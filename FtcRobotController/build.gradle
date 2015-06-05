@@ -1,11 +1,11 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion = 'Google Inc.:Google APIs:21'
+    compileSdkVersion = 'Google Inc.:Google APIs:19'
     buildToolsVersion = '21.1.2'
 
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 19
     }
 }
