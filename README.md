@@ -1,20 +1,6 @@
-# ftc_app
-FTC Android Studio project to create FTC Robot Controller app.
+# 2015-2016 Robot Controller
+Welcome to the Github Repo for the Fellowship of the Loose Screws Robot Controller App!
 
-This is the FTC SDK that can be used to create an FTC Robot Controller app, with custom op modes.
-The FTC Robot Controller app is designed to work in conjunction with the FTC Driver Station app.
-The FTC Driver Station app is available through Google Play.
+![Logo Image](https://pbs.twimg.com/profile_images/552841029494124544/GHkdbYYW.png)
 
-To use this SDK, download/clone the entire project to your local computer.
-Use Android Studio to open the folder as an "existing Android Studio project".
-
-We are working on providing documentation (both javadoc reference documentation and a PDF user manual)
-for this SDK soon.
-
-For technical questions regarding the SDK, please visit the FTC Technology forum:
-
-  http://ftcforum.usfirst.org/forumdisplay.php?156-FTC-Technology
-  
-T. Eng
-May 28, 2015
-
+For now, let's try to keep different modifications in seperate branches, and only merge what we think is really good.
