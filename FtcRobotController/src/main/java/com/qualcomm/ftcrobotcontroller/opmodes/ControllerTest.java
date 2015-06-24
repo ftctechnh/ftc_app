@@ -25,7 +25,7 @@ public class ControllerTest extends OpMode {
         if(input == null) {
             return null;
         } else {
-            return input.booleanValue() ? "1" : "0";
+            return (input ? "1" : "0");
         }
 
     }
