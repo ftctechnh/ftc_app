@@ -30,6 +30,9 @@ public class ControllerTest extends OpMode {
 
     }
 
+    /*
+     * Comment goes here
+     */
     public static String dpadDirectionString(final Gamepad gamepad) {
         if (gamepad == null){
             return null;
