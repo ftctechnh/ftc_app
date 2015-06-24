@@ -58,7 +58,7 @@ public class ControllerTest extends OpMode {
                 toBinaryString(gamepad1.x) + " " +
                 toBinaryString(gamepad1.y));
         telemetry.addData("Joysticks", "Left: (" + String.format("%.2f", gamepad1.left_stick_x) + "," + String.format("%.2f", gamepad1.left_stick_y) +
-                ") Right: (" + String.format("%.2f", gamepad1.left_stick_x) + "," + String.format("%.2f", gamepad1.left_stick_y) + ")");
+                ") Right: (" + String.format("%.2f", gamepad1.right_stick_x) + "," + String.format("%.2f", gamepad1.right_stick_y) + ")");
         telemetry.addData("Dpad", "Dpad: " + dpadDirectionString(gamepad1));
         telemetry.addData("Bumpers", "LB LT RB RT: " +
                 toBinaryString(gamepad1.left_bumper) + " " +
