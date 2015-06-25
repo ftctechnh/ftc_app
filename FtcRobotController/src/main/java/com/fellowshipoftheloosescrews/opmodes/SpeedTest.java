@@ -28,13 +28,15 @@ public class SpeedTest extends OpMode {
         long currentTime = System.nanoTime() - startTime;
 
         //calculate the number of cycles per second
-        double cyclesPerSecond = (double)numOfCycles / (double)currentTime / 1000000000.0d;
+        double cyclesPerSecond = (double)numOfCycles / (double)currentTime * 1000000000.0d;
 
         //add the data to telemetry
         telemetry.addData("Text", "**** Speed Test ****");
         telemetry.addData("Number of cycles", numOfCycles);
         telemetry.addData("Time", currentTime / 1000000000.0d);
         telemetry.addData("Cycles per second", cyclesPerSecond);
+
+
     }
 
     @Override
