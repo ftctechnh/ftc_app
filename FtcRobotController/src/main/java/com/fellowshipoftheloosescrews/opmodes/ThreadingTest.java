@@ -1,41 +1,28 @@
 package com.fellowshipoftheloosescrews.opmodes;
 
-import android.os.Debug;
-import android.util.Log;
+import com.fellowshipoftheloosescrews.utilities.ThreadedOpModeJob;
 
 /**
- * Created by Thomas on 6/25/2015.
- * Tests the ThreadedOpMode class
+ * Created by FTC7123B on 6/28/2015.
  */
-public class ThreadingTest extends ThreadedOpMode {
+public class ThreadingTest extends ThreadedOpModeJob {
+    @Override
+    public void start() {
 
-    public long cyclecount = 0;
+    }
 
     @Override
-    public void onStart() {
-        Log.d("Status", "Starting");
+    public void loop() {
+
+    }
+
+    @Override
+    public void stop() {
+
     }
 
     @Override
     public void run() {
-        while(isRunning) {
-            cyclecount++;
-            Log.d("Status", "Looping");
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
-    @Override
-    public void onLoop() {
-        telemetry.addData("cycle count", cyclecount);
-    }
-
-    @Override
-    public void onStop() {
-        Log.d("Status", "Stopped");
     }
 }
