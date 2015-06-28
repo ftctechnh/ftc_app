@@ -18,14 +18,30 @@ public class ThreadedOpModeWrapper extends OpMode {
         job.setParentOpMode(this);
     }
 
+    public Thread jobThread;
+    private boolean isFirstLoop;
+
     @Override
     public void start() {
+        jobThread = new Thread(opModeJob);
         opModeJob.start();
+        isFirstLoop = true;
     }
 
     @Override
     public void loop() {
+        startJobThread();
         opModeJob.loop();
+    }
+
+    private void startJobThread()
+    {
+        if(isFirstLoop)
+        {
+            jobThread.start();
+            opModeJob.setIsRunning(true);
+            isFirstLoop = false;
+        }
     }
 
     @Override

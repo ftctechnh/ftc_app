@@ -13,7 +13,7 @@ public class ThreadingTest extends ThreadedOpModeJob {
 
     @Override
     public void loop() {
-
+        opMode.telemetry.addData("Threading test", "It works!");
     }
 
     @Override
@@ -23,6 +23,16 @@ public class ThreadingTest extends ThreadedOpModeJob {
 
     @Override
     public void run() {
+        while(isRunning)
+        {
+            System.out.println("Hello world!");
 
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        System.out.println("Stopping");
     }
 }

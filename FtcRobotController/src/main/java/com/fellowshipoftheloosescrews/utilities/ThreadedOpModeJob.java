@@ -5,7 +5,7 @@ import com.fellowshipoftheloosescrews.utilities.ThreadedOpModeWrapper;
 /**
  * Created by Thomas on 6/28/2015.
  */
-public abstract class ThreadedOpModeJob {
+public abstract class ThreadedOpModeJob implements Runnable {
 
     /**
      * Used just like start() from OpMode
@@ -26,9 +26,9 @@ public abstract class ThreadedOpModeJob {
      * The parent ThreadedOpModeWrapper object, used to get
      * normal OpMode functionality.
      */
-    public ThreadedOpModeWrapper parent;
+    public ThreadedOpModeWrapper opMode;
 
-    protected boolean isRunning;
+    public boolean isRunning;
 
     /**
      * Sets the parent ThreadedOpModeWrapper
@@ -37,7 +37,7 @@ public abstract class ThreadedOpModeJob {
      */
     public void setParentOpMode(ThreadedOpModeWrapper parentOpMode)
     {
-        parent = parentOpMode;
+        opMode = parentOpMode;
     }
 
     public abstract void run();
