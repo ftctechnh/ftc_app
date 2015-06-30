@@ -48,8 +48,6 @@ public class FtcOpModeRegister implements OpModeRegister {
    */
   public void register(OpModeManager manager) {
       manager.register("SpeedTest", SpeedTest.class);
-//      manager.register("Threading Test", new ThreadingTest());
-
       manager.register("Threading 0.2", new ThreadedOpModeWrapper(new ThreadingTest()));
   }
 }

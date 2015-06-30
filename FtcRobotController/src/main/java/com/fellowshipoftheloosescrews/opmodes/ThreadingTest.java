@@ -23,15 +23,10 @@ public class ThreadingTest extends ThreadedOpModeJob {
 
     @Override
     public void run() {
-        while(isRunning)
+        while(isRunning())
         {
             System.out.println("Hello world!");
-
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            sleep(1000);
         }
         System.out.println("Stopping");
     }
