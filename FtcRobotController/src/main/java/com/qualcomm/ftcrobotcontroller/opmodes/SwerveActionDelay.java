@@ -52,7 +52,7 @@ public class SwerveActionDelay implements SwerveAction {
         message += (started ? " started " : " not started ");
         if (started)
         {
-            message += ("s: " + startTime + " d:" + durationSeconds);
+            message += ("s: " + String.format("%.2f", startTime) + " d:" + String.format("%.2f", durationSeconds));
         }
         return (message);
     }
