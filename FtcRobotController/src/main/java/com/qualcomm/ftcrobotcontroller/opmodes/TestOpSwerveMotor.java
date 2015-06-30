@@ -1,6 +1,5 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
-import com.android.internal.util.Predicate;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -10,13 +9,11 @@ import java.util.LinkedList;
 /**
  * An empty op mode serving as a template for custom OpModes
  */
-public class TestOp extends OpMode {
+public class TestOpSwerveMotor extends OpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
 
-    //to do: create a class to wrap the motor and its queue?
-    //because: shouldn't the motor's queue know which motor it points to?
-    private LinkedList<SwerveAction> motor1Queue;
+    SwerveMotor motor1 = new SwerveMotor("motor1", null);
 
     //state variables for debouncing the controller buttons
     boolean a1IsDown=false;
@@ -29,18 +26,14 @@ public class TestOp extends OpMode {
     /*
     * Constructor
     */
-    public TestOp()
+    public TestOpSwerveMotor()
     {
-        motor1Queue = new LinkedList<SwerveAction>();
-
         //queue autonomous commands here
-        motor1Queue.add( new SwerveActionTimedMotor(Integer.toString(actioncounter++), null, DcMotor.Direction.FORWARD, 1.0, 3.0));
-        motor1Queue.add( new SwerveActionDelay(Integer.toString(actioncounter++), 3.0));
-        motor1Queue.add( new SwerveActionTimedMotor(Integer.toString(actioncounter++), null, DcMotor.Direction.FORWARD, 1.0, 3.0));
+        motor1.AddTimedMotion(DcMotor.Direction.FORWARD, 1.0, 3.0);
+        motor1.AddDelay(3.0);
+        motor1.AddTimedMotion(DcMotor.Direction.FORWARD, 1.0, 3.0);
 
-        //motor1Queue.add( new SwerveActionLAMotor(Integer.toString(actioncounter++), null, DcMotor.Direction.FORWARD, 0.0, 10.0, 10.0));
-        //motor1Queue.add( new SwerveActionDelay(Integer.toString(actioncounter++), 3.0));
-        //motor1Queue.add( new SwerveActionLAMotor(Integer.toString(actioncounter++), null, DcMotor.Direction.FORWARD, 10.0, 0.0, 10.0));
+        motor1.AddAcceleration(DcMotor.Direction.FORWARD, 0.0, 10.0, 10.0);
 
     }
 
@@ -107,29 +100,28 @@ public class TestOp extends OpMode {
         //handle new input because it may preempt existing items in the queue
         if (debounceA1())
         {
-            motor1Queue.add( new SwerveActionTimedMotor(Integer.toString(actioncounter++), null, DcMotor.Direction.FORWARD, 1.0, 5.0));
+            motor1.AddTimedMotion(DcMotor.Direction.FORWARD, 1.0, 5.0);
         }
         if (debounceX1())
         {
-            motor1Queue.add( new SwerveActionDelay(Integer.toString(actioncounter++), 3.0));
+            motor1.AddDelay(3.0);
         }
         if (debounceY1())
         {
-            motor1Queue.add( new SwerveActionTimedMotor(Integer.toString(actioncounter++), null, DcMotor.Direction.FORWARD, 1.0, 2.0));
-            motor1Queue.add( new SwerveActionDelay(Integer.toString(actioncounter++), 2.0));
-            motor1Queue.add( new SwerveActionTimedMotor(Integer.toString(actioncounter++), null, DcMotor.Direction.FORWARD, 1.0, 2.0));
-
+            motor1.AddTimedMotion(DcMotor.Direction.FORWARD, 1.0, 2.0);
+            motor1.AddDelay(3.0);
+            motor1.AddTimedMotion(DcMotor.Direction.FORWARD, 1.0, 2.0);
         }
         if (gamepad1.b)
         {
-            motor1Queue.clear();
+            motor1.queue.clear();
         }
 
         //process the queue
-        if (motor1Queue.size() > 0)
+        if (motor1.queue.size() > 0)
         {
             //get the first item
-            SwerveAction a = motor1Queue.getFirst();
+            SwerveAction a = motor1.queue.getFirst();
             if (a!=null)  //don't really need this check since we looked at the queue size already
             {
                 if (!a.IsStarted()) {
@@ -142,32 +134,32 @@ public class TestOp extends OpMode {
             //in c# you can't remove an item during an iterator because that messes up the iterator
             //I'm not sure if java handles that better, but to be safer I'll remove after iterating
             LinkedList<SwerveAction> removelist = new LinkedList<SwerveAction>();
-            for (SwerveAction d : motor1Queue)
+            for (SwerveAction d : motor1.queue)
             {
                 if (d.IsDone()) removelist.add(d);
             }
             for (SwerveAction r : removelist)
             {
-                motor1Queue.remove(r);
+                motor1.queue.remove(r);
             }
 
         }
 
         //stop motors
-        if (motor1Queue.size()==0)
+        if (motor1.queue.size()==0)
         {
             //to do: stop motor 1 here?
             //instead, I think we should consider using an explicit stop action,
             //and like lego, allowing an optional param to motor moves that decides if they should brake at end.
         }
 
-        telemetry.addData("Count", "Queue length: " + motor1Queue.size());
+        telemetry.addData("Count", "Queue length: " + motor1.queue.size());
         String message = "";
-        for (SwerveAction d : motor1Queue)
+        for (SwerveAction d : motor1.queue)
         {
             message += d.ToString() +"\n";
         }
-        telemetry.addData("Message", "motor1queue:\n" + message);
+        telemetry.addData("Message", "motor1.queue:\n" + message);
 
     }
 

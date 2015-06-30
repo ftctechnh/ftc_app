@@ -6,11 +6,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 /**
  * Created by Steve on 6/26/2015.
  */
-public class SwerveActionTimedMotor implements SwerveAction {
+public class SwerveActionOnMotor implements SwerveAction {
 
     private double power;
     private DcMotor.Direction direction;
-    private double durationSeconds;
     DcMotor motor;
 
     //these are used in all SwerveActions...move them up?
@@ -20,13 +19,12 @@ public class SwerveActionTimedMotor implements SwerveAction {
     private String name = "";
 
 
-    public SwerveActionTimedMotor(String debugName, DcMotor targetMotor, DcMotor.Direction targetDirection, double targetPower, double targetDurationSeconds)
+    public SwerveActionOnMotor(String debugName, DcMotor targetMotor, DcMotor.Direction targetDirection, double targetPower)
     {
         name = debugName;
         motor = targetMotor;
         power = targetPower;
         direction = targetDirection;
-        durationSeconds = targetDurationSeconds;
     }
 
     public boolean IsDone()
@@ -51,21 +49,13 @@ public class SwerveActionTimedMotor implements SwerveAction {
 
     public void Update(ElapsedTime currentTime)
     {
-        if (currentTime.time() > (startTime + durationSeconds))
-        {
-            done = true;
-            //turn off physical motor?? I think the loop should do it when the motor's queue is empty.
-        }
+        done = true;
     }
 
     public String ToString()
     {
-        String message  = "TimedMotor " + name;
+        String message  = "OnMotor " + name;
         message += (started ? " started " : " not started ");
-        if (started)
-        {
-            message += ("s: " + String.format("%.2f", startTime) + " d:" + String.format("%.2f", durationSeconds));
-        }
         return (message);
     }
 
