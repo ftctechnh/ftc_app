@@ -32,7 +32,6 @@ public class TestOpSwerveMotor extends OpMode {
         motor1.AddTimedMotion(DcMotor.Direction.FORWARD, 1.0, 3.0);
         motor1.AddDelay(3.0);
         motor1.AddTimedMotion(DcMotor.Direction.FORWARD, 1.0, 3.0);
-
         motor1.AddAcceleration(DcMotor.Direction.FORWARD, 0.0, 10.0, 10.0);
 
     }
@@ -114,50 +113,25 @@ public class TestOpSwerveMotor extends OpMode {
         }
         if (gamepad1.b)
         {
-            motor1.queue.clear();
+            motor1.ClearQueue();
         }
 
         //process the queue
-        if (motor1.queue.size() > 0)
-        {
-            //get the first item
-            SwerveAction a = motor1.queue.getFirst();
-            if (a!=null)  //don't really need this check since we looked at the queue size already
-            {
-                if (!a.IsStarted()) {
-                    a.Start(runtime);
-                }
-                a.Update(runtime);
-            }
+        motor1.Update(runtime);
 
-            //remove any done actions from the queue
-            //in c# you can't remove an item during an iterator because that messes up the iterator
-            //I'm not sure if java handles that better, but to be safer I'll remove after iterating
-            LinkedList<SwerveAction> removelist = new LinkedList<SwerveAction>();
-            for (SwerveAction d : motor1.queue)
-            {
-                if (d.IsDone()) removelist.add(d);
-            }
-            for (SwerveAction r : removelist)
-            {
-                motor1.queue.remove(r);
-            }
-
-        }
-
-        //stop motors
-        if (motor1.queue.size()==0)
-        {
+        //stop motors? Decision: No!
+        //if (motor1.GetQueueLength()==0)
+        //{
             //to do: stop motor 1 here?
             //instead, I think we should consider using an explicit stop action,
             //and like lego, allowing an optional param to motor moves that decides if they should brake at end.
-        }
+        //}
 
-        telemetry.addData("Count", "Queue length: " + motor1.queue.size());
-        String message = "";
-        for (SwerveAction d : motor1.queue)
+        telemetry.addData("Count", "Queue length: " + motor1.GetQueueLength());
+        String message = motor1.ToString();
+        if (message.length() > 128) //cover unlikely case that the queue is too big to display in a telemetry message.
         {
-            message += d.ToString() +"\n";
+            message = message.substring(0,128) + "...";
         }
         telemetry.addData("Message", "motor1.queue:\n" + message);
 
