@@ -1,41 +1,48 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.util.LinkedList;
 
 /**
  * Created by Steve on 6/29/2015.
- * A single motor that can be driven directly in teleop mode and can have actions queued for autonomous mode
  */
-public class SwerveMotor {
+public class SwerveLRMotors {
 
     String name;
-    private DcMotor motor;
+    private DcMotor leftmotor;
+    private DcMotor rightmotor;
     private LinkedList<SwerveAction> queue = new LinkedList<SwerveAction>();
 
     int actioncounter = 0;//for generating unique debugging names for actions
 
-    public SwerveMotor(String debugName, DcMotor targetMotor)
+    public SwerveLRMotors(String debugName, DcMotor targetLeftMotor, DcMotor targetRightMotor)
     {
         name = debugName;
-        motor = targetMotor;
+        leftmotor = targetLeftMotor;
+        rightmotor = targetRightMotor;
     }
 
     public void AddAcceleration(DcMotor.Direction targetDirection, double targetStartPower, double targetEndPower, double targetDurationSeconds)
     {
-        queue.add( new SwerveActionLAMotor(Integer.toString(actioncounter++), motor, targetDirection, targetStartPower, targetEndPower, targetDurationSeconds));
+        queue.add( new SwerveActionLADualMotor(Integer.toString(actioncounter++), leftmotor, rightmotor, targetDirection, targetStartPower, targetEndPower, targetDurationSeconds));
     }
 
     public void AddTimedMotion(DcMotor.Direction targetDirection, double targetPower, double targetDurationSeconds)
     {
-        queue.add( new SwerveActionTimedMotor(Integer.toString(actioncounter++), motor, targetDirection, targetPower, targetDurationSeconds));
+        queue.add( new SwerveActionTimedDualMotor(Integer.toString(actioncounter++), leftmotor, targetDirection, targetPower, rightmotor, targetDirection, targetPower, targetDurationSeconds));
     }
 
     public void AddDelay(double targetDurationSeconds)
     {
         queue.add( new SwerveActionDelay(Integer.toString(actioncounter++), targetDurationSeconds));
+    }
+
+    public void AddLineFollow(LightSensor targetSensor)
+    {
+        queue.add( new SwerveActionDualMotorLineFollow(Integer.toString(actioncounter++),leftmotor, rightmotor, targetSensor));
     }
 
     public String ToString()
@@ -90,17 +97,6 @@ public class SwerveMotor {
             }
 
         }
-    }
-
-    //support teleop direct driving
-    void SetImmediate(DcMotor.Direction targetDirection, double targetPower)
-    {
-        //if (queue.size() != 0) throw new Exception("Exception: setting motor power when motor queue is actve.");
-        queue.clear(); //To Do: decide if queue should clear or exception should be thrown
-
-        //motor.setDirection(targetDirection);
-        //motor.setPower(targetPower);
-
     }
 
 
