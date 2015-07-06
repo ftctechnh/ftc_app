@@ -5,13 +5,18 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * Created by Steve on 6/26/2015.
+ * Run two motors for a specified time
  */
-public class SwerveActionTimedMotor implements SwerveAction {
+public class SwerveActionTimedDualMotor implements SwerveAction {
 
-    private double power;
-    private DcMotor.Direction direction;
+    private double leftpower;
+    private DcMotor.Direction leftdirection;
+    private double rightpower;
+    private DcMotor.Direction rightdirection;
+
     private double durationSeconds;
-    DcMotor motor;
+    DcMotor leftmotor;
+    DcMotor rightmotor;
 
     //these are used in all SwerveActions...move them up?
     private double startTime;
@@ -20,12 +25,17 @@ public class SwerveActionTimedMotor implements SwerveAction {
     private String name = "";
 
 
-    public SwerveActionTimedMotor(String debugName, DcMotor targetMotor, DcMotor.Direction targetDirection, double targetPower, double targetDurationSeconds)
+    public SwerveActionTimedDualMotor(String debugName, DcMotor targetLeftMotor, DcMotor.Direction targetLeftDirection, double targetLeftPower,
+                                      DcMotor targetRightMotor, DcMotor.Direction targetRightDirection, double targetRightPower,
+                                      double targetDurationSeconds)
     {
         name = debugName;
-        motor = targetMotor;
-        power = targetPower;
-        direction = targetDirection;
+        leftmotor = targetLeftMotor;
+        leftpower = targetLeftPower;
+        leftdirection = targetLeftDirection;
+        rightmotor = targetRightMotor;
+        rightpower = targetRightPower;
+        rightdirection = targetRightDirection;
         durationSeconds = targetDurationSeconds;
     }
 
@@ -45,8 +55,10 @@ public class SwerveActionTimedMotor implements SwerveAction {
         started = true;
         //set physical motor power and direction here
         //commented out since we don't have motors yet!
-        //motor.setDirection(direction);
-        //motor.setPower(power);
+        //leftmotor.setDirection(direction);
+        //leftmotor.setPower(power);
+        //rightmotor.setDirection(direction);
+        //rightmotor.setPower(power);
     }
 
     public void Update(ElapsedTime currentTime)
