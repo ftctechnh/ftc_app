@@ -3,8 +3,6 @@ package org.swerverobotics.library;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
 
-//==================================================================================================
-
 /**
  * An implementation of DcMotorController that talks to a non-thunking target implementation
  * by thunking all calls over to the loop thread and back gain.
@@ -21,9 +19,14 @@ class ThunkingMotorController implements DcMotorController
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    ThunkingMotorController(DcMotorController targetController)
+    private ThunkingMotorController(DcMotorController targetController)
         {
         this.targetController = targetController;
+        }
+
+    static public ThunkingMotorController Create(DcMotorController target)
+        {
+        return target instanceof ThunkingMotorController ? (ThunkingMotorController)target : new ThunkingMotorController(target);
         }
 
     //----------------------------------------------------------------------------------------------
@@ -32,9 +35,9 @@ class ThunkingMotorController implements DcMotorController
 
     @Override public String getDeviceName()
         {
-        class Thunk extends ResultableAction<String>
+        class Thunk extends SynchronousOpMode.ResultableAction<String>
             {
-            @Override public void evaluateOnLoopThread()
+            @Override public void actionOnLoopThread()
                 {
                 this.result = targetController.getDeviceName();
                 }
@@ -46,9 +49,9 @@ class ThunkingMotorController implements DcMotorController
 
     @Override public int getVersion()
         {
-        class Thunk extends ResultableAction<Integer>
+        class Thunk extends SynchronousOpMode.ResultableAction<Integer>
             {
-            @Override public void evaluateOnLoopThread()
+            @Override public void actionOnLoopThread()
                 {
                 this.result = targetController.getVersion();
                 }
@@ -60,9 +63,9 @@ class ThunkingMotorController implements DcMotorController
 
     @Override public void close()
         {
-        class Thunk extends WaitableAction
+        class Thunk extends SynchronousOpMode.WaitableAction
             {
-            @Override public void evaluateOnLoopThread()
+            @Override public void actionOnLoopThread()
                 {
                 targetController.close();
                 }
@@ -73,10 +76,10 @@ class ThunkingMotorController implements DcMotorController
 
     @Override public void setMotorControllerDeviceMode(DcMotorController.DeviceMode mode)
         {
-        class Thunk extends WaitableAction
+        class Thunk extends SynchronousOpMode.WaitableAction
             {
             DcMotorController.DeviceMode mode;
-            @Override public void evaluateOnLoopThread()
+            @Override public void actionOnLoopThread()
                 {
                 targetController.setMotorControllerDeviceMode(mode);
                 }
@@ -88,9 +91,9 @@ class ThunkingMotorController implements DcMotorController
 
     @Override public DcMotorController.DeviceMode getMotorControllerDeviceMode()
         {
-        class Thunk extends ResultableAction<DcMotorController.DeviceMode>
+        class Thunk extends SynchronousOpMode.ResultableAction<DcMotorController.DeviceMode>
             {
-            @Override public void evaluateOnLoopThread()
+            @Override public void actionOnLoopThread()
                 {
                 this.result = targetController.getMotorControllerDeviceMode();
                 }
@@ -102,11 +105,11 @@ class ThunkingMotorController implements DcMotorController
 
     @Override public void setMotorChannelMode(int channel, DcMotorController.RunMode mode)
         {
-        class Thunk extends WaitableAction
+        class Thunk extends SynchronousOpMode.WaitableAction
             {
             int channel;
             DcMotorController.RunMode mode;
-            @Override public void evaluateOnLoopThread()
+            @Override public void actionOnLoopThread()
                 {
                 targetController.setMotorChannelMode(channel, mode);
                 }
@@ -119,10 +122,10 @@ class ThunkingMotorController implements DcMotorController
 
     @Override public DcMotorController.RunMode getMotorChannelMode(int channel)
         {
-        class Thunk extends ResultableAction<DcMotorController.RunMode>
+        class Thunk extends SynchronousOpMode.ResultableAction<DcMotorController.RunMode>
             {
             int channel;
-            @Override public void evaluateOnLoopThread()
+            @Override public void actionOnLoopThread()
                 {
                 this.result = targetController.getMotorChannelMode(channel);
                 }
@@ -135,11 +138,11 @@ class ThunkingMotorController implements DcMotorController
 
     @Override public void setMotorPower(int channel, double power)
         {
-        class Thunk extends WaitableAction
+        class Thunk extends SynchronousOpMode.WaitableAction
             {
             int channel;
             double power;
-            @Override public void evaluateOnLoopThread()
+            @Override public void actionOnLoopThread()
                 {
                 targetController.setMotorPower(channel, power);
                 }
@@ -152,10 +155,10 @@ class ThunkingMotorController implements DcMotorController
 
     @Override public double getMotorPower(int channel)
         {
-        class Thunk extends ResultableAction<Double>
+        class Thunk extends SynchronousOpMode.ResultableAction<Double>
             {
             int channel;
-            @Override public void evaluateOnLoopThread()
+            @Override public void actionOnLoopThread()
                 {
                 this.result = targetController.getMotorPower(channel);
                 }
@@ -171,10 +174,10 @@ class ThunkingMotorController implements DcMotorController
      */
     @Override public void setMotorPowerFloat(int channel)
         {
-        class Thunk extends WaitableAction
+        class Thunk extends SynchronousOpMode.WaitableAction
             {
             int channel;
-            @Override public void evaluateOnLoopThread()
+            @Override public void actionOnLoopThread()
                 {
                 targetController.setMotorPowerFloat(channel);
                 }
@@ -189,10 +192,10 @@ class ThunkingMotorController implements DcMotorController
      */
     @Override public boolean getMotorPowerFloat(int channel)
         {
-        class Thunk extends ResultableAction<Boolean>
+        class Thunk extends SynchronousOpMode.ResultableAction<Boolean>
             {
             int channel;
-            @Override public void evaluateOnLoopThread()
+            @Override public void actionOnLoopThread()
                 {
                 this.result = targetController.getMotorPowerFloat(channel);
                 }
@@ -205,11 +208,11 @@ class ThunkingMotorController implements DcMotorController
 
     @Override public void setMotorTargetPosition(int channel, int position)
         {
-        class Thunk extends WaitableAction
+        class Thunk extends SynchronousOpMode.WaitableAction
             {
             int channel;
             int position;
-            @Override public void evaluateOnLoopThread()
+            @Override public void actionOnLoopThread()
                 {
                 targetController.setMotorTargetPosition(channel, position);
                 }
@@ -222,10 +225,10 @@ class ThunkingMotorController implements DcMotorController
 
     @Override public int getMotorTargetPosition(int channel)
         {
-        class Thunk extends ResultableAction<Integer>
+        class Thunk extends SynchronousOpMode.ResultableAction<Integer>
             {
             int channel;
-            @Override public void evaluateOnLoopThread()
+            @Override public void actionOnLoopThread()
                 {
                 this.result = targetController.getMotorTargetPosition(channel);
                 }
@@ -238,10 +241,10 @@ class ThunkingMotorController implements DcMotorController
 
     @Override public int getMotorCurrentPosition(int channel)
         {
-        class Thunk extends ResultableAction<Integer>
+        class Thunk extends SynchronousOpMode.ResultableAction<Integer>
             {
             int channel;
-            @Override public void evaluateOnLoopThread()
+            @Override public void actionOnLoopThread()
                 {
                 this.result = targetController.getMotorCurrentPosition(channel);
                 }
@@ -254,11 +257,11 @@ class ThunkingMotorController implements DcMotorController
 
     @Override public void setGearRatio(int channel, double ratio)
         {
-        class Thunk extends WaitableAction
+        class Thunk extends SynchronousOpMode.WaitableAction
             {
             int channel;
             double ratio;
-            @Override public void evaluateOnLoopThread()
+            @Override public void actionOnLoopThread()
                 {
                 targetController.setGearRatio(channel, ratio);
                 }
@@ -271,10 +274,10 @@ class ThunkingMotorController implements DcMotorController
 
     @Override public double getGearRatio(int channel)
         {
-        class Thunk extends ResultableAction<Double>
+        class Thunk extends SynchronousOpMode.ResultableAction<Double>
             {
             int channel;
-            @Override public void evaluateOnLoopThread()
+            @Override public void actionOnLoopThread()
                 {
                 this.result = targetController.getGearRatio(channel);
                 }
@@ -287,11 +290,11 @@ class ThunkingMotorController implements DcMotorController
 
     @Override public void setDifferentialControlLoopCoefficients(int channel, DifferentialControlLoopCoefficients pid)
         {
-        class Thunk extends WaitableAction
+        class Thunk extends SynchronousOpMode.WaitableAction
             {
             int channel;
             DifferentialControlLoopCoefficients pid;
-            @Override public void evaluateOnLoopThread()
+            @Override public void actionOnLoopThread()
                 {
                 targetController.setDifferentialControlLoopCoefficients(channel, pid);
                 }
@@ -304,10 +307,10 @@ class ThunkingMotorController implements DcMotorController
 
     @Override public DifferentialControlLoopCoefficients getDifferentialControlLoopCoefficients(int channel)
         {
-        class Thunk extends ResultableAction<DifferentialControlLoopCoefficients>
+        class Thunk extends SynchronousOpMode.ResultableAction<DifferentialControlLoopCoefficients>
             {
             int channel;
-            @Override public void evaluateOnLoopThread()
+            @Override public void actionOnLoopThread()
                 {
                 this.result = targetController.getDifferentialControlLoopCoefficients(channel);
                 }
@@ -318,146 +321,4 @@ class ThunkingMotorController implements DcMotorController
         return thunk.result;
         }
 
-    }
-
-//==================================================================================================
-
-/**
- * An implementation of ServoController that talks to a non-thunking target implementation
- * by thunking all calls over to the loop thread and back gain.
- */
-class ThunkingServoController implements ServoController
-    {
-    //----------------------------------------------------------------------------------------------
-    // State
-    //----------------------------------------------------------------------------------------------
-
-    ServoController targetController;   // can only talk to him on the loop thread
-
-    //----------------------------------------------------------------------------------------------
-    // Construction
-    //----------------------------------------------------------------------------------------------
-
-    ThunkingServoController(ServoController targetController)
-        {
-        this.targetController = targetController;
-        }
-
-    //----------------------------------------------------------------------------------------------
-    // ServoController interface
-    //----------------------------------------------------------------------------------------------
-
-    @Override public String getDeviceName()
-        {
-        class Thunk extends ResultableAction<String>
-            {
-            @Override public void evaluateOnLoopThread()
-                {
-                this.result = targetController.getDeviceName();
-                }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        return thunk.result;
-        }
-
-    @Override public int getVersion()
-        {
-        class Thunk extends ResultableAction<Integer>
-            {
-            @Override public void evaluateOnLoopThread()
-                {
-                this.result = targetController.getVersion();
-                }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        return thunk.result;
-        }
-
-    @Override public void close()
-        {
-        class Thunk extends WaitableAction
-            {
-            @Override public void evaluateOnLoopThread()
-                {
-                targetController.close();
-                }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        }
-
-    @Override public void pwmEnable()
-        {
-        class Thunk extends WaitableAction
-            {
-            @Override public void evaluateOnLoopThread()
-                {
-                targetController.pwmEnable();
-                }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        }
-
-    @Override public void pwmDisable()
-        {
-        class Thunk extends WaitableAction
-            {
-            @Override public void evaluateOnLoopThread()
-                {
-                targetController.pwmDisable();
-                }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        }
-
-    @Override public ServoController.PwmStatus getPwmStatus()
-        {
-        class Thunk extends ResultableAction<ServoController.PwmStatus>
-            {
-            @Override public void evaluateOnLoopThread()
-                {
-                this.result = targetController.getPwmStatus();
-                }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        return thunk.result;
-        }
-
-    @Override public void setServoPosition(int channel, double position)
-        {
-        class Thunk extends WaitableAction
-            {
-            int channel;
-            double position;
-            @Override public void evaluateOnLoopThread()
-                {
-                targetController.setServoPosition(channel, position);
-                }
-            }
-        Thunk thunk = new Thunk();
-        thunk.channel = channel;
-        thunk.position = position;
-        thunk.dispatch();
-        }
-
-    @Override public double getServoPosition(int channel)
-        {
-        class Thunk extends ResultableAction<Double>
-            {
-            int channel;
-            @Override public void evaluateOnLoopThread()
-                {
-                this.result = targetController.getServoPosition(channel);
-                }
-            }
-        Thunk thunk = new Thunk();
-        thunk.channel = channel;
-        thunk.dispatch();
-        return thunk.result;
-        }
     }
