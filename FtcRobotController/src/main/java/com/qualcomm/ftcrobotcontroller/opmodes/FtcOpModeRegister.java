@@ -62,7 +62,6 @@ public class FtcOpModeRegister implements OpModeRegister {
     //manager.register("K9IrSeeker", K9IrSeeker.class);
     //manager.register("K9AutoTime", K9AutoTime.class);
     manager.register("ControllerTest",ControllerTest.class);
-    manager.register("TestOp",TestOp.class);
     manager.register("TestOpSwerveMotor",TestOpSwerveMotor.class);
       manager.register("TestOpSwerveDualMotor",TestOpSwerveDualMotor.class);
     /*
