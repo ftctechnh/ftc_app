@@ -1,6 +1,10 @@
 package org.swerverobotics.library;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.util.*;
+
+import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
 
@@ -45,31 +49,6 @@ public abstract class SynchronousOpMode extends OpMode implements Runnable
         }
 
     //----------------------------------------------------------------------------------------------
-    // Thread communication
-    //----------------------------------------------------------------------------------------------
-
-    @Override
-    public void loop()
-        {
-        // Run any actions we've been asked to execute
-        for (;;)
-            {
-            Object o = this.queue.poll();
-            if (null == o)
-                break;
-
-            IAction action = (IAction)(o);
-            if (null != action)
-                action.doIt();
-            }
-        }
-
-    void executeOnLoopThread(IAction action)
-        {
-        this.queue.add(action);
-        }
-
-    //----------------------------------------------------------------------------------------------
     // User code
     //----------------------------------------------------------------------------------------------
 
@@ -93,7 +72,7 @@ public abstract class SynchronousOpMode extends OpMode implements Runnable
         {
         this.loopThread = Thread.currentThread();
         //
-        this.mainThread = new Thread(this);
+        this.mainThread = new Thread(this);     // REVIEW: would this be better with an inner class?
         this.mainThread.start();
         }
 
@@ -130,7 +109,7 @@ public abstract class SynchronousOpMode extends OpMode implements Runnable
         }
 
     /**
-     * Our run method here merely calls the synchronous MainThread() method.
+     * Our run method here calls the synchronous main() method.
      */
     public final void run()
         {
@@ -151,56 +130,222 @@ public abstract class SynchronousOpMode extends OpMode implements Runnable
     // Utility
     //----------------------------------------------------------------------------------------------
 
-    public boolean IsLoopThread()
+    public boolean isLoopThread()
         {
         return this.loopThread.getId() == Thread.currentThread().getId();
         }
-    public boolean IsMainThread()
+    public boolean isMainThread()
         {
         return this.mainThread.getId() == Thread.currentThread().getId();
         }
 
-    void Foo()
+    //----------------------------------------------------------------------------------------------
+    // Thunking
+    //----------------------------------------------------------------------------------------------
+
+    @Override
+    public void loop()
         {
-        ThreadLocal<SynchronousOpMode> local = new ThreadLocal<SynchronousOpMode>();
-        }
-    }
-
-//==================================================================================================
-//
-//==================================================================================================
-
-interface IAction
-    {
-    void doIt();
-    }
-
-abstract class WaitableAction implements IAction
-    {
-    Semaphore semaphore = new Semaphore(1);
-
-    public void doIt()
-        {
-        this.evaluateOnLoopThread();
-        this.semaphore.release();
-        }
-
-    protected abstract void evaluateOnLoopThread();
-
-    void dispatch()
-        {
-        SynchronousOpMode.getThreadThunker().executeOnLoopThread(this);
-        try
+        // Run any actions we've been asked to execute
+        for (;;)
             {
-            this.semaphore.acquire();
-            }
-        catch (InterruptedException e)
-            {
-            Thread.currentThread().interrupt();
+            Object o = this.queue.poll();
+            if (null == o)
+                break;
+
+            IAction action = (IAction)(o);
+            if (null != action)
+                action.doAction();
             }
         }
+
+    /**
+     * Execute the indicated action on the loop thread.
+     */
+    public void executeOnLoopThread(IAction action)
+        {
+        assert this.isMainThread();
+        this.queue.add(action);
+        }
+
+    //----------------------------------------------------------------------------------------------
+    // Thunking method helpers
+    //----------------------------------------------------------------------------------------------
+
+    public interface IAction
+        {
+        void doAction();
+        }
+
+    public abstract static class WaitableAction implements IAction
+        {
+        Semaphore semaphore = new Semaphore(0);
+
+        public void doAction()
+            {
+            this.actionOnLoopThread();
+            this.semaphore.release();
+            }
+
+        protected abstract void actionOnLoopThread();
+
+        void dispatch()
+            {
+            SynchronousOpMode.getThreadThunker().executeOnLoopThread(this);
+            try
+                {
+                this.semaphore.acquire();
+                }
+            catch (InterruptedException e)
+                {
+                Thread.currentThread().interrupt();
+                }
+            }
+        }
+
+    public abstract static class ResultableAction<T> extends WaitableAction
+        {
+        T result;
+        }
+
+    //----------------------------------------------------------------------------------------------
+    // Thunking hardware map
+    //----------------------------------------------------------------------------------------------
+
+    /**
+     * Given a non-thunking hardware map, create a new hardware map containing
+     * all the same devices but in a form that their methods thunk from the main()
+     * thread to the loop() thread.
+     */
+    public static HardwareMap CreateThunkedHardwareMap(HardwareMap hwmap)
+        {
+        HardwareMap result = new HardwareMap();
+
+        CreateThunks(hwmap.dcMotorController, result.dcMotorController,
+            new IThunkFactory<DcMotorController>()
+                {
+                @Override public DcMotorController Create(DcMotorController target)
+                    {
+                    return ThunkingMotorController.Create(target);
+                    }
+                }
+            );
+
+        CreateThunks(hwmap.servoController, result.servoController,
+            new IThunkFactory<ServoController>()
+                {
+                @Override public ServoController Create(ServoController target)
+                    {
+                    return ThunkingServoController.Create(target);
+                    }
+                }
+            );
+
+        CreateThunks(hwmap.legacyModule, result.legacyModule,
+            new IThunkFactory<LegacyModule>()
+                {
+                @Override public LegacyModule Create(LegacyModule target)
+                    {
+                    return ThunkingLegacyModule.Create(target);
+                    }
+                }
+            );
+
+        CreateThunks(hwmap.dcMotor, result.dcMotor,
+            new IThunkFactory<DcMotor>()
+                {
+                @Override public DcMotor Create(DcMotor target)
+                    {
+                    return new DcMotor(
+                            ThunkingMotorController.Create(target.getController()),
+                            target.getPortNumber(),
+                            target.getDirection()
+                            );
+                    }
+                }
+            );
+
+        CreateThunks(hwmap.servo, result.servo,
+            new IThunkFactory<com.qualcomm.robotcore.hardware.Servo>()
+                {
+                @Override public com.qualcomm.robotcore.hardware.Servo Create(com.qualcomm.robotcore.hardware.Servo target)
+                    {
+                    return new com.qualcomm.robotcore.hardware.Servo(
+                            ThunkingServoController.Create(target.getController()),
+                            target.getPortNumber(),
+                            target.getDirection()
+                            );
+                    }
+                }
+            );
+
+        /*
+        CreateThunks(hwmap.accelerationSensor, result.accelerationSensor);
+        CreateThunks(hwmap.compassSensor, result.compassSensor);
+        CreateThunks(hwmap.gyroSensor, result.gyroSensor);
+        CreateThunks(hwmap.irSeekerSensor, result.irSeekerSensor);
+        CreateThunks(hwmap.lightSensor, result.lightSensor);
+        CreateThunks(hwmap.ultrasonicSensor, result.ultrasonicSensor);
+        CreateThunks(hwmap.voltageSensor, result.voltageSensor);
+        */
+
+        result.appContext = hwmap.appContext;
+
+        return result;
+        }
+
+    private interface IThunkFactory<T>
+        {
+        T Create(T t);
+        }
+
+    private static <T> void CreateThunks(HardwareMap.DeviceMapping<T> from, HardwareMap.DeviceMapping<T> to, IThunkFactory<T> thunkFactory)
+        {
+        for (Map.Entry<String,T> pair : from.entrySet())
+            {
+            T thunked = thunkFactory.Create(pair.getValue());
+            to.put(pair.getKey(), thunked);
+            }
+        }
     }
-abstract class ResultableAction<T> extends WaitableAction
-    {
-    T result;
-    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
