@@ -60,8 +60,13 @@ class ThunkingMotorController implements DcMotorController
      *      SWITCHING_TO_WRITE_MODE -> WRITE_MODE.
      * All other transitions only happen because we request them.
      */
-    private void switchToMode(DeviceMode newMode)
+    private synchronized void switchToMode(DeviceMode newMode)
         {
+        // Note: remember that in general the user code may choose to spawn worker threads.
+        // Thus, we may have multiple, concurrent threads simultaneously trying to switch modes.
+        // We deal with that by using synchronized methods, allowing only one client in at
+        // a time; this gives us a sequential sequence of modes we need the controller to be in.
+
         // If we don't currently know his mode, we need to ask the controller where we stand
         if (null == this.controllerMode)
             {
@@ -103,7 +108,7 @@ class ThunkingMotorController implements DcMotorController
     // DcMotorController interface
     //----------------------------------------------------------------------------------------------
 
-    @Override public String getDeviceName()
+    @Override public synchronized String getDeviceName()
         {
         try
             {
@@ -125,7 +130,7 @@ class ThunkingMotorController implements DcMotorController
             }
         }
 
-    @Override public int getVersion()
+    @Override public synchronized int getVersion()
         {
         try
             {
@@ -147,7 +152,7 @@ class ThunkingMotorController implements DcMotorController
             }
         }
 
-    @Override public void close()
+    @Override public synchronized void close()
         {
         try
             {
@@ -168,7 +173,7 @@ class ThunkingMotorController implements DcMotorController
             }
         }
 
-    @Override public void setMotorControllerDeviceMode(DcMotorController.DeviceMode mode)
+    @Override public synchronized void setMotorControllerDeviceMode(DcMotorController.DeviceMode mode)
     // setMotorControllerDeviceMode is neither a 'read' nor a 'write' operation; it's internal
         {
         class Thunk extends SynchronousOpMode.WaitableAction
@@ -188,7 +193,7 @@ class ThunkingMotorController implements DcMotorController
         this.controllerMode = null;
         }
 
-    @Override public DcMotorController.DeviceMode getMotorControllerDeviceMode()
+    @Override public synchronized DcMotorController.DeviceMode getMotorControllerDeviceMode()
     // getMotorControllerDeviceMode is neither a 'read' nor a 'write' operation; it's internal
         {
         class Thunk extends SynchronousOpMode.ResultableAction<DcMotorController.DeviceMode>
@@ -207,7 +212,7 @@ class ThunkingMotorController implements DcMotorController
         return thunk.result;
         }
 
-    @Override public void setMotorChannelMode(int channel, DcMotorController.RunMode mode)
+    @Override public synchronized void setMotorChannelMode(int channel, DcMotorController.RunMode mode)
         {
         try
             {
@@ -232,7 +237,7 @@ class ThunkingMotorController implements DcMotorController
             }
         }
 
-    @Override public DcMotorController.RunMode getMotorChannelMode(int channel)
+    @Override public synchronized DcMotorController.RunMode getMotorChannelMode(int channel)
         {
         try
             {
@@ -256,7 +261,7 @@ class ThunkingMotorController implements DcMotorController
             }
         }
 
-    @Override public void setMotorPower(int channel, double power)
+    @Override public synchronized void setMotorPower(int channel, double power)
         {
         try
             {
@@ -281,7 +286,7 @@ class ThunkingMotorController implements DcMotorController
             }
         }
 
-    @Override public double getMotorPower(int channel)
+    @Override public synchronized double getMotorPower(int channel)
         {
         try
             {
@@ -308,7 +313,7 @@ class ThunkingMotorController implements DcMotorController
     /**
      * Set the power level of the indicated motor to 'float'ing. Aka 'coast'ing.
      */
-    @Override public void setMotorPowerFloat(int channel)
+    @Override public synchronized void setMotorPowerFloat(int channel)
         {
         try
             {
@@ -334,7 +339,7 @@ class ThunkingMotorController implements DcMotorController
     /**
      * Is the indicated motor currently floating / coasting?
      */
-    @Override public boolean getMotorPowerFloat(int channel)
+    @Override public synchronized boolean getMotorPowerFloat(int channel)
         {
         try
             {
@@ -358,7 +363,7 @@ class ThunkingMotorController implements DcMotorController
             }
         }
 
-    @Override public void setMotorTargetPosition(int channel, int position)
+    @Override public synchronized void setMotorTargetPosition(int channel, int position)
         {
         try
             {
@@ -383,7 +388,7 @@ class ThunkingMotorController implements DcMotorController
             }
         }
 
-    @Override public int getMotorTargetPosition(int channel)
+    @Override public synchronized int getMotorTargetPosition(int channel)
         {
         try
             {
@@ -407,7 +412,7 @@ class ThunkingMotorController implements DcMotorController
             }
         }
 
-    @Override public int getMotorCurrentPosition(int channel)
+    @Override public synchronized int getMotorCurrentPosition(int channel)
         {
         try
             {
@@ -431,7 +436,7 @@ class ThunkingMotorController implements DcMotorController
             }
         }
 
-    @Override public void setGearRatio(int channel, double ratio)
+    @Override public synchronized void setGearRatio(int channel, double ratio)
         {
         try
             {
@@ -456,7 +461,7 @@ class ThunkingMotorController implements DcMotorController
             }
         }
 
-    @Override public double getGearRatio(int channel)
+    @Override public synchronized double getGearRatio(int channel)
         {
         try
             {
@@ -480,7 +485,7 @@ class ThunkingMotorController implements DcMotorController
             }
         }
 
-    @Override public void setDifferentialControlLoopCoefficients(int channel, DifferentialControlLoopCoefficients pid)
+    @Override public synchronized void setDifferentialControlLoopCoefficients(int channel, DifferentialControlLoopCoefficients pid)
         {
         try
             {
@@ -505,7 +510,7 @@ class ThunkingMotorController implements DcMotorController
             }
         }
 
-    @Override public DifferentialControlLoopCoefficients getDifferentialControlLoopCoefficients(int channel)
+    @Override public synchronized DifferentialControlLoopCoefficients getDifferentialControlLoopCoefficients(int channel)
         {
         try
             {

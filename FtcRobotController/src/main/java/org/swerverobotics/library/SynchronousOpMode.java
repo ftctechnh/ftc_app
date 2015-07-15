@@ -8,7 +8,9 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 // Work items:
 //      * telemetry
-//      * 'getPower on legacy NXT-compatible motor controller returns a null value' (eh?)
+//      * maybe 'getPower on legacy NXT-compatible motor controller returns a null value' (eh?)
+//      * a big once-over for (default)/public/private/protected and/or final on methods and classes
+//      * a once-over thinking about concurrent multiple synchronous threads (main() + workers)
 
 /**
  * SynchronousOpMode is a base class that can be derived from in order to
@@ -39,10 +41,10 @@ public abstract class SynchronousOpMode extends OpMode
     protected HardwareMap unthunkedHardwareMap = null;
 
     /**
-     * The game pad variables are redeclared here so as to hide those in our superclass
-     * as the latter may be updated at arbitrary times and in a manner which is not
-     * synchronized with processing on the main() thread. We take pains to ensure that
-     * the ones here do not suffer from that problem.
+     * The game pad variables are redeclared here so as to hide those in our OpMode superclass
+     * as the latter may be updated by the loop() thread at arbitrary times and in a manner which
+     * is not synchronized with processing on the main() thread. We take pains to ensure that
+     * the variables declared here do not suffer from that problem.
      */
     protected Gamepad gamepad1 = null;
     protected Gamepad gamepad2 = null;
@@ -126,6 +128,20 @@ public abstract class SynchronousOpMode extends OpMode
         catch (InterruptedException e) { }
         }
 
+    /**
+     * Note that the receiver is the party which should handle thunking requests for the
+     * current thread.
+     *
+     * Advanced: this is called automatically for the main() thread. If you choose in your
+     * code to spawn additional worker threads, each of those threads should call this method
+     * near the thread's beginning in order that access to the (thunked) hardware objects
+     * will function correctly from that thread.
+     */
+    protected void setThreadThunker()
+        {
+        SynchronousOpMode.tlsThunker.set(this);
+        }
+
     private class Runner implements Runnable
         {
         /**
@@ -134,7 +150,7 @@ public abstract class SynchronousOpMode extends OpMode
         public final void run()
             {
             // Note that this op mode is the thing on this thread that can thunk back to the loop thread
-            tlsThunker.set(SynchronousOpMode.this);
+            SynchronousOpMode.this.setThreadThunker();
 
             try
                 {

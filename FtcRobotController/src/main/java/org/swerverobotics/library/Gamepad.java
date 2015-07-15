@@ -5,7 +5,7 @@ package org.swerverobotics.library;
  *
  * This *maybe* being overly paranoid, depending on the atomicity of member variable reads
  * and writes in Java (the 8-byte 'timestamp' member in particular offends), but being careful
- * will just avoid any latent bugs that might just happen to be there.
+ * will with certainty avoid any latent bugs that might just happen to be there.
  */
 public class Gamepad
     {
@@ -131,7 +131,10 @@ public class Gamepad
         this.hwPad = hwPad;
         return result;
         }
-    
+
+    /**
+     * Are the states of the two gamepads equivalent?
+     */
     private static boolean equals(com.qualcomm.robotcore.hardware.Gamepad p1, com.qualcomm.robotcore.hardware.Gamepad p2)
         {
         if (p1.left_stick_x != p2.left_stick_x) return false;
