@@ -104,6 +104,7 @@ public abstract class SynchronousOpMode extends OpMode
             // an infinite loop, or a very long one at least).
             this.mainThread.stop();
             }
+        //
         try {
             // Wait until the thread terminates
             this.mainThread.join();
