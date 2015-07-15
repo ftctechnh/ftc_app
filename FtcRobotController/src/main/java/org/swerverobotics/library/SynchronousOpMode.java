@@ -6,6 +6,10 @@ import java.util.concurrent.atomic.*;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+// Work items:
+//      * telemetry
+//      * 'getPower on legacy NXT-compatible motor controller returns a null value' (eh?)
+
 /**
  * SynchronousOpMode is a base class that can be derived from in order to
  * write op modes that can be coded in a linear, synchronous programming style.
@@ -26,12 +30,22 @@ public abstract class SynchronousOpMode extends OpMode
     private Thread loopThread;
     private Thread mainThread;
     private ConcurrentLinkedQueue loopThreadActionQueue = new ConcurrentLinkedQueue();
+    private AtomicBoolean gamePadStateChanged = new AtomicBoolean(false);
 
-    protected HardwareMap   unthunkedHardwareMap = null;
-    protected AtomicInteger loopCount = new AtomicInteger(0);
-    protected Gamepad       gamepad1 = null;
-    protected Gamepad       gamepad2 = null;
-    private   AtomicBoolean gamePadStateChanged = new AtomicBoolean(false);
+    /**
+     * Advanced: unthunkedHardwareMap contains the original hardware map provided
+     * in OpMode before it was replaced with a version that does thunking.
+     */
+    protected HardwareMap unthunkedHardwareMap = null;
+
+    /**
+     * The game pad variables are redeclared here so as to hide those in our superclass
+     * as the latter may be updated at arbitrary times and in a manner which is not
+     * synchronized with processing on the main() thread. We take pains to ensure that
+     * the ones here do not suffer from that problem.
+     */
+    protected Gamepad gamepad1 = null;
+    protected Gamepad gamepad2 = null;
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -150,7 +164,7 @@ public abstract class SynchronousOpMode extends OpMode
      * Answer as to whether there's (probably) any state different in any of the game pads
      * since the last time that this method was called
      */
-    public final boolean gamePadInputAvailable()
+    public final boolean newGamePadInputAvailable()
         {
         // We *wish* there was a way that we could hook or get a callback from the
         // incoming gamepad change messages, but, alas, at present we can find no
@@ -176,9 +190,6 @@ public abstract class SynchronousOpMode extends OpMode
     @Override
     public final void loop()
         {
-        // Record how many times loop has been called
-        this.loopCount.incrementAndGet();
-
         // Capture the gamepad states safely so that in the main() thread we
         // don't see torn writes
         boolean diff1 = this.gamepad1.update(super.gamepad1);
@@ -204,7 +215,17 @@ public abstract class SynchronousOpMode extends OpMode
         this.postLoop();
         }
 
+    /**
+     * preLoop() and postLoop() are hooks that advanced users might want to override in their
+     * subclasses. The implementations of those function here do nothing. preLoop() is called
+     * early on the loop() thread, just after gamepad state has been stabilized, and
+     * postLoop() is called just before the loop() method returns.
+     */
     protected void preLoop() { /* hook for subclasses */ }
+
+    /**
+     * @see #preLoop
+     */
     protected void postLoop() { /* hook for subclasses */ }
 
     /**
@@ -261,7 +282,7 @@ public abstract class SynchronousOpMode extends OpMode
     //----------------------------------------------------------------------------------------------
 
     /**
-     * Given a non-thunking hardware map, create a new hardware map containing
+     * Given a (non-thunking) hardware map, create a new hardware map containing
      * all the same devices but in a form that their methods thunk from the main()
      * thread to the loop() thread.
      */

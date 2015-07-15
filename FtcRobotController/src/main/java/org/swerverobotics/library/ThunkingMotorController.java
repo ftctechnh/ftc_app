@@ -181,6 +181,10 @@ class ThunkingMotorController implements DcMotorController
         Thunk thunk = new Thunk();
         thunk.mode = mode;
         thunk.dispatch();
+
+        // Required: right now we have no idea what mode the controller is in (we know what
+        // we *asked* him to do, yes). Thus, our cached knowledge of his state is unknown.
+        this.controllerMode = null;
         }
 
     @Override public DcMotorController.DeviceMode getMotorControllerDeviceMode()
@@ -195,6 +199,10 @@ class ThunkingMotorController implements DcMotorController
             }
         Thunk thunk = new Thunk();
         thunk.dispatch();
+
+        // Optimization: we may as well update our knowledge about the controller's state
+        this.controllerMode = thunk.result;
+
         return thunk.result;
         }
 
