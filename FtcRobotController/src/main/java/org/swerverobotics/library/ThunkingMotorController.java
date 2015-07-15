@@ -62,14 +62,14 @@ class ThunkingMotorController implements DcMotorController
      */
     private void switchToMode(DeviceMode newMode)
         {
-        // On the first time through, we need to know where we stand
+        // If we don't currently know his mode, we need to ask the controller where we stand
         if (null == this.controllerMode)
             {
             this.controllerMode = this.getMotorControllerDeviceMode();
             }
 
-        // If the controller is being stupid (the mock one was) then to heck with
-        // trying to keep him happy with all this mode stuff
+        // If the controller is being stupid in returning a non-actual mode (the mock one was) 
+        // then to heck with trying to keep him happy
         if (null == this.controllerMode)
             return;
 
@@ -85,13 +85,14 @@ class ThunkingMotorController implements DcMotorController
         if (this.controllerMode == DeviceMode.READ_WRITE)
             return;
 
-        // If he's not what we want, then switch him to what we want and
+        // If he's not what we want, then ask him to switch him to what we want and
         // spin until he gets there.
         if (this.controllerMode != newMode)
             {
             this.setMotorControllerDeviceMode(newMode);
             do
                 {
+                // Again, a yield() is not necessary in this loop
                 this.controllerMode = this.getMotorControllerDeviceMode();
                 }
             while(this.controllerMode != newMode);
