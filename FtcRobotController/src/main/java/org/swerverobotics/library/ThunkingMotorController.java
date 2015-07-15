@@ -13,15 +13,15 @@ class ThunkingMotorController implements DcMotorController
     // State
     //----------------------------------------------------------------------------------------------
 
-    DcMotorController targetController;   // can only talk to him on the loop thread
+    DcMotorController target;   // can only talk to him on the loop thread
 
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    private ThunkingMotorController(DcMotorController targetController)
+    private ThunkingMotorController(DcMotorController target)
         {
-        this.targetController = targetController;
+        this.target = target;
         }
 
     static public ThunkingMotorController Create(DcMotorController target)
@@ -39,7 +39,7 @@ class ThunkingMotorController implements DcMotorController
             {
             @Override public void actionOnLoopThread()
                 {
-                this.result = targetController.getDeviceName();
+                this.result = target.getDeviceName();
                 }
             }
         Thunk thunk = new Thunk();
@@ -53,7 +53,7 @@ class ThunkingMotorController implements DcMotorController
             {
             @Override public void actionOnLoopThread()
                 {
-                this.result = targetController.getVersion();
+                this.result = target.getVersion();
                 }
             }
         Thunk thunk = new Thunk();
@@ -67,7 +67,7 @@ class ThunkingMotorController implements DcMotorController
             {
             @Override public void actionOnLoopThread()
                 {
-                targetController.close();
+                target.close();
                 }
             }
         Thunk thunk = new Thunk();
@@ -81,7 +81,7 @@ class ThunkingMotorController implements DcMotorController
             DcMotorController.DeviceMode mode;
             @Override public void actionOnLoopThread()
                 {
-                targetController.setMotorControllerDeviceMode(mode);
+                target.setMotorControllerDeviceMode(mode);
                 }
             }
         Thunk thunk = new Thunk();
@@ -95,7 +95,7 @@ class ThunkingMotorController implements DcMotorController
             {
             @Override public void actionOnLoopThread()
                 {
-                this.result = targetController.getMotorControllerDeviceMode();
+                this.result = target.getMotorControllerDeviceMode();
                 }
             }
         Thunk thunk = new Thunk();
@@ -111,7 +111,7 @@ class ThunkingMotorController implements DcMotorController
             DcMotorController.RunMode mode;
             @Override public void actionOnLoopThread()
                 {
-                targetController.setMotorChannelMode(channel, mode);
+                target.setMotorChannelMode(channel, mode);
                 }
             }
         Thunk thunk = new Thunk();
@@ -127,7 +127,7 @@ class ThunkingMotorController implements DcMotorController
             int channel;
             @Override public void actionOnLoopThread()
                 {
-                this.result = targetController.getMotorChannelMode(channel);
+                this.result = target.getMotorChannelMode(channel);
                 }
             }
         Thunk thunk = new Thunk();
@@ -144,7 +144,7 @@ class ThunkingMotorController implements DcMotorController
             double power;
             @Override public void actionOnLoopThread()
                 {
-                targetController.setMotorPower(channel, power);
+                target.setMotorPower(channel, power);
                 }
             }
         Thunk thunk = new Thunk();
@@ -160,7 +160,7 @@ class ThunkingMotorController implements DcMotorController
             int channel;
             @Override public void actionOnLoopThread()
                 {
-                this.result = targetController.getMotorPower(channel);
+                this.result = target.getMotorPower(channel);
                 }
             }
         Thunk thunk = new Thunk();
@@ -179,7 +179,7 @@ class ThunkingMotorController implements DcMotorController
             int channel;
             @Override public void actionOnLoopThread()
                 {
-                targetController.setMotorPowerFloat(channel);
+                target.setMotorPowerFloat(channel);
                 }
             }
         Thunk thunk = new Thunk();
@@ -197,7 +197,7 @@ class ThunkingMotorController implements DcMotorController
             int channel;
             @Override public void actionOnLoopThread()
                 {
-                this.result = targetController.getMotorPowerFloat(channel);
+                this.result = target.getMotorPowerFloat(channel);
                 }
             }
         Thunk thunk = new Thunk();
@@ -214,7 +214,7 @@ class ThunkingMotorController implements DcMotorController
             int position;
             @Override public void actionOnLoopThread()
                 {
-                targetController.setMotorTargetPosition(channel, position);
+                target.setMotorTargetPosition(channel, position);
                 }
             }
         Thunk thunk = new Thunk();
@@ -230,7 +230,7 @@ class ThunkingMotorController implements DcMotorController
             int channel;
             @Override public void actionOnLoopThread()
                 {
-                this.result = targetController.getMotorTargetPosition(channel);
+                this.result = target.getMotorTargetPosition(channel);
                 }
             }
         Thunk thunk = new Thunk();
@@ -246,7 +246,7 @@ class ThunkingMotorController implements DcMotorController
             int channel;
             @Override public void actionOnLoopThread()
                 {
-                this.result = targetController.getMotorCurrentPosition(channel);
+                this.result = target.getMotorCurrentPosition(channel);
                 }
             }
         Thunk thunk = new Thunk();
@@ -263,7 +263,7 @@ class ThunkingMotorController implements DcMotorController
             double ratio;
             @Override public void actionOnLoopThread()
                 {
-                targetController.setGearRatio(channel, ratio);
+                target.setGearRatio(channel, ratio);
                 }
             }
         Thunk thunk = new Thunk();
@@ -279,7 +279,7 @@ class ThunkingMotorController implements DcMotorController
             int channel;
             @Override public void actionOnLoopThread()
                 {
-                this.result = targetController.getGearRatio(channel);
+                this.result = target.getGearRatio(channel);
                 }
             }
         Thunk thunk = new Thunk();
@@ -296,7 +296,7 @@ class ThunkingMotorController implements DcMotorController
             DifferentialControlLoopCoefficients pid;
             @Override public void actionOnLoopThread()
                 {
-                targetController.setDifferentialControlLoopCoefficients(channel, pid);
+                target.setDifferentialControlLoopCoefficients(channel, pid);
                 }
             }
         Thunk thunk = new Thunk();
@@ -312,7 +312,7 @@ class ThunkingMotorController implements DcMotorController
             int channel;
             @Override public void actionOnLoopThread()
                 {
-                this.result = targetController.getDifferentialControlLoopCoefficients(channel);
+                this.result = target.getDifferentialControlLoopCoefficients(channel);
                 }
             }
         Thunk thunk = new Thunk();
