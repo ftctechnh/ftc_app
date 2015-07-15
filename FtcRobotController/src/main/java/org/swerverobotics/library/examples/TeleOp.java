@@ -27,14 +27,18 @@ public class TeleOp extends SynchronousOpMode
         this.motorLeft.setChannelMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
         this.motorRight.setChannelMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
 
+        // One of the two motors (here, the left) should be set to reversed direction
+        // so that it can take the same power level values as the other motor.
+        this.motorLeft.setDirection(DcMotor.Direction.REVERSE);
+
         // Enter an infinite loop processing all the input we receive
         for (;;)
             {
-            if (this.gamePadInputAvailable())
+            if (this.newGamePadInputAvailable())
                 {
                 // There is (likely) new gamepad input available.
                 // Do something with that! Here, we just drive.
-                this.doManualDrvingControl(this.gamepad1);
+                this.doManualDrivingControl(this.gamepad1);
                 }
             else
                 {
@@ -50,7 +54,7 @@ public class TeleOp extends SynchronousOpMode
      * Implement a simple two-motor driving logic using the left and right
      * right joysticks on the indicated game pad.
      */
-    void doManualDrvingControl(Gamepad pad)
+    void doManualDrivingControl(Gamepad pad)
         {
         // Remember that the gamepad sticks range from -1 to +1, and that the motor
         // power levels range over the same amount
@@ -101,5 +105,4 @@ public class TeleOp extends SynchronousOpMode
         float oneToTen  = zeroToOne * 9 + 1;
         return (float)(Math.log10(oneToTen) * Math.signum(level));
         }
-
     }
