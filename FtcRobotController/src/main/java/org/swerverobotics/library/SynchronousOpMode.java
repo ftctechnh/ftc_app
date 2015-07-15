@@ -140,6 +140,12 @@ public abstract class SynchronousOpMode extends OpMode implements Runnable
         return this.mainThread.getId() == Thread.currentThread().getId();
         }
 
+    public boolean gamePadInputAvailable()
+        {
+        return false;
+        }
+
+
     //----------------------------------------------------------------------------------------------
     // Thunking
     //----------------------------------------------------------------------------------------------
