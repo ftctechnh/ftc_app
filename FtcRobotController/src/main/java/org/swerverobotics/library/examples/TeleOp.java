@@ -7,8 +7,6 @@ import org.swerverobotics.library.Gamepad;
 
 /**
  * A very simple example of a synchronous op mode.
- *
- * Note that this example is still in a very primitive state of development
  */
 public class TeleOp extends SynchronousOpMode
     {
@@ -41,6 +39,10 @@ public class TeleOp extends SynchronousOpMode
             }
         }
 
+    /**
+     * Implement a simple two-motor driving logic using the left and right
+     * right joysticks on the indicated game pad.
+     */
     void doManualDrvingControl(Gamepad pad)
         {
         // Remember that the gamepad sticks range from -1 to +1, and that the motor
@@ -60,7 +62,7 @@ public class TeleOp extends SynchronousOpMode
         // Dampen power to avoid clipping so we can still effectively steer even
         // under heavy throttle.
         //
-        // Want
+        // We want
         //      -1 <= ctlPower - ctlSteering <= 1
         //      -1 <= ctlPower + ctlSteering <= 1
         // i.e
@@ -71,8 +73,8 @@ public class TeleOp extends SynchronousOpMode
 
         // Figure out how much power to send to each motor. Be sure
         // not to ask for too much, or the motor will throw an exception.
-        float powerLeft  = ctlPower - ctlSteering;  powerLeft  = Range.clip(powerLeft,  -1f, 1f);
-        float powerRight = ctlPower + ctlSteering;  powerRight = Range.clip(powerRight, -1f, 1f);
+        float powerLeft  = Range.clip(ctlPower - ctlSteering, -1f, 1f);
+        float powerRight = Range.clip(ctlPower + ctlSteering, -1f, 1f);
 
         // Tell the motors
         this.motorLeft.setPower(powerLeft);
