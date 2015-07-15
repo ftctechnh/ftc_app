@@ -6,11 +6,11 @@ import org.swerverobotics.library.*;
 /**
  * A very simple example of a synchronous op mode.
  *
- * Note that this is in its very primitive state
+ * Note that this example is still in a very primitive state of development
  */
 public class TeleOp extends SynchronousOpMode
     {
-    // Note: all hardware variables can only be initialized inside the main() function,
+    // All hardware variables can only be initialized inside the main() function,
     // not here at their member variable declarations.
     DcMotor motorLeft = null;
     DcMotor motorRight = null;
@@ -23,13 +23,13 @@ public class TeleOp extends SynchronousOpMode
 
         for (;;)
             {
-            if (this.inputAvailable.tryAcquire())
+            if (this.gamePadInputAvailable())
                 {
-                // There is (likely) new joystick material available
+                // There is (likely) new gamepad input available
                 }
             else
                 {
-
+                // There is no new gamepad input available
                 }
             }
         }
