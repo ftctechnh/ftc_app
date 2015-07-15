@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
  *
  * Extend this class and implement the main() method to add your own code.
  */
-public abstract class SynchronousOpMode extends OpMode implements Runnable
+public abstract class SynchronousOpMode extends OpMode
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -28,8 +28,10 @@ public abstract class SynchronousOpMode extends OpMode implements Runnable
     private ConcurrentLinkedQueue loopThreadActionQueue = new ConcurrentLinkedQueue();
 
     protected HardwareMap   unthunkedHardwareMap = null;
-    protected Semaphore     inputAvailable = new Semaphore(0);
     protected AtomicInteger loopCount = new AtomicInteger(0);
+    protected Gamepad       gamepad1 = null;
+    protected Gamepad       gamepad2 = null;
+    private   AtomicBoolean gamePadStateChanged = new AtomicBoolean(false);
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -73,7 +75,7 @@ public abstract class SynchronousOpMode extends OpMode implements Runnable
 
         // Create the main thread and start it up and going!
         // REVIEW: should we defer the start() until the first loop() call?
-        this.mainThread = new Thread(this);
+        this.mainThread = new Thread(new Runner());
         this.mainThread.start();
         }
 
@@ -109,21 +111,24 @@ public abstract class SynchronousOpMode extends OpMode implements Runnable
         catch (InterruptedException e) { }
         }
 
-    /**
-     * Our run method here calls the synchronous main() method.
-     */
-    public final void run()
+    private class Runner implements Runnable
         {
-        // Note that this op mode is the thing on this thread that can thunk back to the loop thread
-        tlsThunker.set(this);
+        /**
+         * Our run method here calls the synchronous main() method.
+         */
+        public final void run()
+            {
+            // Note that this op mode is the thing on this thread that can thunk back to the loop thread
+            tlsThunker.set(SynchronousOpMode.this);
 
-        try
-            {
-            this.main();
-            }
-        catch (InterruptedException e)
-            {
-            return;
+            try
+                {
+                SynchronousOpMode.this.main();
+                }
+            catch (InterruptedException e)
+                {
+                return;
+                }
             }
         }
 
@@ -131,18 +136,26 @@ public abstract class SynchronousOpMode extends OpMode implements Runnable
     // Utility
     //----------------------------------------------------------------------------------------------
 
-    public boolean isLoopThread()
+    public final boolean isLoopThread()
         {
         return this.loopThread.getId() == Thread.currentThread().getId();
         }
-    public boolean isMainThread()
+    public final boolean isMainThread()
         {
         return this.mainThread.getId() == Thread.currentThread().getId();
         }
 
-    public boolean gamePadInputAvailable()
+    /**
+     * Answer as to whether there's (probably) any state different in any of the game pads
+     * since the last time that this method was called
+     */
+    public final boolean gamePadInputAvailable()
         {
-        return false;
+        // We *wish* there was a way that we could hook or get a callback from the
+        // incoming gamepad change messages, but, alas, at present we can find no
+        // way of doing that.
+        //
+        return this.gamePadStateChanged.getAndSet(false);
         }
 
 
@@ -164,6 +177,12 @@ public abstract class SynchronousOpMode extends OpMode implements Runnable
         {
         // Record how many times loop has been called
         this.loopCount.incrementAndGet();
+
+        // Capture the gamepad states safely so that in the main() thread we
+        // don't see torn writes
+        boolean diff1 = this.gamepad1.update(super.gamepad1);
+        boolean diff2 = this.gamepad2.update(super.gamepad2);
+        this.gamePadStateChanged.compareAndSet(false, diff1 || diff2);
 
         // Call the subclass hook in case they might want to do something interesting
         this.preLoop();
