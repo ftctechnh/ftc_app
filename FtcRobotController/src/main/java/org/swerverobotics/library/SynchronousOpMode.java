@@ -1,12 +1,10 @@
 package org.swerverobotics.library;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.*;
 import com.qualcomm.robotcore.hardware.*;
-import com.qualcomm.robotcore.util.*;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.Semaphore;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 /**
  * SynchronousOpMode is a base class that can be derived from in order to
@@ -20,15 +18,18 @@ public abstract class SynchronousOpMode extends OpMode implements Runnable
     // State
     //----------------------------------------------------------------------------------------------
 
-    Thread loopThread;
-    Thread mainThread;
-    private static final ThreadLocal<SynchronousOpMode> synchronousOpContext
-            = new ThreadLocal<SynchronousOpMode>()
-                {
-                @Override protected SynchronousOpMode initialValue() { return null; }
-                };
+    private static final ThreadLocal<SynchronousOpMode> tlsThunker = new ThreadLocal<SynchronousOpMode>()
+    {
+    @Override protected SynchronousOpMode initialValue() { return null; }
+    };
 
-    ConcurrentLinkedQueue queue;
+    private Thread loopThread;
+    private Thread mainThread;
+    private ConcurrentLinkedQueue loopThreadActionQueue = new ConcurrentLinkedQueue();
+
+    protected HardwareMap   unthunkedHardwareMap = null;
+    protected Semaphore     inputAvailable = new Semaphore(0);
+    protected AtomicInteger loopCount = new AtomicInteger(0);
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -36,16 +37,7 @@ public abstract class SynchronousOpMode extends OpMode implements Runnable
 
     public SynchronousOpMode()
         {
-        this.queue = new ConcurrentLinkedQueue();
-        }
-
-    /**
-     * If we are running on a main() thread, then return the SynchronousOpMode
-     * which is managing that thread.
-     */
-    public static SynchronousOpMode getThreadThunker()
-        {
-        return synchronousOpContext.get();
+        this.loopThreadActionQueue = new ConcurrentLinkedQueue();
         }
 
     //----------------------------------------------------------------------------------------------
@@ -61,18 +53,27 @@ public abstract class SynchronousOpMode extends OpMode implements Runnable
      * @see <a href="http://docs.oracle.com/javase/7/docs/api/java/lang/Thread.html#interrupt()">Thread.interrupt()</a>
      * @see <a href="http://docs.oracle.com/javase/tutorial/essential/concurrency/interrupt.html">Interrupts</a>
      */
-    public abstract void main() throws InterruptedException;
+    protected abstract void main() throws InterruptedException;
 
     //----------------------------------------------------------------------------------------------
     // Startup and shutdown
     //----------------------------------------------------------------------------------------------
 
     @Override
-    public void start()
+    public final void start()
         {
+        // Replace the op mode's hardware map variable with one whose contained
+        // object implementations will thunk over to the loop thread as they need to.
+        this.unthunkedHardwareMap = this.hardwareMap;
+        this.hardwareMap = CreateThunkedHardwareMap(this.unthunkedHardwareMap);
+
+        // Remember who the loop thread is so that we know whom to communicate
+        // with from the main() thread.
         this.loopThread = Thread.currentThread();
-        //
-        this.mainThread = new Thread(this);     // REVIEW: would this be better with an inner class?
+
+        // Create the main thread and start it up and going!
+        // REVIEW: should we defer the start() until the first loop() call?
+        this.mainThread = new Thread(this);
         this.mainThread.start();
         }
 
@@ -113,8 +114,8 @@ public abstract class SynchronousOpMode extends OpMode implements Runnable
      */
     public final void run()
         {
-        // Note that this op mode is the thing on this thread that can hop one back to the loop thread
-        synchronousOpContext.set(this);
+        // Note that this op mode is the thing on this thread that can thunk back to the loop thread
+        tlsThunker.set(this);
 
         try
             {
@@ -143,13 +144,28 @@ public abstract class SynchronousOpMode extends OpMode implements Runnable
     // Thunking
     //----------------------------------------------------------------------------------------------
 
-    @Override
-    public void loop()
+    /**
+     * If we are running on a main() thread, then return the SynchronousOpMode
+     * which is managing the thunking from the current thread to the loop() thread.
+     */
+    public static SynchronousOpMode getThreadThunker()
         {
-        // Run any actions we've been asked to execute
+        return tlsThunker.get();
+        }
+
+    @Override
+    public final void loop()
+        {
+        // Record how many times loop has been called
+        this.loopCount.incrementAndGet();
+
+        // Call the subclass hook in case they might want to do something interesting
+        this.preLoop();
+
+        // Run any actions we've been asked to execute here on the loop thread
         for (;;)
             {
-            Object o = this.queue.poll();
+            Object o = this.loopThreadActionQueue.poll();
             if (null == o)
                 break;
 
@@ -157,7 +173,13 @@ public abstract class SynchronousOpMode extends OpMode implements Runnable
             if (null != action)
                 action.doAction();
             }
+
+        // Call the subclass hook in case they might want to do something interesting
+        this.postLoop();
         }
+
+    protected void preLoop() { /* hook for subclasses */ }
+    protected void postLoop() { /* hook for subclasses */ }
 
     /**
      * Execute the indicated action on the loop thread.
@@ -165,7 +187,7 @@ public abstract class SynchronousOpMode extends OpMode implements Runnable
     public void executeOnLoopThread(IAction action)
         {
         assert this.isMainThread();
-        this.queue.add(action);
+        this.loopThreadActionQueue.add(action);
         }
 
     //----------------------------------------------------------------------------------------------
@@ -279,15 +301,75 @@ public abstract class SynchronousOpMode extends OpMode implements Runnable
                 }
             );
 
-        /*
-        CreateThunks(hwmap.accelerationSensor, result.accelerationSensor);
-        CreateThunks(hwmap.compassSensor, result.compassSensor);
-        CreateThunks(hwmap.gyroSensor, result.gyroSensor);
-        CreateThunks(hwmap.irSeekerSensor, result.irSeekerSensor);
-        CreateThunks(hwmap.lightSensor, result.lightSensor);
-        CreateThunks(hwmap.ultrasonicSensor, result.ultrasonicSensor);
-        CreateThunks(hwmap.voltageSensor, result.voltageSensor);
-        */
+        CreateThunks(hwmap.accelerationSensor, result.accelerationSensor,
+            new IThunkFactory<AccelerationSensor>()
+                {
+                @Override public AccelerationSensor Create(AccelerationSensor target)
+                    {
+                    return ThunkedAccelerationSensor.Create(target);
+                    }
+                }
+            );
+
+        CreateThunks(hwmap.compassSensor, result.compassSensor,
+            new IThunkFactory<CompassSensor>()
+                {
+                @Override public CompassSensor Create(CompassSensor target)
+                    {
+                    return ThunkedCompassSensor.Create(target);
+                    }
+                }
+            );
+
+        CreateThunks(hwmap.gyroSensor, result.gyroSensor,
+            new IThunkFactory<GyroSensor>()
+                {
+                @Override public GyroSensor Create(GyroSensor target)
+                    {
+                    return ThunkedGyroSensor.Create(target);
+                    }
+                }
+            );
+
+        CreateThunks(hwmap.irSeekerSensor, result.irSeekerSensor,
+            new IThunkFactory<IrSeekerSensor>()
+                {
+                @Override public IrSeekerSensor Create(IrSeekerSensor target)
+                    {
+                    return ThunkedIrSeekerSensor.Create(target);
+                    }
+                }
+            );
+
+        CreateThunks(hwmap.lightSensor, result.lightSensor,
+            new IThunkFactory<LightSensor>()
+                {
+                @Override public LightSensor Create(LightSensor target)
+                    {
+                    return ThunkedLightSensor.Create(target);
+                    }
+                }
+            );
+
+        CreateThunks(hwmap.ultrasonicSensor, result.ultrasonicSensor,
+            new IThunkFactory<UltrasonicSensor>()
+                {
+                @Override public UltrasonicSensor Create(UltrasonicSensor target)
+                    {
+                    return ThunkedUltrasonicSensor.Create(target);
+                    }
+                }
+            );
+
+        CreateThunks(hwmap.voltageSensor, result.voltageSensor,
+            new IThunkFactory<VoltageSensor>()
+                {
+                @Override public VoltageSensor Create(VoltageSensor target)
+                    {
+                    return ThunkedVoltageSensor.Create(target);
+                    }
+                }
+            );
 
         result.appContext = hwmap.appContext;
 

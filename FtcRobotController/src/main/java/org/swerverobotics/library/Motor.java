@@ -80,16 +80,7 @@ class MotorOnMotor extends MotorServoBase implements IMotor
 
     MotorOnMotor(DcMotor motor)
         {
-        // Do a check so we can work with ANY DcMotor, just for completeness.
-        // Avoids double thunking, which won't work.
-        if (motor.getController() instanceof ThunkingMotorController)
-            {
-            this.thunkingController = motor.getController();
-            }
-        else
-            {
-            this.thunkingController = new ThunkingMotorController(motor.getController());
-            }
+        this.thunkingController = ThunkingMotorController.Create(motor.getController());
         this.thunkingMotor  = new DcMotor(this.thunkingController, motor.getPortNumber());
         this.encoder        = new MotorEncoder(this.thunkingController, this.thunkingMotor.getPortNumber(), 1440);
 

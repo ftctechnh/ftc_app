@@ -12,15 +12,15 @@ class ThunkingServoController implements ServoController
     // State
     //----------------------------------------------------------------------------------------------
 
-    ServoController targetController;   // can only talk to him on the loop thread
+    ServoController target;   // can only talk to him on the loop thread
 
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    private ThunkingServoController(ServoController targetController)
+    private ThunkingServoController(ServoController target)
         {
-        this.targetController = targetController;
+        this.target = target;
         }
 
     static public ThunkingServoController Create(ServoController target)
@@ -38,7 +38,7 @@ class ThunkingServoController implements ServoController
             {
             @Override public void actionOnLoopThread()
                 {
-                this.result = targetController.getDeviceName();
+                this.result = target.getDeviceName();
                 }
             }
         Thunk thunk = new Thunk();
@@ -52,7 +52,7 @@ class ThunkingServoController implements ServoController
             {
             @Override public void actionOnLoopThread()
                 {
-                this.result = targetController.getVersion();
+                this.result = target.getVersion();
                 }
             }
         Thunk thunk = new Thunk();
@@ -66,7 +66,7 @@ class ThunkingServoController implements ServoController
             {
             @Override public void actionOnLoopThread()
                 {
-                targetController.close();
+                target.close();
                 }
             }
         Thunk thunk = new Thunk();
@@ -79,7 +79,7 @@ class ThunkingServoController implements ServoController
             {
             @Override public void actionOnLoopThread()
                 {
-                targetController.pwmEnable();
+                target.pwmEnable();
                 }
             }
         Thunk thunk = new Thunk();
@@ -92,7 +92,7 @@ class ThunkingServoController implements ServoController
             {
             @Override public void actionOnLoopThread()
                 {
-                targetController.pwmDisable();
+                target.pwmDisable();
                 }
             }
         Thunk thunk = new Thunk();
@@ -105,7 +105,7 @@ class ThunkingServoController implements ServoController
             {
             @Override public void actionOnLoopThread()
                 {
-                this.result = targetController.getPwmStatus();
+                this.result = target.getPwmStatus();
                 }
             }
         Thunk thunk = new Thunk();
@@ -121,7 +121,7 @@ class ThunkingServoController implements ServoController
             double position;
             @Override public void actionOnLoopThread()
                 {
-                targetController.setServoPosition(channel, position);
+                target.setServoPosition(channel, position);
                 }
             }
         Thunk thunk = new Thunk();
@@ -137,7 +137,7 @@ class ThunkingServoController implements ServoController
             int channel;
             @Override public void actionOnLoopThread()
                 {
-                this.result = targetController.getServoPosition(channel);
+                this.result = target.getServoPosition(channel);
                 }
             }
         Thunk thunk = new Thunk();
