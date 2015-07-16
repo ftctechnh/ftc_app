@@ -33,7 +33,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
 
     @Override public void setMode(IrSeekerSensor.Mode mode)
         {
-        class Thunk extends SynchronousOpMode.WaitableAction
+        class Thunk extends WaitingThunk
             {
             IrSeekerSensor.Mode mode;
             @Override public void actionOnLoopThread()
@@ -48,7 +48,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
 
     @Override public IrSeekerSensor.Mode getMode()
         {
-        class Thunk extends SynchronousOpMode.ResultableAction<IrSeekerSensor.Mode>
+        class Thunk extends ResultableThunk<Mode>
             {
             @Override public void actionOnLoopThread()
                 {
@@ -62,7 +62,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
 
     @Override public boolean signalDetected()
         {
-        class Thunk extends SynchronousOpMode.ResultableAction<Boolean>
+        class Thunk extends ResultableThunk<Boolean>
             {
             @Override public void actionOnLoopThread()
                 {
@@ -76,7 +76,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
 
     @Override public double getAngle()
         {
-        class Thunk extends SynchronousOpMode.ResultableAction<Double>
+        class Thunk extends ResultableThunk<Double>
             {
             @Override public void actionOnLoopThread()
                 {
@@ -90,7 +90,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
 
     @Override public double getStrength()
         {
-        class Thunk extends SynchronousOpMode.ResultableAction<Double>
+        class Thunk extends ResultableThunk<Double>
             {
             @Override public void actionOnLoopThread()
                 {
@@ -104,7 +104,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
 
     @Override public IrSeekerSensor.IrSensor[] getSensors()
         {
-        class Thunk extends SynchronousOpMode.ResultableAction<IrSeekerSensor.IrSensor[]>
+        class Thunk extends ResultableThunk<IrSensor[]>
             {
             @Override public void actionOnLoopThread()
                 {

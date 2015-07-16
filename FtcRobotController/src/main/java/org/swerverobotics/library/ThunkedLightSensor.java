@@ -33,7 +33,7 @@ public class ThunkedLightSensor extends LightSensor
 
     @Override public double getLightLevel()
         {
-        class Thunk extends SynchronousOpMode.ResultableAction<Double>
+        class Thunk extends ResultableThunk<Double>
             {
             @Override public void actionOnLoopThread()
                 {
@@ -47,7 +47,7 @@ public class ThunkedLightSensor extends LightSensor
 
     @Override public void enableLed(final boolean enable)
         {
-        class Thunk extends SynchronousOpMode.WaitableAction
+        class Thunk extends WaitingThunk
             {
             boolean enable;
             @Override public void actionOnLoopThread()
@@ -62,7 +62,7 @@ public class ThunkedLightSensor extends LightSensor
 
     @Override public String status()
         {
-        class Thunk extends SynchronousOpMode.ResultableAction<String>
+        class Thunk extends ResultableThunk<String>
             {
             @Override public void actionOnLoopThread()
                 {

@@ -33,7 +33,7 @@ public class ThunkedCompassSensor extends CompassSensor
 
     @Override public double getDirection()
         {
-        class Thunk extends SynchronousOpMode.ResultableAction<Double>
+        class Thunk extends ResultableThunk<Double>
             {
             @Override public void actionOnLoopThread()
                 {
@@ -47,7 +47,7 @@ public class ThunkedCompassSensor extends CompassSensor
 
     @Override public String status()
         {
-        class Thunk extends SynchronousOpMode.ResultableAction<String>
+        class Thunk extends ResultableThunk<String>
             {
             @Override public void actionOnLoopThread()
                 {
@@ -61,7 +61,7 @@ public class ThunkedCompassSensor extends CompassSensor
 
     @Override public void setMode(CompassSensor.CompassMode mode)
         {
-        class Thunk extends SynchronousOpMode.WaitableAction
+        class Thunk extends WaitingThunk
             {
             CompassSensor.CompassMode mode;
             @Override public void actionOnLoopThread()
@@ -76,7 +76,7 @@ public class ThunkedCompassSensor extends CompassSensor
 
     @Override public boolean calibrationFailed()
         {
-        class Thunk extends SynchronousOpMode.ResultableAction<Boolean>
+        class Thunk extends ResultableThunk<Boolean>
             {
             @Override public void actionOnLoopThread()
                 {

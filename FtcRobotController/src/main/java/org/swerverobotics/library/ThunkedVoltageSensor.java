@@ -33,7 +33,7 @@ public class ThunkedVoltageSensor implements VoltageSensor
 
     @Override public double getVoltage()
         {
-        class Thunk extends SynchronousOpMode.ResultableAction<Double>
+        class Thunk extends ResultableThunk<Double>
             {
             @Override public void actionOnLoopThread()
                 {

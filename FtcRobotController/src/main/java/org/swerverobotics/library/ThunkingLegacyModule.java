@@ -1,7 +1,6 @@
 package org.swerverobotics.library;
 
 import com.qualcomm.robotcore.hardware.*;
-import com.qualcomm.robotcore.util.*;
 
 public class ThunkingLegacyModule implements LegacyModule
     {
@@ -31,7 +30,7 @@ public class ThunkingLegacyModule implements LegacyModule
 
     @Override public void enableNxtI2cReadMode(int physicalPort, int i2cAddress, int memAddress, int memLength)
         {
-        class Thunk extends SynchronousOpMode.WaitableAction
+        class Thunk extends WaitingThunk
             {
             int physicalPort;
             int i2cAddress;
@@ -52,7 +51,7 @@ public class ThunkingLegacyModule implements LegacyModule
 
     @Override public void enableNxtI2cWriteMode(int physicalPort, int i2cAddress, int memAddress, byte[] initialValues)
         {
-        class Thunk extends SynchronousOpMode.WaitableAction
+        class Thunk extends WaitingThunk
             {
             int physicalPort;
             int i2cAddress;
@@ -73,7 +72,7 @@ public class ThunkingLegacyModule implements LegacyModule
 
     @Override public void enableAnalogReadMode(int physicalPort, int i2cAddress)
         {
-        class Thunk extends SynchronousOpMode.WaitableAction
+        class Thunk extends WaitingThunk
             {
             int physicalPort;
             int i2cAddress;
@@ -90,7 +89,7 @@ public class ThunkingLegacyModule implements LegacyModule
 
     @Override public void enable9v(int physicalPort, boolean enable)
         {
-        class Thunk extends SynchronousOpMode.WaitableAction
+        class Thunk extends WaitingThunk
             {
             int physicalPort;
             boolean enable;
@@ -107,7 +106,7 @@ public class ThunkingLegacyModule implements LegacyModule
 
     @Override public void setDigitalLine(int physicalPort, int line, boolean set)
         {
-        class Thunk extends SynchronousOpMode.WaitableAction
+        class Thunk extends WaitingThunk
             {
             int physicalPort;
             int line;
@@ -126,7 +125,7 @@ public class ThunkingLegacyModule implements LegacyModule
 
     @Override public byte[] readLegacyModuleCache(int physicalPort)
         {
-        class Thunk extends SynchronousOpMode.ResultableAction<byte[]>
+        class Thunk extends ResultableThunk<byte[]>
             {
             int physicalPort;
             @Override public void actionOnLoopThread()
@@ -142,7 +141,7 @@ public class ThunkingLegacyModule implements LegacyModule
 
     @Override public void writeLegacyModuleCache(int physicalPort, byte[] data)
         {
-        class Thunk extends SynchronousOpMode.WaitableAction
+        class Thunk extends WaitingThunk
             {
             int physicalPort;
             byte[] data;
@@ -159,7 +158,7 @@ public class ThunkingLegacyModule implements LegacyModule
 
     @Override public byte[] readAnalog(int physicalPort)
         {
-        class Thunk extends SynchronousOpMode.ResultableAction<byte[]>
+        class Thunk extends ResultableThunk<byte[]>
             {
             int physicalPort;
             @Override public void actionOnLoopThread()
@@ -175,7 +174,7 @@ public class ThunkingLegacyModule implements LegacyModule
 
     @Override public boolean isPortReady(int physicalPort)
         {
-        class Thunk extends SynchronousOpMode.ResultableAction<Boolean>
+        class Thunk extends ResultableThunk<Boolean>
             {
             int physicalPort;
             @Override public void actionOnLoopThread()
@@ -191,7 +190,7 @@ public class ThunkingLegacyModule implements LegacyModule
 
     @Override public void close()
         {
-        class Thunk extends SynchronousOpMode.WaitableAction
+        class Thunk extends WaitingThunk
             {
             @Override public void actionOnLoopThread()
                 {
