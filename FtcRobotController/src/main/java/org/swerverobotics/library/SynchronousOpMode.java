@@ -200,6 +200,9 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      * code to spawn additional worker synchronous threads, each of those threads should call
      * this method near the thread's beginning in order that access to the (thunked) hardware
      * objects will function correctly from that thread.
+     *
+     * It is the act of calling setThreadThunker that makes a thread into a 'synchronous thread',
+     * capable of thunking calls on over to the loop() thread.
      */
     public void setThreadThunker()
         {
@@ -207,8 +210,9 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         }
 
     /**
-     * Advanced: if we are running on a synchronous thread, then return the object
+     * Advanced: If we are running on a synchronous thread, then return the object
      * which is managing the thunking from the current thread to the loop() thread.
+     * If we are not on a synchronous thread, then the behaviour is undefined.
      */
     public static IThunker getThreadThunker()
         {
@@ -353,7 +357,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 {
                 @Override public DcMotor Create(DcMotor target)
                     {
-                    return new DcMotor(
+                    return new ThreadSafeDcMotor(
                             ThunkingMotorController.Create(target.getController()),
                             target.getPortNumber(),
                             target.getDirection()
@@ -367,7 +371,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 {
                 @Override public com.qualcomm.robotcore.hardware.Servo Create(com.qualcomm.robotcore.hardware.Servo target)
                     {
-                    return new com.qualcomm.robotcore.hardware.Servo(
+                    return new ThreadSafeServo(
                             ThunkingServoController.Create(target.getController()),
                             target.getPortNumber(),
                             target.getDirection()
