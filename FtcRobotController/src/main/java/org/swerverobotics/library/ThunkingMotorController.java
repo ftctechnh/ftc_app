@@ -93,7 +93,7 @@ class ThunkingMotorController implements DcMotorController
                 // Again, a yield() is not necessary in this loop
                 this.controllerMode = this.getMotorControllerDeviceMode();
                 }
-            while(this.controllerMode != newMode);
+            while (this.controllerMode != newMode);
             }
         }
 
