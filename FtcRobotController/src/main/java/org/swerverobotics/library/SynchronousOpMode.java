@@ -30,7 +30,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     private Thread mainThread;
     private ConcurrentLinkedQueue<IThunk> loopThreadActionQueue = new ConcurrentLinkedQueue<IThunk>();
     private AtomicBoolean gamePadStateChanged = new AtomicBoolean(false);
-    private final int msWaitThreadStop = 100;
+    private final int msWaitThreadStop = 1000;
 
     /**
      * Advanced: unthunkedHardwareMap contains the original hardware map provided
@@ -253,6 +253,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         // Call the subclass hook in case they might want to do something interesting
         this.preLoop();
 
+        // Start measuring time so we don't spend too long here in loop()
         long nanotimeStart = System.nanoTime();
 
         // Execute any thunks we've been asked to execute here on the loop thread
