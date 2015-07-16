@@ -1,6 +1,8 @@
 package org.swerverobotics.library;
 
 
+import com.qualcomm.ftcrobotcontroller.BuildConfig;
+
 /**
  * ThreadThunkContext maintains the thunking context for a given synchronous thread.
  */
@@ -46,12 +48,22 @@ public class ThreadThunkContext
      * Note that this can be called from an arbitrary thread, including in particular
      * the loop() thread. It is commonly called only from synchronous threads.
      */
-    public void noteThunkDispatched(IThunk thunk)
+    public void noteThunkDispatching(IThunk thunk)
         {
         synchronized (this)
             {
             this.distpachedThunkCount++;
             }
+        }
+
+    /**
+     * A thunk that previously called us with noteThunkDispatching is calling
+     * us back to inform us that there was a failure in the dispatching logic,
+     * and he thus *won't* be calling us later with noteThunkCompletion().
+     */
+    public void noteThunkDispatchFailure(IThunk thunk)
+        {
+        noteThunkCompletion(thunk);
         }
 
     /**
@@ -65,7 +77,9 @@ public class ThreadThunkContext
         {
         synchronized (this)
             {
-            assert this.distpachedThunkCount > 0;
+            if (BuildConfig.DEBUG && !(this.distpachedThunkCount > 0))
+                throw new AssertionError();
+
             if (--this.distpachedThunkCount == 0)
                 {
                 this.notifyAll();
@@ -92,7 +106,7 @@ public class ThreadThunkContext
     // Lookup
     //----------------------------------------------------------------------------------------------
 
-    public static final void setThreadThunker(IThunker thunker)
+    public static void setThreadThunker(IThunker thunker)
         {
         tlsThunker.set(new ThreadThunkContext(thunker));
         }

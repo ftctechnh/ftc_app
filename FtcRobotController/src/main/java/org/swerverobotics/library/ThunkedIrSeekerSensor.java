@@ -33,7 +33,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
 
     @Override public void setMode(IrSeekerSensor.Mode mode)
         {
-        class Thunk extends WaitingThunk
+        class Thunk extends NonwaitingThunk
             {
             IrSeekerSensor.Mode mode;
             @Override public void actionOnLoopThread()

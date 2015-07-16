@@ -37,7 +37,15 @@ public abstract class ThunkBase implements IThunk
      */
     public void dispatch()
         {
-        this.context.noteThunkDispatched(this);
-        this.context.getThunker().executeOnLoopThread(this);
+        this.context.noteThunkDispatching(this);
+        try
+            {
+            this.context.getThunker().executeOnLoopThread(this);
+            }
+        catch (Exception e)
+            {
+            this.context.noteThunkDispatchFailure(this);
+            throw e;
+            }
         }
     }

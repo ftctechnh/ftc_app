@@ -30,7 +30,7 @@ public class ThunkingLegacyModule implements LegacyModule
 
     @Override public void enableNxtI2cReadMode(int physicalPort, int i2cAddress, int memAddress, int memLength)
         {
-        class Thunk extends WaitingThunk
+        class Thunk extends NonwaitingThunk
             {
             int physicalPort;
             int i2cAddress;
@@ -51,7 +51,7 @@ public class ThunkingLegacyModule implements LegacyModule
 
     @Override public void enableNxtI2cWriteMode(int physicalPort, int i2cAddress, int memAddress, byte[] initialValues)
         {
-        class Thunk extends WaitingThunk
+        class Thunk extends NonwaitingThunk
             {
             int physicalPort;
             int i2cAddress;
@@ -72,7 +72,7 @@ public class ThunkingLegacyModule implements LegacyModule
 
     @Override public void enableAnalogReadMode(int physicalPort, int i2cAddress)
         {
-        class Thunk extends WaitingThunk
+        class Thunk extends NonwaitingThunk
             {
             int physicalPort;
             int i2cAddress;
@@ -89,7 +89,7 @@ public class ThunkingLegacyModule implements LegacyModule
 
     @Override public void enable9v(int physicalPort, boolean enable)
         {
-        class Thunk extends WaitingThunk
+        class Thunk extends NonwaitingThunk
             {
             int physicalPort;
             boolean enable;
@@ -106,7 +106,7 @@ public class ThunkingLegacyModule implements LegacyModule
 
     @Override public void setDigitalLine(int physicalPort, int line, boolean set)
         {
-        class Thunk extends WaitingThunk
+        class Thunk extends NonwaitingThunk
             {
             int physicalPort;
             int line;
@@ -141,7 +141,7 @@ public class ThunkingLegacyModule implements LegacyModule
 
     @Override public void writeLegacyModuleCache(int physicalPort, byte[] data)
         {
-        class Thunk extends WaitingThunk
+        class Thunk extends NonwaitingThunk
             {
             int physicalPort;
             byte[] data;
@@ -190,7 +190,7 @@ public class ThunkingLegacyModule implements LegacyModule
 
     @Override public void close()
         {
-        class Thunk extends WaitingThunk
+        class Thunk extends NonwaitingThunk
             {
             @Override public void actionOnLoopThread()
                 {

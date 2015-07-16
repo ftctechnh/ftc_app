@@ -62,7 +62,7 @@ class ThunkingServoController implements ServoController
 
     @Override public void close()
         {
-        class Thunk extends WaitingThunk
+        class Thunk extends NonwaitingThunk
             {
             @Override public void actionOnLoopThread()
                 {
@@ -75,7 +75,7 @@ class ThunkingServoController implements ServoController
 
     @Override public void pwmEnable()
         {
-        class Thunk extends WaitingThunk
+        class Thunk extends NonwaitingThunk
             {
             @Override public void actionOnLoopThread()
                 {
@@ -88,7 +88,7 @@ class ThunkingServoController implements ServoController
 
     @Override public void pwmDisable()
         {
-        class Thunk extends WaitingThunk
+        class Thunk extends NonwaitingThunk
             {
             @Override public void actionOnLoopThread()
                 {
@@ -115,7 +115,7 @@ class ThunkingServoController implements ServoController
 
     @Override public void setServoPosition(int channel, double position)
         {
-        class Thunk extends WaitingThunk
+        class Thunk extends NonwaitingThunk
             {
             int channel;
             double position;

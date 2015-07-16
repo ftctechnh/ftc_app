@@ -47,7 +47,7 @@ public class ThunkedLightSensor extends LightSensor
 
     @Override public void enableLed(final boolean enable)
         {
-        class Thunk extends WaitingThunk
+        class Thunk extends NonwaitingThunk
             {
             boolean enable;
             @Override public void actionOnLoopThread()
