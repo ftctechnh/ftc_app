@@ -61,7 +61,7 @@ public class ThunkedCompassSensor extends CompassSensor
 
     @Override public void setMode(CompassSensor.CompassMode mode)
         {
-        class Thunk extends WaitingThunk
+        class Thunk extends NonwaitingThunk
             {
             CompassSensor.CompassMode mode;
             @Override public void actionOnLoopThread()

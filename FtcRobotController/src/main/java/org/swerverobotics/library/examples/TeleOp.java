@@ -15,7 +15,7 @@ public class TeleOp extends SynchronousOpMode
     DcMotor motorLeft = null;
     DcMotor motorRight = null;
 
-    @Override protected void main()
+    @Override protected void main() throws InterruptedException
         {
         // Initialize our hardware variables
         this.motorLeft = this.hardwareMap.dcMotor.get("motorLeft");
@@ -45,7 +45,7 @@ public class TeleOp extends SynchronousOpMode
                 // There is no new gamepad input available. Give
                 // other threads a chance to do something rather than
                 // eating our thread scheduler quantum.
-                Thread.currentThread().yield();
+                Thread.yield();
                 }
             }
         }
@@ -54,7 +54,7 @@ public class TeleOp extends SynchronousOpMode
      * Implement a simple two-motor driving logic using the left and right
      * right joysticks on the indicated game pad.
      */
-    void doManualDrivingControl(Gamepad pad)
+    void doManualDrivingControl(Gamepad pad) throws InterruptedException
         {
         // Remember that the gamepad sticks range from -1 to +1, and that the motor
         // power levels range over the same amount
@@ -90,6 +90,9 @@ public class TeleOp extends SynchronousOpMode
         // Tell the motors
         this.motorLeft.setPower(powerLeft);
         this.motorRight.setPower(powerRight);
+
+        // Advanced: not necessary; shown here just for illustration.
+        this.waitForThreadThunkCompletions();
         }
 
     float xformDrivingPowerLevels(float level)

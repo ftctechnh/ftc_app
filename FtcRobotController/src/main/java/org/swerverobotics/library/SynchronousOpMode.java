@@ -3,6 +3,8 @@ package org.swerverobotics.library;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
+
+import com.qualcomm.ftcrobotcontroller.BuildConfig;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
@@ -11,10 +13,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 //      * maybe 'getPower on legacy NXT-compatible motor controller returns a null value' (eh?)
 //      * a big once-over for (default)/public/private/protected and/or final on methods and classes
 //      * a once-over thinking about concurrent multiple synchronous threads (main() + workers)
-//      * wait() instead of semaphore in thunking logic
-//      * allowing setters to return once thunk initiated but not necessarily completed
-//          * beware of loop() being overwhelmed
-//          * this.waitForThunkCompletions() : waits for THIS THREAD's completions
 
 /**
  * SynchronousOpMode is a base class that can be derived from in order to
@@ -167,10 +165,6 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         {
         return this.loopThread.getId() == Thread.currentThread().getId();
         }
-    public final boolean isMainThread()
-        {
-        return this.mainThread.getId() == Thread.currentThread().getId();
-        }
 
     /**
      * Answer as to whether there's (probably) any state different in any of the game pads
@@ -205,7 +199,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         }
 
     /**
-     * If we are running on a synchronous thread, then return the SynchronousOpMode
+     * Advanced: if we are running on a synchronous thread, then return the object
      * which is managing the thunking from the current thread to the loop() thread.
      */
     public static IThunker getThreadThunker()
@@ -214,8 +208,19 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         }
 
     /**
-     * Wait until all any thunks that are currently in flight and have been dispatched
-     * from the current thread have completed
+     * Advanced: wait until all thunks that have been dispatched from the current (synchronous)
+     * thread have completed their execution over on the loop() thread.
+     *
+     * In general, thunked methods that don't return any information to the caller
+     * (that is, the majority of setXXX() calls) only *initiate* their work on the loop()
+     * thread before returning to their caller; the work may or may not have been completed
+     * by the time the setXXX() call returns. Calling waitForThreadThunkCompletions()
+     * allows one to wait later for these calls to do their things. waitForThreadThunkCompletions()
+     * will not return until all outstanding work that has been dispatched from the current
+     * thread has completed its execution over on the loop thread.
+     *
+     * Note that work dispatched from *other* (synchronous) threads may still be pending
+     * when waitForThreadThunkCompletions() returns.
      */
     public void waitForThreadThunkCompletions() throws InterruptedException
         {
@@ -248,9 +253,11 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 break;
 
             // That should be a thunk. If it is, then execute it; if not, who cares.
-            IThunk thunk = (IThunk)(o);
-            if (null != thunk)
+            if (o instanceof IThunk)
+                {
+                IThunk thunk = (IThunk)(o);
                 thunk.doThunk();
+                }
 
             // Periodically check whether we've run long enough for this
             // loop() call.
@@ -288,6 +295,10 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      */
     public void executeOnLoopThread(IThunk thunk)
         {
+        // We should only be called from synchronous threads
+        if (BuildConfig.DEBUG && !this.isLoopThread())
+            throw new AssertionError();
+
         this.loopThreadActionQueue.add(thunk);
         }
 

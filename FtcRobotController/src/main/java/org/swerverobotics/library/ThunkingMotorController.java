@@ -39,15 +39,9 @@ class ThunkingMotorController implements DcMotorController
         {
         this.switchToMode(DeviceMode.READ_ONLY);
         }
-    private void exitReadOperation()
-        {
-        }
     private void enterWriteOperation()
         {
         this.switchToMode(DeviceMode.WRITE_ONLY);
-        }
-    private void exitWriteOperation()
-        {
         }
 
     /**
@@ -109,73 +103,52 @@ class ThunkingMotorController implements DcMotorController
 
     @Override public synchronized String getDeviceName()
         {
-        try
+        this.enterReadOperation();
+        class Thunk extends ResultableThunk<String>
             {
-            this.enterReadOperation();
-            class Thunk extends ResultableThunk<String>
+            @Override public void actionOnLoopThread()
                 {
-                @Override public void actionOnLoopThread()
-                    {
-                    this.result = target.getDeviceName();
-                    }
+                this.result = target.getDeviceName();
                 }
-            Thunk thunk = new Thunk();
-            thunk.dispatch();
-            return thunk.result;
             }
-        finally
-            {
-            this.exitReadOperation();
-            }
+        Thunk thunk = new Thunk();
+        thunk.dispatch();
+        return thunk.result;
         }
 
     @Override public synchronized int getVersion()
         {
-        try
+        this.enterReadOperation();
+        class Thunk extends ResultableThunk<Integer>
             {
-            this.enterReadOperation();
-            class Thunk extends ResultableThunk<Integer>
+            @Override public void actionOnLoopThread()
                 {
-                @Override public void actionOnLoopThread()
-                    {
-                    this.result = target.getVersion();
-                    }
+                this.result = target.getVersion();
                 }
-            Thunk thunk = new Thunk();
-            thunk.dispatch();
-            return thunk.result;
             }
-        finally
-            {
-            this.exitReadOperation();
-            }
+        Thunk thunk = new Thunk();
+        thunk.dispatch();
+        return thunk.result;
         }
 
     @Override public synchronized void close()
         {
-        try
+        this.enterWriteOperation();
+        class Thunk extends NonwaitingThunk
             {
-            this.enterWriteOperation();
-            class Thunk extends WaitingThunk
+            @Override public void actionOnLoopThread()
                 {
-                @Override public void actionOnLoopThread()
-                    {
-                    target.close();
-                    }
+                target.close();
                 }
-            Thunk thunk = new Thunk();
-            thunk.dispatch();
             }
-        finally
-            {
-            this.exitWriteOperation();
-            }
+        Thunk thunk = new Thunk();
+        thunk.dispatch();
         }
 
     @Override public synchronized void setMotorControllerDeviceMode(DcMotorController.DeviceMode mode)
     // setMotorControllerDeviceMode is neither a 'read' nor a 'write' operation; it's internal
         {
-        class Thunk extends WaitingThunk
+        class Thunk extends NonwaitingThunk
             {
             DcMotorController.DeviceMode mode;
             @Override public void actionOnLoopThread()
@@ -213,100 +186,72 @@ class ThunkingMotorController implements DcMotorController
 
     @Override public synchronized void setMotorChannelMode(int channel, DcMotorController.RunMode mode)
         {
-        try
+        this.enterWriteOperation();
+        class Thunk extends NonwaitingThunk
             {
-            this.enterWriteOperation();
-            class Thunk extends WaitingThunk
+            int channel;
+            DcMotorController.RunMode mode;
+            @Override public void actionOnLoopThread()
                 {
-                int channel;
-                DcMotorController.RunMode mode;
-                @Override public void actionOnLoopThread()
-                    {
-                    target.setMotorChannelMode(channel, mode);
-                    }
+                target.setMotorChannelMode(channel, mode);
                 }
-            Thunk thunk = new Thunk();
-            thunk.channel = channel;
-            thunk.mode = mode;
-            thunk.dispatch();
             }
-        finally
-            {
-            this.exitWriteOperation();
-            }
+        Thunk thunk = new Thunk();
+        thunk.channel = channel;
+        thunk.mode = mode;
+        thunk.dispatch();
         }
 
     @Override public synchronized DcMotorController.RunMode getMotorChannelMode(int channel)
         {
-        try
+        this.enterReadOperation();
+        class Thunk extends ResultableThunk<RunMode>
             {
-            this.enterReadOperation();
-            class Thunk extends ResultableThunk<RunMode>
+            int channel;
+            @Override public void actionOnLoopThread()
                 {
-                int channel;
-                @Override public void actionOnLoopThread()
-                    {
-                    this.result = target.getMotorChannelMode(channel);
-                    }
+                this.result = target.getMotorChannelMode(channel);
                 }
-            Thunk thunk = new Thunk();
-            thunk.channel = channel;
-            thunk.dispatch();
-            return thunk.result;
             }
-        finally
-            {
-            this.exitReadOperation();
-            }
+        Thunk thunk = new Thunk();
+        thunk.channel = channel;
+        thunk.dispatch();
+        return thunk.result;
         }
 
     @Override public synchronized void setMotorPower(int channel, double power)
         {
-        try
+        this.enterWriteOperation();
+        class Thunk extends NonwaitingThunk
             {
-            this.exitReadOperation();
-            class Thunk extends WaitingThunk
+            int channel;
+            double power;
+            @Override public void actionOnLoopThread()
                 {
-                int channel;
-                double power;
-                @Override public void actionOnLoopThread()
-                    {
-                    target.setMotorPower(channel, power);
-                    }
+                target.setMotorPower(channel, power);
                 }
-            Thunk thunk = new Thunk();
-            thunk.channel = channel;
-            thunk.power = power;
-            thunk.dispatch();
             }
-        finally
-            {
-            this.exitReadOperation();
-            }
+        Thunk thunk = new Thunk();
+        thunk.channel = channel;
+        thunk.power = power;
+        thunk.dispatch();
         }
 
     @Override public synchronized double getMotorPower(int channel)
         {
-        try
+        this.enterReadOperation();
+        class Thunk extends ResultableThunk<Double>
             {
-            this.enterReadOperation();
-            class Thunk extends ResultableThunk<Double>
+            int channel;
+            @Override public void actionOnLoopThread()
                 {
-                int channel;
-                @Override public void actionOnLoopThread()
-                    {
-                    this.result = target.getMotorPower(channel);
-                    }
+                this.result = target.getMotorPower(channel);
                 }
-            Thunk thunk = new Thunk();
-            thunk.channel = channel;
-            thunk.dispatch();
-            return thunk.result;
             }
-        finally
-            {
-            this.exitReadOperation();
-            }
+        Thunk thunk = new Thunk();
+        thunk.channel = channel;
+        thunk.dispatch();
+        return thunk.result;
         }
 
     /**
@@ -314,25 +259,18 @@ class ThunkingMotorController implements DcMotorController
      */
     @Override public synchronized void setMotorPowerFloat(int channel)
         {
-        try
+        this.enterWriteOperation();
+        class Thunk extends NonwaitingThunk
             {
-            this.enterWriteOperation();
-            class Thunk extends WaitingThunk
+            int channel;
+            @Override public void actionOnLoopThread()
                 {
-                int channel;
-                @Override public void actionOnLoopThread()
-                    {
-                    target.setMotorPowerFloat(channel);
-                    }
+                target.setMotorPowerFloat(channel);
                 }
-            Thunk thunk = new Thunk();
-            thunk.channel = channel;
-            thunk.dispatch();
             }
-        finally
-            {
-            this.exitWriteOperation();
-            }
+        Thunk thunk = new Thunk();
+        thunk.channel = channel;
+        thunk.dispatch();
         }
 
     /**
@@ -340,196 +278,140 @@ class ThunkingMotorController implements DcMotorController
      */
     @Override public synchronized boolean getMotorPowerFloat(int channel)
         {
-        try
+        this.enterReadOperation();
+        class Thunk extends ResultableThunk<Boolean>
             {
-            this.enterReadOperation();
-            class Thunk extends ResultableThunk<Boolean>
+            int channel;
+            @Override public void actionOnLoopThread()
                 {
-                int channel;
-                @Override public void actionOnLoopThread()
-                    {
-                    this.result = target.getMotorPowerFloat(channel);
-                    }
+                this.result = target.getMotorPowerFloat(channel);
                 }
-            Thunk thunk = new Thunk();
-            thunk.channel = channel;
-            thunk.dispatch();
-            return thunk.result;
             }
-        finally
-            {
-            this.exitReadOperation();
-            }
+        Thunk thunk = new Thunk();
+        thunk.channel = channel;
+        thunk.dispatch();
+        return thunk.result;
         }
 
     @Override public synchronized void setMotorTargetPosition(int channel, int position)
         {
-        try
+        this.enterWriteOperation();
+        class Thunk extends NonwaitingThunk
             {
-            this.enterWriteOperation();
-            class Thunk extends WaitingThunk
+            int channel;
+            int position;
+            @Override public void actionOnLoopThread()
                 {
-                int channel;
-                int position;
-                @Override public void actionOnLoopThread()
-                    {
-                    target.setMotorTargetPosition(channel, position);
-                    }
+                target.setMotorTargetPosition(channel, position);
                 }
-            Thunk thunk = new Thunk();
-            thunk.channel = channel;
-            thunk.position = position;
-            thunk.dispatch();
             }
-        finally
-            {
-            this.exitWriteOperation();
-            }
+        Thunk thunk = new Thunk();
+        thunk.channel = channel;
+        thunk.position = position;
+        thunk.dispatch();
         }
 
     @Override public synchronized int getMotorTargetPosition(int channel)
         {
-        try
+        this.enterReadOperation();
+        class Thunk extends ResultableThunk<Integer>
             {
-            this.enterReadOperation();
-            class Thunk extends ResultableThunk<Integer>
+            int channel;
+            @Override public void actionOnLoopThread()
                 {
-                int channel;
-                @Override public void actionOnLoopThread()
-                    {
-                    this.result = target.getMotorTargetPosition(channel);
-                    }
+                this.result = target.getMotorTargetPosition(channel);
                 }
-            Thunk thunk = new Thunk();
-            thunk.channel = channel;
-            thunk.dispatch();
-            return thunk.result;
             }
-        finally
-            {
-            this.exitReadOperation();
-            }
+        Thunk thunk = new Thunk();
+        thunk.channel = channel;
+        thunk.dispatch();
+        return thunk.result;
         }
 
     @Override public synchronized int getMotorCurrentPosition(int channel)
         {
-        try
+        this.enterReadOperation();
+        class Thunk extends ResultableThunk<Integer>
             {
-            this.enterReadOperation();
-            class Thunk extends ResultableThunk<Integer>
+            int channel;
+            @Override public void actionOnLoopThread()
                 {
-                int channel;
-                @Override public void actionOnLoopThread()
-                    {
-                    this.result = target.getMotorCurrentPosition(channel);
-                    }
+                this.result = target.getMotorCurrentPosition(channel);
                 }
-            Thunk thunk = new Thunk();
-            thunk.channel = channel;
-            thunk.dispatch();
-            return thunk.result;
             }
-        finally
-            {
-            this.exitReadOperation();
-            }
+        Thunk thunk = new Thunk();
+        thunk.channel = channel;
+        thunk.dispatch();
+        return thunk.result;
         }
 
     @Override public synchronized void setGearRatio(int channel, double ratio)
         {
-        try
+        this.enterWriteOperation();
+        class Thunk extends NonwaitingThunk
             {
-            this.enterWriteOperation();
-            class Thunk extends WaitingThunk
+            int channel;
+            double ratio;
+            @Override public void actionOnLoopThread()
                 {
-                int channel;
-                double ratio;
-                @Override public void actionOnLoopThread()
-                    {
-                    target.setGearRatio(channel, ratio);
-                    }
+                target.setGearRatio(channel, ratio);
                 }
-            Thunk thunk = new Thunk();
-            thunk.channel = channel;
-            thunk.ratio = ratio;
-            thunk.dispatch();
             }
-        finally
-            {
-            this.exitWriteOperation();
-            }
+        Thunk thunk = new Thunk();
+        thunk.channel = channel;
+        thunk.ratio = ratio;
+        thunk.dispatch();
         }
 
     @Override public synchronized double getGearRatio(int channel)
         {
-        try
+        this.enterReadOperation();
+        class Thunk extends ResultableThunk<Double>
             {
-            this.enterReadOperation();
-            class Thunk extends ResultableThunk<Double>
+            int channel;
+            @Override public void actionOnLoopThread()
                 {
-                int channel;
-                @Override public void actionOnLoopThread()
-                    {
-                    this.result = target.getGearRatio(channel);
-                    }
+                this.result = target.getGearRatio(channel);
                 }
-            Thunk thunk = new Thunk();
-            thunk.channel = channel;
-            thunk.dispatch();
-            return thunk.result;
             }
-        finally
-            {
-            this.exitReadOperation();
-            }
+        Thunk thunk = new Thunk();
+        thunk.channel = channel;
+        thunk.dispatch();
+        return thunk.result;
         }
 
     @Override public synchronized void setDifferentialControlLoopCoefficients(int channel, DifferentialControlLoopCoefficients pid)
         {
-        try
+        this.enterWriteOperation();
+        class Thunk extends NonwaitingThunk
             {
-            this.enterWriteOperation();
-            class Thunk extends WaitingThunk
+            int channel;
+            DifferentialControlLoopCoefficients pid;
+            @Override public void actionOnLoopThread()
                 {
-                int channel;
-                DifferentialControlLoopCoefficients pid;
-                @Override public void actionOnLoopThread()
-                    {
-                    target.setDifferentialControlLoopCoefficients(channel, pid);
-                    }
+                target.setDifferentialControlLoopCoefficients(channel, pid);
                 }
-            Thunk thunk = new Thunk();
-            thunk.channel = channel;
-            thunk.pid = pid;
-            thunk.dispatch();
             }
-        finally
-            {
-            this.exitWriteOperation();
-            }
+        Thunk thunk = new Thunk();
+        thunk.channel = channel;
+        thunk.pid = pid;
+        thunk.dispatch();
         }
 
     @Override public synchronized DifferentialControlLoopCoefficients getDifferentialControlLoopCoefficients(int channel)
         {
-        try
+        this.enterReadOperation();
+        class Thunk extends ResultableThunk<DifferentialControlLoopCoefficients>
             {
-            this.enterReadOperation();
-            class Thunk extends ResultableThunk<DifferentialControlLoopCoefficients>
+            int channel;
+            @Override public void actionOnLoopThread()
                 {
-                int channel;
-                @Override public void actionOnLoopThread()
-                    {
-                    this.result = target.getDifferentialControlLoopCoefficients(channel);
-                    }
+                this.result = target.getDifferentialControlLoopCoefficients(channel);
                 }
-            Thunk thunk = new Thunk();
-            thunk.channel = channel;
-            thunk.dispatch();
-            return thunk.result;
             }
-        finally
-            {
-            this.exitReadOperation();
-            }
+        Thunk thunk = new Thunk();
+        thunk.channel = channel;
+        thunk.dispatch();
+        return thunk.result;
         }
     }
