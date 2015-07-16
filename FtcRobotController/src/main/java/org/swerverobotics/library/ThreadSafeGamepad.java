@@ -7,7 +7,7 @@ package org.swerverobotics.library;
  * and writes in Java (the 8-byte 'timestamp' member in particular offends), but being careful
  * will with certainty avoid any latent bugs that might just happen to be there.
  */
-public class Gamepad
+public class ThreadSafeGamepad
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -19,7 +19,7 @@ public class Gamepad
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    public Gamepad(com.qualcomm.robotcore.hardware.Gamepad hwPad)
+    public ThreadSafeGamepad(com.qualcomm.robotcore.hardware.Gamepad hwPad)
         {
         this.hwPad = hwPad;
         }
