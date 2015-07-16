@@ -44,14 +44,14 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      * is not synchronized with processing on the main() thread. We take pains to ensure that
      * the variables declared here do not suffer from that problem.
      */
-    public Gamepad gamepad1 = null;
-    public Gamepad gamepad2 = null;
+    public ThreadSafeGamepad gamepad1 = null;
+    public ThreadSafeGamepad gamepad2 = null;
 
     /**
      * Advanced: 'nanotimeLoopDwellMax' is the (soft) maximum number of nanoseconds that
      * our loop() implementation will spend in any one call before returning.
      */
-    public long nanotimeLoopDwellMax = 3000000;     // == 3ms
+    public long nanotimeLoopDwellMax = 50 * 1000000;
 
     /**
      * Advanced: loopDwellCheckInterval is the number of thunks we will execute in loop()

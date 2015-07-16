@@ -3,7 +3,7 @@ package org.swerverobotics.library.examples;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
 import org.swerverobotics.library.*;
-import org.swerverobotics.library.Gamepad;
+import org.swerverobotics.library.ThreadSafeGamepad;
 
 /**
  * A very simple example of a synchronous op mode.
@@ -54,7 +54,7 @@ public class TeleOp extends SynchronousOpMode
      * Implement a simple two-motor driving logic using the left and right
      * right joysticks on the indicated game pad.
      */
-    void doManualDrivingControl(Gamepad pad) throws InterruptedException
+    void doManualDrivingControl(ThreadSafeGamepad pad) throws InterruptedException
         {
         // Remember that the gamepad sticks range from -1 to +1, and that the motor
         // power levels range over the same amount
