@@ -31,18 +31,16 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
     // IrSeekerSensor
     //----------------------------------------------------------------------------------------------
 
-    @Override public void setMode(IrSeekerSensor.Mode mode)
+    @Override public void setMode(final IrSeekerSensor.Mode mode)
         {
         class Thunk extends NonwaitingThunk
             {
-            IrSeekerSensor.Mode mode;
             @Override public void actionOnLoopThread()
                 {
                 target.setMode(mode);
                 }
             }
         Thunk thunk = new Thunk();
-        thunk.mode = mode;
         thunk.dispatch();
         }
 

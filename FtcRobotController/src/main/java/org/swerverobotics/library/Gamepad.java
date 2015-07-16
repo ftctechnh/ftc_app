@@ -3,7 +3,7 @@ package org.swerverobotics.library;
 /**
  * A form of GamePad that guards against torn writes to its state caused by concurrency.
  *
- * This *maybe* being overly paranoid, depending on the atomicity of member variable reads
+ * This is *maybe* being overly paranoid, depending on the atomicity of member variable reads
  * and writes in Java (the 8-byte 'timestamp' member in particular offends), but being careful
  * will with certainty avoid any latent bugs that might just happen to be there.
  */
