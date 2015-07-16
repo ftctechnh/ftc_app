@@ -100,7 +100,13 @@ public class ThreadThunkContext
         {
         synchronized (this.lock)
             {
-            this.wait();
+            // Don't leave until any previous work issued by our associated thread
+            // has been completed. The while() loop is necessary in order to deal
+            // with 'spurious wakeups'.
+            while (this.dispatchedThunkCount > 0)
+                {
+                this.wait();
+                }
             }
         }
 
