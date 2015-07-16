@@ -33,7 +33,7 @@ public class ThunkedGyroSensor extends  GyroSensor
 
     @Override public double getRotation()
         {
-        class Thunk extends SynchronousOpMode.ResultableAction<Double>
+        class Thunk extends ResultableThunk<Double>
             {
             @Override public void actionOnLoopThread()
                 {
@@ -47,7 +47,7 @@ public class ThunkedGyroSensor extends  GyroSensor
 
     @Override public String status()
         {
-        class Thunk extends SynchronousOpMode.ResultableAction<String>
+        class Thunk extends ResultableThunk<String>
             {
             @Override public void actionOnLoopThread()
                 {

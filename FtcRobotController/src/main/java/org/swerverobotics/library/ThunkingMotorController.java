@@ -1,6 +1,5 @@
 package org.swerverobotics.library;
 
-import com.qualcomm.modernrobotics.ModernRoboticsNxtDcMotorController;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
 
@@ -113,7 +112,7 @@ class ThunkingMotorController implements DcMotorController
         try
             {
             this.enterReadOperation();
-            class Thunk extends SynchronousOpMode.ResultableAction<String>
+            class Thunk extends ResultableThunk<String>
                 {
                 @Override public void actionOnLoopThread()
                     {
@@ -135,7 +134,7 @@ class ThunkingMotorController implements DcMotorController
         try
             {
             this.enterReadOperation();
-            class Thunk extends SynchronousOpMode.ResultableAction<Integer>
+            class Thunk extends ResultableThunk<Integer>
                 {
                 @Override public void actionOnLoopThread()
                     {
@@ -157,7 +156,7 @@ class ThunkingMotorController implements DcMotorController
         try
             {
             this.enterWriteOperation();
-            class Thunk extends SynchronousOpMode.WaitableAction
+            class Thunk extends WaitingThunk
                 {
                 @Override public void actionOnLoopThread()
                     {
@@ -176,7 +175,7 @@ class ThunkingMotorController implements DcMotorController
     @Override public synchronized void setMotorControllerDeviceMode(DcMotorController.DeviceMode mode)
     // setMotorControllerDeviceMode is neither a 'read' nor a 'write' operation; it's internal
         {
-        class Thunk extends SynchronousOpMode.WaitableAction
+        class Thunk extends WaitingThunk
             {
             DcMotorController.DeviceMode mode;
             @Override public void actionOnLoopThread()
@@ -196,7 +195,7 @@ class ThunkingMotorController implements DcMotorController
     @Override public synchronized DcMotorController.DeviceMode getMotorControllerDeviceMode()
     // getMotorControllerDeviceMode is neither a 'read' nor a 'write' operation; it's internal
         {
-        class Thunk extends SynchronousOpMode.ResultableAction<DcMotorController.DeviceMode>
+        class Thunk extends ResultableThunk<DeviceMode>
             {
             @Override public void actionOnLoopThread()
                 {
@@ -217,7 +216,7 @@ class ThunkingMotorController implements DcMotorController
         try
             {
             this.enterWriteOperation();
-            class Thunk extends SynchronousOpMode.WaitableAction
+            class Thunk extends WaitingThunk
                 {
                 int channel;
                 DcMotorController.RunMode mode;
@@ -242,7 +241,7 @@ class ThunkingMotorController implements DcMotorController
         try
             {
             this.enterReadOperation();
-            class Thunk extends SynchronousOpMode.ResultableAction<DcMotorController.RunMode>
+            class Thunk extends ResultableThunk<RunMode>
                 {
                 int channel;
                 @Override public void actionOnLoopThread()
@@ -266,7 +265,7 @@ class ThunkingMotorController implements DcMotorController
         try
             {
             this.exitReadOperation();
-            class Thunk extends SynchronousOpMode.WaitableAction
+            class Thunk extends WaitingThunk
                 {
                 int channel;
                 double power;
@@ -291,7 +290,7 @@ class ThunkingMotorController implements DcMotorController
         try
             {
             this.enterReadOperation();
-            class Thunk extends SynchronousOpMode.ResultableAction<Double>
+            class Thunk extends ResultableThunk<Double>
                 {
                 int channel;
                 @Override public void actionOnLoopThread()
@@ -318,7 +317,7 @@ class ThunkingMotorController implements DcMotorController
         try
             {
             this.enterWriteOperation();
-            class Thunk extends SynchronousOpMode.WaitableAction
+            class Thunk extends WaitingThunk
                 {
                 int channel;
                 @Override public void actionOnLoopThread()
@@ -344,7 +343,7 @@ class ThunkingMotorController implements DcMotorController
         try
             {
             this.enterReadOperation();
-            class Thunk extends SynchronousOpMode.ResultableAction<Boolean>
+            class Thunk extends ResultableThunk<Boolean>
                 {
                 int channel;
                 @Override public void actionOnLoopThread()
@@ -368,7 +367,7 @@ class ThunkingMotorController implements DcMotorController
         try
             {
             this.enterWriteOperation();
-            class Thunk extends SynchronousOpMode.WaitableAction
+            class Thunk extends WaitingThunk
                 {
                 int channel;
                 int position;
@@ -393,7 +392,7 @@ class ThunkingMotorController implements DcMotorController
         try
             {
             this.enterReadOperation();
-            class Thunk extends SynchronousOpMode.ResultableAction<Integer>
+            class Thunk extends ResultableThunk<Integer>
                 {
                 int channel;
                 @Override public void actionOnLoopThread()
@@ -417,7 +416,7 @@ class ThunkingMotorController implements DcMotorController
         try
             {
             this.enterReadOperation();
-            class Thunk extends SynchronousOpMode.ResultableAction<Integer>
+            class Thunk extends ResultableThunk<Integer>
                 {
                 int channel;
                 @Override public void actionOnLoopThread()
@@ -441,7 +440,7 @@ class ThunkingMotorController implements DcMotorController
         try
             {
             this.enterWriteOperation();
-            class Thunk extends SynchronousOpMode.WaitableAction
+            class Thunk extends WaitingThunk
                 {
                 int channel;
                 double ratio;
@@ -466,7 +465,7 @@ class ThunkingMotorController implements DcMotorController
         try
             {
             this.enterReadOperation();
-            class Thunk extends SynchronousOpMode.ResultableAction<Double>
+            class Thunk extends ResultableThunk<Double>
                 {
                 int channel;
                 @Override public void actionOnLoopThread()
@@ -490,7 +489,7 @@ class ThunkingMotorController implements DcMotorController
         try
             {
             this.enterWriteOperation();
-            class Thunk extends SynchronousOpMode.WaitableAction
+            class Thunk extends WaitingThunk
                 {
                 int channel;
                 DifferentialControlLoopCoefficients pid;
@@ -515,7 +514,7 @@ class ThunkingMotorController implements DcMotorController
         try
             {
             this.enterReadOperation();
-            class Thunk extends SynchronousOpMode.ResultableAction<DifferentialControlLoopCoefficients>
+            class Thunk extends ResultableThunk<DifferentialControlLoopCoefficients>
                 {
                 int channel;
                 @Override public void actionOnLoopThread()

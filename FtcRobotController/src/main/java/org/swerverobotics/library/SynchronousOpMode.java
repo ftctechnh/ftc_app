@@ -7,10 +7,14 @@ import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 // Work items:
-//      * telemetry
+//      * telemetry: dashboard + log; throttling
 //      * maybe 'getPower on legacy NXT-compatible motor controller returns a null value' (eh?)
 //      * a big once-over for (default)/public/private/protected and/or final on methods and classes
 //      * a once-over thinking about concurrent multiple synchronous threads (main() + workers)
+//      * wait() instead of semaphore in thunking logic
+//      * allowing setters to return once thunk initiated but not necessarily completed
+//          * beware of loop() being overwhelmed
+//          * this.waitForThunkCompletions() : waits for THIS THREAD's completions
 
 /**
  * SynchronousOpMode is a base class that can be derived from in order to
@@ -18,16 +22,11 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
  *
  * Extend this class and implement the main() method to add your own code.
  */
-public abstract class SynchronousOpMode extends OpMode
+public abstract class SynchronousOpMode extends OpMode implements IThunker
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
-
-    private static final ThreadLocal<SynchronousOpMode> tlsThunker = new ThreadLocal<SynchronousOpMode>()
-    {
-    @Override protected SynchronousOpMode initialValue() { return null; }
-    };
 
     private Thread loopThread;
     private Thread mainThread;
@@ -38,7 +37,7 @@ public abstract class SynchronousOpMode extends OpMode
      * Advanced: unthunkedHardwareMap contains the original hardware map provided
      * in OpMode before it was replaced with a version that does thunking.
      */
-    protected HardwareMap unthunkedHardwareMap = null;
+    public HardwareMap unthunkedHardwareMap = null;
 
     /**
      * The game pad variables are redeclared here so as to hide those in our OpMode superclass
@@ -46,8 +45,20 @@ public abstract class SynchronousOpMode extends OpMode
      * is not synchronized with processing on the main() thread. We take pains to ensure that
      * the variables declared here do not suffer from that problem.
      */
-    protected Gamepad gamepad1 = null;
-    protected Gamepad gamepad2 = null;
+    public Gamepad gamepad1 = null;
+    public Gamepad gamepad2 = null;
+
+    /**
+     * Advanced: 'nanotimeLoopDwellMax' is the (soft) maximum number of nanoseconds that
+     * our loop() implementation will spend in any one call before returning.
+     */
+    public long nanotimeLoopDwellMax = 3000000;     // == 3ms
+
+    /**
+     * Advanced: loopDwellCheckInterval is the number of thunks we will execute in loop()
+     * before checking whether we've exceeded nanotimeLoopDwellMax
+     */
+    public int loopDwellCheckInterval = 10;
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -55,7 +66,6 @@ public abstract class SynchronousOpMode extends OpMode
 
     public SynchronousOpMode()
         {
-        this.loopThreadActionQueue = new ConcurrentLinkedQueue();
         }
 
     //----------------------------------------------------------------------------------------------
@@ -128,20 +138,6 @@ public abstract class SynchronousOpMode extends OpMode
         catch (InterruptedException e) { }
         }
 
-    /**
-     * Note that the receiver is the party which should handle thunking requests for the
-     * current thread.
-     *
-     * Advanced: this is called automatically for the main() thread. If you choose in your
-     * code to spawn additional worker threads, each of those threads should call this method
-     * near the thread's beginning in order that access to the (thunked) hardware objects
-     * will function correctly from that thread.
-     */
-    protected void setThreadThunker()
-        {
-        SynchronousOpMode.tlsThunker.set(this);
-        }
-
     private class Runner implements Runnable
         {
         /**
@@ -195,15 +191,40 @@ public abstract class SynchronousOpMode extends OpMode
     //----------------------------------------------------------------------------------------------
 
     /**
-     * If we are running on a main() thread, then return the SynchronousOpMode
-     * which is managing the thunking from the current thread to the loop() thread.
+     * Note that the receiver is the party which should handle thunking requests for the
+     * current thread.
+     *
+     * Advanced: this is called automatically for the main() thread. If you choose in your
+     * code to spawn additional worker synchronous threads, each of those threads should call
+     * this method near the thread's beginning in order that access to the (thunked) hardware
+     * objects will function correctly from that thread.
      */
-    public static SynchronousOpMode getThreadThunker()
+    public void setThreadThunker()
         {
-        return tlsThunker.get();
+        ThreadThunkContext.setThreadThunker(this);
         }
 
-    @Override
+    /**
+     * If we are running on a synchronous thread, then return the SynchronousOpMode
+     * which is managing the thunking from the current thread to the loop() thread.
+     */
+    public static IThunker getThreadThunker()
+        {
+        return ThreadThunkContext.getThreadContext().getThunker();
+        }
+
+    /**
+     * Wait until all any thunks that are currently in flight and have been dispatched
+     * from the current thread have completed
+     */
+    public void waitForThreadThunkCompletions() throws InterruptedException
+        {
+        ThreadThunkContext.getThreadContext().waitForThreadThunkCompletions();
+        }
+
+    /**
+     * Our implementation of the loop() callback
+     */
     public final void loop()
         {
         // Capture the gamepad states safely so that in the main() thread we
@@ -215,16 +236,30 @@ public abstract class SynchronousOpMode extends OpMode
         // Call the subclass hook in case they might want to do something interesting
         this.preLoop();
 
-        // Run any actions we've been asked to execute here on the loop thread
-        for (;;)
+        long nanotimeStart = System.nanoTime();
+
+        // Execute any thunks we've been asked to execute here on the loop thread
+        for (int i = 0; ; i++)
             {
+            // Get the next work item in the queue. Get out of here if there isn't
+            // any more work.
             Object o = this.loopThreadActionQueue.poll();
             if (null == o)
                 break;
 
-            IAction action = (IAction)(o);
-            if (null != action)
-                action.doAction();
+            // That should be a thunk. If it is, then execute it; if not, who cares.
+            IThunk thunk = (IThunk)(o);
+            if (null != thunk)
+                thunk.doThunk();
+
+            // Periodically check whether we've run long enough for this
+            // loop() call.
+            if ((i+1) % this.loopDwellCheckInterval == 0)
+                {
+                long nanoTimeNow = System.nanoTime();
+                if (nanoTimeNow - nanotimeStart > this.nanotimeLoopDwellMax)
+                    break;
+                }
             }
 
         // Call the subclass hook in case they might want to do something interesting
@@ -234,8 +269,8 @@ public abstract class SynchronousOpMode extends OpMode
     /**
      * preLoop() and postLoop() are hooks that advanced users might want to override in their
      * subclasses. The implementations of those function here do nothing. preLoop() is called
-     * early on the loop() thread, just after gamepad state has been stabilized, and
-     * postLoop() is called just before the loop() method returns.
+     * early on the loop() thread, just after variable state has been stabilized (e.g. gamepads),
+     * and postLoop() is called just before the loop() method returns.
      */
     protected void preLoop() { /* hook for subclasses */ }
 
@@ -244,53 +279,16 @@ public abstract class SynchronousOpMode extends OpMode
      */
     protected void postLoop() { /* hook for subclasses */ }
 
+    //----------------------------------------------------------------------------------------------
+    // IThunker
+    //----------------------------------------------------------------------------------------------
+
     /**
      * Execute the indicated action on the loop thread.
      */
-    public void executeOnLoopThread(IAction action)
+    public void executeOnLoopThread(IThunk thunk)
         {
-        assert this.isMainThread();
-        this.loopThreadActionQueue.add(action);
-        }
-
-    //----------------------------------------------------------------------------------------------
-    // Thunking method helpers
-    //----------------------------------------------------------------------------------------------
-
-    public interface IAction
-        {
-        void doAction();
-        }
-
-    public abstract static class WaitableAction implements IAction
-        {
-        Semaphore semaphore = new Semaphore(0);
-
-        public void doAction()
-            {
-            this.actionOnLoopThread();
-            this.semaphore.release();
-            }
-
-        protected abstract void actionOnLoopThread();
-
-        void dispatch()
-            {
-            SynchronousOpMode.getThreadThunker().executeOnLoopThread(this);
-            try
-                {
-                this.semaphore.acquire();
-                }
-            catch (InterruptedException e)
-                {
-                Thread.currentThread().interrupt();
-                }
-            }
-        }
-
-    public abstract static class ResultableAction<T> extends WaitableAction
-        {
-        T result;
+        this.loopThreadActionQueue.add(thunk);
         }
 
     //----------------------------------------------------------------------------------------------

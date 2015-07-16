@@ -33,7 +33,7 @@ public class ThunkedAccelerationSensor extends AccelerationSensor
 
     @Override public AccelerationSensor.Acceleration getAcceleration()
         {
-        class Thunk extends SynchronousOpMode.ResultableAction<AccelerationSensor.Acceleration>
+        class Thunk extends ResultableThunk<Acceleration>
             {
             @Override public void actionOnLoopThread()
                 {
@@ -47,7 +47,7 @@ public class ThunkedAccelerationSensor extends AccelerationSensor
 
     @Override public String status()
         {
-        class Thunk extends SynchronousOpMode.ResultableAction<String>
+        class Thunk extends ResultableThunk<String>
             {
             @Override public void actionOnLoopThread()
                 {

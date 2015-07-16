@@ -34,7 +34,7 @@ class ThunkingServoController implements ServoController
 
     @Override public String getDeviceName()
         {
-        class Thunk extends SynchronousOpMode.ResultableAction<String>
+        class Thunk extends ResultableThunk<String>
             {
             @Override public void actionOnLoopThread()
                 {
@@ -48,7 +48,7 @@ class ThunkingServoController implements ServoController
 
     @Override public int getVersion()
         {
-        class Thunk extends SynchronousOpMode.ResultableAction<Integer>
+        class Thunk extends ResultableThunk<Integer>
             {
             @Override public void actionOnLoopThread()
                 {
@@ -62,7 +62,7 @@ class ThunkingServoController implements ServoController
 
     @Override public void close()
         {
-        class Thunk extends SynchronousOpMode.WaitableAction
+        class Thunk extends WaitingThunk
             {
             @Override public void actionOnLoopThread()
                 {
@@ -75,7 +75,7 @@ class ThunkingServoController implements ServoController
 
     @Override public void pwmEnable()
         {
-        class Thunk extends SynchronousOpMode.WaitableAction
+        class Thunk extends WaitingThunk
             {
             @Override public void actionOnLoopThread()
                 {
@@ -88,7 +88,7 @@ class ThunkingServoController implements ServoController
 
     @Override public void pwmDisable()
         {
-        class Thunk extends SynchronousOpMode.WaitableAction
+        class Thunk extends WaitingThunk
             {
             @Override public void actionOnLoopThread()
                 {
@@ -101,7 +101,7 @@ class ThunkingServoController implements ServoController
 
     @Override public ServoController.PwmStatus getPwmStatus()
         {
-        class Thunk extends SynchronousOpMode.ResultableAction<ServoController.PwmStatus>
+        class Thunk extends ResultableThunk<PwmStatus>
             {
             @Override public void actionOnLoopThread()
                 {
@@ -115,7 +115,7 @@ class ThunkingServoController implements ServoController
 
     @Override public void setServoPosition(int channel, double position)
         {
-        class Thunk extends SynchronousOpMode.WaitableAction
+        class Thunk extends WaitingThunk
             {
             int channel;
             double position;
@@ -132,7 +132,7 @@ class ThunkingServoController implements ServoController
 
     @Override public double getServoPosition(int channel)
         {
-        class Thunk extends SynchronousOpMode.ResultableAction<Double>
+        class Thunk extends ResultableThunk<Double>
             {
             int channel;
             @Override public void actionOnLoopThread()
