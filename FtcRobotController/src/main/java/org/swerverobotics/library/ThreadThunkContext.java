@@ -25,7 +25,7 @@ public class ThreadThunkContext
 
     private Thread   thread;
     private IThunker thunker;
-    private int      distpachedThunkCount;
+    private int      dispatchedThunkCount;
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -35,7 +35,7 @@ public class ThreadThunkContext
         {
         this.thread = Thread.currentThread();
         this.thunker = thunker;
-        this.distpachedThunkCount = 0;
+        this.dispatchedThunkCount = 0;
         }
 
     //----------------------------------------------------------------------------------------------
@@ -52,7 +52,7 @@ public class ThreadThunkContext
         {
         synchronized (this)
             {
-            this.distpachedThunkCount++;
+            this.dispatchedThunkCount++;
             }
         }
 
@@ -77,10 +77,10 @@ public class ThreadThunkContext
         {
         synchronized (this)
             {
-            if (BuildConfig.DEBUG && !(this.distpachedThunkCount > 0))
+            if (BuildConfig.DEBUG && !(this.dispatchedThunkCount > 0))
                 throw new AssertionError();
 
-            if (--this.distpachedThunkCount == 0)
+            if (--this.dispatchedThunkCount == 0)
                 {
                 this.notifyAll();
                 }

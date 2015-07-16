@@ -113,35 +113,29 @@ class ThunkingServoController implements ServoController
         return thunk.result;
         }
 
-    @Override public void setServoPosition(int channel, double position)
+    @Override public void setServoPosition(final int channel, final double position)
         {
         class Thunk extends NonwaitingThunk
             {
-            int channel;
-            double position;
             @Override public void actionOnLoopThread()
                 {
                 target.setServoPosition(channel, position);
                 }
             }
         Thunk thunk = new Thunk();
-        thunk.channel = channel;
-        thunk.position = position;
         thunk.dispatch();
         }
 
-    @Override public double getServoPosition(int channel)
+    @Override public double getServoPosition(final int channel)
         {
         class Thunk extends ResultableThunk<Double>
             {
-            int channel;
             @Override public void actionOnLoopThread()
                 {
                 this.result = target.getServoPosition(channel);
                 }
             }
         Thunk thunk = new Thunk();
-        thunk.channel = channel;
         thunk.dispatch();
         return thunk.result;
         }

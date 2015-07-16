@@ -49,14 +49,12 @@ public class ThunkedLightSensor extends LightSensor
         {
         class Thunk extends NonwaitingThunk
             {
-            boolean enable;
             @Override public void actionOnLoopThread()
                 {
                 target.enableLed(enable);
                 }
             }
         Thunk thunk = new Thunk();
-        thunk.enable = enable;
         thunk.dispatch();
         }
 

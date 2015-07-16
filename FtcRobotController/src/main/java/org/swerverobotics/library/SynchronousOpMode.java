@@ -9,10 +9,10 @@ import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 // Work items:
-//      * telemetry: dashboard + log; throttling
-//      * maybe 'getPower on legacy NXT-compatible motor controller returns a null value' (eh?)
-//      * a big once-over for (default)/public/private/protected and/or final on methods and classes
-//      * a once-over thinking about concurrent multiple synchronous threads (main() + workers)
+//      * TODO: telemetry in synchronous mode: dashboard + log; throttling
+//      * TODO: invesigate: 'getPower on legacy NXT-compatible motor controller returns a null value' (eh?)
+//      * TODO: a big once-over for (default)/public/private/protected and/or final on methods and classes
+//      * TODO: a once-over thinking about concurrent multiple synchronous threads (main() + workers)
 
 /**
  * SynchronousOpMode is a base class that can be derived from in order to
@@ -28,7 +28,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
 
     private Thread loopThread;
     private Thread mainThread;
-    private ConcurrentLinkedQueue loopThreadActionQueue = new ConcurrentLinkedQueue();
+    private ConcurrentLinkedQueue<IThunk> loopThreadActionQueue = new ConcurrentLinkedQueue<IThunk>();
     private AtomicBoolean gamePadStateChanged = new AtomicBoolean(false);
 
     /**
@@ -120,7 +120,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
             // Wait, briefly, to give the thread a chance to handle the interruption and complete
             this.mainThread.wait(100);
             }
-        catch (InterruptedException e) { }
+        catch (InterruptedException ignored) { }
         finally
             {
             // Under all circumstances, make sure the thread shuts down, even if the
@@ -133,7 +133,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
             // Wait until the thread terminates
             this.mainThread.join();
             }
-        catch (InterruptedException e) { }
+        catch (InterruptedException ignored) { }
         }
 
     private class Runner implements Runnable
@@ -152,7 +152,6 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 }
             catch (InterruptedException e)
                 {
-                return;
                 }
             }
         }
@@ -244,24 +243,19 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         long nanotimeStart = System.nanoTime();
 
         // Execute any thunks we've been asked to execute here on the loop thread
-        for (int i = 0; ; i++)
+        for (int i = 1; ; i++)
             {
             // Get the next work item in the queue. Get out of here if there isn't
             // any more work.
-            Object o = this.loopThreadActionQueue.poll();
-            if (null == o)
+            IThunk thunk = this.loopThreadActionQueue.poll();
+            if (null == thunk)
                 break;
 
-            // That should be a thunk. If it is, then execute it; if not, who cares.
-            if (o instanceof IThunk)
-                {
-                IThunk thunk = (IThunk)(o);
-                thunk.doThunk();
-                }
+            // Execute the work
+            thunk.doThunk();
 
-            // Periodically check whether we've run long enough for this
-            // loop() call.
-            if ((i+1) % this.loopDwellCheckInterval == 0)
+            // Periodically check whether we've run long enough for this loop() call.
+            if (i % this.loopDwellCheckInterval == 0)
                 {
                 long nanoTimeNow = System.nanoTime();
                 if (nanoTimeNow - nanotimeStart > this.nanotimeLoopDwellMax)
