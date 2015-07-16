@@ -23,9 +23,10 @@ public class ThreadThunkContext
      */
     public IThunker getThunker() { return this.thunker; }
 
-    private Thread   thread;
-    private IThunker thunker;
-    private int      dispatchedThunkCount;
+    private final Thread   thread;
+    private final IThunker thunker;
+    private final Object   lock;
+    private       int      dispatchedThunkCount;
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -35,6 +36,7 @@ public class ThreadThunkContext
         {
         this.thread = Thread.currentThread();
         this.thunker = thunker;
+        this.lock = new Object();
         this.dispatchedThunkCount = 0;
         }
 
@@ -50,7 +52,7 @@ public class ThreadThunkContext
      */
     public void noteThunkDispatching(IThunk thunk)
         {
-        synchronized (this)
+        synchronized (this.lock)
             {
             this.dispatchedThunkCount++;
             }
@@ -75,7 +77,7 @@ public class ThreadThunkContext
      */
     public void noteThunkCompletion(IThunk thunk)
         {
-        synchronized (this)
+        synchronized (this.lock)
             {
             if (BuildConfig.DEBUG && !(this.dispatchedThunkCount > 0))
                 throw new AssertionError();
@@ -96,7 +98,7 @@ public class ThreadThunkContext
      */
     public void waitForThreadThunkCompletions() throws InterruptedException
         {
-        synchronized (this)
+        synchronized (this.lock)
             {
             this.wait();
             }

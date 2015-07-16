@@ -30,6 +30,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     private Thread mainThread;
     private ConcurrentLinkedQueue<IThunk> loopThreadActionQueue = new ConcurrentLinkedQueue<IThunk>();
     private AtomicBoolean gamePadStateChanged = new AtomicBoolean(false);
+    private final int msWaitThreadStop = 100;
 
     /**
      * Advanced: unthunkedHardwareMap contains the original hardware map provided
@@ -109,28 +110,33 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      * It will in particular ALWAYS be the case that by the  time the stop() method returns that
      * the thread on which MainThread() is executed will have been terminated.
      */
+    @SuppressWarnings("deprecation")
     @Override
     public final void stop()
         {
         // Notify the MainThread() method that we wish it to stop what it's doing, clean
         // up, and return.
         this.mainThread.interrupt();
-        //
+
+        // Wait, briefly, to give the thread a chance to handle the interruption and complete
+        // gracefully on its own volition.
         try {
-            // Wait, briefly, to give the thread a chance to handle the interruption and complete
-            this.mainThread.wait(100);
+            this.mainThread.join(msWaitThreadStop);
             }
         catch (InterruptedException ignored) { }
-        finally
+
+        // If after our brief wait the thread is still alive then give it a kick
+        if (this.mainThread.isAlive())
             {
             // Under all circumstances, make sure the thread shuts down, even if the
             // programmer hasn't handled interruption (for example, he might have entered
             // an infinite loop, or a very long one at least).
             this.mainThread.stop();
             }
-        //
+
+        // Ok, one of those two ways should have worked. Wait (indefinitely) until
+        // the thread is no longer alive.
         try {
-            // Wait until the thread terminates
             this.mainThread.join();
             }
         catch (InterruptedException ignored) { }
@@ -139,7 +145,8 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     private class Runner implements Runnable
         {
         /**
-         * Our run method here calls the synchronous main() method.
+         * The run method calls the synchronous main() method to finally
+         * actually run the user's code.
          */
         public final void run()
             {
@@ -150,8 +157,10 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 {
                 SynchronousOpMode.this.main();
                 }
-            catch (InterruptedException e)
+            catch (InterruptedException ignored)
                 {
+                // If the thread itself doesn't catch the interrupt, at least
+                // we will do so here.
                 }
             }
         }
