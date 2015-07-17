@@ -79,12 +79,12 @@ public class ThreadThunkContext
         {
         synchronized (this.lock)
             {
-            if (BuildConfig.DEBUG && !(this.dispatchedThunkCount > 0))
-                throw new AssertionError();
+            if (BuildConfig.DEBUG && (this.dispatchedThunkCount <= 0))
+                throw new AssertionError("assertion failed in noteThunkCompletion");
 
             if (--this.dispatchedThunkCount == 0)
                 {
-                this.notifyAll();
+                this.lock.notifyAll();
                 }
             }
         }
@@ -105,7 +105,7 @@ public class ThreadThunkContext
             // with 'spurious wakeups'.
             while (this.dispatchedThunkCount > 0)
                 {
-                this.wait();
+                this.lock.wait();
                 }
             }
         }
@@ -125,7 +125,7 @@ public class ThreadThunkContext
         }
 
     /**
-     * tlsThunker is the thread local variable by which we are associated with a thread
+     * tlsThunker is the thread local variable by which a ThreadThunkContext is associated with a thread
      */
     private static final ThreadLocal<ThreadThunkContext> tlsThunker = new ThreadLocal<ThreadThunkContext>()
         {

@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.*;
 import com.qualcomm.ftcrobotcontroller.BuildConfig;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.robocol.Telemetry;
 
 // Work items:
 //      * TODO: telemetry in synchronous mode: dashboard + log; throttling
@@ -34,9 +35,19 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
 
     /**
      * Advanced: unthunkedHardwareMap contains the original hardware map provided
-     * in OpMode before it was replaced with a version that does thunking.
+     * in OpMode before it was replaced with a version that does thunking. unthunkedTelemetry
+     * is similar, but for telemetry instead of hardware
      */
     public HardwareMap unthunkedHardwareMap = null;
+    /**
+     * @see #unthunkedHardwareMap
+     */
+    public Telemetry unthunkedTelemetry = null;
+
+    /**
+     * comment to come
+     */
+    public ThunkedTelemetry telemetry = null;
 
     /**
      * The game pad variables are redeclared here so as to hide those in our OpMode superclass
@@ -91,8 +102,11 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         {
         // Replace the op mode's hardware map variable with one whose contained
         // object implementations will thunk over to the loop thread as they need to.
-        this.unthunkedHardwareMap = this.hardwareMap;
+        this.unthunkedHardwareMap = super.hardwareMap;
         this.hardwareMap = CreateThunkedHardwareMap(this.unthunkedHardwareMap);
+
+        this.unthunkedTelemetry = super.telemetry;
+        this.telemetry = new ThunkedTelemetry(this.unthunkedTelemetry);
 
         // Remember who the loop thread is so that we know whom to communicate
         // with from the main() thread.
@@ -108,9 +122,11 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      * Shut down this op mode.
      *
      * It will in particular ALWAYS be the case that by the  time the stop() method returns that
-     * the thread on which MainThread() is executed will have been terminated.
+     * the thread on which MainThread() is executed will have been terminated. Well, at least that's
+     * the invariant we would LIKE to maintain. Unfortunately, there appears to be simply no way
+     * (any longer) to get rid of a thread that simply refuses to die in response to an interrupt.
+     * So we give the main() thread ample time to die, but continue on anyway if it doesn't.
      */
-    @SuppressWarnings("deprecation")
     @Override
     public final void stop()
         {
@@ -125,6 +141,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
             }
         catch (InterruptedException ignored) { }
 
+        /*
         // If after our brief wait the thread is still alive then give it a kick
         if (this.mainThread.isAlive())
             {
@@ -140,6 +157,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
             this.mainThread.join();
             }
         catch (InterruptedException ignored) { }
+        */
         }
 
     private class Runner implements Runnable
@@ -246,8 +264,19 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         {
         // Capture the gamepad states safely so that in the main() thread we
         // don't see torn writes
-        boolean diff1 = this.gamepad1.update(super.gamepad1);
-        boolean diff2 = this.gamepad2.update(super.gamepad2);
+        boolean diff1 = true;
+        boolean diff2 = true;
+        //
+        if (this.gamepad1 == null)
+            this.gamepad1 = new ThreadSafeGamepad(super.gamepad1);
+        else
+            diff1 = this.gamepad1.update(super.gamepad1);
+        //
+        if (this.gamepad2 == null)
+            this.gamepad2 = new ThreadSafeGamepad(super.gamepad2);
+        else
+            diff2 = this.gamepad2.update(super.gamepad2);
+        //
         this.gamePadStateChanged.compareAndSet(false, diff1 || diff2);
 
         // Call the subclass hook in case they might want to do something interesting
@@ -304,8 +333,8 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     public void executeOnLoopThread(IThunk thunk)
         {
         // We should only be called from synchronous threads
-        if (BuildConfig.DEBUG && !this.isLoopThread())
-            throw new AssertionError();
+        if (BuildConfig.DEBUG && this.isLoopThread())
+            throw new AssertionError("executeOnLoopThread called from loop() thread");
 
         this.loopThreadActionQueue.add(thunk);
         }
