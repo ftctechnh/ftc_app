@@ -1,13 +1,17 @@
-package org.swerverobotics.library;
+package org.swerverobotics.library.thunking;
 
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
+
+import org.swerverobotics.library.SynchronousOpMode;
+import org.swerverobotics.library.exceptions.RuntimeInterruptedException;
+import org.swerverobotics.library.exceptions.SwerveRuntimeException;
 
 /**
  * An implementation of DcMotorController that talks to a non-thunking target implementation
  * by thunking all calls over to the loop thread and back gain.
  */
-class ThunkingMotorController implements DcMotorController
+public class ThunkingMotorController implements DcMotorController
     {
     //----------------------------------------------------------------------------------------------
     // State

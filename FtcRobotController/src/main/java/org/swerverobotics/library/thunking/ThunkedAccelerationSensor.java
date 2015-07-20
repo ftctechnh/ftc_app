@@ -1,43 +1,43 @@
-package org.swerverobotics.library;
+package org.swerverobotics.library.thunking;
 
 import com.qualcomm.robotcore.hardware.*;
 
 /**
- * An UltrasonicSensor that can be called on the main() thread.
+ * An AccelerationSensor that can be called on the main() thread.
  */
-public class ThunkedUltrasonicSensor extends UltrasonicSensor
+public class ThunkedAccelerationSensor extends AccelerationSensor
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    UltrasonicSensor target;   // can only talk to him on the loop thread
+    AccelerationSensor target;   // can only talk to him on the loop thread
 
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    private ThunkedUltrasonicSensor(UltrasonicSensor target)
+    private ThunkedAccelerationSensor(AccelerationSensor target)
         {
         this.target = target;
         }
 
-    static public ThunkedUltrasonicSensor Create(UltrasonicSensor target)
+    static public ThunkedAccelerationSensor Create(AccelerationSensor target)
         {
-        return target instanceof ThunkedUltrasonicSensor ? (ThunkedUltrasonicSensor)target : new ThunkedUltrasonicSensor(target);
+        return target instanceof ThunkedAccelerationSensor ? (ThunkedAccelerationSensor)target : new ThunkedAccelerationSensor(target);
         }
 
     //----------------------------------------------------------------------------------------------
-    // UltrasonicSensor
+    // AccelerationSensor
     //----------------------------------------------------------------------------------------------
 
-    @Override public double getUltrasonicLevel()
+    @Override public AccelerationSensor.Acceleration getAcceleration()
         {
-        class Thunk extends ResultableThunk<Double>
+        class Thunk extends ResultableThunk<Acceleration>
             {
             @Override public void actionOnLoopThread()
                 {
-                this.result = target.getUltrasonicLevel();
+                this.result = target.getAcceleration();
                 }
             }
         Thunk thunk = new Thunk();
@@ -58,6 +58,4 @@ public class ThunkedUltrasonicSensor extends UltrasonicSensor
         thunk.dispatch();
         return thunk.result;
         }
-
-
     }

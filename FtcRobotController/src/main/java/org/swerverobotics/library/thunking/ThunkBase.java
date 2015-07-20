@@ -1,4 +1,6 @@
-package org.swerverobotics.library;
+package org.swerverobotics.library.thunking;
+
+import org.swerverobotics.library.exceptions.SwerveRuntimeException;
 
 /**
  * ThunkBase contains most of the functionality for thunking

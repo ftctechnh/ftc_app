@@ -9,11 +9,13 @@ import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.robocol.Telemetry;
 
+import org.swerverobotics.library.exceptions.*;
+import org.swerverobotics.library.thunking.*;
+
 // Work items:
-//      * TODO: telemetry in synchronous mode: dashboard + log; throttling
+//      * TODO: telemetry: dashboard + log; throttling
 //      * TODO: invesigate: 'getPower on legacy NXT-compatible motor controller returns a null value' (eh?)
 //      * TODO: a big once-over for (default)/public/private/protected and/or final on methods and classes
-//      * TODO: a once-over thinking about concurrent multiple synchronous threads (main() + workers)
 
 /**
  * SynchronousOpMode is a base class that can be derived from in order to

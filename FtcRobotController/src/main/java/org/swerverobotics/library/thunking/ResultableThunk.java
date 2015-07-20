@@ -1,4 +1,4 @@
-package org.swerverobotics.library;
+package org.swerverobotics.library.thunking;
 
 /**
  * Thunks derived from ResultableThunk have a member variable named 'result

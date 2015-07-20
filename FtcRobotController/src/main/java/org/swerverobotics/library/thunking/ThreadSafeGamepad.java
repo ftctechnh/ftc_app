@@ -1,4 +1,4 @@
-package org.swerverobotics.library;
+package org.swerverobotics.library.thunking;
 
 /**
  * A form of GamePad that guards against torn writes to its state caused by concurrency.
