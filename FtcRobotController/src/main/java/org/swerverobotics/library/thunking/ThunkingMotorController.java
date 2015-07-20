@@ -9,9 +9,10 @@ import org.swerverobotics.library.exceptions.SwerveRuntimeException;
 
 /**
  * An implementation of DcMotorController that talks to a non-thunking target implementation
- * by thunking all calls over to the loop thread and back gain.
+ * by thunking all calls over to the loop thread and back gain. The implementation automatically
+ * takes care of read and write device mode switching.
  */
-public class ThunkingMotorController implements DcMotorController
+public class ThunkingMotorController extends ThunkedBase implements DcMotorController
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -36,63 +37,17 @@ public class ThunkingMotorController implements DcMotorController
         }
 
     //----------------------------------------------------------------------------------------------
-    // Utility
+    // Dispatching
     //----------------------------------------------------------------------------------------------
 
-    private <T> T doReadOperation(final ResultableThunk<T> thunk)
+    @Override protected void enterReadOperation() throws InterruptedException
         {
-        // Don't bother doing more work if we've been interrupted
-        if (!Thread.currentThread().isInterrupted())
-            {
-            T result = null;
-            try
-                {
-                this.switchToMode(DeviceMode.READ_ONLY);
-                thunk.dispatch();
-                result = thunk.result;
-                }
-            catch (InterruptedException e)
-                {
-                // Tell the current thread that he should shut down soon
-                Thread.currentThread().interrupt();
-
-                // Our signature (and that of our caller) doesn't allow us to throw
-                // InterruptedException. But we can't actually return a value to our caller,
-                // as we have nothing to return. So, we do the best we can, and throw SOMETHING.
-                throw SwerveRuntimeException.Wrap(e);
-                }
-            return result;
-            }
-        else
-            {
-            // Translate the isInterrupted into an exception, as we have to throw, since
-            // we have no value we can possibly return
-            throw new RuntimeInterruptedException();
-            }
+        this.switchToMode(DeviceMode.READ_ONLY);
         }
 
-    private void doWriteOperation(final NonwaitingThunk thunk)
+    @Override protected void enterWriteOperation() throws InterruptedException
         {
-        // Don't bother doing more work if this thread has been interrupted
-        if (!Thread.currentThread().isInterrupted())
-            {
-            try
-                {
-                this.switchToMode(DeviceMode.WRITE_ONLY);
-                thunk.dispatch();
-                }
-            catch (InterruptedException e)
-                {
-                // Tell the current thread that he should shut down soon
-                Thread.currentThread().interrupt();
-
-                // Since callers generally do reads as well as writes, and so
-                // must deal with the necessity we have in reads of throwing,
-                // we may as well throw here as well, as that will help shut
-                // things down sooner.
-                throw SwerveRuntimeException.Wrap(e);
-                }
-            }
+        this.switchToMode(DeviceMode.WRITE_ONLY);
         }
 
     /**
@@ -102,14 +57,15 @@ public class ThunkingMotorController implements DcMotorController
      *      SWITCHING_TO_READ_MODE -> READ_MODE
      * and
      *      SWITCHING_TO_WRITE_MODE -> WRITE_MODE.
-     * All other transitions only happen because we request them.
+     * All other transitions only happen because we (or someone else) requests them.
      */
     private synchronized void switchToMode(DeviceMode newMode) throws InterruptedException
         {
         // Note: remember that in general the user code may choose to spawn worker threads.
         // Thus, we may have multiple, concurrent threads simultaneously trying to switch modes.
-        // We deal with that by using synchronized methods, allowing only one client in at
+        // We deal with that by using synchronized public methods, allowing only one client in at
         // a time; this gives us a sequential sequence of modes we need the controller to be in.
+        // This method, too, is synchronized, but that's paranoia.
 
         // If we don't currently know his mode, we need to ask the controller where we stand
         if (null == this.controllerMode)
