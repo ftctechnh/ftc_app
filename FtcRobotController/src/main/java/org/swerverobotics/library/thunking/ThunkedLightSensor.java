@@ -1,48 +1,61 @@
-package org.swerverobotics.library;
+package org.swerverobotics.library.thunking;
 
 import com.qualcomm.robotcore.hardware.*;
 
 /**
- * An AccelerationSensor that can be called on the main() thread.
+ * A LightSensor that can be called on the main() thread.
  */
-public class ThunkedAccelerationSensor extends AccelerationSensor
+public class ThunkedLightSensor extends LightSensor
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    AccelerationSensor target;   // can only talk to him on the loop thread
+    LightSensor target;   // can only talk to him on the loop thread
 
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    private ThunkedAccelerationSensor(AccelerationSensor target)
+    private ThunkedLightSensor(LightSensor target)
         {
         this.target = target;
         }
 
-    static public ThunkedAccelerationSensor Create(AccelerationSensor target)
+    static public ThunkedLightSensor Create(LightSensor target)
         {
-        return target instanceof ThunkedAccelerationSensor ? (ThunkedAccelerationSensor)target : new ThunkedAccelerationSensor(target);
+        return target instanceof ThunkedLightSensor ? (ThunkedLightSensor)target : new ThunkedLightSensor(target);
         }
 
     //----------------------------------------------------------------------------------------------
-    // AccelerationSensor
+    // LightSensor
     //----------------------------------------------------------------------------------------------
 
-    @Override public AccelerationSensor.Acceleration getAcceleration()
+    @Override public double getLightLevel()
         {
-        class Thunk extends ResultableThunk<Acceleration>
+        class Thunk extends ResultableThunk<Double>
             {
             @Override public void actionOnLoopThread()
                 {
-                this.result = target.getAcceleration();
+                this.result = target.getLightLevel();
                 }
             }
         Thunk thunk = new Thunk();
         thunk.dispatch();
         return thunk.result;
+        }
+
+    @Override public void enableLed(final boolean enable)
+        {
+        class Thunk extends NonwaitingThunk
+            {
+            @Override public void actionOnLoopThread()
+                {
+                target.enableLed(enable);
+                }
+            }
+        Thunk thunk = new Thunk();
+        thunk.dispatch();
         }
 
     @Override public String status()

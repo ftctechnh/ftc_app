@@ -3,6 +3,7 @@ package org.swerverobotics.library.examples;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
 import org.swerverobotics.library.*;
+import org.swerverobotics.library.thunking.ThreadSafeGamepad;
 
 /**
  * A very simple example of a synchronous op mode.

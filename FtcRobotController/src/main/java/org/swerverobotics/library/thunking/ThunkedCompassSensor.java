@@ -1,61 +1,48 @@
-package org.swerverobotics.library;
+package org.swerverobotics.library.thunking;
 
 import com.qualcomm.robotcore.hardware.*;
 
 /**
- * A LightSensor that can be called on the main() thread.
+ * A CompassSensor that can be called on the main() thread.
  */
-public class ThunkedLightSensor extends LightSensor
+public class ThunkedCompassSensor extends CompassSensor
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    LightSensor target;   // can only talk to him on the loop thread
+    CompassSensor target;   // can only talk to him on the loop thread
 
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    private ThunkedLightSensor(LightSensor target)
+    private ThunkedCompassSensor(CompassSensor target)
         {
         this.target = target;
         }
 
-    static public ThunkedLightSensor Create(LightSensor target)
+    static public ThunkedCompassSensor Create(CompassSensor target)
         {
-        return target instanceof ThunkedLightSensor ? (ThunkedLightSensor)target : new ThunkedLightSensor(target);
+        return target instanceof ThunkedCompassSensor ? (ThunkedCompassSensor)target : new ThunkedCompassSensor(target);
         }
 
     //----------------------------------------------------------------------------------------------
-    // LightSensor
+    // CompassSensor
     //----------------------------------------------------------------------------------------------
 
-    @Override public double getLightLevel()
+    @Override public double getDirection()
         {
         class Thunk extends ResultableThunk<Double>
             {
             @Override public void actionOnLoopThread()
                 {
-                this.result = target.getLightLevel();
+                this.result = target.getDirection();
                 }
             }
         Thunk thunk = new Thunk();
         thunk.dispatch();
         return thunk.result;
-        }
-
-    @Override public void enableLed(final boolean enable)
-        {
-        class Thunk extends NonwaitingThunk
-            {
-            @Override public void actionOnLoopThread()
-                {
-                target.enableLed(enable);
-                }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
         }
 
     @Override public String status()
@@ -71,4 +58,34 @@ public class ThunkedLightSensor extends LightSensor
         thunk.dispatch();
         return thunk.result;
         }
+
+    @Override public void setMode(CompassSensor.CompassMode mode)
+        {
+        class Thunk extends NonwaitingThunk
+            {
+            CompassSensor.CompassMode mode;
+            @Override public void actionOnLoopThread()
+                {
+                target.setMode(mode);
+                }
+            }
+        Thunk thunk = new Thunk();
+        thunk.mode = mode;
+        thunk.dispatch();
+        }
+
+    @Override public boolean calibrationFailed()
+        {
+        class Thunk extends ResultableThunk<Boolean>
+            {
+            @Override public void actionOnLoopThread()
+                {
+                this.result = target.calibrationFailed();
+                }
+            }
+        Thunk thunk = new Thunk();
+        thunk.dispatch();
+        return thunk.result;
+        }
+
     }

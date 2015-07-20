@@ -1,4 +1,4 @@
-package org.swerverobotics.library;
+package org.swerverobotics.library.thunking;
 
 /**
  * IThunk is an interface for encapsulating work that must be thunked from

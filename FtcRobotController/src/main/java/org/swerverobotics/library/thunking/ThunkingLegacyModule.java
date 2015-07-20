@@ -1,50 +1,105 @@
-package org.swerverobotics.library;
+package org.swerverobotics.library.thunking;
 
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.*;
-
-import com.qualcomm.ftcrobotcontroller.BuildConfig;
 import com.qualcomm.robotcore.hardware.*;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.robocol.Telemetry;
 
-/**
- * A wrapper for Telemetry that can be called from a synchronous thread.
- */
-public class ThunkedTelemetry
-// Note: we may not actually need to thunk for telemetry: all its entry points are synchronized,
-// so it's certainly threadsafe. But can the resources it calls upon to send data be used from
-// a non-loop() thread? We thunk for now, just to be sure.
-//
-// It's also a nice way to test the thunking infrastructure. :-)
+public class ThunkingLegacyModule implements LegacyModule
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    private Telemetry target;
+    LegacyModule target;   // can only talk to him on the loop thread
 
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    public ThunkedTelemetry(Telemetry target)
+    private ThunkingLegacyModule(LegacyModule target)
         {
         this.target = target;
         }
 
+    static public ThunkingLegacyModule Create(LegacyModule target)
+        {
+        return target instanceof ThunkingLegacyModule ? (ThunkingLegacyModule)target : new ThunkingLegacyModule(target);
+        }
+
     //----------------------------------------------------------------------------------------------
-    // Operations
+    // LegacyModule interface
     //----------------------------------------------------------------------------------------------
 
-    public long getTimestamp()
+    @Override public void enableNxtI2cReadMode(final int physicalPort, final int i2cAddress, final int memAddress, final int memLength)
         {
-        class Thunk extends ResultableThunk<Long>
+        class Thunk extends NonwaitingThunk
             {
             @Override public void actionOnLoopThread()
                 {
-                this.result = target.getTimestamp();
+                target.enableNxtI2cReadMode(physicalPort, i2cAddress, memAddress, memLength);
+                }
+            }
+        Thunk thunk = new Thunk();
+        thunk.dispatch();
+        }
+
+    @Override public void enableNxtI2cWriteMode(final int physicalPort, final int i2cAddress, final int memAddress, final byte[] initialValues)
+        {
+        class Thunk extends NonwaitingThunk
+            {
+            @Override public void actionOnLoopThread()
+                {
+                target.enableNxtI2cWriteMode(physicalPort, i2cAddress, memAddress, initialValues);
+                }
+            }
+        Thunk thunk = new Thunk();
+        thunk.dispatch();
+        }
+
+    @Override public void enableAnalogReadMode(final int physicalPort, final int i2cAddress)
+        {
+        class Thunk extends NonwaitingThunk
+            {
+            @Override public void actionOnLoopThread()
+                {
+                target.enableAnalogReadMode(physicalPort, i2cAddress);
+                }
+            }
+        Thunk thunk = new Thunk();
+        thunk.dispatch();
+        }
+
+    @Override public void enable9v(final int physicalPort, final boolean enable)
+        {
+        class Thunk extends NonwaitingThunk
+            {
+            @Override public void actionOnLoopThread()
+                {
+                target.enable9v(physicalPort, enable);
+                }
+            }
+        Thunk thunk = new Thunk();
+        thunk.dispatch();
+        }
+
+    @Override public void setDigitalLine(final int physicalPort, final int line, final boolean set)
+        {
+        class Thunk extends NonwaitingThunk
+            {
+            @Override public void actionOnLoopThread()
+                {
+                target.setDigitalLine(physicalPort, line, set);
+                }
+            }
+        Thunk thunk = new Thunk();
+        thunk.dispatch();
+        }
+
+    @Override public byte[] readLegacyModuleCache(final int physicalPort)
+        {
+        class Thunk extends ResultableThunk<byte[]>
+            {
+            @Override public void actionOnLoopThread()
+                {
+                this.result = target.readLegacyModuleCache(physicalPort);
                 }
             }
         Thunk thunk = new Thunk();
@@ -52,26 +107,26 @@ public class ThunkedTelemetry
         return thunk.result;
         }
 
-    public void setTag(final String tag)
+    @Override public void writeLegacyModuleCache(final int physicalPort, final byte[] data)
         {
         class Thunk extends NonwaitingThunk
             {
             @Override public void actionOnLoopThread()
                 {
-                target.setTag(tag);
+                target.writeLegacyModuleCache(physicalPort, data);
                 }
             }
         Thunk thunk = new Thunk();
         thunk.dispatch();
         }
 
-    public String getTag()
+    @Override public byte[] readAnalog(final int physicalPort)
         {
-        class Thunk extends ResultableThunk<String>
+        class Thunk extends ResultableThunk<byte[]>
             {
             @Override public void actionOnLoopThread()
                 {
-                this.result = target.getTag();
+                this.result = target.readAnalog(physicalPort);
                 }
             }
         Thunk thunk = new Thunk();
@@ -79,80 +134,13 @@ public class ThunkedTelemetry
         return thunk.result;
         }
 
-    public void addData(final String key, final String msg)
-        {
-        class Thunk extends NonwaitingThunk
-            {
-            @Override public void actionOnLoopThread()
-                {
-                target.addData(key, msg);
-                }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        }
-
-    public void addData(final String key, final float msg)
-        {
-        class Thunk extends NonwaitingThunk
-            {
-            @Override public void actionOnLoopThread()
-                {
-                target.addData(key, msg);
-                }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        }
-
-    public void addData(final String key, final double msg)
-        {
-        class Thunk extends NonwaitingThunk
-            {
-            @Override public void actionOnLoopThread()
-                {
-                target.addData(key, msg);
-                }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        }
-
-    public Map<String, String> getDataStrings()
-        {
-        class Thunk extends ResultableThunk<Map<String, String>>
-            {
-            @Override public void actionOnLoopThread()
-                {
-                this.result = target.getDataStrings();
-                }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        return thunk.result;
-        }
-
-    public Map<String, Float> getDataNumbers()
-        {
-        class Thunk extends ResultableThunk<Map<String, Float>>
-            {
-            @Override public void actionOnLoopThread()
-                {
-                this.result = target.getDataNumbers();
-                }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        return thunk.result;
-        }
-
-    public boolean hasData()
+    @Override public boolean isPortReady(final int physicalPort)
         {
         class Thunk extends ResultableThunk<Boolean>
             {
             @Override public void actionOnLoopThread()
                 {
-                this.result = target.hasData();
+                this.result = target.isPortReady(physicalPort);
                 }
             }
         Thunk thunk = new Thunk();
@@ -160,17 +148,16 @@ public class ThunkedTelemetry
         return thunk.result;
         }
 
-    public void clearData()
+    @Override public void close()
         {
         class Thunk extends NonwaitingThunk
             {
             @Override public void actionOnLoopThread()
                 {
-                target.clearData();
+                target.close();
                 }
             }
         Thunk thunk = new Thunk();
         thunk.dispatch();
         }
-
     }

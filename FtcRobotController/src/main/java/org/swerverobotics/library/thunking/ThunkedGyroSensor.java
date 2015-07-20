@@ -1,43 +1,57 @@
-package org.swerverobotics.library;
+package org.swerverobotics.library.thunking;
 
 import com.qualcomm.robotcore.hardware.*;
 
 /**
- * A VoltageSensor that can be called on the main() thread.
+ * A GyroSensor that can be called on the main() thread.
  */
-public class ThunkedVoltageSensor implements VoltageSensor
+public class ThunkedGyroSensor extends  GyroSensor
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    VoltageSensor target;   // can only talk to him on the loop thread
+    GyroSensor target;   // can only talk to him on the loop thread
 
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    private ThunkedVoltageSensor(VoltageSensor target)
+    private ThunkedGyroSensor(GyroSensor target)
         {
         this.target = target;
         }
 
-    static public ThunkedVoltageSensor Create(VoltageSensor target)
+    static public ThunkedGyroSensor Create(GyroSensor target)
         {
-        return target instanceof ThunkedVoltageSensor ? (ThunkedVoltageSensor)target : new ThunkedVoltageSensor(target);
+        return target instanceof ThunkedGyroSensor ? (ThunkedGyroSensor)target : new ThunkedGyroSensor(target);
         }
 
     //----------------------------------------------------------------------------------------------
-    // VoltageSensor
+    // GyroSensor
     //----------------------------------------------------------------------------------------------
 
-    @Override public double getVoltage()
+    @Override public double getRotation()
         {
         class Thunk extends ResultableThunk<Double>
             {
             @Override public void actionOnLoopThread()
                 {
-                this.result = target.getVoltage();
+                this.result = target.getRotation();
+                }
+            }
+        Thunk thunk = new Thunk();
+        thunk.dispatch();
+        return thunk.result;
+        }
+
+    @Override public String status()
+        {
+        class Thunk extends ResultableThunk<String>
+            {
+            @Override public void actionOnLoopThread()
+                {
+                this.result = target.status();
                 }
             }
         Thunk thunk = new Thunk();

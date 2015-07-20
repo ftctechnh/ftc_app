@@ -1,4 +1,4 @@
-package org.swerverobotics.library;
+package org.swerverobotics.library.thunking;
 
 import com.qualcomm.robotcore.hardware.*;
 
@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.*;
  * An implementation of ServoController that talks to a non-thunking target implementation
  * by thunking all calls over to the loop thread and back gain.
  */
-class ThunkingServoController implements ServoController
+public class ThunkingServoController implements ServoController
     {
     //----------------------------------------------------------------------------------------------
     // State

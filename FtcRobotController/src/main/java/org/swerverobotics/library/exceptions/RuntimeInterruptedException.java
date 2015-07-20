@@ -1,4 +1,4 @@
-package org.swerverobotics.library;
+package org.swerverobotics.library.exceptions;
 
 /**
  * An unchecked version of InterruptedException. Thrown by classes that pay attention to if they

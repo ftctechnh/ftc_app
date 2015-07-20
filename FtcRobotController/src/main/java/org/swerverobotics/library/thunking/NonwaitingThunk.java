@@ -1,4 +1,4 @@
-package org.swerverobotics.library;
+package org.swerverobotics.library.thunking;
 
 /**
  * Thunks derived from NonwaitingThunk queue up their work but do not synchronously

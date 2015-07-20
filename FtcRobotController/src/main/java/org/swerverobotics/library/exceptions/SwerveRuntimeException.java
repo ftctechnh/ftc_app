@@ -1,4 +1,4 @@
-package org.swerverobotics.library;
+package org.swerverobotics.library.exceptions;
 
 /**
  * SwerveRuntimeException is a base for all runtime exceptions defined in the Swerve Robotics library
