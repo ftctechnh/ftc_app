@@ -42,10 +42,23 @@ public abstract class ThunkBase implements IThunk
             {
             this.context.getThunker().executeOnLoopThread(this);
             }
-        catch (Exception e)
+        catch (RuntimeException e)
             {
             this.context.noteThunkDispatchFailure(this);
             throw e;
+            }
+        catch (Error e)
+            {
+            this.context.noteThunkDispatchFailure(this);
+            throw e;
+            }
+        catch (Exception e)
+            {
+            // This shouldn't happen, as we shouldn't see any checked exceptions
+            // since none have been declared. In any event, we note the failure
+            // then do what we can.
+            this.context.noteThunkDispatchFailure(this);
+            throw SwerveRuntimeException.Wrap(e);
             }
         }
     }

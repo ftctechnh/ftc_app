@@ -10,14 +10,14 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.robocol.Telemetry;
 
 /**
- *
+ * A wrapper for Telemetry that can be called from a synchronous thread.
  */
 public class ThunkedTelemetry
 // Note: we may not actually need to thunk for telemetry: all its entry points are synchronized,
 // so it's certainly threadsafe. But can the resources it calls upon to send data be used from
-// a non-loop() thread? We thunk now, just to be sure.
+// a non-loop() thread? We thunk for now, just to be sure.
 //
-// It's also a nice way to test the thunking infrastructure.
+// It's also a nice way to test the thunking infrastructure. :-)
     {
     //----------------------------------------------------------------------------------------------
     // State

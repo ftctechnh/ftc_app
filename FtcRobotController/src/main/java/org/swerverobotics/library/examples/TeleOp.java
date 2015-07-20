@@ -30,8 +30,8 @@ public class TeleOp extends SynchronousOpMode
         // so that it can take the same power level values as the other motor.
         this.motorLeft.setDirection(DcMotor.Direction.REVERSE);
 
-        // Enter an infinite loop processing all the input we receive
-        for (;;)
+        // Enter a loop processing all the input we receive
+        while (!this.stopRequested())
             {
             if (this.newGamePadInputAvailable())
                 {
@@ -41,10 +41,9 @@ public class TeleOp extends SynchronousOpMode
                 }
             else
                 {
-                // There is no new gamepad input available. Give
-                // other threads a chance to do something rather than
-                // eating our thread scheduler quantum.
-                Thread.yield();
+                // There is no new gamepad input available. Give other threads a chance
+                // to do something rather than eating the CPU.
+                this.idle();
                 }
             }
         }
@@ -91,7 +90,7 @@ public class TeleOp extends SynchronousOpMode
         this.motorRight.setPower(powerRight);
 
         // Advanced: not necessary; shown here just for illustration.
-        this.waitForThreadThunkCompletions();
+        this.waitForThreadCallsToComplete();
         }
 
     float xformDrivingPowerLevels(float level)

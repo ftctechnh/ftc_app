@@ -1,7 +1,5 @@
 package org.swerverobotics.library.examples;
 
-import com.qualcomm.robotcore.hardware.*;
-import com.qualcomm.robotcore.util.*;
 import org.swerverobotics.library.*;
 
 /**
@@ -13,8 +11,9 @@ public class NullOp extends SynchronousOpMode
         {
         this.telemetry.addData("log", "Hello world!");
 
-        for (;;)
+        while (!this.stopRequested())
             {
+            this.idle();
             }
         }
     }
