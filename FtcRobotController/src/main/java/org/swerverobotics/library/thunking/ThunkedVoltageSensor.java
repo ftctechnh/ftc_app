@@ -33,16 +33,13 @@ public class ThunkedVoltageSensor implements VoltageSensor
 
     @Override public double getVoltage()
         {
-        class Thunk extends ResultableThunk<Double>
+        return (new ResultableThunk<Double>()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 this.result = target.getVoltage();
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        return thunk.result;
+            }).doReadOperation();
         }
 
     }

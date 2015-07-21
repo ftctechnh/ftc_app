@@ -34,109 +34,89 @@ public class ThunkingServoController implements ServoController
 
     @Override public String getDeviceName()
         {
-        class Thunk extends ResultableThunk<String>
+        return (new ResultableThunk<String>()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 this.result = target.getDeviceName();
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        return thunk.result;
+            }).doReadOperation();
         }
 
     @Override public int getVersion()
         {
-        class Thunk extends ResultableThunk<Integer>
+        return (new ResultableThunk<Integer>()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 this.result = target.getVersion();
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        return thunk.result;
+            }).doReadOperation();
         }
 
     @Override public void close()
         {
-        class Thunk extends NonwaitingThunk
+        (new NonwaitingThunk()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 target.close();
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
+            }).doWriteOperation();
         }
 
     @Override public void pwmEnable()
         {
-        class Thunk extends NonwaitingThunk
+        (new NonwaitingThunk()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 target.pwmEnable();
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
+            }).doWriteOperation();
         }
 
     @Override public void pwmDisable()
         {
-        class Thunk extends NonwaitingThunk
+        (new NonwaitingThunk()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 target.pwmDisable();
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
+            }).doWriteOperation();
         }
 
     @Override public ServoController.PwmStatus getPwmStatus()
         {
-        class Thunk extends ResultableThunk<PwmStatus>
+        return (new ResultableThunk<ServoController.PwmStatus>()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 this.result = target.getPwmStatus();
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        return thunk.result;
+            }).doReadOperation();
         }
 
     @Override public void setServoPosition(final int channel, final double position)
         {
-        class Thunk extends NonwaitingThunk
+        (new NonwaitingThunk()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 target.setServoPosition(channel, position);
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
+            }).doWriteOperation();
         }
 
     @Override public double getServoPosition(final int channel)
         {
-        class Thunk extends ResultableThunk<Double>
+        return (new ResultableThunk<Double>()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 this.result = target.getServoPosition(channel);
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        return thunk.result;
+            }).doReadOperation();
         }
     }

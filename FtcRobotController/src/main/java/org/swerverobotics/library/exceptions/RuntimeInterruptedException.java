@@ -6,7 +6,15 @@ package org.swerverobotics.library.exceptions;
  */
 public class RuntimeInterruptedException extends SwerveRuntimeException
     {
+    //----------------------------------------------------------------------------------------------
+    // State
+    //----------------------------------------------------------------------------------------------
+
     public InterruptedException interruptedException = null;
+
+    //----------------------------------------------------------------------------------------------
+    // Construction
+    //----------------------------------------------------------------------------------------------
 
     public RuntimeInterruptedException()
         {

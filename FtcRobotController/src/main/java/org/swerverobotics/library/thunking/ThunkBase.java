@@ -7,13 +7,28 @@ import org.swerverobotics.library.exceptions.SwerveRuntimeException;
  */
 public abstract class ThunkBase implements IThunk
     {
+    //----------------------------------------------------------------------------------------------
+    // State
+    //----------------------------------------------------------------------------------------------
+
     ThreadThunkContext context;
+
+    //----------------------------------------------------------------------------------------------
+    // Construction
+    //----------------------------------------------------------------------------------------------
 
     public ThunkBase()
         {
         this.context = ThreadThunkContext.getThreadContext();
         }
 
+    //----------------------------------------------------------------------------------------------
+    // State
+    //----------------------------------------------------------------------------------------------
+
+    /**
+     * Executed on the loop() thread, doThunk() is called to carry out the work of the thunk
+     */
     public void doThunk()
         {
         // Do what we came here to do
@@ -36,23 +51,16 @@ public abstract class ThunkBase implements IThunk
 
     /**
      * Dispatch this thunk over to the loop thread.
+     *
+     * If exceptions are thrown, then tell the rest of the infrastructure that we
+     * won't in fact be later calling them back with a noteThunkCompletion
      */
-    public void dispatch()
+    public void dispatch() throws InterruptedException
         {
         this.context.noteThunkDispatching(this);
         try
             {
             this.context.getThunker().executeOnLoopThread(this);
-            }
-        catch (RuntimeException e)
-            {
-            this.context.noteThunkDispatchFailure(this);
-            throw e;
-            }
-        catch (Error e)
-            {
-            this.context.noteThunkDispatchFailure(this);
-            throw e;
             }
         catch (Exception e)
             {

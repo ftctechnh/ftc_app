@@ -35,137 +35,111 @@ public class ThunkedTelemetry
 
     public long getTimestamp()
         {
-        class Thunk extends ResultableThunk<Long>
+        return (new ResultableThunk<Long>()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 this.result = target.getTimestamp();
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        return thunk.result;
+            }).doReadOperation();
         }
 
     public void setTag(final String tag)
         {
-        class Thunk extends NonwaitingThunk
+        (new NonwaitingThunk()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 target.setTag(tag);
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
+            }).doWriteOperation();
         }
 
     public String getTag()
         {
-        class Thunk extends ResultableThunk<String>
+        return (new ResultableThunk<String>()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 this.result = target.getTag();
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        return thunk.result;
+            }).doReadOperation();
         }
 
     public void addData(final String key, final String msg)
         {
-        class Thunk extends NonwaitingThunk
+        (new NonwaitingThunk()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 target.addData(key, msg);
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
+            }).doWriteOperation();
         }
 
     public void addData(final String key, final float msg)
         {
-        class Thunk extends NonwaitingThunk
+        (new NonwaitingThunk()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 target.addData(key, msg);
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
+            }).doWriteOperation();
         }
 
     public void addData(final String key, final double msg)
         {
-        class Thunk extends NonwaitingThunk
+        (new NonwaitingThunk()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 target.addData(key, msg);
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
+            }).doWriteOperation();
         }
 
     public Map<String, String> getDataStrings()
         {
-        class Thunk extends ResultableThunk<Map<String, String>>
+        return (new ResultableThunk<Map<String, String>>()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 this.result = target.getDataStrings();
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        return thunk.result;
+            }).doReadOperation();
         }
 
     public Map<String, Float> getDataNumbers()
         {
-        class Thunk extends ResultableThunk<Map<String, Float>>
+        return (new ResultableThunk<Map<String, Float>>()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 this.result = target.getDataNumbers();
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        return thunk.result;
+            }).doReadOperation();
         }
 
     public boolean hasData()
         {
-        class Thunk extends ResultableThunk<Boolean>
+        return (new ResultableThunk<Boolean>()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 this.result = target.hasData();
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        return thunk.result;
+            }).doReadOperation();
         }
 
     public void clearData()
         {
-        class Thunk extends NonwaitingThunk
+        (new NonwaitingThunk()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 target.clearData();
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
+            }).doWriteOperation();
         }
-
     }

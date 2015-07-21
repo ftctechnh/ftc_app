@@ -33,59 +33,45 @@ public class ThunkedCompassSensor extends CompassSensor
 
     @Override public double getDirection()
         {
-        class Thunk extends ResultableThunk<Double>
+        return (new ResultableThunk<Double>()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 this.result = target.getDirection();
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        return thunk.result;
+            }).doReadOperation();
         }
 
     @Override public String status()
         {
-        class Thunk extends ResultableThunk<String>
+        return (new ResultableThunk<String>()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 this.result = target.status();
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        return thunk.result;
+            }).doReadOperation();
         }
 
-    @Override public void setMode(CompassSensor.CompassMode mode)
+    @Override public void setMode(final CompassSensor.CompassMode mode)
         {
-        class Thunk extends NonwaitingThunk
+        (new NonwaitingThunk()
             {
-            CompassSensor.CompassMode mode;
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 target.setMode(mode);
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.mode = mode;
-        thunk.dispatch();
+            }).doWriteOperation();
         }
 
     @Override public boolean calibrationFailed()
         {
-        class Thunk extends ResultableThunk<Boolean>
+        return (new ResultableThunk<Boolean>()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 this.result = target.calibrationFailed();
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        return thunk.result;
+            }).doReadOperation();
         }
-
     }
