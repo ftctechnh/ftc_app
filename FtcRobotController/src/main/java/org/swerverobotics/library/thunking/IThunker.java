@@ -10,7 +10,7 @@ public interface IThunker
     /**
      * Execute the work contained in the thunk over on the loop thread.
      */
-    void thunkFromSynchronousThreadToLoopThread(IAction thunk);
+    void executeOnLoopThread(IAction thunk);
 
     /**
      * Execute the work on the loop thread as soon as we can (which may be on the current thread).

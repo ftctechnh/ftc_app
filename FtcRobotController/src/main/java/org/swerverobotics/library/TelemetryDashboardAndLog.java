@@ -193,7 +193,7 @@ public class TelemetryDashboardAndLog
 
         private Queue<String> logQueue = new LinkedList<>();
         private boolean       newLogMessagesAvailable = false;
-        private int           capacity = 5;
+        private int           capacity = 0;     // this gets automatically computed
 
         // We just use the outer class so as to *mindlessly* avoid any potential deadlocks
         private Object getLock() { return TelemetryDashboardAndLog.this; }
@@ -256,7 +256,7 @@ public class TelemetryDashboardAndLog
      * API.
      *
      * The ThunkedTelemetry object here can only be called from a synchronous thread; the
-     * FTC-runtime provided object, callable on the loop() thread, can be retrieved using
+     * robot-controller-runtime-provided object, callable on the loop() thread, can be retrieved using
      * the raw.getTarget() method.
      */
     public final ThunkedTelemetry   raw;
@@ -264,7 +264,7 @@ public class TelemetryDashboardAndLog
      * 'telemetryDisplayLineCount' is the number of visible lines we have room for on the
      * driver station.
      */
-    public int                      telemetryDisplayLineCount = 8;
+    public int                      telemetryDisplayLineCount = 7;
 
     //----------------------------------------------------------------------------------------------
     // Construction

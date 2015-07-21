@@ -1,40 +1,61 @@
 package org.swerverobotics.library.examples;
 
+import java.text.*;
 import java.util.*;
 import org.swerverobotics.library.*;
 import com.qualcomm.robotcore.util.*;
 
 /**
- * An OpMode that gives more examples of how telemetry can be used
+ * An example that illustrates use of the telemetry dashboard and log
  */
 public class TelemetryOp extends SynchronousOpMode
     {
-    int count;
-    ElapsedTime runtime;
-    Random random;
-
     @Override protected void main() throws InterruptedException
         {
-        this.random = new Random();
-        this.count = 0;
-        this.runtime = new ElapsedTime();
+        final ElapsedTime elapsed = new ElapsedTime();
+        final int loopCountStart = loopCount.get();
 
-        this.dashboard.line(
-            this.dashboard.item("count: ", new IFunc<Object>() { @Override public Object value() { return count; }}),
-            this.dashboard.item("time: ",  new IFunc<Object>() { @Override public Object value() { return runtime.time(); }})
+        this.telemetry.dashboard.line
+            (
+            this.telemetry.dashboard.item("time: ",  new IFunc<Object>() { @Override public Object value()
+                {
+                return format(elapsed);
+                }}),
+            this.telemetry.dashboard.item("count: ", new IFunc<Object>() { @Override public Object value()
+                {
+                return loopCount.get() - loopCountStart;
+                }}),
+            this.telemetry.dashboard.item("mean rate: ", new IFunc<Object>() { @Override public Object value()
+                {
+                return format(elapsed.time() / (loopCount.get()-loopCountStart) * 1000) + "ms";
+                }})
             );
 
         while (!this.stopRequested())
             {
-            count++;
-
-            if (this.random.nextInt(5) == 0)
+            if (this.newGamePadInputAvailable())
                 {
-                this.log.add("logging jackpot at count = " + this.count);
-                }
+                if (this.gamepad1.left_bumper())
+                    {
+                    this.telemetry.log.add(format(elapsed) + ": left bumper pressed");
+                    }
 
-            this.dashboard.update();
-            this.idle();
+                this.telemetry.dashboard.update();
+                }
+            else
+                {
+                this.telemetry.dashboard.update();
+                this.idle();
+                }
             }
+        }
+
+    String format(ElapsedTime elapsed)
+        {
+        return String.format("%.1f", elapsed.time());
+        }
+    String format(double d)
+        {
+        return String.format("%.1f", d);
         }
     }

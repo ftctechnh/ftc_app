@@ -77,7 +77,7 @@ public abstract class ThunkBase implements IAction
             this.context.noteThunkDispatching(this);
             try
                 {
-                this.context.getThunker().thunkFromSynchronousThreadToLoopThread(this);
+                this.context.getThunker().executeOnLoopThread(this);
                 }
             catch (Exception e)
                 {
