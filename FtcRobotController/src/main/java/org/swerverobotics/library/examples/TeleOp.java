@@ -39,11 +39,19 @@ public class TeleOp extends SynchronousOpMode
                 // There is (likely) new gamepad input available.
                 // Do something with that! Here, we just drive.
                 this.doManualDrivingControl(this.gamepad1);
+
+                // Emit telemetry with the freshest possible values
+                this.telemetry.dashboard.update();
                 }
             else
                 {
-                // There is no new gamepad input available. Give other threads a chance
-                // to do something rather than eating the CPU.
+                // There's no new gamepad input available.
+
+                // Emit any telemetry that hasn't been sent in a while
+                this.telemetry.dashboard.update();
+
+                // Let the rest of the system run until there's a stimulus from the robot
+                // controller runtime.
                 this.idle();
                 }
             }

@@ -71,6 +71,5 @@ public class FtcOpModeRegister implements OpModeRegister {
     */
     manager.register("Telemetry", org.swerverobotics.library.examples.TelemetryOp.class);
     manager.register("Tele", org.swerverobotics.library.examples.TeleOp.class);
-    manager.register("Null", org.swerverobotics.library.examples.NullOp.class);
   }
 }
