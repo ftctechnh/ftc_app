@@ -13,7 +13,7 @@ public abstract class ThunkBase implements IAction
     // State
     //----------------------------------------------------------------------------------------------
 
-    ThreadThunkContext context;
+    SynchronousThreadContext context;
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -21,7 +21,7 @@ public abstract class ThunkBase implements IAction
 
     public ThunkBase()
         {
-        this.context = ThreadThunkContext.getThreadContext();
+        this.context = SynchronousThreadContext.getThreadContext();
         }
 
     //----------------------------------------------------------------------------------------------
