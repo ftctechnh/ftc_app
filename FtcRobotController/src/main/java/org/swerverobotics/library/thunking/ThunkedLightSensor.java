@@ -19,6 +19,7 @@ public class ThunkedLightSensor extends LightSensor
 
     private ThunkedLightSensor(LightSensor target)
         {
+        if (target == null) throw new NullPointerException("null " + this.getClass().getSimpleName() + " target");
         this.target = target;
         }
 

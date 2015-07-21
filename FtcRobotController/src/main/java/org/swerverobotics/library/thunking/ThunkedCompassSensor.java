@@ -19,6 +19,7 @@ public class ThunkedCompassSensor extends CompassSensor
 
     private ThunkedCompassSensor(CompassSensor target)
         {
+        if (target == null) throw new NullPointerException("null " + this.getClass().getSimpleName() + " target");
         this.target = target;
         }
 

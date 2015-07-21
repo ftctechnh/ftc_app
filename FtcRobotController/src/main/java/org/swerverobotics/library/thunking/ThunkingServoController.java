@@ -20,6 +20,7 @@ public class ThunkingServoController implements ServoController
 
     private ThunkingServoController(ServoController target)
         {
+        if (target == null) throw new NullPointerException("null " + this.getClass().getSimpleName() + " target");
         this.target = target;
         }
 
