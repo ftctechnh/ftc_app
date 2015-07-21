@@ -177,10 +177,10 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         // Call the subclass hook in case they might want to do something interesting
         this.preLoopHook();
 
-        this.loopCount.getAndIncrement();
-
         synchronized (this.loopLock)
             {
+            this.loopCount.getAndIncrement();
+
             // Capture the gamepad states safely so that in the main() thread we don't see torn writes
             boolean diff1 = true;
             boolean diff2 = true;
