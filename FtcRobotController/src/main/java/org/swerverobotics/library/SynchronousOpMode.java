@@ -14,7 +14,6 @@ import org.swerverobotics.library.thunking.*;
 // Work items:
 //      * TODO: investigate: 'getPower on legacy NXT-compatible motor controller returns a null value' (eh?)
 //      * TODO: a big once-over for (default)/public/private/protected and/or final on methods and classes
-//      * TODO: investigate the Android Assert mechanism
 //      * TODO: make idle() wakeup-able from some external stimulus?
 
 /**
@@ -61,15 +60,15 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     public TelemetryDashboardAndLog telemetry;
 
     /**
+     * The number of nanoseconds in a millisecond.
+     */
+    public static final long NANO_TO_MILLI = 1000000;
+
+    /**
      * Advanced: 'nanotimeLoopDwellMax' is the (soft) maximum number of nanoseconds that
      * our loop() implementation will spend in any one call before returning.
      */
     public long msLoopDwellMax = 50;
-
-    /**
-     * The number of nanoseconds in a millisecond.
-     */
-    public static final long NANO_TO_MILLI = 1000000;
 
     /**
      * Advanced: loopDwellCheckInterval is the number of thunks we will execute in loop()
@@ -119,7 +118,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 }
             catch (InterruptedException|RuntimeInterruptedException ignored)
                 {
-                // If the thread itself doesn't catch the interrupt, at least
+                // If the main() method itself doesn't catch the interrupt, at least
                 // we will do so here. The whole point of such interrupts is to
                 // get the thread to shut down, which we are about to do here by
                 // falling off the end of run().
@@ -342,6 +341,11 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         return this.gamePadStateChanged.getAndSet(false);
         }
 
+    /**
+     * Similar to newGamePadInputAvailable(), but doesn't auto-reset the state when called
+     *
+     * @see #newGamePadInputAvailable()
+     */
     public final boolean isNewGamePadInputAvailable()
         {
         // Like newGamePadInputAvailable(), but doesn't auto-reset the availability state.
@@ -354,19 +358,20 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     //----------------------------------------------------------------------------------------------
 
     /**
-     * Note that the receiver is the party which should handle thunking requests for the
+     * Advanced: Note that the receiver is the party which should handle thunking requests for the
      * current thread.
      *
-     * Advanced: this is called automatically for the main() thread. If you choose in your
-     * code to spawn additional worker synchronous threads, each of those threads should call
-     * this method near the thread's beginning in order that access to the (thunked) hardware
-     * objects will function correctly from that thread.
+     * This is called automatically for the main() thread. If you choose in your code to spawn 
+     * additional worker synchronous threads, each of those threads should call this method near 
+     * the thread's beginning in order that access to the (thunked) hardware objects will function 
+     * correctly from that thread.
      *
      * It is the act of calling setThreadThunker that makes a thread into a 'synchronous thread',
      * capable of thunking calls on over to the loop() thread.
      */
     public void setThreadThunker()
         {
+        if (BuildConfig.DEBUG) Assert.assertEquals(false, this.isLoopThread());
         SynchronousThreadContext.setThreadThunker(this);
         }
 
@@ -410,7 +415,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      * Put the current thread to sleep for a bit as it has nothing better to do.
      *
      * idle(), which is called on a synchronous thread, never on the loop() thread, causes the
-     * synchronous thread to go to sleep until it is likely that the underlying FTC runtime
+     * synchronous thread to go to sleep until it is likely that the robot controller runtime
      * has gotten back in touch with us (by calling loop() again) and thus the state reported
      * by our various hardware devices and sensors might be different than what it was.
      *
@@ -432,7 +437,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         }
 
     /**
-     * Idles the current thread
+     * Idles the current thread until stimulated by the robot controller runtime
      *
      * @see #idle()
      */
