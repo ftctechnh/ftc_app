@@ -16,8 +16,8 @@ RCL in order to simplify programming for FTC teams. Notable features of the libr
     the driver station as soon as possible. On the driver station display, the dashboard appears
     at the top, followed by as many of the recent log messages as will reasonably fit.
     
-The library is still undergoing development. It has received moderate testing, and no known bugs
-currently exist, but undoubtedly some are there lurking to be discovered. Documentation is currently
+The library is still undergoing development. It has received light testing, and while no known bugs
+currently exist, undoubtedly some are there lurking to be discovered. Documentation is currently
 very sparse. There are a couple of examples in the examples package, and the code itself is heavily
 commented, but there is as yet no easily approachable tutorial or reference manual. We're working on
 that. Finally, in its present form, the library is distributed solely in source form: clone the 
