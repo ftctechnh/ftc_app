@@ -23,7 +23,7 @@ public class ThunkedCompassSensor extends CompassSensor
         this.target = target;
         }
 
-    static public ThunkedCompassSensor Create(CompassSensor target)
+    static public ThunkedCompassSensor create(CompassSensor target)
         {
         return target instanceof ThunkedCompassSensor ? (ThunkedCompassSensor)target : new ThunkedCompassSensor(target);
         }

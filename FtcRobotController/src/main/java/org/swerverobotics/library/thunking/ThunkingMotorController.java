@@ -31,7 +31,7 @@ public class ThunkingMotorController implements DcMotorController, IThunkedReadW
         this.controllerMode = null;
         }
 
-    static public ThunkingMotorController Create(DcMotorController target)
+    static public ThunkingMotorController create(DcMotorController target)
         {
         return target instanceof ThunkingMotorController ? (ThunkingMotorController)target : new ThunkingMotorController(target);
         }

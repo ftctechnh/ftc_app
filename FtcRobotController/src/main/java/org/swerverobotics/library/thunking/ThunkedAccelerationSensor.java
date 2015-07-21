@@ -23,7 +23,7 @@ public class ThunkedAccelerationSensor extends AccelerationSensor
         this.target = target;
         }
 
-    static public ThunkedAccelerationSensor Create(AccelerationSensor target)
+    static public ThunkedAccelerationSensor create(AccelerationSensor target)
         {
         return target instanceof ThunkedAccelerationSensor ? (ThunkedAccelerationSensor)target : new ThunkedAccelerationSensor(target);
         }

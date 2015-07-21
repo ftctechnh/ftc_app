@@ -23,7 +23,7 @@ public class ThunkedLightSensor extends LightSensor
         this.target = target;
         }
 
-    static public ThunkedLightSensor Create(LightSensor target)
+    static public ThunkedLightSensor create(LightSensor target)
         {
         return target instanceof ThunkedLightSensor ? (ThunkedLightSensor)target : new ThunkedLightSensor(target);
         }

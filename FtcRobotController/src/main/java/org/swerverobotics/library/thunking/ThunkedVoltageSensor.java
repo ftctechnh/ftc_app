@@ -23,7 +23,7 @@ public class ThunkedVoltageSensor implements VoltageSensor
         this.target = target;
         }
 
-    static public ThunkedVoltageSensor Create(VoltageSensor target)
+    static public ThunkedVoltageSensor create(VoltageSensor target)
         {
         return target instanceof ThunkedVoltageSensor ? (ThunkedVoltageSensor)target : new ThunkedVoltageSensor(target);
         }

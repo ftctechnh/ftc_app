@@ -22,7 +22,7 @@ public class ThunkingLegacyModule implements LegacyModule
         this.target = target;
         }
 
-    static public ThunkingLegacyModule Create(LegacyModule target)
+    static public ThunkingLegacyModule create(LegacyModule target)
         {
         return target instanceof ThunkingLegacyModule ? (ThunkingLegacyModule)target : new ThunkingLegacyModule(target);
         }
