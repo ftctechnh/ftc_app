@@ -1,5 +1,7 @@
 package org.swerverobotics.library;
 
+import android.util.SparseArray;
+
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
@@ -32,11 +34,14 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     private Thread loopThread;
     private Thread mainThread;
     private boolean stopRequested;
-    private ConcurrentLinkedQueue<IThunk> loopThreadThunkQueue = new ConcurrentLinkedQueue<IThunk>();
+    private ConcurrentLinkedQueue<IAction> loopThreadThunkQueue = new ConcurrentLinkedQueue<IAction>();
     private AtomicBoolean gamePadStateChanged = new AtomicBoolean(false);
     private final int msWaitThreadStop = 1000;
     private final Object loopLock = new Object();
     private int loopCount = 0;  // Must own loopIdleLock to examine
+
+    private static AtomicInteger singletonKey = new AtomicInteger(0);
+    private final SparseArray<IAction> singletonLoopActions = new SparseArray<IAction>();
 
     /**
      * Advanced: unthunkedHardwareMap contains the original hardware map provided
@@ -44,10 +49,6 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      * is similar, but for telemetry instead of hardware
      */
     public HardwareMap unthunkedHardwareMap = null;
-    /**
-     * @see #unthunkedHardwareMap
-     */
-    public Telemetry unthunkedTelemetry = null;
 
     /**
      * The game pad variables are redeclared here so as to hide those in our OpMode superclass
@@ -63,7 +64,9 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      * with one that can work from synchronous threads.
      */
     public ThunkedTelemetry telemetry = null;
-    public TelemetryDashboard dashboard = null;
+    public TelemetryDashboardAndLog.Dashboard dashboard = null;
+    public TelemetryDashboardAndLog.Log log = null;
+    public Telemetry unthunkedTelemetry = null;
 
     /**
      * Advanced: 'nanotimeLoopDwellMax' is the (soft) maximum number of nanoseconds that
@@ -147,7 +150,9 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         // Similarly replace the telemetry variable
         this.unthunkedTelemetry = super.telemetry;
         this.telemetry = new ThunkedTelemetry(this.unthunkedTelemetry);
-        this.dashboard = new TelemetryDashboard(this.telemetry);
+        TelemetryDashboardAndLog dashboardAndLog = new TelemetryDashboardAndLog(this.telemetry);
+        this.dashboard = dashboardAndLog.dashboard;
+        this.log = dashboardAndLog.log;
 
         // Remember who the loop thread is so that we know whom to communicate
         // with from the main() thread.
@@ -203,12 +208,12 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
             for (int i = 1; ; i++)
                 {
                 // Get the next work item in the queue. Get out of here if there isn't any more work.
-                IThunk thunk = this.loopThreadThunkQueue.poll();
+                IAction thunk = this.loopThreadThunkQueue.poll();
                 if (null == thunk)
                     break;
 
                 // Execute the work that needs to be done on the loop thread
-                thunk.doLoopThreadWork();
+                thunk.doAction();
 
                 // Periodically check whether we've run long enough for this loop() call.
                 if (i % this.loopDwellCheckCount == 0)
@@ -218,6 +223,13 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                     }
                 }
 
+            // Dig out and execute any of our singleton actions.
+            ArrayList<IAction> actions = this.snarfSingletons();
+            for (IAction action : actions)
+                {
+                action.doAction();
+                }
+
             // Let everyone who was waiting for the next loop call go again
             this.loopLock.notifyAll();
             }
@@ -225,7 +237,6 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         // Call the subclass hook in case they might want to do something interesting
         this.postLoopHook();
         }
-
 
     /**
      * The robot controller runtime calls stop() to shut down the OpMode.
@@ -455,7 +466,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     /**
      * Advanced: Execute the indicated action on the loop thread given that we are on a synchronous thread
      */
-    public void thunkFromSynchronousThreadToLoopThread(IThunk thunk)
+    public void thunkFromSynchronousThreadToLoopThread(IAction thunk)
         {
         // We should only be called from synchronous threads
         if (BuildConfig.DEBUG && this.isLoopThread())
@@ -465,18 +476,44 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         }
 
     /**
-     * Advanced: Execute the indicated action on the loop thread if we are on a synchronous thread or the loop() thread
+     * Advanced: Execute the indicated action on the loop thread if we are on a synchronous thread
+     * or the loop() thread.
+     *
+     * If a previous call has been made with the same key, then replace that previous action;
+     * otherwise, add a new action with the key.
      */
-    public void executeOnLoopThreadASAP(IThunk thunk)
+    public void executeSingletonOnLoopThread(int key, IAction action)
         {
-        if (this.isLoopThread())
+        synchronized (this.singletonLoopActions)
             {
-            thunk.doLoopThreadWork();
+            this.singletonLoopActions.put(key, action);
             }
-        else
+        }
+
+    private ArrayList<IAction> snarfSingletons()
+    // Atomically retrieve a copy of the singleton loop actions. The lock on that object
+    // is a leaf lock, meaning that no further locks may be acquired if that lock is held.
+    // By this protocol we avoid deadlock, and that is a wonderful thing.
+        {
+        ArrayList<IAction> result = new ArrayList<IAction>();
+        synchronized (this.singletonLoopActions)
             {
-            this.loopThreadThunkQueue.add(thunk);
+            for (int i = 0; i < this.singletonLoopActions.size(); i++)
+                {
+                int key = this.singletonLoopActions.keyAt(i);
+                result.add(this.singletonLoopActions.get(key));
+                }
+            this.singletonLoopActions.clear();
             }
+        return result;
+        }
+
+    /**
+     * Return a new key by which actions can be scheduled using executeSingletonOnLoopThread()
+     */
+    public static int getNewExecuteSingletonKey()
+        {
+        return singletonKey.getAndIncrement();
         }
 
 

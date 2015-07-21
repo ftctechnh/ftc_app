@@ -14,9 +14,11 @@ public class TelemetryOp extends SynchronousOpMode
     {
     int count;
     ElapsedTime runtime;
+    Random random;
 
     @Override protected void main() throws InterruptedException
         {
+        this.random = new Random();
         this.count = 0;
         this.runtime = new ElapsedTime();
 
@@ -29,6 +31,12 @@ public class TelemetryOp extends SynchronousOpMode
         while (!this.stopRequested())
             {
             count++;
+
+            if (this.random.nextInt(5) == 0)
+                {
+                this.log.add("logging jackpot at count = " + this.count);
+                }
+
             this.dashboard.update();
             this.idle();
             }

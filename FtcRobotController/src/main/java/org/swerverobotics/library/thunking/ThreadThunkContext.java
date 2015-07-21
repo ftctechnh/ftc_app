@@ -3,6 +3,8 @@ package org.swerverobotics.library.thunking;
 
 import com.qualcomm.ftcrobotcontroller.BuildConfig;
 
+import org.swerverobotics.library.IAction;
+
 /**
  * ThreadThunkContext maintains the thunking context for a given synchronous thread.
  */
@@ -50,7 +52,7 @@ public class ThreadThunkContext
      * Note that this can be called from an arbitrary thread, including in particular
      * the loop() thread. It is commonly called only from synchronous threads.
      */
-    public void noteThunkDispatching(IThunk thunk)
+    public void noteThunkDispatching(IAction thunk)
         {
         synchronized (this.lock)
             {
@@ -63,7 +65,7 @@ public class ThreadThunkContext
      * us back to inform us that there was a failure in the dispatching logic,
      * and he thus *won't* be calling us later with noteThunkCompletion().
      */
-    public void noteThunkDispatchFailure(IThunk thunk)
+    public void noteThunkDispatchFailure(IAction thunk)
         {
         noteThunkCompletion(thunk);
         }
@@ -75,7 +77,7 @@ public class ThreadThunkContext
      * Note that this can be called from an arbitrary thread, including in particular
      * the loop() thread. In fact, it is most commonly called from the loop() thread.
      */
-    public void noteThunkCompletion(IThunk thunk)
+    public void noteThunkCompletion(IAction thunk)
         {
         synchronized (this.lock)
             {
