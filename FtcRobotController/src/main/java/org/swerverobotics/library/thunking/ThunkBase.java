@@ -1,12 +1,13 @@
 package org.swerverobotics.library.thunking;
 
+import org.swerverobotics.library.IAction;
 import org.swerverobotics.library.SynchronousOpMode;
 import org.swerverobotics.library.exceptions.SwerveRuntimeException;
 
 /**
  * ThunkBase contains most of the functionality for thunking
  */
-public abstract class ThunkBase implements IThunk
+public abstract class ThunkBase implements IAction
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -46,9 +47,9 @@ public abstract class ThunkBase implements IThunk
         }
 
     /**
-     * Executed on the loop() thread, doLoopThreadWork() is called to carry out the work of the thunk
+     * Executed on the loop() thread, doAction() is called to carry out the work of the thunk
      */
-    public void doLoopThreadWork()
+    public void doAction()
         {
         this.doLoopThreadCore();
         this.doLoopThreadThunkCompletion();
