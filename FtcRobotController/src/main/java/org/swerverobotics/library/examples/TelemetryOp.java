@@ -19,7 +19,6 @@ public class TelemetryOp extends SynchronousOpMode
         this.count = 0;
         this.runtime = new ElapsedTime();
 
-        this.dashboard.clear();
         this.dashboard.line(
             this.dashboard.item("count: ", new IFunc<Object>() { @Override public Object value() { return count; }}),
             this.dashboard.item("time: ",  new IFunc<Object>() { @Override public Object value() { return runtime.time(); }})

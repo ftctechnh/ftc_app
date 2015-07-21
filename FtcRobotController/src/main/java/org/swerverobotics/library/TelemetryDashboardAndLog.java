@@ -15,11 +15,6 @@ public class TelemetryDashboardAndLog
     // Types
     //----------------------------------------------------------------------------------------------
 
-    private interface IStringValue
-        {
-        String stringValue();
-        }
-
     //==============================================================================================
 
     public class Dashboard
@@ -28,8 +23,12 @@ public class TelemetryDashboardAndLog
         // State
         //------------------------------------------------------------------------------------------
 
+        public String itemDelimeter = " | ";
+
         private Vector<Dashboard.Line>  lines = null;
-        private Vector<String>          values;
+
+        // We just use the outer class so as to *mindlessly* avoid any potential deadlocks
+        private Object getLock() { return TelemetryDashboardAndLog.this; }
 
         //------------------------------------------------------------------------------------------
         // Types
@@ -37,13 +36,13 @@ public class TelemetryDashboardAndLog
 
         public class Item
             {
-            String       caption;
-            IStringValue value;
+            String        caption;
+            IFunc<String> value;
 
             public void composeTo(StringBuilder builder)
                 {
                 builder.append(this.caption);
-                builder.append(this.value.stringValue());
+                builder.append(this.value.value());
                 }
             }
 
@@ -57,9 +56,10 @@ public class TelemetryDashboardAndLog
                 boolean first = true;
                 for (Item item : this.items)
                     {
+                    // Separate the items with a delimeter
                     if (!first)
                         {
-                        result.append(" | ");
+                        result.append(itemDelimeter);
                         }
                     item.composeTo(result);
                     first = false;
@@ -72,9 +72,13 @@ public class TelemetryDashboardAndLog
         // Evaluation
         //------------------------------------------------------------------------------------------
 
-        public synchronized void clear()
+        public void clear()
             {
-            this.lines = new Vector<Dashboard.Line>();
+            synchronized (this.getLock())
+                {
+                this.lines = new Vector<Dashboard.Line>();
+                }
+            TelemetryDashboardAndLog.this.updateLogCapacity();
             }
 
         //------------------------------------------------------------------------------------------
@@ -85,9 +89,9 @@ public class TelemetryDashboardAndLog
             {
             Item result = new Item();
             result.caption = itemCaption;
-            result.value = new IStringValue()
+            result.value = new IFunc<String>()
                 {
-                @Override public String stringValue()
+                @Override public String value()
                     {
                     return itemValue.value().toString();
                     }
@@ -124,11 +128,15 @@ public class TelemetryDashboardAndLog
             items.add(item2);
             this.line(items);
             }
-        public synchronized void line(List<Item> items)
+        public void line(List<Item> items)
             {
-            Line line = new Line();
-            line.items = items;
-            this.lines.add(line);
+            synchronized (this.getLock())
+                {
+                Line line = new Line();
+                line.items = items;
+                this.lines.add(line);
+                }
+            TelemetryDashboardAndLog.this.updateLogCapacity();
             }
 
         //------------------------------------------------------------------------------------------
@@ -150,8 +158,15 @@ public class TelemetryDashboardAndLog
         //------------------------------------------------------------------------------------------
 
         private Queue<String> logQueue = new LinkedList<>();
-        private boolean dirty = false;
+        private boolean newLogMessagesAvailable = false;
 
+        // We just use the outer class so as to *mindlessly* avoid any potential deadlocks
+        private Object getLock() { return TelemetryDashboardAndLog.this; }
+
+        /**
+         * capacity is the maximum number of (most recent) log messages we keep
+         * in the log queue.
+         */
         public int capacity = 5;
 
         //------------------------------------------------------------------------------------------
@@ -163,19 +178,26 @@ public class TelemetryDashboardAndLog
          */
         public void add(String msg)
             {
-            synchronized (this)
+            synchronized (this.getLock())
                 {
                 this.logQueue.add(msg);
+                this.newLogMessagesAvailable = true;
+                //
+                this.prune();
+                }
 
+            TelemetryDashboardAndLog.this.update();
+            }
+
+        public void prune()
+            {
+            synchronized (this.getLock())
+                {
                 while (this.logQueue.size() > this.capacity)
                     {
                     this.logQueue.remove();
                     }
-
-                this.dirty = true;
                 }
-
-            TelemetryDashboardAndLog.this.update();
             }
         }
 
@@ -195,6 +217,12 @@ public class TelemetryDashboardAndLog
      * to the driver station.
      */
     public double                   msUpdateInterval = 1000;
+
+    /**
+     * telemetryDisplayLineCount is the number of visible lines we have room for on the
+     * driver station.
+     */
+    public int                      telemetryDisplayLineCount = 8;
 
     public final Dashboard          dashboard = new Dashboard();
     public final Log                log = new Log();
@@ -223,17 +251,31 @@ public class TelemetryDashboardAndLog
 
     /**
      * If you want to acquire both the dashboard and the log lock, then this method
-     * does it in the right order.
+     * does it in the right order. For safety's sake, it is preferable that neither
+     * lock be held when calling; however (with the current implementation) it is in
+     * fact permissible to hold the dashboard lock when calling.
      */
     private void synchronizeDashboardAndLog(IAction action)
         {
-        synchronized (this.dashboard)
+        synchronized (this.dashboard.getLock())
             {
-            synchronized (this.log)
+            synchronized (this.log.getLock())
                 {
                 action.doAction();
                 }
             }
+        }
+
+    private void updateLogCapacity()
+        {
+        this.synchronizeDashboardAndLog(new IAction()
+            {
+            @Override public void doAction()
+                {
+                log.capacity = telemetryDisplayLineCount - dashboard.lines.size();
+                log.prune();
+                }
+            });
         }
 
     private static String getKey(int iLine)
@@ -253,15 +295,15 @@ public class TelemetryDashboardAndLog
             @Override public void doAction()
                 {
                 // Don't actually put out updates too often in order to avoid flooding. So,
-                // log additions flow as soon as we can, but otherwise, we only update things
-                // at periodic intervals.
+                // log additions flow as soon as we can, but otherwise, we only send things to
+                // the driver station at periodic intervals.
                 long nanoNow = System.nanoTime();
                 if (nanoLastUpdate == 0
                         || nanoNow > nanoLastUpdate + msUpdateInterval * SynchronousOpMode.NANO_TO_MILLI
-                        || log.dirty
+                        || log.newLogMessagesAvailable
                         )
                     {
-                    // We're going to update the telemetry. Get a copy of all the data to output.
+                    // Ok, we're going to update the telemetry: get a copy of all the data to output.
                     // We only use strings as values. Keys we make up in alphabetical order so as
                     // to maintaining the ordering in which they are created.
                     final Vector<String> keys = new Vector<String>();
@@ -300,8 +342,9 @@ public class TelemetryDashboardAndLog
                             }
                         });
 
+                    // Update our state for the next time around
                     nanoLastUpdate = nanoNow;
-                    log.dirty = false;
+                    log.newLogMessagesAvailable = false;
                     }
                 }
             });
