@@ -6,6 +6,6 @@ package org.swerverobotics.library.thunking;
  */
 public interface IThunk
     {
-    void doThunk();
+    void doLoopThreadWork();
     }
 

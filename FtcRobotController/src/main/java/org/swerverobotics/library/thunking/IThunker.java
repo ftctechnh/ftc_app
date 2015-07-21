@@ -8,5 +8,15 @@ public interface IThunker
     /**
      * Execute the work contained in the thunk over on the loop thread.
      */
-    void executeOnLoopThread(IThunk thunk);
+    void thunkFromSynchronousThreadToLoopThread(IThunk thunk);
+
+    /**
+     * Execute the work on the loop thread as soon as we can (which may be on the current thread).
+     */
+    void executeOnLoopThreadASAP(IThunk thunk);
+
+    /**
+     * Is the current thread the loop thread?
+     */
+    boolean isLoopThread();
     }

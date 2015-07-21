@@ -1,5 +1,6 @@
 package org.swerverobotics.library.thunking;
 
+import org.swerverobotics.library.SynchronousOpMode;
 import org.swerverobotics.library.exceptions.SwerveRuntimeException;
 
 /**
@@ -26,10 +27,7 @@ public abstract class ThunkBase implements IThunk
     // State
     //----------------------------------------------------------------------------------------------
 
-    /**
-     * Executed on the loop() thread, doThunk() is called to carry out the work of the thunk
-     */
-    public void doThunk()
+    public void doLoopThreadCore()
         {
         // Do what we came here to do
         this.actionOnLoopThread();
@@ -39,9 +37,21 @@ public abstract class ThunkBase implements IThunk
             {
             this.notifyAll();
             }
+        }
 
-        // Also tell the thread on which we were created that we are done
+    public void doLoopThreadThunkCompletion()
+        {
+        // Also tell the synchronous thread on which we were created that we are done
         this.context.noteThunkCompletion(this);
+        }
+
+    /**
+     * Executed on the loop() thread, doLoopThreadWork() is called to carry out the work of the thunk
+     */
+    public void doLoopThreadWork()
+        {
+        this.doLoopThreadCore();
+        this.doLoopThreadThunkCompletion();
         }
 
     /**
@@ -57,18 +67,30 @@ public abstract class ThunkBase implements IThunk
      */
     public void dispatch() throws InterruptedException
         {
-        this.context.noteThunkDispatching(this);
-        try
+        if (this.isLoopThread())
             {
-            this.context.getThunker().executeOnLoopThread(this);
+            this.doLoopThreadCore();
             }
-        catch (Exception e)
+        else
             {
-            // This shouldn't happen, as we shouldn't see any checked exceptions
-            // since none have been declared. In any event, we note the failure
-            // then do what we can.
-            this.context.noteThunkDispatchFailure(this);
-            throw SwerveRuntimeException.Wrap(e);
+            this.context.noteThunkDispatching(this);
+            try
+                {
+                this.context.getThunker().thunkFromSynchronousThreadToLoopThread(this);
+                }
+            catch (Exception e)
+                {
+                // This shouldn't happen, as we shouldn't see any checked exceptions
+                // since none have been declared. In any event, we note the failure
+                // then do what we can.
+                this.context.noteThunkDispatchFailure(this);
+                throw SwerveRuntimeException.Wrap(e);
+                }
             }
+        }
+
+    public boolean isLoopThread()
+        {
+        return SynchronousOpMode.getThreadThunker().isLoopThread();
         }
     }

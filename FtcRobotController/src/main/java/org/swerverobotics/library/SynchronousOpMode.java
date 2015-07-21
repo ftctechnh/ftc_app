@@ -14,7 +14,7 @@ import org.swerverobotics.library.thunking.*;
 
 // Work items:
 //      * TODO: telemetry: dashboard + log; throttling
-//      * TODO: invesigate: 'getPower on legacy NXT-compatible motor controller returns a null value' (eh?)
+//      * TODO: investigate: 'getPower on legacy NXT-compatible motor controller returns a null value' (eh?)
 //      * TODO: a big once-over for (default)/public/private/protected and/or final on methods and classes
 
 /**
@@ -32,7 +32,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     private Thread loopThread;
     private Thread mainThread;
     private boolean stopRequested;
-    private ConcurrentLinkedQueue<IThunk> loopThreadActionQueue = new ConcurrentLinkedQueue<IThunk>();
+    private ConcurrentLinkedQueue<IThunk> loopThreadThunkQueue = new ConcurrentLinkedQueue<IThunk>();
     private AtomicBoolean gamePadStateChanged = new AtomicBoolean(false);
     private final int msWaitThreadStop = 1000;
     private final Object loopLock = new Object();
@@ -63,6 +63,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      * with one that can work from synchronous threads.
      */
     public ThunkedTelemetry telemetry = null;
+    public TelemetryDashboard dashboard = null;
 
     /**
      * Advanced: 'nanotimeLoopDwellMax' is the (soft) maximum number of nanoseconds that
@@ -73,7 +74,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     /**
      * The number of nanoseconds in a millisecond.
      */
-    public final long NANO_TO_MILLI = 1000000;
+    public static final long NANO_TO_MILLI = 1000000;
 
     /**
      * Advanced: loopDwellCheckInterval is the number of thunks we will execute in loop()
@@ -121,18 +122,19 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 // If the thread itself doesn't catch the interrupt, at least
                 // we will do so here. The whole point of such interrupts is to
                 // get the thread to shut down, which we are about to do here by
-                /// falling off the end of run()
+                // falling off the end of run().
                 }
             }
         }
-
 
     //----------------------------------------------------------------------------------------------
     // Startup and shutdown
     //----------------------------------------------------------------------------------------------
 
-    @Override
-    public final void start()
+    /**
+     * The robot controller runtime calls start() when the OpMode is started.
+     */
+    @Override public final void start()
         {
         // Call the subclass hook in case they might want to do something interesting
         this.preStartHook();
@@ -145,6 +147,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         // Similarly replace the telemetry variable
         this.unthunkedTelemetry = super.telemetry;
         this.telemetry = new ThunkedTelemetry(this.unthunkedTelemetry);
+        this.dashboard = new TelemetryDashboard(this.telemetry);
 
         // Remember who the loop thread is so that we know whom to communicate
         // with from the main() thread.
@@ -162,9 +165,9 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         }
 
     /**
-     * Our implementation of the loop() callback
+     * The robot controller runtime calls loop() on a frequent basis
      */
-    public final void loop()
+    @Override public final void loop()
         {
         // Call the subclass hook in case they might want to do something interesting
         this.preLoopHook();
@@ -200,12 +203,12 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
             for (int i = 1; ; i++)
                 {
                 // Get the next work item in the queue. Get out of here if there isn't any more work.
-                IThunk thunk = this.loopThreadActionQueue.poll();
+                IThunk thunk = this.loopThreadThunkQueue.poll();
                 if (null == thunk)
                     break;
 
-                // Execute the thunk
-                thunk.doThunk();
+                // Execute the work that needs to be done on the loop thread
+                thunk.doLoopThreadWork();
 
                 // Periodically check whether we've run long enough for this loop() call.
                 if (i % this.loopDwellCheckCount == 0)
@@ -225,16 +228,15 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
 
 
     /**
-     * Shut down this op mode.
+     * The robot controller runtime calls stop() to shut down the OpMode.
      *
      * It will in particular ALWAYS be the case that by the  time the stop() method returns that
-     * the thread on which MainThread() is executed will have been terminated. Well, at least that's
+     * the thread on which main() is executed will have been terminated. Well, at least that's
      * the invariant we would LIKE to maintain. Unfortunately, there appears to be simply no way
      * (any longer) to get rid of a thread that simply refuses to die in response to an interrupt.
-     * So we give the main() thread ample time to die, but continue on anyway if it doesn't.
+     * So we give the main() thread ample time to die, but hang here forever if it doesn't.
      */
-    @Override
-    public final void stop()
+    @Override public final void stop()
         {
         // Call the subclass hook in case they might want to do something interesting
         this.preStopHook();
@@ -451,16 +453,32 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     //----------------------------------------------------------------------------------------------
 
     /**
-     * Advanced: Execute the indicated action on the loop thread.
+     * Advanced: Execute the indicated action on the loop thread given that we are on a synchronous thread
      */
-    public void executeOnLoopThread(IThunk thunk)
+    public void thunkFromSynchronousThreadToLoopThread(IThunk thunk)
         {
         // We should only be called from synchronous threads
         if (BuildConfig.DEBUG && this.isLoopThread())
-            throw new AssertionError("executeOnLoopThread called from loop() thread");
+            throw new AssertionError("thunkFromSynchronousThreadToLoopThread called from loop() thread");
 
-        this.loopThreadActionQueue.add(thunk);
+        this.loopThreadThunkQueue.add(thunk);
         }
+
+    /**
+     * Advanced: Execute the indicated action on the loop thread if we are on a synchronous thread or the loop() thread
+     */
+    public void executeOnLoopThreadASAP(IThunk thunk)
+        {
+        if (this.isLoopThread())
+            {
+            thunk.doLoopThreadWork();
+            }
+        else
+            {
+            this.loopThreadThunkQueue.add(thunk);
+            }
+        }
+
 
     //----------------------------------------------------------------------------------------------
     // Thunking hardware map

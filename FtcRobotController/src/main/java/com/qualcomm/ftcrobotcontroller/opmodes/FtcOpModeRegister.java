@@ -57,8 +57,8 @@ public class FtcOpModeRegister implements OpModeRegister {
      * If two or more op modes are registered with the same name, the app will display an error.
      */
 
-    manager.register("NullOp", NullOp.class);
   /*
+    manager.register("NullOp", NullOp.class);
     manager.register("K9TeleOp", K9TeleOp.class);
     manager.register("K9TankDrive", K9TankDrive.class);
     manager.register("K9Line", K9Line.class);
@@ -69,7 +69,8 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("NxtTeleOp", NxtTeleOp.class);
     manager.register("NxtEncoderOp", NxtEncoderOp.class);
     */
-    manager.register("Synchronous Tele", org.swerverobotics.library.examples.TeleOp.class);
-    manager.register("Synchronous Null", org.swerverobotics.library.examples.NullOp.class);
+    manager.register("Telemetry", org.swerverobotics.library.examples.TelemetryOp.class);
+    manager.register("Tele", org.swerverobotics.library.examples.TeleOp.class);
+    manager.register("Null", org.swerverobotics.library.examples.NullOp.class);
   }
 }
