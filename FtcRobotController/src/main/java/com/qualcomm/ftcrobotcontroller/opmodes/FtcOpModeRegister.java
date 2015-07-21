@@ -69,7 +69,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("NxtTeleOp", NxtTeleOp.class);
     manager.register("NxtEncoderOp", NxtEncoderOp.class);
     */
-    manager.register("Synchronous Tele", SynchronousOpMode.class);
+    manager.register("Synchronous Tele", org.swerverobotics.library.examples.TeleOp.class);
     manager.register("Synchronous Null", org.swerverobotics.library.examples.NullOp.class);
   }
 }

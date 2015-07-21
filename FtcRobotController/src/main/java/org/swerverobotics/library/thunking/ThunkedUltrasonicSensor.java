@@ -19,6 +19,7 @@ public class ThunkedUltrasonicSensor extends UltrasonicSensor
 
     private ThunkedUltrasonicSensor(UltrasonicSensor target)
         {
+        if (target == null) throw new NullPointerException("null " + this.getClass().getSimpleName() + " target");
         this.target = target;
         }
 

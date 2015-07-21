@@ -26,6 +26,7 @@ public class ThunkingMotorController implements DcMotorController, IThunkedReadW
 
     private ThunkingMotorController(DcMotorController target)
         {
+        if (target == null) throw new NullPointerException("null " + this.getClass().getSimpleName() + " target");
         this.target = target;
         this.controllerMode = null;
         }

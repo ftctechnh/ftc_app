@@ -19,6 +19,7 @@ public class ThunkedVoltageSensor implements VoltageSensor
 
     private ThunkedVoltageSensor(VoltageSensor target)
         {
+        if (target == null) throw new NullPointerException("null " + this.getClass().getSimpleName() + " target");
         this.target = target;
         }
 

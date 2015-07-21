@@ -18,6 +18,7 @@ public class ThunkingLegacyModule implements LegacyModule
 
     private ThunkingLegacyModule(LegacyModule target)
         {
+        if (target == null) throw new NullPointerException("null " + this.getClass().getSimpleName() + " target");
         this.target = target;
         }
 

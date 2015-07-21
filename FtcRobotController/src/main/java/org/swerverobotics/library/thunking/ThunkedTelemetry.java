@@ -26,6 +26,7 @@ public class ThunkedTelemetry
 
     public ThunkedTelemetry(Telemetry target)
         {
+        if (target == null) throw new NullPointerException("null " + this.getClass().getSimpleName() + " target");
         this.target = target;
         }
 

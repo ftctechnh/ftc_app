@@ -19,6 +19,7 @@ public class ThunkedAccelerationSensor extends AccelerationSensor
 
     private ThunkedAccelerationSensor(AccelerationSensor target)
         {
+        if (target == null) throw new NullPointerException("null " + this.getClass().getSimpleName() + " target");
         this.target = target;
         }
 

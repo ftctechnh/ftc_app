@@ -19,6 +19,7 @@ public class ThunkedGyroSensor extends  GyroSensor
 
     private ThunkedGyroSensor(GyroSensor target)
         {
+        if (target == null) throw new NullPointerException("null " + this.getClass().getSimpleName() + " target");
         this.target = target;
         }
 
