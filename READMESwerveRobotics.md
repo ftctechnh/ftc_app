@@ -7,7 +7,9 @@ RCL in order to simplify programming for FTC teams. Notable features of the libr
 *   A *synchronous OpMode* that brings back the synchronous, linear programming style
     with which teams have been familiar with from previous seasons, and which is more amenable
     to teaching to beginning programmers than the event-driven / loop() callback programming
-    model native to the RCL.
+    model native to the RCL. SynchronousOpMode also automatically handles the delays necessary
+    when switching from reading to writing modes while using legacy NXT/HiTechnic motor
+    controllers, relieving programmers of the burden of doing so manually.
 *   An enhanced form of telemetry containing a *dashboard* and a *log*. The contents of the 
     dashboard are configured just once, and update() is called periodically to send its contents
     to the driver station. Messages can be written to the log at any time, and these are sent to
