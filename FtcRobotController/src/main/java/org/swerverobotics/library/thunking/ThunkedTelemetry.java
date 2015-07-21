@@ -20,6 +20,8 @@ public class ThunkedTelemetry
 
     private Telemetry target;
 
+    public Telemetry getTarget() { return this.target; }
+
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
@@ -78,24 +80,24 @@ public class ThunkedTelemetry
             }).doWriteOperation();
         }
 
-    public void addData(final String key, final float msg)
+    public void addData(final String msg, final float value)
         {
         (new NonwaitingThunk()
             {
             @Override protected void actionOnLoopThread()
                 {
-                target.addData(key, msg);
+                target.addData(msg, value);
                 }
             }).doWriteOperation();
         }
 
-    public void addData(final String key, final double msg)
+    public void addData(final String msg, final double value)
         {
         (new NonwaitingThunk()
             {
             @Override protected void actionOnLoopThread()
                 {
-                target.addData(key, msg);
+                target.addData(msg, value);
                 }
             }).doWriteOperation();
         }
