@@ -4,8 +4,6 @@ import com.qualcomm.robotcore.robocol.Telemetry;
 
 import org.swerverobotics.library.thunking.ThunkedTelemetry;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.*;
 
 /**
@@ -83,17 +81,17 @@ public class TelemetryDashboardAndLog
         // Items
         //------------------------------------------------------------------------------------------
 
-        public Item item(final String itemCaption, final ITelemetryValue itemValue)
+        public Item item(final String itemCaption, final IFunc<Object> itemValue)
             {
             Item result = new Item();
             result.caption = itemCaption;
             result.value = new IStringValue()
-            {
-            @Override public String stringValue()
                 {
-                return itemValue.value().toString();
-                }
-            };
+                @Override public String stringValue()
+                    {
+                    return itemValue.value().toString();
+                    }
+                };
             return result;
             }
 
