@@ -9,7 +9,6 @@ import java.util.concurrent.atomic.*;
 import com.qualcomm.ftcrobotcontroller.BuildConfig;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.robocol.Telemetry;
 
 import org.swerverobotics.library.exceptions.*;
 import org.swerverobotics.library.thunking.*;
@@ -18,6 +17,7 @@ import org.swerverobotics.library.thunking.*;
 //      * TODO: telemetry: dashboard + log; throttling
 //      * TODO: investigate: 'getPower on legacy NXT-compatible motor controller returns a null value' (eh?)
 //      * TODO: a big once-over for (default)/public/private/protected and/or final on methods and classes
+//      * TODO: investigate the Android Assert mechanism
 
 /**
  * SynchronousOpMode is a base class that can be derived from in order to
@@ -63,10 +63,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      * As with game pads, we hid the 'telemetry' variable of the super class and replace it
      * with one that can work from synchronous threads.
      */
-    public ThunkedTelemetry telemetry = null;
-    public TelemetryDashboardAndLog.Dashboard dashboard = null;
-    public TelemetryDashboardAndLog.Log log = null;
-    public Telemetry unthunkedTelemetry = null;
+    public TelemetryDashboardAndLog telemetry;
 
     /**
      * Advanced: 'nanotimeLoopDwellMax' is the (soft) maximum number of nanoseconds that
@@ -148,11 +145,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         this.hardwareMap = CreateThunkedHardwareMap(this.unthunkedHardwareMap);
 
         // Similarly replace the telemetry variable
-        this.unthunkedTelemetry = super.telemetry;
-        this.telemetry = new ThunkedTelemetry(this.unthunkedTelemetry);
-        TelemetryDashboardAndLog dashboardAndLog = new TelemetryDashboardAndLog(this.telemetry);
-        this.dashboard = dashboardAndLog.dashboard;
-        this.log = dashboardAndLog.log;
+        this.telemetry = new TelemetryDashboardAndLog(ThunkedTelemetry.create(super.telemetry));
 
         // Remember who the loop thread is so that we know whom to communicate
         // with from the main() thread.
@@ -535,7 +528,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 {
                 @Override public DcMotorController Create(DcMotorController target)
                     {
-                    return ThunkingMotorController.Create(target);
+                    return ThunkingMotorController.create(target);
                     }
                 }
             );
@@ -545,7 +538,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 {
                 @Override public ServoController Create(ServoController target)
                     {
-                    return ThunkingServoController.Create(target);
+                    return ThunkingServoController.create(target);
                     }
                 }
             );
@@ -555,7 +548,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 {
                 @Override public LegacyModule Create(LegacyModule target)
                     {
-                    return ThunkingLegacyModule.Create(target);
+                    return ThunkingLegacyModule.create(target);
                     }
                 }
             );
@@ -566,7 +559,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 @Override public DcMotor Create(DcMotor target)
                     {
                     return new ThreadSafeDcMotor(
-                            ThunkingMotorController.Create(target.getController()),
+                            ThunkingMotorController.create(target.getController()),
                             target.getPortNumber(),
                             target.getDirection()
                             );
@@ -580,7 +573,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 @Override public com.qualcomm.robotcore.hardware.Servo Create(com.qualcomm.robotcore.hardware.Servo target)
                     {
                     return new ThreadSafeServo(
-                            ThunkingServoController.Create(target.getController()),
+                            ThunkingServoController.create(target.getController()),
                             target.getPortNumber(),
                             target.getDirection()
                             );
@@ -593,7 +586,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 {
                 @Override public AccelerationSensor Create(AccelerationSensor target)
                     {
-                    return ThunkedAccelerationSensor.Create(target);
+                    return ThunkedAccelerationSensor.create(target);
                     }
                 }
             );
@@ -603,7 +596,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 {
                 @Override public CompassSensor Create(CompassSensor target)
                     {
-                    return ThunkedCompassSensor.Create(target);
+                    return ThunkedCompassSensor.create(target);
                     }
                 }
             );
@@ -613,7 +606,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 {
                 @Override public GyroSensor Create(GyroSensor target)
                     {
-                    return ThunkedGyroSensor.Create(target);
+                    return ThunkedGyroSensor.create(target);
                     }
                 }
             );
@@ -623,7 +616,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 {
                 @Override public IrSeekerSensor Create(IrSeekerSensor target)
                     {
-                    return ThunkedIrSeekerSensor.Create(target);
+                    return ThunkedIrSeekerSensor.create(target);
                     }
                 }
             );
@@ -633,7 +626,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 {
                 @Override public LightSensor Create(LightSensor target)
                     {
-                    return ThunkedLightSensor.Create(target);
+                    return ThunkedLightSensor.create(target);
                     }
                 }
             );
@@ -643,7 +636,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 {
                 @Override public UltrasonicSensor Create(UltrasonicSensor target)
                     {
-                    return ThunkedUltrasonicSensor.Create(target);
+                    return ThunkedUltrasonicSensor.create(target);
                     }
                 }
             );
@@ -653,7 +646,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 {
                 @Override public VoltageSensor Create(VoltageSensor target)
                     {
-                    return ThunkedVoltageSensor.Create(target);
+                    return ThunkedVoltageSensor.create(target);
                     }
                 }
             );

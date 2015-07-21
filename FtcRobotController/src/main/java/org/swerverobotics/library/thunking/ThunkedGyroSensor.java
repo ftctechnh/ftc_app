@@ -23,7 +23,7 @@ public class ThunkedGyroSensor extends  GyroSensor
         this.target = target;
         }
 
-    static public ThunkedGyroSensor Create(GyroSensor target)
+    static public ThunkedGyroSensor create(GyroSensor target)
         {
         return target instanceof ThunkedGyroSensor ? (ThunkedGyroSensor)target : new ThunkedGyroSensor(target);
         }

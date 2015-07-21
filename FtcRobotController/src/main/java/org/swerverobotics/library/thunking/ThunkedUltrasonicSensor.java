@@ -23,7 +23,7 @@ public class ThunkedUltrasonicSensor extends UltrasonicSensor
         this.target = target;
         }
 
-    static public ThunkedUltrasonicSensor Create(UltrasonicSensor target)
+    static public ThunkedUltrasonicSensor create(UltrasonicSensor target)
         {
         return target instanceof ThunkedUltrasonicSensor ? (ThunkedUltrasonicSensor)target : new ThunkedUltrasonicSensor(target);
         }

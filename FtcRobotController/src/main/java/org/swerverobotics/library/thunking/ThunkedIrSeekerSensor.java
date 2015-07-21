@@ -25,7 +25,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
         this.target = target;
         }
 
-    static public ThunkedIrSeekerSensor Create(IrSeekerSensor target)
+    static public ThunkedIrSeekerSensor create(IrSeekerSensor target)
         {
         return target instanceof ThunkedIrSeekerSensor ? (ThunkedIrSeekerSensor)target : new ThunkedIrSeekerSensor(target);
         }

@@ -24,7 +24,7 @@ public class ThunkingServoController implements ServoController
         this.target = target;
         }
 
-    static public ThunkingServoController Create(ServoController target)
+    static public ThunkingServoController create(ServoController target)
         {
         return target instanceof ThunkingServoController ? (ThunkingServoController)target : new ThunkingServoController(target);
         }

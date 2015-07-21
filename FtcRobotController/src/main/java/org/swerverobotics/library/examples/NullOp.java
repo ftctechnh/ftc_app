@@ -17,14 +17,14 @@ public class NullOp extends SynchronousOpMode
         final String startDate = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
         final ElapsedTime runtime = new ElapsedTime();
 
-        this.dashboard.line(
-            this.dashboard.item("count: ", new IFunc<Object>() { @Override public Object value() { return "Synch NullOp started at " + startDate; }}),
-            this.dashboard.item("time: ",  new IFunc<Object>() { @Override public Object value() { return "running for " + runtime; }})
+        this.telemetry.dashboard.line(
+            this.telemetry.dashboard.item("count: ", new IFunc<Object>() { @Override public Object value() { return "Synch NullOp started at " + startDate; }}),
+            this.telemetry.dashboard.item("time: ",  new IFunc<Object>() { @Override public Object value() { return "running for " + runtime; }})
             );
 
         while (!this.stopRequested())
             {
-            this.dashboard.update();
+            this.telemetry.dashboard.update();
             this.idle();
             }
         }

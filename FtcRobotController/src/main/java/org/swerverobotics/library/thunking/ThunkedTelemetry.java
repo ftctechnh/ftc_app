@@ -26,10 +26,15 @@ public class ThunkedTelemetry
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    public ThunkedTelemetry(Telemetry target)
+    private ThunkedTelemetry(Telemetry target)
         {
         if (target == null) throw new NullPointerException("null " + this.getClass().getSimpleName() + " target");
         this.target = target;
+        }
+
+    static public ThunkedTelemetry create(Telemetry target)
+        {
+        return new ThunkedTelemetry(target);
         }
 
     //----------------------------------------------------------------------------------------------

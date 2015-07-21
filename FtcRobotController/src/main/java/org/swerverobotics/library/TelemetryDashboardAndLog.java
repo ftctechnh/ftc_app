@@ -23,12 +23,22 @@ public class TelemetryDashboardAndLog
         // State
         //------------------------------------------------------------------------------------------
 
-        public String itemDelimeter = " | ";
+        /**
+         * msUpdateInterval is the interval in milliseconds at which the drive station
+         * is refreshed with new contents of the dashboard.
+         *
+         * Note that updates might happen more frequently if messages are written to the log.
+         */
+        public double msUpdateInterval = 1000;  // default is 1s
 
-        private Vector<Dashboard.Line>  lines = null;
+        /**
+         * itemDelimeter is the text used to separate dashboard items on a single line
+         */
+        public String itemDelimeter = " | ";
 
         // We just use the outer class so as to *mindlessly* avoid any potential deadlocks
         private Object getLock() { return TelemetryDashboardAndLog.this; }
+        private Vector<Dashboard.Line> lines = null;
 
         //------------------------------------------------------------------------------------------
         // Types
@@ -56,7 +66,7 @@ public class TelemetryDashboardAndLog
                 boolean first = true;
                 for (Item item : this.items)
                     {
-                    // Separate the items with a delimeter
+                    // Separate the items with the delimeter
                     if (!first)
                         {
                         result.append(itemDelimeter);
@@ -72,6 +82,9 @@ public class TelemetryDashboardAndLog
         // Evaluation
         //------------------------------------------------------------------------------------------
 
+        /**
+         * (Re)initialize the dashboard to contain no lines or items
+         */
         public void clear()
             {
             synchronized (this.getLock())
@@ -85,6 +98,9 @@ public class TelemetryDashboardAndLog
         // Items
         //------------------------------------------------------------------------------------------
 
+        /**
+         * Create a new dashboard item with the indicated caption and value computation.
+         */
         public Item item(final String itemCaption, final IFunc<Object> itemValue)
             {
             Item result = new Item();
@@ -103,16 +119,25 @@ public class TelemetryDashboardAndLog
         // Lines
         //------------------------------------------------------------------------------------------
 
+        /**
+         * Add an empty line to the dashboard
+         */
         public void line()
             {
             this.line(new ArrayList<Item>());
             }
+        /**
+         * Add a line to the dashboard containing the indicated item
+         */
         public void line(Item item)
             {
             ArrayList<Item> items = new ArrayList<Item>();
             items.add(item);
             this.line(items);
             }
+        /**
+         * Add a line to the dashboard containing the indicated items
+         */
         public void line(Item item0, Item item1)
             {
             ArrayList<Item> items = new ArrayList<Item>();
@@ -120,6 +145,9 @@ public class TelemetryDashboardAndLog
             items.add(item1);
             this.line(items);
             }
+        /**
+         * Add a line to the dashboard containing the indicated items
+         */
         public void line(Item item0, Item item1, Item item2)
             {
             ArrayList<Item> items = new ArrayList<Item>();
@@ -128,6 +156,9 @@ public class TelemetryDashboardAndLog
             items.add(item2);
             this.line(items);
             }
+        /**
+         * Add a line to the dashboard containing the indicated items
+         */
         public void line(List<Item> items)
             {
             synchronized (this.getLock())
@@ -143,6 +174,9 @@ public class TelemetryDashboardAndLog
         // Emitting
         //------------------------------------------------------------------------------------------
 
+        /**
+         * Update the driver station view of the dashboard.
+         */
         public void update()
             {
             TelemetryDashboardAndLog.this.update();
@@ -158,16 +192,11 @@ public class TelemetryDashboardAndLog
         //------------------------------------------------------------------------------------------
 
         private Queue<String> logQueue = new LinkedList<>();
-        private boolean newLogMessagesAvailable = false;
+        private boolean       newLogMessagesAvailable = false;
+        private int           capacity = 5;
 
         // We just use the outer class so as to *mindlessly* avoid any potential deadlocks
         private Object getLock() { return TelemetryDashboardAndLog.this; }
-
-        /**
-         * capacity is the maximum number of (most recent) log messages we keep
-         * in the log queue.
-         */
-        public int capacity = 5;
 
         //------------------------------------------------------------------------------------------
         // Operations
@@ -189,7 +218,7 @@ public class TelemetryDashboardAndLog
             TelemetryDashboardAndLog.this.update();
             }
 
-        public void prune()
+        private void prune()
             {
             synchronized (this.getLock())
                 {
@@ -207,41 +236,46 @@ public class TelemetryDashboardAndLog
     // State
     //----------------------------------------------------------------------------------------------
 
-    private Telemetry               unthunkedTelemetry = null;
-    private ThunkedTelemetry        thunkedTelemetry = null;
     private long                    nanoLastUpdate = 0;
     private int                     singletonKey = SynchronousOpMode.getNewExecuteSingletonKey();
 
     /**
-     * msUpdateInterval is the interval in milliseconds at which updates are in fact transmitted
-     * to the driver station.
+     * 'dashboard' provides a means to declaratively indicate telemetry items of interest.
+     *
+     * One should fairly often call 'update' on the dashboard from a synchronized thread
+     * in order to update the driver station view of the dashboard.
      */
-    public double                   msUpdateInterval = 1000;
-
+    public final Dashboard          dashboard;
     /**
-     * telemetryDisplayLineCount is the number of visible lines we have room for on the
+     * 'log' provides a means by which a scrolling history of events can be recorded on
+     * the driver station
+     */
+    public final Log                log;
+    /**
+     * Advanced: 'raw' provides access to the lower level (ie: non-dashboard/log) telemetry
+     * API.
+     *
+     * The ThunkedTelemetry object here can only be called from a synchronous thread; the
+     * FTC-runtime provided object, callable on the loop() thread, can be retrieved using
+     * the raw.getTarget() method.
+     */
+    public final ThunkedTelemetry   raw;
+    /**
+     * 'telemetryDisplayLineCount' is the number of visible lines we have room for on the
      * driver station.
      */
     public int                      telemetryDisplayLineCount = 8;
-
-    public final Dashboard          dashboard = new Dashboard();
-    public final Log                log = new Log();
 
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    public TelemetryDashboardAndLog(Telemetry unthunkedTelemetry)
-        {
-        this.thunkedTelemetry = null;
-        this.unthunkedTelemetry = unthunkedTelemetry;
-        this.dashboard.clear();
-        }
-
     public TelemetryDashboardAndLog(ThunkedTelemetry thunkedTelemetry)
         {
-        this.thunkedTelemetry = thunkedTelemetry;
-        this.unthunkedTelemetry = this.thunkedTelemetry.getTarget();
+        this.raw       = thunkedTelemetry;
+        this.dashboard = new Dashboard();
+        this.log       = new Log();
+        //
         this.dashboard.clear();
         }
 
@@ -254,6 +288,10 @@ public class TelemetryDashboardAndLog
      * does it in the right order. For safety's sake, it is preferable that neither
      * lock be held when calling; however (with the current implementation) it is in
      * fact permissible to hold the dashboard lock when calling.
+     *
+     * Note that at the present time, this is moot, since the log and the dashboard
+     * in fact do not have separate locks. But we keep the API here for (future) semantic
+     * clarity in case we might wish to change our minde about that.
      */
     private void synchronizeDashboardAndLog(IAction action)
         {
@@ -299,7 +337,7 @@ public class TelemetryDashboardAndLog
                 // the driver station at periodic intervals.
                 long nanoNow = System.nanoTime();
                 if (nanoLastUpdate == 0
-                        || nanoNow > nanoLastUpdate + msUpdateInterval * SynchronousOpMode.NANO_TO_MILLI
+                        || nanoNow > nanoLastUpdate + dashboard.msUpdateInterval * SynchronousOpMode.NANO_TO_MILLI
                         || log.newLogMessagesAvailable
                         )
                     {
@@ -335,9 +373,9 @@ public class TelemetryDashboardAndLog
                             {
                             for (int i = 0; i < keys.size(); i++)
                                 {
-                                TelemetryDashboardAndLog.this.unthunkedTelemetry.addData(
-                                    keys.elementAt(i),
-                                    values.elementAt(i));
+                                TelemetryDashboardAndLog.this.raw.getTarget().addData(
+                                        keys.elementAt(i),
+                                        values.elementAt(i));
                                 }
                             }
                         });
