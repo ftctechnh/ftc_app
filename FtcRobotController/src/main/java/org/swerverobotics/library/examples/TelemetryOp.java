@@ -1,8 +1,5 @@
 package org.swerverobotics.library.examples;
 
-import android.util.Log;
-
-import java.text.*;
 import java.util.*;
 import org.swerverobotics.library.*;
 import com.qualcomm.robotcore.util.*;
@@ -24,8 +21,8 @@ public class TelemetryOp extends SynchronousOpMode
 
         this.dashboard.clear();
         this.dashboard.line(
-            this.dashboard.item("count: ", new ITelemetryValue() { @Override public Object value() { return count; }}),
-            this.dashboard.item("time: ",  new ITelemetryValue() { @Override public Object value() { return runtime.time(); }})
+            this.dashboard.item("count: ", new IFunc<Object>() { @Override public Object value() { return count; }}),
+            this.dashboard.item("time: ",  new IFunc<Object>() { @Override public Object value() { return runtime.time(); }})
             );
 
         while (!this.stopRequested())
