@@ -1,15 +1,13 @@
 package org.swerverobotics.library;
 
-import android.util.SparseArray;
-
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
-
+import android.util.SparseArray;
+import junit.framework.Assert;
 import com.qualcomm.ftcrobotcontroller.BuildConfig;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-
 import org.swerverobotics.library.exceptions.*;
 import org.swerverobotics.library.thunking.*;
 
@@ -369,7 +367,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      */
     public void setThreadThunker()
         {
-        ThreadThunkContext.setThreadThunker(this);
+        SynchronousThreadContext.setThreadThunker(this);
         }
 
     /**
@@ -379,7 +377,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      */
     public static IThunker getThreadThunker()
         {
-        return ThreadThunkContext.getThreadContext().getThunker();
+        return SynchronousThreadContext.getThreadContext().getThunker();
         }
 
     private static SynchronousOpMode getSynchronousOpMode()
@@ -405,7 +403,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      */
     public void waitForThreadCallsToComplete() throws InterruptedException
         {
-        ThreadThunkContext.getThreadContext().waitForThreadThunkCompletions();
+        SynchronousThreadContext.getThreadContext().waitForThreadThunkCompletions();
         }
 
     /**
@@ -458,6 +456,13 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         {
         return this.loopThread.getId() == Thread.currentThread().getId();
         }
+    /**
+     * Advanced: Answer as to whether this is a synchronous thread
+     */
+    public final boolean isSynchronousThread()
+        {
+        return SynchronousThreadContext.getThreadContext() != null;
+        }
 
     //----------------------------------------------------------------------------------------------
     // IThunker
@@ -468,10 +473,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      */
     public void executeOnLoopThread(IAction thunk)
         {
-        // We should only be called from synchronous threads
-        if (BuildConfig.DEBUG && this.isLoopThread())
-            throw new AssertionError("executeOnLoopThread called from loop() thread");
-
+        if (BuildConfig.DEBUG) Assert.assertEquals(true, this.isSynchronousThread());
         this.loopThreadThunkQueue.add(thunk);
         }
 
@@ -484,6 +486,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      */
     public void executeSingletonOnLoopThread(int key, IAction action)
         {
+        if (BuildConfig.DEBUG) Assert.assertEquals(true, this.isSynchronousThread());
         synchronized (this.singletonLoopActions)
             {
             this.singletonLoopActions.put(key, action);

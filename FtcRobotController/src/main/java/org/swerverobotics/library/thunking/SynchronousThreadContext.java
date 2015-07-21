@@ -1,14 +1,13 @@
 package org.swerverobotics.library.thunking;
 
-
 import com.qualcomm.ftcrobotcontroller.BuildConfig;
-
+import junit.framework.Assert;
 import org.swerverobotics.library.IAction;
 
 /**
- * ThreadThunkContext maintains the thunking context for a given synchronous thread.
+ * SynchronousThreadContext maintains the thunking context for a synchronous thread.
  */
-public class ThreadThunkContext
+public class SynchronousThreadContext
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -34,7 +33,7 @@ public class ThreadThunkContext
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    public ThreadThunkContext(IThunker thunker)
+    public SynchronousThreadContext(IThunker thunker)
         {
         this.thread = Thread.currentThread();
         this.thunker = thunker;
@@ -81,8 +80,7 @@ public class ThreadThunkContext
         {
         synchronized (this.lock)
             {
-            if (BuildConfig.DEBUG && (this.dispatchedThunkCount <= 0))
-                throw new AssertionError("assertion failed in noteThunkCompletion");
+            if (BuildConfig.DEBUG) Assert.assertEquals(true, this.dispatchedThunkCount > 0);
 
             if (--this.dispatchedThunkCount == 0)
                 {
@@ -118,20 +116,20 @@ public class ThreadThunkContext
 
     public static void setThreadThunker(IThunker thunker)
         {
-        tlsThunker.set(new ThreadThunkContext(thunker));
+        tlsThunker.set(new SynchronousThreadContext(thunker));
         }
 
-    public static ThreadThunkContext getThreadContext()
+    public static SynchronousThreadContext getThreadContext()
         {
         return tlsThunker.get();
         }
 
     /**
-     * tlsThunker is the thread local variable by which a ThreadThunkContext is associated with a thread
+     * tlsThunker is the thread local variable by which a SynchronousThreadContext is associated with a thread
      */
-    private static final ThreadLocal<ThreadThunkContext> tlsThunker = new ThreadLocal<ThreadThunkContext>()
+    private static final ThreadLocal<SynchronousThreadContext> tlsThunker = new ThreadLocal<SynchronousThreadContext>()
         {
-        @Override protected ThreadThunkContext initialValue() { return null; }
+        @Override protected SynchronousThreadContext initialValue() { return null; }
         };
 
     }
