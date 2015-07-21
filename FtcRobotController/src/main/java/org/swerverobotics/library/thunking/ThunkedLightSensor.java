@@ -33,42 +33,34 @@ public class ThunkedLightSensor extends LightSensor
 
     @Override public double getLightLevel()
         {
-        class Thunk extends ResultableThunk<Double>
+        return (new ResultableThunk<Double>()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 this.result = target.getLightLevel();
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        return thunk.result;
+            }).doReadOperation();
         }
 
     @Override public void enableLed(final boolean enable)
         {
-        class Thunk extends NonwaitingThunk
+        (new NonwaitingThunk()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 target.enableLed(enable);
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
+            }).doWriteOperation();
         }
 
     @Override public String status()
         {
-        class Thunk extends ResultableThunk<String>
+        return (new ResultableThunk<String>()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 this.result = target.status();
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        return thunk.result;
+            }).doReadOperation();
         }
     }

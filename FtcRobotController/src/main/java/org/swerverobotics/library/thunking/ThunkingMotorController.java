@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
 
 import org.swerverobotics.library.SynchronousOpMode;
-import org.swerverobotics.library.exceptions.RuntimeInterruptedException;
 import org.swerverobotics.library.exceptions.SwerveRuntimeException;
 
 /**
@@ -12,15 +11,14 @@ import org.swerverobotics.library.exceptions.SwerveRuntimeException;
  * by thunking all calls over to the loop thread and back gain. The implementation automatically
  * takes care of read and write device mode switching.
  */
-public class ThunkingMotorController extends ThunkedBase implements DcMotorController
+public class ThunkingMotorController implements DcMotorController, IThunkedReadWrite
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    DcMotorController target;           // can only talk to him on the loop thread
-
-    DeviceMode controllerMode = null;  // the last mode we know the controller to be in
+    DcMotorController target;          // can only talk to him on the loop thread
+    DeviceMode        controllerMode;  // the last mode we know the controller to be in
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -29,6 +27,7 @@ public class ThunkingMotorController extends ThunkedBase implements DcMotorContr
     private ThunkingMotorController(DcMotorController target)
         {
         this.target = target;
+        this.controllerMode = null;
         }
 
     static public ThunkingMotorController Create(DcMotorController target)
@@ -37,15 +36,15 @@ public class ThunkingMotorController extends ThunkedBase implements DcMotorContr
         }
 
     //----------------------------------------------------------------------------------------------
-    // Dispatching
+    // IThunkedReadWrite interface
     //----------------------------------------------------------------------------------------------
 
-    @Override protected void enterReadOperation() throws InterruptedException
+    @Override public void enterReadOperation() throws InterruptedException
         {
         this.switchToMode(DeviceMode.READ_ONLY);
         }
 
-    @Override protected void enterWriteOperation() throws InterruptedException
+    @Override public void enterWriteOperation() throws InterruptedException
         {
         this.switchToMode(DeviceMode.WRITE_ONLY);
         }
@@ -121,15 +120,21 @@ public class ThunkingMotorController extends ThunkedBase implements DcMotorContr
     @Override public synchronized void setMotorControllerDeviceMode(final DcMotorController.DeviceMode mode)
     // setMotorControllerDeviceMode is neither a 'read' nor a 'write' operation; it's internal
         {
-        class Thunk extends NonwaitingThunk
+        NonwaitingThunk thunk = (new NonwaitingThunk()
             {
             @Override protected void actionOnLoopThread()
                 {
                 target.setMotorControllerDeviceMode(mode);
                 }
+            });
+        try
+            {
+            thunk.dispatch();
             }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
+        catch (InterruptedException e)
+            {
+            throw SwerveRuntimeException.Wrap(e);
+            }
 
         // Required: right now we have no idea what mode the controller is in (we know what
         // we *asked* him to do, yes). Thus, our cached knowledge of his state is unknown.
@@ -139,15 +144,21 @@ public class ThunkingMotorController extends ThunkedBase implements DcMotorContr
     @Override public synchronized DcMotorController.DeviceMode getMotorControllerDeviceMode()
     // getMotorControllerDeviceMode is neither a 'read' nor a 'write' operation; it's internal
         {
-        class Thunk extends ResultableThunk<DeviceMode>
+        ResultableThunk<DeviceMode> thunk = (new ResultableThunk<DeviceMode>()
             {
             @Override protected void actionOnLoopThread()
                 {
                 this.result = target.getMotorControllerDeviceMode();
                 }
+            });
+        try
+            {
+            thunk.dispatch();
             }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
+        catch (InterruptedException e)
+            {
+            throw SwerveRuntimeException.Wrap(e);
+            }
 
         // Optimization: we may as well update our knowledge about the controller's state
         this.controllerMode = thunk.result;
@@ -157,178 +168,177 @@ public class ThunkingMotorController extends ThunkedBase implements DcMotorContr
 
     @Override public synchronized String getDeviceName()
         {
-        return this.doReadOperation(new ResultableThunk<String>()
+        return (new ResultableThunk<String>()
             {
             @Override protected void actionOnLoopThread()
                 {
                 this.result = target.getDeviceName();
                 }
-            });
+            }).doReadOperation(this);
         }
 
     @Override public synchronized int getVersion()
         {
-        return this.doReadOperation(new ResultableThunk<Integer>()
+        return (new ResultableThunk<Integer>()
             {
             @Override protected void actionOnLoopThread()
                 {
                 this.result = target.getVersion();
                 }
-            });
+            }).doReadOperation(this);
         }
 
     @Override public synchronized void close()
         {
-        this.doWriteOperation(new NonwaitingThunk()
+        (new NonwaitingThunk()
             {
             @Override protected void actionOnLoopThread()
                 {
                 target.close();
                 }
-            });
+            }).doWriteOperation(this);
         }
-
 
     @Override public synchronized void setMotorChannelMode(final int channel, final DcMotorController.RunMode mode)
         {
-        this.doWriteOperation(new NonwaitingThunk()
+        (new NonwaitingThunk()
             {
             @Override protected void actionOnLoopThread()
                 {
                 target.setMotorChannelMode(channel, mode);
                 }
-            });
+            }).doWriteOperation(this);
         }
 
     @Override public synchronized DcMotorController.RunMode getMotorChannelMode(final int channel)
         {
-        return this.doReadOperation(new ResultableThunk<DcMotorController.RunMode>()
+        return (new ResultableThunk<DcMotorController.RunMode>()
             {
             @Override protected void actionOnLoopThread()
                 {
                 this.result = target.getMotorChannelMode(channel);
                 }
-            });
+            }).doReadOperation(this);
         }
 
     @Override public synchronized void setMotorPower(final int channel, final double power)
         {
-        this.doWriteOperation(new NonwaitingThunk()
+        (new NonwaitingThunk()
             {
             @Override protected void actionOnLoopThread()
                 {
                 target.setMotorPower(channel, power);
                 }
-            });
+            }).doWriteOperation(this);
         }
 
     @Override public synchronized double getMotorPower(final int channel)
         {
-        return this.doReadOperation(new ResultableThunk<Double>()
+        return (new ResultableThunk<Double>()
             {
             @Override protected void actionOnLoopThread()
                 {
                 this.result = target.getMotorPower(channel);
                 }
-            });
+            }).doReadOperation(this);
         }
 
     @Override public synchronized void setMotorPowerFloat(final int channel)
         {
-        this.doWriteOperation(new NonwaitingThunk()
+        (new NonwaitingThunk()
             {
             @Override protected void actionOnLoopThread()
                 {
                 target.setMotorPowerFloat(channel);
                 }
-            });
+            }).doWriteOperation(this);
         }
 
     @Override public synchronized boolean getMotorPowerFloat(final int channel)
         {
-        return this.doReadOperation(new ResultableThunk<Boolean>()
+        return (new ResultableThunk<Boolean>()
             {
             @Override protected void actionOnLoopThread()
                 {
                 this.result = target.getMotorPowerFloat(channel);
                 }
-            });
+            }).doReadOperation(this);
         }
 
     @Override public synchronized void setMotorTargetPosition(final int channel, final int position)
         {
-        this.doWriteOperation(new NonwaitingThunk()
+        (new NonwaitingThunk()
             {
             @Override protected void actionOnLoopThread()
                 {
                 target.setMotorTargetPosition(channel, position);
                 }
-            });
+            }).doWriteOperation(this);
         }
 
     @Override public synchronized int getMotorTargetPosition(final int channel)
         {
-        return this.doReadOperation(new ResultableThunk<Integer>()
+        return (new ResultableThunk<Integer>()
             {
             @Override protected void actionOnLoopThread()
                 {
                 this.result = target.getMotorTargetPosition(channel);
                 }
-            });
+            }).doReadOperation(this);
         }
 
     @Override public synchronized int getMotorCurrentPosition(final int channel)
         {
-        return this.doReadOperation(new ResultableThunk<Integer>()
+        return (new ResultableThunk<Integer>()
             {
             @Override protected void actionOnLoopThread()
                 {
                 this.result = target.getMotorCurrentPosition(channel);
                 }
-            });
+            }).doReadOperation(this);
         }
 
     @Override public synchronized void setGearRatio(final int channel, final double ratio)
         {
-        this.doWriteOperation(new NonwaitingThunk()
+        (new NonwaitingThunk()
             {
             @Override protected void actionOnLoopThread()
                 {
                 target.setGearRatio(channel, ratio);
                 }
-            });
+            }).doWriteOperation(this);
         }
 
     @Override public synchronized double getGearRatio(final int channel)
         {
-        return this.doReadOperation(new ResultableThunk<Double>()
+        return (new ResultableThunk<Double>()
             {
             @Override protected void actionOnLoopThread()
                 {
                 this.result = target.getGearRatio(channel);
                 }
-            });
+            }).doReadOperation(this);
         }
 
     @Override public synchronized void setDifferentialControlLoopCoefficients(final int channel, final DifferentialControlLoopCoefficients pid)
         {
-        this.doWriteOperation(new NonwaitingThunk()
-        {
-        @Override protected void actionOnLoopThread()
+        (new NonwaitingThunk()
             {
-            target.setDifferentialControlLoopCoefficients(channel, pid);
-            }
-        });
+            @Override protected void actionOnLoopThread()
+                {
+                target.setDifferentialControlLoopCoefficients(channel, pid);
+                }
+            }).doWriteOperation(this);
         }
 
     @Override public synchronized DifferentialControlLoopCoefficients getDifferentialControlLoopCoefficients(final int channel)
         {
-        return this.doReadOperation(new ResultableThunk<DifferentialControlLoopCoefficients>()
+        return (new ResultableThunk<DifferentialControlLoopCoefficients>()
             {
             @Override protected void actionOnLoopThread()
                 {
                 this.result = target.getDifferentialControlLoopCoefficients(channel);
                 }
-            });
+            }).doReadOperation(this);
         }
     }

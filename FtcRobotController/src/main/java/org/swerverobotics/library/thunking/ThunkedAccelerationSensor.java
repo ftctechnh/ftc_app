@@ -33,29 +33,23 @@ public class ThunkedAccelerationSensor extends AccelerationSensor
 
     @Override public AccelerationSensor.Acceleration getAcceleration()
         {
-        class Thunk extends ResultableThunk<Acceleration>
+        return (new ResultableThunk<Acceleration>()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 this.result = target.getAcceleration();
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        return thunk.result;
+            }).doReadOperation();
         }
 
     @Override public String status()
         {
-        class Thunk extends ResultableThunk<String>
+        return (new ResultableThunk<String>()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 this.result = target.status();
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        return thunk.result;
+            }).doReadOperation();
         }
     }

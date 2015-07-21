@@ -1,5 +1,7 @@
 package org.swerverobotics.library.thunking;
 
+import android.text.BoringLayout;
+
 import com.qualcomm.robotcore.hardware.*;
 
 public class ThunkingLegacyModule implements LegacyModule
@@ -30,134 +32,111 @@ public class ThunkingLegacyModule implements LegacyModule
 
     @Override public void enableNxtI2cReadMode(final int physicalPort, final int i2cAddress, final int memAddress, final int memLength)
         {
-        class Thunk extends NonwaitingThunk
+        (new NonwaitingThunk()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 target.enableNxtI2cReadMode(physicalPort, i2cAddress, memAddress, memLength);
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
+            }).doWriteOperation();
         }
 
     @Override public void enableNxtI2cWriteMode(final int physicalPort, final int i2cAddress, final int memAddress, final byte[] initialValues)
         {
-        class Thunk extends NonwaitingThunk
+        (new NonwaitingThunk()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 target.enableNxtI2cWriteMode(physicalPort, i2cAddress, memAddress, initialValues);
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
+            }).doWriteOperation();
         }
 
     @Override public void enableAnalogReadMode(final int physicalPort, final int i2cAddress)
         {
-        class Thunk extends NonwaitingThunk
+        (new NonwaitingThunk()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 target.enableAnalogReadMode(physicalPort, i2cAddress);
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
+            }).doWriteOperation();
         }
 
     @Override public void enable9v(final int physicalPort, final boolean enable)
         {
-        class Thunk extends NonwaitingThunk
+        (new NonwaitingThunk()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 target.enable9v(physicalPort, enable);
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
+            }).doWriteOperation();
         }
 
     @Override public void setDigitalLine(final int physicalPort, final int line, final boolean set)
         {
-        class Thunk extends NonwaitingThunk
+        (new NonwaitingThunk()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 target.setDigitalLine(physicalPort, line, set);
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
+            }).doWriteOperation();
         }
 
     @Override public byte[] readLegacyModuleCache(final int physicalPort)
         {
-        class Thunk extends ResultableThunk<byte[]>
+        return (new ResultableThunk<byte[]>()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 this.result = target.readLegacyModuleCache(physicalPort);
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        return thunk.result;
+            }).doReadOperation();
         }
 
     @Override public void writeLegacyModuleCache(final int physicalPort, final byte[] data)
         {
-        class Thunk extends NonwaitingThunk
+        (new NonwaitingThunk()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 target.writeLegacyModuleCache(physicalPort, data);
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
+            }).doWriteOperation();
         }
 
     @Override public byte[] readAnalog(final int physicalPort)
         {
-        class Thunk extends ResultableThunk<byte[]>
+        return (new ResultableThunk<byte[]>()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 this.result = target.readAnalog(physicalPort);
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        return thunk.result;
+            }).doReadOperation();
         }
 
     @Override public boolean isPortReady(final int physicalPort)
         {
-        class Thunk extends ResultableThunk<Boolean>
+        return (new ResultableThunk<Boolean>()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 this.result = target.isPortReady(physicalPort);
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        return thunk.result;
+            }).doReadOperation();
         }
 
     @Override public void close()
         {
-        class Thunk extends NonwaitingThunk
+        (new NonwaitingThunk()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 target.close();
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
+            }).doWriteOperation();
         }
     }

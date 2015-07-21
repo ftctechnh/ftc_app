@@ -1,5 +1,7 @@
 package org.swerverobotics.library.thunking;
 
+import android.text.BoringLayout;
+
 import com.qualcomm.robotcore.hardware.*;
 
 /**
@@ -33,85 +35,68 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
 
     @Override public void setMode(final IrSeekerSensor.Mode mode)
         {
-        class Thunk extends NonwaitingThunk
+        (new NonwaitingThunk()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 target.setMode(mode);
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
+            }).doWriteOperation();
         }
 
     @Override public IrSeekerSensor.Mode getMode()
         {
-        class Thunk extends ResultableThunk<Mode>
+        return (new ResultableThunk<IrSeekerSensor.Mode>()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 this.result = target.getMode();
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        return thunk.result;
+            }).doReadOperation();
         }
 
     @Override public boolean signalDetected()
         {
-        class Thunk extends ResultableThunk<Boolean>
+        return (new ResultableThunk<Boolean>()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 this.result = target.signalDetected();
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        return thunk.result;
+            }).doReadOperation();
         }
 
     @Override public double getAngle()
         {
-        class Thunk extends ResultableThunk<Double>
+        return (new ResultableThunk<Double>()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 this.result = target.getAngle();
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        return thunk.result;
+            }).doReadOperation();
         }
 
     @Override public double getStrength()
         {
-        class Thunk extends ResultableThunk<Double>
+        return (new ResultableThunk<Double>()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 this.result = target.getStrength();
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        return thunk.result;
+            }).doReadOperation();
         }
 
     @Override public IrSeekerSensor.IrSensor[] getSensors()
         {
-        class Thunk extends ResultableThunk<IrSensor[]>
+        return (new ResultableThunk<IrSeekerSensor.IrSensor[]>()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 this.result = target.getSensors();
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        return thunk.result;
+            }).doReadOperation();
         }
 
     }

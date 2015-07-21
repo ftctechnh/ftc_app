@@ -5,6 +5,15 @@ package org.swerverobotics.library.exceptions;
  */
 public class SwerveRuntimeException extends RuntimeException
     {
+    /**
+     * Wrap() takes an exception, of any flavor, and wraps it (only if necessary) to yield
+     * a RuntimeException. The method is idempotent.
+     *
+     * The following exception mappings take place:
+     *      RuntimeException     => itself
+     *      InterruptedException => RuntimeInterruptedException
+     *      other                => RuntimeException
+     */
     public static RuntimeException Wrap(Exception e)
         {
         if (e instanceof RuntimeException)

@@ -4,22 +4,15 @@ package org.swerverobotics.library.thunking;
  * Thunks derived from WaitingThunk queue up their work, then synchronously wait
  * for that work to complete before dispatch() returns.
  */
-public abstract class WaitingThunk extends ThunkBase
+public abstract class WaitingThunk extends NonwaitingThunk
     {
-    @Override public void dispatch()
+    @Override public void dispatch() throws InterruptedException
         {
         super.dispatch();
 
-        try
+        synchronized (this)
             {
-            synchronized (this)
-                {
-                this.wait();
-                }
-            }
-        catch (InterruptedException e)
-            {
-            Thread.currentThread().interrupt();
+            this.wait();
             }
         }
     }

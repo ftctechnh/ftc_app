@@ -33,30 +33,24 @@ public class ThunkedUltrasonicSensor extends UltrasonicSensor
 
     @Override public double getUltrasonicLevel()
         {
-        class Thunk extends ResultableThunk<Double>
+        return (new ResultableThunk<Double>()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 this.result = target.getUltrasonicLevel();
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        return thunk.result;
+            }).doReadOperation();
         }
 
     @Override public String status()
         {
-        class Thunk extends ResultableThunk<String>
+        return (new ResultableThunk<String>()
             {
-            @Override public void actionOnLoopThread()
+            @Override protected void actionOnLoopThread()
                 {
                 this.result = target.status();
                 }
-            }
-        Thunk thunk = new Thunk();
-        thunk.dispatch();
-        return thunk.result;
+            }).doReadOperation();
         }
 
 
