@@ -29,7 +29,7 @@ public class TelemetryOp extends SynchronousOpMode
                 {
                 return loopCount.get() - loopCountStart;
                 }}),
-            this.telemetry.dashboard.item("rate: ", new IFunc<Object>() { @Override public Object value()
+            this.telemetry.dashboard.item("rate: ", new IFunc<Object>() { @Override public Object value() 
                 {
                 return format(elapsed.time() / (loopCount.get()-loopCountStart) * 1000) + "ms";
                 }})

@@ -159,6 +159,31 @@ public class TelemetryDashboardAndLog
         /**
          * Add a line to the dashboard containing the indicated items
          */
+        public void line(Item item0, Item item1, Item item2, Item item3)
+            {
+            ArrayList<Item> items = new ArrayList<Item>();
+            items.add(item0);
+            items.add(item1);
+            items.add(item2);
+            items.add(item3);
+            this.line(items);
+            }
+        /**
+         * Add a line to the dashboard containing the indicated items
+         */
+        public void line(Item item0, Item item1, Item item2, Item item3, Item item4)
+            {
+            ArrayList<Item> items = new ArrayList<Item>();
+            items.add(item0);
+            items.add(item1);
+            items.add(item2);
+            items.add(item3);
+            items.add(item4);
+            this.line(items);
+            }
+        /**
+         * Add a line to the dashboard containing the indicated items
+         */
         public void line(List<Item> items)
             {
             synchronized (this.getLock())
