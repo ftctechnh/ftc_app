@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.*;
  * An implementation of ServoController that talks to a non-thunking target implementation
  * by thunking all calls over to the loop thread and back gain.
  */
-public class ThunkingServoController implements ServoController
+public class ThunkedServoController implements ServoController
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -18,15 +18,15 @@ public class ThunkingServoController implements ServoController
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    private ThunkingServoController(ServoController target)
+    private ThunkedServoController(ServoController target)
         {
         if (target == null) throw new NullPointerException("null " + this.getClass().getSimpleName() + " target");
         this.target = target;
         }
 
-    static public ThunkingServoController create(ServoController target)
+    static public ThunkedServoController create(ServoController target)
         {
-        return target instanceof ThunkingServoController ? (ThunkingServoController)target : new ThunkingServoController(target);
+        return target instanceof ThunkedServoController ? (ThunkedServoController)target : new ThunkedServoController(target);
         }
 
     //----------------------------------------------------------------------------------------------
