@@ -46,9 +46,9 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
 
     /**
      * The game pad variables are redeclared here so as to hide those in our OpMode superclass
-     * as the latter may be updated by the loop() thread at arbitrary times and in a manner which
-     * is not synchronized with processing on the main() thread. We take pains to ensure that
-     * the variables declared here do not suffer from that problem.
+     * as the latter may be updated by robot controller runtime at arbitrary times and in a manner 
+     * which is not synchronized with processing on a synchronous thread. We take pains to ensure 
+     * that the variables declared here do not suffer from that problem.
      */
     public ThreadSafeGamepad gamepad1 = null;
     public ThreadSafeGamepad gamepad2 = null;
@@ -68,11 +68,11 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      * Advanced: 'nanotimeLoopDwellMax' is the (soft) maximum number of nanoseconds that
      * our loop() implementation will spend in any one call before returning.
      */
-    public long msLoopDwellMax = 50;
+    public long msLoopDwellMax = 30;
 
     /**
      * Advanced: loopDwellCheckInterval is the number of thunks we will execute in loop()
-     * before checking whether we've exceeded nanotimeLoopDwellMax
+     * before checking whether we've exceeded msLoopDwellMax.
      */
     public int loopDwellCheckCount = 5;
 
@@ -146,9 +146,10 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         // Similarly replace the telemetry variable
         this.telemetry = new TelemetryDashboardAndLog(ThunkedTelemetry.create(super.telemetry));
 
-        // Remember who the loop thread is so that we know whom to communicate
-        // with from the main() thread.
-        this.loopThread = Thread.currentThread();
+        // Remember who the loop thread is so that we know whom to communicate with from a 
+        // synchronous thread. Note: we ASSUME here that start(), loop(), and stop()
+        // all run on the same thread.
+        loopThread = Thread.currentThread();
 
         // Paranoia: clear any state that may just perhaps be lingering
         this.clearSingletons();
@@ -167,7 +168,8 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         }
 
     /**
-     * The robot controller runtime calls loop() on a frequent basis
+     * The robot controller runtime calls loop() on a frequent basis, nominally every
+     * 20ms or so.
      */
     @Override public final void loop()
         {
@@ -178,7 +180,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
             {
             this.loopCount.getAndIncrement();
 
-            // Capture the gamepad states safely so that in the main() thread we don't see torn writes
+            // Capture the gamepad states safely so that in a synchronous thread we don't see torn writes
             boolean diff1 = true;
             boolean diff2 = true;
             //
@@ -238,7 +240,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     /**
      * The robot controller runtime calls stop() to shut down the OpMode.
      *
-     * It will in particular ALWAYS be the case that by the  time the stop() method returns that
+     * It will in particular ALWAYS be the case that by the time this stop() method returns that
      * the thread on which main() is executed will have been terminated. Well, at least that's
      * the invariant we would LIKE to maintain. Unfortunately, there appears to be simply no way
      * (any longer) to get rid of a thread that simply refuses to die in response to an interrupt.
@@ -290,8 +292,8 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     //----------------------------------------------------------------------------------------------
 
     /**
-     * The various 'hook' calls calls preStartHook(), postStartHook(), preLoopHook(), etc
-     * are hooks that advanced users might want to override in their subclasses to something
+     * Advanced: the various 'hook' calls calls preStartHook(), postStartHook(), preLoopHook(), 
+     * etc are hooks that advanced users might want to override in their subclasses to something
      * interesting.
      *
      * The 'pre' and 'post' variations are called at the beginning and the end of their respective
@@ -348,8 +350,6 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      */
     public final boolean isNewGamePadInputAvailable()
         {
-        // Like newGamePadInputAvailable(), but doesn't auto-reset the availability state.
-        //
         return this.gamePadStateChanged.get();
         }
 
@@ -457,16 +457,16 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     /**
      * Advanced: Answer as to whether the current thread is in fact the loop thread
      */
-    public final boolean isLoopThread()
+    private boolean isLoopThread()
         {
         return this.loopThread.getId() == Thread.currentThread().getId();
         }
     /**
      * Advanced: Answer as to whether this is a synchronous thread
      */
-    public final boolean isSynchronousThread()
+    private boolean isSynchronousThread()
         {
-        return SynchronousThreadContext.getThreadContext() != null;
+        return SynchronousThreadContext.isSynchronousThread();
         }
 
     //----------------------------------------------------------------------------------------------
@@ -694,32 +694,3 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
             }
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,5 +1,7 @@
 package org.swerverobotics.library.thunking;
 
+import com.qualcomm.ftcrobotcontroller.*;
+import junit.framework.Assert;
 import org.swerverobotics.library.IAction;
 import org.swerverobotics.library.SynchronousOpMode;
 import org.swerverobotics.library.exceptions.SwerveRuntimeException;
@@ -68,30 +70,21 @@ public abstract class ThunkBase implements IAction
      */
     public void dispatch() throws InterruptedException
         {
-        if (this.isLoopThread())
+        if (BuildConfig.DEBUG) Assert.assertEquals(true, SynchronousThreadContext.isSynchronousThread());
+        
+        // It's a synchronous thread. Head over to the loop() thread to do the work.
+        this.context.noteThunkDispatching(this);
+        try
             {
-            this.doLoopThreadCore();
+            this.context.getThunker().executeOnLoopThread(this);
             }
-        else
+        catch (Exception e)
             {
-            this.context.noteThunkDispatching(this);
-            try
-                {
-                this.context.getThunker().executeOnLoopThread(this);
-                }
-            catch (Exception e)
-                {
-                // This shouldn't happen, as we shouldn't see any checked exceptions
-                // since none have been declared. In any event, we note the failure
-                // then do what we can.
-                this.context.noteThunkDispatchFailure(this);
-                throw SwerveRuntimeException.Wrap(e);
-                }
+            // This shouldn't happen, as we shouldn't see any checked exceptions
+            // since none have been declared. In any event, we note the failure
+            // then do what we can.
+            this.context.noteThunkDispatchFailure(this);
+            throw SwerveRuntimeException.Wrap(e);
             }
-        }
-
-    public boolean isLoopThread()
-        {
-        return SynchronousOpMode.getThreadThunker().isLoopThread();
         }
     }
