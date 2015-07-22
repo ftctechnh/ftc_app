@@ -6,7 +6,7 @@ import org.swerverobotics.library.*;
 import org.swerverobotics.library.thunking.*;
 
 /**
- * A very simple example of a synchronous op mode.
+ * An example of a synchronous opmode that implements a simple drive-a-bot. 
  */
 public class TeleOp extends SynchronousOpMode
     {
@@ -50,8 +50,7 @@ public class TeleOp extends SynchronousOpMode
                 // Emit any telemetry that hasn't been sent in a while
                 this.telemetry.dashboard.update();
 
-                // Let the rest of the system run until there's a stimulus from the robot
-                // controller runtime.
+                // Let the rest of the system run until there's a stimulus from the robot controller runtime.
                 this.idle();
                 }
             }
