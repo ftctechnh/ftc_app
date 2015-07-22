@@ -123,6 +123,11 @@ public class SynchronousThreadContext
         {
         return tlsThunker.get();
         }
+    
+    public static boolean isSynchronousThread()
+        {
+        return getThreadContext() != null;
+        }
 
     /**
      * tlsThunker is the thread local variable by which a SynchronousThreadContext is associated with a thread

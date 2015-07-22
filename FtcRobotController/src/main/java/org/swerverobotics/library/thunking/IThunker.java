@@ -16,9 +16,4 @@ public interface IThunker
      * Execute the work on the loop thread as soon as we can (which may be on the current thread).
      */
     void executeSingletonOnLoopThread(int key, IAction thunk);
-
-    /**
-     * Is the current thread the loop thread?
-     */
-    boolean isLoopThread();
     }
