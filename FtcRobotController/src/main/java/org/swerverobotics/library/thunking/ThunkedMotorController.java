@@ -11,7 +11,7 @@ import org.swerverobotics.library.exceptions.SwerveRuntimeException;
  * by thunking all calls over to the loop thread and back gain. The implementation automatically
  * takes care of read and write device mode switching.
  */
-public class ThunkingMotorController implements DcMotorController, IThunkedReadWrite
+public class ThunkedMotorController implements DcMotorController, IThunkedReadWrite
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -24,16 +24,16 @@ public class ThunkingMotorController implements DcMotorController, IThunkedReadW
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    private ThunkingMotorController(DcMotorController target)
+    private ThunkedMotorController(DcMotorController target)
         {
         if (target == null) throw new NullPointerException("null " + this.getClass().getSimpleName() + " target");
         this.target = target;
         this.controllerMode = null;
         }
 
-    static public ThunkingMotorController create(DcMotorController target)
+    static public ThunkedMotorController create(DcMotorController target)
         {
-        return target instanceof ThunkingMotorController ? (ThunkingMotorController)target : new ThunkingMotorController(target);
+        return target instanceof ThunkedMotorController ? (ThunkedMotorController)target : new ThunkedMotorController(target);
         }
 
     //----------------------------------------------------------------------------------------------

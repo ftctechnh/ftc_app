@@ -127,7 +127,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         }
 
     //----------------------------------------------------------------------------------------------
-    // Startup and shutdown
+    // start(), loop(), and stop()
     //----------------------------------------------------------------------------------------------
 
     /**
@@ -154,10 +154,10 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         // Paranoia: clear any state that may just perhaps be lingering
         this.clearSingletons();
         this.loopThreadThunkQueue.clear();
-        this.loopCount = new AtomicInteger(0);
 
         // We're being asked to start, not stop
         this.stopRequested = false;
+        this.loopCount = new AtomicInteger(0);
 
         // Create the main thread and start it up and going!
         this.mainThread = new Thread(new Runner());
@@ -551,7 +551,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 {
                 @Override public DcMotorController create(DcMotorController target)
                     {
-                    return ThunkingMotorController.create(target);
+                    return ThunkedMotorController.create(target);
                     }
                 }
         );
@@ -561,7 +561,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 {
                 @Override public ServoController create(ServoController target)
                     {
-                    return ThunkingServoController.create(target);
+                    return ThunkedServoController.create(target);
                     }
                 }
         );
@@ -571,7 +571,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 {
                 @Override public LegacyModule create(LegacyModule target)
                     {
-                    return ThunkingLegacyModule.create(target);
+                    return ThunkedLegacyModule.create(target);
                     }
                 }
         );
@@ -582,7 +582,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 @Override public DcMotor create(DcMotor target)
                     {
                     return new ThreadSafeDcMotor(
-                            ThunkingMotorController.create(target.getController()),
+                            ThunkedMotorController.create(target.getController()),
                             target.getPortNumber(),
                             target.getDirection()
                     );
@@ -597,7 +597,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 public com.qualcomm.robotcore.hardware.Servo create(com.qualcomm.robotcore.hardware.Servo target)
                     {
                     return new ThreadSafeServo(
-                            ThunkingServoController.create(target.getController()),
+                            ThunkedServoController.create(target.getController()),
                             target.getPortNumber(),
                             target.getDirection()
                     );

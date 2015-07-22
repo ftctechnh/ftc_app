@@ -1,10 +1,8 @@
 package org.swerverobotics.library.thunking;
 
-import android.text.BoringLayout;
-
 import com.qualcomm.robotcore.hardware.*;
 
-public class ThunkingLegacyModule implements LegacyModule
+public class ThunkedLegacyModule implements LegacyModule
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -16,15 +14,15 @@ public class ThunkingLegacyModule implements LegacyModule
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    private ThunkingLegacyModule(LegacyModule target)
+    private ThunkedLegacyModule(LegacyModule target)
         {
         if (target == null) throw new NullPointerException("null " + this.getClass().getSimpleName() + " target");
         this.target = target;
         }
 
-    static public ThunkingLegacyModule create(LegacyModule target)
+    static public ThunkedLegacyModule create(LegacyModule target)
         {
-        return target instanceof ThunkingLegacyModule ? (ThunkingLegacyModule)target : new ThunkingLegacyModule(target);
+        return target instanceof ThunkedLegacyModule ? (ThunkedLegacyModule)target : new ThunkedLegacyModule(target);
         }
 
     //----------------------------------------------------------------------------------------------
