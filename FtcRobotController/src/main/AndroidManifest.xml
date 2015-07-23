@@ -4,6 +4,13 @@
           android:versionCode="1"
           android:versionName="1.0" >
 
+  <!--  TEAM ADDED  -->
+
+  <uses-permission android:name="android.permission.CAMERA"/>
+  <uses-feature android:name="android.hardware.Camera"/>
+
+  <!--  END TEAM ADDED  -->
+
   <uses-permission
     android:name="android.permission.ACCESS_WIFI_STATE"
     android:required="true" />
