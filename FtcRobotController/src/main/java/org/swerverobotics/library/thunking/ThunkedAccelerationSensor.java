@@ -11,7 +11,7 @@ public class ThunkedAccelerationSensor extends AccelerationSensor
     // State
     //----------------------------------------------------------------------------------------------
 
-    AccelerationSensor target;   // can only talk to him on the loop thread
+    public AccelerationSensor target;   // can only talk to him on the loop thread
 
     //----------------------------------------------------------------------------------------------
     // Construction

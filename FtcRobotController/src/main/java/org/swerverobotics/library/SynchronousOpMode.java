@@ -144,7 +144,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         this.hardwareMap = createThunkedHardwareMap(this.unthunkedHardwareMap);
 
         // Similarly replace the telemetry variable
-        this.telemetry = new TelemetryDashboardAndLog(ThunkedTelemetry.create(super.telemetry));
+        this.telemetry = new TelemetryDashboardAndLog(super.telemetry);
 
         // Remember who the loop thread is so that we know whom to communicate with from a 
         // synchronous thread. Note: we ASSUME here that start(), loop(), and stop()
@@ -427,6 +427,11 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         {
         synchronized (this.loopLock)
             {
+            // If new input has arrived since anyone last looked, then let our caller process that
+            if (this.isNewGamePadInputAvailable())
+                return;
+            
+            // Otherwise, we know there's nothign to do until at least the next loop() call.
             int count = this.loopCount.get();
             do
                 {

@@ -11,7 +11,7 @@ public class ThunkedGyroSensor extends  GyroSensor
     // State
     //----------------------------------------------------------------------------------------------
 
-    GyroSensor target;   // can only talk to him on the loop thread
+    public GyroSensor target;   // can only talk to him on the loop thread
 
     //----------------------------------------------------------------------------------------------
     // Construction

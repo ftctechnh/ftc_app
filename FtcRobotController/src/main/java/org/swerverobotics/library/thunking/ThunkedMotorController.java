@@ -17,8 +17,8 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
     // State
     //----------------------------------------------------------------------------------------------
 
-    DcMotorController target;          // can only talk to him on the loop thread
-    DeviceMode        controllerMode;  // the last mode we know the controller to be in
+    public  DcMotorController target;          // can only talk to him on the loop thread
+    private DeviceMode        controllerMode;  // the last mode we know the controller to be in
 
     //----------------------------------------------------------------------------------------------
     // Construction

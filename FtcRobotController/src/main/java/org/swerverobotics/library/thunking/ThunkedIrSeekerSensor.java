@@ -13,7 +13,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
     // State
     //----------------------------------------------------------------------------------------------
 
-    IrSeekerSensor target;   // can only talk to him on the loop thread
+    public IrSeekerSensor target;   // can only talk to him on the loop thread
 
     //----------------------------------------------------------------------------------------------
     // Construction

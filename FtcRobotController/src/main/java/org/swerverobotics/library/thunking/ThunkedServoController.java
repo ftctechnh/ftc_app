@@ -12,7 +12,7 @@ public class ThunkedServoController implements ServoController
     // State
     //----------------------------------------------------------------------------------------------
 
-    ServoController target;   // can only talk to him on the loop thread
+    public ServoController target;   // can only talk to him on the loop thread
 
     //----------------------------------------------------------------------------------------------
     // Construction

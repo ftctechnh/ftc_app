@@ -2,6 +2,7 @@ package org.swerverobotics.library;
 
 import com.qualcomm.robotcore.robocol.Telemetry;
 
+import org.swerverobotics.library.thunking.SynchronousThreadContext;
 import org.swerverobotics.library.thunking.ThunkedTelemetry;
 
 import java.util.*;
@@ -295,9 +296,9 @@ public class TelemetryDashboardAndLog
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    public TelemetryDashboardAndLog(ThunkedTelemetry thunkedTelemetry)
+    public TelemetryDashboardAndLog(Telemetry telemetry)
         {
-        this.raw       = thunkedTelemetry;
+        this.raw       = ThunkedTelemetry.create(telemetry);
         this.dashboard = new Dashboard();
         this.log       = new Log();
         //
@@ -387,23 +388,35 @@ public class TelemetryDashboardAndLog
                         iLine++;
                         }
 
-                    // Head on over to the loop() thread and add these messages to the
-                    // (unthunked) telemetry. However, we only do that once per loop() call;
-                    // if we attempt two of these within one loop() quantum (by, e.g., issuing
-                    // a bunch of log.add() calls), then only the last one will actually manifest
-                    // itself and thus get back to the driver station.
-                    SynchronousOpMode.getThreadThunker().executeSingletonOnLoopThread(singletonKey, new IAction()
+                    IAction action = new IAction()
                         {
                         @Override public void doAction()
                             {
                             for (int i = 0; i < keys.size(); i++)
                                 {
-                                TelemetryDashboardAndLog.this.raw.getTarget().addData(
+                                TelemetryDashboardAndLog.this.raw.target.addData(
                                         keys.elementAt(i),
                                         values.elementAt(i));
                                 }
                             }
-                        });
+                        };
+                    
+                    if (SynchronousThreadContext.isSynchronousThread())
+                        {
+                        // Head on over to the loop() thread and add these messages to the
+                        // (unthunked) telemetry. However, we only do that once per loop() call;
+                        // if we attempt two of these within one loop() quantum (by, e.g., issuing
+                        // a bunch of log.add() calls), then only the last one will actually manifest
+                        // itself and thus get back to the driver station.
+                        SynchronousOpMode.getThreadThunker().executeSingletonOnLoopThread(singletonKey, action);
+                        }
+                    else
+                        {
+                        // We're not on a synchronous thread. Presumably, we're on the loop() thread,
+                        // though we can't confirm that. In any case, update the unthunked telemetry
+                        // here, directly on this thread.
+                        action.doAction();
+                        }
 
                     // Update our state for the next time around
                     nanoLastUpdate = nanoNow;

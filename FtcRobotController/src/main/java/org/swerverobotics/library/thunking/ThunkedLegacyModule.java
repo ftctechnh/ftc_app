@@ -8,7 +8,7 @@ public class ThunkedLegacyModule implements LegacyModule
     // State
     //----------------------------------------------------------------------------------------------
 
-    LegacyModule target;   // can only talk to him on the loop thread
+    public LegacyModule target;   // can only talk to him on the loop thread
 
     //----------------------------------------------------------------------------------------------
     // Construction

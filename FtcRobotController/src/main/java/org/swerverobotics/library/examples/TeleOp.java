@@ -17,7 +17,9 @@ public class TeleOp extends SynchronousOpMode
 
     @Override protected void main() throws InterruptedException
         {
-        // Initialize our hardware variables
+        // Initialize our hardware variables. Note that the strings used here as parameters
+        // to 'get' must correspond to the names you assigned during the robot configuration
+        // step you did in the FTC Robot Controller app on the phone.
         this.motorLeft = this.hardwareMap.dcMotor.get("motorLeft");
         this.motorRight = this.hardwareMap.dcMotor.get("motorRight");
 
@@ -39,20 +41,13 @@ public class TeleOp extends SynchronousOpMode
                 // There is (likely) new gamepad input available.
                 // Do something with that! Here, we just drive.
                 this.doManualDrivingControl(this.gamepad1);
-
-                // Emit telemetry with the freshest possible values
-                this.telemetry.dashboard.update();
                 }
-            else
-                {
-                // There's no new gamepad input available.
 
-                // Emit any telemetry that hasn't been sent in a while
-                this.telemetry.dashboard.update();
+            // Emit telemetry with the freshest possible values
+            this.telemetry.dashboard.update();
 
-                // Let the rest of the system run until there's a stimulus from the robot controller runtime.
-                this.idle();
-                }
+            // Let the rest of the system run until there's a stimulus from the robot controller runtime.
+            this.idle();
             }
         }
 
