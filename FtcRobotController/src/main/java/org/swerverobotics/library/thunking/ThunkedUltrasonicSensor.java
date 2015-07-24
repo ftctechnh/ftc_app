@@ -11,7 +11,7 @@ public class ThunkedUltrasonicSensor extends UltrasonicSensor
     // State
     //----------------------------------------------------------------------------------------------
 
-    UltrasonicSensor target;   // can only talk to him on the loop thread
+    public UltrasonicSensor target;   // can only talk to him on the loop thread
 
     //----------------------------------------------------------------------------------------------
     // Construction

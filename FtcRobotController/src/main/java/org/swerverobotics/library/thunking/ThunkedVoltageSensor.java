@@ -11,7 +11,7 @@ public class ThunkedVoltageSensor implements VoltageSensor
     // State
     //----------------------------------------------------------------------------------------------
 
-    VoltageSensor target;   // can only talk to him on the loop thread
+    public VoltageSensor target;   // can only talk to him on the loop thread
 
     //----------------------------------------------------------------------------------------------
     // Construction

@@ -11,7 +11,7 @@ public class ThunkedCompassSensor extends CompassSensor
     // State
     //----------------------------------------------------------------------------------------------
 
-    CompassSensor target;   // can only talk to him on the loop thread
+    public CompassSensor target;   // can only talk to him on the loop thread
 
     //----------------------------------------------------------------------------------------------
     // Construction

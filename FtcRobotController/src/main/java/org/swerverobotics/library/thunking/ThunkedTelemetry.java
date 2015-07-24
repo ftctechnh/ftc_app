@@ -18,9 +18,7 @@ public class ThunkedTelemetry
     // State
     //----------------------------------------------------------------------------------------------
 
-    private Telemetry target;
-
-    public Telemetry getTarget() { return this.target; }
+    public Telemetry target;
 
     //----------------------------------------------------------------------------------------------
     // Construction

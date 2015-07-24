@@ -11,7 +11,7 @@ public class ThunkedLightSensor extends LightSensor
     // State
     //----------------------------------------------------------------------------------------------
 
-    LightSensor target;   // can only talk to him on the loop thread
+    public LightSensor target;   // can only talk to him on the loop thread
 
     //----------------------------------------------------------------------------------------------
     // Construction
