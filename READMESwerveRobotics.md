@@ -16,8 +16,39 @@ RCL in order to simplify programming for FTC teams. Notable features of the libr
     the driver station as soon as possible. On the driver station display, the dashboard appears
     at the top, followed by as many of the recent log messages as will reasonably fit.
     
-The library is still undergoing development. It has received light testing, and while no known bugs
-currently exist, undoubtedly some are there lurking to be discovered. Documentation is currently
+The fifteen second summary of how to use the library is as follows:
+
+*   Inherit your OpMode from SynchronousOpMode instead of OpMode.
+*   Implement your code in a main() method whose signature is:
+        ```
+        @Override protected void main() throws InterruptedException
+        ```
+*   Initialize your hardware variables at the top of main() instead of in start(). Otherwise,
+    the use of hardware objects (DcMotor, Servo, GamePads, etc) is the same as in the RCL, with 
+    the single exception that the GamePad objects have methods rather than data, so you have to
+    say, e.g., 
+        ```
+        gampad1.left_stick_y()
+        ```
+    instead of
+        ```     
+        gampad1.left_stick_y
+        ```
+*   The core of the body of main() should look like
+        ```
+        while (!this.stopRequested()) {
+            if (this.newGamePadInputAvailable()) {
+                // Do something interesting
+                }
+            this.telemetry.dashboard.update();
+            this.idle();
+            }
+        ```
+
+That's it!
+
+Note that he library is still undergoing development. It has received light testing, and while no known 
+bugs currently exist, undoubtedly some are there lurking to be discovered. Documentation is currently
 very sparse. There are a couple of examples in the examples package, and the code itself is heavily
 commented, but there is as yet no easily approachable tutorial or reference manual. We're working on
 that. Finally, in its present form, the library is distributed solely in source form: clone the 
@@ -28,14 +59,11 @@ on releasing in binary form (with full source provided as well to aid in debuggi
 yet available.
 
 We'd love to hear what you think about the library. Please direct your feedback to 
-    
-    <swerveftclibrary@googlegroups.com>
-
-Thanks!
+swerveftclibrary@googlegroups.com. Thanks!
 
 Robert Atkinson,
 bob@theatkinsons.org,
 Mentor, Swerve Robotics,  
 Woodinville, Washington
 
-21 July 2015  
+21 July 2015 (update 27 July)  
