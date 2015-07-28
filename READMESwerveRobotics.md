@@ -44,7 +44,7 @@ The fifteen second summary of how to use the library is as follows:
             }
 That's it!
 
-Note that he library is still undergoing development. It has received light testing, and while no known 
+Note that the library is still undergoing development. It has received light testing, and while no known 
 bugs currently exist, undoubtedly some are there lurking to be discovered. Documentation is currently
 very sparse. There are a couple of examples in the examples package, and the code itself is heavily
 commented, but there is as yet no easily approachable tutorial or reference manual. We're working on
