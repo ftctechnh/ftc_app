@@ -27,11 +27,11 @@ The fifteen second summary of how to use the library is as follows:
     the single exception that the GamePad objects have methods rather than data, so you have to
     say, e.g., 
         ```
-        gampad1.left_stick_y()
+        gamepad1.left_stick_y()
         ```
     instead of
         ```     
-        gampad1.left_stick_y
+        gamepad1.left_stick_y
         ```.
 *   The core of the body of main() should look like
 
