@@ -20,6 +20,7 @@ The fifteen second summary of how to use the library is as follows:
 
 *   Inherit your OpMode from SynchronousOpMode instead of OpMode.
 *   Implement your code in a main() method whose signature is:
+
         ```
         @Override protected void main() throws InterruptedException
         ```
@@ -33,9 +34,9 @@ The fifteen second summary of how to use the library is as follows:
     instead of
         ```     
         gampad1.left_stick_y
-        ```
+        ```.
 *   The core of the body of main() should look like
-        ```
+
         while (!this.stopRequested()) {
             if (this.newGamePadInputAvailable()) {
                 // Do something interesting
@@ -43,7 +44,6 @@ The fifteen second summary of how to use the library is as follows:
             this.telemetry.dashboard.update();
             this.idle();
             }
-        ```
 
 That's it!
 
