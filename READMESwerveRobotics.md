@@ -21,9 +21,7 @@ The fifteen second summary of how to use the library is as follows:
 *   Inherit your OpMode from SynchronousOpMode instead of OpMode.
 *   Implement your code in a main() method whose signature is:
 
-        ```
         @Override protected void main() throws InterruptedException
-        ```
 *   Initialize your hardware variables at the top of main() instead of in start(). Otherwise,
     the use of hardware objects (DcMotor, Servo, GamePads, etc) is the same as in the RCL, with 
     the single exception that the GamePad objects have methods rather than data, so you have to
@@ -44,7 +42,6 @@ The fifteen second summary of how to use the library is as follows:
             this.telemetry.dashboard.update();
             this.idle();
             }
-
 That's it!
 
 Note that he library is still undergoing development. It has received light testing, and while no known 
