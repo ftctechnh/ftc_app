@@ -30,6 +30,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
 
     private         Thread                  loopThread;
     private         Thread                  mainThread;
+    private         RuntimeException        exceptionThrownOnMainThread;
     private volatile boolean                started;
     private volatile boolean                stopRequested;
     private         ConcurrentLinkedQueue<IAction> loopThreadThunkQueue = new ConcurrentLinkedQueue<IAction>();
@@ -229,6 +230,12 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 // get the thread to shut down, which we are about to do here by
                 // falling off the end of run().
                 }
+            catch (RuntimeException e)
+                {
+                // Remember the exception so we can (re)throw it back on over in loop.
+                // TODO: is this really the best idea? Certainly should test it thoroughly.
+                SynchronousOpMode.this.exceptionThrownOnMainThread = e;
+                }
             }
         }
 
@@ -261,6 +268,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         this.started = false;
         this.stopRequested = false;
         this.loopCount = new AtomicInteger(0);
+        this.exceptionThrownOnMainThread = null;
 
         // Create the main thread and start it up and going!
         this.mainThread = new Thread(new Runner());
@@ -301,6 +309,13 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         synchronized (this.loopLock)
             {
             this.loopCount.getAndIncrement();
+            
+            // If we had an exception thrown by the main thread, then throw it here. 'Sort
+            // of like thunking the exceptions.
+            if (this.exceptionThrownOnMainThread != null)
+                {
+                throw this.exceptionThrownOnMainThread;
+                }
 
             // Capture the gamepad states safely so that in a synchronous thread we don't see torn writes
             boolean diff1 = true;
