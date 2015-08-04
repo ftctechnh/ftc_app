@@ -159,12 +159,13 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 return;
 
             // Otherwise, we know there's nothing to do until at least the next loop() call.
-            int count = this.loopCount.get();
-            do
-                {
-                this.loopLock.wait();
-                }
-            while (count == this.loopCount.get());    // avoid 'spurious wakeups'
+            // The trouble is, it's hard to know when that is. We might be running here 
+            // *immediately* before loop() is about to run. Looking at loop counts could allow
+            // us to guarantee that we wait at least one whole cycle, yes, but that's overkill,
+            // that's not what we're looking for. So instead, we just wait until loop() pings us
+            // it the bottom of it's cycle, which may be a bit less than a whole loop(), but is
+            // the reasonable compromise.
+            this.loopLock.wait();
             }
         }
 
