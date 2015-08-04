@@ -1,5 +1,6 @@
 package org.swerverobotics.library;
 
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
@@ -149,7 +150,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     public static final long NANO_TO_MILLI = 1000000;
 
     /**
-     * Advanced: 'nanotimeLoopDwellMax' is the (soft) maximum number of nanoseconds that
+     * Advanced: 'msLoopDwellMax' is the (soft) maximum number of milliseconds that
      * our loop() implementation will spend in any one call before returning.
      */
     public long msLoopDwellMax = 20;
@@ -487,13 +488,10 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         }
 
     /**
-     * The robot controller runtime calls stop() to shut down the OpMode.
+     * The robot controller runtime calls stop() to shut down the OpMode. 
      *
-     * It will in particular ALWAYS be the case that by the time this stop() method returns that
-     * the thread on which main() is executed will have been terminated. Well, at least that's
-     * the invariant we would LIKE to maintain. Unfortunately, there appears to be simply no way
-     * (any longer) to get rid of a thread that simply refuses to die in response to an interrupt.
-     * So we give the main() thread ample time to die, but hang here forever if it doesn't.
+     * We take steps as best as is possible to ensure that the main() thread is terminated
+     * before this call returns.
      */
     @Override public final void stop()
         {
@@ -507,26 +505,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         // up, and return.
         this.mainThread.interrupt();
 
-        /*
-        // Wait, briefly, to give the thread a chance to handle the interruption and complete
-        // gracefully on its own volition.
-        try {
-            this.mainThread.join(msWaitThreadStop);
-            }
-        catch (InterruptedException ignored) { }
-
-        // If after our brief wait the thread is still alive then give it a kick
-        if (this.mainThread.isAlive())
-            {
-            // Under all circumstances, make sure the thread shuts down, even if the
-            // programmer hasn't handled interruption (for example, he might have entered
-            // an infinite loop, or a very long one at least).
-            this.mainThread.stop();
-            }
-        */
-
-        // Ok, one of those two ways should have worked. Wait (indefinitely) until
-        // the thread is no longer alive.
+        // Wait (indefinitely) until the thread is no longer alive.
         try {
             this.mainThread.join();
             }
@@ -796,6 +775,19 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                     return new ThreadSafeAnalogInput(
                         ThreadSafeAnalogInput.getController(target),
                         ThreadSafeAnalogInput.getChannel(target)
+                        );
+                    }
+                }
+        );
+
+        createThunks(hwmap.digitalChannel, result.digitalChannel,
+                new IThunkFactory<DigitalChannel>()
+                {
+                @Override public DigitalChannel create(DigitalChannel target)
+                    {
+                    return new ThreadSafeDigitalChannel(
+                            ThreadSafeDigitalChannel.getController(target),
+                            ThreadSafeDigitalChannel.getChannel(target)
                         );
                     }
                 }
