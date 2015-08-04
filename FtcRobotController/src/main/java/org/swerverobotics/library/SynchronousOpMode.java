@@ -715,8 +715,6 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      * thread to the loop() thread.
      *
      * We have more to do here:
-     public HardwareMap.DeviceMapping<OpticalDistanceSensor> opticalDistanceSensor = new HardwareMap.DeviceMapping();
-     public HardwareMap.DeviceMapping<TouchSensor> touchSensor = new HardwareMap.DeviceMapping();
      public HardwareMap.DeviceMapping<PWMOutput> pwmOutput = new HardwareMap.DeviceMapping();
      public HardwareMap.DeviceMapping<I2cDevice> i2cDevice = new HardwareMap.DeviceMapping();
      */
@@ -882,6 +880,26 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 }
         );
 
+        createThunks(hwmap.opticalDistanceSensor, result.opticalDistanceSensor,
+                new IThunkFactory<OpticalDistanceSensor>()
+                {
+                @Override public OpticalDistanceSensor create(OpticalDistanceSensor target)
+                    {
+                    return ThunkedOpticalDistanceSensor.create(target);
+                    }
+                }
+        );
+
+        createThunks(hwmap.touchSensor, result.touchSensor,
+                new IThunkFactory<TouchSensor>()
+                {
+                @Override public TouchSensor create(TouchSensor target)
+                    {
+                    return ThunkedTouchSensor.create(target);
+                    }
+                }
+        );
+        
         createThunks(hwmap.ultrasonicSensor, result.ultrasonicSensor,
                 new IThunkFactory<UltrasonicSensor>()
                 {
