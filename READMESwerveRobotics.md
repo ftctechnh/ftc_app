@@ -35,7 +35,12 @@ The fifteen second summary of how to use the library is as follows:
         ```.
 *   The core of the body of main() should look like
 
-        while (!this.stopRequested()) {
+        // Initialize stuff (not shown)
+        
+        // Wait for the game to start
+        this.waitForStart(); 
+        
+        while (this.opModeIsActive()) {
             if (this.newGamePadInputAvailable()) {
                 // Do something interesting
                 }
