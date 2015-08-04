@@ -1,7 +1,6 @@
 package org.swerverobotics.library.thunking;
 
 import com.qualcomm.robotcore.hardware.*;
-import com.qualcomm.robotcore.util.*;
 
 import org.swerverobotics.library.SynchronousOpMode;
 import org.swerverobotics.library.exceptions.SwerveRuntimeException;
@@ -89,7 +88,7 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
                 if (this.controllerMode == DeviceMode.SWITCHING_TO_READ_MODE ||
                     this.controllerMode == DeviceMode.SWITCHING_TO_WRITE_MODE)
                     {
-                    SynchronousOpMode.idleCurrentThread();
+                    SynchronousOpMode.synchronousThreadIdle();
                     }
                 else
                     break;
@@ -104,10 +103,43 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
         // spin until he gets there.
         if (this.controllerMode != newMode)
             {
+            // We need to complete any existing thunks (we could be more refined, but that suffices)
+            // as, to quote Johnathan Berling:
+            //
+            // http://ftcforum.usfirst.org/showthread.php?4352-Legacy-Motor-controller-write-to-read-mode-amount-of-time/page3
+            /*
+            When the loop call finishes, all commands are sent simultaneously to the device. So, it 
+            simultaneously gets put into read mode and told to change the channel mode. In this case 
+            it can't comply with the command to switch the channel mode since the port is in read mode.
+
+                Code:
+                motorLeft.setTargetPosition(firstTarget);
+                motorRight.setTargetPosition(-firstTarget);
+                
+                motorLeft.setPower(1.0);
+                motorRight.setPower(1.0);
+                
+                wheelController.setMotorControllerDeviceMode(DcMot orController.DeviceMode.READ_ONLY);
+                
+            In this case, all of the lines above the READ_ONLY line won't take effect until the 
+            device is placed back into write mode.
+            */
+            // What this says is that if you're switching to a new mode then there better not
+            // be any existing commands still in the queue for that device. In effect, mode switches 
+            // should (conservatively) happen at the TOP of a loop() call so that they are compatible 
+            // with anything else that is issued to that controller in that call. 
+            // 
+            // We provide for all this conservatively by waiting until there are NO commands outstanding 
+            // by ANYONE.
+            SynchronousOpMode.synchronousThreadWaitForEmptyLoopThunkQueue();
+
+            // Tell him to switch
             this.setMotorControllerDeviceMode(newMode);
+            
+            // Wait until he gets there
             do
                 {
-                SynchronousOpMode.idleCurrentThread();
+                SynchronousOpMode.synchronousThreadIdle();
                 this.controllerMode = this.getMotorControllerDeviceMode();
                 }
             while (this.controllerMode != newMode);
@@ -206,6 +238,7 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
             }
         catch (InterruptedException e)
             {
+            this.controllerMode = null;         // paranoia
             throw SwerveRuntimeException.Wrap(e);
             }
 
