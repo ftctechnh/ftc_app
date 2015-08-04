@@ -217,7 +217,7 @@ public class TelemetryDashboardAndLog
         // State
         //------------------------------------------------------------------------------------------
 
-        private Queue<String> logQueue = new LinkedList<>();
+        private Queue<String> logQueue = new LinkedList<String>();
         private boolean       newLogMessagesAvailable = false;
         private int           capacity = 0;     // this gets automatically computed
 

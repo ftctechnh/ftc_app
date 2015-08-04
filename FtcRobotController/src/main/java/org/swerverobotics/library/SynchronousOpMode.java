@@ -30,7 +30,8 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
 
     private         Thread                  loopThread;
     private         Thread                  mainThread;
-    private         boolean                 stopRequested;
+    private volatile boolean                started;
+    private volatile boolean                stopRequested;
     private         ConcurrentLinkedQueue<IAction> loopThreadThunkQueue = new ConcurrentLinkedQueue<IAction>();
     private         AtomicBoolean           gamePadStateChanged = new AtomicBoolean(false);
     private final   Object                  loopLock = new Object();
@@ -90,13 +91,117 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         }
 
     //----------------------------------------------------------------------------------------------
-    // User code
+    // User code, and stuff commonly used by user code
     //----------------------------------------------------------------------------------------------
 
+    public void waitForStart() throws InterruptedException
+        {
+        synchronized (this.loopLock)
+            {
+            do
+                {
+                this.loopLock.wait();
+                }
+            while (!this.started); // avoid spurious wakeups
+            }
+        }
+    
     /**
-     * Central idea: implement main() (in a derived class) to contain your robot logic.
+     * Central idea: implement main() (in a subclass) to contain your robot logic!
      */
     protected abstract void main() throws InterruptedException;
+
+    /**
+     * Answer as to whether there's (probably) any state different in any of the game pads
+     * since the last time that this method was called
+     */
+    public final boolean newGamePadInputAvailable()
+        {
+        // We *wish* there was a way that we could hook or get a callback from the
+        // incoming gamepad change messages, but, alas, at present we can find no
+        // way of doing that.
+        //
+        return this.gamePadStateChanged.getAndSet(false);
+        }
+
+    /**
+     * Similar to newGamePadInputAvailable(), but doesn't auto-reset the state when called
+     *
+     * @see #newGamePadInputAvailable()
+     */
+    public final boolean isNewGamePadInputAvailable()
+        {
+        return this.gamePadStateChanged.get();
+        }
+
+    /**
+     * Put the current thread to sleep for a bit as it has nothing better to do.
+     *
+     * idle(), which is called on a synchronous thread, never on the loop() thread, causes the
+     * synchronous thread to go to sleep until it is likely that the robot controller runtime
+     * has gotten back in touch with us (by calling loop() again) and thus the state reported
+     * by our various hardware devices and sensors might be different than what it was.
+     *
+     * One can use this method when you have nothing better to do until the underlying
+     * robot controller runtime gets back in touch with us. Thread.yield() has similar effects, but
+     * idle() / idleCurrentThread() is more efficient.
+     */
+    public final void idle() throws InterruptedException
+        {
+        synchronized (this.loopLock)
+            {
+            // If new input has arrived since anyone last looked, then let our caller process that
+            if (this.isNewGamePadInputAvailable())
+                return;
+
+            // Otherwise, we know there's nothing to do until at least the next loop() call.
+            int count = this.loopCount.get();
+            do
+                {
+                this.loopLock.wait();
+                }
+            while (count == this.loopCount.get());    // avoid 'spurious wakeups'
+            }
+        }
+
+    /**
+     * Idles the current thread until stimulated by the robot controller runtime
+     *
+     * @see #idle()
+     */
+    public static void idleCurrentThread() throws InterruptedException
+        {
+        getSynchronousOpMode().idle();
+        }
+
+    /**
+     * Answer as to whether this opMode is active and the robot should continue onwards. If the
+     * opMode is not active, synchronous threads should terminate at their earliest convenience.
+     */
+    public final boolean opModeIsActive()
+        {
+        return this.started() && !this.stopRequested();
+        }
+
+    /**
+     * Has the opMode been started?
+     */
+    public final boolean started()
+        {
+        return this.started;
+        }
+    
+    /**
+     * Has the the stopping of the opMode been requested?
+     */
+    public final boolean stopRequested()
+        {
+        return this.stopRequested || Thread.currentThread().isInterrupted();
+        }
+
+    //----------------------------------------------------------------------------------------------
+    // start(), loop(), and stop()
+    //----------------------------------------------------------------------------------------------
 
     /**
      * An instance of Runner is called on the loop() thread in order to start up the main() thread.
@@ -116,7 +221,8 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 {
                 SynchronousOpMode.this.main();
                 }
-            catch (InterruptedException|RuntimeInterruptedException ignored)
+            catch (InterruptedException ignored) { }
+            catch (RuntimeInterruptedException ignored)
                 {
                 // If the main() method itself doesn't catch the interrupt, at least
                 // we will do so here. The whole point of such interrupts is to
@@ -126,17 +232,13 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
             }
         }
 
-    //----------------------------------------------------------------------------------------------
-    // start(), loop(), and stop()
-    //----------------------------------------------------------------------------------------------
-
     /**
-     * The robot controller runtime calls start() when the OpMode is started.
+     * The robot controller runtime calls init(), once, to initialized everything
      */
-    @Override public final void start()
+    @Override public final void init()
         {
         // Call the subclass hook in case they might want to do something interesting
-        this.preStartHook();
+        this.preInitHook();
 
         // Replace the op mode's hardware map variable with one whose contained
         // object implementations will thunk over to the loop thread as they need to.
@@ -156,12 +258,32 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         this.loopThreadThunkQueue.clear();
 
         // We're being asked to start, not stop
+        this.started = false;
         this.stopRequested = false;
         this.loopCount = new AtomicInteger(0);
 
         // Create the main thread and start it up and going!
         this.mainThread = new Thread(new Runner());
         this.mainThread.start();
+
+        // Call the subclass hook in case they might want to do something interesting
+        this.postInitHook();
+        }
+
+    /**
+     * start() is called when the autonomous or the teleop mode begins: the robot
+     * should start moving!
+     */
+    @Override public final void start()
+        {
+        // Call the subclass hook in case they might want to do something interesting
+        this.preStartHook();
+        
+        synchronized (this.loopLock)
+            {
+            this.started = true;
+            this.loopLock.notifyAll();
+            }
 
         // Call the subclass hook in case they might want to do something interesting
         this.postStartHook();
@@ -282,6 +404,10 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
             this.mainThread.join();
             }
         catch (InterruptedException ignored) { }
+        
+        // Reset for next time
+        this.started = false;
+        this.stopRequested = false;
 
         // Call the subclass hook in case they might want to do something interesting
         this.postStopHook();
@@ -292,7 +418,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     //----------------------------------------------------------------------------------------------
 
     /**
-     * Advanced: the various 'hook' calls calls preStartHook(), postStartHook(), preLoopHook(), 
+     * Advanced: the various 'hook' calls calls preInitHook(), postInitHook(), preLoopHook(), 
      * etc are hooks that advanced users might want to override in their subclasses to something
      * interesting.
      *
@@ -300,58 +426,39 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      * methods, while midLoopHook() is called in loop() after variable state (e.g. gamepads) has
      * been established.
      */
+    protected void preInitHook() { /* hook for subclasses */ }
+    /**
+     * @see #preInitHook()
+     */
+    protected void postInitHook() { /* hook for subclasses */ }
+    /**
+     * @see #preInitHook()
+     */
     protected void preStartHook() { /* hook for subclasses */ }
     /**
-     * @see #preStartHook()
+     * @see #preInitHook()
      */
     protected void postStartHook() { /* hook for subclasses */ }
     /**
-     * @see #preStartHook()
+     * @see #preInitHook()
      */
     protected void preLoopHook() { /* hook for subclasses */ }
     /**
-     * @see #preStartHook()
+     * @see #preInitHook()
      */
     protected void midLoopHook() { /* hook for subclasses */ }
     /**
-     * @see #preStartHook()
+     * @see #preInitHook()
      */
     protected void postLoopHook() { /* hook for subclasses */ }
     /**
-     * @see #preStartHook()
+     * @see #preInitHook()
      */
     protected void preStopHook() { /* hook for subclasses */ }
     /**
-     * @see #preStartHook()
+     * @see #preInitHook()
      */
     protected void postStopHook() { /* hook for subclasses */ }
-
-    //----------------------------------------------------------------------------------------------
-    // Utility
-    //----------------------------------------------------------------------------------------------
-
-    /**
-     * Answer as to whether there's (probably) any state different in any of the game pads
-     * since the last time that this method was called
-     */
-    public final boolean newGamePadInputAvailable()
-        {
-        // We *wish* there was a way that we could hook or get a callback from the
-        // incoming gamepad change messages, but, alas, at present we can find no
-        // way of doing that.
-        //
-        return this.gamePadStateChanged.getAndSet(false);
-        }
-
-    /**
-     * Similar to newGamePadInputAvailable(), but doesn't auto-reset the state when called
-     *
-     * @see #newGamePadInputAvailable()
-     */
-    public final boolean isNewGamePadInputAvailable()
-        {
-        return this.gamePadStateChanged.get();
-        }
 
     //----------------------------------------------------------------------------------------------
     // Thunking
@@ -411,53 +518,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         SynchronousThreadContext.getThreadContext().waitForThreadThunkCompletions();
         }
 
-    /**
-     * Put the current thread to sleep for a bit as it has nothing better to do.
-     *
-     * idle(), which is called on a synchronous thread, never on the loop() thread, causes the
-     * synchronous thread to go to sleep until it is likely that the robot controller runtime
-     * has gotten back in touch with us (by calling loop() again) and thus the state reported
-     * by our various hardware devices and sensors might be different than what it was.
-     *
-     * One can use this method when you have nothing better to do until the underlying
-     * robot controller runtime gets back in touch with us. Thread.yield() has similar effects, but
-     * idle() / idleCurrentThread() is more efficient.
-     */
-    public final void idle() throws InterruptedException
-        {
-        synchronized (this.loopLock)
-            {
-            // If new input has arrived since anyone last looked, then let our caller process that
-            if (this.isNewGamePadInputAvailable())
-                return;
-            
-            // Otherwise, we know there's nothign to do until at least the next loop() call.
-            int count = this.loopCount.get();
-            do
-                {
-                this.loopLock.wait();
-                }
-            while (count == this.loopCount.get());    // avoid 'spurious wakeups'
-            }
-        }
 
-    /**
-     * Idles the current thread until stimulated by the robot controller runtime
-     *
-     * @see #idle()
-     */
-    public static void idleCurrentThread() throws InterruptedException
-        {
-        getSynchronousOpMode().idle();
-        }
-
-    /**
-     * Answer as to whether a (synchronous) thread should terminate itself at its earliest convenience.
-     */
-    public final boolean stopRequested()
-        {
-        return this.stopRequested || Thread.currentThread().isInterrupted();
-        }
 
     /**
      * Advanced: Answer as to whether the current thread is in fact the loop thread
