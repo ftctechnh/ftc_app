@@ -32,7 +32,7 @@ public class ThunkedAccelerationSensor extends AccelerationSensor
     // HardwareDevice
     //----------------------------------------------------------------------------------------------
     
-    @Override public void close()
+    @Override synchronized public void close()
         {
         (new NonwaitingThunk()
             {
@@ -43,7 +43,7 @@ public class ThunkedAccelerationSensor extends AccelerationSensor
             }).doWriteOperation();
         }
     
-    @Override public int getVersion()
+    @Override synchronized public int getVersion()
         {
         return (new ResultableThunk<Integer>()
             {
@@ -54,7 +54,7 @@ public class ThunkedAccelerationSensor extends AccelerationSensor
             }).doReadOperation();
         }
 
-    @Override public String getConnectionInfo()
+    @Override synchronized public String getConnectionInfo()
         {
         return (new ResultableThunk<String>()
             {
@@ -65,7 +65,7 @@ public class ThunkedAccelerationSensor extends AccelerationSensor
             }).doReadOperation();
         }
 
-    @Override public String getDeviceName()
+    @Override synchronized public String getDeviceName()
         {
         return (new ResultableThunk<String>()
             {
@@ -80,7 +80,7 @@ public class ThunkedAccelerationSensor extends AccelerationSensor
     // AccelerationSensor
     //----------------------------------------------------------------------------------------------
 
-    @Override public AccelerationSensor.Acceleration getAcceleration()
+    @Override synchronized public AccelerationSensor.Acceleration getAcceleration()
         {
         return (new ResultableThunk<Acceleration>()
             {
@@ -91,7 +91,7 @@ public class ThunkedAccelerationSensor extends AccelerationSensor
             }).doReadOperation();
         }
 
-    @Override public String status()
+    @Override synchronized public String status()
         {
         return (new ResultableThunk<String>()
             {

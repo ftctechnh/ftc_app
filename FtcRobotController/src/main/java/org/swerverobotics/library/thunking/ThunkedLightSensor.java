@@ -32,7 +32,7 @@ public class ThunkedLightSensor extends LightSensor
     // HardwareDevice
     //----------------------------------------------------------------------------------------------
 
-    @Override public void close()
+    @Override synchronized public void close()
         {
         (new NonwaitingThunk()
             {
@@ -43,7 +43,7 @@ public class ThunkedLightSensor extends LightSensor
             }).doWriteOperation();
         }
 
-    @Override public int getVersion()
+    @Override synchronized public int getVersion()
         {
         return (new ResultableThunk<Integer>()
             {
@@ -54,7 +54,7 @@ public class ThunkedLightSensor extends LightSensor
             }).doReadOperation();
         }
 
-    @Override public String getConnectionInfo()
+    @Override synchronized public String getConnectionInfo()
         {
         return (new ResultableThunk<String>()
             {
@@ -65,7 +65,7 @@ public class ThunkedLightSensor extends LightSensor
             }).doReadOperation();
         }
 
-    @Override public String getDeviceName()
+    @Override synchronized public String getDeviceName()
         {
         return (new ResultableThunk<String>()
             {
@@ -80,7 +80,7 @@ public class ThunkedLightSensor extends LightSensor
     // LightSensor
     //----------------------------------------------------------------------------------------------
 
-    @Override public double getLightDetected()
+    @Override synchronized public double getLightDetected()
         {
         return (new ResultableThunk<Double>()
             {
@@ -91,7 +91,7 @@ public class ThunkedLightSensor extends LightSensor
             }).doReadOperation();
         }
     
-    @Override public int getLightDetectedRaw()
+    @Override synchronized public int getLightDetectedRaw()
         {
         return (new ResultableThunk<Integer>()
             {
@@ -102,7 +102,7 @@ public class ThunkedLightSensor extends LightSensor
             }).doReadOperation();
         }
 
-    @Override public void enableLed(final boolean enable)
+    @Override synchronized public void enableLed(final boolean enable)
         {
         (new NonwaitingThunk()
             {
@@ -113,7 +113,7 @@ public class ThunkedLightSensor extends LightSensor
             }).doWriteOperation();
         }
 
-    @Override public String status()
+    @Override synchronized public String status()
         {
         return (new ResultableThunk<String>()
             {

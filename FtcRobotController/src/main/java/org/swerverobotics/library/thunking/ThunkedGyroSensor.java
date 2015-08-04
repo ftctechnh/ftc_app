@@ -32,7 +32,7 @@ public class ThunkedGyroSensor extends  GyroSensor
     // HardwareDevice
     //----------------------------------------------------------------------------------------------
 
-    @Override public void close()
+    @Override synchronized public void close()
         {
         (new NonwaitingThunk()
             {
@@ -43,7 +43,7 @@ public class ThunkedGyroSensor extends  GyroSensor
             }).doWriteOperation();
         }
 
-    @Override public int getVersion()
+    @Override synchronized public int getVersion()
         {
         return (new ResultableThunk<Integer>()
             {
@@ -54,7 +54,7 @@ public class ThunkedGyroSensor extends  GyroSensor
             }).doReadOperation();
         }
 
-    @Override public String getConnectionInfo()
+    @Override synchronized public String getConnectionInfo()
         {
         return (new ResultableThunk<String>()
             {
@@ -65,7 +65,7 @@ public class ThunkedGyroSensor extends  GyroSensor
             }).doReadOperation();
         }
 
-    @Override public String getDeviceName()
+    @Override synchronized public String getDeviceName()
         {
         return (new ResultableThunk<String>()
             {
@@ -80,7 +80,7 @@ public class ThunkedGyroSensor extends  GyroSensor
     // GyroSensor
     //----------------------------------------------------------------------------------------------
 
-    @Override public double getRotation()
+    @Override synchronized public double getRotation()
         {
         return (new ResultableThunk<Double>()
             {
@@ -91,7 +91,7 @@ public class ThunkedGyroSensor extends  GyroSensor
             }).doReadOperation();
         }
 
-    @Override public String status()
+    @Override synchronized public String status()
         {
         return (new ResultableThunk<String>()
             {

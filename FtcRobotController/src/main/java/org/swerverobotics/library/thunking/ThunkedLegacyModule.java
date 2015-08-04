@@ -31,7 +31,7 @@ public class ThunkedLegacyModule implements LegacyModule
     // HardwareDevice
     //----------------------------------------------------------------------------------------------
 
-    @Override public void close()
+    @Override synchronized public void close()
         {
         (new NonwaitingThunk()
             {
@@ -42,7 +42,7 @@ public class ThunkedLegacyModule implements LegacyModule
             }).doWriteOperation();
         }
 
-    @Override public int getVersion()
+    @Override synchronized public int getVersion()
         {
         return (new ResultableThunk<Integer>()
             {
@@ -53,7 +53,7 @@ public class ThunkedLegacyModule implements LegacyModule
             }).doReadOperation();
         }
 
-    @Override public String getConnectionInfo()
+    @Override synchronized public String getConnectionInfo()
         {
         return (new ResultableThunk<String>()
             {
@@ -64,7 +64,7 @@ public class ThunkedLegacyModule implements LegacyModule
             }).doReadOperation();
         }
 
-    @Override public String getDeviceName()
+    @Override synchronized public String getDeviceName()
         {
         return (new ResultableThunk<String>()
             {
@@ -79,7 +79,7 @@ public class ThunkedLegacyModule implements LegacyModule
     // LegacyModule interface
     //----------------------------------------------------------------------------------------------
 
-    @Override public void enableNxtI2cReadMode(final int physicalPort, final int i2cAddress, final int memAddress, final int length)
+    @Override synchronized public void enableNxtI2cReadMode(final int physicalPort, final int i2cAddress, final int memAddress, final int length)
         {
         (new NonwaitingThunk()
             {
@@ -90,7 +90,7 @@ public class ThunkedLegacyModule implements LegacyModule
             }).doWriteOperation();
         }
 
-    @Override public void enableNxtI2cWriteMode(final int physicalPort, final int i2cAddress, final int memAddress, final int length)
+    @Override synchronized public void enableNxtI2cWriteMode(final int physicalPort, final int i2cAddress, final int memAddress, final int length)
         {
         (new NonwaitingThunk()
             {
@@ -101,7 +101,7 @@ public class ThunkedLegacyModule implements LegacyModule
             }).doWriteOperation();
         }
 
-    @Override public void enableAnalogReadMode(final int physicalPort)
+    @Override synchronized public void enableAnalogReadMode(final int physicalPort)
         {
         (new NonwaitingThunk()
             {
@@ -112,7 +112,7 @@ public class ThunkedLegacyModule implements LegacyModule
             }).doWriteOperation();
         }
 
-    @Override public void enable9v(final int physicalPort, final boolean enable)
+    @Override synchronized public void enable9v(final int physicalPort, final boolean enable)
         {
         (new NonwaitingThunk()
             {
@@ -123,7 +123,7 @@ public class ThunkedLegacyModule implements LegacyModule
             }).doWriteOperation();
         }
 
-    @Override public void setDigitalLine(final int physicalPort, final int line, final boolean set)
+    @Override synchronized public void setDigitalLine(final int physicalPort, final int line, final boolean set)
         {
         (new NonwaitingThunk()
             {
@@ -134,7 +134,7 @@ public class ThunkedLegacyModule implements LegacyModule
             }).doWriteOperation();
         }
 
-    @Override public byte[] readAnalog(final int physicalPort)
+    @Override synchronized public byte[] readAnalog(final int physicalPort)
         {
         return (new ResultableThunk<byte[]>()
             {
@@ -145,7 +145,7 @@ public class ThunkedLegacyModule implements LegacyModule
             }).doReadOperation();
         }
 
-    @Override public Lock getI2cReadCacheLock(final int physicalPort)
+    @Override synchronized public Lock getI2cReadCacheLock(final int physicalPort)
         {
         return (new ResultableThunk<Lock>()
             {
@@ -156,7 +156,7 @@ public class ThunkedLegacyModule implements LegacyModule
             }).doReadOperation();
         }
 
-    @Override public Lock getI2cWriteCacheLock(final int physicalPort)
+    @Override synchronized public Lock getI2cWriteCacheLock(final int physicalPort)
         {
         return (new ResultableThunk<Lock>()
             {
@@ -167,7 +167,7 @@ public class ThunkedLegacyModule implements LegacyModule
             }).doReadOperation();
         }
 
-    @Override public byte[] getI2cReadCache(final int physicalPort)
+    @Override synchronized public byte[] getI2cReadCache(final int physicalPort)
         {
         return (new ResultableThunk<byte[]>()
             {
@@ -178,7 +178,7 @@ public class ThunkedLegacyModule implements LegacyModule
             }).doReadOperation();
         }
 
-    @Override public byte[] getI2cWriteCache(final int physicalPort)
+    @Override synchronized public byte[] getI2cWriteCache(final int physicalPort)
         {
         return (new ResultableThunk<byte[]>()
             {
@@ -189,7 +189,7 @@ public class ThunkedLegacyModule implements LegacyModule
             }).doReadOperation();
         }
 
-    @Override public void setNxtI2cPortActionFlag(final int physicalPort)
+    @Override synchronized public void setNxtI2cPortActionFlag(final int physicalPort)
         {
         (new NonwaitingThunk()
             {
@@ -200,7 +200,7 @@ public class ThunkedLegacyModule implements LegacyModule
             }).doWriteOperation();
         }
 
-    @Override public boolean isNxtI2cPortActionFlagSet(final int physicalPort)
+    @Override synchronized public boolean isNxtI2cPortActionFlagSet(final int physicalPort)
         {
         return (new ResultableThunk<Boolean>()
             {
@@ -211,7 +211,7 @@ public class ThunkedLegacyModule implements LegacyModule
             }).doReadOperation();
         }
 
-    @Override public void readI2cCacheFromModule(final int physicalPort)
+    @Override synchronized public void readI2cCacheFromModule(final int physicalPort)
         {
         (new NonwaitingThunk()
             {
@@ -222,7 +222,7 @@ public class ThunkedLegacyModule implements LegacyModule
             }).doWriteOperation();
         }
 
-    @Override public void writeI2cCacheToModule(final int physicalPort)
+    @Override synchronized public void writeI2cCacheToModule(final int physicalPort)
         {
         (new NonwaitingThunk()
             {
@@ -233,7 +233,7 @@ public class ThunkedLegacyModule implements LegacyModule
             }).doWriteOperation();
         }
 
-    @Override public void writeI2cPortFlagOnlyToModule(final int physicalPort)
+    @Override synchronized public void writeI2cPortFlagOnlyToModule(final int physicalPort)
         {
         (new NonwaitingThunk()
             {
@@ -244,7 +244,7 @@ public class ThunkedLegacyModule implements LegacyModule
             }).doWriteOperation();
         }
 
-    @Override public boolean isI2cPortInReadMode(final int physicalPort)
+    @Override synchronized public boolean isI2cPortInReadMode(final int physicalPort)
         {
         return (new ResultableThunk<Boolean>()
             {
@@ -255,7 +255,7 @@ public class ThunkedLegacyModule implements LegacyModule
             }).doReadOperation();
         }
 
-    @Override public boolean isI2cPortInWriteMode(final int physicalPort)
+    @Override synchronized public boolean isI2cPortInWriteMode(final int physicalPort)
         {
         return (new ResultableThunk<Boolean>()
         {
@@ -266,7 +266,7 @@ public class ThunkedLegacyModule implements LegacyModule
         }).doReadOperation();
         }
     
-    @Override public void registerForPortReadyCallback(final LegacyModule.PortReadyCallback callback, final int physicalPort)
+    @Override synchronized public void registerForPortReadyCallback(final LegacyModule.PortReadyCallback callback, final int physicalPort)
         {
         (new NonwaitingThunk()
             {
@@ -277,7 +277,7 @@ public class ThunkedLegacyModule implements LegacyModule
             }).doWriteOperation();
         }
         
-    @Override public void deregisterForPortReadyCallback(final int physicalPort)
+    @Override synchronized public void deregisterForPortReadyCallback(final int physicalPort)
         {
         (new NonwaitingThunk()
             {
@@ -288,7 +288,7 @@ public class ThunkedLegacyModule implements LegacyModule
             }).doWriteOperation();
         }
     
-    @Override public boolean isI2cPortReady(final int physicalPort)
+    @Override synchronized public boolean isI2cPortReady(final int physicalPort)
         {
         return (new ResultableThunk<Boolean>()
             {

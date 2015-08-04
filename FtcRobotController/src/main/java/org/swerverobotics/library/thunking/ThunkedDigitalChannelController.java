@@ -81,7 +81,7 @@ public class ThunkedDigitalChannelController implements DigitalChannelController
     // DigitalChannelController
     //----------------------------------------------------------------------------------------------
 
-    @Override public SerialNumber getSerialNumber()
+    @Override synchronized public SerialNumber getSerialNumber()
         {
         return (new ResultableThunk<SerialNumber>()
             {
@@ -92,7 +92,7 @@ public class ThunkedDigitalChannelController implements DigitalChannelController
             }).doReadOperation();
         }
     
-    @Override public DigitalChannelController.Mode getDigitalChannelMode(final int channel)
+    @Override synchronized public DigitalChannelController.Mode getDigitalChannelMode(final int channel)
         {
         return (new ResultableThunk<DigitalChannelController.Mode>()
             {
@@ -103,7 +103,7 @@ public class ThunkedDigitalChannelController implements DigitalChannelController
             }).doReadOperation();
         }
 
-    @Override public void setDigitalChannelMode(final int channel, final DigitalChannelController.Mode mode)
+    @Override synchronized public void setDigitalChannelMode(final int channel, final DigitalChannelController.Mode mode)
         {
         (new NonwaitingThunk()
             {
@@ -114,7 +114,7 @@ public class ThunkedDigitalChannelController implements DigitalChannelController
             }).doWriteOperation();
         }
         
-    @Override public boolean getDigitalChannelState(final int channel)
+    @Override synchronized public boolean getDigitalChannelState(final int channel)
         {
         return (new ResultableThunk<Boolean>()
             {
@@ -125,7 +125,7 @@ public class ThunkedDigitalChannelController implements DigitalChannelController
             }).doReadOperation();
         }
 
-    @Override public void setDigitalChannelState(final int channel, final boolean state)
+    @Override synchronized public void setDigitalChannelState(final int channel, final boolean state)
         {
         (new NonwaitingThunk()
             {
