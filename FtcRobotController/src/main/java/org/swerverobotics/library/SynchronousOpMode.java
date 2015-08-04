@@ -30,7 +30,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
 
     private class ActionQueueAndHistory
         {
-        ConcurrentLinkedQueue<IAction>  queue   = new ConcurrentLinkedQueue<IAction>();
+        ConcurrentLinkedQueue<IAction>  queue   = new ConcurrentLinkedQueue<IAction>(); // could be simpler queue
         SparseArray<Boolean>            history = new SparseArray<Boolean>(); 
         
         synchronized void clear()
@@ -56,25 +56,34 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
             IAction result = this.queue.poll();
             if (result != null)
                 {
-                if (result instanceof IThunkKeyed)
+                if (result instanceof IActionKeyed)
                     {
-                    IThunkKeyed keyed = (IThunkKeyed)result;
-                    this.history.setValueAt(keyed.getThunkKey(), true);
+                    IActionKeyed keyed = (IActionKeyed)result;
+                    this.setActionKey(keyed.getActionKey());
                     }
                 this.onChanged();
                 }
             return result;
             }
         
-        synchronized boolean containsThunkKey(int thunkKey)
+        synchronized void setActionKey(int actionKey)
+            {
+            if (actionKey != ThunkBase.nullActionKey)
+                {
+                this.history.setValueAt(actionKey, true);
+                this.onChanged();
+                }
+            }
+        
+        synchronized boolean containsActionKey(int thunkKey)
             {
             // Is the key present in pending stuff?
             for (IAction action : this.queue)
                 {
-                if (action instanceof IThunkKeyed)
+                if (action instanceof IActionKeyed)
                     {
-                    IThunkKeyed keyed = (IThunkKeyed)action;
-                    if (keyed.getThunkKey() == thunkKey)
+                    IActionKeyed keyed = (IActionKeyed)action;
+                    if (keyed.getActionKey() == thunkKey)
                         {
                         return true;
                         }
@@ -458,21 +467,23 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     
     /**
      * Wait until we encounter a loop() cycle that doesn't (yet) contain any actions which
-     * are also thunks and whose key is the one indicated.
+     * are also thunks and whose key is the one indicated. Once we get to that state, atomically
+     * claim that a new actionKey has in fact been executed (if that's not the null key).
      */
-    public void waitForLoopCycleEmptyOfThunks(int thunkKey) throws InterruptedException
+    public void waitForLoopCycleEmptyOfActionKey(int actionKey, int claimKey) throws InterruptedException
         {
         synchronized (this.actionQueueAndHistory)
             {
-            while (this.actionQueueAndHistory.containsThunkKey(thunkKey))
+            while (this.actionQueueAndHistory.containsActionKey(actionKey))
                 {
                 this.actionQueueAndHistory.wait();
                 }
+            this.actionQueueAndHistory.setActionKey(claimKey);
             }
         }
-    public static void synchronousThreadWaitForLoopCycleEmptyOfThunks(int thunkKey) throws InterruptedException
+    public static void synchronousThreadWaitForLoopCycleEmptyOfActionKey(int actionKey, int claimKey) throws InterruptedException
         {
-        SynchronousOpMode.getSynchronousOpMode().waitForLoopCycleEmptyOfThunks(thunkKey);
+        SynchronousOpMode.getSynchronousOpMode().waitForLoopCycleEmptyOfActionKey(actionKey, claimKey);
         }
 
     /**

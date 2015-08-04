@@ -18,8 +18,8 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
 
     public  DcMotorController target;          // can only talk to him on the loop thread
     private DeviceMode        controllerMode;  // the last mode we know the controller to be in
-    private int               deviceReadThunkKey  = ThunkBase.getNewThunkKey();
-    private int               deviceWriteThunkKey = ThunkBase.getNewThunkKey();
+    private int               deviceReadThunkKey  = ThunkBase.getNewActionKey();
+    private int               deviceWriteThunkKey = ThunkBase.getNewActionKey();
     
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -130,7 +130,7 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
                 
                 wheelController.setMotorControllerDeviceMode(DcMot orController.DeviceMode.READ_ONLY);
                 
-            In this case, all of the lines above the READ_ONLY line won't take effect until the 
+            In this case, all of the lines above the READ_ONL   Y line won't take effect until the 
             device is placed back into write mode.
             */
             // What this says is that if you're switching to a new mode then there better not
@@ -138,8 +138,9 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
             // should (conservatively) happen at the TOP of a loop() call so that they are compatible 
             // with anything else that is issued to that controller in that call.
             
-            int oppositeThunkKey = newMode==DeviceMode.READ_ONLY ? this.deviceWriteThunkKey : this.deviceReadThunkKey;
-            SynchronousOpMode.synchronousThreadWaitForLoopCycleEmptyOfThunks(oppositeThunkKey);
+            int oppositeKey = newMode==DeviceMode.READ_ONLY ? this.deviceWriteThunkKey : this.deviceReadThunkKey;
+            int claimKey    = newMode==DeviceMode.READ_ONLY ? this.deviceReadThunkKey  : this.deviceWriteThunkKey;
+            SynchronousOpMode.synchronousThreadWaitForLoopCycleEmptyOfActionKey(oppositeKey, claimKey);
 
             // Tell him to switch
             this.setMotorControllerDeviceMode(newMode);

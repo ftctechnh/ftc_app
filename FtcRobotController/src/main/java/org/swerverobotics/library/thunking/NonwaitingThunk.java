@@ -9,7 +9,7 @@ import org.swerverobotics.library.exceptions.*;
 public abstract class NonwaitingThunk extends ThunkBase
     {
     public NonwaitingThunk() { }
-    public NonwaitingThunk(int thunkKey) { super(thunkKey); }
+    public NonwaitingThunk(int actionKey) { super(actionKey); }
     
     public void doWriteOperation()
         {
@@ -26,7 +26,7 @@ public abstract class NonwaitingThunk extends ThunkBase
                 // Let any writer know we are about to write
                 if (writer != null)
                     {
-                    this.thunkKey = writer.getListenerWriteThunkKey();
+                    this.actionKey = writer.getListenerWriteThunkKey();
                     writer.enterWriteOperation();
                     }
 
