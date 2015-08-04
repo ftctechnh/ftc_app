@@ -38,6 +38,9 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     private final   Object                  loopLock = new Object();
     private final   SparseArray<IAction>    singletonLoopActions = new SparseArray<IAction>();
     private static  AtomicInteger           singletonKey = new AtomicInteger(0);
+    private Object  loopThunkQueueEmptyLock = new Object();
+    private boolean loopThunkQueueEmpty     = false;
+
 
     /**
      * Advanced: unthunkedHardwareMap contains the original hardware map provided
@@ -145,7 +148,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      *
      * One can use this method when you have nothing better to do until the underlying
      * robot controller runtime gets back in touch with us. Thread.yield() has similar effects, but
-     * idle() / idleCurrentThread() is more efficient.
+     * idle() / synchronousThreadIdle() is more efficient.
      */
     public final void idle() throws InterruptedException
         {
@@ -170,7 +173,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      *
      * @see #idle()
      */
-    public static void idleCurrentThread() throws InterruptedException
+    public static void synchronousThreadIdle() throws InterruptedException
         {
         getSynchronousOpMode().idle();
         }
@@ -263,6 +266,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         // Paranoia: clear any state that may just perhaps be lingering
         this.clearSingletons();
         this.loopThreadThunkQueue.clear();
+        this.noteLoopThunkQueueEmpty();;
 
         // We're being asked to start, not stop
         this.started = false;
@@ -344,9 +348,16 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
             for (int i = 1; ; i++)
                 {
                 // Get the next work item in the queue. Get out of here if there isn't any more work.
-                IAction thunk = this.loopThreadThunkQueue.poll();
-                if (null == thunk)
-                    break;
+                IAction thunk;
+                synchronized (this.loopThreadThunkQueue)
+                    {
+                    thunk = this.loopThreadThunkQueue.poll();
+                    if (null == thunk)
+                        {
+                        this.noteLoopThunkQueueEmpty();
+                        break;
+                        }
+                    }
 
                 // Execute the work that needs to be done on the loop thread
                 thunk.doAction();
@@ -372,6 +383,37 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
 
         // Call the subclass hook in case they might want to do something interesting
         this.postLoopHook();
+        }
+    
+    private void noteLoopThunkQueueEmpty()
+        {
+        synchronized (this.loopThunkQueueEmptyLock)
+            {
+            this.loopThunkQueueEmpty = true;
+            this.loopThunkQueueEmptyLock.notifyAll();
+            }
+        }
+    private void noteLoopThunkQueueNonEmpty()
+        {
+        synchronized (this.loopThunkQueueEmptyLock)
+            {
+            this.loopThunkQueueEmpty = false;
+            }
+        }
+    public void waitForEmptyLoopThunkQueue() throws InterruptedException
+        {
+        synchronized (this.loopThunkQueueEmptyLock)
+            {
+            while (!this.loopThunkQueueEmpty)
+                {
+                this.loopThunkQueueEmptyLock.wait();
+                }
+            }
+        }
+    
+    public static void synchronousThreadWaitForEmptyLoopThunkQueue() throws InterruptedException
+        {
+        SynchronousOpMode.getSynchronousOpMode().waitForEmptyLoopThunkQueue();
         }
 
     /**
@@ -507,7 +549,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         return SynchronousThreadContext.getThreadContext().getThunker();
         }
 
-    private static SynchronousOpMode getSynchronousOpMode()
+    private static SynchronousOpMode getSynchronousOpMode()        
         {
         return (SynchronousOpMode)(getThreadThunker());
         }
@@ -560,7 +602,12 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     public void executeOnLoopThread(IAction thunk)
         {
         if (BuildConfig.DEBUG) Assert.assertEquals(true, this.isSynchronousThread());
-        this.loopThreadThunkQueue.add(thunk);
+
+        synchronized (this.loopThreadThunkQueue)
+            {
+            this.loopThreadThunkQueue.add(thunk);
+            this.noteLoopThunkQueueNonEmpty();
+            }
         }
 
     /**
