@@ -28,7 +28,12 @@ public abstract class NonwaitingThunk extends ThunkBase
 
                 this.dispatch();
                 }
-            catch (InterruptedException|RuntimeInterruptedException e)
+            catch (InterruptedException e)
+                {
+                Thread.currentThread().interrupt();
+                throw SwerveRuntimeException.Wrap(e);
+                }
+            catch (RuntimeInterruptedException e)
                 {
                 // Tell the current thread that he should shut down soon
                 Thread.currentThread().interrupt();

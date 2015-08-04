@@ -33,8 +33,11 @@ public class TeleOp extends SynchronousOpMode
         // so that it can take the same power level values as the other motor.
         this.motorLeft.setDirection(DcMotor.Direction.REVERSE);
 
+        // Wait until we've been given the ok to go
+        this.waitForStart();
+        
         // Enter a loop processing all the input we receive
-        while (!this.stopRequested())
+        while (this.opModeIsActive())
             {
             if (this.newGamePadInputAvailable())
                 {
