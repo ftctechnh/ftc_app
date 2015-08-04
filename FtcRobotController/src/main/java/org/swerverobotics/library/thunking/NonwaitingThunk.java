@@ -8,6 +8,9 @@ import org.swerverobotics.library.exceptions.*;
  */
 public abstract class NonwaitingThunk extends ThunkBase
     {
+    public NonwaitingThunk() { }
+    public NonwaitingThunk(int thunkKey) { super(thunkKey); }
+    
     public void doWriteOperation()
         {
         this.doWriteOperation(null);
@@ -23,6 +26,7 @@ public abstract class NonwaitingThunk extends ThunkBase
                 // Let any writer know we are about to write
                 if (writer != null)
                     {
+                    this.thunkKey = writer.getListenerWriteThunkKey();
                     writer.enterWriteOperation();
                     }
 
@@ -30,6 +34,7 @@ public abstract class NonwaitingThunk extends ThunkBase
                 }
             catch (InterruptedException e)
                 {
+                // Same as below
                 Thread.currentThread().interrupt();
                 throw SwerveRuntimeException.Wrap(e);
                 }

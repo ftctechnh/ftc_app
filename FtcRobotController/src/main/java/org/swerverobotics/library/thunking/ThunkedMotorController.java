@@ -18,7 +18,9 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
 
     public  DcMotorController target;          // can only talk to him on the loop thread
     private DeviceMode        controllerMode;  // the last mode we know the controller to be in
-
+    private int               deviceReadThunkKey  = ThunkBase.getNewThunkKey();
+    private int               deviceWriteThunkKey = ThunkBase.getNewThunkKey();
+    
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
@@ -43,10 +45,17 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
         {
         this.switchToMode(DeviceMode.READ_ONLY);
         }
-
     @Override public void enterWriteOperation() throws InterruptedException
         {
         this.switchToMode(DeviceMode.WRITE_ONLY);
+        }
+    @Override public int getListenerReadThunkKey()
+        {
+        return this.deviceReadThunkKey;
+        }
+    @Override public int getListenerWriteThunkKey()
+        {
+        return this.deviceWriteThunkKey;
         }
 
     /**
@@ -127,11 +136,10 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
             // What this says is that if you're switching to a new mode then there better not
             // be any existing commands still in the queue for that device. In effect, mode switches 
             // should (conservatively) happen at the TOP of a loop() call so that they are compatible 
-            // with anything else that is issued to that controller in that call. 
-            // 
-            // We provide for all this conservatively by waiting until there are NO commands outstanding 
-            // by ANYONE.
-            SynchronousOpMode.synchronousThreadWaitForEmptyLoopThunkQueue();
+            // with anything else that is issued to that controller in that call.
+            
+            int oppositeThunkKey = newMode==DeviceMode.READ_ONLY ? this.deviceWriteThunkKey : this.deviceReadThunkKey;
+            SynchronousOpMode.synchronousThreadWaitForLoopCycleEmptyOfThunks(oppositeThunkKey);
 
             // Tell him to switch
             this.setMotorControllerDeviceMode(newMode);
@@ -198,10 +206,12 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
     // DcMotorController interface
     //----------------------------------------------------------------------------------------------
 
-    @Override public synchronized void setMotorControllerDeviceMode(final DcMotorController.DeviceMode mode)
-    // setMotorControllerDeviceMode is neither a 'read' nor a 'write' operation; it's internal
+    @Override public synchronized void setMotorControllerDeviceMode(final DeviceMode mode)
+    // setMotorControllerDeviceMode is neither a 'read' nor a 'write' operation; it's internal, 
+    // so we don't call doReadOperation() or doWriteOperation().
         {
-        NonwaitingThunk thunk = (new NonwaitingThunk()
+        int thunkKey = mode==DeviceMode.READ_ONLY ? this.deviceReadThunkKey : this.deviceWriteThunkKey;
+        NonwaitingThunk thunk = (new NonwaitingThunk(thunkKey)
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -222,7 +232,7 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
         this.controllerMode = null;
         }
 
-    @Override public synchronized DcMotorController.DeviceMode getMotorControllerDeviceMode()
+    @Override public synchronized DeviceMode getMotorControllerDeviceMode()
     // getMotorControllerDeviceMode is neither a 'read' nor a 'write' operation; it's internal
         {
         ResultableThunk<DeviceMode> thunk = (new ResultableThunk<DeviceMode>()

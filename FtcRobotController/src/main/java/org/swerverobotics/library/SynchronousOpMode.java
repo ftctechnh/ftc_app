@@ -25,6 +25,79 @@ import org.swerverobotics.library.thunking.*;
 public abstract class SynchronousOpMode extends OpMode implements IThunker
     {
     //----------------------------------------------------------------------------------------------
+    // Types
+    //----------------------------------------------------------------------------------------------
+
+    private class ActionQueueAndHistory
+        {
+        ConcurrentLinkedQueue<IAction>  queue   = new ConcurrentLinkedQueue<IAction>();
+        SparseArray<Boolean>            history = new SparseArray<Boolean>(); 
+        
+        synchronized void clear()
+            {
+            this.queue = new ConcurrentLinkedQueue<IAction>();
+            this.clearHistory();
+            }
+        
+        synchronized void clearHistory()
+            {
+            this.history = new SparseArray<Boolean>();
+            this.onChanged();
+            }
+        
+        synchronized void add(IAction action)
+            {
+            this.queue.add(action);
+            this.onChanged();
+            }
+        
+        synchronized IAction poll()
+            {
+            IAction result = this.queue.poll();
+            if (result != null)
+                {
+                if (result instanceof IThunkKeyed)
+                    {
+                    IThunkKeyed keyed = (IThunkKeyed)result;
+                    this.history.setValueAt(keyed.getThunkKey(), true);
+                    }
+                this.onChanged();
+                }
+            return result;
+            }
+        
+        synchronized boolean containsThunkKey(int thunkKey)
+            {
+            // Is the key present in pending stuff?
+            for (IAction action : this.queue)
+                {
+                if (action instanceof IThunkKeyed)
+                    {
+                    IThunkKeyed keyed = (IThunkKeyed)action;
+                    if (keyed.getThunkKey() == thunkKey)
+                        {
+                        return true;
+                        }
+                    }
+                }
+            
+            // Is the key present in our history?
+            if (this.history.get(thunkKey, false))
+                {
+                return true;
+                }
+            
+            // Not present
+            return false;
+            }
+        
+        private void onChanged()
+            {
+            this.notifyAll();
+            }
+        }
+
+    //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
@@ -33,14 +106,11 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     private         RuntimeException        exceptionThrownOnMainThread;
     private volatile boolean                started;
     private volatile boolean                stopRequested;
-    private         ConcurrentLinkedQueue<IAction> loopThreadThunkQueue = new ConcurrentLinkedQueue<IAction>();
+    private         ActionQueueAndHistory   actionQueueAndHistory = new ActionQueueAndHistory();
     private         AtomicBoolean           gamePadStateChanged = new AtomicBoolean(false);
     private final   Object                  loopLock = new Object();
     private final   SparseArray<IAction>    singletonLoopActions = new SparseArray<IAction>();
     private static  AtomicInteger           singletonKey = new AtomicInteger(0);
-    private Object  loopThunkQueueEmptyLock = new Object();
-    private boolean loopThunkQueueEmpty     = false;
-
 
     /**
      * Advanced: unthunkedHardwareMap contains the original hardware map provided
@@ -73,7 +143,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      * Advanced: 'nanotimeLoopDwellMax' is the (soft) maximum number of nanoseconds that
      * our loop() implementation will spend in any one call before returning.
      */
-    public long msLoopDwellMax = 30;
+    public long msLoopDwellMax = 20;
 
     /**
      * Advanced: loopDwellCheckInterval is the number of thunks we will execute in loop()
@@ -266,8 +336,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
 
         // Paranoia: clear any state that may just perhaps be lingering
         this.clearSingletons();
-        this.loopThreadThunkQueue.clear();
-        this.noteLoopThunkQueueEmpty();;
+        this.actionQueueAndHistory.clear();
 
         // We're being asked to start, not stop
         this.started = false;
@@ -301,7 +370,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         // Call the subclass hook in case they might want to do something interesting
         this.postStartHook();
         }
-
+    
     /**
      * The robot controller runtime calls loop() on a frequent basis, nominally every
      * 20ms or so.
@@ -314,6 +383,8 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         synchronized (this.loopLock)
             {
             this.loopCount.getAndIncrement();
+            
+            this.actionQueueAndHistory.clearHistory();
             
             // If we had an exception thrown by the main thread, then throw it here. 'Sort
             // of like thunking the exceptions.
@@ -341,27 +412,26 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
             // Call the subclass hook in case they might want to do something interesting
             this.midLoopHook();
 
-            // Start measuring time so we don't spend too long here in loop()
+            // Start measuring time so we don't spend too long here in loop(). That might
+            // happen if we got flooded with a bevy of non-waiting actions and we didn't have
+            // this check here.
             long nanotimeStart = System.nanoTime();
             long nanotimeMax   = nanotimeStart + this.msLoopDwellMax * NANO_TO_MILLI;
 
-            // Execute any thunks we've been asked to execute here on the loop thread
+            // Execute any actions we've been asked to execute here on the loop thread
             for (int i = 1; ; i++)
                 {
                 // Get the next work item in the queue. Get out of here if there isn't any more work.
-                IAction thunk;
-                synchronized (this.loopThreadThunkQueue)
+                IAction action;
+                synchronized (this.actionQueueAndHistory)
                     {
-                    thunk = this.loopThreadThunkQueue.poll();
-                    if (null == thunk)
-                        {
-                        this.noteLoopThunkQueueEmpty();
+                    action = this.actionQueueAndHistory.poll();
+                    if (null == action)
                         break;
-                        }
                     }
 
                 // Execute the work that needs to be done on the loop thread
-                thunk.doAction();
+                action.doAction();
 
                 // Periodically check whether we've run long enough for this loop() call.
                 if (i % this.loopDwellCheckCount == 0)
@@ -378,7 +448,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 action.doAction();
                 }
 
-            // Let everyone who was waiting for the next loop call go again
+            // Tell people that this loop cycle is complete
             this.loopLock.notifyAll();
             }
 
@@ -386,35 +456,23 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         this.postLoopHook();
         }
     
-    private void noteLoopThunkQueueEmpty()
+    /**
+     * Wait until we encounter a loop() cycle that doesn't (yet) contain any actions which
+     * are also thunks and whose key is the one indicated.
+     */
+    public void waitForLoopCycleEmptyOfThunks(int thunkKey) throws InterruptedException
         {
-        synchronized (this.loopThunkQueueEmptyLock)
+        synchronized (this.actionQueueAndHistory)
             {
-            this.loopThunkQueueEmpty = true;
-            this.loopThunkQueueEmptyLock.notifyAll();
-            }
-        }
-    private void noteLoopThunkQueueNonEmpty()
-        {
-        synchronized (this.loopThunkQueueEmptyLock)
-            {
-            this.loopThunkQueueEmpty = false;
-            }
-        }
-    public void waitForEmptyLoopThunkQueue() throws InterruptedException
-        {
-        synchronized (this.loopThunkQueueEmptyLock)
-            {
-            while (!this.loopThunkQueueEmpty)
+            while (this.actionQueueAndHistory.containsThunkKey(thunkKey))
                 {
-                this.loopThunkQueueEmptyLock.wait();
+                this.actionQueueAndHistory.wait();
                 }
             }
         }
-    
-    public static void synchronousThreadWaitForEmptyLoopThunkQueue() throws InterruptedException
+    public static void synchronousThreadWaitForLoopCycleEmptyOfThunks(int thunkKey) throws InterruptedException
         {
-        SynchronousOpMode.getSynchronousOpMode().waitForEmptyLoopThunkQueue();
+        SynchronousOpMode.getSynchronousOpMode().waitForLoopCycleEmptyOfThunks(thunkKey);
         }
 
     /**
@@ -600,15 +658,10 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     /**
      * Advanced: Execute the indicated action on the loop thread given that we are on a synchronous thread
      */
-    public void executeOnLoopThread(IAction thunk)
+    public void executeOnLoopThread(IAction action)
         {
         if (BuildConfig.DEBUG) Assert.assertEquals(true, this.isSynchronousThread());
-
-        synchronized (this.loopThreadThunkQueue)
-            {
-            this.loopThreadThunkQueue.add(thunk);
-            this.noteLoopThunkQueueNonEmpty();
-            }
+        this.actionQueueAndHistory.add(action);
         }
 
     /**
