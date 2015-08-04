@@ -1,42 +1,53 @@
 package org.swerverobotics.library.thunking;
 
-import java.lang.reflect.Field;
-import com.qualcomm.robotcore.hardware.AnalogInput;
-import com.qualcomm.robotcore.hardware.AnalogInputController;
-
-import org.swerverobotics.library.exceptions.SwerveRuntimeException;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.DigitalChannelController;
 
 /**
- * ThreadSafeAnalogInput modifies the FTC-provided AnalogInput so that it is thread-safe.
- * Accessors are also provided for fetching the controller and channel of an AnalogInput.
+ * Another in our series...
  */
-public class ThreadSafeAnalogInput extends AnalogInput
+public class ThreadSafeDigitalChannel extends DigitalChannel
     {
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
-    
-    public ThreadSafeAnalogInput(AnalogInputController controller, int channel) 
+
+    public ThreadSafeDigitalChannel(DigitalChannelController controller, int channel)
         {
-        super(controller, channel); 
+        super(controller, channel);
         }
-    
-    public static AnalogInputController getController(AnalogInput target)
+
+    public static DigitalChannelController getController(DigitalChannel target)
         {
-        return Util.<AnalogInputController>getPrivateField(target, 0);
+        return Util.<DigitalChannelController>getPrivateField(target, 0);
         }
-    public static int getChannel(AnalogInput target)
+    public static int getChannel(DigitalChannel target)
         {
         return Util.getPrivateIntField(target, 1);
         }
-    
+
     //----------------------------------------------------------------------------------------------
     // Operations
     //----------------------------------------------------------------------------------------------
 
-    @Override public synchronized int getValue() 
+    @Override public synchronized DigitalChannelController.Mode getMode() 
         {
-        return super.getValue();
+        return super.getMode();
+        }
+
+    @Override public synchronized void setMode(DigitalChannelController.Mode mode) 
+        {
+        super.setMode(mode);
+        }
+
+    @Override public synchronized boolean getState() 
+        {
+        return super.getState();
+        }
+
+    @Override public synchronized void setState(boolean state) 
+        {
+        super.setState(state);
         }
 
     @Override public synchronized String getDeviceName() 
@@ -58,4 +69,5 @@ public class ThreadSafeAnalogInput extends AnalogInput
         {
         super.close();
         }
+    
     }
