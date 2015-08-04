@@ -10,21 +10,21 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * ThunkBase contains most of the functionality for thunking
  */
-public abstract class ThunkBase implements IAction, IThunkKeyed
+public abstract class ThunkBase implements IAction, IActionKeyed
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
     private SynchronousThreadContext context;
-    public  int                      thunkKey = nullThunkKey;
+    public  int                      actionKey = nullActionKey;
 
-    public static final int          nullThunkKey = 0;
-    static AtomicInteger             prevThunkKey = new AtomicInteger(nullThunkKey);
+    public static final int          nullActionKey = 0;
+    static AtomicInteger             prevActionKey = new AtomicInteger(nullActionKey);
     
-    public static int getNewThunkKey()
+    public static int getNewActionKey()
         {
-        return prevThunkKey.incrementAndGet();
+        return prevActionKey.incrementAndGet();
         }
     
     //----------------------------------------------------------------------------------------------
@@ -35,19 +35,19 @@ public abstract class ThunkBase implements IAction, IThunkKeyed
         {
         this.context = SynchronousThreadContext.getThreadContext();
         }
-    public ThunkBase(int thunkKey)
+    public ThunkBase(int actionKey)
         {
         this.context = SynchronousThreadContext.getThreadContext();
-        this.thunkKey = thunkKey;
+        this.actionKey = actionKey;
         }
 
     //----------------------------------------------------------------------------------------------
-    // IThunkKeyed
+    // IActionKeyed
     //----------------------------------------------------------------------------------------------
     
-    @Override public int getThunkKey()
+    @Override public int getActionKey()
         {
-        return this.thunkKey;
+        return this.actionKey;
         }
     
     //----------------------------------------------------------------------------------------------

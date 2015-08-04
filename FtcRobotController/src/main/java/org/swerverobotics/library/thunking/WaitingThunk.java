@@ -7,7 +7,7 @@ package org.swerverobotics.library.thunking;
 public abstract class WaitingThunk extends NonwaitingThunk
     {
     public WaitingThunk() { }
-    public WaitingThunk(int thunkKey) { super(thunkKey); }
+    public WaitingThunk(int actionKey) { super(actionKey); }
     
     @Override public void dispatch() throws InterruptedException
         {
