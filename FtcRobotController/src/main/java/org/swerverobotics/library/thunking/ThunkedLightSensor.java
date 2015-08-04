@@ -3,7 +3,7 @@ package org.swerverobotics.library.thunking;
 import com.qualcomm.robotcore.hardware.*;
 
 /**
- * A LightSensor that can be called on the main() thread.
+ * A LightSensor that can be called on a synchronous thread.
  */
 public class ThunkedLightSensor extends LightSensor
     {
@@ -29,16 +29,75 @@ public class ThunkedLightSensor extends LightSensor
         }
 
     //----------------------------------------------------------------------------------------------
+    // HardwareDevice
+    //----------------------------------------------------------------------------------------------
+
+    @Override public void close()
+        {
+        (new NonwaitingThunk()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                target.close();
+                }
+            }).doWriteOperation();
+        }
+
+    @Override public int getVersion()
+        {
+        return (new ResultableThunk<Integer>()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getVersion();
+                }
+            }).doReadOperation();
+        }
+
+    @Override public String getConnectionInfo()
+        {
+        return (new ResultableThunk<String>()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getConnectionInfo();
+                }
+            }).doReadOperation();
+        }
+
+    @Override public String getDeviceName()
+        {
+        return (new ResultableThunk<String>()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getDeviceName();
+                }
+            }).doReadOperation();
+        }
+
+    //----------------------------------------------------------------------------------------------
     // LightSensor
     //----------------------------------------------------------------------------------------------
 
-    @Override public double getLightLevel()
+    @Override public double getLightDetected()
         {
         return (new ResultableThunk<Double>()
             {
             @Override protected void actionOnLoopThread()
                 {
-                this.result = target.getLightLevel();
+                this.result = target.getLightDetected();
+                }
+            }).doReadOperation();
+        }
+    
+    @Override public int getLightDetectedRaw()
+        {
+        return (new ResultableThunk<Integer>()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getLightDetectedRaw();
                 }
             }).doReadOperation();
         }

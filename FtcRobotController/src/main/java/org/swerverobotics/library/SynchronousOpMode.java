@@ -116,7 +116,8 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 {
                 SynchronousOpMode.this.main();
                 }
-            catch (InterruptedException|RuntimeInterruptedException ignored)
+            catch (InterruptedException ignored) { }
+            catch (RuntimeInterruptedException ignored)
                 {
                 // If the main() method itself doesn't catch the interrupt, at least
                 // we will do so here. The whole point of such interrupts is to
@@ -133,10 +134,10 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     /**
      * The robot controller runtime calls start() when the OpMode is started.
      */
-    @Override public final void start()
+    @Override public final void init()
         {
         // Call the subclass hook in case they might want to do something interesting
-        this.preStartHook();
+        this.preInitHook();
 
         // Replace the op mode's hardware map variable with one whose contained
         // object implementations will thunk over to the loop thread as they need to.
@@ -164,7 +165,17 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         this.mainThread.start();
 
         // Call the subclass hook in case they might want to do something interesting
-        this.postStartHook();
+        this.postInitHook();
+        }
+    
+    @Override public final void start()
+    // When is this called vs init()?
+        {
+        // Call the subclass hook in case they might want to do something interesting
+        this.preInitHook();
+
+        // Call the subclass hook in case they might want to do something interesting
+        this.postInitHook();
         }
 
     /**
@@ -292,7 +303,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     //----------------------------------------------------------------------------------------------
 
     /**
-     * Advanced: the various 'hook' calls calls preStartHook(), postStartHook(), preLoopHook(), 
+     * Advanced: the various 'hook' calls calls preInitHook(), postInitHook(), preLoopHook(), 
      * etc are hooks that advanced users might want to override in their subclasses to something
      * interesting.
      *
@@ -300,29 +311,37 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      * methods, while midLoopHook() is called in loop() after variable state (e.g. gamepads) has
      * been established.
      */
+    protected void preInitHook() { /* hook for subclasses */ }
+    /**
+     * @see #preInitHook()
+     */
+    protected void postInitHook() { /* hook for subclasses */ }
+    /**
+     * @see #preInitHook()
+     */
     protected void preStartHook() { /* hook for subclasses */ }
     /**
-     * @see #preStartHook()
+     * @see #preInitHook()
      */
     protected void postStartHook() { /* hook for subclasses */ }
     /**
-     * @see #preStartHook()
+     * @see #preInitHook()
      */
     protected void preLoopHook() { /* hook for subclasses */ }
     /**
-     * @see #preStartHook()
+     * @see #preInitHook()
      */
     protected void midLoopHook() { /* hook for subclasses */ }
     /**
-     * @see #preStartHook()
+     * @see #preInitHook()
      */
     protected void postLoopHook() { /* hook for subclasses */ }
     /**
-     * @see #preStartHook()
+     * @see #preInitHook()
      */
     protected void preStopHook() { /* hook for subclasses */ }
     /**
-     * @see #preStartHook()
+     * @see #preInitHook()
      */
     protected void postStopHook() { /* hook for subclasses */ }
 
