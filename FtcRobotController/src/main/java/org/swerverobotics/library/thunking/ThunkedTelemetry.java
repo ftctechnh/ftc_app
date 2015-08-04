@@ -39,7 +39,7 @@ public class ThunkedTelemetry
     // Operations
     //----------------------------------------------------------------------------------------------
 
-    public long getTimestamp()
+    synchronized public long getTimestamp()
         {
         return (new ResultableThunk<Long>()
             {
@@ -50,7 +50,7 @@ public class ThunkedTelemetry
             }).doReadOperation();
         }
 
-    public void setTag(final String tag)
+    synchronized public void setTag(final String tag)
         {
         (new NonwaitingThunk()
             {
@@ -61,7 +61,7 @@ public class ThunkedTelemetry
             }).doWriteOperation();
         }
 
-    public String getTag()
+    synchronized public String getTag()
         {
         return (new ResultableThunk<String>()
             {
@@ -72,7 +72,7 @@ public class ThunkedTelemetry
             }).doReadOperation();
         }
 
-    public void addData(final String key, final String msg)
+    synchronized public void addData(final String key, final String msg)
         {
         (new NonwaitingThunk()
             {
@@ -83,7 +83,7 @@ public class ThunkedTelemetry
             }).doWriteOperation();
         }
 
-    public void addData(final String msg, final float value)
+    synchronized public void addData(final String msg, final float value)
         {
         (new NonwaitingThunk()
             {
@@ -94,7 +94,7 @@ public class ThunkedTelemetry
             }).doWriteOperation();
         }
 
-    public void addData(final String msg, final double value)
+    synchronized public void addData(final String msg, final double value)
         {
         (new NonwaitingThunk()
             {
@@ -105,7 +105,7 @@ public class ThunkedTelemetry
             }).doWriteOperation();
         }
 
-    public Map<String, String> getDataStrings()
+    synchronized public Map<String, String> getDataStrings()
         {
         return (new ResultableThunk<Map<String, String>>()
             {
@@ -116,7 +116,7 @@ public class ThunkedTelemetry
             }).doReadOperation();
         }
 
-    public Map<String, Float> getDataNumbers()
+    synchronized public Map<String, Float> getDataNumbers()
         {
         return (new ResultableThunk<Map<String, Float>>()
             {
@@ -127,7 +127,7 @@ public class ThunkedTelemetry
             }).doReadOperation();
         }
 
-    public boolean hasData()
+    synchronized public boolean hasData()
         {
         return (new ResultableThunk<Boolean>()
             {
@@ -138,7 +138,7 @@ public class ThunkedTelemetry
             }).doReadOperation();
         }
 
-    public void clearData()
+    synchronized public void clearData()
         {
         (new NonwaitingThunk()
             {

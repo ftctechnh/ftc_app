@@ -32,7 +32,7 @@ public class ThunkedCompassSensor extends CompassSensor
     // HardwareDevice
     //----------------------------------------------------------------------------------------------
 
-    @Override public void close()
+    @Override synchronized public void close()
         {
         (new NonwaitingThunk()
         {
@@ -43,7 +43,7 @@ public class ThunkedCompassSensor extends CompassSensor
         }).doWriteOperation();
         }
 
-    @Override public int getVersion()
+    @Override synchronized public int getVersion()
         {
         return (new ResultableThunk<Integer>()
         {
@@ -54,7 +54,7 @@ public class ThunkedCompassSensor extends CompassSensor
         }).doReadOperation();
         }
 
-    @Override public String getConnectionInfo()
+    @Override synchronized public String getConnectionInfo()
         {
         return (new ResultableThunk<String>()
         {
@@ -65,7 +65,7 @@ public class ThunkedCompassSensor extends CompassSensor
         }).doReadOperation();
         }
 
-    @Override public String getDeviceName()
+    @Override synchronized public String getDeviceName()
         {
         return (new ResultableThunk<String>()
         {
@@ -80,7 +80,7 @@ public class ThunkedCompassSensor extends CompassSensor
     // CompassSensor
     //----------------------------------------------------------------------------------------------
 
-    @Override public double getDirection()
+    @Override synchronized public double getDirection()
         {
         return (new ResultableThunk<Double>()
             {
@@ -91,7 +91,7 @@ public class ThunkedCompassSensor extends CompassSensor
             }).doReadOperation();
         }
 
-    @Override public String status()
+    @Override synchronized public String status()
         {
         return (new ResultableThunk<String>()
             {
@@ -102,7 +102,7 @@ public class ThunkedCompassSensor extends CompassSensor
             }).doReadOperation();
         }
 
-    @Override public void setMode(final CompassSensor.CompassMode mode)
+    @Override synchronized public void setMode(final CompassSensor.CompassMode mode)
         {
         (new NonwaitingThunk()
             {
@@ -113,7 +113,7 @@ public class ThunkedCompassSensor extends CompassSensor
             }).doWriteOperation();
         }
 
-    @Override public boolean calibrationFailed()
+    @Override synchronized public boolean calibrationFailed()
         {
         return (new ResultableThunk<Boolean>()
             {
