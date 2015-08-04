@@ -715,13 +715,10 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      * thread to the loop() thread.
      *
      * We have more to do here:
-     public HardwareMap.DeviceMapping<DigitalChannel> digitalChannel = new HardwareMap.DeviceMapping();
      public HardwareMap.DeviceMapping<OpticalDistanceSensor> opticalDistanceSensor = new HardwareMap.DeviceMapping();
      public HardwareMap.DeviceMapping<TouchSensor> touchSensor = new HardwareMap.DeviceMapping();
      public HardwareMap.DeviceMapping<PWMOutput> pwmOutput = new HardwareMap.DeviceMapping();
      public HardwareMap.DeviceMapping<I2cDevice> i2cDevice = new HardwareMap.DeviceMapping();
-     public HardwareMap.DeviceMapping<AnalogOutput> analogOutput = new HardwareMap.DeviceMapping();
-     * 
      */
     public static HardwareMap createThunkedHardwareMap(HardwareMap hwmap)
         {
@@ -773,9 +770,22 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 @Override public AnalogInput create(AnalogInput target)
                     {
                     return new ThreadSafeAnalogInput(
-                        ThreadSafeAnalogInput.getController(target),
+                        ThunkedAnalogInputController.create(ThreadSafeAnalogInput.getController(target)),
                         ThreadSafeAnalogInput.getChannel(target)
                         );
+                    }
+                }
+        );
+
+        createThunks(hwmap.analogOutput, result.analogOutput,
+                new IThunkFactory<AnalogOutput>()
+                {
+                @Override public AnalogOutput create(AnalogOutput target)
+                    {
+                    return new ThreadSafeAnalogOutput(
+                            ThunkedAnalogOutputController.create(ThreadSafeAnalogOutput.getController(target)),
+                            ThreadSafeAnalogOutput.getChannel(target)
+                    );
                     }
                 }
         );
@@ -786,7 +796,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 @Override public DigitalChannel create(DigitalChannel target)
                     {
                     return new ThreadSafeDigitalChannel(
-                            ThreadSafeDigitalChannel.getController(target),
+                            ThunkedDigitalChannelController.create(ThreadSafeDigitalChannel.getController(target)),
                             ThreadSafeDigitalChannel.getChannel(target)
                         );
                     }
@@ -799,10 +809,9 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 @Override public DcMotor create(DcMotor target)
                     {
                     return new ThreadSafeDcMotor(
-                        ThunkedMotorController.create(
-                            target.getController()),
-                            target.getPortNumber(),
-                            target.getDirection()
+                        ThunkedMotorController.create(target.getController()),
+                        target.getPortNumber(),
+                        target.getDirection()
                     );
                     }
                 }
@@ -815,10 +824,9 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 public com.qualcomm.robotcore.hardware.Servo create(com.qualcomm.robotcore.hardware.Servo target)
                     {
                     return new ThreadSafeServo(
-                        ThunkedServoController.create(
-                            target.getController()),
-                            target.getPortNumber(),
-                            target.getDirection()
+                        ThunkedServoController.create(target.getController()),
+                        target.getPortNumber(),
+                        target.getDirection()
                     );
                     }
                 }

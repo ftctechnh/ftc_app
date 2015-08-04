@@ -43,6 +43,7 @@ public class Util
             }
         }
 
+    // @SuppressWarnings("unchecked")
     static <T> T getPrivateField(Object target, int iMember)
         {
         Class<?> c = target.getClass();
