@@ -30,7 +30,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
 
     private         Thread                  loopThread;
     private         Thread                  mainThread;
-    private         boolean                 stopRequested;
+    private volatile boolean                stopRequested;
     private         ConcurrentLinkedQueue<IAction> loopThreadThunkQueue = new ConcurrentLinkedQueue<IAction>();
     private         AtomicBoolean           gamePadStateChanged = new AtomicBoolean(false);
     private final   Object                  loopLock = new Object();
