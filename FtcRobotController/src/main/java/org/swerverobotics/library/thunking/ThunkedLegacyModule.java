@@ -79,24 +79,24 @@ public class ThunkedLegacyModule implements LegacyModule
     // LegacyModule interface
     //----------------------------------------------------------------------------------------------
 
-    @Override public void enableNxtI2cReadMode(final int physicalPort, final int i2cAddress, final int memAddress, final int memLength)
+    @Override public void enableNxtI2cReadMode(final int physicalPort, final int i2cAddress, final int memAddress, final int length)
         {
         (new NonwaitingThunk()
             {
             @Override protected void actionOnLoopThread()
                 {
-                target.enableNxtI2cReadMode(physicalPort, i2cAddress, memAddress, memLength);
+                target.enableNxtI2cReadMode(physicalPort, i2cAddress, memAddress, length);
                 }
             }).doWriteOperation();
         }
 
-    @Override public void enableNxtI2cWriteMode(final int physicalPort, final int i2cAddress, final int memAddress, final int var4)
+    @Override public void enableNxtI2cWriteMode(final int physicalPort, final int i2cAddress, final int memAddress, final int length)
         {
         (new NonwaitingThunk()
             {
             @Override protected void actionOnLoopThread()
                 {
-                target.enableNxtI2cWriteMode(physicalPort, i2cAddress, memAddress, var4);
+                target.enableNxtI2cWriteMode(physicalPort, i2cAddress, memAddress, length);
                 }
             }).doWriteOperation();
         }
