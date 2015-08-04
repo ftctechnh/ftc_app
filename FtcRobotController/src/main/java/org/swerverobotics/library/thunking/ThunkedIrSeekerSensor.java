@@ -31,6 +31,54 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
         }
 
     //----------------------------------------------------------------------------------------------
+    // HardwareDevice
+    //----------------------------------------------------------------------------------------------
+
+    @Override public void close()
+        {
+        (new NonwaitingThunk()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                target.close();
+                }
+            }).doWriteOperation();
+        }
+
+    @Override public int getVersion()
+        {
+        return (new ResultableThunk<Integer>()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getVersion();
+                }
+            }).doReadOperation();
+        }
+
+    @Override public String getConnectionInfo()
+        {
+        return (new ResultableThunk<String>()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getConnectionInfo();
+                }
+            }).doReadOperation();
+        }
+
+    @Override public String getDeviceName()
+        {
+        return (new ResultableThunk<String>()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getDeviceName();
+                }
+            }).doReadOperation();
+        }
+    
+    //----------------------------------------------------------------------------------------------
     // IrSeekerSensor
     //----------------------------------------------------------------------------------------------
 
@@ -89,13 +137,13 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
             }).doReadOperation();
         }
 
-    @Override public IrSeekerSensor.IrSensor[] getSensors()
+    @Override public IrSeekerSensor.IrSeekerIndividualSensor[] getIndividualSensors()
         {
-        return (new ResultableThunk<IrSeekerSensor.IrSensor[]>()
+        return (new ResultableThunk<IrSeekerSensor.IrSeekerIndividualSensor[]>()
             {
             @Override protected void actionOnLoopThread()
                 {
-                this.result = target.getSensors();
+                this.result = target.getIndividualSensors();
                 }
             }).doReadOperation();
         }
