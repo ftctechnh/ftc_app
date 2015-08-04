@@ -1,7 +1,5 @@
 package org.swerverobotics.library.examples;
 
-import java.text.*;
-import java.util.*;
 import org.swerverobotics.library.*;
 import com.qualcomm.robotcore.util.*;
 
@@ -35,8 +33,11 @@ public class TelemetryOp extends SynchronousOpMode
                 }})
             );
 
+        // Wait until we've been given the ok to go
+        this.waitForStart();
+        
         // Go go gadget robot!
-        while (!this.stopRequested())
+        while (this.opModeIsActive())
             {
             if (this.newGamePadInputAvailable())
                 {
