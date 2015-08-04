@@ -11,4 +11,7 @@ public interface IThunkedReadWrite
     {
     void enterReadOperation() throws InterruptedException;
     void enterWriteOperation() throws InterruptedException;
+
+    int getListenerReadThunkKey();
+    int getListenerWriteThunkKey();
     }

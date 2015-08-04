@@ -3,20 +3,30 @@ package org.swerverobotics.library.thunking;
 import com.qualcomm.ftcrobotcontroller.*;
 import junit.framework.Assert;
 import org.swerverobotics.library.IAction;
-import org.swerverobotics.library.SynchronousOpMode;
 import org.swerverobotics.library.exceptions.SwerveRuntimeException;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * ThunkBase contains most of the functionality for thunking
  */
-public abstract class ThunkBase implements IAction
+public abstract class ThunkBase implements IAction, IThunkKeyed
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    SynchronousThreadContext context;
+    private SynchronousThreadContext context;
+    public  int                      thunkKey = nullThunkKey;
 
+    public static final int          nullThunkKey = 0;
+    static AtomicInteger             prevThunkKey = new AtomicInteger(nullThunkKey);
+    
+    public static int getNewThunkKey()
+        {
+        return prevThunkKey.incrementAndGet();
+        }
+    
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
@@ -25,9 +35,23 @@ public abstract class ThunkBase implements IAction
         {
         this.context = SynchronousThreadContext.getThreadContext();
         }
+    public ThunkBase(int thunkKey)
+        {
+        this.context = SynchronousThreadContext.getThreadContext();
+        this.thunkKey = thunkKey;
+        }
 
     //----------------------------------------------------------------------------------------------
-    // State
+    // IThunkKeyed
+    //----------------------------------------------------------------------------------------------
+    
+    @Override public int getThunkKey()
+        {
+        return this.thunkKey;
+        }
+    
+    //----------------------------------------------------------------------------------------------
+    // Actions
     //----------------------------------------------------------------------------------------------
 
     public void doLoopThreadCore()
