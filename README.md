@@ -65,9 +65,9 @@ yet available.
 We'd love to hear what you think about the library. Please direct your feedback to 
 swerveftclibrary@googlegroups.com. Thanks!
 
-Robert Atkinson,
-bob@theatkinsons.org,
-Mentor, Swerve Robotics,  
+Robert Atkinson,  
+bob@theatkinsons.org,  
+Mentor, Swerve Robotics,    
 Woodinville, Washington
 
 21 July 2015 (update 04 August)  
