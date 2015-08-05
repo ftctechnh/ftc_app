@@ -137,10 +137,12 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
             // be any existing commands still in the queue for that device. In effect, mode switches 
             // should (conservatively) happen at the TOP of a loop() call so that they are compatible 
             // with anything else that is issued to that controller in that call.
-            
+            // 
+            // We accomplish this by waiting until any incompatible operations were executed on 
+            // previous loop() calls. *New* incompatible operations are prevented from starting
+            // by the fact that this controller object uses synchronized methods.
             int oppositeKey = newMode==DeviceMode.READ_ONLY ? this.deviceWriteThunkKey : this.deviceReadThunkKey;
-            int claimKey    = newMode==DeviceMode.READ_ONLY ? this.deviceReadThunkKey  : this.deviceWriteThunkKey;
-            SynchronousOpMode.synchronousThreadWaitForLoopCycleEmptyOfActionKey(oppositeKey, claimKey);
+            SynchronousOpMode.synchronousThreadWaitForLoopCycleEmptyOfActionKey(oppositeKey);
 
             // Tell him to switch
             this.setMotorControllerDeviceMode(newMode);

@@ -463,10 +463,9 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     
     /**
      * Wait until we encounter a loop() cycle that doesn't (yet) contain any actions which
-     * are also thunks and whose key is the one indicated. Once we get to that state, atomically
-     * claim that a new actionKey has in fact been executed (if that's not the null key).
+     * are also thunks and whose key is the one indicated.
      */
-    public void waitForLoopCycleEmptyOfActionKey(int actionKey, int claimKey) throws InterruptedException
+    public void waitForLoopCycleEmptyOfActionKey(int actionKey) throws InterruptedException
         {
         synchronized (this.actionQueueAndHistory)
             {
@@ -474,12 +473,11 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 {
                 this.actionQueueAndHistory.wait();
                 }
-            this.actionQueueAndHistory.setActionKey(claimKey);
             }
         }
-    public static void synchronousThreadWaitForLoopCycleEmptyOfActionKey(int actionKey, int claimKey) throws InterruptedException
+    public static void synchronousThreadWaitForLoopCycleEmptyOfActionKey(int actionKey) throws InterruptedException
         {
-        SynchronousOpMode.getSynchronousOpMode().waitForLoopCycleEmptyOfActionKey(actionKey, claimKey);
+        SynchronousOpMode.getSynchronousOpMode().waitForLoopCycleEmptyOfActionKey(actionKey);
         }
 
     /**
