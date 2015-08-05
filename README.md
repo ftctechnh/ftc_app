@@ -10,11 +10,12 @@ RCL in order to simplify programming for FTC teams. Notable features of the libr
     model native to the RCL. SynchronousOpMode also automatically handles the delays necessary
     when switching between reading and writing modes while using legacy NXT/HiTechnic motor
     controllers, relieving programmers of the burden of doing so manually.
-*   An enhanced form of telemetry containing a *dashboard* and a *log*. The contents of the 
-    dashboard are configured just once, and update() is called periodically to send its contents
-    to the driver station. Messages can be written to the log at any time, and these are sent to
-    the driver station as soon as possible. On the driver station display, the dashboard appears
-    at the top, followed by as many of the recent log messages as will reasonably fit.
+*   An enhanced form of telemetry containing a *dashboard* and a *log*. On the driver station display, 
+    the dashboard appears at the top, followed by as many of the recent log messages as will reasonably 
+    fit. The dashboard is configured just once, and you call update() periodically to compute current
+    values and send its contents to the driver station (you can call it often; actual updates are 
+    automatically throttled to avoid unnecessary bandwith use). Log messages can be written to the 
+    log at any time, and these are sent to the driver station as soon as possible. 
     
 The fifteen second summary of how to use the library is as follows:
 
