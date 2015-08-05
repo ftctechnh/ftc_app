@@ -1,6 +1,5 @@
 package org.swerverobotics.library;
 
-import java.lang.reflect.Field;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
@@ -713,10 +712,6 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      * Rare: Given a (non-thunking) hardware map, create a new hardware map containing
      * all the same devices but in a form that their methods thunk from the main()
      * thread to the loop() thread.
-     *
-     * We have more to do here:
-     public HardwareMap.DeviceMapping<PWMOutput> pwmOutput = new HardwareMap.DeviceMapping();
-     public HardwareMap.DeviceMapping<I2cDevice> i2cDevice = new HardwareMap.DeviceMapping();
      */
     public static HardwareMap createThunkedHardwareMap(HardwareMap hwmap)
         {
@@ -783,6 +778,32 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                     return new ThreadSafeAnalogOutput(
                             ThunkedAnalogOutputController.create(ThreadSafeAnalogOutput.getController(target)),
                             ThreadSafeAnalogOutput.getChannel(target)
+                    );
+                    }
+                }
+        );
+
+        createThunks(hwmap.pwmOutput, result.pwmOutput,
+                new IThunkFactory<PWMOutput>()
+                {
+                @Override public PWMOutput create(PWMOutput target)
+                    {
+                    return new ThreadSafePWMOutput(
+                            ThunkedPWMOutputController.create(ThreadSafePWMOutput.getController(target)),
+                            ThreadSafePWMOutput.getChannel(target)
+                    );
+                    }
+                }
+        );
+
+        createThunks(hwmap.i2cDevice, result.i2cDevice,
+                new IThunkFactory<I2cDevice>()
+                {
+                @Override public I2cDevice create(I2cDevice target)
+                    {
+                    return new ThreadSafeI2cDevice(
+                            ThunkedI2cController.create(ThreadSafeI2cDevice.getController(target)),
+                            ThreadSafeI2cDevice.getChannel(target)
                     );
                     }
                 }
