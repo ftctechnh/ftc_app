@@ -47,6 +47,7 @@ The fifteen second summary of how to use the library is as follows:
             this.telemetry.dashboard.update();
             this.idle();
             }
+
 That's it!
 
 Note that the library is still undergoing development. It has received light testing, and while no known 
@@ -70,6 +71,7 @@ Woodinville, Washington
 
 21 July 2015 (update 04 August)  
 
+(The remainder of this file is as published by FTC headquarters.)
 
 # ftc_app
 FTC Android Studio project to create FTC Robot Controller app.
