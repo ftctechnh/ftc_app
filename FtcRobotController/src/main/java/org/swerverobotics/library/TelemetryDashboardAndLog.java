@@ -1,10 +1,8 @@
 package org.swerverobotics.library;
 
 import com.qualcomm.robotcore.robocol.Telemetry;
-
-import org.swerverobotics.library.thunking.SynchronousThreadContext;
-import org.swerverobotics.library.thunking.ThunkedTelemetry;
-
+import org.swerverobotics.library.interfaces.*;
+import org.swerverobotics.library.thunking.*;
 import java.util.*;
 
 /**

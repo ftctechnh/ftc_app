@@ -1,4 +1,4 @@
-package org.swerverobotics.library;
+package org.swerverobotics.library.interfaces;
 
 /**
  * IFunc<TResult> represents a nullary function that returns a value of the indicated type
