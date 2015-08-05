@@ -33,6 +33,8 @@ public class TelemetryOp extends SynchronousOpMode
                 return format(elapsed.time() / (loopCount.get()-loopCountStart) * 1000) + "ms";
                 }})
             );
+        // And we show the log in new to old order, just because we want to
+        this.telemetry.log.displayOldToNew = false;
 
         // Wait until we've been given the ok to go
         this.waitForStart();
