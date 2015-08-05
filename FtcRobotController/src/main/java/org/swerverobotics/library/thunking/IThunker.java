@@ -1,6 +1,6 @@
 package org.swerverobotics.library.thunking;
 
-import org.swerverobotics.library.IAction;
+import org.swerverobotics.library.interfaces.IAction;
 
 /**
  * IThunker is an interface through which one can cause work to be thunked to the loop() thread.

@@ -1,6 +1,7 @@
 package org.swerverobotics.library.examples;
 
 import org.swerverobotics.library.*;
+import org.swerverobotics.library.interfaces.*;
 import com.qualcomm.robotcore.util.*;
 
 /**

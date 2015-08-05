@@ -3,6 +3,7 @@ package org.swerverobotics.library.examples;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
 import org.swerverobotics.library.*;
+import org.swerverobotics.library.interfaces.*;
 import org.swerverobotics.library.thunking.*;
 
 /**
@@ -139,7 +140,7 @@ public class TeleOp extends SynchronousOpMode
                 {
                 @Override public Object value()
                     {
-                    return format(motorLeft.getChannelMode());
+                    return motorLeft.getChannelMode();
                     }
                 })
             );
@@ -149,9 +150,5 @@ public class TeleOp extends SynchronousOpMode
     String format(double d)
         {
         return String.format("%.1f", d);
-        }
-    String format(DcMotorController.RunMode mode)
-        {
-        return mode.toString();
         }
     }

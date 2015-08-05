@@ -9,6 +9,7 @@ import com.qualcomm.ftcrobotcontroller.BuildConfig;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.swerverobotics.library.exceptions.*;
+import org.swerverobotics.library.interfaces.*;
 import org.swerverobotics.library.thunking.*;
 
 /**
