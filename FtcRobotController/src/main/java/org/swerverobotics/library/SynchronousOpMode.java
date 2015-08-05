@@ -11,11 +11,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.swerverobotics.library.exceptions.*;
 import org.swerverobotics.library.thunking.*;
 
-// Work items:
-//      * TODO: investigate: 'getPower on legacy NXT-compatible motor controller returns a null value' (eh?)
-//      * TODO: a big once-over for (default)/public/private/protected and/or final on methods and classes
-//      * TODO: make idle() wakeup-able from some external stimulus?
-
 /**
  * SynchronousOpMode is a base class that can be derived from in order to
  * write op modes that can be coded in a linear, synchronous programming style.
