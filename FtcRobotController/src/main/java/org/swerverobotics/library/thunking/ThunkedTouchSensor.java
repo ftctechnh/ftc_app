@@ -32,7 +32,7 @@ public class ThunkedTouchSensor extends TouchSensor
     // HardwareDevice
     //----------------------------------------------------------------------------------------------
 
-    @Override synchronized public void close()
+    @Override public void close()
         {
         (new NonwaitingThunk()
         {
@@ -43,7 +43,7 @@ public class ThunkedTouchSensor extends TouchSensor
         }).doWriteOperation();
         }
 
-    @Override synchronized public int getVersion()
+    @Override public int getVersion()
         {
         return (new ResultableThunk<Integer>()
         {
@@ -54,7 +54,7 @@ public class ThunkedTouchSensor extends TouchSensor
         }).doReadOperation();
         }
 
-    @Override synchronized public String getConnectionInfo()
+    @Override public String getConnectionInfo()
         {
         return (new ResultableThunk<String>()
         {
@@ -65,7 +65,7 @@ public class ThunkedTouchSensor extends TouchSensor
         }).doReadOperation();
         }
 
-    @Override synchronized public String getDeviceName()
+    @Override public String getDeviceName()
         {
         return (new ResultableThunk<String>()
         {
@@ -80,7 +80,7 @@ public class ThunkedTouchSensor extends TouchSensor
     // TouchSensor
     //----------------------------------------------------------------------------------------------
 
-    @Override synchronized public double getValue()
+    @Override public double getValue()
         {
         return (new ResultableThunk<Double>()
             {
@@ -91,7 +91,7 @@ public class ThunkedTouchSensor extends TouchSensor
             }).doReadOperation();
         }
 
-    @Override synchronized public boolean isPressed()
+    @Override public boolean isPressed()
         {
         return (new ResultableThunk<Boolean>()
             {
@@ -102,7 +102,7 @@ public class ThunkedTouchSensor extends TouchSensor
             }).doReadOperation();
         }
 
-    @Override synchronized public String toString()
+    @Override public String toString()
         {
         return (new ResultableThunk<String>()
             {

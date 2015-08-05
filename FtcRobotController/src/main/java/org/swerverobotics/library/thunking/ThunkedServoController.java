@@ -33,7 +33,7 @@ public class ThunkedServoController implements ServoController
     // HardwareDevice
     //----------------------------------------------------------------------------------------------
 
-    @Override synchronized public void close()
+    @Override public void close()
         {
         (new NonwaitingThunk()
             {
@@ -44,7 +44,7 @@ public class ThunkedServoController implements ServoController
             }).doWriteOperation();
         }
 
-    @Override synchronized public int getVersion()
+    @Override public int getVersion()
         {
         return (new ResultableThunk<Integer>()
         {
@@ -55,7 +55,7 @@ public class ThunkedServoController implements ServoController
         }).doReadOperation();
         }
 
-    @Override synchronized public String getConnectionInfo()
+    @Override public String getConnectionInfo()
         {
         return (new ResultableThunk<String>()
             {
@@ -66,7 +66,7 @@ public class ThunkedServoController implements ServoController
             }).doReadOperation();
         }
 
-    @Override synchronized public String getDeviceName()
+    @Override public String getDeviceName()
         {
         return (new ResultableThunk<String>()
             {
@@ -81,7 +81,7 @@ public class ThunkedServoController implements ServoController
     // ServoController interface
     //----------------------------------------------------------------------------------------------
 
-    @Override synchronized public void pwmEnable()
+    @Override public void pwmEnable()
         {
         (new NonwaitingThunk()
             {
@@ -92,7 +92,7 @@ public class ThunkedServoController implements ServoController
             }).doWriteOperation();
         }
 
-    @Override synchronized public void pwmDisable()
+    @Override public void pwmDisable()
         {
         (new NonwaitingThunk()
             {
@@ -103,7 +103,7 @@ public class ThunkedServoController implements ServoController
             }).doWriteOperation();
         }
 
-    @Override synchronized public ServoController.PwmStatus getPwmStatus()
+    @Override public ServoController.PwmStatus getPwmStatus()
         {
         return (new ResultableThunk<ServoController.PwmStatus>()
             {
@@ -114,7 +114,7 @@ public class ThunkedServoController implements ServoController
             }).doReadOperation();
         }
 
-    @Override synchronized public void setServoPosition(final int channel, final double position)
+    @Override public void setServoPosition(final int channel, final double position)
         {
         (new NonwaitingThunk()
             {
@@ -125,7 +125,7 @@ public class ThunkedServoController implements ServoController
             }).doWriteOperation();
         }
 
-    @Override synchronized public double getServoPosition(final int channel)
+    @Override public double getServoPosition(final int channel)
         {
         return (new ResultableThunk<Double>()
             {

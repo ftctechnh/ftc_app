@@ -196,7 +196,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     // void close();
 
-    @Override synchronized public void setAnalogOutputVoltage(final int physicalPort, final int voltage)
+    @Override public void setAnalogOutputVoltage(final int physicalPort, final int voltage)
         {
         (new NonwaitingThunk()
             {
@@ -207,7 +207,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
             }).doWriteOperation();
         }
         
-    @Override synchronized public void setAnalogOutputFrequency(final int physicalPort, final int frequency)
+    @Override public void setAnalogOutputFrequency(final int physicalPort, final int frequency)
         {
         (new NonwaitingThunk()
             {
@@ -218,7 +218,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
             }).doWriteOperation();
         }
         
-    @Override synchronized public void setAnalogOutputMode(final int physicalPort, final byte mode)
+    @Override public void setAnalogOutputMode(final int physicalPort, final byte mode)
         {
         (new NonwaitingThunk()
             {
@@ -235,7 +235,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     // @Override public SerialNumber getSerialNumber();
 
-    @Override synchronized public DigitalChannelController.Mode getDigitalChannelMode(final int physicalPort)
+    @Override public DigitalChannelController.Mode getDigitalChannelMode(final int physicalPort)
         {
         return (new ResultableThunk<DigitalChannelController.Mode>()
             {
@@ -246,7 +246,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
             }).doReadOperation();
         }
 
-    @Override synchronized public void setDigitalChannelMode(final int physicalPort, final DigitalChannelController.Mode mode)
+    @Override public void setDigitalChannelMode(final int physicalPort, final DigitalChannelController.Mode mode)
         {
         (new NonwaitingThunk()
             {
@@ -257,7 +257,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
             }).doWriteOperation();
         }
 
-    @Override synchronized public boolean getDigitalChannelState(final int physicalPort)
+    @Override public boolean getDigitalChannelState(final int physicalPort)
         {
         return (new ResultableThunk<Boolean>()
             {
@@ -268,7 +268,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
             }).doReadOperation();
         }
 
-    @Override synchronized public void setDigitalChannelState(final int physicalPort, final boolean state)
+    @Override public void setDigitalChannelState(final int physicalPort, final boolean state)
         {
         (new NonwaitingThunk()
             {
@@ -291,7 +291,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     // @Override public void close()
 
-    @Override synchronized public void enableI2cReadMode(final int physicalPort, final int i2cAddress, final int memAddress, final int length)
+    @Override public void enableI2cReadMode(final int physicalPort, final int i2cAddress, final int memAddress, final int length)
         {
         (new NonwaitingThunk()
             {
@@ -302,7 +302,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
             }).doWriteOperation();
         }
 
-    @Override synchronized public void enableI2cWriteMode(final int physicalPort, final int i2cAddress, final int memAddress, final int length)
+    @Override public void enableI2cWriteMode(final int physicalPort, final int i2cAddress, final int memAddress, final int length)
         {
         (new NonwaitingThunk()
             {
@@ -313,7 +313,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
             }).doWriteOperation();
         }
 
-    @Override synchronized public Lock getI2cReadCacheLock(final int physicalPort)
+    @Override public Lock getI2cReadCacheLock(final int physicalPort)
         {
         return (new ResultableThunk<Lock>()
             {
@@ -324,7 +324,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
             }).doReadOperation();
         }
 
-    @Override synchronized public Lock getI2cWriteCacheLock(final int physicalPort)
+    @Override public Lock getI2cWriteCacheLock(final int physicalPort)
         {
         return (new ResultableThunk<Lock>()
         {
@@ -335,7 +335,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
         }).doReadOperation();
         }
 
-    @Override synchronized public byte[] getI2cReadCache(final int physicalPort)
+    @Override public byte[] getI2cReadCache(final int physicalPort)
         {
         return (new ResultableThunk<byte[]>()
             {
@@ -346,7 +346,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
             }).doReadOperation();
         }
 
-    @Override synchronized public byte[] getI2cWriteCache(final int physicalPort)
+    @Override public byte[] getI2cWriteCache(final int physicalPort)
         {
         return (new ResultableThunk<byte[]>()
             {
@@ -357,7 +357,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
             }).doReadOperation();
         }
 
-    @Override synchronized public void setI2cPortActionFlag(final int physicalPort)
+    @Override public void setI2cPortActionFlag(final int physicalPort)
         {
         (new NonwaitingThunk()
         {
@@ -368,7 +368,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
         }).doWriteOperation();
         }
 
-    @Override synchronized public boolean isI2cPortActionFlagSet(final int physicalPort)
+    @Override public boolean isI2cPortActionFlagSet(final int physicalPort)
         {
         return (new ResultableThunk<Boolean>()
             {
@@ -379,7 +379,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
             }).doReadOperation();
         }
 
-    @Override synchronized public void readI2cCacheFromModule(final int physicalPort)
+    @Override public void readI2cCacheFromModule(final int physicalPort)
         {
         (new NonwaitingThunk()
             {
@@ -390,7 +390,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
             }).doWriteOperation();
         }
 
-    @Override synchronized public void writeI2cCacheToModule(final int physicalPort)
+    @Override public void writeI2cCacheToModule(final int physicalPort)
         {
         (new NonwaitingThunk()
             {
@@ -401,7 +401,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
             }).doWriteOperation();
         }
 
-    @Override synchronized public void writeI2cPortFlagOnlyToModule(final int physicalPort)
+    @Override public void writeI2cPortFlagOnlyToModule(final int physicalPort)
         {
         (new NonwaitingThunk()
             {
@@ -412,7 +412,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
             }).doWriteOperation();
         }
 
-    @Override synchronized public boolean isI2cPortInReadMode(final int physicalPort)
+    @Override public boolean isI2cPortInReadMode(final int physicalPort)
         {
         return (new ResultableThunk<Boolean>()
             {
@@ -423,7 +423,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
             }).doReadOperation();
         }
 
-    @Override synchronized public boolean isI2cPortInWriteMode(final int physicalPort)
+    @Override public boolean isI2cPortInWriteMode(final int physicalPort)
         {
         return (new ResultableThunk<Boolean>()
             {
@@ -434,7 +434,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
             }).doReadOperation();
         }
 
-    @Override synchronized public boolean isI2cPortReady(final int physicalPort)
+    @Override public boolean isI2cPortReady(final int physicalPort)
         {
         return (new ResultableThunk<Boolean>()
             {
@@ -445,7 +445,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
             }).doReadOperation();
         }
 
-    @Override synchronized public void registerForI2cPortReadyCallback(final I2cController.I2cPortReadyCallback callback, final int physicalPort)
+    @Override public void registerForI2cPortReadyCallback(final I2cController.I2cPortReadyCallback callback, final int physicalPort)
         {
         (new NonwaitingThunk()
             {
@@ -456,7 +456,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
             }).doWriteOperation();
         }
 
-    @Override synchronized public void deregisterForPortReadyCallback(final int physicalPort)
+    @Override public void deregisterForPortReadyCallback(final int physicalPort)
         {
         (new NonwaitingThunk()
             {
@@ -479,7 +479,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     // void close();
 
-    @Override synchronized public void setPulseWidthOutputTime(final int physicalPort, final int var2)
+    @Override public void setPulseWidthOutputTime(final int physicalPort, final int var2)
         {
         (new NonwaitingThunk()
             {
@@ -490,7 +490,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
             }).doWriteOperation();
         }
 
-    @Override synchronized public void setPulseWidthPeriod(final int physicalPort, final int var2)
+    @Override public void setPulseWidthPeriod(final int physicalPort, final int var2)
         {
         (new NonwaitingThunk()
             {
@@ -502,7 +502,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
         }
 
 
-    @Override synchronized public double getPulseWidthOutputTime(final int physicalPort)
+    @Override public double getPulseWidthOutputTime(final int physicalPort)
         {
         return (new ResultableThunk<Double>()
             {
@@ -514,7 +514,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
         }
         
 
-    @Override synchronized public double getPulseWidthPeriod(final int physicalPort)
+    @Override public double getPulseWidthPeriod(final int physicalPort)
         {
         return (new ResultableThunk<Double>()
             {

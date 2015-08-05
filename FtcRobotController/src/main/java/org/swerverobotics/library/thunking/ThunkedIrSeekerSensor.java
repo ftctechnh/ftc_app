@@ -34,7 +34,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
     // HardwareDevice
     //----------------------------------------------------------------------------------------------
 
-    @Override synchronized public void close()
+    @Override public void close()
         {
         (new NonwaitingThunk()
             {
@@ -45,7 +45,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
             }).doWriteOperation();
         }
 
-    @Override synchronized public int getVersion()
+    @Override public int getVersion()
         {
         return (new ResultableThunk<Integer>()
             {
@@ -56,7 +56,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
             }).doReadOperation();
         }
 
-    @Override synchronized public String getConnectionInfo()
+    @Override public String getConnectionInfo()
         {
         return (new ResultableThunk<String>()
             {
@@ -67,7 +67,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
             }).doReadOperation();
         }
 
-    @Override synchronized public String getDeviceName()
+    @Override public String getDeviceName()
         {
         return (new ResultableThunk<String>()
             {
@@ -82,7 +82,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
     // IrSeekerSensor
     //----------------------------------------------------------------------------------------------
 
-    @Override synchronized public void setMode(final IrSeekerSensor.Mode mode)
+    @Override public void setMode(final IrSeekerSensor.Mode mode)
         {
         (new NonwaitingThunk()
             {
@@ -93,7 +93,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
             }).doWriteOperation();
         }
 
-    @Override synchronized public IrSeekerSensor.Mode getMode()
+    @Override public IrSeekerSensor.Mode getMode()
         {
         return (new ResultableThunk<IrSeekerSensor.Mode>()
             {
@@ -104,7 +104,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
             }).doReadOperation();
         }
 
-    @Override synchronized public boolean signalDetected()
+    @Override public boolean signalDetected()
         {
         return (new ResultableThunk<Boolean>()
             {
@@ -115,7 +115,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
             }).doReadOperation();
         }
 
-    @Override synchronized public double getAngle()
+    @Override public double getAngle()
         {
         return (new ResultableThunk<Double>()
             {
@@ -126,7 +126,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
             }).doReadOperation();
         }
 
-    @Override synchronized public double getStrength()
+    @Override public double getStrength()
         {
         return (new ResultableThunk<Double>()
             {
@@ -137,7 +137,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
             }).doReadOperation();
         }
 
-    @Override synchronized public IrSeekerSensor.IrSeekerIndividualSensor[] getIndividualSensors()
+    @Override public IrSeekerSensor.IrSeekerIndividualSensor[] getIndividualSensors()
         {
         return (new ResultableThunk<IrSeekerSensor.IrSeekerIndividualSensor[]>()
             {

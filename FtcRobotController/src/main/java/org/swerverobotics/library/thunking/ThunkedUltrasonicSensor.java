@@ -32,7 +32,7 @@ public class ThunkedUltrasonicSensor extends UltrasonicSensor
     // HardwareDevice
     //----------------------------------------------------------------------------------------------
 
-    @Override synchronized public void close()
+    @Override public void close()
         {
         (new NonwaitingThunk()
             {
@@ -43,7 +43,7 @@ public class ThunkedUltrasonicSensor extends UltrasonicSensor
             }).doWriteOperation();
         }
 
-    @Override synchronized public int getVersion()
+    @Override public int getVersion()
         {
         return (new ResultableThunk<Integer>()
             {
@@ -54,7 +54,7 @@ public class ThunkedUltrasonicSensor extends UltrasonicSensor
             }).doReadOperation();
         }
 
-    @Override synchronized public String getConnectionInfo()
+    @Override public String getConnectionInfo()
         {
         return (new ResultableThunk<String>()
             {
@@ -65,7 +65,7 @@ public class ThunkedUltrasonicSensor extends UltrasonicSensor
             }).doReadOperation();
         }
 
-    @Override synchronized public String getDeviceName()
+    @Override public String getDeviceName()
         {
         return (new ResultableThunk<String>()
             {
@@ -80,7 +80,7 @@ public class ThunkedUltrasonicSensor extends UltrasonicSensor
     // UltrasonicSensor
     //----------------------------------------------------------------------------------------------
 
-    @Override synchronized public double getUltrasonicLevel()
+    @Override public double getUltrasonicLevel()
         {
         return (new ResultableThunk<Double>()
             {
@@ -91,7 +91,7 @@ public class ThunkedUltrasonicSensor extends UltrasonicSensor
             }).doReadOperation();
         }
 
-    @Override synchronized public String status()
+    @Override public String status()
         {
         return (new ResultableThunk<String>()
             {

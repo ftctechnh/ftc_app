@@ -33,7 +33,7 @@ public class ThunkedDigitalChannelController implements DigitalChannelController
     // HardwareDevice
     //----------------------------------------------------------------------------------------------
 
-    @Override public synchronized void close()
+    @Override public void close()
         {
         (new NonwaitingThunk()
             {
@@ -44,7 +44,7 @@ public class ThunkedDigitalChannelController implements DigitalChannelController
             }).doWriteOperation();
         }
 
-    @Override public synchronized int getVersion()
+    @Override public int getVersion()
         {
         return (new ResultableThunk<Integer>()
             {
@@ -55,7 +55,7 @@ public class ThunkedDigitalChannelController implements DigitalChannelController
             }).doReadOperation();
         }
 
-    @Override public synchronized String getConnectionInfo()
+    @Override public String getConnectionInfo()
         {
         return (new ResultableThunk<String>()
             {
@@ -66,7 +66,7 @@ public class ThunkedDigitalChannelController implements DigitalChannelController
             }).doReadOperation();
         }
 
-    @Override public synchronized String getDeviceName()
+    @Override public String getDeviceName()
         {
         return (new ResultableThunk<String>()
             {
@@ -81,7 +81,7 @@ public class ThunkedDigitalChannelController implements DigitalChannelController
     // DigitalChannelController
     //----------------------------------------------------------------------------------------------
 
-    @Override synchronized public SerialNumber getSerialNumber()
+    @Override public SerialNumber getSerialNumber()
         {
         return (new ResultableThunk<SerialNumber>()
             {
@@ -92,7 +92,7 @@ public class ThunkedDigitalChannelController implements DigitalChannelController
             }).doReadOperation();
         }
     
-    @Override synchronized public DigitalChannelController.Mode getDigitalChannelMode(final int channel)
+    @Override public DigitalChannelController.Mode getDigitalChannelMode(final int channel)
         {
         return (new ResultableThunk<DigitalChannelController.Mode>()
             {
@@ -103,7 +103,7 @@ public class ThunkedDigitalChannelController implements DigitalChannelController
             }).doReadOperation();
         }
 
-    @Override synchronized public void setDigitalChannelMode(final int channel, final DigitalChannelController.Mode mode)
+    @Override public void setDigitalChannelMode(final int channel, final DigitalChannelController.Mode mode)
         {
         (new NonwaitingThunk()
             {
@@ -114,7 +114,7 @@ public class ThunkedDigitalChannelController implements DigitalChannelController
             }).doWriteOperation();
         }
         
-    @Override synchronized public boolean getDigitalChannelState(final int channel)
+    @Override public boolean getDigitalChannelState(final int channel)
         {
         return (new ResultableThunk<Boolean>()
             {
@@ -125,7 +125,7 @@ public class ThunkedDigitalChannelController implements DigitalChannelController
             }).doReadOperation();
         }
 
-    @Override synchronized public void setDigitalChannelState(final int channel, final boolean state)
+    @Override public void setDigitalChannelState(final int channel, final boolean state)
         {
         (new NonwaitingThunk()
             {
