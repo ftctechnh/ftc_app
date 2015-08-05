@@ -2,7 +2,7 @@ package org.swerverobotics.library.thunking;
 
 import com.qualcomm.ftcrobotcontroller.*;
 import junit.framework.Assert;
-import org.swerverobotics.library.IAction;
+import org.swerverobotics.library.interfaces.IAction;
 import org.swerverobotics.library.exceptions.SwerveRuntimeException;
 
 import java.util.concurrent.atomic.AtomicInteger;

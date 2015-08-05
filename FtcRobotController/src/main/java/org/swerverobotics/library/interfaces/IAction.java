@@ -1,4 +1,4 @@
-package org.swerverobotics.library;
+package org.swerverobotics.library.interfaces;
 
 /**
  * IAction is an interface for encapsulating work
