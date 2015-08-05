@@ -16,7 +16,7 @@ public abstract class NonwaitingThunk extends ThunkBase
         this.doWriteOperation(null);
         }
 
-    public void doWriteOperation(IThunkedReadWrite writer)
+    public void doWriteOperation(IThunkedReadWriteListener writer)
         {
         // Don't bother doing more work if this thread has been interrupted
         if (!Thread.currentThread().isInterrupted())

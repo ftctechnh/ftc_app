@@ -10,7 +10,7 @@ import org.swerverobotics.library.exceptions.SwerveRuntimeException;
  * by thunking all calls over to the loop thread and back gain. The implementation automatically
  * takes care of read and write device mode switching.
  */
-public class ThunkedMotorController implements DcMotorController, IThunkedReadWrite
+public class ThunkedMotorController implements DcMotorController, IThunkedReadWriteListener
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -38,7 +38,7 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
         }
 
     //----------------------------------------------------------------------------------------------
-    // IThunkedReadWrite interface
+    // IThunkedReadWriteListener interface
     //----------------------------------------------------------------------------------------------
 
     @Override public void enterReadOperation() throws InterruptedException
