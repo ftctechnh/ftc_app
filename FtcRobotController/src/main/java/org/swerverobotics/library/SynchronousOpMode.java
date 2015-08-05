@@ -899,7 +899,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                     }
                 }
         );
-        
+
         createThunks(hwmap.ultrasonicSensor, result.ultrasonicSensor,
                 new IThunkFactory<UltrasonicSensor>()
                 {
