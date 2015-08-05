@@ -37,7 +37,7 @@ public class ThomasCamera {
 
     public ThomasCamera() {
         state = CameraStates.CAMERA_NOT_READY;
-        listenerArrayList = new ArrayList<>();
+        listenerArrayList = new ArrayList();
     }
 
     public void init()

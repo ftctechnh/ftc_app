@@ -16,6 +16,11 @@ public class SpeedTest extends OpMode {
     private long numOfCycles = 0;
 
     @Override
+    public void init() {
+
+    }
+
+    @Override
     public void start() {
         startTime = System.nanoTime();
     }

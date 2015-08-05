@@ -14,6 +14,11 @@ public class MoveForward extends OpMode{
     DcMotor leftMotor;
 
     @Override
+    public void init() {
+
+    }
+
+    @Override
     public void start() {
         hardwareMap.dcMotor.get("RightDriveMotor");
         hardwareMap.dcMotor.get("LeftDriveMotor");

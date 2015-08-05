@@ -22,8 +22,12 @@ public class ThreadedOpModeWrapper extends OpMode {
     private boolean isFirstLoop;
 
     @Override
-    public void start() {
+    public void init() {
         jobThread = new Thread(opModeJob);
+    }
+
+    @Override
+    public void start() {
         opModeJob.start();
         isFirstLoop = true;
     }
