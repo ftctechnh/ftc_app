@@ -33,6 +33,32 @@ public class TeleOp extends SynchronousOpMode
         // so that it can take the same power level values as the other motor.
         this.motorLeft.setDirection(DcMotor.Direction.REVERSE);
 
+        // Configure the dashboard. Here, it will have one line, which will contain three items
+        this.telemetry.dashboard.line
+            (
+             this.telemetry.dashboard.item("left:", new IFunc<Object>()
+                {
+                @Override public Object value()
+                    {
+                    return format(motorLeft.getPower());
+                    }
+                }),
+             this.telemetry.dashboard.item("right: ", new IFunc<Object>()
+                {
+                @Override public Object value()
+                    {
+                    return format(motorLeft.getPower());
+                    }
+                }),
+             this.telemetry.dashboard.item("mode: ", new IFunc<Object>()
+                {
+                @Override public Object value()
+                    {
+                    return format(motorLeft.getChannelMode());
+                    }
+                })
+            );
+        
         // Wait until we've been given the ok to go
         this.waitForStart();
         
@@ -111,5 +137,15 @@ public class TeleOp extends SynchronousOpMode
         float zeroToOne = Math.abs(level);
         float oneToTen  = zeroToOne * 9 + 1;
         return (float)(Math.log10(oneToTen) * Math.signum(level));
+        }
+
+    // Handy functions for formatting data for the dashboard
+    String format(double d)
+        {
+        return String.format("%.1f", d);
+        }
+    String format(DcMotorController.RunMode mode)
+        {
+        return mode.toString();
         }
     }
