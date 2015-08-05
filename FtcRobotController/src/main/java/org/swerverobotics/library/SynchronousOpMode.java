@@ -11,11 +11,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.swerverobotics.library.exceptions.*;
 import org.swerverobotics.library.thunking.*;
 
-// Work items:
-//      * TODO: investigate: 'getPower on legacy NXT-compatible motor controller returns a null value' (eh?)
-//      * TODO: a big once-over for (default)/public/private/protected and/or final on methods and classes
-//      * TODO: make idle() wakeup-able from some external stimulus?
-
 /**
  * SynchronousOpMode is a base class that can be derived from in order to
  * write op modes that can be coded in a linear, synchronous programming style.
@@ -25,6 +20,88 @@ import org.swerverobotics.library.thunking.*;
 public abstract class SynchronousOpMode extends OpMode implements IThunker
     {
     //----------------------------------------------------------------------------------------------
+    // Types
+    //----------------------------------------------------------------------------------------------
+
+    private class ActionQueueAndHistory
+        {
+        ConcurrentLinkedQueue<IAction>  queue   = new ConcurrentLinkedQueue<IAction>(); // could be simpler queue
+        SparseArray<Boolean>            history = new SparseArray<Boolean>(); 
+        
+        synchronized void clear()
+            {
+            this.queue = new ConcurrentLinkedQueue<IAction>();
+            this.clearHistory();
+            }
+        
+        synchronized void clearHistory()
+            {
+            this.history = new SparseArray<Boolean>();
+            this.onChanged();
+            }
+        
+        synchronized void add(IAction action)
+            {
+            this.queue.add(action);
+            this.onChanged();
+            }
+        
+        synchronized IAction poll()
+            {
+            IAction result = this.queue.poll();
+            if (result != null)
+                {
+                if (result instanceof IActionKeyed)
+                    {
+                    IActionKeyed keyed = (IActionKeyed)result;
+                    this.setActionKey(keyed.getActionKey());
+                    }
+                this.onChanged();
+                }
+            return result;
+            }
+        
+        synchronized void setActionKey(int actionKey)
+            {
+            if (actionKey != ThunkBase.nullActionKey)
+                {
+                this.history.setValueAt(actionKey, true);
+                this.onChanged();
+                }
+            }
+        
+        synchronized boolean containsActionKey(int thunkKey)
+            {
+            // Is the key present in pending stuff?
+            for (IAction action : this.queue)
+                {
+                if (action instanceof IActionKeyed)
+                    {
+                    IActionKeyed keyed = (IActionKeyed)action;
+                    if (keyed.getActionKey() == thunkKey)
+                        {
+                        return true;
+                        }
+                    }
+                }
+            
+            // Is the key present in our history?
+            if (this.history.get(thunkKey, false))
+                {
+                return true;
+                }
+            
+            // Not present
+            return false;
+            }
+        
+        private void onChanged()
+            {
+            this.notifyAll();
+            }
+        }
+
+    //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
@@ -33,7 +110,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     private         RuntimeException        exceptionThrownOnMainThread;
     private volatile boolean                started;
     private volatile boolean                stopRequested;
-    private         ConcurrentLinkedQueue<IAction> loopThreadThunkQueue = new ConcurrentLinkedQueue<IAction>();
+    private         ActionQueueAndHistory   actionQueueAndHistory = new ActionQueueAndHistory();
     private         AtomicBoolean           gamePadStateChanged = new AtomicBoolean(false);
     private final   Object                  loopLock = new Object();
     private final   SparseArray<IAction>    singletonLoopActions = new SparseArray<IAction>();
@@ -67,10 +144,10 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     public static final long NANO_TO_MILLI = 1000000;
 
     /**
-     * Advanced: 'nanotimeLoopDwellMax' is the (soft) maximum number of nanoseconds that
+     * Advanced: 'msLoopDwellMax' is the (soft) maximum number of milliseconds that
      * our loop() implementation will spend in any one call before returning.
      */
-    public long msLoopDwellMax = 30;
+    public long msLoopDwellMax = 20;
 
     /**
      * Advanced: loopDwellCheckInterval is the number of thunks we will execute in loop()
@@ -145,7 +222,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      *
      * One can use this method when you have nothing better to do until the underlying
      * robot controller runtime gets back in touch with us. Thread.yield() has similar effects, but
-     * idle() / idleCurrentThread() is more efficient.
+     * idle() / synchronousThreadIdle() is more efficient.
      */
     public final void idle() throws InterruptedException
         {
@@ -156,12 +233,13 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 return;
 
             // Otherwise, we know there's nothing to do until at least the next loop() call.
-            int count = this.loopCount.get();
-            do
-                {
-                this.loopLock.wait();
-                }
-            while (count == this.loopCount.get());    // avoid 'spurious wakeups'
+            // The trouble is, it's hard to know when that is. We might be running here 
+            // *immediately* before loop() is about to run. Looking at loop counts could allow
+            // us to guarantee that we wait at least one whole cycle, yes, but that's overkill,
+            // that's not what we're looking for. So instead, we just wait until loop() pings us
+            // it the bottom of it's cycle, which may be a bit less than a whole loop(), but is
+            // the reasonable compromise.
+            this.loopLock.wait();
             }
         }
 
@@ -170,7 +248,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      *
      * @see #idle()
      */
-    public static void idleCurrentThread() throws InterruptedException
+    public static void synchronousThreadIdle() throws InterruptedException
         {
         getSynchronousOpMode().idle();
         }
@@ -262,7 +340,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
 
         // Paranoia: clear any state that may just perhaps be lingering
         this.clearSingletons();
-        this.loopThreadThunkQueue.clear();
+        this.actionQueueAndHistory.clear();
 
         // We're being asked to start, not stop
         this.started = false;
@@ -296,7 +374,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         // Call the subclass hook in case they might want to do something interesting
         this.postStartHook();
         }
-
+    
     /**
      * The robot controller runtime calls loop() on a frequent basis, nominally every
      * 20ms or so.
@@ -309,6 +387,8 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         synchronized (this.loopLock)
             {
             this.loopCount.getAndIncrement();
+            
+            this.actionQueueAndHistory.clearHistory();
             
             // If we had an exception thrown by the main thread, then throw it here. 'Sort
             // of like thunking the exceptions.
@@ -336,20 +416,26 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
             // Call the subclass hook in case they might want to do something interesting
             this.midLoopHook();
 
-            // Start measuring time so we don't spend too long here in loop()
+            // Start measuring time so we don't spend too long here in loop(). That might
+            // happen if we got flooded with a bevy of non-waiting actions and we didn't have
+            // this check here.
             long nanotimeStart = System.nanoTime();
             long nanotimeMax   = nanotimeStart + this.msLoopDwellMax * NANO_TO_MILLI;
 
-            // Execute any thunks we've been asked to execute here on the loop thread
+            // Execute any actions we've been asked to execute here on the loop thread
             for (int i = 1; ; i++)
                 {
                 // Get the next work item in the queue. Get out of here if there isn't any more work.
-                IAction thunk = this.loopThreadThunkQueue.poll();
-                if (null == thunk)
-                    break;
+                IAction action;
+                synchronized (this.actionQueueAndHistory)
+                    {
+                    action = this.actionQueueAndHistory.poll();
+                    if (null == action)
+                        break;
+                    }
 
                 // Execute the work that needs to be done on the loop thread
-                thunk.doAction();
+                action.doAction();
 
                 // Periodically check whether we've run long enough for this loop() call.
                 if (i % this.loopDwellCheckCount == 0)
@@ -366,22 +452,40 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 action.doAction();
                 }
 
-            // Let everyone who was waiting for the next loop call go again
+            // Tell people that this loop cycle is complete
             this.loopLock.notifyAll();
             }
 
         // Call the subclass hook in case they might want to do something interesting
         this.postLoopHook();
         }
+    
+    /**
+     * Wait until we encounter a loop() cycle that doesn't (yet) contain any actions which
+     * are also thunks and whose key is the one indicated. Once we get to that state, atomically
+     * claim that a new actionKey has in fact been executed (if that's not the null key).
+     */
+    public void waitForLoopCycleEmptyOfActionKey(int actionKey, int claimKey) throws InterruptedException
+        {
+        synchronized (this.actionQueueAndHistory)
+            {
+            while (this.actionQueueAndHistory.containsActionKey(actionKey))
+                {
+                this.actionQueueAndHistory.wait();
+                }
+            this.actionQueueAndHistory.setActionKey(claimKey);
+            }
+        }
+    public static void synchronousThreadWaitForLoopCycleEmptyOfActionKey(int actionKey, int claimKey) throws InterruptedException
+        {
+        SynchronousOpMode.getSynchronousOpMode().waitForLoopCycleEmptyOfActionKey(actionKey, claimKey);
+        }
 
     /**
-     * The robot controller runtime calls stop() to shut down the OpMode.
+     * The robot controller runtime calls stop() to shut down the OpMode. 
      *
-     * It will in particular ALWAYS be the case that by the time this stop() method returns that
-     * the thread on which main() is executed will have been terminated. Well, at least that's
-     * the invariant we would LIKE to maintain. Unfortunately, there appears to be simply no way
-     * (any longer) to get rid of a thread that simply refuses to die in response to an interrupt.
-     * So we give the main() thread ample time to die, but hang here forever if it doesn't.
+     * We take steps as best as is possible to ensure that the main() thread is terminated
+     * before this call returns.
      */
     @Override public final void stop()
         {
@@ -395,26 +499,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         // up, and return.
         this.mainThread.interrupt();
 
-        /*
-        // Wait, briefly, to give the thread a chance to handle the interruption and complete
-        // gracefully on its own volition.
-        try {
-            this.mainThread.join(msWaitThreadStop);
-            }
-        catch (InterruptedException ignored) { }
-
-        // If after our brief wait the thread is still alive then give it a kick
-        if (this.mainThread.isAlive())
-            {
-            // Under all circumstances, make sure the thread shuts down, even if the
-            // programmer hasn't handled interruption (for example, he might have entered
-            // an infinite loop, or a very long one at least).
-            this.mainThread.stop();
-            }
-        */
-
-        // Ok, one of those two ways should have worked. Wait (indefinitely) until
-        // the thread is no longer alive.
+        // Wait (indefinitely) until the thread is no longer alive.
         try {
             this.mainThread.join();
             }
@@ -507,7 +592,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         return SynchronousThreadContext.getThreadContext().getThunker();
         }
 
-    private static SynchronousOpMode getSynchronousOpMode()
+    private static SynchronousOpMode getSynchronousOpMode()        
         {
         return (SynchronousOpMode)(getThreadThunker());
         }
@@ -557,10 +642,10 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     /**
      * Advanced: Execute the indicated action on the loop thread given that we are on a synchronous thread
      */
-    public void executeOnLoopThread(IAction thunk)
+    public void executeOnLoopThread(IAction action)
         {
         if (BuildConfig.DEBUG) Assert.assertEquals(true, this.isSynchronousThread());
-        this.loopThreadThunkQueue.add(thunk);
+        this.actionQueueAndHistory.add(action);
         }
 
     /**
@@ -657,15 +742,90 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 }
         );
 
+        createThunks(hwmap.deviceInterfaceModule, result.deviceInterfaceModule,
+                new IThunkFactory<DeviceInterfaceModule>()
+                {
+                @Override public DeviceInterfaceModule create(DeviceInterfaceModule target)
+                    {
+                    return ThunkedDeviceInterfaceModule.create(target);
+                    }
+                }
+        );
+
+        createThunks(hwmap.analogInput, result.analogInput,
+                new IThunkFactory<AnalogInput>()
+                {
+                @Override public AnalogInput create(AnalogInput target)
+                    {
+                    return new ThreadSafeAnalogInput(
+                        ThunkedAnalogInputController.create(ThreadSafeAnalogInput.getController(target)),
+                        ThreadSafeAnalogInput.getChannel(target)
+                        );
+                    }
+                }
+        );
+
+        createThunks(hwmap.analogOutput, result.analogOutput,
+                new IThunkFactory<AnalogOutput>()
+                {
+                @Override public AnalogOutput create(AnalogOutput target)
+                    {
+                    return new ThreadSafeAnalogOutput(
+                            ThunkedAnalogOutputController.create(ThreadSafeAnalogOutput.getController(target)),
+                            ThreadSafeAnalogOutput.getChannel(target)
+                    );
+                    }
+                }
+        );
+
+        createThunks(hwmap.pwmOutput, result.pwmOutput,
+                new IThunkFactory<PWMOutput>()
+                {
+                @Override public PWMOutput create(PWMOutput target)
+                    {
+                    return new ThreadSafePWMOutput(
+                            ThunkedPWMOutputController.create(ThreadSafePWMOutput.getController(target)),
+                            ThreadSafePWMOutput.getChannel(target)
+                    );
+                    }
+                }
+        );
+
+        createThunks(hwmap.i2cDevice, result.i2cDevice,
+                new IThunkFactory<I2cDevice>()
+                {
+                @Override public I2cDevice create(I2cDevice target)
+                    {
+                    return new ThreadSafeI2cDevice(
+                            ThunkedI2cController.create(ThreadSafeI2cDevice.getController(target)),
+                            ThreadSafeI2cDevice.getChannel(target)
+                    );
+                    }
+                }
+        );
+
+        createThunks(hwmap.digitalChannel, result.digitalChannel,
+                new IThunkFactory<DigitalChannel>()
+                {
+                @Override public DigitalChannel create(DigitalChannel target)
+                    {
+                    return new ThreadSafeDigitalChannel(
+                            ThunkedDigitalChannelController.create(ThreadSafeDigitalChannel.getController(target)),
+                            ThreadSafeDigitalChannel.getChannel(target)
+                        );
+                    }
+                }
+        );
+
         createThunks(hwmap.dcMotor, result.dcMotor,
                 new IThunkFactory<DcMotor>()
                 {
                 @Override public DcMotor create(DcMotor target)
                     {
                     return new ThreadSafeDcMotor(
-                            ThunkedMotorController.create(target.getController()),
-                            target.getPortNumber(),
-                            target.getDirection()
+                        ThunkedMotorController.create(target.getController()),
+                        target.getPortNumber(),
+                        target.getDirection()
                     );
                     }
                 }
@@ -678,9 +838,9 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 public com.qualcomm.robotcore.hardware.Servo create(com.qualcomm.robotcore.hardware.Servo target)
                     {
                     return new ThreadSafeServo(
-                            ThunkedServoController.create(target.getController()),
-                            target.getPortNumber(),
-                            target.getDirection()
+                        ThunkedServoController.create(target.getController()),
+                        target.getPortNumber(),
+                        target.getDirection()
                     );
                     }
                 }
@@ -732,6 +892,26 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 @Override public LightSensor create(LightSensor target)
                     {
                     return ThunkedLightSensor.create(target);
+                    }
+                }
+        );
+
+        createThunks(hwmap.opticalDistanceSensor, result.opticalDistanceSensor,
+                new IThunkFactory<OpticalDistanceSensor>()
+                {
+                @Override public OpticalDistanceSensor create(OpticalDistanceSensor target)
+                    {
+                    return ThunkedOpticalDistanceSensor.create(target);
+                    }
+                }
+        );
+
+        createThunks(hwmap.touchSensor, result.touchSensor,
+                new IThunkFactory<TouchSensor>()
+                {
+                @Override public TouchSensor create(TouchSensor target)
+                    {
+                    return ThunkedTouchSensor.create(target);
                     }
                 }
         );

@@ -1,7 +1,6 @@
 package org.swerverobotics.library.thunking;
 
 import com.qualcomm.robotcore.hardware.*;
-import com.qualcomm.robotcore.util.*;
 
 import org.swerverobotics.library.SynchronousOpMode;
 import org.swerverobotics.library.exceptions.SwerveRuntimeException;
@@ -11,7 +10,7 @@ import org.swerverobotics.library.exceptions.SwerveRuntimeException;
  * by thunking all calls over to the loop thread and back gain. The implementation automatically
  * takes care of read and write device mode switching.
  */
-public class ThunkedMotorController implements DcMotorController, IThunkedReadWrite
+public class ThunkedMotorController implements DcMotorController, IThunkedReadWriteListener
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -19,7 +18,9 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
 
     public  DcMotorController target;          // can only talk to him on the loop thread
     private DeviceMode        controllerMode;  // the last mode we know the controller to be in
-
+    private int               deviceReadThunkKey  = ThunkBase.getNewActionKey();
+    private int               deviceWriteThunkKey = ThunkBase.getNewActionKey();
+    
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
@@ -37,17 +38,24 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
         }
 
     //----------------------------------------------------------------------------------------------
-    // IThunkedReadWrite interface
+    // IThunkedReadWriteListener interface
     //----------------------------------------------------------------------------------------------
 
     @Override public void enterReadOperation() throws InterruptedException
         {
         this.switchToMode(DeviceMode.READ_ONLY);
         }
-
     @Override public void enterWriteOperation() throws InterruptedException
         {
         this.switchToMode(DeviceMode.WRITE_ONLY);
+        }
+    @Override public int getListenerReadThunkKey()
+        {
+        return this.deviceReadThunkKey;
+        }
+    @Override public int getListenerWriteThunkKey()
+        {
+        return this.deviceWriteThunkKey;
         }
 
     /**
@@ -89,7 +97,7 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
                 if (this.controllerMode == DeviceMode.SWITCHING_TO_READ_MODE ||
                     this.controllerMode == DeviceMode.SWITCHING_TO_WRITE_MODE)
                     {
-                    SynchronousOpMode.idleCurrentThread();
+                    SynchronousOpMode.synchronousThreadIdle();
                     }
                 else
                     break;
@@ -104,10 +112,43 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
         // spin until he gets there.
         if (this.controllerMode != newMode)
             {
+            // We need to complete any existing thunks (we could be more refined, but that suffices)
+            // as, to quote Johnathan Berling:
+            //
+            // http://ftcforum.usfirst.org/showthread.php?4352-Legacy-Motor-controller-write-to-read-mode-amount-of-time/page3
+            /*
+            When the loop call finishes, all commands are sent simultaneously to the device. So, it 
+            simultaneously gets put into read mode and told to change the channel mode. In this case 
+            it can't comply with the command to switch the channel mode since the port is in read mode.
+
+                Code:
+                motorLeft.setTargetPosition(firstTarget);
+                motorRight.setTargetPosition(-firstTarget);
+                
+                motorLeft.setPower(1.0);
+                motorRight.setPower(1.0);
+                
+                wheelController.setMotorControllerDeviceMode(DcMot orController.DeviceMode.READ_ONLY);
+                
+            In this case, all of the lines above the READ_ONL   Y line won't take effect until the 
+            device is placed back into write mode.
+            */
+            // What this says is that if you're switching to a new mode then there better not
+            // be any existing commands still in the queue for that device. In effect, mode switches 
+            // should (conservatively) happen at the TOP of a loop() call so that they are compatible 
+            // with anything else that is issued to that controller in that call.
+            
+            int oppositeKey = newMode==DeviceMode.READ_ONLY ? this.deviceWriteThunkKey : this.deviceReadThunkKey;
+            int claimKey    = newMode==DeviceMode.READ_ONLY ? this.deviceReadThunkKey  : this.deviceWriteThunkKey;
+            SynchronousOpMode.synchronousThreadWaitForLoopCycleEmptyOfActionKey(oppositeKey, claimKey);
+
+            // Tell him to switch
             this.setMotorControllerDeviceMode(newMode);
+            
+            // Wait until he gets there
             do
                 {
-                SynchronousOpMode.idleCurrentThread();
+                SynchronousOpMode.synchronousThreadIdle();
                 this.controllerMode = this.getMotorControllerDeviceMode();
                 }
             while (this.controllerMode != newMode);
@@ -166,10 +207,12 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
     // DcMotorController interface
     //----------------------------------------------------------------------------------------------
 
-    @Override public synchronized void setMotorControllerDeviceMode(final DcMotorController.DeviceMode mode)
-    // setMotorControllerDeviceMode is neither a 'read' nor a 'write' operation; it's internal
+    @Override public synchronized void setMotorControllerDeviceMode(final DeviceMode mode)
+    // setMotorControllerDeviceMode is neither a 'read' nor a 'write' operation; it's internal, 
+    // so we don't call doReadOperation() or doWriteOperation().
         {
-        NonwaitingThunk thunk = (new NonwaitingThunk()
+        int thunkKey = mode==DeviceMode.READ_ONLY ? this.deviceReadThunkKey : this.deviceWriteThunkKey;
+        NonwaitingThunk thunk = (new NonwaitingThunk(thunkKey)
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -190,7 +233,7 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
         this.controllerMode = null;
         }
 
-    @Override public synchronized DcMotorController.DeviceMode getMotorControllerDeviceMode()
+    @Override public synchronized DeviceMode getMotorControllerDeviceMode()
     // getMotorControllerDeviceMode is neither a 'read' nor a 'write' operation; it's internal
         {
         ResultableThunk<DeviceMode> thunk = (new ResultableThunk<DeviceMode>()
@@ -206,6 +249,7 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
             }
         catch (InterruptedException e)
             {
+            this.controllerMode = null;         // paranoia
             throw SwerveRuntimeException.Wrap(e);
             }
 

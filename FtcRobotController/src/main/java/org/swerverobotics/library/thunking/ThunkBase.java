@@ -3,20 +3,30 @@ package org.swerverobotics.library.thunking;
 import com.qualcomm.ftcrobotcontroller.*;
 import junit.framework.Assert;
 import org.swerverobotics.library.IAction;
-import org.swerverobotics.library.SynchronousOpMode;
 import org.swerverobotics.library.exceptions.SwerveRuntimeException;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * ThunkBase contains most of the functionality for thunking
  */
-public abstract class ThunkBase implements IAction
+public abstract class ThunkBase implements IAction, IActionKeyed
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    SynchronousThreadContext context;
+    private SynchronousThreadContext context;
+    public  int                      actionKey = nullActionKey;
 
+    public static final int          nullActionKey = 0;
+    static AtomicInteger             prevActionKey = new AtomicInteger(nullActionKey);
+    
+    public static int getNewActionKey()
+        {
+        return prevActionKey.incrementAndGet();
+        }
+    
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
@@ -25,9 +35,23 @@ public abstract class ThunkBase implements IAction
         {
         this.context = SynchronousThreadContext.getThreadContext();
         }
+    public ThunkBase(int actionKey)
+        {
+        this.context = SynchronousThreadContext.getThreadContext();
+        this.actionKey = actionKey;
+        }
 
     //----------------------------------------------------------------------------------------------
-    // State
+    // IActionKeyed
+    //----------------------------------------------------------------------------------------------
+    
+    @Override public int getActionKey()
+        {
+        return this.actionKey;
+        }
+    
+    //----------------------------------------------------------------------------------------------
+    // Actions
     //----------------------------------------------------------------------------------------------
 
     public void doLoopThreadCore()
