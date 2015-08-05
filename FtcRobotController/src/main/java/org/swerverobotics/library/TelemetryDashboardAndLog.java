@@ -215,12 +215,17 @@ public class TelemetryDashboardAndLog
         // State
         //------------------------------------------------------------------------------------------
 
-        private Queue<String> logQueue = new LinkedList<String>();
+        private Vector<String> logQueue = new Vector<String>();
         private boolean       newLogMessagesAvailable = false;
         private int           capacity = 0;     // this gets automatically computed
 
         // We just use the outer class so as to *mindlessly* avoid any potential deadlocks
         private Object getLock() { return TelemetryDashboardAndLog.this; }
+
+        /**
+         * Is the log shown in reversed order instead of normal order?
+         */
+        public boolean        displayOldToNew = true;
 
         //------------------------------------------------------------------------------------------
         // Operations
@@ -248,7 +253,7 @@ public class TelemetryDashboardAndLog
                 {
                 while (this.logQueue.size() > this.capacity)
                     {
-                    this.logQueue.remove();
+                    this.logQueue.remove(0);
                     }
                 }
             }
@@ -288,7 +293,7 @@ public class TelemetryDashboardAndLog
      * 'telemetryDisplayLineCount' is the number of visible lines we have room for on the
      * driver station.
      */
-    public int                      telemetryDisplayLineCount = 7;
+    public int                      telemetryDisplayLineCount = 9;
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -381,13 +386,15 @@ public class TelemetryDashboardAndLog
                         iLine++;
                         }
 
-                    for (String s : log.logQueue)
+                    int size = log.logQueue.size();
+                    for (int i=0; i < size; i++)
                         {
+                        String s = log.displayOldToNew ? log.logQueue.elementAt(i) : log.logQueue.elementAt(size-1-i);
                         keys.add(getKey(iLine));
                         values.add(s);
                         iLine++;
                         }
-
+                    
                     IAction action = new IAction()
                         {
                         @Override public void doAction()
