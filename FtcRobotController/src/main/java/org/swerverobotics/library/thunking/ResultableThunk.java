@@ -19,7 +19,7 @@ public abstract class ResultableThunk<T> extends WaitingThunk
         return this.doReadOperation(null);
         }
 
-    public T doReadOperation(IThunkedReadWrite reader)
+    public T doReadOperation(IThunkedReadWriteListener reader)
         {
         // Don't bother doing more work if we've been interrupted
         if (!Thread.currentThread().isInterrupted())
