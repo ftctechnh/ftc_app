@@ -33,7 +33,7 @@ public class ThunkedPWMOutputController implements PWMOutputController
     // PWMOutputController
     //----------------------------------------------------------------------------------------------
 
-    @Override public synchronized void close()
+    @Override public void close()
         {
         (new NonwaitingThunk()
         {
@@ -44,7 +44,7 @@ public class ThunkedPWMOutputController implements PWMOutputController
         }).doWriteOperation();
         }
 
-    @Override public synchronized int getVersion()
+    @Override public int getVersion()
         {
         return (new ResultableThunk<Integer>()
         {
@@ -55,7 +55,7 @@ public class ThunkedPWMOutputController implements PWMOutputController
         }).doReadOperation();
         }
 
-    @Override public synchronized String getDeviceName()
+    @Override public String getDeviceName()
         {
         return (new ResultableThunk<String>()
         {
@@ -66,7 +66,7 @@ public class ThunkedPWMOutputController implements PWMOutputController
         }).doReadOperation();
         }
 
-    @Override synchronized public SerialNumber getSerialNumber()
+    @Override public SerialNumber getSerialNumber()
         {
         return (new ResultableThunk<SerialNumber>()
             {
@@ -77,7 +77,7 @@ public class ThunkedPWMOutputController implements PWMOutputController
             }).doReadOperation();
         }
 
-    @Override synchronized public void setPulseWidthOutputTime(final int channel, final int time)
+    @Override public void setPulseWidthOutputTime(final int channel, final int time)
         {
         (new NonwaitingThunk()
             {
@@ -88,7 +88,7 @@ public class ThunkedPWMOutputController implements PWMOutputController
             }).doWriteOperation();
         }
 
-    @Override synchronized public void setPulseWidthPeriod(final int channel, final int period)
+    @Override public void setPulseWidthPeriod(final int channel, final int period)
         {
         (new NonwaitingThunk()
             {
@@ -99,7 +99,7 @@ public class ThunkedPWMOutputController implements PWMOutputController
             }).doWriteOperation();
         }
 
-    @Override synchronized public double getPulseWidthOutputTime(final int channel)
+    @Override public double getPulseWidthOutputTime(final int channel)
         {
         return (new ResultableThunk<Double>()
             {
@@ -110,7 +110,7 @@ public class ThunkedPWMOutputController implements PWMOutputController
             }).doReadOperation();
         }
 
-    @Override synchronized public double getPulseWidthPeriod(final int channel)
+    @Override public double getPulseWidthPeriod(final int channel)
         {
         return (new ResultableThunk<Double>()
             {

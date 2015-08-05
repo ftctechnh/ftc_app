@@ -35,7 +35,7 @@ public class ThunkedI2cController implements I2cController
     // I2cController
     //----------------------------------------------------------------------------------------------
 
-    @Override public synchronized void close()
+    @Override public void close()
         {
         (new NonwaitingThunk()
         {
@@ -46,7 +46,7 @@ public class ThunkedI2cController implements I2cController
         }).doWriteOperation();
         }
 
-    @Override public synchronized int getVersion()
+    @Override public int getVersion()
         {
         return (new ResultableThunk<Integer>()
         {
@@ -57,7 +57,7 @@ public class ThunkedI2cController implements I2cController
         }).doReadOperation();
         }
 
-    @Override public synchronized String getDeviceName()
+    @Override public String getDeviceName()
         {
         return (new ResultableThunk<String>()
         {
@@ -68,7 +68,7 @@ public class ThunkedI2cController implements I2cController
         }).doReadOperation();
         }
 
-    @Override synchronized public SerialNumber getSerialNumber()
+    @Override public SerialNumber getSerialNumber()
         {
         return (new ResultableThunk<SerialNumber>()
         {
@@ -79,7 +79,7 @@ public class ThunkedI2cController implements I2cController
         }).doReadOperation();
         }
 
-    @Override synchronized public void enableI2cReadMode(final int physicalPort, final int i2cAddress, final int memAddress, final int length)
+    @Override public void enableI2cReadMode(final int physicalPort, final int i2cAddress, final int memAddress, final int length)
         {
         (new NonwaitingThunk()
         {
@@ -90,7 +90,7 @@ public class ThunkedI2cController implements I2cController
         }).doWriteOperation();
         }
 
-    @Override synchronized public void enableI2cWriteMode(final int physicalPort, final int i2cAddress, final int memAddress, final int length)
+    @Override public void enableI2cWriteMode(final int physicalPort, final int i2cAddress, final int memAddress, final int length)
         {
         (new NonwaitingThunk()
         {
@@ -101,7 +101,7 @@ public class ThunkedI2cController implements I2cController
         }).doWriteOperation();
         }
 
-    @Override synchronized public Lock getI2cReadCacheLock(final int physicalPort)
+    @Override public Lock getI2cReadCacheLock(final int physicalPort)
         {
         return (new ResultableThunk<Lock>()
         {
@@ -112,7 +112,7 @@ public class ThunkedI2cController implements I2cController
         }).doReadOperation();
         }
 
-    @Override synchronized public Lock getI2cWriteCacheLock(final int physicalPort)
+    @Override public Lock getI2cWriteCacheLock(final int physicalPort)
         {
         return (new ResultableThunk<Lock>()
         {
@@ -123,7 +123,7 @@ public class ThunkedI2cController implements I2cController
         }).doReadOperation();
         }
 
-    @Override synchronized public byte[] getI2cReadCache(final int physicalPort)
+    @Override public byte[] getI2cReadCache(final int physicalPort)
         {
         return (new ResultableThunk<byte[]>()
         {
@@ -134,7 +134,7 @@ public class ThunkedI2cController implements I2cController
         }).doReadOperation();
         }
 
-    @Override synchronized public byte[] getI2cWriteCache(final int physicalPort)
+    @Override public byte[] getI2cWriteCache(final int physicalPort)
         {
         return (new ResultableThunk<byte[]>()
         {
@@ -145,7 +145,7 @@ public class ThunkedI2cController implements I2cController
         }).doReadOperation();
         }
 
-    @Override synchronized public void setI2cPortActionFlag(final int physicalPort)
+    @Override public void setI2cPortActionFlag(final int physicalPort)
         {
         (new NonwaitingThunk()
         {
@@ -156,7 +156,7 @@ public class ThunkedI2cController implements I2cController
         }).doWriteOperation();
         }
 
-    @Override synchronized public boolean isI2cPortActionFlagSet(final int physicalPort)
+    @Override public boolean isI2cPortActionFlagSet(final int physicalPort)
         {
         return (new ResultableThunk<Boolean>()
         {
@@ -167,7 +167,7 @@ public class ThunkedI2cController implements I2cController
         }).doReadOperation();
         }
 
-    @Override synchronized public void readI2cCacheFromModule(final int physicalPort)
+    @Override public void readI2cCacheFromModule(final int physicalPort)
         {
         (new NonwaitingThunk()
         {
@@ -178,7 +178,7 @@ public class ThunkedI2cController implements I2cController
         }).doWriteOperation();
         }
 
-    @Override synchronized public void writeI2cCacheToModule(final int physicalPort)
+    @Override public void writeI2cCacheToModule(final int physicalPort)
         {
         (new NonwaitingThunk()
         {
@@ -189,7 +189,7 @@ public class ThunkedI2cController implements I2cController
         }).doWriteOperation();
         }
 
-    @Override synchronized public void writeI2cPortFlagOnlyToModule(final int physicalPort)
+    @Override public void writeI2cPortFlagOnlyToModule(final int physicalPort)
         {
         (new NonwaitingThunk()
         {
@@ -200,7 +200,7 @@ public class ThunkedI2cController implements I2cController
         }).doWriteOperation();
         }
 
-    @Override synchronized public boolean isI2cPortInReadMode(final int physicalPort)
+    @Override public boolean isI2cPortInReadMode(final int physicalPort)
         {
         return (new ResultableThunk<Boolean>()
         {
@@ -211,7 +211,7 @@ public class ThunkedI2cController implements I2cController
         }).doReadOperation();
         }
 
-    @Override synchronized public boolean isI2cPortInWriteMode(final int physicalPort)
+    @Override public boolean isI2cPortInWriteMode(final int physicalPort)
         {
         return (new ResultableThunk<Boolean>()
         {
@@ -222,7 +222,7 @@ public class ThunkedI2cController implements I2cController
         }).doReadOperation();
         }
 
-    @Override synchronized public boolean isI2cPortReady(final int physicalPort)
+    @Override public boolean isI2cPortReady(final int physicalPort)
         {
         return (new ResultableThunk<Boolean>()
         {
@@ -233,7 +233,7 @@ public class ThunkedI2cController implements I2cController
         }).doReadOperation();
         }
 
-    @Override synchronized public void registerForI2cPortReadyCallback(final I2cController.I2cPortReadyCallback callback, final int physicalPort)
+    @Override public void registerForI2cPortReadyCallback(final I2cController.I2cPortReadyCallback callback, final int physicalPort)
         {
         (new NonwaitingThunk()
         {
@@ -244,7 +244,7 @@ public class ThunkedI2cController implements I2cController
         }).doWriteOperation();
         }
 
-    @Override synchronized public  void deregisterForPortReadyCallback(final int physicalPort)
+    @Override public void deregisterForPortReadyCallback(final int physicalPort)
         {
         (new NonwaitingThunk()
         {

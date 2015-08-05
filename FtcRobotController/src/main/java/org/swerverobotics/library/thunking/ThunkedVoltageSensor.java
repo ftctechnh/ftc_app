@@ -32,7 +32,7 @@ public class ThunkedVoltageSensor implements VoltageSensor
     // HardwareDevice
     //----------------------------------------------------------------------------------------------
 
-    @Override synchronized public void close()
+    @Override public void close()
         {
         (new NonwaitingThunk()
             {
@@ -43,7 +43,7 @@ public class ThunkedVoltageSensor implements VoltageSensor
             }).doWriteOperation();
         }
 
-    @Override synchronized public int getVersion()
+    @Override public int getVersion()
         {
         return (new ResultableThunk<Integer>()
             {
@@ -54,7 +54,7 @@ public class ThunkedVoltageSensor implements VoltageSensor
             }).doReadOperation();
         }
 
-    @Override synchronized public String getConnectionInfo()
+    @Override public String getConnectionInfo()
         {
         return (new ResultableThunk<String>()
             {
@@ -65,7 +65,7 @@ public class ThunkedVoltageSensor implements VoltageSensor
             }).doReadOperation();
         }
 
-    @Override synchronized public String getDeviceName()
+    @Override public String getDeviceName()
         {
         return (new ResultableThunk<String>()
             {
@@ -80,7 +80,7 @@ public class ThunkedVoltageSensor implements VoltageSensor
     // VoltageSensor
     //----------------------------------------------------------------------------------------------
 
-    @Override synchronized public double getVoltage()
+    @Override public double getVoltage()
         {
         return (new ResultableThunk<Double>()
             {

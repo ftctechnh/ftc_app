@@ -33,7 +33,7 @@ public class ThunkedAnalogInputController implements AnalogInputController
     // HardwareDevice
     //----------------------------------------------------------------------------------------------
 
-    @Override synchronized public void close()
+    @Override public void close()
         {
         (new NonwaitingThunk()
         {
@@ -44,7 +44,7 @@ public class ThunkedAnalogInputController implements AnalogInputController
         }).doWriteOperation();
         }
 
-    @Override synchronized public int getVersion()
+    @Override public int getVersion()
         {
         return (new ResultableThunk<Integer>()
         {
@@ -55,7 +55,7 @@ public class ThunkedAnalogInputController implements AnalogInputController
         }).doReadOperation();
         }
 
-    @Override synchronized public String getConnectionInfo()
+    @Override public String getConnectionInfo()
         {
         return (new ResultableThunk<String>()
         {
@@ -66,7 +66,7 @@ public class ThunkedAnalogInputController implements AnalogInputController
         }).doReadOperation();
         }
 
-    @Override synchronized public String getDeviceName()
+    @Override public String getDeviceName()
         {
         return (new ResultableThunk<String>()
         {
@@ -81,7 +81,7 @@ public class ThunkedAnalogInputController implements AnalogInputController
     // AnalogInputController
     //----------------------------------------------------------------------------------------------
 
-    @Override synchronized public SerialNumber getSerialNumber()
+    @Override public SerialNumber getSerialNumber()
         {
         return (new ResultableThunk<SerialNumber>()
             {
@@ -92,7 +92,7 @@ public class ThunkedAnalogInputController implements AnalogInputController
             }).doReadOperation();
         }
 
-    @Override synchronized public int getAnalogInputValue(final int channel)
+    @Override public int getAnalogInputValue(final int channel)
         {
         return (new ResultableThunk<Integer>()
             {

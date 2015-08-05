@@ -33,7 +33,7 @@ public class ThunkedAnalogOutputController implements AnalogOutputController
     // AnalogOutputController
     //----------------------------------------------------------------------------------------------
 
-    @Override synchronized public void close()
+    @Override public void close()
         {
         (new NonwaitingThunk()
             {
@@ -44,7 +44,7 @@ public class ThunkedAnalogOutputController implements AnalogOutputController
             }).doWriteOperation();
         }
 
-    @Override synchronized public int getVersion()
+    @Override public int getVersion()
         {
         return (new ResultableThunk<Integer>()
             {
@@ -55,7 +55,7 @@ public class ThunkedAnalogOutputController implements AnalogOutputController
             }).doReadOperation();
         }
 
-    @Override synchronized public String getDeviceName()
+    @Override public String getDeviceName()
         {
         return (new ResultableThunk<String>()
             {
@@ -66,7 +66,7 @@ public class ThunkedAnalogOutputController implements AnalogOutputController
             }).doReadOperation();
         }
     
-    @Override synchronized public SerialNumber getSerialNumber()
+    @Override public SerialNumber getSerialNumber()
         {
         return (new ResultableThunk<SerialNumber>()
             {
@@ -77,7 +77,7 @@ public class ThunkedAnalogOutputController implements AnalogOutputController
             }).doReadOperation();
         }
 
-    @Override synchronized public void setAnalogOutputVoltage(final int channel, final int voltage)
+    @Override public void setAnalogOutputVoltage(final int channel, final int voltage)
         {
         (new NonwaitingThunk()
             {
@@ -88,7 +88,7 @@ public class ThunkedAnalogOutputController implements AnalogOutputController
             }).doWriteOperation();
         }
 
-    @Override synchronized public  void setAnalogOutputFrequency(final int channel, final int freq)
+    @Override public void setAnalogOutputFrequency(final int channel, final int freq)
         {
         (new NonwaitingThunk()
             {
@@ -99,7 +99,7 @@ public class ThunkedAnalogOutputController implements AnalogOutputController
             }).doWriteOperation();
         }
 
-    @Override synchronized public  void setAnalogOutputMode(final int channel, final byte mode)
+    @Override public void setAnalogOutputMode(final int channel, final byte mode)
         {
         (new NonwaitingThunk()
             {
