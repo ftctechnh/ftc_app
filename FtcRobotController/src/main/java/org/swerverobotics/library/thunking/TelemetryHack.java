@@ -2,6 +2,7 @@ package org.swerverobotics.library.thunking;
 
 import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.robocol.Telemetry;
+import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.Iterator;
@@ -10,136 +11,176 @@ import java.util.Map;
 /**
  * This is a doozy of a hack. All just to make the output look prettier by having
  * a reasonable sort order. Sorry folks! Maybe we can remove this at some future date.
+ * I sure hope so.
  */
 public class TelemetryHack extends com.qualcomm.robotcore.robocol.Telemetry
     {
-    private static final Charset a = Charset.forName("UTF-8");
-    Map<String,String> b;
-    Map<String,Float> c;
-    String d;
-    long e;
+    //----------------------------------------------------------------------------------------------
+    // State
+    //----------------------------------------------------------------------------------------------
     
+    private static final Charset utf8Charset = Charset.forName("UTF-8");
+    Map<String,String> stringDataPoints;
+    Map<String,Float> numberDataPoints;
+    Field fieldTelemetryTag;
+    Field fieldTimeStamp;
+
+    String getTelemetryTag()
+        {
+        try {
+            return (String)this.fieldTelemetryTag.get(this);
+            }
+        catch (Exception e)
+            {
+            return "TELEMETRY_DATA";
+            }
+        }
+    void setTimeStamp(long timestamp)
+        {
+        try { this.fieldTimeStamp.setLong(this, timestamp); } catch (Exception e) {}
+        }
+
+    //----------------------------------------------------------------------------------------------
+    // Construction
+    //----------------------------------------------------------------------------------------------
+
     public TelemetryHack(Telemetry target)
         {
         // Transfer the state from the target to us 
-        this.b = Util.< Map<String,String> >getPrivateObjectField(target, 2);
-        this.c = Util.< Map<String,Float>  >getPrivateObjectField(target, 3);
-        this.d = Util.<String>getPrivateObjectField(target, 4);
-        this.e = Util.getPrivateLongField(target, 5);
+        this.stringDataPoints = Util.< Map<String,String> >getPrivateObjectField(target, 2);
+        this.numberDataPoints = Util.< Map<String,Float>  >getPrivateObjectField(target, 3);
+        String telemetryTag = Util.<String>getPrivateObjectField(target, 4);
+        long   timestamp = Util.getPrivateLongField(target, 5);
         
-        Util.setPrivateObjectField(this, 2, this.b);
-        Util.setPrivateObjectField(this, 3, this.c);
-        Util.setPrivateObjectField(this, 4, this.d);
-        Util.setPrivateLongField(this, 5, this.e);
+        Util.setPrivateObjectField(this, 2, this.stringDataPoints);
+        Util.setPrivateObjectField(this, 3, this.numberDataPoints);
+        Util.setPrivateObjectField(this, 4, telemetryTag);
+        Util.setPrivateLongField(this, 5, timestamp);
+        
+        this.fieldTelemetryTag = Util.getAccessibleClassField(this, 4);
+        this.fieldTimeStamp    = Util.getAccessibleClassField(this, 5);
         }
+
+    //----------------------------------------------------------------------------------------------
+    // Operations
+    //----------------------------------------------------------------------------------------------
+    
+    private final int cbMax = 4098;
     
     @Override public synchronized byte[] toByteArray() throws RobotCoreException
         {
-        this.e = System.currentTimeMillis();
-        if (this.b.size() > 256)
+        this.setTimeStamp(System.currentTimeMillis());
+        if (this.stringDataPoints.size() > 256)
             {
             throw new RobotCoreException("Cannot have more than 256 string data points");
             }
-        else if (this.c.size() > 256)
+        else if (this.numberDataPoints.size() > 256)
             {
             throw new RobotCoreException("Cannot have more than 256 number data points");
             }
         else
             {
-            int var1 = this.a() + 8;
-            int var2 = 3 + var1;
-            if (var2 > 4098)
+            int cbPayloadAndTimestmap = this.getCbPayload() + 8;
+            int cbTelemetryData = 3 + cbPayloadAndTimestmap;
+            if (cbTelemetryData > cbMax)
                 {
-                throw new RobotCoreException(String.format("Cannot send telemetry data of %d bytes; max is %d", new Object[] {Integer.valueOf(var2), Integer.valueOf(4098)}));
+                throw new RobotCoreException(String.format("Cannot send telemetry data of %d bytes; max is %d", cbTelemetryData, cbMax));
                 }
             else
                 {
-                ByteBuffer var3 = ByteBuffer.allocate(var2);
-                var3.put(this.getRobocolMsgType().asByte());
-                var3.putShort((short) var1);
-                var3.putLong(this.e);
-                if (this.d.length() == 0)
+                ByteBuffer rgb = ByteBuffer.allocate(cbTelemetryData);
+                
+                // 1+2 == 3
+                rgb.put(this.getRobocolMsgType().asByte());
+                rgb.putShort((short) cbPayloadAndTimestmap);
+                
+                // cb(timestamp) == 8
+                rgb.putLong(this.getTimestamp());
+                
+                // payload
+                if (this.getTelemetryTag().length() == 0)
                     {
-                    var3.put((byte) 0);
+                    rgb.put((byte) 0);
                     }
                 else
                     {
-                    byte[] var4 = this.d.getBytes(a);
-                    if (var4.length > 256)
+                    byte[] cbTelemetryTag = this.getTelemetryTag().getBytes(utf8Charset);
+                    if (cbTelemetryTag.length > 256)
                         {
-                        throw new RobotCoreException(String.format("Telemetry tag cannot exceed 256 bytes [%s]", new Object[] {this.d}));
+                        throw new RobotCoreException(String.format("Telemetry tag cannot exceed 256 bytes [%s]", this.getTelemetryTag()));
                         }
 
-                    var3.put((byte) var4.length);
-                    var3.put(var4);
+                    rgb.put((byte) cbTelemetryTag.length);
+                    rgb.put(cbTelemetryTag);
                     }
 
-                var3.put((byte) this.b.size());
-                Iterator var8 = this.b.entrySet().iterator();
+                rgb.put((byte) this.stringDataPoints.size());
 
-                Map.Entry var5;
-                byte[] var6;
-                while (var8.hasNext())
+                // emit the string valued data points
+                Iterator iterator = this.stringDataPoints.entrySet().iterator();
+                Map.Entry keyValue;
+                byte[] rgbKey;
+                while (iterator.hasNext())
                     {
-                    var5 = (Map.Entry) var8.next();
-                    var6 = ((String) var5.getKey()).getBytes(a);
-                    byte[] var7 = ((String) var5.getValue()).getBytes(a);
-                    if (var6.length > 256 || var7.length > 256)
+                    keyValue = (Map.Entry) iterator.next();
+                    rgbKey = ((String) keyValue.getKey()).getBytes(utf8Charset);
+                    byte[] rgbValue = ((String) keyValue.getValue()).getBytes(utf8Charset);
+                    if (rgbKey.length > 256 || rgbValue.length > 256)
                         {
-                        throw new RobotCoreException(String.format("Telemetry elements cannot exceed 256 bytes [%s:%s]", new Object[] {var5.getKey(), var5.getValue()}));
+                        throw new RobotCoreException(String.format("Telemetry elements cannot exceed 256 bytes [%s:%s]", keyValue.getKey(), keyValue.getValue()));
                         }
 
-                    var3.put((byte) var6.length);
-                    var3.put(var6);
-                    var3.put((byte) var7.length);
-                    var3.put(var7);
+                    rgb.put((byte) rgbKey.length);
+                    rgb.put(rgbKey);
+                    rgb.put((byte) rgbValue.length);
+                    rgb.put(rgbValue);
                     }
 
-                var3.put((byte) this.c.size());
-                var8 = this.c.entrySet().iterator();
-
-                while (var8.hasNext())
+                // emit the numeric valued data points
+                rgb.put((byte) this.numberDataPoints.size());
+                iterator = this.numberDataPoints.entrySet().iterator();
+                while (iterator.hasNext())
                     {
-                    var5 = (Map.Entry) var8.next();
-                    var6 = ((String) var5.getKey()).getBytes(a);
-                    float var9 = ((Float) var5.getValue()).floatValue();
-                    if (var6.length > 256)
+                    keyValue = (Map.Entry) iterator.next();
+                    rgbKey = ((String) keyValue.getKey()).getBytes(utf8Charset);
+                    float floatDataPoint = ((Float) keyValue.getValue()).floatValue();
+                    if (rgbKey.length > 256)
                         {
-                        throw new RobotCoreException(String.format("Telemetry elements cannot exceed 256 bytes [%s:%f]", new Object[] {var5.getKey(), Float.valueOf(var9)}));
+                        throw new RobotCoreException(String.format("Telemetry elements cannot exceed 256 bytes [%s:%f]", keyValue.getKey(), floatDataPoint));
                         }
 
-                    var3.put((byte) var6.length);
-                    var3.put(var6);
-                    var3.putFloat(var9);
+                    rgb.put((byte) rgbKey.length);
+                    rgb.put(rgbKey);
+                    rgb.putFloat(floatDataPoint);
                     }
 
-                return var3.array();
+                return rgb.array();
                 }
             }
         }
 
-    private int a()
+    private int getCbPayload()
         {
-        byte var1 = 0;
-        int var4 = var1 + 1 + this.d.getBytes(a).length;
-        ++var4;
+        byte cbInitial = 0;
+        int cbNeeded = cbInitial + 1 + this.getTelemetryTag().getBytes(utf8Charset).length;
+        ++cbNeeded;
 
-        Iterator var2;
-        Map.Entry var3;
-        for (var2 = this.b.entrySet().iterator(); var2.hasNext(); var4 += 1 + ((String) var3.getValue()).getBytes(a).length)
+        Iterator iterator;
+        Map.Entry keyValue;
+        for (iterator = this.stringDataPoints.entrySet().iterator(); iterator.hasNext(); cbNeeded += 1 + ((String) keyValue.getValue()).getBytes(utf8Charset).length)
             {
-            var3 = (Map.Entry) var2.next();
-            var4 += 1 + ((String) var3.getKey()).getBytes(a).length;
+            keyValue = (Map.Entry) iterator.next();
+            cbNeeded += 1 + ((String) keyValue.getKey()).getBytes(utf8Charset).length;
             }
 
-        ++var4;
+        ++cbNeeded;
 
-        for (var2 = this.c.entrySet().iterator(); var2.hasNext(); var4 += 4)
+        for (iterator = this.numberDataPoints.entrySet().iterator(); iterator.hasNext(); cbNeeded += 4)
             {
-            var3 = (Map.Entry) var2.next();
-            var4 += 1 + ((String) var3.getKey()).getBytes(a).length;
+            keyValue = (Map.Entry) iterator.next();
+            cbNeeded += 1 + ((String) keyValue.getKey()).getBytes(utf8Charset).length;
             }
 
-        return var4;
+        return cbNeeded;
         }
     }
