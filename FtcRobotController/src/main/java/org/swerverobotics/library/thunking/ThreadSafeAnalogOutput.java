@@ -19,7 +19,7 @@ public class ThreadSafeAnalogOutput extends AnalogOutput
 
     public static AnalogOutputController getController(AnalogOutput target)
         {
-        return Util.<AnalogOutputController>getPrivateField(target, 0);
+        return Util.<AnalogOutputController>getPrivateObjectField(target, 0);
         }
     public static int getChannel(AnalogOutput target)
         {

@@ -1,10 +1,7 @@
 package org.swerverobotics.library.thunking;
 
-import java.lang.reflect.Field;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.AnalogInputController;
-
-import org.swerverobotics.library.exceptions.SwerveRuntimeException;
 
 /**
  * ThreadSafeAnalogInput modifies the FTC-provided AnalogInput so that it is thread-safe.
@@ -23,7 +20,7 @@ public class ThreadSafeAnalogInput extends AnalogInput
     
     public static AnalogInputController getController(AnalogInput target)
         {
-        return Util.<AnalogInputController>getPrivateField(target, 0);
+        return Util.<AnalogInputController>getPrivateObjectField(target, 0);
         }
     public static int getChannel(AnalogInput target)
         {

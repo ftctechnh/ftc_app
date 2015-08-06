@@ -19,7 +19,7 @@ public class ThreadSafeDigitalChannel extends DigitalChannel
 
     public static DigitalChannelController getController(DigitalChannel target)
         {
-        return Util.<DigitalChannelController>getPrivateField(target, 0);
+        return Util.<DigitalChannelController>getPrivateObjectField(target, 0);
         }
     public static int getChannel(DigitalChannel target)
         {
