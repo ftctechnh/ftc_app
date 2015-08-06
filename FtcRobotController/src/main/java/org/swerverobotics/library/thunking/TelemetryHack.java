@@ -2,6 +2,8 @@ package org.swerverobotics.library.thunking;
 
 import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.robocol.Telemetry;
+import com.qualcomm.robotcore.util.TypeConversion;
+
 import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -25,16 +27,6 @@ public class TelemetryHack extends com.qualcomm.robotcore.robocol.Telemetry
     Field fieldTelemetryTag;
     Field fieldTimeStamp;
 
-    String getTelemetryTag()
-        {
-        try {
-            return (String)this.fieldTelemetryTag.get(this);
-            }
-        catch (Exception e)
-            {
-            return "TELEMETRY_DATA";
-            }
-        }
     void setTimeStamp(long timestamp)
         {
         try { this.fieldTimeStamp.setLong(this, timestamp); } catch (Exception e) {}
@@ -98,20 +90,20 @@ public class TelemetryHack extends com.qualcomm.robotcore.robocol.Telemetry
                 rgb.putLong(this.getTimestamp());
                 
                 // payload
-                if (this.getTelemetryTag().length() == 0)
+                if (this.getTag().length() == 0)
                     {
                     rgb.put((byte) 0);
                     }
                 else
                     {
-                    byte[] cbTelemetryTag = this.getTelemetryTag().getBytes(utf8Charset);
-                    if (cbTelemetryTag.length > 256)
+                    byte[] cbTag = this.getTag().getBytes(utf8Charset);
+                    if (cbTag.length > 256)
                         {
-                        throw new RobotCoreException(String.format("Telemetry tag cannot exceed 256 bytes [%s]", this.getTelemetryTag()));
+                        throw new RobotCoreException(String.format("Telemetry tag cannot exceed 256 bytes [%s]", this.getTag()));
                         }
 
-                    rgb.put((byte) cbTelemetryTag.length);
-                    rgb.put(cbTelemetryTag);
+                    rgb.put((byte) cbTag.length);
+                    rgb.put(cbTag);
                     }
 
                 rgb.put((byte) this.stringDataPoints.size());
@@ -162,7 +154,7 @@ public class TelemetryHack extends com.qualcomm.robotcore.robocol.Telemetry
     private int getCbPayload()
         {
         byte cbInitial = 0;
-        int cbNeeded = cbInitial + 1 + this.getTelemetryTag().getBytes(utf8Charset).length;
+        int cbNeeded = cbInitial + 1 + this.getTag().getBytes(utf8Charset).length;
         ++cbNeeded;
 
         Iterator iterator;
@@ -183,4 +175,50 @@ public class TelemetryHack extends com.qualcomm.robotcore.robocol.Telemetry
 
         return cbNeeded;
         }
+
+    public synchronized void fromByteArray(byte[] byteArray) throws RobotCoreException
+        {
+        this.clearData();
+        ByteBuffer rgbPayloadAndTimestamp = ByteBuffer.wrap(byteArray, 3, byteArray.length - 3);
+        this.setTimeStamp(rgbPayloadAndTimestamp.getLong());
+        int cbTag = TypeConversion.unsignedByteToInt(rgbPayloadAndTimestamp.get());
+        if (cbTag == 0)
+            {
+            this.setTag("");
+            }
+        else
+            {
+            byte[] rgbTag = new byte[cbTag];
+            rgbPayloadAndTimestamp.get(rgbTag);
+            this.setTag(new String(rgbTag, utf8Charset));
+            }
+
+        byte cStringPoints = rgbPayloadAndTimestamp.get();
+
+        int i;
+        for (int iDataPoint = 0; iDataPoint < cStringPoints; ++iDataPoint)
+            {
+            i = TypeConversion.unsignedByteToInt(rgbPayloadAndTimestamp.get());
+            byte[] rgbKey = new byte[i];
+            rgbPayloadAndTimestamp.get(rgbKey);
+            int cbValue = TypeConversion.unsignedByteToInt(rgbPayloadAndTimestamp.get());
+            byte[] rgbValue = new byte[cbValue];
+            rgbPayloadAndTimestamp.get(rgbValue);
+            String key = new String(rgbKey, utf8Charset);
+            String value = new String(rgbValue, utf8Charset);
+            this.stringDataPoints.put(key, value);
+            }
+
+        byte cNumberPoints = rgbPayloadAndTimestamp.get();
+
+        for (i = 0; i < cNumberPoints; ++i)
+            {
+            int cbKey = TypeConversion.unsignedByteToInt(rgbPayloadAndTimestamp.get());
+            byte[] rgbKey = new byte[cbKey];
+            rgbPayloadAndTimestamp.get(rgbKey);
+            String key = new String(rgbKey, utf8Charset);
+            float value = rgbPayloadAndTimestamp.getFloat();
+            this.numberDataPoints.put(key, Float.valueOf(value));
+            }
+        }    
     }
