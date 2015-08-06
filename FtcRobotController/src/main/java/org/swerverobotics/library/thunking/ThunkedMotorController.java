@@ -130,7 +130,7 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
                 
                 wheelController.setMotorControllerDeviceMode(DcMot orController.DeviceMode.READ_ONLY);
                 
-            In this case, all of the lines above the READ_ONL   Y line won't take effect until the 
+            In this case, all of the lines above the READ_ONLY line won't take effect until the 
             device is placed back into write mode.
             */
             // What this says is that if you're switching to a new mode then there better not
