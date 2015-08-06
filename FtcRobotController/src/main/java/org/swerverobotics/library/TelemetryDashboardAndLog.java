@@ -358,8 +358,9 @@ public class TelemetryDashboardAndLog
     private static String getKey(int iLine)
         {
         // At present (Aug 8, 2015), the driver station both sorts by the key we return here
-        // but also DISPLAYS it! Ugh. So we try to conserve space.
-        return String.format("%c", 'a' + iLine);
+        // but also DISPLAYS it! Ugh. So we try to conserve space. And we use Unicode characters
+        // that don't actually take up space on the display.
+        return String.format("%c", 0x180 + iLine);
         }
 
     /**
