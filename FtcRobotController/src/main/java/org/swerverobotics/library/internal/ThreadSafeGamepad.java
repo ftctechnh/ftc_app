@@ -1,5 +1,7 @@
 package org.swerverobotics.library.internal;
 
+import org.swerverobotics.library.interfaces.IGamepad;
+
 /**
  * A form of GamePad that guards against torn writes to its state caused by concurrency.
  *
@@ -7,7 +9,7 @@ package org.swerverobotics.library.internal;
  * and writes in Java (the 8-byte 'timestamp' member in particular offends), but being careful
  * will with certainty avoid any latent bugs that might just happen to be there.
  */
-public class ThreadSafeGamepad
+public class ThreadSafeGamepad implements IGamepad, IGamepadInternal
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -144,7 +146,7 @@ public class ThreadSafeGamepad
      * Update our state to be that of the indicated hw pad. Answer as to whether any
      * of that state was different from what we already had.
      */
-    public synchronized boolean update(com.qualcomm.robotcore.hardware.Gamepad hwPad)
+    public synchronized boolean updateGamepad(com.qualcomm.robotcore.hardware.Gamepad hwPad)
         {
         boolean result = !sameHardwareState(this.target, hwPad);
         

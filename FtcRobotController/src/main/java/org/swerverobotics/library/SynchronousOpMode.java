@@ -130,8 +130,8 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      * which is not synchronized with processing on a synchronous thread. We take pains to ensure 
      * that the variables declared here do not suffer from that problem.
      */
-    public ThreadSafeGamepad gamepad1 = null;
-    public ThreadSafeGamepad gamepad2 = null;
+    public IGamepad gamepad1 = null;
+    public IGamepad gamepad2 = null;
 
     /**
      * As with game pads, we hid the 'telemetry' variable of the super class and replace it
@@ -405,12 +405,12 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
             if (this.gamepad1 == null)
                 this.gamepad1 = new ThreadSafeGamepad(super.gamepad1);
             else
-                diff1 = this.gamepad1.update(super.gamepad1);
+                diff1 = ((IGamepadInternal)this.gamepad1).updateGamepad(super.gamepad1);
             //
             if (this.gamepad2 == null)
                 this.gamepad2 = new ThreadSafeGamepad(super.gamepad2);
             else
-                diff2 = this.gamepad2.update(super.gamepad2);
+                diff2 = ((IGamepadInternal)this.gamepad2).updateGamepad(super.gamepad2);
             //
             this.gamePadStateChanged.compareAndSet(false, diff1 || diff2);
 
