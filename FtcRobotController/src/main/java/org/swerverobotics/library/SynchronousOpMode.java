@@ -332,7 +332,6 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         this.hardwareMap = createThunkedHardwareMap(this.unthunkedHardwareMap);
 
         // Similarly replace the telemetry variable
-        // super.telemetry = new TelemetryHack(super.telemetry);
         this.telemetry = new TelemetryDashboardAndLog(super.telemetry);
 
         // Remember who the loop thread is so that we know whom to communicate with from a 
