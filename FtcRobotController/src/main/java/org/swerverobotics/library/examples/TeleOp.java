@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.interfaces.*;
-import org.swerverobotics.library.thunking.*;
+import org.swerverobotics.library.internal.*;
 
 /**
  * An example of a synchronous opmode that implements a simple drive-a-bot. 
