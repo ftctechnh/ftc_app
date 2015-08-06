@@ -19,7 +19,7 @@ public class ThreadSafePWMOutput extends PWMOutput
 
     public static PWMOutputController getController(PWMOutput target)
         {
-        return Util.<PWMOutputController>getPrivateField(target, 0);
+        return Util.<PWMOutputController>getPrivateObjectField(target, 0);
         }
     public static int getChannel(PWMOutput target)
         {
