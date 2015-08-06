@@ -21,7 +21,7 @@ public class ThreadSafeI2cDevice extends I2cDevice
 
     public static I2cController getController(I2cDevice target)
         {
-        return Util.<I2cController>getPrivateField(target, 0);
+        return Util.<I2cController>getPrivateObjectField(target, 0);
         }
     public static int getChannel(I2cDevice target)
         {
