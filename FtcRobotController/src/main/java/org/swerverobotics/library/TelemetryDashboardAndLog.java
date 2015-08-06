@@ -2,7 +2,7 @@ package org.swerverobotics.library;
 
 import com.qualcomm.robotcore.robocol.Telemetry;
 import org.swerverobotics.library.interfaces.*;
-import org.swerverobotics.library.thunking.*;
+import org.swerverobotics.library.internal.*;
 import java.util.*;
 
 /**
@@ -367,7 +367,7 @@ public class TelemetryDashboardAndLog
      * At the next available loop() thread call, update the telemetry to reflect the state
      * of the dashboard and log.
      */
-    private void update()
+    public void update()
         {
         // We need both the dashboard and log locked while we copy their contents
         this.synchronizeDashboardAndLog(new IAction()

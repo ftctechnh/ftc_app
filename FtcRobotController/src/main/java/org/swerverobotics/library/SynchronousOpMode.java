@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.swerverobotics.library.exceptions.*;
 import org.swerverobotics.library.interfaces.*;
-import org.swerverobotics.library.thunking.*;
+import org.swerverobotics.library.internal.*;
 
 /**
  * SynchronousOpMode is a base class that can be derived from in order to
@@ -119,7 +119,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
 
     /**
      * Advanced: unthunkedHardwareMap contains the original hardware map provided
-     * in OpMode before it was replaced with a version that does thunking. unthunkedTelemetry
+     * in OpMode before it was replaced with a version that does internal. unthunkedTelemetry
      * is similar, but for telemetry instead of hardware
      */
     public HardwareMap unthunkedHardwareMap = null;
@@ -392,7 +392,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
             this.actionQueueAndHistory.clearHistory();
             
             // If we had an exception thrown by the main thread, then throw it here. 'Sort
-            // of like thunking the exceptions.
+            // of like internal the exceptions.
             if (this.exceptionThrownOnMainThread != null)
                 {
                 throw this.exceptionThrownOnMainThread;
@@ -564,7 +564,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     //----------------------------------------------------------------------------------------------
 
     /**
-     * Advanced: Note that the receiver is the party which should handle thunking requests for the
+     * Advanced: Note that the receiver is the party which should handle internal requests for the
      * current thread.
      *
      * This is called automatically for the main() thread. If you choose in your code to spawn 
@@ -573,7 +573,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      * correctly from that thread.
      *
      * It is the act of calling setThreadThunker that makes a thread into a 'synchronous thread',
-     * capable of thunking calls on over to the loop() thread.
+     * capable of internal calls on over to the loop() thread.
      */
     public void setThreadThunker()
         {
@@ -583,7 +583,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
 
     /**
      * Advanced: If we are running on a synchronous thread, then return the object
-     * which is managing the thunking from the current thread to the loop() thread.
+     * which is managing the internal from the current thread to the loop() thread.
      * If we are not on a synchronous thread, then the behaviour is undefined.
      */
     public static IThunker getThreadThunker()
@@ -703,7 +703,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     //----------------------------------------------------------------------------------------------
 
     /**
-     * Rare: Given a (non-thunking) hardware map, create a new hardware map containing
+     * Rare: Given a (non-internal) hardware map, create a new hardware map containing
      * all the same devices but in a form that their methods thunk from the main()
      * thread to the loop() thread.
      */
