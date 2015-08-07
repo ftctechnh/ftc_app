@@ -13,110 +13,129 @@ public class ThreadSafeGamepad
     // State
     //----------------------------------------------------------------------------------------------
 
-    private com.qualcomm.robotcore.hardware.Gamepad hwPad;
+    private float joystickDeadzone = 0.2F;
+    public com.qualcomm.robotcore.hardware.Gamepad target;
 
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    public ThreadSafeGamepad(com.qualcomm.robotcore.hardware.Gamepad hwPad)
+    public ThreadSafeGamepad(com.qualcomm.robotcore.hardware.Gamepad target)
         {
-        this.hwPad = hwPad;
+        this.target = target;
         }
 
     //----------------------------------------------------------------------------------------------
-    // Gamepad access
+    // Basic state access
     //----------------------------------------------------------------------------------------------
 
     public synchronized float left_stick_x()
         {
-        return hwPad.left_stick_x;
+        return target.left_stick_x;
         }
     public synchronized float left_stick_y()
         {
-        return hwPad.left_stick_y;
+        return target.left_stick_y;
         }
     public synchronized float right_stick_x()
         {
-        return hwPad.right_stick_x;
+        return target.right_stick_x;
         }
     public synchronized float right_stick_y()
         {
-        return hwPad.right_stick_y;
+        return target.right_stick_y;
         }
     public synchronized boolean dpad_up()
         {
-        return hwPad.dpad_up;
+        return target.dpad_up;
         }
     public synchronized boolean dpad_down()
         {
-        return hwPad.dpad_down;
+        return target.dpad_down;
         }
     public synchronized boolean dpad_left()
         {
-        return hwPad.dpad_left;
+        return target.dpad_left;
         }
     public synchronized boolean dpad_right()
         {
-        return hwPad.dpad_right;
+        return target.dpad_right;
         }
     public synchronized boolean a()
         {
-        return hwPad.a;
+        return target.a;
         }
     public synchronized boolean b()
         {
-        return hwPad.b;
+        return target.b;
         }
     public synchronized boolean x()
         {
-        return hwPad.x;
+        return target.x;
         }
     public synchronized boolean y()
         {
-        return hwPad.y;
+        return target.y;
         }
     public synchronized boolean guide()
         {
-        return hwPad.guide;
+        return target.guide;
         }
     public synchronized boolean start()
         {
-        return hwPad.start;
+        return target.start;
         }
     public synchronized boolean back()
         {
-        return hwPad.back;
+        return target.back;
         }
     public synchronized boolean left_bumper()
         {
-        return hwPad.left_bumper;
+        return target.left_bumper;
         }
     public synchronized boolean right_bumper()
         {
-        return hwPad.right_bumper;
+        return target.right_bumper;
         }
     public synchronized float left_trigger()
         {
-        return hwPad.left_trigger;
+        return target.left_trigger;
         }
     public synchronized float right_trigger()
         {
-        return hwPad.right_trigger;
+        return target.right_trigger;
         }
     public synchronized byte user()
         {
-        return hwPad.user;
+        return target.user;
         }
     public synchronized int id()
         {
-        return hwPad.id;
+        return target.id;
         }
     public synchronized long timestamp()
         {
-        return hwPad.timestamp;
+        return target.timestamp;
         }
 
+    //----------------------------------------------------------------------------------------------
+    // Methods
+    //----------------------------------------------------------------------------------------------
+
+    public synchronized boolean atRest() 
+        {
+        return target.atRest();
+        }
+    public synchronized void setJoystickDeadzone(float deadzone)
+        {
+        this.joystickDeadzone = deadzone;
+        this.target.setJoystickDeadzone(deadzone);
+        }
+    public synchronized float getJoystickDeadzone()
+        {
+        return this.joystickDeadzone;
+        }
+    
     //----------------------------------------------------------------------------------------------
     // Updates
     //----------------------------------------------------------------------------------------------
@@ -127,15 +146,19 @@ public class ThreadSafeGamepad
      */
     public synchronized boolean update(com.qualcomm.robotcore.hardware.Gamepad hwPad)
         {
-        boolean result = !equals(this.hwPad, hwPad);
-        this.hwPad = hwPad;
+        boolean result = !sameHardwareState(this.target, hwPad);
+        
+        // Transfer settings from old to new guy
+        hwPad.setJoystickDeadzone(this.joystickDeadzone);
+        
+        this.target = hwPad;
         return result;
         }
 
     /**
      * Are the states of the two gamepads equivalent?
      */
-    private static boolean equals(com.qualcomm.robotcore.hardware.Gamepad p1, com.qualcomm.robotcore.hardware.Gamepad p2)
+    private static boolean sameHardwareState(com.qualcomm.robotcore.hardware.Gamepad p1, com.qualcomm.robotcore.hardware.Gamepad p2)
         {
         if (p1.left_stick_x != p2.left_stick_x) return false;
         if (p1.left_stick_y != p2.left_stick_y) return false;
