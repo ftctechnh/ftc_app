@@ -1,14 +1,14 @@
+package org.swerverobotics.library.examples;
+
+import android.util.Log;
+
 import org.swerverobotics.library.SynchronousOpMode;
 
 /**
- * This is a very simple placeholder to get you going. It doesn't actually do
- * ANYTHING, it merely shows you the basic structure of what a SynchronousOpMode 
- * looks like. More interesting examples can be found in org.swerverobotics.library.examples.
- * 
- * (TODO: mention XML file)
- * (TODO: mention that this doesn't have to be in this source tree)
+ * This is a very simple placeholder. It doesn't actually *do* anything. Rather, it merely 
+ * shows you the basic skeletal structure of what a SynchronousOpMode should look like. 
  */
-public class YourTeamsFirstOpMode extends SynchronousOpMode
+public class SkeletalOp extends SynchronousOpMode
     {
     @Override protected void main() throws InterruptedException
         {
