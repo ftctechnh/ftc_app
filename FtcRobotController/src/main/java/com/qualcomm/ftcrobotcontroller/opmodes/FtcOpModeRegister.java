@@ -34,7 +34,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 
-import org.swerverobotics.library.SynchronousOpMode;
+import org.swerverobotics.library.examples.TeleOpDriveModes;
 
 /**
  * Register Op Modes
@@ -71,5 +71,6 @@ public class FtcOpModeRegister implements OpModeRegister {
     */
     manager.register("Telemetry", org.swerverobotics.library.examples.TelemetryOp.class);
     manager.register("Tele", org.swerverobotics.library.examples.TeleOp.class);
+    manager.register("Multiple Drive Modes", TeleOpDriveModes.class);
   }
 }
