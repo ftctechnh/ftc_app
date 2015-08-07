@@ -9,6 +9,9 @@ import org.swerverobotics.library.exceptions.*;
  */
 public abstract class ResultableThunk<T> extends WaitingThunk
     {
+    public ResultableThunk() { }
+    public ResultableThunk(int actionKey) { super(actionKey); }
+    
     public T result;
 
     public T doReadOperation()
@@ -16,7 +19,7 @@ public abstract class ResultableThunk<T> extends WaitingThunk
         return this.doReadOperation(null);
         }
 
-    public T doReadOperation(IThunkedReadWrite reader)
+    public T doReadOperation(IThunkedReadWriteListener reader)
         {
         // Don't bother doing more work if we've been interrupted
         if (!Thread.currentThread().isInterrupted())
@@ -26,6 +29,7 @@ public abstract class ResultableThunk<T> extends WaitingThunk
                 // Let any reader know that we are about to read
                 if (reader != null)
                     {
+                    this.actionKey = reader.getListenerReadThunkKey();
                     reader.enterReadOperation();
                     }
 

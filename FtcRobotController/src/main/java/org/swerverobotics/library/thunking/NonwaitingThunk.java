@@ -8,12 +8,15 @@ import org.swerverobotics.library.exceptions.*;
  */
 public abstract class NonwaitingThunk extends ThunkBase
     {
+    public NonwaitingThunk() { }
+    public NonwaitingThunk(int actionKey) { super(actionKey); }
+    
     public void doWriteOperation()
         {
         this.doWriteOperation(null);
         }
 
-    public void doWriteOperation(IThunkedReadWrite writer)
+    public void doWriteOperation(IThunkedReadWriteListener writer)
         {
         // Don't bother doing more work if this thread has been interrupted
         if (!Thread.currentThread().isInterrupted())
@@ -23,12 +26,19 @@ public abstract class NonwaitingThunk extends ThunkBase
                 // Let any writer know we are about to write
                 if (writer != null)
                     {
+                    this.actionKey = writer.getListenerWriteThunkKey();
                     writer.enterWriteOperation();
                     }
 
                 this.dispatch();
                 }
-            catch (InterruptedException|RuntimeInterruptedException e)
+            catch (InterruptedException e)
+                {
+                // Same as below
+                Thread.currentThread().interrupt();
+                throw SwerveRuntimeException.Wrap(e);
+                }
+            catch (RuntimeInterruptedException e)
                 {
                 // Tell the current thread that he should shut down soon
                 Thread.currentThread().interrupt();
