@@ -5,7 +5,6 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 import android.util.SparseArray;
 import junit.framework.Assert;
-import com.qualcomm.ftcrobotcontroller.BuildConfig;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.swerverobotics.library.exceptions.*;
