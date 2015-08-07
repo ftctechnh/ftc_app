@@ -67,7 +67,7 @@ public class TeleOp extends SynchronousOpMode
         // Remember that the gamepad sticks range from -1 to +1, and that the motor
         // power levels range over the same amount
         float ctlPower    =  pad.left_stick_y();
-        float ctlSteering = -pad.right_stick_x();
+        float ctlSteering =  pad.right_stick_x();
 
         // We're going to assume that the deadzone processing has been taken care of for us
         // already by the underlying system (that appears to be the intent). Were that not
