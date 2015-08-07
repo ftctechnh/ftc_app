@@ -3,26 +3,33 @@ package org.swerverobotics.library.examples;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
 import org.swerverobotics.library.*;
-import org.swerverobotics.library.thunking.*;
+import org.swerverobotics.library.interfaces.*;
 
 /**
- * An example of a synchronous opmode that implements a simple drive-a-bot. 
+ * An example of a synchronous opmode that's a little more complex than
+ * TeleOp, in that it supports multiple different drive modes that are switched
+ * between using the A, B, and Y gamepad buttons.
+ * 
+ * TODO: Perhaps consolidate the two examples 
  */
 public class TeleOpDriveModes extends SynchronousOpMode
     {
+    enum DRIVEMODE { TANK, ARCADE, LEFT_STICK };
+    
     // All hardware variables can only be initialized inside the main() function,
     // not here at their member variable declarations.
-    DcMotor motorLeft = null;
+    DcMotor motorLeft  = null;
     DcMotor motorRight = null;
 
-    int driveMode = 1; // 1 = tank, 2 = arcade, 3 = left stick only
-    String[] driveModeLabel = new String[4];
+    DRIVEMODE driveMode      = DRIVEMODE.TANK;
+    String[]  driveModeLabel = new String[4];
 
     @Override protected void main() throws InterruptedException
         {
         // Initialize our hardware variables
         this.motorLeft = this.hardwareMap.dcMotor.get("motorLeft");
         this.motorRight = this.hardwareMap.dcMotor.get("motorRight");
+        
         // Configure the knobs of the hardware according to how you've wired your
         // robot. Here, we assume that there are no encoders connected to the motors,
         // so we inform the motor objects of that fact.
@@ -40,48 +47,44 @@ public class TeleOpDriveModes extends SynchronousOpMode
         driveModeLabel[3]="Left stick";
 
         this.telemetry.dashboard.line
-                (
-                        this.telemetry.dashboard.item("Drive mode: ",  new IFunc<Object>() { @Override public Object value()
-                        {
-                            return driveModeLabel[driveMode];
-                        }})
-                );
+            (
+            this.telemetry.dashboard.item("Drive mode: ",  new IFunc<Object>() { @Override public Object value()
+                {
+                    return driveModeLabel[driveMode.ordinal()];
+                }})
+            );
+        
+        // Wait until the game begins
+        this.waitForStart();
 
         // Enter a loop processing all the input we receive
-        while (!this.stopRequested())
+        while (this.opModeIsActive())
             {
             if (this.newGamePadInputAvailable())
                 {
-                    if(this.gamepad1.a())
-                        {
-                        this.driveMode = 1;
-                        }
-                    else if(this.gamepad1.b())
-                        {
-                        this.driveMode = 2;
-                        }
-                    else if(this.gamepad1.y())
+                if (this.gamepad1.a())
                     {
-                        this.driveMode = 3;
+                    this.driveMode = DRIVEMODE.TANK;
+                    }
+                else if (this.gamepad1.b())
+                    {
+                    this.driveMode = DRIVEMODE.ARCADE;
+                    }
+                else if (this.gamepad1.y())
+                    {
+                    this.driveMode = DRIVEMODE.LEFT_STICK;
                     }
 
                 // There is (likely) new gamepad input available.
                 // Do something with that! Here, we just drive.
                 this.doManualDrivingControl(this.gamepad1);
-
-                // Emit telemetry with the freshest possible values
-                this.telemetry.dashboard.update();
                 }
-            else
-                {
-                // There's no new gamepad input available.
 
-                // Emit any telemetry that hasn't been sent in a while
-                this.telemetry.dashboard.update();
+            // Emit any telemetry that hasn't been sent in a while
+            this.telemetry.dashboard.update();
 
-                // Let the rest of the system run until there's a stimulus from the robot controller runtime.
-                this.idle();
-                }
+            // Let the rest of the system run until there's a stimulus from the robot controller runtime.
+            this.idle();
             }
         }
 
@@ -89,92 +92,64 @@ public class TeleOpDriveModes extends SynchronousOpMode
      * Implement a simple two-motor driving logic using the left and right
      * right joysticks on the indicated game pad.
      */
-    void doManualDrivingControl(ThreadSafeGamepad pad) throws InterruptedException
+    void doManualDrivingControl(IGamepad pad) throws InterruptedException
         {
-            float powerLeft = 0;
-            float powerRight = 0;
-            switch(this.driveMode)
+        float powerLeft = 0;
+        float powerRight = 0;
+        
+        switch (this.driveMode)
             {
-                case 1:
-                    float leftPower = pad.left_stick_y();
-                    float rightPower = pad.right_stick_y();
-                    powerLeft = Range.clip(leftPower, -1f, 1f);
-                    powerRight = Range.clip(rightPower, -1f, 1f);
-                    break;
-                case 2:
-                    // Remember that the gamepad sticks range from -1 to +1, and that the motor
-                    // power levels range over the same amount
-                    float ctlPower    =  pad.left_stick_y();
-                    float ctlSteering =  pad.right_stick_x();
-
-                    // We're going to assume that the deadzone processing has been taken care of for us
-                    // already by the underlying system (that appears to be the intent). Were that not
-                    // the case, then we would here process ctlPower and ctlSteering to be exactly zero
-                    // within the deadzone.
-
-                    // Map the power and steering to have more oomph at low values (optional)
-                    ctlPower = this.xformDrivingPowerLevels(ctlPower);
-                    ctlSteering = -1 * this.xformDrivingPowerLevels(ctlSteering);
-
-                    // Dampen power to avoid clipping so we can still effectively steer even
-                    // under heavy throttle.
-                    //
-                    // We want
-                    //      -1 <= ctlPower - ctlSteering <= 1
-                    //      -1 <= ctlPower + ctlSteering <= 1
-                    // i.e
-                    //      ctlSteering -1 <= ctlPower <=  ctlSteering + 1
-                    //     -ctlSteering -1 <= ctlPower <= -ctlSteering + 1
-                    ctlPower = Range.clip(ctlPower,  ctlSteering -1,  ctlSteering +1);
-                    ctlPower = Range.clip(ctlPower, -ctlSteering -1, -ctlSteering +1);
-
-                    // Figure out how much power to send to each motor. Be sure
-                    // not to ask for too much, or the motor will throw an exception.
-                    powerLeft  = Range.clip(ctlPower + ctlSteering, -1f, 1f);
-                    powerRight = Range.clip(ctlPower - ctlSteering, -1f, 1f);
-                    break;
-
-                case 3:
-                    // Remember that the gamepad sticks range from -1 to +1, and that the motor
-                    // power levels range over the same amount
-                    float ctlPower3    =  pad.left_stick_y();
-                    float ctlSteering3 =  pad.left_stick_x();
-
-                    // We're going to assume that the deadzone processing has been taken care of for us
-                    // already by the underlying system (that appears to be the intent). Were that not
-                    // the case, then we would here process ctlPower and ctlSteering to be exactly zero
-                    // within the deadzone.
-
-                    // Map the power and steering to have more oomph at low values (optional)
-                    ctlPower3 = this.xformDrivingPowerLevels(ctlPower3);
-                    ctlSteering3 = -1 * this.xformDrivingPowerLevels(ctlSteering3);
-
-                    // Dampen power to avoid clipping so we can still effectively steer even
-                    // under heavy throttle.
-                    //
-                    // We want
-                    //      -1 <= ctlPower - ctlSteering <= 1
-                    //      -1 <= ctlPower + ctlSteering <= 1
-                    // i.e
-                    //      ctlSteering -1 <= ctlPower <=  ctlSteering + 1
-                    //     -ctlSteering -1 <= ctlPower <= -ctlSteering + 1
-                    ctlPower3 = Range.clip(ctlPower3,  ctlSteering3 -1,  ctlSteering3 +1);
-                    ctlPower3 = Range.clip(ctlPower3, -ctlSteering3 -1, -ctlSteering3 +1);
-
-                    // Figure out how much power to send to each motor. Be sure
-                    // not to ask for too much, or the motor will throw an exception.
-                    powerLeft  = Range.clip(ctlPower3 + ctlSteering3, -1f, 1f);
-                    powerRight = Range.clip(ctlPower3 - ctlSteering3, -1f, 1f);
-                    break;
+        case TANK:
+            {
+            float leftPower = pad.left_stick_y();
+            float rightPower = pad.right_stick_y();
+            powerLeft = Range.clip(leftPower, -1f, 1f);
+            powerRight = Range.clip(rightPower, -1f, 1f);
             }
+            break;
 
+        case ARCADE:
+        case LEFT_STICK:
+            {
+            // Remember that the gamepad sticks range from -1 to +1, and that the motor
+            // power levels range over the same amount
+            float ctlPower    = pad.left_stick_y();
+            float ctlSteering = this.driveMode==DRIVEMODE.ARCADE? pad.right_stick_x() : pad.left_stick_x();
+    
+            // We're going to assume that the deadzone processing has been taken care of for us
+            // already by the underlying system (that appears to be the intent). Were that not
+            // the case, then we would here process ctlPower and ctlSteering to be exactly zero
+            // within the deadzone.
+    
+            // Map the power and steering to have more oomph at low values (optional)
+            ctlPower = this.xformDrivingPowerLevels(ctlPower);
+            ctlSteering = -1 * this.xformDrivingPowerLevels(ctlSteering);
+    
+            // Dampen power to avoid clipping so we can still effectively steer even
+            // under heavy throttle.
+            //
+            // We want
+            //      -1 <= ctlPower - ctlSteering <= 1
+            //      -1 <= ctlPower + ctlSteering <= 1
+            // i.e
+            //      ctlSteering -1 <= ctlPower <=  ctlSteering + 1
+            //     -ctlSteering -1 <= ctlPower <= -ctlSteering + 1
+            ctlPower = Range.clip(ctlPower, ctlSteering - 1, ctlSteering + 1);
+            ctlPower = Range.clip(ctlPower, -ctlSteering - 1, -ctlSteering + 1);
+    
+            // Figure out how much power to send to each motor. Be sure
+            // not to ask for too much, or the motor will throw an exception.
+            powerLeft = Range.clip(ctlPower + ctlSteering, -1f, 1f);
+            powerRight = Range.clip(ctlPower - ctlSteering, -1f, 1f);
+            }
+            break;
+
+        // end switch
+            }
 
         // Tell the motors
         this.motorLeft.setPower(powerLeft);
         this.motorRight.setPower(powerRight);
-
-        // Advanced: not necessary; shown here just for illustration.
-        this.waitForThreadCallsToComplete();
         }
 
     float xformDrivingPowerLevels(float level)
