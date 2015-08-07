@@ -111,7 +111,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     private         RuntimeException        exceptionThrownOnMainThread;
     private volatile boolean                started;
     private volatile boolean                stopRequested;
-    private         int                     msWaitForGracefulMainThreadTermination = 500;     
+    private         int                     msWaitForGracefulMainThreadTermination = 250;     
     private         ActionQueueAndHistory   actionQueueAndHistory = new ActionQueueAndHistory();
     private         AtomicBoolean           gamePadStateChanged = new AtomicBoolean(false);
     private final   Object                  loopLock = new Object();
@@ -233,7 +233,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
             // If new input has arrived since anyone last looked, then let our caller process that
             if (this.isNewGamePadInputAvailable())
                 return;
-
+            
             // Otherwise, we know there's nothing to do until at least the next loop() call.
             // The trouble is, it's hard to know when that is. We might be running here 
             // *immediately* before loop() is about to run. Looking at loop counts could allow
@@ -500,13 +500,9 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         this.mainThread.interrupt();
 
         // Wait a while until the thread is no longer alive. If he doesn't clear out
-        // in a reasonable amount of time, then forcefully stop things from moving.
+        // in a reasonable amount of time, then just give up on him.
         try {
             this.mainThread.join(this.msWaitForGracefulMainThreadTermination);
-            if (this.mainThread.isAlive())
-                {
-                this.killEverythingThatMoves();
-                }
             }
         catch (InterruptedException ignored) { }
         
@@ -518,20 +514,6 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         this.postStopHook();
         }
     
-    private final void killEverythingThatMoves()
-    // Callable on the loop() thread only. Does an emergency shutdown of everything
-    // that moves that we can get our hands on.
-        {
-        for (ServoController controller : this.unthunkedHardwareMap.servoController)
-            {
-            controller.pwmDisable();
-            }
-        for (DcMotor motor : this.unthunkedHardwareMap.dcMotor)
-            {
-            motor.setPower(0);
-            }
-        }
-
     //----------------------------------------------------------------------------------------------
     // Advanced: loop thread subclass hooks
     //----------------------------------------------------------------------------------------------
