@@ -111,6 +111,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     private         RuntimeException        exceptionThrownOnMainThread;
     private volatile boolean                started;
     private volatile boolean                stopRequested;
+    private         int                     msWaitForGracefulMainThreadTermination = 500;     
     private         ActionQueueAndHistory   actionQueueAndHistory = new ActionQueueAndHistory();
     private         AtomicBoolean           gamePadStateChanged = new AtomicBoolean(false);
     private final   Object                  loopLock = new Object();
@@ -498,9 +499,14 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         // up, and return.
         this.mainThread.interrupt();
 
-        // Wait (indefinitely) until the thread is no longer alive.
+        // Wait a while until the thread is no longer alive. If he doesn't clear out
+        // in a reasonable amount of time, then forcefully stop things from moving.
         try {
-            this.mainThread.join();
+            this.mainThread.join(this.msWaitForGracefulMainThreadTermination);
+            if (this.mainThread.isAlive())
+                {
+                this.killEverythingThatMoves();
+                }
             }
         catch (InterruptedException ignored) { }
         
@@ -510,6 +516,20 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
 
         // Call the subclass hook in case they might want to do something interesting
         this.postStopHook();
+        }
+    
+    private final void killEverythingThatMoves()
+    // Callable on the loop() thread only. Does an emergency shutdown of everything
+    // that moves that we can get our hands on.
+        {
+        for (ServoController controller : this.unthunkedHardwareMap.servoController)
+            {
+            controller.pwmDisable();
+            }
+        for (DcMotor motor : this.unthunkedHardwareMap.dcMotor)
+            {
+            motor.setPower(0);
+            }
         }
 
     //----------------------------------------------------------------------------------------------
