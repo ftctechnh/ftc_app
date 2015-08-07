@@ -47,7 +47,7 @@ public class FtcOpModeRegister implements OpModeRegister {
    *
    * @param manager op mode manager
    */
-  public void register(OpModeManager manager) {
+    public void register(OpModeManager manager) {
 
     /*
      * register your op modes here.
@@ -110,6 +110,7 @@ public class FtcOpModeRegister implements OpModeRegister {
 
     manager.register("Telemetry", org.swerverobotics.library.examples.TelemetryOp.class);
     manager.register("Tele", org.swerverobotics.library.examples.TeleOp.class);
-    manager.register("TeleDriveMOdes", org.swerverobotics.library.examples.TeleOpDriveModes.class);
+    manager.register("TeleDriveModes", org.swerverobotics.library.examples.TeleOpDriveModes.class);
+    manager.register("Skeleton", org.swerverobotics.library.examples.SkeletalOp.class);
   }
 }
