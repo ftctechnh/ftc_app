@@ -35,7 +35,7 @@ public class ThunkedServoController implements ServoController
 
     @Override public void close()
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -46,7 +46,7 @@ public class ThunkedServoController implements ServoController
 
     @Override public int getVersion()
         {
-        return (new ResultableThunk<Integer>()
+        return (new ThunkForReading<Integer>()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -57,7 +57,7 @@ public class ThunkedServoController implements ServoController
 
     @Override public String getConnectionInfo()
         {
-        return (new ResultableThunk<String>()
+        return (new ThunkForReading<String>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -68,7 +68,7 @@ public class ThunkedServoController implements ServoController
 
     @Override public String getDeviceName()
         {
-        return (new ResultableThunk<String>()
+        return (new ThunkForReading<String>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -83,7 +83,7 @@ public class ThunkedServoController implements ServoController
 
     @Override public void pwmEnable()
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -94,7 +94,7 @@ public class ThunkedServoController implements ServoController
 
     @Override public void pwmDisable()
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -105,7 +105,7 @@ public class ThunkedServoController implements ServoController
 
     @Override public ServoController.PwmStatus getPwmStatus()
         {
-        return (new ResultableThunk<ServoController.PwmStatus>()
+        return (new ThunkForReading<PwmStatus>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -116,7 +116,7 @@ public class ThunkedServoController implements ServoController
 
     @Override public void setServoPosition(final int channel, final double position)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -127,7 +127,7 @@ public class ThunkedServoController implements ServoController
 
     @Override public double getServoPosition(final int channel)
         {
-        return (new ResultableThunk<Double>()
+        return (new ThunkForReading<Double>()
             {
             @Override protected void actionOnLoopThread()
                 {

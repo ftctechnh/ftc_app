@@ -35,7 +35,7 @@ public class ThunkedAnalogOutputController implements AnalogOutputController
 
     @Override public void close()
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -46,7 +46,7 @@ public class ThunkedAnalogOutputController implements AnalogOutputController
 
     @Override public int getVersion()
         {
-        return (new ResultableThunk<Integer>()
+        return (new ThunkForReading<Integer>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -57,7 +57,7 @@ public class ThunkedAnalogOutputController implements AnalogOutputController
 
     @Override public String getDeviceName()
         {
-        return (new ResultableThunk<String>()
+        return (new ThunkForReading<String>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -68,7 +68,7 @@ public class ThunkedAnalogOutputController implements AnalogOutputController
     
     @Override public SerialNumber getSerialNumber()
         {
-        return (new ResultableThunk<SerialNumber>()
+        return (new ThunkForReading<SerialNumber>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -79,7 +79,7 @@ public class ThunkedAnalogOutputController implements AnalogOutputController
 
     @Override public void setAnalogOutputVoltage(final int channel, final int voltage)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -90,7 +90,7 @@ public class ThunkedAnalogOutputController implements AnalogOutputController
 
     @Override public void setAnalogOutputFrequency(final int channel, final int freq)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -101,7 +101,7 @@ public class ThunkedAnalogOutputController implements AnalogOutputController
 
     @Override public void setAnalogOutputMode(final int channel, final byte mode)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
