@@ -161,6 +161,11 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      */
     public AtomicInteger loopCount = new AtomicInteger(0);
 
+    /**
+     * Advance: an event one can wait on to synchronize with the top of a loop() call
+     */
+    public Object topOfLoopEvent = new Object();
+
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
@@ -389,6 +394,14 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
             {
             this.loopCount.getAndIncrement();
             
+            // Tell anyone that was waiting for the top of the loop that we've gotten
+            // there. A key reason for doing such a wait is to ensure that commands issued
+            // to objects representing HW devices have in fact been pushed out to the HW.
+            synchronized (this.topOfLoopEvent)
+                {
+                this.topOfLoopEvent.notifyAll();
+                }
+            
             this.actionQueueAndHistory.clearHistory();
             
             // If we had an exception thrown by the main thread, then throw it here. 'Sort
@@ -605,17 +618,28 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      * In general, thunked methods that don't return any information to the caller
      * (that is, the majority of setXXX() calls) only *initiate* their work on the loop()
      * thread before returning to their caller; the work may or may not have been completed
-     * by the time the setXXX() call returns. Calling waitForThreadCallsToComplete()
-     * allows one to wait later for these calls to do their things. waitForThreadCallsToComplete()
+     * by the time the setXXX() call returns. Calling waitForUpdatesToReachHardware()
+     * allows one to wait later for these calls to do their things. waitForUpdatesToReachHardware()
      * will not return until all outstanding work that has been dispatched from the current
-     * thread has completed its execution over on the loop thread.
+     * thread has completed its execution over on the loop thread, and that those changes have
+     * been subsequently been pushed out to the actual hardware.
      *
      * Note that work dispatched from *other* (synchronous) threads may still be pending
-     * when waitForThreadCallsToComplete() returns.
+     * when waitForUpdatesToReachHardware() returns.
      */
-    public void waitForThreadCallsToComplete() throws InterruptedException
+    public void waitForUpdatesToReachHardware() throws InterruptedException
         {
+        // Wait for all the thunks to have been issued to the objects representing hardware
+        // devices. However, those requests may not reach the HW until after a next loop() call
+        // returns. So...
         SynchronousThreadContext.getThreadContext().waitForThreadThunkCompletions();
+        
+        // Wait until the *next* top off loop so we will have guaranteed that writes to the 
+        // HW objects have actually been pushed to the HW.
+        synchronized (this.topOfLoopEvent)
+            {
+            this.topOfLoopEvent.wait();
+            }
         }
 
 
