@@ -22,7 +22,7 @@ public class TeleOpDriveModes extends SynchronousOpMode
     DcMotor motorRight = null;
 
     DRIVEMODE driveMode      = DRIVEMODE.TANK;
-    String[]  driveModeLabel = new String[4];
+    String[]  driveModeLabel = new String[] { "tank", "arcade", "left stick"}; 
 
     @Override protected void main() throws InterruptedException
         {
@@ -40,17 +40,12 @@ public class TeleOpDriveModes extends SynchronousOpMode
         // so that it can take the same power level values as the other motor.
         this.motorLeft.setDirection(DcMotor.Direction.REVERSE);
 
-        driveModeLabel = new String[4];
-        driveModeLabel[0]="(unknown drive mode)";
-        driveModeLabel[1]="Tank";
-        driveModeLabel[2]="Arcade";
-        driveModeLabel[3]="Left stick";
-
+        // Configure telemetry
         this.telemetry.dashboard.line
             (
             this.telemetry.dashboard.item("Drive mode: ",  new IFunc<Object>() { @Override public Object value()
                 {
-                    return driveModeLabel[driveMode.ordinal()];
+                return driveModeLabel[driveMode.ordinal()];
                 }})
             );
         
