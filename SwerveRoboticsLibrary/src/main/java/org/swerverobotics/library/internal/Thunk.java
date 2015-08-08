@@ -59,7 +59,10 @@ public abstract class Thunk implements IAction, IActionKeyed
     // Actions
     //----------------------------------------------------------------------------------------------
 
-    public void doLoopThreadCore()
+    /**
+     * Executed on the loop() thread, doAction() is called to carry out the work of the thunk
+     */
+    public void doAction()
         {
         // Do what we came here to do
         this.actionOnLoopThread();
@@ -69,19 +72,6 @@ public abstract class Thunk implements IAction, IActionKeyed
             {
             this.notifyAll();
             }
-        }
-
-    public void doLoopThreadThunkCompletion()
-        {
-        }
-
-    /**
-     * Executed on the loop() thread, doAction() is called to carry out the work of the thunk
-     */
-    public void doAction()
-        {
-        this.doLoopThreadCore();
-        this.doLoopThreadThunkCompletion();
         }
 
     /**
