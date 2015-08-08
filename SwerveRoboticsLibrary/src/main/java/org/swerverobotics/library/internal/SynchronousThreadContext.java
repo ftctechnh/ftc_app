@@ -1,9 +1,5 @@
 package org.swerverobotics.library.internal;
 
-import junit.framework.Assert;
-import org.swerverobotics.library.interfaces.*;
-import org.swerverobotics.library.*;
-
 /**
  * SynchronousThreadContext maintains the internal context for a synchronous thread.
  */
@@ -27,7 +23,7 @@ public class SynchronousThreadContext
     /**
      * The action key used for write thunks that are issued by this thread
      */
-    public int actionKeyWritesFromThisThread = ThunkBase.getNewActionKey();
+    public int actionKeyWritesFromThisThread = Thunk.getNewActionKey();
 
     private final Thread   thread;
     private final IThunker thunker;
