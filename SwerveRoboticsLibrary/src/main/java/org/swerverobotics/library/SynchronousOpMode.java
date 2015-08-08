@@ -96,6 +96,9 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     /**
      * Answer as to whether this opMode is active and the robot should continue onwards. If the
      * opMode is not active, synchronous threads should terminate at their earliest convenience.
+     * 
+     * @see #started()
+     * @see #stopRequested()
      */
     public final boolean opModeIsActive()
         {
@@ -104,6 +107,9 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
 
     /**
      * Has the opMode been started?
+     * 
+     * @see #opModeIsActive()
+     * @see #stopRequested()
      */
     public final boolean started()
         {
@@ -112,6 +118,9 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
 
     /**
      * Has the the stopping of the opMode been requested?
+     * 
+     * @see #opModeIsActive()
+     * @see #started()
      */
     public final boolean stopRequested()
         {
@@ -189,8 +198,12 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
 
     /**
      * Advanced: createSynchronousWorkerThread() is used to create secondary worker threads
-     * from your main thread, should you wish to do so. But beware: multithreaded programming
-     * *is* rocket science!
+     * from your main thread, should you wish to do so. 
+     * 
+     * Warning: multithreaded programming *is* rocket science!
+     * 
+     * Like the main() thread, synchronous worker threads should frequently call
+     * opModeIsActive() and return from their loop body if the opMode has stopped.
      */
     public Thread createSynchronousWorkerThread(IInterruptableRunnable threadBody)
         {
