@@ -705,10 +705,6 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         // Notify the main() thread that we wish it to stop what it's doing, clean up, and return.
         this.stopSynchronousThread(this.mainThread, this.msWaitForMainThreadTermination);
         
-        // Reset for next time
-        this.started = false;
-        this.stopRequested = false;
-
         // Call the subclass hook in case they might want to do something interesting
         this.postStopHook();
         }
