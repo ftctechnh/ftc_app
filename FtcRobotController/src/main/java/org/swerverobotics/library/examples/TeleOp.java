@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.interfaces.*;
-import org.swerverobotics.library.internal.*;
 
 /**
  * An example of a synchronous opmode that implements a simple drive-a-bot. 
@@ -99,8 +98,8 @@ public class TeleOp extends SynchronousOpMode
         this.motorLeft.setPower(powerLeft);
         this.motorRight.setPower(powerRight);
 
-        // Advanced: not necessary; shown here just for illustration.
-        this.waitForThreadCallsToComplete();
+        // Advanced: not necessary semantically here; shown just for illustration.
+        this.waitForUpdatesToReachHardware();
         }
 
     float xformDrivingPowerLevels(float level)
