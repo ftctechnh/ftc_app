@@ -4,6 +4,8 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 import android.util.SparseArray;
+import android.util.SparseBooleanArray;
+
 import junit.framework.Assert;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -25,8 +27,8 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
 
     private class ActionQueueAndHistory
         {
-        ConcurrentLinkedQueue<IAction>  queue   = new ConcurrentLinkedQueue<IAction>(); // could be simpler queue
-        SparseArray<Boolean>            history = new SparseArray<Boolean>(); 
+        ConcurrentLinkedQueue<IAction> queue   = new ConcurrentLinkedQueue<IAction>(); // could be simpler queue
+        SparseBooleanArray             history = new SparseBooleanArray(); 
         
         synchronized void clear()
             {
@@ -36,7 +38,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         
         synchronized void clearHistory()
             {
-            this.history = new SparseArray<Boolean>();
+            this.history = new SparseBooleanArray();
             this.onChanged();
             }
         
@@ -65,7 +67,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
             {
             if (actionKey != ThunkBase.nullActionKey)
                 {
-                this.history.setValueAt(actionKey, true);
+                this.history.put(actionKey, true);
                 this.onChanged();
                 }
             }
@@ -111,7 +113,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     private volatile boolean                started;
     private volatile boolean                stopRequested;
     private         int                     msWaitForGracefulMainThreadTermination = 250;     
-    private         ActionQueueAndHistory   actionQueueAndHistory = new ActionQueueAndHistory();
+    private final   ActionQueueAndHistory   actionQueueAndHistory = new ActionQueueAndHistory();
     private         AtomicBoolean           gamePadStateChanged = new AtomicBoolean(false);
     private final   Object                  loopLock = new Object();
     private final   SparseArray<IAction>    singletonLoopActions = new SparseArray<IAction>();
@@ -164,7 +166,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     /**
      * Advance: an event one can wait on to synchronize with the top of a loop() call
      */
-    public Object topOfLoopEvent = new Object();
+    public final Object topOfLoopEvent = new Object();
 
     //----------------------------------------------------------------------------------------------
     // Construction
