@@ -2,8 +2,8 @@ package org.swerverobotics.library.internal;
 
 import java.security.InvalidParameterException;
 import com.qualcomm.robotcore.hardware.*;
-import org.swerverobotics.library.SynchronousOpMode;
-import org.swerverobotics.library.exceptions.SwerveRuntimeException;
+import org.swerverobotics.library.*;
+import org.swerverobotics.library.exceptions.*;
 
 /**
  * An implementation of DcMotorController that talks to a non-thunking target implementation
@@ -269,6 +269,8 @@ public class ThunkedDCMotorController implements DcMotorController, IThunkedRead
             }
         catch (InterruptedException e)
             {
+            // Have to wrap() here, as we're not allowed to throw InterrruptedException 
+            // in this method, given the method signature handed down to us.
             throw SwerveRuntimeException.wrap(e);
             }
 
@@ -293,6 +295,8 @@ public class ThunkedDCMotorController implements DcMotorController, IThunkedRead
             }
         catch (InterruptedException e)
             {
+            // Have to wrap() here, as we're not allowed to throw InterrruptedException 
+            // in this method, given the method signature handed down to us.
             this.controllerMode = null;         // paranoia
             throw SwerveRuntimeException.wrap(e);
             }
