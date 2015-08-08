@@ -1,5 +1,8 @@
 package org.swerverobotics.library.internal;
 
+import junit.framework.Assert;
+import org.swerverobotics.library.BuildConfig;
+
 /**
  * SynchronousThreadContext maintains the internal context for a synchronous thread.
  */
@@ -55,6 +58,14 @@ public class SynchronousThreadContext
     public static boolean isSynchronousThread()
         {
         return getThreadContext() != null;
+        }
+    
+    public static void assertSynchronousThread()
+        {
+        if (BuildConfig.DEBUG) 
+            {
+            Assert.assertEquals(true, isSynchronousThread());
+            }
         }
 
     /**
