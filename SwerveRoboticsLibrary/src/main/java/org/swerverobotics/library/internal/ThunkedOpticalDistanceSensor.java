@@ -34,7 +34,7 @@ public class ThunkedOpticalDistanceSensor extends OpticalDistanceSensor
 
     @Override public void close()
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -45,7 +45,7 @@ public class ThunkedOpticalDistanceSensor extends OpticalDistanceSensor
 
     @Override public int getVersion()
         {
-        return (new ResultableThunk<Integer>()
+        return (new ThunkForReading<Integer>()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -56,7 +56,7 @@ public class ThunkedOpticalDistanceSensor extends OpticalDistanceSensor
 
     @Override public String getConnectionInfo()
         {
-        return (new ResultableThunk<String>()
+        return (new ThunkForReading<String>()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -67,7 +67,7 @@ public class ThunkedOpticalDistanceSensor extends OpticalDistanceSensor
 
     @Override public String getDeviceName()
         {
-        return (new ResultableThunk<String>()
+        return (new ThunkForReading<String>()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -82,7 +82,7 @@ public class ThunkedOpticalDistanceSensor extends OpticalDistanceSensor
 
     @Override public double getLightDetected()
         {
-        return (new ResultableThunk<Double>()
+        return (new ThunkForReading<Double>()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -93,7 +93,7 @@ public class ThunkedOpticalDistanceSensor extends OpticalDistanceSensor
 
     @Override public int getLightDetectedRaw()
         {
-        return (new ResultableThunk<Integer>()
+        return (new ThunkForReading<Integer>()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -104,7 +104,7 @@ public class ThunkedOpticalDistanceSensor extends OpticalDistanceSensor
 
     @Override public void enableLed(final boolean enable)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -115,7 +115,7 @@ public class ThunkedOpticalDistanceSensor extends OpticalDistanceSensor
 
     @Override public String status()
         {
-        return (new ResultableThunk<String>()
+        return (new ThunkForReading<String>()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -126,7 +126,7 @@ public class ThunkedOpticalDistanceSensor extends OpticalDistanceSensor
 
     @Override public String toString()
         {
-        return (new ResultableThunk<String>()
+        return (new ThunkForReading<String>()
             {
             @Override protected void actionOnLoopThread()
                 {

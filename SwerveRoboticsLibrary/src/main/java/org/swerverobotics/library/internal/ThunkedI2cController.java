@@ -37,7 +37,7 @@ public class ThunkedI2cController implements I2cController
 
     @Override public void close()
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -48,7 +48,7 @@ public class ThunkedI2cController implements I2cController
 
     @Override public int getVersion()
         {
-        return (new ResultableThunk<Integer>()
+        return (new ThunkForReading<Integer>()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -59,7 +59,7 @@ public class ThunkedI2cController implements I2cController
 
     @Override public String getDeviceName()
         {
-        return (new ResultableThunk<String>()
+        return (new ThunkForReading<String>()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -70,7 +70,7 @@ public class ThunkedI2cController implements I2cController
 
     @Override public SerialNumber getSerialNumber()
         {
-        return (new ResultableThunk<SerialNumber>()
+        return (new ThunkForReading<SerialNumber>()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -81,7 +81,7 @@ public class ThunkedI2cController implements I2cController
 
     @Override public void enableI2cReadMode(final int physicalPort, final int i2cAddress, final int memAddress, final int length)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -92,7 +92,7 @@ public class ThunkedI2cController implements I2cController
 
     @Override public void enableI2cWriteMode(final int physicalPort, final int i2cAddress, final int memAddress, final int length)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -103,7 +103,7 @@ public class ThunkedI2cController implements I2cController
 
     @Override public Lock getI2cReadCacheLock(final int physicalPort)
         {
-        return (new ResultableThunk<Lock>()
+        return (new ThunkForReading<Lock>()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -114,7 +114,7 @@ public class ThunkedI2cController implements I2cController
 
     @Override public Lock getI2cWriteCacheLock(final int physicalPort)
         {
-        return (new ResultableThunk<Lock>()
+        return (new ThunkForReading<Lock>()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -125,7 +125,7 @@ public class ThunkedI2cController implements I2cController
 
     @Override public byte[] getI2cReadCache(final int physicalPort)
         {
-        return (new ResultableThunk<byte[]>()
+        return (new ThunkForReading<byte[]>()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -136,7 +136,7 @@ public class ThunkedI2cController implements I2cController
 
     @Override public byte[] getI2cWriteCache(final int physicalPort)
         {
-        return (new ResultableThunk<byte[]>()
+        return (new ThunkForReading<byte[]>()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -147,7 +147,7 @@ public class ThunkedI2cController implements I2cController
 
     @Override public void setI2cPortActionFlag(final int physicalPort)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -158,7 +158,7 @@ public class ThunkedI2cController implements I2cController
 
     @Override public boolean isI2cPortActionFlagSet(final int physicalPort)
         {
-        return (new ResultableThunk<Boolean>()
+        return (new ThunkForReading<Boolean>()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -169,7 +169,7 @@ public class ThunkedI2cController implements I2cController
 
     @Override public void readI2cCacheFromModule(final int physicalPort)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -180,7 +180,7 @@ public class ThunkedI2cController implements I2cController
 
     @Override public void writeI2cCacheToModule(final int physicalPort)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -191,7 +191,7 @@ public class ThunkedI2cController implements I2cController
 
     @Override public void writeI2cPortFlagOnlyToModule(final int physicalPort)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -202,7 +202,7 @@ public class ThunkedI2cController implements I2cController
 
     @Override public boolean isI2cPortInReadMode(final int physicalPort)
         {
-        return (new ResultableThunk<Boolean>()
+        return (new ThunkForReading<Boolean>()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -213,7 +213,7 @@ public class ThunkedI2cController implements I2cController
 
     @Override public boolean isI2cPortInWriteMode(final int physicalPort)
         {
-        return (new ResultableThunk<Boolean>()
+        return (new ThunkForReading<Boolean>()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -224,7 +224,7 @@ public class ThunkedI2cController implements I2cController
 
     @Override public boolean isI2cPortReady(final int physicalPort)
         {
-        return (new ResultableThunk<Boolean>()
+        return (new ThunkForReading<Boolean>()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -235,7 +235,7 @@ public class ThunkedI2cController implements I2cController
 
     @Override public void registerForI2cPortReadyCallback(final I2cController.I2cPortReadyCallback callback, final int physicalPort)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -246,7 +246,7 @@ public class ThunkedI2cController implements I2cController
 
     @Override public void deregisterForPortReadyCallback(final int physicalPort)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
         {
         @Override protected void actionOnLoopThread()
             {

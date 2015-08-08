@@ -1,7 +1,7 @@
 package org.swerverobotics.library.internal;
 
+import java.security.InvalidParameterException;
 import com.qualcomm.robotcore.hardware.*;
-
 import org.swerverobotics.library.SynchronousOpMode;
 import org.swerverobotics.library.exceptions.SwerveRuntimeException;
 
@@ -163,7 +163,7 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
 
     @Override public synchronized void close()
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -174,7 +174,7 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
 
     @Override public synchronized int getVersion()
         {
-        return (new ResultableThunk<Integer>()
+        return (new ThunkForReading<Integer>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -185,7 +185,7 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
 
     @Override public synchronized String getConnectionInfo()
         {
-        return (new ResultableThunk<String>()
+        return (new ThunkForReading<String>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -196,7 +196,7 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
 
     @Override public synchronized String getDeviceName()
         {
-        return (new ResultableThunk<String>()
+        return (new ThunkForReading<String>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -213,14 +213,37 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
     // setMotorControllerDeviceMode is neither a 'read' nor a 'write' operation; it's internal, 
     // so we don't call doReadOperation() or doWriteOperation().
         {
-        int thunkKey = mode==DeviceMode.READ_ONLY ? this.deviceReadThunkKey : this.deviceWriteThunkKey;
-        NonwaitingThunk thunk = (new NonwaitingThunk(thunkKey)
+        // Check arguments to rule out the transient modes which aren't supposed to be
+        // set manually.
+        if (!(mode==DeviceMode.READ_ONLY || mode==DeviceMode.WRITE_ONLY || mode==DeviceMode.READ_WRITE))
+            throw new InvalidParameterException("invalid DeviceMode");
+        
+        // Get a thunk
+        ThunkForWriting thunk = (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
                 target.setMotorControllerDeviceMode(mode);
                 }
             });
+        
+        // Classify the thunk as to the kind of operation that's happening on this 
+        // motor controller instance
+        switch (mode)
+            {
+        case READ_ONLY:
+            thunk.addActionKey(this.deviceReadThunkKey);
+            break;
+        case WRITE_ONLY:
+            thunk.addActionKey(this.deviceWriteThunkKey);
+            break;
+        case READ_WRITE:
+            thunk.addActionKey(this.deviceReadThunkKey);
+            thunk.addActionKey(this.deviceWriteThunkKey);
+            break;
+            }
+        
+        // Dispatch the thing!        
         try
             {
             thunk.dispatch();
@@ -238,7 +261,7 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
     @Override public synchronized DeviceMode getMotorControllerDeviceMode()
     // getMotorControllerDeviceMode is neither a 'read' nor a 'write' operation; it's internal
         {
-        ResultableThunk<DeviceMode> thunk = (new ResultableThunk<DeviceMode>()
+        ThunkForReading<DeviceMode> thunk = (new ThunkForReading<DeviceMode>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -263,7 +286,7 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
 
     @Override public synchronized void setMotorChannelMode(final int channel, final DcMotorController.RunMode mode)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -274,7 +297,7 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
 
     @Override public synchronized DcMotorController.RunMode getMotorChannelMode(final int channel)
         {
-        return (new ResultableThunk<DcMotorController.RunMode>()
+        return (new ThunkForReading<RunMode>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -285,7 +308,7 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
 
     @Override public synchronized void setMotorPower(final int channel, final double power)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -296,7 +319,7 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
 
     @Override public synchronized double getMotorPower(final int channel)
         {
-        return (new ResultableThunk<Double>()
+        return (new ThunkForReading<Double>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -307,7 +330,7 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
 
     @Override public synchronized boolean isBusy(final int channel)
         {
-        return (new ResultableThunk<Boolean>()
+        return (new ThunkForReading<Boolean>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -318,7 +341,7 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
 
     @Override public synchronized void setMotorPowerFloat(final int channel)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -329,7 +352,7 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
 
     @Override public synchronized boolean getMotorPowerFloat(final int channel)
         {
-        return (new ResultableThunk<Boolean>()
+        return (new ThunkForReading<Boolean>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -340,7 +363,7 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
 
     @Override public synchronized void setMotorTargetPosition(final int channel, final int position)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -351,7 +374,7 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
 
     @Override public synchronized int getMotorTargetPosition(final int channel)
         {
-        return (new ResultableThunk<Integer>()
+        return (new ThunkForReading<Integer>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -362,7 +385,7 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
 
     @Override public synchronized int getMotorCurrentPosition(final int channel)
         {
-        return (new ResultableThunk<Integer>()
+        return (new ThunkForReading<Integer>()
             {
             @Override protected void actionOnLoopThread()
                 {

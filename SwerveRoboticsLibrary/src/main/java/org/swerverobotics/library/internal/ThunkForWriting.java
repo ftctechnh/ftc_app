@@ -3,14 +3,28 @@ package org.swerverobotics.library.internal;
 import org.swerverobotics.library.exceptions.*;
 
 /**
- * Thunks derived from NonwaitingThunk queue up their work but do not synchronously
- * wait for that work's execution before returning from dispatch() to the caller.
+ * Thunks derived from ThunkForWriting are used for thunking write operations. Note
+ * that they queue up their work but do not synchronously wait for that work's execution
+  * before returning from dispatch() to the caller.
  */
-public abstract class NonwaitingThunk extends ThunkBase
+public abstract class ThunkForWriting extends ThunkBase
     {
-    public NonwaitingThunk() { }
-    public NonwaitingThunk(int actionKey) { super(actionKey); }
-    
+    //----------------------------------------------------------------------------------------------
+    // Construction
+    //----------------------------------------------------------------------------------------------
+
+    public ThunkForWriting() 
+        { 
+        this.addActionKey
+            (
+            SynchronousThreadContext.getThreadContext().actionKeyWritesFromThisThread
+            );
+        }
+
+    //----------------------------------------------------------------------------------------------
+    // Operations
+    //----------------------------------------------------------------------------------------------
+
     public void doWriteOperation()
         {
         this.doWriteOperation(null);
@@ -26,7 +40,7 @@ public abstract class NonwaitingThunk extends ThunkBase
                 // Let any writer know we are about to write
                 if (writer != null)
                     {
-                    this.actionKey = writer.getListenerWriteThunkKey();
+                    this.addActionKey(writer.getListenerWriteThunkKey());
                     writer.enterWriteOperation();
                     }
 

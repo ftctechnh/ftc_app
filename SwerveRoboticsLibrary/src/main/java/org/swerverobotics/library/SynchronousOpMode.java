@@ -1,10 +1,8 @@
 package org.swerverobotics.library;
 
 import java.util.*;
-import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 import android.util.SparseArray;
-import android.util.SparseBooleanArray;
 
 import junit.framework.Assert;
 import com.qualcomm.robotcore.hardware.*;
@@ -24,21 +22,74 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     //----------------------------------------------------------------------------------------------
     // Types
     //----------------------------------------------------------------------------------------------
-
+    
     private class ActionQueueAndHistory
         {
-        ConcurrentLinkedQueue<IAction> queue   = new ConcurrentLinkedQueue<IAction>(); // could be simpler queue
-        SparseBooleanArray             history = new SparseBooleanArray(); 
+        //-----------------------------------------------------------------------
+        // Types
+        
+        private class ActionKeyHistory
+            {
+            private boolean[] array;
+
+            ActionKeyHistory()
+                {
+                this.array = new boolean[30];   // 30 is pretty arbitrary
+                }
+
+            void put(int index, boolean value)
+                {
+                if (index >= this.array.length)
+                    {
+                    this.array = Arrays.copyOf(this.array, Math.max(this.array.length,index) + 5);
+                    }
+                this.array[index] = value;
+                }
+            
+            boolean valueAt(int index)
+                {
+                if (index >= this.array.length)
+                    return false;
+                return this.array[index];
+                }
+            }
+
+        //-----------------------------------------------------------------------
+        // State
+        
+        Queue<IAction>   queue;
+        ActionKeyHistory history;
+
+        //-----------------------------------------------------------------------
+        // Construction
+        
+        ActionQueueAndHistory()
+            {
+            this.queue   = this.newQueue();
+            this.history = this.newHistory();
+            }
+        private Queue<IAction> newQueue()
+            {
+            return new LinkedList<IAction>();
+            }
+        private ActionKeyHistory newHistory()
+            {
+            return new ActionKeyHistory();
+            }
+
+        //-----------------------------------------------------------------------
+        // Operations
         
         synchronized void clear()
             {
-            this.queue = new ConcurrentLinkedQueue<IAction>();
-            this.clearHistory();
+            this.queue   = this.newQueue();
+            this.history = this.newHistory();
+            this.onChanged();
             }
         
         synchronized void clearHistory()
             {
-            this.history = new SparseBooleanArray();
+            this.history = this.newHistory();
             this.onChanged();
             }
         
@@ -56,41 +107,38 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 if (result instanceof IActionKeyed)
                     {
                     IActionKeyed keyed = (IActionKeyed)result;
-                    this.setActionKey(keyed.getActionKey());
+                    for (int actionKey : keyed.getActionKeys())
+                        {
+                        this.history.put(actionKey, true);
+                        }
                     }
                 this.onChanged();
                 }
             return result;
             }
         
-        synchronized void setActionKey(int actionKey)
+        synchronized boolean containsActionKey(int queryKey)
             {
-            if (actionKey != ThunkBase.nullActionKey)
+            // Is the key present in our history?
+            if (this.history.valueAt(queryKey))
                 {
-                this.history.put(actionKey, true);
-                this.onChanged();
+                return true;
                 }
-            }
-        
-        synchronized boolean containsActionKey(int thunkKey)
-            {
+
             // Is the key present in pending stuff?
             for (IAction action : this.queue)
                 {
                 if (action instanceof IActionKeyed)
                     {
                     IActionKeyed keyed = (IActionKeyed)action;
-                    if (keyed.getActionKey() == thunkKey)
+                    for (int actionKey : keyed.getActionKeys())
                         {
-                        return true;
+                        if (actionKey == queryKey)
+                            {
+                            return true;
+                            }
                         }
                     }
-                }
-            
-            // Is the key present in our history?
-            if (this.history.get(thunkKey, false))
-                {
-                return true;
                 }
             
             // Not present
@@ -100,6 +148,11 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         private void onChanged()
             {
             this.notifyAll();
+            }
+        public void waitForChange() throws InterruptedException
+            {
+            // Note: caller must hold the monitor
+            this.wait();
             }
         }
 
@@ -163,11 +216,6 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      */
     public AtomicInteger loopCount = new AtomicInteger(0);
 
-    /**
-     * Advance: an event one can wait on to synchronize with the top of a loop() call
-     */
-    public final Object topOfLoopEvent = new Object();
-
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
@@ -184,11 +232,10 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         {
         synchronized (this.loopLock)
             {
-            do
+            while (!this.started())  // avoid spurious wakeups
                 {
                 this.loopLock.wait();
                 }
-            while (!this.started); // avoid spurious wakeups
             }
         }
     
@@ -396,14 +443,6 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
             {
             this.loopCount.getAndIncrement();
             
-            // Tell anyone that was waiting for the top of the loop that we've gotten
-            // there. A key reason for doing such a wait is to ensure that commands issued
-            // to objects representing HW devices have in fact been pushed out to the HW.
-            synchronized (this.topOfLoopEvent)
-                {
-                this.topOfLoopEvent.notifyAll();
-                }
-            
             this.actionQueueAndHistory.clearHistory();
             
             // If we had an exception thrown by the main thread, then throw it here. 'Sort
@@ -486,7 +525,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
             {
             while (this.actionQueueAndHistory.containsActionKey(actionKey))
                 {
-                this.actionQueueAndHistory.wait();
+                this.actionQueueAndHistory.waitForChange();
                 }
             }
         }
@@ -615,35 +654,27 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
 
     /**
      * Advanced: wait until all thunks that have been dispatched from the current (synchronous)
-     * thread have completed their execution over on the loop() thread.
+     * thread have completed their execution over on the loop() thread and their effects
+     * to have reached the hardwaree.
      *
      * In general, thunked methods that don't return any information to the caller
      * (that is, the majority of setXXX() calls) only *initiate* their work on the loop()
      * thread before returning to their caller; the work may or may not have been completed
-     * by the time the setXXX() call returns. Calling waitForUpdatesToReachHardware()
-     * allows one to wait later for these calls to do their things. waitForUpdatesToReachHardware()
-     * will not return until all outstanding work that has been dispatched from the current
-     * thread has completed its execution over on the loop thread, and that those changes have
-     * been subsequently been pushed out to the actual hardware.
+     * by the time the setXXX() call returns. Calling waitForThreadsWritesToReachHardware()
+     * allows one to wait later for these calls to have been dispatched. It waits further
+     * until it is known that the effect of those calls has been propagated to the hardware.
      *
-     * Note that work dispatched from *other* (synchronous) threads may still be pending
-     * when waitForUpdatesToReachHardware() returns.
+     * Note that waitForThreadsWritesToReachHardware() only deals with work that has been issued
+     * by the current thread. Work dispatched from *other* (synchronous) threads may not yet have
+     * completed when waitForThreadsWritesToReachHardware() returns.
      */
-    public void waitForUpdatesToReachHardware() throws InterruptedException
+    public void waitForThreadsWritesToReachHardware() throws InterruptedException
         {
-        // Wait for all the thunks to have been issued to the objects representing hardware
-        // devices. However, those requests may not reach the HW until after a next loop() call
-        // returns. So...
-        SynchronousThreadContext.getThreadContext().waitForThreadThunkCompletions();
-        
-        // Wait until the *next* top off loop so we will have guaranteed that writes to the 
-        // HW objects have actually been pushed to the HW.
-        synchronized (this.topOfLoopEvent)
-            {
-            this.topOfLoopEvent.wait();
-            }
+        this.waitForLoopCycleEmptyOfActionKey
+            (
+            SynchronousThreadContext.getThreadContext().actionKeyWritesFromThisThread
+            );
         }
-
 
 
     /**

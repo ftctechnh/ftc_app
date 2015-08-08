@@ -1,6 +1,9 @@
 package org.swerverobotics.library.internal;
 
 import junit.framework.Assert;
+
+import java.lang.reflect.Array;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.swerverobotics.library.exceptions.*;
 import org.swerverobotics.library.interfaces.*;
@@ -16,7 +19,21 @@ public abstract class ThunkBase implements IAction, IActionKeyed
     //----------------------------------------------------------------------------------------------
 
     private SynchronousThreadContext context;
-    public  int                      actionKey = nullActionKey;
+    public  ArrayList<Integer>       actionKeys;
+
+    //----------------------------------------------------------------------------------------------
+    // Construction
+    //----------------------------------------------------------------------------------------------
+
+    public ThunkBase()
+        {
+        this.context    = SynchronousThreadContext.getThreadContext();
+        this.actionKeys = new ArrayList<Integer>(3);
+        }
+
+    //----------------------------------------------------------------------------------------------
+    // Action key management
+    //----------------------------------------------------------------------------------------------
 
     public static final int          nullActionKey = 0;
     static AtomicInteger             prevActionKey = new AtomicInteger(nullActionKey);
@@ -26,27 +43,18 @@ public abstract class ThunkBase implements IAction, IActionKeyed
         return prevActionKey.incrementAndGet();
         }
     
-    //----------------------------------------------------------------------------------------------
-    // Construction
-    //----------------------------------------------------------------------------------------------
-
-    public ThunkBase()
+    public void addActionKey(int actionKey)
         {
-        this.context = SynchronousThreadContext.getThreadContext();
-        }
-    public ThunkBase(int actionKey)
-        {
-        this.context = SynchronousThreadContext.getThreadContext();
-        this.actionKey = actionKey;
+        this.actionKeys.add(actionKey);
         }
 
     //----------------------------------------------------------------------------------------------
     // IActionKeyed
     //----------------------------------------------------------------------------------------------
     
-    @Override public int getActionKey()
+    @Override public ArrayList<Integer> getActionKeys()
         {
-        return this.actionKey;
+        return this.actionKeys;
         }
     
     //----------------------------------------------------------------------------------------------
@@ -58,7 +66,7 @@ public abstract class ThunkBase implements IAction, IActionKeyed
         // Do what we came here to do
         this.actionOnLoopThread();
 
-        // Tell all of our waiters that we are done
+        // Tell all those waiting on the completion of this thunk that we are done
         synchronized (this)
             {
             this.notifyAll();
@@ -67,8 +75,6 @@ public abstract class ThunkBase implements IAction, IActionKeyed
 
     public void doLoopThreadThunkCompletion()
         {
-        // Also tell the synchronous thread on which we were created that we are done
-        this.context.noteThunkCompletion(this);
         }
 
     /**
@@ -96,7 +102,6 @@ public abstract class ThunkBase implements IAction, IActionKeyed
         if (BuildConfig.DEBUG) Assert.assertEquals(true, SynchronousThreadContext.isSynchronousThread());
         
         // It's a synchronous thread. Head over to the loop() thread to do the work.
-        this.context.noteThunkDispatching(this);
         try
             {
             this.context.getThunker().executeOnLoopThread(this);
@@ -106,7 +111,6 @@ public abstract class ThunkBase implements IAction, IActionKeyed
             // This shouldn't happen, as we shouldn't see any checked exceptions
             // since none have been declared. In any event, we note the failure
             // then do what we can.
-            this.context.noteThunkDispatchFailure(this);
             throw SwerveRuntimeException.Wrap(e);
             }
         }
