@@ -1,6 +1,7 @@
 package org.swerverobotics.library;
 
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 import android.util.SparseArray;
 
@@ -186,6 +187,15 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         getThreadSynchronousOpMode().idle();
         }
 
+    /**
+     * Advanced: createSynchronousWorkerThread() is used to create secondary worker threads
+     * from your main thread, should you wish to do so. But beware: multithreaded programming
+     * *is* rocket science!
+     */
+    public Thread createSynchronousWorkerThread(IInterruptableRunnable threadBody)
+        {
+        return this.createSynchronousWorkerThread(threadBody, false);
+        }
 
     /**
      * Advanced: wait until all thunks that have been dispatched from the current (synchronous)
@@ -206,26 +216,30 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     public void waitForThreadsWritesToReachHardware() throws InterruptedException
         {
         this.waitForLoopCycleEmptyOfActionKey
-                (
-                        SynchronousThreadContext.getThreadContext().actionKeyWritesFromThisThread
-                );
+            (
+            SynchronousThreadContext.getThreadContext().actionKeyWritesFromThisThread
+            );
         }
 
     //----------------------------------------------------------------------------------------------
     // Private state and construction
     //----------------------------------------------------------------------------------------------
 
-    private         Thread                  loopThread;
-    private         Thread                  mainThread;
-    private         RuntimeException exceptionThrownOnSynchronousThread;
     private volatile boolean                started;
     private volatile boolean                stopRequested;
-    private         int                     msWaitForGracefulMainThreadTermination = 250;
     private final   ActionQueueAndHistory   actionQueueAndHistory = new ActionQueueAndHistory();
     private         AtomicBoolean           gamePadStateChanged = new AtomicBoolean(false);
     private final   Object                  loopLock = new Object();
     private final   SparseArray<IAction>    singletonLoopActions = new SparseArray<IAction>();
     private static  AtomicInteger           prevSingletonKey = new AtomicInteger(0);
+
+    private         Thread                  loopThread;
+    private         Thread                  mainThread;
+    private final   Queue<Thread>           synchronousWorkerThreads = new ConcurrentLinkedQueue<Thread>();
+    private         RuntimeException        exceptionThrownOnMainThread;
+    private final   AtomicReference<RuntimeException> firstExceptionThrownOnASynchronousWorkerThread = new AtomicReference<RuntimeException>();
+    private final   int                     msWaitForMainThreadTermination              = 250;
+    private final   int                     msWaitForSynchronousWorkerThreadTermination = 50;
 
     public SynchronousOpMode()
         {
@@ -374,22 +388,33 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     //----------------------------------------------------------------------------------------------
 
     /**
-     * An instance of Runner is called on the loop() thread in order to start up the main() thread.
+     * An instance of SynchronousThreadRoot is called on the loop() thread in order to start up 
+     * the main() thread. Other instances are used to support synchronous worker threads.
      */
-    private class Runner implements Runnable
+    private class SynchronousThreadRoot implements Runnable
         {
-        /**
-         * The run method calls the synchronous main() method to finally
-         * actually run the user's code.
-         */
+        //--------------------------------------------------------------
+        // State
+        final IInterruptableRunnable threadBody;
+        final boolean                isMain;
+
+        //--------------------------------------------------------------
+        // Construction
+        SynchronousThreadRoot(IInterruptableRunnable threadBody, boolean isMain)
+            {
+            this.threadBody = threadBody;
+            this.isMain     = isMain;
+            }
+
+        //--------------------------------------------------------------
+        // Running
         public final void run()
             {
-            // Note that this op mode is the thing on this thread that can thunk back to the loop thread
+            // Remember the thing that can thunk from this thread back to the loop() thread.
             SynchronousOpMode.this.setThreadThunker();
-
             try
                 {
-                SynchronousOpMode.this.main();
+                this.threadBody.run();
                 }
             catch (InterruptedException ignored) { }
             catch (RuntimeInterruptedException ignored)
@@ -401,25 +426,70 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 }
             catch (RuntimeException e)
                 {
-                // Remember the exception so we can (re)throw it back on over in loop().
-                SynchronousOpMode.this.exceptionThrownOnSynchronousThread = e;
+                // Remember exceptions so we can throw them later
+                if (this.isMain)
+                    {
+                    SynchronousOpMode.this.exceptionThrownOnMainThread = e;
+                    }
+                else
+                    {
+                    SynchronousOpMode.this.firstExceptionThrownOnASynchronousWorkerThread.compareAndSet(null, e); 
+                    }
+                }
+            finally
+                {
+                // Clean up any worker threads 
+                if (this.isMain)
+                    {
+                    SynchronousOpMode.this.stopSynchronousWorkerThreads();
+                    }
                 }
             }
         }
 
-    /**
-     * Advanced: Note that the receiver is the party which should handle internal requests for the
-     * current thread.
-     *
-     * This is called automatically for the main() thread. If you choose in your code to spawn 
-     * additional worker synchronous threads, each of those threads should call this method near 
-     * the thread's beginning in order that access to the (thunked) hardware objects will function 
-     * correctly from that thread.
-     *
-     * It is the act of calling setThreadThunker that makes a thread into a 'synchronous thread',
-     * capable of internal calls on over to the loop() thread.
-     */
-    public void setThreadThunker()
+    private void stopSynchronousThread(Thread thread, int msWait)
+    // Note: the thread might not EVER have been started, so may not have any 
+    // SynchronousThreadContext.
+        {
+        // Notify the thread that we wish it to stop what it's doing, clean up, and return.
+        thread.interrupt();
+
+        // Wait a while until the thread is no longer alive. If he doesn't clear out
+        // in a reasonable amount of time, then just give up on him.
+        try
+            {
+            thread.join(msWait);
+            }
+        catch (InterruptedException ignored) { }
+        }
+
+    private Thread createSynchronousWorkerThread(IInterruptableRunnable threadBody, boolean isMain)
+        {
+        if (this.stopRequested())
+            throw new IllegalStateException("createSynchronousWorkerThread: stop requested");
+        
+        if (!isMain) SynchronousThreadContext.assertSynchronousThread();
+        //
+        Thread thread = new Thread(new SynchronousThreadRoot(threadBody, isMain));
+        if (!isMain)
+            {
+            this.synchronousWorkerThreads.add(thread);
+            }
+        return thread;
+        }
+    
+    private void stopSynchronousWorkerThreads()
+        {
+        for (;;)
+            {
+            Thread thread = this.synchronousWorkerThreads.poll();
+            if (null == thread)
+                break;
+            this.stopSynchronousThread(thread, this.msWaitForSynchronousWorkerThreadTermination);
+            }
+        }
+
+    private void setThreadThunker()
         {
         if (BuildConfig.DEBUG) Assert.assertEquals(false, this.isLoopThread());
         SynchronousThreadContext.setThreadThunker(this);
@@ -453,15 +523,23 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         // Paranoia: clear any state that may just perhaps be lingering
         this.clearSingletons();
         this.actionQueueAndHistory.clear();
+        this.synchronousWorkerThreads.clear();
 
         // We're being asked to start, not stop
         this.started = false;
         this.stopRequested = false;
         this.loopCount.set(0);
-        this.exceptionThrownOnSynchronousThread = null;
+        this.exceptionThrownOnMainThread = null;
+        this.firstExceptionThrownOnASynchronousWorkerThread.set(null);
 
         // Create the main thread and start it up and going!
-        this.mainThread = new Thread(new Runner());
+        this.mainThread = this.createSynchronousWorkerThread(new IInterruptableRunnable()
+        {
+        @Override public void run() throws InterruptedException
+            {
+            SynchronousOpMode.this.main();
+            }
+        }, true);
         this.mainThread.start();
 
         // Call the subclass hook in case they might want to do something interesting
@@ -505,11 +583,17 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
             // The history of what was executed int the previous loop() call is now irrelevant
             this.actionQueueAndHistory.clearHistory();
             
-            // If we had an exception thrown by the main thread, then throw it here. 'Sort
-            // of like thunking the exceptions.
-            if (this.exceptionThrownOnSynchronousThread != null)
+            // If we had an exception thrown by a synchronous thread, then throw it here. 'Sort
+            // of like thunking the exceptions. Exceptions from the main thread take
+            // priority over those from worker threads.
+            RuntimeException e = this.exceptionThrownOnMainThread;
+            if (e == null) 
                 {
-                throw this.exceptionThrownOnSynchronousThread;
+                e = this.firstExceptionThrownOnASynchronousWorkerThread.get();
+                }
+            if (e != null)
+                {
+                throw e;
                 }
 
             // Capture the gamepad states safely so that in a synchronous thread we don't see torn writes
@@ -589,16 +673,8 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         // Next time synchronous threads ask, yes, we do want to stop
         this.stopRequested = true;
 
-        // Notify the MainThread() method that we wish it to stop what it's doing, clean
-        // up, and return.
-        this.mainThread.interrupt();
-
-        // Wait a while until the thread is no longer alive. If he doesn't clear out
-        // in a reasonable amount of time, then just give up on him.
-        try {
-            this.mainThread.join(this.msWaitForGracefulMainThreadTermination);
-            }
-        catch (InterruptedException ignored) { }
+        // Notify the main() thread that we wish it to stop what it's doing, clean up, and return.
+        this.stopSynchronousThread(this.mainThread, this.msWaitForMainThreadTermination);
         
         // Reset for next time
         this.started = false;
