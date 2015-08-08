@@ -1,8 +1,6 @@
 package org.swerverobotics.library.internal;
 
 import junit.framework.Assert;
-
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.swerverobotics.library.exceptions.*;
@@ -12,7 +10,7 @@ import org.swerverobotics.library.*;
 /**
  * ThunkBase contains most of the code for thunking a call from a synchronous thread to the loop() thread
  */
-public abstract class ThunkBase implements IAction, IActionKeyed
+public abstract class Thunk implements IAction, IActionKeyed
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -25,7 +23,7 @@ public abstract class ThunkBase implements IAction, IActionKeyed
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    public ThunkBase()
+    public Thunk()
         {
         this.context    = SynchronousThreadContext.getThreadContext();
         this.actionKeys = new ArrayList<Integer>(3);
@@ -111,7 +109,7 @@ public abstract class ThunkBase implements IAction, IActionKeyed
             // This shouldn't happen, as we shouldn't see any checked exceptions
             // since none have been declared. In any event, we note the failure
             // then do what we can.
-            throw SwerveRuntimeException.Wrap(e);
+            throw SwerveRuntimeException.wrap(e);
             }
         }
     }

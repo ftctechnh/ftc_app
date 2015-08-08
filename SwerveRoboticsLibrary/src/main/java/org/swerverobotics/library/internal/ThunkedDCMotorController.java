@@ -10,7 +10,7 @@ import org.swerverobotics.library.exceptions.SwerveRuntimeException;
  * by thunking all calls over to the loop thread and back gain. The implementation automatically
  * takes care of read and write device mode switching.
  */
-public class ThunkedMotorController implements DcMotorController, IThunkedReadWriteListener
+public class ThunkedDCMotorController implements DcMotorController, IThunkedReadWriteListener
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -18,23 +18,31 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
 
     public  DcMotorController target;          // can only talk to him on the loop thread
     private DeviceMode        controllerMode;  // the last mode we know the controller to be in
-    private int               deviceReadThunkKey  = ThunkBase.getNewActionKey();
-    private int               deviceWriteThunkKey = ThunkBase.getNewActionKey();
+    
+    private int controllerWriteThunkKey = Thunk.getNewActionKey();
+    private int controllerReadThunkKey  = Thunk.getNewActionKey();
+    
+    // Channel indices are one-based
+    private final int[] channelWriteThunkKeys = new int[] { Thunk.nullActionKey, Thunk.getNewActionKey(), Thunk.getNewActionKey() };
+    private int getChannelWriteKey(int channel) 
+        { 
+        return this.channelWriteThunkKeys[channel]; 
+        }
     
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    private ThunkedMotorController(DcMotorController target)
+    private ThunkedDCMotorController(DcMotorController target)
         {
         if (target == null) throw new NullPointerException("null " + this.getClass().getSimpleName() + " target");
         this.target = target;
         this.controllerMode = null;
         }
 
-    static public ThunkedMotorController create(DcMotorController target)
+    static public ThunkedDCMotorController create(DcMotorController target)
         {
-        return target instanceof ThunkedMotorController ? (ThunkedMotorController)target : new ThunkedMotorController(target);
+        return target instanceof ThunkedDCMotorController ? (ThunkedDCMotorController)target : new ThunkedDCMotorController(target);
         }
 
     //----------------------------------------------------------------------------------------------
@@ -51,11 +59,11 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
         }
     @Override public int getListenerReadThunkKey()
         {
-        return this.deviceReadThunkKey;
+        return this.controllerWriteThunkKey;
         }
     @Override public int getListenerWriteThunkKey()
         {
-        return this.deviceWriteThunkKey;
+        return this.controllerReadThunkKey;
         }
 
     /**
@@ -141,7 +149,7 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
             // We accomplish this by waiting until any incompatible operations were executed on 
             // previous loop() calls. *New* incompatible operations are prevented from starting
             // by the fact that this controller object uses synchronized methods.
-            int oppositeKey = newMode==DeviceMode.READ_ONLY ? this.deviceWriteThunkKey : this.deviceReadThunkKey;
+            int oppositeKey = newMode==DeviceMode.READ_ONLY ? this.controllerReadThunkKey : this.controllerWriteThunkKey;
             SynchronousOpMode.synchronousThreadWaitForLoopCycleEmptyOfActionKey(oppositeKey);
 
             // Tell him to switch
@@ -157,6 +165,17 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
             }
         }
 
+    private void waitForWritesToChannelToDrain(int channel)
+        {
+        try {
+            SynchronousOpMode.synchronousThreadWaitForLoopCycleEmptyOfActionKey(this.getChannelWriteKey(channel));        
+            }
+        catch (InterruptedException e)
+            {
+            throw SwerveRuntimeException.wrap(e);
+            }
+        }
+    
     //----------------------------------------------------------------------------------------------
     // HardwareDevice
     //----------------------------------------------------------------------------------------------
@@ -232,14 +251,14 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
         switch (mode)
             {
         case READ_ONLY:
-            thunk.addActionKey(this.deviceReadThunkKey);
+            thunk.addActionKey(this.controllerWriteThunkKey);
             break;
         case WRITE_ONLY:
-            thunk.addActionKey(this.deviceWriteThunkKey);
+            thunk.addActionKey(this.controllerReadThunkKey);
             break;
         case READ_WRITE:
-            thunk.addActionKey(this.deviceReadThunkKey);
-            thunk.addActionKey(this.deviceWriteThunkKey);
+            thunk.addActionKey(this.controllerWriteThunkKey);
+            thunk.addActionKey(this.controllerReadThunkKey);
             break;
             }
         
@@ -250,7 +269,7 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
             }
         catch (InterruptedException e)
             {
-            throw SwerveRuntimeException.Wrap(e);
+            throw SwerveRuntimeException.wrap(e);
             }
 
         // Required: right now we have no idea what mode the controller is in (we know what
@@ -275,7 +294,7 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
         catch (InterruptedException e)
             {
             this.controllerMode = null;         // paranoia
-            throw SwerveRuntimeException.Wrap(e);
+            throw SwerveRuntimeException.wrap(e);
             }
 
         // Optimization: we may as well update our knowledge about the controller's state
@@ -286,7 +305,7 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
 
     @Override public synchronized void setMotorChannelMode(final int channel, final DcMotorController.RunMode mode)
         {
-        (new ThunkForWriting()
+        (new ThunkForWriting(this.getChannelWriteKey(channel))
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -308,7 +327,7 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
 
     @Override public synchronized void setMotorPower(final int channel, final double power)
         {
-        (new ThunkForWriting()
+        (new ThunkForWriting(this.getChannelWriteKey(channel))
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -330,6 +349,8 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
 
     @Override public synchronized boolean isBusy(final int channel)
         {
+        this.waitForWritesToChannelToDrain(channel);
+        
         return (new ThunkForReading<Boolean>()
             {
             @Override protected void actionOnLoopThread()
@@ -341,7 +362,7 @@ public class ThunkedMotorController implements DcMotorController, IThunkedReadWr
 
     @Override public synchronized void setMotorPowerFloat(final int channel)
         {
-        (new ThunkForWriting()
+        (new ThunkForWriting(this.getChannelWriteKey(channel))
             {
             @Override protected void actionOnLoopThread()
                 {

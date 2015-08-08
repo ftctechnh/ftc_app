@@ -305,7 +305,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      */
     public static void synchronousThreadIdle() throws InterruptedException
         {
-        getSynchronousOpMode().idle();
+        getThreadSynchronousOpMode().idle();
         }
 
     /**
@@ -531,7 +531,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         }
     public static void synchronousThreadWaitForLoopCycleEmptyOfActionKey(int actionKey) throws InterruptedException
         {
-        SynchronousOpMode.getSynchronousOpMode().waitForLoopCycleEmptyOfActionKey(actionKey);
+        SynchronousOpMode.getThreadSynchronousOpMode().waitForLoopCycleEmptyOfActionKey(actionKey);
         }
 
     /**
@@ -646,7 +646,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         return SynchronousThreadContext.getThreadContext().getThunker();
         }
 
-    private static SynchronousOpMode getSynchronousOpMode()        
+    private static SynchronousOpMode getThreadSynchronousOpMode()        
         {
         return (SynchronousOpMode)(getThreadThunker());
         }
@@ -774,7 +774,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 {
                 @Override public DcMotorController create(DcMotorController target)
                     {
-                    return ThunkedMotorController.create(target);
+                    return ThunkedDCMotorController.create(target);
                     }
                 }
         );
@@ -880,7 +880,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 @Override public DcMotor create(DcMotor target)
                     {
                     return new ThreadSafeDcMotor(
-                        ThunkedMotorController.create(target.getController()),
+                        ThunkedDCMotorController.create(target.getController()),
                         target.getPortNumber(),
                         target.getDirection()
                     );

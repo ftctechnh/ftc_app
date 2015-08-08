@@ -7,7 +7,7 @@ import org.swerverobotics.library.exceptions.*;
  * which can be set inside of actionOnLoopThread() in order to return data
  * back to the caller of dispatch().
  */
-public abstract class ThunkForReading<T> extends ThunkBase
+public abstract class ThunkForReading<T> extends Thunk
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -24,6 +24,7 @@ public abstract class ThunkForReading<T> extends ThunkBase
         }
     public ThunkForReading(int actionKey) 
         { 
+        this();
         this.addActionKey(actionKey); 
         }
     
@@ -71,7 +72,7 @@ public abstract class ThunkForReading<T> extends ThunkBase
                 // Our signature (and that of our caller) doesn't allow us to throw
                 // InterruptedException. But we can't actually return a value to our caller,
                 // as we have nothing to return. So, we do the best we can, and throw SOMETHING.
-                throw SwerveRuntimeException.Wrap(e);
+                throw SwerveRuntimeException.wrap(e);
                 }
             return this.result;
             }

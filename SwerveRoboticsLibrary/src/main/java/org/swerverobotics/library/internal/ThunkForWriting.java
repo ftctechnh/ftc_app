@@ -7,7 +7,7 @@ import org.swerverobotics.library.exceptions.*;
  * that they queue up their work but do not synchronously wait for that work's execution
   * before returning from dispatch() to the caller.
  */
-public abstract class ThunkForWriting extends ThunkBase
+public abstract class ThunkForWriting extends Thunk
     {
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -19,6 +19,12 @@ public abstract class ThunkForWriting extends ThunkBase
             (
             SynchronousThreadContext.getThreadContext().actionKeyWritesFromThisThread
             );
+        }
+    
+    public ThunkForWriting(int actionKey)
+        {
+        this();
+        this.addActionKey(actionKey);
         }
 
     //----------------------------------------------------------------------------------------------
@@ -50,7 +56,7 @@ public abstract class ThunkForWriting extends ThunkBase
                 {
                 // Same as below
                 Thread.currentThread().interrupt();
-                throw SwerveRuntimeException.Wrap(e);
+                throw SwerveRuntimeException.wrap(e);
                 }
             catch (RuntimeInterruptedException e)
                 {
@@ -61,7 +67,7 @@ public abstract class ThunkForWriting extends ThunkBase
                 // must deal with the necessity we have in reads of throwing,
                 // we may as well throw here as well, as that will help shut
                 // things down sooner.
-                throw SwerveRuntimeException.Wrap(e);
+                throw SwerveRuntimeException.wrap(e);
                 }
             }
         }
