@@ -187,7 +187,9 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         }
 
     /**
-     * Idles the current thread until stimulated by the robot controller runtime
+     * Idles the current thread until stimulated by the robot controller runtime.
+     * 
+     * The current thread must be a synchronous thread.
      *
      * @see #idle()
      */
@@ -476,6 +478,31 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         catch (InterruptedException ignored) { }
         }
 
+    private void stopSynchronousWorkerThreads()
+    // Do the shutdown in parallel so we're not serially taking the timeout hits.
+    // We hope that will be a little faster.
+        {
+        List<Thread> interruptedThreads = new LinkedList<Thread>();
+        //
+        for (;;)
+            {
+            Thread thread = this.synchronousWorkerThreads.poll();
+            if (null == thread)
+                break;
+            thread.interrupt();
+            interruptedThreads.add(thread);
+            }
+        
+        for (Thread thread : interruptedThreads)
+            {
+            try
+                {
+                thread.join(msWaitForSynchronousWorkerThreadTermination);
+                }
+            catch (InterruptedException ignored) { }
+            }
+        }
+
     private Thread createSynchronousWorkerThread(IInterruptableRunnable threadBody, boolean isMain)
         {
         if (this.stopRequested())
@@ -491,17 +518,6 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         return thread;
         }
     
-    private void stopSynchronousWorkerThreads()
-        {
-        for (;;)
-            {
-            Thread thread = this.synchronousWorkerThreads.poll();
-            if (null == thread)
-                break;
-            this.stopSynchronousThread(thread, this.msWaitForSynchronousWorkerThreadTermination);
-            }
-        }
-
     private void setThreadThunker()
         {
         if (BuildConfig.DEBUG) Assert.assertEquals(false, this.isLoopThread());
