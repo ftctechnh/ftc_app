@@ -17,7 +17,7 @@ public abstract class Thunk implements IAction, IActionKeyed
     //----------------------------------------------------------------------------------------------
 
     private SynchronousThreadContext context;
-    public  ArrayList<Integer>       actionKeys;
+    public  List<Integer>            actionKeys;
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -26,7 +26,7 @@ public abstract class Thunk implements IAction, IActionKeyed
     public Thunk()
         {
         this.context    = SynchronousThreadContext.getThreadContext();
-        this.actionKeys = new ArrayList<Integer>(3);
+        this.actionKeys = new LinkedList<Integer>();
         }
 
     //----------------------------------------------------------------------------------------------
@@ -50,7 +50,7 @@ public abstract class Thunk implements IAction, IActionKeyed
     // IActionKeyed
     //----------------------------------------------------------------------------------------------
     
-    @Override public ArrayList<Integer> getActionKeys()
+    @Override public List<Integer> getActionKeys()
         {
         return this.actionKeys;
         }
