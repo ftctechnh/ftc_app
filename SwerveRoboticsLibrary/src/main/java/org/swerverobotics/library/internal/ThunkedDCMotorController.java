@@ -1,6 +1,5 @@
 package org.swerverobotics.library.internal;
 
-import java.security.InvalidParameterException;
 import com.qualcomm.robotcore.hardware.*;
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.exceptions.*;
@@ -235,7 +234,7 @@ public class ThunkedDCMotorController implements DcMotorController, IThunkedRead
         // Check arguments to rule out the transient modes which aren't supposed to be
         // set manually.
         if (!(mode==DeviceMode.READ_ONLY || mode==DeviceMode.WRITE_ONLY || mode==DeviceMode.READ_WRITE))
-            throw new InvalidParameterException("invalid DeviceMode");
+            throw new IllegalArgumentException("invalid DeviceMode");
         
         // Get a thunk
         ThunkForWriting thunk = (new ThunkForWriting()
