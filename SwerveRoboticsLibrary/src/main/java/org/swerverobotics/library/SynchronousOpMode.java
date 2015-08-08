@@ -451,14 +451,6 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                     SynchronousOpMode.this.firstExceptionThrownOnASynchronousWorkerThread.compareAndSet(null, e); 
                     }
                 }
-            finally
-                {
-                // Clean up any worker threads 
-                if (this.isMain)
-                    {
-                    SynchronousOpMode.this.stopSynchronousWorkerThreads();
-                    }
-                }
             }
         }
 
@@ -478,7 +470,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         catch (InterruptedException ignored) { }
         }
 
-    private void stopSynchronousWorkerThreads()
+    private void stopSynchronousWorkerThreads(int msWait)
     // Do the shutdown in parallel so we're not serially taking the timeout hits.
     // We hope that will be a little faster.
         {
@@ -497,7 +489,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
             {
             try
                 {
-                thread.join(msWaitForSynchronousWorkerThreadTermination);
+                thread.join(msWait);
                 }
             catch (InterruptedException ignored) { }
             }
@@ -702,6 +694,9 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         // Next time synchronous threads ask, yes, we do want to stop
         this.stopRequested = true;
 
+        // Clean up any worker threads 
+        this.stopSynchronousWorkerThreads(this.msWaitForSynchronousWorkerThreadTermination);
+        
         // Notify the main() thread that we wish it to stop what it's doing, clean up, and return.
         this.stopSynchronousThread(this.mainThread, this.msWaitForMainThreadTermination);
         
