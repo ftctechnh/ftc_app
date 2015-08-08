@@ -97,9 +97,6 @@ public class TeleOp extends SynchronousOpMode
         // Tell the motors
         this.motorLeft.setPower(powerLeft);
         this.motorRight.setPower(powerRight);
-
-        // Advanced: not necessary semantically in this example OpMode; shown just for illustration.
-        this.waitForThreadsWritesToReachHardware();
         }
 
     float xformDrivingPowerLevels(float level)
