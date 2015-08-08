@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.interfaces.*;
-import org.swerverobotics.library.thunking.*;
 
 /**
  * An example of a synchronous opmode that implements a simple drive-a-bot. 
@@ -62,12 +61,12 @@ public class TeleOp extends SynchronousOpMode
      * Implement a simple two-motor driving logic using the left and right
      * right joysticks on the indicated game pad.
      */
-    void doManualDrivingControl(ThreadSafeGamepad pad) throws InterruptedException
+    void doManualDrivingControl(IGamepad pad) throws InterruptedException
         {
         // Remember that the gamepad sticks range from -1 to +1, and that the motor
         // power levels range over the same amount
         float ctlPower    =  pad.left_stick_y();
-        float ctlSteering = -pad.right_stick_x();
+        float ctlSteering =  pad.right_stick_x();
 
         // We're going to assume that the deadzone processing has been taken care of for us
         // already by the underlying system (that appears to be the intent). Were that not
@@ -99,8 +98,8 @@ public class TeleOp extends SynchronousOpMode
         this.motorLeft.setPower(powerLeft);
         this.motorRight.setPower(powerRight);
 
-        // Advanced: not necessary; shown here just for illustration.
-        this.waitForThreadCallsToComplete();
+        // Advanced: not necessary semantically here; shown just for illustration.
+        this.waitForUpdatesToReachHardware();
         }
 
     float xformDrivingPowerLevels(float level)
