@@ -12,172 +12,16 @@ import org.swerverobotics.library.interfaces.*;
 import org.swerverobotics.library.internal.*;
 
 /**
- * SynchronousOpMode is a base class that can be derived from in order to
- * write op modes that can be coded in a linear, synchronous programming style.
+ * SynchronousOpMode is a base class that can be inherited from in order to
+ * write op modes that can be coded in a traditional programming style.
  *
  * Extend this class and implement the main() method to add your own code.
  */
 public abstract class SynchronousOpMode extends OpMode implements IThunker
     {
     //----------------------------------------------------------------------------------------------
-    // Types
+    // Public State
     //----------------------------------------------------------------------------------------------
-    
-    private class ActionQueueAndHistory
-        {
-        //-----------------------------------------------------------------------
-        // Types
-        
-        private class ActionKeyHistory
-            {
-            private boolean[] array;
-
-            ActionKeyHistory()
-                {
-                this.array = new boolean[30];   // 30 is pretty arbitrary
-                }
-
-            void put(int index, boolean value)
-                {
-                if (index >= this.array.length)
-                    {
-                    this.array = Arrays.copyOf(this.array, Math.max(this.array.length,index) + 5);
-                    }
-                this.array[index] = value;
-                }
-            
-            boolean valueAt(int index)
-                {
-                if (index >= this.array.length)
-                    return false;
-                return this.array[index];
-                }
-            }
-
-        //-----------------------------------------------------------------------
-        // State
-        
-        Queue<IAction>   queue;
-        ActionKeyHistory history;
-
-        //-----------------------------------------------------------------------
-        // Construction
-        
-        ActionQueueAndHistory()
-            {
-            this.queue   = this.newQueue();
-            this.history = this.newHistory();
-            }
-        private Queue<IAction> newQueue()
-            {
-            return new LinkedList<IAction>();
-            }
-        private ActionKeyHistory newHistory()
-            {
-            return new ActionKeyHistory();
-            }
-
-        //-----------------------------------------------------------------------
-        // Operations
-        
-        synchronized void clear()
-            {
-            this.queue   = this.newQueue();
-            this.history = this.newHistory();
-            this.onChanged();
-            }
-        
-        synchronized void clearHistory()
-            {
-            this.history = this.newHistory();
-            this.onChanged();
-            }
-        
-        synchronized void add(IAction action)
-            {
-            this.queue.add(action);
-            this.onChanged();
-            }
-        
-        synchronized IAction poll()
-            {
-            IAction result = this.queue.poll();
-            if (result != null)
-                {
-                if (result instanceof IActionKeyed)
-                    {
-                    IActionKeyed keyed = (IActionKeyed)result;
-                    for (int actionKey : keyed.getActionKeys())
-                        {
-                        this.history.put(actionKey, true);
-                        }
-                    }
-                this.onChanged();
-                }
-            return result;
-            }
-        
-        synchronized boolean containsActionKey(int queryKey)
-            {
-            // Is the key present in our history?
-            if (this.history.valueAt(queryKey))
-                {
-                return true;
-                }
-
-            // Is the key present in pending stuff?
-            for (IAction action : this.queue)
-                {
-                if (action instanceof IActionKeyed)
-                    {
-                    IActionKeyed keyed = (IActionKeyed)action;
-                    for (int actionKey : keyed.getActionKeys())
-                        {
-                        if (actionKey == queryKey)
-                            {
-                            return true;
-                            }
-                        }
-                    }
-                }
-            
-            // Not present
-            return false;
-            }
-        
-        private void onChanged()
-            {
-            this.notifyAll();
-            }
-        public void waitForChange() throws InterruptedException
-            {
-            // Note: caller must hold the monitor
-            this.wait();
-            }
-        }
-
-    //----------------------------------------------------------------------------------------------
-    // State
-    //----------------------------------------------------------------------------------------------
-
-    private         Thread                  loopThread;
-    private         Thread                  mainThread;
-    private         RuntimeException        exceptionThrownOnMainThread;
-    private volatile boolean                started;
-    private volatile boolean                stopRequested;
-    private         int                     msWaitForGracefulMainThreadTermination = 250;     
-    private final   ActionQueueAndHistory   actionQueueAndHistory = new ActionQueueAndHistory();
-    private         AtomicBoolean           gamePadStateChanged = new AtomicBoolean(false);
-    private final   Object                  loopLock = new Object();
-    private final   SparseArray<IAction>    singletonLoopActions = new SparseArray<IAction>();
-    private static  AtomicInteger           singletonKey = new AtomicInteger(0);
-
-    /**
-     * Advanced: unthunkedHardwareMap contains the original hardware map provided
-     * in OpMode before it was replaced with a version that does internal. unthunkedTelemetry
-     * is similar, but for telemetry instead of hardware
-     */
-    public HardwareMap unthunkedHardwareMap = null;
 
     /**
      * The game pad variables are redeclared here so as to hide those in our OpMode superclass
@@ -200,13 +44,15 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     public static final long NANO_TO_MILLI = 1000000;
 
     /**
-     * Advanced: 'msLoopDwellMax' is the (soft) maximum number of milliseconds that
-     * our loop() implementation will spend in any one call before returning.
+     * Advanced: msLoopDwellMax is the (soft) maximum number of milliseconds that
+     * our loop() implementation will spend in any one call before returning. 
+     * 
+     * Usually, much less time than this maximum is expended.
      */
-    public long msLoopDwellMax = 20;
+    public long msLoopDwellMax = 15;
 
     /**
-     * Advanced: loopDwellCheckInterval is the number of thunks we will execute in loop()
+     * Advanced: loopDwellCheckCount is the number of thunks we will execute in loop()
      * before checking whether we've exceeded msLoopDwellMax.
      */
     public int loopDwellCheckCount = 5;
@@ -214,21 +60,28 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     /**
      * Advanced: the number of times the loop thread has been called
      */
-    public AtomicInteger loopCount = new AtomicInteger(0);
+    public final AtomicInteger loopCount = new AtomicInteger(0);
+
+    /**
+     * Advanced: unthunkedHardwareMap contains the original hardware map provided
+     * in OpMode before it was replaced with a version that does thunking.
+     */
+    public HardwareMap unthunkedHardwareMap = null;
 
     //----------------------------------------------------------------------------------------------
-    // Construction
+    // Key Public and Protected Methods
     //----------------------------------------------------------------------------------------------
 
-    public SynchronousOpMode()
-        {
-        }
+    /**
+     * Central idea: implement main() (in a subclass) to contain your robot logic!
+     */
+    protected abstract void main() throws InterruptedException;
 
-    //----------------------------------------------------------------------------------------------
-    // User code, and stuff commonly used by user code
-    //----------------------------------------------------------------------------------------------
-
-    public void waitForStart() throws InterruptedException
+    /**
+     * In your main() method, first perform any necessary data and hardware initialization,
+     * then call waitForStart() to await the commencement of the game.
+     */
+    public final void waitForStart() throws InterruptedException
         {
         synchronized (this.loopLock)
             {
@@ -238,15 +91,38 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 }
             }
         }
-    
-    /**
-     * Central idea: implement main() (in a subclass) to contain your robot logic!
-     */
-    protected abstract void main() throws InterruptedException;
 
     /**
+     * Answer as to whether this opMode is active and the robot should continue onwards. If the
+     * opMode is not active, synchronous threads should terminate at their earliest convenience.
+     */
+    public final boolean opModeIsActive()
+        {
+        return !this.stopRequested() && this.started();
+        }
+
+    /**
+     * Has the opMode been started?
+     */
+    public final boolean started()
+        {
+        return this.started;
+        }
+
+    /**
+     * Has the the stopping of the opMode been requested?
+     */
+    public final boolean stopRequested()
+        {
+        return this.stopRequested || Thread.currentThread().isInterrupted();
+        }
+    
+    /**
      * Answer as to whether there's (probably) any state different in any of the game pads
-     * since the last time that this method was called
+     * since the last time that this method was called. Calling this method atomically clears
+     * the the state.
+     * 
+     * @see #newGamePadInputAvailable() 
      */
     public final boolean newGamePadInputAvailable()
         {
@@ -270,14 +146,16 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     /**
      * Put the current thread to sleep for a bit as it has nothing better to do.
      *
-     * idle(), which is called on a synchronous thread, never on the loop() thread, causes the
+     * idle(), which must be called on a synchronous thread, never on the loop() thread, causes the
      * synchronous thread to go to sleep until it is likely that the robot controller runtime
-     * has gotten back in touch with us (by calling loop() again) and thus the state reported
-     * by our various hardware devices and sensors might be different than what it was.
+     * has gotten back in touch (by calling loop() again) and thus the state reported
+     * by the various hardware devices and sensors might be different than what it was previously.
      *
      * One can use this method when you have nothing better to do until the underlying
      * robot controller runtime gets back in touch with us. Thread.yield() has similar effects, but
      * idle() / synchronousThreadIdle() is more efficient.
+     * 
+     * @see #synchronousThreadIdle() 
      */
     public final void idle() throws InterruptedException
         {
@@ -308,33 +186,191 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         getThreadSynchronousOpMode().idle();
         }
 
-    /**
-     * Answer as to whether this opMode is active and the robot should continue onwards. If the
-     * opMode is not active, synchronous threads should terminate at their earliest convenience.
-     */
-    public final boolean opModeIsActive()
-        {
-        return this.started() && !this.stopRequested();
-        }
 
     /**
-     * Has the opMode been started?
+     * Advanced: wait until all thunks that have been dispatched from the current (synchronous)
+     * thread have completed their execution over on the loop() thread and their effects
+     * to have reached the hardwaree.
+     *
+     * In general, thunked methods that don't return any information to the caller
+     * (that is, the majority of setXXX() calls) only *initiate* their work on the loop()
+     * thread before returning to their caller; the work may or may not have been completed
+     * by the time the setXXX() call returns. Calling waitForThreadsWritesToReachHardware()
+     * allows one to wait later for these calls to have been dispatched. It waits further
+     * until it is known that the effect of those calls has been propagated to the hardware.
+     *
+     * Note that waitForThreadsWritesToReachHardware() only deals with work that has been issued
+     * by the current thread. Work dispatched from *other* (synchronous) threads may not yet have
+     * completed when waitForThreadsWritesToReachHardware() returns.
      */
-    public final boolean started()
+    public void waitForThreadsWritesToReachHardware() throws InterruptedException
         {
-        return this.started;
-        }
-    
-    /**
-     * Has the the stopping of the opMode been requested?
-     */
-    public final boolean stopRequested()
-        {
-        return this.stopRequested || Thread.currentThread().isInterrupted();
+        this.waitForLoopCycleEmptyOfActionKey
+                (
+                        SynchronousThreadContext.getThreadContext().actionKeyWritesFromThisThread
+                );
         }
 
     //----------------------------------------------------------------------------------------------
-    // start(), loop(), and stop()
+    // Private state and construction
+    //----------------------------------------------------------------------------------------------
+
+    private         Thread                  loopThread;
+    private         Thread                  mainThread;
+    private         RuntimeException exceptionThrownOnSynchronousThread;
+    private volatile boolean                started;
+    private volatile boolean                stopRequested;
+    private         int                     msWaitForGracefulMainThreadTermination = 250;
+    private final   ActionQueueAndHistory   actionQueueAndHistory = new ActionQueueAndHistory();
+    private         AtomicBoolean           gamePadStateChanged = new AtomicBoolean(false);
+    private final   Object                  loopLock = new Object();
+    private final   SparseArray<IAction>    singletonLoopActions = new SparseArray<IAction>();
+    private static  AtomicInteger           prevSingletonKey = new AtomicInteger(0);
+
+    public SynchronousOpMode()
+        {
+        }
+
+    //----------------------------------------------------------------------------------------------
+    // Types
+    //----------------------------------------------------------------------------------------------
+
+    private class ActionQueueAndHistory
+        {
+        //-----------------------------------------------------------------------
+        // Types
+
+        private class ActionKeyHistory
+            {
+            private boolean[] array;
+
+            ActionKeyHistory()
+                {
+                this.array = new boolean[30];   // 30 is pretty arbitrary
+                }
+
+            void put(int index, boolean value)
+                {
+                if (index >= this.array.length)
+                    {
+                    this.array = Arrays.copyOf(this.array, Math.max(this.array.length,index) + 5);
+                    }
+                this.array[index] = value;
+                }
+
+            boolean valueAt(int index)
+                {
+                if (index >= this.array.length)
+                    return false;
+                return this.array[index];
+                }
+            }
+
+        //-----------------------------------------------------------------------
+        // State
+
+        Queue<IAction>   queue;
+        ActionKeyHistory history;
+
+        //-----------------------------------------------------------------------
+        // Construction
+
+        ActionQueueAndHistory()
+            {
+            this.queue   = this.newQueue();
+            this.history = this.newHistory();
+            }
+        private Queue<IAction> newQueue()
+            {
+            return new LinkedList<IAction>();
+            }
+        private ActionKeyHistory newHistory()
+            {
+            return new ActionKeyHistory();
+            }
+
+        //-----------------------------------------------------------------------
+        // Operations
+
+        synchronized void clear()
+            {
+            this.queue   = this.newQueue();
+            this.history = this.newHistory();
+            this.onChanged();
+            }
+
+        synchronized void clearHistory()
+            {
+            this.history = this.newHistory();
+            this.onChanged();
+            }
+
+        synchronized void add(IAction action)
+            {
+            this.queue.add(action);
+            this.onChanged();
+            }
+
+        synchronized IAction poll()
+            {
+            IAction result = this.queue.poll();
+            if (result != null)
+                {
+                if (result instanceof IActionKeyed)
+                    {
+                    IActionKeyed keyed = (IActionKeyed)result;
+                    for (int actionKey : keyed.getActionKeys())
+                        {
+                        this.history.put(actionKey, true);
+                        }
+                    }
+                this.onChanged();
+                }
+            return result;
+            }
+
+        synchronized boolean containsActionKey(int queryKey)
+            {
+            // Is the key present in our history?
+            if (this.history.valueAt(queryKey))
+                {
+                return true;
+                }
+
+            // Is the key present in pending stuff?
+            for (IAction action : this.queue)
+                {
+                if (action instanceof IActionKeyed)
+                    {
+                    IActionKeyed keyed = (IActionKeyed)action;
+                    for (int actionKey : keyed.getActionKeys())
+                        {
+                        if (actionKey == queryKey)
+                            {
+                            return true;
+                            }
+                        }
+                    }
+                }
+
+            // Not present
+            return false;
+            }
+
+        private void onChanged()
+            {
+            this.notifyAll();
+            }
+        public void waitForChange() throws InterruptedException
+            {
+            // Note: caller must hold the monitor
+            this.wait();
+            }
+        }
+
+
+    //----------------------------------------------------------------------------------------------
+    // Management of synchronous threads
     //----------------------------------------------------------------------------------------------
 
     /**
@@ -365,15 +401,36 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 }
             catch (RuntimeException e)
                 {
-                // Remember the exception so we can (re)throw it back on over in loop.
-                // TODO: is this really the best idea? Certainly should test it thoroughly.
-                SynchronousOpMode.this.exceptionThrownOnMainThread = e;
+                // Remember the exception so we can (re)throw it back on over in loop().
+                SynchronousOpMode.this.exceptionThrownOnSynchronousThread = e;
                 }
             }
         }
 
     /**
-     * The robot controller runtime calls init(), once, to initialized everything
+     * Advanced: Note that the receiver is the party which should handle internal requests for the
+     * current thread.
+     *
+     * This is called automatically for the main() thread. If you choose in your code to spawn 
+     * additional worker synchronous threads, each of those threads should call this method near 
+     * the thread's beginning in order that access to the (thunked) hardware objects will function 
+     * correctly from that thread.
+     *
+     * It is the act of calling setThreadThunker that makes a thread into a 'synchronous thread',
+     * capable of internal calls on over to the loop() thread.
+     */
+    public void setThreadThunker()
+        {
+        if (BuildConfig.DEBUG) Assert.assertEquals(false, this.isLoopThread());
+        SynchronousThreadContext.setThreadThunker(this);
+        }
+
+    //----------------------------------------------------------------------------------------------
+    // init(), start(), loop(), and stop()
+    //----------------------------------------------------------------------------------------------
+
+    /**
+     * The robot controller runtime calls init(), once, to request that we initialize ourselves
      */
     @Override public final void init()
         {
@@ -400,8 +457,8 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         // We're being asked to start, not stop
         this.started = false;
         this.stopRequested = false;
-        this.loopCount = new AtomicInteger(0);
-        this.exceptionThrownOnMainThread = null;
+        this.loopCount.set(0);
+        this.exceptionThrownOnSynchronousThread = null;
 
         // Create the main thread and start it up and going!
         this.mainThread = new Thread(new Runner());
@@ -414,6 +471,8 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     /**
      * start() is called when the autonomous or the teleop mode begins: the robot
      * should start moving!
+     *
+     * @see #waitForStart()
      */
     @Override public final void start()
         {
@@ -431,8 +490,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         }
     
     /**
-     * The robot controller runtime calls loop() on a frequent basis, nominally every
-     * 20ms or so.
+     * The robot controller runtime calls loop() on a frequent basis, nominally every few ms or so.
      */
     @Override public final void loop()
         {
@@ -441,15 +499,17 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
 
         synchronized (this.loopLock)
             {
+            // Keep track of how many loop() calls we've seen
             this.loopCount.getAndIncrement();
             
+            // The history of what was executed int the previous loop() call is now irrelevant
             this.actionQueueAndHistory.clearHistory();
             
             // If we had an exception thrown by the main thread, then throw it here. 'Sort
-            // of like internal the exceptions.
-            if (this.exceptionThrownOnMainThread != null)
+            // of like thunking the exceptions.
+            if (this.exceptionThrownOnSynchronousThread != null)
                 {
-                throw this.exceptionThrownOnMainThread;
+                throw this.exceptionThrownOnSynchronousThread;
                 }
 
             // Capture the gamepad states safely so that in a synchronous thread we don't see torn writes
@@ -477,10 +537,10 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
             long nanotimeStart = System.nanoTime();
             long nanotimeMax   = nanotimeStart + this.msLoopDwellMax * NANO_TO_MILLI;
 
-            // Execute any actions we've been asked to execute here on the loop thread
+            // Do any actions we've been asked to execute here on the loop thread
             for (int i = 1; ; i++)
                 {
-                // Get the next work item in the queue. Get out of here if there isn't any more work.
+                // Get the next action in the queue. Get out of here if there aren't any more
                 IAction action;
                 synchronized (this.actionQueueAndHistory)
                     {
@@ -501,7 +561,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 }
 
             // Dig out and execute any of our singleton actions.
-            ArrayList<IAction> actions = this.snarfSingletons();
+            List<IAction> actions = this.snarfSingletons();
             for (IAction action : actions)
                 {
                 action.doAction();
@@ -515,25 +575,6 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         this.postLoopHook();
         }
     
-    /**
-     * Wait until we encounter a loop() cycle that doesn't (yet) contain any actions which
-     * are also thunks and whose key is the one indicated.
-     */
-    public void waitForLoopCycleEmptyOfActionKey(int actionKey) throws InterruptedException
-        {
-        synchronized (this.actionQueueAndHistory)
-            {
-            while (this.actionQueueAndHistory.containsActionKey(actionKey))
-                {
-                this.actionQueueAndHistory.waitForChange();
-                }
-            }
-        }
-    public static void synchronousThreadWaitForLoopCycleEmptyOfActionKey(int actionKey) throws InterruptedException
-        {
-        SynchronousOpMode.getThreadSynchronousOpMode().waitForLoopCycleEmptyOfActionKey(actionKey);
-        }
-
     /**
      * The robot controller runtime calls stop() to shut down the OpMode. 
      *
@@ -566,7 +607,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         // Call the subclass hook in case they might want to do something interesting
         this.postStopHook();
         }
-    
+
     //----------------------------------------------------------------------------------------------
     // Advanced: loop thread subclass hooks
     //----------------------------------------------------------------------------------------------
@@ -615,93 +656,15 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     protected void postStopHook() { /* hook for subclasses */ }
 
     //----------------------------------------------------------------------------------------------
-    // Thunking
-    //----------------------------------------------------------------------------------------------
-
-    /**
-     * Advanced: Note that the receiver is the party which should handle internal requests for the
-     * current thread.
-     *
-     * This is called automatically for the main() thread. If you choose in your code to spawn 
-     * additional worker synchronous threads, each of those threads should call this method near 
-     * the thread's beginning in order that access to the (thunked) hardware objects will function 
-     * correctly from that thread.
-     *
-     * It is the act of calling setThreadThunker that makes a thread into a 'synchronous thread',
-     * capable of internal calls on over to the loop() thread.
-     */
-    public void setThreadThunker()
-        {
-        if (BuildConfig.DEBUG) Assert.assertEquals(false, this.isLoopThread());
-        SynchronousThreadContext.setThreadThunker(this);
-        }
-
-    /**
-     * Advanced: If we are running on a synchronous thread, then return the object
-     * which is managing the internal from the current thread to the loop() thread.
-     * If we are not on a synchronous thread, then the behaviour is undefined.
-     */
-    public static IThunker getThreadThunker()
-        {
-        return SynchronousThreadContext.getThreadContext().getThunker();
-        }
-
-    private static SynchronousOpMode getThreadSynchronousOpMode()        
-        {
-        return (SynchronousOpMode)(getThreadThunker());
-        }
-
-
-    /**
-     * Advanced: wait until all thunks that have been dispatched from the current (synchronous)
-     * thread have completed their execution over on the loop() thread and their effects
-     * to have reached the hardwaree.
-     *
-     * In general, thunked methods that don't return any information to the caller
-     * (that is, the majority of setXXX() calls) only *initiate* their work on the loop()
-     * thread before returning to their caller; the work may or may not have been completed
-     * by the time the setXXX() call returns. Calling waitForThreadsWritesToReachHardware()
-     * allows one to wait later for these calls to have been dispatched. It waits further
-     * until it is known that the effect of those calls has been propagated to the hardware.
-     *
-     * Note that waitForThreadsWritesToReachHardware() only deals with work that has been issued
-     * by the current thread. Work dispatched from *other* (synchronous) threads may not yet have
-     * completed when waitForThreadsWritesToReachHardware() returns.
-     */
-    public void waitForThreadsWritesToReachHardware() throws InterruptedException
-        {
-        this.waitForLoopCycleEmptyOfActionKey
-            (
-            SynchronousThreadContext.getThreadContext().actionKeyWritesFromThisThread
-            );
-        }
-
-
-    /**
-     * Advanced: Answer as to whether the current thread is in fact the loop thread
-     */
-    private boolean isLoopThread()
-        {
-        return this.loopThread.getId() == Thread.currentThread().getId();
-        }
-    /**
-     * Advanced: Answer as to whether this is a synchronous thread
-     */
-    private boolean isSynchronousThread()
-        {
-        return SynchronousThreadContext.isSynchronousThread();
-        }
-
-    //----------------------------------------------------------------------------------------------
     // IThunker
     //----------------------------------------------------------------------------------------------
 
     /**
      * Advanced: Execute the indicated action on the loop thread given that we are on a synchronous thread
      */
-    public void executeOnLoopThread(IAction action)
+    @Override public void executeOnLoopThread(IAction action)
         {
-        if (BuildConfig.DEBUG) Assert.assertEquals(true, this.isSynchronousThread());
+        SynchronousThreadContext.assertSynchronousThread();
         this.actionQueueAndHistory.add(action);
         }
 
@@ -712,13 +675,83 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      * If a previous call has been made with the same key, then replace that previous action;
      * otherwise, add a new action with the key.
      */
-    public void executeSingletonOnLoopThread(int key, IAction action)
+    @Override public void executeSingletonOnLoopThread(int singletonKey, IAction action)
         {
-        if (BuildConfig.DEBUG) Assert.assertEquals(true, this.isSynchronousThread());
+        SynchronousThreadContext.assertSynchronousThread();
         synchronized (this.singletonLoopActions)
             {
-            this.singletonLoopActions.put(key, action);
+            this.singletonLoopActions.put(singletonKey, action);
             }
+        }
+
+    /**
+     * Advanced: Return a new key for use in executeSingletonOnLoopThread()
+     */
+    @Override public int getNewSingletonKey()
+        {
+        return staticGetNewSingletonKey();
+        }
+    
+    /**
+     * (Internal) Return a new key by which actions can be scheduled using executeSingletonOnLoopThread()
+     */
+    public static int staticGetNewSingletonKey()
+        {
+        return prevSingletonKey.incrementAndGet();
+        }
+
+    /**
+     * Advanced: If we are running on a synchronous thread, then return the object
+     * which is managing the internal from the current thread to the loop() thread.
+     * If we are not on a synchronous thread, then the behaviour is undefined.
+     */
+    public static IThunker getThreadThunker()
+        {
+        SynchronousThreadContext.assertSynchronousThread();
+        return SynchronousThreadContext.getThreadContext().getThunker();
+        }
+
+    //----------------------------------------------------------------------------------------------
+    // Thunking helpers
+    //----------------------------------------------------------------------------------------------
+
+    private static SynchronousOpMode getThreadSynchronousOpMode()
+        {
+        return (SynchronousOpMode)(getThreadThunker());
+        }
+
+    /**
+     * (Internal) Wait until we encounter a loop() cycle that doesn't (yet) contain any actions which
+     * are also thunks and whose key is the one indicated.
+     */
+    public void waitForLoopCycleEmptyOfActionKey(int actionKey) throws InterruptedException
+        {
+        synchronized (this.actionQueueAndHistory)
+            {
+            while (this.actionQueueAndHistory.containsActionKey(actionKey))
+                {
+                this.actionQueueAndHistory.waitForChange();
+                }
+            }
+        }
+    /**
+     * (Internal)
+     * 
+     *  @see #waitForLoopCycleEmptyOfActionKey(int) 
+     */
+    public static void synchronousThreadWaitForLoopCycleEmptyOfActionKey(int actionKey) throws InterruptedException
+        {
+        SynchronousOpMode.getThreadSynchronousOpMode().waitForLoopCycleEmptyOfActionKey(actionKey);
+        }
+
+    /**
+     * Advanced: Answer as to whether the current thread is in fact the loop thread
+     * 
+     * @see SynchronousThreadContext#isSynchronousThread() 
+     */
+    private boolean isLoopThread()
+        {
+        return this.loopThread.getId() == Thread.currentThread().getId();
         }
 
     private ArrayList<IAction> snarfSingletons()
@@ -747,15 +780,6 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
             }
         }
 
-    /**
-     * Return a new key by which actions can be scheduled using executeSingletonOnLoopThread()
-     */
-    public static int getNewExecuteSingletonKey()
-        {
-        return singletonKey.getAndIncrement();
-        }
-
-
     //----------------------------------------------------------------------------------------------
     // Thunking hardware map
     //----------------------------------------------------------------------------------------------
@@ -765,7 +789,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      * all the same devices but in a form that their methods thunk from the main()
      * thread to the loop() thread.
      */
-    public static HardwareMap createThunkedHardwareMap(HardwareMap hwmap)
+    private final static HardwareMap createThunkedHardwareMap(HardwareMap hwmap)
         {
         HardwareMap result = new HardwareMap();
 

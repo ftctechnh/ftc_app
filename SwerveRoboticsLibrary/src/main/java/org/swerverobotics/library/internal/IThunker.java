@@ -15,5 +15,10 @@ public interface IThunker
     /**
      * Execute the work on the loop thread as soon as we can (which may be on the current thread).
      */
-    void executeSingletonOnLoopThread(int key, IAction thunk);
+    void executeSingletonOnLoopThread(int singletonKey, IAction action);
+
+    /**
+     * Return a new singleton key
+     */
+    int getNewSingletonKey();
     }
