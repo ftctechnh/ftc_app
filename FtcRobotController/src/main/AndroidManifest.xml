@@ -3,7 +3,7 @@
           xmlns:tools="http://schemas.android.com/tools"
           package="com.qualcomm.ftcrobotcontroller"
           android:versionCode="1"
-          android:versionName="1.0">
+          android:versionName="1.1">
 
 
   <uses-permission

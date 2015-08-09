@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <string name="app_name">FTC Robot Controller</string>
+  <string name="app_name">Intersect Robot Controller</string>
   <string name="ok">OK</string>
 
   <string name="pref_configure_robot_title">Robot Configuration Settings</string>
