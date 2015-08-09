@@ -3,14 +3,34 @@ package org.swerverobotics.library.internal;
 import org.swerverobotics.library.exceptions.*;
 
 /**
- * Thunks derived from NonwaitingThunk queue up their work but do not synchronously
- * wait for that work's execution before returning from dispatch() to the caller.
+ * Thunks derived from ThunkForWriting are used for thunking write operations. Note
+ * that they queue up their work but do not synchronously wait for that work's execution
+  * before returning from dispatch() to the caller.
  */
-public abstract class NonwaitingThunk extends ThunkBase
+public abstract class ThunkForWriting extends Thunk
     {
-    public NonwaitingThunk() { }
-    public NonwaitingThunk(int actionKey) { super(actionKey); }
+    //----------------------------------------------------------------------------------------------
+    // Construction
+    //----------------------------------------------------------------------------------------------
+
+    public ThunkForWriting() 
+        { 
+        this.addActionKey
+            (
+            SynchronousThreadContext.getThreadContext().actionKeyWritesFromThisThread
+            );
+        }
     
+    public ThunkForWriting(int actionKey)
+        {
+        this();
+        this.addActionKey(actionKey);
+        }
+
+    //----------------------------------------------------------------------------------------------
+    // Operations
+    //----------------------------------------------------------------------------------------------
+
     public void doWriteOperation()
         {
         this.doWriteOperation(null);
@@ -26,7 +46,7 @@ public abstract class NonwaitingThunk extends ThunkBase
                 // Let any writer know we are about to write
                 if (writer != null)
                     {
-                    this.actionKey = writer.getListenerWriteThunkKey();
+                    this.addActionKey(writer.getListenerWriteThunkKey());
                     writer.enterWriteOperation();
                     }
 
@@ -36,7 +56,7 @@ public abstract class NonwaitingThunk extends ThunkBase
                 {
                 // Same as below
                 Thread.currentThread().interrupt();
-                throw SwerveRuntimeException.Wrap(e);
+                throw SwerveRuntimeException.wrap(e);
                 }
             catch (RuntimeInterruptedException e)
                 {
@@ -47,7 +67,7 @@ public abstract class NonwaitingThunk extends ThunkBase
                 // must deal with the necessity we have in reads of throwing,
                 // we may as well throw here as well, as that will help shut
                 // things down sooner.
-                throw SwerveRuntimeException.Wrap(e);
+                throw SwerveRuntimeException.wrap(e);
                 }
             }
         }

@@ -34,7 +34,7 @@ public class ThunkedUltrasonicSensor extends UltrasonicSensor
 
     @Override public void close()
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -45,7 +45,7 @@ public class ThunkedUltrasonicSensor extends UltrasonicSensor
 
     @Override public int getVersion()
         {
-        return (new ResultableThunk<Integer>()
+        return (new ThunkForReading<Integer>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -56,7 +56,7 @@ public class ThunkedUltrasonicSensor extends UltrasonicSensor
 
     @Override public String getConnectionInfo()
         {
-        return (new ResultableThunk<String>()
+        return (new ThunkForReading<String>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -67,7 +67,7 @@ public class ThunkedUltrasonicSensor extends UltrasonicSensor
 
     @Override public String getDeviceName()
         {
-        return (new ResultableThunk<String>()
+        return (new ThunkForReading<String>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -82,7 +82,7 @@ public class ThunkedUltrasonicSensor extends UltrasonicSensor
 
     @Override public double getUltrasonicLevel()
         {
-        return (new ResultableThunk<Double>()
+        return (new ThunkForReading<Double>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -93,7 +93,7 @@ public class ThunkedUltrasonicSensor extends UltrasonicSensor
 
     @Override public String status()
         {
-        return (new ResultableThunk<String>()
+        return (new ThunkForReading<String>()
             {
             @Override protected void actionOnLoopThread()
                 {

@@ -1,9 +1,11 @@
 package org.swerverobotics.library.internal;
 
+import java.util.*;
+
 /**
  * An interface for accessing administrative information associated with actions. 
  */
 public interface IActionKeyed
     {
-    int getActionKey();
+    List<Integer> getActionKeys();
     }

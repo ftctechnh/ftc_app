@@ -39,7 +39,7 @@ public class ThunkedTelemetry
 
     public long getTimestamp()
         {
-        return (new ResultableThunk<Long>()
+        return (new ThunkForReading<Long>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -50,7 +50,7 @@ public class ThunkedTelemetry
 
     public void setTag(final String tag)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -61,7 +61,7 @@ public class ThunkedTelemetry
 
     public String getTag()
         {
-        return (new ResultableThunk<String>()
+        return (new ThunkForReading<String>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -72,7 +72,7 @@ public class ThunkedTelemetry
 
     public void addData(final String key, final String msg)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -83,7 +83,7 @@ public class ThunkedTelemetry
 
     public void addData(final String msg, final float value)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -94,7 +94,7 @@ public class ThunkedTelemetry
 
     public void addData(final String msg, final double value)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -105,7 +105,7 @@ public class ThunkedTelemetry
 
     public Map<String, String> getDataStrings()
         {
-        return (new ResultableThunk<Map<String, String>>()
+        return (new ThunkForReading<Map<String, String>>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -116,7 +116,7 @@ public class ThunkedTelemetry
 
     public Map<String, Float> getDataNumbers()
         {
-        return (new ResultableThunk<Map<String, Float>>()
+        return (new ThunkForReading<Map<String, Float>>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -127,7 +127,7 @@ public class ThunkedTelemetry
 
     public boolean hasData()
         {
-        return (new ResultableThunk<Boolean>()
+        return (new ThunkForReading<Boolean>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -138,7 +138,7 @@ public class ThunkedTelemetry
 
     public void clearData()
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {

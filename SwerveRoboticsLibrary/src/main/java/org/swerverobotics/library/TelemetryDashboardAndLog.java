@@ -266,8 +266,8 @@ public class TelemetryDashboardAndLog
     //----------------------------------------------------------------------------------------------
 
     private long                    nanoLastUpdate = 0;
-    private int                     singletonKey = SynchronousOpMode.getNewExecuteSingletonKey();
     private int                     telemetryDisplayLineCount = 9;
+    private final int               singletonKey = SynchronousOpMode.staticGetNewSingletonKey();
 
     /**
      * 'dashboard' provides a means to declaratively indicate telemetry items of interest.

@@ -7,13 +7,42 @@ import org.swerverobotics.library.exceptions.*;
  * which can be set inside of actionOnLoopThread() in order to return data
  * back to the caller of dispatch().
  */
-public abstract class ResultableThunk<T> extends WaitingThunk
+public abstract class ThunkForReading<T> extends Thunk
     {
-    public ResultableThunk() { }
-    public ResultableThunk(int actionKey) { super(actionKey); }
-    
+    //----------------------------------------------------------------------------------------------
+    // State
+    //----------------------------------------------------------------------------------------------
+
     public T result;
 
+    //----------------------------------------------------------------------------------------------
+    // Construction
+    //----------------------------------------------------------------------------------------------
+
+    public ThunkForReading() 
+        { 
+        }
+    public ThunkForReading(int actionKey) 
+        { 
+        this();
+        this.addActionKey(actionKey); 
+        }
+    
+    //----------------------------------------------------------------------------------------------
+    // Operations
+    //----------------------------------------------------------------------------------------------
+    
+    @Override public void dispatch() throws InterruptedException
+    // Once dispatched, we wait for our own completion
+        {
+        super.dispatch();
+
+        synchronized (this)
+            {
+            this.wait();
+            }
+        }
+   
     public T doReadOperation()
         {
         return this.doReadOperation(null);
@@ -29,7 +58,7 @@ public abstract class ResultableThunk<T> extends WaitingThunk
                 // Let any reader know that we are about to read
                 if (reader != null)
                     {
-                    this.actionKey = reader.getListenerReadThunkKey();
+                    this.addActionKey(reader.getListenerReadThunkKey());
                     reader.enterReadOperation();
                     }
 
@@ -37,13 +66,13 @@ public abstract class ResultableThunk<T> extends WaitingThunk
                 }
             catch (InterruptedException e)
                 {
-                // Tell the current thread that he should shut down soon
+                // (Re)tell the current thread that he should shut down soon
                 Thread.currentThread().interrupt();
 
                 // Our signature (and that of our caller) doesn't allow us to throw
                 // InterruptedException. But we can't actually return a value to our caller,
                 // as we have nothing to return. So, we do the best we can, and throw SOMETHING.
-                throw SwerveRuntimeException.Wrap(e);
+                throw SwerveRuntimeException.wrap(e);
                 }
             return this.result;
             }

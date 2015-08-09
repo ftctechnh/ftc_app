@@ -35,7 +35,7 @@ public class ThunkedPWMOutputController implements PWMOutputController
 
     @Override public void close()
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -46,7 +46,7 @@ public class ThunkedPWMOutputController implements PWMOutputController
 
     @Override public int getVersion()
         {
-        return (new ResultableThunk<Integer>()
+        return (new ThunkForReading<Integer>()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -57,7 +57,7 @@ public class ThunkedPWMOutputController implements PWMOutputController
 
     @Override public String getDeviceName()
         {
-        return (new ResultableThunk<String>()
+        return (new ThunkForReading<String>()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -68,7 +68,7 @@ public class ThunkedPWMOutputController implements PWMOutputController
 
     @Override public SerialNumber getSerialNumber()
         {
-        return (new ResultableThunk<SerialNumber>()
+        return (new ThunkForReading<SerialNumber>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -79,7 +79,7 @@ public class ThunkedPWMOutputController implements PWMOutputController
 
     @Override public void setPulseWidthOutputTime(final int channel, final int time)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -90,7 +90,7 @@ public class ThunkedPWMOutputController implements PWMOutputController
 
     @Override public void setPulseWidthPeriod(final int channel, final int period)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -101,7 +101,7 @@ public class ThunkedPWMOutputController implements PWMOutputController
 
     @Override public double getPulseWidthOutputTime(final int channel)
         {
-        return (new ResultableThunk<Double>()
+        return (new ThunkForReading<Double>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -112,7 +112,7 @@ public class ThunkedPWMOutputController implements PWMOutputController
 
     @Override public double getPulseWidthPeriod(final int channel)
         {
-        return (new ResultableThunk<Double>()
+        return (new ThunkForReading<Double>()
             {
             @Override protected void actionOnLoopThread()
                 {

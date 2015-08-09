@@ -34,7 +34,7 @@ public class ThunkedVoltageSensor implements VoltageSensor
 
     @Override public void close()
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -45,7 +45,7 @@ public class ThunkedVoltageSensor implements VoltageSensor
 
     @Override public int getVersion()
         {
-        return (new ResultableThunk<Integer>()
+        return (new ThunkForReading<Integer>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -56,7 +56,7 @@ public class ThunkedVoltageSensor implements VoltageSensor
 
     @Override public String getConnectionInfo()
         {
-        return (new ResultableThunk<String>()
+        return (new ThunkForReading<String>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -67,7 +67,7 @@ public class ThunkedVoltageSensor implements VoltageSensor
 
     @Override public String getDeviceName()
         {
-        return (new ResultableThunk<String>()
+        return (new ThunkForReading<String>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -82,7 +82,7 @@ public class ThunkedVoltageSensor implements VoltageSensor
 
     @Override public double getVoltage()
         {
-        return (new ResultableThunk<Double>()
+        return (new ThunkForReading<Double>()
             {
             @Override protected void actionOnLoopThread()
                 {
