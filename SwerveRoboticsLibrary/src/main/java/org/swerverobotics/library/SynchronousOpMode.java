@@ -512,7 +512,6 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     
     private void setThreadThunker()
         {
-        if (BuildConfig.DEBUG) Assert.assertEquals(false, this.isLoopThread());
         SynchronousThreadContext.setThreadThunker(this);
         }
 
@@ -537,8 +536,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         this.telemetry = new TelemetryDashboardAndLog(super.telemetry);
 
         // Remember who the loop thread is so that we know whom to communicate with from a 
-        // synchronous thread. Note: we ASSUME here that start(), loop(), and stop()
-        // all run on the same thread.
+        // synchronous thread. Note: we ASSUME here that init() and loop() run on the same thread
         loopThread = Thread.currentThread();
 
         // Paranoia: clear any state that may just perhaps be lingering
@@ -595,6 +593,9 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
         {
         // Call the subclass hook in case they might want to do something interesting
         this.preLoopHook();
+
+        // Validate our assumption of init() and loop() running on the same thread.
+        if (BuildConfig.DEBUG) Assert.assertEquals(true, this.isLoopThread());
 
         synchronized (this.loopLock)
             {
