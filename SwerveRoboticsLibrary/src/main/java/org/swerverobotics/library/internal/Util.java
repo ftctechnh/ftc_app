@@ -52,7 +52,7 @@ public class Util
             }
         catch (IllegalAccessException e)
             {
-            throw SwerveRuntimeException.Wrap(e);
+            throw SwerveRuntimeException.wrap(e);
             }
         }
 
@@ -65,7 +65,7 @@ public class Util
             }
         catch (IllegalAccessException e)
             {
-            throw SwerveRuntimeException.Wrap(e);
+            throw SwerveRuntimeException.wrap(e);
             }
         }
 
@@ -78,7 +78,7 @@ public class Util
             }
         catch (IllegalAccessException e)
             {
-            throw SwerveRuntimeException.Wrap(e);
+            throw SwerveRuntimeException.wrap(e);
             }
         }
 
@@ -91,7 +91,7 @@ public class Util
             }
         catch (IllegalAccessException e)
             {
-            throw SwerveRuntimeException.Wrap(e);
+            throw SwerveRuntimeException.wrap(e);
             }
         }
 
@@ -104,7 +104,7 @@ public class Util
             }
         catch (IllegalAccessException e)
             {
-            throw SwerveRuntimeException.Wrap(e);
+            throw SwerveRuntimeException.wrap(e);
             }
         }
     static boolean getPrivateBooleanField(Object target, int iField)
@@ -116,7 +116,7 @@ public class Util
             }
         catch (IllegalAccessException e)
             {
-            throw SwerveRuntimeException.Wrap(e);
+            throw SwerveRuntimeException.wrap(e);
             }
         }
 
@@ -129,7 +129,7 @@ public class Util
             }
         catch (IllegalAccessException e)
             {
-            throw SwerveRuntimeException.Wrap(e);
+            throw SwerveRuntimeException.wrap(e);
             }
         }
 
@@ -143,7 +143,7 @@ public class Util
             }
         catch (IllegalAccessException e)
             {
-            throw SwerveRuntimeException.Wrap(e);
+            throw SwerveRuntimeException.wrap(e);
             }
         }
     
@@ -156,7 +156,7 @@ public class Util
             }
         catch (IllegalAccessException e)
             {
-            throw SwerveRuntimeException.Wrap(e);
+            throw SwerveRuntimeException.wrap(e);
             }
         }
 
@@ -169,7 +169,7 @@ public class Util
             }
         catch (IllegalAccessException e)
             {
-            throw SwerveRuntimeException.Wrap(e);
+            throw SwerveRuntimeException.wrap(e);
             }
         }
 
@@ -182,7 +182,7 @@ public class Util
             }
         catch (IllegalAccessException e)
             {
-            throw SwerveRuntimeException.Wrap(e);
+            throw SwerveRuntimeException.wrap(e);
             }
         }
 
@@ -195,7 +195,7 @@ public class Util
             }
         catch (IllegalAccessException e)
             {
-            throw SwerveRuntimeException.Wrap(e);
+            throw SwerveRuntimeException.wrap(e);
             }
         }
 
@@ -208,7 +208,7 @@ public class Util
             }
         catch (IllegalAccessException e)
             {
-            throw SwerveRuntimeException.Wrap(e);
+            throw SwerveRuntimeException.wrap(e);
             }
         }
 
@@ -221,7 +221,7 @@ public class Util
             }
         catch (IllegalAccessException e)
             {
-            throw SwerveRuntimeException.Wrap(e);
+            throw SwerveRuntimeException.wrap(e);
             }
         }
     }

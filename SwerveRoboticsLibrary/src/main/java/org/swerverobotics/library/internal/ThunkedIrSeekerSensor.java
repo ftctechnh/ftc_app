@@ -34,7 +34,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
 
     @Override public void close()
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -45,7 +45,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
 
     @Override public int getVersion()
         {
-        return (new ResultableThunk<Integer>()
+        return (new ThunkForReading<Integer>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -56,7 +56,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
 
     @Override public String getConnectionInfo()
         {
-        return (new ResultableThunk<String>()
+        return (new ThunkForReading<String>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -67,7 +67,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
 
     @Override public String getDeviceName()
         {
-        return (new ResultableThunk<String>()
+        return (new ThunkForReading<String>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -82,7 +82,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
 
     @Override public void setMode(final IrSeekerSensor.Mode mode)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -93,7 +93,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
 
     @Override public IrSeekerSensor.Mode getMode()
         {
-        return (new ResultableThunk<IrSeekerSensor.Mode>()
+        return (new ThunkForReading<Mode>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -104,7 +104,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
 
     @Override public boolean signalDetected()
         {
-        return (new ResultableThunk<Boolean>()
+        return (new ThunkForReading<Boolean>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -115,7 +115,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
 
     @Override public double getAngle()
         {
-        return (new ResultableThunk<Double>()
+        return (new ThunkForReading<Double>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -126,7 +126,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
 
     @Override public double getStrength()
         {
-        return (new ResultableThunk<Double>()
+        return (new ThunkForReading<Double>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -137,7 +137,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
 
     @Override public IrSeekerSensor.IrSeekerIndividualSensor[] getIndividualSensors()
         {
-        return (new ResultableThunk<IrSeekerSensor.IrSeekerIndividualSensor[]>()
+        return (new ThunkForReading<IrSeekerIndividualSensor[]>()
             {
             @Override protected void actionOnLoopThread()
                 {

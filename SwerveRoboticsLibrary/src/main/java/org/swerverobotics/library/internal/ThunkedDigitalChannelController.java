@@ -35,7 +35,7 @@ public class ThunkedDigitalChannelController implements DigitalChannelController
 
     @Override public void close()
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -46,7 +46,7 @@ public class ThunkedDigitalChannelController implements DigitalChannelController
 
     @Override public int getVersion()
         {
-        return (new ResultableThunk<Integer>()
+        return (new ThunkForReading<Integer>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -57,7 +57,7 @@ public class ThunkedDigitalChannelController implements DigitalChannelController
 
     @Override public String getConnectionInfo()
         {
-        return (new ResultableThunk<String>()
+        return (new ThunkForReading<String>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -68,7 +68,7 @@ public class ThunkedDigitalChannelController implements DigitalChannelController
 
     @Override public String getDeviceName()
         {
-        return (new ResultableThunk<String>()
+        return (new ThunkForReading<String>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -83,7 +83,7 @@ public class ThunkedDigitalChannelController implements DigitalChannelController
 
     @Override public SerialNumber getSerialNumber()
         {
-        return (new ResultableThunk<SerialNumber>()
+        return (new ThunkForReading<SerialNumber>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -94,7 +94,7 @@ public class ThunkedDigitalChannelController implements DigitalChannelController
     
     @Override public DigitalChannelController.Mode getDigitalChannelMode(final int channel)
         {
-        return (new ResultableThunk<DigitalChannelController.Mode>()
+        return (new ThunkForReading<Mode>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -105,7 +105,7 @@ public class ThunkedDigitalChannelController implements DigitalChannelController
 
     @Override public void setDigitalChannelMode(final int channel, final DigitalChannelController.Mode mode)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -116,7 +116,7 @@ public class ThunkedDigitalChannelController implements DigitalChannelController
         
     @Override public boolean getDigitalChannelState(final int channel)
         {
-        return (new ResultableThunk<Boolean>()
+        return (new ThunkForReading<Boolean>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -127,7 +127,7 @@ public class ThunkedDigitalChannelController implements DigitalChannelController
 
     @Override public void setDigitalChannelState(final int channel, final boolean state)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {

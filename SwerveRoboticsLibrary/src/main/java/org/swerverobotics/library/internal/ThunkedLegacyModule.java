@@ -33,7 +33,7 @@ public class ThunkedLegacyModule implements LegacyModule
 
     @Override public void close()
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -44,7 +44,7 @@ public class ThunkedLegacyModule implements LegacyModule
 
     @Override public int getVersion()
         {
-        return (new ResultableThunk<Integer>()
+        return (new ThunkForReading<Integer>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -55,7 +55,7 @@ public class ThunkedLegacyModule implements LegacyModule
 
     @Override public String getConnectionInfo()
         {
-        return (new ResultableThunk<String>()
+        return (new ThunkForReading<String>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -66,7 +66,7 @@ public class ThunkedLegacyModule implements LegacyModule
 
     @Override public String getDeviceName()
         {
-        return (new ResultableThunk<String>()
+        return (new ThunkForReading<String>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -81,7 +81,7 @@ public class ThunkedLegacyModule implements LegacyModule
 
     @Override public void enableNxtI2cReadMode(final int physicalPort, final int i2cAddress, final int memAddress, final int length)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -92,7 +92,7 @@ public class ThunkedLegacyModule implements LegacyModule
 
     @Override public void enableNxtI2cWriteMode(final int physicalPort, final int i2cAddress, final int memAddress, final int length)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -103,7 +103,7 @@ public class ThunkedLegacyModule implements LegacyModule
 
     @Override public void enableAnalogReadMode(final int physicalPort)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -114,7 +114,7 @@ public class ThunkedLegacyModule implements LegacyModule
 
     @Override public void enable9v(final int physicalPort, final boolean enable)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -125,7 +125,7 @@ public class ThunkedLegacyModule implements LegacyModule
 
     @Override public void setDigitalLine(final int physicalPort, final int line, final boolean set)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -136,7 +136,7 @@ public class ThunkedLegacyModule implements LegacyModule
 
     @Override public byte[] readAnalog(final int physicalPort)
         {
-        return (new ResultableThunk<byte[]>()
+        return (new ThunkForReading<byte[]>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -147,7 +147,7 @@ public class ThunkedLegacyModule implements LegacyModule
 
     @Override public Lock getI2cReadCacheLock(final int physicalPort)
         {
-        return (new ResultableThunk<Lock>()
+        return (new ThunkForReading<Lock>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -158,7 +158,7 @@ public class ThunkedLegacyModule implements LegacyModule
 
     @Override public Lock getI2cWriteCacheLock(final int physicalPort)
         {
-        return (new ResultableThunk<Lock>()
+        return (new ThunkForReading<Lock>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -169,7 +169,7 @@ public class ThunkedLegacyModule implements LegacyModule
 
     @Override public byte[] getI2cReadCache(final int physicalPort)
         {
-        return (new ResultableThunk<byte[]>()
+        return (new ThunkForReading<byte[]>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -180,7 +180,7 @@ public class ThunkedLegacyModule implements LegacyModule
 
     @Override public byte[] getI2cWriteCache(final int physicalPort)
         {
-        return (new ResultableThunk<byte[]>()
+        return (new ThunkForReading<byte[]>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -191,7 +191,7 @@ public class ThunkedLegacyModule implements LegacyModule
 
     @Override public void setNxtI2cPortActionFlag(final int physicalPort)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -202,7 +202,7 @@ public class ThunkedLegacyModule implements LegacyModule
 
     @Override public boolean isNxtI2cPortActionFlagSet(final int physicalPort)
         {
-        return (new ResultableThunk<Boolean>()
+        return (new ThunkForReading<Boolean>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -213,7 +213,7 @@ public class ThunkedLegacyModule implements LegacyModule
 
     @Override public void readI2cCacheFromModule(final int physicalPort)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -224,7 +224,7 @@ public class ThunkedLegacyModule implements LegacyModule
 
     @Override public void writeI2cCacheToModule(final int physicalPort)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -235,7 +235,7 @@ public class ThunkedLegacyModule implements LegacyModule
 
     @Override public void writeI2cPortFlagOnlyToModule(final int physicalPort)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -246,7 +246,7 @@ public class ThunkedLegacyModule implements LegacyModule
 
     @Override public boolean isI2cPortInReadMode(final int physicalPort)
         {
-        return (new ResultableThunk<Boolean>()
+        return (new ThunkForReading<Boolean>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -257,7 +257,7 @@ public class ThunkedLegacyModule implements LegacyModule
 
     @Override public boolean isI2cPortInWriteMode(final int physicalPort)
         {
-        return (new ResultableThunk<Boolean>()
+        return (new ThunkForReading<Boolean>()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -268,7 +268,7 @@ public class ThunkedLegacyModule implements LegacyModule
     
     @Override public void registerForPortReadyCallback(final LegacyModule.PortReadyCallback callback, final int physicalPort)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -279,7 +279,7 @@ public class ThunkedLegacyModule implements LegacyModule
         
     @Override public void deregisterForPortReadyCallback(final int physicalPort)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -290,7 +290,7 @@ public class ThunkedLegacyModule implements LegacyModule
     
     @Override public boolean isI2cPortReady(final int physicalPort)
         {
-        return (new ResultableThunk<Boolean>()
+        return (new ThunkForReading<Boolean>()
             {
             @Override protected void actionOnLoopThread()
                 {

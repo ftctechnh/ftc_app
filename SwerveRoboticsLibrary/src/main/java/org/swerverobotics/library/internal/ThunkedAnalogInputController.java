@@ -35,7 +35,7 @@ public class ThunkedAnalogInputController implements AnalogInputController
 
     @Override public void close()
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -46,7 +46,7 @@ public class ThunkedAnalogInputController implements AnalogInputController
 
     @Override public int getVersion()
         {
-        return (new ResultableThunk<Integer>()
+        return (new ThunkForReading<Integer>()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -57,7 +57,7 @@ public class ThunkedAnalogInputController implements AnalogInputController
 
     @Override public String getConnectionInfo()
         {
-        return (new ResultableThunk<String>()
+        return (new ThunkForReading<String>()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -68,7 +68,7 @@ public class ThunkedAnalogInputController implements AnalogInputController
 
     @Override public String getDeviceName()
         {
-        return (new ResultableThunk<String>()
+        return (new ThunkForReading<String>()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -83,7 +83,7 @@ public class ThunkedAnalogInputController implements AnalogInputController
 
     @Override public SerialNumber getSerialNumber()
         {
-        return (new ResultableThunk<SerialNumber>()
+        return (new ThunkForReading<SerialNumber>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -94,7 +94,7 @@ public class ThunkedAnalogInputController implements AnalogInputController
 
     @Override public int getAnalogInputValue(final int channel)
         {
-        return (new ResultableThunk<Integer>()
+        return (new ThunkForReading<Integer>()
             {
             @Override protected void actionOnLoopThread()
                 {

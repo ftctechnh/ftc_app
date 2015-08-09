@@ -34,46 +34,46 @@ public class ThunkedTouchSensor extends TouchSensor
 
     @Override public void close()
         {
-        (new NonwaitingThunk()
-        {
-        @Override protected void actionOnLoopThread()
+        (new ThunkForWriting()
             {
-            target.close();
-            }
-        }).doWriteOperation();
+            @Override protected void actionOnLoopThread()
+                {
+                target.close();
+                }
+            }).doWriteOperation();
         }
 
     @Override public int getVersion()
         {
-        return (new ResultableThunk<Integer>()
-        {
-        @Override protected void actionOnLoopThread()
+        return (new ThunkForReading<Integer>()
             {
-            this.result = target.getVersion();
-            }
-        }).doReadOperation();
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getVersion();
+                }
+            }).doReadOperation();
         }
 
     @Override public String getConnectionInfo()
         {
-        return (new ResultableThunk<String>()
-        {
-        @Override protected void actionOnLoopThread()
+        return (new ThunkForReading<String>()
             {
-            this.result = target.getConnectionInfo();
-            }
-        }).doReadOperation();
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getConnectionInfo();
+                }
+            }).doReadOperation();
         }
 
     @Override public String getDeviceName()
         {
-        return (new ResultableThunk<String>()
-        {
-        @Override protected void actionOnLoopThread()
+        return (new ThunkForReading<String>()
             {
-            this.result = target.getDeviceName();
-            }
-        }).doReadOperation();
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getDeviceName();
+                }
+            }).doReadOperation();
         }
 
     //----------------------------------------------------------------------------------------------
@@ -82,7 +82,7 @@ public class ThunkedTouchSensor extends TouchSensor
 
     @Override public double getValue()
         {
-        return (new ResultableThunk<Double>()
+        return (new ThunkForReading<Double>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -93,7 +93,7 @@ public class ThunkedTouchSensor extends TouchSensor
 
     @Override public boolean isPressed()
         {
-        return (new ResultableThunk<Boolean>()
+        return (new ThunkForReading<Boolean>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -104,7 +104,7 @@ public class ThunkedTouchSensor extends TouchSensor
 
     @Override public String toString()
         {
-        return (new ResultableThunk<String>()
+        return (new ThunkForReading<String>()
             {
             @Override protected void actionOnLoopThread()
                 {

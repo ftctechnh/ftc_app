@@ -34,46 +34,46 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     @Override public void close()
         {
-        (new NonwaitingThunk()
-        {
-        @Override protected void actionOnLoopThread()
+        (new ThunkForWriting()
             {
-            target.close();
-            }
-        }).doWriteOperation();
+            @Override protected void actionOnLoopThread()
+                {
+                target.close();
+                }
+            }).doWriteOperation();
         }
 
     @Override public int getVersion()
         {
-        return (new ResultableThunk<Integer>()
-        {
-        @Override protected void actionOnLoopThread()
+        return (new ThunkForReading<Integer>()
             {
-            this.result = target.getVersion();
-            }
-        }).doReadOperation();
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getVersion();
+                }
+            }).doReadOperation();
         }
 
     @Override public String getConnectionInfo()
         {
-        return (new ResultableThunk<String>()
-        {
-        @Override protected void actionOnLoopThread()
+        return (new ThunkForReading<String>()
             {
-            this.result = target.getConnectionInfo();
-            }
-        }).doReadOperation();
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getConnectionInfo();
+                }
+            }).doReadOperation();
         }
 
     @Override public String getDeviceName()
         {
-        return (new ResultableThunk<String>()
-        {
-        @Override protected void actionOnLoopThread()
+        return (new ThunkForReading<String>()
             {
-            this.result = target.getDeviceName();
-            }
-        }).doReadOperation();
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getDeviceName();
+                }
+            }).doReadOperation();
         }
     
     
@@ -83,7 +83,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     @Override public int getDigitalInputStateByte()
         {
-        return (new ResultableThunk<Integer>()
+        return (new ThunkForReading<Integer>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -94,7 +94,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     @Override public void setDigitalIOControlByte(final byte physicalPort)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -105,7 +105,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     @Override public byte getDigitalIOControlByte()
         {
-        return (new ResultableThunk<Byte>()
+        return (new ThunkForReading<Byte>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -116,7 +116,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     @Override public void setDigitalOutputByte(final byte physicalPort)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -127,7 +127,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     @Override public byte getDigitalOutputStateByte()
         {
-        return (new ResultableThunk<Byte>()
+        return (new ThunkForReading<Byte>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -138,7 +138,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     @Override public boolean getLEDState(final int physicalPort)
         {
-        return (new ResultableThunk<Boolean>()
+        return (new ThunkForReading<Boolean>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -149,7 +149,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     @Override public void setLED(final int physicalPort, final boolean var2)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -164,7 +164,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     @Override public int getAnalogInputValue(final int physicalPort)
         {
-        return (new ResultableThunk<Integer>()
+        return (new ThunkForReading<Integer>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -175,7 +175,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     @Override public SerialNumber getSerialNumber()
         {
-        return (new ResultableThunk<SerialNumber>()
+        return (new ThunkForReading<SerialNumber>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -198,7 +198,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     @Override public void setAnalogOutputVoltage(final int physicalPort, final int voltage)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -209,7 +209,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
         
     @Override public void setAnalogOutputFrequency(final int physicalPort, final int frequency)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -220,7 +220,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
         
     @Override public void setAnalogOutputMode(final int physicalPort, final byte mode)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -237,7 +237,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     @Override public DigitalChannelController.Mode getDigitalChannelMode(final int physicalPort)
         {
-        return (new ResultableThunk<DigitalChannelController.Mode>()
+        return (new ThunkForReading<Mode>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -248,7 +248,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     @Override public void setDigitalChannelMode(final int physicalPort, final DigitalChannelController.Mode mode)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -259,7 +259,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     @Override public boolean getDigitalChannelState(final int physicalPort)
         {
-        return (new ResultableThunk<Boolean>()
+        return (new ThunkForReading<Boolean>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -270,7 +270,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     @Override public void setDigitalChannelState(final int physicalPort, final boolean state)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -293,7 +293,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     @Override public void enableI2cReadMode(final int physicalPort, final int i2cAddress, final int memAddress, final int length)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -304,7 +304,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     @Override public void enableI2cWriteMode(final int physicalPort, final int i2cAddress, final int memAddress, final int length)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -315,7 +315,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     @Override public Lock getI2cReadCacheLock(final int physicalPort)
         {
-        return (new ResultableThunk<Lock>()
+        return (new ThunkForReading<Lock>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -326,7 +326,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     @Override public Lock getI2cWriteCacheLock(final int physicalPort)
         {
-        return (new ResultableThunk<Lock>()
+        return (new ThunkForReading<Lock>()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -337,7 +337,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     @Override public byte[] getI2cReadCache(final int physicalPort)
         {
-        return (new ResultableThunk<byte[]>()
+        return (new ThunkForReading<byte[]>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -348,7 +348,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     @Override public byte[] getI2cWriteCache(final int physicalPort)
         {
-        return (new ResultableThunk<byte[]>()
+        return (new ThunkForReading<byte[]>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -359,7 +359,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     @Override public void setI2cPortActionFlag(final int physicalPort)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
         {
         @Override protected void actionOnLoopThread()
             {
@@ -370,7 +370,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     @Override public boolean isI2cPortActionFlagSet(final int physicalPort)
         {
-        return (new ResultableThunk<Boolean>()
+        return (new ThunkForReading<Boolean>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -381,7 +381,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     @Override public void readI2cCacheFromModule(final int physicalPort)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -392,7 +392,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     @Override public void writeI2cCacheToModule(final int physicalPort)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -403,7 +403,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     @Override public void writeI2cPortFlagOnlyToModule(final int physicalPort)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -414,7 +414,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     @Override public boolean isI2cPortInReadMode(final int physicalPort)
         {
-        return (new ResultableThunk<Boolean>()
+        return (new ThunkForReading<Boolean>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -425,7 +425,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     @Override public boolean isI2cPortInWriteMode(final int physicalPort)
         {
-        return (new ResultableThunk<Boolean>()
+        return (new ThunkForReading<Boolean>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -436,7 +436,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     @Override public boolean isI2cPortReady(final int physicalPort)
         {
-        return (new ResultableThunk<Boolean>()
+        return (new ThunkForReading<Boolean>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -447,7 +447,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     @Override public void registerForI2cPortReadyCallback(final I2cController.I2cPortReadyCallback callback, final int physicalPort)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -458,7 +458,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     @Override public void deregisterForPortReadyCallback(final int physicalPort)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -481,7 +481,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     @Override public void setPulseWidthOutputTime(final int physicalPort, final int var2)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -492,7 +492,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     @Override public void setPulseWidthPeriod(final int physicalPort, final int var2)
         {
-        (new NonwaitingThunk()
+        (new ThunkForWriting()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -504,7 +504,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     @Override public double getPulseWidthOutputTime(final int physicalPort)
         {
-        return (new ResultableThunk<Double>()
+        return (new ThunkForReading<Double>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -516,7 +516,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
 
     @Override public double getPulseWidthPeriod(final int physicalPort)
         {
-        return (new ResultableThunk<Double>()
+        return (new ThunkForReading<Double>()
             {
             @Override protected void actionOnLoopThread()
                 {
