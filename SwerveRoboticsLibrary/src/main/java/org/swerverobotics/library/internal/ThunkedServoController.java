@@ -41,18 +41,18 @@ public class ThunkedServoController implements ServoController
                 {
                 target.close();
                 }
-            }).doWriteOperation();
+            }).doUntrackedWriteOperation();
         }
 
     @Override public int getVersion()
         {
         return (new ThunkForReading<Integer>()
-        {
-        @Override protected void actionOnLoopThread()
             {
-            this.result = target.getVersion();
-            }
-        }).doReadOperation();
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getVersion();
+                }
+            }).doUntrackedReadOperation();
         }
 
     @Override public String getConnectionInfo()
@@ -63,7 +63,7 @@ public class ThunkedServoController implements ServoController
                 {
                 this.result = target.getConnectionInfo();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
 
     @Override public String getDeviceName()
@@ -74,7 +74,7 @@ public class ThunkedServoController implements ServoController
                 {
                 this.result = target.getDeviceName();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }    
     
     //----------------------------------------------------------------------------------------------

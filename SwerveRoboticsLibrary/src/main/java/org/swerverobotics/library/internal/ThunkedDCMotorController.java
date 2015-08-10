@@ -187,7 +187,7 @@ public class ThunkedDCMotorController implements DcMotorController, IThunkedRead
                 {
                 target.close();
                 }
-            }).doWriteOperation(this);
+            }).doUntrackedWriteOperation();
         }
 
     @Override public synchronized int getVersion()
@@ -198,7 +198,7 @@ public class ThunkedDCMotorController implements DcMotorController, IThunkedRead
                 {
                 this.result = target.getVersion();
                 }
-            }).doReadOperation(this);
+            }).doUntrackedReadOperation();
         }
 
     @Override public synchronized String getConnectionInfo()
@@ -209,7 +209,7 @@ public class ThunkedDCMotorController implements DcMotorController, IThunkedRead
                 {
                 this.result = target.getConnectionInfo();
                 }
-            }).doReadOperation(this);
+            }).doUntrackedReadOperation();
         }
 
     @Override public synchronized String getDeviceName()
@@ -220,7 +220,7 @@ public class ThunkedDCMotorController implements DcMotorController, IThunkedRead
                 {
                 this.result = target.getDeviceName();
                 }
-            }).doReadOperation(this);
+            }).doUntrackedReadOperation();
         }
 
     //----------------------------------------------------------------------------------------------
@@ -262,16 +262,7 @@ public class ThunkedDCMotorController implements DcMotorController, IThunkedRead
             }
         
         // Dispatch the thing!        
-        try
-            {
-            thunk.dispatch();
-            }
-        catch (InterruptedException e)
-            {
-            // Have to wrap() here, as we're not allowed to throw InterrruptedException 
-            // in this method, given the method signature handed down to us.
-            throw SwerveRuntimeException.wrap(e);
-            }
+        thunk.doUntrackedWriteOperation();
 
         // Required: right now we have no idea what mode the controller is in (we know what
         // we *asked* him to do, yes). Thus, our cached knowledge of his state is unknown.
@@ -281,29 +272,27 @@ public class ThunkedDCMotorController implements DcMotorController, IThunkedRead
     @Override public synchronized DeviceMode getMotorControllerDeviceMode()
     // getMotorControllerDeviceMode is neither a 'read' nor a 'write' operation; it's internal
         {
-        ThunkForReading<DeviceMode> thunk = (new ThunkForReading<DeviceMode>()
-            {
-            @Override protected void actionOnLoopThread()
-                {
-                this.result = target.getMotorControllerDeviceMode();
-                }
-            });
+        DeviceMode result;
         try
             {
-            thunk.dispatch();
+            result = (new ThunkForReading<DeviceMode>()
+                {
+                @Override protected void actionOnLoopThread()
+                    {
+                    this.result = target.getMotorControllerDeviceMode();
+                    }
+                }).doUntrackedReadOperation();
             }
-        catch (InterruptedException e)
+        catch (RuntimeException e)
             {
-            // Have to wrap() here, as we're not allowed to throw InterrruptedException 
-            // in this method, given the method signature handed down to us.
             this.controllerMode = null;         // paranoia
-            throw SwerveRuntimeException.wrap(e);
+            throw e;
             }
 
         // Optimization: we may as well update our knowledge about the controller's state
-        this.controllerMode = thunk.result;
+        this.controllerMode = result;
 
-        return thunk.result;
+        return result;
         }
 
     @Override public synchronized void setMotorChannelMode(final int channel, final DcMotorController.RunMode mode)

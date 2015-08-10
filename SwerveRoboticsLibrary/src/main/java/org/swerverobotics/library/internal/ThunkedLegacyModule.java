@@ -39,7 +39,7 @@ public class ThunkedLegacyModule implements LegacyModule
                 {
                 target.close();
                 }
-            }).doWriteOperation();
+            }).doUntrackedWriteOperation();
         }
 
     @Override public int getVersion()
@@ -50,7 +50,7 @@ public class ThunkedLegacyModule implements LegacyModule
                 {
                 this.result = target.getVersion();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
 
     @Override public String getConnectionInfo()
@@ -61,7 +61,7 @@ public class ThunkedLegacyModule implements LegacyModule
                 {
                 this.result = target.getConnectionInfo();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
 
     @Override public String getDeviceName()
@@ -72,7 +72,7 @@ public class ThunkedLegacyModule implements LegacyModule
                 {
                 this.result = target.getDeviceName();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
     
     //----------------------------------------------------------------------------------------------

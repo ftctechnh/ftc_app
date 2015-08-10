@@ -41,7 +41,7 @@ public class ThunkedAnalogOutputController implements AnalogOutputController
                 {
                 target.close();
                 }
-            }).doWriteOperation();
+            }).doUntrackedWriteOperation();
         }
 
     @Override public int getVersion()
@@ -52,7 +52,7 @@ public class ThunkedAnalogOutputController implements AnalogOutputController
                 {
                 this.result = target.getVersion();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
 
     @Override public String getDeviceName()
@@ -63,7 +63,7 @@ public class ThunkedAnalogOutputController implements AnalogOutputController
                 {
                 this.result = target.getDeviceName();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
     
     @Override public SerialNumber getSerialNumber()
@@ -74,7 +74,7 @@ public class ThunkedAnalogOutputController implements AnalogOutputController
                 {
                 this.result = target.getSerialNumber();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
 
     @Override public void setAnalogOutputVoltage(final int channel, final int voltage)

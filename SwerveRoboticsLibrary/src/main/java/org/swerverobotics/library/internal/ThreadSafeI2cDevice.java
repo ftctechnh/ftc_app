@@ -11,25 +11,33 @@ import java.util.concurrent.locks.Lock;
 public class ThreadSafeI2cDevice extends I2cDevice
     {
     //----------------------------------------------------------------------------------------------
+    // State
+    //----------------------------------------------------------------------------------------------
+
+    // Super has this:
+    // private I2cController a = null;
+    // private int channel = -1;
+    // private int i2cAddr = 0;
+
+    public static I2cController getController(I2cDevice target)  { return Util.<I2cController>getPrivateObjectField(target, 0); }
+    public static int  getChannel(I2cDevice target)              { return Util.getPrivateIntField(target, 1); }
+    public static void setChannel(I2cDevice target, int channel) { Util.setPrivateIntField(target, 1, channel); }
+    public static int  getI2cAddr(I2cDevice target)              { return Util.getPrivateIntField(target, 2); }
+    public static void setI2cAddr(I2cDevice target, int addr)    { Util.setPrivateIntField(target, 2, addr); }
+    
+    public  int getChannel()            { return getChannel(this); }
+    public void setChannel(int channel) { setChannel(this, channel);}
+
+    public  int getI2cAddr()            { return getI2cAddr(this); }
+    public void setI2cAddr(int addr)    { setI2cAddr(this, addr);}
+
+    //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
 
     public ThreadSafeI2cDevice(I2cController controller, int channel)
         {
         super(controller, channel);
-        }
-
-    public static I2cController getController(I2cDevice target)
-        {
-        return Util.<I2cController>getPrivateObjectField(target, 0);
-        }
-    public static int getChannel(I2cDevice target)
-        {
-        return Util.getPrivateIntField(target, 1);
-        }
-    public static int getI2cAddress(I2cDevice target)
-        {
-        return Util.getPrivateIntField(target, 2);
         }
 
     //----------------------------------------------------------------------------------------------

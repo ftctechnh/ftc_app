@@ -41,7 +41,7 @@ public class ThunkedDigitalChannelController implements DigitalChannelController
                 {
                 target.close();
                 }
-            }).doWriteOperation();
+            }).doUntrackedWriteOperation();
         }
 
     @Override public int getVersion()
@@ -52,7 +52,7 @@ public class ThunkedDigitalChannelController implements DigitalChannelController
                 {
                 this.result = target.getVersion();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
 
     @Override public String getConnectionInfo()
@@ -63,7 +63,7 @@ public class ThunkedDigitalChannelController implements DigitalChannelController
                 {
                 this.result = target.getConnectionInfo();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
 
     @Override public String getDeviceName()
@@ -74,7 +74,7 @@ public class ThunkedDigitalChannelController implements DigitalChannelController
                 {
                 this.result = target.getDeviceName();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
 
     //----------------------------------------------------------------------------------------------

@@ -36,34 +36,34 @@ public class ThunkedPWMOutputController implements PWMOutputController
     @Override public void close()
         {
         (new ThunkForWriting()
-        {
-        @Override protected void actionOnLoopThread()
             {
-            target.close();
-            }
-        }).doWriteOperation();
+            @Override protected void actionOnLoopThread()
+                {
+                target.close();
+                }
+            }).doUntrackedWriteOperation();
         }
 
     @Override public int getVersion()
         {
         return (new ThunkForReading<Integer>()
-        {
-        @Override protected void actionOnLoopThread()
             {
-            this.result = target.getVersion();
-            }
-        }).doReadOperation();
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getVersion();
+                }
+            }).doUntrackedReadOperation();
         }
 
     @Override public String getDeviceName()
         {
         return (new ThunkForReading<String>()
-        {
-        @Override protected void actionOnLoopThread()
             {
-            this.result = target.getDeviceName();
-            }
-        }).doReadOperation();
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getDeviceName();
+                }
+            }).doUntrackedReadOperation();
         }
 
     @Override public SerialNumber getSerialNumber()
@@ -74,7 +74,7 @@ public class ThunkedPWMOutputController implements PWMOutputController
                 {
                 this.result = target.getSerialNumber();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
 
     @Override public void setPulseWidthOutputTime(final int channel, final int time)
