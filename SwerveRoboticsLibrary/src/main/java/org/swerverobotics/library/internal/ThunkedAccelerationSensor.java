@@ -40,7 +40,7 @@ public class ThunkedAccelerationSensor extends AccelerationSensor
                 {
                 target.close();
                 }
-            }).doWriteOperation();
+            }).doUntrackedWriteOperation();
         }
     
     @Override public int getVersion()
@@ -51,7 +51,7 @@ public class ThunkedAccelerationSensor extends AccelerationSensor
                 {
                 this.result = target.getVersion();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
 
     @Override public String getConnectionInfo()
@@ -62,7 +62,7 @@ public class ThunkedAccelerationSensor extends AccelerationSensor
                 {
                 this.result = target.getConnectionInfo();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
 
     @Override public String getDeviceName()
@@ -73,7 +73,7 @@ public class ThunkedAccelerationSensor extends AccelerationSensor
                 {
                 this.result = target.getDeviceName();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
     
     //----------------------------------------------------------------------------------------------

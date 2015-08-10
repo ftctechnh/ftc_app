@@ -35,45 +35,45 @@ public class ThunkedOpticalDistanceSensor extends OpticalDistanceSensor
     @Override public void close()
         {
         (new ThunkForWriting()
-        {
-        @Override protected void actionOnLoopThread()
             {
-            target.close();
-            }
-        }).doWriteOperation();
+            @Override protected void actionOnLoopThread()
+                {
+                target.close();
+                }
+            }).doUntrackedWriteOperation();
         }
 
     @Override public int getVersion()
         {
         return (new ThunkForReading<Integer>()
-        {
-        @Override protected void actionOnLoopThread()
             {
-            this.result = target.getVersion();
-            }
-        }).doReadOperation();
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getVersion();
+                }
+            }).doUntrackedReadOperation();
         }
 
     @Override public String getConnectionInfo()
         {
         return (new ThunkForReading<String>()
-        {
-        @Override protected void actionOnLoopThread()
             {
-            this.result = target.getConnectionInfo();
-            }
-        }).doReadOperation();
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getConnectionInfo();
+                }
+            }).doUntrackedReadOperation();
         }
 
     @Override public String getDeviceName()
         {
         return (new ThunkForReading<String>()
-        {
-        @Override protected void actionOnLoopThread()
             {
-            this.result = target.getDeviceName();
-            }
-        }).doReadOperation();
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getDeviceName();
+                }
+            }).doUntrackedReadOperation();
         }
 
     //----------------------------------------------------------------------------------------------

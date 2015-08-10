@@ -2,6 +2,8 @@ package org.swerverobotics.library.internal;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import org.swerverobotics.library.exceptions.*;
 import org.swerverobotics.library.interfaces.*;
 
 /**
@@ -79,7 +81,7 @@ public abstract class Thunk implements IAction, IActionKeyed
     /**
      * Dispatch this thunk over to the loop thread.
      */
-    public void dispatch() throws InterruptedException
+    protected void dispatch() throws InterruptedException
         {
         SynchronousThreadContext.assertSynchronousThread();
         this.context.getThunker().executeOnLoopThread(this);

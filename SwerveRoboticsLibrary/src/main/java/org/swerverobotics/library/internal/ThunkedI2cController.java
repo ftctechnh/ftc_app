@@ -43,7 +43,7 @@ public class ThunkedI2cController implements I2cController
             {
             target.close();
             }
-        }).doWriteOperation();
+        }).doUntrackedWriteOperation();
         }
 
     @Override public int getVersion()
@@ -54,7 +54,7 @@ public class ThunkedI2cController implements I2cController
             {
             this.result = target.getVersion();
             }
-        }).doReadOperation();
+        }).doUntrackedReadOperation();
         }
 
     @Override public String getDeviceName()
@@ -65,7 +65,7 @@ public class ThunkedI2cController implements I2cController
             {
             this.result = target.getDeviceName();
             }
-        }).doReadOperation();
+        }).doUntrackedReadOperation();
         }
 
     @Override public SerialNumber getSerialNumber()
@@ -76,7 +76,7 @@ public class ThunkedI2cController implements I2cController
             {
             this.result = target.getSerialNumber();
             }
-        }).doReadOperation();
+        }).doUntrackedReadOperation();
         }
 
     @Override public void enableI2cReadMode(final int physicalPort, final int i2cAddress, final int memAddress, final int length)
@@ -233,26 +233,32 @@ public class ThunkedI2cController implements I2cController
         }).doReadOperation();
         }
 
+    /**
+     * @hide
+     */
     @Override public void registerForI2cPortReadyCallback(final I2cController.I2cPortReadyCallback callback, final int physicalPort)
         {
         (new ThunkForWriting()
-        {
-        @Override protected void actionOnLoopThread()
             {
-            target.registerForI2cPortReadyCallback(callback, physicalPort);
-            }
-        }).doWriteOperation();
+            @Override protected void actionOnLoopThread()
+                {
+                target.registerForI2cPortReadyCallback(callback, physicalPort);
+                }
+            }).doWriteOperation();
         }
 
+    /**
+     * @hide
+     */
     @Override public void deregisterForPortReadyCallback(final int physicalPort)
         {
         (new ThunkForWriting()
-        {
-        @Override protected void actionOnLoopThread()
             {
-            target.deregisterForPortReadyCallback(physicalPort);
-            }
-        }).doWriteOperation();
+            @Override protected void actionOnLoopThread()
+                {
+                target.deregisterForPortReadyCallback(physicalPort);
+                }
+            }).doWriteOperation();
         }
 
     }
