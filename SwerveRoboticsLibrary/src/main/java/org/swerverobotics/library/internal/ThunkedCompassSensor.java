@@ -20,6 +20,11 @@ public class ThunkedCompassSensor extends CompassSensor implements IThunkedReadW
 
     private int          readThunkKey  = Thunk.getNewActionKey();
     private int          writeThunkKey = Thunk.getNewActionKey();
+    
+    private boolean getIsOffLine()
+        {
+        return Util.getPrivateBooleanField(this, 7);
+        }
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -103,6 +108,14 @@ public class ThunkedCompassSensor extends CompassSensor implements IThunkedReadW
         {
         return this.target instanceof LegacyModule.PortReadyCallback;
         }
+    private boolean isOffline()
+        {
+        // Can't ask the legacyModule, as the internal 'isOffline' boolean
+        // is set AFTER returning to read mode.
+        //
+        // return !this.legacyModule.isI2cPortInReadMode(this.port);
+        return this.getIsOffLine();
+        }
 
     @Override public void enterReadOperation() throws InterruptedException
         {
@@ -111,8 +124,8 @@ public class ThunkedCompassSensor extends CompassSensor implements IThunkedReadW
             // We're about to read. Avoid any writes in this cycle on this object
             SynchronousOpMode.synchronousThreadWaitForLoopCycleEmptyOfActionKey(this.writeThunkKey);
 
-            // Wait until any previous writes have in fact cleared through 
-            while (!this.legacyModule.isI2cPortInReadMode(this.port))
+            // Wait until any previous writes have in fact cleared through to the HW
+            while (this.isOffline())
                 {
                 SynchronousOpMode.synchronousThreadIdle();
                 }
