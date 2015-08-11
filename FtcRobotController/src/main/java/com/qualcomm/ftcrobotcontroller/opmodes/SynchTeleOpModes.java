@@ -1,4 +1,4 @@
-package org.swerverobotics.library.examples;
+package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
@@ -12,7 +12,7 @@ import org.swerverobotics.library.interfaces.*;
  * 
  * TODO: Perhaps consolidate the two examples 
  */
-public class SyncTeleOpModes extends SynchronousOpMode
+public class SynchTeleOpModes extends SynchronousOpMode
     {
     enum DRIVEMODE { TANK, ARCADE, LEFT_STICK };
     
