@@ -18,6 +18,7 @@ public class SynchTelemetryOp extends SynchronousOpMode
         final int loopCountStart = loopCount.get();
 
         // Configure the dashboard. Here, it will have one line, which will contain three items
+        // The output of any telemetry.log calls will be displayed below the dashboard.
         this.telemetry.dashboard.line
             (
             this.telemetry.dashboard.item("time: ",  new IFunc<Object>() { @Override public Object value()
@@ -33,8 +34,12 @@ public class SynchTelemetryOp extends SynchronousOpMode
                 return format(elapsed.time() / (loopCount.get()-loopCountStart) * 1000) + "ms";
                 }})
             );
+        
         // And we show the log in new to old order, just because we want to
         this.telemetry.log.displayOldToNew = false;
+        
+        // We can control the number of lines used on the display (dashboard and log combined)
+        this.telemetry.setDisplayLineCount(10);
 
         // Wait until we've been given the ok to go
         this.waitForStart();
