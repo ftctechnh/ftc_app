@@ -1,18 +1,21 @@
 package org.swerverobotics.library.internal;
 
 import com.qualcomm.robotcore.hardware.*;
+import org.swerverobotics.library.interfaces.*;
 
 /**
  * An implementation of ServoController that talks to a non-thunking target implementation
  * by thunking all calls over to the loop thread and back gain.
  */
-public class ThunkedServoController implements ServoController
+public class ThunkedServoController implements ServoController,IThunkingWrapper<ServoController>
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    public ServoController target;   // can only talk to him on the loop thread
+    private ServoController target;   // can only talk to him on the loop thread
+
+    @Override public ServoController getThunkTarget() { return this.target; }
 
     //----------------------------------------------------------------------------------------------
     // Construction

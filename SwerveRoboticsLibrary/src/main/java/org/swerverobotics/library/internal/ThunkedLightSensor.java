@@ -1,18 +1,21 @@
 package org.swerverobotics.library.internal;
 
 import com.qualcomm.robotcore.hardware.*;
+import org.swerverobotics.library.interfaces.*;
 
 /**
  * A LightSensor that can be called on a synchronous thread.
  */
-public class ThunkedLightSensor extends LightSensor
+public class ThunkedLightSensor extends LightSensor implements IThunkingWrapper<LightSensor>
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    public LightSensor target;   // can only talk to him on the loop thread
+    private LightSensor target;   // can only talk to him on the loop thread
 
+    @Override public LightSensor getThunkTarget() { return this.target; }
+    
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------

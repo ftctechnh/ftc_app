@@ -3,19 +3,23 @@ package org.swerverobotics.library.internal;
 import com.qualcomm.robotcore.hardware.*;
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.exceptions.*;
+import org.swerverobotics.library.interfaces.*;
 
 /**
  * An implementation of DcMotorController that talks to a non-thunking target implementation
  * by thunking all calls over to the loop thread and back gain. The implementation automatically
  * takes care of read and write device mode switching.
  */
-public class ThunkedDCMotorController implements DcMotorController, IThunkedReadWriteListener
+public class ThunkedDCMotorController implements DcMotorController, IThunkedReadWriteListener, IThunkingWrapper<DcMotorController>
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    public  DcMotorController target;          // can only talk to him on the loop thread
+    private DcMotorController target;          // can only talk to him on the loop thread
+
+    @Override public DcMotorController getThunkTarget() { return this.target; }
+
     private DeviceMode        controllerMode;  // the last mode we know the controller to be in
     
     private int controllerWriteThunkKey = Thunk.getNewActionKey();

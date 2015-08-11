@@ -1,17 +1,20 @@
 package org.swerverobotics.library.internal;
 
 import com.qualcomm.robotcore.hardware.*;
+import org.swerverobotics.library.interfaces.*;
 
 /**
  * A VoltageSensor that can be called on the main() thread.
  */
-public class ThunkedVoltageSensor implements VoltageSensor
+public class ThunkedVoltageSensor implements VoltageSensor, IThunkingWrapper<VoltageSensor>
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    public VoltageSensor target;   // can only talk to him on the loop thread
+    private VoltageSensor target;   // can only talk to him on the loop thread
+
+    @Override public VoltageSensor getThunkTarget() { return this.target; }
 
     //----------------------------------------------------------------------------------------------
     // Construction

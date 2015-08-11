@@ -1,16 +1,18 @@
 package org.swerverobotics.library.internal;
 
 import com.qualcomm.robotcore.hardware.*;
-
+import org.swerverobotics.library.interfaces.*;
 import java.util.concurrent.locks.Lock;
 
-public class ThunkedLegacyModule implements LegacyModule
+public class ThunkedLegacyModule implements LegacyModule, IThunkingWrapper<LegacyModule>
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    public LegacyModule target;   // can only talk to him on the loop thread
+    private LegacyModule target;   // can only talk to him on the loop thread
+
+    @Override public LegacyModule getThunkTarget() { return this.target; }
 
     //----------------------------------------------------------------------------------------------
     // Construction
