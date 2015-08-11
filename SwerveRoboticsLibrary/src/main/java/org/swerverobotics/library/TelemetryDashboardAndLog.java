@@ -65,7 +65,7 @@ public class TelemetryDashboardAndLog
                 boolean first = true;
                 for (Item item : this.items)
                     {
-                    // Separate the items with the delimeter
+                    // Separate the items with the delimiter
                     if (!first)
                         {
                         result.append(itemDelimeter);
