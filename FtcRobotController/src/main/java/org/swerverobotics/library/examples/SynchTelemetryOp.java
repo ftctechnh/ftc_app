@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.*;
 /**
  * An example that illustrates use of the telemetry dashboard and log
  */
-public class TelemetryOp extends SynchronousOpMode
+public class SynchTelemetryOp extends SynchronousOpMode
     {
     @Override protected void main() throws InterruptedException
         {
