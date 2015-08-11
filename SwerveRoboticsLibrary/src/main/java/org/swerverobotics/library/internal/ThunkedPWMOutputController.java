@@ -1,18 +1,21 @@
 package org.swerverobotics.library.internal;
 
-import com.qualcomm.robotcore.hardware.PWMOutputController;
-import com.qualcomm.robotcore.util.SerialNumber;
+import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.util.*;
+import org.swerverobotics.library.interfaces.*;
 
 /**
  * Another in our series
  */
-public class ThunkedPWMOutputController implements PWMOutputController
+public class ThunkedPWMOutputController implements PWMOutputController, IThunkingWrapper<PWMOutputController>
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    public PWMOutputController target;          // can only talk to him on the loop thread
+    private PWMOutputController target;          // can only talk to him on the loop thread
+
+    @Override public PWMOutputController getThunkTarget() { return this.target; }
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -36,34 +39,34 @@ public class ThunkedPWMOutputController implements PWMOutputController
     @Override public void close()
         {
         (new ThunkForWriting()
-        {
-        @Override protected void actionOnLoopThread()
             {
-            target.close();
-            }
-        }).doWriteOperation();
+            @Override protected void actionOnLoopThread()
+                {
+                target.close();
+                }
+            }).doUntrackedWriteOperation();
         }
 
     @Override public int getVersion()
         {
         return (new ThunkForReading<Integer>()
-        {
-        @Override protected void actionOnLoopThread()
             {
-            this.result = target.getVersion();
-            }
-        }).doReadOperation();
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getVersion();
+                }
+            }).doUntrackedReadOperation();
         }
 
     @Override public String getDeviceName()
         {
         return (new ThunkForReading<String>()
-        {
-        @Override protected void actionOnLoopThread()
             {
-            this.result = target.getDeviceName();
-            }
-        }).doReadOperation();
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getDeviceName();
+                }
+            }).doUntrackedReadOperation();
         }
 
     @Override public SerialNumber getSerialNumber()
@@ -74,7 +77,7 @@ public class ThunkedPWMOutputController implements PWMOutputController
                 {
                 this.result = target.getSerialNumber();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
 
     @Override public void setPulseWidthOutputTime(final int channel, final int time)

@@ -1,17 +1,33 @@
 package org.swerverobotics.library.internal;
 
+import junit.framework.Assert;
 import com.qualcomm.robotcore.hardware.*;
+import org.swerverobotics.library.*;
+import org.swerverobotics.library.interfaces.*;
 
 /**
- * An IrSeekerSensor that can be called on the main() thread.
+ * An IrSeekerSensor that can be called on a synchronous thread
  */
-public class ThunkedIrSeekerSensor extends IrSeekerSensor
+public class ThunkedIrSeekerSensor extends IrSeekerSensor implements IThunkedReadWriteListener, IThunkingWrapper<IrSeekerSensor>
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    public IrSeekerSensor target;   // can only talk to him on the loop thread
+    private IrSeekerSensor target;   // can only talk to him on the loop thread
+
+    @Override public IrSeekerSensor getThunkTarget() { return this.target; }
+
+    private LegacyModule legacyModule = null;
+    private int          port;
+    
+    private int readThunkKey  = Thunk.getNewActionKey();
+    private int writeThunkKey = Thunk.getNewActionKey();
+
+    private boolean getIsOffLine()
+        {
+        return Util.getPrivateBooleanField(this, 7);
+        }
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -21,6 +37,16 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
         {
         if (target == null) throw new NullPointerException("null " + this.getClass().getSimpleName() + " target");
         this.target = target;
+        //
+        if (this.isTargetLegacy())
+            {
+            // Make sure our hack is at least plausible
+            Assert.assertEquals(true, Util.<Object>getPrivateObjectField(target, 6) instanceof Mode);
+        
+            // Hack: did out the gunk we need to implement our mode-switching-waiting
+            this.legacyModule = (LegacyModule)Util.<LegacyModule>getPrivateObjectField(target, 0);
+            this.port         = Util.getPrivateIntField(target, 5);
+            }
         }
 
     static public ThunkedIrSeekerSensor create(IrSeekerSensor target)
@@ -40,7 +66,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
                 {
                 target.close();
                 }
-            }).doWriteOperation();
+            }).doUntrackedWriteOperation();
         }
 
     @Override public int getVersion()
@@ -51,7 +77,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
                 {
                 this.result = target.getVersion();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
 
     @Override public String getConnectionInfo()
@@ -62,7 +88,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
                 {
                 this.result = target.getConnectionInfo();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
 
     @Override public String getDeviceName()
@@ -73,14 +99,65 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
                 {
                 this.result = target.getDeviceName();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
+
+    //----------------------------------------------------------------------------------------------
+    // IThunkedReadWriteListener
+    //----------------------------------------------------------------------------------------------
     
+    private boolean isTargetLegacy()
+    // Are we hooked to a legacy sensor, and so need to do the read-or-write-not-both dance? 
+        {
+        return this.target instanceof LegacyModule.PortReadyCallback;
+        }
+    private boolean isOffline()
+        {
+        // Can't ask the legacyModule, as the internal 'isOffline' boolean
+        // is set AFTER returning to read mode.
+        //
+        // return !this.legacyModule.isI2cPortInReadMode(this.port);
+        return this.getIsOffLine();
+        }
+
+    @Override public void enterReadOperation() throws InterruptedException
+        {
+        if (this.isTargetLegacy())
+            {
+            // We're about to read. Avoid any writes in this cycle on this object
+            SynchronousOpMode.synchronousThreadWaitForLoopCycleEmptyOfActionKey(this.writeThunkKey);
+            
+            // Wait until any previous writes have in fact cleared through to the HW
+            while (this.isOffline())
+                {
+                SynchronousOpMode.synchronousThreadIdle();
+                }
+            }
+        }
+    @Override public void enterWriteOperation() throws InterruptedException
+        {
+        if (this.isTargetLegacy())
+            {
+            SynchronousOpMode.synchronousThreadWaitForLoopCycleEmptyOfActionKey(this.readThunkKey);
+            }
+        }
+    @Override public int getListenerReadThunkKey()
+        {
+        return this.readThunkKey;
+        }
+    @Override public int getListenerWriteThunkKey()
+        {
+        return this.writeThunkKey;
+        }
+
     //----------------------------------------------------------------------------------------------
     // IrSeekerSensor
     //----------------------------------------------------------------------------------------------
 
     @Override public void setMode(final IrSeekerSensor.Mode mode)
+    // For legacy IR seekers, setting the mode puts signalDetected(), getAngle(), getStrength(), 
+    // and getIndividualSensors() out of commission, as it puts the NXT i2c port into write mode.
+    // They come back into commission once the port gets auto-reset to read mode 
         {
         (new ThunkForWriting()
             {
@@ -88,7 +165,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
                 {
                 target.setMode(mode);
                 }
-            }).doWriteOperation();
+            }).doWriteOperation(this);
         }
 
     @Override public IrSeekerSensor.Mode getMode()
@@ -99,7 +176,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
                 {
                 this.result = target.getMode();
                 }
-            }).doReadOperation();
+            }).doReadOperation(this);
         }
 
     @Override public boolean signalDetected()
@@ -110,7 +187,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
                 {
                 this.result = target.signalDetected();
                 }
-            }).doReadOperation();
+            }).doReadOperation(this);
         }
 
     @Override public double getAngle()
@@ -121,7 +198,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
                 {
                 this.result = target.getAngle();
                 }
-            }).doReadOperation();
+            }).doReadOperation(this);
         }
 
     @Override public double getStrength()
@@ -132,7 +209,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
                 {
                 this.result = target.getStrength();
                 }
-            }).doReadOperation();
+            }).doReadOperation(this);
         }
 
     @Override public IrSeekerSensor.IrSeekerIndividualSensor[] getIndividualSensors()
@@ -143,7 +220,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor
                 {
                 this.result = target.getIndividualSensors();
                 }
-            }).doReadOperation();
+            }).doReadOperation(this);
         }
 
     }

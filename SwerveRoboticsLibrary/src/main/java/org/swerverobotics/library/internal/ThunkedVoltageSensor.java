@@ -1,17 +1,20 @@
 package org.swerverobotics.library.internal;
 
 import com.qualcomm.robotcore.hardware.*;
+import org.swerverobotics.library.interfaces.*;
 
 /**
  * A VoltageSensor that can be called on the main() thread.
  */
-public class ThunkedVoltageSensor implements VoltageSensor
+public class ThunkedVoltageSensor implements VoltageSensor, IThunkingWrapper<VoltageSensor>
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    public VoltageSensor target;   // can only talk to him on the loop thread
+    private VoltageSensor target;   // can only talk to him on the loop thread
+
+    @Override public VoltageSensor getThunkTarget() { return this.target; }
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -40,7 +43,7 @@ public class ThunkedVoltageSensor implements VoltageSensor
                 {
                 target.close();
                 }
-            }).doWriteOperation();
+            }).doUntrackedWriteOperation();
         }
 
     @Override public int getVersion()
@@ -51,7 +54,7 @@ public class ThunkedVoltageSensor implements VoltageSensor
                 {
                 this.result = target.getVersion();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
 
     @Override public String getConnectionInfo()
@@ -62,7 +65,7 @@ public class ThunkedVoltageSensor implements VoltageSensor
                 {
                 this.result = target.getConnectionInfo();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
 
     @Override public String getDeviceName()
@@ -73,7 +76,7 @@ public class ThunkedVoltageSensor implements VoltageSensor
                 {
                 this.result = target.getDeviceName();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
     
     //----------------------------------------------------------------------------------------------

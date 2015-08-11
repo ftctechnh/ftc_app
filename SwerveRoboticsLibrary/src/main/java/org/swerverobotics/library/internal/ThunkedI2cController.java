@@ -1,20 +1,23 @@
 package org.swerverobotics.library.internal;
 
-import com.qualcomm.robotcore.hardware.I2cController;
-import com.qualcomm.robotcore.util.SerialNumber;
+import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.util.*;
+import org.swerverobotics.library.interfaces.*;
 
 import java.util.concurrent.locks.Lock;
 
 /**
  * Another in our story..
  */
-public class ThunkedI2cController implements I2cController
+public class ThunkedI2cController implements I2cController, IThunkingWrapper<I2cController>
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    public I2cController target;          // can only talk to him on the loop thread
+    private I2cController target;          // can only talk to him on the loop thread
+
+    @Override public I2cController getThunkTarget() { return this.target; }
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -43,7 +46,7 @@ public class ThunkedI2cController implements I2cController
             {
             target.close();
             }
-        }).doWriteOperation();
+        }).doUntrackedWriteOperation();
         }
 
     @Override public int getVersion()
@@ -54,7 +57,7 @@ public class ThunkedI2cController implements I2cController
             {
             this.result = target.getVersion();
             }
-        }).doReadOperation();
+        }).doUntrackedReadOperation();
         }
 
     @Override public String getDeviceName()
@@ -65,7 +68,7 @@ public class ThunkedI2cController implements I2cController
             {
             this.result = target.getDeviceName();
             }
-        }).doReadOperation();
+        }).doUntrackedReadOperation();
         }
 
     @Override public SerialNumber getSerialNumber()
@@ -76,7 +79,7 @@ public class ThunkedI2cController implements I2cController
             {
             this.result = target.getSerialNumber();
             }
-        }).doReadOperation();
+        }).doUntrackedReadOperation();
         }
 
     @Override public void enableI2cReadMode(final int physicalPort, final int i2cAddress, final int memAddress, final int length)
@@ -233,26 +236,32 @@ public class ThunkedI2cController implements I2cController
         }).doReadOperation();
         }
 
+    /**
+     * @hide
+     */
     @Override public void registerForI2cPortReadyCallback(final I2cController.I2cPortReadyCallback callback, final int physicalPort)
         {
         (new ThunkForWriting()
-        {
-        @Override protected void actionOnLoopThread()
             {
-            target.registerForI2cPortReadyCallback(callback, physicalPort);
-            }
-        }).doWriteOperation();
+            @Override protected void actionOnLoopThread()
+                {
+                target.registerForI2cPortReadyCallback(callback, physicalPort);
+                }
+            }).doWriteOperation();
         }
 
+    /**
+     * @hide
+     */
     @Override public void deregisterForPortReadyCallback(final int physicalPort)
         {
         (new ThunkForWriting()
-        {
-        @Override protected void actionOnLoopThread()
             {
-            target.deregisterForPortReadyCallback(physicalPort);
-            }
-        }).doWriteOperation();
+            @Override protected void actionOnLoopThread()
+                {
+                target.deregisterForPortReadyCallback(physicalPort);
+                }
+            }).doWriteOperation();
         }
 
     }

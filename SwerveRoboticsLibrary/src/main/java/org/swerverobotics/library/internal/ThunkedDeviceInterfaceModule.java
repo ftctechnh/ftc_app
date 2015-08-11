@@ -2,17 +2,20 @@ package org.swerverobotics.library.internal;
 
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
+import org.swerverobotics.library.interfaces.*;
 
 import java.util.concurrent.locks.Lock;
 
-public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
+public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule, IThunkingWrapper<DeviceInterfaceModule>
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    public DeviceInterfaceModule target;
-    
+    private DeviceInterfaceModule target;
+
+    @Override public DeviceInterfaceModule getThunkTarget() { return this.target; }
+
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
@@ -40,7 +43,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
                 {
                 target.close();
                 }
-            }).doWriteOperation();
+            }).doUntrackedWriteOperation();
         }
 
     @Override public int getVersion()
@@ -51,7 +54,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
                 {
                 this.result = target.getVersion();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
 
     @Override public String getConnectionInfo()
@@ -62,7 +65,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
                 {
                 this.result = target.getConnectionInfo();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
 
     @Override public String getDeviceName()
@@ -73,7 +76,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule
                 {
                 this.result = target.getDeviceName();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
     
     

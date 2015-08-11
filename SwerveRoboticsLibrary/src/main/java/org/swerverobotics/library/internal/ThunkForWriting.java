@@ -1,6 +1,7 @@
 package org.swerverobotics.library.internal;
 
 import org.swerverobotics.library.exceptions.*;
+import org.swerverobotics.library.interfaces.*;
 
 /**
  * Thunks derived from ThunkForWriting are used for thunking write operations. Note
@@ -31,34 +32,24 @@ public abstract class ThunkForWriting extends Thunk
     // Operations
     //----------------------------------------------------------------------------------------------
 
-    public void doWriteOperation()
+    public void doUntrackedWriteOperation()
         {
-        this.doWriteOperation(null);
+        this.doUntrackedWriteOperation(null);
         }
 
-    public void doWriteOperation(IThunkedReadWriteListener writer)
+    protected void doUntrackedWriteOperation(IInterruptableAction actionBeforeDispatch)
         {
         // Don't bother doing more work if this thread has been interrupted
         if (!Thread.currentThread().isInterrupted())
             {
             try
                 {
-                // Let any writer know we are about to write
-                if (writer != null)
-                    {
-                    this.addActionKey(writer.getListenerWriteThunkKey());
-                    writer.enterWriteOperation();
-                    }
+                if (actionBeforeDispatch != null)
+                    actionBeforeDispatch.doAction();
 
                 this.dispatch();
                 }
-            catch (InterruptedException e)
-                {
-                // Same as below
-                Thread.currentThread().interrupt();
-                throw SwerveRuntimeException.wrap(e);
-                }
-            catch (RuntimeInterruptedException e)
+            catch (InterruptedException | RuntimeInterruptedException e)
                 {
                 // Tell the current thread that he should shut down soon
                 Thread.currentThread().interrupt();
@@ -70,5 +61,26 @@ public abstract class ThunkForWriting extends Thunk
                 throw SwerveRuntimeException.wrap(e);
                 }
             }
+        }
+    
+    public void doWriteOperation()
+        {
+        this.doWriteOperation(null);
+        }
+
+    public void doWriteOperation(final IThunkedReadWriteListener writer)
+        {
+        this.doUntrackedWriteOperation(new IInterruptableAction()
+        {
+        @Override public void doAction() throws InterruptedException
+            {
+            // Let any writer know we are about to write
+            if (writer != null)
+                {
+                ThunkForWriting.this.addActionKey(writer.getListenerWriteThunkKey());
+                writer.enterWriteOperation();
+                }
+            }
+        });
         }
     }

@@ -65,7 +65,7 @@ public class TelemetryDashboardAndLog
                 boolean first = true;
                 for (Item item : this.items)
                     {
-                    // Separate the items with the delimeter
+                    // Separate the items with the delimiter
                     if (!first)
                         {
                         result.append(itemDelimeter);
@@ -266,7 +266,7 @@ public class TelemetryDashboardAndLog
     //----------------------------------------------------------------------------------------------
 
     private long                    nanoLastUpdate = 0;
-    private int                     telemetryDisplayLineCount = 9;
+    private int                     telemetryLineCount = 9;
     private final int               singletonKey = SynchronousOpMode.staticGetNewSingletonKey();
 
     /**
@@ -285,7 +285,7 @@ public class TelemetryDashboardAndLog
      * Advanced: 'raw' provides access to the lower level (ie: non-dashboard/log) telemetry
      * API.
      */
-    public final ThunkedTelemetry   raw;
+    public final ThunkedTelemetry   thunker;
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -293,7 +293,7 @@ public class TelemetryDashboardAndLog
 
     public TelemetryDashboardAndLog(Telemetry telemetry)
         {
-        this.raw       = ThunkedTelemetry.create(telemetry);
+        this.thunker   = ThunkedTelemetry.create(telemetry);
         this.dashboard = new Dashboard();
         this.log       = new Log();
         //
@@ -304,17 +304,17 @@ public class TelemetryDashboardAndLog
      * 'telemetryDisplayLineCount' is the number of visible on the driver station that
      * we use in rendering the dashboard plus accumulated log.
      */
-    public int getTelemetryDisplayLineCount() 
+    public int getTelemetryLineCount() 
         { 
-        return this.telemetryDisplayLineCount; 
+        return this.telemetryLineCount; 
         }
     /**
      * 'telemetryDisplayLineCount' is the number of visible on the driver station that
      * we use in rendering the dashboard plus accumulated log.
      */
-    public void setTelemetryDisplayLineCount(int count)
+    public void setDisplayLineCount(int count)
         {
-        this.telemetryDisplayLineCount = count;
+        this.telemetryLineCount = count;
         this.updateLogCapacity();
         }
 
@@ -349,7 +349,7 @@ public class TelemetryDashboardAndLog
             {
             @Override public void doAction()
                 {
-                log.capacity = telemetryDisplayLineCount - dashboard.lines.size();
+                log.capacity = telemetryLineCount - dashboard.lines.size();
                 log.prune();
                 }
             });
@@ -412,7 +412,7 @@ public class TelemetryDashboardAndLog
                             {
                             for (int i = 0; i < keys.size(); i++)
                                 {
-                                TelemetryDashboardAndLog.this.raw.target.addData(
+                                TelemetryDashboardAndLog.this.thunker.getThunkTarget().addData(
                                         keys.elementAt(i),
                                         values.elementAt(i));
                                 }

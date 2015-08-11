@@ -1,18 +1,21 @@
 package org.swerverobotics.library.internal;
 
 import com.qualcomm.robotcore.hardware.*;
+import org.swerverobotics.library.interfaces.*;
 
 /**
  * An implementation of ServoController that talks to a non-thunking target implementation
  * by thunking all calls over to the loop thread and back gain.
  */
-public class ThunkedServoController implements ServoController
+public class ThunkedServoController implements ServoController,IThunkingWrapper<ServoController>
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    public ServoController target;   // can only talk to him on the loop thread
+    private ServoController target;   // can only talk to him on the loop thread
+
+    @Override public ServoController getThunkTarget() { return this.target; }
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -41,18 +44,18 @@ public class ThunkedServoController implements ServoController
                 {
                 target.close();
                 }
-            }).doWriteOperation();
+            }).doUntrackedWriteOperation();
         }
 
     @Override public int getVersion()
         {
         return (new ThunkForReading<Integer>()
-        {
-        @Override protected void actionOnLoopThread()
             {
-            this.result = target.getVersion();
-            }
-        }).doReadOperation();
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getVersion();
+                }
+            }).doUntrackedReadOperation();
         }
 
     @Override public String getConnectionInfo()
@@ -63,7 +66,7 @@ public class ThunkedServoController implements ServoController
                 {
                 this.result = target.getConnectionInfo();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
 
     @Override public String getDeviceName()
@@ -74,7 +77,7 @@ public class ThunkedServoController implements ServoController
                 {
                 this.result = target.getDeviceName();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }    
     
     //----------------------------------------------------------------------------------------------

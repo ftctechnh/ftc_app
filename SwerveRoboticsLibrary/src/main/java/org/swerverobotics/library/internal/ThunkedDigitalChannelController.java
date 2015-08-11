@@ -1,18 +1,21 @@
 package org.swerverobotics.library.internal;
 
-import com.qualcomm.robotcore.hardware.DigitalChannelController;
-import com.qualcomm.robotcore.util.SerialNumber;
+import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.util.*;
+import org.swerverobotics.library.interfaces.*;
 
 /**
  * Another in our series of Thunked objects
  */
-public class ThunkedDigitalChannelController implements DigitalChannelController
+public class ThunkedDigitalChannelController implements DigitalChannelController, IThunkingWrapper<DigitalChannelController>
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    public DigitalChannelController target;          // can only talk to him on the loop thread
+    private DigitalChannelController target;          // can only talk to him on the loop thread
+
+    @Override public DigitalChannelController getThunkTarget() { return this.target; }
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -41,7 +44,7 @@ public class ThunkedDigitalChannelController implements DigitalChannelController
                 {
                 target.close();
                 }
-            }).doWriteOperation();
+            }).doUntrackedWriteOperation();
         }
 
     @Override public int getVersion()
@@ -52,7 +55,7 @@ public class ThunkedDigitalChannelController implements DigitalChannelController
                 {
                 this.result = target.getVersion();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
 
     @Override public String getConnectionInfo()
@@ -63,7 +66,7 @@ public class ThunkedDigitalChannelController implements DigitalChannelController
                 {
                 this.result = target.getConnectionInfo();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
 
     @Override public String getDeviceName()
@@ -74,7 +77,7 @@ public class ThunkedDigitalChannelController implements DigitalChannelController
                 {
                 this.result = target.getDeviceName();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
 
     //----------------------------------------------------------------------------------------------
