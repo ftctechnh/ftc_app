@@ -1,4 +1,4 @@
-package org.swerverobotics.library.examples;
+package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.interfaces.*;
