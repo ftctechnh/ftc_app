@@ -1,6 +1,7 @@
 package org.swerverobotics.library.internal;
 
 import org.swerverobotics.library.exceptions.*;
+import org.swerverobotics.library.interfaces.*;
 
 /**
  * Thunks derived from ResultableThunk have a member variable named 'result
@@ -32,7 +33,7 @@ public abstract class ThunkForReading<T> extends Thunk
     // Operations
     //----------------------------------------------------------------------------------------------
     
-    @Override public void dispatch() throws InterruptedException
+    @Override protected void dispatch() throws InterruptedException
     // Once dispatched, we wait for our own completion
         {
         super.dispatch();
@@ -43,28 +44,24 @@ public abstract class ThunkForReading<T> extends Thunk
             }
         }
    
-    public T doReadOperation()
+    public T doUntrackedReadOperation()
         {
-        return this.doReadOperation(null);
+        return this.doUntrackedReadOperation(null);
         }
 
-    public T doReadOperation(IThunkedReadWriteListener reader)
+    public T doUntrackedReadOperation(IInterruptableAction actionBeforeDispatch)
         {
         // Don't bother doing more work if we've been interrupted
         if (!Thread.currentThread().isInterrupted())
             {
             try
                 {
-                // Let any reader know that we are about to read
-                if (reader != null)
-                    {
-                    this.addActionKey(reader.getListenerReadThunkKey());
-                    reader.enterReadOperation();
-                    }
+                if (actionBeforeDispatch != null)
+                    actionBeforeDispatch.doAction();
 
                 this.dispatch();
                 }
-            catch (InterruptedException e)
+            catch (InterruptedException|RuntimeInterruptedException e)
                 {
                 // (Re)tell the current thread that he should shut down soon
                 Thread.currentThread().interrupt();
@@ -82,5 +79,26 @@ public abstract class ThunkForReading<T> extends Thunk
             // we have no value we can possibly return
             throw new RuntimeInterruptedException();
             }
+        }
+
+    public T doReadOperation()
+        {
+        return this.doReadOperation(null);
+        }
+
+    public T doReadOperation(final IThunkedReadWriteListener reader)
+        {
+        return this.doUntrackedReadOperation(new IInterruptableAction()
+            {
+            @Override public void doAction() throws InterruptedException
+                {
+                // Let any reader know that we are about to read
+                if (reader != null)
+                    {
+                    ThunkForReading.this.addActionKey(reader.getListenerReadThunkKey());
+                    reader.enterReadOperation();
+                    }
+                }
+            });
         }
     }

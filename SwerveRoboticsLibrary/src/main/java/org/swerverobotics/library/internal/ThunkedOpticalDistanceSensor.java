@@ -1,18 +1,21 @@
 package org.swerverobotics.library.internal;
 
-import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
+import com.qualcomm.robotcore.hardware.*;
+import org.swerverobotics.library.interfaces.*;
 
 /**
  * Another in our story
  */
-public class ThunkedOpticalDistanceSensor extends OpticalDistanceSensor
+public class ThunkedOpticalDistanceSensor extends OpticalDistanceSensor implements IThunkingWrapper<OpticalDistanceSensor>
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    public OpticalDistanceSensor target;   // can only talk to him on the loop thread
-    
+    private OpticalDistanceSensor target;   // can only talk to him on the loop thread
+
+    @Override public OpticalDistanceSensor getThunkTarget() { return this.target; }
+
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
@@ -35,45 +38,45 @@ public class ThunkedOpticalDistanceSensor extends OpticalDistanceSensor
     @Override public void close()
         {
         (new ThunkForWriting()
-        {
-        @Override protected void actionOnLoopThread()
             {
-            target.close();
-            }
-        }).doWriteOperation();
+            @Override protected void actionOnLoopThread()
+                {
+                target.close();
+                }
+            }).doUntrackedWriteOperation();
         }
 
     @Override public int getVersion()
         {
         return (new ThunkForReading<Integer>()
-        {
-        @Override protected void actionOnLoopThread()
             {
-            this.result = target.getVersion();
-            }
-        }).doReadOperation();
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getVersion();
+                }
+            }).doUntrackedReadOperation();
         }
 
     @Override public String getConnectionInfo()
         {
         return (new ThunkForReading<String>()
-        {
-        @Override protected void actionOnLoopThread()
             {
-            this.result = target.getConnectionInfo();
-            }
-        }).doReadOperation();
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getConnectionInfo();
+                }
+            }).doUntrackedReadOperation();
         }
 
     @Override public String getDeviceName()
         {
         return (new ThunkForReading<String>()
-        {
-        @Override protected void actionOnLoopThread()
             {
-            this.result = target.getDeviceName();
-            }
-        }).doReadOperation();
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getDeviceName();
+                }
+            }).doUntrackedReadOperation();
         }
 
     //----------------------------------------------------------------------------------------------

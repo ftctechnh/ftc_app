@@ -1,13 +1,13 @@
 package org.swerverobotics.library.internal;
 
 import java.util.*;
-
 import com.qualcomm.robotcore.robocol.Telemetry;
+import org.swerverobotics.library.interfaces.*;
 
 /**
  * A wrapper for Telemetry that can be called from a synchronous thread.
  */
-public class ThunkedTelemetry
+public class ThunkedTelemetry implements IThunkingWrapper<Telemetry>
 // Note: we may not actually need to thunk for telemetry: all its entry points are synchronized,
 // so it's certainly threadsafe. But can the resources it calls upon to send data be used from
 // a non-loop() thread? We thunk for now, just to be sure.
@@ -16,7 +16,9 @@ public class ThunkedTelemetry
     // State
     //----------------------------------------------------------------------------------------------
 
-    public Telemetry target;
+    private Telemetry target;
+
+    @Override public Telemetry getThunkTarget() { return this.target; }
 
     //----------------------------------------------------------------------------------------------
     // Construction

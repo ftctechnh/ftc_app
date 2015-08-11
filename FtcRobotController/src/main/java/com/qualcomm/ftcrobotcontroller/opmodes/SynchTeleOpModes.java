@@ -1,4 +1,4 @@
-package org.swerverobotics.library.examples;
+package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
@@ -7,12 +7,12 @@ import org.swerverobotics.library.interfaces.*;
 
 /**
  * An example of a synchronous opmode that's a little more complex than
- * TeleOp, in that it supports multiple different drive modes that are switched
+ * SynchTeleOp, in that it supports multiple different drive modes that are switched
  * between using the A, B, and Y gamepad buttons.
  * 
  * TODO: Perhaps consolidate the two examples 
  */
-public class TeleOpDriveModes extends SynchronousOpMode
+public class SynchTeleOpModes extends SynchronousOpMode
     {
     enum DRIVEMODE { TANK, ARCADE, LEFT_STICK };
     

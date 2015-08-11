@@ -1,17 +1,20 @@
 package org.swerverobotics.library.internal;
 
 import com.qualcomm.robotcore.hardware.*;
+import org.swerverobotics.library.interfaces.*;
 
 /**
  * An AccelerationSensor that can be called on the main() thread.
  */
-public class ThunkedAccelerationSensor extends AccelerationSensor
+public class ThunkedAccelerationSensor extends AccelerationSensor implements IThunkingWrapper<AccelerationSensor>
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    public AccelerationSensor target;   // can only talk to him on the loop thread
+    private AccelerationSensor target;   // can only talk to him on the loop thread
+    
+    @Override public AccelerationSensor getThunkTarget() { return this.target; }
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -40,7 +43,7 @@ public class ThunkedAccelerationSensor extends AccelerationSensor
                 {
                 target.close();
                 }
-            }).doWriteOperation();
+            }).doUntrackedWriteOperation();
         }
     
     @Override public int getVersion()
@@ -51,7 +54,7 @@ public class ThunkedAccelerationSensor extends AccelerationSensor
                 {
                 this.result = target.getVersion();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
 
     @Override public String getConnectionInfo()
@@ -62,7 +65,7 @@ public class ThunkedAccelerationSensor extends AccelerationSensor
                 {
                 this.result = target.getConnectionInfo();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
 
     @Override public String getDeviceName()
@@ -73,7 +76,7 @@ public class ThunkedAccelerationSensor extends AccelerationSensor
                 {
                 this.result = target.getDeviceName();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
     
     //----------------------------------------------------------------------------------------------

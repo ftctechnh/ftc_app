@@ -1,18 +1,21 @@
 package org.swerverobotics.library.internal;
 
-import com.qualcomm.robotcore.hardware.AnalogInputController;
-import com.qualcomm.robotcore.util.SerialNumber;
+import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.util.*;
+import org.swerverobotics.library.interfaces.*;
 
 /**
  * Another in our series
  */
-public class ThunkedAnalogInputController implements AnalogInputController
+public class ThunkedAnalogInputController implements AnalogInputController, IThunkingWrapper<AnalogInputController>
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    public AnalogInputController target;          // can only talk to him on the loop thread
+    private AnalogInputController target;          // can only talk to him on the loop thread
+
+    @Override public AnalogInputController getThunkTarget() { return this.target; }
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -36,45 +39,45 @@ public class ThunkedAnalogInputController implements AnalogInputController
     @Override public void close()
         {
         (new ThunkForWriting()
-        {
-        @Override protected void actionOnLoopThread()
             {
-            target.close();
-            }
-        }).doWriteOperation();
+            @Override protected void actionOnLoopThread()
+                {
+                target.close();
+                }
+            }).doUntrackedWriteOperation();
         }
 
     @Override public int getVersion()
         {
         return (new ThunkForReading<Integer>()
-        {
-        @Override protected void actionOnLoopThread()
             {
-            this.result = target.getVersion();
-            }
-        }).doReadOperation();
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getVersion();
+                }
+            }).doUntrackedReadOperation();
         }
 
     @Override public String getConnectionInfo()
         {
         return (new ThunkForReading<String>()
-        {
-        @Override protected void actionOnLoopThread()
             {
-            this.result = target.getConnectionInfo();
-            }
-        }).doReadOperation();
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getConnectionInfo();
+                }
+            }).doUntrackedReadOperation();
         }
 
     @Override public String getDeviceName()
         {
         return (new ThunkForReading<String>()
-        {
-        @Override protected void actionOnLoopThread()
             {
-            this.result = target.getDeviceName();
-            }
-        }).doReadOperation();
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getDeviceName();
+                }
+            }).doUntrackedReadOperation();
         }
 
     //----------------------------------------------------------------------------------------------

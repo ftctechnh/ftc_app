@@ -1,18 +1,21 @@
 package org.swerverobotics.library.internal;
 
 import com.qualcomm.robotcore.hardware.*;
+import org.swerverobotics.library.interfaces.*;
 
 /**
- * A GyroSensor that can be called on the main() thread.
+ * A GyroSensor that can be called on a synchronous thread.
  */
-public class ThunkedGyroSensor extends  GyroSensor
+public class ThunkedGyroSensor extends GyroSensor implements IThunkingWrapper<GyroSensor>
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    public GyroSensor target;   // can only talk to him on the loop thread
+    private GyroSensor target;   // can only talk to him on the loop thread
 
+    @Override public GyroSensor getThunkTarget() { return this.target; }
+    
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
@@ -40,7 +43,7 @@ public class ThunkedGyroSensor extends  GyroSensor
                 {
                 target.close();
                 }
-            }).doWriteOperation();
+            }).doUntrackedWriteOperation();
         }
 
     @Override public int getVersion()
@@ -51,7 +54,7 @@ public class ThunkedGyroSensor extends  GyroSensor
                 {
                 this.result = target.getVersion();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
 
     @Override public String getConnectionInfo()
@@ -62,7 +65,7 @@ public class ThunkedGyroSensor extends  GyroSensor
                 {
                 this.result = target.getConnectionInfo();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
 
     @Override public String getDeviceName()
@@ -73,7 +76,7 @@ public class ThunkedGyroSensor extends  GyroSensor
                 {
                 this.result = target.getDeviceName();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
     
     //----------------------------------------------------------------------------------------------

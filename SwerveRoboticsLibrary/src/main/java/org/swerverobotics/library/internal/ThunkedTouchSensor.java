@@ -1,17 +1,20 @@
 package org.swerverobotics.library.internal;
 
-import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.hardware.*;
+import org.swerverobotics.library.interfaces.*;
 
 /**
  * Another in our series
  */
-public class ThunkedTouchSensor extends TouchSensor
+public class ThunkedTouchSensor extends TouchSensor implements IThunkingWrapper<TouchSensor>
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    public TouchSensor target;   // can only talk to him on the loop thread
+    private TouchSensor target;   // can only talk to him on the loop thread
+
+    @Override public TouchSensor getThunkTarget() { return this.target; }
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -40,7 +43,7 @@ public class ThunkedTouchSensor extends TouchSensor
                 {
                 target.close();
                 }
-            }).doWriteOperation();
+            }).doUntrackedWriteOperation();
         }
 
     @Override public int getVersion()
@@ -51,7 +54,7 @@ public class ThunkedTouchSensor extends TouchSensor
                 {
                 this.result = target.getVersion();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
 
     @Override public String getConnectionInfo()
@@ -62,7 +65,7 @@ public class ThunkedTouchSensor extends TouchSensor
                 {
                 this.result = target.getConnectionInfo();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
 
     @Override public String getDeviceName()
@@ -73,7 +76,7 @@ public class ThunkedTouchSensor extends TouchSensor
                 {
                 this.result = target.getDeviceName();
                 }
-            }).doReadOperation();
+            }).doUntrackedReadOperation();
         }
 
     //----------------------------------------------------------------------------------------------
