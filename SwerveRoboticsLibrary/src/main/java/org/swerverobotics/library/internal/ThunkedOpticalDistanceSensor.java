@@ -1,18 +1,21 @@
 package org.swerverobotics.library.internal;
 
-import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
+import com.qualcomm.robotcore.hardware.*;
+import org.swerverobotics.library.interfaces.*;
 
 /**
  * Another in our story
  */
-public class ThunkedOpticalDistanceSensor extends OpticalDistanceSensor
+public class ThunkedOpticalDistanceSensor extends OpticalDistanceSensor implements IThunkingWrapper<OpticalDistanceSensor>
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    public OpticalDistanceSensor target;   // can only talk to him on the loop thread
-    
+    private OpticalDistanceSensor target;   // can only talk to him on the loop thread
+
+    @Override public OpticalDistanceSensor getThunkTarget() { return this.target; }
+
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------

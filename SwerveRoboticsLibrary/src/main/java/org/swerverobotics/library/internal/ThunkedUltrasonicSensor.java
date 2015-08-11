@@ -1,17 +1,20 @@
 package org.swerverobotics.library.internal;
 
 import com.qualcomm.robotcore.hardware.*;
+import org.swerverobotics.library.interfaces.*;
 
 /**
  * An UltrasonicSensor that can be called on the main() thread.
  */
-public class ThunkedUltrasonicSensor extends UltrasonicSensor
+public class ThunkedUltrasonicSensor extends UltrasonicSensor implements IThunkingWrapper<UltrasonicSensor>
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    public UltrasonicSensor target;   // can only talk to him on the loop thread
+    private UltrasonicSensor target;   // can only talk to him on the loop thread
+
+    @Override public UltrasonicSensor getThunkTarget() { return this.target; }
 
     //----------------------------------------------------------------------------------------------
     // Construction

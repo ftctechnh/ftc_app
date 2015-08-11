@@ -1,17 +1,20 @@
 package org.swerverobotics.library.internal;
 
-import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.hardware.*;
+import org.swerverobotics.library.interfaces.*;
 
 /**
  * Another in our series
  */
-public class ThunkedTouchSensor extends TouchSensor
+public class ThunkedTouchSensor extends TouchSensor implements IThunkingWrapper<TouchSensor>
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    public TouchSensor target;   // can only talk to him on the loop thread
+    private TouchSensor target;   // can only talk to him on the loop thread
+
+    @Override public TouchSensor getThunkTarget() { return this.target; }
 
     //----------------------------------------------------------------------------------------------
     // Construction

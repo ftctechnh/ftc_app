@@ -412,7 +412,7 @@ public class TelemetryDashboardAndLog
                             {
                             for (int i = 0; i < keys.size(); i++)
                                 {
-                                TelemetryDashboardAndLog.this.thunker.target.addData(
+                                TelemetryDashboardAndLog.this.thunker.getThunkTarget().addData(
                                         keys.elementAt(i),
                                         values.elementAt(i));
                                 }

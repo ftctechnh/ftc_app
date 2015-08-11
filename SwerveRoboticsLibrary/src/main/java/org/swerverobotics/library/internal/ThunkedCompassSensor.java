@@ -2,24 +2,25 @@ package org.swerverobotics.library.internal;
 
 import com.qualcomm.robotcore.hardware.*;
 import org.swerverobotics.library.*;
+import org.swerverobotics.library.interfaces.*;
+
 import junit.framework.Assert;
 
 /**
  * A CompassSensor that can be called on the main() thread.
  */
-public class ThunkedCompassSensor extends CompassSensor implements IThunkedReadWriteListener
+public class ThunkedCompassSensor extends CompassSensor implements IThunkedReadWriteListener, IThunkingWrapper<CompassSensor>
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    public CompassSensor target;   // can only talk to him on the loop thread
+    private CompassSensor target;   // can only talk to him on the loop thread
 
-    public LegacyModule  legacyModule = null;
-    public int           port;
+    @Override public CompassSensor getThunkTarget() { return this.target; }
 
-    private int          readThunkKey  = Thunk.getNewActionKey();
-    private int          writeThunkKey = Thunk.getNewActionKey();
+    private int           readThunkKey  = Thunk.getNewActionKey();
+    private int           writeThunkKey = Thunk.getNewActionKey();
     
     private boolean getIsOffLine()
         {
@@ -39,10 +40,6 @@ public class ThunkedCompassSensor extends CompassSensor implements IThunkedReadW
             {
             // Make sure our hack is at least plausible
             Assert.assertEquals(true, Util.<Object>getPrivateObjectField(target, 6) instanceof CompassMode);
-
-            // Hack: did out the gunk we need to implement our mode-switching-waiting
-            this.legacyModule = (LegacyModule)Util.<LegacyModule>getPrivateObjectField(target, 0);
-            this.port         = Util.getPrivateIntField(target, 5);
             }
         }
 

@@ -1,18 +1,21 @@
 package org.swerverobotics.library.internal;
 
-import com.qualcomm.robotcore.hardware.AnalogOutputController;
-import com.qualcomm.robotcore.util.SerialNumber;
+import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.util.*;
+import org.swerverobotics.library.interfaces.*;
 
 /**
  * Another in our series
  */
-public class ThunkedAnalogOutputController implements AnalogOutputController
+public class ThunkedAnalogOutputController implements AnalogOutputController, IThunkingWrapper<AnalogOutputController>
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    public AnalogOutputController target;          // can only talk to him on the loop thread
+    private AnalogOutputController target;          // can only talk to him on the loop thread
+
+    @Override public AnalogOutputController getThunkTarget() { return this.target; }
 
     //----------------------------------------------------------------------------------------------
     // Construction

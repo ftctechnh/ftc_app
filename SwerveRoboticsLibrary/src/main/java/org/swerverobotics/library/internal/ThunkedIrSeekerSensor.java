@@ -2,21 +2,24 @@ package org.swerverobotics.library.internal;
 
 import junit.framework.Assert;
 import com.qualcomm.robotcore.hardware.*;
-import org.swerverobotics.library.SynchronousOpMode;
+import org.swerverobotics.library.*;
+import org.swerverobotics.library.interfaces.*;
 
 /**
  * An IrSeekerSensor that can be called on a synchronous thread
  */
-public class ThunkedIrSeekerSensor extends IrSeekerSensor implements IThunkedReadWriteListener
+public class ThunkedIrSeekerSensor extends IrSeekerSensor implements IThunkedReadWriteListener, IThunkingWrapper<IrSeekerSensor>
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    public IrSeekerSensor target;   // can only talk to him on the loop thread
-    
-    public LegacyModule legacyModule = null;
-    public int          port;
+    private IrSeekerSensor target;   // can only talk to him on the loop thread
+
+    @Override public IrSeekerSensor getThunkTarget() { return this.target; }
+
+    private LegacyModule legacyModule = null;
+    private int          port;
     
     private int readThunkKey  = Thunk.getNewActionKey();
     private int writeThunkKey = Thunk.getNewActionKey();
