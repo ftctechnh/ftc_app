@@ -1,4 +1,6 @@
-com.fellowshipoftheloosescrews.opmodes
-com.fellowshipoftheloosescrews.utilities
-com.qualcomm.ftcrobotcontroller
-com.qualcomm.ftcrobotcontroller.opmodes
+com.qualcomm.ftccommon
+com.qualcomm.robotcore.eventloop
+com.qualcomm.robotcore.eventloop.opmode
+com.qualcomm.robotcore.exception
+com.qualcomm.robotcore.hardware
+com.qualcomm.robotcore.util

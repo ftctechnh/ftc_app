@@ -19,5 +19,6 @@ public class TeleOp extends OpMode
     public void loop() {
         motor1.setPower(gamepad1.left_stick_y);
         telemetry.addData("left stick y", gamepad1.left_stick_y);
+        telemetry.addData("motor encoder value", motor1.getCurrentPosition());
     }
 }
