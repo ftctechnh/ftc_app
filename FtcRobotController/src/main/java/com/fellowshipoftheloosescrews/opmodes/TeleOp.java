@@ -11,25 +11,33 @@ import com.qualcomm.robotcore.hardware.*;
  */
 public class TeleOp extends OpMode
 {
+    // Defining variables
     DcMotor rightMotor;
     DcMotor leftMotor;
 
+    // sets the nudge power
     private double nudgePower = -0.25;
 
     @Override
     public void init() {
+        // gets startup data from the hardwaremap
         rightMotor = hardwareMap.dcMotor.get("rightMotor");
         leftMotor = hardwareMap.dcMotor.get("leftMotor");
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
-        //TODO: reverse one of the motors (check which one first)
     }
 
     @Override
     public void loop() {
+        // takes value of joystick and sets motors
         rightMotor.setPower(gamepad1.right_stick_y);
         leftMotor.setPower(gamepad1.left_stick_y);
+
+        
+        // the joystick data in the telemetry
         telemetry.addData("right", gamepad1.right_stick_y);
         telemetry.addData("left", gamepad1.left_stick_y);
+
+        // makes motors move in specified direction from dpad
         if(gamepad1.dpad_up)
         {
             rightMotor.setPower(nudgePower);
