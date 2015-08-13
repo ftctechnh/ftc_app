@@ -6,20 +6,49 @@ import com.qualcomm.robotcore.hardware.*;
 
 /**
  * Created by Thomas on 8/12/2015.
+ *
+ * A basic tele-op program for our tankdrive robot
  */
 public class TeleOp extends OpMode
 {
-    DcMotor motor1;
+    DcMotor rightMotor;
+    DcMotor leftMotor;
+
+    private double nudgePower = -0.25;
 
     @Override
     public void init() {
-        motor1 = hardwareMap.dcMotor.get("motor1");
+        rightMotor = hardwareMap.dcMotor.get("rightMotor");
+        leftMotor = hardwareMap.dcMotor.get("leftMotor");
+        leftMotor.setDirection(DcMotor.Direction.REVERSE);
+        //TODO: reverse one of the motors (check which one first)
     }
 
     @Override
     public void loop() {
-        motor1.setPower(gamepad1.left_stick_y);
-        telemetry.addData("left stick y", gamepad1.left_stick_y);
-        telemetry.addData("motor encoder value", motor1.getCurrentPosition() / Util.ENCODER_NEVEREST_CPR);
+        rightMotor.setPower(gamepad1.right_stick_y);
+        leftMotor.setPower(gamepad1.left_stick_y);
+        telemetry.addData("right", gamepad1.right_stick_y);
+        telemetry.addData("left", gamepad1.left_stick_y);
+        if(gamepad1.dpad_up)
+        {
+            rightMotor.setPower(nudgePower);
+            leftMotor.setPower(nudgePower);
+        }
+        if(gamepad1.dpad_down)
+        {
+            rightMotor.setPower(-nudgePower);
+            leftMotor.setPower(-nudgePower);
+        }
+        if(gamepad1.dpad_right)
+        {
+            rightMotor.setPower(-nudgePower);
+            leftMotor.setPower(nudgePower);
+        }
+        if(gamepad1.dpad_left)
+        {
+            rightMotor.setPower(nudgePower);
+            leftMotor.setPower(-nudgePower);
+        }
     }
 }
