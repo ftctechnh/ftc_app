@@ -50,7 +50,9 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      * 
      * Usually, much less time than this maximum is expended.
      */
-    public long msLoopDwellMax = 15;
+    public long getMsLoopDwellMax()                    { return msLoopDwellMax; }
+    public void setMsLoopDwellMax(long msLoopDwellMax) { this.msLoopDwellMax = msLoopDwellMax; }
+    private long msLoopDwellMax = 15;
 
     /**
      * Advanced: loopDwellCheckCount is the number of thunks we will execute in loop()
@@ -61,7 +63,8 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     /**
      * Advanced: the number of times the loop thread has been called
      */
-    public final AtomicInteger loopCount = new AtomicInteger(0);
+    public int getLoopCount() { return this.loopCount.get(); }
+    private final AtomicInteger loopCount = new AtomicInteger(0);
 
     /**
      * Advanced: unthunkedHardwareMap contains the original hardware map provided
@@ -641,7 +644,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
             // happen if we got flooded with a bevy of non-waiting actions and we didn't have
             // this check here.
             long nanotimeStart = System.nanoTime();
-            long nanotimeMax   = nanotimeStart + this.msLoopDwellMax * NANO_TO_MILLI;
+            long nanotimeMax   = nanotimeStart + this.getMsLoopDwellMax() * NANO_TO_MILLI;
 
             // Do any actions we've been asked to execute here on the loop thread
             for (int i = 1; ; i++)

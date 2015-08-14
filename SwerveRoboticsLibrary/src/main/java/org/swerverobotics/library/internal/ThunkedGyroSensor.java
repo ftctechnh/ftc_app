@@ -32,6 +32,34 @@ public class ThunkedGyroSensor extends GyroSensor implements IThunkingWrapper<Gy
         }
 
     //----------------------------------------------------------------------------------------------
+    // Device information: I2C registers and other info
+    //----------------------------------------------------------------------------------------------
+    /*
+    #define HTIRS2_I2C_ADDR    0x10      /*!< IR Seeker I2C device address                           
+    #define HTISR2_REG_MODE    0x41      /* register address of the IR reading mode                  
+    #define HTIRS2_DIR_DC      0x42      /* DC direction: 0-9                                        
+    #define HTIRS2_REG_DC      0x43      /* register address of first DC signal strength 0x43 - 0x47 
+    #define HTIRS2_MEAN_DC     0x48      /* sensor DC mean                                           
+    #define HTIRS2_DIR_AC      0x49      /* AC direction: 0-9                                        
+    #define HTIRS2_REG_AC      0x4A      /* register address of first AC signal strength 0x4A - 0x4E 
+    
+    #define HTIRS2_READ_BASE_DC   0x42
+    #define HTIRS2_READ_BASE_AC   0x49
+        
+    // "The Gyro Sensor connects to an NXT sensor port using a standard NXT wire and utilizes
+    // the analog sensor interface.  The rotation rate can be read up to approximately 300
+    // times per second."
+    //
+    // Note that the value coming out of the sensor is the rotation rate in the *clockwise*
+    // direction.
+    //
+    // http://nxttime.wordpress.com/2010/11/03/gyro-offset-and-drift/
+    // http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NGY1044
+    // http://proj.titanrobotics.net/hg/Frc/2011/code/file/ea68beef9fd9/trclib.nxt/gyro.h
+    // http://mightor.wordpress.com/2009/11/17/you-spin-me-right-round-baby-right-round/    
+    */
+    
+    //----------------------------------------------------------------------------------------------
     // HardwareDevice
     //----------------------------------------------------------------------------------------------
 
