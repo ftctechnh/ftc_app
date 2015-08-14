@@ -15,7 +15,7 @@ public class SynchTelemetryOp extends SynchronousOpMode
         // are declared 'final' so that they will be accessible inside the item expressions
         // of the dashboard.
         final ElapsedTime elapsed = new ElapsedTime();
-        final int loopCountStart = loopCount.get();
+        final int loopCountStart = getLoopCount();
 
         // Configure the dashboard. Here, it will have one line, which will contain three items
         // The output of any telemetry.log calls will be displayed below the dashboard.
@@ -27,11 +27,11 @@ public class SynchTelemetryOp extends SynchronousOpMode
                 }}),
             this.telemetry.dashboard.item("count: ", new IFunc<Object>() { @Override public Object value()
                 {
-                return loopCount.get() - loopCountStart;
+                return getLoopCount() - loopCountStart;
                 }}),
             this.telemetry.dashboard.item("rate: ", new IFunc<Object>() { @Override public Object value() 
                 {
-                return format(elapsed.time() / (loopCount.get()-loopCountStart) * 1000) + "ms";
+                return format(elapsed.time() / (getLoopCount()-loopCountStart) * 1000) + "ms";
                 }})
             );
         

@@ -33,7 +33,7 @@ public class TelemetryDashboardAndLog
         /**
          * itemDelimeter is the text used to separate dashboard items on a single line
          */
-        public String itemDelimeter = " | ";
+        public String itemDelimiter = " | ";
 
         // We just use the outer class so as to *mindlessly* avoid any potential deadlocks
         private Object getLock() { return TelemetryDashboardAndLog.this; }
@@ -68,7 +68,7 @@ public class TelemetryDashboardAndLog
                     // Separate the items with the delimiter
                     if (!first)
                         {
-                        result.append(itemDelimeter);
+                        result.append(itemDelimiter);
                         }
                     item.composeTo(result);
                     first = false;
