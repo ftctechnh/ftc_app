@@ -1,6 +1,5 @@
 package com.fellowshipoftheloosescrews.utilities;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class ArmController {
@@ -24,7 +23,7 @@ public class ArmController {
 
     public void init(double x, double y)
     {
-
+        moveToPosition(x, y);
     }
 
     public void moveToPosition(double x, double y)
@@ -43,9 +42,11 @@ public class ArmController {
             return;
         }
 
-        elbow = Math.acos(((upperArm * upperArm) + (lowerArm * lowerArm) - (distance * distance)) / (2 * upperArm * lowerArm));
+        elbow = Math.acos(((upperArm * upperArm) + (lowerArm * lowerArm) - (distance * distance))
+                / (2 * upperArm * lowerArm));
         shoulder = Math.atan2(targetY, targetX)
-                + Math.acos(((upperArm * upperArm) + (distance * distance) - (lowerArm * lowerArm)) / (2 * upperArm * distance));
+                + Math.acos(((upperArm * upperArm) + (distance * distance) - (lowerArm * lowerArm))
+                / (2 * upperArm * distance));
 
 
 

@@ -22,9 +22,4 @@ public class DcServo {
         this.motor = motor;
         motorEncoderCPR = cpr;
     }
-
-    public void release()
-    {
-
-    }
 }
