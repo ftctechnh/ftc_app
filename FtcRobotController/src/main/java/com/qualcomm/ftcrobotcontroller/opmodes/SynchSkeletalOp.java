@@ -1,7 +1,6 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import android.util.Log;
-
 import org.swerverobotics.library.SynchronousOpMode;
 
 /**
