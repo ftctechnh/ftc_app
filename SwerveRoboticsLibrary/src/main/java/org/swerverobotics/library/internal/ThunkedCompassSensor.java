@@ -49,6 +49,18 @@ public class ThunkedCompassSensor extends CompassSensor implements IThunkedReadW
         }
 
     //----------------------------------------------------------------------------------------------
+    // Device information: I2C registers
+    //----------------------------------------------------------------------------------------------
+    /*
+    #define HTMC_I2C_ADDR       0x02  //!< HTMC I2C device address 
+    #define HTMC_MODE           0x41  //!< HTMC Mode control 
+    #define HTMC_HEAD_U         0x42  //!< HTMC Heading Upper bits 
+    #define HTMC_HEAD_L         0x43  //!< HTMC Heading Lower bit 
+    #define HTMC_MEASURE_CMD    0x00  //!< HTMC measurement mode command 
+    #define HTMC_CALIBRATE_CMD  0x43  //!< HTMC calibrate mode command 
+    */
+    
+    //----------------------------------------------------------------------------------------------
     // HardwareDevice
     //----------------------------------------------------------------------------------------------
 
@@ -143,7 +155,6 @@ public class ThunkedCompassSensor extends CompassSensor implements IThunkedReadW
         {
         return this.writeThunkKey;
         }
-
 
     //----------------------------------------------------------------------------------------------
     // CompassSensor

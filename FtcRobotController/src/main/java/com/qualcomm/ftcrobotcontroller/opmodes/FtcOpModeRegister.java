@@ -106,9 +106,10 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("PushBotSquare", PushBotSquare.class);
 */
 
-    manager.register("Telemetry", SynchTelemetryOp.class);
-    manager.register("Tele", SynchTeleOp.class);
-    manager.register("TeleDriveModes", SynchTeleOpModes.class);
-    manager.register("Skeleton", SynchSkeletalOp.class);
+    manager.register("Synch Telemetry", SynchTelemetryOp.class);
+    manager.register("Synch TeleOp", SynchTeleOp.class);
+    manager.register("Synch Tele Drive Modes", SynchTeleOpModes.class);
+    manager.register("Synch Skeleton", SynchSkeletalOp.class);
+    manager.register("Synch Motor Loop Perf", SynchMotorLoopPerf.class);
   }
 }

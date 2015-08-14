@@ -55,6 +55,22 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor implements IThunkedRea
         }
 
     //----------------------------------------------------------------------------------------------
+    // Device information: I2C registers for NXT IR seeker
+    //----------------------------------------------------------------------------------------------
+    /*
+    #define HTIRS2_I2C_ADDR    0x10      /*!< IR Seeker I2C device address                           
+    #define HTISR2_REG_MODE    0x41      /* register address of the IR reading mode                  
+    #define HTIRS2_DIR_DC      0x42      /* DC direction: 0-9                                        
+    #define HTIRS2_REG_DC      0x43      /* register address of first DC signal strength 0x43 - 0x47 
+    #define HTIRS2_MEAN_DC     0x48      /* sensor DC mean                                           
+    #define HTIRS2_DIR_AC      0x49      /* AC direction: 0-9                                        
+    #define HTIRS2_REG_AC      0x4A      /* register address of first AC signal strength 0x4A - 0x4E 
+    
+    #define HTIRS2_READ_BASE_DC   0x42
+    #define HTIRS2_READ_BASE_AC   0x49
+    */
+    
+    //----------------------------------------------------------------------------------------------
     // HardwareDevice
     //----------------------------------------------------------------------------------------------
 
