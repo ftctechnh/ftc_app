@@ -134,7 +134,7 @@ public class K9TeleOp extends OpMode {
 		// 1 is full down
 		// direction: left_stick_x ranges from -1 to 1, where -1 is full left
 		// and 1 is full right
-		float throttle = -gamepad1.left_stick_y;
+		float throttle = gamepad1.left_stick_y;
 		float direction = gamepad1.left_stick_x;
 		float right = throttle - direction;
 		float left = throttle + direction;
