@@ -47,9 +47,7 @@ public class FtcOpModeRegister implements OpModeRegister {
    * @param manager op mode manager
    */
   public void register(OpModeManager manager) {
-      manager.register("SpeedTest", SpeedTest.class);
-      manager.register("Threading 0.2", new ThreadedOpModeWrapper(new ThreadingTest()));
-      manager.register("Camera", new ThreadedOpModeWrapper(new CameraTesting()));
       manager.register("TeleOp", TeleOp.class);
+      manager.register("Encoder test", PIDTesting.class);
   }
 }
