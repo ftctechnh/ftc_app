@@ -174,6 +174,7 @@ public class K9IrSeeker extends OpMode {
 				left = 0.0;
 				right = 0.0;
 			}
+
 		} else {
 			/*
 			 * Signal was not detected.
@@ -182,6 +183,15 @@ public class K9IrSeeker extends OpMode {
 			left = 0.0;
 			right = 0.0;
 		}
+
+
+        /*
+         * Stop the robot if the touch sensor is pressed
+         */
+        if(touchSensor.isPressed()) {
+            left = 0.0;
+            right = 0.0;
+        }
 		
 		/*
 		 * set the motor power
@@ -197,10 +207,11 @@ public class K9IrSeeker extends OpMode {
 		 */
 
 		telemetry.addData("Text", "*** Robot Data***");
-		telemetry.addData("angle", "angle:  " + Double.toString(angle));
+		telemetry.addData("angle", "angle: " + Double.toString(angle));
 		telemetry.addData("strength", "sig strength: " + Double.toString(strength));
 		telemetry.addData("left tgt pwr",  "left  pwr: " + Double.toString(left));
 		telemetry.addData("right tgt pwr", "right pwr: " + Double.toString(right));
+        telemetry.addData("touch", "touch sensor: " + (touchSensor.isPressed()? "pressed":"not pressed"));
 	}
 
 	/*
