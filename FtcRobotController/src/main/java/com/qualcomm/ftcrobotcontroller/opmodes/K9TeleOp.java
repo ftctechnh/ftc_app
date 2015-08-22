@@ -136,8 +136,8 @@ public class K9TeleOp extends OpMode {
 		// and 1 is full right
 		float throttle = gamepad1.left_stick_y;
 		float direction = gamepad1.left_stick_x;
-		float right = throttle - direction;
-		float left = throttle + direction;
+		float right = throttle + direction;
+		float left = throttle - direction;
 
 		// clip the right/left values so that the values never exceed +/- 1
 		right = Range.clip(right, -1, 1);
