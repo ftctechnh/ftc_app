@@ -35,6 +35,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IrSeekerSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 /**
  * TeleOp Mode
@@ -54,6 +55,7 @@ public class K9IrSeeker extends OpMode {
 	Servo claw;
 	Servo arm;
 	IrSeekerSensor irSeeker;
+    TouchSensor touchSensor;
 	
 	/**
 	 * Constructor
@@ -102,6 +104,7 @@ public class K9IrSeeker extends OpMode {
 		 * with a name of "ir_seeker" configured for our robot.
 		 */
 		irSeeker = hardwareMap.irSeekerSensor.get("ir_seeker");
+        touchSensor = hardwareMap.touchSensor.get("touch_sensor");
 	}
 
 	/*
