@@ -116,7 +116,7 @@ public class K9IrSeeker extends OpMode {
 	public void loop() {
 		double angle = 0.0;
 		double strength = 0.0;
-		double left, right = 0.0;
+		double left, right;
 		
 		// keep manipulator out of the way.
 		arm.setPosition(armPosition);
