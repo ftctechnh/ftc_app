@@ -178,10 +178,10 @@ public class K9IrSeeker extends OpMode {
 		} else {
 			/*
 			 * Signal was not detected.
-			 * Shut off motors
+			 * Spin in a circle until the signal is detected.
 			 */
-			left = 0.0;
-			right = 0.0;
+			left = MOTOR_POWER;
+			right = -MOTOR_POWER;
 		}
 
 

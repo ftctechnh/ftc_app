@@ -50,7 +50,7 @@ public class K9TeleOp extends OpMode {
 	 */
 	// TETRIX VALUES.
 	final static double ARM_MIN_RANGE  = 0.20;
-	final static double ARM_MAX_RANGE  = 0.90;
+	final static double ARM_MAX_RANGE  = 1.00;
 	final static double CLAW_MIN_RANGE  = 0.20;
 	final static double CLAW_MAX_RANGE  = 0.7;
 
