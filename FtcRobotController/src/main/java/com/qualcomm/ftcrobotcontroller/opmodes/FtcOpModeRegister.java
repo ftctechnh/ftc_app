@@ -96,5 +96,9 @@ public class FtcOpModeRegister implements OpModeRegister {
     //manager.register("PushBotDriveTouch", PushBotDriveTouch.java);
     //manager.register("PushBotIrSeek", PushBotIrSeek.java);
     //manager.register("PushBotSquare", PushBotSquare.java);
+
+    /* Custom Ops Modes here */
+    manager.register("DavTest", DavTest.class);
+
   }
 }
