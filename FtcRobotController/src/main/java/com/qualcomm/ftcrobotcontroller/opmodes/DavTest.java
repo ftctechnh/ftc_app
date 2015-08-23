@@ -6,8 +6,10 @@ import com.qualcomm.robotcore.util.Range;
 
 public class DavTest extends OpMode {
 
-    DcMotor motorRight;
-    DcMotor motorLeft;
+    DcMotor motorRight1;
+    DcMotor motorRight2;
+    DcMotor motorLeft1;
+    DcMotor motorLeft2;
 
     /**
      * Constructor
@@ -37,9 +39,12 @@ public class DavTest extends OpMode {
 		 *   "motor_1" is on the right side of the bot.
 		 *   "motor_2" is on the left side of the bot and reversed.
 		 */
-        motorRight = hardwareMap.dcMotor.get("motor_2");
-        motorLeft = hardwareMap.dcMotor.get("motor_1");
-        motorLeft.setDirection(DcMotor.Direction.REVERSE);
+        motorRight1 = hardwareMap.dcMotor.get("motor_1_right");
+        motorRight2 = hardwareMap.dcMotor.get("motor_2_right");
+        motorLeft1 = hardwareMap.dcMotor.get("motor_1_left");
+        motorLeft2 = hardwareMap.dcMotor.get("motor_2_left");
+        motorLeft1.setDirection(DcMotor.Direction.REVERSE);
+        motorLeft2.setDirection(DcMotor.Direction.REVERSE);
 
     }
 
@@ -62,23 +67,35 @@ public class DavTest extends OpMode {
         // 1 is full down
         // direction: left_stick_x ranges from -1 to 1, where -1 is full left
         // and 1 is full right
-        float throttle = -gamepad1.left_stick_y;
-        float direction = gamepad1.left_stick_x;
-        float right = throttle - direction;
-        float left = throttle + direction;
+        float throttle1 = -gamepad1.left_stick_y;
+        float direction1 = gamepad1.left_stick_x;
+        float right1 = throttle1 - direction1;
+        float left1 = throttle1 + direction1;
+
+        float throttle2 = -gamepad1.right_stick_y;
+        float direction2 = gamepad1.right_stick_x;
+        float right2 = throttle2 - direction2;
+        float left2 = throttle2 + direction2;
 
         // clip the right/left values so that the values never exceed +/- 1
-        right = Range.clip(right, -1, 1);
-        left = Range.clip(left, -1, 1);
+        right1 = Range.clip(right1, -1, 1);
+        left1 = Range.clip(left1, -1, 1);
+        right2 = Range.clip(right2, -1, 1);
+        left2 = Range.clip(left2, -1, 1);
 
         // scale the joystick value to make it easier to control
         // the robot more precisely at slower speeds.
-        right = (float)scaleInput(right);
-        left =  (float)scaleInput(left);
+        right1 = (float)scaleInput(right1);
+        left1 =  (float)scaleInput(left1);
+        right2 = (float)scaleInput(right2);
+        left2 =  (float)scaleInput(left2);
 
         // write the values to the motors
-        motorRight.setPower(right);
-        motorLeft.setPower(left);
+        motorLeft1.setPower(right1);
+        motorLeft2.setPower(left1);
+
+        motorRight1.setPower(right2);
+        motorRight2.setPower(left2);
 
 		/*
 		 * Send telemetry data back to driver station. Note that if we are using
@@ -87,8 +104,10 @@ public class DavTest extends OpMode {
 		 * are currently write only.
 		 */
         telemetry.addData("Text", "*** Robot Data***");
-        telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", left));
-        telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));
+        telemetry.addData("left1 tgt pwr",  "left1  pwr: " + String.format("%.2f", left1));
+        telemetry.addData("right1 tgt pwr", "right1 pwr: " + String.format("%.2f", right1));
+        telemetry.addData("left2 tgt pwr",  "left2  pwr: " + String.format("%.2f", left2));
+        telemetry.addData("right2 tgt pwr", "right2 pwr: " + String.format("%.2f", right2));
 
     }
 
