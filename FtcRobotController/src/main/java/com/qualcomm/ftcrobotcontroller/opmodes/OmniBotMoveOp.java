@@ -66,17 +66,18 @@ public class OmniBotMoveOp extends OpMode {
   @Override
   public void loop () {
 
-    float motor1Power = -gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x ;
-    float motor2Power = -gamepad1.left_stick_y + -gamepad1.left_stick_x + -gamepad1.right_stick_x ;
-    float motor3Power = -gamepad1.left_stick_y + gamepad1.left_stick_x + -gamepad1.right_stick_x ;
-    float motor4Power = -gamepad1.left_stick_y + -gamepad1.left_stick_x + gamepad1.right_stick_x ;
+    float motor1Power = -gamepad1.left_stick_y + gamepad1.left_stick_x + gamepad1.right_stick_x;
+    float motor2Power = -gamepad1.left_stick_y + -gamepad1.left_stick_x + -gamepad1.right_stick_x;
+    float motor3Power = -gamepad1.left_stick_y + gamepad1.left_stick_x + -gamepad1.right_stick_x;
+    float motor4Power = -gamepad1.left_stick_y + -gamepad1.left_stick_x + gamepad1.right_stick_x;
 
-    motor1Power = Range.clip(motor1Power, -1, 1) ;    motor2Power = Range.clip(motor2Power, -1, 1) ;
-    motor3Power = Range.clip(motor3Power, -1, 1) ;
-    motor4Power = Range.clip(motor4Power, -1, 1) ;
+    motor1Power = Range.clip(motor1Power, -1, 1);
+    motor2Power = Range.clip(motor2Power, -1, 1);
+    motor3Power = Range.clip(motor3Power, -1, 1);
+    motor4Power = Range.clip(motor4Power, -1, 1);
 
     if (gamepad1.left_bumper == true) {
-     int scaleDegree = 0 ;
+      int scaleDegree = 0;
     }
 
     if (gamepad1.right_bumper == true) {
@@ -84,25 +85,34 @@ public class OmniBotMoveOp extends OpMode {
     }
 
     if (scaleDegree == 0) {
-      motor1Power = (float) scaleInput(motor1Power) ;
-      motor2Power = (float) scaleInput(motor2Power) ;
-      motor3Power = (float) scaleInput(motor3Power) ;
-      motor4Power = (float) scaleInput(motor4Power) ;
+      motor1Power = (float) scaleInput(motor1Power);
+      motor2Power = (float) scaleInput(motor2Power);
+      motor3Power = (float) scaleInput(motor3Power);
+      motor4Power = (float) scaleInput(motor4Power);
     }
 
-    motor1.setPower(motor1Power) ;
-    motor2.setPower(motor2Power) ;
-    motor3.setPower(motor3Power) ;
-    motor4.setPower(motor4Power) ;
-  }
+    motor1.setPower(motor1Power);
+    motor2.setPower(motor2Power);
+    motor3.setPower(motor3Power);
+    motor4.setPower(motor4Power);
+
+    telemetry.addData("Left Joystick", "Left Joystick at" + String.format("(%.2f,%.2f)", gamepad1.left_stick_x, gamepad1.left_stick_y));
+    telemetry.addData("Motor Power 1", "Motor 1 power is" + String.format("%.2f", motor1Power));
+    telemetry.addData("Motor Power 2", "Motor 2 power is" + String.format("%.2f", motor2Power));
+    telemetry.addData("Motor Power 3", "Motor 3 power is" + String.format("%.2f", motor3Power));
+    telemetry.addData("Motor Power 4", "Motor 4 power is" + String.format("%.2f", motor4Power));
+
   /*
    * Code to run when the op mode is first disabled goes here
    * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#stop()
    */
+  }
   @Override
   public void stop() {
 
   }
+
+
 
 
 /*
