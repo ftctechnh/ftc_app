@@ -434,8 +434,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 {
                 this.threadBody.run();
                 }
-            catch (InterruptedException ignored) { }
-            catch (RuntimeInterruptedException ignored)
+            catch (InterruptedException|RuntimeInterruptedException ignored)
                 {
                 // If the main() method itself doesn't catch the interrupt, at least
                 // we will do so here. The whole point of such interrupts is to
