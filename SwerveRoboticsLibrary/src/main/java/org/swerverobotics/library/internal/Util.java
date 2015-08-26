@@ -17,7 +17,7 @@ public class Util
     // to override leave us no choice.
     //----------------------------------------------------------------------------------------------
     
-    static Vector<Field> getDeclaredFieldsIncludingSuper(Class<?> c)
+    static public Vector<Field> getDeclaredFieldsIncludingSuper(Class<?> c)
         {
         if (c.getSuperclass() == null)
             {
@@ -31,7 +31,7 @@ public class Util
             }
         }
     
-    static Field getAccessibleClassField(Object target, int iField)
+    static public Field getAccessibleClassField(Object target, int iField)
         {
         Class<?> c = target.getClass();
         Vector<Field> fields = getDeclaredFieldsIncludingSuper(c);
@@ -43,7 +43,7 @@ public class Util
         return field;        
         }
 
-    static int getPrivateIntField(Object target, int iField)
+    static public int getPrivateIntField(Object target, int iField)
         {
         Field field = getAccessibleClassField(target, iField);
         try
@@ -56,7 +56,7 @@ public class Util
             }
         }
 
-    static long getPrivateLongField(Object target, int iField)
+    static public long getPrivateLongField(Object target, int iField)
         {
         Field field = getAccessibleClassField(target, iField);
         try
@@ -69,7 +69,7 @@ public class Util
             }
         }
 
-    static short getPrivateShortField(Object target, int iField)
+    static public short getPrivateShortField(Object target, int iField)
         {
         Field field = getAccessibleClassField(target, iField);
         try
@@ -82,7 +82,7 @@ public class Util
             }
         }
 
-    static double getPrivateDoubleField(Object target, int iField)
+    static public double getPrivateDoubleField(Object target, int iField)
         {
         Field field = getAccessibleClassField(target, iField);
         try
@@ -95,7 +95,7 @@ public class Util
             }
         }
 
-    static float getPrivateFloatField(Object target, int iField)
+    static public float getPrivateFloatField(Object target, int iField)
         {
         Field field = getAccessibleClassField(target, iField);
         try
@@ -107,7 +107,7 @@ public class Util
             throw SwerveRuntimeException.wrap(e);
             }
         }
-    static boolean getPrivateBooleanField(Object target, int iField)
+    static public boolean getPrivateBooleanField(Object target, int iField)
         {
         Field field = getAccessibleClassField(target, iField);
         try
@@ -120,7 +120,7 @@ public class Util
             }
         }
 
-    static byte getPrivateByteField(Object target, int iField)
+    static public byte getPrivateByteField(Object target, int iField)
         {
         Field field = getAccessibleClassField(target, iField);
         try
@@ -134,7 +134,7 @@ public class Util
         }
 
     // @SuppressWarnings("unchecked")
-    static <T> T getPrivateObjectField(Object target, int iField)
+    static public <T> T getPrivateObjectField(Object target, int iField)
         {
         Field field = getAccessibleClassField(target, iField);
         try
@@ -147,7 +147,7 @@ public class Util
             }
         }
     
-    static <T> void setPrivateObjectField(Object target, int iField, T value)
+    static public <T> void setPrivateObjectField(Object target, int iField, T value)
         {
         Field field = getAccessibleClassField(target, iField);
         try 
@@ -160,7 +160,7 @@ public class Util
             }
         }
 
-    static void setPrivateLongField(Object target, int iField, long value)
+    static public void setPrivateLongField(Object target, int iField, long value)
         {
         Field field = getAccessibleClassField(target, iField);
         try
@@ -173,7 +173,7 @@ public class Util
             }
         }
 
-    static void setPrivateIntField(Object target, int iField, int value)
+    static public void setPrivateIntField(Object target, int iField, int value)
         {
         Field field = getAccessibleClassField(target, iField);
         try
@@ -186,7 +186,7 @@ public class Util
             }
         }
 
-    static void setPrivateByteField(Object target, int iField, byte value)
+    static public void setPrivateByteField(Object target, int iField, byte value)
         {
         Field field = getAccessibleClassField(target, iField);
         try
@@ -199,7 +199,7 @@ public class Util
             }
         }
 
-    static void setPrivateFloatField(Object target, int iField, float value)
+    static public void setPrivateFloatField(Object target, int iField, float value)
         {
         Field field = getAccessibleClassField(target, iField);
         try
@@ -212,7 +212,7 @@ public class Util
             }
         }
 
-    static void setPrivateDoubleField(Object target, int iField, double value)
+    static public void setPrivateDoubleField(Object target, int iField, double value)
         {
         Field field = getAccessibleClassField(target, iField);
         try
