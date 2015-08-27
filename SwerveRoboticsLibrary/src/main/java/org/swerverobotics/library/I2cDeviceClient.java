@@ -1,6 +1,8 @@
 package org.swerverobotics.library;
 
 import com.qualcomm.robotcore.hardware.*;
+
+import org.swerverobotics.library.exceptions.SwerveRuntimeException;
 import org.swerverobotics.library.internal.*;
 import java.util.*;
 import java.util.concurrent.locks.*;
@@ -84,49 +86,57 @@ public class I2cDeviceClient implements I2cController.I2cPortReadyCallback
     /**
      * Read the indicated register
      */
-    public byte read8(int ireg) throws InterruptedException
+    public byte read8(int ireg)
         {
         return this.read(ireg, 1)[0];
         }
     
-    public byte[] read(int ireg, int creg) throws InterruptedException
+    public byte[] read(int ireg, int creg)
         {
-        synchronized (this.lock)
+        try
             {
-            // We can only fetch registers that lie within the register window
-            if (!this.registerWindow.contains(ireg,creg))
+            synchronized (this.lock)
                 {
-                throw new IllegalArgumentException(String.format("read request (%d,%d) outside of read register window", ireg, creg));
+                // We can only fetch registers that lie within the register window
+                if (!this.registerWindow.contains(ireg, creg))
+                    {
+                    throw new IllegalArgumentException(String.format("read request (%d,%d) outside of read register window", ireg, creg));
+                    }
+
+                // Wait until we fill up with data
+                for (; ; )
+                    {
+                    if (this.readCacheStatus == READ_CACHE_STATUS.VALID)
+                        break;
+                    if (this.readCacheStatus == READ_CACHE_STATUS.VALIDQUEUED)
+                        break;
+                    //
+                    this.lock.wait();
+                    }
+
+                // Extract the data and return!
+                this.readCacheLock.lockInterruptibly();
+                try
+                    {
+                    int ibFirst = ireg - this.registerWindow.getIregFirst() + dibCacheOverhead;
+                    return Arrays.copyOfRange(this.readCache, ibFirst, ibFirst + creg);
+                    }
+                finally
+                    {
+                    this.readCacheLock.unlock();
+                    }
                 }
-            
-            // Wait until we fill up with data
-            for (;;) 
-                {
-                if (this.readCacheStatus == READ_CACHE_STATUS.VALID)
-                    break;
-                if (this.readCacheStatus == READ_CACHE_STATUS.VALIDQUEUED)
-                    break;
-                //
-                this.lock.wait();
-                }
-            
-            // Extract the data and return!
-            this.readCacheLock.lockInterruptibly();
-            try {
-                int ibFirst = ireg - this.registerWindow.getIregFirst() + dibCacheOverhead;           
-                return Arrays.copyOfRange(this.readCache, ibFirst, ibFirst+creg);
-                }
-            finally
-                {
-                this.readCacheLock.unlock();
-                }
+            }
+        catch (InterruptedException e)
+            {
+            throw SwerveRuntimeException.wrap(e);
             }
         }
 
     /**
      * Write a byte to the indicated register
      */
-    public void write8(int ireg, int data) throws InterruptedException
+    public void write8(int ireg, int data)
         {
         this.write(ireg, new byte[] { (byte)data });
         }
@@ -134,30 +144,37 @@ public class I2cDeviceClient implements I2cController.I2cPortReadyCallback
     /**
      * Write data to a set of registers, begining with the one indicated
      */
-    public void write(int ireg, byte[] data) throws InterruptedException
+    public void write(int ireg, byte[] data)
         {
-        synchronized (this.lock)
+        try
             {
-            // Wait until we can write to the write cache
-            while (this.writeCacheStatus != WRITE_CACHE_STATUS.IDLE)
+            synchronized (this.lock)
                 {
-                this.lock.wait();
-                }
+                // Wait until we can write to the write cache
+                while (this.writeCacheStatus != WRITE_CACHE_STATUS.IDLE)
+                    {
+                    this.lock.wait();
+                    }
 
-            // Indicate where we want to write
-            this.i2cDevice.enableI2cWriteMode(ireg, data.length);
-            this.writeCacheStatus = WRITE_CACHE_STATUS.DIRTY;
+                // Indicate where we want to write
+                this.i2cDevice.enableI2cWriteMode(ireg, data.length);
+                this.writeCacheStatus = WRITE_CACHE_STATUS.DIRTY;
 
-            // Provide the data we want to write
-            this.writeCacheLock.lockInterruptibly();
-            try
-                {
-                System.arraycopy(data, 0, this.writeCache, dibCacheOverhead, data.length);
+                // Provide the data we want to write
+                this.writeCacheLock.lockInterruptibly();
+                try
+                    {
+                    System.arraycopy(data, 0, this.writeCache, dibCacheOverhead, data.length);
+                    }
+                finally
+                    {
+                    this.writeCacheLock.unlock();
+                    }
                 }
-            finally
-                {
-                this.writeCacheLock.unlock();
-                }
+            }
+        catch (InterruptedException e)
+            {
+            throw SwerveRuntimeException.wrap(e);
             }
         }
     

@@ -176,7 +176,10 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
             {
             // If new input has arrived since anyone last looked, then let our caller process that
             if (this.isNewGamePadInputAvailable())
+                {
+                Thread.yield();     // avoid tight loop if caller not looking at gamepad input
                 return;
+                }
             
             // Otherwise, we know there's nothing to do until at least the next loop() call.
             // The trouble is, it's hard to know when that is. We might be running here 

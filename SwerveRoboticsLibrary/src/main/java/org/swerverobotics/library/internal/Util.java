@@ -224,4 +224,9 @@ public class Util
             throw SwerveRuntimeException.wrap(e);
             }
         }
+    
+    static public int makeInt(byte low, byte hi)
+        {
+        return ((int)low) | (((int)hi)<<8);
+        }
     }
