@@ -75,7 +75,7 @@ public class AdaFruitBNO055IMU extends I2cDeviceClient implements IAdaFruitBNO05
         delayLore(50);
         
         // Set to normal power mode
-        write8(REGISTER.PWR_MODE_ADDR, POWER_MODE.NORMAL.ordinal());
+        write8(REGISTER.PWR_MODE_ADDR, POWER_MODE.NORMAL.getValue());
         delayLore(10);
 
         // Make sure we're looking at register page zero
@@ -104,7 +104,7 @@ public class AdaFruitBNO055IMU extends I2cDeviceClient implements IAdaFruitBNO05
     while the sensors whose signals are not required are set to suspend mode. */
         {
         this.mode = mode;
-        this.write8(REGISTER.OPR_MODE_ADDR, mode.ordinal() & 0x0F);
+        this.write8(REGISTER.OPR_MODE_ADDR, mode.getValue() & 0x0F);
         
         // Delay per Table 3-6 of BNO055 Data sheet (p21)
         if (mode == OPERATION_MODE.CONFIG)
@@ -260,12 +260,12 @@ public class AdaFruitBNO055IMU extends I2cDeviceClient implements IAdaFruitBNO05
 
     private byte read8(REGISTER reg)
         {
-        return this.read8(reg.ordinal());
+        return this.read8(reg.getValue());
         }
     
     private void write8(REGISTER reg, int data)
         {
-        this.write8(reg.ordinal(), data);
+        this.write8(reg.getValue(), data);
         }
     
     private void enterConfigModeFor(IAction action)
