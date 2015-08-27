@@ -9,12 +9,13 @@ import org.swerverobotics.library.interfaces.*;
 /**
  * (documentation to come) (implementation far from complete)
  */
-public class AdaFruitBNO055IMU extends I2cDeviceClient implements IAdaFruitBNO055IMU
+public class AdaFruitBNO055IMU implements IAdaFruitBNO055IMU
     {
     //------------------------------------------------------------------------------------------
     // State
     //------------------------------------------------------------------------------------------
 
+    I2cDeviceClient  deviceClient;
     OPERATION_MODE   mode;
 
     //----------------------------------------------------------------------------------------------
@@ -23,7 +24,8 @@ public class AdaFruitBNO055IMU extends I2cDeviceClient implements IAdaFruitBNO05
 
     public AdaFruitBNO055IMU(I2cDevice i2cDevice, int i2cAddr)
         {
-        super(i2cDevice, i2cAddr, new RegisterWindow(REGISTER.CHIP_ID_ADDR.getValue(), 8));
+        this.deviceClient = new I2cDeviceClient(i2cDevice, i2cAddr, new I2cDeviceClient.RegisterWindow(REGISTER.CHIP_ID_ADDR.getValue(), 8));
+        this.mode = null;   // unknown mode
         }
     public AdaFruitBNO055IMU(I2cDevice i2cDevice)
         {
@@ -217,7 +219,7 @@ public class AdaFruitBNO055IMU extends I2cDeviceClient implements IAdaFruitBNO05
     
     private double[] getVector(VECTOR vector, double scale)
         {
-        byte[] buffer = this.read(vector.getValue(), 6);
+        byte[] buffer = this.deviceClient.read(vector.getValue(), 6);
         return new double[] {
                 Util.makeInt(buffer[0], buffer[1]) / scale,
                 Util.makeInt(buffer[2], buffer[3]) / scale,
@@ -227,7 +229,7 @@ public class AdaFruitBNO055IMU extends I2cDeviceClient implements IAdaFruitBNO05
     public Quaternion getQuaternionOrientation()
         {
         // Section 3.6.5.5 of BNO055 specification
-        byte[] buffer = this.read(REGISTER.QUATERNION_DATA_W_LSB_ADDR.getValue(), 8);
+        byte[] buffer = this.deviceClient.read(REGISTER.QUATERNION_DATA_W_LSB_ADDR.getValue(), 8);
         final double scale = 1.0 / (1 << 14);
         return new Quaternion(
                 Util.makeInt(buffer[0], buffer[1]) * scale,
@@ -260,12 +262,12 @@ public class AdaFruitBNO055IMU extends I2cDeviceClient implements IAdaFruitBNO05
 
     private byte read8(REGISTER reg)
         {
-        return this.read8(reg.getValue());
+        return this.deviceClient.read8(reg.getValue());
         }
     
     private void write8(REGISTER reg, int data)
         {
-        this.write8(reg.getValue(), data);
+        this.deviceClient.write8(reg.getValue(), data);
         }
     
     private void enterConfigModeFor(IAction action)
