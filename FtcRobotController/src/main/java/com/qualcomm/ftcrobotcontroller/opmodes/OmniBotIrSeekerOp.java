@@ -45,63 +45,88 @@ import com.qualcomm.robotcore.hardware.IrSeekerSensor;
  * Turn on the IR beacon. The robot will now follow the IR beacon. <br>
  * To stop the robot, turn the IR beacon off. <br>
  */
-public class IrSeekerOp extends OpMode {
+public class OmniBotIrSeekerOp extends OpMode {
 
-  final static double MOTOR_POWER = 0.15; // Higher values will cause the robot to move faster
+  final static double motorPower = 0.15 ;
 
-  final static double HOLD_IR_SIGNAL_STRENGTH = 0.20; // Higher values will cause the robot to follow closer
+  final static double irSignalStrength = 0.20 ;
 
-  IrSeekerSensor irSeeker;
-  DcMotor motorRight;
-  DcMotor motorLeft;
+  IrSeekerSensor irSeeker ;
+  DcMotor motor1 ;
+  DcMotor motor2 ;
+  DcMotor motor3 ;
+  DcMotor motor4 ;
 
-  public IrSeekerOp() {
+  public OmniBotIrSeekerOp() {
 
   }
 
   @Override
-  public void start() {    irSeeker = hardwareMap.irSeekerSensor.get("ir_seeker");
-    motorRight = hardwareMap.dcMotor.get("motor_2");
-    motorLeft = hardwareMap.dcMotor.get("motor_1");
+  public void start() {
 
-    motorLeft.setDirection(DcMotor.Direction.REVERSE);
+    motor1 = hardwareMap.dcMotor.get("motor_1") ;
+    motor2 = hardwareMap.dcMotor.get("motor_2") ;
+    motor3 = hardwareMap.dcMotor.get("motor_3") ;
+    motor4 = hardwareMap.dcMotor.get("motor_4") ;
+
+    motor1.setDirection(DcMotor.Direction.REVERSE) ;
+    motor4.setDirection(DcMotor.Direction.REVERSE) ;
+
   }
 
   @Override
   public void loop() {
 
-    // Is an IR signal detected?
     if (irSeeker.signalDetected()) {
-      // an IR signal is detected
 
-      // Get the angle and strength of the signal
-      double angle = irSeeker.getAngle();
-      double strength = irSeeker.getStrength();
+      double angle = irSeeker.getAngle() ;
+      double strength = irSeeker.getStrength() ;
 
-      // which direction should we move?
       if (angle < 0) {
-        // we need to move to the left
-        motorRight.setPower(MOTOR_POWER);
-        motorLeft.setPower(-MOTOR_POWER);
+
+        motor1.setPower(-motorPower);
+        motor2.setPower(-motorPower);
+        motor3.setPower(motorPower);
+        motor4.setPower(motorPower);
+
+        DbgLog.msg("===Signal To the left===") ;
+
       } else if (angle > 0) {
-        // we need to move to the right
-        motorRight.setPower(-MOTOR_POWER);
-        motorLeft.setPower(MOTOR_POWER);
-      } else if (strength < HOLD_IR_SIGNAL_STRENGTH) {
-        // the IR signal is weak, approach
-        motorRight.setPower(MOTOR_POWER);
-        motorLeft.setPower(MOTOR_POWER);
+
+        motor1.setPower(motorPower);
+        motor2.setPower(motorPower);
+        motor3.setPower(-motorPower);
+        motor4.setPower(-motorPower);
+
+        DbgLog.msg("===Signal To the right===") ;
+
+      } else if (strength < irSignalStrength) {
+
+        motor1.setPower(motorPower);
+        motor2.setPower(motorPower);
+        motor3.setPower(-motorPower);
+        motor4.setPower(-motorPower);
+
+        DbgLog.msg("===Signal is weak===") ;
+
       } else {
-        // the IR signal is strong, stay here
-        motorRight.setPower(0.0);
-        motorLeft.setPower(0.0);
+
+        motor1.setPower(0.0);
+        motor2.setPower(0.0);
+        motor3.setPower(0.0);
+        motor4.setPower(0.0);
+
+        DbgLog.msg("===Signal right on===") ;
+
       }
     } else {
-      // no IR signal is detected
-      motorRight.setPower(0.0);
-      motorLeft.setPower(0.0);
-    }
 
+      motor1.setPower(0.0);
+      motor2.setPower(0.0);
+      motor3.setPower(0.0);
+      motor4.setPower(0.0);
+      DbgLog.msg("===No Signal===");
+    }
     DbgLog.msg(irSeeker.toString());
   }
 
