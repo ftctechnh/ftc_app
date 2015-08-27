@@ -78,5 +78,6 @@ public interface IAdaFruitBNO055IMU
             {
             this.value = (byte) value;
             }
+        public byte getValue() { return this.value; }
         }
     }
