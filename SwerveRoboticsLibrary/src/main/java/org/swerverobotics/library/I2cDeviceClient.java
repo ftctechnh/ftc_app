@@ -79,8 +79,34 @@ public class I2cDeviceClient implements I2cController.I2cPortReadyCallback
         {
         synchronized (this.lock)
             {
-            this.registerWindow = window;
+            if (this.registerWindow==null || window==null || !this.registerWindow.equals(window))
+                {
+                // Remember the new window
+                this.registerWindow = window;
+                
+                // Any reads we currently have or are perhaps currently 
+                // in flight are junk.
+                this.readCacheStatus = READ_CACHE_STATUS.IDLE;
+                }
             }
+        }
+
+    /**
+     * Ensure that the current register window covers the indicated set of registers
+     */
+    public void ensureRegisterWindow(int ireg, int creg, int cregNewWindow)
+        {
+        synchronized (this.lock)
+            {
+            if (this.registerWindow == null || !this.registerWindow.contains(ireg, creg))
+                {
+                setRegisterWindow(new RegisterWindow(ireg, cregNewWindow));
+                }
+            }
+        }
+    public void ensureRegisterWindow(int ireg, int creg)
+        {
+        this.ensureRegisterWindow(ireg, creg, creg);
         }
 
     /**
@@ -310,6 +336,12 @@ public class I2cDeviceClient implements I2cController.I2cPortReadyCallback
         // Operations
         //------------------------------------------------------------------------------------------
 
+        public boolean equals(RegisterWindow him)
+            {
+            return this.getIregFirst() == him.getIregFirst() 
+                    && this.getCreg() == him.getCreg();
+            }
+        
         /**
          * Is this register window wholly contained within the receiver
          */
