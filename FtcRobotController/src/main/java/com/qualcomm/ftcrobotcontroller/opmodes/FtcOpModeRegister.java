@@ -31,9 +31,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
-import com.fellowshipoftheloosescrews.utilities.ThreadedOpModeWrapper;
-import com.qualcomm.robotcore.eventloop.opmode.*;
-import com.fellowshipoftheloosescrews.opmodes.*;
+import com.fellowshipoftheloosescrews.testing.PIDTesting;
+import com.fellowshipoftheloosescrews.opmodes.TeleOp;
+import com.fellowshipoftheloosescrews.testing.ThreadedMotorTesting;
+import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
+import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 
 /**
  * Register Op Modes
@@ -47,9 +49,8 @@ public class FtcOpModeRegister implements OpModeRegister {
    * @param manager op mode manager
    */
   public void register(OpModeManager manager) {
-      manager.register("SpeedTest", SpeedTest.class);
-      manager.register("Threading 0.2", new ThreadedOpModeWrapper(new ThreadingTest()));
-      manager.register("Camera", new ThreadedOpModeWrapper(new CameraTesting()));
       manager.register("TeleOp", TeleOp.class);
+      manager.register("Encoder test", PIDTesting.class);
+      manager.register("ThreadingMotor", ThreadedMotorTesting.class);
   }
 }

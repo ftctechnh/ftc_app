@@ -1,6 +1,7 @@
 package com.fellowshipoftheloosescrews.utilities;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.Range;
 
 /**
  * Created by Thomas on 8/13/2015.
@@ -9,22 +10,59 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * This will constantly track the position of the motor.
  *
  * TODO: See if it works with the old controllers?
- * TODO: add PID controller
  */
 public class DcServo {
     private DcMotor motor;
     private PID pidController;
 
-    private double motorEncoderCPR;
+    private Thread jobThread;
+    private Runnable servoJob;
 
-    public DcServo(DcMotor motor, double cpr)
-    {
+    private boolean isRunning;
+
+    private double motorEncoderCPR;
+    private int sleepMs = 10;
+
+    public DcServo(DcMotor motor, double cpr) {
         this.motor = motor;
         motorEncoderCPR = cpr;
+        pidController = new PID(1, 1, 1, 0);
     }
 
-    public void release()
+    public void start()
     {
+        servoJob = new ServoJob();
+        jobThread = new Thread(servoJob);
+        isRunning = true;
+        jobThread.start();
+    }
 
+    public void stop()
+    {
+        isRunning = false;
+    }
+
+    public void setTarget(double target)
+    {
+        pidController.setTarget(target);
+    }
+
+    public class ServoJob implements Runnable
+    {
+        @Override
+        public void run() {
+            while(isRunning)
+            {
+                double currentPosition = motor.getCurrentPosition() / motorEncoderCPR;
+                double pidOutput = pidController.calculate(currentPosition);
+                motor.setPower(Range.clip(pidOutput, -1, 1));
+
+                try {
+                    Thread.sleep(sleepMs);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

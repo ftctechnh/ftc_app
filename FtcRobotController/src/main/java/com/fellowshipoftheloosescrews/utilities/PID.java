@@ -24,12 +24,12 @@ public class PID {
         this.kp = kp;
         this.ki = ki;
         this.kd = kd;
-        this.target = target;
+        setTarget(target);
 
         error = 0;
         lastError = 0;
         totalError = 0;
-        lastTime = 0;
+        lastTime = getTimeMs();
     }
 
     /**
@@ -50,7 +50,7 @@ public class PID {
     public double calculate(double currentValue)
     {
         // gets the current time in milliseconds
-        double currentTime = System.nanoTime() / 1000000d;
+        double currentTime = getTimeMs();
         double deltaTime = currentTime - lastTime;
 
         // calculates the error
@@ -60,11 +60,19 @@ public class PID {
         double derivative = deltaError / deltaTime;
 
         // adds the error to the integral
-        totalError += error;
+        totalError += error * deltaTime / 1000d;
 
         lastTime = currentTime;
         lastError = error;
         return (kp * error) + (ki * totalError) + (kd * -derivative);
     }
 
+    /**
+     * Gets the time in ms
+     * @return milliseconds from the start of the program
+     */
+    private double getTimeMs()
+    {
+        return System.nanoTime() / 1000000d;
+    }
 }
