@@ -1,7 +1,6 @@
 package org.swerverobotics.library.internal;
 
-import com.qualcomm.robotcore.hardware.I2cDevice;
-
+import com.qualcomm.robotcore.hardware.*;
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.exceptions.*;
 import org.swerverobotics.library.interfaces.*;
@@ -192,33 +191,35 @@ public class AdaFruitBNO055IMU implements IAdaFruitBNO055IMU
         return (double)b;
         }
     
-    public MagneticFlux getMagneticFieldStrength()
+    public synchronized MagneticFlux getMagneticFieldStrength()
         {
         return new MagneticFlux(getVector(VECTOR.MAGNETOMETER, 16 * 1000000));
         }
-    public Acceleration getAcceleration()
+    public synchronized Acceleration getAcceleration()
         {
         return new Acceleration(getVector(VECTOR.ACCELEROMETER, 100));
         }
-    public Acceleration getLinearAcceleration()
+    public synchronized Acceleration getLinearAcceleration()
         {
         return new Acceleration(getVector(VECTOR.LINEARACCEL, 100));
         }
-    public Acceleration getGravity()
+    public synchronized Acceleration getGravity()
         {
         return new Acceleration(getVector(VECTOR.GRAVITY, 100));
         }
-    public AngularVelocity getAngularVelocity()
+    public synchronized AngularVelocity getAngularVelocity()
         {
         return new AngularVelocity(getVector(VECTOR.GYROSCOPE, 900));
         }
-    public EulerAngles getAngularOrientation()
+    public synchronized EulerAngles getAngularOrientation()
         {
         return new EulerAngles(getVector(VECTOR.EULER, 900));
         }
     
     private double[] getVector(VECTOR vector, double scale)
         {
+        this.ensureRegisterWindow(vector);
+        //
         byte[] buffer = this.deviceClient.read(vector.getValue(), 6);
         return new double[] {
                 Util.makeInt(buffer[0], buffer[1]) / scale,
@@ -226,8 +227,10 @@ public class AdaFruitBNO055IMU implements IAdaFruitBNO055IMU
                 Util.makeInt(buffer[4], buffer[5]) / scale };
         }
 
-    public Quaternion getQuaternionOrientation()
+    public synchronized Quaternion getQuaternionOrientation()
         {
+        this.ensureRegisterWindow(REGISTER.QUATERNION_DATA_W_LSB_ADDR, 8, REGISTER.GRAVITY_DATA_Z_MSB_ADDR);
+
         // Section 3.6.5.5 of BNO055 specification
         byte[] buffer = this.deviceClient.read(REGISTER.QUATERNION_DATA_W_LSB_ADDR.getValue(), 8);
         final double scale = 1.0 / (1 << 14);
@@ -242,6 +245,21 @@ public class AdaFruitBNO055IMU implements IAdaFruitBNO055IMU
     //------------------------------------------------------------------------------------------
     // Internal utility
     //------------------------------------------------------------------------------------------
+    
+    private void ensureRegisterWindow(REGISTER regFirst, int creg, REGISTER regLast)
+        {
+        this.deviceClient.ensureRegisterWindow(regFirst.getValue(), creg, regLast.getValue()-regFirst.getValue()+1);
+        }
+    private void ensureRegisterWindow(VECTOR vector)
+        {
+        final REGISTER regLast = REGISTER.TEMP_ADDR;    // beyond this are status registers
+        //
+        int iregFirst = vector.getValue();
+        int creg      = 6;  // 6==each vector needs six bytes
+        int iregLast  = Math.min(iregFirst + I2cDeviceClient.RegisterWindow.cregMax, regLast.getValue());
+        //
+        this.deviceClient.ensureRegisterWindow(iregFirst, creg, iregLast-iregFirst+1);
+        }
     
     private void delayLore(int ms)
         {
