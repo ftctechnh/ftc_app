@@ -17,7 +17,7 @@ public interface IAdaFruitBNO055IMU
      0 = Idle
      1 = System Error
      2 = Initializing Peripherals
-     3 = System Iniitalization
+     3 = System Initalization
      4 = Executing Self-Test
      5 = Sensor fusion algorithm running
      6 = System running without fusion algorithms 
