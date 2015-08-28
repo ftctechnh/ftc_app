@@ -1,5 +1,7 @@
 package com.fellowshipoftheloosescrews.utilities;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
@@ -9,37 +11,47 @@ import com.qualcomm.robotcore.util.Range;
  * Makes a Dc motor act like a servo, so we can set its position.
  * This will constantly track the position of the motor.
  *
- * TODO: See if it works with the old controllers?
+ * NOTE: ONLY WORKS WITH NEW CONTROLLERS
  */
 public class DcServo {
     private DcMotor motor;
     private PID pidController;
 
     private Thread jobThread;
-    private Runnable servoJob;
-
-    private boolean isRunning;
+    private ServoJob servoJob;
 
     private double motorEncoderCPR;
     private int sleepMs = 10;
 
+    private int offset = 0;
+
     public DcServo(DcMotor motor, double cpr) {
         this.motor = motor;
         motorEncoderCPR = cpr;
-        pidController = new PID(1, 1, 1, 0);
+        pidController = new PID(1, 0.5, 1, 0);
+        calibrate(0);
+    }
+
+    public synchronized void calibrate(double position)
+    {
+        int currentCPR = motor.getCurrentPosition();
+        int positionCPR = (int)position * (int)motorEncoderCPR;
+        offset = currentCPR - positionCPR;
+        pidController.reset();
     }
 
     public void start()
     {
         servoJob = new ServoJob();
         jobThread = new Thread(servoJob);
-        isRunning = true;
         jobThread.start();
     }
 
     public void stop()
     {
-        isRunning = false;
+        servoJob.stop();
+        Log.d("dcservo", "Stopping");
+        motor.setPower(0);
     }
 
     public void setTarget(double target)
@@ -49,13 +61,19 @@ public class DcServo {
 
     public class ServoJob implements Runnable
     {
+        public boolean isRunning = false;
+
         @Override
         public void run() {
+            isRunning = true;
+
             while(isRunning)
             {
-                double currentPosition = motor.getCurrentPosition() / motorEncoderCPR;
+                double currentPosition = (motor.getCurrentPosition() - offset) / motorEncoderCPR;
                 double pidOutput = pidController.calculate(currentPosition);
                 motor.setPower(Range.clip(pidOutput, -1, 1));
+
+                Log.d("error", "" + pidController.getError());
 
                 try {
                     Thread.sleep(sleepMs);
@@ -63,6 +81,11 @@ public class DcServo {
                     e.printStackTrace();
                 }
             }
+        }
+
+        public void stop()
+        {
+            isRunning = false;
         }
     }
 }
