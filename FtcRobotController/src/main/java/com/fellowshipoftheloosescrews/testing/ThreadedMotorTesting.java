@@ -53,12 +53,18 @@ public class ThreadedMotorTesting extends OpMode
 
             while(isRunning)
             {
-                motor.setTargetPosition((int) Util.ENCODER_NEVEREST_CPR);
-                //motor.setPower(-0.5);
-                delayThread(1000);
-                motor.setTargetPosition(0);
-                delayThread(1000);
+                while(motor.getCurrentPosition() < Util.ENCODER_NEVEREST_CPR)
+                {
+                    motor.setPower(0.5);
+                }
+
+                while(motor.getCurrentPosition() > 0)
+                {
+                    motor.setPower(-0.5);
+                }
             }
+            motor.setPower(0);
+            motor.close();
         }
         void delayThread(long ms)
         {
