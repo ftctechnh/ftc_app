@@ -35,6 +35,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IrSeekerSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 /**
  * TeleOp Mode
@@ -43,7 +44,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 public class K9IrSeeker extends OpMode {
 	
-	final static double MOTOR_POWER = 0.15; // Higher values will cause the robot to move faster
+	final static double MOTOR_POWER = 0.30; // Higher values will cause the robot to move faster
 	final static double HOLD_IR_SIGNAL_STRENGTH = 0.50; // Higher values will cause the robot to follow closer
 
 	double armPosition;
@@ -54,6 +55,7 @@ public class K9IrSeeker extends OpMode {
 	Servo claw;
 	Servo arm;
 	IrSeekerSensor irSeeker;
+    TouchSensor touchSensor;
 	
 	/**
 	 * Constructor
@@ -88,7 +90,7 @@ public class K9IrSeeker extends OpMode {
 		 */
 		motorRight = hardwareMap.dcMotor.get("motor_2");
 		motorLeft = hardwareMap.dcMotor.get("motor_1");
-		motorLeft.setDirection(DcMotor.Direction.REVERSE);
+		motorRight.setDirection(DcMotor.Direction.REVERSE);
 		
 		arm = hardwareMap.servo.get("servo_1");
 		claw = hardwareMap.servo.get("servo_6");
@@ -102,6 +104,7 @@ public class K9IrSeeker extends OpMode {
 		 * with a name of "ir_seeker" configured for our robot.
 		 */
 		irSeeker = hardwareMap.irSeekerSensor.get("ir_seeker");
+        touchSensor = hardwareMap.touchSensor.get("touch_sensor");
 	}
 
 	/*
@@ -113,7 +116,7 @@ public class K9IrSeeker extends OpMode {
 	public void loop() {
 		double angle = 0.0;
 		double strength = 0.0;
-		double left, right = 0.0;
+		double left, right;
 		
 		// keep manipulator out of the way.
 		arm.setPosition(armPosition);
@@ -171,14 +174,24 @@ public class K9IrSeeker extends OpMode {
 				left = 0.0;
 				right = 0.0;
 			}
+
 		} else {
 			/*
 			 * Signal was not detected.
-			 * Shut off motors
+			 * Spin in a circle until the signal is detected.
 			 */
-			left = 0.0;
-			right = 0.0;
+			left = MOTOR_POWER;
+			right = -MOTOR_POWER;
 		}
+
+
+        /*
+         * Stop the robot if the touch sensor is pressed
+         */
+        if(touchSensor.isPressed()) {
+            left = 0.0;
+            right = 0.0;
+        }
 		
 		/*
 		 * set the motor power
@@ -194,10 +207,11 @@ public class K9IrSeeker extends OpMode {
 		 */
 
 		telemetry.addData("Text", "*** Robot Data***");
-		telemetry.addData("angle", "angle:  " + Double.toString(angle));
+		telemetry.addData("angle", "angle: " + Double.toString(angle));
 		telemetry.addData("strength", "sig strength: " + Double.toString(strength));
 		telemetry.addData("left tgt pwr",  "left  pwr: " + Double.toString(left));
 		telemetry.addData("right tgt pwr", "right pwr: " + Double.toString(right));
+        telemetry.addData("touch", "touch sensor: " + (touchSensor.isPressed()? "pressed":"not pressed"));
 	}
 
 	/*

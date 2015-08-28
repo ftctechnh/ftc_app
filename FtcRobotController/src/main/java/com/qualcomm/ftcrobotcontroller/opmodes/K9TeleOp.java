@@ -50,7 +50,7 @@ public class K9TeleOp extends OpMode {
 	 */
 	// TETRIX VALUES.
 	final static double ARM_MIN_RANGE  = 0.20;
-	final static double ARM_MAX_RANGE  = 0.90;
+	final static double ARM_MAX_RANGE  = 1.00;
 	final static double CLAW_MIN_RANGE  = 0.20;
 	final static double CLAW_MAX_RANGE  = 0.7;
 
@@ -134,10 +134,10 @@ public class K9TeleOp extends OpMode {
 		// 1 is full down
 		// direction: left_stick_x ranges from -1 to 1, where -1 is full left
 		// and 1 is full right
-		float throttle = -gamepad1.left_stick_y;
+		float throttle = gamepad1.left_stick_y;
 		float direction = gamepad1.left_stick_x;
-		float right = throttle - direction;
-		float left = throttle + direction;
+		float right = throttle + direction;
+		float left = throttle - direction;
 
 		// clip the right/left values so that the values never exceed +/- 1
 		right = Range.clip(right, -1, 1);
