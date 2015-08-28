@@ -31,7 +31,7 @@ public class AdaFruitBNO055IMU implements IAdaFruitBNO055IMU
         this(i2cDevice, ADDRESS_A);
         }
 
-    public static IAdaFruitBNO055IMU create(I2cDevice i2cDevice) throws InterruptedException
+    public static IAdaFruitBNO055IMU create(I2cDevice i2cDevice)
         {
         // Create a sensor which is a client of i2cDevice
         IAdaFruitBNO055IMU result = new AdaFruitBNO055IMU(i2cDevice);
@@ -90,7 +90,7 @@ public class AdaFruitBNO055IMU implements IAdaFruitBNO055IMU
                       (0 << 0);  // Accelerometer = m/s^2
         write8(REGISTER.UNIT_SEL_ADDR, unitsel);
         
-        // ???
+        // ??? what does this do ???
         write8(REGISTER.SYS_TRIGGER_ADDR, 0x0);
         delayLore(10);
         
@@ -119,7 +119,7 @@ public class AdaFruitBNO055IMU implements IAdaFruitBNO055IMU
      * 
      * See Section 5.5 (p100) of the BNO055 specification.
      */
-    public void setExternalCrystalUse(final boolean useExternalCrystal)
+    public synchronized void setExternalCrystalUse(final boolean useExternalCrystal)
         {
         this.enterConfigModeFor(new IAction()
             {
@@ -139,7 +139,7 @@ public class AdaFruitBNO055IMU implements IAdaFruitBNO055IMU
             });
         }
     
-    public byte getSystemStatus()
+    public synchronized byte getSystemStatus()
         {
         return this.enterConfigModeFor(new IFunc<Byte>()
             {
@@ -150,7 +150,7 @@ public class AdaFruitBNO055IMU implements IAdaFruitBNO055IMU
             });
         }
 
-    public byte getSystemError()
+    public synchronized byte getSystemError()
         {
         return this.enterConfigModeFor(new IFunc<Byte>()
             {
@@ -161,31 +161,31 @@ public class AdaFruitBNO055IMU implements IAdaFruitBNO055IMU
             });
         }
 
-    public boolean isSystemCalibrated()
+    public synchronized boolean isSystemCalibrated()
         {
         byte b = this.read8(REGISTER.CALIB_STAT_ADDR);
         return ((b>>6) & 0x03) == 0x03;
         }
 
-    public boolean isGyroCalibrated()
+    public synchronized boolean isGyroCalibrated()
         {
         byte b = this.read8(REGISTER.CALIB_STAT_ADDR);
         return ((b>>4) & 0x03) == 0x03;
         }
 
-    public boolean isAccelerometerCalibrated()
+    public synchronized boolean isAccelerometerCalibrated()
         {
         byte b = this.read8(REGISTER.CALIB_STAT_ADDR);
         return ((b>>2) & 0x03) == 0x03;
         }
 
-    public boolean isMagnetometerCalibrated()
+    public synchronized boolean isMagnetometerCalibrated()
         {
         byte b = this.read8(REGISTER.CALIB_STAT_ADDR);
         return ((b>>0) & 0x03) == 0x03;
         }
     
-    public double getTemperature()
+    public synchronized double getTemperature()
         {
         byte b = this.read8(REGISTER.TEMP_ADDR);
         return (double)b;
@@ -193,7 +193,7 @@ public class AdaFruitBNO055IMU implements IAdaFruitBNO055IMU
     
     public synchronized MagneticFlux getMagneticFieldStrength()
         {
-        return new MagneticFlux(getVector(VECTOR.MAGNETOMETER, 16 * 1000000));
+        return new MagneticFlux(getVector(VECTOR.MAGNETOMETER, 16. * 1000000));
         }
     public synchronized Acceleration getAcceleration()
         {
@@ -215,11 +215,12 @@ public class AdaFruitBNO055IMU implements IAdaFruitBNO055IMU
         {
         return new EulerAngles(getVector(VECTOR.EULER, 900));
         }
-    
     private double[] getVector(VECTOR vector, double scale)
         {
-        this.ensureRegisterWindow(vector);
-        //
+        // Ensure that the 6 bytes for this vector are visible in the register window. 
+        this.ensureRegisterWindow(new I2cDeviceClient.RegisterWindow(vector.getValue(), 6));
+
+        // Read the data
         byte[] buffer = this.deviceClient.read(vector.getValue(), 6);
         return new double[] {
                 Util.makeInt(buffer[0], buffer[1]) / scale,
@@ -229,8 +230,12 @@ public class AdaFruitBNO055IMU implements IAdaFruitBNO055IMU
 
     public synchronized Quaternion getQuaternionOrientation()
         {
-        this.ensureRegisterWindow(REGISTER.QUATERNION_DATA_W_LSB_ADDR, 8, REGISTER.GRAVITY_DATA_Z_MSB_ADDR);
-
+        // Ensure we can see the registers we need
+        this.deviceClient.ensureRegisterWindow(
+                new I2cDeviceClient.RegisterWindow(REGISTER.QUATERNION_DATA_W_LSB_ADDR.getValue(), 8),
+                upperWindow
+            );
+        
         // Section 3.6.5.5 of BNO055 specification
         byte[] buffer = this.deviceClient.read(REGISTER.QUATERNION_DATA_W_LSB_ADDR.getValue(), 8);
         final double scale = 1.0 / (1 << 14);
@@ -246,21 +251,23 @@ public class AdaFruitBNO055IMU implements IAdaFruitBNO055IMU
     // Internal utility
     //------------------------------------------------------------------------------------------
     
-    private void ensureRegisterWindow(REGISTER regFirst, int creg, REGISTER regLast)
+    private static final I2cDeviceClient.RegisterWindow lowerWindow = newWindow(REGISTER.CHIP_ID_ADDR, REGISTER.EULER_H_LSB_ADDR);
+    private static final I2cDeviceClient.RegisterWindow upperWindow = newWindow(REGISTER.EULER_H_LSB_ADDR, REGISTER.CALIB_STAT_ADDR);;
+    private static I2cDeviceClient.RegisterWindow newWindow(REGISTER regFirst, REGISTER regMax)
         {
-        this.deviceClient.ensureRegisterWindow(regFirst.getValue(), creg, regLast.getValue()-regFirst.getValue()+1);
+        return new I2cDeviceClient.RegisterWindow(regFirst.getValue(), regMax.getValue()-regFirst.getValue());
         }
-    private void ensureRegisterWindow(VECTOR vector)
+
+    private void ensureRegisterWindow(I2cDeviceClient.RegisterWindow needed)
         {
-        final REGISTER regLast = REGISTER.TEMP_ADDR;    // beyond this are status registers
-        //
-        int iregFirst = vector.getValue();
-        int creg      = 6;  // 6==each vector needs six bytes
-        int iregLast  = Math.min(iregFirst + I2cDeviceClient.RegisterWindow.cregMax, regLast.getValue());
-        //
-        this.deviceClient.ensureRegisterWindow(iregFirst, creg, iregLast-iregFirst+1);
+        I2cDeviceClient.RegisterWindow set = lowerWindow.contains(needed)
+            ? lowerWindow
+            : upperWindow.contains(needed)
+                ? upperWindow
+                : needed;
+        this.deviceClient.ensureRegisterWindow(needed, set);
         }
-    
+
     private void delayLore(int ms)
         {
         delay(ms);
@@ -280,6 +287,7 @@ public class AdaFruitBNO055IMU implements IAdaFruitBNO055IMU
 
     private byte read8(REGISTER reg)
         {
+        this.ensureRegisterWindow(new I2cDeviceClient.RegisterWindow(reg.getValue(), 1));
         return this.deviceClient.read8(reg.getValue());
         }
     

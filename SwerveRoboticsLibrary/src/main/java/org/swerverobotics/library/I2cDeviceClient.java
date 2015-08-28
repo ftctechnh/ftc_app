@@ -94,19 +94,15 @@ public class I2cDeviceClient implements I2cController.I2cPortReadyCallback
     /**
      * Ensure that the current register window covers the indicated set of registers
      */
-    public void ensureRegisterWindow(int ireg, int creg, int cregNewWindow)
+    public void ensureRegisterWindow(RegisterWindow windowNeeded, RegisterWindow windowToSet)
         {
         synchronized (this.lock)
             {
-            if (this.registerWindow == null || !this.registerWindow.contains(ireg, creg))
+            if (this.registerWindow == null || !this.registerWindow.contains(windowNeeded))
                 {
-                setRegisterWindow(new RegisterWindow(ireg, cregNewWindow));
+                setRegisterWindow(windowToSet);
                 }
             }
-        }
-    public void ensureRegisterWindow(int ireg, int creg)
-        {
-        this.ensureRegisterWindow(ireg, creg, creg);
         }
 
     /**
@@ -164,7 +160,7 @@ public class I2cDeviceClient implements I2cController.I2cPortReadyCallback
      */
     public void write8(int ireg, int data)
         {
-        this.write(ireg, new byte[] { (byte)data });
+        this.write(ireg, new byte[] {(byte) data});
         }
 
     /**
@@ -276,7 +272,7 @@ public class I2cDeviceClient implements I2cController.I2cPortReadyCallback
                     }
                 }
             
-            // Set flags and queue to module as requested above
+            // Set action flag and queue to module as requested
             if (setI2CActionFlag)
                 this.i2cDevice.setI2cPortActionFlag();
 

@@ -1,5 +1,6 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import org.swerverobotics.library.ClassFactory;
 import org.swerverobotics.library.SynchronousOpMode;
 import org.swerverobotics.library.interfaces.IAdaFruitBNO055IMU;
 import org.swerverobotics.library.internal.AdaFruitBNO055IMU;
@@ -14,7 +15,7 @@ public class SynchIMUDemo extends SynchronousOpMode
     
     @Override public void main() throws InterruptedException
         {
-        imu = AdaFruitBNO055IMU.create(hardwareMap.i2cDevice.get("imu"));
+        imu = ClassFactory.createAdaFruitBNO055IMU(hardwareMap.i2cDevice.get("imu"));
 
         waitForStart();
         
