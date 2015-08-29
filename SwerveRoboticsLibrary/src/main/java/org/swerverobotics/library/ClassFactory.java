@@ -1,17 +1,20 @@
 package org.swerverobotics.library;
 
-import com.qualcomm.robotcore.hardware.I2cDevice;
-
-import org.swerverobotics.library.interfaces.IAdaFruitBNO055IMU;
-import org.swerverobotics.library.internal.AdaFruitBNO055IMU;
+import com.qualcomm.robotcore.hardware.*;
+import org.swerverobotics.library.interfaces.*;
+import org.swerverobotics.library.internal.*;
 
 /**
  * 
  */
 public class ClassFactory
     {
-    public static IAdaFruitBNO055IMU createAdaFruitBNO055IMU(I2cDevice i2cDevice)
+    public static IBNO055IMU createAdaFruitBNO055IMU(I2cDevice i2cDevice)
         {
         return AdaFruitBNO055IMU.create(i2cDevice);
+        }
+    public static IBNO055IMU createAdaFruitBNO055IMU(I2cDevice i2cDevice, IBNO055IMU.Parameters parameters)
+        {
+        return AdaFruitBNO055IMU.create(i2cDevice, parameters);
         }
     }
