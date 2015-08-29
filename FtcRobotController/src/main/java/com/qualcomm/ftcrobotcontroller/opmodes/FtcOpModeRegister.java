@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 import com.qualcomm.robotcore.robot.Robot;
 import com.qualcomm.robotcore.util.RobotLog;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -52,7 +53,10 @@ public class FtcOpModeRegister implements OpModeRegister {
      */
     public void register(OpModeManager manager) {
         try {
-            List<Class<? extends OpMode>> opmodeList = TBotsClassLoader.loadJars(TBotsClassLoader.getFileSet());
+            List<File> fileList = TBotsClassLoader.getFileSet();
+            TBotsDxCompler.getJarList(fileList);
+            TBotsDxCompler.convertJars(fileList);
+            List<Class<? extends OpMode>> opmodeList = TBotsClassLoader.loadJars(fileList);
             RobotLog.i("Now registering OpModes...");
             for (Class<? extends OpMode> opmode : opmodeList) {
                 try {
