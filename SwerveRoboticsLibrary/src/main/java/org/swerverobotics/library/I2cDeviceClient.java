@@ -17,22 +17,25 @@ public final class I2cDeviceClient
     // State
     //----------------------------------------------------------------------------------------------
 
-    final I2cDevice     i2cDevice;                  // the device we are talking to
-    final Callback      callback;
+    /**
+     * The I2cDevice of which are are a client.
+     */
+    public final I2cDevice      i2cDevice;                  // the device we are talking to
 
-    final byte[]        readCache;                  // the buffer into which reads are retrieved
-    final byte[]        writeCache;                 // the buffer that we write from 
-    static final int    dibCacheOverhead = 4;       // this many bytes at start of writeCache are system overhead
-    final Lock          readCacheLock;              // lock we must hold to look at readCache
-    final Lock          writeCacheLock;             // lock we must old to look at writeCache
-    
-    final Object        lock = new Object();        // the lock we use to synchronize concurrent callers as well as the portIsReady() callback
-    
-    RegWindow           registerWindow;             // the set of registers to look at when we are in read mode. May be null, indicating no read needed
-    READ_CACHE_STATUS   readCacheStatus;            // what we know about the contents of readCache
-    WRITE_CACHE_STATUS  writeCacheStatus;           // what we know about the contents of writeCache
+    private final Callback      callback;
+    private final byte[]        readCache;                  // the buffer into which reads are retrieved
+    private final byte[]        writeCache;                 // the buffer that we write from 
+    private static final int    dibCacheOverhead = 4;       // this many bytes at start of writeCache are system overhead
+    private final Lock          readCacheLock;              // lock we must hold to look at readCache
+    private final Lock          writeCacheLock;             // lock we must old to look at writeCache
 
-    enum READ_CACHE_STATUS
+    private final Object        lock = new Object();        // the lock we use to synchronize concurrent callers as well as the portIsReady() callback
+
+    private RegWindow           registerWindow;             // the set of registers to look at when we are in read mode. May be null, indicating no read needed
+    private READ_CACHE_STATUS   readCacheStatus;            // what we know about the contents of readCache
+    private WRITE_CACHE_STATUS  writeCacheStatus;           // what we know about the contents of writeCache
+
+    private enum READ_CACHE_STATUS
         {
         IDLE,           // the read cache is quiescent; it doesn't contain valid data
         SWITCHING,      // a request to switch to read mode has been made
@@ -41,7 +44,7 @@ public final class I2cDeviceClient
         VALIDQUEUED,    // read cache has valid data AND a read has been queued 
         }
 
-    enum WRITE_CACHE_STATUS 
+    private enum WRITE_CACHE_STATUS 
         {
         IDLE,           // write cache is quiescent
         DIRTY,          // write cache has changed bits that need to be pushed to module
@@ -159,7 +162,8 @@ public final class I2cDeviceClient
     /**
      * Read a contiguous set of registers.
      * 
-     * All the registers must lie within the current register window
+     * All the registers must lie within the current register window. Note that this 
+     * method can take several tens of milliseconds to execute.
      */
     public byte[] read(int ireg, int creg)
         {
@@ -236,6 +240,8 @@ public final class I2cDeviceClient
 
                 // Indicate where we want to write
                 this.i2cDevice.enableI2cWriteMode(ireg, data.length);
+                
+                // Indicate we are dirty so the callback will write us out
                 this.writeCacheStatus = WRITE_CACHE_STATUS.DIRTY;
 
                 // Provide the data we want to write
@@ -256,10 +262,17 @@ public final class I2cDeviceClient
             }
         }
     
-    class Callback implements I2cController.I2cPortReadyCallback
+    private class Callback implements I2cController.I2cPortReadyCallback
         {
+        /**
+         * @hide
+         */
         @Override public void portIsReady(int port)
-            // This is the callback from the device module indicating completion of previously requested work
+        // This is the callback from the device module indicating completion of previously requested work.
+        // At the moment we are called, we are assured that the read buffer / write buffer for our port in the
+        // USB device is not currently busy.
+        //
+        // We've got quite the little state machine here!
             {
             synchronized (lock)
                 {
