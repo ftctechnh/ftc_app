@@ -78,6 +78,7 @@ public final class I2cDeviceClient
         this.readCacheStatus  = READ_CACHE_STATUS.IDLE;
         this.writeCacheStatus = WRITE_CACHE_STATUS.IDLE;
         
+        // Hack. But it's all we can do at the moment, given the definition of I2cDevice
         if (i2cAddr >= 0)
             Util.setPrivateIntField(this.i2cDevice, 2, i2cAddr);
         
@@ -89,13 +90,13 @@ public final class I2cDeviceClient
     //----------------------------------------------------------------------------------------------
 
     /**
-     * Set the set of registers that we pretty much continuously read 
+     * Set the set of registers that we will read and read and read again on every hardware cycle 
      */
     public void setRegisterWindow(RegWindow window)
         {
         synchronized (this.lock)
             {
-            if (this.registerWindow==null || window==null || !this.registerWindow.equals(window))
+            if (this.registerWindow==null || !this.registerWindow.equals(window))
                 {
                 // Remember the new window
                 this.registerWindow = window;
@@ -129,9 +130,7 @@ public final class I2cDeviceClient
         {
         synchronized (this.lock)
             {
-            if (this.registerWindow == null 
-                    || windowNeeded == null
-                    || !this.registerWindow.contains(windowNeeded))
+            if (this.registerWindow == null || !this.registerWindow.contains(windowNeeded))
                 {
                 setRegisterWindow(windowToSet);
                 }
@@ -224,7 +223,7 @@ public final class I2cDeviceClient
         }
     
     /**
-     * Write data to a set of registers, begining with the one indicated
+     * Write data to a set of registers, beginning with the one indicated
      */
     public void write(int ireg, byte[] data)
         {
@@ -428,6 +427,9 @@ public final class I2cDeviceClient
          */
         public boolean equals(RegWindow him)
             {
+            if (him == null)
+                return false;
+            
             return this.getIregFirst() == him.getIregFirst() 
                     && this.getCreg() == him.getCreg();
             }

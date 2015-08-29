@@ -10,6 +10,10 @@ package org.swerverobotics.library.interfaces;
  */
 public interface IBNO055IMU
     {
+    //----------------------------------------------------------------------------------------------
+    // Construction 
+    //----------------------------------------------------------------------------------------------
+
     /**
      * Initialize the sensor using the indicated set of parameters.
      * 
@@ -26,8 +30,14 @@ public interface IBNO055IMU
      */
     public static class Parameters
         {
+        // The address at which the sensor resides on the I2C bus
+        public I2CADDR          i2cAddr             = I2CADDR.DEFAULT;
+        
+        // The mode we wish to use the sensor in
         public OPERATION_MODE   mode                = OPERATION_MODE.IMU;
-        public boolean          useExternalCrystal  = true;  // recommended per BNO055 spec
+        
+        // Whether to use the external or internal crystal
+        public boolean          useExternalCrystal  = true;  // external crystal is recommended per BNO055 spec
 
         // Unit Selection. Section 3.6.1 (p31) of the BNO055 specification
         public TEMPUNIT         temperatureUnit     = TEMPUNIT.CELSIUS;
@@ -35,14 +45,51 @@ public interface IBNO055IMU
         public ACCELUNIT        accelunit           = ACCELUNIT.METERS_PERSEC_PERSEC;
         public PITCHMODE        pitchmode           = PITCHMODE.ANDROID;    // Section 3.6.2
 
-        // Enus to make all that work
-        public enum TEMPUNIT   { CELSIUS(0), FARENHEIT(1); public byte b; TEMPUNIT(int i) { b=(byte)i; }}
-        public enum ANGLEUNIT  { DEGREES(0), RADIANS(1); public byte b; ANGLEUNIT(int i) { b=(byte)i; }}
-        public enum ACCELUNIT  { METERS_PERSEC_PERSEC(0), MILLIGALS(1); public byte b; ACCELUNIT(int i) { b=(byte)i; }}
-        public enum PITCHMODE  { WINDOWS(0), ANDROID(1); public byte b; PITCHMODE(int i) { b=(byte)i; }}
+        // Enums to make all that work
+        public enum I2CADDR    { UNSPECIFIED(-1), DEFAULT(0x28), ALTERNATE(0x29);   public final byte bVal; I2CADDR(int i) { bVal =(byte)i; }}
+        public enum TEMPUNIT   { CELSIUS(0), FARENHEIT(1);                          public final byte bVal; TEMPUNIT(int i) { bVal =(byte)i; }}
+        public enum ANGLEUNIT  { DEGREES(0), RADIANS(1);                            public final byte bVal; ANGLEUNIT(int i) { bVal =(byte)i; }}
+        public enum ACCELUNIT  { METERS_PERSEC_PERSEC(0), MILLIGALS(1);             public final byte bVal; ACCELUNIT(int i) { bVal =(byte)i; }}
+        public enum PITCHMODE  { WINDOWS(0), ANDROID(1);                            public final byte bVal; PITCHMODE(int i) { bVal =(byte)i; }}
+
+        /**
+         * Operation modes are described in Table 3-5 (p21) of the BNO055 specification.
+         */
+        public enum OPERATION_MODE
+            {
+            CONFIG(0X00),       ACCONLY(0X01),          MAGONLY(0X02),
+            GYRONLY(0X03),      ACCMAG(0X04),           ACCGYRO(0X05),
+            MAGGYRO(0X06),      AMG(0X07),              IMU(0X08),
+            COMPASS(0X09),      M4G(0X0A),              NDOF_FMC_OFF(0X0B),
+            NDOF(0X0C);
+            //------------------------------------------------------------------------------------------
+            public final byte bVal; 
+            OPERATION_MODE(int i) { this.bVal = (byte) i; }
+            }
         }
 
-    /* System Status (see section 4.3.58)
+    //----------------------------------------------------------------------------------------------
+    // Sensor output
+    //----------------------------------------------------------------------------------------------
+
+    /**
+     * Return the current temperature. Units are as configured during initialization.
+     */
+    double              getTemperature();
+
+    MagneticFlux        getMagneticFieldStrength();
+    Acceleration        getAcceleration();
+    Acceleration        getLinearAcceleration();
+    Acceleration        getGravity();
+    AngularVelocity     getAngularVelocity();
+    EulerAngles         getAngularOrientation();
+    Quaternion          getQuaternionOrientation();
+
+    //----------------------------------------------------------------------------------------------
+    // Status inquiry
+    //----------------------------------------------------------------------------------------------
+
+    /** System Status (see section 4.3.58)
      ---------------------------------
      0 = Idle
      1 = System Error
@@ -54,7 +101,7 @@ public interface IBNO055IMU
    */
     byte getSystemStatus();
     
-  /* System Error (see section 4.3.59)
+  /** System Error (see section 4.3.59)
      ---------------------------------
      0 = No error
      1 = Peripheral initialization error
@@ -73,41 +120,4 @@ public interface IBNO055IMU
     boolean isGyroCalibrated();
     boolean isAccelerometerCalibrated();
     boolean isMagnetometerCalibrated();
-    
-    double getTemperature();
-
-    MagneticFlux getMagneticFieldStrength();
-    Acceleration getAcceleration();
-    Acceleration getLinearAcceleration();
-    Acceleration getGravity();
-    AngularVelocity getAngularVelocity();
-    EulerAngles getAngularOrientation();
-    Quaternion getQuaternionOrientation();
-    
-    /**
-     * Operation modes as in Table 3-5 (p21) of the BNO055 specification.
-     */
-    enum OPERATION_MODE
-        {
-            CONFIG(0X00),
-            ACCONLY(0X01),
-            MAGONLY(0X02),
-            GYRONLY(0X03),
-            ACCMAG(0X04),
-            ACCGYRO(0X05),
-            MAGGYRO(0X06),
-            AMG(0X07),
-            IMU(0X08),
-            COMPASS(0X09),
-            M4G(0X0A),
-            NDOF_FMC_OFF(0X0B),
-            NDOF(0X0C);
-        //------------------------------------------------------------------------------------------
-        private byte value;
-        private OPERATION_MODE(int value)
-            {
-            this.value = (byte) value;
-            }
-        public byte getValue() { return this.value; }
-        }
     }
