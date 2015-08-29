@@ -2,8 +2,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import org.swerverobotics.library.ClassFactory;
 import org.swerverobotics.library.SynchronousOpMode;
-import org.swerverobotics.library.interfaces.IAdaFruitBNO055IMU;
-import org.swerverobotics.library.internal.AdaFruitBNO055IMU;
+import org.swerverobotics.library.interfaces.IBNO055IMU;
 
 /**
  * SynchIMUDemo gives a short demo on how to use the BNO055 Inertial Motion Unit (IMU) from AdaFruit.
@@ -11,7 +10,7 @@ import org.swerverobotics.library.internal.AdaFruitBNO055IMU;
  */
 public class SynchIMUDemo extends SynchronousOpMode
     {
-    IAdaFruitBNO055IMU imu;
+    IBNO055IMU imu;
     
     @Override public void main() throws InterruptedException
         {

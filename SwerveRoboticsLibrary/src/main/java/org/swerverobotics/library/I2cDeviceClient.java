@@ -8,6 +8,8 @@ import java.util.*;
 import java.util.concurrent.locks.*;
 
 /**
+ * I2cDeviceClient is a utility class that makes it easy to read or write data to 
+ * an instance of I2cDevice.
  */
 public final class I2cDeviceClient 
     {
@@ -24,9 +26,9 @@ public final class I2cDeviceClient
     final Lock          readCacheLock;              // lock we must hold to look at readCache
     final Lock          writeCacheLock;             // lock we must old to look at writeCache
     
-    final Object        lock = new Object();
+    final Object        lock = new Object();        // the lock we use to synchronize concurrent callers as well as the portIsReady() callback
     
-    RegisterWindow      registerWindow;             // the set of registers to look at when we are in read mode. May be null, indicating no read needed
+    RegWindow           registerWindow;             // the set of registers to look at when we are in read mode. May be null, indicating no read needed
     READ_CACHE_STATUS   readCacheStatus;            // what we know about the contents of readCache
     WRITE_CACHE_STATUS  writeCacheStatus;           // what we know about the contents of writeCache
 
@@ -50,7 +52,15 @@ public final class I2cDeviceClient
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    public I2cDeviceClient(I2cDevice i2cDevice, int i2cAddr, RegisterWindow window)
+    /**
+     * Instantiate an I2cDeviceClient instance in the indicated device with the indicated
+     * initial window of registers being read.
+     * 
+     * initialRegisterWindow may be null if no registers are initially to be read.
+     * 
+     * If i2cAddr is >= 0, then the address of the i2cDevice is changed to be the one indicated.
+     */
+    public I2cDeviceClient(I2cDevice i2cDevice, RegWindow initialRegisterWindow, int i2cAddr)
         {
         this.i2cDevice = i2cDevice;
         this.callback = new Callback();
@@ -60,12 +70,13 @@ public final class I2cDeviceClient
         this.writeCache     = this.i2cDevice.getI2cWriteCache();
         this.writeCacheLock = this.i2cDevice.getI2cWriteCacheLock();
         
-        this.registerWindow = window;
+        this.registerWindow = initialRegisterWindow;
 
         this.readCacheStatus  = READ_CACHE_STATUS.IDLE;
         this.writeCacheStatus = WRITE_CACHE_STATUS.IDLE;
         
-        Util.setPrivateIntField(this.i2cDevice, 2, i2cAddr);
+        if (i2cAddr >= 0)
+            Util.setPrivateIntField(this.i2cDevice, 2, i2cAddr);
         
         this.i2cDevice.registerForI2cPortReadyCallback(this.callback);
         }
@@ -77,7 +88,7 @@ public final class I2cDeviceClient
     /**
      * Set the set of registers that we pretty much continuously read 
      */
-    public void setRegisterWindow(RegisterWindow window)
+    public void setRegisterWindow(RegWindow window)
         {
         synchronized (this.lock)
             {
@@ -96,7 +107,7 @@ public final class I2cDeviceClient
     /**
      * Return the current register window.
      */
-    public RegisterWindow getRegisterWindow()
+    public RegWindow getRegisterWindow()
         {
         synchronized (this.lock)
             {
@@ -111,7 +122,7 @@ public final class I2cDeviceClient
      * and the curret register window entirely contains windowNeeded, then do nothing.
      * Otherwise, set the current register window to windowToSet.
      */
-    public void ensureRegisterWindow(RegisterWindow windowNeeded, RegisterWindow windowToSet)
+    public void ensureRegisterWindow(RegWindow windowNeeded, RegWindow windowToSet)
         {
         synchronized (this.lock)
             {
@@ -135,7 +146,9 @@ public final class I2cDeviceClient
         }
 
     /**
-     * Read a (little-endian) integer starting at the indicated register
+     * Read a (little-endian) integer starting at the indicated register.
+     * 
+     * The integer must lie within the current register window.
      */
     public int read16(int ireg)
         {
@@ -339,29 +352,52 @@ public final class I2cDeviceClient
     // RegisterWindow
     //----------------------------------------------------------------------------------------------
 
-    public static class RegisterWindow
+    /**
+     * RegWindow is a utility class for managing the window of I2C register bytes that
+     * are read from our I2C device on every hardware cycle
+     */
+    public static class RegWindow
         {
         //------------------------------------------------------------------------------------------
         // State
         //------------------------------------------------------------------------------------------
 
-        // enableI2cReadMode and enableI2cWriteMode both impose a maximum length
-        // on the size of data that can be read or written at one time
+        /**
+         * enableI2cReadMode and enableI2cWriteMode both impose a maximum length
+         * on the size of data that can be read or written at one time. cregMax
+         * indicates that maximum size.
+         */
         public static final int cregMax = 27;
 
+        /**
+         * The first register in the window
+         */
         private final int iregFirst;
+        /**
+         * The number of registers in the window
+         */
         private final int creg;
-
+        /**
+         * Return the first register in the window
+         */
         public int getIregFirst() { return this.iregFirst; }
+        /**
+         * Return the first register NOT in the window
+         */
         public int getIregMax()   { return this.iregFirst + this.creg; }
+        /**
+         * Return the number of registers in the window
+         */
         public int getCreg()      { return this.creg; }
 
         //------------------------------------------------------------------------------------------
         // Construction
         //------------------------------------------------------------------------------------------
 
-        public RegisterWindow(int ib)              { this(ib, 1); }
-        public RegisterWindow(int iregFirst, int creg)
+        /**
+         * Create a new register window with the indicated starting register and register count
+         */
+        public RegWindow(int iregFirst, int creg)
             {
             this.iregFirst = iregFirst;
             this.creg = creg;
@@ -369,34 +405,37 @@ public final class I2cDeviceClient
                 throw new IllegalArgumentException(String.format("buffer length %d invalid; max is %d", creg, cregMax));
             }
 
-        public static RegisterWindow createDefault()
-            {
-            // Most of the legacy sensors, at least, start their registers at 0x41, so
-            // that seems a reasonable thing to start our default window at
-            return new RegisterWindow(0x41, cregMax);
-            }
-
         //------------------------------------------------------------------------------------------
         // Operations
         //------------------------------------------------------------------------------------------
 
-        public boolean equals(RegisterWindow him)
+        /**
+         * Do the recevier and the indicated register window cover exactly the 
+         * same set of registers?
+         */
+        public boolean equals(RegWindow him)
             {
             return this.getIregFirst() == him.getIregFirst() 
                     && this.getCreg() == him.getCreg();
             }
         
         /**
-         * Is this register window wholly contained within the receiver
+         * Does the receiver wholly contain the indicated window?
          */
-        public boolean contains(RegisterWindow him)
+        public boolean contains(RegWindow him)
             {
+            if (him==null)
+                return false;
+            
             return this.getIregFirst() <= him.getIregFirst() && him.getIregMax() <= this.getIregMax();
             }
-        
+
+        /**
+         * @see #contains(RegWindow) 
+         */
         public boolean contains(int ireg, int creg)
             {
-            return this.getIregFirst() <= ireg && ireg + creg <= this.getIregMax();
+            return this.contains(new RegWindow(ireg, creg));
             }
         }
     }

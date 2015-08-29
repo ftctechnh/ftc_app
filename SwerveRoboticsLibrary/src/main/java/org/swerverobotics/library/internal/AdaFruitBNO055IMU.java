@@ -6,43 +6,63 @@ import org.swerverobotics.library.exceptions.*;
 import org.swerverobotics.library.interfaces.*;
 
 /**
- * (documentation to come) (implementation far from complete)
+ * Instances of AdaFruitBNO055IMU provide API access to an 
+ * <a href="http://www.adafruit.com/products/2472">AdaFruit Absolute Orientation Sensor</a> that 
+ * is attached to a Modern Robotics Core Device Interface module.
  */
-public class AdaFruitBNO055IMU implements IAdaFruitBNO055IMU
+public final class AdaFruitBNO055IMU implements IBNO055IMU
     {
     //------------------------------------------------------------------------------------------
     // State
     //------------------------------------------------------------------------------------------
 
-    I2cDeviceClient  deviceClient;
-    OPERATION_MODE   mode;
+    private I2cDeviceClient deviceClient;
+    private OPERATION_MODE  currentMode;
 
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
 
+    /** 
+     * Instantiate an AdaFruitBNO055IMU on the indicated device whose I2C address is the one
+     * indicated.
+     */
     public AdaFruitBNO055IMU(I2cDevice i2cDevice, int i2cAddr)
         {
-        this.deviceClient = new I2cDeviceClient(i2cDevice, i2cAddr, new I2cDeviceClient.RegisterWindow(REGISTER.CHIP_ID_ADDR.getValue(), 8));
-        this.mode = null;   // unknown mode
+        this.deviceClient = new I2cDeviceClient(i2cDevice, lowerWindow, i2cAddr);
+        this.currentMode  = null;
         }
+
+    /**
+     * Instantiate an AdaFruitBNO055IMU on the indicated device at its default I2C address
+     */
     public AdaFruitBNO055IMU(I2cDevice i2cDevice)
         {
         this(i2cDevice, ADDRESS_A);
         }
 
-    public static IAdaFruitBNO055IMU create(I2cDevice i2cDevice)
+    /**
+     * Instantiate and initialize an AdaFruitBNO055IMU with default parameters
+     */
+    public static IBNO055IMU create(I2cDevice i2cDevice)
         {
-        // Create a sensor which is a client of i2cDevice
-        IAdaFruitBNO055IMU result = new AdaFruitBNO055IMU(i2cDevice);
-        
-        // Initialize it to useful defaults: IMU mode and external crystal (recommended 
-        // in BNO055 specification)
-        result.initialize(OPERATION_MODE.IMU);
-        result.setExternalCrystalUse(true);
-        return result;
+        // Default to the fusion 'IMU' mode
+        return create(i2cDevice, new Parameters());
         }
 
+    /**
+     * Instantiate and initialize an AdaFruitBNO055IMU with the indicated set of parameters
+     */
+    public static IBNO055IMU create(I2cDevice i2cDevice, Parameters parameters)
+        {
+        // Create a sensor which is a client of i2cDevice
+        IBNO055IMU result = new AdaFruitBNO055IMU(i2cDevice);
+        
+        // Initialize it with the indicated parameters
+        result.initialize(parameters);
+        return result;
+        }
+    
     //------------------------------------------------------------------------------------------
     // Operations
     //------------------------------------------------------------------------------------------
@@ -50,7 +70,7 @@ public class AdaFruitBNO055IMU implements IAdaFruitBNO055IMU
     /**
      * Initialize the device to be running in the indicated operation mode
      */
-    public void initialize(OPERATION_MODE mode)
+    public void initialize(Parameters parameters)
         {
         // Make sure we have the right device
         byte id = read8(REGISTER.CHIP_ID_ADDR); 
@@ -79,15 +99,16 @@ public class AdaFruitBNO055IMU implements IAdaFruitBNO055IMU
         write8(REGISTER.PWR_MODE_ADDR, POWER_MODE.NORMAL.getValue());
         delayLore(10);
 
-        // Make sure we're looking at register page zero
+        // Make sure we're looking at register page zero, as the other registers
+        // we need to set here are on that page.
         write8(REGISTER.PAGE_ID_ADDR, 0);
         
-        // Set the output units. Section 3.6, p30
-        int unitsel = (0 << 7) | // Orientation = Android
-                      (0 << 4) | // Temperature = Celsius
-                      (1 << 2) | // Euler = radians
-                      (1 << 1) | // Gyro = radians / second
-                      (0 << 0);  // Accelerometer = m/s^2
+        // Set the output units. Section 3.6, p31
+        int unitsel = (parameters.pitchmode.b << 7) |       // ptich angle convention
+                      (parameters.temperatureUnit.b << 4) | // temperature
+                      (parameters.angleunit.b << 2) |       // euler angle units
+                      (parameters.angleunit.b << 1) |       // gyro units, per second
+                      (parameters.accelunit.b /*<< 0*/);    // accelerometer units
         write8(REGISTER.UNIT_SEL_ADDR, unitsel);
         
         // ??? what does this do ???
@@ -95,8 +116,11 @@ public class AdaFruitBNO055IMU implements IAdaFruitBNO055IMU
         delayLore(10);
         
         // Set the requested operating mode (see section 3.3)
-        setOperationMode(mode);
+        setOperationMode(parameters.mode);
         delayLore(20);
+        
+        // Use or don't use the external cyrstal
+        setExternalCrystalUse(parameters.useExternalCrystal);
         }
 
     private void setOperationMode(OPERATION_MODE mode)
@@ -104,7 +128,10 @@ public class AdaFruitBNO055IMU implements IAdaFruitBNO055IMU
     operation mode, the sensors which are required in that particular sensor mode are powered, 
     while the sensors whose signals are not required are set to suspend mode. */
         {
-        this.mode = mode;
+        // Remember the mode, 'cause that's easy
+        this.currentMode = mode;
+        
+        // Actually change the mode
         this.write8(REGISTER.OPR_MODE_ADDR, mode.getValue() & 0x0F);
         
         // Delay per Table 3-6 of BNO055 Data sheet (p21)
@@ -218,7 +245,7 @@ public class AdaFruitBNO055IMU implements IAdaFruitBNO055IMU
     private double[] getVector(VECTOR vector, double scale)
         {
         // Ensure that the 6 bytes for this vector are visible in the register window. 
-        this.ensureRegisterWindow(new I2cDeviceClient.RegisterWindow(vector.getValue(), 6));
+        this.ensureRegisterWindow(new I2cDeviceClient.RegWindow(vector.getValue(), 6));
 
         // Read the data
         byte[] buffer = this.deviceClient.read(vector.getValue(), 6);
@@ -232,7 +259,7 @@ public class AdaFruitBNO055IMU implements IAdaFruitBNO055IMU
         {
         // Ensure we can see the registers we need
         this.deviceClient.ensureRegisterWindow(
-                new I2cDeviceClient.RegisterWindow(REGISTER.QUATERNION_DATA_W_LSB_ADDR.getValue(), 8),
+                new I2cDeviceClient.RegWindow(REGISTER.QUATERNION_DATA_W_LSB_ADDR.getValue(), 8),
                 upperWindow
             );
         
@@ -250,29 +277,58 @@ public class AdaFruitBNO055IMU implements IAdaFruitBNO055IMU
     //------------------------------------------------------------------------------------------
     // Internal utility
     //------------------------------------------------------------------------------------------
-    
-    private static final I2cDeviceClient.RegisterWindow lowerWindow = newWindow(REGISTER.CHIP_ID_ADDR, REGISTER.EULER_H_LSB_ADDR);
-    private static final I2cDeviceClient.RegisterWindow upperWindow = newWindow(REGISTER.EULER_H_LSB_ADDR, REGISTER.CALIB_STAT_ADDR);;
-    private static I2cDeviceClient.RegisterWindow newWindow(REGISTER regFirst, REGISTER regMax)
+
+    /**
+     * Given the maximum allowable size of a register window, the set of registers on 
+     * a BNO055 can be usefully divided into two windows, which we here call lowerWindow
+     * and upperWindow. 
+     * 
+     * When we find the need to change register windows depending on what data is being requested
+     * from the sensor, we try to use these two windows so as to reduce the number of register
+     * window switching that might be required as other data is read in the future.
+     */
+    private static final I2cDeviceClient.RegWindow lowerWindow = newWindow(REGISTER.CHIP_ID_ADDR, REGISTER.EULER_H_LSB_ADDR);
+    /**
+     * @see #lowerWindow
+     */
+    private static final I2cDeviceClient.RegWindow upperWindow = newWindow(REGISTER.EULER_H_LSB_ADDR, REGISTER.CALIB_STAT_ADDR);;
+    private static I2cDeviceClient.RegWindow newWindow(REGISTER regFirst, REGISTER regMax)
         {
-        return new I2cDeviceClient.RegisterWindow(regFirst.getValue(), regMax.getValue()-regFirst.getValue());
+        return new I2cDeviceClient.RegWindow(regFirst.getValue(), regMax.getValue()-regFirst.getValue());
         }
 
-    private void ensureRegisterWindow(I2cDeviceClient.RegisterWindow needed)
+    private void ensureRegisterWindow(I2cDeviceClient.RegWindow needed)
         {
-        I2cDeviceClient.RegisterWindow set = lowerWindow.contains(needed)
+        I2cDeviceClient.RegWindow set = lowerWindow.contains(needed)
             ? lowerWindow
             : upperWindow.contains(needed)
                 ? upperWindow
-                : needed;
+                : needed;           // just use what's needed if it's not within our two main windows
         this.deviceClient.ensureRegisterWindow(needed, set);
         }
 
+    /**
+     * delayLore() implements a delay that only known by lore and mythology to be necessary.
+     * 
+     * @see #delay(int) 
+     */
     private void delayLore(int ms)
         {
-        delay(ms);
+        try
+            {
+            Thread.sleep(ms);
+            }
+        catch (InterruptedException e)
+            {
+            throw SwerveRuntimeException.wrap(e);
+            }
         }
 
+    /**
+     * delay() implements delays which are known to be necessary according to the BNO055 specification
+     * 
+     * @see #delayLore(int) 
+     */
     private void delay(int ms)
         {
         try
@@ -287,7 +343,7 @@ public class AdaFruitBNO055IMU implements IAdaFruitBNO055IMU
 
     private byte read8(REGISTER reg)
         {
-        this.ensureRegisterWindow(new I2cDeviceClient.RegisterWindow(reg.getValue(), 1));
+        this.ensureRegisterWindow(new I2cDeviceClient.RegWindow(reg.getValue(), 1));
         return this.deviceClient.read8(reg.getValue());
         }
     
@@ -298,7 +354,7 @@ public class AdaFruitBNO055IMU implements IAdaFruitBNO055IMU
     
     private void enterConfigModeFor(IAction action)
         {
-        OPERATION_MODE modePrev = this.mode;
+        OPERATION_MODE modePrev = this.currentMode;
         setOperationMode(OPERATION_MODE.CONFIG);
         delayLore(25);
         try
@@ -316,7 +372,7 @@ public class AdaFruitBNO055IMU implements IAdaFruitBNO055IMU
         {
         T result;
         
-        OPERATION_MODE modePrev = this.mode;
+        OPERATION_MODE modePrev = this.currentMode;
         setOperationMode(OPERATION_MODE.CONFIG);
         delayLore(25);
         try
