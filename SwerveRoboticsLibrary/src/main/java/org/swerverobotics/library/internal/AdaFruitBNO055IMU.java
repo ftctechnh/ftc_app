@@ -17,7 +17,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
     //------------------------------------------------------------------------------------------
 
     private I2cDeviceClient deviceClient;
-    private OPERATION_MODE  currentMode;
+    private IBNO055IMU.Parameters.OPERATION_MODE  currentMode;
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -31,14 +31,6 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
         {
         this.deviceClient = new I2cDeviceClient(i2cDevice, lowerWindow, i2cAddr);
         this.currentMode  = null;
-        }
-
-    /**
-     * Instantiate an AdaFruitBNO055IMU on the indicated device at its default I2C address
-     */
-    public AdaFruitBNO055IMU(I2cDevice i2cDevice)
-        {
-        this(i2cDevice, ADDRESS_A);
         }
 
     /**
@@ -56,7 +48,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
     public static IBNO055IMU create(I2cDevice i2cDevice, Parameters parameters)
         {
         // Create a sensor which is a client of i2cDevice
-        IBNO055IMU result = new AdaFruitBNO055IMU(i2cDevice);
+        IBNO055IMU result = new AdaFruitBNO055IMU(i2cDevice, parameters.i2cAddr.bVal);
         
         // Initialize it with the indicated parameters
         result.initialize(parameters);
@@ -83,7 +75,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
             }
         
         // Switch to config mode (just in case, since this is the default)
-        setOperationMode(OPERATION_MODE.CONFIG);
+        setOperationMode(IBNO055IMU.Parameters.OPERATION_MODE.CONFIG);
         
         // Reset the system, and wait for the chip id register to switch
         // back from its reset state (0xA0?) to the it's chip id state (also 0xA0?; hmmm
@@ -104,11 +96,11 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
         write8(REGISTER.PAGE_ID_ADDR, 0);
         
         // Set the output units. Section 3.6, p31
-        int unitsel = (parameters.pitchmode.b << 7) |       // ptich angle convention
-                      (parameters.temperatureUnit.b << 4) | // temperature
-                      (parameters.angleunit.b << 2) |       // euler angle units
-                      (parameters.angleunit.b << 1) |       // gyro units, per second
-                      (parameters.accelunit.b /*<< 0*/);    // accelerometer units
+        int unitsel = (parameters.pitchmode.bVal << 7) |       // ptich angle convention
+                      (parameters.temperatureUnit.bVal << 4) | // temperature
+                      (parameters.angleunit.bVal << 2) |       // euler angle units
+                      (parameters.angleunit.bVal << 1) |       // gyro units, per second
+                      (parameters.accelunit.bVal /*<< 0*/);    // accelerometer units
         write8(REGISTER.UNIT_SEL_ADDR, unitsel);
         
         // ??? what does this do ???
@@ -123,7 +115,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
         setExternalCrystalUse(parameters.useExternalCrystal);
         }
 
-    private void setOperationMode(OPERATION_MODE mode)
+    private void setOperationMode(IBNO055IMU.Parameters.OPERATION_MODE mode)
     /* The default operation mode after power-on is CONFIGMODE. When the user changes to another 
     operation mode, the sensors which are required in that particular sensor mode are powered, 
     while the sensors whose signals are not required are set to suspend mode. */
@@ -132,10 +124,10 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
         this.currentMode = mode;
         
         // Actually change the mode
-        this.write8(REGISTER.OPR_MODE_ADDR, mode.getValue() & 0x0F);
+        this.write8(REGISTER.OPR_MODE_ADDR, mode.bVal & 0x0F);
         
         // Delay per Table 3-6 of BNO055 Data sheet (p21)
-        if (mode == OPERATION_MODE.CONFIG)
+        if (mode == IBNO055IMU.Parameters.OPERATION_MODE.CONFIG)
             delay(19);
         else
             delay(7);
@@ -168,6 +160,9 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
     
     public synchronized byte getSystemStatus()
         {
+        // It's unclear why we have to be in config mode to read the status,
+        // but that's what the AdaFruit library did, so we follow that for now
+        // until we might find we can do without.
         return this.enterConfigModeFor(new IFunc<Byte>()
             {
             @Override public Byte value()
@@ -179,6 +174,9 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
 
     public synchronized byte getSystemError()
         {
+        // It's unclear why we have to be in config mode to read the error,
+        // but that's what the AdaFruit library did, so we follow that for now
+        // until we might find we can do without.
         return this.enterConfigModeFor(new IFunc<Byte>()
             {
             @Override public Byte value()
@@ -354,8 +352,8 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
     
     private void enterConfigModeFor(IAction action)
         {
-        OPERATION_MODE modePrev = this.currentMode;
-        setOperationMode(OPERATION_MODE.CONFIG);
+        IBNO055IMU.Parameters.OPERATION_MODE modePrev = this.currentMode;
+        setOperationMode(IBNO055IMU.Parameters.OPERATION_MODE.CONFIG);
         delayLore(25);
         try
             {
@@ -372,8 +370,8 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
         {
         T result;
         
-        OPERATION_MODE modePrev = this.currentMode;
-        setOperationMode(OPERATION_MODE.CONFIG);
+        IBNO055IMU.Parameters.OPERATION_MODE modePrev = this.currentMode;
+        setOperationMode(IBNO055IMU.Parameters.OPERATION_MODE.CONFIG);
         delayLore(25);
         try
             {
