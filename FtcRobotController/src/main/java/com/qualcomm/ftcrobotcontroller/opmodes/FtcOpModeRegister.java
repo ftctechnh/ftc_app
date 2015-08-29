@@ -31,8 +31,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
+import com.qualcomm.robotcore.robot.Robot;
+import com.qualcomm.robotcore.util.RobotLog;
+
+import java.io.File;
+import java.util.List;
 
 /**
  * Register Op Modes
@@ -46,7 +52,25 @@ public class FtcOpModeRegister implements OpModeRegister {
      * @param manager op mode manager
      */
     public void register(OpModeManager manager) {
-
+        try {
+            List<File> fileList = TBotsClassLoader.getFileSet();
+            TBotsDxCompler.getJarList(fileList);
+            TBotsDxCompler.convertJars(fileList);
+            List<Class<? extends OpMode>> opmodeList = TBotsClassLoader.loadJars(fileList);
+            RobotLog.i("Now registering OpModes...");
+            for (Class<? extends OpMode> opmode : opmodeList) {
+                try {
+                    manager.register(opmode.getSimpleName(), opmode);
+                    RobotLog.i("Registered " + opmode.getSimpleName());
+                } catch (Throwable ex) {
+                    RobotLog.e("Error registering op mode: " + opmode.getSimpleName());
+                    RobotLog.e(ex.getMessage());
+                }
+            }
+        } catch (Throwable ex) {
+            RobotLog.e("[Thunderbots] Error reading external files:");
+            RobotLog.logStacktrace((Exception) ex);
+        }
 
     }
 

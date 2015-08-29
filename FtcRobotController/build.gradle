@@ -19,6 +19,7 @@ repositories {
 dependencies {
     compile files('libs/android-support-v4.jar')
     compile (name:'d2xx', ext:'jar')
+    compile (name:'dx', ext:'jar')
     compile (name:'RobotCore-release', ext:'aar')
     compile (name:'ModernRobotics-release', ext:'aar')
     compile (name:'FtcCommon-release', ext:'aar')
