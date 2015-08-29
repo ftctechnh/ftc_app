@@ -9,23 +9,24 @@ import java.util.concurrent.locks.*;
 
 /**
  */
-public class I2cDeviceClient implements I2cController.I2cPortReadyCallback
+public final class I2cDeviceClient 
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    I2cDevice           i2cDevice;                  // the device we are talking to
+    final I2cDevice     i2cDevice;                  // the device we are talking to
+    final Callback      callback;
 
-    byte[]              readCache;                  // the buffer into which reads are retrieved
-    byte[]              writeCache;                 // the buffer that we write from 
+    final byte[]        readCache;                  // the buffer into which reads are retrieved
+    final byte[]        writeCache;                 // the buffer that we write from 
     static final int    dibCacheOverhead = 4;       // this many bytes at start of writeCache are system overhead
-    Lock                readCacheLock;              // lock we must hold to look at readCache
-    Lock                writeCacheLock;             // lock we must old to look at writeCache
+    final Lock          readCacheLock;              // lock we must hold to look at readCache
+    final Lock          writeCacheLock;             // lock we must old to look at writeCache
     
-    Object              lock = new Object();
-    RegisterWindow      registerWindow;             // the set of registers to look at when we are in read mode
-
+    final Object        lock = new Object();
+    
+    RegisterWindow      registerWindow;             // the set of registers to look at when we are in read mode. May be null, indicating no read needed
     READ_CACHE_STATUS   readCacheStatus;            // what we know about the contents of readCache
     WRITE_CACHE_STATUS  writeCacheStatus;           // what we know about the contents of writeCache
 
@@ -40,9 +41,9 @@ public class I2cDeviceClient implements I2cController.I2cPortReadyCallback
 
     enum WRITE_CACHE_STATUS 
         {
-        IDLE,       // write cache is quiescent
-        DIRTY,      // write cache has changed bits that need to be pushed to module
-        QUEUED,     // write cache is currently being written to module, not yet returned
+        IDLE,           // write cache is quiescent
+        DIRTY,          // write cache has changed bits that need to be pushed to module
+        QUEUED,         // write cache is currently being written to module, not yet returned
         }
 
     //----------------------------------------------------------------------------------------------
@@ -52,6 +53,7 @@ public class I2cDeviceClient implements I2cController.I2cPortReadyCallback
     public I2cDeviceClient(I2cDevice i2cDevice, int i2cAddr, RegisterWindow window)
         {
         this.i2cDevice = i2cDevice;
+        this.callback = new Callback();
 
         this.readCache      = this.i2cDevice.getI2cReadCache();
         this.readCacheLock  = this.i2cDevice.getI2cReadCacheLock();
@@ -65,7 +67,7 @@ public class I2cDeviceClient implements I2cController.I2cPortReadyCallback
         
         Util.setPrivateIntField(this.i2cDevice, 2, i2cAddr);
         
-        this.i2cDevice.registerForI2cPortReadyCallback(this);
+        this.i2cDevice.registerForI2cPortReadyCallback(this.callback);
         }
     
     //----------------------------------------------------------------------------------------------
@@ -92,13 +94,30 @@ public class I2cDeviceClient implements I2cController.I2cPortReadyCallback
         }
 
     /**
-     * Ensure that the current register window covers the indicated set of registers
+     * Return the current register window.
+     */
+    public RegisterWindow getRegisterWindow()
+        {
+        synchronized (this.lock)
+            {
+            return this.registerWindow;
+            }
+        }
+
+    /**
+     * Ensure that the current register window covers the indicated set of registers.
+     * 
+     * If there is currently a non-null register window, and windowNeeded is non-null,
+     * and the curret register window entirely contains windowNeeded, then do nothing.
+     * Otherwise, set the current register window to windowToSet.
      */
     public void ensureRegisterWindow(RegisterWindow windowNeeded, RegisterWindow windowToSet)
         {
         synchronized (this.lock)
             {
-            if (this.registerWindow == null || !this.registerWindow.contains(windowNeeded))
+            if (this.registerWindow == null 
+                    || windowNeeded == null
+                    || !this.registerWindow.contains(windowNeeded))
                 {
                 setRegisterWindow(windowToSet);
                 }
@@ -106,13 +125,29 @@ public class I2cDeviceClient implements I2cController.I2cPortReadyCallback
         }
 
     /**
-     * Read the indicated register
+     * Read the byte at the indicated register.
+     * 
+     * The register must lie within the current register window.
      */
     public byte read8(int ireg)
         {
         return this.read(ireg, 1)[0];
         }
-    
+
+    /**
+     * Read a (little-endian) integer starting at the indicated register
+     */
+    public int read16(int ireg)
+        {
+        byte[] data = read(ireg, 2);
+        return Util.makeInt(data[0], data[1]);
+        }
+
+    /**
+     * Read a contiguous set of registers.
+     * 
+     * All the registers must lie within the current register window
+     */
     public byte[] read(int ireg, int creg)
         {
         try
@@ -126,7 +161,7 @@ public class I2cDeviceClient implements I2cController.I2cPortReadyCallback
                     }
 
                 // Wait until we fill up with data
-                for (; ; )
+                for (;;)
                     {
                     if (this.readCacheStatus == READ_CACHE_STATUS.VALID)
                         break;
@@ -164,6 +199,14 @@ public class I2cDeviceClient implements I2cController.I2cPortReadyCallback
         }
 
     /**
+     * Write an little endian int to an adjacent pair of registers
+     */
+    public void write16(int ireg, int data)
+        {
+        this.write(ireg, new byte[] { (byte)(data&0xFF), (byte)((data>>8)&0xFF)} );
+        }
+    
+    /**
      * Write data to a set of registers, begining with the one indicated
      */
     public void write(int ireg, byte[] data)
@@ -200,93 +243,98 @@ public class I2cDeviceClient implements I2cController.I2cPortReadyCallback
             }
         }
     
-    @Override public void portIsReady(int port)
-    // This is the callback from the device module indicating completion of previously requested work
+    class Callback implements I2cController.I2cPortReadyCallback
         {
-        synchronized (this.lock)
+        @Override public void portIsReady(int port)
+            // This is the callback from the device module indicating completion of previously requested work
             {
-            boolean setI2CActionFlag = false;
-            boolean writeFullCache = false;
-            
-            if (this.writeCacheStatus == WRITE_CACHE_STATUS.IDLE 
-                    || this.writeCacheStatus == WRITE_CACHE_STATUS.QUEUED
-                    || this.readCacheStatus == READ_CACHE_STATUS.SWITCHING)
+            synchronized (lock)
                 {
-                // If we just finished a write cycle, then our write cache is idle
-                if (this.writeCacheStatus == WRITE_CACHE_STATUS.QUEUED)
-                    this.writeCacheStatus = WRITE_CACHE_STATUS.IDLE;
-                
-                // Deal with read issues
-                if (this.readCacheStatus == READ_CACHE_STATUS.IDLE)
+                boolean setI2CActionFlag = false;
+                boolean writeFullCache = false;
+    
+                if (writeCacheStatus == WRITE_CACHE_STATUS.IDLE
+                        || writeCacheStatus == WRITE_CACHE_STATUS.QUEUED
+                        || readCacheStatus == READ_CACHE_STATUS.SWITCHING)
                     {
-                    if (this.registerWindow != null)
+                    // If we just finished a write queuing cycle, then our write cache is idle
+                    if (writeCacheStatus == WRITE_CACHE_STATUS.QUEUED)
+                        writeCacheStatus = WRITE_CACHE_STATUS.IDLE;
+    
+                    // Deal with read issues
+                    if (readCacheStatus == READ_CACHE_STATUS.IDLE)
                         {
-                        // Initiate switch to read mode
-                        this.readCacheStatus = READ_CACHE_STATUS.SWITCHING;
-                        this.i2cDevice.enableI2cReadMode(this.registerWindow.getIregFirst(), this.registerWindow.getCreg());
+                        if (registerWindow != null)
+                            {
+                            // Initiate switch to read mode
+                            readCacheStatus = READ_CACHE_STATUS.SWITCHING;
+                            i2cDevice.enableI2cReadMode(registerWindow.getIregFirst(), registerWindow.getCreg());
+                            setI2CActionFlag = true;
+                            writeFullCache = true;
+                            }
+                        }
+                    else if (readCacheStatus == READ_CACHE_STATUS.SWITCHING)
+                        {
+                        if (i2cDevice.isI2cPortInReadMode())
+                            {
+                            // The port is in read mode. Start reading from it
+                            readCacheStatus = READ_CACHE_STATUS.QUEUED;
+                            i2cDevice.readI2cCacheFromModule();
+                            setI2CActionFlag = true;
+                            }
+                        }
+                    else if (readCacheStatus == READ_CACHE_STATUS.QUEUED)
+                        {
+                        readCacheStatus = READ_CACHE_STATUS.VALIDQUEUED;
+                        // Re-read the next time around
+                        i2cDevice.readI2cCacheFromModule();
                         setI2CActionFlag = true;
-                        writeFullCache = true;
+                        }
+                    else if (readCacheStatus == READ_CACHE_STATUS.VALID || readCacheStatus == READ_CACHE_STATUS.VALIDQUEUED)
+                        {
+                        readCacheStatus = READ_CACHE_STATUS.VALIDQUEUED;
+                        // Re-read the next time around
+                        i2cDevice.readI2cCacheFromModule();
+                        setI2CActionFlag = true;
                         }
                     }
-                else if (this.readCacheStatus == READ_CACHE_STATUS.SWITCHING)
+    
+                else if (writeCacheStatus == WRITE_CACHE_STATUS.DIRTY)
                     {
-                    // The port is in read mode. Start reading from it
-                    this.readCacheStatus = READ_CACHE_STATUS.QUEUED;
-                    this.i2cDevice.readI2cCacheFromModule();
-                    setI2CActionFlag = true;
+                    // Queue the write cache for writing to the module
+                    writeCacheStatus = WRITE_CACHE_STATUS.QUEUED;
+                    setI2CActionFlag = true;      // request an I2C write
+                    writeFullCache = true;
+    
+                    // What's the impact on the read cache? 
+                    if (readCacheStatus == READ_CACHE_STATUS.QUEUED || readCacheStatus == READ_CACHE_STATUS.VALIDQUEUED)
+                        {
+                        // We just completed a read cycle. Data is valid, for the moment.
+                        // But don't re-issue the reread request
+                        readCacheStatus = READ_CACHE_STATUS.VALID;
+                        }
+                    else if (readCacheStatus == READ_CACHE_STATUS.VALID)
+                        {
+                        // We've gone a cycle w/o reading. What's there is out of date.
+                        readCacheStatus = READ_CACHE_STATUS.IDLE;
+                        }
                     }
-                else if (this.readCacheStatus == READ_CACHE_STATUS.QUEUED)
-                    {
-                    this.readCacheStatus = READ_CACHE_STATUS.VALIDQUEUED;
-                    // Re-read the next time around
-                    this.i2cDevice.readI2cCacheFromModule();
-                    setI2CActionFlag = true;
-                    }
-                else if (this.readCacheStatus == READ_CACHE_STATUS.VALID || this.readCacheStatus == READ_CACHE_STATUS.VALIDQUEUED)
-                    {
-                    this.readCacheStatus = READ_CACHE_STATUS.VALIDQUEUED;
-                    // Re-read the next time around
-                    this.i2cDevice.readI2cCacheFromModule();
-                    setI2CActionFlag = true;
-                    }
+    
+                // Set action flag and queue to module as requested
+                if (setI2CActionFlag)
+                    i2cDevice.setI2cPortActionFlag();
+    
+                if (setI2CActionFlag && !writeFullCache)
+                    i2cDevice.writeI2cPortFlagOnlyToModule();
+    
+                if (writeFullCache)
+                    i2cDevice.writeI2cCacheToModule();
+    
+                // Tell any readers or writers that statuses have changed
+                lock.notifyAll();
                 }
-            
-            else if (this.writeCacheStatus == WRITE_CACHE_STATUS.DIRTY)
-                {
-                // Queue the write cache for writing to the module
-                this.writeCacheStatus = WRITE_CACHE_STATUS.QUEUED;
-                setI2CActionFlag = true;      // request an I2C write
-                writeFullCache = true;
-                
-                // What's the impact on the read cache? 
-                if (this.readCacheStatus == READ_CACHE_STATUS.QUEUED || this.readCacheStatus == READ_CACHE_STATUS.VALIDQUEUED)
-                    {
-                    // We just completed a read cycle. Data is valid, for the moment.
-                    // But don't re-issue the reread request
-                    this.readCacheStatus = READ_CACHE_STATUS.VALID;
-                    }
-                else if (this.readCacheStatus == READ_CACHE_STATUS.VALID)
-                    {
-                    // We've gone a cycle w/o reading. What's there is out of date.
-                    this.readCacheStatus = READ_CACHE_STATUS.IDLE;
-                    }
-                }
-            
-            // Set action flag and queue to module as requested
-            if (setI2CActionFlag)
-                this.i2cDevice.setI2cPortActionFlag();
-
-            if (setI2CActionFlag && !writeFullCache)
-                this.i2cDevice.writeI2cPortFlagOnlyToModule();
-            
-            if (writeFullCache)
-                this.i2cDevice.writeI2cCacheToModule();
-            
-            // Tell any readers or writers that statuses have changed
-            this.lock.notifyAll();
             }
         }
-    
     //----------------------------------------------------------------------------------------------
     // RegisterWindow
     //----------------------------------------------------------------------------------------------
