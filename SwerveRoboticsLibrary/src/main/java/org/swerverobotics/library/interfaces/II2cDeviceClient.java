@@ -70,12 +70,35 @@ public interface II2cDeviceClient
     int read16(int ireg);
 
     /**
-     * Read a contiguous set of registers.
+     * Read a contiguous set of device I2C registers.
      *
      * All the registers must lie within the current register window. Note that this 
      * method can take several tens of milliseconds to execute.
+     * 
+     * @param ireg  the register number of the first byte register to read
+     * @param creg  the number of bytes / registers to read
+     * @return      the data which was read
      */
     byte[] read(int ireg, int creg);
+
+    /**
+     * Reads and returns a contiguous set of device I2C registers, together with a timestamp
+     * of when the read occurred.
+     *
+     * @param ireg  the register number of the first byte register to read
+     * @param creg  the number of bytes / registers to read
+     * @return      the data which was read, together with the timestamp
+     */
+    TimestampedData readTimeStamped(int ireg, int creg);
+    
+    /** TimestampedData associates pairs together data with an associated timestamp */
+    class TimestampedData
+        {
+        /** the data in question */
+        public byte[]   data;
+        /** the timestamp on the System.nanoTime() clock associated with that data */
+        public long     nanoTime;
+        }
 
     //----------------------------------------------------------------------------------------------
     // Writing
