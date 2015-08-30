@@ -31,4 +31,18 @@ public class ClassFactory
         {
         return AdaFruitBNO055IMU.create(i2cDevice, parameters);
         }
+
+    /**
+     * Instantiate an I2cDeviceClient wrapper around the provided I2cDevice.
+     * 
+     * @param i2cDevice                 the I2cDevice to wrap
+     * @param initialRegisterWindow     the initial register window to read. May be null.
+     * @param i2cAddr                   the I2C address to initialize i2cDevice with. If less than 
+     *                                  zero, then i2cAddr is ignored, and the address used by 
+     *                                  i2cDevice must be initialized by other means.
+     */
+    public static II2cDeviceClient createI2cDeviceClient(I2cDevice i2cDevice, II2cDeviceClient.RegWindow initialRegisterWindow, int i2cAddr)
+        {
+        return new I2cDeviceClient(i2cDevice, initialRegisterWindow, i2cAddr);
+        }
     }
