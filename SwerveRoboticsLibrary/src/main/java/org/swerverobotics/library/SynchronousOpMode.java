@@ -31,17 +31,16 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      * that the variables declared here do not suffer from that problem.
      */
     public IGamepad gamepad1 = null;
+    /** @see #gamepad1 */
     public IGamepad gamepad2 = null;
 
     /**
      * As with game pads, we hid the 'telemetry' variable of the super class and replace it
-     * with one that can work from synchronous threads.
+     * with one that can work on synchronous threads.
      */
     public TelemetryDashboardAndLog telemetry;
 
-    /**
-     * The number of nanoseconds in a millisecond.
-     */
+    /** Advanced: the number of nanoseconds in a millisecond. */
     public static final long NANO_TO_MILLI = 1000000;
 
     /**
