@@ -91,7 +91,7 @@ public interface II2cDeviceClient
      */
     TimestampedData readTimeStamped(int ireg, int creg);
     
-    /** TimestampedData associates pairs together data with an associated timestamp */
+    /** TimestampedData pairs together data which has been read with the timestamp at which the read occurred */
     class TimestampedData
         {
         /** the data in question */
