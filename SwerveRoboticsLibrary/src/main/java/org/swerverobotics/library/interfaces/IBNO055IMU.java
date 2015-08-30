@@ -1,7 +1,7 @@
 package org.swerverobotics.library.interfaces;
 
 /**
- * Interface to Adafruit 9-DOF Absolute Orientation IMU Fusion Breakout - BNO055 
+ * Interface to the Adafruit 9-DOF Absolute Orientation IMU Fusion Breakout - BNO055 sensor.
  * 
  * Undoubtedly this needs further refinement and expansion. All in due time.
  * 
@@ -297,4 +297,202 @@ public interface IBNO055IMU
             }
         }
 
+    /**
+     * 
+     */
+    class MagneticFlux
+        {
+        //----------------------------------------------------------------------------------------------
+        // State
+        //----------------------------------------------------------------------------------------------
+    
+        // Units: tesla
+        public double x;
+        public double y;
+        public double z;
+    
+        //----------------------------------------------------------------------------------------------
+        // Construction
+        //----------------------------------------------------------------------------------------------
+    
+        public MagneticFlux()
+            {
+            this(0,0,0);
+            }
+        public MagneticFlux(double x, double y, double z)
+            {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+            }
+        public MagneticFlux(double[] xyz)
+            {
+            this(xyz[0], xyz[1], xyz[2]);
+            }
+        }
+
+    /**
+     * @see <a href="https://en.wikipedia.org/wiki/Quaternion">https://en.wikipedia.org/wiki/Quaternion</a>
+     */
+    class Quaternion
+        {
+        //----------------------------------------------------------------------------------------------
+        // State
+        //----------------------------------------------------------------------------------------------
+    
+        public double w;
+        public double x;
+        public double y;
+        public double z;
+    
+        //----------------------------------------------------------------------------------------------
+        // Construction
+        //----------------------------------------------------------------------------------------------
+    
+        public Quaternion()
+            {
+            this.w = 1;
+            this.x = this.y = this.z = 0;
+            }
+        public Quaternion(double w, double x, double y, double z)
+            {
+            this.w = w;
+            this.x = x;
+            this.y = y;
+            this.z = z;
+            }
+    
+        //----------------------------------------------------------------------------------------------
+        // Operations
+        //----------------------------------------------------------------------------------------------
+    
+        public double magnitude()
+            {
+            return Math.sqrt(w*w + x*x + y*y + z*z);
+            }
+    
+        public void normalize()
+            {
+            double mag = this.magnitude();
+            w /= mag;
+            x /= mag;
+            y /= mag;
+            z /= mag;
+            }
+        
+        public Quaternion congugate()
+            {
+            Quaternion result = new Quaternion();
+            result.w =  w;
+            result.x = -x;
+            result.y = -y;
+            result.z = -y;
+            return result;
+            }
+        
+        }
+
+    /**
+     * 
+     */
+    class Acceleration
+        {
+        //----------------------------------------------------------------------------------------------
+        // State
+        //----------------------------------------------------------------------------------------------
+    
+        public double x;
+        public double y;
+        public double z;
+    
+        //----------------------------------------------------------------------------------------------
+        // Construction
+        //----------------------------------------------------------------------------------------------
+    
+        public Acceleration()
+            {
+            this(0,0,0);
+            }
+        public Acceleration(double x, double y, double z)
+            {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+            }
+        public Acceleration(double[] xyz)
+            {
+            this(xyz[0], xyz[1], xyz[2]);
+            }
+        }
+
+    /**
+     * 
+     */
+    class AngularVelocity
+        {
+        //----------------------------------------------------------------------------------------------
+        // State
+        //----------------------------------------------------------------------------------------------
+    
+        // Units: radians per second
+        public double rpsX;
+        public double rpsY;
+        public double rpsZ;
+    
+        //----------------------------------------------------------------------------------------------
+        // Construction
+        //----------------------------------------------------------------------------------------------
+    
+        public AngularVelocity()
+            {
+            this(0,0,0);
+            }
+        public AngularVelocity(double rpsX, double rpsY, double rpsZ)
+            {
+            this.rpsX = rpsX;
+            this.rpsY = rpsY;
+            this.rpsZ = rpsZ;
+            }
+        public AngularVelocity(double[] xyz)
+            {
+            this(xyz[0], xyz[1], xyz[2]);
+            }
+        }
+
+    /**
+     * Instances of EulerAngles represent a direction in three-dimensional space by way of rotations
+     */
+    class EulerAngles
+        {
+        //----------------------------------------------------------------------------------------------
+        // State
+        //----------------------------------------------------------------------------------------------
+    
+        // Angles are in rotation order (heading, roll, pitch) and are right-handed 
+        // about their respective axes
+        
+        // Units: radians
+        public double heading;  // rotation about Z
+        public double roll;     // rotation about Y
+        public double pitch;    // rotation about X
+    
+        //----------------------------------------------------------------------------------------------
+        // Construction
+        //----------------------------------------------------------------------------------------------
+    
+        public EulerAngles()
+            {
+            this(0,0,0);
+            }
+        public EulerAngles(double heading, double roll, double pitch)
+            {
+            this.heading = heading;
+            this.roll = roll;
+            this.pitch = pitch;
+            }
+        public EulerAngles(double[] angles)
+            {
+            this(angles[0], angles[1], angles[2]);
+            }
+        }
     }
