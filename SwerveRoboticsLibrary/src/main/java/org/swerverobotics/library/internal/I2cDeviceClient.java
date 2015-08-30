@@ -3,7 +3,6 @@ package org.swerverobotics.library.internal;
 import com.qualcomm.robotcore.hardware.*;
 
 import org.swerverobotics.library.exceptions.*;
-import org.swerverobotics.library.internal.*;
 import org.swerverobotics.library.interfaces.*;
 import java.util.*;
 import java.util.concurrent.locks.*;
@@ -33,6 +32,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
     private final Object        lock = new Object();        // the lock we use to synchronize concurrent callers as well as the portIsReady() callback
 
     private RegWindow           registerWindow;             // the set of registers to look at when we are in read mode. May be null, indicating no read needed
+    private long                nanoTimeReadCacheValid;     // the time on the System.nanoTime() clock at which the read cache was last set as valid
     private READ_CACHE_STATUS   readCacheStatus;            // what we know about the contents of readCache
     private WRITE_CACHE_STATUS  writeCacheStatus;           // what we know about the contents of writeCache
 
@@ -76,6 +76,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
         
         this.registerWindow = initialRegisterWindow;
 
+        this.nanoTimeReadCacheValid = 0;
         this.readCacheStatus  = READ_CACHE_STATUS.IDLE;
         this.writeCacheStatus = WRITE_CACHE_STATUS.IDLE;
         
@@ -136,8 +137,6 @@ public final class I2cDeviceClient implements II2cDeviceClient
 
     /**
      * Read the byte at the indicated register.
-     * 
-     * The register must lie within the current register window.
      */
     public byte read8(int ireg)
         {
@@ -146,8 +145,6 @@ public final class I2cDeviceClient implements II2cDeviceClient
 
     /**
      * Read a (little-endian) integer starting at the indicated register.
-     * 
-     * The integer must lie within the current register window.
      */
     public int read16(int ireg)
         {
@@ -156,12 +153,17 @@ public final class I2cDeviceClient implements II2cDeviceClient
         }
 
     /**
-     * Read a contiguous set of registers.
-     * 
-     * All the registers must lie within the current register window. Note that this 
-     * method can take several tens of milliseconds to execute.
+     * Read a contiguous set of registers
      */
     public byte[] read(int ireg, int creg)
+        {
+        return this.readTimeStamped(ireg, creg).data;
+        }
+    
+    /**
+     * Read a contiguous set of registers.
+     */
+    public TimestampedData readTimeStamped(int ireg, int creg)
         {
         try
             {
@@ -189,7 +191,10 @@ public final class I2cDeviceClient implements II2cDeviceClient
                 try
                     {
                     int ibFirst = ireg - this.registerWindow.getIregFirst() + dibCacheOverhead;
-                    return Arrays.copyOfRange(this.readCache, ibFirst, ibFirst + creg);
+                    TimestampedData result = new TimestampedData();
+                    result.data     = Arrays.copyOfRange(this.readCache, ibFirst, ibFirst + creg);
+                    result.nanoTime = this.nanoTimeReadCacheValid;
+                    return result;
                     }
                 finally
                     {
@@ -305,6 +310,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
                     else if (readCacheStatus == READ_CACHE_STATUS.QUEUED)
                         {
                         readCacheStatus = READ_CACHE_STATUS.VALIDQUEUED;
+                        nanoTimeReadCacheValid = System.nanoTime();
                         // Re-read the next time around
                         i2cDevice.readI2cCacheFromModule();
                         setI2CActionFlag = true;
@@ -312,6 +318,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
                     else if (readCacheStatus == READ_CACHE_STATUS.VALID || readCacheStatus == READ_CACHE_STATUS.VALIDQUEUED)
                         {
                         readCacheStatus = READ_CACHE_STATUS.VALIDQUEUED;
+                        nanoTimeReadCacheValid = System.nanoTime();
                         // Re-read the next time around
                         i2cDevice.readI2cCacheFromModule();
                         setI2CActionFlag = true;
@@ -331,6 +338,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
                         // We just completed a read cycle. Data is valid, for the moment.
                         // But don't re-issue the reread request
                         readCacheStatus = READ_CACHE_STATUS.VALID;
+                        nanoTimeReadCacheValid = System.nanoTime();
                         }
                     else if (readCacheStatus == READ_CACHE_STATUS.VALID)
                         {

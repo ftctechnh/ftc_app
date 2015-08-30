@@ -241,17 +241,13 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
         {
         return new EulerAngles(getVector(VECTOR.EULER, 900));
         }
-    private double[] getVector(VECTOR vector, double scale)
+    private II2cDeviceClient.TimestampedData getVector(VECTOR vector, double scale)
         {
         // Ensure that the 6 bytes for this vector are visible in the register window. 
         this.ensureRegisterWindow(new I2cDeviceClient.RegWindow(vector.getValue(), 6));
 
         // Read the data
-        byte[] buffer = this.deviceClient.read(vector.getValue(), 6);
-        return new double[] {
-                Util.makeInt(buffer[0], buffer[1]) / scale,
-                Util.makeInt(buffer[2], buffer[3]) / scale,
-                Util.makeInt(buffer[4], buffer[5]) / scale };
+        return this.deviceClient.readTimeStamped(vector.getValue(), 6);
         }
 
     public synchronized Quaternion getQuaternionOrientation()
@@ -263,14 +259,16 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
             );
         
         // Section 3.6.5.5 of BNO055 specification
-        byte[] buffer = this.deviceClient.read(REGISTER.QUATERNION_DATA_W_LSB.bVal, 8);
+        II2cDeviceClient.TimestampedData ts = this.deviceClient.readTimeStamped(REGISTER.QUATERNION_DATA_W_LSB.bVal, 8);
         final double scale = 1.0 / (1 << 14);
-        return new Quaternion(
-                Util.makeInt(buffer[0], buffer[1]) * scale,
-                Util.makeInt(buffer[2], buffer[3]) * scale,
-                Util.makeInt(buffer[4], buffer[5]) * scale,
-                Util.makeInt(buffer[6], buffer[7]) * scale
+        Quaternion result = new Quaternion(
+                Util.makeInt(ts.data[0], ts.data[1]) * scale,
+                Util.makeInt(ts.data[2], ts.data[3]) * scale,
+                Util.makeInt(ts.data[4], ts.data[5]) * scale,
+                Util.makeInt(ts.data[6], ts.data[7]) * scale
             );
+        result.nanoTime = ts.nanoTime;
+        return result;
         }
     
     //------------------------------------------------------------------------------------------

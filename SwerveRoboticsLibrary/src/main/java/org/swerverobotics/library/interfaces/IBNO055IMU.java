@@ -200,10 +200,9 @@ public interface IBNO055IMU
      */
     enum REGISTER
         {
-            /** Page id register definition */
+            /** Controls which of the two register pages are visible */
             PAGE_ID(0X07),
 
-            /** PAGE0 REGISTER DEFINITION START*/
             CHIP_ID(0x00),
             ACCEL_REV_ID(0x01),
             MAG_REV_ID(0x02),
@@ -364,27 +363,34 @@ public interface IBNO055IMU
         // State
         //----------------------------------------------------------------------------------------------
     
+        /** the flux in the X direction */
         public double x;
+        /** the flux in the Y direction */
         public double y;
+        /** the flux in the Z direction */
         public double z;
-    
+
+        /** the time on the System.nanoTime() clock at which the data was acquired */
+        public long nanoTime;
+
         //----------------------------------------------------------------------------------------------
         // Construction
         //----------------------------------------------------------------------------------------------
     
         public MagneticFlux()
             {
-            this(0,0,0);
+            this(0,0,0, 0);
             }
-        public MagneticFlux(double x, double y, double z)
+        public MagneticFlux(double x, double y, double z, long nanoTime)
             {
             this.x = x;
             this.y = y;
             this.z = z;
+            this.nanoTime = nanoTime;
             }
-        public MagneticFlux(double[] xyz)
+        public MagneticFlux(II2cDeviceClient.TimestampedData ts)
             {
-            this(xyz[0], xyz[1], xyz[2]);
+            this(ts.data[0], ts.data[1], ts.data[2], ts.nanoTime);
             }
         }
 
@@ -407,7 +413,10 @@ public interface IBNO055IMU
         public double x;
         public double y;
         public double z;
-    
+
+        /** the time on the System.nanoTime() clock at which the data was acquired */
+        public long nanoTime = 0;
+
         //----------------------------------------------------------------------------------------------
         // Construction
         //----------------------------------------------------------------------------------------------
@@ -456,8 +465,10 @@ public interface IBNO055IMU
         }
 
     /**
-     * Accleration represents a directed acceleration in three-space. Units are as specified
-     * in sensor initialization.
+     * Accleration represents a directed acceleration in three-space. 
+     * <p></p>
+     * Units are as specified in sensor initialization. The time at which the data was 
+     * acquired is provide so as to facilitate integration of accelerations.
      */
     class Acceleration
         {
@@ -465,27 +476,34 @@ public interface IBNO055IMU
         // State
         //----------------------------------------------------------------------------------------------
     
-        public double x;
-        public double y;
-        public double z;
-    
+        /** the acceleration in the X direction */
+        public double accelX;
+        /** the acceleration in the Y direction */
+        public double accelY;
+        /** the acceleration in the Z direction */
+        public double accelZ;
+
+        /** the time on the System.nanoTime() clock at which the data was acquired */
+        public long nanoTime;
+
         //----------------------------------------------------------------------------------------------
         // Construction
         //----------------------------------------------------------------------------------------------
     
         public Acceleration()
             {
-            this(0,0,0);
+            this(0,0,0,0);
             }
-        public Acceleration(double x, double y, double z)
+        public Acceleration(double accelX, double accelY, double accelZ, long nanoTime)
             {
-            this.x = x;
-            this.y = y;
-            this.z = z;
+            this.accelX = accelX;
+            this.accelY = accelY;
+            this.accelZ = accelZ;
+            this.nanoTime = nanoTime;
             }
-        public Acceleration(double[] xyz)
+        public Acceleration(II2cDeviceClient.TimestampedData ts)
             {
-            this(xyz[0], xyz[1], xyz[2]);
+            this(ts.data[0], ts.data[1], ts.data[2], ts.nanoTime);
             }
         }
 
@@ -499,27 +517,34 @@ public interface IBNO055IMU
         // State
         //----------------------------------------------------------------------------------------------
     
+        /** the rotational rate about the X axis */
         public double rateX;
+        /** the rotational rate about the Y axis */
         public double rateY;
+        /** the rotational rate about the Z axis */
         public double rateZ;
-    
+
+        /** the time on the System.nanoTime() clock at which the data was acquired */
+        public long nanoTime;
+
         //----------------------------------------------------------------------------------------------
         // Construction
         //----------------------------------------------------------------------------------------------
     
         public AngularVelocity()
             {
-            this(0,0,0);
+            this(0,0,0, 0);
             }
-        public AngularVelocity(double rateX, double rateY, double rateZ)
+        public AngularVelocity(double rateX, double rateY, double rateZ, long nanoTime)
             {
             this.rateX = rateX;
             this.rateY = rateY;
             this.rateZ = rateZ;
+            this.nanoTime = nanoTime;
             }
-        public AngularVelocity(double[] xyz)
+        public AngularVelocity(II2cDeviceClient.TimestampedData ts)
             {
-            this(xyz[0], xyz[1], xyz[2]);
+            this(ts.data[0], ts.data[1], ts.data[2], ts.nanoTime);
             }
         }
 
@@ -534,36 +559,34 @@ public interface IBNO055IMU
         // State
         //----------------------------------------------------------------------------------------------
     
-        /**
-         * the rotation about the Z axis
-         */
+        /** the rotation about the Z axis */
         public double heading;
-        /**
-         * the rotation about the Y axis
-         */
+        /** the rotation about the Y axis */
         public double roll;
-        /**
-         * the rotation about the X axix
-         */
+        /** the rotation about the X axix */
         public double pitch;
-    
+
+        /** the time on the System.nanoTime() clock at which the data was acquired */
+        public long nanoTime;
+
         //----------------------------------------------------------------------------------------------
         // Construction
         //----------------------------------------------------------------------------------------------
     
         public EulerAngles()
             {
-            this(0,0,0);
+            this(0,0,0, 0);
             }
-        public EulerAngles(double heading, double roll, double pitch)
+        public EulerAngles(double heading, double roll, double pitch, long nanoTime)
             {
             this.heading = heading;
             this.roll = roll;
             this.pitch = pitch;
+            this.nanoTime = nanoTime;
             }
-        public EulerAngles(double[] angles)
+        public EulerAngles(II2cDeviceClient.TimestampedData ts)
             {
-            this(angles[0], angles[1], angles[2]);
+            this(ts.data[0], ts.data[1], ts.data[2], ts.nanoTime);
             }
         }
     }
