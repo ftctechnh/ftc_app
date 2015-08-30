@@ -10,7 +10,7 @@ import org.swerverobotics.library.interfaces.*;
  * <a href="http://www.adafruit.com/products/2472">AdaFruit Absolute Orientation Sensor</a> that 
  * is attached to a Modern Robotics Core Device Interface module.
  */
-final class AdaFruitBNO055IMU implements IBNO055IMU
+public final class AdaFruitBNO055IMU implements IBNO055IMU
     {
     //------------------------------------------------------------------------------------------
     // State

@@ -137,7 +137,10 @@ public interface IBNO055IMU
         public final byte bVal;
         SENSOR_MODE(int i) { this.bVal = (byte) i; }
         }
-    
+
+    /**
+     * REGISTER provides symbolic names for each of the BNO055 registers
+     */
     enum REGISTER
         {
             /* Page id register definition */
