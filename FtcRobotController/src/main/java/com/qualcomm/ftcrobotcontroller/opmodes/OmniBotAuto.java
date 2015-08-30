@@ -8,6 +8,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  */
 public class OmniBotAuto extends OpMode {
 
+
+    @Override
+    public void init() {
+
+    }
     DcMotor motor1 ;
     DcMotor motor2 ;
     DcMotor motor3 ;

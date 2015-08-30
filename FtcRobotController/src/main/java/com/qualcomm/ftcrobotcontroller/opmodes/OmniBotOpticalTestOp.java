@@ -32,6 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.text.SimpleDateFormat;
@@ -52,13 +53,19 @@ public class OmniBotOpticalTestOp extends OpMode {
 
   }
 
+    OpticalDistanceSensor distanceSensor ;
+
   @Override
   public void start() {
+
+    distanceSensor = hardwareMap.opticalDistanceSensor.get("distanceSensor") ;
 
   }
 
   @Override
   public void loop() {
+
+
 
   }
 
