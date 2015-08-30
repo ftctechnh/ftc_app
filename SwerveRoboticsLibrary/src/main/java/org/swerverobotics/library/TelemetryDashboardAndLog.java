@@ -320,7 +320,7 @@ public class TelemetryDashboardAndLog
     //----------------------------------------------------------------------------------------------
 
     private long                    nanoLastUpdate = 0;
-    private int telemetryMaxLineCount = 9;
+    private int                     telemetryMaxLineCount = 9;
     private final int               singletonKey = SynchronousOpMode.staticGetNewSingletonKey();
 
     /**
@@ -336,18 +336,22 @@ public class TelemetryDashboardAndLog
      */
     public final Log                log;
     /**
-     * Advanced: provides access to the lower level (ie: non-dashboard/log) telemetry
-     * API.
+     * Advanced: 'target' is the lower level (ie: non-dashboard/log) telemetry
+     * object from the robot controller runtime.
      */
-    public final ThunkedTelemetry   thunker;
+    public final Telemetry          target;
 
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
 
+    /**
+     * Instantiate a new telemetry dashboard and log
+     * @param telemetry the robot controller runtime telemetry object
+     */
     public TelemetryDashboardAndLog(Telemetry telemetry)
         {
-        this.thunker   = ThunkedTelemetry.create(telemetry);
+        this.target    = telemetry;
         this.dashboard = new Dashboard();
         this.log       = new Log();
         //
@@ -473,7 +477,7 @@ public class TelemetryDashboardAndLog
                             {
                             for (int i = 0; i < keys.size(); i++)
                                 {
-                                TelemetryDashboardAndLog.this.thunker.getThunkTarget().addData(
+                                TelemetryDashboardAndLog.this.target.addData(
                                         keys.elementAt(i),
                                         values.elementAt(i));
                                 }
