@@ -31,45 +31,61 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
-import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
- * Register Op Modes
+ * TeleOp Mode
+ * <p>
+ *Enables control of the robot via the gamepad
  */
-public class FtcOpModeRegister implements OpModeRegister {
+public class OmniBotTouchOp extends OpMode {
 
-  /**
-   * The Op Mode Manager will call this method when it wants a list of all
-   * available op modes. Add your op mode to the list to enable it.
-   *
-   * @param manager op mode manager
+
+
+  /*
+   * Code to run when the op mode is first enabled goes here
+   * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
    */
-  public void register(OpModeManager manager) {
-
-    /*
-     * register your op modes here.
-     * The first parameter is the name of the op mode
-     * The second parameter is the op mode class property
-     *
-     * If two or more op modes are registered with the same name, the app will display an error.
-     */
-
-    manager.register("NullOp", NullOp.class);
-    manager.register("K9TeleOp", K9TeleOp.class);
-
-    manager.register("K9Line", K9Line.class);
-    manager.register("K9IrSeeker", K9IrSeeker.class);
 
 
-    manager.register("IrSeekerOp", IrSeekerOp.class);
-    manager.register("CompassCalibration", CompassCalibration.class);
-    manager.register("NxtTeleOp", NxtTeleOp.class);
-    
-    manager.register("OmniBotMoveOp", OmniBotMoveOp.class) ;
-    manager.register("OmniBotIrSeekerOp", OmniBotIrSeekerOp.class) ;
-    manager.register("OmniBotTouchOp", OmniBotTouchOp.class) ;
 
+
+  @Override
+  public void init() {
+
+  }
+
+  TouchSensor touchSensor ;
+
+  @Override
+  public void start() {
+
+    touchSensor = hardwareMap.touchSensor.get("touchSensor") ;
+
+  }
+
+  @Override
+  public void loop() {
+
+    double TouchValue = touchSensor.getValue() ;
+
+    telemetry.addData("Touch Sensor", "Touch sensor is " + String.format("%d", TouchValue)) ;
+
+  }
+
+  @Override
+  public void stop() {
 
   }
 }
+
+
+
+
+
+

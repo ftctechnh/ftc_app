@@ -48,6 +48,10 @@ import com.qualcomm.robotcore.hardware.IrSeekerSensor;
  */
 public class IrSeekerOp extends OpMode {
 
+  @Override
+  public void init() {
+  }
+
   final static double MOTOR_POWER = 0.15; // Higher values will cause the robot to move faster
 
   final static double HOLD_IR_SIGNAL_STRENGTH = 0.20; // Higher values will cause the robot to follow closer
@@ -57,7 +61,8 @@ public class IrSeekerOp extends OpMode {
   DcMotor motorLeft;
 
   @Override
-  public void start() {    irSeeker = hardwareMap.irSeekerSensor.get("ir_seeker");
+  public void start() {
+    irSeeker = hardwareMap.irSeekerSensor.get("ir_seeker");
     motorRight = hardwareMap.dcMotor.get("motor_2");
     motorLeft = hardwareMap.dcMotor.get("motor_1");
 
@@ -73,6 +78,7 @@ public class IrSeekerOp extends OpMode {
 
       // Get the angle and strength of the signal
       double strength = irSeeker.getStrength();
+      double angle = irSeeker.getAngle() ;
 
       // which direction should we move?
       if (angle < 0) {
@@ -99,9 +105,11 @@ public class IrSeekerOp extends OpMode {
     }
 
     DbgLog.msg(irSeeker.toString());
+  }
 
   @Override
   public void stop() {
     // no action needed
   }
 }
+

@@ -47,15 +47,20 @@ import com.qualcomm.robotcore.hardware.IrSeekerSensor;
  */
 public class OmniBotIrSeekerOp extends OpMode {
 
-  final static double motorPower = 0.15 ;
+  @Override
+  public void init() {
+  }
 
-  final static double irSignalStrength = 0.20 ;
+  final static double motorPower = 0.15;
 
-  IrSeekerSensor irSeeker ;
-  DcMotor motor1 ;
-  DcMotor motor2 ;
-  DcMotor motor3 ;
-  DcMotor motor4 ;
+  final static double irSignalStrength = 0.20;
+
+  IrSeekerSensor irSeeker;
+  DcMotor motor1;
+  DcMotor motor2;
+  DcMotor motor3;
+  DcMotor motor4;
+
 
   public OmniBotIrSeekerOp() {
 
@@ -64,6 +69,7 @@ public class OmniBotIrSeekerOp extends OpMode {
   @Override
   public void start() {
 
+    irSeeker = hardwareMap.irSeekerSensor.get("ir_seeker");
     motor1 = hardwareMap.dcMotor.get("motor_1") ;
     motor2 = hardwareMap.dcMotor.get("motor_2") ;
     motor3 = hardwareMap.dcMotor.get("motor_3") ;
@@ -120,7 +126,6 @@ public class OmniBotIrSeekerOp extends OpMode {
 
       }
     } else {
-
       motor1.setPower(0.0);
       motor2.setPower(0.0);
       motor3.setPower(0.0);
