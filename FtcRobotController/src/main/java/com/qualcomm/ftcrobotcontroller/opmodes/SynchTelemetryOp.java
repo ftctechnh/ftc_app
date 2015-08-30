@@ -39,7 +39,7 @@ public class SynchTelemetryOp extends SynchronousOpMode
         this.telemetry.log.displayOldToNew = false;
         
         // We can control the number of lines used on the display (dashboard and log combined)
-        this.telemetry.setDisplayLineCount(10);
+        this.telemetry.setDisplayMaxLineCount(10);
 
         // Wait until we've been given the ok to go
         this.waitForStart();
