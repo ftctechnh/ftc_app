@@ -41,6 +41,10 @@ import java.lang.Override;
 
 public class OmniBotMoveOp extends OpMode {
 
+  @Override
+  public void init() {
+  }
+
   DcMotor motor1 ;
   DcMotor motor2 ;
   DcMotor motor3 ;
