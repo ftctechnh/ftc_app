@@ -1,7 +1,13 @@
 package org.swerverobotics.library.interfaces;
 
+import com.qualcomm.robotcore.hardware.*;
+import org.swerverobotics.library.*;
+
 /**
- * Created by bob on 8/29/15.
+ * II2cDeviceClient is the public interface to a utility class that makes it easier to
+ * use I2cDevice instances.
+ * 
+ * @see ClassFactory#createI2cDeviceClient(I2cDevice, II2cDeviceClient.RegWindow, int)
  */
 public interface II2cDeviceClient
     {
@@ -10,7 +16,9 @@ public interface II2cDeviceClient
     //----------------------------------------------------------------------------------------------
 
     /**
-     * Set the set of registers that we will read and read and read again on every hardware cycle 
+     * Set the set of registers that we will read and read and read again on every hardware cycle
+     * 
+     * @param window    the register window to read. May be null, indicating that no reads are to occur.
      */
     void setRegisterWindow(RegWindow window);
 
@@ -25,6 +33,15 @@ public interface II2cDeviceClient
      * If there is currently a non-null register window, and windowNeeded is non-null,
      * and the curret register window entirely contains windowNeeded, then do nothing.
      * Otherwise, set the current register window to windowToSet.
+     * 
+     * @param windowNeeded Test the current register window, if any, against this window 
+     *                     to see if an update to the current register window is needed in
+     *                     order to cover it. May be null, indicating that an update to the
+     *                     current register window is <I>always</I> needed
+     * @param windowToSet  If an update to the current register window is needed, then this
+     *                     is the window to which it will be set. May be null.
+     *
+     * @see #setRegisterWindow
      */
     void ensureRegisterWindow(RegWindow windowNeeded, RegWindow windowToSet);
 
@@ -36,6 +53,9 @@ public interface II2cDeviceClient
      * Read the byte at the indicated register.
      *
      * The register must lie within the current register window.
+     * 
+     * @param ireg  the register number to read
+     * @return      the byte that was read
      */
     byte read8(int ireg);
 
@@ -43,6 +63,9 @@ public interface II2cDeviceClient
      * Read a (little-endian) integer starting at the indicated register.
      *
      * The two registers comprising the integer must lie within the current register window.
+     * 
+     * @param ireg  the register number of the first of the two registers to read
+     * @return      the integer that was read
      */
     int read16(int ireg);
 
@@ -60,16 +83,25 @@ public interface II2cDeviceClient
 
     /**
      * Write a byte to the indicated register
+     * 
+     * @param ireg      the register number that is to be written
+     * @param bVal      the byte which is to be written to that register
      */
     void write8(int ireg, int bVal);
 
     /**
-     * Write an little endian integer to an adjacent pair of registers
+     * Write an little endian 16-bit integer to an adjacent pair of registers
+     * 
+     * @param ireg      the first of the registers which is to be written
+     * @param iVal      the 16 bit integer which is to be written there
      */
     void write16(int ireg, int iVal);
 
     /**
      * Write data to a set of registers, beginning with the one indicated
+     * 
+     * @param ireg      the first of the registers which is to be written
+     * @param data      the data which is to be written to the registers
      */
     void write(int ireg, byte[] data);
     

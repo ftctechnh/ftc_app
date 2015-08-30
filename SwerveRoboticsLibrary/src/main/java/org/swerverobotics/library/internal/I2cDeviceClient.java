@@ -122,10 +122,6 @@ public final class I2cDeviceClient implements II2cDeviceClient
 
     /**
      * Ensure that the current register window covers the indicated set of registers.
-     * 
-     * If there is currently a non-null register window, and windowNeeded is non-null,
-     * and the curret register window entirely contains windowNeeded, then do nothing.
-     * Otherwise, set the current register window to windowToSet.
      */
     public void ensureRegisterWindow(RegWindow windowNeeded, RegWindow windowToSet)
         {

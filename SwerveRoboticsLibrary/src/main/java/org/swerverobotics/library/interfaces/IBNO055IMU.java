@@ -3,8 +3,6 @@ package org.swerverobotics.library.interfaces;
 /**
  * Interface to the Adafruit 9-DOF Absolute Orientation IMU Fusion Breakout - BNO055 sensor.
  * 
- * Undoubtedly this needs further refinement and expansion. All in due time.
- * 
  * @see <a href="http://www.adafruit.com/products/2472">http://www.adafruit.com/products/2472</a>
  * @see <a href="http://www.bosch-sensortec.com/en/homepage/products_3/9_axis_sensors_5/ecompass_2/bno055_3/bno055_4">http://www.bosch-sensortec.com/en/homepage/products_3/9_axis_sensors_5/ecompass_2/bno055_3/bno055_4</a>
  */

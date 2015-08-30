@@ -12,11 +12,14 @@ import org.swerverobotics.library.internal.*;
  * package structures in which various object implementations are stored; these are often internal,
  * and thus should not be exposed to clients, as they are not stable from release to release.
  */
-public class ClassFactory
+public final class ClassFactory
     {
     /**
      * Instantiate an AdaFruit BNO055 sensor who resides at the indicated I2cDevice using
      * default values for configuration parameters.
+     * 
+     * @param i2cDevice     the robot controller runtime object representing the sensor
+     * @return              the interface to the instantiated sensor object
      */
     public static IBNO055IMU createAdaFruitBNO055IMU(I2cDevice i2cDevice)
         {
@@ -26,6 +29,10 @@ public class ClassFactory
     /**
      * Instantiate an AdaFruit BNO055 sensor who resides at the indicated I2cDevice using
      * the provided configuration parameters.
+     * 
+     * @param i2cDevice     the robot controller runtime object representing the sensor
+     * @param parameters    the parameters with which the sensor should be initialized
+     * @return              the interface to the instantiated sensor object
      */
     public static IBNO055IMU createAdaFruitBNO055IMU(I2cDevice i2cDevice, IBNO055IMU.Parameters parameters)
         {
@@ -45,4 +52,10 @@ public class ClassFactory
         {
         return new I2cDeviceClient(i2cDevice, initialRegisterWindow, i2cAddr);
         }
+    
+    //----------------------------------------------------------------------------------------------
+    // Construction
+    //----------------------------------------------------------------------------------------------
+    
+    private ClassFactory() { }
     }
