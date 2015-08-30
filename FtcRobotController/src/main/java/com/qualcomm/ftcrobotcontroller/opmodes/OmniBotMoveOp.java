@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.qualcomm.ftccommon.DbgLog;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -45,7 +46,7 @@ public class OmniBotMoveOp extends OpMode {
   DcMotor motor3 ;
   DcMotor motor4 ;
 
-  int scaleDegree = 1 ;
+  int scaleDegree = 0 ;
 
   public OmniBotMoveOp () {
 
@@ -56,8 +57,8 @@ public class OmniBotMoveOp extends OpMode {
 
     motor1 = hardwareMap.dcMotor.get("motor_1") ;
     motor2 = hardwareMap.dcMotor.get("motor_2") ;
-    motor3 = hardwareMap.dcMotor.get("motor_4") ;
-    motor4 = hardwareMap.dcMotor.get("motor_3") ;
+    motor3 = hardwareMap.dcMotor.get("motor_3") ;
+    motor4 = hardwareMap.dcMotor.get("motor_4") ;
 
     motor1.setDirection(DcMotor.Direction.REVERSE) ;
     motor4.setDirection(DcMotor.Direction.REVERSE) ;
@@ -77,25 +78,29 @@ public class OmniBotMoveOp extends OpMode {
     motor4Power = Range.clip(motor4Power, -1, 1);
 
     if (gamepad1.left_bumper == true) {
-      int scaleDegree = 0;
+      scaleDegree = 0 ;
+      DbgLog.msg("===Setting scale to 0===") ;
     }
 
     if (gamepad1.right_bumper == true) {
-      int scaleDegree = 1;
+      scaleDegree = 1 ;
+      DbgLog.msg("===Setting scale to 1===") ;
     }
 
-    if (scaleDegree == 0) {
+    if (scaleDegree == 1) {
       motor1Power = (float) scaleInput(motor1Power);
       motor2Power = (float) scaleInput(motor2Power);
       motor3Power = (float) scaleInput(motor3Power);
       motor4Power = (float) scaleInput(motor4Power);
     }
 
+
     motor1.setPower(motor1Power);
     motor2.setPower(motor2Power);
     motor3.setPower(motor3Power);
     motor4.setPower(motor4Power);
 
+    telemetry.addData("Scale", "Scale is set to" + String.format("%d", scaleDegree));
     telemetry.addData("Left Joystick", "Left Joystick at" + String.format("(%.2f,%.2f)", gamepad1.left_stick_x, gamepad1.left_stick_y));
     telemetry.addData("Motor Power 1", "Motor 1 power is" + String.format("%.2f", motor1Power));
     telemetry.addData("Motor Power 2", "Motor 2 power is" + String.format("%.2f", motor2Power));
@@ -120,6 +125,7 @@ public class OmniBotMoveOp extends OpMode {
 * scaled value is less than linear.  This is to make it easier to drive
 * the robot more precisely at slower speeds.
 */
+
   double scaleInput(double dVal)  {
     double[] scaleArray = { 0.0, 0.025, 0.05, 0.075, 0.1, 0.125, 0.15, 0.175, 0.2, 0.225, 0.25, 0.275,
             0.3, 0.325, 0.35, 0.375, 0.4, 0.425, 0.45, 0.475, 0.5 };
@@ -140,5 +146,8 @@ public class OmniBotMoveOp extends OpMode {
     }
 
     return dScale;
+
+    }
+
   }
-}
+
