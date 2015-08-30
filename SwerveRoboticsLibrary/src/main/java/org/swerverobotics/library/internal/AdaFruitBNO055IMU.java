@@ -1,6 +1,7 @@
 package org.swerverobotics.library.internal;
 
 import com.qualcomm.robotcore.hardware.*;
+
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.exceptions.*;
 import org.swerverobotics.library.interfaces.*;
@@ -16,8 +17,8 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
     // State
     //------------------------------------------------------------------------------------------
 
-    private I2cDeviceClient deviceClient;
-    private SENSOR_MODE     currentMode;
+    private II2cDeviceClient deviceClient;
+    private SENSOR_MODE      currentMode;
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -29,7 +30,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
      */
     public AdaFruitBNO055IMU(I2cDevice i2cDevice, int i2cAddr)
         {
-        this.deviceClient = new I2cDeviceClient(i2cDevice, lowerWindow, i2cAddr);
+        this.deviceClient = ClassFactory.createI2cDeviceClient(i2cDevice, lowerWindow, i2cAddr);
         this.currentMode  = null;
         }
 
