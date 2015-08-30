@@ -124,7 +124,8 @@ public interface IBNO055IMU
     enum PITCHMODE  { WINDOWS(0), ANDROID(1);                            public final byte bVal; PITCHMODE(int i) { bVal =(byte)i; }}
 
     /**
-     * Operation modes are described in Table 3-5 (p21) of the BNO055 specification.
+     * Sensor modes are described in Table 3-5 (p21) of the BNO055 specification,
+     * where they are termed "operation modes".
      */
     enum SENSOR_MODE
         {
@@ -139,7 +140,7 @@ public interface IBNO055IMU
         }
 
     /**
-     * REGISTER provides symbolic names for each of the BNO055 registers
+     * REGISTER provides symbolic names for each of the BNO055 device registers
      */
     enum REGISTER
         {
@@ -298,7 +299,8 @@ public interface IBNO055IMU
         }
 
     /**
-     * 
+     * Instances of MagneticFlux represent a three-dimensional magnetic strength vector. Units
+     * are in tesla (NOT microtesla).
      */
     class MagneticFlux
         {
@@ -306,7 +308,6 @@ public interface IBNO055IMU
         // State
         //----------------------------------------------------------------------------------------------
     
-        // Units: tesla
         public double x;
         public double y;
         public double z;
@@ -332,7 +333,13 @@ public interface IBNO055IMU
         }
 
     /**
+     * A Quaternion can indicate an orientation in three-space without the trouble of
+     * possible gimbal-lock.
+     * 
      * @see <a href="https://en.wikipedia.org/wiki/Quaternion">https://en.wikipedia.org/wiki/Quaternion</a>
+     * @see <a href="https://en.wikipedia.org/wiki/Gimbal_lock">https://en.wikipedia.org/wiki/Gimbal_lock</a>
+     * @see <a href="https://www.youtube.com/watch?v=zc8b2Jo7mno">https://www.youtube.com/watch?v=zc8b2Jo7mno</a>
+     * @see <a href="https://www.youtube.com/watch?v=mHVwd8gYLnI">https://www.youtube.com/watch?v=mHVwd8gYLnI</a>
      */
     class Quaternion
         {
@@ -393,7 +400,8 @@ public interface IBNO055IMU
         }
 
     /**
-     * 
+     * Accleration represents a directed acceleration in three-space. Units are as specified
+     * in sensor initialization.
      */
     class Acceleration
         {
@@ -426,7 +434,8 @@ public interface IBNO055IMU
         }
 
     /**
-     * 
+     * AngularVelocity represents a rotation rate in three-space. Units are as specified 
+     * in sensor initialization, either radians/second or degrees/second.
      */
     class AngularVelocity
         {
@@ -434,7 +443,6 @@ public interface IBNO055IMU
         // State
         //----------------------------------------------------------------------------------------------
     
-        // Units: radians per second
         public double rpsX;
         public double rpsY;
         public double rpsZ;
@@ -460,7 +468,9 @@ public interface IBNO055IMU
         }
 
     /**
-     * Instances of EulerAngles represent a direction in three-dimensional space by way of rotations
+     * Instances of EulerAngles represent a direction in three-dimensional space by way of rotations.
+     * Units are as specified in sensor initiation. Angles are in rotation order (heading, then roll,
+     * then pitch) and are right-handed abou their respective axes.
      */
     class EulerAngles
         {
@@ -468,13 +478,18 @@ public interface IBNO055IMU
         // State
         //----------------------------------------------------------------------------------------------
     
-        // Angles are in rotation order (heading, roll, pitch) and are right-handed 
-        // about their respective axes
-        
-        // Units: radians
-        public double heading;  // rotation about Z
-        public double roll;     // rotation about Y
-        public double pitch;    // rotation about X
+        /**
+         * the rotation about the Z axis
+         */
+        public double heading;
+        /**
+         * the rotation about the Y axis
+         */
+        public double roll;
+        /**
+         * the rotation about the X axix
+         */
+        public double pitch;
     
         //----------------------------------------------------------------------------------------------
         // Construction
