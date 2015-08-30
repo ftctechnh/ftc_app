@@ -28,7 +28,10 @@ public interface IBNO055IMU
      */
     class Parameters
         {
-        /** the address at which the sensor resides on the I2C bus */
+        /** the address at which the sensor resides on the I2C bus. If this value is 
+         * less than zero, it is ignored; the I2C address in that case must be provided to 
+         * the I2cDevice object by some other mechanism, perhaps as part of the initialization
+         * of that object itself. */
         public I2CADDR          i2cAddr             = I2CADDR.DEFAULT;
         
         /** the mode we wish to use the sensor in */
@@ -53,16 +56,56 @@ public interface IBNO055IMU
     //----------------------------------------------------------------------------------------------
 
     /**
-     * Return the current temperature. Units are as configured during initialization.
+     * Returns the current temperature. Units are as configured during initialization.
+     * @return  the current temperature
      */
     double              getTemperature();
 
+    /**
+     * Returns the magnetic field strength experienced by the sensor. See Section 3.6.5.2 of
+     * the BNO055 specification.
+     * @return  the magnetic field strength experienced by the sensor, in units of tesla
+     * @see <a href="https://en.wikipedia.org/wiki/Tesla_(unit)">https://en.wikipedia.org/wiki/Tesla_(unit)</a>
+     */
     MagneticFlux        getMagneticFieldStrength();
+
+    /**
+     * Returns the overall acceleration experienced by the sensor. This is composed of 
+     * a component due to the movement of the sensor and a component due to the force of gravity.
+     * @return  the overall acceleration vector experienced by the sensor
+     */
     Acceleration        getAcceleration();
+
+    /**
+     * Returns the acceleration experienced by the sensor due to the movement of the sensor. 
+     * @return  the acceleration vector of the sensor due to its movement
+     */
     Acceleration        getLinearAcceleration();
+
+    /**
+     * Returns the direction of the force of gravity relative to the sensor.
+     * @return  the acceleration vector of gravity relative to the sensor
+     */
     Acceleration        getGravity();
+
+    /**
+     * Returns the rate of change of the absolute orientation of the sensor.
+     * @return  the rate at which the orientation of the sensor is changing.
+     * @see #getAngularOrientation() 
+     */
     AngularVelocity     getAngularVelocity();
+
+    /** Returns the absolute orientation of the sensor as a set of Euler angles.
+     * @see #getQuaternionOrientation() 
+     * @return  the absolute orientation of the sensor
+     */
     EulerAngles         getAngularOrientation();
+    
+    /** Returns the absolute orientation of the sensor as a quaternion. 
+     * @see #getAngularOrientation() 
+     * 
+     * @return  the absolute orientation of the sensor
+     */
     Quaternion          getQuaternionOrientation();
 
     //----------------------------------------------------------------------------------------------
@@ -103,7 +146,7 @@ public interface IBNO055IMU
    <tr><td>7</td><td>BNO low poer mode not available for selected operation mode</td></tr>
    <tr><td>8</td><td>acceleromoeter power mode not available</td></tr>
    <tr><td>9</td><td>fusion algorithm configuration error</td></tr>
-   <tr><td>A</td><td>sensor cnfiguraton error</td></tr>
+   <tr><td>A</td><td>sensor configuraton error</td></tr>
    </table> */
     byte getSystemError();
     
@@ -157,10 +200,10 @@ public interface IBNO055IMU
      */
     enum REGISTER
         {
-            /* Page id register definition */
+            /** Page id register definition */
             PAGE_ID(0X07),
 
-            /* PAGE0 REGISTER DEFINITION START*/
+            /** PAGE0 REGISTER DEFINITION START*/
             CHIP_ID(0x00),
             ACCEL_REV_ID(0x01),
             MAG_REV_ID(0x02),
@@ -169,7 +212,7 @@ public interface IBNO055IMU
             SW_REV_ID_MSB(0x05),
             BL_REV_ID(0X06),
 
-            /* Accel data register */
+            /** Acceleration data register */
             ACCEL_DATA_X_LSB(0X08),
             ACCEL_DATA_X_MSB(0X09),
             ACCEL_DATA_Y_LSB(0X0A),
@@ -177,7 +220,7 @@ public interface IBNO055IMU
             ACCEL_DATA_Z_LSB(0X0C),
             ACCEL_DATA_Z_MSB(0X0D),
 
-            /* Mag data register */
+            /** Magnetometer data register */
             MAG_DATA_X_LSB(0X0E),
             MAG_DATA_X_MSB(0X0F),
             MAG_DATA_Y_LSB(0X10),
@@ -185,7 +228,7 @@ public interface IBNO055IMU
             MAG_DATA_Z_LSB(0X12),
             MAG_DATA_Z_MSB(0X13),
 
-            /* Gyro data registers */
+            /** Gyro data registers */
             GYRO_DATA_X_LSB(0X14),
             GYRO_DATA_X_MSB(0X15),
             GYRO_DATA_Y_LSB(0X16),
@@ -193,7 +236,7 @@ public interface IBNO055IMU
             GYRO_DATA_Z_LSB(0X18),
             GYRO_DATA_Z_MSB(0X19),
 
-            /* Euler data registers */
+            /** Euler data registers */
             EULER_H_LSB(0X1A),
             EULER_H_MSB(0X1B),
             EULER_R_LSB(0X1C),
@@ -201,7 +244,7 @@ public interface IBNO055IMU
             EULER_P_LSB(0X1E),
             EULER_P_MSB(0X1F),
 
-            /* Quaternion data registers */
+            /** Quaternion data registers */
             QUATERNION_DATA_W_LSB(0X20),
             QUATERNION_DATA_W_MSB(0X21),
             QUATERNION_DATA_X_LSB(0X22),
@@ -211,7 +254,7 @@ public interface IBNO055IMU
             QUATERNION_DATA_Z_LSB(0X26),
             QUATERNION_DATA_Z_MSB(0X27),
 
-            /* Linear acceleration data registers */
+            /** Linear acceleration data registers */
             LINEAR_ACCEL_DATA_X_LSB(0X28),
             LINEAR_ACCEL_DATA_X_MSB(0X29),
             LINEAR_ACCEL_DATA_Y_LSB(0X2A),
@@ -219,7 +262,7 @@ public interface IBNO055IMU
             LINEAR_ACCEL_DATA_Z_LSB(0X2C),
             LINEAR_ACCEL_DATA_Z_MSB(0X2D),
 
-            /* Gravity data registers */
+            /** Gravity data registers */
             GRAVITY_DATA_X_LSB(0X2E),
             GRAVITY_DATA_X_MSB(0X2F),
             GRAVITY_DATA_Y_LSB(0X30),
@@ -227,10 +270,10 @@ public interface IBNO055IMU
             GRAVITY_DATA_Z_LSB(0X32),
             GRAVITY_DATA_Z_MSB(0X33),
 
-            /* Temperature data register */
+            /** Temperature data register */
             TEMP(0X34),
 
-            /* Status registers */
+            /** Status registers */
             CALIB_STAT(0X35),
             SELFTEST_RESULT(0X36),
             INTR_STAT(0X37),
@@ -239,22 +282,22 @@ public interface IBNO055IMU
             SYS_STAT(0X39),
             SYS_ERR(0X3A),
 
-            /* Unit selection register */
+            /** Unit selection register */
             UNIT_SEL(0X3B),
             DATA_SELECT(0X3C),
 
-            /* Mode registers */
+            /** Mode registers */
             OPR_MODE(0X3D),
             PWR_MODE(0X3E),
 
             SYS_TRIGGER(0X3F),
             TEMP_SOURCE(0X40),
 
-            /* Axis remap registers */
+            /** Axis remap registers */
             AXIS_MAP_CONFIG(0X41),
             AXIS_MAP_SIGN(0X42),
 
-            /* SIC registers */
+            /** SIC registers */
             SIC_MATRIX_0_LSB(0X43),
             SIC_MATRIX_0_MSB(0X44),
             SIC_MATRIX_1_LSB(0X45),
@@ -274,7 +317,7 @@ public interface IBNO055IMU
             SIC_MATRIX_8_LSB(0X53),
             SIC_MATRIX_8_MSB(0X54),
 
-            /* Accelerometer Offset registers */
+            /**Accelerometer Offset registers */
             ACCEL_OFFSET_X_LSB(0X55),
             ACCEL_OFFSET_X_MSB(0X56),
             ACCEL_OFFSET_Y_LSB(0X57),
@@ -282,7 +325,7 @@ public interface IBNO055IMU
             ACCEL_OFFSET_Z_LSB(0X59),
             ACCEL_OFFSET_Z_MSB(0X5A),
 
-            /* Magnetometer Offset registers */
+            /** Magnetometer Offset registers */
             MAG_OFFSET_X_LSB(0X5B),
             MAG_OFFSET_X_MSB(0X5C),
             MAG_OFFSET_Y_LSB(0X5D),
@@ -290,7 +333,7 @@ public interface IBNO055IMU
             MAG_OFFSET_Z_LSB(0X5F),
             MAG_OFFSET_Z_MSB(0X60),
 
-            /* Gyroscope Offset register s*/
+            /** Gyroscope Offset register s*/
             GYRO_OFFSET_X_LSB(0X61),
             GYRO_OFFSET_X_MSB(0X62),
             GYRO_OFFSET_Y_LSB(0X63),
@@ -298,7 +341,7 @@ public interface IBNO055IMU
             GYRO_OFFSET_Z_LSB(0X65),
             GYRO_OFFSET_Z_MSB(0X66),
 
-            /* Radius registers */
+            /** Radius registers */
             ACCEL_RADIUS_LSB(0X67),
             ACCEL_RADIUS_MSB(0X68),
             MAG_RADIUS_LSB(0X69),
