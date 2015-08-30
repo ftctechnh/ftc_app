@@ -68,6 +68,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("NxtEncoderOp", NxtEncoderOp.class);
     manager.register("OmniBotMoveOp", OmniBotMoveOp.class) ;
     manager.register("OmniBotAuto", OmniBotAuto.class) ;
+    manager.register("OmniBotIrSeekerOp", OmniBotIrSeekerOp.class) ;
 
 
   }
