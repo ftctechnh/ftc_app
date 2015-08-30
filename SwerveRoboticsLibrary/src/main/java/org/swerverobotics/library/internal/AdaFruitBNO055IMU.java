@@ -10,14 +10,14 @@ import org.swerverobotics.library.interfaces.*;
  * <a href="http://www.adafruit.com/products/2472">AdaFruit Absolute Orientation Sensor</a> that 
  * is attached to a Modern Robotics Core Device Interface module.
  */
-public final class AdaFruitBNO055IMU implements IBNO055IMU
+final class AdaFruitBNO055IMU implements IBNO055IMU
     {
     //------------------------------------------------------------------------------------------
     // State
     //------------------------------------------------------------------------------------------
 
     private I2cDeviceClient deviceClient;
-    private IBNO055IMU.Parameters.OPERATION_MODE  currentMode;
+    private SENSOR_MODE     currentMode;
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -65,35 +65,35 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
     public void initialize(Parameters parameters)
         {
         // Make sure we have the right device
-        byte id = read8(REGISTER.CHIP_ID_ADDR); 
+        byte id = read8(REGISTER.CHIP_ID); 
         if (id != ID)
             {
             delay(1000); // hold on for boot
-            id = read8(REGISTER.CHIP_ID_ADDR);
+            id = read8(REGISTER.CHIP_ID);
             if (id != ID)
                 throw new UnexpectedI2CDeviceException(id);
             }
         
         // Switch to config mode (just in case, since this is the default)
-        setOperationMode(IBNO055IMU.Parameters.OPERATION_MODE.CONFIG);
+        setSensorMode(SENSOR_MODE.CONFIG);
         
         // Reset the system, and wait for the chip id register to switch
         // back from its reset state (0xA0?) to the it's chip id state (also 0xA0?; hmmm
         // something is odd there). This can typically take 650ms (Table 0-2, p13).
-        write8(REGISTER.SYS_TRIGGER_ADDR, 0x20);
-        while (read8(REGISTER.CHIP_ID_ADDR) != ID)
+        write8(REGISTER.SYS_TRIGGER, 0x20);
+        while (read8(REGISTER.CHIP_ID) != ID)
             {
             delay(10);
             }
         delayLore(50);
         
         // Set to normal power mode
-        write8(REGISTER.PWR_MODE_ADDR, POWER_MODE.NORMAL.getValue());
+        write8(REGISTER.PWR_MODE, POWER_MODE.NORMAL.getValue());
         delayLore(10);
 
         // Make sure we're looking at register page zero, as the other registers
         // we need to set here are on that page.
-        write8(REGISTER.PAGE_ID_ADDR, 0);
+        write8(REGISTER.PAGE_ID, 0);
         
         // Set the output units. Section 3.6, p31
         int unitsel = (parameters.pitchmode.bVal << 7) |       // ptich angle convention
@@ -101,21 +101,21 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
                       (parameters.angleunit.bVal << 2) |       // euler angle units
                       (parameters.angleunit.bVal << 1) |       // gyro units, per second
                       (parameters.accelunit.bVal /*<< 0*/);    // accelerometer units
-        write8(REGISTER.UNIT_SEL_ADDR, unitsel);
+        write8(REGISTER.UNIT_SEL, unitsel);
         
         // ??? what does this do ???
-        write8(REGISTER.SYS_TRIGGER_ADDR, 0x0);
+        write8(REGISTER.SYS_TRIGGER, 0x0);
         delayLore(10);
         
         // Set the requested operating mode (see section 3.3)
-        setOperationMode(parameters.mode);
+        setSensorMode(parameters.mode);
         delayLore(20);
         
         // Use or don't use the external cyrstal
         setExternalCrystalUse(parameters.useExternalCrystal);
         }
 
-    private void setOperationMode(IBNO055IMU.Parameters.OPERATION_MODE mode)
+    private void setSensorMode(SENSOR_MODE mode)
     /* The default operation mode after power-on is CONFIGMODE. When the user changes to another 
     operation mode, the sensors which are required in that particular sensor mode are powered, 
     while the sensors whose signals are not required are set to suspend mode. */
@@ -123,11 +123,11 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
         // Remember the mode, 'cause that's easy
         this.currentMode = mode;
         
-        // Actually change the mode
-        this.write8(REGISTER.OPR_MODE_ADDR, mode.bVal & 0x0F);
+        // Actually change the operation/sensor mode
+        this.write8(REGISTER.OPR_MODE, mode.bVal & 0x0F);
         
         // Delay per Table 3-6 of BNO055 Data sheet (p21)
-        if (mode == IBNO055IMU.Parameters.OPERATION_MODE.CONFIG)
+        if (mode == SENSOR_MODE.CONFIG)
             delay(19);
         else
             delay(7);
@@ -144,14 +144,14 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
             {
             @Override public void doAction()
                 {
-                write8(REGISTER.PAGE_ID_ADDR, 0);
+                write8(REGISTER.PAGE_ID, 0);
                 if (useExternalCrystal)
                     {
-                    write8(REGISTER.SYS_TRIGGER_ADDR, 0x80);
+                    write8(REGISTER.SYS_TRIGGER, 0x80);
                     }
                 else
                     {
-                    write8(REGISTER.SYS_TRIGGER_ADDR, 0x00);
+                    write8(REGISTER.SYS_TRIGGER, 0x00);
                     }
                 delayLore(10);
                 }
@@ -167,7 +167,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
             {
             @Override public Byte value()
                 {
-                return read8(REGISTER.SYS_STAT_ADDR);
+                return read8(REGISTER.SYS_STAT);
                 }
             });
         }
@@ -181,38 +181,38 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
             {
             @Override public Byte value()
                 {
-                return read8(REGISTER.SYS_STAT_ADDR);
+                return read8(REGISTER.SYS_STAT);
                 }
             });
         }
 
     public synchronized boolean isSystemCalibrated()
         {
-        byte b = this.read8(REGISTER.CALIB_STAT_ADDR);
+        byte b = this.read8(REGISTER.CALIB_STAT);
         return ((b>>6) & 0x03) == 0x03;
         }
 
     public synchronized boolean isGyroCalibrated()
         {
-        byte b = this.read8(REGISTER.CALIB_STAT_ADDR);
+        byte b = this.read8(REGISTER.CALIB_STAT);
         return ((b>>4) & 0x03) == 0x03;
         }
 
     public synchronized boolean isAccelerometerCalibrated()
         {
-        byte b = this.read8(REGISTER.CALIB_STAT_ADDR);
+        byte b = this.read8(REGISTER.CALIB_STAT);
         return ((b>>2) & 0x03) == 0x03;
         }
 
     public synchronized boolean isMagnetometerCalibrated()
         {
-        byte b = this.read8(REGISTER.CALIB_STAT_ADDR);
+        byte b = this.read8(REGISTER.CALIB_STAT);
         return ((b>>0) & 0x03) == 0x03;
         }
     
     public synchronized double getTemperature()
         {
-        byte b = this.read8(REGISTER.TEMP_ADDR);
+        byte b = this.read8(REGISTER.TEMP);
         return (double)b;
         }
     
@@ -257,12 +257,12 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
         {
         // Ensure we can see the registers we need
         this.deviceClient.ensureRegisterWindow(
-                new I2cDeviceClient.RegWindow(REGISTER.QUATERNION_DATA_W_LSB_ADDR.getValue(), 8),
+                new I2cDeviceClient.RegWindow(REGISTER.QUATERNION_DATA_W_LSB.bVal, 8),
                 upperWindow
             );
         
         // Section 3.6.5.5 of BNO055 specification
-        byte[] buffer = this.deviceClient.read(REGISTER.QUATERNION_DATA_W_LSB_ADDR.getValue(), 8);
+        byte[] buffer = this.deviceClient.read(REGISTER.QUATERNION_DATA_W_LSB.bVal, 8);
         final double scale = 1.0 / (1 << 14);
         return new Quaternion(
                 Util.makeInt(buffer[0], buffer[1]) * scale,
@@ -285,14 +285,14 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
      * from the sensor, we try to use these two windows so as to reduce the number of register
      * window switching that might be required as other data is read in the future.
      */
-    private static final I2cDeviceClient.RegWindow lowerWindow = newWindow(REGISTER.CHIP_ID_ADDR, REGISTER.EULER_H_LSB_ADDR);
+    private static final I2cDeviceClient.RegWindow lowerWindow = newWindow(REGISTER.CHIP_ID, REGISTER.EULER_H_LSB);
     /**
      * @see #lowerWindow
      */
-    private static final I2cDeviceClient.RegWindow upperWindow = newWindow(REGISTER.EULER_H_LSB_ADDR, REGISTER.CALIB_STAT_ADDR);;
+    private static final I2cDeviceClient.RegWindow upperWindow = newWindow(REGISTER.EULER_H_LSB, REGISTER.CALIB_STAT);;
     private static I2cDeviceClient.RegWindow newWindow(REGISTER regFirst, REGISTER regMax)
         {
-        return new I2cDeviceClient.RegWindow(regFirst.getValue(), regMax.getValue()-regFirst.getValue());
+        return new I2cDeviceClient.RegWindow(regFirst.bVal, regMax.bVal-regFirst.bVal);
         }
 
     private void ensureRegisterWindow(I2cDeviceClient.RegWindow needed)
@@ -339,21 +339,21 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
             }
         }
 
-    private byte read8(REGISTER reg)
+    public synchronized byte read8(REGISTER reg)
         {
-        this.ensureRegisterWindow(new I2cDeviceClient.RegWindow(reg.getValue(), 1));
-        return this.deviceClient.read8(reg.getValue());
+        this.ensureRegisterWindow(new I2cDeviceClient.RegWindow(reg.bVal, 1));
+        return this.deviceClient.read8(reg.bVal);
         }
     
-    private void write8(REGISTER reg, int data)
+    public void write8(REGISTER reg, int data)
         {
-        this.deviceClient.write8(reg.getValue(), data);
+        this.deviceClient.write8(reg.bVal, data);
         }
     
     private void enterConfigModeFor(IAction action)
         {
-        IBNO055IMU.Parameters.OPERATION_MODE modePrev = this.currentMode;
-        setOperationMode(IBNO055IMU.Parameters.OPERATION_MODE.CONFIG);
+        SENSOR_MODE modePrev = this.currentMode;
+        setSensorMode(SENSOR_MODE.CONFIG);
         delayLore(25);
         try
             {
@@ -361,7 +361,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
             }
         finally
             {
-            setOperationMode(modePrev);
+            setSensorMode(modePrev);
             delayLore(20);
             }
         }
@@ -370,8 +370,8 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
         {
         T result;
         
-        IBNO055IMU.Parameters.OPERATION_MODE modePrev = this.currentMode;
-        setOperationMode(IBNO055IMU.Parameters.OPERATION_MODE.CONFIG);
+        SENSOR_MODE modePrev = this.currentMode;
+        setSensorMode(SENSOR_MODE.CONFIG);
         delayLore(25);
         try
             {
@@ -379,7 +379,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
             }
         finally
             {
-            setOperationMode(modePrev);
+            setSensorMode(modePrev);
             delayLore(20);
             }
         //
@@ -396,16 +396,16 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
 
     enum VECTOR
         {
-            ACCELEROMETER   (REGISTER.ACCEL_DATA_X_LSB_ADDR),
-            MAGNETOMETER    (REGISTER.MAG_DATA_X_LSB_ADDR),
-            GYROSCOPE       (REGISTER.GYRO_DATA_X_LSB_ADDR),
-            EULER           (REGISTER.EULER_H_LSB_ADDR),
-            LINEARACCEL     (REGISTER.LINEAR_ACCEL_DATA_X_LSB_ADDR),
-            GRAVITY         (REGISTER.GRAVITY_DATA_X_LSB_ADDR);
+            ACCELEROMETER   (REGISTER.ACCEL_DATA_X_LSB),
+            MAGNETOMETER    (REGISTER.MAG_DATA_X_LSB),
+            GYROSCOPE       (REGISTER.GYRO_DATA_X_LSB),
+            EULER           (REGISTER.EULER_H_LSB),
+            LINEARACCEL     (REGISTER.LINEAR_ACCEL_DATA_X_LSB),
+            GRAVITY         (REGISTER.GRAVITY_DATA_X_LSB);
         //------------------------------------------------------------------------------------------
         private byte value;
         private VECTOR(int value) { this.value = (byte)value; }
-        private VECTOR(REGISTER register) { this(register.getValue());}
+        private VECTOR(REGISTER register) { this(register.bVal);}
         public byte getValue() { return this.value; }
         }
 
@@ -420,162 +420,6 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
         public byte getValue() { return this.value; }
         }
 
-    enum REGISTER
-        {
-            /* Page id register definition */
-            PAGE_ID_ADDR(0X07),
-
-            /* PAGE0 REGISTER DEFINITION START*/
-            CHIP_ID_ADDR(0x00),
-            ACCEL_REV_ID_ADDR(0x01),
-            MAG_REV_ID_ADDR(0x02),
-            GYRO_REV_ID_ADDR(0x03),
-            SW_REV_ID_LSB_ADDR(0x04),
-            SW_REV_ID_MSB_ADDR(0x05),
-            BL_REV_ID_ADDR(0X06),
-
-            /* Accel data register */
-            ACCEL_DATA_X_LSB_ADDR(0X08),
-            ACCEL_DATA_X_MSB_ADDR(0X09),
-            ACCEL_DATA_Y_LSB_ADDR(0X0A),
-            ACCEL_DATA_Y_MSB_ADDR(0X0B),
-            ACCEL_DATA_Z_LSB_ADDR(0X0C),
-            ACCEL_DATA_Z_MSB_ADDR(0X0D),
-
-            /* Mag data register */
-            MAG_DATA_X_LSB_ADDR(0X0E),
-            MAG_DATA_X_MSB_ADDR(0X0F),
-            MAG_DATA_Y_LSB_ADDR(0X10),
-            MAG_DATA_Y_MSB_ADDR(0X11),
-            MAG_DATA_Z_LSB_ADDR(0X12),
-            MAG_DATA_Z_MSB_ADDR(0X13),
-
-            /* Gyro data registers */
-            GYRO_DATA_X_LSB_ADDR(0X14),
-            GYRO_DATA_X_MSB_ADDR(0X15),
-            GYRO_DATA_Y_LSB_ADDR(0X16),
-            GYRO_DATA_Y_MSB_ADDR(0X17),
-            GYRO_DATA_Z_LSB_ADDR(0X18),
-            GYRO_DATA_Z_MSB_ADDR(0X19),
-
-            /* Euler data registers */
-            EULER_H_LSB_ADDR(0X1A),
-            EULER_H_MSB_ADDR(0X1B),
-            EULER_R_LSB_ADDR(0X1C),
-            EULER_R_MSB_ADDR(0X1D),
-            EULER_P_LSB_ADDR(0X1E),
-            EULER_P_MSB_ADDR(0X1F),
-
-            /* Quaternion data registers */
-            QUATERNION_DATA_W_LSB_ADDR(0X20),
-            QUATERNION_DATA_W_MSB_ADDR(0X21),
-            QUATERNION_DATA_X_LSB_ADDR(0X22),
-            QUATERNION_DATA_X_MSB_ADDR(0X23),
-            QUATERNION_DATA_Y_LSB_ADDR(0X24),
-            QUATERNION_DATA_Y_MSB_ADDR(0X25),
-            QUATERNION_DATA_Z_LSB_ADDR(0X26),
-            QUATERNION_DATA_Z_MSB_ADDR(0X27),
-
-            /* Linear acceleration data registers */
-            LINEAR_ACCEL_DATA_X_LSB_ADDR(0X28),
-            LINEAR_ACCEL_DATA_X_MSB_ADDR(0X29),
-            LINEAR_ACCEL_DATA_Y_LSB_ADDR(0X2A),
-            LINEAR_ACCEL_DATA_Y_MSB_ADDR(0X2B),
-            LINEAR_ACCEL_DATA_Z_LSB_ADDR(0X2C),
-            LINEAR_ACCEL_DATA_Z_MSB_ADDR(0X2D),
-
-            /* Gravity data registers */
-            GRAVITY_DATA_X_LSB_ADDR(0X2E),
-            GRAVITY_DATA_X_MSB_ADDR(0X2F),
-            GRAVITY_DATA_Y_LSB_ADDR(0X30),
-            GRAVITY_DATA_Y_MSB_ADDR(0X31),
-            GRAVITY_DATA_Z_LSB_ADDR(0X32),
-            GRAVITY_DATA_Z_MSB_ADDR(0X33),
-
-            /* Temperature data register */
-            TEMP_ADDR(0X34),
-
-            /* Status registers */
-            CALIB_STAT_ADDR(0X35),
-            SELFTEST_RESULT_ADDR(0X36),
-            INTR_STAT_ADDR(0X37),
-
-            SYS_CLK_STAT_ADDR(0X38),
-            SYS_STAT_ADDR(0X39),
-            SYS_ERR_ADDR(0X3A),
-
-            /* Unit selection register */
-            UNIT_SEL_ADDR(0X3B),
-            DATA_SELECT_ADDR(0X3C),
-
-            /* Mode registers */
-            OPR_MODE_ADDR(0X3D),
-            PWR_MODE_ADDR(0X3E),
-
-            SYS_TRIGGER_ADDR(0X3F),
-            TEMP_SOURCE_ADDR(0X40),
-
-            /* Axis remap registers */
-            AXIS_MAP_CONFIG_ADDR(0X41),
-            AXIS_MAP_SIGN_ADDR(0X42),
-
-            /* SIC registers */
-            SIC_MATRIX_0_LSB_ADDR(0X43),
-            SIC_MATRIX_0_MSB_ADDR(0X44),
-            SIC_MATRIX_1_LSB_ADDR(0X45),
-            SIC_MATRIX_1_MSB_ADDR(0X46),
-            SIC_MATRIX_2_LSB_ADDR(0X47),
-            SIC_MATRIX_2_MSB_ADDR(0X48),
-            SIC_MATRIX_3_LSB_ADDR(0X49),
-            SIC_MATRIX_3_MSB_ADDR(0X4A),
-            SIC_MATRIX_4_LSB_ADDR(0X4B),
-            SIC_MATRIX_4_MSB_ADDR(0X4C),
-            SIC_MATRIX_5_LSB_ADDR(0X4D),
-            SIC_MATRIX_5_MSB_ADDR(0X4E),
-            SIC_MATRIX_6_LSB_ADDR(0X4F),
-            SIC_MATRIX_6_MSB_ADDR(0X50),
-            SIC_MATRIX_7_LSB_ADDR(0X51),
-            SIC_MATRIX_7_MSB_ADDR(0X52),
-            SIC_MATRIX_8_LSB_ADDR(0X53),
-            SIC_MATRIX_8_MSB_ADDR(0X54),
-
-            /* Accelerometer Offset registers */
-            ACCEL_OFFSET_X_LSB_ADDR(0X55),
-            ACCEL_OFFSET_X_MSB_ADDR(0X56),
-            ACCEL_OFFSET_Y_LSB_ADDR(0X57),
-            ACCEL_OFFSET_Y_MSB_ADDR(0X58),
-            ACCEL_OFFSET_Z_LSB_ADDR(0X59),
-            ACCEL_OFFSET_Z_MSB_ADDR(0X5A),
-
-            /* Magnetometer Offset registers */
-            MAG_OFFSET_X_LSB_ADDR(0X5B),
-            MAG_OFFSET_X_MSB_ADDR(0X5C),
-            MAG_OFFSET_Y_LSB_ADDR(0X5D),
-            MAG_OFFSET_Y_MSB_ADDR(0X5E),
-            MAG_OFFSET_Z_LSB_ADDR(0X5F),
-            MAG_OFFSET_Z_MSB_ADDR(0X60),
-
-            /* Gyroscope Offset register s*/
-            GYRO_OFFSET_X_LSB_ADDR(0X61),
-            GYRO_OFFSET_X_MSB_ADDR(0X62),
-            GYRO_OFFSET_Y_LSB_ADDR(0X63),
-            GYRO_OFFSET_Y_MSB_ADDR(0X64),
-            GYRO_OFFSET_Z_LSB_ADDR(0X65),
-            GYRO_OFFSET_Z_MSB_ADDR(0X66),
-
-            /* Radius registers */
-            ACCEL_RADIUS_LSB_ADDR(0X67),
-            ACCEL_RADIUS_MSB_ADDR(0X68),
-            MAG_RADIUS_LSB_ADDR(0X69),
-            MAG_RADIUS_MSB_ADDR(0X6A);
-        //------------------------------------------------------------------------------------------
-        private byte value;
-        private REGISTER(int value)
-            {
-            this.value = (byte)value;
-            }
-        public byte getValue() { return this.value; }
-        }
     }
 
 // This code is modelled after https://github.com/adafruit/Adafruit_BNO055

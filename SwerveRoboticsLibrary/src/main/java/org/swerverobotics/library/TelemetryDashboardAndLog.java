@@ -282,7 +282,7 @@ public class TelemetryDashboardAndLog
      */
     public final Log                log;
     /**
-     * Advanced: 'raw' provides access to the lower level (ie: non-dashboard/log) telemetry
+     * Advanced: provides access to the lower level (ie: non-dashboard/log) telemetry
      * API.
      */
     public final ThunkedTelemetry   thunker;
