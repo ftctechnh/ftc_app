@@ -1,7 +1,7 @@
 package org.swerverobotics.library.interfaces;
 
 /**
- * Interface to the Adafruit 9-DOF Absolute Orientation IMU Fusion Breakout - BNO055 sensor.
+ * Interface API to the Adafruit 9-DOF Absolute Orientation IMU Fusion Breakout - BNO055 sensor.
  * 
  * @see <a href="http://www.adafruit.com/products/2472">http://www.adafruit.com/products/2472</a>
  * @see <a href="http://www.bosch-sensortec.com/en/homepage/products_3/9_axis_sensors_5/ecompass_2/bno055_3/bno055_4">http://www.bosch-sensortec.com/en/homepage/products_3/9_axis_sensors_5/ecompass_2/bno055_3/bno055_4</a>
@@ -28,19 +28,23 @@ public interface IBNO055IMU
      */
     class Parameters
         {
-        // The address at which the sensor resides on the I2C bus
+        /** the address at which the sensor resides on the I2C bus */
         public I2CADDR          i2cAddr             = I2CADDR.DEFAULT;
         
-        // The mode we wish to use the sensor in
+        /** the mode we wish to use the sensor in */
         public SENSOR_MODE      mode                = SENSOR_MODE.IMU;
-        
-        // Whether to use the external or internal 32.768khz crystal
-        public boolean          useExternalCrystal  = true;  // external crystal is recommended per BNO055 spec
 
-        // Unit Selection. Section 3.6.1 (p31) of the BNO055 specification
+        /** whether to use the external or internal 32.768khz crystal. External crystal
+         * use is recommended by the BNO055 specification. */
+        public boolean          useExternalCrystal  = true;
+
+        /** units in which temperature are measured. See Section 3.6.1 (p31) of the BNO055 specification */
         public TEMPUNIT         temperatureUnit     = TEMPUNIT.CELSIUS;
+        /** units in which angles and angular rates are measured. See Section 3.6.1 (p31) of the BNO055 specification */
         public ANGLEUNIT        angleunit           = ANGLEUNIT.RADIANS;
+        /** units in which accelerations are measured. See Section 3.6.1 (p31) of the BNO055 specification */
         public ACCELUNIT        accelunit           = ACCELUNIT.METERS_PERSEC_PERSEC;
+        /** directional convention for measureing pitch angles. See Section 3.6.1 (p31) of the BNO055 specification */
         public PITCHMODE        pitchmode           = PITCHMODE.ANDROID;    // Section 3.6.2
         }
 
@@ -65,31 +69,42 @@ public interface IBNO055IMU
     // Status inquiry
     //----------------------------------------------------------------------------------------------
 
-    /** System Status (see section 4.3.58)
-     ---------------------------------
-     0 = Idle
-     1 = System Error
-     2 = Initializing Peripherals
-     3 = System Initalization
-     4 = Executing Self-Test
-     5 = Sensor fusion algorithm running
-     6 = System running without fusion algorithms 
+    /** Returns the current status of the system.
+     * 
+     * See section 4.3.58 of the BNO055 specification.
+     * 
+    <table><col width="20">
+     <tr><td>Result</td><td>Meaning</td></tr>
+     <tr><td>0</td><td>idle</td></tr>
+     <tr><td>1</td><td>system error</td></tr>
+     <tr><td>2</td><td>initializing peripherals</td></tr>
+     <tr><td>3</td><td>system initialization</td></tr>
+     <tr><td>4</td><td>executing self-test</td></tr>
+     <tr><td>5</td><td>sensor fusion algorithm running</td></tr>
+     <tr><td>6</td><td>system running without fusion algorithms</td></tr>
+     </table>
    */
     byte getSystemStatus();
     
-  /** System Error (see section 4.3.59)
-     ---------------------------------
-     0 = No error
-     1 = Peripheral initialization error
-     2 = System initialization error
-     3 = Self test result failed
-     4 = Register map value out of range
-     5 = Register map address out of range
-     6 = Register map write error
-     7 = BNO low power mode not available for selected operat ion mode
-     8 = Accelerometer power mode not available
-     9 = Fusion algorithm configuration error
-     A = Sensor configuration error */
+  /** If {@link #getSystemStatus()} is 'system error' (1), returns particulars
+   * regarding that error.
+   * 
+   * See section 4.3.58 of the BNO055 specification.
+   *
+   <table><col width="20">
+   <tr><td>Result</td><td>Meaning</td></tr>
+   <tr><td>0</td><td>no error</td></tr>
+   <tr><td>1</td><td>peripheral initialization error</td></tr>
+   <tr><td>2</td><td>system initialization error</td></tr>
+   <tr><td>3</td><td>self test result failed</td></tr>
+   <tr><td>4</td><td>register map value out of range</td></tr>
+   <tr><td>5</td><td>register map address out of range</td></tr>
+   <tr><td>6</td><td>register map write error</td></tr>
+   <tr><td>7</td><td>BNO low poer mode not available for selected operation mode</td></tr>
+   <tr><td>8</td><td>acceleromoeter power mode not available</td></tr>
+   <tr><td>9</td><td>fusion algorithm configuration error</td></tr>
+   <tr><td>A</td><td>sensor cnfiguraton error</td></tr>
+   </table> */
     byte getSystemError();
     
     boolean isSystemCalibrated();
@@ -441,9 +456,9 @@ public interface IBNO055IMU
         // State
         //----------------------------------------------------------------------------------------------
     
-        public double rpsX;
-        public double rpsY;
-        public double rpsZ;
+        public double rateX;
+        public double rateY;
+        public double rateZ;
     
         //----------------------------------------------------------------------------------------------
         // Construction
@@ -453,11 +468,11 @@ public interface IBNO055IMU
             {
             this(0,0,0);
             }
-        public AngularVelocity(double rpsX, double rpsY, double rpsZ)
+        public AngularVelocity(double rateX, double rateY, double rateZ)
             {
-            this.rpsX = rpsX;
-            this.rpsY = rpsY;
-            this.rpsZ = rpsZ;
+            this.rateX = rateX;
+            this.rateY = rateY;
+            this.rateZ = rateZ;
             }
         public AngularVelocity(double[] xyz)
             {
@@ -468,7 +483,7 @@ public interface IBNO055IMU
     /**
      * Instances of EulerAngles represent a direction in three-dimensional space by way of rotations.
      * Units are as specified in sensor initiation. Angles are in rotation order (heading, then roll,
-     * then pitch) and are right-handed abou their respective axes.
+     * then pitch) and are right-handed about their respective axes.
      */
     class EulerAngles
         {
