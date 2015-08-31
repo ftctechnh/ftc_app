@@ -50,6 +50,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      * Usually, much less time than this maximum is expended.
      */
     public long getMsLoopDwellMax()                    { return msLoopDwellMax; }
+    /** @see #getMsLoopDwellMax() */
     public void setMsLoopDwellMax(long msLoopDwellMax) { this.msLoopDwellMax = msLoopDwellMax; }
     private long msLoopDwellMax = 15;
 

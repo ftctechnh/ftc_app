@@ -6,6 +6,8 @@ import org.swerverobotics.library.*;
 import org.swerverobotics.library.exceptions.*;
 import org.swerverobotics.library.interfaces.*;
 
+import java.io.InterruptedIOException;
+
 /**
  * Instances of AdaFruitBNO055IMU provide API access to an 
  * <a href="http://www.adafruit.com/products/2472">AdaFruit Absolute Orientation Sensor</a> that 
@@ -17,8 +19,16 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
     // State
     //------------------------------------------------------------------------------------------
 
-    private II2cDeviceClient deviceClient;
-    private SENSOR_MODE      currentMode;
+    private II2cDeviceClient    deviceClient;
+    private SENSOR_MODE         currentMode;
+
+    private Acceleration        acceleration;
+    private Velocity            velocity;
+    private Position            position;
+    private Thread              accelerationIntegrationThread;
+    private boolean             shutDownRequested;
+    private static final int    msAccelerationIntegrationThreadShutdownWait = 20;
+    private static final int    msAccelerationIntegrationDefaultPollInterval = 10;
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -32,6 +42,11 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
         {
         this.deviceClient = ClassFactory.createI2cDeviceClient(i2cDevice, lowerWindow, i2cAddr);
         this.currentMode  = null;
+        this.acceleration = null;
+        this.velocity     = new Velocity();
+        this.position     = new Position();
+        this.shutDownRequested             = false;
+        this.accelerationIntegrationThread = null;
         }
 
     /**
@@ -270,7 +285,117 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
         result.nanoTime = ts.nanoTime;
         return result;
         }
+
+    //------------------------------------------------------------------------------------------
+    // Position and velocity management
+    //------------------------------------------------------------------------------------------
     
+    public synchronized Velocity getVelocity()
+        {
+        return this.velocity;
+        }
+    public synchronized Position getPosition()
+        {
+        return this.position;
+        }
+    public synchronized void setPositionAndVelocity(Position position, Velocity velocity)
+        {
+        if (position != null)
+            this.position = position;
+        if (velocity != null)
+            this.velocity = velocity;
+        }
+    
+    public synchronized void startAccelerationIntegration(Position initalPosition, Velocity initialVelocity)
+        {
+        this.startAccelerationIntegration(initalPosition, initialVelocity, msAccelerationIntegrationDefaultPollInterval);
+        }
+    public synchronized void startAccelerationIntegration(Position initalPosition, Velocity initialVelocity, int msPollInterval)
+        {
+        this.stopAccelerationIntegration();
+        this.setPositionAndVelocity(initalPosition, initialVelocity);
+        
+        this.shutDownRequested = false;
+        this.accelerationIntegrationThread = new Thread(new Integrator(msPollInterval));
+        this.accelerationIntegrationThread.start();
+        }
+    
+    public synchronized void stopAccelerationIntegration()
+        {
+        if (this.accelerationIntegrationThread != null)
+            {
+            this.shutDownRequested = true;
+            this.accelerationIntegrationThread.interrupt();
+            try {
+                this.accelerationIntegrationThread.join(msAccelerationIntegrationThreadShutdownWait);
+                }
+            catch (InterruptedException ignored) { }
+            //
+            this.accelerationIntegrationThread = null;
+            }
+        }
+
+    /** Integrator maintains current velocity and position by integrating off of acceleration */
+    class Integrator implements Runnable
+        {
+        private final int msPollInterval;
+        
+        Integrator(int msPollInterval)
+            {
+            this.msPollInterval = msPollInterval;
+            }
+        
+        @Override public void run()
+            {
+            // Any extant acceleration is stale. Null it out so that we will have
+            // fresh and accurate intervals
+            synchronized (AdaFruitBNO055IMU.this)
+                {
+                acceleration = null;                
+                }
+            
+            // Don't let inappropriate exceptions sneak out
+            try
+                {
+                // Loop until we're asked to stop
+                while (!Thread.currentThread().isInterrupted() && !shutDownRequested)
+                    {
+                    // Read the latest available acceleration
+                    Acceleration accelNext = AdaFruitBNO055IMU.this.getLinearAcceleration();
+                    
+                    // Update our state variables based thereon
+                    synchronized (AdaFruitBNO055IMU.this)
+                        {
+                        // We can only integrate if we have a previous acceleration to baseline from
+                        if (acceleration != null && acceleration.nanoTime != 0)
+                            {
+                            Acceleration accelPrev    = acceleration;
+                            Velocity     velocityPrev = velocity;
+                            
+                            acceleration = accelNext;
+
+                            Velocity deltaVelocity = acceleration.integrate(accelPrev);                         
+                            velocity.accumulate(deltaVelocity);
+                            
+                            Position deltaPosition = velocity.integrate(velocityPrev);
+                            position.accumulate(deltaPosition);
+                            }
+                        else
+                            {
+                            acceleration = accelNext;
+                            }
+                        }
+                    
+                    // Wait a bit before polling again
+                    Thread.sleep(msPollInterval);
+                    }
+                }
+            catch (InterruptedException|RuntimeInterruptedException ignored)
+                {
+                }
+            }
+        }
+
     //------------------------------------------------------------------------------------------
     // Internal utility
     //------------------------------------------------------------------------------------------
