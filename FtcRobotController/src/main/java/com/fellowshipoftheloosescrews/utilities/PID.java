@@ -1,5 +1,7 @@
 package com.fellowshipoftheloosescrews.utilities;
 
+import android.util.Log;
+
 /**
  * Created by Thomas on 8/13/2015.
  */
@@ -47,7 +49,7 @@ public class PID {
      * @param currentValue the current value from the sensor
      * @return PID output
      */
-    public double calculate(double currentValue)
+    public synchronized double calculate(double currentValue)
     {
         // gets the current time in milliseconds
         double currentTime = getTimeMs();
@@ -57,14 +59,26 @@ public class PID {
         double error = target - currentValue;
         double deltaError = error - lastError;
 
-        double derivative = deltaError / deltaTime;
+        double derivative = deltaError;
 
         // adds the error to the integral
         totalError += error * deltaTime / 1000d;
 
         lastTime = currentTime;
         lastError = error;
-        return (kp * error) + (ki * totalError) + (kd * -derivative);
+        Log.d("error", "der" + derivative);
+        return (kp * error) + (ki * totalError) + (kd * derivative);
+    }
+
+    public synchronized void reset()
+    {
+        lastError = 0;
+        totalError = 0;
+    }
+
+    public double getError()
+    {
+        return lastError;
     }
 
     /**
