@@ -109,6 +109,63 @@ public interface IBNO055IMU
     Quaternion          getQuaternionOrientation();
 
     //----------------------------------------------------------------------------------------------
+    // Position and velocity management
+    //----------------------------------------------------------------------------------------------
+
+    /**
+     * Returns the current position of the sensor as calculated by doubly integrating the observed 
+     * sensor accelerations
+     * @return  the current position of the sensor.
+     * @see #setPositionAndVelocity(Position, Velocity) 
+     */
+    Position    getPosition();
+
+    /**
+     * Returns the curren velocity of the sensor as calculated by integrating the observed 
+     * sensor accelerations
+     * @return  the current velocity of the sensor
+     * @see #setPositionAndVelocity(Position, Velocity) 
+     */
+    Velocity    getVelocity();
+
+    /**
+     * Atomically sets the current position and / or velocity of the sensor. It is explicitly
+     * OK to call this method while the acceleration integration loop is executing.
+     * @param position  If non-null, the current sensor position is set to this value. If 
+     *                  null, the current sensor position is unchanged.
+     * @param velocity  If non-null, the current sensor velocity is set to this value. If
+     *                  null, the current sensor velocity is unchanged.
+     * @see #startAccelerationIntegration(Position, Velocity)
+     * @see #getPosition() 
+     * @see #getVelocity() 
+     */
+    void setPositionAndVelocity(Position position, Velocity velocity);
+
+    /**
+     * Start (or re-start) a thread that continuously at intervals polls the current linear acceleration 
+     * of the sensor and integrates it to provide velocity and position information
+     * @param initalPosition    as in {@link #setPositionAndVelocity(Position, Velocity)}
+     * @param initialVelocity   as in {@link #setPositionAndVelocity(Position, Velocity)}
+     * @see #setPositionAndVelocity(Position, Velocity) 
+     * @see #getLinearAcceleration() 
+     */
+    void startAccelerationIntegration(Position initalPosition, Velocity initialVelocity);
+
+    /**
+     * As in {@link #startAccelerationIntegration(Position, Velocity)}, but provides control over
+     * the frequency which which the acceleration is polled
+     * @param initalPosition    as in {@link #startAccelerationIntegration(Position, Velocity)}
+     * @param initialVelocity   as in {@link #startAccelerationIntegration(Position, Velocity)}
+     * @param msPollInterval    the interval, in milliseconds, between successive calls to {@link #getLinearAcceleration()}
+     */
+    void startAccelerationIntegration(Position initalPosition, Velocity initialVelocity, int msPollInterval);
+
+    /**
+     * Stop the integration thread if it is currently running.
+     */
+    void stopAccelerationIntegration();
+
+    //----------------------------------------------------------------------------------------------
     // Status inquiry
     //----------------------------------------------------------------------------------------------
 
@@ -504,6 +561,156 @@ public interface IBNO055IMU
         public Acceleration(II2cDeviceClient.TimestampedData ts)
             {
             this(ts.data[0], ts.data[1], ts.data[2], ts.nanoTime);
+            }
+
+        //----------------------------------------------------------------------------------------------
+        // Integration
+        //----------------------------------------------------------------------------------------------
+
+        /**
+         * Integrate between two accelerations to determine a change in velocity
+         * @param prev   the previously measured acceleration
+         * @return       the change in velocity between the previous acceleration and the receiver
+         */
+        public Velocity integrate(Acceleration prev)
+            {
+            // We assume that the mean of the two accelerations has been acting during the entire interval
+            double sDuration = (this.nanoTime - prev.nanoTime) * 1e-9;
+            return new Velocity(
+                    (this.accelX + prev.accelX) * 0.5 * sDuration,
+                    (this.accelY + prev.accelY) * 0.5 * sDuration,
+                    (this.accelZ + prev.accelZ) * 0.5 * sDuration,
+                    this.nanoTime
+                    );
+            }
+        }
+
+    /**
+     * Velocity represents a directed velocity in three-space. 
+     * <p></p>
+     * Units are as the same as for Accleration, but integrated for time.
+     */
+    class Velocity
+        {
+        //----------------------------------------------------------------------------------------------
+        // State
+        //----------------------------------------------------------------------------------------------
+
+        /** the velocity in the X direction */
+        public double velocX;
+        /** the velocity in the Y direction */
+        public double velocY;
+        /** the velocity in the Z direction */
+        public double velocZ;
+
+        /** the time on the System.nanoTime() clock at which the data was acquired */
+        public long nanoTime;
+
+        //----------------------------------------------------------------------------------------------
+        // Construction
+        //----------------------------------------------------------------------------------------------
+
+        public Velocity()
+            {
+            this(0,0,0,0);
+            }
+        public Velocity(double velocX, double velocY, double velocZ, long nanoTime)
+            {
+            this.velocX = velocX;
+            this.velocY = velocY;
+            this.velocZ = velocZ;
+            this.nanoTime = nanoTime;
+            }
+        public Velocity(II2cDeviceClient.TimestampedData ts)
+            {
+            this(ts.data[0], ts.data[1], ts.data[2], ts.nanoTime);
+            }
+        
+        //----------------------------------------------------------------------------------------------
+        // Arithmetic
+        //----------------------------------------------------------------------------------------------
+
+        public void accumulate(Velocity him)
+            {
+            this.velocX += him.velocX;
+            this.velocY += him.velocY;
+            this.velocZ += him.velocZ;
+            this.nanoTime = Math.max(this.nanoTime, him.nanoTime);
+            }
+        
+        //----------------------------------------------------------------------------------------------
+        // Integration
+        //----------------------------------------------------------------------------------------------
+
+        /**
+         * Integrate between two velocities to determine a change in position
+         * @param prev   the previously measured velocity
+         * @return       the change in position between the previous position and the receiver
+         */
+        public Position integrate(Velocity prev)
+            {
+            // We assume that the mean of the two velocities has been acting during the entire interval
+            double sDuration = (this.nanoTime - prev.nanoTime) * 1e-9;
+            return new Position(
+                    (this.velocX + prev.velocX) * 0.5 * sDuration,
+                    (this.velocY + prev.velocY) * 0.5 * sDuration,
+                    (this.velocZ + prev.velocZ) * 0.5 * sDuration,
+                    this.nanoTime
+            );
+            }
+        }
+    
+    /**
+     * Position represents a coordinate position in three-space. 
+     * <p></p>
+     * Units are as the same as for Velocity, but integrated for time.
+     */
+    class Position
+        {
+        //----------------------------------------------------------------------------------------------
+        // State
+        //----------------------------------------------------------------------------------------------
+
+        /** the velocity in the X direction */
+        public double x;
+        /** the velocity in the Y direction */
+        public double y;
+        /** the velocity in the Z direction */
+        public double z;
+
+        /** the time on the System.nanoTime() clock at which the data was acquired */
+        public long nanoTime;
+
+        //----------------------------------------------------------------------------------------------
+        // Construction
+        //----------------------------------------------------------------------------------------------
+
+        public Position()
+            {
+            this(0,0,0,0);
+            }
+        public Position(double x, double y, double z, long nanoTime)
+            {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+            this.nanoTime = nanoTime;
+            }
+        public Position(II2cDeviceClient.TimestampedData ts)
+            {
+            this(ts.data[0], ts.data[1], ts.data[2], ts.nanoTime);
+            }
+
+        //----------------------------------------------------------------------------------------------
+        // Arithmetic
+        //----------------------------------------------------------------------------------------------
+
+        public void accumulate(Position him)
+            {
+            this.x += him.x;
+            this.y += him.y;
+            this.z += him.y;
+            this.nanoTime = Math.max(this.nanoTime, him.nanoTime);
             }
         }
 
