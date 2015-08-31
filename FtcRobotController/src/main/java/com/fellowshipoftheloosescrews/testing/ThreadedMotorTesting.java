@@ -1,7 +1,6 @@
 package com.fellowshipoftheloosescrews.testing;
 
-import com.fellowshipoftheloosescrews.utilities.Util;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.fellowshipoftheloosescrews.utilities.MotorUtils;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -53,7 +52,7 @@ public class ThreadedMotorTesting extends OpMode
 
             while(isRunning)
             {
-                while(motor.getCurrentPosition() < Util.ENCODER_NEVEREST_CPR)
+                while(motor.getCurrentPosition() < MotorUtils.ENCODER_NEVEREST_CPR)
                 {
                     motor.setPower(0.5);
                 }

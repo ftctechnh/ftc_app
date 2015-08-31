@@ -1,12 +1,8 @@
 package com.fellowshipoftheloosescrews.testing;
 
 import com.fellowshipoftheloosescrews.utilities.DcServo;
-import com.fellowshipoftheloosescrews.utilities.PID;
-import com.fellowshipoftheloosescrews.utilities.Util;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.Range;
 
 /**
  * Created by Thomas on 8/14/2015.

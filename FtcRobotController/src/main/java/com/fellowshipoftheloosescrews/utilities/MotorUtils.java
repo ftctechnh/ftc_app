@@ -6,7 +6,7 @@ package com.fellowshipoftheloosescrews.utilities;
  * This class holds useful methods and constants to make
  * programming easier
  */
-public class Util {
+public class MotorUtils {
     public static double ENCODER_NEVEREST_CPR = 1120;
     public static double ENCODER_TETRIX_CPR = 1440;
 }
