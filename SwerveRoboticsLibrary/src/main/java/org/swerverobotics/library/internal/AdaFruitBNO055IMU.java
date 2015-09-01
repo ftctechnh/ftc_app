@@ -20,6 +20,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
     //------------------------------------------------------------------------------------------
 
     private II2cDeviceClient    deviceClient;
+    private SuicideWatch        suicideWatch;
     private SENSOR_MODE         currentMode;
 
     private Acceleration        acceleration;
@@ -28,7 +29,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
     private Thread              accelerationIntegrationThread;
     private boolean             shutDownRequested;
     private static final int    msAccelerationIntegrationThreadShutdownWait = 20;
-    private static final int    msAccelerationIntegrationDefaultPollInterval = 10;
+    private static final int    msAccelerationIntegrationDefaultPollInterval = 100;
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -47,6 +48,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
         this.position     = new Position();
         this.shutDownRequested             = false;
         this.accelerationIntegrationThread = null;
+        this.suicideWatch = null;
         }
 
     /**
@@ -310,13 +312,33 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
         {
         this.startAccelerationIntegration(initalPosition, initialVelocity, msAccelerationIntegrationDefaultPollInterval);
         }
+
     public synchronized void startAccelerationIntegration(Position initalPosition, Velocity initialVelocity, int msPollInterval)
+    // Start integrating acceleration to determine position and velocity by polling for acceleration every while
         {
+        // Stop doing this if we're already in flight
         this.stopAccelerationIntegration();
+        this.shutDownRequested = false;
+        
+        // Set the current position and velocity if asked
         this.setPositionAndVelocity(initalPosition, initialVelocity);
         
-        this.shutDownRequested = false;
+        // Make a new thread on which to do the integration        
         this.accelerationIntegrationThread = new Thread(new Integrator(msPollInterval));
+        
+        // Set up a monitor that will shutdown that integration thread if 
+        // the I2cDevice is shutdown. This is a bit of a hack, perhaps, but
+        // is the only way given the current architecture that we've figured out
+        // how to auto-stop integration if the robot is shutdown
+        while (this.deviceClient.getCallbackThread() == null)
+            {
+            // Don't yet know the callback thread. Spin until we do.
+            Thread.yield();
+            }
+        this.suicideWatch = new SuicideWatch(this.deviceClient.getCallbackThread(),this.accelerationIntegrationThread);
+        try { this.suicideWatch.arm(); } catch(InterruptedException e) { throw SwerveRuntimeException.wrap(e); }        
+        
+        // Start the whole schebang a rockin...
         this.accelerationIntegrationThread.start();
         }
     
@@ -324,6 +346,9 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
         {
         if (this.accelerationIntegrationThread != null)
             {
+            try { this.suicideWatch.disarm(); } catch(InterruptedException ignored) { }
+            this.suicideWatch = null;
+            
             this.shutDownRequested = true;
             this.accelerationIntegrationThread.interrupt();
             try {
@@ -546,7 +571,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
 
     }
 
-// This code is modelled after https://github.com/adafruit/Adafruit_BNO055
+// This code is in part modelled after https://github.com/adafruit/Adafruit_BNO055
 
 /***************************************************************************
  This is a library for the BNO055 orientation sensor

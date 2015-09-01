@@ -127,7 +127,17 @@ public interface II2cDeviceClient
      * @param data      the data which is to be written to the registers
      */
     void write(int ireg, byte[] data);
-    
+
+    //----------------------------------------------------------------------------------------------
+    // Monitoring
+    //----------------------------------------------------------------------------------------------
+
+    /** Return the thread on which it is observed that portIsReady callbacks occur 
+     * @return the thread on which callbacks occur. If null, then no callback has yet been made
+     *         so the identity of this thread is not yet known.
+     */
+    Thread getCallbackThread();
+
     //----------------------------------------------------------------------------------------------
     // RegWindow
     //----------------------------------------------------------------------------------------------
