@@ -143,9 +143,11 @@ public interface IBNO055IMU
 
     /**
      * Start (or re-start) a thread that continuously at intervals polls the current linear acceleration 
-     * of the sensor and integrates it to provide velocity and position information
+     * of the sensor and integrates it to provide velocity and position information. A default polling
+     * interval of 100ms is used.
      * @param initalPosition    as in {@link #setPositionAndVelocity(Position, Velocity)}
      * @param initialVelocity   as in {@link #setPositionAndVelocity(Position, Velocity)}
+     * @see #startAccelerationIntegration(Position, Velocity) 
      * @see #setPositionAndVelocity(Position, Velocity) 
      * @see #getLinearAcceleration() 
      */
@@ -153,10 +155,11 @@ public interface IBNO055IMU
 
     /**
      * As in {@link #startAccelerationIntegration(Position, Velocity)}, but provides control over
-     * the frequency which which the acceleration is polled
+     * the frequency which which the acceleration is polled.
      * @param initalPosition    as in {@link #startAccelerationIntegration(Position, Velocity)}
      * @param initialVelocity   as in {@link #startAccelerationIntegration(Position, Velocity)}
      * @param msPollInterval    the interval, in milliseconds, between successive calls to {@link #getLinearAcceleration()}
+     * @see #startAccelerationIntegration(Position, Velocity, int)
      */
     void startAccelerationIntegration(Position initalPosition, Velocity initialVelocity, int msPollInterval);
 

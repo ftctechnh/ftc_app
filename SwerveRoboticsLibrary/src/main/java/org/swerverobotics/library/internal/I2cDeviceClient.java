@@ -2,6 +2,8 @@ package org.swerverobotics.library.internal;
 
 import com.qualcomm.robotcore.hardware.*;
 
+import junit.framework.Assert;
+import org.swerverobotics.library.BuildConfig;
 import org.swerverobotics.library.exceptions.*;
 import org.swerverobotics.library.interfaces.*;
 import java.util.*;
@@ -23,6 +25,8 @@ public final class I2cDeviceClient implements II2cDeviceClient
     public final I2cDevice      i2cDevice;                  // the device we are talking to
 
     private final Callback      callback;
+    private       Thread        callbackThread;             // the thread on which we observe our callbacks to be made
+    
     private final byte[]        readCache;                  // the buffer into which reads are retrieved
     private final byte[]        writeCache;                 // the buffer that we write from 
     private static final int    dibCacheOverhead = 4;       // this many bytes at start of writeCache are system overhead
@@ -68,6 +72,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
         {
         this.i2cDevice = i2cDevice;
         this.callback = new Callback();
+        this.callbackThread = null;
 
         this.readCache      = this.i2cDevice.getI2cReadCache();
         this.readCacheLock  = this.i2cDevice.getI2cReadCacheLock();
@@ -263,6 +268,14 @@ public final class I2cDeviceClient implements II2cDeviceClient
             }
         }
     
+    public Thread getCallbackThread()
+        {
+        synchronized (this.lock)
+            {
+            return this.callbackThread;
+            }
+        }
+    
     private class Callback implements I2cController.I2cPortReadyCallback
         {
         @Override public void portIsReady(int port)
@@ -274,6 +287,11 @@ public final class I2cDeviceClient implements II2cDeviceClient
             {
             synchronized (lock)
                 {
+                if (callbackThread == null)
+                    callbackThread = Thread.currentThread();
+                else if (BuildConfig.DEBUG)
+                    Assert.assertEquals(callbackThread.getId(), Thread.currentThread().getId());
+                
                 boolean setI2CActionFlag = false;
                 boolean writeFullCache = false;
     
