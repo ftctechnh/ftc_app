@@ -1,7 +1,7 @@
 # Swerve Robotics FTC Library
 
 Welcome to the Swerve Robotics library support for the FTC Android Robot Controller Library
-(hereinafter known as the RCL). The purpose of the Swerve Robotics library is to augment the
+The purpose of the Swerve Robotics library is to augment the
 RCL in order to simplify programming for FTC teams. Notable features of the library include:
 
 *   A *synchronous OpMode* that brings back the synchronous, linear programming style
@@ -16,6 +16,15 @@ RCL in order to simplify programming for FTC teams. Notable features of the libr
     values and send its contents to the driver station (you can call it often; actual updates are 
     automatically throttled to avoid unnecessary bandwith use). Log messages can be written to the 
     log at any time, and these are sent to the driver station as soon as possible. 
+*   An *I2cDeviceClient* class that wraps I2cDevice instances and makes them easy to use by handling
+    read-vs-write mode switches and attendant waits automatically and transparently. Just call read8()
+    or write8() (and friends) to read and write device registers and the rest is taken care of.
+*   A class that provides a clean interface to the *Bosch BNO055 absolute position sensor*, allowing
+    teams to make easy use of the AdaFruit breakout board which incorporates that sensor module. Features of this
+    sensor include a gyro that does rate integration in hardware to provide robust and accurate
+    angular position indications, and a robust separation of acceleration into gravity and linear-motion-induced
+    components. The class builds on the latter to provide linear velocity and position indications
+    using integration in software.
     
 The fifteen second summary of how to use the library is as follows:
 
