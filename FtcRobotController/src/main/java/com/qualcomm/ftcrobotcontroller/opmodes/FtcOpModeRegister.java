@@ -111,5 +111,6 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("Synch Tele Drive Modes", SynchTeleOpModes.class);
     manager.register("Synch Skeleton", SynchSkeletalOp.class);
     manager.register("Synch Motor Loop Perf", SynchMotorLoopPerf.class);
+    manager.register("Synch IMU Demo", SynchIMUDemo.class);
   }
 }

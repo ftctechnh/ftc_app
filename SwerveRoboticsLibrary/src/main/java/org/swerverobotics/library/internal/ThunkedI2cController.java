@@ -7,7 +7,9 @@ import org.swerverobotics.library.interfaces.*;
 import java.util.concurrent.locks.Lock;
 
 /**
- * Another in our story..
+ * ThunkedI2cController implements I2cController interface by thunking over to a target
+ * I2cController on the loop() thread, except where it can get away with performing operations 
+ * locally (which turns out to be a lot).
  */
 public class ThunkedI2cController implements I2cController, IThunkingWrapper<I2cController>
     {
@@ -40,228 +42,118 @@ public class ThunkedI2cController implements I2cController, IThunkingWrapper<I2c
 
     @Override public void close()
         {
+        // This we still do on the loop() thread out of paranoia 
         (new ThunkForWriting()
-        {
-        @Override protected void actionOnLoopThread()
             {
-            target.close();
-            }
-        }).doUntrackedWriteOperation();
+            @Override protected void actionOnLoopThread()
+                {
+                target.close();
+                }
+            }).doUntrackedWriteOperation();
         }
 
     @Override public int getVersion()
         {
-        return (new ThunkForReading<Integer>()
-        {
-        @Override protected void actionOnLoopThread()
-            {
-            this.result = target.getVersion();
-            }
-        }).doUntrackedReadOperation();
+        return target.getVersion();
         }
 
     @Override public String getDeviceName()
         {
-        return (new ThunkForReading<String>()
-        {
-        @Override protected void actionOnLoopThread()
-            {
-            this.result = target.getDeviceName();
-            }
-        }).doUntrackedReadOperation();
+        return target.getDeviceName();
         }
 
     @Override public SerialNumber getSerialNumber()
         {
-        return (new ThunkForReading<SerialNumber>()
-        {
-        @Override protected void actionOnLoopThread()
-            {
-            this.result = target.getSerialNumber();
-            }
-        }).doUntrackedReadOperation();
+        return target.getSerialNumber();
         }
 
     @Override public void enableI2cReadMode(final int physicalPort, final int i2cAddress, final int memAddress, final int length)
         {
-        (new ThunkForWriting()
-        {
-        @Override protected void actionOnLoopThread()
-            {
-            target.enableI2cReadMode(physicalPort, i2cAddress, memAddress, length);
-            }
-        }).doWriteOperation();
+        target.enableI2cReadMode(physicalPort, i2cAddress, memAddress, length);
         }
 
     @Override public void enableI2cWriteMode(final int physicalPort, final int i2cAddress, final int memAddress, final int length)
         {
-        (new ThunkForWriting()
-        {
-        @Override protected void actionOnLoopThread()
-            {
-            target.enableI2cWriteMode(physicalPort, i2cAddress, memAddress, length);
-            }
-        }).doWriteOperation();
+        target.enableI2cWriteMode(physicalPort, i2cAddress, memAddress, length);
         }
 
     @Override public Lock getI2cReadCacheLock(final int physicalPort)
         {
-        return (new ThunkForReading<Lock>()
-        {
-        @Override protected void actionOnLoopThread()
-            {
-            this.result = target.getI2cReadCacheLock(physicalPort);
-            }
-        }).doReadOperation();
+        return target.getI2cReadCacheLock(physicalPort);
         }
 
     @Override public Lock getI2cWriteCacheLock(final int physicalPort)
         {
-        return (new ThunkForReading<Lock>()
-        {
-        @Override protected void actionOnLoopThread()
-            {
-            this.result = target.getI2cWriteCacheLock(physicalPort);
-            }
-        }).doReadOperation();
+        return target.getI2cWriteCacheLock(physicalPort);
         }
 
     @Override public byte[] getI2cReadCache(final int physicalPort)
         {
-        return (new ThunkForReading<byte[]>()
-        {
-        @Override protected void actionOnLoopThread()
-            {
-            this.result = target.getI2cReadCache(physicalPort);
-            }
-        }).doReadOperation();
+        return target.getI2cReadCache(physicalPort);
         }
 
     @Override public byte[] getI2cWriteCache(final int physicalPort)
         {
-        return (new ThunkForReading<byte[]>()
-        {
-        @Override protected void actionOnLoopThread()
-            {
-            this.result = target.getI2cWriteCache(physicalPort);
-            }
-        }).doReadOperation();
+        return target.getI2cWriteCache(physicalPort);
         }
 
     @Override public void setI2cPortActionFlag(final int physicalPort)
         {
-        (new ThunkForWriting()
-        {
-        @Override protected void actionOnLoopThread()
-            {
-            target.setI2cPortActionFlag(physicalPort);
-            }
-        }).doWriteOperation();
+        target.setI2cPortActionFlag(physicalPort);
         }
 
     @Override public boolean isI2cPortActionFlagSet(final int physicalPort)
         {
-        return (new ThunkForReading<Boolean>()
-        {
-        @Override protected void actionOnLoopThread()
-            {
-            this.result = target.isI2cPortActionFlagSet(physicalPort);
-            }
-        }).doReadOperation();
+        return target.isI2cPortActionFlagSet(physicalPort);
         }
 
-    @Override public void readI2cCacheFromModule(final int physicalPort)
+    @Override public synchronized void readI2cCacheFromModule(final int physicalPort)
+    // Synchronized is necessary to avoid possible double queue insertion of segment
         {
-        (new ThunkForWriting()
-        {
-        @Override protected void actionOnLoopThread()
-            {
-            target.readI2cCacheFromModule(physicalPort);
-            }
-        }).doWriteOperation();
+        target.readI2cCacheFromModule(physicalPort);
         }
 
-    @Override public void writeI2cCacheToModule(final int physicalPort)
+    @Override public synchronized void writeI2cCacheToModule(final int physicalPort)
+    // Synchronized is necessary to avoid possible double queue insertion of segment
         {
-        (new ThunkForWriting()
-        {
-        @Override protected void actionOnLoopThread()
-            {
-            target.writeI2cCacheToModule(physicalPort);
-            }
-        }).doWriteOperation();
+        target.writeI2cCacheToModule(physicalPort);
         }
 
-    @Override public void writeI2cPortFlagOnlyToModule(final int physicalPort)
+    @Override public synchronized void writeI2cPortFlagOnlyToModule(final int physicalPort)
+    // Synchronized is necessary to avoid possible double queue insertion of segment
         {
-        (new ThunkForWriting()
-        {
-        @Override protected void actionOnLoopThread()
-            {
-            target.writeI2cPortFlagOnlyToModule(physicalPort);
-            }
-        }).doWriteOperation();
+        target.writeI2cPortFlagOnlyToModule(physicalPort);
         }
 
     @Override public boolean isI2cPortInReadMode(final int physicalPort)
         {
-        return (new ThunkForReading<Boolean>()
-        {
-        @Override protected void actionOnLoopThread()
-            {
-            this.result = target.isI2cPortInReadMode(physicalPort);
-            }
-        }).doReadOperation();
+        return target.isI2cPortInReadMode(physicalPort);
         }
 
     @Override public boolean isI2cPortInWriteMode(final int physicalPort)
         {
-        return (new ThunkForReading<Boolean>()
-        {
-        @Override protected void actionOnLoopThread()
-            {
-            this.result = target.isI2cPortInWriteMode(physicalPort);
-            }
-        }).doReadOperation();
+        return target.isI2cPortInWriteMode(physicalPort);
         }
 
     @Override public boolean isI2cPortReady(final int physicalPort)
         {
-        return (new ThunkForReading<Boolean>()
-        {
-        @Override protected void actionOnLoopThread()
-            {
-            this.result = target.isI2cPortReady(physicalPort);
-            }
-        }).doReadOperation();
+        return target.isI2cPortReady(physicalPort);
         }
 
     /**
      * @hide
      */
-    @Override public void registerForI2cPortReadyCallback(final I2cController.I2cPortReadyCallback callback, final int physicalPort)
+    @Override public synchronized void registerForI2cPortReadyCallback(final I2cController.I2cPortReadyCallback callback, final int physicalPort)
         {
-        (new ThunkForWriting()
-            {
-            @Override protected void actionOnLoopThread()
-                {
-                target.registerForI2cPortReadyCallback(callback, physicalPort);
-                }
-            }).doWriteOperation();
+        target.registerForI2cPortReadyCallback(callback, physicalPort);
         }
 
     /**
      * @hide
      */
-    @Override public void deregisterForPortReadyCallback(final int physicalPort)
+    @Override public synchronized void deregisterForPortReadyCallback(final int physicalPort)
         {
-        (new ThunkForWriting()
-            {
-            @Override protected void actionOnLoopThread()
-                {
-                target.deregisterForPortReadyCallback(physicalPort);
-                }
-            }).doWriteOperation();
+        target.deregisterForPortReadyCallback(physicalPort);
         }
 
     }

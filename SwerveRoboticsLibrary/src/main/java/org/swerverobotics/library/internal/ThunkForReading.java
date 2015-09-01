@@ -21,7 +21,8 @@ public abstract class ThunkForReading<T> extends Thunk
     //----------------------------------------------------------------------------------------------
 
     public ThunkForReading() 
-        { 
+        {
+        SynchronousThreadContext.assertSynchronousThread();
         }
     public ThunkForReading(int actionKey) 
         { 
