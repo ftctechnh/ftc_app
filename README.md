@@ -2,5 +2,3 @@
 Welcome to the Github Repo for the Fellowship of the Loose Screws Robot Controller App!
 
 ![Logo Image](https://pbs.twimg.com/profile_images/552841029494124544/GHkdbYYW.png)
-
-For now, let's try to keep different modifications in seperate branches, and only merge what we think is really good.
