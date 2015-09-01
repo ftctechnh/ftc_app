@@ -6,7 +6,25 @@ import org.swerverobotics.library.internal.*;
 import java.util.*;
 
 /**
- *
+ * TelemetryDashboardAndLog is a telemetry helper class that makes it easier write 
+ * telemetry to the driver station. It is primarily intended to be used within
+ * SynchronousOpModes.
+ * <p>
+ * The telemetry is provided in two parts: a dashboard, and a log, instances of which 
+ * reside in fields of the same names within the TelemetryDashboardAndLog object.
+ * <p>
+ * The dashboard is configured once, using a series of {@link Dashboard#line() line()} 
+ * calls each containing a series of {@link org.swerverobotics.library.TelemetryDashboardAndLog.Dashboard#item item()} invocations.
+ * You then call {@link Dashboard#update() update()} on the dashboard at a relatively high
+ * rate of speed, as often as you like, usually at the bottom of your while(opModeIsActive())
+ * loop. Periodically, at a rate controlled by the {@link org.swerverobotics.library.TelemetryDashboardAndLog.Dashboard#msUpdateInterval msUpdateInterval}
+ * field, which defaults to one second, these {@link Dashboard#update() update()} calls will actually 
+ * cause reevaluation of the dashboard line items and transmission of the data to the driver station. 
+ * So: call it often, but the transmission traffic is kept to a reasonable amount.
+ * <p>
+ * The log simply contains a serial history of the messages it has been asked to display. 
+ * When new additions are made to the log, they are conveyed to the driver station in an
+ * expeditious manner. The dashboard is also updated at such times.
  */
 public class TelemetryDashboardAndLog
     {
@@ -43,7 +61,7 @@ public class TelemetryDashboardAndLog
         // Types
         //------------------------------------------------------------------------------------------
 
-        public class Item
+        class Item
             {
             String        caption;
             IFunc<String> value;
@@ -55,7 +73,7 @@ public class TelemetryDashboardAndLog
                 }
             }
 
-        public class Line
+        class Line
             {
             List<Item> items;
 
@@ -99,6 +117,11 @@ public class TelemetryDashboardAndLog
 
         /**
          * Create a new dashboard item with the indicated caption and value computation.
+         * 
+         * @param itemCaption   the string with which the item value is to be labelled
+         * @param itemValue     a lambda expression that when evaluated will provide the
+         *                      then-current value of the item
+         * @return              the newly created item
          */
         public Item item(final String itemCaption, final IFunc<Object> itemValue)
             {
@@ -127,6 +150,8 @@ public class TelemetryDashboardAndLog
             }
         /**
          * Add a line to the dashboard containing the indicated item
+         * 
+         * @param item      the item to be contained in the line
          */
         public void line(Item item)
             {
@@ -136,6 +161,9 @@ public class TelemetryDashboardAndLog
             }
         /**
          * Add a line to the dashboard containing the indicated items
+         * 
+         * @param item0     the first item to be contained in the line
+         * @param item1     the second item to be contained in the line
          */
         public void line(Item item0, Item item1)
             {
@@ -146,6 +174,10 @@ public class TelemetryDashboardAndLog
             }
         /**
          * Add a line to the dashboard containing the indicated items
+         *
+         * @param item0     the first item to be contained in the line
+         * @param item1     the second item to be contained in the line
+         * @param item2     the third item to be contained in the line
          */
         public void line(Item item0, Item item1, Item item2)
             {
@@ -157,6 +189,11 @@ public class TelemetryDashboardAndLog
             }
         /**
          * Add a line to the dashboard containing the indicated items
+
+         * @param item0     the first item to be contained in the line
+         * @param item1     the second item to be contained in the line
+         * @param item2     the third item to be contained in the line
+         * @param item3     the fourth item to be contained in the line
          */
         public void line(Item item0, Item item1, Item item2, Item item3)
             {
@@ -169,6 +206,12 @@ public class TelemetryDashboardAndLog
             }
         /**
          * Add a line to the dashboard containing the indicated items
+         *
+         * @param item0     the first item to be contained in the line
+         * @param item1     the second item to be contained in the line
+         * @param item2     the third item to be contained in the line
+         * @param item3     the fourth item to be contained in the line
+         * @param item4     the fifth item to be contained in the line
          */
         public void line(Item item0, Item item1, Item item2, Item item3, Item item4)
             {
@@ -182,6 +225,8 @@ public class TelemetryDashboardAndLog
             }
         /**
          * Add a line to the dashboard containing the indicated items
+         * 
+         * @param items     the list of items to be contained in the line
          */
         public void line(List<Item> items)
             {
@@ -199,7 +244,12 @@ public class TelemetryDashboardAndLog
         //------------------------------------------------------------------------------------------
 
         /**
-         * Update the driver station view of the dashboard.
+         * If sufficient time has elapsed since the last driver station refresh,
+         * evaluate all the items on all the dashboard lines and update the driver
+         * station screen.
+         * 
+         * @see #msUpdateInterval
+         * @see TelemetryDashboardAndLog#update() 
          */
         public void update()
             {
@@ -224,8 +274,12 @@ public class TelemetryDashboardAndLog
 
         /**
          * Is the log shown in reversed order instead of normal order?
+         * <p></p>
+         * If true, older log messages are displayed at the top of the log, newer messages at the bottom.
+         * <p></p>
+         * If false, newer messages are on top, older messages at the bottom.
          */
-        public boolean        displayOldToNew = true;
+        public boolean displayOldToNew = true;
 
         //------------------------------------------------------------------------------------------
         // Operations
@@ -266,7 +320,7 @@ public class TelemetryDashboardAndLog
     //----------------------------------------------------------------------------------------------
 
     private long                    nanoLastUpdate = 0;
-    private int                     telemetryLineCount = 9;
+    private int                     telemetryMaxLineCount = 9;
     private final int               singletonKey = SynchronousOpMode.staticGetNewSingletonKey();
 
     /**
@@ -282,18 +336,22 @@ public class TelemetryDashboardAndLog
      */
     public final Log                log;
     /**
-     * Advanced: 'raw' provides access to the lower level (ie: non-dashboard/log) telemetry
-     * API.
+     * Advanced: 'target' is the lower level (ie: non-dashboard/log) telemetry
+     * object from the robot controller runtime.
      */
-    public final ThunkedTelemetry   thunker;
+    public final Telemetry          target;
 
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
 
+    /**
+     * Instantiate a new telemetry dashboard and log
+     * @param telemetry the robot controller runtime telemetry object
+     */
     public TelemetryDashboardAndLog(Telemetry telemetry)
         {
-        this.thunker   = ThunkedTelemetry.create(telemetry);
+        this.target    = telemetry;
         this.dashboard = new Dashboard();
         this.log       = new Log();
         //
@@ -302,19 +360,25 @@ public class TelemetryDashboardAndLog
 
     /**
      * 'telemetryDisplayLineCount' is the number of visible on the driver station that
-     * we use in rendering the dashboard plus accumulated log.
+     * we use in rendering the dashboard plus accumulated log. This method returns the
+     * current value of that variable.
+     * 
+     * @return the current maximum number of lines displayed by the log
+     * @see #setDisplayMaxLineCount(int) 
      */
-    public int getTelemetryLineCount() 
+    public int getTelemetryMaxLineCount() 
         { 
-        return this.telemetryLineCount; 
+        return this.telemetryMaxLineCount; 
         }
     /**
-     * 'telemetryDisplayLineCount' is the number of visible on the driver station that
-     * we use in rendering the dashboard plus accumulated log.
+     * Set the maximum number of lines displayed in the log.
+     * 
+     * @param count the maximum number of lines to display in the log
+     * @see #getTelemetryMaxLineCount() 
      */
-    public void setDisplayLineCount(int count)
+    public void setDisplayMaxLineCount(int count)
         {
-        this.telemetryLineCount = count;
+        this.telemetryMaxLineCount = count;
         this.updateLogCapacity();
         }
 
@@ -349,7 +413,7 @@ public class TelemetryDashboardAndLog
             {
             @Override public void doAction()
                 {
-                log.capacity = telemetryLineCount - dashboard.lines.size();
+                log.capacity = telemetryMaxLineCount - dashboard.lines.size();
                 log.prune();
                 }
             });
@@ -364,8 +428,9 @@ public class TelemetryDashboardAndLog
         }
 
     /**
-     * At the next available loop() thread call, update the telemetry to reflect the state
-     * of the dashboard and log.
+     * Equivalent to {@link Dashboard#update() Dashboard.update()} 
+     * 
+     * @see Dashboard#update()
      */
     public void update()
         {
@@ -412,7 +477,7 @@ public class TelemetryDashboardAndLog
                             {
                             for (int i = 0; i < keys.size(); i++)
                                 {
-                                TelemetryDashboardAndLog.this.thunker.getThunkTarget().addData(
+                                TelemetryDashboardAndLog.this.target.addData(
                                         keys.elementAt(i),
                                         values.elementAt(i));
                                 }

@@ -31,17 +31,16 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      * that the variables declared here do not suffer from that problem.
      */
     public IGamepad gamepad1 = null;
+    /** @see #gamepad1 */
     public IGamepad gamepad2 = null;
 
     /**
      * As with game pads, we hid the 'telemetry' variable of the super class and replace it
-     * with one that can work from synchronous threads.
+     * with one that can work on synchronous threads.
      */
     public TelemetryDashboardAndLog telemetry;
 
-    /**
-     * The number of nanoseconds in a millisecond.
-     */
+    /** Advanced: the number of nanoseconds in a millisecond. */
     public static final long NANO_TO_MILLI = 1000000;
 
     /**
@@ -51,6 +50,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      * Usually, much less time than this maximum is expended.
      */
     public long getMsLoopDwellMax()                    { return msLoopDwellMax; }
+    /** @see #getMsLoopDwellMax() */
     public void setMsLoopDwellMax(long msLoopDwellMax) { this.msLoopDwellMax = msLoopDwellMax; }
     private long msLoopDwellMax = 15;
 
@@ -176,7 +176,10 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
             {
             // If new input has arrived since anyone last looked, then let our caller process that
             if (this.isNewGamePadInputAvailable())
+                {
+                Thread.yield();     // avoid tight loop if caller not looking at gamepad input
                 return;
+                }
             
             // Otherwise, we know there's nothing to do until at least the next loop() call.
             // The trouble is, it's hard to know when that is. We might be running here 
@@ -434,8 +437,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
                 {
                 this.threadBody.run();
                 }
-            catch (InterruptedException ignored) { }
-            catch (RuntimeInterruptedException ignored)
+            catch (InterruptedException|RuntimeInterruptedException ignored)
                 {
                 // If the main() method itself doesn't catch the interrupt, at least
                 // we will do so here. The whole point of such interrupts is to

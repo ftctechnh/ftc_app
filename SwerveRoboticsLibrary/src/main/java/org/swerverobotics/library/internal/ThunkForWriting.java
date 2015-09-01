@@ -15,7 +15,8 @@ public abstract class ThunkForWriting extends Thunk
     //----------------------------------------------------------------------------------------------
 
     public ThunkForWriting() 
-        { 
+        {
+        SynchronousThreadContext.assertSynchronousThread();
         this.addActionKey
             (
             SynchronousThreadContext.getThreadContext().actionKeyWritesFromThisThread
