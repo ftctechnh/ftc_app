@@ -335,7 +335,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
             // Don't yet know the callback thread. Spin until we do.
             Thread.yield();
             }
-        this.suicideWatch = new SuicideWatch(this.deviceClient.getCallbackThread(),this.accelerationIntegrationThread);
+        this.suicideWatch = new SuicideWatch(this.deviceClient.getCallbackThread(), this.accelerationIntegrationThread);
         try { this.suicideWatch.arm(); } catch(InterruptedException e) { throw SwerveRuntimeException.wrap(e); }        
         
         // Start the whole schebang a rockin...
@@ -346,16 +346,21 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
         {
         if (this.accelerationIntegrationThread != null)
             {
+            // Disarm our monitor
             try { this.suicideWatch.disarm(); } catch(InterruptedException ignored) { }
             this.suicideWatch = null;
             
+            // Interrupt the integration thread
             this.shutDownRequested = true;
             this.accelerationIntegrationThread.interrupt();
+            
+            // Wait a while for the integration thread to terminate
             try {
                 this.accelerationIntegrationThread.join(msAccelerationIntegrationThreadShutdownWait);
                 }
             catch (InterruptedException ignored) { }
-            //
+            
+            // Clean up on the way out
             this.accelerationIntegrationThread = null;
             }
         }
