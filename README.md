@@ -51,18 +51,21 @@ The fifteen second summary of how to use the library is as follows:
 
 That's it!
 
-Note that the library is still undergoing development. It has received light testing, and while no known 
-bugs currently exist, undoubtedly some are there lurking to be discovered. Documentation is currently
-very sparse. There are a couple of examples in the examples package, and the code itself is heavily
-commented, but there is as yet no easily approachable tutorial or reference manual. We're working on
-that. Finally, in its present form, the library is distributed solely in source form: clone the 
+While the library is still undergoing developement, it is fairly mature and is stable enough
+to be ready for use in competition.
+ 
+Documentation for the library is available in the SwerveRoboticsLibrary/doc/javadoc directory.
+There are also several examples of using the library to be found in the usual 'opmodes'
+directory (alongside the examples provided in the core FTC SDK).
+
+In its present form, the library is distributed solely in source form: clone the 
 entire project to your local computer just as you would the official (beta) project release from
 FTC headquarters. We realize that releasing only in source form can be cumbersome for integrating 
 with a team's own code base, especially as new versions of the library are released. We're working 
 on releasing in binary form (with full source provided as well to aid in debugging), but that's not 
 yet available.
 
-We'd love to hear what you think about the library. Please direct your feedback to 
+We'd love to hear what you think about the library. Please direct your feedback and bug reports to 
 swerveftclibrary@googlegroups.com. Thanks!
 
 Robert Atkinson,  
@@ -70,7 +73,7 @@ bob@theatkinsons.org,
 Mentor, Swerve Robotics,    
 Woodinville, Washington
 
-21 July 2015 (update 04 August)  
+1 September 2015  
 
 (The remainder of this file is as published by FTC headquarters.)
 
