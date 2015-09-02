@@ -25,11 +25,11 @@ public final class I2cDeviceClient implements II2cDeviceClient
      */
     public final II2cDevice     i2cDevice;                  // the device we are talking to
 
-    private final Callback      callback;
+    private final Callback      callback;                   // the callback object on which we actually receive callbacks
     private       Thread        callbackThread;             // the thread on which we observe our callbacks to be made
-    private final ElapsedTime   timeSinceLastHeartbeat;
-    private       int           msHeartbeatInterval;
-    private       RegWindow     regWindowHeartbeat;
+    private final ElapsedTime   timeSinceLastHeartbeat;     // keeps track of our need for doing heartbeats
+    private       int           msHeartbeatInterval;        // time between heartbeats; zero is none necessary
+    private       boolean       heartBeatUsingRead;         // true if we are to read for heartbeats, false if we are to write
     
     private final byte[]        readCache;                  // the buffer into which reads are retrieved
     private final byte[]        writeCache;                 // the buffer that we write from 
@@ -70,7 +70,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
      * 
      * initialRegisterWindow may be null if no registers are initially to be read.
      */
-    public I2cDeviceClient(II2cDevice i2cDevice, int i2cAddr, RegWindow initialRegisterWindow)
+    public I2cDeviceClient(II2cDevice i2cDevice, int i2cAddr8Bit, RegWindow initialRegisterWindow)
         {
         this.i2cDevice = i2cDevice;
         this.callback = new Callback();
@@ -78,7 +78,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
         this.timeSinceLastHeartbeat = new ElapsedTime();
         this.timeSinceLastHeartbeat.reset();
         this.msHeartbeatInterval = 0;
-        this.regWindowHeartbeat = new RegWindow(0,1);
+        this.heartBeatUsingRead = true;
 
         this.readCache      = this.i2cDevice.getI2cReadCache();
         this.readCacheLock  = this.i2cDevice.getI2cReadCacheLock();
@@ -91,7 +91,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
         this.readCacheStatus  = READ_CACHE_STATUS.IDLE;
         this.writeCacheStatus = WRITE_CACHE_STATUS.IDLE;
         
-        this.i2cDevice.setI2cAddr(i2cAddr);
+        this.i2cDevice.setI2cAddr(i2cAddr8Bit);
         
         this.i2cDevice.registerForI2cPortReadyCallback(this.callback);
         }
@@ -102,7 +102,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
     
     public String getDeviceName()
         {
-        return this.i2cDevice.getDeviceName();
+        return this.i2cDevice.getDeviceName();  
         }
     
     public String getConnectionInfo()
@@ -312,21 +312,13 @@ public final class I2cDeviceClient implements II2cDeviceClient
             }
         }
     
-    public void setHeartbeatRead(int ms, RegWindow window)
+    public void setHeartbeatRead(int ms)
         {
         ms = Math.max(0, ms);
         synchronized (this.lock)
             {
-            if (ms > 0)
-                {
-                if (window == null)
-                    window = this.regWindowRead;
-                if (window == null)
-                    throw new IllegalArgumentException(String.format("setHeartbeatInterval: null window and null read window"));
-                }
-            
             this.msHeartbeatInterval = ms;
-            this.regWindowHeartbeat  = window;
+            this.heartBeatUsingRead  = true;
             }
         }
     
@@ -336,14 +328,8 @@ public final class I2cDeviceClient implements II2cDeviceClient
         synchronized (this.lock)
             {
             this.msHeartbeatInterval = ms;
-            this.regWindowHeartbeat  = null;
+            this.heartBeatUsingRead  = false;
             }
-        }
-    
-    private boolean heartbeatRequired()
-    // Requirement: lock must be held
-        {
-        return (msHeartbeatInterval > 0 && timeSinceLastHeartbeat.time()*1000 >= msHeartbeatInterval);
         }
     
     private class Callback implements I2cController.I2cPortReadyCallback
@@ -365,7 +351,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
                 boolean setActionFlag     = false;
                 boolean queueFullWrite    = false;
                 boolean queueRead         = false;
-                boolean heartbeatRequired = heartbeatRequired();
+                boolean heartbeatRequired = (msHeartbeatInterval > 0 && timeSinceLastHeartbeat.time()*1000 >= msHeartbeatInterval);
                 
                 READ_CACHE_STATUS  nextReadCacheStatus  = readCacheStatus;
                 WRITE_CACHE_STATUS nextWriteCacheStatus = writeCacheStatus;
@@ -383,16 +369,15 @@ public final class I2cDeviceClient implements II2cDeviceClient
                         {
                         // Read something if we ought to, either whatever the user would
                         // like us to read in the normal course of events or what he'd like
-                        // us to read if we have to do a heartbeat
-                        RegWindow window = regWindowRead;
-                        if (window == null && heartbeatRequired)
-                            window = regWindowHeartbeat;
-                        
-                        if (window != null)
+                        // us to read if we have to do a heartbeat.
+                        //
+                        // Note that our current implementation *always* just reads, so that
+                        // read heartbeating is sort of implied.
+                        if (regWindowRead != null)
                             {
                             // Initiate switch to read mode
                             nextReadCacheStatus = READ_CACHE_STATUS.SWITCHING;
-                            i2cDevice.enableI2cReadMode(window.getIregFirst(), window.getCreg());
+                            i2cDevice.enableI2cReadMode(regWindowRead.getIregFirst(), regWindowRead.getCreg());
                             setActionFlag = true;
                             queueFullWrite = true;
                             }
@@ -455,7 +440,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
                     timeSinceLastHeartbeat.reset();
                     }
                 
-                if (!setActionFlag && heartbeatRequired && regWindowHeartbeat==null)
+                if (!setActionFlag && heartbeatRequired && !heartBeatUsingRead)
                     {
                     // Rewrite what we previously wrote
                     setActionFlag  = true;

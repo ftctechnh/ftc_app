@@ -37,9 +37,9 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
      * Instantiate an AdaFruitBNO055IMU on the indicated device whose I2C address is the one
      * indicated.
      */
-    public AdaFruitBNO055IMU(I2cDevice i2cDevice, int i2cAddr)
+    public AdaFruitBNO055IMU(I2cDevice i2cDevice, int i2cAddr8Bit)
         {
-        this.deviceClient = ClassFactory.createI2cDeviceClient(i2cDevice, i2cAddr, lowerWindow);
+        this.deviceClient = ClassFactory.createI2cDeviceClient(i2cDevice, i2cAddr8Bit, lowerWindow);
         this.currentMode  = null;
         this.acceleration = null;
         this.velocity     = new Velocity();
@@ -64,7 +64,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
     public static IBNO055IMU create(I2cDevice i2cDevice, Parameters parameters)
         {
         // Create a sensor which is a client of i2cDevice
-        IBNO055IMU result = new AdaFruitBNO055IMU(i2cDevice, parameters.i2cAddr.bVal);
+        IBNO055IMU result = new AdaFruitBNO055IMU(i2cDevice, parameters.i2cAddr8Bit.bVal);
         
         // Initialize it with the indicated parameters
         result.initialize(parameters);

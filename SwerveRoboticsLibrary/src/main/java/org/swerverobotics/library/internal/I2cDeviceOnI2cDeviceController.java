@@ -8,6 +8,17 @@ import java.util.concurrent.locks.Lock;
  * thus supporting polymorphism with NXT I2C devices
  */
 public final class I2cDeviceOnI2cDeviceController implements II2cDevice
+// Implementation note: 
+//
+// The Core Device Interface module follows the standard I2C protocol. Many device documentation will 
+// specify the address as a 7 bit address. But the CDIM takes the address in the standard 8 bit format. 
+// To convert the address multiply it by 2 (or bit shift it to the left by one).
+//
+//      Jonathan Berling
+//      http://ftcforum.usfirst.org/showthread.php?4421-Recommendation-for-a-gyro-sensor-that-will-work-on-new-control-system/page3
+//
+// See also:
+//      http://www.totalphase.com/support/articles/200349176/
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -15,7 +26,7 @@ public final class I2cDeviceOnI2cDeviceController implements II2cDevice
 
     private I2cController controller;
     private int           port;
-    private int           i2cAddr;
+    private int           i2cAddr8Bit;
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -23,9 +34,9 @@ public final class I2cDeviceOnI2cDeviceController implements II2cDevice
 
     public I2cDeviceOnI2cDeviceController(I2cController controller, int port)
         {
-        this.controller = controller;
-        this.port       = port;
-        this.i2cAddr    = 0;
+        this.controller  = controller;
+        this.port        = port;
+        this.i2cAddr8Bit = 0;
         }
     
     //----------------------------------------------------------------------------------------------
@@ -34,7 +45,7 @@ public final class I2cDeviceOnI2cDeviceController implements II2cDevice
 
     @Override public String getDeviceName()
         {
-        return String.format("I2C device at address 0x%02x", this.i2cAddr);
+        return String.format("I2C device at address 0x%02x", this.i2cAddr8Bit);
         }
     
     @Override public String getConnectionInfo()
@@ -62,21 +73,21 @@ public final class I2cDeviceOnI2cDeviceController implements II2cDevice
 
     @Override public int getI2cAddr()
         {
-        return this.i2cAddr;
+        return this.i2cAddr8Bit;
         }
-    @Override public void setI2cAddr(int i2cAddr)
+    @Override public void setI2cAddr(int i2cAddr8Bit)
         {
-        this.i2cAddr = i2cAddr;
+        this.i2cAddr8Bit = i2cAddr8Bit;
         }
     
     @Override public void enableI2cReadMode(int ib, int cb)
         {
-        this.controller.enableI2cReadMode(port, i2cAddr, ib, cb);
+        this.controller.enableI2cReadMode(port, i2cAddr8Bit, ib, cb);
         }
 
     @Override public void enableI2cWriteMode(int ib, int cb)
         {
-        this.controller.enableI2cWriteMode(port, i2cAddr, ib, cb);
+        this.controller.enableI2cWriteMode(port, i2cAddr8Bit, ib, cb);
         }
 
     @Override public byte[] getI2cReadCache()

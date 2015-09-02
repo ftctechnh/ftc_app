@@ -7,7 +7,7 @@ import org.swerverobotics.library.interfaces.*;
 /**
  * 
  */
-public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorController
+public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorController, IHardwareWrapper<DcMotorController>
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -58,23 +58,36 @@ public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorControll
     private static final double powerMax = 1.0;
     
     private II2cDeviceClient i2cDeviceClient;
+    private DcMotorController target;
     
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
     
-    public LegacyDcMotorControllerOnI2cDevice(II2cDeviceClient ii2cDeviceClient)
+    public LegacyDcMotorControllerOnI2cDevice(II2cDeviceClient ii2cDeviceClient, DcMotorController target)
         {
         this.i2cDeviceClient = ii2cDeviceClient;
+        this.target          = target;
         
         this.initPID();
         this.floatMotors();
         
         // Always read a certain set of registers
         this.i2cDeviceClient.setReadWindow(new II2cDeviceClient.RegWindow(iregFirstRead, cregRead));
-        this.i2cDeviceClient.setHeartbeatRead(2000, null);
+        
+        // Keep the motors from shutting off 
+        this.i2cDeviceClient.setHeartbeatRead(2000);
         }
 
+    //----------------------------------------------------------------------------------------------
+    // IHardwareWrapper
+    //----------------------------------------------------------------------------------------------
+    
+    @Override public DcMotorController getWrappedTarget()
+        {
+        return target;
+        }
+    
     //----------------------------------------------------------------------------------------------
     // HardwareDevice
     //----------------------------------------------------------------------------------------------

@@ -14,7 +14,7 @@ public final class I2cDeviceOnLegacyModule implements II2cDevice, LegacyModule.P
 
     private LegacyModule controller;
     private int          port;
-    private int          i2cAddr;
+    private int          i2cAddr8Bit;
     private LegacyModule.PortReadyCallback callback;
 
     //----------------------------------------------------------------------------------------------
@@ -23,10 +23,10 @@ public final class I2cDeviceOnLegacyModule implements II2cDevice, LegacyModule.P
 
     public I2cDeviceOnLegacyModule(LegacyModule controller, int port)
         {
-        this.controller = controller;
-        this.port       = port;
-        this.i2cAddr    = 0;
-        this.callback   = null;
+        this.controller  = controller;
+        this.port        = port;
+        this.i2cAddr8Bit = 0;
+        this.callback    = null;
         }
 
     //----------------------------------------------------------------------------------------------
@@ -35,7 +35,7 @@ public final class I2cDeviceOnLegacyModule implements II2cDevice, LegacyModule.P
 
     @Override public String getDeviceName()
         {
-        return String.format("Legacy I2C device at address 0x%02x", this.i2cAddr);
+        return String.format("Legacy I2C device at address 0x%02x", this.i2cAddr8Bit);
         }
 
     @Override public String getConnectionInfo()
@@ -60,21 +60,21 @@ public final class I2cDeviceOnLegacyModule implements II2cDevice, LegacyModule.P
 
     @Override public int getI2cAddr()
         {
-        return this.i2cAddr;
+        return this.i2cAddr8Bit;
         }
-    @Override public void setI2cAddr(int i2cAddr)
+    @Override public void setI2cAddr(int i2cAddr8Bit)
         {
-        this.i2cAddr = i2cAddr;
+        this.i2cAddr8Bit = i2cAddr8Bit;
         }
 
     @Override public void enableI2cReadMode(int ib, int cb)
         {
-        this.controller.enableNxtI2cReadMode(port, i2cAddr, ib, cb);
+        this.controller.enableNxtI2cReadMode(port, i2cAddr8Bit, ib, cb);
         }
 
     @Override public void enableI2cWriteMode(int ib, int cb)
         {
-        this.controller.enableNxtI2cReadMode(port, i2cAddr, ib, cb);
+        this.controller.enableNxtI2cReadMode(port, i2cAddr8Bit, ib, cb);
         }
 
     @Override public byte[] getI2cReadCache()

@@ -32,7 +32,7 @@ public interface IBNO055IMU
          * less than zero, it is ignored; the I2C address in that case must be provided to 
          * the I2cDevice object by some other mechanism, perhaps as part of the initialization
          * of that object itself. */
-        public I2CADDR          i2cAddr             = I2CADDR.DEFAULT;
+        public I2CADDR          i2cAddr8Bit         = I2CADDR.DEFAULT;
         
         /** the mode we wish to use the sensor in */
         public SENSOR_MODE      mode                = SENSOR_MODE.IMU;
@@ -233,11 +233,11 @@ public interface IBNO055IMU
     // Enumerations to make all of the above work 
     //----------------------------------------------------------------------------------------------
 
-    enum I2CADDR    { UNSPECIFIED(-1), DEFAULT(0x28), ALTERNATE(0x29);   public final byte bVal; I2CADDR(int i) { bVal =(byte)i; }}
-    enum TEMPUNIT   { CELSIUS(0), FARENHEIT(1);                          public final byte bVal; TEMPUNIT(int i) { bVal =(byte)i; }}
-    enum ANGLEUNIT  { DEGREES(0), RADIANS(1);                            public final byte bVal; ANGLEUNIT(int i) { bVal =(byte)i; }}
-    enum ACCELUNIT  { METERS_PERSEC_PERSEC(0), MILLIGALS(1);             public final byte bVal; ACCELUNIT(int i) { bVal =(byte)i; }}
-    enum PITCHMODE  { WINDOWS(0), ANDROID(1);                            public final byte bVal; PITCHMODE(int i) { bVal =(byte)i; }}
+    enum I2CADDR    { UNSPECIFIED(-1), DEFAULT(0x28*2), ALTERNATE(0x29*2); public final byte bVal; I2CADDR(int i)   { bVal =(byte)i; }}
+    enum TEMPUNIT   { CELSIUS(0), FARENHEIT(1);                            public final byte bVal; TEMPUNIT(int i)  { bVal =(byte)i; }}
+    enum ANGLEUNIT  { DEGREES(0), RADIANS(1);                              public final byte bVal; ANGLEUNIT(int i) { bVal =(byte)i; }}
+    enum ACCELUNIT  { METERS_PERSEC_PERSEC(0), MILLIGALS(1);               public final byte bVal; ACCELUNIT(int i) { bVal =(byte)i; }}
+    enum PITCHMODE  { WINDOWS(0), ANDROID(1);                              public final byte bVal; PITCHMODE(int i) { bVal =(byte)i; }}
 
     /**
      * Sensor modes are described in Table 3-5 (p21) of the BNO055 specification,
