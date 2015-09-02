@@ -45,8 +45,8 @@ public class OmniBotAuto extends OpMode {
         double etime;
         etime = elapsedTime.time();
         if (etime < 5) {
-            motor1.setPower(0.15);
             motor2.setPower(0.15);
+            motor1.setPower(0.15);
             motor3.setPower(0.15);
             motor4.setPower(0.15);
         }
