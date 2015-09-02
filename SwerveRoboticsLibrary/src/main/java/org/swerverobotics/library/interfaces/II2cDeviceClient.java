@@ -19,13 +19,15 @@ public interface II2cDeviceClient
      * Set the set of registers that we will read and read and read again on every hardware cycle
      * 
      * @param window    the register window to read. May be null, indicating that no reads are to occur.
+     * @see #getReadWindow() 
      */
-    void setRegisterWindow(RegWindow window);
+    void setReadWindow(RegWindow window);
 
     /**
      * Return the current register window.
+     * @see #setReadWindow(RegWindow)  
      */
-    RegWindow getRegisterWindow();
+    RegWindow getReadWindow();
 
     /**
      * Ensure that the current register window covers the indicated set of registers.
@@ -41,9 +43,9 @@ public interface II2cDeviceClient
      * @param windowToSet  If an update to the current register window is needed, then this
      *                     is the window to which it will be set. May be null.
      *
-     * @see #setRegisterWindow
+     * @see #setReadWindow(RegWindow) 
      */
-    void ensureRegisterWindow(RegWindow windowNeeded, RegWindow windowToSet);
+    void ensureReadWindow(RegWindow windowNeeded, RegWindow windowToSet);
 
     //----------------------------------------------------------------------------------------------
     // Reading
@@ -136,17 +138,20 @@ public interface II2cDeviceClient
      * Returns the interval within which communication must be received by the I2C device lest
      * a timeout occur. The default heartbeat interval is zero.
      * @return  the current timeout interval, in milliseconds
-     * @see #setHeartbeatInterval(int) 
+     * @see #setHeartbeatInterval(int, RegWindow)  
      */
     int getHeartbeatInterval();
 
     /**
      * Sets the interval within which communication must be received by the I2C device lest
      * a timeout occur.
-     * @param ms    the timeout interval, in milliseconds. If ms is less than or equal to zero, then 
-     *              no heartbeat messages are sent
+     * @param ms            the timeout interval, in milliseconds. If ms is less than or equal to
+     *                      zero, then no heartbeat messages are sent
+     * @param regWindow     the registers to read to effect a heartbeat. May be null, in which case
+     *                      the current read window is used, which must not be null if ms is 
+     *                      greater than zero.
      */
-    void setHeartbeatInterval(int ms);
+    void setHeartbeatInterval(int ms, RegWindow regWindow);
 
     //----------------------------------------------------------------------------------------------
     // Monitoring
