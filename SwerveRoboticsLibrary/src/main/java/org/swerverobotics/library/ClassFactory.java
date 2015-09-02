@@ -48,7 +48,7 @@ public final class ClassFactory
      * 
      * @param i2cDevice                 the I2cDevice to wrap
      * @param initialRegisterWindow     the initial register window to read. May be null.
-     * @param i2cAddr8Bit               the I2C address to initialize i2cDevice with.
+     * @param i2cAddr8Bit               the I2C address to initialize i2cDevice with. Ignored if less than zero.
      * @return                          the newly instantiated wrapper
      */
     public static II2cDeviceClient createI2cDeviceClient(I2cDevice i2cDevice, int i2cAddr8Bit, II2cDeviceClient.RegWindow initialRegisterWindow)
@@ -62,20 +62,32 @@ public final class ClassFactory
      * Instantiate an I2cDeviceClient on an I2cController using a given port and i2cAddr
      * @param i2cController             the controller to use
      * @param port                      the port to use on that controlller
-     * @param i2cAddr8Bit               the i2cAddr to talk to through that port
+     * @param i2cAddr8Bit               the i2cAddr to talk to through that port. Ignored if less than zero.
      * @param initialRegisterWindow     the initial register window to read. May be null.
      * @return                          the returned wrapper
+     * 
+     * @see #createI2cDeviceClient(LegacyModule, int, int, II2cDeviceClient.RegWindow) 
      */
     public static II2cDeviceClient createI2cDeviceClient(I2cController i2cController, int port, int i2cAddr8Bit, II2cDeviceClient.RegWindow initialRegisterWindow)
         {
         II2cDevice ii2cDevice = new I2cDeviceOnI2cDeviceController(i2cController, port);
         return createI2cDeviceClient(ii2cDevice, i2cAddr8Bit, initialRegisterWindow);    
         }
-    
-    public static II2cDeviceClient createI2cDeviceClient(LegacyModule legacyModule, int port, int i2cAddr, II2cDeviceClient.RegWindow initialRegisterWindow)
+
+    /**
+     * Instantiate an I2cDeviceClient on a LegacyModule using a given port and i2cAddr
+     * @param legacyModule              the legacy module to use
+     * @param port                      the port to use on that controlller
+     * @param i2cAddr8Bit               the i2cAddr to talk to through that port. Ignored if less than zero.
+     * @param initialRegisterWindow     the initial register window to read. May be null.
+     * @return                          the returned wrapper
+     * 
+     * @see #createI2cDeviceClient(I2cController, int, int, II2cDeviceClient.RegWindow) 
+     */
+    public static II2cDeviceClient createI2cDeviceClient(LegacyModule legacyModule, int port, int i2cAddr8Bit, II2cDeviceClient.RegWindow initialRegisterWindow)
         {
         II2cDevice ii2cDevice = new I2cDeviceOnLegacyModule(legacyModule, port);
-        return createI2cDeviceClient(ii2cDevice, i2cAddr, initialRegisterWindow);
+        return createI2cDeviceClient(ii2cDevice, i2cAddr8Bit, initialRegisterWindow);
         }
 
     /**

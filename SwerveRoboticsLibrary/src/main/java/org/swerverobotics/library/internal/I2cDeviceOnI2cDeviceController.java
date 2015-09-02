@@ -77,7 +77,8 @@ public final class I2cDeviceOnI2cDeviceController implements II2cDevice
         }
     @Override public void setI2cAddr(int i2cAddr8Bit)
         {
-        this.i2cAddr8Bit = i2cAddr8Bit;
+        if (i2cAddr8Bit >= 0)
+            this.i2cAddr8Bit = i2cAddr8Bit;
         }
     
     @Override public void enableI2cReadMode(int ib, int cb)
