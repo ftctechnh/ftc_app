@@ -72,7 +72,7 @@ public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorControll
         
         // Always read a certain set of registers
         this.i2cDeviceClient.setReadWindow(new II2cDeviceClient.RegWindow(iregFirstRead, cregRead));
-        this.i2cDeviceClient.setHeartbeatInterval(2000, null);
+        this.i2cDeviceClient.setHeartbeatRead(2000, null);
         }
 
     //----------------------------------------------------------------------------------------------
@@ -86,7 +86,7 @@ public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorControll
 
     @Override public String getConnectionInfo()
         {
-        return "";  // TODO
+        return this.i2cDeviceClient.getConnectionInfo();
         }
 
     @Override public int getVersion()
@@ -97,7 +97,6 @@ public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorControll
     @Override public void close()
         {
         this.floatMotors();
-        // super.close();   // TODO: close the device?
         }
 
     //----------------------------------------------------------------------------------------------

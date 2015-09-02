@@ -6,24 +6,24 @@ import java.util.concurrent.locks.Lock;
 /**
  * 
  */
-public interface II2cDevice
+public interface II2cDevice extends HardwareDevice
     {
-    int getI2cAddr();
-    void setI2cAddr(int i2cAddr);
+    int     getI2cAddr();
+    void    setI2cAddr(int i2cAddr);
     
-    void deregisterForPortReadyCallback();
+    void    deregisterForPortReadyCallback();
 
-    void enableI2cReadMode(int ib, int cb);
+    void    enableI2cReadMode(int ib, int cb);
 
-    void enableI2cWriteMode(int ib, int cb);
+    void    enableI2cWriteMode(int ib, int cb);
 
-    byte[] getI2cReadCache();
+    byte[]  getI2cReadCache();
 
-    Lock getI2cReadCacheLock();
+    Lock    getI2cReadCacheLock();
 
-    byte[] getI2cWriteCache();
+    byte[]  getI2cWriteCache();
 
-    Lock getI2cWriteCacheLock();
+    Lock    getI2cWriteCacheLock();
 
     boolean isI2cPortActionFlagSet();
 
@@ -33,13 +33,13 @@ public interface II2cDevice
 
     boolean isI2cPortReady();
 
-    void readI2cCacheFromModule();
+    void    readI2cCacheFromModule();
 
-    void registerForI2cPortReadyCallback(I2cController.I2cPortReadyCallback callback);
+    void    registerForI2cPortReadyCallback(I2cController.I2cPortReadyCallback callback);
 
-    void setI2cPortActionFlag();
+    void    setI2cPortActionFlag();
 
-    void writeI2cCacheToModule();
+    void    writeI2cCacheToModule();
 
-    void writeI2cPortFlagOnlyToModule();
+    void    writeI2cPortFlagOnlyToModule();
     }
