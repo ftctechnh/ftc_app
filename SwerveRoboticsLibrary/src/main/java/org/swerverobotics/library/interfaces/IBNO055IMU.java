@@ -29,7 +29,7 @@ public interface IBNO055IMU
     class Parameters
         {
         /** the address at which the sensor resides on the I2C bus. If this value is 
-         * less than zero, it is ignored; the I2C address in that case must be provided to 
+         * UNSPECIFIED, it is ignored; the I2C address in that case must be provided to 
          * the I2cDevice object by some other mechanism, perhaps as part of the initialization
          * of that object itself. */
         public I2CADDR          i2cAddr8Bit         = I2CADDR.DEFAULT;
