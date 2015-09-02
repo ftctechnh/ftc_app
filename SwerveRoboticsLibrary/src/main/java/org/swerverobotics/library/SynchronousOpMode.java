@@ -563,12 +563,12 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
 
         // Create the main thread and start it up and going!
         this.mainThread = this.createSynchronousWorkerThread(new IInterruptableRunnable()
-        {
-        @Override public void run() throws InterruptedException
             {
-            SynchronousOpMode.this.main();
-            }
-        }, true);
+            @Override public void run() throws InterruptedException
+                {
+                SynchronousOpMode.this.main();
+                }
+            }, true);
         this.mainThread.start();
 
         // Call the subclass hook in case they might want to do something interesting
@@ -598,6 +598,9 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     
     /**
      * The robot controller runtime calls loop() on a frequent basis, nominally every few ms or so.
+     * 
+     * Our implementation here just executes the work that has been requested from the
+     * synchronous threads.
      */
     @Override public final void loop()
         {
@@ -722,42 +725,51 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     /**
      * Advanced: the various 'hook' calls calls preInitHook(), postInitHook(), preLoopHook(), 
      * etc are hooks that advanced users might want to override in their subclasses to something
-     * interesting.
-     *
-     * The 'pre' and 'post' variations are called at the beginning and the end of their respective
+     * interesting. 
+     * 
+     * No particular semantic is implied or required, though the timing of the calls is defined:
+     * the 'pre' and 'post' variations are called at the beginning and the end of their respective
      * methods, while midLoopHook() is called in loop() after variable state (e.g. gamepads) has
      * been established.
      */
     protected void preInitHook() { /* hook for subclasses */ }
     /**
+     * Advanced: a hook for subclasses
      * @see #preInitHook()
      */
     protected void postInitHook() { /* hook for subclasses */ }
     /**
+     * Advanced: a hook for subclasses
      * @see #preInitHook()
      */
     protected void preStartHook() { /* hook for subclasses */ }
     /**
+     * Advanced: a hook for subclasses
      * @see #preInitHook()
      */
     protected void postStartHook() { /* hook for subclasses */ }
     /**
+     * Advanced: a hook for subclasses
      * @see #preInitHook()
      */
     protected void preLoopHook() { /* hook for subclasses */ }
     /**
+     * Advanced: a hook for subclasses
      * @see #preInitHook()
      */
     protected void midLoopHook() { /* hook for subclasses */ }
     /**
+     * Advanced: a hook for subclasses
      * @see #preInitHook()
      */
     protected void postLoopHook() { /* hook for subclasses */ }
     /**
+     * Advanced: a hook for subclasses
      * @see #preInitHook()
      */
     protected void preStopHook() { /* hook for subclasses */ }
     /**
+     * Advanced: a hook for subclasses
      * @see #preInitHook()
      */
     protected void postStopHook() { /* hook for subclasses */ }
