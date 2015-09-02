@@ -41,7 +41,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
      */
     public AdaFruitBNO055IMU(I2cDevice i2cDevice, int i2cAddr)
         {
-        this.deviceClient = ClassFactory.createI2cDeviceClient(i2cDevice, lowerWindow, i2cAddr);
+        this.deviceClient = ClassFactory.createI2cDeviceClient(i2cDevice, i2cAddr, lowerWindow);
         this.currentMode  = null;
         this.acceleration = null;
         this.velocity     = new Velocity();
