@@ -13,11 +13,49 @@ public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorControll
     // State
     //----------------------------------------------------------------------------------------------
     
+    /*
+    Address     Type     Contents
+    00 – 07H    chars    Sensor version number
+    08 – 0FH    chars    Manufacturer
+    10 – 17H    chars    Sensor type
+    18 – 3DH    bytes    Not used
+    3E, 3FH     chars    Reserved
+    40H – 43H   s/int    Motor 1 target encoder value, high byte first == 64-67
+    44H         byte     Motor 1 mode   == 68
+    45H         s/byte   Motor 1 power  == 69
+    46H         s/byte   Motor 2 power  == 70
+    47H         byte     Motor 2 mode   == 71
+    48 – 4BH    s/int    Motor 2 target encoder value, high byte first   == 72-75
+    4C – 4FH    s/int    Motor 1 current encoder value, high byte first  == 76-79
+    50 – 53H    s/int    Motor 2 current encoder value, high byte first  == 80-83
+    54, 55H     word     Battery voltage 54H high byte, 55H low byte
+    56H         S/byte   Motor 1 gear ratio
+    57H         byte     Motor 1 P coefficient*
+    58H         byte     Motor 1 I coefficient*
+    59H         byte     Motor 1 D coefficient*
+    5AH         s/byte   Motor 2 gear ratio
+    5BH         byte     Motor 2 P coefficient*
+    5CH         byte     Motor 2 I coefficient*
+    5DH         byte     Motor 2 D coefficient*
+     */
+    
     // motor numbers are 1-based
-    private static final byte[] mpMotorRegMotorPower          = new byte[]{(byte)-1, (byte)9, (byte)10};
-    private static final byte[] mpMotorRegMotorMode           = new byte[]{(byte)-1, (byte)8, (byte)11};
-    private static final byte[] mpMotorRegTargetEncoderValue  = new byte[]{(byte)-1, (byte)4, (byte)12};
-    private static final byte[] mpMotorRegCurrentEncoderValue = new byte[]{(byte)-1, (byte)16, (byte)20};
+    private static final byte[] mpMotorRegMotorPower          = new byte[]{(byte)-1, (byte)0x45, (byte)0x46};
+    private static final byte[] mpMotorRegMotorMode           = new byte[]{(byte)-1, (byte)0x44, (byte)0x47};
+    private static final byte[] mpMotorRegTargetEncoderValue  = new byte[]{(byte)-1, (byte)0x40, (byte)0x48};
+    private static final byte[] mpMotorRegCurrentEncoderValue = new byte[]{(byte)-1, (byte)0x4c, (byte)0x50};
+    private static final int iregFirstRead = 0x40;
+    private static final int cregRead = 20;
+    
+    private static final byte cbEncoder = 4;
+
+    private static final byte bPowerBrake = 0;
+    private static final byte bPowerFloat = -128;
+    private static final byte bPowerMax = 100;
+    private static final byte bPowerMin = -100;
+    
+    private static final double powerMin = -1.0;
+    private static final double powerMax = 1.0;
     
     private II2cDeviceClient i2cDeviceClient;
     
@@ -29,8 +67,10 @@ public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorControll
         {
         this.initPID();
         this.floatMotors();
-        // TODO: set the registerWindow
+        
+        this.i2cDeviceClient.setRegisterWindow(new II2cDeviceClient.RegWindow(iregFirstRead, cregRead));
         // TODO: rename register window to read window
+        // TODO: implement heartbeat
         }
 
     //----------------------------------------------------------------------------------------------
@@ -102,10 +142,10 @@ public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorControll
         
         // Unlike the (beta) robot controller library, we just saturate the motor
         // power rather than making clients worry about that
-        power = Range.clip(power, -1.0, 1.0);
+        power = Range.clip(power, powerMin, powerMax);
         
         // The legacy values are -100 to 100
-        byte bPower = (byte)(power * 100.0);
+        byte bPower = (byte)Range.scale(power, powerMin, powerMax, bPowerMin, bPowerMax);
         
         // Write it on out
         this.i2cDeviceClient.write8(mpMotorRegMotorPower[motor], bPower);
@@ -117,19 +157,19 @@ public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorControll
         byte bPower = this.i2cDeviceClient.read8(mpMotorRegMotorMode[motor]);
         
         // Float counts as zero power
-        if (bPower == -128)
+        if (bPower == bPowerFloat)
             return 0.0;
         
         // Other values are just linear scaling. The clipping is just paranoia about 
         // numerical precision; it probably isn't necessary
-        double power = (double)bPower / 100.0;
-        return Range.clip(power, -1.0, 1.0);
+        double power = Range.scale(bPower, bPowerMin, bPowerMax, powerMin, powerMax);
+        return Range.clip(power, powerMin, powerMax);
         }
 
     @Override public void setMotorPowerFloat(int motor)
         {
         this.validateMotor(motor);
-        byte bPower = -128;
+        byte bPower = bPowerFloat;
         this.i2cDeviceClient.write8(mpMotorRegMotorPower[motor], bPower);
         }
 
@@ -137,7 +177,7 @@ public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorControll
         {
         this.validateMotor(motor);
         byte bPower = this.i2cDeviceClient.read8(mpMotorRegMotorMode[motor]);
-        return bPower == -128;
+        return bPower == bPowerFloat;
         }
 
     @Override public void setMotorTargetPosition(int motor, int position)
@@ -150,16 +190,17 @@ public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorControll
     @Override public int getMotorTargetPosition(int motor)
         {
         this.validateMotor(motor);
-        byte[] bytes = this.i2cDeviceClient.read(mpMotorRegTargetEncoderValue[motor], 2);
+        byte[] bytes = this.i2cDeviceClient.read(mpMotorRegTargetEncoderValue[motor], cbEncoder);
         return TypeConversion.byteArrayToInt(bytes);
         }
 
     @Override public int getMotorCurrentPosition(int motor)
         {
         this.validateMotor(motor);
-        byte[] bytes = this.i2cDeviceClient.read(mpMotorRegMotorPower[motor], 2);
+        byte[] bytes = this.i2cDeviceClient.read(mpMotorRegMotorPower[motor], cbEncoder);
         return TypeConversion.byteArrayToInt(bytes);
         }
+    
     //----------------------------------------------------------------------------------------------
     // DcMotorController utility
     //----------------------------------------------------------------------------------------------
