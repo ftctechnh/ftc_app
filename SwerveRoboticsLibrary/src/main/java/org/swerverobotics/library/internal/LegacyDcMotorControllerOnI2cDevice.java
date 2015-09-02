@@ -70,8 +70,9 @@ public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorControll
         this.initPID();
         this.floatMotors();
         
-        this.i2cDeviceClient.setRegisterWindow(new II2cDeviceClient.RegWindow(iregFirstRead, cregRead));
-        // TODO: implement heartbeat
+        // Always read a certain set of registers
+        this.i2cDeviceClient.setReadWindow(new II2cDeviceClient.RegWindow(iregFirstRead, cregRead));
+        this.i2cDeviceClient.setHeartbeatInterval(2000, null);
         }
 
     //----------------------------------------------------------------------------------------------

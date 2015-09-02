@@ -6,8 +6,6 @@ import org.swerverobotics.library.*;
 import org.swerverobotics.library.exceptions.*;
 import org.swerverobotics.library.interfaces.*;
 
-import java.io.InterruptedIOException;
-
 /**
  * Instances of AdaFruitBNO055IMU provide API access to an 
  * <a href="http://www.adafruit.com/products/2472">AdaFruit Absolute Orientation Sensor</a> that 
@@ -270,10 +268,10 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
     public synchronized Quaternion getQuaternionOrientation()
         {
         // Ensure we can see the registers we need
-        this.deviceClient.ensureRegisterWindow(
+        this.deviceClient.ensureReadWindow(
                 new I2cDeviceClient.RegWindow(REGISTER.QUATERNION_DATA_W_LSB.bVal, 8),
                 upperWindow
-            );
+        );
         
         // Section 3.6.5.5 of BNO055 specification
         II2cDeviceClient.TimestampedData ts = this.deviceClient.readTimeStamped(REGISTER.QUATERNION_DATA_W_LSB.bVal, 8);
@@ -456,7 +454,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
             : upperWindow.contains(needed)
                 ? upperWindow
                 : needed;           // just use what's needed if it's not within our two main windows
-        this.deviceClient.ensureRegisterWindow(needed, set);
+        this.deviceClient.ensureReadWindow(needed, set);
         }
 
     /**
