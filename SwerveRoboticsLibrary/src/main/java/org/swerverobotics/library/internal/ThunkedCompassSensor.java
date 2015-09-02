@@ -37,7 +37,7 @@ public class ThunkedCompassSensor extends CompassSensor implements IThunkedReadW
         if (this.isTargetLegacy())
             {
             // Make sure our hack is at least plausible
-            Assert.assertEquals(true, Util.<Object>getPrivateObjectField(target, 6) instanceof CompassMode);
+            junit.framework.Assert.assertEquals(true, Util.<Object>getPrivateObjectField(target, 6) instanceof CompassMode);
             }
         }
 
