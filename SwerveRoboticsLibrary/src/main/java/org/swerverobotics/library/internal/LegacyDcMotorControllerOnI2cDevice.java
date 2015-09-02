@@ -63,13 +63,14 @@ public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorControll
     // Construction
     //----------------------------------------------------------------------------------------------
     
-    public LegacyDcMotorControllerOnI2cDevice()
+    public LegacyDcMotorControllerOnI2cDevice(II2cDeviceClient ii2cDeviceClient)
         {
+        this.i2cDeviceClient = ii2cDeviceClient;
+        
         this.initPID();
         this.floatMotors();
         
         this.i2cDeviceClient.setRegisterWindow(new II2cDeviceClient.RegWindow(iregFirstRead, cregRead));
-        // TODO: rename register window to read window
         // TODO: implement heartbeat
         }
 

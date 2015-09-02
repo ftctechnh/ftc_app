@@ -7,7 +7,7 @@ import org.swerverobotics.library.*;
  * II2cDeviceClient is the public interface to a utility class that makes it easier to
  * use I2cDevice instances.
  * 
- * @see ClassFactory#createI2cDeviceClient(I2cDevice, II2cDeviceClient.RegWindow, int)
+ * @see ClassFactory#createI2cDeviceClient(I2cDevice, int, II2cDeviceClient.RegWindow)
  */
 public interface II2cDeviceClient
     {
@@ -127,6 +127,26 @@ public interface II2cDeviceClient
      * @param data      the data which is to be written to the registers
      */
     void write(int ireg, byte[] data);
+
+    //----------------------------------------------------------------------------------------------
+    // Heartbeats
+    //----------------------------------------------------------------------------------------------
+
+    /**
+     * Returns the interval within which communication must be received by the I2C device lest
+     * a timeout occur. The default heartbeat interval is zero.
+     * @return  the current timeout interval, in milliseconds
+     * @see #setHeartbeatInterval(int) 
+     */
+    int getHeartbeatInterval();
+
+    /**
+     * Sets the interval within which communication must be received by the I2C device lest
+     * a timeout occur.
+     * @param ms    the timeout interval, in milliseconds. If ms is less than or equal to zero, then 
+     *              no heartbeat messages are sent
+     */
+    void setHeartbeatInterval(int ms);
 
     //----------------------------------------------------------------------------------------------
     // Monitoring
