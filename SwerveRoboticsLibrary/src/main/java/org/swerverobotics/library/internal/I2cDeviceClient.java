@@ -1,6 +1,7 @@
 package org.swerverobotics.library.internal;
 
 import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.util.*;
 
 import junit.framework.Assert;
 import org.swerverobotics.library.BuildConfig;
@@ -26,6 +27,8 @@ public final class I2cDeviceClient implements II2cDeviceClient
 
     private final Callback      callback;
     private       Thread        callbackThread;             // the thread on which we observe our callbacks to be made
+    private final ElapsedTime   timeSinceLastHeartbeat;
+    private       int           msHeartbeatInterval;
     
     private final byte[]        readCache;                  // the buffer into which reads are retrieved
     private final byte[]        writeCache;                 // the buffer that we write from 
@@ -71,6 +74,9 @@ public final class I2cDeviceClient implements II2cDeviceClient
         this.i2cDevice = i2cDevice;
         this.callback = new Callback();
         this.callbackThread = null;
+        this.timeSinceLastHeartbeat = new ElapsedTime();
+        this.timeSinceLastHeartbeat.reset();
+        this.msHeartbeatInterval = 0;
 
         this.readCache      = this.i2cDevice.getI2cReadCache();
         this.readCacheLock  = this.i2cDevice.getI2cReadCacheLock();
@@ -272,6 +278,23 @@ public final class I2cDeviceClient implements II2cDeviceClient
             }
         }
     
+    public int getHeartbeatInterval()
+        {
+        synchronized (this.lock)
+            {
+            return this.msHeartbeatInterval;
+            }
+        }
+    
+    public void setHeartbeatInterval(int ms)
+        {
+        ms = Math.max(0, ms);
+        synchronized (this.lock)
+            {
+            this.msHeartbeatInterval = ms;
+            }
+        }
+    
     private class Callback implements I2cController.I2cPortReadyCallback
         {
         @Override public void portIsReady(int port)
@@ -288,8 +311,12 @@ public final class I2cDeviceClient implements II2cDeviceClient
                 else if (BuildConfig.DEBUG)
                     Assert.assertEquals(callbackThread.getId(), Thread.currentThread().getId());
                 
-                boolean setI2CActionFlag = false;
-                boolean writeFullCache = false;
+                boolean setActionFlag  = false;
+                boolean queueFullWrite = false;
+                boolean queueRead      = false;
+                
+                READ_CACHE_STATUS  nextReadCacheStatus  = readCacheStatus;
+                WRITE_CACHE_STATUS nextWriteCacheStatus = writeCacheStatus;
     
                 if (writeCacheStatus == WRITE_CACHE_STATUS.IDLE
                         || writeCacheStatus == WRITE_CACHE_STATUS.QUEUED
@@ -297,7 +324,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
                     {
                     // If we just finished a write queuing cycle, then our write cache is idle
                     if (writeCacheStatus == WRITE_CACHE_STATUS.QUEUED)
-                        writeCacheStatus = WRITE_CACHE_STATUS.IDLE;
+                        nextWriteCacheStatus = WRITE_CACHE_STATUS.IDLE;
     
                     // Deal with read issues
                     if (readCacheStatus == READ_CACHE_STATUS.IDLE)
@@ -305,72 +332,98 @@ public final class I2cDeviceClient implements II2cDeviceClient
                         if (registerWindow != null)
                             {
                             // Initiate switch to read mode
-                            readCacheStatus = READ_CACHE_STATUS.SWITCHING;
+                            nextReadCacheStatus = READ_CACHE_STATUS.SWITCHING;
                             i2cDevice.enableI2cReadMode(registerWindow.getIregFirst(), registerWindow.getCreg());
-                            setI2CActionFlag = true;
-                            writeFullCache = true;
+                            setActionFlag = true;
+                            queueFullWrite = true;
                             }
                         }
                     else if (readCacheStatus == READ_CACHE_STATUS.SWITCHING)
                         {
                         if (i2cDevice.isI2cPortInReadMode())
                             {
-                            // The port is in read mode. Start reading from it
-                            readCacheStatus = READ_CACHE_STATUS.QUEUED;
-                            i2cDevice.readI2cCacheFromModule();
-                            setI2CActionFlag = true;
+                            // The port has switched to read mode. Start reading from it
+                            nextReadCacheStatus = READ_CACHE_STATUS.QUEUED;
+                            queueRead = true;
+                            setActionFlag = true;
                             }
                         }
                     else if (readCacheStatus == READ_CACHE_STATUS.QUEUED)
                         {
-                        readCacheStatus = READ_CACHE_STATUS.VALIDQUEUED;
+                        nextReadCacheStatus = READ_CACHE_STATUS.VALIDQUEUED;
                         nanoTimeReadCacheValid = System.nanoTime();
                         // Re-read the next time around
-                        i2cDevice.readI2cCacheFromModule();
-                        setI2CActionFlag = true;
+                        queueRead = true;
+                        setActionFlag = true;
                         }
                     else if (readCacheStatus == READ_CACHE_STATUS.VALID || readCacheStatus == READ_CACHE_STATUS.VALIDQUEUED)
                         {
-                        readCacheStatus = READ_CACHE_STATUS.VALIDQUEUED;
+                        nextReadCacheStatus = READ_CACHE_STATUS.VALIDQUEUED;
                         nanoTimeReadCacheValid = System.nanoTime();
                         // Re-read the next time around
-                        i2cDevice.readI2cCacheFromModule();
-                        setI2CActionFlag = true;
+                        queueRead = true;
+                        setActionFlag = true;
                         }
                     }
     
                 else if (writeCacheStatus == WRITE_CACHE_STATUS.DIRTY)
                     {
                     // Queue the write cache for writing to the module
-                    writeCacheStatus = WRITE_CACHE_STATUS.QUEUED;
-                    setI2CActionFlag = true;      // request an I2C write
-                    writeFullCache = true;
+                    nextWriteCacheStatus = WRITE_CACHE_STATUS.QUEUED;
+                    setActionFlag = true;      // request an I2C write
+                    queueFullWrite = true;
     
                     // What's the impact on the read cache? 
                     if (readCacheStatus == READ_CACHE_STATUS.QUEUED || readCacheStatus == READ_CACHE_STATUS.VALIDQUEUED)
                         {
                         // We just completed a read cycle. Data is valid, for the moment.
                         // But don't re-issue the reread request
-                        readCacheStatus = READ_CACHE_STATUS.VALID;
+                        nextReadCacheStatus = READ_CACHE_STATUS.VALID;
                         nanoTimeReadCacheValid = System.nanoTime();
                         }
                     else if (readCacheStatus == READ_CACHE_STATUS.VALID)
                         {
                         // We've gone a cycle w/o reading. What's there is out of date.
-                        readCacheStatus = READ_CACHE_STATUS.IDLE;
+                        nextReadCacheStatus = READ_CACHE_STATUS.IDLE;
                         }
                     }
     
-                // Set action flag and queue to module as requested
-                if (setI2CActionFlag)
+                // Deal with any heartbeats which might be necessary to keep the I2C
+                // device alive and operational.
+                if (setActionFlag || queueFullWrite || queueRead)
+                    {
+                    // We're about to communicate right now, so reset the heart beat.
+                    // Note that we reset() *before* we talk to the device so as to do 
+                    // conservative timing accounting
+                    timeSinceLastHeartbeat.reset();
+                    }
+                else
+                    {
+                    // We're not otherwise communicating during this callback.
+                    // Do we need to do a heartbeat?
+                    if (msHeartbeatInterval > 0 && timeSinceLastHeartbeat.time()*1000 >= msHeartbeatInterval)
+                        {
+                        // Yes, we need to send a heartbeat. What can we do?
+                        }
+                    }
+
+                // Read, set action flag and / or queue to module as requested
+                if (queueRead)
+                    i2cDevice.readI2cCacheFromModule();;
+
+                if (setActionFlag)
                     i2cDevice.setI2cPortActionFlag();
-    
-                if (setI2CActionFlag && !writeFullCache)
+
+                if (setActionFlag && !queueFullWrite)
                     i2cDevice.writeI2cPortFlagOnlyToModule();
     
-                if (writeFullCache)
+                if (queueFullWrite)
                     i2cDevice.writeI2cCacheToModule();
-    
+                
+                // Update our state machine
+                readCacheStatus  = nextReadCacheStatus;
+                writeCacheStatus = nextWriteCacheStatus;
+                
                 // Tell any readers or writers that statuses have changed
                 lock.notifyAll();
                 }
