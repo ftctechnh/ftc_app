@@ -9,7 +9,7 @@ import java.util.concurrent.locks.Lock;
 public interface II2cDevice extends HardwareDevice
     {
     int     getI2cAddr();
-    void    setI2cAddr(int i2cAddr);
+    void    setI2cAddr(int i2cAddr8Bit);
     
     void    deregisterForPortReadyCallback();
 

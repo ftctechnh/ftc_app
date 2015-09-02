@@ -10,7 +10,7 @@ import org.swerverobotics.library.interfaces.*;
  * by thunking all calls over to the loop thread and back gain. The implementation automatically
  * takes care of read and write device mode switching.
  */
-public class ThunkedDCMotorController implements DcMotorController, IThunkedReadWriteListener, IThunkingWrapper<DcMotorController>
+public class ThunkedDCMotorController implements DcMotorController, IThunkedReadWriteListener, IHardwareWrapper<DcMotorController>
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -18,7 +18,7 @@ public class ThunkedDCMotorController implements DcMotorController, IThunkedRead
 
     private DcMotorController target;          // can only talk to him on the loop thread
 
-    @Override public DcMotorController getThunkTarget() { return this.target; }
+    @Override public DcMotorController getWrappedTarget() { return this.target; }
 
     private DeviceMode        controllerMode;  // the last mode we know the controller to be in
     

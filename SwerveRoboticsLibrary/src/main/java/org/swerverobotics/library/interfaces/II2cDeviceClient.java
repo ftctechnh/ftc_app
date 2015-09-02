@@ -138,22 +138,27 @@ public interface II2cDeviceClient extends HardwareDevice
      * Returns the interval within which communication must be received by the I2C device lest
      * a timeout occur. The default heartbeat interval is zero.
      * 
-     * @return  the current timeout interval, in milliseconds
-     * @see #setHeartbeatRead(int, RegWindow) 
+     * @return  the current heartbeat interval, in milliseconds
+     * @see #setHeartbeatRead(int) 
      * @see #setHeartbeatWrite(int) 
      */
     int getHeartbeatInterval();
 
     /**
      * Sets the interval within which communication must be received by the I2C device lest
-     * a timeout occur. If a heartbeat must ge sent, read the indicated window.
+     * a timeout occur. If a heartbeat must be sent, read the current read window registers
+     * from the device.
+     * 
+     * In effect, this sets a minimum frequency with which the read window registers are read.
+     * Note, though, that they may be read much more often than this, at the discretion of the
+     * implementation.
+     * 
+     * For read-heartbeats to be useful, the current read window must be non-null.
      * @param ms            the timeout interval, in milliseconds. If ms is less than or equal to
      *                      zero, then no heartbeat messages are sent
-     * @param regWindow     the registers to read to effect a heartbeat. May be null, in which case
-     *                      the current read window is used, which must not be null if ms is 
-     *                      greater than zero.
+     * @see #setReadWindow(RegWindow) 
      */
-    void setHeartbeatRead(int ms, RegWindow regWindow);
+    void setHeartbeatRead(int ms);
 
     /**
      * Sets the interval within which communication must be received by the I2C device lest
@@ -162,7 +167,7 @@ public interface II2cDeviceClient extends HardwareDevice
      *
      * @param ms            the timeout interval, in milliseconds. If ms is less than or equal to
      *                      zero, then no heartbeat messages are sent
-     * @see #setHeartbeatRead(int, RegWindow) 
+     * @see #setHeartbeatRead(int) 
      */
     void setHeartbeatWrite(int ms);
 
