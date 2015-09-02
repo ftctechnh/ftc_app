@@ -22,7 +22,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
     /**
      * The I2cDevice of which are are a client.
      */
-    public final I2cDevice      i2cDevice;                  // the device we are talking to
+    public final II2cDevice     i2cDevice;                  // the device we are talking to
 
     private final Callback      callback;
     private       Thread        callbackThread;             // the thread on which we observe our callbacks to be made
@@ -65,10 +65,8 @@ public final class I2cDeviceClient implements II2cDeviceClient
      * initial window of registers being read.
      * 
      * initialRegisterWindow may be null if no registers are initially to be read.
-     * 
-     * If i2cAddr is >= 0, then the address of the i2cDevice is changed to be the one indicated.
      */
-    public I2cDeviceClient(I2cDevice i2cDevice, RegWindow initialRegisterWindow, int i2cAddr)
+    public I2cDeviceClient(II2cDevice i2cDevice, int i2cAddr, RegWindow initialRegisterWindow)
         {
         this.i2cDevice = i2cDevice;
         this.callback = new Callback();
@@ -85,9 +83,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
         this.readCacheStatus  = READ_CACHE_STATUS.IDLE;
         this.writeCacheStatus = WRITE_CACHE_STATUS.IDLE;
         
-        // Hack. But it's all we can do at the moment, given the definition of I2cDevice
-        if (i2cAddr >= 0)
-            Util.setPrivateIntField(this.i2cDevice, 2, i2cAddr);
+        this.i2cDevice.setI2cAddr(i2cAddr);
         
         this.i2cDevice.registerForI2cPortReadyCallback(this.callback);
         }

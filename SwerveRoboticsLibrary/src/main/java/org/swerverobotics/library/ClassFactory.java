@@ -14,6 +14,8 @@ import org.swerverobotics.library.internal.*;
  */
 public final class ClassFactory
     {
+    //----------------------------------------------------------------------------------------------
+    
     /**
      * Instantiate an AdaFruit BNO055 sensor who resides at the indicated I2cDevice using
      * default values for configuration parameters.
@@ -38,19 +40,61 @@ public final class ClassFactory
         {
         return AdaFruitBNO055IMU.create(i2cDevice, parameters);
         }
+    
+    //----------------------------------------------------------------------------------------------
 
     /**
-     * Instantiate an I2cDeviceClient wrapper around the provided I2cDevice.
+     * Instantiate an I2cDeviceClient wrapper on an I2cDevice.
      * 
      * @param i2cDevice                 the I2cDevice to wrap
      * @param initialRegisterWindow     the initial register window to read. May be null.
-     * @param i2cAddr                   the I2C address to initialize i2cDevice with. If less than 
-     *                                  zero, then i2cAddr is ignored, and the address used by 
-     *                                  i2cDevice must be initialized by other means.
+     * @param i2cAddr                   the I2C address to initialize i2cDevice with.
+     * @return                          the newly instantiated wrapper
      */
-    public static II2cDeviceClient createI2cDeviceClient(I2cDevice i2cDevice, II2cDeviceClient.RegWindow initialRegisterWindow, int i2cAddr)
+    public static II2cDeviceClient createI2cDeviceClient(I2cDevice i2cDevice, int i2cAddr, II2cDeviceClient.RegWindow initialRegisterWindow)
         {
-        return new I2cDeviceClient(i2cDevice, initialRegisterWindow, i2cAddr);
+        I2cController i2cController = Util.<I2cController>getPrivateObjectField(i2cDevice, 0);
+        int port = Util.getPrivateIntField(i2cDevice, 1);
+        return createI2cDeviceClient(i2cController, port, i2cAddr, initialRegisterWindow);
+        }
+
+    /**
+     * Instantiate an I2cDeviceClient on an I2cController using a given port and i2cAddr
+     * @param i2cController             the controller to use
+     * @param port                      the port to use on that controlller
+     * @param i2cAddr                   the i2cAddr to talk to through that port
+     * @param initialRegisterWindow     the initial register window to read. May be null.
+     * @return                          the returned wrapper
+     */
+    public static II2cDeviceClient createI2cDeviceClient(I2cController i2cController, int port, int i2cAddr, II2cDeviceClient.RegWindow initialRegisterWindow)
+        {
+        II2cDevice ii2cDevice = new I2cDeviceOnI2cDeviceController(i2cController, port);
+        return createI2cDeviceClient(ii2cDevice, i2cAddr, initialRegisterWindow);    
+        }
+    
+    public static II2cDeviceClient createI2cDeviceClient(LegacyModule legacyModule, int port, int i2cAddr, II2cDeviceClient.RegWindow initialRegisterWindow)
+        {
+        II2cDevice ii2cDevice = new I2cDeviceOnLegacyModule(legacyModule, port);
+        return createI2cDeviceClient(ii2cDevice, i2cAddr, initialRegisterWindow);
+        }
+
+    /**
+     * Instantiate an I2cDeviceClient wrapper around an I2cDevice using the i2cAddr found therein
+     * 
+     * @param i2cDevice                 the I2cDevice to wrap
+     * @param initialRegisterWindow     the initial register window to read. May be null
+     * @return                          the newly instantiated wrapper
+     */
+    public static II2cDeviceClient createI2cDeviceClient(I2cDevice i2cDevice, II2cDeviceClient.RegWindow initialRegisterWindow)
+        {
+        int i2cAddr = Util.getPrivateIntField(i2cDevice, 2);
+        return createI2cDeviceClient(i2cDevice, i2cAddr, initialRegisterWindow);
+        }
+
+    /** internal */
+    private static II2cDeviceClient createI2cDeviceClient(II2cDevice ii2cDevice, int i2cAddr, II2cDeviceClient.RegWindow initialRegisterWindow)
+        {
+        return new I2cDeviceClient(ii2cDevice, i2cAddr, initialRegisterWindow);
         }
     
     //----------------------------------------------------------------------------------------------
