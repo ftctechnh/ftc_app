@@ -9,7 +9,7 @@ import org.swerverobotics.library.*;
  * 
  * @see ClassFactory#createI2cDeviceClient(I2cDevice, int, II2cDeviceClient.RegWindow)
  */
-public interface II2cDeviceClient
+public interface II2cDeviceClient extends HardwareDevice
     {
     //----------------------------------------------------------------------------------------------
     // RegWindow management
@@ -137,21 +137,34 @@ public interface II2cDeviceClient
     /**
      * Returns the interval within which communication must be received by the I2C device lest
      * a timeout occur. The default heartbeat interval is zero.
+     * 
      * @return  the current timeout interval, in milliseconds
-     * @see #setHeartbeatInterval(int, RegWindow)  
+     * @see #setHeartbeatRead(int, RegWindow) 
+     * @see #setHeartbeatWrite(int) 
      */
     int getHeartbeatInterval();
 
     /**
      * Sets the interval within which communication must be received by the I2C device lest
-     * a timeout occur.
+     * a timeout occur. If a heartbeat must ge sent, read the indicated window.
      * @param ms            the timeout interval, in milliseconds. If ms is less than or equal to
      *                      zero, then no heartbeat messages are sent
      * @param regWindow     the registers to read to effect a heartbeat. May be null, in which case
      *                      the current read window is used, which must not be null if ms is 
      *                      greater than zero.
      */
-    void setHeartbeatInterval(int ms, RegWindow regWindow);
+    void setHeartbeatRead(int ms, RegWindow regWindow);
+
+    /**
+     * Sets the interval within which communication must be received by the I2C device lest
+     * a timeout occur. If a heartbeat must be sent, the previous write operation on the 
+     * device is reissued.
+     *
+     * @param ms            the timeout interval, in milliseconds. If ms is less than or equal to
+     *                      zero, then no heartbeat messages are sent
+     * @see #setHeartbeatRead(int, RegWindow) 
+     */
+    void setHeartbeatWrite(int ms);
 
     //----------------------------------------------------------------------------------------------
     // Monitoring

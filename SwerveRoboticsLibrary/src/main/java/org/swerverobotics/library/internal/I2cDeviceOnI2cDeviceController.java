@@ -29,9 +29,37 @@ public final class I2cDeviceOnI2cDeviceController implements II2cDevice
         }
     
     //----------------------------------------------------------------------------------------------
+    // HardwareDevice
+    //----------------------------------------------------------------------------------------------
+
+    @Override public String getDeviceName()
+        {
+        return String.format("I2C device at address 0x%02x", this.i2cAddr);
+        }
+    
+    @Override public String getConnectionInfo()
+        {
+        String sController = "anI2cController";
+        if (this.controller instanceof HardwareDevice)
+            sController = ((HardwareDevice)this.controller).getConnectionInfo();
+        return String.format("%s; port: %d", sController, this.port);
+        }
+    
+    @Override public int getVersion()
+        {
+        // We actually don't have any idea what revision number the device might be
+        return 0;
+        }
+    
+    @Override public void close()
+        {
+        // There's nothing in particular we need to do to shut this down.
+        }
+
+    //----------------------------------------------------------------------------------------------
     // II2cDevice
     //----------------------------------------------------------------------------------------------
-    
+
     @Override public int getI2cAddr()
         {
         return this.i2cAddr;

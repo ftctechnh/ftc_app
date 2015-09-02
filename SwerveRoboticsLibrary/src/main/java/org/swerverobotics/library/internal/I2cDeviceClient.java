@@ -97,6 +97,30 @@ public final class I2cDeviceClient implements II2cDeviceClient
         }
     
     //----------------------------------------------------------------------------------------------
+    // HardwareDevice
+    //----------------------------------------------------------------------------------------------
+    
+    public String getDeviceName()
+        {
+        return this.i2cDevice.getDeviceName();
+        }
+    
+    public String getConnectionInfo()
+        {
+        return this.i2cDevice.getConnectionInfo();
+        }
+    
+    public int getVersion()
+        {
+        return this.i2cDevice.getVersion();
+        }
+
+    public void close()
+        {
+        this.i2cDevice.close();
+        }
+
+    //----------------------------------------------------------------------------------------------
     // Operations
     //----------------------------------------------------------------------------------------------
 
@@ -288,7 +312,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
             }
         }
     
-    public void setHeartbeatInterval(int ms, RegWindow window)
+    public void setHeartbeatRead(int ms, RegWindow window)
         {
         ms = Math.max(0, ms);
         synchronized (this.lock)
@@ -303,6 +327,16 @@ public final class I2cDeviceClient implements II2cDeviceClient
             
             this.msHeartbeatInterval = ms;
             this.regWindowHeartbeat  = window;
+            }
+        }
+    
+    public void setHeartbeatWrite(int ms)
+        {
+        ms = Math.max(0, ms);
+        synchronized (this.lock)
+            {
+            this.msHeartbeatInterval = ms;
+            this.regWindowHeartbeat  = null;
             }
         }
     
@@ -328,9 +362,10 @@ public final class I2cDeviceClient implements II2cDeviceClient
                 else if (BuildConfig.DEBUG)
                     Assert.assertEquals(callbackThread.getId(), Thread.currentThread().getId());
                 
-                boolean setActionFlag  = false;
-                boolean queueFullWrite = false;
-                boolean queueRead      = false;
+                boolean setActionFlag     = false;
+                boolean queueFullWrite    = false;
+                boolean queueRead         = false;
+                boolean heartbeatRequired = heartbeatRequired();
                 
                 READ_CACHE_STATUS  nextReadCacheStatus  = readCacheStatus;
                 WRITE_CACHE_STATUS nextWriteCacheStatus = writeCacheStatus;
@@ -350,7 +385,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
                         // like us to read in the normal course of events or what he'd like
                         // us to read if we have to do a heartbeat
                         RegWindow window = regWindowRead;
-                        if (window == null && heartbeatRequired())
+                        if (window == null && heartbeatRequired)
                             window = regWindowHeartbeat;
                         
                         if (window != null)
@@ -418,6 +453,13 @@ public final class I2cDeviceClient implements II2cDeviceClient
                     // Note that we reset() *before* we talk to the device so as to do 
                     // conservative timing accounting
                     timeSinceLastHeartbeat.reset();
+                    }
+                
+                if (!setActionFlag && heartbeatRequired && regWindowHeartbeat==null)
+                    {
+                    // Rewrite what we previously wrote
+                    setActionFlag  = true;
+                    queueFullWrite = true;
                     }
 
                 // Read, set action flag and / or queue to module as requested

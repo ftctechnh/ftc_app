@@ -30,6 +30,31 @@ public final class I2cDeviceOnLegacyModule implements II2cDevice, LegacyModule.P
         }
 
     //----------------------------------------------------------------------------------------------
+    // HardwareDevice
+    //----------------------------------------------------------------------------------------------
+
+    @Override public String getDeviceName()
+        {
+        return String.format("Legacy I2C device at address 0x%02x", this.i2cAddr);
+        }
+
+    @Override public String getConnectionInfo()
+        {
+        return String.format("%s; port: %d", controller.getConnectionInfo(), this.port); 
+        }
+
+    @Override public int getVersion()
+        {
+        // We actually don't have any idea what revision number the device might be
+        return 0;
+        }
+
+    @Override public void close()
+        {
+        // There's nothing in particular we need to do to shut this down.
+        }
+
+    //----------------------------------------------------------------------------------------------
     // II2cDevice
     //----------------------------------------------------------------------------------------------
 
