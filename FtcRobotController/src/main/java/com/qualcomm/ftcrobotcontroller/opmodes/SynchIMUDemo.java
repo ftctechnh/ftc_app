@@ -18,6 +18,9 @@ public class SynchIMUDemo extends SynchronousOpMode
         // module and named "imu". Retrieve that raw I2cDevice and then wrap it in an object that
         // semantically understands this particular kind of sensor.
         imu = ClassFactory.createAdaFruitBNO055IMU(hardwareMap.i2cDevice.get("imu"));
+        
+        // Enable some low-level logging to help in debugging
+        ((II2cDeviceClientUser)imu).getI2cDeviceClient().setLoggingEnabled(true);
 
         // Set up our dashboard computations
         composeDashboard();
@@ -36,10 +39,28 @@ public class SynchIMUDemo extends SynchronousOpMode
     void composeDashboard()
         {
         TelemetryDashboardAndLog.Dashboard dashboard = telemetry.dashboard;
-        dashboard.action(new IAction() { @Override public void doAction()
+        dashboard.action(new IAction()
+        {
+        @Override public void doAction()
             {
             angles = imu.getAngularOrientation();
-            }});
+            }
+        });
+        dashboard.line(
+                dashboard.item("loop count: ", new IFunc<Object>()
+                {
+                @Override public Object value()
+                    {
+                    return getLoopCount();
+                    }
+                }),
+                dashboard.item("hw cycle count: ", new IFunc<Object>()
+                {
+                @Override public Object value()
+                    {
+                    return ((II2cDeviceClientUser) imu).getI2cDeviceClient().getHardwareCycleCount();
+                    }
+                }));
         dashboard.line(dashboard.item("heading: ", new IFunc<Object>() { @Override public Object value()
             {
             return formatAngle(angles.heading);

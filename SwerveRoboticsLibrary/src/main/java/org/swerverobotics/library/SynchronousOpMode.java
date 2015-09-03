@@ -148,6 +148,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         // incoming gamepad change messages, but, alas, at present we can find no
         // way of doing that.
         //
+        this.gamepadInputQueried = true;
         return this.gamePadStateChanged.getAndSet(false);
         }
 
@@ -158,9 +159,15 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      */
     public final boolean isNewGamePadInputAvailable()
         {
+        this.gamepadInputQueried = true;
+        return this.isNewGamePadInputAvailableInternal();
+        }
+    
+    private final boolean isNewGamePadInputAvailableInternal()
+        {
         return this.gamePadStateChanged.get();
         }
-
+    
     /**
      * Put the current thread to sleep for a bit as it has nothing better to do.
      *
@@ -180,7 +187,9 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         synchronized (this.loopLock)
             {
             // If new input has arrived since anyone last looked, then let our caller process that
-            if (this.isNewGamePadInputAvailable())
+            // if he is looking at the game pad input. If he's not, then we save some cycles and
+            // processing power by waiting instead of spinning.
+            if (this.gamepadInputQueried && this.isNewGamePadInputAvailableInternal())
                 {
                 Thread.yield();     // avoid tight loop if caller not looking at gamepad input
                 return;
@@ -255,6 +264,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     private volatile boolean                stopRequested;
     private final   ActionQueueAndHistory   actionQueueAndHistory = new ActionQueueAndHistory();
     private         AtomicBoolean           gamePadStateChanged = new AtomicBoolean(false);
+    private         boolean                 gamepadInputQueried = false;
     private final   Object                  loopLock = new Object();
     private final   SparseArray<IAction>    singletonLoopActions = new SparseArray<IAction>();
     private static  AtomicInteger           prevSingletonKey = new AtomicInteger(0);

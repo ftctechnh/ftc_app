@@ -154,7 +154,7 @@ public interface II2cDeviceClient extends HardwareDevice
     void setHeartbeatWrite(int ms);
 
     //----------------------------------------------------------------------------------------------
-    // Monitoring
+    // Monitoring & debugging
     //----------------------------------------------------------------------------------------------
 
     /** Return the thread on which it is observed that portIsReady callbacks occur 
@@ -162,6 +162,19 @@ public interface II2cDeviceClient extends HardwareDevice
      *         so the identity of this thread is not yet known.
      */
     Thread getCallbackThread();
+
+    /**
+     * Return the number of hardware cycles that we've seen for this device. This at times
+     * can be a useful debugging aid, but probably isn't useful for much more
+     */
+    int getHardwareCycleCount();
+
+    /**
+     * Turn logging on or off. Note: the details of logging control will likely be developed
+     * further. That is, this particular methods signature and semantics may change in future
+     * releases
+     */
+    void setLoggingEnabled(boolean enabled);
 
     //----------------------------------------------------------------------------------------------
     // RegWindow
