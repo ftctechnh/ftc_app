@@ -8,7 +8,7 @@ import org.swerverobotics.library.interfaces.*;
 /**
  * An IrSeekerSensor that can be called on a synchronous thread
  */
-public class ThunkedIrSeekerSensor extends IrSeekerSensor implements IThunkedReadWriteListener, IThunkingWrapper<IrSeekerSensor>
+public class ThunkedIrSeekerSensor extends IrSeekerSensor implements IThunkedReadWriteListener, IThunkWrapper<IrSeekerSensor>
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -16,7 +16,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor implements IThunkedRea
 
     private IrSeekerSensor target;   // can only talk to him on the loop thread
 
-    @Override public IrSeekerSensor getThunkTarget() { return this.target; }
+    @Override public IrSeekerSensor getWrappedTarget() { return this.target; }
 
     private LegacyModule legacyModule = null;
     private int          port;

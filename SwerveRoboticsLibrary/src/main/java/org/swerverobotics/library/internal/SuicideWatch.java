@@ -6,8 +6,8 @@ import org.swerverobotics.library.exceptions.SwerveRuntimeException;
 import java.util.concurrent.*;
 
 /**
- * SuicideWatch is a little utility class that will terminate one thread upon the termination
- * of a second, monitored threads
+ * SuicideWatch is a little utility class that monitors a thread for termination. When that
+ * occurs, a second thread is interrupted.
  */
 public class SuicideWatch
     {

@@ -7,7 +7,7 @@ import org.swerverobotics.library.interfaces.*;
 /**
  * Another in our series
  */
-public class ThunkedPWMOutputController implements PWMOutputController, IThunkingWrapper<PWMOutputController>
+public class ThunkedPWMOutputController implements PWMOutputController, IThunkWrapper<PWMOutputController>
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -15,7 +15,7 @@ public class ThunkedPWMOutputController implements PWMOutputController, IThunkin
 
     private PWMOutputController target;          // can only talk to him on the loop thread
 
-    @Override public PWMOutputController getThunkTarget() { return this.target; }
+    @Override public PWMOutputController getWrappedTarget() { return this.target; }
 
     //----------------------------------------------------------------------------------------------
     // Construction

@@ -7,9 +7,9 @@ import org.swerverobotics.library.*;
  * II2cDeviceClient is the public interface to a utility class that makes it easier to
  * use I2cDevice instances.
  * 
- * @see ClassFactory#createI2cDeviceClient(I2cDevice, II2cDeviceClient.RegWindow, int)
+ * @see ClassFactory#createI2cDeviceClient(I2cDevice, int, II2cDeviceClient.RegWindow)
  */
-public interface II2cDeviceClient
+public interface II2cDeviceClient extends HardwareDevice
     {
     //----------------------------------------------------------------------------------------------
     // RegWindow management
@@ -19,13 +19,15 @@ public interface II2cDeviceClient
      * Set the set of registers that we will read and read and read again on every hardware cycle
      * 
      * @param window    the register window to read. May be null, indicating that no reads are to occur.
+     * @see #getReadWindow() 
      */
-    void setRegisterWindow(RegWindow window);
+    void setReadWindow(RegWindow window);
 
     /**
      * Return the current register window.
+     * @see #setReadWindow(RegWindow)  
      */
-    RegWindow getRegisterWindow();
+    RegWindow getReadWindow();
 
     /**
      * Ensure that the current register window covers the indicated set of registers.
@@ -41,9 +43,9 @@ public interface II2cDeviceClient
      * @param windowToSet  If an update to the current register window is needed, then this
      *                     is the window to which it will be set. May be null.
      *
-     * @see #setRegisterWindow
+     * @see #setReadWindow(RegWindow) 
      */
-    void ensureRegisterWindow(RegWindow windowNeeded, RegWindow windowToSet);
+    void ensureReadWindow(RegWindow windowNeeded, RegWindow windowToSet);
 
     //----------------------------------------------------------------------------------------------
     // Reading
@@ -58,16 +60,6 @@ public interface II2cDeviceClient
      * @return      the byte that was read
      */
     byte read8(int ireg);
-
-    /**
-     * Read a (little-endian) integer starting at the indicated register.
-     *
-     * The two registers comprising the integer must lie within the current register window.
-     * 
-     * @param ireg  the register number of the first of the two registers to read
-     * @return      the integer that was read
-     */
-    int read16(int ireg);
 
     /**
      * Read a contiguous set of device I2C registers.
@@ -113,14 +105,6 @@ public interface II2cDeviceClient
     void write8(int ireg, int bVal);
 
     /**
-     * Write an little endian 16-bit integer to an adjacent pair of registers
-     * 
-     * @param ireg      the first of the registers which is to be written
-     * @param iVal      the 16 bit integer which is to be written there
-     */
-    void write16(int ireg, int iVal);
-
-    /**
      * Write data to a set of registers, beginning with the one indicated
      * 
      * @param ireg      the first of the registers which is to be written
@@ -129,7 +113,48 @@ public interface II2cDeviceClient
     void write(int ireg, byte[] data);
 
     //----------------------------------------------------------------------------------------------
-    // Monitoring
+    // Heartbeats
+    //----------------------------------------------------------------------------------------------
+
+    /**
+     * Returns the interval within which communication must be received by the I2C device lest
+     * a timeout occur. The default heartbeat interval is zero.
+     * 
+     * @return  the current heartbeat interval, in milliseconds
+     * @see #setHeartbeatRead(int) 
+     * @see #setHeartbeatWrite(int) 
+     */
+    int getHeartbeatInterval();
+
+    /**
+     * Sets the interval within which communication must be received by the I2C device lest
+     * a timeout occur. If a heartbeat must be sent, read the current read window registers
+     * from the device.
+     * 
+     * In effect, this sets a minimum frequency with which the read window registers are read.
+     * Note, though, that they may be read much more often than this, at the discretion of the
+     * implementation.
+     * 
+     * For read-heartbeats to be useful, the current read window must be non-null.
+     * @param ms            the timeout interval, in milliseconds. If ms is less than or equal to
+     *                      zero, then no heartbeat messages are sent
+     * @see #setReadWindow(RegWindow) 
+     */
+    void setHeartbeatRead(int ms);
+
+    /**
+     * Sets the interval within which communication must be received by the I2C device lest
+     * a timeout occur. If a heartbeat must be sent, the previous write operation on the 
+     * device is reissued.
+     *
+     * @param ms            the timeout interval, in milliseconds. If ms is less than or equal to
+     *                      zero, then no heartbeat messages are sent
+     * @see #setHeartbeatRead(int) 
+     */
+    void setHeartbeatWrite(int ms);
+
+    //----------------------------------------------------------------------------------------------
+    // Monitoring & debugging
     //----------------------------------------------------------------------------------------------
 
     /** Return the thread on which it is observed that portIsReady callbacks occur 
@@ -137,6 +162,19 @@ public interface II2cDeviceClient
      *         so the identity of this thread is not yet known.
      */
     Thread getCallbackThread();
+
+    /**
+     * Return the number of hardware cycles that we've seen for this device. This at times
+     * can be a useful debugging aid, but probably isn't useful for much more
+     */
+    int getHardwareCycleCount();
+
+    /**
+     * Turn logging on or off. Note: the details of logging control will likely be developed
+     * further. That is, this particular methods signature and semantics may change in future
+     * releases
+     */
+    void setLoggingEnabled(boolean enabled);
 
     //----------------------------------------------------------------------------------------------
     // RegWindow
