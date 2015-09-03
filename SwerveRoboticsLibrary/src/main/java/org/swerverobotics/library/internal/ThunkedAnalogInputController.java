@@ -7,7 +7,7 @@ import org.swerverobotics.library.interfaces.*;
 /**
  * Another in our series
  */
-public class ThunkedAnalogInputController implements AnalogInputController, IThunkingWrapper<AnalogInputController>
+public class ThunkedAnalogInputController implements AnalogInputController, IThunkWrapper<AnalogInputController>
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -15,7 +15,7 @@ public class ThunkedAnalogInputController implements AnalogInputController, IThu
 
     private AnalogInputController target;          // can only talk to him on the loop thread
 
-    @Override public AnalogInputController getThunkTarget() { return this.target; }
+    @Override public AnalogInputController getWrappedTarget() { return this.target; }
 
     //----------------------------------------------------------------------------------------------
     // Construction

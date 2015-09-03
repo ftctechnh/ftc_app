@@ -6,7 +6,7 @@ import org.swerverobotics.library.interfaces.*;
 /**
  * Another in our story
  */
-public class ThunkedOpticalDistanceSensor extends OpticalDistanceSensor implements IThunkingWrapper<OpticalDistanceSensor>
+public class ThunkedOpticalDistanceSensor extends OpticalDistanceSensor implements IThunkWrapper<OpticalDistanceSensor>
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -14,7 +14,7 @@ public class ThunkedOpticalDistanceSensor extends OpticalDistanceSensor implemen
 
     private OpticalDistanceSensor target;   // can only talk to him on the loop thread
 
-    @Override public OpticalDistanceSensor getThunkTarget() { return this.target; }
+    @Override public OpticalDistanceSensor getWrappedTarget() { return this.target; }
 
     //----------------------------------------------------------------------------------------------
     // Construction
