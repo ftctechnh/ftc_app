@@ -80,6 +80,9 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
      */
     public void initialize(Parameters parameters)
         {
+        // Turn on the logging (or not) so we can see what happens
+        this.getI2cDeviceClient().setLoggingEnabled(parameters.loggingEnabled);
+        
         // Make sure we have the right device
         byte id = read8(REGISTER.CHIP_ID); 
         if (id != bCHIP_ID_VALUE)
@@ -406,6 +409,8 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
     //------------------------------------------------------------------------------------------
 
     /**
+     * One of two primary register windows we use for reading from the BNO055.
+     * 
      * Given the maximum allowable size of a register window, the set of registers on 
      * a BNO055 can be usefully divided into two windows, which we here call lowerWindow
      * and upperWindow. 
@@ -416,9 +421,14 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
      */
     private static final I2cDeviceClient.RegWindow lowerWindow = newWindow(REGISTER.CHIP_ID, REGISTER.EULER_H_LSB);
     /**
+     * A second of two primary register windows we use for reading from the BNO055.
+     * We'd like to include the temperature register, too, but that would make a 27-byte window, and
+     * those don't (currently) work in the CDIM.
+     *
      * @see #lowerWindow
      */
-    private static final I2cDeviceClient.RegWindow upperWindow = newWindow(REGISTER.EULER_H_LSB, REGISTER.CALIB_STAT);;
+    private static final I2cDeviceClient.RegWindow upperWindow = newWindow(REGISTER.EULER_H_LSB, REGISTER.TEMP);
+    
     private static I2cDeviceClient.RegWindow newWindow(REGISTER regFirst, REGISTER regMax)
         {
         return new I2cDeviceClient.RegWindow(regFirst.bVal, regMax.bVal-regFirst.bVal);

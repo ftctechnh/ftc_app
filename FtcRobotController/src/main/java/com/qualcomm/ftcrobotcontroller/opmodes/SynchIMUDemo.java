@@ -18,11 +18,10 @@ public class SynchIMUDemo extends SynchronousOpMode
         // We are expecting the IMU to be attached to an I2C port on  a core device interface 
         // module and named "imu". Retrieve that raw I2cDevice and then wrap it in an object that
         // semantically understands this particular kind of sensor.
-        imu = ClassFactory.createAdaFruitBNO055IMU(hardwareMap.i2cDevice.get("imu"));
+        IBNO055IMU.Parameters parameters = new IBNO055IMU.Parameters();
+        parameters.loggingEnabled = true;
+        imu = ClassFactory.createAdaFruitBNO055IMU(hardwareMap.i2cDevice.get("imu"), parameters);
         
-        // Enable some logging to help in debugging
-        ((II2cDeviceClientUser)imu).getI2cDeviceClient().setLoggingEnabled(true);
-
         // Set up our dashboard computations
         composeDashboard();
         
