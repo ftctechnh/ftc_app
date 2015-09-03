@@ -50,7 +50,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
         }
 
     /**
-     * Instantiate and initialize an AdaFruitBNO055IMU with the indicated set of parameters
+     * Instantiate an AdaFruitBNO055IMU and then initialize it with the indicated set of parameters.
      */
     public static IBNO055IMU create(I2cDevice i2cDevice, Parameters parameters)
         {

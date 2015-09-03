@@ -62,16 +62,6 @@ public interface II2cDeviceClient extends HardwareDevice
     byte read8(int ireg);
 
     /**
-     * Read a (little-endian) integer starting at the indicated register.
-     *
-     * The two registers comprising the integer must lie within the current register window.
-     * 
-     * @param ireg  the register number of the first of the two registers to read
-     * @return      the integer that was read
-     */
-    int read16(int ireg);
-
-    /**
      * Read a contiguous set of device I2C registers.
      *
      * All the registers must lie within the current register window. Note that this 
@@ -113,14 +103,6 @@ public interface II2cDeviceClient extends HardwareDevice
      * @param bVal      the byte which is to be written to that register
      */
     void write8(int ireg, int bVal);
-
-    /**
-     * Write an little endian 16-bit integer to an adjacent pair of registers
-     * 
-     * @param ireg      the first of the registers which is to be written
-     * @param iVal      the 16 bit integer which is to be written there
-     */
-    void write16(int ireg, int iVal);
 
     /**
      * Write data to a set of registers, beginning with the one indicated

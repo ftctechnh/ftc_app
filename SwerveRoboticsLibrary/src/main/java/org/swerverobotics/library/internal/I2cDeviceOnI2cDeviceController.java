@@ -10,9 +10,9 @@ import java.util.concurrent.locks.Lock;
 public final class I2cDeviceOnI2cDeviceController implements II2cDevice
 // Implementation note: 
 //
-// The Core Device Interface module follows the standard I2C protocol. Many device documentation will 
+// "The Core Device Interface module follows the standard I2C protocol. Many device documentation will 
 // specify the address as a 7 bit address. But the CDIM takes the address in the standard 8 bit format. 
-// To convert the address multiply it by 2 (or bit shift it to the left by one).
+// To convert the address multiply it by 2 (or bit shift it to the left by one)."
 //
 //      Jonathan Berling
 //      http://ftcforum.usfirst.org/showthread.php?4421-Recommendation-for-a-gyro-sensor-that-will-work-on-new-control-system/page3
@@ -34,7 +34,7 @@ public final class I2cDeviceOnI2cDeviceController implements II2cDevice
 
     public I2cDeviceOnI2cDeviceController(I2cController controller, int port)
         {
-        // Get rid of any thunker; we know we want to go the metal
+        // Get rid of any thunker; we we want to go the metal
         if (controller instanceof IThunkWrapper)
             {
             controller = ((IThunkWrapper<I2cController>)controller).getWrappedTarget();

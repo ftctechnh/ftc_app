@@ -190,15 +190,6 @@ public final class I2cDeviceClient implements II2cDeviceClient
         }
 
     /**
-     * Read a (little-endian) integer starting at the indicated register.
-     */
-    public int read16(int ireg)
-        {
-        byte[] data = read(ireg, 2);
-        return Util.makeIntLittle(data[0], data[1]);
-        }
-
-    /**
      * Read a contiguous set of registers
      */
     public byte[] read(int ireg, int creg)
@@ -260,14 +251,6 @@ public final class I2cDeviceClient implements II2cDeviceClient
         this.write(ireg, new byte[] {(byte) data});
         }
 
-    /**
-     * Write an little endian int to an adjacent pair of registers
-     */
-    public void write16(int ireg, int data)
-        {
-        this.write(ireg, new byte[] { (byte)(data&0xFF), (byte)((data>>8)&0xFF)} );
-        }
-    
     /**
      * Write data to a set of registers, beginning with the one indicated
      */
@@ -527,6 +510,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
                 if (queueFullWrite)
                     i2cDevice.writeI2cCacheToModule();
                 
+                /*
                 if (readCacheStatus != nextReadCacheStatus || writeCacheStatus != nextWriteCacheStatus)
                     {
                     log("-----");
@@ -535,6 +519,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
                     if (writeCacheStatus != nextWriteCacheStatus)
                         log("WRITE." + writeCacheStatus.toString() + "->" + nextWriteCacheStatus.toString());
                     }
+                */
                 
                 // Update our state machine
                 readCacheStatus  = nextReadCacheStatus;
