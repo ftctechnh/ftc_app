@@ -6,8 +6,6 @@ import org.swerverobotics.library.*;
 import org.swerverobotics.library.exceptions.*;
 import org.swerverobotics.library.interfaces.*;
 
-import java.io.InterruptedIOException;
-
 /**
  * Instances of AdaFruitBNO055IMU provide API access to an 
  * <a href="http://www.adafruit.com/products/2472">AdaFruit Absolute Orientation Sensor</a> that 
@@ -39,9 +37,9 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
      * Instantiate an AdaFruitBNO055IMU on the indicated device whose I2C address is the one
      * indicated.
      */
-    public AdaFruitBNO055IMU(I2cDevice i2cDevice, int i2cAddr)
+    public AdaFruitBNO055IMU(I2cDevice i2cDevice, int i2cAddr8Bit)
         {
-        this.deviceClient = ClassFactory.createI2cDeviceClient(i2cDevice, lowerWindow, i2cAddr);
+        this.deviceClient = ClassFactory.createI2cDeviceClient(i2cDevice, i2cAddr8Bit, lowerWindow);
         this.currentMode  = null;
         this.acceleration = null;
         this.velocity     = new Velocity();
@@ -52,21 +50,12 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
         }
 
     /**
-     * Instantiate and initialize an AdaFruitBNO055IMU with default parameters
-     */
-    public static IBNO055IMU create(I2cDevice i2cDevice)
-        {
-        // Default to the fusion 'IMU' mode
-        return create(i2cDevice, new Parameters());
-        }
-
-    /**
      * Instantiate and initialize an AdaFruitBNO055IMU with the indicated set of parameters
      */
     public static IBNO055IMU create(I2cDevice i2cDevice, Parameters parameters)
         {
         // Create a sensor which is a client of i2cDevice
-        IBNO055IMU result = new AdaFruitBNO055IMU(i2cDevice, parameters.i2cAddr.bVal);
+        IBNO055IMU result = new AdaFruitBNO055IMU(i2cDevice, parameters.i2cAddr8Bit.bVal);
         
         // Initialize it with the indicated parameters
         result.initialize(parameters);
@@ -84,11 +73,11 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
         {
         // Make sure we have the right device
         byte id = read8(REGISTER.CHIP_ID); 
-        if (id != ID)
+        if (id != bCHIP_ID_VALUE)
             {
             delay(1000); // hold on for boot
             id = read8(REGISTER.CHIP_ID);
-            if (id != ID)
+            if (id != bCHIP_ID_VALUE)
                 throw new UnexpectedI2CDeviceException(id);
             }
         
@@ -99,7 +88,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
         // back from its reset state (0xA0?) to the it's chip id state (also 0xA0?; hmmm
         // something is odd there). This can typically take 650ms (Table 0-2, p13).
         write8(REGISTER.SYS_TRIGGER, 0x20);
-        while (read8(REGISTER.CHIP_ID) != ID)
+        while (read8(REGISTER.CHIP_ID) != bCHIP_ID_VALUE)
             {
             delay(10);
             }
@@ -225,7 +214,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
     public synchronized boolean isMagnetometerCalibrated()
         {
         byte b = this.read8(REGISTER.CALIB_STAT);
-        return ((b>>0) & 0x03) == 0x03;
+        return ((b/*>>0*/) & 0x03) == 0x03;
         }
     
     public synchronized double getTemperature()
@@ -236,29 +225,29 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
     
     public synchronized MagneticFlux getMagneticFieldStrength()
         {
-        return new MagneticFlux(getVector(VECTOR.MAGNETOMETER, 16. * 1000000));
+        return new MagneticFlux(getVector(VECTOR.MAGNETOMETER), 16. * 1000000);
         }
     public synchronized Acceleration getAcceleration()
         {
-        return new Acceleration(getVector(VECTOR.ACCELEROMETER, 100));
+        return new Acceleration(getVector(VECTOR.ACCELEROMETER), 100);
         }
     public synchronized Acceleration getLinearAcceleration()
         {
-        return new Acceleration(getVector(VECTOR.LINEARACCEL, 100));
+        return new Acceleration(getVector(VECTOR.LINEARACCEL), 100);
         }
     public synchronized Acceleration getGravity()
         {
-        return new Acceleration(getVector(VECTOR.GRAVITY, 100));
+        return new Acceleration(getVector(VECTOR.GRAVITY), 100);
         }
     public synchronized AngularVelocity getAngularVelocity()
         {
-        return new AngularVelocity(getVector(VECTOR.GYROSCOPE, 900));
+        return new AngularVelocity(getVector(VECTOR.GYROSCOPE), 900);
         }
     public synchronized EulerAngles getAngularOrientation()
         {
-        return new EulerAngles(getVector(VECTOR.EULER, 900));
+        return new EulerAngles(getVector(VECTOR.EULER), 900);
         }
-    private II2cDeviceClient.TimestampedData getVector(VECTOR vector, double scale)
+    private II2cDeviceClient.TimestampedData getVector(VECTOR vector) 
         {
         // Ensure that the 6 bytes for this vector are visible in the register window. 
         this.ensureRegisterWindow(new I2cDeviceClient.RegWindow(vector.getValue(), 6));
@@ -270,19 +259,19 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
     public synchronized Quaternion getQuaternionOrientation()
         {
         // Ensure we can see the registers we need
-        this.deviceClient.ensureRegisterWindow(
+        this.deviceClient.ensureReadWindow(
                 new I2cDeviceClient.RegWindow(REGISTER.QUATERNION_DATA_W_LSB.bVal, 8),
                 upperWindow
-            );
+        );
         
         // Section 3.6.5.5 of BNO055 specification
         II2cDeviceClient.TimestampedData ts = this.deviceClient.readTimeStamped(REGISTER.QUATERNION_DATA_W_LSB.bVal, 8);
         final double scale = 1.0 / (1 << 14);
         Quaternion result = new Quaternion(
-                Util.makeInt(ts.data[0], ts.data[1]) * scale,
-                Util.makeInt(ts.data[2], ts.data[3]) * scale,
-                Util.makeInt(ts.data[4], ts.data[5]) * scale,
-                Util.makeInt(ts.data[6], ts.data[7]) * scale
+                Util.makeIntLittle(ts.data[0], ts.data[1]) * scale,
+                Util.makeIntLittle(ts.data[2], ts.data[3]) * scale,
+                Util.makeIntLittle(ts.data[4], ts.data[5]) * scale,
+                Util.makeIntLittle(ts.data[6], ts.data[7]) * scale
             );
         result.nanoTime = ts.nanoTime;
         return result;
@@ -456,7 +445,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
             : upperWindow.contains(needed)
                 ? upperWindow
                 : needed;           // just use what's needed if it's not within our two main windows
-        this.deviceClient.ensureRegisterWindow(needed, set);
+        this.deviceClient.ensureReadWindow(needed, set);
         }
 
     /**
@@ -544,9 +533,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
     // Constants
     //------------------------------------------------------------------------------------------
 
-    final static int ADDRESS_A = 0x28;
-    final static int ADDRESS_B = 0x29;
-    final static int ID        = 0xa0;
+    final static byte bCHIP_ID_VALUE = (byte)0xa0;
 
     enum VECTOR
         {

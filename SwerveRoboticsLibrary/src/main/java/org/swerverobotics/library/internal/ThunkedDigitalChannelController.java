@@ -7,7 +7,7 @@ import org.swerverobotics.library.interfaces.*;
 /**
  * Another in our series of Thunked objects
  */
-public class ThunkedDigitalChannelController implements DigitalChannelController, IThunkingWrapper<DigitalChannelController>
+public class ThunkedDigitalChannelController implements DigitalChannelController, IThunkWrapper<DigitalChannelController>
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -15,7 +15,7 @@ public class ThunkedDigitalChannelController implements DigitalChannelController
 
     private DigitalChannelController target;          // can only talk to him on the loop thread
 
-    @Override public DigitalChannelController getThunkTarget() { return this.target; }
+    @Override public DigitalChannelController getWrappedTarget() { return this.target; }
 
     //----------------------------------------------------------------------------------------------
     // Construction

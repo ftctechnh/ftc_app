@@ -3,10 +3,10 @@ package org.swerverobotics.library.internal;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
 import org.swerverobotics.library.interfaces.*;
-
 import java.util.concurrent.locks.Lock;
 
-public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule, IThunkingWrapper<DeviceInterfaceModule>
+
+public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule, IThunkWrapper<DeviceInterfaceModule>
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -14,7 +14,7 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule, IThu
 
     private DeviceInterfaceModule target;
 
-    @Override public DeviceInterfaceModule getThunkTarget() { return this.target; }
+    @Override public DeviceInterfaceModule getWrappedTarget() { return this.target; }
 
     //----------------------------------------------------------------------------------------------
     // Construction

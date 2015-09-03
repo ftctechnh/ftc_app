@@ -7,7 +7,7 @@ import org.swerverobotics.library.interfaces.*;
  * An implementation of ServoController that talks to a non-thunking target implementation
  * by thunking all calls over to the loop thread and back gain.
  */
-public class ThunkedServoController implements ServoController,IThunkingWrapper<ServoController>
+public class ThunkedServoController implements ServoController,IThunkWrapper<ServoController>
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -15,7 +15,7 @@ public class ThunkedServoController implements ServoController,IThunkingWrapper<
 
     private ServoController target;   // can only talk to him on the loop thread
 
-    @Override public ServoController getThunkTarget() { return this.target; }
+    @Override public ServoController getWrappedTarget() { return this.target; }
 
     //----------------------------------------------------------------------------------------------
     // Construction

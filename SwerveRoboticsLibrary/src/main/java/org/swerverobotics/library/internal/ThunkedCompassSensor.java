@@ -4,12 +4,10 @@ import com.qualcomm.robotcore.hardware.*;
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.interfaces.*;
 
-import junit.framework.Assert;
-
 /**
  * A CompassSensor that can be called on the main() thread.
  */
-public class ThunkedCompassSensor extends CompassSensor implements IThunkedReadWriteListener, IThunkingWrapper<CompassSensor>
+public class ThunkedCompassSensor extends CompassSensor implements IThunkedReadWriteListener, IThunkWrapper<CompassSensor>
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -17,7 +15,7 @@ public class ThunkedCompassSensor extends CompassSensor implements IThunkedReadW
 
     private CompassSensor target;   // can only talk to him on the loop thread
 
-    @Override public CompassSensor getThunkTarget() { return this.target; }
+    @Override public CompassSensor getWrappedTarget() { return this.target; }
 
     private int           readThunkKey  = Thunk.getNewActionKey();
     private int           writeThunkKey = Thunk.getNewActionKey();
@@ -39,7 +37,7 @@ public class ThunkedCompassSensor extends CompassSensor implements IThunkedReadW
         if (this.isTargetLegacy())
             {
             // Make sure our hack is at least plausible
-            Assert.assertEquals(true, Util.<Object>getPrivateObjectField(target, 6) instanceof CompassMode);
+            junit.framework.Assert.assertEquals(true, Util.<Object>getPrivateObjectField(target, 6) instanceof CompassMode);
             }
         }
 
