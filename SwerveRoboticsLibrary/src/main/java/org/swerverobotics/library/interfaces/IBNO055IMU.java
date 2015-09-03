@@ -51,6 +51,9 @@ public interface IBNO055IMU
         public ACCELUNIT        accelunit           = ACCELUNIT.METERS_PERSEC_PERSEC;
         /** directional convention for measureing pitch angles. See Section 3.6.1 (p31) of the BNO055 specification */
         public PITCHMODE        pitchmode           = PITCHMODE.ANDROID;    // Section 3.6.2
+        
+        /** debugging aid: enable logging for this device? */
+        public boolean          loggingEnabled      = false;
         }
 
     //----------------------------------------------------------------------------------------------
