@@ -93,9 +93,9 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         // Switch to config mode (just in case, since this is the default)
         setSensorMode(SENSOR_MODE.CONFIG);
         
-        // Reset the system, and wait for the chip id register to switch
-        // back from its reset state (0xA0?) to the it's chip id state (also 0xA0?; hmmm
-        // something is odd there). This can typically take 650ms (Table 0-2, p13).
+        // Reset the system, and wait for the chip id register to switch back from its reset state 
+        // to the it's chip id state. This can take a very long time, some 650ms (Table 0-2, p13) 
+        // perhaps. While in the reset state the chip id (and other registers) reads as 0xFF.
         write8(REGISTER.SYS_TRIGGER, 0x20);
         while (read8(REGISTER.CHIP_ID) != bCHIP_ID_VALUE)
             {

@@ -22,6 +22,10 @@ public final class ClassFactory
      * 
      * @param i2cDevice     the robot controller runtime object representing the sensor
      * @return              the interface to the instantiated sensor object
+     * @return              the interface to the instantiated sensor object. This object also
+     *                      supports the II2cDeviceClientUser interface; this is often useful
+     *                      for debugging.
+     * @see #createAdaFruitBNO055IMU(I2cDevice, IBNO055IMU.Parameters) 
      */
     public static IBNO055IMU createAdaFruitBNO055IMU(I2cDevice i2cDevice)
         {
@@ -34,7 +38,10 @@ public final class ClassFactory
      * 
      * @param i2cDevice     the robot controller runtime object representing the sensor
      * @param parameters    the parameters with which the sensor should be initialized
-     * @return              the interface to the instantiated sensor object
+     * @return              the interface to the instantiated sensor object. This object also
+     *                      supports the II2cDeviceClientUser interface; this is often useful
+     *                      for debugging.
+     * @see #createAdaFruitBNO055IMU(I2cDevice) 
      */
     public static IBNO055IMU createAdaFruitBNO055IMU(I2cDevice i2cDevice, IBNO055IMU.Parameters parameters)
         {
