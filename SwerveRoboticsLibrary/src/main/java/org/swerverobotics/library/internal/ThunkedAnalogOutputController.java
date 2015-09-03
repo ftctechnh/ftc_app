@@ -7,7 +7,7 @@ import org.swerverobotics.library.interfaces.*;
 /**
  * Another in our series
  */
-public class ThunkedAnalogOutputController implements AnalogOutputController, IHardwareWrapper<AnalogOutputController>
+public class ThunkedAnalogOutputController implements AnalogOutputController, IThunkWrapper<AnalogOutputController>
     {
     //----------------------------------------------------------------------------------------------
     // State

@@ -34,6 +34,12 @@ public final class I2cDeviceOnI2cDeviceController implements II2cDevice
 
     public I2cDeviceOnI2cDeviceController(I2cController controller, int port)
         {
+        // Get rid of any thunker; we know we want to go the metal
+        if (controller instanceof IThunkWrapper)
+            {
+            controller = ((IThunkWrapper<I2cController>)controller).getWrappedTarget();
+            }
+        
         this.controller  = controller;
         this.port        = port;
         this.i2cAddr8Bit = 0;

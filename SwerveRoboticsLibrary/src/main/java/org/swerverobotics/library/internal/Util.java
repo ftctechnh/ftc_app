@@ -225,7 +225,7 @@ public class Util
             }
         }
     
-    static public int makeInt(byte low, byte hi)
+    static public int makeIntLittle(byte low, byte hi)
         {
         return ((int)low) | (((int)hi)<<8);
         }

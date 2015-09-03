@@ -7,7 +7,7 @@ import org.swerverobotics.library.interfaces.*;
 /**
  * 
  */
-public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorController, IHardwareWrapper<DcMotorController>
+public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorController, IThunkWrapper<DcMotorController>
     {
     //----------------------------------------------------------------------------------------------
     // State

@@ -7,7 +7,7 @@ import org.swerverobotics.library.interfaces.*;
 /**
  * A CompassSensor that can be called on the main() thread.
  */
-public class ThunkedCompassSensor extends CompassSensor implements IThunkedReadWriteListener, IHardwareWrapper<CompassSensor>
+public class ThunkedCompassSensor extends CompassSensor implements IThunkedReadWriteListener, IThunkWrapper<CompassSensor>
     {
     //----------------------------------------------------------------------------------------------
     // State

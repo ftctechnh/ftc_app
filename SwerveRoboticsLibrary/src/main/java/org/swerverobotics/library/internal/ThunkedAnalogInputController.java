@@ -7,7 +7,7 @@ import org.swerverobotics.library.interfaces.*;
 /**
  * Another in our series
  */
-public class ThunkedAnalogInputController implements AnalogInputController, IHardwareWrapper<AnalogInputController>
+public class ThunkedAnalogInputController implements AnalogInputController, IThunkWrapper<AnalogInputController>
     {
     //----------------------------------------------------------------------------------------------
     // State

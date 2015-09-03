@@ -1,5 +1,7 @@
 package org.swerverobotics.library.internal;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
 
@@ -49,8 +51,17 @@ public final class I2cDeviceClient implements II2cDeviceClient
         IDLE,           // the read cache is quiescent; it doesn't contain valid data
         SWITCHING,      // a request to switch to read mode has been made
         QUEUED,         // an I2C read has been queued, but we've not yet seen valid data
-        VALID,          // the read cache contains valid data
         VALIDQUEUED,    // read cache has valid data AND a read has been queued 
+        VALIDWRITING;   // read cache has valid data but the device is currently in write mode
+        
+        boolean isValid()
+            {
+            return this==VALIDQUEUED || this==VALIDWRITING;
+            }
+        boolean isQueued()
+            {
+            return this==QUEUED || this==VALIDQUEUED;
+            }
         }
 
     private enum WRITE_CACHE_STATUS 
@@ -182,7 +193,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
     public int read16(int ireg)
         {
         byte[] data = read(ireg, 2);
-        return Util.makeInt(data[0], data[1]);
+        return Util.makeIntLittle(data[0], data[1]);
         }
 
     /**
@@ -211,9 +222,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
                 // Wait until we fill up with data
                 for (;;)
                     {
-                    if (this.readCacheStatus == READ_CACHE_STATUS.VALID)
-                        break;
-                    if (this.readCacheStatus == READ_CACHE_STATUS.VALIDQUEUED)
+                    if (this.readCacheStatus.isValid())
                         break;
                     //
                     this.lock.wait();
@@ -332,6 +341,11 @@ public final class I2cDeviceClient implements II2cDeviceClient
             }
         }
     
+    private void log(String message)
+        {
+        Log.i("I2cDeviceClient", message);
+        }
+    
     private class Callback implements I2cController.I2cPortReadyCallback
         {
         @Override public void portIsReady(int port)
@@ -360,12 +374,17 @@ public final class I2cDeviceClient implements II2cDeviceClient
                         || writeCacheStatus == WRITE_CACHE_STATUS.QUEUED
                         || readCacheStatus == READ_CACHE_STATUS.SWITCHING)
                     {
+                    // We don't have anything fresh to actually write. So we try to do reads
+                    // if we can, generally.
+                    
                     // If we just finished a write queuing cycle, then our write cache is idle
                     if (writeCacheStatus == WRITE_CACHE_STATUS.QUEUED)
                         nextWriteCacheStatus = WRITE_CACHE_STATUS.IDLE;
     
-                    // Deal with read issues
-                    if (readCacheStatus == READ_CACHE_STATUS.IDLE)
+                    // Do state transitions on the read cache
+                    switch (readCacheStatus)
+                        {
+                    case IDLE:
                         {
                         // Read something if we ought to, either whatever the user would
                         // like us to read in the normal course of events or what he'd like
@@ -375,60 +394,99 @@ public final class I2cDeviceClient implements II2cDeviceClient
                         // read heartbeating is sort of implied.
                         if (regWindowRead != null)
                             {
-                            // Initiate switch to read mode
+                            // Initiate switch to read mode.
+                            // TODO: We might not actually need the SWITCHING state 
                             nextReadCacheStatus = READ_CACHE_STATUS.SWITCHING;
                             i2cDevice.enableI2cReadMode(regWindowRead.getIregFirst(), regWindowRead.getCreg());
                             setActionFlag = true;
                             queueFullWrite = true;
+    
+                            // Read the read vs write mode back again asap.
+                            queueRead = true;
                             }
+                        break;
                         }
-                    else if (readCacheStatus == READ_CACHE_STATUS.SWITCHING)
+                    case SWITCHING:
                         {
+                        // We're trying to switch into read mode. Are we there yet?
                         if (i2cDevice.isI2cPortInReadMode())
                             {
                             // The port has switched to read mode. Start reading from it
                             nextReadCacheStatus = READ_CACHE_STATUS.QUEUED;
-                            queueRead = true;
                             setActionFlag = true;
+                            queueRead = true;
                             }
+                        else
+                            {
+                            // Keep reading the read vs write mode back again
+                            queueRead = true;
+                            }
+                        break;
                         }
-                    else if (readCacheStatus == READ_CACHE_STATUS.QUEUED)
+                    case QUEUED:
                         {
+                        // We queued a read last time, now it's here, so we're valid. We'll
+                        // also queue another one
                         nextReadCacheStatus = READ_CACHE_STATUS.VALIDQUEUED;
                         nanoTimeReadCacheValid = System.nanoTime();
                         // Re-read the next time around
-                        queueRead = true;
                         setActionFlag = true;
+                        queueRead = true;
+                        break;
                         }
-                    else if (readCacheStatus == READ_CACHE_STATUS.VALID || readCacheStatus == READ_CACHE_STATUS.VALIDQUEUED)
+                    case VALIDQUEUED:
                         {
+                        // We were valid last cycle and we also queued a new read request.
+                        // We'll do so again, so we stay in the same state.
                         nextReadCacheStatus = READ_CACHE_STATUS.VALIDQUEUED;
-                        nanoTimeReadCacheValid = System.nanoTime();
-                        // Re-read the next time around
-                        queueRead = true;
+                        // Queue another read
                         setActionFlag = true;
+                        queueRead = true;
+                        break;
+                        }
+                    case VALIDWRITING:
+                        {
+                        // We were valid last time but that cycle issued a write so we're no longer valid
+                        nextReadCacheStatus = READ_CACHE_STATUS.IDLE;
+                        break;    
+                        }
+                    /* end swtich*/
                         }
                     }
     
                 else if (writeCacheStatus == WRITE_CACHE_STATUS.DIRTY)
                     {
+                    // We've got something fresh to write
+                    
                     // Queue the write cache for writing to the module
                     nextWriteCacheStatus = WRITE_CACHE_STATUS.QUEUED;
-                    setActionFlag = true;      // request an I2C write
+                    setActionFlag = true;
                     queueFullWrite = true;
+                    queueRead = true;       // so we can get read/write mode status
     
                     // What's the impact on the read cache? 
-                    if (readCacheStatus == READ_CACHE_STATUS.QUEUED || readCacheStatus == READ_CACHE_STATUS.VALIDQUEUED)
+                    switch (readCacheStatus)
                         {
-                        // We just completed a read cycle. Data is valid, for the moment.
+                    case IDLE:
+                    case SWITCHING:
+                        // Nothing to do (and SWITCHING case isn't actually reachable)
+                        break;
+                    case QUEUED:
+                    case VALIDQUEUED:
+                        {
+                        // We just completed a queued read cycle. Data is valid, for the moment.
                         // But don't re-issue the reread request
-                        nextReadCacheStatus = READ_CACHE_STATUS.VALID;
+                        nextReadCacheStatus = READ_CACHE_STATUS.VALIDWRITING;
                         nanoTimeReadCacheValid = System.nanoTime();
+                        break;
                         }
-                    else if (readCacheStatus == READ_CACHE_STATUS.VALID)
+                    case VALIDWRITING:
                         {
-                        // We've gone a cycle w/o reading. What's there is out of date.
+                        // We've gone a cycle w/o queueing a read. What's there is out of date.
                         nextReadCacheStatus = READ_CACHE_STATUS.IDLE;
+                        break;
+                        }
+                    /* end switch */
                         }
                     }
     
@@ -459,6 +517,15 @@ public final class I2cDeviceClient implements II2cDeviceClient
     
                 if (queueFullWrite)
                     i2cDevice.writeI2cCacheToModule();
+                
+                if (readCacheStatus != nextReadCacheStatus || writeCacheStatus != nextWriteCacheStatus)
+                    {
+                    log("-----");
+                    if (readCacheStatus != nextReadCacheStatus)
+                        log("READ." + readCacheStatus.toString() + "->" + nextReadCacheStatus.toString());
+                    if (writeCacheStatus != nextWriteCacheStatus)
+                        log("WRITE." + writeCacheStatus.toString() + "->" + nextWriteCacheStatus.toString());
+                    }
                 
                 // Update our state machine
                 readCacheStatus  = nextReadCacheStatus;

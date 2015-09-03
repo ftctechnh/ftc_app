@@ -7,7 +7,7 @@ import org.swerverobotics.library.interfaces.*;
 /**
  * Another in our series of Thunked objects
  */
-public class ThunkedDigitalChannelController implements DigitalChannelController, IHardwareWrapper<DigitalChannelController>
+public class ThunkedDigitalChannelController implements DigitalChannelController, IThunkWrapper<DigitalChannelController>
     {
     //----------------------------------------------------------------------------------------------
     // State

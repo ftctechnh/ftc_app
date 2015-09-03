@@ -6,7 +6,7 @@ import org.swerverobotics.library.interfaces.*;
 import java.util.concurrent.locks.Lock;
 
 
-public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule, IHardwareWrapper<DeviceInterfaceModule>
+public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule, IThunkWrapper<DeviceInterfaceModule>
     {
     //----------------------------------------------------------------------------------------------
     // State

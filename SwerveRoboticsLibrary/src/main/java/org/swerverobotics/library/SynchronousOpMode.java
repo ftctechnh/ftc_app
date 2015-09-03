@@ -18,7 +18,7 @@ import org.swerverobotics.library.internal.*;
  *
  * Extend this class and implement the main() method to add your own code.
  */
-public abstract class SynchronousOpMode extends OpMode implements IThunker
+public abstract class SynchronousOpMode extends OpMode implements IThunkDispatcher
     {
     //----------------------------------------------------------------------------------------------
     // Public State
@@ -775,7 +775,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
     protected void postStopHook() { /* hook for subclasses */ }
 
     //----------------------------------------------------------------------------------------------
-    // IThunker
+    // IThunkDispatcher
     //----------------------------------------------------------------------------------------------
 
     /**
@@ -824,7 +824,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunker
      * which is managing the internal from the current thread to the loop() thread.
      * If we are not on a synchronous thread, then the behaviour is undefined.
      */
-    public static IThunker getThreadThunker()
+    public static IThunkDispatcher getThreadThunker()
         {
         SynchronousThreadContext.assertSynchronousThread();
         return SynchronousThreadContext.getThreadContext().getThunker();

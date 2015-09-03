@@ -1,5 +1,7 @@
 package org.swerverobotics.library.interfaces;
 
+import org.swerverobotics.library.internal.Util;
+
 /**
  * Interface API to the Adafruit 9-DOF Absolute Orientation IMU Fusion Breakout - BNO055 sensor.
  * 
@@ -448,9 +450,12 @@ public interface IBNO055IMU
             this.z = z;
             this.nanoTime = nanoTime;
             }
-        public MagneticFlux(II2cDeviceClient.TimestampedData ts)
+        public MagneticFlux(II2cDeviceClient.TimestampedData ts, double scale)
             {
-            this(ts.data[0], ts.data[1], ts.data[2], ts.nanoTime);
+            this(   Util.makeIntLittle(ts.data[0], ts.data[1]) / scale,
+                    Util.makeIntLittle(ts.data[2], ts.data[3]) / scale,
+                    Util.makeIntLittle(ts.data[4], ts.data[5]) / scale,
+                    ts.nanoTime);
             }
         }
 
@@ -561,9 +566,12 @@ public interface IBNO055IMU
             this.accelZ = accelZ;
             this.nanoTime = nanoTime;
             }
-        public Acceleration(II2cDeviceClient.TimestampedData ts)
+        public Acceleration(II2cDeviceClient.TimestampedData ts, double scale)
             {
-            this(ts.data[0], ts.data[1], ts.data[2], ts.nanoTime);
+            this(   Util.makeIntLittle(ts.data[0], ts.data[1]) / scale,
+                    Util.makeIntLittle(ts.data[2], ts.data[3]) / scale,
+                    Util.makeIntLittle(ts.data[4], ts.data[5]) / scale,
+                    ts.nanoTime);
             }
 
         //----------------------------------------------------------------------------------------------
@@ -624,9 +632,12 @@ public interface IBNO055IMU
             this.velocZ = velocZ;
             this.nanoTime = nanoTime;
             }
-        public Velocity(II2cDeviceClient.TimestampedData ts)
+        public Velocity(II2cDeviceClient.TimestampedData ts, double scale)
             {
-            this(ts.data[0], ts.data[1], ts.data[2], ts.nanoTime);
+            this(   Util.makeIntLittle(ts.data[0], ts.data[1]) / scale,
+                    Util.makeIntLittle(ts.data[2], ts.data[3]) / scale,
+                    Util.makeIntLittle(ts.data[4], ts.data[5]) / scale,
+                    ts.nanoTime);
             }
         
         //----------------------------------------------------------------------------------------------
@@ -699,9 +710,12 @@ public interface IBNO055IMU
             this.z = z;
             this.nanoTime = nanoTime;
             }
-        public Position(II2cDeviceClient.TimestampedData ts)
+        public Position(II2cDeviceClient.TimestampedData ts, double scale)
             {
-            this(ts.data[0], ts.data[1], ts.data[2], ts.nanoTime);
+            this(   Util.makeIntLittle(ts.data[0], ts.data[1]) / scale,
+                    Util.makeIntLittle(ts.data[2], ts.data[3]) / scale,
+                    Util.makeIntLittle(ts.data[4], ts.data[5]) / scale,
+                    ts.nanoTime);
             }
 
         //----------------------------------------------------------------------------------------------
@@ -752,9 +766,12 @@ public interface IBNO055IMU
             this.rateZ = rateZ;
             this.nanoTime = nanoTime;
             }
-        public AngularVelocity(II2cDeviceClient.TimestampedData ts)
+        public AngularVelocity(II2cDeviceClient.TimestampedData ts, double scale)
             {
-            this(ts.data[0], ts.data[1], ts.data[2], ts.nanoTime);
+            this(   Util.makeIntLittle(ts.data[0], ts.data[1]) / scale,
+                    Util.makeIntLittle(ts.data[2], ts.data[3]) / scale,
+                    Util.makeIntLittle(ts.data[4], ts.data[5]) / scale,
+                    ts.nanoTime);
             }
         }
 
@@ -794,9 +811,12 @@ public interface IBNO055IMU
             this.pitch = pitch;
             this.nanoTime = nanoTime;
             }
-        public EulerAngles(II2cDeviceClient.TimestampedData ts)
+        public EulerAngles(II2cDeviceClient.TimestampedData ts, double scale)
             {
-            this(ts.data[0], ts.data[1], ts.data[2], ts.nanoTime);
+            this(   Util.makeIntLittle(ts.data[0], ts.data[1]) / scale,
+                    Util.makeIntLittle(ts.data[2], ts.data[3]) / scale,
+                    Util.makeIntLittle(ts.data[4], ts.data[5]) / scale,
+                    ts.nanoTime);
             }
         }
     }
