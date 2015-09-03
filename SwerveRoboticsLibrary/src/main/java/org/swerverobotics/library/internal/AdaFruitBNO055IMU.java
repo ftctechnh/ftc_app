@@ -11,7 +11,7 @@ import org.swerverobotics.library.interfaces.*;
  * <a href="http://www.adafruit.com/products/2472">AdaFruit Absolute Orientation Sensor</a> that 
  * is attached to a Modern Robotics Core Device Interface module.
  */
-public final class AdaFruitBNO055IMU implements IBNO055IMU
+public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
     {
     //------------------------------------------------------------------------------------------
     // State
@@ -61,9 +61,18 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
         result.initialize(parameters);
         return result;
         }
+
+    //------------------------------------------------------------------------------------------
+    // II2cDeviceClientUser
+    //------------------------------------------------------------------------------------------
+
+    @Override public II2cDeviceClient getI2cDeviceClient()
+        {
+        return this.deviceClient;
+        }
     
     //------------------------------------------------------------------------------------------
-    // Operations
+    // IBNO055IMU
     //------------------------------------------------------------------------------------------
     
     /**
@@ -113,13 +122,15 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
         // ??? what does this do ???
         write8(REGISTER.SYS_TRIGGER, 0x0);
         delayLore(10);
+
+        // Use or don't use the external crystal
+        // See Section 5.5 (p100) of the BNO055 specification.
+        write8(REGISTER.SYS_TRIGGER, parameters.useExternalCrystal ? 0x80 : 0x00);
+        delayLore(10);
         
-        // Set the requested operating mode (see section 3.3)
+        // Finally, enter the requested operating mode (see section 3.3)
         setSensorMode(parameters.mode);
         delayLore(20);
-        
-        // Use or don't use the external cyrstal
-        setExternalCrystalUse(parameters.useExternalCrystal);
         }
 
     private void setSensorMode(SENSOR_MODE mode)
@@ -140,31 +151,6 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
             delay(7);
         }
 
-    /**
-     * Use or don't use the external 32.768khz crystal.
-     * 
-     * See Section 5.5 (p100) of the BNO055 specification.
-     */
-    public synchronized void setExternalCrystalUse(final boolean useExternalCrystal)
-        {
-        this.enterConfigModeFor(new IAction()
-            {
-            @Override public void doAction()
-                {
-                write8(REGISTER.PAGE_ID, 0);
-                if (useExternalCrystal)
-                    {
-                    write8(REGISTER.SYS_TRIGGER, 0x80);
-                    }
-                else
-                    {
-                    write8(REGISTER.SYS_TRIGGER, 0x00);
-                    }
-                delayLore(10);
-                }
-            });
-        }
-    
     public synchronized byte getSystemStatus()
         {
         // It's unclear why we have to be in config mode to read the status,
