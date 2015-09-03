@@ -6,7 +6,7 @@ import org.swerverobotics.library.interfaces.*;
 /**
  * An AccelerationSensor that can be called on the main() thread.
  */
-public class ThunkedAccelerationSensor extends AccelerationSensor implements IThunkingWrapper<AccelerationSensor>
+public class ThunkedAccelerationSensor extends AccelerationSensor implements IThunkWrapper<AccelerationSensor>
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -14,7 +14,7 @@ public class ThunkedAccelerationSensor extends AccelerationSensor implements ITh
 
     private AccelerationSensor target;   // can only talk to him on the loop thread
     
-    @Override public AccelerationSensor getThunkTarget() { return this.target; }
+    @Override public AccelerationSensor getWrappedTarget() { return this.target; }
 
     //----------------------------------------------------------------------------------------------
     // Construction
