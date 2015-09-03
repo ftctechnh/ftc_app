@@ -7,7 +7,7 @@ import org.swerverobotics.library.interfaces.*;
 /**
  * Another in our series
  */
-public class ThunkedPWMOutputController implements PWMOutputController, IHardwareWrapper<PWMOutputController>
+public class ThunkedPWMOutputController implements PWMOutputController, IThunkWrapper<PWMOutputController>
     {
     //----------------------------------------------------------------------------------------------
     // State

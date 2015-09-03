@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.*;
 import org.swerverobotics.library.interfaces.*;
 import java.util.concurrent.locks.Lock;
 
-public class ThunkedLegacyModule implements LegacyModule, IHardwareWrapper<LegacyModule>
+public class ThunkedLegacyModule implements LegacyModule, IThunkWrapper<LegacyModule>
     {
     //----------------------------------------------------------------------------------------------
     // State

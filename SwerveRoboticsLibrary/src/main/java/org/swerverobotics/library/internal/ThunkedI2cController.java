@@ -11,7 +11,7 @@ import java.util.concurrent.locks.Lock;
  * I2cController on the loop() thread, except where it can get away with performing operations 
  * locally (which turns out to be a lot).
  */
-public class ThunkedI2cController implements I2cController, IHardwareWrapper<I2cController>
+public class ThunkedI2cController implements I2cController, IThunkWrapper<I2cController>
     {
     //----------------------------------------------------------------------------------------------
     // State

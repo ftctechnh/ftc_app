@@ -25,7 +25,7 @@ public final class ClassFactory
      */
     public static IBNO055IMU createAdaFruitBNO055IMU(I2cDevice i2cDevice)
         {
-        return AdaFruitBNO055IMU.create(i2cDevice);
+        return createAdaFruitBNO055IMU(i2cDevice, new IBNO055IMU.Parameters());
         }
 
     /**
@@ -61,8 +61,8 @@ public final class ClassFactory
     /**
      * Instantiate an I2cDeviceClient on an I2cController using a given port and i2cAddr
      * @param i2cController             the controller to use
-     * @param port                      the port to use on that controlller
-     * @param i2cAddr8Bit               the i2cAddr to talk to through that port. Ignored if less than zero.
+     * @param port                      the port to use on that controller
+     * @param i2cAddr8Bit               the I2C address to talk to through that port. Ignored if less than zero.
      * @param initialRegisterWindow     the initial register window to read. May be null.
      * @return                          the returned wrapper
      * 
@@ -77,8 +77,8 @@ public final class ClassFactory
     /**
      * Instantiate an I2cDeviceClient on a LegacyModule using a given port and i2cAddr
      * @param legacyModule              the legacy module to use
-     * @param port                      the port to use on that controlller
-     * @param i2cAddr8Bit               the i2cAddr to talk to through that port. Ignored if less than zero.
+     * @param port                      the port to use on that controller
+     * @param i2cAddr8Bit               the I2C address to talk to through that port. Ignored if less than zero.
      * @param initialRegisterWindow     the initial register window to read. May be null.
      * @return                          the returned wrapper
      * 
@@ -91,7 +91,7 @@ public final class ClassFactory
         }
 
     /**
-     * Instantiate an I2cDeviceClient wrapper around an I2cDevice using the i2cAddr found therein
+     * Instantiate an I2cDeviceClient wrapper around an I2cDevice using the I2C address currently found therein
      * 
      * @param i2cDevice                 the I2cDevice to wrap
      * @param initialRegisterWindow     the initial register window to read. May be null

@@ -6,7 +6,7 @@ import org.swerverobotics.library.interfaces.*;
 /**
  * A VoltageSensor that can be called on the main() thread.
  */
-public class ThunkedVoltageSensor implements VoltageSensor, IHardwareWrapper<VoltageSensor>
+public class ThunkedVoltageSensor implements VoltageSensor, IThunkWrapper<VoltageSensor>
     {
     //----------------------------------------------------------------------------------------------
     // State

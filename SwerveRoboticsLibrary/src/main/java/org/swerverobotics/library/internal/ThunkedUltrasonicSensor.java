@@ -6,7 +6,7 @@ import org.swerverobotics.library.interfaces.*;
 /**
  * An UltrasonicSensor that can be called on the main() thread.
  */
-public class ThunkedUltrasonicSensor extends UltrasonicSensor implements IHardwareWrapper<UltrasonicSensor>
+public class ThunkedUltrasonicSensor extends UltrasonicSensor implements IThunkWrapper<UltrasonicSensor>
     {
     //----------------------------------------------------------------------------------------------
     // State

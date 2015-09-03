@@ -1,11 +1,9 @@
 package org.swerverobotics.library.interfaces;
 
-import org.swerverobotics.library.interfaces.IAction;
-
 /**
- * Advanced: IThunker is an interface through which one can cause work to be thunked to the loop() thread.
+ * Advanced: IThunkDispatcher is an interface through which one can cause work to be thunked to the loop() thread.
  */
-public interface IThunker
+public interface IThunkDispatcher
     {
     /**
      * Execute the indicated action over on the loop() thread.
