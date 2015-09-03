@@ -45,6 +45,8 @@ public final class I2cDeviceClient implements II2cDeviceClient
     private long                nanoTimeReadCacheValid;     // the time on the System.nanoTime() clock at which the read cache was last set as valid
     private READ_CACHE_STATUS   readCacheStatus;            // what we know about the contents of readCache
     private WRITE_CACHE_STATUS  writeCacheStatus;           // what we know about the contents of writeCache
+    private int                 iregWriteFirst;             // when writeCacheStatus is DIRTY, this is where we want to write
+    private int                 cregWrite;
 
     private enum READ_CACHE_STATUS
         {
@@ -282,7 +284,8 @@ public final class I2cDeviceClient implements II2cDeviceClient
                     }
 
                 // Indicate where we want to write
-                this.i2cDevice.enableI2cWriteMode(ireg, data.length);
+                this.iregWriteFirst = ireg;
+                this.cregWrite      = data.length;
                 
                 // Indicate we are dirty so the callback will write us out
                 this.writeCacheStatus = WRITE_CACHE_STATUS.DIRTY;
@@ -456,7 +459,13 @@ public final class I2cDeviceClient implements II2cDeviceClient
     
                 else if (writeCacheStatus == WRITE_CACHE_STATUS.DIRTY)
                     {
-                    // We've got something fresh to write
+                    // We've got something fresh to write. We have to here do the enable,
+                    // as we must defer until now in order that we don't stomp on other uses of
+                    // those first four bytes in the write cache (a READ_CACHE_STATUS.SWITCHING 
+                    // might be in flight with its attendant enableI2cReadMode()). But the payload 
+                    // data has already been written to the write cache as those latter
+                    // bytes are only used for writing the data; they are not shared with other uses.
+                    i2cDevice.enableI2cWriteMode(iregWriteFirst, cregWrite);
                     
                     // Queue the write cache for writing to the module
                     nextWriteCacheStatus = WRITE_CACHE_STATUS.QUEUED;
