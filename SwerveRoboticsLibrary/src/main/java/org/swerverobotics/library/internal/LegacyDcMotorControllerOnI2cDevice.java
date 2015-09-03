@@ -7,7 +7,7 @@ import org.swerverobotics.library.interfaces.*;
 /**
  * 
  */
-public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorController, IThunkWrapper<DcMotorController>
+public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorController, IThunkWrapper<DcMotorController>, VoltageSensor
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -87,7 +87,22 @@ public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorControll
         {
         return target;
         }
-    
+
+    //----------------------------------------------------------------------------------------------
+    // VoltageSensor
+    //----------------------------------------------------------------------------------------------
+
+    @Override public double getVoltage()
+        {
+        byte[] bytes = this.i2cDeviceClient.read(0x54, 2);
+        
+        // "The high byte is the upper 8 bits of a 10 bit value. It may be used as an 8 bit 
+        // representation of the battery voltage in units of 80mV. This provides a measurement 
+        // range of 0 – 20.4 volts. The low byte has the lower 2 bits at bit locations 0 and 1 
+        // in the byte. This increases the measurement resolution to 20mV."
+        return Util.unpack10BitAnalog(bytes,0) * 0.020;
+        }
+
     //----------------------------------------------------------------------------------------------
     // HardwareDevice
     //----------------------------------------------------------------------------------------------
