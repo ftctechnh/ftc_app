@@ -1,5 +1,6 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import java.util.*;
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.interfaces.*;
 
@@ -19,7 +20,7 @@ public class SynchIMUDemo extends SynchronousOpMode
         // semantically understands this particular kind of sensor.
         imu = ClassFactory.createAdaFruitBNO055IMU(hardwareMap.i2cDevice.get("imu"));
         
-        // Enable some low-level logging to help in debugging
+        // Enable some logging to help in debugging
         ((II2cDeviceClientUser)imu).getI2cDeviceClient().setLoggingEnabled(true);
 
         // Set up our dashboard computations

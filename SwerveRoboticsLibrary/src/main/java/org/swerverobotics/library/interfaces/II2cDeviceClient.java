@@ -170,9 +170,8 @@ public interface II2cDeviceClient extends HardwareDevice
     int getHardwareCycleCount();
 
     /**
-     * Turn logging on or off. Note: the details of logging control will likely be developed
-     * further. That is, this particular methods signature and semantics may change in future
-     * releases
+     * Turn logging on or off. Logging output can be viewed using the Android Logcat tools.
+     * @param enabled     whether to enable logging or not
      */
     void setLoggingEnabled(boolean enabled);
 
