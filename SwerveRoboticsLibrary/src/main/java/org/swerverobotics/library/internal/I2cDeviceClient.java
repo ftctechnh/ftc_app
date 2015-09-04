@@ -30,7 +30,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
     private final Callback      callback;                   // the callback object on which we actually receive callbacks
     private       Thread        callbackThread;             // the thread on which we observe our callbacks to be made
     private       int           hardwareCycleCount;         // number of callbacks that we've received
-    private       boolean       loggingEnabled;                    // whether we are to log to Logcat or not
+    private       boolean       loggingEnabled;             // whether we are to log to Logcat or not
     private       String        loggingTag;                 // what we annotate our logging with
     private final ElapsedTime   timeSinceLastHeartbeat;     // keeps track of our need for doing heartbeats
     private       int           msHeartbeatInterval;        // time between heartbeats; zero is none necessary
@@ -94,7 +94,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
         this.callbackThread         = null;
         this.hardwareCycleCount     = 0;
         this.loggingEnabled         = false;
-        this.loggingTag             = "I2cDeviceClient";
+        this.loggingTag             = null;
         this.timeSinceLastHeartbeat = new ElapsedTime();
         this.timeSinceLastHeartbeat.reset();
         this.msHeartbeatInterval    = 0;
@@ -352,6 +352,12 @@ public final class I2cDeviceClient implements II2cDeviceClient
     
     private void log(int verbosity, String message)
         {
+        synchronized (this)
+            {
+            if (this.loggingTag == null)
+                this.loggingTag = String.format("I2cDeviceClient(%s)", i2cDevice.getDeviceName());
+            }
+        
         switch (verbosity)
             {
         case Log.VERBOSE:   Log.v(loggingTag, message); break;
@@ -577,7 +583,6 @@ public final class I2cDeviceClient implements II2cDeviceClient
                 //----------------------------------------------------------------------------------
                 // Do logging 
 
-                final int mostVerbose = Log.VERBOSE;
                 final int moreVerbose = Log.DEBUG;
                 final int moreQuiet   = Log.INFO;
 
