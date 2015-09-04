@@ -25,16 +25,23 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     //----------------------------------------------------------------------------------------------
 
     /**
+     * provides access to the first gamepad controller.
+     * 
      * The game pad variables are redeclared here so as to hide those in our OpMode superclass
      * as the latter may be updated by robot controller runtime at arbitrary times and in a manner 
      * which is not synchronized with processing on a synchronous thread. We take pains to ensure 
      * that the variables declared here do not suffer from that problem.
      */
     public IGamepad gamepad1 = null;
-    /** @see #gamepad1 */
+    /** 
+     * provides access to the second gamepad controller.
+     * @see #gamepad1 */
     public IGamepad gamepad2 = null;
 
     /**
+     * provides access to an object by which telemetry information can be transmitted
+     * from the robot controller to the driver station.
+     * 
      * As with game pads, we hid the 'telemetry' variable of the super class and replace it
      * with one that can work on synchronous threads.
      */
