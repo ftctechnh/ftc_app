@@ -1,6 +1,9 @@
 package org.swerverobotics.library.internal;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.exceptions.*;
@@ -28,6 +31,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
     private boolean             shutDownRequested;
     private static final int    msAccelerationIntegrationThreadShutdownWait = 20;
     private static final int    msAccelerationIntegrationDefaultPollInterval = 100;
+    private static final int    msAwaitSelfTest = 500;
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -130,6 +134,18 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         // See Section 5.5 (p100) of the BNO055 specification.
         write8(REGISTER.SYS_TRIGGER, parameters.useExternalCrystal ? 0x80 : 0x00);
         delayLore(10);
+
+        // Run a self test. This appears to be a necessary step in order for the 
+        // sensor to be able to actually be used.
+        write8(REGISTER.SYS_TRIGGER, read8(REGISTER.SYS_TRIGGER) | 0x01);
+        ElapsedTime time = new ElapsedTime();
+        boolean selfTestSuccessful = false;
+        while (!selfTestSuccessful && time.time()*1000 < msAwaitSelfTest)
+            {
+            selfTestSuccessful = (read8(REGISTER.SELFTEST_RESULT)&0x0F) == 0x0F;
+            }
+        if (!selfTestSuccessful)
+            throw new BNO055InitializationException(this, "self test failed");
         
         // Finally, enter the requested operating mode (see section 3.3)
         setSensorMode(parameters.mode);
@@ -156,30 +172,12 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
 
     public synchronized byte getSystemStatus()
         {
-        // It's unclear why we have to be in config mode to read the status,
-        // but that's what the AdaFruit library did, so we follow that for now
-        // until we might find we can do without.
-        return this.enterConfigModeFor(new IFunc<Byte>()
-            {
-            @Override public Byte value()
-                {
-                return read8(REGISTER.SYS_STAT);
-                }
-            });
+        return read8(REGISTER.SYS_STAT);
         }
 
     public synchronized byte getSystemError()
         {
-        // It's unclear why we have to be in config mode to read the error,
-        // but that's what the AdaFruit library did, so we follow that for now
-        // until we might find we can do without.
-        return this.enterConfigModeFor(new IFunc<Byte>()
-            {
-            @Override public Byte value()
-                {
-                return read8(REGISTER.SYS_STAT);
-                }
-            });
+        return read8(REGISTER.SYS_ERR);
         }
 
     public synchronized boolean isSystemCalibrated()
