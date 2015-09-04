@@ -20,9 +20,11 @@ Notable features of the library include:
 *   An *I2cDeviceClient* class that wraps I2cDevice instances and makes them easy to use by handling
     read-vs-write mode switches and attendant waits automatically and transparently. Just call read8()
     or write8() (and friends) to read and write device registers and the rest is taken care of.
-*   A class that provides a clean interface to the *Bosch BNO055 absolute position sensor*, allowing
-    teams to make easy use of the AdaFruit breakout board which incorporates that sensor module. Features of this
-    sensor include a gyro that does rate integration in hardware to provide robust and accurate
+    Note that I2cDeviceClient is decoupled from the SynchronousOpMode work, in that one need not 
+    be using SynchronousOpMode to use I2cDeviceClient.
+*   A class that built on I2cDeviceClient that provides a clean interface to the *Bosch BNO055 absolute 
+    position sensor*, allowing teams to make easy use of the AdaFruit breakout board which incorporates 
+    that sensor module. Features of this sensor include a gyro that does rate integration in hardware to provide robust and accurate
     angular position indications, and a robust separation of acceleration into gravity and linear-motion-induced
     components. The class builds on the latter to provide linear velocity and position indications
     using integration in software.
