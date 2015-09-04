@@ -208,7 +208,7 @@ public interface IBNO055IMU
    <tr><td>4</td><td>register map value out of range</td></tr>
    <tr><td>5</td><td>register map address out of range</td></tr>
    <tr><td>6</td><td>register map write error</td></tr>
-   <tr><td>7</td><td>BNO low poer mode not available for selected operation mode</td></tr>
+   <tr><td>7</td><td>BNO low power mode not available for selected operation mode</td></tr>
    <tr><td>8</td><td>acceleromoeter power mode not available</td></tr>
    <tr><td>9</td><td>fusion algorithm configuration error</td></tr>
    <tr><td>A</td><td>sensor configuraton error</td></tr>
