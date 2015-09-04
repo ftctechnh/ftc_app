@@ -1,13 +1,15 @@
 package org.swerverobotics.library.internal;
 
+import android.util.Log;
+
 import org.swerverobotics.library.exceptions.RuntimeInterruptedException;
 import org.swerverobotics.library.exceptions.SwerveRuntimeException;
 
 import java.util.concurrent.*;
 
 /**
- * SuicideWatch is a little utility class that will terminate one thread upon the termination
- * of a second, monitored threads
+ * SuicideWatch is a little utility class that monitors a thread for termination. When that
+ * occurs, a second thread is interrupted.
  */
 public class SuicideWatch
     {
@@ -28,6 +30,7 @@ public class SuicideWatch
         this.monitoredThread = monitoredThread;
         this.terminalThread  = terminalThread;
         this.monitor         = null; 
+        log("constructed");
         }
 
     //----------------------------------------------------------------------------------------------
@@ -46,11 +49,13 @@ public class SuicideWatch
         {
         if (this.monitor != null)
             {
+            log("disarming...");
             ExecutorService monitor = this.monitor;
             this.monitor = null;
             
             monitor.shutdownNow();
             monitor.awaitTermination(1000, TimeUnit.DAYS);
+            log("...disarmed");
             }
         }
 
@@ -58,14 +63,24 @@ public class SuicideWatch
         {
         @Override public void run()
             {
+            log("awaiting death...");
             try {
                 monitoredThread.join();
+                log("...suicide");
                 terminalThread.interrupt();
                 }
             catch (InterruptedException|RuntimeInterruptedException e)
                 {
+                log("...aborting");
                 }
             }
+        }
+
+    static final String loggingTag = "SuicideWatch";
+
+    private void log(String message)
+        {
+        Log.d(loggingTag, String.format("thread(%d): %s", Thread.currentThread().getId(), message));
         }
     
     }

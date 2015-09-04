@@ -225,8 +225,21 @@ public class Util
             }
         }
     
-    static public int makeInt(byte low, byte hi)
+    //----------------------------------------------------------------------------------------------
+    // Arithmetic utility
+    //----------------------------------------------------------------------------------------------
+    
+    static public int makeIntLittle(byte low, byte hi)
         {
         return ((int)low) | (((int)hi)<<8);
+        }
+    static public int makeIntBig(byte hi, byte low)
+        {
+        return ((int)low) | (((int)hi)<<8);
+        }
+    
+    static public int unpack10BitAnalog(byte[] rgb, int ib)
+        {
+        return (((int)rgb[ib])<<2) | (rgb[ib+1]&0x03);
         }
     }

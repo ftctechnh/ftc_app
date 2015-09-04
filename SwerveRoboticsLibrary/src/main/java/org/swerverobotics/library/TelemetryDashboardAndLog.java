@@ -55,6 +55,10 @@ public class TelemetryDashboardAndLog
 
         // We just use the outer class so as to *mindlessly* avoid any potential deadlocks
         private Object getLock() { return TelemetryDashboardAndLog.this; }
+
+        /** the list of actions that are evaluated before the lines are composed */
+        private Vector<IAction> actions = null;
+        /** the lines that are composed to form the dashboard contents */
         private Vector<Dashboard.Line> lines = null;
 
         //------------------------------------------------------------------------------------------
@@ -65,8 +69,14 @@ public class TelemetryDashboardAndLog
             {
             String        caption;
             IFunc<String> value;
+            
+            Item(String caption, IFunc<String> value)
+                {
+                this.caption = caption;
+                this.value   = value;
+                }
 
-            public void composeTo(StringBuilder builder)
+            void composeTo(StringBuilder builder)
                 {
                 builder.append(this.caption);
                 builder.append(this.value.value());
@@ -75,9 +85,14 @@ public class TelemetryDashboardAndLog
 
         class Line
             {
-            List<Item> items;
+            final Item[] items;
+            
+            Line(Item[] items)
+                {
+                this.items = items;
+                }
 
-            public String compose()
+            String compose()
                 {
                 StringBuilder result = new StringBuilder();
                 boolean first = true;
@@ -106,7 +121,8 @@ public class TelemetryDashboardAndLog
             {
             synchronized (this.getLock())
                 {
-                this.lines = new Vector<Dashboard.Line>();
+                this.actions = new Vector<IAction>();
+                this.lines   = new Vector<Dashboard.Line>();
                 }
             TelemetryDashboardAndLog.this.updateLogCapacity();
             }
@@ -125,18 +141,37 @@ public class TelemetryDashboardAndLog
          */
         public Item item(final String itemCaption, final IFunc<Object> itemValue)
             {
-            Item result = new Item();
-            result.caption = itemCaption;
-            result.value = new IFunc<String>()
-                {
-                @Override public String value()
+            Item result = new Item(itemCaption, new IFunc<String>()
                     {
-                    return itemValue.value().toString();
+                    @Override public String value()
+                        {
+                        return itemValue.value().toString();
+                        }
                     }
-                };
+                );
             return result;
             }
 
+        //------------------------------------------------------------------------------------------
+        // Actions
+        //------------------------------------------------------------------------------------------
+
+        /**
+         * In addition to lines, a dashboard may also contain a list of actions.
+         * When the dashboard is to be updated, these actions are evaluated before
+         * the dashboard lines are composed. A typical use of such actions is to 
+         * initialize some state variable, parts of which are subsequently displayed
+         * in dashboard lines and items. This can help avoid needless re-evaluation.
+         * @param action
+         */
+        public void action(IAction action)
+            {
+            synchronized (this.getLock())
+                {
+                this.actions.add(action);
+                }
+            }
+        
         //------------------------------------------------------------------------------------------
         // Lines
         //------------------------------------------------------------------------------------------
@@ -146,7 +181,7 @@ public class TelemetryDashboardAndLog
          */
         public void line()
             {
-            this.line(new ArrayList<Item>());
+            this.line(new Item[] {});
             }
         /**
          * Add a line to the dashboard containing the indicated item
@@ -155,9 +190,7 @@ public class TelemetryDashboardAndLog
          */
         public void line(Item item)
             {
-            ArrayList<Item> items = new ArrayList<Item>();
-            items.add(item);
-            this.line(items);
+            this.line(new Item[] { item });
             }
         /**
          * Add a line to the dashboard containing the indicated items
@@ -167,10 +200,7 @@ public class TelemetryDashboardAndLog
          */
         public void line(Item item0, Item item1)
             {
-            ArrayList<Item> items = new ArrayList<Item>();
-            items.add(item0);
-            items.add(item1);
-            this.line(items);
+            this.line(new Item[] { item0, item1 });
             }
         /**
          * Add a line to the dashboard containing the indicated items
@@ -181,11 +211,7 @@ public class TelemetryDashboardAndLog
          */
         public void line(Item item0, Item item1, Item item2)
             {
-            ArrayList<Item> items = new ArrayList<Item>();
-            items.add(item0);
-            items.add(item1);
-            items.add(item2);
-            this.line(items);
+            this.line(new Item[] { item0, item1, item2 });
             }
         /**
          * Add a line to the dashboard containing the indicated items
@@ -197,12 +223,7 @@ public class TelemetryDashboardAndLog
          */
         public void line(Item item0, Item item1, Item item2, Item item3)
             {
-            ArrayList<Item> items = new ArrayList<Item>();
-            items.add(item0);
-            items.add(item1);
-            items.add(item2);
-            items.add(item3);
-            this.line(items);
+            this.line(new Item[] { item0, item1, item2, item3 });
             }
         /**
          * Add a line to the dashboard containing the indicated items
@@ -215,30 +236,23 @@ public class TelemetryDashboardAndLog
          */
         public void line(Item item0, Item item1, Item item2, Item item3, Item item4)
             {
-            ArrayList<Item> items = new ArrayList<Item>();
-            items.add(item0);
-            items.add(item1);
-            items.add(item2);
-            items.add(item3);
-            items.add(item4);
-            this.line(items);
+            this.line(new Item[] {item0, item1, item2, item3, item4});
             }
         /**
          * Add a line to the dashboard containing the indicated items
          * 
          * @param items     the list of items to be contained in the line
          */
-        public void line(List<Item> items)
+        public void line(Item[] items)
             {
             synchronized (this.getLock())
                 {
-                Line line = new Line();
-                line.items = items;
+                Line line = new Line(items);
                 this.lines.add(line);
                 }
             TelemetryDashboardAndLog.this.updateLogCapacity();
             }
-
+        
         //------------------------------------------------------------------------------------------
         // Emitting
         //------------------------------------------------------------------------------------------
@@ -451,6 +465,12 @@ public class TelemetryDashboardAndLog
                     // Ok, we're going to update the telemetry: get a copy of all the data to output.
                     // We only use strings as values. Keys we make up in alphabetical order so as
                     // to maintaining the ordering in which they are created.
+
+                    for (IAction action : dashboard.actions)
+                        {
+                        action.doAction();
+                        }
+
                     final Vector<String> keys = new Vector<String>();
                     final Vector<String> values = new Vector<String>();
                     int iLine = 0;

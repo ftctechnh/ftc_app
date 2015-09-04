@@ -1,5 +1,7 @@
 package org.swerverobotics.library.interfaces;
 
+import org.swerverobotics.library.internal.Util;
+
 /**
  * Interface API to the Adafruit 9-DOF Absolute Orientation IMU Fusion Breakout - BNO055 sensor.
  * 
@@ -29,10 +31,10 @@ public interface IBNO055IMU
     class Parameters
         {
         /** the address at which the sensor resides on the I2C bus. If this value is 
-         * less than zero, it is ignored; the I2C address in that case must be provided to 
+         * UNSPECIFIED, it is ignored; the I2C address in that case must be provided to 
          * the I2cDevice object by some other mechanism, perhaps as part of the initialization
          * of that object itself. */
-        public I2CADDR          i2cAddr             = I2CADDR.DEFAULT;
+        public I2CADDR          i2cAddr8Bit         = I2CADDR.DEFAULT;
         
         /** the mode we wish to use the sensor in */
         public SENSOR_MODE      mode                = SENSOR_MODE.IMU;
@@ -49,6 +51,9 @@ public interface IBNO055IMU
         public ACCELUNIT        accelunit           = ACCELUNIT.METERS_PERSEC_PERSEC;
         /** directional convention for measureing pitch angles. See Section 3.6.1 (p31) of the BNO055 specification */
         public PITCHMODE        pitchmode           = PITCHMODE.ANDROID;    // Section 3.6.2
+        
+        /** debugging aid: enable logging for this device? */
+        public boolean          loggingEnabled      = false;
         }
 
     //----------------------------------------------------------------------------------------------
@@ -203,7 +208,7 @@ public interface IBNO055IMU
    <tr><td>4</td><td>register map value out of range</td></tr>
    <tr><td>5</td><td>register map address out of range</td></tr>
    <tr><td>6</td><td>register map write error</td></tr>
-   <tr><td>7</td><td>BNO low poer mode not available for selected operation mode</td></tr>
+   <tr><td>7</td><td>BNO low power mode not available for selected operation mode</td></tr>
    <tr><td>8</td><td>acceleromoeter power mode not available</td></tr>
    <tr><td>9</td><td>fusion algorithm configuration error</td></tr>
    <tr><td>A</td><td>sensor configuraton error</td></tr>
@@ -233,11 +238,11 @@ public interface IBNO055IMU
     // Enumerations to make all of the above work 
     //----------------------------------------------------------------------------------------------
 
-    enum I2CADDR    { UNSPECIFIED(-1), DEFAULT(0x28), ALTERNATE(0x29);   public final byte bVal; I2CADDR(int i) { bVal =(byte)i; }}
-    enum TEMPUNIT   { CELSIUS(0), FARENHEIT(1);                          public final byte bVal; TEMPUNIT(int i) { bVal =(byte)i; }}
-    enum ANGLEUNIT  { DEGREES(0), RADIANS(1);                            public final byte bVal; ANGLEUNIT(int i) { bVal =(byte)i; }}
-    enum ACCELUNIT  { METERS_PERSEC_PERSEC(0), MILLIGALS(1);             public final byte bVal; ACCELUNIT(int i) { bVal =(byte)i; }}
-    enum PITCHMODE  { WINDOWS(0), ANDROID(1);                            public final byte bVal; PITCHMODE(int i) { bVal =(byte)i; }}
+    enum I2CADDR    { UNSPECIFIED(-1), DEFAULT(0x28*2), ALTERNATE(0x29*2); public final byte bVal; I2CADDR(int i)   { bVal =(byte)i; }}
+    enum TEMPUNIT   { CELSIUS(0), FARENHEIT(1);                            public final byte bVal; TEMPUNIT(int i)  { bVal =(byte)i; }}
+    enum ANGLEUNIT  { DEGREES(0), RADIANS(1);                              public final byte bVal; ANGLEUNIT(int i) { bVal =(byte)i; }}
+    enum ACCELUNIT  { METERS_PERSEC_PERSEC(0), MILLIGALS(1);               public final byte bVal; ACCELUNIT(int i) { bVal =(byte)i; }}
+    enum PITCHMODE  { WINDOWS(0), ANDROID(1);                              public final byte bVal; PITCHMODE(int i) { bVal =(byte)i; }}
 
     /**
      * Sensor modes are described in Table 3-5 (p21) of the BNO055 specification,
@@ -448,9 +453,12 @@ public interface IBNO055IMU
             this.z = z;
             this.nanoTime = nanoTime;
             }
-        public MagneticFlux(II2cDeviceClient.TimestampedData ts)
+        public MagneticFlux(II2cDeviceClient.TimestampedData ts, double scale)
             {
-            this(ts.data[0], ts.data[1], ts.data[2], ts.nanoTime);
+            this(   Util.makeIntLittle(ts.data[0], ts.data[1]) / scale,
+                    Util.makeIntLittle(ts.data[2], ts.data[3]) / scale,
+                    Util.makeIntLittle(ts.data[4], ts.data[5]) / scale,
+                    ts.nanoTime);
             }
         }
 
@@ -561,9 +569,12 @@ public interface IBNO055IMU
             this.accelZ = accelZ;
             this.nanoTime = nanoTime;
             }
-        public Acceleration(II2cDeviceClient.TimestampedData ts)
+        public Acceleration(II2cDeviceClient.TimestampedData ts, double scale)
             {
-            this(ts.data[0], ts.data[1], ts.data[2], ts.nanoTime);
+            this(   Util.makeIntLittle(ts.data[0], ts.data[1]) / scale,
+                    Util.makeIntLittle(ts.data[2], ts.data[3]) / scale,
+                    Util.makeIntLittle(ts.data[4], ts.data[5]) / scale,
+                    ts.nanoTime);
             }
 
         //----------------------------------------------------------------------------------------------
@@ -624,9 +635,12 @@ public interface IBNO055IMU
             this.velocZ = velocZ;
             this.nanoTime = nanoTime;
             }
-        public Velocity(II2cDeviceClient.TimestampedData ts)
+        public Velocity(II2cDeviceClient.TimestampedData ts, double scale)
             {
-            this(ts.data[0], ts.data[1], ts.data[2], ts.nanoTime);
+            this(   Util.makeIntLittle(ts.data[0], ts.data[1]) / scale,
+                    Util.makeIntLittle(ts.data[2], ts.data[3]) / scale,
+                    Util.makeIntLittle(ts.data[4], ts.data[5]) / scale,
+                    ts.nanoTime);
             }
         
         //----------------------------------------------------------------------------------------------
@@ -699,9 +713,12 @@ public interface IBNO055IMU
             this.z = z;
             this.nanoTime = nanoTime;
             }
-        public Position(II2cDeviceClient.TimestampedData ts)
+        public Position(II2cDeviceClient.TimestampedData ts, double scale)
             {
-            this(ts.data[0], ts.data[1], ts.data[2], ts.nanoTime);
+            this(   Util.makeIntLittle(ts.data[0], ts.data[1]) / scale,
+                    Util.makeIntLittle(ts.data[2], ts.data[3]) / scale,
+                    Util.makeIntLittle(ts.data[4], ts.data[5]) / scale,
+                    ts.nanoTime);
             }
 
         //----------------------------------------------------------------------------------------------
@@ -752,9 +769,12 @@ public interface IBNO055IMU
             this.rateZ = rateZ;
             this.nanoTime = nanoTime;
             }
-        public AngularVelocity(II2cDeviceClient.TimestampedData ts)
+        public AngularVelocity(II2cDeviceClient.TimestampedData ts, double scale)
             {
-            this(ts.data[0], ts.data[1], ts.data[2], ts.nanoTime);
+            this(   Util.makeIntLittle(ts.data[0], ts.data[1]) / scale,
+                    Util.makeIntLittle(ts.data[2], ts.data[3]) / scale,
+                    Util.makeIntLittle(ts.data[4], ts.data[5]) / scale,
+                    ts.nanoTime);
             }
         }
 
@@ -794,9 +814,12 @@ public interface IBNO055IMU
             this.pitch = pitch;
             this.nanoTime = nanoTime;
             }
-        public EulerAngles(II2cDeviceClient.TimestampedData ts)
+        public EulerAngles(II2cDeviceClient.TimestampedData ts, double scale)
             {
-            this(ts.data[0], ts.data[1], ts.data[2], ts.nanoTime);
+            this(   Util.makeIntLittle(ts.data[0], ts.data[1]) / scale,
+                    Util.makeIntLittle(ts.data[2], ts.data[3]) / scale,
+                    Util.makeIntLittle(ts.data[4], ts.data[5]) / scale,
+                    ts.nanoTime);
             }
         }
     }

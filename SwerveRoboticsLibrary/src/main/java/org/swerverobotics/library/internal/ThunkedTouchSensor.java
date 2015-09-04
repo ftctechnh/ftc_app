@@ -6,7 +6,7 @@ import org.swerverobotics.library.interfaces.*;
 /**
  * Another in our series
  */
-public class ThunkedTouchSensor extends TouchSensor implements IThunkingWrapper<TouchSensor>
+public class ThunkedTouchSensor extends TouchSensor implements IThunkWrapper<TouchSensor>
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -14,7 +14,7 @@ public class ThunkedTouchSensor extends TouchSensor implements IThunkingWrapper<
 
     private TouchSensor target;   // can only talk to him on the loop thread
 
-    @Override public TouchSensor getThunkTarget() { return this.target; }
+    @Override public TouchSensor getWrappedTarget() { return this.target; }
 
     //----------------------------------------------------------------------------------------------
     // Construction

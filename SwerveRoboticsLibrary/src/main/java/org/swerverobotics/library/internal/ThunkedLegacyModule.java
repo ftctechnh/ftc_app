@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.*;
 import org.swerverobotics.library.interfaces.*;
 import java.util.concurrent.locks.Lock;
 
-public class ThunkedLegacyModule implements LegacyModule, IThunkingWrapper<LegacyModule>
+public class ThunkedLegacyModule implements LegacyModule, IThunkWrapper<LegacyModule>
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -12,7 +12,7 @@ public class ThunkedLegacyModule implements LegacyModule, IThunkingWrapper<Legac
 
     private LegacyModule target;   // can only talk to him on the loop thread
 
-    @Override public LegacyModule getThunkTarget() { return this.target; }
+    @Override public LegacyModule getWrappedTarget() { return this.target; }
 
     //----------------------------------------------------------------------------------------------
     // Construction
