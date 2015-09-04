@@ -21,7 +21,8 @@ Notable features of the library include:
     read-vs-write mode switches and attendant waits automatically and transparently. Just call read8()
     or write8() (and friends) to read and write device registers and the rest is taken care of.
     Note that I2cDeviceClient is decoupled from the SynchronousOpMode work, in that one need not 
-    be using SynchronousOpMode to use I2cDeviceClient.
+    be using SynchronousOpMode to use I2cDeviceClient (however some operations are lengthy, so a
+    worker thread is suggested in order to avoid long-running operations on the loop() thread).
 *   A class that built on I2cDeviceClient that provides a clean interface to the *Bosch BNO055 absolute 
     position sensor*, allowing teams to make easy use of the AdaFruit breakout board which incorporates 
     that sensor module. Features of this sensor include a gyro that does rate integration in hardware to provide robust and accurate
