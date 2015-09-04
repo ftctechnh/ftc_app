@@ -3,15 +3,15 @@ package org.swerverobotics.library.internal;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
 import org.swerverobotics.library.interfaces.*;
-
 import java.util.concurrent.locks.Lock;
+
 
 /**
  * ThunkedI2cController implements I2cController interface by thunking over to a target
  * I2cController on the loop() thread, except where it can get away with performing operations 
  * locally (which turns out to be a lot).
  */
-public class ThunkedI2cController implements I2cController, IThunkingWrapper<I2cController>
+public class ThunkedI2cController implements I2cController, IThunkWrapper<I2cController>
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -19,7 +19,7 @@ public class ThunkedI2cController implements I2cController, IThunkingWrapper<I2c
 
     private I2cController target;          // can only talk to him on the loop thread
 
-    @Override public I2cController getThunkTarget() { return this.target; }
+    @Override public I2cController getWrappedTarget() { return this.target; }
 
     //----------------------------------------------------------------------------------------------
     // Construction

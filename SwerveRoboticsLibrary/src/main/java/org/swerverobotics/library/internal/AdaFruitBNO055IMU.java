@@ -1,19 +1,20 @@
 package org.swerverobotics.library.internal;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.exceptions.*;
 import org.swerverobotics.library.interfaces.*;
-
-import java.io.InterruptedIOException;
 
 /**
  * Instances of AdaFruitBNO055IMU provide API access to an 
  * <a href="http://www.adafruit.com/products/2472">AdaFruit Absolute Orientation Sensor</a> that 
  * is attached to a Modern Robotics Core Device Interface module.
  */
-public final class AdaFruitBNO055IMU implements IBNO055IMU
+public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
     {
     //------------------------------------------------------------------------------------------
     // State
@@ -30,6 +31,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
     private boolean             shutDownRequested;
     private static final int    msAccelerationIntegrationThreadShutdownWait = 20;
     private static final int    msAccelerationIntegrationDefaultPollInterval = 100;
+    private static final int    msAwaitSelfTest = 500;
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -39,9 +41,9 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
      * Instantiate an AdaFruitBNO055IMU on the indicated device whose I2C address is the one
      * indicated.
      */
-    public AdaFruitBNO055IMU(I2cDevice i2cDevice, int i2cAddr)
+    public AdaFruitBNO055IMU(I2cDevice i2cDevice, int i2cAddr8Bit)
         {
-        this.deviceClient = ClassFactory.createI2cDeviceClient(i2cDevice, lowerWindow, i2cAddr);
+        this.deviceClient = ClassFactory.createI2cDeviceClient(i2cDevice, i2cAddr8Bit, lowerWindow);
         this.currentMode  = null;
         this.acceleration = null;
         this.velocity     = new Velocity();
@@ -52,29 +54,29 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
         }
 
     /**
-     * Instantiate and initialize an AdaFruitBNO055IMU with default parameters
-     */
-    public static IBNO055IMU create(I2cDevice i2cDevice)
-        {
-        // Default to the fusion 'IMU' mode
-        return create(i2cDevice, new Parameters());
-        }
-
-    /**
-     * Instantiate and initialize an AdaFruitBNO055IMU with the indicated set of parameters
+     * Instantiate an AdaFruitBNO055IMU and then initialize it with the indicated set of parameters.
      */
     public static IBNO055IMU create(I2cDevice i2cDevice, Parameters parameters)
         {
         // Create a sensor which is a client of i2cDevice
-        IBNO055IMU result = new AdaFruitBNO055IMU(i2cDevice, parameters.i2cAddr.bVal);
+        IBNO055IMU result = new AdaFruitBNO055IMU(i2cDevice, parameters.i2cAddr8Bit.bVal);
         
         // Initialize it with the indicated parameters
         result.initialize(parameters);
         return result;
         }
+
+    //------------------------------------------------------------------------------------------
+    // II2cDeviceClientUser
+    //------------------------------------------------------------------------------------------
+
+    @Override public II2cDeviceClient getI2cDeviceClient()
+        {
+        return this.deviceClient;
+        }
     
     //------------------------------------------------------------------------------------------
-    // Operations
+    // IBNO055IMU
     //------------------------------------------------------------------------------------------
     
     /**
@@ -82,24 +84,27 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
      */
     public void initialize(Parameters parameters)
         {
+        // Turn on the logging (or not) so we can see what happens
+        this.getI2cDeviceClient().setLoggingEnabled(parameters.loggingEnabled);
+        
         // Make sure we have the right device
         byte id = read8(REGISTER.CHIP_ID); 
-        if (id != ID)
+        if (id != bCHIP_ID_VALUE)
             {
             delay(1000); // hold on for boot
             id = read8(REGISTER.CHIP_ID);
-            if (id != ID)
+            if (id != bCHIP_ID_VALUE)
                 throw new UnexpectedI2CDeviceException(id);
             }
         
         // Switch to config mode (just in case, since this is the default)
         setSensorMode(SENSOR_MODE.CONFIG);
         
-        // Reset the system, and wait for the chip id register to switch
-        // back from its reset state (0xA0?) to the it's chip id state (also 0xA0?; hmmm
-        // something is odd there). This can typically take 650ms (Table 0-2, p13).
+        // Reset the system, and wait for the chip id register to switch back from its reset state 
+        // to the it's chip id state. This can take a very long time, some 650ms (Table 0-2, p13) 
+        // perhaps. While in the reset state the chip id (and other registers) reads as 0xFF.
         write8(REGISTER.SYS_TRIGGER, 0x20);
-        while (read8(REGISTER.CHIP_ID) != ID)
+        while (read8(REGISTER.CHIP_ID) != bCHIP_ID_VALUE)
             {
             delay(10);
             }
@@ -124,13 +129,27 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
         // ??? what does this do ???
         write8(REGISTER.SYS_TRIGGER, 0x0);
         delayLore(10);
+
+        // Use or don't use the external crystal
+        // See Section 5.5 (p100) of the BNO055 specification.
+        write8(REGISTER.SYS_TRIGGER, parameters.useExternalCrystal ? 0x80 : 0x00);
+        delayLore(10);
+
+        // Run a self test. This appears to be a necessary step in order for the 
+        // sensor to be able to actually be used.
+        write8(REGISTER.SYS_TRIGGER, read8(REGISTER.SYS_TRIGGER) | 0x01);
+        ElapsedTime time = new ElapsedTime();
+        boolean selfTestSuccessful = false;
+        while (!selfTestSuccessful && time.time()*1000 < msAwaitSelfTest)
+            {
+            selfTestSuccessful = (read8(REGISTER.SELFTEST_RESULT)&0x0F) == 0x0F;
+            }
+        if (!selfTestSuccessful)
+            throw new BNO055InitializationException(this, "self test failed");
         
-        // Set the requested operating mode (see section 3.3)
+        // Finally, enter the requested operating mode (see section 3.3)
         setSensorMode(parameters.mode);
         delayLore(20);
-        
-        // Use or don't use the external cyrstal
-        setExternalCrystalUse(parameters.useExternalCrystal);
         }
 
     private void setSensorMode(SENSOR_MODE mode)
@@ -151,57 +170,14 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
             delay(7);
         }
 
-    /**
-     * Use or don't use the external 32.768khz crystal.
-     * 
-     * See Section 5.5 (p100) of the BNO055 specification.
-     */
-    public synchronized void setExternalCrystalUse(final boolean useExternalCrystal)
-        {
-        this.enterConfigModeFor(new IAction()
-            {
-            @Override public void doAction()
-                {
-                write8(REGISTER.PAGE_ID, 0);
-                if (useExternalCrystal)
-                    {
-                    write8(REGISTER.SYS_TRIGGER, 0x80);
-                    }
-                else
-                    {
-                    write8(REGISTER.SYS_TRIGGER, 0x00);
-                    }
-                delayLore(10);
-                }
-            });
-        }
-    
     public synchronized byte getSystemStatus()
         {
-        // It's unclear why we have to be in config mode to read the status,
-        // but that's what the AdaFruit library did, so we follow that for now
-        // until we might find we can do without.
-        return this.enterConfigModeFor(new IFunc<Byte>()
-            {
-            @Override public Byte value()
-                {
-                return read8(REGISTER.SYS_STAT);
-                }
-            });
+        return read8(REGISTER.SYS_STAT);
         }
 
     public synchronized byte getSystemError()
         {
-        // It's unclear why we have to be in config mode to read the error,
-        // but that's what the AdaFruit library did, so we follow that for now
-        // until we might find we can do without.
-        return this.enterConfigModeFor(new IFunc<Byte>()
-            {
-            @Override public Byte value()
-                {
-                return read8(REGISTER.SYS_STAT);
-                }
-            });
+        return read8(REGISTER.SYS_ERR);
         }
 
     public synchronized boolean isSystemCalibrated()
@@ -225,7 +201,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
     public synchronized boolean isMagnetometerCalibrated()
         {
         byte b = this.read8(REGISTER.CALIB_STAT);
-        return ((b>>0) & 0x03) == 0x03;
+        return ((b/*>>0*/) & 0x03) == 0x03;
         }
     
     public synchronized double getTemperature()
@@ -236,29 +212,29 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
     
     public synchronized MagneticFlux getMagneticFieldStrength()
         {
-        return new MagneticFlux(getVector(VECTOR.MAGNETOMETER, 16. * 1000000));
+        return new MagneticFlux(getVector(VECTOR.MAGNETOMETER), 16. * 1000000);
         }
     public synchronized Acceleration getAcceleration()
         {
-        return new Acceleration(getVector(VECTOR.ACCELEROMETER, 100));
+        return new Acceleration(getVector(VECTOR.ACCELEROMETER), 100);
         }
     public synchronized Acceleration getLinearAcceleration()
         {
-        return new Acceleration(getVector(VECTOR.LINEARACCEL, 100));
+        return new Acceleration(getVector(VECTOR.LINEARACCEL), 100);
         }
     public synchronized Acceleration getGravity()
         {
-        return new Acceleration(getVector(VECTOR.GRAVITY, 100));
+        return new Acceleration(getVector(VECTOR.GRAVITY), 100);
         }
     public synchronized AngularVelocity getAngularVelocity()
         {
-        return new AngularVelocity(getVector(VECTOR.GYROSCOPE, 900));
+        return new AngularVelocity(getVector(VECTOR.GYROSCOPE), 900);
         }
     public synchronized EulerAngles getAngularOrientation()
         {
-        return new EulerAngles(getVector(VECTOR.EULER, 900));
+        return new EulerAngles(getVector(VECTOR.EULER), 900);
         }
-    private II2cDeviceClient.TimestampedData getVector(VECTOR vector, double scale)
+    private II2cDeviceClient.TimestampedData getVector(VECTOR vector) 
         {
         // Ensure that the 6 bytes for this vector are visible in the register window. 
         this.ensureRegisterWindow(new I2cDeviceClient.RegWindow(vector.getValue(), 6));
@@ -270,19 +246,19 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
     public synchronized Quaternion getQuaternionOrientation()
         {
         // Ensure we can see the registers we need
-        this.deviceClient.ensureRegisterWindow(
+        this.deviceClient.ensureReadWindow(
                 new I2cDeviceClient.RegWindow(REGISTER.QUATERNION_DATA_W_LSB.bVal, 8),
                 upperWindow
-            );
+        );
         
         // Section 3.6.5.5 of BNO055 specification
         II2cDeviceClient.TimestampedData ts = this.deviceClient.readTimeStamped(REGISTER.QUATERNION_DATA_W_LSB.bVal, 8);
         final double scale = 1.0 / (1 << 14);
         Quaternion result = new Quaternion(
-                Util.makeInt(ts.data[0], ts.data[1]) * scale,
-                Util.makeInt(ts.data[2], ts.data[3]) * scale,
-                Util.makeInt(ts.data[4], ts.data[5]) * scale,
-                Util.makeInt(ts.data[6], ts.data[7]) * scale
+                Util.makeIntLittle(ts.data[0], ts.data[1]) * scale,
+                Util.makeIntLittle(ts.data[2], ts.data[3]) * scale,
+                Util.makeIntLittle(ts.data[4], ts.data[5]) * scale,
+                Util.makeIntLittle(ts.data[6], ts.data[7]) * scale
             );
         result.nanoTime = ts.nanoTime;
         return result;
@@ -431,6 +407,8 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
     //------------------------------------------------------------------------------------------
 
     /**
+     * One of two primary register windows we use for reading from the BNO055.
+     * 
      * Given the maximum allowable size of a register window, the set of registers on 
      * a BNO055 can be usefully divided into two windows, which we here call lowerWindow
      * and upperWindow. 
@@ -441,9 +419,14 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
      */
     private static final I2cDeviceClient.RegWindow lowerWindow = newWindow(REGISTER.CHIP_ID, REGISTER.EULER_H_LSB);
     /**
+     * A second of two primary register windows we use for reading from the BNO055.
+     * We'd like to include the temperature register, too, but that would make a 27-byte window, and
+     * those don't (currently) work in the CDIM.
+     *
      * @see #lowerWindow
      */
-    private static final I2cDeviceClient.RegWindow upperWindow = newWindow(REGISTER.EULER_H_LSB, REGISTER.CALIB_STAT);;
+    private static final I2cDeviceClient.RegWindow upperWindow = newWindow(REGISTER.EULER_H_LSB, REGISTER.TEMP);
+    
     private static I2cDeviceClient.RegWindow newWindow(REGISTER regFirst, REGISTER regMax)
         {
         return new I2cDeviceClient.RegWindow(regFirst.bVal, regMax.bVal-regFirst.bVal);
@@ -456,7 +439,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
             : upperWindow.contains(needed)
                 ? upperWindow
                 : needed;           // just use what's needed if it's not within our two main windows
-        this.deviceClient.ensureRegisterWindow(needed, set);
+        this.deviceClient.ensureReadWindow(needed, set);
         }
 
     /**
@@ -544,9 +527,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU
     // Constants
     //------------------------------------------------------------------------------------------
 
-    final static int ADDRESS_A = 0x28;
-    final static int ADDRESS_B = 0x29;
-    final static int ID        = 0xa0;
+    final static byte bCHIP_ID_VALUE = (byte)0xa0;
 
     enum VECTOR
         {

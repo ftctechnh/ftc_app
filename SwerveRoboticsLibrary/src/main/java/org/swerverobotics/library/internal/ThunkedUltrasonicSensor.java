@@ -6,7 +6,7 @@ import org.swerverobotics.library.interfaces.*;
 /**
  * An UltrasonicSensor that can be called on the main() thread.
  */
-public class ThunkedUltrasonicSensor extends UltrasonicSensor implements IThunkingWrapper<UltrasonicSensor>
+public class ThunkedUltrasonicSensor extends UltrasonicSensor implements IThunkWrapper<UltrasonicSensor>
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -14,7 +14,7 @@ public class ThunkedUltrasonicSensor extends UltrasonicSensor implements IThunki
 
     private UltrasonicSensor target;   // can only talk to him on the loop thread
 
-    @Override public UltrasonicSensor getThunkTarget() { return this.target; }
+    @Override public UltrasonicSensor getWrappedTarget() { return this.target; }
 
     //----------------------------------------------------------------------------------------------
     // Construction

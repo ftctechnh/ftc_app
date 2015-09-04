@@ -6,7 +6,7 @@ import org.swerverobotics.library.interfaces.*;
 /**
  * A GyroSensor that can be called on a synchronous thread.
  */
-public class ThunkedGyroSensor extends GyroSensor implements IThunkingWrapper<GyroSensor>
+public class ThunkedGyroSensor extends GyroSensor implements IThunkWrapper<GyroSensor>
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -14,7 +14,7 @@ public class ThunkedGyroSensor extends GyroSensor implements IThunkingWrapper<Gy
 
     private GyroSensor target;   // can only talk to him on the loop thread
 
-    @Override public GyroSensor getThunkTarget() { return this.target; }
+    @Override public GyroSensor getWrappedTarget() { return this.target; }
     
     //----------------------------------------------------------------------------------------------
     // Construction
