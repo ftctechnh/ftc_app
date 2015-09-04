@@ -2,13 +2,13 @@
 <!-- NewPage -->
 <html lang="en">
 <head>
-<title>RuntimeInterruptedException</title>
+<title>BNO055InitializationException</title>
 <link rel="stylesheet" type="text/css" href="../../../../stylesheet.css" title="Style">
 </head>
 <body>
 <script type="text/javascript"><!--
     if (location.href.indexOf('is-external=true') == -1) {
-        parent.document.title="RuntimeInterruptedException";
+        parent.document.title="BNO055InitializationException";
     }
 //-->
 </script>
@@ -32,12 +32,12 @@
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../org/swerverobotics/library/exceptions/BNO055InitializationException.html" title="class in org.swerverobotics.library.exceptions"><span class="strong">Prev Class</span></a></li>
-<li><a href="../../../../org/swerverobotics/library/exceptions/SwerveRuntimeException.html" title="class in org.swerverobotics.library.exceptions"><span class="strong">Next Class</span></a></li>
+<li>Prev Class</li>
+<li><a href="../../../../org/swerverobotics/library/exceptions/RuntimeInterruptedException.html" title="class in org.swerverobotics.library.exceptions"><span class="strong">Next Class</span></a></li>
 </ul>
 <ul class="navList">
-<li><a href="../../../../index.html?org/swerverobotics/library/exceptions/RuntimeInterruptedException.html" target="_top">Frames</a></li>
-<li><a href="RuntimeInterruptedException.html" target="_top">No Frames</a></li>
+<li><a href="../../../../index.html?org/swerverobotics/library/exceptions/BNO055InitializationException.html" target="_top">Frames</a></li>
+<li><a href="BNO055InitializationException.html" target="_top">No Frames</a></li>
 </ul>
 <ul class="navList" id="allclasses_navbar_top">
 <li><a href="../../../../allclasses-noframe.html">All Classes</a></li>
@@ -60,7 +60,7 @@
 <li>Nested&nbsp;|&nbsp;</li>
 <li><a href="#field_summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor_summary">Constr</a>&nbsp;|&nbsp;</li>
-<li><a href="#methods_inherited_from_class_org.swerverobotics.library.exceptions.SwerveRuntimeException">Method</a></li>
+<li><a href="#methods_inherited_from_class_Throwable">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
@@ -76,7 +76,7 @@
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
 <div class="subTitle">org.swerverobotics.library.exceptions</div>
-<h2 title="Class RuntimeInterruptedException" class="title">Class RuntimeInterruptedException</h2>
+<h2 title="Class BNO055InitializationException" class="title">Class BNO055InitializationException</h2>
 </div>
 <div class="contentContainer">
 <ul class="inheritance">
@@ -92,12 +92,7 @@
 <li>RuntimeException</li>
 <li>
 <ul class="inheritance">
-<li><a href="../../../../org/swerverobotics/library/exceptions/SwerveRuntimeException.html" title="class in org.swerverobotics.library.exceptions">org.swerverobotics.library.exceptions.SwerveRuntimeException</a></li>
-<li>
-<ul class="inheritance">
-<li>org.swerverobotics.library.exceptions.RuntimeInterruptedException</li>
-</ul>
-</li>
+<li>org.swerverobotics.library.exceptions.BNO055InitializationException</li>
 </ul>
 </li>
 </ul>
@@ -116,11 +111,10 @@
 </dl>
 <hr>
 <br>
-<pre>public class <span class="strong">RuntimeInterruptedException</span>
-extends <a href="../../../../org/swerverobotics/library/exceptions/SwerveRuntimeException.html" title="class in org.swerverobotics.library.exceptions">SwerveRuntimeException</a></pre>
-<div class="block">An unchecked version of InterruptedException. Thrown by classes that pay attention to if they
- were interrupted, yet have no other choice but to throw.</div>
-<dl><dt><span class="strong">See Also:</span></dt><dd><a href="../../../../serialized-form.html#org.swerverobotics.library.exceptions.RuntimeInterruptedException">Serialized Form</a></dd></dl>
+<pre>public class <span class="strong">BNO055InitializationException</span>
+extends RuntimeException</pre>
+<div class="block">A BNO055InitializationException is thrown if a BNO055 fails to initialize successfully</div>
+<dl><dt><span class="strong">See Also:</span></dt><dd><a href="../../../../serialized-form.html#org.swerverobotics.library.exceptions.BNO055InitializationException">Serialized Form</a></dd></dl>
 </li>
 </ul>
 </div>
@@ -140,8 +134,12 @@ extends <a href="../../../../org/swerverobotics/library/exceptions/SwerveRuntime
 <th class="colLast" scope="col">Field and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>InterruptedException</code></td>
-<td class="colLast"><code><strong><a href="../../../../org/swerverobotics/library/exceptions/RuntimeInterruptedException.html#interruptedException">interruptedException</a></strong></code>&nbsp;</td>
+<td class="colFirst"><code><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html" title="interface in org.swerverobotics.library.interfaces">IBNO055IMU</a></code></td>
+<td class="colLast"><code><strong><a href="../../../../org/swerverobotics/library/exceptions/BNO055InitializationException.html#imu">imu</a></strong></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>String</code></td>
+<td class="colLast"><code><strong><a href="../../../../org/swerverobotics/library/exceptions/BNO055InitializationException.html#message">message</a></strong></code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -158,10 +156,8 @@ extends <a href="../../../../org/swerverobotics/library/exceptions/SwerveRuntime
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><strong><a href="../../../../org/swerverobotics/library/exceptions/RuntimeInterruptedException.html#RuntimeInterruptedException()">RuntimeInterruptedException</a></strong>()</code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colOne"><code><strong><a href="../../../../org/swerverobotics/library/exceptions/RuntimeInterruptedException.html#RuntimeInterruptedException(java.lang.InterruptedException)">RuntimeInterruptedException</a></strong>(InterruptedException&nbsp;e)</code>&nbsp;</td>
+<td class="colOne"><code><strong><a href="../../../../org/swerverobotics/library/exceptions/BNO055InitializationException.html#BNO055InitializationException(org.swerverobotics.library.interfaces.IBNO055IMU, java.lang.String)">BNO055InitializationException</a></strong>(<a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html" title="interface in org.swerverobotics.library.interfaces">IBNO055IMU</a>&nbsp;imu,
+                             String&nbsp;message)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -172,13 +168,6 @@ extends <a href="../../../../org/swerverobotics/library/exceptions/SwerveRuntime
 <!--   -->
 </a>
 <h3>Method Summary</h3>
-<ul class="blockList">
-<li class="blockList"><a name="methods_inherited_from_class_org.swerverobotics.library.exceptions.SwerveRuntimeException">
-<!--   -->
-</a>
-<h3>Methods inherited from class&nbsp;org.swerverobotics.library.exceptions.<a href="../../../../org/swerverobotics/library/exceptions/SwerveRuntimeException.html" title="class in org.swerverobotics.library.exceptions">SwerveRuntimeException</a></h3>
-<code><a href="../../../../org/swerverobotics/library/exceptions/SwerveRuntimeException.html#wrap(java.lang.Exception)">wrap</a></code></li>
-</ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods_inherited_from_class_Throwable">
 <!--   -->
@@ -207,13 +196,22 @@ extends <a href="../../../../org/swerverobotics/library/exceptions/SwerveRuntime
 <!--   -->
 </a>
 <h3>Field Detail</h3>
-<a name="interruptedException">
+<a name="imu">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>imu</h4>
+<pre>public final&nbsp;<a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html" title="interface in org.swerverobotics.library.interfaces">IBNO055IMU</a> imu</pre>
+</li>
+</ul>
+<a name="message">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>interruptedException</h4>
-<pre>public&nbsp;InterruptedException interruptedException</pre>
+<h4>message</h4>
+<pre>public final&nbsp;String message</pre>
 </li>
 </ul>
 </li>
@@ -224,22 +222,14 @@ extends <a href="../../../../org/swerverobotics/library/exceptions/SwerveRuntime
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="RuntimeInterruptedException()">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>RuntimeInterruptedException</h4>
-<pre>public&nbsp;RuntimeInterruptedException()</pre>
-</li>
-</ul>
-<a name="RuntimeInterruptedException(java.lang.InterruptedException)">
+<a name="BNO055InitializationException(org.swerverobotics.library.interfaces.IBNO055IMU, java.lang.String)">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>RuntimeInterruptedException</h4>
-<pre>public&nbsp;RuntimeInterruptedException(InterruptedException&nbsp;e)</pre>
+<h4>BNO055InitializationException</h4>
+<pre>public&nbsp;BNO055InitializationException(<a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html" title="interface in org.swerverobotics.library.interfaces">IBNO055IMU</a>&nbsp;imu,
+                             String&nbsp;message)</pre>
 </li>
 </ul>
 </li>
@@ -266,12 +256,12 @@ extends <a href="../../../../org/swerverobotics/library/exceptions/SwerveRuntime
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../org/swerverobotics/library/exceptions/BNO055InitializationException.html" title="class in org.swerverobotics.library.exceptions"><span class="strong">Prev Class</span></a></li>
-<li><a href="../../../../org/swerverobotics/library/exceptions/SwerveRuntimeException.html" title="class in org.swerverobotics.library.exceptions"><span class="strong">Next Class</span></a></li>
+<li>Prev Class</li>
+<li><a href="../../../../org/swerverobotics/library/exceptions/RuntimeInterruptedException.html" title="class in org.swerverobotics.library.exceptions"><span class="strong">Next Class</span></a></li>
 </ul>
 <ul class="navList">
-<li><a href="../../../../index.html?org/swerverobotics/library/exceptions/RuntimeInterruptedException.html" target="_top">Frames</a></li>
-<li><a href="RuntimeInterruptedException.html" target="_top">No Frames</a></li>
+<li><a href="../../../../index.html?org/swerverobotics/library/exceptions/BNO055InitializationException.html" target="_top">Frames</a></li>
+<li><a href="BNO055InitializationException.html" target="_top">No Frames</a></li>
 </ul>
 <ul class="navList" id="allclasses_navbar_bottom">
 <li><a href="../../../../allclasses-noframe.html">All Classes</a></li>
@@ -294,7 +284,7 @@ extends <a href="../../../../org/swerverobotics/library/exceptions/SwerveRuntime
 <li>Nested&nbsp;|&nbsp;</li>
 <li><a href="#field_summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor_summary">Constr</a>&nbsp;|&nbsp;</li>
-<li><a href="#methods_inherited_from_class_org.swerverobotics.library.exceptions.SwerveRuntimeException">Method</a></li>
+<li><a href="#methods_inherited_from_class_Throwable">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
