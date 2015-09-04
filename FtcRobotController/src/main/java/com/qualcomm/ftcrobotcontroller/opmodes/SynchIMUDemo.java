@@ -19,7 +19,6 @@ public class SynchIMUDemo extends SynchronousOpMode
         // module and named "imu". Retrieve that raw I2cDevice and then wrap it in an object that
         // semantically understands this particular kind of sensor.
         IBNO055IMU.Parameters parameters = new IBNO055IMU.Parameters();
-        parameters.loggingEnabled = true;
         imu = ClassFactory.createAdaFruitBNO055IMU(hardwareMap.i2cDevice.get("imu"), parameters);
         
         // Set up our dashboard computations
@@ -47,20 +46,28 @@ public class SynchIMUDemo extends SynchronousOpMode
             }
         });
         dashboard.line(
-                dashboard.item("loop count: ", new IFunc<Object>()
-                {
-                @Override public Object value()
+                dashboard.item("loop count: ", new IFunc<Object>() { @Override public Object value()
                     {
                     return getLoopCount();
                     }
                 }),
-                dashboard.item("hw cycle count: ", new IFunc<Object>()
-                {
-                @Override public Object value()
+                dashboard.item("hw cycle count: ", new IFunc<Object>() { @Override public Object value()
                     {
                     return ((II2cDeviceClientUser) imu).getI2cDeviceClient().getHardwareCycleCount();
                     }
                 }));
+        dashboard.line(
+                dashboard.item("status: ", new IFunc<Object>() { @Override public Object value()
+                    {
+                    return String.format("0x%02x", imu.getSystemStatus());
+                    }
+                }),
+                dashboard.item("calib: ", new IFunc<Object>() { @Override public Object value()
+                    {
+                    return String.format("0x%02x", imu.read8(IBNO055IMU.REGISTER.CALIB_STAT));
+                    }
+                })
+            );
         dashboard.line(dashboard.item("heading: ", new IFunc<Object>() { @Override public Object value()
             {
             return formatAngle(angles.heading);
