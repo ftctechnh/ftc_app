@@ -51,7 +51,7 @@ public final class I2cDeviceOnI2cDeviceController implements II2cDevice
 
     @Override public String getDeviceName()
         {
-        return String.format("I2C device at address 0x%02x", this.i2cAddr8Bit);
+        return String.format("I2C(0x%02X)", this.i2cAddr8Bit);
         }
     
     @Override public String getConnectionInfo()

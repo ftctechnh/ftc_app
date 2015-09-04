@@ -1,6 +1,9 @@
 package org.swerverobotics.library.internal;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.exceptions.*;
@@ -28,6 +31,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
     private boolean             shutDownRequested;
     private static final int    msAccelerationIntegrationThreadShutdownWait = 20;
     private static final int    msAccelerationIntegrationDefaultPollInterval = 100;
+    private static final int    msAwaitSelfTest = 500;
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -80,6 +84,9 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
      */
     public void initialize(Parameters parameters)
         {
+        // Turn on the logging (or not) so we can see what happens
+        this.getI2cDeviceClient().setLoggingEnabled(parameters.loggingEnabled);
+        
         // Make sure we have the right device
         byte id = read8(REGISTER.CHIP_ID); 
         if (id != bCHIP_ID_VALUE)
@@ -127,6 +134,18 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         // See Section 5.5 (p100) of the BNO055 specification.
         write8(REGISTER.SYS_TRIGGER, parameters.useExternalCrystal ? 0x80 : 0x00);
         delayLore(10);
+
+        // Run a self test. This appears to be a necessary step in order for the 
+        // sensor to be able to actually be used.
+        write8(REGISTER.SYS_TRIGGER, read8(REGISTER.SYS_TRIGGER) | 0x01);
+        ElapsedTime time = new ElapsedTime();
+        boolean selfTestSuccessful = false;
+        while (!selfTestSuccessful && time.time()*1000 < msAwaitSelfTest)
+            {
+            selfTestSuccessful = (read8(REGISTER.SELFTEST_RESULT)&0x0F) == 0x0F;
+            }
+        if (!selfTestSuccessful)
+            throw new BNO055InitializationException(this, "self test failed");
         
         // Finally, enter the requested operating mode (see section 3.3)
         setSensorMode(parameters.mode);
@@ -153,30 +172,12 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
 
     public synchronized byte getSystemStatus()
         {
-        // It's unclear why we have to be in config mode to read the status,
-        // but that's what the AdaFruit library did, so we follow that for now
-        // until we might find we can do without.
-        return this.enterConfigModeFor(new IFunc<Byte>()
-            {
-            @Override public Byte value()
-                {
-                return read8(REGISTER.SYS_STAT);
-                }
-            });
+        return read8(REGISTER.SYS_STAT);
         }
 
     public synchronized byte getSystemError()
         {
-        // It's unclear why we have to be in config mode to read the error,
-        // but that's what the AdaFruit library did, so we follow that for now
-        // until we might find we can do without.
-        return this.enterConfigModeFor(new IFunc<Byte>()
-            {
-            @Override public Byte value()
-                {
-                return read8(REGISTER.SYS_STAT);
-                }
-            });
+        return read8(REGISTER.SYS_ERR);
         }
 
     public synchronized boolean isSystemCalibrated()
@@ -406,6 +407,8 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
     //------------------------------------------------------------------------------------------
 
     /**
+     * One of two primary register windows we use for reading from the BNO055.
+     * 
      * Given the maximum allowable size of a register window, the set of registers on 
      * a BNO055 can be usefully divided into two windows, which we here call lowerWindow
      * and upperWindow. 
@@ -416,9 +419,14 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
      */
     private static final I2cDeviceClient.RegWindow lowerWindow = newWindow(REGISTER.CHIP_ID, REGISTER.EULER_H_LSB);
     /**
+     * A second of two primary register windows we use for reading from the BNO055.
+     * We'd like to include the temperature register, too, but that would make a 27-byte window, and
+     * those don't (currently) work in the CDIM.
+     *
      * @see #lowerWindow
      */
-    private static final I2cDeviceClient.RegWindow upperWindow = newWindow(REGISTER.EULER_H_LSB, REGISTER.CALIB_STAT);;
+    private static final I2cDeviceClient.RegWindow upperWindow = newWindow(REGISTER.EULER_H_LSB, REGISTER.TEMP);
+    
     private static I2cDeviceClient.RegWindow newWindow(REGISTER regFirst, REGISTER regMax)
         {
         return new I2cDeviceClient.RegWindow(regFirst.bVal, regMax.bVal-regFirst.bVal);
