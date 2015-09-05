@@ -1,7 +1,8 @@
 package com.fellowshipoftheloosescrews.testing;
 
 import com.fellowshipoftheloosescrews.utilities.DcServo;
-import com.fellowshipoftheloosescrews.utilities.Util;
+//import com.fellowshipoftheloosescrews.utilities.Util;
+import com.fellowshipoftheloosescrews.utilities.MotorUtils;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -18,7 +19,7 @@ public class DcServoTest extends LinearOpMode{
     public void runOpMode()
     {
         motor = hardwareMap.dcMotor.get("motor1");
-        servo = new DcServo(motor, Util.ENCODER_NEVEREST_CPR);
+        servo = new DcServo(motor, MotorUtils.ENCODER_NEVEREST_CPR);
 
         servo.setTarget(1);
         servo.start();

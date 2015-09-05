@@ -14,7 +14,7 @@ public class TeleOp extends OpMode
     DcMotor rightMotor;
     DcMotor leftMotor;
 
-    DcMotor shoulder;
+    //DcMotor shoulder;
 
     // sets the nudge power
     private double nudgePower = -0.25;
@@ -25,7 +25,7 @@ public class TeleOp extends OpMode
         rightMotor = hardwareMap.dcMotor.get("rightMotor");
         leftMotor = hardwareMap.dcMotor.get("leftMotor");
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
-        shoulder = hardwareMap.dcMotor.get("shoulder");
+        //shoulder = hardwareMap.dcMotor.get("shoulder");
     }
 
     @Override
@@ -59,19 +59,6 @@ public class TeleOp extends OpMode
         {
             rightMotor.setPower(nudgePower);
             leftMotor.setPower(-nudgePower);
-        }
-
-        if(gamepad1.a)
-        {
-            shoulder.setPower(0.5);
-        }
-        else if(gamepad1.b)
-        {
-            shoulder.setPower(-0.5);
-        }
-        else
-        {
-            shoulder.setPower(0);
         }
     }
 }
