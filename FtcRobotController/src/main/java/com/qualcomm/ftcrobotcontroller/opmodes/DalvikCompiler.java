@@ -9,7 +9,7 @@ import java.util.List;
 import com.android.dx.cf.iface.ParseException;
 import com.android.dx.command.Main;
 
-public class TBotsDxCompler {
+public class DalvikCompiler {
 
     private static final String OUTPUT_TO = "/thunderbots/compiled";
 
