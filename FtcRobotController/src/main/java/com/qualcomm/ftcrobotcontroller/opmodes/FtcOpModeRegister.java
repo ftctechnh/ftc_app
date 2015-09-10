@@ -52,10 +52,10 @@ public class FtcOpModeRegister implements OpModeRegister {
      */
     public void register(OpModeManager manager) {
         try {
-            List<File> fileList = TBotsClassLoader.getFileSet();
+            List<File> fileList = OpModeClassLoader.getFileSet();
             DalvikCompiler.getJarList(fileList);
             DalvikCompiler.convertJars(fileList);
-            List<Class<? extends OpMode>> opmodeList = TBotsClassLoader.loadJars(fileList);
+            List<Class<? extends OpMode>> opmodeList = OpModeClassLoader.loadJars(fileList);
             RobotLog.i("Now registering OpModes...");
             for (Class<? extends OpMode> opmode : opmodeList) {
                 try {

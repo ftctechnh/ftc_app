@@ -17,7 +17,7 @@ import java.util.List;
 import dalvik.system.DexClassLoader;
 import dalvik.system.DexFile;
 
-public class TBotsClassLoader {
+public class OpModeClassLoader {
 
     private static ClassLoader classLoader;
     private static List<Class<? extends OpMode>> opModeList;
@@ -28,7 +28,7 @@ public class TBotsClassLoader {
 
     public static List<Class<? extends OpMode>> loadJars(List<File> filelist) {
         URL[] jarurls = getJarURLs(filelist);
-        //classLoader = new URLClassLoader(jarurls, TBotsClassLoader.class.getClassLoader());
+        //classLoader = new URLClassLoader(jarurls, OpModeClassLoader.class.getClassLoader());
         classLoader = getClassLoader(jarurls);
         Thread.currentThread().setContextClassLoader(classLoader);
         opModeList = new ArrayList<Class<? extends OpMode>>();
@@ -48,7 +48,7 @@ public class TBotsClassLoader {
         File cacheFile = new File(FtcRobotControllerActivity.getPrivateFilesDir(), "/thunderbots/");
         cacheFile.mkdirs();
         String cacheDir = cacheFile.toString();
-        ClassLoader parentLoader = TBotsClassLoader.class.getClassLoader();
+        ClassLoader parentLoader = OpModeClassLoader.class.getClassLoader();
         return new DexClassLoader(pathString, cacheDir, null, parentLoader);
         //return new PathClassLoader(pathString, parentLoader);
     }
