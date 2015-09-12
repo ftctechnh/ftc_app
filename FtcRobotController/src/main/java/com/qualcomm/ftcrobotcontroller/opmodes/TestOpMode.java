@@ -15,4 +15,9 @@ public class TestOpMode extends OpMode{
     public void loop() {
 
     }
+
+    @Override
+    public void stop() {
+
+    }
 }
