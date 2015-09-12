@@ -58,13 +58,13 @@ public class K9TeleOp extends OpMode {
 	double armPosition;
 
 	// amount to change the arm servo position.
-	double armDelta = 0.1;
+	double armDelta = 0.01;
 
 	// position of the claw servo
 	double clawPosition;
 
 	// amount to change the claw servo position by
-	double clawDelta = 0.1;
+	double clawDelta = 0.01;
 
 	DcMotor motorRight;
 	DcMotor motorLeft;
