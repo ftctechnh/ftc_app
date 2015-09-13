@@ -29,41 +29,43 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.qualcomm.ftcrobotcontroller.opmodes;
-
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
+package com.qualcomm.ftcrobotcontroller.sampleops;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 /**
  * TeleOp Mode
  * <p>
- *Enables control of the robot via the gamepad
+ * Enables control of the robot via the gamepad
  */
 public class NullOp extends OpMode {
 
-  private String startDate;
-  private ElapsedTime runtime = new ElapsedTime();
+	private String startDate;
+	private ElapsedTime runtime = new ElapsedTime();
 
-  /*
-   * Code to run when the op mode is first enabled goes here
-   * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
-   */
-  @Override
-  public void init() {
-    startDate = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
-    runtime.reset();
-  }
+	/*
+	 * Code to run when the op mode is first enabled goes here
+	 *
+	 * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
+	 */
+	@Override
+	public void init() {
+		this.startDate = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
+		this.runtime.reset();
+	}
 
-  /*
-   * This method will be called repeatedly in a loop
-   * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
-   */
-  @Override
-  public void loop() {
-    telemetry.addData("1 Start", "NullOp started at " + startDate);
-    telemetry.addData("2 Status", "running for " + runtime.toString());
-  }
+	/*
+	 * This method will be called repeatedly in a loop
+	 *
+	 * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
+	 */
+	@Override
+	public void loop() {
+		this.telemetry.addData("1 Start", "NullOp started at " + this.startDate);
+		this.telemetry.addData("2 Status", "running for " + this.runtime.toString());
+	}
 }

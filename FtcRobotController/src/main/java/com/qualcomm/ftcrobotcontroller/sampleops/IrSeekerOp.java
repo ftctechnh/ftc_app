@@ -28,9 +28,9 @@
  * THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.qualcomm.ftcrobotcontroller.opmodes;
+package com.qualcomm.ftcrobotcontroller.sampleops;
 
-import com.qualcomm.ftccommon.DbgLog;
+//import com.qualcomm.ftccommon.DbgLog;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IrSeekerSensor;
@@ -40,70 +40,72 @@ import com.qualcomm.robotcore.hardware.IrSeekerSensor;
  * <p>
  * How to use: <br>
  * Make sure the Modern Robotics IR beacon is off. <br>
- * Set it to 1200 at 180.  <br>
+ * Set it to 1200 at 180. <br>
  * Make sure the side of the beacon with the LED on is facing the robot. <br>
  * Turn on the IR beacon. The robot will now follow the IR beacon. <br>
  * To stop the robot, turn the IR beacon off. <br>
  */
 public class IrSeekerOp extends OpMode {
 
-  final static double MOTOR_POWER = 0.15; // Higher values will cause the robot to move faster
+	final static double MOTOR_POWER = 0.15; // Higher values will cause the robot to move
+											// faster
 
-  final static double HOLD_IR_SIGNAL_STRENGTH = 0.20; // Higher values will cause the robot to follow closer
+	final static double HOLD_IR_SIGNAL_STRENGTH = 0.20; // Higher values will cause the
+														// robot to follow closer
 
-  IrSeekerSensor irSeeker;
-  DcMotor motorRight;
-  DcMotor motorLeft;
+	IrSeekerSensor irSeeker;
+	DcMotor motorRight;
+	DcMotor motorLeft;
 
-  @Override
-  public void init() {
-    irSeeker = hardwareMap.irSeekerSensor.get("ir_seeker");
-    motorRight = hardwareMap.dcMotor.get("motor_2");
-    motorLeft = hardwareMap.dcMotor.get("motor_1");
+	@Override
+	public void init() {
+		this.irSeeker = this.hardwareMap.irSeekerSensor.get("ir_seeker");
+		this.motorRight = this.hardwareMap.dcMotor.get("motor_2");
+		this.motorLeft = this.hardwareMap.dcMotor.get("motor_1");
 
-    motorLeft.setDirection(DcMotor.Direction.REVERSE);
-  }
+		this.motorLeft.setDirection(DcMotor.Direction.REVERSE);
+	}
 
-  @Override
-  public void loop() {
-    double angle = 0;
-    double strength = 0;
+	@Override
+	public void loop() {
+		double angle = 0;
+		double strength = 0;
 
-    // Is an IR signal detected?
-    if (irSeeker.signalDetected()) {
-      // an IR signal is detected
+		// Is an IR signal detected?
+		if (this.irSeeker.signalDetected()) {
+			// an IR signal is detected
 
-      // Get the angle and strength of the signal
-      angle = irSeeker.getAngle();
-      strength = irSeeker.getStrength();
+			// Get the angle and strength of the signal
+			angle = this.irSeeker.getAngle();
+			strength = this.irSeeker.getStrength();
 
-      // which direction should we move?
-      if (angle < 0) {
-        // we need to move to the left
-        motorRight.setPower(MOTOR_POWER);
-        motorLeft.setPower(-MOTOR_POWER);
-      } else if (angle > 0) {
-        // we need to move to the right
-        motorRight.setPower(-MOTOR_POWER);
-        motorLeft.setPower(MOTOR_POWER);
-      } else if (strength < HOLD_IR_SIGNAL_STRENGTH) {
-        // the IR signal is weak, approach
-        motorRight.setPower(MOTOR_POWER);
-        motorLeft.setPower(MOTOR_POWER);
-      } else {
-        // the IR signal is strong, stay here
-        motorRight.setPower(0.0);
-        motorLeft.setPower(0.0);
-      }
-    } else {
-      // no IR signal is detected
-      motorRight.setPower(0.0);
-      motorLeft.setPower(0.0);
-    }
+			// which direction should we move?
+			if (angle < 0) {
+				// we need to move to the left
+				this.motorRight.setPower(IrSeekerOp.MOTOR_POWER);
+				this.motorLeft.setPower( -IrSeekerOp.MOTOR_POWER);
+			} else if (angle > 0) {
+				// we need to move to the right
+				this.motorRight.setPower( -IrSeekerOp.MOTOR_POWER);
+				this.motorLeft.setPower(IrSeekerOp.MOTOR_POWER);
+			} else if (strength < IrSeekerOp.HOLD_IR_SIGNAL_STRENGTH) {
+				// the IR signal is weak, approach
+				this.motorRight.setPower(IrSeekerOp.MOTOR_POWER);
+				this.motorLeft.setPower(IrSeekerOp.MOTOR_POWER);
+			} else {
+				// the IR signal is strong, stay here
+				this.motorRight.setPower(0.0);
+				this.motorLeft.setPower(0.0);
+			}
+		} else {
+			// no IR signal is detected
+			this.motorRight.setPower(0.0);
+			this.motorLeft.setPower(0.0);
+		}
 
-    telemetry.addData("angle", angle);
-    telemetry.addData("strength", strength);
+		this.telemetry.addData("angle", angle);
+		this.telemetry.addData("strength", strength);
 
-    DbgLog.msg(irSeeker.toString());
-  }
+		// DbgLog.msg(irSeeker.toString());
+	}
 }

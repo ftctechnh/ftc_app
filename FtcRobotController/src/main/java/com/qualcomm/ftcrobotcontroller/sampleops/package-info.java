@@ -30,9 +30,8 @@
 
 
 /**
- * FTC Robot Controller class loader for operation modes. Classes in this package are used to load
- * user-defined op modes from the file system of the phone, and register them with the app's
- * backend.
+ * FTC Robot Controller default op modes. These op modes can be used by teams as sample programs to
+ * guide development of other code.
  */
 
-package com.qualcomm.ftcrobotcontroller.opmodes;
+package com.qualcomm.ftcrobotcontroller.sampleops;
