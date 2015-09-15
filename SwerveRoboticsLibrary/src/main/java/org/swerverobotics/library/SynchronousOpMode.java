@@ -530,8 +530,13 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         if (!isMain) SynchronousThreadContext.assertSynchronousThread();
         //
         Thread thread = new Thread(new SynchronousThreadRoot(threadBody, isMain));
-        if (!isMain)
+        if (isMain)
             {
+            thread.setName("Sync main");
+            }
+        else
+            {
+            thread.setName("Sync worker");
             this.synchronousWorkerThreads.add(thread);
             }
         return thread;

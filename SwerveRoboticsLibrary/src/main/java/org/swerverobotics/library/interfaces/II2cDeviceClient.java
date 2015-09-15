@@ -157,17 +157,17 @@ public interface II2cDeviceClient extends HardwareDevice
     // Monitoring & debugging
     //----------------------------------------------------------------------------------------------
 
-    /** Return the thread on which it is observed that portIsReady callbacks occur 
+    /** Returns the thread on which it is observed that portIsReady callbacks occur 
      * @return the thread on which callbacks occur. If null, then no callback has yet been made
      *         so the identity of this thread is not yet known.
      */
     Thread getCallbackThread();
 
     /**
-     * Return the number of hardware cycles that we've seen for this device. This at times
-     * can be a useful debugging aid, but probably isn't useful for much more
+     * Returns the number of I2C cycles that we've seen for this device. This at times
+     * can be a useful debugging aid, but probably isn't useful for much more.
      */
-    int getHardwareCycleCount();
+    int getI2cCycleCount();
 
     /**
      * Turn logging on or off. Logging output can be viewed using the Android Logcat tools.
