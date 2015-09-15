@@ -306,7 +306,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
             }
         }
     
-    public int getHardwareCycleCount()
+    public int getI2cCycleCount()
         {
         synchronized (this.lock)
             {
@@ -421,8 +421,11 @@ public final class I2cDeviceClient implements II2cDeviceClient
                 else if (BuildConfig.DEBUG)
                     Assert.assertEquals(callbackThread.getId(), Thread.currentThread().getId());
                 
+                if (0 == hardwareCycleCount)
+                    Thread.currentThread().setName(String.format("rw loop(%s)", i2cDevice.getDeviceName()));
+
                 hardwareCycleCount++;
-                
+
                 setActionFlag     = false;
                 queueFullWrite    = false;
                 queueRead         = false;
