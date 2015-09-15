@@ -4,7 +4,7 @@ This project is our attempt to create a modified, improved version of the FTC Ro
 
 There is source code in this repository that is forked from the original FTC Robot Controller app, which was published on github by FTC. This code is under the Copyright of Qualcomm Technologies.
 
-##### Everthing following this is from the original README.md file that is in the ftc_app repository
+##### Everything following this is from the original README.md file that is in the ftc_app repository
 
 # ftc_app
 FTC Android Studio project to create FTC Robot Controller app.
