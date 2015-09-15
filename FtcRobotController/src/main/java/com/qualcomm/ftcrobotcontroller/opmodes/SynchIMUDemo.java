@@ -67,7 +67,7 @@ public class SynchIMUDemo extends SynchronousOpMode
                     {
                     return loopCycles;
                     }}),
-                db.item("hw cycle count: ", new IFunc<Object>() { @Override public Object value()
+                db.item("i2c cycle count: ", new IFunc<Object>() { @Override public Object value()
                     {
                     return i2cCycles;
                     }}));
