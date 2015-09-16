@@ -22,13 +22,18 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
     private SuicideWatch           suicideWatch;
     private SENSOR_MODE            currentMode;
 
+    private final Object           dataLock = new Object();
     private Acceleration           acceleration;
     private Velocity               velocity;
     private Position               position;
+
     private HandshakeThreadStarter accelerationIntegration;
-    private static final int       msAccelerationIntegrationThreadShutdownWait = 20;
-    private static final int       msAccelerationIntegrationDefaultPollInterval = 100;
+    private static final int       msAccelerationIntegrationStopWait = 20;
     private static final int       msAwaitSelfTest = 500;
+
+    // we poll essentially as fast as we can, since measurements show that
+    // we only get an I2C cycle every 70 ms or so. 'no point in waiting longer.
+    private static final int       msAccelerationIntegrationDefaultPollInterval = 0;    // ASAP
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -263,20 +268,29 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
     // Position and velocity management
     //------------------------------------------------------------------------------------------
     
-    public synchronized Velocity getVelocity()
+    public Velocity getVelocity()
         {
-        return this.velocity;
+        synchronized (dataLock)
+            {
+            return this.velocity;
+            }
         }
-    public synchronized Position getPosition()
+    public Position getPosition()
         {
-        return this.position;
+        synchronized (dataLock)
+            {
+            return this.position;
+            }
         }
-    public synchronized void setPositionAndVelocity(Position position, Velocity velocity)
+    public void setPositionAndVelocity(Position position, Velocity velocity)
         {
-        if (position != null)
-            this.position = position;
-        if (velocity != null)
-            this.velocity = velocity;
+        synchronized (dataLock)
+            {
+            if (position != null)
+                this.position = position;
+            if (velocity != null)
+                this.velocity = velocity;
+            }
         }
     
     public synchronized void startAccelerationIntegration(Position initalPosition, Velocity initialVelocity)
@@ -305,11 +319,11 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
             // Don't yet know the callback thread. Spin until we do.
             Thread.yield();
             }
-        this.suicideWatch = new SuicideWatch(this.deviceClient.getCallbackThread(), this.accelerationIntegration.prepareStart());
-        try { this.suicideWatch.arm(); } catch(InterruptedException e) { throw SwerveRuntimeException.wrap(e); }        
+        this.suicideWatch = new SuicideWatch(this.deviceClient.getCallbackThread(), this.accelerationIntegration);
+        this.suicideWatch.start();
         
         // Start the whole schebang a rockin...
-        try { this.accelerationIntegration.start(); } catch (InterruptedException e) { throw SwerveRuntimeException.wrap(e); }
+        this.accelerationIntegration.start();
         }
     
     public synchronized void stopAccelerationIntegration()
@@ -317,19 +331,11 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         if (this.accelerationIntegration != null)
             {
             // Disarm our monitor
-            try { this.suicideWatch.disarm(); } catch(InterruptedException ignored) { }
+            this.suicideWatch.stop(msAccelerationIntegrationStopWait);
             this.suicideWatch = null;
             
-            // Interrupt the integration thread
-            this.accelerationIntegration.stop();
-            
-            // Wait a while for the integration thread to terminate
-            try {
-                this.accelerationIntegration.join(msAccelerationIntegrationThreadShutdownWait);
-                }
-            catch (InterruptedException ignored) { }
-            
-            // Clean up on the way out
+            // Stop the integration thread
+            this.accelerationIntegration.stop(msAccelerationIntegrationStopWait);
             this.accelerationIntegration = null;
             }
         }
@@ -351,7 +357,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
 
             // Any extant acceleration is stale. Null it out so that we will have
             // fresh and accurate intervals
-            synchronized (AdaFruitBNO055IMU.this)
+            synchronized (dataLock)
                 {
                 acceleration = null;                
                 }
@@ -366,7 +372,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
                     Acceleration accelNext = AdaFruitBNO055IMU.this.getLinearAcceleration();
                     
                     // Update our state variables based thereon
-                    synchronized (AdaFruitBNO055IMU.this)
+                    synchronized (dataLock)
                         {
                         // We can only integrate if we have a previous acceleration to baseline from
                         if (acceleration != null && acceleration.nanoTime != 0)
@@ -389,11 +395,13 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
                         }
                     
                     // Wait a bit before polling again
-                    Thread.sleep(msPollInterval);
+                    if (msPollInterval > 0)
+                        Thread.sleep(msPollInterval);
                     }
                 }
             catch (InterruptedException|RuntimeInterruptedException ignored)
                 {
+                Util.handleCapturedInterrupt();
                 }
             }
         }
@@ -451,7 +459,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
             }
         catch (InterruptedException e)
             {
-            throw SwerveRuntimeException.wrap(e);
+            Util.handleCapturedInterrupt();
             }
         }
 
@@ -468,7 +476,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
             }
         catch (InterruptedException e)
             {
-            throw SwerveRuntimeException.wrap(e);
+            Util.handleCapturedInterrupt();
             }
         }
 

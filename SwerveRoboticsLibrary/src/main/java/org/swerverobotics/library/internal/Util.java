@@ -11,6 +11,15 @@ import java.util.Vector;
 public class Util
     {
     //----------------------------------------------------------------------------------------------
+    // Threading
+    //----------------------------------------------------------------------------------------------
+
+    static public void handleCapturedInterrupt()
+        {
+        Thread.currentThread().interrupt();
+        }
+
+    //----------------------------------------------------------------------------------------------
     // Private field access
     //
     // Ugh. We wish we didn't have to do this. But the definitions of some classes we need
