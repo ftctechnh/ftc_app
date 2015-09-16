@@ -220,19 +220,50 @@ public interface IBNO055IMU
     boolean isAccelerometerCalibrated();
     boolean isMagnetometerCalibrated();
 
+    /** The size of the calibration data, starting at ACCEL_OFFSET_X_LSB, is 22 bytes. */
+    int cbCalibrationData = 22;
+
+    /**
+     * Read calibration data from the IMU which later can be restored with writeCalibrationData().
+     * This might be persistently stored, and reapplied at a later power-on.
+     *
+     * For greatest utility, full calibration should be achieved before reading
+     * the calibration data
+     *
+     * @return the calibration data
+     * @see #writeCalibrationData(byte[])
+     */
+    byte[] readCalibrationData();
+
+    /**
+     * Write calibration data previously retrieved.
+     *
+     * @param data  the calibration data to write
+     * @see #readCalibrationData()
+     */
+    void   writeCalibrationData(byte[] data);
+
     //----------------------------------------------------------------------------------------------
     // Low level reading and writing 
     //----------------------------------------------------------------------------------------------
 
     /**
-     * Low level: read the byte at the indicated register
+     * Low level: read the byte starting at the indicated register
      */
-    byte read8(REGISTER register);
+    byte  read8(REGISTER register);
+    /**
+     * Low level: read data starting at the indicated register
+     */
+    byte[] read(REGISTER reg, int cb);
 
     /**
-     * Low level: write a byte to the indicated registers
+     * Low level: write a byte to the indicated register
      */
     void write8(REGISTER register, int bVal);
+    /**
+     * Low level: write data starting at the indicated register
+     */
+    void write (REGISTER register, byte[] data);
     
     //----------------------------------------------------------------------------------------------
     // Enumerations to make all of the above work 

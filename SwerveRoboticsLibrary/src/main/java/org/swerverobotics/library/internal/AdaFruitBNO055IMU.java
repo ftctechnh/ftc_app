@@ -30,7 +30,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
 
     private HandshakeThreadStarter accelerationIntegration;
     private static final int       msAccelerationIntegrationStopWait = 20;
-    private static final int       msAwaitSelfTest = 500;
+    private static final int       msAwaitSelfTest                   = 500;
 
     // we poll essentially as fast as we can, since measurements show that
     // we only get an I2C cycle every 70 ms or so. 'no point in waiting longer.
@@ -91,12 +91,16 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
 
         // Turn on the logging (or not) so we can see what happens
         this.getI2cDeviceClient().setLoggingEnabled(parameters.loggingEnabled);
-        
+
+        // Lore: "send a throw-away command [...] just to make sure the BNO is in a good state
+        // and ready to accept commands (this seems to be necessary after a hard power down)."
+        write8(REGISTER.PAGE_ID, 0);
+
         // Make sure we have the right device
         byte id = read8(REGISTER.CHIP_ID); 
         if (id != bCHIP_ID_VALUE)
             {
-            delay(1000); // hold on for boot
+            delay(650); // delay value is from from Table 0-2
             id = read8(REGISTER.CHIP_ID);
             if (id != bCHIP_ID_VALUE)
                 throw new UnexpectedI2CDeviceException(id);
@@ -124,17 +128,13 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         write8(REGISTER.PAGE_ID, 0);
         
         // Set the output units. Section 3.6, p31
-        int unitsel = (parameters.pitchmode.bVal << 7) |       // ptich angle convention
+        int unitsel = (parameters.pitchmode.bVal << 7) |       // pitch angle convention
                       (parameters.temperatureUnit.bVal << 4) | // temperature
                       (parameters.angleunit.bVal << 2) |       // euler angle units
                       (parameters.angleunit.bVal << 1) |       // gyro units, per second
                       (parameters.accelunit.bVal /*<< 0*/);    // accelerometer units
         write8(REGISTER.UNIT_SEL, unitsel);
         
-        // ??? what does this do ???
-        write8(REGISTER.SYS_TRIGGER, 0x0);
-        delayLore(10);
-
         // Use or don't use the external crystal
         // See Section 5.5 (p100) of the BNO055 specification.
         write8(REGISTER.SYS_TRIGGER, parameters.useExternalCrystal ? 0x80 : 0x00);
@@ -185,6 +185,10 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         return read8(REGISTER.SYS_ERR);
         }
 
+    //------------------------------------------------------------------------------------------
+    // Calibration
+    //------------------------------------------------------------------------------------------
+
     public synchronized boolean isSystemCalibrated()
         {
         byte b = this.read8(REGISTER.CALIB_STAT);
@@ -207,6 +211,50 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         {
         byte b = this.read8(REGISTER.CALIB_STAT);
         return ((b/*>>0*/) & 0x03) == 0x03;
+        }
+
+    public byte[] readCalibrationData()
+        {
+        // From Section 3.11.4 of the datasheet:
+        //
+        // "The calibration profile includes sensor offsets and sensor radius. Host system can
+        // read the offsets and radius only after a full calibration is achieved and the operation
+        // mode is switched to CONFIG_MODE. Refer to sensor offsets and sensor radius registers."
+
+        SENSOR_MODE prevMode = this.currentMode;
+        setSensorMode(SENSOR_MODE.CONFIG);
+
+        // Read the calibration data
+        byte[] result = this.read(REGISTER.ACCEL_OFFSET_X_LSB, cbCalibrationData);
+
+        // Restore the previous mode and return
+        setSensorMode(prevMode);
+        return result;
+        }
+
+    public void writeCalibrationData(byte[] data)
+        {
+        // Section 3.11.4:
+        //
+        // It is important that the correct offsets and corresponding sensor radius are used.
+        // Incorrect offsets may result in unreliable orientation data even at calibration
+        // accuracy level 3. To set the calibration profile the following steps need to be taken
+        //
+        //    1. Select the operation mode to CONFIG_MODE
+        //    2. Write the corresponding sensor offsets and radius data
+        //    3. Change operation mode to fusion mode
+
+        if (data.length != cbCalibrationData)
+            throw new IllegalArgumentException(String.format("illegal calibration data size: %d; expected: %d", data.length, cbCalibrationData));
+
+        SENSOR_MODE prevMode = this.currentMode;
+        setSensorMode(SENSOR_MODE.CONFIG);
+
+        // Write the calibration data
+        this.write(REGISTER.ACCEL_OFFSET_X_LSB, data);
+
+        // Restore the previous mode and return
+        setSensorMode(prevMode);
         }
 
     //------------------------------------------------------------------------------------------
@@ -524,10 +572,19 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         this.ensureRegisterWindow(new I2cDeviceClient.RegWindow(reg.bVal, 1));
         return this.deviceClient.read8(reg.bVal);
         }
-    
+    public synchronized byte[] read(REGISTER reg, int cb)
+        {
+        this.ensureRegisterWindow(new I2cDeviceClient.RegWindow(reg.bVal, cb));
+        return this.deviceClient.read(reg.bVal, cb);
+        }
+
     public void write8(REGISTER reg, int data)
         {
         this.deviceClient.write8(reg.bVal, data);
+        }
+    public void write(REGISTER reg, byte[] data)
+        {
+        this.deviceClient.write(reg.bVal, data);
         }
     
     private void enterConfigModeFor(IAction action)
