@@ -3,7 +3,14 @@ package org.swerverobotics.library.internal;
 import java.util.concurrent.Semaphore;
 
 /**
- * A class that helps us start a thread and interlock with its actual starting up
+ * A class that helps us start a thread and interlock with its actual starting up.
+ *
+ * It's surprisingly often that in order to be able to correctly shut down a thread after
+ * it has begun, or to give the thread the opportunity to acquire resources it needs to operate,
+ * that one shouldn't return from the logic that 'starts' the thread until the thread has
+ * begun execution and positively indicated that it's good to go.
+ *
+ * This class helps to implement that handshake logic.
  */
 public class HandshakeThreadStarter
     {
@@ -11,15 +18,16 @@ public class HandshakeThreadStarter
     // State
     //----------------------------------------------------------------------------------------------
     
-    public String  getName()    { return this.name;  }
-    public Thread  getThread()  { return this.thread; }
+    public String  getName()            { return this.name;   }
+    public void    setName(String name) { this.name = name;   }
+    public Thread  getThread()          { return this.thread; }
 
-    private String          name           = null;
-    private IHandshakeable  shakeable      = null;
-    private Semaphore       semaphore      = null;
-    private Thread          thread         = null;
-    private boolean         started        = false;
-    private boolean         stopRequested  = false;
+    private         String          name;
+    private         IHandshakeable  shakeable;
+    private final   Semaphore       semaphore      = new Semaphore(0);   // no permits initially; it is 'reset';
+    private         Thread          thread         = null;
+    private         boolean         started        = false;
+    private         boolean         stopRequested  = false;
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -27,10 +35,8 @@ public class HandshakeThreadStarter
 
     public HandshakeThreadStarter(String name, IHandshakeable shakeable)
         {
-        this.shakeable    = shakeable;
-        this.name         = name;
-        this.thread       = null;
-        this.semaphore    = new Semaphore(0);
+        this.shakeable = shakeable;
+        this.name      = name;
         }
     public HandshakeThreadStarter(IHandshakeable shakeable)
         {
@@ -48,7 +54,7 @@ public class HandshakeThreadStarter
 
         resetEvent();
         this.stopRequested = false;
-        this.thread = new Thread(new Run());
+        this.thread = new Thread(new Runner());
         if (this.name != null)
             this.thread.setName(this.name);
 
@@ -153,7 +159,7 @@ public class HandshakeThreadStarter
     // Utility
     //----------------------------------------------------------------------------------------------
 
-    class Run implements Runnable
+    class Runner implements Runnable
         {
         @Override public void run()
             {
@@ -161,28 +167,32 @@ public class HandshakeThreadStarter
             }
         }
 
+    // THIS HAS DEADLOCK
+
+    /* make it so that subsequent waiters will block */
     void resetEvent()
         {
-        synchronized (this)
+        synchronized (this.semaphore)
             {
-            // Make the semaphore have zero permits. Thus, subsequent
-            // acquirers will have to wait
+            // Make the semaphore have zero permits. Thus, subsequent acquirers will have to wait.
             this.semaphore.drainPermits();
             }
         }
 
+    /* wait until setEvent() has happened. leave state unchanged as a result of our waiting */
     void waitEvent() throws InterruptedException
         {
-        synchronized (this)
+        synchronized (this.semaphore)
             {
             this.semaphore.acquire();       // get a permit
             this.semaphore.release();       // give it back
             }
         }
 
+    /* make it so that subsequent waiters will not block */
     void setEvent()
         {
-        synchronized (this)
+        synchronized (this.semaphore)
             {
             // Make the semaphore have one permit
             this.semaphore.drainPermits();
