@@ -14,10 +14,12 @@ public class SynchIMUDemo extends SynchronousOpMode
     // Our sensor and other devices
     IBNO055IMU              imu;
 
-    // State we use for updating the dashboard
-    ElapsedTime             elapsed = new ElapsedTime();
+    // State we use for updating the dashboard. The first of these is important
+    // to read only once per update, as its acquisition is expensive. The remainder, though,
+    // could probably be read once per item, at only a small loss in display accuracy.
     IBNO055IMU.EulerAngles  angles;
-    int loopCycles;
+    ElapsedTime             elapsed = new ElapsedTime();
+    int                     loopCycles;
     int                     i2cCycles;
     double                  dt;
     
@@ -46,9 +48,10 @@ public class SynchIMUDemo extends SynchronousOpMode
     
     void composeDashboard()
         {
-        telemetry.dashboard.msUpdateInterval = 500;
-
         TelemetryDashboardAndLog.Dashboard db = telemetry.dashboard;
+
+        // The default dashboard update rate is a little to slow for us, so we update faster
+        db.msUpdateInterval = 333;
 
         // At the beginning of each telemetry update, grab a bunch of data
         // from the IMU that we will then display in separate lines.
@@ -111,12 +114,25 @@ public class SynchIMUDemo extends SynchronousOpMode
     
     String formatRadians(double radians)
         {
-        return String.format("%.2f", radians * 180 / Math.PI);
+        return String.format("%.2f", normalizeDegrees(degreesFromRadians(radians)));
         }
     String formatRate(double rate)
         {
         return String.format("%.2f", rate);
         }
+
+    /** Normalize the angle into the range [-180,180) */
+    double normalizeDegrees(double degrees)
+        {
+        while (degrees >= 180.0) degrees -= 360.0;
+        while (degrees < -180.0) degrees += 360.0;
+        return degrees;
+        }
+    double degreesFromRadians(double radians)
+        {
+        return radians * 180.0 / Math.PI;
+        }
+
 
     /** Turn a system status into something that's reasonable to show in telemetry */
     String decodeStatus(int status)
