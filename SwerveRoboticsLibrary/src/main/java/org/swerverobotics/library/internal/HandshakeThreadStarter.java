@@ -1,7 +1,5 @@
 package org.swerverobotics.library.internal;
 
-import java.util.concurrent.Semaphore;
-
 /**
  * A class that helps us start a thread and interlock with its actual starting up.
  *
@@ -24,7 +22,8 @@ public class HandshakeThreadStarter
 
     private         String          name;
     private         IHandshakeable  shakeable;
-    private final   Semaphore       semaphore      = new Semaphore(0);   // no permits initially; it is 'reset';
+    private final   Object          eventLock      = new Object();
+    private         boolean         eventSignalled = false;
     private         Thread          thread         = null;
     private         boolean         started        = false;
     private         boolean         stopRequested  = false;
@@ -167,36 +166,34 @@ public class HandshakeThreadStarter
             }
         }
 
-    // THIS HAS DEADLOCK
-
     /* make it so that subsequent waiters will block */
     void resetEvent()
         {
-        synchronized (this.semaphore)
+        synchronized (this.eventLock)
             {
-            // Make the semaphore have zero permits. Thus, subsequent acquirers will have to wait.
-            this.semaphore.drainPermits();
+            this.eventSignalled = false;
             }
         }
 
     /* wait until setEvent() has happened. leave state unchanged as a result of our waiting */
     void waitEvent() throws InterruptedException
         {
-        synchronized (this.semaphore)
+        synchronized (this.eventLock)
             {
-            this.semaphore.acquire();       // get a permit
-            this.semaphore.release();       // give it back
+            while (!this.eventSignalled)
+                {
+                this.eventLock.wait();
+                }
             }
         }
 
-    /* make it so that subsequent waiters will not block */
+    /* make it so that subsequent waiters will not block. release anyone currently waiting  */
     void setEvent()
         {
-        synchronized (this.semaphore)
+        synchronized (this.eventLock)
             {
-            // Make the semaphore have one permit
-            this.semaphore.drainPermits();
-            this.semaphore.release();
+            this.eventSignalled = true;
+            this.eventLock.notifyAll();
             }
         }
     }
