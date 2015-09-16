@@ -11,26 +11,37 @@ import org.swerverobotics.library.interfaces.*;
  */
 public class SynchIMUDemo extends SynchronousOpMode
     {
-    // Our sensor and other devices
-    IBNO055IMU              imu;
+    //----------------------------------------------------------------------------------------------
+    // State
+    //----------------------------------------------------------------------------------------------
 
-    // State we use for updating the dashboard. The first of these is important
+    // Our sensors, motors, and other devices go here, along with other long term state
+    IBNO055IMU              imu;
+    ElapsedTime             elapsed    = new ElapsedTime();
+    IBNO055IMU.Parameters   parameters = new IBNO055IMU.Parameters();
+
+    // Here we have state we use for updating the dashboard. The first of these is important
     // to read only once per update, as its acquisition is expensive. The remainder, though,
     // could probably be read once per item, at only a small loss in display accuracy.
     IBNO055IMU.EulerAngles  angles;
-    ElapsedTime             elapsed = new ElapsedTime();
     int                     loopCycles;
     int                     i2cCycles;
     double                  dt;
     
+    //----------------------------------------------------------------------------------------------
+    // main() loop
+    //----------------------------------------------------------------------------------------------
+
     @Override public void main() throws InterruptedException
         {
         // We are expecting the IMU to be attached to an I2C port on  a core device interface 
         // module and named "imu". Retrieve that raw I2cDevice and then wrap it in an object that
         // semantically understands this particular kind of sensor.
-        IBNO055IMU.Parameters parameters = new IBNO055IMU.Parameters();
+        parameters.angleunit = IBNO055IMU.ANGLEUNIT.DEGREES;
         imu = ClassFactory.createAdaFruitBNO055IMU(hardwareMap.i2cDevice.get("imu"), parameters);
-        imu.startAccelerationIntegration(new IBNO055IMU.Position(), new IBNO055IMU.Velocity());
+
+        // In future, we'll enhance this demo to illustrate position tracking, but not yet
+        // imu.startAccelerationIntegration(new IBNO055IMU.Position(), new IBNO055IMU.Velocity());
         
         // Set up our dashboard computations
         composeDashboard();
@@ -46,12 +57,16 @@ public class SynchIMUDemo extends SynchronousOpMode
             }
         }
     
+    //----------------------------------------------------------------------------------------------
+    // dashboard configuration
+    //----------------------------------------------------------------------------------------------
+
     void composeDashboard()
         {
         TelemetryDashboardAndLog.Dashboard db = telemetry.dashboard;
 
         // The default dashboard update rate is a little to slow for us, so we update faster
-        db.msUpdateInterval = 333;
+        db.msUpdateInterval = 200;
 
         // At the beginning of each telemetry update, grab a bunch of data
         // from the IMU that we will then display in separate lines.
@@ -66,60 +81,72 @@ public class SynchIMUDemo extends SynchronousOpMode
                 dt         = elapsed.time();
                 }
             });
-        db.line(db.item("loop count: ", new IFunc<Object>() { @Override public Object value()
+        db.line(db.item("loop count: ", new IFunc<Object>() { public Object value()
                     {
                     return loopCycles;
                     }}),
-                db.item("i2c cycle count: ", new IFunc<Object>() { @Override public Object value()
+                db.item("i2c cycle count: ", new IFunc<Object>() { public Object value()
                     {
                     return i2cCycles;
                     }}));
 
-        db.line(db.item("loop rate: ", new IFunc<Object>() { @Override public Object value()
+        db.line(db.item("loop rate: ", new IFunc<Object>() { public Object value()
                     {
                     return formatRate(dt / loopCycles * 1000.0);
                     }
                 }),
-                db.item("i2c cycle rate: ", new IFunc<Object>() { @Override public Object value()
+                db.item("i2c cycle rate: ", new IFunc<Object>() { public Object value()
                     {
                     return formatRate(dt / i2cCycles * 1000.0);
                     }
                 }));
-        db.line(db.item("status: ", new IFunc<Object>() { @Override public Object value()
+        db.line(db.item("status: ", new IFunc<Object>() { public Object value()
                     {
                     return String.format("%s", decodeStatus(imu.getSystemStatus()));
                     }
                 }),
-                db.item("calib: ", new IFunc<Object>() { @Override public Object value()
+                db.item("calib: ", new IFunc<Object>() { public Object value()
                     {
-                    return String.format("%s", decodeCalib(imu.read8(IBNO055IMU.REGISTER.CALIB_STAT)));
+                    return String.format("%s", decodeCalibration(imu.read8(IBNO055IMU.REGISTER.CALIB_STAT)));
                     }
                 }));
-        db.line(db.item("heading: ", new IFunc<Object>() { @Override public Object value()
+        db.line(db.item("heading: ", new IFunc<Object>() { public Object value()
                     {
-                    return formatRadians(angles.heading);
+                    return formatAngle(angles.heading);
                     }
                 }));
-        db.line(db.item("roll: ", new IFunc<Object>() { @Override public Object value()
+        db.line(db.item("roll: ", new IFunc<Object>() { public Object value()
                     {
-                    return formatRadians(angles.roll);
+                    return formatAngle(angles.roll);
                     }
                 }));
-        db.line(db.item("pitch: ", new IFunc<Object>() { @Override public Object value()
+        db.line(db.item("pitch: ", new IFunc<Object>() { public Object value()
                     {
-                    return formatRadians(angles.pitch);
+                    return formatAngle(angles.pitch);
                     }
                 }));
         }
-    
+
+    String formatAngle(double angle)
+        {
+        return parameters.angleunit==IBNO055IMU.ANGLEUNIT.DEGREES ? formatDegrees(angle) : formatRadians(angle);
+        }
     String formatRadians(double radians)
         {
-        return String.format("%.2f", normalizeDegrees(degreesFromRadians(radians)));
+        return formatDegrees(degreesFromRadians(radians));
         }
-    String formatRate(double rate)
+    String formatDegrees(double degrees)
         {
-        return String.format("%.2f", rate);
+        return String.format("%.2f", normalizeDegrees(degrees));
         }
+    String formatRate(double cyclesPerSecond)
+        {
+        return String.format("%.2f", cyclesPerSecond);
+        }
+
+    //----------------------------------------------------------------------------------------------
+    // Utility
+    //----------------------------------------------------------------------------------------------
 
     /** Normalize the angle into the range [-180,180) */
     double normalizeDegrees(double degrees)
@@ -132,7 +159,6 @@ public class SynchIMUDemo extends SynchronousOpMode
         {
         return radians * 180.0 / Math.PI;
         }
-
 
     /** Turn a system status into something that's reasonable to show in telemetry */
     String decodeStatus(int status)
@@ -151,7 +177,7 @@ public class SynchIMUDemo extends SynchronousOpMode
         }
 
     /** Turn a calibration code into something that is reasonable to show in telemetry */
-    String decodeCalib(int status)
+    String decodeCalibration(int status)
         {
         StringBuilder result = new StringBuilder();
 

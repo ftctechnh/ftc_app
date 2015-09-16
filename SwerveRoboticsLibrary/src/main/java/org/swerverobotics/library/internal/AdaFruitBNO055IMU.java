@@ -19,6 +19,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
     //------------------------------------------------------------------------------------------
 
     private II2cDeviceClient       deviceClient;
+    private Parameters             parameters;
     private SuicideWatch           suicideWatch;
     private SENSOR_MODE            currentMode;
 
@@ -45,6 +46,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
     public AdaFruitBNO055IMU(I2cDevice i2cDevice, int i2cAddr8Bit)
         {
         this.deviceClient = ClassFactory.createI2cDeviceClient(i2cDevice, i2cAddr8Bit, lowerWindow);
+        this.parameters   = null;
         this.currentMode  = null;
         this.acceleration = null;
         this.velocity     = new Velocity();
@@ -76,7 +78,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         }
     
     //------------------------------------------------------------------------------------------
-    // IBNO055IMU
+    // IBNO055IMU initialization
     //------------------------------------------------------------------------------------------
     
     /**
@@ -84,6 +86,9 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
      */
     public void initialize(Parameters parameters)
         {
+        // Remember the parameters for future use
+        this.parameters = parameters;
+
         // Turn on the logging (or not) so we can see what happens
         this.getI2cDeviceClient().setLoggingEnabled(parameters.loggingEnabled);
         
@@ -203,44 +208,40 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         byte b = this.read8(REGISTER.CALIB_STAT);
         return ((b/*>>0*/) & 0x03) == 0x03;
         }
-    
+
+    //------------------------------------------------------------------------------------------
+    // IBNO055IMU data retrieval
+    //------------------------------------------------------------------------------------------
+
     public synchronized double getTemperature()
         {
         byte b = this.read8(REGISTER.TEMP);
         return (double)b;
         }
-    
+
     public synchronized MagneticFlux getMagneticFieldStrength()
         {
-        return new MagneticFlux(getVector(VECTOR.MAGNETOMETER), 16. * 1000000);
+        return new MagneticFlux(getVector(VECTOR.MAGNETOMETER), getFluxScale());
         }
     public synchronized Acceleration getAcceleration()
         {
-        return new Acceleration(getVector(VECTOR.ACCELEROMETER), 100);
+        return new Acceleration(getVector(VECTOR.ACCELEROMETER), getAccelerationScale());
         }
     public synchronized Acceleration getLinearAcceleration()
         {
-        return new Acceleration(getVector(VECTOR.LINEARACCEL), 100);
+        return new Acceleration(getVector(VECTOR.LINEARACCEL), getAccelerationScale());
         }
     public synchronized Acceleration getGravity()
         {
-        return new Acceleration(getVector(VECTOR.GRAVITY), 100);
+        return new Acceleration(getVector(VECTOR.GRAVITY), getAccelerationScale());
         }
     public synchronized AngularVelocity getAngularVelocity()
         {
-        return new AngularVelocity(getVector(VECTOR.GYROSCOPE), 900);
+        return new AngularVelocity(getVector(VECTOR.GYROSCOPE), getAngularScale());
         }
     public synchronized EulerAngles getAngularOrientation()
         {
-        return new EulerAngles(getVector(VECTOR.EULER), 900);
-        }
-    private II2cDeviceClient.TimestampedData getVector(VECTOR vector) 
-        {
-        // Ensure that the 6 bytes for this vector are visible in the register window. 
-        this.ensureRegisterWindow(new I2cDeviceClient.RegWindow(vector.getValue(), 6));
-
-        // Read the data
-        return this.deviceClient.readTimeStamped(vector.getValue(), 6);
+        return new EulerAngles(getVector(VECTOR.EULER), getAngularScale());
         }
 
     public synchronized Quaternion getQuaternionOrientation()
@@ -262,6 +263,44 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
             );
         result.nanoTime = ts.nanoTime;
         return result;
+        }
+
+
+    /**
+     * Return the number by which we need to divide a raw angle as read from the device in order
+     * to convert it to our current angular units. See Table 3-22 of the BNO055 spec
+     */
+    private double getAngularScale()
+        {
+        return this.parameters.angleunit == ANGLEUNIT.DEGREES ? 16.0 : 900.0;
+        }
+
+    /**
+     * Return the number by which we need to divide a raw acceleration as read from the device in order
+     * to convert it to our current angular units. See Table 3-17 of the BNO055 spec.
+     */
+    private double getAccelerationScale()
+        {
+        return this.parameters.accelunit == ACCELUNIT.METERS_PERSEC_PERSEC ? 100.0 : 1.0;
+        }
+
+    /**
+     * Return the number by which we need to divide a raw acceleration as read from the device in order
+     * to convert it to our current angular units. See Table 3-19 of the BNO055 spec. Note that the
+     * BNO055 natively uses micro Teslas; we instead use Teslas.
+     */
+    private double getFluxScale()
+        {
+        return 16.0 * 1000000.0;
+        }
+
+    private II2cDeviceClient.TimestampedData getVector(VECTOR vector)
+        {
+        // Ensure that the 6 bytes for this vector are visible in the register window.
+        this.ensureRegisterWindow(new I2cDeviceClient.RegWindow(vector.getValue(), 6));
+
+        // Read the data
+        return this.deviceClient.readTimeStamped(vector.getValue(), 6);
         }
 
     //------------------------------------------------------------------------------------------

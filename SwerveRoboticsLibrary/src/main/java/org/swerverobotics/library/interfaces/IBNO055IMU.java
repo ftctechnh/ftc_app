@@ -796,7 +796,8 @@ public interface IBNO055IMU
         /** the rotation about the X axix */
         public double pitch;
 
-        /** the time on the System.nanoTime() clock at which the data was acquired */
+        /** the time on the System.nanoTime() clock at which the data was acquired,
+         *  as best as we can manage to determine that */
         public long nanoTime;
 
         //----------------------------------------------------------------------------------------------
@@ -809,9 +810,9 @@ public interface IBNO055IMU
             }
         public EulerAngles(double heading, double roll, double pitch, long nanoTime)
             {
-            this.heading = heading;
-            this.roll = roll;
-            this.pitch = pitch;
+            this.heading  = heading;
+            this.roll     = roll;
+            this.pitch    = pitch;
             this.nanoTime = nanoTime;
             }
         public EulerAngles(II2cDeviceClient.TimestampedData ts, double scale)
