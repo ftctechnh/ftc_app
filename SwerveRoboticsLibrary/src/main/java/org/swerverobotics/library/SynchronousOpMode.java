@@ -494,7 +494,10 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             {
             thread.join(msWait);
             }
-        catch (InterruptedException ignored) { }
+        catch (InterruptedException ignored)
+            { 
+            Util.handleCapturedInterrupt();
+            }
         }
 
     private void stopSynchronousWorkerThreads(int msWait)
@@ -518,7 +521,10 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
                 {
                 thread.join(msWait);
                 }
-            catch (InterruptedException ignored) { }
+            catch (InterruptedException ignored) 
+                {
+                Util.handleCapturedInterrupt();
+                }
             }
         }
 

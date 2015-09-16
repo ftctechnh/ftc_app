@@ -1,5 +1,7 @@
 package org.swerverobotics.library.internal;
 
+import org.swerverobotics.library.exceptions.*;
+
 /**
  * A class that helps us start a thread and interlock with its actual starting up.
  *
@@ -61,7 +63,7 @@ public class HandshakeThreadStarter
         }
 
     /** Starts the thread going. Blocks until the thread actually runs and calls starter.handshake(). */
-    public synchronized void start() throws InterruptedException
+    public synchronized void start()
         {
         try {
             if (this.thread == null)
@@ -72,12 +74,13 @@ public class HandshakeThreadStarter
 
             this.started = true;
             }
-        catch (InterruptedException ex)
+        catch (InterruptedException|RuntimeInterruptedException ex)
             {
             // Clean up if we were interrupted while waiting
-            this.started = true;    // so stop() will do the work
+            this.started = true;    // so stop() will work
             stop();
-            throw ex;               // pass it on
+
+            Util.handleCapturedInterrupt(); // pass it on
             }
         }
 
@@ -95,18 +98,22 @@ public class HandshakeThreadStarter
             this.thread.interrupt();
         }
 
-    /** Stops the thread, if currently running. Blocks until thread terminates. */
-    public synchronized void stop()
+    /** Stops the thread, if currently running. Blocks until thread terminates or for msWait ms. */
+    public synchronized void stop(int msWait)
         {
         if (this.started)
             {
             try {
                 this.stopRequested = true;
                 this.thread.interrupt();
-                this.thread.join();
+                if (msWait==0)
+                    this.thread.join();
+                else
+                    this.thread.join(msWait);
                 }
-            catch (InterruptedException ignored)
+            catch (InterruptedException|RuntimeInterruptedException ignored)
                 {
+                Util.handleCapturedInterrupt();
                 }
             finally
                 {
@@ -114,6 +121,12 @@ public class HandshakeThreadStarter
                 this.started = false;
                 }
             }
+        }
+
+    /** Stops the thread, if currently running. Blocks until thread terminates. */
+    public void stop()
+        {
+        stop(0);
         }
 
     /** block until the thread terminates. Note that this does not itself stop the thread */

@@ -3,9 +3,6 @@ package org.swerverobotics.library.internal;
 import android.util.Log;
 
 import org.swerverobotics.library.exceptions.RuntimeInterruptedException;
-import org.swerverobotics.library.exceptions.SwerveRuntimeException;
-
-import java.util.concurrent.*;
 
 /**
  * SuicideWatch is a little utility class that monitors a thread for termination. When that
@@ -17,57 +14,50 @@ public class SuicideWatch
     // State
     //----------------------------------------------------------------------------------------------
 
-    Thread          monitoredThread;
-    Thread          terminalThread;
-    ExecutorService monitor;
+    Thread                  threadWhichIsMonitored;
+    HandshakeThreadStarter  threadToBeInterrupted;
+    HandshakeThreadStarter  monitor;
     
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
     
-    public SuicideWatch(Thread monitoredThread, Thread terminalThread)
+    public SuicideWatch(Thread threadWhichIsMonitored, HandshakeThreadStarter threadToBeInterrupted)
         {
-        this.monitoredThread = monitoredThread;
-        this.terminalThread  = terminalThread;
-        this.monitor         = null; 
-        log("constructed");
+        this.threadWhichIsMonitored = threadWhichIsMonitored;
+        this.threadToBeInterrupted  = threadToBeInterrupted;
+        this.monitor                = new HandshakeThreadStarter("suicide watch", new Monitor());
         }
 
     //----------------------------------------------------------------------------------------------
     // Startup and shutdown
     //----------------------------------------------------------------------------------------------
     
-    public synchronized void arm() throws InterruptedException
+    public synchronized void start()
         {
-        this.disarm();
-        
-        this.monitor = Executors.newSingleThreadExecutor();
-        this.monitor.execute(new Monitor());
-        }
-    
-    public synchronized void disarm() throws InterruptedException
-        {
-        if (this.monitor != null)
-            {
-            log("disarming...");
-            ExecutorService monitor = this.monitor;
-            this.monitor = null;
-            
-            monitor.shutdownNow();
-            monitor.awaitTermination(1000, TimeUnit.DAYS);
-            log("...disarmed");
-            }
+        monitor.start();
         }
 
-    private class Monitor implements Runnable
+    public synchronized void stop(int msWait)
         {
-        @Override public void run()
+        monitor.stop(msWait);
+        }
+    public synchronized void stop()
+        {
+        stop(0);
+        }
+
+    private class Monitor implements IHandshakeable
+        {
+        @Override public void run(HandshakeThreadStarter starter)
             {
+            starter.handshake();
+
             log("awaiting death...");
             try {
-                monitoredThread.join();
+                threadWhichIsMonitored.join();
                 log("...suicide");
-                terminalThread.interrupt();
+                threadToBeInterrupted.stop();
                 }
             catch (InterruptedException|RuntimeInterruptedException e)
                 {
