@@ -67,22 +67,27 @@ The fifteen second summary of how to use the library is as follows:
 
 That's it!
 
-While the library is still undergoing developement, it is fairly mature and is stable enough
-to be ready for use in competition.
+While the library is still undergoing developement, it is quite stable, and our own teams plan
+are actively developing their competition code using it. It currently is synchronized to the 
+FTC headquarters beta release. When FTC HQ updates to a final release for the season, we will 
+synchronize with that as fast as we are able. 
+
+To use the library, we recommend forking or cloning our repository and working off of the 
+#master branch. While we do tag major milestones and 'release' them, we try to keep that
+branch always stable and fully functional, so you could reasonably sync to the latest
+available if you wished. Alternately, instead of forking or cloning, you can download a 
+full copy of the source in .zip form from one of our releases.
  
-Documentation for the library is available in the SwerveRoboticsLibrary/doc/javadoc directory.
+Documentation is available in the SwerveRoboticsLibrary/doc/javadoc directory.
 There are also several examples of using the library to be found in the usual 'opmodes'
 directory (alongside the examples provided in the core FTC SDK).
 
-In its present form, the library is distributed solely in source form: clone the 
-entire project to your local computer just as you would the official (beta) project release from
-FTC headquarters. We realize that releasing only in source form can be cumbersome for integrating 
-with a team's own code base, especially as new versions of the library are released. We're working 
-on releasing in binary form (with full source provided as well to aid in debugging), but that's not 
-yet available.
+In its present form, the library is distributed solely in source form. We realize that releasing only 
+in source form can be cumbersome for integrating with a team's own code base, especially as new versions 
+of the library are released. We're working on releasing in binary form (with full source provided as 
+well to aid in debugging), but that's not yet available.
 
-We'd love to hear what you think about the library. Please direct your feedback and bug reports to 
-swerveftclibrary@googlegroups.com. Thanks!
+We'd love to hear what you think about the library. Thanks!
 
 Robert Atkinson,  
 bob@theatkinsons.org,  
