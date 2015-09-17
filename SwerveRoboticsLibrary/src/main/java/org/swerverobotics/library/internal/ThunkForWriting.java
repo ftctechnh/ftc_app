@@ -53,7 +53,7 @@ public abstract class ThunkForWriting extends Thunk
             catch (InterruptedException | RuntimeInterruptedException e)
                 {
                 // Tell the current thread that he should shut down soon
-                Thread.currentThread().interrupt();
+                Util.handleCapturedInterrupt();
 
                 // Since callers generally do reads as well as writes, and so
                 // must deal with the necessity we have in reads of throwing,

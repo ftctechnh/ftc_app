@@ -65,7 +65,7 @@ public abstract class ThunkForReading<T> extends Thunk
             catch (InterruptedException|RuntimeInterruptedException e)
                 {
                 // (Re)tell the current thread that he should shut down soon
-                Thread.currentThread().interrupt();
+                Util.handleCapturedInterrupt();
 
                 // Our signature (and that of our caller) doesn't allow us to throw
                 // InterruptedException. But we can't actually return a value to our caller,

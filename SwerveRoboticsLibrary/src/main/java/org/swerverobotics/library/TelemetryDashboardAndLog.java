@@ -42,7 +42,8 @@ public class TelemetryDashboardAndLog
 
         /**
          * msUpdateInterval is the interval in milliseconds at which the drive station
-         * is refreshed with new contents of the dashboard.
+         * is refreshed with new contents of the dashboard. If updates aren't happening
+         * frequently enough for you, you can change this value.
          *
          * Note that updates might happen more frequently if messages are written to the log.
          */
