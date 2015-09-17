@@ -1,9 +1,12 @@
 # Swerve Robotics FTC Library
 
 Welcome to the Swerve Robotics library support for the FTC Android Robot Controller Library
-The purpose of the Swerve Robotics library is to augment the
-robot controller library in order to simplify programming for FTC teams. 
-Notable features of the library include:
+The purpose of the Swerve Robotics library is to augment the robot controller library in order 
+to simplify programming for FTC teams. The aim is not to change what's there, just to make it
+better. You might also want to check out our related project, the Swerver Robotics Tools 
+Suite, also here on GitHub.
+
+Notable features of the Swerve Robotics FTC Library include:
 
 *   A *synchronous OpMode* that brings back the synchronous, linear programming style
     with which teams have been familiar with from previous seasons, and which is more amenable
@@ -20,9 +23,12 @@ Notable features of the library include:
 *   An *I2cDeviceClient* class that wraps I2cDevice instances and makes them easy to use by handling
     read-vs-write mode switches and attendant waits automatically and transparently. Just call read8()
     or write8() (and friends) to read and write device registers and the rest is taken care of.
-*   A class that provides a clean interface to the *Bosch BNO055 absolute position sensor*, allowing
-    teams to make easy use of the AdaFruit breakout board which incorporates that sensor module. Features of this
-    sensor include a gyro that does rate integration in hardware to provide robust and accurate
+    Note that I2cDeviceClient is decoupled from the SynchronousOpMode work, in that one need not 
+    be using SynchronousOpMode to use I2cDeviceClient (however as some operations are lengthy, a
+    worker thread is suggested in that case in order to avoid long-running operations on the loop() thread).
+*   A class that is built on I2cDeviceClient that provides a clean interface to the *Bosch BNO055 absolute 
+    position sensor*, allowing teams to make easy use of the AdaFruit breakout board which incorporates 
+    that sensor module. Features of this sensor include a gyro that does rate integration in hardware to provide robust and accurate
     angular position indications, and a robust separation of acceleration into gravity and linear-motion-induced
     components. The class builds on the latter to provide linear velocity and position indications
     using integration in software.
@@ -82,8 +88,6 @@ Robert Atkinson,
 bob@theatkinsons.org,  
 Mentor, Swerve Robotics,    
 Woodinville, Washington
-
-1 September 2015  
 
 (The remainder of this file is as published by FTC headquarters.)
 
