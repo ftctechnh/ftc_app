@@ -102,12 +102,12 @@ public class SynchIMUDemo extends SynchronousOpMode
                 }));
         db.line(db.item("status: ", new IFunc<Object>() { public Object value()
                     {
-                    return String.format("%s", decodeStatus(imu.getSystemStatus()));
+                    return decodeStatus(imu.getSystemStatus());
                     }
                 }),
                 db.item("calib: ", new IFunc<Object>() { public Object value()
                     {
-                    return String.format("%s", decodeCalibration(imu.read8(IBNO055IMU.REGISTER.CALIB_STAT)));
+                    return decodeCalibration(imu.read8(IBNO055IMU.REGISTER.CALIB_STAT));
                     }
                 }));
         db.line(db.item("heading: ", new IFunc<Object>() { public Object value()
