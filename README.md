@@ -73,7 +73,7 @@ FTC headquarters beta release. When FTC HQ updates to a final release for the se
 synchronize with that as fast as we are able. 
 
 To use the library, we recommend forking or cloning our repository and working off of the 
-#master branch. While we do tag major milestones and 'release' them, we try to keep that
+'master' branch. While we do tag major milestones and 'release' them, we try to keep that
 branch always stable and fully functional, so you could reasonably sync to the latest
 available if you wished. Alternately, instead of forking or cloning, you can download a 
 full copy of the source in .zip form from one of our releases.
