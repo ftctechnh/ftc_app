@@ -67,13 +67,13 @@ The fifteen second summary of how to use the library is as follows:
 
 That's it!
 
-While the library is still undergoing developement, it is quite stable, and our own teams plan
+While the library is still undergoing development, it is quite stable, and our own teams
 are actively developing their competition code using it. It currently is synchronized to the 
-FTC headquarters beta release. When FTC HQ updates to a final release for the season, we will 
+FTC headquarters beta release; when FTC HQ updates to a final release for the season, we will 
 synchronize with that as fast as we are able. 
 
 To use the library, we recommend forking or cloning our repository and working off of the 
-'master' branch. While we do tag major milestones and 'release' them, we try to keep that
+'master' branch. While we do tag major milestones and 'release' them, we try to keep the master
 branch always stable and fully functional, so you could reasonably sync to the latest
 available if you wished. Alternately, instead of forking or cloning, you can download a 
 full copy of the source in .zip form from one of our releases.
