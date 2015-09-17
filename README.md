@@ -82,7 +82,7 @@ Documentation is available in the SwerveRoboticsLibrary/doc/javadoc directory.
 There are also several examples of using the library to be found in the usual 'opmodes'
 directory (alongside the examples provided in the core FTC SDK).
 
-In its present form, the library is distributed solely in source form. We realize that releasing only 
+At present, the library is distributed solely in source form. We realize that releasing only 
 in source form can be cumbersome for integrating with a team's own code base, especially as new versions 
 of the library are released. We're working on releasing in binary form (with full source provided as 
 well to aid in debugging), but that's not yet available.
