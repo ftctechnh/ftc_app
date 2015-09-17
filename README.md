@@ -3,7 +3,7 @@
 Welcome to the Swerve Robotics library support for the FTC Android Robot Controller Library
 The purpose of the Swerve Robotics library is to augment the robot controller library in order 
 to simplify programming for FTC teams. The aim is not to change what's there, just to make it
-better. You might also want to check out our related project, the Swerver Robotics Tools 
+better. You might also want to check out our related project, the Swerve Robotics Tools 
 Suite, also here on GitHub.
 
 Notable features of the Swerve Robotics FTC Library include:
