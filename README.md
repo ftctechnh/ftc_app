@@ -33,16 +33,16 @@ Notable features of the Swerve Robotics FTC Library include:
     components. The class builds on the latter to provide linear velocity and position indications
     using integration in software.
     
-The fifteen second summary of how to use the library is as follows:
+The fifteen second summary of how to use SynchronousOpMode is as follows:
 
-*   Inherit your OpMode from SynchronousOpMode instead of OpMode.
+*   Inherit your opmode from SynchronousOpMode instead of OpMode or LinearOpMode.
 *   Implement your code in a main() method whose signature is:
 
         @Override protected void main() throws InterruptedException
 *   Initialize your hardware variables at the top of main() instead of in start(). Otherwise,
-    the use of hardware objects (DcMotor, Servo, GamePads, etc) is the same as in the RCL, with 
-    the single exception that the GamePad objects have methods rather than data, so you have to
-    say, e.g., 
+    the use of hardware objects (DcMotor, Servo, GamePads, etc) is the same as in the usual robot
+    controller runtime, with the single exception that the GamePad objects have methods rather than 
+    data, so you have to say, e.g., 
         ```
         gamepad1.left_stick_y()
         ```
