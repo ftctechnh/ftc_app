@@ -47,8 +47,6 @@ public class NullOp extends OpMode {
   private String startDate;
   private ElapsedTime runtime = new ElapsedTime();
 
-  //Fuzz.
-
   /*
    * Code to run when the op mode is first enabled goes here
    * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
