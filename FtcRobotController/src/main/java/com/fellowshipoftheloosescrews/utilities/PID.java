@@ -84,6 +84,7 @@ public class PID {
     /**
      * Gets the time in ms
      * @return milliseconds from the start of the program
+     * TODO: move to a general purpose time class
      */
     private double getTimeMs()
     {
