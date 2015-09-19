@@ -30,6 +30,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
 
     private HandshakeThreadStarter accelerationIntegration;
     private static final int       msAccelerationIntegrationStopWait = 20;
+    private static final int       msAwaitChipId                     = 2000;
     private static final int       msAwaitSelfTest                   = 500;
 
     // we poll essentially as fast as we can, since measurements show that
@@ -88,9 +89,11 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         {
         // Remember the parameters for future use
         this.parameters = parameters;
+        ElapsedTime elapsed = new ElapsedTime();
 
         // Turn on the logging (or not) so we can see what happens
-        this.getI2cDeviceClient().setLoggingEnabled(parameters.loggingEnabled);
+        this.getI2cDeviceClient().setLogging(parameters.loggingEnabled);
+        this.getI2cDeviceClient().setLoggingTag(parameters.loggingTag);
 
         // Lore: "send a throw-away command [...] just to make sure the BNO is in a good state
         // and ready to accept commands (this seems to be necessary after a hard power down)."
@@ -100,7 +103,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         byte id = read8(REGISTER.CHIP_ID); 
         if (id != bCHIP_ID_VALUE)
             {
-            delay(650); // delay value is from from Table 0-2
+            delay(650);     // delay value is from from Table 0-2
             id = read8(REGISTER.CHIP_ID);
             if (id != bCHIP_ID_VALUE)
                 throw new UnexpectedI2CDeviceException(id);
@@ -112,10 +115,13 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         // Reset the system, and wait for the chip id register to switch back from its reset state 
         // to the it's chip id state. This can take a very long time, some 650ms (Table 0-2, p13) 
         // perhaps. While in the reset state the chip id (and other registers) reads as 0xFF.
+        elapsed.reset();
         write8(REGISTER.SYS_TRIGGER, 0x20);
         while (read8(REGISTER.CHIP_ID) != bCHIP_ID_VALUE)
             {
             delay(10);
+            if (elapsed.time()*1000 > msAwaitChipId)
+                throw new BNO055InitializationException(this, "failed to retrieve chip id");
             }
         delayLore(50);
         
@@ -143,9 +149,9 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         // Run a self test. This appears to be a necessary step in order for the 
         // sensor to be able to actually be used.
         write8(REGISTER.SYS_TRIGGER, read8(REGISTER.SYS_TRIGGER) | 0x01);
-        ElapsedTime time = new ElapsedTime();
+        elapsed.reset();
         boolean selfTestSuccessful = false;
-        while (!selfTestSuccessful && time.time()*1000 < msAwaitSelfTest)
+        while (!selfTestSuccessful && elapsed.time()*1000 < msAwaitSelfTest)
             {
             selfTestSuccessful = (read8(REGISTER.SELFTEST_RESULT)&0x0F) == 0x0F;
             }
@@ -154,7 +160,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         
         // Finally, enter the requested operating mode (see section 3.3)
         setSensorMode(parameters.mode);
-        delayLore(20);
+        delayLore(200);
         }
 
     private void setSensorMode(SENSOR_MODE mode)

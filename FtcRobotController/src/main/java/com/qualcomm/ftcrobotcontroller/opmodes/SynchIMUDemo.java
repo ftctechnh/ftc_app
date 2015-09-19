@@ -37,7 +37,9 @@ public class SynchIMUDemo extends SynchronousOpMode
         // We are expecting the IMU to be attached to an I2C port on  a core device interface 
         // module and named "imu". Retrieve that raw I2cDevice and then wrap it in an object that
         // semantically understands this particular kind of sensor.
-        parameters.angleunit = IBNO055IMU.ANGLEUNIT.DEGREES;
+        parameters.angleunit      = IBNO055IMU.ANGLEUNIT.DEGREES;
+        parameters.loggingEnabled = true;
+        parameters.loggingTag     = "BNO055";
         imu = ClassFactory.createAdaFruitBNO055IMU(hardwareMap.i2cDevice.get("imu"), parameters);
 
         // In future, we'll enhance this demo to illustrate position tracking, but not yet

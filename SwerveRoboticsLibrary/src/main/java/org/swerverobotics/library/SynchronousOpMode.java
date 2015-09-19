@@ -468,16 +468,18 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
                 }
             catch (RuntimeException e)
                 {
-                // Remember exceptions so we can throw them later
+                // Remember exceptions so we can throw them later back over in loop()
                 if (this.isMain)
                     {
                     SynchronousOpMode.this.exceptionThrownOnMainThread = e;
                     }
                 else
                     {
+                    // Only remember the first one for a worker
                     SynchronousOpMode.this.firstExceptionThrownOnASynchronousWorkerThread.compareAndSet(null, e); 
                     }
                 }
+            // 'Thread falls off the end here and terminates.
             }
         }
 
@@ -648,7 +650,8 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             
             // If we had an exception thrown by a synchronous thread, then throw it here. 'Sort
             // of like thunking the exceptions. Exceptions from the main thread take
-            // priority over those from worker threads.
+            // priority over those from worker threads. Note that the reads here are indeed
+            // racing with the writes that are throwing, but that's ok.
             RuntimeException e = this.exceptionThrownOnMainThread;
             if (e == null) 
                 {
