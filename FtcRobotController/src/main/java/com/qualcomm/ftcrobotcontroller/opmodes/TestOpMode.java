@@ -47,34 +47,7 @@ public class TestOpMode extends OpMode{
 
     @Override
     public void loop() {
-        float throttle = gamepad1.left_stick_y;
-        float direction = gamepad1.right_stick_x;
-        float right = throttle - direction;
-        float left = throttle + direction;
-
-        /* Yj and Xj are joystick coordinates */
-        float max = Math.abs(direction);
-        if (Math.abs(throttle) > max)
-            max = Math.abs(throttle);
-        float sum = direction + throttle;
-        float dif = direction-throttle;
-        if(throttle<=0) {
-            if(direction>=0) {
-                motorLeft.setPower(max);
-                motorRight.setPower(-sum);
-            } else {
-                motorLeft.setPower(dif);
-                motorRight.setPower(max);
-            }
-        } else {
-            if(direction>=0) {
-                motorLeft.setPower(dif);
-                motorRight.setPower(-max);
-            } else {
-                motorLeft.setPower(-max);
-                motorRight.setPower(-sum);
-            }
-        }
+        arcadeDrive(gamepad1.left_stick_y, gamepad1.right_stick_x);
 
         if (gamepad1.a)
             armPosition += armDelta;
@@ -98,5 +71,30 @@ public class TestOpMode extends OpMode{
     @Override
     public void stop() {
 
+    }
+
+    void arcadeDrive(float y, float x) {
+        float max = Math.abs(x);
+        if (Math.abs(y) > max)
+            max = Math.abs(y);
+        float sum = y + x;
+        float dif = y - x;
+        if(y <= 0) {
+            if(x >= 0) {
+                motorLeft.setPower(max);
+                motorRight.setPower(-sum);
+            } else {
+                motorLeft.setPower(dif);
+                motorRight.setPower(max);
+            }
+        } else {
+            if(y >= 0) {
+                motorLeft.setPower(dif);
+                motorRight.setPower(-max);
+            } else {
+                motorLeft.setPower(-max);
+                motorRight.setPower(-sum);
+            }
+        }
     }
 }
