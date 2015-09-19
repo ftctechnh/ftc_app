@@ -20,7 +20,7 @@ public class MoveForward extends OpMode{
     @Override
     public void start() {
         hardwareMap.dcMotor.get("DC1");
-        hardwareMap.dcMotor.get("CC2");
+        hardwareMap.dcMotor.get("DC2");
 
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
     }
