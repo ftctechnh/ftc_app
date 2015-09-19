@@ -57,7 +57,7 @@ public class FtcOpModeRegister implements OpModeRegister {
      * If two or more op modes are registered with the same name, the app will display an error.
      */
 
-    manager.register("MF1", MoveForward.class);
+    manager.register("MoveForward", MoveForward.class);
     manager.register("MF2", MoveForward2.class);
 
     /*
@@ -83,9 +83,9 @@ public class FtcOpModeRegister implements OpModeRegister {
      *  - K9Line uses a legacy LEGO NXT light sensor to follow a white line.
      */
 
-    manager.register("K9TeleOp", K9TeleOp.class);
-    manager.register("K9IrSeeker", K9IrSeeker.class);
-    manager.register("K9Line", K9Line.class);
+//    manager.register("K9TeleOp", K9TeleOp.class);
+//    manager.register("K9IrSeeker", K9IrSeeker.class);
+//    manager.register("K9Line", K9Line.class);
 
     /*
      * The following example op modes are designed to work with a pushbot-style robot.
@@ -98,9 +98,11 @@ public class FtcOpModeRegister implements OpModeRegister {
 
     manager.register("PushBotManual", PushBotManual.class);
     manager.register("PushBotAuto", PushBotAuto.class);
-    manager.register("PushBotDriveTouch", PushBotDriveTouch.class);
-    manager.register("PushBotIrSeek", PushBotIrSeek.class);
-    manager.register("PushBotSquare", PushBotSquare.class);
+
+// Linear Programs
+//    manager.register("PushBotDriveTouch", PushBotDriveTouch.class);
+//    manager.register("PushBotIrSeek", PushBotIrSeek.class);
+//    manager.register("PushBotSquare", PushBotSquare.class);
 
   }
 }
