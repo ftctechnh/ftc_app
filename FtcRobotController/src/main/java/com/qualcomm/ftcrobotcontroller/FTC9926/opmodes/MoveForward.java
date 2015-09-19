@@ -1,4 +1,4 @@
-package com.FTC9926.opmodes;
+package com.qualcomm.ftcrobotcontroller.FTC9926.opmodes;
 
   import com.qualcomm.robotcore.eventloop.opmode.OpMode;
   import com.qualcomm.robotcore.hardware.DcMotor;
