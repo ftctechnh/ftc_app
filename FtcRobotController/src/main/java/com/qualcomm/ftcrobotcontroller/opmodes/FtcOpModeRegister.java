@@ -32,6 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.fellowshipoftheloosescrews.opmodes.TeleOp;
+import com.fellowshipoftheloosescrews.testing.CustomTestOpMode;
 import com.fellowshipoftheloosescrews.testing.DcServoTest;
 import com.fellowshipoftheloosescrews.testing.GyroTesting;
 import com.fellowshipoftheloosescrews.testing.HardwareCycleTesting;
@@ -59,5 +60,7 @@ public class FtcOpModeRegister implements OpModeRegister {
 
       manager.register("gyro testing", GyroTesting.class);
       manager.register("hardware cycle timing", HardwareCycleTesting.class);
+
+      manager.register("Custom-OpMode", CustomTestOpMode.class);
   }
 }
