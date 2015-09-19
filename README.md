@@ -1,8 +1,8 @@
 # Swerve Robotics FTC Library
 
-Welcome to the Swerve Robotics library support for the FTC Android Robot Controller Library
-The purpose of the Swerve Robotics library is to augment the robot controller library in order 
-to simplify programming for FTC teams. The aim is not to change what's there, just to make it
+Welcome to the Swerve Robotics library support for the FTC Android Robot Controller Library.
+The purpose of the Swerve Robotics library is to augment the robot controller library from FTC HQ 
+in order to simplify programming for FTC teams. The aim is not to change what's there, just to make it
 better. You might also want to check out our related project, the Swerve Robotics Tools 
 Suite, also here on GitHub.
 
@@ -33,16 +33,16 @@ Notable features of the Swerve Robotics FTC Library include:
     components. The class builds on the latter to provide linear velocity and position indications
     using integration in software.
     
-The fifteen second summary of how to use the library is as follows:
+The fifteen second summary of how to use SynchronousOpMode is as follows:
 
-*   Inherit your OpMode from SynchronousOpMode instead of OpMode.
+*   Inherit your opmode from SynchronousOpMode instead of OpMode or LinearOpMode.
 *   Implement your code in a main() method whose signature is:
 
         @Override protected void main() throws InterruptedException
 *   Initialize your hardware variables at the top of main() instead of in start(). Otherwise,
-    the use of hardware objects (DcMotor, Servo, GamePads, etc) is the same as in the RCL, with 
-    the single exception that the GamePad objects have methods rather than data, so you have to
-    say, e.g., 
+    the use of hardware objects (DcMotor, Servo, GamePads, etc) is the same as in the usual robot
+    controller runtime, with the single exception that the GamePad objects have methods rather than 
+    data, so you have to say, e.g., 
         ```
         gamepad1.left_stick_y()
         ```
@@ -67,22 +67,27 @@ The fifteen second summary of how to use the library is as follows:
 
 That's it!
 
-While the library is still undergoing developement, it is fairly mature and is stable enough
-to be ready for use in competition.
+While the library is still undergoing development, it is quite stable, and our own teams
+are actively developing their competition code using it. It currently is synchronized to the 
+FTC headquarters beta release; when FTC HQ updates to a final release for the season, we will 
+synchronize with that as fast as we are able. 
+
+To use the library, we recommend forking or cloning our repository and working off of the 
+'master' branch. While we do tag major milestones and 'release' them, we try to keep the master
+branch always stable and fully functional, so you could reasonably sync to the latest
+available if you wished. Alternately, instead of forking or cloning, you can download a 
+full copy of the source in .zip form from one of our releases.
  
-Documentation for the library is available in the SwerveRoboticsLibrary/doc/javadoc directory.
+Documentation is available in the SwerveRoboticsLibrary/doc/javadoc directory.
 There are also several examples of using the library to be found in the usual 'opmodes'
 directory (alongside the examples provided in the core FTC SDK).
 
-In its present form, the library is distributed solely in source form: clone the 
-entire project to your local computer just as you would the official (beta) project release from
-FTC headquarters. We realize that releasing only in source form can be cumbersome for integrating 
-with a team's own code base, especially as new versions of the library are released. We're working 
-on releasing in binary form (with full source provided as well to aid in debugging), but that's not 
-yet available.
+At present, the library is distributed solely in source form. We realize that releasing only 
+in source form can be cumbersome for integrating with a team's own code base, especially as new versions 
+of the library are released. We're working on releasing in binary form (with full source provided as 
+well to aid in debugging), but that's not yet available.
 
-We'd love to hear what you think about the library. Please direct your feedback and bug reports to 
-swerveftclibrary@googlegroups.com. Thanks!
+We'd love to hear what you think about the library. Thanks!
 
 Robert Atkinson,  
 bob@theatkinsons.org,  
