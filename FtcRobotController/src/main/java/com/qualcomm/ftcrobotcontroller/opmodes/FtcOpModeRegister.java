@@ -112,5 +112,11 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("Synch Skeleton", SynchSkeletalOp.class);
     manager.register("Synch Motor Loop Perf", SynchMotorLoopPerf.class);
     manager.register("Synch IMU Demo", SynchIMUDemo.class);
+
+    // FTC 7330 OpModes
+    manager.register("TeleOp Mechanum", TeleOpMecanum.class);
+    manager.register("TeleOp Tank", TeleOpTank.class);
+    manager.register("Test Gyro", TestGryo.class);
+    manager.register("Test IR", TestIR.class);
   }
 }
