@@ -7,22 +7,17 @@ package org.swerverobotics.library.exceptions;
 public class RuntimeInterruptedException extends SwerveRuntimeException
     {
     //----------------------------------------------------------------------------------------------
-    // State
-    //----------------------------------------------------------------------------------------------
-
-    public InterruptedException interruptedException = null;
-
-    //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
 
     public RuntimeInterruptedException()
         {
+        super(String.format("thread '%s' was interrupted", Thread.currentThread().getName()));
         }
 
     public RuntimeInterruptedException(InterruptedException e)
         {
-        this.interruptedException = e;
+        super(String.format("thread '%s' was interrupted", Thread.currentThread().getName()), e);
         }
 
     }

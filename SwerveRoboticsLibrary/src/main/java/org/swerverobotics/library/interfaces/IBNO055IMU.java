@@ -54,6 +54,8 @@ public interface IBNO055IMU
         
         /** debugging aid: enable logging for this device? */
         public boolean          loggingEnabled      = false;
+        /** debugging aid: the logging tag to use when logging */
+        public String           loggingTag          = null;
         }
 
     //----------------------------------------------------------------------------------------------

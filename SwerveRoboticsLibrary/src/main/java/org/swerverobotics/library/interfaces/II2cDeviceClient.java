@@ -105,7 +105,8 @@ public interface II2cDeviceClient extends HardwareDevice
     void write8(int ireg, int bVal);
 
     /**
-     * Write data to a set of registers, beginning with the one indicated
+     * Write data to a set of registers, beginning with the one indicated. This method
+     * blocks until the write has actually been issued to the device.
      * 
      * @param ireg      the first of the registers which is to be written
      * @param data      the data which is to be written to the registers
@@ -173,7 +174,11 @@ public interface II2cDeviceClient extends HardwareDevice
      * Turn logging on or off. Logging output can be viewed using the Android Logcat tools.
      * @param enabled     whether to enable logging or not
      */
-    void setLoggingEnabled(boolean enabled);
+    void setLogging(boolean enabled);
+    /**
+     * Set the tag to use when logging is on
+     */
+    void setLoggingTag(String loggingTag);
 
     //----------------------------------------------------------------------------------------------
     // RegWindow
