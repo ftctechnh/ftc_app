@@ -19,17 +19,17 @@ public class SynchTelemetryOp extends SynchronousOpMode
 
         // Configure the dashboard. Here, it will have one line, which will contain three items
         // The output of any telemetry.log calls will be displayed below the dashboard.
-        this.telemetry.dashboard.line
+        this.telemetry.line
             (
-            this.telemetry.dashboard.item("time: ",  new IFunc<Object>() { @Override public Object value()
+            this.telemetry.item("time: ",  new IFunc<Object>() { @Override public Object value()
                 {
                 return format(elapsed);
                 }}),
-            this.telemetry.dashboard.item("count: ", new IFunc<Object>() { @Override public Object value()
+            this.telemetry.item("count: ", new IFunc<Object>() { @Override public Object value()
                 {
                 return getLoopCount() - loopCountStart;
                 }}),
-            this.telemetry.dashboard.item("rate: ", new IFunc<Object>() { @Override public Object value() 
+            this.telemetry.item("rate: ", new IFunc<Object>() { @Override public Object value()
                 {
                 return format(elapsed.time() / (getLoopCount()-loopCountStart) * 1000) + "ms";
                 }})
@@ -59,7 +59,7 @@ public class SynchTelemetryOp extends SynchronousOpMode
                 }
 
             // Emit telemetry with the freshest possible values
-            this.telemetry.dashboard.update();
+            this.telemetry.update();
             
             // Let the rest of the system run until there's a stimulus from the robot controller runtime.
             this.idle();

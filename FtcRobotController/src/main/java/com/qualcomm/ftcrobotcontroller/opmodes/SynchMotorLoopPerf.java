@@ -36,7 +36,7 @@ public class SynchMotorLoopPerf extends SynchronousOpMode
             else
                 motor.setPower(0);
             
-            telemetry.dashboard.update();
+            telemetry.update();
             idle();
             
             spinCount++;
@@ -45,21 +45,21 @@ public class SynchMotorLoopPerf extends SynchronousOpMode
     
     void configureTelemetry()
         {
-        telemetry.dashboard.line(
-            telemetry.dashboard.item("pos:", new IFunc<Object>() { @Override public Object value() {
+        telemetry.line(
+            telemetry.item("pos:", new IFunc<Object>() { @Override public Object value() {
                 return position;
                 }}),
-            telemetry.dashboard.item("loop:", new IFunc<Object>() { @Override public Object value() {
+            telemetry.item("loop:", new IFunc<Object>() { @Override public Object value() {
                 return getLoopCount() - loopCountStart;
                 }}),
-            telemetry.dashboard.item("spin:", new IFunc<Object>() { @Override public Object value() {
+            telemetry.item("spin:", new IFunc<Object>() { @Override public Object value() {
                 return spinCount;
                 }}));
-        telemetry.dashboard.line(
-            telemetry.dashboard.item("loop/spin:", new IFunc<Object>() { @Override public Object value() {
+        telemetry.line(
+            telemetry.item("loop/spin:", new IFunc<Object>() { @Override public Object value() {
                 return format((getLoopCount() - loopCountStart) / (double)spinCount);
                 }}),
-            telemetry.dashboard.item("ms/spin:", new IFunc<Object>() { @Override public Object value() {
+            telemetry.item("ms/spin:", new IFunc<Object>() { @Override public Object value() {
                 return format(elapsedTime.time() * 1000 / (double)spinCount);
                 }})
             );

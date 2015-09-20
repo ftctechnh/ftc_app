@@ -54,7 +54,7 @@ public class SynchIMUDemo extends SynchronousOpMode
         // Loop and update the dashboard
         while (opModeIsActive())
             {
-            telemetry.dashboard.update();
+            telemetry.update();
             idle();
             }
         }
@@ -65,14 +65,12 @@ public class SynchIMUDemo extends SynchronousOpMode
 
     void composeDashboard()
         {
-        TelemetryDashboardAndLog.Dashboard db = telemetry.dashboard;
-
         // The default dashboard update rate is a little to slow for us, so we update faster
-        db.msUpdateInterval = 200;
+        telemetry.msUpdateInterval = 200;
 
         // At the beginning of each telemetry update, grab a bunch of data
         // from the IMU that we will then display in separate lines.
-        db.action(new IAction() { @Override public void doAction()
+        telemetry.action(new IAction() { @Override public void doAction()
                 {
                 // Acquiring the angles is relatively expensive; we don't want
                 // to do that in each of the three items that need that info, as that's
@@ -83,46 +81,46 @@ public class SynchIMUDemo extends SynchronousOpMode
                 dt         = elapsed.time();
                 }
             });
-        db.line(db.item("loop count: ", new IFunc<Object>() { public Object value()
+        telemetry.line(telemetry.item("loop count: ", new IFunc<Object>() { public Object value()
                     {
                     return loopCycles;
                     }}),
-                db.item("i2c cycle count: ", new IFunc<Object>() { public Object value()
+                telemetry.item("i2c cycle count: ", new IFunc<Object>() { public Object value()
                     {
                     return i2cCycles;
                     }}));
 
-        db.line(db.item("loop rate: ", new IFunc<Object>() { public Object value()
+        telemetry.line(telemetry.item("loop rate: ", new IFunc<Object>() { public Object value()
                     {
                     return formatRate(dt / loopCycles * 1000.0);
                     }
                 }),
-                db.item("i2c cycle rate: ", new IFunc<Object>() { public Object value()
+                telemetry.item("i2c cycle rate: ", new IFunc<Object>() { public Object value()
                     {
                     return formatRate(dt / i2cCycles * 1000.0);
                     }
                 }));
-        db.line(db.item("status: ", new IFunc<Object>() { public Object value()
+        telemetry.line(telemetry.item("status: ", new IFunc<Object>() { public Object value()
                     {
                     return decodeStatus(imu.getSystemStatus());
                     }
                 }),
-                db.item("calib: ", new IFunc<Object>() { public Object value()
+                telemetry.item("calib: ", new IFunc<Object>() { public Object value()
                     {
                     return decodeCalibration(imu.read8(IBNO055IMU.REGISTER.CALIB_STAT));
                     }
                 }));
-        db.line(db.item("heading: ", new IFunc<Object>() { public Object value()
+        telemetry.line(telemetry.item("heading: ", new IFunc<Object>() { public Object value()
                     {
                     return formatAngle(angles.heading);
                     }
                 }));
-        db.line(db.item("roll: ", new IFunc<Object>() { public Object value()
+        telemetry.line(telemetry.item("roll: ", new IFunc<Object>() { public Object value()
                     {
                     return formatAngle(angles.roll);
                     }
                 }));
-        db.line(db.item("pitch: ", new IFunc<Object>() { public Object value()
+        telemetry.line(telemetry.item("pitch: ", new IFunc<Object>() { public Object value()
                     {
                     return formatAngle(angles.pitch);
                     }

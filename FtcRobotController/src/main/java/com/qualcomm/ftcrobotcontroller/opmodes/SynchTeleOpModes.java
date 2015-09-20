@@ -41,9 +41,9 @@ public class SynchTeleOpModes extends SynchronousOpMode
         this.motorLeft.setDirection(DcMotor.Direction.REVERSE);
 
         // Configure telemetry
-        this.telemetry.dashboard.line
+        this.telemetry.line
             (
-            this.telemetry.dashboard.item("Drive mode: ",  new IFunc<Object>() { @Override public Object value()
+            this.telemetry.item("Drive mode: ",  new IFunc<Object>() { @Override public Object value()
                 {
                 return driveModeLabel[driveMode.ordinal()];
                 }})
@@ -76,7 +76,7 @@ public class SynchTeleOpModes extends SynchronousOpMode
                 }
 
             // Emit any telemetry that hasn't been sent in a while
-            this.telemetry.dashboard.update();
+            this.telemetry.update();
 
             // Let the rest of the system run until there's a stimulus from the robot controller runtime.
             this.idle();
