@@ -98,12 +98,10 @@ public class TelemetryDashboardAndLog
     private String itemDelimiter    = " | ";
     private double msUpdateInterval = 1000;  // default is 1s
 
-    /** the list of actions that are evaluated before the lines are composed */
     private Vector<IAction>         actions = null;
-    /** lines that are to be composed each time we actually update */
-    private Vector<Line> composableLines = null;
-    /** lines that are provided to us in precomposed form */
+    private Vector<Line>            composableLines = null;
     private Vector<String>          composedLines = null;
+    private boolean                 updateSinceAddComposedLine = false;
 
     private long                    nanoLastUpdate = 0;
     private final int               singletonKey = SynchronousOpMode.staticGetNewSingletonKey();
@@ -193,10 +191,14 @@ public class TelemetryDashboardAndLog
 
     private void addComposedLine(String caption, String value)
         {
+        if (this.updateSinceAddComposedLine)
+            this.composedLines.clear();
+
         // We display both the key and the value for these, as that's what the
         // raw telemetry does. However, we do NOT sort on the caption, as that
         // has little utility.
         this.composedLines.add(String.format("%s : %s", caption, value));
+        this.updateSinceAddComposedLine = false;
         }
 
     //------------------------------------------------------------------------------------------
@@ -237,6 +239,11 @@ public class TelemetryDashboardAndLog
       * @see #getUpdateIntervalMs()
       */
     public synchronized boolean update()
+        {
+        return update(false);
+        }
+
+    private synchronized boolean update(boolean internal)
         {
         boolean result = false;
 
@@ -328,7 +335,8 @@ public class TelemetryDashboardAndLog
 
         // We ALWAYS clear the composed lines, as the user, generally,
         // has no idea which update() calls actually transmit.
-        this.clearComposedLines();
+        if (!internal)
+            this.updateSinceAddComposedLine = true;
 
         return result;
         }
@@ -537,7 +545,7 @@ public class TelemetryDashboardAndLog
                 this.prune();
                 }
 
-            TelemetryDashboardAndLog.this.update();
+            TelemetryDashboardAndLog.this.update(true);
             }
 
         /**
