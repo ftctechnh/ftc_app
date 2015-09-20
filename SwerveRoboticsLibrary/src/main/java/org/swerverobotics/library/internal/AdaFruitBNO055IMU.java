@@ -157,7 +157,10 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
             }
         if (!selfTestSuccessful)
             throw new BNO055InitializationException(this, "self test failed");
-        
+
+        if (this.parameters.calibrationData != null)
+            writeCalibrationData(this.parameters.calibrationData);
+
         // Finally, enter the requested operating mode (see section 3.3)
         setSensorMode(parameters.mode);
         delayLore(200);
@@ -228,13 +231,13 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         // mode is switched to CONFIG_MODE. Refer to sensor offsets and sensor radius registers."
 
         SENSOR_MODE prevMode = this.currentMode;
-        setSensorMode(SENSOR_MODE.CONFIG);
+        if (prevMode != SENSOR_MODE.CONFIG) setSensorMode(SENSOR_MODE.CONFIG);
 
         // Read the calibration data
         byte[] result = this.read(REGISTER.ACCEL_OFFSET_X_LSB, cbCalibrationData);
 
         // Restore the previous mode and return
-        setSensorMode(prevMode);
+        if (prevMode != SENSOR_MODE.CONFIG) setSensorMode(prevMode);
         return result;
         }
 
@@ -254,13 +257,13 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
             throw new IllegalArgumentException(String.format("illegal calibration data size: %d; expected: %d", data.length, cbCalibrationData));
 
         SENSOR_MODE prevMode = this.currentMode;
-        setSensorMode(SENSOR_MODE.CONFIG);
+        if (prevMode != SENSOR_MODE.CONFIG) setSensorMode(SENSOR_MODE.CONFIG);
 
         // Write the calibration data
         this.write(REGISTER.ACCEL_OFFSET_X_LSB, data);
 
         // Restore the previous mode and return
-        setSensorMode(prevMode);
+        if (prevMode != SENSOR_MODE.CONFIG) setSensorMode(prevMode);
         }
 
     //------------------------------------------------------------------------------------------
