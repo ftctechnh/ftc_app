@@ -14,10 +14,10 @@ import java.util.*;
  * reside in fields of the same names within the TelemetryDashboardAndLog object.
  * <p>
  * The dashboard is configured once, using a series of {@link #line() line()}
- * calls each containing a series of {@link org.swerverobotics.library.TelemetryDashboardAndLog.#item item()} invocations.
- * You then call {@link #update() update()} on the dashboard at a relatively high
+ * calls each containing a series of {@link #item item()} invocations.
+ * You then call {@link #update() update()} on at a relatively high
  * rate of speed, as often as you like, usually at the bottom of your while(opModeIsActive())
- * loop. Periodically, at a rate controlled by the {@link org.swerverobotics.library.TelemetryDashboardAndLog.#msUpdateInterval msUpdateInterval}
+ * loop. Periodically, at a rate controlled by the {@link #msUpdateInterval msUpdateInterval}
  * field, which defaults to one second, these {@link #update() update()} calls will actually
  * cause reevaluation of the dashboard line items and transmission of the data to the driver station. 
  * So: call it often, but the transmission traffic is kept to a reasonable amount.
@@ -29,7 +29,7 @@ import java.util.*;
 public class TelemetryDashboardAndLog
     {
     //------------------------------------------------------------------------------------------
-    // State
+    // Public State
     //------------------------------------------------------------------------------------------
 
     /**
@@ -37,29 +37,66 @@ public class TelemetryDashboardAndLog
      * the driver station
      */
     public final Log                log;
-    /**
-     * Advanced: 'target' is the lower level (ie: non-dashboard/log) telemetry
-     * object from the robot controller runtime.
-     */
-    public final Telemetry          target;
 
     /**
-     * msUpdateInterval is the interval in milliseconds at which the drive station
+     * Retrieves the current delimiter used to separate dashboard items on a single line
+     *
+     * @return the current delimiter
+     * @see #setItemDelimiter(String)
+     */
+    public String getItemDelimiter()
+        {
+        return itemDelimiter;
+        }
+
+    /**
+     * Sets the current delimiter used to separate dashboard items on a single line
+     * @param itemDelimiter the new delimiter to use
+     */
+    public void setItemDelimiter(String itemDelimiter)
+        {
+        this.itemDelimiter = itemDelimiter;
+        }
+
+    /**
+     * Advanced: retrieves the interval in milliseconds at which the drive station
      * is refreshed with new contents of the dashboard. If updates aren't happening
      * frequently enough for you, you can change this value.
      *
-     * Note that updates might happen more frequently if messages are written to the log.
+     * Note that updates happen more frequently if messages are written to the log.
+     *
+     * @return  the current update interval, in milliseconds
+     *
+     * @see #setUpdateIntervalMs(double)
      */
-    public double msUpdateInterval = 1000;  // default is 1s
+    public double getUpdateIntervalMs()
+        {
+        return msUpdateInterval;
+        }
 
     /**
-     * itemDelimeter is the text used to separate dashboard items on a single line
+     * Advanced: sets the update interval at which the driver station is refreshed.
+     *
+     * @param msUpdateInterval  the new update interval for telemetry, in milliseconds
+     *
+     * @see #getUpdateIntervalMs()
      */
-    public String itemDelimiter = " | ";
+    public void setUpdateIntervalMs(double msUpdateInterval)
+        {
+        this.msUpdateInterval = msUpdateInterval;
+        }
 
-    //-----------------
+    /**
+     * Advanced: 'target' is the lower level robot-controller-runtime-provided telemetry object
+     */
+    public final Telemetry target;
 
-    private Object getLock() { return this; }
+    //------------------------------------------------------------------------------------------
+    // Private State
+    //------------------------------------------------------------------------------------------
+
+    private String itemDelimiter    = " | ";
+    private double msUpdateInterval = 1000;  // default is 1s
 
     /** the list of actions that are evaluated before the lines are composed */
     private Vector<IAction>         actions = null;
@@ -93,14 +130,19 @@ public class TelemetryDashboardAndLog
     /**
      * (Re)initialize the dashboard to contain no lines or items
      */
-    public void clearDashboard()
+    public synchronized void clearDashboard()
         {
-        synchronized (this.getLock())
-            {
-            this.actions = new Vector<IAction>();
-            this.lines   = new Vector<Line>();
-            }
+        this.actions = new Vector<IAction>();
+        this.lines   = new Vector<Line>();
         this.updateLogCapacity();
+        }
+
+    private static String getKey(int iLine)
+        {
+        // At present (Aug 8, 2015), the driver station both sorts by the key we return here
+        // but also DISPLAYS it! Ugh. So we try to conserve space. And we use Unicode characters
+        // that don't actually take up space on the display.
+        return String.format("%c", 0x180 + iLine);
         }
 
      /**
@@ -108,55 +150,49 @@ public class TelemetryDashboardAndLog
      * evaluate all the items on all the dashboard lines and update the driver
      * station screen.
      *
-     * @see #msUpdateInterval
-     * @see TelemetryDashboardAndLog#update()
+     * @see #getUpdateIntervalMs()
      */
-    public void update()
+    public synchronized void update()
         {
-        // We need both the dashboard and log locked while we copy their contents
-        this.synchronizeDashboardAndLog(new IAction()
-        {
-        @Override public void doAction()
+        // Don't actually put out updates too often in order to avoid flooding. So,
+        // log additions flow as soon as we can, but otherwise, we only send things to
+        // the driver station at periodic intervals.
+        long nanoNow = System.nanoTime();
+        if (nanoLastUpdate == 0
+                || nanoNow > nanoLastUpdate + getUpdateIntervalMs() * SynchronousOpMode.NANO_TO_MILLI
+                || log.newLogMessagesAvailable
+                )
             {
-            // Don't actually put out updates too often in order to avoid flooding. So,
-            // log additions flow as soon as we can, but otherwise, we only send things to
-            // the driver station at periodic intervals.
-            long nanoNow = System.nanoTime();
-            if (nanoLastUpdate == 0
-                    || nanoNow > nanoLastUpdate + msUpdateInterval * SynchronousOpMode.NANO_TO_MILLI
-                    || log.newLogMessagesAvailable
-                    )
+            // Ok, we're going to update the telemetry: get a copy of all the data to output.
+            // We only use strings as values. Keys we make up in alphabetical order so as
+            // to maintaining the ordering in which they are created.
+
+            for (IAction action : this.actions)
                 {
-                // Ok, we're going to update the telemetry: get a copy of all the data to output.
-                // We only use strings as values. Keys we make up in alphabetical order so as
-                // to maintaining the ordering in which they are created.
+                action.doAction();
+                }
 
-                for (IAction action : actions)
-                    {
-                    action.doAction();
-                    }
+            final Vector<String> keys = new Vector<String>();
+            final Vector<String> values = new Vector<String>();
+            int iLine = 0;
 
-                final Vector<String> keys = new Vector<String>();
-                final Vector<String> values = new Vector<String>();
-                int iLine = 0;
+            for (Line line : this.lines)
+                {
+                keys.add(getKey(iLine));
+                values.add(lines.elementAt(iLine).compose());
+                iLine++;
+                }
 
-                for (Line line : lines)
-                    {
-                    keys.add(getKey(iLine));
-                    values.add(lines.elementAt(iLine).compose());
-                    iLine++;
-                    }
+            int size = this.log.logQueue.size();
+            for (int i = 0; i < size; i++)
+                {
+                String s = this.log.displayOldToNew ? this.log.logQueue.elementAt(i) : this.log.logQueue.elementAt(size - 1 - i);
+                keys.add(getKey(iLine));
+                values.add(s);
+                iLine++;
+                }
 
-                int size = log.logQueue.size();
-                for (int i = 0; i < size; i++)
-                    {
-                    String s = log.displayOldToNew ? log.logQueue.elementAt(i) : log.logQueue.elementAt(size - 1 - i);
-                    keys.add(getKey(iLine));
-                    values.add(s);
-                    iLine++;
-                    }
-
-                IAction action = new IAction()
+            IAction action = new IAction()
                 {
                 @Override public void doAction()
                     {
@@ -169,29 +205,27 @@ public class TelemetryDashboardAndLog
                     }
                 };
 
-                if (SynchronousThreadContext.isSynchronousThread())
-                    {
-                    // Head on over to the loop() thread and add these messages to the
-                    // (unthunked) telemetry. However, we only do that once per loop() call;
-                    // if we attempt two of these within one loop() quantum (by, e.g., issuing
-                    // a bunch of log.add() calls), then only the last one will actually manifest
-                    // itself and thus get back to the driver station.
-                    SynchronousOpMode.getThreadThunker().executeSingletonOnLoopThread(singletonKey, action);
-                    }
-                else
-                    {
-                    // We're not on a synchronous thread. Presumably, we're on the loop() thread,
-                    // though we can't confirm that. In any case, update the unthunked telemetry
-                    // here, directly on this thread.
-                    action.doAction();
-                    }
-
-                // Update our state for the next time around
-                nanoLastUpdate = nanoNow;
-                log.newLogMessagesAvailable = false;
+            if (SynchronousThreadContext.isSynchronousThread())
+                {
+                // Head on over to the loop() thread and add these messages to the
+                // (unthunked) telemetry. However, we only do that once per loop() call;
+                // if we attempt two of these within one loop() quantum (by, e.g., issuing
+                // a bunch of log.add() calls), then only the last one will actually manifest
+                // itself and thus get back to the driver station.
+                SynchronousOpMode.getThreadThunker().executeSingletonOnLoopThread(singletonKey, action);
                 }
+            else
+                {
+                // We're not on a synchronous thread. Presumably, we're on the loop() thread,
+                // though we can't confirm that. In any case, update the unthunked telemetry
+                // here, directly on this thread, and we'll live with the consequences.
+                action.doAction();
+                }
+
+            // Update our state for the next time around
+            this.nanoLastUpdate = nanoNow;
+            this.log.newLogMessagesAvailable = false;
             }
-        });
         }
 
     //------------------------------------------------------------------------------------------
@@ -231,12 +265,9 @@ public class TelemetryDashboardAndLog
      * in dashboard lines and items. This can help avoid needless re-evaluation.
      * @param action
      */
-    public void action(IAction action)
+    public synchronized void action(IAction action)
         {
-        synchronized (this.getLock())
-            {
-            this.actions.add(action);
-            }
+        this.actions.add(action);
         }
         
     //------------------------------------------------------------------------------------------
@@ -290,7 +321,7 @@ public class TelemetryDashboardAndLog
      */
     public void line(Item item0, Item item1, Item item2, Item item3)
         {
-        this.line(new Item[] { item0, item1, item2, item3 });
+        this.line(new Item[]{item0, item1, item2, item3});
         }
     /**
      * Add a line to the dashboard containing the indicated items
@@ -310,14 +341,11 @@ public class TelemetryDashboardAndLog
      *
      * @param items     the list of items to be contained in the line
      */
-    public void line(Item[] items)
+    public synchronized void line(Item[] items)
         {
-        synchronized (this.getLock())
-            {
-            Line line = new Line(items);
-            this.lines.add(line);
-            }
-        TelemetryDashboardAndLog.this.updateLogCapacity();
+        Line line = new Line(items);
+        this.lines.add(line);
+        updateLogCapacity();
         }
 
     //==============================================================================================
@@ -406,45 +434,10 @@ public class TelemetryDashboardAndLog
     // Emitting
     //----------------------------------------------------------------------------------------------
 
-    /**
-     * If you want to acquire both the dashboard and the log lock, then this method
-     * does it in the right order. For safety's sake, it is preferable that neither
-     * lock be held when calling; however (with the current implementation) it is in
-     * fact permissible to hold the dashboard lock when calling.
-     *
-     * Note that at the present time, this is moot, since the log and the dashboard
-     * in fact do not have separate locks. But we keep the API here for (future) semantic
-     * clarity in case we might wish to change our minde about that.
-     */
-    private void synchronizeDashboardAndLog(IAction action)
+    private synchronized void updateLogCapacity()
         {
-        synchronized (this.getLock())
-            {
-            synchronized (this.log.getLock())
-                {
-                action.doAction();
-                }
-            }
-        }
-
-    private void updateLogCapacity()
-        {
-        this.synchronizeDashboardAndLog(new IAction()
-            {
-            @Override public void doAction()
-                {
-                log.capacity = telemetryMaxLineCount - lines.size();
-                log.prune();
-                }
-            });
-        }
-
-    private static String getKey(int iLine)
-        {
-        // At present (Aug 8, 2015), the driver station both sorts by the key we return here
-        // but also DISPLAYS it! Ugh. So we try to conserve space. And we use Unicode characters
-        // that don't actually take up space on the display.
-        return String.format("%c", 0x180 + iLine);
+        log.capacity = telemetryMaxLineCount - lines.size();
+        log.prune();
         }
 
 
@@ -488,7 +481,7 @@ public class TelemetryDashboardAndLog
                 // Separate the items with the delimiter
                 if (!first)
                     {
-                    result.append(itemDelimiter);
+                    result.append(getItemDelimiter());
                     }
                 item.composeTo(result);
                 first = false;

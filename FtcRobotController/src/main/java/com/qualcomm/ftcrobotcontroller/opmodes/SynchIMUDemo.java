@@ -66,7 +66,7 @@ public class SynchIMUDemo extends SynchronousOpMode
     void composeDashboard()
         {
         // The default dashboard update rate is a little to slow for us, so we update faster
-        telemetry.msUpdateInterval = 200;
+        telemetry.setUpdateIntervalMs(200);
 
         // At the beginning of each telemetry update, grab a bunch of data
         // from the IMU that we will then display in separate lines.
