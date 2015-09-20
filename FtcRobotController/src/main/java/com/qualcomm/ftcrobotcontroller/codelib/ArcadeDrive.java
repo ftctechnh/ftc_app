@@ -1,7 +1,6 @@
 package com.qualcomm.ftcrobotcontroller.codelib;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Gamepad;
 
 /**
  * Created by JackV on 9/20/15.
