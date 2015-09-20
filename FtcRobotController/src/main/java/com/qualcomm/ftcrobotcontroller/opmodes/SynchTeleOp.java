@@ -50,7 +50,7 @@ public class SynchTeleOp extends SynchronousOpMode
                 }
 
             // Emit telemetry with the freshest possible values
-            this.telemetry.dashboard.update();
+            this.telemetry.update();
 
             // Let the rest of the system run until there's a stimulus from the robot controller runtime.
             this.idle();
@@ -116,23 +116,23 @@ public class SynchTeleOp extends SynchronousOpMode
     void configureDashboard()
         {
         // Configure the dashboard. Here, it will have one line, which will contain three items
-        this.telemetry.dashboard.line
+        this.telemetry.line
             (
-            this.telemetry.dashboard.item("left:", new IFunc<Object>()
+            this.telemetry.item("left:", new IFunc<Object>()
                 {
                 @Override public Object value()
                     {
                     return format(motorLeft.getPower());
                     }
                 }),
-            this.telemetry.dashboard.item("right: ", new IFunc<Object>()
+            this.telemetry.item("right: ", new IFunc<Object>()
                 {
                 @Override public Object value()
                     {
                     return format(motorLeft.getPower());
                     }
                 }),
-            this.telemetry.dashboard.item("mode: ", new IFunc<Object>()
+            this.telemetry.item("mode: ", new IFunc<Object>()
                 {
                 @Override public Object value()
                     {
