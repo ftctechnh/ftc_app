@@ -116,7 +116,7 @@ public class SynchTeleOp extends SynchronousOpMode
     void configureDashboard()
         {
         // Configure the dashboard. Here, it will have one line, which will contain three items
-        this.telemetry.line
+        this.telemetry.addLine
             (
             this.telemetry.item("left:", new IFunc<Object>()
                 {
