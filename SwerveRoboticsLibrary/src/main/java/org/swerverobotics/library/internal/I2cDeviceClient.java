@@ -490,7 +490,10 @@ public final class I2cDeviceClient implements II2cDeviceClient
 
                 //----------------------------------------------------------------------------------
                 // Handle the state machine 
-                
+
+                if (caller == UPDATE_STATE_MACHINE.FROM_CALLBACK &&  modeCacheStatus  == MODE_CACHE_STATUS.QUEUED)
+                    modeCacheStatus = MODE_CACHE_STATUS.IDLE;
+
                 if ((writeCacheStatus == WRITE_CACHE_STATUS.IDLE
                         || writeCacheStatus == WRITE_CACHE_STATUS.QUEUED
                         || readCacheStatus == READ_CACHE_STATUS.AWAITINGREADMODE)
@@ -502,8 +505,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
                     
                     // If we just finished a write cycle, then our write cache is now idle
                     if (writeCacheStatus == WRITE_CACHE_STATUS.QUEUED) nextWriteCacheStatus = WRITE_CACHE_STATUS.IDLE;
-                    if (modeCacheStatus  == MODE_CACHE_STATUS.QUEUED)  modeCacheStatus      = MODE_CACHE_STATUS.IDLE;
-    
+
                     // Do state transitions on the read cache
                     switch (readCacheStatus)
                         {
