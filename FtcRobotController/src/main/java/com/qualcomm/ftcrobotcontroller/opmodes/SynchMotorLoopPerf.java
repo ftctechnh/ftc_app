@@ -31,7 +31,7 @@ public class SynchMotorLoopPerf extends SynchronousOpMode
             {
             position = motor.getCurrentPosition();
             
-            if (gamepad1.left_bumper())
+            if (gamepad1.left_bumper)
                 motor.setPower(0.5);
             else
                 motor.setPower(0);

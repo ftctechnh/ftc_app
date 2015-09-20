@@ -25,18 +25,23 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     //----------------------------------------------------------------------------------------------
 
     /**
-     * provides access to the first gamepad controller.
+     * Provides access to the first gamepad controller. Only changes as a result of calling
+     * {@linkplain #updateGamepads()}.
      * 
      * The game pad variables are redeclared here so as to hide those in our OpMode superclass
-     * as the latter may be updated by robot controller runtime at arbitrary times and in a manner 
-     * which is not synchronized with processing on a synchronous thread. We take pains to ensure 
-     * that the variables declared here do not suffer from that problem.
+     * as the latter may be updated by robot controller runtime at arbitrary times in a manner
+     * which is not synchronized with processing on a synchronous thread.
+     *
+     * @see #gamepad2
      */
-    public IGamepad gamepad1 = null;
+    public Gamepad gamepad1 = new Gamepad();
     /** 
-     * provides access to the second gamepad controller.
-     * @see #gamepad1 */
-    public IGamepad gamepad2 = null;
+     * Provides access to the second gamepad controller. Only changes as a result of calling
+     * {@linkplain #updateGamepads()}.
+     *
+     * @see #gamepad1
+     */
+    public Gamepad gamepad2 = new Gamepad();
 
     /**
      * provides access to an object by which telemetry information can be transmitted
@@ -85,7 +90,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     protected boolean useExperimentalThunking = false; 
 
     //----------------------------------------------------------------------------------------------
-    // Key Public and Protected Methods
+    // Key threading-related methods
     //----------------------------------------------------------------------------------------------
 
     /**
@@ -141,40 +146,8 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         {
         return this.stopRequested || Thread.currentThread().isInterrupted();
         }
-    
-    /**
-     * Answer as to whether there's (probably) any state different in any of the game pads
-     * since the last time that this method was called. Calling this method atomically clears
-     * the the state.
-     * 
-     * @see #newGamePadInputAvailable() 
-     */
-    public final boolean newGamePadInputAvailable()
-        {
-        // We *wish* there was a way that we could hook or get a callback from the
-        // incoming gamepad change messages, but, alas, at present we can find no
-        // way of doing that.
-        //
-        this.gamepadInputQueried = true;
-        return this.gamePadStateChanged.getAndSet(false);
-        }
 
-    /**
-     * Similar to newGamePadInputAvailable(), but doesn't auto-reset the state when called
-     *
-     * @see #newGamePadInputAvailable()
-     */
-    public final boolean isNewGamePadInputAvailable()
-        {
-        this.gamepadInputQueried = true;
-        return this.isNewGamePadInputAvailableInternal();
-        }
-    
-    private final boolean isNewGamePadInputAvailableInternal()
-        {
-        return this.gamePadStateChanged.get();
-        }
-    
+
     /**
      * Put the current thread to sleep for a bit as it has nothing better to do.
      *
@@ -196,7 +169,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             // If new input has arrived since anyone last looked, then let our caller process that
             // if he is looking at the game pad input. If he's not, then we save some cycles and
             // processing power by waiting instead of spinning.
-            if (this.gamepadInputQueried && this.isNewGamePadInputAvailableInternal())
+            if (this.gamepadInputQueried && isNewGamepadStateAvailable())
                 {
                 Thread.yield();     // avoid tight loop if caller not looking at gamepad input
                 return;
@@ -264,13 +237,127 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         }
 
     //----------------------------------------------------------------------------------------------
+    // Gamepad management
+    //----------------------------------------------------------------------------------------------
+
+    /**
+     * Captures any new state available from the game pads, and answers as to whether
+     * anything is different from the previous state.
+     *
+     * Between calls to {@linkplain #updateGamepads()}, the visible gamepad state is guaranteed
+     * not to change. This permits you to consistently reason about that state across a possibly
+     * complicated chain of logic. Conversely, however, if you don't call this method, you
+     * won't see any changes to the state of the gamepads.
+     *
+     * @return whether any state of the gamepads has (probably) changed
+     */
+    public final boolean updateGamepads()
+        {
+        // Called NOT from loop()
+        synchronized (this.loopLock)
+            {
+            this.gamepadInputQueried = true;
+            boolean result = this.gamePadCaptureStateChanged.getAndSet(false);
+            if (result)
+                {
+                gamepadAssign(this.gamepad1, this.gamepad1Captured);
+                gamepadAssign(this.gamepad2, this.gamepad2Captured);
+                }
+            return result;
+            }
+        }
+
+    /** Capture the gamepad state so that it will be available for a later updateGamepads() */
+    private void captureGamepadState()
+        {
+        // Called from loop()
+        boolean changed1 = true, changed2 = true;
+        //
+        if (this.gamepad1Captured == null)
+            this.gamepad1Captured = new Gamepad();
+        else
+            changed1 = !gamepadsSame(this.gamepad1Captured, super.gamepad1);
+        //
+        if (this.gamepad2Captured == null)
+            this.gamepad2Captured = new Gamepad();
+        else
+            changed2 = !gamepadsSame(this.gamepad2Captured, super.gamepad2);
+        //
+        gamepadAssign(this.gamepad1Captured, super.gamepad1);
+        gamepadAssign(this.gamepad2Captured, super.gamepad2);
+        //
+        this.gamePadCaptureStateChanged.compareAndSet(false, changed1 || changed2);
+        }
+
+    boolean isNewGamepadStateAvailable()
+        {
+        return this.gamePadCaptureStateChanged.get();
+        }
+
+    /** Are the states of two gamepads equivalent? */
+    private static boolean gamepadsSame(com.qualcomm.robotcore.hardware.Gamepad p1, com.qualcomm.robotcore.hardware.Gamepad p2)
+        {
+        if (p1.left_stick_x != p2.left_stick_x) return false;
+        if (p1.left_stick_y != p2.left_stick_y) return false;
+        if (p1.right_stick_x != p2.right_stick_x) return false;
+        if (p1.right_stick_y != p2.right_stick_y) return false;
+        if (p1.dpad_up != p2.dpad_up) return false;
+        if (p1.dpad_down != p2.dpad_down) return false;
+        if (p1.dpad_left != p2.dpad_left) return false;
+        if (p1.dpad_right != p2.dpad_right) return false;
+        if (p1.a != p2.a) return false;
+        if (p1.b != p2.b) return false;
+        if (p1.x != p2.x) return false;
+        if (p1.y != p2.y) return false;
+        if (p1.guide != p2.guide) return false;
+        if (p1.start != p2.start) return false;
+        if (p1.back != p2.back) return false;
+        if (p1.left_bumper != p2.left_bumper) return false;
+        if (p1.right_bumper != p2.right_bumper) return false;
+        if (p1.left_trigger != p2.left_trigger) return false;
+        if (p1.right_trigger != p2.right_trigger) return false;
+        if (p1.user != p2.user) return false;
+        if (p1.id != p2.id) return false;
+        if (p1.timestamp != p2.timestamp) return false;
+        //
+        return true;
+        }
+
+    /** Copy the state of one gamepad into another */
+    public static void gamepadAssign(com.qualcomm.robotcore.hardware.Gamepad dst, com.qualcomm.robotcore.hardware.Gamepad src)
+        {
+        dst.left_stick_x = src.left_stick_x;
+        dst.left_stick_y = src.left_stick_y;
+        dst.right_stick_x = src.right_stick_x;
+        dst.right_stick_y = src.right_stick_y;
+        dst.dpad_up = src.dpad_up;
+        dst.dpad_down = src.dpad_down;
+        dst.dpad_left = src.dpad_left;
+        dst.dpad_right = src.dpad_right;
+        dst.a = src.a;
+        dst.b = src.b;
+        dst.x = src.x;
+        dst.y = src.y;
+        dst.guide = src.guide;
+        dst.start = src.start;
+        dst.back = src.back;
+        dst.left_bumper = src.left_bumper;
+        dst.right_bumper = src.right_bumper;
+        dst.left_trigger = src.left_trigger;
+        dst.right_trigger = src.right_trigger;
+        dst.user = src.user;
+        dst.id = src.id;
+        dst.timestamp = src.timestamp;
+        }
+
+    //----------------------------------------------------------------------------------------------
     // Private state and construction
     //----------------------------------------------------------------------------------------------
 
     private volatile boolean                started;
     private volatile boolean                stopRequested;
     private final   ActionQueueAndHistory   actionQueueAndHistory = new ActionQueueAndHistory();
-    private         AtomicBoolean           gamePadStateChanged = new AtomicBoolean(false);
+    private         AtomicBoolean           gamePadCaptureStateChanged = new AtomicBoolean(false);
     private         boolean                 gamepadInputQueried = false;
     private final   Object                  loopLock = new Object();
     private final   SparseArray<IAction>    singletonLoopActions = new SparseArray<IAction>();
@@ -283,6 +370,9 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     private final   AtomicReference<RuntimeException> firstExceptionThrownOnASynchronousWorkerThread = new AtomicReference<RuntimeException>();
     private final   int                     msWaitForMainThreadTermination              = 250;
     private final   int                     msWaitForSynchronousWorkerThreadTermination = 50;
+
+    private         Gamepad                 gamepad1Captured = null;
+    private         Gamepad                 gamepad2Captured = null;
 
     public SynchronousOpMode()
         {
@@ -625,7 +715,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         // Call the subclass hook in case they might want to do something interesting
         this.postStartHook();
         }
-    
+
     /**
      * The robot controller runtime calls loop() on a frequent basis, nominally every few ms or so.
      * 
@@ -662,21 +752,8 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
                 throw e;
                 }
 
-            // Capture the gamepad states safely so that in a synchronous thread we don't see torn writes
-            boolean diff1 = true;
-            boolean diff2 = true;
-            //
-            if (this.gamepad1 == null)
-                this.gamepad1 = new ThreadSafeGamepad(super.gamepad1);
-            else
-                diff1 = ((IGamepadInternal)this.gamepad1).updateGamepad(super.gamepad1);
-            //
-            if (this.gamepad2 == null)
-                this.gamepad2 = new ThreadSafeGamepad(super.gamepad2);
-            else
-                diff2 = ((IGamepadInternal)this.gamepad2).updateGamepad(super.gamepad2);
-            //
-            this.gamePadStateChanged.compareAndSet(false, diff1 || diff2);
+            // Capture the gamepad state for later processing
+            this.captureGamepadState();
 
             // Call the subclass hook in case they might want to do something interesting
             this.midLoopHook();

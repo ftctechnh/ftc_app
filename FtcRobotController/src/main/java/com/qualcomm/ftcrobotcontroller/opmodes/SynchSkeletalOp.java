@@ -1,6 +1,5 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
-import android.util.Log;
 import org.swerverobotics.library.SynchronousOpMode;
 
 /**
@@ -20,7 +19,7 @@ public class SynchSkeletalOp extends SynchronousOpMode
         // Loop until the game is finished
         while (this.opModeIsActive())
             {
-            if (this.newGamePadInputAvailable())
+            if (this.updateGamepads())
                 {
                 // Do something with it!
                 }

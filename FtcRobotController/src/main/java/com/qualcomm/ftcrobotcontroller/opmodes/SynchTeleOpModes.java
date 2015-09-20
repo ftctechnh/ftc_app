@@ -40,32 +40,23 @@ public class SynchTeleOpModes extends SynchronousOpMode
         // so that it can take the same power level values as the other motor.
         this.motorLeft.setDirection(DcMotor.Direction.REVERSE);
 
-        // Configure telemetry
-        this.telemetry.addLine
-            (
-            this.telemetry.item("Drive mode: ", new IFunc<Object>() { @Override public Object value()
-                {
-                return driveModeLabel[driveMode.ordinal()];
-                }})
-            );
-        
         // Wait until the game begins
         this.waitForStart();
 
         // Enter a loop processing all the input we receive
         while (this.opModeIsActive())
             {
-            if (this.newGamePadInputAvailable())
+            if (this.updateGamepads())
                 {
-                if (this.gamepad1.a())
+                if (this.gamepad1.a)
                     {
                     this.driveMode = DRIVEMODE.TANK;
                     }
-                else if (this.gamepad1.b())
+                else if (this.gamepad1.b)
                     {
                     this.driveMode = DRIVEMODE.ARCADE;
                     }
-                else if (this.gamepad1.y())
+                else if (this.gamepad1.y)
                     {
                     this.driveMode = DRIVEMODE.LEFT_STICK;
                     }
@@ -75,7 +66,8 @@ public class SynchTeleOpModes extends SynchronousOpMode
                 this.doManualDrivingControl(this.gamepad1);
                 }
 
-            // Emit any telemetry that hasn't been sent in a while
+            // Emit telemetry
+            this.telemetry.addData("Drive mode", driveModeLabel[driveMode.ordinal()]);
             this.telemetry.update();
 
             // Let the rest of the system run until there's a stimulus from the robot controller runtime.
@@ -87,7 +79,7 @@ public class SynchTeleOpModes extends SynchronousOpMode
      * Implement a simple two-motor driving logic using the left and right
      * right joysticks on the indicated game pad.
      */
-    void doManualDrivingControl(IGamepad pad) throws InterruptedException
+    void doManualDrivingControl(Gamepad pad) throws InterruptedException
         {
         float powerLeft = 0;
         float powerRight = 0;
@@ -96,8 +88,8 @@ public class SynchTeleOpModes extends SynchronousOpMode
             {
         case TANK:
             {
-            float leftPower = pad.left_stick_y();
-            float rightPower = pad.right_stick_y();
+            float leftPower = pad.left_stick_y;
+            float rightPower = pad.right_stick_y;
             powerLeft = Range.clip(leftPower, -1f, 1f);
             powerRight = Range.clip(rightPower, -1f, 1f);
             }
@@ -108,8 +100,8 @@ public class SynchTeleOpModes extends SynchronousOpMode
             {
             // Remember that the gamepad sticks range from -1 to +1, and that the motor
             // power levels range over the same amount
-            float ctlPower    = pad.left_stick_y();
-            float ctlSteering = this.driveMode==DRIVEMODE.ARCADE? pad.right_stick_x() : pad.left_stick_x();
+            float ctlPower    = pad.left_stick_y;
+            float ctlSteering = this.driveMode==DRIVEMODE.ARCADE? pad.right_stick_x : pad.left_stick_x;
     
             // We're going to assume that the deadzone processing has been taken care of for us
             // already by the underlying system (that appears to be the intent). Were that not
