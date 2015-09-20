@@ -41,9 +41,9 @@ public class SynchTeleOpModes extends SynchronousOpMode
         this.motorLeft.setDirection(DcMotor.Direction.REVERSE);
 
         // Configure telemetry
-        this.telemetry.line
+        this.telemetry.addLine
             (
-            this.telemetry.item("Drive mode: ",  new IFunc<Object>() { @Override public Object value()
+            this.telemetry.item("Drive mode: ", new IFunc<Object>() { @Override public Object value()
                 {
                 return driveModeLabel[driveMode.ordinal()];
                 }})

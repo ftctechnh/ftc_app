@@ -13,7 +13,7 @@ import java.util.*;
  * The telemetry is provided in two parts: a dashboard, and a log, instances of which 
  * reside in fields of the same names within the TelemetryDashboardAndLog object.
  * <p>
- * The dashboard is configured once, using a series of {@link #line() line()}
+ * The dashboard is configured once, using a series of {@link #addLine() line()}
  * calls each containing a series of {@link #item item()} invocations.
  * You then call {@link #update() update()} on at a relatively high
  * rate of speed, as often as you like, usually at the bottom of your while(opModeIsActive())
@@ -104,7 +104,6 @@ public class TelemetryDashboardAndLog
     private Vector<Line>            lines = null;
 
     private long                    nanoLastUpdate = 0;
-    private int                     telemetryMaxLineCount = 9;
     private final int               singletonKey = SynchronousOpMode.staticGetNewSingletonKey();
 
     //----------------------------------------------------------------------------------------------
@@ -124,7 +123,31 @@ public class TelemetryDashboardAndLog
         }
 
     //------------------------------------------------------------------------------------------
-    // Evaluation
+    // Robot controller runtime Telemetry API support
+    //------------------------------------------------------------------------------------------
+
+    public synchronized void addData(String key, String msg)
+        {
+        // this.b.put(key, msg);
+        }
+
+    public synchronized void addData(String key, Object msg)
+        {
+        // this.b.put(key, msg.toString());
+        }
+
+    public synchronized void addData(String key, float msg)
+        {
+        // this.c.put(key, Float.valueOf(msg));
+        }
+
+    public synchronized void addData(String key, double msg)
+        {
+        // this.c.put(key, Float.valueOf((float) msg));
+        }
+
+    //------------------------------------------------------------------------------------------
+    // Updating
     //------------------------------------------------------------------------------------------
 
     /**
@@ -134,7 +157,6 @@ public class TelemetryDashboardAndLog
         {
         this.actions = new Vector<IAction>();
         this.lines   = new Vector<Line>();
-        this.updateLogCapacity();
         }
 
     private static String getKey(int iLine)
@@ -277,18 +299,18 @@ public class TelemetryDashboardAndLog
     /**
      * Add an empty line to the dashboard
      */
-    public void line()
+    public void addLine()
         {
-        this.line(new Item[] {});
+        this.addLine(new Item[]{});
         }
     /**
      * Add a line to the dashboard containing the indicated item
      *
      * @param item      the item to be contained in the line
      */
-    public void line(Item item)
+    public void addLine(Item item)
         {
-        this.line(new Item[] { item });
+        this.addLine(new Item[]{item});
         }
     /**
      * Add a line to the dashboard containing the indicated items
@@ -296,9 +318,9 @@ public class TelemetryDashboardAndLog
      * @param item0     the first item to be contained in the line
      * @param item1     the second item to be contained in the line
      */
-    public void line(Item item0, Item item1)
+    public void addLine(Item item0, Item item1)
         {
-        this.line(new Item[] { item0, item1 });
+        this.addLine(new Item[]{item0, item1});
         }
     /**
      * Add a line to the dashboard containing the indicated items
@@ -307,9 +329,9 @@ public class TelemetryDashboardAndLog
      * @param item1     the second item to be contained in the line
      * @param item2     the third item to be contained in the line
      */
-    public void line(Item item0, Item item1, Item item2)
+    public void addLine(Item item0, Item item1, Item item2)
         {
-        this.line(new Item[] { item0, item1, item2 });
+        this.addLine(new Item[]{item0, item1, item2});
         }
     /**
      * Add a line to the dashboard containing the indicated items
@@ -319,9 +341,9 @@ public class TelemetryDashboardAndLog
      * @param item2     the third item to be contained in the line
      * @param item3     the fourth item to be contained in the line
      */
-    public void line(Item item0, Item item1, Item item2, Item item3)
+    public void addLine(Item item0, Item item1, Item item2, Item item3)
         {
-        this.line(new Item[]{item0, item1, item2, item3});
+        this.addLine(new Item[]{item0, item1, item2, item3});
         }
     /**
      * Add a line to the dashboard containing the indicated items
@@ -332,20 +354,19 @@ public class TelemetryDashboardAndLog
      * @param item3     the fourth item to be contained in the line
      * @param item4     the fifth item to be contained in the line
      */
-    public void line(Item item0, Item item1, Item item2, Item item3, Item item4)
+    public void addLine(Item item0, Item item1, Item item2, Item item3, Item item4)
         {
-        this.line(new Item[] {item0, item1, item2, item3, item4});
+        this.addLine(new Item[]{item0, item1, item2, item3, item4});
         }
     /**
      * Add a line to the dashboard containing the indicated items
      *
      * @param items     the list of items to be contained in the line
      */
-    public synchronized void line(Item[] items)
+    public synchronized void addLine(Item[] items)
         {
         Line line = new Line(items);
         this.lines.add(line);
-        updateLogCapacity();
         }
 
     //==============================================================================================
@@ -353,12 +374,39 @@ public class TelemetryDashboardAndLog
     public class Log
         {
         //------------------------------------------------------------------------------------------
-        // State
+        // Public state
         //------------------------------------------------------------------------------------------
 
-        private Vector<String> logQueue = new Vector<String>();
-        private boolean       newLogMessagesAvailable = false;
-        private int           capacity = 0;     // this gets automatically computed
+        /**
+         * Returns the maximum number of entries used by the log on the telemetry display
+         *
+         * @return the maximum number of lines retained by the og
+         * @see #setCapacity(int)
+         */
+        public int getCapacity()
+            {
+            return this.capacity;
+            }
+
+        /**
+         * Sets the maximum number of entries used by the log on the telemetry display.
+         *
+         * @param capacity  the maximum number of lines to retain
+         * @see #getCapacity()
+         */
+        public void setCapacity(int capacity)
+            {
+            this.capacity = capacity;
+            this.prune();
+            }
+
+        //------------------------------------------------------------------------------------------
+        // Private State
+        //------------------------------------------------------------------------------------------
+
+        private Vector<String>  logQueue = new Vector<String>();
+        private boolean         newLogMessagesAvailable = false;
+        private int             capacity = 9;
 
         // We just use the outer class so as to *mindlessly* avoid any potential deadlocks
         private Object getLock() { return TelemetryDashboardAndLog.this; }
@@ -385,11 +433,22 @@ public class TelemetryDashboardAndLog
                 {
                 this.logQueue.add(msg);
                 this.newLogMessagesAvailable = true;
-                //
                 this.prune();
                 }
 
             TelemetryDashboardAndLog.this.update();
+            }
+
+        /**
+         * Clear the contents of the log
+         */
+        public void clear()
+            {
+            synchronized (this.getLock())
+                {
+                this.logQueue.clear();
+                this.newLogMessagesAvailable = true;
+                }
             }
 
         private void prune()
@@ -403,43 +462,6 @@ public class TelemetryDashboardAndLog
                 }
             }
         }
-
-    //==============================================================================================
-
-    /**
-     * 'telemetryDisplayLineCount' is the number of visible on the driver station that
-     * we use in rendering the dashboard plus accumulated log. This method returns the
-     * current value of that variable.
-     * 
-     * @return the current maximum number of lines displayed by the log
-     * @see #setDisplayMaxLineCount(int) 
-     */
-    public int getTelemetryMaxLineCount() 
-        { 
-        return this.telemetryMaxLineCount; 
-        }
-    /**
-     * Set the maximum number of lines displayed in the log.
-     * 
-     * @param count the maximum number of lines to display in the log
-     * @see #getTelemetryMaxLineCount() 
-     */
-    public void setDisplayMaxLineCount(int count)
-        {
-        this.telemetryMaxLineCount = count;
-        this.updateLogCapacity();
-        }
-
-    //----------------------------------------------------------------------------------------------
-    // Emitting
-    //----------------------------------------------------------------------------------------------
-
-    private synchronized void updateLogCapacity()
-        {
-        log.capacity = telemetryMaxLineCount - lines.size();
-        log.prune();
-        }
-
 
     //------------------------------------------------------------------------------------------
     // Types

@@ -45,23 +45,39 @@ public class SynchMotorLoopPerf extends SynchronousOpMode
     
     void configureTelemetry()
         {
-        telemetry.line(
-            telemetry.item("pos:", new IFunc<Object>() { @Override public Object value() {
-                return position;
-                }}),
-            telemetry.item("loop:", new IFunc<Object>() { @Override public Object value() {
-                return getLoopCount() - loopCountStart;
-                }}),
-            telemetry.item("spin:", new IFunc<Object>() { @Override public Object value() {
-                return spinCount;
-                }}));
-        telemetry.line(
-            telemetry.item("loop/spin:", new IFunc<Object>() { @Override public Object value() {
-                return format((getLoopCount() - loopCountStart) / (double)spinCount);
-                }}),
-            telemetry.item("ms/spin:", new IFunc<Object>() { @Override public Object value() {
-                return format(elapsedTime.time() * 1000 / (double)spinCount);
-                }})
+        telemetry.addLine(
+            telemetry.item("pos:", new IFunc<Object>()
+                {
+                @Override public Object value()
+                    {
+                    return position;
+                    }}),
+            telemetry.item("loop:", new IFunc<Object>()
+                {
+                @Override public Object value()
+                    {
+                    return getLoopCount() - loopCountStart;
+                    }}),
+            telemetry.item("spin:", new IFunc<Object>()
+                {
+                @Override public Object value()
+                    {
+                    return spinCount;
+                    }})
+             );
+        telemetry.addLine(
+            telemetry.item("loop/spin:", new IFunc<Object>()
+                {
+                @Override public Object value()
+                    {
+                    return format((getLoopCount() - loopCountStart) / (double) spinCount);
+                    }}),
+            telemetry.item("ms/spin:", new IFunc<Object>()
+                {
+                @Override public Object value()
+                    {
+                    return format(elapsedTime.time() * 1000 / (double) spinCount);
+                    }})
             );
         }
 

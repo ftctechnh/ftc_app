@@ -81,46 +81,61 @@ public class SynchIMUDemo extends SynchronousOpMode
                 dt         = elapsed.time();
                 }
             });
-        telemetry.line(telemetry.item("loop count: ", new IFunc<Object>() { public Object value()
+        telemetry.addLine(telemetry.item("loop count: ", new IFunc<Object>()
+                {
+                public Object value()
                     {
                     return loopCycles;
                     }}),
-                telemetry.item("i2c cycle count: ", new IFunc<Object>() { public Object value()
+                telemetry.item("i2c cycle count: ", new IFunc<Object>()
+                {
+                public Object value()
                     {
                     return i2cCycles;
                     }}));
 
-        telemetry.line(telemetry.item("loop rate: ", new IFunc<Object>() { public Object value()
+        telemetry.addLine(telemetry.item("loop rate: ", new IFunc<Object>()
+                {
+                public Object value()
                     {
                     return formatRate(dt / loopCycles * 1000.0);
-                    }
-                }),
-                telemetry.item("i2c cycle rate: ", new IFunc<Object>() { public Object value()
+                    }}),
+                telemetry.item("i2c cycle rate: ", new IFunc<Object>()
+                {
+                public Object value()
                     {
                     return formatRate(dt / i2cCycles * 1000.0);
                     }
                 }));
-        telemetry.line(telemetry.item("status: ", new IFunc<Object>() { public Object value()
+        telemetry.addLine(telemetry.item("status: ", new IFunc<Object>()
+                {
+                public Object value()
                     {
                     return decodeStatus(imu.getSystemStatus());
-                    }
-                }),
-                telemetry.item("calib: ", new IFunc<Object>() { public Object value()
+                    }}),
+                telemetry.item("calib: ", new IFunc<Object>()
+                {
+                public Object value()
                     {
                     return decodeCalibration(imu.read8(IBNO055IMU.REGISTER.CALIB_STAT));
-                    }
-                }));
-        telemetry.line(telemetry.item("heading: ", new IFunc<Object>() { public Object value()
+                    }}));
+        telemetry.addLine(telemetry.item("heading: ", new IFunc<Object>()
+                {
+                public Object value()
                     {
                     return formatAngle(angles.heading);
                     }
                 }));
-        telemetry.line(telemetry.item("roll: ", new IFunc<Object>() { public Object value()
+        telemetry.addLine(telemetry.item("roll: ", new IFunc<Object>()
+                {
+                public Object value()
                     {
                     return formatAngle(angles.roll);
                     }
                 }));
-        telemetry.line(telemetry.item("pitch: ", new IFunc<Object>() { public Object value()
+        telemetry.addLine(telemetry.item("pitch: ", new IFunc<Object>()
+                {
+                public Object value()
                     {
                     return formatAngle(angles.pitch);
                     }
