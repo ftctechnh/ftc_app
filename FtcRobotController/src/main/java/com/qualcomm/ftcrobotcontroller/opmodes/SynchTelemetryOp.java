@@ -26,11 +26,11 @@ public class SynchTelemetryOp extends SynchronousOpMode
         // Go go gadget robot!
         while (this.opModeIsActive())
             {
-            if (this.newGamePadInputAvailable())
+            if (this.updateGamepads())
                 {
                 // There is (likely) new gamepad input available. We choose to log some of its state.
-                if (this.gamepad1.left_bumper())  this.telemetry.log.add(format(elapsed) + ": left bumper pressed");
-                if (this.gamepad1.right_bumper()) this.telemetry.log.add(format(elapsed) + ": right bumper pressed");
+                if (this.gamepad1.left_bumper)  this.telemetry.log.add(format(elapsed) + ": left bumper pressed");
+                if (this.gamepad1.right_bumper) this.telemetry.log.add(format(elapsed) + ": right bumper pressed");
                 }
 
             // Update the telemetry dashboard with fresh values
@@ -38,7 +38,7 @@ public class SynchTelemetryOp extends SynchronousOpMode
             this.telemetry.addData("count", getLoopCount() - loopCountStart);
             this.telemetry.addData("rate",  format(elapsed.time() / (getLoopCount() - loopCountStart) * 1000) + "ms");
 
-            // Update telemetry and wait until there's something useful to do
+            // Update driver station and wait until there's something useful to do
             this.telemetry.update();
             this.idle();
             }
