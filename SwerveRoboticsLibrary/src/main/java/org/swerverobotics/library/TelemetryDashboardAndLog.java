@@ -100,8 +100,10 @@ public class TelemetryDashboardAndLog
 
     /** the list of actions that are evaluated before the lines are composed */
     private Vector<IAction>         actions = null;
-    /** the lines that are composed to form the dashboard contents */
-    private Vector<Line>            lines = null;
+    /** lines that are to be composed each time we actually update */
+    private Vector<Line> composableLines = null;
+    /** lines that are provided to us in precomposed form */
+    private Vector<String>          composedLines = null;
 
     private long                    nanoLastUpdate = 0;
     private final int               singletonKey = SynchronousOpMode.staticGetNewSingletonKey();
@@ -126,24 +128,75 @@ public class TelemetryDashboardAndLog
     // Robot controller runtime Telemetry API support
     //------------------------------------------------------------------------------------------
 
-    public synchronized void addData(String key, String msg)
+    /**
+     * Add a one-time message to the dashboard. This message is erased after
+     * update() is called and must be reissued if it is to be shown
+     * in subsequent update() cycles.
+     *
+     * @param caption   the caption to put on the message
+     * @param msg       the message to display
+     *
+     * @see Telemetry#addData(String, String)
+     */
+    public synchronized void addData(String caption, String msg)
         {
-        // this.b.put(key, msg);
+        this.addComposedLine(caption, msg);
         }
 
-    public synchronized void addData(String key, Object msg)
+    /**
+     * Add a one-time message to the dashboard. This message is erased after
+     * update() is called and must be reissued if it is to be shown
+     * in subsequent update() cycles.
+     *
+     * @param caption   the caption to put on the message
+     * @param value     the value to be formatted and displayed
+     *
+     * @see #addData(String, String)
+     * @see Telemetry#addData(String, Object)
+     */
+    public synchronized void addData(String caption, Object value)
         {
-        // this.b.put(key, msg.toString());
+        this.addComposedLine(caption, value.toString());
         }
 
-    public synchronized void addData(String key, float msg)
+    /**
+     * Add a one-time message to the dashboard. This message is erased after
+     * update() is called and must be reissued if it is to be shown
+     * in subsequent update() cycles.
+     *
+     * @param caption   the caption to put on the message
+     * @param value     the value to be formatted and displayed
+     *
+     * @see #addData(String, String)
+     * @see Telemetry#addData(String, float)
+     */
+    public synchronized void addData(String caption, float value)
         {
-        // this.c.put(key, Float.valueOf(msg));
+        this.addData(caption, (double)value);
         }
 
-    public synchronized void addData(String key, double msg)
+    /**
+     * Add a one-time message to the dashboard. This message is erased after
+     * update() is called and must be reissued if it is to be shown
+     * in subsequent update() cycles.
+     *
+     * @param caption   the caption to put on the message
+     * @param value     the value to be formatted and displayed
+     *
+     * @see #addData(String, String)
+     * @see Telemetry#addData(String, double)
+     */
+    public synchronized void addData(String caption, double value)
         {
-        // this.c.put(key, Float.valueOf((float) msg));
+        this.addComposedLine(caption, Double.toString(value));
+        }
+
+    private void addComposedLine(String caption, String value)
+        {
+        // We display both the key and the value for these, as that's what the
+        // raw telemetry does. However, we do NOT sort on the caption, as that
+        // has little utility.
+        this.composedLines.add(String.format("%s : %s", caption, value));
         }
 
     //------------------------------------------------------------------------------------------
@@ -155,8 +208,14 @@ public class TelemetryDashboardAndLog
      */
     public synchronized void clearDashboard()
         {
-        this.actions = new Vector<IAction>();
-        this.lines   = new Vector<Line>();
+        this.actions         = new Vector<IAction>();
+        this.composableLines = new Vector<Line>();
+        clearComposedLines();
+        }
+
+    private void clearComposedLines()
+        {
+        this.composedLines    = new Vector<String>();
         }
 
     private static String getKey(int iLine)
@@ -168,52 +227,68 @@ public class TelemetryDashboardAndLog
         }
 
      /**
-     * If sufficient time has elapsed since the last driver station refresh,
-     * evaluate all the items on all the dashboard lines and update the driver
-     * station screen.
-     *
-     * @see #getUpdateIntervalMs()
-     */
-    public synchronized void update()
+      * Call this function often to send your telemetry to the driver station.
+      *
+      * Note that telemetry isn't *actually* transmitted on each call. Rather, transmission
+      * to the driver station is throttled to normally be sent at the end of every update
+      * interval. However, when a message is added to the log, the driver station is always
+      * updated on the next call to update().
+      *
+      * @see #getUpdateIntervalMs()
+      */
+    public synchronized boolean update()
         {
-        // Don't actually put out updates too often in order to avoid flooding. So,
-        // log additions flow as soon as we can, but otherwise, we only send things to
-        // the driver station at periodic intervals.
+        boolean result = false;
+
+        // Don't actually put out updates too often so as to avoid excessive pointless
+        // computation in the robot controller and (to a lesser extent) reduced network
+        // traffic to the driver station.
         long nanoNow = System.nanoTime();
         if (nanoLastUpdate == 0
                 || nanoNow > nanoLastUpdate + getUpdateIntervalMs() * SynchronousOpMode.NANO_TO_MILLI
                 || log.newLogMessagesAvailable
                 )
             {
-            // Ok, we're going to update the telemetry: get a copy of all the data to output.
-            // We only use strings as values. Keys we make up in alphabetical order so as
-            // to maintaining the ordering in which they are created.
+            // Ok, we're going to update the telemetry
 
+            // Evaluate any delayed actions we've been asked to do
             for (IAction action : this.actions)
                 {
                 action.doAction();
                 }
 
+            // Get a copy of all the data
             final Vector<String> keys = new Vector<String>();
             final Vector<String> values = new Vector<String>();
             int iLine = 0;
 
-            for (Line line : this.lines)
+            // Compose each of the composable lines
+            for (Line line : this.composableLines)
                 {
                 keys.add(getKey(iLine));
-                values.add(lines.elementAt(iLine).compose());
+                values.add(composableLines.elementAt(iLine).compose());
                 iLine++;
                 }
 
+            // Copy each of the composed lines
+            for (String line : this.composedLines)
+                {
+                keys.add(getKey(iLine));
+                values.add(line);
+                iLine++;
+                }
+
+            // Add on the log
             int size = this.log.logQueue.size();
             for (int i = 0; i < size; i++)
                 {
-                String s = this.log.displayOldToNew ? this.log.logQueue.elementAt(i) : this.log.logQueue.elementAt(size - 1 - i);
+                String s = this.log.isDisplayOldToNew() ? this.log.logQueue.elementAt(i) : this.log.logQueue.elementAt(size - 1 - i);
                 keys.add(getKey(iLine));
                 values.add(s);
                 iLine++;
                 }
 
+            // Create an action that sends that all to the underlying telemetry object
             IAction action = new IAction()
                 {
                 @Override public void doAction()
@@ -227,6 +302,7 @@ public class TelemetryDashboardAndLog
                     }
                 };
 
+            // Execute that action in the right context
             if (SynchronousThreadContext.isSynchronousThread())
                 {
                 // Head on over to the loop() thread and add these messages to the
@@ -247,7 +323,14 @@ public class TelemetryDashboardAndLog
             // Update our state for the next time around
             this.nanoLastUpdate = nanoNow;
             this.log.newLogMessagesAvailable = false;
+            result = true;
             }
+
+        // We ALWAYS clear the composed lines, as the user, generally,
+        // has no idea which update() calls actually transmit.
+        this.clearComposedLines();
+
+        return result;
         }
 
     //------------------------------------------------------------------------------------------
@@ -366,7 +449,7 @@ public class TelemetryDashboardAndLog
     public synchronized void addLine(Item[] items)
         {
         Line line = new Line(items);
-        this.lines.add(line);
+        this.composableLines.add(line);
         }
 
     //==============================================================================================
@@ -376,6 +459,31 @@ public class TelemetryDashboardAndLog
         //------------------------------------------------------------------------------------------
         // Public state
         //------------------------------------------------------------------------------------------
+
+        /**
+         * Returns the order in which the log is displayed.
+         * <p></p>
+         * If true, older log messages are displayed at the top of the log, newer messages at the bottom.
+         * <p></p>
+         * If false, newer messages are on top, older messages at the bottom.
+         *
+         * @return whether the log is displayed in old-to-new order
+         * @see #setDisplayOldToNew(boolean)
+         */
+        public boolean isDisplayOldToNew()
+            {
+            return displayOldToNew;
+            }
+
+        /**
+         * Sets the order in which the log is displayed
+         * @param displayOldToNew   whether the log is to be displayed in old-to-new order
+         * @see #isDisplayOldToNew()
+         */
+        public void setDisplayOldToNew(boolean displayOldToNew)
+            {
+            this.displayOldToNew = displayOldToNew;
+            }
 
         /**
          * Returns the maximum number of entries used by the log on the telemetry display
@@ -411,14 +519,7 @@ public class TelemetryDashboardAndLog
         // We just use the outer class so as to *mindlessly* avoid any potential deadlocks
         private Object getLock() { return TelemetryDashboardAndLog.this; }
 
-        /**
-         * Is the log shown in reversed order instead of normal order?
-         * <p></p>
-         * If true, older log messages are displayed at the top of the log, newer messages at the bottom.
-         * <p></p>
-         * If false, newer messages are on top, older messages at the bottom.
-         */
-        public boolean displayOldToNew = true;
+        private boolean displayOldToNew = true;
 
         //------------------------------------------------------------------------------------------
         // Operations
@@ -461,6 +562,7 @@ public class TelemetryDashboardAndLog
                     }
                 }
             }
+
         }
 
     //------------------------------------------------------------------------------------------
