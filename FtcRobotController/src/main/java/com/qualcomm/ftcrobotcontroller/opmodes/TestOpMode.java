@@ -1,5 +1,6 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.qualcomm.ftcrobotcontroller.codelib.ArcadeDrive;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -28,6 +29,9 @@ public class TestOpMode extends OpMode{
     Servo claw;
     Servo arm;
 
+    // DRIVE
+    ArcadeDrive drive = new ArcadeDrive(motorRight, motorLeft);
+
     // CONSTRUCTOR
     public TestOpMode() {
 
@@ -48,38 +52,13 @@ public class TestOpMode extends OpMode{
 
     @Override
     public void loop() {
-        arcadeDrive(gamepad1.left_stick_y, gamepad1.right_stick_x);
+        drive.arcadeDrive(gamepad1.left_stick_y, gamepad1.right_stick_x);
         moveArm(gamepad1.y, gamepad1.a, gamepad1.x, gamepad1.b);
     }
 
     @Override
     public void stop() {
         stopRobot();
-    }
-
-    void arcadeDrive(float y, float x) {
-        float max = Math.abs(x);
-        if (Math.abs(y) > max)
-            max = Math.abs(y);
-        float sum = y + x;
-        float dif = y - x;
-        if(y <= 0) {
-            if(x >= 0) {
-                motorLeft.setPower(max);
-                motorRight.setPower(-sum);
-            } else {
-                motorLeft.setPower(dif);
-                motorRight.setPower(max);
-            }
-        } else {
-            if(y >= 0) {
-                motorLeft.setPower(dif);
-                motorRight.setPower(-max);
-            } else {
-                motorLeft.setPower(-max);
-                motorRight.setPower(-sum);
-            }
-        }
     }
 
     void moveArm(boolean up, boolean down, boolean open, boolean close) {
