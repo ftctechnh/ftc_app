@@ -119,7 +119,7 @@ public class PushBotManual extends PushBotTelemetry
         telemetry.addData ("11", "GP1 Right: " + l_gp1_right_stick_y);
         telemetry.addData ("12", "GP2 Left: " + l_gp2_left_stick_y);
         telemetry.addData ("13", "GP2 X: " + gamepad2.x);
-        telemetry.addData ("14", "GP2 Y: " + gamepad2.b);
+        telemetry.addData ("14", "GP2 B: " + gamepad2.b);
 
     } // PushBotManual::loop
 
