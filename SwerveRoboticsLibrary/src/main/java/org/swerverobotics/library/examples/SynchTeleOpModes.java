@@ -1,4 +1,4 @@
-package com.qualcomm.ftcrobotcontroller.opmodes;
+package org.swerverobotics.library.examples;
 
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
@@ -12,6 +12,8 @@ import org.swerverobotics.library.interfaces.*;
  * 
  * TODO: Perhaps consolidate the two examples 
  */
+@TeleOp(name="Tele Op - modes")
+@Disabled
 public class SynchTeleOpModes extends SynchronousOpMode
     {
     enum DRIVEMODE { TANK, ARCADE, LEFT_STICK };
