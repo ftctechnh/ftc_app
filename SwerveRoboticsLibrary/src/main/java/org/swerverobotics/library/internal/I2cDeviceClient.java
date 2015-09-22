@@ -313,13 +313,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
 
                 // Send out the data proactively (this is optional, but more efficient).
                 this.callback.updateStateMachines(UPDATE_STATE_MACHINE.FROM_USER_WRITE);
-                // Wait until the write has been issued
-                // TODO: We SHOULD be able to do without this
-                while (this.writeCacheStatus != WRITE_CACHE_STATUS.IDLE)
-                    {
-                    this.theLock.wait();
-                    }
-               }
+                }
             }
         catch (InterruptedException e)
             {
@@ -588,7 +582,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
                     // That limits the number of states the caches can now be in
 
                     assertTrue(BuildConfig.DEBUG && (readCacheStatus==READ_CACHE_STATUS.IDLE||readCacheStatus==READ_CACHE_STATUS.SWITCHINGTOREADMODE||readCacheStatus==READ_CACHE_STATUS.VALID));
-                    assertTrue(BuildConfig.DEBUG && (writeCacheStatus==WRITE_CACHE_STATUS.IDLE||writeCacheStatus==WRITE_CACHE_STATUS.DIRTY));
+                    assertTrue(BuildConfig.DEBUG && (writeCacheStatus == WRITE_CACHE_STATUS.IDLE || writeCacheStatus == WRITE_CACHE_STATUS.DIRTY));
 
 
                     //--------------------------------------------------------------------------
@@ -695,10 +689,11 @@ public final class I2cDeviceClient implements II2cDeviceClient
                     if (setActionFlag)                            message.append("|flag");
                     if (setActionFlag && !queueFullWrite)         message.append("|f");
                     else if (queueFullWrite)                      message.append("|w");
+                    else                                          message.append("|.");
                     if (queueRead)                                message.append("|r");
                     if (readCacheStatus != prevReadCacheStatus)   message.append("| R." + prevReadCacheStatus.toString() + "->" + readCacheStatus.toString());
                     if (writeCacheStatus != prevWriteCacheStatus) message.append("| W." + prevWriteCacheStatus.toString() + "->" + writeCacheStatus.toString());
-                    if (modeCacheStatus != prevModeCacheStatus)   message.append("| M." + prevModeCacheStatus.toString() + "->" + modeCacheStatus.toString());
+                 // if (modeCacheStatus != prevModeCacheStatus)   message.append("| M." + prevModeCacheStatus.toString() + "->" + modeCacheStatus.toString());
                     if (enabledWriteMode)                         message.append(String.format("| setWrite(0x%02x,%d)", iregWriteFirst, cregWrite));
                     if (enabledReadMode)                          message.append(String.format("| setRead(0x%02x,%d)", regWindowRead.getIregFirst(), regWindowRead.getCreg()));
 
