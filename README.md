@@ -6,13 +6,15 @@ The FTC Robot Controller app is designed to work in conjunction with the FTC Dri
 The FTC Driver Station app is available through Google Play.
 
 To use this SDK, download/clone the entire project to your local computer.
-Use Android Studio to import the folder  ("Import project (Eclipse ADT, Gradle, etc.)").
+Use Android Studio File->Open to open the FtcRobotController directory.
 
 Documentation for the FTC SDK are included with this repository.  There is a subfolder called "doc" which contains several subfolders:
 
- * The folder "apk" contains the .apk files for the FTC Driver Station and FTC Robot Controller apps.
- * The folder "javadoc" contains the JavaDoc user documentation for the FTC SDK.
- * The folder "tutorial" contains PDF files that help teach the basics of using the FTC SDK.
+ * The folder "/doc/apk" contains the .apk files for the FTC Driver Station and FTC Robot Controller apps.
+ * The folder "/doc/javadoc" contains the JavaDoc user documentation for the FTC SDK.
+   * The JavaDoc API is hosted at [ftckey.com](http://ftckey.com/apis/ftc/index.html). This is much easier to use than the local files.
+ * The folder "/doc/tutorial" contains PDF files that help teach the basics of using the FTC SDK.
+   * There are more tutorials online at [usfirst.org](http://www.usfirst.org/roboticsprograms/ftc/team-resources)
 
 For technical questions regarding the SDK, please visit the FTC Technology forum:
 
