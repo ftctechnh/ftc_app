@@ -100,13 +100,13 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         write8(REGISTER.PAGE_ID, 0);
 
         // Make sure we have the right device
-        byte id = read8(REGISTER.CHIP_ID); 
-        if (id != bCHIP_ID_VALUE)
+        byte chipId = read8(REGISTER.CHIP_ID);
+        if (chipId != bCHIP_ID_VALUE)
             {
             delay(650);     // delay value is from from Table 0-2
-            id = read8(REGISTER.CHIP_ID);
-            if (id != bCHIP_ID_VALUE)
-                throw new UnexpectedI2CDeviceException(id);
+            chipId = read8(REGISTER.CHIP_ID);
+            if (chipId != bCHIP_ID_VALUE)
+                throw new UnexpectedI2CDeviceException(chipId);
             }
         
         // Switch to config mode (just in case, since this is the default)
@@ -117,8 +117,11 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         // perhaps. While in the reset state the chip id (and other registers) reads as 0xFF.
         elapsed.reset();
         write8(REGISTER.SYS_TRIGGER, 0x20);
-        while (read8(REGISTER.CHIP_ID) != bCHIP_ID_VALUE)
+        for (;;)
             {
+            chipId = read8(REGISTER.CHIP_ID);
+            if (chipId == bCHIP_ID_VALUE)
+                break;
             delay(10);
             if (elapsed.time()*1000 > msAwaitChipId)
                 throw new BNO055InitializationException(this, "failed to retrieve chip id");
@@ -148,12 +151,12 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
 
         // Run a self test. This appears to be a necessary step in order for the 
         // sensor to be able to actually be used.
-        write8(REGISTER.SYS_TRIGGER, read8(REGISTER.SYS_TRIGGER) | 0x01);
+        write8(REGISTER.SYS_TRIGGER, read8(REGISTER.SYS_TRIGGER) | 0x01);           // SYS_TRIGGER=0x3F
         elapsed.reset();
         boolean selfTestSuccessful = false;
         while (!selfTestSuccessful && elapsed.time()*1000 < msAwaitSelfTest)
             {
-            selfTestSuccessful = (read8(REGISTER.SELFTEST_RESULT)&0x0F) == 0x0F;
+            selfTestSuccessful = (read8(REGISTER.SELFTEST_RESULT)&0x0F) == 0x0F;    // SELFTEST_RESULT=0x36
             }
         if (!selfTestSuccessful)
             throw new BNO055InitializationException(this, "self test failed");
@@ -175,7 +178,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         this.currentMode = mode;
         
         // Actually change the operation/sensor mode
-        this.write8(REGISTER.OPR_MODE, mode.bVal & 0x0F);
+        this.write8(REGISTER.OPR_MODE, mode.bVal & 0x0F);                           // OPR_MODE=0x3D
         
         // Delay per Table 3-6 of BNO055 Data sheet (p21)
         if (mode == SENSOR_MODE.CONFIG)

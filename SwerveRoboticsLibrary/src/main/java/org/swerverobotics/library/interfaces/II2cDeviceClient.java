@@ -115,6 +115,8 @@ public interface II2cDeviceClient extends HardwareDevice
 
     //----------------------------------------------------------------------------------------------
     // Heartbeats
+    //
+    // (temporarily disabled to allow further thinking)
     //----------------------------------------------------------------------------------------------
 
     /**
@@ -125,7 +127,7 @@ public interface II2cDeviceClient extends HardwareDevice
      * @see #setHeartbeatRead(int) 
      * @see #setHeartbeatWrite(int) 
      */
-    int getHeartbeatInterval();
+    // int getHeartbeatInterval();
 
     /**
      * Sets the interval within which communication must be received by the I2C device lest
@@ -141,7 +143,7 @@ public interface II2cDeviceClient extends HardwareDevice
      *                      zero, then no heartbeat messages are sent
      * @see #setReadWindow(RegWindow) 
      */
-    void setHeartbeatRead(int ms);
+    // void setHeartbeatRead(int ms);
 
     /**
      * Sets the interval within which communication must be received by the I2C device lest
@@ -152,7 +154,7 @@ public interface II2cDeviceClient extends HardwareDevice
      *                      zero, then no heartbeat messages are sent
      * @see #setHeartbeatRead(int) 
      */
-    void setHeartbeatWrite(int ms);
+    // void setHeartbeatWrite(int ms);
 
     //----------------------------------------------------------------------------------------------
     // Monitoring & debugging
