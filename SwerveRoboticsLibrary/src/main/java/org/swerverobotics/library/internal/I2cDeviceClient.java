@@ -43,9 +43,10 @@ public final class I2cDeviceClient implements II2cDeviceClient
     private final Lock          readCacheLock;              // lock we must hold to look at readCache
     private final Lock          writeCacheLock;             // lock we must old to look at writeCache
 
-    private final Object        theLock = new Object();        // the lock we use to synchronize concurrent callers as well as the portIsReady() callback
+    private final Object        theLock = new Object();     // the lock we use to synchronize concurrent callers as well as the portIsReady() callback
 
     private RegWindow           regWindowRead;              // the set of registers to look at when we are in read mode. May be null, indicating no read needed
+    private boolean             regWindowChanged;           // whether regWindow has changed since the hw cycle loop last took note
     private long                nanoTimeReadCacheValid;     // the time on the System.nanoTime() clock at which the read cache was last set as valid
     private READ_CACHE_STATUS   readCacheStatus;            // what we know about the contents of readCache
     private WRITE_CACHE_STATUS  writeCacheStatus;           // what we know about the (payload) contents of writeCache
@@ -119,6 +120,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
         this.writeCacheLock = this.i2cDevice.getI2cWriteCacheLock();
         
         this.regWindowRead  = initialRegisterWindow;
+        this.regWindowChanged = false;
 
         this.nanoTimeReadCacheValid = 0;
         this.readCacheStatus  = READ_CACHE_STATUS.IDLE;
@@ -170,8 +172,8 @@ public final class I2cDeviceClient implements II2cDeviceClient
                 // Remember the new window
                 this.regWindowRead = window;
                 
-                // Any reads we currently have or are perhaps currently in flight are junk.
-                this.readCacheStatus = READ_CACHE_STATUS.IDLE;      // TO DO: does this cause problems?
+                // Let others know of the update
+                this.regWindowChanged = true;
                 }
             }
         }
@@ -236,7 +238,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
                 // The latter honors the visibility semantic we intend to portray, namely
                 // that issuing a read after a write has been issued will see the state AFTER
                 // the write has had a chance to take effect.
-                while (!this.readCacheStatus.isValid() && this.writeCacheStatus != WRITE_CACHE_STATUS.IDLE)
+                while (this.regWindowChanged || !this.readCacheStatus.isValid() || this.writeCacheStatus != WRITE_CACHE_STATUS.IDLE)
                     {
                     this.theLock.wait();
                     }
@@ -588,10 +590,25 @@ public final class I2cDeviceClient implements II2cDeviceClient
                     assertTrue(BuildConfig.DEBUG && (readCacheStatus==READ_CACHE_STATUS.IDLE||readCacheStatus==READ_CACHE_STATUS.SWITCHINGTOREADMODE||readCacheStatus==READ_CACHE_STATUS.VALID));
                     assertTrue(BuildConfig.DEBUG && (writeCacheStatus==WRITE_CACHE_STATUS.IDLE||writeCacheStatus==WRITE_CACHE_STATUS.DIRTY));
 
+
+                    //--------------------------------------------------------------------------
+                    // Complete any read mode switch if there is one
+
+                    if (readCacheStatus == READ_CACHE_STATUS.SWITCHINGTOREADMODE)
+                        {
+                        // We're trying to switch into read mode. Are we there yet?
+                        if (i2cDevice.isI2cPortInReadMode())
+                            {
+                            // TODO: Is the data actually valid NOW? Or do we really have to issue a read as we're doing here and wait another cycle?
+                            readCacheStatus = READ_CACHE_STATUS.QUEUED;
+                            setActionFlag = true;       // actually do an I2C read
+                            }
+                        }
+
                     //--------------------------------------------------------------------------
                     // If there's a write request pending, and it's ok to issue the write, do so
 
-                    if (writeCacheStatus == WRITE_CACHE_STATUS.DIRTY && readCacheStatus != READ_CACHE_STATUS.SWITCHINGTOREADMODE)
+                    else if (writeCacheStatus == WRITE_CACHE_STATUS.DIRTY)
                         {
                         issueWrite();
 
@@ -602,28 +619,16 @@ public final class I2cDeviceClient implements II2cDeviceClient
                         }
 
                     //--------------------------------------------------------------------------
-                    // Initiate reading if we should
+                    // Initiate reading if we should (or change the register window)
 
-                    else if (readCacheStatus == READ_CACHE_STATUS.IDLE)
+                    else if (readCacheStatus == READ_CACHE_STATUS.IDLE || regWindowChanged)
                         {
                         if (regWindowRead != null)
-                            {
                             startSwitchingToReadMode();
-                            }
-                        }
+                        else
+                            readCacheStatus = READ_CACHE_STATUS.IDLE;
 
-                    //--------------------------------------------------------------------------
-                    // Complete a read mode switch if there is one
-
-                    else if (readCacheStatus == READ_CACHE_STATUS.SWITCHINGTOREADMODE)
-                        {
-                        // We're trying to switch into read mode. Are we there yet?
-                        if (i2cDevice.isI2cPortInReadMode())
-                            {
-                            // TODO: Is the data actually valid now? Or do we really have to issue a read as we're doing here?
-                            readCacheStatus = READ_CACHE_STATUS.QUEUED;
-                            setActionFlag = true;       // actually do an I2C read
-                            }
+                        regWindowChanged = false;
                         }
 
                     //--------------------------------------------------------------------------
