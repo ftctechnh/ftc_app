@@ -76,7 +76,7 @@ public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorControll
         this.i2cDeviceClient.setReadWindow(new II2cDeviceClient.RegWindow(iregFirstRead, cregRead));
         
         // Keep the motors from shutting off 
-        this.i2cDeviceClient.setHeartbeatRead(2000);
+        // this.i2cDeviceClient.setHeartbeatRead(2000);
         }
 
     //----------------------------------------------------------------------------------------------

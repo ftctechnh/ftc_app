@@ -1,12 +1,11 @@
 package org.swerverobotics.library.internal;
 
-import android.os.Build;
 import android.util.Log;
 
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
 
-import junit.framework.Assert;
+import static junit.framework.Assert.*;
 import org.swerverobotics.library.BuildConfig;
 import org.swerverobotics.library.exceptions.*;
 import org.swerverobotics.library.interfaces.*;
@@ -57,15 +56,15 @@ public final class I2cDeviceClient implements II2cDeviceClient
     /** Keeps track of what we know about about the state of 'readCache' */
     private enum READ_CACHE_STATUS
         {
-        IDLE,               // the read cache is quiescent; it doesn't contain valid data
-        AWAITINGREADMODE,   // a request to switch to read mode has been made
-        QUEUED,             // an I2C read has been queued, but we've not yet seen valid data
-        VALIDQUEUED,        // read cache has valid data AND a read has been queued 
-        VALIDWRITING;       // read cache has valid data but the device is currently in write mode
-        
+        IDLE,                 // the read cache is quiescent; it doesn't contain valid data
+        SWITCHINGTOREADMODE,  // a request to switch to read mode has been made
+        QUEUED,               // an I2C read has been queued, but we've not yet seen valid data
+        VALID,                // a transient intermediate state only used in the state machine logic (never set when lock is released)
+        VALIDQUEUED;          // read cache has valid data AND a read has been queued
+
         boolean isValid()
             {
-            return this==VALIDQUEUED || this==VALIDWRITING;
+            return this==VALIDQUEUED || this==VALID;
             }
         boolean isQueued()
             {
@@ -166,14 +165,13 @@ public final class I2cDeviceClient implements II2cDeviceClient
         {
         synchronized (this.theLock)
             {
-            if (this.regWindowRead ==null || !this.regWindowRead.equals(window))
+            if (this.regWindowRead == null || !this.regWindowRead.equals(window))
                 {
                 // Remember the new window
                 this.regWindowRead = window;
                 
-                // Any reads we currently have or are perhaps currently 
-                // in flight are junk.
-                this.readCacheStatus = READ_CACHE_STATUS.IDLE;
+                // Any reads we currently have or are perhaps currently in flight are junk.
+                this.readCacheStatus = READ_CACHE_STATUS.IDLE;      // TO DO: does this cause problems?
                 }
             }
         }
@@ -229,17 +227,17 @@ public final class I2cDeviceClient implements II2cDeviceClient
             synchronized (this.theLock)
                 {
                 // We can only fetch registers that lie within the register window
+                if (this.regWindowRead == null)
+                    throw new IllegalArgumentException("read request with no register window set");
                 if (!this.regWindowRead.contains(ireg, creg))
-                    {
                     throw new IllegalArgumentException(String.format("read request (%d,%d) outside of read register window", ireg, creg));
-                    }
 
-                // Wait until we fill up with data
-                for (;;)
+                // Wait until the read cache is valid and the write cache isn't busy.
+                // The latter honors the visibility semantic we intend to portray, namely
+                // that issuing a read after a write has been issued will see the state AFTER
+                // the write has had a chance to take effect.
+                while (!this.readCacheStatus.isValid() && this.writeCacheStatus != WRITE_CACHE_STATUS.IDLE)
                     {
-                    if (this.readCacheStatus.isValid())
-                        break;
-                    //
                     this.theLock.wait();
                     }
 
@@ -277,8 +275,9 @@ public final class I2cDeviceClient implements II2cDeviceClient
         }
 
     /**
-     * Write data to a set of registers, beginning with the one indicated. This method blocks
-     * until the write has actually been issued to the device.
+     * Write data to a set of registers, beginning with the one indicated. The data will be
+     * written to the I2C device as expeditiously as possible, but that is not guaranteed
+     * to have occurred by the time this method returns.
      */
     public void write(int ireg, byte[] data)
         {
@@ -311,15 +310,14 @@ public final class I2cDeviceClient implements II2cDeviceClient
                     }
 
                 // Send out the data proactively (this is optional, but more efficient).
-                // Not yet working; commented out for now
-                // this.callback.updateStateMachines(UPDATE_STATE_MACHINE.FROM_USER_WRITE);
-
+                this.callback.updateStateMachines(UPDATE_STATE_MACHINE.FROM_USER_WRITE);
                 // Wait until the write has been issued
+                // TODO: We SHOULD be able to do without this
                 while (this.writeCacheStatus != WRITE_CACHE_STATUS.IDLE)
                     {
                     this.theLock.wait();
                     }
-                }
+               }
             }
         catch (InterruptedException e)
             {
@@ -359,6 +357,8 @@ public final class I2cDeviceClient implements II2cDeviceClient
             }
         }
     
+    /* Disable, temporarily, to allow more thinking as to how best to model heartbeats
+
     public int getHeartbeatInterval()
         {
         synchronized (this.theLock)
@@ -366,7 +366,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
             return this.msHeartbeatInterval;
             }
         }
-    
+
     public void setHeartbeatRead(int ms)
         {
         ms = Math.max(0, ms);
@@ -386,7 +386,8 @@ public final class I2cDeviceClient implements II2cDeviceClient
             this.heartBeatUsingRead  = false;
             }
         }
-    
+    */
+
     private void log(int verbosity, String message)
         {
         synchronized (this)
@@ -432,6 +433,11 @@ public final class I2cDeviceClient implements II2cDeviceClient
 
     private class Callback implements I2cController.I2cPortReadyCallback
         {
+        //------------------------------------------------------------------------------------------
+        // State, kept in member variables so we can divy the updateStateMachines() logic
+        // across multiple function
+        //------------------------------------------------------------------------------------------
+
         boolean setActionFlag     = false;
         boolean queueFullWrite    = false;
         boolean queueRead         = false;
@@ -439,16 +445,70 @@ public final class I2cDeviceClient implements II2cDeviceClient
         boolean enabledReadMode   = false;
         boolean enabledWriteMode  = false;
 
-        READ_CACHE_STATUS  nextReadCacheStatus;
-        WRITE_CACHE_STATUS nextWriteCacheStatus;
-        MODE_CACHE_STATUS  nextModeCacheStatus;
-        
+        READ_CACHE_STATUS  prevReadCacheStatus  = READ_CACHE_STATUS.IDLE;
+        WRITE_CACHE_STATUS prevWriteCacheStatus = WRITE_CACHE_STATUS.IDLE;
+        MODE_CACHE_STATUS  prevModeCacheStatus  = MODE_CACHE_STATUS.IDLE;
+
+        //------------------------------------------------------------------------------------------
+        // Main entry point
+        //------------------------------------------------------------------------------------------
+
         @Override public void portIsReady(int port)
         // This is the callback from the device module indicating completion of previously requested work.
         // At the moment we are called, we are assured that the read buffer / write buffer for our port in the
         // USB device is not currently busy.
             {
             updateStateMachines(UPDATE_STATE_MACHINE.FROM_CALLBACK);
+            }
+
+        //------------------------------------------------------------------------------------------
+        // Update logic
+        //------------------------------------------------------------------------------------------
+
+        void startSwitchingToReadMode()
+            {
+            readCacheStatus = READ_CACHE_STATUS.SWITCHINGTOREADMODE;
+            i2cDevice.enableI2cReadMode(regWindowRead.getIregFirst(), regWindowRead.getCreg());
+            enabledReadMode = true;
+
+            setActionFlag   = true;     // causes an I2C read
+            queueFullWrite  = true;     // for the mode bytes
+
+            assertTrue(BuildConfig.DEBUG && modeCacheStatus == MODE_CACHE_STATUS.IDLE);
+            modeCacheStatus = MODE_CACHE_STATUS.DIRTY;
+            }
+
+        void issueWrite()
+            {
+            writeCacheStatus = WRITE_CACHE_STATUS.QUEUED;
+            i2cDevice.enableI2cWriteMode(iregWriteFirst, cregWrite);
+            enabledWriteMode = true;
+
+            setActionFlag  = true;      // causes the I2C write to happen
+            queueFullWrite = true;      // for the mode bytes and the payload
+
+            assertTrue(BuildConfig.DEBUG && modeCacheStatus == MODE_CACHE_STATUS.IDLE);
+            modeCacheStatus = MODE_CACHE_STATUS.DIRTY;
+            }
+
+        void dealWithHeartbeat()
+        // This is not yet used; heartbeats are temporariliy disabled
+            {
+            if (setActionFlag)
+                {
+                // We're about to communicate right now, so reset the heart beat.
+                // Note that we reset() *before* we talk to the device so as to do
+                // conservative timing accounting
+                timeSinceLastHeartbeat.reset();
+                }
+
+            if (!setActionFlag && heartbeatRequired && !heartBeatUsingRead)
+                {
+                // Rewrite what we previously wrote
+                // TODO: is this really the best idea?
+                setActionFlag  = true;
+                queueFullWrite = true;
+                }
             }
 
         void updateStateMachines(UPDATE_STATE_MACHINE caller)
@@ -460,22 +520,36 @@ public final class I2cDeviceClient implements II2cDeviceClient
                 // If we're calling from other than the callback (in which we *know* the port is
                 // ready), we need to check whether things are currently busy. We defer until
                 // later if they are.
-                if (caller==UPDATE_STATE_MACHINE.FROM_USER_WRITE && !i2cDevice.isI2cPortReady())
+                if (caller==UPDATE_STATE_MACHINE.FROM_USER_WRITE)
+                    {
+                    if (!i2cDevice.isI2cPortReady() || callbackThread==null)
+                        return;
+
+                    // Optimized calling from user mode is not yet implemented
                     return;
+                    }
 
                 //----------------------------------------------------------------------------------
-                // Some preliminaries and bookkeeping
+                // Some ancillary bookkeeping
+
                 if (caller == UPDATE_STATE_MACHINE.FROM_CALLBACK)
                     {
+                    // Capture the current callback thread if we haven't already
                     if (callbackThread == null)
                         callbackThread = Thread.currentThread();
-                    else if (BuildConfig.DEBUG)
-                        Assert.assertEquals(callbackThread.getId(), Thread.currentThread().getId());
+                    else
+                        assertTrue(BuildConfig.DEBUG && callbackThread.getId() == Thread.currentThread().getId());
 
+                    // Set the thread name to make the system more debuggable
                     if (0 == hardwareCycleCount)
-                        Thread.currentThread().setName(String.format("rw loop(%s)", i2cDevice.getDeviceName()));
+                        Thread.currentThread().setName(String.format("RWLoop(%s)", i2cDevice.getDeviceName()));
+
+                    // Update cycle statistics
                     hardwareCycleCount++;
                     }
+
+                //----------------------------------------------------------------------------------
+                // Initialize state for managing state transition
 
                 setActionFlag     = false;
                 queueFullWrite    = false;
@@ -484,200 +558,93 @@ public final class I2cDeviceClient implements II2cDeviceClient
                 enabledReadMode   = false;
                 enabledWriteMode  = false;
                 
-                nextReadCacheStatus  = readCacheStatus;
-                nextWriteCacheStatus = writeCacheStatus;
-                nextModeCacheStatus  = modeCacheStatus;
+                prevReadCacheStatus  = readCacheStatus;
+                prevWriteCacheStatus = writeCacheStatus;
+                prevModeCacheStatus  = modeCacheStatus;
 
                 //----------------------------------------------------------------------------------
-                // Handle the state machine 
+                // Handle the state machine
 
-                if (caller == UPDATE_STATE_MACHINE.FROM_CALLBACK &&  modeCacheStatus  == MODE_CACHE_STATUS.QUEUED)
-                    modeCacheStatus = MODE_CACHE_STATUS.IDLE;
-
-                if ((writeCacheStatus == WRITE_CACHE_STATUS.IDLE
-                        || writeCacheStatus == WRITE_CACHE_STATUS.QUEUED
-                        || readCacheStatus == READ_CACHE_STATUS.AWAITINGREADMODE)
-
-                    && caller==UPDATE_STATE_MACHINE.FROM_CALLBACK)
+                if (caller==UPDATE_STATE_MACHINE.FROM_CALLBACK)
                     {
-                    // We don't have anything fresh to actually write. So we try to do reads
-                    // if we can, generally.
-                    
-                    // If we just finished a write cycle, then our write cache is now idle
-                    if (writeCacheStatus == WRITE_CACHE_STATUS.QUEUED) nextWriteCacheStatus = WRITE_CACHE_STATUS.IDLE;
+                    //--------------------------------------------------------------------------
+                    // Deal with the fact that we've completed any previous queueing operation
 
-                    // Do state transitions on the read cache
-                    switch (readCacheStatus)
+                    if (modeCacheStatus == MODE_CACHE_STATUS.QUEUED)
+                        modeCacheStatus = MODE_CACHE_STATUS.IDLE;
+
+                    if (readCacheStatus == READ_CACHE_STATUS.QUEUED || readCacheStatus == READ_CACHE_STATUS.VALIDQUEUED)
                         {
-                    case IDLE:
+                        readCacheStatus = READ_CACHE_STATUS.VALID;
+                        nanoTimeReadCacheValid = System.nanoTime();
+                        }
+
+                    if (writeCacheStatus == WRITE_CACHE_STATUS.QUEUED)
+                        writeCacheStatus = WRITE_CACHE_STATUS.IDLE;
+
+                    //--------------------------------------------------------------------------
+                    // That limits the number of states the caches can now be in
+
+                    assertTrue(BuildConfig.DEBUG && (readCacheStatus==READ_CACHE_STATUS.IDLE||readCacheStatus==READ_CACHE_STATUS.SWITCHINGTOREADMODE||readCacheStatus==READ_CACHE_STATUS.VALID));
+                    assertTrue(BuildConfig.DEBUG && (writeCacheStatus==WRITE_CACHE_STATUS.IDLE||writeCacheStatus==WRITE_CACHE_STATUS.DIRTY));
+
+                    //--------------------------------------------------------------------------
+                    // If there's a write request pending, and it's ok to issue the write, do so
+
+                    if (writeCacheStatus == WRITE_CACHE_STATUS.DIRTY && readCacheStatus != READ_CACHE_STATUS.SWITCHINGTOREADMODE)
                         {
-                        // Read something if we have something we've been asked to read
+                        issueWrite();
+
+                        // Our ordering rules are that any reads after a write have to wait until
+                        // the write is actually sent to the hardware, so anything we've read before is junk.
+                        // Note that there's an analogous check in read().
+                        readCacheStatus = READ_CACHE_STATUS.IDLE;
+                        }
+
+                    //--------------------------------------------------------------------------
+                    // Initiate reading if we should
+
+                    else if (readCacheStatus == READ_CACHE_STATUS.IDLE)
+                        {
                         if (regWindowRead != null)
                             {
-                            // Initiate switch to read mode.
-                            // TODO: We might not actually need the AWAITINGREADMODE state
-                            nextReadCacheStatus = READ_CACHE_STATUS.AWAITINGREADMODE;
-                            i2cDevice.enableI2cReadMode(regWindowRead.getIregFirst(), regWindowRead.getCreg());
-                            enabledReadMode = true;
-                            queueFullWrite = true;
-                            setActionFlag = true;
-    
-                            if (BuildConfig.DEBUG) Assert.assertTrue(modeCacheStatus == MODE_CACHE_STATUS.IDLE);
-                            nextModeCacheStatus = MODE_CACHE_STATUS.DIRTY;
-
-                            // Read the read vs write mode back again asap.
-                            queueRead = true;
+                            startSwitchingToReadMode();
                             }
-                        break;
                         }
-                    case AWAITINGREADMODE:
+
+                    //--------------------------------------------------------------------------
+                    // Complete a read mode switch if there is one
+
+                    else if (readCacheStatus == READ_CACHE_STATUS.SWITCHINGTOREADMODE)
                         {
                         // We're trying to switch into read mode. Are we there yet?
                         if (i2cDevice.isI2cPortInReadMode())
                             {
-                            // The port has switched to read mode. Start reading from it
-                            nextReadCacheStatus = READ_CACHE_STATUS.QUEUED;
-                            setActionFlag = true;
-                            queueRead = true;
-                            }
-                        else
-                            {
-                            // Keep reading the read vs write mode status
-                            queueRead = true;
-                            }
-                        break;
-                        }
-                    case QUEUED:
-                        {
-                        // We queued a read last time, now it's here, so we're valid. We'll
-                        // also queue another one
-                        nextReadCacheStatus = READ_CACHE_STATUS.VALIDQUEUED;
-                        nanoTimeReadCacheValid = System.nanoTime();
-
-                        // Re-read the next time around
-                        setActionFlag = true;
-                        queueRead = true;
-                        break;
-                        }
-                    case VALIDQUEUED:
-                        {
-                        // We were valid last cycle and we also queued a new read request,
-                        // which has now arrived.  We'll do so again, so we stay in the same state.
-                        nextReadCacheStatus = READ_CACHE_STATUS.VALIDQUEUED;
-                        nanoTimeReadCacheValid = System.nanoTime();
-
-                        // Queue another read
-                        setActionFlag = true;
-                        queueRead = true;
-                        break;
-                        }
-                    case VALIDWRITING:
-                        {
-                        // We were valid last time but that cycle issued a write so we're no longer valid
-                        nextReadCacheStatus = READ_CACHE_STATUS.IDLE;
-                        break;    
-                        }
-                    /* end switch */
-                        }
-                    }
-    
-                // We can't start writing if we have an outstanding read transition.
-                // We repeat that test here as it covers the FROM_USER_WRITE case.
-                else if (writeCacheStatus==WRITE_CACHE_STATUS.DIRTY
-                         && readCacheStatus != READ_CACHE_STATUS.AWAITINGREADMODE
-                        /* && caller is either case */)
-                    {
-                    // We've got something fresh to write. We have to here do the enable,
-                    // as we must defer until now in order that we don't stomp on other uses of
-                    // those first four bytes in the write cache (a READ_CACHE_STATUS.AWAITINGREADMODE
-                    // might be in flight with its attendant enableI2cReadMode()). But the payload 
-                    // data has already been written to the write cache as those latter
-                    // bytes are only used for writing the data; they are not shared with other uses.
-                    i2cDevice.enableI2cWriteMode(iregWriteFirst, cregWrite);
-                    enabledWriteMode = true;
-
-                    if (BuildConfig.DEBUG) Assert.assertTrue(modeCacheStatus == MODE_CACHE_STATUS.IDLE);
-                    nextModeCacheStatus = MODE_CACHE_STATUS.DIRTY;
-
-                    // Queue the write cache for writing to the module
-                    // Don't actually issue the write action, though
-                    nextWriteCacheStatus = WRITE_CACHE_STATUS.QUEUED;
-                    setActionFlag = true;
-                    queueFullWrite = true;
-                    queueRead = true;       // for mode status
-
-                    if (caller==UPDATE_STATE_MACHINE.FROM_CALLBACK)
-                        {
-                        // What's the impact on the read cache? If we're demand-writing, not
-                        // from the callback, then the answer is 'nothing'.
-                        switch (readCacheStatus)
-                            {
-                        case IDLE:
-                        case AWAITINGREADMODE:
-                            break;
-                        case QUEUED:
-                        case VALIDQUEUED:
-                            {
-                            // We just completed a queued read cycle. Data is valid, for the moment.
-                            // But don't re-issue the reread request
-                            nextReadCacheStatus = READ_CACHE_STATUS.VALIDWRITING;
-                            nanoTimeReadCacheValid = System.nanoTime();
-                            break;
-                            }
-                        case VALIDWRITING:
-                            {
-                            // We've gone a cycle w/o queueing a read. What's there is out of date.
-                            nextReadCacheStatus = READ_CACHE_STATUS.IDLE;
-                            break;
-                            }
-                        /* end switch */
+                            // TODO: Is the data actually valid now? Or do we really have to issue a read as we're doing here?
+                            readCacheStatus = READ_CACHE_STATUS.QUEUED;
+                            setActionFlag = true;       // actually do an I2C read
                             }
                         }
 
-                    if (setActionFlag)
+                    //--------------------------------------------------------------------------
+                    // Reissue any previous read
+
+                    else if (readCacheStatus == READ_CACHE_STATUS.VALID)
                         {
-                        // We're about to communicate right now, so reset the heart beat.
-                        // Note that we reset() *before* we talk to the device so as to do 
-                        // conservative timing accounting
-                        timeSinceLastHeartbeat.reset();
+                        readCacheStatus = READ_CACHE_STATUS.VALIDQUEUED;
+                        setActionFlag = true;           // actually do an I2C read
                         }
 
-                    if (!setActionFlag && heartbeatRequired && !heartBeatUsingRead)
-                        {
-                        // Rewrite what we previously wrote
-                        // TODO: is this really the best idea?
-                        setActionFlag  = true;
-                        queueFullWrite = true;
-                        }
+                    //--------------------------------------------------------------------------
+                    // In all cases, we want to read the latest from the interface module.
+                    // That may or may not involve doing an I2C read depending on other settings.
+
+                    queueRead = true;
                     }
 
-                //----------------------------------------------------------------------------------
-                // Do logging 
-
-                final int moreVerbose = Log.DEBUG;
-                final int moreQuiet   = Log.INFO;
-
-                if (loggingEnabled)
+                else if (caller==UPDATE_STATE_MACHINE.FROM_USER_WRITE)
                     {
-                    boolean anyQuietLoggingToDo = (readCacheStatus != nextReadCacheStatus
-                            || writeCacheStatus != nextWriteCacheStatus
-                            || enabledReadMode || enabledWriteMode);
-    
-                    log(anyQuietLoggingToDo ? moreQuiet : moreVerbose, "-----");
-                    if (caller==UPDATE_STATE_MACHINE.FROM_CALLBACK)
-                        log(moreVerbose, "hardware cycle: %d | setActionFlag: %s", hardwareCycleCount, setActionFlag ? "true" : "false");
-                    else
-                        log(moreVerbose, "user write | setActionFlag: %s", setActionFlag ? "true" : "false");
-                    log(moreVerbose, "mode: %s", i2cDevice.isI2cPortInReadMode() ? "read" : "write");
-                    
-                    if (readCacheStatus != nextReadCacheStatus)
-                        log(moreQuiet, "READ." + readCacheStatus.toString() + "->" + nextReadCacheStatus.toString());
-                    if (enabledReadMode)
-                        log(moreQuiet, "setReadMode(0x%02x,%d)", regWindowRead.getIregFirst(), regWindowRead.getCreg());
-                    if (writeCacheStatus != nextWriteCacheStatus)
-                        log(moreQuiet, "WRITE." + writeCacheStatus.toString() + "->" + nextWriteCacheStatus.toString());
-                    if (enabledWriteMode)
-                        log(moreQuiet, "setWriteMode(0x%02x,%d)", iregWriteFirst, cregWrite);
+                    // This is not yet implemented
                     }
 
                 //----------------------------------------------------------------------------------
@@ -689,26 +656,52 @@ public final class I2cDeviceClient implements II2cDeviceClient
                     clearActionFlag();
 
                 if (setActionFlag && !queueFullWrite)
+                    {
                     i2cDevice.writeI2cPortFlagOnlyToModule();
+                    }
                 else if (queueFullWrite)
                     {
                     i2cDevice.writeI2cCacheToModule();
-                    if (nextModeCacheStatus==MODE_CACHE_STATUS.DIRTY)
-                        nextModeCacheStatus=MODE_CACHE_STATUS.QUEUED;
+                    //
+                    if (modeCacheStatus == MODE_CACHE_STATUS.DIRTY)
+                        modeCacheStatus =  MODE_CACHE_STATUS.QUEUED;
                     }
 
-                // Do read after write for a bit of paranoia: if we're mode switching
-                // to write, we want that write to go out first, THEN read the mode status.
+                // Queue a read after queuing any write for a bit of paranoia: if we're mode switching
+                // to write, we want that write to go out first, THEN read the mode status. It probably
+                // would anyway, but why not...
                 if (queueRead)
-                    i2cDevice.readI2cCacheFromModule();;
+                    {
+                    i2cDevice.readI2cCacheFromModule();
+                    }
 
                 //----------------------------------------------------------------------------------
-                // Update our state machine
-                
-                readCacheStatus  = nextReadCacheStatus;
-                writeCacheStatus = nextWriteCacheStatus;
-                modeCacheStatus  = nextModeCacheStatus;
+                // Do logging
 
+                if (loggingEnabled)
+                    {
+                    StringBuilder message = new StringBuilder();
+
+                    switch (caller)
+                        {
+                        case FROM_CALLBACK:     message.append(String.format("cyc %d", hardwareCycleCount)); break;
+                        case FROM_USER_WRITE:   message.append(String.format("usr write")); break;
+                        }
+                    if (setActionFlag)                            message.append("|flag");
+                    if (setActionFlag && !queueFullWrite)         message.append("|f");
+                    else if (queueFullWrite)                      message.append("|w");
+                    if (queueRead)                                message.append("|r");
+                    if (readCacheStatus != prevReadCacheStatus)   message.append("| R." + prevReadCacheStatus.toString() + "->" + readCacheStatus.toString());
+                    if (writeCacheStatus != prevWriteCacheStatus) message.append("| W." + prevWriteCacheStatus.toString() + "->" + writeCacheStatus.toString());
+                    if (modeCacheStatus != prevModeCacheStatus)   message.append("| M." + prevModeCacheStatus.toString() + "->" + modeCacheStatus.toString());
+                    if (enabledWriteMode)                         message.append(String.format("| setWrite(0x%02x,%d)", iregWriteFirst, cregWrite));
+                    if (enabledReadMode)                          message.append(String.format("| setRead(0x%02x,%d)", regWindowRead.getIregFirst(), regWindowRead.getCreg()));
+
+                    log(Log.DEBUG, message.toString());
+                    }
+
+                //----------------------------------------------------------------------------------
+                // Notify anyone blocked in read() or write()
                 theLock.notifyAll();
                 }
             }
