@@ -9,7 +9,7 @@ Suite, also [here](https://github.com/SwerveRobotics/tools) on GitHub.
 Notable features of the Swerve Robotics FTC Library include:
 
 *   A [*SynchronousOpMode*]
-    (https://cdn.rawgit.com/SwerveRobotics/ftc_app/MentorSandbox/doc/javadoc/org/swerverobotics/library/SynchronousOpMode.html)
+    (https://cdn.rawgit.com/SwerveRobotics/ftc_app/master/doc/javadoc/org/swerverobotics/library/SynchronousOpMode.html)
     class that brings back the synchronous, linear programming style
     with which teams have been familiar with from previous seasons in RobotC, and which is more amenable
     to teaching to beginning programmers than the event-driven / loop() callback programming
@@ -24,7 +24,7 @@ Notable features of the Swerve Robotics FTC Library include:
     safely reason about a given state across a possibly complicated chain of logic.
 *   An enhanced form of telemetry containing a *dashboard* and a *log*. On the driver station display,
     the dashboard appears at the top, followed by as many of the recent log messages as will reasonably 
-    fit. The dashboard can be configured just once with unevaluated computations to form the lines
+    fit. The dashboard can be preconfigured just once with unevaluated computations to form the lines
     on the dashboard, and / or the lines can be created dynamically with addData() calls as in
     the robot controller runtime. You call telemetry.update() to compose
     the current dashboard and transmit to the driver station. Only a subset of update() calls
@@ -35,15 +35,16 @@ Notable features of the Swerve Robotics FTC Library include:
 *   An *I2cDeviceClient* class that wraps I2cDevice instances and makes them easy to use by handling
     read-vs-write mode switches and attendant waits automatically and transparently. Just call read8()
     or write8() (and friends) to read and write device registers and the rest is taken care of.
-    Note that I2cDeviceClient is decoupled from the SynchronousOpMode work, in that one need not 
-    be using SynchronousOpMode to use I2cDeviceClient (however as some operations are lengthy, a
-    worker thread is suggested in that case in order to avoid long-running operations on the loop() thread).
-*   A class that is built on I2cDeviceClient that provides a clean interface to the *Bosch BNO055 absolute 
-    position sensor*, allowing teams to make easy use of the AdaFruit breakout board which incorporates 
-    that sensor module. Features of this sensor include a gyro that does rate integration in hardware to provide robust and accurate
-    angular position indications, and a robust separation of acceleration into gravity and linear-motion-induced
-    components. The class builds on the latter to provide linear velocity and position indications
-    using integration in software.
+    Note that I2cDeviceClient is also decoupled from SynchronousOpMode, in that one need not
+    be using SynchronousOpMode to use I2cDeviceClient. However as some operations are lengthy, a
+    worker thread is suggested in that case in order to avoid long-running operations on the loop() thread.
+*   A class that is built on I2cDeviceClient that provides a semantic interface to the *Bosch BNO055 absolute
+    position sensor*, allowing teams to make easy use of the [AdaFruit breakout board](http://www.adafruit.com/products/2472)
+    which incorporates that sensor module. Features of this sensor include a gyro that does rate
+    integration in hardware to provide robust and accurate angular position indications, and a
+    separation of the output of the accelerometer into gravity and linear-motion-induced components.
+    The class builds on the latter to provide linear velocity and position measurements using integration
+    in software, which can be straightforwardly used for inertial dead reckoning for your robot.
     
 The fifteen second summary of how to use SynchronousOpMode is as follows:
 
@@ -65,7 +66,7 @@ The fifteen second summary of how to use SynchronousOpMode is as follows:
             if (this.updateGamePads()) {
                 // Do something interesting
                 }
-            this.telemetry.dashboard.update();
+            this.telemetry.update();
             this.idle();
             }
 

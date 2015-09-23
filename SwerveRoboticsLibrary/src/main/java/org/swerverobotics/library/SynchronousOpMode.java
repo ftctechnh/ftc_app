@@ -115,7 +115,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             if (this.updateGamePads()) {
                 // Do something interesting
                 }
-            this.telemetry.dashboard.update();
+            this.telemetry.update();
             this.idle();
             }
      * </pre>
