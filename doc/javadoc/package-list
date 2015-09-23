@@ -1,7 +1,4 @@
-com.qualcomm.ftccommon
-com.qualcomm.robotcore.eventloop
-com.qualcomm.robotcore.eventloop.opmode
-com.qualcomm.robotcore.exception
-com.qualcomm.robotcore.hardware
-com.qualcomm.robotcore.robocol
-com.qualcomm.robotcore.util
+org.swerverobotics.library
+org.swerverobotics.library.examples
+org.swerverobotics.library.exceptions
+org.swerverobotics.library.interfaces

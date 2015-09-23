@@ -58,7 +58,7 @@ The fifteen second summary of how to use SynchronousOpMode is as follows:
         this.waitForStart(); 
         
         while (this.opModeIsActive()) {
-            if (this.newGamePadInputAvailable()) {
+            if (this.updateGamePads()) {
                 // Do something interesting
                 }
             this.telemetry.dashboard.update();
