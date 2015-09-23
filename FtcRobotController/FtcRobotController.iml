@@ -95,6 +95,7 @@
     <orderEntry type="library" exported="" name="Analytics-release-" level="project" />
     <orderEntry type="library" exported="" name="android-support-v4" level="project" />
     <orderEntry type="library" exported="" name="FtcCommon-release-" level="project" />
+    <orderEntry type="module" module-name="YourCodeHere" exported="" />
     <orderEntry type="module" module-name="SwerveRoboticsLibrary" exported="" />
   </component>
 </module>

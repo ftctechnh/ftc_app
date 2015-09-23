@@ -11,6 +11,14 @@ import org.swerverobotics.library.examples.*;
  * here, it is preferable to annotate them in their own source with {@link TeleOp}
  * or {@link Autonomous} annotations, as appropriate.
  *
+ * <p>NOTE: To make this work, for the moment at least you need to add your library module
+ * 'YourCodeHere' to the 'build.gradle' file in the FtcRobotController library. That build.gradle
+ * (be careful: each Android Studio module has its own) is found in $PROJECT_DIR$\FtcRobotController\build.gradle,
+ * where $PROJECT_DIR$ is the directory which contains SwerveRoboticsLibrary and YourCodeHere in addition to
+ * FtcRobotController. In that 'build.gradle', make sure the 'dependencies' section has a line
+ * compile project(':YourCodeHere') in addition to compile project(':SwerveRoboticsLibrary')
+ * and other things.</p>
+ *
  * @see TeleOp
  * @see Autonomous
  * @see OpModeRegistrar
