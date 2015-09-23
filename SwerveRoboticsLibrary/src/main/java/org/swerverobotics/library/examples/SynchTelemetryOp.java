@@ -2,6 +2,7 @@ package org.swerverobotics.library.examples;
 
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.interfaces.Autonomous;
+import org.swerverobotics.library.interfaces.Disabled;
 import org.swerverobotics.library.interfaces.TeleOp;
 
 import com.qualcomm.robotcore.util.*;
@@ -10,6 +11,7 @@ import com.qualcomm.robotcore.util.*;
  * An example that illustrates use of the telemetry dashboard and log
  */
 @TeleOp(name="Telemetry")
+@Disabled
 public class SynchTelemetryOp extends SynchronousOpMode
     {
     @Override protected void main() throws InterruptedException
@@ -31,7 +33,7 @@ public class SynchTelemetryOp extends SynchronousOpMode
             {
             if (this.updateGamepads())
                 {
-                // There is (likely) new gamepad input available. We choose to log some of its state.
+                // There is new gamepad input available. We choose to log some of its state.
                 if (this.gamepad1.left_bumper)  this.telemetry.log.add(format(elapsed) + ": left bumper pressed");
                 if (this.gamepad1.right_bumper) this.telemetry.log.add(format(elapsed) + ": right bumper pressed");
                 }
