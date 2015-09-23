@@ -5,7 +5,8 @@ import com.qualcomm.robotcore.util.*;
 import org.swerverobotics.library.interfaces.*;
 
 /**
- * 
+ * This is an experiment in an alternative implementation of a Legacy DC Motor controller.
+ * It is not yet finished, and is not currently used.
  */
 public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorController, IThunkWrapper<DcMotorController>, VoltageSensor
     {

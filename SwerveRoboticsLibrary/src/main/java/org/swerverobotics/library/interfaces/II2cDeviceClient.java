@@ -157,7 +157,7 @@ public interface II2cDeviceClient extends HardwareDevice
     // void setHeartbeatWrite(int ms);
 
     //----------------------------------------------------------------------------------------------
-    // Monitoring & debugging
+    // Monitoring, debugging, and life cycle management
     //----------------------------------------------------------------------------------------------
 
     /** Returns the thread on which it is observed that portIsReady callbacks occur 
@@ -181,6 +181,12 @@ public interface II2cDeviceClient extends HardwareDevice
      * Set the tag to use when logging is on
      */
     void setLoggingTag(String loggingTag);
+
+    /**
+     * Close down and disable this device. Once this is done, the object instance cannot
+     * support further read() or write() calls.
+     */
+    void close();
 
     //----------------------------------------------------------------------------------------------
     // RegWindow

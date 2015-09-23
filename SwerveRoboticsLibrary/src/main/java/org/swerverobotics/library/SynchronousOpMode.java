@@ -18,7 +18,7 @@ import org.swerverobotics.library.internal.*;
  *
  * Extend this class and implement the main() method to add your own code.
  */
-public abstract class SynchronousOpMode extends OpMode implements IThunkDispatcher
+public abstract class SynchronousOpMode extends OpMode implements IThunkDispatcher, IStopActionRegistrar
     {
     //----------------------------------------------------------------------------------------------
     // Public State
@@ -370,6 +370,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     private final   AtomicReference<RuntimeException> firstExceptionThrownOnASynchronousWorkerThread = new AtomicReference<RuntimeException>();
     private final   int                     msWaitForMainThreadTermination              = 250;
     private final   int                     msWaitForSynchronousWorkerThreadTermination = 50;
+    private final   List<IAction>           actionsOnStop = new LinkedList<IAction>();
 
     private         Gamepad                 gamepad1Captured = null;
     private         Gamepad                 gamepad2Captured = null;
@@ -732,8 +733,10 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
 
         synchronized (this.loopLock)
             {
-            // Keep track of how many loop() calls we've seen
-            this.loopCount.getAndIncrement();
+            // Keep track of how many loop() calls we've seen. And give this thread a handy
+            // name so we recognize it in the debugger
+            if (0 == this.loopCount.getAndIncrement())
+                Thread.currentThread().setName("loop() thread");
             
             // The history of what was executed int the previous loop() call is now irrelevant
             this.actionQueueAndHistory.clearHistory();
@@ -821,9 +824,29 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         
         // Notify the main() thread that we wish it to stop what it's doing, clean up, and return.
         this.stopSynchronousThread(this.mainThread, this.msWaitForMainThreadTermination);
+
+        // Call all actions we've been asked to call
+        synchronized (this.actionsOnStop)
+            {
+            for (IAction action: this.actionsOnStop)
+                action.doAction();
+            this.actionsOnStop.clear();
+            }
         
         // Call the subclass hook in case they might want to do something interesting
         this.postStopHook();
+        }
+
+    /**
+     * Registers an action to be called when the contextually associated opMode stops
+     * @param action the action to be called on stop
+     */
+    public void registerActionOnStop(IAction action)
+        {
+        synchronized (this.actionsOnStop)
+            {
+            this.actionsOnStop.add(action);
+            }
         }
 
     //----------------------------------------------------------------------------------------------
@@ -930,12 +953,29 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     /**
      * Advanced: If we are running on a synchronous thread, then return the object
      * which is managing the internal from the current thread to the loop() thread.
-     * If we are not on a synchronous thread, then the behaviour is undefined.
+     *
+     * @return the thunk dispatcher object, or null if we are not on a synchronous thread
      */
     public static IThunkDispatcher getThreadThunker()
         {
-        SynchronousThreadContext.assertSynchronousThread();
-        return SynchronousThreadContext.getThreadContext().getThunker();
+        if (SynchronousThreadContext.isSynchronousThread())
+            return SynchronousThreadContext.getThreadContext().getThunker();
+        else
+            return null;
+        }
+
+    /**
+     * Advanced: If we are running on a synchronous thread, returns an object that can
+     * be used to register for a callback when the contextually associated synchronous
+     * opmode stops.
+     * @return the registrar object, or null if we are not on a synchronous thread
+     */
+    public static IStopActionRegistrar getStopActionRegistrar()
+        {
+        if (SynchronousThreadContext.isSynchronousThread())
+            return SynchronousThreadContext.getThreadContext().getStopActionRegistrar();
+        else
+            return null;
         }
 
     //----------------------------------------------------------------------------------------------
