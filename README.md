@@ -8,7 +8,7 @@ Suite, also [here](https://github.com/SwerveRobotics/tools) on GitHub.
 
 Notable features of the Swerve Robotics FTC Library include:
 
-*   A [_SynchronousOpMode_]
+*   A [**SynchronousOpMode**]
     (https://cdn.rawgit.com/SwerveRobotics/ftc_app/master/doc/javadoc/org/swerverobotics/library/SynchronousOpMode.html)
     class that brings back the synchronous, linear programming style
     with which teams have been familiar with from previous seasons in RobotC, and which is more amenable
@@ -22,7 +22,7 @@ Notable features of the Swerve Robotics FTC Library include:
     when using legacy NXT/HiTechnic motor controllers. SynchronousOpMode also gives you precise
     control of when changes in gamepad state are made visible to your program, allowing you to
     safely reason about a given state across a possibly complicated chain of logic.
-*   An enhanced form of telemetry containing a _dashboard_ and a _log_. On the driver station display,
+*   An enhanced form of telemetry containing a **dashboard** and a **log**. On the driver station display,
     the dashboard appears at the top, followed by as many of the recent log messages as will reasonably 
     fit. The dashboard can be preconfigured just once with unevaluated computations to form the lines
     on the dashboard, and / or the lines can be created dynamically with addData() calls as in
@@ -32,7 +32,7 @@ Notable features of the Swerve Robotics FTC Library include:
     Log messages can be written to the log at any time, and these are sent to the driver station as
     soon as possible. The enhanced telemetry class can be used both by synchronous and non-synchronous
     opmodes.
-*   An _alternate OpMode registration mechanism_ (the old FtcOpModeRegister.register() still works too)
+*   An **alternate OpMode registration mechanism** (the old FtcOpModeRegister.register() still works too)
     that allows you to register your OpModes simply by decorating them with @TeleOp or @Annotation annotations.
     This helps promote clean living and easier integration of library updates over time by avoiding
     editing code that lives in libraries owned by others. To register OpModes that aren't your own,
@@ -40,14 +40,14 @@ Notable features of the Swerve Robotics FTC Library include:
     as part of the registration process. Take a look at the YourCodeHere module for an example of
     how this works. We'd like to thank [dmssargent](https://github.com/dmssargent/Xtensible-ftc_app/blob/master/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/FtcOpModeRegister.java)
     for illustrating how this might be technically accomplished.
-*   An _I2cDeviceClient_ class that wraps I2cDevice instances and makes them easy to use by handling
+*   An **I2cDeviceClient** class that wraps I2cDevice instances and makes them easy to use by handling
     read-vs-write mode switches and attendant waits automatically and transparently. Just call read8()
     or write8() (and friends) to read and write device registers and the rest is taken care of.
     Note that I2cDeviceClient is also decoupled from SynchronousOpMode, in that one need not
     be using SynchronousOpMode to use I2cDeviceClient. However as some operations are lengthy, a
     worker thread is suggested in that case in order to avoid long-running operations on the loop() thread.
-*   A class that is built on I2cDeviceClient that provides a semantic interface to the _Bosch BNO055 absolute
-    position sensor_, allowing teams to make easy use of the [AdaFruit breakout board](http://www.adafruit.com/products/2472)
+*   A class that is built on I2cDeviceClient that provides a semantic interface to the **Bosch BNO055 absolute
+    position sensor**, allowing teams to make easy use of the [AdaFruit breakout board](http://www.adafruit.com/products/2472)
     which incorporates that sensor module. Features of this sensor include a gyro that does rate
     integration in hardware to provide robust and accurate angular position indications, and a
     separation of the output of the accelerometer into gravity and linear-motion-induced components.
