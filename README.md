@@ -4,11 +4,13 @@ Welcome to the Swerve Robotics library support for the FTC Android Robot Control
 The purpose of the Swerve Robotics library is to augment the robot controller runtime from FTC HQ
 in order to simplify programming for FTC teams. The central aim here is not to change what's there,
 just to make it better. You might also want to check out our related project, the Swerve Robotics Tools
-Suite, also here on GitHub.
+Suite, also [here](https://github.com/SwerveRobotics/tools) on GitHub.
 
 Notable features of the Swerve Robotics FTC Library include:
 
-*   A *SynchronousOpMode* class that brings back the synchronous, linear programming style
+*   A [*SynchronousOpMode*]
+    (https://cdn.rawgit.com/SwerveRobotics/ftc_app/MentorSandbox/doc/javadoc/org/swerverobotics/library/SynchronousOpMode.html)
+    class that brings back the synchronous, linear programming style
     with which teams have been familiar with from previous seasons in RobotC, and which is more amenable
     to teaching to beginning programmers than the event-driven / loop() callback programming
     model native to the robot controller runtime. SynchronousOpMode is similar to [LinearOpMode]
