@@ -10,13 +10,13 @@ import java.util.*;
  * telemetry to the driver station. It is primarily intended to be used within
  * SynchronousOpModes, where its use is necessary to avoid possibly garbled output on
  * the driver station, but it can be used in any OpMode.
- * <p>
- * The telemetry is divided into two parts: a <em>dashboard</em>, and a <em>log</em>.
+ *
+ * <p> The telemetry is divided into two parts: a <em>dashboard</em>, and a <em>log</em>.
  * The dashboard, typically consisting of a fixed set of lines of data, is shown in the driver
  * station at the top of the telemetry output. The log, containing a series of messages in
- * chronological or reverse chronological order, is shown below that.
- * <p>
- * The telemetry is sent to the driver station when {@link #update()} is called. It is
+ * chronological or reverse chronological order, is shown below that.</p>
+ *
+ * <p>The telemetry is sent to the driver station when {@link #update()} is called. It is
  * <em>not</em> transmitted automatically: if you don't call update(), you won't see any telemetry. Usually
  * you call update() at the bottom of your {@link SynchronousOpMode#opModeIsActive()
  * while(opModeIsActive())} loop. And only a subset of update() calls actually transmit:
@@ -24,9 +24,9 @@ import java.util.*;
  * {@link #setUpdateIntervalMs(int)}. This helps both reduce network traffic and reduce
  * the cost on the robot controller itself of acquiring telemetry data for transmission,
  * as the acquisition of the data itself can sometimes be quite expensive, depending on what
- * is being shown.
- * <p>
- * Data can be shown in the dashboard in one (or both) of two ways:
+ * is being shown.</p>
+ *
+ * <p>Data can be shown in the dashboard in one (or both) of two ways:</p>
  * <ol>
  *  <li>As with the telemetry in the robot controller runtime, you can call
  *      {@link #addData(String, String)} to add a message you have composed. And as in
@@ -38,13 +38,13 @@ import java.util.*;
  *      computations needed for their display. Only when a transmission is actually to be made
  *      to the driver station are these expressions evaluated and the lines composed. This is
  *      accomplished using a series of {@link #addLine() addLine()} calls, each containing a
- *      number of {@link #item(String, IFunc)}  item()} invocations.
+ *      number of {@link #item(String, IFunc) item()} invocations.
  * </li></ol>
- * <p>
- * The log simply contains a serial history of the messages it has been asked to display.
+ *
+ * <p>The log simply contains a serial history of the messages it has been asked to display.
  * When new additions are made to the log, they are conveyed to the driver station in an
  * expeditious manner. The dashboard is also updated at such times. The order of the display
- * of log messages can be controlled with {@link org.swerverobotics.library.TelemetryDashboardAndLog.Log#setDisplayOldToNew(boolean) setDisplayOldToNew()}.
+ * of log messages can be controlled with {@link org.swerverobotics.library.TelemetryDashboardAndLog.Log#setDisplayOldToNew(boolean) setDisplayOldToNew()}.</p>
  */
 public class TelemetryDashboardAndLog
     {
