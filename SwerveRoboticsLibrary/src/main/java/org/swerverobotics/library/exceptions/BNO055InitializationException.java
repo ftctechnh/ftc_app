@@ -8,10 +8,9 @@ import org.swerverobotics.library.interfaces.IBNO055IMU;
 public class BNO055InitializationException extends RuntimeException
     {
     public final IBNO055IMU imu;
-    public final String     message;
     public BNO055InitializationException(IBNO055IMU imu, String message)
         {
+        super(String.format("BNO055: %s", message));
         this.imu = imu;
-        this.message = message;
         }
     }

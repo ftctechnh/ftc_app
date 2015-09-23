@@ -5,7 +5,8 @@ import com.qualcomm.robotcore.util.*;
 import org.swerverobotics.library.interfaces.*;
 
 /**
- * 
+ * This is an experiment in an alternative implementation of a Legacy DC Motor controller.
+ * It is not yet finished, and is not currently used.
  */
 public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorController, IThunkWrapper<DcMotorController>, VoltageSensor
     {
@@ -73,10 +74,10 @@ public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorControll
         this.floatMotors();
         
         // Always read a certain set of registers
-        this.i2cDeviceClient.setReadWindow(new II2cDeviceClient.RegWindow(iregFirstRead, cregRead));
+        this.i2cDeviceClient.setReadWindow(new II2cDeviceClient.ReadWindow(iregFirstRead, cregRead));
         
         // Keep the motors from shutting off 
-        this.i2cDeviceClient.setHeartbeatRead(2000);
+        // this.i2cDeviceClient.setHeartbeatRead(2000);
         }
 
     //----------------------------------------------------------------------------------------------

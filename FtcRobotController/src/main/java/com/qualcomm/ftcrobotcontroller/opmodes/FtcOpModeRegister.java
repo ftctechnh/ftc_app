@@ -34,83 +34,53 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 
+import org.swerverobotics.library.internal.AnnotatedOpModeRegistrar;
+
 /**
  * Register Op Modes
  */
-public class FtcOpModeRegister implements OpModeRegister {
-
-  /**
-   * The Op Mode Manager will call this method when it wants a list of all
-   * available op modes. Add your op mode to the list to enable it.
-   *
-   * @param manager op mode manager
-   */
-    public void register(OpModeManager manager) {
-
-    /*
-     * register your op modes here.
-     * The first parameter is the name of the op mode
-     * The second parameter is the op mode class property
+public class FtcOpModeRegister implements OpModeRegister
+    {
+    /**
+     * The Op Mode Manager will call this method when it wants a list of all available op modes.
+     * OpModes which are registered during this call will form the contents of the OpMode
+     * list on the driver station.
      *
-     * If two or more op modes are registered with the same name, the app will display an error.
+     * There are two ways you can register an OpMode.
+     *
+     * 1)   Manually, by calling manager.register(displayName, class) here, where
+     *      displayName is the name you want to show up in on the driver station
+     *      and class is the class which should be instantiated to service that OpMode,
+     *
+     * 2)   Dynamically, by annotating your OpModes with @Autonomous or @TeleOp annotations
+     *
+     * @param manager the manager to use for manual registration
+     *
+     * @see org.swerverobotics.library.interfaces.Autonomous
+     * @see org.swerverobotics.library.interfaces.TeleOp
+     * @see org.swerverobotics.library.interfaces.Disabled
+     * @see org.swerverobotics.library.examples.SynchTeleOp
      */
+    public void register(OpModeManager manager)
+        {
+        AnnotatedOpModeRegistrar.register(manager);
 
-
-    /*
-     * The following op modes are example op modes provided by QualComm.
-     * Uncomment the lines to make the op modes available to the driver station.
-     */
-/*
-    manager.register("LinearK9TeleOp", LinearK9TeleOp.class);
-    manager.register("LinearIrExample", LinearIrExample.class);
-    manager.register("IrSeekerOp", IrSeekerOp.class);
-    manager.register("CompassCalibration", CompassCalibration.class);
-    manager.register("NxtTeleOp", NxtTeleOp.class);
-*/
-
-    /*
-     * The NullOp op mode
-     */
-/*
-    manager.register("NullOp", NullOp.class);
-*/
-
-
-    /*
-     * The following example op modes are designed to work with a K9-style robot.
-     *  - K9TeleOp is a simple driver controlled program.
-     *  - K9IrSeeker uses a legacy IR seeker V2 sensor to follow a beacon.
-     *  - K9Line uses a legacy LEGO NXT light sensor to follow a white line.
-     */
-
-/*
-    manager.register("K9TeleOp", K9TeleOp.class);
-    manager.register("K9IrSeeker", K9IrSeeker.class);
-    manager.register("K9Line", K9Line.class);
-*/
-
-    /*
-     * The following example op modes are designed to work with a pushbot-style robot.
-     *  - PushBotManual is a driver controled (tank drive) op mode.
-     *  - PushBotAuto uses the event driven (non linear) OpMode class for autonomous operation.
-     *  - PushBotDriveTouch uses the LinearOpMode class and shows how to autonomously drive if a button is not pressed.
-     *  - PushBotIrSeek uses the LinearOpMode class and shows how to track an IR beacon.
-     *  - PushBotSquare uses the LinearOpMOde class and shows how to drive in a square pattern autonomously.
-    */
-
-/*
-    manager.register("PushBotManual", PushBotManual.class);
-    manager.register("PushBotAuto", PushBotAuto.class);
-    manager.register("PushBotDriveTouch", PushBotDriveTouch.class);
-    manager.register("PushBotIrSeek", PushBotIrSeek.class);
-    manager.register("PushBotSquare", PushBotSquare.class);
-*/
-
-    manager.register("Synch Telemetry", SynchTelemetryOp.class);
-    manager.register("Synch TeleOp", SynchTeleOp.class);
-    manager.register("Synch Tele Drive Modes", SynchTeleOpModes.class);
-    manager.register("Synch Skeleton", SynchSkeletalOp.class);
-    manager.register("Synch Motor Loop Perf", SynchMotorLoopPerf.class);
-    manager.register("Synch IMU Demo", SynchIMUDemo.class);
-  }
-}
+        // These are the example OpModes distributed with the FTC SDK.
+        /*
+        manager.register("LinearK9TeleOp",      LinearK9TeleOp.class);
+        manager.register("LinearIrExample",     LinearIrExample.class);
+        manager.register("IrSeekerOp",          IrSeekerOp.class);
+        manager.register("CompassCalibration",  CompassCalibration.class);
+        manager.register("NxtTeleOp",           NxtTeleOp.class);
+        manager.register("NullOp",              NullOp.class);
+        manager.register("K9TeleOp",            K9TeleOp.class);
+        manager.register("K9IrSeeker",          K9IrSeeker.class);
+        manager.register("K9Line",              K9Line.class);
+        manager.register("PushBotManual",       PushBotManual.class);
+        manager.register("PushBotAuto",         PushBotAuto.class);
+        manager.register("PushBotDriveTouch",   PushBotDriveTouch.class);
+        manager.register("PushBotIrSeek",       PushBotIrSeek.class);
+        manager.register("PushBotSquare",       PushBotSquare.class);
+        */
+        }
+    }
