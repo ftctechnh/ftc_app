@@ -74,7 +74,7 @@ public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorControll
         this.floatMotors();
         
         // Always read a certain set of registers
-        this.i2cDeviceClient.setReadWindow(new II2cDeviceClient.RegWindow(iregFirstRead, cregRead));
+        this.i2cDeviceClient.setReadWindow(new II2cDeviceClient.ReadWindow(iregFirstRead, cregRead));
         
         // Keep the motors from shutting off 
         // this.i2cDeviceClient.setHeartbeatRead(2000);

@@ -7,7 +7,7 @@ import org.swerverobotics.library.*;
  * II2cDeviceClient is the public interface to a utility class that makes it easier to
  * use I2cDevice instances.
  * 
- * @see ClassFactory#createI2cDeviceClient(I2cDevice, int, II2cDeviceClient.RegWindow)
+ * @see ClassFactory#createI2cDeviceClient(I2cDevice, int, ReadWindow)
  */
 public interface II2cDeviceClient extends HardwareDevice
     {
@@ -21,13 +21,13 @@ public interface II2cDeviceClient extends HardwareDevice
      * @param window    the register window to read. May be null, indicating that no reads are to occur.
      * @see #getReadWindow() 
      */
-    void setReadWindow(RegWindow window);
+    void setReadWindow(ReadWindow window);
 
     /**
      * Return the current register window.
-     * @see #setReadWindow(RegWindow)  
+     * @see #setReadWindow(ReadWindow)
      */
-    RegWindow getReadWindow();
+    ReadWindow getReadWindow();
 
     /**
      * Ensure that the current register window covers the indicated set of registers.
@@ -43,10 +43,10 @@ public interface II2cDeviceClient extends HardwareDevice
      * @param windowToSet  If an update to the current register window is needed, then this
      *                     is the window to which it will be set. May be null.
      *
-     * @see #setReadWindow(RegWindow)
-     * @see #read8(int) 
+     * @see #setReadWindow(ReadWindow)
+     * @see #read8(int)
      */
-    void ensureReadWindow(RegWindow windowNeeded, RegWindow windowToSet);
+    void ensureReadWindow(ReadWindow windowNeeded, ReadWindow windowToSet);
 
     //----------------------------------------------------------------------------------------------
     // Reading
@@ -62,7 +62,7 @@ public interface II2cDeviceClient extends HardwareDevice
      *
      * @see #read(int, int)
      * @see #readTimeStamped(int, int)
-     * @see #ensureReadWindow(RegWindow, RegWindow)
+     * @see #ensureReadWindow(ReadWindow, ReadWindow)
      */
     byte read8(int ireg);
 
@@ -78,7 +78,7 @@ public interface II2cDeviceClient extends HardwareDevice
      *
      * @see #read8(int)
      * @see #readTimeStamped(int, int)
-     * @see #ensureReadWindow(RegWindow, RegWindow)
+     * @see #ensureReadWindow(ReadWindow, ReadWindow)
      */
     byte[] read(int ireg, int creg);
 
@@ -92,7 +92,7 @@ public interface II2cDeviceClient extends HardwareDevice
      *
      * @see #read(int, int)
      * @see #read8(int)
-     * @see #ensureReadWindow(RegWindow, RegWindow)
+     * @see #ensureReadWindow(ReadWindow, ReadWindow)
      */
     TimestampedData readTimeStamped(int ireg, int creg);
     
@@ -162,7 +162,7 @@ public interface II2cDeviceClient extends HardwareDevice
      * For read-heartbeats to be useful, the current read window must be non-null.
      * @param ms            the timeout interval, in milliseconds. If ms is less than or equal to
      *                      zero, then no heartbeat messages are sent
-     * @see #setReadWindow(RegWindow) 
+     * @see #setReadWindow(ReadWindow)
      */
     // void setHeartbeatRead(int ms);
 
@@ -217,7 +217,7 @@ public interface II2cDeviceClient extends HardwareDevice
      * RegWindow is a utility class for managing the window of I2C register bytes that
      * are read from our I2C device on every hardware cycle
      */
-    class RegWindow
+    class ReadWindow
         {
         //------------------------------------------------------------------------------------------
         // State
@@ -258,7 +258,7 @@ public interface II2cDeviceClient extends HardwareDevice
         /**
          * Create a new register window with the indicated starting register and register count
          */
-        public RegWindow(int iregFirst, int creg)
+        public ReadWindow(int iregFirst, int creg)
             {
             this.iregFirst = iregFirst;
             this.creg = creg;
@@ -274,7 +274,7 @@ public interface II2cDeviceClient extends HardwareDevice
          * Do the recevier and the indicated register window cover exactly the 
          * same set of registers?
          */
-        public boolean equals(RegWindow him)
+        public boolean equals(ReadWindow him)
             {
             if (him == null)
                 return false;
@@ -286,7 +286,7 @@ public interface II2cDeviceClient extends HardwareDevice
         /**
          * Does the receiver wholly contain the indicated window?
          */
-        public boolean contains(RegWindow him)
+        public boolean contains(ReadWindow him)
             {
             if (him==null)
                 return false;
@@ -295,11 +295,11 @@ public interface II2cDeviceClient extends HardwareDevice
             }
 
         /**
-         * @see #contains(RegWindow) 
+         * @see #contains(ReadWindow)
          */
         public boolean contains(int ireg, int creg)
             {
-            return this.contains(new RegWindow(ireg, creg));
+            return this.contains(new ReadWindow(ireg, creg));
             }
         }
     }

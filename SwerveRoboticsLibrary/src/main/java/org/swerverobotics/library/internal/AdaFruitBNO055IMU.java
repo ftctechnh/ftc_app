@@ -308,7 +308,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         {
         // Ensure we can see the registers we need
         this.deviceClient.ensureReadWindow(
-                new I2cDeviceClient.RegWindow(REGISTER.QUATERNION_DATA_W_LSB.bVal, 8),
+                new II2cDeviceClient.ReadWindow(REGISTER.QUATERNION_DATA_W_LSB.bVal, 8),
                 upperWindow
         );
         
@@ -357,7 +357,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
     private II2cDeviceClient.TimestampedData getVector(VECTOR vector)
         {
         // Ensure that the 6 bytes for this vector are visible in the register window.
-        this.ensureRegisterWindow(new I2cDeviceClient.RegWindow(vector.getValue(), 6));
+        this.ensureRegisterWindow(new II2cDeviceClient.ReadWindow(vector.getValue(), 6));
 
         // Read the data
         return this.deviceClient.readTimeStamped(vector.getValue(), 6);
@@ -520,7 +520,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
      * from the sensor, we try to use these two windows so as to reduce the number of register
      * window switching that might be required as other data is read in the future.
      */
-    private static final I2cDeviceClient.RegWindow lowerWindow = newWindow(REGISTER.CHIP_ID, REGISTER.EULER_H_LSB);
+    private static final II2cDeviceClient.ReadWindow lowerWindow = newWindow(REGISTER.CHIP_ID, REGISTER.EULER_H_LSB);
     /**
      * A second of two primary register windows we use for reading from the BNO055.
      * We'd like to include the temperature register, too, but that would make a 27-byte window, and
@@ -528,16 +528,16 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
      *
      * @see #lowerWindow
      */
-    private static final I2cDeviceClient.RegWindow upperWindow = newWindow(REGISTER.EULER_H_LSB, REGISTER.TEMP);
+    private static final II2cDeviceClient.ReadWindow upperWindow = newWindow(REGISTER.EULER_H_LSB, REGISTER.TEMP);
     
-    private static I2cDeviceClient.RegWindow newWindow(REGISTER regFirst, REGISTER regMax)
+    private static II2cDeviceClient.ReadWindow newWindow(REGISTER regFirst, REGISTER regMax)
         {
-        return new I2cDeviceClient.RegWindow(regFirst.bVal, regMax.bVal-regFirst.bVal);
+        return new II2cDeviceClient.ReadWindow(regFirst.bVal, regMax.bVal-regFirst.bVal);
         }
 
-    private void ensureRegisterWindow(I2cDeviceClient.RegWindow needed)
+    private void ensureRegisterWindow(II2cDeviceClient.ReadWindow needed)
         {
-        I2cDeviceClient.RegWindow set = lowerWindow.contains(needed)
+        II2cDeviceClient.ReadWindow set = lowerWindow.contains(needed)
             ? lowerWindow
             : upperWindow.contains(needed)
                 ? upperWindow
@@ -581,12 +581,12 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
 
     public synchronized byte read8(REGISTER reg)
         {
-        this.ensureRegisterWindow(new I2cDeviceClient.RegWindow(reg.bVal, 1));
+        this.ensureRegisterWindow(new II2cDeviceClient.ReadWindow(reg.bVal, 1));
         return this.deviceClient.read8(reg.bVal);
         }
     public synchronized byte[] read(REGISTER reg, int cb)
         {
-        this.ensureRegisterWindow(new I2cDeviceClient.RegWindow(reg.bVal, cb));
+        this.ensureRegisterWindow(new II2cDeviceClient.ReadWindow(reg.bVal, cb));
         return this.deviceClient.read(reg.bVal, cb);
         }
 

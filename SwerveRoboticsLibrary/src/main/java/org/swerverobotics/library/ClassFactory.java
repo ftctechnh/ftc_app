@@ -53,32 +53,32 @@ public final class ClassFactory
     /**
      * Instantiate an I2cDeviceClient wrapper on an I2cDevice.
      * 
-     * @param i2cDevice                 the I2cDevice to wrap
-     * @param initialRegisterWindow     the initial register window to read. May be null.
-     * @param i2cAddr8Bit               the I2C address to initialize i2cDevice with. Ignored if less than zero.
-     * @return                          the newly instantiated wrapper
+     * @param i2cDevice             the I2cDevice to wrap
+     * @param initialReadWindow     the initial register window to read. May be null.
+     * @param i2cAddr8Bit           the I2C address to initialize i2cDevice with. Ignored if less than zero.
+     * @return                      the newly instantiated wrapper
      */
-    public static II2cDeviceClient createI2cDeviceClient(I2cDevice i2cDevice, int i2cAddr8Bit, II2cDeviceClient.RegWindow initialRegisterWindow)
+    public static II2cDeviceClient createI2cDeviceClient(I2cDevice i2cDevice, int i2cAddr8Bit, II2cDeviceClient.ReadWindow initialReadWindow)
         {
         I2cController i2cController = Util.<I2cController>getPrivateObjectField(i2cDevice, 0);
         int port = Util.getPrivateIntField(i2cDevice, 1);
-        return createI2cDeviceClient(i2cController, port, i2cAddr8Bit, initialRegisterWindow);
+        return createI2cDeviceClient(i2cController, port, i2cAddr8Bit, initialReadWindow);
         }
 
     /**
      * Instantiate an I2cDeviceClient on an I2cController using a given port and i2cAddr
-     * @param i2cController             the controller to use
-     * @param port                      the port to use on that controller
-     * @param i2cAddr8Bit               the I2C address to talk to through that port. Ignored if less than zero.
-     * @param initialRegisterWindow     the initial register window to read. May be null.
-     * @return                          the returned wrapper
+     * @param i2cController         the controller to use
+     * @param port                  the port to use on that controller
+     * @param i2cAddr8Bit           the I2C address to talk to through that port. Ignored if less than zero.
+     * @param initialReadWindow     the initial register window to read. May be null.
+     * @return                      the returned wrapper
      * 
-     * @see #createI2cDeviceClient(LegacyModule, int, int, II2cDeviceClient.RegWindow) 
+     * @see #createI2cDeviceClient(LegacyModule, int, int, II2cDeviceClient.ReadWindow)
      */
-    public static II2cDeviceClient createI2cDeviceClient(I2cController i2cController, int port, int i2cAddr8Bit, II2cDeviceClient.RegWindow initialRegisterWindow)
+    public static II2cDeviceClient createI2cDeviceClient(I2cController i2cController, int port, int i2cAddr8Bit, II2cDeviceClient.ReadWindow initialReadWindow)
         {
         II2cDevice ii2cDevice = new I2cDeviceOnI2cDeviceController(i2cController, port);
-        return createI2cDeviceClient(ii2cDevice, i2cAddr8Bit, initialRegisterWindow);    
+        return createI2cDeviceClient(ii2cDevice, i2cAddr8Bit, initialReadWindow);
         }
 
     /**
@@ -89,9 +89,9 @@ public final class ClassFactory
      * @param initialRegisterWindow     the initial register window to read. May be null.
      * @return                          the returned wrapper
      * 
-     * @see #createI2cDeviceClient(I2cController, int, int, II2cDeviceClient.RegWindow) 
+     * @see #createI2cDeviceClient(I2cController, int, int, II2cDeviceClient.ReadWindow)
      */
-    public static II2cDeviceClient createI2cDeviceClient(LegacyModule legacyModule, int port, int i2cAddr8Bit, II2cDeviceClient.RegWindow initialRegisterWindow)
+    public static II2cDeviceClient createI2cDeviceClient(LegacyModule legacyModule, int port, int i2cAddr8Bit, II2cDeviceClient.ReadWindow initialRegisterWindow)
         {
         II2cDevice ii2cDevice = new I2cDeviceOnLegacyModule(legacyModule, port);
         return createI2cDeviceClient(ii2cDevice, i2cAddr8Bit, initialRegisterWindow);
@@ -104,14 +104,14 @@ public final class ClassFactory
      * @param initialRegisterWindow     the initial register window to read. May be null
      * @return                          the newly instantiated wrapper
      */
-    public static II2cDeviceClient createI2cDeviceClient(I2cDevice i2cDevice, II2cDeviceClient.RegWindow initialRegisterWindow)
+    public static II2cDeviceClient createI2cDeviceClient(I2cDevice i2cDevice, II2cDeviceClient.ReadWindow initialRegisterWindow)
         {
         int i2cAddr8Bit = Util.getPrivateIntField(i2cDevice, 2);
         return createI2cDeviceClient(i2cDevice, i2cAddr8Bit, initialRegisterWindow);
         }
 
     /** internal */
-    private static II2cDeviceClient createI2cDeviceClient(II2cDevice ii2cDevice, int i2cAddr8Bit, II2cDeviceClient.RegWindow initialRegisterWindow)
+    private static II2cDeviceClient createI2cDeviceClient(II2cDevice ii2cDevice, int i2cAddr8Bit, II2cDeviceClient.ReadWindow initialRegisterWindow)
         {
         return new I2cDeviceClient(ii2cDevice, i2cAddr8Bit, initialRegisterWindow);
         }
