@@ -8,23 +8,43 @@ import java.util.*;
 /**
  * TelemetryDashboardAndLog is a telemetry helper class that makes it easier write 
  * telemetry to the driver station. It is primarily intended to be used within
- * SynchronousOpModes.
+ * SynchronousOpModes, where its use is necessary to avoid possibly garbled output on
+ * the driver station, but it can be used in any OpMode.
  * <p>
- * The telemetry is provided in two parts: a dashboard, and a log, instances of which 
- * reside in fields of the same names within the TelemetryDashboardAndLog object.
+ * The telemetry is divided into two parts: a <em>dashboard</em>, and a <em>log</em>.
+ * The dashboard, typically consisting of a fixed set of lines of data, is shown in the driver
+ * station at the top of the telemetry output. The log, containing a series of messages in
+ * chronological or reverse chronological order, is shown below that.
  * <p>
- * The dashboard is configured once, using a series of {@link #addLine() line()}
- * calls each containing a series of {@link #item item()} invocations.
- * You then call {@link #update() update()} on at a relatively high
- * rate of speed, as often as you like, usually at the bottom of your while(opModeIsActive())
- * loop. Periodically, at a rate controlled by the {@link #msUpdateInterval msUpdateInterval}
- * field, which defaults to one second, these {@link #update() update()} calls will actually
- * cause reevaluation of the dashboard line items and transmission of the data to the driver station. 
- * So: call it often, but the transmission traffic is kept to a reasonable amount.
+ * The telemetry is sent to the driver station when {@link #update()} is called. It is
+ * <em>not</em> transmitted automatically: if you don't call update(), you won't see any telemetry. Usually
+ * you call update() at the bottom of your {@link SynchronousOpMode#opModeIsActive()
+ * while(opModeIsActive())} loop. And only a subset of update() calls actually transmit:
+ * by default, the update rate is limited to twice per second, which can be adjusted with
+ * {@link #setUpdateIntervalMs(int)}. This helps both reduce network traffic and reduce
+ * the cost on the robot controller itself of acquiring telemetry data for transmission,
+ * as the acquisition of the data itself can sometimes be quite expensive, depending on what
+ * is being shown.
  * <p>
- * The log simply contains a serial history of the messages it has been asked to display. 
+ * Data can be shown in the dashboard in one (or both) of two ways:
+ * <ol>
+ *  <li>As with the telemetry in the robot controller runtime, you can call
+ *      {@link #addData(String, String)} to add a message you have composed. And as in
+ *      the robot controller runtime telemetry, addData() needs to be called on every display
+ *      cycle, that is, here, before every call to {@link #update()}, as the display of
+ *      these pre-composed lines is a one-time event.
+ *  </li><li>
+ *      Lines in the dashboard can be configured in a one-time setup setup with the unevaluated
+ *      computations needed for their display. Only when a transmission is actually to be made
+ *      to the driver station are these expressions evaluated and the lines composed. This is
+ *      accomplished using a series of {@link #addLine() addLine()} calls, each containing a
+ *      number of {@link #item(String, IFunc)}  item()} invocations.
+ * </li></ol>
+ * <p>
+ * The log simply contains a serial history of the messages it has been asked to display.
  * When new additions are made to the log, they are conveyed to the driver station in an
- * expeditious manner. The dashboard is also updated at such times.
+ * expeditious manner. The dashboard is also updated at such times. The order of the display
+ * of log messages can be controlled with {@link org.swerverobotics.library.TelemetryDashboardAndLog.Log#setDisplayOldToNew(boolean) setDisplayOldToNew()}.
  */
 public class TelemetryDashboardAndLog
     {
@@ -67,9 +87,9 @@ public class TelemetryDashboardAndLog
      *
      * @return  the current update interval, in milliseconds
      *
-     * @see #setUpdateIntervalMs(double)
+     * @see #setUpdateIntervalMs(int)
      */
-    public double getUpdateIntervalMs()
+    public int getUpdateIntervalMs()
         {
         return msUpdateInterval;
         }
@@ -81,7 +101,7 @@ public class TelemetryDashboardAndLog
      *
      * @see #getUpdateIntervalMs()
      */
-    public void setUpdateIntervalMs(double msUpdateInterval)
+    public void setUpdateIntervalMs(int msUpdateInterval)
         {
         this.msUpdateInterval = msUpdateInterval;
         }
@@ -96,7 +116,7 @@ public class TelemetryDashboardAndLog
     //------------------------------------------------------------------------------------------
 
     private String itemDelimiter    = " | ";
-    private double msUpdateInterval = 1000;  // default is 1s
+    private int    msUpdateInterval = 500;
 
     private Vector<IAction>         actions = null;
     private Vector<Line>            composableLines = null;
@@ -236,14 +256,29 @@ public class TelemetryDashboardAndLog
       * interval. However, when a message is added to the log, the driver station is always
       * updated on the next call to update().
       *
+      * @return whether an update to the driver station was made or not
       * @see #getUpdateIntervalMs()
+      * @see #update(int)
       */
     public synchronized boolean update()
         {
-        return update(false);
+        return update(getUpdateIntervalMs());
         }
 
-    private synchronized boolean update(boolean internal)
+    /**
+     * A variant on {@link #update()} in which one can explicitly specify the update interval
+     * to be used.
+     *
+     * @param msUpdateInterval the update interval to use, in milliseconds
+     * @return whether an update to the driver station was made or not
+     * @see #update()
+     */
+    public synchronized boolean update(int msUpdateInterval)
+        {
+        return update(msUpdateInterval, true);
+        }
+
+    private synchronized boolean update(int msUpdateInterval, boolean userRequest)
         {
         boolean result = false;
 
@@ -252,7 +287,7 @@ public class TelemetryDashboardAndLog
         // traffic to the driver station.
         long nanoNow = System.nanoTime();
         if (nanoLastUpdate == 0
-                || nanoNow > nanoLastUpdate + getUpdateIntervalMs() * SynchronousOpMode.NANO_TO_MILLI
+                || nanoNow > nanoLastUpdate + (long)msUpdateInterval * SynchronousOpMode.NANO_TO_MILLI
                 || log.newLogMessagesAvailable
                 )
             {
@@ -335,7 +370,7 @@ public class TelemetryDashboardAndLog
 
         // We ALWAYS clear the composed lines, as the user, generally,
         // has no idea which update() calls actually transmit.
-        if (!internal)
+        if (userRequest)
             this.updateSinceAddComposedLine = true;
 
         return result;
@@ -376,9 +411,11 @@ public class TelemetryDashboardAndLog
      * the dashboard lines are composed. A typical use of such actions is to
      * initialize some state variable, parts of which are subsequently displayed
      * in dashboard lines and items. This can help avoid needless re-evaluation.
-     * @param action
+     * @param action    the action to execute before composing the lines of the dashboard
+     * @see #addLine()
+     * @see #update()
      */
-    public synchronized void action(IAction action)
+    public synchronized void addAction(IAction action)
         {
         this.actions.add(action);
         }
@@ -389,6 +426,7 @@ public class TelemetryDashboardAndLog
 
     /**
      * Add an empty line to the dashboard
+     * @see #addLine(Item[])
      */
     public void addLine()
         {
@@ -398,6 +436,7 @@ public class TelemetryDashboardAndLog
      * Add a line to the dashboard containing the indicated item
      *
      * @param item      the item to be contained in the line
+     * @see #addLine(Item[])
      */
     public void addLine(Item item)
         {
@@ -408,6 +447,7 @@ public class TelemetryDashboardAndLog
      *
      * @param item0     the first item to be contained in the line
      * @param item1     the second item to be contained in the line
+     * @see #addLine(Item[])
      */
     public void addLine(Item item0, Item item1)
         {
@@ -419,6 +459,7 @@ public class TelemetryDashboardAndLog
      * @param item0     the first item to be contained in the line
      * @param item1     the second item to be contained in the line
      * @param item2     the third item to be contained in the line
+     * @see #addLine(Item[])
      */
     public void addLine(Item item0, Item item1, Item item2)
         {
@@ -431,6 +472,7 @@ public class TelemetryDashboardAndLog
      * @param item1     the second item to be contained in the line
      * @param item2     the third item to be contained in the line
      * @param item3     the fourth item to be contained in the line
+     * @see #addLine(Item[])
      */
     public void addLine(Item item0, Item item1, Item item2, Item item3)
         {
@@ -444,15 +486,17 @@ public class TelemetryDashboardAndLog
      * @param item2     the third item to be contained in the line
      * @param item3     the fourth item to be contained in the line
      * @param item4     the fifth item to be contained in the line
+     * @see #addLine(Item[])
      */
     public void addLine(Item item0, Item item1, Item item2, Item item3, Item item4)
         {
         this.addLine(new Item[]{item0, item1, item2, item3, item4});
         }
     /**
-     * Add a line to the dashboard containing the indicated items
+     * Add a line to the dashboard containing the indicated items.
      *
      * @param items     the list of items to be contained in the line
+     * @see #addAction(IAction)
      */
     public synchronized void addLine(Item[] items)
         {
@@ -470,9 +514,8 @@ public class TelemetryDashboardAndLog
 
         /**
          * Returns the order in which the log is displayed.
-         * <p></p>
+         * <p>
          * If true, older log messages are displayed at the top of the log, newer messages at the bottom.
-         * <p></p>
          * If false, newer messages are on top, older messages at the bottom.
          *
          * @return whether the log is displayed in old-to-new order
@@ -484,7 +527,7 @@ public class TelemetryDashboardAndLog
             }
 
         /**
-         * Sets the order in which the log is displayed
+         * Sets the order in which the log is displayed.
          * @param displayOldToNew   whether the log is to be displayed in old-to-new order
          * @see #isDisplayOldToNew()
          */
@@ -534,7 +577,9 @@ public class TelemetryDashboardAndLog
         //------------------------------------------------------------------------------------------
 
         /**
-         * Add a new log message to be emitted to the telemetry as soon as we can
+         * Add a new log message to be transmitted to the driver station as soon as we can.
+         *
+         * @param msg   the message to display in the log
          */
         public void add(String msg)
             {
@@ -545,7 +590,7 @@ public class TelemetryDashboardAndLog
                 this.prune();
                 }
 
-            TelemetryDashboardAndLog.this.update(true);
+            TelemetryDashboardAndLog.this.update(getUpdateIntervalMs(), false);
             }
 
         /**

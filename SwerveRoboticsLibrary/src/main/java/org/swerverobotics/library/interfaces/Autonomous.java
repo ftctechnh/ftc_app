@@ -4,11 +4,11 @@ import java.lang.annotation.*;
 
 /**
  * Provides an easy and non-centralized way of determining the OpMode list
- * shown on an FTC Driver Station.  Put an {@linkplain Autonomous} annotation on
+ * shown on an FTC Driver Station.  Put an {@link Autonomous} annotation on
  * your autonomous OpModes that you want to show up in the driver station display.
  *
  * If you want to temporarily disable an opmode, then set then also add
- * a {@linkplain Disabled} annotation to it.
+ * a {@link Disabled} annotation to it.
  *
  * @see TeleOp
  * @see Disabled
@@ -21,6 +21,7 @@ public @interface Autonomous
     /**
      * The name to be used on the driver station display. If empty, the name of
      * the OpMode class will be used.
+     * @return the name to use for the OpMode in the driver station.
      */
     String name() default "";
 
