@@ -1,7 +1,7 @@
 # Swerve Robotics FTC Library
 
-Welcome to the Swerve Robotics library support for the FTC Android Robot Controller Library.
-The purpose of the Swerve Robotics library is to augment the robot controller runtime from FTC HQ
+Welcome to the Swerve Robotics library for the FTC robot controller runtime.
+The purpose of our library is to augment the robot controller runtime library from FTC HQ
 in order to simplify programming for FTC teams. The central aim here is not to change what's there,
 just to make it better. You might also want to check out our related project, the Swerve Robotics Tools
 Suite, also [here](https://github.com/SwerveRobotics/tools) on GitHub.
@@ -32,14 +32,6 @@ Notable features of the Swerve Robotics FTC Library include:
     Log messages can be written to the log at any time, and these are sent to the driver station as
     soon as possible. The enhanced telemetry class can be used both by synchronous and non-synchronous
     opmodes.
-*   An **alternate OpMode registration mechanism** (the old FtcOpModeRegister.register() still works too)
-    that allows you to register your OpModes simply by decorating them with @TeleOp or @Annotation annotations.
-    This helps promote clean living and easier integration of library updates over time by avoiding
-    editing code that lives in libraries owned by others. To register OpModes that aren't your own,
-    a related annotation, @OpModeRegistrar, can be placed on a method in your code which is to be called
-    as part of the registration process. Take a look at the YourCodeHere module for an example of
-    how this works. We'd like to thank [dmssargent](https://github.com/dmssargent/Xtensible-ftc_app/blob/master/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/FtcOpModeRegister.java)
-    for illustrating how this might be technically accomplished.
 *   An **I2cDeviceClient** class that wraps I2cDevice instances and makes them easy to use by handling
     read-vs-write mode switches and attendant waits automatically and transparently. Just call read8()
     or write8() (and friends) to read and write device registers and the rest is taken care of.
@@ -53,7 +45,15 @@ Notable features of the Swerve Robotics FTC Library include:
     separation of the output of the accelerometer into gravity and linear-motion-induced components.
     The class builds on the latter to provide linear velocity and position measurements using integration
     in software, which can be straightforwardly used for inertial dead reckoning for your robot.
-    
+*   An **alternate OpMode registration mechanism** (the old FtcOpModeRegister.register() still works too)
+    that allows you to register your own OpModes simply by decorating them with @TeleOp or @Annotation annotations.
+    This helps promote clean living and easier integration of library updates over time by avoiding
+    editing code that lives in libraries owned by others. To register OpModes that aren't your own,
+    a related annotation, @OpModeRegistrar, can be placed on a method in your code which is to be called
+    as part of the registration process. Take a look at the YourCodeHere module for an example of
+    how this works. We'd like to thank [dmssargent](https://github.com/dmssargent/Xtensible-ftc_app/blob/master/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/FtcOpModeRegister.java)
+    for illustrating how this all might be technically accomplished.
+
 The fifteen second summary of how to use SynchronousOpMode is as follows:
 
 *   Inherit your opmode from SynchronousOpMode instead of OpMode or LinearOpMode.
@@ -80,7 +80,7 @@ The fifteen second summary of how to use SynchronousOpMode is as follows:
 
 That's it!
 
-While the library is still undergoing development, it is quite stable, and our own teams
+While this library is still undergoing development, it is quite stable, and our own teams
 are actively developing their competition code using it. It currently is synchronized to the 
 FTC headquarters beta release; when FTC HQ updates to a final release for the season, we will 
 synchronize with that as fast as we are able. 
@@ -93,8 +93,8 @@ could reasonably sync to the latest available if you wished. Alternately, instea
 or cloning, you can download a full copy of the source in .zip form from one of our releases.
  
 Documentation is available in the SwerveRoboticsLibrary/doc/javadoc directory.
-There are also several examples of using the library to be found in the usual 'opmodes'
-directory (alongside the examples provided in the core FTC SDK).
+There are also several examples of using the library to be found in the 'examples'
+package.
 
 We'd love to hear what you think about the library. Thanks!
 
