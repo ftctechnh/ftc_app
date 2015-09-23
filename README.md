@@ -32,6 +32,14 @@ Notable features of the Swerve Robotics FTC Library include:
     Log messages can be written to the log at any time, and these are sent to the driver station as
     soon as possible. The enhanced telemetry class can be used both by synchronous and non-synchronous
     opmodes.
+*   An *alternate OpMode registration mechanism* (the old FtcOpModeRegister.register() still works too)
+    that allows you to register your OpModes by decorating them with @TeleOp or @Annotation annotations.
+    This helps promote clean living and easier integration of library updates over time by avoiding
+    editing code that lives in libraries owned by others. To register OpModes that aren't your own,
+    a related annotation, @OpModeRegistrar, can be placed on a method in your code which is to be called
+    as part of the registration process. Take a look at the YourCodeHere module for an example of
+    how this works. We'd like to thank [dmssargent](https://github.com/dmssargent/Xtensible-ftc_app/blob/master/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/FtcOpModeRegister.java)
+    for illustrating how this might be technically accomplished.
 *   An *I2cDeviceClient* class that wraps I2cDevice instances and makes them easy to use by handling
     read-vs-write mode switches and attendant waits automatically and transparently. Just call read8()
     or write8() (and friends) to read and write device registers and the rest is taken care of.
