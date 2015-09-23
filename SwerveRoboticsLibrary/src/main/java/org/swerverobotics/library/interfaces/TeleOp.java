@@ -12,6 +12,7 @@ import java.lang.annotation.*;
  *
  * @see Autonomous
  * @see Disabled
+ * @see org.swerverobotics.library.examples.SynchTeleOp
  */
 @Documented
 @Target(ElementType.TYPE)

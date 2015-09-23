@@ -13,6 +13,7 @@ import java.lang.annotation.*;
  * @see TeleOp
  * @see Disabled
  * @see OpModeRegistrar
+ * @see org.swerverobotics.library.examples.SynchTeleOp
  */
 @Documented
 @Target(ElementType.TYPE)
