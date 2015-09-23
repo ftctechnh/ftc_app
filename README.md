@@ -1,25 +1,35 @@
 # Swerve Robotics FTC Library
 
 Welcome to the Swerve Robotics library support for the FTC Android Robot Controller Library.
-The purpose of the Swerve Robotics library is to augment the robot controller library from FTC HQ 
-in order to simplify programming for FTC teams. The aim is not to change what's there, just to make it
-better. You might also want to check out our related project, the Swerve Robotics Tools 
+The purpose of the Swerve Robotics library is to augment the robot controller runtime from FTC HQ
+in order to simplify programming for FTC teams. The central aim here is not to change what's there,
+just to make it better. You might also want to check out our related project, the Swerve Robotics Tools
 Suite, also here on GitHub.
 
 Notable features of the Swerve Robotics FTC Library include:
 
-*   A *synchronous OpMode* that brings back the synchronous, linear programming style
-    with which teams have been familiar with from previous seasons, and which is more amenable
+*   A *SynchronousOpMode* class that brings back the synchronous, linear programming style
+    with which teams have been familiar with from previous seasons in RobotC, and which is more amenable
     to teaching to beginning programmers than the event-driven / loop() callback programming
-    model native to the RCL. SynchronousOpMode also automatically handles the delays necessary
-    when switching between reading and writing modes while using legacy NXT/HiTechnic motor
-    controllers, relieving programmers of the burden of doing so manually.
-*   An enhanced form of telemetry containing a *dashboard* and a *log*. On the driver station display, 
+    model native to the robot controller runtime. SynchronousOpMode is similar to [LinearOpMode]
+    (https://cdn.rawgit.com/ftctechnh/ftc_app/master/doc/javadoc/com/qualcomm/robotcore/eventloop/opmode/LinearOpMode.html)
+    but contains several enhancements and a few fixes. Most notable for those using the legacy
+    NXT/HiTechnic motor controllers is the automatic handling of the tedious manual mode switching, multi-loop-cycle
+    delay management, and loop-cycle operation compatibility rules which are otherwise necessary when
+    when switching between reading and writing operations (getPosition() vs setPower(), for example)
+    when using legacy NXT/HiTechnic motor controllers. SynchronousOpMode also gives you precise
+    control of when changes in gamepad state are made visible to your program, allowing you to
+    safely reason about a given state across a possibly complicated chain of logic.
+*   An enhanced form of telemetry containing a *dashboard* and a *log*. On the driver station display,
     the dashboard appears at the top, followed by as many of the recent log messages as will reasonably 
-    fit. The dashboard is configured just once, and you call update() periodically to compute current
-    values and send its contents to the driver station (you can call it often; actual updates are 
-    automatically throttled to avoid unnecessary bandwith use). Log messages can be written to the 
-    log at any time, and these are sent to the driver station as soon as possible. 
+    fit. The dashboard can be configured just once with unevaluated computations to form the lines
+    on the dashboard, and / or the lines can be created dynamically with addData() calls as in
+    the robot controller runtime. You call telemetry.update() to compose
+    the current dashboard and transmit to the driver station. Only a subset of update() calls
+    actually transmit, saving bandwith on the network and data acquistion time on the controller.
+    Log messages can be written to the log at any time, and these are sent to the driver station as
+    soon as possible. The enhanced telemetry class can be used both by synchronous and non-synchronous
+    opmodes.
 *   An *I2cDeviceClient* class that wraps I2cDevice instances and makes them easy to use by handling
     read-vs-write mode switches and attendant waits automatically and transparently. Just call read8()
     or write8() (and friends) to read and write device registers and the rest is taken care of.
@@ -41,15 +51,7 @@ The fifteen second summary of how to use SynchronousOpMode is as follows:
         @Override protected void main() throws InterruptedException
 *   Initialize your hardware variables at the top of main() instead of in start(). Otherwise,
     the use of hardware objects (DcMotor, Servo, GamePads, etc) is the same as in the usual robot
-    controller runtime, with the single exception that the GamePad objects have methods rather than 
-    data, so you have to say, e.g., 
-        ```
-        gamepad1.left_stick_y()
-        ```
-    instead of
-        ```     
-        gamepad1.left_stick_y
-        ```.
+    controller runtime.
 *   The core of the body of main() should look like
 
         // Initialize stuff (not shown)
@@ -73,19 +75,15 @@ FTC headquarters beta release; when FTC HQ updates to a final release for the se
 synchronize with that as fast as we are able. 
 
 To use the library, we recommend forking or cloning our repository and working off of the 
-'master' branch. While we do tag major milestones and 'release' them, we try to keep the master
-branch always stable and fully functional, so you could reasonably sync to the latest
-available if you wished. Alternately, instead of forking or cloning, you can download a 
-full copy of the source in .zip form from one of our releases.
+'master' branch. The Swerve Library repository *includes* the robot controller runtime
+repository from FTC HQ; you don't need both. While we do tag major milestones in the library
+and 'release' them, we try to keep the master branch always stable and fully functional, so you
+could reasonably sync to the latest available if you wished. Alternately, instead of forking
+or cloning, you can download a full copy of the source in .zip form from one of our releases.
  
 Documentation is available in the SwerveRoboticsLibrary/doc/javadoc directory.
 There are also several examples of using the library to be found in the usual 'opmodes'
 directory (alongside the examples provided in the core FTC SDK).
-
-At present, the library is distributed solely in source form. We realize that releasing only 
-in source form can be cumbersome for integrating with a team's own code base, especially as new versions 
-of the library are released. We're working on releasing in binary form (with full source provided as 
-well to aid in debugging), but that's not yet available.
 
 We'd love to hear what you think about the library. Thanks!
 
