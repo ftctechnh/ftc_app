@@ -19,6 +19,10 @@ import org.swerverobotics.library.examples.*;
  * compile project(':YourCodeHere') in addition to compile project(':SwerveRoboticsLibrary')
  * and other things.</p>
  *
+ * <p>For the YourCodeHere module specifically, this has already been done for you. If you
+ * create your own sibling modules, you'll have to do that for yourself. We hope in the future
+ * to obviate the need for this step.</p>
+ *
  * @see TeleOp
  * @see Autonomous
  * @see OpModeRegistrar
