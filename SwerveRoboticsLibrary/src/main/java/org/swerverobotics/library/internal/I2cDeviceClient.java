@@ -311,8 +311,10 @@ public final class I2cDeviceClient implements II2cDeviceClient
 
     /**
      * Write data to a set of registers, beginning with the one indicated. The data will be
-     * written to the I2C device as expeditiously as possible, but that is not guaranteed
-     * to have occurred by the time this method returns.
+     * written to the I2C device as expeditiously as possible. This method will not return until
+     * the data has been written to the device controller; however, that does not necessarily
+     * indicate that the data has been issued in an I2C write transaction, though that ought
+     * to happen a short deterministic time later.
      */
     public void write(int ireg, byte[] data)
         {
@@ -346,6 +348,14 @@ public final class I2cDeviceClient implements II2cDeviceClient
 
                 // Send out the data proactively (this is optional, but more efficient).
                 this.callback.updateStateMachines(UPDATE_STATE_MACHINE.FROM_USER_WRITE);
+
+                // Wait until the write at least issues to the device controller. This will
+                // help make any delays/sleeps that follow a write() be more deterministically
+                // relative to the actual I2C device write.
+                while (writeCacheStatus != WRITE_CACHE_STATUS.IDLE)
+                    {
+                    this.theLock.wait();
+                    }
                 }
             }
         catch (InterruptedException e)
