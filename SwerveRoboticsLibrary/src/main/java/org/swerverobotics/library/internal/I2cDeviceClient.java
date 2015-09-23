@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
 
 import static junit.framework.Assert.*;
-import org.swerverobotics.library.BuildConfig;
+import org.swerverobotics.library.*;
 import org.swerverobotics.library.exceptions.*;
 import org.swerverobotics.library.interfaces.*;
 import java.util.*;
@@ -98,10 +98,27 @@ public final class I2cDeviceClient implements II2cDeviceClient
     /**
      * Instantiate an I2cDeviceClient instance in the indicated device with the indicated
      * initial window of registers being read.
-     * 
-     * initialRegisterWindow may be null if no registers are initially to be read.
+     *
+     * @param i2cDevice             the device we are to be a client of
+     * @param i2cAddr8Bit           its 8 bit i2cAddress
+     * @param initialRegisterWindow initial reg window to use, may be null
      */
     public I2cDeviceClient(II2cDevice i2cDevice, int i2cAddr8Bit, RegWindow initialRegisterWindow)
+        {
+        this(i2cDevice, i2cAddr8Bit, initialRegisterWindow, true);
+        }
+
+    /**
+     * Instantiate an I2cDeviceClient instance in the indicated device with the indicated
+     * initial window of registers being read.
+     *
+     * @param i2cDevice             the device we are to be a client of
+     * @param i2cAddr8Bit           its 8 bit i2cAddress
+     * @param initialRegisterWindow initial reg window to use, may be null
+     * @param autoClose             if true, the device client will automatically close when the
+     *                              associated SynchronousOpMode stops
+     */
+    public I2cDeviceClient(II2cDevice i2cDevice, int i2cAddr8Bit, RegWindow initialRegisterWindow, boolean autoClose)
         {
         this.i2cDevice              = i2cDevice;
         this.callback               = new Callback();
@@ -128,10 +145,24 @@ public final class I2cDeviceClient implements II2cDeviceClient
         this.modeCacheStatus  = MODE_CACHE_STATUS.IDLE;
         
         this.i2cDevice.setI2cAddr(i2cAddr8Bit);
-        
+
+        if (autoClose)
+            {
+            IStopActionRegistrar registrar = SynchronousOpMode.getStopActionRegistrar();
+            if (registrar != null)
+                {
+                registrar.registerActionOnStop(new IAction() {
+                    @Override public void doAction()
+                        {
+                        I2cDeviceClient.this.close();
+                        }
+                    });
+                }
+            }
+
         this.i2cDevice.registerForI2cPortReadyCallback(this.callback);
         }
-    
+
     //----------------------------------------------------------------------------------------------
     // HardwareDevice
     //----------------------------------------------------------------------------------------------
@@ -152,7 +183,9 @@ public final class I2cDeviceClient implements II2cDeviceClient
         }
 
     public void close()
+    // NB: this HardwareDevice method is shared with I2cDevice.close()
         {
+        this.i2cDevice.deregisterForPortReadyCallback();
         this.i2cDevice.close();
         }
 
