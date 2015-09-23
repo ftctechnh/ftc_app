@@ -43,7 +43,8 @@ public interface II2cDeviceClient extends HardwareDevice
      * @param windowToSet  If an update to the current register window is needed, then this
      *                     is the window to which it will be set. May be null.
      *
-     * @see #setReadWindow(RegWindow) 
+     * @see #setReadWindow(RegWindow)
+     * @see #read8(int) 
      */
     void ensureReadWindow(RegWindow windowNeeded, RegWindow windowToSet);
 
@@ -58,6 +59,10 @@ public interface II2cDeviceClient extends HardwareDevice
      * 
      * @param ireg  the register number to read
      * @return      the byte that was read
+     *
+     * @see #read(int, int)
+     * @see #readTimeStamped(int, int)
+     * @see #ensureReadWindow(RegWindow, RegWindow)
      */
     byte read8(int ireg);
 
@@ -70,6 +75,10 @@ public interface II2cDeviceClient extends HardwareDevice
      * @param ireg  the register number of the first byte register to read
      * @param creg  the number of bytes / registers to read
      * @return      the data which was read
+     *
+     * @see #read8(int)
+     * @see #readTimeStamped(int, int)
+     * @see #ensureReadWindow(RegWindow, RegWindow)
      */
     byte[] read(int ireg, int creg);
 
@@ -80,10 +89,15 @@ public interface II2cDeviceClient extends HardwareDevice
      * @param ireg  the register number of the first byte register to read
      * @param creg  the number of bytes / registers to read
      * @return      the data which was read, together with the timestamp
+     *
+     * @see #read(int, int)
+     * @see #read8(int)
+     * @see #ensureReadWindow(RegWindow, RegWindow)
      */
     TimestampedData readTimeStamped(int ireg, int creg);
     
-    /** TimestampedData pairs together data which has been read with the timestamp at which the read occurred */
+    /** TimestampedData pairs together data which has been read with the timestamp at which
+     * the read occurred, as best that can be determined */
     class TimestampedData
         {
         /** the data in question */
@@ -101,15 +115,22 @@ public interface II2cDeviceClient extends HardwareDevice
      * 
      * @param ireg      the register number that is to be written
      * @param bVal      the byte which is to be written to that register
+     *
+     * @see #write(int, byte[])
      */
-    void write8(int ireg, int bVal);
 
+    void write8(int ireg, int bVal);
     /**
-     * Write data to a set of registers, beginning with the one indicated. This method
-     * blocks until the write has actually been issued to the device.
+     * Write data to a set of registers, beginning with the one indicated. The data will be
+     * written to the I2C device as expeditiously as possible. This method will not return until
+     * the data has been written to the device controller; however, that does not necessarily
+     * indicate that the data has been issued in an I2C write transaction, though that ought
+     * to happen a short deterministic time later.
      * 
      * @param ireg      the first of the registers which is to be written
      * @param data      the data which is to be written to the registers
+     *
+     * @see #write8(int, int)
      */
     void write(int ireg, byte[] data);
 
