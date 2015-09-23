@@ -16,7 +16,7 @@ import org.swerverobotics.library.internal.*;
  * SynchronousOpMode is a base class that can be inherited from in order to
  * write op modes that can be coded in a traditional programming style.
  *
- * Extend this class and implement the main() method to add your own code.
+ * Extend this class and implement the {@link #main()} method to add your own code.
  */
 public abstract class SynchronousOpMode extends OpMode implements IThunkDispatcher, IStopActionRegistrar
     {
@@ -58,12 +58,19 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     /**
      * Advanced: msLoopDwellMax is the (soft) maximum number of milliseconds that
      * our loop() implementation will spend in any one call before returning. 
-     * 
      * Usually, much less time than this maximum is expended.
+     *
+     * @return the current maximum loop dwell time.
      */
     public long getMsLoopDwellMax()                    { return msLoopDwellMax; }
-    /** @see #getMsLoopDwellMax() */
+    /**
+     * Advanced: Sets the maximum loop dwell time.
+     *
+     * @param msLoopDwellMax the new maximum loop dwell time, in milliseconds
+     * @see #getMsLoopDwellMax()
+     * */
     public void setMsLoopDwellMax(long msLoopDwellMax) { this.msLoopDwellMax = msLoopDwellMax; }
+
     private long msLoopDwellMax = 15;
 
     /**
@@ -73,7 +80,8 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     public int loopDwellCheckCount = 5;
 
     /**
-     * Advanced: the number of times the loop thread has been called
+     * Advanced: the number of times loop() has been called on the loop thread.
+     * @return the number of times loop() has been called.
      */
     public int getLoopCount() { return this.loopCount.get(); }
     private final AtomicInteger loopCount = new AtomicInteger(0);
@@ -94,12 +102,34 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     //----------------------------------------------------------------------------------------------
 
     /**
-     * Central idea: implement main() (in a subclass) to contain your robot logic!
+     * Implement main() (in a subclass) to contain your robot logic. Your code will
+     * execute on its own thread, which will be started and stopped automatically. A typical
+     * skeleton of a main() method looks like the following:
+     * <pre>
+        // Initialize stuff (not shown)
+
+        // Wait for the game to start
+        this.waitForStart();
+
+        while (this.opModeIsActive()) {
+            if (this.updateGamePads()) {
+                // Do something interesting
+                }
+            this.telemetry.dashboard.update();
+            this.idle();
+            }
+     * </pre>
+     *
+     * @see #waitForStart()
+     * @see #opModeIsActive()
+     * @see #updateGamepads()
+     * @see TelemetryDashboardAndLog#update()
+     * @see #idle()
      */
     protected abstract void main() throws InterruptedException;
 
     /**
-     * In your main() method, first perform any necessary data and hardware initialization,
+     * In your {@link #main()} method, first perform any necessary data and hardware initialization,
      * then call waitForStart() to await the commencement of the game.
      */
     public final void waitForStart() throws InterruptedException
@@ -116,7 +146,10 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     /**
      * Answer as to whether this opMode is active and the robot should continue onwards. If the
      * opMode is not active, synchronous threads should terminate at their earliest convenience.
-     * 
+     *
+     * @return whether the OpMode is currently active. If this returns false, you should
+     *         break out of the loop in your {@link #main()} method and return to its caller.
+     * @see #main()
      * @see #started()
      * @see #stopRequested()
      */
@@ -127,7 +160,8 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
 
     /**
      * Has the opMode been started?
-     * 
+     *
+     * @return whether this opMode has been started or not
      * @see #opModeIsActive()
      * @see #stopRequested()
      */
@@ -139,6 +173,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     /**
      * Has the the stopping of the opMode been requested?
      * 
+     * @return whether stopping opMode has been requested or not
      * @see #opModeIsActive()
      * @see #started()
      */
@@ -159,7 +194,8 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      * One can use this method when you have nothing better to do until the underlying
      * robot controller runtime gets back in touch with us. Thread.yield() has similar effects, but
      * idle() / synchronousThreadIdle() is more efficient.
-     * 
+     *
+     * @see #main()
      * @see #synchronousThreadIdle() 
      */
     public final void idle() throws InterruptedException
@@ -201,11 +237,17 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     /**
      * Advanced: createSynchronousWorkerThread() is used to create secondary worker threads
      * from your main thread, should you wish to do so. 
-     * 
-     * Warning: multithreaded programming *is* rocket science!
-     * 
-     * Like the main() thread, synchronous worker threads should frequently call
-     * opModeIsActive() and return from their loop body if the opMode has stopped.
+     * <p>
+     * Warning: multithreaded programming <em>is</em> rocket science!
+     * <p>
+     * Like the {@link #main()} thread, synchronous worker threads should frequently call
+     * {@link #opModeIsActive()} and return from their loop body if the opMode has stopped.
+     *
+     * @param threadBody the code to execute on the newly created thread
+     * @return a new synchronous thread on which the indicated code will run. The thread has
+     *         not yet been started.
+     * @see #main()
+     * @see #opModeIsActive()
      */
     public Thread createSynchronousWorkerThread(IInterruptableRunnable threadBody)
         {
@@ -244,7 +286,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      * Captures any new state available from the game pads, and answers as to whether
      * anything is different from the previous state.
      *
-     * Between calls to {@linkplain #updateGamepads()}, the visible gamepad state is guaranteed
+     * Between calls to updateGamepads(), the visible gamepad state is guaranteed
      * not to change. This permits you to consistently reason about that state across a possibly
      * complicated chain of logic. Conversely, however, if you don't call this method, you
      * won't see any changes to the state of the gamepads.
@@ -324,7 +366,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         }
 
     /** Copy the state of one gamepad into another */
-    public static void gamepadAssign(com.qualcomm.robotcore.hardware.Gamepad dst, com.qualcomm.robotcore.hardware.Gamepad src)
+    private static void gamepadAssign(com.qualcomm.robotcore.hardware.Gamepad dst, com.qualcomm.robotcore.hardware.Gamepad src)
         {
         dst.left_stick_x = src.left_stick_x;
         dst.left_stick_y = src.left_stick_y;
@@ -943,7 +985,8 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         }
     
     /**
-     * (Internal) Return a new key by which actions can be scheduled using executeSingletonOnLoopThread()
+     * Advanced/Internal: Return a new key by which actions can be scheduled using executeSingletonOnLoopThread()
+     * @return the new singleton key.
      */
     public static int staticGetNewSingletonKey()
         {
@@ -988,10 +1031,11 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         }
 
     /**
-     * (Internal) Wait until we encounter a loop() cycle that doesn't (yet) contain any actions which
+     * Advanced/Internal: Wait until we encounter a loop() cycle that doesn't (yet) contain any actions which
      * are also thunks and whose key is the one indicated.
+     * @param actionKey the key used to indicate which actions are of interest
      */
-    public void waitForLoopCycleEmptyOfActionKey(int actionKey) throws InterruptedException
+    private void waitForLoopCycleEmptyOfActionKey(int actionKey) throws InterruptedException
         {
         synchronized (this.actionQueueAndHistory)
             {
@@ -1002,9 +1046,9 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             }
         }
     /**
-     * (Internal)
-     * 
-     *  @see #waitForLoopCycleEmptyOfActionKey(int) 
+     * Advanced/Internal: Wait until we encounter a loop() cycle that doesn't (yet) contain any actions which
+     * are also thunks and whose key is the one indicated.
+     * @param actionKey the key used to indicate which actions are of interest
      */
     public static void synchronousThreadWaitForLoopCycleEmptyOfActionKey(int actionKey) throws InterruptedException
         {

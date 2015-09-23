@@ -7,7 +7,7 @@ import org.swerverobotics.library.*;
  * II2cDeviceClient is the public interface to a utility class that makes it easier to
  * use I2cDevice instances.
  * 
- * @see ClassFactory#createI2cDeviceClient(I2cDevice, int, ReadWindow)
+ * @see ClassFactory#createI2cDeviceClient(I2cDevice, ReadWindow)
  */
 public interface II2cDeviceClient extends HardwareDevice
     {
@@ -24,7 +24,8 @@ public interface II2cDeviceClient extends HardwareDevice
     void setReadWindow(ReadWindow window);
 
     /**
-     * Return the current register window.
+     * Returns the current register window used for reading.
+     * @return the current read window
      * @see #setReadWindow(ReadWindow)
      */
     ReadWindow getReadWindow();
@@ -190,6 +191,8 @@ public interface II2cDeviceClient extends HardwareDevice
     /**
      * Returns the number of I2C cycles that we've seen for this device. This at times
      * can be a useful debugging aid, but probably isn't useful for much more.
+     *
+     * @return the current I2C cycle count
      */
     int getI2cCycleCount();
 
@@ -199,7 +202,8 @@ public interface II2cDeviceClient extends HardwareDevice
      */
     void setLogging(boolean enabled);
     /**
-     * Set the tag to use when logging is on
+     * Set the tag to use when logging is on.
+     * @param loggingTag    the logging tag to sue
      */
     void setLoggingTag(String loggingTag);
 
