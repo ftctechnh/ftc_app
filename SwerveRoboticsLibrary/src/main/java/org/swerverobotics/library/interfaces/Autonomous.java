@@ -12,6 +12,7 @@ import java.lang.annotation.*;
  *
  * @see TeleOp
  * @see Disabled
+ * @see OpModeRegistrar
  */
 @Documented
 @Target(ElementType.TYPE)
