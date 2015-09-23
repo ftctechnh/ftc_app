@@ -45,7 +45,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
 
     private final Object        theLock = new Object();     // the lock we use to synchronize concurrent callers as well as the portIsReady() callback
 
-    private RegWindow           regWindowRead;              // the set of registers to look at when we are in read mode. May be null, indicating no read needed
+    private ReadWindow          readWindow;                 // the set of registers to look at when we are in read mode. May be null, indicating no read needed
     private boolean             regWindowChanged;           // whether regWindow has changed since the hw cycle loop last took note
     private long                nanoTimeReadCacheValid;     // the time on the System.nanoTime() clock at which the read cache was last set as valid
     private READ_CACHE_STATUS   readCacheStatus;            // what we know about the contents of readCache
@@ -101,11 +101,11 @@ public final class I2cDeviceClient implements II2cDeviceClient
      *
      * @param i2cDevice             the device we are to be a client of
      * @param i2cAddr8Bit           its 8 bit i2cAddress
-     * @param initialRegisterWindow initial reg window to use, may be null
+     * @param initialReadWindow     initial reg window to use, may be null
      */
-    public I2cDeviceClient(II2cDevice i2cDevice, int i2cAddr8Bit, RegWindow initialRegisterWindow)
+    public I2cDeviceClient(II2cDevice i2cDevice, int i2cAddr8Bit, ReadWindow initialReadWindow)
         {
-        this(i2cDevice, i2cAddr8Bit, initialRegisterWindow, true);
+        this(i2cDevice, i2cAddr8Bit, initialReadWindow, true);
         }
 
     /**
@@ -114,11 +114,11 @@ public final class I2cDeviceClient implements II2cDeviceClient
      *
      * @param i2cDevice             the device we are to be a client of
      * @param i2cAddr8Bit           its 8 bit i2cAddress
-     * @param initialRegisterWindow initial reg window to use, may be null
+     * @param initialReadWindow initial reg window to use, may be null
      * @param autoClose             if true, the device client will automatically close when the
      *                              associated SynchronousOpMode stops
      */
-    public I2cDeviceClient(II2cDevice i2cDevice, int i2cAddr8Bit, RegWindow initialRegisterWindow, boolean autoClose)
+    public I2cDeviceClient(II2cDevice i2cDevice, int i2cAddr8Bit, ReadWindow initialReadWindow, boolean autoClose)
         {
         this.i2cDevice              = i2cDevice;
         this.callback               = new Callback();
@@ -136,7 +136,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
         this.writeCache     = this.i2cDevice.getI2cWriteCache();
         this.writeCacheLock = this.i2cDevice.getI2cWriteCacheLock();
         
-        this.regWindowRead  = initialRegisterWindow;
+        this.readWindow       = initialReadWindow;
         this.regWindowChanged = false;
 
         this.nanoTimeReadCacheValid = 0;
@@ -151,12 +151,13 @@ public final class I2cDeviceClient implements II2cDeviceClient
             IStopActionRegistrar registrar = SynchronousOpMode.getStopActionRegistrar();
             if (registrar != null)
                 {
-                registrar.registerActionOnStop(new IAction() {
-                    @Override public void doAction()
-                        {
-                        I2cDeviceClient.this.close();
-                        }
-                    });
+                registrar.registerActionOnStop(new IAction()
+                {
+                @Override public void doAction()
+                    {
+                    I2cDeviceClient.this.close();
+                    }
+                });
                 }
             }
 
@@ -196,14 +197,14 @@ public final class I2cDeviceClient implements II2cDeviceClient
     /**
      * Set the set of registers that we will read and read and read again on every hardware cycle 
      */
-    public void setReadWindow(RegWindow window)
+    public void setReadWindow(ReadWindow window)
         {
         synchronized (this.theLock)
             {
-            if (this.regWindowRead == null || !this.regWindowRead.equals(window))
+            if (this.readWindow == null || !this.readWindow.equals(window))
                 {
                 // Remember the new window
-                this.regWindowRead = window;
+                this.readWindow = window;
                 
                 // Let others know of the update
                 this.regWindowChanged = true;
@@ -214,22 +215,22 @@ public final class I2cDeviceClient implements II2cDeviceClient
     /**
      * Return the current register window.
      */
-    public RegWindow getReadWindow()
+    public ReadWindow getReadWindow()
         {
         synchronized (this.theLock)
             {
-            return this.regWindowRead;
+            return this.readWindow;
             }
         }
 
     /**
      * Ensure that the current register window covers the indicated set of registers.
      */
-    public void ensureReadWindow(RegWindow windowNeeded, RegWindow windowToSet)
+    public void ensureReadWindow(ReadWindow windowNeeded, ReadWindow windowToSet)
         {
         synchronized (this.theLock)
             {
-            if (this.regWindowRead == null || !this.regWindowRead.contains(windowNeeded))
+            if (this.readWindow == null || !this.readWindow.contains(windowNeeded))
                 {
                 setReadWindow(windowToSet);
                 }
@@ -262,9 +263,9 @@ public final class I2cDeviceClient implements II2cDeviceClient
             synchronized (this.theLock)
                 {
                 // We can only fetch registers that lie within the register window
-                if (this.regWindowRead == null)
+                if (this.readWindow == null)
                     throw new IllegalArgumentException("read request with no register window set");
-                if (!this.regWindowRead.contains(ireg, creg))
+                if (!this.readWindow.contains(ireg, creg))
                     throw new IllegalArgumentException(String.format("read request (%d,%d) outside of read register window", ireg, creg));
 
                 // Wait until the read cache is valid and the write cache isn't busy.
@@ -280,7 +281,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
                 this.readCacheLock.lockInterruptibly();
                 try
                     {
-                    int ibFirst = ireg - this.regWindowRead.getIregFirst() + dibCacheOverhead;
+                    int ibFirst = ireg - this.readWindow.getIregFirst() + dibCacheOverhead;
                     TimestampedData result = new TimestampedData();
                     result.data     = Arrays.copyOfRange(this.readCache, ibFirst, ibFirst + creg);
                     result.nanoTime = this.nanoTimeReadCacheValid;
@@ -507,7 +508,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
         void startSwitchingToReadMode()
             {
             readCacheStatus = READ_CACHE_STATUS.SWITCHINGTOREADMODE;
-            i2cDevice.enableI2cReadMode(regWindowRead.getIregFirst(), regWindowRead.getCreg());
+            i2cDevice.enableI2cReadMode(readWindow.getIregFirst(), readWindow.getCreg());
             enabledReadMode = true;
 
             setActionFlag   = true;     // causes an I2C read
@@ -660,7 +661,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
 
                     else if (readCacheStatus == READ_CACHE_STATUS.IDLE || regWindowChanged)
                         {
-                        if (regWindowRead != null)
+                        if (readWindow != null)
                             startSwitchingToReadMode();
                         else
                             readCacheStatus = READ_CACHE_STATUS.IDLE;
@@ -738,7 +739,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
                     if (writeCacheStatus != prevWriteCacheStatus) message.append("| W." + prevWriteCacheStatus.toString() + "->" + writeCacheStatus.toString());
                  // if (modeCacheStatus != prevModeCacheStatus)   message.append("| M." + prevModeCacheStatus.toString() + "->" + modeCacheStatus.toString());
                     if (enabledWriteMode)                         message.append(String.format("| setWrite(0x%02x,%d)", iregWriteFirst, cregWrite));
-                    if (enabledReadMode)                          message.append(String.format("| setRead(0x%02x,%d)", regWindowRead.getIregFirst(), regWindowRead.getCreg()));
+                    if (enabledReadMode)                          message.append(String.format("| setRead(0x%02x,%d)", readWindow.getIregFirst(), readWindow.getCreg()));
 
                     log(Log.DEBUG, message.toString());
                     }
