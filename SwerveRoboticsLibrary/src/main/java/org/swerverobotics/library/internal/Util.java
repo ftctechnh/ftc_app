@@ -1,9 +1,12 @@
 package org.swerverobotics.library.internal;
 
-import org.swerverobotics.library.exceptions.SwerveRuntimeException;
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.Vector;
+import org.swerverobotics.library.examples.*;
+import org.swerverobotics.library.exceptions.*;
+import org.swerverobotics.library.interfaces.*;
+
+
+import java.lang.reflect.*;
+import java.util.*;
 
 /**
  * Various internal utilities that assist us.
@@ -25,17 +28,47 @@ public class Util
     // Ugh. We wish we didn't have to do this. But the definitions of some classes we need
     // to override leave us no choice.
     //----------------------------------------------------------------------------------------------
-    
-    static public Vector<Field> getDeclaredFieldsIncludingSuper(Class<?> c)
+
+    static List<Method> getDeclaredMethods(Class<?> clazz)
+    // Guard against silly class loaders
         {
-        if (c.getSuperclass() == null)
+        Method[] methods;
+        try {
+            methods = clazz.getDeclaredMethods();
+            }
+        catch (Exception e)
             {
-            return new Vector<Field>(Arrays.asList(c.getDeclaredFields()));
+            methods = new Method[0];
+            }
+        List<Method> result = new LinkedList<Method>();
+        result.addAll(Arrays.asList(methods));
+        return result;
+        }
+
+    static public List<Method> getDeclaredMethodsIncludingSuper(Class<?> clazz)
+        {
+        if (clazz.getSuperclass() == null)
+            {
+            return getDeclaredMethods(clazz);
             }
         else
             {
-            Vector<Field> result = getDeclaredFieldsIncludingSuper(c.getSuperclass());
-            result.addAll(Arrays.asList(c.getDeclaredFields()));
+            List<Method> result = getDeclaredMethodsIncludingSuper(clazz.getSuperclass());
+            result.addAll(getDeclaredMethods(clazz));
+            return result;
+            }
+        }
+
+    static public Vector<Field> getDeclaredFieldsIncludingSuper(Class<?> clazz)
+        {
+        if (clazz.getSuperclass() == null)
+            {
+            return new Vector<Field>(Arrays.asList(clazz.getDeclaredFields()));
+            }
+        else
+            {
+            Vector<Field> result = getDeclaredFieldsIncludingSuper(clazz.getSuperclass());
+            result.addAll(Arrays.asList(clazz.getDeclaredFields()));
             return result;
             }
         }
