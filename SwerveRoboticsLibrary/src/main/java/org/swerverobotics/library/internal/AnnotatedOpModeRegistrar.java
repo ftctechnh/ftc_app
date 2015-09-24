@@ -26,11 +26,13 @@ public class AnnotatedOpModeRegistrar
     // State
     //----------------------------------------------------------------------------------------------
 
-    LinkedList<String>  partialClassNamesToIgnore;
+    private final String                     TAG = "AnnotatedOpModeReg";
 
-    final OpModeManager                opModeManager;
-    final Context                      context;
-    final DexFile                      dexFile;
+    LinkedList<String>                       partialClassNamesToIgnore;
+
+    final OpModeManager                      opModeManager;
+    final Context                            context;
+    final DexFile                            dexFile;
 
     final HashMap<String, LinkedList<Class>> pairedOpModes;
     final HashSet<Class>                     classesSeen;
@@ -99,14 +101,15 @@ public class AnnotatedOpModeRegistrar
     // Operations
     //----------------------------------------------------------------------------------------------
 
-    private final String TAG = "AnnotatedOpModeReg";
-
     void doRegistration()
     // The body of this is from the following, without which we could not have been successful
     // in this endeavor.
     //      https://github.com/dmssargent/Xtensible-ftc_app/blob/master/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/FtcOpModeRegister.java
     // Many thanks.
         {
+        // Help with later debugging
+        Thread.currentThread().setName("FtcRobotControllerService$b");
+
         // Find all the candidates
         this.findOpModesFromClassAnnotations();
         this.findOpModesFromRegistrarMethods();
@@ -150,7 +153,9 @@ public class AnnotatedOpModeRegistrar
             {
             for (Class opMode : opModeList)
                 {
-                this.opModeManager.register(getOpModeName(opMode), opMode);
+                String name = getOpModeName(opMode);
+                this.opModeManager.register(name, opMode);
+                Log.d(TAG, String.format("registered {%s} as {%s}", opMode.getSimpleName(), name));
                 }
             }
         }
@@ -263,6 +268,7 @@ public class AnnotatedOpModeRegistrar
             // We just go ahead and register this, as there's nothing else to do.
             // TODO: we could register these AFTER the classes, if we wanted to.
             opModeManager.register(name, opModeInstance);
+            Log.d(TAG, String.format("registered instance {%s} as {%s}", opModeInstance.toString(), name));
             }
         }
 
