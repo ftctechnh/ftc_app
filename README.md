@@ -8,13 +8,11 @@ Suite, also [here](https://github.com/SwerveRobotics/tools) on GitHub.
 
 Notable features of the Swerve Robotics FTC Library include:
 
-*   A [**SynchronousOpMode**]
-    (https://cdn.rawgit.com/swerverobotics/ftc_app/master/SwerveRoboticsLibrary/doc/javadoc/org/swerverobotics/library/SynchronousOpMode.html)
+*   A [**SynchronousOpMode**](https://cdn.rawgit.com/swerverobotics/ftc_app/master/SwerveRoboticsLibrary/doc/javadoc/org/swerverobotics/library/SynchronousOpMode.html)
     class that brings back the synchronous, linear programming style
     with which teams have been familiar with from previous seasons in RobotC, and which is more amenable
     to teaching to beginning programmers than the event-driven / loop() callback programming
-    model native to the robot controller runtime. SynchronousOpMode is similar to [LinearOpMode]
-    (https://cdn.rawgit.com/ftctechnh/ftc_app/master/doc/javadoc/com/qualcomm/robotcore/eventloop/opmode/LinearOpMode.html)
+    model native to the robot controller runtime. SynchronousOpMode is similar to [LinearOpMode](https://cdn.rawgit.com/ftctechnh/ftc_app/master/doc/javadoc/com/qualcomm/robotcore/eventloop/opmode/LinearOpMode.html)
     but contains several enhancements and a few fixes. Most notable for those using the legacy
     NXT/HiTechnic motor controllers is the automatic handling of the tedious manual mode switching, multi-loop-cycle
     delay management, and loop-cycle operation compatibility rules which are otherwise necessary when
