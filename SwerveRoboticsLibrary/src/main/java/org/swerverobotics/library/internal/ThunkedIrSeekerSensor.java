@@ -125,7 +125,23 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor implements IThunkedRea
     private boolean isTargetLegacy()
     // Are we hooked to a legacy sensor, and so need to do the read-or-write-not-both dance? 
         {
-        return Util.isLegacyDevice(this.target);
+        // ModernRoboticsNxtIrSeekerSensor starts as:
+        //      private final ModernRoboticsUsbLegacyModule a;
+        //      private final byte[] b;
+        //      private final Lock c;
+        //      ...
+        //
+        // whereas ModernRoboticsIrSeekerSensorV3 starts as:
+        //      private final DeviceInterfaceModule a;
+        //      private final int b;
+        //      private Mode c;
+        //      ...
+        //
+        // return Util.<Object>getPrivateObjectField(this.target, 0) instanceof LegacyModule;
+        //
+        // But this is better:
+        //
+        return this.target instanceof com.qualcomm.hardware.ModernRoboticsNxtIrSeekerSensor;
         }
     private boolean isOffline()
         {
