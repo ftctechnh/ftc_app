@@ -187,13 +187,17 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      * Put the current thread to sleep for a bit as it has nothing better to do.
      *
      * idle(), which must be called on a synchronous thread, never on the loop() thread, causes the
-     * synchronous thread to go to sleep until it is likely that the robot controller runtime
-     * has gotten back in touch (by calling loop() again) and thus the state reported
-     * by the various hardware devices and sensors might be different than what it was previously.
+     * synchronous thread to go to sleep until it is likely that there's something useful to do.
+     * Specifically, it currently waits at most until the next end of a loop() cycle, and might return
+     * much earlier if there is new gamepad state available.
      *
-     * One can use this method when you have nothing better to do until the underlying
-     * robot controller runtime gets back in touch with us. Thread.yield() has similar effects, but
-     * idle() / synchronousThreadIdle() is more efficient.
+     * One should use this method when you have nothing better to do in your code, usually
+     * at the very end of your while(opModeIsActive()) loop. Calling Thread.yield() has similar
+     * effects, but idle() uses processor resources more effectively.
+     *
+     * {@link #idle()} is similar to waitOneFullHardwareCycle() in LinearOpMode (which can at times
+     * in fact wait nearly two full cycles), but makes no guarantees as to completing any
+     * particular number of hardware cycles, if any.
      *
      * @see #main()
      * @see #synchronousThreadIdle() 
@@ -203,11 +207,11 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         synchronized (this.loopLock)
             {
             // If new input has arrived since anyone last looked, then let our caller process that
-            // if he is looking at the game pad input. If he's not, then we save some cycles and
-            // processing power by waiting instead of spinning.
+            // if he is looking at the game pad input. If he's not, or if there's nothing there,
+            // then we save some cycles and processing power by waiting instead of spinning.
             if (this.gamepadInputQueried && isNewGamepadStateAvailable())
                 {
-                Thread.yield();     // avoid tight loop if caller not looking at gamepad input
+                Thread.yield();     // avoid tight loop
                 return;
                 }
             
@@ -224,7 +228,6 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
 
     /**
      * Idles the current thread until stimulated by the robot controller runtime.
-     * 
      * The current thread must be a synchronous thread.
      *
      * @see #idle()
