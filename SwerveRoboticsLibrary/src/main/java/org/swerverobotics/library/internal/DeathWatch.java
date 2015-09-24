@@ -3,29 +3,30 @@ package org.swerverobotics.library.internal;
 import android.util.Log;
 
 import org.swerverobotics.library.exceptions.RuntimeInterruptedException;
+import org.swerverobotics.library.interfaces.IAction;
 
 /**
  * SuicideWatch is a little utility class that monitors a thread for termination. When that
- * occurs, a second thread is interrupted.
+ * occurs, an action is invoked.
  */
-public class SuicideWatch
+public class DeathWatch
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
     Thread                  threadWhichIsMonitored;
-    HandshakeThreadStarter  threadToBeInterrupted;
+    IAction                 action;
     HandshakeThreadStarter  monitor;
     
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
     
-    public SuicideWatch(Thread threadWhichIsMonitored, HandshakeThreadStarter threadToBeInterrupted)
+    public DeathWatch(Thread threadWhichIsMonitored, IAction action)
         {
         this.threadWhichIsMonitored = threadWhichIsMonitored;
-        this.threadToBeInterrupted  = threadToBeInterrupted;
+        this.action                 = action;
         this.monitor                = new HandshakeThreadStarter("suicide watch", new Monitor());
         }
 
@@ -57,7 +58,7 @@ public class SuicideWatch
             try {
                 threadWhichIsMonitored.join();
                 log("...suicide");
-                threadToBeInterrupted.stop();
+                action.doAction();
                 }
             catch (InterruptedException|RuntimeInterruptedException e)
                 {
