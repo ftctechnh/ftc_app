@@ -3,8 +3,7 @@ package org.swerverobotics.library;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
-import android.util.SparseArray;
-
+import android.util.*;
 import junit.framework.Assert;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -23,6 +22,11 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     //----------------------------------------------------------------------------------------------
     // Public State
     //----------------------------------------------------------------------------------------------
+
+    /**
+     * The logging tag we use in LogCat output from this class
+     */
+    public static final String TAG = "SyncOpMode";
 
     /**
      * Provides access to the first gamepad controller. Only changes as a result of calling
@@ -260,7 +264,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     /**
      * Advanced: wait until all thunks that have been dispatched from the current (synchronous)
      * thread have completed their execution over on the loop() thread and their effects
-     * to have reached the hardwaree.
+     * to have reached the hardware.
      *
      * In general, thunked methods that don't return any information to the caller
      * (that is, the majority of setXXX() calls) only *initiate* their work on the loop()
@@ -331,7 +335,14 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         gamepadAssign(this.gamepad1Captured, super.gamepad1);
         gamepadAssign(this.gamepad2Captured, super.gamepad2);
         //
-        this.gamePadCaptureStateChanged.compareAndSet(false, changed1 || changed2);
+        boolean changed = changed1 || changed2;
+        //
+        if (changed)
+            {
+            Log.v(TAG, String.format("gamepad state: %d", this.gamepadStateCount.getAndIncrement()));
+            }
+        //
+        this.gamePadCaptureStateChanged.compareAndSet(false, changed);
         }
 
     boolean isNewGamepadStateAvailable()
@@ -419,6 +430,9 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
 
     private         Gamepad                 gamepad1Captured = null;
     private         Gamepad                 gamepad2Captured = null;
+
+    // State only intended to support debugging and logging
+    private         AtomicInteger           gamepadStateCount = new AtomicInteger(0);
 
     public SynchronousOpMode()
         {
@@ -732,6 +746,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             {
             @Override public void run() throws InterruptedException
                 {
+                Log.d(TAG, String.format("starting OpMode {%s}", SynchronousOpMode.this.getClass().getSimpleName()));
                 SynchronousOpMode.this.main();
                 }
             }, true);
@@ -873,6 +888,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         {
         // Call the subclass hook in case they might want to do something interesting
         this.preStopHook();
+        Log.d(TAG, String.format("stopping OpMode {%s}...", this.getClass().getSimpleName()));
 
         // Next time synchronous threads ask, yes, we do want to stop
         this.stopRequested = true;
@@ -890,8 +906,8 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
                 action.doAction();
             this.actionsOnStop.clear();
             }
-        
-        // Call the subclass hook in case they might want to do something interesting
+
+        Log.d(TAG, String.format("...stopped"));
         this.postStopHook();
         }
 
