@@ -700,11 +700,11 @@ public final class I2cDeviceClient implements II2cDeviceClient
 
                 if (setActionFlag && !queueFullWrite)
                     {
-                    i2cDevice.writeI2cPortFlagOnlyToModule();
+                    i2cDevice.writeI2cPortFlagOnlyToController();
                     }
                 else if (queueFullWrite)
                     {
-                    i2cDevice.writeI2cCacheToModule();
+                    i2cDevice.writeI2cCacheToController();
                     //
                     if (modeCacheStatus == MODE_CACHE_STATUS.DIRTY)
                         modeCacheStatus =  MODE_CACHE_STATUS.QUEUED;
@@ -715,7 +715,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
                 // would anyway, but why not...
                 if (queueRead)
                     {
-                    i2cDevice.readI2cCacheFromModule();
+                    i2cDevice.readI2cCacheFromController();
                     }
 
                 //----------------------------------------------------------------------------------
