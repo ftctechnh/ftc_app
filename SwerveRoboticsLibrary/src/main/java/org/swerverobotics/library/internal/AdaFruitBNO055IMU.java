@@ -20,7 +20,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
 
     private II2cDeviceClient       deviceClient;
     private Parameters             parameters;
-    private SuicideWatch           suicideWatch;
+    private DeathWatch             deathWatch;
     private SENSOR_MODE            currentMode;
 
     private final Object           dataLock = new Object();
@@ -53,7 +53,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         this.velocity     = new Velocity();
         this.position     = new Position();
         this.accelerationIntegration = null;
-        this.suicideWatch = null;
+        this.deathWatch   = null;
         }
 
     /**
@@ -167,6 +167,12 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         // Finally, enter the requested operating mode (see section 3.3)
         setSensorMode(parameters.mode);
         delayLore(200);
+        }
+
+    @Override public void close()
+        {
+        stopAccelerationIntegration();
+        this.deviceClient.close();
         }
 
     private void setSensorMode(SENSOR_MODE mode)
@@ -408,18 +414,39 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         
         // Make a new thread on which to do the integration        
         this.accelerationIntegration = new HandshakeThreadStarter("integrator", new Integrator(msPollInterval));
-        
-        // Set up a suicide watch that will shutdown that integration thread if
-        // the I2cDevice is shutdown. This is a bit of a hack, perhaps, but
-        // is the only way given the current architecture that we've figured out
-        // how to auto-stop integration if the robot is shutdown
-        while (this.deviceClient.getCallbackThread() == null)
+
+        IStopActionRegistrar registrar = SynchronousOpMode.getStopActionRegistrar();
+        if (registrar != null)
             {
-            // Don't yet know the callback thread. Spin until we do.
-            Thread.yield();
+            // Running on synchronous thread; we can use the SynchronousOpMode to
+            // shut us down automatically.
+            registrar.registerActionOnStop(new IAction() {
+                @Override public void doAction()
+                    {
+                    AdaFruitBNO055IMU.this.close();
+                    }
+                });
             }
-        this.suicideWatch = new SuicideWatch(this.deviceClient.getCallbackThread(), this.accelerationIntegration);
-        this.suicideWatch.start();
+        else
+            {
+            // Set up a suicide watch that will shutdown that integration thread if
+            // the I2cDevice is shutdown. This is a bit of a hack, perhaps, but
+            // is the only way given the current architecture that we've figured out
+            // how to auto-stop integration if the robot is shutdown and we're not
+            // on a synchronous thread.
+            while (this.deviceClient.getCallbackThread() == null)
+                {
+                // Don't yet know the callback thread. Spin until we do.
+                Thread.yield();
+                }
+            this.deathWatch = new DeathWatch(this.deviceClient.getCallbackThread(), new IAction() {
+                @Override public void doAction()
+                    {
+                    AdaFruitBNO055IMU.this.close();
+                    }
+                });
+            this.deathWatch.start();
+            }
         
         // Start the whole schebang a rockin...
         this.accelerationIntegration.start();
@@ -430,8 +457,8 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         if (this.accelerationIntegration != null)
             {
             // Disarm our monitor
-            this.suicideWatch.stop(msAccelerationIntegrationStopWait);
-            this.suicideWatch = null;
+            this.deathWatch.stop(msAccelerationIntegrationStopWait);
+            this.deathWatch = null;
             
             // Stop the integration thread
             this.accelerationIntegration.stop(msAccelerationIntegrationStopWait);
