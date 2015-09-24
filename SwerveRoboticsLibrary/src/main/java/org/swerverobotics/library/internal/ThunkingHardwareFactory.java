@@ -114,7 +114,7 @@ public class ThunkingHardwareFactory
         );
 
         //----------------------------------------------------------------------------
-        // Devices
+        // Actuators
         //----------------------------------------------------------------------------
         
         // Thunk the DC motors
@@ -152,6 +152,10 @@ public class ThunkingHardwareFactory
                     }
                 }
         );
+
+        //----------------------------------------------------------------------------
+        // Sensors
+        //----------------------------------------------------------------------------
 
         // Thunk the analog inputs
         createThunks(hwmap.analogInput, result.analogInput,
@@ -322,7 +326,46 @@ public class ThunkingHardwareFactory
                 }
         );
 
+        // Thunk the color sensors
+        createThunks(hwmap.colorSensor, result.colorSensor,
+                new IThunkFactory<ColorSensor>()
+                {
+                @Override public ColorSensor create(ColorSensor target)
+                    {
+                    return ThunkedColorSensor.create(target);
+                    }
+                }
+        );
+
+        // Thunk the LEDs
+        createThunks(hwmap.led, result.led,
+                new IThunkFactory<LED>()
+                {
+                @Override public LED create(LED target)
+                    {
+                    return ThunkedLED.create(target);
+                    }
+                }
+        );
+
+        // Thunk the TouchSensorMultiplexers
+        createThunks(hwmap.touchSensorMultiplexer , result.touchSensorMultiplexer ,
+                new IThunkFactory<TouchSensorMultiplexer>()
+                {
+                @Override public TouchSensorMultiplexer create(TouchSensorMultiplexer target)
+                    {
+                    return ThunkedTouchSensorMultiplexer.create(target);
+                    }
+                }
+        );
+
+        // Carry over the app context
         result.appContext = hwmap.appContext;
+
+        // If they haven't actually given us one (early versions of the runtime didn't actually set one),
+        // then fill one in through the use of magic.
+        if (result.appContext == null)
+            result.appContext = AnnotatedOpModeRegistrar.getApplicationContext();
 
         return result;
         }
