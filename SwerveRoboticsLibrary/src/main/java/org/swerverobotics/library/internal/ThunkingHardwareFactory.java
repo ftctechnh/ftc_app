@@ -363,7 +363,7 @@ public class ThunkingHardwareFactory
     
     private boolean isLegacyMotorController(DcMotorController controller)
         {
-        return controller instanceof LegacyModule.PortReadyCallback;
+        return Util.isLegacyDevice(controller);
         }
 
     private LegacyModule legacyModuleOfLegacyMotorController(DcMotorController controller)

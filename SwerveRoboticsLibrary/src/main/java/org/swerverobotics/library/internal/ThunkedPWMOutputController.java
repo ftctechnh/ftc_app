@@ -33,7 +33,7 @@ public class ThunkedPWMOutputController implements PWMOutputController, IThunkWr
         }
 
     //----------------------------------------------------------------------------------------------
-    // PWMOutputController
+    // HardwareDevice
     //----------------------------------------------------------------------------------------------
 
     @Override public void close()
@@ -58,6 +58,17 @@ public class ThunkedPWMOutputController implements PWMOutputController, IThunkWr
             }).doUntrackedReadOperation();
         }
 
+    @Override public String getConnectionInfo()
+        {
+        return (new ThunkForReading<String>()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getConnectionInfo();
+                }
+            }).doUntrackedReadOperation();
+        }
+
     @Override public String getDeviceName()
         {
         return (new ThunkForReading<String>()
@@ -68,6 +79,10 @@ public class ThunkedPWMOutputController implements PWMOutputController, IThunkWr
                 }
             }).doUntrackedReadOperation();
         }
+
+    //----------------------------------------------------------------------------------------------
+    // PWMOutputController
+    //----------------------------------------------------------------------------------------------
 
     @Override public SerialNumber getSerialNumber()
         {
@@ -102,9 +117,9 @@ public class ThunkedPWMOutputController implements PWMOutputController, IThunkWr
             }).doWriteOperation();
         }
 
-    @Override public double getPulseWidthOutputTime(final int channel)
+    @Override public int getPulseWidthOutputTime(final int channel)
         {
-        return (new ThunkForReading<Double>()
+        return (new ThunkForReading<Integer>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -113,9 +128,9 @@ public class ThunkedPWMOutputController implements PWMOutputController, IThunkWr
             }).doReadOperation();
         }
 
-    @Override public double getPulseWidthPeriod(final int channel)
+    @Override public int getPulseWidthPeriod(final int channel)
         {
-        return (new ThunkForReading<Double>()
+        return (new ThunkForReading<Integer>()
             {
             @Override protected void actionOnLoopThread()
                 {

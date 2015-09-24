@@ -1,5 +1,8 @@
 package org.swerverobotics.library.internal;
 
+import com.qualcomm.robotcore.hardware.HardwareDevice;
+import com.qualcomm.robotcore.hardware.LegacyModule;
+
 import org.swerverobotics.library.examples.*;
 import org.swerverobotics.library.exceptions.*;
 import org.swerverobotics.library.interfaces.*;
@@ -13,6 +16,15 @@ import java.util.*;
  */
 public class Util
     {
+    //----------------------------------------------------------------------------------------------
+    // FTC
+    //----------------------------------------------------------------------------------------------
+
+    static public boolean isLegacyDevice(HardwareDevice device)
+        {
+        return device instanceof LegacyModule.I2cPortReadyCallback; // WRONG: BUG
+        }
+
     //----------------------------------------------------------------------------------------------
     // Threading
     //----------------------------------------------------------------------------------------------

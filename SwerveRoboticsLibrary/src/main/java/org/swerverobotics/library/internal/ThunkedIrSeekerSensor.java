@@ -125,7 +125,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor implements IThunkedRea
     private boolean isTargetLegacy()
     // Are we hooked to a legacy sensor, and so need to do the read-or-write-not-both dance? 
         {
-        return this.target instanceof LegacyModule.PortReadyCallback;
+        return Util.isLegacyDevice(this.target);
         }
     private boolean isOffline()
         {
@@ -169,6 +169,50 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor implements IThunkedRea
     //----------------------------------------------------------------------------------------------
     // IrSeekerSensor
     //----------------------------------------------------------------------------------------------
+
+    @Override public void setI2cAddress(final int i2cAddress)
+        {
+        (new ThunkForWriting()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                target.setI2cAddress(i2cAddress);
+                }
+            }).doWriteOperation(this);
+        }
+
+    @Override public int getI2cAddress()
+        {
+        return (new ThunkForReading<Integer>()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getI2cAddress();
+                }
+            }).doReadOperation(this);
+        }
+
+    @Override public void setSignalDetectedThreshold(final double threshold)
+        {
+        (new ThunkForWriting()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                target.setSignalDetectedThreshold(threshold);
+                }
+            }).doWriteOperation(this);
+        }
+
+    @Override public double getSignalDetectedThreshold()
+        {
+        return (new ThunkForReading<Double>()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getSignalDetectedThreshold();
+                }
+            }).doReadOperation(this);
+        }
 
     @Override public void setMode(final IrSeekerSensor.Mode mode)
     // For legacy IR seekers, setting the mode puts signalDetected(), getAngle(), getStrength(), 
