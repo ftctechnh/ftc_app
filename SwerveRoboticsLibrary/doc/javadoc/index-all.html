@@ -585,7 +585,12 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#init--">init()</a></span> - Method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
 <dd>
-<div class="block">The robot controller runtime calls init(), once, to request that we initialize ourselves</div>
+<div class="block">Advanced: The robot controller runtime calls init(), once, to request that we initialize ourselves</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#init_loop--">init_loop()</a></span> - Method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
+<dd>
+<div class="block">Advanced: The robot controller runtime calls init_loop() repeatedly after the Init button is
+ pressed but before start() is called.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IBNO055IMU.html#initialize-org.swerverobotics.library.interfaces.IBNO055IMU.Parameters-">initialize(IBNO055IMU.Parameters)</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/IBNO055IMU.html" title="interface in org.swerverobotics.library.interfaces">IBNO055IMU</a></dt>
 <dd>
@@ -651,7 +656,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#loop--">loop()</a></span> - Method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
 <dd>
-<div class="block">The robot controller runtime calls loop() on a frequent basis, nominally every few ms or so.</div>
+<div class="block">Advanced: The robot controller runtime calls loop() on a frequent basis, nominally every few ms or so.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#loopDwellCheckCount">loopDwellCheckCount</a></span> - Variable in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
 <dd>
@@ -812,6 +817,10 @@
 <dd>
 <div class="block">Advanced: a hook for subclasses</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#postInitLoopHook--">postInitLoopHook()</a></span> - Method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
+<dd>
+<div class="block">Advanced: a hook for subclasses</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#postLoopHook--">postLoopHook()</a></span> - Method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
 <dd>
 <div class="block">Advanced: a hook for subclasses</div>
@@ -829,6 +838,10 @@
 <div class="block">Advanced: the various 'hook' calls calls preInitHook(), postInitHook(), preLoopHook(), 
  etc are hooks that advanced users might want to override in their subclasses to something
  interesting.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#preInitLoopHook--">preInitLoopHook()</a></span> - Method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
+<dd>
+<div class="block">Advanced: a hook for subclasses</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#preLoopHook--">preLoopHook()</a></span> - Method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
 <dd>
@@ -982,7 +995,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#start--">start()</a></span> - Method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
 <dd>
-<div class="block">start() is called when the autonomous or the teleop mode begins: the robot
+<div class="block">Advanced: start() is called when the autonomous or the teleop mode begins: the robot
  should start moving!</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IBNO055IMU.html#startAccelerationIntegration-org.swerverobotics.library.interfaces.IBNO055IMU.Position-org.swerverobotics.library.interfaces.IBNO055IMU.Velocity-">startAccelerationIntegration(IBNO055IMU.Position, IBNO055IMU.Velocity)</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/IBNO055IMU.html" title="interface in org.swerverobotics.library.interfaces">IBNO055IMU</a></dt>
@@ -1005,7 +1018,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#stop--">stop()</a></span> - Method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
 <dd>
-<div class="block">The robot controller runtime calls stop() to shut down the OpMode.</div>
+<div class="block">Advanced: The robot controller runtime calls stop() to shut down the OpMode.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IBNO055IMU.html#stopAccelerationIntegration--">stopAccelerationIntegration()</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/IBNO055IMU.html" title="interface in org.swerverobotics.library.interfaces">IBNO055IMU</a></dt>
 <dd>
