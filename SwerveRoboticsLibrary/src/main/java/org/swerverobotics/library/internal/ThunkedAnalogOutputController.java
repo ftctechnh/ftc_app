@@ -33,7 +33,7 @@ public class ThunkedAnalogOutputController implements AnalogOutputController, IT
         }
 
     //----------------------------------------------------------------------------------------------
-    // AnalogOutputController
+    // HardwareDevice
     //----------------------------------------------------------------------------------------------
 
     @Override public void close()
@@ -58,6 +58,17 @@ public class ThunkedAnalogOutputController implements AnalogOutputController, IT
             }).doUntrackedReadOperation();
         }
 
+    @Override public String getConnectionInfo()
+        {
+        return (new ThunkForReading<String>()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getConnectionInfo();
+                }
+            }).doUntrackedReadOperation();
+        }
+
     @Override public String getDeviceName()
         {
         return (new ThunkForReading<String>()
@@ -69,6 +80,10 @@ public class ThunkedAnalogOutputController implements AnalogOutputController, IT
             }).doUntrackedReadOperation();
         }
     
+    //----------------------------------------------------------------------------------------------
+    // AnalogOutputController
+    //----------------------------------------------------------------------------------------------
+
     @Override public SerialNumber getSerialNumber()
         {
         return (new ThunkForReading<SerialNumber>()

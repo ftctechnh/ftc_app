@@ -35,7 +35,7 @@ public class ThreadSafePWMOutput extends PWMOutput
         super.setPulseWidthOutputTime(time);
         }
 
-    @Override public synchronized double getPulseWidthOutputTime() 
+    @Override public synchronized int getPulseWidthOutputTime()
         {
         return super.getPulseWidthOutputTime();
         }
@@ -45,7 +45,7 @@ public class ThreadSafePWMOutput extends PWMOutput
         super.setPulseWidthPeriod(period);
         }
 
-    @Override public synchronized double getPulseWidthPeriod() 
+    @Override public synchronized int getPulseWidthPeriod()
         {
         return super.getPulseWidthPeriod();
         }

@@ -316,6 +316,39 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule, IThu
             }).doWriteOperation();
         }
 
+    @Override public byte[] getCopyOfReadBuffer(final int physicalPort)
+        {
+        return (new ThunkForReading<byte[]>()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getCopyOfReadBuffer(physicalPort);
+                }
+            }).doReadOperation();
+        }
+
+    @Override public byte[] getCopyOfWriteBuffer(final int physicalPort)
+        {
+        return (new ThunkForReading<byte[]>()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getCopyOfWriteBuffer(physicalPort);
+                }
+            }).doReadOperation();
+        }
+
+    @Override public void copyBufferIntoWriteBuffer(final int physicalPort, final byte[] data)
+        {
+        (new ThunkForWriting()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                target.copyBufferIntoWriteBuffer(physicalPort, data);
+                }
+            }).doWriteOperation();
+        }
+
     @Override public Lock getI2cReadCacheLock(final int physicalPort)
         {
         return (new ThunkForReading<Lock>()
@@ -393,6 +426,17 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule, IThu
             }).doWriteOperation();
         }
 
+    @Override public void readI2cCacheFromController(final int physicalPort)
+        {
+        (new ThunkForWriting()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                target.readI2cCacheFromController(physicalPort);
+                }
+            }).doWriteOperation();
+        }
+
     @Override public void writeI2cCacheToModule(final int physicalPort)
         {
         (new ThunkForWriting()
@@ -404,6 +448,17 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule, IThu
             }).doWriteOperation();
         }
 
+    @Override public void writeI2cCacheToController(final int physicalPort)
+        {
+        (new ThunkForWriting()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                target.writeI2cCacheToController(physicalPort);
+                }
+            }).doWriteOperation();
+        }
+
     @Override public void writeI2cPortFlagOnlyToModule(final int physicalPort)
         {
         (new ThunkForWriting()
@@ -411,6 +466,17 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule, IThu
             @Override protected void actionOnLoopThread()
                 {
                 target.writeI2cPortFlagOnlyToModule(physicalPort);
+                }
+            }).doWriteOperation();
+        }
+
+    @Override public void writeI2cPortFlagOnlyToController(final int physicalPort)
+        {
+        (new ThunkForWriting()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                target.writeI2cPortFlagOnlyToController(physicalPort);
                 }
             }).doWriteOperation();
         }
@@ -505,9 +571,9 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule, IThu
         }
 
 
-    @Override public double getPulseWidthOutputTime(final int physicalPort)
+    @Override public int getPulseWidthOutputTime(final int physicalPort)
         {
-        return (new ThunkForReading<Double>()
+        return (new ThunkForReading<Integer>()
             {
             @Override protected void actionOnLoopThread()
                 {
@@ -517,9 +583,9 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule, IThu
         }
         
 
-    @Override public double getPulseWidthPeriod(final int physicalPort)
+    @Override public int getPulseWidthPeriod(final int physicalPort)
         {
-        return (new ThunkForReading<Double>()
+        return (new ThunkForReading<Integer>()
             {
             @Override protected void actionOnLoopThread()
                 {
