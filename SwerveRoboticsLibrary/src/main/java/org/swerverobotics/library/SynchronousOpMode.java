@@ -689,11 +689,11 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         }
 
     //----------------------------------------------------------------------------------------------
-    // init(), start(), loop(), and stop()
+    // init(), init_loop(), start(), loop(), and stop()
     //----------------------------------------------------------------------------------------------
 
     /**
-     * The robot controller runtime calls init(), once, to request that we initialize ourselves
+     * Advanced: The robot controller runtime calls init(), once, to request that we initialize ourselves
      */
     @Override public final void init()
         {
@@ -739,7 +739,20 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         }
 
     /**
-     * start() is called when the autonomous or the teleop mode begins: the robot
+     * Advanced: The robot controller runtime calls init_loop() repeatedly after the Init button is
+     * pressed but before start() is called. This has little utility in SynchronousOpMode,
+     * but for consistency we provide subclass hooks that mirror how we handle the other
+     * overrideable OpMode methods.
+     */
+    @Override public final void init_loop()
+        {
+        this.preInitLoopHook();
+        ;
+        this.postInitLoopHook();
+        }
+
+    /**
+     * Advanced: start() is called when the autonomous or the teleop mode begins: the robot
      * should start moving!
      *
      * @see #waitForStart()
@@ -760,7 +773,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         }
 
     /**
-     * The robot controller runtime calls loop() on a frequent basis, nominally every few ms or so.
+     * Advanced: The robot controller runtime calls loop() on a frequent basis, nominally every few ms or so.
      * 
      * Our implementation here just executes the work that has been requested from the
      * synchronous threads.
@@ -848,7 +861,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         }
     
     /**
-     * The robot controller runtime calls stop() to shut down the OpMode. 
+     * Advanced: The robot controller runtime calls stop() to shut down the OpMode.
      *
      * We take steps as best as is possible to ensure that the main() thread is terminated
      * before this call returns.
@@ -911,6 +924,16 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      * @see #preInitHook()
      */
     protected void postInitHook() { /* hook for subclasses */ }
+    /**
+     * Advanced: a hook for subclasses
+     * @see #preInitHook()
+     */
+    protected void preInitLoopHook() { /* hook for subclasses */ }
+    /**
+     * Advanced: a hook for subclasses
+     * @see #preInitHook()
+     */
+    protected void postInitLoopHook() { /* hook for subclasses */ }
     /**
      * Advanced: a hook for subclasses
      * @see #preInitHook()
