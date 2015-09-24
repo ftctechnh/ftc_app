@@ -363,7 +363,7 @@ public class ThunkingHardwareFactory
     
     private boolean isLegacyMotorController(DcMotorController controller)
         {
-        return Util.isLegacyDevice(controller);
+        return controller instanceof com.qualcomm.hardware.ModernRoboticsNxtDcMotorController;
         }
 
     private LegacyModule legacyModuleOfLegacyMotorController(DcMotorController controller)

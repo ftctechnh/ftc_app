@@ -113,7 +113,16 @@ public class ThunkedCompassSensor extends CompassSensor implements IThunkedReadW
     private boolean isTargetLegacy()
     // Are we hooked to a legacy sensor, and so need to do the read-or-write-not-both dance?
         {
-        return Util.isLegacyDevice(this.target);
+        // ModernRoboticsNxtCompassSensor starts as:
+        //    private final ModernRoboticsUsbLegacyModule a;
+        //    private final byte[] b;
+        //    private final Lock c;
+        // ...
+        // return Util.<Object>getPrivateObjectField(this.target, 0) instanceof LegacyModule;
+        //
+        // But this is better:
+        //
+        return this.target instanceof com.qualcomm.hardware.ModernRoboticsNxtCompassSensor;
         }
     private boolean isOffline()
         {
