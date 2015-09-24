@@ -52,7 +52,7 @@ public class AnnotatedOpModeRegistrar
         try {
             registrar = new AnnotatedOpModeRegistrar(manager);
             }
-        catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | IOException e)
+        catch (Exception e)
             {
             registrar = null;
             }
@@ -72,10 +72,27 @@ public class AnnotatedOpModeRegistrar
         this.partialClassNamesToIgnore.add("io.netty");
 
         // Find the file in which we are executing
+        this.context = getApplicationContextRaw();
+        this.dexFile = new DexFile(this.context.getPackageCodePath());
+        }
+
+    static Context getApplicationContextRaw() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException
+        {
         Class<?> activityThreadClass    = Class.forName("android.app.ActivityThread");
         Method methodCurrentApplication = activityThreadClass.getMethod("currentApplication");
-        this.context                    = (Application) methodCurrentApplication.invoke(null, (Object[]) null);
-        this.dexFile                    = new DexFile(context.getPackageCodePath());
+        return                            (Application) methodCurrentApplication.invoke(null, (Object[]) null);
+        }
+
+    /** Use magic to find the current application context */
+    static Context getApplicationContext()
+        {
+        try {
+            return getApplicationContextRaw();
+            }
+        catch (Exception e)
+            {
+            return null;
+            }
         }
 
     //----------------------------------------------------------------------------------------------
