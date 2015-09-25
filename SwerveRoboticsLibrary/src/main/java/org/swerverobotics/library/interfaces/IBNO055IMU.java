@@ -61,6 +61,12 @@ public interface IBNO055IMU
         public String           loggingTag          = null;
         }
 
+    /**
+     * Shut down the sensor. This doesn't do anything in the hardware device itself, but rather
+     * shuts down any resources (threads, etc) that we use to communicate with it.
+     */
+    void close();
+
     //----------------------------------------------------------------------------------------------
     // Reading sensor output
     //----------------------------------------------------------------------------------------------
@@ -182,11 +188,13 @@ public interface IBNO055IMU
     // Status inquiry
     //----------------------------------------------------------------------------------------------
 
-    /** Returns the current status of the system.
+    /**
+     * Returns the current status of the system.
      * 
      * See section 4.3.58 of the BNO055 specification.
+     * @see #getSystemError()
      * 
-    <table><col width="20">
+    <table summary="System Status Codes">
      <tr><td>Result</td><td>Meaning</td></tr>
      <tr><td>0</td><td>idle</td></tr>
      <tr><td>1</td><td>system error</td></tr>
@@ -203,8 +211,9 @@ public interface IBNO055IMU
    * regarding that error.
    * 
    * See section 4.3.58 of the BNO055 specification.
+   * @see #getSystemStatus()
    *
-   <table><col width="20">
+   <table summary="System Error Codes">
    <tr><td>Result</td><td>Meaning</td></tr>
    <tr><td>0</td><td>no error</td></tr>
    <tr><td>1</td><td>peripheral initialization error</td></tr>
@@ -570,7 +579,6 @@ public interface IBNO055IMU
 
     /**
      * Accleration represents a directed acceleration in three-space. 
-     * <p></p>
      * Units are as specified in sensor initialization. The time at which the data was 
      * acquired is provide so as to facilitate integration of accelerations.
      */
@@ -637,7 +645,6 @@ public interface IBNO055IMU
 
     /**
      * Velocity represents a directed velocity in three-space. 
-     * <p></p>
      * Units are as the same as for Accleration, but integrated for time.
      */
     class Velocity
@@ -715,7 +722,6 @@ public interface IBNO055IMU
     
     /**
      * Position represents a coordinate position in three-space. 
-     * <p></p>
      * Units are as the same as for Velocity, but integrated for time.
      */
     class Position

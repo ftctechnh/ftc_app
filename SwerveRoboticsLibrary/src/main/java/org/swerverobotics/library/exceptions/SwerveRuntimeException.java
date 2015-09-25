@@ -10,13 +10,16 @@ public abstract class SwerveRuntimeException extends RuntimeException
     //----------------------------------------------------------------------------------------------
 
     /**
-     * wrap() takes an exception, of any flavor, and wraps it (only if necessary) to yield
-     * a RuntimeException. The method is idempotent.
+     * Takes an exception, of any flavor, and wraps it (only if necessary) to yield
+     * a RuntimeException. The method is idempotent. The following exception mappings are made:
+     * <table summary="Exception Mappings">
+     *     <tr><td>RuntimeException    </td><td>=&gt;</td><td>itself</td></tr>
+     *     <tr><td>InterruptedException</td><td>=&gt;</td><td>RuntimeInterruptedException</td></tr>
+     *     <tr><td>other               </td><td>=&gt;</td><td>RuntimeException</td></tr>
+     * </table>
      *
-     * The following exception mappings take place:
-     *      RuntimeException     => itself
-     *      InterruptedException => RuntimeInterruptedException
-     *      other                => RuntimeException
+     * @param e the exception which is to be wrapped
+     * @return the (possibly new) wrapper for the to-be-wrapped exception
      */
     public static RuntimeException wrap(Exception e)
         {
@@ -34,14 +37,14 @@ public abstract class SwerveRuntimeException extends RuntimeException
     //----------------------------------------------------------------------------------------------
 
     /**
-     * Constructs a new {@code SwerveRuntimeException} that includes the current stack trace.
+     * Constructs a new {@link SwerveRuntimeException} that includes the current stack trace.
      */
     protected SwerveRuntimeException()
         {
         }
 
     /**
-     * Constructs a new {@code SwerveRuntimeException} with the current stack trace
+     * Constructs a new {@link SwerveRuntimeException} with the current stack trace
      * and the specified detail message.
      *
      * @param detailMessage     the detail message for this exception.
@@ -52,7 +55,7 @@ public abstract class SwerveRuntimeException extends RuntimeException
         }
 
    /**
-     * Constructs a new {@code SwerveRuntimeException} with the current stack trace,
+     * Constructs a new {@link SwerveRuntimeException} with the current stack trace,
      * the specified detail message and the specified cause.
      *
      * @param detailMessage     the detail message for this exception.
@@ -64,7 +67,7 @@ public abstract class SwerveRuntimeException extends RuntimeException
         }
 
     /**
-     * Constructs a new {@code RuntimeException} with the current stack trace
+     * Constructs a new {@link SwerveRuntimeException} with the current stack trace
      * and the specified cause.
      *
     * @param throwable          the cause of this exception.

@@ -8,6 +8,8 @@ import org.swerverobotics.library.interfaces.*;
 
 /**
  * ThunkBase contains most of the code for thunking a call from a synchronous thread to the loop() thread
+ *
+ * @see <a href="https://en.wikipedia.org/wiki/Thunk">https://en.wikipedia.org/wiki/Thunk</a>
  */
 public abstract class Thunk implements IAction, IActionKeyed
     {

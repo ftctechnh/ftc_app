@@ -44,14 +44,14 @@ public class ThreadSafeI2cDevice extends I2cDevice
     // Operations
     //----------------------------------------------------------------------------------------------
 
-    @Override synchronized public void enableI2cReadMode(int memAddress, int length) 
+    @Override synchronized public void enableI2cReadMode(int i2cAddress, int memAddress, int length)
         {
-        super.enableI2cReadMode(memAddress, length);
+        super.enableI2cReadMode(i2cAddress, memAddress, length);
         }
 
-    @Override synchronized public void enableI2cWriteMode(int memAddress, int length) 
+    @Override synchronized public void enableI2cWriteMode(int i2cAddress, int memAddress, int length)
         {
-        super.enableI2cWriteMode(memAddress, length);
+        super.enableI2cWriteMode(i2cAddress, memAddress, length);
         }
 
     @Override synchronized public Lock getI2cReadCacheLock() 

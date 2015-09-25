@@ -87,6 +87,11 @@ public abstract class ThunkForReading<T> extends Thunk
         return this.doReadOperation(null);
         }
 
+    /**
+     * Do a tracking read. Tracking reads are most commonly used in classes that
+     * do both reading and writing to a LegacyModule-hosted device, where they have
+     * to keep track of mode switching.
+     */
     public T doReadOperation(final IThunkedReadWriteListener reader)
         {
         return this.doUntrackedReadOperation(new IInterruptableAction()
