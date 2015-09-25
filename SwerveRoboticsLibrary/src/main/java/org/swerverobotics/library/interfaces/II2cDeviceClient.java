@@ -112,17 +112,18 @@ public interface II2cDeviceClient extends HardwareDevice
     //----------------------------------------------------------------------------------------------
 
     /**
-     * Write a byte to the indicated register
+     * Writes a byte to the indicated register. The call does not return until the write has
+     * been queued to the device controller.
      * 
      * @param ireg      the register number that is to be written
      * @param bVal      the byte which is to be written to that register
      *
      * @see #write(int, byte[])
      */
-
     void write8(int ireg, int bVal);
+
     /**
-     * Write data to a set of registers, beginning with the one indicated. The data will be
+     * Writes data to a set of registers, beginning with the one indicated. The data will be
      * written to the I2C device as expeditiously as possible. This method will not return until
      * the data has been written to the device controller; however, that does not necessarily
      * indicate that the data has been issued in an I2C write transaction, though that ought
@@ -132,8 +133,34 @@ public interface II2cDeviceClient extends HardwareDevice
      * @param data      the data which is to be written to the registers
      *
      * @see #write8(int, int)
+     * @see #write(int, byte[], boolean)
      */
     void write(int ireg, byte[] data);
+
+    /**
+     * Writes a byte to the indicated register. The call may or may block until the write
+     * has been issued to the device controller
+     *
+     * @param ireg                  the register number that is to be written
+     * @param bVal                  the byte which is to be written to that register
+     * @param waitForCompletion     whether or not to wait until the write has been sent to the controller
+     *
+     * @see #write(int, byte[], boolean)
+     */
+    void write8(int ireg, int bVal, boolean waitForCompletion);
+
+    /**
+     * Writes data to a set of registers, beginning with the one indicated. The data will be
+     * written to the I2C device as expeditiously as possible. The call may or may block until the write
+     * has been issued to the device controller.
+     *
+     * @param ireg                  the first of the registers which is to be written
+     * @param data                  the data which is to be written to the registers
+     * @param waitForCompletion     whether or not to wait until the write has been sent to the controller     *
+     *
+     * @see #write8(int, int, boolean)
+     */
+    void write(int ireg, byte[] data, boolean waitForCompletion);
 
     //----------------------------------------------------------------------------------------------
     // Heartbeats
@@ -321,7 +348,7 @@ public interface II2cDeviceClient extends HardwareDevice
             }
 
         /**
-         * Returns a copy of this window but with the readIssued flag clear
+         * Returns a copy of this window but with the {@link #readIssued} flag clear
          */
         public ReadWindow freshCopy()
             {
@@ -334,7 +361,7 @@ public interface II2cDeviceClient extends HardwareDevice
 
         /**
          * Do the receiver and the indicated register window cover exactly the
-         * same set of registers?
+         * same set of registers and have the same modality?
          */
         public boolean sameAs(ReadWindow him)
             {
@@ -347,21 +374,38 @@ public interface II2cDeviceClient extends HardwareDevice
             }
         
         /**
-         * Does the receiver wholly contain the indicated window?
+         * Answers as to whether the receiver wholly contains the indicated window.
+         *
+         * @param him   the window we wish to see whether we contain
+         * @return      whether or not we contain the window
          */
-        public boolean containsWithSameMode(ReadWindow him)
+        public boolean contains(ReadWindow him)
             {
             if (him==null)
-                return false;
-
-            if (this.getReadMode() != him.getReadMode())
                 return false;
 
             return this.getIregFirst() <= him.getIregFirst() && him.getIregMax() <= this.getIregMax();
             }
 
         /**
-         * @see #containsWithSameMode(ReadWindow)
+         * Answers as to whether the receiver wholly contains the indicated window
+         * and also has the same modality.
+         *
+         * @param him   the window we wish to see whether we contain
+         * @return      whether or not we contain the window
+         */
+        public boolean containsWithSameMode(ReadWindow him)
+            {
+            return contains(him) && (this.getReadMode() == him.getReadMode());
+            }
+
+        /**
+         * Answers as to whether the receiver wholly contains the indicated set of registers.
+         *
+         * @param ireg  the first register of interest
+         * @param creg  the number of registers of interest
+         * @return whether or not the receiver contains this set of registers
+         * @see #contains(ReadWindow)
          */
         public boolean contains(int ireg, int creg)
             {
