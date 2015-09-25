@@ -2,10 +2,10 @@ package org.swerverobotics.library.internal;
 
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.exceptions.*;
 import org.swerverobotics.library.interfaces.*;
+import static org.swerverobotics.library.internal.Util.*;
 
 /**
  * Instances of AdaFruitBNO055IMU provide API access to an 
@@ -126,7 +126,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
             if (chipId == bCHIP_ID_VALUE)
                 break;
             delay(10);
-            if (elapsed.time()*1000 > msAwaitChipId)
+            if (milliseconds(elapsed) > msAwaitChipId)
                 throw new BNO055InitializationException(this, "failed to retrieve chip id");
             }
         delayLore(50);
@@ -157,7 +157,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         write8(REGISTER.SYS_TRIGGER, read8(REGISTER.SYS_TRIGGER) | 0x01);           // SYS_TRIGGER=0x3F
         elapsed.reset();
         boolean selfTestSuccessful = false;
-        while (!selfTestSuccessful && elapsed.time()*1000 < msAwaitSelfTest)
+        while (!selfTestSuccessful && milliseconds(elapsed) < msAwaitSelfTest)
             {
             selfTestSuccessful = (read8(REGISTER.SELFTEST_RESULT)&0x0F) == 0x0F;    // SELFTEST_RESULT=0x36
             }
@@ -366,7 +366,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
     private II2cDeviceClient.TimestampedData getVector(VECTOR vector)
         {
         // Ensure that the 6 bytes for this vector are visible in the register window.
-        this.ensureRegisterWindow(new II2cDeviceClient.ReadWindow(vector.getValue(), 6, readMode));
+        this.ensureReadWindow(new II2cDeviceClient.ReadWindow(vector.getValue(), 6, readMode));
 
         // Read the data
         return this.deviceClient.readTimeStamped(vector.getValue(), 6);
@@ -565,7 +565,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         return new II2cDeviceClient.ReadWindow(regFirst.bVal, regMax.bVal-regFirst.bVal, readMode);
         }
 
-    private void ensureRegisterWindow(II2cDeviceClient.ReadWindow needed)
+    private void ensureReadWindow(II2cDeviceClient.ReadWindow needed)
     // We optimize small windows into larger ones if we can
         {
         II2cDeviceClient.ReadWindow windowToSet = lowerWindow.containsWithSameMode(needed)
@@ -610,15 +610,30 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
             }
         }
 
-    public synchronized byte read8(REGISTER reg)
+    public synchronized byte read8(final REGISTER reg)
         {
-        this.ensureRegisterWindow(new II2cDeviceClient.ReadWindow(reg.bVal, 1, readMode));
-        return this.deviceClient.read8(reg.bVal);
+        this.deviceClient.executeFunctionWhileLocked(new IFunc<Byte>()
+            {
+            @Override public Byte value()
+                {
+                ensureReadWindow(new II2cDeviceClient.ReadWindow(reg.bVal, 1, readMode));
+                return deviceClient.read8(reg.bVal);
+                }
+            });
+        return 0;   // not reached
         }
-    public synchronized byte[] read(REGISTER reg, int cb)
+
+    public synchronized byte[] read(final REGISTER reg, final int cb)
         {
-        this.ensureRegisterWindow(new II2cDeviceClient.ReadWindow(reg.bVal, cb, readMode));
-        return this.deviceClient.read(reg.bVal, cb);
+        this.deviceClient.executeFunctionWhileLocked(new IFunc<byte[]>()
+            {
+            @Override public byte[] value()
+                {
+                ensureReadWindow(new II2cDeviceClient.ReadWindow(reg.bVal, cb, readMode));
+                return deviceClient.read(reg.bVal, cb);
+                }
+            });
+        return new byte[0];   // not reached
         }
 
     public void write8(REGISTER reg, int data)
