@@ -14,7 +14,7 @@ import org.swerverobotics.library.interfaces.TeleOp;
  *
  * THIS CODE IS NOT WORKING YET...
  */
-@TeleOp(name="AnalogOut")
+@TeleOp(name="AnalogOut demo")
 @Disabled
 public class SynchAnalogOutputDemo extends SynchronousOpMode {
 
@@ -51,7 +51,7 @@ public class SynchAnalogOutputDemo extends SynchronousOpMode {
                 } else if (this.gamepad1.x) {//we don't know what the valid mode values are so we have to explore
                     mode++;
                     analog.setAnalogOutputMode(mode);
-                } else if (this.gamepad1.y) { //we don't care if mode goes "negative", we can use the full range of the byte
+                } else if (this.gamepad1.y) { //for now, we don't care if mode goes "negative" since we don't know what values of mode are valid yet
                     mode--;
                     analog.setAnalogOutputMode(mode);
                 } else if (this.gamepad1.left_bumper) { //a 'reset' to see if this will get the port working
