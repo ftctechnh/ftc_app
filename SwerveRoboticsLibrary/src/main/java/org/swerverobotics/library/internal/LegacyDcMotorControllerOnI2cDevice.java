@@ -73,10 +73,7 @@ public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorControll
         this.initPID();
         this.floatMotors();
         
-        // Always read a certain set of registers
-        this.i2cDeviceClient.setReadWindow(new II2cDeviceClient.ReadWindow(iregFirstRead, cregRead, II2cDeviceClient.READ_MODE.ONLY_ONCE));
-        
-        // Keep the motors from shutting off 
+        // Keep the motors from shutting off
         // this.i2cDeviceClient.setHeartbeatRead(2000);
         }
 
@@ -147,8 +144,8 @@ public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorControll
         this.validateMotor(motor);
         byte b = modeToByte(mode);
         
-        // We write the whole byte, but only the lower two bits are actually writable.
-        // Thus, we don't need to read and OR in the other values
+        // We write the whole byte, but only the lower five bits are actually writable
+        // and we only ever use the lowest two as non zero.
         this.i2cDeviceClient.write8(mpMotorRegMotorMode[motor], b);
         }
 
@@ -170,8 +167,8 @@ public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorControll
         {
         this.validateMotor(motor);
         
-        // Unlike the (beta) robot controller library, we just saturate the motor
-        // power rather than making clients worry about that
+        // Unlike the (beta) robot controller library, we saturate the motor
+        // power rather than making clients worry about doing that.
         power = Range.clip(power, powerMin, powerMax);
         
         // The legacy values are -100 to 100
