@@ -34,7 +34,8 @@ public class AnnotatedOpModeRegistrar
     final Context                            context;
     final DexFile                            dexFile;
 
-    final HashMap<String, LinkedList<Class>> pairedOpModes;
+    final HashMap<String, LinkedList<Class>> opModeGroups;                          // key == group name
+    final String                             defaultOpModeGroupName = "$$$$$$$";    // arbitrary, but unlikely to be used by users
     final HashSet<Class>                     classesSeen;
     final HashMap<Class, String>             classNameOverrides;
 
@@ -67,7 +68,7 @@ public class AnnotatedOpModeRegistrar
         {
         this.opModeManager             = opModeManager;
         this.classNameOverrides        = new HashMap<>();
-        this.pairedOpModes             = new HashMap<>();
+        this.opModeGroups              = new HashMap<>();
         this.classesSeen               = new HashSet<>();
         this.partialClassNamesToIgnore = new LinkedList<>();
         this.partialClassNamesToIgnore.add("com.google");
@@ -114,7 +115,7 @@ public class AnnotatedOpModeRegistrar
         this.findOpModesFromClassAnnotations();
         this.findOpModesFromRegistrarMethods();
 
-        // Sort the linked lists within opModes
+        // Sort the linked lists within opModes, first by flavor and second by name
         Comparator<Class> comparator = new Comparator<Class>()
             {
             @Override public int compare(Class lhs, Class rhs)
@@ -134,21 +135,21 @@ public class AnnotatedOpModeRegistrar
                 return -1;
                 }
             };
-        for (String key : pairedOpModes.keySet())
+        for (String key : opModeGroups.keySet())
             {
-            Collections.sort(pairedOpModes.get(key), comparator);
+            Collections.sort(opModeGroups.get(key), comparator);
             }
 
-        // "Sort the map by keys, after discarding the old keys, use the new key from
-        // the first item in each LinkedList, and change from HashMap to TreeMap"
+        // Display each group on the driver station in alphabetical order according
+        // to the name of the first member of each group.
         TreeMap<String, LinkedList<Class>> sortedOpModes = new TreeMap<>();
-        for (String key : pairedOpModes.keySet())
+        for (String groupName : opModeGroups.keySet())
             {
-            Class<? extends OpMode> opMode = pairedOpModes.get(key).getFirst();
-            sortedOpModes.put(getOpModeName(opMode), pairedOpModes.get(key));
+            Class<? extends OpMode> groupSortKey = opModeGroups.get(groupName).getFirst();
+            sortedOpModes.put(getOpModeName(groupSortKey), opModeGroups.get(groupName));
             }
 
-        // Finally, register all the opmodes
+        // Finally, register all the OpModes
         for (LinkedList<Class> opModeList : sortedOpModes.values())
             {
             for (Class opMode : opModeList)
@@ -259,7 +260,7 @@ public class AnnotatedOpModeRegistrar
             {
             if (isOpMode(opModeClass))
                 {
-                addClassWithName(opModeClass, name);
+                addUserNamedClass(opModeClass, name);
                 }
             }
 
@@ -278,7 +279,6 @@ public class AnnotatedOpModeRegistrar
      */
     private List<Class> findAllClasses()
         {
-        // A list of annotated OpModes, grouped by their pairing properties (if any)
         List<Class> result = new LinkedList<Class>();
 
         // Iterate over all the classes in this whole .APK
@@ -325,63 +325,60 @@ public class AnnotatedOpModeRegistrar
     /** add this class, which has annotations, to the map of classes to register */
     private void addAnnotatedClass(Class clazz)
         {
-        // Locate TeleOp and Autonomous pairs
         if (clazz.isAnnotationPresent(TeleOp.class))
             {
             Annotation annotation = clazz.getAnnotation(TeleOp.class);
-            String pairedName = ((TeleOp) annotation).pairWithAuto();
-            addPairedClassWithName(clazz, pairedName);
+            String groupName = ((TeleOp) annotation).group();
+            addClassWithGroupName(clazz, groupName);
             }
 
         if (clazz.isAnnotationPresent(Autonomous.class))
             {
             Annotation annotation = clazz.getAnnotation(Autonomous.class);
-            String pairedName = ((Autonomous) annotation).pairWithTeleOp();
-            addPairedClassWithName(clazz, pairedName);
+            String groupName = ((Autonomous) annotation).group();
+            addClassWithGroupName(clazz, groupName);
             }
         }
 
-    private void addPairedClassWithName(Class clazz, String pairedName)
+    private void addClassWithGroupName(Class clazz, String groupName)
         {
-        if (pairedName.equals(""))
-            addToOpModes(clazz);
+        if (groupName.equals(""))
+            addToOpModeGroup(defaultOpModeGroupName, clazz);
         else
-            addToOpModes(pairedName, clazz);
+            addToOpModeGroup(groupName, clazz);
         }
 
-    private void addClassWithName(Class clazz, String name)
+    /** Add a class for which the user has provided the name as opposed to
+     *  the name being taken from the class and its own annotations */
+    private void addUserNamedClass(Class clazz, String name)
         {
-        addToOpModes(clazz);
+        addToOpModeGroup(defaultOpModeGroupName, clazz);
         this.classNameOverrides.put(clazz, name);
         }
 
-    /** Add a class to the map under a pairing key we make up, as the class is not paired */
-    private void addToOpModes(Class clazz)
-        {
-        int i = 0;
-        while (this.pairedOpModes.containsKey(Integer.toString(i)))
-            i++;
-        addToOpModes(Integer.toString(i), clazz);
-        }
-
     /** Add a class to the map under the indicated key */
-    private void addToOpModes(String pairingKey, Class clazz)
+    private void addToOpModeGroup(String groupName, Class clazz)
         {
         // Have we seen this class before?
         if (!this.classesSeen.contains(clazz))
             {
             this.classesSeen.add(clazz);
 
-            if (this.pairedOpModes.containsKey(pairingKey))
+            if (this.opModeGroups.containsKey(groupName))
                 {
-                this.pairedOpModes.get(pairingKey).add(clazz);
+                this.opModeGroups.get(groupName).add(clazz);
                 }
             else
                 {
                 LinkedList<Class> temp = new LinkedList<>();
                 temp.add(clazz);
-                this.pairedOpModes.put(pairingKey, temp);
+                this.opModeGroups.put(groupName, temp);
                 }
+            }
+        else
+            {
+            // We've already got this class somewhere; don't
+            // put it in a second time.
             }
         }
 
@@ -410,7 +407,7 @@ public class AnnotatedOpModeRegistrar
         return inheritsFrom(clazz, OpMode.class);
         }
 
-    /** Answers whether one class is or inhertits from another */
+    /** Answers whether one class is or inherits from another */
     private static boolean inheritsFrom(Class baseClass, Class superClass)
         {
         while (baseClass != null)
@@ -421,6 +418,5 @@ public class AnnotatedOpModeRegistrar
             }
         return false;
         }
-
 
     }
