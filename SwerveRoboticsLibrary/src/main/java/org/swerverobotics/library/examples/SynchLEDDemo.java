@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannelController;
 import org.swerverobotics.library.ClassFactory;
 import org.swerverobotics.library.SynchronousOpMode;
 import org.swerverobotics.library.TelemetryDashboardAndLog;
+import org.swerverobotics.library.interfaces.Disabled;
 import org.swerverobotics.library.interfaces.IAction;
 import org.swerverobotics.library.interfaces.IFunc;
 import org.swerverobotics.library.interfaces.TeleOp;
@@ -15,7 +16,8 @@ import org.swerverobotics.library.interfaces.TeleOp;
  * It assumes that you have 1 led connected to a Core Device Interface
  * and that the led is named "led" in your robot configuration file.
  */
-@TeleOp(name="LED")
+@TeleOp(name="LED demo")
+@Disabled
 public class SynchLEDDemo extends SynchronousOpMode {
 
     DigitalChannel led;

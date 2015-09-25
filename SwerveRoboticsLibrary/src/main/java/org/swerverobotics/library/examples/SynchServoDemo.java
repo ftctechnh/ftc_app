@@ -3,6 +3,7 @@ package org.swerverobotics.library.examples;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.swerverobotics.library.SynchronousOpMode;
+import org.swerverobotics.library.interfaces.Disabled;
 import org.swerverobotics.library.interfaces.TeleOp;
 
 /**
@@ -10,8 +11,9 @@ import org.swerverobotics.library.interfaces.TeleOp;
  * It assumes that you have 3 servos connected to a Core Servo Controller
  * and that the servos are named "servo1", "servo2", and "servo3" in your robot configuration file.
  */
-@TeleOp(name="Servos")
-public class SynchServoOp extends SynchronousOpMode
+@TeleOp(name="Servo demo")
+@Disabled
+public class SynchServoDemo extends SynchronousOpMode
 {
     Servo s1 = null;
     Servo s2 = null;
