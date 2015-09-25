@@ -10,6 +10,7 @@ import org.swerverobotics.library.interfaces.*;
  * mode switching on a motor controller.
  */
 @TeleOp(name="Motor Perf")
+@Disabled
 public class SynchMotorLoopPerf extends SynchronousOpMode
     {
     DcMotor     motor;

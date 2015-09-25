@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 
 /**
  * Provides a way to temporarily disable an OpMode annotated with
- * {@linkplain Autonomous} or {@linkplain TeleOp} from showing up
+ * {@link Autonomous} or {@link TeleOp} from showing up
  * on the driver station OpMode list.
  *
  * @see Autonomous

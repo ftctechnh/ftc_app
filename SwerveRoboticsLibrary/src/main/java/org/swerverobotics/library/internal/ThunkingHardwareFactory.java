@@ -87,7 +87,7 @@ public class ThunkingHardwareFactory
                             legacyModule.deregisterForPortReadyCallback(port);
                             
                             // Make a new experimental legacy motor controller
-                            II2cDevice i2cDevice            = new I2cDeviceOnLegacyModule(legacyModule, port);
+                            II2cDevice i2cDevice            = new I2cDeviceOnI2cDeviceController(legacyModule, port);
                             I2cDeviceClient i2cDeviceClient = new I2cDeviceClient(i2cDevice, i2cAddr8Bit, null);
                             DcMotorController controller    = new LegacyDcMotorControllerOnI2cDevice(i2cDeviceClient, target);
                             
@@ -114,7 +114,7 @@ public class ThunkingHardwareFactory
         );
 
         //----------------------------------------------------------------------------
-        // Devices
+        // Actuators
         //----------------------------------------------------------------------------
         
         // Thunk the DC motors
@@ -152,6 +152,10 @@ public class ThunkingHardwareFactory
                     }
                 }
         );
+
+        //----------------------------------------------------------------------------
+        // Sensors
+        //----------------------------------------------------------------------------
 
         // Thunk the analog inputs
         createThunks(hwmap.analogInput, result.analogInput,
@@ -322,7 +326,46 @@ public class ThunkingHardwareFactory
                 }
         );
 
+        // Thunk the color sensors
+        createThunks(hwmap.colorSensor, result.colorSensor,
+                new IThunkFactory<ColorSensor>()
+                {
+                @Override public ColorSensor create(ColorSensor target)
+                    {
+                    return ThunkedColorSensor.create(target);
+                    }
+                }
+        );
+
+        // Thunk the LEDs
+        createThunks(hwmap.led, result.led,
+                new IThunkFactory<LED>()
+                {
+                @Override public LED create(LED target)
+                    {
+                    return ThunkedLED.create(target);
+                    }
+                }
+        );
+
+        // Thunk the TouchSensorMultiplexers
+        createThunks(hwmap.touchSensorMultiplexer , result.touchSensorMultiplexer ,
+                new IThunkFactory<TouchSensorMultiplexer>()
+                {
+                @Override public TouchSensorMultiplexer create(TouchSensorMultiplexer target)
+                    {
+                    return ThunkedTouchSensorMultiplexer.create(target);
+                    }
+                }
+        );
+
+        // Carry over the app context
         result.appContext = hwmap.appContext;
+
+        // If they haven't actually given us one (early versions of the runtime didn't actually set one),
+        // then fill one in through the use of magic.
+        if (result.appContext == null)
+            result.appContext = AnnotatedOpModeRegistrar.getApplicationContext();
 
         return result;
         }
@@ -363,7 +406,7 @@ public class ThunkingHardwareFactory
     
     private boolean isLegacyMotorController(DcMotorController controller)
         {
-        return controller instanceof LegacyModule.PortReadyCallback;
+        return controller instanceof com.qualcomm.hardware.ModernRoboticsNxtDcMotorController;
         }
 
     private LegacyModule legacyModuleOfLegacyMotorController(DcMotorController controller)

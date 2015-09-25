@@ -41,7 +41,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor implements IThunkedRea
         if (this.isTargetLegacy())
             {
             // Make sure our hack is at least plausible
-            Assert.assertEquals(true, Util.<Object>getPrivateObjectField(target, 6) instanceof Mode);
+            Assert.assertTrue(!BuildConfig.DEBUG || (Util.<Object>getPrivateObjectField(target, 6) instanceof Mode));
         
             // Hack: did out the gunk we need to implement our mode-switching-waiting
             this.legacyModule = (LegacyModule)Util.<LegacyModule>getPrivateObjectField(target, 0);
@@ -125,7 +125,23 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor implements IThunkedRea
     private boolean isTargetLegacy()
     // Are we hooked to a legacy sensor, and so need to do the read-or-write-not-both dance? 
         {
-        return this.target instanceof LegacyModule.PortReadyCallback;
+        // ModernRoboticsNxtIrSeekerSensor starts as:
+        //      private final ModernRoboticsUsbLegacyModule a;
+        //      private final byte[] b;
+        //      private final Lock c;
+        //      ...
+        //
+        // whereas ModernRoboticsIrSeekerSensorV3 starts as:
+        //      private final DeviceInterfaceModule a;
+        //      private final int b;
+        //      private Mode c;
+        //      ...
+        //
+        // return Util.<Object>getPrivateObjectField(this.target, 0) instanceof LegacyModule;
+        //
+        // But this is better:
+        //
+        return this.target instanceof com.qualcomm.hardware.ModernRoboticsNxtIrSeekerSensor;
         }
     private boolean isOffline()
         {
@@ -169,6 +185,50 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor implements IThunkedRea
     //----------------------------------------------------------------------------------------------
     // IrSeekerSensor
     //----------------------------------------------------------------------------------------------
+
+    @Override public void setI2cAddress(final int i2cAddress)
+        {
+        (new ThunkForWriting()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                target.setI2cAddress(i2cAddress);
+                }
+            }).doWriteOperation(this);
+        }
+
+    @Override public int getI2cAddress()
+        {
+        return (new ThunkForReading<Integer>()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getI2cAddress();
+                }
+            }).doReadOperation(this);
+        }
+
+    @Override public void setSignalDetectedThreshold(final double threshold)
+        {
+        (new ThunkForWriting()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                target.setSignalDetectedThreshold(threshold);
+                }
+            }).doWriteOperation(this);
+        }
+
+    @Override public double getSignalDetectedThreshold()
+        {
+        return (new ThunkForReading<Double>()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getSignalDetectedThreshold();
+                }
+            }).doReadOperation(this);
+        }
 
     @Override public void setMode(final IrSeekerSensor.Mode mode)
     // For legacy IR seekers, setting the mode puts signalDetected(), getAngle(), getStrength(), 

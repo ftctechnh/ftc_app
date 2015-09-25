@@ -7,7 +7,7 @@ import org.swerverobotics.library.*;
  * II2cDeviceClient is the public interface to a utility class that makes it easier to
  * use I2cDevice instances.
  * 
- * @see ClassFactory#createI2cDeviceClient(I2cDevice, int, ReadWindow)
+ * @see ClassFactory#createI2cDeviceClient(I2cDevice, ReadWindow)
  */
 public interface II2cDeviceClient extends HardwareDevice
     {
@@ -24,7 +24,8 @@ public interface II2cDeviceClient extends HardwareDevice
     void setReadWindow(ReadWindow window);
 
     /**
-     * Return the current register window.
+     * Returns the current register window used for reading.
+     * @return the current read window
      * @see #setReadWindow(ReadWindow)
      */
     ReadWindow getReadWindow();
@@ -111,17 +112,18 @@ public interface II2cDeviceClient extends HardwareDevice
     //----------------------------------------------------------------------------------------------
 
     /**
-     * Write a byte to the indicated register
+     * Writes a byte to the indicated register. The call does not return until the write has
+     * been queued to the device controller.
      * 
      * @param ireg      the register number that is to be written
      * @param bVal      the byte which is to be written to that register
      *
      * @see #write(int, byte[])
      */
-
     void write8(int ireg, int bVal);
+
     /**
-     * Write data to a set of registers, beginning with the one indicated. The data will be
+     * Writes data to a set of registers, beginning with the one indicated. The data will be
      * written to the I2C device as expeditiously as possible. This method will not return until
      * the data has been written to the device controller; however, that does not necessarily
      * indicate that the data has been issued in an I2C write transaction, though that ought
@@ -131,8 +133,34 @@ public interface II2cDeviceClient extends HardwareDevice
      * @param data      the data which is to be written to the registers
      *
      * @see #write8(int, int)
+     * @see #write(int, byte[], boolean)
      */
     void write(int ireg, byte[] data);
+
+    /**
+     * Writes a byte to the indicated register. The call may or may block until the write
+     * has been issued to the device controller
+     *
+     * @param ireg                  the register number that is to be written
+     * @param bVal                  the byte which is to be written to that register
+     * @param waitForCompletion     whether or not to wait until the write has been sent to the controller
+     *
+     * @see #write(int, byte[], boolean)
+     */
+    void write8(int ireg, int bVal, boolean waitForCompletion);
+
+    /**
+     * Writes data to a set of registers, beginning with the one indicated. The data will be
+     * written to the I2C device as expeditiously as possible. The call may or may block until the write
+     * has been issued to the device controller.
+     *
+     * @param ireg                  the first of the registers which is to be written
+     * @param data                  the data which is to be written to the registers
+     * @param waitForCompletion     whether or not to wait until the write has been sent to the controller     *
+     *
+     * @see #write8(int, int, boolean)
+     */
+    void write(int ireg, byte[] data, boolean waitForCompletion);
 
     //----------------------------------------------------------------------------------------------
     // Heartbeats
@@ -190,6 +218,8 @@ public interface II2cDeviceClient extends HardwareDevice
     /**
      * Returns the number of I2C cycles that we've seen for this device. This at times
      * can be a useful debugging aid, but probably isn't useful for much more.
+     *
+     * @return the current I2C cycle count
      */
     int getI2cCycleCount();
 
@@ -199,7 +229,8 @@ public interface II2cDeviceClient extends HardwareDevice
      */
     void setLogging(boolean enabled);
     /**
-     * Set the tag to use when logging is on
+     * Set the tag to use when logging is on.
+     * @param loggingTag    the logging tag to sue
      */
     void setLoggingTag(String loggingTag);
 
@@ -212,6 +243,27 @@ public interface II2cDeviceClient extends HardwareDevice
     //----------------------------------------------------------------------------------------------
     // RegWindow
     //----------------------------------------------------------------------------------------------
+
+    /**
+     * READ_MODE controls whether when asked to read we read only once or read multiple times
+     */
+    enum READ_MODE
+        {
+        /**
+         * continuously issue I2C reads whenever there's nothing else needing to be done.
+         * In this mode, {@link #read(int, int)} will not necessarily execute and I2C transaction
+         * for every call but might instead return previously read data it has not been invalidated
+         * by a write operation.
+         *
+         * @see #read(int, int)
+         */
+        REPEAT,
+        /**
+         * only issue a single I2C read, then set the read window to null to disable further reads
+         */
+        ONLY_ONCE
+        };
+
 
     /**
      * RegWindow is a utility class for managing the window of I2C register bytes that
@@ -228,7 +280,7 @@ public interface II2cDeviceClient extends HardwareDevice
          * on the size of data that can be read or written at one time. cregMax
          * indicates that maximum size.
          */
-        public static final int cregMax = 27;
+        public static final int cregMax = 26;   // No, not 27: the CDIM can't handle 27
 
         /**
          * The first register in the window
@@ -239,17 +291,44 @@ public interface II2cDeviceClient extends HardwareDevice
          */
         private final int creg;
         /**
-         * Return the first register in the window
+         * The mode of the window
+         */
+        private final READ_MODE readMode;
+        /**
+         * Whether a read has been issued for this window or not
+         */
+        private boolean readIssued;
+
+
+        /**
+         * Returns the first register in the window
          */
         public int getIregFirst() { return this.iregFirst; }
         /**
-         * Return the first register NOT in the window
+         * Returns the first register NOT in the window
          */
         public int getIregMax()   { return this.iregFirst + this.creg; }
         /**
-         * Return the number of registers in the window
+         * Returns the number of registers in the window
          */
         public int getCreg()      { return this.creg; }
+        /**
+         * Returns the mode of the window
+         */
+        public READ_MODE getReadMode() { return this.readMode; }
+        /**
+         * Returns whether a read has ever been issued for this window or not
+         */
+        public boolean getReadIssued() { return this.readIssued; }
+        /**
+         * Sets that a read has in fact been issued for this window
+         */
+        public void setReadIssued() { this.readIssued = true; }
+
+        /**
+         * Answers as to whether we're allowed to read using this window
+         */
+        public boolean isOkToRead() { return this.readMode==READ_MODE.REPEAT || !this.readIssued; }
 
         //------------------------------------------------------------------------------------------
         // Construction
@@ -258,12 +337,22 @@ public interface II2cDeviceClient extends HardwareDevice
         /**
          * Create a new register window with the indicated starting register and register count
          */
-        public ReadWindow(int iregFirst, int creg)
+        public ReadWindow(int iregFirst, int creg, READ_MODE readMode)
             {
-            this.iregFirst = iregFirst;
-            this.creg = creg;
+            this.readMode   = readMode;
+            this.readIssued = false;
+            this.iregFirst  = iregFirst;
+            this.creg       = creg;
             if (creg < 0 || creg > cregMax)
                 throw new IllegalArgumentException(String.format("buffer length %d invalid; max is %d", creg, cregMax));
+            }
+
+        /**
+         * Returns a copy of this window but with the {@link #readIssued} flag clear
+         */
+        public ReadWindow freshCopy()
+            {
+            return new ReadWindow(this.iregFirst, this.creg, this.readMode);
             }
 
         //------------------------------------------------------------------------------------------
@@ -271,35 +360,56 @@ public interface II2cDeviceClient extends HardwareDevice
         //------------------------------------------------------------------------------------------
 
         /**
-         * Do the recevier and the indicated register window cover exactly the 
-         * same set of registers?
+         * Do the receiver and the indicated register window cover exactly the
+         * same set of registers and have the same modality?
          */
-        public boolean equals(ReadWindow him)
+        public boolean sameAs(ReadWindow him)
             {
             if (him == null)
                 return false;
             
             return this.getIregFirst() == him.getIregFirst() 
-                    && this.getCreg() == him.getCreg();
+                    && this.getCreg() == him.getCreg()
+                    && this.getReadMode() == him.getReadMode();
             }
         
         /**
-         * Does the receiver wholly contain the indicated window?
+         * Answers as to whether the receiver wholly contains the indicated window.
+         *
+         * @param him   the window we wish to see whether we contain
+         * @return      whether or not we contain the window
          */
         public boolean contains(ReadWindow him)
             {
             if (him==null)
                 return false;
-            
+
             return this.getIregFirst() <= him.getIregFirst() && him.getIregMax() <= this.getIregMax();
             }
 
         /**
+         * Answers as to whether the receiver wholly contains the indicated window
+         * and also has the same modality.
+         *
+         * @param him   the window we wish to see whether we contain
+         * @return      whether or not we contain the window
+         */
+        public boolean containsWithSameMode(ReadWindow him)
+            {
+            return contains(him) && (this.getReadMode() == him.getReadMode());
+            }
+
+        /**
+         * Answers as to whether the receiver wholly contains the indicated set of registers.
+         *
+         * @param ireg  the first register of interest
+         * @param creg  the number of registers of interest
+         * @return whether or not the receiver contains this set of registers
          * @see #contains(ReadWindow)
          */
         public boolean contains(int ireg, int creg)
             {
-            return this.contains(new ReadWindow(ireg, creg));
+            return this.containsWithSameMode(new ReadWindow(ireg, creg, this.getReadMode()));
             }
         }
     }

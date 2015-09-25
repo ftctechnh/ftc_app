@@ -93,7 +93,7 @@ public final class ClassFactory
      */
     public static II2cDeviceClient createI2cDeviceClient(LegacyModule legacyModule, int port, int i2cAddr8Bit, II2cDeviceClient.ReadWindow initialRegisterWindow)
         {
-        II2cDevice ii2cDevice = new I2cDeviceOnLegacyModule(legacyModule, port);
+        II2cDevice ii2cDevice = new I2cDeviceOnI2cDeviceController(legacyModule, port);
         return createI2cDeviceClient(ii2cDevice, i2cAddr8Bit, initialRegisterWindow);
         }
 

@@ -1,2 +1,2 @@
 -notimestamp
--noqualifier com.qualcomm.robotcore.hardware:java.lang:org.swerverobotics.library:org.swerverobotics.interfaces:org.swerverobotics.exceptions:com.qualcomm.robotcore.robocol
+-notimestamp -noqualifier org.swerverobotics.library.*:org.swerverobotics.library.interfaces.*:org.swerverobotics.library.examples.*:org.swerverobotics.library.exceptions.*:org.usfirst.ftc.exampleteam.yourcodehere.*

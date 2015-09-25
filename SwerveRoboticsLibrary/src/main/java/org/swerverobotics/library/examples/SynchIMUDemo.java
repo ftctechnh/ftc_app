@@ -10,6 +10,7 @@ import org.swerverobotics.library.interfaces.*;
  * http://www.adafruit.com/products/2472
  */
 @TeleOp(name="IMU Demo")
+@Disabled
 public class SynchIMUDemo extends SynchronousOpMode
     {
     //----------------------------------------------------------------------------------------------
@@ -71,7 +72,7 @@ public class SynchIMUDemo extends SynchronousOpMode
 
         // At the beginning of each telemetry update, grab a bunch of data
         // from the IMU that we will then display in separate lines.
-        telemetry.action(new IAction() { @Override public void doAction()
+        telemetry.addAction(new IAction() { @Override public void doAction()
                 {
                 // Acquiring the angles is relatively expensive; we don't want
                 // to do that in each of the three items that need that info, as that's
