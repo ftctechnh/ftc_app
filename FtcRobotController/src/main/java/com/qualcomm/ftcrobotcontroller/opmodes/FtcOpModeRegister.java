@@ -67,6 +67,9 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("OmniBotIrSeekerOp", OmniBotIrSeekerOp.class) ;
     manager.register("OmniBotTouchOp", OmniBotTouchOp.class) ;
     manager.register("OmniBotOpticalTestOp", OmniBotOpticalTestOp.class) ;
+    manager.register("OrientOp", OrientOp.class) ;
+    manager.register("ServoOp", ServoOp.class) ;
+    manager.register("WeCoTeleOp", WeCoTeleOp.class) ;
 
 
   }

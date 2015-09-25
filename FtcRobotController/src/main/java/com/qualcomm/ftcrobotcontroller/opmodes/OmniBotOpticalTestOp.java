@@ -65,7 +65,9 @@ public class OmniBotOpticalTestOp extends OpMode {
   @Override
   public void loop() {
 
+    int Light = distanceSensor.getLightDetectedRaw() ;
 
+    telemetry.addData("Light", "Optical Distance Sensor returns " + String.format("%d", Light));
 
   }
 

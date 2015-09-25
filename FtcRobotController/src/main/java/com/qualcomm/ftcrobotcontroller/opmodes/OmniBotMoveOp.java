@@ -49,8 +49,14 @@ public class OmniBotMoveOp extends OpMode {
   DcMotor motor2 ;
   DcMotor motor3 ;
   DcMotor motor4 ;
+  Servo servo1 ;
 
   int scaleDegree = 0 ;
+
+  final static double armMinRange = 0.9 ;
+  final static double armMaxRange = 0.1 ;
+  double armDelta = 0.1 ;
+  double armPosition = 0.5 ;
 
   public OmniBotMoveOp () {
 
@@ -63,9 +69,11 @@ public class OmniBotMoveOp extends OpMode {
     motor2 = hardwareMap.dcMotor.get("motor_2") ;
     motor3 = hardwareMap.dcMotor.get("motor_3") ;
     motor4 = hardwareMap.dcMotor.get("motor_4") ;
+    servo1 = hardwareMap.servo.get("servo_1") ;
 
     motor1.setDirection(DcMotor.Direction.REVERSE) ;
     motor4.setDirection(DcMotor.Direction.REVERSE) ;
+
   }
 
   @Override
@@ -104,12 +112,34 @@ public class OmniBotMoveOp extends OpMode {
     motor3.setPower(motor3Power);
     motor4.setPower(motor4Power);
 
+    if (gamepad1.a) {
+
+      armPosition += armDelta ;
+      DbgLog.msg("=== Increase arm ===");
+    }
+
+    if (gamepad1.b) {
+
+      armPosition -= armDelta ;
+      DbgLog.msg("=== Decrease arm ===");
+    }
+
+    armPosition = Range.clip(armPosition, armMinRange, armMaxRange) ;
+
+    servo1.setPosition(armPosition);
+    String gamepad = "";
+    if (gamepad1.a || gamepad1.b) {
+      gamepad = "a or b is pressed" ;
+    }
+
     telemetry.addData("Scale", "Scale is set to" + String.format("%d", scaleDegree));
     telemetry.addData("Left Joystick", "Left Joystick at" + String.format("(%.2f,%.2f)", gamepad1.left_stick_x, gamepad1.left_stick_y));
     telemetry.addData("Motor Power 1", "Motor 1 power is" + String.format("%.2f", motor1Power));
     telemetry.addData("Motor Power 2", "Motor 2 power is" + String.format("%.2f", motor2Power));
     telemetry.addData("Motor Power 3", "Motor 3 power is" + String.format("%.2f", motor3Power));
     telemetry.addData("Motor Power 4", "Motor 4 power is" + String.format("%.2f", motor4Power));
+    telemetry.addData("Arm position", "Arm position is " + String.format("%.2f", armPosition));
+    telemetry.addData("gamepad", gamepad) ;
 
   /*
    * Code to run when the op mode is first disabled goes here
