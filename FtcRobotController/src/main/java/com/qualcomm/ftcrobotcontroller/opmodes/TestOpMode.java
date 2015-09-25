@@ -52,7 +52,7 @@ public class TestOpMode extends OpMode{
 
     @Override
     public void loop() {
-        drive.arcadeDrive(gamepad1.left_stick_y, gamepad1.right_stick_x);
+        drive.arcadeDrive(gamepad1.left_stick_y, gamepad1.right_stick_x, false);
         moveArm(gamepad1.y, gamepad1.a, gamepad1.x, gamepad1.b);
     }
 

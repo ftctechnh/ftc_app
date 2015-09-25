@@ -12,28 +12,55 @@ public class ArcadeDrive {
         this.motorLeft = motorLeft;
     }
 
-    public void arcadeDrive(float y, float x) {
-        float max = Math.abs(x);
-        if (Math.abs(y) > max)
-            max = Math.abs(y);
-        float sum = y + x;
-        float dif = y - x;
-        if(y <= 0) {
-            if(x >= 0) {
-                motorLeft.setPower(max);
-                motorRight.setPower(-sum);
+    public void arcadeDrive(float moveValue, float rotateValue, boolean squaredInputs) {
+        float leftMotorSpeed, rightMotorSpeed;
+
+        moveValue = limit(moveValue);
+        rotateValue = limit(rotateValue);
+
+        if (squaredInputs) {
+            // square the inputs (while preserving the sign) to increase fine control while permitting full power
+            if (moveValue >= 0.0) {
+                moveValue = (moveValue * moveValue);
             } else {
-                motorLeft.setPower(dif);
-                motorRight.setPower(max);
+                moveValue = -(moveValue * moveValue);
             }
-        } else {
-            if(y >= 0) {
-                motorLeft.setPower(dif);
-                motorRight.setPower(-max);
+            if (rotateValue >= 0.0) {
+                rotateValue = (rotateValue * rotateValue);
             } else {
-                motorLeft.setPower(-max);
-                motorRight.setPower(-sum);
+                rotateValue = -(rotateValue * rotateValue);
             }
         }
+
+        if (moveValue > 0.0) {
+            if (rotateValue > 0.0) {
+                leftMotorSpeed = moveValue - rotateValue;
+                rightMotorSpeed = Math.max(moveValue, rotateValue);
+            } else {
+                leftMotorSpeed = Math.max(moveValue, -rotateValue);
+                rightMotorSpeed = moveValue + rotateValue;
+            }
+        } else {
+            if (rotateValue > 0.0) {
+                leftMotorSpeed = -Math.max(-moveValue, rotateValue);
+                rightMotorSpeed = moveValue + rotateValue;
+            } else {
+                leftMotorSpeed = moveValue - rotateValue;
+                rightMotorSpeed = -Math.max(-moveValue, -rotateValue);
+            }
+        }
+
+        motorLeft.setPower(leftMotorSpeed);
+        motorRight.setPower(rightMotorSpeed);
+    }
+
+    protected static float limit(float num) {
+        if (num > 1.0) {
+            return 1;
+        }
+        if (num < -1.0) {
+            return -1;
+        }
+        return num;
     }
 }
