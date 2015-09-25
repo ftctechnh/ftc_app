@@ -2,6 +2,7 @@ package org.swerverobotics.library.internal;
 
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.LegacyModule;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.swerverobotics.library.examples.*;
 import org.swerverobotics.library.exceptions.*;
@@ -16,6 +17,15 @@ import java.util.*;
  */
 public class Util
     {
+    //----------------------------------------------------------------------------------------------
+    // Miscellany
+    //----------------------------------------------------------------------------------------------
+
+    static public double milliseconds(ElapsedTime elapsed)
+        {
+        return elapsed.time() * 1000.0;
+        }
+
     //----------------------------------------------------------------------------------------------
     // Threading
     //----------------------------------------------------------------------------------------------

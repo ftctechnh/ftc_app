@@ -12,7 +12,7 @@ import org.swerverobotics.library.*;
 public interface II2cDeviceClient extends HardwareDevice
     {
     //----------------------------------------------------------------------------------------------
-    // RegWindow management
+    // ReadWindow management
     //----------------------------------------------------------------------------------------------
 
     /**
@@ -46,6 +46,7 @@ public interface II2cDeviceClient extends HardwareDevice
      *
      * @see #setReadWindow(ReadWindow)
      * @see #read8(int)
+     * @see #executeFunctionWhileLocked(IFunc)
      */
     void ensureReadWindow(ReadWindow windowNeeded, ReadWindow windowToSet);
 
@@ -54,10 +55,9 @@ public interface II2cDeviceClient extends HardwareDevice
     //----------------------------------------------------------------------------------------------
 
     /**
-     * Read the byte at the indicated register.
+     * Read the byte at the indicated register. See {@link #readTimeStamped(int, int)} for a
+     * complete description.
      *
-     * The register must lie within the current register window.
-     * 
      * @param ireg  the register number to read
      * @return      the byte that was read
      *
@@ -68,11 +68,9 @@ public interface II2cDeviceClient extends HardwareDevice
     byte read8(int ireg);
 
     /**
-     * Read a contiguous set of device I2C registers.
+     * Read a contiguous set of device I2C registers. See {@link #readTimeStamped(int, int)} for a
+     * complete description.
      *
-     * All the registers must lie within the current register window. Note that this 
-     * method can take several tens of milliseconds to execute.
-     * 
      * @param ireg  the register number of the first byte register to read
      * @param creg  the number of bytes / registers to read
      * @return      the data which was read
@@ -84,8 +82,30 @@ public interface II2cDeviceClient extends HardwareDevice
     byte[] read(int ireg, int creg);
 
     /**
-     * Reads and returns a contiguous set of device I2C registers, together with a timestamp
-     * of when the read occurred.
+     * Reads and returns a contiguous set of device I2C registers, together with a best-available
+     * timestamp of when the actual I2C read occurred. Note that this can take many tens of
+     * milliseconds to execute, and thus should not be called from the loop() thread.
+     *
+     * <p>You can always just call this method without worrying at all about
+     * {@link org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow read windows},
+     * that will work, but usually it is more efficient to take some thought and care as to what set
+     * of registers the I2C device controller is being set up to read, as adjusting that window
+     * of registers incurs significant extra time.</p>
+     *
+     * <p>If the current read window can't be used to read the requested registers, then
+     * a new read window will automatically be created as follows. If the current read window is non
+     * null and wholly contains the registers to read but can't be read because it is a used-up
+     * {@link org.swerverobotics.library.interfaces.II2cDeviceClient.READ_MODE#ONLY_ONCE} window,
+     * a new read fresh window will be created with the same set of registers. Otherwise, a
+     * window that exactly covers the requested set of registers will be created.</p>
+     *
+     * <p>If one is trying to optimize the the register window by calling
+     * {@link #ensureReadWindow(ReadWindow, ReadWindow) ensureReadWindow()}, this auto-window
+     * creation can cause difficulties if any concurrent access is present. In such situations,
+     * {@link #executeFunctionWhileLocked(IFunc)} can be used to allow you to atomically both
+     * set the read window and execute a read without the possibility of the read window being
+     * re-adjusted in the middle.
+     * </p>
      *
      * @param ireg  the register number of the first byte register to read
      * @param creg  the number of bytes / registers to read
@@ -94,6 +114,7 @@ public interface II2cDeviceClient extends HardwareDevice
      * @see #read(int, int)
      * @see #read8(int)
      * @see #ensureReadWindow(ReadWindow, ReadWindow)
+     * @see #executeFunctionWhileLocked(IFunc)
      */
     TimestampedData readTimeStamped(int ireg, int creg);
     
@@ -156,54 +177,105 @@ public interface II2cDeviceClient extends HardwareDevice
      *
      * @param ireg                  the first of the registers which is to be written
      * @param data                  the data which is to be written to the registers
-     * @param waitForCompletion     whether or not to wait until the write has been sent to the controller     *
+     * @param waitForCompletion     whether or not to wait until the write has been sent to the controller
      *
      * @see #write8(int, int, boolean)
      */
     void write(int ireg, byte[] data, boolean waitForCompletion);
 
     //----------------------------------------------------------------------------------------------
-    // Heartbeats
-    //
-    // (temporarily disabled to allow further thinking)
+    // Concurrency management
     //----------------------------------------------------------------------------------------------
 
     /**
+     * Executes the indicated action while holding the concurrency lock on the object
+     * so as to prevent other threads from interleaving.
+     *
+     * @param action the action to execute
+     * @see #executeFunctionWhileLocked(IFunc)
+     */
+    void executeActionWhileLocked(IAction action);
+
+    /**
+     * Executes the indicated function while holding the concurrency lock on the object
+     * so as to prevent other threads from interleaving. Returns the value of the function.
+     *
+     * @param function      the function to execute
+     * @param <T>           the type of the data returned from the function
+     * @return              the datum value returned from the function
+     * @see #executeActionWhileLocked(IAction)
+     */
+    <T> T executeFunctionWhileLocked(IFunc<T> function);
+
+    //----------------------------------------------------------------------------------------------
+    // Heartbeats
+    //----------------------------------------------------------------------------------------------
+
+    /**
+     * Sets the interval within which communication must be received by the I2C device list
+     * a timeout may occur. The default heartbeat interval is zero, signifying that no heartbeat
+     * is maintained.
+     *
+     * @param ms the new hearbeat interval, in milliseconds
+     * @see #getHeartbeatInterval()
+     */
+    void setHeartbeatInterval(int ms);
+
+    /**
      * Returns the interval within which communication must be received by the I2C device lest
-     * a timeout occur. The default heartbeat interval is zero.
+     * a timeout occur.
      * 
      * @return  the current heartbeat interval, in milliseconds
-     * @see #setHeartbeatRead(int) 
-     * @see #setHeartbeatWrite(int) 
+     * @see #setHeartbeatInterval(int)
      */
-    // int getHeartbeatInterval();
+    int getHeartbeatInterval();
 
     /**
-     * Sets the interval within which communication must be received by the I2C device lest
-     * a timeout occur. If a heartbeat must be sent, read the current read window registers
-     * from the device.
-     * 
-     * In effect, this sets a minimum frequency with which the read window registers are read.
-     * Note, though, that they may be read much more often than this, at the discretion of the
-     * implementation.
-     * 
-     * For read-heartbeats to be useful, the current read window must be non-null.
-     * @param ms            the timeout interval, in milliseconds. If ms is less than or equal to
-     *                      zero, then no heartbeat messages are sent
-     * @see #setReadWindow(ReadWindow)
-     */
-    // void setHeartbeatRead(int ms);
-
-    /**
-     * Sets the interval within which communication must be received by the I2C device lest
-     * a timeout occur. If a heartbeat must be sent, the previous write operation on the 
-     * device is reissued.
+     * Sets the action to take when the current heartbeat interval expires.
+     * The default action is null; thus, to be useful, an action must always
+     * be explicitly specified.
      *
-     * @param ms            the timeout interval, in milliseconds. If ms is less than or equal to
-     *                      zero, then no heartbeat messages are sent
-     * @see #setHeartbeatRead(int) 
+     * @param action the action to take at each heartbeat.
+     * @see #getHeartbeatAction()
+     * @see #setHeartbeatInterval(int)
      */
-    // void setHeartbeatWrite(int ms);
+    void setHeartbeatAction(HeartbeatAction action);
+
+    /**
+     * Returns the current action, if any, to take upon expiration of the heartbeat interval.
+     * @return the current heartbeat action. May be null
+     * @see #setHeartbeatAction(HeartbeatAction)
+     */
+    HeartbeatAction getHeartbeatAction();
+
+    /**
+     * Instances of HeartBeatAction indicate what action to carry out to perform
+     * a heartbeat should that become necessary. The actual action to take is indicated
+     * by one of several prioritized possibilities.
+     */
+    class HeartbeatAction
+        {
+        /** Priority #1: re-issue the last I2C read operation, if possible. */
+        public boolean      rereadLastRead      = false;
+
+        /** Priority #2: re-issue the last I2C write operation, if possible. */
+        public boolean      rewriteLastWritten  = false;
+
+        /** Priority #3: explicitly read a given register window. Note that using
+         * this form of heartbeat may cause the I2C device to experience concurrency it
+         * otherwise might not support for this heartbeat form may make use of
+         * worker threads.
+         *
+         * @see #explicitReadPriority
+         * @see #executeFunctionWhileLocked(IFunc)
+         */
+        public ReadWindow   explicitReadWindow  = null;
+
+        /** Advanced: if a read on a separate thread is in fact needed, use this thread priority
+         * @see #explicitReadWindow
+         */
+        public int          explicitReadPriority = Thread.NORM_PRIORITY;
+        }
 
     //----------------------------------------------------------------------------------------------
     // Monitoring, debugging, and life cycle management
@@ -250,16 +322,17 @@ public interface II2cDeviceClient extends HardwareDevice
     enum READ_MODE
         {
         /**
-         * continuously issue I2C reads whenever there's nothing else needing to be done.
-         * In this mode, {@link #read(int, int)} will not necessarily execute and I2C transaction
-         * for every call but might instead return previously read data it has not been invalidated
-         * by a write operation.
+         * Continuously issue I2C reads whenever there's nothing else needing to be done.
+         * In this mode, {@link #read(int, int) read()} will not necessarily execute an I2C transaction
+         * for every call but might instead return data previously read on from the I2C device.
          *
          * @see #read(int, int)
          */
         REPEAT,
         /**
-         * only issue a single I2C read, then set the read window to null to disable further reads
+         * Only issue a single I2C read, then set the read window to null to disable further reads.
+         * Executing a {@link #read(int, int) read()} in this mode will always get fresh data
+         * from the I2C device.
          */
         ONLY_ONCE
         };
@@ -363,7 +436,7 @@ public interface II2cDeviceClient extends HardwareDevice
          * Do the receiver and the indicated register window cover exactly the
          * same set of registers and have the same modality?
          */
-        public boolean sameAs(ReadWindow him)
+        public boolean sameAsIncludingMode(ReadWindow him)
             {
             if (him == null)
                 return false;
