@@ -27,8 +27,8 @@ public @interface TeleOp
     String name() default "";
 
     /**
-     * Optionally indicate the name of a Autonomous class with whom
-     * this TeleOp class is to be paired.
+     * Optionally indicates a group of other OpModes with which the annotated
+     * OpMode should be sorted on the driver station OpMode list.
      */
-    String pairWithAuto() default "";
+    String group() default "";
     }
