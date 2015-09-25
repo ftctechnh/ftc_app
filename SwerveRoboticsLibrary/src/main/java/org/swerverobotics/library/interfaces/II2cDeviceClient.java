@@ -251,7 +251,9 @@ public interface II2cDeviceClient extends HardwareDevice
     /**
      * Instances of HeartBeatAction indicate what action to carry out to perform
      * a heartbeat should that become necessary. The actual action to take is indicated
-     * by one of several prioritized possibilities.
+     * by one of several prioritized possibilities. When a heartbeat is needed, these
+     * are considered in order, and the first one applicable given the state of the
+     * I2C device at the time will be applied.
      */
     class HeartbeatAction
         {
@@ -269,12 +271,12 @@ public interface II2cDeviceClient extends HardwareDevice
          * @see #explicitReadPriority
          * @see #executeFunctionWhileLocked(IFunc)
          */
-        public ReadWindow   explicitReadWindow  = null;
+        public ReadWindow   heartbeatReadWindow = null;
 
         /** Advanced: if a read on a separate thread is in fact needed, use this thread priority
-         * @see #explicitReadWindow
+         * @see #heartbeatReadWindow
          */
-        public int          explicitReadPriority = Thread.NORM_PRIORITY;
+        public int          explicitReadPriority = Math.min(Thread.MAX_PRIORITY, Thread.NORM_PRIORITY+1);
         }
 
     //----------------------------------------------------------------------------------------------

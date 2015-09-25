@@ -861,13 +861,13 @@ public final class I2cDeviceClient implements II2cDeviceClient
                                 setActionFlag = true;           // issue an I2C write
                                 }
 
-                            else if (heartbeatAction.explicitReadWindow != null)
+                            else if (heartbeatAction.heartbeatReadWindow != null)
                                 {
                                 // The simplest way to do this is just to do a new read from the outside, as that
                                 // means it has literally zero impact here on our state machine. That unfortunately
                                 // introduces concurrency where otherwise none might exist, but that's ONLY if you
                                 // choose this flavor of heartbeat, so that's a reasonable tradeoff.
-                                final ReadWindow window = heartbeatAction.explicitReadWindow;   // capture here while we still have the lock
+                                final ReadWindow window = heartbeatAction.heartbeatReadWindow;   // capture here while we still have the lock
                                 Thread thread = new Thread(new Runnable() {
                                     @Override public void run()
                                         {
