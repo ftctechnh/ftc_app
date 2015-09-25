@@ -46,7 +46,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
     private final Object        theLock = new Object();     // the lock we use to synchronize concurrent callers as well as the portIsReady() callback
 
     private ReadWindow          readWindow;                 // the set of registers to look at when we are in read mode. May be null, indicating no read needed
-    private boolean             regWindowChanged;           // whether regWindow has changed since the hw cycle loop last took note
+    private boolean             readWindowChanged;          // whether regWindow has changed since the hw cycle loop last took note
     private long                nanoTimeReadCacheValid;     // the time on the System.nanoTime() clock at which the read cache was last set as valid
     private READ_CACHE_STATUS   readCacheStatus;            // what we know about the contents of readCache
     private WRITE_CACHE_STATUS  writeCacheStatus;           // what we know about the (payload) contents of writeCache
@@ -60,16 +60,16 @@ public final class I2cDeviceClient implements II2cDeviceClient
         IDLE,                 // the read cache is quiescent; it doesn't contain valid data
         SWITCHINGTOREADMODE,  // a request to switch to read mode has been made
         QUEUED,               // an I2C read has been queued, but we've not yet seen valid data
-        VALID,                // a transient intermediate state only used in the state machine logic (never set when lock is released)
-        VALIDQUEUED;          // read cache has valid data AND a read has been queued
+        VALID_ONLYONCE,       // read cache data has valid data but can only be read once
+        VALID_QUEUED;         // read cache has valid data AND a read has been queued
 
         boolean isValid()
             {
-            return this==VALIDQUEUED || this==VALID;
+            return this==VALID_QUEUED || this==VALID_ONLYONCE;
             }
         boolean isQueued()
             {
-            return this==QUEUED || this==VALIDQUEUED;
+            return this==QUEUED || this==VALID_QUEUED;
             }
         }
 
@@ -136,8 +136,8 @@ public final class I2cDeviceClient implements II2cDeviceClient
         this.writeCache     = this.i2cDevice.getI2cWriteCache();
         this.writeCacheLock = this.i2cDevice.getI2cWriteCacheLock();
         
-        this.readWindow       = initialReadWindow;
-        this.regWindowChanged = false;
+        this.readWindow        = initialReadWindow;
+        this.readWindowChanged = false;
 
         this.nanoTimeReadCacheValid = 0;
         this.readCacheStatus  = READ_CACHE_STATUS.IDLE;
@@ -201,13 +201,14 @@ public final class I2cDeviceClient implements II2cDeviceClient
         {
         synchronized (this.theLock)
             {
-            if (this.readWindow == null || !this.readWindow.equals(window))
+            if (this.readWindow == null || !this.readWindow.isOkToRead() || !this.readWindow.sameAs(window))
                 {
-                // Remember the new window
-                this.readWindow = window;
+                // Remember the new window, but get a fresh copy so we can implement the read mode policy
+                this.readWindow = window.freshCopy();
+                assertTrue(BuildConfig.DEBUG && this.readWindow.isOkToRead());
                 
                 // Let others know of the update
-                this.regWindowChanged = true;
+                this.readWindowChanged = true;
                 }
             }
         }
@@ -230,7 +231,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
         {
         synchronized (this.theLock)
             {
-            if (this.readWindow == null || !this.readWindow.contains(windowNeeded))
+            if (this.readWindow == null || !this.readWindow.containsWithSameMode(windowNeeded))
                 {
                 setReadWindow(windowToSet);
                 }
@@ -262,9 +263,14 @@ public final class I2cDeviceClient implements II2cDeviceClient
             {
             synchronized (this.theLock)
                 {
-                // We can only fetch registers that lie within the register window
+                // If there's no read window given, we'll make one that just covers the indicated data
+                // and that will be a one-shot.
                 if (this.readWindow == null)
-                    throw new IllegalArgumentException("read request with no register window set");
+                    {
+                    setReadWindow(new ReadWindow(ireg, creg, READ_MODE.ONLY_ONCE));
+                    }
+
+                // We can only fetch registers that lie within the register window
                 if (!this.readWindow.contains(ireg, creg))
                     throw new IllegalArgumentException(String.format("read request (%d,%d) outside of read register window", ireg, creg));
 
@@ -272,7 +278,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
                 // The latter honors the visibility semantic we intend to portray, namely
                 // that issuing a read after a write has been issued will see the state AFTER
                 // the write has had a chance to take effect.
-                while (this.regWindowChanged || !this.readCacheStatus.isValid() || this.writeCacheStatus != WRITE_CACHE_STATUS.IDLE)
+                while (this.readWindowChanged || !this.readCacheStatus.isValid() || this.writeCacheStatus != WRITE_CACHE_STATUS.IDLE)
                     {
                     this.theLock.wait();
                     }
@@ -290,6 +296,10 @@ public final class I2cDeviceClient implements II2cDeviceClient
                 finally
                     {
                     this.readCacheLock.unlock();
+
+                    // If that was a one-time read, invalidate the data so we won't read it again a second time.
+                    if (this.readCacheStatus==READ_CACHE_STATUS.VALID_ONLYONCE)
+                        this.readCacheStatus=READ_CACHE_STATUS.IDLE;
                     }
                 }
             }
@@ -613,9 +623,9 @@ public final class I2cDeviceClient implements II2cDeviceClient
                     if (modeCacheStatus == MODE_CACHE_STATUS.QUEUED)
                         modeCacheStatus = MODE_CACHE_STATUS.IDLE;
 
-                    if (readCacheStatus == READ_CACHE_STATUS.QUEUED || readCacheStatus == READ_CACHE_STATUS.VALIDQUEUED)
+                    if (readCacheStatus == READ_CACHE_STATUS.QUEUED || readCacheStatus == READ_CACHE_STATUS.VALID_QUEUED)
                         {
-                        readCacheStatus = READ_CACHE_STATUS.VALID;
+                        readCacheStatus = READ_CACHE_STATUS.VALID_ONLYONCE;
                         nanoTimeReadCacheValid = System.nanoTime();
                         }
 
@@ -625,7 +635,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
                     //--------------------------------------------------------------------------
                     // That limits the number of states the caches can now be in
 
-                    assertTrue(BuildConfig.DEBUG && (readCacheStatus==READ_CACHE_STATUS.IDLE||readCacheStatus==READ_CACHE_STATUS.SWITCHINGTOREADMODE||readCacheStatus==READ_CACHE_STATUS.VALID));
+                    assertTrue(BuildConfig.DEBUG && (readCacheStatus==READ_CACHE_STATUS.IDLE||readCacheStatus==READ_CACHE_STATUS.SWITCHINGTOREADMODE||readCacheStatus==READ_CACHE_STATUS.VALID_ONLYONCE));
                     assertTrue(BuildConfig.DEBUG && (writeCacheStatus == WRITE_CACHE_STATUS.IDLE || writeCacheStatus == WRITE_CACHE_STATUS.DIRTY));
 
 
@@ -637,7 +647,6 @@ public final class I2cDeviceClient implements II2cDeviceClient
                         // We're trying to switch into read mode. Are we there yet?
                         if (i2cDevice.isI2cPortInReadMode())
                             {
-                            // TODO: Is the data actually valid NOW? Or do we really have to issue a read as we're doing here and wait another cycle?
                             readCacheStatus = READ_CACHE_STATUS.QUEUED;
                             setActionFlag = true;       // actually do an I2C read
                             }
@@ -657,25 +666,31 @@ public final class I2cDeviceClient implements II2cDeviceClient
                         }
 
                     //--------------------------------------------------------------------------
-                    // Initiate reading if we should (or change the register window)
+                    // Initiate reading if we should. Be sure to honor the policy of the read mode
 
-                    else if (readCacheStatus == READ_CACHE_STATUS.IDLE || regWindowChanged)
+                    else if (readCacheStatus == READ_CACHE_STATUS.IDLE || readWindowChanged)
                         {
-                        if (readWindow != null)
+                        if (readWindow != null && !readWindow.isOkToRead())
+                            {
                             startSwitchingToReadMode();
+                            readWindow.setReadIssued();
+                            }
                         else
                             readCacheStatus = READ_CACHE_STATUS.IDLE;
 
-                        regWindowChanged = false;
+                        readWindowChanged = false;
                         }
 
                     //--------------------------------------------------------------------------
-                    // Reissue any previous read
+                    // Reissue any previous read if we should
 
-                    else if (readCacheStatus == READ_CACHE_STATUS.VALID)
+                    else if (readCacheStatus == READ_CACHE_STATUS.VALID_ONLYONCE)
                         {
-                        readCacheStatus = READ_CACHE_STATUS.VALIDQUEUED;
-                        setActionFlag = true;           // actually do an I2C read
+                        if (readWindow != null && readWindow.isOkToRead())
+                            {
+                            readCacheStatus = READ_CACHE_STATUS.VALID_QUEUED;
+                            setActionFlag = true;           // actually do an I2C read
+                            }
                         }
 
                     //--------------------------------------------------------------------------

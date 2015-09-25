@@ -33,6 +33,9 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
     private static final int       msAwaitChipId                     = 2000;
     private static final int       msAwaitSelfTest                   = 500;
 
+    // We always read as much as we can when we have nothing else to do
+    private static final II2cDeviceClient.READ_MODE readMode = II2cDeviceClient.READ_MODE.REPEAT;
+
     // we poll essentially as fast as we can, since measurements show that
     // we only get an I2C cycle every 70 ms or so. 'no point in waiting longer.
     private static final int       msAccelerationIntegrationDefaultPollInterval = 0;    // ASAP
@@ -314,7 +317,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         {
         // Ensure we can see the registers we need
         this.deviceClient.ensureReadWindow(
-                new II2cDeviceClient.ReadWindow(REGISTER.QUATERNION_DATA_W_LSB.bVal, 8),
+                new II2cDeviceClient.ReadWindow(REGISTER.QUATERNION_DATA_W_LSB.bVal, 8, readMode),
                 upperWindow
         );
         
@@ -363,7 +366,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
     private II2cDeviceClient.TimestampedData getVector(VECTOR vector)
         {
         // Ensure that the 6 bytes for this vector are visible in the register window.
-        this.ensureRegisterWindow(new II2cDeviceClient.ReadWindow(vector.getValue(), 6));
+        this.ensureRegisterWindow(new II2cDeviceClient.ReadWindow(vector.getValue(), 6, readMode));
 
         // Read the data
         return this.deviceClient.readTimeStamped(vector.getValue(), 6);
@@ -559,17 +562,18 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
     
     private static II2cDeviceClient.ReadWindow newWindow(REGISTER regFirst, REGISTER regMax)
         {
-        return new II2cDeviceClient.ReadWindow(regFirst.bVal, regMax.bVal-regFirst.bVal);
+        return new II2cDeviceClient.ReadWindow(regFirst.bVal, regMax.bVal-regFirst.bVal, readMode);
         }
 
     private void ensureRegisterWindow(II2cDeviceClient.ReadWindow needed)
+    // We optimize small windows into larger ones if we can
         {
-        II2cDeviceClient.ReadWindow set = lowerWindow.contains(needed)
+        II2cDeviceClient.ReadWindow windowToSet = lowerWindow.containsWithSameMode(needed)
             ? lowerWindow
-            : upperWindow.contains(needed)
+            : upperWindow.containsWithSameMode(needed)
                 ? upperWindow
                 : needed;           // just use what's needed if it's not within our two main windows
-        this.deviceClient.ensureReadWindow(needed, set);
+        this.deviceClient.ensureReadWindow(needed, windowToSet);
         }
 
     /**
@@ -608,12 +612,12 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
 
     public synchronized byte read8(REGISTER reg)
         {
-        this.ensureRegisterWindow(new II2cDeviceClient.ReadWindow(reg.bVal, 1));
+        this.ensureRegisterWindow(new II2cDeviceClient.ReadWindow(reg.bVal, 1, readMode));
         return this.deviceClient.read8(reg.bVal);
         }
     public synchronized byte[] read(REGISTER reg, int cb)
         {
-        this.ensureRegisterWindow(new II2cDeviceClient.ReadWindow(reg.bVal, cb));
+        this.ensureRegisterWindow(new II2cDeviceClient.ReadWindow(reg.bVal, cb, readMode));
         return this.deviceClient.read(reg.bVal, cb);
         }
 
