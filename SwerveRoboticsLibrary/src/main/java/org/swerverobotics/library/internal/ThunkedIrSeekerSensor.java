@@ -41,7 +41,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor implements IThunkedRea
         if (this.isTargetLegacy())
             {
             // Make sure our hack is at least plausible
-            Assert.assertEquals(true, Util.<Object>getPrivateObjectField(target, 6) instanceof Mode);
+            Assert.assertTrue(!BuildConfig.DEBUG || (Util.<Object>getPrivateObjectField(target, 6) instanceof Mode));
         
             // Hack: did out the gunk we need to implement our mode-switching-waiting
             this.legacyModule = (LegacyModule)Util.<LegacyModule>getPrivateObjectField(target, 0);

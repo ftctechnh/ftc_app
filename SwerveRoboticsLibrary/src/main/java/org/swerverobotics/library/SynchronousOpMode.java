@@ -802,7 +802,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         this.preLoopHook();
 
         // Validate our assumption of init() and loop() running on the same thread.
-        if (BuildConfig.DEBUG) Assert.assertEquals(true, this.isLoopThread());
+        Assert.assertTrue(!BuildConfig.DEBUG || this.isLoopThread());
 
         synchronized (this.loopLock)
             {
