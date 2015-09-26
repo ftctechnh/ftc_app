@@ -45,9 +45,9 @@ public class Robot {
         motorRight = mode.hardwareMap.dcMotor.get("motor_2");
 
         servoArm = mode.hardwareMap.servo.get("servo_1");
-        servoClaw = mode.hardwareMap.servo.get("servo_2");
+        servoClaw = mode.hardwareMap.servo.get("servo_6");
 
-        touchSensor = mode.hardwareMap.touchSensor.get("sensor_touch");
-        opticalSensor = mode.hardwareMap.opticalDistanceSensor.get("sensor_optical");
+        touchSensor = mode.hardwareMap.touchSensor.get("touch_sensor");
+        opticalSensor = mode.hardwareMap.opticalDistanceSensor.get("optical_distance_sensor");
     }
 }
