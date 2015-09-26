@@ -30,22 +30,19 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
  */
 public class WorkshopTeleop extends OpMode{
 
-    Robot robot = new Robot();
+    Robot robot;
 
     @Override
     public void init() {
-        robot.motorLeft = hardwareMap.dcMotor.get("motor_1");
-        robot.motorRight = hardwareMap.dcMotor.get("motor_2");
-
-        robot.servoArm = hardwareMap.servo.get("servo_1");
-        robot.servoClaw = hardwareMap.servo.get("servo_2");
-
-        robot.touchSensor = hardwareMap.touchSensor.get("sensor_touch");
-        robot.opticalSensor = hardwareMap.opticalDistanceSensor.get("sensor_optical");
+        robot = new Robot(this);
     }
 
     @Override
     public void loop() {
 
+        int light = robot.opticalSensor.getLightDetectedRaw();
+
+
+        telemetry.addData("optical", String.format("%d", light));
     }
 }

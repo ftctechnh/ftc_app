@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2015 Powerstackers
  *
- * Basic configurations and capabilities of our robot.
+ * Basic configurations and capabilities of our
  *
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,6 +21,7 @@
 
 package com.powerstackers.resq.opmodes.common;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -39,6 +40,14 @@ public class Robot {
     public TouchSensor touchSensor;
     public OpticalDistanceSensor opticalSensor;
 
-    public Robot() {
+    public Robot(OpMode mode) {
+        motorLeft = mode.hardwareMap.dcMotor.get("motor_1");
+        motorRight = mode.hardwareMap.dcMotor.get("motor_2");
+
+        servoArm = mode.hardwareMap.servo.get("servo_1");
+        servoClaw = mode.hardwareMap.servo.get("servo_2");
+
+        touchSensor = mode.hardwareMap.touchSensor.get("sensor_touch");
+        opticalSensor = mode.hardwareMap.opticalDistanceSensor.get("sensor_optical");
     }
 }
