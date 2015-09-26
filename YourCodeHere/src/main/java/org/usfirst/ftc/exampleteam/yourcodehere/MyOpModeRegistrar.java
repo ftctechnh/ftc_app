@@ -13,7 +13,7 @@ import org.swerverobotics.library.examples.*;
  *
  * <p>NOTE: To make this work, for the moment at least you need to add your library module
  * 'YourCodeHere' to the 'build.gradle' file in the FtcRobotController library. That build.gradle
- * (be careful: each Android Studio module has its own) is found in $PROJECT_DIR$\FtcRobotController\build.gradle,
+ * (be aware: each Android Studio module has its own) is found in $PROJECT_DIR$\FtcRobotController\build.gradle,
  * where $PROJECT_DIR$ is the directory which contains SwerveRoboticsLibrary and YourCodeHere in addition to
  * FtcRobotController. In that 'build.gradle', make sure the 'dependencies' section has a line
  * compile project(':YourCodeHere') in addition to compile project(':SwerveRoboticsLibrary')
@@ -31,7 +31,8 @@ public class MyOpModeRegistrar
     {
     /**
      * Register any library OpModes that we wish to display. Change this code to suit
-     * your needs.
+     * your needs: the specific OpModes that are registered as this code comes from
+     * the factory are probably not what you want.
      *
      * @param manager   the object through which registrations are effected
      */
