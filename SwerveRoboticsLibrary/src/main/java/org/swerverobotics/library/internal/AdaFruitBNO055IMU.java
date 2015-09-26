@@ -528,9 +528,9 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
                         Thread.sleep(msPollInterval);
                     }
                 }
-            catch (InterruptedException|RuntimeInterruptedException ignored)
+            catch (InterruptedException|RuntimeInterruptedException e)
                 {
-                Util.handleCapturedInterrupt();
+                Util.handleCapturedInterrupt(e);
                 }
             }
         }
@@ -589,7 +589,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
             }
         catch (InterruptedException e)
             {
-            Util.handleCapturedInterrupt();
+            Util.handleCapturedInterrupt(e);
             }
         }
 
@@ -606,7 +606,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
             }
         catch (InterruptedException e)
             {
-            Util.handleCapturedInterrupt();
+            Util.handleCapturedInterrupt(e);
             }
         }
 

@@ -1,7 +1,10 @@
 package org.swerverobotics.library.internal;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.swerverobotics.library.SynchronousOpMode;
 import org.swerverobotics.library.exceptions.*;
 
 
@@ -26,8 +29,9 @@ public class Util
     // Threading
     //----------------------------------------------------------------------------------------------
 
-    static public void handleCapturedInterrupt()
+    static public void handleCapturedInterrupt(Exception e)
         {
+        // Log.d(SynchronousOpMode.TAG, "caught an thread interrupt, reinterrupting: " + e);
         Thread.currentThread().interrupt();
         }
 
