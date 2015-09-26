@@ -140,7 +140,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         {
         synchronized (this.loopLock)
             {
-            while (!this.started())  // avoid spurious wakeups
+            while (!this.isStarted())  // avoid spurious wakeups
                 {
                 this.loopLock.wait();
                 }
@@ -154,12 +154,12 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      * @return whether the OpMode is currently active. If this returns false, you should
      *         break out of the loop in your {@link #main()} method and return to its caller.
      * @see #main()
-     * @see #started()
-     * @see #stopRequested()
+     * @see #isStarted()
+     * @see #isStopRequested()
      */
     public final boolean opModeIsActive()
         {
-        return !this.stopRequested() && this.started();
+        return !this.isStopRequested() && this.isStarted();
         }
 
     /**
@@ -167,9 +167,9 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      *
      * @return whether this opMode has been started or not
      * @see #opModeIsActive()
-     * @see #stopRequested()
+     * @see #isStopRequested()
      */
-    public final boolean started()
+    public final boolean isStarted()
         {
         return this.started;
         }
@@ -179,9 +179,9 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      * 
      * @return whether stopping opMode has been requested or not
      * @see #opModeIsActive()
-     * @see #started()
+     * @see #isStarted()
      */
-    public final boolean stopRequested()
+    public final boolean isStopRequested()
         {
         return this.stopRequested || Thread.currentThread().isInterrupted();
         }
@@ -424,8 +424,8 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     private final   Queue<Thread>           synchronousWorkerThreads = new ConcurrentLinkedQueue<Thread>();
     private         RuntimeException        exceptionThrownOnMainThread;
     private final   AtomicReference<RuntimeException> firstExceptionThrownOnASynchronousWorkerThread = new AtomicReference<RuntimeException>();
-    private final   int                     msWaitForMainThreadTermination              = 250;
-    private final   int                     msWaitForSynchronousWorkerThreadTermination = 50;
+    private final static int                msWaitForMainThreadTermination              = 250;
+    private final static int                msWaitForSynchronousWorkerThreadTermination = 50;
     private final   List<IAction>           actionsOnStop = new LinkedList<IAction>();
 
     private         Gamepad                 gamepad1Captured = null;
@@ -682,7 +682,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
 
     private Thread createSynchronousWorkerThread(IInterruptableRunnable threadBody, boolean isMain)
         {
-        if (this.stopRequested())
+        if (this.isStopRequested())
             throw new IllegalStateException("createSynchronousWorkerThread: stop requested");
         
         if (!isMain) SynchronousThreadContext.assertSynchronousThread();
@@ -720,7 +720,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         // Replace the op mode's hardware map variable with one whose contained
         // object implementations will thunk over to the loop thread as they need to.
         this.unthunkedHardwareMap = super.hardwareMap;
-        this.hardwareMap = (new ThunkingHardwareFactory(this.useExperimentalThunking)).createThunkedHardwareMap(this.unthunkedHardwareMap);
+        this.hardwareMap = (new ThunkingHardwareFactory((IStopActionRegistrar)this, this.useExperimentalThunking)).createThunkedHardwareMap(this.unthunkedHardwareMap);
 
         // Similarly replace the telemetry variable
         this.telemetry = new TelemetryDashboardAndLog(super.telemetry);

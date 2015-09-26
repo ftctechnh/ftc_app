@@ -27,8 +27,8 @@ public class HandshakeThreadStarter
     private final   Object          eventLock      = new Object();
     private         boolean         eventSignalled = false;
     private         Thread          thread         = null;
-    private         boolean         started        = false;
-    private         boolean         stopRequested  = false;
+    private volatile boolean        started        = false;
+    private volatile boolean        stopRequested  = false;
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -104,8 +104,7 @@ public class HandshakeThreadStarter
         if (this.started)
             {
             try {
-                this.stopRequested = true;
-                this.thread.interrupt();
+                this.requestStop();
                 if (msWait==0)
                     this.thread.join();
                 else
@@ -156,13 +155,13 @@ public class HandshakeThreadStarter
     //----------------------------------------------------------------------------------------------
 
     /** called by the thread to indicate that he's alive and well */
-    public void handshake()
+    public void doHandshake()
         {
         this.setEvent();
         }
 
     /** Returns whether the thread has been asked to stop */
-    public synchronized boolean stopRequested()
+    public synchronized boolean isStopRequested()
         {
         return this.stopRequested || (this.thread != null && this.thread.isInterrupted());
         }
