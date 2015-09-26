@@ -26,12 +26,9 @@ public final class I2cDeviceClient implements II2cDeviceClient
 
     private final Callback      callback;                   // the callback object on which we actually receive callbacks
     private       Thread        callbackThread;             // the thread on which we observe our callbacks to be made
-    private       int           hardwareCycleCount;         // number of callbacks that we've received
     private       boolean       loggingEnabled;             // whether we are to log to Logcat or not
     private       String        loggingTag;                 // what we annotate our logging with
     private final ElapsedTime   timeSinceLastHeartbeat;     // keeps track of our need for doing heartbeats
-    private       int           msHeartbeatInterval;        // time between heartbeats; zero is 'none necessary'
-    private       HeartbeatAction heartbeatAction;          // the action to take when a heartbeat is needed. May be null.
 
     private final byte[]        readCache;                  // the buffer into which reads are retrieved
     private final byte[]        writeCache;                 // the buffer that we write from 
@@ -43,17 +40,20 @@ public final class I2cDeviceClient implements II2cDeviceClient
     private final Object        concurrentClientLock = new Object(); // the lock we use to serialize against concurrent clients of us. Can't acquire this AFTER the callback lock.
     private final Object        callbackLock         = new Object(); // the lock we use to synchronize with our callback.
 
-    private ReadWindow          readWindow;                 // the set of registers to look at when we are in read mode. May be null, indicating no read needed
-    private ReadWindow          readWindowActuallyRead;     // the read window that was really read. readWindow will be a (possibly non-proper) subset of this
-    private ReadWindow          readWindowSentToController; // the read window we last issued to the controller module. May disappear before read() returns
-    private boolean             readWindowSentToControllerInitialized; // whether readWindowSentToController has valid data or not
-    private boolean             readWindowChanged;          // whether regWindow has changed since the hw cycle loop last took note
-    private long                nanoTimeReadCacheValid;     // the time on the System.nanoTime() clock at which the read cache was last set as valid
-    private READ_CACHE_STATUS   readCacheStatus;            // what we know about the contents of readCache
-    private WRITE_CACHE_STATUS  writeCacheStatus;           // what we know about the (payload) contents of writeCache
-    private MODE_CACHE_STATUS   modeCacheStatus;            // what we know about the first four bytes of writeCache (mostly a debugging aid)
-    private int                 iregWriteFirst;             // when writeCacheStatus is DIRTY, this is where we want to write
-    private int                 cregWrite;
+    private volatile ReadWindow          readWindow;                 // the set of registers to look at when we are in read mode. May be null, indicating no read needed
+    private volatile ReadWindow          readWindowActuallyRead;     // the read window that was really read. readWindow will be a (possibly non-proper) subset of this
+    private volatile ReadWindow          readWindowSentToController; // the read window we last issued to the controller module. May disappear before read() returns
+    private volatile boolean             readWindowSentToControllerInitialized; // whether readWindowSentToController has valid data or not
+    private volatile boolean             readWindowChanged;          // whether regWindow has changed since the hw cycle loop last took note
+    private volatile long                nanoTimeReadCacheValid;     // the time on the System.nanoTime() clock at which the read cache was last set as valid
+    private volatile READ_CACHE_STATUS   readCacheStatus;            // what we know about the contents of readCache
+    private volatile WRITE_CACHE_STATUS  writeCacheStatus;           // what we know about the (payload) contents of writeCache
+    private volatile MODE_CACHE_STATUS   modeCacheStatus;            // what we know about the first four bytes of writeCache (mostly a debugging aid)
+    private volatile int                 iregWriteFirst;             // when writeCacheStatus is DIRTY, this is where we want to write
+    private volatile int                 cregWrite;
+    private volatile int                 msHeartbeatInterval;        // time between heartbeats; zero is 'none necessary'
+    private volatile HeartbeatAction     heartbeatAction;            // the action to take when a heartbeat is needed. May be null.
+    private volatile int                 hardwareCycleCount;         // number of callbacks that we've received
 
     /** Keeps track of what we know about about the state of 'readCache' */
     private enum READ_CACHE_STATUS
