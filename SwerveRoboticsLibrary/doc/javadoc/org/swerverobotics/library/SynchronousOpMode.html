@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":9,"i7":9,"i8":10,"i9":10,"i10":10,"i11":10,"i12":6,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":9,"i30":10,"i31":10,"i32":9,"i33":9,"i34":10,"i35":10,"i36":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":9,"i7":9,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":6,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":9,"i31":10,"i32":9,"i33":9,"i34":10,"i35":10,"i36":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -98,7 +98,7 @@ var activeTableTab = "activeTableTab";
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
-<li>com.qualcomm.robotcore.eventloop.opmode.OpMode</li>
+<li>OpMode</li>
 <li>
 <ul class="inheritance">
 <li>SynchronousOpMode</li>
@@ -121,7 +121,7 @@ var activeTableTab = "activeTableTab";
 <hr>
 <br>
 <pre>public abstract class <span class="typeNameLabel">SynchronousOpMode</span>
-extends com.qualcomm.robotcore.eventloop.opmode.OpMode
+extends OpMode
 implements <a href="../../../org/swerverobotics/library/interfaces/IThunkDispatcher.html" title="interface in org.swerverobotics.library.interfaces">IThunkDispatcher</a>, <a href="../../../org/swerverobotics/library/interfaces/IStopActionRegistrar.html" title="interface in org.swerverobotics.library.interfaces">IStopActionRegistrar</a></pre>
 <div class="block">SynchronousOpMode is a base class that can be inherited from in order to
  write op modes that can be coded in a traditional programming style.
@@ -146,45 +146,51 @@ implements <a href="../../../org/swerverobotics/library/interfaces/IThunkDispatc
 <th class="colLast" scope="col">Field and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>com.qualcomm.robotcore.hardware.Gamepad</code></td>
+<td class="colFirst"><code>Gamepad</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#gamepad1">gamepad1</a></span></code>
 <div class="block">Provides access to the first gamepad controller.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>com.qualcomm.robotcore.hardware.Gamepad</code></td>
+<td class="colFirst"><code>Gamepad</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#gamepad2">gamepad2</a></span></code>
 <div class="block">Provides access to the second gamepad controller.</div>
 </td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>static java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#LOGGING_TAG">LOGGING_TAG</a></span></code>
+<div class="block">The logging tag we use in LogCat output in this general vicinity.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#loopDwellCheckCount">loopDwellCheckCount</a></span></code>
 <div class="block">Advanced: loopDwellCheckCount is the number of thunks we will execute in loop()
  before checking whether we've exceeded msLoopDwellMax.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>static long</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#NANO_TO_MILLI">NANO_TO_MILLI</a></span></code>
 <div class="block">Advanced: the number of nanoseconds in a millisecond.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../org/swerverobotics/library/TelemetryDashboardAndLog.html" title="class in org.swerverobotics.library">TelemetryDashboardAndLog</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#telemetry">telemetry</a></span></code>
 <div class="block">provides access to an object by which telemetry information can be transmitted
  from the robot controller to the driver station.</div>
 </td>
 </tr>
-<tr class="rowColor">
-<td class="colFirst"><code>com.qualcomm.robotcore.hardware.HardwareMap</code></td>
+<tr class="altColor">
+<td class="colFirst"><code>HardwareMap</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#unthunkedHardwareMap">unthunkedHardwareMap</a></span></code>
 <div class="block">Advanced: unthunkedHardwareMap contains the original hardware map provided
  in OpMode before it was replaced with a version that does thunking.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#useExperimentalThunking">useExperimentalThunking</a></span></code>
 <div class="block">Advanced: use experimental approaches to thunking hardware devices</div>
@@ -192,10 +198,10 @@ implements <a href="../../../org/swerverobotics/library/interfaces/IThunkDispatc
 </tr>
 </table>
 <ul class="blockList">
-<li class="blockList"><a name="fields.inherited.from.class.com.qualcomm.robotcore.eventloop.opmode.OpMode">
+<li class="blockList"><a name="fields.inherited.from.class.OpMode">
 <!--   -->
 </a>
-<h3>Fields inherited from class&nbsp;com.qualcomm.robotcore.eventloop.opmode.OpMode</h3>
+<h3>Fields inherited from class&nbsp;OpMode</h3>
 <code>hardwareMap, time</code></li>
 </ul>
 </li>
@@ -304,60 +310,72 @@ implements <a href="../../../org/swerverobotics/library/interfaces/IThunkDispatc
 </td>
 </tr>
 <tr id="i11" class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#isStarted--">isStarted</a></span>()</code>
+<div class="block">Has the opMode been started?</div>
+</td>
+</tr>
+<tr id="i12" class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#isStopRequested--">isStopRequested</a></span>()</code>
+<div class="block">Has the the stopping of the opMode been requested?</div>
+</td>
+</tr>
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#loop--">loop</a></span>()</code>
 <div class="block">Advanced: The robot controller runtime calls loop() on a frequent basis, nominally every few ms or so.</div>
 </td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>protected abstract void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#main--">main</a></span>()</code>
 <div class="block">Implement main() (in a subclass) to contain your robot logic.</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code>protected void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#midLoopHook--">midLoopHook</a></span>()</code>
 <div class="block">Advanced: a hook for subclasses</div>
 </td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#opModeIsActive--">opModeIsActive</a></span>()</code>
 <div class="block">Answer as to whether this opMode is active and the robot should continue onwards.</div>
 </td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code>protected void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#postInitHook--">postInitHook</a></span>()</code>
 <div class="block">Advanced: a hook for subclasses</div>
 </td>
 </tr>
-<tr id="i16" class="altColor">
+<tr id="i18" class="altColor">
 <td class="colFirst"><code>protected void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#postInitLoopHook--">postInitLoopHook</a></span>()</code>
 <div class="block">Advanced: a hook for subclasses</div>
 </td>
 </tr>
-<tr id="i17" class="rowColor">
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code>protected void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#postLoopHook--">postLoopHook</a></span>()</code>
 <div class="block">Advanced: a hook for subclasses</div>
 </td>
 </tr>
-<tr id="i18" class="altColor">
+<tr id="i20" class="altColor">
 <td class="colFirst"><code>protected void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#postStartHook--">postStartHook</a></span>()</code>
 <div class="block">Advanced: a hook for subclasses</div>
 </td>
 </tr>
-<tr id="i19" class="rowColor">
+<tr id="i21" class="rowColor">
 <td class="colFirst"><code>protected void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#postStopHook--">postStopHook</a></span>()</code>
 <div class="block">Advanced: a hook for subclasses</div>
 </td>
 </tr>
-<tr id="i20" class="altColor">
+<tr id="i22" class="altColor">
 <td class="colFirst"><code>protected void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#preInitHook--">preInitHook</a></span>()</code>
 <div class="block">Advanced: the various 'hook' calls calls preInitHook(), postInitHook(), preLoopHook(), 
@@ -365,71 +383,59 @@ implements <a href="../../../org/swerverobotics/library/interfaces/IThunkDispatc
  interesting.</div>
 </td>
 </tr>
-<tr id="i21" class="rowColor">
+<tr id="i23" class="rowColor">
 <td class="colFirst"><code>protected void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#preInitLoopHook--">preInitLoopHook</a></span>()</code>
 <div class="block">Advanced: a hook for subclasses</div>
 </td>
 </tr>
-<tr id="i22" class="altColor">
+<tr id="i24" class="altColor">
 <td class="colFirst"><code>protected void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#preLoopHook--">preLoopHook</a></span>()</code>
 <div class="block">Advanced: a hook for subclasses</div>
 </td>
 </tr>
-<tr id="i23" class="rowColor">
+<tr id="i25" class="rowColor">
 <td class="colFirst"><code>protected void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#preStartHook--">preStartHook</a></span>()</code>
 <div class="block">Advanced: a hook for subclasses</div>
 </td>
 </tr>
-<tr id="i24" class="altColor">
+<tr id="i26" class="altColor">
 <td class="colFirst"><code>protected void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#preStopHook--">preStopHook</a></span>()</code>
 <div class="block">Advanced: a hook for subclasses</div>
 </td>
 </tr>
-<tr id="i25" class="rowColor">
+<tr id="i27" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#registerActionOnStop-org.swerverobotics.library.interfaces.IAction-">registerActionOnStop</a></span>(<a href="../../../org/swerverobotics/library/interfaces/IAction.html" title="interface in org.swerverobotics.library.interfaces">IAction</a>&nbsp;action)</code>
 <div class="block">Registers an action to be called when the contextually associated opMode stops</div>
 </td>
 </tr>
-<tr id="i26" class="altColor">
+<tr id="i28" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#setMsLoopDwellMax-long-">setMsLoopDwellMax</a></span>(long&nbsp;msLoopDwellMax)</code>
 <div class="block">Advanced: Sets the maximum loop dwell time.</div>
 </td>
 </tr>
-<tr id="i27" class="rowColor">
+<tr id="i29" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#start--">start</a></span>()</code>
 <div class="block">Advanced: start() is called when the autonomous or the teleop mode begins: the robot
  should start moving!</div>
 </td>
 </tr>
-<tr id="i28" class="altColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#started--">started</a></span>()</code>
-<div class="block">Has the opMode been started?</div>
-</td>
-</tr>
-<tr id="i29" class="rowColor">
+<tr id="i30" class="altColor">
 <td class="colFirst"><code>static int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#staticGetNewSingletonKey--">staticGetNewSingletonKey</a></span>()</code>
 <div class="block">Advanced/Internal: Return a new key by which actions can be scheduled using executeSingletonOnLoopThread()</div>
 </td>
 </tr>
-<tr id="i30" class="altColor">
+<tr id="i31" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#stop--">stop</a></span>()</code>
 <div class="block">Advanced: The robot controller runtime calls stop() to shut down the OpMode.</div>
-</td>
-</tr>
-<tr id="i31" class="rowColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#stopRequested--">stopRequested</a></span>()</code>
-<div class="block">Has the the stopping of the opMode been requested?</div>
 </td>
 </tr>
 <tr id="i32" class="altColor">
@@ -464,15 +470,15 @@ implements <a href="../../../org/swerverobotics/library/interfaces/IThunkDispatc
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#waitForThreadsWritesToReachHardware--">waitForThreadsWritesToReachHardware</a></span>()</code>
 <div class="block">Advanced: wait until all thunks that have been dispatched from the current (synchronous)
  thread have completed their execution over on the loop() thread and their effects
- to have reached the hardwaree.</div>
+ to have reached the hardware.</div>
 </td>
 </tr>
 </table>
 <ul class="blockList">
-<li class="blockList"><a name="methods.inherited.from.class.com.qualcomm.robotcore.eventloop.opmode.OpMode">
+<li class="blockList"><a name="methods.inherited.from.class.OpMode">
 <!--   -->
 </a>
-<h3>Methods inherited from class&nbsp;com.qualcomm.robotcore.eventloop.opmode.OpMode</h3>
+<h3>Methods inherited from class&nbsp;OpMode</h3>
 <code>getRuntime, resetStartTime</code></li>
 </ul>
 <ul class="blockList">
@@ -496,13 +502,27 @@ implements <a href="../../../org/swerverobotics/library/interfaces/IThunkDispatc
 <!--   -->
 </a>
 <h3>Field Detail</h3>
+<a name="LOGGING_TAG">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>LOGGING_TAG</h4>
+<pre>public static final&nbsp;java.lang.String LOGGING_TAG</pre>
+<div class="block">The logging tag we use in LogCat output in this general vicinity.</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../constant-values.html#org.swerverobotics.library.SynchronousOpMode.LOGGING_TAG">Constant Field Values</a></dd>
+</dl>
+</li>
+</ul>
 <a name="gamepad1">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>gamepad1</h4>
-<pre>public&nbsp;com.qualcomm.robotcore.hardware.Gamepad gamepad1</pre>
+<pre>public&nbsp;Gamepad gamepad1</pre>
 <div class="block">Provides access to the first gamepad controller. Only changes as a result of calling
  <a href="../../../org/swerverobotics/library/SynchronousOpMode.html#updateGamepads--">updateGamepads()</a>.
  
@@ -521,7 +541,7 @@ implements <a href="../../../org/swerverobotics/library/interfaces/IThunkDispatc
 <ul class="blockList">
 <li class="blockList">
 <h4>gamepad2</h4>
-<pre>public&nbsp;com.qualcomm.robotcore.hardware.Gamepad gamepad2</pre>
+<pre>public&nbsp;Gamepad gamepad2</pre>
 <div class="block">Provides access to the second gamepad controller. Only changes as a result of calling
  <a href="../../../org/swerverobotics/library/SynchronousOpMode.html#updateGamepads--">updateGamepads()</a>.</div>
 <dl>
@@ -575,7 +595,7 @@ implements <a href="../../../org/swerverobotics/library/interfaces/IThunkDispatc
 <ul class="blockList">
 <li class="blockList">
 <h4>unthunkedHardwareMap</h4>
-<pre>public&nbsp;com.qualcomm.robotcore.hardware.HardwareMap unthunkedHardwareMap</pre>
+<pre>public&nbsp;HardwareMap unthunkedHardwareMap</pre>
 <div class="block">Advanced: unthunkedHardwareMap contains the original hardware map provided
  in OpMode before it was replaced with a version that does thunking.</div>
 </li>
@@ -729,42 +749,42 @@ implements <a href="../../../org/swerverobotics/library/interfaces/IThunkDispatc
          break out of the loop in your <a href="../../../org/swerverobotics/library/SynchronousOpMode.html#main--"><code>main()</code></a> method and return to its caller.</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#main--"><code>main()</code></a>, 
-<a href="../../../org/swerverobotics/library/SynchronousOpMode.html#started--"><code>started()</code></a>, 
-<a href="../../../org/swerverobotics/library/SynchronousOpMode.html#stopRequested--"><code>stopRequested()</code></a></dd>
+<a href="../../../org/swerverobotics/library/SynchronousOpMode.html#isStarted--"><code>isStarted()</code></a>, 
+<a href="../../../org/swerverobotics/library/SynchronousOpMode.html#isStopRequested--"><code>isStopRequested()</code></a></dd>
 </dl>
 </li>
 </ul>
-<a name="started--">
+<a name="isStarted--">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>started</h4>
-<pre>public final&nbsp;boolean&nbsp;started()</pre>
+<h4>isStarted</h4>
+<pre>public final&nbsp;boolean&nbsp;isStarted()</pre>
 <div class="block">Has the opMode been started?</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>whether this opMode has been started or not</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#opModeIsActive--"><code>opModeIsActive()</code></a>, 
-<a href="../../../org/swerverobotics/library/SynchronousOpMode.html#stopRequested--"><code>stopRequested()</code></a></dd>
+<a href="../../../org/swerverobotics/library/SynchronousOpMode.html#isStopRequested--"><code>isStopRequested()</code></a></dd>
 </dl>
 </li>
 </ul>
-<a name="stopRequested--">
+<a name="isStopRequested--">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>stopRequested</h4>
-<pre>public final&nbsp;boolean&nbsp;stopRequested()</pre>
+<h4>isStopRequested</h4>
+<pre>public final&nbsp;boolean&nbsp;isStopRequested()</pre>
 <div class="block">Has the the stopping of the opMode been requested?</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>whether stopping opMode has been requested or not</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#opModeIsActive--"><code>opModeIsActive()</code></a>, 
-<a href="../../../org/swerverobotics/library/SynchronousOpMode.html#started--"><code>started()</code></a></dd>
+<a href="../../../org/swerverobotics/library/SynchronousOpMode.html#isStarted--"><code>isStarted()</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -853,7 +873,7 @@ implements <a href="../../../org/swerverobotics/library/interfaces/IThunkDispatc
                                          throws java.lang.InterruptedException</pre>
 <div class="block">Advanced: wait until all thunks that have been dispatched from the current (synchronous)
  thread have completed their execution over on the loop() thread and their effects
- to have reached the hardwaree.
+ to have reached the hardware.
 
  In general, thunked methods that don't return any information to the caller
  (that is, the majority of setXXX() calls) only *initiate* their work on the loop()
@@ -901,7 +921,7 @@ implements <a href="../../../org/swerverobotics/library/interfaces/IThunkDispatc
 <div class="block">Advanced: The robot controller runtime calls init(), once, to request that we initialize ourselves</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>init</code>&nbsp;in class&nbsp;<code>com.qualcomm.robotcore.eventloop.opmode.OpMode</code></dd>
+<dd><code>init</code>&nbsp;in class&nbsp;<code>OpMode</code></dd>
 </dl>
 </li>
 </ul>
@@ -918,7 +938,7 @@ implements <a href="../../../org/swerverobotics/library/interfaces/IThunkDispatc
  overrideable OpMode methods.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code>init_loop</code>&nbsp;in class&nbsp;<code>com.qualcomm.robotcore.eventloop.opmode.OpMode</code></dd>
+<dd><code>init_loop</code>&nbsp;in class&nbsp;<code>OpMode</code></dd>
 </dl>
 </li>
 </ul>
@@ -933,7 +953,7 @@ implements <a href="../../../org/swerverobotics/library/interfaces/IThunkDispatc
  should start moving!</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code>start</code>&nbsp;in class&nbsp;<code>com.qualcomm.robotcore.eventloop.opmode.OpMode</code></dd>
+<dd><code>start</code>&nbsp;in class&nbsp;<code>OpMode</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#waitForStart--"><code>waitForStart()</code></a></dd>
 </dl>
@@ -952,7 +972,7 @@ implements <a href="../../../org/swerverobotics/library/interfaces/IThunkDispatc
  synchronous threads.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>loop</code>&nbsp;in class&nbsp;<code>com.qualcomm.robotcore.eventloop.opmode.OpMode</code></dd>
+<dd><code>loop</code>&nbsp;in class&nbsp;<code>OpMode</code></dd>
 </dl>
 </li>
 </ul>
@@ -969,7 +989,7 @@ implements <a href="../../../org/swerverobotics/library/interfaces/IThunkDispatc
  before this call returns.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code>stop</code>&nbsp;in class&nbsp;<code>com.qualcomm.robotcore.eventloop.opmode.OpMode</code></dd>
+<dd><code>stop</code>&nbsp;in class&nbsp;<code>OpMode</code></dd>
 </dl>
 </li>
 </ul>

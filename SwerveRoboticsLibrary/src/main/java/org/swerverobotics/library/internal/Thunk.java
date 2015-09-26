@@ -1,9 +1,11 @@
 package org.swerverobotics.library.internal;
 
+import android.util.Log;
+
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.swerverobotics.library.exceptions.*;
+import org.swerverobotics.library.SynchronousOpMode;
 import org.swerverobotics.library.interfaces.*;
 
 /**
@@ -17,8 +19,10 @@ public abstract class Thunk implements IAction, IActionKeyed
     // State
     //----------------------------------------------------------------------------------------------
 
-    private SynchronousThreadContext context;
-    public  List<Integer>            actionKeys;
+    private   final SynchronousThreadContext context;
+    protected final Object                   theLock;
+    protected       RuntimeException         exception;
+    public    final List<Integer>            actionKeys;
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -27,6 +31,8 @@ public abstract class Thunk implements IAction, IActionKeyed
     public Thunk()
         {
         this.context    = SynchronousThreadContext.getThreadContext();
+        this.theLock    = new Object();
+        this.exception  = null;
         this.actionKeys = new LinkedList<Integer>();
         }
 
@@ -65,13 +71,36 @@ public abstract class Thunk implements IAction, IActionKeyed
      */
     public void doAction()
         {
-        // Do what we came here to do
-        this.actionOnLoopThread();
+        try {
+            // Do what we came here to do
+            this.actionOnLoopThread();
+            }
+        catch (RuntimeException e)
+            {
+            // Record the exception to be rethrown back on the waiting thread after we wake him
+            this.exception = e;
+            Log.e(SynchronousOpMode.LOGGING_TAG, "exception thrown during action: " + e);
+            }
 
         // Tell all those waiting on the completion of this thunk that we are done
-        synchronized (this)
+        synchronized (theLock)
             {
-            this.notifyAll();
+            theLock.notifyAll();
+            }
+        }
+
+    protected void waitForCompletion() throws InterruptedException
+        {
+        // Wait until the action is carried out on the loop thread
+        synchronized (theLock)
+            {
+            theLock.wait();
+            }
+
+        // If an exception was thrown on the loop thread, then re-throw it here
+        if (this.exception != null)
+            {
+            throw this.exception;
             }
         }
 

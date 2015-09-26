@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 import android.util.*;
-import junit.framework.Assert;
+import static junit.framework.Assert.*;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.swerverobotics.library.exceptions.*;
@@ -24,9 +24,9 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     //----------------------------------------------------------------------------------------------
 
     /**
-     * The logging tag we use in LogCat output from this class
+     * The logging tag we use in LogCat output in this general vicinity.
      */
-    public static final String TAG = "SyncOpMode";
+    public static final String LOGGING_TAG = "Swerve";
 
     /**
      * Provides access to the first gamepad controller. Only changes as a result of calling
@@ -140,7 +140,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         {
         synchronized (this.loopLock)
             {
-            while (!this.started())  // avoid spurious wakeups
+            while (!this.isStarted())  // avoid spurious wakeups
                 {
                 this.loopLock.wait();
                 }
@@ -154,12 +154,12 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      * @return whether the OpMode is currently active. If this returns false, you should
      *         break out of the loop in your {@link #main()} method and return to its caller.
      * @see #main()
-     * @see #started()
-     * @see #stopRequested()
+     * @see #isStarted()
+     * @see #isStopRequested()
      */
     public final boolean opModeIsActive()
         {
-        return !this.stopRequested() && this.started();
+        return !this.isStopRequested() && this.isStarted();
         }
 
     /**
@@ -167,9 +167,9 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      *
      * @return whether this opMode has been started or not
      * @see #opModeIsActive()
-     * @see #stopRequested()
+     * @see #isStopRequested()
      */
-    public final boolean started()
+    public final boolean isStarted()
         {
         return this.started;
         }
@@ -179,9 +179,9 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      * 
      * @return whether stopping opMode has been requested or not
      * @see #opModeIsActive()
-     * @see #started()
+     * @see #isStarted()
      */
-    public final boolean stopRequested()
+    public final boolean isStopRequested()
         {
         return this.stopRequested || Thread.currentThread().isInterrupted();
         }
@@ -339,7 +339,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         //
         if (changed)
             {
-            Log.v(TAG, String.format("gamepad state: %d", this.gamepadStateCount.getAndIncrement()));
+            Log.v(LOGGING_TAG, String.format("gamepad state: %d", this.gamepadStateCount.getAndIncrement()));
             }
         //
         this.gamePadCaptureStateChanged.compareAndSet(false, changed);
@@ -424,8 +424,8 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     private final   Queue<Thread>           synchronousWorkerThreads = new ConcurrentLinkedQueue<Thread>();
     private         RuntimeException        exceptionThrownOnMainThread;
     private final   AtomicReference<RuntimeException> firstExceptionThrownOnASynchronousWorkerThread = new AtomicReference<RuntimeException>();
-    private final   int                     msWaitForMainThreadTermination              = 250;
-    private final   int                     msWaitForSynchronousWorkerThreadTermination = 50;
+    private final static int                msWaitForMainThreadTermination              = 250;
+    private final static int                msWaitForSynchronousWorkerThreadTermination = 50;
     private final   List<IAction>           actionsOnStop = new LinkedList<IAction>();
 
     private         Gamepad                 gamepad1Captured = null;
@@ -478,6 +478,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
 
         Queue<IAction>   queue;
         ActionKeyHistory history;
+        Queue<IAction>   historicalActions;
 
         //-----------------------------------------------------------------------
         // Construction
@@ -486,6 +487,8 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             {
             this.queue   = this.newQueue();
             this.history = this.newHistory();
+            if (BuildConfig.DEBUG && false)
+                this.historicalActions = new LinkedList<IAction>();
             }
         private Queue<IAction> newQueue()
             {
@@ -514,6 +517,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
 
         synchronized void add(IAction action)
             {
+            assertTrue(!BuildConfig.DEBUG || action!=null);
             this.queue.add(action);
             this.onChanged();
             }
@@ -531,6 +535,11 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
                         this.history.put(actionKey, true);
                         }
                     }
+                if (this.historicalActions != null)
+                    {
+                    this.historicalActions.add(result);
+                    }
+
                 this.onChanged();
                 }
             return result;
@@ -646,9 +655,9 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             {
             thread.join(msWait);
             }
-        catch (InterruptedException ignored)
+        catch (InterruptedException e)
             { 
-            Util.handleCapturedInterrupt();
+            Util.handleCapturedInterrupt(e);
             }
         }
 
@@ -673,16 +682,16 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
                 {
                 thread.join(msWait);
                 }
-            catch (InterruptedException ignored) 
+            catch (InterruptedException e)
                 {
-                Util.handleCapturedInterrupt();
+                Util.handleCapturedInterrupt(e);
                 }
             }
         }
 
     private Thread createSynchronousWorkerThread(IInterruptableRunnable threadBody, boolean isMain)
         {
-        if (this.stopRequested())
+        if (this.isStopRequested())
             throw new IllegalStateException("createSynchronousWorkerThread: stop requested");
         
         if (!isMain) SynchronousThreadContext.assertSynchronousThread();
@@ -720,7 +729,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         // Replace the op mode's hardware map variable with one whose contained
         // object implementations will thunk over to the loop thread as they need to.
         this.unthunkedHardwareMap = super.hardwareMap;
-        this.hardwareMap = (new ThunkingHardwareFactory(this.useExperimentalThunking)).createThunkedHardwareMap(this.unthunkedHardwareMap);
+        this.hardwareMap = (new ThunkingHardwareFactory((IStopActionRegistrar)this, this.useExperimentalThunking)).createThunkedHardwareMap(this.unthunkedHardwareMap);
 
         // Similarly replace the telemetry variable
         this.telemetry = new TelemetryDashboardAndLog(super.telemetry);
@@ -746,7 +755,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             {
             @Override public void run() throws InterruptedException
                 {
-                Log.d(TAG, String.format("starting OpMode {%s}", SynchronousOpMode.this.getClass().getSimpleName()));
+                Log.d(LOGGING_TAG, String.format("starting OpMode {%s}", SynchronousOpMode.this.getClass().getSimpleName()));
                 SynchronousOpMode.this.main();
                 }
             }, true);
@@ -802,7 +811,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         this.preLoopHook();
 
         // Validate our assumption of init() and loop() running on the same thread.
-        Assert.assertTrue(!BuildConfig.DEBUG || this.isLoopThread());
+        assertTrue(!BuildConfig.DEBUG || this.isLoopThread());
 
         synchronized (this.loopLock)
             {
@@ -853,7 +862,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
                     }
 
                 // Execute the work that needs to be done on the loop thread
-                action.doAction();
+                executeAction(action);
 
                 // Periodically check whether we've run long enough for this loop() call.
                 if (i % this.loopDwellCheckCount == 0)
@@ -867,7 +876,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             List<IAction> actions = this.snarfSingletons();
             for (IAction action : actions)
                 {
-                action.doAction();
+                executeAction(action);
                 }
 
             // Tell people that this loop cycle is complete
@@ -876,6 +885,20 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
 
         // Call the subclass hook in case they might want to do something interesting
         this.postLoopHook();
+        }
+
+    void executeAction(IAction action)
+        {
+        try {
+            action.doAction();
+            }
+        catch (Exception e)
+            {
+            // Ignore. Actions generally are responsible for cleaning up their own
+            // mess; they shouldn't be disturbing us. Thus, we eat any exceptions to keep
+            // things moving.
+            Log.e(LOGGING_TAG, "action exception leaked through to loop thread: " + e);
+            }
         }
     
     /**
@@ -888,7 +911,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         {
         // Call the subclass hook in case they might want to do something interesting
         this.preStopHook();
-        Log.d(TAG, String.format("stopping OpMode {%s}...", this.getClass().getSimpleName()));
+        Log.d(LOGGING_TAG, String.format("stopping OpMode {%s}...", this.getClass().getSimpleName()));
 
         // Next time synchronous threads ask, yes, we do want to stop
         this.stopRequested = true;
@@ -907,7 +930,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             this.actionsOnStop.clear();
             }
 
-        Log.d(TAG, String.format("...stopped"));
+        Log.d(LOGGING_TAG, String.format("...stopped"));
         this.postStopHook();
         }
 

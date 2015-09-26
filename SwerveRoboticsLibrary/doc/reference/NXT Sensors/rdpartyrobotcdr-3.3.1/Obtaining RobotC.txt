@@ -1,0 +1,5 @@
+RobotC 3.x can be downloaded from: http://www.robotc.net
+
+/*
+ * $Id: Obtaining RobotC.txt 98 2012-08-04 09:02:53Z xander $
+ */
