@@ -103,11 +103,10 @@ public final class I2cDeviceClient implements II2cDeviceClient
      *
      * @param i2cDevice             the device we are to be a client of
      * @param i2cAddr8Bit           its 8 bit i2cAddress
-     * @param initialReadWindow     initial reg window to use, may be null
      */
-    public I2cDeviceClient(II2cDevice i2cDevice, int i2cAddr8Bit, ReadWindow initialReadWindow)
+    public I2cDeviceClient(II2cDevice i2cDevice, int i2cAddr8Bit)
         {
-        this(i2cDevice, i2cAddr8Bit, initialReadWindow, true, null);
+        this(i2cDevice, i2cAddr8Bit, true, null);
         }
 
     /**
@@ -116,11 +115,10 @@ public final class I2cDeviceClient implements II2cDeviceClient
      *
      * @param i2cDevice             the device we are to be a client of
      * @param i2cAddr8Bit           its 8 bit i2cAddress
-     * @param initialReadWindow     initial reg window to use, may be null
      * @param autoClose             if true, the device client will automatically close when the
      *                              associated SynchronousOpMode stops
      */
-    public I2cDeviceClient(II2cDevice i2cDevice, int i2cAddr8Bit, ReadWindow initialReadWindow, boolean autoClose, IStopActionRegistrar registrar)
+    public I2cDeviceClient(II2cDevice i2cDevice, int i2cAddr8Bit, boolean autoClose, IStopActionRegistrar registrar)
         {
         i2cDevice.setI2cAddr(i2cAddr8Bit);
 
@@ -140,7 +138,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
         this.writeCache     = this.i2cDevice.getI2cWriteCache();
         this.writeCacheLock = this.i2cDevice.getI2cWriteCacheLock();
         
-        this.readWindow                 = initialReadWindow;
+        this.readWindow                 = null;
         this.readWindowActuallyRead     = null;
         this.readWindowSentToController = null;
         this.readWindowChanged          = false;
