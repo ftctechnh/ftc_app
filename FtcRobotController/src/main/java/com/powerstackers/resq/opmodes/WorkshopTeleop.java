@@ -21,8 +21,7 @@
 
 package com.powerstackers.resq.opmodes;
 
-import com.powerstackers.resq.opmodes.common.Robot;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.powerstackers.resq.common.Robot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 /**
