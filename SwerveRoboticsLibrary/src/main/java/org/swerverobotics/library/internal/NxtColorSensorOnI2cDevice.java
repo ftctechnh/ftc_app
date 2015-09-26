@@ -36,12 +36,12 @@ public class NxtColorSensorOnI2cDevice extends ColorSensor
     public NxtColorSensorOnI2cDevice(I2cDevice i2cDevice)
         {
         i2cDevice.deregisterForPortReadyCallback(); // Disable the previous guy so we're not fighting
-        construct(ClassFactory.createI2cDeviceFrom(i2cDevice));
+        construct(ClassFactory.createI2cDevice(i2cDevice));
         }
 
     public NxtColorSensorOnI2cDevice(I2cController controller, int port)
         {
-        construct(ClassFactory.createI2cDeviceFrom(controller, port));
+        construct(ClassFactory.createI2cDevice(controller, port));
         }
 
     public NxtColorSensorOnI2cDevice(II2cDevice ii2cDevice)
@@ -51,7 +51,7 @@ public class NxtColorSensorOnI2cDevice extends ColorSensor
 
     void construct(II2cDevice ii2cDevice)
         {
-        this.i2cDeviceClient = ClassFactory.createI2cDeviceClientFrom(ii2cDevice, i2cAddr8Bit);
+        this.i2cDeviceClient = ClassFactory.createI2cDeviceClient(ii2cDevice, i2cAddr8Bit);
         this.i2cDeviceClient.setReadWindow(new II2cDeviceClient.ReadWindow(iregFirst, iregMax - iregFirst, II2cDeviceClient.READ_MODE.REPEAT));
         }
 

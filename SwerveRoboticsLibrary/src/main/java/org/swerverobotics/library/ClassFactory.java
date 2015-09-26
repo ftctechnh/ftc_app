@@ -32,14 +32,14 @@ public final class ClassFactory
      * LinearOpMode, or, indeed, any thread that can tolerate operations that can take tens of
      * milliseconds to run. In SynchronousOpMode, NxtMotorControllerOnI2cDevice is currently
      * enabled by setting the {@link SynchronousOpMode#useExperimentalThunking} flag, though that
-     * will probably change. In other OpModes, you'll have to manually call this {@link #createNxtDcMotorControllerFrom
+     * will probably change. In other OpModes, you'll have to manually call this {@link #createNxtDcMotorController
      * createNxtDcMotorControllerOnI2cDevice()}.</p>
      *
      * <p>You should call {@link DcMotorController#close()} when you want the controller to
      * close down, likely from your stop() logic or the end of your runOpMode() method as the
      * case may be.</p>
      *
-     * <p>{@link #createNxtDcMotorControllerFrom createNxtDcMotorControllerOnI2cDevice()} takes
+     * <p>{@link #createNxtDcMotorController createNxtDcMotorControllerOnI2cDevice()} takes
      * a ModernRoboticsNxtDcMotorController motor controller as might found in an OpMode's hardware map
      * and converts that into an NxtDcMotorControllerOnI2cDevice. As a side effect of doing so, the
      * ModernRoboticsNxtDcMotorController is disabled, as only one object can be managing the
@@ -56,7 +56,7 @@ public final class ClassFactory
      * @return an NxtMotorControllerOnI2cDevice, or null if target was not a legacy motor controller
      *
      */
-    public static DcMotorController createNxtDcMotorControllerFrom(DcMotorController target)
+    public static DcMotorController createNxtDcMotorController(DcMotorController target)
         {
         return ThunkingHardwareFactory.createNxtMotorControllerOnI2cDevice(target, null);
         }
@@ -104,7 +104,7 @@ public final class ClassFactory
      * @param i2cDevice     the color sensor device
      * @return              a ColorSensor object connected to the device
      */
-    public static ColorSensor createNxtColorSensorFrom(I2cDevice i2cDevice)
+    public static ColorSensor createNxtColorSensor(I2cDevice i2cDevice)
         {
         return new NxtColorSensorOnI2cDevice(i2cDevice);
         }
@@ -116,7 +116,7 @@ public final class ClassFactory
      * @param ii2cDevice    the color sensor device
      * @return              a ColorSensor object connected to the device
      */
-    public static ColorSensor createNxtColorSensorFrom(II2cDevice ii2cDevice)
+    public static ColorSensor createNxtColorSensor(II2cDevice ii2cDevice)
         {
         return new NxtColorSensorOnI2cDevice(ii2cDevice);
         }
@@ -129,7 +129,7 @@ public final class ClassFactory
      * @param port          the port on the controller that the device attaches to
      * @return              a ColorSensor object connected to the device
      */
-    public static ColorSensor createNxtColorSensorFrom(I2cController controller, int port)
+    public static ColorSensor createNxtColorSensor(I2cController controller, int port)
         {
         return new NxtColorSensorOnI2cDevice(controller, port);
         }
@@ -144,11 +144,11 @@ public final class ClassFactory
      * @param i2cDevice the device to wrap
      * @return          the II2cDevice wrapping
      */
-    public static II2cDevice createI2cDeviceFrom(I2cDevice i2cDevice)
+    public static II2cDevice createI2cDevice(I2cDevice i2cDevice)
         {
         I2cController i2cController = Util.<I2cController>getPrivateObjectField(i2cDevice, 0);
         int port                    = Util.getPrivateIntField(i2cDevice, 1);
-        return createI2cDeviceFrom(i2cController, port);
+        return createI2cDevice(i2cController, port);
         }
 
     /**
@@ -158,7 +158,7 @@ public final class ClassFactory
      * @param port          the port on the controller to use
      * @return              the created II2cDevice instance
      */
-    public static II2cDevice createI2cDeviceFrom(I2cController i2cController, int port)
+    public static II2cDevice createI2cDevice(I2cController i2cController, int port)
         {
         return new I2cDeviceOnI2cDeviceController(i2cController, port);
         }
@@ -170,10 +170,10 @@ public final class ClassFactory
      * @param i2cAddr8Bit           the I2C address at which the client is to communicate
      * @return                      the newly instantiated I2c device client
      */
-    public static II2cDeviceClient createI2cDeviceClientFrom(I2cDevice i2cDevice, int i2cAddr8Bit)
+    public static II2cDeviceClient createI2cDeviceClient(I2cDevice i2cDevice, int i2cAddr8Bit)
         {
-        II2cDevice ii2cDevice = createI2cDeviceFrom(i2cDevice);
-        return createI2cDeviceClientFrom(ii2cDevice, i2cAddr8Bit);
+        II2cDevice ii2cDevice = createI2cDevice(i2cDevice);
+        return createI2cDeviceClient(ii2cDevice, i2cAddr8Bit);
         }
 
 
@@ -184,7 +184,7 @@ public final class ClassFactory
      * @param i2cAddr8Bit           the I2C address at which the client is to communicate
      * @return                      the newly instantiated I2c device client
      */
-    public static II2cDeviceClient createI2cDeviceClientFrom(II2cDevice i2cDevice, int i2cAddr8Bit)
+    public static II2cDeviceClient createI2cDeviceClient(II2cDevice i2cDevice, int i2cAddr8Bit)
         {
         return new I2cDeviceClient(i2cDevice, i2cAddr8Bit, true, null);
         }
@@ -200,7 +200,7 @@ public final class ClassFactory
      *                              are absent, then no auto registration occurs.
      * @return                      the newly instantiated I2c device client
      */
-    public static II2cDeviceClient createI2cDeviceClientFrom(II2cDevice i2cDevice, int i2cAddr8Bit, boolean autoClose, IStopActionRegistrar registrar)
+    public static II2cDeviceClient createI2cDeviceClient(II2cDevice i2cDevice, int i2cAddr8Bit, boolean autoClose, IStopActionRegistrar registrar)
         {
         return new I2cDeviceClient(i2cDevice, i2cAddr8Bit, autoClose, registrar);
         }
