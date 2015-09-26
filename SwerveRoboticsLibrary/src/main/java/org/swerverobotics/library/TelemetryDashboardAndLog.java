@@ -335,12 +335,15 @@ public class TelemetryDashboardAndLog
                 {
                 @Override public void doAction()
                     {
-                    for (int i = 0; i < keys.size(); i++)
-                        {
-                        TelemetryDashboardAndLog.this.target.addData(
-                                keys.elementAt(i),
-                                values.elementAt(i));
+                    try {
+                        for (int i = 0; i < keys.size(); i++)
+                            {
+                            TelemetryDashboardAndLog.this.target.addData(
+                                    keys.elementAt(i),
+                                    values.elementAt(i));
+                            }
                         }
+                    catch (Exception e) { /* ignore */ }
                     }
                 };
 

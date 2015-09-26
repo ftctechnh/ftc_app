@@ -67,7 +67,7 @@
 <!--   -->
 </a></div>
 <!-- ========= END OF TOP NAVBAR ========= -->
-<div class="contentContainer"><a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:Q">Q</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:W">W</a>&nbsp;<a href="#I:X">X</a>&nbsp;<a href="#I:Y">Y</a>&nbsp;<a href="#I:Z">Z</a>&nbsp;<a name="I:A">
+<div class="contentContainer"><a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:Q">Q</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:W">W</a>&nbsp;<a href="#I:X">X</a>&nbsp;<a href="#I:Y">Y</a>&nbsp;<a href="#I:Z">Z</a>&nbsp;<a name="I:A">
 <!--   -->
 </a>
 <h2 class="title">A</h2>
@@ -218,6 +218,10 @@
 <dd>
 <div class="block">(Re)initialize the dashboard to contain no lines or items</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IBNO055IMU.html#close--">close()</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/IBNO055IMU.html" title="interface in org.swerverobotics.library.interfaces">IBNO055IMU</a></dt>
+<dd>
+<div class="block">Shut down the sensor.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html#close--">close()</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a></dt>
 <dd>
 <div class="block">Close down and disable this device.</div>
@@ -226,35 +230,62 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#contains-org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow-">contains(II2cDeviceClient.ReadWindow)</a></span> - Method in class <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a></dt>
 <dd>
-<div class="block">Does the receiver wholly contain the indicated window?</div>
+<div class="block">Answers as to whether the receiver wholly contains the indicated window.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#contains-int-int-">contains(int, int)</a></span> - Method in class <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Answers as to whether the receiver wholly contains the indicated set of registers.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#containsWithSameMode-org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow-">containsWithSameMode(II2cDeviceClient.ReadWindow)</a></span> - Method in class <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a></dt>
+<dd>
+<div class="block">Answers as to whether the receiver wholly contains the indicated window
+ and also has the same modality.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createAdaFruitBNO055IMU-com.qualcomm.robotcore.hardware.I2cDevice-">createAdaFruitBNO055IMU(I2cDevice)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
 <dd>
-<div class="block">Instantiate an AdaFruit BNO055 sensor who resides at the indicated I2cDevice using
+<div class="block">Instantiates an AdaFruit BNO055 sensor which resides at the indicated I2cDevice using
  default values for configuration parameters.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createAdaFruitBNO055IMU-com.qualcomm.robotcore.hardware.I2cDevice-org.swerverobotics.library.interfaces.IBNO055IMU.Parameters-">createAdaFruitBNO055IMU(I2cDevice, IBNO055IMU.Parameters)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
 <dd>
-<div class="block">Instantiate an AdaFruit BNO055 sensor who resides at the indicated I2cDevice using
+<div class="block">Instantiates an AdaFruit BNO055 sensor which resides at the indicated I2cDevice using
  the provided configuration parameters.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createI2cDeviceClient-com.qualcomm.robotcore.hardware.I2cDevice-int-org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow-">createI2cDeviceClient(I2cDevice, int, II2cDeviceClient.ReadWindow)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createI2cDevice-com.qualcomm.robotcore.hardware.I2cDevice-">createI2cDevice(I2cDevice)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
 <dd>
-<div class="block">Instantiate an I2cDeviceClient wrapper on an I2cDevice.</div>
+<div class="block">Creates an II2cDevice interface around an I2cDevice.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createI2cDeviceClient-com.qualcomm.robotcore.hardware.I2cController-int-int-org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow-">createI2cDeviceClient(I2cController, int, int, II2cDeviceClient.ReadWindow)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createI2cDevice-com.qualcomm.robotcore.hardware.I2cController-int-">createI2cDevice(I2cController, int)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
 <dd>
-<div class="block">Instantiate an I2cDeviceClient on an I2cController using a given port and i2cAddr</div>
+<div class="block">Creates an II2Device instance on a specific port on an I2cDeviceController</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createI2cDeviceClient-com.qualcomm.robotcore.hardware.LegacyModule-int-int-org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow-">createI2cDeviceClient(LegacyModule, int, int, II2cDeviceClient.ReadWindow)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createI2cDeviceClient-com.qualcomm.robotcore.hardware.I2cDevice-int-">createI2cDeviceClient(I2cDevice, int)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
 <dd>
-<div class="block">Instantiate an I2cDeviceClient on a LegacyModule using a given port and i2cAddr</div>
+<div class="block">Create a new II2cDeviceClient on an I2cDevice instance.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createI2cDeviceClient-com.qualcomm.robotcore.hardware.I2cDevice-org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow-">createI2cDeviceClient(I2cDevice, II2cDeviceClient.ReadWindow)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createI2cDeviceClient-org.swerverobotics.library.internal.II2cDevice-int-">createI2cDeviceClient(II2cDevice, int)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
 <dd>
-<div class="block">Instantiate an I2cDeviceClient wrapper around an I2cDevice using the I2C address currently found therein</div>
+<div class="block">Create a new II2cDeviceClient on an II2cDevice instance.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createI2cDeviceClient-org.swerverobotics.library.internal.II2cDevice-int-boolean-org.swerverobotics.library.interfaces.IStopActionRegistrar-">createI2cDeviceClient(II2cDevice, int, boolean, IStopActionRegistrar)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
+<dd>
+<div class="block">Create a new II2cDeviceClient on an II2cDevice instance.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createNxtColorSensor-com.qualcomm.robotcore.hardware.I2cDevice-">createNxtColorSensor(I2cDevice)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
+<dd>
+<div class="block">Creates an Nxt ColorSensor object from an I2cDevice.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createNxtColorSensor-org.swerverobotics.library.internal.II2cDevice-">createNxtColorSensor(II2cDevice)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
+<dd>
+<div class="block">Creates an Nxt ColorSensor object from an I2cDevice.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createNxtColorSensor-com.qualcomm.robotcore.hardware.I2cController-int-">createNxtColorSensor(I2cController, int)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
+<dd>
+<div class="block">Creates an Nxt ColorSensor object from an I2cDevice.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createNxtDcMotorController-com.qualcomm.robotcore.hardware.DcMotorController-">createNxtDcMotorController(DcMotorController)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
+<dd>
+<div class="block">NxtMotorControllerOnI2cDevice is an alternative implementation of a Legacy DC Motor controller.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#createSynchronousWorkerThread-org.swerverobotics.library.interfaces.IInterruptableRunnable-">createSynchronousWorkerThread(IInterruptableRunnable)</a></span> - Method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
 <dd>
@@ -296,17 +327,22 @@
 <dd>
 <div class="block">Ensure that the current register window covers the indicated set of registers.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#equals-org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow-">equals(II2cDeviceClient.ReadWindow)</a></span> - Method in class <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a></dt>
-<dd>
-<div class="block">Do the recevier and the indicated register window cover exactly the 
- same set of registers?</div>
-</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IBNO055IMU.EulerAngles.html#EulerAngles--">EulerAngles()</a></span> - Constructor for class <a href="org/swerverobotics/library/interfaces/IBNO055IMU.EulerAngles.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.EulerAngles</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IBNO055IMU.EulerAngles.html#EulerAngles-double-double-double-long-">EulerAngles(double, double, double, long)</a></span> - Constructor for class <a href="org/swerverobotics/library/interfaces/IBNO055IMU.EulerAngles.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.EulerAngles</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IBNO055IMU.EulerAngles.html#EulerAngles-org.swerverobotics.library.interfaces.II2cDeviceClient.TimestampedData-double-">EulerAngles(II2cDeviceClient.TimestampedData, double)</a></span> - Constructor for class <a href="org/swerverobotics/library/interfaces/IBNO055IMU.EulerAngles.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.EulerAngles</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html#executeActionWhileLocked-org.swerverobotics.library.interfaces.IAction-">executeActionWhileLocked(IAction)</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a></dt>
+<dd>
+<div class="block">Executes the indicated action while holding the concurrency lock on the object
+ so as to prevent other threads from interleaving.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html#executeFunctionWhileLocked-org.swerverobotics.library.interfaces.IFunc-">executeFunctionWhileLocked(IFunc&lt;T&gt;)</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a></dt>
+<dd>
+<div class="block">Executes the indicated function while holding the concurrency lock on the object
+ so as to prevent other threads from interleaving.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IThunkDispatcher.html#executeOnLoopThread-org.swerverobotics.library.interfaces.IAction-">executeOnLoopThread(IAction)</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/IThunkDispatcher.html" title="interface in org.swerverobotics.library.interfaces">IThunkDispatcher</a></dt>
 <dd>
 <div class="block">Execute the indicated action over on the loop() thread.</div>
@@ -324,6 +360,20 @@
 <dd>
 <div class="block">Advanced: Execute the indicated action on the loop thread if we are on a synchronous thread
  or the loop() thread.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.HeartbeatAction.html#explicitReadPriority">explicitReadPriority</a></span> - Variable in class <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.HeartbeatAction.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.HeartbeatAction</a></dt>
+<dd>
+<div class="block">Advanced: if a read on a separate thread is in fact needed, use this thread priority</div>
+</dd>
+</dl>
+<a name="I:F">
+<!--   -->
+</a>
+<h2 class="title">F</h2>
+<dl>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#freshCopy--">freshCopy()</a></span> - Method in class <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a></dt>
+<dd>
+<div class="block">Returns a copy of this window but with the <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#readIssued"><code>II2cDeviceClient.ReadWindow.readIssued</code></a> flag clear</div>
 </dd>
 </dl>
 <a name="I:G">
@@ -361,11 +411,20 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#getCreg--">getCreg()</a></span> - Method in class <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a></dt>
 <dd>
-<div class="block">Return the number of registers in the window</div>
+<div class="block">Returns the number of registers in the window</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IBNO055IMU.html#getGravity--">getGravity()</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/IBNO055IMU.html" title="interface in org.swerverobotics.library.interfaces">IBNO055IMU</a></dt>
 <dd>
 <div class="block">Returns the direction of the force of gravity relative to the sensor.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html#getHeartbeatAction--">getHeartbeatAction()</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a></dt>
+<dd>
+<div class="block">Returns the current action, if any, to take upon expiration of the heartbeat interval.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html#getHeartbeatInterval--">getHeartbeatInterval()</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a></dt>
+<dd>
+<div class="block">Returns the interval within which communication must be received by the I2C device lest
+ a timeout occur.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html#getI2cCycleCount--">getI2cCycleCount()</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a></dt>
 <dd>
@@ -375,11 +434,11 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#getIregFirst--">getIregFirst()</a></span> - Method in class <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a></dt>
 <dd>
-<div class="block">Return the first register in the window</div>
+<div class="block">Returns the first register in the window</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#getIregMax--">getIregMax()</a></span> - Method in class <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a></dt>
 <dd>
-<div class="block">Return the first register NOT in the window</div>
+<div class="block">Returns the first register NOT in the window</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/TelemetryDashboardAndLog.html#getItemDelimiter--">getItemDelimiter()</a></span> - Method in class <a href="org/swerverobotics/library/TelemetryDashboardAndLog.html" title="class in org.swerverobotics.library">TelemetryDashboardAndLog</a></dt>
 <dd>
@@ -418,6 +477,14 @@
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IBNO055IMU.html#getQuaternionOrientation--">getQuaternionOrientation()</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/IBNO055IMU.html" title="interface in org.swerverobotics.library.interfaces">IBNO055IMU</a></dt>
 <dd>
 <div class="block">Returns the absolute orientation of the sensor as a quaternion.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#getReadIssued--">getReadIssued()</a></span> - Method in class <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a></dt>
+<dd>
+<div class="block">Returns whether a read has ever been issued for this window or not</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#getReadMode--">getReadMode()</a></span> - Method in class <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a></dt>
+<dd>
+<div class="block">Returns the mode of the window</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html#getReadWindow--">getReadWindow()</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a></dt>
 <dd>
@@ -468,6 +535,12 @@
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IBNO055IMU.EulerAngles.html#heading">heading</a></span> - Variable in class <a href="org/swerverobotics/library/interfaces/IBNO055IMU.EulerAngles.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.EulerAngles</a></dt>
 <dd>
 <div class="block">the rotation about the Z axis</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.HeartbeatAction.html#HeartbeatAction--">HeartbeatAction()</a></span> - Constructor for class <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.HeartbeatAction.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.HeartbeatAction</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.HeartbeatAction.html#heartbeatReadWindow">heartbeatReadWindow</a></span> - Variable in class <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.HeartbeatAction.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.HeartbeatAction</a></dt>
+<dd>
+<div class="block">Priority #3: explicitly read a given register window.</div>
 </dd>
 </dl>
 <a name="I:I">
@@ -558,6 +631,15 @@
 <div class="block">II2cDeviceClient is the public interface to a utility class that makes it easier to
  use I2cDevice instances.</div>
 </dd>
+<dt><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.HeartbeatAction.html" title="class in org.swerverobotics.library.interfaces"><span class="typeNameLink">II2cDeviceClient.HeartbeatAction</span></a> - Class in <a href="org/swerverobotics/library/interfaces/package-summary.html">org.swerverobotics.library.interfaces</a></dt>
+<dd>
+<div class="block">Instances of HeartBeatAction indicate what action to carry out to perform
+ a heartbeat should that become necessary.</div>
+</dd>
+<dt><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.READ_MODE.html" title="enum in org.swerverobotics.library.interfaces"><span class="typeNameLink">II2cDeviceClient.READ_MODE</span></a> - Enum in <a href="org/swerverobotics/library/interfaces/package-summary.html">org.swerverobotics.library.interfaces</a></dt>
+<dd>
+<div class="block">READ_MODE controls whether when asked to read we read only once or read multiple times</div>
+</dd>
 <dt><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces"><span class="typeNameLink">II2cDeviceClient.ReadWindow</span></a> - Class in <a href="org/swerverobotics/library/interfaces/package-summary.html">org.swerverobotics.library.interfaces</a></dt>
 <dd>
 <div class="block">RegWindow is a utility class for managing the window of I2C register bytes that
@@ -619,6 +701,18 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IBNO055IMU.html#isMagnetometerCalibrated--">isMagnetometerCalibrated()</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/IBNO055IMU.html" title="interface in org.swerverobotics.library.interfaces">IBNO055IMU</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#isOkToRead--">isOkToRead()</a></span> - Method in class <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a></dt>
+<dd>
+<div class="block">Answers as to whether we're allowed to read using this window</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#isStarted--">isStarted()</a></span> - Method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
+<dd>
+<div class="block">Has the opMode been started?</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#isStopRequested--">isStopRequested()</a></span> - Method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
+<dd>
+<div class="block">Has the the stopping of the opMode been requested?</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IBNO055IMU.html#isSystemCalibrated--">isSystemCalibrated()</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/IBNO055IMU.html" title="interface in org.swerverobotics.library.interfaces">IBNO055IMU</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/swerverobotics/library/interfaces/IStopActionRegistrar.html" title="interface in org.swerverobotics.library.interfaces"><span class="typeNameLink">IStopActionRegistrar</span></a> - Interface in <a href="org/swerverobotics/library/interfaces/package-summary.html">org.swerverobotics.library.interfaces</a></dt>
@@ -646,6 +740,10 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/TelemetryDashboardAndLog.Log.html#Log--">Log()</a></span> - Constructor for class <a href="org/swerverobotics/library/TelemetryDashboardAndLog.Log.html" title="class in org.swerverobotics.library">TelemetryDashboardAndLog.Log</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#LOGGING_TAG">LOGGING_TAG</a></span> - Static variable in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
+<dd>
+<div class="block">The logging tag we use in LogCat output in this general vicinity.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IBNO055IMU.Parameters.html#loggingEnabled">loggingEnabled</a></span> - Variable in class <a href="org/swerverobotics/library/interfaces/IBNO055IMU.Parameters.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Parameters</a></dt>
 <dd>
 <div class="block">debugging aid: enable logging for this device?</div>
@@ -905,10 +1003,10 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html#readTimeStamped-int-int-">readTimeStamped(int, int)</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a></dt>
 <dd>
-<div class="block">Reads and returns a contiguous set of device I2C registers, together with a timestamp
- of when the read occurred.</div>
+<div class="block">Reads and returns a contiguous set of device I2C registers, together with a best-available
+ timestamp of when the actual I2C read occurred.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#ReadWindow-int-int-">ReadWindow(int, int)</a></span> - Constructor for class <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a></dt>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#ReadWindow-int-int-org.swerverobotics.library.interfaces.II2cDeviceClient.READ_MODE-">ReadWindow(int, int, II2cDeviceClient.READ_MODE)</a></span> - Constructor for class <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a></dt>
 <dd>
 <div class="block">Create a new register window with the indicated starting register and register count</div>
 </dd>
@@ -937,6 +1035,14 @@
 <dd>
 <div class="block">Registers an action to be called when the contextually associated opMode stops</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.HeartbeatAction.html#rereadLastRead">rereadLastRead</a></span> - Variable in class <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.HeartbeatAction.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.HeartbeatAction</a></dt>
+<dd>
+<div class="block">Priority #1: re-issue the last I2C read operation, if possible.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.HeartbeatAction.html#rewriteLastWritten">rewriteLastWritten</a></span> - Variable in class <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.HeartbeatAction.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.HeartbeatAction</a></dt>
+<dd>
+<div class="block">Priority #2: re-issue the last I2C write operation, if possible.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IBNO055IMU.EulerAngles.html#roll">roll</a></span> - Variable in class <a href="org/swerverobotics/library/interfaces/IBNO055IMU.EulerAngles.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.EulerAngles</a></dt>
 <dd>
 <div class="block">the rotation about the Y axis</div>
@@ -957,6 +1063,11 @@
 </a>
 <h2 class="title">S</h2>
 <dl>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#sameAsIncludingMode-org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow-">sameAsIncludingMode(II2cDeviceClient.ReadWindow)</a></span> - Method in class <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a></dt>
+<dd>
+<div class="block">Do the receiver and the indicated register window cover exactly the
+ same set of registers and have the same modality?</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/TelemetryDashboardAndLog.Log.html#setCapacity-int-">setCapacity(int)</a></span> - Method in class <a href="org/swerverobotics/library/TelemetryDashboardAndLog.Log.html" title="class in org.swerverobotics.library">TelemetryDashboardAndLog.Log</a></dt>
 <dd>
 <div class="block">Sets the maximum number of entries used by the log on the telemetry display.</div>
@@ -964,6 +1075,15 @@
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/TelemetryDashboardAndLog.Log.html#setDisplayOldToNew-boolean-">setDisplayOldToNew(boolean)</a></span> - Method in class <a href="org/swerverobotics/library/TelemetryDashboardAndLog.Log.html" title="class in org.swerverobotics.library">TelemetryDashboardAndLog.Log</a></dt>
 <dd>
 <div class="block">Sets the order in which the log is displayed.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html#setHeartbeatAction-org.swerverobotics.library.interfaces.II2cDeviceClient.HeartbeatAction-">setHeartbeatAction(II2cDeviceClient.HeartbeatAction)</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a></dt>
+<dd>
+<div class="block">Sets the action to take when the current heartbeat interval expires.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html#setHeartbeatInterval-int-">setHeartbeatInterval(int)</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a></dt>
+<dd>
+<div class="block">Sets the interval within which communication must be received by the I2C device list
+ a timeout may occur.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/TelemetryDashboardAndLog.html#setItemDelimiter-java.lang.String-">setItemDelimiter(String)</a></span> - Method in class <a href="org/swerverobotics/library/TelemetryDashboardAndLog.html" title="class in org.swerverobotics.library">TelemetryDashboardAndLog</a></dt>
 <dd>
@@ -984,6 +1104,10 @@
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IBNO055IMU.html#setPositionAndVelocity-org.swerverobotics.library.interfaces.IBNO055IMU.Position-org.swerverobotics.library.interfaces.IBNO055IMU.Velocity-">setPositionAndVelocity(IBNO055IMU.Position, IBNO055IMU.Velocity)</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/IBNO055IMU.html" title="interface in org.swerverobotics.library.interfaces">IBNO055IMU</a></dt>
 <dd>
 <div class="block">Atomically sets the current position and / or velocity of the sensor.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#setReadIssued--">setReadIssued()</a></span> - Method in class <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a></dt>
+<dd>
+<div class="block">Sets that a read has in fact been issued for this window</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html#setReadWindow-org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow-">setReadWindow(II2cDeviceClient.ReadWindow)</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a></dt>
 <dd>
@@ -1008,10 +1132,6 @@
 <div class="block">As in <a href="org/swerverobotics/library/interfaces/IBNO055IMU.html#startAccelerationIntegration-org.swerverobotics.library.interfaces.IBNO055IMU.Position-org.swerverobotics.library.interfaces.IBNO055IMU.Velocity-"><code>IBNO055IMU.startAccelerationIntegration(Position, Velocity)</code></a>, but provides control over
  the frequency which which the acceleration is polled.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#started--">started()</a></span> - Method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
-<dd>
-<div class="block">Has the opMode been started?</div>
-</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#staticGetNewSingletonKey--">staticGetNewSingletonKey()</a></span> - Static method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
 <dd>
 <div class="block">Advanced/Internal: Return a new key by which actions can be scheduled using executeSingletonOnLoopThread()</div>
@@ -1023,10 +1143,6 @@
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IBNO055IMU.html#stopAccelerationIntegration--">stopAccelerationIntegration()</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/IBNO055IMU.html" title="interface in org.swerverobotics.library.interfaces">IBNO055IMU</a></dt>
 <dd>
 <div class="block">Stop the integration thread if it is currently running.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#stopRequested--">stopRequested()</a></span> - Method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
-<dd>
-<div class="block">Has the the stopping of the opMode been requested?</div>
 </dd>
 <dt><a href="org/swerverobotics/library/exceptions/SwerveRuntimeException.html" title="class in org.swerverobotics.library.exceptions"><span class="typeNameLink">SwerveRuntimeException</span></a> - Exception in <a href="org/swerverobotics/library/exceptions/package-summary.html">org.swerverobotics.library.exceptions</a></dt>
 <dd>
@@ -1218,6 +1334,10 @@
 <dd>
 <div class="block">Returns the enum constant of this type with the specified name.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.READ_MODE.html#valueOf-java.lang.String-">valueOf(String)</a></span> - Static method in enum <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.READ_MODE.html" title="enum in org.swerverobotics.library.interfaces">II2cDeviceClient.READ_MODE</a></dt>
+<dd>
+<div class="block">Returns the enum constant of this type with the specified name.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IBNO055IMU.ACCELUNIT.html#values--">values()</a></span> - Static method in enum <a href="org/swerverobotics/library/interfaces/IBNO055IMU.ACCELUNIT.html" title="enum in org.swerverobotics.library.interfaces">IBNO055IMU.ACCELUNIT</a></dt>
 <dd>
 <div class="block">Returns an array containing the constants of this enum type, in
@@ -1249,6 +1369,11 @@ the order they are declared.</div>
 the order they are declared.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IBNO055IMU.TEMPUNIT.html#values--">values()</a></span> - Static method in enum <a href="org/swerverobotics/library/interfaces/IBNO055IMU.TEMPUNIT.html" title="enum in org.swerverobotics.library.interfaces">IBNO055IMU.TEMPUNIT</a></dt>
+<dd>
+<div class="block">Returns an array containing the constants of this enum type, in
+the order they are declared.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.READ_MODE.html#values--">values()</a></span> - Static method in enum <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.READ_MODE.html" title="enum in org.swerverobotics.library.interfaces">II2cDeviceClient.READ_MODE</a></dt>
 <dd>
 <div class="block">Returns an array containing the constants of this enum type, in
 the order they are declared.</div>
@@ -1288,7 +1413,7 @@ the order they are declared.</div>
 <dd>
 <div class="block">Advanced: wait until all thunks that have been dispatched from the current (synchronous)
  thread have completed their execution over on the loop() thread and their effects
- to have reached the hardwaree.</div>
+ to have reached the hardware.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/exceptions/SwerveRuntimeException.html#wrap-java.lang.Exception-">wrap(Exception)</a></span> - Static method in exception <a href="org/swerverobotics/library/exceptions/SwerveRuntimeException.html" title="class in org.swerverobotics.library.exceptions">SwerveRuntimeException</a></dt>
 <dd>
@@ -1301,7 +1426,11 @@ the order they are declared.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html#write-int-byte:A-">write(int, byte[])</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a></dt>
 <dd>
-<div class="block">Write data to a set of registers, beginning with the one indicated.</div>
+<div class="block">Writes data to a set of registers, beginning with the one indicated.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html#write-int-byte:A-boolean-">write(int, byte[], boolean)</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a></dt>
+<dd>
+<div class="block">Writes data to a set of registers, beginning with the one indicated.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IBNO055IMU.html#write8-org.swerverobotics.library.interfaces.IBNO055IMU.REGISTER-int-">write8(IBNO055IMU.REGISTER, int)</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/IBNO055IMU.html" title="interface in org.swerverobotics.library.interfaces">IBNO055IMU</a></dt>
 <dd>
@@ -1309,7 +1438,11 @@ the order they are declared.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html#write8-int-int-">write8(int, int)</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a></dt>
 <dd>
-<div class="block">Write a byte to the indicated register</div>
+<div class="block">Writes a byte to the indicated register.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html#write8-int-int-boolean-">write8(int, int, boolean)</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a></dt>
+<dd>
+<div class="block">Writes a byte to the indicated register.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IBNO055IMU.html#writeCalibrationData-byte:A-">writeCalibrationData(byte[])</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/IBNO055IMU.html" title="interface in org.swerverobotics.library.interfaces">IBNO055IMU</a></dt>
 <dd>
@@ -1364,7 +1497,7 @@ the order they are declared.</div>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IBNO055IMU.Quaternion.html#z">z</a></span> - Variable in class <a href="org/swerverobotics/library/interfaces/IBNO055IMU.Quaternion.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Quaternion</a></dt>
 <dd>&nbsp;</dd>
 </dl>
-<a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:Q">Q</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:W">W</a>&nbsp;<a href="#I:X">X</a>&nbsp;<a href="#I:Y">Y</a>&nbsp;<a href="#I:Z">Z</a>&nbsp;</div>
+<a href="#I:A">A</a>&nbsp;<a href="#I:B">B</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:E">E</a>&nbsp;<a href="#I:F">F</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:H">H</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:L">L</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:N">N</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:Q">Q</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:U">U</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:W">W</a>&nbsp;<a href="#I:X">X</a>&nbsp;<a href="#I:Y">Y</a>&nbsp;<a href="#I:Z">Z</a>&nbsp;</div>
 <!-- ======= START OF BOTTOM NAVBAR ====== -->
 <div class="bottomNav"><a name="navbar.bottom">
 <!--   -->
