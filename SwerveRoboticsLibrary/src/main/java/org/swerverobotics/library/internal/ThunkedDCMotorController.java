@@ -175,7 +175,7 @@ public class ThunkedDCMotorController implements DcMotorController, IThunkedRead
             }
         catch (InterruptedException e)
             {
-            Util.handleCapturedInterrupt();
+            Util.handleCapturedInterrupt(e);
             }
         }
     

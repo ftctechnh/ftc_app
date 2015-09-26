@@ -74,13 +74,13 @@ public class HandshakeThreadStarter
 
             this.started = true;
             }
-        catch (InterruptedException|RuntimeInterruptedException ex)
+        catch (InterruptedException|RuntimeInterruptedException e)
             {
             // Clean up if we were interrupted while waiting
             this.started = true;    // so stop() will work
             stop();
 
-            Util.handleCapturedInterrupt(); // pass it on
+            Util.handleCapturedInterrupt(e); // pass it on
             }
         }
 
@@ -110,9 +110,9 @@ public class HandshakeThreadStarter
                 else
                     this.thread.join(msWait);
                 }
-            catch (InterruptedException|RuntimeInterruptedException ignored)
+            catch (InterruptedException|RuntimeInterruptedException e)
                 {
-                Util.handleCapturedInterrupt();
+                Util.handleCapturedInterrupt(e);
                 }
             finally
                 {

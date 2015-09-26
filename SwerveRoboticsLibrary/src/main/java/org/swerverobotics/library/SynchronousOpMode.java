@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 import android.util.*;
-import junit.framework.Assert;
+import static junit.framework.Assert.*;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.swerverobotics.library.exceptions.*;
@@ -517,6 +517,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
 
         synchronized void add(IAction action)
             {
+            assertTrue(!BuildConfig.DEBUG || action!=null);
             this.queue.add(action);
             this.onChanged();
             }
@@ -654,9 +655,9 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             {
             thread.join(msWait);
             }
-        catch (InterruptedException ignored)
+        catch (InterruptedException e)
             { 
-            Util.handleCapturedInterrupt();
+            Util.handleCapturedInterrupt(e);
             }
         }
 
@@ -681,9 +682,9 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
                 {
                 thread.join(msWait);
                 }
-            catch (InterruptedException ignored) 
+            catch (InterruptedException e)
                 {
-                Util.handleCapturedInterrupt();
+                Util.handleCapturedInterrupt(e);
                 }
             }
         }
@@ -810,7 +811,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         this.preLoopHook();
 
         // Validate our assumption of init() and loop() running on the same thread.
-        Assert.assertTrue(!BuildConfig.DEBUG || this.isLoopThread());
+        assertTrue(!BuildConfig.DEBUG || this.isLoopThread());
 
         synchronized (this.loopLock)
             {
@@ -861,7 +862,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
                     }
 
                 // Execute the work that needs to be done on the loop thread
-                action.doAction();
+                executeAction(action);
 
                 // Periodically check whether we've run long enough for this loop() call.
                 if (i % this.loopDwellCheckCount == 0)
@@ -875,7 +876,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             List<IAction> actions = this.snarfSingletons();
             for (IAction action : actions)
                 {
-                action.doAction();
+                executeAction(action);
                 }
 
             // Tell people that this loop cycle is complete
@@ -884,6 +885,20 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
 
         // Call the subclass hook in case they might want to do something interesting
         this.postLoopHook();
+        }
+
+    void executeAction(IAction action)
+        {
+        try {
+            action.doAction();
+            }
+        catch (Exception e)
+            {
+            // Ignore. Actions generally are responsible for cleaning up their own
+            // mess; they shouldn't be disturbing us. Thus, we eat any exceptions to keep
+            // things moving.
+            Log.d(TAG, "action exception leaked through to loop thread: " + e);
+            }
         }
     
     /**

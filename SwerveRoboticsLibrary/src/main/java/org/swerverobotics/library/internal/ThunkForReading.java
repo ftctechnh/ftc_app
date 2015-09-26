@@ -35,14 +35,11 @@ public abstract class ThunkForReading<T> extends Thunk
     //----------------------------------------------------------------------------------------------
     
     @Override protected void dispatch() throws InterruptedException
-    // Once dispatched, we wait for our own completion
+    // Once dispatched, we wait for our own completion, as that's when the
+    // the data to be read will be available
         {
         super.dispatch();
-
-        synchronized (this)
-            {
-            this.wait();
-            }
+        waitForCompletion();
         }
    
     public T doUntrackedReadOperation()
@@ -65,7 +62,7 @@ public abstract class ThunkForReading<T> extends Thunk
             catch (InterruptedException|RuntimeInterruptedException e)
                 {
                 // (Re)tell the current thread that he should shut down soon
-                Util.handleCapturedInterrupt();
+                Util.handleCapturedInterrupt(e);
 
                 // Our signature (and that of our caller) doesn't allow us to throw
                 // InterruptedException. But we can't actually return a value to our caller,
