@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.*;
 /**
  * An example that illustrates use of the telemetry dashboard and log
  */
-@TeleOp(name="Telemetry")
+@TeleOp(name="Telemetry", group="Swerve Examples")
 @Disabled
 public class SynchTelemetryOp extends SynchronousOpMode
     {
@@ -41,7 +41,7 @@ public class SynchTelemetryOp extends SynchronousOpMode
             // Update the telemetry dashboard with fresh values
             this.telemetry.addData("time",  format(elapsed));
             this.telemetry.addData("count", getLoopCount() - loopCountStart);
-            this.telemetry.addData("rate",  format(elapsed.time() / (getLoopCount() - loopCountStart) * 1000) + "ms");
+            this.telemetry.addData("rate",  format(elapsed.time()*1000.0 / (getLoopCount() - loopCountStart)) + "ms");
 
             // Update driver station and wait until there's something useful to do
             this.telemetry.update();
