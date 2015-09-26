@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6,"i8":6,"i9":6,"i10":6,"i11":6,"i12":6};
+var methods = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6,"i8":6,"i9":6,"i10":6,"i11":6,"i12":6,"i13":6,"i14":6,"i15":6,"i16":6,"i17":6,"i18":6,"i19":6,"i20":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -48,7 +48,7 @@ var activeTableTab = "activeTableTab";
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../../org/swerverobotics/library/interfaces/IHardwareWrapper.html" title="interface in org.swerverobotics.library.interfaces"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.HeartbeatAction.html" title="class in org.swerverobotics.library.interfaces"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../index.html?org/swerverobotics/library/interfaces/II2cDeviceClient.html" target="_top">Frames</a></li>
@@ -99,18 +99,14 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <dl>
 <dt>All Superinterfaces:</dt>
-<dd>com.qualcomm.robotcore.hardware.HardwareDevice</dd>
+<dd>HardwareDevice</dd>
 </dl>
 <hr>
 <br>
 <pre>public interface <span class="typeNameLabel">II2cDeviceClient</span>
-extends com.qualcomm.robotcore.hardware.HardwareDevice</pre>
+extends HardwareDevice</pre>
 <div class="block">II2cDeviceClient is the public interface to a utility class that makes it easier to
  use I2cDevice instances.</div>
-<dl>
-<dt><span class="seeLabel">See Also:</span></dt>
-<dd><code>ClassFactory#createI2cDeviceClient(I2cDevice, ReadWindow)</code></dd>
-</dl>
 </li>
 </ul>
 </div>
@@ -128,6 +124,19 @@ extends com.qualcomm.robotcore.hardware.HardwareDevice</pre>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colLast" scope="col">Interface and Description</th>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>static class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.HeartbeatAction.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.HeartbeatAction</a></span></code>
+<div class="block">Instances of HeartBeatAction indicate what action to carry out to perform
+ a heartbeat should that become necessary.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static class&nbsp;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.READ_MODE.html" title="enum in org.swerverobotics.library.interfaces">II2cDeviceClient.READ_MODE</a></span></code>
+<div class="block">READ_MODE controls whether when asked to read we read only once or read multiple times</div>
+</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static class&nbsp;</code></td>
@@ -172,82 +181,138 @@ extends com.qualcomm.robotcore.hardware.HardwareDevice</pre>
 </td>
 </tr>
 <tr id="i2" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#executeActionWhileLocked-org.swerverobotics.library.interfaces.IAction-">executeActionWhileLocked</a></span>(<a href="../../../../org/swerverobotics/library/interfaces/IAction.html" title="interface in org.swerverobotics.library.interfaces">IAction</a>&nbsp;action)</code>
+<div class="block">Executes the indicated action while holding the concurrency lock on the object
+ so as to prevent other threads from interleaving.</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#executeFunctionWhileLocked-org.swerverobotics.library.interfaces.IFunc-">executeFunctionWhileLocked</a></span>(<a href="../../../../org/swerverobotics/library/interfaces/IFunc.html" title="interface in org.swerverobotics.library.interfaces">IFunc</a>&lt;T&gt;&nbsp;function)</code>
+<div class="block">Executes the indicated function while holding the concurrency lock on the object
+ so as to prevent other threads from interleaving.</div>
+</td>
+</tr>
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>java.lang.Thread</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#getCallbackThread--">getCallbackThread</a></span>()</code>
 <div class="block">Returns the thread on which it is observed that portIsReady callbacks occur</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.HeartbeatAction.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.HeartbeatAction</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#getHeartbeatAction--">getHeartbeatAction</a></span>()</code>
+<div class="block">Returns the current action, if any, to take upon expiration of the heartbeat interval.</div>
+</td>
+</tr>
+<tr id="i6" class="altColor">
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#getHeartbeatInterval--">getHeartbeatInterval</a></span>()</code>
+<div class="block">Returns the interval within which communication must be received by the I2C device lest
+ a timeout occur.</div>
+</td>
+</tr>
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#getI2cCycleCount--">getI2cCycleCount</a></span>()</code>
 <div class="block">Returns the number of I2C cycles that we've seen for this device.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#getReadWindow--">getReadWindow</a></span>()</code>
 <div class="block">Returns the current register window used for reading.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>byte[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#read-int-int-">read</a></span>(int&nbsp;ireg,
     int&nbsp;creg)</code>
 <div class="block">Read a contiguous set of device I2C registers.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>byte</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#read8-int-">read8</a></span>(int&nbsp;ireg)</code>
 <div class="block">Read the byte at the indicated register.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.TimestampedData.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.TimestampedData</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#readTimeStamped-int-int-">readTimeStamped</a></span>(int&nbsp;ireg,
                int&nbsp;creg)</code>
-<div class="block">Reads and returns a contiguous set of device I2C registers, together with a timestamp
- of when the read occurred.</div>
+<div class="block">Reads and returns a contiguous set of device I2C registers, together with a best-available
+ timestamp of when the actual I2C read occurred.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i12" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#setHeartbeatAction-org.swerverobotics.library.interfaces.II2cDeviceClient.HeartbeatAction-">setHeartbeatAction</a></span>(<a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.HeartbeatAction.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.HeartbeatAction</a>&nbsp;action)</code>
+<div class="block">Sets the action to take when the current heartbeat interval expires.</div>
+</td>
+</tr>
+<tr id="i13" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#setHeartbeatInterval-int-">setHeartbeatInterval</a></span>(int&nbsp;ms)</code>
+<div class="block">Sets the interval within which communication must be received by the I2C device list
+ a timeout may occur.</div>
+</td>
+</tr>
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#setLogging-boolean-">setLogging</a></span>(boolean&nbsp;enabled)</code>
 <div class="block">Turn logging on or off.</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#setLoggingTag-java.lang.String-">setLoggingTag</a></span>(java.lang.String&nbsp;loggingTag)</code>
 <div class="block">Set the tag to use when logging is on.</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#setReadWindow-org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow-">setReadWindow</a></span>(<a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a>&nbsp;window)</code>
 <div class="block">Set the set of registers that we will read and read and read again on every hardware cycle</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#write-int-byte:A-">write</a></span>(int&nbsp;ireg,
      byte[]&nbsp;data)</code>
-<div class="block">Write data to a set of registers, beginning with the one indicated.</div>
+<div class="block">Writes data to a set of registers, beginning with the one indicated.</div>
 </td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i18" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#write-int-byte:A-boolean-">write</a></span>(int&nbsp;ireg,
+     byte[]&nbsp;data,
+     boolean&nbsp;waitForCompletion)</code>
+<div class="block">Writes data to a set of registers, beginning with the one indicated.</div>
+</td>
+</tr>
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#write8-int-int-">write8</a></span>(int&nbsp;ireg,
       int&nbsp;bVal)</code>
-<div class="block">Write a byte to the indicated register</div>
+<div class="block">Writes a byte to the indicated register.</div>
+</td>
+</tr>
+<tr id="i20" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#write8-int-int-boolean-">write8</a></span>(int&nbsp;ireg,
+      int&nbsp;bVal,
+      boolean&nbsp;waitForCompletion)</code>
+<div class="block">Writes a byte to the indicated register.</div>
 </td>
 </tr>
 </table>
 <ul class="blockList">
-<li class="blockList"><a name="methods.inherited.from.class.com.qualcomm.robotcore.hardware.HardwareDevice">
+<li class="blockList"><a name="methods.inherited.from.class.HardwareDevice">
 <!--   -->
 </a>
-<h3>Methods inherited from interface&nbsp;com.qualcomm.robotcore.hardware.HardwareDevice</h3>
+<h3>Methods inherited from interface&nbsp;HardwareDevice</h3>
 <code>getConnectionInfo, getDeviceName, getVersion</code></li>
 </ul>
 </li>
@@ -307,7 +372,7 @@ extends com.qualcomm.robotcore.hardware.HardwareDevice</pre>
 <div class="block">Ensure that the current register window covers the indicated set of registers.
 
  If there is currently a non-null register window, and windowNeeded is non-null,
- and the curret register window entirely contains windowNeeded, then do nothing.
+ and the current register window entirely contains windowNeeded, then do nothing.
  Otherwise, set the current register window to windowToSet.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -319,7 +384,8 @@ extends com.qualcomm.robotcore.hardware.HardwareDevice</pre>
                      is the window to which it will be set. May be null.</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#setReadWindow-org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow-"><code>setReadWindow(ReadWindow)</code></a>, 
-<a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#read8-int-"><code>read8(int)</code></a></dd>
+<a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#read8-int-"><code>read8(int)</code></a>, 
+<a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#executeFunctionWhileLocked-org.swerverobotics.library.interfaces.IFunc-"><code>executeFunctionWhileLocked(IFunc)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -330,9 +396,8 @@ extends com.qualcomm.robotcore.hardware.HardwareDevice</pre>
 <li class="blockList">
 <h4>read8</h4>
 <pre>byte&nbsp;read8(int&nbsp;ireg)</pre>
-<div class="block">Read the byte at the indicated register.
-
- The register must lie within the current register window.</div>
+<div class="block">Read the byte at the indicated register. See <a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#readTimeStamped-int-int-"><code>readTimeStamped(int, int)</code></a> for a
+ complete description.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>ireg</code> - the register number to read</dd>
@@ -353,10 +418,8 @@ extends com.qualcomm.robotcore.hardware.HardwareDevice</pre>
 <h4>read</h4>
 <pre>byte[]&nbsp;read(int&nbsp;ireg,
             int&nbsp;creg)</pre>
-<div class="block">Read a contiguous set of device I2C registers.
-
- All the registers must lie within the current register window. Note that this 
- method can take several tens of milliseconds to execute.</div>
+<div class="block">Read a contiguous set of device I2C registers. See <a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#readTimeStamped-int-int-"><code>readTimeStamped(int, int)</code></a> for a
+ complete description.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>ireg</code> - the register number of the first byte register to read</dd>
@@ -378,8 +441,30 @@ extends com.qualcomm.robotcore.hardware.HardwareDevice</pre>
 <h4>readTimeStamped</h4>
 <pre><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.TimestampedData.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.TimestampedData</a>&nbsp;readTimeStamped(int&nbsp;ireg,
                                                  int&nbsp;creg)</pre>
-<div class="block">Reads and returns a contiguous set of device I2C registers, together with a timestamp
- of when the read occurred.</div>
+<div class="block">Reads and returns a contiguous set of device I2C registers, together with a best-available
+ timestamp of when the actual I2C read occurred. Note that this can take many tens of
+ milliseconds to execute, and thus should not be called from the loop() thread.
+
+ <p>You can always just call this method without worrying at all about
+ <a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces"><code>read windows</code></a>,
+ that will work, but usually it is more efficient to take some thought and care as to what set
+ of registers the I2C device controller is being set up to read, as adjusting that window
+ of registers incurs significant extra time.</p>
+
+ <p>If the current read window can't be used to read the requested registers, then
+ a new read window will automatically be created as follows. If the current read window is non
+ null and wholly contains the registers to read but can't be read because it is a used-up
+ <a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.READ_MODE.html#ONLY_ONCE"><code>II2cDeviceClient.READ_MODE.ONLY_ONCE</code></a> window,
+ a new read fresh window will be created with the same set of registers. Otherwise, a
+ window that exactly covers the requested set of registers will be created.</p>
+
+ <p>If one is trying to optimize the the register window by calling
+ <a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#ensureReadWindow-org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow-org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow-"><code>ensureReadWindow()</code></a>, this auto-window
+ creation can cause difficulties if any concurrent access is present. In such situations,
+ <a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#executeFunctionWhileLocked-org.swerverobotics.library.interfaces.IFunc-"><code>executeFunctionWhileLocked(IFunc)</code></a> can be used to allow you to atomically both
+ set the read window and execute a read without the possibility of the read window being
+ re-adjusted in the middle.
+ </p></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>ireg</code> - the register number of the first byte register to read</dd>
@@ -389,7 +474,8 @@ extends com.qualcomm.robotcore.hardware.HardwareDevice</pre>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#read-int-int-"><code>read(int, int)</code></a>, 
 <a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#read8-int-"><code>read8(int)</code></a>, 
-<a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#ensureReadWindow-org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow-org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow-"><code>ensureReadWindow(ReadWindow, ReadWindow)</code></a></dd>
+<a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#ensureReadWindow-org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow-org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow-"><code>ensureReadWindow(ReadWindow, ReadWindow)</code></a>, 
+<a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#executeFunctionWhileLocked-org.swerverobotics.library.interfaces.IFunc-"><code>executeFunctionWhileLocked(IFunc)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -401,7 +487,8 @@ extends com.qualcomm.robotcore.hardware.HardwareDevice</pre>
 <h4>write8</h4>
 <pre>void&nbsp;write8(int&nbsp;ireg,
             int&nbsp;bVal)</pre>
-<div class="block">Write a byte to the indicated register</div>
+<div class="block">Writes a byte to the indicated register. The call does not return until the write has
+ been queued to the device controller.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>ireg</code> - the register number that is to be written</dd>
@@ -419,7 +506,7 @@ extends com.qualcomm.robotcore.hardware.HardwareDevice</pre>
 <h4>write</h4>
 <pre>void&nbsp;write(int&nbsp;ireg,
            byte[]&nbsp;data)</pre>
-<div class="block">Write data to a set of registers, beginning with the one indicated. The data will be
+<div class="block">Writes data to a set of registers, beginning with the one indicated. The data will be
  written to the I2C device as expeditiously as possible. This method will not return until
  the data has been written to the device controller; however, that does not necessarily
  indicate that the data has been issued in an I2C write transaction, though that ought
@@ -429,7 +516,159 @@ extends com.qualcomm.robotcore.hardware.HardwareDevice</pre>
 <dd><code>ireg</code> - the first of the registers which is to be written</dd>
 <dd><code>data</code> - the data which is to be written to the registers</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#write8-int-int-"><code>write8(int, int)</code></a></dd>
+<dd><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#write8-int-int-"><code>write8(int, int)</code></a>, 
+<a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#write-int-byte:A-boolean-"><code>write(int, byte[], boolean)</code></a></dd>
+</dl>
+</li>
+</ul>
+<a name="write8-int-int-boolean-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>write8</h4>
+<pre>void&nbsp;write8(int&nbsp;ireg,
+            int&nbsp;bVal,
+            boolean&nbsp;waitForCompletion)</pre>
+<div class="block">Writes a byte to the indicated register. The call may or may block until the write
+ has been issued to the device controller</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ireg</code> - the register number that is to be written</dd>
+<dd><code>bVal</code> - the byte which is to be written to that register</dd>
+<dd><code>waitForCompletion</code> - whether or not to wait until the write has been sent to the controller</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#write-int-byte:A-boolean-"><code>write(int, byte[], boolean)</code></a></dd>
+</dl>
+</li>
+</ul>
+<a name="write-int-byte:A-boolean-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>write</h4>
+<pre>void&nbsp;write(int&nbsp;ireg,
+           byte[]&nbsp;data,
+           boolean&nbsp;waitForCompletion)</pre>
+<div class="block">Writes data to a set of registers, beginning with the one indicated. The data will be
+ written to the I2C device as expeditiously as possible. The call may or may block until the write
+ has been issued to the device controller.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ireg</code> - the first of the registers which is to be written</dd>
+<dd><code>data</code> - the data which is to be written to the registers</dd>
+<dd><code>waitForCompletion</code> - whether or not to wait until the write has been sent to the controller</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#write8-int-int-boolean-"><code>write8(int, int, boolean)</code></a></dd>
+</dl>
+</li>
+</ul>
+<a name="executeActionWhileLocked-org.swerverobotics.library.interfaces.IAction-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>executeActionWhileLocked</h4>
+<pre>void&nbsp;executeActionWhileLocked(<a href="../../../../org/swerverobotics/library/interfaces/IAction.html" title="interface in org.swerverobotics.library.interfaces">IAction</a>&nbsp;action)</pre>
+<div class="block">Executes the indicated action while holding the concurrency lock on the object
+ so as to prevent other threads from interleaving.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>action</code> - the action to execute</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#executeFunctionWhileLocked-org.swerverobotics.library.interfaces.IFunc-"><code>executeFunctionWhileLocked(IFunc)</code></a></dd>
+</dl>
+</li>
+</ul>
+<a name="executeFunctionWhileLocked-org.swerverobotics.library.interfaces.IFunc-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>executeFunctionWhileLocked</h4>
+<pre>&lt;T&gt;&nbsp;T&nbsp;executeFunctionWhileLocked(<a href="../../../../org/swerverobotics/library/interfaces/IFunc.html" title="interface in org.swerverobotics.library.interfaces">IFunc</a>&lt;T&gt;&nbsp;function)</pre>
+<div class="block">Executes the indicated function while holding the concurrency lock on the object
+ so as to prevent other threads from interleaving. Returns the value of the function.</div>
+<dl>
+<dt><span class="paramLabel">Type Parameters:</span></dt>
+<dd><code>T</code> - the type of the data returned from the function</dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>function</code> - the function to execute</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the datum value returned from the function</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#executeActionWhileLocked-org.swerverobotics.library.interfaces.IAction-"><code>executeActionWhileLocked(IAction)</code></a></dd>
+</dl>
+</li>
+</ul>
+<a name="setHeartbeatInterval-int-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setHeartbeatInterval</h4>
+<pre>void&nbsp;setHeartbeatInterval(int&nbsp;ms)</pre>
+<div class="block">Sets the interval within which communication must be received by the I2C device list
+ a timeout may occur. The default heartbeat interval is zero, signifying that no heartbeat
+ is maintained.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ms</code> - the new hearbeat interval, in milliseconds</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#getHeartbeatInterval--"><code>getHeartbeatInterval()</code></a></dd>
+</dl>
+</li>
+</ul>
+<a name="getHeartbeatInterval--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getHeartbeatInterval</h4>
+<pre>int&nbsp;getHeartbeatInterval()</pre>
+<div class="block">Returns the interval within which communication must be received by the I2C device lest
+ a timeout occur.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the current heartbeat interval, in milliseconds</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#setHeartbeatInterval-int-"><code>setHeartbeatInterval(int)</code></a></dd>
+</dl>
+</li>
+</ul>
+<a name="setHeartbeatAction-org.swerverobotics.library.interfaces.II2cDeviceClient.HeartbeatAction-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setHeartbeatAction</h4>
+<pre>void&nbsp;setHeartbeatAction(<a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.HeartbeatAction.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.HeartbeatAction</a>&nbsp;action)</pre>
+<div class="block">Sets the action to take when the current heartbeat interval expires.
+ The default action is null; thus, to be useful, an action must always
+ be explicitly specified.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>action</code> - the action to take at each heartbeat.</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#getHeartbeatAction--"><code>getHeartbeatAction()</code></a>, 
+<a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#setHeartbeatInterval-int-"><code>setHeartbeatInterval(int)</code></a></dd>
+</dl>
+</li>
+</ul>
+<a name="getHeartbeatAction--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getHeartbeatAction</h4>
+<pre><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.HeartbeatAction.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.HeartbeatAction</a>&nbsp;getHeartbeatAction()</pre>
+<div class="block">Returns the current action, if any, to take upon expiration of the heartbeat interval.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the current heartbeat action. May be null</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#setHeartbeatAction-org.swerverobotics.library.interfaces.II2cDeviceClient.HeartbeatAction-"><code>setHeartbeatAction(HeartbeatAction)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -502,7 +741,7 @@ extends com.qualcomm.robotcore.hardware.HardwareDevice</pre>
  support further read() or write() calls.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>close</code>&nbsp;in interface&nbsp;<code>com.qualcomm.robotcore.hardware.HardwareDevice</code></dd>
+<dd><code>close</code>&nbsp;in interface&nbsp;<code>HardwareDevice</code></dd>
 </dl>
 </li>
 </ul>
@@ -534,7 +773,7 @@ extends com.qualcomm.robotcore.hardware.HardwareDevice</pre>
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../../org/swerverobotics/library/interfaces/IHardwareWrapper.html" title="interface in org.swerverobotics.library.interfaces"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.HeartbeatAction.html" title="class in org.swerverobotics.library.interfaces"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../index.html?org/swerverobotics/library/interfaces/II2cDeviceClient.html" target="_top">Frames</a></li>

@@ -6,15 +6,24 @@ import org.swerverobotics.library.interfaces.*;
 
 /**
  * This is an experiment in an alternative implementation of a Legacy DC Motor controller.
- * It is not yet finished, and is not currently used.
+ * While it appears to be complete and functional, it is currently used in Synchronous OpModes
+ * only if 'experimental' mode is enabled.
+ *
+ * <p>Of some import, however, is the fact that this implementation is not tied to SynchronousOpMode.
+ * It can be used from LinearOpMode, or, indeed, any thread that can tolerate operations that
+ * can take tens of milliseconds to run.</p>
+ *
+ * @see org.swerverobotics.library.ClassFactory#createNxtDcMotorControllerOnI2cDevice(DcMotorController, IStopActionRegistrar)
+ * @see org.swerverobotics.library.SynchronousOpMode#useExperimentalThunking
  */
-public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorController, IThunkWrapper<DcMotorController>, VoltageSensor
+public final class NxtDcMotorControllerOnI2cDevice implements DcMotorController, IThunkWrapper<DcMotorController>, VoltageSensor
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
     
-    /*
+    /* The NXT HiTechnic motor controller register layout is as follows:
+
     Address     Type     Contents
     00 – 07H    chars    Sensor version number
     08 – 0FH    chars    Manufacturer
@@ -29,7 +38,7 @@ public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorControll
     48 – 4BH    s/int    Motor 2 target encoder value, high byte first   == 72-75
     4C – 4FH    s/int    Motor 1 current encoder value, high byte first  == 76-79
     50 – 53H    s/int    Motor 2 current encoder value, high byte first  == 80-83
-    54, 55H     word     Battery voltage 54H high byte, 55H low byte
+    54, 55H     word     Battery voltage 54H high byte, 55H low byte     == 84-85
     56H         S/byte   Motor 1 gear ratio
     57H         byte     Motor 1 P coefficient*
     58H         byte     Motor 1 I coefficient*
@@ -39,16 +48,18 @@ public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorControll
     5CH         byte     Motor 2 I coefficient*
     5DH         byte     Motor 2 D coefficient*
      */
+    private static final int iRegWindowFirst = 0x40;
+    private static final int iRegWindowMax   = 0x56;  // first register not included
     
     // motor numbers are 1-based
     private static final byte[] mpMotorRegMotorPower          = new byte[]{(byte)-1, (byte)0x45, (byte)0x46};
     private static final byte[] mpMotorRegMotorMode           = new byte[]{(byte)-1, (byte)0x44, (byte)0x47};
     private static final byte[] mpMotorRegTargetEncoderValue  = new byte[]{(byte)-1, (byte)0x40, (byte)0x48};
     private static final byte[] mpMotorRegCurrentEncoderValue = new byte[]{(byte)-1, (byte)0x4c, (byte)0x50};
-    private static final int iregFirstRead = 0x40;
-    private static final int cregRead = 20;
-    
-    private static final byte cbEncoder = 4;
+
+    private static final int  motorFirst = 1;
+    private static final int  motorLast  = 2;
+    private static final byte cbEncoder  = 4;
 
     private static final byte bPowerBrake = 0;
     private static final byte bPowerFloat = -128;
@@ -65,19 +76,34 @@ public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorControll
     // Construction
     //----------------------------------------------------------------------------------------------
     
-    public LegacyDcMotorControllerOnI2cDevice(II2cDeviceClient ii2cDeviceClient, DcMotorController target)
+    public NxtDcMotorControllerOnI2cDevice(II2cDeviceClient ii2cDeviceClient, DcMotorController target)
         {
         this.i2cDeviceClient = ii2cDeviceClient;
         this.target          = target;
         
         this.initPID();
         this.floatMotors();
-        
-        // Always read a certain set of registers
-        this.i2cDeviceClient.setReadWindow(new II2cDeviceClient.ReadWindow(iregFirstRead, cregRead));
-        
-        // Keep the motors from shutting off 
-        // this.i2cDeviceClient.setHeartbeatRead(2000);
+
+        // The NXT HiTechnic motor controller will time out if it doesn't receive any I2C communication for
+        // 2.5 seconds. So we set up a heartbeat request to try to prevent that. We try to use
+        // heartbeats which are as minimally disruptive as possible. Note as a matter of interest
+        // that the heartbeat mechanism used by ModernRoboticsNxtDcMotorController is analogous to
+        // 'rewriteLastWritten'.
+        II2cDeviceClient.HeartbeatAction heartbeatAction = new II2cDeviceClient.HeartbeatAction();
+        heartbeatAction.rereadLastRead     = true;
+        heartbeatAction.rewriteLastWritten = true;
+        heartbeatAction.heartbeatReadWindow = new II2cDeviceClient.ReadWindow(mpMotorRegCurrentEncoderValue[1], 1, II2cDeviceClient.READ_MODE.ONLY_ONCE);
+
+        this.i2cDeviceClient.setHeartbeatAction(heartbeatAction);
+        this.i2cDeviceClient.setHeartbeatInterval(2000);
+
+        // Also: set up a read-window. We make it 'ONLY_ONCE' to avoid unnecessary ping-ponging
+        // between read mode and write mode, since motors are read about as much as they are
+        // written, but we make it relatively large so that least that when we DO go
+        // into read mode and possibly do more than one read we will use this window
+        // and won't have to fiddle with the 'switch to read mode' each and every time.
+        // We include everything from the 'Motor 1 target encoder value' through the battery voltage.
+        this.i2cDeviceClient.setReadWindow(new II2cDeviceClient.ReadWindow(iRegWindowFirst, iRegWindowMax-iRegWindowFirst, II2cDeviceClient.READ_MODE.ONLY_ONCE));
         }
 
     //----------------------------------------------------------------------------------------------
@@ -126,6 +152,7 @@ public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorControll
     @Override public void close()
         {
         this.floatMotors();
+        this.i2cDeviceClient.close();
         }
 
     //----------------------------------------------------------------------------------------------
@@ -147,8 +174,8 @@ public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorControll
         this.validateMotor(motor);
         byte b = modeToByte(mode);
         
-        // We write the whole byte, but only the lower two bits are actually writable.
-        // Thus, we don't need to read and OR in the other values
+        // We write the whole byte, but only the lower five bits are actually writable
+        // and we only ever use the lowest two as non zero.
         this.i2cDeviceClient.write8(mpMotorRegMotorMode[motor], b);
         }
 
@@ -170,8 +197,8 @@ public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorControll
         {
         this.validateMotor(motor);
         
-        // Unlike the (beta) robot controller library, we just saturate the motor
-        // power rather than making clients worry about that
+        // Unlike the (beta) robot controller library, we saturate the motor
+        // power rather than making clients worry about doing that.
         power = Range.clip(power, powerMin, powerMax);
         
         // The legacy values are -100 to 100
@@ -237,7 +264,7 @@ public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorControll
 
     private void initPID()
         {
-        // is this necessary?
+        // TODO: is there anything we really have to do here, or can we just leave the motor controller to its defaults?
         }
 
     private void floatMotors()
@@ -248,9 +275,9 @@ public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorControll
 
     private void validateMotor(int motor)
         {
-        if(motor < 1 || motor > 2)
+        if(motor < motorFirst || motor > motorLast)
             {
-            throw new IllegalArgumentException(String.format("Motor %d is invalid; valid motors are 1..%d", motor, 2));
+            throw new IllegalArgumentException(String.format("Motor %d is invalid; valid motors are %d..%d", motor, motorFirst, motorLast));
             }
         }
 

@@ -15,7 +15,56 @@ import org.swerverobotics.library.internal.*;
 public final class ClassFactory
     {
     //----------------------------------------------------------------------------------------------
-    
+    // NxtMotorControllerOnI2cDevice
+    //----------------------------------------------------------------------------------------------
+
+    /**
+     * NxtMotorControllerOnI2cDevice is an alternative implementation of a Legacy DC Motor controller.
+     * It is implemented on top of an {@link II2cDeviceClient} instance which completely handles
+     * all the complexities of read vs write mode switching and the like, allowing the logic of the
+     * controller itself to be extraordinarily simple.
+     *
+     * <p>The key fact about NxtMotorControllerOnI2cDevice is that manual mode switching is
+     * entirely unnecessary. Just call the getPosition() or setPower() methods or what have you,
+     * and the mode switching will be taken care of.</p>
+     *
+     * <p>NxtMotorControllerOnI2cDevice not tied to SynchronousOpMode. It can also be used from
+     * LinearOpMode, or, indeed, any thread that can tolerate operations that can take tens of
+     * milliseconds to run. In SynchronousOpMode, NxtMotorControllerOnI2cDevice is currently
+     * enabled by setting the {@link SynchronousOpMode#useExperimentalThunking} flag, though that
+     * will probably change. In other OpModes, you'll have to manually call this {@link #createNxtDcMotorControllerOnI2cDevice
+     * createNxtDcMotorControllerOnI2cDevice()}.</p>
+     *
+     * <p>You should call {@link DcMotorController#close()} when you want the controller to
+     * close down, likely from your stop() logic or the end of your runOpMode() method as the
+     * case may be.</p>
+     *
+     * <p>{@link #createNxtDcMotorControllerOnI2cDevice createNxtDcMotorControllerOnI2cDevice()} takes
+     * a ModernRoboticsNxtDcMotorController motor controller as might found in an OpMode's hardware map
+     * and converts that into an NxtDcMotorControllerOnI2cDevice. As a side effect of doing so, the
+     * ModernRoboticsNxtDcMotorController is disabled, as only one object can be managing the
+     * controller at a given time. That importantly also means that any DcMotor objects from
+     * the hardware map that were on that controller will need to be recreated. This can be accomplished by calling</p>
+     *
+     * <code>new DcMotor(controller, portNumber, direction)</code>
+     *
+     * <p>where controller is the new NxtMotorControllerOnI2cDevice instance and portNumber and
+     * direction were retreived from the old, now non-functional DcMotor using getPortNumber()
+     * and getDirection() respectively.</p>
+     *
+     * @param target the ModernRoboticsNxtDcMotorController we are to convert
+     * @return an NxtMotorControllerOnI2cDevice, or null if target was not a legacy motor controller
+     *
+     */
+    public static DcMotorController createNxtDcMotorControllerOnI2cDevice(DcMotorController target)
+        {
+        return ThunkingHardwareFactory.createNxtMotorControllerOnI2cDevice(target, null);
+        }
+
+    //----------------------------------------------------------------------------------------------
+    // AdaFruit IMU
+    //----------------------------------------------------------------------------------------------
+
     /**
      * Instantiate an AdaFruit BNO055 sensor who resides at the indicated I2cDevice using
      * default values for configuration parameters.
@@ -49,73 +98,65 @@ public final class ClassFactory
         }
     
     //----------------------------------------------------------------------------------------------
+    // Low level I2cDevice manipulation
+    //----------------------------------------------------------------------------------------------
 
     /**
-     * Instantiate an I2cDeviceClient wrapper on an I2cDevice.
-     * 
-     * @param i2cDevice             the I2cDevice to wrap
-     * @param initialReadWindow     the initial register window to read. May be null.
-     * @param i2cAddr8Bit           the I2C address to initialize i2cDevice with. Ignored if less than zero.
-     * @return                      the newly instantiated wrapper
+     * Creates an II2cDevice interface around an I2cDevice.
+     *
+     * @param i2cDevice the device to wrap
+     * @return          the II2cDevice wrapping
      */
-    public static II2cDeviceClient createI2cDeviceClient(I2cDevice i2cDevice, int i2cAddr8Bit, II2cDeviceClient.ReadWindow initialReadWindow)
+    public static II2cDevice createI2cDeviceFrom(I2cDevice i2cDevice)
         {
         I2cController i2cController = Util.<I2cController>getPrivateObjectField(i2cDevice, 0);
-        int port = Util.getPrivateIntField(i2cDevice, 1);
-        return createI2cDeviceClient(i2cController, port, i2cAddr8Bit, initialReadWindow);
+        int port                    = Util.getPrivateIntField(i2cDevice, 1);
+        return createI2cDeviceFrom(i2cController, port);
         }
 
     /**
-     * Instantiate an I2cDeviceClient on an I2cController using a given port and i2cAddr
-     * @param i2cController         the controller to use
-     * @param port                  the port to use on that controller
-     * @param i2cAddr8Bit           the I2C address to talk to through that port. Ignored if less than zero.
-     * @param initialReadWindow     the initial register window to read. May be null.
-     * @return                      the returned wrapper
-     * 
-     * @see #createI2cDeviceClient(LegacyModule, int, int, II2cDeviceClient.ReadWindow)
+     * Creates an II2Device instance on a specific port on an I2cDeviceController
+     *
+     * @param i2cController the controller on which to create the device
+     * @param port          the port on the controller to use
+     * @return              the created II2cDevice instance
      */
-    public static II2cDeviceClient createI2cDeviceClient(I2cController i2cController, int port, int i2cAddr8Bit, II2cDeviceClient.ReadWindow initialReadWindow)
+    public static II2cDevice createI2cDeviceFrom(I2cController i2cController, int port)
         {
-        II2cDevice ii2cDevice = new I2cDeviceOnI2cDeviceController(i2cController, port);
-        return createI2cDeviceClient(ii2cDevice, i2cAddr8Bit, initialReadWindow);
+        return new I2cDeviceOnI2cDeviceController(i2cController, port);
         }
 
     /**
-     * Instantiate an I2cDeviceClient on a LegacyModule using a given port and i2cAddr
-     * @param legacyModule              the legacy module to use
-     * @param port                      the port to use on that controller
-     * @param i2cAddr8Bit               the I2C address to talk to through that port. Ignored if less than zero.
-     * @param initialRegisterWindow     the initial register window to read. May be null.
-     * @return                          the returned wrapper
-     * 
-     * @see #createI2cDeviceClient(I2cController, int, int, II2cDeviceClient.ReadWindow)
+     * Create a new II2cDeviceClient on an II2cDevice instance.
+     *
+     * @param i2cDevice             the II2cDevice to wrap
+     * @param i2cAddr8Bit           the I2C address at which the client is to communicate
+     * @param initialReadWindow     the initial read window to use for the device. May be null
+     * @return                      the newly instantiated I2c device client
      */
-    public static II2cDeviceClient createI2cDeviceClient(LegacyModule legacyModule, int port, int i2cAddr8Bit, II2cDeviceClient.ReadWindow initialRegisterWindow)
+    public static II2cDeviceClient createI2cDeviceClientFrom(II2cDevice i2cDevice, int i2cAddr8Bit, II2cDeviceClient.ReadWindow initialReadWindow)
         {
-        II2cDevice ii2cDevice = new I2cDeviceOnLegacyModule(legacyModule, port);
-        return createI2cDeviceClient(ii2cDevice, i2cAddr8Bit, initialRegisterWindow);
+        return new I2cDeviceClient(i2cDevice, i2cAddr8Bit, initialReadWindow, true, null);
         }
 
     /**
-     * Instantiate an I2cDeviceClient wrapper around an I2cDevice using the I2C address currently found therein
-     * 
-     * @param i2cDevice                 the I2cDevice to wrap
-     * @param initialRegisterWindow     the initial register window to read. May be null
-     * @return                          the newly instantiated wrapper
+     * Create a new II2cDeviceClient on an II2cDevice instance.
+     *
+     * @param i2cDevice             the II2cDevice to wrap
+     * @param i2cAddr8Bit           the I2C address at which the client is to communicate
+     * @param initialReadWindow     the initial read window to use for the device. May be null
+     * @param autoClose             whether the I2cDevice should register itself to auto-close on OpMode stop
+     * @param registrar             the optional registrar with which to attempt auto closing, if requested. If null, then
+     *                              if we are on a synchronous thread, the contextual registrar is used. If both
+     *                              are absent, then no auto registration occurs.
+     * @return                      the newly instantiated I2c device client
      */
-    public static II2cDeviceClient createI2cDeviceClient(I2cDevice i2cDevice, II2cDeviceClient.ReadWindow initialRegisterWindow)
+    public static II2cDeviceClient createI2cDeviceClientFrom(II2cDevice i2cDevice, int i2cAddr8Bit, II2cDeviceClient.ReadWindow initialReadWindow, boolean autoClose, IStopActionRegistrar registrar)
         {
-        int i2cAddr8Bit = Util.getPrivateIntField(i2cDevice, 2);
-        return createI2cDeviceClient(i2cDevice, i2cAddr8Bit, initialRegisterWindow);
+        return new I2cDeviceClient(i2cDevice, i2cAddr8Bit, initialReadWindow, autoClose, registrar);
         }
 
-    /** internal */
-    private static II2cDeviceClient createI2cDeviceClient(II2cDevice ii2cDevice, int i2cAddr8Bit, II2cDeviceClient.ReadWindow initialRegisterWindow)
-        {
-        return new I2cDeviceClient(ii2cDevice, i2cAddr8Bit, initialRegisterWindow);
-        }
-    
+
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------

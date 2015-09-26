@@ -1,9 +1,8 @@
 package org.swerverobotics.library.internal;
 
 import com.qualcomm.robotcore.hardware.*;
-
-import org.swerverobotics.library.interfaces.IHardwareWrapper;
-
+import org.swerverobotics.library.interfaces.*;
+import java.lang.reflect.*;
 import java.util.*;
 
 /**
@@ -14,15 +13,17 @@ public class ThunkingHardwareFactory
     //----------------------------------------------------------------------------------------------
     // State 
     //----------------------------------------------------------------------------------------------
-    
-    boolean useExperimental;
+
+    IStopActionRegistrar stopRegistrar;
+    boolean              useExperimental;
     
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    public ThunkingHardwareFactory(boolean useExperimental)
+    public ThunkingHardwareFactory(IStopActionRegistrar stopRegistrar, boolean useExperimental)
         {
+        this.stopRegistrar   = stopRegistrar;
         this.useExperimental = useExperimental;
         }
     
@@ -77,23 +78,9 @@ public class ThunkingHardwareFactory
                     {
                     if (useExperimental)
                         {
-                        if (isLegacyMotorController(target))
-                            {
-                            LegacyModule legacyModule = legacyModuleOfLegacyMotorController(target);
-                            int          port         = portOfLegacyMotorController(target);
-                            int          i2cAddr8Bit  = i2cAddrOfLegacyMotorController(target);
-                            
-                            // Disable the existing legacy motor controller
-                            legacyModule.deregisterForPortReadyCallback(port);
-                            
-                            // Make a new experimental legacy motor controller
-                            II2cDevice i2cDevice            = new I2cDeviceOnLegacyModule(legacyModule, port);
-                            I2cDeviceClient i2cDeviceClient = new I2cDeviceClient(i2cDevice, i2cAddr8Bit, null);
-                            DcMotorController controller    = new LegacyDcMotorControllerOnI2cDevice(i2cDeviceClient, target);
-                            
-                            // Use that one instead
-                            return controller;
-                            }
+                        DcMotorController newController = createNxtMotorControllerOnI2cDevice(target, stopRegistrar);
+                        if (newController != null)
+                            return newController;
                         }
                     
                     // Not experimental or not a legacy motor controller. Proceed as usual.
@@ -114,7 +101,7 @@ public class ThunkingHardwareFactory
         );
 
         //----------------------------------------------------------------------------
-        // Devices
+        // Actuators
         //----------------------------------------------------------------------------
         
         // Thunk the DC motors
@@ -152,6 +139,10 @@ public class ThunkingHardwareFactory
                     }
                 }
         );
+
+        //----------------------------------------------------------------------------
+        // Sensors
+        //----------------------------------------------------------------------------
 
         // Thunk the analog inputs
         createThunks(hwmap.analogInput, result.analogInput,
@@ -322,7 +313,46 @@ public class ThunkingHardwareFactory
                 }
         );
 
+        // Thunk the color sensors
+        createThunks(hwmap.colorSensor, result.colorSensor,
+                new IThunkFactory<ColorSensor>()
+                {
+                @Override public ColorSensor create(ColorSensor target)
+                    {
+                    return ThunkedColorSensor.create(target);
+                    }
+                }
+        );
+
+        // Thunk the LEDs
+        createThunks(hwmap.led, result.led,
+                new IThunkFactory<LED>()
+                {
+                @Override public LED create(LED target)
+                    {
+                    return ThunkedLED.create(target);
+                    }
+                }
+        );
+
+        // Thunk the TouchSensorMultiplexers
+        createThunks(hwmap.touchSensorMultiplexer , result.touchSensorMultiplexer ,
+                new IThunkFactory<TouchSensorMultiplexer>()
+                {
+                @Override public TouchSensorMultiplexer create(TouchSensorMultiplexer target)
+                    {
+                    return ThunkedTouchSensorMultiplexer.create(target);
+                    }
+                }
+        );
+
+        // Carry over the app context
         result.appContext = hwmap.appContext;
+
+        // If they haven't actually given us one (early versions of the runtime didn't actually set one),
+        // then fill one in through the use of magic.
+        if (result.appContext == null)
+            result.appContext = AnnotatedOpModeRegistrar.getApplicationContext();
 
         return result;
         }
@@ -341,9 +371,11 @@ public class ThunkingHardwareFactory
             }
         }
 
-    private <T> T findWrapper(HardwareMap.DeviceMapping<T> mapping, T target, T ifAbsent)
+    // Find and return the wrapping of the indicated target with the wrapping map; if absent,
+    // return the ifAbsent value.
+    private <T> T findWrapper(HardwareMap.DeviceMapping<T> wrappingMap, T target, T ifAbsent)
         {
-        for (Map.Entry<String,T> pair : mapping.entrySet())
+        for (Map.Entry<String,T> pair : wrappingMap.entrySet())
             {
             T thunked = pair.getValue();
             if (thunked instanceof IHardwareWrapper)
@@ -360,23 +392,83 @@ public class ThunkingHardwareFactory
     //----------------------------------------------------------------------------------------------
     // Skullduggery 
     //----------------------------------------------------------------------------------------------
-    
-    private boolean isLegacyMotorController(DcMotorController controller)
+
+    public static DcMotorController createNxtMotorControllerOnI2cDevice(DcMotorController target, IStopActionRegistrar stopRegistrar)
         {
-        return controller instanceof LegacyModule.PortReadyCallback;
+        if (isLegacyMotorController(target))
+            {
+            LegacyModule legacyModule = legacyModuleOfLegacyMotorController(target);
+            int          port         = portOfLegacyMotorController(target);
+            int          i2cAddr8Bit  = i2cAddrOfLegacyMotorController(target);
+
+            // Disable the existing legacy motor controller
+            legacyModule.deregisterForPortReadyCallback(port);
+
+            // Make a new experimental legacy motor controller
+            II2cDevice i2cDevice            = new I2cDeviceOnI2cDeviceController(legacyModule, port);
+            I2cDeviceClient i2cDeviceClient = new I2cDeviceClient(i2cDevice, i2cAddr8Bit, /*no initial window*/null, /*autostop*/true, stopRegistrar);
+            DcMotorController controller    = new NxtDcMotorControllerOnI2cDevice(i2cDeviceClient, target);
+
+            // Use that one instead
+            return controller;
+            }
+        else
+            {
+            return null;
+            }
         }
 
-    private LegacyModule legacyModuleOfLegacyMotorController(DcMotorController controller)
-        {
-        return Util.<LegacyModule>getPrivateObjectField(controller, 0);
-        }
 
-    private int portOfLegacyMotorController(DcMotorController controller)
+    static List<Field> legacyMotorControllerFields = getFields(com.qualcomm.hardware.ModernRoboticsNxtDcMotorController.class);
+
+    private static List<Field> getFields(Class clazz)
+    // Return a list of all non-static fields of the given class in the order in which
+    // they were declared in the source.
         {
-        return Util.getPrivateIntField(controller, 5);
+        List<Field> result = Util.getLocalDeclaredNonStaticFields(clazz);
+
+        // A comparator that will sort the fields into the right order. At the moment, we
+        // rely (ugh!) on the fact we are sorting obfuscated classes only, and so the fields
+        // are simple alphabetical letters. We NEED to do better!
+        Comparator<Field> comparator = new Comparator<Field>()
+            {
+            @Override public int compare(Field a, Field b)
+                {
+                int comparison = a.getName().compareTo(b.getName());
+                if (comparison != 0)
+                    {
+                    return comparison;
+                    }
+                return a.getDeclaringClass().getName().compareTo(b.getDeclaringClass().getName());
+                }
+            };
+        Collections.sort(result, comparator);
+
+        for (Field field : result)
+            {
+            if (!field.isAccessible())
+                field.setAccessible(true);
+            }
+
+        return result;
         }
     
-    private int i2cAddrOfLegacyMotorController(DcMotorController controller)
+    private static boolean isLegacyMotorController(DcMotorController controller)
+        {
+        return controller instanceof com.qualcomm.hardware.ModernRoboticsNxtDcMotorController;
+        }
+
+    private static LegacyModule legacyModuleOfLegacyMotorController(DcMotorController controller)
+        {
+        return Util.<LegacyModule>getPrivateObjectField(controller, legacyMotorControllerFields.get(0));
+        }
+
+    private static int portOfLegacyMotorController(DcMotorController controller)
+        {
+        return Util.getPrivateIntField(controller, legacyMotorControllerFields.get(5));
+        }
+    
+    private static int i2cAddrOfLegacyMotorController(DcMotorController controller)
         {
         // From the spec from HiTechnic:
         //

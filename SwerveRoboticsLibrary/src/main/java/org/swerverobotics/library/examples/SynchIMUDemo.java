@@ -9,7 +9,7 @@ import org.swerverobotics.library.interfaces.*;
  * SynchIMUDemo gives a short demo on how to use the BNO055 Inertial Motion Unit (IMU) from AdaFruit.
  * http://www.adafruit.com/products/2472
  */
-@TeleOp(name="IMU Demo")
+@TeleOp(name="IMU Demo", group="Swerve Examples")
 @Disabled
 public class SynchIMUDemo extends SynchronousOpMode
     {
@@ -28,7 +28,7 @@ public class SynchIMUDemo extends SynchronousOpMode
     IBNO055IMU.EulerAngles  angles;
     int                     loopCycles;
     int                     i2cCycles;
-    double                  dt;
+    double                  ms;
     
     //----------------------------------------------------------------------------------------------
     // main() loop
@@ -44,7 +44,7 @@ public class SynchIMUDemo extends SynchronousOpMode
         parameters.loggingTag     = "BNO055";
         imu = ClassFactory.createAdaFruitBNO055IMU(hardwareMap.i2cDevice.get("imu"), parameters);
 
-        // In future, we'll enhance this demo to illustrate position tracking, but not yet
+        // In future, we'll enhance this demo to illustrate position tracking, but not yet.
         // imu.startAccelerationIntegration(new IBNO055IMU.Position(), new IBNO055IMU.Velocity());
         
         // Set up our dashboard computations
@@ -80,7 +80,7 @@ public class SynchIMUDemo extends SynchronousOpMode
                 angles     = imu.getAngularOrientation();
                 loopCycles = getLoopCount();
                 i2cCycles  = ((II2cDeviceClientUser) imu).getI2cDeviceClient().getI2cCycleCount();
-                dt         = elapsed.time();
+                ms         = elapsed.time() * 1000.0;
                 }
             });
         telemetry.addLine(telemetry.item("loop count: ", new IFunc<Object>()
@@ -100,13 +100,13 @@ public class SynchIMUDemo extends SynchronousOpMode
                 {
                 public Object value()
                     {
-                    return formatRate(dt / loopCycles * 1000.0);
+                    return formatRate(ms / loopCycles);
                     }}),
                 telemetry.item("i2c cycle rate: ", new IFunc<Object>()
                 {
                 public Object value()
                     {
-                    return formatRate(dt / i2cCycles * 1000.0);
+                    return formatRate(ms / i2cCycles);
                     }
                 }));
         telemetry.addLine(telemetry.item("status: ", new IFunc<Object>()

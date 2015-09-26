@@ -1,6 +1,7 @@
 package org.swerverobotics.library.internal;
 
 import com.qualcomm.robotcore.hardware.*;
+import static junit.framework.Assert.*;
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.interfaces.*;
 
@@ -37,7 +38,7 @@ public class ThunkedCompassSensor extends CompassSensor implements IThunkedReadW
         if (this.isTargetLegacy())
             {
             // Make sure our hack is at least plausible
-            junit.framework.Assert.assertEquals(true, Util.<Object>getPrivateObjectField(target, 6) instanceof CompassMode);
+            assertTrue(!BuildConfig.DEBUG || (Util.<Object>getPrivateObjectField(target, 6) instanceof CompassMode));
             }
         }
 
@@ -47,7 +48,7 @@ public class ThunkedCompassSensor extends CompassSensor implements IThunkedReadW
         }
 
     //----------------------------------------------------------------------------------------------
-    // Device information: I2C registers
+    // Device information: I2C registers for the Nxt Compass Sensor
     //----------------------------------------------------------------------------------------------
     /*
     #define HTMC_I2C_ADDR       0x02  //!< HTMC I2C device address 
@@ -111,9 +112,18 @@ public class ThunkedCompassSensor extends CompassSensor implements IThunkedReadW
     //----------------------------------------------------------------------------------------------
 
     private boolean isTargetLegacy()
-        // Are we hooked to a legacy sensor, and so need to do the read-or-write-not-both dance? 
+    // Are we hooked to a legacy sensor, and so need to do the read-or-write-not-both dance?
         {
-        return this.target instanceof LegacyModule.PortReadyCallback;
+        // ModernRoboticsNxtCompassSensor starts as:
+        //    private final ModernRoboticsUsbLegacyModule a;
+        //    private final byte[] b;
+        //    private final Lock c;
+        // ...
+        // return Util.<Object>getPrivateObjectField(this.target, 0) instanceof LegacyModule;
+        //
+        // But this is better:
+        //
+        return this.target instanceof com.qualcomm.hardware.ModernRoboticsNxtCompassSensor;
         }
     private boolean isOffline()
         {

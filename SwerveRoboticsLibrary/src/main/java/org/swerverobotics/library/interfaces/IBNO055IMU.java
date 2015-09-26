@@ -61,6 +61,12 @@ public interface IBNO055IMU
         public String           loggingTag          = null;
         }
 
+    /**
+     * Shut down the sensor. This doesn't do anything in the hardware device itself, but rather
+     * shuts down any resources (threads, etc) that we use to communicate with it.
+     */
+    void close();
+
     //----------------------------------------------------------------------------------------------
     // Reading sensor output
     //----------------------------------------------------------------------------------------------
