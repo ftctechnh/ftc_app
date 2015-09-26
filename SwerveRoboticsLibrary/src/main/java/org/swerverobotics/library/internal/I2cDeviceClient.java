@@ -13,7 +13,8 @@ import static org.swerverobotics.library.internal.Util.*;
 
 /**
  * I2cDeviceClient is a utility class that makes it easy to read or write data to 
- * an instance of I2cDevice.
+ * an instance of I2cDevice. There's a really whole lot of hard stuff this does for you
+ *
  */
 public final class I2cDeviceClient implements II2cDeviceClient
     {
@@ -21,9 +22,6 @@ public final class I2cDeviceClient implements II2cDeviceClient
     // State
     //----------------------------------------------------------------------------------------------
 
-    /**
-     * The I2cDevice of which are are a client.
-     */
     public final II2cDevice     i2cDevice;                  // the device we are talking to
 
     private final Callback      callback;                   // the callback object on which we actually receive callbacks

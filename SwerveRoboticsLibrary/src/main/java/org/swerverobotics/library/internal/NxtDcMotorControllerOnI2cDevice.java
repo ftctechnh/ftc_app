@@ -6,9 +6,17 @@ import org.swerverobotics.library.interfaces.*;
 
 /**
  * This is an experiment in an alternative implementation of a Legacy DC Motor controller.
- * It is not yet finished, and is not currently used.
+ * While it appears to be complete and functional, it is currently used in Synchronous OpModes
+ * only if 'experimental' mode is enabled.
+ *
+ * <p>Of some import, however, is the fact that this implementation is not tied to SynchronousOpMode.
+ * It can be used from LinearOpMode, or, indeed, any thread that can tolerate operations that
+ * can take tens of milliseconds to run.</p>
+ *
+ * @see org.swerverobotics.library.ClassFactory#createNxtDcMotorControllerOnI2cDevice(DcMotorController, IStopActionRegistrar)
+ * @see org.swerverobotics.library.SynchronousOpMode#useExperimentalThunking
  */
-public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorController, IThunkWrapper<DcMotorController>, VoltageSensor
+public final class NxtDcMotorControllerOnI2cDevice implements DcMotorController, IThunkWrapper<DcMotorController>, VoltageSensor
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -68,7 +76,7 @@ public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorControll
     // Construction
     //----------------------------------------------------------------------------------------------
     
-    public LegacyDcMotorControllerOnI2cDevice(II2cDeviceClient ii2cDeviceClient, DcMotorController target)
+    public NxtDcMotorControllerOnI2cDevice(II2cDeviceClient ii2cDeviceClient, DcMotorController target)
         {
         this.i2cDeviceClient = ii2cDeviceClient;
         this.target          = target;
@@ -144,6 +152,7 @@ public final class LegacyDcMotorControllerOnI2cDevice implements DcMotorControll
     @Override public void close()
         {
         this.floatMotors();
+        this.i2cDeviceClient.close();
         }
 
     //----------------------------------------------------------------------------------------------
