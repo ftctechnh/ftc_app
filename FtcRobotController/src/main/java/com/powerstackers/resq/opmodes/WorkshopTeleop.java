@@ -1,25 +1,30 @@
 package com.powerstackers.resq.opmodes;
 
+import com.powerstackers.resq.opmodes.common.Robot;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 /**
  * Teleop program made at the workshop.
  */
-public class WorkshopTeleop extends OpMode{
+public class WorkshopTeleop extends Robot{
 
     /**
-     * Get the robot ready to run.
+     * Run the OpMode.
+     * @throws InterruptedException
+     *      Throws this if the thread gets interrupted.
      */
     @Override
-    public void init() {
+    public void runOpMode() throws InterruptedException {
+        motorLeft = hardwareMap.dcMotor.get("motor_1");
+        motorRight = hardwareMap.dcMotor.get("motor_2");
 
-    }
+        servoArm = hardwareMap.servo.get("servo_1");
+        servoClaw = hardwareMap.servo.get("servo_2");
 
-    /**
-     * Run the robot.
-     */
-    @Override
-    public void loop() {
+        touchSensor = hardwareMap.touchSensor.get("sensor_touch");
+        opticalSensor = hardwareMap.opticalDistanceSensor.get("sensor_optical");
 
+        // This is where the program goes.
     }
 }
