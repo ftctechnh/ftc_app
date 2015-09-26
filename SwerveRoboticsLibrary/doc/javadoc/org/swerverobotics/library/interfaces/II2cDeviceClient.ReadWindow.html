@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -47,7 +47,7 @@ var activeTableTab = "activeTableTab";
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.READ_MODE.html" title="enum in org.swerverobotics.library.interfaces"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.TimestampedData.html" title="class in org.swerverobotics.library.interfaces"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
@@ -155,8 +155,9 @@ extends java.lang.Object</pre>
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#ReadWindow-int-int-">ReadWindow</a></span>(int&nbsp;iregFirst,
-          int&nbsp;creg)</code>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#ReadWindow-int-int-org.swerverobotics.library.interfaces.II2cDeviceClient.READ_MODE-">ReadWindow</a></span>(int&nbsp;iregFirst,
+          int&nbsp;creg,
+          <a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.READ_MODE.html" title="enum in org.swerverobotics.library.interfaces">II2cDeviceClient.READ_MODE</a>&nbsp;readMode)</code>
 <div class="block">Create a new register window with the indicated starting register and register count</div>
 </td>
 </tr>
@@ -178,37 +179,76 @@ extends java.lang.Object</pre>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#contains-org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow-">contains</a></span>(<a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a>&nbsp;him)</code>
-<div class="block">Does the receiver wholly contain the indicated window?</div>
+<div class="block">Answers as to whether the receiver wholly contains the indicated window.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#contains-int-int-">contains</a></span>(int&nbsp;ireg,
-        int&nbsp;creg)</code>&nbsp;</td>
+        int&nbsp;creg)</code>
+<div class="block">Answers as to whether the receiver wholly contains the indicated set of registers.</div>
+</td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#equals-org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow-">equals</a></span>(<a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a>&nbsp;him)</code>
-<div class="block">Do the recevier and the indicated register window cover exactly the 
- same set of registers?</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#containsWithSameMode-org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow-">containsWithSameMode</a></span>(<a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a>&nbsp;him)</code>
+<div class="block">Answers as to whether the receiver wholly contains the indicated window
+ and also has the same modality.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
-<td class="colFirst"><code>int</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#getCreg--">getCreg</a></span>()</code>
-<div class="block">Return the number of registers in the window</div>
+<td class="colFirst"><code><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#freshCopy--">freshCopy</a></span>()</code>
+<div class="block">Returns a copy of this window but with the <a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#readIssued"><code>readIssued</code></a> flag clear</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>int</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#getIregFirst--">getIregFirst</a></span>()</code>
-<div class="block">Return the first register in the window</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#getCreg--">getCreg</a></span>()</code>
+<div class="block">Returns the number of registers in the window</div>
 </td>
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#getIregFirst--">getIregFirst</a></span>()</code>
+<div class="block">Returns the first register in the window</div>
+</td>
+</tr>
+<tr id="i6" class="altColor">
+<td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#getIregMax--">getIregMax</a></span>()</code>
-<div class="block">Return the first register NOT in the window</div>
+<div class="block">Returns the first register NOT in the window</div>
+</td>
+</tr>
+<tr id="i7" class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#getReadIssued--">getReadIssued</a></span>()</code>
+<div class="block">Returns whether a read has ever been issued for this window or not</div>
+</td>
+</tr>
+<tr id="i8" class="altColor">
+<td class="colFirst"><code><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.READ_MODE.html" title="enum in org.swerverobotics.library.interfaces">II2cDeviceClient.READ_MODE</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#getReadMode--">getReadMode</a></span>()</code>
+<div class="block">Returns the mode of the window</div>
+</td>
+</tr>
+<tr id="i9" class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#isOkToRead--">isOkToRead</a></span>()</code>
+<div class="block">Answers as to whether we're allowed to read using this window</div>
+</td>
+</tr>
+<tr id="i10" class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#sameAsIncludingMode-org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow-">sameAsIncludingMode</a></span>(<a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a>&nbsp;him)</code>
+<div class="block">Do the receiver and the indicated register window cover exactly the
+ same set of registers and have the same modality?</div>
+</td>
+</tr>
+<tr id="i11" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#setReadIssued--">setReadIssued</a></span>()</code>
+<div class="block">Sets that a read has in fact been issued for this window</div>
 </td>
 </tr>
 </table>
@@ -257,14 +297,15 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="ReadWindow-int-int-">
+<a name="ReadWindow-int-int-org.swerverobotics.library.interfaces.II2cDeviceClient.READ_MODE-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>ReadWindow</h4>
 <pre>public&nbsp;ReadWindow(int&nbsp;iregFirst,
-                  int&nbsp;creg)</pre>
+                  int&nbsp;creg,
+                  <a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.READ_MODE.html" title="enum in org.swerverobotics.library.interfaces">II2cDeviceClient.READ_MODE</a>&nbsp;readMode)</pre>
 <div class="block">Create a new register window with the indicated starting register and register count</div>
 </li>
 </ul>
@@ -283,7 +324,7 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getIregFirst</h4>
 <pre>public&nbsp;int&nbsp;getIregFirst()</pre>
-<div class="block">Return the first register in the window</div>
+<div class="block">Returns the first register in the window</div>
 </li>
 </ul>
 <a name="getIregMax--">
@@ -293,7 +334,7 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getIregMax</h4>
 <pre>public&nbsp;int&nbsp;getIregMax()</pre>
-<div class="block">Return the first register NOT in the window</div>
+<div class="block">Returns the first register NOT in the window</div>
 </li>
 </ul>
 <a name="getCreg--">
@@ -303,18 +344,68 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>getCreg</h4>
 <pre>public&nbsp;int&nbsp;getCreg()</pre>
-<div class="block">Return the number of registers in the window</div>
+<div class="block">Returns the number of registers in the window</div>
 </li>
 </ul>
-<a name="equals-org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow-">
+<a name="getReadMode--">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>equals</h4>
-<pre>public&nbsp;boolean&nbsp;equals(<a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a>&nbsp;him)</pre>
-<div class="block">Do the recevier and the indicated register window cover exactly the 
- same set of registers?</div>
+<h4>getReadMode</h4>
+<pre>public&nbsp;<a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.READ_MODE.html" title="enum in org.swerverobotics.library.interfaces">II2cDeviceClient.READ_MODE</a>&nbsp;getReadMode()</pre>
+<div class="block">Returns the mode of the window</div>
+</li>
+</ul>
+<a name="getReadIssued--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getReadIssued</h4>
+<pre>public&nbsp;boolean&nbsp;getReadIssued()</pre>
+<div class="block">Returns whether a read has ever been issued for this window or not</div>
+</li>
+</ul>
+<a name="setReadIssued--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setReadIssued</h4>
+<pre>public&nbsp;void&nbsp;setReadIssued()</pre>
+<div class="block">Sets that a read has in fact been issued for this window</div>
+</li>
+</ul>
+<a name="isOkToRead--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>isOkToRead</h4>
+<pre>public&nbsp;boolean&nbsp;isOkToRead()</pre>
+<div class="block">Answers as to whether we're allowed to read using this window</div>
+</li>
+</ul>
+<a name="freshCopy--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>freshCopy</h4>
+<pre>public&nbsp;<a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a>&nbsp;freshCopy()</pre>
+<div class="block">Returns a copy of this window but with the <a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#readIssued"><code>readIssued</code></a> flag clear</div>
+</li>
+</ul>
+<a name="sameAsIncludingMode-org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>sameAsIncludingMode</h4>
+<pre>public&nbsp;boolean&nbsp;sameAsIncludingMode(<a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a>&nbsp;him)</pre>
+<div class="block">Do the receiver and the indicated register window cover exactly the
+ same set of registers and have the same modality?</div>
 </li>
 </ul>
 <a name="contains-org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow-">
@@ -324,7 +415,30 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>contains</h4>
 <pre>public&nbsp;boolean&nbsp;contains(<a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a>&nbsp;him)</pre>
-<div class="block">Does the receiver wholly contain the indicated window?</div>
+<div class="block">Answers as to whether the receiver wholly contains the indicated window.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>him</code> - the window we wish to see whether we contain</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>whether or not we contain the window</dd>
+</dl>
+</li>
+</ul>
+<a name="containsWithSameMode-org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>containsWithSameMode</h4>
+<pre>public&nbsp;boolean&nbsp;containsWithSameMode(<a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a>&nbsp;him)</pre>
+<div class="block">Answers as to whether the receiver wholly contains the indicated window
+ and also has the same modality.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>him</code> - the window we wish to see whether we contain</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>whether or not we contain the window</dd>
+</dl>
 </li>
 </ul>
 <a name="contains-int-int-">
@@ -335,7 +449,13 @@ extends java.lang.Object</pre>
 <h4>contains</h4>
 <pre>public&nbsp;boolean&nbsp;contains(int&nbsp;ireg,
                         int&nbsp;creg)</pre>
+<div class="block">Answers as to whether the receiver wholly contains the indicated set of registers.</div>
 <dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ireg</code> - the first register of interest</dd>
+<dd><code>creg</code> - the number of registers of interest</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>whether or not the receiver contains this set of registers</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><code>#contains(ReadWindow)</code></dd>
 </dl>
@@ -368,7 +488,7 @@ extends java.lang.Object</pre>
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.READ_MODE.html" title="enum in org.swerverobotics.library.interfaces"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.TimestampedData.html" title="class in org.swerverobotics.library.interfaces"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">

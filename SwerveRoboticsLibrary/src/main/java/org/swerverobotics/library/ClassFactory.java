@@ -32,18 +32,19 @@ public final class ClassFactory
      * LinearOpMode, or, indeed, any thread that can tolerate operations that can take tens of
      * milliseconds to run. In SynchronousOpMode, NxtMotorControllerOnI2cDevice is currently
      * enabled by setting the {@link SynchronousOpMode#useExperimentalThunking} flag, though that
-     * will probably change. In other OpModes, you'll have to manually call this {@link #createNxtDcMotorControllerOnI2cDevice}.</p>
+     * will probably change. In other OpModes, you'll have to manually call this {@link #createNxtDcMotorControllerOnI2cDevice
+     * createNxtDcMotorControllerOnI2cDevice()}.</p>
      *
      * <p>You should call {@link DcMotorController#close()} when you want the controller to
      * close down, likely from your stop() logic or the end of your runOpMode() method as the
      * case may be.</p>
      *
-     * <p>{@link #createNxtDcMotorControllerOnI2cDevice} takes a ModernRoboticsNxtDcMotorController
-     * motor controller as might found in an OpMode's hardware map and converts that into an
-     * NxtDcMotorControllerOnI2cDevice. As a side effect of doing so, the ModernRoboticsNxtDcMotorController
-     * is disabled, as only one object can be managing the controller at a given time. That importantly
-     * also means that any DcMotor objects from the hardware map that were on that controller will need to
-     * be recreated. This can be accomplished by calling</p>
+     * <p>{@link #createNxtDcMotorControllerOnI2cDevice createNxtDcMotorControllerOnI2cDevice()} takes
+     * a ModernRoboticsNxtDcMotorController motor controller as might found in an OpMode's hardware map
+     * and converts that into an NxtDcMotorControllerOnI2cDevice. As a side effect of doing so, the
+     * ModernRoboticsNxtDcMotorController is disabled, as only one object can be managing the
+     * controller at a given time. That importantly also means that any DcMotor objects from
+     * the hardware map that were on that controller will need to be recreated. This can be accomplished by calling</p>
      *
      * <code>new DcMotor(controller, portNumber, direction)</code>
      *
