@@ -109,7 +109,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
      */
     public I2cDeviceClient(II2cDevice i2cDevice, int i2cAddr8Bit, ReadWindow initialReadWindow)
         {
-        this(i2cDevice, i2cAddr8Bit, initialReadWindow, true);
+        this(i2cDevice, i2cAddr8Bit, initialReadWindow, true, null);
         }
 
     /**
@@ -122,8 +122,10 @@ public final class I2cDeviceClient implements II2cDeviceClient
      * @param autoClose             if true, the device client will automatically close when the
      *                              associated SynchronousOpMode stops
      */
-    public I2cDeviceClient(II2cDevice i2cDevice, int i2cAddr8Bit, ReadWindow initialReadWindow, boolean autoClose)
+    public I2cDeviceClient(II2cDevice i2cDevice, int i2cAddr8Bit, ReadWindow initialReadWindow, boolean autoClose, IStopActionRegistrar registrar)
         {
+        i2cDevice.setI2cAddr(i2cAddr8Bit);
+
         this.i2cDevice              = i2cDevice;
         this.callback               = new Callback();
         this.callbackThread         = null;
@@ -151,11 +153,10 @@ public final class I2cDeviceClient implements II2cDeviceClient
         this.writeCacheStatus = WRITE_CACHE_STATUS.IDLE;
         this.modeCacheStatus  = MODE_CACHE_STATUS.IDLE;
         
-        this.i2cDevice.setI2cAddr(i2cAddr8Bit);
-
         if (autoClose)
             {
-            IStopActionRegistrar registrar = SynchronousOpMode.getStopActionRegistrar();
+            if (registrar == null)
+                registrar = SynchronousOpMode.getStopActionRegistrar();
             if (registrar != null)
                 {
                 registrar.registerActionOnStop(new IAction()

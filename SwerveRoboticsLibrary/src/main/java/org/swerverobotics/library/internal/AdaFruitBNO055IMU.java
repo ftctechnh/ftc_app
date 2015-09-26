@@ -482,7 +482,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         @Override public void run(HandshakeThreadStarter starter)
             {
             // Let the starter know we're up and running
-            starter.handshake();
+            starter.doHandshake();
 
             // Any extant acceleration is stale. Null it out so that we will have
             // fresh and accurate intervals
@@ -495,7 +495,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
             try
                 {
                 // Loop until we're asked to stop
-                while (!starter.stopRequested())
+                while (!starter.isStopRequested())
                     {
                     // Read the latest available acceleration
                     Acceleration accelNext = AdaFruitBNO055IMU.this.getLinearAcceleration();

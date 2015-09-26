@@ -52,7 +52,7 @@ public class DeathWatch
         {
         @Override public void run(HandshakeThreadStarter starter)
             {
-            starter.handshake();
+            starter.doHandshake();
 
             log("awaiting death...");
             try {
