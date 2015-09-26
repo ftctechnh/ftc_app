@@ -15,7 +15,55 @@ import org.swerverobotics.library.internal.*;
 public final class ClassFactory
     {
     //----------------------------------------------------------------------------------------------
-    
+    // NxtMotorControllerOnI2cDevice
+    //----------------------------------------------------------------------------------------------
+
+    /**
+     * NxtMotorControllerOnI2cDevice is an alternative implementation of a Legacy DC Motor controller.
+     * It is implemented on top of an {@link II2cDeviceClient} instance which completely handles
+     * all the complexities of read vs write mode switching and the like, allowing the logic of the
+     * controller itself to be extraordinarily simple.
+     *
+     * <p>The key fact about NxtMotorControllerOnI2cDevice is that manual mode switching is
+     * entirely unnecessary. Just call the getPosition() or setPower() methods or what have you,
+     * and the mode switching will be taken care of.</p>
+     *
+     * <p>NxtMotorControllerOnI2cDevice not tied to SynchronousOpMode. It can also be used from
+     * LinearOpMode, or, indeed, any thread that can tolerate operations that can take tens of
+     * milliseconds to run. In SynchronousOpMode, NxtMotorControllerOnI2cDevice is currently
+     * enabled by setting the {@link SynchronousOpMode#useExperimentalThunking} flag, though that
+     * will probably change. In other OpModes, you'll have to manually call this {@link #createNxtDcMotorControllerOnI2cDevice}.</p>
+     *
+     * <p>You should call {@link DcMotorController#close()} when you want the controller to
+     * close down, likely from your stop() logic or the end of your runOpMode() method as the
+     * case may be.</p>
+     *
+     * <p>{@link #createNxtDcMotorControllerOnI2cDevice} takes a ModernRoboticsNxtDcMotorController
+     * motor controller as might found in an OpMode's hardware map and converts that into an
+     * NxtDcMotorControllerOnI2cDevice. As a side effect of doing so, the ModernRoboticsNxtDcMotorController
+     * is disabled, as only one object can be managing the controller at a given time. That importantly
+     * also means that any DcMotor objects from the hardware map that were on that controller will need to
+     * be recreated. This can be accomplished by calling</p>
+     *
+     * <code>new DcMotor(controller, portNumber, direction)</code>
+     *
+     * <p>where controller is the new NxtMotorControllerOnI2cDevice instance and portNumber and
+     * direction were retreived from the old, now non-functional DcMotor using getPortNumber()
+     * and getDirection() respectively.</p>
+     *
+     * @param target the ModernRoboticsNxtDcMotorController we are to convert
+     * @return an NxtMotorControllerOnI2cDevice, or null if target was not a legacy motor controller
+     *
+     */
+    public static DcMotorController createNxtDcMotorControllerOnI2cDevice(DcMotorController target)
+        {
+        return ThunkingHardwareFactory.createNxtMotorControllerOnI2cDevice(target, null);
+        }
+
+    //----------------------------------------------------------------------------------------------
+    // AdaFruit IMU
+    //----------------------------------------------------------------------------------------------
+
     /**
      * Instantiate an AdaFruit BNO055 sensor who resides at the indicated I2cDevice using
      * default values for configuration parameters.
@@ -48,6 +96,8 @@ public final class ClassFactory
         return AdaFruitBNO055IMU.create(i2cDevice, parameters);
         }
     
+    //----------------------------------------------------------------------------------------------
+    // Low level I2cDevice manipulation
     //----------------------------------------------------------------------------------------------
 
     /**

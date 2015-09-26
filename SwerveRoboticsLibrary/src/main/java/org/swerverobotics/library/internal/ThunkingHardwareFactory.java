@@ -78,23 +78,9 @@ public class ThunkingHardwareFactory
                     {
                     if (useExperimental)
                         {
-                        if (isLegacyMotorController(target))
-                            {
-                            LegacyModule legacyModule = legacyModuleOfLegacyMotorController(target);
-                            int          port         = portOfLegacyMotorController(target);
-                            int          i2cAddr8Bit  = i2cAddrOfLegacyMotorController(target);
-                            
-                            // Disable the existing legacy motor controller
-                            legacyModule.deregisterForPortReadyCallback(port);
-                            
-                            // Make a new experimental legacy motor controller
-                            II2cDevice i2cDevice            = new I2cDeviceOnI2cDeviceController(legacyModule, port);
-                            I2cDeviceClient i2cDeviceClient = new I2cDeviceClient(i2cDevice, i2cAddr8Bit, /*no initial window*/null, /*autostop*/true, stopRegistrar);
-                            DcMotorController controller    = new LegacyDcMotorControllerOnI2cDevice(i2cDeviceClient, target);
-                            
-                            // Use that one instead
-                            return controller;
-                            }
+                        DcMotorController newController = createNxtMotorControllerOnI2cDevice(target, stopRegistrar);
+                        if (newController != null)
+                            return newController;
                         }
                     
                     // Not experimental or not a legacy motor controller. Proceed as usual.
@@ -407,6 +393,32 @@ public class ThunkingHardwareFactory
     // Skullduggery 
     //----------------------------------------------------------------------------------------------
 
+    public static DcMotorController createNxtMotorControllerOnI2cDevice(DcMotorController target, IStopActionRegistrar stopRegistrar)
+        {
+        if (isLegacyMotorController(target))
+            {
+            LegacyModule legacyModule = legacyModuleOfLegacyMotorController(target);
+            int          port         = portOfLegacyMotorController(target);
+            int          i2cAddr8Bit  = i2cAddrOfLegacyMotorController(target);
+
+            // Disable the existing legacy motor controller
+            legacyModule.deregisterForPortReadyCallback(port);
+
+            // Make a new experimental legacy motor controller
+            II2cDevice i2cDevice            = new I2cDeviceOnI2cDeviceController(legacyModule, port);
+            I2cDeviceClient i2cDeviceClient = new I2cDeviceClient(i2cDevice, i2cAddr8Bit, /*no initial window*/null, /*autostop*/true, stopRegistrar);
+            DcMotorController controller    = new NxtDcMotorControllerOnI2cDevice(i2cDeviceClient, target);
+
+            // Use that one instead
+            return controller;
+            }
+        else
+            {
+            return null;
+            }
+        }
+
+
     static List<Field> legacyMotorControllerFields = getFields(com.qualcomm.hardware.ModernRoboticsNxtDcMotorController.class);
 
     private static List<Field> getFields(Class clazz)
@@ -456,7 +468,7 @@ public class ThunkingHardwareFactory
         return Util.getPrivateIntField(controller, legacyMotorControllerFields.get(5));
         }
     
-    private int i2cAddrOfLegacyMotorController(DcMotorController controller)
+    private static int i2cAddrOfLegacyMotorController(DcMotorController controller)
         {
         // From the spec from HiTechnic:
         //
