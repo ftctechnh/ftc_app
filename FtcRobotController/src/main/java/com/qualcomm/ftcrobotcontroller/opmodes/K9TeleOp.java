@@ -33,6 +33,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
@@ -70,6 +71,7 @@ public class K9TeleOp extends OpMode {
 	DcMotor motorLeft;
 	Servo claw;
 	Servo arm;
+	OpticalDistanceSensor opticalSensor;
 
 	/**
 	 * Constructor
@@ -110,6 +112,8 @@ public class K9TeleOp extends OpMode {
 		arm = hardwareMap.servo.get("servo_1");
 		claw = hardwareMap.servo.get("servo_6");
 
+		opticalSensor = hardwareMap.opticalDistanceSensor.get("optical_sensor");
+
 		// assign the starting position of the wrist and claw
 		armPosition = 0.2;
 		clawPosition = 0.2;
@@ -122,6 +126,8 @@ public class K9TeleOp extends OpMode {
 	 */
 	@Override
 	public void loop() {
+
+		int light = opticalSensor.getLightDetectedRaw();
 
 		/*
 		 * Gamepad 1
@@ -195,6 +201,7 @@ public class K9TeleOp extends OpMode {
         telemetry.addData("claw", "claw:  " + String.format("%.2f", clawPosition));
         telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", left));
         telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));
+		telemetry.addData("opticalsense", "opticalsense: " + String.format("%d", light));
 
 	}
 
