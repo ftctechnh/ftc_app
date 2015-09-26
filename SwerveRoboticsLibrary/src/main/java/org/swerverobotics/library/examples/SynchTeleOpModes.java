@@ -12,7 +12,7 @@ import org.swerverobotics.library.interfaces.*;
  * 
  * TODO: Perhaps consolidate the two examples 
  */
-@TeleOp(name="Tele Op - modes")
+@TeleOp(name="Fancy Tele Op", group="Swerve Examples")
 @Disabled
 public class SynchTeleOpModes extends SynchronousOpMode
     {
