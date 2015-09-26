@@ -6,8 +6,6 @@ import org.swerverobotics.library.*;
 /**
  * II2cDeviceClient is the public interface to a utility class that makes it easier to
  * use I2cDevice instances.
- * 
- * @see ClassFactory#createI2cDeviceClient(I2cDevice, ReadWindow)
  */
 public interface II2cDeviceClient extends HardwareDevice
     {
@@ -34,7 +32,7 @@ public interface II2cDeviceClient extends HardwareDevice
      * Ensure that the current register window covers the indicated set of registers.
      *
      * If there is currently a non-null register window, and windowNeeded is non-null,
-     * and the curret register window entirely contains windowNeeded, then do nothing.
+     * and the current register window entirely contains windowNeeded, then do nothing.
      * Otherwise, set the current register window to windowToSet.
      * 
      * @param windowNeeded Test the current register window, if any, against this window 
