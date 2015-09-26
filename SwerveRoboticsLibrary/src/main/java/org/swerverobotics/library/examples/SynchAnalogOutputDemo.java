@@ -29,15 +29,16 @@ public class SynchAnalogOutputDemo extends SynchronousOpMode {
         // We are expecting the analog output to be attached to a core device interface
         // module and named "analogout".
         analog = hardwareMap.analogOutput.get("analogout");
-        analog.setAnalogOutputVoltage(4);
-        analog.setAnalogOutputFrequency(frequency);
-        //analog.setAnalogOutputMode(byte);  //what are the values for mode???
 
         // Set up our dashboard computations
         composeDashboard();
 
         // Wait until we're told to go
         waitForStart();
+
+        analog.setAnalogOutputVoltage(4);
+        analog.setAnalogOutputFrequency(frequency);
+        //analog.setAnalogOutputMode(mode);  //what are the values for mode???
 
         // Loop and update the dashboard
         while (this.opModeIsActive()) {
