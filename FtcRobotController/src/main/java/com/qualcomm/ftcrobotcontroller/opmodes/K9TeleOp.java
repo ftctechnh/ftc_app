@@ -112,7 +112,7 @@ public class K9TeleOp extends OpMode {
 		arm = hardwareMap.servo.get("servo_1");
 		claw = hardwareMap.servo.get("servo_6");
 
-		opticalSensor = hardwareMap.opticalDistanceSensor.get("optical_sensor");
+		opticalSensor = hardwareMap.opticalDistanceSensor.get("optical_distance_sensor");
 
 		// assign the starting position of the wrist and claw
 		armPosition = 0.2;
@@ -127,7 +127,9 @@ public class K9TeleOp extends OpMode {
 	@Override
 	public void loop() {
 
-		int light = opticalSensor.getLightDetectedRaw();
+		int light = 0;
+
+		light = opticalSensor.getLightDetectedRaw();
 
 		/*
 		 * Gamepad 1
