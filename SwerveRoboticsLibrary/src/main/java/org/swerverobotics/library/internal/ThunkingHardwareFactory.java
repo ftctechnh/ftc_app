@@ -406,7 +406,7 @@ public class ThunkingHardwareFactory
 
             // Make a new experimental legacy motor controller
             II2cDevice i2cDevice            = new I2cDeviceOnI2cDeviceController(legacyModule, port);
-            I2cDeviceClient i2cDeviceClient = new I2cDeviceClient(i2cDevice, i2cAddr8Bit, /*no initial window*/null, /*autostop*/true, stopRegistrar);
+            I2cDeviceClient i2cDeviceClient = new I2cDeviceClient(i2cDevice, i2cAddr8Bit, /*autostop*/true, stopRegistrar);
             DcMotorController controller    = new NxtDcMotorControllerOnI2cDevice(i2cDeviceClient, target);
 
             // Use that one instead
