@@ -7,9 +7,11 @@ import org.swerverobotics.library.interfaces.*;
 
 /**
  * An op mode that investigates how many loop() cycles it takes to do full
- * mode switching on a motor controller.
+ * mode switching on a motor controller. Each main loop cycle does both
+ * a read and a write to the motor. On the legacy motoro controller, this
+ * will
  */
-@TeleOp(name="Motor Perf")
+@TeleOp(name="Motor Perf", group="Swerve Examples")
 @Disabled
 public class SynchMotorLoopPerf extends SynchronousOpMode
     {
@@ -17,17 +19,21 @@ public class SynchMotorLoopPerf extends SynchronousOpMode
     int         position;
     long        loopCountStart;
     int         spinCount;
-    ElapsedTime elapsedTime = new ElapsedTime();
+    ElapsedTime elapsed = new ElapsedTime();
+
+    public SynchMotorLoopPerf()
+        {
+        // this.useExperimentalThunking = true;
+        }
     
     public @Override void main() throws InterruptedException
         {
         motor = hardwareMap.dcMotor.get("motorLeft");
-        configureTelemetry();
-        
+
         waitForStart();
         loopCountStart = getLoopCount();
         spinCount      = 1;
-        elapsedTime.reset();
+        elapsed.reset();
         
         while (this.opModeIsActive())
             {
@@ -37,54 +43,16 @@ public class SynchMotorLoopPerf extends SynchronousOpMode
                 motor.setPower(0.5);
             else
                 motor.setPower(0);
-            
+
+            telemetry.addData("position",      position);
+            telemetry.addData("#loop()",       getLoopCount() - loopCountStart);
+            telemetry.addData("#spin",         spinCount);
+            telemetry.addData("#loop()/#spin", (getLoopCount() - loopCountStart) / (double)spinCount);
+            telemetry.addData("ms/spin",       String.format("%.1f ms", (elapsed.time()*1000) / (double)spinCount));
             telemetry.update();
             idle();
             
             spinCount++;
             }
-        }
-    
-    void configureTelemetry()
-        {
-        telemetry.addLine(
-            telemetry.item("pos:", new IFunc<Object>()
-                {
-                @Override public Object value()
-                    {
-                    return position;
-                    }}),
-            telemetry.item("loop:", new IFunc<Object>()
-                {
-                @Override public Object value()
-                    {
-                    return getLoopCount() - loopCountStart;
-                    }}),
-            telemetry.item("spin:", new IFunc<Object>()
-                {
-                @Override public Object value()
-                    {
-                    return spinCount;
-                    }})
-             );
-        telemetry.addLine(
-            telemetry.item("loop/spin:", new IFunc<Object>()
-                {
-                @Override public Object value()
-                    {
-                    return format((getLoopCount() - loopCountStart) / (double) spinCount);
-                    }}),
-            telemetry.item("ms/spin:", new IFunc<Object>()
-                {
-                @Override public Object value()
-                    {
-                    return format(elapsedTime.time() * 1000 / (double) spinCount);
-                    }})
-            );
-        }
-
-    String format(double d)
-        {
-        return String.format("%.1f", d);
         }
     }

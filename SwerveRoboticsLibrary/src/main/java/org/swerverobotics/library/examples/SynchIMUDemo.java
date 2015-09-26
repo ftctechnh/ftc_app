@@ -9,7 +9,7 @@ import org.swerverobotics.library.interfaces.*;
  * SynchIMUDemo gives a short demo on how to use the BNO055 Inertial Motion Unit (IMU) from AdaFruit.
  * http://www.adafruit.com/products/2472
  */
-@TeleOp(name="IMU Demo")
+@TeleOp(name="IMU Demo", group="Swerve Examples")
 @Disabled
 public class SynchIMUDemo extends SynchronousOpMode
     {
