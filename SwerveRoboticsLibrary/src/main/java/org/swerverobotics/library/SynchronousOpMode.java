@@ -24,9 +24,9 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     //----------------------------------------------------------------------------------------------
 
     /**
-     * The logging tag we use in LogCat output from this class
+     * The logging tag we use in LogCat output in this general vicinity.
      */
-    public static final String TAG = "SyncOpMode";
+    public static final String LOGGING_TAG = "Swerve";
 
     /**
      * Provides access to the first gamepad controller. Only changes as a result of calling
@@ -339,7 +339,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         //
         if (changed)
             {
-            Log.v(TAG, String.format("gamepad state: %d", this.gamepadStateCount.getAndIncrement()));
+            Log.v(LOGGING_TAG, String.format("gamepad state: %d", this.gamepadStateCount.getAndIncrement()));
             }
         //
         this.gamePadCaptureStateChanged.compareAndSet(false, changed);
@@ -755,7 +755,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             {
             @Override public void run() throws InterruptedException
                 {
-                Log.d(TAG, String.format("starting OpMode {%s}", SynchronousOpMode.this.getClass().getSimpleName()));
+                Log.d(LOGGING_TAG, String.format("starting OpMode {%s}", SynchronousOpMode.this.getClass().getSimpleName()));
                 SynchronousOpMode.this.main();
                 }
             }, true);
@@ -897,7 +897,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             // Ignore. Actions generally are responsible for cleaning up their own
             // mess; they shouldn't be disturbing us. Thus, we eat any exceptions to keep
             // things moving.
-            Log.d(TAG, "action exception leaked through to loop thread: " + e);
+            Log.e(LOGGING_TAG, "action exception leaked through to loop thread: " + e);
             }
         }
     
@@ -911,7 +911,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         {
         // Call the subclass hook in case they might want to do something interesting
         this.preStopHook();
-        Log.d(TAG, String.format("stopping OpMode {%s}...", this.getClass().getSimpleName()));
+        Log.d(LOGGING_TAG, String.format("stopping OpMode {%s}...", this.getClass().getSimpleName()));
 
         // Next time synchronous threads ask, yes, we do want to stop
         this.stopRequested = true;
@@ -930,7 +930,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             this.actionsOnStop.clear();
             }
 
-        Log.d(TAG, String.format("...stopped"));
+        Log.d(LOGGING_TAG, String.format("...stopped"));
         this.postStopHook();
         }
 

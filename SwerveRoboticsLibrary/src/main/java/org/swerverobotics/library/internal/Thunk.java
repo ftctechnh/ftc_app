@@ -6,7 +6,6 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.swerverobotics.library.SynchronousOpMode;
-import org.swerverobotics.library.exceptions.*;
 import org.swerverobotics.library.interfaces.*;
 
 /**
@@ -80,7 +79,7 @@ public abstract class Thunk implements IAction, IActionKeyed
             {
             // Record the exception to be rethrown back on the waiting thread after we wake him
             this.exception = e;
-            Log.d(SynchronousOpMode.TAG, "exception thrown during action: " + e);
+            Log.e(SynchronousOpMode.LOGGING_TAG, "exception thrown during action: " + e);
             }
 
         // Tell all those waiting on the completion of this thunk that we are done
