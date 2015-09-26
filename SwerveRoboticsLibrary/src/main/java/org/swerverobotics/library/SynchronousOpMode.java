@@ -478,6 +478,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
 
         Queue<IAction>   queue;
         ActionKeyHistory history;
+        Queue<IAction>   historicalActions;
 
         //-----------------------------------------------------------------------
         // Construction
@@ -486,6 +487,8 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             {
             this.queue   = this.newQueue();
             this.history = this.newHistory();
+            if (BuildConfig.DEBUG && false)
+                this.historicalActions = new LinkedList<IAction>();
             }
         private Queue<IAction> newQueue()
             {
@@ -531,6 +534,11 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
                         this.history.put(actionKey, true);
                         }
                     }
+                if (this.historicalActions != null)
+                    {
+                    this.historicalActions.add(result);
+                    }
+
                 this.onChanged();
                 }
             return result;
