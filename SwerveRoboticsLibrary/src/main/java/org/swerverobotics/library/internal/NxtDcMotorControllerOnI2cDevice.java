@@ -13,7 +13,7 @@ import org.swerverobotics.library.interfaces.*;
  * It can be used from LinearOpMode, or, indeed, any thread that can tolerate operations that
  * can take tens of milliseconds to run.</p>
  *
- * @see org.swerverobotics.library.ClassFactory#createNxtDcMotorControllerFrom(DcMotorController)
+ * @see org.swerverobotics.library.ClassFactory#createNxtDcMotorController(DcMotorController)
  * @see org.swerverobotics.library.SynchronousOpMode#useExperimentalThunking
  */
 public final class NxtDcMotorControllerOnI2cDevice implements DcMotorController, IThunkWrapper<DcMotorController>, VoltageSensor
