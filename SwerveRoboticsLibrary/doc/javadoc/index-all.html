@@ -243,19 +243,23 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createAdaFruitBNO055IMU-com.qualcomm.robotcore.hardware.I2cDevice-">createAdaFruitBNO055IMU(I2cDevice)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
 <dd>
-<div class="block">Instantiate an AdaFruit BNO055 sensor who resides at the indicated I2cDevice using
+<div class="block">Instantiates an AdaFruit BNO055 sensor which resides at the indicated I2cDevice using
  default values for configuration parameters.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createAdaFruitBNO055IMU-com.qualcomm.robotcore.hardware.I2cDevice-org.swerverobotics.library.interfaces.IBNO055IMU.Parameters-">createAdaFruitBNO055IMU(I2cDevice, IBNO055IMU.Parameters)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
 <dd>
-<div class="block">Instantiate an AdaFruit BNO055 sensor who resides at the indicated I2cDevice using
+<div class="block">Instantiates an AdaFruit BNO055 sensor which resides at the indicated I2cDevice using
  the provided configuration parameters.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createI2cDeviceClientFrom-org.swerverobotics.library.internal.II2cDevice-int-org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow-">createI2cDeviceClientFrom(II2cDevice, int, II2cDeviceClient.ReadWindow)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createI2cDeviceClientFrom-com.qualcomm.robotcore.hardware.I2cDevice-int-">createI2cDeviceClientFrom(I2cDevice, int)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
+<dd>
+<div class="block">Create a new II2cDeviceClient on an I2cDevice instance.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createI2cDeviceClientFrom-org.swerverobotics.library.internal.II2cDevice-int-">createI2cDeviceClientFrom(II2cDevice, int)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
 <dd>
 <div class="block">Create a new II2cDeviceClient on an II2cDevice instance.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createI2cDeviceClientFrom-org.swerverobotics.library.internal.II2cDevice-int-org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow-boolean-org.swerverobotics.library.interfaces.IStopActionRegistrar-">createI2cDeviceClientFrom(II2cDevice, int, II2cDeviceClient.ReadWindow, boolean, IStopActionRegistrar)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createI2cDeviceClientFrom-org.swerverobotics.library.internal.II2cDevice-int-boolean-org.swerverobotics.library.interfaces.IStopActionRegistrar-">createI2cDeviceClientFrom(II2cDevice, int, boolean, IStopActionRegistrar)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
 <dd>
 <div class="block">Create a new II2cDeviceClient on an II2cDevice instance.</div>
 </dd>
@@ -267,7 +271,19 @@
 <dd>
 <div class="block">Creates an II2Device instance on a specific port on an I2cDeviceController</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createNxtDcMotorControllerOnI2cDevice-com.qualcomm.robotcore.hardware.DcMotorController-">createNxtDcMotorControllerOnI2cDevice(DcMotorController)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createNxtColorSensorFrom-com.qualcomm.robotcore.hardware.I2cDevice-">createNxtColorSensorFrom(I2cDevice)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
+<dd>
+<div class="block">Creates an Nxt ColorSensor object from an I2cDevice.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createNxtColorSensorFrom-org.swerverobotics.library.internal.II2cDevice-">createNxtColorSensorFrom(II2cDevice)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
+<dd>
+<div class="block">Creates an Nxt ColorSensor object from an I2cDevice.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createNxtColorSensorFrom-com.qualcomm.robotcore.hardware.I2cController-int-">createNxtColorSensorFrom(I2cController, int)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
+<dd>
+<div class="block">Creates an Nxt ColorSensor object from an I2cDevice.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createNxtDcMotorControllerFrom-com.qualcomm.robotcore.hardware.DcMotorController-">createNxtDcMotorControllerFrom(DcMotorController)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
 <dd>
 <div class="block">NxtMotorControllerOnI2cDevice is an alternative implementation of a Legacy DC Motor controller.</div>
 </dd>
@@ -724,6 +740,10 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/TelemetryDashboardAndLog.Log.html#Log--">Log()</a></span> - Constructor for class <a href="org/swerverobotics/library/TelemetryDashboardAndLog.Log.html" title="class in org.swerverobotics.library">TelemetryDashboardAndLog.Log</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#LOGGING_TAG">LOGGING_TAG</a></span> - Static variable in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
+<dd>
+<div class="block">The logging tag we use in LogCat output in this general vicinity.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IBNO055IMU.Parameters.html#loggingEnabled">loggingEnabled</a></span> - Variable in class <a href="org/swerverobotics/library/interfaces/IBNO055IMU.Parameters.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Parameters</a></dt>
 <dd>
 <div class="block">debugging aid: enable logging for this device?</div>
@@ -1208,10 +1228,6 @@
 </a>
 <h2 class="title">T</h2>
 <dl>
-<dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#TAG">TAG</a></span> - Static variable in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
-<dd>
-<div class="block">The logging tag we use in LogCat output from this class</div>
-</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/TelemetryDashboardAndLog.html#target">target</a></span> - Variable in class <a href="org/swerverobotics/library/TelemetryDashboardAndLog.html" title="class in org.swerverobotics.library">TelemetryDashboardAndLog</a></dt>
 <dd>
 <div class="block">Advanced: 'target' is the lower level robot-controller-runtime-provided telemetry object</div>
