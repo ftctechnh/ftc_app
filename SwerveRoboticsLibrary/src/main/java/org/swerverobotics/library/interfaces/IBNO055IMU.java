@@ -1,6 +1,10 @@
 package org.swerverobotics.library.interfaces;
 
+import android.util.Log;
+import org.swerverobotics.library.internal.AdaFruitBNO055IMU;
 import org.swerverobotics.library.internal.Util;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 /**
  * Interface API to the Adafruit 9-DOF Absolute Orientation IMU Fusion Breakout - BNO055 sensor.
@@ -500,10 +504,11 @@ public interface IBNO055IMU
             }
         public MagneticFlux(II2cDeviceClient.TimestampedData ts, double scale)
             {
-            this(   Util.makeIntLittle(ts.data[0], ts.data[1]) / scale,
-                    Util.makeIntLittle(ts.data[2], ts.data[3]) / scale,
-                    Util.makeIntLittle(ts.data[4], ts.data[5]) / scale,
-                    ts.nanoTime);
+            ByteBuffer buffer = ByteBuffer.wrap(ts.data).order(ByteOrder.LITTLE_ENDIAN);
+            this.x = buffer.getShort() / scale;
+            this.y = buffer.getShort() / scale;
+            this.z = buffer.getShort() / scale;
+            this.nanoTime = ts.nanoTime;
             }
         }
 
@@ -546,7 +551,15 @@ public interface IBNO055IMU
             this.y = y;
             this.z = z;
             }
-    
+        public Quaternion(II2cDeviceClient.TimestampedData ts, double scale)
+            {
+            ByteBuffer buffer = ByteBuffer.wrap(ts.data).order(ByteOrder.LITTLE_ENDIAN);
+            this.w = buffer.getShort() / scale;
+            this.x = buffer.getShort() / scale;
+            this.y = buffer.getShort() / scale;
+            this.z = buffer.getShort() / scale;
+            this.nanoTime = ts.nanoTime;
+            }
         //----------------------------------------------------------------------------------------------
         // Operations
         //----------------------------------------------------------------------------------------------
@@ -615,10 +628,11 @@ public interface IBNO055IMU
             }
         public Acceleration(II2cDeviceClient.TimestampedData ts, double scale)
             {
-            this(   Util.makeIntLittle(ts.data[0], ts.data[1]) / scale,
-                    Util.makeIntLittle(ts.data[2], ts.data[3]) / scale,
-                    Util.makeIntLittle(ts.data[4], ts.data[5]) / scale,
-                    ts.nanoTime);
+            ByteBuffer buffer = ByteBuffer.wrap(ts.data).order(ByteOrder.LITTLE_ENDIAN);
+            this.accelX = buffer.getShort() / scale;
+            this.accelY = buffer.getShort() / scale;
+            this.accelZ = buffer.getShort() / scale;
+            this.nanoTime = ts.nanoTime;
             }
 
         //----------------------------------------------------------------------------------------------
@@ -680,10 +694,11 @@ public interface IBNO055IMU
             }
         public Velocity(II2cDeviceClient.TimestampedData ts, double scale)
             {
-            this(   Util.makeIntLittle(ts.data[0], ts.data[1]) / scale,
-                    Util.makeIntLittle(ts.data[2], ts.data[3]) / scale,
-                    Util.makeIntLittle(ts.data[4], ts.data[5]) / scale,
-                    ts.nanoTime);
+            ByteBuffer buffer = ByteBuffer.wrap(ts.data).order(ByteOrder.LITTLE_ENDIAN);
+            this.velocX = buffer.getShort() / scale;
+            this.velocY = buffer.getShort() / scale;
+            this.velocZ = buffer.getShort() / scale;
+            this.nanoTime = ts.nanoTime;
             }
         
         //----------------------------------------------------------------------------------------------
@@ -757,10 +772,11 @@ public interface IBNO055IMU
             }
         public Position(II2cDeviceClient.TimestampedData ts, double scale)
             {
-            this(   Util.makeIntLittle(ts.data[0], ts.data[1]) / scale,
-                    Util.makeIntLittle(ts.data[2], ts.data[3]) / scale,
-                    Util.makeIntLittle(ts.data[4], ts.data[5]) / scale,
-                    ts.nanoTime);
+            ByteBuffer buffer = ByteBuffer.wrap(ts.data).order(ByteOrder.LITTLE_ENDIAN);
+            this.x = buffer.getShort() / scale;
+            this.y = buffer.getShort() / scale;
+            this.z = buffer.getShort() / scale;
+            this.nanoTime = ts.nanoTime;
             }
 
         //----------------------------------------------------------------------------------------------
@@ -813,10 +829,11 @@ public interface IBNO055IMU
             }
         public AngularVelocity(II2cDeviceClient.TimestampedData ts, double scale)
             {
-            this(   Util.makeIntLittle(ts.data[0], ts.data[1]) / scale,
-                    Util.makeIntLittle(ts.data[2], ts.data[3]) / scale,
-                    Util.makeIntLittle(ts.data[4], ts.data[5]) / scale,
-                    ts.nanoTime);
+            ByteBuffer buffer = ByteBuffer.wrap(ts.data).order(ByteOrder.LITTLE_ENDIAN);
+            this.rateX = buffer.getShort() / scale;
+            this.rateY = buffer.getShort() / scale;
+            this.rateZ = buffer.getShort() / scale;
+            this.nanoTime = ts.nanoTime;
             }
         }
 
@@ -859,10 +876,11 @@ public interface IBNO055IMU
             }
         public EulerAngles(II2cDeviceClient.TimestampedData ts, double scale)
             {
-            this(   Util.makeIntLittle(ts.data[0], ts.data[1]) / scale,
-                    Util.makeIntLittle(ts.data[2], ts.data[3]) / scale,
-                    Util.makeIntLittle(ts.data[4], ts.data[5]) / scale,
-                    ts.nanoTime);
+            ByteBuffer buffer = ByteBuffer.wrap(ts.data).order(ByteOrder.LITTLE_ENDIAN);
+            this.heading = buffer.getShort() / scale;
+            this.roll    = buffer.getShort() / scale;
+            this.pitch   = buffer.getShort() / scale;
+            this.nanoTime = ts.nanoTime;
             }
         }
     }

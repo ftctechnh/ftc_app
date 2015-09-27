@@ -49,7 +49,6 @@ public class MyOpModeRegistrar
 
         manager.register(SynchTeleOp.class);
         manager.register(SynchTelemetryOp.class);
-        manager.register(SynchIMUDemo.class);
         // manager.register("HQ NxtTeleoP", com.qualcomm.ftcrobotcontroller.opmodes.NxtTeleOp); // need to make this work!
         }
     }

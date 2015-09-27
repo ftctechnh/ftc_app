@@ -1,13 +1,9 @@
 package org.swerverobotics.library.internal;
 
-import android.util.Log;
-
 import com.qualcomm.robotcore.util.*;
 import org.swerverobotics.library.exceptions.*;
 import java.lang.reflect.*;
 import java.util.*;
-import junit.framework.*;
-import static junit.framework.Assert.*;
 
 /**
  * Various internal utilities that assist us.
@@ -303,23 +299,5 @@ public class Util
             {
             throw SwerveRuntimeException.wrap(e);
             }
-        }
-    
-    //----------------------------------------------------------------------------------------------
-    // Arithmetic utility
-    //----------------------------------------------------------------------------------------------
-    
-    static public int makeIntLittle(byte low, byte hi)
-        {
-        return ((int)low) | (((int)hi)<<8);
-        }
-    static public int makeIntBig(byte hi, byte low)
-        {
-        return ((int)low) | (((int)hi)<<8);
-        }
-    
-    static public int unpack10BitAnalog(byte[] rgb, int ib)
-        {
-        return (((int)rgb[ib])<<2) | (rgb[ib+1]&0x03);
         }
     }
