@@ -61,17 +61,12 @@ public class ServoOp extends OpMode {
 
   @Override
   public void init() {
+      servo1 = hardwareMap.servo.get("servo_1") ;
+
+      servoPosition = 0.5 ;
 
   }
 
-  @Override
-  public void start() {
-
-    servo1 = hardwareMap.servo.get("servo_1") ;
-
-    servoPosition = 0.5 ;
-
-  }
   @Override
   public void loop() {
 /*
