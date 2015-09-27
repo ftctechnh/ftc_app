@@ -37,8 +37,8 @@ public class MoveForward extends OpMode {
 
     @Override
     public void loop() {
-        float M1 = gamepad1.right_stick_x;
-        float M2 = gamepad1.left_stick_x;
+        float M1 = gamepad1.right_stick_y;
+        float M2 = -gamepad1.left_stick_y;
         float SM1 = gamepad1.left_trigger;
         float SM2 = gamepad1.right_trigger;
 
