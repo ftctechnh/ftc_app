@@ -18,14 +18,14 @@ public class TouchOp extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         // Get references to the motors from the hardware map
-        leftMotor = hardwareMap.dcMotor.get("left_drive");
-        rightMotor = hardwareMap.dcMotor.get("right_drive");
+        leftMotor = hardwareMap.dcMotor.get("M1");
+        rightMotor = hardwareMap.dcMotor.get("M2");
 
         // Reverse the right motor
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
 
         // Get a reference to the touch sensor
-        touchSensor = hardwareMap.touchSensor.get("sensor_touch");
+        touchSensor = hardwareMap.touchSensor.get("Touch");
 
         // Wait for the start button to be pressed
         waitForStart();
