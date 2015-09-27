@@ -27,7 +27,7 @@ public class OmniBotAuto extends OpMode {
     @Override
     public void start () {
 
-        if (gamepad1.left_bumper == true) {
+        if (gamepad1.left_bumper) {
             motor1 = hardwareMap.dcMotor.get("motor_1");
             motor2 = hardwareMap.dcMotor.get("motor_2");
             motor3 = hardwareMap.dcMotor.get("motor_3");
@@ -45,8 +45,8 @@ public class OmniBotAuto extends OpMode {
         double etime;
         etime = elapsedTime.time();
         if (etime < 5) {
-            motor2.setPower(0.15);
             motor1.setPower(0.15);
+            motor2.setPower(0.15);
             motor3.setPower(0.15);
             motor4.setPower(0.15);
         }

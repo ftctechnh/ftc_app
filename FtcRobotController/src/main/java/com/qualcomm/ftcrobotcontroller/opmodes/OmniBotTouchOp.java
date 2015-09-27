@@ -32,11 +32,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * TeleOp Mode
@@ -53,35 +52,107 @@ public class OmniBotTouchOp extends OpMode {
    */
 
 
+    @Override
+    public void init() {
+
+    }
+    DcMotor motor1;
+    DcMotor motor2;
+    DcMotor motor3;
+    DcMotor motor4;
+
+    public OmniBotTouchOp() {
+
+    }
+
+    ElapsedTime elapsedTime = new ElapsedTime();
+    TouchSensor touchSensor;
+
+    @Override
+    public void start() {
+
+        touchSensor = hardwareMap.touchSensor.get("touchSensor");
+        motor1 = hardwareMap.dcMotor.get("motor_1");
+        motor2 = hardwareMap.dcMotor.get("motor_2");
+        motor3 = hardwareMap.dcMotor.get("motor_3");
+        motor4 = hardwareMap.dcMotor.get("motor_4");
+
+        motor1.setDirection(DcMotor.Direction.REVERSE);
+        motor4.setDirection(DcMotor.Direction.REVERSE);
+
+        elapsedTime.reset();
+        elapsedTime.startTime();
+
+    }
+
+    @Override
+    public void loop() {
+
+        double etouch;
+        etouch = touchSensor.getValue();
+        double etime;
+        etime = elapsedTime.time();
+
+        if (etouch == 0) {
+            motor1.setPower(0.25);
+            motor2.setPower(0.25);
+            motor3.setPower(0.25);
+            motor4.setPower(0.25);
+        } else {
+            elapsedTime.reset();
+            elapsedTime.startTime();
+
+            if (etime < 1) {
+                motor1.setPower(0);
+                motor2.setPower(0);
+                motor3.setPower(0);
+                motor4.setPower(0);
+            } else {
+                elapsedTime.reset();
+                elapsedTime.startTime();
+                if (etime < 1) {
+                    motor1.setPower(-0.15);
+                    motor2.setPower(0.15);
+                    motor3.setPower(0.15);
+                    motor4.setPower(-0.15);
+                } else {
+                    elapsedTime.reset();
+                    elapsedTime.startTime();
+                    if (etime < 1) {
+                        motor1.setPower(0);
+                        motor2.setPower(0);
+                        motor3.setPower(0);
+                        motor4.setPower(0);
+                    } else {
+                        elapsedTime.reset();
+                        elapsedTime.startTime();
+                        if (etime < 5) {
+                            motor1.setPower(0.25);
+                            motor2.setPower(0.25);
+                            motor3.setPower(0.25);
+                            motor4.setPower(0.25);
+                        }
+                        else {
+                            motor1.setPower(0);
+                            motor2.setPower(0);
+                            motor3.setPower(0);
+                            motor4.setPower(0);
+                        }
+                    }
+
+                }
+            }
+            telemetry.addData("Touch Sensor", "Touch sensor is " + String.format("%d", etouch));
 
 
-  @Override
-  public void init() {
+        }
 
-  }
 
-  TouchSensor touchSensor ;
+    }
+    @Override
+    public void stop(){
 
-  @Override
-  public void start() {
-
-    touchSensor = hardwareMap.touchSensor.get("touchSensor") ;
-
-  }
-
-  @Override
-  public void loop() {
-
-    double TouchValue = touchSensor.getValue() ;
-
-    telemetry.addData("Touch Sensor", "Touch sensor is " + String.format("%d", TouchValue)) ;
-
-  }
-
-  @Override
-  public void stop() {
-
-  }
+    }
 }
 
 
