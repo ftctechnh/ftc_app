@@ -19,6 +19,18 @@ public class Util
         return elapsed.time() * 1000.0;
         }
 
+    static public String getStackTrace(Exception e)
+        {
+        StringBuilder result = new StringBuilder();
+        result.append(e.toString());
+        for (StackTraceElement ele : e.getStackTrace())
+            {
+            result.append("\n");
+            result.append(ele.toString());
+            }
+        return result.toString();
+        }
+
     //----------------------------------------------------------------------------------------------
     // Threading
     //----------------------------------------------------------------------------------------------

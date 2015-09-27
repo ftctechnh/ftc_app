@@ -1,5 +1,7 @@
 package org.swerverobotics.library.internal;
 
+import android.os.SystemClock;
+
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.swerverobotics.library.*;
@@ -30,6 +32,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
     private Velocity               velocity;
     private Position               position;
 
+    private final Object           startStopLock = new Object();
     private HandshakeThreadStarter accelerationIntegration;
     private static final int       msAccelerationIntegrationStopWait = 20;
     private static final int       msAwaitChipId                     = 2000;
@@ -38,9 +41,10 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
     // We always read as much as we can when we have nothing else to do
     private static final II2cDeviceClient.READ_MODE readMode = II2cDeviceClient.READ_MODE.REPEAT;
 
-    // we poll essentially as fast as we can, since measurements show that
-    // we only get an I2C cycle every 70 ms or so. 'no point in waiting longer.
-    private static final int       msAccelerationIntegrationDefaultPollInterval = 0;    // ASAP
+    // There is a big difference in the polling interval we see when debugging
+    // and what we see when running free. The former is ~70ms, the latter about ~15ms.
+    // That's just a bit of contextual background for the magnitude here
+    private static final int       msAccelerationIntegrationDefaultPollInterval = 100;   // so far only a guess
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -318,18 +322,20 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
 
     public synchronized Quaternion getQuaternionOrientation()
         {
-        // Ensure we can see the registers we need
-        this.deviceClient.ensureReadWindow(
-                new II2cDeviceClient.ReadWindow(REGISTER.QUATERNION_DATA_W_LSB.bVal, 8, readMode),
-                upperWindow
-        );
-        
-        // Section 3.6.5.5 of BNO055 specification
-        II2cDeviceClient.TimestampedData ts = this.deviceClient.readTimeStamped(REGISTER.QUATERNION_DATA_W_LSB.bVal, 8);
-        final double scale = (1 << 14);
-        Quaternion result = new Quaternion(ts, scale);
-        result.nanoTime = ts.nanoTime;
-        return result;
+        return this.deviceClient.executeFunctionWhileLocked(new IFunc<Quaternion>()
+            {
+            @Override public Quaternion value()
+                {
+                // Ensure we can see the registers we need
+                deviceClient.ensureReadWindow(
+                        new II2cDeviceClient.ReadWindow(REGISTER.QUATERNION_DATA_W_LSB.bVal, 8, readMode),
+                        upperWindow);
+
+                // Section 3.6.5.5 of BNO055 specification
+                II2cDeviceClient.TimestampedData ts = deviceClient.readTimeStamped(REGISTER.QUATERNION_DATA_W_LSB.bVal, 8);
+                return new Quaternion(ts, (1 << 14));
+                }
+            });
         }
 
 
@@ -361,13 +367,19 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         return 16.0 * 1000000.0;
         }
 
-    private II2cDeviceClient.TimestampedData getVector(VECTOR vector)
+    private II2cDeviceClient.TimestampedData getVector(final VECTOR vector)
         {
-        // Ensure that the 6 bytes for this vector are visible in the register window.
-        this.ensureReadWindow(new II2cDeviceClient.ReadWindow(vector.getValue(), 6, readMode));
+        return this.deviceClient.executeFunctionWhileLocked(new IFunc<II2cDeviceClient.TimestampedData>()
+            {
+            @Override public II2cDeviceClient.TimestampedData value()
+                {
+                // Ensure that the 6 bytes for this vector are visible in the register window.
+                ensureReadWindow(new II2cDeviceClient.ReadWindow(vector.getValue(), 6, readMode));
 
-        // Read the data
-        return this.deviceClient.readTimeStamped(vector.getValue(), 6);
+                // Read the data
+                return deviceClient.readTimeStamped(vector.getValue(), 6);
+                }
+            });
         }
 
     //------------------------------------------------------------------------------------------
@@ -399,71 +411,80 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
             }
         }
     
-    public synchronized void startAccelerationIntegration(Position initalPosition, Velocity initialVelocity)
+    public void startAccelerationIntegration(Position initalPosition, Velocity initialVelocity)
         {
         this.startAccelerationIntegration(initalPosition, initialVelocity, msAccelerationIntegrationDefaultPollInterval);
         }
 
-    public synchronized void startAccelerationIntegration(Position initalPosition, Velocity initialVelocity, int msPollInterval)
+    public void startAccelerationIntegration(Position initalPosition, Velocity initialVelocity, int msPollInterval)
     // Start integrating acceleration to determine position and velocity by polling for acceleration every while
         {
-        // Stop doing this if we're already in flight
-        this.stopAccelerationIntegration();
-
-        // Set the current position and velocity if asked
-        this.setPositionAndVelocity(initalPosition, initialVelocity);
-        
-        // Make a new thread on which to do the integration        
-        this.accelerationIntegration = new HandshakeThreadStarter("integrator", new Integrator(msPollInterval));
-
-        IStopActionRegistrar registrar = SynchronousOpMode.getStopActionRegistrar();
-        if (registrar != null)
+        synchronized (this.startStopLock)
             {
-            // Running on synchronous thread; we can use the SynchronousOpMode to
-            // shut us down automatically.
-            registrar.registerActionOnStop(new IAction() {
-                @Override public void doAction()
-                    {
-                    AdaFruitBNO055IMU.this.close();
-                    }
-                });
-            }
-        else
-            {
-            // Set up a suicide watch that will shutdown that integration thread if
-            // the I2cDevice is shutdown. This is a bit of a hack, perhaps, but
-            // is the only way given the current architecture that we've figured out
-            // how to auto-stop integration if the robot is shutdown and we're not
-            // on a synchronous thread.
-            while (this.deviceClient.getCallbackThread() == null)
+            // Stop doing this if we're already in flight
+            this.stopAccelerationIntegration();
+
+            // Set the current position and velocity if asked
+            this.setPositionAndVelocity(initalPosition, initialVelocity);
+
+            // Make a new thread on which to do the integration
+            this.accelerationIntegration = new HandshakeThreadStarter("integrator", new Integrator(msPollInterval));
+
+            IStopActionRegistrar registrar = SynchronousOpMode.getStopActionRegistrar();
+            if (registrar != null)
                 {
-                // Don't yet know the callback thread. Spin until we do.
-                Thread.yield();
+                // Running on synchronous thread; we can use the SynchronousOpMode to
+                // shut us down automatically.
+                registrar.registerActionOnStop(new IAction() {
+                    @Override public void doAction()
+                        {
+                        AdaFruitBNO055IMU.this.close();
+                        }
+                    });
                 }
-            this.deathWatch = new DeathWatch(this.deviceClient.getCallbackThread(), new IAction() {
-                @Override public void doAction()
+            else
+                {
+                // Set up a suicide watch that will shutdown that integration thread if
+                // the I2cDevice is shutdown. This is a bit of a hack, perhaps, but
+                // is the only way given the current architecture that we've figured out
+                // how to auto-stop integration if the robot is shutdown and we're not
+                // on a synchronous thread.
+                while (this.deviceClient.getCallbackThread() == null)
                     {
-                    AdaFruitBNO055IMU.this.close();
+                    // Don't yet know the callback thread. Spin until we do.
+                    Thread.yield();
                     }
-                });
-            this.deathWatch.start();
+                this.deathWatch = new DeathWatch(this.deviceClient.getCallbackThread(), new IAction() {
+                    @Override public void doAction()
+                        {
+                        AdaFruitBNO055IMU.this.close();
+                        }
+                    });
+                this.deathWatch.start();
+                }
+
+            // Start the whole schebang a rockin...
+            this.accelerationIntegration.start();
             }
-        
-        // Start the whole schebang a rockin...
-        this.accelerationIntegration.start();
         }
     
-    public synchronized void stopAccelerationIntegration()
+    public void stopAccelerationIntegration() // needs a different lock
         {
-        if (this.accelerationIntegration != null)
+        synchronized (this.startStopLock)
             {
             // Disarm our monitor
-            this.deathWatch.stop(msAccelerationIntegrationStopWait);
-            this.deathWatch = null;
-            
+            if (this.deathWatch != null)
+                {
+                this.deathWatch.stop(msAccelerationIntegrationStopWait);
+                this.deathWatch = null;
+                }
+
             // Stop the integration thread
-            this.accelerationIntegration.stop(msAccelerationIntegrationStopWait);
-            this.accelerationIntegration = null;
+            if (this.accelerationIntegration != null)
+                {
+                this.accelerationIntegration.stop(msAccelerationIntegrationStopWait);
+                this.accelerationIntegration = null;
+                }
             }
         }
 
@@ -471,6 +492,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
     class Integrator implements IHandshakeable
         {
         private final int msPollInterval;
+        private final static long nsPerMs = 1000000;
         
         Integrator(int msPollInterval)
             {
@@ -496,7 +518,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
                 while (!starter.isStopRequested())
                     {
                     // Read the latest available acceleration
-                    Acceleration accelNext = AdaFruitBNO055IMU.this.getLinearAcceleration();
+                    final Acceleration accelNext = AdaFruitBNO055IMU.this.getLinearAcceleration();
                     
                     // Update our state variables based thereon
                     synchronized (dataLock)
@@ -510,10 +532,10 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
                             acceleration = accelNext;
 
                             Velocity deltaVelocity = acceleration.integrate(accelPrev);                         
-                            velocity.accumulate(deltaVelocity);
+                            velocity = velocity.plus(deltaVelocity);
                             
                             Position deltaPosition = velocity.integrate(velocityPrev);
-                            position.accumulate(deltaPosition);
+                            position = position.plus(deltaPosition);
                             }
                         else
                             {
@@ -523,7 +545,10 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
                     
                     // Wait a bit before polling again
                     if (msPollInterval > 0)
-                        Thread.sleep(msPollInterval);
+                        {
+                        long msSoFar = (System.nanoTime() - accelNext.nanoTime) / nsPerMs;
+                        Thread.sleep(Math.max(0,msPollInterval - msSoFar));
+                        }
                     }
                 }
             catch (InterruptedException|RuntimeInterruptedException e)

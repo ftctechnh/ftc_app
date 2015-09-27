@@ -478,11 +478,11 @@ public interface IBNO055IMU
         //----------------------------------------------------------------------------------------------
     
         /** the flux in the X direction */
-        public double x;
+        public final double x;
         /** the flux in the Y direction */
-        public double y;
+        public final double y;
         /** the flux in the Z direction */
-        public double z;
+        public final double z;
 
         /** the time on the System.nanoTime() clock at which the data was acquired */
         public long nanoTime;
@@ -527,13 +527,13 @@ public interface IBNO055IMU
         // State
         //----------------------------------------------------------------------------------------------
     
-        public double w;
-        public double x;
-        public double y;
-        public double z;
+        public final double w;
+        public final double x;
+        public final double y;
+        public final double z;
 
         /** the time on the System.nanoTime() clock at which the data was acquired */
-        public long nanoTime = 0;
+        public final long nanoTime;
 
         //----------------------------------------------------------------------------------------------
         // Construction
@@ -543,6 +543,7 @@ public interface IBNO055IMU
             {
             this.w = 1;
             this.x = this.y = this.z = 0;
+            this.nanoTime = 0;
             }
         public Quaternion(double w, double x, double y, double z)
             {
@@ -550,6 +551,7 @@ public interface IBNO055IMU
             this.x = x;
             this.y = y;
             this.z = z;
+            this.nanoTime = 0;
             }
         public Quaternion(II2cDeviceClient.TimestampedData ts, double scale)
             {
@@ -569,23 +571,19 @@ public interface IBNO055IMU
             return Math.sqrt(w*w + x*x + y*y + z*z);
             }
     
-        public void normalize()
+        public Quaternion normalized()
             {
             double mag = this.magnitude();
-            w /= mag;
-            x /= mag;
-            y /= mag;
-            z /= mag;
+            return new Quaternion(
+                w / mag,
+                x / mag,
+                y / mag,
+                z / mag);
             }
         
         public Quaternion congugate()
             {
-            Quaternion result = new Quaternion();
-            result.w =  w;
-            result.x = -x;
-            result.y = -y;
-            result.z = -y;
-            return result;
+            return new Quaternion(w, -x, -y, -z);
             }
         
         }
@@ -647,11 +645,11 @@ public interface IBNO055IMU
         public Velocity integrate(Acceleration prev)
             {
             // We assume that the mean of the two accelerations has been acting during the entire interval
-            double sDuration = (this.nanoTime - prev.nanoTime) * 1e-9;
+            double sInterval = (this.nanoTime - prev.nanoTime) * 1e-9;
             return new Velocity(
-                    (this.accelX + prev.accelX) * 0.5 * sDuration,
-                    (this.accelY + prev.accelY) * 0.5 * sDuration,
-                    (this.accelZ + prev.accelZ) * 0.5 * sDuration,
+                    (this.accelX + prev.accelX) * 0.5 * sInterval,
+                    (this.accelY + prev.accelY) * 0.5 * sInterval,
+                    (this.accelZ + prev.accelZ) * 0.5 * sInterval,
                     this.nanoTime
                     );
             }
@@ -668,14 +666,14 @@ public interface IBNO055IMU
         //----------------------------------------------------------------------------------------------
 
         /** the velocity in the X direction */
-        public double velocX;
+        public final double velocX;
         /** the velocity in the Y direction */
-        public double velocY;
+        public final double velocY;
         /** the velocity in the Z direction */
-        public double velocZ;
+        public final double velocZ;
 
         /** the time on the System.nanoTime() clock at which the data was acquired */
-        public long nanoTime;
+        public final long nanoTime;
 
         //----------------------------------------------------------------------------------------------
         // Construction
@@ -705,12 +703,13 @@ public interface IBNO055IMU
         // Arithmetic
         //----------------------------------------------------------------------------------------------
 
-        public void accumulate(Velocity him)
+        public Velocity plus(Velocity him)
             {
-            this.velocX += him.velocX;
-            this.velocY += him.velocY;
-            this.velocZ += him.velocZ;
-            this.nanoTime = Math.max(this.nanoTime, him.nanoTime);
+            return new Velocity(
+                this.velocX + him.velocX,
+                this.velocY + him.velocY,
+                this.velocZ + him.velocZ,
+                Math.max(this.nanoTime, him.nanoTime));
             }
         
         //----------------------------------------------------------------------------------------------
@@ -725,11 +724,11 @@ public interface IBNO055IMU
         public Position integrate(Velocity prev)
             {
             // We assume that the mean of the two velocities has been acting during the entire interval
-            double sDuration = (this.nanoTime - prev.nanoTime) * 1e-9;
+            double sInterval = (this.nanoTime - prev.nanoTime) * 1e-9;
             return new Position(
-                    (this.velocX + prev.velocX) * 0.5 * sDuration,
-                    (this.velocY + prev.velocY) * 0.5 * sDuration,
-                    (this.velocZ + prev.velocZ) * 0.5 * sDuration,
+                    (this.velocX + prev.velocX) * 0.5 * sInterval,
+                    (this.velocY + prev.velocY) * 0.5 * sInterval,
+                    (this.velocZ + prev.velocZ) * 0.5 * sInterval,
                     this.nanoTime
             );
             }
@@ -746,14 +745,14 @@ public interface IBNO055IMU
         //----------------------------------------------------------------------------------------------
 
         /** the velocity in the X direction */
-        public double x;
+        public final double x;
         /** the velocity in the Y direction */
-        public double y;
+        public final double y;
         /** the velocity in the Z direction */
-        public double z;
+        public final double z;
 
         /** the time on the System.nanoTime() clock at which the data was acquired */
-        public long nanoTime;
+        public final long nanoTime;
 
         //----------------------------------------------------------------------------------------------
         // Construction
@@ -783,12 +782,13 @@ public interface IBNO055IMU
         // Arithmetic
         //----------------------------------------------------------------------------------------------
 
-        public void accumulate(Position him)
+        public Position plus(Position him)
             {
-            this.x += him.x;
-            this.y += him.y;
-            this.z += him.y;
-            this.nanoTime = Math.max(this.nanoTime, him.nanoTime);
+            return new Position(
+                this.x + him.x,
+                this.y + him.y,
+                this.z + him.y,
+                Math.max(this.nanoTime, him.nanoTime));
             }
         }
 
@@ -803,14 +803,14 @@ public interface IBNO055IMU
         //----------------------------------------------------------------------------------------------
     
         /** the rotational rate about the X axis */
-        public double rateX;
+        public final double rateX;
         /** the rotational rate about the Y axis */
-        public double rateY;
+        public final double rateY;
         /** the rotational rate about the Z axis */
-        public double rateZ;
+        public final double rateZ;
 
         /** the time on the System.nanoTime() clock at which the data was acquired */
-        public long nanoTime;
+        public final long nanoTime;
 
         //----------------------------------------------------------------------------------------------
         // Construction
@@ -849,15 +849,15 @@ public interface IBNO055IMU
         //----------------------------------------------------------------------------------------------
     
         /** the rotation about the Z axis */
-        public double heading;
+        public final double heading;
         /** the rotation about the Y axis */
-        public double roll;
+        public final double roll;
         /** the rotation about the X axix */
-        public double pitch;
+        public final double pitch;
 
         /** the time on the System.nanoTime() clock at which the data was acquired,
          *  as best as we can manage to determine that */
-        public long nanoTime;
+        public final long nanoTime;
 
         //----------------------------------------------------------------------------------------------
         // Construction
