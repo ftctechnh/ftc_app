@@ -41,7 +41,7 @@
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.MagneticFlux.html" title="class in org.swerverobotics.library.interfaces"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.I2CADDR.html" title="enum in org.swerverobotics.library.interfaces"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.PITCHMODE.html" title="enum in org.swerverobotics.library.interfaces"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
@@ -132,57 +132,69 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Field and Description</th>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code><a href="../../../../org/swerverobotics/library/interfaces/IAccelerationIntegrator.html" title="interface in org.swerverobotics.library.interfaces">IAccelerationIntegrator</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Parameters.html#accelerationIntegrationAlgorithm">accelerationIntegrationAlgorithm</a></span></code>
+<div class="block">the algorithm to use for integrating acceleration to produce velocity and position.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.ACCELUNIT.html" title="enum in org.swerverobotics.library.interfaces">IBNO055IMU.ACCELUNIT</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Parameters.html#accelunit">accelunit</a></span></code>
 <div class="block">units in which accelerations are measured.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.ANGLEUNIT.html" title="enum in org.swerverobotics.library.interfaces">IBNO055IMU.ANGLEUNIT</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Parameters.html#angleunit">angleunit</a></span></code>
 <div class="block">units in which angles and angular rates are measured.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>byte[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Parameters.html#calibrationData">calibrationData</a></span></code>
 <div class="block">calibration data with which the BNO055 should be initialized</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.I2CADDR.html" title="enum in org.swerverobotics.library.interfaces">IBNO055IMU.I2CADDR</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Parameters.html#i2cAddr8Bit">i2cAddr8Bit</a></span></code>
 <div class="block">the address at which the sensor resides on the I2C bus.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Parameters.html#loggingEnabled">loggingEnabled</a></span></code>
 <div class="block">debugging aid: enable logging for this device?</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Parameters.html#loggingTag">loggingTag</a></span></code>
 <div class="block">debugging aid: the logging tag to use when logging</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.SENSOR_MODE.html" title="enum in org.swerverobotics.library.interfaces">IBNO055IMU.SENSOR_MODE</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Parameters.html#mode">mode</a></span></code>
 <div class="block">the mode we wish to use the sensor in</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.PITCHMODE.html" title="enum in org.swerverobotics.library.interfaces">IBNO055IMU.PITCHMODE</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Parameters.html#pitchmode">pitchmode</a></span></code>
 <div class="block">directional convention for measureing pitch angles.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.TEMPUNIT.html" title="enum in org.swerverobotics.library.interfaces">IBNO055IMU.TEMPUNIT</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Parameters.html#temperatureUnit">temperatureUnit</a></span></code>
 <div class="block">units in which temperature are measured.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Parameters.html#threadPriorityBoost">threadPriorityBoost</a></span></code>
+<div class="block">the boost in thread priority to use for data acquisition.</div>
 </td>
 </tr>
 <tr class="rowColor">
@@ -245,10 +257,7 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>i2cAddr8Bit</h4>
 <pre>public&nbsp;<a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.I2CADDR.html" title="enum in org.swerverobotics.library.interfaces">IBNO055IMU.I2CADDR</a> i2cAddr8Bit</pre>
-<div class="block">the address at which the sensor resides on the I2C bus. If this value is 
- UNSPECIFIED, it is ignored; the I2C address in that case must be provided to 
- the I2cDevice object by some other mechanism, perhaps as part of the initialization
- of that object itself.</div>
+<div class="block">the address at which the sensor resides on the I2C bus.</div>
 </li>
 </ul>
 <a name="mode">
@@ -322,6 +331,29 @@ extends java.lang.Object</pre>
 <div class="block">calibration data with which the BNO055 should be initialized</div>
 </li>
 </ul>
+<a name="accelerationIntegrationAlgorithm">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>accelerationIntegrationAlgorithm</h4>
+<pre>public&nbsp;<a href="../../../../org/swerverobotics/library/interfaces/IAccelerationIntegrator.html" title="interface in org.swerverobotics.library.interfaces">IAccelerationIntegrator</a> accelerationIntegrationAlgorithm</pre>
+<div class="block">the algorithm to use for integrating acceleration to produce velocity and position.
+ If not specified, a simple but not especially effective internal algorithm will be used.</div>
+</li>
+</ul>
+<a name="threadPriorityBoost">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>threadPriorityBoost</h4>
+<pre>public&nbsp;int threadPriorityBoost</pre>
+<div class="block">the boost in thread priority to use for data acquisition. A small increase in the
+ thread priority can help reduce timestamping jitter and improve acceleration integration
+ at only a small detriment to other parts of the system.</div>
+</li>
+</ul>
 <a name="loggingEnabled">
 <!--   -->
 </a>
@@ -386,7 +418,7 @@ extends java.lang.Object</pre>
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.MagneticFlux.html" title="class in org.swerverobotics.library.interfaces"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.I2CADDR.html" title="enum in org.swerverobotics.library.interfaces"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.PITCHMODE.html" title="enum in org.swerverobotics.library.interfaces"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">

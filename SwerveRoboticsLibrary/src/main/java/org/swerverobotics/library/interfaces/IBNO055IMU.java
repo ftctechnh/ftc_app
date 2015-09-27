@@ -1,8 +1,14 @@
 package org.swerverobotics.library.interfaces;
 
+import com.qualcomm.robotcore.hardware.I2cDevice;
+
 /**
  * Interface API to the Adafruit 9-DOF Absolute Orientation IMU Fusion Breakout - BNO055 sensor.
- * 
+ * You can create an implementation of this interface for a given sensor using
+ * {@link org.swerverobotics.library.ClassFactory#createAdaFruitBNO055IMU(I2cDevice) ClassFactory.createAdaFruitBNO055IMU()}.
+ *
+ * @see IAccelerationIntegrator
+ * @see org.swerverobotics.library.ClassFactory#createAdaFruitBNO055IMU(I2cDevice)
  * @see <a href="http://www.adafruit.com/products/2472">http://www.adafruit.com/products/2472</a>
  * @see <a href="http://www.bosch-sensortec.com/en/homepage/products_3/9_axis_sensors_5/ecompass_2/bno055_3/bno055_4">http://www.bosch-sensortec.com/en/homepage/products_3/9_axis_sensors_5/ecompass_2/bno055_3/bno055_4</a>
  */

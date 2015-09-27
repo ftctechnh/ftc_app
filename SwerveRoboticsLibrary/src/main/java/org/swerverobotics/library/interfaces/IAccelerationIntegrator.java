@@ -3,6 +3,8 @@ package org.swerverobotics.library.interfaces;
 /**
  * {@link IAccelerationIntegrator} encapsulates an algorithm for integrating
  * acceleration information over time to produce velocity and position.
+ *
+ * @see IBNO055IMU
  */
 public interface IAccelerationIntegrator
     {

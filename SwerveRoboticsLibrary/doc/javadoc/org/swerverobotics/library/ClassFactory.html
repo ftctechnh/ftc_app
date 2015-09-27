@@ -149,33 +149,58 @@ extends java.lang.Object</pre>
 </td>
 </tr>
 <tr id="i2" class="altColor">
+<td class="colFirst"><code>static ColorSensor</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createHiTechnicColorSensor-com.qualcomm.robotcore.hardware.I2cController-int-">createHiTechnicColorSensor</a></span>(I2cController&nbsp;controller,
+                          int&nbsp;port)</code>
+<div class="block">Creates an ColorSensor object from an controller and port specification that represents a
+ <a href="http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NCO1038">HiTechnic
+ color sensor</a>.</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code>static ColorSensor</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createHiTechnicColorSensor-com.qualcomm.robotcore.hardware.I2cDevice-">createHiTechnicColorSensor</a></span>(I2cDevice&nbsp;i2cDevice)</code>
+<div class="block">Creates an ColorSensor object from an I2cDevice that represents a
+ <a href="http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NCO1038">HiTechnic
+ color sensor</a>.</div>
+</td>
+</tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code>static ColorSensor</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createHiTechnicColorSensor-org.swerverobotics.library.internal.II2cDevice-">createHiTechnicColorSensor</a></span>(II2cDevice&nbsp;ii2cDevice)</code>
+<div class="block">Creates an ColorSensor object from an II2cDevice that represents a
+ <a href="http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NCO1038">HiTechnic
+ color sensor</a>.</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>static II2cDevice</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createI2cDevice-com.qualcomm.robotcore.hardware.I2cController-int-">createI2cDevice</a></span>(I2cController&nbsp;i2cController,
                int&nbsp;port)</code>
 <div class="block">Creates an II2Device instance on a specific port on an I2cDeviceController</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>static II2cDevice</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createI2cDevice-com.qualcomm.robotcore.hardware.I2cDevice-">createI2cDevice</a></span>(I2cDevice&nbsp;i2cDevice)</code>
 <div class="block">Creates an II2cDevice interface around an I2cDevice.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createI2cDeviceClient-com.qualcomm.robotcore.hardware.I2cDevice-int-">createI2cDeviceClient</a></span>(I2cDevice&nbsp;i2cDevice,
                      int&nbsp;i2cAddr8Bit)</code>
 <div class="block">Create a new II2cDeviceClient on an I2cDevice instance.</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>static <a href="../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createI2cDeviceClient-org.swerverobotics.library.internal.II2cDevice-int-">createI2cDeviceClient</a></span>(II2cDevice&nbsp;i2cDevice,
                      int&nbsp;i2cAddr8Bit)</code>
 <div class="block">Create a new II2cDeviceClient on an II2cDevice instance.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createI2cDeviceClient-org.swerverobotics.library.internal.II2cDevice-int-boolean-org.swerverobotics.library.interfaces.IStopActionRegistrar-">createI2cDeviceClient</a></span>(II2cDevice&nbsp;i2cDevice,
                      int&nbsp;i2cAddr8Bit,
@@ -184,29 +209,11 @@ extends java.lang.Object</pre>
 <div class="block">Create a new II2cDeviceClient on an II2cDevice instance.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
-<td class="colFirst"><code>static ColorSensor</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createNxtColorSensor-com.qualcomm.robotcore.hardware.I2cController-int-">createNxtColorSensor</a></span>(I2cController&nbsp;controller,
-                    int&nbsp;port)</code>
-<div class="block">Creates an Nxt ColorSensor object from an I2cDevice.</div>
-</td>
-</tr>
-<tr id="i8" class="altColor">
-<td class="colFirst"><code>static ColorSensor</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createNxtColorSensor-com.qualcomm.robotcore.hardware.I2cDevice-">createNxtColorSensor</a></span>(I2cDevice&nbsp;i2cDevice)</code>
-<div class="block">Creates an Nxt ColorSensor object from an I2cDevice.</div>
-</td>
-</tr>
-<tr id="i9" class="rowColor">
-<td class="colFirst"><code>static ColorSensor</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createNxtColorSensor-org.swerverobotics.library.internal.II2cDevice-">createNxtColorSensor</a></span>(II2cDevice&nbsp;ii2cDevice)</code>
-<div class="block">Creates an Nxt ColorSensor object from an I2cDevice.</div>
-</td>
-</tr>
 <tr id="i10" class="altColor">
 <td class="colFirst"><code>static DcMotorController</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createNxtDcMotorController-com.qualcomm.robotcore.hardware.DcMotorController-">createNxtDcMotorController</a></span>(DcMotorController&nbsp;target)</code>
-<div class="block">NxtMotorControllerOnI2cDevice is an alternative implementation of a Legacy DC Motor controller.</div>
+<div class="block">Creates an alternate 'NxtMotorControllerOnI2cDevice' DCMotorController implementation for
+ a legacy HiTechnic / Nxt motor controller.</div>
 </td>
 </tr>
 </table>
@@ -238,24 +245,28 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>createNxtDcMotorController</h4>
 <pre>public static&nbsp;DcMotorController&nbsp;createNxtDcMotorController(DcMotorController&nbsp;target)</pre>
-<div class="block">NxtMotorControllerOnI2cDevice is an alternative implementation of a Legacy DC Motor controller.
- It is implemented on top of an <a href="../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces"><code>II2cDeviceClient</code></a> instance which completely handles
- all the complexities of read vs write mode switching and the like, allowing the logic of the
- controller itself to be extraordinarily simple.
+<div class="block">Creates an alternate 'NxtMotorControllerOnI2cDevice' DCMotorController implementation for
+ a legacy HiTechnic / Nxt motor controller. NxtMotorControllerOnI2cDevice is implemented
+ on top of an <a href="../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces"><code>II2cDeviceClient</code></a> instance which completely handles all the complexities
+ of read vs write mode switching and the like, allowing the logic of the controller itself
+ to be extraordinarily simple.
 
  <p>The key fact about NxtMotorControllerOnI2cDevice is that manual mode switching is
  entirely unnecessary. Just call the getPosition() or setPower() methods or what have you,
  and the mode switching will be taken care of.</p>
 
- <p>NxtMotorControllerOnI2cDevice not tied to SynchronousOpMode. It can also be used from
- LinearOpMode, or, indeed, any thread that can tolerate operations that can take tens of
+ <p>NxtMotorControllerOnI2cDevice not tied to SynchronousOpMode. It can also be used for example
+ from LinearOpMode, or, indeed, any thread that can tolerate operations that can take tens of
  milliseconds to run. In SynchronousOpMode, NxtMotorControllerOnI2cDevice is currently
- enabled by setting the <a href="../../../org/swerverobotics/library/SynchronousOpMode.html#useExperimentalThunking"><code>SynchronousOpMode.useExperimentalThunking</code></a> flag, though that
- will probably change. In other OpModes, you'll have to manually call this <a href="../../../org/swerverobotics/library/ClassFactory.html#createNxtDcMotorController-com.qualcomm.robotcore.hardware.DcMotorController-"><code>createNxtDcMotorControllerOnI2cDevice()</code></a>.</p>
+ enabled by setting the <a href="../../../org/swerverobotics/library/SynchronousOpMode.html#useExperimentalThunking"><code>useExperimentalThunking</code></a> flag,
+ though that will probably change. In other OpModes, you'll have to manually
+ call <a href="../../../org/swerverobotics/library/ClassFactory.html#createNxtDcMotorController-com.qualcomm.robotcore.hardware.DcMotorController-"><code>createNxtDcMotorControllerOnI2cDevice()</code></a> yourself.</p>
 
- <p>You should call <code>HardwareDevice.close()</code> when you want the controller to
+ <p>If you call this method to retrieve a NxtMotorControllerOnI2cDevice, you should
+ call <code>HardwareDevice.close()</code> when you want the controller to
  close down, likely from your stop() logic or the end of your runOpMode() method as the
- case may be.</p>
+ case may be. In SynchronousOpMode with the <a href="../../../org/swerverobotics/library/SynchronousOpMode.html#useExperimentalThunking"><code>useExperimentalThunking</code></a>
+ flag, closing the controller is automaticlly taken care of.</p>
 
  <p><a href="../../../org/swerverobotics/library/ClassFactory.html#createNxtDcMotorController-com.qualcomm.robotcore.hardware.DcMotorController-"><code>createNxtDcMotorControllerOnI2cDevice()</code></a> takes
  a ModernRoboticsNxtDcMotorController motor controller as might found in an OpMode's hardware map
@@ -319,15 +330,16 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a name="createNxtColorSensor-com.qualcomm.robotcore.hardware.I2cDevice-">
+<a name="createHiTechnicColorSensor-com.qualcomm.robotcore.hardware.I2cDevice-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>createNxtColorSensor</h4>
-<pre>public static&nbsp;ColorSensor&nbsp;createNxtColorSensor(I2cDevice&nbsp;i2cDevice)</pre>
-<div class="block">Creates an Nxt ColorSensor object from an I2cDevice. Said device must, of course,
- be connected to a Core Legacy Module</div>
+<h4>createHiTechnicColorSensor</h4>
+<pre>public static&nbsp;ColorSensor&nbsp;createHiTechnicColorSensor(I2cDevice&nbsp;i2cDevice)</pre>
+<div class="block">Creates an ColorSensor object from an I2cDevice that represents a
+ <a href="http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NCO1038">HiTechnic
+ color sensor</a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>i2cDevice</code> - the color sensor device</dd>
@@ -336,15 +348,16 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a name="createNxtColorSensor-org.swerverobotics.library.internal.II2cDevice-">
+<a name="createHiTechnicColorSensor-org.swerverobotics.library.internal.II2cDevice-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>createNxtColorSensor</h4>
-<pre>public static&nbsp;ColorSensor&nbsp;createNxtColorSensor(II2cDevice&nbsp;ii2cDevice)</pre>
-<div class="block">Creates an Nxt ColorSensor object from an I2cDevice. Said device must, of course,
- be connected to a Core Legacy Module.</div>
+<h4>createHiTechnicColorSensor</h4>
+<pre>public static&nbsp;ColorSensor&nbsp;createHiTechnicColorSensor(II2cDevice&nbsp;ii2cDevice)</pre>
+<div class="block">Creates an ColorSensor object from an II2cDevice that represents a
+ <a href="http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NCO1038">HiTechnic
+ color sensor</a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>ii2cDevice</code> - the color sensor device</dd>
@@ -353,16 +366,17 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a name="createNxtColorSensor-com.qualcomm.robotcore.hardware.I2cController-int-">
+<a name="createHiTechnicColorSensor-com.qualcomm.robotcore.hardware.I2cController-int-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>createNxtColorSensor</h4>
-<pre>public static&nbsp;ColorSensor&nbsp;createNxtColorSensor(I2cController&nbsp;controller,
-                                               int&nbsp;port)</pre>
-<div class="block">Creates an Nxt ColorSensor object from an I2cDevice. Said device must, of course,
- be connected to a Core Legacy Module.</div>
+<h4>createHiTechnicColorSensor</h4>
+<pre>public static&nbsp;ColorSensor&nbsp;createHiTechnicColorSensor(I2cController&nbsp;controller,
+                                                     int&nbsp;port)</pre>
+<div class="block">Creates an ColorSensor object from an controller and port specification that represents a
+ <a href="http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NCO1038">HiTechnic
+ color sensor</a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>controller</code> - the Core Device Legacy Module controller to which the device is attached</dd>
