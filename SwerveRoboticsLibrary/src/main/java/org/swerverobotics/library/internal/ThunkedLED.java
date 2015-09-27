@@ -1,7 +1,7 @@
 package org.swerverobotics.library.internal;
 
 
-import com.qualcomm.robotcore.hardware.LED;
+import com.qualcomm.robotcore.hardware.*;
 
 /**
  * Yet another in our series
@@ -22,8 +22,7 @@ public class ThunkedLED extends LED implements IThunkWrapper<LED>
 
     protected ThunkedLED(LED target)
         {
-        // Keep our base class happy; no one will ever use it as we've override all the methods
-        super(null,-1);
+        super(controllerOf(target), portOf(target));
 
         if (target == null) throw new NullPointerException("null " + this.getClass().getSimpleName() + " target");
         this.target = target;
@@ -32,6 +31,15 @@ public class ThunkedLED extends LED implements IThunkWrapper<LED>
     static public ThunkedLED create(LED target)
         {
         return target instanceof ThunkedLED ? (ThunkedLED)target : new ThunkedLED(target);
+        }
+
+    private static DigitalChannelController controllerOf(LED target)
+        {
+        return Util.<DigitalChannelController>getPrivateObjectField(target, 0);
+        }
+    private static int portOf(LED target)
+        {
+        return Util.getPrivateIntField(target, 1);
         }
 
     //----------------------------------------------------------------------------------------------

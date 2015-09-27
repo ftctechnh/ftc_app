@@ -1,6 +1,7 @@
 package org.swerverobotics.library.internal;
 
 import android.os.SystemClock;
+import android.util.Log;
 
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -19,8 +20,6 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
     //------------------------------------------------------------------------------------------
     // State
     //------------------------------------------------------------------------------------------
-
-    public static final String     LOGGING_TAG = "AdaFruitIMU";
 
     private II2cDeviceClient       deviceClient;
     private Parameters             parameters;
@@ -514,12 +513,15 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
             // Don't let inappropriate exceptions sneak out
             try
                 {
+                final long nano0 = System.nanoTime();
+
                 // Loop until we're asked to stop
                 while (!starter.isStopRequested())
                     {
                     // Read the latest available acceleration
                     final Acceleration accelNext = AdaFruitBNO055IMU.this.getLinearAcceleration();
-                    
+                    log_v("a: %f %f %f %f", accelNext.accelX, accelNext.accelY, accelNext.accelZ, (accelNext.nanoTime - nano0) * 1e-9);
+
                     // Update our state variables based thereon
                     synchronized (dataLock)
                         {
@@ -558,9 +560,66 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
             }
         }
 
+    @Override public synchronized byte read8(final REGISTER reg)
+        {
+        return this.deviceClient.executeFunctionWhileLocked(new IFunc<Byte>()
+            {
+            @Override public Byte value()
+                {
+                ensureReadWindow(new II2cDeviceClient.ReadWindow(reg.bVal, 1, readMode));
+                return deviceClient.read8(reg.bVal);
+                }
+            });
+        }
+
+    @Override public synchronized byte[] read(final REGISTER reg, final int cb)
+        {
+        return this.deviceClient.executeFunctionWhileLocked(new IFunc<byte[]>()
+            {
+            @Override public byte[] value()
+                {
+                ensureReadWindow(new II2cDeviceClient.ReadWindow(reg.bVal, cb, readMode));
+                return deviceClient.read(reg.bVal, cb);
+                }
+            });
+        }
+
+    @Override public void write8(REGISTER reg, int data)
+        {
+        this.deviceClient.write8(reg.bVal, data);
+        }
+    @Override public void write(REGISTER reg, byte[] data)
+        {
+        this.deviceClient.write(reg.bVal, data);
+        }
+
+
     //------------------------------------------------------------------------------------------
     // Internal utility
     //------------------------------------------------------------------------------------------
+    
+    private String getLoggingTag()
+        {
+        return parameters.loggingTag + ":"; // add suffix so we can filter out our I2C logging if we wish
+        }
+
+    private void log_v(String format, Object... args)
+        {
+        if (this.parameters.loggingEnabled)
+            {
+            String message = String.format(format, args);
+            Log.v(getLoggingTag(), message);
+            }
+        }
+
+    private void log_d(String format, Object... args)
+        {
+        if (this.parameters.loggingEnabled)
+            {
+            String message = String.format(format, args);
+            Log.d(getLoggingTag(), message);
+            }
+        }
 
     /**
      * One of two primary register windows we use for reading from the BNO055.
@@ -651,39 +710,6 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
             }
         }
 
-    public synchronized byte read8(final REGISTER reg)
-        {
-        return this.deviceClient.executeFunctionWhileLocked(new IFunc<Byte>()
-            {
-            @Override public Byte value()
-                {
-                ensureReadWindow(new II2cDeviceClient.ReadWindow(reg.bVal, 1, readMode));
-                return deviceClient.read8(reg.bVal);
-                }
-            });
-        }
-
-    public synchronized byte[] read(final REGISTER reg, final int cb)
-        {
-        return this.deviceClient.executeFunctionWhileLocked(new IFunc<byte[]>()
-            {
-            @Override public byte[] value()
-                {
-                ensureReadWindow(new II2cDeviceClient.ReadWindow(reg.bVal, cb, readMode));
-                return deviceClient.read(reg.bVal, cb);
-                }
-            });
-        }
-
-    public void write8(REGISTER reg, int data)
-        {
-        this.deviceClient.write8(reg.bVal, data);
-        }
-    public void write(REGISTER reg, byte[] data)
-        {
-        this.deviceClient.write(reg.bVal, data);
-        }
-    
     private void enterConfigModeFor(IAction action)
         {
         SENSOR_MODE modePrev = this.currentMode;

@@ -485,7 +485,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
             {
             synchronized (this.callbackLock)
                 {
-                this.loggingTag = loggingTag;
+                this.loggingTag = loggingTag + "I2C";
                 }
             }
         }
