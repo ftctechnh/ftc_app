@@ -35,15 +35,15 @@ public class MoveStick extends OpMode {
     public void loop() {
 
         // Tank Mode movement:
-           float M1 = gamepad1.right_stick_y;
-           float M2 = gamepad1.left_stick_y;
+        //   float M1 = gamepad1.right_stick_y;
+        //   float M2 = gamepad1.left_stick_y;
 
         // Direction and throttle movement;
         // Copy from K9TeleOp
-        //float throttle = -gamepad1.left_stick_y;
-        //float direction = gamepad1.left_stick_x;
-        //float M1 = throttle - direction;
-        //float M2 = throttle + direction;
+        float throttle = -gamepad1.left_stick_y;
+        float direction = -gamepad1.left_stick_x;
+        float M1 = throttle - direction;
+        float M2 = throttle + direction;
 
         M1 = Range.clip(M1, -1, 1);
         M2 = Range.clip(M2, -1, 1);

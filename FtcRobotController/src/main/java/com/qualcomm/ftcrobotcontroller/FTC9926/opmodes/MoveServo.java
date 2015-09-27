@@ -52,7 +52,7 @@ public class MoveServo extends OpMode {
         }
 
         SM1_Position = Range.clip(SM1_Position, SM1_Min, SM1_Max);
-        SM2_Position = Range.clip(SM2_Position,0,1);
+        SM2_Position = Range.clip(gamepad1.right_trigger,0,1);
 
         Servo1.setPosition(SM1_Position);
         Servo2.setPosition(SM2_Position);
