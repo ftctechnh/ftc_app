@@ -23,6 +23,11 @@ import org.swerverobotics.library.examples.*;
  * create your own sibling modules, you'll have to do that for yourself. We hope in the future
  * to obviate the need for this step.</p>
  *
+ * <p>UPDATE: at the moment, this is slightly broken, in that you cannot here reference
+ * the OpModes in the FtcRobotController module written by FTC HQ. Until that is fixed (we're
+ * working on it), if you want to use any of those OpModes you'll have to go back to the old
+ * way of modifying FtcOpModeRegister.register() directly. We apologize for the incovenience.</p>
+ *
  * @see TeleOp
  * @see Autonomous
  * @see OpModeRegistrar
@@ -44,5 +49,7 @@ public class MyOpModeRegistrar
 
         manager.register(SynchTeleOp.class);
         manager.register(SynchTelemetryOp.class);
+        manager.register(SynchIMUDemo.class);
+        // manager.register("HQ NxtTeleoP", com.qualcomm.ftcrobotcontroller.opmodes.NxtTeleOp); // need to make this work!
         }
     }
