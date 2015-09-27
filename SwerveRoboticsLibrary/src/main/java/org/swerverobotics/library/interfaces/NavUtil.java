@@ -5,7 +5,7 @@ package org.swerverobotics.library.interfaces;
  * objects related to navigation. It is typically most convenient to import these functions
  * statically using:
  *
- * <pre></pre>import static org.swerverobotics.library.interfaces.NavUtil.*;</pre>
+ * <pre>import static org.swerverobotics.library.interfaces.NavUtil.*;</pre>
  */
 public class NavUtil
     {
@@ -65,5 +65,10 @@ public class NavUtil
         Acceleration meanAcceleration = scale(plus(cur,prev), 0.5);
         return integrate(meanAcceleration, duration);
         }
-    
+
+    //----------------------------------------------------------------------------------------------
+    // Construction
+    //----------------------------------------------------------------------------------------------
+
+    private NavUtil() { }
     }
