@@ -31,10 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
-import com.qualcomm.ftcrobotcontroller.FTC9926.opmodes.MoveForward;
-import com.qualcomm.ftcrobotcontroller.FTC9926.opmodes.MoveServo;
-import com.qualcomm.ftcrobotcontroller.FTC9926.opmodes.MoveStick;
-import com.qualcomm.ftcrobotcontroller.FTC9926.opmodes.MoveTank;
+import com.qualcomm.ftcrobotcontroller.FTC9926.opmodes.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 
@@ -63,6 +60,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("Servo", MoveServo.class);
     manager.register("Stick", MoveStick.class);
     manager.register("Tank", MoveTank.class);
+    manager.register("Touch", TouchOp.class);
 
     /*
      * The following op modes are example op modes provided by QualComm.
