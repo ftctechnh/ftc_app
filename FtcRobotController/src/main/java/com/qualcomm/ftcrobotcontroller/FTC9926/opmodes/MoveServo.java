@@ -43,15 +43,7 @@ public class MoveServo extends OpMode {
     @Override
     public void loop() {
 
-        // Update the servos based on the press of the controller buttons.
-        if (gamepad1.a) {
-            SM1_Position += SM1_Interval;
-        }
-        if (gamepad1.b) {
-            SM1_Position -= SM1_Interval;
-        }
-
-        SM1_Position = Range.clip(SM1_Position, SM1_Min, SM1_Max);
+        SM1_Position = Range.clip(gamepad1.left_trigger,0,1);
         SM2_Position = Range.clip(gamepad1.right_trigger,0,1);
 
         Servo1.setPosition(SM1_Position);
