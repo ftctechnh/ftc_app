@@ -25,7 +25,6 @@ public final class I2cDeviceClient implements II2cDeviceClient
     public final II2cDevice     i2cDevice;                  // the device we are talking to
 
     private final Callback      callback;                   // the callback object on which we actually receive callbacks
-    private       Thread        callbackThread;             // the thread on which we observe our callbacks to be made
     private       boolean       loggingEnabled;             // whether we are to log to Logcat or not
     private       String        loggingTag;                 // what we annotate our logging with
     private final ElapsedTime   timeSinceLastHeartbeat;     // keeps track of our need for doing heartbeats
@@ -40,6 +39,9 @@ public final class I2cDeviceClient implements II2cDeviceClient
     private final Object        concurrentClientLock = new Object(); // the lock we use to serialize against concurrent clients of us. Can't acquire this AFTER the callback lock.
     private final Object        callbackLock         = new Object(); // the lock we use to synchronize with our callback.
 
+    private volatile Thread              callbackThread;             // the thread on which we observe our callbacks to be made
+    private volatile int                 callbackThreadOriginalPriority; // original priority of the callback thread
+    private volatile int                 callbackThreadPriorityBoost;    // the boost we give to it
     private volatile ReadWindow          readWindow;                 // the set of registers to look at when we are in read mode. May be null, indicating no read needed
     private volatile ReadWindow          readWindowActuallyRead;     // the read window that was really read. readWindow will be a (possibly non-proper) subset of this
     private volatile ReadWindow          readWindowSentToController; // the read window we last issued to the controller module. May disappear before read() returns
@@ -125,6 +127,8 @@ public final class I2cDeviceClient implements II2cDeviceClient
         this.i2cDevice              = i2cDevice;
         this.callback               = new Callback();
         this.callbackThread         = null;
+        this.callbackThreadOriginalPriority = 0;    // not known
+        this.callbackThreadPriorityBoost = 0;       // no boost
         this.hardwareCycleCount     = 0;
         this.loggingEnabled         = false;
         this.loggingTag             = String.format("I2cDeviceClient(%s)", i2cDevice.getDeviceName());;
@@ -534,6 +538,28 @@ public final class I2cDeviceClient implements II2cDeviceClient
             }
         }
 
+    @Override public void setThreadPriorityBoost(int priorityBoost)
+        {
+        synchronized (this.concurrentClientLock)
+            {
+            synchronized (this.callbackLock)
+                {
+                this.callbackThreadPriorityBoost = priorityBoost;
+                }
+            }
+        }
+
+    @Override public int getThreadPriorityBoost()
+        {
+        synchronized (this.concurrentClientLock)
+            {
+            synchronized (this.callbackLock)
+                {
+                return this.callbackThreadPriorityBoost;
+                }
+            }
+        }
+
     private void log(int verbosity, String message)
         {
         switch (verbosity)
@@ -676,13 +702,26 @@ public final class I2cDeviceClient implements II2cDeviceClient
                     {
                     // Capture the current callback thread if we haven't already
                     if (callbackThread == null)
+                        {
                         callbackThread = Thread.currentThread();
+                        callbackThreadOriginalPriority = callbackThread.getPriority();
+                        }
                     else
                         assertTrue(!BuildConfig.DEBUG || callbackThread.getId() == Thread.currentThread().getId());
 
                     // Set the thread name to make the system more debuggable
                     if (0 == hardwareCycleCount)
                         Thread.currentThread().setName(String.format("RWLoop(%s)", i2cDevice.getDeviceName()));
+
+                    // Adjust the target thread priority. Note that we only ever adjust it upwards,
+                    // not downwards, because in reality the thread is shared by other I2C objects
+                    // on the same controller and we don't want to fight with their understanding
+                    // of what the priority should be.
+                    int targetPriority = callbackThreadOriginalPriority + callbackThreadPriorityBoost;
+                    if (callbackThread.getPriority() < targetPriority)
+                        {
+                        callbackThread.setPriority(targetPriority);
+                        }
 
                     // Update cycle statistics
                     hardwareCycleCount++;

@@ -53,6 +53,11 @@ public interface IBNO055IMU
         /** the algorithm to use for integrating acceleration to produce velocity and position.
          * If not specified, a simple but not especially effective internal algorithm will be used. */
         public IAccelerationIntegrator accelerationIntegrationAlgorithm = null;
+
+        /** the boost in thread priority to use for data acquisition. A small increase in the
+         * thread priority can help reduce timestamping jitter and improve acceleration integration
+         * at only a small detriment to other parts of the system. */
+        public int              threadPriorityBoost = 1;
         
         /** debugging aid: enable logging for this device? */
         public boolean          loggingEnabled      = false;
