@@ -58,7 +58,6 @@ public class NullOp extends OpMode {
   }
 
   /*
-   * This method will be called repeatedly in a loop
    * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
    */
   @Override
