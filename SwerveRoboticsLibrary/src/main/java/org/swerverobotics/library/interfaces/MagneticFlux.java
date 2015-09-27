@@ -20,7 +20,8 @@ public class MagneticFlux
     /** the flux in the Z direction */
     public final double z;
 
-    /** the time on the System.nanoTime() clock at which the data was acquired */
+    /** the time on the System.nanoTime() clock at which the data was acquired. If no
+     * timestamp is associated with this particular set of data, this value is zero */
     public long nanoTime;
 
     //----------------------------------------------------------------------------------------------

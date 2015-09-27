@@ -6,7 +6,7 @@ import java.nio.ByteOrder;
 /**
  * Acceleration represents a directed acceleration in three-space.
  * Units are as specified in sensor initialization. The time at which the data was
- * acquired is provide so as to facilitate integration of accelerations.
+ * acquired is provided so as to facilitate integration of accelerations.
  */
 public class Acceleration
     {
@@ -21,7 +21,8 @@ public class Acceleration
     /** the acceleration in the Z direction */
     public double accelZ;
 
-    /** the time on the System.nanoTime() clock at which the data was acquired */
+    /** the time on the System.nanoTime() clock at which the data was acquired. If no
+     * timestamp is associated with this particular set of data, this value is zero */
     public long nanoTime;
 
     //----------------------------------------------------------------------------------------------
@@ -48,24 +49,4 @@ public class Acceleration
         this.nanoTime = ts.nanoTime;
         }
 
-    //----------------------------------------------------------------------------------------------
-    // Integration
-    //----------------------------------------------------------------------------------------------
-
-    /**
-     * Integrate between two accelerations to determine a change in velocity
-     * @param prev   the previously measured acceleration
-     * @return       the change in velocity between the previous acceleration and the receiver
-     */
-    public Velocity integrate(Acceleration prev)
-        {
-        // We assume that the mean of the two accelerations has been acting during the entire interval
-        double sInterval = (this.nanoTime - prev.nanoTime) * 1e-9;
-        return new Velocity(
-                (this.accelX + prev.accelX) * 0.5 * sInterval,
-                (this.accelY + prev.accelY) * 0.5 * sInterval,
-                (this.accelZ + prev.accelZ) * 0.5 * sInterval,
-                this.nanoTime
-                );
-        }
     }

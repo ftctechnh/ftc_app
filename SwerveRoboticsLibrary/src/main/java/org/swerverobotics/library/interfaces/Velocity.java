@@ -20,7 +20,8 @@ public class Velocity
     /** the velocity in the Z direction */
     public final double velocZ;
 
-    /** the time on the System.nanoTime() clock at which the data was acquired */
+    /** the time on the System.nanoTime() clock at which the data was acquired. If no
+     * timestamp is associated with this particular set of data, this value is zero */
     public final long nanoTime;
 
     //----------------------------------------------------------------------------------------------
@@ -47,37 +48,4 @@ public class Velocity
         this.nanoTime = ts.nanoTime;
         }
 
-    //----------------------------------------------------------------------------------------------
-    // Arithmetic
-    //----------------------------------------------------------------------------------------------
-
-    public Velocity plus(Velocity him)
-        {
-        return new Velocity(
-            this.velocX + him.velocX,
-            this.velocY + him.velocY,
-            this.velocZ + him.velocZ,
-            Math.max(this.nanoTime, him.nanoTime));
-        }
-
-    //----------------------------------------------------------------------------------------------
-    // Integration
-    //----------------------------------------------------------------------------------------------
-
-    /**
-     * Integrate between two velocities to determine a change in position
-     * @param prev   the previously measured velocity
-     * @return       the change in position between the previous position and the receiver
-     */
-    public Position integrate(Velocity prev)
-        {
-        // We assume that the mean of the two velocities has been acting during the entire interval
-        double sInterval = (this.nanoTime - prev.nanoTime) * 1e-9;
-        return new Position(
-                (this.velocX + prev.velocX) * 0.5 * sInterval,
-                (this.velocY + prev.velocY) * 0.5 * sInterval,
-                (this.velocZ + prev.velocZ) * 0.5 * sInterval,
-                this.nanoTime
-        );
-        }
     }

@@ -28,10 +28,7 @@ public interface IBNO055IMU
      */
     class Parameters
         {
-        /** the address at which the sensor resides on the I2C bus. If this value is 
-         * UNSPECIFIED, it is ignored; the I2C address in that case must be provided to 
-         * the I2cDevice object by some other mechanism, perhaps as part of the initialization
-         * of that object itself. */
+        /** the address at which the sensor resides on the I2C bus.  */
         public I2CADDR          i2cAddr8Bit         = I2CADDR.DEFAULT;
         
         /** the mode we wish to use the sensor in */
@@ -52,6 +49,10 @@ public interface IBNO055IMU
 
         /** calibration data with which the BNO055 should be initialized */
         public byte[]           calibrationData     = null;
+
+        /** the algorithm to use for integrating acceleration to produce velocity and position.
+         * If not specified, a simple but not especially effective internal algorithm will be used. */
+        public IAccelerationIntegrator accelerationIntegrationAlgorithm = null;
         
         /** debugging aid: enable logging for this device? */
         public boolean          loggingEnabled      = false;
@@ -88,7 +89,7 @@ public interface IBNO055IMU
      * a component due to the movement of the sensor and a component due to the force of gravity.
      * @return  the overall acceleration vector experienced by the sensor
      */
-    Acceleration        getAcceleration();
+    Acceleration        getOverallAcceleration();
 
     /**
      * Returns the acceleration experienced by the sensor due to the movement of the sensor. 
@@ -128,51 +129,47 @@ public interface IBNO055IMU
 
     /**
      * Returns the current position of the sensor as calculated by doubly integrating the observed 
-     * sensor accelerations
+     * sensor accelerations.
      * @return  the current position of the sensor.
-     * @see #setPositionAndVelocity(Position, Velocity) 
      */
     Position    getPosition();
 
     /**
-     * Returns the curren velocity of the sensor as calculated by integrating the observed 
-     * sensor accelerations
+     * Returns the current velocity of the sensor as calculated by integrating the observed
+     * sensor accelerations.
      * @return  the current velocity of the sensor
-     * @see #setPositionAndVelocity(Position, Velocity) 
      */
     Velocity    getVelocity();
 
     /**
-     * Atomically sets the current position and / or velocity of the sensor. It is explicitly
-     * OK to call this method while the acceleration integration loop is executing.
-     * @param position  If non-null, the current sensor position is set to this value. If 
-     *                  null, the current sensor position is unchanged.
-     * @param velocity  If non-null, the current sensor velocity is set to this value. If
-     *                  null, the current sensor velocity is unchanged.
-     * @see #startAccelerationIntegration(Position, Velocity)
-     * @see #getPosition() 
-     * @see #getVelocity() 
+     * Returns the last observed acceleration of the sensor. Note that this does not communicate
+     * with the sensor, but rather returns the most recent value reported to the acceleration
+     * integration algorithm.
+     * @return  the last observed acceleration of the sensor
      */
-    void setPositionAndVelocity(Position position, Velocity velocity);
+    Acceleration getAcceleration();
 
     /**
      * Start (or re-start) a thread that continuously at intervals polls the current linear acceleration 
      * of the sensor and integrates it to provide velocity and position information. A default polling
      * interval of 100ms is used.
-     * @param initalPosition    as in {@link #setPositionAndVelocity(Position, Velocity)}
-     * @param initialVelocity   as in {@link #setPositionAndVelocity(Position, Velocity)}
+     * @param initalPosition   If non-null, the current sensor position is set to this value. If
+     *                         null, the current sensor position is unchanged.
+     * @param initialVelocity  If non-null, the current sensor velocity is set to this value. If
+     *                         null, the current sensor velocity is unchanged.
      * @see #startAccelerationIntegration(Position, Velocity) 
-     * @see #setPositionAndVelocity(Position, Velocity) 
-     * @see #getLinearAcceleration() 
+     * @see #getLinearAcceleration()
      */
     void startAccelerationIntegration(Position initalPosition, Velocity initialVelocity);
 
     /**
      * As in {@link #startAccelerationIntegration(Position, Velocity)}, but provides control over
      * the frequency which which the acceleration is polled.
-     * @param initalPosition    as in {@link #startAccelerationIntegration(Position, Velocity)}
-     * @param initialVelocity   as in {@link #startAccelerationIntegration(Position, Velocity)}
-     * @param msPollInterval    the interval, in milliseconds, between successive calls to {@link #getLinearAcceleration()}
+     * @param initalPosition   If non-null, the current sensor position is set to this value. If
+     *                         null, the current sensor position is unchanged.
+     * @param initialVelocity  If non-null, the current sensor velocity is set to this value. If
+     *                         null, the current sensor velocity is unchanged.
+     * @param msPollInterval   the interval to use, in milliseconds, between successive calls to {@link #getLinearAcceleration()}
      * @see #startAccelerationIntegration(Position, Velocity, int)
      */
     void startAccelerationIntegration(Position initalPosition, Velocity initialVelocity, int msPollInterval);
