@@ -13,6 +13,7 @@ import org.swerverobotics.library.interfaces.TeleOp;
  * and that the led is named "led" in your robot configuration file.
  */
 @TeleOp(name="LED demo", group="Swerve Examples")
+@Disabled
 public class SynchLEDDemo extends SynchronousOpMode {
 
     LED led;
