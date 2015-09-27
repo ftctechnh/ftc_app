@@ -23,7 +23,8 @@ public final class ClassFactory
      * a legacy HiTechnic / Nxt motor controller. NxtMotorControllerOnI2cDevice is implemented
      * on top of an {@link II2cDeviceClient} instance which completely handles all the complexities
      * of read vs write mode switching and the like, allowing the logic of the controller itself
-     * to be extraordinarily simple.
+     * to be extraordinarily simple. NxtMotorControllerOnI2cDevice is currently experimental,
+     * alpha-quality code.
      *
      * <p>The key fact about NxtMotorControllerOnI2cDevice is that manual mode switching is
      * entirely unnecessary. Just call the getPosition() or setPower() methods or what have you,
