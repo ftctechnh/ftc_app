@@ -25,7 +25,7 @@ public class armRobot extends OpMode {
     Servo claw;
 
 
-    public K9TeleOp() {
+    public armRobot() {
 
     }
     @Override
