@@ -13,7 +13,7 @@ Notable features of the Swerve Robotics FTC Library include:
     with which teams have been familiar with from previous seasons in RobotC, and which is more amenable
     to teaching to beginning programmers than the event-driven / loop() callback programming
     model native to the robot controller runtime. SynchronousOpMode is similar to [LinearOpMode](https://cdn.rawgit.com/ftctechnh/ftc_app/master/doc/javadoc/com/qualcomm/robotcore/eventloop/opmode/LinearOpMode.html)
-    but contains several enhancements and a few fixes. Most notable for those using the legacy
+    but contains several enhancements, improved robustness, and a few fixes. Most notable for those using the legacy
     NXT/HiTechnic motor controllers is the automatic handling of the tedious manual mode switching, multi-loop-cycle
     delay management, and loop-cycle operation compatibility rules which are otherwise necessary when
     when switching between reading and writing operations (getPosition() vs setPower(), for example)
@@ -44,7 +44,9 @@ Notable features of the Swerve Robotics FTC Library include:
     The class builds on the latter to provide linear velocity and position measurements using integration
     in software. That said, the built-in accelerometer integration algorithm is quite naive. For a real
     robot, you'll want to do some investigation and reading and provide a better one, which you can
-    specify in the initialization parameters for the IMU.
+    specify in the initialization parameters for the IMU. Also, while the out-of-box sensor works
+    remarkably well, Bosch [describes](https://github.com/SwerveRobotics/ftc_app/raw/master/SwerveRoboticsLibrary/doc/reference/BST_BNO055_DS000_13.pdf)
+    a one-time calibration process (see Section 3.11) that will make it even better.
 *   An **alternate OpMode registration mechanism** (the old FtcOpModeRegister.register() still works too)
     that allows you to register your own OpModes simply by decorating them with @TeleOp or @Annotation annotations.
     This helps promote clean living and easier integration of library updates over time by avoiding

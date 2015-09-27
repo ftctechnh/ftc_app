@@ -70,13 +70,12 @@ public final class ClassFactory
     //----------------------------------------------------------------------------------------------
 
     /**
-     * Instantiates an AdaFruit BNO055 sensor which resides at the indicated I2cDevice using
+     * Instantiates a driver object for a  AdaFruit BNO055 sensor which resides at the indicated I2cDevice using
      * default values for configuration parameters.
      * 
      * @param i2cDevice     the robot controller runtime object representing the sensor
-     * @return              the interface to the instantiated sensor object
      * @return              the interface to the instantiated sensor object. This object also
-     *                      supports the II2cDeviceClientUser interface; this is often useful
+     *                      supports the II2cDeviceClientUser interface, which can be useful
      *                      for debugging.
      * @see #createAdaFruitBNO055IMU(I2cDevice, IBNO055IMU.Parameters) 
      */
@@ -86,13 +85,33 @@ public final class ClassFactory
         }
 
     /**
-     * Instantiates an AdaFruit BNO055 sensor which resides at the indicated I2cDevice using
+     * Instantiates a driver object for an AdaFruit BNO055 sensor which resides at the indicated I2cDevice using
      * the provided configuration parameters.
+     *
+     * <p>Features of this sensor include a gyro that does rate integration in hardware to
+     * provide robust and accurate angular position indications, and a separation of the output of the
+     * accelerometer into gravity and linear-motion-induced components.</p>
+     *
+     * <p>The driver builds on the linear-acceleration information to provide linear velocity
+     * and position measurements using integration in software. That said, the built-in accelerometer
+     * integration algorithm is quite naive. For a real robot, you'll want to do some investigation
+     * and reading and make a better one, whose use you can indicate using
+     * {@link org.swerverobotics.library.interfaces.IBNO055IMU.Parameters#accelerationIntegrationAlgorithm parameters.accelerationIntegrationAlgorithm}.</p>
+     *
+     * <p>Also, while the out-of-box sensor BNO055 works remarkably well, Bosch
+     * <a href="https://github.com/SwerveRobotics/ftc_app/raw/master/SwerveRoboticsLibrary/doc/reference/BST_BNO055_DS000_13.pdf">describes</a>
+     * a one-time calibration process that will make it even better (see Section 3.11).
+     * Perform this calibration process in the lab. Once you've got the sensor fully
+     * calibrated (or at least the gyro and the accelerometer), extract the configuration
+     * state with {@link IBNO055IMU#readCalibrationData()}. We suggest that you then incorporate
+     * the results as constants in your code, and provide them during OpMode startup in
+     * {@link org.swerverobotics.library.interfaces.IBNO055IMU.Parameters#calibrationData parameters.calibrationData}
+     * where they will automatically be applied.</p>
      * 
      * @param i2cDevice     the robot controller runtime object representing the sensor
      * @param parameters    the parameters with which the sensor should be initialized
      * @return              the interface to the instantiated sensor object. This object also
-     *                      supports the II2cDeviceClientUser interface; this is often useful
+     *                      supports the II2cDeviceClientUser interface, which can be useful
      *                      for debugging.
      * @see #createAdaFruitBNO055IMU(I2cDevice) 
      */
@@ -102,7 +121,7 @@ public final class ClassFactory
         }
 
     /**
-     * Creates an ColorSensor object from an I2cDevice that represents a
+     * Creates a driver ColorSensor object for an I2cDevice that represents a
      * <a href="http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NCO1038">HiTechnic
      * color sensor</a>.
      *
@@ -115,7 +134,7 @@ public final class ClassFactory
         }
 
     /**
-     * Creates an ColorSensor object from an II2cDevice that represents a
+     * Creates a driver ColorSensor object for an I2cDevice that represents a
      * <a href="http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NCO1038">HiTechnic
      * color sensor</a>.
      *
@@ -128,7 +147,7 @@ public final class ClassFactory
         }
 
     /**
-     * Creates an ColorSensor object from an controller and port specification that represents a
+     * Creates a driver ColorSensor object from an controller and port specification that represents a
      * <a href="http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NCO1038">HiTechnic
      * color sensor</a>.
      *
