@@ -26,6 +26,7 @@ public class SynchIMUDemo extends SynchronousOpMode
     // to read only once per update, as its acquisition is expensive. The remainder, though,
     // could probably be read once per item, at only a small loss in display accuracy.
     IBNO055IMU.EulerAngles  angles;
+    IBNO055IMU.Position     position;
     int                     loopCycles;
     int                     i2cCycles;
     double                  ms;
@@ -40,12 +41,13 @@ public class SynchIMUDemo extends SynchronousOpMode
         // module and named "imu". Retrieve that raw I2cDevice and then wrap it in an object that
         // semantically understands this particular kind of sensor.
         parameters.angleunit      = IBNO055IMU.ANGLEUNIT.DEGREES;
+        parameters.accelunit      = IBNO055IMU.ACCELUNIT.METERS_PERSEC_PERSEC;
         parameters.loggingEnabled = true;
         parameters.loggingTag     = "BNO055";
         imu = ClassFactory.createAdaFruitBNO055IMU(hardwareMap.i2cDevice.get("imu"), parameters);
 
-        // In future, we'll enhance this demo to illustrate position tracking, but not yet.
-        // imu.startAccelerationIntegration(new IBNO055IMU.Position(), new IBNO055IMU.Velocity());
+        // Enable reporting of position. Note: this is still buggy
+        imu.startAccelerationIntegration(new IBNO055IMU.Position(), new IBNO055IMU.Velocity());
         
         // Set up our dashboard computations
         composeDashboard();
@@ -78,68 +80,106 @@ public class SynchIMUDemo extends SynchronousOpMode
                 // to do that in each of the three items that need that info, as that's
                 // three times the necessary expense.
                 angles     = imu.getAngularOrientation();
+                position   = imu.getPosition();
+
+                // The rest of this is pretty cheap to acquire, but we may as well do it
+                // all while we're gathering the above.
                 loopCycles = getLoopCount();
                 i2cCycles  = ((II2cDeviceClientUser) imu).getI2cDeviceClient().getI2cCycleCount();
                 ms         = elapsed.time() * 1000.0;
                 }
             });
-        telemetry.addLine(telemetry.item("loop count: ", new IFunc<Object>()
+        telemetry.addLine(
+            telemetry.item("loop count: ", new IFunc<Object>()
                 {
                 public Object value()
                     {
                     return loopCycles;
-                    }}),
-                telemetry.item("i2c cycle count: ", new IFunc<Object>()
+                    }
+                }),
+            telemetry.item("i2c cycle count: ", new IFunc<Object>()
                 {
                 public Object value()
                     {
                     return i2cCycles;
-                    }}));
+                    }
+                }));
 
-        telemetry.addLine(telemetry.item("loop rate: ", new IFunc<Object>()
+        telemetry.addLine(
+            telemetry.item("loop rate: ", new IFunc<Object>()
                 {
                 public Object value()
                     {
                     return formatRate(ms / loopCycles);
-                    }}),
-                telemetry.item("i2c cycle rate: ", new IFunc<Object>()
+                    }
+                }),
+            telemetry.item("i2c cycle rate: ", new IFunc<Object>()
                 {
                 public Object value()
                     {
                     return formatRate(ms / i2cCycles);
                     }
                 }));
-        telemetry.addLine(telemetry.item("status: ", new IFunc<Object>()
+
+        telemetry.addLine(
+            telemetry.item("status: ", new IFunc<Object>()
                 {
                 public Object value()
                     {
                     return decodeStatus(imu.getSystemStatus());
-                    }}),
-                telemetry.item("calib: ", new IFunc<Object>()
+                    }
+                }),
+            telemetry.item("calib: ", new IFunc<Object>()
                 {
                 public Object value()
                     {
                     return decodeCalibration(imu.read8(IBNO055IMU.REGISTER.CALIB_STAT));
-                    }}));
-        telemetry.addLine(telemetry.item("heading: ", new IFunc<Object>()
+                    }
+                }));
+
+        telemetry.addLine(
+            telemetry.item("heading: ", new IFunc<Object>()
                 {
                 public Object value()
                     {
                     return formatAngle(angles.heading);
                     }
-                }));
-        telemetry.addLine(telemetry.item("roll: ", new IFunc<Object>()
+                }),
+            telemetry.item("roll: ", new IFunc<Object>()
                 {
                 public Object value()
                     {
                     return formatAngle(angles.roll);
                     }
-                }));
-        telemetry.addLine(telemetry.item("pitch: ", new IFunc<Object>()
+                }),
+            telemetry.item("pitch: ", new IFunc<Object>()
                 {
                 public Object value()
                     {
                     return formatAngle(angles.pitch);
+                    }
+                }));
+
+        telemetry.addLine(
+            telemetry.item("x: ", new IFunc<Object>()
+                {
+                public Object value()
+                    {
+                    return formatPosition(position.x);
+                    }
+                }),
+            telemetry.item("y: ", new IFunc<Object>()
+                {
+                public Object value()
+                    {
+                    return formatPosition(position.y);
+                    }
+                }),
+            telemetry.item("z: ", new IFunc<Object>()
+                {
+                public Object value()
+                    {
+                    return formatPosition(position.z);
                     }
                 }));
         }
@@ -154,11 +194,17 @@ public class SynchIMUDemo extends SynchronousOpMode
         }
     String formatDegrees(double degrees)
         {
-        return String.format("%.2f", normalizeDegrees(degrees));
+        return String.format("%.1f", normalizeDegrees(degrees));
         }
     String formatRate(double cyclesPerSecond)
         {
         return String.format("%.2f", cyclesPerSecond);
+        }
+    String formatPosition(double coordinate)
+        {
+        String unit = parameters.accelunit== IBNO055IMU.ACCELUNIT.METERS_PERSEC_PERSEC
+                ? "m" : "??";
+        return String.format("%.2f%s", coordinate, unit);
         }
 
     //----------------------------------------------------------------------------------------------
