@@ -50,14 +50,16 @@ public class ServoOp extends OpMode {
 
   Servo servo1 ;
 
-  final static double servoMinRange = .1 ;
-  final static double servoMaxRange = 0.9 ;
-  double servoDelta = 0.1 ;
-  double servoPosition ;
-  double servoPositionClipped ;
-  String gamepad = "Gamepad is not pressed";
-  boolean BbuttonOn= false;
-  ElapsedTime BbuttonTimmer = new ElapsedTime();
+    final static double servoMinRange = 0.1 ;
+    final static double servoMaxRange = 0.9 ;
+    double servoDelta = 0.1 ;
+    double servoPosition ;
+    double servoPositionClipped ;
+    String gamepad = "Gamepad is not pressed";
+    boolean BbuttonOn= false;
+    boolean AbuttonOn= false;
+    ElapsedTime BbuttonTimmer = new ElapsedTime();
+    ElapsedTime AbuttonTimmer = new ElapsedTime();
 
   @Override
   public void init() {
@@ -74,16 +76,24 @@ public class ServoOp extends OpMode {
   }
   @Override
   public void loop() {
-/*
+
     if (gamepad1.a) {
 
-      servoPosition = servoPosition + servoDelta ;
-      DbgLog.msg("=====Decrease arm position=====") ;
-      gamepad = "A button is pressed" ;
+        servoPosition = servoPosition + servoDelta ;
+        DbgLog.msg("=====Decrease arm position=====") ;
+        gamepad = "A button is pressed" ;
+        AbuttonOn = true;
+        AbuttonTimmer.reset();
 
     }
 
-*/
+    if(AbuttonOn == true && (AbuttonTimmer.time() > 0.25) ) {
+      AbuttonOn = false;
+      DbgLog.msg("=====Reset AbuttonOn=====") ;
+      gamepad = "Gamepad is not pressed" ;
+    }
+
+
     //DbgLog.msg("=====servoPosition====="+String.format("%f", servoPositionClipped)) ;
 
     if (gamepad1.b && !BbuttonOn) {
@@ -95,7 +105,7 @@ public class ServoOp extends OpMode {
         BbuttonTimmer.reset();
 
     }
-    if(BbuttonOn == true && (BbuttonTimmer.time() > 0.5) ) {
+    if(BbuttonOn == true && (BbuttonTimmer.time() > 0.25) ) {
         BbuttonOn = false;
         DbgLog.msg("=====Reset BbuttonOn=====") ;
         gamepad = "Gamepad is not pressed" ;
