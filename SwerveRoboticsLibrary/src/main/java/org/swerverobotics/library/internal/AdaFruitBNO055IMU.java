@@ -99,9 +99,10 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         if (parameters.accelerationIntegrationAlgorithm != null)
             this.accelerationAlgorithm = parameters.accelerationIntegrationAlgorithm;
 
-        // Turn on the logging (or not) so we can see what happens
+        // Propagate relevant parameters to our device client
         this.getI2cDeviceClient().setLogging(parameters.loggingEnabled);
         this.getI2cDeviceClient().setLoggingTag(parameters.loggingTag);
+        this.getI2cDeviceClient().setThreadPriorityBoost(parameters.threadPriorityBoost);
 
         // Lore: "send a throw-away command [...] just to make sure the BNO is in a good state
         // and ready to accept commands (this seems to be necessary after a hard power down)."
@@ -117,7 +118,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
                 throw new UnexpectedI2CDeviceException(chipId);
             }
         
-        // Switch to config mode (just in case, since this is the default)
+        // Make sure we are in config mode
         setSensorMode(SENSOR_MODE.CONFIG);
         
         // Reset the system, and wait for the chip id register to switch back from its reset state 
