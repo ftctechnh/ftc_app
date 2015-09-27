@@ -1,10 +1,6 @@
 package org.swerverobotics.library.interfaces;
 
-import android.util.Log;
-import org.swerverobotics.library.internal.AdaFruitBNO055IMU;
-import org.swerverobotics.library.internal.Util;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
+import java.nio.*;
 
 /**
  * Interface API to the Adafruit 9-DOF Absolute Orientation IMU Fusion Breakout - BNO055 sensor.
@@ -62,7 +58,7 @@ public interface IBNO055IMU
         /** debugging aid: enable logging for this device? */
         public boolean          loggingEnabled      = false;
         /** debugging aid: the logging tag to use when logging */
-        public String           loggingTag          = null;
+        public String           loggingTag          = "AdaFruitIMU";
         }
 
     /**
@@ -657,7 +653,7 @@ public interface IBNO055IMU
 
     /**
      * Velocity represents a directed velocity in three-space. 
-     * Units are as the same as for Accleration, but integrated for time.
+     * Units are as the same as for Acceleration, but integrated for time.
      */
     class Velocity
         {
@@ -744,11 +740,11 @@ public interface IBNO055IMU
         // State
         //----------------------------------------------------------------------------------------------
 
-        /** the velocity in the X direction */
+        /** the location in the X direction */
         public final double x;
-        /** the velocity in the Y direction */
+        /** the location in the Y direction */
         public final double y;
-        /** the velocity in the Z direction */
+        /** the location in the Z direction */
         public final double z;
 
         /** the time on the System.nanoTime() clock at which the data was acquired */
