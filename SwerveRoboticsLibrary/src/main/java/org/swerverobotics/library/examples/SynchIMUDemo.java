@@ -25,8 +25,8 @@ public class SynchIMUDemo extends SynchronousOpMode
     // Here we have state we use for updating the dashboard. The first of these is important
     // to read only once per update, as its acquisition is expensive. The remainder, though,
     // could probably be read once per item, at only a small loss in display accuracy.
-    IBNO055IMU.EulerAngles  angles;
-    IBNO055IMU.Position     position;
+    EulerAngles angles;
+    Position position;
     int                     loopCycles;
     int                     i2cCycles;
     double                  ms;
@@ -47,7 +47,7 @@ public class SynchIMUDemo extends SynchronousOpMode
         imu = ClassFactory.createAdaFruitBNO055IMU(hardwareMap.i2cDevice.get("imu"), parameters);
 
         // Enable reporting of position. Note: this is still buggy
-        imu.startAccelerationIntegration(new IBNO055IMU.Position(), new IBNO055IMU.Velocity());
+        imu.startAccelerationIntegration(new Position(), new Velocity());
         
         // Set up our dashboard computations
         composeDashboard();
