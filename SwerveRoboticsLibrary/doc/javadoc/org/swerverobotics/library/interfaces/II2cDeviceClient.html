@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6,"i8":6,"i9":6,"i10":6,"i11":6,"i12":6,"i13":6,"i14":6,"i15":6,"i16":6,"i17":6,"i18":6,"i19":6,"i20":6};
+var methods = {"i0":6,"i1":6,"i2":6,"i3":6,"i4":6,"i5":6,"i6":6,"i7":6,"i8":6,"i9":6,"i10":6,"i11":6,"i12":6,"i13":6,"i14":6,"i15":6,"i16":6,"i17":6,"i18":6,"i19":6,"i20":6,"i21":6,"i22":6};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],4:["t3","Abstract Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -226,19 +226,25 @@ extends HardwareDevice</pre>
 </td>
 </tr>
 <tr id="i9" class="rowColor">
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#getThreadPriorityBoost--">getThreadPriorityBoost</a></span>()</code>
+<div class="block">Retrieves the current boost in thread priority used for data acquisition.</div>
+</td>
+</tr>
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>byte[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#read-int-int-">read</a></span>(int&nbsp;ireg,
     int&nbsp;creg)</code>
 <div class="block">Read a contiguous set of device I2C registers.</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>byte</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#read8-int-">read8</a></span>(int&nbsp;ireg)</code>
 <div class="block">Read the byte at the indicated register.</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.TimestampedData.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.TimestampedData</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#readTimeStamped-int-int-">readTimeStamped</a></span>(int&nbsp;ireg,
                int&nbsp;creg)</code>
@@ -246,45 +252,51 @@ extends HardwareDevice</pre>
  timestamp of when the actual I2C read occurred.</div>
 </td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i13" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#setHeartbeatAction-org.swerverobotics.library.interfaces.II2cDeviceClient.HeartbeatAction-">setHeartbeatAction</a></span>(<a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.HeartbeatAction.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.HeartbeatAction</a>&nbsp;action)</code>
 <div class="block">Sets the action to take when the current heartbeat interval expires.</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#setHeartbeatInterval-int-">setHeartbeatInterval</a></span>(int&nbsp;ms)</code>
 <div class="block">Sets the interval within which communication must be received by the I2C device list
  a timeout may occur.</div>
 </td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#setLogging-boolean-">setLogging</a></span>(boolean&nbsp;enabled)</code>
 <div class="block">Turn logging on or off.</div>
 </td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#setLoggingTag-java.lang.String-">setLoggingTag</a></span>(java.lang.String&nbsp;loggingTag)</code>
 <div class="block">Set the tag to use when logging is on.</div>
 </td>
 </tr>
-<tr id="i16" class="altColor">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#setReadWindow-org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow-">setReadWindow</a></span>(<a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a>&nbsp;window)</code>
 <div class="block">Set the set of registers that we will read and read and read again on every hardware cycle</div>
 </td>
 </tr>
-<tr id="i17" class="rowColor">
+<tr id="i18" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#setThreadPriorityBoost-int-">setThreadPriorityBoost</a></span>(int&nbsp;boost)</code>
+<div class="block">Sets the boost in thread priority we use for data acquisition.</div>
+</td>
+</tr>
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#write-int-byte:A-">write</a></span>(int&nbsp;ireg,
      byte[]&nbsp;data)</code>
 <div class="block">Writes data to a set of registers, beginning with the one indicated.</div>
 </td>
 </tr>
-<tr id="i18" class="altColor">
+<tr id="i20" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#write-int-byte:A-boolean-">write</a></span>(int&nbsp;ireg,
      byte[]&nbsp;data,
@@ -292,14 +304,14 @@ extends HardwareDevice</pre>
 <div class="block">Writes data to a set of registers, beginning with the one indicated.</div>
 </td>
 </tr>
-<tr id="i19" class="rowColor">
+<tr id="i21" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#write8-int-int-">write8</a></span>(int&nbsp;ireg,
       int&nbsp;bVal)</code>
 <div class="block">Writes a byte to the indicated register.</div>
 </td>
 </tr>
-<tr id="i20" class="altColor">
+<tr id="i22" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#write8-int-int-boolean-">write8</a></span>(int&nbsp;ireg,
       int&nbsp;bVal,
@@ -684,6 +696,37 @@ extends HardwareDevice</pre>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the thread on which callbacks occur. If null, then no callback has yet been made
          so the identity of this thread is not yet known.</dd>
+</dl>
+</li>
+</ul>
+<a name="setThreadPriorityBoost-int-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setThreadPriorityBoost</h4>
+<pre>void&nbsp;setThreadPriorityBoost(int&nbsp;boost)</pre>
+<div class="block">Sets the boost in thread priority we use for data acquisition. Judiciously applied,
+ this boost can help reduce jitter in data timestamps.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>boost</code> - the boost in thread priority to apply</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#getThreadPriorityBoost--"><code>getThreadPriorityBoost()</code></a></dd>
+</dl>
+</li>
+</ul>
+<a name="getThreadPriorityBoost--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getThreadPriorityBoost</h4>
+<pre>int&nbsp;getThreadPriorityBoost()</pre>
+<div class="block">Retrieves the current boost in thread priority used for data acquisition.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the current boost in priority</dd>
 </dl>
 </li>
 </ul>
