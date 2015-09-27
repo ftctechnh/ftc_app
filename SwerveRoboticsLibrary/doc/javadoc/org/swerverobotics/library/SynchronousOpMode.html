@@ -279,8 +279,8 @@ implements <a href="../../../org/swerverobotics/library/interfaces/IThunkDispatc
 <td class="colFirst"><code>static <a href="../../../org/swerverobotics/library/interfaces/IStopActionRegistrar.html" title="interface in org.swerverobotics.library.interfaces">IStopActionRegistrar</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#getStopActionRegistrar--">getStopActionRegistrar</a></span>()</code>
 <div class="block">Advanced: If we are running on a synchronous thread, returns an object that can
- be used to register for a callback when the contextually associated synchronous
- opmode stops.</div>
+ be used to register for a callback when the contextually associated SynchronousOpMode
+ stops.</div>
 </td>
 </tr>
 <tr id="i7" class="rowColor">
@@ -1006,6 +1006,8 @@ implements <a href="../../../org/swerverobotics/library/interfaces/IThunkDispatc
 <dd><code><a href="../../../org/swerverobotics/library/interfaces/IStopActionRegistrar.html#registerActionOnStop-org.swerverobotics.library.interfaces.IAction-">registerActionOnStop</a></code>&nbsp;in interface&nbsp;<code><a href="../../../org/swerverobotics/library/interfaces/IStopActionRegistrar.html" title="interface in org.swerverobotics.library.interfaces">IStopActionRegistrar</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>action</code> - the action to be called on stop</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#getStopActionRegistrar--"><code>getStopActionRegistrar()</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -1179,6 +1181,8 @@ implements <a href="../../../org/swerverobotics/library/interfaces/IThunkDispatc
 <dd><code><a href="../../../org/swerverobotics/library/interfaces/IThunkDispatcher.html#executeOnLoopThread-org.swerverobotics.library.interfaces.IAction-">executeOnLoopThread</a></code>&nbsp;in interface&nbsp;<code><a href="../../../org/swerverobotics/library/interfaces/IThunkDispatcher.html" title="interface in org.swerverobotics.library.interfaces">IThunkDispatcher</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>action</code> - the action to execute</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#getThreadThunker--"><code>getThreadThunker()</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -1202,7 +1206,8 @@ implements <a href="../../../org/swerverobotics/library/interfaces/IThunkDispatc
 <dd><code>singletonKey</code> - the key that indicates which pending previous action to replace</dd>
 <dd><code>action</code> - the action to execute</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../org/swerverobotics/library/interfaces/IThunkDispatcher.html#getNewSingletonKey--"><code>IThunkDispatcher.getNewSingletonKey()</code></a></dd>
+<dd><a href="../../../org/swerverobotics/library/interfaces/IThunkDispatcher.html#getNewSingletonKey--"><code>IThunkDispatcher.getNewSingletonKey()</code></a>, 
+<a href="../../../org/swerverobotics/library/SynchronousOpMode.html#getThreadThunker--"><code>getThreadThunker()</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -1220,7 +1225,8 @@ implements <a href="../../../org/swerverobotics/library/interfaces/IThunkDispatc
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new key</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../org/swerverobotics/library/interfaces/IThunkDispatcher.html#executeSingletonOnLoopThread-int-org.swerverobotics.library.interfaces.IAction-"><code>IThunkDispatcher.executeSingletonOnLoopThread(int, IAction)</code></a></dd>
+<dd><a href="../../../org/swerverobotics/library/interfaces/IThunkDispatcher.html#executeSingletonOnLoopThread-int-org.swerverobotics.library.interfaces.IAction-"><code>IThunkDispatcher.executeSingletonOnLoopThread(int, IAction)</code></a>, 
+<a href="../../../org/swerverobotics/library/SynchronousOpMode.html#getThreadThunker--"><code>getThreadThunker()</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -1261,8 +1267,8 @@ implements <a href="../../../org/swerverobotics/library/interfaces/IThunkDispatc
 <h4>getStopActionRegistrar</h4>
 <pre>public static&nbsp;<a href="../../../org/swerverobotics/library/interfaces/IStopActionRegistrar.html" title="interface in org.swerverobotics.library.interfaces">IStopActionRegistrar</a>&nbsp;getStopActionRegistrar()</pre>
 <div class="block">Advanced: If we are running on a synchronous thread, returns an object that can
- be used to register for a callback when the contextually associated synchronous
- opmode stops.</div>
+ be used to register for a callback when the contextually associated SynchronousOpMode
+ stops.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the registrar object, or null if we are not on a synchronous thread</dd>
