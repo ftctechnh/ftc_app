@@ -1,6 +1,5 @@
 package org.swerverobotics.library.internal;
 
-import android.os.SystemClock;
 import android.util.Log;
 
 import com.qualcomm.robotcore.hardware.*;
