@@ -1076,7 +1076,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
 
     /**
      * Advanced: If we are running on a synchronous thread, then return the object
-     * which is managing the internal from the current thread to the loop() thread.
+     * which manages thunking from the current thread to the loop() thread.
      *
      * @return the thunk dispatcher object, or null if we are not on a synchronous thread
      */
