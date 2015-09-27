@@ -57,7 +57,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         this.deviceClient.setReadWindow(lowerWindow);
         this.parameters   = null;
         this.currentMode  = null;
-        this.accelerationAlgorithm = new SimpleAccelerationIntegrator();
+        this.accelerationAlgorithm = new NaiveAccelerationIntegrator();
         this.accelerationMananger = null;
         this.deathWatch   = null;
         }
@@ -491,10 +491,12 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         }
 
     /**
-     * SimpleAccelerationIntegrator provides a very simple implementation of
-     * an acceleration integration algorithm. In particular, it
+     * NaiveAccelerationIntegrator provides a very naive implementation of
+     * an acceleration integration algorithm. It just does the basic physics.
+     * One you would actually want to use in a robot would, for example, likely
+     * filter noise out the acceleration data.
      */
-    class SimpleAccelerationIntegrator implements IAccelerationIntegrator
+    class NaiveAccelerationIntegrator implements IAccelerationIntegrator
         {
         //------------------------------------------------------------------------------------------
         // State
@@ -512,7 +514,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         // Construction
         //------------------------------------------------------------------------------------------
 
-        SimpleAccelerationIntegrator()
+        NaiveAccelerationIntegrator()
             {
             this.position = null;
             this.velocity = null;
