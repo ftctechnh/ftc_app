@@ -6,6 +6,7 @@ import org.swerverobotics.library.*;
 import org.swerverobotics.library.exceptions.*;
 import org.swerverobotics.library.interfaces.*;
 import static org.swerverobotics.library.internal.Util.*;
+import static junit.framework.Assert.*;
 
 /**
  * Instances of AdaFruitBNO055IMU provide API access to an 
@@ -613,7 +614,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
 
     public synchronized byte read8(final REGISTER reg)
         {
-        this.deviceClient.executeFunctionWhileLocked(new IFunc<Byte>()
+        return this.deviceClient.executeFunctionWhileLocked(new IFunc<Byte>()
             {
             @Override public Byte value()
                 {
@@ -621,12 +622,11 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
                 return deviceClient.read8(reg.bVal);
                 }
             });
-        return 0;   // not reached
         }
 
     public synchronized byte[] read(final REGISTER reg, final int cb)
         {
-        this.deviceClient.executeFunctionWhileLocked(new IFunc<byte[]>()
+        return this.deviceClient.executeFunctionWhileLocked(new IFunc<byte[]>()
             {
             @Override public byte[] value()
                 {
@@ -634,7 +634,6 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
                 return deviceClient.read(reg.bVal, cb);
                 }
             });
-        return new byte[0];   // not reached
         }
 
     public void write8(REGISTER reg, int data)
