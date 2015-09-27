@@ -720,7 +720,10 @@ public final class I2cDeviceClient implements II2cDeviceClient
                     int targetPriority = callbackThreadOriginalPriority + callbackThreadPriorityBoost;
                     if (callbackThread.getPriority() < targetPriority)
                         {
-                        callbackThread.setPriority(targetPriority);
+                        try {
+                            callbackThread.setPriority(targetPriority);
+                            }
+                        catch (Exception e) { /* ignore: just run as is */}
                         }
 
                     // Update cycle statistics
