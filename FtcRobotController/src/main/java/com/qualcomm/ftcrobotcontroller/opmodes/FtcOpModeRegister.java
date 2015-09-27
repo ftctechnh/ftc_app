@@ -31,6 +31,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.qualcomm.ftcrobotcontroller.FTC9926.opmodes.MoveForward;
+import com.qualcomm.ftcrobotcontroller.FTC9926.opmodes.MoveServo;
+import com.qualcomm.ftcrobotcontroller.FTC9926.opmodes.MoveStick;
+import com.qualcomm.ftcrobotcontroller.FTC9926.opmodes.MoveTank;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 
@@ -55,6 +59,10 @@ public class FtcOpModeRegister implements OpModeRegister {
      * If two or more op modes are registered with the same name, the app will display an error.
      */
 
+    //manager.register("MoveForward", MoveForward.class);
+    manager.register("Servo", MoveServo.class);
+    manager.register("Stick", MoveStick.class);
+    manager.register("Tank", MoveTank.class);
 
     /*
      * The following op modes are example op modes provided by QualComm.
@@ -79,9 +87,9 @@ public class FtcOpModeRegister implements OpModeRegister {
      *  - K9Line uses a legacy LEGO NXT light sensor to follow a white line.
      */
 
-    manager.register("K9TeleOp", K9TeleOp.class);
-    manager.register("K9IrSeeker", K9IrSeeker.class);
-    manager.register("K9Line", K9Line.class);
+//    manager.register("K9TeleOp", K9TeleOp.class);
+//    manager.register("K9IrSeeker", K9IrSeeker.class);
+//    manager.register("K9Line", K9Line.class);
 
     /*
      * The following example op modes are designed to work with a pushbot-style robot.
@@ -92,11 +100,13 @@ public class FtcOpModeRegister implements OpModeRegister {
      *  - PushBotSquare uses the LinearOpMOde class and shows how to drive in a square pattern autonomously.
      */
 
-    manager.register("PushBotManual", PushBotManual.class);
-    manager.register("PushBotAuto", PushBotAuto.class);
-    manager.register("PushBotDriveTouch", PushBotDriveTouch.class);
-    manager.register("PushBotIrSeek", PushBotIrSeek.class);
-    manager.register("PushBotSquare", PushBotSquare.class);
+    //manager.register("PushBotManual", PushBotManual.class);
+    //manager.register("PushBotAuto", PushBotAuto.class);
+
+// Linear Programs
+//    manager.register("PushBotDriveTouch", PushBotDriveTouch.class);
+//    manager.register("PushBotIrSeek", PushBotIrSeek.class);
+//    manager.register("PushBotSquare", PushBotSquare.class);
 
   }
 }
