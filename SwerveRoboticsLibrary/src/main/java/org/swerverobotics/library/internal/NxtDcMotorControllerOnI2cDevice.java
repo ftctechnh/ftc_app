@@ -3,6 +3,7 @@ package org.swerverobotics.library.internal;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
 import org.swerverobotics.library.interfaces.*;
+import java.nio.*;
 
 /**
  * This is an experiment in an alternative implementation of a Legacy DC Motor controller.
@@ -127,7 +128,11 @@ public final class NxtDcMotorControllerOnI2cDevice implements DcMotorController,
         // representation of the battery voltage in units of 80mV. This provides a measurement 
         // range of 0 – 20.4 volts. The low byte has the lower 2 bits at bit locations 0 and 1 
         // in the byte. This increases the measurement resolution to 20mV."
-        return Util.unpack10BitAnalog(bytes,0) * 0.020;
+        bytes[1]          = (byte)(bytes[1] << 6);
+        ByteBuffer buffer = ByteBuffer.wrap(bytes).order(ByteOrder.BIG_ENDIAN);
+        int tenBits       = (buffer.getShort()>>6) & 0x3FF;
+        double result     = ((double)tenBits) / 4 * 0.080;
+        return result;
         }
 
     //----------------------------------------------------------------------------------------------

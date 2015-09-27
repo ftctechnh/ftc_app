@@ -6,7 +6,6 @@ import org.swerverobotics.library.*;
 import org.swerverobotics.library.exceptions.*;
 import org.swerverobotics.library.interfaces.*;
 import static org.swerverobotics.library.internal.Util.*;
-import static junit.framework.Assert.*;
 
 /**
  * Instances of AdaFruitBNO055IMU provide API access to an 
@@ -18,6 +17,8 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
     //------------------------------------------------------------------------------------------
     // State
     //------------------------------------------------------------------------------------------
+
+    public static final String     LOGGING_TAG = "AdaFruitIMU";
 
     private II2cDeviceClient       deviceClient;
     private Parameters             parameters;
@@ -108,7 +109,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         byte chipId = read8(REGISTER.CHIP_ID);
         if (chipId != bCHIP_ID_VALUE)
             {
-            delay(650);     // delay value is from from Table 0-2
+            delayExtra(650);     // delay value is from from Table 0-2
             chipId = read8(REGISTER.CHIP_ID);
             if (chipId != bCHIP_ID_VALUE)
                 throw new UnexpectedI2CDeviceException(chipId);
@@ -127,15 +128,15 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
             chipId = read8(REGISTER.CHIP_ID);
             if (chipId == bCHIP_ID_VALUE)
                 break;
-            delay(10);
+            delayExtra(10);
             if (milliseconds(elapsed) > msAwaitChipId)
                 throw new BNO055InitializationException(this, "failed to retrieve chip id");
             }
-        delayLore(50);
+        delayLoreExtra(50);
         
         // Set to normal power mode
         write8(REGISTER.PWR_MODE, POWER_MODE.NORMAL.getValue());
-        delayLore(10);
+        delayLoreExtra(10);
 
         // Make sure we're looking at register page zero, as the other registers
         // we need to set here are on that page.
@@ -152,7 +153,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         // Use or don't use the external crystal
         // See Section 5.5 (p100) of the BNO055 specification.
         write8(REGISTER.SYS_TRIGGER, parameters.useExternalCrystal ? 0x80 : 0x00);
-        delayLore(10);
+        delayLoreExtra(10);
 
         // Run a self test. This appears to be a necessary step in order for the 
         // sensor to be able to actually be used.
@@ -171,7 +172,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
 
         // Finally, enter the requested operating mode (see section 3.3)
         setSensorMode(parameters.mode);
-        delayLore(200);
+        delayLoreExtra(200);
         }
 
     @Override public void close()
@@ -193,9 +194,9 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         
         // Delay per Table 3-6 of BNO055 Data sheet (p21)
         if (mode == SENSOR_MODE.CONFIG)
-            delay(19);
+            delayExtra(19);
         else
-            delay(7);
+            delayExtra(7);
         }
 
     public synchronized byte getSystemStatus()
@@ -325,13 +326,8 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         
         // Section 3.6.5.5 of BNO055 specification
         II2cDeviceClient.TimestampedData ts = this.deviceClient.readTimeStamped(REGISTER.QUATERNION_DATA_W_LSB.bVal, 8);
-        final double scale = 1.0 / (1 << 14);
-        Quaternion result = new Quaternion(
-                Util.makeIntLittle(ts.data[0], ts.data[1]) * scale,
-                Util.makeIntLittle(ts.data[2], ts.data[3]) * scale,
-                Util.makeIntLittle(ts.data[4], ts.data[5]) * scale,
-                Util.makeIntLittle(ts.data[6], ts.data[7]) * scale
-            );
+        final double scale = (1 << 14);
+        Quaternion result = new Quaternion(ts, scale);
         result.nanoTime = ts.nanoTime;
         return result;
         }
@@ -578,6 +574,24 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         this.deviceClient.ensureReadWindow(needed, windowToSet);
         }
 
+    // Our write logic doesn't actually know when the I2C writes are issued. All it knows is
+    // when it has queued the write to the USB Core Device Interface Module. It's a pretty
+    // deterministic interval after that that the I2C write occurs, we guess, but we don't
+    // really know what that is. To account for this, we slop in some extra time to the
+    // delays so that we're not cutting things too close to the edge. And given that this is
+    // initialization logic and so not time critical, we err on being generous.
+
+    private final static int msExtra = 50;
+
+    private void delayExtra(int ms)
+        {
+        delay(ms + msExtra);
+        }
+    private void delayLoreExtra(int ms)
+        {
+        delayLore(ms + msExtra);
+        }
+
     /**
      * delayLore() implements a delay that only known by lore and mythology to be necessary.
      * 
@@ -649,7 +663,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         {
         SENSOR_MODE modePrev = this.currentMode;
         setSensorMode(SENSOR_MODE.CONFIG);
-        delayLore(25);
+        delayLoreExtra(25);
         try
             {
             action.doAction();
@@ -657,7 +671,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         finally
             {
             setSensorMode(modePrev);
-            delayLore(20);
+            delayLoreExtra(20);
             }
         }
 
@@ -667,7 +681,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         
         SENSOR_MODE modePrev = this.currentMode;
         setSensorMode(SENSOR_MODE.CONFIG);
-        delayLore(25);
+        delayLoreExtra(25);
         try
             {
             result = lambda.value();
@@ -675,7 +689,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         finally
             {
             setSensorMode(modePrev);
-            delayLore(20);
+            delayLoreExtra(20);
             }
         //
         return result;
