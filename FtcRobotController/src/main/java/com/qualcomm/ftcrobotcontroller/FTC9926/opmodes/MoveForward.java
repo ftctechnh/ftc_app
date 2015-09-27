@@ -14,11 +14,10 @@ package com.qualcomm.ftcrobotcontroller.FTC9926.opmodes;
 public class MoveForward extends OpMode {
 
     // Define position, max/min range, move interval
-    final static double SM1_Min = 0.20;
-    static double SM1_Max = 0.9;
+    final static double SM1_Min = 0.0;
+    final static double SM1_Max = 0.95;
     double SM1_Position;
-    double SM1_Interval = 0.1;
-
+    double SM1_Interval = 0.01;
 
     DcMotor Motor1;
     DcMotor Motor2;
@@ -37,7 +36,7 @@ public class MoveForward extends OpMode {
         Servo2 = hardwareMap.servo.get("SM2");
 
         //Set starting postion for SM1
-        SM1_Position = 0.4;
+        SM1_Position = 0.5;
 
     }
 
@@ -53,21 +52,21 @@ public class MoveForward extends OpMode {
     public void loop() {
 
         // Tank Mode movement:
-        float M1 = gamepad1.right_stick_y;
-        float M2 = gamepad1.left_stick_y;
+     //   float M1 = gamepad1.right_stick_y;
+     //   float M2 = gamepad1.left_stick_y;
 
         // Direction and throttle movement;
         // Copy from K9TeleOp
-       // float throttle = -gamepad1.left_stick_y;
-       // float direction = gamepad1.left_stick_x;
-       // float M1 = throttle - direction;
-       // float M2 = throttle + direction;
+        float throttle = -gamepad1.left_stick_y;
+        float direction = gamepad1.left_stick_x;
+        float M1 = throttle - direction;
+        float M2 = throttle + direction;
 
         // Update the servos based on the press of the controller buttons.
-        if (gamepad1.dpad_up) {
+        if (gamepad1.a) {
             SM1_Position += SM1_Interval;
         }
-        if (gamepad1.dpad_down) {
+        if (gamepad1.b) {
             SM1_Position -= SM1_Interval;
         }
 
@@ -81,7 +80,7 @@ public class MoveForward extends OpMode {
 
         telemetry.addData("M1", "M1: " + M1);
         telemetry.addData("M2", "M2: " + M2);
-        telemetry.addData("SM1", "SM1 Pos: " + SM1_Position);
+        telemetry.addData("SM1", "SM1 Pos: " + String.format("%.2f", SM1_Position));
 
     }
 
