@@ -1090,8 +1090,8 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
 
     /**
      * Advanced: If we are running on a synchronous thread, returns an object that can
-     * be used to register for a callback when the contextually associated synchronous
-     * opmode stops.
+     * be used to register for a callback when the contextually associated SynchronousOpMode
+     * stops.
      * @return the registrar object, or null if we are not on a synchronous thread
      */
     public static IStopActionRegistrar getStopActionRegistrar()

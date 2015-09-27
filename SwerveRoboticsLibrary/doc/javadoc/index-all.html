@@ -364,7 +364,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IThunkDispatcher.html#executeOnLoopThread-org.swerverobotics.library.interfaces.IAction-">executeOnLoopThread(IAction)</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/IThunkDispatcher.html" title="interface in org.swerverobotics.library.interfaces">IThunkDispatcher</a></dt>
 <dd>
-<div class="block">Execute the indicated action over on the loop() thread.</div>
+<div class="block">Executes the indicated action over on the loop() thread.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#executeOnLoopThread-org.swerverobotics.library.interfaces.IAction-">executeOnLoopThread(IAction)</a></span> - Method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
 <dd>
@@ -372,8 +372,8 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IThunkDispatcher.html#executeSingletonOnLoopThread-int-org.swerverobotics.library.interfaces.IAction-">executeSingletonOnLoopThread(int, IAction)</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/IThunkDispatcher.html" title="interface in org.swerverobotics.library.interfaces">IThunkDispatcher</a></dt>
 <dd>
-<div class="block">Execute the indicated action over on the loop() thread, but replace any
- pending singleton there already there who was queued using the same action key.</div>
+<div class="block">Executes the indicated action over on the loop() thread, but replace any
+ pending singleton already there who was queued using the same singleton key.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#executeSingletonOnLoopThread-int-org.swerverobotics.library.interfaces.IAction-">executeSingletonOnLoopThread(int, IAction)</a></span> - Method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
 <dd>
@@ -486,7 +486,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IThunkDispatcher.html#getNewSingletonKey--">getNewSingletonKey()</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/IThunkDispatcher.html" title="interface in org.swerverobotics.library.interfaces">IThunkDispatcher</a></dt>
 <dd>
-<div class="block">Return a new singleton key</div>
+<div class="block">Returns a new singleton key</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#getNewSingletonKey--">getNewSingletonKey()</a></span> - Method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
 <dd>
@@ -524,8 +524,8 @@
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#getStopActionRegistrar--">getStopActionRegistrar()</a></span> - Static method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
 <dd>
 <div class="block">Advanced: If we are running on a synchronous thread, returns an object that can
- be used to register for a callback when the contextually associated synchronous
- opmode stops.</div>
+ be used to register for a callback when the contextually associated SynchronousOpMode
+ stops.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IBNO055IMU.html#getSystemError--">getSystemError()</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/IBNO055IMU.html" title="interface in org.swerverobotics.library.interfaces">IBNO055IMU</a></dt>
 <dd>
@@ -732,7 +732,7 @@
 <dd>&nbsp;</dd>
 <dt><a href="org/swerverobotics/library/interfaces/IStopActionRegistrar.html" title="interface in org.swerverobotics.library.interfaces"><span class="typeNameLink">IStopActionRegistrar</span></a> - Interface in <a href="org/swerverobotics/library/interfaces/package-summary.html">org.swerverobotics.library.interfaces</a></dt>
 <dd>
-<div class="block">IStopActionRegistrar can be used to register for a callback when a synchronous opmode stops</div>
+<div class="block">IStopActionRegistrar can be used to register for a callback when an OpMode stops.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/TelemetryDashboardAndLog.html#item-java.lang.String-org.swerverobotics.library.interfaces.IFunc-">item(String, IFunc&lt;Object&gt;)</a></span> - Method in class <a href="org/swerverobotics/library/TelemetryDashboardAndLog.html" title="class in org.swerverobotics.library">TelemetryDashboardAndLog</a></dt>
 <dd>
