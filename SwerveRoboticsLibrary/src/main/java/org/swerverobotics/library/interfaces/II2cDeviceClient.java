@@ -288,6 +288,20 @@ public interface II2cDeviceClient extends HardwareDevice
     Thread getCallbackThread();
 
     /**
+     * Sets the boost in thread priority we use for data acquisition. Judiciously applied,
+     * this boost can help reduce jitter in data timestamps.
+     * @param boost the boost in thread priority to apply
+     * @see #getThreadPriorityBoost()
+     */
+    void setThreadPriorityBoost(int boost);
+
+    /**
+     * Retrieves the current boost in thread priority used for data acquisition.
+     * @return the current boost in priority
+     */
+    int getThreadPriorityBoost();
+
+    /**
      * Returns the number of I2C cycles that we've seen for this device. This at times
      * can be a useful debugging aid, but probably isn't useful for much more.
      *
