@@ -807,84 +807,93 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      */
     @Override public final void loop()
         {
-        // Call the subclass hook in case they might want to do something interesting
-        this.preLoopHook();
+        // Protect the whole silly thing. If we throw in there, 'caller is just going to tell
+        // on us, so we want to get to know what's happening before he does.
+        try {
+            // Call the subclass hook in case they might want to do something interesting
+            this.preLoopHook();
 
-        // Validate our assumption of init() and loop() running on the same thread.
-        assertTrue(!BuildConfig.DEBUG || this.isLoopThread());
+            // Validate our assumption of init() and loop() running on the same thread.
+            assertTrue(!BuildConfig.DEBUG || this.isLoopThread());
 
-        synchronized (this.loopLock)
-            {
-            // Keep track of how many loop() calls we've seen. And give this thread a handy
-            // name so we recognize it in the debugger
-            if (0 == this.loopCount.getAndIncrement())
-                Thread.currentThread().setName("loop() thread");
-            
-            // The history of what was executed int the previous loop() call is now irrelevant
-            this.actionQueueAndHistory.clearHistory();
-            
-            // If we had an exception thrown by a synchronous thread, then throw it here. 'Sort
-            // of like thunking the exceptions. Exceptions from the main thread take
-            // priority over those from worker threads. Note that the reads here are indeed
-            // racing with the writes that are throwing, but that's ok.
-            RuntimeException e = this.exceptionThrownOnMainThread;
-            if (e == null) 
+            synchronized (this.loopLock)
                 {
-                e = this.firstExceptionThrownOnASynchronousWorkerThread.get();
-                }
-            if (e != null)
-                {
-                throw e;
-                }
+                // Keep track of how many loop() calls we've seen. And give this thread a handy
+                // name so we recognize it in the debugger
+                if (0 == this.loopCount.getAndIncrement())
+                    Thread.currentThread().setName("loop() thread");
 
-            // Capture the gamepad state for later processing
-            this.captureGamepadState();
+                // The history of what was executed int the previous loop() call is now irrelevant
+                this.actionQueueAndHistory.clearHistory();
+
+                // If we had an exception thrown by a synchronous thread, then throw it here. 'Sort
+                // of like thunking the exceptions. Exceptions from the main thread take
+                // priority over those from worker threads. Note that the reads here are indeed
+                // racing with the writes that are throwing, but that's ok.
+                RuntimeException e = this.exceptionThrownOnMainThread;
+                if (e == null)
+                    {
+                    e = this.firstExceptionThrownOnASynchronousWorkerThread.get();
+                    }
+                if (e != null)
+                    {
+                    throw e;
+                    }
+
+                // Capture the gamepad state for later processing
+                this.captureGamepadState();
+
+                // Call the subclass hook in case they might want to do something interesting
+                this.midLoopHook();
+
+                // Start measuring time so we don't spend too long here in loop(). That might
+                // happen if we got flooded with a bevy of non-waiting actions and we didn't have
+                // this check here.
+                long nanotimeStart = System.nanoTime();
+                long nanotimeMax   = nanotimeStart + this.getMsLoopDwellMax() * NANO_TO_MILLI;
+
+                // Do any actions we've been asked to execute here on the loop thread
+                for (int i = 1; ; i++)
+                    {
+                    // Get the next action in the queue. Get out of here if there aren't any more
+                    IAction action;
+                    synchronized (this.actionQueueAndHistory)
+                        {
+                        action = this.actionQueueAndHistory.poll();
+                        if (null == action)
+                            break;
+                        }
+
+                    // Execute the work that needs to be done on the loop thread
+                    executeAction(action);
+
+                    // Periodically check whether we've run long enough for this loop() call.
+                    if (i % this.loopDwellCheckCount == 0)
+                        {
+                        if (System.nanoTime() >= nanotimeMax)
+                            break;
+                        }
+                    }
+
+                // Dig out and execute any of our singleton actions.
+                List<IAction> actions = this.snarfSingletons();
+                for (IAction action : actions)
+                    {
+                    executeAction(action);
+                    }
+
+                // Tell people that this loop cycle is complete
+                this.loopLock.notifyAll();
+                }
 
             // Call the subclass hook in case they might want to do something interesting
-            this.midLoopHook();
-
-            // Start measuring time so we don't spend too long here in loop(). That might
-            // happen if we got flooded with a bevy of non-waiting actions and we didn't have
-            // this check here.
-            long nanotimeStart = System.nanoTime();
-            long nanotimeMax   = nanotimeStart + this.getMsLoopDwellMax() * NANO_TO_MILLI;
-
-            // Do any actions we've been asked to execute here on the loop thread
-            for (int i = 1; ; i++)
-                {
-                // Get the next action in the queue. Get out of here if there aren't any more
-                IAction action;
-                synchronized (this.actionQueueAndHistory)
-                    {
-                    action = this.actionQueueAndHistory.poll();
-                    if (null == action)
-                        break;
-                    }
-
-                // Execute the work that needs to be done on the loop thread
-                executeAction(action);
-
-                // Periodically check whether we've run long enough for this loop() call.
-                if (i % this.loopDwellCheckCount == 0)
-                    {
-                    if (System.nanoTime() >= nanotimeMax)
-                        break;
-                    }
-                }
-
-            // Dig out and execute any of our singleton actions.
-            List<IAction> actions = this.snarfSingletons();
-            for (IAction action : actions)
-                {
-                executeAction(action);
-                }
-
-            // Tell people that this loop cycle is complete
-            this.loopLock.notifyAll();
+            this.postLoopHook();
             }
-
-        // Call the subclass hook in case they might want to do something interesting
-        this.postLoopHook();
+        catch (Exception e)
+            {
+            Log.e(LOGGING_TAG, String.format("exception thrown in loop(): %s", Util.getStackTrace(e)));
+            throw e;    // Rethrow so this exception gets displayed on phone displays
+            }
         }
 
     void executeAction(IAction action)
@@ -909,29 +918,36 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      */
     @Override public final void stop()
         {
-        // Call the subclass hook in case they might want to do something interesting
-        this.preStopHook();
-        Log.d(LOGGING_TAG, String.format("stopping OpMode {%s}...", this.getClass().getSimpleName()));
+        try {
+            // Call the subclass hook in case they might want to do something interesting
+            this.preStopHook();
+            Log.d(LOGGING_TAG, String.format("stopping OpMode {%s}...", this.getClass().getSimpleName()));
 
-        // Next time synchronous threads ask, yes, we do want to stop
-        this.stopRequested = true;
+            // Next time synchronous threads ask, yes, we do want to stop
+            this.stopRequested = true;
 
-        // Clean up any worker threads 
-        this.stopSynchronousWorkerThreads(this.msWaitForSynchronousWorkerThreadTermination);
-        
-        // Notify the main() thread that we wish it to stop what it's doing, clean up, and return.
-        this.stopSynchronousThread(this.mainThread, this.msWaitForMainThreadTermination);
+            // Clean up any worker threads
+            this.stopSynchronousWorkerThreads(this.msWaitForSynchronousWorkerThreadTermination);
 
-        // Call all actions we've been asked to call
-        synchronized (this.actionsOnStop)
-            {
-            for (IAction action: this.actionsOnStop)
-                action.doAction();
-            this.actionsOnStop.clear();
+            // Notify the main() thread that we wish it to stop what it's doing, clean up, and return.
+            this.stopSynchronousThread(this.mainThread, this.msWaitForMainThreadTermination);
+
+            // Call all actions we've been asked to call
+            synchronized (this.actionsOnStop)
+                {
+                for (IAction action: this.actionsOnStop)
+                    action.doAction();
+                this.actionsOnStop.clear();
+                }
+
+            Log.d(LOGGING_TAG, String.format("...stopped"));
+            this.postStopHook();
             }
-
-        Log.d(LOGGING_TAG, String.format("...stopped"));
-        this.postStopHook();
+        catch (Exception e)
+            {
+            Log.e(LOGGING_TAG, String.format("exception thrown in stop(): %s", Util.getStackTrace(e)));
+            throw e;    // Rethrow so this exception gets displayed on phone displays
+            }
         }
 
     /**
