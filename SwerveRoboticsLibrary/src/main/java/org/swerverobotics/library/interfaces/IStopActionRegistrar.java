@@ -1,7 +1,6 @@
 package org.swerverobotics.library.interfaces;
 
 import com.qualcomm.robotcore.hardware.HardwareDevice;
-
 import org.swerverobotics.library.SynchronousOpMode;
 
 /**
