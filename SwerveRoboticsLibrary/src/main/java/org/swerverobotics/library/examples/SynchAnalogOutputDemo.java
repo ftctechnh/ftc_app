@@ -18,7 +18,7 @@ import org.swerverobotics.library.interfaces.TeleOp;
  * and I don't know what the valid values are for the output port's "mode"
  * ("mode" is a byte which supposedly sets the output waveform to sine, square, triangle, or DC).
  */
-@TeleOp(name="AnalogOut demo")
+@TeleOp(name="AnalogOut demo", group="Swerve Examples")
 @Disabled
 public class SynchAnalogOutputDemo extends SynchronousOpMode {
 
@@ -36,7 +36,7 @@ public class SynchAnalogOutputDemo extends SynchronousOpMode {
     * double[] notesd = { 16.35, 17.32, 18.35, 19.45, 20.60, 21.83, 23.12, 24.50, 25.96, 27.50, 29.14, 30.87, 32.70, 34.65, 36.71, 38.89, 41.20, 43.65, 46.25, 49.00, 51.91, 55.00, 58.27, 61.74, 65.41, 69.30, 73.42, 77.78, 82.41, 87.31, 92.50, 98.00, 103.8, 110.0, 116.5, 123.5, 130.8, 138.6, 146.8, 155.6, 164.8, 174.6, 185.0, 196.0, 207.7, 220.0, 233.1, 246.9, 261.6, 277.2, 293.7, 311.1, 329.6, 349.2, 370.0, 392.0, 415.3, 440.0, 466.2, 493.9, 523.3, 554.4, 587.3, 622.3, 659.3, 698.5, 740.0, 784.0, 830.6, 880.0, 932.3, 987.8, 1047, 1109, 1175, 1245, 1319, 1397, 1480, 1568, 1661, 1760, 1865, 1976, 2093, 2217, 2349, 2489, 2637, 2794, 2960, 3136, 3322, 3520, 3729, 3951, 4186, 4435, 4699, 4978, 5274, 5588, 5920, 6272, 6645, 7040, 7459, 7902 };
     */
     int[] notes = { 16, 17, 18, 19, 21, 22, 23, 24, 26, 28, 29, 31, 33, 35, 37, 39, 41, 44, 46, 49, 52, 55, 58, 62, 65, 69, 73, 78, 82, 87, 92, 98, 104, 110, 116, 124, 131, 139, 147, 156, 165, 175, 185, 196, 208, 220, 233, 247, 262, 277, 294, 311, 330, 349, 370, 392, 415, 440, 466, 494, 523, 554, 587, 622, 659, 698, 740, 784, 831, 880, 932, 988, 1047, 1109, 1175, 1245, 1319, 1397, 1480, 1568, 1661, 1760, 1865, 1976, 2093, 2217, 2349, 2489, 2637, 2794, 2960, 3136, 3322, 3520, 3729, 3951, 4186, 4435, 4699, 4978, 5274, 5588, 5920, 6272, 6645, 7040, 7459, 7902};
-    static final int A440_INDEX = 58; //the position of A440 in the array
+    static final int A440_INDEX = 57; //the position of A440 in the array
     //Many devices can only play a limited range of notes.
     //For my purposes, I'll set somewhat reasonable limits here.
     static final int MAX_NOTE_INDEX = 108;

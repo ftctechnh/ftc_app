@@ -126,7 +126,12 @@ extends java.lang.Object</pre>
 
  <p>For the YourCodeHere module specifically, this has already been done for you. If you
  create your own sibling modules, you'll have to do that for yourself. We hope in the future
- to obviate the need for this step.</p></div>
+ to obviate the need for this step.</p>
+
+ <p>UPDATE: at the moment, this is slightly broken, in that you cannot here reference
+ the OpModes in the FtcRobotController module written by FTC HQ. Until that is fixed (we're
+ working on it), if you want to use any of those OpModes you'll have to go back to the old
+ way of modifying FtcOpModeRegister.register() directly. We apologize for the incovenience.</p></div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../../org/swerverobotics/library/interfaces/TeleOp.html" title="annotation in org.swerverobotics.library.interfaces"><code>TeleOp</code></a>, 

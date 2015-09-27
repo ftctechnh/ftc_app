@@ -1,10 +1,14 @@
 package org.swerverobotics.library.interfaces;
 
-import java.nio.*;
+import com.qualcomm.robotcore.hardware.I2cDevice;
 
 /**
  * Interface API to the Adafruit 9-DOF Absolute Orientation IMU Fusion Breakout - BNO055 sensor.
- * 
+ * You can create an implementation of this interface for a given sensor using
+ * {@link org.swerverobotics.library.ClassFactory#createAdaFruitBNO055IMU(I2cDevice) ClassFactory.createAdaFruitBNO055IMU()}.
+ *
+ * @see IAccelerationIntegrator
+ * @see org.swerverobotics.library.ClassFactory#createAdaFruitBNO055IMU(I2cDevice)
  * @see <a href="http://www.adafruit.com/products/2472">http://www.adafruit.com/products/2472</a>
  * @see <a href="http://www.bosch-sensortec.com/en/homepage/products_3/9_axis_sensors_5/ecompass_2/bno055_3/bno055_4">http://www.bosch-sensortec.com/en/homepage/products_3/9_axis_sensors_5/ecompass_2/bno055_3/bno055_4</a>
  */
@@ -30,10 +34,7 @@ public interface IBNO055IMU
      */
     class Parameters
         {
-        /** the address at which the sensor resides on the I2C bus. If this value is 
-         * UNSPECIFIED, it is ignored; the I2C address in that case must be provided to 
-         * the I2cDevice object by some other mechanism, perhaps as part of the initialization
-         * of that object itself. */
+        /** the address at which the sensor resides on the I2C bus.  */
         public I2CADDR          i2cAddr8Bit         = I2CADDR.DEFAULT;
         
         /** the mode we wish to use the sensor in */
@@ -54,6 +55,15 @@ public interface IBNO055IMU
 
         /** calibration data with which the BNO055 should be initialized */
         public byte[]           calibrationData     = null;
+
+        /** the algorithm to use for integrating acceleration to produce velocity and position.
+         * If not specified, a simple but not especially effective internal algorithm will be used. */
+        public IAccelerationIntegrator accelerationIntegrationAlgorithm = null;
+
+        /** the boost in thread priority to use for data acquisition. A small increase in the
+         * thread priority can help reduce timestamping jitter and improve acceleration integration
+         * at only a small detriment to other parts of the system. */
+        public int              threadPriorityBoost = 1;
         
         /** debugging aid: enable logging for this device? */
         public boolean          loggingEnabled      = false;
@@ -90,7 +100,7 @@ public interface IBNO055IMU
      * a component due to the movement of the sensor and a component due to the force of gravity.
      * @return  the overall acceleration vector experienced by the sensor
      */
-    Acceleration        getAcceleration();
+    Acceleration        getOverallAcceleration();
 
     /**
      * Returns the acceleration experienced by the sensor due to the movement of the sensor. 
@@ -130,51 +140,47 @@ public interface IBNO055IMU
 
     /**
      * Returns the current position of the sensor as calculated by doubly integrating the observed 
-     * sensor accelerations
+     * sensor accelerations.
      * @return  the current position of the sensor.
-     * @see #setPositionAndVelocity(Position, Velocity) 
      */
     Position    getPosition();
 
     /**
-     * Returns the curren velocity of the sensor as calculated by integrating the observed 
-     * sensor accelerations
+     * Returns the current velocity of the sensor as calculated by integrating the observed
+     * sensor accelerations.
      * @return  the current velocity of the sensor
-     * @see #setPositionAndVelocity(Position, Velocity) 
      */
     Velocity    getVelocity();
 
     /**
-     * Atomically sets the current position and / or velocity of the sensor. It is explicitly
-     * OK to call this method while the acceleration integration loop is executing.
-     * @param position  If non-null, the current sensor position is set to this value. If 
-     *                  null, the current sensor position is unchanged.
-     * @param velocity  If non-null, the current sensor velocity is set to this value. If
-     *                  null, the current sensor velocity is unchanged.
-     * @see #startAccelerationIntegration(Position, Velocity)
-     * @see #getPosition() 
-     * @see #getVelocity() 
+     * Returns the last observed acceleration of the sensor. Note that this does not communicate
+     * with the sensor, but rather returns the most recent value reported to the acceleration
+     * integration algorithm.
+     * @return  the last observed acceleration of the sensor
      */
-    void setPositionAndVelocity(Position position, Velocity velocity);
+    Acceleration getAcceleration();
 
     /**
      * Start (or re-start) a thread that continuously at intervals polls the current linear acceleration 
      * of the sensor and integrates it to provide velocity and position information. A default polling
      * interval of 100ms is used.
-     * @param initalPosition    as in {@link #setPositionAndVelocity(Position, Velocity)}
-     * @param initialVelocity   as in {@link #setPositionAndVelocity(Position, Velocity)}
+     * @param initalPosition   If non-null, the current sensor position is set to this value. If
+     *                         null, the current sensor position is unchanged.
+     * @param initialVelocity  If non-null, the current sensor velocity is set to this value. If
+     *                         null, the current sensor velocity is unchanged.
      * @see #startAccelerationIntegration(Position, Velocity) 
-     * @see #setPositionAndVelocity(Position, Velocity) 
-     * @see #getLinearAcceleration() 
+     * @see #getLinearAcceleration()
      */
     void startAccelerationIntegration(Position initalPosition, Velocity initialVelocity);
 
     /**
      * As in {@link #startAccelerationIntegration(Position, Velocity)}, but provides control over
      * the frequency which which the acceleration is polled.
-     * @param initalPosition    as in {@link #startAccelerationIntegration(Position, Velocity)}
-     * @param initialVelocity   as in {@link #startAccelerationIntegration(Position, Velocity)}
-     * @param msPollInterval    the interval, in milliseconds, between successive calls to {@link #getLinearAcceleration()}
+     * @param initalPosition   If non-null, the current sensor position is set to this value. If
+     *                         null, the current sensor position is unchanged.
+     * @param initialVelocity  If non-null, the current sensor velocity is set to this value. If
+     *                         null, the current sensor velocity is unchanged.
+     * @param msPollInterval   the interval to use, in milliseconds, between successive calls to {@link #getLinearAcceleration()}
      * @see #startAccelerationIntegration(Position, Velocity, int)
      */
     void startAccelerationIntegration(Position initalPosition, Velocity initialVelocity, int msPollInterval);
@@ -463,420 +469,4 @@ public interface IBNO055IMU
             }
         }
 
-    /**
-     * Instances of MagneticFlux represent a three-dimensional magnetic strength vector. Units
-     * are in tesla (NOT microtesla).
-     */
-    class MagneticFlux
-        {
-        //----------------------------------------------------------------------------------------------
-        // State
-        //----------------------------------------------------------------------------------------------
-    
-        /** the flux in the X direction */
-        public final double x;
-        /** the flux in the Y direction */
-        public final double y;
-        /** the flux in the Z direction */
-        public final double z;
-
-        /** the time on the System.nanoTime() clock at which the data was acquired */
-        public long nanoTime;
-
-        //----------------------------------------------------------------------------------------------
-        // Construction
-        //----------------------------------------------------------------------------------------------
-    
-        public MagneticFlux()
-            {
-            this(0,0,0, 0);
-            }
-        public MagneticFlux(double x, double y, double z, long nanoTime)
-            {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-            this.nanoTime = nanoTime;
-            }
-        public MagneticFlux(II2cDeviceClient.TimestampedData ts, double scale)
-            {
-            ByteBuffer buffer = ByteBuffer.wrap(ts.data).order(ByteOrder.LITTLE_ENDIAN);
-            this.x = buffer.getShort() / scale;
-            this.y = buffer.getShort() / scale;
-            this.z = buffer.getShort() / scale;
-            this.nanoTime = ts.nanoTime;
-            }
-        }
-
-    /**
-     * A Quaternion can indicate an orientation in three-space without the trouble of
-     * possible gimbal-lock.
-     * 
-     * @see <a href="https://en.wikipedia.org/wiki/Quaternion">https://en.wikipedia.org/wiki/Quaternion</a>
-     * @see <a href="https://en.wikipedia.org/wiki/Gimbal_lock">https://en.wikipedia.org/wiki/Gimbal_lock</a>
-     * @see <a href="https://www.youtube.com/watch?v=zc8b2Jo7mno">https://www.youtube.com/watch?v=zc8b2Jo7mno</a>
-     * @see <a href="https://www.youtube.com/watch?v=mHVwd8gYLnI">https://www.youtube.com/watch?v=mHVwd8gYLnI</a>
-     */
-    class Quaternion
-        {
-        //----------------------------------------------------------------------------------------------
-        // State
-        //----------------------------------------------------------------------------------------------
-    
-        public final double w;
-        public final double x;
-        public final double y;
-        public final double z;
-
-        /** the time on the System.nanoTime() clock at which the data was acquired */
-        public final long nanoTime;
-
-        //----------------------------------------------------------------------------------------------
-        // Construction
-        //----------------------------------------------------------------------------------------------
-    
-        public Quaternion()
-            {
-            this.w = 1;
-            this.x = this.y = this.z = 0;
-            this.nanoTime = 0;
-            }
-        public Quaternion(double w, double x, double y, double z)
-            {
-            this.w = w;
-            this.x = x;
-            this.y = y;
-            this.z = z;
-            this.nanoTime = 0;
-            }
-        public Quaternion(II2cDeviceClient.TimestampedData ts, double scale)
-            {
-            ByteBuffer buffer = ByteBuffer.wrap(ts.data).order(ByteOrder.LITTLE_ENDIAN);
-            this.w = buffer.getShort() / scale;
-            this.x = buffer.getShort() / scale;
-            this.y = buffer.getShort() / scale;
-            this.z = buffer.getShort() / scale;
-            this.nanoTime = ts.nanoTime;
-            }
-        //----------------------------------------------------------------------------------------------
-        // Operations
-        //----------------------------------------------------------------------------------------------
-    
-        public double magnitude()
-            {
-            return Math.sqrt(w*w + x*x + y*y + z*z);
-            }
-    
-        public Quaternion normalized()
-            {
-            double mag = this.magnitude();
-            return new Quaternion(
-                w / mag,
-                x / mag,
-                y / mag,
-                z / mag);
-            }
-        
-        public Quaternion congugate()
-            {
-            return new Quaternion(w, -x, -y, -z);
-            }
-        
-        }
-
-    /**
-     * Accleration represents a directed acceleration in three-space. 
-     * Units are as specified in sensor initialization. The time at which the data was 
-     * acquired is provide so as to facilitate integration of accelerations.
-     */
-    class Acceleration
-        {
-        //----------------------------------------------------------------------------------------------
-        // State
-        //----------------------------------------------------------------------------------------------
-    
-        /** the acceleration in the X direction */
-        public double accelX;
-        /** the acceleration in the Y direction */
-        public double accelY;
-        /** the acceleration in the Z direction */
-        public double accelZ;
-
-        /** the time on the System.nanoTime() clock at which the data was acquired */
-        public long nanoTime;
-
-        //----------------------------------------------------------------------------------------------
-        // Construction
-        //----------------------------------------------------------------------------------------------
-    
-        public Acceleration()
-            {
-            this(0,0,0,0);
-            }
-        public Acceleration(double accelX, double accelY, double accelZ, long nanoTime)
-            {
-            this.accelX = accelX;
-            this.accelY = accelY;
-            this.accelZ = accelZ;
-            this.nanoTime = nanoTime;
-            }
-        public Acceleration(II2cDeviceClient.TimestampedData ts, double scale)
-            {
-            ByteBuffer buffer = ByteBuffer.wrap(ts.data).order(ByteOrder.LITTLE_ENDIAN);
-            this.accelX = buffer.getShort() / scale;
-            this.accelY = buffer.getShort() / scale;
-            this.accelZ = buffer.getShort() / scale;
-            this.nanoTime = ts.nanoTime;
-            }
-
-        //----------------------------------------------------------------------------------------------
-        // Integration
-        //----------------------------------------------------------------------------------------------
-
-        /**
-         * Integrate between two accelerations to determine a change in velocity
-         * @param prev   the previously measured acceleration
-         * @return       the change in velocity between the previous acceleration and the receiver
-         */
-        public Velocity integrate(Acceleration prev)
-            {
-            // We assume that the mean of the two accelerations has been acting during the entire interval
-            double sInterval = (this.nanoTime - prev.nanoTime) * 1e-9;
-            return new Velocity(
-                    (this.accelX + prev.accelX) * 0.5 * sInterval,
-                    (this.accelY + prev.accelY) * 0.5 * sInterval,
-                    (this.accelZ + prev.accelZ) * 0.5 * sInterval,
-                    this.nanoTime
-                    );
-            }
-        }
-
-    /**
-     * Velocity represents a directed velocity in three-space. 
-     * Units are as the same as for Acceleration, but integrated for time.
-     */
-    class Velocity
-        {
-        //----------------------------------------------------------------------------------------------
-        // State
-        //----------------------------------------------------------------------------------------------
-
-        /** the velocity in the X direction */
-        public final double velocX;
-        /** the velocity in the Y direction */
-        public final double velocY;
-        /** the velocity in the Z direction */
-        public final double velocZ;
-
-        /** the time on the System.nanoTime() clock at which the data was acquired */
-        public final long nanoTime;
-
-        //----------------------------------------------------------------------------------------------
-        // Construction
-        //----------------------------------------------------------------------------------------------
-
-        public Velocity()
-            {
-            this(0,0,0,0);
-            }
-        public Velocity(double velocX, double velocY, double velocZ, long nanoTime)
-            {
-            this.velocX = velocX;
-            this.velocY = velocY;
-            this.velocZ = velocZ;
-            this.nanoTime = nanoTime;
-            }
-        public Velocity(II2cDeviceClient.TimestampedData ts, double scale)
-            {
-            ByteBuffer buffer = ByteBuffer.wrap(ts.data).order(ByteOrder.LITTLE_ENDIAN);
-            this.velocX = buffer.getShort() / scale;
-            this.velocY = buffer.getShort() / scale;
-            this.velocZ = buffer.getShort() / scale;
-            this.nanoTime = ts.nanoTime;
-            }
-        
-        //----------------------------------------------------------------------------------------------
-        // Arithmetic
-        //----------------------------------------------------------------------------------------------
-
-        public Velocity plus(Velocity him)
-            {
-            return new Velocity(
-                this.velocX + him.velocX,
-                this.velocY + him.velocY,
-                this.velocZ + him.velocZ,
-                Math.max(this.nanoTime, him.nanoTime));
-            }
-        
-        //----------------------------------------------------------------------------------------------
-        // Integration
-        //----------------------------------------------------------------------------------------------
-
-        /**
-         * Integrate between two velocities to determine a change in position
-         * @param prev   the previously measured velocity
-         * @return       the change in position between the previous position and the receiver
-         */
-        public Position integrate(Velocity prev)
-            {
-            // We assume that the mean of the two velocities has been acting during the entire interval
-            double sInterval = (this.nanoTime - prev.nanoTime) * 1e-9;
-            return new Position(
-                    (this.velocX + prev.velocX) * 0.5 * sInterval,
-                    (this.velocY + prev.velocY) * 0.5 * sInterval,
-                    (this.velocZ + prev.velocZ) * 0.5 * sInterval,
-                    this.nanoTime
-            );
-            }
-        }
-    
-    /**
-     * Position represents a coordinate position in three-space. 
-     * Units are as the same as for Velocity, but integrated for time.
-     */
-    class Position
-        {
-        //----------------------------------------------------------------------------------------------
-        // State
-        //----------------------------------------------------------------------------------------------
-
-        /** the location in the X direction */
-        public final double x;
-        /** the location in the Y direction */
-        public final double y;
-        /** the location in the Z direction */
-        public final double z;
-
-        /** the time on the System.nanoTime() clock at which the data was acquired */
-        public final long nanoTime;
-
-        //----------------------------------------------------------------------------------------------
-        // Construction
-        //----------------------------------------------------------------------------------------------
-
-        public Position()
-            {
-            this(0,0,0,0);
-            }
-        public Position(double x, double y, double z, long nanoTime)
-            {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-            this.nanoTime = nanoTime;
-            }
-        public Position(II2cDeviceClient.TimestampedData ts, double scale)
-            {
-            ByteBuffer buffer = ByteBuffer.wrap(ts.data).order(ByteOrder.LITTLE_ENDIAN);
-            this.x = buffer.getShort() / scale;
-            this.y = buffer.getShort() / scale;
-            this.z = buffer.getShort() / scale;
-            this.nanoTime = ts.nanoTime;
-            }
-
-        //----------------------------------------------------------------------------------------------
-        // Arithmetic
-        //----------------------------------------------------------------------------------------------
-
-        public Position plus(Position him)
-            {
-            return new Position(
-                this.x + him.x,
-                this.y + him.y,
-                this.z + him.y,
-                Math.max(this.nanoTime, him.nanoTime));
-            }
-        }
-
-    /**
-     * AngularVelocity represents a rotation rate in three-space. Units are as specified 
-     * in sensor initialization, either radians/second or degrees/second.
-     */
-    class AngularVelocity
-        {
-        //----------------------------------------------------------------------------------------------
-        // State
-        //----------------------------------------------------------------------------------------------
-    
-        /** the rotational rate about the X axis */
-        public final double rateX;
-        /** the rotational rate about the Y axis */
-        public final double rateY;
-        /** the rotational rate about the Z axis */
-        public final double rateZ;
-
-        /** the time on the System.nanoTime() clock at which the data was acquired */
-        public final long nanoTime;
-
-        //----------------------------------------------------------------------------------------------
-        // Construction
-        //----------------------------------------------------------------------------------------------
-    
-        public AngularVelocity()
-            {
-            this(0,0,0, 0);
-            }
-        public AngularVelocity(double rateX, double rateY, double rateZ, long nanoTime)
-            {
-            this.rateX = rateX;
-            this.rateY = rateY;
-            this.rateZ = rateZ;
-            this.nanoTime = nanoTime;
-            }
-        public AngularVelocity(II2cDeviceClient.TimestampedData ts, double scale)
-            {
-            ByteBuffer buffer = ByteBuffer.wrap(ts.data).order(ByteOrder.LITTLE_ENDIAN);
-            this.rateX = buffer.getShort() / scale;
-            this.rateY = buffer.getShort() / scale;
-            this.rateZ = buffer.getShort() / scale;
-            this.nanoTime = ts.nanoTime;
-            }
-        }
-
-    /**
-     * Instances of EulerAngles represent a direction in three-dimensional space by way of rotations.
-     * Units are as specified in sensor initiation. Angles are in rotation order (heading, then roll,
-     * then pitch) and are right-handed about their respective axes.
-     */
-    class EulerAngles
-        {
-        //----------------------------------------------------------------------------------------------
-        // State
-        //----------------------------------------------------------------------------------------------
-    
-        /** the rotation about the Z axis */
-        public final double heading;
-        /** the rotation about the Y axis */
-        public final double roll;
-        /** the rotation about the X axix */
-        public final double pitch;
-
-        /** the time on the System.nanoTime() clock at which the data was acquired,
-         *  as best as we can manage to determine that */
-        public final long nanoTime;
-
-        //----------------------------------------------------------------------------------------------
-        // Construction
-        //----------------------------------------------------------------------------------------------
-    
-        public EulerAngles()
-            {
-            this(0,0,0, 0);
-            }
-        public EulerAngles(double heading, double roll, double pitch, long nanoTime)
-            {
-            this.heading  = heading;
-            this.roll     = roll;
-            this.pitch    = pitch;
-            this.nanoTime = nanoTime;
-            }
-        public EulerAngles(II2cDeviceClient.TimestampedData ts, double scale)
-            {
-            ByteBuffer buffer = ByteBuffer.wrap(ts.data).order(ByteOrder.LITTLE_ENDIAN);
-            this.heading = buffer.getShort() / scale;
-            this.roll    = buffer.getShort() / scale;
-            this.pitch   = buffer.getShort() / scale;
-            this.nanoTime = ts.nanoTime;
-            }
-        }
     }

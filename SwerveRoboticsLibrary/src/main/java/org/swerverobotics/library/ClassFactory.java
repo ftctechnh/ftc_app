@@ -19,25 +19,28 @@ public final class ClassFactory
     //----------------------------------------------------------------------------------------------
 
     /**
-     * NxtMotorControllerOnI2cDevice is an alternative implementation of a Legacy DC Motor controller.
-     * It is implemented on top of an {@link II2cDeviceClient} instance which completely handles
-     * all the complexities of read vs write mode switching and the like, allowing the logic of the
-     * controller itself to be extraordinarily simple.
+     * Creates an alternate 'NxtMotorControllerOnI2cDevice' DCMotorController implementation for
+     * a legacy HiTechnic / Nxt motor controller. NxtMotorControllerOnI2cDevice is implemented
+     * on top of an {@link II2cDeviceClient} instance which completely handles all the complexities
+     * of read vs write mode switching and the like, allowing the logic of the controller itself
+     * to be extraordinarily simple.
      *
      * <p>The key fact about NxtMotorControllerOnI2cDevice is that manual mode switching is
      * entirely unnecessary. Just call the getPosition() or setPower() methods or what have you,
      * and the mode switching will be taken care of.</p>
      *
-     * <p>NxtMotorControllerOnI2cDevice not tied to SynchronousOpMode. It can also be used from
-     * LinearOpMode, or, indeed, any thread that can tolerate operations that can take tens of
+     * <p>NxtMotorControllerOnI2cDevice not tied to SynchronousOpMode. It can also be used for example
+     * from LinearOpMode, or, indeed, any thread that can tolerate operations that can take tens of
      * milliseconds to run. In SynchronousOpMode, NxtMotorControllerOnI2cDevice is currently
-     * enabled by setting the {@link SynchronousOpMode#useExperimentalThunking} flag, though that
-     * will probably change. In other OpModes, you'll have to manually call this {@link #createNxtDcMotorController
-     * createNxtDcMotorControllerOnI2cDevice()}.</p>
+     * enabled by setting the {@link SynchronousOpMode#useExperimentalThunking useExperimentalThunking} flag,
+     * though that will probably change. In other OpModes, you'll have to manually
+     * call {@link #createNxtDcMotorController createNxtDcMotorControllerOnI2cDevice()} yourself.</p>
      *
-     * <p>You should call {@link DcMotorController#close()} when you want the controller to
+     * <p>If you call this method to retrieve a NxtMotorControllerOnI2cDevice, you should
+     * call {@link DcMotorController#close()} when you want the controller to
      * close down, likely from your stop() logic or the end of your runOpMode() method as the
-     * case may be.</p>
+     * case may be. In SynchronousOpMode with the {@link SynchronousOpMode#useExperimentalThunking useExperimentalThunking}
+     * flag, closing the controller is automaticlly taken care of.</p>
      *
      * <p>{@link #createNxtDcMotorController createNxtDcMotorControllerOnI2cDevice()} takes
      * a ModernRoboticsNxtDcMotorController motor controller as might found in an OpMode's hardware map
@@ -98,38 +101,41 @@ public final class ClassFactory
         }
 
     /**
-     * Creates an Nxt ColorSensor object from an I2cDevice. Said device must, of course,
-     * be connected to a Core Legacy Module
+     * Creates an ColorSensor object from an I2cDevice that represents a
+     * <a href="http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NCO1038">HiTechnic
+     * color sensor</a>.
      *
      * @param i2cDevice     the color sensor device
      * @return              a ColorSensor object connected to the device
      */
-    public static ColorSensor createNxtColorSensor(I2cDevice i2cDevice)
+    public static ColorSensor createHiTechnicColorSensor(I2cDevice i2cDevice)
         {
         return new NxtColorSensorOnI2cDevice(i2cDevice);
         }
 
     /**
-     * Creates an Nxt ColorSensor object from an I2cDevice. Said device must, of course,
-     * be connected to a Core Legacy Module.
+     * Creates an ColorSensor object from an II2cDevice that represents a
+     * <a href="http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NCO1038">HiTechnic
+     * color sensor</a>.
      *
      * @param ii2cDevice    the color sensor device
      * @return              a ColorSensor object connected to the device
      */
-    public static ColorSensor createNxtColorSensor(II2cDevice ii2cDevice)
+    public static ColorSensor createHiTechnicColorSensor(II2cDevice ii2cDevice)
         {
         return new NxtColorSensorOnI2cDevice(ii2cDevice);
         }
 
     /**
-     * Creates an Nxt ColorSensor object from an I2cDevice. Said device must, of course,
-     * be connected to a Core Legacy Module.
+     * Creates an ColorSensor object from an controller and port specification that represents a
+     * <a href="http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NCO1038">HiTechnic
+     * color sensor</a>.
      *
      * @param controller    the Core Device Legacy Module controller to which the device is attached
      * @param port          the port on the controller that the device attaches to
      * @return              a ColorSensor object connected to the device
      */
-    public static ColorSensor createNxtColorSensor(I2cController controller, int port)
+    public static ColorSensor createHiTechnicColorSensor(I2cController controller, int port)
         {
         return new NxtColorSensorOnI2cDevice(controller, port);
         }

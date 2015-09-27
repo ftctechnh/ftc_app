@@ -48,7 +48,7 @@ var activeTableTab = "activeTableTab";
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../../org/swerverobotics/library/interfaces/IAction.html" title="interface in org.swerverobotics.library.interfaces"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Acceleration.html" title="class in org.swerverobotics.library.interfaces"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.ACCELUNIT.html" title="enum in org.swerverobotics.library.interfaces"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../index.html?org/swerverobotics/library/interfaces/IBNO055IMU.html" target="_top">Frames</a></li>
@@ -100,10 +100,14 @@ var activeTableTab = "activeTableTab";
 <hr>
 <br>
 <pre>public interface <span class="typeNameLabel">IBNO055IMU</span></pre>
-<div class="block">Interface API to the Adafruit 9-DOF Absolute Orientation IMU Fusion Breakout - BNO055 sensor.</div>
+<div class="block">Interface API to the Adafruit 9-DOF Absolute Orientation IMU Fusion Breakout - BNO055 sensor.
+ You can create an implementation of this interface for a given sensor using
+ <a href="../../../../org/swerverobotics/library/ClassFactory.html#createAdaFruitBNO055IMU-com.qualcomm.robotcore.hardware.I2cDevice-"><code>ClassFactory.createAdaFruitBNO055IMU()</code></a>.</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="http://www.adafruit.com/products/2472">http://www.adafruit.com/products/2472</a>, 
+<dd><a href="../../../../org/swerverobotics/library/interfaces/IAccelerationIntegrator.html" title="interface in org.swerverobotics.library.interfaces"><code>IAccelerationIntegrator</code></a>, 
+<a href="../../../../org/swerverobotics/library/ClassFactory.html#createAdaFruitBNO055IMU-com.qualcomm.robotcore.hardware.I2cDevice-"><code>ClassFactory.createAdaFruitBNO055IMU(I2cDevice)</code></a>, 
+<a href="http://www.adafruit.com/products/2472">http://www.adafruit.com/products/2472</a>, 
 <a href="http://www.bosch-sensortec.com/en/homepage/products_3/9_axis_sensors_5/ecompass_2/bno055_3/bno055_4">http://www.bosch-sensortec.com/en/homepage/products_3/9_axis_sensors_5/ecompass_2/bno055_3/bno055_4</a></dd>
 </dl>
 </li>
@@ -126,39 +130,15 @@ var activeTableTab = "activeTableTab";
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Acceleration.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Acceleration</a></span></code>
-<div class="block">Accleration represents a directed acceleration in three-space.</div>
-</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>static class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.ACCELUNIT.html" title="enum in org.swerverobotics.library.interfaces">IBNO055IMU.ACCELUNIT</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>static class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.ANGLEUNIT.html" title="enum in org.swerverobotics.library.interfaces">IBNO055IMU.ANGLEUNIT</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
-<td class="colFirst"><code>static class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.AngularVelocity.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.AngularVelocity</a></span></code>
-<div class="block">AngularVelocity represents a rotation rate in three-space.</div>
-</td>
-</tr>
 <tr class="altColor">
-<td class="colFirst"><code>static class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.EulerAngles.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.EulerAngles</a></span></code>
-<div class="block">Instances of EulerAngles represent a direction in three-dimensional space by way of rotations.</div>
-</td>
-</tr>
-<tr class="rowColor">
 <td class="colFirst"><code>static class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.I2CADDR.html" title="enum in org.swerverobotics.library.interfaces">IBNO055IMU.I2CADDR</a></span></code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>static class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.MagneticFlux.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.MagneticFlux</a></span></code>
-<div class="block">Instances of MagneticFlux represent a three-dimensional magnetic strength vector.</div>
-</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static class&nbsp;</code></td>
@@ -170,19 +150,6 @@ var activeTableTab = "activeTableTab";
 <tr class="altColor">
 <td class="colFirst"><code>static class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.PITCHMODE.html" title="enum in org.swerverobotics.library.interfaces">IBNO055IMU.PITCHMODE</a></span></code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>static class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Position.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Position</a></span></code>
-<div class="block">Position represents a coordinate position in three-space.</div>
-</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>static class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Quaternion.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Quaternion</a></span></code>
-<div class="block">A Quaternion can indicate an orientation in three-space without the trouble of
- possible gimbal-lock.</div>
-</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static class&nbsp;</code></td>
@@ -200,12 +167,6 @@ var activeTableTab = "activeTableTab";
 <tr class="rowColor">
 <td class="colFirst"><code>static class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.TEMPUNIT.html" title="enum in org.swerverobotics.library.interfaces">IBNO055IMU.TEMPUNIT</a></span></code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>static class&nbsp;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Velocity.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Velocity</a></span></code>
-<div class="block">Velocity represents a directed velocity in three-space.</div>
-</td>
 </tr>
 </table>
 </li>
@@ -250,142 +211,141 @@ var activeTableTab = "activeTableTab";
 </td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Acceleration.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Acceleration</a></code></td>
+<td class="colFirst"><code><a href="../../../../org/swerverobotics/library/interfaces/Acceleration.html" title="class in org.swerverobotics.library.interfaces">Acceleration</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#getAcceleration--">getAcceleration</a></span>()</code>
-<div class="block">Returns the overall acceleration experienced by the sensor.</div>
+<div class="block">Returns the last observed acceleration of the sensor.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
-<td class="colFirst"><code><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.EulerAngles.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.EulerAngles</a></code></td>
+<td class="colFirst"><code><a href="../../../../org/swerverobotics/library/interfaces/EulerAngles.html" title="class in org.swerverobotics.library.interfaces">EulerAngles</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#getAngularOrientation--">getAngularOrientation</a></span>()</code>
 <div class="block">Returns the absolute orientation of the sensor as a set of Euler angles.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
-<td class="colFirst"><code><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.AngularVelocity.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.AngularVelocity</a></code></td>
+<td class="colFirst"><code><a href="../../../../org/swerverobotics/library/interfaces/AngularVelocity.html" title="class in org.swerverobotics.library.interfaces">AngularVelocity</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#getAngularVelocity--">getAngularVelocity</a></span>()</code>
 <div class="block">Returns the rate of change of the absolute orientation of the sensor.</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
-<td class="colFirst"><code><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Acceleration.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Acceleration</a></code></td>
+<td class="colFirst"><code><a href="../../../../org/swerverobotics/library/interfaces/Acceleration.html" title="class in org.swerverobotics.library.interfaces">Acceleration</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#getGravity--">getGravity</a></span>()</code>
 <div class="block">Returns the direction of the force of gravity relative to the sensor.</div>
 </td>
 </tr>
 <tr id="i5" class="rowColor">
-<td class="colFirst"><code><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Acceleration.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Acceleration</a></code></td>
+<td class="colFirst"><code><a href="../../../../org/swerverobotics/library/interfaces/Acceleration.html" title="class in org.swerverobotics.library.interfaces">Acceleration</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#getLinearAcceleration--">getLinearAcceleration</a></span>()</code>
 <div class="block">Returns the acceleration experienced by the sensor due to the movement of the sensor.</div>
 </td>
 </tr>
 <tr id="i6" class="altColor">
-<td class="colFirst"><code><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.MagneticFlux.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.MagneticFlux</a></code></td>
+<td class="colFirst"><code><a href="../../../../org/swerverobotics/library/interfaces/MagneticFlux.html" title="class in org.swerverobotics.library.interfaces">MagneticFlux</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#getMagneticFieldStrength--">getMagneticFieldStrength</a></span>()</code>
 <div class="block">Returns the magnetic field strength experienced by the sensor.</div>
 </td>
 </tr>
 <tr id="i7" class="rowColor">
-<td class="colFirst"><code><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Position.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Position</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#getPosition--">getPosition</a></span>()</code>
-<div class="block">Returns the current position of the sensor as calculated by doubly integrating the observed 
- sensor accelerations</div>
+<td class="colFirst"><code><a href="../../../../org/swerverobotics/library/interfaces/Acceleration.html" title="class in org.swerverobotics.library.interfaces">Acceleration</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#getOverallAcceleration--">getOverallAcceleration</a></span>()</code>
+<div class="block">Returns the overall acceleration experienced by the sensor.</div>
 </td>
 </tr>
 <tr id="i8" class="altColor">
-<td class="colFirst"><code><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Quaternion.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Quaternion</a></code></td>
+<td class="colFirst"><code><a href="../../../../org/swerverobotics/library/interfaces/Position.html" title="class in org.swerverobotics.library.interfaces">Position</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#getPosition--">getPosition</a></span>()</code>
+<div class="block">Returns the current position of the sensor as calculated by doubly integrating the observed 
+ sensor accelerations.</div>
+</td>
+</tr>
+<tr id="i9" class="rowColor">
+<td class="colFirst"><code><a href="../../../../org/swerverobotics/library/interfaces/Quaternion.html" title="class in org.swerverobotics.library.interfaces">Quaternion</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#getQuaternionOrientation--">getQuaternionOrientation</a></span>()</code>
 <div class="block">Returns the absolute orientation of the sensor as a quaternion.</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>byte</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#getSystemError--">getSystemError</a></span>()</code>
 <div class="block">If <a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#getSystemStatus--"><code>getSystemStatus()</code></a> is 'system error' (1), returns particulars
  regarding that error.</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>byte</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#getSystemStatus--">getSystemStatus</a></span>()</code>
 <div class="block">Returns the current status of the system.</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>double</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#getTemperature--">getTemperature</a></span>()</code>
 <div class="block">Returns the current temperature.</div>
 </td>
 </tr>
-<tr id="i12" class="altColor">
-<td class="colFirst"><code><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Velocity.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Velocity</a></code></td>
+<tr id="i13" class="rowColor">
+<td class="colFirst"><code><a href="../../../../org/swerverobotics/library/interfaces/Velocity.html" title="class in org.swerverobotics.library.interfaces">Velocity</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#getVelocity--">getVelocity</a></span>()</code>
-<div class="block">Returns the curren velocity of the sensor as calculated by integrating the observed 
- sensor accelerations</div>
+<div class="block">Returns the current velocity of the sensor as calculated by integrating the observed
+ sensor accelerations.</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i14" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#initialize-org.swerverobotics.library.interfaces.IBNO055IMU.Parameters-">initialize</a></span>(<a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Parameters.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Parameters</a>&nbsp;parameters)</code>
 <div class="block">Initialize the sensor using the indicated set of parameters.</div>
 </td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i15" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#isAccelerometerCalibrated--">isAccelerometerCalibrated</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i16" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#isGyroCalibrated--">isGyroCalibrated</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i16" class="altColor">
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#isMagnetometerCalibrated--">isMagnetometerCalibrated</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i17" class="rowColor">
+<tr id="i18" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#isSystemCalibrated--">isSystemCalibrated</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i18" class="altColor">
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code>byte[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#read-org.swerverobotics.library.interfaces.IBNO055IMU.REGISTER-int-">read</a></span>(<a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.REGISTER.html" title="enum in org.swerverobotics.library.interfaces">IBNO055IMU.REGISTER</a>&nbsp;reg,
     int&nbsp;cb)</code>
 <div class="block">Low level: read data starting at the indicated register</div>
 </td>
 </tr>
-<tr id="i19" class="rowColor">
+<tr id="i20" class="altColor">
 <td class="colFirst"><code>byte</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#read8-org.swerverobotics.library.interfaces.IBNO055IMU.REGISTER-">read8</a></span>(<a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.REGISTER.html" title="enum in org.swerverobotics.library.interfaces">IBNO055IMU.REGISTER</a>&nbsp;register)</code>
 <div class="block">Low level: read the byte starting at the indicated register</div>
 </td>
 </tr>
-<tr id="i20" class="altColor">
+<tr id="i21" class="rowColor">
 <td class="colFirst"><code>byte[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#readCalibrationData--">readCalibrationData</a></span>()</code>
 <div class="block">Read calibration data from the IMU which later can be restored with writeCalibrationData().</div>
 </td>
 </tr>
-<tr id="i21" class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#setPositionAndVelocity-org.swerverobotics.library.interfaces.IBNO055IMU.Position-org.swerverobotics.library.interfaces.IBNO055IMU.Velocity-">setPositionAndVelocity</a></span>(<a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Position.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Position</a>&nbsp;position,
-                      <a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Velocity.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Velocity</a>&nbsp;velocity)</code>
-<div class="block">Atomically sets the current position and / or velocity of the sensor.</div>
-</td>
-</tr>
 <tr id="i22" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#startAccelerationIntegration-org.swerverobotics.library.interfaces.IBNO055IMU.Position-org.swerverobotics.library.interfaces.IBNO055IMU.Velocity-">startAccelerationIntegration</a></span>(<a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Position.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Position</a>&nbsp;initalPosition,
-                            <a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Velocity.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Velocity</a>&nbsp;initialVelocity)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#startAccelerationIntegration-org.swerverobotics.library.interfaces.Position-org.swerverobotics.library.interfaces.Velocity-">startAccelerationIntegration</a></span>(<a href="../../../../org/swerverobotics/library/interfaces/Position.html" title="class in org.swerverobotics.library.interfaces">Position</a>&nbsp;initalPosition,
+                            <a href="../../../../org/swerverobotics/library/interfaces/Velocity.html" title="class in org.swerverobotics.library.interfaces">Velocity</a>&nbsp;initialVelocity)</code>
 <div class="block">Start (or re-start) a thread that continuously at intervals polls the current linear acceleration 
  of the sensor and integrates it to provide velocity and position information.</div>
 </td>
 </tr>
 <tr id="i23" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#startAccelerationIntegration-org.swerverobotics.library.interfaces.IBNO055IMU.Position-org.swerverobotics.library.interfaces.IBNO055IMU.Velocity-int-">startAccelerationIntegration</a></span>(<a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Position.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Position</a>&nbsp;initalPosition,
-                            <a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Velocity.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Velocity</a>&nbsp;initialVelocity,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#startAccelerationIntegration-org.swerverobotics.library.interfaces.Position-org.swerverobotics.library.interfaces.Velocity-int-">startAccelerationIntegration</a></span>(<a href="../../../../org/swerverobotics/library/interfaces/Position.html" title="class in org.swerverobotics.library.interfaces">Position</a>&nbsp;initalPosition,
+                            <a href="../../../../org/swerverobotics/library/interfaces/Velocity.html" title="class in org.swerverobotics.library.interfaces">Velocity</a>&nbsp;initialVelocity,
                             int&nbsp;msPollInterval)</code>
-<div class="block">As in <a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#startAccelerationIntegration-org.swerverobotics.library.interfaces.IBNO055IMU.Position-org.swerverobotics.library.interfaces.IBNO055IMU.Velocity-"><code>startAccelerationIntegration(Position, Velocity)</code></a>, but provides control over
+<div class="block">As in <a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#startAccelerationIntegration-org.swerverobotics.library.interfaces.Position-org.swerverobotics.library.interfaces.Velocity-"><code>startAccelerationIntegration(Position, Velocity)</code></a>, but provides control over
  the frequency which which the acceleration is polled.</div>
 </td>
 </tr>
@@ -496,7 +456,7 @@ var activeTableTab = "activeTableTab";
 <ul class="blockList">
 <li class="blockList">
 <h4>getMagneticFieldStrength</h4>
-<pre><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.MagneticFlux.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.MagneticFlux</a>&nbsp;getMagneticFieldStrength()</pre>
+<pre><a href="../../../../org/swerverobotics/library/interfaces/MagneticFlux.html" title="class in org.swerverobotics.library.interfaces">MagneticFlux</a>&nbsp;getMagneticFieldStrength()</pre>
 <div class="block">Returns the magnetic field strength experienced by the sensor. See Section 3.6.5.2 of
  the BNO055 specification.</div>
 <dl>
@@ -507,13 +467,13 @@ var activeTableTab = "activeTableTab";
 </dl>
 </li>
 </ul>
-<a name="getAcceleration--">
+<a name="getOverallAcceleration--">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>getAcceleration</h4>
-<pre><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Acceleration.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Acceleration</a>&nbsp;getAcceleration()</pre>
+<h4>getOverallAcceleration</h4>
+<pre><a href="../../../../org/swerverobotics/library/interfaces/Acceleration.html" title="class in org.swerverobotics.library.interfaces">Acceleration</a>&nbsp;getOverallAcceleration()</pre>
 <div class="block">Returns the overall acceleration experienced by the sensor. This is composed of 
  a component due to the movement of the sensor and a component due to the force of gravity.</div>
 <dl>
@@ -528,7 +488,7 @@ var activeTableTab = "activeTableTab";
 <ul class="blockList">
 <li class="blockList">
 <h4>getLinearAcceleration</h4>
-<pre><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Acceleration.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Acceleration</a>&nbsp;getLinearAcceleration()</pre>
+<pre><a href="../../../../org/swerverobotics/library/interfaces/Acceleration.html" title="class in org.swerverobotics.library.interfaces">Acceleration</a>&nbsp;getLinearAcceleration()</pre>
 <div class="block">Returns the acceleration experienced by the sensor due to the movement of the sensor.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -542,7 +502,7 @@ var activeTableTab = "activeTableTab";
 <ul class="blockList">
 <li class="blockList">
 <h4>getGravity</h4>
-<pre><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Acceleration.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Acceleration</a>&nbsp;getGravity()</pre>
+<pre><a href="../../../../org/swerverobotics/library/interfaces/Acceleration.html" title="class in org.swerverobotics.library.interfaces">Acceleration</a>&nbsp;getGravity()</pre>
 <div class="block">Returns the direction of the force of gravity relative to the sensor.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -556,7 +516,7 @@ var activeTableTab = "activeTableTab";
 <ul class="blockList">
 <li class="blockList">
 <h4>getAngularVelocity</h4>
-<pre><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.AngularVelocity.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.AngularVelocity</a>&nbsp;getAngularVelocity()</pre>
+<pre><a href="../../../../org/swerverobotics/library/interfaces/AngularVelocity.html" title="class in org.swerverobotics.library.interfaces">AngularVelocity</a>&nbsp;getAngularVelocity()</pre>
 <div class="block">Returns the rate of change of the absolute orientation of the sensor.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -572,7 +532,7 @@ var activeTableTab = "activeTableTab";
 <ul class="blockList">
 <li class="blockList">
 <h4>getAngularOrientation</h4>
-<pre><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.EulerAngles.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.EulerAngles</a>&nbsp;getAngularOrientation()</pre>
+<pre><a href="../../../../org/swerverobotics/library/interfaces/EulerAngles.html" title="class in org.swerverobotics.library.interfaces">EulerAngles</a>&nbsp;getAngularOrientation()</pre>
 <div class="block">Returns the absolute orientation of the sensor as a set of Euler angles.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -588,7 +548,7 @@ var activeTableTab = "activeTableTab";
 <ul class="blockList">
 <li class="blockList">
 <h4>getQuaternionOrientation</h4>
-<pre><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Quaternion.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Quaternion</a>&nbsp;getQuaternionOrientation()</pre>
+<pre><a href="../../../../org/swerverobotics/library/interfaces/Quaternion.html" title="class in org.swerverobotics.library.interfaces">Quaternion</a>&nbsp;getQuaternionOrientation()</pre>
 <div class="block">Returns the absolute orientation of the sensor as a quaternion.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -604,14 +564,12 @@ var activeTableTab = "activeTableTab";
 <ul class="blockList">
 <li class="blockList">
 <h4>getPosition</h4>
-<pre><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Position.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Position</a>&nbsp;getPosition()</pre>
+<pre><a href="../../../../org/swerverobotics/library/interfaces/Position.html" title="class in org.swerverobotics.library.interfaces">Position</a>&nbsp;getPosition()</pre>
 <div class="block">Returns the current position of the sensor as calculated by doubly integrating the observed 
- sensor accelerations</div>
+ sensor accelerations.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the current position of the sensor.</dd>
-<dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#setPositionAndVelocity-org.swerverobotics.library.interfaces.IBNO055IMU.Position-org.swerverobotics.library.interfaces.IBNO055IMU.Velocity-"><code>setPositionAndVelocity(Position, Velocity)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -621,80 +579,74 @@ var activeTableTab = "activeTableTab";
 <ul class="blockList">
 <li class="blockList">
 <h4>getVelocity</h4>
-<pre><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Velocity.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Velocity</a>&nbsp;getVelocity()</pre>
-<div class="block">Returns the curren velocity of the sensor as calculated by integrating the observed 
- sensor accelerations</div>
+<pre><a href="../../../../org/swerverobotics/library/interfaces/Velocity.html" title="class in org.swerverobotics.library.interfaces">Velocity</a>&nbsp;getVelocity()</pre>
+<div class="block">Returns the current velocity of the sensor as calculated by integrating the observed
+ sensor accelerations.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the current velocity of the sensor</dd>
-<dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#setPositionAndVelocity-org.swerverobotics.library.interfaces.IBNO055IMU.Position-org.swerverobotics.library.interfaces.IBNO055IMU.Velocity-"><code>setPositionAndVelocity(Position, Velocity)</code></a></dd>
 </dl>
 </li>
 </ul>
-<a name="setPositionAndVelocity-org.swerverobotics.library.interfaces.IBNO055IMU.Position-org.swerverobotics.library.interfaces.IBNO055IMU.Velocity-">
+<a name="getAcceleration--">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>setPositionAndVelocity</h4>
-<pre>void&nbsp;setPositionAndVelocity(<a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Position.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Position</a>&nbsp;position,
-                            <a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Velocity.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Velocity</a>&nbsp;velocity)</pre>
-<div class="block">Atomically sets the current position and / or velocity of the sensor. It is explicitly
- OK to call this method while the acceleration integration loop is executing.</div>
+<h4>getAcceleration</h4>
+<pre><a href="../../../../org/swerverobotics/library/interfaces/Acceleration.html" title="class in org.swerverobotics.library.interfaces">Acceleration</a>&nbsp;getAcceleration()</pre>
+<div class="block">Returns the last observed acceleration of the sensor. Note that this does not communicate
+ with the sensor, but rather returns the most recent value reported to the acceleration
+ integration algorithm.</div>
 <dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>position</code> - If non-null, the current sensor position is set to this value. If 
-                  null, the current sensor position is unchanged.</dd>
-<dd><code>velocity</code> - If non-null, the current sensor velocity is set to this value. If
-                  null, the current sensor velocity is unchanged.</dd>
-<dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#startAccelerationIntegration-org.swerverobotics.library.interfaces.IBNO055IMU.Position-org.swerverobotics.library.interfaces.IBNO055IMU.Velocity-"><code>startAccelerationIntegration(Position, Velocity)</code></a>, 
-<a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#getPosition--"><code>getPosition()</code></a>, 
-<a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#getVelocity--"><code>getVelocity()</code></a></dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the last observed acceleration of the sensor</dd>
 </dl>
 </li>
 </ul>
-<a name="startAccelerationIntegration-org.swerverobotics.library.interfaces.IBNO055IMU.Position-org.swerverobotics.library.interfaces.IBNO055IMU.Velocity-">
+<a name="startAccelerationIntegration-org.swerverobotics.library.interfaces.Position-org.swerverobotics.library.interfaces.Velocity-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>startAccelerationIntegration</h4>
-<pre>void&nbsp;startAccelerationIntegration(<a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Position.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Position</a>&nbsp;initalPosition,
-                                  <a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Velocity.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Velocity</a>&nbsp;initialVelocity)</pre>
+<pre>void&nbsp;startAccelerationIntegration(<a href="../../../../org/swerverobotics/library/interfaces/Position.html" title="class in org.swerverobotics.library.interfaces">Position</a>&nbsp;initalPosition,
+                                  <a href="../../../../org/swerverobotics/library/interfaces/Velocity.html" title="class in org.swerverobotics.library.interfaces">Velocity</a>&nbsp;initialVelocity)</pre>
 <div class="block">Start (or re-start) a thread that continuously at intervals polls the current linear acceleration 
  of the sensor and integrates it to provide velocity and position information. A default polling
  interval of 100ms is used.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>initalPosition</code> - as in <a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#setPositionAndVelocity-org.swerverobotics.library.interfaces.IBNO055IMU.Position-org.swerverobotics.library.interfaces.IBNO055IMU.Velocity-"><code>setPositionAndVelocity(Position, Velocity)</code></a></dd>
-<dd><code>initialVelocity</code> - as in <a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#setPositionAndVelocity-org.swerverobotics.library.interfaces.IBNO055IMU.Position-org.swerverobotics.library.interfaces.IBNO055IMU.Velocity-"><code>setPositionAndVelocity(Position, Velocity)</code></a></dd>
+<dd><code>initalPosition</code> - If non-null, the current sensor position is set to this value. If
+                         null, the current sensor position is unchanged.</dd>
+<dd><code>initialVelocity</code> - If non-null, the current sensor velocity is set to this value. If
+                         null, the current sensor velocity is unchanged.</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#startAccelerationIntegration-org.swerverobotics.library.interfaces.IBNO055IMU.Position-org.swerverobotics.library.interfaces.IBNO055IMU.Velocity-"><code>startAccelerationIntegration(Position, Velocity)</code></a>, 
-<a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#setPositionAndVelocity-org.swerverobotics.library.interfaces.IBNO055IMU.Position-org.swerverobotics.library.interfaces.IBNO055IMU.Velocity-"><code>setPositionAndVelocity(Position, Velocity)</code></a>, 
+<dd><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#startAccelerationIntegration-org.swerverobotics.library.interfaces.Position-org.swerverobotics.library.interfaces.Velocity-"><code>startAccelerationIntegration(Position, Velocity)</code></a>, 
 <a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#getLinearAcceleration--"><code>getLinearAcceleration()</code></a></dd>
 </dl>
 </li>
 </ul>
-<a name="startAccelerationIntegration-org.swerverobotics.library.interfaces.IBNO055IMU.Position-org.swerverobotics.library.interfaces.IBNO055IMU.Velocity-int-">
+<a name="startAccelerationIntegration-org.swerverobotics.library.interfaces.Position-org.swerverobotics.library.interfaces.Velocity-int-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>startAccelerationIntegration</h4>
-<pre>void&nbsp;startAccelerationIntegration(<a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Position.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Position</a>&nbsp;initalPosition,
-                                  <a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Velocity.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Velocity</a>&nbsp;initialVelocity,
+<pre>void&nbsp;startAccelerationIntegration(<a href="../../../../org/swerverobotics/library/interfaces/Position.html" title="class in org.swerverobotics.library.interfaces">Position</a>&nbsp;initalPosition,
+                                  <a href="../../../../org/swerverobotics/library/interfaces/Velocity.html" title="class in org.swerverobotics.library.interfaces">Velocity</a>&nbsp;initialVelocity,
                                   int&nbsp;msPollInterval)</pre>
-<div class="block">As in <a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#startAccelerationIntegration-org.swerverobotics.library.interfaces.IBNO055IMU.Position-org.swerverobotics.library.interfaces.IBNO055IMU.Velocity-"><code>startAccelerationIntegration(Position, Velocity)</code></a>, but provides control over
+<div class="block">As in <a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#startAccelerationIntegration-org.swerverobotics.library.interfaces.Position-org.swerverobotics.library.interfaces.Velocity-"><code>startAccelerationIntegration(Position, Velocity)</code></a>, but provides control over
  the frequency which which the acceleration is polled.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>initalPosition</code> - as in <a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#startAccelerationIntegration-org.swerverobotics.library.interfaces.IBNO055IMU.Position-org.swerverobotics.library.interfaces.IBNO055IMU.Velocity-"><code>startAccelerationIntegration(Position, Velocity)</code></a></dd>
-<dd><code>initialVelocity</code> - as in <a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#startAccelerationIntegration-org.swerverobotics.library.interfaces.IBNO055IMU.Position-org.swerverobotics.library.interfaces.IBNO055IMU.Velocity-"><code>startAccelerationIntegration(Position, Velocity)</code></a></dd>
-<dd><code>msPollInterval</code> - the interval, in milliseconds, between successive calls to <a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#getLinearAcceleration--"><code>getLinearAcceleration()</code></a></dd>
+<dd><code>initalPosition</code> - If non-null, the current sensor position is set to this value. If
+                         null, the current sensor position is unchanged.</dd>
+<dd><code>initialVelocity</code> - If non-null, the current sensor velocity is set to this value. If
+                         null, the current sensor velocity is unchanged.</dd>
+<dd><code>msPollInterval</code> - the interval to use, in milliseconds, between successive calls to <a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#getLinearAcceleration--"><code>getLinearAcceleration()</code></a></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#startAccelerationIntegration-org.swerverobotics.library.interfaces.IBNO055IMU.Position-org.swerverobotics.library.interfaces.IBNO055IMU.Velocity-int-"><code>startAccelerationIntegration(Position, Velocity, int)</code></a></dd>
+<dd><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#startAccelerationIntegration-org.swerverobotics.library.interfaces.Position-org.swerverobotics.library.interfaces.Velocity-int-"><code>startAccelerationIntegration(Position, Velocity, int)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -906,7 +858,7 @@ var activeTableTab = "activeTableTab";
 <div class="subNav">
 <ul class="navList">
 <li><a href="../../../../org/swerverobotics/library/interfaces/IAction.html" title="interface in org.swerverobotics.library.interfaces"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
-<li><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Acceleration.html" title="class in org.swerverobotics.library.interfaces"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.ACCELUNIT.html" title="enum in org.swerverobotics.library.interfaces"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../../index.html?org/swerverobotics/library/interfaces/IBNO055IMU.html" target="_top">Frames</a></li>

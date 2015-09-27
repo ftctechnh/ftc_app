@@ -1,6 +1,5 @@
 package org.swerverobotics.library.internal;
 
-import android.os.SystemClock;
 import android.util.Log;
 
 import com.qualcomm.robotcore.hardware.*;
@@ -9,6 +8,8 @@ import org.swerverobotics.library.*;
 import org.swerverobotics.library.exceptions.*;
 import org.swerverobotics.library.interfaces.*;
 import static org.swerverobotics.library.internal.Util.*;
+import static junit.framework.Assert.*;
+import static org.swerverobotics.library.interfaces.NavUtil.*;
 
 /**
  * Instances of AdaFruitBNO055IMU provide API access to an 
@@ -27,12 +28,10 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
     private SENSOR_MODE            currentMode;
 
     private final Object           dataLock = new Object();
-    private Acceleration           acceleration;
-    private Velocity               velocity;
-    private Position               position;
+    private IAccelerationIntegrator accelerationAlgorithm;
 
     private final Object           startStopLock = new Object();
-    private HandshakeThreadStarter accelerationIntegration;
+    private HandshakeThreadStarter accelerationMananger;
     private static final int       msAccelerationIntegrationStopWait = 20;
     private static final int       msAwaitChipId                     = 2000;
     private static final int       msAwaitSelfTest                   = 500;
@@ -58,10 +57,8 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         this.deviceClient.setReadWindow(lowerWindow);
         this.parameters   = null;
         this.currentMode  = null;
-        this.acceleration = null;
-        this.velocity     = new Velocity();
-        this.position     = new Position();
-        this.accelerationIntegration = null;
+        this.accelerationAlgorithm = new NaiveAccelerationIntegrator();
+        this.accelerationMananger = null;
         this.deathWatch   = null;
         }
 
@@ -99,10 +96,13 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         // Remember the parameters for future use
         this.parameters = parameters;
         ElapsedTime elapsed = new ElapsedTime();
+        if (parameters.accelerationIntegrationAlgorithm != null)
+            this.accelerationAlgorithm = parameters.accelerationIntegrationAlgorithm;
 
-        // Turn on the logging (or not) so we can see what happens
+        // Propagate relevant parameters to our device client
         this.getI2cDeviceClient().setLogging(parameters.loggingEnabled);
         this.getI2cDeviceClient().setLoggingTag(parameters.loggingTag);
+        this.getI2cDeviceClient().setThreadPriorityBoost(parameters.threadPriorityBoost);
 
         // Lore: "send a throw-away command [...] just to make sure the BNO is in a good state
         // and ready to accept commands (this seems to be necessary after a hard power down)."
@@ -118,7 +118,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
                 throw new UnexpectedI2CDeviceException(chipId);
             }
         
-        // Switch to config mode (just in case, since this is the default)
+        // Make sure we are in config mode
         setSensorMode(SENSOR_MODE.CONFIG);
         
         // Reset the system, and wait for the chip id register to switch back from its reset state 
@@ -298,7 +298,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         {
         return new MagneticFlux(getVector(VECTOR.MAGNETOMETER), getFluxScale());
         }
-    public synchronized Acceleration getAcceleration()
+    public synchronized Acceleration getOverallAcceleration()
         {
         return new Acceleration(getVector(VECTOR.ACCELEROMETER), getAccelerationScale());
         }
@@ -385,31 +385,34 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
     // Position and velocity management
     //------------------------------------------------------------------------------------------
     
+    public Acceleration getAcceleration()
+        {
+        synchronized (dataLock)
+            {
+            Acceleration result = this.accelerationAlgorithm.getAcceleration();
+            if (result == null) result = new Acceleration();
+            return result;
+            }
+        }
     public Velocity getVelocity()
         {
         synchronized (dataLock)
             {
-            return this.velocity;
+            Velocity result = this.accelerationAlgorithm.getVelocity();
+            if (result == null) result = new Velocity();
+            return result;
             }
         }
     public Position getPosition()
         {
         synchronized (dataLock)
             {
-            return this.position;
+            Position result = this.accelerationAlgorithm.getPosition();
+            if (result == null) result = new Position();
+            return result;
             }
         }
-    public void setPositionAndVelocity(Position position, Velocity velocity)
-        {
-        synchronized (dataLock)
-            {
-            if (position != null)
-                this.position = position;
-            if (velocity != null)
-                this.velocity = velocity;
-            }
-        }
-    
+
     public void startAccelerationIntegration(Position initalPosition, Velocity initialVelocity)
         {
         this.startAccelerationIntegration(initalPosition, initialVelocity, msAccelerationIntegrationDefaultPollInterval);
@@ -423,11 +426,11 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
             // Stop doing this if we're already in flight
             this.stopAccelerationIntegration();
 
-            // Set the current position and velocity if asked
-            this.setPositionAndVelocity(initalPosition, initialVelocity);
+            // Set the current position and velocity
+            this.accelerationAlgorithm.initialize(initalPosition, initialVelocity);
 
             // Make a new thread on which to do the integration
-            this.accelerationIntegration = new HandshakeThreadStarter("integrator", new Integrator(msPollInterval));
+            this.accelerationMananger = new HandshakeThreadStarter("integrator", new AccelerationManager(msPollInterval));
 
             IStopActionRegistrar registrar = SynchronousOpMode.getStopActionRegistrar();
             if (registrar != null)
@@ -463,7 +466,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
                 }
 
             // Start the whole schebang a rockin...
-            this.accelerationIntegration.start();
+            this.accelerationMananger.start();
             }
         }
     
@@ -479,21 +482,90 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
                 }
 
             // Stop the integration thread
-            if (this.accelerationIntegration != null)
+            if (this.accelerationMananger != null)
                 {
-                this.accelerationIntegration.stop(msAccelerationIntegrationStopWait);
-                this.accelerationIntegration = null;
+                this.accelerationMananger.stop(msAccelerationIntegrationStopWait);
+                this.accelerationMananger = null;
                 }
             }
         }
 
-    /** Integrator maintains current velocity and position by integrating off of acceleration */
-    class Integrator implements IHandshakeable
+    /**
+     * NaiveAccelerationIntegrator provides a very naive implementation of
+     * an acceleration integration algorithm. It just does the basic physics.
+     * One you would actually want to use in a robot would, for example, likely
+     * filter noise out the acceleration data.
+     */
+    class NaiveAccelerationIntegrator implements IAccelerationIntegrator
+        {
+        //------------------------------------------------------------------------------------------
+        // State
+        //------------------------------------------------------------------------------------------
+
+        Position        position;
+        Velocity        velocity;
+        Acceleration    acceleration;
+
+        public Position getPosition() { return this.position; }
+        public Velocity getVelocity() { return this.velocity; }
+        public Acceleration getAcceleration() { return this.acceleration; }
+
+        //------------------------------------------------------------------------------------------
+        // Construction
+        //------------------------------------------------------------------------------------------
+
+        NaiveAccelerationIntegrator()
+            {
+            this.position = null;
+            this.velocity = null;
+            this.acceleration = null;
+            }
+
+        //------------------------------------------------------------------------------------------
+        // Operations
+        //------------------------------------------------------------------------------------------
+
+        @Override public void initialize(Position initialPosition, Velocity initialVelocity)
+            {
+            this.position = initialPosition;
+            this.velocity = initialVelocity;
+            this.acceleration = null;
+            }
+
+        @Override public void update(Acceleration accelNext)
+            {
+            // We should always be given a timestamp here
+            assertTrue(!BuildConfig.DEBUG || accelNext.nanoTime != 0);
+
+            // Log the incoming accelerations
+            log_v("a: %f %f %f %f", accelNext.accelX, accelNext.accelY, accelNext.accelZ, acceleration == null ? 0 : (accelNext.nanoTime - acceleration.nanoTime) * 1e-9);
+
+            // We can only integrate if we have a previous acceleration to baseline from
+            if (acceleration != null)
+                {
+                Acceleration accelPrev    = acceleration;
+                Velocity     velocityPrev = velocity;
+
+                acceleration = accelNext;
+
+                Velocity deltaVelocity = meanIntegrate(acceleration, accelPrev);
+                velocity = plus(velocity, deltaVelocity);
+
+                Position deltaPosition = meanIntegrate(velocity, velocityPrev);
+                position = plus(position, deltaPosition);
+                }
+            else
+                acceleration = accelNext;
+            }
+        }
+
+    /** Maintains current velocity and position by integrating acceleration */
+    class AccelerationManager implements IHandshakeable
         {
         private final int msPollInterval;
         private final static long nsPerMs = 1000000;
         
-        Integrator(int msPollInterval)
+        AccelerationManager(int msPollInterval)
             {
             this.msPollInterval = msPollInterval;
             }
@@ -503,46 +575,19 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
             // Let the starter know we're up and running
             starter.doHandshake();
 
-            // Any extant acceleration is stale. Null it out so that we will have
-            // fresh and accurate intervals
-            synchronized (dataLock)
-                {
-                acceleration = null;                
-                }
-            
             // Don't let inappropriate exceptions sneak out
             try
                 {
-                final long nano0 = System.nanoTime();
-
                 // Loop until we're asked to stop
                 while (!starter.isStopRequested())
                     {
                     // Read the latest available acceleration
                     final Acceleration accelNext = AdaFruitBNO055IMU.this.getLinearAcceleration();
-                    log_v("a: %f %f %f %f", accelNext.accelX, accelNext.accelY, accelNext.accelZ, (accelNext.nanoTime - nano0) * 1e-9);
 
-                    // Update our state variables based thereon
+                    // Have the algorithm do its thing
                     synchronized (dataLock)
                         {
-                        // We can only integrate if we have a previous acceleration to baseline from
-                        if (acceleration != null && acceleration.nanoTime != 0)
-                            {
-                            Acceleration accelPrev    = acceleration;
-                            Velocity     velocityPrev = velocity;
-                            
-                            acceleration = accelNext;
-
-                            Velocity deltaVelocity = acceleration.integrate(accelPrev);                         
-                            velocity = velocity.plus(deltaVelocity);
-                            
-                            Position deltaPosition = velocity.integrate(velocityPrev);
-                            position = position.plus(deltaPosition);
-                            }
-                        else
-                            {
-                            acceleration = accelNext;
-                            }
+                        accelerationAlgorithm.update(accelNext);
                         }
                     
                     // Wait a bit before polling again
@@ -551,11 +596,13 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
                         long msSoFar = (System.nanoTime() - accelNext.nanoTime) / nsPerMs;
                         Thread.sleep(Math.max(0,msPollInterval - msSoFar));
                         }
+                    else
+                        Thread.yield(); // never do a hard spin
                     }
                 }
             catch (InterruptedException|RuntimeInterruptedException e)
                 {
-                Util.handleCapturedInterrupt(e);
+                return;
                 }
             }
         }
