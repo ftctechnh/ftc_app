@@ -20,7 +20,8 @@ public class Position
     /** the location in the Z direction */
     public final double z;
 
-    /** the time on the System.nanoTime() clock at which the data was acquired */
+    /** the time on the System.nanoTime() clock at which the data was acquired. If no
+     * timestamp is associated with this particular set of data, this value is zero */
     public final long nanoTime;
 
     //----------------------------------------------------------------------------------------------
@@ -45,18 +46,5 @@ public class Position
         this.y = buffer.getShort() / scale;
         this.z = buffer.getShort() / scale;
         this.nanoTime = ts.nanoTime;
-        }
-
-    //----------------------------------------------------------------------------------------------
-    // Arithmetic
-    //----------------------------------------------------------------------------------------------
-
-    public Position plus(Position him)
-        {
-        return new Position(
-            this.x + him.x,
-            this.y + him.y,
-            this.z + him.y,
-            Math.max(this.nanoTime, him.nanoTime));
         }
     }

@@ -20,7 +20,8 @@ public class AngularVelocity
     /** the rotational rate about the Z axis */
     public final double rateZ;
 
-    /** the time on the System.nanoTime() clock at which the data was acquired */
+    /** the time on the System.nanoTime() clock at which the data was acquired. If no
+     * timestamp is associated with this particular set of data, this value is zero */
     public final long nanoTime;
 
     //----------------------------------------------------------------------------------------------

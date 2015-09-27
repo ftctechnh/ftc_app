@@ -23,7 +23,8 @@ public class Quaternion
     public final double y;
     public final double z;
 
-    /** the time on the System.nanoTime() clock at which the data was acquired */
+    /** the time on the System.nanoTime() clock at which the data was acquired. If no
+     * timestamp is associated with this particular set of data, this value is zero */
     public final long nanoTime;
 
     //----------------------------------------------------------------------------------------------

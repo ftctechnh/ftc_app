@@ -21,8 +21,8 @@ public class EulerAngles
     /** the rotation about the X axix */
     public final double pitch;
 
-    /** the time on the System.nanoTime() clock at which the data was acquired,
-     *  as best as we can manage to determine that */
+    /** the time on the System.nanoTime() clock at which the data was acquired. If no
+     * timestamp is associated with this particular set of data, this value is zero */
     public final long nanoTime;
 
     //----------------------------------------------------------------------------------------------
