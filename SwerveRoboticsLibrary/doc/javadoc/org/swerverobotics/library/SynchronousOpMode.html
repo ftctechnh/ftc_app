@@ -287,7 +287,7 @@ implements <a href="../../../org/swerverobotics/library/interfaces/IThunkDispatc
 <td class="colFirst"><code>static <a href="../../../org/swerverobotics/library/interfaces/IThunkDispatcher.html" title="interface in org.swerverobotics.library.interfaces">IThunkDispatcher</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#getThreadThunker--">getThreadThunker</a></span>()</code>
 <div class="block">Advanced: If we are running on a synchronous thread, then return the object
- which is managing the internal from the current thread to the loop() thread.</div>
+ which manages thunking from the current thread to the loop() thread.</div>
 </td>
 </tr>
 <tr id="i8" class="altColor">
@@ -1252,7 +1252,7 @@ implements <a href="../../../org/swerverobotics/library/interfaces/IThunkDispatc
 <h4>getThreadThunker</h4>
 <pre>public static&nbsp;<a href="../../../org/swerverobotics/library/interfaces/IThunkDispatcher.html" title="interface in org.swerverobotics.library.interfaces">IThunkDispatcher</a>&nbsp;getThreadThunker()</pre>
 <div class="block">Advanced: If we are running on a synchronous thread, then return the object
- which is managing the internal from the current thread to the loop() thread.</div>
+ which manages thunking from the current thread to the loop() thread.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the thunk dispatcher object, or null if we are not on a synchronous thread</dd>
