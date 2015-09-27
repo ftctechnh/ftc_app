@@ -136,7 +136,7 @@ extends java.lang.Object</pre>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>static <a href="../../../org/swerverobotics/library/interfaces/IBNO055IMU.html" title="interface in org.swerverobotics.library.interfaces">IBNO055IMU</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createAdaFruitBNO055IMU-com.qualcomm.robotcore.hardware.I2cDevice-">createAdaFruitBNO055IMU</a></span>(I2cDevice&nbsp;i2cDevice)</code>
-<div class="block">Instantiates an AdaFruit BNO055 sensor which resides at the indicated I2cDevice using
+<div class="block">Instantiates a driver object for a  AdaFruit BNO055 sensor which resides at the indicated I2cDevice using
  default values for configuration parameters.</div>
 </td>
 </tr>
@@ -144,7 +144,7 @@ extends java.lang.Object</pre>
 <td class="colFirst"><code>static <a href="../../../org/swerverobotics/library/interfaces/IBNO055IMU.html" title="interface in org.swerverobotics.library.interfaces">IBNO055IMU</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createAdaFruitBNO055IMU-com.qualcomm.robotcore.hardware.I2cDevice-org.swerverobotics.library.interfaces.IBNO055IMU.Parameters-">createAdaFruitBNO055IMU</a></span>(I2cDevice&nbsp;i2cDevice,
                        <a href="../../../org/swerverobotics/library/interfaces/IBNO055IMU.Parameters.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Parameters</a>&nbsp;parameters)</code>
-<div class="block">Instantiates an AdaFruit BNO055 sensor which resides at the indicated I2cDevice using
+<div class="block">Instantiates a driver object for an AdaFruit BNO055 sensor which resides at the indicated I2cDevice using
  the provided configuration parameters.</div>
 </td>
 </tr>
@@ -152,7 +152,7 @@ extends java.lang.Object</pre>
 <td class="colFirst"><code>static ColorSensor</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createHiTechnicColorSensor-com.qualcomm.robotcore.hardware.I2cController-int-">createHiTechnicColorSensor</a></span>(I2cController&nbsp;controller,
                           int&nbsp;port)</code>
-<div class="block">Creates an ColorSensor object from an controller and port specification that represents a
+<div class="block">Creates a driver ColorSensor object from an controller and port specification that represents a
  <a href="http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NCO1038">HiTechnic
  color sensor</a>.</div>
 </td>
@@ -160,7 +160,7 @@ extends java.lang.Object</pre>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>static ColorSensor</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createHiTechnicColorSensor-com.qualcomm.robotcore.hardware.I2cDevice-">createHiTechnicColorSensor</a></span>(I2cDevice&nbsp;i2cDevice)</code>
-<div class="block">Creates an ColorSensor object from an I2cDevice that represents a
+<div class="block">Creates a driver ColorSensor object for an I2cDevice that represents a
  <a href="http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NCO1038">HiTechnic
  color sensor</a>.</div>
 </td>
@@ -168,7 +168,7 @@ extends java.lang.Object</pre>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>static ColorSensor</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createHiTechnicColorSensor-org.swerverobotics.library.internal.II2cDevice-">createHiTechnicColorSensor</a></span>(II2cDevice&nbsp;ii2cDevice)</code>
-<div class="block">Creates an ColorSensor object from an II2cDevice that represents a
+<div class="block">Creates a driver ColorSensor object for an I2cDevice that represents a
  <a href="http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NCO1038">HiTechnic
  color sensor</a>.</div>
 </td>
@@ -296,13 +296,15 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>createAdaFruitBNO055IMU</h4>
 <pre>public static&nbsp;<a href="../../../org/swerverobotics/library/interfaces/IBNO055IMU.html" title="interface in org.swerverobotics.library.interfaces">IBNO055IMU</a>&nbsp;createAdaFruitBNO055IMU(I2cDevice&nbsp;i2cDevice)</pre>
-<div class="block">Instantiates an AdaFruit BNO055 sensor which resides at the indicated I2cDevice using
+<div class="block">Instantiates a driver object for a  AdaFruit BNO055 sensor which resides at the indicated I2cDevice using
  default values for configuration parameters.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>i2cDevice</code> - the robot controller runtime object representing the sensor</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the interface to the instantiated sensor object</dd>
+<dd>the interface to the instantiated sensor object. This object also
+                      supports the II2cDeviceClientUser interface, which can be useful
+                      for debugging.</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../org/swerverobotics/library/ClassFactory.html#createAdaFruitBNO055IMU-com.qualcomm.robotcore.hardware.I2cDevice-org.swerverobotics.library.interfaces.IBNO055IMU.Parameters-"><code>createAdaFruitBNO055IMU(I2cDevice, IBNO055IMU.Parameters)</code></a></dd>
 </dl>
@@ -316,15 +318,35 @@ extends java.lang.Object</pre>
 <h4>createAdaFruitBNO055IMU</h4>
 <pre>public static&nbsp;<a href="../../../org/swerverobotics/library/interfaces/IBNO055IMU.html" title="interface in org.swerverobotics.library.interfaces">IBNO055IMU</a>&nbsp;createAdaFruitBNO055IMU(I2cDevice&nbsp;i2cDevice,
                                                  <a href="../../../org/swerverobotics/library/interfaces/IBNO055IMU.Parameters.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Parameters</a>&nbsp;parameters)</pre>
-<div class="block">Instantiates an AdaFruit BNO055 sensor which resides at the indicated I2cDevice using
- the provided configuration parameters.</div>
+<div class="block">Instantiates a driver object for an AdaFruit BNO055 sensor which resides at the indicated I2cDevice using
+ the provided configuration parameters.
+
+ <p>Features of this sensor include a gyro that does rate integration in hardware to
+ provide robust and accurate angular position indications, and a separation of the output of the
+ accelerometer into gravity and linear-motion-induced components.</p>
+
+ <p>The driver builds on the linear-acceleration information to provide linear velocity
+ and position measurements using integration in software. That said, the built-in accelerometer
+ integration algorithm is quite naive. For a real robot, you'll want to do some investigation
+ and reading and make a better one, whose use you can indicate using
+ <a href="../../../org/swerverobotics/library/interfaces/IBNO055IMU.Parameters.html#accelerationIntegrationAlgorithm"><code>parameters.accelerationIntegrationAlgorithm</code></a>.</p>
+
+ <p>Also, while the out-of-box sensor BNO055 works remarkably well, Bosch
+ <a href="https://github.com/SwerveRobotics/ftc_app/raw/master/SwerveRoboticsLibrary/doc/reference/BST_BNO055_DS000_13.pdf">describes</a>
+ a one-time calibration process that will make it even better (see Section 3.11).
+ Perform this calibration process in the lab. Once you've got the sensor fully
+ calibrated (or at least the gyro and the accelerometer), extract the configuration
+ state with <a href="../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#readCalibrationData--"><code>IBNO055IMU.readCalibrationData()</code></a>. We suggest that you then incorporate
+ the results as constants in your code, and provide them during OpMode startup in
+ <a href="../../../org/swerverobotics/library/interfaces/IBNO055IMU.Parameters.html#calibrationData"><code>parameters.calibrationData</code></a>
+ where they will automatically be applied.</p></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>i2cDevice</code> - the robot controller runtime object representing the sensor</dd>
 <dd><code>parameters</code> - the parameters with which the sensor should be initialized</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the interface to the instantiated sensor object. This object also
-                      supports the II2cDeviceClientUser interface; this is often useful
+                      supports the II2cDeviceClientUser interface, which can be useful
                       for debugging.</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../org/swerverobotics/library/ClassFactory.html#createAdaFruitBNO055IMU-com.qualcomm.robotcore.hardware.I2cDevice-"><code>createAdaFruitBNO055IMU(I2cDevice)</code></a></dd>
@@ -338,7 +360,7 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>createHiTechnicColorSensor</h4>
 <pre>public static&nbsp;ColorSensor&nbsp;createHiTechnicColorSensor(I2cDevice&nbsp;i2cDevice)</pre>
-<div class="block">Creates an ColorSensor object from an I2cDevice that represents a
+<div class="block">Creates a driver ColorSensor object for an I2cDevice that represents a
  <a href="http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NCO1038">HiTechnic
  color sensor</a>.</div>
 <dl>
@@ -356,7 +378,7 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>createHiTechnicColorSensor</h4>
 <pre>public static&nbsp;ColorSensor&nbsp;createHiTechnicColorSensor(II2cDevice&nbsp;ii2cDevice)</pre>
-<div class="block">Creates an ColorSensor object from an II2cDevice that represents a
+<div class="block">Creates a driver ColorSensor object for an I2cDevice that represents a
  <a href="http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NCO1038">HiTechnic
  color sensor</a>.</div>
 <dl>
@@ -375,7 +397,7 @@ extends java.lang.Object</pre>
 <h4>createHiTechnicColorSensor</h4>
 <pre>public static&nbsp;ColorSensor&nbsp;createHiTechnicColorSensor(I2cController&nbsp;controller,
                                                      int&nbsp;port)</pre>
-<div class="block">Creates an ColorSensor object from an controller and port specification that represents a
+<div class="block">Creates a driver ColorSensor object from an controller and port specification that represents a
  <a href="http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NCO1038">HiTechnic
  color sensor</a>.</div>
 <dl>
