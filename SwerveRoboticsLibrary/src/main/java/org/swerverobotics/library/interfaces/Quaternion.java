@@ -33,17 +33,15 @@ public class Quaternion
 
     public Quaternion()
         {
-        this.w = 1;
-        this.x = this.y = this.z = 0;
-        this.nanoTime = 0;
+        this(1,0,0,0, 0);
         }
-    public Quaternion(double w, double x, double y, double z)
+    public Quaternion(double w, double x, double y, double z, long nanoTime)
         {
         this.w = w;
         this.x = x;
         this.y = y;
         this.z = z;
-        this.nanoTime = 0;
+        this.nanoTime = nanoTime;
         }
     public Quaternion(II2cDeviceClient.TimestampedData ts, double scale)
         {
@@ -54,6 +52,7 @@ public class Quaternion
         this.z = buffer.getShort() / scale;
         this.nanoTime = ts.nanoTime;
         }
+
     //----------------------------------------------------------------------------------------------
     // Operations
     //----------------------------------------------------------------------------------------------
@@ -70,12 +69,12 @@ public class Quaternion
             w / mag,
             x / mag,
             y / mag,
-            z / mag);
+            z / mag,
+            this.nanoTime);
         }
 
     public Quaternion congugate()
         {
-        return new Quaternion(w, -x, -y, -z);
+        return new Quaternion(w, -x, -y, -z, this.nanoTime);
         }
-
     }

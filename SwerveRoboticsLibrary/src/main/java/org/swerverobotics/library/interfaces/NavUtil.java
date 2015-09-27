@@ -10,26 +10,23 @@ package org.swerverobotics.library.interfaces;
 public class NavUtil
     {
     //----------------------------------------------------------------------------------------------
-    // Arithmetic
+    // Arithmetic: some handy helpers
     //----------------------------------------------------------------------------------------------
 
-    public static Position plus(Position a, Position b)
-        {
-        return new Position(
-            a.x + b.x,
-            a.y + b.y,
-            a.z + b.y,
-            Math.max(a.nanoTime, b.nanoTime));
-        }
-    
-    public static Velocity plus(Velocity a, Velocity b)
-        {
-        return new Velocity(
-            a.velocX + b.velocX,
-            a.velocY + b.velocY,
-            a.velocZ + b.velocZ,
-            Math.max(a.nanoTime, b.nanoTime));
-        }
+    public static Position     plus(Position a, Position b)         { return new Position    (a.x      + b.x,      a.y      + b.y,      a.z      + b.y,      Math.max(a.nanoTime, b.nanoTime)); }
+    public static Velocity     plus(Velocity a, Velocity b)         { return new Velocity    (a.velocX + b.velocX, a.velocY + b.velocY, a.velocZ + b.velocZ, Math.max(a.nanoTime, b.nanoTime)); }
+    public static Acceleration plus(Acceleration a, Acceleration b) { return new Acceleration(a.accelX + b.accelX, a.accelY + b.accelY, a.accelZ + b.accelZ, Math.max(a.nanoTime, b.nanoTime)); }
+
+    public static Position     minus(Position a, Position b)         { return new Position    (a.x      - b.x,      a.y      - b.y,      a.z      - b.y,      Math.max(a.nanoTime, b.nanoTime)); }
+    public static Velocity     minus(Velocity a, Velocity b)         { return new Velocity    (a.velocX - b.velocX, a.velocY - b.velocY, a.velocZ - b.velocZ, Math.max(a.nanoTime, b.nanoTime)); }
+    public static Acceleration minus(Acceleration a, Acceleration b) { return new Acceleration(a.accelX - b.accelX, a.accelY - b.accelY, a.accelZ - b.accelZ, Math.max(a.nanoTime, b.nanoTime)); }
+
+    public static Position     scale(Position p, double scale)       { return new Position    (p.x      * scale, p.y      * scale, p.z      * scale, p.nanoTime); }
+    public static Velocity     scale(Velocity v, double scale)       { return new Velocity    (v.velocX * scale, v.velocY * scale, v.velocZ * scale, v.nanoTime); }
+    public static Acceleration scale(Acceleration a, double scale)   { return new Acceleration(a.accelX * scale, a.accelY * scale, a.accelZ * scale, a.nanoTime); }
+
+    public static Position     integrate(Velocity v, double dt)      { return new Position(v.velocX * dt, v.velocY * dt, v.velocZ * dt, v.nanoTime); }
+    public static Velocity     integrate(Acceleration a, double dt)  { return new Velocity(a.accelX * dt, a.accelY * dt, a.accelZ * dt, a.nanoTime); }
 
     //----------------------------------------------------------------------------------------------
     // Integration
@@ -47,14 +44,9 @@ public class NavUtil
      */
     public static Position meanIntegrate(Velocity cur, Velocity prev)
         {
-        // We assume that the mean of the two velocities has been acting during the entire interval
-        double sInterval = (cur.nanoTime - prev.nanoTime) * 1e-9;
-        return new Position(
-                (cur.velocX + prev.velocX) * 0.5 * sInterval,
-                (cur.velocY + prev.velocY) * 0.5 * sInterval,
-                (cur.velocZ + prev.velocZ) * 0.5 * sInterval,
-                cur.nanoTime
-                );
+        double duration = (cur.nanoTime - prev.nanoTime) * 1e-9;
+        Velocity meanVelocity = scale(plus(cur, prev), 0.5);
+        return integrate(meanVelocity, duration);
         }
     
     /**
@@ -69,13 +61,9 @@ public class NavUtil
      */
     public static Velocity meanIntegrate(Acceleration cur, Acceleration prev)
         {
-        double sInterval = (cur.nanoTime - prev.nanoTime) * 1e-9;
-        return new Velocity(
-                (cur.accelX + prev.accelX) * 0.5 * sInterval,
-                (cur.accelY + prev.accelY) * 0.5 * sInterval,
-                (cur.accelZ + prev.accelZ) * 0.5 * sInterval,
-                cur.nanoTime
-                );
+        double duration = (cur.nanoTime - prev.nanoTime) * 1e-9;
+        Acceleration meanAcceleration = scale(plus(cur,prev), 0.5);
+        return integrate(meanAcceleration, duration);
         }
     
     }
