@@ -33,9 +33,11 @@ Notable features of the Swerve Robotics FTC Library include:
 *   An **I2cDeviceClient** class that wraps I2cDevice instances and makes them easy to use by handling
     read-vs-write mode switches and attendant waits automatically and transparently. Just call read8()
     or write8() (and friends) to read and write device registers and the rest is taken care of.
-    Note that I2cDeviceClient is also decoupled from SynchronousOpMode, in that one need not
-    be using SynchronousOpMode to use I2cDeviceClient. However as some operations are lengthy, a
-    worker thread is suggested in that case in order to avoid long-running operations on the loop() thread.
+    With the I2C register map you get from the sensor manufacturer in hand, it's now just dead easy to
+    write your own code to talk to new I2C devices. Note that I2cDeviceClient is also decoupled
+    from SynchronousOpMode, in that one need not be using SynchronousOpMode to use I2cDeviceClient.
+    However as some operations are lengthy, a worker thread is suggested in that case in order to avoid
+    long-running operations on the loop() thread.
 *   A class that is built on I2cDeviceClient that provides a semantic interface to the **Bosch BNO055 absolute
     position sensor**, allowing teams to make easy use of the [AdaFruit inertial motion unit (IMU)](http://www.adafruit.com/products/2472)
     which incorporates that sensor module. Features of this sensor include a gyro that does rate
