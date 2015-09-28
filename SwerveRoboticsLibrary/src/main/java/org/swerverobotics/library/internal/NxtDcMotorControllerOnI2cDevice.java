@@ -2,6 +2,7 @@ package org.swerverobotics.library.internal;
 
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
+import org.swerverobotics.library.exceptions.*;
 import org.swerverobotics.library.interfaces.*;
 import java.nio.*;
 
@@ -122,17 +123,29 @@ public final class NxtDcMotorControllerOnI2cDevice implements DcMotorController,
 
     @Override public double getVoltage()
         {
-        byte[] bytes = this.i2cDeviceClient.read(0x54, 2);
-        
-        // "The high byte is the upper 8 bits of a 10 bit value. It may be used as an 8 bit 
-        // representation of the battery voltage in units of 80mV. This provides a measurement 
-        // range of 0 – 20.4 volts. The low byte has the lower 2 bits at bit locations 0 and 1 
-        // in the byte. This increases the measurement resolution to 20mV."
-        bytes[1]          = (byte)(bytes[1] << 6);
-        ByteBuffer buffer = ByteBuffer.wrap(bytes).order(ByteOrder.BIG_ENDIAN);
-        int tenBits       = (buffer.getShort()>>6) & 0x3FF;
-        double result     = ((double)tenBits) / 4 * 0.080;
-        return result;
+        try {
+            // Register is per the HiTechnic motor controller specification
+            byte[] bytes = this.i2cDeviceClient.read(0x54, 2);
+
+            // "The high byte is the upper 8 bits of a 10 bit value. It may be used as an 8 bit
+            // representation of the battery voltage in units of 80mV. This provides a measurement
+            // range of 0 – 20.4 volts. The low byte has the lower 2 bits at bit locations 0 and 1
+            // in the byte. This increases the measurement resolution to 20mV."
+            bytes[1]          = (byte)(bytes[1] << 6);
+            ByteBuffer buffer = ByteBuffer.wrap(bytes).order(ByteOrder.BIG_ENDIAN);
+            int tenBits       = (buffer.getShort()>>6) & 0x3FF;
+            double result     = ((double)tenBits) / 4 * 0.080;
+            return result;
+            }
+        catch (RuntimeInterruptedException e)
+            {
+            throw e;
+            }
+        catch (Exception e)
+            {
+            // Protect our clients from somehow getting an I2c related exception
+            return 0;
+            }
         }
 
     //----------------------------------------------------------------------------------------------
