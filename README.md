@@ -8,11 +8,11 @@ Suite, also [here](https://github.com/SwerveRobotics/tools) on GitHub.
 
 Notable features of the Swerve Robotics FTC Library include:
 
-*   A [**SynchronousOpMode**](https://cdn.rawgit.com/swerverobotics/ftc_app/master/SwerveRoboticsLibrary/doc/javadoc/org/swerverobotics/library/SynchronousOpMode.html)
+*   A [**SynchronousOpMode**](https://htmlpreview.github.io/?https://github.com/swerverobotics/ftc_app/blob/master/SwerveRoboticsLibrary/doc/javadoc/org/swerverobotics/library/SynchronousOpMode.html)
     class that brings back the synchronous, linear programming style
     with which teams have been familiar with from previous seasons in RobotC, and which is more amenable
     to teaching to beginning programmers than the event-driven / loop() callback programming
-    model native to the robot controller runtime. SynchronousOpMode is similar to [LinearOpMode](https://cdn.rawgit.com/ftctechnh/ftc_app/master/doc/javadoc/com/qualcomm/robotcore/eventloop/opmode/LinearOpMode.html)
+    model native to the robot controller runtime. SynchronousOpMode is similar to [LinearOpMode](https://htmlpreview.github.io/?https://github.com/ftctechnh/ftc_app/blob/master/doc/javadoc/com/qualcomm/robotcore/eventloop/opmode/LinearOpMode.html)
     but contains several enhancements, improved robustness, and a few fixes. Most notable for those using the legacy
     NXT/HiTechnic motor controllers is the automatic handling of the tedious manual mode switching, multi-loop-cycle
     delay management, and loop-cycle operation compatibility rules which are otherwise necessary when
@@ -33,9 +33,11 @@ Notable features of the Swerve Robotics FTC Library include:
 *   An **I2cDeviceClient** class that wraps I2cDevice instances and makes them easy to use by handling
     read-vs-write mode switches and attendant waits automatically and transparently. Just call read8()
     or write8() (and friends) to read and write device registers and the rest is taken care of.
-    Note that I2cDeviceClient is also decoupled from SynchronousOpMode, in that one need not
-    be using SynchronousOpMode to use I2cDeviceClient. However as some operations are lengthy, a
-    worker thread is suggested in that case in order to avoid long-running operations on the loop() thread.
+    With the I2C register map you get from the sensor manufacturer in hand, it's now just dead easy to
+    write your own code to talk to new I2C devices. Note that I2cDeviceClient is also decoupled
+    from SynchronousOpMode, in that one need not be using SynchronousOpMode to use I2cDeviceClient.
+    However as some operations are lengthy, a worker thread is suggested in that case in order to avoid
+    long-running operations on the loop() thread.
 *   A class that is built on I2cDeviceClient that provides a semantic interface to the **Bosch BNO055 absolute
     position sensor**, allowing teams to make easy use of the [AdaFruit inertial motion unit (IMU)](http://www.adafruit.com/products/2472)
     which incorporates that sensor module. Features of this sensor include a gyro that does rate

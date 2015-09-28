@@ -230,7 +230,7 @@ public class AnnotatedOpModeRegistrar
                 // it happens to have the wrong signture
                 //
                 // TODO: It would be nice if we did better error checking and could tell
-                // the programmer what was going on.
+                // the programmer what was going on if a failure occurred.
 
                 // Filter on modifiers.
                 // TODO: allow non-public methods, but force their use?

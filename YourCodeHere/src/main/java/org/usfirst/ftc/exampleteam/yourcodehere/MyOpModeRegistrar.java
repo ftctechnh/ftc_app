@@ -26,7 +26,7 @@ import org.swerverobotics.library.examples.*;
  * <p>UPDATE: at the moment, this is slightly broken, in that you cannot here reference
  * the OpModes in the FtcRobotController module written by FTC HQ. Until that is fixed (we're
  * working on it), if you want to use any of those OpModes you'll have to go back to the old
- * way of modifying FtcOpModeRegister.register() directly. We apologize for the incovenience.</p>
+ * way of modifying FtcOpModeRegister.register() directly. We apologize for the inconvenience.</p>
  *
  * @see TeleOp
  * @see Autonomous
