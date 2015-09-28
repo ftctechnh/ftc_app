@@ -37,7 +37,7 @@ public class ThunkedI2cController implements I2cController, IThunkWrapper<I2cCon
         }
 
     //----------------------------------------------------------------------------------------------
-    // I2cController
+    // HardwareDevice
     //----------------------------------------------------------------------------------------------
 
     @Override public void close()
@@ -57,10 +57,25 @@ public class ThunkedI2cController implements I2cController, IThunkWrapper<I2cCon
         return target.getVersion();
         }
 
+    @Override public String getConnectionInfo()
+        {
+        return (new ThunkForReading<String>()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getConnectionInfo();
+                }
+            }).doUntrackedReadOperation();
+        }
+
     @Override public String getDeviceName()
         {
         return target.getDeviceName();
         }
+
+    //----------------------------------------------------------------------------------------------
+    // I2cController
+    //----------------------------------------------------------------------------------------------
 
     @Override public SerialNumber getSerialNumber()
         {
@@ -76,6 +91,40 @@ public class ThunkedI2cController implements I2cController, IThunkWrapper<I2cCon
         {
         target.enableI2cWriteMode(physicalPort, i2cAddress, memAddress, length);
         }
+
+    @Override public byte[] getCopyOfReadBuffer(final int physicalPort)
+        {
+        return (new ThunkForReading<byte[]>()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getCopyOfReadBuffer(physicalPort);
+                }
+            }).doReadOperation();
+        }
+
+    @Override public byte[] getCopyOfWriteBuffer(final int physicalPort)
+        {
+        return (new ThunkForReading<byte[]>()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getCopyOfWriteBuffer(physicalPort);
+                }
+            }).doReadOperation();
+        }
+
+    @Override public void copyBufferIntoWriteBuffer(final int physicalPort, final byte[] data)
+        {
+        (new ThunkForWriting()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                target.copyBufferIntoWriteBuffer(physicalPort, data);
+                }
+            }).doWriteOperation();
+        }
+
 
     @Override public Lock getI2cReadCacheLock(final int physicalPort)
         {
@@ -113,16 +162,34 @@ public class ThunkedI2cController implements I2cController, IThunkWrapper<I2cCon
         target.readI2cCacheFromModule(physicalPort);
         }
 
+    @Override public synchronized void readI2cCacheFromController(final int physicalPort)
+    // Synchronized is necessary to avoid possible double queue insertion of segment
+        {
+        target.readI2cCacheFromController(physicalPort);
+        }
+
     @Override public synchronized void writeI2cCacheToModule(final int physicalPort)
     // Synchronized is necessary to avoid possible double queue insertion of segment
         {
         target.writeI2cCacheToModule(physicalPort);
         }
 
+    @Override public synchronized void writeI2cCacheToController(final int physicalPort)
+    // Synchronized is necessary to avoid possible double queue insertion of segment
+        {
+        target.writeI2cCacheToController(physicalPort);
+        }
+
     @Override public synchronized void writeI2cPortFlagOnlyToModule(final int physicalPort)
     // Synchronized is necessary to avoid possible double queue insertion of segment
         {
         target.writeI2cPortFlagOnlyToModule(physicalPort);
+        }
+
+    @Override public synchronized void writeI2cPortFlagOnlyToController(final int physicalPort)
+    // Synchronized is necessary to avoid possible double queue insertion of segment
+        {
+        target.writeI2cPortFlagOnlyToController(physicalPort);
         }
 
     @Override public boolean isI2cPortInReadMode(final int physicalPort)

@@ -83,8 +83,7 @@ public final class I2cDeviceOnI2cDeviceController implements II2cDevice
         }
     @Override public void setI2cAddr(int i2cAddr8Bit)
         {
-        if (i2cAddr8Bit >= 0)
-            this.i2cAddr8Bit = i2cAddr8Bit;
+        this.i2cAddr8Bit = i2cAddr8Bit;
         }
     
     @Override public void enableI2cReadMode(int ib, int cb)
@@ -137,9 +136,9 @@ public final class I2cDeviceOnI2cDeviceController implements II2cDevice
         return this.controller.isI2cPortReady(port);
         }
 
-    @Override public void readI2cCacheFromModule()
+    @Override public void readI2cCacheFromController()
         {
-        this.controller.readI2cCacheFromModule(port);
+        this.controller.readI2cCacheFromController(port);
         }
 
     @Override public void setI2cPortActionFlag()
@@ -147,14 +146,14 @@ public final class I2cDeviceOnI2cDeviceController implements II2cDevice
         this.controller.setI2cPortActionFlag(port);
         }
 
-    @Override public void writeI2cCacheToModule()
+    @Override public void writeI2cCacheToController()
         {
-        this.controller.writeI2cCacheToModule(port);
+        this.controller.writeI2cCacheToController(port);
         }
 
-    @Override public void writeI2cPortFlagOnlyToModule()
+    @Override public void writeI2cPortFlagOnlyToController()
         {
-        this.controller.writeI2cPortFlagOnlyToModule(port);
+        this.controller.writeI2cPortFlagOnlyToController(port);
         }
 
     @Override public void deregisterForPortReadyCallback()
