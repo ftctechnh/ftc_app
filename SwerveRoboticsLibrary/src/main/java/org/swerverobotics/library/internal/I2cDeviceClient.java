@@ -866,10 +866,10 @@ public final class I2cDeviceClient implements II2cDeviceClient
 
                     //--------------------------------------------------------------------------
                     // In all cases, we want to read the latest from the controller to get read
-                    // vs write mode settings, if nothing else.
+                    // vs write mode settings, if nothing else. Remember (for those confused)
+                    // this only causes bytes to be read from the USB module to the phone; an I2C
+                    // read isn't issued unless the action flag is ALSO set.
 
-                    // TODO: Review this, as it may in fact be the case that the mode status
-                    // settings are read automatically for you.
                     queueRead = true;
 
                     //----------------------------------------------------------------------------------
