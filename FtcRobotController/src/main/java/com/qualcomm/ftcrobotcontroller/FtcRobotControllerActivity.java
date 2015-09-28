@@ -245,34 +245,37 @@ public class FtcRobotControllerActivity extends Activity {
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case R.id.action_restart_robot:
+    int id = item.getItemId();
+    if (id==R.id.action_restart_robot) {
         dimmer.handleDimTimer();
         Toast.makeText(context, "Restarting Robot", Toast.LENGTH_SHORT).show();
         requestRobotRestart();
         return true;
-      case R.id.action_settings:
+    }
+    if (id==R.id.action_settings) {
         // The string to launch this activity must match what's in AndroidManifest of FtcCommon for this activity.
         Intent settingsIntent = new Intent("com.qualcomm.ftccommon.FtcRobotControllerSettingsActivity.intent.action.Launch");
         startActivityForResult(settingsIntent, LaunchActivityConstantsList.FTC_ROBOT_CONTROLLER_ACTIVITY_CONFIGURE_ROBOT);
         return true;
-      case R.id.action_about:
+    }
+    if (id==R.id.action_about) {
         // The string to launch this activity must match what's in AndroidManifest of FtcCommon for this activity.
         Intent intent = new Intent("com.qualcomm.ftccommon.configuration.AboutActivity.intent.action.Launch");
         startActivity(intent);
         return true;
-      case R.id.action_exit_app:
+    }
+    if (id==R.id.action_exit_app) {
         finish();
         return true;
-      case R.id.action_view_logs:
+    }
+    if (id==R.id.action_view_logs) {
         // The string to launch this activity must match what's in AndroidManifest of FtcCommon for this activity.
         Intent viewLogsIntent = new Intent("com.qualcomm.ftccommon.ViewLogsActivity.intent.action.Launch");
         viewLogsIntent.putExtra(LaunchActivityConstantsList.VIEW_LOGS_ACTIVITY_FILENAME, RobotLog.getLogFilename(this));
         startActivity(viewLogsIntent);
         return true;
-      default:
-        return super.onOptionsItemSelected(item);
     }
+    return super.onOptionsItemSelected(item);
   }
 
   @Override
