@@ -70,7 +70,7 @@ public class TelemetryDashboardAndLog
         }
 
     /**
-     * Sets the current delimiter used to separate dashboard items on a single line
+     * Sets the delimiter used to separate dashboard items on a single line
      * @param itemDelimiter the new delimiter to use
      */
     public void setItemDelimiter(String itemDelimiter)
@@ -131,7 +131,9 @@ public class TelemetryDashboardAndLog
     //----------------------------------------------------------------------------------------------
 
     /**
-     * Instantiate a new telemetry dashboard and log
+     * Instantiate a new telemetry dashboard and log on a Telemetry object provided by
+     * the robot controller runtime.
+     *
      * @param telemetry the robot controller runtime telemetry object
      */
     public TelemetryDashboardAndLog(Telemetry telemetry)
