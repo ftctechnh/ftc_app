@@ -868,6 +868,8 @@ public final class I2cDeviceClient implements II2cDeviceClient
                     // In all cases, we want to read the latest from the controller to get read
                     // vs write mode settings, if nothing else.
 
+                    // TODO: Review this, as it may in fact be the case that the mode status
+                    // settings are read automatically for you.
                     queueRead = true;
 
                     //----------------------------------------------------------------------------------
