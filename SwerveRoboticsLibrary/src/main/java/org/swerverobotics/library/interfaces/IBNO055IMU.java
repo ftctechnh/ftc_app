@@ -63,7 +63,7 @@ public interface IBNO055IMU
         /** the boost in thread priority to use for data acquisition. A small increase in the
          * thread priority can help reduce timestamping jitter and improve acceleration integration
          * at only a small detriment to other parts of the system. */
-        public int              threadPriorityBoost = 1;
+        public int              threadPriorityBoost = 0;
         
         /** debugging aid: enable logging for this device? */
         public boolean          loggingEnabled      = false;
