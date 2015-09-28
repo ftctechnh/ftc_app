@@ -646,18 +646,21 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     // Note: the thread might not EVER have been started, so may not have any 
     // SynchronousThreadContext.
         {
-        // Notify the thread that we wish it to stop what it's doing, clean up, and return.
-        thread.interrupt();
-
-        // Wait a while until the thread is no longer alive. If he doesn't clear out
-        // in a reasonable amount of time, then just give up on him.
-        try
+        if (thread != null)
             {
-            thread.join(msWait);
-            }
-        catch (InterruptedException e)
-            { 
-            Util.handleCapturedInterrupt(e);
+            // Notify the thread that we wish it to stop what it's doing, clean up, and return.
+            thread.interrupt();
+
+            // Wait a while until the thread is no longer alive. If he doesn't clear out
+            // in a reasonable amount of time, then just give up on him.
+            try
+                {
+                thread.join(msWait);
+                }
+            catch (InterruptedException e)
+                {
+                Util.handleCapturedInterrupt(e);
+                }
             }
         }
 
