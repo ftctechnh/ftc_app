@@ -33,13 +33,13 @@ public interface II2cDevice extends HardwareDevice
 
     boolean isI2cPortReady();
 
-    void    readI2cCacheFromModule();
+    void    readI2cCacheFromController();
 
     void    registerForI2cPortReadyCallback(I2cController.I2cPortReadyCallback callback);
 
     void    setI2cPortActionFlag();
 
-    void    writeI2cCacheToModule();
+    void    writeI2cCacheToController();
 
-    void    writeI2cPortFlagOnlyToModule();
+    void    writeI2cPortFlagOnlyToController();
     }
