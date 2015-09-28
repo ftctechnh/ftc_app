@@ -1,9 +1,12 @@
 package org.swerverobotics.library.internal;
 
+import android.util.*;
 import com.qualcomm.robotcore.util.*;
+import org.swerverobotics.library.*;
 import org.swerverobotics.library.exceptions.*;
 import java.lang.reflect.*;
 import java.util.*;
+import static junit.framework.Assert.*;
 
 /**
  * Various internal utilities that assist us.
@@ -42,7 +45,7 @@ public class Util
         }
 
     //----------------------------------------------------------------------------------------------
-    // Private field access
+    // Private method access
     //
     // Ugh. We wish we didn't have to do this. But the definitions of some classes we need
     // to override leave us no choice.
@@ -78,7 +81,63 @@ public class Util
             }
         }
 
+    //----------------------------------------------------------------------------------------------
+    // Private field access - utility
+    //----------------------------------------------------------------------------------------------
+
+    // The Field of the 'fieldDexIndex' field of class Field
+    static Field fieldDexIndexField = getFieldDexIndexField();
+
+    static Field getFieldDexIndexField()
+    // Find the Field for the 'fieldDexIndex' field of class Field.
+        {
+        Class   fieldClass      = Field.class;
+        Class   fieldSuperClass = fieldClass.getSuperclass();
+        assertTrue(!BuildConfig.DEBUG || fieldSuperClass.getSuperclass() == Object.class);
+
+        List<Field> superFields = getLocalDeclaredNonStaticFields(fieldSuperClass, false);
+        List<Field> fieldFields = getLocalDeclaredNonStaticFields(fieldClass, false);
+
+        int iFieldTarget = 7;
+
+        Field result = fieldFields.get(iFieldTarget - superFields.size());
+        if (!result.isAccessible())
+            result.setAccessible(true);
+
+        return result;
+        }
+
+    static Comparator<Field> fieldComparator = new Comparator<Field>()
+    // A comparator that sorts fields according to their declaration order
+        {
+        @Override public int compare(Field a, Field b)
+            {
+            return getSortIndex(a) - getSortIndex(b);
+            }
+        };
+
+    static int getSortIndex(Field field)
+    // Returns a sort key that will sort Fields in their declared order
+        {
+        try {
+            return fieldDexIndexField.getInt(field);
+            }
+        catch (IllegalAccessException e)
+            {
+            throw SwerveRuntimeException.wrap(e);
+            }
+        }
+
+    //----------------------------------------------------------------------------------------------
+    // Private field Field access - local
+    //----------------------------------------------------------------------------------------------
+
     static List<Field> getLocalDeclaredNonStaticFields(Class<?> clazz)
+        {
+        return getLocalDeclaredNonStaticFields(clazz, true);
+        }
+
+    static List<Field> getLocalDeclaredNonStaticFields(Class<?> clazz, boolean sort)
         {
         List<Field> result = new LinkedList<Field>();
         for (Field field : Arrays.asList(clazz.getDeclaredFields()))
@@ -92,19 +151,25 @@ public class Util
                 result.add(field);
                 }
             }
+
+        if (sort) Collections.sort(result, Util.fieldComparator);
         return result;
         }
 
-    static public List<Field> getDeclaredNonStaticFieldsIncludingSuper(Class<?> clazz)
+    //----------------------------------------------------------------------------------------------
+    // Private field Field access - super
+    //----------------------------------------------------------------------------------------------
+
+    static public List<Field> getDeclaredNonStaticFieldsIncludingSuper(Class<?> clazz, boolean sort)
         {
         if (clazz.getSuperclass() == null)
             {
-            return getLocalDeclaredNonStaticFields(clazz);
+            return getLocalDeclaredNonStaticFields(clazz, sort);
             }
         else
             {
-            List<Field> result = getDeclaredNonStaticFieldsIncludingSuper(clazz.getSuperclass());
-            result.addAll(getLocalDeclaredNonStaticFields(clazz));
+            List<Field> result = getDeclaredNonStaticFieldsIncludingSuper(clazz.getSuperclass(), sort);
+            result.addAll(getLocalDeclaredNonStaticFields(clazz, sort));
             return result;
             }
         }
@@ -112,7 +177,7 @@ public class Util
     static public Field getAccessibleClassNonStaticField(Object target, int iField)
         {
         Class<?> c = target.getClass();
-        List<Field> fields = getDeclaredNonStaticFieldsIncludingSuper(c);
+        List<Field> fields = getDeclaredNonStaticFieldsIncludingSuper(c, true);
         Field field = fields.get(iField);
         
         if (!field.isAccessible())
@@ -120,6 +185,10 @@ public class Util
         
         return field;        
         }
+
+    //----------------------------------------------------------------------------------------------
+    // Private field access
+    //----------------------------------------------------------------------------------------------
 
     static public int getPrivateIntField(Object target, int iField)
         {
