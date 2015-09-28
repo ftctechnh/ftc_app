@@ -122,11 +122,9 @@ public class Util
         try {
             return fieldDexIndexField.getInt(field);
             }
-        catch (Exception e)
+        catch (IllegalAccessException e)
             {
-            String stackTrace = getStackTrace(e);
-            Log.e("tag", stackTrace);
-            return 0;
+            throw SwerveRuntimeException.wrap(e);
             }
         }
 
