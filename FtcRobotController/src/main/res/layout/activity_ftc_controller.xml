@@ -31,7 +31,6 @@
       android:layout_height="wrap_content"
       android:textColor="@color/white"
       android:padding="8dp"
-      android:text="417-RC"
       android:textSize="24sp"
       android:textStyle="bold"/>
 
