@@ -706,11 +706,12 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         }
 
     // Our write logic doesn't actually know when the I2C writes are issued. All it knows is
-    // when it has queued the write to the USB Core Device Interface Module. It's a pretty
+    // when the write has made it to the USB Core Device Interface Module. It's a pretty
     // deterministic interval after that that the I2C write occurs, we guess, but we don't
     // really know what that is. To account for this, we slop in some extra time to the
     // delays so that we're not cutting things too close to the edge. And given that this is
-    // initialization logic and so not time critical, we err on being generous.
+    // initialization logic and so not time critical, we err on being generous: the current
+    // setting of this extra can undoubtedly be reduced.
 
     private final static int msExtra = 50;
 
