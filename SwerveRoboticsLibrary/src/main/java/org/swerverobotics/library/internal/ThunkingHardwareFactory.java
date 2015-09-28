@@ -418,41 +418,6 @@ public class ThunkingHardwareFactory
             }
         }
 
-
-    static List<Field> legacyMotorControllerFields = getFields(com.qualcomm.hardware.ModernRoboticsNxtDcMotorController.class);
-
-    private static List<Field> getFields(Class clazz)
-    // Return a list of all non-static fields of the given class in the order in which
-    // they were declared in the source.
-        {
-        List<Field> result = Util.getLocalDeclaredNonStaticFields(clazz);
-
-        // A comparator that will sort the fields into the right order. At the moment, we
-        // rely (ugh!) on the fact we are sorting obfuscated classes only, and so the fields
-        // are simple alphabetical letters. We NEED to do better!
-        Comparator<Field> comparator = new Comparator<Field>()
-            {
-            @Override public int compare(Field a, Field b)
-                {
-                int comparison = a.getName().compareTo(b.getName());
-                if (comparison != 0)
-                    {
-                    return comparison;
-                    }
-                return a.getDeclaringClass().getName().compareTo(b.getDeclaringClass().getName());
-                }
-            };
-        Collections.sort(result, comparator);
-
-        for (Field field : result)
-            {
-            if (!field.isAccessible())
-                field.setAccessible(true);
-            }
-
-        return result;
-        }
-    
     private static boolean isLegacyMotorController(DcMotorController controller)
         {
         return controller instanceof com.qualcomm.hardware.ModernRoboticsNxtDcMotorController;
@@ -460,12 +425,12 @@ public class ThunkingHardwareFactory
 
     private static LegacyModule legacyModuleOfLegacyMotorController(DcMotorController controller)
         {
-        return Util.<LegacyModule>getPrivateObjectField(controller, legacyMotorControllerFields.get(0));
+        return Util.<LegacyModule>getPrivateObjectField(controller, 0);
         }
 
     private static int portOfLegacyMotorController(DcMotorController controller)
         {
-        return Util.getPrivateIntField(controller, legacyMotorControllerFields.get(5));
+        return Util.getPrivateIntField(controller, 5);
         }
     
     private static int i2cAddrOfLegacyMotorController(DcMotorController controller)
