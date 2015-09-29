@@ -638,7 +638,8 @@ public final class I2cDeviceClient implements II2cDeviceClient
             readWindowSentToControllerInitialized = true;
 
             setActionFlag   = true;     // causes an I2C read to happen
-            queueFullWrite  = true;     // for just the mode bytes
+            queueFullWrite  = true;     // for just the mod bytes
+            queueRead       = true;     // read the mode byte so we can tell when the switch is done
 
             dirtyModeCacheStatus();
             }
@@ -654,7 +655,8 @@ public final class I2cDeviceClient implements II2cDeviceClient
             readWindowSentToControllerInitialized = true;
 
             setActionFlag  = true;      // causes the I2C write to happen
-            queueFullWrite = true;      // for the mode bytes and the payload
+            queueFullWrite = true;      // for the mode byte and the payload
+            queueRead      = true;      // *read* the mode byte too so that isI2cPortInReadMode() will report correctly
 
             dirtyModeCacheStatus();
             }
@@ -762,7 +764,11 @@ public final class I2cDeviceClient implements II2cDeviceClient
                         }
 
                     if (writeCacheStatus == WRITE_CACHE_STATUS.QUEUED)
+                        {
                         writeCacheStatus = WRITE_CACHE_STATUS.IDLE;
+                        // Our write mode status should have been reported back to us
+                        // assertTrue(!BuildConfig.DEBUG || i2cDevice.isI2cPortInWriteMode());     // ABCDEF
+                        }
 
                     //--------------------------------------------------------------------------
                     // That limits the number of states the caches can now be in
@@ -784,7 +790,12 @@ public final class I2cDeviceClient implements II2cDeviceClient
                             {
                             // See also below XYZZY
                             readCacheStatus = READ_CACHE_STATUS.QUEUED;
-                            setActionFlag = true;       // actually do an I2C read
+                            setActionFlag   = true;     // actually do an I2C read
+                            queueRead       = true;     // read the I2C read results
+                            }
+                        else
+                            {
+                            queueRead = true;           // read the read-vs-write mode byte
                             }
                         }
 
@@ -820,7 +831,8 @@ public final class I2cDeviceClient implements II2cDeviceClient
                                 // See also above XYZZY
                                 readWindowActuallyRead = readWindowSentToController;
                                 readCacheStatus = READ_CACHE_STATUS.QUEUED;
-                                setActionFlag = true;       // actually do an I2C read
+                                setActionFlag   = true;         // actually do an I2C read
+                                queueRead       = true;         // read the results of the read
                                 }
                             else
                                 {
@@ -849,6 +861,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
                             {
                             readCacheStatus = READ_CACHE_STATUS.VALID_QUEUED;
                             setActionFlag = true;           // actually do an I2C read
+                            queueRead     = true;           // read the results of the read
                             }
                         else
                             {
@@ -869,6 +882,13 @@ public final class I2cDeviceClient implements II2cDeviceClient
                     // vs write mode settings, if nothing else. Remember (for those confused)
                     // this only causes bytes to be read from the USB module to the phone; an I2C
                     // read isn't issued unless the action flag is ALSO set.
+
+                    // TODO: we only need the mode byte when we're switching modes, not all the time.
+                    // The other time we need to do a read is to read I2C payload. So we can probably
+                    // remove this line now, as the above logic now sets it in each place it's needed.
+                    // But that hasn't been tested enough yet, so for the moment we continue to read
+                    // every time. If this line IS removed, be sure to turn on the assert above
+                    // labeled ABCDEF.
 
                     queueRead = true;
 
