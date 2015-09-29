@@ -23,15 +23,6 @@ Thumbs.db
 .idea
 .gradle
 build/
-<<<<<<< HEAD
-FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/IrSeekerOp.java
-=======
 
 *ASUS_PC_01*
 
-.gitignore
->>>>>>> ftctechnh/master
-FtcRobotController/FtcRobotController.iml
-doc/tutorial/FTCTraining_Manual.pdf
-doc/tutorial/Build guide for k9bot.pdf
-*.pdf
