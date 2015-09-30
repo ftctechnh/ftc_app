@@ -22,6 +22,6 @@ public class OmniBotUrOp extends OpMode{
 
     @Override
     public void loop() {
-    telemetry.addData("ursensor","ursensor is" +String.format("%d","ursense"));
+    telemetry.addData("ursensor","ursensor is" +String.format("%d","ursensor"));
     }
 }
