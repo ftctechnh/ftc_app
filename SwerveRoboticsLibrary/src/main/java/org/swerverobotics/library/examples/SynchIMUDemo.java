@@ -46,7 +46,7 @@ public class SynchIMUDemo extends SynchronousOpMode
         parameters.loggingTag     = "BNO055";
         imu = ClassFactory.createAdaFruitBNO055IMU(hardwareMap.i2cDevice.get("imu"), parameters);
 
-        // Enable reporting of position. Note: this is still buggy
+        // Enable reporting of position using the naive integrator
         imu.startAccelerationIntegration(new Position(), new Velocity());
         
         // Set up our dashboard computations
