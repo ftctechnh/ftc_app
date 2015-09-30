@@ -852,7 +852,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
 
                     //--------------------------------------------------------------------------
                     // Reissue any previous read if we should. The only way we are here and
-                    // see READ_CACHE_STATUS.VALID_ONLYONCE is if we completed a queuing operation
+                    // see READ_CACHE_STATUS.QUEUE_COMPLETED is if we completed a queuing operation
                     // above.
 
                     else if (readCacheStatus == READ_CACHE_STATUS.QUEUE_COMPLETED)
