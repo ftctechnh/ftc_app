@@ -656,7 +656,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
 
             setActionFlag  = true;      // causes the I2C write to happen
             queueFullWrite = true;      // for the mode byte and the payload
-            queueRead      = true;      // *read* the mode byte too so that isI2cPortInReadMode() will report correctly
+            queueRead      = true;      // read the mode byte too so that isI2cPortInReadMode() will report correctly
 
             dirtyModeCacheStatus();
             }
@@ -767,7 +767,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
                         {
                         writeCacheStatus = WRITE_CACHE_STATUS.IDLE;
                         // Our write mode status should have been reported back to us
-                        // assertTrue(!BuildConfig.DEBUG || i2cDevice.isI2cPortInWriteMode());     // ABCDEF
+                        assertTrue(!BuildConfig.DEBUG || i2cDevice.isI2cPortInWriteMode());
                         }
 
                     //--------------------------------------------------------------------------
@@ -795,7 +795,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
                             }
                         else
                             {
-                            queueRead = true;           // read the read-vs-write mode byte
+                            queueRead = true;           // read the mode byte
                             }
                         }
 
@@ -876,21 +876,6 @@ public final class I2cDeviceClient implements II2cDeviceClient
                         {
                         // Just leave it there until someone reads it
                         }
-
-                    //--------------------------------------------------------------------------
-                    // In all cases, we want to read the latest from the controller to get read
-                    // vs write mode settings, if nothing else. Remember (for those confused)
-                    // this only causes bytes to be read from the USB module to the phone; an I2C
-                    // read isn't issued unless the action flag is ALSO set.
-
-                    // TODO: we only need the mode byte when we're switching modes, not all the time.
-                    // The other time we need to do a read is to read I2C payload. So we can probably
-                    // remove this line now, as the above logic now sets it in each place it's needed.
-                    // But that hasn't been tested enough yet, so for the moment we continue to read
-                    // every time. If this line IS removed, be sure to turn on the assert above
-                    // labeled ABCDEF.
-
-                    queueRead = true;
 
                     //----------------------------------------------------------------------------------
                     // Ok, after all that we finally know what how we're required to
