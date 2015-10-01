@@ -638,7 +638,7 @@ public final class I2cDeviceClient implements II2cDeviceClient
             readWindowSentToControllerInitialized = true;
 
             setActionFlag   = true;     // causes an I2C read to happen
-            queueFullWrite  = true;     // for just the mod bytes
+            queueFullWrite  = true;     // for just the mode bytes
             queueRead       = true;     // read the mode byte so we can tell when the switch is done
 
             dirtyModeCacheStatus();
