@@ -91,12 +91,13 @@ public class FtcRobotControllerActivity extends Activity {
   protected TextView textDeviceName;
   protected TextView textWifiDirectStatus;
   protected TextView textRobotStatus;
+  protected TextView textWifiDirectPassphrase;
   protected TextView[] textGamepad = new TextView[NUM_GAMEPADS];
   protected TextView textOpMode;
   protected TextView textErrorMessage;
   protected ImmersiveMode immersion;
 
-  protected UpdateUI updateUI;
+  protected UpdateUIHook updateUI;
   protected Dimmer dimmer;
   protected LinearLayout entireScreenLayout;
 
@@ -156,6 +157,7 @@ public class FtcRobotControllerActivity extends Activity {
     textRobotStatus = (TextView) findViewById(R.id.textRobotStatus);
     textOpMode = (TextView) findViewById(R.id.textOpMode);
     textErrorMessage = (TextView) findViewById(R.id.textErrorMessage);
+    textWifiDirectPassphrase = (TextView) findViewById(R.id.textWifiDirectPassphrase);
     textGamepad[0] = (TextView) findViewById(R.id.textGamepad1);
     textGamepad[1] = (TextView) findViewById(R.id.textGamepad2);
     immersion = new ImmersiveMode(getWindow().getDecorView());
@@ -163,11 +165,11 @@ public class FtcRobotControllerActivity extends Activity {
     dimmer.longBright();
     Restarter restarter = new RobotRestarter();
 
-    updateUI = new UpdateUI(this, dimmer);
+    updateUI = new UpdateUIHook(this, dimmer);
     updateUI.setRestarter(restarter);
     updateUI.setTextViews(textWifiDirectStatus, textRobotStatus,
-        textGamepad, textOpMode, textErrorMessage, textDeviceName);
-    callback = updateUI.new Callback();
+            textGamepad, textOpMode, textErrorMessage, textDeviceName);
+    callback = updateUI.new CallbackHook();
 
     PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
     preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -386,4 +388,75 @@ public class FtcRobotControllerActivity extends Activity {
       }
     });
   }
-}
+
+class UpdateUIHook extends UpdateUI
+  {
+  //------------------------------------------------------------------------------------------------
+  // State
+  //------------------------------------------------------------------------------------------------
+
+  FtcRobotControllerActivity activity;
+  FtcRobotControllerService  controllerService;
+
+  //------------------------------------------------------------------------------------------------
+  // Construction
+  //------------------------------------------------------------------------------------------------
+
+  UpdateUIHook(FtcRobotControllerActivity activity, Dimmer dimmer)
+    {
+    super(activity, dimmer);
+    this.activity = activity;
+    this.controllerService = null;
+    }
+
+  @Override public void setControllerService(FtcRobotControllerService controllerService)
+    {
+    super.setControllerService(controllerService);
+    this.controllerService = controllerService;
+    }
+
+  //------------------------------------------------------------------------------------------------
+  // Operations
+  //------------------------------------------------------------------------------------------------
+
+  class CallbackHook extends UpdateUI.Callback
+    {
+    @Override public void wifiDirectUpdate(WifiDirectAssistant.Event event)
+      {
+      super.wifiDirectUpdate(event);
+
+      final String message = controllerService == null
+        ? "" :
+        String.format("Wifi Direct passphrase: %s", controllerService.getWifiDirectAssistant().getPassphrase());
+
+      UpdateUIHook.this.activity.runOnUiThread(new Runnable()
+      {
+      @Override public void run()
+        {
+        activity.textWifiDirectPassphrase.setText(message);
+        }
+      });
+      }
+    }
+  }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
