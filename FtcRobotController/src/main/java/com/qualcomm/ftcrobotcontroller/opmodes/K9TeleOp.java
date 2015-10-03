@@ -127,9 +127,9 @@ public class K9TeleOp extends OpMode {
 	@Override
 	public void loop() {
 
-		int light = 0;
+		//int light = 0;
 
-		light = opticalSensor.getLightDetectedRaw();
+		//light = opticalSensor.getLightDetectedRaw();
 
 		/*
 		 * Gamepad 1
@@ -198,12 +198,12 @@ public class K9TeleOp extends OpMode {
 		 * will return a null value. The legacy NXT-compatible motor controllers
 		 * are currently write only.
 		 */
-        telemetry.addData("Text", "*** Robot Data***");
-        telemetry.addData("arm", "arm:  " + String.format("%.2f", armPosition));
-        telemetry.addData("claw", "claw:  " + String.format("%.2f", clawPosition));
-        telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", left));
-        telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));
-		telemetry.addData("opticalsense", "opticalsense: " + String.format("%d", light));
+//        telemetry.addData("Text", "*** Robot Data***");
+//        telemetry.addData("arm", "arm:  " + String.format("%.2f", armPosition));
+//        telemetry.addData("claw", "claw:  " + String.format("%.2f", clawPosition));
+//        telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", left));
+//        telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));
+//		telemetry.addData("opticalsense", "opticalsense: " + String.format("%d", light));
 
 	}
 
