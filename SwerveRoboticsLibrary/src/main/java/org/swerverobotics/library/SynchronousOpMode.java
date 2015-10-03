@@ -231,6 +231,27 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         }
 
     /**
+     * Waits until the rest of the event loop code that runs on the loop() thread but outside
+     * of the actual body of the loop() method itself has had a chance to run at least once. In
+     * practice, up to two such 'hardware cycles' are sometimes used. Provided only for compatibility
+     * with LinearOpMode, as it is unnecessary here: {@link #idle()} is a better choice.
+     * @see #idle()
+     */
+    @Deprecated
+    public void waitOneFullHardwareCycle() throws InterruptedException
+        {
+        synchronized (this.loopLock)
+            {
+            this.loopLock.wait();
+            }
+        Thread.sleep(1);
+        synchronized (this.loopLock)
+            {
+            this.loopLock.wait();
+            }
+        }
+
+    /**
      * Idles the current thread until stimulated by the robot controller runtime.
      * The current thread must be a synchronous thread.
      *
