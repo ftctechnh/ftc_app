@@ -238,7 +238,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      * @see #idle()
      */
     @Deprecated
-    void waitOneFullHardwareCycle() throws InterruptedException
+    public void waitOneFullHardwareCycle() throws InterruptedException
         {
         synchronized (this.loopLock)
             {
