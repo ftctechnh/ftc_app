@@ -29,6 +29,7 @@ public @interface TeleOp
     /**
      * Optionally indicates a group of other OpModes with which the annotated
      * OpMode should be sorted on the driver station OpMode list.
+     * @return the group into which the annotated OpMode is to be categorized
      */
     String group() default "";
     }
