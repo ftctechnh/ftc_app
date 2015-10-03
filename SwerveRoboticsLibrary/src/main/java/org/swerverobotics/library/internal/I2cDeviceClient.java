@@ -617,7 +617,10 @@ public final class I2cDeviceClient implements II2cDeviceClient
 
         // The user has new data for us to write. We could do nothing, in which case the data
         // will go out at the next callback cycle just fine, or we could try to push it out
-        // more aggressively.
+        // more aggressively. Unfortunately, at present there's no way to push it out more quickly,
+        // so in effect this is a no-op. But we've left the code we do have here in place as a
+        // reminder of our current thoughts about some pieces of how the two modes would interact
+        // should that situation change.
         void onNewDataToWrite()
             {
             updateStateMachines(UPDATE_STATE_MACHINE.FROM_USER_WRITE);
@@ -945,7 +948,8 @@ public final class I2cDeviceClient implements II2cDeviceClient
 
                 else if (caller==UPDATE_STATE_MACHINE.FROM_USER_WRITE)
                     {
-                    // This is not yet implemented
+                    // There's nothing we know to do that would speed things up, so we
+                    // just do nothing here and wait until the next portIsReady() callback.
                     }
 
                 //----------------------------------------------------------------------------------
