@@ -389,22 +389,27 @@ public interface II2cDeviceClient extends HardwareDevice
 
         /**
          * Returns the first register in the window
+         * @return the first register in the window
          */
         public int getIregFirst() { return this.iregFirst; }
         /**
          * Returns the first register NOT in the window
+         * @return the first register NOT in the window
          */
         public int getIregMax()   { return this.iregFirst + this.creg; }
         /**
          * Returns the number of registers in the window
+         * @return the number of registers in the window
          */
         public int getCreg()      { return this.creg; }
         /**
          * Returns the mode of the window
+         * @return the mode of the window
          */
         public READ_MODE getReadMode() { return this.readMode; }
         /**
          * Returns whether a read has ever been issued for this window or not
+         * @return whether a read has ever been issued for this window or not
          */
         public boolean getReadIssued() { return this.readIssued; }
         /**
@@ -413,7 +418,9 @@ public interface II2cDeviceClient extends HardwareDevice
         public void setReadIssued() { this.readIssued = true; }
 
         /**
-         * Answers as to whether we're allowed to read using this window
+         * Answers as to whether we're allowed to read using this window. This will return
+         * false for ONLY_ONCE windows after {@link #setReadIssued()} has been called on them.
+         * @return whether it is permitted to perform a read for this window.
          */
         public boolean isOkToRead() { return this.readMode==READ_MODE.REPEAT || !this.readIssued; }
 
@@ -449,6 +456,8 @@ public interface II2cDeviceClient extends HardwareDevice
         /**
          * Do the receiver and the indicated register window cover exactly the
          * same set of registers and have the same modality?
+         * @param him   the other window to compare to
+         * @return the result of the comparison
          */
         public boolean sameAsIncludingMode(ReadWindow him)
             {
