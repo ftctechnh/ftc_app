@@ -2,6 +2,7 @@ package org.usfirst.ftc.exampleteam.yourcodehere;
 
 import org.swerverobotics.library.interfaces.*;
 import org.swerverobotics.library.examples.*;
+import com.qualcomm.ftcrobotcontroller.opmodes.*;
 
 /**
  * {@link MyOpModeRegistrar} can be used to register OpModes for display in the
@@ -11,26 +12,27 @@ import org.swerverobotics.library.examples.*;
  * here, it is preferable to annotate them in their own source with {@link TeleOp}
  * or {@link Autonomous} annotations, as appropriate.
  *
- * <p>NOTE: To make this work, for the moment at least you need to add your library module
- * 'YourCodeHere' to the 'build.gradle' file in the FtcRobotController library. That build.gradle
- * (be aware: each Android Studio module has its own) is found in $PROJECT_DIR$\FtcRobotController\build.gradle,
- * where $PROJECT_DIR$ is the directory which contains SwerveRoboticsLibrary and YourCodeHere in addition to
- * FtcRobotController. In that 'build.gradle', make sure the 'dependencies' section has a line
- * compile project(':YourCodeHere') in addition to compile project(':SwerveRoboticsLibrary')
- * and other things.</p>
+ * <p>NOTE: if you previously cloned YourCodeHere for your team and per the then-current
+ * instructions edited FtcRobotController\build.gradle to mention your project, you should
+ * now remove that: FtcRobotController\build.gradle should now always be the original, verbatim
+ * version as currently found here. Then, in your own project's build.gradle make necessary
+ * changes to match the now-current YourCodeHere\build.gradle. Specifically, ensure that:
+ * <ol>
+ *     <li>it uses <code>apply plugin: 'com.android.<em>application</em>'</code> not <code>...android.<em>module</em>'</code></li>
+ *     <li>its <code>defaultConfig</code> section contains the following</li>
+ *         <ol>
+ *         <li>the verbatim line <code>applicationId 'com.qualcomm.ftcrobotcontroller'</code></li>
+ *         <li>a <code>versionCode</code> line with the version three or greater: <code>versionCode 3</code></li>
+ *         </ol>
+ *     <li>its <code>dependencies</code> section contains the line <code>compile project(':FtcRobotController')</code></li>
+ * </ol></p>
  *
- * <p>For the YourCodeHere module specifically, this has already been done for you. If you
- * create your own sibling modules, you'll have to do that for yourself. We hope in the future
- * to obviate the need for this step.</p>
- *
- * <p>UPDATE: at the moment, this is slightly broken, in that you cannot here reference
- * the OpModes in the FtcRobotController module written by FTC HQ. Until that is fixed (we're
- * working on it), if you want to use any of those OpModes you'll have to go back to the old
- * way of modifying FtcOpModeRegister.register() directly. We apologize for the inconvenience.</p>
+ * <p>If you're new to us here, these updates have already been done for you.</p>
  *
  * @see TeleOp
  * @see Autonomous
  * @see OpModeRegistrar
+ * @see SynchTeleOp
  */
 public class MyOpModeRegistrar
     {
@@ -44,11 +46,11 @@ public class MyOpModeRegistrar
     @OpModeRegistrar
     public static void Register(IOpModeManager manager)
         {
-        // As an example, we here register some examples from the Swerve library.
-        // You'll probably want to change that.
+        // As an example, we here register some examples from the Swerve library
+        // and one of the FTC HQ example opmodes. You'll probably want to change that.
 
         manager.register(SynchTeleOp.class);
         manager.register(SynchTelemetryOp.class);
-        // manager.register("HQ NxtTeleoP", com.qualcomm.ftcrobotcontroller.opmodes.NxtTeleOp); // need to make this work!
+        manager.register("FTC HQ NxtTeleOp", NxtTeleOp.class);
         }
     }
