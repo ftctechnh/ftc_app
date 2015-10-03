@@ -43,7 +43,12 @@ public class FTCCompetitionBase extends OpMode {
 
     public void ArcadeDrive(double ForwardPower, double TurnPower){
         DriveSystem(ForwardPower - TurnPower,  //Left Side
-                    ForwardPower + TurnPower); //Right Side
+                ForwardPower + TurnPower); //Right Side
     }
+
+    public int getLeftEncoder(){ return LeftDrive1.getCurrentPosition(); }
+    public void resetLeftEncoder(){ LeftDrive1.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);}
+    public int getRightEncoder(){ return RightDrive1.getCurrentPosition(); }
+    public void resetRightEncoder(){ RightDrive1.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);}
 
 }
