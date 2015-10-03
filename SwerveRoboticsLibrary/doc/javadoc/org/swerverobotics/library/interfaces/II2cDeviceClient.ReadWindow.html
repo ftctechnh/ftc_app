@@ -235,7 +235,7 @@ extends java.lang.Object</pre>
 <tr id="i9" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#isOkToRead--">isOkToRead</a></span>()</code>
-<div class="block">Answers as to whether we're allowed to read using this window</div>
+<div class="block">Answers as to whether we're allowed to read using this window.</div>
 </td>
 </tr>
 <tr id="i10" class="altColor">
@@ -325,6 +325,10 @@ extends java.lang.Object</pre>
 <h4>getIregFirst</h4>
 <pre>public&nbsp;int&nbsp;getIregFirst()</pre>
 <div class="block">Returns the first register in the window</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the first register in the window</dd>
+</dl>
 </li>
 </ul>
 <a name="getIregMax--">
@@ -335,6 +339,10 @@ extends java.lang.Object</pre>
 <h4>getIregMax</h4>
 <pre>public&nbsp;int&nbsp;getIregMax()</pre>
 <div class="block">Returns the first register NOT in the window</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the first register NOT in the window</dd>
+</dl>
 </li>
 </ul>
 <a name="getCreg--">
@@ -345,6 +353,10 @@ extends java.lang.Object</pre>
 <h4>getCreg</h4>
 <pre>public&nbsp;int&nbsp;getCreg()</pre>
 <div class="block">Returns the number of registers in the window</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the number of registers in the window</dd>
+</dl>
 </li>
 </ul>
 <a name="getReadMode--">
@@ -355,6 +367,10 @@ extends java.lang.Object</pre>
 <h4>getReadMode</h4>
 <pre>public&nbsp;<a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.READ_MODE.html" title="enum in org.swerverobotics.library.interfaces">II2cDeviceClient.READ_MODE</a>&nbsp;getReadMode()</pre>
 <div class="block">Returns the mode of the window</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the mode of the window</dd>
+</dl>
 </li>
 </ul>
 <a name="getReadIssued--">
@@ -365,6 +381,10 @@ extends java.lang.Object</pre>
 <h4>getReadIssued</h4>
 <pre>public&nbsp;boolean&nbsp;getReadIssued()</pre>
 <div class="block">Returns whether a read has ever been issued for this window or not</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>whether a read has ever been issued for this window or not</dd>
+</dl>
 </li>
 </ul>
 <a name="setReadIssued--">
@@ -384,7 +404,12 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>isOkToRead</h4>
 <pre>public&nbsp;boolean&nbsp;isOkToRead()</pre>
-<div class="block">Answers as to whether we're allowed to read using this window</div>
+<div class="block">Answers as to whether we're allowed to read using this window. This will return
+ false for ONLY_ONCE windows after <a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#setReadIssued--"><code>setReadIssued()</code></a> has been called on them.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>whether it is permitted to perform a read for this window.</dd>
+</dl>
 </li>
 </ul>
 <a name="freshCopy--">
@@ -406,6 +431,12 @@ extends java.lang.Object</pre>
 <pre>public&nbsp;boolean&nbsp;sameAsIncludingMode(<a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a>&nbsp;him)</pre>
 <div class="block">Do the receiver and the indicated register window cover exactly the
  same set of registers and have the same modality?</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>him</code> - the other window to compare to</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the result of the comparison</dd>
+</dl>
 </li>
 </ul>
 <a name="contains-org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow-">
