@@ -39,8 +39,8 @@ public class armRobot extends OpMode {
     @Override
     public void init(){
         frontMotorLeft = hardwareMap.dcMotor.get("fMotorL");
-        frontMotorLeft.setDirection(DcMotor.Direction.REVERSE);
         frontMotorRight = hardwareMap.dcMotor.get("fMotorR");
+        frontMotorRight.setDirection(DcMotor.Direction.REVERSE);
         rearMotorLeft = hardwareMap.dcMotor.get("rMotorL");
         rearMotorLeft.setDirection(DcMotor.Direction.REVERSE);
         rearMotorRight = hardwareMap.dcMotor.get("rMotorR");
