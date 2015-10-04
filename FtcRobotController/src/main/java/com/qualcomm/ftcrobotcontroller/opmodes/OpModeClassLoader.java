@@ -32,12 +32,12 @@ public class OpModeClassLoader {
 
     public static final String LOG_TAG = "Thunderbots";
 
-    public static List<Class<? extends OpMode>> loadJars(List<File> filelist) {
-        URL[] jarurls = getJarURLs(filelist);
+    public static List<Class<? extends OpMode>> loadJars(List<File> fileList) {
+        URL[] jarurls = getJarURLs(fileList);
         classLoader = getClassLoader(jarurls);
         Thread.currentThread().setContextClassLoader(classLoader);
         opModeList = new ArrayList<Class<? extends OpMode>>();
-        for (File jarfile : filelist) {
+        for (File jarfile : fileList) {
             if (jarfile.getName().endsWith(".jar")) {
                 try {
                     loadJarFile(jarfile);
