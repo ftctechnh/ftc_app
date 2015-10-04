@@ -60,9 +60,14 @@ public final class ClassFactory
      * @return an NxtMotorControllerOnI2cDevice, or null if target was not a legacy motor controller
      *
      */
-    public static DcMotorController createNxtDcMotorController(DcMotorController target)
+    public static DcMotorController createNxtDcMotorController(HardwareMap hwmap, DcMotorController target)
         {
-        return ThunkingHardwareFactory.createNxtMotorControllerOnI2cDevice(target, null);
+        return ThunkingHardwareFactory.createNxtMotorControllerOnI2cDevice(hwmap, target, null);
+        }
+
+    public static void createNxtDcMotorController(HardwareMap hwmap, DcMotor motor1, DcMotor motor2)
+        {
+        // NOT YET IMPLEMENTED
         }
 
     //----------------------------------------------------------------------------------------------

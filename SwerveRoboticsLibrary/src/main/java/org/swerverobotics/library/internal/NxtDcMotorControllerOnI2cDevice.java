@@ -2,6 +2,7 @@ package org.swerverobotics.library.internal;
 
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
+import org.swerverobotics.library.*;
 import org.swerverobotics.library.exceptions.*;
 import org.swerverobotics.library.interfaces.*;
 import java.nio.*;
@@ -77,14 +78,36 @@ public final class NxtDcMotorControllerOnI2cDevice implements DcMotorController,
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
-    
+
     public NxtDcMotorControllerOnI2cDevice(II2cDeviceClient ii2cDeviceClient, DcMotorController target)
+        {
+        // Default to auto-stopping if we can if we're on a synchronous thread
+        this(ii2cDeviceClient, target, true, null);
+        }
+
+    public NxtDcMotorControllerOnI2cDevice(II2cDeviceClient ii2cDeviceClient, DcMotorController target, boolean autoClose, IStopActionRegistrar registrar)
         {
         this.i2cDeviceClient = ii2cDeviceClient;
         this.target          = target;
-        
         this.initPID();
         this.floatMotors();
+
+        // Register for shutdown if asked to and if we can
+        if (autoClose)
+            {
+            if (registrar == null)
+                registrar = SynchronousOpMode.getStopActionRegistrar();
+            if (registrar != null)
+                {
+                registrar.registerActionOnStop(new IAction()
+                {
+                @Override public void doAction()
+                    {
+                    NxtDcMotorControllerOnI2cDevice.this.close();
+                    }
+                });
+                }
+            }
 
         // The NXT HiTechnic motor controller will time out if it doesn't receive any I2C communication for
         // 2.5 seconds. So we set up a heartbeat request to try to prevent that. We try to use
