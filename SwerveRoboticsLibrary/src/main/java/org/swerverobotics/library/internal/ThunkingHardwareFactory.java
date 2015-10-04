@@ -470,6 +470,13 @@ public class ThunkingHardwareFactory
         return ifAbsent;
         }
 
+    /**
+     *
+     * @param hwmap
+     * @param target
+     * @param stopRegistrar
+     * @return      null if the target is not a legacy motor controller
+     */
     public static DcMotorController createNxtMotorControllerOnI2cDevice(HardwareMap hwmap, DcMotorController target, IStopActionRegistrar stopRegistrar)
         {
         if (isLegacyMotorController(target))
