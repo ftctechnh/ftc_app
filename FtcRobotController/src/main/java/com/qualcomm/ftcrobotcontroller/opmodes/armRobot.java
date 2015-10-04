@@ -55,7 +55,7 @@ public class armRobot extends OpMode {
     @Override
     public void loop(){
         float throttle = -gamepad1.left_stick_y;
-        float direction = gamepad1.left_stick_x;
+        float direction = -gamepad1.left_stick_x;
         float right = throttle - direction;
         float left = throttle + direction;
 
