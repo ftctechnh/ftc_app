@@ -56,18 +56,50 @@ public final class ClassFactory
      * direction were retreived from the old, now non-functional DcMotor using getPortNumber()
      * and getDirection() respectively.</p>
      *
+     * @param hwmap  the hardware map in which the target controller was found
      * @param target the ModernRoboticsNxtDcMotorController we are to convert
      * @return an NxtMotorControllerOnI2cDevice, or null if target was not a legacy motor controller
-     *
+     * @see #createNxtDcMotorController(HardwareMap, DcMotor, DcMotor)
      */
     public static DcMotorController createNxtDcMotorController(HardwareMap hwmap, DcMotorController target)
         {
-        return ThunkingHardwareFactory.createNxtMotorControllerOnI2cDevice(hwmap, target, null);
+        DcMotorController result = ThunkingHardwareFactory.createNxtMotorControllerOnI2cDevice(hwmap, target, null);
+        if (result == null)
+            throw new IllegalArgumentException("target is not a legacy motor controller");
+        return result;
         }
 
+    /**
+     * Creates an NxtMotorControllerOnI2cDevice on the motors which share a given
+     * legacy motor controller and installs that new controller as the controller
+     * for the indicated one or two motors. The existing controller is disabled.
+     *
+     * @param hwmap     the hardware map in which the motors are found
+     * @param motor1    one of the up-to-two motor controllers which share a legacy motor controller
+     * @param motor2    the possibly other motor controller on the same controller. May be null.
+     * @see #createNxtDcMotorController(HardwareMap,DcMotorController)
+     */
     public static void createNxtDcMotorController(HardwareMap hwmap, DcMotor motor1, DcMotor motor2)
         {
-        // NOT YET IMPLEMENTED
+        if (motor1==null)
+            {
+            motor1 = motor2;
+            motor2 = null;
+            }
+        if (motor1 != null)
+            {
+            DcMotorController controller = motor1.getController();
+            if (motor2 != null && motor2.getController() != controller)
+                throw new IllegalArgumentException("motors do not share the same controller");
+            //
+            DcMotorController newController = createNxtDcMotorController(hwmap, controller);
+            //
+            Util.setPrivateObjectField(motor1, 1, newController);
+            if (motor2 != null)
+                Util.setPrivateObjectField(motor2, 1, newController);
+            }
+        else
+            throw new IllegalArgumentException("both motors are null");
         }
 
     //----------------------------------------------------------------------------------------------
