@@ -4,12 +4,13 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 
 /**
  * Created by pranavb on 9/27/15.
  */
 public class armRobot extends OpMode {
-    float ARM_MIN_RANGE = 0;
+    final float ARM_MIN_RANGE = 0;
     float ARM_MAX_RANGE = 1;
     float CLAW_MIN_RANGE = 0;
     float CLAW_MAX_RANGE = 1;
@@ -19,10 +20,17 @@ public class armRobot extends OpMode {
     double clawPosition;
     double clawDelta = 0.01;
 
-    DcMotor motorLeft;
-    DcMotor motorRight;
+    DcMotor frontMotorLeft;
+    DcMotor frontMotorRight;
+    DcMotor rearMotorLeft;
+    DcMotor rearMotorRight;
     Servo arm;
     Servo claw;
+    OpticalDistanceSensor distSensor;
+
+    public void wallFollow(){
+
+    }
 
 
     public armRobot() {
@@ -30,11 +38,15 @@ public class armRobot extends OpMode {
     }
     @Override
     public void init(){
-        motorLeft = hardwareMap.dcMotor.get("motorL");
-        motorLeft.setDirection(DcMotor.Direction.REVERSE);
-        motorRight = hardwareMap.dcMotor.get("motorR");
+        frontMotorLeft = hardwareMap.dcMotor.get("fMotorL");
+        frontMotorLeft.setDirection(DcMotor.Direction.REVERSE);
+        frontMotorRight = hardwareMap.dcMotor.get("fMotorR");
+        rearMotorLeft = hardwareMap.dcMotor.get("rMotorL");
+        rearMotorLeft.setDirection(DcMotor.Direction.REVERSE);
+        rearMotorRight = hardwareMap.dcMotor.get("rMotorR");
         arm = hardwareMap.servo.get("arm");
         claw = hardwareMap.servo.get("claw");
+        distSensor = hardwareMap.opticalDistanceSensor.get("distSensor");
 
         armPosition = 0.0;
         clawPosition = 0.0;
@@ -53,8 +65,10 @@ public class armRobot extends OpMode {
         right = (float)scaleInput(right);
         left =  (float)scaleInput(left);
 
-        motorLeft.setPower(left);
-        motorRight.setPower(right);
+        frontMotorLeft.setPower(left);
+        rearMotorLeft.setPower(right);
+        frontMotorRight.setPower(right);
+        rearMotorRight.setPower(right);
 
         if(gamepad2.dpad_up){
             armPosition += armDelta;
@@ -67,6 +81,9 @@ public class armRobot extends OpMode {
         }
         if(gamepad2.a){
             clawPosition -= clawDelta;
+        }
+        if(gamepad1.left_bumper){
+
         }
 
         armPosition = Range.clip(armPosition, ARM_MIN_RANGE, ARM_MAX_RANGE);
