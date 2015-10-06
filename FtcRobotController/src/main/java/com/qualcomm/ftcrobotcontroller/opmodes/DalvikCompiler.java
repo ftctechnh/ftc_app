@@ -1,11 +1,9 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.ftcrobotcontroller.FtcRobotControllerActivity;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.android.dx.cf.iface.ParseException;
 import com.android.dx.command.Main;
 
@@ -35,16 +33,15 @@ public class DalvikCompiler {
      * @param jarList the list of jar files to compile.
      */
     public static void convertJars(List<File> jarList) {
+        String[] args = {"--dex", null, null};
         for (int i = 0; i < jarList.size(); i++) {
             File f = jarList.get(i);
             //System.out.println("in: " + f);
             //System.out.println("out: " + outputFile(f));
-            List<String> args = new ArrayList<String>();
-            args.add("--dex");
-            args.add("--output=" + outputFile(f).getAbsolutePath() + "");
-            args.add("" + f.getAbsolutePath() + "");
+            args[1] = "--output=" + outputFile(f).getAbsolutePath() + "";
+            args[2] = "" + f.getAbsolutePath() + "";
             try {
-                Main.main(args.toArray(new String[args.size()]));
+                Main.main(args);
                 jarList.set(i, outputFile(f));
             } catch (ParseException ex) {
                 System.out.println(f.getName() + " was probably generated using the wrong compiler!");
