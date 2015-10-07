@@ -757,6 +757,13 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             // Call the subclass hook in case they might want to do something interesting
             this.preInitHook();
 
+            // Make this thread easy to find in the debugger
+            Thread.currentThread().setName("FTC loop() thread");
+
+            // Remember who the loop thread is so that we know whom to communicate with from a
+            // synchronous thread. Note: we ASSUME here that init() and loop() run on the same thread
+            loopThread = Thread.currentThread();
+
             // Remember the old hardware map somewhere that user code can easily get at it if it wants.
             this.unthunkedHardwareMap = super.hardwareMap;
             // Make a new thunking one, and remember it in a variable that shadows the super one.
@@ -767,10 +774,6 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             // Similarly replace the telemetry variable
             this.telemetry = new TelemetryDashboardAndLog(super.telemetry);
 
-            // Remember who the loop thread is so that we know whom to communicate with from a
-            // synchronous thread. Note: we ASSUME here that init() and loop() run on the same thread
-            loopThread = Thread.currentThread();
-
             // Paranoia: clear any state that may just perhaps be lingering
             this.clearSingletons();
             this.actionQueueAndHistory.clear();
@@ -780,6 +783,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             this.started = false;
             this.stopRequested = false;
             this.loopCount.set(0);
+
             this.exceptionThrownOnMainThread = null;
             this.firstExceptionThrownOnASynchronousWorkerThread.set(null);
 
@@ -857,10 +861,8 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
 
             synchronized (this.loopLock)
                 {
-                // Keep track of how many loop() calls we've seen. And give this thread a handy
-                // name so we recognize it in the debugger
-                if (0 == this.loopCount.getAndIncrement())
-                    Thread.currentThread().setName("loop() thread");
+                // Keep track of how many loop() calls we've seen
+                this.loopCount.getAndIncrement();
 
                 // The history of what was executed int the previous loop() call is now irrelevant
                 this.actionQueueAndHistory.clearHistory();

@@ -534,6 +534,6 @@ public class ThunkingHardwareFactory
 
     static void setController(DcMotor motor, DcMotorController controller)
         {
-        Util.setPrivateObjectField(motor, 1, controller);
+        Util.setPrivateObjectField(motor, 0, controller);
         }
     }
