@@ -266,15 +266,9 @@ public interface II2cDeviceClient extends HardwareDevice
          * otherwise might not support for this heartbeat form may make use of
          * worker threads.
          *
-         * @see #explicitReadPriority
          * @see #executeFunctionWhileLocked(IFunc)
          */
         public ReadWindow   heartbeatReadWindow = null;
-
-        /** Advanced: if a read on a separate thread is in fact needed, use this thread priority
-         * @see #heartbeatReadWindow
-         */
-        public int          explicitReadPriority = Math.min(Thread.MAX_PRIORITY, Thread.NORM_PRIORITY+1);
         }
 
     //----------------------------------------------------------------------------------------------

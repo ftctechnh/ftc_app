@@ -9,6 +9,7 @@ import org.swerverobotics.library.*;
 import org.swerverobotics.library.exceptions.*;
 import org.swerverobotics.library.interfaces.*;
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.concurrent.locks.*;
 import static junit.framework.Assert.*;
 import static org.swerverobotics.library.internal.Util.*;
@@ -39,6 +40,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeShutdownN
     private final Lock          readCacheLock;              // lock we must hold to look at readCache
     private final Lock          writeCacheLock;             // lock we must old to look at writeCache
 
+    private final Object        armingLock           = new Object();
     private final Object        concurrentClientLock = new Object(); // the lock we use to serialize against concurrent clients of us. Can't acquire this AFTER the callback lock.
     private final Object        callbackLock         = new Object(); // the lock we use to synchronize with our callback.
 
@@ -58,6 +60,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeShutdownN
     private volatile int                 cregWrite;
     private volatile int                 msHeartbeatInterval;        // time between heartbeats; zero is 'none necessary'
     private volatile HeartbeatAction     heartbeatAction;            // the action to take when a heartbeat is needed. May be null.
+    private volatile ExecutorService     heartbeatExecutor;          // used to schedule heartbeats when we need to read from the outside
     private volatile int                 hardwareCycleCount;         // number of callbacks that we've received
 
     /** Keeps track of what we know about about the state of 'readCache' */
@@ -127,6 +130,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeShutdownN
         this.timeSinceLastHeartbeat.reset();
         this.msHeartbeatInterval    = 0;
         this.heartbeatAction        = null;
+        this.heartbeatExecutor      = null;
 
         this.readCache      = this.i2cDevice.getI2cReadCache();
         this.readCacheLock  = this.i2cDevice.getI2cReadCacheLock();
@@ -167,11 +171,15 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeShutdownN
 
     public void arm()
         {
-        synchronized (this.concurrentClientLock)
+        synchronized (this.armingLock)
             {
             if (!this.isArmed)
                 {
-                this.i2cDevice.registerForI2cPortReadyCallback(this.callback);
+                synchronized (this.callbackLock)
+                    {
+                    this.heartbeatExecutor = Executors.newSingleThreadExecutor();
+                    this.i2cDevice.registerForI2cPortReadyCallback(this.callback);
+                    }
                 this.isArmed = true;
                 }
             }
@@ -179,19 +187,22 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeShutdownN
 
     public boolean isArmed()
         {
-        synchronized (this.concurrentClientLock)
-            {
-            return this.isArmed;
-            }
+        return this.isArmed;
         }
 
     public void disarm()
         {
-        synchronized (this.concurrentClientLock)
+        synchronized (this.armingLock)
             {
             if (this.isArmed)
                 {
-                this.i2cDevice.deregisterForPortReadyCallback();
+                // If we are armed, we need to drain w/o holding the concurrentClient lock
+                this.heartbeatExecutor.shutdown();
+                synchronized (this.callbackLock)
+                    {
+                    this.heartbeatExecutor = null;
+                    this.i2cDevice.deregisterForPortReadyCallback();
+                    }
                 this.isArmed = false;
                 }
             }
@@ -218,7 +229,6 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeShutdownN
 
     public void close()
         {
-        // We're not interested in talking to our I2C device any more
         this.disarm();
 
         // We do NOT close() our i2cDevice, as we conceptually are a client of
@@ -950,22 +960,28 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeShutdownN
                                 // introduces concurrency where otherwise none might exist, but that's ONLY if you
                                 // choose this flavor of heartbeat, so that's a reasonable tradeoff.
                                 final ReadWindow window = heartbeatAction.heartbeatReadWindow;   // capture here while we still have the lock
-                                Thread thread = new Thread(new Runnable() {
-                                    @Override public void run()
+                                try {
+                                    if (heartbeatExecutor != null)
                                         {
-                                        try {
-                                            I2cDeviceClient.this.read(window.getIregFirst(), window.getCreg());
-                                            }
-                                        catch (Exception e) // paranoia
+                                        heartbeatExecutor.submit(new Runnable()
                                             {
-                                            // ignored
-                                            }
+                                            @Override public void run()
+                                                {
+                                                try {
+                                                    I2cDeviceClient.this.read(window.getIregFirst(), window.getCreg());
+                                                    }
+                                                catch (Exception e) // paranoia
+                                                    {
+                                                    // ignored
+                                                    }
+                                                }
+                                            });
                                         }
-                                    });
-                                // Start the thread a-going. It will run relatively quickly and then shut down
-                                thread.setName("I2C heartbeat read thread");
-                                thread.setPriority(heartbeatAction.explicitReadPriority);
-                                thread.start();
+                                    }
+                                catch (RejectedExecutionException e)
+                                    {
+                                    // ignore: maybe we're racing with disarm
+                                    }
                                 }
                             }
                         }
