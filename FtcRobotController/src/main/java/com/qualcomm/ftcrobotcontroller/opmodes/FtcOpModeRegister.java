@@ -60,11 +60,11 @@ public class FtcOpModeRegister implements OpModeRegister {
      * The following op modes are example op modes provided by QualComm.
      * Uncomment the lines to make the op modes available to the driver station.
      */
-    //manager.register("LinearK9TeleOp", LinearK9TeleOp.class);
-    //manager.register("LinearIrExample", LinearIrExample.class);
-    //manager.register("IrSeekerOp", IrSeekerOp.class);
-    //manager.register("CompassCalibration", CompassCalibration.class);
-    //manager.register("NxtTeleOp", NxtTeleOp.class);
+    /*manager.register("LinearK9TeleOp", LinearK9TeleOp.class);
+    manager.register("LinearIrExample", LinearIrExample.class);
+    manager.register("IrSeekerOp", IrSeekerOp.class);
+    manager.register("CompassCalibration", CompassCalibration.class);
+    manager.register("NxtTeleOp", NxtTeleOp.class);*/
 
     /*
      * The NullOp op mode
@@ -79,9 +79,9 @@ public class FtcOpModeRegister implements OpModeRegister {
      *  - K9Line uses a legacy LEGO NXT light sensor to follow a white line.
      */
 
-    manager.register("K9TeleOp", K9TeleOp.class);
+    /*manager.register("K9TeleOp", K9TeleOp.class);
     manager.register("K9IrSeeker", K9IrSeeker.class);
-    manager.register("K9Line", K9Line.class);
+    manager.register("K9Line", K9Line.class);*/
 
     /*
      * The following example op modes are designed to work with a pushbot-style robot.
@@ -92,11 +92,15 @@ public class FtcOpModeRegister implements OpModeRegister {
      *  - PushBotSquare uses the LinearOpMOde class and shows how to drive in a square pattern autonomously.
      */
 
-    manager.register("PushBotManual", PushBotManual.class);
+    /*manager.register("PushBotManual", PushBotManual.class);
     manager.register("PushBotAuto", PushBotAuto.class);
     manager.register("PushBotDriveTouch", PushBotDriveTouch.class);
     manager.register("PushBotIrSeek", PushBotIrSeek.class);
-    manager.register("PushBotSquare", PushBotSquare.class);
+    manager.register("PushBotSquare", PushBotSquare.class);*/
 
+    /**
+     * The following op modes are for rod testing
+     */
+    manager.register("OneMotorTwoServoOp", OneMotorTwoServoTest.class);
   }
 }
