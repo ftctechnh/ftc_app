@@ -22,7 +22,7 @@ import com.qualcomm.ftcrobotcontroller.opmodes.*;
  *     <li>its <code>defaultConfig</code> section contains the following</li>
  *         <ol>
  *         <li>the verbatim line <code>applicationId 'com.qualcomm.ftcrobotcontroller'</code></li>
- *         <li>a <code>versionCode</code> line with the version three or greater: <code>versionCode 3</code></li>
+ *         <li>a <code>versionCode</code> line with the version four or greater: <code>versionCode 4</code></li>
  *         </ol>
  *     <li>its <code>dependencies</code> section contains the line <code>compile project(':FtcRobotController')</code></li>
  * </ol></p>
