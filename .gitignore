@@ -24,5 +24,7 @@ Thumbs.db
 .gradle
 build/
 
-*ASUS_PC_01*
+# Android Studio
+*.iml
 
+*ASUS_PC_01*
