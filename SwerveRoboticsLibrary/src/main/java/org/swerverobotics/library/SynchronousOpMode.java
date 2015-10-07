@@ -17,7 +17,7 @@ import org.swerverobotics.library.internal.*;
  *
  * Extend this class and implement the {@link #main()} method to add your own code.
  */
-public abstract class SynchronousOpMode extends OpMode implements IThunkDispatcher, IStopActionRegistrar
+public abstract class SynchronousOpMode extends OpMode implements IThunkDispatcher
     {
     //----------------------------------------------------------------------------------------------
     // Public State
@@ -89,6 +89,12 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      */
     public int getLoopCount() { return this.loopCount.get(); }
     private final AtomicInteger loopCount = new AtomicInteger(0);
+
+    /**
+     * We define a *local* hardwareMap variable here to hide the one in our base
+     * class as the one we want user code to see is the one with the thunking in it.
+     */
+    public HardwareMap hardwareMap = null;
 
     /**
      * Advanced: unthunkedHardwareMap contains the original hardware map provided
@@ -448,7 +454,6 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     private final   AtomicReference<RuntimeException> firstExceptionThrownOnASynchronousWorkerThread = new AtomicReference<RuntimeException>();
     private final static int                msWaitForMainThreadTermination              = 250;
     private final static int                msWaitForSynchronousWorkerThreadTermination = 50;
-    private final   List<IAction>           actionsOnStop = new LinkedList<IAction>();
 
     private         Gamepad                 gamepad1Captured = null;
     private         Gamepad                 gamepad2Captured = null;
@@ -736,7 +741,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     
     private void setThreadThunker()
         {
-        SynchronousThreadContext.setThreadThunker(this);
+        SynchronousThreadContext.create(this, this);
         }
 
     //----------------------------------------------------------------------------------------------
@@ -752,10 +757,11 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             // Call the subclass hook in case they might want to do something interesting
             this.preInitHook();
 
-            // Replace the op mode's hardware map variable with one whose contained
-            // object implementations will thunk over to the loop thread as they need to.
+            // Remember the old hardware map somewhere that user code can easily get at it if it wants.
             this.unthunkedHardwareMap = super.hardwareMap;
-            this.hardwareFactory      = new ThunkingHardwareFactory(this.unthunkedHardwareMap, (IStopActionRegistrar)this, this.useExperimentalThunking);
+            // Make a new thunking one, and remember it in a variable that shadows the super one.
+            // Note that we always leave the super one unchanged; this is important to OpModeShutdownNotifier.
+            this.hardwareFactory      = new ThunkingHardwareFactory(this, this.useExperimentalThunking);
             this.hardwareMap          = this.hardwareFactory.createThunkedHardwareMap();
 
             // Similarly replace the telemetry variable
@@ -965,14 +971,6 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             // Notify the main() thread that we wish it to stop what it's doing, clean up, and return.
             this.stopSynchronousThread(this.mainThread, this.msWaitForMainThreadTermination);
 
-            // Call all actions we've been asked to call
-            synchronized (this.actionsOnStop)
-                {
-                for (IAction action: this.actionsOnStop)
-                    action.doAction();
-                this.actionsOnStop.clear();
-                }
-
             if (this.hardwareFactory != null)
                 {
                 this.hardwareFactory.stop();
@@ -986,18 +984,6 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             {
             Log.e(LOGGING_TAG, String.format("exception thrown in stop(): %s", Util.getStackTrace(e)));
             throw e;    // Rethrow so this exception gets displayed on phone displays
-            }
-        }
-
-    /**
-     * Registers an action to be called when the contextually associated opMode stops
-     * @param action the action to be called on stop
-     */
-    public void registerActionOnStop(IAction action)
-        {
-        synchronized (this.actionsOnStop)
-            {
-            this.actionsOnStop.add(action);
             }
         }
 
@@ -1121,24 +1107,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      */
     public static IThunkDispatcher getThreadThunker()
         {
-        if (SynchronousThreadContext.isSynchronousThread())
-            return SynchronousThreadContext.getThreadContext().getThunker();
-        else
-            return null;
-        }
-
-    /**
-     * Advanced: If we are running on a synchronous thread, returns an object that can
-     * be used to register for a callback when the contextually associated SynchronousOpMode
-     * stops.
-     * @return the registrar object, or null if we are not on a synchronous thread
-     */
-    public static IStopActionRegistrar getStopActionRegistrar()
-        {
-        if (SynchronousThreadContext.isSynchronousThread())
-            return SynchronousThreadContext.getThreadContext().getStopActionRegistrar();
-        else
-            return null;
+        return SynchronousThreadContext.getContextualThunker();
         }
 
     //----------------------------------------------------------------------------------------------
@@ -1147,7 +1116,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
 
     private static SynchronousOpMode getThreadSynchronousOpMode()
         {
-        return (SynchronousOpMode)(getThreadThunker());
+        return (SynchronousOpMode)(SynchronousThreadContext.getContextualOpMode());
         }
 
     /**

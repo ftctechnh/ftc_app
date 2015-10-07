@@ -1,6 +1,8 @@
 package org.swerverobotics.library.internal;
 
 import android.util.Log;
+
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
 import org.swerverobotics.library.*;
@@ -16,13 +18,14 @@ import static org.swerverobotics.library.internal.Util.*;
  * an instance of I2cDevice. There's a really whole lot of hard stuff this does for you
  *
  */
-public final class I2cDeviceClient implements II2cDeviceClient
+public final class I2cDeviceClient implements II2cDeviceClient, IOpModeShutdownNotify
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
     public final II2cDevice     i2cDevice;                  // the device we are talking to
+    private       boolean       isArmed;                    // whether we are armed or not
 
     private final Callback      callback;                   // the callback object on which we actually receive callbacks
     private       boolean       loggingEnabled;             // whether we are to log to Logcat or not
@@ -103,28 +106,16 @@ public final class I2cDeviceClient implements II2cDeviceClient
      * Instantiate an I2cDeviceClient instance in the indicated device with the indicated
      * initial window of registers being read.
      *
+     * @param context               the OpMode within which the creation is taking place
      * @param i2cDevice             the device we are to be a client of
      * @param i2cAddr8Bit           its 8 bit i2cAddress
      */
-    public I2cDeviceClient(II2cDevice i2cDevice, int i2cAddr8Bit)
-        {
-        this(i2cDevice, i2cAddr8Bit, true, null);
-        }
-
-    /**
-     * Instantiate an I2cDeviceClient instance in the indicated device with the indicated
-     * initial window of registers being read.
-     *
-     * @param i2cDevice             the device we are to be a client of
-     * @param i2cAddr8Bit           its 8 bit i2cAddress
-     * @param autoClose             if true, the device client will automatically close when the
-     *                              associated SynchronousOpMode stops
-     */
-    public I2cDeviceClient(II2cDevice i2cDevice, int i2cAddr8Bit, boolean autoClose, IStopActionRegistrar registrar)
+    public I2cDeviceClient(/*optional*/ OpMode context, II2cDevice i2cDevice, int i2cAddr8Bit)
         {
         i2cDevice.setI2cAddr(i2cAddr8Bit);
 
         this.i2cDevice              = i2cDevice;
+        this.isArmed                = false;
         this.callback               = new Callback();
         this.callbackThread         = null;
         this.callbackThreadOriginalPriority = 0;    // not known
@@ -152,24 +143,43 @@ public final class I2cDeviceClient implements II2cDeviceClient
         this.readCacheStatus  = READ_CACHE_STATUS.IDLE;
         this.writeCacheStatus = WRITE_CACHE_STATUS.IDLE;
         this.modeCacheStatus  = MODE_CACHE_STATUS.IDLE;
-        
-        if (autoClose)
-            {
-            if (registrar == null)
-                registrar = SynchronousOpMode.getStopActionRegistrar();
-            if (registrar != null)
-                {
-                registrar.registerActionOnStop(new IAction()
-                {
-                @Override public void doAction()
-                    {
-                    I2cDeviceClient.this.close();
-                    }
-                });
-                }
-            }
 
-        this.i2cDevice.registerForI2cPortReadyCallback(this.callback);
+        OpModeShutdownNotifier.register(context, this);
+        }
+
+    @Override synchronized public boolean onUserOpModeStop()
+        {
+        this.close();
+        return true;
+        }
+
+    @Override synchronized public boolean onRobotShutdown()
+        {
+        this.close();
+        return true;
+        }
+
+    public synchronized void arm()
+        {
+        if (!this.isArmed)
+            {
+            this.i2cDevice.registerForI2cPortReadyCallback(this.callback);
+            this.isArmed = true;
+            }
+        }
+
+    public synchronized boolean isArmed()
+        {
+        return this.isArmed;
+        }
+
+    public synchronized void disarm()
+        {
+        if (this.isArmed)
+            {
+            this.i2cDevice.deregisterForPortReadyCallback();
+            this.isArmed = false;
+            }
         }
 
     //----------------------------------------------------------------------------------------------
@@ -192,10 +202,12 @@ public final class I2cDeviceClient implements II2cDeviceClient
         }
 
     public void close()
-    // NB: this HardwareDevice method is shared with I2cDevice.close()
         {
-        this.i2cDevice.deregisterForPortReadyCallback();
-        this.i2cDevice.close();
+        // We're not interested in talking to our I2C device any more
+        this.disarm();
+
+        // We do NOT close() our i2cDevice, as we conceptually are a client of
+        // the device, not it's owner.
         }
 
     //----------------------------------------------------------------------------------------------
