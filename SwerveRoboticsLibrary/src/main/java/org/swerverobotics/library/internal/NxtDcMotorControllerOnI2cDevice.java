@@ -117,8 +117,8 @@ public final class NxtDcMotorControllerOnI2cDevice implements DcMotorController,
         // that the heartbeat mechanism used by ModernRoboticsNxtDcMotorController is analogous to
         // 'rewriteLastWritten'.
         II2cDeviceClient.HeartbeatAction heartbeatAction = new II2cDeviceClient.HeartbeatAction();
-        heartbeatAction.rereadLastRead     = true;
-        heartbeatAction.rewriteLastWritten = true;
+        heartbeatAction.rereadLastRead      = true;
+        heartbeatAction.rewriteLastWritten  = true;
         heartbeatAction.heartbeatReadWindow = new II2cDeviceClient.ReadWindow(mpMotorRegCurrentEncoderValue[1], 1, II2cDeviceClient.READ_MODE.ONLY_ONCE);
 
         this.i2cDeviceClient.setHeartbeatAction(heartbeatAction);
