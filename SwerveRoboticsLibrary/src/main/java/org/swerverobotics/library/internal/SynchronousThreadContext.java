@@ -1,5 +1,6 @@
 package org.swerverobotics.library.internal;
 
+import com.qualcomm.robotcore.eventloop.opmode.*;
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.interfaces.*;
 
@@ -18,73 +19,8 @@ public class SynchronousThreadContext
     public int actionKeyWritesFromThisThread = Thunk.getNewActionKey();
 
     private final Thread           thread;
+    private final OpMode           opMode;
     private final IThunkDispatcher thunker;
-
-    //----------------------------------------------------------------------------------------------
-    // Construction
-    //----------------------------------------------------------------------------------------------
-
-    public SynchronousThreadContext(IThunkDispatcher thunker)
-        {
-        this.thread = Thread.currentThread();
-        this.thunker = thunker;
-        }
-
-    //----------------------------------------------------------------------------------------------
-    // Access
-    //----------------------------------------------------------------------------------------------
-
-    /**
-     * Retrieves the thread context the current thread
-     * @return the context of the current thread
-     */
-    public static SynchronousThreadContext getThreadContext()
-        {
-        return tlsThunker.get();
-        }
-
-    /**
-     * Returns the Thread for which the receiver is the context.
-     *
-     * @return the thread for which the receiver is the context
-     */
-    public Thread getThread() { return this.thread; }
-
-    /**
-     * Returns an object that can assist in thunking work from a synchronous thread
-     * to the loop() thread.
-     *
-     * @return the object that can help with thunking
-     */
-    public IThunkDispatcher getThunker() { return this.thunker; }
-
-    /**
-     * Returns an object that one can use to register an action when a synchronous opmode stops
-     * @return
-     */
-    public IStopActionRegistrar getStopActionRegistrar()
-        {
-        return (IStopActionRegistrar)(this.getThunker());
-        }
-
-    //----------------------------------------------------------------------------------------------
-    // Lookup
-    //----------------------------------------------------------------------------------------------
-
-    public static void setThreadThunker(IThunkDispatcher thunker)
-        {
-        tlsThunker.set(new SynchronousThreadContext(thunker));
-        }
-
-    public static boolean isSynchronousThread()
-        {
-        return getThreadContext() != null;
-        }
-    
-    public static void assertSynchronousThread()
-        {
-        junit.framework.Assert.assertTrue(!BuildConfig.DEBUG || isSynchronousThread());
-        }
 
     /**
      * tlsThunker is the thread local variable by which a SynchronousThreadContext is associated with a thread
@@ -93,4 +29,54 @@ public class SynchronousThreadContext
         {
         @Override protected SynchronousThreadContext initialValue() { return null; }
         };
+
+    //----------------------------------------------------------------------------------------------
+    // Construction
+    //----------------------------------------------------------------------------------------------
+
+    public SynchronousThreadContext(OpMode opMode, IThunkDispatcher thunker)
+        {
+        this.opMode  = opMode;
+        this.thread  = Thread.currentThread();
+        this.thunker = thunker;
+        }
+
+    public static void create(OpMode opMode, IThunkDispatcher thunker)
+        {
+        tlsThunker.set(new SynchronousThreadContext(opMode, thunker));
+        }
+
+    //----------------------------------------------------------------------------------------------
+    // Access
+    //----------------------------------------------------------------------------------------------
+
+    public static SynchronousThreadContext getThreadContext()
+        {
+        return tlsThunker.get();
+        }
+    public static IThunkDispatcher getContextualThunker()
+        {
+        return getThreadContext()==null ? null : getThreadContext().getThunker();
+        }
+    public static boolean isSynchronousThread()
+        {
+        return getThreadContext() != null;
+        }
+    public static void assertSynchronousThread()
+        {
+        junit.framework.Assert.assertTrue(!BuildConfig.DEBUG || isSynchronousThread());
+        }
+
+    public static OpMode getContextualOpMode()
+        {
+        return getThreadContext()==null ? null : getThreadContext().getOpMode();
+        }
+    public IThunkDispatcher getThunker()
+        {
+        return this.thunker;
+        }
+    public OpMode getOpMode()
+        {
+        return this.opMode;
+        }
     }

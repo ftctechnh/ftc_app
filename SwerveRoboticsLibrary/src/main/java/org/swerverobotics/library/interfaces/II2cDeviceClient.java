@@ -321,8 +321,34 @@ public interface II2cDeviceClient extends HardwareDevice
     void setLoggingTag(String loggingTag);
 
     /**
+     * Arms the client for operation. This involves registering for callbacks with
+     * the underlying I2cDevice. Only one client of an I2cDevice may register for callbacks
+     * at any given time; if multiple clients exist, they must be coordinated so as to use
+     * the I2cDevice sequentially. This method is idempotent.
+     * @see #disarm()
+     * @see #isArmed()
+     */
+    void arm();
+
+    /**
+     * Answers as to whether this I2cDeviceClient is currently armed.
+     * @return whether the client is currently armed
+     * @see #arm()
+     */
+    boolean isArmed();
+
+    /**
+     * Disarms the client if it is currently armed. This method is idempotent.
+     * @see #arm()
+     */
+    void disarm();
+
+    /**
      * Close down and disable this device. Once this is done, the object instance cannot
-     * support further read() or write() calls.
+     * support further read() or write() calls. Note that calling close() here does NOT
+     * also close() the underlying I2cDevice: we here are a *client* of the I2cDevice, not
+     * its owner. If your I2cDevice has a non-trivial close() semantic, you are yourself
+     * responsible for calling that method at an appropriate time.
      */
     void close();
 

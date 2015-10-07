@@ -1,11 +1,14 @@
 package org.swerverobotics.library.internal;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.exceptions.*;
 import org.swerverobotics.library.interfaces.*;
 import java.nio.*;
+import static junit.framework.Assert.*;
+import static org.swerverobotics.library.internal.ThunkingHardwareFactory.*;
 
 /**
  * This is an experiment in an alternative implementation of a Legacy DC Motor controller.
@@ -16,10 +19,10 @@ import java.nio.*;
  * It can be used from LinearOpMode, or, indeed, any thread that can tolerate operations that
  * can take tens of milliseconds to run.</p>
  *
- * @see org.swerverobotics.library.ClassFactory#createNxtDcMotorController(DcMotorController)
+ * @see org.swerverobotics.library.ClassFactory#createNxtDcMotorController(HardwareMap, DcMotor, DcMotor)
  * @see org.swerverobotics.library.SynchronousOpMode#useExperimentalThunking
  */
-public final class NxtDcMotorControllerOnI2cDevice implements DcMotorController, IThunkWrapper<DcMotorController>, VoltageSensor
+public final class NxtDcMotorControllerOnI2cDevice implements DcMotorController, IThunkWrapper<DcMotorController>, VoltageSensor, IOpModeShutdownNotify
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -71,43 +74,39 @@ public final class NxtDcMotorControllerOnI2cDevice implements DcMotorController,
     
     private static final double powerMin = -1.0;
     private static final double powerMax = 1.0;
-    
-    private II2cDeviceClient i2cDeviceClient;
-    private DcMotorController target;
-    
+
+    private static final String             swerveVoltageSensorName = " |Swerve|VoltageSensor| ";
+    private final OpMode                    context;
+    private final II2cDeviceClient          i2cDeviceClient;
+    private final DcMotorController         target;
+    private final LegacyModule              legacyModule;
+    private final int                       targetPort;
+    I2cController.I2cPortReadyCallback      targetCallback;
+    private       boolean                   isArmed;
+    private       DcMotor                   motor1;
+    private       DcMotor                   motor2;
+
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    public NxtDcMotorControllerOnI2cDevice(II2cDeviceClient ii2cDeviceClient, DcMotorController target)
+    private NxtDcMotorControllerOnI2cDevice(OpMode context, II2cDeviceClient ii2cDeviceClient, DcMotorController target)
         {
-        // Default to auto-stopping if we can if we're on a synchronous thread
-        this(ii2cDeviceClient, target, true, null);
-        }
-
-    public NxtDcMotorControllerOnI2cDevice(II2cDeviceClient ii2cDeviceClient, DcMotorController target, boolean autoClose, IStopActionRegistrar registrar)
-        {
+        assertTrue(!BuildConfig.DEBUG || !ii2cDeviceClient.isArmed());
+        this.context         = context;
         this.i2cDeviceClient = ii2cDeviceClient;
         this.target          = target;
+        this.legacyModule    = ThunkingHardwareFactory.legacyModuleOfLegacyMotorController(target);
+        this.targetPort      = ThunkingHardwareFactory.portOfLegacyMotorController(target);
+        this.targetCallback  = null;
+        this.isArmed         = false;
+        this.motor1          = null;
+        this.motor2          = null;
+
+        OpModeShutdownNotifier.register(context, this);
+
         this.initPID();
         this.floatMotors();
-
-        // Register for shutdown if asked to and if we can
-        if (autoClose)
-            {
-            if (registrar == null)
-                registrar = SynchronousOpMode.getStopActionRegistrar();
-            if (registrar != null)
-                {
-                registrar.registerActionOnStop(new IAction()
-                {
-                @Override public void doAction()
-                    {
-                    NxtDcMotorControllerOnI2cDevice.this.close();
-                    }
-                });
-                }
-            }
 
         // The NXT HiTechnic motor controller will time out if it doesn't receive any I2C communication for
         // 2.5 seconds. So we set up a heartbeat request to try to prevent that. We try to use
@@ -129,6 +128,131 @@ public final class NxtDcMotorControllerOnI2cDevice implements DcMotorController,
         // and won't have to fiddle with the 'switch to read mode' each and every time.
         // We include everything from the 'Motor 1 target encoder value' through the battery voltage.
         this.i2cDeviceClient.setReadWindow(new II2cDeviceClient.ReadWindow(iRegWindowFirst, iRegWindowMax-iRegWindowFirst, II2cDeviceClient.READ_MODE.ONLY_ONCE));
+        }
+
+    public static NxtDcMotorControllerOnI2cDevice create(OpMode context, DcMotorController target, DcMotor motor1, DcMotor motor2)
+        {
+        if (isLegacyMotorController(target))
+            {
+            LegacyModule legacyModule = legacyModuleOfLegacyMotorController(target);
+            int          port         = portOfLegacyMotorController(target);
+            int          i2cAddr8Bit  = i2cAddrOfLegacyMotorController(target);
+
+            // Make a new legacy motor controller
+            II2cDevice i2cDevice                        = new I2cDeviceOnI2cDeviceController(legacyModule, port);
+            I2cDeviceClient i2cDeviceClient             = new I2cDeviceClient(null, i2cDevice, i2cAddr8Bit);
+            NxtDcMotorControllerOnI2cDevice controller  = new NxtDcMotorControllerOnI2cDevice(context, i2cDeviceClient, target);
+
+            controller.setMotors(motor1, motor2);
+            controller.arm();
+
+            return controller;
+            }
+        else
+            throw new IllegalArgumentException("target is not a legacy motor controller");
+        }
+
+    //----------------------------------------------------------------------------------------------
+    // Construction utility
+    //----------------------------------------------------------------------------------------------
+
+    private void setMotors(DcMotor motor1, DcMotor motor2)
+        {
+        assertTrue(!BuildConfig.DEBUG || !this.isArmed);
+
+        if ((motor1 != null && motor1.getController() != this.target)
+         || (motor2 != null && motor2.getController() != this.target))
+            {
+            throw new IllegalArgumentException("motors have incorrect controller for usurpation");
+            }
+
+        this.motor1 = motor1;
+        this.motor2 = motor2;
+        }
+
+    private void usurpMotors()
+        {
+        if (this.motor1 != null) setController(this.motor1, this);
+        if (this.motor2 != null) setController(this.motor2, this);
+        }
+
+    private void deusurpMotors()
+        {
+        if (this.motor1 != null) setController(this.motor1, this.target);
+        if (this.motor2 != null) setController(this.motor2, this.target);
+        }
+
+
+    private void registerVoltageSensor()
+        {
+        if (this.context != null)
+            {
+            // Are there any voltage sensors there in the map the robot controller runtime made?
+            if (this.context.hardwareMap.voltageSensor.size() == 0)
+                {
+                // No, there isn't. Well, we're one. We'll take up the challenge!
+                this.context.hardwareMap.voltageSensor.put(swerveVoltageSensorName, this);
+                }
+            }
+        }
+
+    private void unregisterVoltageSensor()
+        {
+        if (this.context != null)
+            {
+            if (ThunkingHardwareFactory.contains(this.context.hardwareMap.voltageSensor, swerveVoltageSensorName))
+                {
+                VoltageSensor voltageSensor = this.context.hardwareMap.voltageSensor.get(swerveVoltageSensorName);
+                if (voltageSensor == (VoltageSensor)this)
+                    {
+                    ThunkingHardwareFactory.removeName(this.context.hardwareMap.voltageSensor, swerveVoltageSensorName);
+                    }
+                }
+            }
+        }
+
+    private synchronized void arm()
+    // Disarm the existing controller and arm us
+        {
+        if (!this.isArmed)
+            {
+            this.usurpMotors();
+            this.targetCallback = ThunkingHardwareFactory.callbacksOfLegacyModule(this.legacyModule)[this.targetPort];
+            this.legacyModule.deregisterForPortReadyCallback(this.targetPort);
+            this.i2cDeviceClient.arm();
+            this.registerVoltageSensor();
+            this.isArmed = true;
+            }
+        }
+    private synchronized void disarm()
+    // Disarm us and re-arm the target
+        {
+        if (this.isArmed)
+            {
+            this.isArmed = false;
+            this.unregisterVoltageSensor();
+            this.i2cDeviceClient.disarm();
+            this.legacyModule.registerForI2cPortReadyCallback(this.targetCallback, this.targetPort);
+            this.deusurpMotors();
+            }
+        }
+
+    @Override synchronized public boolean onUserOpModeStop()
+        {
+        if (this.isArmed)
+            {
+            this.stopMotors();  // mirror StopRobotOpMode
+            this.disarm();
+            }
+        return true;    // unregister us
+        }
+
+    @Override synchronized public boolean onRobotShutdown()
+        {
+        // We actually shouldn't be here by now, having received a onUserOpModeStop()
+        // after which we should have been unregistered. But we close down anyway.
+        this.close();
+        return true;    // unregister us
         }
 
     //----------------------------------------------------------------------------------------------
@@ -192,8 +316,8 @@ public final class NxtDcMotorControllerOnI2cDevice implements DcMotorController,
 
     @Override public void close()
         {
-        this.floatMotors();
-        this.i2cDeviceClient.close();
+        this.floatMotors(); // mirrors robot controller runtime behavior
+        this.disarm();
         }
 
     //----------------------------------------------------------------------------------------------
@@ -312,6 +436,12 @@ public final class NxtDcMotorControllerOnI2cDevice implements DcMotorController,
         {
         this.setMotorPowerFloat(1);
         this.setMotorPowerFloat(2);
+        }
+
+    private void stopMotors()
+        {
+        this.setMotorPower(1, 0);
+        this.setMotorPower(2, 0);
         }
 
     private void validateMotor(int motor)
