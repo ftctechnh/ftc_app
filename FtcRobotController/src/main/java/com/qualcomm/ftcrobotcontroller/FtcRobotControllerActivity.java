@@ -68,6 +68,7 @@ import com.qualcomm.robotcore.util.ImmersiveMode;
 import com.qualcomm.robotcore.util.RobotLog;
 import com.qualcomm.robotcore.wifi.WifiDirectAssistant;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
@@ -102,6 +103,12 @@ public class FtcRobotControllerActivity extends Activity {
   protected FtcRobotControllerService controllerService;
 
   protected FtcEventLoop eventLoop;
+
+  private static FtcRobotControllerActivity singleton;
+
+  {
+    singleton = this;
+  }
 
   protected class RobotRestarter implements Restarter {
 
@@ -381,4 +388,9 @@ public class FtcRobotControllerActivity extends Activity {
       }
     });
   }
+
+  public static File getPrivateFilesDir() {
+    return singleton.getCacheDir();
+  }
+
 }
