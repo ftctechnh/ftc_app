@@ -15,7 +15,6 @@ hs_err_pid*
 # Android files
 
 # Built application files
-*.apk
 *.ap_
 
 # Files for the Dalvik VM
