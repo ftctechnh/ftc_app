@@ -147,38 +147,53 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeShutdownN
         OpModeShutdownNotifier.register(context, this);
         }
 
-    @Override synchronized public boolean onUserOpModeStop()
+    @Override public boolean onUserOpModeStop()
         {
-        this.close();
-        return true;
-        }
-
-    @Override synchronized public boolean onRobotShutdown()
-        {
-        this.close();
-        return true;
-        }
-
-    public synchronized void arm()
-        {
-        if (!this.isArmed)
+        synchronized (this.concurrentClientLock)
             {
-            this.i2cDevice.registerForI2cPortReadyCallback(this.callback);
-            this.isArmed = true;
+            this.close();
+            return true;
             }
         }
 
-    public synchronized boolean isArmed()
+    @Override public boolean onRobotShutdown()
         {
-        return this.isArmed;
+        synchronized (this.concurrentClientLock)
+            {
+            this.close();
+            return true;
+            }
         }
 
-    public synchronized void disarm()
+    public void arm()
         {
-        if (this.isArmed)
+        synchronized (this.concurrentClientLock)
             {
-            this.i2cDevice.deregisterForPortReadyCallback();
-            this.isArmed = false;
+            if (!this.isArmed)
+                {
+                this.i2cDevice.registerForI2cPortReadyCallback(this.callback);
+                this.isArmed = true;
+                }
+            }
+        }
+
+    public boolean isArmed()
+        {
+        synchronized (this.concurrentClientLock)
+            {
+            return this.isArmed;
+            }
+        }
+
+    public void disarm()
+        {
+        synchronized (this.concurrentClientLock)
+            {
+            if (this.isArmed)
+                {
+                this.i2cDevice.deregisterForPortReadyCallback();
+                this.isArmed = false;
+                }
             }
         }
 
@@ -308,6 +323,9 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeShutdownN
             {
             synchronized (this.concurrentClientLock)
                 {
+                if (!this.isArmed)
+                    throw new IllegalStateException("can't read from I2cDeviceClient while not armed");
+
                 synchronized (this.callbackLock)
                     {
                     // Wait until the write cache isn't busy. This honors the visibility semantic
@@ -414,6 +432,9 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeShutdownN
             {
             synchronized (this.concurrentClientLock)
                 {
+                if (!this.isArmed)
+                    throw new IllegalStateException("can't write to I2cDeviceClient while not armed");
+
                 synchronized (this.callbackLock)
                     {
                     // Wait until we can write to the write cache
