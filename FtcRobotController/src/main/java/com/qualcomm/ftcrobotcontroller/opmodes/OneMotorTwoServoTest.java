@@ -75,9 +75,13 @@ public class OneMotorTwoServoTest extends OpMode {
             // If the right bumper is pressed, move the servo one direction
             // Don't adjust the servo right away. instead, change the position member
             servo_1Position += servoDelta;
+            if (servo_1Position > 1)
+                servo_1Position = 1;
         } else if (gamepad1.left_bumper) {
             // if the left bumper is pressed, move the servo another direction
             servo_1Position -= servoDelta;
+            if (servo_1Position < 0)
+                servo_1Position = 0;
         }
 
         // Handle controls for servo_2
@@ -85,9 +89,13 @@ public class OneMotorTwoServoTest extends OpMode {
             // If the right trigger is pressed down far enough, move the servo
             // Don't adjust the servo right away. instead, change the position member
             servo_2Position += servoDelta;
+            if (servo_2Position > 1)
+                servo_2Position = 1;
         } else if (gamepad1.left_trigger >= triggerBuffer) {
             // if the left bumper is pressed down far enough, move the servo the other direction
             servo_2Position -= servoDelta;
+            if (servo_2Position < 0)
+                servo_2Position = 0;
         }
 
         // Handle controls for motor_1
