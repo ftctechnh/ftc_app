@@ -99,6 +99,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("PushBotSquare", PushBotSquare.class);
     manager.register("LinearTest", LinearTest.class);
     manager.register("ArmRobot", armRobot.class);
+    manager.register("MecanumWheelsTest", mecanumWheels.class);
 
   }
 }
