@@ -12,6 +12,10 @@ public class mecanumWheels extends OpMode {
     DcMotor frontRight;
     DcMotor rearLeft;
     DcMotor rearRight;
+    float frontLeftPwr;
+    float frontRightPwr;
+    float rearLeftPwr;
+    float rearRightPwr;
 
     @Override
     public void init(){
@@ -26,18 +30,16 @@ public class mecanumWheels extends OpMode {
 
     @Override
     public void loop(){
-        float forwardDiag = gamepad1.left_stick_x;
-        float backwardDiag = gamepad1.left_stick_y;
-        forwardDiag = Range.clip(forwardDiag, -1, 1);
-        backwardDiag = Range.clip(backwardDiag, -1, 1);
+        float strafeDirection = gamepad1.left_stick_x;
+        float throttle = gamepad1.left_stick_y;
 
-        forwardDiag = (float)scaleInput(forwardDiag);
-        backwardDiag = (float)scaleInput(backwardDiag);
+        strafeDirection = Range.clip(strafeDirection, -1, 1);
+        throttle = Range.clip(throttle, -1, 1);
 
-        frontLeft.setPower(forwardDiag);
-        frontRight.setPower(backwardDiag);
-        rearLeft.setPower(backwardDiag);
-        rearRight.setPower(forwardDiag);
+        frontLeft.setPower(throttle + strafeDirection);
+        rearRight.setPower(throttle + strafeDirection);
+        frontRight.setPower(throttle - strafeDirection);
+        rearLeft.setPower(throttle - strafeDirection);
     }
     @Override
     public void stop() {
