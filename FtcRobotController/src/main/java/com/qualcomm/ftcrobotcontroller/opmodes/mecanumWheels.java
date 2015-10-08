@@ -36,10 +36,15 @@ public class mecanumWheels extends OpMode {
         strafeDirection = Range.clip(strafeDirection, -1, 1);
         throttle = Range.clip(throttle, -1, 1);
 
-        frontLeft.setPower(throttle + strafeDirection);
-        rearRight.setPower(throttle + strafeDirection);
-        frontRight.setPower(throttle - strafeDirection);
-        rearLeft.setPower(throttle - strafeDirection);
+        frontLeftPwr = Range.clip(throttle + strafeDirection, -1, 1);
+        frontRightPwr = Range.clip(strafeDirection - throttle, -1, 1);
+        rearLeftPwr = Range.clip(strafeDirection - throttle, -1, 1);
+        rearRightPwr = Range.clip(throttle + strafeDirection, -1, 1);
+
+        frontLeft.setPower(frontLeftPwr);
+        rearRight.setPower(rearRightPwr);
+        frontRight.setPower(frontRightPwr);
+        rearLeft.setPower(rearLeftPwr);
     }
     @Override
     public void stop() {
