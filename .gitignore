@@ -23,6 +23,7 @@ Thumbs.db
 .idea
 .gradle
 build/
+ftc_app.iml
+FtcRobotController/build.gradle
 
 *ASUS_PC_01*
-
