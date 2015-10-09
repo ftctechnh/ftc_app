@@ -78,7 +78,7 @@ public abstract class FellowshipOpMode extends LinearOpMode {
                 new IllegalAccessException("getOpMode() returned null").printStackTrace();
                 return;
             }
-            currentOM.waitOneHardwareCycle();
+            currentOM.waitOneFullHardwareCycle();
         } catch (Exception e) {
             Log.e("FellowshipOpMode", "Couldn't wait one hardware cycle");
         }
