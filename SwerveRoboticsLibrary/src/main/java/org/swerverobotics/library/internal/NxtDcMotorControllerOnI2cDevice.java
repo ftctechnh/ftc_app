@@ -451,13 +451,13 @@ public final class NxtDcMotorControllerOnI2cDevice implements DcMotorController,
     private void write8(int ireg, byte data)
         {
         if (this.isArmed)
-            this.i2cDeviceClient.write8(ireg, data);
+            this.i2cDeviceClient.write8(ireg, data, false);
         }
 
     private void write(int ireg, byte[] data)
         {
         if (this.isArmed)
-            this.i2cDeviceClient.write(ireg, data);
+            this.i2cDeviceClient.write(ireg, data, false);
         }
 
     private void initPID()
