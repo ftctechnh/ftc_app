@@ -136,7 +136,7 @@ public final class NxtDcMotorControllerOnI2cDevice implements DcMotorController,
 
             // Make a new legacy motor controller
             II2cDevice i2cDevice                        = new I2cDeviceOnI2cDeviceController(legacyModule, port);
-            I2cDeviceClient i2cDeviceClient             = new I2cDeviceClient(null, i2cDevice, i2cAddr8Bit);
+            I2cDeviceClient i2cDeviceClient             = new I2cDeviceClient(context, i2cDevice, i2cAddr8Bit, false);
             NxtDcMotorControllerOnI2cDevice controller  = new NxtDcMotorControllerOnI2cDevice(context, i2cDeviceClient, target);
 
             controller.setMotors(motor1, motor2);

@@ -206,13 +206,14 @@ public final class ClassFactory
      * @param context               the OpMode within which the creation is taking place
      * @param i2cDevice             the II2cDevice to wrap
      * @param i2cAddr8Bit           the I2C address at which the client is to communicate
+     * @param closeOnOpModeStop     if true, then when the OpMode stops, the client will automatically close
      * @return                      the newly instantiated I2c device client
      * @see II2cDeviceClient#arm()
      */
-    public static II2cDeviceClient createI2cDeviceClient(OpMode context, I2cDevice i2cDevice, int i2cAddr8Bit)
+    public static II2cDeviceClient createI2cDeviceClient(OpMode context, I2cDevice i2cDevice, int i2cAddr8Bit, boolean closeOnOpModeStop)
         {
         II2cDevice ii2cDevice = createI2cDevice(i2cDevice);
-        return createI2cDeviceClient(context, ii2cDevice, i2cAddr8Bit);
+        return createI2cDeviceClient(context, ii2cDevice, i2cAddr8Bit, closeOnOpModeStop);
         }
 
 
@@ -223,12 +224,13 @@ public final class ClassFactory
      * @param context               the OpMode within which the creation is taking place
      * @param i2cDevice             the II2cDevice to wrap
      * @param i2cAddr8Bit           the I2C address at which the client is to communicate
+     * @param closeOnOpModeStop     if true, then when the OpMode stops, the client will automatically close
      * @return                      the newly instantiated I2c device client
      * @see II2cDeviceClient#arm()
      */
-    public static II2cDeviceClient createI2cDeviceClient(OpMode context, II2cDevice i2cDevice, int i2cAddr8Bit)
+    public static II2cDeviceClient createI2cDeviceClient(OpMode context, II2cDevice i2cDevice, int i2cAddr8Bit, boolean closeOnOpModeStop)
         {
-        return new I2cDeviceClient(context, i2cDevice, i2cAddr8Bit);
+        return new I2cDeviceClient(context, i2cDevice, i2cAddr8Bit, closeOnOpModeStop);
         }
 
     //----------------------------------------------------------------------------------------------

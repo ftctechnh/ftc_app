@@ -56,8 +56,8 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         {
         this.context                = context;
 
-        // We don't give the device client a context since *we* handle the shutdown logic
-        this.deviceClient           = ClassFactory.createI2cDeviceClient(null, ClassFactory.createI2cDevice(i2cDevice), i2cAddr8Bit);
+        // We don't have the device auto-close since *we* handle the shutdown logic
+        this.deviceClient           = ClassFactory.createI2cDeviceClient(context, ClassFactory.createI2cDevice(i2cDevice), i2cAddr8Bit, false);
         this.deviceClient.setReadWindow(lowerWindow);
         this.deviceClient.arm();
 
