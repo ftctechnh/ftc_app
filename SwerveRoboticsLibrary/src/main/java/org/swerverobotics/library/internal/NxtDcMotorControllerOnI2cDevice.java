@@ -8,18 +8,11 @@ import org.swerverobotics.library.exceptions.*;
 import org.swerverobotics.library.interfaces.*;
 import java.nio.*;
 import java.util.*;
-
 import static junit.framework.Assert.*;
 import static org.swerverobotics.library.internal.ThunkingHardwareFactory.*;
 
 /**
- * This is an experiment in an alternative implementation of a Legacy DC Motor controller.
- * While it appears to be complete and functional, it is currently used in Synchronous OpModes
- * only if 'experimental' mode is enabled.
- *
- * <p>Of some import, however, is the fact that this implementation is not tied to SynchronousOpMode.
- * It can be used from LinearOpMode, or, indeed, any thread that can tolerate operations that
- * can take tens of milliseconds to run.</p>
+ * An alternative implementation of a Legacy DC Motor controller.
  *
  * @see org.swerverobotics.library.ClassFactory#createNxtDcMotorController(OpMode, DcMotor, DcMotor)
  * @see org.swerverobotics.library.SynchronousOpMode#useExperimentalThunking
@@ -257,24 +250,6 @@ public final class NxtDcMotorControllerOnI2cDevice implements DcMotorController,
             }
         }
 
-    @Override synchronized public boolean onUserOpModeStop()
-        {
-        if (this.isArmed)
-            {
-            this.stopMotors();  // mirror StopRobotOpMode
-            this.disarm();
-            }
-        return true;    // unregister us
-        }
-
-    @Override synchronized public boolean onRobotShutdown()
-        {
-        // We actually shouldn't be here by now, having received a onUserOpModeStop()
-        // after which we should have been unregistered. But we close down anyway.
-        this.close();
-        return true;    // unregister us
-        }
-
     //----------------------------------------------------------------------------------------------
     // IHardwareWrapper
     //----------------------------------------------------------------------------------------------
@@ -334,11 +309,37 @@ public final class NxtDcMotorControllerOnI2cDevice implements DcMotorController,
         return 1;
         }
 
-    @Override public void close()
+    @Override public synchronized void close()
         {
-        this.floatMotors(); // mirrors robot controller runtime behavior
-        this.disarm();
+        if (this.isArmed)
+            {
+            this.floatMotors(); // mirrors robot controller runtime behavior
+            this.disarm();
+            }
         }
+
+    //----------------------------------------------------------------------------------------------
+    // IOpModeShutdownNotify
+    //----------------------------------------------------------------------------------------------
+
+    @Override synchronized public boolean onUserOpModeStop()
+        {
+        if (this.isArmed)
+            {
+            this.stopMotors();  // mirror StopRobotOpMode
+            this.disarm();
+            }
+        return true;    // unregister us
+        }
+
+    @Override synchronized public boolean onRobotShutdown()
+        {
+        // We actually shouldn't be here by now, having received a onUserOpModeStop()
+        // after which we should have been unregistered. But we close down anyway.
+        this.close();
+        return true;    // unregister us
+        }
+
 
     //----------------------------------------------------------------------------------------------
     // DcMotorController
