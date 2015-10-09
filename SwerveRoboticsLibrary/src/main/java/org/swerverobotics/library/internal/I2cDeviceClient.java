@@ -113,7 +113,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeShutdownN
      * @param i2cDevice             the device we are to be a client of
      * @param i2cAddr8Bit           its 8 bit i2cAddress
      */
-    public I2cDeviceClient(/*optional*/ OpMode context, II2cDevice i2cDevice, int i2cAddr8Bit)
+    public I2cDeviceClient(OpMode context, II2cDevice i2cDevice, int i2cAddr8Bit, boolean closeOnOpModeStop)
         {
         i2cDevice.setI2cAddr(i2cAddr8Bit);
 
@@ -148,7 +148,8 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeShutdownN
         this.writeCacheStatus = WRITE_CACHE_STATUS.IDLE;
         this.modeCacheStatus  = MODE_CACHE_STATUS.IDLE;
 
-        OpModeShutdownNotifier.register(context, this);
+        if (closeOnOpModeStop)
+            OpModeShutdownNotifier.register(context, this);
         }
 
     @Override public boolean onUserOpModeStop()
