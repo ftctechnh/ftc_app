@@ -35,7 +35,6 @@ import com.fellowshipoftheloosescrews.opmodes.TeleOp;
 import com.fellowshipoftheloosescrews.testing.CustomTestOpMode;
 import com.fellowshipoftheloosescrews.testing.DcServoTest;
 import com.fellowshipoftheloosescrews.testing.GyroTesting;
-import com.fellowshipoftheloosescrews.testing.HardwareCycleTesting;
 import com.fellowshipoftheloosescrews.testing.ThreadedMotorTesting;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
@@ -59,7 +58,6 @@ public class FtcOpModeRegister implements OpModeRegister {
       manager.register("DCServo", DcServoTest.class);
 
       manager.register("gyro testing", GyroTesting.class);
-      manager.register("hardware cycle timing", HardwareCycleTesting.class);
 
       manager.register("Custom-OpMode", CustomTestOpMode.class);
   }
