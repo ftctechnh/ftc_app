@@ -362,7 +362,7 @@ public final class NxtDcMotorControllerOnI2cDevice implements DcMotorController,
         
         // We write the whole byte, but only the lower five bits are actually writable
         // and we only ever use the lowest two as non zero.
-        this.i2cDeviceClient.write8(mpMotorRegMotorMode[motor], b);
+        this.write8(mpMotorRegMotorMode[motor], b);
         }
 
     @Override public DcMotorController.RunMode getMotorChannelMode(int motor)
@@ -391,7 +391,7 @@ public final class NxtDcMotorControllerOnI2cDevice implements DcMotorController,
         byte bPower = (byte)Range.scale(power, powerMin, powerMax, bPowerMin, bPowerMax);
         
         // Write it on out
-        this.i2cDeviceClient.write8(mpMotorRegMotorPower[motor], bPower);
+        this.write8(mpMotorRegMotorPower[motor], bPower);
         }
 
     @Override public double getMotorPower(int motor)
@@ -413,7 +413,7 @@ public final class NxtDcMotorControllerOnI2cDevice implements DcMotorController,
         {
         this.validateMotor(motor);
         byte bPower = bPowerFloat;
-        this.i2cDeviceClient.write8(mpMotorRegMotorPower[motor], bPower);
+        this.write8(mpMotorRegMotorPower[motor], bPower);
         }
 
     @Override public boolean getMotorPowerFloat(int motor)
@@ -427,7 +427,7 @@ public final class NxtDcMotorControllerOnI2cDevice implements DcMotorController,
         {
         this.validateMotor(motor);
         byte[] bytes = TypeConversion.intToByteArray(position);
-        this.i2cDeviceClient.write(mpMotorRegTargetEncoderValue[motor], bytes);
+        this.write(mpMotorRegTargetEncoderValue[motor], bytes);
         }
 
     @Override public int getMotorTargetPosition(int motor)
@@ -447,6 +447,18 @@ public final class NxtDcMotorControllerOnI2cDevice implements DcMotorController,
     //----------------------------------------------------------------------------------------------
     // DcMotorController utility
     //----------------------------------------------------------------------------------------------
+
+    private void write8(int ireg, byte data)
+        {
+        if (this.isArmed)
+            this.i2cDeviceClient.write8(ireg, data);
+        }
+
+    private void write(int ireg, byte[] data)
+        {
+        if (this.isArmed)
+            this.i2cDeviceClient.write(ireg, data);
+        }
 
     private void initPID()
         {
