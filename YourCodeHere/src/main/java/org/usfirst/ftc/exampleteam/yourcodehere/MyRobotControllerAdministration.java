@@ -64,7 +64,9 @@ public abstract class MyRobotControllerAdministration
     /**
      * Any public static method annotated with {@link OnRobotRunning} is invoked when the robot
      * object in the robot controller application enters the running state following an initial
-     * boot or a 'restart robot'.
+     * boot or a 'restart robot'. One thing useful to do here is to play a sound of some sort
+     * to provide an audible indicator that the robot is ready for use with the driver station,
+     * but you could do whatever you like.
      *
      * @param context   the application context of the robot controller application. Useful for
      *                  interacting with other parts of the Android system, such creating a
