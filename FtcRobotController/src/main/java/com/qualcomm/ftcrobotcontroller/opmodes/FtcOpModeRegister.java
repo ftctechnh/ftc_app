@@ -33,6 +33,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.fellowshipoftheloosescrews.opmodes.TeleOp;
 import com.fellowshipoftheloosescrews.testing.CustomTestOpMode;
+import com.fellowshipoftheloosescrews.testing.DataLogTest;
 import com.fellowshipoftheloosescrews.testing.DcServoTest;
 import com.fellowshipoftheloosescrews.testing.GyroTesting;
 import com.fellowshipoftheloosescrews.testing.IntentTest;
@@ -63,5 +64,6 @@ public class FtcOpModeRegister implements OpModeRegister {
       manager.register("Custom-OpMode", CustomTestOpMode.class);
 
       manager.register("Intent", IntentTest.class);
+      manager.register("DataLogTest", DataLogTest.class);
   }
 }

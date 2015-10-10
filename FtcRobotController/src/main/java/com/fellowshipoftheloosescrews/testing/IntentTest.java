@@ -1,6 +1,6 @@
 package com.fellowshipoftheloosescrews.testing;
 
-import com.fellowshipoftheloosescrews.utilities.DataLog;
+import com.fellowshipoftheloosescrews.utilities.data.DataLog;
 import com.fellowshipoftheloosescrews.utilities.opmode.FellowshipOpMode;
 
 /**

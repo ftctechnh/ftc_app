@@ -2,6 +2,7 @@ package com.fellowshipoftheloosescrews.utilities.opmode;
 
 import android.util.Log;
 
+import com.fellowshipoftheloosescrews.utilities.data.DataLog;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import java.util.HashMap;
@@ -84,7 +85,15 @@ public abstract class FellowshipOpMode extends LinearOpMode {
         }
     }
 
+    private DataLog dataLog;
+
+    public DataLog getDataLog()
+    {
+        return dataLog;
+    }
+
     //========  Start Module Code  ========//
+
 
     /**
      * put code here to register modules with the module manager
@@ -140,6 +149,13 @@ public abstract class FellowshipOpMode extends LinearOpMode {
         public void stopModuleThread()
         {
             isRunning = false;
+
+            for(String s : moduleMap.keySet())
+            {
+                moduleMap.get(s).stop();
+            }
+            Log.d(DataLog.LOG_TAG, dataLog.toString());
+            dataLog.saveFile(DataLog.getDateString(), DataLog.getDateAndTimeString() + ".csv", dataLog.toString());
         }
 
         private boolean isRunning = false;
@@ -152,26 +168,24 @@ public abstract class FellowshipOpMode extends LinearOpMode {
         @Override
         public void run() {
             isRunning = true;
-
+            dataLog = new DataLog();
+            Log.d(DataLog.LOG_TAG, "Test");
+            dataLog.init();
             for(String s : moduleMap.keySet())
             {
                 moduleMap.get(s).start();
             }
-
-            while(isRunning)
+            double startTime = System.currentTimeMillis();
+            dataLog.start();
+            while(opModeIsActive())
             {
                 for(String s : moduleMap.keySet())
                 {
                     moduleMap.get(s).update();
                 }
+                dataLog.saveTempData(System.currentTimeMillis() - startTime);
                 waitForHardwareUpdate();
             }
-
-            for(String s : moduleMap.keySet())
-            {
-                moduleMap.get(s).stop();
-            }
-            isRunning = false;
         }
 
         //========  Stop Threading  ========//
