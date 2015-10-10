@@ -1,5 +1,6 @@
 package org.swerverobotics.library.internal;
 
+import com.qualcomm.robotcore.eventloop.EventLoopManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
 
@@ -40,7 +41,7 @@ import java.util.List;
  * So we build this weird beast that is both a motor and its own controller as that's the
  * most efficient way to accomplish the teast.
  */
-class OpModeShutdownNotifier extends DcMotor implements DcMotorController
+public class OpModeStateTransitionNotifier extends DcMotor implements DcMotorController
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -48,24 +49,24 @@ class OpModeShutdownNotifier extends DcMotor implements DcMotorController
 
     static final String shutdownHookName = " |Swerve|ShutdownHook| ";
 
-    public  final HardwareMap                   hardwareMap;
-    private final List<IOpModeShutdownNotify>   registrants;
-                  boolean                       shutdownProcessed;
+    public  final HardwareMap                           hardwareMap;
+    private final List<IOpModeStateTransitionEvents>    registrants;
+                  boolean                               shutdownProcessed;
 
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    OpModeShutdownNotifier(HardwareMap hardwareMap)
+    OpModeStateTransitionNotifier(HardwareMap hardwareMap)
         {
         super(null, 0);
         this.controller        = this;
         this.hardwareMap       = hardwareMap;
-        this.registrants       = new LinkedList<IOpModeShutdownNotify>();
+        this.registrants       = new LinkedList<IOpModeStateTransitionEvents>();
         this.shutdownProcessed = false;
         }
 
-    public static void register(OpMode context, IOpModeShutdownNotify registrant)
+    public static void register(OpMode context, IOpModeStateTransitionEvents registrant)
         {
         if (context != null)
             {
@@ -73,26 +74,26 @@ class OpModeShutdownNotifier extends DcMotor implements DcMotorController
             }
         }
 
-    private static OpModeShutdownNotifier create(HardwareMap map)
+    private static OpModeStateTransitionNotifier create(HardwareMap map)
         {
         if (!ThunkingHardwareFactory.contains(map.dcMotorController, shutdownHookName))
             {
-            OpModeShutdownNotifier hook = new OpModeShutdownNotifier(map);
+            OpModeStateTransitionNotifier hook = new OpModeStateTransitionNotifier(map);
             map.dcMotorController.put(shutdownHookName, hook);
             map.dcMotor.put(shutdownHookName, hook);
             }
-        return (OpModeShutdownNotifier)map.dcMotorController.get(shutdownHookName);
+        return (OpModeStateTransitionNotifier)map.dcMotorController.get(shutdownHookName);
         }
 
     //----------------------------------------------------------------------------------------------
     // State transitions
     //----------------------------------------------------------------------------------------------
 
-    synchronized void register(IOpModeShutdownNotify him)
+    synchronized void register(IOpModeStateTransitionEvents him)
         {
         this.registrants.add(him);
         }
-    synchronized boolean unregister(IOpModeShutdownNotify him)
+    synchronized boolean unregister(IOpModeStateTransitionEvents him)
         {
         for (int i = 0; i < this.registrants.size(); i++)
             {
@@ -107,14 +108,14 @@ class OpModeShutdownNotifier extends DcMotor implements DcMotorController
 
     synchronized void onUserOpModeStop()
         {
-        List<IOpModeShutdownNotify> toRemove = new LinkedList<IOpModeShutdownNotify>();
-        for (IOpModeShutdownNotify registrant : this.registrants)
+        List<IOpModeStateTransitionEvents> toRemove = new LinkedList<IOpModeStateTransitionEvents>();
+        for (IOpModeStateTransitionEvents registrant : this.registrants)
             {
             if (registrant.onUserOpModeStop())
                 toRemove.add(registrant);
             }
 
-        for (IOpModeShutdownNotify registrant : toRemove)
+        for (IOpModeStateTransitionEvents registrant : toRemove)
             unregister(registrant);
         }
 
@@ -124,16 +125,21 @@ class OpModeShutdownNotifier extends DcMotor implements DcMotorController
             {
             this.shutdownProcessed = true;
 
-            List<IOpModeShutdownNotify> toRemove = new LinkedList<IOpModeShutdownNotify>();
-            for (IOpModeShutdownNotify registrant : this.registrants)
+            List<IOpModeStateTransitionEvents> toRemove = new LinkedList<IOpModeStateTransitionEvents>();
+            for (IOpModeStateTransitionEvents registrant : this.registrants)
                 {
                 if (registrant.onRobotShutdown())
                     toRemove.add(registrant);
                 }
 
-            for (IOpModeShutdownNotify registrant : toRemove)
+            for (IOpModeStateTransitionEvents registrant : toRemove)
                 unregister(registrant);
             }
+        }
+
+    public static synchronized void onEventLoopStateChange(EventLoopManager.State newState)
+        {
+        // TO DO
         }
 
     //----------------------------------------------------------------------------------------------

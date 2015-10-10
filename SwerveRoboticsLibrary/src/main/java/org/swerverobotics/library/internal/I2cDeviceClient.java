@@ -19,7 +19,7 @@ import static org.swerverobotics.library.internal.Util.*;
  * an instance of I2cDevice. There's a really whole lot of hard stuff this does for you
  *
  */
-public final class I2cDeviceClient implements II2cDeviceClient, IOpModeShutdownNotify
+public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTransitionEvents
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -149,7 +149,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeShutdownN
         this.modeCacheStatus  = MODE_CACHE_STATUS.IDLE;
 
         if (closeOnOpModeStop)
-            OpModeShutdownNotifier.register(context, this);
+            OpModeStateTransitionNotifier.register(context, this);
         }
 
     @Override public boolean onUserOpModeStop()
