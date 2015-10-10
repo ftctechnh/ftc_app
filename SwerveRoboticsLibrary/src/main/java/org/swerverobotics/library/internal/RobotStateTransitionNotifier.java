@@ -9,10 +9,10 @@ import java.util.*;
 
 /**
  * The point of all this is to hook into the robot controller runtime in order to
- * get access to their motor controller shutdown and stop logic. They expect *all*
- * the motors and motor controllers to live in the hardware map that they know about,
- * and they run over the collections of those at times in order to shutdown motors.
- * Ours don't always do that, so we need to compensate.
+ * get access to their motor controller shutdown and stop logic. The runtime expects *all*
+ * the motors and motor controllers to live in the hardware map that it knows about,
+ * and it runs over the collections of those at times in order to shutdown motors.
+ * Ours motor controllers etc don't always do that, so we need to compensate.
  *
  * Looked at more generally, what we're doing here is providing a general purpose
  * notification mechanism that any component can use to register for end-of-user-OpMode
@@ -78,6 +78,7 @@ public class RobotStateTransitionNotifier extends DcMotor implements DcMotorCont
 
     private static RobotStateTransitionNotifier create(HardwareMap map)
         {
+        // Only need to create one instance per hardwareMap.
         if (!ThunkingHardwareFactory.contains(map.dcMotorController, shutdownHookName))
             {
             RobotStateTransitionNotifier hook = new RobotStateTransitionNotifier(map);
