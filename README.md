@@ -82,7 +82,7 @@ The fifteen second summary of how to use SynchronousOpMode is as follows:
 *   Initialize your hardware variables at the top of main() instead of in start(). Otherwise,
     the use of hardware objects (DcMotor, Servo, GamePads, etc) is the same as in the usual robot
     controller runtime.
-*   The core of the body of main() should look like
+*   The core of the body of main() for a typical TeleOp OpMode should look like
 
         // Initialize stuff (not shown)
         
@@ -93,11 +93,14 @@ The fifteen second summary of how to use SynchronousOpMode is as follows:
             if (this.updateGamePads()) {
                 // Do something interesting
                 }
-            this.telemetry.update();
+            telemetry.update();
             this.idle();
             }
 
-That's it! Migrating from LinearOpMode to SyncronousOpMode is easy, usually simply involving 
+That's it! Autonomous OpModes are even simpler: just write what you want the robot to do
+after the waitForStart().
+
+Migrating from LinearOpMode to SyncronousOpMode is easy, usually simply involving 
 
 * changing the OpMode base class to SynchronousOpMode from LinearOpMode
 * changing the name of your runOpMode() method to main()
@@ -115,8 +118,8 @@ and 'release' them, we try to keep the master branch always stable and fully fun
 could reasonably sync to the latest available if you wished. Alternately, instead of forking
 or cloning, you can download a full copy of the source in .zip form from one of our releases.
 
-If you have previously forked the FTC HQ tree from https://github.com/ftctechnh/ftc_app, it you
-are somewhat git-savy you can easily upgrade to the Swerve Library by adding a new remote 
+If you have previously forked the FTC HQ tree from https://github.com/ftctechnh/ftc_app and you
+are moderately git-savvy, you can easily upgrade to the Swerve Library by adding a new remote 
 of https://github.com/SwerveRobotics/ftc_app to your git tree and initiating a pull from that remote.
  
 Documentation is available in the SwerveRoboticsLibrary/doc/javadoc directory.
