@@ -7,12 +7,9 @@ import org.swerverobotics.library.examples.*;
 import com.qualcomm.ftcrobotcontroller.opmodes.*;
 
 /**
- * {@link MyRobotControllerAdministration} can be used to register OpModes for display in the
- * driver station menu. It is particularly useful for registering OpModes that
- * are found in libraries in which you are unable to or would prefer not to
- * modify the source code. For your own OpModes, though you could register them
- * here, it is preferable to annotate them in their own source with {@link TeleOp}
- * or {@link Autonomous} annotations, as appropriate.
+ * MyRobotControllerAdministration is a container for administrative methods that intereract
+ * with the Swerve library. You don't <em>have to</em> put your adminstrative methods in a separate
+ * class like this, but it does help keep them neat and tidy.
  *
  * <p>NOTE: if you previously cloned YourCodeHere for your team and per the then-current
  * instructions edited FtcRobotController\build.gradle to mention your project, you should
@@ -34,16 +31,25 @@ import com.qualcomm.ftcrobotcontroller.opmodes.*;
  * @see TeleOp
  * @see Autonomous
  * @see OpModeRegistrar
- * @see OnRobotStart
+ * @see OnRobotRunning
  * @see SynchTeleOp
  */
-public class MyRobotControllerAdministration
+public abstract class MyRobotControllerAdministration
     {
     /**
-     * Register any library OpModes that we wish to display. Change this code to suit
+     * Registers any library OpModes that you wish to display. Change this code to suit
      * your needs: the specific OpModes that are registered as this code comes from
      * the factory are probably not what you want.
      *
+     * Annotating a public static method with @OpModeRegistrary like this can be used to register
+     * OpModes for display in the driver station menu. It is particularly useful for
+     * registering OpModes that are found in libraries in which you are unable to or would prefer not to
+     * modify the source code. For your own OpModes, though you could register them
+     * here, it is preferable to annotate them in their own source with {@link TeleOp}
+     * or {@link Autonomous} annotations, as appropriate
+     *
+     * @param context   the application context of the robot controller application. Not often
+     *                  actually used in OpMode registrar functions.
      * @param manager   the object through which registrations are effected
      */
     @OpModeRegistrar
@@ -57,8 +63,17 @@ public class MyRobotControllerAdministration
         manager.register("FTC HQ NxtTeleOp", NxtTeleOp.class);
         }
 
-    @OnRobotStart
-    public static void PlaySoundOnRobotStart(Context context)
+    /**
+     * Any public static method annotated with {@link OnRobotRunning} is invoked when the robot
+     * object in the robot controller application enters the running state following an initial
+     * boot or a 'restart robot'.
+     *
+     * @param context   the application context of the robot controller application. Useful for
+     *                  interacting with other parts of the Android system, such creating a
+     *                  MediaPlayer.
+     */
+    @OnRobotRunning
+    public static void PlaySoundOnRobotRunning(Context context)
         {
         MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.nxtstartup);
         mediaPlayer.start();
