@@ -1,6 +1,5 @@
 package com.fellowshipoftheloosescrews.utilities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
