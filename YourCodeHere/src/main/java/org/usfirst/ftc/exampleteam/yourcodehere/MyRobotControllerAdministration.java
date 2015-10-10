@@ -7,9 +7,12 @@ import org.swerverobotics.library.examples.*;
 import com.qualcomm.ftcrobotcontroller.opmodes.*;
 
 /**
- * MyRobotControllerAdministration is a container for administrative methods that intereract
- * with the Swerve library. You don't <em>have to</em> put your adminstrative methods in a separate
- * class like this, but it does help keep them neat and tidy.
+ * MyRobotControllerAdministration is a container for 'administrative' methods that intereract
+ * with the Swerve library. You don't <em>have to</em> put your administrative methods in a separate
+ * class as we do here, but it does help keep them neat and tidy. Administrative methods are
+ * each tagged with a Java annotation that connotes and bestows their significance; see the
+ * individual example methods for details. Note that administrative methods don't reside in any
+ * given OpMode, but rather are used and invoked outside of the OpMode life cycle.
  *
  * <p>NOTE: if you previously cloned YourCodeHere for your team and per the then-current
  * instructions edited FtcRobotController\build.gradle to mention your project, you should
@@ -39,12 +42,7 @@ public abstract class MyRobotControllerAdministration
     /**
      * Registers any library OpModes that you wish to display. Change this code to suit
      * your needs: the specific OpModes that are registered as this code comes from
-     * the factory are probably not what you want.
-     *
-     * Annotating a public static method with @OpModeRegistrary like this can be used to register
-     * OpModes for display in the driver station menu. It is particularly useful for
-     * registering OpModes that are found in libraries in which you are unable to or would prefer not to
-     * modify the source code. For your own OpModes, though you could register them
+     * the factory are probably not whur own OpModes, though you could register them
      * here, it is preferable to annotate them in their own source with {@link TeleOp}
      * or {@link Autonomous} annotations, as appropriate
      *
@@ -60,7 +58,12 @@ public abstract class MyRobotControllerAdministration
 
         manager.register(SynchTeleOp.class);
         manager.register(SynchTelemetryOp.class);
-        manager.register("FTC HQ NxtTeleOp", NxtTeleOp.class);
+        manager.register("FTC HQ NxtTeleOp", NxtTeleOp.class)at you want.
+                *
+        * Annotating a public static method with @OpModeRegistrary like this can be used to register
+                * OpModes for display in the driver station menu. It is particularly useful for
+        * registering OpModes that are found in libraries in which you are unable to or would prefer not to
+        * modify the source code. For yo;
         }
 
     /**
