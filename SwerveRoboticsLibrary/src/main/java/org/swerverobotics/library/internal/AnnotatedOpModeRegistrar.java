@@ -246,7 +246,7 @@ public class AnnotatedOpModeRegistrar
                         registrarMethods.add(method);
                     }
 
-                if (method.isAnnotationPresent(OnRobotStart.class))
+                if (method.isAnnotationPresent(OnRobotRunning.class))
                     {
                     if (getParameterCount(method)==1)
                         onRobotStartMethods.add(method);
