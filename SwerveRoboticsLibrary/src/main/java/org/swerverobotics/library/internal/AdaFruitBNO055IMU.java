@@ -17,7 +17,7 @@ import static org.swerverobotics.library.interfaces.NavUtil.*;
  * <a href="http://www.adafruit.com/products/2472">AdaFruit Absolute Orientation Sensor</a> that 
  * is attached to a Modern Robotics Core Device Interface module.
  */
-public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser, IOpModeShutdownNotify
+public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser, IOpModeStateTransitionEvents
     {
     //------------------------------------------------------------------------------------------
     // State
@@ -66,7 +66,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         this.accelerationAlgorithm = new NaiveAccelerationIntegrator();
         this.accelerationMananger  = null;
 
-        OpModeShutdownNotifier.register(context, this);
+        OpModeStateTransitionNotifier.register(context, this);
         }
 
     /**

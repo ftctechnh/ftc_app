@@ -17,7 +17,7 @@ import static org.swerverobotics.library.internal.ThunkingHardwareFactory.*;
  * @see org.swerverobotics.library.ClassFactory#createNxtDcMotorController(OpMode, DcMotor, DcMotor)
  * @see org.swerverobotics.library.SynchronousOpMode#useExperimentalThunking
  */
-public final class NxtDcMotorControllerOnI2cDevice implements DcMotorController, IThunkWrapper<DcMotorController>, VoltageSensor, IOpModeShutdownNotify
+public final class NxtDcMotorControllerOnI2cDevice implements DcMotorController, IThunkWrapper<DcMotorController>, VoltageSensor, IOpModeStateTransitionEvents
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -100,7 +100,7 @@ public final class NxtDcMotorControllerOnI2cDevice implements DcMotorController,
         this.motor1          = null;
         this.motor2          = null;
 
-        OpModeShutdownNotifier.register(context, this);
+        OpModeStateTransitionNotifier.register(context, this);
 
         this.initPID();
 
@@ -319,7 +319,7 @@ public final class NxtDcMotorControllerOnI2cDevice implements DcMotorController,
         }
 
     //----------------------------------------------------------------------------------------------
-    // IOpModeShutdownNotify
+    // IOpModeStateTransitionEvents
     //----------------------------------------------------------------------------------------------
 
     @Override synchronized public boolean onUserOpModeStop()

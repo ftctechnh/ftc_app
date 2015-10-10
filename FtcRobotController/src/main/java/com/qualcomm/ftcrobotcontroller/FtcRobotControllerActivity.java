@@ -62,12 +62,16 @@ import com.qualcomm.ftccommon.Restarter;
 import com.qualcomm.ftccommon.UpdateUI;
 import com.qualcomm.ftcrobotcontroller.opmodes.FtcOpModeRegister;
 import com.qualcomm.hardware.ModernRoboticsHardwareFactory;
+import com.qualcomm.robotcore.eventloop.EventLoopManager;
 import com.qualcomm.robotcore.hardware.HardwareFactory;
 import com.qualcomm.robotcore.hardware.configuration.Utility;
+import com.qualcomm.robotcore.robot.Robot;
 import com.qualcomm.robotcore.util.Dimmer;
 import com.qualcomm.robotcore.util.ImmersiveMode;
 import com.qualcomm.robotcore.util.RobotLog;
 import com.qualcomm.robotcore.wifi.WifiDirectAssistant;
+import org.swerverobotics.library.internal.*;
+
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -97,7 +101,7 @@ public class FtcRobotControllerActivity extends Activity {
   protected TextView textErrorMessage;
   protected ImmersiveMode immersion;
 
-  protected UpdateUIHook updateUI;
+  protected SwerveUpdateUIHook updateUI;
   protected Dimmer dimmer;
   protected LinearLayout entireScreenLayout;
 
@@ -165,7 +169,7 @@ public class FtcRobotControllerActivity extends Activity {
     dimmer.longBright();
     Restarter restarter = new RobotRestarter();
 
-    updateUI = new UpdateUIHook(this, dimmer);
+    updateUI = new SwerveUpdateUIHook(this, dimmer);
     updateUI.setRestarter(restarter);
     updateUI.setTextViews(textWifiDirectStatus, textRobotStatus,
             textGamepad, textOpMode, textErrorMessage, textDeviceName);
@@ -194,11 +198,11 @@ public class FtcRobotControllerActivity extends Activity {
     callback.wifiDirectUpdate(WifiDirectAssistant.Event.DISCONNECTED);
 
     entireScreenLayout.setOnTouchListener(new View.OnTouchListener() {
-      @Override
-      public boolean onTouch(View v, MotionEvent event) {
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
         dimmer.handleDimTimer();
         return false;
-      }
+        }
     });
 
   }
@@ -382,64 +386,147 @@ public class FtcRobotControllerActivity extends Activity {
 
   public void showToast(final Toast toast) {
     runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
+    @Override
+    public void run() {
         toast.show();
-      }
+        }
     });
   }
 
-class UpdateUIHook extends UpdateUI
-  {
-  //------------------------------------------------------------------------------------------------
-  // State
-  //------------------------------------------------------------------------------------------------
+    //==============================================================================================
+    // Hooking infrastructure (Swerve)
 
-  FtcRobotControllerActivity activity;
-  FtcRobotControllerService  controllerService;
-
-  //------------------------------------------------------------------------------------------------
-  // Construction
-  //------------------------------------------------------------------------------------------------
-
-  UpdateUIHook(FtcRobotControllerActivity activity, Dimmer dimmer)
-    {
-    super(activity, dimmer);
-    this.activity = activity;
-    this.controllerService = null;
-    }
-
-  @Override public void setControllerService(FtcRobotControllerService controllerService)
-    {
-    super.setControllerService(controllerService);
-    this.controllerService = controllerService;
-    }
-
-  //------------------------------------------------------------------------------------------------
-  // Operations
-  //------------------------------------------------------------------------------------------------
-
-  class CallbackHook extends UpdateUI.Callback
-    {
-    @Override public void wifiDirectUpdate(WifiDirectAssistant.Event event)
-      {
-      super.wifiDirectUpdate(event);
-
-      final String message = controllerService == null
-        ? "" :
-        String.format("Wifi Direct passphrase: %s", controllerService.getWifiDirectAssistant().getPassphrase());
-
-      UpdateUIHook.this.activity.runOnUiThread(new Runnable()
-      {
-      @Override public void run()
+    static class SwerveEventLoopMonitor implements EventLoopManager.EventLoopMonitor
         {
-        activity.textWifiDirectPassphrase.setText(message);
+        //------------------------------------------------------------------------------------------
+        // State
+        //------------------------------------------------------------------------------------------
+
+        final EventLoopManager.EventLoopMonitor prevMonitor;
+
+        //------------------------------------------------------------------------------------------
+        // Construction
+        //------------------------------------------------------------------------------------------
+
+        SwerveEventLoopMonitor(EventLoopManager.EventLoopMonitor prevMonitor)
+            {
+            this.prevMonitor = prevMonitor;
+            }
+
+        // Make sure we're installed in the eventloop in the hook
+        public synchronized static void installIfNeceesary(FtcRobotControllerService service)
+            {
+            if (service == null)
+                return;
+
+            Robot robot = robotOfFtcRobotControllerService(service);
+            EventLoopManager eventLoopManager = eventLoopManagerOfRobot(robot);
+            EventLoopManager.EventLoopMonitor monitor = monitorOfEventLoopManager(eventLoopManager);
+            if (monitor instanceof SwerveEventLoopMonitor)
+                {
+                // we're already installed
+                }
+            else
+                {
+                SwerveEventLoopMonitor newMonitor = new SwerveEventLoopMonitor(monitor);
+                eventLoopManager.setMonitor(newMonitor);
+                }
+            }
+
+
+        //----------------------------------------------------------------------------------------------
+        // Notifications
+        //----------------------------------------------------------------------------------------------
+
+        @Override
+        public void onStateChange(EventLoopManager.State newState)
+            {
+            this.prevMonitor.onStateChange(newState);
+            OpModeStateTransitionNotifier.onEventLoopStateChange(newState);
+            }
+
+        //----------------------------------------------------------------------------------------------
+        // Skullduggery
+        //----------------------------------------------------------------------------------------------
+
+        public static Robot robotOfFtcRobotControllerService(FtcRobotControllerService service)
+            {
+            return Util.<Robot>getLocalPrivateObjectField(service, 2);
+            }
+        public static EventLoopManager eventLoopManagerOfRobot(Robot robot)
+            {
+            return Util.<EventLoopManager>getLocalPrivateObjectField(robot, 0);
+            }
+        public static EventLoopManager.EventLoopMonitor monitorOfEventLoopManager(EventLoopManager manager)
+            {
+            return Util.<EventLoopManager.EventLoopMonitor>getLocalPrivateObjectField(manager, 10);
+            }
+
         }
-      });
-      }
+
+    class SwerveUpdateUIHook extends UpdateUI
+        {
+        //----------------------------------------------------------------------------------------------
+        // State
+        //----------------------------------------------------------------------------------------------
+
+        FtcRobotControllerActivity activity;
+        FtcRobotControllerService  controllerService;
+
+        //----------------------------------------------------------------------------------------------
+        // Construction
+        //----------------------------------------------------------------------------------------------
+
+        SwerveUpdateUIHook(FtcRobotControllerActivity activity, Dimmer dimmer)
+            {
+            super(activity, dimmer);
+            this.activity = activity;
+            this.controllerService = null;
+            }
+
+        @Override
+        public void setControllerService(FtcRobotControllerService controllerService)
+            {
+            super.setControllerService(controllerService);
+            this.controllerService = controllerService;
+            }
+
+        //----------------------------------------------------------------------------------------------
+        // Operations
+        //----------------------------------------------------------------------------------------------
+
+        class CallbackHook extends UpdateUI.Callback
+            {
+            @Override
+            public void robotUpdate(final String status)
+                {
+                super.robotUpdate(status);
+
+                // Make sure we get to see all the robot state transitions
+                SwerveEventLoopMonitor.installIfNeceesary(controllerService);
+                }
+
+            @Override
+            public void wifiDirectUpdate(WifiDirectAssistant.Event event)
+                {
+                super.wifiDirectUpdate(event);
+
+                final String message = controllerService == null
+                    ? ""
+                    : String.format("Wifi Direct passphrase: %s", controllerService.getWifiDirectAssistant().getPassphrase());
+
+                SwerveUpdateUIHook.this.activity.runOnUiThread(new Runnable()
+                    {
+                    @Override
+                    public void run()
+                        {
+                        activity.textWifiDirectPassphrase.setText(message);
+                        }
+                    });
+                }
+            }
+        }
     }
-  }
-  }
 
 
 

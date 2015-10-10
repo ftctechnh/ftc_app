@@ -1,6 +1,5 @@
 package org.swerverobotics.library.internal;
 
-import android.util.*;
 import com.qualcomm.robotcore.util.*;
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.exceptions.*;
@@ -174,7 +173,7 @@ public class Util
             }
         }
     
-    static public Field getAccessibleClassNonStaticField(Object target, int iField)
+    static public Field getAccessibleClassNonStaticFieldIncludingSuper(Object target, int iField)
         {
         Class<?> c = target.getClass();
         List<Field> fields = getDeclaredNonStaticFieldsIncludingSuper(c, true);
@@ -186,13 +185,25 @@ public class Util
         return field;        
         }
 
+    static public Field getLocalAccessibleClassNonStaticField(Object target, int iField)
+        {
+        Class<?> c = target.getClass();
+        List<Field> fields = getLocalDeclaredNonStaticFields(c, true);
+        Field field = fields.get(iField);
+
+        if (!field.isAccessible())
+            field.setAccessible(true);
+
+        return field;
+        }
+
     //----------------------------------------------------------------------------------------------
     // Private field access
     //----------------------------------------------------------------------------------------------
 
     static public int getPrivateIntField(Object target, int iField)
         {
-        Field field = getAccessibleClassNonStaticField(target, iField);
+        Field field = getAccessibleClassNonStaticFieldIncludingSuper(target, iField);
         return getPrivateIntField(target, field);
         }
 
@@ -210,7 +221,7 @@ public class Util
 
     static public long getPrivateLongField(Object target, int iField)
         {
-        Field field = getAccessibleClassNonStaticField(target, iField);
+        Field field = getAccessibleClassNonStaticFieldIncludingSuper(target, iField);
         try
             {
             return field.getLong(target);
@@ -223,7 +234,7 @@ public class Util
 
     static public short getPrivateShortField(Object target, int iField)
         {
-        Field field = getAccessibleClassNonStaticField(target, iField);
+        Field field = getAccessibleClassNonStaticFieldIncludingSuper(target, iField);
         try
             {
             return field.getShort(target);
@@ -236,7 +247,7 @@ public class Util
 
     static public double getPrivateDoubleField(Object target, int iField)
         {
-        Field field = getAccessibleClassNonStaticField(target, iField);
+        Field field = getAccessibleClassNonStaticFieldIncludingSuper(target, iField);
         try
             {
             return field.getDouble(target);
@@ -249,7 +260,7 @@ public class Util
 
     static public float getPrivateFloatField(Object target, int iField)
         {
-        Field field = getAccessibleClassNonStaticField(target, iField);
+        Field field = getAccessibleClassNonStaticFieldIncludingSuper(target, iField);
         try
             {
             return field.getFloat(target);
@@ -261,7 +272,7 @@ public class Util
         }
     static public boolean getPrivateBooleanField(Object target, int iField)
         {
-        Field field = getAccessibleClassNonStaticField(target, iField);
+        Field field = getAccessibleClassNonStaticFieldIncludingSuper(target, iField);
         try
             {
             return field.getBoolean(target);
@@ -274,7 +285,7 @@ public class Util
 
     static public byte getPrivateByteField(Object target, int iField)
         {
-        Field field = getAccessibleClassNonStaticField(target, iField);
+        Field field = getAccessibleClassNonStaticFieldIncludingSuper(target, iField);
         try
             {
             return field.getByte(target);
@@ -288,7 +299,13 @@ public class Util
     // @SuppressWarnings("unchecked")
     static public <T> T getPrivateObjectField(Object target, int iField)
         {
-        Field field = getAccessibleClassNonStaticField(target, iField);
+        Field field = getAccessibleClassNonStaticFieldIncludingSuper(target, iField);
+        return Util.<T>getPrivateObjectField(target, field);
+        }
+
+    static public <T> T getLocalPrivateObjectField(Object target, int iField)
+        {
+        Field field = getLocalAccessibleClassNonStaticField(target, iField);
         return Util.<T>getPrivateObjectField(target, field);
         }
 
@@ -306,7 +323,7 @@ public class Util
 
     static public <T> void setPrivateObjectField(Object target, int iField, T value)
         {
-        Field field = getAccessibleClassNonStaticField(target, iField);
+        Field field = getAccessibleClassNonStaticFieldIncludingSuper(target, iField);
         try 
             {
             field.set(target, value);
@@ -319,7 +336,7 @@ public class Util
 
     static public void setPrivateLongField(Object target, int iField, long value)
         {
-        Field field = getAccessibleClassNonStaticField(target, iField);
+        Field field = getAccessibleClassNonStaticFieldIncludingSuper(target, iField);
         try
             {
             field.setLong(target, value);
@@ -332,7 +349,7 @@ public class Util
 
     static public void setPrivateIntField(Object target, int iField, int value)
         {
-        Field field = getAccessibleClassNonStaticField(target, iField);
+        Field field = getAccessibleClassNonStaticFieldIncludingSuper(target, iField);
         try
             {
             field.setInt(target, value);
@@ -345,7 +362,7 @@ public class Util
 
     static public void setPrivateByteField(Object target, int iField, byte value)
         {
-        Field field = getAccessibleClassNonStaticField(target, iField);
+        Field field = getAccessibleClassNonStaticFieldIncludingSuper(target, iField);
         try
             {
             field.setByte(target, value);
@@ -358,7 +375,7 @@ public class Util
 
     static public void setPrivateFloatField(Object target, int iField, float value)
         {
-        Field field = getAccessibleClassNonStaticField(target, iField);
+        Field field = getAccessibleClassNonStaticFieldIncludingSuper(target, iField);
         try
             {
             field.setFloat(target, value);
@@ -371,7 +388,7 @@ public class Util
 
     static public void setPrivateDoubleField(Object target, int iField, double value)
         {
-        Field field = getAccessibleClassNonStaticField(target, iField);
+        Field field = getAccessibleClassNonStaticFieldIncludingSuper(target, iField);
         try
             {
             field.setDouble(target, value);
