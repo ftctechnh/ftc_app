@@ -1,7 +1,6 @@
 package org.swerverobotics.library.interfaces;
 
 import com.qualcomm.robotcore.hardware.*;
-import org.swerverobotics.library.*;
 
 /**
  * II2cDeviceClient is the public interface to a utility class that makes it easier to
@@ -192,7 +191,7 @@ public interface II2cDeviceClient extends HardwareDevice
      * @param action the action to execute
      * @see #executeFunctionWhileLocked(IFunc)
      */
-    void executeActionWhileLocked(IAction action);
+    void executeActionWhileLocked(Runnable action);
 
     /**
      * Executes the indicated function while holding the concurrency lock on the object
@@ -201,7 +200,7 @@ public interface II2cDeviceClient extends HardwareDevice
      * @param function      the function to execute
      * @param <T>           the type of the data returned from the function
      * @return              the datum value returned from the function
-     * @see #executeActionWhileLocked(IAction)
+     * @see #executeActionWhileLocked(Runnable)
      */
     <T> T executeFunctionWhileLocked(IFunc<T> function);
 
