@@ -215,7 +215,7 @@ public class AnnotatedOpModeRegistrar
             }
 
         // Remember the robot start methods for later
-        RobotStateTransitionNotifier.setOnRobotStartMethods(context, onRobotStartMethods);
+        RobotStateTransitionNotifier.setOnRobotRunningMethods(context, onRobotStartMethods);
         }
 
     private int getParameterCount(Method method)
