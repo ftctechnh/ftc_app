@@ -50,7 +50,7 @@ Notable features of the Swerve Robotics FTC Library include:
     actually transmit, saving bandwith on the network and data acquistion time on the controller.
     Log messages can be written to the log at any time, and these are sent to the driver station as
     soon as possible. The enhanced telemetry class can be used both by synchronous and non-synchronous
-    opmodes.
+    opmodes, but is used automatically in SynchronousOpModes.
 
 *   An **I2cDeviceClient** class that wraps I2cDevice instances and makes them easy to use by handling
     read-vs-write mode switches and attendant waits automatically and transparently. Just call read8()
