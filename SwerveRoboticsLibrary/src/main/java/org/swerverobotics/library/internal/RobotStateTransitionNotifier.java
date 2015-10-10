@@ -49,7 +49,7 @@ public class RobotStateTransitionNotifier extends DcMotor implements DcMotorCont
 
     static final String       shutdownHookName    = " |Swerve|ShutdownHook| ";
     static       Context      applicationContext  = null;
-    static       List<Method> onRobotStartMethods = new LinkedList<Method>();
+    static       List<Method> onRobotRunningMethods = new LinkedList<Method>();
 
     public  final HardwareMap                           hardwareMap;
     private final List<IOpModeStateTransitionEvents>    registrants;
@@ -139,12 +139,18 @@ public class RobotStateTransitionNotifier extends DcMotor implements DcMotorCont
             }
         }
 
+    /**
+     * Called by the FtcRobotControllerActivity hooking infrastructure when the event loop
+     * changes state.
+     *
+     * @param newState the new state into which the event loop is transitioning.
+     */
     public static synchronized void onEventLoopStateChange(EventLoopManager.State newState)
         {
         switch (newState)
             {
             case RUNNING:
-                for (Method method : onRobotStartMethods)
+                for (Method method : onRobotRunningMethods)
                     {
                     try {
                         method.invoke(null, applicationContext);
@@ -156,10 +162,10 @@ public class RobotStateTransitionNotifier extends DcMotor implements DcMotorCont
             }
         }
 
-    public static void setOnRobotStartMethods(Context applicationContext, Collection<Method> methods)
+    public static void setOnRobotRunningMethods(Context applicationContext, Collection<Method> methods)
         {
         RobotStateTransitionNotifier.applicationContext  = applicationContext;
-        RobotStateTransitionNotifier.onRobotStartMethods = new LinkedList<Method>(methods);
+        RobotStateTransitionNotifier.onRobotRunningMethods = new LinkedList<Method>(methods);
         }
 
     //----------------------------------------------------------------------------------------------
