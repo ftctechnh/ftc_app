@@ -195,11 +195,20 @@ public class K9TeleOp extends OpMode {
 		 * will return a null value. The legacy NXT-compatible motor controllers
 		 * are currently write only.
 		 */
+<<<<<<< HEAD
         telemetry.addData("Text", "*** Robot Data***");
         telemetry.addData("arm", "arm:  " + String.format("%.2f", armPosition));
         telemetry.addData("claw", "claw:  " + String.format("%.2f", clawPosition));
         telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", left));
         telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));
+=======
+        telemetry.addData("", "*** Robot Data***");
+        telemetry.addData("arm", String.format("%.2f", armPosition));
+        telemetry.addData("claw", String.format("%.2f", clawPosition));
+        telemetry.addData("left tgt pwr",  String.format("%.2f", left));
+        telemetry.addData("right tgt pwr", String.format("%.2f", right));
+		telemetry.addData("opticalsense", String.format("%d", light));
+>>>>>>> origin/optical-sensor-tinkering
 
 	}
 
