@@ -442,7 +442,7 @@ public class FtcRobotControllerActivity extends Activity {
         public void onStateChange(EventLoopManager.State newState)
             {
             this.prevMonitor.onStateChange(newState);
-            OpModeStateTransitionNotifier.onEventLoopStateChange(newState);
+            RobotStateTransitionNotifier.onEventLoopStateChange(newState);
             }
 
         //----------------------------------------------------------------------------------------------

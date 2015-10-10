@@ -1,11 +1,11 @@
 package org.swerverobotics.library.internal;
 
+import android.content.Context;
 import com.qualcomm.robotcore.eventloop.EventLoopManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
-
-import java.util.LinkedList;
-import java.util.List;
+import java.lang.reflect.*;
+import java.util.*;
 
 /**
  * The point of all this is to hook into the robot controller runtime in order to
@@ -41,13 +41,15 @@ import java.util.List;
  * So we build this weird beast that is both a motor and its own controller as that's the
  * most efficient way to accomplish the teast.
  */
-public class OpModeStateTransitionNotifier extends DcMotor implements DcMotorController
+public class RobotStateTransitionNotifier extends DcMotor implements DcMotorController
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    static final String shutdownHookName = " |Swerve|ShutdownHook| ";
+    static final String       shutdownHookName    = " |Swerve|ShutdownHook| ";
+    static       Context      applicationContext  = null;
+    static       List<Method> onRobotStartMethods = new LinkedList<Method>();
 
     public  final HardwareMap                           hardwareMap;
     private final List<IOpModeStateTransitionEvents>    registrants;
@@ -57,7 +59,7 @@ public class OpModeStateTransitionNotifier extends DcMotor implements DcMotorCon
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    OpModeStateTransitionNotifier(HardwareMap hardwareMap)
+    RobotStateTransitionNotifier(HardwareMap hardwareMap)
         {
         super(null, 0);
         this.controller        = this;
@@ -74,15 +76,15 @@ public class OpModeStateTransitionNotifier extends DcMotor implements DcMotorCon
             }
         }
 
-    private static OpModeStateTransitionNotifier create(HardwareMap map)
+    private static RobotStateTransitionNotifier create(HardwareMap map)
         {
         if (!ThunkingHardwareFactory.contains(map.dcMotorController, shutdownHookName))
             {
-            OpModeStateTransitionNotifier hook = new OpModeStateTransitionNotifier(map);
+            RobotStateTransitionNotifier hook = new RobotStateTransitionNotifier(map);
             map.dcMotorController.put(shutdownHookName, hook);
             map.dcMotor.put(shutdownHookName, hook);
             }
-        return (OpModeStateTransitionNotifier)map.dcMotorController.get(shutdownHookName);
+        return (RobotStateTransitionNotifier)map.dcMotorController.get(shutdownHookName);
         }
 
     //----------------------------------------------------------------------------------------------
@@ -139,7 +141,25 @@ public class OpModeStateTransitionNotifier extends DcMotor implements DcMotorCon
 
     public static synchronized void onEventLoopStateChange(EventLoopManager.State newState)
         {
-        // TO DO
+        switch (newState)
+            {
+            case RUNNING:
+                for (Method method : onRobotStartMethods)
+                    {
+                    try {
+                        method.invoke(null, applicationContext);
+                        }
+                    catch (Exception e)
+                        { /* ignored */ }
+                    }
+                break;
+            }
+        }
+
+    public static void setOnRobotStartMethods(Context applicationContext, Collection<Method> methods)
+        {
+        RobotStateTransitionNotifier.applicationContext  = applicationContext;
+        RobotStateTransitionNotifier.onRobotStartMethods = new LinkedList<Method>(methods);
         }
 
     //----------------------------------------------------------------------------------------------

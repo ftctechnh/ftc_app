@@ -100,7 +100,7 @@ public final class NxtDcMotorControllerOnI2cDevice implements DcMotorController,
         this.motor1          = null;
         this.motor2          = null;
 
-        OpModeStateTransitionNotifier.register(context, this);
+        RobotStateTransitionNotifier.register(context, this);
 
         this.initPID();
 
