@@ -395,13 +395,20 @@ public class FtcRobotControllerActivity extends Activity {
 
     //==============================================================================================
     // Hooking infrastructure (Swerve)
+    //
+    // The code below has been added to the stock FtcRobotControllerActivity in order to hook
+    // into state transitions of various kinds that happen within the robot controller application.
+    // Most of what's here is of necessity pretty obscure and technical in nature, but
+    // fortunately those details won't be of significance to most.
 
     static class SwerveEventLoopMonitor implements EventLoopManager.EventLoopMonitor
+    // Hook to receive event monitor state transition
         {
         //------------------------------------------------------------------------------------------
         // State
         //------------------------------------------------------------------------------------------
 
+        // The previously installed hook
         final EventLoopManager.EventLoopMonitor prevMonitor;
 
         //------------------------------------------------------------------------------------------
@@ -413,7 +420,7 @@ public class FtcRobotControllerActivity extends Activity {
             this.prevMonitor = prevMonitor;
             }
 
-        // Make sure we're installed in the eventloop in the hook
+        // Make sure we're installed in the in the hook of the current event loop
         public synchronized static void installIfNeceesary(FtcRobotControllerService service)
             {
             if (service == null)
@@ -432,7 +439,6 @@ public class FtcRobotControllerActivity extends Activity {
                 eventLoopManager.setMonitor(newMonitor);
                 }
             }
-
 
         //----------------------------------------------------------------------------------------------
         // Notifications
@@ -461,10 +467,10 @@ public class FtcRobotControllerActivity extends Activity {
             {
             return Util.<EventLoopManager.EventLoopMonitor>getLocalPrivateObjectField(manager, 10);
             }
-
         }
 
     class SwerveUpdateUIHook extends UpdateUI
+    // Hook used to augment the user interface
         {
         //----------------------------------------------------------------------------------------------
         // State
