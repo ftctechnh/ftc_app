@@ -20,8 +20,8 @@ public final class ClassFactory
     //----------------------------------------------------------------------------------------------
 
     /**
-     * Creates an alternate 'NxtMotorControllerOnI2cDevice' DCMotorController implementation for
-     * a legacy HiTechnic NXT motor controller. NxtMotorControllerOnI2cDevice is implemented
+     * Creates an alternate 'EasyLegacyMotorController' DCMotorController implementation for
+     * a legacy HiTechnic NXT motor controller. EasyLegacyMotorController is implemented
      * on top of an {@link II2cDeviceClient} instance which completely handles all the complexities
      * of read vs write mode switching and the like, allowing the logic inside the controller itself
      * to be extraordinarily simple. In particular, the manual mode switching and loop() counting
@@ -29,16 +29,16 @@ public final class ClassFactory
      * getPosition() or setPower() methods or what have you, and the necessary bookkeeping details
      * will be taken care of.
      *
-     * <p>NxtMotorControllerOnI2cDevice is not tied to SynchronousOpMode or any other particular
+     * <p>EasyLegacyMotorController is not tied to SynchronousOpMode or any other particular
      * OpMode. It can be used, for example, from LinearOpMode, or, indeed, any thread that can
      * tolerate operations that can take tens of milliseconds to run. In SynchronousOpMode,
-     * NxtMotorControllerOnI2cDevice is used automatically; in other OpModes, you'll have to manually
-     * call {@link #createNxtDcMotorController} yourself.</p>
+     * EasyLegacyMotorController is used automatically; in other OpModes, you'll have to manually
+     * call {@link #createEasyLegacyMotorController} yourself.</p>
      *
      * This method takes as parameters one or both motors that reside on a given legacy motor
      * controller. If two motors are provided, they must share the same controller, and conversely
      * if two motors reside on a controller then both must be provided. The method creates a new
-     * NxtMotorControllerOnI2cDevice and installs it as the controller for the provided motors;
+     * EasyLegacyMotorController and installs it as the controller for the provided motors;
      * the existing controller is disabled. When the current OpMode is complete, the processed
      * is reversed.
      *
@@ -46,14 +46,14 @@ public final class ClassFactory
      * @param motor1    one of the up-to-two motor controllers which share a legacy motor controller. May be null.
      * @param motor2    the possibly other motor controller on the same controller. May be null.
      */
-    public static void createNxtDcMotorController(OpMode context, DcMotor motor1, DcMotor motor2)
+    public static void createEasyLegacyMotorController(OpMode context, DcMotor motor1, DcMotor motor2)
         {
         DcMotorController target = motor1==null ? null : motor1.getController();
 
         if (motor2 != null && target != null && motor2.getController()!=target)
             throw new IllegalArgumentException("motors do not share the same controller");
 
-        NxtDcMotorControllerOnI2cDevice.create(context, target, motor1, motor2);
+        EasyLegacyMotorController.create(context, target, motor1, motor2);
         }
 
 
