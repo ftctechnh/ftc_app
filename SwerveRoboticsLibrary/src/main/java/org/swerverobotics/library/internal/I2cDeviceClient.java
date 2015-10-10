@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.util.*;
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.exceptions.*;
 import org.swerverobotics.library.interfaces.*;
+
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.*;
@@ -240,11 +241,11 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
     // Operations
     //----------------------------------------------------------------------------------------------
 
-    @Override public void executeActionWhileLocked(IAction action)
+    @Override public void executeActionWhileLocked(Runnable action)
         {
         synchronized (this.concurrentClientLock)
             {
-            action.doAction();
+            action.run();
             }
         }
 
@@ -964,7 +965,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                                 try {
                                     if (heartbeatExecutor != null)
                                         {
-                                        heartbeatExecutor.submit(new Runnable()
+                                        heartbeatExecutor.submit(new java.lang.Runnable()
                                             {
                                             @Override public void run()
                                                 {

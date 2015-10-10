@@ -444,7 +444,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     private         AtomicBoolean           gamePadCaptureStateChanged = new AtomicBoolean(false);
     private         boolean                 gamepadInputQueried = false;
     private final   Object                  loopLock = new Object();
-    private final   SparseArray<IAction>    singletonLoopActions = new SparseArray<IAction>();
+    private final   SparseArray<Runnable>   singletonLoopActions = new SparseArray<Runnable>();
     private static  AtomicInteger           prevSingletonKey = new AtomicInteger(0);
 
     private         Thread                  loopThread;
@@ -503,9 +503,9 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         //-----------------------------------------------------------------------
         // State
 
-        Queue<IAction>   queue;
+        Queue<Runnable>  queue;
         ActionKeyHistory history;
-        Queue<IAction>   historicalActions;
+        Queue<Runnable>  historicalActions;
 
         //-----------------------------------------------------------------------
         // Construction
@@ -515,11 +515,11 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             this.queue   = this.newQueue();
             this.history = this.newHistory();
             if (BuildConfig.DEBUG && false)
-                this.historicalActions = new LinkedList<IAction>();
+                this.historicalActions = new LinkedList<Runnable>();
             }
-        private Queue<IAction> newQueue()
+        private Queue<Runnable> newQueue()
             {
-            return new LinkedList<IAction>();
+            return new LinkedList<Runnable>();
             }
         private ActionKeyHistory newHistory()
             {
@@ -542,16 +542,16 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             this.onChanged();
             }
 
-        synchronized void add(IAction action)
+        synchronized void add(Runnable action)
             {
             assertTrue(!BuildConfig.DEBUG || action!=null);
             this.queue.add(action);
             this.onChanged();
             }
 
-        synchronized IAction poll()
+        synchronized Runnable poll()
             {
-            IAction result = this.queue.poll();
+            Runnable result = this.queue.poll();
             if (result != null)
                 {
                 if (result instanceof IActionKeyed)
@@ -581,7 +581,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
                 }
 
             // Is the key present in pending stuff?
-            for (IAction action : this.queue)
+            for (Runnable action : this.queue)
                 {
                 if (action instanceof IActionKeyed)
                     {
@@ -620,7 +620,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      * An instance of SynchronousThreadRoot is called on the loop() thread in order to start up 
      * the main() thread. Other instances are used to support synchronous worker threads.
      */
-    private class SynchronousThreadRoot implements Runnable
+    private class SynchronousThreadRoot implements java.lang.Runnable
         {
         //--------------------------------------------------------------
         // State
@@ -897,7 +897,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
                 for (int i = 1; ; i++)
                     {
                     // Get the next action in the queue. Get out of here if there aren't any more
-                    IAction action;
+                    Runnable action;
                     synchronized (this.actionQueueAndHistory)
                         {
                         action = this.actionQueueAndHistory.poll();
@@ -917,8 +917,8 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
                     }
 
                 // Dig out and execute any of our singleton actions.
-                List<IAction> actions = this.snarfSingletons();
-                for (IAction action : actions)
+                List<Runnable> actions = this.snarfSingletons();
+                for (Runnable action : actions)
                     {
                     executeAction(action);
                     }
@@ -937,10 +937,10 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             }
         }
 
-    void executeAction(IAction action)
+    void executeAction(Runnable action)
         {
         try {
-            action.doAction();
+            action.run();
             }
         catch (Exception e)
             {
@@ -1062,7 +1062,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     /**
      * Advanced: Execute the indicated action on the loop thread given that we are on a synchronous thread
      */
-    @Override public void executeOnLoopThread(IAction action)
+    @Override public void executeOnLoopThread(Runnable action)
         {
         SynchronousThreadContext.assertSynchronousThread();
         this.actionQueueAndHistory.add(action);
@@ -1075,7 +1075,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      * If a previous call has been made with the same key, then replace that previous action;
      * otherwise, add a new action with the key.
      */
-    @Override public void executeSingletonOnLoopThread(int singletonKey, IAction action)
+    @Override public void executeSingletonOnLoopThread(int singletonKey, Runnable action)
         {
         SynchronousThreadContext.assertSynchronousThread();
         synchronized (this.singletonLoopActions)
@@ -1156,12 +1156,12 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         return this.loopThread.getId() == Thread.currentThread().getId();
         }
 
-    private ArrayList<IAction> snarfSingletons()
+    private ArrayList<Runnable> snarfSingletons()
     // Atomically retrieve a copy of the singleton loop actions. The lock on that object
     // is a leaf lock, meaning that no further locks may be acquired if that lock is held.
     // By this protocol we avoid deadlock, and that is a wonderful thing.
         {
-        ArrayList<IAction> result = new ArrayList<IAction>();
+        ArrayList<Runnable> result = new ArrayList<Runnable>();
         synchronized (this.singletonLoopActions)
             {
             for (int i = 0; i < this.singletonLoopActions.size(); i++)

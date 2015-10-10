@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.util.*;
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.exceptions.*;
 import org.swerverobotics.library.interfaces.*;
+
 import static org.swerverobotics.library.internal.Util.*;
 import static junit.framework.Assert.*;
 import static org.swerverobotics.library.interfaces.NavUtil.*;
@@ -736,14 +737,14 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
             }
         }
 
-    private void enterConfigModeFor(IAction action)
+    private void enterConfigModeFor(Runnable action)
         {
         SENSOR_MODE modePrev = this.currentMode;
         setSensorMode(SENSOR_MODE.CONFIG);
         delayLoreExtra(25);
         try
             {
-            action.doAction();
+            action.run();
             }
         finally
             {
