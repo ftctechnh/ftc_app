@@ -58,12 +58,7 @@ public abstract class MyRobotControllerAdministration
 
         manager.register(SynchTeleOp.class);
         manager.register(SynchTelemetryOp.class);
-        manager.register("FTC HQ NxtTeleOp", NxtTeleOp.class)at you want.
-                *
-        * Annotating a public static method with @OpModeRegistrary like this can be used to register
-                * OpModes for display in the driver station menu. It is particularly useful for
-        * registering OpModes that are found in libraries in which you are unable to or would prefer not to
-        * modify the source code. For yo;
+        manager.register("FTC HQ NxtTeleOp", NxtTeleOp.class);
         }
 
     /**
