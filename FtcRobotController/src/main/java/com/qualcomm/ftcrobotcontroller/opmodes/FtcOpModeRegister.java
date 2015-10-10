@@ -35,6 +35,7 @@ import com.fellowshipoftheloosescrews.opmodes.TeleOp;
 import com.fellowshipoftheloosescrews.testing.CustomTestOpMode;
 import com.fellowshipoftheloosescrews.testing.DcServoTest;
 import com.fellowshipoftheloosescrews.testing.GyroTesting;
+import com.fellowshipoftheloosescrews.testing.IntentTest;
 import com.fellowshipoftheloosescrews.testing.ThreadedMotorTesting;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
@@ -60,5 +61,7 @@ public class FtcOpModeRegister implements OpModeRegister {
       manager.register("gyro testing", GyroTesting.class);
 
       manager.register("Custom-OpMode", CustomTestOpMode.class);
+
+      manager.register("Intent", IntentTest.class);
   }
 }
