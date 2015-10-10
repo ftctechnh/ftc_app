@@ -127,9 +127,6 @@ public class K9TeleOp extends OpMode {
 	@Override
 	public void loop() {
 
-		int light = 0;
-
-		light = opticalSensor.getLightDetectedRaw();
 
 		/*
 		 * Gamepad 1
@@ -203,7 +200,6 @@ public class K9TeleOp extends OpMode {
         telemetry.addData("claw", "claw:  " + String.format("%.2f", clawPosition));
         telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", left));
         telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));
-		telemetry.addData("opticalsense", "opticalsense: " + String.format("%d", light));
 
 	}
 
