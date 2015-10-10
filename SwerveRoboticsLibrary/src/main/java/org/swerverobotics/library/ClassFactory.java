@@ -21,13 +21,15 @@ public final class ClassFactory
 
     /**
      * Creates an alternate 'EasyLegacyMotorController' DCMotorController implementation for
-     * a legacy HiTechnic NXT motor controller. EasyLegacyMotorController is implemented
-     * on top of an {@link II2cDeviceClient} instance which completely handles all the complexities
-     * of read vs write mode switching and the like, allowing the logic inside the controller itself
-     * to be extraordinarily simple. In particular, the manual mode switching and loop() counting
-     * nececessary with the stock controller implementation is unnecessary. Just call the motor
-     * getPosition() or setPower() methods or what have you, and the necessary bookkeeping details
-     * will be taken care of.
+     * a legacy HiTechnic NXT motor controller.
+     *
+     * <p>EasyLegacyMotorController is implemented on top of an {@link II2cDeviceClient} instance
+     * which completely handles all the complexities of read vs write mode switching and the
+     * like, allowing the logic inside the controller itself to be extraordinarily simple.
+     * In particular, the manual mode switching and loop() counting necessary with the stock
+     * controller implementation is not needed. Just call the motor getPosition() or setPower()
+     * methods or what have you, and the necessary bookkeeping details
+     * will be taken care of.</p>
      *
      * <p>EasyLegacyMotorController is not tied to SynchronousOpMode or any other particular
      * OpMode. It can be used, for example, from LinearOpMode, or, indeed, any thread that can
@@ -45,6 +47,8 @@ public final class ClassFactory
      * @param context   the OpMode within which this creation is occurring
      * @param motor1    one of the up-to-two motor controllers which share a legacy motor controller. May be null.
      * @param motor2    the possibly other motor controller on the same controller. May be null.
+     *
+     * @see org.swerverobotics.library.examples.SynchMotorLoopPerf
      */
     public static void createEasyLegacyMotorController(OpMode context, DcMotor motor1, DcMotor motor2)
         {

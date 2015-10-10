@@ -10,7 +10,7 @@ import org.swerverobotics.library.interfaces.*;
  * mode switching on a motor controller. Each main loop cycle does both
  * a read and a write to the motor.
  */
-@TeleOp(name="Motor Perf", group="Swerve Examples")
+@TeleOp(name="Motor Perf (sync)", group="Swerve Examples")
 @Disabled
 public class SynchMotorLoopPerf extends SynchronousOpMode
     {
