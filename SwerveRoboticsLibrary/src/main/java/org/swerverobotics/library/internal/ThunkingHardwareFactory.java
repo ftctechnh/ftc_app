@@ -74,8 +74,8 @@ public class ThunkingHardwareFactory
         );
 
         //----------------------------------------------------------------------------
-        // Swapping in NxtDcMotorControllerOnI2cDevice in place of any legacy
-        // motor controllers. Note that we DO NOT put the NxtDcMotorControllerOnI2cDevice
+        // Swapping in EasyLegacyMotorController in place of any legacy
+        // motor controllers. Note that we DO NOT put the EasyLegacyMotorController
         // in the unthunked map as a motor controller (though it may go in as a voltage sensor).
         //----------------------------------------------------------------------------
 
@@ -102,7 +102,7 @@ public class ThunkingHardwareFactory
                     {
                     DcMotor motor1 = motors.get(controller).get(0);
                     DcMotor motor2 = motors.get(controller).size() > 1 ? motors.get(controller).get(1) : null;
-                    ClassFactory.createNxtDcMotorController(this.context, motor1, motor2);
+                    ClassFactory.createEasyLegacyMotorController(this.context, motor1, motor2);
                     }
                 }
             }
@@ -117,9 +117,9 @@ public class ThunkingHardwareFactory
                 {
                 @Override public DcMotorController create(DcMotorController target)
                     {
-                    if (target instanceof NxtDcMotorControllerOnI2cDevice)
+                    if (target instanceof EasyLegacyMotorController)
                         {
-                        // Put the NxtDcMotorControllerOnI2cDevice in the thunked map
+                        // Put the EasyLegacyMotorController in the thunked map
                         return target;
                         }
 
@@ -348,7 +348,7 @@ public class ThunkingHardwareFactory
                 {
                 @Override public VoltageSensor create(VoltageSensor target)
                     {
-                    return (target instanceof NxtDcMotorControllerOnI2cDevice) ? target : ThunkedVoltageSensor.create(target);
+                    return (target instanceof EasyLegacyMotorController) ? target : ThunkedVoltageSensor.create(target);
                     }
                 }
         );
@@ -448,7 +448,7 @@ public class ThunkingHardwareFactory
             T wrapper = pair.getValue();
 
             if (wrapper == target)
-                return wrapper;     // likely an NxtDcMotorControllerOnI2cDevice
+                return wrapper;     // likely an EasyLegacyMotorController
 
             if (wrapper instanceof IHardwareWrapper)
                 {

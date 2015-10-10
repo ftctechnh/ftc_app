@@ -14,10 +14,10 @@ import static org.swerverobotics.library.internal.ThunkingHardwareFactory.*;
 /**
  * An alternative implementation of a Legacy DC Motor controller.
  *
- * @see org.swerverobotics.library.ClassFactory#createNxtDcMotorController(OpMode, DcMotor, DcMotor)
+ * @see org.swerverobotics.library.ClassFactory#createEasyLegacyMotorController(OpMode, DcMotor, DcMotor)
  * @see org.swerverobotics.library.SynchronousOpMode#useExperimentalThunking
  */
-public final class NxtDcMotorControllerOnI2cDevice implements DcMotorController, IThunkWrapper<DcMotorController>, VoltageSensor, IOpModeStateTransitionEvents
+public final class EasyLegacyMotorController implements DcMotorController, IThunkWrapper<DcMotorController>, VoltageSensor, IOpModeStateTransitionEvents
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -86,7 +86,7 @@ public final class NxtDcMotorControllerOnI2cDevice implements DcMotorController,
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    private NxtDcMotorControllerOnI2cDevice(OpMode context, II2cDeviceClient ii2cDeviceClient, DcMotorController target)
+    private EasyLegacyMotorController(OpMode context, II2cDeviceClient ii2cDeviceClient, DcMotorController target)
         {
         assertTrue(!BuildConfig.DEBUG || !ii2cDeviceClient.isArmed());
         this.context         = context;
@@ -126,7 +126,7 @@ public final class NxtDcMotorControllerOnI2cDevice implements DcMotorController,
         this.i2cDeviceClient.setReadWindow(new II2cDeviceClient.ReadWindow(iRegWindowFirst, iRegWindowMax-iRegWindowFirst, II2cDeviceClient.READ_MODE.ONLY_ONCE));
         }
 
-    public static NxtDcMotorControllerOnI2cDevice create(OpMode context, DcMotorController target, DcMotor motor1, DcMotor motor2)
+    public static EasyLegacyMotorController create(OpMode context, DcMotorController target, DcMotor motor1, DcMotor motor2)
         {
         if (isLegacyMotorController(target))
             {
@@ -135,9 +135,9 @@ public final class NxtDcMotorControllerOnI2cDevice implements DcMotorController,
             int          i2cAddr8Bit  = i2cAddrOfLegacyMotorController(target);
 
             // Make a new legacy motor controller
-            II2cDevice i2cDevice                        = new I2cDeviceOnI2cDeviceController(legacyModule, port);
-            I2cDeviceClient i2cDeviceClient             = new I2cDeviceClient(context, i2cDevice, i2cAddr8Bit, false);
-            NxtDcMotorControllerOnI2cDevice controller  = new NxtDcMotorControllerOnI2cDevice(context, i2cDeviceClient, target);
+            II2cDevice i2cDevice                 = new I2cDeviceOnI2cDeviceController(legacyModule, port);
+            I2cDeviceClient i2cDeviceClient      = new I2cDeviceClient(context, i2cDevice, i2cAddr8Bit, false);
+            EasyLegacyMotorController controller = new EasyLegacyMotorController(context, i2cDeviceClient, target);
 
             controller.setMotors(motor1, motor2);
             controller.arm();
@@ -296,7 +296,7 @@ public final class NxtDcMotorControllerOnI2cDevice implements DcMotorController,
 
     @Override public String getDeviceName()
         {
-        return "Swerve NxtDcMotorControllerOnI2cDevice";
+        return "Swerve EasyLegacyMotorController";
         }
 
     @Override public String getConnectionInfo()
