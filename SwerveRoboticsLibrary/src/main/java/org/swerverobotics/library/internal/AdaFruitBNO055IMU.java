@@ -66,7 +66,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         this.accelerationAlgorithm = new NaiveAccelerationIntegrator();
         this.accelerationMananger  = null;
 
-        OpModeStateTransitionNotifier.register(context, this);
+        RobotStateTransitionNotifier.register(context, this);
         }
 
     /**

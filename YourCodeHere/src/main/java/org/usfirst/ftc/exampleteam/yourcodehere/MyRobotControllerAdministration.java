@@ -1,11 +1,13 @@
 package org.usfirst.ftc.exampleteam.yourcodehere;
 
+import android.content.Context;
+import android.media.MediaPlayer;
 import org.swerverobotics.library.interfaces.*;
 import org.swerverobotics.library.examples.*;
 import com.qualcomm.ftcrobotcontroller.opmodes.*;
 
 /**
- * {@link MyOpModeRegistrar} can be used to register OpModes for display in the
+ * {@link MyRobotControllerAdministration} can be used to register OpModes for display in the
  * driver station menu. It is particularly useful for registering OpModes that
  * are found in libraries in which you are unable to or would prefer not to
  * modify the source code. For your own OpModes, though you could register them
@@ -32,9 +34,10 @@ import com.qualcomm.ftcrobotcontroller.opmodes.*;
  * @see TeleOp
  * @see Autonomous
  * @see OpModeRegistrar
+ * @see OnRobotStart
  * @see SynchTeleOp
  */
-public class MyOpModeRegistrar
+public class MyRobotControllerAdministration
     {
     /**
      * Register any library OpModes that we wish to display. Change this code to suit
@@ -44,7 +47,7 @@ public class MyOpModeRegistrar
      * @param manager   the object through which registrations are effected
      */
     @OpModeRegistrar
-    public static void Register(IOpModeManager manager)
+    public static void RegisterMyOpModes(Context context, IOpModeManager manager)
         {
         // As an example, we here register some examples from the Swerve library
         // and one of the FTC HQ example opmodes. You'll probably want to change that.
@@ -52,5 +55,12 @@ public class MyOpModeRegistrar
         manager.register(SynchTeleOp.class);
         manager.register(SynchTelemetryOp.class);
         manager.register("FTC HQ NxtTeleOp", NxtTeleOp.class);
+        }
+
+    @OnRobotStart
+    public static void PlaySoundOnRobotStart(Context context)
+        {
+        MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.nxtstartup);
+        mediaPlayer.start();
         }
     }

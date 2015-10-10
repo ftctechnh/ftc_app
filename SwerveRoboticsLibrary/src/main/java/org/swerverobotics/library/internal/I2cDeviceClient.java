@@ -149,7 +149,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         this.modeCacheStatus  = MODE_CACHE_STATUS.IDLE;
 
         if (closeOnOpModeStop)
-            OpModeStateTransitionNotifier.register(context, this);
+            RobotStateTransitionNotifier.register(context, this);
         }
 
     @Override public boolean onUserOpModeStop()
