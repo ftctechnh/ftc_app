@@ -453,25 +453,16 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
     // DcMotorController utility
     //----------------------------------------------------------------------------------------------
 
-    // Note: you might think that these next couple of methods don't need to wait for the I2C
-    // completion. However, this apparently is not the case: if two writes are issued in very
-    // quick succession, as in the stopMotors() call below, it's sometimes the case that the second
-    // one won't take if the write() doesn't wait for completion. Getting to the bottom of that
-    // is something that's on our list, but as waiting for completion is a negligible overhead
-    // in our usage here, we just wait and make sure the write() stick.
-    //
-    // TODO: get to the bottom of this
-
     private void write8(int ireg, byte data)
         {
         if (this.isArmed)
-            this.i2cDeviceClient.write8(ireg, data, true);
+            this.i2cDeviceClient.write8(ireg, data, false);
         }
 
     private void write(int ireg, byte[] data)
         {
         if (this.isArmed)
-            this.i2cDeviceClient.write(ireg, data, true);
+            this.i2cDeviceClient.write(ireg, data, false);
         }
 
     private void initPID()

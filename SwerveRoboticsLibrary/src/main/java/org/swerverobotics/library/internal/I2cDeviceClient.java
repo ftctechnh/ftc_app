@@ -28,6 +28,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
 
     public final II2cDevice     i2cDevice;                  // the device we are talking to
     private       boolean       isArmed;                    // whether we are armed or not
+    private       boolean       disarming;                  // whether we are in the process of disarming
 
     private final Callback      callback;                   // the callback object on which we actually receive callbacks
     private       boolean       loggingEnabled;             // whether we are to log to Logcat or not
@@ -120,6 +121,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
 
         this.i2cDevice              = i2cDevice;
         this.isArmed                = false;
+        this.disarming              = false;
         this.callback               = new Callback();
         this.callbackThread         = null;
         this.callbackThreadOriginalPriority = 0;    // not known
@@ -173,6 +175,10 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
 
     public void arm()
         {
+        // The arming lock is distinct from the concurrentClientLock because we need to be
+        // able to drain heartbeats while disarming, so can't own the concurrentClientLock then,
+        // but we still need to be able to lock out arm() and disarm() against each other.
+        // Locking order: armingLock > concurrentClientLock > callbackLock
         synchronized (this.armingLock)
             {
             if (!this.isArmed)
@@ -194,19 +200,47 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
 
     public void disarm()
         {
-        synchronized (this.armingLock)
-            {
-            if (this.isArmed)
+        try {
+            synchronized (this.armingLock)
                 {
-                // If we are armed, we need to drain w/o holding the concurrentClient lock
-                this.heartbeatExecutor.shutdown();
-                synchronized (this.callbackLock)
+                if (this.isArmed)
                     {
-                    this.heartbeatExecutor = null;
-                    this.i2cDevice.deregisterForPortReadyCallback();
+                    // We can't hold the concurrent client lock while we drain the heartbeat
+                    // as that might be doing an external top-level read. But the semantic of
+                    // Executors guarantees us that by the time that shutdown() returns any
+                    // actions we've scheduled have in fact been completed.
+                    this.heartbeatExecutor.shutdown();
+
+                    // Prevent any new write from starting
+                    this.disarming = true;
+
+                    // Synchronizing on the concurrent client lock means we'll wait until any *existing*
+                    // write()s finish up and return
+                    synchronized (this.concurrentClientLock)
+                        {
+                        synchronized (this.callbackLock)
+                            {
+                            // There may be still data that needs to get out to the controller.
+                            // Wait until that happens.
+                            waitForWriteCompletion();
+
+                            // Now we know that the callback isn't executing, we can pull the
+                            // rug out from under his use of the heartbeater
+                            this.heartbeatExecutor = null;
+
+                            // Finally, disconnect us from our I2cDevice
+                            this.i2cDevice.deregisterForPortReadyCallback();
+                            }
+                        }
+
+                    this.isArmed = false;
+                    this.disarming = false;
                     }
-                this.isArmed = false;
                 }
+            }
+        catch (InterruptedException e)
+            {
+            Util.handleCapturedInterrupt(e);
             }
         }
 
@@ -442,11 +476,11 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         {
         try
             {
+            if (!this.isArmed || this.disarming)
+                throw new IllegalStateException("can't write to I2cDeviceClient while not armed");
+
             synchronized (this.concurrentClientLock)
                 {
-                if (!this.isArmed)
-                    throw new IllegalStateException("can't write to I2cDeviceClient while not armed");
-
                 synchronized (this.callbackLock)
                     {
                     // Wait until we can write to the write cache
@@ -481,10 +515,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                         // Wait until the write at least issues to the device controller. This will
                         // help make any delays/sleeps that follow a write() be more deterministically
                         // relative to the actual I2C device write.
-                        while (writeCacheStatus != WRITE_CACHE_STATUS.IDLE)
-                            {
-                            this.callbackLock.wait();
-                            }
+                        waitForWriteCompletion();
                         }
                     }
                 }
@@ -492,6 +523,14 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         catch (InterruptedException e)
             {
             Util.handleCapturedInterrupt(e);
+            }
+        }
+
+    private void waitForWriteCompletion() throws InterruptedException
+        {
+        while (writeCacheStatus != WRITE_CACHE_STATUS.IDLE)
+            {
+            this.callbackLock.wait();
             }
         }
     
