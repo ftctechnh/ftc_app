@@ -20,6 +20,7 @@ public class ThunkingHardwareFactory
     HardwareMap          unthunkedHwmap;
     HardwareMap          thunkedHwmap;
     boolean              useExperimental;
+    boolean              useEasyLegacyMotorController;
 
 
     //----------------------------------------------------------------------------------------------
@@ -32,6 +33,7 @@ public class ThunkingHardwareFactory
         this.thunkedHwmap       = null;
         this.unthunkedHwmap     = context.hardwareMap;
         this.useExperimental    = useExperimental;
+        this.useEasyLegacyMotorController = true;
         }
     
     //----------------------------------------------------------------------------------------------
@@ -75,11 +77,10 @@ public class ThunkingHardwareFactory
 
         //----------------------------------------------------------------------------
         // Swapping in EasyLegacyMotorController in place of any legacy
-        // motor controllers. Note that we DO NOT put the EasyLegacyMotorController
-        // in the unthunked map as a motor controller (though it may go in as a voltage sensor).
+        // motor controllers.
         //----------------------------------------------------------------------------
 
-        if (useExperimental)
+        if (this.useEasyLegacyMotorController)
             {
             // Group the motors and their controller together
             Map<DcMotorController, List<DcMotor>> motors = new HashMap<DcMotorController, List<DcMotor>>();
