@@ -20,8 +20,10 @@ public final class ClassFactory
     //----------------------------------------------------------------------------------------------
 
     /**
-     * Creates an alternate 'EasyLegacyMotorController' DCMotorController implementation for
-     * a legacy HiTechnic NXT motor controller.
+     * If the provided motors are using a legacy motor controller, swaps that controller out
+     * and installs an alternate 'EasyLegacyMotorController' DCMotorController implementation
+     * for the duration of the OpMode; if the motors are using a modern motor controller, the
+     * function has no effect.
      *
      * <p>EasyLegacyMotorController is implemented on top of an {@link II2cDeviceClient} instance
      * which completely handles all the complexities of read vs write mode switching and the

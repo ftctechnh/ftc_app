@@ -163,8 +163,10 @@ extends java.lang.Object</pre>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createEasyLegacyMotorController-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.DcMotor-com.qualcomm.robotcore.hardware.DcMotor-">createEasyLegacyMotorController</a></span>(OpMode&nbsp;context,
                                DcMotor&nbsp;motor1,
                                DcMotor&nbsp;motor2)</code>
-<div class="block">Creates an alternate 'EasyLegacyMotorController' DCMotorController implementation for
- a legacy HiTechnic NXT motor controller.</div>
+<div class="block">If the provided motors are using a legacy motor controller, swaps that controller out
+ and installs an alternate 'EasyLegacyMotorController' DCMotorController implementation
+ for the duration of the OpMode; if the motors are using a modern motor controller, the
+ function has no effect.</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
@@ -257,8 +259,10 @@ extends java.lang.Object</pre>
 <pre>public static&nbsp;void&nbsp;createEasyLegacyMotorController(OpMode&nbsp;context,
                                                    DcMotor&nbsp;motor1,
                                                    DcMotor&nbsp;motor2)</pre>
-<div class="block">Creates an alternate 'EasyLegacyMotorController' DCMotorController implementation for
- a legacy HiTechnic NXT motor controller.
+<div class="block">If the provided motors are using a legacy motor controller, swaps that controller out
+ and installs an alternate 'EasyLegacyMotorController' DCMotorController implementation
+ for the duration of the OpMode; if the motors are using a modern motor controller, the
+ function has no effect.
 
  <p>EasyLegacyMotorController is implemented on top of an <a href="../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces"><code>II2cDeviceClient</code></a> instance
  which completely handles all the complexities of read vs write mode switching and the
