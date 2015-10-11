@@ -11,26 +11,12 @@ import com.qualcomm.robotcore.util.Range;
  * Created by JackV on 9/12/15.
  */
 public class TestOpMode extends OpMode{
-    // RANGE VALUES.
-    final static double ARM_MIN_RANGE  = 0.20;
-    final static double ARM_MAX_RANGE  = 0.90;
-    final static double CLAW_MIN_RANGE  = 0.20;
-    final static double CLAW_MAX_RANGE  = 0.7;
-
-    // POSITION VALUES
-    double armPosition;
-    double armDelta = 0.01;
-    double clawPosition;
-    double clawDelta = 0.01;
 
     // MOTOR VALUES
-    DcMotor motorRight;
-    DcMotor motorLeft;
-    Servo claw;
-    Servo arm;
-
-    // DRIVE
-    ArcadeDrive drive = new ArcadeDrive(motorRight, motorLeft);
+    DcMotor motorRightBack;
+    DcMotor motorLeftBack;
+    DcMotor motorRightFront;
+    DcMotor motorLeftFront;
 
     // CONSTRUCTOR
     public TestOpMode() {
@@ -39,21 +25,19 @@ public class TestOpMode extends OpMode{
 
     @Override
     public void init() {
-        motorRight = hardwareMap.dcMotor.get("motor_2");
-        motorLeft = hardwareMap.dcMotor.get("motor_1");
-        motorLeft.setDirection(DcMotor.Direction.REVERSE);
-        arm = hardwareMap.servo.get("servo_1");
-        claw = hardwareMap.servo.get("servo_6");
-
-        // Starting position
-        armPosition = 0.2;
-        clawPosition = 0.2;
+        motorLeftFront = hardwareMap.dcMotor.get("motor_1");
+        motorRightFront = hardwareMap.dcMotor.get("motor_2");
+        motorLeftBack = hardwareMap.dcMotor.get("motor_3");
+        motorRightBack = hardwareMap.dcMotor.get("motor_4");
     }
 
     @Override
     public void loop() {
-        drive.arcadeDrive(gamepad1.left_stick_y, gamepad1.right_stick_x, false);
-        moveArm(gamepad1.y, gamepad1.a, gamepad1.x, gamepad1.b);
+        motorLeftFront.setPower(-gamepad1.left_stick_y);
+        motorLeftBack.setPower(-gamepad1.left_stick_y);
+
+        motorRightFront.setPower(gamepad1.right_stick_y);
+        motorRightBack.setPower(gamepad1.right_stick_y);
     }
 
     @Override
@@ -61,28 +45,10 @@ public class TestOpMode extends OpMode{
         stopRobot();
     }
 
-    void moveArm(boolean up, boolean down, boolean open, boolean close) {
-        if (up)
-            armPosition += armDelta;
-
-        if (down)
-            armPosition -= armDelta;
-
-        if (open)
-            clawPosition += clawDelta;
-
-        if (close)
-            clawPosition -= clawDelta;
-
-        armPosition = Range.clip(armPosition, ARM_MIN_RANGE, ARM_MAX_RANGE);
-        clawPosition = Range.clip(clawPosition, CLAW_MIN_RANGE, CLAW_MAX_RANGE);
-
-        arm.setPosition(armPosition);
-        claw.setPosition(clawPosition);
-    }
-
     void stopRobot() {
-        motorRight.setPower(0);
-        motorLeft.setPower(0);
+        motorRightFront.setPower(0);
+        motorLeftFront.setPower(0);
+        motorRightBack.setPower(0);
+        motorLeftBack.setPower(0);
     }
 }

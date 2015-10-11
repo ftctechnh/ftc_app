@@ -6,10 +6,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Created by JackV on 9/20/15.
  */
 public class ArcadeDrive {
-    DcMotor motorRight, motorLeft;
-    public ArcadeDrive(DcMotor motorRight, DcMotor motorLeft) {
-        this.motorRight = motorRight;
-        this.motorLeft = motorLeft;
+    DcMotor motorRightBack, motorLeftBack, motorRightFront, motorLeftFront;
+
+    public ArcadeDrive(DcMotor motorRightBack, DcMotor motorLeftBack, DcMotor motorRightFront, DcMotor motorLeftFront) {
+        this.motorRightBack = motorRightBack;
+        this.motorLeftBack = motorLeftBack;
+        this.motorRightFront = motorRightFront;
+        this.motorLeftFront = motorLeftFront;
     }
 
     public void arcadeDrive(float moveValue, float rotateValue, boolean squaredInputs) {
@@ -50,8 +53,10 @@ public class ArcadeDrive {
             }
         }
 
-        motorLeft.setPower(leftMotorSpeed);
-        motorRight.setPower(rightMotorSpeed);
+        motorLeftBack.setPower(leftMotorSpeed);
+        motorLeftFront.setPower(leftMotorSpeed);
+        motorRightBack.setPower(rightMotorSpeed);
+        motorRightFront.setPower(rightMotorSpeed);
     }
 
     protected static float limit(float num) {
