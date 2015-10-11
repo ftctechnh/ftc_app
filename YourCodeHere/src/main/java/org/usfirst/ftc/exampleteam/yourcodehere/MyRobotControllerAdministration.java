@@ -37,7 +37,7 @@ import com.qualcomm.ftcrobotcontroller.opmodes.*;
  * @see OnRobotRunning
  * @see SynchTeleOp
  */
-public abstract class MyRobotControllerAdministration
+public class MyRobotControllerAdministration
     {
     /**
      * Registers any library OpModes that you wish to display. Change this code to suit

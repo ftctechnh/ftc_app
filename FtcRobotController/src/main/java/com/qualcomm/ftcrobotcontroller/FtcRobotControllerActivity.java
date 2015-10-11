@@ -421,14 +421,23 @@ public class FtcRobotControllerActivity extends Activity {
             }
 
         // Make sure we're installed in the in the hook of the current event loop
-        public synchronized static void installIfNeceesary(FtcRobotControllerService service)
+        public synchronized static void installIfNecessary(FtcRobotControllerService service)
             {
             if (service == null)
                 return;
 
             Robot robot = robotOfFtcRobotControllerService(service);
+            if (robot == null)
+                return;
+
             EventLoopManager eventLoopManager = eventLoopManagerOfRobot(robot);
+            if (eventLoopManager == null)
+                return;
+
             EventLoopManager.EventLoopMonitor monitor = monitorOfEventLoopManager(eventLoopManager);
+            if (monitor == null)
+                return;
+
             if (monitor instanceof SwerveEventLoopMonitor)
                 {
                 // we're already installed
@@ -465,7 +474,7 @@ public class FtcRobotControllerActivity extends Activity {
             }
         public static EventLoopManager.EventLoopMonitor monitorOfEventLoopManager(EventLoopManager manager)
             {
-            return Util.<EventLoopManager.EventLoopMonitor>getLocalPrivateObjectField(manager, 10);
+            return Util.<EventLoopManager.EventLoopMonitor>getLocalPrivateObjectField(manager, 8);
             }
         }
 
@@ -509,7 +518,7 @@ public class FtcRobotControllerActivity extends Activity {
                 super.robotUpdate(status);
 
                 // Make sure we get to see all the robot state transitions
-                SwerveEventLoopMonitor.installIfNeceesary(controllerService);
+                SwerveEventLoopMonitor.installIfNecessary(controllerService);
                 }
 
             @Override
