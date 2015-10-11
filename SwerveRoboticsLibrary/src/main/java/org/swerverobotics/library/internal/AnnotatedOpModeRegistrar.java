@@ -9,7 +9,6 @@ import java.io.*;
 import java.lang.reflect.*;
 import java.lang.annotation.*;
 import java.util.*;
-
 import dalvik.system.DexFile;
 
 /**
@@ -224,7 +223,7 @@ public class AnnotatedOpModeRegistrar
         return parameters.length;
         }
 
-    private void findAnnotatedStaticMethodsOfInterest(Set<Method> registrarMethods, Set<Method> onRobotStartMethods)
+    private void findAnnotatedStaticMethodsOfInterest(Set<Method> registrarMethods, Set<Method> onRobotRunningMethods)
         {
         List<Class> allClasses = findAllClasses();
         for (Class clazz : allClasses)
@@ -249,7 +248,7 @@ public class AnnotatedOpModeRegistrar
                 if (method.isAnnotationPresent(OnRobotRunning.class))
                     {
                     if (getParameterCount(method)==1)
-                        onRobotStartMethods.add(method);
+                        onRobotRunningMethods.add(method);
                     }
                 }
             }
