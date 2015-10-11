@@ -130,6 +130,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             }
      * </pre>
      *
+     * @throws InterruptedException thrown if the thread is interrupted
      * @see #waitForStart()
      * @see #opModeIsActive()
      * @see #updateGamepads()
@@ -141,6 +142,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     /**
      * In your {@link #main()} method, first perform any necessary data and hardware initialization,
      * then call waitForStart() to await the commencement of the game.
+     * @throws InterruptedException thrown if the thread is interrupted
      */
     public final void waitForStart() throws InterruptedException
         {
@@ -202,15 +204,18 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      * much earlier if there is new gamepad state available.
      *
      * One should use this method when you have nothing better to do in your code, usually
-     * at the very end of your while(opModeIsActive()) loop. Calling Thread.yield() has similar
-     * effects, but idle() uses processor resources more effectively.
+     * at the very end of your while(opModeIsActive()) loop in TeleOp. Calling Thread.yield()
+     * has similar effects, but idle() uses processor resources more effectively. Calling idle()
+     * is entirely optional: it just helps make the system a little more responsive and a
+     * little more efficient.
      *
-     * {@link #idle()} is similar to waitOneFullHardwareCycle() in LinearOpMode (which can at times
-     * in fact wait nearly two full cycles), but makes no guarantees as to completing any
-     * particular number of hardware cycles, if any.
+     * {@link #idle()} is similar to waitOneFullHardwareCycle(), but makes no guarantees as to
+     * completing any particular number of hardware cycles, if any.
      *
+     * @throws InterruptedException thrown if the thread is interrupted
      * @see #main()
-     * @see #synchronousThreadIdle() 
+     * @see #synchronousThreadIdle()
+     * @see #waitOneFullHardwareCycle() 
      */
     public final void idle() throws InterruptedException
         {
@@ -241,6 +246,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      * of the actual body of the loop() method itself has had a chance to run at least once. In
      * practice, up to two such 'hardware cycles' are sometimes used. Provided only for compatibility
      * with LinearOpMode, as it is unnecessary here: {@link #idle()} is a better choice.
+     * @throws InterruptedException thrown if the thread is interrupted
      * @see #idle()
      */
     @Deprecated
@@ -260,7 +266,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     /**
      * Idles the current thread until stimulated by the robot controller runtime.
      * The current thread must be a synchronous thread.
-     *
+     * @throws InterruptedException thrown if the thread is interrupted
      * @see #idle()
      */
     public static void synchronousThreadIdle() throws InterruptedException
@@ -303,6 +309,8 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      * Note that waitForThreadsWritesToReachHardware() only deals with work that has been issued
      * by the current thread. Work dispatched from *other* (synchronous) threads may not yet have
      * completed when waitForThreadsWritesToReachHardware() returns.
+     *
+     * @throws InterruptedException thrown if the thread is interrupted
      */
     public void waitForThreadsWritesToReachHardware() throws InterruptedException
         {
@@ -1140,6 +1148,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      * Advanced/Internal: Wait until we encounter a loop() cycle that doesn't (yet) contain any actions which
      * are also thunks and whose key is the one indicated.
      * @param actionKey the key used to indicate which actions are of interest
+     * @throws InterruptedException thrown if the thread is interrupted
      */
     public static void synchronousThreadWaitForLoopCycleEmptyOfActionKey(int actionKey) throws InterruptedException
         {

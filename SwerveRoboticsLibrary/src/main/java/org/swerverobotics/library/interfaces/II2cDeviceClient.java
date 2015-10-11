@@ -449,6 +449,10 @@ public interface II2cDeviceClient extends HardwareDevice
 
         /**
          * Create a new register window with the indicated starting register and register count
+         *
+         * @param iregFirst the index of the first register to read
+         * @param creg      the number of registers to read
+         * @param readMode  whether to repeat-read or read only once
          */
         public ReadWindow(int iregFirst, int creg, READ_MODE readMode)
             {
@@ -462,6 +466,7 @@ public interface II2cDeviceClient extends HardwareDevice
 
         /**
          * Returns a copy of this window but with the {@link #readIssued} flag clear
+         * @return a fresh readable copy of the window
          */
         public ReadWindow freshCopy()
             {
@@ -493,6 +498,7 @@ public interface II2cDeviceClient extends HardwareDevice
          *
          * @param him   the window we wish to see whether we contain
          * @return      whether or not we contain the window
+         * @see #contains(int, int)
          */
         public boolean contains(ReadWindow him)
             {

@@ -18,7 +18,7 @@ import com.qualcomm.ftcrobotcontroller.opmodes.*;
  * instructions edited FtcRobotController\build.gradle to mention your project, you should
  * now remove that: FtcRobotController\build.gradle should now always be the original, verbatim
  * version as currently found here. Then, in your own project's build.gradle make necessary
- * changes to match the now-current YourCodeHere\build.gradle. Specifically, ensure that:
+ * changes to match the now-current YourCodeHere\build.gradle. Specifically, ensure that:</p>
  * <ol>
  *     <li>it uses <code>apply plugin: 'com.android.<em>application</em>'</code> not <code>...android.<em>module</em>'</code></li>
  *     <li>its <code>defaultConfig</code> section contains the following</li>
@@ -27,7 +27,7 @@ import com.qualcomm.ftcrobotcontroller.opmodes.*;
  *         <li>a <code>versionCode</code> line with the version three or greater: <code>versionCode 3</code></li>
  *         </ol>
  *     <li>its <code>dependencies</code> section contains the line <code>compile project(':FtcRobotController')</code></li>
- * </ol></p>
+ * </ol>
  *
  * <p>If you're new to us here, these updates have already been done for you.</p>
  *
