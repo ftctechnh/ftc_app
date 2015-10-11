@@ -1,26 +1,21 @@
 package org.swerverobotics.library.examples;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.swerverobotics.library.SynchronousOpMode;
-import org.swerverobotics.library.interfaces.Disabled;
-import org.swerverobotics.library.interfaces.TeleOp;
+import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.util.*;
+import org.swerverobotics.library.*;
+import org.swerverobotics.library.interfaces.*;
 
 /**
- * An op mode that investigates how many loop() cycles it takes to do full
- * mode switching on a motor controller. Each main loop cycle does both
- * a read and a write to the motor.
+ * An op mode that investigates how fast in a Linear OpMode we can execute
+ * a main loop that both reads and writes to the a motor. This OpMode can
+ * be used with both legacy and ModernRobotics motor controllers.
  */
 @TeleOp(name="Motor Perf (linear)", group="Swerve Examples")
 @Disabled
 public class LinearMotorLoopPerf extends LinearOpMode
     {
-    DcMotor     motor;
-    int         position;
-    long        loopCountStart;
-    int         spinCount;
+    DcMotor leftMotor, rightMotor;
     ElapsedTime elapsed = new ElapsedTime();
 
     public LinearMotorLoopPerf()
@@ -29,42 +24,31 @@ public class LinearMotorLoopPerf extends LinearOpMode
 
     public @Override void runOpMode() throws InterruptedException
         {
-        motor = hardwareMap.dcMotor.get("motorLeft");
+        leftMotor  = hardwareMap.dcMotor.get("motorLeft");
+        rightMotor = hardwareMap.dcMotor.get("motorRight");
+        ClassFactory.createEasyLegacyMotorController(this, leftMotor, rightMotor);
 
         waitForStart();
-        loopCountStart = getLoopCount();
-        spinCount      = 1;
+
+        int spinCount = 1;
         elapsed.reset();
         
         while (this.opModeIsActive())
             {
-            position = motor.getCurrentPosition();
-            long loopCount = getLoopCount() - loopCountStart;
+            int position = leftMotor.getCurrentPosition();
             double ms = elapsed.time() * 1000;
 
             if (gamepad1.left_bumper)
-                motor.setPower(0.5);
+                leftMotor.setPower(0.5);
             else
-                motor.setPower(0.25);
+                leftMotor.setPower(0.25);
 
             telemetry.addData("position",      position);
-            telemetry.addData("#loop()",       loopCount);
             telemetry.addData("#spin",         spinCount);
-            telemetry.addData("#loop()/#spin", String.format("%.1f", loopCount / (double)spinCount));
             telemetry.addData("ms/spin",       String.format("%.1f ms", ms / spinCount));
-            telemetry.addData("ms/loop",       String.format("%.1f ms", ms / loopCount));
 
-            Thread.yield();
-            
             spinCount++;
+            Thread.yield();
             }
-        }
-
-    int getLoopCount()
-    // The intent here is to return the number of times that the loop() method
-    // has been called. Unfortunately, at the moment we know of no way of obtaining
-    // that information, so we stub this out.
-        {
-        return 0;
         }
     }

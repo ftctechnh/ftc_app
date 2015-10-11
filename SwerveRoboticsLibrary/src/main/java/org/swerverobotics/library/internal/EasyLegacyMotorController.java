@@ -126,7 +126,7 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
         this.i2cDeviceClient.setReadWindow(new II2cDeviceClient.ReadWindow(iRegWindowFirst, iRegWindowMax-iRegWindowFirst, II2cDeviceClient.READ_MODE.ONLY_ONCE));
         }
 
-    public static EasyLegacyMotorController create(OpMode context, DcMotorController target, DcMotor motor1, DcMotor motor2)
+    public static DcMotorController create(OpMode context, DcMotorController target, DcMotor motor1, DcMotor motor2)
         {
         if (isLegacyMotorController(target))
             {
@@ -145,7 +145,12 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
             return controller;
             }
         else
-            throw new IllegalArgumentException("target is not a legacy motor controller");
+            {
+            // The target isn't a legacy motor controller, so we can't swap anything in for him.
+            // Return the raw target (rather than, e.g., throwing) so that caller doesn't need to check
+            // what kind of controller he has in hand.
+            return target;
+            }
         }
 
     //----------------------------------------------------------------------------------------------
