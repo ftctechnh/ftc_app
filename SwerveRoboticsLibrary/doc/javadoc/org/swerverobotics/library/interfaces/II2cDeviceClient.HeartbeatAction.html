@@ -131,24 +131,18 @@ extends java.lang.Object</pre>
 <th class="colLast" scope="col">Field and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>int</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.HeartbeatAction.html#explicitReadPriority">explicitReadPriority</a></span></code>
-<div class="block">Advanced: if a read on a separate thread is in fact needed, use this thread priority</div>
-</td>
-</tr>
-<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.HeartbeatAction.html#heartbeatReadWindow">heartbeatReadWindow</a></span></code>
 <div class="block">Priority #3: explicitly read a given register window.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.HeartbeatAction.html#rereadLastRead">rereadLastRead</a></span></code>
 <div class="block">Priority #1: re-issue the last I2C read operation, if possible.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.HeartbeatAction.html#rewriteLastWritten">rewriteLastWritten</a></span></code>
 <div class="block">Priority #2: re-issue the last I2C write operation, if possible.</div>
@@ -224,7 +218,7 @@ extends java.lang.Object</pre>
 <a name="heartbeatReadWindow">
 <!--   -->
 </a>
-<ul class="blockList">
+<ul class="blockListLast">
 <li class="blockList">
 <h4>heartbeatReadWindow</h4>
 <pre>public&nbsp;<a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a> heartbeatReadWindow</pre>
@@ -234,22 +228,7 @@ extends java.lang.Object</pre>
  worker threads.</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.HeartbeatAction.html#explicitReadPriority"><code>explicitReadPriority</code></a>, 
-<a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#executeFunctionWhileLocked-org.swerverobotics.library.interfaces.IFunc-"><code>II2cDeviceClient.executeFunctionWhileLocked(IFunc)</code></a></dd>
-</dl>
-</li>
-</ul>
-<a name="explicitReadPriority">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>explicitReadPriority</h4>
-<pre>public&nbsp;int explicitReadPriority</pre>
-<div class="block">Advanced: if a read on a separate thread is in fact needed, use this thread priority</div>
-<dl>
-<dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.HeartbeatAction.html#heartbeatReadWindow"><code>heartbeatReadWindow</code></a></dd>
+<dd><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#executeFunctionWhileLocked-org.swerverobotics.library.interfaces.IFunc-"><code>II2cDeviceClient.executeFunctionWhileLocked(IFunc)</code></a></dd>
 </dl>
 </li>
 </ul>
