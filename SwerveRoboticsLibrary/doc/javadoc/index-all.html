@@ -270,8 +270,10 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createEasyLegacyMotorController-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.DcMotor-com.qualcomm.robotcore.hardware.DcMotor-">createEasyLegacyMotorController(OpMode, DcMotor, DcMotor)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
 <dd>
-<div class="block">Creates an alternate 'EasyLegacyMotorController' DCMotorController implementation for
- a legacy HiTechnic NXT motor controller.</div>
+<div class="block">If the provided motors are using a legacy motor controller, swaps that controller out
+ and installs an alternate 'EasyLegacyMotorController' DCMotorController implementation
+ for the duration of the OpMode; if the motors are using a modern motor controller, the
+ function has no effect.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createHiTechnicColorSensor-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.I2cDevice-">createHiTechnicColorSensor(OpMode, I2cDevice)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
 <dd>
@@ -744,6 +746,13 @@
 </a>
 <h2 class="title">L</h2>
 <dl>
+<dt><a href="org/swerverobotics/library/examples/LinearAutonomousPolygon.html" title="class in org.swerverobotics.library.examples"><span class="typeNameLink">LinearAutonomousPolygon</span></a> - Class in <a href="org/swerverobotics/library/examples/package-summary.html">org.swerverobotics.library.examples</a></dt>
+<dd>
+<div class="block">This autonomous OpMode drives the robot forward for a while, turns left, then drives forward
+ again and turns left, etc, until a polygon has been completed.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/examples/LinearAutonomousPolygon.html#LinearAutonomousPolygon--">LinearAutonomousPolygon()</a></span> - Constructor for class <a href="org/swerverobotics/library/examples/LinearAutonomousPolygon.html" title="class in org.swerverobotics.library.examples">LinearAutonomousPolygon</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="org/swerverobotics/library/examples/LinearMotorLoopPerf.html" title="class in org.swerverobotics.library.examples"><span class="typeNameLink">LinearMotorLoopPerf</span></a> - Class in <a href="org/swerverobotics/library/examples/package-summary.html">org.swerverobotics.library.examples</a></dt>
 <dd>
 <div class="block">An op mode that investigates how fast in a Linear OpMode we can execute
@@ -1117,6 +1126,8 @@
 <div class="block">the rotation about the Y axis</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IInterruptableRunnable.html#run--">run()</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/IInterruptableRunnable.html" title="interface in org.swerverobotics.library.interfaces">IInterruptableRunnable</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/examples/LinearAutonomousPolygon.html#runOpMode--">runOpMode()</a></span> - Method in class <a href="org/swerverobotics/library/examples/LinearAutonomousPolygon.html" title="class in org.swerverobotics.library.examples">LinearAutonomousPolygon</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/examples/LinearMotorLoopPerf.html#runOpMode--">runOpMode()</a></span> - Method in class <a href="org/swerverobotics/library/examples/LinearMotorLoopPerf.html" title="class in org.swerverobotics.library.examples">LinearMotorLoopPerf</a></dt>
 <dd>&nbsp;</dd>

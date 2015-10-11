@@ -215,7 +215,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      * @throws InterruptedException thrown if the thread is interrupted
      * @see #main()
      * @see #synchronousThreadIdle()
-     * @see #waitOneFullHardwareCycle() 
+     * @see #waitOneFullHardwareCycle()
      */
     public final void idle() throws InterruptedException
         {

@@ -1,9 +1,12 @@
 package org.swerverobotics.library.internal;
 
 import android.content.Context;
+import android.util.Log;
 import com.qualcomm.robotcore.eventloop.EventLoopManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
+import org.swerverobotics.library.SynchronousOpMode;
+
 import java.lang.reflect.*;
 import java.util.*;
 
@@ -111,6 +114,8 @@ public class RobotStateTransitionNotifier extends DcMotor implements DcMotorCont
 
     synchronized void onUserOpModeStop()
         {
+        Log.d(SynchronousOpMode.LOGGING_TAG, "state xtion: opmode stopped");
+
         List<IOpModeStateTransitionEvents> toRemove = new LinkedList<IOpModeStateTransitionEvents>();
         for (IOpModeStateTransitionEvents registrant : this.registrants)
             {
@@ -124,6 +129,7 @@ public class RobotStateTransitionNotifier extends DcMotor implements DcMotorCont
 
     synchronized void onRobotShutdown()
         {
+        Log.d(SynchronousOpMode.LOGGING_TAG, "state xtion: robot shutdown");
         if (!this.shutdownProcessed)
             {
             this.shutdownProcessed = true;
@@ -148,6 +154,7 @@ public class RobotStateTransitionNotifier extends DcMotor implements DcMotorCont
      */
     public static synchronized void onEventLoopStateChange(EventLoopManager.State newState)
         {
+        Log.d(SynchronousOpMode.LOGGING_TAG, String.format("state xtion: state=%s", newState.toString()));
         switch (newState)
             {
             case RUNNING:
