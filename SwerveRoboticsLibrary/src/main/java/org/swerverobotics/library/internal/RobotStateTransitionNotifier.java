@@ -114,8 +114,6 @@ public class RobotStateTransitionNotifier extends DcMotor implements DcMotorCont
 
     synchronized void onUserOpModeStop()
         {
-        Log.d(SynchronousOpMode.LOGGING_TAG, "state xtion: opmode stopped");
-
         List<IOpModeStateTransitionEvents> toRemove = new LinkedList<IOpModeStateTransitionEvents>();
         for (IOpModeStateTransitionEvents registrant : this.registrants)
             {
