@@ -30,8 +30,8 @@ public class mecanumWheels extends OpMode {
 
     @Override
     public void loop(){
-        float strafeDirection = gamepad1.left_stick_x;
-        float throttle = gamepad1.left_stick_y;
+        float strafeDirection = -gamepad1.left_stick_x;
+        float throttle = -gamepad1.left_stick_y;
 
         strafeDirection = Range.clip(strafeDirection, -1, 1);
         throttle = Range.clip(throttle, -1, 1);
