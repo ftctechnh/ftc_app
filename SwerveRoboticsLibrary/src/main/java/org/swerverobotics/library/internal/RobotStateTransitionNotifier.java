@@ -55,6 +55,7 @@ public class RobotStateTransitionNotifier extends DcMotor implements DcMotorCont
     static final String       shutdownHookName    = " |Swerve|ShutdownHook| ";
     static       Context      applicationContext  = null;
     static       List<Method> onRobotRunningMethods = new LinkedList<Method>();
+    static       List<Method> onRobotStartupFailureMethods = new LinkedList<Method>();
 
     public  final HardwareMap                           hardwareMap;
     private final List<IOpModeStateTransitionEvents>    registrants;
@@ -167,13 +168,25 @@ public class RobotStateTransitionNotifier extends DcMotor implements DcMotorCont
                         { /* ignored */ }
                     }
                 break;
+
+            case EMERGENCY_STOP:
+                for (Method method : onRobotStartupFailureMethods)
+                    {
+                    try {
+                        method.invoke(null, applicationContext);
+                        }
+                    catch (Exception e)
+                        { /* ignored */ }
+                    }
+                break;
             }
         }
 
-    public static void setOnRobotRunningMethods(Context applicationContext, Collection<Method> methods)
+    public static void setStateTransitionCallbacks(Context applicationContext, Collection<Method> onRunningMethods, Collection<Method> onStartupFailureMethods)
         {
         RobotStateTransitionNotifier.applicationContext  = applicationContext;
-        RobotStateTransitionNotifier.onRobotRunningMethods = new LinkedList<Method>(methods);
+        RobotStateTransitionNotifier.onRobotRunningMethods = new LinkedList<Method>(onRunningMethods);
+        RobotStateTransitionNotifier.onRobotStartupFailureMethods = new LinkedList<Method>(onStartupFailureMethods);
         }
 
     //----------------------------------------------------------------------------------------------

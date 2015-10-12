@@ -928,6 +928,11 @@
  invoked when the robot object in the robot controller application reaches the running
  state after an initial boot or a 'robot restart'.</div>
 </dd>
+<dt><a href="org/swerverobotics/library/interfaces/OnRobotStartupFailure.html" title="annotation in org.swerverobotics.library.interfaces"><span class="typeNameLink">OnRobotStartupFailure</span></a> - Annotation Type in <a href="org/swerverobotics/library/interfaces/package-summary.html">org.swerverobotics.library.interfaces</a></dt>
+<dd>
+<div class="block">OnRobotStartupFailure annotations can be placed on public static methods which are to be
+ invoked when the robot object in the robot controller application fails as it is starting up.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#opModeIsActive--">opModeIsActive()</a></span> - Method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
 <dd>
 <div class="block">Answer as to whether this opMode is active and the robot should continue onwards.</div>
@@ -968,11 +973,17 @@
 <dd>
 <div class="block">directional convention for measureing pitch angles.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/usfirst/ftc/exampleteam/yourcodehere/MyRobotControllerAdministration.html#PlaySoundOnRobotRunning-Context-">PlaySoundOnRobotRunning(Context)</a></span> - Static method in class <a href="org/usfirst/ftc/exampleteam/yourcodehere/MyRobotControllerAdministration.html" title="class in org.usfirst.ftc.exampleteam.yourcodehere">MyRobotControllerAdministration</a></dt>
+<dt><span class="memberNameLink"><a href="org/usfirst/ftc/exampleteam/yourcodehere/MyRobotControllerAdministration.html#playSoundOnRobotRunning-Context-">playSoundOnRobotRunning(Context)</a></span> - Static method in class <a href="org/usfirst/ftc/exampleteam/yourcodehere/MyRobotControllerAdministration.html" title="class in org.usfirst.ftc.exampleteam.yourcodehere">MyRobotControllerAdministration</a></dt>
 <dd>
 <div class="block">Any public static method annotated with <a href="org/swerverobotics/library/interfaces/OnRobotRunning.html" title="annotation in org.swerverobotics.library.interfaces"><code>OnRobotRunning</code></a> is invoked when the robot
  object in the robot controller application enters the running state following an initial
  boot or a 'restart robot'.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/usfirst/ftc/exampleteam/yourcodehere/MyRobotControllerAdministration.html#playSoundOnRobotStartupFailure-Context-">playSoundOnRobotStartupFailure(Context)</a></span> - Static method in class <a href="org/usfirst/ftc/exampleteam/yourcodehere/MyRobotControllerAdministration.html" title="class in org.usfirst.ftc.exampleteam.yourcodehere">MyRobotControllerAdministration</a></dt>
+<dd>
+<div class="block">Any public static method annotated with <a href="org/swerverobotics/library/interfaces/OnRobotRunning.html" title="annotation in org.swerverobotics.library.interfaces"><code>OnRobotRunning</code></a> is invoked when the robot
+ object in the robot controller application fails to enter the running state during
+ an attempt to do so.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/NavUtil.html#plus-org.swerverobotics.library.interfaces.Position-org.swerverobotics.library.interfaces.Position-">plus(Position, Position)</a></span> - Static method in class <a href="org/swerverobotics/library/interfaces/NavUtil.html" title="class in org.swerverobotics.library.interfaces">NavUtil</a></dt>
 <dd>&nbsp;</dd>
@@ -1109,7 +1120,7 @@
 <div class="block">Register an *instance* of a class for display on the driver station and availability
  for game play.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/usfirst/ftc/exampleteam/yourcodehere/MyRobotControllerAdministration.html#RegisterMyOpModes-Context-org.swerverobotics.library.interfaces.IOpModeManager-">RegisterMyOpModes(Context, IOpModeManager)</a></span> - Static method in class <a href="org/usfirst/ftc/exampleteam/yourcodehere/MyRobotControllerAdministration.html" title="class in org.usfirst.ftc.exampleteam.yourcodehere">MyRobotControllerAdministration</a></dt>
+<dt><span class="memberNameLink"><a href="org/usfirst/ftc/exampleteam/yourcodehere/MyRobotControllerAdministration.html#registerMyOpModes-Context-org.swerverobotics.library.interfaces.IOpModeManager-">registerMyOpModes(Context, IOpModeManager)</a></span> - Static method in class <a href="org/usfirst/ftc/exampleteam/yourcodehere/MyRobotControllerAdministration.html" title="class in org.usfirst.ftc.exampleteam.yourcodehere">MyRobotControllerAdministration</a></dt>
 <dd>
 <div class="block">Registers any library OpModes that you wish to display.</div>
 </dd>
