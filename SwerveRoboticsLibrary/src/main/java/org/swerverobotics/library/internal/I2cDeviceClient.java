@@ -211,7 +211,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                     // actions we've scheduled have in fact been completed.
                     this.heartbeatExecutor.shutdown();
 
-                    // Prevent any new write from starting
+                    // Prevent any new read or write from starting
                     this.disarming = true;
 
                     // Synchronizing on the concurrent client lock means we'll wait until any *existing*
@@ -369,7 +369,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
             {
             synchronized (this.concurrentClientLock)
                 {
-                if (!this.isArmed)
+                if (!this.isArmed || this.disarming)
                     throw new IllegalStateException("can't read from I2cDeviceClient while not armed");
 
                 synchronized (this.callbackLock)
@@ -476,11 +476,11 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         {
         try
             {
-            if (!this.isArmed || this.disarming)
-                throw new IllegalStateException("can't write to I2cDeviceClient while not armed");
-
             synchronized (this.concurrentClientLock)
                 {
+                if (!this.isArmed || this.disarming)
+                    throw new IllegalStateException("can't write to I2cDeviceClient while not armed");
+
                 synchronized (this.callbackLock)
                     {
                     // Wait until we can write to the write cache
