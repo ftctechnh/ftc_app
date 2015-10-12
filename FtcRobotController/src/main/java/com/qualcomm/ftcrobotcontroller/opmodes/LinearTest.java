@@ -29,7 +29,7 @@ public class LinearTest extends LinearOpMode{
 
             motorLeft.setPower(0.0);
             motorRight.setPower(0.0);
-            waitOneHardwareCycle();
+            //waitOneHardwareCycle();
         }
     }
 }
