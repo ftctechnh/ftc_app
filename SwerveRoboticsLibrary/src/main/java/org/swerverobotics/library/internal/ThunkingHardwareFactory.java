@@ -501,7 +501,7 @@ public class ThunkingHardwareFactory
 
     static boolean isLegacyMotorController(DcMotorController controller)
         {
-        return controller instanceof com.qualcomm.hardware.ModernRoboticsNxtDcMotorController;
+        return controller instanceof com.qualcomm.hardware.HiTechnicNxtDcMotorController;
         }
 
     static LegacyModule legacyModuleOfLegacyMotorController(DcMotorController controller)

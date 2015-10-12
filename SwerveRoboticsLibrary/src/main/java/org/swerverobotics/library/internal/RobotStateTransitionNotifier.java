@@ -5,6 +5,8 @@ import android.util.Log;
 import com.qualcomm.robotcore.eventloop.EventLoopManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.robot.RobotState;
+
 import org.swerverobotics.library.SynchronousOpMode;
 
 import java.lang.reflect.*;
@@ -150,7 +152,7 @@ public class RobotStateTransitionNotifier extends DcMotor implements DcMotorCont
      *
      * @param newState the new state into which the event loop is transitioning.
      */
-    public static synchronized void onEventLoopStateChange(EventLoopManager.State newState)
+    public static synchronized void onEventLoopStateChange(RobotState newState)
         {
         Log.d(SynchronousOpMode.LOGGING_TAG, String.format("state xtion: state=%s", newState.toString()));
         switch (newState)
