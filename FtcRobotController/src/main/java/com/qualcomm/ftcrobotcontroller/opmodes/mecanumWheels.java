@@ -31,15 +31,19 @@ public class mecanumWheels extends OpMode {
     @Override
     public void loop(){
         float strafeDirection = -gamepad1.left_stick_x;
-        float throttle = -gamepad1.left_stick_y;
+        float throttle1 = -gamepad1.left_stick_y;
+        float throttle2 = -gamepad1.right_stick_y;
+        float direction = -gamepad1.right_stick_x;
 
         strafeDirection = Range.clip(strafeDirection, -1, 1);
-        throttle = Range.clip(throttle, -1, 1);
+        throttle1 = Range.clip(throttle1, -1, 1);
+        throttle2 = Range.clip(throttle2, -1, 1);
+        direction = Range.clip(direction, -1, 1);
 
-        frontLeftPwr = Range.clip(throttle + strafeDirection, -1, 1);
-        frontRightPwr = Range.clip(strafeDirection - throttle, -1, 1);
-        rearLeftPwr = Range.clip(strafeDirection - throttle, -1, 1);
-        rearRightPwr = Range.clip(throttle + strafeDirection, -1, 1);
+        frontLeftPwr = Range.clip(throttle1 + strafeDirection, -1, 1) - Range.clip(throttle2 + direction, -1, 1);
+        frontRightPwr = Range.clip(strafeDirection - throttle1, -1, 1) + Range.clip(throttle2 - direction, -1, 1);
+        rearLeftPwr = Range.clip(strafeDirection - throttle1, -1, 1) - Range.clip(throttle2 + direction, -1, 1);
+        rearRightPwr = Range.clip(throttle1 + strafeDirection, -1, 1) + Range.clip(throttle2 - direction, -1, 1);
 
         frontLeft.setPower(frontLeftPwr);
         rearRight.setPower(rearRightPwr);
