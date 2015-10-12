@@ -58,6 +58,7 @@ public class MyRobotControllerAdministration
 
         manager.register(SynchTeleOp.class);
         manager.register(SynchTelemetryOp.class);
+        manager.register(LinearAutonomousPolygon.class);
         manager.register("FTC HQ NxtTeleOp", NxtTeleOp.class);
         }
 
@@ -80,6 +81,8 @@ public class MyRobotControllerAdministration
         {
         MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.nxtstartup);
         mediaPlayer.start();
+        while (mediaPlayer.isPlaying())
+            Thread.yield();
         }
 
     /**
@@ -98,5 +101,7 @@ public class MyRobotControllerAdministration
         {
         MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.chord);
         mediaPlayer.start();
+        while (mediaPlayer.isPlaying())
+            Thread.yield();
         }
     }
