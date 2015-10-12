@@ -1,9 +1,9 @@
 package org.swerverobotics.library.examples;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
-
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.interfaces.*;
+
 
 /**
  * SynchIMUDemo gives a short demo on how to use the BNO055 Inertial Motion Unit (IMU) from AdaFruit.
@@ -74,7 +74,7 @@ public class SynchIMUDemo extends SynchronousOpMode
 
         // At the beginning of each telemetry update, grab a bunch of data
         // from the IMU that we will then display in separate lines.
-        telemetry.addAction(new IAction() { @Override public void doAction()
+        telemetry.addAction(new Runnable() { @Override public void run()
                 {
                 // Acquiring the angles is relatively expensive; we don't want
                 // to do that in each of the three items that need that info, as that's

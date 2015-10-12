@@ -88,51 +88,43 @@
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><a href="../../../../org/swerverobotics/library/interfaces/IAction.html" title="interface in org.swerverobotics.library.interfaces">IAction</a></td>
-<td class="colLast">
-<div class="block">IAction is an interface for encapsulating work</div>
-</td>
-</tr>
-<tr class="altColor">
 <td class="colFirst"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html" title="interface in org.swerverobotics.library.interfaces">IBNO055IMU</a></td>
 <td class="colLast">
 <div class="block">Interface API to the Adafruit 9-DOF Absolute Orientation IMU Fusion Breakout - BNO055 sensor.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><a href="../../../../org/swerverobotics/library/interfaces/IFunc.html" title="interface in org.swerverobotics.library.interfaces">IFunc</a>&lt;TResult&gt;</td>
 <td class="colLast">
-<div class="block">IFunc<TResult> represents a nullary function that returns a value of the indicated type</div>
+<div class="block">IFunc&lt;TResult&gt; represents a nullary function that returns a value of the indicated type.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><a href="../../../../org/swerverobotics/library/interfaces/IHardwareWrapper.html" title="interface in org.swerverobotics.library.interfaces">IHardwareWrapper</a>&lt;T&gt;</td>
 <td class="colLast">
 <div class="block">Advanced: IHardwareWrapper can be used on hardware objects which wrap other, similar
  hardware objects in order to retrieve the object that they wrapp</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a></td>
 <td class="colLast">
 <div class="block">II2cDeviceClient is the public interface to a utility class that makes it easier to
  use I2cDevice instances.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClientUser.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClientUser</a></td>
 <td class="colLast">
 <div class="block">II2cDeviceClientUser allows one to retrieve an underlying I2cDeviceClient from 
  an object that respresents an I2C hardware sensor.</div>
 </td>
 </tr>
-<tr class="rowColor">
-<td class="colFirst"><a href="../../../../org/swerverobotics/library/interfaces/IInterruptableAction.html" title="interface in org.swerverobotics.library.interfaces">IInterruptableAction</a></td>
-<td class="colLast">&nbsp;</td>
-</tr>
 <tr class="altColor">
 <td class="colFirst"><a href="../../../../org/swerverobotics/library/interfaces/IInterruptableFunc.html" title="interface in org.swerverobotics.library.interfaces">IInterruptableFunc</a>&lt;TResult&gt;</td>
-<td class="colLast">&nbsp;</td>
+<td class="colLast">
+<div class="block">A variation of IFunc that permits the throwing of an InterruptedException</div>
+</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><a href="../../../../org/swerverobotics/library/interfaces/IInterruptableRunnable.html" title="interface in org.swerverobotics.library.interfaces">IInterruptableRunnable</a></td>
@@ -148,12 +140,6 @@
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><a href="../../../../org/swerverobotics/library/interfaces/IStopActionRegistrar.html" title="interface in org.swerverobotics.library.interfaces">IStopActionRegistrar</a></td>
-<td class="colLast">
-<div class="block">IStopActionRegistrar can be used to register for a callback when an OpMode stops.</div>
-</td>
-</tr>
-<tr class="altColor">
 <td class="colFirst"><a href="../../../../org/swerverobotics/library/interfaces/IThunkDispatcher.html" title="interface in org.swerverobotics.library.interfaces">IThunkDispatcher</a></td>
 <td class="colLast">
 <div class="block">Advanced: IThunkDispatcher is an interface through which one can cause work to be thunked to the loop() thread.</div>
@@ -322,6 +308,21 @@
 <div class="block">Provides a way to temporarily disable an OpMode annotated with
  <a href="../../../../org/swerverobotics/library/interfaces/Autonomous.html" title="annotation in org.swerverobotics.library.interfaces"><code>Autonomous</code></a> or <a href="../../../../org/swerverobotics/library/interfaces/TeleOp.html" title="annotation in org.swerverobotics.library.interfaces"><code>TeleOp</code></a> from showing up
  on the driver station OpMode list.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><a href="../../../../org/swerverobotics/library/interfaces/OnRobotRunning.html" title="annotation in org.swerverobotics.library.interfaces">OnRobotRunning</a></td>
+<td class="colLast">
+<div class="block">OnRobotRunning annotations can be placed on public static methods which are to be
+ invoked when the robot object in the robot controller application reaches the running
+ state after an initial boot or a 'robot restart'.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><a href="../../../../org/swerverobotics/library/interfaces/OnRobotStartupFailure.html" title="annotation in org.swerverobotics.library.interfaces">OnRobotStartupFailure</a></td>
+<td class="colLast">
+<div class="block">OnRobotStartupFailure annotations can be placed on public static methods which are to be
+ invoked when the robot object in the robot controller application fails as it is starting up.</div>
 </td>
 </tr>
 <tr class="altColor">

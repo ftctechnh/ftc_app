@@ -47,7 +47,7 @@ var activeTableTab = "activeTableTab";
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../org/swerverobotics/library/interfaces/IAction.html" title="interface in org.swerverobotics.library.interfaces"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../org/swerverobotics/library/interfaces/IAccelerationIntegrator.html" title="interface in org.swerverobotics.library.interfaces"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.ACCELUNIT.html" title="enum in org.swerverobotics.library.interfaces"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
@@ -102,11 +102,11 @@ var activeTableTab = "activeTableTab";
 <pre>public interface <span class="typeNameLabel">IBNO055IMU</span></pre>
 <div class="block">Interface API to the Adafruit 9-DOF Absolute Orientation IMU Fusion Breakout - BNO055 sensor.
  You can create an implementation of this interface for a given sensor using
- <a href="../../../../org/swerverobotics/library/ClassFactory.html#createAdaFruitBNO055IMU-com.qualcomm.robotcore.hardware.I2cDevice-"><code>ClassFactory.createAdaFruitBNO055IMU()</code></a>.</div>
+ <a href="../../../../org/swerverobotics/library/ClassFactory.html#createAdaFruitBNO055IMU-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.I2cDevice-"><code>ClassFactory.createAdaFruitBNO055IMU()</code></a>.</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../org/swerverobotics/library/interfaces/IAccelerationIntegrator.html" title="interface in org.swerverobotics.library.interfaces"><code>IAccelerationIntegrator</code></a>, 
-<a href="../../../../org/swerverobotics/library/ClassFactory.html#createAdaFruitBNO055IMU-com.qualcomm.robotcore.hardware.I2cDevice-"><code>ClassFactory.createAdaFruitBNO055IMU(I2cDevice)</code></a>, 
+<a href="../../../../org/swerverobotics/library/ClassFactory.html#createAdaFruitBNO055IMU-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.I2cDevice-"><code>ClassFactory.createAdaFruitBNO055IMU(OpMode, I2cDevice)</code></a>, 
 <a href="http://www.adafruit.com/products/2472">http://www.adafruit.com/products/2472</a>, 
 <a href="http://www.bosch-sensortec.com/en/homepage/products_3/9_axis_sensors_5/ecompass_2/bno055_3/bno055_4">http://www.bosch-sensortec.com/en/homepage/products_3/9_axis_sensors_5/ecompass_2/bno055_3/bno055_4</a></dd>
 </dl>
@@ -315,7 +315,7 @@ var activeTableTab = "activeTableTab";
 </tr>
 <tr id="i19" class="rowColor">
 <td class="colFirst"><code>byte[]</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#read-org.swerverobotics.library.interfaces.IBNO055IMU.REGISTER-int-">read</a></span>(<a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.REGISTER.html" title="enum in org.swerverobotics.library.interfaces">IBNO055IMU.REGISTER</a>&nbsp;reg,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#read-org.swerverobotics.library.interfaces.IBNO055IMU.REGISTER-int-">read</a></span>(<a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.REGISTER.html" title="enum in org.swerverobotics.library.interfaces">IBNO055IMU.REGISTER</a>&nbsp;register,
     int&nbsp;cb)</code>
 <div class="block">Low level: read data starting at the indicated register</div>
 </td>
@@ -419,10 +419,12 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <h4>initialize</h4>
 <pre>void&nbsp;initialize(<a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.Parameters.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Parameters</a>&nbsp;parameters)</pre>
-<div class="block">Initialize the sensor using the indicated set of parameters.
- 
- Note that the execution of this method can take a fairly long while, possibly
- several tens of milliseconds.</div>
+<div class="block">Initialize the sensor using the indicated set of parameters. Note that the execution of
+ this method can take a fairly long while, possibly several tens of milliseconds.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>parameters</code> - the parameters with which to initialize the IMU</dd>
+</dl>
 </li>
 </ul>
 <a name="close--">
@@ -667,10 +669,12 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <h4>getSystemStatus</h4>
 <pre>byte&nbsp;getSystemStatus()</pre>
-<div class="block">Returns the current status of the system.
- 
- See section 4.3.58 of the BNO055 specification.</div>
+<div class="block">Returns the current status of the system.</div>
 <dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the current status of the system
+ 
+ See section 4.3.58 of the BNO055 specification.</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#getSystemError--"><code><table summary="System Status Codes">
      <tr><td>Result</td><td>Meaning</td></tr>
@@ -697,6 +701,8 @@ var activeTableTab = "activeTableTab";
  
  See section 4.3.58 of the BNO055 specification.</div>
 <dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the current error status</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.html#getSystemStatus--"><code><table summary="System Error Codes">
    <tr><td>Result</td><td>Meaning</td></tr>
@@ -795,6 +801,12 @@ var activeTableTab = "activeTableTab";
 <h4>read8</h4>
 <pre>byte&nbsp;read8(<a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.REGISTER.html" title="enum in org.swerverobotics.library.interfaces">IBNO055IMU.REGISTER</a>&nbsp;register)</pre>
 <div class="block">Low level: read the byte starting at the indicated register</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>register</code> - the location from which to read the data</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the data that was read</dd>
+</dl>
 </li>
 </ul>
 <a name="read-org.swerverobotics.library.interfaces.IBNO055IMU.REGISTER-int-">
@@ -803,9 +815,16 @@ var activeTableTab = "activeTableTab";
 <ul class="blockList">
 <li class="blockList">
 <h4>read</h4>
-<pre>byte[]&nbsp;read(<a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.REGISTER.html" title="enum in org.swerverobotics.library.interfaces">IBNO055IMU.REGISTER</a>&nbsp;reg,
+<pre>byte[]&nbsp;read(<a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.REGISTER.html" title="enum in org.swerverobotics.library.interfaces">IBNO055IMU.REGISTER</a>&nbsp;register,
             int&nbsp;cb)</pre>
 <div class="block">Low level: read data starting at the indicated register</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>register</code> - the location from which to read the data</dd>
+<dd><code>cb</code> - the number of bytes to read</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the data that was read</dd>
+</dl>
 </li>
 </ul>
 <a name="write8-org.swerverobotics.library.interfaces.IBNO055IMU.REGISTER-int-">
@@ -817,6 +836,11 @@ var activeTableTab = "activeTableTab";
 <pre>void&nbsp;write8(<a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.REGISTER.html" title="enum in org.swerverobotics.library.interfaces">IBNO055IMU.REGISTER</a>&nbsp;register,
             int&nbsp;bVal)</pre>
 <div class="block">Low level: write a byte to the indicated register</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>register</code> - the location at which to write the data</dd>
+<dd><code>bVal</code> - the data to write</dd>
+</dl>
 </li>
 </ul>
 <a name="write-org.swerverobotics.library.interfaces.IBNO055IMU.REGISTER-byte:A-">
@@ -828,6 +852,11 @@ var activeTableTab = "activeTableTab";
 <pre>void&nbsp;write(<a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.REGISTER.html" title="enum in org.swerverobotics.library.interfaces">IBNO055IMU.REGISTER</a>&nbsp;register,
            byte[]&nbsp;data)</pre>
 <div class="block">Low level: write data starting at the indicated register</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>register</code> - the location at which to write the data</dd>
+<dd><code>data</code> - the data to write</dd>
+</dl>
 </li>
 </ul>
 </li>
@@ -857,7 +886,7 @@ var activeTableTab = "activeTableTab";
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../org/swerverobotics/library/interfaces/IAction.html" title="interface in org.swerverobotics.library.interfaces"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../org/swerverobotics/library/interfaces/IAccelerationIntegrator.html" title="interface in org.swerverobotics.library.interfaces"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li><a href="../../../../org/swerverobotics/library/interfaces/IBNO055IMU.ACCELUNIT.html" title="enum in org.swerverobotics.library.interfaces"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">

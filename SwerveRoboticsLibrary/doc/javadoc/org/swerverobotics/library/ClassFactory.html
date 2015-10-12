@@ -135,85 +135,97 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>static <a href="../../../org/swerverobotics/library/interfaces/IBNO055IMU.html" title="interface in org.swerverobotics.library.interfaces">IBNO055IMU</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createAdaFruitBNO055IMU-com.qualcomm.robotcore.hardware.I2cDevice-">createAdaFruitBNO055IMU</a></span>(I2cDevice&nbsp;i2cDevice)</code>
-<div class="block">Instantiates a driver object for a  AdaFruit BNO055 sensor which resides at the indicated I2cDevice using
- default values for configuration parameters.</div>
-</td>
-</tr>
-<tr id="i1" class="rowColor">
-<td class="colFirst"><code>static <a href="../../../org/swerverobotics/library/interfaces/IBNO055IMU.html" title="interface in org.swerverobotics.library.interfaces">IBNO055IMU</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createAdaFruitBNO055IMU-com.qualcomm.robotcore.hardware.I2cDevice-org.swerverobotics.library.interfaces.IBNO055IMU.Parameters-">createAdaFruitBNO055IMU</a></span>(I2cDevice&nbsp;i2cDevice,
                        <a href="../../../org/swerverobotics/library/interfaces/IBNO055IMU.Parameters.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Parameters</a>&nbsp;parameters)</code>
 <div class="block">Instantiates a driver object for an AdaFruit BNO055 sensor which resides at the indicated I2cDevice using
  the provided configuration parameters.</div>
 </td>
 </tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>static <a href="../../../org/swerverobotics/library/interfaces/IBNO055IMU.html" title="interface in org.swerverobotics.library.interfaces">IBNO055IMU</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createAdaFruitBNO055IMU-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.I2cDevice-">createAdaFruitBNO055IMU</a></span>(OpMode&nbsp;context,
+                       I2cDevice&nbsp;i2cDevice)</code>
+<div class="block">Instantiates a driver object for a  AdaFruit BNO055 sensor which resides at the indicated I2cDevice using
+ default values for configuration parameters.</div>
+</td>
+</tr>
 <tr id="i2" class="altColor">
+<td class="colFirst"><code>static <a href="../../../org/swerverobotics/library/interfaces/IBNO055IMU.html" title="interface in org.swerverobotics.library.interfaces">IBNO055IMU</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createAdaFruitBNO055IMU-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.I2cDevice-org.swerverobotics.library.interfaces.IBNO055IMU.Parameters-">createAdaFruitBNO055IMU</a></span>(OpMode&nbsp;context,
+                       I2cDevice&nbsp;i2cDevice,
+                       <a href="../../../org/swerverobotics/library/interfaces/IBNO055IMU.Parameters.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Parameters</a>&nbsp;parameters)</code>
+<div class="block">Instantiates a driver object for an AdaFruit BNO055 sensor which resides at the indicated I2cDevice using
+ the provided configuration parameters.</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code>static void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createEasyLegacyMotorController-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.DcMotor-com.qualcomm.robotcore.hardware.DcMotor-">createEasyLegacyMotorController</a></span>(OpMode&nbsp;context,
+                               DcMotor&nbsp;motor1,
+                               DcMotor&nbsp;motor2)</code>
+<div class="block">If the provided motors are using a legacy motor controller, swaps that controller out
+ and installs an alternate 'EasyLegacyMotorController' DCMotorController implementation
+ for the duration of the OpMode; if the motors are using a modern motor controller, the
+ function has no effect.</div>
+</td>
+</tr>
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>static ColorSensor</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createHiTechnicColorSensor-com.qualcomm.robotcore.hardware.I2cController-int-">createHiTechnicColorSensor</a></span>(I2cController&nbsp;controller,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createHiTechnicColorSensor-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.I2cController-int-">createHiTechnicColorSensor</a></span>(OpMode&nbsp;context,
+                          I2cController&nbsp;controller,
                           int&nbsp;port)</code>
 <div class="block">Creates a driver ColorSensor object from an controller and port specification that represents a
  <a href="http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NCO1038">HiTechnic
  color sensor</a>.</div>
 </td>
 </tr>
-<tr id="i3" class="rowColor">
-<td class="colFirst"><code>static ColorSensor</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createHiTechnicColorSensor-com.qualcomm.robotcore.hardware.I2cDevice-">createHiTechnicColorSensor</a></span>(I2cDevice&nbsp;i2cDevice)</code>
-<div class="block">Creates a driver ColorSensor object for an I2cDevice that represents a
- <a href="http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NCO1038">HiTechnic
- color sensor</a>.</div>
-</td>
-</tr>
-<tr id="i4" class="altColor">
-<td class="colFirst"><code>static ColorSensor</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createHiTechnicColorSensor-org.swerverobotics.library.internal.II2cDevice-">createHiTechnicColorSensor</a></span>(II2cDevice&nbsp;ii2cDevice)</code>
-<div class="block">Creates a driver ColorSensor object for an I2cDevice that represents a
- <a href="http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NCO1038">HiTechnic
- color sensor</a>.</div>
-</td>
-</tr>
 <tr id="i5" class="rowColor">
+<td class="colFirst"><code>static ColorSensor</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createHiTechnicColorSensor-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.I2cDevice-">createHiTechnicColorSensor</a></span>(OpMode&nbsp;context,
+                          I2cDevice&nbsp;i2cDevice)</code>
+<div class="block">Creates a driver ColorSensor object for an I2cDevice that represents a
+ <a href="http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NCO1038">HiTechnic
+ color sensor</a>.</div>
+</td>
+</tr>
+<tr id="i6" class="altColor">
+<td class="colFirst"><code>static ColorSensor</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createHiTechnicColorSensor-com.qualcomm.robotcore.eventloop.opmode.OpMode-org.swerverobotics.library.internal.II2cDevice-">createHiTechnicColorSensor</a></span>(OpMode&nbsp;context,
+                          II2cDevice&nbsp;ii2cDevice)</code>
+<div class="block">Creates a driver ColorSensor object for an I2cDevice that represents a
+ <a href="http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NCO1038">HiTechnic
+ color sensor</a>.</div>
+</td>
+</tr>
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>static II2cDevice</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createI2cDevice-com.qualcomm.robotcore.hardware.I2cController-int-">createI2cDevice</a></span>(I2cController&nbsp;i2cController,
                int&nbsp;port)</code>
 <div class="block">Creates an II2Device instance on a specific port on an I2cDeviceController</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>static II2cDevice</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createI2cDevice-com.qualcomm.robotcore.hardware.I2cDevice-">createI2cDevice</a></span>(I2cDevice&nbsp;i2cDevice)</code>
 <div class="block">Creates an II2cDevice interface around an I2cDevice.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createI2cDeviceClient-com.qualcomm.robotcore.hardware.I2cDevice-int-">createI2cDeviceClient</a></span>(I2cDevice&nbsp;i2cDevice,
-                     int&nbsp;i2cAddr8Bit)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createI2cDeviceClient-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.I2cDevice-int-boolean-">createI2cDeviceClient</a></span>(OpMode&nbsp;context,
+                     I2cDevice&nbsp;i2cDevice,
+                     int&nbsp;i2cAddr8Bit,
+                     boolean&nbsp;closeOnOpModeStop)</code>
 <div class="block">Create a new II2cDeviceClient on an I2cDevice instance.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
-<td class="colFirst"><code>static <a href="../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createI2cDeviceClient-org.swerverobotics.library.internal.II2cDevice-int-">createI2cDeviceClient</a></span>(II2cDevice&nbsp;i2cDevice,
-                     int&nbsp;i2cAddr8Bit)</code>
-<div class="block">Create a new II2cDeviceClient on an II2cDevice instance.</div>
-</td>
-</tr>
-<tr id="i9" class="rowColor">
-<td class="colFirst"><code>static <a href="../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createI2cDeviceClient-org.swerverobotics.library.internal.II2cDevice-int-boolean-org.swerverobotics.library.interfaces.IStopActionRegistrar-">createI2cDeviceClient</a></span>(II2cDevice&nbsp;i2cDevice,
-                     int&nbsp;i2cAddr8Bit,
-                     boolean&nbsp;autoClose,
-                     <a href="../../../org/swerverobotics/library/interfaces/IStopActionRegistrar.html" title="interface in org.swerverobotics.library.interfaces">IStopActionRegistrar</a>&nbsp;registrar)</code>
-<div class="block">Create a new II2cDeviceClient on an II2cDevice instance.</div>
-</td>
-</tr>
 <tr id="i10" class="altColor">
-<td class="colFirst"><code>static DcMotorController</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createNxtDcMotorController-com.qualcomm.robotcore.hardware.DcMotorController-">createNxtDcMotorController</a></span>(DcMotorController&nbsp;target)</code>
-<div class="block">Creates an alternate 'NxtMotorControllerOnI2cDevice' DCMotorController implementation for
- a legacy HiTechnic / Nxt motor controller.</div>
+<td class="colFirst"><code>static <a href="../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createI2cDeviceClient-com.qualcomm.robotcore.eventloop.opmode.OpMode-org.swerverobotics.library.internal.II2cDevice-int-boolean-">createI2cDeviceClient</a></span>(OpMode&nbsp;context,
+                     II2cDevice&nbsp;i2cDevice,
+                     int&nbsp;i2cAddr8Bit,
+                     boolean&nbsp;closeOnOpModeStop)</code>
+<div class="block">Create a new II2cDeviceClient on an II2cDevice instance.</div>
 </td>
 </tr>
 </table>
@@ -238,75 +250,68 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="createNxtDcMotorController-com.qualcomm.robotcore.hardware.DcMotorController-">
+<a name="createEasyLegacyMotorController-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.DcMotor-com.qualcomm.robotcore.hardware.DcMotor-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>createNxtDcMotorController</h4>
-<pre>public static&nbsp;DcMotorController&nbsp;createNxtDcMotorController(DcMotorController&nbsp;target)</pre>
-<div class="block">Creates an alternate 'NxtMotorControllerOnI2cDevice' DCMotorController implementation for
- a legacy HiTechnic / Nxt motor controller. NxtMotorControllerOnI2cDevice is implemented
- on top of an <a href="../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces"><code>II2cDeviceClient</code></a> instance which completely handles all the complexities
- of read vs write mode switching and the like, allowing the logic of the controller itself
- to be extraordinarily simple. NxtMotorControllerOnI2cDevice is currently experimental,
- alpha-quality code.
+<h4>createEasyLegacyMotorController</h4>
+<pre>public static&nbsp;void&nbsp;createEasyLegacyMotorController(OpMode&nbsp;context,
+                                                   DcMotor&nbsp;motor1,
+                                                   DcMotor&nbsp;motor2)</pre>
+<div class="block">If the provided motors are using a legacy motor controller, swaps that controller out
+ and installs an alternate 'EasyLegacyMotorController' DCMotorController implementation
+ for the duration of the OpMode; if the motors are using a modern motor controller, the
+ function has no effect.
 
- <p>The key fact about NxtMotorControllerOnI2cDevice is that manual mode switching is
- entirely unnecessary. Just call the getPosition() or setPower() methods or what have you,
- and the mode switching will be taken care of.</p>
+ <p>EasyLegacyMotorController is implemented on top of an <a href="../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces"><code>II2cDeviceClient</code></a> instance
+ which completely handles all the complexities of read vs write mode switching and the
+ like, allowing the logic inside the controller itself to be extraordinarily simple.
+ In particular, the manual mode switching and loop() counting necessary with the stock
+ controller implementation is not needed. Just call the motor getPosition() or setPower()
+ methods or what have you, and the necessary bookkeeping details
+ will be taken care of.</p>
 
- <p>NxtMotorControllerOnI2cDevice not tied to SynchronousOpMode. It can also be used for example
- from LinearOpMode, or, indeed, any thread that can tolerate operations that can take tens of
- milliseconds to run. In SynchronousOpMode, NxtMotorControllerOnI2cDevice is currently
- enabled by setting the <a href="../../../org/swerverobotics/library/SynchronousOpMode.html#useExperimentalThunking"><code>useExperimentalThunking</code></a> flag,
- though that will probably change. In other OpModes, you'll have to manually
- call <a href="../../../org/swerverobotics/library/ClassFactory.html#createNxtDcMotorController-com.qualcomm.robotcore.hardware.DcMotorController-"><code>createNxtDcMotorControllerOnI2cDevice()</code></a> yourself.</p>
+ <p>EasyLegacyMotorController is not tied to SynchronousOpMode or any other particular
+ OpMode. It can be used, for example, from LinearOpMode, or, indeed, any thread that can
+ tolerate operations that can take tens of milliseconds to run. In SynchronousOpMode,
+ EasyLegacyMotorController is used automatically; in other OpModes, you'll have to manually
+ call <a href="../../../org/swerverobotics/library/ClassFactory.html#createEasyLegacyMotorController-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.DcMotor-com.qualcomm.robotcore.hardware.DcMotor-"><code>createEasyLegacyMotorController(com.qualcomm.robotcore.eventloop.opmode.OpMode, com.qualcomm.robotcore.hardware.DcMotor, com.qualcomm.robotcore.hardware.DcMotor)</code></a> yourself.</p>
 
- <p>If you call this method to retrieve a NxtMotorControllerOnI2cDevice, you should
- call <code>HardwareDevice.close()</code> when you want the controller to
- close down, likely from your stop() logic or the end of your runOpMode() method as the
- case may be. In SynchronousOpMode with the <a href="../../../org/swerverobotics/library/SynchronousOpMode.html#useExperimentalThunking"><code>useExperimentalThunking</code></a>
- flag, closing the controller is automaticlly taken care of.</p>
-
- <p><a href="../../../org/swerverobotics/library/ClassFactory.html#createNxtDcMotorController-com.qualcomm.robotcore.hardware.DcMotorController-"><code>createNxtDcMotorControllerOnI2cDevice()</code></a> takes
- a ModernRoboticsNxtDcMotorController motor controller as might found in an OpMode's hardware map
- and converts that into an NxtDcMotorControllerOnI2cDevice. As a side effect of doing so, the
- ModernRoboticsNxtDcMotorController is disabled, as only one object can be managing the
- controller at a given time. That importantly also means that any DcMotor objects from
- the hardware map that were on that controller will need to be recreated. This can be accomplished by calling</p>
-
- <code>new DcMotor(controller, portNumber, direction)</code>
-
- <p>where controller is the new NxtMotorControllerOnI2cDevice instance and portNumber and
- direction were retreived from the old, now non-functional DcMotor using getPortNumber()
- and getDirection() respectively.</p></div>
+ This method takes as parameters one or both motors that reside on a given legacy motor
+ controller. If two motors are provided, they must share the same controller, and conversely
+ if two motors reside on a controller then both must be provided. The method creates a new
+ EasyLegacyMotorController and installs it as the controller for the provided motors;
+ the existing controller is disabled. When the current OpMode is complete, the processed
+ is reversed.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>target</code> - the ModernRoboticsNxtDcMotorController we are to convert</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>an NxtMotorControllerOnI2cDevice, or null if target was not a legacy motor controller</dd>
+<dd><code>context</code> - the OpMode within which this creation is occurring</dd>
+<dd><code>motor1</code> - one of the up-to-two motor controllers which share a legacy motor controller. May be null.</dd>
+<dd><code>motor2</code> - the possibly other motor controller on the same controller. May be null.</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../org/swerverobotics/library/examples/SynchMotorLoopPerf.html" title="class in org.swerverobotics.library.examples"><code>SynchMotorLoopPerf</code></a></dd>
 </dl>
 </li>
 </ul>
-<a name="createAdaFruitBNO055IMU-com.qualcomm.robotcore.hardware.I2cDevice-">
+<a name="createAdaFruitBNO055IMU-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.I2cDevice-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>createAdaFruitBNO055IMU</h4>
-<pre>public static&nbsp;<a href="../../../org/swerverobotics/library/interfaces/IBNO055IMU.html" title="interface in org.swerverobotics.library.interfaces">IBNO055IMU</a>&nbsp;createAdaFruitBNO055IMU(I2cDevice&nbsp;i2cDevice)</pre>
+<pre>public static&nbsp;<a href="../../../org/swerverobotics/library/interfaces/IBNO055IMU.html" title="interface in org.swerverobotics.library.interfaces">IBNO055IMU</a>&nbsp;createAdaFruitBNO055IMU(OpMode&nbsp;context,
+                                                 I2cDevice&nbsp;i2cDevice)</pre>
 <div class="block">Instantiates a driver object for a  AdaFruit BNO055 sensor which resides at the indicated I2cDevice using
  default values for configuration parameters.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>context</code> - the OpMode within which this creation is taking place</dd>
 <dd><code>i2cDevice</code> - the robot controller runtime object representing the sensor</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the interface to the instantiated sensor object. This object also
-                      supports the II2cDeviceClientUser interface, which can be useful
-                      for debugging.</dd>
+<dd>the interface to the instantiated sensor object.</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../org/swerverobotics/library/ClassFactory.html#createAdaFruitBNO055IMU-com.qualcomm.robotcore.hardware.I2cDevice-org.swerverobotics.library.interfaces.IBNO055IMU.Parameters-"><code>createAdaFruitBNO055IMU(I2cDevice, IBNO055IMU.Parameters)</code></a></dd>
+<dd><a href="../../../org/swerverobotics/library/ClassFactory.html#createAdaFruitBNO055IMU-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.I2cDevice-org.swerverobotics.library.interfaces.IBNO055IMU.Parameters-"><code>createAdaFruitBNO055IMU(OpMode, I2cDevice, IBNO055IMU.Parameters)</code></a></dd>
 </dl>
 </li>
 </ul>
@@ -317,6 +322,28 @@ extends java.lang.Object</pre>
 <li class="blockList">
 <h4>createAdaFruitBNO055IMU</h4>
 <pre>public static&nbsp;<a href="../../../org/swerverobotics/library/interfaces/IBNO055IMU.html" title="interface in org.swerverobotics.library.interfaces">IBNO055IMU</a>&nbsp;createAdaFruitBNO055IMU(I2cDevice&nbsp;i2cDevice,
+                                                 <a href="../../../org/swerverobotics/library/interfaces/IBNO055IMU.Parameters.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Parameters</a>&nbsp;parameters)</pre>
+<div class="block">Instantiates a driver object for an AdaFruit BNO055 sensor which resides at the indicated I2cDevice using
+ the provided configuration parameters. This creation method only functions in a SynchronousOpMode</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>i2cDevice</code> - the robot controller runtime object representing the sensor</dd>
+<dd><code>parameters</code> - the parameters with which the sensor should be initialized</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the interface to the instantiated sensor object.</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../org/swerverobotics/library/ClassFactory.html#createAdaFruitBNO055IMU-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.I2cDevice-org.swerverobotics.library.interfaces.IBNO055IMU.Parameters-"><code>createAdaFruitBNO055IMU(OpMode, I2cDevice, IBNO055IMU.Parameters)</code></a></dd>
+</dl>
+</li>
+</ul>
+<a name="createAdaFruitBNO055IMU-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.I2cDevice-org.swerverobotics.library.interfaces.IBNO055IMU.Parameters-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>createAdaFruitBNO055IMU</h4>
+<pre>public static&nbsp;<a href="../../../org/swerverobotics/library/interfaces/IBNO055IMU.html" title="interface in org.swerverobotics.library.interfaces">IBNO055IMU</a>&nbsp;createAdaFruitBNO055IMU(OpMode&nbsp;context,
+                                                 I2cDevice&nbsp;i2cDevice,
                                                  <a href="../../../org/swerverobotics/library/interfaces/IBNO055IMU.Parameters.html" title="class in org.swerverobotics.library.interfaces">IBNO055IMU.Parameters</a>&nbsp;parameters)</pre>
 <div class="block">Instantiates a driver object for an AdaFruit BNO055 sensor which resides at the indicated I2cDevice using
  the provided configuration parameters.
@@ -342,6 +369,7 @@ extends java.lang.Object</pre>
  where they will automatically be applied.</p></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>context</code> - the OpMode within which this creation is taking place</dd>
 <dd><code>i2cDevice</code> - the robot controller runtime object representing the sensor</dd>
 <dd><code>parameters</code> - the parameters with which the sensor should be initialized</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -349,59 +377,65 @@ extends java.lang.Object</pre>
                       supports the II2cDeviceClientUser interface, which can be useful
                       for debugging.</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../org/swerverobotics/library/ClassFactory.html#createAdaFruitBNO055IMU-com.qualcomm.robotcore.hardware.I2cDevice-"><code>createAdaFruitBNO055IMU(I2cDevice)</code></a></dd>
+<dd><a href="../../../org/swerverobotics/library/ClassFactory.html#createAdaFruitBNO055IMU-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.I2cDevice-"><code>createAdaFruitBNO055IMU(OpMode, I2cDevice)</code></a></dd>
 </dl>
 </li>
 </ul>
-<a name="createHiTechnicColorSensor-com.qualcomm.robotcore.hardware.I2cDevice-">
+<a name="createHiTechnicColorSensor-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.I2cDevice-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>createHiTechnicColorSensor</h4>
-<pre>public static&nbsp;ColorSensor&nbsp;createHiTechnicColorSensor(I2cDevice&nbsp;i2cDevice)</pre>
+<pre>public static&nbsp;ColorSensor&nbsp;createHiTechnicColorSensor(OpMode&nbsp;context,
+                                                     I2cDevice&nbsp;i2cDevice)</pre>
 <div class="block">Creates a driver ColorSensor object for an I2cDevice that represents a
  <a href="http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NCO1038">HiTechnic
  color sensor</a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>context</code> - the OpMode within which the creation is taking place</dd>
 <dd><code>i2cDevice</code> - the color sensor device</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a ColorSensor object connected to the device</dd>
 </dl>
 </li>
 </ul>
-<a name="createHiTechnicColorSensor-org.swerverobotics.library.internal.II2cDevice-">
+<a name="createHiTechnicColorSensor-com.qualcomm.robotcore.eventloop.opmode.OpMode-org.swerverobotics.library.internal.II2cDevice-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>createHiTechnicColorSensor</h4>
-<pre>public static&nbsp;ColorSensor&nbsp;createHiTechnicColorSensor(II2cDevice&nbsp;ii2cDevice)</pre>
+<pre>public static&nbsp;ColorSensor&nbsp;createHiTechnicColorSensor(OpMode&nbsp;context,
+                                                     II2cDevice&nbsp;ii2cDevice)</pre>
 <div class="block">Creates a driver ColorSensor object for an I2cDevice that represents a
  <a href="http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NCO1038">HiTechnic
  color sensor</a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>context</code> - the OpMode within which the creation is taking place</dd>
 <dd><code>ii2cDevice</code> - the color sensor device</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>a ColorSensor object connected to the device</dd>
 </dl>
 </li>
 </ul>
-<a name="createHiTechnicColorSensor-com.qualcomm.robotcore.hardware.I2cController-int-">
+<a name="createHiTechnicColorSensor-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.I2cController-int-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>createHiTechnicColorSensor</h4>
-<pre>public static&nbsp;ColorSensor&nbsp;createHiTechnicColorSensor(I2cController&nbsp;controller,
+<pre>public static&nbsp;ColorSensor&nbsp;createHiTechnicColorSensor(OpMode&nbsp;context,
+                                                     I2cController&nbsp;controller,
                                                      int&nbsp;port)</pre>
 <div class="block">Creates a driver ColorSensor object from an controller and port specification that represents a
  <a href="http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NCO1038">HiTechnic
  color sensor</a>.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>context</code> - the OpMode within which the creation is taking place</dd>
 <dd><code>controller</code> - the Core Device Legacy Module controller to which the device is attached</dd>
 <dd><code>port</code> - the port on the controller that the device attaches to</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -443,63 +477,53 @@ extends java.lang.Object</pre>
 </dl>
 </li>
 </ul>
-<a name="createI2cDeviceClient-com.qualcomm.robotcore.hardware.I2cDevice-int-">
+<a name="createI2cDeviceClient-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.I2cDevice-int-boolean-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>createI2cDeviceClient</h4>
-<pre>public static&nbsp;<a href="../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a>&nbsp;createI2cDeviceClient(I2cDevice&nbsp;i2cDevice,
-                                                     int&nbsp;i2cAddr8Bit)</pre>
-<div class="block">Create a new II2cDeviceClient on an I2cDevice instance.</div>
+<pre>public static&nbsp;<a href="../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a>&nbsp;createI2cDeviceClient(OpMode&nbsp;context,
+                                                     I2cDevice&nbsp;i2cDevice,
+                                                     int&nbsp;i2cAddr8Bit,
+                                                     boolean&nbsp;closeOnOpModeStop)</pre>
+<div class="block">Create a new II2cDeviceClient on an I2cDevice instance. The client is initially disarmed,
+ and must be armed before use.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>context</code> - the OpMode within which the creation is taking place</dd>
 <dd><code>i2cDevice</code> - the II2cDevice to wrap</dd>
 <dd><code>i2cAddr8Bit</code> - the I2C address at which the client is to communicate</dd>
+<dd><code>closeOnOpModeStop</code> - if true, then when the OpMode stops, the client will automatically close</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the newly instantiated I2c device client</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#arm--"><code>II2cDeviceClient.arm()</code></a></dd>
 </dl>
 </li>
 </ul>
-<a name="createI2cDeviceClient-org.swerverobotics.library.internal.II2cDevice-int-">
-<!--   -->
-</a>
-<ul class="blockList">
-<li class="blockList">
-<h4>createI2cDeviceClient</h4>
-<pre>public static&nbsp;<a href="../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a>&nbsp;createI2cDeviceClient(II2cDevice&nbsp;i2cDevice,
-                                                     int&nbsp;i2cAddr8Bit)</pre>
-<div class="block">Create a new II2cDeviceClient on an II2cDevice instance.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>i2cDevice</code> - the II2cDevice to wrap</dd>
-<dd><code>i2cAddr8Bit</code> - the I2C address at which the client is to communicate</dd>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>the newly instantiated I2c device client</dd>
-</dl>
-</li>
-</ul>
-<a name="createI2cDeviceClient-org.swerverobotics.library.internal.II2cDevice-int-boolean-org.swerverobotics.library.interfaces.IStopActionRegistrar-">
+<a name="createI2cDeviceClient-com.qualcomm.robotcore.eventloop.opmode.OpMode-org.swerverobotics.library.internal.II2cDevice-int-boolean-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>createI2cDeviceClient</h4>
-<pre>public static&nbsp;<a href="../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a>&nbsp;createI2cDeviceClient(II2cDevice&nbsp;i2cDevice,
+<pre>public static&nbsp;<a href="../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a>&nbsp;createI2cDeviceClient(OpMode&nbsp;context,
+                                                     II2cDevice&nbsp;i2cDevice,
                                                      int&nbsp;i2cAddr8Bit,
-                                                     boolean&nbsp;autoClose,
-                                                     <a href="../../../org/swerverobotics/library/interfaces/IStopActionRegistrar.html" title="interface in org.swerverobotics.library.interfaces">IStopActionRegistrar</a>&nbsp;registrar)</pre>
-<div class="block">Create a new II2cDeviceClient on an II2cDevice instance.</div>
+                                                     boolean&nbsp;closeOnOpModeStop)</pre>
+<div class="block">Create a new II2cDeviceClient on an II2cDevice instance. The client is initially
+ disarmed, and must be armed before use.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>context</code> - the OpMode within which the creation is taking place</dd>
 <dd><code>i2cDevice</code> - the II2cDevice to wrap</dd>
 <dd><code>i2cAddr8Bit</code> - the I2C address at which the client is to communicate</dd>
-<dd><code>autoClose</code> - whether the I2cDevice should register itself to auto-close on OpMode stop</dd>
-<dd><code>registrar</code> - the optional registrar with which to attempt auto closing, if requested. If null, then
-                              if we are on a synchronous thread, the contextual registrar is used. If both
-                              are absent, then no auto registration occurs.</dd>
+<dd><code>closeOnOpModeStop</code> - if true, then when the OpMode stops, the client will automatically close</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the newly instantiated I2c device client</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#arm--"><code>II2cDeviceClient.arm()</code></a></dd>
 </dl>
 </li>
 </ul>

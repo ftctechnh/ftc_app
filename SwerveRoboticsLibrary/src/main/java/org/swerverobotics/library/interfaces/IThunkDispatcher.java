@@ -16,7 +16,7 @@ public interface IThunkDispatcher
      * @param action the action to execute
      * @see SynchronousOpMode#getThreadThunker()
      */
-    void executeOnLoopThread(IAction action);
+    void executeOnLoopThread(Runnable action);
 
     /**
      * Executes the indicated action over on the loop() thread, but replace any
@@ -28,12 +28,12 @@ public interface IThunkDispatcher
      * @see #getNewSingletonKey()
      * @see SynchronousOpMode#getThreadThunker()
      */
-    void executeSingletonOnLoopThread(int singletonKey, IAction action);
+    void executeSingletonOnLoopThread(int singletonKey, Runnable action);
 
     /**
      * Returns a new singleton key
      * @return the new key
-     * @see #executeSingletonOnLoopThread(int, IAction)
+     * @see #executeSingletonOnLoopThread(int, Runnable)
      * @see SynchronousOpMode#getThreadThunker()
      */
     int getNewSingletonKey();

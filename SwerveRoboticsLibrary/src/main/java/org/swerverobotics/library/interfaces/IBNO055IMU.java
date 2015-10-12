@@ -1,14 +1,15 @@
 package org.swerverobotics.library.interfaces;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.I2cDevice;
 
 /**
  * Interface API to the Adafruit 9-DOF Absolute Orientation IMU Fusion Breakout - BNO055 sensor.
  * You can create an implementation of this interface for a given sensor using
- * {@link org.swerverobotics.library.ClassFactory#createAdaFruitBNO055IMU(I2cDevice) ClassFactory.createAdaFruitBNO055IMU()}.
+ * {@link org.swerverobotics.library.ClassFactory#createAdaFruitBNO055IMU(OpMode, I2cDevice) ClassFactory.createAdaFruitBNO055IMU()}.
  *
  * @see IAccelerationIntegrator
- * @see org.swerverobotics.library.ClassFactory#createAdaFruitBNO055IMU(I2cDevice)
+ * @see org.swerverobotics.library.ClassFactory#createAdaFruitBNO055IMU(OpMode, I2cDevice)
  * @see <a href="http://www.adafruit.com/products/2472">http://www.adafruit.com/products/2472</a>
  * @see <a href="http://www.bosch-sensortec.com/en/homepage/products_3/9_axis_sensors_5/ecompass_2/bno055_3/bno055_4">http://www.bosch-sensortec.com/en/homepage/products_3/9_axis_sensors_5/ecompass_2/bno055_3/bno055_4</a>
  */
@@ -19,10 +20,10 @@ public interface IBNO055IMU
     //----------------------------------------------------------------------------------------------
 
     /**
-     * Initialize the sensor using the indicated set of parameters.
-     * 
-     * Note that the execution of this method can take a fairly long while, possibly
-     * several tens of milliseconds.
+     * Initialize the sensor using the indicated set of parameters. Note that the execution of
+     * this method can take a fairly long while, possibly several tens of milliseconds.
+     *
+     * @param parameters    the parameters with which to initialize the IMU
      */
     void initialize(Parameters parameters);
 
@@ -196,6 +197,7 @@ public interface IBNO055IMU
 
     /**
      * Returns the current status of the system.
+     * @return the current status of the system
      * 
      * See section 4.3.58 of the BNO055 specification.
      * @see #getSystemError()
@@ -217,6 +219,7 @@ public interface IBNO055IMU
    * regarding that error.
    * 
    * See section 4.3.58 of the BNO055 specification.
+   * @return the current error status
    * @see #getSystemStatus()
    *
    <table summary="System Error Codes">
@@ -269,19 +272,28 @@ public interface IBNO055IMU
 
     /**
      * Low level: read the byte starting at the indicated register
+     * @param register  the location from which to read the data
+     * @return          the data that was read
      */
     byte  read8(REGISTER register);
     /**
      * Low level: read data starting at the indicated register
+     * @param register  the location from which to read the data
+     * @param cb        the number of bytes to read
+     * @return          the data that was read
      */
-    byte[] read(REGISTER reg, int cb);
+    byte[] read(REGISTER register, int cb);
 
     /**
      * Low level: write a byte to the indicated register
+     * @param register  the location at which to write the data
+     * @param bVal      the data to write
      */
     void write8(REGISTER register, int bVal);
     /**
      * Low level: write data starting at the indicated register
+     * @param register  the location at which to write the data
+     * @param data      the data to write
      */
     void write (REGISTER register, byte[] data);
     

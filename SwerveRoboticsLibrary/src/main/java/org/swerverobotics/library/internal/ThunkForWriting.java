@@ -38,7 +38,7 @@ public abstract class ThunkForWriting extends Thunk
         this.doUntrackedWriteOperation(null);
         }
 
-    protected void doUntrackedWriteOperation(IInterruptableAction actionBeforeDispatch)
+    protected void doUntrackedWriteOperation(IInterruptableRunnable actionBeforeDispatch)
         {
         // Don't bother doing more work if this thread has been interrupted
         if (!Thread.currentThread().isInterrupted())
@@ -46,7 +46,7 @@ public abstract class ThunkForWriting extends Thunk
             try
                 {
                 if (actionBeforeDispatch != null)
-                    actionBeforeDispatch.doAction();
+                    actionBeforeDispatch.run();
 
                 this.dispatch();
                 }
@@ -71,17 +71,17 @@ public abstract class ThunkForWriting extends Thunk
 
     public void doWriteOperation(final IThunkedReadWriteListener writer)
         {
-        this.doUntrackedWriteOperation(new IInterruptableAction()
-        {
-        @Override public void doAction() throws InterruptedException
+        this.doUntrackedWriteOperation(new IInterruptableRunnable()
             {
-            // Let any writer know we are about to write
-            if (writer != null)
+            @Override public void run() throws InterruptedException
                 {
-                ThunkForWriting.this.addActionKey(writer.getListenerWriteThunkKey());
-                writer.enterWriteOperation();
+                // Let any writer know we are about to write
+                if (writer != null)
+                    {
+                    ThunkForWriting.this.addActionKey(writer.getListenerWriteThunkKey());
+                    writer.enterWriteOperation();
+                    }
                 }
-            }
-        });
+            });
         }
     }

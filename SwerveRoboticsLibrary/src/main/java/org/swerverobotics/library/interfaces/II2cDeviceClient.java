@@ -1,7 +1,6 @@
 package org.swerverobotics.library.interfaces;
 
 import com.qualcomm.robotcore.hardware.*;
-import org.swerverobotics.library.*;
 
 /**
  * II2cDeviceClient is the public interface to a utility class that makes it easier to
@@ -192,7 +191,7 @@ public interface II2cDeviceClient extends HardwareDevice
      * @param action the action to execute
      * @see #executeFunctionWhileLocked(IFunc)
      */
-    void executeActionWhileLocked(IAction action);
+    void executeActionWhileLocked(Runnable action);
 
     /**
      * Executes the indicated function while holding the concurrency lock on the object
@@ -201,7 +200,7 @@ public interface II2cDeviceClient extends HardwareDevice
      * @param function      the function to execute
      * @param <T>           the type of the data returned from the function
      * @return              the datum value returned from the function
-     * @see #executeActionWhileLocked(IAction)
+     * @see #executeActionWhileLocked(Runnable)
      */
     <T> T executeFunctionWhileLocked(IFunc<T> function);
 
@@ -266,15 +265,9 @@ public interface II2cDeviceClient extends HardwareDevice
          * otherwise might not support for this heartbeat form may make use of
          * worker threads.
          *
-         * @see #explicitReadPriority
          * @see #executeFunctionWhileLocked(IFunc)
          */
         public ReadWindow   heartbeatReadWindow = null;
-
-        /** Advanced: if a read on a separate thread is in fact needed, use this thread priority
-         * @see #heartbeatReadWindow
-         */
-        public int          explicitReadPriority = Math.min(Thread.MAX_PRIORITY, Thread.NORM_PRIORITY+1);
         }
 
     //----------------------------------------------------------------------------------------------
@@ -321,8 +314,34 @@ public interface II2cDeviceClient extends HardwareDevice
     void setLoggingTag(String loggingTag);
 
     /**
+     * Arms the client for operation. This involves registering for callbacks with
+     * the underlying I2cDevice. Only one client of an I2cDevice may register for callbacks
+     * at any given time; if multiple clients exist, they must be coordinated so as to use
+     * the I2cDevice sequentially. This method is idempotent.
+     * @see #disarm()
+     * @see #isArmed()
+     */
+    void arm();
+
+    /**
+     * Answers as to whether this I2cDeviceClient is currently armed.
+     * @return whether the client is currently armed
+     * @see #arm()
+     */
+    boolean isArmed();
+
+    /**
+     * Disarms the client if it is currently armed. This method is idempotent.
+     * @see #arm()
+     */
+    void disarm();
+
+    /**
      * Close down and disable this device. Once this is done, the object instance cannot
-     * support further read() or write() calls.
+     * support further read() or write() calls. Note that calling close() here does NOT
+     * also close() the underlying I2cDevice: we here are a *client* of the I2cDevice, not
+     * its owner. If your I2cDevice has a non-trivial close() semantic, you are yourself
+     * responsible for calling that method at an appropriate time.
      */
     void close();
 
@@ -430,6 +449,10 @@ public interface II2cDeviceClient extends HardwareDevice
 
         /**
          * Create a new register window with the indicated starting register and register count
+         *
+         * @param iregFirst the index of the first register to read
+         * @param creg      the number of registers to read
+         * @param readMode  whether to repeat-read or read only once
          */
         public ReadWindow(int iregFirst, int creg, READ_MODE readMode)
             {
@@ -443,6 +466,7 @@ public interface II2cDeviceClient extends HardwareDevice
 
         /**
          * Returns a copy of this window but with the {@link #readIssued} flag clear
+         * @return a fresh readable copy of the window
          */
         public ReadWindow freshCopy()
             {
@@ -474,6 +498,7 @@ public interface II2cDeviceClient extends HardwareDevice
          *
          * @param him   the window we wish to see whether we contain
          * @return      whether or not we contain the window
+         * @see #contains(int, int)
          */
         public boolean contains(ReadWindow him)
             {

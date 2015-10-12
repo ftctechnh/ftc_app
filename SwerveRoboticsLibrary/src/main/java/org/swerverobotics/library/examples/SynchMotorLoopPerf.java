@@ -10,7 +10,7 @@ import org.swerverobotics.library.interfaces.*;
  * mode switching on a motor controller. Each main loop cycle does both
  * a read and a write to the motor.
  */
-@TeleOp(name="Motor Perf", group="Swerve Examples")
+@TeleOp(name="Motor Perf (sync)", group="Swerve Examples")
 @Disabled
 public class SynchMotorLoopPerf extends SynchronousOpMode
     {
@@ -22,14 +22,6 @@ public class SynchMotorLoopPerf extends SynchronousOpMode
 
     public SynchMotorLoopPerf()
         {
-        // Setting this flag will (for now; we may remove this later, or maybe change it to
-        // a default, or ... we don't know yet :-) enable an alternate implementation of the legacy
-        // motor controller, one built on our robust I2cDeviceClient instead of hand-rolling the 
-        // I2C logic as is done in the robot controller runtime's ModernRoboticsNxtDcMotorController
-        // implementation. If you're poking around our source code here, you can find that 
-        // in internal\LegacyDcMotorControllerOnI2cDevice if you want to have a look.
-        //
-        // this.useExperimentalThunking = true;
         }
     
     public @Override void main() throws InterruptedException

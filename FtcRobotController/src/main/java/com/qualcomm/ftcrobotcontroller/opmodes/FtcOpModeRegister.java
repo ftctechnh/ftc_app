@@ -41,11 +41,11 @@ import org.swerverobotics.library.internal.AnnotatedOpModeRegistrar;
  */
 public class FtcOpModeRegister implements OpModeRegister 
     {
-    /**
+  /**
      * The Op Mode Manager will call this method when it wants a list of all available op modes.
      * OpModes which are registered during this call will form the contents of the OpMode
      * list on the driver station.
-     *
+   *
      * There are two ways you can register an OpMode.
      *
      * 1)   Manually, by calling manager.register(displayName, class) here, where
@@ -62,7 +62,7 @@ public class FtcOpModeRegister implements OpModeRegister
      * @see org.swerverobotics.library.interfaces.Disabled
      * @see org.swerverobotics.library.interfaces.OpModeRegistrar
      * @see org.swerverobotics.library.examples.SynchTeleOp
-     */
+   */
   public void register(OpModeManager manager) 
     {
     AnnotatedOpModeRegistrar.register(manager);
@@ -71,16 +71,20 @@ public class FtcOpModeRegister implements OpModeRegister
      * Uncomment any of the following lines if you want to register an op mode,
      * or do that registration in a static method annotated as @OpModeRegistrar.
      */
+
     //manager.register("NullOp", NullOp.class);
+
+    //manager.register("MatrixK9TeleOp", MatrixK9TeleOp.class);
+    //manager.register("K9TeleOp", K9TeleOp.class);
+    //manager.register ("PushBotAuto", PushBotAuto.class);
+    //manager.register ("PushBotManual", PushBotManual.class);
 
     //manager.register("K9TeleOp", K9TeleOp.class);
     //manager.register ("PushBotAuto", PushBotAuto.class);
     //manager.register ("PushBotManual", PushBotManual.class);
 
     //manager.register("AdafruitRGBExample", AdafruitRGBExample.class);
-    //manager.register("MRRGBExample", MRRGBExample.class);
     //manager.register("ColorSensorDriver", ColorSensorDriver.class);
-    //manager.register("HTRGBExample", HTRGBExample.class);
 
     //manager.register("IrSeekerOp", IrSeekerOp.class);
     //manager.register("CompassCalibration", CompassCalibration.class);
