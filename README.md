@@ -119,7 +119,6 @@ repository from FTC HQ; you don't need both. While we do tag major milestones in
 and 'release' them, we try to keep the master branch always stable and fully functional, so you
 could reasonably sync to the latest available if you wished. Alternately, instead of forking
 or cloning, you can download a full copy of the source in .zip form from one of our releases.
-
 If you have previously forked the FTC HQ tree from https://github.com/ftctechnh/ftc_app and you
 are moderately git-savvy, you can easily upgrade to the Swerve Library by adding a new remote 
 of https://github.com/SwerveRobotics/ftc_app to your git tree and initiating a pull from that remote.
