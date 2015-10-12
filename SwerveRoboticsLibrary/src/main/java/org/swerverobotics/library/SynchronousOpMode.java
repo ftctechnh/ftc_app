@@ -825,7 +825,13 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     @Override public final void init_loop()
         {
         this.preInitLoopHook();
-        ;
+
+        // Make waitOneFullHardwareCycle work before start is called
+        synchronized (this.loopLock)
+            {
+            this.loopLock.notifyAll();
+            }
+
         this.postInitLoopHook();
         }
 
