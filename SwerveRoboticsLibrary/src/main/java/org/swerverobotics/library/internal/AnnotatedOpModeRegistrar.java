@@ -192,9 +192,10 @@ public class AnnotatedOpModeRegistrar
         // This will, nicely, have duplicates removed. But it might contain methods
         // we can't actually invoke, so beware.
         Set<Method> registrarMethods = new HashSet<Method>();
-        Set<Method> onRobotStartMethods = new HashSet<Method>();
+        Set<Method> onRobotRunningMethods = new HashSet<Method>();
+        Set<Method> onRobotStartupFailureMethods = new HashSet<Method>();
 
-        findAnnotatedStaticMethodsOfInterest(registrarMethods, onRobotStartMethods);
+        findAnnotatedStaticMethodsOfInterest(registrarMethods, onRobotRunningMethods, onRobotStartupFailureMethods);
 
         // Call the opmode registration methods now
         AnnotationOpModeManager manager = new AnnotationOpModeManager();
@@ -214,7 +215,7 @@ public class AnnotatedOpModeRegistrar
             }
 
         // Remember the robot start methods for later
-        RobotStateTransitionNotifier.setOnRobotRunningMethods(context, onRobotStartMethods);
+        RobotStateTransitionNotifier.setStateTransitionCallbacks(context, onRobotRunningMethods, onRobotStartupFailureMethods);
         }
 
     private int getParameterCount(Method method)
@@ -223,7 +224,7 @@ public class AnnotatedOpModeRegistrar
         return parameters.length;
         }
 
-    private void findAnnotatedStaticMethodsOfInterest(Set<Method> registrarMethods, Set<Method> onRobotRunningMethods)
+    private void findAnnotatedStaticMethodsOfInterest(Set<Method> registrarMethods, Set<Method> onRobotRunningMethods, Set<Method> onRobotStartupFailureMethods)
         {
         List<Class> allClasses = findAllClasses();
         for (Class clazz : allClasses)
@@ -231,7 +232,6 @@ public class AnnotatedOpModeRegistrar
             List<Method> methods = Util.getDeclaredMethodsIncludingSuper(clazz);
             for (Method method : methods)
                 {
-                // Filter on modifiers.
                 int requiredModifiers   = Modifier.STATIC | Modifier.PUBLIC;
                 int prohibitedModifiers = Modifier.ABSTRACT;
                 if (!((method.getModifiers() & requiredModifiers) == requiredModifiers && (method.getModifiers() & prohibitedModifiers) == 0))
@@ -241,6 +241,7 @@ public class AnnotatedOpModeRegistrar
 
                 if (method.isAnnotationPresent(OpModeRegistrar.class))
                     {
+                    // the 1-parameter version is legacy
                     if (getParameterCount(method)==1 || getParameterCount(method)==2)
                         registrarMethods.add(method);
                     }
@@ -249,6 +250,12 @@ public class AnnotatedOpModeRegistrar
                     {
                     if (getParameterCount(method)==1)
                         onRobotRunningMethods.add(method);
+                    }
+
+                if (method.isAnnotationPresent(OnRobotStartupFailure.class))
+                    {
+                    if (getParameterCount(method)==1)
+                        onRobotStartupFailureMethods.add(method);
                     }
                 }
             }

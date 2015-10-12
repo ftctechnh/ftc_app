@@ -51,7 +51,7 @@ public class MyRobotControllerAdministration
      * @param manager   the object through which registrations are effected
      */
     @OpModeRegistrar
-    public static void RegisterMyOpModes(Context context, IOpModeManager manager)
+    public static void registerMyOpModes(Context context, IOpModeManager manager)
         {
         // As an example, we here register some examples from the Swerve library
         // and one of the FTC HQ example opmodes. You'll probably want to change that.
@@ -71,11 +71,32 @@ public class MyRobotControllerAdministration
      * @param context   the application context of the robot controller application. Useful for
      *                  interacting with other parts of the Android system, such creating a
      *                  MediaPlayer.
+     * @see OnRobotRunning
+     * @see OnRobotStartupFailure
+     * @see #playSoundOnRobotStartupFailure(Context)
      */
     @OnRobotRunning
-    public static void PlaySoundOnRobotRunning(Context context)
+    public static void playSoundOnRobotRunning(Context context)
         {
         MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.nxtstartup);
+        mediaPlayer.start();
+        }
+
+    /**
+     * Any public static method annotated with {@link OnRobotRunning} is invoked when the robot
+     * object in the robot controller application fails to enter the running state during
+     * an attempt to do so. A common cause of such failures is a mismatch between the robot
+     * configuration file and the devices currently attached to the robot.
+     *
+     * @param context   the application context of the robot controller application. Useful for
+     *                  interacting with other parts of the Android system, such creating a
+     *                  MediaPlayer.
+     * @see #playSoundOnRobotRunning(Context)
+     */
+    @OnRobotStartupFailure
+    public static void playSoundOnRobotStartupFailure(Context context)
+        {
+        MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.chord);
         mediaPlayer.start();
         }
     }
