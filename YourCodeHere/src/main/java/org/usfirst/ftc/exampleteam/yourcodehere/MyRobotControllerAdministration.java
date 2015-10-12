@@ -42,9 +42,9 @@ public class MyRobotControllerAdministration
     /**
      * Registers any library OpModes that you wish to display. Change this code to suit
      * your needs: the specific OpModes that are registered as this code comes from
-     * the factory are probably not whur own OpModes, though you could register them
+     * the factory are probably not what you want. For your own OpModes, though you could register them
      * here, it is preferable to annotate them in their own source with {@link TeleOp}
-     * or {@link Autonomous} annotations, as appropriate
+     * or {@link Autonomous} annotations, as appropriate.
      *
      * @param context   the application context of the robot controller application. Not often
      *                  actually used in OpMode registrar functions.

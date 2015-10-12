@@ -141,7 +141,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor implements IThunkedRea
         //
         // But this is better:
         //
-        return this.target instanceof com.qualcomm.hardware.ModernRoboticsNxtIrSeekerSensor;
+        return this.target instanceof com.qualcomm.hardware.HiTechnicNxtIrSeekerSensor;
         }
     private boolean isOffline()
         {
