@@ -32,7 +32,7 @@ public class mecanumWheels extends OpMode {
     public void loop(){
         float strafeDirection = -gamepad1.left_stick_x;
         float throttle1 = -gamepad1.left_stick_y;
-        float throttle2 = -gamepad1.right_stick_y;
+        float throttle2 = gamepad1.right_stick_y;
         float direction = -gamepad1.right_stick_x;
 
         strafeDirection = Range.clip(strafeDirection, -1, 1);
