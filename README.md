@@ -3,8 +3,9 @@
 Welcome to the Swerve Robotics library for the FTC robot controller runtime.
 The purpose of our library is to augment the robot controller runtime library from FTC HQ
 in order to simplify programming for FTC teams. The central aim here is not to change what's there,
-just to make it better. You might also want to check out our related project, the Swerve Robotics Tools
-Suite, also [here](https://github.com/SwerveRobotics/tools) on GitHub.
+just to make it better. Please consult the [GitHub release notes](https://github.com/SwerveRobotics/ftc_app/releases) 
+for details regarding a given release. You might also want to check out our related project, the 
+Swerve Robotics Tools Suite, also [here](https://github.com/SwerveRobotics/tools) on GitHub. 
 
 Notable features of the Swerve Robotics FTC Library include:
 
