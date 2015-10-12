@@ -1,5 +1,7 @@
 package org.swerverobotics.library.internal;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
@@ -329,19 +331,25 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
 
     @Override synchronized public boolean onUserOpModeStop()
         {
+        Log.d(SynchronousOpMode.LOGGING_TAG, "Easy: auto-stopping...");
         if (this.isArmed)
             {
             this.stopMotors();  // mirror StopRobotOpMode
             this.disarm();
             }
+        Log.d(SynchronousOpMode.LOGGING_TAG, "Easy: ... done");
         return true;    // unregister us
         }
 
     @Override synchronized public boolean onRobotShutdown()
         {
+        Log.d(SynchronousOpMode.LOGGING_TAG, "Easy: auto-closing...");
+
         // We actually shouldn't be here by now, having received a onUserOpModeStop()
         // after which we should have been unregistered. But we close down anyway.
         this.close();
+
+        Log.d(SynchronousOpMode.LOGGING_TAG, "Easy: ... done");
         return true;    // unregister us
         }
 
