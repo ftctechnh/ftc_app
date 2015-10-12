@@ -14,6 +14,9 @@ import java.lang.annotation.*;
  * the method, call opModeManager.register() methods, just as you would had you been
  * registering methods by putting your code inside the FtcOpModeRegister.register()
  * method as the robot controller runtime suggests.</p>
+ *
+ * @see OnRobotRunning
+ * @see OnRobotStartupFailure
  */
 @Documented
 @Target(ElementType.METHOD)

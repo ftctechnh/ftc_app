@@ -307,6 +307,12 @@ extends java.lang.Object</pre>
                   int&nbsp;creg,
                   <a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.READ_MODE.html" title="enum in org.swerverobotics.library.interfaces">II2cDeviceClient.READ_MODE</a>&nbsp;readMode)</pre>
 <div class="block">Create a new register window with the indicated starting register and register count</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>iregFirst</code> - the index of the first register to read</dd>
+<dd><code>creg</code> - the number of registers to read</dd>
+<dd><code>readMode</code> - whether to repeat-read or read only once</dd>
+</dl>
 </li>
 </ul>
 </li>
@@ -420,6 +426,10 @@ extends java.lang.Object</pre>
 <h4>freshCopy</h4>
 <pre>public&nbsp;<a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a>&nbsp;freshCopy()</pre>
 <div class="block">Returns a copy of this window but with the <a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#readIssued"><code>readIssued</code></a> flag clear</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>a fresh readable copy of the window</dd>
+</dl>
 </li>
 </ul>
 <a name="sameAsIncludingMode-org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow-">
@@ -452,6 +462,8 @@ extends java.lang.Object</pre>
 <dd><code>him</code> - the window we wish to see whether we contain</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>whether or not we contain the window</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#contains-int-int-"><code>contains(int, int)</code></a></dd>
 </dl>
 </li>
 </ul>

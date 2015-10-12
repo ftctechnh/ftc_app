@@ -40,7 +40,7 @@ public interface IAccelerationIntegrator
 
     /**
      * Step the algorithm as a result of the stimulus of new acceleration data.
-     * @param acceleration
+     * @param acceleration  the acceleration as just reported by the IMU
      */
     void update(Acceleration acceleration);
     }

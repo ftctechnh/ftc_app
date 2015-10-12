@@ -47,7 +47,7 @@ var activeTableTab = "activeTableTab";
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../org/swerverobotics/library/interfaces/IStopActionRegistrar.html" title="interface in org.swerverobotics.library.interfaces"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../org/swerverobotics/library/interfaces/IOpModeManager.html" title="interface in org.swerverobotics.library.interfaces"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li><a href="../../../../org/swerverobotics/library/interfaces/MagneticFlux.html" title="class in org.swerverobotics.library.interfaces"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
@@ -130,14 +130,14 @@ var activeTableTab = "activeTableTab";
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IThunkDispatcher.html#executeOnLoopThread-org.swerverobotics.library.interfaces.IAction-">executeOnLoopThread</a></span>(<a href="../../../../org/swerverobotics/library/interfaces/IAction.html" title="interface in org.swerverobotics.library.interfaces">IAction</a>&nbsp;action)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IThunkDispatcher.html#executeOnLoopThread-java.lang.Runnable-">executeOnLoopThread</a></span>(java.lang.Runnable&nbsp;action)</code>
 <div class="block">Executes the indicated action over on the loop() thread.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IThunkDispatcher.html#executeSingletonOnLoopThread-int-org.swerverobotics.library.interfaces.IAction-">executeSingletonOnLoopThread</a></span>(int&nbsp;singletonKey,
-                            <a href="../../../../org/swerverobotics/library/interfaces/IAction.html" title="interface in org.swerverobotics.library.interfaces">IAction</a>&nbsp;action)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/IThunkDispatcher.html#executeSingletonOnLoopThread-int-java.lang.Runnable-">executeSingletonOnLoopThread</a></span>(int&nbsp;singletonKey,
+                            java.lang.Runnable&nbsp;action)</code>
 <div class="block">Executes the indicated action over on the loop() thread, but replace any
  pending singleton already there who was queued using the same singleton key.</div>
 </td>
@@ -163,13 +163,13 @@ var activeTableTab = "activeTableTab";
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="executeOnLoopThread-org.swerverobotics.library.interfaces.IAction-">
+<a name="executeOnLoopThread-java.lang.Runnable-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>executeOnLoopThread</h4>
-<pre>void&nbsp;executeOnLoopThread(<a href="../../../../org/swerverobotics/library/interfaces/IAction.html" title="interface in org.swerverobotics.library.interfaces">IAction</a>&nbsp;action)</pre>
+<pre>void&nbsp;executeOnLoopThread(java.lang.Runnable&nbsp;action)</pre>
 <div class="block">Executes the indicated action over on the loop() thread.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -179,14 +179,14 @@ var activeTableTab = "activeTableTab";
 </dl>
 </li>
 </ul>
-<a name="executeSingletonOnLoopThread-int-org.swerverobotics.library.interfaces.IAction-">
+<a name="executeSingletonOnLoopThread-int-java.lang.Runnable-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>executeSingletonOnLoopThread</h4>
 <pre>void&nbsp;executeSingletonOnLoopThread(int&nbsp;singletonKey,
-                                  <a href="../../../../org/swerverobotics/library/interfaces/IAction.html" title="interface in org.swerverobotics.library.interfaces">IAction</a>&nbsp;action)</pre>
+                                  java.lang.Runnable&nbsp;action)</pre>
 <div class="block">Executes the indicated action over on the loop() thread, but replace any
  pending singleton already there who was queued using the same singleton key.</div>
 <dl>
@@ -211,7 +211,7 @@ var activeTableTab = "activeTableTab";
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>the new key</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../org/swerverobotics/library/interfaces/IThunkDispatcher.html#executeSingletonOnLoopThread-int-org.swerverobotics.library.interfaces.IAction-"><code>executeSingletonOnLoopThread(int, IAction)</code></a>, 
+<dd><a href="../../../../org/swerverobotics/library/interfaces/IThunkDispatcher.html#executeSingletonOnLoopThread-int-java.lang.Runnable-"><code>executeSingletonOnLoopThread(int, Runnable)</code></a>, 
 <a href="../../../../org/swerverobotics/library/SynchronousOpMode.html#getThreadThunker--"><code>SynchronousOpMode.getThreadThunker()</code></a></dd>
 </dl>
 </li>
@@ -243,7 +243,7 @@ var activeTableTab = "activeTableTab";
 </div>
 <div class="subNav">
 <ul class="navList">
-<li><a href="../../../../org/swerverobotics/library/interfaces/IStopActionRegistrar.html" title="interface in org.swerverobotics.library.interfaces"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
+<li><a href="../../../../org/swerverobotics/library/interfaces/IOpModeManager.html" title="interface in org.swerverobotics.library.interfaces"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li><a href="../../../../org/swerverobotics/library/interfaces/MagneticFlux.html" title="class in org.swerverobotics.library.interfaces"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
