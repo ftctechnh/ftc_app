@@ -7,7 +7,7 @@ import org.swerverobotics.library.examples.*;
 import com.qualcomm.ftcrobotcontroller.opmodes.*;
 
 /**
- * MyRobotControllerAdministration is a container for 'administrative' methods that intereract
+ * MyRobotControllerAdministration is a container for 'administrative' methods that interact
  * with the Swerve library. You don't <em>have to</em> put your administrative methods in a separate
  * class as we do here, but it does help keep them neat and tidy. Administrative methods are
  * each tagged with a Java annotation that connotes and bestows their significance; see the
