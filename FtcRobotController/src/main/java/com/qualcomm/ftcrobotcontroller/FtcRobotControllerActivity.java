@@ -334,7 +334,7 @@ public class FtcRobotControllerActivity extends Activity {
     modernRoboticsFactory.setXmlInputStream(fis);
     factory = modernRoboticsFactory;
 
-    eventLoop = new FtcEventLoop(factory, new FtcOpModeRegister(), callback, this);
+    eventLoop = new SwerveFtcEventLoop(factory, new FtcOpModeRegister(), callback, this);
 
     controllerService.setCallback(callback);
     controllerService.setupRobot(eventLoop);
@@ -425,15 +425,15 @@ public class FtcRobotControllerActivity extends Activity {
             if (service == null)
                 return false;
 
-            Robot robot = robotOfFtcRobotControllerService(service);
+            Robot robot = Util.robotOfFtcRobotControllerService(service);
             if (robot == null)
                 return false;
 
-            EventLoopManager eventLoopManager = eventLoopManagerOfRobot(robot);
+            EventLoopManager eventLoopManager = Util.eventLoopManagerOfRobot(robot);
             if (eventLoopManager == null)
                 return false;
 
-            EventLoopManager.EventLoopMonitor monitor = monitorOfEventLoopManager(eventLoopManager);
+            EventLoopManager.EventLoopMonitor monitor = Util.monitorOfEventLoopManager(eventLoopManager);
             if (monitor == null)
                 return false;
 
@@ -446,7 +446,7 @@ public class FtcRobotControllerActivity extends Activity {
                 SwerveEventLoopMonitor newMonitor = new SwerveEventLoopMonitor(monitor);
                 eventLoopManager.setMonitor(newMonitor);
                 }
-            
+
             return true;
             }
 
@@ -458,25 +458,9 @@ public class FtcRobotControllerActivity extends Activity {
         public void onStateChange(RobotState newState)
             {
             this.prevMonitor.onStateChange(newState);
-            RobotStateTransitionNotifier.onEventLoopStateChange(newState);
+            RobotStateTransitionNotifier.onRobotStateChange(newState);
             }
 
-        //------------------------------------------------------------------------------------------
-        // Skullduggery
-        //------------------------------------------------------------------------------------------
-
-        public static Robot robotOfFtcRobotControllerService(FtcRobotControllerService service)
-            {
-            return Util.<Robot>getLocalPrivateObjectField(service, 2);
-            }
-        public static EventLoopManager eventLoopManagerOfRobot(Robot robot)
-            {
-            return Util.<EventLoopManager>getLocalPrivateObjectField(robot, 0);
-            }
-        public static EventLoopManager.EventLoopMonitor monitorOfEventLoopManager(EventLoopManager manager)
-            {
-            return Util.<EventLoopManager.EventLoopMonitor>getLocalPrivateObjectField(manager, 8);
-            }
         }
 
     class SwerveUpdateUIHook extends UpdateUI
@@ -527,6 +511,7 @@ public class FtcRobotControllerActivity extends Activity {
             public void robotUpdate(final String status)
                 {
                 super.robotUpdate(status);
+                RobotStateTransitionNotifier.onRobotUpdate(status);
 
                 // Make sure we get to see all the robot state transitions
                 if (!monitorInstalled)
