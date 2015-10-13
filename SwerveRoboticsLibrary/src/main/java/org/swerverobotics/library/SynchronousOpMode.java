@@ -457,7 +457,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
 
     private         Thread                  loopThread;
     private         Thread                  mainThread;
-    private final   Queue<Thread>           synchronousWorkerThreads = new ConcurrentLinkedQueue<Thread>();
+    private final   Collection<Thread>      synchronousWorkerThreads = new ConcurrentLinkedQueue<Thread>();
     private         RuntimeException        exceptionThrownOnMainThread;
     private final   AtomicReference<RuntimeException> firstExceptionThrownOnASynchronousWorkerThread = new AtomicReference<RuntimeException>();
     private final static int                msWaitForMainThreadTermination              = 250;
@@ -677,53 +677,31 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             }
         }
 
-    private void stopSynchronousThread(Thread thread, int msWait)
-    // Note: the thread might not EVER have been started, so may not have any 
-    // SynchronousThreadContext.
+    private void interruptSynchronousThreads()
         {
-        if (thread != null)
+        for (Thread thread : this.synchronousWorkerThreads)
             {
-            // Notify the thread that we wish it to stop what it's doing, clean up, and return.
             thread.interrupt();
-
-            // Wait a while until the thread is no longer alive. If he doesn't clear out
-            // in a reasonable amount of time, then just give up on him.
-            try
-                {
-                thread.join(msWait);
-                }
-            catch (InterruptedException e)
-                {
-                Util.handleCapturedInterrupt(e);
-                }
+            }
+        if (this.mainThread != null)
+            {
+            this.mainThread.interrupt();
             }
         }
 
-    private void stopSynchronousWorkerThreads(int msWait)
-    // Do the shutdown in parallel so we're not serially taking the timeout hits.
-    // We hope that will be a little faster.
+    private void waitForSynchronousWorkerThreads(int msWait) throws InterruptedException
         {
-        List<Thread> interruptedThreads = new LinkedList<Thread>();
-        //
-        for (;;)
+        for (Thread thread : this.synchronousWorkerThreads)
             {
-            Thread thread = this.synchronousWorkerThreads.poll();
-            if (null == thread)
-                break;
-            thread.interrupt();
-            interruptedThreads.add(thread);
+            thread.join(msWait);
             }
-        
-        for (Thread thread : interruptedThreads)
+        }
+
+    private void waitForMainThread(int msWait) throws InterruptedException
+        {
+        if (this.mainThread != null)
             {
-            try
-                {
-                thread.join(msWait);
-                }
-            catch (InterruptedException e)
-                {
-                Util.handleCapturedInterrupt(e);
-                }
+            this.mainThread.join(msWait);
             }
         }
 
@@ -981,11 +959,22 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             // Next time synchronous threads ask, yes, we do want to stop
             this.stopRequested = true;
 
-            // Clean up any worker threads
-            this.stopSynchronousWorkerThreads(this.msWaitForSynchronousWorkerThreadTermination);
+            try {
+                // Give all of our worker threads a heads up to get out of town
+                this.interruptSynchronousThreads();
 
-            // Notify the main() thread that we wish it to stop what it's doing, clean up, and return.
-            this.stopSynchronousThread(this.mainThread, this.msWaitForMainThreadTermination);
+                // Serially wait for these folk to pack up and leave
+                this.waitForSynchronousWorkerThreads(this.msWaitForSynchronousWorkerThreadTermination);
+                this.waitForMainThread(this.msWaitForMainThreadTermination);
+                }
+            catch (InterruptedException e)
+                {
+                // We were waiting for the threads to shutdown but then *we* got an interrupt
+                // while doing so. That's an entirely unexpected situation; it shouldn't happen
+                // architecturally in the robot controller app.
+                Log.e(LOGGING_TAG, String.format("unexpected interrupt: %s", Util.getStackTrace(e)));
+                throw SwerveRuntimeException.wrap(e);
+                }
 
             if (this.hardwareFactory != null)
                 {
