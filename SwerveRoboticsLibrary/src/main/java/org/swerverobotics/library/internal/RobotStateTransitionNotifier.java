@@ -56,6 +56,7 @@ public class RobotStateTransitionNotifier extends DcMotor implements DcMotorCont
     static       Context      applicationContext  = null;
     static       List<Method> onRobotRunningMethods = new LinkedList<Method>();
     static       List<Method> onRobotStartupFailureMethods = new LinkedList<Method>();
+    static       List<Runnable> onRobotUpdateActions = new LinkedList<Runnable>();
 
     public  final HardwareMap                           hardwareMap;
     private final List<IOpModeStateTransitionEvents>    registrants;
@@ -95,7 +96,7 @@ public class RobotStateTransitionNotifier extends DcMotor implements DcMotorCont
         }
 
     //----------------------------------------------------------------------------------------------
-    // State transitions
+    // Registration
     //----------------------------------------------------------------------------------------------
 
     synchronized void register(IOpModeStateTransitionEvents him)
@@ -114,6 +115,27 @@ public class RobotStateTransitionNotifier extends DcMotor implements DcMotorCont
             }
         return false;
         }
+
+    public synchronized static void setStateTransitionCallbacks(Context applicationContext, Collection<Method> onRunningMethods, Collection<Method> onStartupFailureMethods)
+        {
+        RobotStateTransitionNotifier.applicationContext  = applicationContext;
+        RobotStateTransitionNotifier.onRobotRunningMethods = new LinkedList<Method>(onRunningMethods);
+        RobotStateTransitionNotifier.onRobotStartupFailureMethods = new LinkedList<Method>(onStartupFailureMethods);
+        }
+
+    public synchronized static void registerRobotUpdateAction(Runnable runnable)
+        {
+        onRobotUpdateActions.add(runnable);
+        }
+
+    public synchronized static void unregisterRobotUpdateAction(Runnable runnable)
+        {
+        onRobotUpdateActions.remove(runnable);
+        }
+
+    //----------------------------------------------------------------------------------------------
+    // Notifications
+    //----------------------------------------------------------------------------------------------
 
     synchronized void onUserOpModeStop()
         {
@@ -147,13 +169,22 @@ public class RobotStateTransitionNotifier extends DcMotor implements DcMotorCont
             }
         }
 
+    public static synchronized void onRobotUpdate(final String status)
+        {
+        List<Runnable> copiedList = new LinkedList<Runnable>(onRobotUpdateActions);
+        for (Runnable runnable : copiedList)
+            {
+            runnable.run();
+            }
+        }
+
     /**
      * Called by the FtcRobotControllerActivity hooking infrastructure when the event loop
      * changes state.
      *
      * @param newState the new state into which the event loop is transitioning.
      */
-    public static synchronized void onEventLoopStateChange(RobotState newState)
+    public static synchronized void onRobotStateChange(RobotState newState)
         {
         Log.d(SynchronousOpMode.LOGGING_TAG, String.format("state xtion: state=%s", newState.toString()));
         switch (newState)
@@ -180,13 +211,6 @@ public class RobotStateTransitionNotifier extends DcMotor implements DcMotorCont
                     }
                 break;
             }
-        }
-
-    public static void setStateTransitionCallbacks(Context applicationContext, Collection<Method> onRunningMethods, Collection<Method> onStartupFailureMethods)
-        {
-        RobotStateTransitionNotifier.applicationContext  = applicationContext;
-        RobotStateTransitionNotifier.onRobotRunningMethods = new LinkedList<Method>(onRunningMethods);
-        RobotStateTransitionNotifier.onRobotStartupFailureMethods = new LinkedList<Method>(onStartupFailureMethods);
         }
 
     //----------------------------------------------------------------------------------------------

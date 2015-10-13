@@ -1,5 +1,10 @@
 package org.swerverobotics.library.internal;
 
+import com.qualcomm.ftccommon.FtcEventLoop;
+import com.qualcomm.ftccommon.FtcEventLoopHandler;
+import com.qualcomm.ftccommon.FtcRobotControllerService;
+import com.qualcomm.robotcore.eventloop.EventLoopManager;
+import com.qualcomm.robotcore.robot.Robot;
 import com.qualcomm.robotcore.util.*;
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.exceptions.*;
@@ -41,6 +46,27 @@ public class Util
         {
         // Log.d(SynchronousOpMode.TAG, "caught an thread interrupt, reinterrupting: " + e);
         Thread.currentThread().interrupt();
+        }
+
+    //------------------------------------------------------------------------------------------
+    // Skullduggery
+    //------------------------------------------------------------------------------------------
+
+    public static Robot robotOfFtcRobotControllerService(FtcRobotControllerService service)
+        {
+        return Util.<Robot>getPrivateObjectField(service, 2+7);
+        }
+    public static EventLoopManager eventLoopManagerOfRobot(Robot robot)
+        {
+        return Util.<EventLoopManager>getPrivateObjectField(robot, 0);
+        }
+    public static EventLoopManager.EventLoopMonitor monitorOfEventLoopManager(EventLoopManager manager)
+        {
+        return Util.<EventLoopManager.EventLoopMonitor>getPrivateObjectField(manager, 8);
+        }
+    public static FtcEventLoopHandler ftcEventLoopHandlerOfFtcEventLoop(FtcEventLoop ftcEventLoop)
+        {
+        return Util.<FtcEventLoopHandler>getPrivateObjectField(ftcEventLoop, 0);
         }
 
     //----------------------------------------------------------------------------------------------
