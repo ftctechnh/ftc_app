@@ -498,12 +498,6 @@ public class FtcRobotControllerActivity extends Activity {
         class CallbackHook extends UpdateUI.Callback
             {
             //--------------------------------------------------------------------------------------
-            // State
-            //--------------------------------------------------------------------------------------
-
-            boolean monitorInstalled = false;
-
-            //--------------------------------------------------------------------------------------
             // Operations
             //--------------------------------------------------------------------------------------
 
@@ -514,8 +508,7 @@ public class FtcRobotControllerActivity extends Activity {
                 RobotStateTransitionNotifier.onRobotUpdate(status);
 
                 // Make sure we get to see all the robot state transitions
-                if (!monitorInstalled)
-                    monitorInstalled = SwerveEventLoopMonitor.installIfNecessary(controllerService);
+                SwerveEventLoopMonitor.installIfNecessary(controllerService);
                 }
 
             @Override
