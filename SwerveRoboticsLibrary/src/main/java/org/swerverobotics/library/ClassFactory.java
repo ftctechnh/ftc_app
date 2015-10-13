@@ -188,8 +188,8 @@ public final class ClassFactory
      */
     public static II2cDevice createI2cDevice(I2cDevice i2cDevice)
         {
-        I2cController i2cController = Util.<I2cController>getPrivateObjectField(i2cDevice, 0);
-        int port                    = Util.getPrivateIntField(i2cDevice, 1);
+        I2cController i2cController = MemberUtil.i2cControllerOfI2cDevice(i2cDevice);
+        int port                    = MemberUtil.portOfI2cDevice(i2cDevice);
         return createI2cDevice(i2cController, port);
         }
 
