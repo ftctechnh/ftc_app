@@ -49,4 +49,14 @@ public class MemberUtil
         {
         return Util.getPrivateIntField(controller, 5);
         }
+
+    public static I2cController i2cControllerOfI2cDevice(I2cDevice i2cDevice)
+        {
+        return Util.<I2cController>getPrivateObjectField(i2cDevice, 0);
+        }
+
+    public static int portOfI2cDevice(I2cDevice i2cDevice)
+        {
+        return Util.getPrivateIntField(i2cDevice, 1);
+        }
     }
