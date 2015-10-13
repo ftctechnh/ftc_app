@@ -1,10 +1,5 @@
 package org.swerverobotics.library.internal;
 
-import com.qualcomm.ftccommon.FtcEventLoop;
-import com.qualcomm.ftccommon.FtcEventLoopHandler;
-import com.qualcomm.ftccommon.FtcRobotControllerService;
-import com.qualcomm.robotcore.eventloop.EventLoopManager;
-import com.qualcomm.robotcore.robot.Robot;
 import com.qualcomm.robotcore.util.*;
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.exceptions.*;
