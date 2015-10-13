@@ -39,16 +39,6 @@ public class Util
         }
 
     //----------------------------------------------------------------------------------------------
-    // Threading
-    //----------------------------------------------------------------------------------------------
-
-    static public void handleCapturedInterrupt(Exception e)
-        {
-        // Log.d(SynchronousOpMode.TAG, "caught an thread interrupt, reinterrupting: " + e);
-        Thread.currentThread().interrupt();
-        }
-
-    //----------------------------------------------------------------------------------------------
     // Private method access
     //
     // Ugh. We wish we didn't have to do this. But the definitions of some classes we need

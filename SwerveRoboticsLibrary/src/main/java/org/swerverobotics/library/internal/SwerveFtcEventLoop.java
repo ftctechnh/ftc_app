@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.robocol.Command;
 
+import org.swerverobotics.library.exceptions.SwerveRuntimeException;
+
 import java.util.concurrent.Semaphore;
 
 /**
@@ -45,7 +47,7 @@ public class SwerveFtcEventLoop extends FtcEventLoop
             }
         catch (InterruptedException e)
             {
-            Util.handleCapturedInterrupt(e);
+            SwerveRuntimeException.handleCapturedInterrupt(e);
             }
         super.processCommand(command);
         }

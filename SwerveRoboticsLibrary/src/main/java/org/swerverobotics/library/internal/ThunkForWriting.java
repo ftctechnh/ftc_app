@@ -50,16 +50,9 @@ public abstract class ThunkForWriting extends Thunk
 
                 this.dispatch();
                 }
-            catch (InterruptedException | RuntimeInterruptedException e)
+            catch (Exception e)
                 {
-                // Tell the current thread that he should shut down soon
-                Util.handleCapturedInterrupt(e);
-
-                // Since callers generally do reads as well as writes, and so
-                // must deal with the necessity we have in reads of throwing,
-                // we may as well throw here as well, as that will help shut
-                // things down sooner.
-                throw SwerveRuntimeException.wrap(e);
+                SwerveRuntimeException.handleCapturedException(e);
                 }
             }
         }

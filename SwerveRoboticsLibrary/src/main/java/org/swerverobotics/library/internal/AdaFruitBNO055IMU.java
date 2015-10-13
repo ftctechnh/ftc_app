@@ -716,7 +716,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
             }
         catch (InterruptedException e)
             {
-            Util.handleCapturedInterrupt(e);
+            SwerveRuntimeException.handleCapturedInterrupt(e);
             }
         }
 
@@ -733,7 +733,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
             }
         catch (InterruptedException e)
             {
-            Util.handleCapturedInterrupt(e);
+            SwerveRuntimeException.handleCapturedInterrupt(e);
             }
         }
 
