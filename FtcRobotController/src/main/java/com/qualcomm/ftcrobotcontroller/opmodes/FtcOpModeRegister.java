@@ -102,7 +102,7 @@ public class FtcOpModeRegister implements OpModeRegister {
         /*
          * Test Modes
          */
-        manager.register("TestOpMode", TestOpMode.class);
+        manager.register("TestOpMode", MainOpMode.class);
 
 
     }
