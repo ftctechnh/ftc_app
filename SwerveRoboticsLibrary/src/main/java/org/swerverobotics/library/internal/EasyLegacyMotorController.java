@@ -445,7 +445,7 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
     @Override public int getMotorCurrentPosition(int motor)
         {
         this.validateMotor(motor);
-        byte[] bytes = this.i2cDeviceClient.read(mpMotorRegMotorPower[motor], cbEncoder);
+        byte[] bytes = this.i2cDeviceClient.read(mpMotorRegCurrentEncoderValue[motor], cbEncoder);
         return TypeConversion.byteArrayToInt(bytes);
         }
     
