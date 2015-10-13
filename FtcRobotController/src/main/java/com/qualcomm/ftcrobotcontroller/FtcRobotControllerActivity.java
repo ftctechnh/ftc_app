@@ -425,15 +425,15 @@ public class FtcRobotControllerActivity extends Activity {
             if (service == null)
                 return false;
 
-            Robot robot = Util.robotOfFtcRobotControllerService(service);
+            Robot robot = MemberUtil.robotOfFtcRobotControllerService(service);
             if (robot == null)
                 return false;
 
-            EventLoopManager eventLoopManager = Util.eventLoopManagerOfRobot(robot);
+            EventLoopManager eventLoopManager = MemberUtil.eventLoopManagerOfRobot(robot);
             if (eventLoopManager == null)
                 return false;
 
-            EventLoopManager.EventLoopMonitor monitor = Util.monitorOfEventLoopManager(eventLoopManager);
+            EventLoopManager.EventLoopMonitor monitor = MemberUtil.monitorOfEventLoopManager(eventLoopManager);
             if (monitor == null)
                 return false;
 

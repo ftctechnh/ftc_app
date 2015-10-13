@@ -52,23 +52,6 @@ public class Util
     // Skullduggery
     //------------------------------------------------------------------------------------------
 
-    public static Robot robotOfFtcRobotControllerService(FtcRobotControllerService service)
-        {
-        return Util.<Robot>getPrivateObjectField(service, 2+7);
-        }
-    public static EventLoopManager eventLoopManagerOfRobot(Robot robot)
-        {
-        return Util.<EventLoopManager>getPrivateObjectField(robot, 0);
-        }
-    public static EventLoopManager.EventLoopMonitor monitorOfEventLoopManager(EventLoopManager manager)
-        {
-        return Util.<EventLoopManager.EventLoopMonitor>getPrivateObjectField(manager, 8);
-        }
-    public static FtcEventLoopHandler ftcEventLoopHandlerOfFtcEventLoop(FtcEventLoop ftcEventLoop)
-        {
-        return Util.<FtcEventLoopHandler>getPrivateObjectField(ftcEventLoop, 0);
-        }
-
     //----------------------------------------------------------------------------------------------
     // Private method access
     //
