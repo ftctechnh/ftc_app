@@ -79,10 +79,7 @@ public class MyRobotControllerAdministration
     @OnRobotRunning
     public static void playSoundOnRobotRunning(Context context)
         {
-        MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.nxtstartup);
-        mediaPlayer.start();
-        while (mediaPlayer.isPlaying())
-            Thread.yield();
+        playSound(context, R.raw.nxtstartup);
         }
 
     /**
@@ -99,9 +96,16 @@ public class MyRobotControllerAdministration
     @OnRobotStartupFailure
     public static void playSoundOnRobotStartupFailure(Context context)
         {
-        MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.chord);
+        playSound(context, R.raw.chord);
+        }
+
+    /** Plays a sound given the sounds identity as a (raw) resource. */
+    static void playSound(Context context, int resource)
+        {
+        MediaPlayer mediaPlayer = MediaPlayer.create(context, resource);
         mediaPlayer.start();
         while (mediaPlayer.isPlaying())
             Thread.yield();
+        mediaPlayer.release();
         }
     }
