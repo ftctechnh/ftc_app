@@ -1,5 +1,7 @@
 package org.swerverobotics.library.internal;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
@@ -93,8 +95,8 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
         this.i2cDeviceClient = ii2cDeviceClient;
         this.target          = target;
         this.targetName      = findTargetName();
-        this.legacyModule    = ThunkingHardwareFactory.legacyModuleOfLegacyMotorController(target);
-        this.targetPort      = ThunkingHardwareFactory.portOfLegacyMotorController(target);
+        this.legacyModule    = MemberUtil.legacyModuleOfLegacyMotorController(target);
+        this.targetPort      = MemberUtil.portOfLegacyMotorController(target);
         this.targetCallback  = null;
         this.isArmed         = false;
         this.motor1          = null;
@@ -128,10 +130,10 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
 
     public static DcMotorController create(OpMode context, DcMotorController target, DcMotor motor1, DcMotor motor2)
         {
-        if (isLegacyMotorController(target))
+        if (MemberUtil.isLegacyMotorController(target))
             {
-            LegacyModule legacyModule = legacyModuleOfLegacyMotorController(target);
-            int          port         = portOfLegacyMotorController(target);
+            LegacyModule legacyModule = MemberUtil.legacyModuleOfLegacyMotorController(target);
+            int          port         = MemberUtil.portOfLegacyMotorController(target);
             int          i2cAddr8Bit  = i2cAddrOfLegacyMotorController(target);
 
             // Make a new legacy motor controller
@@ -231,7 +233,7 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
         if (!this.isArmed)
             {
             this.usurpMotors();
-            this.targetCallback = ThunkingHardwareFactory.callbacksOfLegacyModule(this.legacyModule)[this.targetPort];
+            this.targetCallback = MemberUtil.callbacksOfLegacyModule(this.legacyModule)[this.targetPort];
             this.legacyModule.deregisterForPortReadyCallback(this.targetPort);
             if (this.targetName != null) this.context.hardwareMap.dcMotorController.put(this.targetName, this);
             this.i2cDeviceClient.arm();
@@ -329,19 +331,25 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
 
     @Override synchronized public boolean onUserOpModeStop()
         {
+        Log.d(SynchronousOpMode.LOGGING_TAG, "Easy: auto-stopping...");
         if (this.isArmed)
             {
             this.stopMotors();  // mirror StopRobotOpMode
             this.disarm();
             }
+        Log.d(SynchronousOpMode.LOGGING_TAG, "Easy: ... done");
         return true;    // unregister us
         }
 
     @Override synchronized public boolean onRobotShutdown()
         {
+        Log.d(SynchronousOpMode.LOGGING_TAG, "Easy: auto-closing...");
+
         // We actually shouldn't be here by now, having received a onUserOpModeStop()
         // after which we should have been unregistered. But we close down anyway.
         this.close();
+
+        Log.d(SynchronousOpMode.LOGGING_TAG, "Easy: ... done");
         return true;    // unregister us
         }
 

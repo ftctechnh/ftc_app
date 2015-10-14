@@ -7,7 +7,7 @@ import org.swerverobotics.library.examples.*;
 import com.qualcomm.ftcrobotcontroller.opmodes.*;
 
 /**
- * MyRobotControllerAdministration is a container for 'administrative' methods that intereract
+ * MyRobotControllerAdministration is a container for 'administrative' methods that interact
  * with the Swerve library. You don't <em>have to</em> put your administrative methods in a separate
  * class as we do here, but it does help keep them neat and tidy. Administrative methods are
  * each tagged with a Java annotation that connotes and bestows their significance; see the
@@ -79,10 +79,7 @@ public class MyRobotControllerAdministration
     @OnRobotRunning
     public static void playSoundOnRobotRunning(Context context)
         {
-        MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.nxtstartup);
-        mediaPlayer.start();
-        while (mediaPlayer.isPlaying())
-            Thread.yield();
+        playSound(context, R.raw.nxtstartup);
         }
 
     /**
@@ -99,9 +96,16 @@ public class MyRobotControllerAdministration
     @OnRobotStartupFailure
     public static void playSoundOnRobotStartupFailure(Context context)
         {
-        MediaPlayer mediaPlayer = MediaPlayer.create(context, R.raw.chord);
+        playSound(context, R.raw.chord);
+        }
+
+    /** Plays a sound given the sounds identity as a (raw) resource. */
+    static void playSound(Context context, int resource)
+        {
+        MediaPlayer mediaPlayer = MediaPlayer.create(context, resource);
         mediaPlayer.start();
         while (mediaPlayer.isPlaying())
             Thread.yield();
+        mediaPlayer.release();
         }
     }
