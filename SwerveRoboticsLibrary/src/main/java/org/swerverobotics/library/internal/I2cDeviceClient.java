@@ -240,7 +240,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
             }
         catch (InterruptedException e)
             {
-            SwerveRuntimeException.handleCapturedInterrupt(e);
+            handleCapturedInterrupt(e);
             }
         }
 
@@ -442,7 +442,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
             }
         catch (InterruptedException e)
             {
-            SwerveRuntimeException.handleCapturedInterrupt(e);
+            handleCapturedInterrupt(e);
 
             // Can't return (no data to return!) so we must throw
             throw SwerveRuntimeException.wrap(e);
@@ -522,7 +522,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
             }
         catch (InterruptedException e)
             {
-            SwerveRuntimeException.handleCapturedInterrupt(e);
+            handleCapturedInterrupt(e);
             }
         }
 

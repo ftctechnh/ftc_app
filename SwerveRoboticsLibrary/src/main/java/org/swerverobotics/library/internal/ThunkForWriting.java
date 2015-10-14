@@ -1,6 +1,5 @@
 package org.swerverobotics.library.internal;
 
-import org.swerverobotics.library.exceptions.*;
 import org.swerverobotics.library.interfaces.*;
 
 /**
@@ -52,7 +51,7 @@ public abstract class ThunkForWriting extends Thunk
                 }
             catch (Exception e)
                 {
-                SwerveRuntimeException.handleCapturedException(e);
+                Util.handleCapturedException(e);
                 }
             }
         }

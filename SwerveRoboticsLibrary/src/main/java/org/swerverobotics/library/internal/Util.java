@@ -388,4 +388,30 @@ public class Util
             throw SwerveRuntimeException.wrap(e);
             }
         }
+
+    //----------------------------------------------------------------------------------------------
+    // Dealing with captured exceptions
+    //
+    // That InterruptedException is a non-runtime exception is, I believe, a bug: I could go
+    // on at great length here about that, but for the moment will refrain and defer until another
+    // time: the issue is a lengthy discussion.
+    //
+    // But we have the issue of what to do. That the fellow has captured the interrupt means that
+    // he doesn't want an InterruptedException to propagate. Yet somehow we must in effect do so:
+    // the thread needs to be torn down. Ergo, we seem to have no choice but to throw a runtime
+    // version of the interrupt.
+    //----------------------------------------------------------------------------------------------
+
+    public static void handleCapturedInterrupt(InterruptedException e)
+        {
+        handleCapturedException((Exception)e);
+        }
+
+    public static void handleCapturedException(Exception e)
+        {
+        if (e instanceof InterruptedException || e instanceof RuntimeInterruptedException);
+            Thread.currentThread().interrupt();
+
+        throw SwerveRuntimeException.wrap(e);
+        }
     }
