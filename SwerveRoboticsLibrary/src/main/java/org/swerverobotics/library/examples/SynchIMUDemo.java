@@ -42,7 +42,7 @@ public class SynchIMUDemo extends SynchronousOpMode
         // semantically understands this particular kind of sensor.
         parameters.angleunit      = IBNO055IMU.ANGLEUNIT.DEGREES;
         parameters.accelunit      = IBNO055IMU.ACCELUNIT.METERS_PERSEC_PERSEC;
-        parameters.loggingEnabled = true;
+        parameters.loggingEnabled = false;
         parameters.loggingTag     = "BNO055";
         imu = ClassFactory.createAdaFruitBNO055IMU(hardwareMap.i2cDevice.get("imu"), parameters);
 
