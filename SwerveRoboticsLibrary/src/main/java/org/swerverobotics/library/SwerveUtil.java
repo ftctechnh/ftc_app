@@ -36,7 +36,7 @@ public class SwerveUtil
             }
         catch (Exception e)
             {
-            Log.e(SynchronousOpMode.LOGGING_TAG, String.format("exception in playSound: %s", Util.getStackTrace(e)));
+            Log.e(SynchronousOpMode.LOGGING_TAG, String.format("exception ignored in playSound: %s", Util.getStackTrace(e)));
             }
         }
     }
