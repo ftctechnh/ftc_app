@@ -34,6 +34,9 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
+import org.swerverobotics.library.*;
+import org.swerverobotics.library.interfaces.*;
+
 
 /**
  * TeleOpTank Mode
@@ -41,7 +44,7 @@ import com.qualcomm.robotcore.util.Range;
  * Enables control of the robot via the gamepad
  */
 
-@TeleOp(name"TeleOpMecanum")
+@TeleOp(name="TeleOpMecanum")
 public class TeleOpMecanum extends OpMode {
 	DcMotor motorFrontRight;
 	DcMotor motorBackRight;

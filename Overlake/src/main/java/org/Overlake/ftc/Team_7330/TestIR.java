@@ -34,6 +34,9 @@ import com.qualcomm.ftccommon.DbgLog;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IrSeekerSensor;
+import org.swerverobotics.library.*;
+import org.swerverobotics.library.interfaces.*;
+
 
 /**
  * Follow an IR Beacon
