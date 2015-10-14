@@ -34,6 +34,9 @@ import com.qualcomm.ftccommon.DbgLog;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IrSeekerSensor;
+import org.swerverobotics.library.*;
+import org.swerverobotics.library.interfaces.*;
+
 
 /**
  * Follow an IR Beacon
@@ -45,6 +48,7 @@ import com.qualcomm.robotcore.hardware.IrSeekerSensor;
  * Turn on the IR beacon. The robot will now follow the IR beacon. <br>
  * To stop the robot, turn the IR beacon off. <br>
  */
+@TeleOp(name="TestIR")
 public class TestIR extends OpMode {
 
     IrSeekerSensor irSeeker;

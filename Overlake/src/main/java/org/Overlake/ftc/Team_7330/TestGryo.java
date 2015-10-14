@@ -35,6 +35,9 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import org.swerverobotics.library.*;
+import org.swerverobotics.library.interfaces.*;
+
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -44,6 +47,8 @@ import java.util.Date;
  * <p>
  *Enables control of the robot via the gamepad
  */
+
+@TeleOp(name="TestGyro")
 public class TestGryo extends OpMode {
 
   private String startDate;
