@@ -45,6 +45,7 @@ import com.qualcomm.robotcore.hardware.IrSeekerSensor;
  * Turn on the IR beacon. The robot will now follow the IR beacon. <br>
  * To stop the robot, turn the IR beacon off. <br>
  */
+@TeleOp(name="TestIR")
 public class TestIR extends OpMode {
 
     IrSeekerSensor irSeeker;

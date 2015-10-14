@@ -104,12 +104,6 @@ public class FtcOpModeRegister implements OpModeRegister
     
     //manager.register("PushBotDriveTouch", PushBotDriveTouch.class);
     //manager.register("PushBotIrSeek", PushBotIrSeek.class);
-    //manager.register("PushBotSquare", PushBotSquare.class);
-
-    // FTC 7330 OpModes
-    manager.register("TeleOp Mechanum", TeleOpMecanum.class);
-    manager.register("TeleOp Tank", TeleOpTank.class);
-    manager.register("Test Gyro", TestGryo.class);
-    manager.register("Test IR", TestIR.class);
+    manager.register("PushBotSquare", PushBotSquare.class);
   }
 }

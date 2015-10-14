@@ -44,6 +44,8 @@ import java.util.Date;
  * <p>
  *Enables control of the robot via the gamepad
  */
+
+@TeleOp(name="TestGyro")
 public class TestGryo extends OpMode {
 
   private String startDate;

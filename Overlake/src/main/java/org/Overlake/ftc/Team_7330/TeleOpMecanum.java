@@ -40,6 +40,8 @@ import com.qualcomm.robotcore.util.Range;
  * <p>
  * Enables control of the robot via the gamepad
  */
+
+@TeleOp(name"TeleOpMecanum")
 public class TeleOpMecanum extends OpMode {
 	DcMotor motorFrontRight;
 	DcMotor motorBackRight;
