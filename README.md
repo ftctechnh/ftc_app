@@ -2,11 +2,10 @@
 
 This is the Powerstackers' personal fork of the FTC robot control app, for use with our robots that we will build this season. For information, contact us at powerstackers@gmail.com.
 
-More to come later. :)
-
 To use this SDK, download/clone the entire project to your local computer.
 Use Android Studio to import the folder  ("Import project (Eclipse ADT, Gradle, etc.)").
 
+## Documentation
 Documentation for the FTC SDK are included with this repository.  There is a subfolder called "doc" which contains several subfolders:
 
  * The folder "apk" contains the .apk files for the FTC Driver Station and FTC Robot Controller apps.
@@ -16,3 +15,16 @@ Documentation for the FTC SDK are included with this repository.  There is a sub
 For technical questions regarding the SDK, please visit the FTC Technology forum:
 
   http://ftcforum.usfirst.org/forumdisplay.php?156-FTC-Technology
+
+## License
+All our code is free and open to use. We publish our code under the GNU General Public License version 3.
+
+Copyright (C) 2015 Powerstackers
+
+**The code that falls under this license is contained in the com.powerstackers package. The com.qualcomm package contains code owned by FTC and is not covered under this license.**
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program. If not, see http://www.gnu.org/licenses/.
