@@ -3,7 +3,7 @@ package org.swerverobotics.library.internal.tests;
 import android.util.Log;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import org.swerverobotics.library.interfaces.Autonomous;
+import org.swerverobotics.library.interfaces.*;
 
 /**
  * Created by davegoldy on 9/1/15.
@@ -12,6 +12,7 @@ import org.swerverobotics.library.interfaces.Autonomous;
  * robot has completed a square.
  */
 @Autonomous(name = "Dave Goldy")
+@Disabled
 public class DaveGoldyAutonomous extends OpMode {
 
     public static String LOGGING_TAG = "Swerve: DaveGoldy";
@@ -26,7 +27,7 @@ public class DaveGoldyAutonomous extends OpMode {
     protected final long driveTime = 1500;
     protected final long turnTime = 700;
     protected final double drivePower = 1.0;
-    protected final int delta = 50;
+    protected final int delta = 0;
 
     /**
      * Constructor
@@ -122,7 +123,7 @@ public class DaveGoldyAutonomous extends OpMode {
     }
 
     void log(String message) {
-        Log.d(LOGGING_TAG, String.format("%f: %s", this.runningTime, message));
+        // Log.d(LOGGING_TAG, String.format("%f: %s", this.runningTime, message));
     }
 
     /*
