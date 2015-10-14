@@ -2,6 +2,8 @@ package org.usfirst.ftc.exampleteam.yourcodehere;
 
 import android.content.Context;
 import android.media.MediaPlayer;
+
+import org.swerverobotics.library.SwerveUtil;
 import org.swerverobotics.library.interfaces.*;
 import org.swerverobotics.library.examples.*;
 import com.qualcomm.ftcrobotcontroller.opmodes.*;
@@ -79,7 +81,7 @@ public class MyRobotControllerAdministration
     @OnRobotRunning
     public static void playSoundOnRobotRunning(Context context)
         {
-        playSound(context, R.raw.nxtstartup);
+        SwerveUtil.playSound(context, R.raw.nxtstartup);
         }
 
     /**
@@ -96,16 +98,7 @@ public class MyRobotControllerAdministration
     @OnRobotStartupFailure
     public static void playSoundOnRobotStartupFailure(Context context)
         {
-        playSound(context, R.raw.chord);
+        SwerveUtil.playSound(context, R.raw.chord);
         }
 
-    /** Plays a sound given the sounds identity as a (raw) resource. */
-    static void playSound(Context context, int resource)
-        {
-        MediaPlayer mediaPlayer = MediaPlayer.create(context, resource);
-        mediaPlayer.start();
-        while (mediaPlayer.isPlaying())
-            Thread.yield();
-        mediaPlayer.release();
-        }
     }
