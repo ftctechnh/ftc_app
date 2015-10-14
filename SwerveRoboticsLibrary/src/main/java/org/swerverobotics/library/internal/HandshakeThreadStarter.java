@@ -1,7 +1,5 @@
 package org.swerverobotics.library.internal;
 
-import org.swerverobotics.library.exceptions.*;
-
 /**
  * A class that helps us start a thread and interlock with its actual starting up.
  *
@@ -80,7 +78,7 @@ public class HandshakeThreadStarter
             this.started = true;    // so stop() will work
             stop();
 
-            SwerveRuntimeException.handleCapturedException(e);
+            Util.handleCapturedException(e);
             }
         }
 
@@ -112,7 +110,7 @@ public class HandshakeThreadStarter
                 }
             catch (Exception e)
                 {
-                SwerveRuntimeException.handleCapturedException(e);
+                Util.handleCapturedException(e);
                 }
             finally
                 {

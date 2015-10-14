@@ -64,7 +64,7 @@ public abstract class ThunkForReading<T> extends Thunk
                 // Our signature (and that of our caller) doesn't allow us to throw
                 // InterruptedException. But we can't actually return a value to our caller,
                 // as we have nothing to return. So, we do the best we can, and throw SOMETHING.
-                SwerveRuntimeException.handleCapturedException(e);
+                Util.handleCapturedException(e);
                 }
             return this.result;
             }
