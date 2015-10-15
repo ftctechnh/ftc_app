@@ -2,8 +2,6 @@ package org.swerverobotics.library.internal;
 
 import com.qualcomm.robotcore.hardware.*;
 import org.swerverobotics.library.*;
-import org.swerverobotics.library.exceptions.*;
-import org.swerverobotics.library.interfaces.*;
 
 /**
  * An implementation of DcMotorController that talks to a non-thunking target implementation

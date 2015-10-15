@@ -99,7 +99,7 @@ public class ThunkingHardwareFactory
             // For those controller which are legacy controllers, do a switch-er-roo.
             for (DcMotorController controller : motors.keySet())
                 {
-                if (isLegacyMotorController(controller))
+                if (MemberUtil.isLegacyMotorController(controller))
                     {
                     DcMotor motor1 = motors.get(controller).get(0);
                     DcMotor motor2 = motors.get(controller).size() > 1 ? motors.get(controller).get(1) : null;
@@ -499,36 +499,16 @@ public class ThunkingHardwareFactory
         return false;
         }
 
-    static boolean isLegacyMotorController(DcMotorController controller)
-        {
-        return controller instanceof com.qualcomm.hardware.HiTechnicNxtDcMotorController;
-        }
-
-    static LegacyModule legacyModuleOfLegacyMotorController(DcMotorController controller)
-        {
-        return Util.<LegacyModule>getPrivateObjectField(controller, 0);
-        }
-
-    static I2cController.I2cPortReadyCallback[] callbacksOfLegacyModule(LegacyModule module)
-        {
-        return Util.<I2cController.I2cPortReadyCallback[]>getPrivateObjectField(module, 4);
-        }
-
-    static int portOfLegacyMotorController(DcMotorController controller)
-        {
-        return Util.getPrivateIntField(controller, 5);
-        }
-    
     static int i2cAddrOfLegacyMotorController(DcMotorController controller)
         {
         // From the spec from HiTechnic:
         //
-        // "The first motor controller in the daisy chain will use an I2C address of 02/03. Subsequent 
-        // controllers will obtain addresses of 04/05, 06/07 and 08/09. Only four controllers may be 
+        // "The first motor controller in the daisy chain will use an I2C address of 02/03. Subsequent
+        // controllers will obtain addresses of 04/05, 06/07 and 08/09. Only four controllers may be
         // daisy chained."
         //
         // The legacy module appears not to support daisy chaining; it only supports the first
-        // address. Note that these are clearly 8-bit addresses, not 7-bit. 
+        // address. Note that these are clearly 8-bit addresses, not 7-bit.
         //
         return 0x02;
         }
