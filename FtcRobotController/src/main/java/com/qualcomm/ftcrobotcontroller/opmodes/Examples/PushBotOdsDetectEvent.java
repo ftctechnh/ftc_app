@@ -1,29 +1,30 @@
-package com.qualcomm.ftcrobotcontroller.opmodes;
+package com.qualcomm.ftcrobotcontroller.opmodes.Examples;
 
 //------------------------------------------------------------------------------
 //
-// PushBotIrEvent
+// PushBotOdsDetectEvent
 //
 /**
  * Provide a basic autonomous operational mode that demonstrates the use of an
- * IR seeker implemented using a state machine for the Push Bot.
+ * optical distance sensor to detect a line implemented using a state machine
+ * for the Push Bot.
  *
  * @author SSI Robotics
- * @version 2015-08-16-08-41
+ * @version 2015-08-30-11-45
  */
-public class PushBotIrEvent extends PushBotTelemetrySensors
+public class PushBotOdsDetectEvent extends PushBotTelemetrySensors
 
 {
     //--------------------------------------------------------------------------
     //
-    // PushBotIrEvent
+    // PushBotOdsDetectEvent
     //
     /**
      * Construct the class.
      *
      * The system calls this member when the class is instantiated.
      */
-    public PushBotIrEvent ()
+    public PushBotOdsDetectEvent ()
 
     {
         //
@@ -36,7 +37,7 @@ public class PushBotIrEvent extends PushBotTelemetrySensors
         //
         // All via self-construction.
 
-    } // PushBotIrEvent
+    } // PushBotOdsDetectEvent
 
     //--------------------------------------------------------------------------
     //
@@ -51,25 +52,19 @@ public class PushBotIrEvent extends PushBotTelemetrySensors
 
     {
         //
-        // When the robot is close to the IR beacon, stop the motors and
-        // transition to the next state.
+        // If a white line has been detected, then set the power level to zero.
         //
-        int l_status = drive_to_ir_beacon ();
-        if (l_status == drive_to_ir_beacon_running)
+        if (a_ods_white_tape_detected ())
         {
-            set_first_message ("Driving to IR beacon.");
+            set_drive_power (0.0, 0.0);
         }
-        else if (l_status == drive_to_ir_beacon_done)
+        //
+        // Else a white line has not been detected, so set the power level to
+        // full forward.
+        //
+        else
         {
-            set_error_message ("IR beacon is close!");
-        }
-        else if (l_status == drive_to_ir_beacon_not_detected)
-        {
-            set_error_message ("IR beacon not detected!");
-        }
-        else if (l_status == drive_to_ir_beacon_invalid)
-        {
-            set_error_message ("IR beacon return value is invalid!");
+            set_drive_power (1.0, 1.0);
         }
 
         //
@@ -79,4 +74,4 @@ public class PushBotIrEvent extends PushBotTelemetrySensors
 
     } // loop
 
-} // PushBotIrEvent
+} // PushBotOdsDetectEvent

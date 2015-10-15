@@ -1,29 +1,30 @@
-package com.qualcomm.ftcrobotcontroller.opmodes;
+package com.qualcomm.ftcrobotcontroller.opmodes.Examples;
 
 //------------------------------------------------------------------------------
 //
-// PushBotTouchEvent
+// PushBotOdsFollowEvent
 //
 /**
  * Provide a basic autonomous operational mode that demonstrates the use of an
- * touch sensor to control the arm using a state machine for the Push Bot.
+ * optical distance sensor to follow a line implemented using a state machine
+ * for the Push Bot.
  *
  * @author SSI Robotics
  * @version 2015-08-30-11-45
  */
-public class PushBotTouchEvent extends PushBotTelemetrySensors
+public class PushBotOdsFollowEvent extends PushBotTelemetrySensors
 
 {
     //--------------------------------------------------------------------------
     //
-    // PushBotTouchEvent
+    // PushBotOdsFollowEvent
     //
     /**
      * Construct the class.
      *
      * The system calls this member when the class is instantiated.
      */
-    public PushBotTouchEvent ()
+    public PushBotOdsFollowEvent ()
 
     {
         //
@@ -36,7 +37,7 @@ public class PushBotTouchEvent extends PushBotTelemetrySensors
         //
         // All via self-construction.
 
-    } // PushBotTouchEvent
+    } // PushBotOdsFollowEvent
 
     //--------------------------------------------------------------------------
     //
@@ -51,26 +52,18 @@ public class PushBotTouchEvent extends PushBotTelemetrySensors
 
     {
         //
-        // NOTE: The touch sensor controls the WHEELS in this op-mode.  The main
-        // use of the touch sensor in the other PushBot[...]Sensor classes is to
-        // operate the arm.  This method operates the DRIVE WHEELS.
+        // If a white line has been detected, then turn left.
         //
-
-        //
-        // If a touch sensor has been detected, then set the power level to
-        // zero.
-        //
-        if (is_touch_sensor_pressed ())
+        if (a_ods_white_tape_detected ())
         {
-            set_drive_power (0.0, 0.0);
+            set_drive_power (0.0, 0.2);
         }
         //
-        // Else a white line has not been detected, so set the power level to
-        // full forward.
+        // Else a white line has not been detected, so turn right.
         //
         else
         {
-            set_drive_power (1.0, 1.0);
+            set_drive_power (0.2, 0.0);
         }
 
         //
@@ -80,4 +73,4 @@ public class PushBotTouchEvent extends PushBotTelemetrySensors
 
     } // loop
 
-} // PushBotTouchEvent
+} // PushBotOdsFollowEvent

@@ -29,11 +29,12 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.qualcomm.ftcrobotcontroller.opmodes;
+package com.qualcomm.ftcrobotcontroller.opmodes.Examples;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoController;
 import com.qualcomm.robotcore.util.Range;
 
 /**
@@ -41,18 +42,18 @@ import com.qualcomm.robotcore.util.Range;
  * <p>
  * Enables control of the robot via the gamepad
  */
-public class K9TeleOp extends OpMode {
-	
+public class MatrixK9TeleOp extends OpMode {
+
 	/*
 	 * Note: the configuration of the servos is such that
 	 * as the arm servo approaches 0, the arm position moves up (away from the floor).
 	 * Also, as the claw servo approaches 0, the claw opens up (drops the game element).
 	 */
 	// TETRIX VALUES.
-	final static double ARM_MIN_RANGE  = 0.20;
-	final static double ARM_MAX_RANGE  = 0.90;
-	final static double CLAW_MIN_RANGE  = 0.20;
-	final static double CLAW_MAX_RANGE  = 0.7;
+	final static double ARM_MIN_RANGE  = 0.40;
+	final static double ARM_MAX_RANGE  = 1.0;
+	final static double CLAW_MIN_RANGE  = 0.30;
+	final static double CLAW_MAX_RANGE  = 0.9;
 
 	// position of the arm servo.
 	double armPosition;
@@ -70,11 +71,12 @@ public class K9TeleOp extends OpMode {
 	DcMotor motorLeft;
 	Servo claw;
 	Servo arm;
+	ServoController sc;
 
 	/**
 	 * Constructor
 	 */
-	public K9TeleOp() {
+	public MatrixK9TeleOp() {
 
 	}
 
@@ -105,7 +107,11 @@ public class K9TeleOp extends OpMode {
 		 */
 		motorRight = hardwareMap.dcMotor.get("motor_2");
 		motorLeft = hardwareMap.dcMotor.get("motor_1");
-		motorLeft.setDirection(DcMotor.Direction.REVERSE);
+		motorRight.setDirection(DcMotor.Direction.REVERSE);
+
+		// enable pwm.
+		sc = hardwareMap.servoController.get("matrixServo");
+		sc.pwmEnable();
 		
 		arm = hardwareMap.servo.get("servo_1");
 		claw = hardwareMap.servo.get("servo_6");

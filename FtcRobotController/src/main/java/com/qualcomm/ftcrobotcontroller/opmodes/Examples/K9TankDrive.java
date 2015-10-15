@@ -29,12 +29,11 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.qualcomm.ftcrobotcontroller.opmodes;
+package com.qualcomm.ftcrobotcontroller.opmodes.Examples;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoController;
 import com.qualcomm.robotcore.util.Range;
 
 /**
@@ -42,18 +41,18 @@ import com.qualcomm.robotcore.util.Range;
  * <p>
  * Enables control of the robot via the gamepad
  */
-public class MatrixK9TeleOp extends OpMode {
+public class K9TankDrive extends OpMode {
 
 	/*
 	 * Note: the configuration of the servos is such that
 	 * as the arm servo approaches 0, the arm position moves up (away from the floor).
 	 * Also, as the claw servo approaches 0, the claw opens up (drops the game element).
 	 */
-	// TETRIX VALUES.
-	final static double ARM_MIN_RANGE  = 0.40;
-	final static double ARM_MAX_RANGE  = 1.0;
-	final static double CLAW_MIN_RANGE  = 0.30;
-	final static double CLAW_MAX_RANGE  = 0.9;
+    // TETRIX VALUES.
+    final static double ARM_MIN_RANGE  = 0.20;
+    final static double ARM_MAX_RANGE  = 0.90;
+    final static double CLAW_MIN_RANGE  = 0.20;
+    final static double CLAW_MAX_RANGE  = 0.7;
 
 	// position of the arm servo.
 	double armPosition;
@@ -71,12 +70,11 @@ public class MatrixK9TeleOp extends OpMode {
 	DcMotor motorLeft;
 	Servo claw;
 	Servo arm;
-	ServoController sc;
 
 	/**
 	 * Constructor
 	 */
-	public MatrixK9TeleOp() {
+	public K9TankDrive() {
 
 	}
 
@@ -87,8 +85,6 @@ public class MatrixK9TeleOp extends OpMode {
 	 */
 	@Override
 	public void init() {
-
-
 		/*
 		 * Use the hardwareMap to get the dc motors and servos by name. Note
 		 * that the names of the devices must match the names used when you
@@ -99,7 +95,7 @@ public class MatrixK9TeleOp extends OpMode {
 		 * For the demo Tetrix K9 bot we assume the following,
 		 *   There are two motors "motor_1" and "motor_2"
 		 *   "motor_1" is on the right side of the bot.
-		 *   "motor_2" is on the left side of the bot and reversed.
+		 *   "motor_2" is on the left side of the bot.
 		 *   
 		 * We also assume that there are two servos "servo_1" and "servo_6"
 		 *    "servo_1" controls the arm joint of the manipulator.
@@ -107,11 +103,7 @@ public class MatrixK9TeleOp extends OpMode {
 		 */
 		motorRight = hardwareMap.dcMotor.get("motor_2");
 		motorLeft = hardwareMap.dcMotor.get("motor_1");
-		motorRight.setDirection(DcMotor.Direction.REVERSE);
-
-		// enable pwm.
-		sc = hardwareMap.servoController.get("matrixServo");
-		sc.pwmEnable();
+		motorLeft.setDirection(DcMotor.Direction.REVERSE);
 		
 		arm = hardwareMap.servo.get("servo_1");
 		claw = hardwareMap.servo.get("servo_6");
@@ -136,14 +128,10 @@ public class MatrixK9TeleOp extends OpMode {
 		 * wrist/claw via the a,b, x, y buttons
 		 */
 
-		// throttle: left_stick_y ranges from -1 to 1, where -1 is full up, and
-		// 1 is full down
-		// direction: left_stick_x ranges from -1 to 1, where -1 is full left
-		// and 1 is full right
-		float throttle = -gamepad1.left_stick_y;
-		float direction = gamepad1.left_stick_x;
-		float right = throttle - direction;
-		float left = throttle + direction;
+        // tank drive
+        // note that if y equal -1 then joystick is pushed all of the way forward.
+        float left = -gamepad1.left_stick_y;
+        float right = -gamepad1.right_stick_y;
 
 		// clip the right/left values so that the values never exceed +/- 1
 		right = Range.clip(right, -1, 1);
@@ -171,6 +159,19 @@ public class MatrixK9TeleOp extends OpMode {
 			armPosition -= armDelta;
 		}
 
+        // update the position of the claw
+        if (gamepad1.left_bumper) {
+            clawPosition += clawDelta;
+        }
+
+        if (gamepad1.left_trigger > 0.25) {
+            clawPosition -= clawDelta;
+        }
+
+        if (gamepad1.b) {
+            clawPosition -= clawDelta;
+        }
+
 		// update the position of the claw
 		if (gamepad1.x) {
 			clawPosition += clawDelta;
@@ -180,15 +181,13 @@ public class MatrixK9TeleOp extends OpMode {
 			clawPosition -= clawDelta;
 		}
 
-        // clip the position values so that they never exceed their allowed range.
-        armPosition = Range.clip(armPosition, ARM_MIN_RANGE, ARM_MAX_RANGE);
-        clawPosition = Range.clip(clawPosition, CLAW_MIN_RANGE, CLAW_MAX_RANGE);
+		// clip the position values so that they never exceed their allowed range.
+		armPosition = Range.clip(armPosition, ARM_MIN_RANGE, ARM_MAX_RANGE);
+		clawPosition = Range.clip(clawPosition, CLAW_MIN_RANGE, CLAW_MAX_RANGE);
 
 		// write position values to the wrist and claw servo
 		arm.setPosition(armPosition);
 		claw.setPosition(clawPosition);
-
-
 
 		/*
 		 * Send telemetry data back to driver station. Note that if we are using
@@ -196,12 +195,12 @@ public class MatrixK9TeleOp extends OpMode {
 		 * will return a null value. The legacy NXT-compatible motor controllers
 		 * are currently write only.
 		 */
-        telemetry.addData("Text", "*** Robot Data***");
+
+		telemetry.addData("Text", "*** Robot Data***");
         telemetry.addData("arm", "arm:  " + String.format("%.2f", armPosition));
         telemetry.addData("claw", "claw:  " + String.format("%.2f", clawPosition));
-        telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", left));
-        telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));
-
+		telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", left));
+		telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));
 	}
 
 	/*
@@ -213,8 +212,7 @@ public class MatrixK9TeleOp extends OpMode {
 	public void stop() {
 
 	}
-
-    	
+	
 	/*
 	 * This method scales the joystick input so for low joystick values, the 
 	 * scaled value is less than linear.  This is to make it easier to drive

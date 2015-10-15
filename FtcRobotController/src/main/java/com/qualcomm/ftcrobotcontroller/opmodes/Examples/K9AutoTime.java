@@ -29,7 +29,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.qualcomm.ftcrobotcontroller.opmodes;
+package com.qualcomm.ftcrobotcontroller.opmodes.Examples;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -37,12 +37,17 @@ import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
- * TeleOp Mode
+ * Example autonomous program.
  * <p>
- * Enables control of the robot via the gamepad
+ * This example program uses elapsed time to determine how to move the robot.
+ * The OpMode.java class has some class members that provide time information
+ * for the current op mode.
+ * The public member variable 'time' is updated before each call to the run() event.
+ * The method getRunTime() returns the time that has elapsed since the op mode
+ * starting running to when the method was called.
  */
-public class K9Line extends OpMode {
-	
+public class K9AutoTime extends OpMode {
+
 	final static double MOTOR_POWER = 0.15; // Higher values will cause the robot to move faster
 	final static double HOLD_IR_SIGNAL_STRENGTH = 0.20; // Higher values will cause the robot to follow closer
 	final static double LIGHT_THRESHOLD = 0.5;
@@ -55,11 +60,11 @@ public class K9Line extends OpMode {
 	Servo claw;
 	Servo arm;
 	LightSensor reflectedLight;
-	
+
 	/**
 	 * Constructor
 	 */
-	public K9Line() {
+	public K9AutoTime() {
 
 	}
 
@@ -95,7 +100,7 @@ public class K9Line extends OpMode {
 		claw = hardwareMap.servo.get("servo_6");
 
 		// set the starting position of the wrist and claw
-		armPosition = 0.2;
+		armPosition = 0.4;
 		clawPosition = 0.25;
 
 		/*
@@ -122,42 +127,44 @@ public class K9Line extends OpMode {
 		arm.setPosition(armPosition);
 		claw.setPosition(clawPosition);
 
+
         /*
-         * As a temporary fix, turn on LED in run() event rather than in start().
+         * Use the 'time' variable of this op mode to determine
+         * how to adjust the motor power.
          */
-        // turn on LED of light sensor.
-        //reflectedLight.enableLed(true);
+        if (this.time <= 1) {
+            // from 0 to 1 seconds, run the motors for five seconds.
+            left = 0.15;
+            right = 0.15;
+        } else if (this.time > 5 && this.time <= 8.5) {
+            // between 5 and 8.5 seconds, point turn right.
+            left = 0.15;
+            right = -0.15;
+        } else if (this.time > 8.5 && this.time <= 15) {
+            // between 8 and 15 seconds, idle.
+            left = 0.0;
+            right = 0.0;
+        } else if (this.time > 15d && this.time <= 20.75d) {
+            // between 15 and 20.75 seconds, point turn left.
+            left = -0.15;
+            right = 0.15;
+        } else {
+            // after 20.75 seconds, stop.
+            left = 0.0;
+            right = 0.0;
+        }
+
+		/*
+		 * set the motor power
+		 */
+        motorRight.setPower(left);
+        motorLeft.setPower(right);
 
 		/*
 		 * read the light sensor.
 		 */
 		//reflection = reflectedLight.getLightLevel();
 		
-		/*
-		 * compare measured value to threshold.
-		 */
-		if (reflection < LIGHT_THRESHOLD) {
-			/*
-			 * if reflection is less than the threshold value, then assume we are above dark spot.
-			 * turn to the right.
-			 */
-			left = MOTOR_POWER;
-			right = 0.0;
-		} else {
-			/*
-			 * assume we are over a light spot.
-			 * turn to the left.
-			 */
-			left = 0.0;
-			right = MOTOR_POWER;
-		}
-		
-		/*
-		 * set the motor power
-		 */
-		motorRight.setPower(left);
-		motorLeft.setPower(right);
-
 		/*
 		 * Send telemetry data back to driver station. Note that if we are using
 		 * a legacy NXT-compatible motor controller, then the getPower() method
@@ -166,7 +173,8 @@ public class K9Line extends OpMode {
 		 */
 
 		telemetry.addData("Text", "*** Robot Data***");
-		telemetry.addData("reflection", "reflection:  " + Double.toString(reflection));
+        telemetry.addData("time", "elapsed time: " + Double.toString(this.time));
+        telemetry.addData("reflection", "reflection:  " + Double.toString(reflection));
 		telemetry.addData("left tgt pwr",  "left  pwr: " + Double.toString(left));
 		telemetry.addData("right tgt pwr", "right pwr: " + Double.toString(right));
 	}
