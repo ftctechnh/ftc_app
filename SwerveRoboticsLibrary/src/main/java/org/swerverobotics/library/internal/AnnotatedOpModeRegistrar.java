@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 import com.qualcomm.robotcore.eventloop.opmode.*;
+
+import org.swerverobotics.library.SynchronousOpMode;
 import org.swerverobotics.library.interfaces.*;
 import java.io.*;
 import java.lang.reflect.*;
@@ -25,7 +27,7 @@ public class AnnotatedOpModeRegistrar
     // State
     //----------------------------------------------------------------------------------------------
 
-    private final String                     TAG = "AnnotatedOpModeReg";
+    private final String                     LOGGING_TAG = SynchronousOpMode.LOGGING_TAG;
 
     LinkedList<String>                       partialClassNamesToIgnore;
 
@@ -155,7 +157,7 @@ public class AnnotatedOpModeRegistrar
                 {
                 String name = getOpModeName(opMode);
                 this.opModeManager.register(name, opMode);
-                Log.d(TAG, String.format("registered {%s} as {%s}", opMode.getSimpleName(), name));
+                Log.d(LOGGING_TAG, String.format("registered {%s} as {%s}", opMode.getSimpleName(), name));
                 }
             }
         }
@@ -284,7 +286,7 @@ public class AnnotatedOpModeRegistrar
             // We just go ahead and register this, as there's nothing else to do.
             // TODO: we could register these AFTER the classes, if we wanted to.
             opModeManager.register(name, opModeInstance);
-            Log.d(TAG, String.format("registered instance {%s} as {%s}", opModeInstance.toString(), name));
+            Log.d(LOGGING_TAG, String.format("registered instance {%s} as {%s}", opModeInstance.toString(), name));
             }
         }
 
@@ -321,7 +323,7 @@ public class AnnotatedOpModeRegistrar
                 }
             catch (NoClassDefFoundError|ClassNotFoundException ex)
                 {
-                Log.w(TAG, className + " " + ex.toString(), ex);
+                Log.w(LOGGING_TAG, className + " " + ex.toString(), ex);
                 if (className.contains("$"))
                     {
                     className = className.substring(0, className.indexOf("$") - 1);

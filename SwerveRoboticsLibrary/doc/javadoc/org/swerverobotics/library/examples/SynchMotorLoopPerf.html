@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10};
+var methods = {"i0":10,"i1":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -128,7 +128,9 @@ public class <span class="typeNameLabel">SynchMotorLoopPerf</span>
 extends <a href="../../../../org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></pre>
 <div class="block">An op mode that investigates how many loop() cycles it takes to do full
  mode switching on a motor controller. Each main loop cycle does both
- a read and a write to the motor.</div>
+ a read and a write to the motor.
+
+ This OpMode expects two motors, named 'motorLeft' and 'motorRight'.</div>
 </li>
 </ul>
 </div>
@@ -192,6 +194,10 @@ extends <a href="../../../../org/swerverobotics/library/SynchronousOpMode.html" 
 <div class="block">Implement main() (in a subclass) to contain your robot logic.</div>
 </td>
 </tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/examples/SynchMotorLoopPerf.html#powerMotors-double-">powerMotors</a></span>(double&nbsp;power)</code>&nbsp;</td>
+</tr>
 </table>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.SynchronousOpMode">
@@ -248,7 +254,7 @@ extends <a href="../../../../org/swerverobotics/library/SynchronousOpMode.html" 
 <a name="main--">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>main</h4>
 <pre>public&nbsp;void&nbsp;main()
@@ -283,6 +289,15 @@ extends <a href="../../../../org/swerverobotics/library/SynchronousOpMode.html" 
 <a href="../../../../org/swerverobotics/library/TelemetryDashboardAndLog.html#update--"><code>TelemetryDashboardAndLog.update()</code></a>, 
 <a href="../../../../org/swerverobotics/library/SynchronousOpMode.html#idle--"><code>SynchronousOpMode.idle()</code></a></dd>
 </dl>
+</li>
+</ul>
+<a name="powerMotors-double-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>powerMotors</h4>
+<pre>public&nbsp;void&nbsp;powerMotors(double&nbsp;power)</pre>
 </li>
 </ul>
 </li>
