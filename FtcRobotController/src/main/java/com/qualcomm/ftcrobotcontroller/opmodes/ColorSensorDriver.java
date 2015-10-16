@@ -70,7 +70,7 @@ public class ColorSensorDriver extends LinearOpMode {
         break;
     }
     led = hardwareMap.led.get("led");
-    t = hardwareMap.touchSensor.get("t");
+    //t = hardwareMap.touchSensor.get("t");
 
     waitForStart();
 
@@ -79,7 +79,7 @@ public class ColorSensorDriver extends LinearOpMode {
     final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(R.id.RelativeLayout);
     while (opModeIsActive()) {
 
-      enableLed(t.isPressed());
+      enableLed(false );
 
       switch (device) {
         case HITECHNIC_NXT:

@@ -103,12 +103,8 @@ public class PushBot {
         final  double COUNTS = ENCODER_CPR * ROTATIONS * GEAR_RATIO;
 
         leftWheel.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
-        rightWheel.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
-        leftWheel.setTargetPosition((int) COUNTS);
-        rightWheel.setTargetPosition((int) COUNTS);
-
+        leftWheel.setTargetPosition((int) COUNTS);;
         leftWheel.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
-        rightWheel.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
 
         leftWheel.setPower(0.5);
         rightWheel.setPower(0.5);
