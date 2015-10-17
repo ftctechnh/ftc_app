@@ -481,10 +481,36 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                 if (!this.isArmed || this.disarming)
                     throw new IllegalStateException("can't write to I2cDeviceClient while not armed");
 
+                if (data.length > ReadWindow.cregWriteMax)
+                    throw new IllegalArgumentException(String.format("write request of %d bytes is too large; max is %d", data.length, ReadWindow.cregWriteMax));
+
                 synchronized (this.callbackLock)
                     {
-                    // Wait until we can write to the write cache
-                    while (this.writeCacheStatus != WRITE_CACHE_STATUS.IDLE)
+                    // If there's already a pending write, can we coalesce?
+                    boolean doCoalesce = false;
+                    if (this.writeCacheStatus == WRITE_CACHE_STATUS.DIRTY && this.cregWrite + data.length <= ReadWindow.cregWriteMax)
+                        {
+                        if (ireg + data.length == this.iregWriteFirst)
+                            {
+                            // New data is immediately before the old data.
+                            // leave ireg is unchanged
+                            data = Util.concatenateByteArrays(data, readWriteCache());
+                            doCoalesce = true;
+                            }
+                        else if (this.iregWriteFirst + this.cregWrite == ireg)
+                            {
+                            // New data is immediately after the new data.
+                            ireg = this.iregWriteFirst;
+                            data = Util.concatenateByteArrays(readWriteCache(), data);
+                            doCoalesce = true;
+                            }
+                        }
+
+                    // if (doCoalesce) this.log(Log.VERBOSE, "coalesced write");
+
+                    // Wait until we can write to the write cache. If we are coalescing, then
+                    // we don't ever wait, as we're just modifying what's there
+                    while (!doCoalesce && this.writeCacheStatus != WRITE_CACHE_STATUS.IDLE)
                         {
                         this.callbackLock.wait();
                         }
@@ -497,7 +523,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                     this.writeCacheStatus = WRITE_CACHE_STATUS.DIRTY;
 
                     // Provide the data we want to write
-                    this.writeCacheLock.lockInterruptibly();
+                    this.writeCacheLock.lock();
                     try
                         {
                         System.arraycopy(data, 0, this.writeCache, dibCacheOverhead, data.length);
@@ -523,6 +549,19 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         catch (InterruptedException e)
             {
             handleCapturedInterrupt(e);
+            }
+        }
+
+    /** Returns a copy of the user data currently sitting in the write cache */
+    private byte[] readWriteCache()
+        {
+        this.writeCacheLock.lock();
+        try {
+            return Arrays.copyOfRange(this.writeCache, dibCacheOverhead, dibCacheOverhead + this.cregWrite);
+            }
+        finally
+            {
+            this.writeCacheLock.unlock();
             }
         }
 
