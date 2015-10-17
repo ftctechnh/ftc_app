@@ -12,12 +12,18 @@ public class FTCCompetitionBase extends OpMode {
     // Motor Controllers
     private DcMotorController LeftDriveController;
     private DcMotorController RightDriveController;
+    private DcMotorController Arm1Controller;
+    private DcMotorController Arm2Controller;
 
     // Drive Motors
     private DcMotor LeftDrive1;
     private DcMotor LeftDrive2;
     private DcMotor RightDrive1;
     private DcMotor RightDrive2;
+    private DcMotor ArmLift;
+    private DcMotor ArmTilt;
+    private DcMotor BlockPickup;
+    private DcMotor PullupHook;
 
     @Override
     public void init() {
