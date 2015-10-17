@@ -128,7 +128,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         this.callbackThreadPriorityBoost = 0;       // no boost
         this.hardwareCycleCount     = 0;
         this.loggingEnabled         = false;
-        this.loggingTag             = String.format("I2cDeviceClient(%s)", i2cDevice.getDeviceName());;
+        this.loggingTag             = String.format("%s:I2C(%s)", SynchronousOpMode.LOGGING_TAG, i2cDevice.getDeviceName());;
         this.timeSinceLastHeartbeat = new ElapsedTime();
         this.timeSinceLastHeartbeat.reset();
         this.msHeartbeatInterval    = 0;
