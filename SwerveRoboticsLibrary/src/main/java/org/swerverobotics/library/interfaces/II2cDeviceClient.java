@@ -383,10 +383,13 @@ public interface II2cDeviceClient extends HardwareDevice
 
         /**
          * enableI2cReadMode and enableI2cWriteMode both impose a maximum length
-         * on the size of data that can be read or written at one time. cregMax
-         * indicates that maximum size.
+         * on the size of data that can be read or written at one time. cregReadMax
+         * and cregWriteMax indicate those maximum sizes.
+         * @see #cregWriteMax
          */
-        public static final int cregMax = 26;   // No, not 27: the CDIM can't handle 27
+        public static final int cregReadMax = 26;   // No, not 27: the CDIM can't handle 27
+        /** @see #cregReadMax */
+        public static final int cregWriteMax = 26;  // the CDIM might be able to do 27, not just 26, but we're paranoid
 
         /**
          * The first register in the window
@@ -460,8 +463,8 @@ public interface II2cDeviceClient extends HardwareDevice
             this.readIssued = false;
             this.iregFirst  = iregFirst;
             this.creg       = creg;
-            if (creg < 0 || creg > cregMax)
-                throw new IllegalArgumentException(String.format("buffer length %d invalid; max is %d", creg, cregMax));
+            if (creg < 0 || creg > cregReadMax)
+                throw new IllegalArgumentException(String.format("buffer length %d invalid; max is %d", creg, cregReadMax));
             }
 
         /**

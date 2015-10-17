@@ -33,6 +33,14 @@ public class Util
         return result.toString();
         }
 
+    public static byte[] concatenateByteArrays(byte[] left, byte[] right)
+        {
+        byte[] result = new byte[left.length + right.length];
+        System.arraycopy(left,  0, result, 0,           left.length);
+        System.arraycopy(right, 0, result, left.length, right.length);
+        return result;
+        }
+
     //----------------------------------------------------------------------------------------------
     // Private method access
     //

@@ -42,14 +42,14 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
     4C – 4FH    s/int    Motor 1 current encoder value, high byte first  == 76-79
     50 – 53H    s/int    Motor 2 current encoder value, high byte first  == 80-83
     54, 55H     word     Battery voltage 54H high byte, 55H low byte     == 84-85
-    56H         S/byte   Motor 1 gear ratio
-    57H         byte     Motor 1 P coefficient*
-    58H         byte     Motor 1 I coefficient*
-    59H         byte     Motor 1 D coefficient*
-    5AH         s/byte   Motor 2 gear ratio
-    5BH         byte     Motor 2 P coefficient*
-    5CH         byte     Motor 2 I coefficient*
-    5DH         byte     Motor 2 D coefficient*
+    56H         S/byte   Motor 1 gear ratio         == 86
+    57H         byte     Motor 1 P coefficient*     == 87
+    58H         byte     Motor 1 I coefficient*     == 88
+    59H         byte     Motor 1 D coefficient*     == 89
+    5AH         s/byte   Motor 2 gear ratio         == 90
+    5BH         byte     Motor 2 P coefficient*     == 91
+    5CH         byte     Motor 2 I coefficient*     == 92
+    5DH         byte     Motor 2 D coefficient*     == 93
      */
     private static final int iRegWindowFirst = 0x40;
     private static final int iRegWindowMax   = 0x56;  // first register not included
