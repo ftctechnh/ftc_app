@@ -80,22 +80,32 @@ public class FTCCompetitionBase extends OpMode {
     // Lift Functions
     // TODO: Look at code to control the lift, fill in
     public void setArmLift(double power){
-
+        ArmLift.setPower(power);
     }
 
     // TODO: Look at code to control the Tilt, fill in
     public void setArmTilt(double power){
-
+        ArmTilt.setPower(power);
     }
 
     // TODO: Program block pickup to run on one button
     public void BlockPickup(boolean power){
-
+        if(power){
+            BlockPickup.setPower(1.0);
+        }
+        else{
+            BlockPickup.setPower(0);
+        }
     }
 
     // TODO: Operate Pullup hook on one button
     public void PullupHook(boolean power){
-
+        if (power){
+            PullUpHook.setPower(1.0);
+        }
+        else{
+            PullUpHook.setPower(0);
+        }
     }
 
 }
