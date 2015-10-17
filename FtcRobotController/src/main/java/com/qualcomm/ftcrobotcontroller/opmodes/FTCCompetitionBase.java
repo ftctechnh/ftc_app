@@ -58,6 +58,7 @@ public class FTCCompetitionBase extends OpMode {
 
     }
 
+    //Drive Functions
     private void DriveSystem(double left, double right){
         LeftDrive1.setPower(left);
         LeftDrive2.setPower(left);
@@ -75,5 +76,26 @@ public class FTCCompetitionBase extends OpMode {
     public void resetLeftEncoder(){ LeftDrive1.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);}
     public int getRightEncoder(){ return RightDrive1.getCurrentPosition(); }
     public void resetRightEncoder(){ RightDrive1.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);}
+
+    // Lift Functions
+    // TODO: Look at code to control the lift, fill in
+    public void setArmLift(double power){
+
+    }
+
+    // TODO: Look at code to control the Tilt, fill in
+    public void setArmTilt(double power){
+
+    }
+
+    // TODO: Program block pickup to run on one button
+    public void BlockPickup(boolean power){
+
+    }
+
+    // TODO: Operate Pullup hook on one button
+    public void PullupHook(boolean power){
+
+    }
 
 }
