@@ -85,7 +85,7 @@ public class MyRobotControllerAdministration
         }
 
     /**
-     * Any public static method annotated with {@link OnRobotRunning} is invoked when the robot
+     * Any public static method annotated with {@link OnRobotStartupFailure} is invoked when the robot
      * object in the robot controller application fails to enter the running state during
      * an attempt to do so. A common cause of such failures is a mismatch between the robot
      * configuration file and the devices currently attached to the robot.
