@@ -8,7 +8,7 @@ import org.swerverobotics.library.interfaces.TeleOp;
 import com.qualcomm.robotcore.util.*;
 
 /**
- * An example that illustrates use of the telemetry dashboard and log
+ * An example that illustrates use of the telemetry dashboard and log in a synchronous OpMode
  */
 @TeleOp(name="Telemetry (sync)", group="Swerve Examples")
 @Disabled
@@ -16,18 +16,15 @@ public class SynchTelemetryOp extends SynchronousOpMode
     {
     @Override protected void main() throws InterruptedException
         {
-        // Declare variables that will be used as our dashboard is updated. The variables
-        // are declared 'final' so that they will be accessible inside the item expressions
-        // of the dashboard.
         final ElapsedTime elapsed = new ElapsedTime();
-        final int loopCountStart = getLoopCount();
 
         this.telemetry.log.setDisplayOldToNew(false);   // And we show the log in new to old order, just because we want to
         this.telemetry.log.setCapacity(10);             // We can control the number of lines used by the log
 
         // Wait until we've been given the ok to go
         this.waitForStart();
-        
+        final int loopCountStart = getLoopCount();
+
         // Go go gadget robot!
         while (this.opModeIsActive())
             {
@@ -41,7 +38,7 @@ public class SynchTelemetryOp extends SynchronousOpMode
             // Update the telemetry dashboard with fresh values
             this.telemetry.addData("time",  format(elapsed));
             this.telemetry.addData("count", getLoopCount() - loopCountStart);
-            this.telemetry.addData("rate",  format(elapsed.time()*1000.0 / (getLoopCount() - loopCountStart)) + "ms");
+            this.telemetry.addData("ms/loop",  format(elapsed.time()*1000.0 / (getLoopCount() - loopCountStart)) + "ms");
 
             // Update driver station and wait until there's something useful to do
             this.telemetry.update();
