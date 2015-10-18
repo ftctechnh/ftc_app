@@ -9,7 +9,7 @@ import org.swerverobotics.library.interfaces.*;
  * An example that illustrates use of the telemetry dashboard and log in a linear opmode
  */
 @TeleOp(name="Telemetry (linear)", group="Swerve Examples")
-
+@Disabled
 public class LinearTelemetryOp extends LinearOpMode
     {
     TelemetryDashboardAndLog telemetry;
@@ -33,8 +33,8 @@ public class LinearTelemetryOp extends LinearOpMode
             // Go go gadget robot!
             while (this.opModeIsActive())
                 {
-                if (this.gamepad1.left_bumper)  { this.telemetry.log.add(format(elapsed) + ": left bumper pressed");  }
-                if (this.gamepad1.right_bumper) { this.telemetry.log.add(format(elapsed) + ": right bumper pressed"); }
+                if (this.gamepad1.left_bumper)  { this.telemetry.log.add(format(elapsed) + ": left bumper pressed");  while (opModeIsActive() && this.gamepad1.left_bumper) Thread.yield(); }
+                if (this.gamepad1.right_bumper) { this.telemetry.log.add(format(elapsed) + ": right bumper pressed"); while (opModeIsActive() && this.gamepad1.right_bumper) Thread.yield(); }
 
                 // Update the telemetry dashboard with fresh values
                 this.telemetry.addData("time",  format(elapsed));
