@@ -6,11 +6,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
 /**
- * The competition robot with the API for Autonomous Mode and Teleop Mode
+ * The Pushbot robot with the API for Autonomous Mode and Teleop Mode
  */
 public class PushBot {
-    public static int DEFAULTLINSLIDE = 0;
+ //   public static int DEFAULTLINSLIDE = 0;
     public static double WHEEL_DIAMETER = 4;
     public static int ENCODER_CPR = 1440;
     public static double GEAR_RATIO = 0.5;
@@ -18,11 +20,11 @@ public class PushBot {
     /**
      * The DCMotor for the left wheel
      */
-    private static DcMotor leftWheel;
+    private static DcMotor leftMotor;
     /**
      * The DCMotor for the right wheel
      */
-    private static DcMotor rightWheel;
+    private static DcMotor rightMotor;
     /**
      * The DCMotor for the linear slide
      */
@@ -54,20 +56,20 @@ public class PushBot {
     }*/
 
     public PushBot(HardwareMap hardwareMap){
-        rightWheel = hardwareMap.dcMotor.get("rightwheel");
-        leftWheel = hardwareMap.dcMotor.get("leftwheel");
-        rightWheel.setDirection(DcMotor.Direction.REVERSE);
+        rightMotor = hardwareMap.dcMotor.get("rightMotor");
+        leftMotor = hardwareMap.dcMotor.get("leftMotor");
+        rightMotor.setDirection(DcMotor.Direction.REVERSE);
     }
 
     public PushBot(DcMotor left, DcMotor right, DcMotor linearLift, Servo button, Sensor light, Sensor color, Sensor gyro){
-        leftWheel = left;
-        rightWheel = right;
+        leftMotor = left;
+        rightMotor = right;
         linearSlide = linearLift;
         buttonTouch = button;
         lightSensor = light;
         colorSensor = color;
         gyroSensor = gyro;
-        rightWheel.setDirection(DcMotor.Direction.REVERSE);
+        rightMotor.setDirection(DcMotor.Direction.REVERSE);
     }
 
     /**
@@ -92,7 +94,7 @@ public class PushBot {
 
     /**
      * Move straight
-     * Precondition: Encoder attached to leftWheel
+     * Precondition: Encoder attached to leftMotor
      * Postcondition: Robot moved to target position
      * @Param distance in cm, + = forward, - = backward
      */
@@ -101,19 +103,30 @@ public class PushBot {
         final double CIRCUMFERENCE = Math.PI * WHEEL_DIAMETER;
         final  double ROTATIONS = distance / CIRCUMFERENCE;
         final  double COUNTS = ENCODER_CPR * ROTATIONS * GEAR_RATIO;
+        rightMotor.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
+        rightMotor.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+//        rightMotor.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 
-        leftWheel.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
-        leftWheel.setTargetPosition((int) COUNTS);;
-        leftWheel.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
-
-        leftWheel.setPower(0.5);
-        rightWheel.setPower(0.5);
+        leftMotor.setTargetPosition((int) COUNTS);;
+        rightMotor.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
+      if (reverse) {
+          leftMotor.setPower(-1 * power);
+          rightMotor.setPower(-1 * power);
+      } else{
+                leftMotor.setPower(power);
+                rightMotor.setPower(power);
+            }
+        //telemetry.addData("Encoder Value", rightMotor.getCurrentPosition());
+        while (rightMotor.getCurrentPosition()<rightMotor.getTargetPosition()) {
+        }
+        leftMotor.setPower(0);
+        rightMotor.setPower(0);
 
     }
 
     /**
      * Turn left/right
-     * Precondition: Encoder attached to leftWheel
+     * Precondition: Encoder attached to leftMotor
      * Postcondition: Robot turned target degrees
      * @Param degrees in degrees, + = turn right, - = turn left
      */

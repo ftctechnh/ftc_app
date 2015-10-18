@@ -3,23 +3,28 @@ package com.technicbots;
 import android.hardware.Sensor;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 /**
- * The competition robot with the API for Autonomous Mode and Teleop Mode
+ * The Pushbot robot with the API for Autonomous Mode and Teleop Mode
  */
 public class K9Bot {
-    public static int DEFAULTLINSLIDE = 0;
+    //   public static int DEFAULTLINSLIDE = 0;
     public static double WHEEL_DIAMETER = 4;
+    public static int ENCODER_CPR = 1440;
+    public static double GEAR_RATIO = 0.5;
 
     /**
      * The DCMotor for the left wheel
      */
-    private DcMotor leftWheel;
+    private static DcMotor leftMotor;
     /**
      * The DCMotor for the right wheel
      */
-    private DcMotor rightWheel;
+    private static DcMotor rightMotor;
     /**
      * The DCMotor for the linear slide
      */
@@ -50,25 +55,21 @@ public class K9Bot {
         Reset, LowButton, MediumButton, HighButton
     }*/
 
-    /**
-     *
-     * @param left
-     * @param right
-     * @param linearLift
-     * @param button
-     * @param light
-     * @param color
-     * @param gyro
-     */
+    public K9Bot(HardwareMap hardwareMap){
+        rightMotor = hardwareMap.dcMotor.get("rightMotor");
+        leftMotor = hardwareMap.dcMotor.get("leftMotor");
+        rightMotor.setDirection(DcMotor.Direction.REVERSE);
+    }
+
     public K9Bot(DcMotor left, DcMotor right, DcMotor linearLift, Servo button, Sensor light, Sensor color, Sensor gyro){
-        leftWheel = left;
-        rightWheel = right;
+        leftMotor = left;
+        rightMotor = right;
         linearSlide = linearLift;
         buttonTouch = button;
         lightSensor = light;
         colorSensor = color;
         gyroSensor = gyro;
-
+        rightMotor.setDirection(DcMotor.Direction.REVERSE);
     }
 
     /**
@@ -93,17 +94,38 @@ public class K9Bot {
 
     /**
      * Move straight
-     * Precondition: Encoder attached to leftWheel
+     * Precondition: Encoder attached to leftMotor
      * Postcondition: Robot moved to target position
      * @Param distance in cm, + = forward, - = backward
      */
-    public static void moveStraight(double distance) {
+    public static void moveStraight(double distance, double power, boolean reverse) {
+
+        final double CIRCUMFERENCE = Math.PI * WHEEL_DIAMETER;
+        final  double ROTATIONS = distance / CIRCUMFERENCE;
+        final  double COUNTS = ENCODER_CPR * ROTATIONS * GEAR_RATIO;
+        rightMotor.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
+        rightMotor.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+//        rightMotor.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+
+        leftMotor.setTargetPosition((int) COUNTS);
+        rightMotor.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        if (reverse) {
+            leftMotor.setPower(-1 * power);
+            rightMotor.setPower(-1 * power);
+        } else{
+            leftMotor.setPower(power);
+            rightMotor.setPower(power);
+        }
+        //telemetry.addData("Encoder Value", rightMotor.getCurrentPosition());
+        while (rightMotor.getCurrentPosition()<rightMotor.getTargetPosition()) {
+        }
+        leftMotor.setPower(0);
+        rightMotor.setPower(0);
 
     }
-
     /**
      * Turn left/right
-     * Precondition: Encoder attached to leftWheel
+     * Precondition: Encoder attached to leftMotor
      * Postcondition: Robot turned target degrees
      * @Param degrees in degrees, + = turn right, - = turn left
      */
