@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9};
+var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -48,7 +48,7 @@ var activeTableTab = "activeTableTab";
 <div class="subNav">
 <ul class="navList">
 <li>Prev&nbsp;Class</li>
-<li><a href="../../../org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../org/swerverobotics/library/SwerveUtil.html" title="class in org.swerverobotics.library"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../index.html?org/swerverobotics/library/ClassFactory.html" target="_top">Frames</a></li>
@@ -226,6 +226,13 @@ extends java.lang.Object</pre>
                      int&nbsp;i2cAddr8Bit,
                      boolean&nbsp;closeOnOpModeStop)</code>
 <div class="block">Create a new II2cDeviceClient on an II2cDevice instance.</div>
+</td>
+</tr>
+<tr id="i11" class="rowColor">
+<td class="colFirst"><code>static <a href="../../../org/swerverobotics/library/interfaces/IOpModeLoopCounter.html" title="interface in org.swerverobotics.library.interfaces">IOpModeLoopCounter</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createLoopCounter-com.qualcomm.robotcore.eventloop.opmode.OpMode-">createLoopCounter</a></span>(OpMode&nbsp;opMode)</code>
+<div class="block">Creates an object that can report the number of times loop() has been called in both
+ Synchronous and Linear OpModes.</div>
 </td>
 </tr>
 </table>
@@ -505,7 +512,7 @@ extends java.lang.Object</pre>
 <a name="createI2cDeviceClient-com.qualcomm.robotcore.eventloop.opmode.OpMode-org.swerverobotics.library.internal.II2cDevice-int-boolean-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>createI2cDeviceClient</h4>
 <pre>public static&nbsp;<a href="../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a>&nbsp;createI2cDeviceClient(OpMode&nbsp;context,
@@ -524,6 +531,24 @@ extends java.lang.Object</pre>
 <dd>the newly instantiated I2c device client</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#arm--"><code>II2cDeviceClient.arm()</code></a></dd>
+</dl>
+</li>
+</ul>
+<a name="createLoopCounter-com.qualcomm.robotcore.eventloop.opmode.OpMode-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>createLoopCounter</h4>
+<pre>public static&nbsp;<a href="../../../org/swerverobotics/library/interfaces/IOpModeLoopCounter.html" title="interface in org.swerverobotics.library.interfaces">IOpModeLoopCounter</a>&nbsp;createLoopCounter(OpMode&nbsp;opMode)</pre>
+<div class="block">Creates an object that can report the number of times loop() has been called in both
+ Synchronous and Linear OpModes. In the former, this is not necessary, as getLoopCount()
+ may simply be called directly, but this utility object is handy in the latter.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>opMode</code> - the OpMode in which this loop counter is to report</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>the new utility object. Be sure to close() this object before exiting your OpMode</dd>
 </dl>
 </li>
 </ul>
@@ -555,7 +580,7 @@ extends java.lang.Object</pre>
 <div class="subNav">
 <ul class="navList">
 <li>Prev&nbsp;Class</li>
-<li><a href="../../../org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
+<li><a href="../../../org/swerverobotics/library/SwerveUtil.html" title="class in org.swerverobotics.library"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
 <li><a href="../../../index.html?org/swerverobotics/library/ClassFactory.html" target="_top">Frames</a></li>
