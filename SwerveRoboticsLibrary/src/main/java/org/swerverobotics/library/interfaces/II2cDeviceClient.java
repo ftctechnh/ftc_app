@@ -350,7 +350,10 @@ public interface II2cDeviceClient extends HardwareDevice
     //----------------------------------------------------------------------------------------------
 
     /**
-     * READ_MODE controls whether when asked to read we read only once or read multiple times
+     * READ_MODE controls whether when asked to read we read only once or read multiple times.
+     *
+     * In all modes, it is guaranteed that a read() which follows a write() operation will
+     * see the state of the device <em>after</em> the write has had effect.
      */
     enum READ_MODE
         {
@@ -358,10 +361,22 @@ public interface II2cDeviceClient extends HardwareDevice
          * Continuously issue I2C reads whenever there's nothing else needing to be done.
          * In this mode, {@link #read(int, int) read()} will not necessarily execute an I2C transaction
          * for every call but might instead return data previously read on from the I2C device.
+         * This mode is most useful in a device that spends most of its time doing read operations
+         * and only very infrequently writes, if ever.
          *
          * @see #read(int, int)
          */
         REPEAT,
+
+        /**
+         * Continuously issue I2C reads as in REPEAT when we can, but do <em>not</em> automatically
+         * transition back to read-mode following a write operation in order to do so. This mode is
+         * most useful in a device which has a balanced mix of read() and write() operations, such
+         * as a motor controller. Like {@link #REPEAT}, this mode might return data that was
+         * previously read a short while ago.
+         */
+        BALANCED,
+
         /**
          * Only issue a single I2C read, then set the read window to null to disable further reads.
          * Executing a {@link #read(int, int) read()} in this mode will always get fresh data
@@ -444,7 +459,20 @@ public interface II2cDeviceClient extends HardwareDevice
          * false for ONLY_ONCE windows after {@link #setReadIssued()} has been called on them.
          * @return whether it is permitted to perform a read for this window.
          */
-        public boolean isOkToRead() { return this.readMode==READ_MODE.REPEAT || !this.readIssued; }
+        public boolean isOkToRead()
+            {
+            return !this.readIssued || this.readMode != READ_MODE.ONLY_ONCE;
+            }
+
+        /**
+         * Answers as to whether this window in its present state ought to cause a transition
+         * to read-mode when there's nothing else for the device to be doing.
+         * @return whether this device should cause a read mode transition
+         */
+        public boolean maySwitchToReadMode()
+            {
+            return !this.readIssued || this.readMode == READ_MODE.REPEAT;
+            }
 
         //------------------------------------------------------------------------------------------
         // Construction
