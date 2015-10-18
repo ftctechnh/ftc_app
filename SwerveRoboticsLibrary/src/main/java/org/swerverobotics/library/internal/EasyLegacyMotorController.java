@@ -24,6 +24,8 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
+
+    public final String LOGGING_TAG = SynchronousOpMode.LOGGING_TAG;
     
     /* The NXT HiTechnic motor controller register layout is as follows:
 
@@ -331,25 +333,25 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
 
     @Override synchronized public boolean onUserOpModeStop()
         {
-        Log.d(SynchronousOpMode.LOGGING_TAG, "Easy: auto-stopping...");
+        Log.d(LOGGING_TAG, "Easy: auto-stopping...");
         if (this.isArmed)
             {
             this.stopMotors();  // mirror StopRobotOpMode
             this.disarm();
             }
-        Log.d(SynchronousOpMode.LOGGING_TAG, "Easy: ... done");
+        Log.d(LOGGING_TAG, "Easy: ... done");
         return true;    // unregister us
         }
 
     @Override synchronized public boolean onRobotShutdown()
         {
-        Log.d(SynchronousOpMode.LOGGING_TAG, "Easy: auto-closing...");
+        Log.d(LOGGING_TAG, "Easy: auto-closing...");
 
         // We actually shouldn't be here by now, having received a onUserOpModeStop()
         // after which we should have been unregistered. But we close down anyway.
         this.close();
 
-        Log.d(SynchronousOpMode.LOGGING_TAG, "Easy: ... done");
+        Log.d(LOGGING_TAG, "Easy: ... done");
         return true;    // unregister us
         }
 
@@ -480,12 +482,14 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
 
     private void floatMotors()
         {
+        Log.d(LOGGING_TAG, "floating motors");
         this.setMotorPowerFloat(1);
         this.setMotorPowerFloat(2);
         }
 
     private void stopMotors()
         {
+        Log.d(LOGGING_TAG, "stopping motors");
         this.setMotorPower(1, 0);
         this.setMotorPower(2, 0);
         }
