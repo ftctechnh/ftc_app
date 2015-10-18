@@ -238,6 +238,10 @@
 <dd>
 <div class="block">Close down and disable this device.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IOpModeLoopCounter.html#close--">close()</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/IOpModeLoopCounter.html" title="interface in org.swerverobotics.library.interfaces">IOpModeLoopCounter</a></dt>
+<dd>
+<div class="block">Shuts down the loop counter</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/Quaternion.html#congugate--">congugate()</a></span> - Method in class <a href="org/swerverobotics/library/interfaces/Quaternion.html" title="class in org.swerverobotics.library.interfaces">Quaternion</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#contains-org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow-">contains(II2cDeviceClient.ReadWindow)</a></span> - Method in class <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a></dt>
@@ -309,16 +313,23 @@
 <dd>
 <div class="block">Create a new II2cDeviceClient on an II2cDevice instance.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createLoopCounter-com.qualcomm.robotcore.eventloop.opmode.OpMode-">createLoopCounter(OpMode)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
+<dd>
+<div class="block">Creates an object that can report the number of times loop() has been called in both
+ Synchronous and Linear OpModes.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#createSynchronousWorkerThread-org.swerverobotics.library.interfaces.IInterruptableRunnable-">createSynchronousWorkerThread(IInterruptableRunnable)</a></span> - Method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
 <dd>
 <div class="block">Advanced: createSynchronousWorkerThread() is used to create secondary worker threads
  from your main thread, should you wish to do so.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#cregMax">cregMax</a></span> - Static variable in class <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a></dt>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#cregReadMax">cregReadMax</a></span> - Static variable in class <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a></dt>
 <dd>
 <div class="block">enableI2cReadMode and enableI2cWriteMode both impose a maximum length
  on the size of data that can be read or written at one time.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#cregWriteMax">cregWriteMax</a></span> - Static variable in class <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <a name="I:D">
 <!--   -->
@@ -473,6 +484,10 @@
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IBNO055IMU.html#getLinearAcceleration--">getLinearAcceleration()</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/IBNO055IMU.html" title="interface in org.swerverobotics.library.interfaces">IBNO055IMU</a></dt>
 <dd>
 <div class="block">Returns the acceleration experienced by the sensor due to the movement of the sensor.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IOpModeLoopCounter.html#getLoopCount--">getLoopCount()</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/IOpModeLoopCounter.html" title="interface in org.swerverobotics.library.interfaces">IOpModeLoopCounter</a></dt>
+<dd>
+<div class="block">Returns the number of times that loop() has been called in the associated OpMode</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#getLoopCount--">getLoopCount()</a></span> - Method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
 <dd>
@@ -651,7 +666,7 @@
 </dd>
 <dt><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.READ_MODE.html" title="enum in org.swerverobotics.library.interfaces"><span class="typeNameLink">II2cDeviceClient.READ_MODE</span></a> - Enum in <a href="org/swerverobotics/library/interfaces/package-summary.html">org.swerverobotics.library.interfaces</a></dt>
 <dd>
-<div class="block">READ_MODE controls whether when asked to read we read only once or read multiple times</div>
+<div class="block">READ_MODE controls whether when asked to read we read only once or read multiple times.</div>
 </dd>
 <dt><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces"><span class="typeNameLink">II2cDeviceClient.ReadWindow</span></a> - Class in <a href="org/swerverobotics/library/interfaces/package-summary.html">org.swerverobotics.library.interfaces</a></dt>
 <dd>
@@ -699,6 +714,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/NavUtil.html#integrate-org.swerverobotics.library.interfaces.Acceleration-double-">integrate(Acceleration, double)</a></span> - Static method in class <a href="org/swerverobotics/library/interfaces/NavUtil.html" title="class in org.swerverobotics.library.interfaces">NavUtil</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="org/swerverobotics/library/interfaces/IOpModeLoopCounter.html" title="interface in org.swerverobotics.library.interfaces"><span class="typeNameLink">IOpModeLoopCounter</span></a> - Interface in <a href="org/swerverobotics/library/interfaces/package-summary.html">org.swerverobotics.library.interfaces</a></dt>
+<dd>
+<div class="block">Public interface to the little OpModeLoopCounter utility</div>
+</dd>
 <dt><a href="org/swerverobotics/library/interfaces/IOpModeManager.html" title="interface in org.swerverobotics.library.interfaces"><span class="typeNameLink">IOpModeManager</span></a> - Interface in <a href="org/swerverobotics/library/interfaces/package-summary.html">org.swerverobotics.library.interfaces</a></dt>
 <dd>
 <div class="block">IOpModeManager instances are used as part of a decentralized OpMode registration
@@ -759,6 +778,12 @@
  a main loop that both reads and writes to the a motor.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/examples/LinearMotorLoopPerf.html#LinearMotorLoopPerf--">LinearMotorLoopPerf()</a></span> - Constructor for class <a href="org/swerverobotics/library/examples/LinearMotorLoopPerf.html" title="class in org.swerverobotics.library.examples">LinearMotorLoopPerf</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="org/swerverobotics/library/examples/LinearTelemetryOp.html" title="class in org.swerverobotics.library.examples"><span class="typeNameLink">LinearTelemetryOp</span></a> - Class in <a href="org/swerverobotics/library/examples/package-summary.html">org.swerverobotics.library.examples</a></dt>
+<dd>
+<div class="block">An example that illustrates use of the telemetry dashboard and log in a linear opmode</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/examples/LinearTelemetryOp.html#LinearTelemetryOp--">LinearTelemetryOp()</a></span> - Constructor for class <a href="org/swerverobotics/library/examples/LinearTelemetryOp.html" title="class in org.swerverobotics.library.examples">LinearTelemetryOp</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/TelemetryDashboardAndLog.html#log">log</a></span> - Variable in class <a href="org/swerverobotics/library/TelemetryDashboardAndLog.html" title="class in org.swerverobotics.library">TelemetryDashboardAndLog</a></dt>
 <dd>
@@ -830,6 +855,11 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/usfirst/ftc/exampleteam/yourcodehere/MyFirstOpMode.html#main--">main()</a></span> - Method in class <a href="org/usfirst/ftc/exampleteam/yourcodehere/MyFirstOpMode.html" title="class in org.usfirst.ftc.exampleteam.yourcodehere">MyFirstOpMode</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#maySwitchToReadMode--">maySwitchToReadMode()</a></span> - Method in class <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a></dt>
+<dd>
+<div class="block">Answers as to whether this window in its present state ought to cause a transition
+ to read-mode when there's nothing else for the device to be doing.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/NavUtil.html#meanIntegrate-org.swerverobotics.library.interfaces.Velocity-org.swerverobotics.library.interfaces.Velocity-">meanIntegrate(Velocity, Velocity)</a></span> - Static method in class <a href="org/swerverobotics/library/interfaces/NavUtil.html" title="class in org.swerverobotics.library.interfaces">NavUtil</a></dt>
 <dd>
 <div class="block">Integrate between two velocities to determine a change in position using an assumption
@@ -973,6 +1003,10 @@
 <dd>
 <div class="block">directional convention for measureing pitch angles.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/SwerveUtil.html#playSound-Context-int-">playSound(Context, int)</a></span> - Static method in class <a href="org/swerverobotics/library/SwerveUtil.html" title="class in org.swerverobotics.library">SwerveUtil</a></dt>
+<dd>
+<div class="block">Plays a sound given the sounds identity as a (raw) resource.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/usfirst/ftc/exampleteam/yourcodehere/MyRobotControllerAdministration.html#playSoundOnRobotRunning-Context-">playSoundOnRobotRunning(Context)</a></span> - Static method in class <a href="org/usfirst/ftc/exampleteam/yourcodehere/MyRobotControllerAdministration.html" title="class in org.usfirst.ftc.exampleteam.yourcodehere">MyRobotControllerAdministration</a></dt>
 <dd>
 <div class="block">Any public static method annotated with <a href="org/swerverobotics/library/interfaces/OnRobotRunning.html" title="annotation in org.swerverobotics.library.interfaces"><code>OnRobotRunning</code></a> is invoked when the robot
@@ -981,7 +1015,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/usfirst/ftc/exampleteam/yourcodehere/MyRobotControllerAdministration.html#playSoundOnRobotStartupFailure-Context-">playSoundOnRobotStartupFailure(Context)</a></span> - Static method in class <a href="org/usfirst/ftc/exampleteam/yourcodehere/MyRobotControllerAdministration.html" title="class in org.usfirst.ftc.exampleteam.yourcodehere">MyRobotControllerAdministration</a></dt>
 <dd>
-<div class="block">Any public static method annotated with <a href="org/swerverobotics/library/interfaces/OnRobotRunning.html" title="annotation in org.swerverobotics.library.interfaces"><code>OnRobotRunning</code></a> is invoked when the robot
+<div class="block">Any public static method annotated with <a href="org/swerverobotics/library/interfaces/OnRobotStartupFailure.html" title="annotation in org.swerverobotics.library.interfaces"><code>OnRobotStartupFailure</code></a> is invoked when the robot
  object in the robot controller application fails to enter the running state during
  an attempt to do so.</div>
 </dd>
@@ -1144,6 +1178,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/examples/LinearMotorLoopPerf.html#runOpMode--">runOpMode()</a></span> - Method in class <a href="org/swerverobotics/library/examples/LinearMotorLoopPerf.html" title="class in org.swerverobotics.library.examples">LinearMotorLoopPerf</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/examples/LinearTelemetryOp.html#runOpMode--">runOpMode()</a></span> - Method in class <a href="org/swerverobotics/library/examples/LinearTelemetryOp.html" title="class in org.swerverobotics.library.examples">LinearTelemetryOp</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="org/swerverobotics/library/exceptions/RuntimeInterruptedException.html" title="class in org.swerverobotics.library.exceptions"><span class="typeNameLink">RuntimeInterruptedException</span></a> - Exception in <a href="org/swerverobotics/library/exceptions/package-summary.html">org.swerverobotics.library.exceptions</a></dt>
 <dd>
 <div class="block">An unchecked version of InterruptedException.</div>
@@ -1268,6 +1304,12 @@
 <div class="block">Constructs a new <a href="org/swerverobotics/library/exceptions/SwerveRuntimeException.html" title="class in org.swerverobotics.library.exceptions"><code>SwerveRuntimeException</code></a> with the current stack trace
  and the specified cause.</div>
 </dd>
+<dt><a href="org/swerverobotics/library/SwerveUtil.html" title="class in org.swerverobotics.library"><span class="typeNameLink">SwerveUtil</span></a> - Class in <a href="org/swerverobotics/library/package-summary.html">org.swerverobotics.library</a></dt>
+<dd>
+<div class="block">A class containing a small selection of handy utilities.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/SwerveUtil.html#SwerveUtil--">SwerveUtil()</a></span> - Constructor for class <a href="org/swerverobotics/library/SwerveUtil.html" title="class in org.swerverobotics.library">SwerveUtil</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="org/swerverobotics/library/examples/SynchAnalogOutputDemo.html" title="class in org.swerverobotics.library.examples"><span class="typeNameLink">SynchAnalogOutputDemo</span></a> - Class in <a href="org/swerverobotics/library/examples/package-summary.html">org.swerverobotics.library.examples</a></dt>
 <dd>
 <div class="block">SynchAnalogOutputDemo is a short demo of an AnalogOutput port.</div>
@@ -1323,7 +1365,7 @@
 <dd>&nbsp;</dd>
 <dt><a href="org/swerverobotics/library/examples/SynchTelemetryOp.html" title="class in org.swerverobotics.library.examples"><span class="typeNameLink">SynchTelemetryOp</span></a> - Class in <a href="org/swerverobotics/library/examples/package-summary.html">org.swerverobotics.library.examples</a></dt>
 <dd>
-<div class="block">An example that illustrates use of the telemetry dashboard and log</div>
+<div class="block">An example that illustrates use of the telemetry dashboard and log in a synchronous OpMode</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/examples/SynchTelemetryOp.html#SynchTelemetryOp--">SynchTelemetryOp()</a></span> - Constructor for class <a href="org/swerverobotics/library/examples/SynchTelemetryOp.html" title="class in org.swerverobotics.library.examples">SynchTelemetryOp</a></dt>
 <dd>&nbsp;</dd>

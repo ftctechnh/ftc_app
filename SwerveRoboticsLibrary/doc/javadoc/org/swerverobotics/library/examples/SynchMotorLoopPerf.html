@@ -128,9 +128,10 @@ public class <span class="typeNameLabel">SynchMotorLoopPerf</span>
 extends <a href="../../../../org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></pre>
 <div class="block">An op mode that investigates how many loop() cycles it takes to do full
  mode switching on a motor controller. Each main loop cycle does both
- a read and a write to the motor.
+ a read and a write to motors.
 
- This OpMode expects two motors, named 'motorLeft' and 'motorRight'.</div>
+ This OpMode expects two motors, named 'motorLeft' and 'motorRight'. A configuration
+ flag, set in the constructor, controls whether just one or both of the motors are used.</div>
 </li>
 </ul>
 </div>
