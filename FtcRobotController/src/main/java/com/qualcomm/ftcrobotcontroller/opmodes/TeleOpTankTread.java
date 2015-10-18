@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.util.Range;
  * <p>
  * Enables control of the robot via the gamepad
  */
-public class TeleOpTankTread {
+public class TeleOpTankTread extends OpMode{
     /*
 	 * Note: the configuration of the servos is such that
 	 * as the arm servo approaches 0, the arm position moves up (away from the floor).
@@ -38,6 +38,7 @@ public class TeleOpTankTread {
     // amount to change the claw servo position by
     double clawDelta = 0.1;
 
+// Emma
     DcMotor motorFRight;
     DcMotor motorRRight;
     DcMotor motorFLeft;
