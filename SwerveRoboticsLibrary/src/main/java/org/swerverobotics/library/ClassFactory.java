@@ -240,6 +240,22 @@ public final class ClassFactory
         }
 
     //----------------------------------------------------------------------------------------------
+    // Miscellaneous
+    //----------------------------------------------------------------------------------------------
+
+    /**
+     * Creates an object that can report the number of times loop() has been called in both
+     * Synchronous and Linear OpModes. In the former, this is not necessary, as getLoopCount()
+     * may simply be called directly, but this utility object is handy in the latter.
+     * @param opMode    the OpMode in which this loop counter is to report
+     * @return          the new utility object. Be sure to close() this object before exiting your OpMode
+     */
+    public static IOpModeLoopCounter createLoopCounter(OpMode opMode)
+        {
+        return new OpModeLoopCounter(opMode);
+        }
+
+    //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
     
