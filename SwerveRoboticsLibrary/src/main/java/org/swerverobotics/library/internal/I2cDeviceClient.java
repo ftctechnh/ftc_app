@@ -222,7 +222,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                             {
                             // There may be still data that needs to get out to the controller.
                             // Wait until that happens.
-                            waitForWriteCompletion();
+                            waitForWriteCompletionInternal();
 
                             // Now we know that the callback isn't executing, we can pull the
                             // rug out from under his use of the heartbeater
@@ -541,8 +541,25 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                         // Wait until the write at least issues to the device controller. This will
                         // help make any delays/sleeps that follow a write() be more deterministically
                         // relative to the actual I2C device write.
-                        waitForWriteCompletion();
+                        waitForWriteCompletionInternal();
                         }
+                    }
+                }
+            }
+        catch (InterruptedException e)
+            {
+            handleCapturedInterrupt(e);
+            }
+        }
+
+    @Override public void waitForWriteCompletions()
+        {
+        try {
+            synchronized (this.concurrentClientLock)
+                {
+                synchronized (this.callbackLock)
+                    {
+                    waitForWriteCompletionInternal();
                     }
                 }
             }
@@ -565,7 +582,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
             }
         }
 
-    private void waitForWriteCompletion() throws InterruptedException
+    private void waitForWriteCompletionInternal() throws InterruptedException
         {
         while (writeCacheStatus != WRITE_CACHE_STATUS.IDLE)
             {
