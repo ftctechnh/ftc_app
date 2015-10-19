@@ -482,14 +482,14 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
         {
         this.setMotorPowerFloat(1);
         this.setMotorPowerFloat(2);
-        i2cDeviceClient.waitForWriteCompletions();
+        i2cDeviceClient.waitForWriteCompletions();  // paranoia about safety
         }
 
     private void stopMotors()
         {
         this.setMotorPower(1, 0);
         this.setMotorPower(2, 0);
-        i2cDeviceClient.waitForWriteCompletions();
+        i2cDeviceClient.waitForWriteCompletions();  // paranoia about safety
         }
 
     private void validateMotor(int motor)
