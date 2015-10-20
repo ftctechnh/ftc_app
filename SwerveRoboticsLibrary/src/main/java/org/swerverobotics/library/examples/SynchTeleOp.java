@@ -8,7 +8,7 @@ import org.swerverobotics.library.interfaces.*;
 /**
  * An example of a synchronous opmode that implements a simple drive-a-bot. 
  */
-@TeleOp(name="Simple TeleOp", group="Swerve Examples")
+@TeleOp(name="TeleOp (sync)", group="Swerve Examples")
 @Disabled
 public class SynchTeleOp extends SynchronousOpMode
     {

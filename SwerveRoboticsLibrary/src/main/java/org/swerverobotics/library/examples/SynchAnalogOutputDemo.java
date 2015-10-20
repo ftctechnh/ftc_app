@@ -40,7 +40,7 @@ public class SynchAnalogOutputDemo extends SynchronousOpMode {
     //Many devices can only play a limited range of notes.
     //For my purposes, I'll set somewhat reasonable limits here.
     static final int MAX_NOTE_INDEX = 108;
-    static final int MIN_NOTE_INDEX = 14; //Console.Beep requires a frequency of 37 or above
+    static final int MIN_NOTE_INDEX = 14;
 
     int current_note_index = A440_INDEX; //start at A440.
 
@@ -53,7 +53,7 @@ public class SynchAnalogOutputDemo extends SynchronousOpMode {
 
     @Override public void main() throws InterruptedException {
         // We are expecting the analog output to be attached to a core device interface module
-        // and named "analogout".
+        // and named "aout".
         analog = hardwareMap.analogOutput.get("aout");
 
         // Set up our dashboard computations

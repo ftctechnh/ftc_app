@@ -106,7 +106,7 @@
 <dd>
 <div class="block">Add a new log message to be transmitted to the driver station as soon as we can.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/swerverobotics/library/TelemetryDashboardAndLog.html#addAction-org.swerverobotics.library.interfaces.IAction-">addAction(IAction)</a></span> - Method in class <a href="org/swerverobotics/library/TelemetryDashboardAndLog.html" title="class in org.swerverobotics.library">TelemetryDashboardAndLog</a></dt>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/TelemetryDashboardAndLog.html#addAction-java.lang.Runnable-">addAction(Runnable)</a></span> - Method in class <a href="org/swerverobotics/library/TelemetryDashboardAndLog.html" title="class in org.swerverobotics.library">TelemetryDashboardAndLog</a></dt>
 <dd>
 <div class="block">In addition to lines, a dashboard may also contain a list of actions.</div>
 </dd>
@@ -168,6 +168,10 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/AngularVelocity.html#AngularVelocity-org.swerverobotics.library.interfaces.II2cDeviceClient.TimestampedData-double-">AngularVelocity(II2cDeviceClient.TimestampedData, double)</a></span> - Constructor for class <a href="org/swerverobotics/library/interfaces/AngularVelocity.html" title="class in org.swerverobotics.library.interfaces">AngularVelocity</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html#arm--">arm()</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a></dt>
+<dd>
+<div class="block">Arms the client for operation.</div>
+</dd>
 <dt><a href="org/swerverobotics/library/interfaces/Autonomous.html" title="annotation in org.swerverobotics.library.interfaces"><span class="typeNameLink">Autonomous</span></a> - Annotation Type in <a href="org/swerverobotics/library/interfaces/package-summary.html">org.swerverobotics.library.interfaces</a></dt>
 <dd>
 <div class="block">Provides an easy and non-centralized way of determining the OpMode list
@@ -249,31 +253,43 @@
 <div class="block">Answers as to whether the receiver wholly contains the indicated window
  and also has the same modality.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createAdaFruitBNO055IMU-com.qualcomm.robotcore.hardware.I2cDevice-">createAdaFruitBNO055IMU(I2cDevice)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createAdaFruitBNO055IMU-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.I2cDevice-">createAdaFruitBNO055IMU(OpMode, I2cDevice)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
 <dd>
-<div class="block">Instantiates an AdaFruit BNO055 sensor which resides at the indicated I2cDevice using
+<div class="block">Instantiates a driver object for a  AdaFruit BNO055 sensor which resides at the indicated I2cDevice using
  default values for configuration parameters.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createAdaFruitBNO055IMU-com.qualcomm.robotcore.hardware.I2cDevice-org.swerverobotics.library.interfaces.IBNO055IMU.Parameters-">createAdaFruitBNO055IMU(I2cDevice, IBNO055IMU.Parameters)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
 <dd>
-<div class="block">Instantiates an AdaFruit BNO055 sensor which resides at the indicated I2cDevice using
+<div class="block">Instantiates a driver object for an AdaFruit BNO055 sensor which resides at the indicated I2cDevice using
  the provided configuration parameters.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createHiTechnicColorSensor-com.qualcomm.robotcore.hardware.I2cDevice-">createHiTechnicColorSensor(I2cDevice)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createAdaFruitBNO055IMU-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.I2cDevice-org.swerverobotics.library.interfaces.IBNO055IMU.Parameters-">createAdaFruitBNO055IMU(OpMode, I2cDevice, IBNO055IMU.Parameters)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
 <dd>
-<div class="block">Creates an ColorSensor object from an I2cDevice that represents a
+<div class="block">Instantiates a driver object for an AdaFruit BNO055 sensor which resides at the indicated I2cDevice using
+ the provided configuration parameters.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createEasyLegacyMotorController-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.DcMotor-com.qualcomm.robotcore.hardware.DcMotor-">createEasyLegacyMotorController(OpMode, DcMotor, DcMotor)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
+<dd>
+<div class="block">If the provided motors are using a legacy motor controller, swaps that controller out
+ and installs an alternate 'EasyLegacyMotorController' DCMotorController implementation
+ for the duration of the OpMode; if the motors are using a modern motor controller, the
+ function has no effect.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createHiTechnicColorSensor-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.I2cDevice-">createHiTechnicColorSensor(OpMode, I2cDevice)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
+<dd>
+<div class="block">Creates a driver ColorSensor object for an I2cDevice that represents a
  <a href="http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NCO1038">HiTechnic
  color sensor</a>.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createHiTechnicColorSensor-org.swerverobotics.library.internal.II2cDevice-">createHiTechnicColorSensor(II2cDevice)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createHiTechnicColorSensor-com.qualcomm.robotcore.eventloop.opmode.OpMode-org.swerverobotics.library.internal.II2cDevice-">createHiTechnicColorSensor(OpMode, II2cDevice)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
 <dd>
-<div class="block">Creates an ColorSensor object from an II2cDevice that represents a
+<div class="block">Creates a driver ColorSensor object for an I2cDevice that represents a
  <a href="http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NCO1038">HiTechnic
  color sensor</a>.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createHiTechnicColorSensor-com.qualcomm.robotcore.hardware.I2cController-int-">createHiTechnicColorSensor(I2cController, int)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createHiTechnicColorSensor-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.I2cController-int-">createHiTechnicColorSensor(OpMode, I2cController, int)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
 <dd>
-<div class="block">Creates an ColorSensor object from an controller and port specification that represents a
+<div class="block">Creates a driver ColorSensor object from an controller and port specification that represents a
  <a href="http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NCO1038">HiTechnic
  color sensor</a>.</div>
 </dd>
@@ -285,22 +301,13 @@
 <dd>
 <div class="block">Creates an II2Device instance on a specific port on an I2cDeviceController</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createI2cDeviceClient-com.qualcomm.robotcore.hardware.I2cDevice-int-">createI2cDeviceClient(I2cDevice, int)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createI2cDeviceClient-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.I2cDevice-int-boolean-">createI2cDeviceClient(OpMode, I2cDevice, int, boolean)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
 <dd>
 <div class="block">Create a new II2cDeviceClient on an I2cDevice instance.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createI2cDeviceClient-org.swerverobotics.library.internal.II2cDevice-int-">createI2cDeviceClient(II2cDevice, int)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createI2cDeviceClient-com.qualcomm.robotcore.eventloop.opmode.OpMode-org.swerverobotics.library.internal.II2cDevice-int-boolean-">createI2cDeviceClient(OpMode, II2cDevice, int, boolean)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
 <dd>
 <div class="block">Create a new II2cDeviceClient on an II2cDevice instance.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createI2cDeviceClient-org.swerverobotics.library.internal.II2cDevice-int-boolean-org.swerverobotics.library.interfaces.IStopActionRegistrar-">createI2cDeviceClient(II2cDevice, int, boolean, IStopActionRegistrar)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
-<dd>
-<div class="block">Create a new II2cDeviceClient on an II2cDevice instance.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createNxtDcMotorController-com.qualcomm.robotcore.hardware.DcMotorController-">createNxtDcMotorController(DcMotorController)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
-<dd>
-<div class="block">Creates an alternate 'NxtMotorControllerOnI2cDevice' DCMotorController implementation for
- a legacy HiTechnic / Nxt motor controller.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#createSynchronousWorkerThread-org.swerverobotics.library.interfaces.IInterruptableRunnable-">createSynchronousWorkerThread(IInterruptableRunnable)</a></span> - Method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
 <dd>
@@ -328,10 +335,10 @@
  <a href="org/swerverobotics/library/interfaces/Autonomous.html" title="annotation in org.swerverobotics.library.interfaces"><code>Autonomous</code></a> or <a href="org/swerverobotics/library/interfaces/TeleOp.html" title="annotation in org.swerverobotics.library.interfaces"><code>TeleOp</code></a> from showing up
  on the driver station OpMode list.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IAction.html#doAction--">doAction()</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/IAction.html" title="interface in org.swerverobotics.library.interfaces">IAction</a></dt>
-<dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IInterruptableAction.html#doAction--">doAction()</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/IInterruptableAction.html" title="interface in org.swerverobotics.library.interfaces">IInterruptableAction</a></dt>
-<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html#disarm--">disarm()</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a></dt>
+<dd>
+<div class="block">Disarms the client if it is currently armed.</div>
+</dd>
 </dl>
 <a name="I:E">
 <!--   -->
@@ -352,7 +359,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/EulerAngles.html#EulerAngles-org.swerverobotics.library.interfaces.II2cDeviceClient.TimestampedData-double-">EulerAngles(II2cDeviceClient.TimestampedData, double)</a></span> - Constructor for class <a href="org/swerverobotics/library/interfaces/EulerAngles.html" title="class in org.swerverobotics.library.interfaces">EulerAngles</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html#executeActionWhileLocked-org.swerverobotics.library.interfaces.IAction-">executeActionWhileLocked(IAction)</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a></dt>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html#executeActionWhileLocked-java.lang.Runnable-">executeActionWhileLocked(Runnable)</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a></dt>
 <dd>
 <div class="block">Executes the indicated action while holding the concurrency lock on the object
  so as to prevent other threads from interleaving.</div>
@@ -362,27 +369,23 @@
 <div class="block">Executes the indicated function while holding the concurrency lock on the object
  so as to prevent other threads from interleaving.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IThunkDispatcher.html#executeOnLoopThread-org.swerverobotics.library.interfaces.IAction-">executeOnLoopThread(IAction)</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/IThunkDispatcher.html" title="interface in org.swerverobotics.library.interfaces">IThunkDispatcher</a></dt>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IThunkDispatcher.html#executeOnLoopThread-java.lang.Runnable-">executeOnLoopThread(Runnable)</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/IThunkDispatcher.html" title="interface in org.swerverobotics.library.interfaces">IThunkDispatcher</a></dt>
 <dd>
-<div class="block">Execute the indicated action over on the loop() thread.</div>
+<div class="block">Executes the indicated action over on the loop() thread.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#executeOnLoopThread-org.swerverobotics.library.interfaces.IAction-">executeOnLoopThread(IAction)</a></span> - Method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#executeOnLoopThread-java.lang.Runnable-">executeOnLoopThread(Runnable)</a></span> - Method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
 <dd>
 <div class="block">Advanced: Execute the indicated action on the loop thread given that we are on a synchronous thread</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IThunkDispatcher.html#executeSingletonOnLoopThread-int-org.swerverobotics.library.interfaces.IAction-">executeSingletonOnLoopThread(int, IAction)</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/IThunkDispatcher.html" title="interface in org.swerverobotics.library.interfaces">IThunkDispatcher</a></dt>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IThunkDispatcher.html#executeSingletonOnLoopThread-int-java.lang.Runnable-">executeSingletonOnLoopThread(int, Runnable)</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/IThunkDispatcher.html" title="interface in org.swerverobotics.library.interfaces">IThunkDispatcher</a></dt>
 <dd>
-<div class="block">Execute the indicated action over on the loop() thread, but replace any
- pending singleton there already there who was queued using the same action key.</div>
+<div class="block">Executes the indicated action over on the loop() thread, but replace any
+ pending singleton already there who was queued using the same singleton key.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#executeSingletonOnLoopThread-int-org.swerverobotics.library.interfaces.IAction-">executeSingletonOnLoopThread(int, IAction)</a></span> - Method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#executeSingletonOnLoopThread-int-java.lang.Runnable-">executeSingletonOnLoopThread(int, Runnable)</a></span> - Method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
 <dd>
 <div class="block">Advanced: Execute the indicated action on the loop thread if we are on a synchronous thread
  or the loop() thread.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.HeartbeatAction.html#explicitReadPriority">explicitReadPriority</a></span> - Variable in class <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.HeartbeatAction.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.HeartbeatAction</a></dt>
-<dd>
-<div class="block">Advanced: if a read on a separate thread is in fact needed, use this thread priority</div>
 </dd>
 </dl>
 <a name="I:F">
@@ -486,7 +489,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IThunkDispatcher.html#getNewSingletonKey--">getNewSingletonKey()</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/IThunkDispatcher.html" title="interface in org.swerverobotics.library.interfaces">IThunkDispatcher</a></dt>
 <dd>
-<div class="block">Return a new singleton key</div>
+<div class="block">Returns a new singleton key</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#getNewSingletonKey--">getNewSingletonKey()</a></span> - Method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
 <dd>
@@ -521,12 +524,6 @@
 <dd>
 <div class="block">Returns the current register window used for reading.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#getStopActionRegistrar--">getStopActionRegistrar()</a></span> - Static method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
-<dd>
-<div class="block">Advanced: If we are running on a synchronous thread, returns an object that can
- be used to register for a callback when the contextually associated synchronous
- opmode stops.</div>
-</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IBNO055IMU.html#getSystemError--">getSystemError()</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/IBNO055IMU.html" title="interface in org.swerverobotics.library.interfaces">IBNO055IMU</a></dt>
 <dd>
 <div class="block">If <a href="org/swerverobotics/library/interfaces/IBNO055IMU.html#getSystemStatus--"><code>IBNO055IMU.getSystemStatus()</code></a> is 'system error' (1), returns particulars
@@ -547,7 +544,7 @@
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#getThreadThunker--">getThreadThunker()</a></span> - Static method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
 <dd>
 <div class="block">Advanced: If we are running on a synchronous thread, then return the object
- which is managing the internal from the current thread to the loop() thread.</div>
+ which manages thunking from the current thread to the loop() thread.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/TelemetryDashboardAndLog.html#getUpdateIntervalMs--">getUpdateIntervalMs()</a></span> - Method in class <a href="org/swerverobotics/library/TelemetryDashboardAndLog.html" title="class in org.swerverobotics.library">TelemetryDashboardAndLog</a></dt>
 <dd>
@@ -571,6 +568,11 @@
 </a>
 <h2 class="title">H</h2>
 <dl>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#hardwareMap">hardwareMap</a></span> - Variable in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
+<dd>
+<div class="block">We define a *local* hardwareMap variable here to hide the one in our base
+ class as the one we want user code to see is the one with the thunking in it.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/EulerAngles.html#heading">heading</a></span> - Variable in class <a href="org/swerverobotics/library/interfaces/EulerAngles.html" title="class in org.swerverobotics.library.interfaces">EulerAngles</a></dt>
 <dd>
 <div class="block">the rotation about the Z axis</div>
@@ -595,10 +597,6 @@
 <dd>
 <div class="block"><a href="org/swerverobotics/library/interfaces/IAccelerationIntegrator.html" title="interface in org.swerverobotics.library.interfaces"><code>IAccelerationIntegrator</code></a> encapsulates an algorithm for integrating
  acceleration information over time to produce velocity and position.</div>
-</dd>
-<dt><a href="org/swerverobotics/library/interfaces/IAction.html" title="interface in org.swerverobotics.library.interfaces"><span class="typeNameLink">IAction</span></a> - Interface in <a href="org/swerverobotics/library/interfaces/package-summary.html">org.swerverobotics.library.interfaces</a></dt>
-<dd>
-<div class="block">IAction is an interface for encapsulating work</div>
 </dd>
 <dt><a href="org/swerverobotics/library/interfaces/IBNO055IMU.html" title="interface in org.swerverobotics.library.interfaces"><span class="typeNameLink">IBNO055IMU</span></a> - Interface in <a href="org/swerverobotics/library/interfaces/package-summary.html">org.swerverobotics.library.interfaces</a></dt>
 <dd>
@@ -634,7 +632,7 @@
 </dd>
 <dt><a href="org/swerverobotics/library/interfaces/IFunc.html" title="interface in org.swerverobotics.library.interfaces"><span class="typeNameLink">IFunc</span></a>&lt;<a href="org/swerverobotics/library/interfaces/IFunc.html" title="type parameter in IFunc">TResult</a>&gt; - Interface in <a href="org/swerverobotics/library/interfaces/package-summary.html">org.swerverobotics.library.interfaces</a></dt>
 <dd>
-<div class="block">IFunc<TResult> represents a nullary function that returns a value of the indicated type</div>
+<div class="block">IFunc&lt;TResult&gt; represents a nullary function that returns a value of the indicated type.</div>
 </dd>
 <dt><a href="org/swerverobotics/library/interfaces/IHardwareWrapper.html" title="interface in org.swerverobotics.library.interfaces"><span class="typeNameLink">IHardwareWrapper</span></a>&lt;<a href="org/swerverobotics/library/interfaces/IHardwareWrapper.html" title="type parameter in IHardwareWrapper">T</a>&gt; - Interface in <a href="org/swerverobotics/library/interfaces/package-summary.html">org.swerverobotics.library.interfaces</a></dt>
 <dd>
@@ -670,10 +668,10 @@
 <div class="block">II2cDeviceClientUser allows one to retrieve an underlying I2cDeviceClient from 
  an object that respresents an I2C hardware sensor.</div>
 </dd>
-<dt><a href="org/swerverobotics/library/interfaces/IInterruptableAction.html" title="interface in org.swerverobotics.library.interfaces"><span class="typeNameLink">IInterruptableAction</span></a> - Interface in <a href="org/swerverobotics/library/interfaces/package-summary.html">org.swerverobotics.library.interfaces</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="org/swerverobotics/library/interfaces/IInterruptableFunc.html" title="interface in org.swerverobotics.library.interfaces"><span class="typeNameLink">IInterruptableFunc</span></a>&lt;<a href="org/swerverobotics/library/interfaces/IInterruptableFunc.html" title="type parameter in IInterruptableFunc">TResult</a>&gt; - Interface in <a href="org/swerverobotics/library/interfaces/package-summary.html">org.swerverobotics.library.interfaces</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">A variation of IFunc that permits the throwing of an InterruptedException</div>
+</dd>
 <dt><a href="org/swerverobotics/library/interfaces/IInterruptableRunnable.html" title="interface in org.swerverobotics.library.interfaces"><span class="typeNameLink">IInterruptableRunnable</span></a> - Interface in <a href="org/swerverobotics/library/interfaces/package-summary.html">org.swerverobotics.library.interfaces</a></dt>
 <dd>
 <div class="block">A variation on Runnable that allows InterruptedExceptions to be thrown</div>
@@ -708,6 +706,10 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IBNO055IMU.html#isAccelerometerCalibrated--">isAccelerometerCalibrated()</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/IBNO055IMU.html" title="interface in org.swerverobotics.library.interfaces">IBNO055IMU</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html#isArmed--">isArmed()</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a></dt>
+<dd>
+<div class="block">Answers as to whether this I2cDeviceClient is currently armed.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/TelemetryDashboardAndLog.Log.html#isDisplayOldToNew--">isDisplayOldToNew()</a></span> - Method in class <a href="org/swerverobotics/library/TelemetryDashboardAndLog.Log.html" title="class in org.swerverobotics.library">TelemetryDashboardAndLog.Log</a></dt>
 <dd>
 <div class="block">Returns the order in which the log is displayed.</div>
@@ -718,7 +720,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#isOkToRead--">isOkToRead()</a></span> - Method in class <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a></dt>
 <dd>
-<div class="block">Answers as to whether we're allowed to read using this window</div>
+<div class="block">Answers as to whether we're allowed to read using this window.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#isStarted--">isStarted()</a></span> - Method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
 <dd>
@@ -730,10 +732,6 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IBNO055IMU.html#isSystemCalibrated--">isSystemCalibrated()</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/IBNO055IMU.html" title="interface in org.swerverobotics.library.interfaces">IBNO055IMU</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="org/swerverobotics/library/interfaces/IStopActionRegistrar.html" title="interface in org.swerverobotics.library.interfaces"><span class="typeNameLink">IStopActionRegistrar</span></a> - Interface in <a href="org/swerverobotics/library/interfaces/package-summary.html">org.swerverobotics.library.interfaces</a></dt>
-<dd>
-<div class="block">IStopActionRegistrar can be used to register for a callback when a synchronous opmode stops</div>
-</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/TelemetryDashboardAndLog.html#item-java.lang.String-org.swerverobotics.library.interfaces.IFunc-">item(String, IFunc&lt;Object&gt;)</a></span> - Method in class <a href="org/swerverobotics/library/TelemetryDashboardAndLog.html" title="class in org.swerverobotics.library">TelemetryDashboardAndLog</a></dt>
 <dd>
 <div class="block">Create a new dashboard item with the indicated caption and value computation.</div>
@@ -748,6 +746,20 @@
 </a>
 <h2 class="title">L</h2>
 <dl>
+<dt><a href="org/swerverobotics/library/examples/LinearAutonomousPolygon.html" title="class in org.swerverobotics.library.examples"><span class="typeNameLink">LinearAutonomousPolygon</span></a> - Class in <a href="org/swerverobotics/library/examples/package-summary.html">org.swerverobotics.library.examples</a></dt>
+<dd>
+<div class="block">This autonomous OpMode drives the robot forward for a while, turns left, then drives forward
+ again and turns left, etc, until a polygon has been completed.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/examples/LinearAutonomousPolygon.html#LinearAutonomousPolygon--">LinearAutonomousPolygon()</a></span> - Constructor for class <a href="org/swerverobotics/library/examples/LinearAutonomousPolygon.html" title="class in org.swerverobotics.library.examples">LinearAutonomousPolygon</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="org/swerverobotics/library/examples/LinearMotorLoopPerf.html" title="class in org.swerverobotics.library.examples"><span class="typeNameLink">LinearMotorLoopPerf</span></a> - Class in <a href="org/swerverobotics/library/examples/package-summary.html">org.swerverobotics.library.examples</a></dt>
+<dd>
+<div class="block">An op mode that investigates how fast in a Linear OpMode we can execute
+ a main loop that both reads and writes to the a motor.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/examples/LinearMotorLoopPerf.html#LinearMotorLoopPerf--">LinearMotorLoopPerf()</a></span> - Constructor for class <a href="org/swerverobotics/library/examples/LinearMotorLoopPerf.html" title="class in org.swerverobotics.library.examples">LinearMotorLoopPerf</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/TelemetryDashboardAndLog.html#log">log</a></span> - Variable in class <a href="org/swerverobotics/library/TelemetryDashboardAndLog.html" title="class in org.swerverobotics.library">TelemetryDashboardAndLog</a></dt>
 <dd>
 <div class="block">'log' provides a means by which a scrolling history of events can be recorded on
@@ -848,12 +860,12 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/usfirst/ftc/exampleteam/yourcodehere/MyFirstOpMode.html#MyFirstOpMode--">MyFirstOpMode()</a></span> - Constructor for class <a href="org/usfirst/ftc/exampleteam/yourcodehere/MyFirstOpMode.html" title="class in org.usfirst.ftc.exampleteam.yourcodehere">MyFirstOpMode</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="org/usfirst/ftc/exampleteam/yourcodehere/MyOpModeRegistrar.html" title="class in org.usfirst.ftc.exampleteam.yourcodehere"><span class="typeNameLink">MyOpModeRegistrar</span></a> - Class in <a href="org/usfirst/ftc/exampleteam/yourcodehere/package-summary.html">org.usfirst.ftc.exampleteam.yourcodehere</a></dt>
+<dt><a href="org/usfirst/ftc/exampleteam/yourcodehere/MyRobotControllerAdministration.html" title="class in org.usfirst.ftc.exampleteam.yourcodehere"><span class="typeNameLink">MyRobotControllerAdministration</span></a> - Class in <a href="org/usfirst/ftc/exampleteam/yourcodehere/package-summary.html">org.usfirst.ftc.exampleteam.yourcodehere</a></dt>
 <dd>
-<div class="block"><a href="org/usfirst/ftc/exampleteam/yourcodehere/MyOpModeRegistrar.html" title="class in org.usfirst.ftc.exampleteam.yourcodehere"><code>MyOpModeRegistrar</code></a> can be used to register OpModes for display in the
- driver station menu.</div>
+<div class="block">MyRobotControllerAdministration is a container for 'administrative' methods that interact
+ with the Swerve library.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/usfirst/ftc/exampleteam/yourcodehere/MyOpModeRegistrar.html#MyOpModeRegistrar--">MyOpModeRegistrar()</a></span> - Constructor for class <a href="org/usfirst/ftc/exampleteam/yourcodehere/MyOpModeRegistrar.html" title="class in org.usfirst.ftc.exampleteam.yourcodehere">MyOpModeRegistrar</a></dt>
+<dt><span class="memberNameLink"><a href="org/usfirst/ftc/exampleteam/yourcodehere/MyRobotControllerAdministration.html#MyRobotControllerAdministration--">MyRobotControllerAdministration()</a></span> - Constructor for class <a href="org/usfirst/ftc/exampleteam/yourcodehere/MyRobotControllerAdministration.html" title="class in org.usfirst.ftc.exampleteam.yourcodehere">MyRobotControllerAdministration</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <a name="I:N">
@@ -902,8 +914,6 @@
 <div class="block">NavUtil is a collection of utilities that provide useful manipulations of
  objects related to navigation.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/NavUtil.html#NavUtil--">NavUtil()</a></span> - Constructor for class <a href="org/swerverobotics/library/interfaces/NavUtil.html" title="class in org.swerverobotics.library.interfaces">NavUtil</a></dt>
-<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/Quaternion.html#normalized--">normalized()</a></span> - Method in class <a href="org/swerverobotics/library/interfaces/Quaternion.html" title="class in org.swerverobotics.library.interfaces">Quaternion</a></dt>
 <dd>&nbsp;</dd>
 </dl>
@@ -912,6 +922,17 @@
 </a>
 <h2 class="title">O</h2>
 <dl>
+<dt><a href="org/swerverobotics/library/interfaces/OnRobotRunning.html" title="annotation in org.swerverobotics.library.interfaces"><span class="typeNameLink">OnRobotRunning</span></a> - Annotation Type in <a href="org/swerverobotics/library/interfaces/package-summary.html">org.swerverobotics.library.interfaces</a></dt>
+<dd>
+<div class="block">OnRobotRunning annotations can be placed on public static methods which are to be
+ invoked when the robot object in the robot controller application reaches the running
+ state after an initial boot or a 'robot restart'.</div>
+</dd>
+<dt><a href="org/swerverobotics/library/interfaces/OnRobotStartupFailure.html" title="annotation in org.swerverobotics.library.interfaces"><span class="typeNameLink">OnRobotStartupFailure</span></a> - Annotation Type in <a href="org/swerverobotics/library/interfaces/package-summary.html">org.swerverobotics.library.interfaces</a></dt>
+<dd>
+<div class="block">OnRobotStartupFailure annotations can be placed on public static methods which are to be
+ invoked when the robot object in the robot controller application fails as it is starting up.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#opModeIsActive--">opModeIsActive()</a></span> - Method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
 <dd>
 <div class="block">Answer as to whether this opMode is active and the robot should continue onwards.</div>
@@ -952,6 +973,18 @@
 <dd>
 <div class="block">directional convention for measureing pitch angles.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/usfirst/ftc/exampleteam/yourcodehere/MyRobotControllerAdministration.html#playSoundOnRobotRunning-Context-">playSoundOnRobotRunning(Context)</a></span> - Static method in class <a href="org/usfirst/ftc/exampleteam/yourcodehere/MyRobotControllerAdministration.html" title="class in org.usfirst.ftc.exampleteam.yourcodehere">MyRobotControllerAdministration</a></dt>
+<dd>
+<div class="block">Any public static method annotated with <a href="org/swerverobotics/library/interfaces/OnRobotRunning.html" title="annotation in org.swerverobotics.library.interfaces"><code>OnRobotRunning</code></a> is invoked when the robot
+ object in the robot controller application enters the running state following an initial
+ boot or a 'restart robot'.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/usfirst/ftc/exampleteam/yourcodehere/MyRobotControllerAdministration.html#playSoundOnRobotStartupFailure-Context-">playSoundOnRobotStartupFailure(Context)</a></span> - Static method in class <a href="org/usfirst/ftc/exampleteam/yourcodehere/MyRobotControllerAdministration.html" title="class in org.usfirst.ftc.exampleteam.yourcodehere">MyRobotControllerAdministration</a></dt>
+<dd>
+<div class="block">Any public static method annotated with <a href="org/swerverobotics/library/interfaces/OnRobotRunning.html" title="annotation in org.swerverobotics.library.interfaces"><code>OnRobotRunning</code></a> is invoked when the robot
+ object in the robot controller application fails to enter the running state during
+ an attempt to do so.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/NavUtil.html#plus-org.swerverobotics.library.interfaces.Position-org.swerverobotics.library.interfaces.Position-">plus(Position, Position)</a></span> - Static method in class <a href="org/swerverobotics/library/interfaces/NavUtil.html" title="class in org.swerverobotics.library.interfaces">NavUtil</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/NavUtil.html#plus-org.swerverobotics.library.interfaces.Velocity-org.swerverobotics.library.interfaces.Velocity-">plus(Velocity, Velocity)</a></span> - Static method in class <a href="org/swerverobotics/library/interfaces/NavUtil.html" title="class in org.swerverobotics.library.interfaces">NavUtil</a></dt>
@@ -988,6 +1021,8 @@
 <dd>
 <div class="block">Advanced: a hook for subclasses</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/examples/SynchMotorLoopPerf.html#powerMotors-double-">powerMotors(double)</a></span> - Method in class <a href="org/swerverobotics/library/examples/SynchMotorLoopPerf.html" title="class in org.swerverobotics.library.examples">SynchMotorLoopPerf</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#preInitHook--">preInitHook()</a></span> - Method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
 <dd>
 <div class="block">Advanced: the various 'hook' calls calls preInitHook(), postInitHook(), preLoopHook(), 
@@ -1087,17 +1122,9 @@
 <div class="block">Register an *instance* of a class for display on the driver station and availability
  for game play.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="org/usfirst/ftc/exampleteam/yourcodehere/MyOpModeRegistrar.html#Register-org.swerverobotics.library.interfaces.IOpModeManager-">Register(IOpModeManager)</a></span> - Static method in class <a href="org/usfirst/ftc/exampleteam/yourcodehere/MyOpModeRegistrar.html" title="class in org.usfirst.ftc.exampleteam.yourcodehere">MyOpModeRegistrar</a></dt>
+<dt><span class="memberNameLink"><a href="org/usfirst/ftc/exampleteam/yourcodehere/MyRobotControllerAdministration.html#registerMyOpModes-Context-org.swerverobotics.library.interfaces.IOpModeManager-">registerMyOpModes(Context, IOpModeManager)</a></span> - Static method in class <a href="org/usfirst/ftc/exampleteam/yourcodehere/MyRobotControllerAdministration.html" title="class in org.usfirst.ftc.exampleteam.yourcodehere">MyRobotControllerAdministration</a></dt>
 <dd>
-<div class="block">Register any library OpModes that we wish to display.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IStopActionRegistrar.html#registerActionOnStop-org.swerverobotics.library.interfaces.IAction-">registerActionOnStop(IAction)</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/IStopActionRegistrar.html" title="interface in org.swerverobotics.library.interfaces">IStopActionRegistrar</a></dt>
-<dd>
-<div class="block">Registers an action to be called when the contextually associated opMode stops</div>
-</dd>
-<dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#registerActionOnStop-org.swerverobotics.library.interfaces.IAction-">registerActionOnStop(IAction)</a></span> - Method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
-<dd>
-<div class="block">Registers an action to be called when the contextually associated opMode stops</div>
+<div class="block">Registers any library OpModes that you wish to display.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.HeartbeatAction.html#rereadLastRead">rereadLastRead</a></span> - Variable in class <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.HeartbeatAction.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.HeartbeatAction</a></dt>
 <dd>
@@ -1112,6 +1139,10 @@
 <div class="block">the rotation about the Y axis</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IInterruptableRunnable.html#run--">run()</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/IInterruptableRunnable.html" title="interface in org.swerverobotics.library.interfaces">IInterruptableRunnable</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/examples/LinearAutonomousPolygon.html#runOpMode--">runOpMode()</a></span> - Method in class <a href="org/swerverobotics/library/examples/LinearAutonomousPolygon.html" title="class in org.swerverobotics.library.examples">LinearAutonomousPolygon</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/examples/LinearMotorLoopPerf.html#runOpMode--">runOpMode()</a></span> - Method in class <a href="org/swerverobotics/library/examples/LinearMotorLoopPerf.html" title="class in org.swerverobotics.library.examples">LinearMotorLoopPerf</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="org/swerverobotics/library/exceptions/RuntimeInterruptedException.html" title="class in org.swerverobotics.library.exceptions"><span class="typeNameLink">RuntimeInterruptedException</span></a> - Exception in <a href="org/swerverobotics/library/exceptions/package-summary.html">org.swerverobotics.library.exceptions</a></dt>
 <dd>
@@ -1157,7 +1188,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/TelemetryDashboardAndLog.html#setItemDelimiter-java.lang.String-">setItemDelimiter(String)</a></span> - Method in class <a href="org/swerverobotics/library/TelemetryDashboardAndLog.html" title="class in org.swerverobotics.library">TelemetryDashboardAndLog</a></dt>
 <dd>
-<div class="block">Sets the current delimiter used to separate dashboard items on a single line</div>
+<div class="block">Sets the delimiter used to separate dashboard items on a single line</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html#setLogging-boolean-">setLogging(boolean)</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a></dt>
 <dd>
@@ -1332,7 +1363,8 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/TelemetryDashboardAndLog.html#TelemetryDashboardAndLog-com.qualcomm.robotcore.robocol.Telemetry-">TelemetryDashboardAndLog(Telemetry)</a></span> - Constructor for class <a href="org/swerverobotics/library/TelemetryDashboardAndLog.html" title="class in org.swerverobotics.library">TelemetryDashboardAndLog</a></dt>
 <dd>
-<div class="block">Instantiate a new telemetry dashboard and log</div>
+<div class="block">Instantiate a new telemetry dashboard and log on a Telemetry object provided by
+ the robot controller runtime.</div>
 </dd>
 <dt><a href="org/swerverobotics/library/TelemetryDashboardAndLog.Log.html" title="class in org.swerverobotics.library"><span class="typeNameLink">TelemetryDashboardAndLog.Log</span></a> - Class in <a href="org/swerverobotics/library/package-summary.html">org.swerverobotics.library</a></dt>
 <dd>&nbsp;</dd>
@@ -1399,7 +1431,9 @@
 <h2 class="title">V</h2>
 <dl>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IFunc.html#value--">value()</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/IFunc.html" title="interface in org.swerverobotics.library.interfaces">IFunc</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Evaluates and returns the value of the function</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IInterruptableFunc.html#value--">value()</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/IInterruptableFunc.html" title="interface in org.swerverobotics.library.interfaces">IInterruptableFunc</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/IBNO055IMU.ACCELUNIT.html#valueOf-java.lang.String-">valueOf(String)</a></span> - Static method in enum <a href="org/swerverobotics/library/interfaces/IBNO055IMU.ACCELUNIT.html" title="enum in org.swerverobotics.library.interfaces">IBNO055IMU.ACCELUNIT</a></dt>
@@ -1514,6 +1548,10 @@ the order they are declared.</div>
 <div class="block">Advanced: wait until all thunks that have been dispatched from the current (synchronous)
  thread have completed their execution over on the loop() thread and their effects
  to have reached the hardware.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#waitOneFullHardwareCycle--">waitOneFullHardwareCycle()</a></span> - Method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
+<dd>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/exceptions/SwerveRuntimeException.html#wrap-java.lang.Exception-">wrap(Exception)</a></span> - Static method in exception <a href="org/swerverobotics/library/exceptions/SwerveRuntimeException.html" title="class in org.swerverobotics.library.exceptions">SwerveRuntimeException</a></dt>
 <dd>
