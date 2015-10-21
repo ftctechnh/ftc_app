@@ -123,7 +123,7 @@ public class ThunkedCompassSensor extends CompassSensor implements IThunkedReadW
         //
         // But this is better:
         //
-        return this.target instanceof com.qualcomm.hardware.ModernRoboticsNxtCompassSensor;
+        return this.target instanceof com.qualcomm.hardware.HiTechnicNxtCompassSensor;
         }
     private boolean isOffline()
         {

@@ -4,12 +4,13 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 import com.qualcomm.robotcore.eventloop.opmode.*;
+
+import org.swerverobotics.library.SynchronousOpMode;
 import org.swerverobotics.library.interfaces.*;
 import java.io.*;
 import java.lang.reflect.*;
 import java.lang.annotation.*;
 import java.util.*;
-
 import dalvik.system.DexFile;
 
 /**
@@ -26,7 +27,7 @@ public class AnnotatedOpModeRegistrar
     // State
     //----------------------------------------------------------------------------------------------
 
-    private final String                     TAG = "AnnotatedOpModeReg";
+    private final String                     LOGGING_TAG = SynchronousOpMode.LOGGING_TAG;
 
     LinkedList<String>                       partialClassNamesToIgnore;
 
@@ -87,7 +88,7 @@ public class AnnotatedOpModeRegistrar
         }
 
     /** Use magic to find the current application context */
-    static Context getApplicationContext()
+    public static Context getApplicationContext()
         {
         try {
             return getApplicationContextRaw();
@@ -113,7 +114,7 @@ public class AnnotatedOpModeRegistrar
 
         // Find all the candidates
         this.findOpModesFromClassAnnotations();
-        this.findOpModesFromRegistrarMethods();
+        this.processAnnotatedStaticMethods();
 
         // Sort the linked lists within opModes, first by flavor and second by name
         Comparator<Class> comparator = new Comparator<Class>()
@@ -156,7 +157,7 @@ public class AnnotatedOpModeRegistrar
                 {
                 String name = getOpModeName(opMode);
                 this.opModeManager.register(name, opMode);
-                Log.d(TAG, String.format("registered {%s} as {%s}", opMode.getSimpleName(), name));
+                Log.d(LOGGING_TAG, String.format("registered {%s} as {%s}", opMode.getSimpleName(), name));
                 }
             }
         }
@@ -188,62 +189,78 @@ public class AnnotatedOpModeRegistrar
             }
         }
 
-    private void findOpModesFromRegistrarMethods()
+    private void processAnnotatedStaticMethods()
         {
         // This will, nicely, have duplicates removed. But it might contain methods
         // we can't actually invoke, so beware.
-        Set<Method> methods = findOpModeRegistrarMethods();
+        Set<Method> registrarMethods = new HashSet<Method>();
+        Set<Method> onRobotRunningMethods = new HashSet<Method>();
+        Set<Method> onRobotStartupFailureMethods = new HashSet<Method>();
+
+        findAnnotatedStaticMethodsOfInterest(registrarMethods, onRobotRunningMethods, onRobotStartupFailureMethods);
+
+        // Call the opmode registration methods now
         AnnotationOpModeManager manager = new AnnotationOpModeManager();
-        for (Method method : methods)
+        for (Method method : registrarMethods)
             {
             try {
-                method.invoke(null, manager);
+                // We support both with and without a context for compatibility
+                if (getParameterCount(method)==1)
+                    method.invoke(null, manager);
+                else if (getParameterCount(method)==2)
+                    method.invoke(null, context, manager);
                 }
             catch (Exception e)
                 {
                 // ignored
                 }
             }
+
+        // Remember the robot start methods for later
+        RobotStateTransitionNotifier.setStateTransitionCallbacks(context, onRobotRunningMethods, onRobotStartupFailureMethods);
         }
 
-    /** Find the list of methods correctly tagged with @OpModeRegistrar */
-    private Set<Method> findOpModeRegistrarMethods()
+    private int getParameterCount(Method method)
         {
-        HashSet<Method> result = new HashSet<Method>();
+        Class<?>[] parameters = method.getParameterTypes();
+        return parameters.length;
+        }
+
+    private void findAnnotatedStaticMethodsOfInterest(Set<Method> registrarMethods, Set<Method> onRobotRunningMethods, Set<Method> onRobotStartupFailureMethods)
+        {
         List<Class> allClasses = findAllClasses();
         for (Class clazz : allClasses)
             {
             List<Method> methods = Util.getDeclaredMethodsIncludingSuper(clazz);
             for (Method method : methods)
                 {
-                // Only look for those methods tagged as registrars
-                if (!method.isAnnotationPresent(OpModeRegistrar.class))
-                    continue;
-
-                // Filter on method signature
-                Class<?>[] parameters = method.getParameterTypes();
-                if (parameters.length !=1)
-                    continue;
-
-                // We don't actually do any more formal parameter checking, as it's not
-                // worth it. We'll just catch exceptions when we try to use the method if
-                // it happens to have the wrong signture
-                //
-                // TODO: It would be nice if we did better error checking and could tell
-                // the programmer what was going on.
-
-                // Filter on modifiers.
-                // TODO: allow non-public methods, but force their use?
                 int requiredModifiers   = Modifier.STATIC | Modifier.PUBLIC;
                 int prohibitedModifiers = Modifier.ABSTRACT;
                 if (!((method.getModifiers() & requiredModifiers) == requiredModifiers && (method.getModifiers() & prohibitedModifiers) == 0))
                     continue;
 
-                // Ok, it's a candidate
-                result.add(method);
+                Class<?>[] parameters = method.getParameterTypes();
+
+                if (method.isAnnotationPresent(OpModeRegistrar.class))
+                    {
+                    // the 1-parameter version is legacy
+                    if (getParameterCount(method)==1 || getParameterCount(method)==2)
+                        registrarMethods.add(method);
+                    }
+
+                if (method.isAnnotationPresent(OnRobotRunning.class))
+                    {
+                    if (getParameterCount(method)==1)
+                        onRobotRunningMethods.add(method);
+                    }
+
+                if (method.isAnnotationPresent(OnRobotStartupFailure.class))
+                    {
+                    if (getParameterCount(method)==1)
+                        onRobotStartupFailureMethods.add(method);
+                    }
                 }
             }
-        return result;
         }
 
     class AnnotationOpModeManager implements IOpModeManager
@@ -269,7 +286,7 @@ public class AnnotatedOpModeRegistrar
             // We just go ahead and register this, as there's nothing else to do.
             // TODO: we could register these AFTER the classes, if we wanted to.
             opModeManager.register(name, opModeInstance);
-            Log.d(TAG, String.format("registered instance {%s} as {%s}", opModeInstance.toString(), name));
+            Log.d(LOGGING_TAG, String.format("registered instance {%s} as {%s}", opModeInstance.toString(), name));
             }
         }
 
@@ -306,7 +323,7 @@ public class AnnotatedOpModeRegistrar
                 }
             catch (NoClassDefFoundError|ClassNotFoundException ex)
                 {
-                Log.w(TAG, className + " " + ex.toString(), ex);
+                Log.w(LOGGING_TAG, className + " " + ex.toString(), ex);
                 if (className.contains("$"))
                     {
                     className = className.substring(0, className.indexOf("$") - 1);

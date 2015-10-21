@@ -9,41 +9,42 @@ import org.swerverobotics.library.interfaces.*;
  * An op mode that investigates how many loop() cycles it takes to do full
  * mode switching on a motor controller. Each main loop cycle does both
  * a read and a write to the motor.
+ *
+ * This OpMode expects two motors, named 'motorLeft' and 'motorRight'.
  */
-@TeleOp(name="Motor Perf", group="Swerve Examples")
+@TeleOp(name="Motor Perf (sync)", group="Swerve Examples")
 @Disabled
 public class SynchMotorLoopPerf extends SynchronousOpMode
     {
-    DcMotor     motor;
-    int         position;
+    final boolean useBothMotors;
+
+    DcMotor     leftMotor, rightMotor;
+    int         leftPosition, rightPosition;
     long        loopCountStart;
     int         spinCount;
     ElapsedTime elapsed = new ElapsedTime();
 
     public SynchMotorLoopPerf()
         {
-        // Setting this flag will (for now; we may remove this later, or maybe change it to
-        // a default, or ... we don't know yet :-) enable an alternate implementation of the legacy
-        // motor controller, one built on our robust I2cDeviceClient instead of hand-rolling the 
-        // I2C logic as is done in the robot controller runtime's ModernRoboticsNxtDcMotorController
-        // implementation. If you're poking around our source code here, you can find that 
-        // in internal\LegacyDcMotorControllerOnI2cDevice if you want to have a look.
-        //
-        // this.useExperimentalThunking = true;
+        useBothMotors = false;
         }
     
     public @Override void main() throws InterruptedException
         {
-        motor = hardwareMap.dcMotor.get("motorLeft");
+        leftMotor  = hardwareMap.dcMotor.get("motorLeft");
+        rightMotor = hardwareMap.dcMotor.get("motorRight");
 
         waitForStart();
+
         loopCountStart = getLoopCount();
         spinCount      = 1;
         elapsed.reset();
-        
+
         while (this.opModeIsActive())
             {
-            position = motor.getCurrentPosition();
+            leftPosition  = leftMotor.getCurrentPosition();
+            rightPosition = useBothMotors ? rightMotor.getCurrentPosition() : 0;
+
             long loopCount = getLoopCount() - loopCountStart;
             double ms = elapsed.time() * 1000;
 
@@ -55,11 +56,11 @@ public class SynchMotorLoopPerf extends SynchronousOpMode
             // performance analysis, and we don't want that to be subject to human issues.
             // Instead, we always set the power exactly once each spin around the loop.
             if (gamepad1.left_bumper)
-                motor.setPower(0.5);
+                powerMotors(0.5);
             else
-                motor.setPower(0.25);
+                powerMotors(0.25);
 
-            telemetry.addData("position",      position);
+            telemetry.addData("position",      String.format("left=%d right=%d", leftPosition, rightPosition));
             telemetry.addData("#loop()",       loopCount);
             telemetry.addData("#spin",         spinCount);
             telemetry.addData("#loop()/#spin", String.format("%.1f", loopCount / (double)spinCount));
@@ -70,5 +71,12 @@ public class SynchMotorLoopPerf extends SynchronousOpMode
             
             spinCount++;
             }
+        }
+
+    public void powerMotors(double power)
+        {
+        leftMotor.setPower(power);
+        if (useBothMotors)
+            rightMotor.setPower(power);
         }
     }

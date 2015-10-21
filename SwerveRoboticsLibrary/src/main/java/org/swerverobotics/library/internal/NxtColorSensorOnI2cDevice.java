@@ -1,9 +1,8 @@
 package org.swerverobotics.library.internal;
 
 import android.graphics.Color;
-
+import com.qualcomm.robotcore.eventloop.opmode.*;
 import com.qualcomm.robotcore.hardware.*;
-
 import org.swerverobotics.library.ClassFactory;
 import org.swerverobotics.library.interfaces.*;
 
@@ -33,26 +32,27 @@ public class NxtColorSensorOnI2cDevice extends ColorSensor
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    public NxtColorSensorOnI2cDevice(I2cDevice i2cDevice)
+    public NxtColorSensorOnI2cDevice(OpMode context, I2cDevice i2cDevice)
         {
         i2cDevice.deregisterForPortReadyCallback(); // Disable the previous guy so we're not fighting
-        construct(ClassFactory.createI2cDevice(i2cDevice));
+        construct(context, ClassFactory.createI2cDevice(i2cDevice));
         }
 
-    public NxtColorSensorOnI2cDevice(I2cController controller, int port)
+    public NxtColorSensorOnI2cDevice(OpMode context, I2cController controller, int port)
         {
-        construct(ClassFactory.createI2cDevice(controller, port));
+        construct(context, ClassFactory.createI2cDevice(controller, port));
         }
 
-    public NxtColorSensorOnI2cDevice(II2cDevice ii2cDevice)
+    public NxtColorSensorOnI2cDevice(OpMode context, II2cDevice ii2cDevice)
         {
-        construct(ii2cDevice);
+        construct(context, ii2cDevice);
         }
 
-    void construct(II2cDevice ii2cDevice)
+    void construct(OpMode context, II2cDevice ii2cDevice)
         {
-        this.i2cDeviceClient = ClassFactory.createI2cDeviceClient(ii2cDevice, i2cAddr8Bit);
+        this.i2cDeviceClient = ClassFactory.createI2cDeviceClient(context, ii2cDevice, i2cAddr8Bit, true);
         this.i2cDeviceClient.setReadWindow(new II2cDeviceClient.ReadWindow(iregFirst, iregMax - iregFirst, II2cDeviceClient.READ_MODE.REPEAT));
+        this.i2cDeviceClient.arm();
         }
 
     //----------------------------------------------------------------------------------------------

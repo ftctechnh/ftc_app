@@ -13,7 +13,7 @@ import org.swerverobotics.library.interfaces.*;
  *
  * @see <a href="https://en.wikipedia.org/wiki/Thunk">https://en.wikipedia.org/wiki/Thunk</a>
  */
-public abstract class Thunk implements IAction, IActionKeyed
+public abstract class Thunk implements Runnable, IActionKeyed
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -67,9 +67,9 @@ public abstract class Thunk implements IAction, IActionKeyed
     //----------------------------------------------------------------------------------------------
 
     /**
-     * Executed on the loop() thread, doAction() is called to carry out the work of the thunk
+     * Executed on the loop() thread, run() is called to carry out the work of the thunk
      */
-    public void doAction()
+    public void run()
         {
         try {
             // Do what we came here to do
