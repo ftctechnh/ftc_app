@@ -47,7 +47,7 @@ public abstract class ThunkForReading<T> extends Thunk
         return this.doUntrackedReadOperation(null);
         }
 
-    public T doUntrackedReadOperation(IInterruptableAction actionBeforeDispatch)
+    public T doUntrackedReadOperation(IInterruptableRunnable actionBeforeDispatch)
         {
         // Don't bother doing more work if we've been interrupted
         if (!Thread.currentThread().isInterrupted())
@@ -55,19 +55,16 @@ public abstract class ThunkForReading<T> extends Thunk
             try
                 {
                 if (actionBeforeDispatch != null)
-                    actionBeforeDispatch.doAction();
+                    actionBeforeDispatch.run();
 
                 this.dispatch();
                 }
-            catch (InterruptedException|RuntimeInterruptedException e)
+            catch (Exception e)
                 {
-                // (Re)tell the current thread that he should shut down soon
-                Util.handleCapturedInterrupt(e);
-
                 // Our signature (and that of our caller) doesn't allow us to throw
                 // InterruptedException. But we can't actually return a value to our caller,
                 // as we have nothing to return. So, we do the best we can, and throw SOMETHING.
-                throw SwerveRuntimeException.wrap(e);
+                Util.handleCapturedException(e);
                 }
             return this.result;
             }
@@ -91,9 +88,9 @@ public abstract class ThunkForReading<T> extends Thunk
      */
     public T doReadOperation(final IThunkedReadWriteListener reader)
         {
-        return this.doUntrackedReadOperation(new IInterruptableAction()
+        return this.doUntrackedReadOperation(new IInterruptableRunnable()
             {
-            @Override public void doAction() throws InterruptedException
+            @Override public void run() throws InterruptedException
                 {
                 // Let any reader know that we are about to read
                 if (reader != null)

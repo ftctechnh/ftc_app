@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.*;
 /**
  * An example that illustrates use of the telemetry dashboard and log
  */
-@TeleOp(name="Telemetry", group="Swerve Examples")
+@TeleOp(name="Telemetry (sync)", group="Swerve Examples")
 @Disabled
 public class SynchTelemetryOp extends SynchronousOpMode
     {

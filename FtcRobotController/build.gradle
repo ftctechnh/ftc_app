@@ -1,39 +1,25 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion = 'Google Inc.:Google APIs:19'
-    buildToolsVersion = '21.1.2'
+    compileSdkVersion 19
+    buildToolsVersion '21.1.2'
 
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 19
     }
-}
-
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:1.2.3'
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+    buildTypes {
+        release {
+            debuggable true
+        }
+        debug {
+            debuggable true
+        }
     }
 }
-
 repositories {
     flatDir {
         dirs 'libs'
-    }
-}
-
-allprojects {
-    repositories {
-        jcenter()
-        flatDir {
-            dirs 'out'
-        }
     }
 }
 

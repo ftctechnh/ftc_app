@@ -70,7 +70,7 @@ public class TelemetryDashboardAndLog
         }
 
     /**
-     * Sets the current delimiter used to separate dashboard items on a single line
+     * Sets the delimiter used to separate dashboard items on a single line
      * @param itemDelimiter the new delimiter to use
      */
     public void setItemDelimiter(String itemDelimiter)
@@ -118,7 +118,7 @@ public class TelemetryDashboardAndLog
     private String itemDelimiter    = " | ";
     private int    msUpdateInterval = 500;
 
-    private Vector<IAction>         actions = null;
+    private Vector<Runnable>        actions = null;
     private Vector<Line>            composableLines = null;
     private Vector<String>          composedLines = null;
     private boolean                 updateSinceAddComposedLine = false;
@@ -131,7 +131,9 @@ public class TelemetryDashboardAndLog
     //----------------------------------------------------------------------------------------------
 
     /**
-     * Instantiate a new telemetry dashboard and log
+     * Instantiate a new telemetry dashboard and log on a Telemetry object provided by
+     * the robot controller runtime.
+     *
      * @param telemetry the robot controller runtime telemetry object
      */
     public TelemetryDashboardAndLog(Telemetry telemetry)
@@ -230,7 +232,7 @@ public class TelemetryDashboardAndLog
      */
     public synchronized void clearDashboard()
         {
-        this.actions         = new Vector<IAction>();
+        this.actions         = new Vector<Runnable>();
         this.composableLines = new Vector<Line>();
         clearComposedLines();
         }
@@ -294,9 +296,9 @@ public class TelemetryDashboardAndLog
             // Ok, we're going to update the telemetry
 
             // Evaluate any delayed actions we've been asked to do
-            for (IAction action : this.actions)
+            for (Runnable action : this.actions)
                 {
-                action.doAction();
+                action.run();
                 }
 
             // Get a copy of all the data
@@ -331,9 +333,9 @@ public class TelemetryDashboardAndLog
                 }
 
             // Create an action that sends that all to the underlying telemetry object
-            IAction action = new IAction()
+            Runnable action = new Runnable()
                 {
-                @Override public void doAction()
+                @Override public void run()
                     {
                     try {
                         for (int i = 0; i < keys.size(); i++)
@@ -362,7 +364,7 @@ public class TelemetryDashboardAndLog
                 // We're not on a synchronous thread. Presumably, we're on the loop() thread,
                 // though we can't confirm that. In any case, update the unthunked telemetry
                 // here, directly on this thread, and we'll live with the consequences.
-                action.doAction();
+                action.run();
                 }
 
             // Update our state for the next time around
@@ -418,7 +420,7 @@ public class TelemetryDashboardAndLog
      * @see #addLine()
      * @see #update()
      */
-    public synchronized void addAction(IAction action)
+    public synchronized void addAction(Runnable action)
         {
         this.actions.add(action);
         }
@@ -499,7 +501,7 @@ public class TelemetryDashboardAndLog
      * Add a line to the dashboard containing the indicated items.
      *
      * @param items     the list of items to be contained in the line
-     * @see #addAction(IAction)
+     * @see #addAction(Runnable)
      */
     public synchronized void addLine(Item[] items)
         {

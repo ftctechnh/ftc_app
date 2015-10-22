@@ -43,7 +43,7 @@ public class TestIMU extends SynchronousOpMode {
         parameters.loggingTag     = "BNO055";
         imu = ClassFactory.createAdaFruitBNO055IMU(hardwareMap.i2cDevice.get("imu"), parameters);
 
-        // Enable reporting of position. Note: this is still buggy
+        // Enable reporting of position using the naive integrator
         imu.startAccelerationIntegration(new Position(), new Velocity());
 
         // Set up our dashboard computations
@@ -71,7 +71,7 @@ public class TestIMU extends SynchronousOpMode {
 
         // At the beginning of each telemetry update, grab a bunch of data
         // from the IMU that we will then display in separate lines.
-        telemetry.addAction(new IAction() { @Override public void doAction()
+        telemetry.addAction(new Runnable() { @Override public void run()
         {
             // Acquiring the angles is relatively expensive; we don't want
             // to do that in each of the three items that need that info, as that's

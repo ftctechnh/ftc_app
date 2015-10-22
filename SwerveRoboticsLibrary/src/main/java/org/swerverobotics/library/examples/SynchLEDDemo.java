@@ -1,13 +1,9 @@
 package org.swerverobotics.library.examples;
 
-import com.qualcomm.robotcore.hardware.DigitalChannel;
-import com.qualcomm.robotcore.hardware.DigitalChannelController;
+import com.qualcomm.robotcore.hardware.LED;
 
-import org.swerverobotics.library.ClassFactory;
 import org.swerverobotics.library.SynchronousOpMode;
-import org.swerverobotics.library.TelemetryDashboardAndLog;
 import org.swerverobotics.library.interfaces.Disabled;
-import org.swerverobotics.library.interfaces.IAction;
 import org.swerverobotics.library.interfaces.IFunc;
 import org.swerverobotics.library.interfaces.TeleOp;
 
@@ -20,13 +16,13 @@ import org.swerverobotics.library.interfaces.TeleOp;
 @Disabled
 public class SynchLEDDemo extends SynchronousOpMode {
 
-    DigitalChannel led;
+    LED led;
+    boolean led_state = false; //unlike DigitalChannel, leds don't let you read their state, so we need to store it elsewhere.
 
     @Override public void main() throws InterruptedException {
         // We are expecting the LED to be attached to a digital port on a core device interface
         // module and named "led".
-        led = hardwareMap.digitalChannel.get("led");
-        led.setMode(DigitalChannelController.Mode.OUTPUT);
+        led = hardwareMap.led.get("led");
 
         // Set up our dashboard computations
         composeDashboard();
@@ -38,9 +34,11 @@ public class SynchLEDDemo extends SynchronousOpMode {
         while (this.opModeIsActive()) {
             if (this.updateGamepads()) {
                 if (this.gamepad1.a) {
-                    led.setState(true);
+                    led_state = true;
+                    led.enable(led_state);
                 } else if (this.gamepad1.b) {
-                    led.setState(false);
+                    led_state = false;
+                    led.enable(led_state);
                 }
             }
             telemetry.update();
@@ -68,7 +66,8 @@ public class SynchLEDDemo extends SynchronousOpMode {
                 telemetry.item("led state: ", new IFunc<Object>() {
                     @Override
                     public Object value() {
-                        return led.getState();
+                        //return led.getState(); //unlike DigitalChannel, leds don't let you read their state, so use the variable here instead.
+                        return led_state;
                     }
                 }));
     }
