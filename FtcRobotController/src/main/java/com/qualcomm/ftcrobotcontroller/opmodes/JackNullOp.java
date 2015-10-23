@@ -42,7 +42,7 @@ import java.util.Date;
  * <p>
  *Enables control of the robot via the gamepad
  */
-public class NullOp extends OpMode {
+public class JackNullOp extends OpMode {
 
   private String startDate;
   private ElapsedTime runtime = new ElapsedTime();
@@ -58,6 +58,7 @@ public class NullOp extends OpMode {
   }
 
   /*
+   * This method will be called repeatedly in a loop
    * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
    */
   @Override
