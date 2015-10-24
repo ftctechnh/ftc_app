@@ -5,12 +5,15 @@ import android.hardware.Sensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
 /**
- * The competition robot with the API for Autonomous Mode and Teleop Mode
+ * The Pushbot robot with the API for Autonomous Mode and Teleop Mode
  */
 public class PushBot {
-    public static int DEFAULTLINSLIDE = 0;
+ //   public static int DEFAULTLINSLIDE = 0;
     public static double WHEEL_DIAMETER = 4;
     public static int ENCODER_CPR = 1440;
     public static double GEAR_RATIO = 0.5;
@@ -18,31 +21,33 @@ public class PushBot {
     /**
      * The DCMotor for the left wheel
      */
-    private static DcMotor leftWheel;
+    private static DcMotor leftMotor;
     /**
      * The DCMotor for the right wheel
      */
-    private static DcMotor rightWheel;
+    private static DcMotor rightMotor;
     /**
      * The DCMotor for the linear slide
      */
-    private DcMotor linearSlide;
+    private static DcMotor linearSlide;
     /**
      * The servo for the button
      */
-    private Servo buttonTouch;
+    private static Servo buttonTouch;
     /**
      * The light sensor(facing downward)
      */
-    private Sensor lightSensor;
+    private static Sensor lightSensor;
     /**
      * The color sensor(facing downward)
      */
-    private Sensor colorSensor;
+    private static Sensor colorSensor;
     /**
      * The gyro sensor(aligned with robot body)
      */
-    private Sensor gyroSensor;
+    private static Sensor gyroSensor;
+
+    private static OpticalDistanceSensor opticalDistanceSensor;
 
     //private static LinSlideButton lastButton = LinSlideButton.Reset;
 
@@ -54,20 +59,22 @@ public class PushBot {
     }*/
 
     public PushBot(HardwareMap hardwareMap){
-        rightWheel = hardwareMap.dcMotor.get("rightwheel");
-        leftWheel = hardwareMap.dcMotor.get("leftwheel");
-        rightWheel.setDirection(DcMotor.Direction.REVERSE);
+        rightMotor = hardwareMap.dcMotor.get("rightMotor");
+        leftMotor = hardwareMap.dcMotor.get("leftMotor");
+        opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("sensor_EOPD");
+        rightMotor.setDirection(DcMotor.Direction.REVERSE);
     }
 
-    public PushBot(DcMotor left, DcMotor right, DcMotor linearLift, Servo button, Sensor light, Sensor color, Sensor gyro){
-        leftWheel = left;
-        rightWheel = right;
+    public PushBot(DcMotor left, DcMotor right, DcMotor linearLift, Servo button, Sensor light, Sensor color, Sensor gyro, OpticalDistanceSensor odSensor){
+        leftMotor = left;
+        rightMotor = right;
         linearSlide = linearLift;
         buttonTouch = button;
         lightSensor = light;
         colorSensor = color;
         gyroSensor = gyro;
-        rightWheel.setDirection(DcMotor.Direction.REVERSE);
+        opticalDistanceSensor = odSensor;
+        rightMotor.setDirection(DcMotor.Direction.REVERSE);
     }
 
     /**
@@ -92,7 +99,7 @@ public class PushBot {
 
     /**
      * Move straight
-     * Precondition: Encoder attached to leftWheel
+     * Precondition: Encoder attached to leftMotor
      * Postcondition: Robot moved to target position
      * @Param distance in cm, + = forward, - = backward
      */
@@ -101,23 +108,30 @@ public class PushBot {
         final double CIRCUMFERENCE = Math.PI * WHEEL_DIAMETER;
         final  double ROTATIONS = distance / CIRCUMFERENCE;
         final  double COUNTS = ENCODER_CPR * ROTATIONS * GEAR_RATIO;
+        rightMotor.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
+        rightMotor.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+//        rightMotor.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 
-        leftWheel.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
-        rightWheel.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
-        leftWheel.setTargetPosition((int) COUNTS);
-        rightWheel.setTargetPosition((int) COUNTS);
-
-        leftWheel.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
-        rightWheel.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
-
-        leftWheel.setPower(0.5);
-        rightWheel.setPower(0.5);
+        rightMotor.setTargetPosition((int) COUNTS);;
+        rightMotor.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
+      if (reverse) {
+          leftMotor.setPower(-1 * power);
+          rightMotor.setPower(-1 * power);
+      } else{
+                leftMotor.setPower(power);
+                rightMotor.setPower(power);
+            }
+        //telemetry.addData("Encoder Value", rightMotor.getCurrentPosition());
+        while (rightMotor.getCurrentPosition()<rightMotor.getTargetPosition()) {
+        }
+        leftMotor.setPower(0);
+        rightMotor.setPower(0);
 
     }
 
     /**
      * Turn left/right
-     * Precondition: Encoder attached to leftWheel
+     * Precondition: Encoder attached to leftMotor
      * Postcondition: Robot turned target degrees
      * @Param degrees in degrees, + = turn right, - = turn left
      */
@@ -142,7 +156,45 @@ public class PushBot {
      */
     public static void lineFollower(double distance) {
 
+        //Find black and white values using calibration program
+        //This program follows the left side of the line
+        //Power is oscillation amount, base power is speed
+         double BLACKVALUE = 0.02;
+       double WHITEVALUE = 0.64;
+         double EOPDThreshold = 0.5 * (BLACKVALUE + WHITEVALUE);
+        double POWER = 0.3;
+         double BASEPOWER = 0.2;
+
+        rightMotor.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
+        rightMotor.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        rightMotor.setTargetPosition((int) distance*2880);;
+        rightMotor.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
+
+
+        //telemetry.addData("Encoder Value", rightMotor.getCurrentPosition());
+        while (rightMotor.getCurrentPosition()<rightMotor.getTargetPosition()) {
+            double reflectance = opticalDistanceSensor.getLightDetected();
+            double value;
+
+            if (reflectance > EOPDThreshold) {
+                value = reflectance-EOPDThreshold;
+                leftMotor.setPower ((BASEPOWER+POWER*value));
+                rightMotor.setPower((BASEPOWER-POWER*value));
+            } else {
+                value = EOPDThreshold-reflectance;
+                leftMotor.setPower((BASEPOWER-POWER*value));
+                rightMotor.setPower((BASEPOWER+POWER*value));
+            }
+
+            //telemetry.addData("Reflectance Value", reflectance);
+            //telemetry.addData("Value", value);
+        }
+
+        leftMotor.setPower(0);
+        rightMotor.setPower(0);
+
     }
+
 
     /**
      * Scoring Low Goal

@@ -13,8 +13,11 @@ public class Testing1010 extends OpMode{
     DcMotor Omni_left;
     DcMotor Omni_right;
 
+
+
     @Override
     public void init () {
+
         DC_left = hardwareMap.dcMotor.get("DC_left");
         DC_right = hardwareMap.dcMotor.get("DC_right");
         Omni_left = hardwareMap.dcMotor.get("Omni_left");
@@ -23,10 +26,15 @@ public class Testing1010 extends OpMode{
 
     @Override
     public void loop () {
-        DC_left.setPower(0.5);
-        DC_right.setPower(0.5);
-        Omni_left.setPower(0.5);
-        Omni_right.setPower(0.5);
+
+        float rightY = -gamepad1.right_stick_y;
+
+        DC_left.setPower(rightY);
+        DC_right.setPower(rightY);
+        Omni_left.setPower(rightY);
+        Omni_right.setPower(rightY);
     }
 
 }
+
+
