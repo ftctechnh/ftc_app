@@ -4,10 +4,19 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
 
 public class ResQAuto extends LinearOpMode {
     DcMotor leftMotor;
     DcMotor rightMotor;
+
+    static double BLACKVALUE = 0;
+    static double WHITEVALUE = 0.4;
+    static double EOPDThreshold = 0.5 * (BLACKVALUE + WHITEVALUE);
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -16,6 +25,20 @@ public class ResQAuto extends LinearOpMode {
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
        // leftMotor.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         rightMotor.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        try
+        {
+            BufferedReader br = new BufferedReader(new FileReader("/FIRST/calibration.txt"));
+            String sCurrentLine;
+
+
+            while ((sCurrentLine = br.readLine()) != null) {
+                WHITEVALUE = Double.valueOf(sCurrentLine).doubleValue();
+                System.out.println("Calibrated Value: " + WHITEVALUE);
+            }
+            br.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         waitForStart();
 
