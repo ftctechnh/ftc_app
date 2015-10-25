@@ -3,12 +3,13 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.technicbots.PushBot;
+import com.technicbots.MainRobot;
+import com.technicbots.MainRobot;
 
 public class _ResQAuto extends LinearOpMode {
    // DcMotor leftMotor;
     //DcMotor rightMotor;
-    PushBot PushBot;
+    MainRobot MainRobot;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -18,10 +19,10 @@ public class _ResQAuto extends LinearOpMode {
         //rightMotor.setDirection(DcMotor.Direction.REVERSE);
 
         waitForStart();
-        PushBot.moveStraight(150.0, 0.9, false);
-        PushBot.turn(60);
-        PushBot.moveStraight(80.0, 0.9, false);
-        PushBot.lineFollower(50);
+        MainRobot.moveStraight(150.0, 0.9, true);
+        //MainRobot.turn(60);
+        //MainRobot.moveStraight(80.0, 0.9, true);
+        //MainRobot.lineFollower(50);
 
     }
 }
