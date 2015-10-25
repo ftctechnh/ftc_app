@@ -112,7 +112,7 @@ public class MainRobot {
         rightWheel.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 //        rightWheel.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 
-        rightWheel.setTargetPosition((int) COUNTS);;
+        rightWheel.setTargetPosition((int) COUNTS);
         rightWheel.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
         if (reverse) {
             leftWheel.setPower(-1 * power);
