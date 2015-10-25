@@ -3,6 +3,9 @@ package com.technicbots;
 import android.hardware.Sensor;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
@@ -11,35 +14,39 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class MainRobot {
     public static int DEFAULTLINSLIDE = 0;
     public static double WHEEL_DIAMETER = 4;
+    public static int ENCODER_CPR = 1440;
+    public static double GEAR_RATIO = 0.5;
 
     /**
      * The DCMotor for the left wheel
      */
-    private DcMotor leftWheel;
+    private static DcMotor leftWheel;
     /**
      * The DCMotor for the right wheel
      */
-    private DcMotor rightWheel;
+    private static DcMotor rightWheel;
     /**
      * The DCMotor for the linear slide
      */
-    private DcMotor linearSlide;
+    private static DcMotor linearSlide;
     /**
      * The servo for the button
      */
-    private Servo buttonTouch;
+    private static Servo buttonTouch;
     /**
      * The light sensor(facing downward)
      */
-    private Sensor lightSensor;
+    private static Sensor lightSensor;
     /**
      * The color sensor(facing downward)
      */
-    private Sensor colorSensor;
+    private static Sensor colorSensor;
     /**
      * The gyro sensor(aligned with robot body)
      */
-    private Sensor gyroSensor;
+    private static Sensor gyroSensor;
+
+    private static OpticalDistanceSensor opticalDistanceSensor;
 
     //private static LinSlideButton lastButton = LinSlideButton.Reset;
 
@@ -50,16 +57,15 @@ public class MainRobot {
         Reset, LowButton, MediumButton, HighButton
     }*/
 
-    /**
-     *
-     * @param left
-     * @param right
-     * @param linearLift
-     * @param button
-     * @param light
-     * @param color
-     * @param gyro
-     */
+
+
+    public MainRobot(HardwareMap hardwareMap){
+        rightWheel = hardwareMap.dcMotor.get("rightwheel");
+        leftWheel = hardwareMap.dcMotor.get("leftwheel");
+        //opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("sensor_EOPD");
+        rightWheel.setDirection(DcMotor.Direction.REVERSE);
+    }
+
     public MainRobot(DcMotor left, DcMotor right, DcMotor linearLift, Servo button, Sensor light, Sensor color, Sensor gyro){
         leftWheel = left;
         rightWheel = right;
@@ -97,7 +103,29 @@ public class MainRobot {
      * Postcondition: Robot moved to target position
      * @Param distance in cm, + = forward, - = backward
      */
-    public static void moveStraight(double distance) {
+    public static void moveStraight(double distance, double power, boolean reverse) {
+
+        final double CIRCUMFERENCE = Math.PI * WHEEL_DIAMETER;
+        final  double ROTATIONS = distance / CIRCUMFERENCE;
+        final  double COUNTS = ENCODER_CPR * ROTATIONS * GEAR_RATIO;
+        rightWheel.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
+        rightWheel.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+//        rightWheel.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+
+        rightWheel.setTargetPosition((int) COUNTS);
+        rightWheel.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        if (reverse) {
+            leftWheel.setPower(-1 * power);
+            rightWheel.setPower(-1 * power);
+        } else{
+            leftWheel.setPower(power);
+            rightWheel.setPower(power);
+        }
+        //telemetry.addData("Encoder Value", rightWheel.getCurrentPosition());
+        while (rightWheel.getCurrentPosition()<rightWheel.getTargetPosition()) {
+        }
+        leftWheel.setPower(0);
+        rightWheel.setPower(0);
 
     }
 
