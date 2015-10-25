@@ -3,13 +3,14 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
+import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
-public class LineFollower extends OpMode {
+public class LineFollower extends OpMode{
     DcMotor DC_left;
     DcMotor DC_right;
-    DcMotor Omni_left;
-    DcMotor Omni_right;
     OpticalDistanceSensor opticalDistanceSensor;
+    UltrasonicSensor ultrasonicSensor;
 
     //Find black and white values using calibration program
     //This program follows the left side of the line
@@ -19,36 +20,41 @@ public class LineFollower extends OpMode {
     static double EOPDThreshold = 0.5 * (BLACKVALUE + WHITEVALUE);
     static double POWER = 0.3;
     static double BASEPOWER = 0.2;
-    @Override
-    public void init() {
-        DC_left = hardwareMap.dcMotor.get("DC_left");
-        DC_right = hardwareMap.dcMotor.get("DC_right");
-        Omni_left = hardwareMap.dcMotor.get("Omni_left");
-        Omni_right = hardwareMap.dcMotor.get("Omni_right");
-        opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("sensor_EOPD");
+    static double ultrasonicThreshold = 5;
 
-    }
+@Override
+    public void init(){
+    ultrasonicSensor = hardwareMap.ultrasonicSensor.get("sonic");
+}
 
-    public void loop() {
-
+@Override
+    public void loop(){
+//Ultrasonic sensor can only be used in Legacy Module Ports 4 and 5
         double reflectance = opticalDistanceSensor.getLightDetected();
         double value;
+        double distance;
 
-        if (reflectance > EOPDThreshold) {
-            value = reflectance-EOPDThreshold;
-            DC_left.setPower ((BASEPOWER+POWER*value));
-            Omni_left.setPower((BASEPOWER+POWER*value));
-            DC_right.setPower((BASEPOWER-POWER*value));
-            Omni_right.setPower((BASEPOWER-POWER*value));
-        } else {
-            value = EOPDThreshold-reflectance;
-            DC_left.setPower((BASEPOWER-POWER*value));
-            Omni_left.setPower((BASEPOWER-POWER*value));
-            DC_right.setPower((BASEPOWER+POWER*value));
-            Omni_right.setPower((BASEPOWER+POWER*value));
+    ultrasonicSensor.getUltrasonicLevel();
+    distance = ultrasonicSensor.getUltrasonicLevel();
+    value = reflectance-EOPDThreshold;
+
+    if (distance > ultrasonicThreshold){
+            if (reflectance > EOPDThreshold) {
+                DC_left.setPower ((BASEPOWER+POWER*value));
+                DC_right.setPower((BASEPOWER-POWER*value));
+            } else {
+                value = EOPDThreshold-reflectance;
+                DC_left.setPower((BASEPOWER-POWER*value));
+                DC_right.setPower((BASEPOWER+POWER*value));
+            }
+        }
+        else {
+            DC_left.setPower(0);
+            DC_right.setPower(0);
         }
 
         telemetry.addData("Reflectance Value", reflectance);
         telemetry.addData("Value", value);
+        telemetry.addData("Ultrasonic Value: ", distance);
     }
 }
