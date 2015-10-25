@@ -5,6 +5,7 @@ import android.hardware.Sensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -28,23 +29,25 @@ public class PushBot {
     /**
      * The DCMotor for the linear slide
      */
-    private DcMotor linearSlide;
+    private static DcMotor linearSlide;
     /**
      * The servo for the button
      */
-    private Servo buttonTouch;
+    private static Servo buttonTouch;
     /**
      * The light sensor(facing downward)
      */
-    private Sensor lightSensor;
+    private static Sensor lightSensor;
     /**
      * The color sensor(facing downward)
      */
-    private Sensor colorSensor;
+    private static Sensor colorSensor;
     /**
      * The gyro sensor(aligned with robot body)
      */
-    private Sensor gyroSensor;
+    private static Sensor gyroSensor;
+
+    private static OpticalDistanceSensor opticalDistanceSensor;
 
     //private static LinSlideButton lastButton = LinSlideButton.Reset;
 
@@ -58,10 +61,11 @@ public class PushBot {
     public PushBot(HardwareMap hardwareMap){
         rightMotor = hardwareMap.dcMotor.get("rightMotor");
         leftMotor = hardwareMap.dcMotor.get("leftMotor");
+        opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("sensor_EOPD");
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
     }
 
-    public PushBot(DcMotor left, DcMotor right, DcMotor linearLift, Servo button, Sensor light, Sensor color, Sensor gyro){
+    public PushBot(DcMotor left, DcMotor right, DcMotor linearLift, Servo button, Sensor light, Sensor color, Sensor gyro, OpticalDistanceSensor odSensor){
         leftMotor = left;
         rightMotor = right;
         linearSlide = linearLift;
@@ -69,6 +73,7 @@ public class PushBot {
         lightSensor = light;
         colorSensor = color;
         gyroSensor = gyro;
+        opticalDistanceSensor = odSensor;
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
     }
 
@@ -107,7 +112,7 @@ public class PushBot {
         rightMotor.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 //        rightMotor.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 
-        leftMotor.setTargetPosition((int) COUNTS);;
+        rightMotor.setTargetPosition((int) COUNTS);;
         rightMotor.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
       if (reverse) {
           leftMotor.setPower(-1 * power);
@@ -151,7 +156,45 @@ public class PushBot {
      */
     public static void lineFollower(double distance) {
 
+        //Find black and white values using calibration program
+        //This program follows the left side of the line
+        //Power is oscillation amount, base power is speed
+         double BLACKVALUE = 0.02;
+       double WHITEVALUE = 0.64;
+         double EOPDThreshold = 0.5 * (BLACKVALUE + WHITEVALUE);
+        double POWER = 0.3;
+         double BASEPOWER = 0.2;
+
+        rightMotor.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
+        rightMotor.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        rightMotor.setTargetPosition((int) distance*2880);;
+        rightMotor.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
+
+
+        //telemetry.addData("Encoder Value", rightMotor.getCurrentPosition());
+        while (rightMotor.getCurrentPosition()<rightMotor.getTargetPosition()) {
+            double reflectance = opticalDistanceSensor.getLightDetected();
+            double value;
+
+            if (reflectance > EOPDThreshold) {
+                value = reflectance-EOPDThreshold;
+                leftMotor.setPower ((BASEPOWER+POWER*value));
+                rightMotor.setPower((BASEPOWER-POWER*value));
+            } else {
+                value = EOPDThreshold-reflectance;
+                leftMotor.setPower((BASEPOWER-POWER*value));
+                rightMotor.setPower((BASEPOWER+POWER*value));
+            }
+
+            //telemetry.addData("Reflectance Value", reflectance);
+            //telemetry.addData("Value", value);
+        }
+
+        leftMotor.setPower(0);
+        rightMotor.setPower(0);
+
     }
+
 
     /**
      * Scoring Low Goal

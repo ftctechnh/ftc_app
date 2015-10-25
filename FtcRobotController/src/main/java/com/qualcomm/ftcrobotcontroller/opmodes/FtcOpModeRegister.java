@@ -100,6 +100,6 @@ public class FtcOpModeRegister implements OpModeRegister {
     //manager.register("PushBotSquare", PushBotSquare.java);
 
 
-    manager.register("ResQAuto", ResQAuto.class);
+    manager.register("_ResQAuto", _ResQAuto.class);
   }
 }
