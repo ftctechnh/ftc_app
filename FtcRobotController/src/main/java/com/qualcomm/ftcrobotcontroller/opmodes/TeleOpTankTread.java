@@ -38,7 +38,8 @@ public class TeleOpTankTread extends OpMode{
     // amount to change the claw servo position by
     double clawDelta = 0.1;
 
-// Emma
+    // Eden
+    // Emma
     DcMotor motorFRight;
     DcMotor motorRRight;
     DcMotor motorFLeft;
