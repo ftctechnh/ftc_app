@@ -8,13 +8,18 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Wait and Time-based movement.
  * Based off of MoveTank.
  */
+
 public class MoveTime extends OpMode {
 
     DcMotor Motor1;
     DcMotor Motor2;
 
+    int move_state =0;
+
     @Override
     public void init() {
+        Motor1 = hardwareMap.dcMotor.get("M1");
+        Motor2 = hardwareMap.dcMotor.get("M2");
         Motor2.setDirection(DcMotor.Direction.REVERSE);
     }
 
@@ -25,18 +30,77 @@ public class MoveTime extends OpMode {
 
     @Override
     public void loop() {
-        if (time < 5) {
-            Motor1.setPower(1);
-            Motor2.setPower(1);
-            telemetry.addData("M1", "M1: " + Motor1);
-            telemetry.addData("M2", "M2: " + Motor2);
+
+        switch (move_state)
+        {
+            case 0:
+                /* might need to reset motor */
+                move_state++;
+                break;
+
+            case 1:
+                Motor1.setPower(1);
+                Motor2.setPower(1);
+                if (getRuntime() > 5){
+                    Motor1.setPower(0);
+                    Motor2.setPower(0);
+                    move_state++;
+                }
+                break;
+
+            case 2:
+                Motor1.setPower(1);
+                Motor2.setPower(0);
+                if (getRuntime() > 1.5)
+                {
+                    Motor1.setPower(0);
+                    Motor2.setPower(0);
+                    move_state++;
+                }
+                break;
+
+            case 3:
+                Motor1.setPower(1);
+                Motor2.setPower(1);
+                if (getRuntime() > 5){
+                    Motor1.setPower(0);
+                    Motor2.setPower(0);
+                    move_state++;
+                }
+                break;
+
+            case 4:
+                Motor1.setPower(-1);
+                Motor2.setPower(-1);
+                if (getRuntime() > 5){
+                    Motor1.setPower(0);
+                    Motor2.setPower(0);
+                    move_state++;
+                }
+                break;
+
+            case 5:
+                Motor1.setPower(-1);
+                Motor2.setPower(0);
+                if (getRuntime() > 1.5)
+                {
+                    Motor1.setPower(0);
+                    Motor2.setPower(0);
+                    move_state++;
+                }
+                break;
+
+            case 6:
+                Motor1.setPower(-1);
+                Motor2.setPower(-1);
+                if (getRuntime() > 5){
+                    Motor1.setPower(0);
+                    Motor2.setPower(0);
+                    move_state++;
+                }
+                break;
         }
-        else {
-            Motor1.setPower(2);
-            Motor2.setPower(2);
-            telemetry.addData("M1", "M1: " + Motor1);
-            telemetry.addData("M2", "M2: " + Motor2);
-        }
+
     }
 
     @Override
@@ -44,3 +108,6 @@ public class MoveTime extends OpMode {
 
     }
 }
+
+
+
