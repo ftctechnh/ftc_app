@@ -59,8 +59,6 @@ public class EETestAuton extends OpMode {
     DcMotor motorFLeft;
     DcMotor motorRRight;
     DcMotor motorRLeft;
-    Servo claw;
-    Servo arm;
     LightSensor reflectedLight;
 
     /**
@@ -78,28 +76,13 @@ public class EETestAuton extends OpMode {
     @Override
     public void init() {
 
-		/*
-		 * Use the hardwareMap to get the dc motors and servos by name.
-		 * Note that the names of the devices must match the names used
-		 * when you configured your robot and created the configuration file.
-		 */
-		
-		/*
-		 * For the demo Tetrix K9 bot we assume the following,
-		 *   There are two motors "motor_1" and "motor_2"
-		 *   "motor_1" is on the right side of the bot.
-		 *   "motor_2" is on the left side of the bot..
-		 *   
-		 * We also assume that there are two servos "servo_1" and "servo_6"
-		 *    "servo_1" controls the arm joint of the manipulator.
-		 *    "servo_6" controls the claw joint of the manipulator.
-		 */
-        motorRight = hardwareMap.dcMotor.get("motor_2");
-        motorLeft = hardwareMap.dcMotor.get("motor_1");
-        motorLeft.setDirection(DcMotor.Direction.REVERSE);
+        motorFRight = hardwareMap.dcMotor.get("FRight");
+        motorFLeft = hardwareMap.dcMotor.get("FLeft");
+        motorRRight = hardwareMap.dcMotor.get("RRight");
+        motorRLeft = hardwareMap.dcMotor.get("RLeft");
+        motorFLeft.setDirection(DcMotor.Direction.REVERSE);
+        motorRLeft.setDirection(DcMotor.Direction.REVERSE);
 
-        arm = hardwareMap.servo.get("servo_1");
-        claw = hardwareMap.servo.get("servo_6");
 
         // set the starting position of the wrist and claw
         armPosition = 0.4;
@@ -126,8 +109,6 @@ public class EETestAuton extends OpMode {
         double left, right = 0.0;
 
         // keep manipulator out of the way.
-        arm.setPosition(armPosition);
-        claw.setPosition(clawPosition);
 
 
         /*
@@ -135,21 +116,21 @@ public class EETestAuton extends OpMode {
          * how to adjust the motor power.
          */
         if (this.time <= 1) {
-            // from 0 to 1 seconds, run the motors for five seconds.
-            left = 0.15;
-            right = 0.15;
+            // from 0 to 1 seconds, run the motor at 0.15.
+            left = MOTOR_POWER;
+            right = MOTOR_POWER;
         } else if (this.time > 5 && this.time <= 8.5) {
             // between 5 and 8.5 seconds, point turn right.
-            left = 0.15;
-            right = -0.15;
+            left = MOTOR_POWER;
+            right = -MOTOR_POWER;
         } else if (this.time > 8.5 && this.time <= 15) {
             // between 8 and 15 seconds, idle.
             left = 0.0;
             right = 0.0;
         } else if (this.time > 15d && this.time <= 20.75d) {
             // between 15 and 20.75 seconds, point turn left.
-            left = -0.15;
-            right = 0.15;
+            left = -MOTOR_POWER;
+            right = MOTOR_POWER;
         } else {
             // after 20.75 seconds, stop.
             left = 0.0;
