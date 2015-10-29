@@ -34,7 +34,6 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.LightSensor;
-import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * Example autonomous program.
@@ -140,8 +139,10 @@ public class EETestAuton extends OpMode {
 		/*
 		 * set the motor power
 		 */
-        motorRight.setPower(left);
-        motorLeft.setPower(right);
+        motorRRight.setPower(left);
+        motorRLeft.setPower(right);
+        motorFRight.setPower(left);
+        motorFLeft.setPower(right);
 
 		/*
 		 * read the light sensor.
