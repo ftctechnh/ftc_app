@@ -42,6 +42,9 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.DigitalChannelController;
 
+import org.swerverobotics.library.*;
+import org.swerverobotics.library.interfaces.*;
+
 /*
  *
  * This is an example LinearOpMode that shows how to use
@@ -67,6 +70,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannelController;
  * You can use the X button on either gamepad to turn the LED on and off.
  *
  */
+@TeleOp(name="AdafruitRGBExample")
 public class AdafruitRGBExample extends LinearOpMode {
 
   ColorSensor sensorRGB;
