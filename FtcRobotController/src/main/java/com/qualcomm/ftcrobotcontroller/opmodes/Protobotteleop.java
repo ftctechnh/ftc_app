@@ -44,10 +44,10 @@ public class Protobotteleop extends OpMode {
 
         motorFRight = hardwareMap.dcMotor.get("motorFRight");
         motorFLeft = hardwareMap.dcMotor.get("motorFLeft");
-        motorFLeft.setDirection(DcMotor.Direction.REVERSE);
+        motorFRight.setDirection(DcMotor.Direction.REVERSE);
         motorBRight = hardwareMap.dcMotor.get("motorBRight");
         motorBLeft = hardwareMap.dcMotor.get("motorBLeft");
-        motorBLeft.setDirection(DcMotor.Direction.REVERSE);
+        motorBRight.setDirection(DcMotor.Direction.REVERSE);
     }
 
     /*
