@@ -34,7 +34,6 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 /**
@@ -42,7 +41,7 @@ import com.qualcomm.robotcore.util.Range;
  * <p>
  * Enables control of the robot via the gamepad
  */
-public class TestProgram extends OpMode {
+public class TestProgram2 extends OpMode {
 
 	/*
 	 * Note: the configuration of the servos is such that
@@ -57,11 +56,13 @@ public class TestProgram extends OpMode {
 	int red;
 	int blue;
 	int green;
+	int rightPosition;
+	int leftPosition;
 
 	/**
 	 * Constructor
 	 */
-	public TestProgram() {
+	public TestProgram2() {
 
 	}
 
@@ -94,7 +95,7 @@ public class TestProgram extends OpMode {
 		motorLeft = hardwareMap.dcMotor.get("motor_left");
 		colorSensor = hardwareMap.colorSensor.get("color_sensor");
 		motorRight.setDirection(DcMotor.Direction.REVERSE);
-		colorSensor.enableLed(false);
+
 	}
 
 	/*
@@ -131,7 +132,8 @@ public class TestProgram extends OpMode {
 		// write the values to the motors
 		motorRight.setPower(right);
 		motorLeft.setPower(left);
-
+		rightPosition = motorRight.getCurrentPosition();
+		leftPosition = motorLeft.getCurrentPosition();
 		// update the position of the arm.
 		if (gamepad1.a) {
 
@@ -167,7 +169,8 @@ public class TestProgram extends OpMode {
 		telemetry.addData("red",  "red: " + String.format("%d", red));
 		telemetry.addData("green", "green: " + String.format("%d", green));
 		telemetry.addData("blue", "blue: " + String.format("%d", blue));
-
+		telemetry.addData("right position",  "right position: " + String.format("%d", rightPosition));
+		telemetry.addData("left position",  "left position: " + String.format("%d", leftPosition));
 	}
 
 	/*

@@ -58,6 +58,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("NullOp", NullOp.class);
     manager.register ("TestProgram", TestProgram.class);
     manager.register("ArmMotor", ArmMotor.class);
+    manager.register("TestProgram2", TestProgram2.class);
     /*
      * Uncomment any of the following lines if you want to register an op mode.
      */
