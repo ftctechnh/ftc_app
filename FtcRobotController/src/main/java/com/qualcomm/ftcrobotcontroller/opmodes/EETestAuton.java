@@ -75,10 +75,10 @@ public class EETestAuton extends OpMode {
     @Override
     public void init() {
 
-        motorFRight = hardwareMap.dcMotor.get("FRight");
-        motorFLeft = hardwareMap.dcMotor.get("FLeft");
-        motorRRight = hardwareMap.dcMotor.get("RRight");
-        motorRLeft = hardwareMap.dcMotor.get("RLeft");
+        motorFRight = hardwareMap.dcMotor.get("motor_3"); // FRight
+        motorFLeft = hardwareMap.dcMotor.get("motor_1"); // FLeft
+        motorRRight = hardwareMap.dcMotor.get("motor_4"); //RRight
+        motorRLeft = hardwareMap.dcMotor.get("motor_2"); //RLeft
         motorFLeft.setDirection(DcMotor.Direction.REVERSE);
         motorRLeft.setDirection(DcMotor.Direction.REVERSE);
 
@@ -91,10 +91,10 @@ public class EETestAuton extends OpMode {
 		 * We also assume that we have a LEGO light sensor
 		 * with a name of "light_sensor" configured for our robot.
 		 */
-        reflectedLight = hardwareMap.lightSensor.get("light_sensor");
+        //reflectedLight = hardwareMap.lightSensor.get("light_sensor");
 
         // turn on LED of light sensor.
-        reflectedLight.enableLed(true);
+        //reflectedLight.enableLed(true);
     }
 
     /*
@@ -121,7 +121,7 @@ public class EETestAuton extends OpMode {
         } else if (this.time > 5 && this.time <= 8.5) {
             // between 5 and 8.5 seconds, point turn right.
             left = MOTOR_POWER;
-            right = -MOTOR_POWER;
+            right = MOTOR_POWER;
         } else if (this.time > 8.5 && this.time <= 15) {
             // between 8 and 15 seconds, idle.
             left = 0.0;
