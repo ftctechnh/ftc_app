@@ -1,10 +1,44 @@
 package org.swerverobotics.library.interfaces;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
+import org.swerverobotics.library.*;
 
 /**
  * II2cDeviceClient is the public interface to a utility class that makes it easier to
  * use I2cDevice instances.
+ *
+ * <p>Having created an II2cDeviceClient instance, reads and writes are performed by calling
+ * {@link #read8(int) read8()} and {@link #write8(int, int) write8()} or
+ * {@link #read(int, int) read()} and {@link #write(int, byte[]) write()} respectively. These
+ * calls are synchronous; they block until their action is semantically complete. No attention
+ * to 'read mode' or 'write mode' is required. Simply call reads and writes as you need them, and
+ * the right thing happens.</p>
+ *
+ * <p>A word about optimizing reads. In I2cDevice, reads are accomplished by calling
+ * {@link I2cDevice#enableI2cReadMode(int, int, int) enableI2cReadMode()} to indicate a set of
+ * registers which are to be read from the I2C device. <em>Changing</em> that set of registers
+ * is a relatively time consuming operation, on the order of several tens of milliseconds. If your
+ * code wishes to read some registers at some times and then others at another, it behooves you to
+ * set up a {@link org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow ReadWindow} that
+ * covers them all (if it can): the read window will be read all at once, then subsequent read()
+ * operations will return various parts of that already retrieved data (if still valid) without
+ * the need to invoke another enableI2cReadMode() expense. Note that this is purely an optimization:
+ * if you don't specify an explicit read window, one will be automatically created for you. But
+ * it's usually worth thinking about.</p>
+ *
+ * <p>Three different flavors of read window are available that differ in whether they
+ * read only one time or perform repeated reads, and whether they aggressively return to reading
+ * when there's no writing to do or just read when it's opportune to do so but don't on their
+ * own cause underlying mode switches.</p>
+ *
+ * <p>For devices that automatically shutdown if no communication is received in a certain
+ * duration, a heartbeat facility is optionally provided.</p>
+ *
+ * @see ClassFactory#createI2cDeviceClient(OpMode, I2cDevice, int, boolean)
+ * @see org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow
+ * @see #ensureReadWindow(ReadWindow, ReadWindow)
+ * @see #setHeartbeatAction(HeartbeatAction)
  */
 public interface II2cDeviceClient extends HardwareDevice
     {
