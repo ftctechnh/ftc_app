@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 
 /**
  * Created by ibravo on 10/30/15.
@@ -45,6 +46,34 @@ public class HardwareMap9926 extends OpMode {
     public void stop(){
 
     }
+
+    //--------------------------------------------------------------------------
+    // Access the hand position.
+    //--------
+    double a_hand_position ()
+    {
+        return v_servo_left_hand.getPosition();
+
+    } // PushBotManual::a_hand_position
+
+    //--------------------------------------------------------------------------
+    // Set the hand position.
+    //--------
+
+    void m_hand_position (double p_position)
+    {
+        // Ensure the specifiec value is legal.
+        double l_position = Range.clip
+                (p_position
+                        , Servo.MIN_POSITION
+                        , Servo.MAX_POSITION
+                );
+
+        // Set the value.
+        v_servo_left_hand.setPosition (l_position);
+
+    } // PushBotManual::m_hand_position
+
 
 
 }
