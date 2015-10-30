@@ -10,28 +10,23 @@ import com.qualcomm.ftcrobotcontroller.opmodes.*;
 
 /**
  * MyRobotControllerAdministration is a container for 'administrative' methods that interact
- * with the Swerve library. You don't <em>have to</em> put your administrative methods in a separate
+ * with the Swerve Library. You don't <em>have to</em> put your administrative methods in a separate
  * class as we do here, but it does help keep them neat and tidy. Administrative methods are
  * each tagged with a Java annotation that connotes and bestows their significance; see the
- * individual example methods for details. Note that administrative methods don't reside in any
- * given OpMode, but rather are used and invoked outside of the OpMode life cycle.
+ * individual example methods below for details. Note that administrative methods don't reside in any
+ * given OpMode, but rather are used and invoked outside of the OpMode life cycle. Neither the
+ * name of the administrative methods nor the name of the class are of significance; the only
+ * important thing is the annotations with which they are decorated.
  *
- * <p>NOTE: if you previously cloned YourCodeHere for your team and per the then-current
- * instructions edited FtcRobotController\build.gradle to mention your project, you should
- * now remove that: FtcRobotController\build.gradle should now always be the original, verbatim
- * version as currently found here. Then, in your own project's build.gradle make necessary
- * changes to match the now-current YourCodeHere\build.gradle. Specifically, ensure that:</p>
- * <ol>
- *     <li>it uses <code>apply plugin: 'com.android.<em>application</em>'</code> not <code>...android.<em>module</em>'</code></li>
- *     <li>its <code>defaultConfig</code> section contains the following</li>
- *         <ol>
- *         <li>the verbatim line <code>applicationId 'com.qualcomm.ftcrobotcontroller'</code></li>
- *         <li>a <code>versionCode</code> line with the version three or greater: <code>versionCode 3</code></li>
- *         </ol>
- *     <li>its <code>dependencies</code> section contains the line <code>compile project(':FtcRobotController')</code></li>
- * </ol>
- *
- * <p>If you're new to us here, these updates have already been done for you.</p>
+ * As we've written things here, the code resides in an Android module named 'YourCodeHere' which
+ * contains a package named 'org.usfirst.ftc.exampleteam.yourcodehere'. If you wish to change that,
+ * or to create multiple such modules with different names, that's pretty straightforward: you can
+ * begin by copying the entire YourCodeHere folder, then renaming the src\main\java\org\...\yourcodehere
+ * path to reflect your new package name, whatever that might be. That new package name will also
+ * of course need to appear in your copied .java files (including package-info.java), so those will
+ * need their 'package' statement at the top adjusted accordingly. Finally, perhaps less obviously,
+ * the src\main\AndroidManifest.xml, which also contains the package name, will need to have the
+ * 'package' attribute of the 'manifest' element adjusted.
  *
  * @see TeleOp
  * @see Autonomous
