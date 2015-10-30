@@ -109,7 +109,7 @@ public class PushBotAuto extends PushBotTelemetry
             l_times[0] = 0;
             l_times[1] = 0;
             l_times[2] = 0;
-            v_state++;
+
 
             break;
         //
