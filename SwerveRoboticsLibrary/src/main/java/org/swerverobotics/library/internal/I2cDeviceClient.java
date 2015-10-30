@@ -363,7 +363,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         {
         return this.readTimeStamped(ireg, creg).data;
         }
-    
+
     /**
      * Read a contiguous set of registers.
      */
@@ -460,6 +460,17 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
             // Can't return (no data to return!) so we must throw
             throw SwerveRuntimeException.wrap(e);
             }
+        }
+
+    @Override public TimestampedData readTimeStamped(final int ireg, final int creg, final ReadWindow readWindowNeeded, final ReadWindow readWindowSet)
+        {
+        return this.executeFunctionWhileLocked(new IFunc<TimestampedData>() {
+            @Override public TimestampedData value()
+                {
+                ensureReadWindow(readWindowNeeded, readWindowSet);
+                return readTimeStamped(ireg, creg);
+                }
+            });
         }
 
     private boolean readCacheValidityCurrentOrImminent()

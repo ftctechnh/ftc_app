@@ -159,6 +159,23 @@ public interface II2cDeviceClient extends HardwareDevice
         public long     nanoTime;
         }
 
+    /**
+     * Advanced: Atomically calls ensureReadWindow() with the last two parameters and then
+     * readTimeStamped() with the first two without the possibility of a concurrent client
+     * interrupting in the middle.
+     *
+     * @param ireg              the register number of the first byte register to read
+     * @param creg              the number of bytes / registers to read
+     * @param readWindowNeeded  the read window we require
+     * @param readWindowSet     the read window to set if the required read window is not current
+     * @return                  the data that was read, together with the timestamp
+     *
+     * @see #ensureReadWindow(ReadWindow, ReadWindow)
+     * @see #readTimeStamped(int, int)
+     * @see #executeFunctionWhileLocked(IFunc)
+     */
+    TimestampedData readTimeStamped(int ireg, int creg, ReadWindow readWindowNeeded, ReadWindow readWindowSet);
+
     //----------------------------------------------------------------------------------------------
     // Writing
     //----------------------------------------------------------------------------------------------
