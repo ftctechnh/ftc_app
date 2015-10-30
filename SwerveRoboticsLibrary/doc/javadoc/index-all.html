@@ -893,7 +893,7 @@
 <dt><a href="org/usfirst/ftc/exampleteam/yourcodehere/MyRobotControllerAdministration.html" title="class in org.usfirst.ftc.exampleteam.yourcodehere"><span class="typeNameLink">MyRobotControllerAdministration</span></a> - Class in <a href="org/usfirst/ftc/exampleteam/yourcodehere/package-summary.html">org.usfirst.ftc.exampleteam.yourcodehere</a></dt>
 <dd>
 <div class="block">MyRobotControllerAdministration is a container for 'administrative' methods that interact
- with the Swerve library.</div>
+ with the Swerve Library.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/usfirst/ftc/exampleteam/yourcodehere/MyRobotControllerAdministration.html#MyRobotControllerAdministration--">MyRobotControllerAdministration()</a></span> - Constructor for class <a href="org/usfirst/ftc/exampleteam/yourcodehere/MyRobotControllerAdministration.html" title="class in org.usfirst.ftc.exampleteam.yourcodehere">MyRobotControllerAdministration</a></dt>
 <dd>&nbsp;</dd>
@@ -1138,6 +1138,12 @@
 <dd>
 <div class="block">Reads and returns a contiguous set of device I2C registers, together with a best-available
  timestamp of when the actual I2C read occurred.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html#readTimeStamped-int-int-org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow-org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow-">readTimeStamped(int, int, II2cDeviceClient.ReadWindow, II2cDeviceClient.ReadWindow)</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a></dt>
+<dd>
+<div class="block">Advanced: Atomically calls ensureReadWindow() with the last two parameters and then
+ readTimeStamped() with the first two without the possibility of a concurrent client
+ interrupting in the middle.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#ReadWindow-int-int-org.swerverobotics.library.interfaces.II2cDeviceClient.READ_MODE-">ReadWindow(int, int, II2cDeviceClient.READ_MODE)</a></span> - Constructor for class <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a></dt>
 <dd>
