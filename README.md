@@ -22,7 +22,7 @@ Notable features of the Swerve Robotics FTC Library include:
     calling ClassFactory.createEasyMotorController(). 
 
 *   An **alternate OpMode registration mechanism** (the old FtcOpModeRegister.register() still works too)
-    that allows you to register your own OpModes simply by decorating them with @TeleOp or @Annotation annotations.
+    that allows you to register your own OpModes simply by decorating them with @TeleOp or @Autonomous annotations.
     This helps promote clean living and easier integration of library updates over time by avoiding
     editing code that lives in libraries owned by others. To register OpModes that aren't your own,
     a related annotation, @OpModeRegistrar, can be placed on a method in your code which is to be called
