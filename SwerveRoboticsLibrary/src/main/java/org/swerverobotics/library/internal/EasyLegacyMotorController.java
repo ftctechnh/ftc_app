@@ -485,6 +485,7 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
         Log.d(LOGGING_TAG, "floating motors");
         this.setMotorPowerFloat(1);
         this.setMotorPowerFloat(2);
+        i2cDeviceClient.waitForWriteCompletions();  // paranoia about safety
         }
 
     private void stopMotors()
@@ -492,6 +493,7 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
         Log.d(LOGGING_TAG, "stopping motors");
         this.setMotorPower(1, 0);
         this.setMotorPower(2, 0);
+        i2cDeviceClient.waitForWriteCompletions();  // paranoia about safety
         }
 
     private void validateMotor(int motor)

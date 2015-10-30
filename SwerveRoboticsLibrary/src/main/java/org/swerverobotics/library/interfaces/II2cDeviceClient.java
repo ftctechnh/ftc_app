@@ -231,6 +231,12 @@ public interface II2cDeviceClient extends HardwareDevice
      */
     void write(int ireg, byte[] data, boolean waitForCompletion);
 
+    /**
+     * Waits for any previously issued writes to complete.
+     * @throws InterruptedException
+     */
+    void waitForWriteCompletions();
+
     //----------------------------------------------------------------------------------------------
     // Concurrency management
     //----------------------------------------------------------------------------------------------
