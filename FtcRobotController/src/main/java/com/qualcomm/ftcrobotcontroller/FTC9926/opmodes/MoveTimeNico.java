@@ -4,12 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
- * Created by Nicolas Bravo on 10/23/15.
- * Wait and Time-based movement.
- * Based off of MoveTank.
+ * Created by Nicolas Bravo on 10/30/15.
  */
-
-public class MoveTime extends OpMode {
+public class MoveTimeNico extends OpMode{
 
     DcMotor Motor1;
     DcMotor Motor2;
@@ -108,6 +105,3 @@ public class MoveTime extends OpMode {
 
     }
 }
-
-
-
