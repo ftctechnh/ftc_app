@@ -24,6 +24,8 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
+
+    public final String LOGGING_TAG = SynchronousOpMode.LOGGING_TAG;
     
     /* The NXT HiTechnic motor controller register layout is as follows:
 
@@ -119,13 +121,13 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
         this.i2cDeviceClient.setHeartbeatAction(heartbeatAction);
         this.i2cDeviceClient.setHeartbeatInterval(2000);
 
-        // Also: set up a read-window. We make it 'ONLY_ONCE' to avoid unnecessary ping-ponging
+        // Also: set up a read-window. We make it BALANCED to avoid unnecessary ping-ponging
         // between read mode and write mode, since motors are read about as much as they are
         // written, but we make it relatively large so that least that when we DO go
         // into read mode and possibly do more than one read we will use this window
         // and won't have to fiddle with the 'switch to read mode' each and every time.
         // We include everything from the 'Motor 1 target encoder value' through the battery voltage.
-        this.i2cDeviceClient.setReadWindow(new II2cDeviceClient.ReadWindow(iRegWindowFirst, iRegWindowMax-iRegWindowFirst, II2cDeviceClient.READ_MODE.ONLY_ONCE));
+        this.i2cDeviceClient.setReadWindow(new II2cDeviceClient.ReadWindow(iRegWindowFirst, iRegWindowMax-iRegWindowFirst, II2cDeviceClient.READ_MODE.BALANCED));
         }
 
     public static DcMotorController create(OpMode context, DcMotorController target, DcMotor motor1, DcMotor motor2)
@@ -331,25 +333,25 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
 
     @Override synchronized public boolean onUserOpModeStop()
         {
-        Log.d(SynchronousOpMode.LOGGING_TAG, "Easy: auto-stopping...");
+        Log.d(LOGGING_TAG, "Easy: auto-stopping...");
         if (this.isArmed)
             {
             this.stopMotors();  // mirror StopRobotOpMode
             this.disarm();
             }
-        Log.d(SynchronousOpMode.LOGGING_TAG, "Easy: ... done");
+        Log.d(LOGGING_TAG, "Easy: ... done");
         return true;    // unregister us
         }
 
     @Override synchronized public boolean onRobotShutdown()
         {
-        Log.d(SynchronousOpMode.LOGGING_TAG, "Easy: auto-closing...");
+        Log.d(LOGGING_TAG, "Easy: auto-closing...");
 
         // We actually shouldn't be here by now, having received a onUserOpModeStop()
         // after which we should have been unregistered. But we close down anyway.
         this.close();
 
-        Log.d(SynchronousOpMode.LOGGING_TAG, "Easy: ... done");
+        Log.d(LOGGING_TAG, "Easy: ... done");
         return true;    // unregister us
         }
 
@@ -480,12 +482,14 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
 
     private void floatMotors()
         {
+        Log.d(LOGGING_TAG, "floating motors");
         this.setMotorPowerFloat(1);
         this.setMotorPowerFloat(2);
         }
 
     private void stopMotors()
         {
+        Log.d(LOGGING_TAG, "stopping motors");
         this.setMotorPower(1, 0);
         this.setMotorPower(2, 0);
         }
