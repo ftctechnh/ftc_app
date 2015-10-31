@@ -6,18 +6,12 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 /**
  * Created by Nicolas Bravo on 10/30/15.
  */
-public class MoveTimeNico extends OpMode{
+public class MoveTimeNico extends HardwareMap9926{
 
-    DcMotor Motor1;
-    DcMotor Motor2;
-
-    int move_state =0;
+    int move_state = 0;
 
     @Override
     public void init() {
-        Motor1 = hardwareMap.dcMotor.get("M1");
-        Motor2 = hardwareMap.dcMotor.get("M2");
-        Motor2.setDirection(DcMotor.Direction.REVERSE);
     }
 
     @Override
@@ -25,9 +19,8 @@ public class MoveTimeNico extends OpMode{
 
     }
 
-    @Override
-    public void loop() {
-
+    @Override public void loop()
+    {
         switch (move_state)
         {
             case 0:
@@ -36,37 +29,42 @@ public class MoveTimeNico extends OpMode{
                 break;
 
             case 1:
-                Motor1.setPower(1);
-                Motor2.setPower(1);
-                if (getRuntime() > 5){
-                    Motor1.setPower(0);
-                    Motor2.setPower(0);
+                m_hand_position(0.2);
+
+//                if (getRuntime() > 5){
+//                    Motor1.setPower(0);
+//                    Motor2.setPower(0);
                     move_state++;
-                }
+//                }
                 break;
 
             case 2:
-                Motor1.setPower(1);
-                Motor2.setPower(0);
-                if (getRuntime() > 1.5)
-                {
-                    Motor1.setPower(0);
-                    Motor2.setPower(0);
+                m_hand_position(0.4);
+  //              Motor1.setPower(1);
+  //              Motor2.setPower(0);
+ //               if (getRuntime() > 1.5)
+ //               {
+  //                  Motor1.setPower(0);
+  //                  Motor2.setPower(0);
                     move_state++;
-                }
+ //               }
                 break;
 
             case 3:
-                Motor1.setPower(1);
-                Motor2.setPower(1);
-                if (getRuntime() > 5){
-                    Motor1.setPower(0);
-                    Motor2.setPower(0);
+                m_hand_position(.8);
+  //              Motor1.setPower(1);
+  //              Motor2.setPower(1);
+  //              if (getRuntime() > 5){
+  //                  Motor1.setPower(0);
+  //                  Motor2.setPower(0);
                     move_state++;
-                }
+  //              }
+                break;
+            default:
                 break;
 
-            case 4:
+
+    /*        case 4:
                 Motor1.setPower(-1);
                 Motor2.setPower(-1);
                 if (getRuntime() > 5){
@@ -94,8 +92,9 @@ public class MoveTimeNico extends OpMode{
                     Motor1.setPower(0);
                     Motor2.setPower(0);
                     move_state++;
-                }
-                break;
+                }*/
+
+                //break;
         }
 
     }
