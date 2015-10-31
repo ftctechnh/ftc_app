@@ -16,36 +16,10 @@ public class _ResQAuto extends LinearOpMode {
         leftWheel = hardwareMap.dcMotor.get("leftwheel");
         rightWheel.setDirection(DcMotor.Direction.REVERSE);
         waitForStart();
-        rightWheel.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
-        rightWheel.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        rightWheel.setTargetPosition(5000);
-        leftWheel.setPower(-0.9);
-        rightWheel.setPower(-0.9);
-        rightWheel.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
-        while (rightWheel.getCurrentPosition()<rightWheel.getTargetPosition()) {
-            telemetry.addData("Encoder Value", rightWheel.getCurrentPosition());
-            waitForNextHardwareCycle();
-    }
-        leftWheel.setPower(0);
-        rightWheel.setPower(0);
-
-
-        rightWheel.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
-        rightWheel.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        rightWheel.setTargetPosition(1000);
-        leftWheel.setPower(-0.9);
-        rightWheel.setPower(0.9);
-        rightWheel.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
-        while (rightWheel.getCurrentPosition()<rightWheel.getTargetPosition()) {
-            telemetry.addData("Encoder Value", rightWheel.getCurrentPosition());
-            waitForNextHardwareCycle();
-        }
-        leftWheel.setPower(0);
-        rightWheel.setPower(0);
-        //MainRobot.moveStraight(150.0, 0.9, true);
-        //MainRobot.turn(60);
-        //MainRobot.moveStraight(80.0, 0.9, true);
-        //MainRobot.lineFollower(50);
+        MainRobot.moveStraight(150.0, 0.9, true);
+        MainRobot.turn(60);
+        MainRobot.moveStraight(80.0, 0.9, true);
+        MainRobot.lineFollower(50);
 
     }
 }
