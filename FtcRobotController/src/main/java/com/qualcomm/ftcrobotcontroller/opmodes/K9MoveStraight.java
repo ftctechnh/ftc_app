@@ -3,6 +3,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.technicbots.MainRobot;
 
 
 public class K9MoveStraight extends LinearOpMode {
@@ -11,6 +12,7 @@ public class K9MoveStraight extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
     DcMotor DC_left;
     DcMotor DC_right;
+    MainRobot robot;
 
         DC_left = hardwareMap.dcMotor.get("DC_left");
         DC_right = hardwareMap.dcMotor.get("DC_right");
