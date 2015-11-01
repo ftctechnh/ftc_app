@@ -51,7 +51,7 @@ public class LineFollower extends OpMode{
                 Omni_left.setPower(0);
                 Omni_right.setPower(0);
             }
-
+//life
         telemetry.addData("Reflectance Value", reflectance);
         telemetry.addData("Ultrasonic Value", distance);
     }
