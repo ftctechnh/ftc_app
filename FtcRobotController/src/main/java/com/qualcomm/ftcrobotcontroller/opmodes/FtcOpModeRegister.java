@@ -44,7 +44,7 @@ public class FtcOpModeRegister implements OpModeRegister {
    * The Op Mode Manager will call this method when it wants a list of all
    * available op modes. Add your op mode to the list to enable it.
    *
-   * @param manager op mode manager
+   * @5param manager op mode manager
    */
   public void register(OpModeManager manager) {
 
@@ -67,6 +67,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register ("Testing1010", Testing1010.class);
     manager.register ("LineFollower", LineFollower.class);
     manager.register ("Calibration", Calibration.class);
+    manager.register ("LightSensorCalibration", Calibration.class);
     manager.register("K9MoveStraight", K9MoveStraight.class);
     /*
      * Uncomment any of the following lines if you want to register an op mode.
@@ -100,7 +101,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     //manager.register("PushBotSquare", PushBotSquare.java);
 
 
-    manager.register("ResQAuto", ResQAuto.class);
+    manager.register("ResQAuto", _ResQAuto.class);
     manager.register("ResQTeleop", ResQTeleop.class);
   }
 }
