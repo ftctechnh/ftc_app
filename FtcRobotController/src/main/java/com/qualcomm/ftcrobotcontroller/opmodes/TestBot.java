@@ -1,7 +1,10 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.qualcomm.hardware.HiTechnicNxtLightSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.LightSensor;
+
 
 /**
  * Created by subash on 10/11/15.
@@ -12,9 +15,11 @@ public class TestBot extends OpMode
     DcMotor rightMotor;
     DcMotor leftMotor;
     DcMotor grabber;
+    LightSensor beaconColor;
 
     public void init()
     {
+        beaconColor = hardwareMap.lightSensor.get("beaconColor");
         gamepad1.setJoystickDeadzone(DEADZONE);
         rightMotor = hardwareMap.dcMotor.get("rightMotor");
         leftMotor = hardwareMap.dcMotor.get("leftMotor");
@@ -46,6 +51,8 @@ public class TestBot extends OpMode
         }
         telemetry.addData("leftMotor", leftMotor.getPower());
         telemetry.addData("rightMotor", rightMotor.getPower());
+        telemetry.addData("beaconColor", beaconColor.getLightDetected());
+
     }
 
     public void stop()
