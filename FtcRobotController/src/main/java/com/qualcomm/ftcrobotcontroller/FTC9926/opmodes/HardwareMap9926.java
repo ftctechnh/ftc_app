@@ -15,14 +15,15 @@ public class HardwareMap9926 extends OpMode {
 
     //Define what hardware to use:
     // Motor Controller
-    private DcMotorController v_dc_motor_controller_drive;
+//    private DcMotorController v_dc_motor_controller_drive;
 
     // Motor Left and encoder
-    private DcMotor v_motor_left_drive;
-    final int v_channel_left_drive = 1;
+//    private DcMotor v_motor_left_drive;
+//    final int v_channel_left_drive = 1;
 
     // Servo ARM
-    Servo v_servo_left_hand;
+    Servo Servo1;
+    double SM1_Position;
 
 
     @Override
@@ -31,19 +32,19 @@ public class HardwareMap9926 extends OpMode {
         // Define Config Name in Driver Station
         double l_hand_position = 0.5;
 
-        v_servo_left_hand = hardwareMap.servo.get ("SV1");
-        v_servo_left_hand.setPosition (l_hand_position);
+        Servo1 = hardwareMap.servo.get("SM1");
+        SM1_Position = 0.5;
 
     }
 
-    public void start(){
+    @Override public void start(){
 
     }
 
-    public void loop(){
+    @Override public void loop(){
 
     }
-    public void stop(){
+    @Override public void stop(){
 
     }
 
@@ -52,7 +53,7 @@ public class HardwareMap9926 extends OpMode {
     //--------
     double a_hand_position ()
     {
-        return v_servo_left_hand.getPosition();
+        return Servo1.getPosition();
 
     } // PushBotManual::a_hand_position
 
@@ -63,14 +64,15 @@ public class HardwareMap9926 extends OpMode {
     void m_hand_position (double p_position)
     {
         // Ensure the specifiec value is legal.
-        double l_position = Range.clip
-                (p_position
-                        , Servo.MIN_POSITION
-                        , Servo.MAX_POSITION
-                );
+//        double l_position = Range.clip(p_position, Servo.MIN_POSITION,Servo.MAX_POSITION);
+
+        SM1_Position = Range.clip(p_position,0,1);
+
+        Servo1.getPosition();
 
         // Set the value.
-        v_servo_left_hand.setPosition (l_position);
+//        v_servo_left_hand.setDirection(1);
+//        v_servo_left_hand.setPosition(.2);
 
     } // PushBotManual::m_hand_position
 

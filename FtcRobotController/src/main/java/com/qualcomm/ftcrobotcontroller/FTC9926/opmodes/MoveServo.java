@@ -25,7 +25,7 @@ public class MoveServo extends OpMode {
     public void init() {
 
         Servo1 = hardwareMap.servo.get("SM1");
-        Servo2 = hardwareMap.servo.get("SM2");
+//        Servo2 = hardwareMap.servo.get("SM2");
 
         //Set starting postion for SM1
         SM1_Position = 0.5;
@@ -44,13 +44,13 @@ public class MoveServo extends OpMode {
     public void loop() {
 
         SM1_Position = Range.clip(gamepad1.left_trigger,0,1);
-        SM2_Position = Range.clip(gamepad1.right_trigger,0,1);
+//        SM2_Position = Range.clip(gamepad1.right_trigger,0,1);
 
         Servo1.setPosition(SM1_Position);
-        Servo2.setPosition(SM2_Position);
+//        Servo2.setPosition(SM2_Position);
 
         telemetry.addData("SM1", "SM1 Pos: " + String.format("%.2f", SM1_Position));
-        telemetry.addData("SM2", "SM2 Pos: " + String.format("%.2f", SM2_Position));
+//        telemetry.addData("SM2", "SM2 Pos: " + String.format("%.2f", SM2_Position));
 
     }
 
