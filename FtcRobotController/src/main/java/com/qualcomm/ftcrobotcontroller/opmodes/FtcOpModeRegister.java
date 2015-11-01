@@ -61,6 +61,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("Stick", MoveStick.class);
     manager.register("Tank", MoveTank.class);
     manager.register("Touch", TouchOp.class);
+    manager.register("TimE", MoveTimeNico.class);
 
     /*
      * The following op modes are example op modes provided by QualComm.
