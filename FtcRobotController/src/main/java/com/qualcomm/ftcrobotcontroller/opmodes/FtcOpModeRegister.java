@@ -60,15 +60,15 @@ public class FtcOpModeRegister implements OpModeRegister {
 
     //manager.register("MatrixK9TeleOp", MatrixK9TeleOp.class);
     //manager.register("K9TeleOp", K9TeleOp.class);
-    manager.register ("PushBotAuto", PushBotAuto.class);
-    manager.register ("PushBotManual", PushBotManual.class);
+    //manager.register ("PushBotAuto", PushBotAuto.class);
+    //manager.register ("PushBotManual", PushBotManual.class);
 
     //Blue team work
-    manager.register ("Testing1010", Testing1010.class);
-    manager.register ("LineFollower", LineFollower.class);
+    //manager.register ("Testing1010", Testing1010.class);
+    //manager.register ("LineFollower", LineFollower.class);
     manager.register ("Calibration", Calibration.class);
-    manager.register ("LightSensorCalibration", Calibration.class);
-    manager.register("K9MoveStraight", K9MoveStraight.class);
+    //manager.register ("LightSensorCalibration", Calibration.class);
+    //manager.register("K9MoveStraight", K9MoveStraight.class);
     /*
      * Uncomment any of the following lines if you want to register an op mode.
      */
@@ -101,7 +101,10 @@ public class FtcOpModeRegister implements OpModeRegister {
     //manager.register("PushBotSquare", PushBotSquare.java);
 
 
-    manager.register("ResQAuto", _ResQAuto.class);
+    manager.register("ResQAuto_D_R", ResQAutoDelayRed.class);
+    manager.register("ResQAuto_D_B", ResQAutoDelayBlue.class);
+    manager.register("ResQAuto_R", ResQAutoRed.class);
+    manager.register("ResQAuto_B", ResQAutoBlue.class);
     manager.register("ResQTeleop", ResQTeleop.class);
   }
 }
