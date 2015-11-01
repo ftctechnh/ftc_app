@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
 public class LineFollower extends OpMode{
+    DcMotor Omni_left;
+    DcMotor Omni_right;
     DcMotor DC_left;
     DcMotor DC_right;
     OpticalDistanceSensor opticalDistanceSensor;
@@ -16,45 +18,41 @@ public class LineFollower extends OpMode{
     //This program follows the left side of the line
     //Power is oscillation amount, base power is speed
     static double BLACKVALUE = 0.02;
-    static double WHITEVALUE = 0.64;
+    static double WHITEVALUE = 0.529;
     static double EOPDThreshold = 0.5 * (BLACKVALUE + WHITEVALUE);
-    static double POWER = 0.3;
-    static double BASEPOWER = 0.2;
-    static double ultrasonicThreshold = 5;
+    static double ultrasonicThreshold = 20;
 
 @Override
     public void init(){
+    opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("sensor_EOPD");
     ultrasonicSensor = hardwareMap.ultrasonicSensor.get("sonic");
+    DC_left = hardwareMap.dcMotor.get("DC_left");
+    DC_right = hardwareMap.dcMotor.get("DC_right");
+
 }
 
 @Override
     public void loop(){
-//Ultrasonic sensor can only be used in Legacy Module Ports 4 and 5
-        double reflectance = opticalDistanceSensor.getLightDetected();
-        double value;
-        double distance;
+    double reflectance = opticalDistanceSensor.getLightDetected();
+    double distance = ultrasonicSensor.getUltrasonicLevel();
 
-    ultrasonicSensor.getUltrasonicLevel();
-    distance = ultrasonicSensor.getUltrasonicLevel();
-    value = reflectance-EOPDThreshold;
-
-    if (distance > ultrasonicThreshold){
             if (reflectance > EOPDThreshold) {
-                DC_left.setPower ((BASEPOWER+POWER*value));
-                DC_right.setPower((BASEPOWER-POWER*value));
-            } else {
-                value = EOPDThreshold-reflectance;
-                DC_left.setPower((BASEPOWER-POWER*value));
-                DC_right.setPower((BASEPOWER+POWER*value));
+                double value = reflectance - EOPDThreshold;
+                DC_left.setPower(0.1+.1*value);
+                DC_right.setPower(0.1-.1*value);
             }
-        }
-        else {
-            DC_left.setPower(0);
-            DC_right.setPower(0);
-        }
+            else {
+                double value = EOPDThreshold - reflectance;
+                DC_left.setPower(0.1-.1*value);
+                DC_right.setPower(0.1+.1*value);
+            }
+
+            if (distance<ultrasonicThreshold){
+                Omni_left.setPower(0);
+                Omni_right.setPower(0);
+            }
 
         telemetry.addData("Reflectance Value", reflectance);
-        telemetry.addData("Value", value);
-        telemetry.addData("Ultrasonic Value: ", distance);
+        telemetry.addData("Ultrasonic Value", distance);
     }
 }
