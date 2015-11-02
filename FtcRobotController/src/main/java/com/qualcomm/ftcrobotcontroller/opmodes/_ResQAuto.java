@@ -67,8 +67,6 @@ public abstract class _ResQAuto extends LinearOpMode {
             waitForNextHardwareCycle();
         }
 
-
-
         if (getRedAlliance() == 0) {
             //Overshoot to left side of line only as BLUE alliance
             leftWheel.setPower(0.1);
@@ -78,7 +76,10 @@ public abstract class _ResQAuto extends LinearOpMode {
             //Goes back to the left side of the line only as RED alliance
             leftWheel.setPower(-0.1);
             rightWheel.setPower(-0.1);
-            sleep(500);
+            sleep(800);
+            leftWheel.setPower(0.3);
+            rightWheel.setPower(-0.3);
+            sleep(1500);
         }
 
         //follow the left edge of the line
@@ -160,10 +161,10 @@ public abstract class _ResQAuto extends LinearOpMode {
             sleep(1500);
             leftWheel.setPower(0.3);
             rightWheel.setPower(-0.3);
-            sleep(1500);
+            sleep(500);
             leftWheel.setPower(0.3);
             rightWheel.setPower(0.3);
-            sleep(1500);
+            sleep(2000);
             leftWheel.setPower(0);
             rightWheel.setPower(0);
         } else {
