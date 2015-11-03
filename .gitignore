@@ -26,3 +26,5 @@ build/
 
 *ASUS_PC_01*
 
+*.iml
+FtcRobotController/FtcRobotController.iml

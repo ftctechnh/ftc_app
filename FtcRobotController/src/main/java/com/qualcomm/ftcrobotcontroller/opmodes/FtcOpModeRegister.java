@@ -59,7 +59,9 @@ public class FtcOpModeRegister implements OpModeRegister {
 
     manager.register("MatrixK9TeleOp", MatrixK9TeleOp.class);
     manager.register("K9TeleOp", K9TeleOp.class);
-    manager.register ("PushBotAuto", PushBotAuto.class);
+    //manager.register ("PushBotAuto", PushBotAuto.class);
+    //manager.register ("PushBotManual", PushBotManual.class);
+    manager.register ("PushBotAuto",PushBotAuto.class);
     manager.register ("PushBotManual", PushBotManual.class);
 
     /*
@@ -69,15 +71,15 @@ public class FtcOpModeRegister implements OpModeRegister {
     //manager.register("AdafruitRGBExample", AdafruitRGBExample.class);
     //manager.register("ColorSensorDriver", ColorSensorDriver.class);
 
-    //manager.register("IrSeekerOp", IrSeekerOp.class);
-    //manager.register("CompassCalibration", CompassCalibration.class);
+    manager.register("IrSeekerOp", IrSeekerOp.class);
+    manager.register("CompassCalibration", CompassCalibration.class);
     //manager.register("I2cAddressChangeExample", LinearI2cAddressChange.class);
 
 
     //manager.register("NxtTeleOp", NxtTeleOp.class);
     
-    //manager.register("LinearK9TeleOp", LinearK9TeleOp.class);
-    //manager.register("LinearIrExample", LinearIrExample.class);
+    manager.register("LinearK9TeleOp", LinearK9TeleOp.class);
+    manager.register("LinearIrExample", LinearIrExample.class);
 
     
     //manager.register ("PushBotManual1", PushBotManual1.class);
