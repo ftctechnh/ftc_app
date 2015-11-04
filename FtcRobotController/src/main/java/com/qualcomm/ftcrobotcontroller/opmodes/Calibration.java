@@ -1,6 +1,7 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
@@ -14,6 +15,7 @@ public class Calibration extends OpMode {
 
     OpticalDistanceSensor opticalDistanceSensor;
     UltrasonicSensor ultrasonicSensor;
+
 
     @Override
     public void init() {

@@ -18,6 +18,7 @@ public abstract class _ResQAuto extends LinearOpMode {
         OpticalDistanceSensor opticalDistanceSensor;
         UltrasonicSensor ultrasonicSensor;
         ColorSensor colorsensor;
+
         double reflectance = 0;
         final double TARGET_REFLECTANCE = 0.1;
         final double BLACKVALUE = 0.01;
@@ -28,20 +29,22 @@ public abstract class _ResQAuto extends LinearOpMode {
         final double BASEPOWER = 0.2;
         final double BUTTONSERVO_MIN_RANGE  = 0.01;
         final double BUTTONSERVO_MAX_RANGE  = 1;
-        //double buttonServoPosition;
+        double buttonservoPosition;
+        double buttonServoDelta = 0.49;
         double value;
 
 
         rightWheel = hardwareMap.dcMotor.get("rightwheel");
         leftWheel = hardwareMap.dcMotor.get("leftwheel");
-        //buttonServo = hardwareMap.servo.get("buttonservo");
+        buttonServo = hardwareMap.servo.get("buttonservo");
+        buttonservoPosition = 0.0;
+
         opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("sensor_EOPD");
         ultrasonicSensor = hardwareMap.ultrasonicSensor.get("sonic");
         colorsensor = hardwareMap.colorSensor.get("colorsensor");
         colorsensor.enableLed(false);
-
         leftWheel.setDirection(DcMotor.Direction.REVERSE);
-
+        rightWheel.setDirection(DcMotor.Direction.FORWARD);
         waitForStart();
       /* buttonServoPosition = 0.7;
        buttonServoPosition = Range.clip(buttonServoPosition, BUTTONSERVO_MIN_RANGE, BUTTONSERVO_MAX_RANGE);
@@ -149,39 +152,41 @@ public abstract class _ResQAuto extends LinearOpMode {
         sleep(1000);
 
         //End of Autonomous
-        leftWheel.setPower(-0.3);
-        rightWheel.setPower(-0.3);
-        sleep(1000);
-        if ( getRedAlliance() == 1) {
-            leftWheel.setPower(0.3);
-            rightWheel.setPower(-0.3);
-            sleep(2000);
-            leftWheel.setPower(0.3);
-            leftWheel.setPower(0.3);
-            sleep(1500);
-            leftWheel.setPower(0.3);
-            rightWheel.setPower(-0.3);
-            sleep(500);
-            leftWheel.setPower(0.3);
-            rightWheel.setPower(0.3);
-            sleep(2000);
-            leftWheel.setPower(0);
-            rightWheel.setPower(0);
-        } else {
+        if (getDelay() == 0) {
             leftWheel.setPower(-0.3);
-            rightWheel.setPower(0.3);
-            sleep(3000);
-            leftWheel.setPower(0.3);
-            leftWheel.setPower(0.3);
-            sleep(1500);
-            leftWheel.setPower(-0.3);
-            rightWheel.setPower(0.3);
-            sleep(1500);
-            leftWheel.setPower(0.3);
-            rightWheel.setPower(0.3);
-            sleep(1500);
-            leftWheel.setPower(0);
-            rightWheel.setPower(0);
+            rightWheel.setPower(-0.3);
+            sleep(1000);
+            if (getRedAlliance() == 1) {
+                leftWheel.setPower(0.3);
+                rightWheel.setPower(-0.3);
+                sleep(2000);
+                leftWheel.setPower(0.3);
+                leftWheel.setPower(0.3);
+                sleep(1500);
+                leftWheel.setPower(0.3);
+                rightWheel.setPower(-0.3);
+                sleep(500);
+                leftWheel.setPower(0.3);
+                rightWheel.setPower(0.3);
+                sleep(2000);
+                leftWheel.setPower(0);
+                rightWheel.setPower(0);
+            } else {
+                leftWheel.setPower(-0.3);
+                rightWheel.setPower(0.3);
+                sleep(3000);
+                leftWheel.setPower(0.3);
+                leftWheel.setPower(0.3);
+                sleep(1500);
+                leftWheel.setPower(-0.3);
+                rightWheel.setPower(0.3);
+                sleep(1500);
+                leftWheel.setPower(0.3);
+                rightWheel.setPower(0.3);
+                sleep(1500);
+                leftWheel.setPower(0);
+                rightWheel.setPower(0);
+            }
         }
     }
 

@@ -26,8 +26,8 @@ public class LineFollower extends OpMode{
     public void init(){
     opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("sensor_EOPD");
     ultrasonicSensor = hardwareMap.ultrasonicSensor.get("sonic");
-    DC_left = hardwareMap.dcMotor.get("DC_left");
-    DC_right = hardwareMap.dcMotor.get("DC_right");
+    DC_left = hardwareMap.dcMotor.get("leftwheel");
+    DC_right = hardwareMap.dcMotor.get("rightwheel");
 
 }
 
@@ -47,7 +47,7 @@ public class LineFollower extends OpMode{
                 DC_right.setPower(0.1+.1*value);
             }
 
-            if (distance<ultrasonicThreshold){
+            if (distance < ultrasonicThreshold){
                 Omni_left.setPower(0);
                 Omni_right.setPower(0);
             }
