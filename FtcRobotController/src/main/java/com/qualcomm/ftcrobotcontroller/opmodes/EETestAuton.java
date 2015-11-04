@@ -54,10 +54,10 @@ public class EETestAuton extends OpMode {
     double armPosition;
     double clawPosition;
 
-    DcMotor motorFRight;
-    DcMotor motorFLeft;
-    DcMotor motorRRight;
-    DcMotor motorRLeft;
+    DcMotor motorFRight= null;
+    DcMotor motorFLeft= null;
+    DcMotor motorRRight= null;
+    DcMotor motorRLeft= null;
     LightSensor reflectedLight;
 
     /**
@@ -75,12 +75,19 @@ public class EETestAuton extends OpMode {
     @Override
     public void init() {
 
-        motorFRight = hardwareMap.dcMotor.get("motor_3"); // FRight
-        motorFLeft = hardwareMap.dcMotor.get("motor_1"); // FLeft
-        motorRRight = hardwareMap.dcMotor.get("motor_4"); //RRight
+        motorRRight = hardwareMap.dcMotor.get("motor_1"); //RRight
         motorRLeft = hardwareMap.dcMotor.get("motor_2"); //RLeft
-        motorFLeft.setDirection(DcMotor.Direction.REVERSE);
+
         motorRLeft.setDirection(DcMotor.Direction.REVERSE);
+
+        try {
+            motorFRight = hardwareMap.dcMotor.get("motor_3"); // FRight
+            motorFLeft = hardwareMap.dcMotor.get("motor_4"); // FLeft
+
+            motorFLeft.setDirection(DcMotor.Direction.REVERSE);
+        } catch (Exception ex) {
+
+        }
 
 
         // set the starting position of the wrist and claw
