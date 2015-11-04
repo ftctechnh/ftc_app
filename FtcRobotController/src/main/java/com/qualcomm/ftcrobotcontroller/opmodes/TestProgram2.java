@@ -60,7 +60,7 @@ public class TestProgram2 extends OpMode {
 	int leftPosition;
 
 	/**
-	 * Constructor
+	 * Constructorhttps://github.com/EC-Robotics/ftc_app.git
 	 */
 	public TestProgram2() {
 
@@ -172,6 +172,7 @@ public class TestProgram2 extends OpMode {
 		telemetry.addData("right position",  "right position: " + String.format("%d", rightPosition));
 		telemetry.addData("left position",  "left position: " + String.format("%d", leftPosition));
 		//Hi Patrick
+		//ldasguansdbvhidskjaesbdk;asbjklqewgthj
 	}
 
 	/*
