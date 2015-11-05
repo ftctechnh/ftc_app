@@ -87,6 +87,9 @@ public class TeleOpTankTread extends OpMode{
 
         motorRLeft.setDirection(DcMotor.Direction.REVERSE);
 
+        /* Emma
+        * allows robot to run if there are only 2 motors
+        */
         try {
             motorFRight = hardwareMap.dcMotor.get("motor_3"); // FRight
             motorFLeft = hardwareMap.dcMotor.get("motor_4"); // FLeft
@@ -95,9 +98,7 @@ public class TeleOpTankTread extends OpMode{
         } catch (Exception ex) {
 
         }
-        /* Emma
-        * allows robot to run if there are only 2 motors
-        */
+
 
 
 
