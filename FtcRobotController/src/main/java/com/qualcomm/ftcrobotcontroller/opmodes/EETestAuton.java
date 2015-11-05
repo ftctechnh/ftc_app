@@ -34,6 +34,9 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.LightSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.ndhsb.ftc7593.AutonChoice;
 
 /**
  * Example autonomous program.
@@ -58,7 +61,20 @@ public class EETestAuton extends OpMode {
     DcMotor motorFLeft;
     DcMotor motorRRight;
     DcMotor motorRLeft;
-    LightSensor reflectedLight;
+    LightSensor reflectedLight = null;
+
+    private org.ndhsb.ftc7593.AutonChoice[] autonSteps = {
+            new AutonChoice(0.0,1.0,MOTOR_POWER,MOTOR_POWER), // from 0 to 1 s, run the motor at 0.15
+            new AutonChoice(5.0,8.5,MOTOR_POWER,MOTOR_POWER), // from 5 and 8.5 s, run the motor at 0.15
+            new AutonChoice(5.0,8.5,0.0,0.0), // between 8 and 15 s, idle.
+            new AutonChoice(15.0,20.75,-MOTOR_POWER,MOTOR_POWER) // between 15 and 20.75 s, point turn left.
+            };
+
+    public ElapsedTime mRuntime = new ElapsedTime();   // Time into round. // MPH
+
+    private boolean complainLight = false;
+
+    String[] foo = {"a","b","c"};
 
     /**
      * Constructor
@@ -91,11 +107,32 @@ public class EETestAuton extends OpMode {
 		 * We also assume that we have a LEGO light sensor
 		 * with a name of "light_sensor" configured for our robot.
 		 */
-        //reflectedLight = hardwareMap.lightSensor.get("light_sensor");
 
-        // turn on LED of light sensor.
-        //reflectedLight.enableLed(true);
+        try {
+            reflectedLight = hardwareMap.lightSensor.get("light_sensor");
+
+            // turn on LED of light sensor.
+            reflectedLight.enableLed(true);
+        }
+        catch (Exception ex) {
+            if ( !complainLight) {
+                telemetry.addData("Err", "No light sensor!");
+                complainLight = true;
+            }
+        }
+
     }
+
+    //--------------------------------------------------------------------------
+    // start - MPH plagiarized from State example
+    //--------------------------------------------------------------------------
+    @Override
+    public void start()
+    {
+        // Start game clock
+        mRuntime.reset();           // Zero game clock
+    }
+
 
     /*
      * This method will be called repeatedly in a loop
@@ -113,42 +150,67 @@ public class EETestAuton extends OpMode {
         /*
          * Use the 'time' variable of this op mode to determine
          * how to adjust the motor power.
+         * MPH - alter to use mRuntime object
          */
-        if (this.time <= 1) {
-            // from 0 to 1 seconds, run the motor at 0.15.
-            left = MOTOR_POWER;
-            right = MOTOR_POWER;
-        } else if (this.time > 5 && this.time <= 8.5) {
-            // between 5 and 8.5 seconds, point turn right.
-            left = MOTOR_POWER;
-            right = MOTOR_POWER;
-        } else if (this.time > 8.5 && this.time <= 15) {
-            // between 8 and 15 seconds, idle.
-            left = 0.0;
-            right = 0.0;
-        } else if (this.time > 15d && this.time <= 20.75d) {
-            // between 15 and 20.75 seconds, point turn left.
-            left = -MOTOR_POWER;
-            right = MOTOR_POWER;
-        } else {
-            // after 20.75 seconds, stop.
-            left = 0.0;
-            right = 0.0;
+        if (true) {
+            if (mRuntime.time() <= 1) {
+                // from 0 to 1 seconds, run the motor at 0.15.
+                left = MOTOR_POWER;
+                right = MOTOR_POWER;
+            } else if (mRuntime.time() > 5 && mRuntime.time() <= 8.5) {
+                // between 5 and 8.5 seconds, point turn right.
+                left = MOTOR_POWER;
+                right = MOTOR_POWER;
+            } else if (mRuntime.time() > 8.5 && mRuntime.time() <= 15) {
+                // between 8 and 15 seconds, idle.
+                left = 0.0;
+                right = 0.0;
+            } else if (mRuntime.time() > 15d && mRuntime.time() <= 20.75d) {
+                // between 15 and 20.75 seconds, point turn left.
+                left = -MOTOR_POWER;
+                right = MOTOR_POWER;
+            } else {
+                // after 20.75 seconds, stop.
+                left = 0.0;
+                right = 0.0;
+            }
+        }
+
+        if (false) {
+            left = 0.0; // default speeds are 0.0
+            right = 0.0; // default speeds are 0.0
+            for(AutonChoice value : autonSteps)
+            {
+                double sTime = value.startTime;
+                double eTime = value.endTime;
+                double time = mRuntime.time();
+                if ((sTime <= time) && (time <- eTime)) {
+                    left = value.lMotor;
+                    right = value.rMotor;
+                    break;  // first rule to match wins and we leave the loop!
+                }
+                //double f = value.startTime;
+                //System.out.println(value);
+            }
         }
 
 		/*
 		 * set the motor power
 		 */
-        motorRRight.setPower(left);
-        motorRLeft.setPower(right);
-        motorFRight.setPower(left);
-        motorFLeft.setPower(right);
+        motorRRight.setPower(right);
+        motorRLeft.setPower(left);
+        motorFRight.setPower(right);
+        motorFLeft.setPower(left);
 
 		/*
 		 * read the light sensor.
 		 */
-        //reflection = reflectedLight.getLightLevel();
-		
+        //plan: wrap this in a try / catch block
+        if ( reflectedLight != null ) {
+            reflection = reflectedLight.getLightDetected();
+        }
+
+
 		/*
 		 * Send telemetry data back to driver station. Note that if we are using
 		 * a legacy NXT-compatible motor controller, then the getPower() method
@@ -170,7 +232,11 @@ public class EETestAuton extends OpMode {
      */
     @Override
     public void stop() {
-
+        // make sure those motors are stopped!
+        motorRRight.setPower(0.0);
+        motorRLeft.setPower(0.0);
+        motorFRight.setPower(0.0);
+        motorFLeft.setPower(0.0);
     }
 
 }
