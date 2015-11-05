@@ -402,6 +402,19 @@ public interface II2cDeviceClient extends HardwareDevice
      */
     void close();
 
+    /**
+     * Sets the I2C address of the underlying client. If necessary, the client is briefly
+     * disarmed and automatically rearmed in the process.
+     * @param i2cAddr8Bit the new I2C address
+     */
+    void setI2cAddr(int i2cAddr8Bit);
+
+    /**
+     * Returns the I2C address currently being used.
+     * @return the current I2C address
+     */
+    int getI2cAddr();
+
     //----------------------------------------------------------------------------------------------
     // RegWindow
     //----------------------------------------------------------------------------------------------

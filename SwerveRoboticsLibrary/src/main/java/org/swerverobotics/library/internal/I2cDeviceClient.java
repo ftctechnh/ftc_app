@@ -173,12 +173,37 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
             }
         }
 
-    public void arm()
+    @Override public void setI2cAddr(int i2cAddr8Bit)
+        {
+        synchronized (this.armingLock)
+            {
+            if (this.i2cDevice.getI2cAddr() != i2cAddr8Bit)
+                {
+                boolean wasArmed = this.isArmed;
+                this.disarm();
+                //
+                this.i2cDevice.setI2cAddr(i2cAddr8Bit);
+                //
+                if (wasArmed) this.arm();
+                }
+            }
+        }
+
+    @Override public int getI2cAddr()
+        {
+        synchronized (this.armingLock)
+            {
+            return this.i2cDevice.getI2cAddr();
+            }
+        }
+
+    @Override public void arm()
         {
         // The arming lock is distinct from the concurrentClientLock because we need to be
         // able to drain heartbeats while disarming, so can't own the concurrentClientLock then,
         // but we still need to be able to lock out arm() and disarm() against each other.
         // Locking order: armingLock > concurrentClientLock > callbackLock
+        //
         synchronized (this.armingLock)
             {
             if (!this.isArmed)
@@ -193,12 +218,12 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
             }
         }
 
-    public boolean isArmed()
+    @Override public boolean isArmed()
         {
         return this.isArmed;
         }
 
-    public void disarm()
+    @Override public void disarm()
         {
         try {
             synchronized (this.armingLock)
