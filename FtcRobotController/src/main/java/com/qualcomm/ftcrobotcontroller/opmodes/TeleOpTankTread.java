@@ -95,6 +95,10 @@ public class TeleOpTankTread extends OpMode{
         } catch (Exception ex) {
 
         }
+        /* Emma
+        * allows robot to run if there are only 2 motors
+        */
+
 
 
         //arm = hardwareMap.servo.get("servo_1");

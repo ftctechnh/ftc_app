@@ -60,6 +60,8 @@ public class EETestAuton extends OpMode {
     DcMotor motorRLeft= null;
     LightSensor reflectedLight;
 
+    //Emma
+
     /**
      * Constructor
      */
