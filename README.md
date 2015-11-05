@@ -1,3 +1,19 @@
+# AAE Robotics
+This is the code repository for the AAE Robotics Teams. These are the currently registered teams:
+  * Team 5518
+  * Team 5519
+  * Team 5520
+
+Each team should create a branch off master and name it (e.g., team-5518).
+Each programmer from the same team should have their own local copy of the branch,
+or he/she may create a sub-branch named with their own GitHub name.
+It is expected that each programmer utilize pull-requests to add their code to the
+repository in order to allow other programmers to review new code and suggest improvements.
+
+Any questions can be emailed to the current lead programmer:
+
+Alec Bernardi (abernardi597@@gmail.com)
+
 # ftc_app
 FTC Android Studio project to create FTC Robot Controller app.
 
@@ -44,7 +60,7 @@ Release 15.11.04.001
  * Fix to keep references stable when updating gamepad.
  * For legacy Matrix motor/servo controllers removed necessity of appending "Motor" and "Servo" to controller names.
  * Updated HT color sensor driver to use constants from ModernRoboticsUsbLegacyModule class.
- * Updated MR color sensor driver to use constants from ModernRoboticsUsbDeviceInterfaceModule class. 
+ * Updated MR color sensor driver to use constants from ModernRoboticsUsbDeviceInterfaceModule class.
  * Correctly handle I2C Address change in all color sensors
  * Updated/cleaned up op modes.
   - Updated comments in LinearI2cAddressChange.java example op mode.
@@ -59,7 +75,7 @@ Release 15.11.04.001
 
 T. Eng
 November 5, 2015
- 
+
 **************************************************************************************
 
 Release 15.10.06.002
