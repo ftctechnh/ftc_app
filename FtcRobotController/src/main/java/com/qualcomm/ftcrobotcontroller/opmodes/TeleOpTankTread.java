@@ -40,10 +40,10 @@ public class TeleOpTankTread extends OpMode{
 
     // Eden
     // Emma
-    DcMotor motorFRight;
-    DcMotor motorRRight;
-    DcMotor motorFLeft;
-    DcMotor motorRLeft;
+    DcMotor motorFRight = null;
+    DcMotor motorRRight = null;
+    DcMotor motorFLeft = null;
+    DcMotor motorRLeft = null;
 
     Servo claw;
     Servo arm;
@@ -80,12 +80,27 @@ public class TeleOpTankTread extends OpMode{
 		 *    "servo_1" controls the arm joint of the manipulator.
 		 *    "servo_6" controls the claw joint of the manipulator.
 		 */
-        motorFRight = hardwareMap.dcMotor.get("motor_4");
-        motorRRight = hardwareMap.dcMotor.get("motor_3");
-        motorFLeft = hardwareMap.dcMotor.get("motor_2");
-        motorRLeft = hardwareMap.dcMotor.get("motor_1");
-        motorFLeft.setDirection(DcMotor.Direction.REVERSE);
+
+
+        motorRRight = hardwareMap.dcMotor.get("motor_1"); //RRight
+        motorRLeft = hardwareMap.dcMotor.get("motor_2"); //RLeft
+
         motorRLeft.setDirection(DcMotor.Direction.REVERSE);
+
+        /* Emma
+        * allows robot to run if there are only 2 motors
+        */
+        try {
+            motorFRight = hardwareMap.dcMotor.get("motor_3"); // FRight
+            motorFLeft = hardwareMap.dcMotor.get("motor_4"); // FLeft
+
+            motorFLeft.setDirection(DcMotor.Direction.REVERSE);
+        } catch (Exception ex) {
+
+        }
+
+
+
 
         //arm = hardwareMap.servo.get("servo_1");
         //claw = hardwareMap.servo.get("servo_6");
@@ -129,10 +144,15 @@ public class TeleOpTankTread extends OpMode{
         left =  (float)scaleInput(left);
 
         // write the values to the motors
-        motorFRight.setPower(right);
+
         motorRRight.setPower(right);
-        motorFLeft.setPower(left);
         motorRLeft.setPower(left);
+
+        if (motorFRight != null) {
+            motorFRight.setPower(right);
+            motorFLeft.setPower(left);
+        }
+
 
 		/*
 		// update the position of the arm.

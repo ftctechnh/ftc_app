@@ -34,6 +34,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.LightSensor;
+//eden
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.ndhsb.ftc7593.AutonChoice;
@@ -57,10 +58,10 @@ public class EETestAuton extends OpMode {
     double armPosition;
     double clawPosition;
 
-    DcMotor motorFRight;
-    DcMotor motorFLeft;
-    DcMotor motorRRight;
-    DcMotor motorRLeft;
+    DcMotor motorFRight = null;
+    DcMotor motorFLeft = null;
+    DcMotor motorRRight = null;
+    DcMotor motorRLeft = null;
     LightSensor reflectedLight = null;
 
     private org.ndhsb.ftc7593.AutonChoice[] autonSteps = {
@@ -73,6 +74,13 @@ public class EETestAuton extends OpMode {
     public ElapsedTime mRuntime = new ElapsedTime();   // Time into round. // MPH
 
     private boolean complainLight = false;
+    DcMotor motorFRight= null;
+    DcMotor motorFLeft= null;
+    DcMotor motorRRight= null;
+    DcMotor motorRLeft= null;
+    LightSensor reflectedLight;
+
+    //Emma
 
     /**
      * Constructor
@@ -89,12 +97,19 @@ public class EETestAuton extends OpMode {
     @Override
     public void init() {
 
-        motorFRight = hardwareMap.dcMotor.get("motor_3"); // FRight
-        motorFLeft = hardwareMap.dcMotor.get("motor_1"); // FLeft
-        motorRRight = hardwareMap.dcMotor.get("motor_4"); //RRight
+        motorRRight = hardwareMap.dcMotor.get("motor_1"); //RRight
         motorRLeft = hardwareMap.dcMotor.get("motor_2"); //RLeft
-        motorFLeft.setDirection(DcMotor.Direction.REVERSE);
+
         motorRLeft.setDirection(DcMotor.Direction.REVERSE);
+
+        try {
+            motorFRight = hardwareMap.dcMotor.get("motor_3"); // FRight
+            motorFLeft = hardwareMap.dcMotor.get("motor_4"); // FLeft
+
+            motorFLeft.setDirection(DcMotor.Direction.REVERSE);
+        } catch (Exception ex) {
+
+        }
 
 
         // set the starting position of the wrist and claw
