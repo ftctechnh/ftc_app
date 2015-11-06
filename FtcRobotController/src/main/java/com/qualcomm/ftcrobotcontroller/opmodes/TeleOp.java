@@ -25,7 +25,7 @@ public class TeleOp extends OpMode {
     {
         float leftY = -gamepad1.left_stick_y;
         float rightY = -gamepad1.right_stick_y;
-        if(gamepad1.x)
+        if(gamepad1.left_bumper)
         {
             leftmotor.setPower(.5*leftY);
             rightmotor.setPower(.5*rightY);
