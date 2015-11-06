@@ -42,7 +42,7 @@ import com.qualcomm.robotcore.util.Range;
  * <p>
  * Enables control of the robot via the gamepad
  */
-public class TestProgram extends OpMode {
+public class estProgram extends OpMode {
 
 	/*
 	 * Note: the configuration of the servos is such that
