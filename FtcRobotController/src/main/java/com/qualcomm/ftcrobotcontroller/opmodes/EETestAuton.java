@@ -74,8 +74,6 @@ public class EETestAuton extends OpMode {
 
     private boolean complainLight = false;
 
-    String[] foo = {"a","b","c"};
-
     /**
      * Constructor
      */
