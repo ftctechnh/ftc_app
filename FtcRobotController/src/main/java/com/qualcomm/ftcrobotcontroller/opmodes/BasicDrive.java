@@ -1,5 +1,14 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.qualcomm.ftccommon.DbgLog;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
+//import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
+//import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
+
 /**
  * Created by Cormac on 11/2/2015.
  */
@@ -11,8 +20,8 @@ public class BasicDrive extends OpMode {
     @Override
     public void init(){
         //get references to the motors from the hardware map
-        leftMotor = hardwareMap.dcmotor.get("left_drive");
-        rightMotor = hardwareMap.dcmotor.get("right_drive");
+        leftMotor = hardwareMap.dcMotor.get("left_drive");
+        rightMotor = hardwareMap.dcMotor.get("right_drive");
 
         //reverse right motor so forward is forward
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -20,8 +29,8 @@ public class BasicDrive extends OpMode {
     
     @Override
     public void loop(){
-        float xValue = gamepad.left_stick.y;
-        float yValue = -gamepad.left_stick.y;
+        float xValue = gamepad1.left_stick_y;
+        float yValue = -gamepad1.left_stick_y;
 
         //calc value for each motor
         float leftPower = yValue + xValue;
