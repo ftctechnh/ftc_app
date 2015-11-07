@@ -68,7 +68,9 @@ public class FtcOpModeRegister implements OpModeRegister {
             }
         } catch (Throwable ex) {
             RobotLog.e("[Thunderbots] Error reading external files:");
-            RobotLog.logStacktrace((Exception) ex);
+            if (ex instanceof Exception) {
+                RobotLog.logStacktrace((Exception) ex);
+            }
         }
 
     }
