@@ -23,9 +23,18 @@ public class MotorMove extends LinearOpMode {
             telemetry.addData("right", gamepad1.right_stick_y);
             telemetry.addData("left", gamepad1.left_stick_y);
 
-            motorRight.setPower(-gamepad1.right_stick_y);
-            motorLeft.setPower(gamepad1.left_stick_y);
-
+            if(Math.abs(gamepad1.right_stick_y)>= .1){
+                motorRight.setPower(-gamepad1.right_stick_y);
+            }
+            else{
+                motorRight.setPower(0);
+            }
+            if(Math.abs(gamepad1.left_stick_y)>=.1) {
+                motorLeft.setPower(gamepad1.left_stick_y);
+            }
+            else{
+                motorRight.setPower(0);
+            }
             if (gamepad1.dpad_down) {
                 winchpivot.setPower(.9);
             } else if (gamepad1.dpad_up) {
