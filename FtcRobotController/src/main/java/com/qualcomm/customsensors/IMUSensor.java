@@ -44,7 +44,10 @@ public class IMUSensor implements HardwareDevice, I2cController.I2cPortReadyCall
 
     public static final short LOW_ODR = 0x39;
 
+    //0.007476806640625 degrees/bit
     public static final double degreesPerBit = (2 * 245) / 65536; // 490 degrees / 16 bits
+
+    private double currentPosition = 0;
 
     //Gyro Chip Settings
     //LOW_ODR is set in register 0x39--see data sheet page 48
@@ -217,15 +220,20 @@ public class IMUSensor implements HardwareDevice, I2cController.I2cPortReadyCall
 //    }
 
     public double getIMUGyroYawRate() {
-        double tempYaw = 0.0;
-        tempYaw = ((short) (((i2cReadCache[I2cController.I2C_BUFFER_START_ADDRESS] & 0XFF) << 8)
-                | (i2cReadCache[I2cController.I2C_BUFFER_START_ADDRESS] & 0XFF)) * degreesPerBit);
-        try {
-            i2cReadCacheLock.lock();
-        } finally {
-            i2cReadCacheLock.unlock();
-        }
-        return tempYaw;
+//        double tempYaw = 0.0;
+//        try {
+//            i2cReadCacheLock.lock();
+//
+//            tempYaw = ((short) (((i2cReadCache[I2cController.I2C_BUFFER_START_ADDRESS] & 0XFF) << 8)
+//                    | (i2cReadCache[I2cController.I2C_BUFFER_START_ADDRESS] & 0XFF)) * degreesPerBit);
+//
+//        } finally {
+//            i2cReadCacheLock.unlock();
+//
+
+//       return tempYaw;
+
+        return currentPosition;
     }
 
     public boolean testRead_WHO_AM_I()
@@ -286,6 +294,17 @@ public class IMUSensor implements HardwareDevice, I2cController.I2cPortReadyCall
         avgReadInterval = ((avgReadInterval * 511.0) + latestInterval)/512.0;
         i2cIMU.readI2cCacheFromController(); //Read in the most recent data from the device
         totalI2Creads++;
+
+        //Add to current position
+        try {
+            i2cReadCacheLock.lock();
+            currentPosition = ((short) (((i2cReadCache[I2cController.I2C_BUFFER_START_ADDRESS] & 0XFF) << 8)
+                    | (i2cReadCache[I2cController.I2C_BUFFER_START_ADDRESS] & 0XFF)));
+            currentPosition *= latestInterval;
+        } finally {
+            i2cReadCacheLock.unlock();
+        }
+
         i2cIMU.setI2cPortActionFlag();   //Set this flag to do the next read
         i2cIMU.writeI2cPortFlagOnlyToController();
         readStartTime = System.nanoTime();
