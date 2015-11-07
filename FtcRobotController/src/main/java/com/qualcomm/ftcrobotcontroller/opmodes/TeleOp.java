@@ -18,11 +18,11 @@ public class TeleOp extends OpMode {
     Servo leftLiftServo;
     Servo rightLiftServo;
 
-    double leftLiftServoUnlockedPosition;
-    double leftLiftServoLockedPosition;
+    double leftLiftServoUnlockedPosition = 0.5;
+    double leftLiftServoLockedPosition = 0.75;
 
-    double rightLiftServoUnlockedPosition;
-    double rightLiftServoLockedPosition;
+    double rightLiftServoUnlockedPosition = 0.35;
+    double rightLiftServoLockedPosition = 0.50;
 
     @Override
     public void init() {
