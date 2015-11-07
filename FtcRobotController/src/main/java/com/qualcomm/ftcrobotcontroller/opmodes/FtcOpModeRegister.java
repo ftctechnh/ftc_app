@@ -33,7 +33,6 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
-
 import org.swerverobotics.library.internal.AnnotatedOpModeRegistrar;
 
 /**
@@ -76,13 +75,11 @@ public class FtcOpModeRegister implements OpModeRegister
 
     //manager.register("MatrixK9TeleOp", MatrixK9TeleOp.class);
     //manager.register("K9TeleOp", K9TeleOp.class);
+    //manager.register("K9Line", K9Line.class);
     //manager.register ("PushBotAuto", PushBotAuto.class);
     //manager.register ("PushBotManual", PushBotManual.class);
 
-    //manager.register("K9TeleOp", K9TeleOp.class);
-    //manager.register ("PushBotAuto", PushBotAuto.class);
-    //manager.register ("PushBotManual", PushBotManual.class);
-
+    //manager.register("MR Gyro Test", MRGyroTest.class);
     //manager.register("AdafruitRGBExample", AdafruitRGBExample.class);
     //manager.register("ColorSensorDriver", ColorSensorDriver.class);
 

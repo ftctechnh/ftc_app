@@ -225,7 +225,7 @@ the order they are declared.</div>
 <pre>public static final&nbsp;<a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.READ_MODE.html" title="enum in org.swerverobotics.library.interfaces">II2cDeviceClient.READ_MODE</a> REPEAT</pre>
 <div class="block">Continuously issue I2C reads whenever there's nothing else needing to be done.
  In this mode, <a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html#read-int-int-"><code>read()</code></a> will not necessarily execute an I2C transaction
- for every call but might instead return data previously read on from the I2C device.
+ for every call but might instead return data previously read from the I2C device.
  This mode is most useful in a device that spends most of its time doing read operations
  and only very infrequently writes, if ever.</div>
 <dl>

@@ -39,15 +39,35 @@ public class MemberUtil
         {
         return Util.<LegacyModule>getPrivateObjectField(controller, 0);
         }
+    static LegacyModule legacyModuleOfHiTechnicColorSensor(ColorSensor sensor)
+        {
+        return Util.<LegacyModule>getPrivateObjectField(sensor, 0);
+        }
+    static DeviceInterfaceModule deviceModuleOfModernColorSensor(ColorSensor sensor)
+        {
+        return Util.<DeviceInterfaceModule>getPrivateObjectField(sensor, 0);
+        }
 
     static I2cController.I2cPortReadyCallback[] callbacksOfLegacyModule(LegacyModule module)
         {
         return Util.<I2cController.I2cPortReadyCallback[]>getPrivateObjectField(module, 4);
         }
+    static I2cController.I2cPortReadyCallback[] callbacksOfDeviceInterfaceModule(DeviceInterfaceModule module)
+        {
+        return Util.<I2cController.I2cPortReadyCallback[]>getPrivateObjectField(module, 0);
+        }
 
     static int portOfLegacyMotorController(DcMotorController controller)
         {
         return Util.getPrivateIntField(controller, 5);
+        }
+    static int portOfHiTechnicColorSensor(ColorSensor sensor)
+        {
+        return Util.getPrivateIntField(sensor, 7);
+        }
+    static int portOfModernColorSensor(ColorSensor sensor)
+        {
+        return Util.getPrivateIntField(sensor, 7);
         }
 
     public static I2cController i2cControllerOfI2cDevice(I2cDevice i2cDevice)

@@ -132,4 +132,82 @@ public class ThunkedGyroSensor extends GyroSensor implements IThunkWrapper<GyroS
                 }
             }).doReadOperation();
         }
+
+    @Override public void calibrate()
+        {
+        (new ThunkForWriting()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                target.calibrate();
+                }
+            }).doWriteOperation();
+        }
+
+    @Override public boolean isCalibrating()
+        {
+        return (new ThunkForReading<Boolean>()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.isCalibrating();
+                }
+            }).doReadOperation();
+        }
+
+    @Override public int getHeading()
+        {
+        return (new ThunkForReading<Integer>()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getHeading();
+                }
+            }).doReadOperation();
+        }
+
+    @Override public int rawX()
+        {
+        return (new ThunkForReading<Integer>()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.rawX();
+                }
+            }).doReadOperation();
+        }
+
+    @Override public int rawY()
+        {
+        return (new ThunkForReading<Integer>()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.rawY();
+                }
+            }).doReadOperation();
+        }
+
+    @Override public int rawZ()
+        {
+        return (new ThunkForReading<Integer>()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.rawZ();
+                }
+            }).doReadOperation();
+        }
+
+    @Override public void resetZAxisIntegrator()
+        {
+        (new ThunkForWriting()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                target.resetZAxisIntegrator();
+                }
+            }).doWriteOperation();
+        }
+
     }
