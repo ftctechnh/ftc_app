@@ -1,8 +1,8 @@
-package com.qualcomm.ftcrobotcontroller.opmodes;
+package com.qualcomm.opmodes;
 
 import android.util.Log;
 
-import com.qualcomm.ftcrobotcontroller.customsensors.IMUSensor;
+import com.qualcomm.customsensors.IMUSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
