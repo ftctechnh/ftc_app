@@ -5,6 +5,9 @@ import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.robocol.Telemetry;
 import com.qualcomm.robotcore.util.*;
 
+import java.util.concurrent.Delayed;
+import java.util.concurrent.TimeUnit;
+
 
 /**
  * Created by Nikhil on 11/6/2015.
@@ -24,20 +27,24 @@ public class LiftServoTest extends OpMode {
 
 
 
+
     }
 
     @Override
     public void loop() {
 
+
         if (gamepad1.dpad_up) {
 
-            ServoPosition  += 0.1;
+            ServoPosition  += 0.05;
+
         }
 
         if (gamepad1.dpad_down){
 
-            ServoPosition -= 0.1;
+            ServoPosition -= 0.05;
         }
+
 
         ServoPosition = Range.clip(ServoPosition,0,1);
 
@@ -46,5 +53,13 @@ public class LiftServoTest extends OpMode {
 
         telemetry.addData("rightLiftServo", "rightLiftServo:  " + String.format("%.2f", ServoPosition));
 
+        try {
+            TimeUnit.MILLISECONDS.sleep(50);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
+
+
 }
