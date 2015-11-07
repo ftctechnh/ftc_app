@@ -72,8 +72,8 @@ public class MBTeleopComp extends OpMode {
 		rwa.setDirection(DcMotor.Direction.REVERSE);
 		rwb.setDirection(DcMotor.Direction.REVERSE);
 		liftL = hardwareMap.dcMotor.get("liftL");
-		liftL.setDirection(DcMotor.Direction.REVERSE);
 		liftR = hardwareMap.dcMotor.get("liftR");
+		liftR.setDirection(DcMotor.Direction.REVERSE);
 		scoopArm = hardwareMap.dcMotor.get("scoopArm");
 		scoopArm.setDirection(DcMotor.Direction.REVERSE);
 		wrist = hardwareMap.servo.get("wrist");
@@ -131,7 +131,7 @@ public class MBTeleopComp extends OpMode {
 
 		if(gamepad2.b)
 		{
-			wrist.setPosition(0.75);
+			wrist.setPosition(0.9);
 		}
 
 		if(gamepad2.y)
@@ -170,10 +170,10 @@ public class MBTeleopComp extends OpMode {
 		*/
 // Zipline release control
 		if(gamepad2.right_bumper) {
-		trigL.setPosition(0.0);
+		trigL.setPosition(0.25);
 		}
 		else{
-			trigL.setPosition(0.4);
+			trigL.setPosition(1.0);
 		}
 
 
@@ -183,6 +183,9 @@ public class MBTeleopComp extends OpMode {
 		else{
 			trigR.setPosition(0.15);
 		}
+
+
+
 // Comb control
 
 		if(gamepad2.left_trigger>0.5)
