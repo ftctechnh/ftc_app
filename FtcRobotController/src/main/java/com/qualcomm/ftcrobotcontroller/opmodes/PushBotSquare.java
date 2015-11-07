@@ -18,22 +18,25 @@ public class PushBotSquare extends LinearOpMode {
         leftmotor = hardwareMap.dcMotor.get("leftmotor");
         rightmotor = hardwareMap.dcMotor.get("rightmotor");
         rightmotor.setDirection(DcMotor.Direction.REVERSE);
-        rightmotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        leftmotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+
         waitForStart();
-        rightmotor.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        leftmotor.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 
-       while (rightmotor.getCurrentPosition()< 1000)
-       {
-           rightmotor.setPower(.5);
-           leftmotor.setPower(.5);
+        move(500);
 
 
-        }
+    }
+    public void move (int count)
+    {
+        leftmotor.setTargetPosition(count);
+        rightmotor.setTargetPosition(count);
+        rightmotor.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        leftmotor.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        rightmotor.setPower(50);
+        leftmotor.setPower(50);
 
-        leftmotor.setPower(0);
-        rightmotor.setPower(0);
-
+    }
+    public void data()
+    {
+        telemetry.addData("rightmotor",rightmotor.getCurrentPosition());
     }
 }
