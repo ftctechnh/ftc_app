@@ -12,6 +12,8 @@ public class TeleOp extends OpMode {
     DcMotor leftMotor2; //Assigns motor2 as a DC Motor
     DcMotor rightMotor1;
     DcMotor rightMotor2;
+    DcMotor rightLiftMotor;
+    DcMotor leftLiftMotor;
 
 
     @Override
@@ -20,9 +22,12 @@ public class TeleOp extends OpMode {
         leftMotor2 = hardwareMap.dcMotor.get("leftmotor2");
         rightMotor1 = hardwareMap.dcMotor.get("rightMotor1");
         rightMotor2 = hardwareMap.dcMotor.get("rightMotor2");
+        leftLiftMotor = hardwareMap.dcMotor.get("leftLiftMotor");
+        rightLiftMotor = hardwareMap.dcMotor.get("rightLiftMotor");
 
         rightMotor1.setDirection(DcMotor.Direction.REVERSE);
         rightMotor2.setDirection(DcMotor.Direction.REVERSE);
+        rightLiftMotor.setDirection(DcMotor.Direction.REVERSE);
     }
 
     @Override
