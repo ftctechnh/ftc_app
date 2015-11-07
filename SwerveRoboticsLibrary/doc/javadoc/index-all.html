@@ -463,6 +463,10 @@
 <div class="block">Returns the interval within which communication must be received by the I2C device lest
  a timeout occur.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html#getI2cAddr--">getI2cAddr()</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a></dt>
+<dd>
+<div class="block">Returns the I2C address currently being used.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html#getI2cCycleCount--">getI2cCycleCount()</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a></dt>
 <dd>
 <div class="block">Returns the number of I2C cycles that we've seen for this device.</div>
@@ -1228,6 +1232,10 @@
 <div class="block">Sets the interval within which communication must be received by the I2C device list
  a timeout may occur.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html#setI2cAddr-int-">setI2cAddr(int)</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a></dt>
+<dd>
+<div class="block">Sets the I2C address of the underlying client.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/TelemetryDashboardAndLog.html#setItemDelimiter-java.lang.String-">setItemDelimiter(String)</a></span> - Method in class <a href="org/swerverobotics/library/TelemetryDashboardAndLog.html" title="class in org.swerverobotics.library">TelemetryDashboardAndLog</a></dt>
 <dd>
 <div class="block">Sets the delimiter used to separate dashboard items on a single line</div>
@@ -1596,6 +1604,10 @@ the order they are declared.</div>
 <div class="block">Advanced: wait until all thunks that have been dispatched from the current (synchronous)
  thread have completed their execution over on the loop() thread and their effects
  to have reached the hardware.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html#waitForWriteCompletions--">waitForWriteCompletions()</a></span> - Method in interface <a href="org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a></dt>
+<dd>
+<div class="block">Waits for any previously issued writes to complete.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#waitOneFullHardwareCycle--">waitOneFullHardwareCycle()</a></span> - Method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
 <dd>

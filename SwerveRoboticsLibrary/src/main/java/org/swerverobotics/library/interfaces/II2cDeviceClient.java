@@ -402,6 +402,19 @@ public interface II2cDeviceClient extends HardwareDevice
      */
     void close();
 
+    /**
+     * Sets the I2C address of the underlying client. If necessary, the client is briefly
+     * disarmed and automatically rearmed in the process.
+     * @param i2cAddr8Bit the new I2C address
+     */
+    void setI2cAddr(int i2cAddr8Bit);
+
+    /**
+     * Returns the I2C address currently being used.
+     * @return the current I2C address
+     */
+    int getI2cAddr();
+
     //----------------------------------------------------------------------------------------------
     // RegWindow
     //----------------------------------------------------------------------------------------------
@@ -417,7 +430,7 @@ public interface II2cDeviceClient extends HardwareDevice
         /**
          * Continuously issue I2C reads whenever there's nothing else needing to be done.
          * In this mode, {@link #read(int, int) read()} will not necessarily execute an I2C transaction
-         * for every call but might instead return data previously read on from the I2C device.
+         * for every call but might instead return data previously read from the I2C device.
          * This mode is most useful in a device that spends most of its time doing read operations
          * and only very infrequently writes, if ever.
          *
