@@ -1,18 +1,16 @@
 package org.swerverobotics.library.internal;
 
 import android.graphics.Color;
-import android.util.Log;
-
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
-import com.qualcomm.robotcore.util.TypeConversion;
-import org.swerverobotics.library.interfaces.II2cDeviceClient;
-
-import java.util.Map;
+import com.qualcomm.robotcore.util.*;
+import org.swerverobotics.library.interfaces.*;
 
 /**
  * This class implements a driver for either a HiTechnic color sensor or a
- * Modern Robotics color sensor
+ * Modern Robotics color sensor. The two are very similiar I2C devices.
+ *
+ * NOTE: This class is not actually ever currently used, pending testing.
  */
 public class ColorSensorOnI2cDeviceClient extends ColorSensor implements IOpModeStateTransitionEvents
     {
@@ -21,6 +19,7 @@ public class ColorSensorOnI2cDeviceClient extends ColorSensor implements IOpMode
     //----------------------------------------------------------------------------------------------
 
     // See http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NCO1038
+    // See http://www.modernroboticsinc.com/color-sensor
 
     public static final int ADDRESS_I2C_HITECHNIC = 2;
     public static final int ADDRESS_I2C_MODERN    = 60;
@@ -41,13 +40,7 @@ public class ColorSensorOnI2cDeviceClient extends ColorSensor implements IOpMode
     final FLAVOR          flavor;
           boolean         ledIsEnabled;
 
-    OpMode                              context;
-    ColorSensor                         target;
-    String                              targetName;
-    I2cController                       controller;
-    int                                 targetPort;
-    I2cController.I2cPortReadyCallback  targetCallback;
-    boolean                             isArmed;
+    HardwareDeviceReplacementHelper<ColorSensor> helper;
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -58,15 +51,9 @@ public class ColorSensorOnI2cDeviceClient extends ColorSensor implements IOpMode
     public ColorSensorOnI2cDeviceClient(OpMode context, I2cDeviceClient i2cDeviceClient, FLAVOR flavor, ColorSensor target,
                                         I2cController controller, int targetPort, I2cController.I2cPortReadyCallback callback)
         {
-        this.context        = context;
+        this.helper = new HardwareDeviceReplacementHelper<ColorSensor>(context, this, target, controller, targetPort, callback);
         this.i2cDeviceClient = i2cDeviceClient;
-        this.isArmed        = false;
-        this.target         = target;
-        this.targetName     = findTargetName();
-        this.controller     = controller;
-        this.targetPort     = targetPort;
-        this.targetCallback = callback;
-        this.flavor         = flavor;
+        this.flavor          = flavor;
 
         this.ledIsEnabled = false;
 
@@ -109,38 +96,21 @@ public class ColorSensorOnI2cDeviceClient extends ColorSensor implements IOpMode
         return result;
         }
 
-    private String findTargetName()
-        {
-        if (this.context != null)
-            {
-            for (Map.Entry<String,ColorSensor> pair : this.context.hardwareMap.colorSensor.entrySet())
-                {
-                if (pair.getValue() == this.target)
-                    return pair.getKey();
-                }
-            }
-        return null;
-        }
-
     private void arm()
         {
-        if (!this.isArmed)
+        if (!this.helper.isArmed())
             {
-            this.controller.deregisterForPortReadyCallback(this.targetPort);
-            if (this.targetName != null) this.context.hardwareMap.colorSensor.put(this.targetName, this);
+            this.helper.arm();
             this.i2cDeviceClient.arm();
-            this.isArmed = true;
             }
         }
 
     private void disarm()
         {
-        if (this.isArmed)
+        if (this.helper.isArmed())
             {
-            this.isArmed = false;
             this.i2cDeviceClient.disarm();
-            if (this.targetName != null) this.context.hardwareMap.colorSensor.put(this.targetName, this.target);
-            this.controller.registerForI2cPortReadyCallback(this.targetCallback, this.targetPort);
+            this.helper.disarm();
             }
         }
 
@@ -150,10 +120,7 @@ public class ColorSensorOnI2cDeviceClient extends ColorSensor implements IOpMode
 
     @Override synchronized public boolean onUserOpModeStop()
         {
-        if (this.isArmed)
-            {
-            this.disarm();
-            }
+        this.disarm();
         return true;    // unregister us
         }
 

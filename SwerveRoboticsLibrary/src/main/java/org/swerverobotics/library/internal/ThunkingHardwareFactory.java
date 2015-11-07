@@ -356,6 +356,7 @@ public class ThunkingHardwareFactory
         );
 
         // Thunk or reimplement the color sensors
+        // NOTE: Use of Swerve color sensor implementation is currently disabled pending testing
         createThunks(unthunkedHwmap.colorSensor, thunkedHwmap.colorSensor,
                 new IThunkFactory<ColorSensor>()
                 {
