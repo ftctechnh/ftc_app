@@ -18,7 +18,7 @@ public class TeleOp extends OpMode {
     Servo leftLiftServo;
     Servo rightLiftServo;
 
-    double leftLiftServoUnlockedPosition = 0.5;
+    double leftLiftServoUnlockedPosition = 0.37;
     double leftLiftServoLockedPosition = 0.75;
 
     double rightLiftServoUnlockedPosition = 0.35;
@@ -27,7 +27,7 @@ public class TeleOp extends OpMode {
     @Override
     public void init() {
         leftMotor1 = hardwareMap.dcMotor.get("leftMotor1");
-        leftMotor2 = hardwareMap.dcMotor.get("leftmotor2");
+        leftMotor2 = hardwareMap.dcMotor.get("leftMotor2");
         rightMotor1 = hardwareMap.dcMotor.get("rightMotor1");
         rightMotor2 = hardwareMap.dcMotor.get("rightMotor2");
         leftLiftMotor = hardwareMap.dcMotor.get("leftLiftMotor");
@@ -36,9 +36,12 @@ public class TeleOp extends OpMode {
         leftLiftServo = hardwareMap.servo.get("leftLiftServo");
         rightLiftServo = hardwareMap.servo.get("rightLiftServo");
 
-        rightMotor1.setDirection(DcMotor.Direction.REVERSE);
-        rightMotor2.setDirection(DcMotor.Direction.REVERSE);
+        leftMotor1.setDirection(DcMotor.Direction.REVERSE);
+        leftMotor2.setDirection(DcMotor.Direction.REVERSE);
         rightLiftMotor.setDirection(DcMotor.Direction.REVERSE);
+
+        leftLiftServo.setPosition(leftLiftServoUnlockedPosition);
+        rightLiftServo.setPosition(rightLiftServoUnlockedPosition);
     }
 
     @Override
