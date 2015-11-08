@@ -8,7 +8,11 @@ import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.Range;
 
-
+//TODO: Detect red/blue line, change ODS boundary
+//Get sweeper working
+//Get button pushing working
+//do dumping
+//Tune get out of the way?
 public abstract class _ResQAuto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
