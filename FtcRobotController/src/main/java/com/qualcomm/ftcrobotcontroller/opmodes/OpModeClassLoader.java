@@ -77,7 +77,7 @@ public class OpModeClassLoader {
      * Loads the classes contained in a given jar file. The jar file must have already been converted
      * to a dalvik-compatible form.
      *
-     * @param jarfile the file to load classes from.
+     * @param jarfile the file to load classefs from.
      * @throws IOException if an IOException is thrown by the underlying class loading system.
      */
     private static void loadJarFile(File jarfile) throws IOException {
@@ -106,7 +106,7 @@ public class OpModeClassLoader {
             Class<?> c = classLoader.loadClass(classname);
             Object instance = c.newInstance();
             if (instance instanceof OpMode) {
-                Log.i(LOG_TAG, "Found " + classname + " as an op mode!");
+                Log.i(LOG_TAG, "Found " + classname + " as an op mode");
                 opModeList.add(((OpMode)instance).getClass());
             }
         } catch (Throwable ex) {
