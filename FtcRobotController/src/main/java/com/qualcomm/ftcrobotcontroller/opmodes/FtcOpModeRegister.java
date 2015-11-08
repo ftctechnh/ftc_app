@@ -55,6 +55,7 @@ public class FtcOpModeRegister implements OpModeRegister {
      * If two or more op modes are registered with the same name, the app will display an error.
      */
 
+<<<<<<< HEAD
     manager.register ("K9TeleOp", K9TeleOp.class);
     manager.register ("ServoOp", ServoOp.class) ;
     manager.register ("WeCoTeleOp", WeCoTeleOp.class) ;
@@ -62,6 +63,14 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register ("TurnOp", TurnOp.class) ;
     //manager.register ("WeCoServoOp", WeCoServoOp.class) ;
 
+=======
+    manager.register("NullOp", NullOp.class);
+
+    manager.register("K9TeleOp", K9TeleOp.class);
+    manager.register ("PushBotAuto", PushBotAuto.class);
+    manager.register ("PushBotManual", PushBotManual.class);
+    manager.register ("WeCoAutoTriangle", WeCoAutoTriangle.class);
+>>>>>>> origin/SBD9871_FirstBranch
     /*
      * Uncomment any of the following lines if you want to register an op mode.
      */
