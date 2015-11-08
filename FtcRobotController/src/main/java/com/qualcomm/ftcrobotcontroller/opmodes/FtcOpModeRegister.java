@@ -65,7 +65,7 @@ public class FtcOpModeRegister implements OpModeRegister {
 
     //Blue team work
     //manager.register ("Testing1010", Testing1010.class);
-    //manager.register ("LineFollower", LineFollower.class);
+    manager.register ("LineFollower", LineFollower.class);
     manager.register ("Calibration", Calibration.class);
     //manager.register ("LightSensorCalibration", Calibration.class);
     //manager.register("K9MoveStraight", K9MoveStraight.class);
@@ -106,5 +106,6 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("ResQAuto_R", ResQAutoRed.class);
     manager.register("ResQAuto_B", ResQAutoBlue.class);
     manager.register("ResQTeleop", ResQTeleop.class);
+    manager.register("SparringTeleOp",SparringTeleOp.class);
   }
 }

@@ -14,22 +14,18 @@ import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 public class Calibration extends OpMode {
 
     OpticalDistanceSensor opticalDistanceSensor;
-    UltrasonicSensor ultrasonicSensor;
 
 
     @Override
     public void init() {
         opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("sensor_EOPD");
-        ultrasonicSensor = hardwareMap.ultrasonicSensor.get("sonic");
 
     }
 
     public void loop() {
         double reflectance = opticalDistanceSensor.getLightDetected();
-        double distance = ultrasonicSensor.getUltrasonicLevel();
 
         telemetry.addData("Reflectance Value", reflectance);
-        telemetry.addData("Ultrasonic Value", distance);
     }
 
 }
