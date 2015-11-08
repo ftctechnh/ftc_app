@@ -24,8 +24,6 @@ public class TeleOp extends OpMode {
     double rightLiftServoUnlockedPosition = 0.35;
     double rightLiftServoLockedPosition = 0.50;
 
-    boolean isLiftLocked = false;
-
     @Override
     public void init() {
         leftMotor1 = hardwareMap.dcMotor.get("leftMotor1");
@@ -49,41 +47,20 @@ public class TeleOp extends OpMode {
     @Override
     public void loop() {
 
-        if(!isLiftLocked) {
-            leftMotor1.setPower(gamepad1.left_stick_y);
-            leftMotor2.setPower(gamepad1.left_stick_y);
-            rightMotor1.setPower(gamepad1.right_stick_y);
-            rightMotor2.setPower(gamepad1.right_stick_y);
-        }
+        leftMotor1.setPower(gamepad1.left_stick_y);
+        leftMotor2.setPower(gamepad1.left_stick_y);
+        rightMotor1.setPower(gamepad1.right_stick_y);
+        rightMotor2.setPower(gamepad1.right_stick_y);
 
-        if(!isLiftLocked) {
-            leftLiftMotor.setPower(gamepad2.left_stick_y);
-            rightLiftMotor.setPower(gamepad2.left_stick_y);
-        }
-        else
-        {
-            leftLiftMotor.setPower(gamepad2.left_stick_y);
-            rightLiftMotor.setPower(gamepad2.left_stick_y);
-            leftMotor1.setPower(gamepad2.left_stick_y);
-            leftMotor2.setPower(gamepad2.left_stick_y);
-            rightMotor1.setPower(gamepad2.left_stick_y);
-            rightMotor2.setPower(gamepad2.left_stick_y);
-        }
+        leftLiftMotor.setPower(gamepad2.left_stick_y);
+        rightLiftMotor.setPower(gamepad2.left_stick_y);
 
         if(gamepad2.a){
-            isLiftLocked = true;
-            leftMotor1.setPower(0);
-            leftMotor2.setPower(0);
-            rightMotor1.setPower(0);
-            rightMotor2.setPower(0);
-
             leftLiftServo.setPosition(leftLiftServoLockedPosition);
             rightLiftServo.setPosition(rightLiftServoLockedPosition);
         }
 
         if(gamepad2.b){
-            isLiftLocked = false;
-
             leftLiftServo.setPosition(leftLiftServoUnlockedPosition);
             rightLiftServo.setPosition(rightLiftServoUnlockedPosition);
         }
