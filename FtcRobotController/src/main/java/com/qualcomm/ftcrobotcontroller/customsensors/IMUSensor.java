@@ -1,4 +1,4 @@
-package com.qualcomm.customsensors;
+package com.qualcomm.ftcrobotcontroller.customsensors;
 //import com.qualcomm.robotcore.hardware.I2cDevice;
 
 import android.util.Log;

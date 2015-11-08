@@ -1,17 +1,14 @@
-package com.qualcomm.opmodes;
+package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import android.util.Log;
 
-import com.qualcomm.customsensors.IMUSensor;
+import com.qualcomm.ftcrobotcontroller.customsensors.IMUSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.robotcore.hardware.GyroSensor;
-import com.qualcomm.robotcore.hardware.I2cDevice;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
-
 import com.qualcomm.robotcore.exception.RobotCoreException;
 
 /**
@@ -21,28 +18,20 @@ import com.qualcomm.robotcore.exception.RobotCoreException;
 public class FTCCompetitionBase extends OpMode {
 
     // Motor Controllers
-    private DcMotorController LeftDriveController;
-    private DcMotorController RightDriveController;
-    private DcMotorController Arm1Controller;
-    private DcMotorController Arm2Controller;
+    private DcMotorController LeftDriveController, RightDriveController,
+            Arm1Controller, Arm2Controller;
     private ServoController ServoController;
 
     // Drive Motors
-    private DcMotor LeftDrive1;
-    private DcMotor LeftDrive2;
-    private DcMotor RightDrive1;
-    private DcMotor RightDrive2;
-    private DcMotor ArmLift;
-    private DcMotor ArmTilt;
-    private DcMotor BlockPickup;
-    private DcMotor PullUpHook;
+    private DcMotor LeftDrive1, LeftDrive2, RightDrive1, RightDrive2, ArmLift,
+            ArmTilt, BlockPickup, PullUpHook;
 
     // Servos
-    private Servo DumpServo1;
-    private Servo DumpServo2;
+    private Servo DumpServo, LeftTabTripper, RightTabTripper, AutonFlag;
+
 
     // Sensors
-    private ColorSensor ColorSensor;
+    //private ColorSensor ColorSensor;
     private IMUSensor imuSensor;
 
     @Override
@@ -60,7 +49,7 @@ public class FTCCompetitionBase extends OpMode {
         RightDrive1 = hardwareMap.dcMotor.get("RightDrive1");
         RightDrive2 = hardwareMap.dcMotor.get("RightDrive2");
 
-        RightDrive1.setDirection(DcMotor.Direction.REVERSE);
+        LeftDrive1.setDirection(DcMotor.Direction.REVERSE);
         RightDrive2.setDirection(DcMotor.Direction.REVERSE);
 
         ArmLift = hardwareMap.dcMotor.get("ArmLift");
@@ -69,9 +58,12 @@ public class FTCCompetitionBase extends OpMode {
         PullUpHook = hardwareMap.dcMotor.get("PullUpHook");
 
         // Servos
-        DumpServo1 = hardwareMap.servo.get("DumpServo1");
-        DumpServo2 = hardwareMap.servo.get("DumpServo2");
+        DumpServo = hardwareMap.servo.get("DumpServo");
+        LeftTabTripper = hardwareMap.servo.get("LeftTabTripper");
+        RightTabTripper = hardwareMap.servo.get("RightTabTripper");
+        AutonFlag = hardwareMap.servo.get("AutonFlag");
 
+        /*
         // Sensors
         ColorSensor = hardwareMap.colorSensor.get("ColorSensor");
 
@@ -100,16 +92,20 @@ public class FTCCompetitionBase extends OpMode {
 
         //TODO: This is how we read the current instantaneous value once startIMU is running
         //double yawRate = imuSensor.getIMUGyroYawRate();
-
+*/
     }
 
     @Override
-    public void loop() {
-
-    }
+    public void loop(){}
 
     //Drive Functions
+    private double deadzone(double input){
+        return (input > 1.0 ? 1.0 : (input < -1.0 ? -1.0 : input));
+    }
+
     private void DriveSystem(double left, double right){
+        left = deadzone(left);
+        right = deadzone(right);
         LeftDrive1.setPower(left);
         LeftDrive2.setPower(left);
         RightDrive1.setPower(right);
@@ -123,13 +119,12 @@ public class FTCCompetitionBase extends OpMode {
 
     // Encoder Functions
     public int getLeftEncoder(){ return LeftDrive1.getCurrentPosition(); }
-    public void resetLeftEncoder(){ LeftDrive1.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);}
+    public void resetLeftEncoder(){ LeftDrive1.setMode(DcMotorController.RunMode.RESET_ENCODERS);}
     public int getRightEncoder(){ return RightDrive1.getCurrentPosition(); }
-    public void resetRightEncoder(){ RightDrive1.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);}
+    public void resetRightEncoder(){ RightDrive1.setMode(DcMotorController.RunMode.RESET_ENCODERS);}
 
     // Sensor Functions
     // TODO: setup get functions for blue and red colors
-
     // TODO: Setup a Gyroscope for getting Rate and Direction
 
     // Lift Functions
@@ -140,39 +135,25 @@ public class FTCCompetitionBase extends OpMode {
         ArmTilt.setPower(power);
     }
     public void BlockPickup(boolean power){
-        if(power){
-            BlockPickup.setPower(1.0);
-        }
-        else{
-            BlockPickup.setPower(0);
-        }
+        BlockPickup.setPower(power ? 1 : 0);
     }
 
     public void PullupHook(boolean Out, boolean In){
-        if (Out){
-            PullUpHook.setPower(1.0);
-        }
-        else if (In){
-            PullUpHook.setPower(-1.0);
-        }
-        else{
-            PullUpHook.setPower(0);
-        }
+        PullUpHook.setPower(Out ? -1.0 : (In ? 1.0 : 0));
     }
 
     // Dumper Functions
-    // TODO: Prove dump function
-    // TODO: Determine actual servo set positions
     public void DumpTrash(boolean left,boolean right){
-        if (left){
-            DumpServo1.setPosition(1);
-        }
-        else if (right){
-            DumpServo1.setPosition(0);
-        }
-        else{
-            DumpServo1.setPosition(0.5);
-        }
+        DumpServo.setPosition(left ? 1 : (right ? 0 : 0.5));
     }
 
+    public void TabDropper(boolean left, boolean right){
+        LeftTabTripper.setPosition(left ? 0.0 : 0.9);
+        RightTabTripper.setPosition(right ? 1.0 : 0.1);
+    }
+
+    private final static double AFNeutral = 0.5, AFLeft = 0.0, AFRight = 1.0;
+    public void AutonFlag(boolean left, boolean right){
+        AutonFlag.setPosition(left ? AFLeft : (right ? AFRight : AFNeutral));
+    }
 }
