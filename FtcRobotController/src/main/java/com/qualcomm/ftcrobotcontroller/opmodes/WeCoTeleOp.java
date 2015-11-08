@@ -52,43 +52,89 @@ public class WeCoTeleOp extends OpMode {
 
   DcMotor motor1 ;
   DcMotor motor2 ;
-  DcMotor motor3 ;
-  DcMotor motor4 ;
+  Servo servo1 ;
 
-
+  final static double servoMinRange = 0.0 ;
+  final static double servoMaxRange = 1.0 ;
+  double servoDelta = 0.25 ;
+  double servoPosition ;
+  boolean BbuttonOn= false;
+  ElapsedTime BbuttonTimmer = new ElapsedTime();
+  boolean AbuttonOn= false;
+  ElapsedTime AbuttonTimmer = new ElapsedTime();
+  double buttonResetTime = 0.25 ;
   float motorPowerMin = -1 ;
   float motorPowerMax = 1  ;
   int scaleNum = 0 ;
   float wheelDiameter = 4 ;
+
 
   @Override
   public void start() {
 
     motor1 = hardwareMap.dcMotor.get("motor_1") ;
     motor2 = hardwareMap.dcMotor.get("motor_2") ;
-    motor3 = hardwareMap.dcMotor.get("motor_3") ;
-    motor4 = hardwareMap.dcMotor.get("motor_4") ;
+    servo1 = hardwareMap.servo.get("servo_1") ;
 
     motor1.setDirection(DcMotor.Direction.REVERSE) ;
-    motor2.setDirection(DcMotor.Direction.REVERSE) ;
 
+    servoPosition = 0.5 ;
   }
 
   @Override
   public void loop() {
+//increase servo position by a set amount
+    if (gamepad2.a || gamepad2.b) {
 
+      if (gamepad2.a && !AbuttonOn) {
+
+        servoPosition = servoPosition + servoDelta;
+        DbgLog.msg("=====Decrease arm position=====");
+        AbuttonOn = true;
+        AbuttonTimmer.reset();
+
+      }
+      if (AbuttonOn == true && (AbuttonTimmer.time() > buttonResetTime)) {
+        AbuttonOn = false;
+        DbgLog.msg("=====Reset AbuttonOn=====");
+      }
+
+
+      //DbgLog.msg("=====servoPosition====="+String.format("%f", servoPositionClipped)) ;
+
+      if (gamepad2.b && !BbuttonOn) {
+
+        servoPosition = servoPosition - servoDelta;
+        DbgLog.msg("=====Decrease arm position=====" + String.format("%f", servoPosition));
+        BbuttonOn = true;
+        BbuttonTimmer.reset();
+
+      }
+      if (BbuttonOn == true && (BbuttonTimmer.time() > buttonResetTime)) {
+        BbuttonOn = false;
+        DbgLog.msg("=====Reset BbuttonOn=====");
+      }
+
+
+      if ((gamepad2.a == false) && (gamepad2.b == false)) {
+        DbgLog.msg("=====Not Pressed=====");
+      }
+    } else if ((gamepad2.left_trigger > 0) || (gamepad2.right_trigger > 0)) {
+      //increase servo position proportionally
+      servoPosition = servoPosition + (gamepad2.left_trigger / 100) - (gamepad2.right_trigger / 100);
+    }
+
+//sets motor power
     float motor1power = -gamepad1.left_stick_y + gamepad1.right_stick_x ;
-    float motor2power = -gamepad1.left_stick_y + gamepad1.right_stick_x ;
-    float motor3power = -gamepad1.left_stick_y - gamepad1.right_stick_x ;
-    float motor4power = -gamepad1.left_stick_y - gamepad1.right_stick_x ;
+    float motor2power = -gamepad1.left_stick_y - gamepad1.right_stick_x ;
 
-
+//clips motor and servo power/position
     motor1power = Range.clip(motor1power, motorPowerMin, motorPowerMax) ;
     motor2power = Range.clip(motor2power, motorPowerMin, motorPowerMax) ;
-    motor3power = Range.clip(motor3power, motorPowerMin, motorPowerMax) ;
-    motor4power = Range.clip(motor4power, motorPowerMin, motorPowerMax) ;
+    servoPosition = Range.clip(servoPosition, servoMinRange, servoMaxRange) ;
 
 
+//Defines scale
     if (gamepad1.left_bumper) {
 
       scaleNum += 1 ;
@@ -97,40 +143,54 @@ public class WeCoTeleOp extends OpMode {
     if (scaleNum % 2 == 1) {
       motor1power = scale1(motor1power) ;
       motor2power = scale1(motor2power) ;
-      motor3power = scale1(motor3power) ;
-      motor4power = scale1(motor4power) ;
 
     }
+
+    if (gamepad1.right_trigger > 0) {
+      motor1power = scale2(motor1power, gamepad1.left_trigger) ;
+      motor2power = scale2(motor2power, gamepad1.left_trigger) ;
+    }
+
+    //sets motor and servo power/position
     motor1.setPower(motor1power) ;
     motor2.setPower(motor2power) ;
-    motor3.setPower(motor3power) ;
-    motor4.setPower(motor4power) ;
+    servo1.setPosition(servoPosition);
 
-    double position2 = -motor2.getCurrentPosition() ;
-    double position4 = motor4.getCurrentPosition() ;
+// gets current position and uses formula to find rotations or distance in inches
+    double position1 = -motor1.getCurrentPosition() ;
+    double position2 = motor2.getCurrentPosition() ;
 
-    position2 = (position2/2500) * (wheelDiameter*3.14159265358);
-    position4 = (position4/2500) * (wheelDiameter*3.14159265358);
+    position1 = (position1/2500)  /* * (wheelDiameter*3.14159265358)*/;
+    position2 = (position2/2500) /* * (wheelDiameter*3.14159265358)*/;
 
+//telemetry data
+    //telemetry.addData("Left Stick", "Left Stick is at " + String.format("%.2f", gamepad1.left_stick_y)); //left stick y-axis poition
+    telemetry.addData("0 Motor 1", "Motor 1 power is " + String.format("%.2f", motor1power)); //motor 1 power
+    telemetry.addData("0 Motor 2", "Motor 2 power is " + String.format("%.2f", motor2power)); // motor 2 power
+    telemetry.addData("1 Left Distance", "Left motor has gone " + String.format("%.2f", position1) + " rotations"); //distance in rotations
+    telemetry.addData("1 Right Distance", "Right motor has gone " + String.format("%.2f", position2) + " rotations"); //distance in rotations
+    telemetry.addData("2 Left Trigger", "Left Trigger is at " + String.format("%.2f", gamepad2.left_trigger)); // right trigger position
+    telemetry.addData("2 Right Trigger", "Right Trigger is at " + String.format("%.2f", gamepad2.right_trigger)); // right trigger position
+    telemetry.addData("Servo Position", "Servo is at " + String.format("%f", servoPosition)) ; //servo position
 
-    telemetry.addData("Left Stick", "Left Stick is at " + String.format("%.2f", gamepad1.left_stick_y));
-    telemetry.addData("Motor 1", "Motor 1 power is " + String.format("%.2f", motor1power));
-    telemetry.addData("Motor 2", "Motor 2 power is " + String.format("%.2f", motor2power));
-    telemetry.addData("Motor 3", "Motor 3 power is " + String.format("%.2f", motor3power));
-    telemetry.addData("Motor 4", "Motor 4 power is " + String.format("%.2f", motor4power));
-    telemetry.addData("Left Distance", "Left wheel has gone " + String.format("%.2f", position2) + " inches");
-    telemetry.addData("Right Distance", "Right wheel has gone " + String.format("%.2f", position4) + " inches");
 
   }
   @Override
   public void stop() {
 
   }
-
+//the alternate scale
   float scale1(float scaleInput1) {
 
     scaleInput1 /= 3 ;
 
     return  scaleInput1 ;
+  }
+  //test alternate
+  float scale2(float scale2Input, float scale2Input2) {
+
+    scale2Input /= scale2Input2 ;
+
+    return scale2Input ;
   }
 }
