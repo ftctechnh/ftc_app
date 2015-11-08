@@ -290,7 +290,7 @@ public class Wire implements I2cController.I2cPortReadyCallback {
     }
 
     private long getFromQueue(byte[] cache, ArrayQueue queue) {
-        Element element     = queue.remove();
+        AnyType element     = queue.remove();
         if (element == null) return 0;
         int length          = element.cache.length;
         long timeStamp      = element.timeStamp;

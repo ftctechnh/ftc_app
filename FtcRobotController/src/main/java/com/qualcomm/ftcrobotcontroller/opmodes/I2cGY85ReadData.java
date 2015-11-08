@@ -31,175 +31,104 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.ftccommon.DbgLog;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
-import com.qualcomm.robotcore.hardware.IrSeekerSensor;
+import org.usfirst.FTC5866.library.*;
 import com.qualcomm.robotcore.util.RobotLog;
 import com.qualcomm.robotcore.util.TypeConversion;
-
 import java.util.concurrent.locks.Lock;
 
 /**
  * Example to read data from GY85 9DOF sensor
  */
-public class I2cGY85ReadData extends LinearOpMode {
+
+
+public class I2cGY85ReadData extends OpMode {
+
 
   public static final int ADXL345_I2C_ADDRESS = 0x53;
-  
-  // trigger bytes used to change I2C address on ModernRobotics sensors.
-  /* public static final byte TRIGGER_BYTE_1 = 0x55;
-   * public static final byte TRIGGER_BYTE_2 = (byte) 0xaa;
-   * public static final byte IR_SEEKER_V3_FIRMWARE_REV = 0x12;
-   * public static final byte IR_SEEKER_V3_SENSOR_ID = 0x49;
-   * public static final byte IR_SEEKER_V3_ORIGINAL_ADDRESS = 0x38;
-  
-   * public static final byte MANUFACTURER_CODE = 0x4d;
-   * public static final byte FIRMWARE_REV = IR_SEEKER_V3_FIRMWARE_REV;
-   * public static final byte SENSOR_ID = IR_SEEKER_V3_SENSOR_ID;
-  */
-  
+
+
   public static final int ACC_DATA_FORMAT = 0x31;
-  public static final int ACC_SET_8G_MODE = 0x02;  
+  public static final int ACC_SET_8G_MODE = 0x02;
   public static final int ACC_POWER_CTL = 0x2D;
-  public static final int ACC_DATAX0 = 0x32;  
-  public static final int ACC_DATAX1 = 0x33;  
-  public static final int ACC_DATAY0 = 0x34;  
-  public static final int ACC_DATAY1 = 0x35;  
-  public static final int ACC_DATAZ0 = 0x36;  
-  public static final int ACC_DATAZ1 = 0x37;  
+  public static final int ACC_DISABLE_PM = 0x08;
+  public static final int ACC_DATAX0 = 0x32;
+  public static final int ACC_DATAX1 = 0x33;
+  public static final int ACC_DATAY0 = 0x34;
+  public static final int ACC_DATAY1 = 0x35;
+  public static final int ACC_DATAZ0 = 0x36;
+  public static final int ACC_DATAZ1 = 0x37;
   public static final int TOTAL_MEMORY_LENGTH = 0x06;
 
   int port = 5;
 
-  byte[] readCache;
-  Lock readLock;
-  byte[] writeCache;
-  Lock writeLock;
+  private DataLogger dl;
+  private Wire ds;
+  private int readCount = 0;
+  private int distance;
+  private long pingTime;
 
-  DeviceInterfaceModule dim;
+  public void init() {
+    dl = new DataLogger("ADXL345_Z_Accel");
+    ds = new Wire(hardwareMap, "GY85", ADXL345_I2C_ADDRESS);
+
+    dl.addField("Micros");      //Sensor reading time in microseconds
+    dl.addField("X_Accel");
+    dl.addField("Y_Accel");
+    dl.addField("Z_Accel");
+    dl.newLine();
+  }
+
+  public void start() {
+    ds.beginWrite(ADXL345_I2C_ADDRESS);
+    ds.write(ACC_DATA_FORMAT);
+    ds.write(ACC_SET_8G_MODE);
+    ds.endWrite();
+    ds.beginWrite(ADXL345_I2C_ADDRESS);
+    ds.write(ACC_POWER_CTL);
+    ds.write(ACC_DISABLE_PM);
+    ds.endWrite();
+    pingTime = System.currentTimeMillis();
+  }
 
   @Override
-  public void runOpMode() throws InterruptedException {
-
-    // set up the hardware devices we are going to use
-    dim = hardwareMap.deviceInterfaceModule.get("dim");
-
-    readCache = dim.getI2cReadCache(port);
-    readLock = dim.getI2cReadCacheLock(port);
-    writeCache = dim.getI2cWriteCache(port);
-    writeLock = dim.getI2cWriteCacheLock(port);
-
-    // I2c addresses on Modern Robotics devices must be divisible by 2, and between 0x7e and 0x10
-    // Different hardware may have different rules.
-    // Be sure to read the requirements for the hardware you're using!
-    IrSeekerSensor.throwIfModernRoboticsI2cAddressIsInvalid(newAddress);
-
-    // wait for the start button to be pressed
-    waitForStart();
-
-    performAction("read", port, currentAddress, ADDRESS_MEMORY_START, TOTAL_MEMORY_LENGTH);
-
-    while(!dim.isI2cPortReady(port)) {
-      telemetry.addData("I2cAddressChange", "waiting for the port to be ready...");
-      sleep(1000);
+  public void loop() {
+    if ((System.currentTimeMillis() - pingTime) > 100) {
+      ds.beginWrite(ADXL345_I2C_ADDRESS);
+      ds.write(ACC_DATAX0);
+      ds.endWrite();
+      ds.beginWrite(ADXL345_I2C_ADDRESS);
+      ds.requestFrom(ADXL345_I2C_ADDRESS, 6);
+      pingTime = System.currentTimeMillis();
     }
 
-    // update the local cache
-    dim.readI2cCacheFromController(port);
+    if (ds.responseCount() > 0) {
+      ds.getResponse();
+      if (ds.isRead()) {
+        long micros = ds.micros();
+        int Xaxis = ds.read() << 8 | ds.read();
+        int Yaxis = ds.read() << 8 | ds.read();
+        int Zaxis = ds.read() << 8 | ds.read();
+        dl.addField(micros);
+        dl.addField(Xaxis);
+        dl.addField(Yaxis);
+        dl.addField(Zaxis);
 
-    // make sure the first bytes are what we think they should be.
-    int count = 0;
-    int[] initialArray = {READ_MODE, currentAddress, ADDRESS_MEMORY_START, TOTAL_MEMORY_LENGTH, FIRMWARE_REV, MANUFACTURER_CODE, SENSOR_ID};
-    while (!foundExpectedBytes(initialArray, readLock, readCache)) {
-      telemetry.addData("I2cAddressChange", "Confirming that we're reading the correct bytes...");
-      dim.readI2cCacheFromController(port);
-      sleep(1000);
-      count++;
-      // if we go too long with failure, we probably are expecting the wrong bytes.
-      if (count >= 10)  {
-        telemetry.addData("I2cAddressChange", String.format("Looping too long with no change, probably have the wrong address. Current address: %02x", currentAddress));
-        hardwareMap.irSeekerSensor.get(String.format("Looping too long with no change, probably have the wrong address. Current address: %02x", currentAddress));
+        readCount++;
+        telemetry.addData("Count", readCount);
+        telemetry.addData("Time", micros / 1000);
+        telemetry.addData("X_Acc", Xaxis);
+        telemetry.addData("Y_Acc", Yaxis);
+        telemetry.addData("Z_Acc", Zaxis);
       }
     }
-
-    // Enable writes to the correct segment of the memory map.
-    performAction("write", port, currentAddress, ADDRESS_SET_NEW_I2C_ADDRESS, BUFFER_CHANGE_ADDRESS_LENGTH);
-
-    waitOneFullHardwareCycle();
-
-    // Write out the trigger bytes, and the new desired address.
-    writeNewAddress();
-    dim.setI2cPortActionFlag(port);
-    dim.writeI2cCacheToController(port);
-
-    telemetry.addData("I2cAddressChange", "Giving the hardware some time to make the change...");
-
-    // Changing the I2C address takes some time.
-    for (int i = 0; i < 5000; i++) {
-      waitOneFullHardwareCycle();
-    }
-
-    // Query the new address and see if we can get the bytes we expect.
-    dim.enableI2cReadMode(port, newAddress, ADDRESS_MEMORY_START, TOTAL_MEMORY_LENGTH);
-    dim.setI2cPortActionFlag(port);
-    dim.writeI2cCacheToController(port);
-
-    int[] confirmArray = {READ_MODE, newAddress, ADDRESS_MEMORY_START, TOTAL_MEMORY_LENGTH, FIRMWARE_REV, MANUFACTURER_CODE, SENSOR_ID};
-    while (!foundExpectedBytes(confirmArray, readLock, readCache)) {
-      telemetry.addData("I2cAddressChange", "Have not confirmed the changes yet...");
-	  
-      dim.readI2cCacheFromController(port);
-      sleep(1000)
-    }
-
-    telemetry.addData("I2cAddressChange", "Successfully changed the I2C address." + String.format("New address: %02x", newAddress));
-
-    /**** IMPORTANT NOTE ******/
-    // You need to add a line like this at the top of your op mode
-    // to update the I2cAddress in the driver.
-    //irSeeker.setI2cAddress(newAddress);
-    /***************************/
-
   }
 
-  private boolean foundExpectedBytes(int[] byteArray, Lock lock, byte[] cache) {
-    try {
-      lock.lock();
-      boolean allMatch = true;
-      StringBuilder s = new StringBuilder(300 * 4);
-      String mismatch = "";
-      for (int i = 0; i < byteArray.length; i++) {
-        s.append(String.format("expected: %02x, got: %02x \n", TypeConversion.unsignedByteToInt( (byte) byteArray[i]), cache[i]));
-        if (TypeConversion.unsignedByteToInt(cache[i]) != TypeConversion.unsignedByteToInt( (byte) byteArray[i])) {
-          mismatch = String.format("i: %d, byteArray[i]: %02x, cache[i]: %02x", i, byteArray[i], cache[i]);
-          allMatch = false;
-          break;
-        }
-      }
-      RobotLog.e(s.toString() + "\n allMatch: " + allMatch + ", mismatch: " + mismatch);
-      return allMatch;
-    } finally {
-      lock.unlock();
-    }
-  }
-
-  private void performAction(String actionName, int port, int i2cAddress, int memAddress, int memLength) {
-    if (actionName.equalsIgnoreCase("read")) dim.enableI2cReadMode(port, i2cAddress, memAddress, memLength);
-    if (actionName.equalsIgnoreCase("write")) dim.enableI2cWriteMode(port, i2cAddress, memAddress, memLength);
-
-    dim.setI2cPortActionFlag(port);
-    dim.writeI2cCacheToController(port);
-    dim.readI2cCacheFromController(port);
-  }
-
-  private void writeNewAddress() {
-    try {
-      writeLock.lock();
-      writeCache[4] = (byte) newAddress;
-      writeCache[5] = TRIGGER_BYTE_1;
-      writeCache[6] = TRIGGER_BYTE_2;
-    } finally {
-      writeLock.unlock();
-    }
+  public void stop() {
+    dl.closeDataLogger();
+    ds.close();
   }
 }
