@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorController;
 /**
  * Created by Jerry on 10/10/2015.
  */
+//4 wheeled drive, works with blue team robot
 public class Testing1010 extends OpMode{
     DcMotor DC_left;
     DcMotor DC_right;
@@ -26,12 +27,12 @@ public class Testing1010 extends OpMode{
 
     @Override
     public void loop () {
-
+        float leftY = -gamepad1.left_stick_y;
         float rightY = -gamepad1.right_stick_y;
 
-        DC_left.setPower(rightY);
+        DC_left.setPower(leftY);
         DC_right.setPower(rightY);
-        Omni_left.setPower(rightY);
+        Omni_left.setPower(leftY);
         Omni_right.setPower(rightY);
     }
 
