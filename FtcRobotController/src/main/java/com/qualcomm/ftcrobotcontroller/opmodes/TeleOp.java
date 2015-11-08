@@ -62,8 +62,9 @@ public class TeleOp extends OpMode {
         }
         else
         {
-            leftLiftMotor.setPower(gamepad2.left_stick_y);
-            rightLiftMotor.setPower(gamepad2.left_stick_y);
+            leftLiftMotor.setPower(gamepad2.left_stick_y * 3.0/4.0);
+            rightLiftMotor.setPower(gamepad2.left_stick_y * 3.0/4.0);
+
             leftMotor1.setPower(-gamepad2.left_stick_y);
             leftMotor2.setPower(-gamepad2.left_stick_y);
             rightMotor1.setPower(-gamepad2.left_stick_y);
