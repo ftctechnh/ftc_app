@@ -70,7 +70,7 @@ public class TeleOp extends OpMode {
             rightMotor2.setPower(-gamepad2.left_stick_y);
         }
 
-        if(gamepad2.a){
+        if(gamepad2.dpad_up){
             isLiftLocked = true;
             leftMotor1.setPower(0);
             leftMotor2.setPower(0);
@@ -81,13 +81,12 @@ public class TeleOp extends OpMode {
             rightLiftServo.setPosition(rightLiftServoLockedPosition);
         }
 
-        if(gamepad2.b){
+        if(gamepad2.dpad_down){
             isLiftLocked = false;
 
             leftLiftServo.setPosition(leftLiftServoUnlockedPosition);
             rightLiftServo.setPosition(rightLiftServoUnlockedPosition);
 
-            isLiftLocked = true;
             leftMotor1.setPower(0);
             leftMotor2.setPower(0);
             rightMotor1.setPower(0);
