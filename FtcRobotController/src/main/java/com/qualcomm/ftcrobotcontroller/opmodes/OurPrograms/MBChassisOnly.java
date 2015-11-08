@@ -126,8 +126,8 @@ public class MBChassisOnly extends OpMode {
         // 1 is full down
         // direction: left_stick_x ranges from -1 to 1, where -1 is full left
         // and 1 is full right
-        float left = -gamepad1.left_stick_y;
-        float right = -gamepad1.right_stick_y;
+        float left = -gamepad1.right_stick_y;
+        float right = -gamepad1.left_stick_y;
 
         // clip the right/left values so that the values never exceed +/- 1
         right = Range.clip(right, -1, 1);

@@ -62,6 +62,8 @@ public class MBTeleopComp extends OpMode {
 	DcMotor lwa; // P5 port 1
 	DcMotor lwb; // P5 port 2
 
+
+
 	@Override
 	public void init() {
 
@@ -131,7 +133,7 @@ public class MBTeleopComp extends OpMode {
 
 		if(gamepad2.b)
 		{
-			wrist.setPosition(0.9);
+			wrist.setPosition(0.8);
 		}
 
 		if(gamepad2.y)
