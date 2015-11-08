@@ -4,7 +4,6 @@ package com.qualcomm.customsensors;
 import android.util.Log;
 
 import com.qualcomm.robotcore.exception.RobotCoreException;
-import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.I2cController;
@@ -47,7 +46,7 @@ public class IMUSensor implements HardwareDevice, I2cController.I2cPortReadyCall
     //0.007476806640625 degrees/bit
     public static final double degreesPerBit = (2 * 245) / 65536; // 490 degrees / 16 bits
 
-    private double currentPosition = 0;
+    private double currentPositionInDegrees = 0;
 
     //Gyro Chip Settings
     //LOW_ODR is set in register 0x39--see data sheet page 48
@@ -219,7 +218,7 @@ public class IMUSensor implements HardwareDevice, I2cController.I2cPortReadyCall
 //        i2cIMU.setI2cPortActionFlag();
 //    }
 
-    public double getIMUGyroYawRate() {
+    public double getCurrentPositionInDegrees() {
 //        double tempYaw = 0.0;
 //        try {
 //            i2cReadCacheLock.lock();
@@ -233,7 +232,11 @@ public class IMUSensor implements HardwareDevice, I2cController.I2cPortReadyCall
 
 //       return tempYaw;
 
-        return currentPosition;
+        return currentPositionInDegrees;
+    }
+
+    public void resetCurrentPosition() {
+        currentPositionInDegrees = 0;
     }
 
     public boolean testRead_WHO_AM_I()
@@ -298,9 +301,10 @@ public class IMUSensor implements HardwareDevice, I2cController.I2cPortReadyCall
         //Add to current position
         try {
             i2cReadCacheLock.lock();
-            currentPosition = ((short) (((i2cReadCache[I2cController.I2C_BUFFER_START_ADDRESS] & 0XFF) << 8)
+
+            double thisSampleDegreesPerSecond = ((short) (((i2cReadCache[I2cController.I2C_BUFFER_START_ADDRESS] & 0XFF) << 8)
                     | (i2cReadCache[I2cController.I2C_BUFFER_START_ADDRESS] & 0XFF)));
-            currentPosition *= latestInterval;
+            currentPositionInDegrees += thisSampleDegreesPerSecond * latestInterval;
         } finally {
             i2cReadCacheLock.unlock();
         }
