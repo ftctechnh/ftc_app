@@ -14,15 +14,25 @@ public class TeleOp extends OpMode {
     DcMotor rightMotor2;
     DcMotor rightLiftMotor;
     DcMotor leftLiftMotor;
+    DcMotor armMotor;
 
     Servo leftLiftServo;
     Servo rightLiftServo;
+    Servo armServo;
 
     double leftLiftServoUnlockedPosition = 0.93;
     double leftLiftServoLockedPosition = 0.75;
 
     double rightLiftServoUnlockedPosition = 0.35;
     double rightLiftServoLockedPosition = 0.50;
+
+    double armServoUpwardSpeed = 0.6;
+    double armServoStoppedSpeed = 0.5;
+    double armServoDownwardSpeed = 0.4;
+
+    double armMotorForwardSpeed = 0.5;
+    double armMotorStoppedSpeed = 0.0;
+    double armMotorBackwardSpeed = -0.5;
 
     boolean isLiftLocked = false;
 
@@ -34,9 +44,11 @@ public class TeleOp extends OpMode {
         rightMotor2 = hardwareMap.dcMotor.get("rightMotor2");
         leftLiftMotor = hardwareMap.dcMotor.get("leftLiftMotor");
         rightLiftMotor = hardwareMap.dcMotor.get("rightLiftMotor");
+        armMotor = hardwareMap.dcMotor.get("armMotor");
 
         leftLiftServo = hardwareMap.servo.get("leftLiftServo");
         rightLiftServo = hardwareMap.servo.get("rightLiftServo");
+        armServo = hardwareMap.servo.get("armServo");
 
         leftMotor1.setDirection(DcMotor.Direction.REVERSE);
         leftMotor2.setDirection(DcMotor.Direction.REVERSE);
@@ -44,6 +56,8 @@ public class TeleOp extends OpMode {
 
         leftLiftServo.setPosition(leftLiftServoUnlockedPosition);
         rightLiftServo.setPosition(rightLiftServoUnlockedPosition);
+
+        armServo.setPosition(armServoStoppedSpeed);
     }
 
     @Override
@@ -95,6 +109,33 @@ public class TeleOp extends OpMode {
             leftLiftMotor.setPower(0);
             rightLiftMotor.setPower(0);
         }
+
+        if(gamepad2.y){
+            armMotor.setPower(armMotorForwardSpeed);
+        }
+
+
+        if(gamepad2.a){
+            armMotor.setPower(armMotorBackwardSpeed);
+        }
+
+
+        if(!(gamepad2.y || gamepad2.a)){
+            armMotor.setPower(armMotorStoppedSpeed);
+        }
+
+        if(gamepad2.right_bumper){
+            armServo.setPosition(armMotorForwardSpeed);
+        }
+
+        if(gamepad2.right_trigger > 0.5){
+            armServo.setPosition(armServoDownwardSpeed);
+        }
+
+        if(!(gamepad2.right_bumper || gamepad2.right_trigger > 0.5)){
+            armServo.setPosition(armServoStoppedSpeed);
+        }
+
 
     }
 }
