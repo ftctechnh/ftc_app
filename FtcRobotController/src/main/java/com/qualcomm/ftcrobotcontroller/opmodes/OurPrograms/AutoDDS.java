@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 
 public class AutoDDS extends LinearOpMode{
 
@@ -25,6 +26,8 @@ public class AutoDDS extends LinearOpMode{
     Servo ddsclaw; // P4 channel 4
     DcMotor lwa; // P5 port 1
     DcMotor lwb; // P5 port 2
+
+    GyroSensor Gyro;
 
 
     @Override
@@ -59,13 +62,18 @@ public class AutoDDS extends LinearOpMode{
         ddspivot = hardwareMap.servo.get("ddspivot");
         ddsclaw = hardwareMap.servo.get("ddsclaw");
 
-        final int ENCODER_CPR = 1440;     //Encoder Counts per Revolution
-        int DISTANCE = 24;          //Distance in inches to drive
+        Gyro = hardwareMap.gyroSensor.get("gyro");
 
-        final double CIRCUMFERENCE = Math.PI * 4;
-        double ROTATIONS = DISTANCE / CIRCUMFERENCE;
-        double COUNTS = ENCODER_CPR * ROTATIONS;
+        //final int ENCODER_CPR = 1440;     //Encoder Counts per Revolution
 
+
+        //final double CIRCUMFERENCE = 12.566;
+        //double ROTATIONS = DISTANCE / CIRCUMFERENCE;
+        //double COUNTS = ENCODER_CPR * ROTATIONS;
+
+
+        //int zVal = 0;
+        int heading = 0;
 
         // Wait for the start button to be pressed
         waitForStart();
@@ -73,8 +81,68 @@ public class AutoDDS extends LinearOpMode{
         ddspivot.setPosition(1);
         ddsclaw.setPosition(0.75);
         sleep(500);
-        
 
+        //24 in. is 1.9 rotations is 2750 counts
+        while(lwa.getCurrentPosition() < 2750){
+
+            lwa.setPower(-0.5);
+            lwb.setPower(-0.5);
+            rwb.setPower(-0.5);
+            rwa.setPower(-0.5);
+            waitOneFullHardwareCycle();
+        }
+
+        //stop
+        lwa.setPower(0);
+        lwb.setPower(0);
+        rwb.setPower(0);
+        rwa.setPower(0);
+
+        //unpack arm/scoop
+        scoopArm.setPower(0.2);
+        sleep(800);    //UNTESTED VALUE
+        scoopArm.setPower(0);
+
+        wrist.setPosition(0.8);
+        sleep(200);
+
+        //keep going
+        //70 in. is 5.57 rotations is 8022 counts
+        while(lwa.getCurrentPosition() < 8022){
+
+            lwa.setPower(-0.5);
+            lwb.setPower(-0.5);
+            rwb.setPower(-0.5);
+            rwa.setPower(-0.5);
+            waitOneFullHardwareCycle();
+        }
+
+        //stop
+        lwa.setPower(0);
+        lwb.setPower(0);
+        rwb.setPower(0);
+        rwa.setPower(0);
+
+        //turn 45 degrees w/ gyro
+        heading = Gyro.getHeading();
+
+        while(heading < 45){
+
+            lwa.setPower(0.5);
+            lwb.setPower(0.5);
+            rwb.setPower(-0.5);
+            rwa.setPower(-0.5);
+            waitOneFullHardwareCycle();
+
+        }
+
+        //stop
+        lwa.setPower(0);
+        lwb.setPower(0);
+        rwb.setPower(0);
+        rwa.setPower(0);
+
+        sleep(100);
 
     }
 }
