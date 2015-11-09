@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
           package="com.qualcomm.ftcrobotcontroller"
-          android:versionCode="3"
-          android:versionName="User Developed App">
+          android:versionCode="5"
+          android:versionName="1.25">
 
 
   <uses-permission
