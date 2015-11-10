@@ -144,7 +144,8 @@ public class TelemetryDashboardAndLog
      */
     public TelemetryDashboardAndLog()
         {
-        this.eventLoopManager = SwerveThreadContext.getThreadContext().swerveFtcEventLoop.getEventLoopManager();
+        SwerveThreadContext context = SwerveThreadContext.getThreadContext();
+        this.eventLoopManager = context.swerveFtcEventLoop.getEventLoopManager();
         this.log = new Log();
         //
         this.clearDashboard();
