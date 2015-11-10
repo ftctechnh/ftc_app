@@ -316,7 +316,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         {
         this.waitForLoopCycleEmptyOfActionKey
             (
-            SynchronousThreadContext.getThreadContext().actionKeyWritesFromThisThread
+            SwerveThreadContext.getThreadContext().actionKeyWritesFromThisThread
             );
         }
 
@@ -710,7 +710,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         if (this.isStopRequested())
             throw new IllegalStateException("createSynchronousWorkerThread: stop requested");
         
-        if (!isMain) SynchronousThreadContext.assertSynchronousThread();
+        if (!isMain) SwerveThreadContext.assertSynchronousThread();
         //
         Thread thread = new Thread(new SynchronousThreadRoot(threadBody, isMain));
         if (isMain)
@@ -727,7 +727,10 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     
     private void setThreadThunker()
         {
-        SynchronousThreadContext.create(this, this);
+        SwerveThreadContext context = SwerveThreadContext.createIfNecessary();
+        context.opMode = this;
+        context.thunker = this;
+        context.isSynchronousThread = true;
         }
 
     //----------------------------------------------------------------------------------------------
@@ -758,7 +761,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             this.hardwareMap          = this.hardwareFactory.createThunkedHardwareMap();
 
             // Similarly replace the telemetry variable
-            this.telemetry = new TelemetryDashboardAndLog(super.telemetry);
+            this.telemetry = new TelemetryDashboardAndLog();
 
             // Paranoia: clear any state that may just perhaps be lingering
             this.clearSingletons();
@@ -1067,7 +1070,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      */
     @Override public void executeOnLoopThread(Runnable action)
         {
-        SynchronousThreadContext.assertSynchronousThread();
+        SwerveThreadContext.assertSynchronousThread();
         this.actionQueueAndHistory.add(action);
         }
 
@@ -1080,7 +1083,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      */
     @Override public void executeSingletonOnLoopThread(int singletonKey, Runnable action)
         {
-        SynchronousThreadContext.assertSynchronousThread();
+        SwerveThreadContext.assertSynchronousThread();
         synchronized (this.singletonLoopActions)
             {
             this.singletonLoopActions.put(singletonKey, action);
@@ -1112,7 +1115,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      */
     public static IThunkDispatcher getThreadThunker()
         {
-        return SynchronousThreadContext.getContextualThunker();
+        return SwerveThreadContext.getContextualThunker();
         }
 
     //----------------------------------------------------------------------------------------------
@@ -1121,7 +1124,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
 
     private static SynchronousOpMode getThreadSynchronousOpMode()
         {
-        return (SynchronousOpMode)(SynchronousThreadContext.getContextualOpMode());
+        return (SynchronousOpMode)(SwerveThreadContext.getContextualOpMode());
         }
 
     /**
@@ -1153,7 +1156,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     /**
      * Advanced: Answer as to whether the current thread is in fact the loop thread
      * 
-     * @see SynchronousThreadContext#isSynchronousThread() 
+     * @see SwerveThreadContext#isCurrentThreadSynchronous()
      */
     private boolean isLoopThread()
         {

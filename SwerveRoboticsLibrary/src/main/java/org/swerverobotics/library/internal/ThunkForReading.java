@@ -22,7 +22,7 @@ public abstract class ThunkForReading<T> extends Thunk
 
     public ThunkForReading() 
         {
-        SynchronousThreadContext.assertSynchronousThread();
+        SwerveThreadContext.assertSynchronousThread();
         }
     public ThunkForReading(int actionKey) 
         { 
