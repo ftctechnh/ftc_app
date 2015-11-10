@@ -12,6 +12,7 @@ public class MotorMove extends LinearOpMode {
     DcMotor motorLeft;
     DcMotor winch;
     DcMotor winchpivot;
+    DcMotor winchwheel;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -19,6 +20,8 @@ public class MotorMove extends LinearOpMode {
         motorLeft = hardwareMap.dcMotor.get("left");
         winch = hardwareMap.dcMotor.get("winch");
         winchpivot = hardwareMap.dcMotor.get("winchpivot");
+        winchwheel = hardwareMap.dcMotor.get("winchwheel");
+
 
         while(true) {
             telemetry.addData("right", gamepad1.right_stick_y);
@@ -36,18 +39,23 @@ public class MotorMove extends LinearOpMode {
             else{
                 motorRight.setPower(0);
             }
+
+            //winchpivot BUTTONS Dpad up/down
             if (gamepad1.dpad_down) {
                 winchpivot.setPower(.9);
-            } else if (gamepad1.dpad_up) {
+            }
+            else if (gamepad1.dpad_up) {
                 winchpivot.setPower(-.9);
             } else {
                 winchpivot.setPower(0);
             }
-
+            //winch & winchwheel BUTTONS  A/Y
             if (gamepad1.a) {
                 winch.setPower(.9);
+                winchwheel.setPower(1);
             } else if (gamepad1.y) {
                 winch.setPower(-.9);
+                winchwheel.setPower(-1);
             } else {
                 winch.setPower(0);
             }
