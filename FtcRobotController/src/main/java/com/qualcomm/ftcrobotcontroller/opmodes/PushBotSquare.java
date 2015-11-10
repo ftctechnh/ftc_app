@@ -6,8 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorController;
 
 /*
  * An example linear op mode where the pushbot
- * will drive in a square pattern using sleep() 
- * and a for loop.
+ * will drive forward
  */
 public class PushBotSquare extends LinearOpMode {
     DcMotor leftmotor;
@@ -17,7 +16,7 @@ public class PushBotSquare extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         leftmotor = hardwareMap.dcMotor.get("leftmotor");
         rightmotor = hardwareMap.dcMotor.get("rightmotor");
-        rightmotor.setDirection(DcMotor.Direction.REVERSE);
+
 
         waitForStart();
 
@@ -31,8 +30,8 @@ public class PushBotSquare extends LinearOpMode {
         rightmotor.setTargetPosition(count);
         rightmotor.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
         leftmotor.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
-        rightmotor.setPower(50);
-        leftmotor.setPower(50);
+        rightmotor.setPower(.5);
+        leftmotor.setPower(.5);
 
     }
     public void data()
