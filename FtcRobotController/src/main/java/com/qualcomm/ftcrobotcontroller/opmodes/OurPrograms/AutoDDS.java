@@ -88,7 +88,7 @@ public class AutoDDS extends LinearOpMode{
         waitForStart();
 
         ddspivot.setPosition(1);
-        ddsclaw.setPosition(0.75);
+        ddsclaw.setPosition(0.1);
         sleep(500);
 
         //24 in. is 1.9 rotations is 2750 counts
@@ -106,6 +106,8 @@ public class AutoDDS extends LinearOpMode{
         lwb.setPower(0);
         rwb.setPower(0);
         rwa.setPower(0);
+
+        sleep(2000);
 
         //unpack arm/scoop
         scoopArm.setPower(0.2);

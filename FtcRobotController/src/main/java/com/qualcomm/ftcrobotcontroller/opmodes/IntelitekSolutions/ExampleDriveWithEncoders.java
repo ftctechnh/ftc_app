@@ -3,11 +3,28 @@ package com.qualcomm.ftcrobotcontroller.opmodes.IntelitekSolutions;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.hardware.Servo;
 
 public class ExampleDriveWithEncoders extends OpMode {
 
-    DcMotor rightMotor;
-    DcMotor leftMotor;
+    DcMotor rwa; // P0 port 1
+    DcMotor rwb; // P0 port 2
+    DcMotor liftL; // P1 port 1
+    DcMotor liftR; // P1 port 2
+    Servo leftComb; // P2 channel 1
+    Servo rightComb; // P2 channel 2
+    Servo trigL; // P2 channel 3
+    Servo trigR; // P2 channel 4
+    DcMotor scoopArm; // P3 port 1
+    //DcMotor winch; - Winch not currently on robot will be //P3 port 2
+    //Servo leftCR; // Not on robot- P4 channel 1
+    //Servo rightCR; //Not on robot- P4 channel 2
+    Servo wrist;
+    Servo ddspivot; // P4 channel 3
+    Servo ddsclaw; // P4 channel 4
+    DcMotor lwa; // P5 port 1
+    DcMotor lwb; // P5 port 2
+
 
     final static int ENCODER_CPR = 1440;     //Encoder Counts per Revolution
     final static double GEAR_RATIO = 2;      //Gear Ratio
@@ -20,32 +37,59 @@ public class ExampleDriveWithEncoders extends OpMode {
 
     @Override
     public void init() {
-        leftMotor = hardwareMap.dcMotor.get("left_drive");
-        rightMotor = hardwareMap.dcMotor.get("right_drive");
+        lwa = hardwareMap.dcMotor.get("leftwheelA");
+        lwb = hardwareMap.dcMotor.get("leftwheelB");
+        rwa = hardwareMap.dcMotor.get("rightwheelA");
+        rwb = hardwareMap.dcMotor.get("rightwheelB");
+        rwa.setDirection(DcMotor.Direction.REVERSE);
+        rwb.setDirection(DcMotor.Direction.REVERSE);
+        lwa.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
+        rwa.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
 
-        rightMotor.setDirection(DcMotor.Direction.REVERSE);
+        liftL = hardwareMap.dcMotor.get("liftL");
+        liftR = hardwareMap.dcMotor.get("liftR");
+        liftR.setDirection(DcMotor.Direction.REVERSE);
 
-        leftMotor.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
-        rightMotor.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
+        scoopArm = hardwareMap.dcMotor.get("scoopArm");
+        scoopArm.setDirection(DcMotor.Direction.REVERSE);
+
+        wrist = hardwareMap.servo.get("wrist");
+
+        //rightCR = hardwareMap.servo.get("rightCR");
+
+        leftComb = hardwareMap.servo.get("leftComb");
+        rightComb = hardwareMap.servo.get("rightComb");
+
+        trigL = hardwareMap.servo.get("trigL");
+        trigR = hardwareMap.servo.get("trigR");
+
+        ddspivot = hardwareMap.servo.get("ddspivot");
+        ddsclaw = hardwareMap.servo.get("ddsclaw");
     }
 
     @Override
     public void start() {
-        leftMotor.setTargetPosition((int) COUNTS);
-        rightMotor.setTargetPosition((int) COUNTS);
+        lwa.setTargetPosition((int) COUNTS);
+        rwa.setTargetPosition((int) COUNTS);
+        lwb.setTargetPosition((int) COUNTS);
+        rwb.setTargetPosition((int) COUNTS);
 
-        leftMotor.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
-        rightMotor.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        lwa.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        lwb.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        rwb.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        rwa.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
 
-        leftMotor.setPower(0.5);
-        rightMotor.setPower(0.5);
+        lwa.setPower(-0.5);
+        rwa.setPower(-0.5);
+        lwb.setPower(-0.5);
+        rwb.setPower(-0.5);
     }
 
     @Override
     public void loop() {
         telemetry.addData("Motor Target", COUNTS);
-        telemetry.addData("Left Position", leftMotor.getCurrentPosition());
-        telemetry.addData("Right Position", rightMotor.getCurrentPosition());
+        telemetry.addData("Left Position", lwa.getCurrentPosition());
+        telemetry.addData("Right Position", rwa.getCurrentPosition());
     }
 }
 
