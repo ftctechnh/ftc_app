@@ -3,6 +3,7 @@ package org.swerverobotics.library.internal;
 import com.qualcomm.ftccommon.*;
 import com.qualcomm.robotcore.eventloop.*;
 import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.robocol.*;
 import com.qualcomm.robotcore.robot.*;
 
 /**
@@ -31,6 +32,16 @@ public class MemberUtil
     //----------------------------------------------------------------------------------------------
     // EventLoopManager
     //----------------------------------------------------------------------------------------------
+
+    public static RobocolDatagramSocket socketOfEventLoopManager(EventLoopManager manager)
+        {
+        return Util.<RobocolDatagramSocket>getPrivateObjectField(manager, 2);
+        }
+
+    public static void setSocketOfEventLoopManager(EventLoopManager manager, RobocolDatagramSocket socket)
+        {
+        Util.setPrivateObjectField(manager, 2, socket);
+        }
 
     public static EventLoopManager.EventLoopMonitor monitorOfEventLoopManager(EventLoopManager manager)
         {
