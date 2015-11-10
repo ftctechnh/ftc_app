@@ -58,6 +58,8 @@ public class EETestAuton extends OpMode {
     double armPosition;
     double clawPosition;
 
+    private boolean complainLight = false;
+
     DcMotor motorFRight = null;
     DcMotor motorFLeft = null;
     DcMotor motorRRight = null;
@@ -72,13 +74,6 @@ public class EETestAuton extends OpMode {
             };
 
     public ElapsedTime mRuntime = new ElapsedTime();   // Time into round. // MPH
-
-    private boolean complainLight = false;
-    DcMotor motorFRight= null;
-    DcMotor motorFLeft= null;
-    DcMotor motorRRight= null;
-    DcMotor motorRLeft= null;
-    LightSensor reflectedLight;
 
     //Emma
 

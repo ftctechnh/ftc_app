@@ -82,8 +82,8 @@ public class TeleOpTankTread extends OpMode{
 		 */
 
 
-        motorRRight = hardwareMap.dcMotor.get("motor_1"); //RRight
-        motorRLeft = hardwareMap.dcMotor.get("motor_2"); //RLeft
+        motorRRight = hardwareMap.dcMotor.get("motor_right_rear"); //RRight
+        motorRLeft = hardwareMap.dcMotor.get("motor_left_rear"); //RLeft
 
         motorRLeft.setDirection(DcMotor.Direction.REVERSE);
 
@@ -91,8 +91,8 @@ public class TeleOpTankTread extends OpMode{
         * allows robot to run if there are only 2 motors
         */
         try {
-            motorFRight = hardwareMap.dcMotor.get("motor_3"); // FRight
-            motorFLeft = hardwareMap.dcMotor.get("motor_4"); // FLeft
+            motorFRight = hardwareMap.dcMotor.get("motor_right_front"); // FRight
+            motorFLeft = hardwareMap.dcMotor.get("motor_left_front"); // FLeft
 
             motorFLeft.setDirection(DcMotor.Direction.REVERSE);
         } catch (Exception ex) {
