@@ -34,7 +34,13 @@ public class SwerveFtcEventLoop extends FtcEventLoop
         {
         super(hardwareFactory, register, callback, robotControllerContext);
         this.ftcEventLoopHandler = MemberUtil.handlerOfFtcEventLoop(this);
-        this.eventLoopManager    = MemberUtil.eventLoopManagerOfFtcEventLoopHandler(this.ftcEventLoopHandler);
+        setEventLoopManager();
+        }
+
+    void setEventLoopManager()
+        {
+        if (null == this.eventLoopManager)
+            this.eventLoopManager = MemberUtil.eventLoopManagerOfFtcEventLoopHandler(this.ftcEventLoopHandler);
         }
 
     //----------------------------------------------------------------------------------------------
@@ -56,6 +62,7 @@ public class SwerveFtcEventLoop extends FtcEventLoop
         {
         SwerveThreadContext context = SwerveThreadContext.createIfNecessary();
         context.swerveFtcEventLoop = this;
+        setEventLoopManager();
         //
         super.loop();
         }
