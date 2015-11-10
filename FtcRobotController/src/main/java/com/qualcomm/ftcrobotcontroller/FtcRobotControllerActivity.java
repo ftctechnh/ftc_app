@@ -460,7 +460,7 @@ public class FtcRobotControllerActivity extends Activity {
             if (robot == null)
                 return;
 
-            EventLoopManager eventLoopManager = MemberUtil.eventLoopManagerOfRobot(robot);
+            EventLoopManager eventLoopManager = robot.eventLoopManager;
             if (eventLoopManager == null)
                 return;
 
@@ -482,6 +482,7 @@ public class FtcRobotControllerActivity extends Activity {
                     // Stuff in a replacement, thread-safe, socket.
                     RobocolDatagramSocket newSocket = new ThreadSafeRobocolDatagramSocket();
                     MemberUtil.setSocketOfEventLoopManager(eventLoopManager, newSocket);
+                    robot.socket = newSocket;
                     Log.v(SynchronousOpMode.LOGGING_TAG, "installed ThreadSafeRobocolDatagramSocket");
                     }
                 }
