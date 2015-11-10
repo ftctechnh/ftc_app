@@ -75,6 +75,13 @@ public class AutoDDS extends LinearOpMode{
         //int zVal = 0;
         int heading = 0;
 
+        Gyro.calibrate();
+
+        if(Gyro.isCalibrating())
+        {
+            waitOneFullHardwareCycle();
+        }
+
         // Wait for the start button to be pressed
         waitForStart();
 
