@@ -83,7 +83,7 @@ public final class ClassFactory
 
     /**
      * Instantiates a driver object for an AdaFruit BNO055 sensor which resides at the indicated I2cDevice using
-     * the provided configuration parameters. This creation method only functions in a SynchronousOpMode
+     * the provided configuration parameters. This creation method only functions in a SynchronousOpMode.
      *
      * @param i2cDevice     the robot controller runtime object representing the sensor
      * @param parameters    the parameters with which the sensor should be initialized
@@ -92,8 +92,8 @@ public final class ClassFactory
      */
     public static IBNO055IMU createAdaFruitBNO055IMU(I2cDevice i2cDevice, IBNO055IMU.Parameters parameters)
         {
-        SynchronousThreadContext.assertSynchronousThread();
-        return createAdaFruitBNO055IMU(SynchronousThreadContext.getContextualOpMode(), i2cDevice, parameters);
+        SwerveThreadContext.assertSynchronousThread();
+        return createAdaFruitBNO055IMU(SwerveThreadContext.getContextualOpMode(), i2cDevice, parameters);
         }
 
     /**

@@ -30,6 +30,24 @@ public class MemberUtil
         }
 
     //----------------------------------------------------------------------------------------------
+    // FTCEventLoop
+    //----------------------------------------------------------------------------------------------
+
+    public static FtcEventLoopHandler handlerOfFtcEventLoop(FtcEventLoop ftcEventLoop)
+        {
+        return Util.<FtcEventLoopHandler>getPrivateObjectField(ftcEventLoop, 0);
+        }
+
+    //----------------------------------------------------------------------------------------------
+    // FtcEventLoopHandler
+    //----------------------------------------------------------------------------------------------
+
+    public static EventLoopManager eventLoopManagerOfFtcEventLoopHandler(FtcEventLoopHandler ftcEventLoopHandler)
+        {
+        return Util.<EventLoopManager>getPrivateObjectField(ftcEventLoopHandler, 0);
+        }
+
+    //----------------------------------------------------------------------------------------------
     // EventLoopManager
     //----------------------------------------------------------------------------------------------
 
