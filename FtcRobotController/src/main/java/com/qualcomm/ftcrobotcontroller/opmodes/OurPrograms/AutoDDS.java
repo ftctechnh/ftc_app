@@ -64,6 +64,8 @@ public class AutoDDS extends LinearOpMode{
 
         Gyro = hardwareMap.gyroSensor.get("gyro");
 
+        double motorspeed = 0.8;
+
         //final int ENCODER_CPR = 1440;     //Encoder Counts per Revolution
 
 
@@ -92,10 +94,10 @@ public class AutoDDS extends LinearOpMode{
         //24 in. is 1.9 rotations is 2750 counts
         while(lwa.getCurrentPosition() < 2750){
 
-            lwa.setPower(-0.5);
-            lwb.setPower(-0.5);
-            rwb.setPower(-0.5);
-            rwa.setPower(-0.5);
+            lwa.setPower(-motorspeed);
+            lwb.setPower(-motorspeed);
+            rwb.setPower(-motorspeed);
+            rwa.setPower(-motorspeed);
             waitOneFullHardwareCycle();
         }
 
@@ -117,10 +119,10 @@ public class AutoDDS extends LinearOpMode{
         //70 in. is 5.57 rotations is 8022 counts
         while(lwa.getCurrentPosition() < 8022){
 
-            lwa.setPower(-0.5);
-            lwb.setPower(-0.5);
-            rwb.setPower(-0.5);
-            rwa.setPower(-0.5);
+            lwa.setPower(-motorspeed);
+            lwb.setPower(-motorspeed);
+            rwb.setPower(-motorspeed);
+            rwa.setPower(-motorspeed);
             waitOneFullHardwareCycle();
         }
 
@@ -135,10 +137,10 @@ public class AutoDDS extends LinearOpMode{
 
         while(heading < 45){
 
-            lwa.setPower(0.5);
-            lwb.setPower(0.5);
-            rwb.setPower(-0.5);
-            rwa.setPower(-0.5);
+            lwa.setPower(motorspeed);
+            lwb.setPower(motorspeed);
+            rwb.setPower(-motorspeed);
+            rwa.setPower(-motorspeed);
             waitOneFullHardwareCycle();
 
         }
