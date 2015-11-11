@@ -7,25 +7,25 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
  */
  abstract public class PushButtonAuto extends LinearOpMode
 {
-    public void runOpMode()
+    /*public void runOpMode()
     {
-        moveStraightLineDist(48.0f, .75f,  true)
-        spinOnCenter(90.0f, .5f,  true)
-        moveStraightLineDist(48.0f, .75f,   true)
-        spinOnCenter(90f, .5f,  false)
-        moveStraightLineDist(24.0f, .75f,true)
-        spinOnCenter(90.0f, .5f,  true)
-        moveStraightLineDist(24.0f, .75f, true)
-        senseColor()
-        if (//parameter for red)
+        moveStraightLineDist(48.0f, .75f,  true);
+        spinOnCenter(90.0f, .5f,  true);
+        moveStraightLineDist(48.0f, .75f,   true);
+        spinOnCenter(90f, .5f,  false);
+        moveStraightLineDist(24.0f, .75f,true);
+        spinOnCenter(90.0f, .5f,  true);
+        moveStraightLineDist(24.0f, .75f, true);
+        senseColor();
+        if (false)
             {
-                   pushBotton(true)
+                   pushBotton(true);
             }
-        if (//parameter for blue)
+        if (false)
                 {
-                  pushButton(false)
+                  pushButton(false);
                 }
-        spinOnCenter(48.0f, .75f, true)
-        moveStraightLineDist(24.0f, .75f, true)
-    }
+        spinOnCenter(48.0f, .75f, true);
+        moveStraightLineDist(24.0f, .75f, true);
+    }*/
 }
