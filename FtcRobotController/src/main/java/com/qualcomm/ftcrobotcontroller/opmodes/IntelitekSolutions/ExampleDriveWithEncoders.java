@@ -45,6 +45,8 @@ public class ExampleDriveWithEncoders extends OpMode {
         rwb.setDirection(DcMotor.Direction.REVERSE);
         lwa.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
         rwa.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
+        lwb.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
+        rwb.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
 
         liftL = hardwareMap.dcMotor.get("liftL");
         liftR = hardwareMap.dcMotor.get("liftR");

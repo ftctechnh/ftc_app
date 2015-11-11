@@ -33,6 +33,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.ftcrobotcontroller.opmodes.IntelitekSolutions.ExampleDriveWithEncoders;
 import com.qualcomm.ftcrobotcontroller.opmodes.OurPrograms.AutoDDS;
+import com.qualcomm.ftcrobotcontroller.opmodes.OurPrograms.EncoderTest;
 import com.qualcomm.ftcrobotcontroller.opmodes.OurPrograms.MBChassisOnly;
 import com.qualcomm.ftcrobotcontroller.opmodes.OurPrograms.MBTeleopComp;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
@@ -63,7 +64,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("MBTeleopComp", MBTeleopComp.class);
     manager.register("MBChassisOnly", MBChassisOnly.class);
     manager.register("AutoDDS", AutoDDS.class);
-    manager.register("ExampleDriveWithEncoders", ExampleDriveWithEncoders.class);
+    manager.register("EncoderTest", EncoderTest.class);
 
     //manager.register("MatrixK9TeleOp", MatrixK9TeleOp.class);
     //manager.register("K9TeleOp", K9TeleOp.class);
