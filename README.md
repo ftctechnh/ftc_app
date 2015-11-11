@@ -6,6 +6,16 @@ Current list of collaborators (please update):
 * Erin
 * Ashley
 
+#Motor Configuration
+The current motor configuration is listed below:
+* MC "bottom"
+    * "left" in M1, "right" in M2
+* MC "middle"
+    * "winch in M1, "winchpivot" in M2
+* Mc "top"
+    * "winchwheel" in M1
+Bottom, middle, and top correspond to the motor controllers' positions in the tower of electronics.
+
 # ftc_app
 FTC Android Studio project to create FTC Robot Controller app.
 
