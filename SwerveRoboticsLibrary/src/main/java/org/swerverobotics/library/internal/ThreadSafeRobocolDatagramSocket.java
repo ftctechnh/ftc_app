@@ -15,6 +15,13 @@ import java.net.SocketException;
 public class ThreadSafeRobocolDatagramSocket extends RobocolDatagramSocket
     {
     //----------------------------------------------------------------------------------------------
+    // State
+    //----------------------------------------------------------------------------------------------
+
+    final Object readLock = new Object();
+    final Object openCloseLock = new Object();
+
+    //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
 
@@ -26,58 +33,69 @@ public class ThreadSafeRobocolDatagramSocket extends RobocolDatagramSocket
     // Operations
     //----------------------------------------------------------------------------------------------
 
-    @Override synchronized public boolean isClosed()
+    @Override public void close()
+        {
+        synchronized (this.openCloseLock)
+            {
+            super.close();
+            }
+        }
+
+    @Override public void bind(InetSocketAddress bindAddress) throws SocketException
+        {
+        synchronized (this.openCloseLock)
+            {
+            super.bind(bindAddress);
+            }
+        }
+
+    @Override public boolean isClosed()
         {
         return super.isClosed();
         }
 
-    @Override synchronized public boolean isRunning()
+    @Override public boolean isRunning()
         {
         return super.isRunning();
         }
 
-    @Override synchronized public InetAddress getLocalAddress()
+    @Override public InetAddress getLocalAddress()
         {
         return super.getLocalAddress();
         }
 
-    @Override synchronized public InetAddress getInetAddress()
+    @Override public InetAddress getInetAddress()
         {
         return super.getInetAddress();
         }
 
-    @Override synchronized public State getState()
+    @Override public State getState()
         {
         return super.getState();
         }
 
-    @Override synchronized public RobocolDatagram recv()
+    @Override public RobocolDatagram recv()
         {
-        return super.recv();
+        synchronized (this.readLock)
+            {
+            return super.recv();
+            }
         }
 
-    @Override synchronized public void send(RobocolDatagram message)
+    @Override public void listen(InetAddress destAddress) throws SocketException
+        {
+        super.listen(destAddress);
+        }
+
+    @Override public void send(RobocolDatagram message)
         {
         super.send(message);
         }
 
-    @Override synchronized public void close()
-        {
-        super.close();
-        }
-
-    @Override synchronized public void connect(InetAddress connectAddress) throws SocketException
+    @Override public void connect(InetAddress connectAddress) throws SocketException
         {
         super.connect(connectAddress);
         }
 
-    @Override synchronized public void bind(InetSocketAddress bindAddress) throws SocketException
-        {
-        super.bind(bindAddress);
-        }
 
-    @Override synchronized public void listen(InetAddress destAddress) throws SocketException
-        {
-        super.listen(destAddress);
-        }
     }
