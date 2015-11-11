@@ -1,6 +1,9 @@
 package org.swerverobotics.library.internal;
 
 import android.graphics.Color;
+
+import com.qualcomm.hardware.HiTechnicNxtColorSensor;
+import com.qualcomm.hardware.ModernRoboticsI2cColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
@@ -40,7 +43,7 @@ public class ColorSensorOnI2cDeviceClient extends ColorSensor implements IOpMode
     final FLAVOR          flavor;
           boolean         ledIsEnabled;
 
-    HardwareDeviceReplacementHelper<ColorSensor> helper;
+    I2cDeviceReplacementHelper<ColorSensor> helper;
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -49,9 +52,9 @@ public class ColorSensorOnI2cDeviceClient extends ColorSensor implements IOpMode
     public enum FLAVOR { HITECHNIC, MODERNROBOTICS };
 
     public ColorSensorOnI2cDeviceClient(OpMode context, I2cDeviceClient i2cDeviceClient, FLAVOR flavor, ColorSensor target,
-                                        I2cController controller, int targetPort, I2cController.I2cPortReadyCallback callback)
+                                        I2cController controller, int targetPort)
         {
-        this.helper = new HardwareDeviceReplacementHelper<ColorSensor>(context, this, target, controller, targetPort, callback);
+        this.helper = new I2cDeviceReplacementHelper<ColorSensor>(context, this, target, controller, targetPort);
         this.i2cDeviceClient = i2cDeviceClient;
         this.flavor          = flavor;
 
@@ -65,33 +68,33 @@ public class ColorSensorOnI2cDeviceClient extends ColorSensor implements IOpMode
         RobotStateTransitionNotifier.register(context, this);
         }
 
-    public static ColorSensor create(OpMode context, ColorSensor target, FLAVOR flavor)
+    public static ColorSensor create(OpMode context, ColorSensor target)
         {
         I2cController controller;
         int           port;
         int           i2cAddr8Bit;
-        I2cController.I2cPortReadyCallback callback;
+        FLAVOR        flavor;
 
-        if (flavor == FLAVOR.HITECHNIC)
+        if (target instanceof HiTechnicNxtColorSensor)
             {
-            LegacyModule legacyModule = MemberUtil.legacyModuleOfHiTechnicColorSensor(target);
-            controller  = legacyModule;
+            controller  = MemberUtil.legacyModuleOfHiTechnicColorSensor(target);
             port        = MemberUtil.portOfHiTechnicColorSensor(target);
             i2cAddr8Bit = ADDRESS_I2C_HITECHNIC;
-            callback    = MemberUtil.callbacksOfLegacyModule(legacyModule)[port];
+            flavor      = FLAVOR.HITECHNIC;
             }
-        else
+        else if (target instanceof ModernRoboticsI2cColorSensor)
             {
-            DeviceInterfaceModule deviceInterfaceModule = MemberUtil.deviceModuleOfModernColorSensor(target);
-            controller  = deviceInterfaceModule;
+            controller  = MemberUtil.deviceModuleOfModernColorSensor(target);
             port        = MemberUtil.portOfModernColorSensor(target);
             i2cAddr8Bit = target.getI2cAddress();
-            callback    = MemberUtil.callbacksOfDeviceInterfaceModule(deviceInterfaceModule)[port];
+            flavor      = FLAVOR.MODERNROBOTICS;
             }
+        else
+            throw new IllegalArgumentException(String.format("unknown color sensor class: %s", target.getClass().getSimpleName()));
 
         II2cDevice i2cDevice                = new I2cDeviceOnI2cDeviceController(controller, port);
         I2cDeviceClient i2cDeviceClient     = new I2cDeviceClient(context, i2cDevice, i2cAddr8Bit, false);
-        ColorSensorOnI2cDeviceClient result = new ColorSensorOnI2cDeviceClient(context, i2cDeviceClient, flavor, target, controller, port, callback);
+        ColorSensorOnI2cDeviceClient result = new ColorSensorOnI2cDeviceClient(context, i2cDeviceClient, flavor, target, controller, port);
         result.arm();
         return result;
         }

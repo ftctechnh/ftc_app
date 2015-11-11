@@ -9,7 +9,7 @@ import org.swerverobotics.library.*;
 import org.swerverobotics.library.exceptions.*;
 import org.swerverobotics.library.interfaces.*;
 import java.nio.*;
-import java.util.*;
+
 import static junit.framework.Assert.*;
 import static org.swerverobotics.library.internal.ThunkingHardwareFactory.*;
 
@@ -79,7 +79,7 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
     private final OpMode                    context;
     private final II2cDeviceClient          i2cDeviceClient;
     private final DcMotorController         target;
-    HardwareDeviceReplacementHelper<DcMotorController> helper;
+    I2cDeviceReplacementHelper<DcMotorController> helper;
 
     private       DcMotor                   motor1;
     private       DcMotor                   motor2;
@@ -90,10 +90,9 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
 
     private EasyLegacyMotorController(OpMode context, II2cDeviceClient ii2cDeviceClient, DcMotorController target)
         {
-        LegacyModule                       legacyModule    = MemberUtil.legacyModuleOfLegacyMotorController(target);
-        int                                targetPort      = MemberUtil.portOfLegacyMotorController(target);
-        I2cController.I2cPortReadyCallback targetCallback  = MemberUtil.callbacksOfLegacyModule(legacyModule)[targetPort];
-        this.helper          = new HardwareDeviceReplacementHelper<DcMotorController>(context, this, target, legacyModule, targetPort, targetCallback);
+        LegacyModule legacyModule = MemberUtil.legacyModuleOfLegacyMotorController(target);
+        int          targetPort   = MemberUtil.portOfLegacyMotorController(target);
+        this.helper          = new I2cDeviceReplacementHelper<DcMotorController>(context, this, target, legacyModule, targetPort);
 
         this.context         = context;
         this.i2cDeviceClient = ii2cDeviceClient;

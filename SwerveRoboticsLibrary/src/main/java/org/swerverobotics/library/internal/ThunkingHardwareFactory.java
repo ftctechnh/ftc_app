@@ -368,11 +368,11 @@ public class ThunkingHardwareFactory
                         }
                     else if (false && target instanceof HiTechnicNxtColorSensor)
                         {
-                        return ColorSensorOnI2cDeviceClient.create(context, target, ColorSensorOnI2cDeviceClient.FLAVOR.HITECHNIC);
+                        return ColorSensorOnI2cDeviceClient.create(context, target);
                         }
                     else if (false && target instanceof ModernRoboticsI2cColorSensor)
                         {
-                        return ColorSensorOnI2cDeviceClient.create(context, target, ColorSensorOnI2cDeviceClient.FLAVOR.MODERNROBOTICS);
+                        return ColorSensorOnI2cDeviceClient.create(context, target);
                         }
                     else
                         return ThunkedColorSensor.create(target);
