@@ -46,6 +46,7 @@ public class EncoderTest extends LinearOpMode {
         rwb = hardwareMap.dcMotor.get("rightwheelB");
         rwa.setDirection(DcMotor.Direction.REVERSE);
         rwb.setDirection(DcMotor.Direction.REVERSE);
+        lwa.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 
         liftL = hardwareMap.dcMotor.get("liftL");
         liftR = hardwareMap.dcMotor.get("liftR");
