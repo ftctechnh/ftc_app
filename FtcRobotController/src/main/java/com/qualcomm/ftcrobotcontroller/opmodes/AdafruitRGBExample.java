@@ -68,7 +68,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannelController;
  *
  */
 public class AdafruitRGBExample extends LinearOpMode {
-
+  //works
   ColorSensor sensorRGB;
   DeviceInterfaceModule cdim;
 
