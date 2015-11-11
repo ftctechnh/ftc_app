@@ -11,7 +11,7 @@ The current motor configuration is listed below:
 * MC "bottom"
     * "left" in M1, "right" in M2
 * MC "middle"
-    * "winch in M1, "winchpivot" in M2
+    * "winch" in M1, "winchpivot" in M2
 * MC "top"
     * "winchwheel" in M1
  
