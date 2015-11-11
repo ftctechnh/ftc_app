@@ -2,6 +2,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.util.Range;
 
 /**
  * Created by Carlos on 11/11/2015.
@@ -21,19 +22,21 @@ public class ClassifiedTeleOp extends OpMode{
     @Override
     public void loop() {
 
+        /*
         if(!lift.isLocked) {
             drivetrain.arcadeDrive(gamepad1.left_stick_y, gamepad1.right_stick_x);
         }
 
+
         if(!lift.isLocked) {
-            lift.setSpeed(gamepad2.left_stick_y);
+            lift.targetPosition += 100 * gamepad2.left_stick_y;
         }
         else
         {
             lift.setSpeed(gamepad2.left_stick_y * 3.0 / 4.0);
-
             drivetrain.arcadeDrive(-gamepad2.left_stick_y, 0);
         }
+
 
         if(gamepad2.dpad_up){
             lift.isLocked = true;
@@ -44,6 +47,7 @@ public class ClassifiedTeleOp extends OpMode{
             lift.setGear(2);
         }
 
+
         if(gamepad2.dpad_down){
             lift.isLocked = false;
 
@@ -53,31 +57,27 @@ public class ClassifiedTeleOp extends OpMode{
             lift.setGear(1);
         }
 
-        if(gamepad2.y){
+
+        if(gamepad2.y)
             lift.armMotor.setPower(lift.armMotorForwardSpeed);
-        }
 
-
-        if(gamepad2.a){
+        if(gamepad2.a)
             lift.armMotor.setPower(lift.armMotorBackwardSpeed);
-        }
 
-
-        if(!(gamepad2.y || gamepad2.a)){
+        if(!(gamepad2.y || gamepad2.a))
             lift.armMotor.setPower(lift.armMotorStoppedSpeed);
-        }
 
-        if(gamepad2.right_bumper){
+        if(gamepad2.right_bumper)
             lift.armServo.setPosition(lift.armServoUpwardSpeed);
-        }
 
-        if(gamepad2.right_trigger > 0.5){
+        if(gamepad2.right_trigger > 0.5)
             lift.armServo.setPosition(lift.armServoDownwardSpeed);
-        }
 
-        if(!(gamepad2.right_bumper || gamepad2.right_trigger > 0.5)){
+        if(!(gamepad2.right_bumper || gamepad2.right_trigger > 0.5))
             lift.armServo.setPosition(lift.armServoStoppedSpeed);
-        }
+            */
+        lift.targetPosition += 100 * gamepad2.left_stick_y;
+        lift.updatePosition();
     }
 }
 
@@ -105,6 +105,9 @@ class Lift{
 
     boolean isLocked = false;
 
+    int targetPosition = 0;
+    double KP = 0.05;
+
     public Lift(){
 
     }
@@ -124,12 +127,23 @@ class Lift{
         rightShifter.setPosition(rightShifterHighGear);
 
         armServo.setPosition(armServoStoppedSpeed);
+
+        leftMotor.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
+        rightMotor.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
     }
 
     public void setSpeed(double speed){
         leftMotor.setPower(speed);
         rightMotor.setPower(speed);
     }
+
+    public void updatePosition(){
+
+        int error = targetPosition - (leftMotor.getCurrentPosition()+rightMotor.getCurrentPosition())/2;
+
+        this.setSpeed(error * KP);
+    }
+
 
     public void setGear(int gear){
 
@@ -168,7 +182,7 @@ class Drivetrain{
         backLeft.setDirection(DcMotor.Direction.REVERSE);
     }
 
-    public void tankDrive(double leftSpeed,double rightSpeed){
+    public void tankDrive(double leftSpeed,double rightSpeed) {
         frontLeft.setPower(leftSpeed);
         backLeft.setPower(leftSpeed);
 
@@ -177,11 +191,11 @@ class Drivetrain{
     }
 
     public void arcadeDrive(double throttle, double turn){
-        frontLeft.setPower(throttle - turn);
-        backLeft.setPower(throttle - turn);
+        frontLeft.setPower(Range.clip(throttle - turn, -1, 1));
+        backLeft.setPower(Range.clip(throttle - turn, -1, 1));
 
-        frontRight.setPower(throttle + turn);
-        backRight.setPower(throttle + turn);
+        frontRight.setPower(Range.clip(throttle + turn, -1, 1));
+        backRight.setPower(Range.clip(throttle + turn, -1, 1));
     }
 
 }
