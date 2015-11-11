@@ -1,3 +1,12 @@
+#6183 code
+This fork is for Team 6183 Thunderduck's usage on their robot. Editing is only allowed for collaborators, if you would like to have access to the file let one of the collaborators know.
+Current list of collaborators (please update):
+
+* Justin
+* Nick
+* Erin
+* Ashley
+
 # ftc_app
 FTC Android Studio project to create FTC Robot Controller app.
 
