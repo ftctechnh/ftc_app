@@ -12,8 +12,9 @@ The current motor configuration is listed below:
     * "left" in M1, "right" in M2
 * MC "middle"
     * "winch in M1, "winchpivot" in M2
-* Mc "top"
+* MC "top"
     * "winchwheel" in M1
+ 
 Bottom, middle, and top correspond to the motor controllers' positions in the tower of electronics.
 
 # ftc_app
