@@ -33,7 +33,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.LightSensor;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 //eden
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -64,12 +64,12 @@ public class EETestAuton extends OpMode {
     DcMotor motorFLeft = null;
     DcMotor motorRRight = null;
     DcMotor motorRLeft = null;
-    LightSensor reflectedLight = null;
+    ColorSensor sensorRGB = null;
 
     private org.ndhsb.ftc7593.AutonChoice[] autonSteps = {
             new AutonChoice(0.0,1.0,MOTOR_POWER,MOTOR_POWER), // from 0 to 1 s, run the motor at 0.15
             new AutonChoice(5.0,8.5,MOTOR_POWER,MOTOR_POWER), // from 5 and 8.5 s, run the motor at 0.15
-            new AutonChoice(5.0,8.5,0.0,0.0), // between 8 and 15 s, idle.
+            //new AutonChoice(5.0,8.5,0.0,0.0), // between 8 and 15 s, idle.
             new AutonChoice(15.0,20.75,-MOTOR_POWER,MOTOR_POWER) // between 15 and 20.75 s, point turn left.
             };
 
@@ -92,14 +92,14 @@ public class EETestAuton extends OpMode {
     @Override
     public void init() {
 
-        motorRRight = hardwareMap.dcMotor.get("motor_1"); //RRight
-        motorRLeft = hardwareMap.dcMotor.get("motor_2"); //RLeft
+        motorRRight = hardwareMap.dcMotor.get("motor_right_rear"); //RRight
+        motorRLeft = hardwareMap.dcMotor.get("motor_left_rear"); //RLeft
 
         motorRLeft.setDirection(DcMotor.Direction.REVERSE);
 
         try {
-            motorFRight = hardwareMap.dcMotor.get("motor_3"); // FRight
-            motorFLeft = hardwareMap.dcMotor.get("motor_4"); // FLeft
+            motorFRight = hardwareMap.dcMotor.get("motor_right_front"); // FRight
+            motorFLeft = hardwareMap.dcMotor.get("motor_left_front"); // FLeft
 
             motorFLeft.setDirection(DcMotor.Direction.REVERSE);
         } catch (Exception ex) {
@@ -117,10 +117,10 @@ public class EETestAuton extends OpMode {
 		 */
 
         try {
-            reflectedLight = hardwareMap.lightSensor.get("light_sensor");
+            sensorRGB = hardwareMap.colorSensor.get("color_sensor");
 
             // turn on LED of light sensor.
-            reflectedLight.enableLed(true);
+            sensorRGB.enableLed(true);
         }
         catch (Exception ex) {
             if ( !complainLight) {
@@ -152,6 +152,8 @@ public class EETestAuton extends OpMode {
         double reflection = 0.0;
         double left, right = 0.0;
 
+        float hsvValues[] = {0F,0F,0F};
+
         // keep manipulator out of the way.
 
 
@@ -160,7 +162,7 @@ public class EETestAuton extends OpMode {
          * how to adjust the motor power.
          * MPH - alter to use mRuntime object
          */
-        if (true) {
+        if (false) {
             if (mRuntime.time() <= 1) {
                 // from 0 to 1 seconds, run the motor at 0.15.
                 left = MOTOR_POWER;
@@ -184,7 +186,7 @@ public class EETestAuton extends OpMode {
             }
         }
 
-        if (false) {
+        if (true) {
             left = 0.0; // default speeds are 0.0
             right = 0.0; // default speeds are 0.0
             for(AutonChoice value : autonSteps)
@@ -214,8 +216,7 @@ public class EETestAuton extends OpMode {
 		 * read the light sensor.
 		 */
         //plan: wrap this in a try / catch block
-        if ( reflectedLight != null ) {
-            reflection = reflectedLight.getLightDetected();
+        if ( sensorRGB != null ) {
         }
 
 
