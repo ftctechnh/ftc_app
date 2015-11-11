@@ -64,7 +64,8 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register ("PushBotManual", PushBotManual.class);
     manager.register("LiftServoTest", LiftServoTest.class);
     manager.register("TeleOp", TeleOp.class);
-
+    manager.register("ColorSensorTest", ColorSensorTest.class);
+    manager.register("ColorSensorServoTest", ColorSensorServoTest.class);
 
 
     /*
