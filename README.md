@@ -1,7 +1,6 @@
 #6183 code
-This fork is for Team 6183 Thunderduck's usage on their robot. Editing is only allowed for collaborators, if you would like to have access to the file let one of the collaborators know.
+This fork is for Team 6183 Thunderduck's usage. Editing is only allowed for collaborators, if you would like to have access to the file let one of the collaborators know. You will need to make a GitHub account and tell one of them your username or email.
 Current list of collaborators (please update):
-
 * Justin
 * Nick
 * Erin
