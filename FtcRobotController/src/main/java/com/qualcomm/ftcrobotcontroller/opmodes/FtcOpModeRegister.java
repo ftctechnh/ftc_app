@@ -72,7 +72,7 @@ public class FtcOpModeRegister implements OpModeRegister {
      * Uncomment any of the following lines if you want to register an op mode.
      */
 
-    manager.register("K9TeleOp", K9TeleOp.class);
+    //manager.register("K9TeleOp", K9TeleOp.class);
     manager.register("K9IrSeeker", K9IrSeeker.class);
     manager.register("OpticalTelemetry", OpticalTelemetry.class);
     manager.register("Protobot" ,Protobotteleop.class);

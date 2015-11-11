@@ -31,14 +31,14 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
  * Created by Jonathan on 9/26/2015.
  */
 public class Robot {
-    public DcMotor motorLeft;
-    public DcMotor motorRight;
+    private DcMotor motorLeft;
+    private DcMotor motorRight;
 
-    public Servo servoArm;
-    public Servo servoClaw;
+    private Servo servoArm;
+    private Servo servoClaw;
 
-    public TouchSensor touchSensor;
-    public OpticalDistanceSensor opticalSensor;
+    private TouchSensor touchSensor;
+    private OpticalDistanceSensor opticalSensor;
 
     public Robot(OpMode mode) {
         motorLeft = mode.hardwareMap.dcMotor.get("motor_1");
@@ -50,4 +50,11 @@ public class Robot {
         touchSensor = mode.hardwareMap.touchSensor.get("touch_sensor");
         opticalSensor = mode.hardwareMap.opticalDistanceSensor.get("optical_distance_sensor");
     }
+
+    public void setPower(double power) {
+        motorLeft.setPower(power);
+        motorRight.setPower(power);
+    }
+
+
 }
