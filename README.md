@@ -1,3 +1,22 @@
+#6183 code
+This fork is for Team 6183 Thunderduck's usage. Editing is only allowed for collaborators, if you would like to have access to the file let one of the collaborators know. You will need to make a GitHub account and tell one of them your username or email.
+Current list of collaborators (please update):
+* Justin
+* Nick
+* Erin
+* Ashley
+
+#Motor Configuration
+The current motor configuration is listed below:
+* MC "bottom"
+    * "left" in M1, "right" in M2
+* MC "middle"
+    * "winch" in M1, "winchpivot" in M2
+* MC "top"
+    * "winchwheel" in M1
+ 
+Bottom, middle, and top correspond to the motor controllers' positions in the tower of electronics.
+
 # ftc_app
 FTC Android Studio project to create FTC Robot Controller app.
 
