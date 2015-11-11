@@ -41,6 +41,8 @@ public class WorkshopTeleop extends OpMode{
 
         int light = robot.opticalSensor.getLightDetectedRaw();
 
+        robot.toString();
+
 
         //telemetry.addData("optical", String.format("%d", light));
     }

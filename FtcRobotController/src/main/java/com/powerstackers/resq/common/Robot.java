@@ -38,7 +38,7 @@ public class Robot {
     private Servo servoClaw;
 
     private TouchSensor touchSensor;
-    private OpticalDistanceSensor opticalSensor;
+    public OpticalDistanceSensor opticalSensor;
 
     public Robot(OpMode mode) {
         motorLeft = mode.hardwareMap.dcMotor.get("motor_1");
