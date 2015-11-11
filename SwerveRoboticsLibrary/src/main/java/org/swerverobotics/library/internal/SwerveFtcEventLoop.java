@@ -66,7 +66,9 @@ public class SwerveFtcEventLoop extends FtcEventLoop
         //
         super.loop();
         }
-   
+
+    // Note: we shouldn't need this interlock below any longer
+
     @Override
     public void init(EventLoopManager eventLoopManager) throws RobotCoreException, InterruptedException
         {
@@ -86,4 +88,4 @@ public class SwerveFtcEventLoop extends FtcEventLoop
             }
         super.processCommand(command);
         }
-}
+    }
