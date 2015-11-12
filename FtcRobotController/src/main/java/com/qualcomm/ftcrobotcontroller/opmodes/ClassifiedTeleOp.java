@@ -27,7 +27,7 @@ public class ClassifiedTeleOp extends OpMode{
     @Override
     public void loop() {
 
-        /*
+
         if(!lift.isLocked)
             drivetrain.arcadeDrive(gamepad1.left_stick_y, gamepad1.right_stick_x);
 
@@ -61,7 +61,7 @@ public class ClassifiedTeleOp extends OpMode{
             lift.setGear("Low");
         }
 
-
+        /*
         if(gamepad2.y)
             lift.armMotor.setPower(lift.armMotorForwardSpeed);
 
@@ -80,6 +80,7 @@ public class ClassifiedTeleOp extends OpMode{
         if(!(gamepad2.right_bumper || gamepad2.right_trigger > 0.5))
             lift.armServo.setPosition(lift.armServoStoppedSpeed);
             */
+
         lift.targetPosition += 100 * gamepad2.left_stick_y;
         lift.updatePosition();
         telemetry.addData("Lift Position", "Lift Position: " + String.format("%d", lift.leftMotor.getCurrentPosition()));

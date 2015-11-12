@@ -16,7 +16,7 @@ public class Lift {
     double rightShifterHighGear = 0.35;
     double rightShifterLowGear = 0.50;
 
-    boolean isLocked = false;
+    public boolean isLocked = false;
 
     public int targetPosition = 0;
     double KP = 0.05;
@@ -57,17 +57,14 @@ public class Lift {
 
     public void setGear(String gear){
 
-        switch (gear) {
-            case "Low":
-                leftShifter.setPosition(leftShifterLowGear);
-                rightShifter.setPosition(rightShifterLowGear);
-                break;
-            case "High":
-                leftShifter.setPosition(leftShifterHighGear);
-                rightShifter.setPosition(rightShifterHighGear);
-                break;
-            default:
-                break;
+        if(gear == "Low") {
+            leftShifter.setPosition(leftShifterLowGear);
+            rightShifter.setPosition(rightShifterLowGear);
+        }
+        else if(gear == "High"){
+            leftShifter.setPosition(leftShifterHighGear);
+            rightShifter.setPosition(rightShifterHighGear);
         }
     }
 }
+

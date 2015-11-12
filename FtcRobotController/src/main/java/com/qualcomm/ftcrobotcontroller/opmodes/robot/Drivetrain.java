@@ -66,16 +66,15 @@ public class Drivetrain {
         backRight.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
     }
 
-    public int getAverageEncoderValue(String side){
-        switch(side){
-            case "All":
-                return (frontLeft.getCurrentPosition() + frontRight.getCurrentPosition() + backLeft.getCurrentPosition() + backRight.getCurrentPosition())/4;
-            case "Left":
-                return (frontLeft.getCurrentPosition() + backLeft.getCurrentPosition())/2;
-            case "Right":
-                return (frontRight.getCurrentPosition() + backRight.getCurrentPosition())/2;
-            default:
-                return 0;
+    public int getAverageEncoderValue(String side) {
+        if (side == "All") {
+            return (frontLeft.getCurrentPosition() + frontRight.getCurrentPosition() + backLeft.getCurrentPosition() + backRight.getCurrentPosition()) / 4;
+        } else if (side == "Left"){
+            return (frontLeft.getCurrentPosition() + backLeft.getCurrentPosition()) / 2;
+        } else if(side == "Right"){
+            return (frontRight.getCurrentPosition() + backRight.getCurrentPosition()) / 2;
+        } else{
+            return 0;
         }
     }
 
