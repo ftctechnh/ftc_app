@@ -98,7 +98,7 @@ var activeTableTab = "activeTableTab";
 <li>java.lang.Object</li>
 <li>
 <ul class="inheritance">
-<li>OpMode</li>
+<li>com.qualcomm.robotcore.eventloop.opmode.OpMode</li>
 <li>
 <ul class="inheritance">
 <li>SynchronousOpMode</li>
@@ -116,12 +116,12 @@ var activeTableTab = "activeTableTab";
 </dl>
 <dl>
 <dt>Direct Known Subclasses:</dt>
-<dd><a href="../../../org/usfirst/ftc/exampleteam/yourcodehere/MyFirstOpMode.html" title="class in org.usfirst.ftc.exampleteam.yourcodehere">MyFirstOpMode</a>, <a href="../../../org/swerverobotics/library/examples/SynchAnalogOutputDemo.html" title="class in org.swerverobotics.library.examples">SynchAnalogOutputDemo</a>, <a href="../../../org/swerverobotics/library/examples/SynchIMUDemo.html" title="class in org.swerverobotics.library.examples">SynchIMUDemo</a>, <a href="../../../org/swerverobotics/library/examples/SynchLEDDemo.html" title="class in org.swerverobotics.library.examples">SynchLEDDemo</a>, <a href="../../../org/swerverobotics/library/examples/SynchMotorLoopPerf.html" title="class in org.swerverobotics.library.examples">SynchMotorLoopPerf</a>, <a href="../../../org/swerverobotics/library/examples/SynchServoDemo.html" title="class in org.swerverobotics.library.examples">SynchServoDemo</a>, <a href="../../../org/swerverobotics/library/examples/SynchSkeletalOp.html" title="class in org.swerverobotics.library.examples">SynchSkeletalOp</a>, <a href="../../../org/swerverobotics/library/examples/SynchTelemetryOp.html" title="class in org.swerverobotics.library.examples">SynchTelemetryOp</a>, <a href="../../../org/swerverobotics/library/examples/SynchTeleOp.html" title="class in org.swerverobotics.library.examples">SynchTeleOp</a>, <a href="../../../org/swerverobotics/library/examples/SynchTeleOpModes.html" title="class in org.swerverobotics.library.examples">SynchTeleOpModes</a></dd>
+<dd><a href="../../../org/usfirst/ftc/exampleteam/yourcodehere/MyFirstOpMode.html" title="class in org.usfirst.ftc.exampleteam.yourcodehere">MyFirstOpMode</a>, <a href="../../../org/swerverobotics/library/examples/SyncColorDemo.html" title="class in org.swerverobotics.library.examples">SyncColorDemo</a>, <a href="../../../org/swerverobotics/library/examples/SynchAnalogOutputDemo.html" title="class in org.swerverobotics.library.examples">SynchAnalogOutputDemo</a>, <a href="../../../org/swerverobotics/library/examples/SynchIMUDemo.html" title="class in org.swerverobotics.library.examples">SynchIMUDemo</a>, <a href="../../../org/swerverobotics/library/examples/SynchLEDDemo.html" title="class in org.swerverobotics.library.examples">SynchLEDDemo</a>, <a href="../../../org/swerverobotics/library/examples/SynchMotorLoopPerf.html" title="class in org.swerverobotics.library.examples">SynchMotorLoopPerf</a>, <a href="../../../org/swerverobotics/library/examples/SynchServoDemo.html" title="class in org.swerverobotics.library.examples">SynchServoDemo</a>, <a href="../../../org/swerverobotics/library/examples/SynchSkeletalOp.html" title="class in org.swerverobotics.library.examples">SynchSkeletalOp</a>, <a href="../../../org/swerverobotics/library/examples/SynchTelemetryOp.html" title="class in org.swerverobotics.library.examples">SynchTelemetryOp</a>, <a href="../../../org/swerverobotics/library/examples/SynchTeleOp.html" title="class in org.swerverobotics.library.examples">SynchTeleOp</a>, <a href="../../../org/swerverobotics/library/examples/SynchTeleOpModes.html" title="class in org.swerverobotics.library.examples">SynchTeleOpModes</a></dd>
 </dl>
 <hr>
 <br>
 <pre>public abstract class <span class="typeNameLabel">SynchronousOpMode</span>
-extends OpMode
+extends com.qualcomm.robotcore.eventloop.opmode.OpMode
 implements <a href="../../../org/swerverobotics/library/interfaces/IThunkDispatcher.html" title="interface in org.swerverobotics.library.interfaces">IThunkDispatcher</a></pre>
 <div class="block">SynchronousOpMode is a base class that can be inherited from in order to
  write op modes that can be coded in a traditional programming style.
@@ -146,19 +146,19 @@ implements <a href="../../../org/swerverobotics/library/interfaces/IThunkDispatc
 <th class="colLast" scope="col">Field and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>Gamepad</code></td>
+<td class="colFirst"><code>com.qualcomm.robotcore.hardware.Gamepad</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#gamepad1">gamepad1</a></span></code>
 <div class="block">Provides access to the first gamepad controller.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>Gamepad</code></td>
+<td class="colFirst"><code>com.qualcomm.robotcore.hardware.Gamepad</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#gamepad2">gamepad2</a></span></code>
 <div class="block">Provides access to the second gamepad controller.</div>
 </td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>HardwareMap</code></td>
+<td class="colFirst"><code>com.qualcomm.robotcore.hardware.HardwareMap</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#hardwareMap">hardwareMap</a></span></code>
 <div class="block">We define a *local* hardwareMap variable here to hide the one in our base
  class as the one we want user code to see is the one with the thunking in it.</div>
@@ -191,7 +191,7 @@ implements <a href="../../../org/swerverobotics/library/interfaces/IThunkDispatc
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>HardwareMap</code></td>
+<td class="colFirst"><code>com.qualcomm.robotcore.hardware.HardwareMap</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#unthunkedHardwareMap">unthunkedHardwareMap</a></span></code>
 <div class="block">Advanced: unthunkedHardwareMap contains the original hardware map provided
  in OpMode before it was replaced with a version that does thunking.</div>
@@ -205,10 +205,10 @@ implements <a href="../../../org/swerverobotics/library/interfaces/IThunkDispatc
 </tr>
 </table>
 <ul class="blockList">
-<li class="blockList"><a name="fields.inherited.from.class.OpMode">
+<li class="blockList"><a name="fields.inherited.from.class.com.qualcomm.robotcore.eventloop.opmode.OpMode">
 <!--   -->
 </a>
-<h3>Fields inherited from class&nbsp;OpMode</h3>
+<h3>Fields inherited from class&nbsp;com.qualcomm.robotcore.eventloop.opmode.OpMode</h3>
 <code>time</code></li>
 </ul>
 </li>
@@ -474,10 +474,10 @@ implements <a href="../../../org/swerverobotics/library/interfaces/IThunkDispatc
 </tr>
 </table>
 <ul class="blockList">
-<li class="blockList"><a name="methods.inherited.from.class.OpMode">
+<li class="blockList"><a name="methods.inherited.from.class.com.qualcomm.robotcore.eventloop.opmode.OpMode">
 <!--   -->
 </a>
-<h3>Methods inherited from class&nbsp;OpMode</h3>
+<h3>Methods inherited from class&nbsp;com.qualcomm.robotcore.eventloop.opmode.OpMode</h3>
 <code>getRuntime, resetStartTime</code></li>
 </ul>
 <ul class="blockList">
@@ -521,7 +521,7 @@ implements <a href="../../../org/swerverobotics/library/interfaces/IThunkDispatc
 <ul class="blockList">
 <li class="blockList">
 <h4>gamepad1</h4>
-<pre>public final&nbsp;Gamepad gamepad1</pre>
+<pre>public final&nbsp;com.qualcomm.robotcore.hardware.Gamepad gamepad1</pre>
 <div class="block">Provides access to the first gamepad controller. Only changes as a result of calling
  <a href="../../../org/swerverobotics/library/SynchronousOpMode.html#updateGamepads--">updateGamepads()</a>.
  
@@ -540,7 +540,7 @@ implements <a href="../../../org/swerverobotics/library/interfaces/IThunkDispatc
 <ul class="blockList">
 <li class="blockList">
 <h4>gamepad2</h4>
-<pre>public final&nbsp;Gamepad gamepad2</pre>
+<pre>public final&nbsp;com.qualcomm.robotcore.hardware.Gamepad gamepad2</pre>
 <div class="block">Provides access to the second gamepad controller. Only changes as a result of calling
  <a href="../../../org/swerverobotics/library/SynchronousOpMode.html#updateGamepads--">updateGamepads()</a>.</div>
 <dl>
@@ -594,7 +594,7 @@ implements <a href="../../../org/swerverobotics/library/interfaces/IThunkDispatc
 <ul class="blockList">
 <li class="blockList">
 <h4>hardwareMap</h4>
-<pre>public&nbsp;HardwareMap hardwareMap</pre>
+<pre>public&nbsp;com.qualcomm.robotcore.hardware.HardwareMap hardwareMap</pre>
 <div class="block">We define a *local* hardwareMap variable here to hide the one in our base
  class as the one we want user code to see is the one with the thunking in it.</div>
 </li>
@@ -605,7 +605,7 @@ implements <a href="../../../org/swerverobotics/library/interfaces/IThunkDispatc
 <ul class="blockList">
 <li class="blockList">
 <h4>unthunkedHardwareMap</h4>
-<pre>public&nbsp;HardwareMap unthunkedHardwareMap</pre>
+<pre>public&nbsp;com.qualcomm.robotcore.hardware.HardwareMap unthunkedHardwareMap</pre>
 <div class="block">Advanced: unthunkedHardwareMap contains the original hardware map provided
  in OpMode before it was replaced with a version that does thunking.</div>
 </li>
@@ -955,7 +955,7 @@ public&nbsp;void&nbsp;waitOneFullHardwareCycle()
 <div class="block">Advanced: The robot controller runtime calls init(), once, to request that we initialize ourselves</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>init</code>&nbsp;in class&nbsp;<code>OpMode</code></dd>
+<dd><code>init</code>&nbsp;in class&nbsp;<code>com.qualcomm.robotcore.eventloop.opmode.OpMode</code></dd>
 </dl>
 </li>
 </ul>
@@ -972,7 +972,7 @@ public&nbsp;void&nbsp;waitOneFullHardwareCycle()
  overrideable OpMode methods.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code>init_loop</code>&nbsp;in class&nbsp;<code>OpMode</code></dd>
+<dd><code>init_loop</code>&nbsp;in class&nbsp;<code>com.qualcomm.robotcore.eventloop.opmode.OpMode</code></dd>
 </dl>
 </li>
 </ul>
@@ -987,7 +987,7 @@ public&nbsp;void&nbsp;waitOneFullHardwareCycle()
  should start moving!</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code>start</code>&nbsp;in class&nbsp;<code>OpMode</code></dd>
+<dd><code>start</code>&nbsp;in class&nbsp;<code>com.qualcomm.robotcore.eventloop.opmode.OpMode</code></dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#waitForStart--"><code>waitForStart()</code></a></dd>
 </dl>
@@ -1006,7 +1006,7 @@ public&nbsp;void&nbsp;waitOneFullHardwareCycle()
  synchronous threads.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code>loop</code>&nbsp;in class&nbsp;<code>OpMode</code></dd>
+<dd><code>loop</code>&nbsp;in class&nbsp;<code>com.qualcomm.robotcore.eventloop.opmode.OpMode</code></dd>
 </dl>
 </li>
 </ul>
@@ -1023,7 +1023,7 @@ public&nbsp;void&nbsp;waitOneFullHardwareCycle()
  before this call returns.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code>stop</code>&nbsp;in class&nbsp;<code>OpMode</code></dd>
+<dd><code>stop</code>&nbsp;in class&nbsp;<code>com.qualcomm.robotcore.eventloop.opmode.OpMode</code></dd>
 </dl>
 </li>
 </ul>

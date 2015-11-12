@@ -139,11 +139,16 @@ public final class ClassFactory
 
     /**
      * Creates an alternate implementation of the target color sensor. The target sensor is
-     * disabled in the process.
+     * disabled in the process. The alternate implementation robustly implements the ColorSensor
+     * functionality.
      *
      * @param context       the OpMode within which this sensor is to be used
      * @param target        the sensor whose implementation we are to replace
      * @return an alternate color sensor implementation
+     *
+     * @see #createSwerveColorSensor(OpMode, I2cController, int, int, SENSOR_FLAVOR)
+     * @see org.swerverobotics.library.examples.LinearColorDemo
+     * @see org.swerverobotics.library.examples.SyncColorDemo
      */
     public static ColorSensor createSwerveColorSensor(OpMode context, ColorSensor target)
         {
@@ -158,7 +163,11 @@ public final class ClassFactory
      * @param port          the port on the controller at which it so resides
      * @param i2cAddr8Bit   the I2C address of the sensor
      * @param flavor        the flavor of color sensor that resides there
-     * @return
+     * @return an alternate color sensor implementation
+     *
+     * @see #createSwerveColorSensor(OpMode, ColorSensor)
+     * @see org.swerverobotics.library.examples.LinearColorDemo
+     * @see org.swerverobotics.library.examples.SyncColorDemo
      */
     public static ColorSensor createSwerveColorSensor(OpMode context, I2cController controller, int port, int i2cAddr8Bit, ClassFactory.SENSOR_FLAVOR flavor)
         {
