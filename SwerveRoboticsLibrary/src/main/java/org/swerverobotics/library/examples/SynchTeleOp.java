@@ -28,8 +28,8 @@ public class SynchTeleOp extends SynchronousOpMode
         // Configure the knobs of the hardware according to how you've wired your
         // robot. Here, we assume that there are no encoders connected to the motors,
         // so we inform the motor objects of that fact.
-        this.motorLeft.setChannelMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-        this.motorRight.setChannelMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        this.motorLeft.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        this.motorRight.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
 
         // One of the two motors (here, the left) should be set to reversed direction
         // so that it can take the same power level values as the other motor.
@@ -138,7 +138,7 @@ public class SynchTeleOp extends SynchronousOpMode
                 {
                 @Override public Object value()
                     {
-                    return motorLeft.getChannelMode();
+                    return motorLeft.getMode();
                     }
                 })
             );

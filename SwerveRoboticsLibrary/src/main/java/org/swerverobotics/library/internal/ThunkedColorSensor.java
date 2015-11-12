@@ -148,4 +148,26 @@ public class ThunkedColorSensor extends ColorSensor implements IThunkWrapper<Col
             }).doUntrackedWriteOperation();
         }
 
+    @Override public void setI2cAddress(final int i2cAddr8Bit)
+        {
+        (new ThunkForWriting()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                target.setI2cAddress(i2cAddr8Bit);
+                }
+            }).doUntrackedWriteOperation();
+        }
+
+    @Override public int getI2cAddress()
+        {
+        return (new ThunkForReading<Integer>()
+            {
+            @Override protected void actionOnLoopThread()
+                {
+                this.result = target.getI2cAddress();
+                }
+            }).doUntrackedReadOperation();
+        }
+
     }

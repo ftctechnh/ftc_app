@@ -24,6 +24,8 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
+
+    public final String LOGGING_TAG = SynchronousOpMode.LOGGING_TAG;
     
     /* The NXT HiTechnic motor controller register layout is as follows:
 
@@ -42,14 +44,14 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
     4C – 4FH    s/int    Motor 1 current encoder value, high byte first  == 76-79
     50 – 53H    s/int    Motor 2 current encoder value, high byte first  == 80-83
     54, 55H     word     Battery voltage 54H high byte, 55H low byte     == 84-85
-    56H         S/byte   Motor 1 gear ratio
-    57H         byte     Motor 1 P coefficient*
-    58H         byte     Motor 1 I coefficient*
-    59H         byte     Motor 1 D coefficient*
-    5AH         s/byte   Motor 2 gear ratio
-    5BH         byte     Motor 2 P coefficient*
-    5CH         byte     Motor 2 I coefficient*
-    5DH         byte     Motor 2 D coefficient*
+    56H         S/byte   Motor 1 gear ratio         == 86
+    57H         byte     Motor 1 P coefficient*     == 87
+    58H         byte     Motor 1 I coefficient*     == 88
+    59H         byte     Motor 1 D coefficient*     == 89
+    5AH         s/byte   Motor 2 gear ratio         == 90
+    5BH         byte     Motor 2 P coefficient*     == 91
+    5CH         byte     Motor 2 I coefficient*     == 92
+    5DH         byte     Motor 2 D coefficient*     == 93
      */
     private static final int iRegWindowFirst = 0x40;
     private static final int iRegWindowMax   = 0x56;  // first register not included
@@ -73,14 +75,12 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
     private static final double powerMax = 1.0;
 
     private static final String             swerveVoltageSensorName = " |Swerve|VoltageSensor| ";
+
     private final OpMode                    context;
     private final II2cDeviceClient          i2cDeviceClient;
     private final DcMotorController         target;
-    private       String                    targetName;
-    private final LegacyModule              legacyModule;
-    private final int                       targetPort;
-    I2cController.I2cPortReadyCallback      targetCallback;
-    private       boolean                   isArmed;
+    HardwareDeviceReplacementHelper<DcMotorController> helper;
+
     private       DcMotor                   motor1;
     private       DcMotor                   motor2;
 
@@ -90,15 +90,14 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
 
     private EasyLegacyMotorController(OpMode context, II2cDeviceClient ii2cDeviceClient, DcMotorController target)
         {
-        assertTrue(!BuildConfig.DEBUG || !ii2cDeviceClient.isArmed());
+        LegacyModule                       legacyModule    = MemberUtil.legacyModuleOfLegacyMotorController(target);
+        int                                targetPort      = MemberUtil.portOfLegacyMotorController(target);
+        I2cController.I2cPortReadyCallback targetCallback  = MemberUtil.callbacksOfLegacyModule(legacyModule)[targetPort];
+        this.helper          = new HardwareDeviceReplacementHelper<DcMotorController>(context, this, target, legacyModule, targetPort, targetCallback);
+
         this.context         = context;
         this.i2cDeviceClient = ii2cDeviceClient;
         this.target          = target;
-        this.targetName      = findTargetName();
-        this.legacyModule    = MemberUtil.legacyModuleOfLegacyMotorController(target);
-        this.targetPort      = MemberUtil.portOfLegacyMotorController(target);
-        this.targetCallback  = null;
-        this.isArmed         = false;
         this.motor1          = null;
         this.motor2          = null;
 
@@ -119,13 +118,13 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
         this.i2cDeviceClient.setHeartbeatAction(heartbeatAction);
         this.i2cDeviceClient.setHeartbeatInterval(2000);
 
-        // Also: set up a read-window. We make it 'ONLY_ONCE' to avoid unnecessary ping-ponging
+        // Also: set up a read-window. We make it BALANCED to avoid unnecessary ping-ponging
         // between read mode and write mode, since motors are read about as much as they are
         // written, but we make it relatively large so that least that when we DO go
         // into read mode and possibly do more than one read we will use this window
         // and won't have to fiddle with the 'switch to read mode' each and every time.
         // We include everything from the 'Motor 1 target encoder value' through the battery voltage.
-        this.i2cDeviceClient.setReadWindow(new II2cDeviceClient.ReadWindow(iRegWindowFirst, iRegWindowMax-iRegWindowFirst, II2cDeviceClient.READ_MODE.ONLY_ONCE));
+        this.i2cDeviceClient.setReadWindow(new II2cDeviceClient.ReadWindow(iRegWindowFirst, iRegWindowMax-iRegWindowFirst, II2cDeviceClient.READ_MODE.BALANCED));
         }
 
     public static DcMotorController create(OpMode context, DcMotorController target, DcMotor motor1, DcMotor motor2)
@@ -161,7 +160,7 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
 
     private void setMotors(DcMotor motor1, DcMotor motor2)
         {
-        assertTrue(!BuildConfig.DEBUG || !this.isArmed);
+        assertTrue(!BuildConfig.DEBUG || !this.isArmed());
 
         if ((motor1 != null && motor1.getController() != this.target)
          || (motor2 != null && motor2.getController() != this.target))
@@ -214,45 +213,34 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
             }
         }
 
-    private String findTargetName()
-        {
-        if (this.context != null)
-            {
-            for (Map.Entry<String,DcMotorController> pair : this.context.hardwareMap.dcMotorController.entrySet())
-                {
-                if (pair.getValue() == this.target)
-                    return pair.getKey();
-                }
-            }
-        return null;
-        }
-
     private void arm()
     // Disarm the existing controller and arm us
         {
-        if (!this.isArmed)
+        if (!this.isArmed())
             {
             this.usurpMotors();
-            this.targetCallback = MemberUtil.callbacksOfLegacyModule(this.legacyModule)[this.targetPort];
-            this.legacyModule.deregisterForPortReadyCallback(this.targetPort);
-            if (this.targetName != null) this.context.hardwareMap.dcMotorController.put(this.targetName, this);
+
+            this.helper.arm();
+
             this.i2cDeviceClient.arm();
             this.registerVoltageSensor();
-            this.isArmed = true;
-
             this.floatMotors();
             }
         }
-    private synchronized void disarm()
+    private boolean isArmed()
+        {
+        return this.helper.isArmed();
+        }
+    private void disarm()
     // Disarm us and re-arm the target
         {
-        if (this.isArmed)
+        if (this.isArmed())
             {
-            this.isArmed = false;
             this.unregisterVoltageSensor();
             this.i2cDeviceClient.disarm();
-            if (this.targetName != null) this.context.hardwareMap.dcMotorController.put(this.targetName, this.target);
-            this.legacyModule.registerForI2cPortReadyCallback(this.targetCallback, this.targetPort);
+
+            this.helper.disarm();
+
             this.deusurpMotors();
             }
         }
@@ -318,7 +306,7 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
 
     @Override public synchronized void close()
         {
-        if (this.isArmed)
+        if (this.isArmed())
             {
             this.floatMotors(); // mirrors robot controller runtime behavior
             this.disarm();
@@ -331,25 +319,25 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
 
     @Override synchronized public boolean onUserOpModeStop()
         {
-        Log.d(SynchronousOpMode.LOGGING_TAG, "Easy: auto-stopping...");
-        if (this.isArmed)
+        Log.d(LOGGING_TAG, "Easy: auto-stopping...");
+        if (this.isArmed())
             {
             this.stopMotors();  // mirror StopRobotOpMode
             this.disarm();
             }
-        Log.d(SynchronousOpMode.LOGGING_TAG, "Easy: ... done");
+        Log.d(LOGGING_TAG, "Easy: ... done");
         return true;    // unregister us
         }
 
     @Override synchronized public boolean onRobotShutdown()
         {
-        Log.d(SynchronousOpMode.LOGGING_TAG, "Easy: auto-closing...");
+        Log.d(LOGGING_TAG, "Easy: auto-closing...");
 
         // We actually shouldn't be here by now, having received a onUserOpModeStop()
         // after which we should have been unregistered. But we close down anyway.
         this.close();
 
-        Log.d(SynchronousOpMode.LOGGING_TAG, "Easy: ... done");
+        Log.d(LOGGING_TAG, "Easy: ... done");
         return true;    // unregister us
         }
 
@@ -463,13 +451,13 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
 
     private void write8(int ireg, byte data)
         {
-        if (this.isArmed)
+        if (this.isArmed())
             this.i2cDeviceClient.write8(ireg, data, false);
         }
 
     private void write(int ireg, byte[] data)
         {
-        if (this.isArmed)
+        if (this.isArmed())
             this.i2cDeviceClient.write(ireg, data, false);
         }
 
@@ -480,14 +468,18 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
 
     private void floatMotors()
         {
+        Log.d(LOGGING_TAG, "floating motors");
         this.setMotorPowerFloat(1);
         this.setMotorPowerFloat(2);
+        i2cDeviceClient.waitForWriteCompletions();  // paranoia about safety
         }
 
     private void stopMotors()
         {
+        Log.d(LOGGING_TAG, "stopping motors");
         this.setMotorPower(1, 0);
         this.setMotorPower(2, 0);
+        i2cDeviceClient.waitForWriteCompletions();  // paranoia about safety
         }
 
     private void validateMotor(int motor)
