@@ -128,7 +128,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         this.callbackThreadPriorityBoost = 0;       // no boost
         this.hardwareCycleCount     = 0;
         this.loggingEnabled         = false;
-        this.loggingTag             = String.format("I2cDeviceClient(%s)", i2cDevice.getDeviceName());;
+        this.loggingTag             = String.format("%s:client(%s)", SynchronousOpMode.LOGGING_TAG, i2cDevice.getDeviceName());;
         this.timeSinceLastHeartbeat = new ElapsedTime();
         this.timeSinceLastHeartbeat.reset();
         this.msHeartbeatInterval    = 0;
@@ -173,12 +173,37 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
             }
         }
 
-    public void arm()
+    @Override public void setI2cAddr(int i2cAddr8Bit)
+        {
+        synchronized (this.armingLock)
+            {
+            if (this.i2cDevice.getI2cAddr() != i2cAddr8Bit)
+                {
+                boolean wasArmed = this.isArmed;
+                this.disarm();
+                //
+                this.i2cDevice.setI2cAddr(i2cAddr8Bit);
+                //
+                if (wasArmed) this.arm();
+                }
+            }
+        }
+
+    @Override public int getI2cAddr()
+        {
+        synchronized (this.armingLock)
+            {
+            return this.i2cDevice.getI2cAddr();
+            }
+        }
+
+    @Override public void arm()
         {
         // The arming lock is distinct from the concurrentClientLock because we need to be
         // able to drain heartbeats while disarming, so can't own the concurrentClientLock then,
         // but we still need to be able to lock out arm() and disarm() against each other.
         // Locking order: armingLock > concurrentClientLock > callbackLock
+        //
         synchronized (this.armingLock)
             {
             if (!this.isArmed)
@@ -193,12 +218,12 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
             }
         }
 
-    public boolean isArmed()
+    @Override public boolean isArmed()
         {
         return this.isArmed;
         }
 
-    public void disarm()
+    @Override public void disarm()
         {
         try {
             synchronized (this.armingLock)
@@ -222,7 +247,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                             {
                             // There may be still data that needs to get out to the controller.
                             // Wait until that happens.
-                            waitForWriteCompletion();
+                            waitForWriteCompletionInternal();
 
                             // Now we know that the callback isn't executing, we can pull the
                             // rug out from under his use of the heartbeater
@@ -292,7 +317,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         }
 
     /**
-     * Set the set of registers that we will read and read and read again on every hardware cycle 
+     * Sets the set of I2C device registers that we wish to read.
      */
     @Override public void setReadWindow(ReadWindow newWindow)
         {
@@ -300,11 +325,15 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
             {
             synchronized (this.callbackLock)
                 {
-                if (this.readWindow == null || !this.readWindow.isOkToRead() || !this.readWindow.sameAsIncludingMode(newWindow))
+                if (this.readWindow != null && this.readWindow.isOkToRead() && this.readWindow.maySwitchToReadMode() && this.readWindow.sameAsIncludingMode(newWindow))
+                    {
+                    // What's there is good; we don't need to change anything
+                    }
+                else
                     {
                     // Remember the new window, but get a fresh copy so we can implement the read mode policy
                     this.readWindow = newWindow.freshCopy();
-                    assertTrue(!BuildConfig.DEBUG || this.readWindow.isOkToRead());
+                    assertTrue(!BuildConfig.DEBUG || (this.readWindow.isOkToRead() && this.readWindow.maySwitchToReadMode()));
 
                     // Let others know of the update
                     this.readWindowChanged = true;
@@ -359,7 +388,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         {
         return this.readTimeStamped(ireg, creg).data;
         }
-    
+
     /**
      * Read a contiguous set of registers.
      */
@@ -382,34 +411,43 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                         this.callbackLock.wait();
                         }
 
-                    // If there's no read window given or what's there either can't service any
-                    // more reads or it doesn't contain the required registers, auto-make a new window.
-                    if (this.readWindow == null || !this.readWindow.isOkToRead() || !this.readWindow.contains(ireg, creg))
+                    // Is what's in the read cache right now or shortly will be have what we want?
+                    if (readCacheValidityCurrentOrImminent() && readWindowActuallyRead != null && readWindowActuallyRead.contains(ireg, creg))
                         {
-                        // If we can re-use the window that was there before that will help increase
-                        // the chance that we don't need to take the time to switch the controller to
-                        // read mode (with a different window) and thus can respond faster.
-                        if (this.readWindow != null && this.readWindow.contains(ireg, creg))
-                            {
-                            setReadWindow(this.readWindow);
-                            }
-                        else
-                            {
-                            // Make a one-shot that just covers the data we need right now
-                            setReadWindow(new ReadWindow(ireg, creg, READ_MODE.ONLY_ONCE));
-                            }
+                        // Ok, we don't have to issue a read, but we may have to wait for validity,
+                        // which we we do in a moment down below
+                        // log(Log.VERBOSE, String.format("read from cache: (0x%02x,%d)", ireg, creg));
                         }
-
-                    // We can only fetch registers that lie within the current register window.
-                    // This actually should never trigger now, as the above should ALWAYS auto-adjust
-                    // the window if necessary, but we have it here still as a check.
-                    if (!this.readWindow.contains(ireg, creg))
+                    else
                         {
-                        throw new IllegalArgumentException(String.format("read request (%d,%d) outside of read window (%d, %d)", ireg, creg, this.readWindow.getIregFirst(), this.readWindow.getCreg()));
+                        // We have to issue a new read. We do so by setting the read window to something
+                        // that is readable; this is noticed by the callback which then services the read.
+
+                        // If there's no read window given or what's there either can't service any
+                        // more reads or it doesn't contain the required registers, auto-make a new window.
+                        boolean readWindowRangeOk = this.readWindow != null && this.readWindow.contains(ireg, creg);
+
+                        if (!readWindowRangeOk || !this.readWindow.isOkToRead() || !this.readWindow.maySwitchToReadMode())
+                            {
+                            // If we can re-use the window that was there before that will help increase
+                            // the chance that we don't need to take the time to switch the controller to
+                            // read mode (with a different window) and thus can respond faster.
+                            if (readWindowRangeOk)
+                                {
+                                // log(Log.VERBOSE, String.format("reuse window: (0x%02x,%d)", ireg, creg));
+                                setReadWindow(this.readWindow);
+                                }
+                            else
+                                {
+                                // Make a one-shot that just covers the data we need right now
+                                // log(Log.VERBOSE, String.format("make one shot: (0x%02x,%d)", ireg, creg));
+                                setReadWindow(new ReadWindow(ireg, creg, READ_MODE.ONLY_ONCE));
+                                }
+                            }
                         }
 
                     // Wait until the read cache is valid
-                    while (this.readWindowChanged || !this.readCacheStatus.isValid())
+                    while (!readCacheIsValid())
                         {
                         this.callbackLock.wait();
                         }
@@ -449,6 +487,26 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
             }
         }
 
+    @Override public TimestampedData readTimeStamped(final int ireg, final int creg, final ReadWindow readWindowNeeded, final ReadWindow readWindowSet)
+        {
+        return this.executeFunctionWhileLocked(new IFunc<TimestampedData>() {
+            @Override public TimestampedData value()
+                {
+                ensureReadWindow(readWindowNeeded, readWindowSet);
+                return readTimeStamped(ireg, creg);
+                }
+            });
+        }
+
+    private boolean readCacheValidityCurrentOrImminent()
+        {
+        return this.readCacheStatus != READ_CACHE_STATUS.IDLE && !this.readWindowChanged;
+        }
+    private boolean readCacheIsValid()
+        {
+        return this.readCacheStatus.isValid() && !this.readWindowChanged;
+        }
+
     /**
      * Write a byte to the indicated register
      */
@@ -481,10 +539,36 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                 if (!this.isArmed || this.disarming)
                     throw new IllegalStateException("can't write to I2cDeviceClient while not armed");
 
+                if (data.length > ReadWindow.cregWriteMax)
+                    throw new IllegalArgumentException(String.format("write request of %d bytes is too large; max is %d", data.length, ReadWindow.cregWriteMax));
+
                 synchronized (this.callbackLock)
                     {
-                    // Wait until we can write to the write cache
-                    while (this.writeCacheStatus != WRITE_CACHE_STATUS.IDLE)
+                    // If there's already a pending write, can we coalesce?
+                    boolean doCoalesce = false;
+                    if (this.writeCacheStatus == WRITE_CACHE_STATUS.DIRTY && this.cregWrite + data.length <= ReadWindow.cregWriteMax)
+                        {
+                        if (ireg + data.length == this.iregWriteFirst)
+                            {
+                            // New data is immediately before the old data.
+                            // leave ireg is unchanged
+                            data = Util.concatenateByteArrays(data, readWriteCache());
+                            doCoalesce = true;
+                            }
+                        else if (this.iregWriteFirst + this.cregWrite == ireg)
+                            {
+                            // New data is immediately after the new data.
+                            ireg = this.iregWriteFirst;
+                            data = Util.concatenateByteArrays(readWriteCache(), data);
+                            doCoalesce = true;
+                            }
+                        }
+
+                    // if (doCoalesce) this.log(Log.VERBOSE, "coalesced write");
+
+                    // Wait until we can write to the write cache. If we are coalescing, then
+                    // we don't ever wait, as we're just modifying what's there
+                    while (!doCoalesce && this.writeCacheStatus != WRITE_CACHE_STATUS.IDLE)
                         {
                         this.callbackLock.wait();
                         }
@@ -497,7 +581,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                     this.writeCacheStatus = WRITE_CACHE_STATUS.DIRTY;
 
                     // Provide the data we want to write
-                    this.writeCacheLock.lockInterruptibly();
+                    this.writeCacheLock.lock();
                     try
                         {
                         System.arraycopy(data, 0, this.writeCache, dibCacheOverhead, data.length);
@@ -515,7 +599,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                         // Wait until the write at least issues to the device controller. This will
                         // help make any delays/sleeps that follow a write() be more deterministically
                         // relative to the actual I2C device write.
-                        waitForWriteCompletion();
+                        waitForWriteCompletionInternal();
                         }
                     }
                 }
@@ -526,7 +610,37 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
             }
         }
 
-    private void waitForWriteCompletion() throws InterruptedException
+    @Override public void waitForWriteCompletions()
+        {
+        try {
+            synchronized (this.concurrentClientLock)
+                {
+                synchronized (this.callbackLock)
+                    {
+                    waitForWriteCompletionInternal();
+                    }
+                }
+            }
+        catch (InterruptedException e)
+            {
+            handleCapturedInterrupt(e);
+            }
+        }
+
+    /** Returns a copy of the user data currently sitting in the write cache */
+    private byte[] readWriteCache()
+        {
+        this.writeCacheLock.lock();
+        try {
+            return Arrays.copyOfRange(this.writeCache, dibCacheOverhead, dibCacheOverhead + this.cregWrite);
+            }
+        finally
+            {
+            this.writeCacheLock.unlock();
+            }
+        }
+
+    private void waitForWriteCompletionInternal() throws InterruptedException
         {
         while (writeCacheStatus != WRITE_CACHE_STATUS.IDLE)
             {
@@ -900,37 +1014,51 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                         }
 
                     //--------------------------------------------------------------------------
-                    // Initiate reading if we should. Be sure to honor the policy of the read mode
+                    // Initiate reading if we should. Be sure to honor the policy of the read mode.
 
                     else if (readCacheStatus == READ_CACHE_STATUS.IDLE || readWindowChanged)
                         {
-                        if (readWindow != null && readWindow.isOkToRead())
+                        boolean issuedRead = false;
+                        if (readWindow != null)
                             {
-                            // We're going to read from this window. If it's an only-once, then
-                            // ensure we don't come down this path again with the same ReadWindow instance.
-                            readWindow.setReadIssued();
+                            // Is the controller already set up to read the data we're now interested
+                            // in, so that we can get at it without having to incur the cost of
+                            // switching to read mode?
+                            boolean readSwitchUnnecessary = (readWindowSentToController != null
+                                    && readWindowSentToController.contains(readWindow)
+                                    && i2cDevice.isI2cPortInReadMode());
 
-                            // You know...we might *already* have set up the controller to read what we want.
-                            // Maybe the previous read was a one-shot, for example.
-                            if (readWindowSentToController != null && readWindowSentToController.contains(readWindow) && i2cDevice.isI2cPortInReadMode())
+                            if (readWindow.isOkToRead() && (readSwitchUnnecessary || readWindow.maySwitchToReadMode()))
                                 {
-                                // Lucky us! We can go ahead and queue the read right now!
-                                // See also above XYZZY
-                                readWindowActuallyRead = readWindowSentToController;
-                                readCacheStatus = READ_CACHE_STATUS.QUEUED;
-                                setActionFlag   = true;         // actually do an I2C read
-                                queueRead       = true;         // read the results of the read
+                                if (readSwitchUnnecessary)
+                                    {
+                                    // Lucky us! We can go ahead and queue the read right now!
+                                    // See also above XYZZY
+                                    readWindowActuallyRead = readWindowSentToController;
+                                    readCacheStatus = READ_CACHE_STATUS.QUEUED;
+                                    setActionFlag   = true;         // actually do an I2C read
+                                    queueRead       = true;         // read the results of the read
+                                    }
+                                else
+                                    {
+                                    // We'll start switching now, and queue the read later
+                                    readWindowActuallyRead = readWindow;
+                                    startSwitchingToReadMode(readWindow);
+                                    }
+
+                                issuedRead = true;
                                 }
-                            else
-                                {
-                                // We'll start switching now, and queue the read later
-                                readWindowActuallyRead = readWindow;
-                                startSwitchingToReadMode(readWindow);
-                                }
+                            }
+
+                        if (issuedRead)
+                            {
+                            // Remember that we've used this window in a read operation. This doesn't
+                            // matter for REPEATs, but does for the other modes
+                            readWindow.setReadIssued();
                             }
                         else
                             {
-                            // There's nothing to read. Make *sure* we are idle.
+                            // Make *sure* that we don't appear to have valid data
                             readCacheStatus = READ_CACHE_STATUS.IDLE;
                             }
 

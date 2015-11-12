@@ -20,6 +20,9 @@ import java.util.concurrent.Semaphore;
  *
  * The essence of the bug is that we're being asked to process commands before we've been
  * initialized. So our work around is to simply block the latter on the former.
+ *
+ * Update: 2015-11-04. EventLoopManager.start() has been fixed; this can almost certainly
+ * now be removed.
  */
 public class SwerveFtcEventLoop extends FtcEventLoop
     {

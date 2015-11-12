@@ -115,4 +115,13 @@ public class NxtColorSensorOnI2cDevice extends ColorSensor
         throw new UnsupportedOperationException("enableLed is not implemented.");
         }
 
+    @Override public void setI2cAddress(int i2cAddr8Bit)
+        {
+        throw new UnsupportedOperationException("setI2cAddress is not supported."); // WRONG
+        }
+
+    @Override public int getI2cAddress()
+        {
+        throw new UnsupportedOperationException("getI2cAddress is not supported."); // WRONG
+        }
     }

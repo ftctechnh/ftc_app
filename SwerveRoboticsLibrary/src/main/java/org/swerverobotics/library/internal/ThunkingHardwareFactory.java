@@ -1,5 +1,6 @@
 package org.swerverobotics.library.internal;
 
+import com.qualcomm.hardware.*;
 import com.qualcomm.robotcore.eventloop.opmode.*;
 import com.qualcomm.robotcore.hardware.*;
 import org.swerverobotics.library.*;
@@ -354,13 +355,27 @@ public class ThunkingHardwareFactory
                 }
         );
 
-        // Thunk the color sensors
+        // Thunk or reimplement the color sensors
+        // NOTE: Use of Swerve color sensor implementation is currently disabled pending testing
         createThunks(unthunkedHwmap.colorSensor, thunkedHwmap.colorSensor,
                 new IThunkFactory<ColorSensor>()
                 {
                 @Override public ColorSensor create(ColorSensor target)
                     {
-                    return ThunkedColorSensor.create(target);
+                    if (target instanceof ColorSensorOnI2cDeviceClient)
+                        {
+                        return target;
+                        }
+                    else if (false && target instanceof HiTechnicNxtColorSensor)
+                        {
+                        return ColorSensorOnI2cDeviceClient.create(context, target, ColorSensorOnI2cDeviceClient.FLAVOR.HITECHNIC);
+                        }
+                    else if (false && target instanceof ModernRoboticsI2cColorSensor)
+                        {
+                        return ColorSensorOnI2cDeviceClient.create(context, target, ColorSensorOnI2cDeviceClient.FLAVOR.MODERNROBOTICS);
+                        }
+                    else
+                        return ThunkedColorSensor.create(target);
                     }
                 }
         );
