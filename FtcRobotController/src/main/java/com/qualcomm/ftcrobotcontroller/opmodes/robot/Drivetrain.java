@@ -13,8 +13,8 @@ public class Drivetrain {
     public DcMotor frontRight;
     public DcMotor backRight;
 
-    double wheelCircumference = 8 * Math.PI;
-    double ticksPerRotiation = 1440;
+    double wheelCircumference = 6 * Math.PI;
+    double ticksPerRotiation = 280;
 
     public Drivetrain(){
     }

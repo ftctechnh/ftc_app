@@ -23,7 +23,7 @@ public class ColorSensorTest extends LinearOpMode {
     ColorSensor sensorRGB;
 
     double rightButtonServoPressed = 0.45;
-    double leftButtonServoPressed = 0.55;
+    double leftButtonServoPressed = 0.57;
 
     public void runOpMode() throws InterruptedException {
 
@@ -39,18 +39,18 @@ public class ColorSensorTest extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            if (sensorRGB.blue() > sensorRGB.red()) {
+            if (sensorRGB.blue() == 1) {
 
                 rightButtonServo.setPosition(rightButtonServoPressed);
-                TimeUnit.MILLISECONDS.sleep(2300);
+                TimeUnit.MILLISECONDS.sleep(2100);
                 rightButtonServo.setPosition(0.5);
             }
 
-            if (sensorRGB.red() >  sensorRGB.blue()) {
+            if (sensorRGB.red() == 1) {
 
                 leftButtonServo.setPosition(leftButtonServoPressed);
-                TimeUnit.MILLISECONDS.sleep(2300);
-                rightButtonServo.setPosition(0.5);
+                TimeUnit.MILLISECONDS.sleep(2100);
+                leftButtonServo.setPosition(0.5);
             }
 
             telemetry.addData("sensorRGB", "sensorRGB:  " + String.format("%d", sensorRGB.blue()));
