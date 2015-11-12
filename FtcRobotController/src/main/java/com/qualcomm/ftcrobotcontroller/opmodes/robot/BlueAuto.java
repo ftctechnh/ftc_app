@@ -9,12 +9,12 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by Nikhil on 11/12/2015.
  */
-public class Auto extends LinearOpMode {
+public class BlueAuto extends LinearOpMode {
 
-        Lift lift = new Lift();
+        //Lift lift = new Lift();
         Drivetrain drivetrain = new Drivetrain();
-        Arm arm = new Arm();
-        Intake intake = new Intake();
+        //Arm arm = new Arm();
+        //Intake intake = new Intake();
 
         Servo rightButtonServo;
         Servo leftButtonServo;
@@ -25,10 +25,10 @@ public class Auto extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {
 
-        lift.init(hardwareMap);
+        //lift.init(hardwareMap);
         drivetrain.init(hardwareMap);
-        arm.init(hardwareMap);
-        intake.init(hardwareMap);
+        //arm.init(hardwareMap);
+        //intake.init(hardwareMap);
         sensorRGB = hardwareMap.colorSensor.get("sensorRGB");
         rightButtonServo = hardwareMap.servo.get("rightButtonServo");
         leftButtonServo = hardwareMap.servo.get("leftButtonServo");
