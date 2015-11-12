@@ -303,7 +303,7 @@ public class IMUSensor implements HardwareDevice, I2cController.I2cPortReadyCall
             i2cReadCacheLock.lock();
 
             double thisSampleDegreesPerSecond = ((short) (((i2cReadCache[I2cController.I2C_BUFFER_START_ADDRESS] & 0XFF) << 8)
-                    | (i2cReadCache[I2cController.I2C_BUFFER_START_ADDRESS] & 0XFF)));
+                    | (i2cReadCache[I2cController.I2C_BUFFER_START_ADDRESS] & 0XFF))) * degreesPerBit;
             currentPositionInDegrees += thisSampleDegreesPerSecond * latestInterval;
         } finally {
             i2cReadCacheLock.unlock();
