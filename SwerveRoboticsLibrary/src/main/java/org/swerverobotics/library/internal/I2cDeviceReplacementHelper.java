@@ -38,15 +38,19 @@ public class I2cDeviceReplacementHelper<TARGET>
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    public I2cDeviceReplacementHelper(OpMode context, TARGET client, TARGET target, I2cController controller, int targetPort)
+    public I2cDeviceReplacementHelper(OpMode context, TARGET client, /* may be null */ TARGET target, I2cController controller, int targetPort)
         {
         this.context        = context;
         this.isArmed        = false;
         this.client         = client;
-        this.target         = target;
+        this.target         = target;       // may be null
         this.controller     = controller;
         this.targetPort     = targetPort;
-        findTargetNameAndMapping();
+
+        this.targetName     = null;
+        this.targetDeviceMapping = null;
+        if (this.target != null)
+            findTargetNameAndMapping();
 
         if (controller instanceof LegacyModule)
             {
