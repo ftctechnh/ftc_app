@@ -71,7 +71,7 @@ public class AutoDDS extends LinearOpMode{
 
         Gyro = hardwareMap.gyroSensor.get("gyro");
 
-        lwa.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        //lwa.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         lwb.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         rwb.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         rwa.setMode(DcMotorController.RunMode.RESET_ENCODERS);
