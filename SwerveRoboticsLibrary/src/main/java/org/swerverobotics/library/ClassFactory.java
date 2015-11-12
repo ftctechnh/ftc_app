@@ -67,6 +67,9 @@ public final class ClassFactory
     // Sensors
     //----------------------------------------------------------------------------------------------
 
+    /** An enumeration of the various sensor manufacturers we are involved with */
+    public enum SENSOR_FLAVOR { HITECHNIC, MODERNROBOTICS, ADAFRUIT };
+
     /**
      * Instantiates a driver object for a  AdaFruit BNO055 sensor which resides at the indicated I2cDevice using
      * default values for configuration parameters.
@@ -83,7 +86,7 @@ public final class ClassFactory
 
     /**
      * Instantiates a driver object for an AdaFruit BNO055 sensor which resides at the indicated I2cDevice using
-     * the provided configuration parameters. This creation method only functions in a SynchronousOpMode
+     * the provided configuration parameters. This creation method only functions in a SynchronousOpMode.
      *
      * @param i2cDevice     the robot controller runtime object representing the sensor
      * @param parameters    the parameters with which the sensor should be initialized
@@ -92,8 +95,8 @@ public final class ClassFactory
      */
     public static IBNO055IMU createAdaFruitBNO055IMU(I2cDevice i2cDevice, IBNO055IMU.Parameters parameters)
         {
-        SynchronousThreadContext.assertSynchronousThread();
-        return createAdaFruitBNO055IMU(SynchronousThreadContext.getContextualOpMode(), i2cDevice, parameters);
+        SwerveThreadContext.assertSynchronousThread();
+        return createAdaFruitBNO055IMU(SwerveThreadContext.getContextualOpMode(), i2cDevice, parameters);
         }
 
     /**
@@ -133,48 +136,44 @@ public final class ClassFactory
         return AdaFruitBNO055IMU.create(context, i2cDevice, parameters);
         }
 
+
     /**
-     * Creates a driver ColorSensor object for an I2cDevice that represents a
-     * <a href="http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NCO1038">HiTechnic
-     * color sensor</a>.
+     * Creates an alternate implementation of the target color sensor. The target sensor is
+     * disabled in the process. The alternate implementation robustly implements the ColorSensor
+     * functionality.
      *
-     * @param context       the OpMode within which the creation is taking place
-     * @param i2cDevice     the color sensor device
-     * @return              a ColorSensor object connected to the device
+     * @param context       the OpMode within which this sensor is to be used
+     * @param target        the sensor whose implementation we are to replace
+     * @return an alternate color sensor implementation
+     *
+     * @see #createSwerveColorSensor(OpMode, I2cController, int, int, SENSOR_FLAVOR)
+     * @see org.swerverobotics.library.examples.LinearColorDemo
+     * @see org.swerverobotics.library.examples.SyncColorDemo
      */
-    public static ColorSensor createHiTechnicColorSensor(OpMode context, I2cDevice i2cDevice)
+    public static ColorSensor createSwerveColorSensor(OpMode context, ColorSensor target)
         {
-        return new NxtColorSensorOnI2cDevice(context, i2cDevice);
+        return SwerveColorSensor.create(context, target);
         }
 
     /**
-     * Creates a driver ColorSensor object for an I2cDevice that represents a
-     * <a href="http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NCO1038">HiTechnic
-     * color sensor</a>.
+     * Creates a implementation of a color sensor from the provided information.
      *
-     * @param context       the OpMode within which the creation is taking place
-     * @param ii2cDevice    the color sensor device
-     * @return              a ColorSensor object connected to the device
+     * @param context       the OpMode within which this sensor is to be used
+     * @param controller    the controller on which the sensor resides
+     * @param port          the port on the controller at which it so resides
+     * @param i2cAddr8Bit   the I2C address of the sensor
+     * @param flavor        the flavor of color sensor that resides there
+     * @return an alternate color sensor implementation
+     *
+     * @see #createSwerveColorSensor(OpMode, ColorSensor)
+     * @see org.swerverobotics.library.examples.LinearColorDemo
+     * @see org.swerverobotics.library.examples.SyncColorDemo
      */
-    public static ColorSensor createHiTechnicColorSensor(OpMode context, II2cDevice ii2cDevice)
+    public static ColorSensor createSwerveColorSensor(OpMode context, I2cController controller, int port, int i2cAddr8Bit, ClassFactory.SENSOR_FLAVOR flavor)
         {
-        return new NxtColorSensorOnI2cDevice(context, ii2cDevice);
+        return SwerveColorSensor.create(context, controller, port, i2cAddr8Bit, flavor, null);
         }
 
-    /**
-     * Creates a driver ColorSensor object from an controller and port specification that represents a
-     * <a href="http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NCO1038">HiTechnic
-     * color sensor</a>.
-     *
-     * @param context       the OpMode within which the creation is taking place
-     * @param controller    the Core Device Legacy Module controller to which the device is attached
-     * @param port          the port on the controller that the device attaches to
-     * @return              a ColorSensor object connected to the device
-     */
-    public static ColorSensor createHiTechnicColorSensor(OpMode context, I2cController controller, int port)
-        {
-        return new NxtColorSensorOnI2cDevice(context, controller, port);
-        }
 
     //----------------------------------------------------------------------------------------------
     // Low level I2cDevice creation

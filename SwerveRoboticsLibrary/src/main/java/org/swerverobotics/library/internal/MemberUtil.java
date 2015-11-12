@@ -3,6 +3,7 @@ package org.swerverobotics.library.internal;
 import com.qualcomm.ftccommon.*;
 import com.qualcomm.robotcore.eventloop.*;
 import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.robocol.*;
 import com.qualcomm.robotcore.robot.*;
 
 /**
@@ -10,14 +11,45 @@ import com.qualcomm.robotcore.robot.*;
  */
 public class MemberUtil
     {
+    //----------------------------------------------------------------------------------------------
+    // FtcRobotControllerService
+    //----------------------------------------------------------------------------------------------
+
     public static Robot robotOfFtcRobotControllerService(FtcRobotControllerService service)
         {
         return Util.<Robot>getPrivateObjectField(service, 2+7);
         }
 
-    public static EventLoopManager eventLoopManagerOfRobot(Robot robot)
+    //----------------------------------------------------------------------------------------------
+    // FTCEventLoop
+    //----------------------------------------------------------------------------------------------
+
+    public static FtcEventLoopHandler handlerOfFtcEventLoop(FtcEventLoop ftcEventLoop)
         {
-        return Util.<EventLoopManager>getPrivateObjectField(robot, 0);
+        return Util.<FtcEventLoopHandler>getPrivateObjectField(ftcEventLoop, 0);
+        }
+
+    //----------------------------------------------------------------------------------------------
+    // FtcEventLoopHandler
+    //----------------------------------------------------------------------------------------------
+
+    public static EventLoopManager eventLoopManagerOfFtcEventLoopHandler(FtcEventLoopHandler ftcEventLoopHandler)
+        {
+        return Util.<EventLoopManager>getPrivateObjectField(ftcEventLoopHandler, 0);
+        }
+
+    //----------------------------------------------------------------------------------------------
+    // EventLoopManager
+    //----------------------------------------------------------------------------------------------
+
+    public static RobocolDatagramSocket socketOfEventLoopManager(EventLoopManager manager)
+        {
+        return Util.<RobocolDatagramSocket>getPrivateObjectField(manager, 2);
+        }
+
+    public static void setSocketOfEventLoopManager(EventLoopManager manager, RobocolDatagramSocket socket)
+        {
+        Util.setPrivateObjectField(manager, 2, socket);
         }
 
     public static EventLoopManager.EventLoopMonitor monitorOfEventLoopManager(EventLoopManager manager)
@@ -25,10 +57,9 @@ public class MemberUtil
         return Util.<EventLoopManager.EventLoopMonitor>getPrivateObjectField(manager, 8);
         }
 
-    public static FtcEventLoopHandler ftcEventLoopHandlerOfFtcEventLoop(FtcEventLoop ftcEventLoop)
-        {
-        return Util.<FtcEventLoopHandler>getPrivateObjectField(ftcEventLoop, 0);
-        }
+    //----------------------------------------------------------------------------------------------
+    // Legacy Motor Controller
+    //----------------------------------------------------------------------------------------------
 
     static boolean isLegacyMotorController(DcMotorController controller)
         {
@@ -39,6 +70,16 @@ public class MemberUtil
         {
         return Util.<LegacyModule>getPrivateObjectField(controller, 0);
         }
+
+    static int portOfLegacyMotorController(DcMotorController controller)
+        {
+        return Util.getPrivateIntField(controller, 5);
+        }
+
+    //----------------------------------------------------------------------------------------------
+    // Color Sensors
+    //----------------------------------------------------------------------------------------------
+
     static LegacyModule legacyModuleOfHiTechnicColorSensor(ColorSensor sensor)
         {
         return Util.<LegacyModule>getPrivateObjectField(sensor, 0);
@@ -46,20 +87,6 @@ public class MemberUtil
     static DeviceInterfaceModule deviceModuleOfModernColorSensor(ColorSensor sensor)
         {
         return Util.<DeviceInterfaceModule>getPrivateObjectField(sensor, 0);
-        }
-
-    static I2cController.I2cPortReadyCallback[] callbacksOfLegacyModule(LegacyModule module)
-        {
-        return Util.<I2cController.I2cPortReadyCallback[]>getPrivateObjectField(module, 4);
-        }
-    static I2cController.I2cPortReadyCallback[] callbacksOfDeviceInterfaceModule(DeviceInterfaceModule module)
-        {
-        return Util.<I2cController.I2cPortReadyCallback[]>getPrivateObjectField(module, 0);
-        }
-
-    static int portOfLegacyMotorController(DcMotorController controller)
-        {
-        return Util.getPrivateIntField(controller, 5);
         }
     static int portOfHiTechnicColorSensor(ColorSensor sensor)
         {
@@ -70,10 +97,32 @@ public class MemberUtil
         return Util.getPrivateIntField(sensor, 7);
         }
 
+    //----------------------------------------------------------------------------------------------
+    // Legacy Module
+    //----------------------------------------------------------------------------------------------
+
+    static I2cController.I2cPortReadyCallback[] callbacksOfLegacyModule(LegacyModule module)
+        {
+        return Util.<I2cController.I2cPortReadyCallback[]>getPrivateObjectField(module, 4);
+        }
+
+    //----------------------------------------------------------------------------------------------
+    // Device Interface Module
+    //----------------------------------------------------------------------------------------------
+
+    static I2cController.I2cPortReadyCallback[] callbacksOfDeviceInterfaceModule(DeviceInterfaceModule module)
+        {
+        return Util.<I2cController.I2cPortReadyCallback[]>getPrivateObjectField(module, 0);
+        }
+
     public static I2cController i2cControllerOfI2cDevice(I2cDevice i2cDevice)
         {
         return Util.<I2cController>getPrivateObjectField(i2cDevice, 0);
         }
+
+    //----------------------------------------------------------------------------------------------
+    // I2cDevice
+    //----------------------------------------------------------------------------------------------
 
     public static int portOfI2cDevice(I2cDevice i2cDevice)
         {
