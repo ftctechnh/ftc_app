@@ -71,9 +71,10 @@ import org.swerverobotics.library.interfaces.*;
  *
  */
 @TeleOp(name="AdafruitRGBExample")
-public class AdafruitRGBExample extends LinearOpMode {
+public class AdafruitRGBExample extends SynchronousOpMode {
 
   ColorSensor sensorRGB;
+  float hue;
   DeviceInterfaceModule cdim;
 
   // we assume that the LED pin of the RGB sensor is connected to
@@ -81,7 +82,7 @@ public class AdafruitRGBExample extends LinearOpMode {
   static final int LED_CHANNEL = 5;
 
   @Override
-  public void runOpMode() throws InterruptedException {
+  public void main() throws InterruptedException {
 
     // write some device information (connection info, name and type)
     // to the log file.
@@ -104,8 +105,8 @@ public class AdafruitRGBExample extends LinearOpMode {
     // turn the LED on in the beginning, just so user will know that the sensor is active.
     cdim.setDigitalChannelState(LED_CHANNEL, bEnabled);
 
-    // wait one cycle.
-    waitOneFullHardwareCycle();
+    // Set up our dashboard computations
+    composeDashboard();
 
     // wait for the start button to be pressed.
     waitForStart();
@@ -165,12 +166,7 @@ public class AdafruitRGBExample extends LinearOpMode {
       // convert the RGB values to HSV values.
       Color.RGBToHSV((sensorRGB.red() * 255) / 800, (sensorRGB.green() * 255) / 800, (sensorRGB.blue() * 255) / 800, hsvValues);
 
-      // send the info back to driver station using telemetry function.
-      telemetry.addData("Clear", sensorRGB.alpha());
-      telemetry.addData("Red  ", sensorRGB.red());
-      telemetry.addData("Green", sensorRGB.green());
-      telemetry.addData("Blue ", sensorRGB.blue());
-      telemetry.addData("Hue", hsvValues[0]);
+      this.hue = hsvValues[0];
 
       // change the background color to match the color detected by the RGB sensor.
       // pass a reference to the hue, saturation, and value array as an argument
@@ -181,8 +177,59 @@ public class AdafruitRGBExample extends LinearOpMode {
         }
       });
 
-      // wait a hardware cycle before iterating.
-      waitOneFullHardwareCycle();
+      this.telemetry.update();
+      this.idle();
     }
+  }
+
+  //----------------------------------------------------------------------------------------------
+  // dashboard configuration
+  //----------------------------------------------------------------------------------------------
+
+  void composeDashboard()
+  {
+    // The default dashboard update rate is a little to slow for us, so we update faster
+    telemetry.setUpdateIntervalMs(200);
+
+    // send the info back to driver station using telemetry function.
+    telemetry.addLine(
+            telemetry.item("Red: ", new IFunc<Object>()
+            {
+              public Object value()
+              {
+                  return sensorRGB.red();
+              }
+            }),
+            telemetry.item("Green: ", new IFunc<Object>()
+            {
+              public Object value()
+              {
+                  return sensorRGB.green();
+              }
+            }),
+            telemetry.item("Blue: ", new IFunc<Object>()
+            {
+              public Object value()
+              {
+                  return sensorRGB.blue();
+              }
+            })
+    );
+      telemetry.addLine(
+              telemetry.item("Hue: ", new IFunc<Object>()
+              {
+                  public Object value()
+                  {
+                      return hue;
+                  }
+              }),
+              telemetry.item("Alpha: ", new IFunc<Object>()
+              {
+                  public Object value()
+                  {
+                      return sensorRGB.alpha();
+                  }
+              })
+      );
   }
 }
