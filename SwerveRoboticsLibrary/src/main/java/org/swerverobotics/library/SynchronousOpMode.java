@@ -38,14 +38,14 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      *
      * @see #gamepad2
      */
-    public Gamepad gamepad1 = new Gamepad();
+    public final Gamepad gamepad1 = new Gamepad();
     /** 
      * Provides access to the second gamepad controller. Only changes as a result of calling
      * {@linkplain #updateGamepads()}.
      *
      * @see #gamepad1
      */
-    public Gamepad gamepad2 = new Gamepad();
+    public final Gamepad gamepad2 = new Gamepad();
 
     /**
      * provides access to an object by which telemetry information can be transmitted

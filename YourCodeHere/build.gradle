@@ -8,7 +8,16 @@ android {
         applicationId 'com.qualcomm.ftcrobotcontroller'
         minSdkVersion 16
         targetSdkVersion 19
-        versionCode 4                       // http://developer.android.com/tools/publishing/versioning.html
+
+        // Note: this versionCode must be kept in sync with the
+        //      android:versionCode="5"
+        // attribute that is found in the AndroidManifest.xml file of the FtcRobotController
+        // module from FTC HQ. If this is not done, the robot controller may potentially have
+        // multiple versions of the app simultaneously installed, which can lead to confusion.
+        //
+        // The versionName need not match; you can set that to what you may please.
+        //
+        versionCode 5                       // http://developer.android.com/tools/publishing/versioning.html
         versionName '@string/version_name'  // http://developer.android.com/tools/publishing/versioning.html
     }
     buildTypes {
