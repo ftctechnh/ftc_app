@@ -17,7 +17,7 @@ public class DataLogger {
     private long nsBase;
 
     public DataLogger (String fileName) {
-        String directoryPath    = Environment.getExternalStorageDirectory().getPath()+"FIRST/DataLogger";
+        String directoryPath    = "/sdcard/FIRST/DataLogger";
         String filePath         = directoryPath + "/" + fileName + ".csv";
 
         new File(directoryPath).mkdir();        // Make sure that the directory exists

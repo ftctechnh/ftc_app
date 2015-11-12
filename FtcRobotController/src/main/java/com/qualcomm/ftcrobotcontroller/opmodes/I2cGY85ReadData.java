@@ -50,7 +50,7 @@ public class I2cGY85ReadData extends OpMode {
 
   public static final int ADXL345_I2C_ADDRESS = 0x53;
 
-
+  public static final int ACC_DEVICE_ID = 0x00;
   public static final int ACC_DATA_FORMAT = 0x31;
   public static final int ACC_SET_8G_MODE = 0x02;
   public static final int ACC_POWER_CTL = 0x2D;
@@ -60,8 +60,7 @@ public class I2cGY85ReadData extends OpMode {
   public static final int ACC_DATAY0 = 0x34;
   public static final int ACC_DATAY1 = 0x35;
   public static final int ACC_DATAZ0 = 0x36;
-  public static final int ACC_DATAZ1 = 0x37;
-  public static final int TOTAL_MEMORY_LENGTH = 0x06;
+  public static final int ACC_DATAZ1 = 0x37;  public static final int TOTAL_MEMORY_LENGTH = 0x06;
 
   int port = 5;
 
@@ -69,11 +68,16 @@ public class I2cGY85ReadData extends OpMode {
   private Wire ds;
   private int readCount = 0;
   private int distance;
-  private long pingTime;
+  private long accTimeStamp;
+  private int Xaxis = 0;
+  private int Yaxis = 0;
+  private int Zaxis = 0;
 
   public void init() {
+    DbgLog.msg("=====Start Init=====");
     dl = new DataLogger("ADXL345_Z_Accel");
-    ds = new Wire(hardwareMap, "GY85", ADXL345_I2C_ADDRESS);
+    ds = new Wire(hardwareMap, "GY85", 2*ADXL345_I2C_ADDRESS);
+    DbgLog.msg("=====Initialized Items=====");
 
     dl.addField("Micros");      //Sensor reading time in microseconds
     dl.addField("X_Accel");
@@ -83,48 +87,78 @@ public class I2cGY85ReadData extends OpMode {
   }
 
   public void start() {
-    ds.beginWrite(ADXL345_I2C_ADDRESS);
-    ds.write(ACC_DATA_FORMAT);
-    ds.write(ACC_SET_8G_MODE);
-    ds.endWrite();
-    ds.beginWrite(ADXL345_I2C_ADDRESS);
-    ds.write(ACC_POWER_CTL);
-    ds.write(ACC_DISABLE_PM);
-    ds.endWrite();
-    pingTime = System.currentTimeMillis();
+    DbgLog.msg("=====Start Acc Setup=====");
+    ds.write(ACC_DATA_FORMAT, ACC_SET_8G_MODE);
+    DbgLog.msg("=====Data Format Done=====");
+    ds.write(ACC_POWER_CTL, ACC_DISABLE_PM);
+    DbgLog.msg("=====PM Done=====");
+    ds.requestFrom(ACC_DEVICE_ID,1);
   }
 
   @Override
   public void loop() {
-    if ((System.currentTimeMillis() - pingTime) > 100) {
-      ds.beginWrite(ADXL345_I2C_ADDRESS);
+    if (isACCUpdate()) {
+      dl.addField(accTimeStamp / 1e6);
+      dl.addField(Xaxis);
+      dl.addField(Yaxis);
+      dl.addField(Zaxis);
+      dl.newLine();
+
+      readCount++;
+      telemetry.addData("ACC", "X-Axis: " + Xaxis + " Y-Axis: " + Yaxis + " Z-Axis: "+Zaxis);
+      telemetry.addData("Time", accTimeStamp / 1e6);
+    }
+
+  }
+
+  private boolean isACCUpdate() {
+    boolean isNew = false;
+    if ((System.currentTimeMillis() - accTimeStamp) > 100 ) {
       ds.write(ACC_DATAX0);
-      ds.endWrite();
-      ds.beginWrite(ADXL345_I2C_ADDRESS);
-      ds.requestFrom(ADXL345_I2C_ADDRESS, 6);
-      pingTime = System.currentTimeMillis();
+      ds.requestFrom(ACC_DATAX0,6);
+      accTimeStamp    = System.currentTimeMillis();
     }
 
     if (ds.responseCount() > 0) {
       ds.getResponse();
+      int regNumber = ds.registerNumber();
       if (ds.isRead()) {
-        long micros = ds.micros();
-        int Xaxis = ds.read() << 8 | ds.read();
-        int Yaxis = ds.read() << 8 | ds.read();
-        int Zaxis = ds.read() << 8 | ds.read();
-        dl.addField(micros);
-        dl.addField(Xaxis);
-        dl.addField(Yaxis);
-        dl.addField(Zaxis);
-
-        readCount++;
-        telemetry.addData("Count", readCount);
-        telemetry.addData("Time", micros / 1000);
-        telemetry.addData("X_Acc", Xaxis);
-        telemetry.addData("Y_Acc", Yaxis);
-        telemetry.addData("Z_Acc", Zaxis);
+        int regCount = ds.available();
+        switch (regNumber) {
+          case ACC_DEVICE_ID:
+            if (regCount == 1) {
+              int acc_did = ds.read();
+              if ((acc_did & 0xFF) != 0xE5) {
+                DbgLog.msg(String.format("=====  DID 0x%02X =====",acc_did));
+              } else {
+                ds.requestFrom(ACC_DATAX0, 6);             // Request Data
+                DbgLog.msg(String.format("=====  GOT DID =====", acc_did));
+              }
+            } else {
+              telemetry.addData("Error", regNumber + " length 1 != " + regCount);
+              DbgLog.msg(String.format("ERROR reg 0x%02X Len = 0x%02X (!= 1)", regNumber, regCount));
+            }
+            break;
+          case ACC_DATAX0:
+            if (regCount == 6) {                        // Check register count
+              accTimeStamp = ds.micros();              // Reading time
+              Xaxis       = ds.readLH();              // Read X axis
+              Yaxis       = ds.readLH();              // Read Y axis
+              Zaxis       = ds.readLH();              // Read Z axis
+              isNew       = true;
+              DbgLog.msg(String.format("=====  GOT DATAX0 6 regs ====="));
+            } else {
+              telemetry.addData("Error", regNumber + " length 6 != " + regCount);
+              DbgLog.msg(String.format("ERROR reg 0x%02X Len = 0x%02X (!= 1)", regNumber, regCount));
+            }
+            break;
+          default:
+            telemetry.addData("Error", "Unexpected register " + regNumber);
+            break;
+        }
       }
     }
+    return isNew;
   }
 
   public void stop() {

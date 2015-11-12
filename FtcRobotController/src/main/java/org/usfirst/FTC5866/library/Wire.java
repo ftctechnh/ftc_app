@@ -3,6 +3,7 @@ package org.usfirst.FTC5866.library;
 /**
  * Created by Olavi Kamppari on 10/25/2015.
  */
+import android.renderscript.Element;
 import android.util.Log;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -290,7 +291,7 @@ public class Wire implements I2cController.I2cPortReadyCallback {
     }
 
     private long getFromQueue(byte[] cache, ArrayQueue queue) {
-        AnyType element     = queue.remove();
+        Element element     = (org.usfirst.FTC5866.library.Wire.Element) queue.remove();
         if (element == null) return 0;
         int length          = element.cache.length;
         long timeStamp      = element.timeStamp;
