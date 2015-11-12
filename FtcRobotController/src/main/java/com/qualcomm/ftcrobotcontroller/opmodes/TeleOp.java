@@ -32,9 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 /**
@@ -42,26 +40,22 @@ import com.qualcomm.robotcore.util.Range;
  * <p>
  * Enables control of the robot via the gamepad
  */
-public class estProgram extends OpMode {
+public class TeleOp extends OpMode {
 
 	/*
 	 * Note: the configuration of the servos is such that
 	 * as the arm servo approaches 0, the arm position moves up (away from the floor).
 	 * Also, as the claw servo approaches 0, the claw opens up (drops the game element).
 	 */
-	// TETRIX VALUES
-	DcMotor motorRight;
-	DcMotor motorLeft;
+	// TETRIX VALUES.
 
-	ColorSensor colorSensor;
-	int red;
-	int blue;
-	int green;
+	DcMotor armLowerMotor;
+	DcMotor armUpperMotor;
 
 	/**
 	 * Constructor
 	 */
-	public TestProgram() {
+	public TeleOp() {
 
 	}
 
@@ -90,11 +84,9 @@ public class estProgram extends OpMode {
 		 *    "servo_1" controls the arm joint of the manipulator.
 		 *    "servo_6" controls the claw joint of the manipulator.
 		 */
-		motorRight = hardwareMap.dcMotor.get("motor_right");
-		motorLeft = hardwareMap.dcMotor.get("motor_left");
-		colorSensor = hardwareMap.colorSensor.get("color_sensor");
-		motorRight.setDirection(DcMotor.Direction.REVERSE);
-		colorSensor.enableLed(false);
+
+		armUpperMotor = hardwareMap.dcMotor.get("armUpperMotor");
+		armLowerMotor = hardwareMap.dcMotor.get("armLowerMotor");
 	}
 
 	/*
@@ -116,23 +108,21 @@ public class estProgram extends OpMode {
 		// 1 is full down
 		// direction: left_stick_x ranges from -1 to 1, where -1 is full left
 		// and 1 is full right
-		float left = gamepad1.left_stick_y;
-		float right = gamepad1.right_stick_y;
+		float UpperMotorSpeed = gamepad1.left_stick_y;
+		float LowerMotorSpeed = gamepad1.right_stick_y/2f;
 
 		// clip the right/left values so that the values never exceed +/- 1
-		right = Range.clip(right, -1, 1);
-		left = Range.clip(left, -1, 1);
+		UpperMotorSpeed = Range.clip(UpperMotorSpeed, -1f, 1f);
+		LowerMotorSpeed = Range.clip(LowerMotorSpeed, -.5f, .5f);
 
 		// scale the joystick value to make it easier to control
 		// the robot more precisely at slower speeds.
-		right = (float)scaleInput(right);
-		left =  (float)scaleInput(left);
-		
-		// write the values to the motors
-		motorRight.setPower(right);
-		motorLeft.setPower(left);
+		UpperMotorSpeed = (float)scaleInput(UpperMotorSpeed);
+		LowerMotorSpeed =  (float)scaleInput(LowerMotorSpeed);
 
-		
+		// write the values to the motors
+		armUpperMotor.setPower(UpperMotorSpeed);
+		armLowerMotor.setPower(LowerMotorSpeed);
 
 		// update the position of the arm.
 		if (gamepad1.a) {
@@ -145,16 +135,14 @@ public class estProgram extends OpMode {
 
 		// update the position of the claw
 		if (gamepad1.x) {
+
 		}
 
 		if (gamepad1.b) {
+
 		}
 
-        // clip the position values so that they never exceed their allowed range.
 
-		red = colorSensor.red();
-		green = colorSensor.green();
-		blue = colorSensor.blue();
 
 		/*
 		 * Send telemetry data back to driver station. Note that if we are using
@@ -162,18 +150,13 @@ public class estProgram extends OpMode {
 		 * will return a null value. The legacy NXT-compatible motor controllers
 		 * are currently write only.
 		 */
-
-        telemetry.addData("Text", "*** Robot Data***");
-        telemetry.addData("right speed",  "right speed: " + String.format("%.2f", right));
-        telemetry.addData("left speed", "left speed: " + String.format("%.2f", left));
-		telemetry.addData("red",  "red: " + String.format("%d", red));
-		telemetry.addData("green", "green: " + String.format("%d", green));
-		telemetry.addData("blue", "blue: " + String.format("%d", blue));
-
+		telemetry.addData("Text", "*** Robot Data***");
+		telemetry.addData("UpperMotorSpeed tgt pwr",  "UpperMotorPower  pwr: " + String.format("%.2f", UpperMotorSpeed));
+		telemetry.addData("LowerMotorSpeed tgt pwr", "LowerMotorPower pwr: " + String.format("%.2f", LowerMotorSpeed));
 	}
 
 	/*
-	 * Code to run when the op mod e is first disabled goes here
+	 * Code to run when the op mode is first disabled goes here
 	 * 
 	 * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#stop()
 	 */
