@@ -97,6 +97,7 @@
     <orderEntry type="library" exported="" name="RobotCore-release-" level="project" />
     <orderEntry type="library" exported="" name="ModernRobotics-release-" level="project" />
     <orderEntry type="library" exported="" name="WirelessP2p-release-" level="project" />
+    <orderEntry type="library" exported="" name="dx" level="project" />
     <orderEntry type="library" exported="" name="Analytics-release-" level="project" />
     <orderEntry type="library" exported="" name="android-support-v4" level="project" />
     <orderEntry type="library" exported="" name="Hardware-release-" level="project" />

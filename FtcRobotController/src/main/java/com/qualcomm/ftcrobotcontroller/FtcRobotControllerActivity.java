@@ -393,7 +393,7 @@ public class FtcRobotControllerActivity extends Activity {
   }
 
   public static File getPrivateFilesDirectory() {
-    return singleton.getPrivateFilesDirectory();
+    return singleton.getCacheDir();
   }
 
 }

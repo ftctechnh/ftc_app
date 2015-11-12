@@ -31,8 +31,18 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import android.util.Log;
+
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
+
+import java.io.File;
+import java.util.List;
+
+import io.github.thunderbots.robotcontroller.fileloader.DalvikConverter;
+import io.github.thunderbots.robotcontroller.fileloader.OpModeClassLoader;
+import io.github.thunderbots.robotcontroller.logging.ThunderLog;
 
 /**
  * Register Op Modes
@@ -47,54 +57,35 @@ public class FtcOpModeRegister implements OpModeRegister {
    */
   public void register(OpModeManager manager) {
 
+    manager.register("Yay! K9 Tele Op", K9TeleOp.class);
+    ThunderLog.i("About to register op modes...");
+    //try {
+      List<File> fileList = OpModeClassLoader.getFileSet();
+      ThunderLog.d("Preliminary fileList: " + fileList);
+      DalvikConverter.getJarList(fileList);
+      ThunderLog.d("Jar-only fileList: " + fileList);
+      DalvikConverter.convertJars(fileList);
+      ThunderLog.d("Converted fileList: " + fileList);
+      List<Class<? extends OpMode>> opmodeList = OpModeClassLoader.loadJars(fileList);
+      ThunderLog.d("Final opmodeList: " + opmodeList);
+      ThunderLog.i("Now registering OpModes...");
+      for (Class<? extends OpMode> opmode : opmodeList) {
+        try {
+          manager.register(opmode.getSimpleName(), opmode);
+          ThunderLog.i("Registered " + opmode.getSimpleName());
+        } catch (Throwable ex) {
+          ThunderLog.e("Error registering op mode: " + opmode.getSimpleName());
+          ThunderLog.e(ex.getMessage());
+        }
+      }
     /*
-     * register your op modes here.
-     * The first parameter is the name of the op mode
-     * The second parameter is the op mode class property
-     *
-     * If two or more op modes are registered with the same name, the app will display an error.
-     */
-
-    manager.register("NullOp", NullOp.class);
-
-    //manager.register("MatrixK9TeleOp", MatrixK9TeleOp.class);
-    manager.register("K9TeleOp", K9TeleOp.class);
-    manager.register("K9Line", K9Line.class);
-    manager.register ("PushBotAuto", PushBotAuto.class);
-    manager.register ("PushBotManual", PushBotManual.class);
-
-
-
-    /*
-     * Uncomment any of the following lines if you want to register an op mode.
-     */
-    manager.register("MR Gyro Test", MRGyroTest.class);
-
-    //manager.register("AdafruitRGBExample", AdafruitRGBExample.class);
-    //manager.register("ColorSensorDriver", ColorSensorDriver.class);
-
-    //manager.register("IrSeekerOp", IrSeekerOp.class);
-    //manager.register("CompassCalibration", CompassCalibration.class);
-    //manager.register("I2cAddressChangeExample", LinearI2cAddressChange.class);
-
-
-    //manager.register("NxtTeleOp", NxtTeleOp.class);
-
-    //manager.register("LinearK9TeleOp", LinearK9TeleOp.class);
-    //manager.register("LinearIrExample", LinearIrExample.class);
-
-
-    //manager.register ("PushBotManual1", PushBotManual1.class);
-    //manager.register ("PushBotAutoSensors", PushBotAutoSensors.class);
-    //manager.register ("PushBotIrEvent", PushBotIrEvent.class);
-
-    //manager.register ("PushBotManualSensors", PushBotManualSensors.class);
-    //manager.register ("PushBotOdsDetectEvent", PushBotOdsDetectEvent.class);
-    //manager.register ("PushBotOdsFollowEvent", PushBotOdsFollowEvent.class);
-    //manager.register ("PushBotTouchEvent", PushBotTouchEvent.class);
-
-    //manager.register("PushBotDriveTouch", PushBotDriveTouch.java);
-    //manager.register("PushBotIrSeek", PushBotIrSeek.java);
-    //manager.register("PushBotSquare", PushBotSquare.java);
+    } catch (Throwable ex) {
+      Log.e("Thunderbots", "Error reading external files:");
+      if (ex instanceof Exception) {
+        ex.printStackTrace();
+      }
+    }
+    */
   }
+
 }
