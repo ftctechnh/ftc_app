@@ -33,6 +33,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.ftcrobotcontroller.opmodes.IntelitekSolutions.ExampleDriveWithEncoders;
 import com.qualcomm.ftcrobotcontroller.opmodes.OurPrograms.AutoDDS;
+import com.qualcomm.ftcrobotcontroller.opmodes.OurPrograms.DriveToTest;
 import com.qualcomm.ftcrobotcontroller.opmodes.OurPrograms.EncoderTest;
 import com.qualcomm.ftcrobotcontroller.opmodes.OurPrograms.MBChassisOnly;
 import com.qualcomm.ftcrobotcontroller.opmodes.OurPrograms.MBTeleopComp;
@@ -60,11 +61,13 @@ public class FtcOpModeRegister implements OpModeRegister {
      * If two or more op modes are registered with the same name, the app will display an error.
      */
 
-    manager.register("NullOp", NullOp.class);
+    //manager.register("NullOp", NullOp.class);
     manager.register("MBTeleopComp", MBTeleopComp.class);
-    manager.register("MBChassisOnly", MBChassisOnly.class);
+    //manager.register("MBChassisOnly", MBChassisOnly.class);
     manager.register("AutoDDS", AutoDDS.class);
     manager.register("EncoderTest", EncoderTest.class);
+    manager.register("DriveToTest", DriveToTest.class);
+    manager.register("ExampleDriveWithEncoders", ExampleDriveWithEncoders.class);
 
     //manager.register("MatrixK9TeleOp", MatrixK9TeleOp.class);
     //manager.register("K9TeleOp", K9TeleOp.class);

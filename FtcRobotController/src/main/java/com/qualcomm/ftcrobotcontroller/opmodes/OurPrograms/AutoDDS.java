@@ -29,7 +29,16 @@ public class AutoDDS extends LinearOpMode{
 
     GyroSensor Gyro;
 
+    /*
+    final static int ENCODER_CPR = 1440;     //Encoder Counts per Revolution
+    final static double GEAR_RATIO = 2;      //Gear Ratio
+    final static int WHEEL_DIAMETER = 4;     //Diameter of the wheel in inches
+    final static int DISTANCE = 24;          //Distance in inches to drive
 
+    final static double CIRCUMFERENCE = Math.PI * WHEEL_DIAMETER;
+    final static double ROTATIONS = DISTANCE / CIRCUMFERENCE;
+    final static double COUNTS = ENCODER_CPR * ROTATIONS * GEAR_RATIO;
+    */
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -39,8 +48,6 @@ public class AutoDDS extends LinearOpMode{
         rwb = hardwareMap.dcMotor.get("rightwheelB");
         rwa.setDirection(DcMotor.Direction.REVERSE);
         rwb.setDirection(DcMotor.Direction.REVERSE);
-        lwa.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
-        rwa.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
 
         liftL = hardwareMap.dcMotor.get("liftL");
         liftR = hardwareMap.dcMotor.get("liftR");
@@ -64,15 +71,12 @@ public class AutoDDS extends LinearOpMode{
 
         Gyro = hardwareMap.gyroSensor.get("gyro");
 
+        lwa.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        lwb.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        rwb.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        rwa.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+
         double motorspeed = 0.8;
-
-        //final int ENCODER_CPR = 1440;     //Encoder Counts per Revolution
-
-
-        //final double CIRCUMFERENCE = 12.566;
-        //double ROTATIONS = DISTANCE / CIRCUMFERENCE;
-        //double COUNTS = ENCODER_CPR * ROTATIONS;
-
 
         //int zVal = 0;
         int heading = 0;
@@ -92,12 +96,12 @@ public class AutoDDS extends LinearOpMode{
         sleep(500);
 
         //24 in. is 1.9 rotations is 2750 counts
-        while(lwa.getCurrentPosition() < 2750){
+        while(rwa.getCurrentPosition() < 2750){
 
-            lwa.setPower(-motorspeed);
-            lwb.setPower(-motorspeed);
-            rwb.setPower(-motorspeed);
-            rwa.setPower(-motorspeed);
+            lwa.setPower(motorspeed);
+            lwb.setPower(motorspeed);
+            rwb.setPower(motorspeed);
+            rwa.setPower(motorspeed);
             waitOneFullHardwareCycle();
         }
 
@@ -119,12 +123,12 @@ public class AutoDDS extends LinearOpMode{
 
         //keep going
         //70 in. is 5.57 rotations is 8022 counts
-        while(lwa.getCurrentPosition() < 8022){
+        while(rwa.getCurrentPosition() < 8022){
 
-            lwa.setPower(-motorspeed);
-            lwb.setPower(-motorspeed);
-            rwb.setPower(-motorspeed);
-            rwa.setPower(-motorspeed);
+            lwa.setPower(motorspeed);
+            lwb.setPower(motorspeed);
+            rwb.setPower(motorspeed);
+            rwa.setPower(motorspeed);
             waitOneFullHardwareCycle();
         }
 

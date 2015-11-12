@@ -25,9 +25,8 @@ public class EncoderTest extends LinearOpMode {
     DcMotor lwa; // P5 port 1
     DcMotor lwb; // P5 port 2
 
-    int lEncoder;
 
-    /*
+
     final static int ENCODER_CPR = 1440;     //Encoder Counts per Revolution
     final static double GEAR_RATIO = 2;      //Gear Ratio
     final static int WHEEL_DIAMETER = 4;     //Diameter of the wheel in inches
@@ -36,7 +35,7 @@ public class EncoderTest extends LinearOpMode {
     final static double CIRCUMFERENCE = Math.PI * WHEEL_DIAMETER;
     final static double ROTATIONS = DISTANCE / CIRCUMFERENCE;
     final static double COUNTS = ENCODER_CPR * ROTATIONS * GEAR_RATIO;
-    */
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -68,32 +67,34 @@ public class EncoderTest extends LinearOpMode {
         ddspivot = hardwareMap.servo.get("ddspivot");
         ddsclaw = hardwareMap.servo.get("ddsclaw");
 
+        //lwa.setChannelMode();
+
         waitForStart();
 
 
-        while(lwa.getCurrentPosition() < 2000) {
+        while(1==1) {
 
-            lEncoder = lwa.getCurrentPosition();
 
-            telemetry.addData("Left Position", lEncoder);
+
+            telemetry.addData("Left Position", lwa.getCurrentPosition());
 
             lwa.setPower(0.8);
             lwb.setPower(0.8);
             rwa.setPower(0.8);
             rwb.setPower(0.8);
-            waitOneFullHardwareCycle();
+            sleep(10);
 
         }
 
-        telemetry.addData("Left Position", lEncoder);
-
+        //telemetry.addData("Left Position", lEncoder);
+/*
         lwa.setPower(0);
         lwb.setPower(0);
         rwa.setPower(0);
         rwb.setPower(0);
 
         sleep(5000);
-
+*/
     }
 }
 

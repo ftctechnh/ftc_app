@@ -42,7 +42,7 @@ import com.qualcomm.robotcore.util.Range;
  * Enables control of the robot via the gamepad
  */
 
-public class MBTeleopComp extends OpMode {
+public class  MBTeleopComp extends OpMode {
 
 	DcMotor rwa; // P0 port 1
 	DcMotor rwb; // P0 port 2
@@ -172,7 +172,7 @@ public class MBTeleopComp extends OpMode {
 		*/
 // Zipline release control
 		if(gamepad2.right_bumper) {
-		trigL.setPosition(0.25);
+		trigL.setPosition(0.15);
 		}
 		else{
 			trigL.setPosition(1.0);

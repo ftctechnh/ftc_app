@@ -43,10 +43,10 @@ public class ExampleDriveWithEncoders extends OpMode {
         rwb = hardwareMap.dcMotor.get("rightwheelB");
         rwa.setDirection(DcMotor.Direction.REVERSE);
         rwb.setDirection(DcMotor.Direction.REVERSE);
-        lwa.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
-        rwa.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
-        lwb.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
-        rwb.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
+        lwa.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        rwa.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        lwb.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        rwb.setMode(DcMotorController.RunMode.RESET_ENCODERS);
 
         liftL = hardwareMap.dcMotor.get("liftL");
         liftR = hardwareMap.dcMotor.get("liftR");
@@ -76,15 +76,15 @@ public class ExampleDriveWithEncoders extends OpMode {
         lwb.setTargetPosition((int) COUNTS);
         rwb.setTargetPosition((int) COUNTS);
 
-        lwa.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
-        lwb.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
-        rwb.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
-        rwa.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        lwa.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        lwb.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        rwb.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        rwa.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
 
-        lwa.setPower(-0.5);
-        rwa.setPower(-0.5);
-        lwb.setPower(-0.5);
-        rwb.setPower(-0.5);
+        lwa.setPower(0.5);
+        rwa.setPower(0.5);
+        lwb.setPower(0.5);
+        rwb.setPower(0.5);
     }
 
     @Override
