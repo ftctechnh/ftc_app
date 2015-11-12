@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -135,10 +135,14 @@ extends java.lang.Object</pre>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>static int</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#cregMax">cregMax</a></span></code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#cregReadMax">cregReadMax</a></span></code>
 <div class="block">enableI2cReadMode and enableI2cWriteMode both impose a maximum length
  on the size of data that can be read or written at one time.</div>
 </td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>static int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#cregWriteMax">cregWriteMax</a></span></code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -240,12 +244,19 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i10" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#maySwitchToReadMode--">maySwitchToReadMode</a></span>()</code>
+<div class="block">Answers as to whether this window in its present state ought to cause a transition
+ to read-mode when there's nothing else for the device to be doing.</div>
+</td>
+</tr>
+<tr id="i11" class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#sameAsIncludingMode-org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow-">sameAsIncludingMode</a></span>(<a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html" title="class in org.swerverobotics.library.interfaces">II2cDeviceClient.ReadWindow</a>&nbsp;him)</code>
 <div class="block">Do the receiver and the indicated register window cover exactly the
  same set of registers and have the same modality?</div>
 </td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#setReadIssued--">setReadIssued</a></span>()</code>
 <div class="block">Sets that a read has in fact been issued for this window</div>
@@ -273,19 +284,34 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Field Detail</h3>
-<a name="cregMax">
+<a name="cregReadMax">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>cregReadMax</h4>
+<pre>public static final&nbsp;int cregReadMax</pre>
+<div class="block">enableI2cReadMode and enableI2cWriteMode both impose a maximum length
+ on the size of data that can be read or written at one time. cregReadMax
+ and cregWriteMax indicate those maximum sizes.</div>
+<dl>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#cregWriteMax"><code>cregWriteMax</code></a>, 
+<a href="../../../../constant-values.html#org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow.cregReadMax">Constant Field Values</a></dd>
+</dl>
+</li>
+</ul>
+<a name="cregWriteMax">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>cregMax</h4>
-<pre>public static final&nbsp;int cregMax</pre>
-<div class="block">enableI2cReadMode and enableI2cWriteMode both impose a maximum length
- on the size of data that can be read or written at one time. cregMax
- indicates that maximum size.</div>
+<h4>cregWriteMax</h4>
+<pre>public static final&nbsp;int cregWriteMax</pre>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../constant-values.html#org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow.cregMax">Constant Field Values</a></dd>
+<dd><a href="../../../../org/swerverobotics/library/interfaces/II2cDeviceClient.ReadWindow.html#cregReadMax"><code>cregReadMax</code></a>, 
+<a href="../../../../constant-values.html#org.swerverobotics.library.interfaces.II2cDeviceClient.ReadWindow.cregWriteMax">Constant Field Values</a></dd>
 </dl>
 </li>
 </ul>
@@ -415,6 +441,21 @@ extends java.lang.Object</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>whether it is permitted to perform a read for this window.</dd>
+</dl>
+</li>
+</ul>
+<a name="maySwitchToReadMode--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>maySwitchToReadMode</h4>
+<pre>public&nbsp;boolean&nbsp;maySwitchToReadMode()</pre>
+<div class="block">Answers as to whether this window in its present state ought to cause a transition
+ to read-mode when there's nothing else for the device to be doing.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>whether this device should cause a read mode transition</dd>
 </dl>
 </li>
 </ul>

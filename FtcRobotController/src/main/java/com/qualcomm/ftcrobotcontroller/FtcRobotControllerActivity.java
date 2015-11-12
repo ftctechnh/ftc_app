@@ -40,9 +40,9 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.hardware.usb.UsbManager;
-import android.os.Bundle;
-import android.os.IBinder;
+import android.os.*;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -75,6 +75,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
 
+import org.swerverobotics.library.SynchronousOpMode;
 import org.swerverobotics.library.internal.*;
 
 public class FtcRobotControllerActivity extends Activity {
@@ -284,7 +285,7 @@ public class FtcRobotControllerActivity extends Activity {
     return super.onOptionsItemSelected(item);
   }
 
-  @Override
+@Override
   public void onConfigurationChanged(Configuration newConfig) {
     super.onConfigurationChanged(newConfig);
     // don't destroy assets on screen rotation
@@ -391,6 +392,34 @@ public class FtcRobotControllerActivity extends Activity {
       }
     });
   }
+
+    //==============================================================================================
+
+    /**
+     * We are being notified that the FTC robot controller activity is being shut down.
+     *
+     * In response, we choose here to also terminate the underlying process. While not normally
+     * something one does in a well-behaved and fully-debugged Android app, we do it here in order
+     * to make the controller behavior more robust and reliable: there are known scenarios in which
+     * the controller can get into an inoperable state that *requires* that this underlying process
+     * be terminated (that is, there's something in that process state that's stuck). While this can
+     * be done manually with 'swiping' closed the process, relying on the user to do that is just
+     * silly. By terminating the process here, that will happen automatically when the user chooses
+     * 'Exit' from the menu.
+     *
+     * @see <a href="http://developer.android.com/reference/android/app/Activity.html">Activity Life Cycle</a>
+     */
+    @Override protected void onDestroy()
+        {
+        // Do required superclass stuff
+        super.onDestroy();
+
+        // Commit suicide
+        Log.i(SynchronousOpMode.LOGGING_TAG, "FtcRobotControllerActivity committing process suicide");
+        int pid = android.os.Process.myPid();
+        android.os.Process.killProcess(pid);
+        }
+
 
     //==============================================================================================
     // Hooking infrastructure (Swerve)
