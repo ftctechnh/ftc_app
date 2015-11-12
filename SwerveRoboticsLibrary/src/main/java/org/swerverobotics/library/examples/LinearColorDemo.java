@@ -1,26 +1,27 @@
 package org.swerverobotics.library.examples;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.*;
-import org.swerverobotics.library.*;
+
+import org.swerverobotics.library.ClassFactory;
 import org.swerverobotics.library.interfaces.*;
 
 /**
- * This SynchronousOpMode illustrates a very simple use of the Swerve color
- * sensor implementation, which is used automatically.
+ * This Lineaer illustrates a very simple use of the Swerve color sensor implementation.
  *
  * The opmode expects either a HiTechnic or a Modern Robotics color sensor named "colorSensor";
  */
-@TeleOp(name="Color Demo (sync)", group="Swerve Examples")
+@TeleOp(name="Color Demo (linear)", group="Swerve Examples")
 
-public class SyncColorDemo extends SynchronousOpMode
+public class LinearColorDemo extends LinearOpMode
     {
     ColorSensor color;
     boolean     ledIsOn;
 
     @Override
-    protected void main() throws InterruptedException
+    public void runOpMode() throws InterruptedException
         {
-        this.color = this.hardwareMap.colorSensor.get("colorSensor");
+        this.color   = ClassFactory.createSwerveColorSensor(this, this.hardwareMap.colorSensor.get("colorSensor"));
         this.ledIsOn = true;
         this.color.enableLed(ledIsOn);
 
@@ -28,13 +29,14 @@ public class SyncColorDemo extends SynchronousOpMode
 
         while (opModeIsActive())
             {
-            if (updateGamepads())
+            // Press 'x' to toggle the LED
+            if (gamepad1.x)
                 {
-                // Press 'x' to toggle the LED
-                if (gamepad1.x)
+                this.ledIsOn = !this.ledIsOn;
+                this.color.enableLed(this.ledIsOn);
+                while (gamepad1.x)
                     {
-                    this.ledIsOn = !this.ledIsOn;
-                    this.color.enableLed(this.ledIsOn);
+                    // wait for button release
                     }
                 }
 
@@ -42,8 +44,7 @@ public class SyncColorDemo extends SynchronousOpMode
             telemetry.addData("green", this.color.green());
             telemetry.addData("blue",  this.color.blue());
             telemetry.addData("alpha", this.color.alpha());
-            telemetry.update();
-            this.idle();
             }
+
         }
     }
