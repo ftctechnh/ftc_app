@@ -17,8 +17,8 @@ import java.util.concurrent.TimeUnit;
 public class ColorSensorServoTest extends OpMode {
 
     Servo rightButtonServo;
-    Servo leftButtonServo
-    double ServoPosition = 0;
+    //Servo leftButtonServo;
+    double ServoPosition = 0.5;
 
 
     @Override
@@ -60,7 +60,7 @@ public class ColorSensorServoTest extends OpMode {
         telemetry.addData("rightLiftServo", "rightLiftServo:  " + String.format("%.2f", ServoPosition));
 
         try {
-            TimeUnit.MILLISECONDS.sleep(50);
+            TimeUnit.MILLISECONDS.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
