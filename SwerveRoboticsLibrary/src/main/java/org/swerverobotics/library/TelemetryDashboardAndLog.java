@@ -1,5 +1,8 @@
 package org.swerverobotics.library;
 
+import com.qualcomm.ftccommon.FtcEventLoopHandler;
+import com.qualcomm.robotcore.eventloop.EventLoopManager;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.robocol.Telemetry;
 import org.swerverobotics.library.interfaces.*;
 import org.swerverobotics.library.internal.*;
@@ -106,11 +109,6 @@ public class TelemetryDashboardAndLog
         this.msUpdateInterval = msUpdateInterval;
         }
 
-    /**
-     * Advanced: 'target' is the lower level robot-controller-runtime-provided telemetry object
-     */
-    public final Telemetry target;
-
     //------------------------------------------------------------------------------------------
     // Private State
     //------------------------------------------------------------------------------------------
@@ -124,22 +122,31 @@ public class TelemetryDashboardAndLog
     private boolean                 updateSinceAddComposedLine = false;
 
     private long                    nanoLastUpdate = 0;
-    private final int               singletonKey = SynchronousOpMode.staticGetNewSingletonKey();
+    private EventLoopManager        eventLoopManager;
 
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
 
     /**
-     * Instantiate a new telemetry dashboard and log on a Telemetry object provided by
-     * the robot controller runtime.
+     * Instantiate a new telemetry dashboard and log for use within a given OpMode
      *
-     * @param telemetry the robot controller runtime telemetry object
+     * @param notUsed the previous telemetry object that the new one is to take over from
      */
-    public TelemetryDashboardAndLog(Telemetry telemetry)
+    @Deprecated
+    public TelemetryDashboardAndLog(Telemetry notUsed)
         {
-        this.target    = telemetry;
-        this.log       = new Log();
+        this();
+        }
+
+    /**
+     * Instantiate a new telemetry dashboard and log
+     */
+    public TelemetryDashboardAndLog()
+        {
+        SwerveThreadContext context = SwerveThreadContext.getThreadContext();
+        this.eventLoopManager = context.swerveFtcEventLoop.getEventLoopManager();
+        this.log = new Log();
         //
         this.clearDashboard();
         }
@@ -332,40 +339,19 @@ public class TelemetryDashboardAndLog
                 iLine++;
                 }
 
-            // Create an action that sends that all to the underlying telemetry object
-            Runnable action = new Runnable()
+            // Build an object to carry our telemetry data.
+            // Transmit same to the driver station.
+            Telemetry transmitter = new Telemetry();
+            //
+            for (int i = 0; i < keys.size(); i++)
                 {
-                @Override public void run()
-                    {
-                    try {
-                        for (int i = 0; i < keys.size(); i++)
-                            {
-                            TelemetryDashboardAndLog.this.target.addData(
-                                    keys.elementAt(i),
-                                    values.elementAt(i));
-                            }
-                        }
-                    catch (Exception e) { /* ignore */ }
-                    }
-                };
-
-            // Execute that action in the right context
-            if (SynchronousThreadContext.isSynchronousThread())
-                {
-                // Head on over to the loop() thread and add these messages to the
-                // (unthunked) telemetry. However, we only do that once per loop() call;
-                // if we attempt two of these within one loop() quantum (by, e.g., issuing
-                // a bunch of log.add() calls), then only the last one will actually manifest
-                // itself and thus get back to the driver station.
-                SynchronousOpMode.getThreadThunker().executeSingletonOnLoopThread(singletonKey, action);
+                transmitter.addData(
+                        keys.elementAt(i),
+                        values.elementAt(i));
                 }
-            else
-                {
-                // We're not on a synchronous thread. Presumably, we're on the loop() thread,
-                // though we can't confirm that. In any case, update the unthunked telemetry
-                // here, directly on this thread, and we'll live with the consequences.
-                action.run();
-                }
+            //
+            if (transmitter.hasData())
+                this.eventLoopManager.sendTelemetryData(transmitter);
 
             // Update our state for the next time around
             this.nanoLastUpdate = nanoNow;

@@ -2,6 +2,7 @@ package org.swerverobotics.library.internal;
 
 import android.content.Context;
 import com.qualcomm.ftccommon.FtcEventLoop;
+import com.qualcomm.ftccommon.FtcEventLoopHandler;
 import com.qualcomm.ftccommon.UpdateUI;
 import com.qualcomm.hardware.HardwareFactory;
 import com.qualcomm.robotcore.eventloop.EventLoopManager;
@@ -12,44 +13,57 @@ import com.qualcomm.robotcore.robocol.Command;
 import java.util.concurrent.Semaphore;
 
 /**
- * This class is a nefarious hook to try to work around an initialization problem
- * that arises when registerOpModes takes too long. We would LOVE not to have to do
- * this, and will remove this as soon as the underlying bug is fixed.
- *
- * See http://ftcforum.usfirst.org/showthread.php?4967
- *
- * The essence of the bug is that we're being asked to process commands before we've been
- * initialized. So our work around is to simply block the latter on the former.
- *
- * Update: 2015-11-04. EventLoopManager.start() has been fixed; this can almost certainly
- * now be removed.
+ * This class provides hooking services that we use to provide contextual 
+ * information to opmode code.
  */
 public class SwerveFtcEventLoop extends FtcEventLoop
     {
+    //----------------------------------------------------------------------------------------------
+    // State
+    //----------------------------------------------------------------------------------------------
+
+    FtcEventLoopHandler ftcEventLoopHandler;
+    EventLoopManager    eventLoopManager;
     Semaphore semaphore = new Semaphore(0);
+
+    //----------------------------------------------------------------------------------------------
+    // Construction
+    //----------------------------------------------------------------------------------------------
 
     public SwerveFtcEventLoop(HardwareFactory hardwareFactory, OpModeRegister register, UpdateUI.Callback callback, Context robotControllerContext)
         {
         super(hardwareFactory, register, callback, robotControllerContext);
+        this.ftcEventLoopHandler = MemberUtil.handlerOfFtcEventLoop(this);
+        setEventLoopManager();
         }
 
-    @Override
-    public void init(EventLoopManager eventLoopManager) throws RobotCoreException, InterruptedException
+    void setEventLoopManager()
         {
-        super.init(eventLoopManager);
-        semaphore.release();
+        if (null == this.eventLoopManager)
+            this.eventLoopManager = MemberUtil.eventLoopManagerOfFtcEventLoopHandler(this.ftcEventLoopHandler);
         }
 
-    @Override public void processCommand(Command command)
+    //----------------------------------------------------------------------------------------------
+    // Operations
+    //----------------------------------------------------------------------------------------------
+
+    public FtcEventLoopHandler getFtcEventLoopHandler()
         {
-        try {
-            semaphore.acquire();
-            semaphore.release();
-            }
-        catch (InterruptedException e)
-            {
-            Util.handleCapturedInterrupt(e);
-            }
-        super.processCommand(command);
+        return this.ftcEventLoopHandler;
+        }
+    public EventLoopManager getEventLoopManager()
+        {
+        return this.eventLoopManager;
+        }
+
+    @Override public void loop() throws RobotCoreException
+    // Hook this so that we will have thread context set whenever we're running user
+    // code on the loop() thread
+        {
+        SwerveThreadContext context = SwerveThreadContext.createIfNecessary();
+        context.swerveFtcEventLoop = this;
+        setEventLoopManager();
+        //
+        super.loop();
         }
     }

@@ -22,7 +22,7 @@ public class LinearTelemetryOp extends LinearOpMode
         final IOpModeLoopCounter loopCounter = ClassFactory.createLoopCounter(this);
 
         try {
-            this.telemetry = new TelemetryDashboardAndLog(super.telemetry);
+            this.telemetry = new TelemetryDashboardAndLog();
             this.telemetry.log.setDisplayOldToNew(false);   // And we show the log in new to old order, just because we want to
             this.telemetry.log.setCapacity(10);             // We can control the number of lines used by the log
 

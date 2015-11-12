@@ -5,12 +5,13 @@ import org.swerverobotics.library.*;
 import org.swerverobotics.library.interfaces.*;
 
 /**
- * SynchronousThreadContext maintains the internal context for a synchronous thread.
+ * SwerveThreadContext maintains thread-specific context for the Swerve Library
  */
-public class SynchronousThreadContext
+public class SwerveThreadContext
     {
     //----------------------------------------------------------------------------------------------
     // State
+    // Only to be accessed directly by internal Swerve Library components. All others to use methods.
     //----------------------------------------------------------------------------------------------
 
     /**
@@ -18,53 +19,68 @@ public class SynchronousThreadContext
      */
     public int actionKeyWritesFromThisThread = Thunk.getNewActionKey();
 
-    private final Thread           thread;
-    private final OpMode           opMode;
-    private final IThunkDispatcher thunker;
+    public final Thread     thread;
+    public OpMode           opMode;
+    public IThunkDispatcher thunker;
+    public boolean          isSynchronousThread;
+    public SwerveFtcEventLoop swerveFtcEventLoop;
 
     /**
-     * tlsThunker is the thread local variable by which a SynchronousThreadContext is associated with a thread
+     * tlsThreadContext is the thread local variable by which a SwerveThreadContext is associated with a thread
      */
-    private static final ThreadLocal<SynchronousThreadContext> tlsThunker = new ThreadLocal<SynchronousThreadContext>()
+    private static final ThreadLocal<SwerveThreadContext> tlsThreadContext = new ThreadLocal<SwerveThreadContext>()
         {
-        @Override protected SynchronousThreadContext initialValue() { return null; }
+        @Override protected SwerveThreadContext initialValue() { return null; }
         };
 
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    public SynchronousThreadContext(OpMode opMode, IThunkDispatcher thunker)
+    public SwerveThreadContext()
         {
-        this.opMode  = opMode;
         this.thread  = Thread.currentThread();
-        this.thunker = thunker;
+        this.opMode              = null;
+        this.thunker             = null;
+        this.isSynchronousThread = false;
+        this.swerveFtcEventLoop  = null;
         }
 
-    public static void create(OpMode opMode, IThunkDispatcher thunker)
+    public static SwerveThreadContext createIfNecessary()
         {
-        tlsThunker.set(new SynchronousThreadContext(opMode, thunker));
+        SwerveThreadContext result = getThreadContext();
+        if (null == result)
+            {
+            result = new SwerveThreadContext();
+            tlsThreadContext.set(result);
+            }
+        return result;
         }
 
     //----------------------------------------------------------------------------------------------
     // Access
     //----------------------------------------------------------------------------------------------
 
-    public static SynchronousThreadContext getThreadContext()
+    public static SwerveThreadContext getThreadContext()
         {
-        return tlsThunker.get();
+        return tlsThreadContext.get();
         }
     public static IThunkDispatcher getContextualThunker()
         {
         return getThreadContext()==null ? null : getThreadContext().getThunker();
         }
-    public static boolean isSynchronousThread()
+    public boolean isSynchronousThread()
         {
-        return getThreadContext() != null;
+        return this.isSynchronousThread;
+        }
+    public static boolean isCurrentThreadSynchronous()
+        {
+        SwerveThreadContext context = getThreadContext();
+        return context != null && context.isSynchronousThread();
         }
     public static void assertSynchronousThread()
         {
-        junit.framework.Assert.assertTrue(!BuildConfig.DEBUG || isSynchronousThread());
+        junit.framework.Assert.assertTrue(!BuildConfig.DEBUG || isCurrentThreadSynchronous());
         }
 
     public static OpMode getContextualOpMode()
