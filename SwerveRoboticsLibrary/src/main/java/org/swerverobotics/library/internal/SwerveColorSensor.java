@@ -7,15 +7,16 @@ import com.qualcomm.hardware.ModernRoboticsI2cColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
+
+import org.swerverobotics.library.ClassFactory;
 import org.swerverobotics.library.interfaces.*;
 
 /**
  * This class implements a driver for either a HiTechnic color sensor or a
- * Modern Robotics color sensor. The two are very similiar I2C devices.
- *
- * NOTE: This class is not actually ever currently used, pending testing.
+ * Modern Robotics color sensor. The two are very similar I2C devices; it's easy
+ * for them to share code.
  */
-public class ColorSensorOnI2cDeviceClient extends ColorSensor implements IOpModeStateTransitionEvents
+public class SwerveColorSensor extends ColorSensor implements IOpModeStateTransitionEvents
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -24,45 +25,59 @@ public class ColorSensorOnI2cDeviceClient extends ColorSensor implements IOpMode
     // See http://www.hitechnic.com/cgi-bin/commerce.cgi?preadd=action&key=NCO1038
     // See http://www.modernroboticsinc.com/color-sensor
 
-    public static final int ADDRESS_I2C_HITECHNIC = 2;
-    public static final int ADDRESS_I2C_MODERN    = 60;
+    public static final int ADDRESS_I2C_HITECHNIC       = 2;
+    public static final int ADDRESS_I2C_MODERN          = 60;   // == 0x3c, but changeable
 
-    public static final int ADDRESS_COMMAND_HITECHNIC = 65;
-    public static final int ADDRESS_COMMAND_MODERN    = 3;
+    public static final int REGISTER_COMMAND_HITECHNIC  = 65;   // == 0x41
+    public static final int REGISTER_COMMAND_MODERN     = 3;
 
-    public static final int OFFSET_COMMAND = 4;
-    public static final int OFFSET_COLOR_NUMBER = 5;
-    public static final int OFFSET_RED_READING = 6;
-    public static final int OFFSET_GREEN_READING = 7;
-    public static final int OFFSET_BLUE_READING = 8;
-    public static final int OFFSET_ALPHA_VALUE = 9;
-    public static final int COMMAND_PASSIVE_LED = 1;
-    public static final int COMMAND_ACTIVE_LED = 0;
+    public static final int OFFSET_COMMAND              = 4;
+    public static final int OFFSET_COLOR_NUMBER         = 5;
+    public static final int OFFSET_RED_READING          = 6;
+    public static final int OFFSET_GREEN_READING        = 7;
+    public static final int OFFSET_BLUE_READING         = 8;
+    public static final int OFFSET_ALPHA_VALUE          = 9;                        // MR sensor only
+    public static final int OFFSET_READ_FIRST           = OFFSET_COMMAND;
+    public static final int OFFSET_READ_MAX             = OFFSET_ALPHA_VALUE + 1;
 
-    final I2cDeviceClient i2cDeviceClient;
-    final FLAVOR          flavor;
-          boolean         ledIsEnabled;
+    public static final int COMMAND_PASSIVE_LED         = 1;
+    public static final int COMMAND_ACTIVE_LED          = 0;
+    public static final int COMMAND_BLACK_CALIBRATION   = 0x42;                     // MR sensor only
+    public static final int COMMAND_WHITE_CALIBRATION   = 0x43;                     // MR sensor only
+    public static final int COMMAND_50HZ                = 0x35;                     // MR sensor only
+    public static final int COMMAND_60HZ                = 0x36;                     // MR sensor only
 
-    I2cDeviceReplacementHelper<ColorSensor> helper;
+    final I2cDeviceClient                       i2cDeviceClient;
+    final ClassFactory.SENSOR_FLAVOR            flavor;
+          boolean                               ledIsEnabled;
+          boolean                               ledStateIsKnown;
+    I2cDeviceReplacementHelper<ColorSensor>     helper;
 
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    public enum FLAVOR { HITECHNIC, MODERNROBOTICS };
-
-    public ColorSensorOnI2cDeviceClient(OpMode context, I2cDeviceClient i2cDeviceClient, FLAVOR flavor, ColorSensor target,
-                                        I2cController controller, int targetPort)
+    private SwerveColorSensor(OpMode context, I2cDeviceClient i2cDeviceClient, ClassFactory.SENSOR_FLAVOR flavor, ColorSensor target,
+                             I2cController controller, int targetPort)
         {
-        this.helper = new I2cDeviceReplacementHelper<ColorSensor>(context, this, target, controller, targetPort);
+        switch (flavor)
+            {
+            case HITECHNIC:
+            case MODERNROBOTICS:
+                break;
+            default:
+                throw new IllegalArgumentException(String.format("unimplemented color sensor flavor: %s", flavor.toString()));
+            }
+
+        this.helper          = new I2cDeviceReplacementHelper<ColorSensor>(context, this, target, controller, targetPort);
         this.i2cDeviceClient = i2cDeviceClient;
         this.flavor          = flavor;
-
-        this.ledIsEnabled = false;
+        this.ledIsEnabled    = false;
+        this.ledStateIsKnown = false;
 
         this.i2cDeviceClient.setReadWindow(new II2cDeviceClient.ReadWindow(
-                this.getIbOffsetBase() + OFFSET_COMMAND,
-                OFFSET_ALPHA_VALUE - OFFSET_COMMAND + 1,
+                this.getOffsetBase() + OFFSET_READ_FIRST,
+                OFFSET_READ_MAX - OFFSET_READ_FIRST,
                 II2cDeviceClient.READ_MODE.REPEAT));
 
         RobotStateTransitionNotifier.register(context, this);
@@ -71,30 +86,35 @@ public class ColorSensorOnI2cDeviceClient extends ColorSensor implements IOpMode
     public static ColorSensor create(OpMode context, ColorSensor target)
         {
         I2cController controller;
-        int           port;
-        int           i2cAddr8Bit;
-        FLAVOR        flavor;
+        int port;
+        int i2cAddr8Bit;
+        ClassFactory.SENSOR_FLAVOR flavor;
 
         if (target instanceof HiTechnicNxtColorSensor)
             {
             controller  = MemberUtil.legacyModuleOfHiTechnicColorSensor(target);
             port        = MemberUtil.portOfHiTechnicColorSensor(target);
             i2cAddr8Bit = ADDRESS_I2C_HITECHNIC;
-            flavor      = FLAVOR.HITECHNIC;
+            flavor      = ClassFactory.SENSOR_FLAVOR.HITECHNIC;
             }
         else if (target instanceof ModernRoboticsI2cColorSensor)
             {
             controller  = MemberUtil.deviceModuleOfModernColorSensor(target);
             port        = MemberUtil.portOfModernColorSensor(target);
             i2cAddr8Bit = target.getI2cAddress();
-            flavor      = FLAVOR.MODERNROBOTICS;
+            flavor      = ClassFactory.SENSOR_FLAVOR.MODERNROBOTICS;
             }
         else
             throw new IllegalArgumentException(String.format("unknown color sensor class: %s", target.getClass().getSimpleName()));
 
-        II2cDevice i2cDevice                = new I2cDeviceOnI2cDeviceController(controller, port);
-        I2cDeviceClient i2cDeviceClient     = new I2cDeviceClient(context, i2cDevice, i2cAddr8Bit, false);
-        ColorSensorOnI2cDeviceClient result = new ColorSensorOnI2cDeviceClient(context, i2cDeviceClient, flavor, target, controller, port);
+        return create(context, controller, port, i2cAddr8Bit, flavor, target);
+        }
+
+    public static ColorSensor create(OpMode context, I2cController controller, int port, int i2cAddr8Bit, ClassFactory.SENSOR_FLAVOR flavor, ColorSensor target)
+        {
+        II2cDevice i2cDevice            = new I2cDeviceOnI2cDeviceController(controller, port);
+        I2cDeviceClient i2cDeviceClient = new I2cDeviceClient(context, i2cDevice, i2cAddr8Bit, false);
+        SwerveColorSensor result        = new SwerveColorSensor(context, i2cDeviceClient, flavor, target, controller, port);
         result.arm();
         return result;
         }
@@ -146,7 +166,7 @@ public class ColorSensorOnI2cDeviceClient extends ColorSensor implements IOpMode
 
     @Override public int getVersion()
         {
-        return this.flavor == FLAVOR.HITECHNIC ? 2 : 1;
+        return this.flavor == ClassFactory.SENSOR_FLAVOR.HITECHNIC ? 2 : 1;
         }
 
     @Override public String getConnectionInfo()
@@ -156,7 +176,7 @@ public class ColorSensorOnI2cDeviceClient extends ColorSensor implements IOpMode
 
     @Override public String getDeviceName()
         {
-        return this.flavor == FLAVOR.HITECHNIC
+        return this.flavor == ClassFactory.SENSOR_FLAVOR.HITECHNIC
                 ? "Swerve NXT Color Sensor"
                 : "Swerve Modern Robotics I2C Color Sensor";
         }
@@ -165,16 +185,16 @@ public class ColorSensorOnI2cDeviceClient extends ColorSensor implements IOpMode
     // ColorSensor
     //----------------------------------------------------------------------------------------------
 
-    int getIbOffsetBase()
+    int getOffsetBase()
         {
-        return this.flavor == FLAVOR.HITECHNIC
-                ? (ADDRESS_COMMAND_HITECHNIC - OFFSET_COMMAND)
-                : (ADDRESS_COMMAND_MODERN - OFFSET_COMMAND);
+        return this.flavor == ClassFactory.SENSOR_FLAVOR.HITECHNIC
+                ? (REGISTER_COMMAND_HITECHNIC - OFFSET_COMMAND)
+                : (REGISTER_COMMAND_MODERN - OFFSET_COMMAND);
         }
 
     int read(int dib)
         {
-        byte b = this.i2cDeviceClient.read8(getIbOffsetBase() + dib);
+        byte b = this.i2cDeviceClient.read8(getOffsetBase() + dib);
         return TypeConversion.unsignedByteToInt(b);
         }
 
@@ -205,10 +225,11 @@ public class ColorSensorOnI2cDeviceClient extends ColorSensor implements IOpMode
 
     @Override public synchronized void enableLed(boolean enable)
         {
-        if (this.ledIsEnabled != enable)
+        if (!this.ledStateIsKnown || this.ledIsEnabled != enable)
             {
             this.ledIsEnabled = enable;
-            this.i2cDeviceClient.write8(getIbOffsetBase() + OFFSET_COMMAND, enable ? COMMAND_ACTIVE_LED : COMMAND_PASSIVE_LED);
+            this.ledStateIsKnown = true;
+            this.i2cDeviceClient.write8(getOffsetBase() + OFFSET_COMMAND, enable ? COMMAND_ACTIVE_LED : COMMAND_PASSIVE_LED);
             }
         }
 

@@ -362,17 +362,13 @@ public class ThunkingHardwareFactory
                 {
                 @Override public ColorSensor create(ColorSensor target)
                     {
-                    if (target instanceof ColorSensorOnI2cDeviceClient)
+                    if (target instanceof SwerveColorSensor)
                         {
                         return target;
                         }
-                    else if (false && target instanceof HiTechnicNxtColorSensor)
+                    else if (target instanceof HiTechnicNxtColorSensor || target instanceof ModernRoboticsI2cColorSensor)
                         {
-                        return ColorSensorOnI2cDeviceClient.create(context, target);
-                        }
-                    else if (false && target instanceof ModernRoboticsI2cColorSensor)
-                        {
-                        return ColorSensorOnI2cDeviceClient.create(context, target);
+                        return ClassFactory.createSwerveColorSensor(context, target);
                         }
                     else
                         return ThunkedColorSensor.create(target);
