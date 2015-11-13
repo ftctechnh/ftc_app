@@ -26,19 +26,25 @@ public class DriveTest extends LinearOpMode {
         backLeft = hardwareMap.dcMotor.get("leftMotor2");
         frontRight = hardwareMap.dcMotor.get("rightMotor1");
         backRight = hardwareMap.dcMotor.get("rightMotor2");
+        telemetry.addData("Hardware Mapped", "Done");
 
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
-        frontRight.setDirection(DcMotor.Direction.REVERSE);
+        backLeft.setDirection(DcMotor.Direction.REVERSE);
+
         frontLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         frontRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        telemetry.addData("Encoders Reset", "Done");
 
 
         waitForStart();
+        telemetry.addData("Waited for Start", "Done");
 
         while(opModeIsActive()){
 
 
-            while(frontLeft.getCurrentPosition() < 210)
+            telemetry.addData("Got into OpMode", "Done");
+
+            while(frontLeft.getCurrentPosition() < 1049)
             {
                 frontLeft.setPower(.5);
                 frontRight.setPower(.5);
@@ -47,8 +53,10 @@ public class DriveTest extends LinearOpMode {
                 telemetry.addData("Text", "*** Robot Data***");
                 telemetry.addData(" Left Position", frontLeft.getCurrentPosition());
                 telemetry.addData("Right Position", frontRight.getCurrentPosition());
-                waitForNextHardwareCycle();
             }
+
+
+            telemetry.addData("Finished Moving", "Done");
 
             frontLeft.setPower(0);
             frontRight.setPower(0);
