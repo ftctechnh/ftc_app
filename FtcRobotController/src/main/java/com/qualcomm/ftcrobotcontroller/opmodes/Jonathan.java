@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 /**
  * Created by rayzhang on 10/26/15.
  */
-public class Johansson extends OpMode {
+public class Jonathan extends OpMode {
     DcMotor leftMotor;
     DcMotor rightMotor;
     DcMotor upperMotor;
@@ -20,29 +20,25 @@ public class Johansson extends OpMode {
     }
     @Override
     public void loop(){
-        float leftY = gamepad1.left_stick_y;
-        float rightY= -gamepad1.right_stick_y;
+        float leftY = -gamepad1.left_stick_y;
+        float rightY= gamepad1.right_stick_y;
         float rightTrigger=gamepad1.right_trigger;
-        float leftTrigger=gamepad1.left_trigger;
+        float leftTrigger=-gamepad1.left_trigger;
         boolean a=gamepad1.a;
         boolean b=gamepad1.b;
         boolean x=gamepad1.x;
         boolean y=gamepad1.y;
-        if (a)
+        if (y)
         {
             upperMotor.setDirection(DcMotor.Direction.FORWARD);
             upperMotor.setPower(1);
         }
-        if (b)
+        if (a)
         {
             upperMotor.setDirection(DcMotor.Direction.REVERSE);
             upperMotor.setPower(1);
         }
-        if ((leftTrigger<0)&&(rightTrigger>0)||((leftTrigger==0)&&(rightTrigger==0)))
-        {
-
-        }
-        else
+        if (!((leftTrigger<0)&&(rightTrigger>0)))
         {
             if (rightTrigger>0)
             {
@@ -53,7 +49,11 @@ public class Johansson extends OpMode {
                 bottomMotor.setPower(leftTrigger);
             }
         }
-        if ((a==false)&&(b==false))
+        if ((leftTrigger==0)&&(rightTrigger==0))
+        {
+            bottomMotor.setPower(0);
+        }
+        if ((a==false)&&(y==false))
         {
             upperMotor.setPower(0);
         }
