@@ -61,25 +61,25 @@ public class ClassifiedTeleOp extends OpMode{
             lift.setGear("Low");
         }
 
-        /*
+
         if(gamepad2.y)
-            lift.armMotor.setPower(lift.armMotorForwardSpeed);
+            arm.motor.setPower(arm.motorForwardSpeed);
 
         if(gamepad2.a)
-            lift.armMotor.setPower(lift.armMotorBackwardSpeed);
+            arm.motor.setPower(arm.motorBackwardSpeed);
 
         if(!(gamepad2.y || gamepad2.a))
-            lift.armMotor.setPower(lift.armMotorStoppedSpeed);
+            arm.motor.setPower(arm.motorStoppedSpeed);
 
         if(gamepad2.right_bumper)
-            lift.armServo.setPosition(lift.armServoUpwardSpeed);
+           arm.servo.setPosition(arm.servoUpwardSpeed);
 
         if(gamepad2.right_trigger > 0.5)
-            lift.armServo.setPosition(lift.armServoDownwardSpeed);
+            arm.servo.setPosition(arm.servoDownwardSpeed);
 
         if(!(gamepad2.right_bumper || gamepad2.right_trigger > 0.5))
-            lift.armServo.setPosition(lift.armServoStoppedSpeed);
-            */
+            arm.servo.setPosition(arm.servoDownwardSpeed);
+
 
         lift.targetPosition += 100 * gamepad2.left_stick_y;
         lift.updatePosition();

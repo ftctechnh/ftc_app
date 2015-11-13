@@ -37,10 +37,6 @@ public class Lift {
         leftShifter.setPosition(leftShifterHighGear);
         rightShifter.setPosition(rightShifterHighGear);
 
-        leftMotor.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
-        rightMotor.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
-        leftMotor.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        rightMotor.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
     }
 
     public void setSpeed(double speed){

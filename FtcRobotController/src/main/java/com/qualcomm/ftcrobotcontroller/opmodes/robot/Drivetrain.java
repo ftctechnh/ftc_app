@@ -14,7 +14,7 @@ public class Drivetrain {
     public DcMotor backRight;
 
     double wheelCircumference = 6 * Math.PI;
-    double ticksPerRotiation = 280;
+    double ticksPerRotation = 280;
 
     public Drivetrain(){
     }
@@ -81,7 +81,7 @@ public class Drivetrain {
     public void drive(double inches, double speed){
         this.resetEncoders();
 
-        double targetDistance = ticksPerRotiation * inches/wheelCircumference;
+        double targetDistance = ticksPerRotation * inches/wheelCircumference;
 
         while(Math.abs(this.getAverageEncoderValue("All")) < Math.abs(targetDistance))
         {
