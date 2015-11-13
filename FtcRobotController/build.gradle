@@ -7,6 +7,26 @@ android {
     }
     compileSdkVersion 'Google Inc.:Google APIs:19'
     buildToolsVersion '21.1.2'
+    def versionPropsFile = file('version.properties')
+
+    if (versionPropsFile.canRead()) {
+        def Properties versionProps = new Properties()
+
+        versionProps.load(new FileInputStream(versionPropsFile))
+
+        def code = versionProps['BUILD_NUMBER'].toInteger() + 1
+
+        versionProps['BUILD_NUMBER'] = code.toString()
+        versionProps.store(versionPropsFile.newWriter(), null)
+
+        defaultConfig {
+            versionName "1.1." + code + " (" + new Date() + ")"
+            minSdkVersion 16
+            targetSdkVersion 19
+        }
+    } else {
+        throw new GradleException("Could not read version.properties!")
+    }
 }
 
 buildscript {
