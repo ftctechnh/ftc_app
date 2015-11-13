@@ -270,7 +270,7 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
             bytes[1]          = (byte)(bytes[1] << 6);
             ByteBuffer buffer = ByteBuffer.wrap(bytes).order(ByteOrder.BIG_ENDIAN);
             int tenBits       = (buffer.getShort()>>6) & 0x3FF;
-            double result     = ((double)tenBits) / 4 * 0.080;
+            double result     = ((double)tenBits) * 0.020;
             return result;
             }
         catch (RuntimeInterruptedException e)
