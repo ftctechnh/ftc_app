@@ -45,7 +45,17 @@ public class EncoderTest extends LinearOpMode {
         rwb = hardwareMap.dcMotor.get("rightwheelB");
         rwa.setDirection(DcMotor.Direction.REVERSE);
         rwb.setDirection(DcMotor.Direction.REVERSE);
-        lwa.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+
+        lwa.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        rwa.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        lwb.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        rwb.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+
+        lwa.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        rwa.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        lwb.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        rwb.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+sleep(100);
 
         liftL = hardwareMap.dcMotor.get("liftL");
         liftR = hardwareMap.dcMotor.get("liftR");
@@ -72,11 +82,12 @@ public class EncoderTest extends LinearOpMode {
         waitForStart();
 
 
-        while(1==1) {
+        while(rwa.getCurrentPosition() < 9000) {
 
-
-
-            telemetry.addData("Left Position", lwa.getCurrentPosition());
+            telemetry.addData("LeftA Position", lwa.getCurrentPosition());
+            telemetry.addData("LeftB Position", lwb.getCurrentPosition());
+            telemetry.addData("RightA Position", rwa.getCurrentPosition());
+            telemetry.addData("RightB Position", rwb.getCurrentPosition());
 
             lwa.setPower(0.8);
             lwb.setPower(0.8);
@@ -87,14 +98,18 @@ public class EncoderTest extends LinearOpMode {
         }
 
         //telemetry.addData("Left Position", lEncoder);
-/*
+
         lwa.setPower(0);
         lwb.setPower(0);
         rwa.setPower(0);
         rwb.setPower(0);
 
-        sleep(5000);
-*/
-    }
+        sleep(1000);
+
+
+        }
+
+
+
 }
 

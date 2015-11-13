@@ -29,7 +29,7 @@ public class ExampleDriveWithEncoders extends OpMode {
     final static int ENCODER_CPR = 1440;     //Encoder Counts per Revolution
     final static double GEAR_RATIO = 2;      //Gear Ratio
     final static int WHEEL_DIAMETER = 4;     //Diameter of the wheel in inches
-    final static int DISTANCE = 24;          //Distance in inches to drive
+    final static int DISTANCE = 100;          //Distance in inches to drive
 
     final static double CIRCUMFERENCE = Math.PI * WHEEL_DIAMETER;
     final static double ROTATIONS = DISTANCE / CIRCUMFERENCE;

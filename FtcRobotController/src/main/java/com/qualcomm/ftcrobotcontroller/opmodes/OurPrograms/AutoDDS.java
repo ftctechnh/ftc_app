@@ -93,17 +93,20 @@ public class AutoDDS extends LinearOpMode{
         }
 
         ddspivot.setPosition(1);
-        ddsclaw.setPosition(0.1);
+        ddsclaw.setPosition(0);
         sleep(500);
 
         //24 in. is 1.9 rotations is 2750 counts
 
-        do
-        {
-            lwa.setTargetPosition(10000);
-            lwb.setTargetPosition(10000);
-            rwa.setTargetPosition(10000);
-            rwb.setTargetPosition(10000);
+        lwa.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        lwb.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        rwb.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        rwa.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+
+            lwa.setTargetPosition(1100000);
+            lwb.setTargetPosition(1100000);
+            rwa.setTargetPosition(1100000);
+            rwb.setTargetPosition(1100000);
 
             lwa.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
             lwb.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
@@ -115,7 +118,7 @@ public class AutoDDS extends LinearOpMode{
             rwa.setPower(0.8);
             rwb.setPower(0.8);
             sleep(10);
-        }while(rwa.isBusy());
+
 
         sleep(1000);
 
@@ -181,6 +184,8 @@ public class AutoDDS extends LinearOpMode{
             telemetry.addData("h", String.format("%03d", heading));
 
         }
+
+
 
         //stop
         lwa.setPower(0);

@@ -76,10 +76,10 @@ public class DriveToTest extends LinearOpMode
 
         //telemetry.addData("LeftEncoderValue", lwb.getCurrentPosition());
 
-        lwa.setTargetPosition(1000);
-        lwb.setTargetPosition(1000);
-        rwa.setTargetPosition(1000);
-        rwb.setTargetPosition(1000);
+        lwa.setTargetPosition(100000);
+        lwb.setTargetPosition(100000);
+        rwa.setTargetPosition(100000);
+        rwb.setTargetPosition(100000);
 
         lwa.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
         lwb.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
