@@ -49,6 +49,8 @@ public class TeleOp extends OpMode {
 	 */
 	// TETRIX VALUES.
 
+
+
 	DcMotor armLowerMotor;
 	DcMotor armUpperMotor;
 
@@ -87,6 +89,7 @@ public class TeleOp extends OpMode {
 
 		armUpperMotor = hardwareMap.dcMotor.get("armUpperMotor");
 		armLowerMotor = hardwareMap.dcMotor.get("armLowerMotor");
+		
 	}
 
 	/*
@@ -109,7 +112,7 @@ public class TeleOp extends OpMode {
 		// direction: left_stick_x ranges from -1 to 1, where -1 is full left
 		// and 1 is full right
 		float UpperMotorSpeed = gamepad1.left_stick_y;
-		float LowerMotorSpeed = gamepad1.right_stick_y/2f;
+		float LowerMotorSpeed = gamepad1.right_stick_y;
 
 		// clip the right/left values so that the values never exceed +/- 1
 		UpperMotorSpeed = Range.clip(UpperMotorSpeed, -1f, 1f);

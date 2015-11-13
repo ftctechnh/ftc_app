@@ -132,7 +132,8 @@ public class estProgram extends OpMode {
 		motorRight.setPower(right);
 		motorLeft.setPower(left);
 
-		
+		motorRight.getCurrentPosition();
+
 
 		// update the position of the arm.
 		if (gamepad1.a) {
