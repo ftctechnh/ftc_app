@@ -36,11 +36,21 @@ public class BlueAuto extends LinearOpMode {
         rightButtonServo.setPosition(0.5);
         leftButtonServo.setPosition(0.5);
 
+        drivetrain.frontLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        drivetrain.frontRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        drivetrain.backLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        drivetrain.backRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+
+        drivetrain.frontLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        drivetrain.frontRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        drivetrain.backLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        drivetrain.backRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+
         waitOneFullHardwareCycle();
 
         waitForStart();
 
-        drivetrain.drive(12,0.5);
+        drivetrain.drive(12,-0.5);
 
 
     }
