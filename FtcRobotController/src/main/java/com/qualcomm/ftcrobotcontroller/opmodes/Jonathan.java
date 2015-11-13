@@ -42,11 +42,11 @@ public class Jonathan extends OpMode {
         {
             if (rightTrigger>0)
             {
-                bottomMotor.setPower(rightTrigger);
+                bottomMotor.setPower(0.6*rightTrigger);
             }
             if (leftTrigger<0)
             {
-                bottomMotor.setPower(leftTrigger);
+                bottomMotor.setPower(0.6*leftTrigger);
             }
         }
         if ((leftTrigger==0)&&(rightTrigger==0))
