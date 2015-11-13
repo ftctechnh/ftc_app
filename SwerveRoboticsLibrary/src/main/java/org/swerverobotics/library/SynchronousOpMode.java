@@ -221,6 +221,10 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         {
         synchronized (this.loopLock)
             {
+            // Get out of here ASAP if the thread has been asked to interrupt
+            if (Thread.currentThread().isInterrupted())
+                throw new InterruptedException();
+
             // If new input has arrived since anyone last looked, then let our caller process that
             // if he is looking at the game pad input. If he's not, or if there's nothing there,
             // then we save some cycles and processing power by waiting instead of spinning.
