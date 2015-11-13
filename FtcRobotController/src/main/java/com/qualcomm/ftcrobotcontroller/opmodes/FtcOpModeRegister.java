@@ -66,6 +66,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register ("EETestAuton", EETestAuton.class);
     manager.register ("GyroTestOp", GyroTestOp.class);
     manager.register ("BlinkOp", BlinkOp.class);
+    manager.register ("SlideOpMode", SlideOpMode.class);
 
 
 
