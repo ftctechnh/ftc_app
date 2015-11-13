@@ -89,7 +89,7 @@ public class TeleOp extends OpMode {
 
 		armUpperMotor = hardwareMap.dcMotor.get("armUpperMotor");
 		armLowerMotor = hardwareMap.dcMotor.get("armLowerMotor");
-		
+
 	}
 
 	/*
