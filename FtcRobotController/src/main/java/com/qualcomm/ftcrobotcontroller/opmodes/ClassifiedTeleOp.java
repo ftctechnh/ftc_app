@@ -15,6 +15,7 @@ public class ClassifiedTeleOp extends OpMode{
     Drivetrain drivetrain = new Drivetrain();
     Arm arm = new Arm();
     Intake intake = new Intake();
+    Dumper dumper = new Dumper();
 
     @Override
     public void init() {
@@ -22,28 +23,32 @@ public class ClassifiedTeleOp extends OpMode{
         drivetrain.init(hardwareMap);
         arm.init(hardwareMap);
         intake.init(hardwareMap);
+        dumper.init(hardwareMap);
     }
 
     @Override
     public void loop() {
 
 
-        if(!lift.isLocked)
-            drivetrain.arcadeDrive(gamepad1.left_stick_y, gamepad1.right_stick_x);
-
-
         if(!lift.isLocked) {
-            lift.targetPosition += 100 * gamepad2.left_stick_y;
+            if (lift.isShiftedHigh) {
+                drivetrain.arcadeDrive(gamepad1.left_stick_y, gamepad1.right_stick_x);
+                lift.setSpeed(gamepad2.left_stick_y);
+                //lift.targetPosition += 100 * gamepad2.left_stick_y;
+                //lift.updatePosition();
+            } else {
+                lift.setSpeed(gamepad2.left_stick_y * 3.0 / 4.0);
+                drivetrain.arcadeDrive(-gamepad2.left_stick_y, 0);
+            }
         }
-        else
-        {
-            lift.setSpeed(gamepad2.left_stick_y * 3.0 / 4.0);
-            drivetrain.arcadeDrive(-gamepad2.left_stick_y, 0);
+        else{
+            drivetrain.arcadeDrive(0,0);
+            lift.setSpeed(0);
         }
 
 
         if(gamepad2.dpad_up){
-            lift.isLocked = true;
+            lift.isShiftedHigh = true;
 
             drivetrain.arcadeDrive(0,0);
             lift.setSpeed(0);
@@ -51,15 +56,16 @@ public class ClassifiedTeleOp extends OpMode{
             lift.setGear("High");
         }
 
-
         if(gamepad2.dpad_down){
-            lift.isLocked = false;
+            lift.isShiftedHigh = false;
 
             drivetrain.arcadeDrive(0, 0);
             lift.setSpeed(0);
 
             lift.setGear("Low");
         }
+
+        
 
 
         if(gamepad2.y)
@@ -71,18 +77,24 @@ public class ClassifiedTeleOp extends OpMode{
         if(!(gamepad2.y || gamepad2.a))
             arm.motor.setPower(arm.motorStoppedSpeed);
 
-        if(gamepad2.right_bumper)
+
+        if(gamepad2.right_stick_y >= 0.4)
            arm.servo.setPosition(arm.servoUpwardSpeed);
 
-        if(gamepad2.right_trigger > 0.5)
+        if(gamepad2.right_stick_y <= -0.4)
             arm.servo.setPosition(arm.servoDownwardSpeed);
 
-        if(!(gamepad2.right_bumper || gamepad2.right_trigger > 0.5))
+        if(Math.abs(gamepad2.right_stick_y) < 0.4)
             arm.servo.setPosition(arm.servoDownwardSpeed);
 
 
-        lift.targetPosition += 100 * gamepad2.left_stick_y;
-        lift.updatePosition();
-        telemetry.addData("Lift Position", "Lift Position: " + String.format("%d", lift.leftMotor.getCurrentPosition()));
+        if(gamepad2.left_bumper)
+            dumper.setRight();
+
+        if(gamepad2.right_bumper)
+            dumper.setRight();
+
+        if(!(gamepad2.left_bumper || gamepad2.right_bumper))
+            dumper.setNeutral();
     }
 }
