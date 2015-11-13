@@ -28,11 +28,10 @@ public class LiftTest extends OpMode {
 
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
 
-        leftMotor.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
-        rightMotor.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
-        leftMotor.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        rightMotor.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-
+        leftMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        rightMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        leftMotor.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        rightMotor.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
     }
 
     @Override
@@ -44,36 +43,46 @@ public class LiftTest extends OpMode {
         error = 0;
         output = 0;
 
-        leftMotor.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
-        rightMotor.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
-        leftMotor.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        rightMotor.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        leftMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        rightMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        leftMotor.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        rightMotor.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
     }
 
     @Override
     public void loop() {
 
-        if(Math.abs(gamepad1.left_stick_y) > 0.1)
+        /*
+        if(Math.abs(gamepad1.left_stick_y) > 0.2)
             targetPosition += gamepad1.left_stick_y*10;
 
-        currentPosition = rightMotor.getCurrentPosition();
+        currentPosition = (rightMotor.getCurrentPosition()+leftMotor.getCurrentPosition())/2;
 
         error = targetPosition - currentPosition;
 
         output = error * KP;
 
+        */
+
+        if(Math.abs(gamepad1.left_stick_y) > 0.2)
+            output = gamepad1.left_stick_y;
+        else
+            output = 0;
+
         output = Range.clip(output, -1, 1);
 
-        //leftMotor.setPower(output);
+        leftMotor.setPower(output);
         rightMotor.setPower(output);
+
 
         telemetry.addData("Text", "Lift Test");
         telemetry.addData(" Target Position", targetPosition);
         telemetry.addData("Current Position", currentPosition);
         telemetry.addData("          Output", output);
         telemetry.addData("   Left Position", leftMotor.getCurrentPosition());
+        telemetry.addData("  Right Position", rightMotor.getCurrentPosition());
         telemetry.addData("      Left Motor",leftMotor.getPower());
-
+        telemetry.addData("     Right Motor", rightMotor.getPower());
     }
 }
 
