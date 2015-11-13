@@ -14,7 +14,7 @@ public class Drivetrain {
     public DcMotor backRight;
 
     double wheelCircumference = 6 * Math.PI;
-    double ticksPerRotation = 280;
+    double ticksPerRotation = 1049;
 
     public Drivetrain(){
     }

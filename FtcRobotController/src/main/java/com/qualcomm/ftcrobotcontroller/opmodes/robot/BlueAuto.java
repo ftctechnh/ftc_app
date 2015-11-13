@@ -9,21 +9,26 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by Nikhil on 11/12/2015.
  */
-public class BlueAuto extends LinearOpMode {
+public class BlueAuto extends OpMode {
 
-        //Lift lift = new Lift();
-        Drivetrain drivetrain = new Drivetrain();
-        //Arm arm = new Arm();
-        //Intake intake = new Intake();
 
-        Servo rightButtonServo;
-        Servo leftButtonServo;
-        ColorSensor sensorRGB;
+    //Lift lift = new Lift();
+    Drivetrain drivetrain = new Drivetrain();
+    //Arm arm = new Arm();
+    //Intake intake = new Intake();
 
-        double rightButtonServoPressed = 0.45;
-        double leftButtonServoPressed = 0.57;
+    Servo rightButtonServo;
+    Servo leftButtonServo;
+    ColorSensor sensorRGB;
 
-    public void runOpMode() throws InterruptedException {
+    double rightButtonServoPressed = 0.45;
+    double leftButtonServoPressed = 0.57;
+
+
+
+
+    @Override
+    public void init() {
 
         //lift.init(hardwareMap);
         drivetrain.init(hardwareMap);
@@ -36,22 +41,36 @@ public class BlueAuto extends LinearOpMode {
         rightButtonServo.setPosition(0.5);
         leftButtonServo.setPosition(0.5);
 
-        drivetrain.frontLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        drivetrain.frontRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        drivetrain.backLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        drivetrain.backRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        drivetrain.resetEncoders();
 
         drivetrain.frontLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         drivetrain.frontRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         drivetrain.backLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         drivetrain.backRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 
-        waitOneFullHardwareCycle();
+    }
 
-        waitForStart();
+    /*
+    public void init_loop(){
+        super.init_loop();
+
+        drivetrain.resetEncoders();
+    }
+    */
+
+
+
+    @Override
+    public void loop() {
 
         drivetrain.drive(12,-0.5);
 
+
+
+        telemetry.addData("rightMotor1", drivetrain.frontRight.getCurrentPosition());
+        telemetry.addData("leftMotor1", drivetrain.frontLeft.getCurrentPosition());
+        telemetry.addData("rightMotor2", drivetrain.backRight.getCurrentPosition());
+        telemetry.addData("leftMotor2", drivetrain.backLeft.getCurrentPosition());
 
     }
 }
