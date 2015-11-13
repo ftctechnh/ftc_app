@@ -10,7 +10,7 @@ public class OurAutonomous {
 
         //turn left/right (depending on current position)
 
-        //** robotic will be going towards the sacred button
+        //** robot will be going towards the sacred button
 
         // robot arm extends to press light button using light sensor in order to know what button to press
     }
