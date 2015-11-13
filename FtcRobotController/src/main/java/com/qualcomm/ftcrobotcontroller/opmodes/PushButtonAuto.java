@@ -10,6 +10,7 @@ import junit.framework.Test;
  */
  abstract public class PushButtonAuto extends OpMode
 {
+<<<<<<< HEAD
 
     TestBot testBot;
 
@@ -29,11 +30,25 @@ import junit.framework.Test;
         testBot.moveStraightEncoders(24.0f, .75f);
         senseColor();
         if (//parameter for red)
+=======
+    /*public void runOpMode()
+    {
+        moveStraightLineDist(48.0f, .75f,  true);
+        spinOnCenter(90.0f, .5f,  true);
+        moveStraightLineDist(48.0f, .75f,   true);
+        spinOnCenter(90f, .5f,  false);
+        moveStraightLineDist(24.0f, .75f,true);
+        spinOnCenter(90.0f, .5f,  true);
+        moveStraightLineDist(24.0f, .75f, true);
+        senseColor();
+        if (false)
+>>>>>>> 7cb1cc7b1cb19b48d62a6258617511c8711114e7
             {
-                   pushBotton(true)
+                   pushBotton(true);
             }
-        if (//parameter for blue)
+        if (false)
                 {
+<<<<<<< HEAD
                   pushButton(false)
                 };
         spinOnCenter(48.0f, .75f, true);
@@ -49,4 +64,11 @@ import junit.framework.Test;
     {
         testBot.stop();
     }
+=======
+                  pushButton(false);
+                }
+        spinOnCenter(48.0f, .75f, true);
+        moveStraightLineDist(24.0f, .75f, true);
+    }*/
+>>>>>>> 7cb1cc7b1cb19b48d62a6258617511c8711114e7
 }
