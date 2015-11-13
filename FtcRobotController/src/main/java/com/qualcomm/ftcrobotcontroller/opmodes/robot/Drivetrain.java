@@ -21,8 +21,8 @@ public class Drivetrain {
 
     public void init(HardwareMap hardwareMap){
         frontLeft = hardwareMap.dcMotor.get("leftMotor1");
-        frontRight = hardwareMap.dcMotor.get("leftMotor2");
-        backLeft = hardwareMap.dcMotor.get("rightMotor1");
+        backLeft = hardwareMap.dcMotor.get("leftMotor2");
+        frontRight = hardwareMap.dcMotor.get("rightMotor1");
         backRight = hardwareMap.dcMotor.get("rightMotor2");
 
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -55,15 +55,15 @@ public class Drivetrain {
     public void resetEncoders(){
         this.brake();
 
-        frontLeft.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
-        frontRight.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
-        backLeft.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
-        backRight.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
+        frontLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        frontRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        backLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        backRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
 
-        frontLeft.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        frontRight.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        backLeft.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        backRight.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        frontLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        frontRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        backLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        backRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
     }
 
     public int getAverageEncoderValue(String side) {
