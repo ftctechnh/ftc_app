@@ -14,6 +14,8 @@ public class MC {
 
     public void moveForward(int distance, int speed, DcMotor rightMotor, DcMotor leftMotor){
         //move for distance at speed using motors right and left
+        int rightPos = rightMotor.getCurrentPosition();
+        int leftPos = leftMotor.getCurrentPosition();
     }
 
     public void moveBackward(int distance, int speed, DcMotor rightMotor, DcMotor leftMotor){
