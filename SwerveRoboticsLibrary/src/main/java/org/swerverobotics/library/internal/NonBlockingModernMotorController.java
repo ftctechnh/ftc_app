@@ -63,8 +63,8 @@ public class NonBlockingModernMotorController extends ModernRoboticsUsbDevice im
     @Override public int getMotorCurrentPosition(int motor)
         {
         this.validateMotor(motor);
-        byte[] var2 = this.read(ADDRESS_MOTOR_CURRENT_ENCODER_VALUE_MAP[motor], 4);
-        return TypeConversion.byteArrayToInt(var2);
+        byte[] bytes = this.read(ADDRESS_MOTOR_CURRENT_ENCODER_VALUE_MAP[motor], 4);
+        return TypeConversion.byteArrayToInt(bytes);
         }
 
     @Override public int getMotorTargetPosition(int motor)
@@ -191,7 +191,7 @@ public class NonBlockingModernMotorController extends ModernRoboticsUsbDevice im
         {
         for (int motor = FIRST_MOTOR; motor <= LAST_MOTOR; motor++)
             {
-            this.isBusyHelpers[motor].noteMotorMovement(this.getMotorCurrentPosition(motor));
+            this.isBusyHelpers[motor].noteMotorPosition(this.getMotorCurrentPosition(motor));
             }
         }
 
@@ -254,7 +254,7 @@ public class NonBlockingModernMotorController extends ModernRoboticsUsbDevice im
             this.targetPositionSet = true;
             }
 
-        public synchronized void noteMotorMovement(int position)
+        public synchronized void noteMotorPosition(int position)
             {
             this.currentPosition = position;
             this.currentPositionSet = true;
