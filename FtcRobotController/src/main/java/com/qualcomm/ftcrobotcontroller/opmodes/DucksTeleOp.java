@@ -23,17 +23,17 @@ public class DucksTeleOp extends OpMode {
         DcMotor winchwheel=hardwareMap.dcMotor.get("winchwheel");
 //left wheel
         if(gamepad1.left_stick_y>.05){
-            left.setPower(Math.pow(gamepad1.left_stick_y, 3/2));
+            left.setPower(Math.pow(gamepad1.left_stick_y, 2));
         }else if(gamepad1.left_stick_y<.05) {
-            left.setPower(-Math.pow(gamepad1.left_stick_y, 3/2));
+            left.setPower(-Math.pow(gamepad1.left_stick_y, 2));
         } else{
             left.setPower(0);
         }
 //right wheel
         if(gamepad1.right_stick_y>.05){
-            right.setPower(-Math.pow(gamepad1.right_stick_y,3/2));
+            right.setPower(-Math.pow(gamepad1.right_stick_y,2));
         } else if(gamepad1.right_stick_y<.05){
-            right.setPower(Math.pow(gamepad1.right_stick_y,3/2));
+            right.setPower(Math.pow(gamepad1.right_stick_y,2));
         }else{
             right.setPower(0);
         }
