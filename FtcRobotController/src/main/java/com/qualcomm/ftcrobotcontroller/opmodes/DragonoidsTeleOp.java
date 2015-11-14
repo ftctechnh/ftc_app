@@ -9,15 +9,18 @@ import java.util.HashMap;
 public class DragonoidsTeleOp extends OpMode {
     HashMap<String, DcMotor> driveMotors = new HashMap<String, DcMotor>();
 
+    @Override
     public void init() {
         driveMotors.put("right", hardwareMap.dcMotor.get("rightDrive"));
         driveMotors.put("left", hardwareMap.dcMotor.get("leftDrive"));
         driveMotors.get("left").setDirection(DcMotor.Direction.REVERSE);
     }
+    @Override
     public void loop() {
         // If y equals -1 then joystick is pushed all the way forward.
         float left = -gamepad1.left_stick_y;
         float right = -gamepad1.right_stick_y;
+
         right = Range.clip(right, -1, 1);
         left = Range.clip(left, -1, 1);
         right = scaleInput(right);
