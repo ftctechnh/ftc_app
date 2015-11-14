@@ -45,7 +45,6 @@ public class TankDrive2Motors_V2 extends LinearOpMode {
     DcMotor Right;
     DcMotor Left;
     Servo Leftarm;
-    int speed = 4;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -55,26 +54,18 @@ public class TankDrive2Motors_V2 extends LinearOpMode {
         Leftarm = hardwareMap.servo.get("arm");
 
         //Set Directions
-        Left.setDirection(DcMotor.Direction.REVERSE);
+        Right.setDirection(DcMotor.Direction.REVERSE);
+        Leftarm.setPosition(0);
         waitForStart();
 
         while (opModeIsActive()) {
             //Get Joystick Values
             float left = gamepad1.left_stick_y;
             float right = gamepad1.right_stick_y;
-            boolean dUp = gamepad1.dpad_up;
-            boolean dDown = gamepad1.dpad_down;
             boolean x = gamepad1.x;
             // clip the right/left values so that the values never exceed +/- 1
             right = Range.clip(right, -1, 1);
             left = Range.clip(left, -1, 1);
-            if (dUp && speed < 4) {
-                speed++;
-                dUp = false;
-            } else if (dDown && speed > 1) {
-                speed--;
-                dDown = false;
-            }
 
             if (x && Leftarm.getPosition() != 0.5) {
                 Leftarm.setPosition(0.5);
@@ -83,8 +74,8 @@ public class TankDrive2Motors_V2 extends LinearOpMode {
             }
 
             // write the values to the motors
-            Right.setPower(right * (speed / 4));
-            Left.setPower(left * (speed / 4));
+            Right.setPower(right);
+            Left.setPower(left);
             //Return the left and right encoder values to the driver station
             telemetry.addData("Right: ", Right.getCurrentPosition());
             telemetry.addData("Left: ", Left.getCurrentPosition());
