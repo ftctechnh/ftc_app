@@ -31,15 +31,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
-import android.hardware.Camera;
-import android.media.CameraProfile;
+//import android.hardware.Camera;
+//import android.media.CameraProfile;
 
 import com.qualcomm.ftccommon.DbgLog;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
-import com.sun.javafx.scene.CameraHelper;
+//import com.sun.javafx.scene.CameraHelper;
 
 /**
  * TeleOp Mode
