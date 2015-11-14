@@ -38,11 +38,11 @@ allprojects {
 
 dependencies {
     compile files('libs/android-support-v4.jar')
-    compile(name: 'dx', ext: 'jar')
     compile(name: 'RobotCore-release', ext: 'aar')
     compile(name: 'Hardware-release', ext: 'aar')
     compile(name: 'FtcCommon-release', ext: 'aar')
     compile(name: 'ModernRobotics-release', ext: 'aar')
     compile(name: 'Analytics-release', ext: 'aar')
     compile(name: 'WirelessP2p-release', ext: 'aar')
+    compile(name: 'dx', ext:'jar')
 }

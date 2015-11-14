@@ -1,7 +1,5 @@
-package com.qualcomm.ftcrobotcontroller.opmodes;
-
+package io.github.thunderbots.robotcontroller.fileloader;
 import android.os.Environment;
-import android.util.Log;
 
 import com.qualcomm.ftcrobotcontroller.FtcRobotControllerActivity;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -16,6 +14,7 @@ import java.util.List;
 
 import dalvik.system.DexClassLoader;
 import dalvik.system.DexFile;
+import io.github.thunderbots.robotcontroller.logging.ThunderLog;
 
 /**
  * The {@code OpModeClassLoader} class is responsible for loading class files into instantiated
@@ -29,8 +28,6 @@ public class OpModeClassLoader {
     private static List<Class<? extends OpMode>> opModeList;
 
     public static final String FILE_LOCATION = "FIRST";
-
-    public static final String LOG_TAG = "Thunderbots";
 
     public static List<Class<? extends OpMode>> loadJars(List<File> fileList) {
         URL[] jarurls = getJarURLs(fileList);
@@ -49,7 +46,7 @@ public class OpModeClassLoader {
 
     private static ClassLoader getClassLoader(URL[] jarurls) {
         String pathString = getDelimitedPathString(jarurls);
-        File cacheFile = new File(FtcRobotControllerActivity.getPrivateFilesDir(), "/thunderbots/");
+        File cacheFile = new File(FtcRobotControllerActivity.getPrivateFilesDirectory(), "/thunderbots/");
         cacheFile.mkdirs();
         String cacheDir = cacheFile.toString();
         ClassLoader parentLoader = OpModeClassLoader.class.getClassLoader();
@@ -81,7 +78,7 @@ public class OpModeClassLoader {
      * @throws IOException if an IOException is thrown by the underlying class loading system.
      */
     private static void loadJarFile(File jarfile) throws IOException {
-        File cache = new File(FtcRobotControllerActivity.getPrivateFilesDir(), "/thunderbots/temp");
+        File cache = new File(FtcRobotControllerActivity.getPrivateFilesDirectory(), "/thunderbots/temp");
         DexFile jarobj = DexFile.loadDex(jarfile.getAbsolutePath(), cache.getAbsolutePath(), 0);
         Enumeration<String> jarentries = jarobj.entries();
         while (jarentries.hasMoreElements()) {
@@ -106,12 +103,12 @@ public class OpModeClassLoader {
             Class<?> c = classLoader.loadClass(classname);
             Object instance = c.newInstance();
             if (instance instanceof OpMode) {
-                Log.i(LOG_TAG, "Found " + classname + " as an op mode");
+                ThunderLog.i("Found " + classname + " as an op mode");
                 opModeList.add(((OpMode)instance).getClass());
             }
         } catch (Throwable ex) {
-            //Log.e(LOG_TAG, "Exception while loading " + entryname + ": ");//, ex)
-            //Log.e(LOG_TAG, ex.getMessage());// ;
+            //ThunderLog.e("Exception while loading " + entryname + ": ");//, ex)
+            //ThunderLog.e(ex.getMessage());// ;
         }
     }
 
@@ -146,7 +143,7 @@ public class OpModeClassLoader {
      *
      * @param current the directory to look for files in.
      * @param fileList the list of all files in the given directory. This list should be
-     * empty when 
+     * empty when
      */
     private static void getFilesInDirectory(File current, List<File> fileList) {
         for (File f : current.listFiles()) {

@@ -1,11 +1,12 @@
-package com.qualcomm.ftcrobotcontroller.opmodes;
+package io.github.thunderbots.robotcontroller.fileloader;
 
 import com.qualcomm.ftcrobotcontroller.FtcRobotControllerActivity;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import com.android.dx.cf.iface.ParseException;
 import com.android.dx.command.Main;
+
+import io.github.thunderbots.robotcontroller.logging.ThunderLog;
 
 /**
  * The {@code DalvikCompiler} class contains static methods for compiling standard java
@@ -14,7 +15,7 @@ import com.android.dx.command.Main;
  *
  * @author Zach Ohara
  */
-public class DalvikCompiler {
+public class DalvikConverter {
 
     /**
      * The sub-directory of the application's private data folder that is used to cache
@@ -44,8 +45,8 @@ public class DalvikCompiler {
                 Main.main(args);
                 jarList.set(i, outputFile(f));
             } catch (ParseException ex) {
-                System.out.println(f.getName() + " was probably generated using the wrong compiler!");
-                System.out.println("Make sure to use Java 1.6");
+                ThunderLog.e(f.getName() + " was probably generated using the wrong compiler!");
+                ThunderLog.e("Make sure to use Java 1.6");
             }
         }
     }
@@ -59,7 +60,7 @@ public class DalvikCompiler {
     private static File outputFile(File inputFile) {
         String inputName = inputFile.getName();
         inputName = inputName.replace(" ", "-");
-        File output = new File(FtcRobotControllerActivity.getPrivateFilesDir(), OUTPUT_TO);
+        File output = new File(FtcRobotControllerActivity.getPrivateFilesDirectory(), OUTPUT_TO);
         if (output.exists()) {
             output.delete();
         }

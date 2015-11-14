@@ -104,6 +104,9 @@ public class FtcRobotControllerActivity extends Activity {
 
   protected FtcEventLoop eventLoop;
 
+  /**
+   * A single {@code FtcRobotControllerActivity} object that is statically accessible.
+   */
   private static FtcRobotControllerActivity singleton;
 
   {
@@ -389,7 +392,7 @@ public class FtcRobotControllerActivity extends Activity {
     });
   }
 
-  public static File getPrivateFilesDir() {
+  public static File getPrivateFilesDirectory() {
     return singleton.getCacheDir();
   }
 
