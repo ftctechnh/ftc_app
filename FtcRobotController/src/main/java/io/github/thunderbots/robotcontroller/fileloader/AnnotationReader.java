@@ -20,10 +20,13 @@ public class AnnotationReader {
         Annotation[] annotations = c.getAnnotations();
         for (Annotation annotation : annotations) {
             if (annotation instanceof OpMode) {
-                return ((OpMode) annotation).name();
+                String name = ((OpMode) annotation).name();
+                if (name != null && name != "") {
+                    return name;
+                }
             }
         }
-        return "OpMode Name Not Found";
+        return c.getSimpleName();
     }
 
 }
