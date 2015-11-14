@@ -65,7 +65,6 @@ public class TankDrive2Motors_V2 extends LinearOpMode {
             boolean dUp = gamepad1.dpad_up;
             boolean dDown = gamepad1.dpad_down;
             boolean x = gamepad1.x;
-            boolean y = gamepad1.b;
             // clip the right/left values so that the values never exceed +/- 1
             right = Range.clip(right, -1, 1);
             left = Range.clip(left, -1, 1);
@@ -77,15 +76,10 @@ public class TankDrive2Motors_V2 extends LinearOpMode {
                 dDown = false;
             }
 
-            if (x && Leftarm.getPosition() < 1) {
-
-                Leftarm.setPosition(Leftarm.getPosition() + 0.5);
-
-            } else if(y && Leftarm.getPosition() > 0) {
-
-
-                Leftarm.setPosition(Leftarm.getPosition() - 0.5);
-
+            if (x && Leftarm.getPosition() != 0.5) {
+                Leftarm.setPosition(0.5);
+            } else if (x) {
+                Leftarm.setPosition(0);
             }
 
             // write the values to the motors
