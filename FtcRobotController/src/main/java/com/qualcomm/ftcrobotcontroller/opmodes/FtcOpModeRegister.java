@@ -31,19 +31,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
-import android.util.Log;
-
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 
-import java.io.File;
-import java.util.List;
-
-import io.github.thunderbots.robotcontroller.fileloader.DalvikConverter;
-import io.github.thunderbots.robotcontroller.fileloader.OpModeClassLoader;
-import io.github.thunderbots.robotcontroller.fileloader.AnnotationReader;
-import io.github.thunderbots.robotcontroller.logging.ThunderLog;
+import io.github.thunderbots.robotcontroller.fileloader.ThunderOpModeRegister;
 
 /**
  * Register Op Modes
@@ -57,35 +48,7 @@ public class FtcOpModeRegister implements OpModeRegister {
    * @param manager op mode manager
    */
   public void register(OpModeManager manager) {
-
-    ThunderLog.i("About to register op modes...");
-    try {
-      List<File> fileList = OpModeClassLoader.getFileSet();
-      ThunderLog.d("Preliminary fileList: " + fileList);
-      DalvikConverter.getJarList(fileList);
-      ThunderLog.d("Jar-only fileList: " + fileList);
-      DalvikConverter.convertJars(fileList);
-      ThunderLog.d("Converted fileList: " + fileList);
-      List<Class<? extends OpMode>> opmodeList = OpModeClassLoader.loadJars(fileList);
-      ThunderLog.d("Final opmodeList: " + opmodeList);
-      ThunderLog.i("Now registering OpModes...");
-      for (Class<? extends OpMode> opmode : opmodeList) {
-        if (AnnotationReader.isActive(opmode)) {
-          try {
-            manager.register(AnnotationReader.getOpModeName(opmode), opmode);
-            ThunderLog.i("Registered " + opmode.getSimpleName());
-          } catch (Throwable ex) {
-            ThunderLog.e("Error registering op mode: " + opmode.getSimpleName());
-            ThunderLog.e(ex.getMessage());
-          }
-        }
-      }
-    } catch (Throwable ex) {
-      ThunderLog.e("Error reading external files:");
-      if (ex instanceof Exception) {
-        ex.printStackTrace();
-      }
-    }
+    ThunderOpModeRegister.register(manager);
   }
 
 }
