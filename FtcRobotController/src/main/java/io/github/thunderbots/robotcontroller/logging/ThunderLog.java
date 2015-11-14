@@ -10,7 +10,7 @@ public class ThunderLog {
     public static final String THUNDERBOTS_TAG = "Thunderbots";
 
     public static void d(String msg) {
-        Log.e(THUNDERBOTS_TAG, msg);
+        Log.d(THUNDERBOTS_TAG, msg);
     }
 
     public static void w(String msg) {
