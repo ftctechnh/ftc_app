@@ -1,13 +1,12 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 import java.util.HashMap;
 
-public class DragonoidsAuto extends LinearOpMode {
+public class DragonoidsAuto extends OpMode {
     HashMap<String, DcMotor> driveMotors = new HashMap<String, DcMotor>();
 
     public void init() {
