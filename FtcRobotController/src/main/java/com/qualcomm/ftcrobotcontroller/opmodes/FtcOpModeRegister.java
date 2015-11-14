@@ -57,9 +57,8 @@ public class FtcOpModeRegister implements OpModeRegister {
    */
   public void register(OpModeManager manager) {
 
-    manager.register("Yay! K9 Tele Op", K9TeleOp.class);
     ThunderLog.i("About to register op modes...");
-    //try {
+    try {
       List<File> fileList = OpModeClassLoader.getFileSet();
       ThunderLog.d("Preliminary fileList: " + fileList);
       DalvikConverter.getJarList(fileList);
@@ -78,14 +77,12 @@ public class FtcOpModeRegister implements OpModeRegister {
           ThunderLog.e(ex.getMessage());
         }
       }
-    /*
     } catch (Throwable ex) {
-      Log.e("Thunderbots", "Error reading external files:");
+      ThunderLog.e("Error reading external files:");
       if (ex instanceof Exception) {
         ex.printStackTrace();
       }
     }
-    */
   }
 
 }
