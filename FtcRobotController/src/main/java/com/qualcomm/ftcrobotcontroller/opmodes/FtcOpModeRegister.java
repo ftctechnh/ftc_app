@@ -62,6 +62,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("TankDrive4Motors", TankDrive4Motors.class);
 
     //manager.register("MatrixK9TeleOp", MatrixK9TeleOp.class);
+    //manager.register("MatrixK9TeleOp", MatrixK9TeleOp.class);
     manager.register("IR Test", IR_Test.class);
 
 
