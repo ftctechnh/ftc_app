@@ -16,4 +16,14 @@ public class AnnotationReader {
         return false;
     }
 
+    public static String getOpModeName(Class<? extends com.qualcomm.robotcore.eventloop.opmode.OpMode> c) {
+        Annotation[] annotations = c.getAnnotations();
+        for (Annotation annotation : annotations) {
+            if (annotation instanceof OpMode) {
+                return ((OpMode) annotation).name();
+            }
+        }
+        return "OpMode Name Not Found";
+    }
+
 }
