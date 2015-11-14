@@ -44,6 +44,5 @@ dependencies {
     compile(name: 'ModernRobotics-release', ext: 'aar')
     compile(name: 'Analytics-release', ext: 'aar')
     compile(name: 'WirelessP2p-release', ext: 'aar')
-    compile(name: 'dx', ext: 'jar')
-    compile(name: 'Annotations', ext: 'jar')
+    compile(name: 'dx', ext:'jar')
 }
