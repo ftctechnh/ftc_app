@@ -6,14 +6,10 @@ import com.qualcomm.robotcore.util.Range;
 
 import java.util.HashMap;
 
-public class DragonoidsTeleOp extends OpMode {
-    HashMap<String, DcMotor> driveMotors = new HashMap<String, DcMotor>();
-
+public class DragonoidsTeleOp extends DragonoidsOpMode {
     @Override
     public void init() {
-        driveMotors.put("right", hardwareMap.dcMotor.get("rightDrive"));
-        driveMotors.put("left", hardwareMap.dcMotor.get("leftDrive"));
-        driveMotors.get("left").setDirection(DcMotor.Direction.REVERSE);
+        super.init();
     }
     @Override
     public void loop() {
@@ -24,12 +20,13 @@ public class DragonoidsTeleOp extends OpMode {
         right = Range.clip(right, -1, 1);
         left = Range.clip(left, -1, 1);
         right = scaleInput(right);
-        left =  scaleInput(left);
+        left = scaleInput(left);
 
         driveMotors.get("right").setPower(right);
         driveMotors.get("left").setPower(left);
-    }
 
+        super.loop();
+    }
     /*
 	 * This method scales the joystick input so for low joystick values, the
 	 * scaled value is less than linear.  This is to make it easier to drive
