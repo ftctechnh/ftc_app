@@ -38,6 +38,7 @@ import org.swerverobotics.library.*;
 import org.swerverobotics.library.interfaces.*;
 
 
+
 /**
  * TeleOpTank Mode
  * <p>
@@ -120,11 +121,11 @@ public class TeleOpMecanum extends OpMode {
 	{
 		if(joystickValue > 0)
 		{
-			return (float)((joystickValue*joystickValue)*.0062) / 100;
+			return (float)((joystickValue*joystickValue)*.62);
 		}
 		else
 		{
-			return (float)(-(joystickValue*joystickValue)*.0062) / 100;
+			return (float)(-(joystickValue*joystickValue)*.62);
 		}
 	}
 
