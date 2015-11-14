@@ -44,7 +44,7 @@ public class TankDrive2Motors_V2 extends LinearOpMode {
     //Define Variables
     DcMotor Right;
     DcMotor Left;
-    Servo Rightarm;
+    Servo Leftarm;
     int speed = 4;
 
     @Override
@@ -52,7 +52,7 @@ public class TankDrive2Motors_V2 extends LinearOpMode {
         //Setup Motors
         Right = hardwareMap.dcMotor.get("right");
         Left = hardwareMap.dcMotor.get("left");
-        Rightarm = hardwareMap.servo.get("arm");
+        Leftarm = hardwareMap.servo.get("arm");
 
         //Set Directions
         Left.setDirection(DcMotor.Direction.REVERSE);
@@ -64,6 +64,8 @@ public class TankDrive2Motors_V2 extends LinearOpMode {
             float right = gamepad1.right_stick_y;
             boolean dUp = gamepad1.dpad_up;
             boolean dDown = gamepad1.dpad_down;
+            boolean x = gamepad1.x;
+            boolean y = gamepad1.b;
             // clip the right/left values so that the values never exceed +/- 1
             right = Range.clip(right, -1, 1);
             left = Range.clip(left, -1, 1);
@@ -73,6 +75,17 @@ public class TankDrive2Motors_V2 extends LinearOpMode {
             } else if (dDown && speed > 1) {
                 speed--;
                 dDown = false;
+            }
+
+            if (x && Leftarm.getPosition() < 1) {
+
+                Leftarm.setPosition(Leftarm.getPosition() + 0.5);
+
+            } else if(y && Leftarm.getPosition() > 0) {
+
+
+                Leftarm.setPosition(Leftarm.getPosition() - 0.5);
+
             }
 
             // write the values to the motors
