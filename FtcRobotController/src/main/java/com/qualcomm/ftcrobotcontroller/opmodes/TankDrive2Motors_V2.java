@@ -67,10 +67,12 @@ public class TankDrive2Motors_V2 extends LinearOpMode {
             right = Range.clip(right, -1, 1);
             left = Range.clip(left, -1, 1);
 
-            if (x && Leftarm.getPosition() != 0.5) {
-                Leftarm.setPosition(0.5);
+            if (x && Leftarm.getPosition() != 0.4) {
+                Leftarm.setPosition(0.4);
+                x = false;
             } else if (x) {
                 Leftarm.setPosition(0);
+                x = false;
             }
 
             // write the values to the motors
