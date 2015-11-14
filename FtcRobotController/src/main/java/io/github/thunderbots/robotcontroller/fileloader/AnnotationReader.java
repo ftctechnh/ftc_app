@@ -21,7 +21,7 @@ public class AnnotationReader {
         for (Annotation annotation : annotations) {
             if (annotation instanceof OpMode) {
                 String name = ((OpMode) annotation).name();
-                if (name != null && name != "") {
+                if (name != null && !name.equals("")) {
                     return name;
                 }
             }
