@@ -42,6 +42,7 @@ import java.util.List;
 
 import io.github.thunderbots.robotcontroller.fileloader.DalvikConverter;
 import io.github.thunderbots.robotcontroller.fileloader.OpModeClassLoader;
+import io.github.thunderbots.robotcontroller.fileloader.AnnotationReader;
 import io.github.thunderbots.robotcontroller.logging.ThunderLog;
 
 /**
@@ -69,12 +70,14 @@ public class FtcOpModeRegister implements OpModeRegister {
       ThunderLog.d("Final opmodeList: " + opmodeList);
       ThunderLog.i("Now registering OpModes...");
       for (Class<? extends OpMode> opmode : opmodeList) {
-        try {
-          manager.register(opmode.getSimpleName(), opmode);
-          ThunderLog.i("Registered " + opmode.getSimpleName());
-        } catch (Throwable ex) {
-          ThunderLog.e("Error registering op mode: " + opmode.getSimpleName());
-          ThunderLog.e(ex.getMessage());
+        if (AnnotationReader.isActive(opmode)) {
+          try {
+            manager.register(opmode.getSimpleName(), opmode);
+            ThunderLog.i("Registered " + opmode.getSimpleName());
+          } catch (Throwable ex) {
+            ThunderLog.e("Error registering op mode: " + opmode.getSimpleName());
+            ThunderLog.e(ex.getMessage());
+          }
         }
       }
     } catch (Throwable ex) {
