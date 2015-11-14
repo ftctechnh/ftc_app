@@ -21,7 +21,7 @@ public class Motor {
     {
         name = nm;
         _motor = hwm.dcMotor.get(name);
-        reversed = false;
+        reversed = rev;
     }
 
     public void reverse()

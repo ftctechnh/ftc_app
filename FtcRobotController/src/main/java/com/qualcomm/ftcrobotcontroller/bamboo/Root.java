@@ -11,6 +11,8 @@ public class Root extends OpMode {
     public Console console;
     public Joystick joy1, joy2;
     public HardwareMap map;
+    public float gp_rt=0, gp_lt=0;
+    public boolean gp_rb=false, gp_lb=false;
 
     public Root()
     {
@@ -20,25 +22,18 @@ public class Root extends OpMode {
         map = hardwareMap;
     }
 
-    public void onJoy1_right()
-    {
+    public void onJoy1_right() {}
+    public void onJoy1_left() {}
+    public void onJoy2_right() {}
+    public void onJoy2_left() {}
 
-    }
+    public void onJoy1_lt() {}
+    public void onJoy1_rt() {}
+    public void onJoy1_rb_press() {}
+    public void onJoy1_lb_press() {}
+    public void onJoy1_rb_release() {}
+    public void onJoy1_lb_release() {}
 
-    public void onJoy1_left()
-    {
-
-    }
-
-    public void onJoy2_right()
-    {
-
-    }
-
-    public void onJoy2_left()
-    {
-
-    }
 
     @Override
     public void init()
@@ -51,6 +46,32 @@ public class Root extends OpMode {
     public final void loop()
     {
         // some ugly stuff here....
+
+        if(gp_rb != gamepad1.right_bumper)
+        {
+            if(gamepad1.right_bumper) onJoy1_rb_press();
+            else onJoy1_rb_release();
+            gp_rb = !gp_rb;
+        }
+
+        if(gp_lb != gamepad1.left_bumper)
+        {
+            if(gamepad1.left_bumper) onJoy1_lb_press();
+            else onJoy1_lb_release();
+            gp_lb = !gp_lb;
+        }
+
+        if(gp_rt != gamepad1.right_trigger)
+        {
+            gp_rt = gamepad1.right_trigger;
+            onJoy1_rt();
+        }
+
+        if(gp_lt != gamepad1.left_trigger)
+        {
+            gp_lt = gamepad1.left_trigger;
+            onJoy1_lt();
+        }
 
         // check the joystick modifiers
         if(gamepad1.right_stick_x != joy1.right.x ||

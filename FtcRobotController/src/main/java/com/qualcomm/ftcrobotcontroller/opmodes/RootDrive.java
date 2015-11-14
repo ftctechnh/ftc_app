@@ -12,6 +12,7 @@ public class RootDrive extends Root {
 
     public Point sides;
     public Motor right, left;
+    public Motor ext, rot;
 
     public RootDrive() {
         sides = new Point(0, 0);
@@ -21,14 +22,40 @@ public class RootDrive extends Root {
     @Override
     public void init()
     {
-        right = new Motor("right", hardwareMap, true);
-        left = new Motor("left", hardwareMap);
+        right = new Motor("right", hardwareMap);
+        left = new Motor("left", hardwareMap, true);
+        ext = new Motor("rightext", hardwareMap);
+        rot = new Motor("rightrot", hardwareMap);
+    }
+
+    @Override
+    public void onJoy1_left()
+    {
+        left.scale(joy1.left.y + joy1.left.x);
+        right.scale(joy1.left.y - joy1.left.x);
     }
 
     @Override
     public void onJoy1_right()
     {
-        left.scale(joy1.right.y - joy1.right.x);
-        right.scale(joy1.right.y + joy1.right.x);
+        rot.scale(joy1.right.y);
+    }
+
+    @Override
+    public void onJoy1_rt()
+    {
+        ext.scale(gp_rt);
+    }
+
+    @Override
+    public void onJoy1_rb_press()
+    {
+        ext.set(-0.5);
+    }
+
+    @Override
+    public void onJoy1_rb_release()
+    {
+        ext.set(0);
     }
 }
