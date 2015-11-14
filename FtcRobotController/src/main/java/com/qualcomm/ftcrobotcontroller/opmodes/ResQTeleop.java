@@ -84,9 +84,16 @@ public class ResQTeleop extends OpMode {
     public void loop() {
         float throttle = -gamepad1.left_stick_y;
         float rightThrottle = -gamepad1.right_stick_y;
+        float secondThrottle = -gamepad2.left_stick_y;
+        float secondRightThrottle = -gamepad2.right_stick_y;
 
-        rightMotor.setPower(rightThrottle);
-        leftMotor.setPower(throttle);
+        if (Math.abs(throttle) < 0.01 && Math.abs(rightThrottle) < 0.01) {
+            rightMotor.setPower(secondRightThrottle);
+            leftMotor.setPower(secondThrottle);
+        } else {
+            rightMotor.setPower(rightThrottle);
+            leftMotor.setPower(throttle);
+        }
         if (gamepad1.x || gamepad2.x) {
             //harvester.setPower(.5);
         }
