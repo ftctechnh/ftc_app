@@ -56,6 +56,7 @@ public class IR_Test extends LinearOpMode {
 		Right = hardwareMap.dcMotor.get("right");
 		Left = hardwareMap.dcMotor.get("left");
 		Rightarm = hardwareMap.servo.get("arm");
+		irSensor = hardwareMap.irSeekerSensor.get("ir_sensor");
 
 
 		//Set Directions
