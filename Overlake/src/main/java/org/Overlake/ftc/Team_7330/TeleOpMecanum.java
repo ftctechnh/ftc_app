@@ -103,7 +103,7 @@ public class TeleOpMecanum extends OpMode {
 		 * will return a null value. The legacy NXT-compatible motor controllers
 		 * are currently write only.
 		 */
-        telemetry.addData("Text", "*** Robot Data***");
+        telemetry.addData("Text", rightX + ", " + rightY + ", " + leftX + ", " + leftY);
 	}
 
 	/*
