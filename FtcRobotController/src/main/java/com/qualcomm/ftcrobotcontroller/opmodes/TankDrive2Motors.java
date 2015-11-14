@@ -51,7 +51,7 @@ public class TankDrive2Motors extends LinearOpMode {
         Left = hardwareMap.dcMotor.get("left");
 
         //Set Directions
-        Left.setDirection(DcMotor.Direction.REVERSE);
+        Right.setDirection(DcMotor.Direction.REVERSE);
         waitForStart();
 
         while (opModeIsActive()) {
