@@ -8,9 +8,9 @@ import com.qualcomm.robotcore.hardware.*;
 public class Dumper {
     public Servo servo;
 
-    double leftPosition = 0.16;
-    double neutralPosition = 0.25;
-    double rightPosition = 0.34;
+    double leftPosition = 0.44;
+    double neutralPosition = 0.49;
+    double rightPosition = 0.54;
 
     public Dumper(){
     }

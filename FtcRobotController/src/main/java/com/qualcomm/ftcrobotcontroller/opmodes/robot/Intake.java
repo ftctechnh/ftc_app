@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.hardware.*;
 public class Intake {
     public DcMotor motor;
 
-    double forwardSpeed;
-    double backwardSpeed;
+    double forwardSpeed = 1;
+    double backwardSpeed = -1;
 
     public Intake(){
     }
@@ -25,5 +25,7 @@ public class Intake {
     public void backward(){
         motor.setPower(backwardSpeed);
     }
+
+    public void stop() { motor.setPower(0);}
 
 }
