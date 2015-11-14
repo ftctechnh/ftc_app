@@ -72,7 +72,7 @@ public class FtcOpModeRegister implements OpModeRegister {
       for (Class<? extends OpMode> opmode : opmodeList) {
         if (AnnotationReader.isActive(opmode)) {
           try {
-            manager.register(opmode.getSimpleName(), opmode);
+            manager.register(AnnotationReader.getOpModeName(opmode), opmode);
             ThunderLog.i("Registered " + opmode.getSimpleName());
           } catch (Throwable ex) {
             ThunderLog.e("Error registering op mode: " + opmode.getSimpleName());
