@@ -87,27 +87,27 @@ public class ResQTeleop extends OpMode {
 
         rightMotor.setPower(rightThrottle);
         leftMotor.setPower(throttle);
-        if (gamepad1.x) {
+        if (gamepad1.x || gamepad2.x) {
             //harvester.setPower(.5);
         }
-        if (gamepad1.b) {
+        if (gamepad1.b || gamepad2.b) {
             //harvester.setPower(0);
             linearSlide.setPower(0);
         }
-        if (gamepad1.y) {
+        if (gamepad1.y || gamepad2.y) {
             linearSlide.setPower(.5);
         }
-        if (gamepad1.a) {
+        if (gamepad1.a || gamepad2.a) {
             linearSlide.setPower(-.5);
         }
-        if (gamepad1.dpad_up) {
+        if (gamepad1.dpad_up || gamepad2.dpad_up) {
             //climbservoPosition -= climbServoDelta;
             //climbservoPosition2 -= climbServo2Delta;
             //climbservo.setPosition(climbservoPositionStart);
             //climbservo2.setPosition(climbservoPositionStart2);
             //buttonservoPosition -= buttonServoDelta;
         }
-        if (gamepad1.dpad_down) {
+        if (gamepad1.dpad_down || gamepad1.dpad_down) {
             //climbservoPosition += climbServoDelta;
             //climbservoPosition2 += climbServo2Delta;
             //climbservo.setPosition(climbservoPositionWork);

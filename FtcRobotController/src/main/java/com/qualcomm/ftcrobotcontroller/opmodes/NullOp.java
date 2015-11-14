@@ -34,6 +34,12 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -49,6 +55,16 @@ public class NullOp extends OpMode {
 
   @Override
   public void init() {
+    try
+    {
+      File file = new File("/sdcard/FIRST/calibration.txt");
+      BufferedReader br = new BufferedReader(new FileReader(file));
+      startDate = br.readLine();
+      br.close();
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   /*
@@ -57,7 +73,7 @@ public class NullOp extends OpMode {
      */
   @Override
   public void init_loop() {
-    startDate = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
+    //startDate = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
     runtime.reset();
     telemetry.addData("Null Op Init Loop", runtime.toString());
   }
@@ -71,4 +87,20 @@ public class NullOp extends OpMode {
     telemetry.addData("1 Start", "NullOp started at " + startDate);
     telemetry.addData("2 Status", "running for " + runtime.toString());
   }
+    public void stop() {
+        try
+        {
+            startDate = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
+            File file = new File("/sdcard/FIRST/calibration.txt");
+            FileOutputStream fileoutput = new FileOutputStream(file);
+            PrintStream ps = new PrintStream(fileoutput);
+            ps.println(startDate);
+
+            ps.close();
+            fileoutput.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
