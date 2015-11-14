@@ -1,7 +1,5 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
-import android.net.NetworkInfo;
-
 import com.qualcomm.hardware.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -11,15 +9,14 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
  * Created by Dan on 11/12/2015.
  */
 
-public class DucksAtonomous extends LinearOpMode{
+public class DucksAutonomous extends LinearOpMode{
     DcMotor left;
     DcMotor right;
     DcMotor winch;
     DcMotor winchpivot;
     DcMotor winchwheel;
     GyroSensor gyro;
-    private int second, gyroHeading;
-    public DucksAtonomous(){
+    public DucksAutonomous(){
 
     }
 
@@ -30,36 +27,18 @@ public class DucksAtonomous extends LinearOpMode{
         if(targetHeading<0){
             targetHeading=targetHeading+360;
         }
-      while(gyro.getHeading()<targetHeading-3 || gyro.getHeading()>targetHeading+3){
-          left.setPower(-speed);
-          right.setPower(-speed);
-      }
+        while(gyro.getHeading()<targetHeading-3 || gyro.getHeading()>targetHeading+3){
+            left.setPower(-speed);
+            right.setPower(-speed);
+        }
         left.setPower(0);
         right.setPower(0);
     }
-    public class setCalibration extends Thread {
-        public void run(){
 
-        gyro.calibrate();
-             gyroHeading = -1;
-            while(!gyro.isCalibrating() && gyroHeading == -1){
-                gyro.calibrate();
-                gyroHeading = gyro.getHeading()-1;
-                telemetry.addData("fun times", gyroHeading);
-            }
-        try {
-            this.sleep(500);
-        }
-        catch(InterruptedException e){
-
-        }
-    }
-    }
-
-   public void turnRight(int degrees,double speed){
+    public void turnRight(int degrees,double speed){
         int startHeading=gyro.getHeading();
         int targetHeading=startHeading+degrees;
-       telemetry.addData("targetHeading",targetHeading);
+        telemetry.addData("targetHeading",targetHeading);
         if(targetHeading>360){
             targetHeading=targetHeading-360;
         }
@@ -73,23 +52,20 @@ public class DucksAtonomous extends LinearOpMode{
         right.setPower(0);
     }
     public void printHeading(){
-            telemetry.addData("currentHeading",gyro.getHeading());
+        telemetry.addData("currentHeading",gyro.getHeading());
     }
     @Override
     public void runOpMode() throws InterruptedException{
-         left= hardwareMap.dcMotor.get("left");
+        left= hardwareMap.dcMotor.get("left");
         right= hardwareMap.dcMotor.get("right");
         winch=hardwareMap.dcMotor.get("winch");
         winchpivot=hardwareMap.dcMotor.get("winchpivot");
-         winchwheel=hardwareMap.dcMotor.get("winchwheel");
+        winchwheel=hardwareMap.dcMotor.get("winchwheel");
         gyro=hardwareMap.gyroSensor.get("gyro");
 
         gyro.calibrate();
-
-        Thread.sleep(20);
-        (new setCalibration()).start();
         while(gyro.isCalibrating()){
-            telemetry.addData("You are calibrating", "lmao");
+            telemetry.addData("You are callibrating", "lmao");
         }
         turnRight(90, .3);
 //        turnLeft(90, .5);
