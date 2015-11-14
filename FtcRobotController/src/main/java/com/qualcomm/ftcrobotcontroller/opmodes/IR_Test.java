@@ -49,6 +49,7 @@ public class IR_Test extends LinearOpMode {
 	Servo Rightarm;
 	int speed = 4;
 	IrSeekerSensor irSensor;
+	Co
 
 	@Override
 	public void runOpMode() throws InterruptedException {

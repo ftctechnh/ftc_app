@@ -64,6 +64,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     //manager.register("MatrixK9TeleOp", MatrixK9TeleOp.class);
     //manager.register("MatrixK9TeleOp", MatrixK9TeleOp.class);
     manager.register("IR Test", IR_Test.class);
+    manager.register("ColorSensorDriver", ColorSensorDriver.class);
 
 
 
