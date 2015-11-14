@@ -29,4 +29,24 @@ public class ThunderLog {
         Log.v(THUNDERBOTS_TAG, msg);
     }
 
+    public static void d(String msg, Throwable ex) {
+        Log.d(THUNDERBOTS_TAG, msg, ex);
+    }
+
+    public static void w(String msg, Throwable ex) {
+        Log.w(THUNDERBOTS_TAG, msg, ex);
+    }
+
+    public static void e(String msg, Throwable ex) {
+        Log.e(THUNDERBOTS_TAG, msg, ex);
+    }
+
+    public static void i(String msg, Throwable ex) {
+        Log.i(THUNDERBOTS_TAG, msg, ex);
+    }
+
+    public static void v(String msg, Throwable ex) {
+        Log.v(THUNDERBOTS_TAG, msg, ex);
+    }
+
 }
