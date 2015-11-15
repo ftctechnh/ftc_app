@@ -1,8 +1,11 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import com.technicbots.MainRobot;
@@ -57,6 +60,10 @@ public class ResQTeleopPitCrew extends OpMode {
     Servo rightsweeper;
     Servo climberservo;
 
+    OpticalDistanceSensor opticalDistanceSensor;
+    UltrasonicSensor ultrasonicSensor;
+    ColorSensor colorsensor;
+
     MainRobot mainRobot;
     public ResQTeleopPitCrew() {
 
@@ -104,7 +111,10 @@ public class ResQTeleopPitCrew extends OpMode {
         climberservoPosition = 0.0;
         climberservo.setPosition(climberservoPosition);
 
-
+        opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("sensor_EOPD");
+        ultrasonicSensor = hardwareMap.ultrasonicSensor.get("sonic");
+        colorsensor = hardwareMap.colorSensor.get("colorsensor");
+        colorsensor.enableLed(false);
 
     }
 
@@ -117,6 +127,9 @@ public class ResQTeleopPitCrew extends OpMode {
         float rightThrottle = -gamepad1.right_stick_y;
         float secondThrottle = -gamepad2.left_stick_y;
         float secondRightThrottle = -gamepad2.right_stick_y;
+
+        double distance = ultrasonicSensor.getUltrasonicLevel();
+        double reflectance = opticalDistanceSensor.getLightDetected();
 
         if (Math.abs(throttle) < 0.01 && Math.abs(rightThrottle) < 0.01) {
             rightMotor.setPower(secondRightThrottle);
@@ -139,8 +152,7 @@ public class ResQTeleopPitCrew extends OpMode {
             linearSlide.setPower(-.5);
         }
         if (gamepad1.dpad_up || gamepad2.dpad_up) {
-            climbservo.setPosition(climbServoEnd);
-            climbservo2.setPosition(climbServo2End);
+
             leftsweeper.setPosition(1);
             rightsweeper.setPosition(1);
             buttonServo.setPosition(1);
@@ -150,8 +162,7 @@ public class ResQTeleopPitCrew extends OpMode {
             //buttonservoPosition -= buttonServoDelta;
         }
         if (gamepad1.dpad_down || gamepad1.dpad_down) {
-            climbservo.setPosition(climbservoPosition);
-            climbservo2.setPosition(climbservoPosition2);
+
             leftsweeper.setPosition(0);
             rightsweeper.setPosition(0);
             buttonServo.setPosition(0);
@@ -161,22 +172,26 @@ public class ResQTeleopPitCrew extends OpMode {
             //buttonservoPosition += buttonServoDelta;
         }
         if (gamepad1.dpad_left || gamepad2.dpad_left) {
-
+            climbservo.setPosition(climbServoEnd);
+            climbservo2.setPosition(climbServo2End);
         }
         if (gamepad1.dpad_right || gamepad2.dpad_right) {
-
+            climbservo.setPosition(climbservoPosition);
+            climbservo2.setPosition(climbservoPosition2);
         }
         climbservoPosition = Range.clip(climbservoPosition, CLIMBSERVO_MIN_RANGE, CLIMBSERVO_MAX_RANGE);
-        //climbservo.setPosition(climbservoPosition);
         climbservoPosition2 = Range.clip(climbservoPosition2, CLIMBSERVO2_MIN_RANGE, CLIMBSERVO2_MAX_RANGE);
-        //climbservo2.setPosition(climbservoPosition2);
-        //buttonservoPosition = Range.clip(buttonservoPosition, BUTTONSERVO_MIN_RANGE, BUTTONSERVO_MAX_RANGE);
-        //buttonservo.setPosition(buttonservoPosition);
+
         boxservoPosition = Range.clip(boxservoPosition, BOXSERVO_MIN_RANGE, BOXSERVO_MAX_RANGE);
         boxservo.setPosition(boxservoPosition);
         //telemetry.addData("Button Servo Position: ", buttonservoPosition);
-        telemetry.addData("Climb Servo Position: ", climbservo.getPosition());
-        telemetry.addData("Climb Servo Position2: ", climbservo2.getPosition());
+        //telemetry.addData("Climb Servo Position: ", climbservo.getPosition());
+        //telemetry.addData("Climb Servo Position2: ", climbservo2.getPosition());
+
+        telemetry.addData("Reflectance Value", reflectance);
+        telemetry.addData("Ultrasonic Value", distance);
+        telemetry.addData("Red", colorsensor.red());
+        telemetry.addData("Blue", colorsensor.blue());
     }
     public void stop() {
 
