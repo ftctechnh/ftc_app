@@ -27,8 +27,8 @@ public abstract class _ResQAuto extends LinearOpMode {
 
         Servo buttonServo;
         Servo button2Servo;
-        Servo sweeperServo;
-        Servo sweeper2Servo;
+        Servo leftsweeper;
+        Servo rightsweeper;
         Servo peopleServo;
 
 
@@ -68,23 +68,23 @@ public abstract class _ResQAuto extends LinearOpMode {
         final double BUTTONSERVO_MAX_RANGE  = 1;
         final double BUTTON2SERVO_MIN_RANGE  = 0.01;
         final double BUTTON2SERVO_MAX_RANGE  = 1;
-        final double SWEEPERSERVO_MIN_RANGE  = 0.01;
-        final double SWEEPERSERVO_MAX_RANGE  = 1;
-        final double SWEEPER2SERVO_MIN_RANGE  = 0.01;
-        final double SWEEPER2SERVO_MAX_RANGE  = 1;
+        final double leftsweeper_MIN_RANGE  = 0.01;
+        final double leftsweeper_MAX_RANGE  = 1;
+        final double rightsweeper_MIN_RANGE  = 0.01;
+        final double rightsweeper_MAX_RANGE  = 1;
         final double PEOPLESERVO_MIN_RANGE  = 0.01;
         final double PEOPLESERVO_MAX_RANGE  = 1;
 
         double buttonservoPosition;
         double button2servoPosition;
-        double sweeperservoPosition;
-        double sweeper2servoPosition;
+        double leftsweeperPosition;
+        double rightsweeperPosition;
         double peopleservoPosition;
 
         double buttonServoDelta = 0.49;
         double button2ServoDelta = 0.49;
-        double sweeperServoDelta = 0.49;
-        double sweeper2ServoDelta = 0.49;
+        double leftsweeperDelta = 0.49;
+        double rightsweeperDelta = 0.49;
         double peopleServoDelta = 0.49;
 
         double value;
@@ -101,16 +101,16 @@ public abstract class _ResQAuto extends LinearOpMode {
         button2Servo = hardwareMap.servo.get("button2servo");
         button2servoPosition = 0.3;
         button2Servo.setPosition(button2servoPosition);
-        /*
-        sweeperServo = hardwareMap.servo.get("sweeperservo");
-        sweeperservoPosition = 0.0;
-        sweeperServo.setPosition(sweeperservoPosition);
-        sweeper2Servo = hardwareMap.servo.get("sweeper2servo");
-        sweeper2servoPosition = 0.0;
-        sweeper2Servo.setPosition(sweeper2servoPosition);
+
+        leftsweeper = hardwareMap.servo.get("leftsweeper");
+        leftsweeperPosition = 0.0;
+        leftsweeper.setPosition(leftsweeperPosition);
+        rightsweeper = hardwareMap.servo.get("rightsweeper");
+        rightsweeperPosition = 0.0;
+        rightsweeper.setPosition(rightsweeperPosition);
         peopleServo = hardwareMap.servo.get("peopleservo");
         peopleservoPosition = 0.0;
-        peopleServo.setPosition(peopleservoPosition); */
+        peopleServo.setPosition(peopleservoPosition);
 
         opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("sensor_EOPD");
         ultrasonicSensor = hardwareMap.ultrasonicSensor.get("sonic");
@@ -143,48 +143,53 @@ public abstract class _ResQAuto extends LinearOpMode {
         }
 
         if (getRedAlliance() == 0) {
-            /*
+
             //Sweeps the balls and boxes
-            sweeperservoPosition += sweeperServoDelta;
-            sweeper2servoPosition += sweeper2ServoDelta;
+            leftsweeperPosition += leftsweeperDelta;
+            rightsweeperPosition += rightsweeperDelta;
 
-            sweeperservoPosition = Range.clip(sweeperservoPosition, SWEEPERSERVO_MIN_RANGE, SWEEPERSERVO_MAX_RANGE);
-            sweeperServo.setPosition(sweeperservoPosition);
-            sweeper2servoPosition = Range.clip(sweeper2servoPosition, SWEEPER2SERVO_MIN_RANGE, SWEEPER2SERVO_MAX_RANGE);
-            sweeperServo.setPosition(sweeper2servoPosition);
+            leftsweeperPosition = Range.clip(leftsweeperPosition, leftsweeper_MIN_RANGE, leftsweeper_MAX_RANGE);
+            leftsweeper.setPosition(leftsweeperPosition);
+            rightsweeperPosition = Range.clip(rightsweeperPosition, rightsweeper_MIN_RANGE, rightsweeper_MAX_RANGE);
+            leftsweeper.setPosition(rightsweeperPosition);
 
-            sweeperservoPosition -= sweeperServoDelta;
-            sweeper2servoPosition -= sweeper2ServoDelta;
+            sleep(2000);
 
-            sweeperservoPosition = Range.clip(sweeperservoPosition, SWEEPERSERVO_MIN_RANGE, SWEEPERSERVO_MAX_RANGE);
-            sweeperServo.setPosition(sweeperservoPosition);
-            sweeper2servoPosition = Range.clip(sweeper2servoPosition, SWEEPER2SERVO_MIN_RANGE, SWEEPER2SERVO_MAX_RANGE);
-            sweeperServo.setPosition(sweeper2servoPosition);
-            */
+            leftsweeperPosition -= leftsweeperDelta;
+            rightsweeperPosition -= rightsweeperDelta;
+
+            leftsweeperPosition = Range.clip(leftsweeperPosition, leftsweeper_MIN_RANGE, leftsweeper_MAX_RANGE);
+            leftsweeper.setPosition(leftsweeperPosition);
+            rightsweeperPosition = Range.clip(rightsweeperPosition, rightsweeper_MIN_RANGE, rightsweeper_MAX_RANGE);
+            leftsweeper.setPosition(rightsweeperPosition);
+
+            sleep(2000);
 
             //Overshoot to left side of line only as BLUE alliance
             leftWheel.setPower(0.1);
             rightWheel.setPower(0.1);
 
         } else {
-            /*
+
             //Sweeps the balls and boxes
-            sweeperservoPosition += sweeperServoDelta;
-            sweeper2servoPosition += sweeper2ServoDelta;
+            leftsweeperPosition += leftsweeperDelta;
+            rightsweeperPosition += rightsweeperDelta;
 
-            sweeperservoPosition = Range.clip(sweeperservoPosition, SWEEPERSERVO_MIN_RANGE, SWEEPERSERVO_MAX_RANGE);
-            sweeperServo.setPosition(sweeperservoPosition);
-            sweeper2servoPosition = Range.clip(sweeper2servoPosition, SWEEPER2SERVO_MIN_RANGE, SWEEPER2SERVO_MAX_RANGE);
-            sweeperServo.setPosition(sweeper2servoPosition);
+            leftsweeperPosition = Range.clip(leftsweeperPosition, leftsweeper_MIN_RANGE, leftsweeper_MAX_RANGE);
+            leftsweeper.setPosition(leftsweeperPosition);
+            rightsweeperPosition = Range.clip(rightsweeperPosition, rightsweeper_MIN_RANGE, rightsweeper_MAX_RANGE);
+            leftsweeper.setPosition(rightsweeperPosition);
 
-            sweeperservoPosition -= sweeperServoDelta;
-            sweeper2servoPosition -= sweeper2ServoDelta;
+            sleep(2000);
+            leftsweeperPosition -= leftsweeperDelta;
+            rightsweeperPosition -= rightsweeperDelta;
 
-            sweeperservoPosition = Range.clip(sweeperservoPosition, SWEEPERSERVO_MIN_RANGE, SWEEPERSERVO_MAX_RANGE);
-            sweeperServo.setPosition(sweeperservoPosition);
-            sweeper2servoPosition = Range.clip(sweeper2servoPosition, SWEEPER2SERVO_MIN_RANGE, SWEEPER2SERVO_MAX_RANGE);
-            sweeperServo.setPosition(sweeper2servoPosition);
-*/
+            leftsweeperPosition = Range.clip(leftsweeperPosition, leftsweeper_MIN_RANGE, leftsweeper_MAX_RANGE);
+            leftsweeper.setPosition(leftsweeperPosition);
+            rightsweeperPosition = Range.clip(rightsweeperPosition, rightsweeper_MIN_RANGE, rightsweeper_MAX_RANGE);
+            leftsweeper.setPosition(rightsweeperPosition);
+
+            sleep(2000);
 
             //Goes back to the left side of the line only as RED alliance
             leftWheel.setPower(-0.1);
