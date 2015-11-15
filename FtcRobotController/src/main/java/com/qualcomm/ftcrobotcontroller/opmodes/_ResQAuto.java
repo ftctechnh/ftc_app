@@ -13,11 +13,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-//TODO: Detect red/blue line, change ODS boundary DONE, but need calibration
-//TODO: Get sweeper working
+//TODO: Detect red/blue line, change ODS boundary DONE
+//TODO: Get sweeper working Done
 //TODO: Get button pushing working DONE
-//TODO: do dumping
-//TODO: Tune get out of the way?
+//TODO: do dumping Done
+//TODO: Tune get out of the way Done
 public abstract class _ResQAuto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
@@ -29,7 +29,7 @@ public abstract class _ResQAuto extends LinearOpMode {
         Servo button2Servo;
         Servo leftsweeper;
         Servo rightsweeper;
-        Servo peopleServo;
+        Servo climberservo;
 
 
         OpticalDistanceSensor opticalDistanceSensor;
@@ -72,20 +72,22 @@ public abstract class _ResQAuto extends LinearOpMode {
         final double leftsweeper_MAX_RANGE  = 1;
         final double rightsweeper_MIN_RANGE  = 0.01;
         final double rightsweeper_MAX_RANGE  = 1;
-        final double PEOPLESERVO_MIN_RANGE  = 0.01;
-        final double PEOPLESERVO_MAX_RANGE  = 1;
+        final double climberservo_MIN_RANGE  = 0.01;
+        final double climberservo_MAX_RANGE  = 1;
 
         double buttonservoPosition;
         double button2servoPosition;
         double leftsweeperPosition;
         double rightsweeperPosition;
-        double peopleservoPosition;
+        double climberservoPosition;
 
         double buttonServoDelta = 0.49;
         double button2ServoDelta = 0.49;
         double leftsweeperDelta = 0.49;
         double rightsweeperDelta = 0.49;
-        double peopleServoDelta = 0.49;
+        double climberservoDelta = 0.49;
+
+        boolean sweep = false;
 
         double value;
 
@@ -103,14 +105,14 @@ public abstract class _ResQAuto extends LinearOpMode {
         button2Servo.setPosition(button2servoPosition);
 
         leftsweeper = hardwareMap.servo.get("leftsweeper");
-        leftsweeperPosition = 0.0;
+        leftsweeperPosition = 0.8;
         leftsweeper.setPosition(leftsweeperPosition);
         rightsweeper = hardwareMap.servo.get("rightsweeper");
-        rightsweeperPosition = 0.0;
+        rightsweeperPosition = 0.2;
         rightsweeper.setPosition(rightsweeperPosition);
-        peopleServo = hardwareMap.servo.get("peopleservo");
-        peopleservoPosition = 0.0;
-        peopleServo.setPosition(peopleservoPosition);
+        climberservo = hardwareMap.servo.get("climberservo");
+        climberservoPosition = 0.0;
+        climberservo.setPosition(climberservoPosition);
 
         opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("sensor_EOPD");
         ultrasonicSensor = hardwareMap.ultrasonicSensor.get("sonic");
@@ -137,59 +139,45 @@ public abstract class _ResQAuto extends LinearOpMode {
         while(reflectance < TARGET_REFLECTANCE) {
             telemetry.addData("Reflectance Value", reflectance);
             reflectance = opticalDistanceSensor.getLightDetected();
-            leftWheel.setPower(0.9);
-            rightWheel.setPower(0.9);
+            leftWheel.setPower(0.4);
+            rightWheel.setPower(0.4);
             waitForNextHardwareCycle();
         }
 
         if (getRedAlliance() == 0) {
-
+            leftWheel.setPower(0);
+            rightWheel.setPower(0);
             //Sweeps the balls and boxes
-            leftsweeperPosition += leftsweeperDelta;
-            rightsweeperPosition += rightsweeperDelta;
+           // rightsweeper.setPosition(1);
+           // sleep(500);
+            leftsweeper.setPosition(0);
 
-            leftsweeperPosition = Range.clip(leftsweeperPosition, leftsweeper_MIN_RANGE, leftsweeper_MAX_RANGE);
-            leftsweeper.setPosition(leftsweeperPosition);
-            rightsweeperPosition = Range.clip(rightsweeperPosition, rightsweeper_MIN_RANGE, rightsweeper_MAX_RANGE);
-            leftsweeper.setPosition(rightsweeperPosition);
+            sleep(500);
 
-            sleep(2000);
+            rightsweeper.setPosition(0);
 
-            leftsweeperPosition -= leftsweeperDelta;
-            rightsweeperPosition -= rightsweeperDelta;
+            leftsweeper.setPosition(1);
 
-            leftsweeperPosition = Range.clip(leftsweeperPosition, leftsweeper_MIN_RANGE, leftsweeper_MAX_RANGE);
-            leftsweeper.setPosition(leftsweeperPosition);
-            rightsweeperPosition = Range.clip(rightsweeperPosition, rightsweeper_MIN_RANGE, rightsweeper_MAX_RANGE);
-            leftsweeper.setPosition(rightsweeperPosition);
-
-            sleep(2000);
+            sleep(500);
 
             //Overshoot to left side of line only as BLUE alliance
             leftWheel.setPower(0.1);
             rightWheel.setPower(0.1);
 
         } else {
-
+            //leftWheel.setPower(0);
+            rightWheel.setPower(0);
             //Sweeps the balls and boxes
-            leftsweeperPosition += leftsweeperDelta;
-            rightsweeperPosition += rightsweeperDelta;
+            rightsweeper.setPosition(1);
+            sleep(700);
+           // leftsweeper.setPosition(0);
 
-            leftsweeperPosition = Range.clip(leftsweeperPosition, leftsweeper_MIN_RANGE, leftsweeper_MAX_RANGE);
-            leftsweeper.setPosition(leftsweeperPosition);
-            rightsweeperPosition = Range.clip(rightsweeperPosition, rightsweeper_MIN_RANGE, rightsweeper_MAX_RANGE);
-            leftsweeper.setPosition(rightsweeperPosition);
+           // sleep(700);
 
-            sleep(2000);
-            leftsweeperPosition -= leftsweeperDelta;
-            rightsweeperPosition -= rightsweeperDelta;
+            rightsweeper.setPosition(0);
+            leftsweeper.setPosition(1);
 
-            leftsweeperPosition = Range.clip(leftsweeperPosition, leftsweeper_MIN_RANGE, leftsweeper_MAX_RANGE);
-            leftsweeper.setPosition(leftsweeperPosition);
-            rightsweeperPosition = Range.clip(rightsweeperPosition, rightsweeper_MIN_RANGE, rightsweeper_MAX_RANGE);
-            leftsweeper.setPosition(rightsweeperPosition);
-
-            sleep(2000);
+            sleep(500);
 
             //Goes back to the left side of the line only as RED alliance
             leftWheel.setPower(-0.1);
@@ -239,14 +227,38 @@ public abstract class _ResQAuto extends LinearOpMode {
             telemetry.addData("Ultrasonic Value", distance);
             //telemetry.addData("Red Value", redvalue);
             //telemetry.addData("Blue Value", bluevalue);
-            if (ultrasonicThreshold > distance && distance > 1.0)
-                    break;
+            if (40 > distance && distance > 30.0 && sweep==false) {
+                leftWheel.setPower(0);
+                rightWheel.setPower(0);
+                //Sweeps the balls and boxes
+                //rightsweeper.setPosition(1);
+               // sleep(700);
+                leftsweeper.setPosition(0);
+
+                sleep(600);
+
+                //rightsweeper.setPosition(0);
+                leftsweeper.setPosition(1);
+
+                sleep(600);
+
+                leftWheel.setPower(-0.3);
+                rightWheel.setPower(0.3);
+                sleep(250);
+               // leftWheel.setPower(0.3);
+             //   rightWheel.setPower(0.3);
+             //   sleep(250);
+                sweep=true;
+            }
+            if(distance<20 && distance>1) {
+                sleep(200);
+                leftWheel.setPower(0);
+                rightWheel.setPower(0);
+                break;
+            }
+
 
         }
-
-        //Stop
-        leftWheel.setPower(0);
-        rightWheel.setPower(0);
 
         colorsensor.enableLed(false);
         // colorsensor.red();
@@ -285,7 +297,10 @@ public abstract class _ResQAuto extends LinearOpMode {
         sleep(1000);
 
         //Dump climbers
-        //peopleServo.setPosition(1);
+
+        climberservo.setPosition(1);
+        sleep(1500);
+        climberservo.setPosition(0);
 
         //End of Autonomous
         if (getDelay() == 0) {
