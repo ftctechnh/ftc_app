@@ -13,6 +13,32 @@ import static junit.framework.Assert.*;
 public class Util
     {
     //----------------------------------------------------------------------------------------------
+    // String
+    //----------------------------------------------------------------------------------------------
+
+    /** Is 'prefix' an initial substring of 'target'? */
+    static public boolean isPrefixOf(String prefix, String target)
+        {
+        if (prefix == null)
+            return true;
+        else if (target == null)
+            return false;
+        else
+            {
+            if (prefix.length() <= target.length())
+                {
+                for (int ich = 0; ich < prefix.length(); ich++)
+                    {
+                    if (prefix.charAt(ich) != target.charAt(ich))
+                        return false;
+                    }
+                return true;
+                }
+            return false;
+            }
+        }
+
+    //----------------------------------------------------------------------------------------------
     // Miscellany
     //----------------------------------------------------------------------------------------------
 
