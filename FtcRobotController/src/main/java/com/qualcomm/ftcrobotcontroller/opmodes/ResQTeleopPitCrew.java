@@ -25,9 +25,13 @@ public class ResQTeleopPitCrew extends OpMode {
     double climbservoPosition;
     double climbservoPosition2;
     double clampPosition;
-    double buttonservoPosition;
     double boxservoPosition;
     double lastTime;
+    double buttonservoPosition;
+    double button2servoPosition;
+    double leftsweeperPosition;
+    double rightsweeperPosition;
+    double climberservoPosition;
 
     double climbServoEnd = 0.5;
     double climbServo2End = 0.5;
@@ -47,6 +51,11 @@ public class ResQTeleopPitCrew extends OpMode {
     Servo buttonservo;
     Servo clamp;
     Servo boxservo;
+    Servo buttonServo;
+    Servo button2Servo;
+    Servo leftsweeper;
+    Servo rightsweeper;
+    Servo climberservo;
 
     MainRobot mainRobot;
     public ResQTeleopPitCrew() {
@@ -71,16 +80,32 @@ public class ResQTeleopPitCrew extends OpMode {
         climbservoPosition = 0.3;
         climbservo2 = hardwareMap.servo.get("climbservo2");
         climbservoPosition2 = 0.6;
-        //buttonservo = hardwareMap.servo.get("buttonservo");
-        //buttonservoPosition = 0.0;
         boxservo = hardwareMap.servo.get("boxservo");
         boxservoPosition = 0.0;
-
-
         climbservo.setPosition(climbservoPosition);
         climbservo2.setPosition(climbservoPosition2);
-        //buttonservo.setPosition(buttonservoPosition);
         boxservo.setPosition(boxservoPosition);
+
+
+        buttonServo = hardwareMap.servo.get("buttonservo");
+        buttonservoPosition = 0.3;
+        buttonServo.setPosition(buttonservoPosition);
+        button2Servo = hardwareMap.servo.get("button2servo");
+        button2servoPosition = 0.3;
+        button2Servo.setPosition(button2servoPosition);
+
+        leftsweeper = hardwareMap.servo.get("leftsweeper");
+        leftsweeperPosition = 0.8;
+        leftsweeper.setPosition(leftsweeperPosition);
+        rightsweeper = hardwareMap.servo.get("rightsweeper");
+        rightsweeperPosition = 0.2;
+        rightsweeper.setPosition(rightsweeperPosition);
+        climberservo = hardwareMap.servo.get("climberservo");
+        climberservoPosition = 0.0;
+        climberservo.setPosition(climberservoPosition);
+
+
+
     }
 
     /*
@@ -116,12 +141,22 @@ public class ResQTeleopPitCrew extends OpMode {
         if (gamepad1.dpad_up || gamepad2.dpad_up) {
             climbservo.setPosition(climbServoEnd);
             climbservo2.setPosition(climbServo2End);
+            leftsweeper.setPosition(1);
+            rightsweeper.setPosition(1);
+            buttonServo.setPosition(1);
+            button2Servo.setPosition(1);
+            climberservo.setPosition(1);
             boxservoPosition += boxServoDelta;
             //buttonservoPosition -= buttonServoDelta;
         }
         if (gamepad1.dpad_down || gamepad1.dpad_down) {
             climbservo.setPosition(climbservoPosition);
             climbservo2.setPosition(climbservoPosition2);
+            leftsweeper.setPosition(0);
+            rightsweeper.setPosition(0);
+            buttonServo.setPosition(0);
+            button2Servo.setPosition(0);
+            climberservo.setPosition(0);
             boxservoPosition -= boxServoDelta;
             //buttonservoPosition += buttonServoDelta;
         }
