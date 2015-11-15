@@ -107,5 +107,6 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("ResQAuto_B", ResQAutoBlue.class);
     manager.register("ResQTeleop", ResQTeleop.class);
     manager.register("SparringTeleOp",SparringTeleOp.class);
+    manager.register("ResQPitCrew", ResQTeleopPitCrew.class);
   }
 }

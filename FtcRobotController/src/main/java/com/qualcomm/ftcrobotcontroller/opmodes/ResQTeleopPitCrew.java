@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.util.Range;
 import com.technicbots.MainRobot;
 
 
-public class ResQTeleop extends OpMode {
+public class ResQTeleopPitCrew extends OpMode {
     private ElapsedTime mStateTime = new ElapsedTime();
     //experimental
     final static double CLIMBSERVO_MIN_RANGE  = 0.01;
@@ -49,7 +49,7 @@ public class ResQTeleop extends OpMode {
     Servo boxservo;
 
     MainRobot mainRobot;
-    public ResQTeleop() {
+    public ResQTeleopPitCrew() {
 
     }
 
@@ -116,18 +116,20 @@ public class ResQTeleop extends OpMode {
         if (gamepad1.dpad_up || gamepad2.dpad_up) {
             climbservo.setPosition(climbServoEnd);
             climbservo2.setPosition(climbServo2End);
+            boxservoPosition += boxServoDelta;
             //buttonservoPosition -= buttonServoDelta;
         }
         if (gamepad1.dpad_down || gamepad1.dpad_down) {
             climbservo.setPosition(climbservoPosition);
             climbservo2.setPosition(climbservoPosition2);
+            boxservoPosition -= boxServoDelta;
             //buttonservoPosition += buttonServoDelta;
         }
         if (gamepad1.dpad_left || gamepad2.dpad_left) {
-            boxservoPosition += boxServoDelta;
+
         }
         if (gamepad1.dpad_right || gamepad2.dpad_right) {
-            boxservoPosition -= boxServoDelta;
+
         }
         climbservoPosition = Range.clip(climbservoPosition, CLIMBSERVO_MIN_RANGE, CLIMBSERVO_MAX_RANGE);
         //climbservo.setPosition(climbservoPosition);
