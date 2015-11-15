@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 /**
- * Created by Patrick.Brady on 11/5/2015.
+ * HI.
  */
 public class MC {
     final int DEFAULT_SPEED = 50;
@@ -16,18 +16,48 @@ public class MC {
         //move for distance at speed using motors right and left
         int rightPos = rightMotor.getCurrentPosition();
         int leftPos = leftMotor.getCurrentPosition();
+        rightMotor.setTargetPosition(distance + rightPos);
+        leftMotor.setTargetPosition(distance + leftPos);
+        while(rightMotor.getTargetPosition() > rightMotor.getCurrentPosition()){
+            rightMotor.setPower(speed);
+            leftMotor.setPower(speed);
+        }
     }
 
     public void moveBackward(int distance, int speed, DcMotor rightMotor, DcMotor leftMotor){
         //move backward for distance at speed using motors right and left
+        int rightPos = rightMotor.getCurrentPosition();
+        int leftPos = leftMotor.getCurrentPosition();
+        rightMotor.setTargetPosition(-distance + rightPos);
+        leftMotor.setTargetPosition(-distance + leftPos);
+        while(rightMotor.getTargetPosition() < rightMotor.getCurrentPosition()){
+            rightMotor.setPower(-speed);
+            leftMotor.setPower(-speed);
+        }
     }
 
     public void turnRight(int distance, int speed, DcMotor rightMotor, DcMotor leftMotor){
         //turn right for distance at speed using motors right and left
+        int rightPos = rightMotor.getCurrentPosition();
+        int leftPos = leftMotor.getCurrentPosition();
+        rightMotor.setTargetPosition(-distance + rightPos);
+        leftMotor.setTargetPosition(distance + leftPos);
+        while(leftMotor.getTargetPosition() > leftMotor.getCurrentPosition()){
+            rightMotor.setPower(-speed);
+            leftMotor.setPower(speed);
+        }
     }
 
     public void turnLeft(int distance, int speed, DcMotor rightMotor, DcMotor leftMotor){
         //turn left for distance at speed using motors right and left
+        int rightPos = rightMotor.getCurrentPosition();
+        int leftPos = leftMotor.getCurrentPosition();
+        rightMotor.setTargetPosition(distance + rightPos);
+        leftMotor.setTargetPosition(-distance + leftPos);
+        while(leftMotor.getTargetPosition() < leftMotor.getCurrentPosition()){
+            rightMotor.setPower(speed);
+            leftMotor.setPower(-speed);
+        }
     }
 
     public void moveForward(int distance, DcMotor rightMotor, DcMotor leftMotor){
