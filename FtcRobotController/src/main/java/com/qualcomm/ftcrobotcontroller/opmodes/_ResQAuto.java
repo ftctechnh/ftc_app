@@ -209,6 +209,8 @@ public abstract class _ResQAuto extends LinearOpMode {
                 value = reflectance - EOPDThreshold ;
                 valueB = .1+3*value;
                 valueS = .1-3*value;
+                valueB = (valueB)<1?valueB:1;
+                valueS=(valueS)<1?valueS:1;
                 if (Math.abs(valueS) < 0.25)
                   valueS = (Math.signum(valueS) * 0.25);
 
