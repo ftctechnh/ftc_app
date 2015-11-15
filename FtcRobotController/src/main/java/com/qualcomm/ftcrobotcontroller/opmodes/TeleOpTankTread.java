@@ -87,7 +87,9 @@ public class TeleOpTankTread extends OpMode{
         motorRRight = hardwareMap.dcMotor.get("motor_right_rear"); //RRight
         motorRLeft = hardwareMap.dcMotor.get("motor_left_rear"); //RLeft
 
-        motorRLeft.setDirection(DcMotor.Direction.REVERSE);
+        //motorRLeft.setDirection(DcMotor.Direction.REVERSE);
+        motorRRight.setDirection(DcMotor.Direction.REVERSE);
+
 
         /* Emma
         * allows robot to run if there are only 2 motors
@@ -96,7 +98,8 @@ public class TeleOpTankTread extends OpMode{
             motorFRight = hardwareMap.dcMotor.get("motor_right_front"); // FRight
             motorFLeft = hardwareMap.dcMotor.get("motor_left_front"); // FLeft
 
-            motorFLeft.setDirection(DcMotor.Direction.REVERSE);
+            //motorFLeft.setDirection(DcMotor.Direction.REVERSE);
+            motorFRight.setDirection(DcMotor.Direction.REVERSE);
         } catch (Exception ex) {
 
         }
@@ -141,6 +144,7 @@ public class TeleOpTankTread extends OpMode{
         // and 1 is full right
         float drivespeed = -gamepad1.left_stick_y;
         float driveturn = gamepad1.right_stick_x;
+
         float upperslide = gamepad2.left_stick_y;
         float lowerslide = gamepad2.right_stick_y;
         float right = drivespeed - driveturn;
@@ -156,6 +160,7 @@ public class TeleOpTankTread extends OpMode{
         // the robot more precisely at slower speeds.
         right = (float)scaleInput(right);
         left =  (float)scaleInput(left);
+        
         upperslide = (float)scaleInput(upperslide);
         lowerslide = (float)scaleInput(lowerslide);
 
@@ -163,8 +168,11 @@ public class TeleOpTankTread extends OpMode{
 
         motorRRight.setPower(right);
         motorRLeft.setPower(left);
-        motorUpperSlide.setPower(upperslide);
-        motorLowerSlide.setPower(lowerslide);
+
+        if (motorUpperSlide != null) {
+            motorUpperSlide.setPower(upperslide);
+            motorLowerSlide.setPower(lowerslide);
+        }
 
         if (motorFRight != null) {
             motorFRight.setPower(right);
