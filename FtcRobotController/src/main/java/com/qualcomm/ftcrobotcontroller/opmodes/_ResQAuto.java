@@ -8,6 +8,11 @@ import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.Range;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+
 //TODO: Detect red/blue line, change ODS boundary DONE, but need calibration
 //TODO: Get sweeper working
 //TODO: Get button pushing working DONE
@@ -32,13 +37,29 @@ public abstract class _ResQAuto extends LinearOpMode {
         ColorSensor colorsensor;
 
         double reflectance = 0;
-        final double TARGET_REFLECTANCE = 0.1;
-        final double BLACKVALUE = 0.023;
-        final double WHITEVALUE = 0.29;
-        final double REDVALUE = 0.19; //NEED TO TEST
-        final double BLUEVALUE = 0.12; //NEED TO TEST
-        final double EOPDThreshold = 0.5 * (REDVALUE + WHITEVALUE);
-        final double ultrasonicThreshold = 15;
+        double TARGET_REFLECTANCE = 0.1;
+        double BLACKVALUE = 0.023;
+        double WHITEVALUE = 0.29;
+        double REDVALUE = 0.19; //NEED TO TEST
+        double BLUEVALUE = 0.12; //NEED TO TEST
+        double EOPDThreshold = 0.5 * (REDVALUE + WHITEVALUE);
+        double ultrasonicThreshold = 15;
+        String date;
+
+        try
+        {
+            File file = new File("/sdcard/FIRST/calibration.txt");
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            date = br.readLine();
+            REDVALUE = Double.parseDouble(br.readLine());
+            BLUEVALUE = Double.parseDouble(br.readLine());
+            WHITEVALUE = Double.parseDouble(br.readLine());
+            BLACKVALUE = Double.parseDouble(br.readLine());
+            br.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         final double POWER = 0.3;
         final double BASEPOWER = 0.2;
