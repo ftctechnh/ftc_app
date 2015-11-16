@@ -8,4 +8,5 @@ public interface DriverInterface
     void moveStraightEncoders(float inches, float speed );
     void pivotTurn(float degrees, float speed, boolean isLeft);
     void spinOnCenter(float degrees,float speed, boolean isLeft );
+    void stop();
 }
