@@ -9,7 +9,7 @@ import org.swerverobotics.library.interfaces.*;
  * This is similar to LinearAutonomousPolygon, but uses a 'run to position'
  * approach rather than a timed delay approach, and it
  */
-@Autonomous(name="Autonomous Polygon (encoders)", group="Swerve Examples")
+@Autonomous(name="Autonomous Polygon (Sync, encoders)", group="Swerve Examples")
 public class SyncAutonomousPolygonEncoders extends SynchronousOpMode
     {
     DcMotor motorRight;

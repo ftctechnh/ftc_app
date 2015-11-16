@@ -74,8 +74,6 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
     private static final double powerMin = -1.0;
     private static final double powerMax = 1.0;
 
-    private static final String             swerveVoltageSensorName = " |Swerve|VoltageSensor| ";
-
     private final OpMode                    context;
     private final II2cDeviceClient          i2cDeviceClient;
     private final DcMotorController         target;
@@ -101,8 +99,6 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
         this.motor2          = null;
 
         RobotStateTransitionNotifier.register(context, this);
-
-        this.initPID();
 
         // The NXT HiTechnic motor controller will time out if it doesn't receive any I2C communication for
         // 2.5 seconds. So we set up a heartbeat request to try to prevent that. We try to use
@@ -173,16 +169,17 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
 
     private void usurpMotors()
         {
-        if (this.motor1 != null)    setController(this.motor1, this);
-        if (this.motor2 != null)    setController(this.motor2, this);
+        if (this.motor1 != null) MemberUtil.setControllerOfMotor(this.motor1, this);
+        if (this.motor2 != null) MemberUtil.setControllerOfMotor(this.motor2, this);
         }
 
     private void deusurpMotors()
         {
-        if (this.motor1 != null) setController(this.motor1, this.target);
-        if (this.motor2 != null) setController(this.motor2, this.target);
+        if (this.motor1 != null) MemberUtil.setControllerOfMotor(this.motor1, this.target);
+        if (this.motor2 != null) MemberUtil.setControllerOfMotor(this.motor2, this.target);
         }
 
+    private static final String swerveVoltageSensorName = " |Swerve|Legacy|VoltageSensor| ";
 
     private void registerVoltageSensor()
         {
@@ -201,12 +198,12 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
         {
         if (this.context != null)
             {
-            if (ThunkingHardwareFactory.contains(this.context.hardwareMap.voltageSensor, swerveVoltageSensorName))
+            if (Util.contains(this.context.hardwareMap.voltageSensor, swerveVoltageSensorName))
                 {
                 VoltageSensor voltageSensor = this.context.hardwareMap.voltageSensor.get(swerveVoltageSensorName);
                 if (voltageSensor == (VoltageSensor)this)
                     {
-                    ThunkingHardwareFactory.removeName(this.context.hardwareMap.voltageSensor, swerveVoltageSensorName);
+                    Util.removeName(this.context.hardwareMap.voltageSensor, swerveVoltageSensorName);
                     }
                 }
             }
@@ -223,6 +220,7 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
 
             this.i2cDeviceClient.arm();
             this.registerVoltageSensor();
+            this.initPID();
             this.floatMotors();
             }
         }
