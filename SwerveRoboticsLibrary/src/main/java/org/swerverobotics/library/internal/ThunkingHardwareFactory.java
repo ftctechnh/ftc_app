@@ -100,7 +100,7 @@ public class ThunkingHardwareFactory
                 {
                 ClassFactory.createEasyLegacyMotorController(this.context, motor1, motor2);
                 }
-            else if (false && MemberUtil.isModernMotorController(controller))
+            else if (MemberUtil.isModernMotorController(controller))
                 {
                 ClassFactory.createEasyModernMotorController(this.context, motor1, motor2);
                 }

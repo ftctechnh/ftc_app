@@ -68,7 +68,7 @@ public class NonBlockingModernMotorController extends ModernRoboticsUsbDevice im
 
         RobotStateTransitionNotifier.register(context, this);
 
-        this.isBusyHelpers = new IsBusyHelper[3];
+        this.isBusyHelpers = new IsBusyHelper[LAST_MOTOR+1];
         for (int i = 0; i < this.isBusyHelpers.length; i++)
             this.isBusyHelpers[i] = new IsBusyHelper();
         }
