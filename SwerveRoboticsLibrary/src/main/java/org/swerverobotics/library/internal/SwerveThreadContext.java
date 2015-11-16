@@ -1,5 +1,6 @@
 package org.swerverobotics.library.internal;
 
+import com.qualcomm.robotcore.eventloop.EventLoopManager;
 import com.qualcomm.robotcore.eventloop.opmode.*;
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.interfaces.*;
@@ -65,34 +66,43 @@ public class SwerveThreadContext
         {
         return tlsThreadContext.get();
         }
-    public static IThunkDispatcher getContextualThunker()
+    public static IThunkDispatcher getThunker()
         {
-        return getThreadContext()==null ? null : getThreadContext().getThunker();
+        return getThreadContext()==null ? null : getThreadContext().thunker;
         }
-    public boolean isSynchronousThread()
+    public static OpMode getOpMode()
+        {
+        return getThreadContext()==null ? null : getThreadContext().opMode;
+        }
+    public static EventLoopManager getEventLoopManager()
+        {
+        SwerveThreadContext me = getThreadContext();
+        if (me != null)
+            {
+            if (me.swerveFtcEventLoop != null)
+                {
+                return me.swerveFtcEventLoop.getEventLoopManager();
+                }
+            }
+        return null;
+        }
+
+    public static void assertSynchronousThread()
+        {
+        junit.framework.Assert.assertTrue(!BuildConfig.DEBUG || isSynchronousThread());
+        }
+    public static boolean isSynchronousThread()
+        {
+        SwerveThreadContext context = getThreadContext();
+        return context != null && context.thisIsSynchronousThread();
+        }
+
+    public boolean thisIsSynchronousThread()
         {
         return this.isSynchronousThread;
         }
-    public static boolean isCurrentThreadSynchronous()
-        {
-        SwerveThreadContext context = getThreadContext();
-        return context != null && context.isSynchronousThread();
-        }
-    public static void assertSynchronousThread()
-        {
-        junit.framework.Assert.assertTrue(!BuildConfig.DEBUG || isCurrentThreadSynchronous());
-        }
-
-    public static OpMode getContextualOpMode()
-        {
-        return getThreadContext()==null ? null : getThreadContext().getOpMode();
-        }
-    public IThunkDispatcher getThunker()
+    public IThunkDispatcher thisGetThunker()
         {
         return this.thunker;
-        }
-    public OpMode getOpMode()
-        {
-        return this.opMode;
         }
     }

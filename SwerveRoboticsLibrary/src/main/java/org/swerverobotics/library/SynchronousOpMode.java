@@ -1119,7 +1119,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      */
     public static IThunkDispatcher getThreadThunker()
         {
-        return SwerveThreadContext.getContextualThunker();
+        return SwerveThreadContext.getThunker();
         }
 
     //----------------------------------------------------------------------------------------------
@@ -1128,7 +1128,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
 
     private static SynchronousOpMode getThreadSynchronousOpMode()
         {
-        return (SynchronousOpMode)(SwerveThreadContext.getContextualOpMode());
+        return (SynchronousOpMode)(SwerveThreadContext.getOpMode());
         }
 
     /**
@@ -1160,7 +1160,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     /**
      * Advanced: Answer as to whether the current thread is in fact the loop thread
      * 
-     * @see SwerveThreadContext#isCurrentThreadSynchronous()
+     * @see SwerveThreadContext#isSynchronousThread()
      */
     private boolean isLoopThread()
         {

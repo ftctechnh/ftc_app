@@ -62,6 +62,16 @@ public final class ClassFactory
         EasyLegacyMotorController.create(context, target, motor1, motor2);
         }
 
+    /** Documentation to come */
+    public static void createEasyModernMotorController(OpMode context, DcMotor motor1, DcMotor motor2)
+        {
+        DcMotorController target = motor1==null ? null : motor1.getController();
+
+        if (motor2 != null && target != null && motor2.getController()!=target)
+            throw new IllegalArgumentException("motors do not share the same controller");
+
+        NonBlockingModernMotorController.create(context, target, motor1, motor2);
+        }
 
     //----------------------------------------------------------------------------------------------
     // Sensors
@@ -96,7 +106,7 @@ public final class ClassFactory
     public static IBNO055IMU createAdaFruitBNO055IMU(I2cDevice i2cDevice, IBNO055IMU.Parameters parameters)
         {
         SwerveThreadContext.assertSynchronousThread();
-        return createAdaFruitBNO055IMU(SwerveThreadContext.getContextualOpMode(), i2cDevice, parameters);
+        return createAdaFruitBNO055IMU(SwerveThreadContext.getOpMode(), i2cDevice, parameters);
         }
 
     /**

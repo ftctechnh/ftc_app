@@ -112,6 +112,6 @@ public abstract class Thunk implements Runnable, IActionKeyed
     protected void dispatch() throws InterruptedException
         {
         SwerveThreadContext.assertSynchronousThread();
-        this.context.getThunker().executeOnLoopThread(this);
+        this.context.thisGetThunker().executeOnLoopThread(this);
         }
     }
