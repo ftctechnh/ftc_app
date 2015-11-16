@@ -121,10 +121,22 @@ public class Util
     // Threads
     //----------------------------------------------------------------------------------------------
 
-    public static void shutdownAndAwaitTermination(ExecutorService service, Runnable runnable)
+    public static void shutdownAndAwaitTermination(ExecutorService service)
         {
         service.shutdown();
-        runnable.run();
+        awaitTermination(service);
+        }
+
+    public static void shutdownNowAndAwaitTermination(ExecutorService service)
+        {
+        service.shutdownNow();
+        awaitTermination(service);
+        }
+
+    public static void shutdownNowAndAwaitTermination(ExecutorService service, Runnable runnableBetween)
+        {
+        service.shutdownNow();
+        runnableBetween.run();
         awaitTermination(service);
         }
 
