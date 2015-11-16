@@ -16,6 +16,7 @@ public class ClassifiedTeleOp extends OpMode{
     //Arm arm = new Arm();
     Intake intake = new Intake();
     Dumper dumper = new Dumper();
+    ZiplineScorer ziplineScorer = new ZiplineScorer();
 
     Servo climberServo;
 
@@ -26,9 +27,10 @@ public class ClassifiedTeleOp extends OpMode{
         //arm.init(hardwareMap);
         intake.init(hardwareMap);
         dumper.init(hardwareMap);
+        ziplineScorer.init(hardwareMap);
 
         climberServo = hardwareMap.servo.get("climberServo");
-        climberServo.setPosition(0.5);
+        climberServo.setPosition(1);
 
     }
 
@@ -39,23 +41,48 @@ public class ClassifiedTeleOp extends OpMode{
         drivetrain.tankDrive(-gamepad1.right_stick_y, -gamepad1.left_stick_y);
         lift.setSpeed(-gamepad2.left_stick_y);
 
-        if(gamepad1.a)
-            intake.forward();
 
-        if(gamepad1.b)
-            intake.backward();
+        if(gamepad1.left_bumper)
+            intake.inward();
 
-        if(!(gamepad1.a || gamepad1.b))
+        if(gamepad1.right_bumper)
+            intake.outward();
+
+        if(!(gamepad1.right_bumper || gamepad1.left_bumper))
             intake.stop();
 
 
+
         if(gamepad2.left_bumper)
-            dumper.setLeft();
+            ziplineScorer.leftServo.setPosition(ziplineScorer.leftOut);
+        else
+            ziplineScorer.leftServo.setPosition(ziplineScorer.leftIn);
 
         if(gamepad2.right_bumper)
+            ziplineScorer.rightServo.setPosition(ziplineScorer.rightOut);
+        else
+            ziplineScorer.rightServo.setPosition(ziplineScorer.rightIn);
+
+
+
+        if(gamepad2.a)
+            climberServo.setPosition(0);
+
+        if(gamepad2.b)
+            climberServo.setPosition(1);
+
+        if(gamepad2.y)
+            climberServo.setPosition(0.5);
+
+
+
+        if(gamepad2.dpad_left)
+            dumper.setLeft();
+
+        if(gamepad2.dpad_right)
             dumper.setRight();
 
-        if(!(gamepad2.left_bumper || gamepad2.right_bumper))
+        if(!(gamepad2.dpad_left || gamepad2.dpad_right))
             dumper.setNeutral();
 
         /*

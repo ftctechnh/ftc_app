@@ -8,15 +8,17 @@ import com.qualcomm.robotcore.hardware.*;
 public class Dumper {
     public Servo servo;
 
-    double leftPosition = 0.44;
+    double leftPosition = 0.44    ;
     double neutralPosition = 0.49;
-    double rightPosition = 0.54;
+    double rightPosition = 0.55;
 
     public Dumper(){
     }
 
     public void init(HardwareMap hardwareMap){
+
         servo = hardwareMap.servo.get("dumperServo");
+        servo.setPosition(neutralPosition);
     }
     public void setLeft(){
         servo.setPosition(leftPosition);
