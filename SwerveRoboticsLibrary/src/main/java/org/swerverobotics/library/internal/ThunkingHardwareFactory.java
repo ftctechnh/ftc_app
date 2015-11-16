@@ -118,7 +118,11 @@ public class ThunkingHardwareFactory
                     {
                     if (target instanceof EasyLegacyMotorController)
                         {
-                        // Put the EasyLegacyMotorController in the thunked map
+                        return target;
+                        }
+
+                    if (target instanceof EasyModernMotorController)
+                        {
                         return target;
                         }
 

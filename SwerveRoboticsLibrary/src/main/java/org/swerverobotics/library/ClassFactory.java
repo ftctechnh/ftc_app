@@ -70,7 +70,7 @@ public final class ClassFactory
         if (motor2 != null && target != null && motor2.getController()!=target)
             throw new IllegalArgumentException("motors do not share the same controller");
 
-        NonBlockingModernMotorController.create(context, target, motor1, motor2);
+        EasyModernMotorController.create(context, target, motor1, motor2);
         }
 
     //----------------------------------------------------------------------------------------------

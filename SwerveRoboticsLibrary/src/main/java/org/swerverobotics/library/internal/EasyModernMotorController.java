@@ -20,9 +20,9 @@ import static junit.framework.Assert.assertTrue;
 
 /**
  * An alternate implementation of the driver for a Modern Robotics DC Motor Controller.
- * Not yet used.
+ * This implementation doesn't use a blocking ReadWriteRunnable.
  */
-public class NonBlockingModernMotorController extends ModernRoboticsUsbDevice implements DcMotorController, VoltageSensor, IOpModeStateTransitionEvents
+public class EasyModernMotorController extends ModernRoboticsUsbDevice implements DcMotorController, VoltageSensor, IOpModeStateTransitionEvents
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -45,14 +45,14 @@ public class NonBlockingModernMotorController extends ModernRoboticsUsbDevice im
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    private NonBlockingModernMotorController(OpMode context, ModernRoboticsUsbDcMotorController target) throws RobotCoreException, InterruptedException
+    private EasyModernMotorController(OpMode context, ModernRoboticsUsbDcMotorController target) throws RobotCoreException, InterruptedException
         {
         // We *have*to* construct with something live
         super(target.getSerialNumber(), SwerveThreadContext.getEventLoopManager(), newDummyReadWriteRunnable(target.getSerialNumber()));
         // But we shut it down right away, because we want to start disarmed until we fully configure
         Util.shutdownAndAwaitTermination(this.readWriteService, new Runnable() {
             @Override public void run() {
-                ((ReadWriteRunnableStandard)NonBlockingModernMotorController.this.readWriteRunnable).close();
+                ((ReadWriteRunnableStandard)EasyModernMotorController.this.readWriteRunnable).close();
                 }
             });
 
@@ -78,7 +78,7 @@ public class NonBlockingModernMotorController extends ModernRoboticsUsbDevice im
         try {
             if (MemberUtil.isModernMotorController(target))
                 {
-                NonBlockingModernMotorController controller = new NonBlockingModernMotorController(context, (ModernRoboticsUsbDcMotorController) target);
+                EasyModernMotorController controller = new EasyModernMotorController(context, (ModernRoboticsUsbDcMotorController) target);
                 controller.setMotors(motor1, motor2);
                 controller.arm();
                 return controller;
