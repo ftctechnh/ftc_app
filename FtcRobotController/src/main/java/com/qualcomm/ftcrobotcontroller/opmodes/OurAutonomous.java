@@ -6,12 +6,12 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 
 
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.ftcrobotcontroller.opmodes.MC;
+        import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+        import com.qualcomm.robotcore.hardware.DcMotor;
+        import com.qualcomm.robotcore.hardware.DcMotorController;
+        import com.qualcomm.robotcore.hardware.Servo;
+        import com.qualcomm.robotcore.util.Range;
+        import com.qualcomm.ftcrobotcontroller.opmodes.MC;
 
 
 public class OurAutonomous {
@@ -41,7 +41,7 @@ public class OurAutonomous {
     //public static climb(){
 
     //back up/ turn right/ left(depending on position)
-   turnandbackup.BackTurn(100,34);
+    turnandbackup.BackTurn(100,34);
     //go forward to press button to release climbers
     MC.moveForward(100, 34);
     //extend arm to press button to release climbers
