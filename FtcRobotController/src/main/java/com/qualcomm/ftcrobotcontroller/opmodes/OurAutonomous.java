@@ -1,5 +1,13 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.ftcrobotcontroller.opmodes.MC;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
+
+
 /**
  * Created by patrick.brady on 11/12/2015.
  */
@@ -16,6 +24,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 
 public class OurAutonomous {
 
+
     public OurAutonomous(){
 
     }
@@ -25,6 +34,24 @@ public class OurAutonomous {
     DcMotor rightMotor;
     DcMotor leftMotor;
 
+    public void init(){
+        DcMotor armLowerMotor;
+        DcMotor armUpperMotor;
+        DcMotor rightMotor = hardwareMap.dcMotor.get("motor_right");
+        DcMotor leftMotor = hardwareMap.dcMotor.get("motor_left");
+    }
+
+    public void start(){
+
+    }
+
+    public void loop(){
+
+    }
+
+    public void stop(){
+
+    }
     //public static light(){
 
     // go straight some amount
@@ -52,5 +79,5 @@ public class OurAutonomous {
     MC.moveForward(100, 34);
     //}
 
-
+    MC.moveForward(100, 34, rightMotor, leftMotor);
 }
