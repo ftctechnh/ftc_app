@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.Range;
  * HI.
  */
 public class MC {
-    final int DEFAULT_SPEED = 50;
+    final static int DEFAULT_SPEED = 50;
 
     public static void moveForward(int distance, int speed, DcMotor rightMotor, DcMotor leftMotor){
         //move for distance at speed using motors right and left

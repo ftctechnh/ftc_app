@@ -44,7 +44,7 @@ public class OurAutonomous extends OpMode{
             //public static climb(){
 
             //back up/ turn right/ left(depending on position)
-            turnandbackup.BackTurn(100,34, rightMotor, leftMotor);
+            //turnandbackup.BackTurn(100,34, rightMotor, leftMotor);
             //go forward to press button to release climbers
             MC.moveForward(100, 34, rightMotor, leftMotor);
             //extend arm to press button to release climbers
