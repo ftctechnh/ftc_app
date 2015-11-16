@@ -50,9 +50,12 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
         // We *have*to* construct with something live
         super(target.getSerialNumber(), SwerveThreadContext.getEventLoopManager(), newDummyReadWriteRunnable(target.getSerialNumber()));
         // But we shut it down right away, because we want to start disarmed until we fully configure
-        Util.shutdownAndAwaitTermination(this.readWriteService, new Runnable() {
-            @Override public void run() {
-                ((ReadWriteRunnableStandard)EasyModernMotorController.this.readWriteRunnable).close();
+        Util.shutdownNowAndAwaitTermination(this.readWriteService, new Runnable()
+            {
+            @Override
+            public void run()
+                {
+                ((ReadWriteRunnableStandard) EasyModernMotorController.this.readWriteRunnable).close();
                 }
             });
 

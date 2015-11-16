@@ -232,9 +232,9 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                     {
                     // We can't hold the concurrent client lock while we drain the heartbeat
                     // as that might be doing an external top-level read. But the semantic of
-                    // Executors guarantees us that by the time that shutdown() returns any
-                    // actions we've scheduled have in fact been completed.
-                    this.heartbeatExecutor.shutdown();
+                    // Executors guarantees us this call returns any actions we've scheduled
+                    // have in fact been completed.
+                    Util.shutdownAndAwaitTermination(this.heartbeatExecutor);
 
                     // Prevent any new read or write from starting
                     this.disarming = true;
