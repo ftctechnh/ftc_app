@@ -59,7 +59,7 @@ public class FtcOpModeRegister implements OpModeRegister {
 
     manager.register("ArmMotor", ArmMotor.class);
 
-    manager.register("MC", MC.class);
+   // manager.register("MC", MC.class);
 
     manager.register("TeleOp", TeleOp.class);
 

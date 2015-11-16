@@ -28,28 +28,28 @@ public class OurAutonomous {
     //public static light(){
 
     // go straight some amount
-    MC.moveForward(100, 34);
+    //MC.moveForward(100, 34);
     //open claw...
 
     //**claw is to remain open for autonomous
 
     //turn left/right goes to button (depending on position)
-    MC.turnRight(100, 34);
+    //MC.turnRight(100, 34);
     //extend arm and press light button
 
 //}
     //public static climb(){
 
     //back up/ turn right/ left(depending on position)
-   turnandbackup.BackTurn(100,34);
+   //turnandbackup.BackTurn(100,34);
     //go forward to press button to release climbers
-    MC.moveForward(100, 34);
+   //MC.moveForward(100, 34);
     //extend arm to press button to release climbers
 
     //back up and turn (to reposition) to go straight onto mountain
-    turnandbackup.BackTurn(100,34);
+    //turnandbackup.BackTurn(100,34);
     //with all force climb to highest point on mountain
-    MC.moveForward(100, 34);
+    //MC.moveForward(100, 34);
     //}
 
 

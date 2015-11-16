@@ -91,8 +91,10 @@ public class TeleOp extends OpMode {
 
 		armUpperMotor = hardwareMap.dcMotor.get("armUpperMotor");
 		armLowerMotor = hardwareMap.dcMotor.get("armLowerMotor");
+
 		rightMotor = hardwareMap.dcMotor.get("motor_right");
 		leftMotor = hardwareMap.dcMotor.get("motor_left");
+		leftMotor.setDirection(DcMotor.Direction.REVERSE);
 	}
 
 	/*
@@ -117,8 +119,9 @@ public class TeleOp extends OpMode {
 
 		float rightMotorSpeed = gamepad1.right_stick_y;
 		float leftMotorSpeed = gamepad1.left_stick_y;
-		float UpperMotorSpeed = gamepad2.left_stick_y;
-		float LowerMotorSpeed = gamepad2.right_stick_y/2;
+
+		float UpperMotorSpeed = gamepad2.left_stick_y/1.5f;
+		float LowerMotorSpeed = gamepad2.right_stick_y/1.5f;
 
 		// clip the right/left values so that the values never exceed +/- 1
 		rightMotorSpeed = Range.clip(rightMotorSpeed, -1f, 1f);
@@ -137,6 +140,7 @@ public class TeleOp extends OpMode {
 		// write the values to the motors
 		rightMotor.setPower(rightMotorSpeed);
 		leftMotor.setPower(leftMotorSpeed);
+
 		armUpperMotor.setPower(UpperMotorSpeed);
 		armLowerMotor.setPower(LowerMotorSpeed);
 
@@ -167,8 +171,8 @@ public class TeleOp extends OpMode {
 		 * are currently write only.
 		 */
 		telemetry.addData("Text", "*** Robot Data***");
-		telemetry.addData("UpperMotorSpeed tgt pwr",  "UpperMotorPower  pwr: " + String.format("%.2f", UpperMotorSpeed));
-		telemetry.addData("LowerMotorSpeed tgt pwr", "LowerMotorPower pwr: " + String.format("%.2f", LowerMotorSpeed));
+		telemetry.addData("UpperMotorSpeed tgt pwr",  "UpperMotorPower  pwr: " + String.format("%.2f", rightMotorSpeed));
+		telemetry.addData("LowerMotorSpeed tgt pwr", "LowerMotorPower pwr: " + String.format("%.2f", leftMotorSpeed));
 	}
 
 	/*
