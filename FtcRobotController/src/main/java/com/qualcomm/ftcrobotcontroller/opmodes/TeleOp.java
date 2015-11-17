@@ -42,9 +42,17 @@ public class TeleOp extends OpMode {
         }
         else if(gamepad1.b) {
         servo.setPosition(.6);
-    }
+        }
         else if(gamepad1.a) {
-            servo.setPosition(.75);
+            servo.setPosition(.8);
+        }
+        if (gamepad2.a)
+        {
+            while (!( gamepad2.b))
+            {
+                leftmotor.setPower(0);
+                rightmotor.setPower(0);
+            }
         }
     }
 }
