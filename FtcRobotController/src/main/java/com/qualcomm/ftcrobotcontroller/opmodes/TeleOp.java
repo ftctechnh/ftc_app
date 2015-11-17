@@ -33,6 +33,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 /**
@@ -55,6 +56,8 @@ public class TeleOp extends OpMode {
 	DcMotor armUpperMotor;
 	DcMotor rightMotor;
 	DcMotor leftMotor;
+	Servo servoRight;
+	Servo servoLeft;
 
 	/**
 	 * Constructor
@@ -95,6 +98,9 @@ public class TeleOp extends OpMode {
 		rightMotor = hardwareMap.dcMotor.get("motor_right");
 		leftMotor = hardwareMap.dcMotor.get("motor_left");
 		leftMotor.setDirection(DcMotor.Direction.REVERSE);
+
+		servoRight = hardwareMap.servo.get("servoRight");
+		servoLeft = hardwareMap.servo.get("servoLeft");
 	}
 
 	/*
@@ -104,6 +110,7 @@ public class TeleOp extends OpMode {
 	 */
 	@Override
 	public void loop() {
+
 
 		/*
 		 * Gamepad 1
@@ -145,20 +152,11 @@ public class TeleOp extends OpMode {
 		armLowerMotor.setPower(LowerMotorSpeed);
 
 		// update the position of the arm.
-		if (gamepad1.a) {
+		if (gamepad1.left_bumper) {
 
 		}
 
-		if (gamepad1.y) {
-
-		}
-
-		// update the position of the claw
-		if (gamepad1.x) {
-
-		}
-
-		if (gamepad1.b) {
+		if (gamepad1.right_bumper) {
 
 		}
 
