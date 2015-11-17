@@ -7,12 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
-
 public class OurAutonomous extends OpMode{
-
-
     public OurAutonomous(){
-
     }
 
     DcMotor armLowerMotor;
@@ -32,12 +28,10 @@ public class OurAutonomous extends OpMode{
     public void start(){
         if(peopleAndLight) {
             peopleAndLight();
-        }
-
-        if(climbing && peopleAndLight){
-            climbFromBasket();
-        }
-        else if(climbing){
+            if(climbing) {
+                climbFromBasket();
+            }
+        }else if(climbing) {
             climbFromStart();
         }
     }
@@ -54,7 +48,6 @@ public class OurAutonomous extends OpMode{
 
     public void dumpClimbers(){
         //starting from the point where line following stopped, the robot will use its arm to reach up and dump the people
-        
     }
 
     public void detectAndPushLight(){
@@ -70,15 +63,13 @@ public class OurAutonomous extends OpMode{
     }
 
     public void climbFromStart(){
-        //the robot starts from the position on the wall
+        //the robot starts from the position on the wall and then goes to climb
+        MC.moveForward(100, rightMotor, leftMotor);
     }
 
     public void loop(){
-
     }
 
     public void stop(){
-
     }
-
 }
