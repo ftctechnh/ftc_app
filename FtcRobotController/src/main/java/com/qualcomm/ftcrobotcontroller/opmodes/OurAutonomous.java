@@ -31,13 +31,7 @@ public class OurAutonomous extends OpMode{
 
     public void start(){
         if(peopleAndLight) {
-            //dumpAndLight
-            MC.moveForward(3000, rightMotor, leftMotor); //move in front of the light
-            MC.turnRight(200, rightMotor, leftMotor); //face the light approximately
-            MC.moveForward(400, rightMotor, leftMotor); //CAN USE LINE FOLLOWING TO CENTER ROBOT AND TOUCH TO DETECT WALL.
-            dumpClimbers(); //method to use the arm to dump the climbers into the bin that should be in front of the robot
-            detectAndPushLight();//method to use the light sensor to see which button to push
-            //make sure to have the methods return the robot to this position
+            peopleAndLight();
         }
 
         if(climbing && peopleAndLight){
@@ -46,33 +40,21 @@ public class OurAutonomous extends OpMode{
         else if(climbing){
             climbFromStart();
         }
+    }
 
-
-        //turn left/right goes to button (depending on position)
-        MC.turnRight(100, rightMotor, leftMotor);
-        //extend arm and press light button
-
-//}
-        //public static climb(){
-
-        //back up/ turn right/ left(depending on position)
-        //turnandbackup.BackTurn(100,34, rightMotor, leftMotor);
-        //go forward to press button to release climbers
-        MC.moveForward(100, rightMotor, leftMotor);
-        //extend arm to press button to release climbers
-
-        //back up and turn (to reposition) to go straight onto mountain
-        //turnandbackup.BackTurn(100,34, rightMotor, leftMotor);
-        //with all force climb to highest point on mountain
-        MC.moveForward(100, rightMotor, leftMotor);
-        //}
-
-        MC.moveForward(100, rightMotor, leftMotor);
+    public void peopleAndLight(){
+        //dumpAndLight
+        MC.moveForward(3000, rightMotor, leftMotor); //move in front of the light
+        MC.turnRight(200, rightMotor, leftMotor); //face the light approximately
+        MC.moveForward(400, rightMotor, leftMotor); //CAN USE LINE FOLLOWING TO CENTER ROBOT AND TOUCH TO DETECT WALL.
+        dumpClimbers(); //method to use the arm to dump the climbers into the bin that should be in front of the robot
+        detectAndPushLight();//method to use the light sensor to see which button to push
+        //make sure to have the methods return the robot to this position
     }
 
     public void dumpClimbers(){
         //starting from the point where line following stopped, the robot will use its arm to reach up and dump the people
-
+        
     }
 
     public void detectAndPushLight(){
@@ -81,6 +63,10 @@ public class OurAutonomous extends OpMode{
 
     public void climbFromBasket(){
         //the robot starts from the location that is at the end of the light and basket methods
+        //back up and turn (to reposition) to go straight onto mountain
+        //turnandbackup.BackTurn(100,34, rightMotor, leftMotor);
+        //with all force climb to highest point on mountain
+        MC.moveForward(100, rightMotor, leftMotor);
     }
 
     public void climbFromStart(){
