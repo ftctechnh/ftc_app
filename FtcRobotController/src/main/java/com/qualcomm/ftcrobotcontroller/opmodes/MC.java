@@ -10,9 +10,9 @@ import com.qualcomm.robotcore.util.Range;
  * HI.
  */
 public class MC {
-    final int DEFAULT_SPEED = 50;
+    final static int DEFAULT_SPEED = 50;
 
-    public void moveForward(int distance, int speed, DcMotor rightMotor, DcMotor leftMotor){
+    public static void moveForward(int distance, int speed, DcMotor rightMotor, DcMotor leftMotor){
         //move for distance at speed using motors right and left
         int rightPos = rightMotor.getCurrentPosition();
         int leftPos = leftMotor.getCurrentPosition();
@@ -24,7 +24,7 @@ public class MC {
         }
     }
 
-    public void moveBackward(int distance, int speed, DcMotor rightMotor, DcMotor leftMotor){
+    public static void moveBackward(int distance, int speed, DcMotor rightMotor, DcMotor leftMotor){
         //move backward for distance at speed using motors right and left
         int rightPos = rightMotor.getCurrentPosition();
         int leftPos = leftMotor.getCurrentPosition();
@@ -36,7 +36,7 @@ public class MC {
         }
     }
 
-    public void turnRight(int distance, int speed, DcMotor rightMotor, DcMotor leftMotor){
+    public static void turnRight(int distance, int speed, DcMotor rightMotor, DcMotor leftMotor){
         //turn right for distance at speed using motors right and left
         int rightPos = rightMotor.getCurrentPosition();
         int leftPos = leftMotor.getCurrentPosition();
@@ -48,7 +48,7 @@ public class MC {
         }
     }
 
-    public void turnLeft(int distance, int speed, DcMotor rightMotor, DcMotor leftMotor){
+    public static void turnLeft(int distance, int speed, DcMotor rightMotor, DcMotor leftMotor){
         //turn left for distance at speed using motors right and left
         int rightPos = rightMotor.getCurrentPosition();
         int leftPos = leftMotor.getCurrentPosition();
@@ -60,16 +60,16 @@ public class MC {
         }
     }
 
-    public void moveForward(int distance, DcMotor rightMotor, DcMotor leftMotor){
+    public static void moveForward(int distance, DcMotor rightMotor, DcMotor leftMotor){
         moveForward(distance, DEFAULT_SPEED, rightMotor, leftMotor);
     }
-    public void moveBackward(int distance, DcMotor rightMotor, DcMotor leftMotor){
+    public static void moveBackward(int distance, DcMotor rightMotor, DcMotor leftMotor){
         moveBackward(distance, DEFAULT_SPEED, rightMotor, leftMotor);
     }
-    public void turnRight(int distance, DcMotor rightMotor, DcMotor leftMotor){
+    public static void turnRight(int distance, DcMotor rightMotor, DcMotor leftMotor){
         turnRight(distance, DEFAULT_SPEED, rightMotor, leftMotor);
     }
-    public void turnLeft(int distance, DcMotor rightMotor, DcMotor leftMotor){
+    public static void turnLeft(int distance, DcMotor rightMotor, DcMotor leftMotor){
         turnLeft(distance, DEFAULT_SPEED, rightMotor, leftMotor);
     }
 }
