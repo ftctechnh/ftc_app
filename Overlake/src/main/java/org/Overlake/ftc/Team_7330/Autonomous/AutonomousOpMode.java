@@ -38,8 +38,6 @@ public abstract class AutonomousOpMode extends SynchronousOpMode {
         double rightMotorPower = .25;
         double increment = .005;
 
-        while (true)
-        {
         if (isColor(c, sensorSide) == true)
         {
             if (colorSide == Side.Left)      //if color side is left, veer right
@@ -68,11 +66,11 @@ public abstract class AutonomousOpMode extends SynchronousOpMode {
             }
         }
 
-            motorFrontRight.setPower(rightMotorPower);
-            motorBackRight.setPower(rightMotorPower);
-            motorFrontLeft.setPower(leftMotorPower);
-            motorBackLeft.setPower(leftMotorPower);
+        motorFrontRight.setPower(rightMotorPower);
+        motorBackRight.setPower(rightMotorPower);
+        motorFrontLeft.setPower(leftMotorPower);
+        motorBackLeft.setPower(leftMotorPower);
 
-            //drive forward a bit
+        //drive forward a bit
     }
 }

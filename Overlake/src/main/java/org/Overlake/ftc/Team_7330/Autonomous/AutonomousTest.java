@@ -1,5 +1,6 @@
 package org.Overlake.ftc.Team_7330.Autonomous;
 
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.swerverobotics.library.*;
