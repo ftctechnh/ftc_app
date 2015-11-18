@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
 import org.swerverobotics.library.interfaces.*;
 import org.swerverobotics.library.internal.*;
+import java.util.*;
 
 /**
  * ClassFactory provides static methods for instantiating objects within the Swerve Robotics
@@ -76,6 +77,42 @@ public final class ClassFactory
     public static void createEasyLegacyMotorController(OpMode context, DcMotor motor1, DcMotor motor2)
         {
         createEasyMotorController(context, motor1, motor2);
+        }
+
+    /**
+     * Creates an alternate 'easy' implementation of the controller for the indicated collection
+     * of servos, which must all share the same controller, and must be <em>all</em> the servos
+     * which are found on that controller.
+     *
+     * A notable feature of the easy servo controller implementation is that position change
+     * requests and other servo writes are issued immediately instead of being deferred to the
+     * end of the next loop() cycle, which simplifies programming. This is similar to the
+     * enhancements found in the easy motor controller.
+     *
+     * @param context   the OpMode within which the creation is occuring
+     * @param servos    the list of servos whose controller implementation we are to change.
+     *                  May not be null or empty.
+     *
+     * @see #createEasyMotorController(OpMode, DcMotor, DcMotor)
+     */
+    public static void createEasyServoController(OpMode context, Collection<Servo> servos)
+        {
+        if (servos != null && !servos.isEmpty())
+            {
+            ServoController controller = null;
+            for (Servo servo : servos)
+                {
+                if (controller==null)
+                    controller = servo.getController();
+                else if (controller != servo.getController())
+                    throw new IllegalArgumentException("not all servos share the same controller");
+                }
+
+            if (MemberUtil.isModernServoController(controller))
+                EasyModernServoController.create(context, controller, servos);
+            }
+        else
+            throw new IllegalArgumentException("no servos provided");
         }
 
     //----------------------------------------------------------------------------------------------
