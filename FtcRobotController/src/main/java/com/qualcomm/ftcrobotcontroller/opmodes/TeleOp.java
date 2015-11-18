@@ -59,6 +59,13 @@ public class TeleOp extends OpMode {
 	Servo servoRight;
 	Servo servoLeft;
 
+	Double servoLeftPosition = 0.1;
+	Double servoRightPosition = 0.9;
+	Double servoChange = .01;
+	Double servoLower = 0.1; //Lower limit for servos
+	Double servoUpper = 0.9; //Upper limit for servos
+
+
 	/**
 	 * Constructor
 	 */
@@ -101,6 +108,8 @@ public class TeleOp extends OpMode {
 
 		servoRight = hardwareMap.servo.get("servoRight");
 		servoLeft = hardwareMap.servo.get("servoLeft");
+
+
 	}
 
 	/*
@@ -127,15 +136,15 @@ public class TeleOp extends OpMode {
 		float rightMotorSpeed = gamepad1.right_stick_y;
 		float leftMotorSpeed = gamepad1.left_stick_y;
 
-		float UpperMotorSpeed = gamepad2.left_stick_y/1.5f;
-		float LowerMotorSpeed = gamepad2.right_stick_y/1.5f;
+		float UpperMotorSpeed = gamepad2.left_stick_y/2f;
+		float LowerMotorSpeed = gamepad2.right_stick_y/2f;
 
 		// clip the right/left values so that the values never exceed +/- 1
 		rightMotorSpeed = Range.clip(rightMotorSpeed, -1f, 1f);
 		leftMotorSpeed = Range.clip(leftMotorSpeed, -1f, 1f);
 
 		UpperMotorSpeed = Range.clip(UpperMotorSpeed, -1f, 1f);
-		LowerMotorSpeed = Range.clip(LowerMotorSpeed, -.5f, .5f);
+		LowerMotorSpeed = Range.clip(LowerMotorSpeed, -1f, 1f);
 
 		// scale the joystick value to make it easier to control
 		// the robot more precisely at slower speeds.
@@ -152,15 +161,23 @@ public class TeleOp extends OpMode {
 		armLowerMotor.setPower(LowerMotorSpeed);
 
 		// update the position of the arm.
-		if (gamepad1.left_bumper) {
-
+		if (gamepad2.left_bumper) {
+			servoRightPosition += servoChange;
+			servoLeftPosition -= servoChange;
 		}
 
-		if (gamepad1.right_bumper) {
-
+		if (gamepad2.right_bumper) {
+			servoRightPosition -= servoChange;
+			servoLeftPosition += servoChange;
 		}
 
 
+		servoRightPosition = Range.clip(servoRightPosition, servoLower, servoUpper);
+		servoLeftPosition = Range.clip(servoLeftPosition, servoLower, servoUpper);
+
+
+		servoRight.setPosition(servoRightPosition);
+		servoLeft.setPosition(servoLeftPosition);
 
 		/*
 		 * Send telemetry data back to driver station. Note that if we are using
@@ -169,9 +186,11 @@ public class TeleOp extends OpMode {
 		 * are currently write only.
 		 */
 		telemetry.addData("Text", "*** Robot Data***");
-		telemetry.addData("UpperMotorSpeed tgt pwr",  "UpperMotorPower  pwr: " + String.format("%.2f", rightMotorSpeed));
-		telemetry.addData("LowerMotorSpeed tgt pwr", "LowerMotorPower pwr: " + String.format("%.2f", leftMotorSpeed));
+		telemetry.addData("Right Servo Pos",  "Right servo pos: " + String.format("%.2f", servoRightPosition));
+		telemetry.addData("Left Servo Pos", "Left Servo Pos: " + String.format("%.2f", servoLeftPosition));
 	}
+
+	//screb
 
 	/*
 	 * Code to run when the op mode is first disabled goes here
