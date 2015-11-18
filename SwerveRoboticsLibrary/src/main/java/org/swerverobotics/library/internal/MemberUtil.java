@@ -116,21 +116,21 @@ public class MemberUtil
     // Legacy Motor Controller
     //----------------------------------------------------------------------------------------------
 
-    static boolean isLegacyMotorController(DcMotorController controller)
+    public static boolean isLegacyMotorController(DcMotorController controller)
         {
         return controller instanceof com.qualcomm.hardware.HiTechnicNxtDcMotorController;
         }
 
-    static boolean isModernMotorController(DcMotorController controller)
+    public static boolean isModernMotorController(DcMotorController controller)
         {
         return controller instanceof com.qualcomm.hardware.ModernRoboticsUsbDcMotorController;
         }
 
-    static LegacyModule legacyModuleOfLegacyMotorController(DcMotorController controller)
+    public static LegacyModule legacyModuleOfLegacyMotorController(DcMotorController controller)
         {
         return Util.<LegacyModule>getPrivateObjectField(controller, 0);
         }
-    static int portOfLegacyMotorController(DcMotorController controller)
+    public static int portOfLegacyMotorController(DcMotorController controller)
         {
         return Util.getPrivateIntField(controller, 5);
         }
@@ -139,7 +139,7 @@ public class MemberUtil
     // DCMotor
     //----------------------------------------------------------------------------------------------
 
-    static void setControllerOfMotor(DcMotor motor, DcMotorController controller)
+    public static void setControllerOfMotor(DcMotor motor, DcMotorController controller)
         {
         Util.setPrivateObjectField(motor, 0, controller);
         }

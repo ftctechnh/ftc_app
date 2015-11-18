@@ -82,6 +82,8 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
     private       DcMotor                   motor1;
     private       DcMotor                   motor2;
 
+    private final EasyModernMotorController.IsBusyHelper[] isBusyHelpers;
+
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
@@ -99,6 +101,10 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
         this.motor2          = null;
 
         RobotStateTransitionNotifier.register(context, this);
+
+        this.isBusyHelpers = new EasyModernMotorController.IsBusyHelper[motorLast+1];
+        for (int i = 0; i < this.isBusyHelpers.length; i++)
+            this.isBusyHelpers[i] = new EasyModernMotorController.IsBusyHelper();
 
         // The NXT HiTechnic motor controller will time out if it doesn't receive any I2C communication for
         // 2.5 seconds. So we set up a heartbeat request to try to prevent that. We try to use
@@ -357,10 +363,24 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
         {
         this.validateMotor(motor);
         byte b = modeToByte(mode);
-        
-        // We write the whole byte, but only the lower five bits are actually writable
-        // and we only ever use the lowest two as non zero.
-        this.write8(mpMotorRegMotorMode[motor], b);
+
+        synchronized (this.isBusyHelpers[motor])
+            {
+            // We write the whole byte, but only the lower five bits are actually writable
+            // and we only ever use the lowest two as non zero.
+            this.write8(mpMotorRegMotorMode[motor], b);
+            this.isBusyHelpers[motor].noteMotorMode(mode);
+
+            // If the mode is 'reset encoders', we don't want to return until the encoders have actually reset
+            //      http://ftcforum.usfirst.org/showthread.php?4924-Use-of-RUN_TO_POSITION-in-LineraOpMode&highlight=reset+encoders
+            //      http://ftcforum.usfirst.org/showthread.php?4567-Using-and-resetting-encoders-in-MIT-AI&p=19303&viewfull=1#post19303
+            // For us, here, we believe we'll always *immediately* have that be true, as our writes
+            // to the USB device actually happen when we issue them.
+            if (mode == RunMode.RESET_ENCODERS)
+                {
+                assertTrue(!BuildConfig.DEBUG || this.getMotorCurrentPosition(motor)==0);
+                }
+            }
         }
 
     @Override public DcMotorController.RunMode getMotorChannelMode(int motor)
@@ -369,13 +389,27 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
         byte b = this.i2cDeviceClient.read8(mpMotorRegMotorMode[motor]);
         return modeFromByte(b);
         }
-    
+
+    // From the HiTechnic Motor Controller specification
+    //
+    //      The Run to position command will cause the firmware to run the motor to make the current encoder
+    //      value to become equal to the target encoder value. It will do this using a maximum rotation rate
+    //      as defined by the motor power byte. It will hold this position in a servo like mode until the Run
+    //      to position command is changed or the target encoder value is changed. While the Run to position
+    //      command is executing, the Busy bit will be set. Once the target position is achieved, the Busy bit
+    //      will be cleared. There may be a delay of up to 50mS after a Run to position command is initiated
+    //      before the Busy bit will be set.
+    //
+    // Our task here is to work around that 50ms issue
+
     @Override public boolean isBusy(int motor)
         {
         this.validateMotor(motor);
-        // TO DO: fix: this has the 50ms delay problem
-        byte b = this.i2cDeviceClient.read8(mpMotorRegMotorMode[motor]);
-        return (b & 0x80) != 0;
+        synchronized (this.isBusyHelpers[motor])
+            {
+            this.isBusyHelpers[motor].noteMotorPosition(this.getMotorCurrentPosition(motor));
+            return this.isBusyHelpers[motor].isBusy();
+            }
         }
 
     @Override public void setMotorPower(int motor, double power)
@@ -425,8 +459,12 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
     @Override public void setMotorTargetPosition(int motor, int position)
         {
         this.validateMotor(motor);
-        byte[] bytes = TypeConversion.intToByteArray(position);
-        this.write(mpMotorRegTargetEncoderValue[motor], bytes);
+        synchronized (this.isBusyHelpers[motor])
+            {
+            this.isBusyHelpers[motor].noteTargetPositionSet(position);
+            byte[] bytes = TypeConversion.intToByteArray(position);
+            this.write(mpMotorRegTargetEncoderValue[motor], bytes);
+            }
         }
 
     @Override public int getMotorTargetPosition(int motor)

@@ -20,30 +20,36 @@ public final class ClassFactory
     //----------------------------------------------------------------------------------------------
 
     /**
-     * If the provided motors are using a legacy motor controller, swaps that controller out
-     * and installs an alternate 'EasyLegacyMotorController' DCMotorController implementation
-     * for the duration of the OpMode; if the motors are using a modern motor controller, the
-     * function has no effect.
+     * If the provided motors are using a legacy motor controller, createEasyMotorController swaps
+     * that controller out and installs an alternate 'EasyLegacyMotorController' DCMotorController
+     * implementation for the duration of the OpMode. If the motors are using a modern motor controller,
+     * an analogous swap to an 'EasyModernMotorController' is made. If a matrix motor controller is in
+     * use, this function has no effect. The APIs to easy legacy and modern motor controllers
+     * are <em>identical</em>, which helps simplify programming.
      *
      * <p>EasyLegacyMotorController is implemented on top of an {@link II2cDeviceClient} instance
      * which completely handles all the complexities of read vs write mode switching and the
      * like, allowing the logic inside the controller itself to be extraordinarily simple.
      * In particular, the manual mode switching and loop() counting necessary with the stock
      * controller implementation is not needed. Just call the motor getPosition() or setPower()
-     * methods or what have you, and the necessary bookkeeping details
-     * will be taken care of.</p>
+     * methods or what have you, and the necessary bookkeeping details will be taken care of.</p>
      *
-     * <p>EasyLegacyMotorController is not tied to SynchronousOpMode or any other particular
-     * OpMode. It can be used, for example, from LinearOpMode, or, indeed, any thread that can
-     * tolerate operations that can take tens of milliseconds to run. In SynchronousOpMode,
-     * EasyLegacyMotorController is used automatically; in other OpModes, you'll have to manually
-     * call {@link #createEasyLegacyMotorController} yourself.</p>
+     * <p>The improvements in EasyModernMotorController are less dramatic, but still significant.
+     * Of particular note is that write operations, including motor mode and power changes, happen
+     * immediately rather than being deferred to the end of a loop() cycle. This significantly
+     * simplifies the steps that are necessary to create code that uses a modern motor controller
+     * reliably.</p>
      *
-     * This method takes as parameters one or both motors that reside on a given legacy motor
+     * <p>Easy motor controllers are not tied to SynchronousOpMode or any other particular
+     * OpMode. They can be used, for example, from LinearOpModes. In SynchronousOpMode,
+     * easy motor controllers are used automatically; in other OpModes, you'll have to manually
+     * call {@link #createEasyMotorController} yourself.</p>
+     *
+     * This method takes as parameters one or both motors that reside on a given  motor
      * controller. If two motors are provided, they must share the same controller, and conversely
      * if two motors reside on a controller then both must be provided. The method creates a new
-     * EasyLegacyMotorController and installs it as the controller for the provided motors;
-     * the existing controller is disabled. When the current OpMode is complete, the processed
+     * easy motor controller of the appropriate type and installs it as the controller for the provided
+     * motors; the existing controller is disabled. When the current OpMode is complete, the processed
      * is reversed.
      *
      * @param context   the OpMode within which this creation is occurring
@@ -52,25 +58,24 @@ public final class ClassFactory
      *
      * @see org.swerverobotics.library.examples.SynchMotorLoopPerf
      */
-    public static void createEasyLegacyMotorController(OpMode context, DcMotor motor1, DcMotor motor2)
+    public static void createEasyMotorController(OpMode context, DcMotor motor1, DcMotor motor2)
         {
         DcMotorController target = motor1==null ? null : motor1.getController();
 
         if (motor2 != null && target != null && motor2.getController()!=target)
             throw new IllegalArgumentException("motors do not share the same controller");
 
-        EasyLegacyMotorController.create(context, target, motor1, motor2);
+        if (MemberUtil.isLegacyMotorController(target))
+            EasyLegacyMotorController.create(context, target, motor1, motor2);
+
+        else if (MemberUtil.isModernMotorController(target))
+            EasyModernMotorController.create(context, target, motor1, motor2);
         }
 
-    /** Documentation to come */
-    public static void createEasyModernMotorController(OpMode context, DcMotor motor1, DcMotor motor2)
+    @Deprecated
+    public static void createEasyLegacyMotorController(OpMode context, DcMotor motor1, DcMotor motor2)
         {
-        DcMotorController target = motor1==null ? null : motor1.getController();
-
-        if (motor2 != null && target != null && motor2.getController()!=target)
-            throw new IllegalArgumentException("motors do not share the same controller");
-
-        EasyModernMotorController.create(context, target, motor1, motor2);
+        createEasyMotorController(context, motor1, motor2);
         }
 
     //----------------------------------------------------------------------------------------------

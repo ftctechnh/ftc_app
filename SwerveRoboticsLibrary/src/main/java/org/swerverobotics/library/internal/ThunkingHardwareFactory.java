@@ -96,13 +96,9 @@ public class ThunkingHardwareFactory
             {
             DcMotor motor1 = motors.get(controller).get(0);
             DcMotor motor2 = motors.get(controller).size() > 1 ? motors.get(controller).get(1) : null;
-            if (MemberUtil.isLegacyMotorController(controller))
+            if (MemberUtil.isLegacyMotorController(controller) || MemberUtil.isModernMotorController(controller))
                 {
-                ClassFactory.createEasyLegacyMotorController(this.context, motor1, motor2);
-                }
-            else if (MemberUtil.isModernMotorController(controller))
-                {
-                ClassFactory.createEasyModernMotorController(this.context, motor1, motor2);
+                ClassFactory.createEasyMotorController(this.context, motor1, motor2);
                 }
             }
 

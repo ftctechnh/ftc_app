@@ -68,7 +68,7 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
 
         RobotStateTransitionNotifier.register(context, this);
 
-        this.isBusyHelpers = new IsBusyHelper[LAST_MOTOR+1];
+        this.isBusyHelpers = new IsBusyHelper[motorLast +1];
         for (int i = 0; i < this.isBusyHelpers.length; i++)
             this.isBusyHelpers[i] = new IsBusyHelper();
         }
@@ -154,7 +154,7 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
             {
             Log.d(LOGGING_TAG, String.format("arming \"%s\"....", this.getConnectionInfo()));
             this.usurpMotors();
-            //
+
             // Turn off target's usb stuff
             this.eventLoopManager.unregisterSyncdDevice(MemberUtil.getReadWriteRunnableModernRoboticsUsbDevice(this.target));
             this.floatMotors(target);
@@ -166,10 +166,10 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
                 this.context.hardwareMap.voltageSensor.put(this.targetName, this);
                 }
             this.isArmed = true;
-            //
+
             // Turn on our usb stuff
             this.installReadWriteRunnable(this);
-            //
+
             this.initPID();
             this.floatMotors();
             Log.d(LOGGING_TAG, String.format("....armed \"%s\"", this.getConnectionInfo()));
@@ -181,7 +181,7 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
         if (this.isArmed())
             {
             Log.d(LOGGING_TAG, String.format("disarming \"%s\"....", this.getConnectionInfo()));
-            //
+
             // Turn off our usb stuff
             this.eventLoopManager.unregisterSyncdDevice(this.readWriteRunnable);
             this.close();
@@ -192,10 +192,10 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
                 this.targetDeviceMapping.put(this.targetName, this.target);
                 this.context.hardwareMap.voltageSensor.put(this.targetName, this.target);
                 }
-            //
+
             // Turn target's usb stuff back on
             this.installReadWriteRunnable(this.target);
-            //
+
             this.deusurpMotors();
             Log.d(LOGGING_TAG, String.format("....disarmed \"%s\"", this.getConnectionInfo()));
             }
@@ -379,16 +379,20 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
         this.validateMotor(motor);
         byte bPower = this.read(ADDRESS_MOTOR_POWER_MAP[motor]);
 
+        // Float counts as zero power
         if (bPower == bPowerFloat)
-            return 0;
-        else
-            return Range.scale(bPower, bPowerMin, bPowerMax, powerMin, powerMax);
+            return 0.0;
+
+        // Other values are just linear scaling. The clipping is just paranoia about
+        // numerical precision; it probably isn't necessary
+        double power = Range.scale(bPower, bPowerMin, bPowerMax, powerMin, powerMax);
+        return Range.clip(power, powerMin, powerMax);
         }
 
     @Override public void setMotorPower(int motor, double power)
         {
         this.validateMotor(motor);
-        power = Range.clip(power, powerMin, powerMax);   // NB: runtime previously threw on invalid range instead of clipping
+        power = Range.clip(power, powerMin, powerMax);   // NB: robot controller runtime previously threw on invalid range instead of clipping
         power = Range.scale(power, powerMin, powerMax, bPowerMin, bPowerMax);
         this.write(ADDRESS_MOTOR_POWER_MAP[motor], new byte[]{(byte)((int)(power))});
         }
@@ -408,9 +412,15 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
             this.write(ADDRESS_MOTOR_MODE_MAP[motor], bMode);
             this.isBusyHelpers[motor].noteMotorMode(mode);
 
-            // TO DO: If the mode is 'reset encoders' don't return until the encoders have actually reset
-            // http://ftcforum.usfirst.org/showthread.php?4924-Use-of-RUN_TO_POSITION-in-LineraOpMode&highlight=reset+encoders
-            // http://ftcforum.usfirst.org/showthread.php?4567-Using-and-resetting-encoders-in-MIT-AI&p=19303&viewfull=1#post19303
+            // If the mode is 'reset encoders', we don't want to return until the encoders have actually reset
+            //      http://ftcforum.usfirst.org/showthread.php?4924-Use-of-RUN_TO_POSITION-in-LineraOpMode&highlight=reset+encoders
+            //      http://ftcforum.usfirst.org/showthread.php?4567-Using-and-resetting-encoders-in-MIT-AI&p=19303&viewfull=1#post19303
+            // For us, here, we believe we'll always *immediately* have that be true, as our writes
+            // to the USB device actually happen when we issue them.
+            if (mode == RunMode.RESET_ENCODERS)
+                {
+                assertTrue(!BuildConfig.DEBUG || this.getMotorCurrentPosition(motor)==0);
+                }
             }
         }
 
@@ -466,14 +476,14 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
         {
         if (this.isArmed())
             {
-            for (int motor = FIRST_MOTOR; motor <= LAST_MOTOR; motor++)
+            for (int motor = motorFirst; motor <= motorLast; motor++)
                 {
                 this.isBusyHelpers[motor].noteMotorPosition(this.getMotorCurrentPosition(motor));
                 }
             }
         }
 
-    class IsBusyHelper
+    public static class IsBusyHelper
         {
         //------------------------------------------------------------------------------------------
         // State
@@ -562,7 +572,7 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
     
     private void initPID()
         {
-        for (int motor = FIRST_MOTOR; motor <= LAST_MOTOR; ++motor)
+        for (int motor = motorFirst; motor <= motorLast; ++motor)
             {
             this.write(ADDRESS_MAX_DIFFERENTIAL_CONTROL_LOOP_COEFFICIENT_MAP[motor], new byte[]{(byte)-128, (byte)64, (byte)-72});
             }
@@ -570,9 +580,9 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
 
     private void validateMotor(int motor)
         {
-        if(motor < FIRST_MOTOR || motor > LAST_MOTOR)
+        if(motor < motorFirst || motor > motorLast)
             {
-            throw new IllegalArgumentException(String.format("Motor %d is invalid; valid motors are %d..%d",motor, FIRST_MOTOR, LAST_MOTOR));
+            throw new IllegalArgumentException(String.format("Motor %d is invalid; valid motors are %d..%d",motor, motorFirst, motorLast));
             }
         }
 
@@ -633,8 +643,8 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
     //----------------------------------------------------------------------------------------------
 
     public static final int cbDataMonitor = 30;
-    public static final int FIRST_MOTOR = 1;
-    public static final int LAST_MOTOR = 2;
+    public static final int motorFirst = 1;
+    public static final int motorLast = 2;
     public static final double powerMin = -1.0;
     public static final double powerMax =  1.0;
     public static final byte bPowerMax = 100;
