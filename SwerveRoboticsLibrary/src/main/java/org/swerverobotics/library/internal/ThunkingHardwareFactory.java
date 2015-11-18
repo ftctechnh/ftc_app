@@ -486,22 +486,4 @@ public class ThunkingHardwareFactory
         return ifAbsent;
         }
 
-
-    //----------------------------------------------------------------------------------------------
-    // Skullduggery 
-    //----------------------------------------------------------------------------------------------
-
-    static int i2cAddrOfLegacyMotorController(DcMotorController controller)
-        {
-        // From the spec from HiTechnic:
-        //
-        // "The first motor controller in the daisy chain will use an I2C address of 02/03. Subsequent
-        // controllers will obtain addresses of 04/05, 06/07 and 08/09. Only four controllers may be
-        // daisy chained."
-        //
-        // The legacy module appears not to support daisy chaining; it only supports the first
-        // address. Note that these are clearly 8-bit addresses, not 7-bit.
-        //
-        return 0x02;
-        }
     }
