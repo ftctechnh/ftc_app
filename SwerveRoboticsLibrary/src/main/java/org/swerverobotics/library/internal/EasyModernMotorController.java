@@ -2,43 +2,33 @@ package org.swerverobotics.library.internal;
 
 import android.util.Log;
 import com.qualcomm.hardware.*;
-import com.qualcomm.modernrobotics.*;
-import com.qualcomm.robotcore.eventloop.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.exception.*;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.hardware.usb.*;
 import com.qualcomm.robotcore.util.*;
-import org.swerverobotics.library.*;
+
 import org.swerverobotics.library.BuildConfig;
 import java.nio.*;
 import java.util.*;
-import java.util.concurrent.*;
 
 import static junit.framework.Assert.assertTrue;
 
 /**
  * An alternate implementation of the driver for a Modern Robotics DC Motor Controller.
- * This implementation doesn't use a blocking ReadWriteRunnable.
+ * This implementation doesn't use a blocking ReadWriteRunnable; that greatly simplifies
+ * programming.
  */
-public class EasyModernMotorController extends ModernRoboticsUsbDevice implements DcMotorController, VoltageSensor, IOpModeStateTransitionEvents
+public class EasyModernMotorController extends EasyModernController implements DcMotorController, VoltageSensor
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    public static final String LOGGING_TAG = SynchronousOpMode.LOGGING_TAG;
-
-    private final OpMode                             context;
-    private final EventLoopManager                   eventLoopManager;
     private final IsBusyHelper[]                     isBusyHelpers;
-    private boolean                                  isArmed;
     private DcMotor                                  motor1;
     private DcMotor                                  motor2;
     private final ModernRoboticsUsbDcMotorController target;
-    private final RobotUsbDevice                     robotUsbDevice;
-    private String                                   targetName;
-    private HardwareMap.DeviceMapping                targetDeviceMapping;
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -46,31 +36,20 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
 
     private EasyModernMotorController(OpMode context, ModernRoboticsUsbDcMotorController target) throws RobotCoreException, InterruptedException
         {
-        // We *have*to* construct with something live, as that's how the current API works
-        super(target.getSerialNumber(), SwerveThreadContext.getEventLoopManager(), newDummyReadWriteRunnable(target.getSerialNumber()));
+        super(context, target, newDummyReadWriteRunnable(target.getSerialNumber()));
 
-        // Wait until the thing actually gets going
-        DummyReadWriteRunnableStandard rwRunnable = (DummyReadWriteRunnableStandard)this.readWriteRunnable;
-        rwRunnable.semaphore.acquire();
-
-        // Then shut it down right away, because we want to start disarmed until we fully configure
-        closeModernRoboticsUsbDevice(this);
-
-        this.context = context;
-        this.eventLoopManager = SwerveThreadContext.getEventLoopManager();
-        this.isArmed = false;
         this.target  = target;
         this.findTargetNameAndMapping();
-
-        ReadWriteRunnableStandard readWriteRunnableStandard = MemberUtil.getReadWriteRunnableModernRoboticsUsbDevice(target);
-        ReadWriteRunnableUsbHandler handler                 = MemberUtil.getHandlerOfReadWriteRunnableStandard(readWriteRunnableStandard);
-        this.robotUsbDevice                                 = MemberUtil.getRobotUsbDeviceOfReadWriteRunnableUsbHandler(handler);
-
-        RobotStateTransitionNotifier.register(context, this);
 
         this.isBusyHelpers = new IsBusyHelper[motorLast +1];
         for (int i = 0; i < this.isBusyHelpers.length; i++)
             this.isBusyHelpers[i] = new IsBusyHelper();
+        }
+
+    static DummyReadWriteRunnableStandard newDummyReadWriteRunnable(SerialNumber serialNumber)
+        {
+        RobotUsbDevice robotUsbDevice = new DummyRobotUsbDevice();
+        return new DummyReadWriteRunnableStandard(serialNumber, robotUsbDevice, MONITOR_LENGTH, START_ADDRESS, false);
         }
 
     public static DcMotorController create(OpMode context, DcMotorController target, DcMotor motor1, DcMotor motor2)
@@ -129,13 +108,13 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
         this.motor2 = motor2;
         }
 
-    private void usurpMotors()
+    private void usurpDevices()
         {
         if (this.motor1 != null) MemberUtil.setControllerOfMotor(this.motor1, this);
         if (this.motor2 != null) MemberUtil.setControllerOfMotor(this.motor2, this);
         }
 
-    private void deusurpMotors()
+    private void deusurpDevices()
         {
         if (this.motor1 != null) MemberUtil.setControllerOfMotor(this.motor1, this.target);
         if (this.motor2 != null) MemberUtil.setControllerOfMotor(this.motor2, this.target);
@@ -143,21 +122,16 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
 
     private static final String swerveVoltageSensorName = " |Swerve|Modern|VoltageSensor| ";
 
-    private boolean isArmed()
-        {
-        return this.isArmed;
-        }
-
-    private void arm()
+    @Override public void arm()
         {
         if (!this.isArmed())
             {
             Log.d(LOGGING_TAG, String.format("arming \"%s\"....", this.getConnectionInfo()));
-            this.usurpMotors();
+            this.usurpDevices();
 
             // Turn off target's usb stuff
             this.eventLoopManager.unregisterSyncdDevice(MemberUtil.getReadWriteRunnableModernRoboticsUsbDevice(this.target));
-            this.floatMotors(target);
+            this.floatHardware(target);
             this.closeModernRoboticsUsbDevice(target);
             //
             if (this.targetName != null)
@@ -168,15 +142,15 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
             this.isArmed = true;
 
             // Turn on our usb stuff
-            this.installReadWriteRunnable(this);
+            this.installReadWriteRunnable(this, MONITOR_LENGTH, START_ADDRESS);
 
             this.initPID();
-            this.floatMotors();
+            this.floatHardware();
             Log.d(LOGGING_TAG, String.format("....armed \"%s\"", this.getConnectionInfo()));
             }
         }
 
-    private void disarm()
+    @Override public void disarm()
         {
         if (this.isArmed())
             {
@@ -194,116 +168,10 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
                 }
 
             // Turn target's usb stuff back on
-            this.installReadWriteRunnable(this.target);
+            this.installReadWriteRunnable(this.target, MONITOR_LENGTH, START_ADDRESS);
 
-            this.deusurpMotors();
+            this.deusurpDevices();
             Log.d(LOGGING_TAG, String.format("....disarmed \"%s\"", this.getConnectionInfo()));
-            }
-        }
-
-    static void closeModernRoboticsUsbDevice(ModernRoboticsUsbDevice usbDevice)
-    // Close down the usbDevice in a robust and reliable way
-        {
-        // Get access to the state
-        ExecutorService service = MemberUtil.getExecutorServiceModernRoboticsUsbDevice(usbDevice);
-        ReadWriteRunnableStandard readWriteRunnableStandard = MemberUtil.getReadWriteRunnableModernRoboticsUsbDevice(usbDevice);
-
-        // Stop accepting new work
-        service.shutdown();
-
-        // Set a dummy handler so that we don't end up closing the actual FT_device
-        RobotUsbDevice robotUsbDevice = new DummyRobotUsbDevice();
-        ReadWriteRunnableUsbHandler dummyHandler = new ReadWriteRunnableUsbHandler(robotUsbDevice);
-        MemberUtil.setHandlerOfReadWriteRunnableStandard(readWriteRunnableStandard, dummyHandler);
-
-        // Set 'running' to false; this fixes a race condition
-        MemberUtil.setRunningReadWriteRunnableStandard(readWriteRunnableStandard, false);
-
-        // Ok: actually carry out the close
-        readWriteRunnableStandard.close();
-
-        // Wait until the thread terminates
-        Util.awaitTermination(service);
-        }
-
-    void installReadWriteRunnable(ModernRoboticsUsbDevice usbDevice)
-        {
-        try
-            {
-            ExecutorService service = Executors.newSingleThreadScheduledExecutor();
-            ReadWriteRunnableStandard rwRunnable = new DummyReadWriteRunnableStandard(usbDevice.getSerialNumber(), this.robotUsbDevice, cbDataMonitor, START_ADDRESS, false);
-            //
-            MemberUtil.setExecutorServiceModernRoboticsUsbDevice(usbDevice, service);
-            MemberUtil.setReadWriteRunnableModernRoboticsUsbDevice(usbDevice, rwRunnable);
-            service.execute(rwRunnable);
-            rwRunnable.blockUntilReady();
-            rwRunnable.setCallback(usbDevice);
-            this.eventLoopManager.registerSyncdDevice(rwRunnable);
-            }
-        catch (Exception e)
-            {
-            Util.handleCapturedException(e);
-            }
-        }
-
-    static ReadWriteRunnableStandard newDummyReadWriteRunnable(SerialNumber serialNumber)
-        {
-        RobotUsbDevice robotUsbDevice = new DummyRobotUsbDevice();
-        return new DummyReadWriteRunnableStandard(serialNumber, robotUsbDevice, cbDataMonitor, START_ADDRESS, false);
-        }
-
-    /**
-     * This class implements a dummy RobotUsbDevice that will apparently successfully do reads and
-     * writes but doesn't actually do anything.
-     */
-    static class DummyRobotUsbDevice implements RobotUsbDevice
-        {
-        byte cbExpected = 0;
-        @Override public void close()  {}
-        @Override public void setBaudRate(int i) throws RobotCoreException {}
-        @Override public void setDataCharacteristics(byte b, byte b1, byte b2) throws RobotCoreException  {}
-        @Override public void setLatencyTimer(int i) throws RobotCoreException {}
-        @Override public void purge(Channel channel) throws RobotCoreException {}
-        @Override public int read(byte[] bytes) throws RobotCoreException { return this.read(bytes, bytes.length, 0/*bogus*/); }
-        @Override public void write(byte[] bytes) throws RobotCoreException
-            {
-            // Write commands have zero-sized responses, read commands indicate their expected size
-            byte bCommand = bytes[2];
-            this.cbExpected = bCommand==0 ? 0/*write*/ : bytes[4] /*read*/;
-            }
-        @Override public int read(byte[] bytes, int cbReadExpected, int timeout) throws RobotCoreException
-            {
-            // Need to set the 'sync' bytes correctly, and set the sizes
-            bytes[0]    = (byte)0x33;
-            bytes[1]    = (byte)0xCC;
-            bytes[4]    = (byte)cbExpected;
-            return cbReadExpected;
-            }
-        }
-
-    /**
-     * This class is a ReadWriteRunnableStandard but one that doesn't report any errors
-     * due to connection failures in its blockUntilReady()
-     */
-    static class DummyReadWriteRunnableStandard extends ReadWriteRunnableStandard
-        {
-        Semaphore semaphore = new Semaphore(0);
-
-        public DummyReadWriteRunnableStandard(SerialNumber serialNumber, RobotUsbDevice device, int monitorLength, int startAddress, boolean debug)
-            {
-            super(serialNumber, device, monitorLength, startAddress, debug);
-            }
-
-        @Override public void run()
-            {
-            Thread.currentThread().setName("DummyReadWriteRunnableStandard.run");
-            this.semaphore.release();
-            super.run();
-            }
-
-        @Override public void blockUntilReady() throws RobotCoreException, InterruptedException
-            {
-            // Do nothing. In particular, don't report any errors
             }
         }
 
@@ -313,7 +181,7 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
 
     @Override public void close()
         {
-        this.floatMotors();
+        this.floatHardware();
         closeModernRoboticsUsbDevice(this);
         }
 
@@ -553,15 +421,20 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
     // Utility
     //----------------------------------------------------------------------------------------------
 
-    private void floatMotors()
+    private void floatHardware()
         {
-        this.floatMotors(this);
+        this.floatHardware(this);
         }
 
-    private void floatMotors(DcMotorController controller)
+    private void floatHardware(DcMotorController controller)
         {
         controller.setMotorPowerFloat(1);
         controller.setMotorPowerFloat(2);
+        }
+
+    @Override public void stopHardware()
+        {
+        stopMotors();
         }
 
     private void stopMotors()
@@ -611,38 +484,10 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
         }
 
     //----------------------------------------------------------------------------------------------
-    // IOpModeStateTransitionEvents
-    //----------------------------------------------------------------------------------------------
-
-    @Override synchronized public boolean onUserOpModeStop()
-        {
-        Log.d(LOGGING_TAG, "EasyModern: auto-stopping...");
-        if (this.isArmed())
-            {
-            this.stopMotors();  // mirror StopRobotOpMode
-            this.disarm();
-            }
-        Log.d(LOGGING_TAG, "EasyModern: ... done");
-        return true;    // unregister us
-        }
-
-    @Override synchronized public boolean onRobotShutdown()
-        {
-        Log.d(LOGGING_TAG, "EasyModern: auto-closing...");
-
-        // We actually shouldn't be here by now, having received a onUserOpModeStop()
-        // after which we should have been unregistered. But we close down anyway.
-        this.close();
-
-        Log.d(LOGGING_TAG, "EasyModern: ... done");
-        return true;    // unregister us
-        }
-
-    //----------------------------------------------------------------------------------------------
     // Constants
     //----------------------------------------------------------------------------------------------
 
-    public static final int cbDataMonitor = 30;
+    public static final int MONITOR_LENGTH = 30;
     public static final int motorFirst = 1;
     public static final int motorLast = 2;
     public static final double powerMin = -1.0;
