@@ -126,6 +126,11 @@ public class MemberUtil
         return controller instanceof com.qualcomm.hardware.ModernRoboticsUsbDcMotorController;
         }
 
+    public static boolean isModernServoController(ServoController controller)
+        {
+        return controller instanceof com.qualcomm.hardware.ModernRoboticsUsbServoController;
+        }
+
     public static LegacyModule legacyModuleOfLegacyMotorController(DcMotorController controller)
         {
         return Util.<LegacyModule>getPrivateObjectField(controller, 0);
@@ -142,6 +147,11 @@ public class MemberUtil
     public static void setControllerOfMotor(DcMotor motor, DcMotorController controller)
         {
         Util.setPrivateObjectField(motor, 0, controller);
+        }
+
+    public static void setControllerOfServo(Servo servo, ServoController controller)
+        {
+        Util.setPrivateObjectField(servo, 0, controller);
         }
 
     //----------------------------------------------------------------------------------------------
