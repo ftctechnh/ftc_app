@@ -11,7 +11,6 @@ import com.qualcomm.robotcore.hardware.usb.*;
 import com.qualcomm.robotcore.util.*;
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.BuildConfig;
-
 import java.nio.*;
 import java.util.*;
 import java.util.concurrent.*;
@@ -47,17 +46,15 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
 
     private EasyModernMotorController(OpMode context, ModernRoboticsUsbDcMotorController target) throws RobotCoreException, InterruptedException
         {
-        // We *have*to* construct with something live
+        // We *have*to* construct with something live, as that's how the current API works
         super(target.getSerialNumber(), SwerveThreadContext.getEventLoopManager(), newDummyReadWriteRunnable(target.getSerialNumber()));
-        // But we shut it down right away, because we want to start disarmed until we fully configure
-        Util.shutdownNowAndAwaitTermination(this.readWriteService, new Runnable()
-            {
-            @Override
-            public void run()
-                {
-                ((ReadWriteRunnableStandard) EasyModernMotorController.this.readWriteRunnable).close();
-                }
-            });
+
+        // Wait until the thing actually gets going
+        DummyReadWriteRunnableStandard rwRunnable = (DummyReadWriteRunnableStandard)this.readWriteRunnable;
+        rwRunnable.semaphore.acquire();
+
+        // Then shut it down right away, because we want to start disarmed until we fully configure
+        closeModernRoboticsUsbDevice(this);
 
         this.context = context;
         this.eventLoopManager = SwerveThreadContext.getEventLoopManager();
@@ -183,7 +180,7 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
         {
         if (!this.isArmed())
             {
-            Log.d(LOGGING_TAG, String.format("arming %s", this.getConnectionInfo()));
+            Log.d(LOGGING_TAG, String.format("arming \"%s\"....", this.getConnectionInfo()));
             this.usurpMotors();
             //
             // Turn off target's usb stuff
@@ -200,6 +197,7 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
             this.registerVoltageSensor();
             this.initPID();
             this.floatMotors();
+            Log.d(LOGGING_TAG, String.format("....armed \"%s\"", this.getConnectionInfo()));
             }
         }
 
@@ -207,7 +205,7 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
         {
         if (this.isArmed())
             {
-            Log.d(LOGGING_TAG, String.format("disarming %s", this.getConnectionInfo()));
+            Log.d(LOGGING_TAG, String.format("disarming \"%s\"....", this.getConnectionInfo()));
             this.unregisterVoltageSensor();
             //
             // Turn off our usb stuff
@@ -221,10 +219,11 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
             this.installReadWriteRunnable(this.target);
             //
             this.deusurpMotors();
+            Log.d(LOGGING_TAG, String.format("....disarmed \"%s\"", this.getConnectionInfo()));
             }
         }
 
-    void closeModernRoboticsUsbDevice(ModernRoboticsUsbDevice usbDevice)
+    static void closeModernRoboticsUsbDevice(ModernRoboticsUsbDevice usbDevice)
     // Close down the usbDevice in a robust and reliable way
         {
         // Get access to the state
@@ -235,7 +234,7 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
         service.shutdown();
 
         // Set a dummy handler so that we don't end up closing the actual FT_device
-        RobotUsbDevice robotUsbDevice = newDummyRobotUsbDevice();
+        RobotUsbDevice robotUsbDevice = new DummyRobotUsbDevice();
         ReadWriteRunnableUsbHandler dummyHandler = new ReadWriteRunnableUsbHandler(robotUsbDevice);
         MemberUtil.setHandlerOfReadWriteRunnableStandard(readWriteRunnableStandard, dummyHandler);
 
@@ -254,7 +253,7 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
         try
             {
             ExecutorService service = Executors.newSingleThreadScheduledExecutor();
-            ReadWriteRunnableStandard rwRunnable = new OurReadWriteRunnable(usbDevice.getSerialNumber(), this.robotUsbDevice, MONITOR_LENGTH, START_ADDRESS, false);
+            ReadWriteRunnableStandard rwRunnable = new DummyReadWriteRunnableStandard(usbDevice.getSerialNumber(), this.robotUsbDevice, cbDataMonitor, START_ADDRESS, false);
             //
             MemberUtil.setExecutorServiceModernRoboticsUsbDevice(usbDevice, service);
             MemberUtil.setReadWriteRunnableModernRoboticsUsbDevice(usbDevice, rwRunnable);
@@ -271,44 +270,60 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
 
     static ReadWriteRunnableStandard newDummyReadWriteRunnable(SerialNumber serialNumber)
         {
-        RobotUsbDevice robotUsbDevice = new RobotUsbDevice()
-            {
-            @Override public void setBaudRate(int i) throws RobotCoreException {}
-            @Override public void setDataCharacteristics(byte b, byte b1, byte b2) throws RobotCoreException  {}
-            @Override public void setLatencyTimer(int i) throws RobotCoreException {}
-            @Override public void purge(Channel channel) throws RobotCoreException {}
-            @Override public void write(byte[] bytes) throws RobotCoreException {}
-            @Override public int read(byte[] bytes) throws RobotCoreException { return 0; }
-            @Override public int read(byte[] bytes, int i, int i1) throws RobotCoreException { return 0; }
-            @Override public void close()  {}
-            };
-        return new OurReadWriteRunnable(serialNumber, robotUsbDevice, MONITOR_LENGTH, START_ADDRESS, false);
+        RobotUsbDevice robotUsbDevice = new DummyRobotUsbDevice();
+        return new DummyReadWriteRunnableStandard(serialNumber, robotUsbDevice, cbDataMonitor, START_ADDRESS, false);
         }
 
-    static RobotUsbDevice newDummyRobotUsbDevice()
+    /**
+     * This class implements a dummy RobotUsbDevice that will apparently successfully do reads and
+     * writes but doesn't actually do anything.
+     */
+    static class DummyRobotUsbDevice implements RobotUsbDevice
         {
-        return new RobotUsbDevice()
+        byte cbExpected = 0;
+        @Override public void close()  {}
+        @Override public void setBaudRate(int i) throws RobotCoreException {}
+        @Override public void setDataCharacteristics(byte b, byte b1, byte b2) throws RobotCoreException  {}
+        @Override public void setLatencyTimer(int i) throws RobotCoreException {}
+        @Override public void purge(Channel channel) throws RobotCoreException {}
+        @Override public int read(byte[] bytes) throws RobotCoreException { return this.read(bytes, bytes.length, 0/*bogus*/); }
+        @Override public void write(byte[] bytes) throws RobotCoreException
             {
-            @Override public void setBaudRate(int i) throws RobotCoreException {}
-            @Override public void setDataCharacteristics(byte b, byte b1, byte b2) throws RobotCoreException {}
-            @Override public void setLatencyTimer(int i) throws RobotCoreException {}
-            @Override public void purge(Channel channel) throws RobotCoreException {}
-            @Override public void write(byte[] bytes) throws RobotCoreException {}
-            @Override public int read(byte[] bytes) throws RobotCoreException { return 0; }
-            @Override public int read(byte[] bytes, int i, int i1) throws RobotCoreException { return 0; }
-            @Override public void close() { }
-            };
+            // Write commands have zero-sized responses, read commands indicate their expected size
+            byte bCommand = bytes[2];
+            this.cbExpected = bCommand==0 ? 0/*write*/ : bytes[4] /*read*/;
+            }
+        @Override public int read(byte[] bytes, int cbReadExpected, int timeout) throws RobotCoreException
+            {
+            // Need to set the 'sync' bytes correctly, and set the sizes
+            bytes[0]    = (byte)0x33;
+            bytes[1]    = (byte)0xCC;
+            bytes[4]    = (byte)cbExpected;
+            return cbReadExpected;
+            }
         }
 
-    static class OurReadWriteRunnable extends ReadWriteRunnableStandard
+    /**
+     * This class is a ReadWriteRunnableStandard but one that doesn't report any errors
+     * due to connection failures in its blockUntilReady()
+     */
+    static class DummyReadWriteRunnableStandard extends ReadWriteRunnableStandard
         {
-        public OurReadWriteRunnable(SerialNumber serialNumber, RobotUsbDevice device, int monitorLength, int startAddress, boolean debug)
+        Semaphore semaphore = new Semaphore(0);
+
+        public DummyReadWriteRunnableStandard(SerialNumber serialNumber, RobotUsbDevice device, int monitorLength, int startAddress, boolean debug)
             {
             super(serialNumber, device, monitorLength, startAddress, debug);
             }
 
-        @Override
-        public void blockUntilReady() throws RobotCoreException, InterruptedException
+        @Override public void run()
+            {
+            Thread.currentThread().setName("DummyReadWriteRunnableStandard.run");
+            this.semaphore.release();
+            super.run();
+            }
+
+        @Override public void blockUntilReady() throws RobotCoreException, InterruptedException
             {
             // Do nothing. In particular, don't report any errors
             }
@@ -366,13 +381,13 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
         {
         this.validateMotor(motor);
         byte bPower = this.read(ADDRESS_MOTOR_POWER_MAP[motor]);
-        return bPower == POWER_FLOAT;
+        return bPower == bPowerFloat;
         }
 
     @Override public void setMotorPowerFloat(int motor)
         {
         this.validateMotor(motor);
-        this.write(ADDRESS_MOTOR_POWER_MAP[motor], new byte[]{(byte) POWER_FLOAT});
+        this.write(ADDRESS_MOTOR_POWER_MAP[motor], new byte[]{(byte) bPowerFloat});
         }
 
     @Override public boolean isBusy(int motor)
@@ -386,17 +401,17 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
         this.validateMotor(motor);
         byte bPower = this.read(ADDRESS_MOTOR_POWER_MAP[motor]);
 
-        if (bPower == POWER_FLOAT)
+        if (bPower == bPowerFloat)
             return 0;
         else
-            return Range.scale(bPower, POWER_MIN, POWER_MAX, API_POWER_MIN, API_POWER_MAX);
+            return Range.scale(bPower, bPowerMin, bPowerMax, powerMin, powerMax);
         }
 
     @Override public void setMotorPower(int motor, double power)
         {
         this.validateMotor(motor);
-        power = Range.clip(power, API_POWER_MIN, API_POWER_MAX);   // NB: runtime previously threw on invalid range instead of clipping
-        power = Range.scale(power, API_POWER_MIN, API_POWER_MAX, POWER_MIN, POWER_MAX);
+        power = Range.clip(power, powerMin, powerMax);   // NB: runtime previously threw on invalid range instead of clipping
+        power = Range.scale(power, powerMin, powerMax, bPowerMin, bPowerMax);
         this.write(ADDRESS_MOTOR_POWER_MAP[motor], new byte[]{(byte)((int)(power))});
         }
 
@@ -414,6 +429,10 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
             {
             this.write(ADDRESS_MOTOR_MODE_MAP[motor], bMode);
             this.isBusyHelpers[motor].noteMotorMode(mode);
+
+            // TO DO: If the mode is 'reset encoders' don't return until the encoders have actually reset
+            // http://ftcforum.usfirst.org/showthread.php?4924-Use-of-RUN_TO_POSITION-in-LineraOpMode&highlight=reset+encoders
+            // http://ftcforum.usfirst.org/showthread.php?4567-Using-and-resetting-encoders-in-MIT-AI&p=19303&viewfull=1#post19303
             }
         }
 
@@ -452,7 +471,7 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
     // http://ftcforum.usfirst.org/showthread.php?4639-New-release-of-FTC-SDK-and-FTC-apps-are-out-there&p=17430&viewfull=1#post17430
     // http://ftcforum.usfirst.org/showthread.php?5369-DC-motor-controller-run-mode-definitions&p=20960&viewfull=1#post20960
     //
-    // From the HiTechnic Motor Controller specification:
+    // From the HiTechnic Motor Controller specification (and we guess that the Modern Motor Controller is similar):
     //
     //      The Run to position command will cause the firmware to run the motor to make the current encoder
     //      value to become equal to the target encoder value. It will do this using a maximum rotation rate
@@ -482,7 +501,7 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
         // State
         //------------------------------------------------------------------------------------------
 
-        static final int positionTolerance = 10;
+        static final int busyThreshold = 5;
 
         int     targetPosition;
         int     currentPosition;
@@ -513,7 +532,7 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
                 {
                 if (this.currentPositionSet && this.targetPositionSet)
                     {
-                    return Math.abs(this.currentPosition - this.targetPosition) <= positionTolerance;
+                    return Math.abs(this.currentPosition - this.targetPosition) > busyThreshold;
                     }
                 }
             return false;
@@ -635,15 +654,15 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
     // Constants
     //----------------------------------------------------------------------------------------------
 
-    public static final int MONITOR_LENGTH = 30;
+    public static final int cbDataMonitor = 30;
     public static final int FIRST_MOTOR = 1;
     public static final int LAST_MOTOR = 2;
-    public static final double API_POWER_MIN = -1.0;
-    public static final double API_POWER_MAX =  1.0;
-    public static final byte POWER_MAX = 100;
+    public static final double powerMin = -1.0;
+    public static final double powerMax =  1.0;
+    public static final byte bPowerMax = 100;
     public static final byte POWER_BRAKE = 0;
-    public static final byte POWER_MIN = -100;
-    public static final byte POWER_FLOAT = -128;
+    public static final byte bPowerMin = -100;
+    public static final byte bPowerFloat = -128;
     public static final byte RATIO_MIN = -128;
     public static final byte RATIO_MAX = 127;
     public static final int DIFFERENTIAL_CONTROL_LOOP_COEFFICIENT_MAX = 255;

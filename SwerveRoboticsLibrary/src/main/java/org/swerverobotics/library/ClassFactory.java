@@ -162,7 +162,7 @@ public final class ClassFactory
      */
     public static ColorSensor createSwerveColorSensor(OpMode context, ColorSensor target)
         {
-        return SwerveColorSensor.create(context, target);
+        return LegacyOrModernColorSensor.create(context, target);
         }
 
     /**
@@ -181,7 +181,7 @@ public final class ClassFactory
      */
     public static ColorSensor createSwerveColorSensor(OpMode context, I2cController controller, int port, int i2cAddr8Bit, ClassFactory.SENSOR_FLAVOR flavor)
         {
-        return SwerveColorSensor.create(context, controller, port, i2cAddr8Bit, flavor, null);
+        return LegacyOrModernColorSensor.create(context, controller, port, i2cAddr8Bit, flavor, null);
         }
 
 

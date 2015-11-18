@@ -363,7 +363,7 @@ public class ThunkingHardwareFactory
                 {
                 @Override public ColorSensor create(ColorSensor target)
                     {
-                    if (target instanceof SwerveColorSensor)
+                    if (target instanceof LegacyOrModernColorSensor)
                         {
                         return target;
                         }

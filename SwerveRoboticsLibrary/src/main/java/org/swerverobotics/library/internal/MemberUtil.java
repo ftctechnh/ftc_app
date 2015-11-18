@@ -148,6 +148,15 @@ public class MemberUtil
     // Color Sensors
     //----------------------------------------------------------------------------------------------
 
+    static DeviceInterfaceModule deviceInterfaceModuleOfAdaFruitColorSensor(ColorSensor sensor)
+        {
+        return Util.<DeviceInterfaceModule>getPrivateObjectField(sensor, 0);
+        }
+    static int portOfAdaFruitColorSensor(ColorSensor sensor)
+        {
+        return Util.getPrivateIntField(sensor, 5);
+        }
+
     static LegacyModule legacyModuleOfHiTechnicColorSensor(ColorSensor sensor)
         {
         return Util.<LegacyModule>getPrivateObjectField(sensor, 0);
