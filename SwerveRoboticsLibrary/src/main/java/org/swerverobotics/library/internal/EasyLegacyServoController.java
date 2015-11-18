@@ -73,7 +73,7 @@ public class EasyLegacyServoController implements ServoController, IOpModeStateT
 
         RobotStateTransitionNotifier.register(context, this);
 
-        // The NXT HiTechnic motor controller will time out if it doesn't receive any I2C communication for
+        // The NXT HiTechnic servo controller will time out if it doesn't receive any I2C communication for
         // 10.0 seconds. So we set up a heartbeat request to try to prevent that. We try to use
         // heartbeats which are as minimally disruptive as possible.
         II2cDeviceClient.HeartbeatAction heartbeatAction = new II2cDeviceClient.HeartbeatAction();
