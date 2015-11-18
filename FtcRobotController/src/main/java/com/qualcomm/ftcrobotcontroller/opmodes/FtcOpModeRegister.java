@@ -67,6 +67,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     //manager.register ("Testing1010", Testing1010.class);
     manager.register ("LineFollower", LineFollower.class);
     manager.register ("Calibration", Calibration.class);
+    manager.register("PitCrew", ResQTeleopPitCrew.class);
     //manager.register ("LightSensorCalibration", Calibration.class);
     //manager.register("K9MoveStraight", K9MoveStraight.class);
     /*
