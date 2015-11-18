@@ -133,13 +133,6 @@ public class Util
         awaitTermination(service);
         }
 
-    public static void shutdownNowAndAwaitTermination(ExecutorService service, Runnable runnableBetween)
-        {
-        service.shutdownNow();
-        runnableBetween.run();
-        awaitTermination(service);
-        }
-
     public static void awaitTermination(ExecutorService service)
         {
         try {

@@ -373,6 +373,7 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
     @Override public boolean isBusy(int motor)
         {
         this.validateMotor(motor);
+        // TO DO: fix: this has the 50ms delay problem
         byte b = this.i2cDeviceClient.read8(mpMotorRegMotorMode[motor]);
         return (b & 0x80) != 0;
         }
