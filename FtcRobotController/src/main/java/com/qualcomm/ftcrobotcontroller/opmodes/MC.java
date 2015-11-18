@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 public class MC {
     final static int DEFAULT_SPEED = 50;
+    static boolean isBlue; //ASSUME BLUE IS DEFAULT
 
     public static void moveForward(int distance, int speed, DcMotor rightMotor, DcMotor leftMotor){
         //move for distance at speed using motors right and left
@@ -37,26 +38,34 @@ public class MC {
     }
 
     public static void turnRight(int distance, int speed, DcMotor rightMotor, DcMotor leftMotor){
-        //turn right for distance at speed using motors right and left
-        int rightPos = rightMotor.getCurrentPosition();
-        int leftPos = leftMotor.getCurrentPosition();
-        rightMotor.setTargetPosition(-distance + rightPos);
-        leftMotor.setTargetPosition(distance + leftPos);
-        while(leftMotor.getTargetPosition() > leftMotor.getCurrentPosition()){
-            rightMotor.setPower(-speed);
-            leftMotor.setPower(speed);
+        if(isBlue) {
+            //turn right for distance at speed using motors right and left
+            int rightPos = rightMotor.getCurrentPosition();
+            int leftPos = leftMotor.getCurrentPosition();
+            rightMotor.setTargetPosition(-distance + rightPos);
+            leftMotor.setTargetPosition(distance + leftPos);
+            while (leftMotor.getTargetPosition() > leftMotor.getCurrentPosition()) {
+                rightMotor.setPower(-speed);
+                leftMotor.setPower(speed);
+            }
+        }else{
+            turnLeft(distance, speed, rightMotor, leftMotor);
         }
     }
 
     public static void turnLeft(int distance, int speed, DcMotor rightMotor, DcMotor leftMotor){
-        //turn left for distance at speed using motors right and left
-        int rightPos = rightMotor.getCurrentPosition();
-        int leftPos = leftMotor.getCurrentPosition();
-        rightMotor.setTargetPosition(distance + rightPos);
-        leftMotor.setTargetPosition(-distance + leftPos);
-        while(leftMotor.getTargetPosition() < leftMotor.getCurrentPosition()){
-            rightMotor.setPower(speed);
-            leftMotor.setPower(-speed);
+        if(isBlue) {
+            //turn left for distance at speed using motors right and left
+            int rightPos = rightMotor.getCurrentPosition();
+            int leftPos = leftMotor.getCurrentPosition();
+            rightMotor.setTargetPosition(distance + rightPos);
+            leftMotor.setTargetPosition(-distance + leftPos);
+            while (leftMotor.getTargetPosition() < leftMotor.getCurrentPosition()) {
+                rightMotor.setPower(speed);
+                leftMotor.setPower(-speed);
+            }
+        }else{
+            turnRight(distance, speed, rightMotor, leftMotor);
         }
     }
 
