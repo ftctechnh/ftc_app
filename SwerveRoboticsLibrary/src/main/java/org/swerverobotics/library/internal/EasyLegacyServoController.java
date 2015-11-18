@@ -274,7 +274,7 @@ public class EasyLegacyServoController implements ServoController, IOpModeStateT
         position = Range.clip(position, positionMin, positionMax);  // note: runtime formerly threw on range error
         double bPosition = Range.scale(position, positionMin, positionMax, bPositionMin, bPositionMax);
         this.write(ADDRESS_CHANNEL_MAP[servo], bPosition);
-        this.pwmDisable();
+        this.pwmEnable();
         }
 
     @Override
