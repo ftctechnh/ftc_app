@@ -7,6 +7,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoController;
 import com.qualcomm.robotcore.util.Range;
 
 /**
@@ -27,7 +28,7 @@ public class TeleOpTankTread extends OpMode{
     final static double CLAW_MAX_RANGE  = 0.7;
 
     // position of the arm servo.
-    double armPosition;
+    double pusherPosition;
 
     // amount to change the arm servo position.
     double armDelta = 0.1;
@@ -40,15 +41,19 @@ public class TeleOpTankTread extends OpMode{
 
     // Eden
     // Emma
+    ServoController sc = null;
+
     DcMotor motorFRight = null;
     DcMotor motorRRight = null;
     DcMotor motorFLeft = null;
     DcMotor motorRLeft = null;
+    Servo pusher = null;
+
     DcMotor motorLowerSlide = null;
     DcMotor motorUpperSlide = null;
 
-    Servo claw;
-    Servo arm;
+    float servoInput = 0.0f;
+    float servoSpeed = 0.0f;
 
     /**
      * Constructor
@@ -83,11 +88,17 @@ public class TeleOpTankTread extends OpMode{
 		 *    "servo_6" controls the claw joint of the manipulator.
 		 */
 
+        sc = hardwareMap.servoController.get("sc");
+        pusher = hardwareMap.servo.get("pusher");
+        pusher.setPosition(0.5);
+        sc.pwmEnable();
 
         motorRRight = hardwareMap.dcMotor.get("motor_right_rear"); //RRight
         motorRLeft = hardwareMap.dcMotor.get("motor_left_rear"); //RLeft
 
         motorRLeft.setDirection(DcMotor.Direction.REVERSE);
+
+
 
         /* Emma
         * allows robot to run if there are only 2 motors
@@ -152,6 +163,7 @@ public class TeleOpTankTread extends OpMode{
         upperslide = Range.clip(upperslide, -1, 1);
         lowerslide = Range.clip(lowerslide, -1,1);
 
+
         // scale the joystick value to make it easier to control
         // the robot more precisely at slower speeds.
         right = (float)scaleInput(right);
@@ -163,14 +175,28 @@ public class TeleOpTankTread extends OpMode{
 
         motorRRight.setPower(right);
         motorRLeft.setPower(left);
-        motorUpperSlide.setPower(upperslide);
-        motorLowerSlide.setPower(lowerslide);
+        if (motorUpperSlide != null) {
+            motorUpperSlide.setPower(upperslide);
+            motorLowerSlide.setPower(lowerslide);
+        }
 
         if (motorFRight != null) {
             motorFRight.setPower(right);
             motorFLeft.setPower(left);
         }
 
+        if(gamepad1.a) {
+            servoSpeed = 0.0f;
+        }
+        if(gamepad1.b) {
+            servoSpeed = 1.0f;
+        }
+
+        if(gamepad1.a != true && gamepad1.b != true) {
+            servoSpeed = 0.5f;
+        }
+
+        pusher.setPosition(servoSpeed);
 
 		/*
 		// update the position of the arm.
@@ -216,6 +242,8 @@ public class TeleOpTankTread extends OpMode{
         // telemetry.addData("claw", "claw:  " + String.format("%.2f", clawPosition));
         telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", left));
         telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));
+        telemetry.addData("servo in",  "servo in: " + String.format("%.2f", servoInput));
+        telemetry.addData("servo out",  "servo out: " + String.format("%.2f", servoSpeed));
 
     }
 
@@ -226,6 +254,14 @@ public class TeleOpTankTread extends OpMode{
      */
     @Override
     public void stop() {
+        servoSpeed = 0.5f;
+
+        pusher.setPosition(servoSpeed);
+
+        if (sc != null) {
+            sc.pwmDisable();
+            sc = null;
+        }
 
     }
 
