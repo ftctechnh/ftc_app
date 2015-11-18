@@ -69,7 +69,7 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
     public abstract void disarm();
 
     static void closeModernRoboticsUsbDevice(ModernRoboticsUsbDevice usbDevice)
-        // Close down the usbDevice in a robust and reliable way
+    // Close down the usbDevice in a robust and reliable way
         {
         // Get access to the state
         ExecutorService service = MemberUtil.getExecutorServiceModernRoboticsUsbDevice(usbDevice);
