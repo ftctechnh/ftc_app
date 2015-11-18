@@ -17,8 +17,14 @@ public class OurAutonomous extends OpMode{
     DcMotor leftMotor;
     boolean peopleAndLight = true;
     boolean climbing = true;
+    boolean isBlue = true;
+
+
 
     public void init(){
+        if(isBlue){
+            MC.isBlue = true;
+        }
         armUpperMotor = hardwareMap.dcMotor.get("armUpperMotor");
         armLowerMotor = hardwareMap.dcMotor.get("armLowerMotor");
         rightMotor = hardwareMap.dcMotor.get("motor_right");
@@ -26,12 +32,12 @@ public class OurAutonomous extends OpMode{
     }
 
     public void start(){
-        if(peopleAndLight) {
+        if(peopleAndLight){
             peopleAndLight();
             if(climbing) {
                 climbFromBasket();
             }
-        }else if(climbing) {
+        }else if(climbing){
             climbFromStart();
         }
     }
@@ -48,6 +54,7 @@ public class OurAutonomous extends OpMode{
 
     public void dumpClimbers(){
         //starting from the point where line following stopped, the robot will use its arm to reach up and dump the people
+        //lower motor up so that it will dump the cimers from above the claw
     }
 
     public void detectAndPushLight(){
@@ -56,15 +63,17 @@ public class OurAutonomous extends OpMode{
 
     public void climbFromBasket(){
         //the robot starts from the location that is at the end of the light and basket methods
-        //back up and turn (to reposition) to go straight onto mountain
-        //turnandbackup.BackTurn(100,34, rightMotor, leftMotor);
-        //with all force climb to highest point on mountain
-        MC.moveForward(100, rightMotor, leftMotor);
+        MC.moveBackward(400, rightMotor, leftMotor);//back up and turn (to reposition) to go straight onto mountain
+        MC.turnLeft(200, rightMotor, leftMotor);
+        MC.moveBackward(1500, rightMotor, leftMotor);
+        MC.turnRight(500, rightMotor, leftMotor);
+        MC.moveForward(1600, 100, rightMotor, leftMotor);
     }
 
     public void climbFromStart(){
         //the robot starts from the position on the wall and then goes to climb
-        MC.moveForward(100, rightMotor, leftMotor);
+        MC.moveForward(1500, rightMotor, leftMotor);
+        MC.turnRight(500, rightMotor, leftMotor);
     }
 
     public void loop(){
