@@ -72,8 +72,6 @@ public class SynchMotorLoopPerf extends SynchronousOpMode
             
             spinCount++;
             }
-
-        // powerMotors(0);
         }
 
     public void powerMotors(double power)
