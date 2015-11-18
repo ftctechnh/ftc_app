@@ -26,12 +26,21 @@ public class BlueAuto extends FTCCompetitionBase {
         switch (dstate){
             // TODO: 11/15/2015 Drive Forward
             case Stage1:
+                if(AutonDrive(2000, 0.75D, 0.0D)){
+                    dstate = Dstate.Stage2;
+                }
                 break;
             // TODO: 11/15/2015 Turn Left 45 degrees
             case Stage2:
+                if(AutonDrive(500, 0.0D, 0.75D)){
+                    dstate = Dstate.Stage3;
+                }
                 break;
             // TODO: 11/15/2015 Drive Backwards to Drive on Ramp
             case Stage3:
+                if (AutonDrive(750, -0.75D, 0.0D)){
+                    dstate = Dstate.Stage4;
+                }
                 break;
             // TODO: 11/15/2015 Winch up when ready 
             case Stage4:
