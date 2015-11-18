@@ -27,13 +27,10 @@ public class EasyModernServoController extends EasyModernController implements S
 
     public static final byte[] ADDRESS_CHANNEL_MAP = new byte[]{(byte)-1, (byte)66, (byte)67, (byte)68, (byte)69, (byte)70, (byte)71};
     public static final int ADDRESS_PWM = 72;
-    public static final boolean DEBUG_LOGGING = false;
-    public static final int MAX_SERVOS = 6;
     public static final int MONITOR_LENGTH = 9;
     public static final byte PWM_DISABLE = -1;
     public static final byte PWM_ENABLE = 0;
     public static final byte PWM_ENABLE_WITHOUT_TIMEOUT = -86;
-    public static final int SERVO_POSITION_MAX = 255;
     public static final byte START_ADDRESS = 64;
 
     public static final double positionMin = 0.0;
@@ -41,7 +38,7 @@ public class EasyModernServoController extends EasyModernController implements S
     public static final byte   bPositionMin = 0;
     public static final byte   bPositionMax = (byte)255;
 
-    private Servo[]                                  servos;
+    private List<Servo>                              servos;
     private final ModernRoboticsUsbServoController   target;
 
     //----------------------------------------------------------------------------------------------
@@ -53,7 +50,7 @@ public class EasyModernServoController extends EasyModernController implements S
         super(context, target, newDummyReadWriteRunnable(target.getSerialNumber()));
 
         this.target  = target;
-        this.servos  = new Servo[0];
+        this.servos  = new LinkedList<Servo>();
         this.findTargetNameAndMapping();
         }
 
@@ -63,7 +60,7 @@ public class EasyModernServoController extends EasyModernController implements S
         return new DummyReadWriteRunnableStandard(serialNumber, robotUsbDevice, MONITOR_LENGTH, START_ADDRESS, false);
         }
 
-    public static ServoController create(OpMode context, ServoController target, Servo[] servos)
+    public static ServoController create(OpMode context, ServoController target, Collection<Servo> servos)
         {
         try {
             if (MemberUtil.isModernServoController(target))
@@ -102,10 +99,10 @@ public class EasyModernServoController extends EasyModernController implements S
         }
 
     //----------------------------------------------------------------------------------------------
-    // Construction utility
+    // Arming and disarming
     //----------------------------------------------------------------------------------------------
 
-    private void setServos(Servo[] servos)
+    private void setServos(Collection<Servo> servos)
         {
         assertTrue(!BuildConfig.DEBUG || !this.isArmed());
 
@@ -115,7 +112,7 @@ public class EasyModernServoController extends EasyModernController implements S
                 throw new IllegalArgumentException(String.format("servo has incorrect controller for usurpation: %s", servo.getConnectionInfo()));
             }
 
-        this.servos = Arrays.copyOf(servos, servos.length);
+        this.servos = new LinkedList<Servo>(servos);
         }
 
     private void usurpDevices()

@@ -74,7 +74,7 @@ public class ThunkingHardwareFactory
         );
 
         //----------------------------------------------------------------------------
-        // Swapping in new motor controller implementations in place of any existing ones
+        // Swapping in new motor controller implementations in place of existing ones
         //----------------------------------------------------------------------------
 
         // Group the motors and their controller together
@@ -94,11 +94,37 @@ public class ThunkingHardwareFactory
         // Switcheroo the motor controllers
         for (DcMotorController controller : motors.keySet())
             {
-            DcMotor motor1 = motors.get(controller).get(0);
-            DcMotor motor2 = motors.get(controller).size() > 1 ? motors.get(controller).get(1) : null;
             if (MemberUtil.isLegacyMotorController(controller) || MemberUtil.isModernMotorController(controller))
                 {
+                DcMotor motor1 = motors.get(controller).get(0);
+                DcMotor motor2 = motors.get(controller).size() > 1 ? motors.get(controller).get(1) : null;
                 ClassFactory.createEasyMotorController(this.context, motor1, motor2);
+                }
+            }
+
+        //----------------------------------------------------------------------------
+        // Now the same for the servo controllers
+        //----------------------------------------------------------------------------
+
+        Map<ServoController, List<Servo>> servos = new HashMap<ServoController, List<Servo>>();
+        for (Servo servo : this.unthunkedHwmap.servo)
+            {
+            if (servos.containsKey(servo.getController()))
+                servos.get(servo.getController()).add(servo);
+            else
+                {
+                List<Servo> list = new LinkedList<Servo>();
+                list.add(servo);
+                servos.put(servo.getController(), list);
+                }
+            }
+
+        for (ServoController controller : servos.keySet())
+            {
+            if (MemberUtil.isModernServoController(controller))
+                {
+                Collection<Servo> thisControllersServos = servos.get(controller);
+                ClassFactory.createEasyServoController(this.context, thisControllersServos);
                 }
             }
 
