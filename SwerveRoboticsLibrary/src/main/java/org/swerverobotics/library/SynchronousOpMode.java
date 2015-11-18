@@ -216,16 +216,13 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      */
     public final void idle() throws InterruptedException
         {
-        synchronized (this.loopLock)
-            {
-            // Abort the world if the OpMode has been asked to stop
-            if (this.isStopRequested())
-                throw new InterruptedException();
+        // Abort the world if the OpMode has been asked to stop
+        if (this.isStopRequested())
+            throw new InterruptedException();
 
-            // Otherwise, yield back our thread scheduling quantum and give other threads at
-            // our priority level a chance to run
-            Thread.yield();
-            }
+        // Otherwise, yield back our thread scheduling quantum and give other threads at
+        // our priority level a chance to run
+        Thread.yield();
         }
 
     /**
