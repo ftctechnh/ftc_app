@@ -26,6 +26,8 @@ public class EasyModernServoController extends EasyModernController implements S
     //----------------------------------------------------------------------------------------------
 
     public static final byte[] ADDRESS_CHANNEL_MAP = new byte[]{(byte)-1, (byte)0x42, (byte)0x43, (byte)0x44, (byte)0x45, (byte)0x46, (byte)0x47};
+    public static final int SERVO_FIRST = 1;
+    public static final int SERVO_LAST  = 6;
     public static final int ADDRESS_PWM = 0x48;
     public static final int MONITOR_LENGTH = 9;
     public static final byte PWM_DISABLE = -1;
@@ -249,9 +251,9 @@ public class EasyModernServoController extends EasyModernController implements S
 
     private void validateServo(int servo)
         {
-        if (servo < 1 || servo > ADDRESS_CHANNEL_MAP.length)
+        if (servo < SERVO_FIRST || servo > SERVO_LAST)
             {
-            throw new IllegalArgumentException(String.format("servo %d is invalid; valid servos are 1..%d", servo, ADDRESS_CHANNEL_MAP.length));
+            throw new IllegalArgumentException(String.format("servo %d is invalid; valid servos are %d..%d", servo, SERVO_FIRST, SERVO_LAST));
             }
         }
 

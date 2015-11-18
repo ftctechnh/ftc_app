@@ -1,7 +1,6 @@
 package org.swerverobotics.library.internal;
 
 import android.util.Log;
-
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.Range;
@@ -51,11 +50,11 @@ public class EasyLegacyServoController implements ServoController, IOpModeStateT
     private static final int iRegWindowFirst = 0x40;
     private static final int iRegWindowMax   = 0x48+1;  // first register not included
 
-    private final OpMode                        context;
     private final II2cDeviceClient              i2cDeviceClient;
     private List<Servo>                         servos;
+    private final double[]                      servoPositions;
     private final ServoController               target;
-    I2cDeviceReplacementHelper<ServoController> helper;
+    private I2cDeviceReplacementHelper<ServoController> helper;
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -67,10 +66,10 @@ public class EasyLegacyServoController implements ServoController, IOpModeStateT
         int          targetPort   = MemberUtil.portOfLegacyServoController(target);
         this.helper          = new I2cDeviceReplacementHelper<ServoController>(context, this, target, legacyModule, targetPort);
 
-        this.context         = context;
         this.i2cDeviceClient = ii2cDeviceClient;
         this.target          = target;
         this.servos          = new LinkedList<Servo>();
+        this.servoPositions  = new double[ADDRESS_CHANNEL_MAP.length];
 
         RobotStateTransitionNotifier.register(context, this);
 
@@ -90,7 +89,6 @@ public class EasyLegacyServoController implements ServoController, IOpModeStateT
         // written, but we make it relatively large so that least that when we DO go
         // into read mode and possibly do more than one read we will use this window
         // and won't have to fiddle with the 'switch to read mode' each and every time.
-        // We include everything from the 'Motor 1 target encoder value' through the battery voltage.
         this.i2cDeviceClient.setReadWindow(new II2cDeviceClient.ReadWindow(iRegWindowFirst, iRegWindowMax-iRegWindowFirst, II2cDeviceClient.READ_MODE.BALANCED));
         }
 
@@ -248,19 +246,19 @@ public class EasyLegacyServoController implements ServoController, IOpModeStateT
     //----------------------------------------------------------------------------------------------
 
     @Override
-    public void pwmEnable()
+    public synchronized void pwmEnable()
         {
         this.write(ADDRESS_PWM, PWM_ENABLE);
         }
 
     @Override
-    public void pwmDisable()
+    public synchronized void pwmDisable()
         {
         this.write(ADDRESS_PWM, PWM_DISABLE);
         }
 
     @Override
-    public PwmStatus getPwmStatus()
+    public synchronized PwmStatus getPwmStatus()
         {
         return this.read(ADDRESS_PWM,1)[0] == PWM_DISABLE
                 ? PwmStatus.DISABLED
@@ -268,21 +266,28 @@ public class EasyLegacyServoController implements ServoController, IOpModeStateT
         }
 
     @Override
-    public void setServoPosition(int servo, double position)
+    public synchronized void setServoPosition(int servo, double position)
         {
         validateServo(servo);
         position = Range.clip(position, positionMin, positionMax);  // note: runtime formerly threw on range error
         double bPosition = Range.scale(position, positionMin, positionMax, bPositionMin, bPositionMax);
         this.write(ADDRESS_CHANNEL_MAP[servo], bPosition);
         this.pwmEnable();
+
+        // We remember the servo target positions so that getServoPosition can return something reasonable
+        this.servoPositions[servo] = position;
         }
 
     @Override
-    public double getServoPosition(int servo)
+    public synchronized double getServoPosition(int servo)
         {
         validateServo(servo);
-        double bPosition = TypeConversion.unsignedByteToDouble(this.read(ADDRESS_CHANNEL_MAP[servo], 1)[0]);
-        return Range.scale(bPosition, bPositionMin, bPositionMax, positionMin, positionMax);
+        if (this.getPwmStatus() == PwmStatus.ENABLED)
+            {
+            return this.servoPositions[servo];
+            }
+        else
+            return 0;
         }
 
     //----------------------------------------------------------------------------------------------
@@ -307,9 +312,9 @@ public class EasyLegacyServoController implements ServoController, IOpModeStateT
 
     private void validateServo(int servo)
         {
-        if (servo < 1 || servo > ADDRESS_CHANNEL_MAP.length)
+        if (servo < SERVO_FIRST || servo > SERVO_LAST)
             {
-            throw new IllegalArgumentException(String.format("servo %d is invalid; valid servos are 1..%d", servo, ADDRESS_CHANNEL_MAP.length));
+            throw new IllegalArgumentException(String.format("servo %d is invalid; valid servos are %d..%d", servo, SERVO_FIRST, SERVO_LAST));
             }
         }
 

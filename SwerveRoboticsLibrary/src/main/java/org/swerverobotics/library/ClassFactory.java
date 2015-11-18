@@ -87,7 +87,7 @@ public final class ClassFactory
      * A notable feature of the easy servo controller implementation is that position change
      * requests and other servo writes are issued immediately instead of being deferred to the
      * end of the next loop() cycle, which simplifies programming. This is similar to the
-     * enhancements found in the easy motor controller.
+     * enhancements found in the easy motor controller. Some small bugs are also fixed.
      *
      * @param context   the OpMode within which the creation is occurring
      * @param servos    the list of servos whose controller implementation we are to change.
