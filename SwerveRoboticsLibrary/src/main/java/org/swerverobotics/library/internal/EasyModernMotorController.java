@@ -143,34 +143,6 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
 
     private static final String swerveVoltageSensorName = " |Swerve|Modern|VoltageSensor| ";
 
-    private void registerVoltageSensor()
-        {
-        if (this.context != null)
-            {
-            // Are there any voltage sensors there in the map the robot controller runtime made?
-            if (this.context.hardwareMap.voltageSensor.size() == 0)
-                {
-                // No, there isn't. Well, we're one. We'll take up the challenge!
-                this.context.hardwareMap.voltageSensor.put(swerveVoltageSensorName, this);
-                }
-            }
-        }
-
-    private void unregisterVoltageSensor()
-        {
-        if (this.context != null)
-            {
-            if (Util.contains(this.context.hardwareMap.voltageSensor, swerveVoltageSensorName))
-                {
-                VoltageSensor voltageSensor = this.context.hardwareMap.voltageSensor.get(swerveVoltageSensorName);
-                if (voltageSensor == (VoltageSensor)this)
-                    {
-                    Util.removeName(this.context.hardwareMap.voltageSensor, swerveVoltageSensorName);
-                    }
-                }
-            }
-        }
-
     private boolean isArmed()
         {
         return this.isArmed;
@@ -188,13 +160,16 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
             this.floatMotors(target);
             this.closeModernRoboticsUsbDevice(target);
             //
-            if (this.targetName != null) this.targetDeviceMapping.put(this.targetName, this);
+            if (this.targetName != null)
+                {
+                this.targetDeviceMapping.put(this.targetName, this);
+                this.context.hardwareMap.voltageSensor.put(this.targetName, this);
+                }
             this.isArmed = true;
             //
             // Turn on our usb stuff
             this.installReadWriteRunnable(this);
             //
-            this.registerVoltageSensor();
             this.initPID();
             this.floatMotors();
             Log.d(LOGGING_TAG, String.format("....armed \"%s\"", this.getConnectionInfo()));
@@ -206,14 +181,17 @@ public class EasyModernMotorController extends ModernRoboticsUsbDevice implement
         if (this.isArmed())
             {
             Log.d(LOGGING_TAG, String.format("disarming \"%s\"....", this.getConnectionInfo()));
-            this.unregisterVoltageSensor();
             //
             // Turn off our usb stuff
             this.eventLoopManager.unregisterSyncdDevice(this.readWriteRunnable);
             this.close();
             //
             this.isArmed = false;
-            if (this.targetName != null) this.targetDeviceMapping.put(this.targetName, this.target);
+            if (this.targetName != null)
+                {
+                this.targetDeviceMapping.put(this.targetName, this.target);
+                this.context.hardwareMap.voltageSensor.put(this.targetName, this.target);
+                }
             //
             // Turn target's usb stuff back on
             this.installReadWriteRunnable(this.target);
