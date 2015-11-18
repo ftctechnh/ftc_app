@@ -134,7 +134,7 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
             {
             LegacyModule legacyModule = MemberUtil.legacyModuleOfLegacyMotorController(target);
             int          port         = MemberUtil.portOfLegacyMotorController(target);
-            int          i2cAddr8Bit  = i2cAddrOfLegacyMotorController(target);
+            int          i2cAddr8Bit  = MemberUtil.i2cAddrOfLegacyMotorController(target);
 
             // Make a new legacy motor controller
             II2cDevice i2cDevice                 = new I2cDeviceOnI2cDeviceController(legacyModule, port);
@@ -173,13 +173,13 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
         this.motor2 = motor2;
         }
 
-    private void usurpMotors()
+    private void usurpDevices()
         {
         if (this.motor1 != null) MemberUtil.setControllerOfMotor(this.motor1, this);
         if (this.motor2 != null) MemberUtil.setControllerOfMotor(this.motor2, this);
         }
 
-    private void deusurpMotors()
+    private void deusurpDevices()
         {
         if (this.motor1 != null) MemberUtil.setControllerOfMotor(this.motor1, this.target);
         if (this.motor2 != null) MemberUtil.setControllerOfMotor(this.motor2, this.target);
@@ -220,7 +220,7 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
         {
         if (!this.isArmed())
             {
-            this.usurpMotors();
+            this.usurpDevices();
 
             this.helper.arm();
 
@@ -244,7 +244,7 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
 
             this.helper.disarm();
 
-            this.deusurpMotors();
+            this.deusurpDevices();
             }
         }
 

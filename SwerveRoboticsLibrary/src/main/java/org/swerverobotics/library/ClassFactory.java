@@ -89,7 +89,7 @@ public final class ClassFactory
      * end of the next loop() cycle, which simplifies programming. This is similar to the
      * enhancements found in the easy motor controller.
      *
-     * @param context   the OpMode within which the creation is occuring
+     * @param context   the OpMode within which the creation is occurring
      * @param servos    the list of servos whose controller implementation we are to change.
      *                  May not be null or empty.
      *
@@ -110,6 +110,9 @@ public final class ClassFactory
 
             if (MemberUtil.isModernServoController(controller))
                 EasyModernServoController.create(context, controller, servos);
+
+            if (MemberUtil.isLegacyServoController(controller))
+                EasyLegacyServoController.create(context, controller, servos);
             }
         else
             throw new IllegalArgumentException("no servos provided");
