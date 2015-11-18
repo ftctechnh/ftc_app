@@ -100,7 +100,7 @@ public class EasyLegacyServoController implements ServoController, IOpModeStateT
             int          port         = MemberUtil.portOfLegacyServoController(target);
             int          i2cAddr8Bit  = MemberUtil.i2cAddrOfLegacyServoController(target);
 
-            // Make a new legacy motor controller
+            // Make a new legacy servo controller
             II2cDevice i2cDevice                 = new I2cDeviceOnI2cDeviceController(legacyModule, port);
             I2cDeviceClient i2cDeviceClient      = new I2cDeviceClient(context, i2cDevice, i2cAddr8Bit, false);
             EasyLegacyServoController controller = new EasyLegacyServoController(context, i2cDeviceClient, target);
@@ -112,7 +112,7 @@ public class EasyLegacyServoController implements ServoController, IOpModeStateT
             }
         else
             {
-            // The target isn't a legacy motor controller, so we can't swap anything in for him.
+            // The target isn't a legacy servo controller, so we can't swap anything in for him.
             // Return the raw target (rather than, e.g., throwing) so that caller doesn't need to check
             // what kind of controller he has in hand.
             return target;
