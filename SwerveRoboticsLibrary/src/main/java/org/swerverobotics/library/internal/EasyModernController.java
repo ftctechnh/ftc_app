@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.usb.RobotUsbDevice;
 import com.qualcomm.robotcore.util.*;
 import org.swerverobotics.library.*;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.*;
 
 /**
  * Base class common to both easy modern servo and motor controllers. Handles glue about
@@ -30,9 +31,15 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
     protected String                        targetName;
     protected HardwareMap.DeviceMapping     targetDeviceMapping;
     protected final RobotUsbDevice          robotUsbDevice;
-    protected final Object                  readsSeeEffectsOfWrites = new Object();
-    protected final Object                  readCompletion          = new Object();
-    protected boolean                       writePending;
+
+    enum WRITE_STATUS { IDLE, DIRTY, ISSUED, READ };
+
+    protected WRITE_STATUS                  writeStatus;
+    protected final AtomicLong              readCompletionCount = new AtomicLong();
+    // Locking hierarchy is in the order listed
+    protected final Object                  concurrentClientLock = new Object();
+    protected final Object                  callbackLock         = new Object();
+
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -53,7 +60,7 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
         this.context          = context;
         this.eventLoopManager = SwerveThreadContext.getEventLoopManager();
         this.isArmed          = false;
-        this.writePending     = false;
+        this.writeStatus      = WRITE_STATUS.IDLE;
 
         ReadWriteRunnableStandard readWriteRunnableStandard = MemberUtil.getReadWriteRunnableModernRoboticsUsbDevice(target);
         ReadWriteRunnableUsbHandler handler                 = MemberUtil.getHandlerOfReadWriteRunnableStandard(readWriteRunnableStandard);
@@ -127,10 +134,13 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
 
     @Override public void write(int address, byte[] data)
         {
-        synchronized (this.readsSeeEffectsOfWrites)
+        synchronized (this.concurrentClientLock)
             {
-            this.writePending = true;
-            super.write(address, data);
+            synchronized (this.callbackLock)
+                {
+                this.writeStatus = WRITE_STATUS.DIRTY;
+                super.write(address, data);
+                }
             }
         }
 
@@ -138,16 +148,13 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
         {
         // Make sure that any read we issue happens *after* any writes
         // that have been queued but not yet been sent to the actual module.
-        synchronized (this.readsSeeEffectsOfWrites)
+        synchronized (this.concurrentClientLock)
             {
-            while (this.writePending)
+            synchronized (this.callbackLock)
                 {
-                try {
-                    this.readsSeeEffectsOfWrites.wait();
-                    }
-                catch (InterruptedException e)
+                while (this.writeStatus != WRITE_STATUS.IDLE)
                     {
-                    Util.handleCapturedInterrupt(e);
+                    wait(this.callbackLock);
                     }
                 }
 
@@ -155,41 +162,55 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
             }
         }
 
+    void waitForNextReadComplete()
+        {
+        synchronized (this.concurrentClientLock)
+            {
+            synchronized (this.callbackLock)
+                {
+                long cur = this.readCompletionCount.get();
+                long target = cur + 1;
+                while (this.readCompletionCount.get() < target)
+                    {
+                    wait(this.callbackLock);
+                    }
+                }
+            }
+        }
+
     @Override public void writeComplete() throws InterruptedException
         {
         // Any previously issued writes are now in the hands of the USB module
-        synchronized (this.readsSeeEffectsOfWrites)
+        synchronized (this.callbackLock)
             {
             super.writeComplete();
-            this.writePending = false;
-            this.readsSeeEffectsOfWrites.notifyAll();
+            // Make sure we really read after we write before read()s can continue
+            if (this.writeStatus == WRITE_STATUS.DIRTY)
+                this.writeStatus = WRITE_STATUS.READ;
+            this.callbackLock.notifyAll();
             }
         }
 
     @Override public void readComplete() throws InterruptedException
         {
-        synchronized (this.readsSeeEffectsOfWrites)
+        synchronized (this.callbackLock)
             {
             super.readComplete();
-
-            synchronized (this.readCompletion)
-                {
-                this.readCompletion.notifyAll();
-                }
+            if (this.writeStatus==WRITE_STATUS.READ)
+                this.writeStatus = WRITE_STATUS.IDLE;
+            readCompletionCount.incrementAndGet();
+            this.callbackLock.notifyAll();
             }
         }
 
-    void waitForReadComplete()
+    void wait(Object o)
         {
-        synchronized (this.readCompletion)
+        try {
+            o.wait();
+            }
+        catch (InterruptedException e)
             {
-            try {
-                this.readCompletion.wait();
-                }
-            catch (InterruptedException e)
-                {
-                Util.handleCapturedInterrupt(e);
-                }
+            Util.handleCapturedInterrupt(e);
             }
         }
 
