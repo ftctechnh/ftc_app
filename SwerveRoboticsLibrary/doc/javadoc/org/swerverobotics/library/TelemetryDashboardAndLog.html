@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -191,12 +191,6 @@ extends java.lang.Object</pre>
  the driver station</div>
 </td>
 </tr>
-<tr class="rowColor">
-<td class="colFirst"><code>Telemetry</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/TelemetryDashboardAndLog.html#target">target</a></span></code>
-<div class="block">Advanced: 'target' is the lower level robot-controller-runtime-provided telemetry object</div>
-</td>
-</tr>
 </table>
 </li>
 </ul>
@@ -212,9 +206,13 @@ extends java.lang.Object</pre>
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/TelemetryDashboardAndLog.html#TelemetryDashboardAndLog-com.qualcomm.robotcore.robocol.Telemetry-">TelemetryDashboardAndLog</a></span>(Telemetry&nbsp;telemetry)</code>
-<div class="block">Instantiate a new telemetry dashboard and log on a Telemetry object provided by
- the robot controller runtime.</div>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/TelemetryDashboardAndLog.html#TelemetryDashboardAndLog--">TelemetryDashboardAndLog</a></span>()</code>
+<div class="block">Instantiate a new telemetry dashboard and log</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/TelemetryDashboardAndLog.html#TelemetryDashboardAndLog-com.qualcomm.robotcore.robocol.Telemetry-">TelemetryDashboardAndLog</a></span>(com.qualcomm.robotcore.robocol.Telemetry&nbsp;notUsed)</code>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 </td>
 </tr>
 </table>
@@ -369,6 +367,12 @@ extends java.lang.Object</pre>
  to be used.</div>
 </td>
 </tr>
+<tr id="i20" class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/TelemetryDashboardAndLog.html#updateNow--">updateNow</a></span>()</code>
+<div class="block">Like <a href="../../../org/swerverobotics/library/TelemetryDashboardAndLog.html#update--"><code>update()</code></a>, but <em>always</em> transmits to the drive station.</div>
+</td>
+</tr>
 </table>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
@@ -394,22 +398,12 @@ extends java.lang.Object</pre>
 <a name="log">
 <!--   -->
 </a>
-<ul class="blockList">
+<ul class="blockListLast">
 <li class="blockList">
 <h4>log</h4>
 <pre>public final&nbsp;<a href="../../../org/swerverobotics/library/TelemetryDashboardAndLog.Log.html" title="class in org.swerverobotics.library">TelemetryDashboardAndLog.Log</a> log</pre>
 <div class="block">'log' provides a means by which a scrolling history of events can be recorded on
  the driver station</div>
-</li>
-</ul>
-<a name="target">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>target</h4>
-<pre>public final&nbsp;Telemetry target</pre>
-<div class="block">Advanced: 'target' is the lower level robot-controller-runtime-provided telemetry object</div>
 </li>
 </ul>
 </li>
@@ -423,16 +417,27 @@ extends java.lang.Object</pre>
 <a name="TelemetryDashboardAndLog-com.qualcomm.robotcore.robocol.Telemetry-">
 <!--   -->
 </a>
+<ul class="blockList">
+<li class="blockList">
+<h4>TelemetryDashboardAndLog</h4>
+<pre>@Deprecated
+public&nbsp;TelemetryDashboardAndLog(com.qualcomm.robotcore.robocol.Telemetry&nbsp;notUsed)</pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
+<div class="block">Instantiate a new telemetry dashboard and log for use within a given OpMode</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>notUsed</code> - the previous telemetry object that the new one is to take over from</dd>
+</dl>
+</li>
+</ul>
+<a name="TelemetryDashboardAndLog--">
+<!--   -->
+</a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>TelemetryDashboardAndLog</h4>
-<pre>public&nbsp;TelemetryDashboardAndLog(Telemetry&nbsp;telemetry)</pre>
-<div class="block">Instantiate a new telemetry dashboard and log on a Telemetry object provided by
- the robot controller runtime.</div>
-<dl>
-<dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>telemetry</code> - the robot controller runtime telemetry object</dd>
-</dl>
+<pre>public&nbsp;TelemetryDashboardAndLog()</pre>
+<div class="block">Instantiate a new telemetry dashboard and log</div>
 </li>
 </ul>
 </li>
@@ -621,6 +626,26 @@ extends java.lang.Object</pre>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../org/swerverobotics/library/TelemetryDashboardAndLog.html#getUpdateIntervalMs--"><code>getUpdateIntervalMs()</code></a>, 
 <a href="../../../org/swerverobotics/library/TelemetryDashboardAndLog.html#update-int-"><code>update(int)</code></a></dd>
+</dl>
+</li>
+</ul>
+<a name="updateNow--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>updateNow</h4>
+<pre>public&nbsp;boolean&nbsp;updateNow()</pre>
+<div class="block">Like <a href="../../../org/swerverobotics/library/TelemetryDashboardAndLog.html#update--"><code>update()</code></a>, but <em>always</em> transmits to the drive station. Use with
+ caution, as this can get to be expensive if overused. A typical case when you'd want to
+ use this occurs when you had been sending normal telemetry during some long-ish operation,
+ but that operation is now complete, and you want the driver station telemetry to now
+ accurately reflect the final state of the operation.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>whether an update to the drive station was made or not (will always be true)</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../org/swerverobotics/library/TelemetryDashboardAndLog.html#update--"><code>update()</code></a></dd>
 </dl>
 </li>
 </ul>
