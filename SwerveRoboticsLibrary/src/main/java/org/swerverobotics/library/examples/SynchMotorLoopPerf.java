@@ -14,7 +14,7 @@ import org.swerverobotics.library.interfaces.*;
  * flag, set in the constructor, controls whether just one or both of the motors are used.
  */
 @TeleOp(name="Motor Perf (sync)", group="Swerve Examples")
-// @Disabled
+@Disabled
 public class SynchMotorLoopPerf extends SynchronousOpMode
     {
     final boolean useBothMotors;
