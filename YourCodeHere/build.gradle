@@ -17,6 +17,8 @@ android {
         //
         // The versionName need not match; you can set that to what you may please.
         //
+        // See also: http://developer.android.com/tools/building/configuring-gradle.html
+        //
         versionCode 5                       // http://developer.android.com/tools/publishing/versioning.html
         versionName '@string/version_name'  // http://developer.android.com/tools/publishing/versioning.html
     }
