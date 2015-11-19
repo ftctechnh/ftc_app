@@ -578,6 +578,24 @@ public class FtcRobotControllerActivity extends Activity {
             {
             return this.legalWifiDirectNamePattern.matcher(name).matches();
             }
+        boolean containsNewline(String name)
+            {
+            return name.contains("\n") || name.contains("\r");
+            }
+        String withoutNewlines(String name)
+            {
+            StringBuilder result = new StringBuilder();
+            for (int ich = 0; ich < name.length(); ich++)
+                {
+                char ch = name.charAt(ich);
+                switch (ch)
+                    {
+                    case '\r':case '\n': break;
+                    default: result.append(ch); break;
+                    }
+                }
+            return result.toString();
+            }
 
         /** Is this peer a driver station? If in doubt, answer 'no'*/
         boolean isDriverStation(WifiP2pDevice peer)
@@ -624,7 +642,12 @@ public class FtcRobotControllerActivity extends Activity {
                 // Check the robot controller name for legality
                 String robotControllerName = assistant.getDeviceName();
                 if (!isValidWifiDirectName(robotControllerName))
-                    reportWifiDirectError("\"%s\" is not a legal robot controller name (see <RS02>)", robotControllerName);
+                    {
+                    if (containsNewline(robotControllerName))
+                        reportWifiDirectError("robot controller name \"%s\" contains a carriage return: PLEASE FIX immediately", withoutNewlines(robotControllerName));
+                    else
+                        reportWifiDirectError("\"%s\" is not a legal robot controller name (see <RS02>)", robotControllerName);
+                    }
 
                 // We'd like to check all the peers as well, but some of them may not be actually
                 // the driver station but instead, e.g., development laptops. So we need to be a
@@ -634,7 +657,12 @@ public class FtcRobotControllerActivity extends Activity {
                     if (isDriverStation(peer))
                         {
                         if (!isValidWifiDirectName(peer.deviceName))
-                            reportWifiDirectError("\"%s\" is not a legal driver station name (see <RS02>)", peer.deviceName);
+                            {
+                            if (containsNewline(peer.deviceName))
+                                reportWifiDirectError("driver station name \"%s\" contains a carriage return: PLEASE FIX immediately", withoutNewlines(peer.deviceName));
+                            else
+                                reportWifiDirectError("\"%s\" is not a legal driver station name (see <RS02>)", peer.deviceName);
+                            }
                         }
                     }
 
