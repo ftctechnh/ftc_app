@@ -30,7 +30,8 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
     protected String                        targetName;
     protected HardwareMap.DeviceMapping     targetDeviceMapping;
     protected final RobotUsbDevice          robotUsbDevice;
-    protected final Object                  readAfterWriteLock = new Object();
+    protected final Object                  readsSeeEffectsOfWrites = new Object();
+    protected final Object                  readCompletion          = new Object();
     protected boolean                       writePending;
 
     //----------------------------------------------------------------------------------------------
@@ -126,7 +127,7 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
 
     @Override public void write(int address, byte[] data)
         {
-        synchronized (this.readAfterWriteLock)
+        synchronized (this.readsSeeEffectsOfWrites)
             {
             this.writePending = true;
             super.write(address, data);
@@ -137,12 +138,12 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
         {
         // Make sure that any read we issue happens *after* any writes
         // that have been queued but not yet been sent to the actual module.
-        synchronized (this.readAfterWriteLock)
+        synchronized (this.readsSeeEffectsOfWrites)
             {
             while (this.writePending)
                 {
                 try {
-                    this.readAfterWriteLock.wait();
+                    this.readsSeeEffectsOfWrites.wait();
                     }
                 catch (InterruptedException e)
                     {
@@ -157,19 +158,38 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
     @Override public void writeComplete() throws InterruptedException
         {
         // Any previously issued writes are now in the hands of the USB module
-        synchronized (this.readAfterWriteLock)
+        synchronized (this.readsSeeEffectsOfWrites)
             {
             super.writeComplete();
             this.writePending = false;
-            this.readAfterWriteLock.notifyAll();
+            this.readsSeeEffectsOfWrites.notifyAll();
             }
         }
 
     @Override public void readComplete() throws InterruptedException
         {
-        synchronized (this.readAfterWriteLock)
+        synchronized (this.readsSeeEffectsOfWrites)
             {
             super.readComplete();
+
+            synchronized (this.readCompletion)
+                {
+                this.readCompletion.notifyAll();
+                }
+            }
+        }
+
+    void waitForReadComplete()
+        {
+        synchronized (this.readCompletion)
+            {
+            try {
+                this.readCompletion.wait();
+                }
+            catch (InterruptedException e)
+                {
+                Util.handleCapturedInterrupt(e);
+                }
             }
         }
 

@@ -82,8 +82,6 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
     private       DcMotor                   motor1;
     private       DcMotor                   motor2;
 
-    private final EasyModernMotorController.IsBusyHelper[] isBusyHelpers;
-
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
@@ -101,10 +99,6 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
         this.motor2          = null;
 
         RobotStateTransitionNotifier.register(context, this);
-
-        this.isBusyHelpers = new EasyModernMotorController.IsBusyHelper[motorLast+1];
-        for (int i = 0; i < this.isBusyHelpers.length; i++)
-            this.isBusyHelpers[i] = new EasyModernMotorController.IsBusyHelper();
 
         // The NXT HiTechnic motor controller will time out if it doesn't receive any I2C communication for
         // 2.5 seconds. So we set up a heartbeat request to try to prevent that. We try to use
@@ -348,57 +342,53 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
     // DcMotorController
     //----------------------------------------------------------------------------------------------
 
-    @Override public void setMotorControllerDeviceMode(DcMotorController.DeviceMode port)
+    @Override public synchronized void setMotorControllerDeviceMode(DcMotorController.DeviceMode port)
         {
         // ignored
         }
 
-    @Override public DcMotorController.DeviceMode getMotorControllerDeviceMode()
+    @Override public synchronized DcMotorController.DeviceMode getMotorControllerDeviceMode()
         {
         return DeviceMode.READ_WRITE;
         }
     
-    @Override public void setMotorChannelMode(int motor, DcMotorController.RunMode mode)
+    @Override public synchronized void setMotorChannelMode(int motor, DcMotorController.RunMode mode)
         {
         this.validateMotor(motor);
         byte b = modeToByte(mode);
 
-        synchronized (this.isBusyHelpers[motor])
-            {
-            // We write the whole byte, but only the lower five bits are actually writable
-            // and we only ever use the lowest two as non zero.
-            this.write8(mpMotorRegMotorMode[motor], b);
-            this.isBusyHelpers[motor].noteMotorMode(mode);
+        // We write the whole byte, but only the lower five bits are actually writable
+        // and we only ever use the lowest two as non zero.
+        this.write8(mpMotorRegMotorMode[motor], b);
 
-            // If the mode is 'reset encoders', we don't want to return until the encoders have actually reset
-            //      http://ftcforum.usfirst.org/showthread.php?4924-Use-of-RUN_TO_POSITION-in-LineraOpMode&highlight=reset+encoders
-            //      http://ftcforum.usfirst.org/showthread.php?4567-Using-and-resetting-encoders-in-MIT-AI&p=19303&viewfull=1#post19303
-            // For us, here, we believe we'll always *immediately* have that be true, as our writes
-            // to the I2C device actually happen when we issue them.
-            //
-            // Or, at least, insofar as anything is actually *observable*: the write will be issued
-            // ahead of any subsequent reads or writes. Thus, the assertTrue here would never fire,
-            // since the getMotorCurrentPosition() would follow the write and see its effect. However,
-            // having the assert does unnecessarily slow things down. We'll keep it for a while, then
-            // probably comment it out.
-            //
-            if (mode == RunMode.RESET_ENCODERS)
-                {
-                assertTrue(!BuildConfig.DEBUG || this.getMotorCurrentPosition(motor)==0);
-                }
-            else if (mode == RunMode.RUN_TO_POSITION)
-                {
-                // Enforce that in RUN_TO_POSITION, we always need *positive* power. DCMotor will
-                // take care of that if we set power *after* we set the mode, but not the other way
-                // around. So we handle that here.
-                double power = getMotorPower(motor);
-                if (power < 0)
-                    setMotorPower(motor, Math.abs(power));
-                }
+        // If the mode is 'reset encoders', we don't want to return until the encoders have actually reset
+        //      http://ftcforum.usfirst.org/showthread.php?4924-Use-of-RUN_TO_POSITION-in-LineraOpMode&highlight=reset+encoders
+        //      http://ftcforum.usfirst.org/showthread.php?4567-Using-and-resetting-encoders-in-MIT-AI&p=19303&viewfull=1#post19303
+        // For us, here, we believe we'll always *immediately* have that be true, as our writes
+        // to the I2C device actually happen when we issue them.
+        //
+        // Or, at least, insofar as anything is actually *observable*: the write will be issued
+        // ahead of any subsequent reads or writes. Thus, the assertTrue here would never fire,
+        // since the getMotorCurrentPosition() would follow the write and see its effect. However,
+        // having the assert does unnecessarily slow things down. We'll keep it for a while, then
+        // probably comment it out.
+        //
+        if (mode == RunMode.RESET_ENCODERS)
+            {
+            assertTrue(!BuildConfig.DEBUG || this.getMotorCurrentPosition(motor)==0);
+            }
+        else if (mode == RunMode.RUN_TO_POSITION)
+            {
+            // Enforce that in RUN_TO_POSITION, we always need *positive* power. DCMotor will
+            // take care of that if we set power *after* we set the mode, but not the other way
+            // around. So we handle that here.
+            double power = getMotorPower(motor);
+            if (power < 0)
+                setMotorPower(motor, Math.abs(power));
             }
         }
 
-    @Override public DcMotorController.RunMode getMotorChannelMode(int motor)
+    @Override public synchronized DcMotorController.RunMode getMotorChannelMode(int motor)
         {
         this.validateMotor(motor);
         byte b = this.i2cDeviceClient.read8(mpMotorRegMotorMode[motor]);
@@ -417,17 +407,17 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
     //
     // Our task here is to work around that 50ms issue
 
-    @Override public boolean isBusy(int motor)
+    static final int busyThreshold = 5;
+
+    @Override public synchronized boolean isBusy(int motor)
         {
         this.validateMotor(motor);
-        synchronized (this.isBusyHelpers[motor])
-            {
-            this.isBusyHelpers[motor].noteMotorPosition(this.getMotorCurrentPosition(motor));
-            return this.isBusyHelpers[motor].isBusy();
-            }
+
+        return getMotorChannelMode(motor)==RunMode.RUN_TO_POSITION &&
+                Math.abs(getMotorCurrentPosition(motor) - getMotorTargetPosition(motor)) > busyThreshold;
         }
 
-    @Override public void setMotorPower(int motor, double power)
+    @Override public synchronized void setMotorPower(int motor, double power)
         {
         this.validateMotor(motor);
         
@@ -442,7 +432,7 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
         this.write8(mpMotorRegMotorPower[motor], bPower);
         }
 
-    @Override public double getMotorPower(int motor)
+    @Override public synchronized double getMotorPower(int motor)
         {
         this.validateMotor(motor);
         byte bPower = this.i2cDeviceClient.read8(mpMotorRegMotorMode[motor]);
@@ -457,43 +447,39 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
         return Range.clip(power, powerMin, powerMax);
         }
 
-    @Override public void setMotorPowerFloat(int motor)
+    @Override public synchronized void setMotorPowerFloat(int motor)
         {
         this.validateMotor(motor);
         byte bPower = bPowerFloat;
         this.write8(mpMotorRegMotorPower[motor], bPower);
         }
 
-    @Override public boolean getMotorPowerFloat(int motor)
+    @Override public synchronized boolean getMotorPowerFloat(int motor)
         {
         this.validateMotor(motor);
         byte bPower = this.i2cDeviceClient.read8(mpMotorRegMotorMode[motor]);
         return bPower == bPowerFloat;
         }
 
-    @Override public void setMotorTargetPosition(int motor, int position)
+    @Override public synchronized void setMotorTargetPosition(int motor, int position)
         {
         this.validateMotor(motor);
-        synchronized (this.isBusyHelpers[motor])
-            {
-            this.isBusyHelpers[motor].noteTargetPositionSet(position);
-            byte[] bytes = TypeConversion.intToByteArray(position);
-            this.write(mpMotorRegTargetEncoderValue[motor], bytes);
-            }
+        byte[] bytes = TypeConversion.intToByteArray(position, ByteOrder.BIG_ENDIAN);
+        this.write(mpMotorRegTargetEncoderValue[motor], bytes);
         }
 
-    @Override public int getMotorTargetPosition(int motor)
+    @Override public synchronized int getMotorTargetPosition(int motor)
         {
         this.validateMotor(motor);
         byte[] bytes = this.i2cDeviceClient.read(mpMotorRegTargetEncoderValue[motor], cbEncoder);
-        return TypeConversion.byteArrayToInt(bytes);
+        return TypeConversion.byteArrayToInt(bytes, ByteOrder.BIG_ENDIAN);
         }
 
-    @Override public int getMotorCurrentPosition(int motor)
+    @Override public synchronized int getMotorCurrentPosition(int motor)
         {
         this.validateMotor(motor);
         byte[] bytes = this.i2cDeviceClient.read(mpMotorRegCurrentEncoderValue[motor], cbEncoder);
-        return TypeConversion.byteArrayToInt(bytes);
+        return TypeConversion.byteArrayToInt(bytes, ByteOrder.BIG_ENDIAN);
         }
     
     //----------------------------------------------------------------------------------------------
