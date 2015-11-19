@@ -1,6 +1,7 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import android.util.Log;
+import android.widget.Switch;
 
 import com.qualcomm.ftcrobotcontroller.customsensors.IMUSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -10,6 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
 import com.qualcomm.robotcore.exception.RobotCoreException;
+import java.lang.Math;
 
 /**
  * Created by Eric on 10/3/2015.
@@ -118,9 +120,9 @@ public class FTCCompetitionBase extends OpMode {
     }
 
     // Encoder Functions
-    public int getLeftEncoder(){ return LeftDrive1.getCurrentPosition(); }
+    public int getLeftEncoder(){ return Math.abs(LeftDrive1.getCurrentPosition()); }
     public void resetLeftEncoder(){ LeftDrive1.setMode(DcMotorController.RunMode.RESET_ENCODERS);}
-    public int getRightEncoder(){ return RightDrive1.getCurrentPosition(); }
+    public int getRightEncoder(){ return Math.abs(RightDrive1.getCurrentPosition()); }
     public void resetRightEncoder(){ RightDrive1.setMode(DcMotorController.RunMode.RESET_ENCODERS);}
 
     // Sensor Functions
@@ -142,6 +144,13 @@ public class FTCCompetitionBase extends OpMode {
         PullUpHook.setPower(Out ? -1.0 : (In ? 1.0 : 0));
     }
 
+    void pullUpMountain(boolean Activate){
+        if (Activate){
+            this.PullupHook(false, true);
+            this.ArcadeDrive(-0.30,0);
+        }
+    }
+
     // Dumper Functions
     public void DumpTrash(boolean left,boolean right){
         DumpServo.setPosition(left ? 1 : (right ? 0 : 0.5));
@@ -156,4 +165,49 @@ public class FTCCompetitionBase extends OpMode {
     public void AutonFlag(boolean left, boolean right){
         AutonFlag.setPosition(left ? AFLeft : (right ? AFRight : AFNeutral));
     }
+
+    // Autonimous Mode functions
+    enum DirectionSelect{left,right,both}
+
+
+    boolean atEncVal(DirectionSelect Select, int val){
+        switch (Select){
+            case left:
+                return (Math.abs(LeftDrive1.getCurrentPosition()) > val);
+            case right:
+                return (Math.abs(RightDrive1.getCurrentPosition()) > val);
+            case both:
+                return (Math.abs(LeftDrive1.getCurrentPosition()) > val && (Math.abs(LeftDrive1.getCurrentPosition()) > val));
+            default:
+                return false;
+        }
+    }
+
+    void setRunMode(DcMotorController.RunMode Mode){
+        LeftDrive1.setMode(Mode);
+        RightDrive1.setMode(Mode);
+    }
+
+    boolean hasEncoderReset(DcMotor check){
+        return (check.getCurrentPosition() == 0);
+    }
+
+    private final double power = 0.75;
+    boolean AutonDrive(int length, double ForwardPower, double LateralPower) {
+        // Always reset to false condition on check
+        boolean l_return = false;
+
+        // Ensure run mode is set to run with encoders
+        setRunMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+
+        // Check if at position currently
+        if (atEncVal(DirectionSelect.both, length)){
+            l_return = true;
+            setRunMode(DcMotorController.RunMode.RESET_ENCODERS);
+        }
+        return l_return;
+    }
+
+
+
 }

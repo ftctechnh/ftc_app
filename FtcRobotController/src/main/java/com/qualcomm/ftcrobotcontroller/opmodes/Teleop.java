@@ -21,11 +21,4 @@ public class Teleop extends FTCCompetitionBase {
         // Macros
         this.pullUpMountain(gamepad1.b);
     }
-
-    private void pullUpMountain(boolean Activate){
-        if (Activate){
-            this.PullupHook(false, true);
-            this.ArcadeDrive(-0.30,0);
-        }
-    }
 }
