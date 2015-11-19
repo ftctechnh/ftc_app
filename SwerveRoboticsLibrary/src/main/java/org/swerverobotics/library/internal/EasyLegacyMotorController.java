@@ -355,11 +355,22 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
     @Override public synchronized void setMotorChannelMode(int motor, DcMotorController.RunMode mode)
         {
         this.validateMotor(motor);
-        byte b = modeToByte(mode);
+        byte bNewMode = modeToByte(mode);
 
         // We write the whole byte, but only the lower five bits are actually writable
         // and we only ever use the lowest two as non zero.
-        this.write8(mpMotorRegMotorMode[motor], b);
+        this.write8(mpMotorRegMotorMode[motor], bNewMode);
+
+        // The mode switch doesn't happen instantaneously. Wait for it,
+        // so that the programmer's model is that he just needs to set the
+        // mode and be done.
+        for (;;)
+            {
+            byte bCurrentMode = this.i2cDeviceClient.read8(mpMotorRegMotorMode[motor]);
+            if (bCurrentMode == bNewMode)
+                break;
+            Thread.yield();;
+            }
 
         // If the mode is 'reset encoders', we don't want to return until the encoders have actually reset
         //      http://ftcforum.usfirst.org/showthread.php?4924-Use-of-RUN_TO_POSITION-in-LineraOpMode&highlight=reset+encoders
@@ -413,8 +424,11 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
         {
         this.validateMotor(motor);
 
-        return getMotorChannelMode(motor)==RunMode.RUN_TO_POSITION &&
-                Math.abs(getMotorCurrentPosition(motor) - getMotorTargetPosition(motor)) > busyThreshold;
+        int cur = getMotorCurrentPosition(motor);
+        int tar = getMotorTargetPosition(motor);
+        RunMode mode = getMotorChannelMode(motor);
+
+        return mode==RunMode.RUN_TO_POSITION && (Math.abs(cur - tar) > busyThreshold);
         }
 
     @Override public synchronized void setMotorPower(int motor, double power)
