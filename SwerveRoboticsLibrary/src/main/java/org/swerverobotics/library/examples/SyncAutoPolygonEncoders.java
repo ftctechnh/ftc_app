@@ -12,14 +12,15 @@ import org.swerverobotics.library.interfaces.*;
  * This opmode works with both legacy and modern motor controllers, and
  * expects two motors, named "motorLeft" and "motorRight".
  */
-@Autonomous(name="Autonomous Polygon (Sync, encoders)", group="Swerve Examples")
-public class SyncAutonomousPolygonEncoders extends SynchronousOpMode
+@Autonomous(name="Auto Polygon (Sync, encoders)", group="Swerve Examples")
+@Disabled
+public class SyncAutoPolygonEncoders extends SynchronousOpMode
     {
     DcMotor motorRight;
     DcMotor motorLeft;
 
     // The number of encoder ticks per motor shaft revolution. 1440 is correct
-    // for HiTechnic motors. Andy Mark motors are 1080 ticks per revolution.
+    // for HiTechnic motors. Andy Mark motors are 1120 ticks per revolution.
     final int    encRotation = 1440;
 
     // Just for simple demonstration, we have very short encoder increments
