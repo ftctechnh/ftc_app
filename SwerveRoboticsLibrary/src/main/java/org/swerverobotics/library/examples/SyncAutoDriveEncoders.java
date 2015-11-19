@@ -54,10 +54,6 @@ public class SyncAutoDriveEncoders extends SynchronousOpMode
 
         // Drive forward a while. The parameters here are arbitrary; they're just for illustration
         driveWithEncoders(4.7, 1.0);
-
-        // Stop the motors
-        this.motorLeft.setPower(0);
-        this.motorRight.setPower(0);
         }
 
     /** Drive (forward) the indicated number of motor shaft revolutions using the indicated power */
@@ -85,8 +81,12 @@ public class SyncAutoDriveEncoders extends SynchronousOpMode
             this.idle();
             }
 
+        // Now that we've arrived, kill the motors so they don't just sit there buzzing
+        this.motorLeft.setPower(0);
+        this.motorRight.setPower(0);
+
         // Always leave the screen looking pretty
-        telemetry.updateForced();
+        telemetry.updateNow();
         }
 
     //----------------------------------------------------------------------------------------------

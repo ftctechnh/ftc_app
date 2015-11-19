@@ -369,7 +369,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i20" class="altColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/TelemetryDashboardAndLog.html#updateForced--">updateForced</a></span>()</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/TelemetryDashboardAndLog.html#updateNow--">updateNow</a></span>()</code>
 <div class="block">Like <a href="../../../org/swerverobotics/library/TelemetryDashboardAndLog.html#update--"><code>update()</code></a>, but <em>always</em> transmits to the drive station.</div>
 </td>
 </tr>
@@ -629,18 +629,18 @@ public&nbsp;TelemetryDashboardAndLog(com.qualcomm.robotcore.robocol.Telemetry&nb
 </dl>
 </li>
 </ul>
-<a name="updateForced--">
+<a name="updateNow--">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>updateForced</h4>
-<pre>public&nbsp;boolean&nbsp;updateForced()</pre>
+<h4>updateNow</h4>
+<pre>public&nbsp;boolean&nbsp;updateNow()</pre>
 <div class="block">Like <a href="../../../org/swerverobotics/library/TelemetryDashboardAndLog.html#update--"><code>update()</code></a>, but <em>always</em> transmits to the drive station. Use with
- caution, as this can be expensive. A typical case when you'd want to use this occurs when
- you had been sending normal telemetry during some long-ish operation, but that operation
- is now complete, and you want the driver station telemetry to now accurately reflect the final
- state of the operation.</div>
+ caution, as this can get to be expensive if overused. A typical case when you'd want to
+ use this occurs when you had been sending normal telemetry during some long-ish operation,
+ but that operation is now complete, and you want the driver station telemetry to now
+ accurately reflect the final state of the operation.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>whether an update to the drive station was made or not (will always be true)</dd>
