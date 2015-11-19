@@ -17,8 +17,8 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":9,"i2":9,"i3":9,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9};
-var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"]};
+var methods = {"i0":9,"i1":9,"i2":9,"i3":41,"i4":9,"i5":9,"i6":9,"i7":9,"i8":9,"i9":9,"i10":9,"i11":9,"i12":9};
+var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],8:["t4","Concrete Methods"],32:["t6","Deprecated Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
 var tableTab = "tableTab";
@@ -149,7 +149,7 @@ extends java.lang.Object</pre>
 </a>
 <h3>Method Summary</h3>
 <table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
-<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t1" class="tableTab"><span><a href="javascript:show(1);">Static Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t6" class="tableTab"><span><a href="javascript:show(32);">Deprecated Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
 <tr>
 <th class="colFirst" scope="col">Modifier and Type</th>
 <th class="colLast" scope="col">Method and Description</th>
@@ -184,26 +184,42 @@ extends java.lang.Object</pre>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createEasyLegacyMotorController-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.DcMotor-com.qualcomm.robotcore.hardware.DcMotor-">createEasyLegacyMotorController</a></span>(com.qualcomm.robotcore.eventloop.opmode.OpMode&nbsp;context,
                                com.qualcomm.robotcore.hardware.DcMotor&nbsp;motor1,
                                com.qualcomm.robotcore.hardware.DcMotor&nbsp;motor2)</code>
-<div class="block">If the provided motors are using a legacy motor controller, swaps that controller out
- and installs an alternate 'EasyLegacyMotorController' DCMotorController implementation
- for the duration of the OpMode; if the motors are using a modern motor controller, the
- function has no effect.</div>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
+<td class="colFirst"><code>static void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createEasyMotorController-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.DcMotor-com.qualcomm.robotcore.hardware.DcMotor-">createEasyMotorController</a></span>(com.qualcomm.robotcore.eventloop.opmode.OpMode&nbsp;context,
+                         com.qualcomm.robotcore.hardware.DcMotor&nbsp;motor1,
+                         com.qualcomm.robotcore.hardware.DcMotor&nbsp;motor2)</code>
+<div class="block">If the provided motors are using a legacy motor controller, createEasyMotorController swaps
+ that controller out and installs an alternate 'EasyLegacyMotorController' DCMotorController
+ implementation for the duration of the OpMode.</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code>static void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createEasyServoController-com.qualcomm.robotcore.eventloop.opmode.OpMode-java.util.Collection-">createEasyServoController</a></span>(com.qualcomm.robotcore.eventloop.opmode.OpMode&nbsp;context,
+                         java.util.Collection&lt;com.qualcomm.robotcore.hardware.Servo&gt;&nbsp;servos)</code>
+<div class="block">Creates an alternate 'easy' implementation of the controller for the indicated collection
+ of servos, which must all share the same controller, and must be <em>all</em> the servos
+ which are found on that controller.</div>
+</td>
+</tr>
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>static II2cDevice</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createI2cDevice-com.qualcomm.robotcore.hardware.I2cController-int-">createI2cDevice</a></span>(com.qualcomm.robotcore.hardware.I2cController&nbsp;i2cController,
                int&nbsp;port)</code>
 <div class="block">Creates an II2Device instance on a specific port on an I2cDeviceController</div>
 </td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>static II2cDevice</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createI2cDevice-com.qualcomm.robotcore.hardware.I2cDevice-">createI2cDevice</a></span>(com.qualcomm.robotcore.hardware.I2cDevice&nbsp;i2cDevice)</code>
 <div class="block">Creates an II2cDevice interface around an I2cDevice.</div>
 </td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>static <a href="../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createI2cDeviceClient-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.I2cDevice-int-boolean-">createI2cDeviceClient</a></span>(com.qualcomm.robotcore.eventloop.opmode.OpMode&nbsp;context,
                      com.qualcomm.robotcore.hardware.I2cDevice&nbsp;i2cDevice,
@@ -212,7 +228,7 @@ extends java.lang.Object</pre>
 <div class="block">Create a new II2cDeviceClient on an I2cDevice instance.</div>
 </td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>static <a href="../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces">II2cDeviceClient</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createI2cDeviceClient-com.qualcomm.robotcore.eventloop.opmode.OpMode-org.swerverobotics.library.internal.II2cDevice-int-boolean-">createI2cDeviceClient</a></span>(com.qualcomm.robotcore.eventloop.opmode.OpMode&nbsp;context,
                      II2cDevice&nbsp;i2cDevice,
@@ -221,21 +237,21 @@ extends java.lang.Object</pre>
 <div class="block">Create a new II2cDeviceClient on an II2cDevice instance.</div>
 </td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>static <a href="../../../org/swerverobotics/library/interfaces/IOpModeLoopCounter.html" title="interface in org.swerverobotics.library.interfaces">IOpModeLoopCounter</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createLoopCounter-com.qualcomm.robotcore.eventloop.opmode.OpMode-">createLoopCounter</a></span>(com.qualcomm.robotcore.eventloop.opmode.OpMode&nbsp;opMode)</code>
 <div class="block">Creates an object that can report the number of times loop() has been called in both
  Synchronous and Linear OpModes.</div>
 </td>
 </tr>
-<tr id="i9" class="rowColor">
+<tr id="i11" class="rowColor">
 <td class="colFirst"><code>static com.qualcomm.robotcore.hardware.ColorSensor</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createSwerveColorSensor-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.ColorSensor-">createSwerveColorSensor</a></span>(com.qualcomm.robotcore.eventloop.opmode.OpMode&nbsp;context,
                        com.qualcomm.robotcore.hardware.ColorSensor&nbsp;target)</code>
 <div class="block">Creates an alternate implementation of the target color sensor.</div>
 </td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i12" class="altColor">
 <td class="colFirst"><code>static com.qualcomm.robotcore.hardware.ColorSensor</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/ClassFactory.html#createSwerveColorSensor-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.I2cController-int-int-org.swerverobotics.library.ClassFactory.SENSOR_FLAVOR-">createSwerveColorSensor</a></span>(com.qualcomm.robotcore.eventloop.opmode.OpMode&nbsp;context,
                        com.qualcomm.robotcore.hardware.I2cController&nbsp;controller,
@@ -267,39 +283,45 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="createEasyLegacyMotorController-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.DcMotor-com.qualcomm.robotcore.hardware.DcMotor-">
+<a name="createEasyMotorController-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.DcMotor-com.qualcomm.robotcore.hardware.DcMotor-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
-<h4>createEasyLegacyMotorController</h4>
-<pre>public static&nbsp;void&nbsp;createEasyLegacyMotorController(com.qualcomm.robotcore.eventloop.opmode.OpMode&nbsp;context,
-                                                   com.qualcomm.robotcore.hardware.DcMotor&nbsp;motor1,
-                                                   com.qualcomm.robotcore.hardware.DcMotor&nbsp;motor2)</pre>
-<div class="block">If the provided motors are using a legacy motor controller, swaps that controller out
- and installs an alternate 'EasyLegacyMotorController' DCMotorController implementation
- for the duration of the OpMode; if the motors are using a modern motor controller, the
- function has no effect.
+<h4>createEasyMotorController</h4>
+<pre>public static&nbsp;void&nbsp;createEasyMotorController(com.qualcomm.robotcore.eventloop.opmode.OpMode&nbsp;context,
+                                             com.qualcomm.robotcore.hardware.DcMotor&nbsp;motor1,
+                                             com.qualcomm.robotcore.hardware.DcMotor&nbsp;motor2)</pre>
+<div class="block">If the provided motors are using a legacy motor controller, createEasyMotorController swaps
+ that controller out and installs an alternate 'EasyLegacyMotorController' DCMotorController
+ implementation for the duration of the OpMode. If the motors are using a modern motor controller,
+ an analogous swap to an 'EasyModernMotorController' is made. If a matrix motor controller is in
+ use, this function has no effect. The APIs to easy legacy and modern motor controllers
+ are <em>identical</em>, which helps simplify programming.
 
  <p>EasyLegacyMotorController is implemented on top of an <a href="../../../org/swerverobotics/library/interfaces/II2cDeviceClient.html" title="interface in org.swerverobotics.library.interfaces"><code>II2cDeviceClient</code></a> instance
  which completely handles all the complexities of read vs write mode switching and the
  like, allowing the logic inside the controller itself to be extraordinarily simple.
  In particular, the manual mode switching and loop() counting necessary with the stock
  controller implementation is not needed. Just call the motor getPosition() or setPower()
- methods or what have you, and the necessary bookkeeping details
- will be taken care of.</p>
+ methods or what have you, and the necessary bookkeeping details will be taken care of.</p>
 
- <p>EasyLegacyMotorController is not tied to SynchronousOpMode or any other particular
- OpMode. It can be used, for example, from LinearOpMode, or, indeed, any thread that can
- tolerate operations that can take tens of milliseconds to run. In SynchronousOpMode,
- EasyLegacyMotorController is used automatically; in other OpModes, you'll have to manually
- call <a href="../../../org/swerverobotics/library/ClassFactory.html#createEasyLegacyMotorController-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.DcMotor-com.qualcomm.robotcore.hardware.DcMotor-"><code>createEasyLegacyMotorController(com.qualcomm.robotcore.eventloop.opmode.OpMode, com.qualcomm.robotcore.hardware.DcMotor, com.qualcomm.robotcore.hardware.DcMotor)</code></a> yourself.</p>
+ <p>The improvements in EasyModernMotorController are less dramatic, but still significant.
+ Of particular note is that write operations, including motor mode and power changes, happen
+ immediately rather than being deferred to the end of a loop() cycle. This significantly
+ simplifies the steps that are necessary to create code that uses a modern motor controller
+ reliably.</p>
 
- This method takes as parameters one or both motors that reside on a given legacy motor
+ <p>Easy motor controllers are not tied to SynchronousOpMode or any other particular
+ OpMode. They can be used, for example, from LinearOpModes. In SynchronousOpMode,
+ easy motor controllers are used automatically; in other OpModes, you'll have to manually
+ call <a href="../../../org/swerverobotics/library/ClassFactory.html#createEasyMotorController-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.DcMotor-com.qualcomm.robotcore.hardware.DcMotor-"><code>createEasyMotorController(com.qualcomm.robotcore.eventloop.opmode.OpMode, com.qualcomm.robotcore.hardware.DcMotor, com.qualcomm.robotcore.hardware.DcMotor)</code></a> yourself.</p>
+
+ This method takes as parameters one or both motors that reside on a given  motor
  controller. If two motors are provided, they must share the same controller, and conversely
  if two motors reside on a controller then both must be provided. The method creates a new
- EasyLegacyMotorController and installs it as the controller for the provided motors;
- the existing controller is disabled. When the current OpMode is complete, the processed
+ easy motor controller of the appropriate type and installs it as the controller for the provided
+ motors; the existing controller is disabled. When the current OpMode is complete, the processed
  is reversed.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
@@ -308,6 +330,45 @@ extends java.lang.Object</pre>
 <dd><code>motor2</code> - the possibly other motor controller on the same controller. May be null.</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../org/swerverobotics/library/examples/SynchMotorLoopPerf.html" title="class in org.swerverobotics.library.examples"><code>SynchMotorLoopPerf</code></a></dd>
+</dl>
+</li>
+</ul>
+<a name="createEasyLegacyMotorController-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.DcMotor-com.qualcomm.robotcore.hardware.DcMotor-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>createEasyLegacyMotorController</h4>
+<pre>@Deprecated
+public static&nbsp;void&nbsp;createEasyLegacyMotorController(com.qualcomm.robotcore.eventloop.opmode.OpMode&nbsp;context,
+                                                                com.qualcomm.robotcore.hardware.DcMotor&nbsp;motor1,
+                                                                com.qualcomm.robotcore.hardware.DcMotor&nbsp;motor2)</pre>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span>&nbsp;</div>
+</li>
+</ul>
+<a name="createEasyServoController-com.qualcomm.robotcore.eventloop.opmode.OpMode-java.util.Collection-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>createEasyServoController</h4>
+<pre>public static&nbsp;void&nbsp;createEasyServoController(com.qualcomm.robotcore.eventloop.opmode.OpMode&nbsp;context,
+                                             java.util.Collection&lt;com.qualcomm.robotcore.hardware.Servo&gt;&nbsp;servos)</pre>
+<div class="block">Creates an alternate 'easy' implementation of the controller for the indicated collection
+ of servos, which must all share the same controller, and must be <em>all</em> the servos
+ which are found on that controller.
+
+ A notable feature of the easy servo controller implementation is that position change
+ requests and other servo writes are issued immediately instead of being deferred to the
+ end of the next loop() cycle, which simplifies programming. This is similar to the
+ enhancements found in the easy motor controller. Some small bugs are also fixed.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>context</code> - the OpMode within which the creation is occurring</dd>
+<dd><code>servos</code> - the list of servos whose controller implementation we are to change.
+                  May not be null or empty.</dd>
+<dt><span class="seeLabel">See Also:</span></dt>
+<dd><a href="../../../org/swerverobotics/library/ClassFactory.html#createEasyMotorController-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.DcMotor-com.qualcomm.robotcore.hardware.DcMotor-"><code>createEasyMotorController(OpMode, DcMotor, DcMotor)</code></a></dd>
 </dl>
 </li>
 </ul>
