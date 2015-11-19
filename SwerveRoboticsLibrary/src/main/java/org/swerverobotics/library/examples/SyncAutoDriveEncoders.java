@@ -12,7 +12,7 @@ import org.swerverobotics.library.interfaces.*;
  * named "motorLeft" and "motorRight".
  */
 @Autonomous(name="Auto Drive (Sync)", group="Swerve Examples")
-// @Disabled
+@Disabled
 public class SyncAutoDriveEncoders extends SynchronousOpMode
     {
     //----------------------------------------------------------------------------------------------
