@@ -42,6 +42,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <color name="bright_red_text">#ff0a19</color>
   <color name="white">#FFFFFF</color>
   <color name="black">#000000</color>
-  <color name="river_blue">#000000</color>
+  <color name="river_blue">#3498db</color>
+  <color name="belize_blue">#2980b9</color>
   <color name="transparent_color">#00000000</color>
 </resources>

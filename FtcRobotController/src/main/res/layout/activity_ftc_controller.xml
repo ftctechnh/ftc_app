@@ -83,7 +83,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       android:layout_margin="10dp"/>
 
   </RelativeLayout>
-  <!-- end of black bar -->
+  <!-- end of blue bar -->
 
   <include layout="@layout/header"
            android:id="@+id/included_header"/>
