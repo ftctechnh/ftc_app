@@ -46,10 +46,10 @@ public class EasyModernMotorController extends EasyModernController implements D
             this.isBusyHelpers[i] = new IsBusyHelper();
         }
 
-    static DummyReadWriteRunnableStandard newDummyReadWriteRunnable(SerialNumber serialNumber)
+    static NoErrorReportingReadWriteRunnableStandard newDummyReadWriteRunnable(SerialNumber serialNumber)
         {
         RobotUsbDevice robotUsbDevice = new DummyRobotUsbDevice();
-        return new DummyReadWriteRunnableStandard(serialNumber, robotUsbDevice, MONITOR_LENGTH, START_ADDRESS, false);
+        return new NoErrorReportingReadWriteRunnableStandard(serialNumber, robotUsbDevice, MONITOR_LENGTH, START_ADDRESS, false);
         }
 
     public static DcMotorController create(OpMode context, DcMotorController target, DcMotor motor1, DcMotor motor2)
@@ -239,7 +239,11 @@ public class EasyModernMotorController extends EasyModernController implements D
     @Override public boolean isBusy(int motor)
         {
         this.validateMotor(motor);
-        return this.isBusyHelpers[motor].isBusy();
+        synchronized (this.isBusyHelpers[motor])
+            {
+            this.isBusyHelpers[motor].noteMotorPosition(this.getMotorCurrentPosition(motor));
+            return this.isBusyHelpers[motor].isBusy();
+            }
         }
 
     @Override public double getMotorPower(int motor)
@@ -288,6 +292,15 @@ public class EasyModernMotorController extends EasyModernController implements D
             if (mode == RunMode.RESET_ENCODERS)
                 {
                 assertTrue(!BuildConfig.DEBUG || this.getMotorCurrentPosition(motor)==0);
+                }
+            else if (mode == RunMode.RUN_TO_POSITION)
+                {
+                // Enforce that in RUN_TO_POSITION, we always need *positive* power. DCMotor will
+                // take care of that if we set power *after* we set the mode, but not the other way
+                // around. So we handle that here.
+                double power = getMotorPower(motor);
+                if (power < 0)
+                    setMotorPower(motor, Math.abs(power));
                 }
             }
         }
@@ -338,18 +351,6 @@ public class EasyModernMotorController extends EasyModernController implements D
     //      before the Busy bit will be set.
     //
     //----------------------------------------------------------------------------------------------
-
-    @Override
-    public void readComplete() throws InterruptedException
-        {
-        if (this.isArmed())
-            {
-            for (int motor = motorFirst; motor <= motorLast; motor++)
-                {
-                this.isBusyHelpers[motor].noteMotorPosition(this.getMotorCurrentPosition(motor));
-                }
-            }
-        }
 
     public static class IsBusyHelper
         {

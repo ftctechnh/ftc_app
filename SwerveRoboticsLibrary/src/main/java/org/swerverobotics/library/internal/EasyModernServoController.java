@@ -56,10 +56,10 @@ public class EasyModernServoController extends EasyModernController implements S
         this.findTargetNameAndMapping();
         }
 
-    static DummyReadWriteRunnableStandard newDummyReadWriteRunnable(SerialNumber serialNumber)
+    static NoErrorReportingReadWriteRunnableStandard newDummyReadWriteRunnable(SerialNumber serialNumber)
         {
         RobotUsbDevice robotUsbDevice = new DummyRobotUsbDevice();
-        return new DummyReadWriteRunnableStandard(serialNumber, robotUsbDevice, MONITOR_LENGTH, START_ADDRESS, false);
+        return new NoErrorReportingReadWriteRunnableStandard(serialNumber, robotUsbDevice, MONITOR_LENGTH, START_ADDRESS, false);
         }
 
     public static ServoController create(OpMode context, ServoController target, Collection<Servo> servos)

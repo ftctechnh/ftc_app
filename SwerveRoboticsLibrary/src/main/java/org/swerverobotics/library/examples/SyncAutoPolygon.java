@@ -4,13 +4,12 @@ import com.qualcomm.robotcore.hardware.*;
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.interfaces.*;
 
-
 /**
  * Documentation to come
  */
-@Autonomous(name="Autonomous Polygon (Sync)", group="Swerve Examples")
+@Autonomous(name="Auto Polygon (Sync)", group="Swerve Examples")
 @Disabled
-public class SyncAutonomousPolygon extends SynchronousOpMode
+public class SyncAutoPolygon extends SynchronousOpMode
     {
     DcMotor motorRight;
     DcMotor motorLeft;

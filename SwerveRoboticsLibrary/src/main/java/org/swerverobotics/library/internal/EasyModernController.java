@@ -13,7 +13,8 @@ import org.swerverobotics.library.*;
 import java.util.concurrent.*;
 
 /**
- * Common to both easy modern servo and motor controllers
+ * Base class common to both easy modern servo and motor controllers. Handles glue about
+ * talking to a ModernRobotics USB device, notably arming and disarming help.
  */
 public abstract class EasyModernController extends ModernRoboticsUsbDevice implements IOpModeStateTransitionEvents
     {
@@ -29,15 +30,17 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
     protected String                        targetName;
     protected HardwareMap.DeviceMapping     targetDeviceMapping;
     protected final RobotUsbDevice          robotUsbDevice;
+    protected final Object                  readAfterWriteLock = new Object();
+    protected boolean                       writePending;
 
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    public EasyModernController(OpMode context, ModernRoboticsUsbDevice target, DummyReadWriteRunnableStandard readWriteRunnable) throws RobotCoreException, InterruptedException
+    public EasyModernController(OpMode context, ModernRoboticsUsbDevice target, NoErrorReportingReadWriteRunnableStandard readWriteRunnable) throws RobotCoreException, InterruptedException
         {
         // We *have to* give a live ReadWriteRunnable to our parent constructor, so we grudgingly do so
-        super (target.getSerialNumber(), SwerveThreadContext.getEventLoopManager(), readWriteRunnable);
+        super(target.getSerialNumber(), SwerveThreadContext.getEventLoopManager(), readWriteRunnable);
 
         // Wait until the thing actually gets going
         readWriteRunnable.semaphore.acquire();
@@ -49,6 +52,7 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
         this.context          = context;
         this.eventLoopManager = SwerveThreadContext.getEventLoopManager();
         this.isArmed          = false;
+        this.writePending     = false;
 
         ReadWriteRunnableStandard readWriteRunnableStandard = MemberUtil.getReadWriteRunnableModernRoboticsUsbDevice(target);
         ReadWriteRunnableUsbHandler handler                 = MemberUtil.getHandlerOfReadWriteRunnableStandard(readWriteRunnableStandard);
@@ -98,7 +102,7 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
         try
             {
             ExecutorService service = Executors.newSingleThreadScheduledExecutor();
-            ReadWriteRunnableStandard rwRunnable = new DummyReadWriteRunnableStandard(usbDevice.getSerialNumber(), this.robotUsbDevice, cbMonitor, ibStart, false);
+            ReadWriteRunnableStandard rwRunnable = new NoErrorReportingReadWriteRunnableStandard(usbDevice.getSerialNumber(), this.robotUsbDevice, cbMonitor, ibStart, false);
             //
             MemberUtil.setExecutorServiceModernRoboticsUsbDevice(usbDevice, service);
             MemberUtil.setReadWriteRunnableModernRoboticsUsbDevice(usbDevice, rwRunnable);
@@ -110,6 +114,62 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
         catch (Exception e)
             {
             Util.handleCapturedException(e);
+            }
+        }
+
+    //----------------------------------------------------------------------------------------------
+    // Reading and writing
+    //
+    // The key thing here is that we will block reads to wait until any pending writes have
+    // completed before issuing, as that guarantees that they will see the effect of the writes.
+    //----------------------------------------------------------------------------------------------
+
+    @Override public void write(int address, byte[] data)
+        {
+        synchronized (this.readAfterWriteLock)
+            {
+            this.writePending = true;
+            super.write(address, data);
+            }
+        }
+
+    @Override public byte[] read(int address, int size)
+        {
+        // Make sure that any read we issue happens *after* any writes
+        // that have been queued but not yet been sent to the actual module.
+        synchronized (this.readAfterWriteLock)
+            {
+            while (this.writePending)
+                {
+                try {
+                    this.readAfterWriteLock.wait();
+                    }
+                catch (InterruptedException e)
+                    {
+                    Util.handleCapturedInterrupt(e);
+                    }
+                }
+
+            return super.read(address, size);
+            }
+        }
+
+    @Override public void writeComplete() throws InterruptedException
+        {
+        // Any previously issued writes are now in the hands of the USB module
+        synchronized (this.readAfterWriteLock)
+            {
+            super.writeComplete();
+            this.writePending = false;
+            this.readAfterWriteLock.notifyAll();
+            }
+        }
+
+    @Override public void readComplete() throws InterruptedException
+        {
+        synchronized (this.readAfterWriteLock)
+            {
+            super.readComplete();
             }
         }
 
@@ -156,18 +216,18 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
      * This class is a ReadWriteRunnableStandard but one that doesn't report any errors
      * due to connection failures in its blockUntilReady()
      */
-    static class DummyReadWriteRunnableStandard extends ReadWriteRunnableStandard
+    static class NoErrorReportingReadWriteRunnableStandard extends ReadWriteRunnableStandard
         {
         Semaphore semaphore = new Semaphore(0);
 
-        public DummyReadWriteRunnableStandard(SerialNumber serialNumber, RobotUsbDevice device, int monitorLength, int startAddress, boolean debug)
+        public NoErrorReportingReadWriteRunnableStandard(SerialNumber serialNumber, RobotUsbDevice device, int monitorLength, int startAddress, boolean debug)
             {
             super(serialNumber, device, monitorLength, startAddress, debug);
             }
 
         @Override public void run()
             {
-            Thread.currentThread().setName("DummyReadWriteRunnableStandard.run");
+            Thread.currentThread().setName("NoErrorReportingReadWriteRunnableStandard.run");
             this.semaphore.release();
             super.run();
             }

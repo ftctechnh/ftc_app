@@ -344,7 +344,6 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
         return true;    // unregister us
         }
 
-
     //----------------------------------------------------------------------------------------------
     // DcMotorController
     //----------------------------------------------------------------------------------------------
@@ -375,10 +374,26 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
             //      http://ftcforum.usfirst.org/showthread.php?4924-Use-of-RUN_TO_POSITION-in-LineraOpMode&highlight=reset+encoders
             //      http://ftcforum.usfirst.org/showthread.php?4567-Using-and-resetting-encoders-in-MIT-AI&p=19303&viewfull=1#post19303
             // For us, here, we believe we'll always *immediately* have that be true, as our writes
-            // to the USB device actually happen when we issue them.
+            // to the I2C device actually happen when we issue them.
+            //
+            // Or, at least, insofar as anything is actually *observable*: the write will be issued
+            // ahead of any subsequent reads or writes. Thus, the assertTrue here would never fire,
+            // since the getMotorCurrentPosition() would follow the write and see its effect. However,
+            // having the assert does unnecessarily slow things down. We'll keep it for a while, then
+            // probably comment it out.
+            //
             if (mode == RunMode.RESET_ENCODERS)
                 {
                 assertTrue(!BuildConfig.DEBUG || this.getMotorCurrentPosition(motor)==0);
+                }
+            else if (mode == RunMode.RUN_TO_POSITION)
+                {
+                // Enforce that in RUN_TO_POSITION, we always need *positive* power. DCMotor will
+                // take care of that if we set power *after* we set the mode, but not the other way
+                // around. So we handle that here.
+                double power = getMotorPower(motor);
+                if (power < 0)
+                    setMotorPower(motor, Math.abs(power));
                 }
             }
         }
