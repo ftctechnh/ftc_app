@@ -64,7 +64,7 @@ public abstract class AutonomousOpMode extends SynchronousOpMode {
                 leftMotorPower += increment;
                 rightMotorPower -= increment;
             }
-        }
+            }
 
         motorFrontRight.setPower(rightMotorPower);
         motorBackRight.setPower(rightMotorPower);
