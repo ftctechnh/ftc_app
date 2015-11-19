@@ -48,7 +48,7 @@ public class SyncAutoDriveEncoders extends SynchronousOpMode
         // to the positions, so we could live with whatever the encoders happen to presently read
         // just fine. That said, it's a little easier to interpret telemetry if we start them off
         // at zero, so we do that. But try commenting these lines out, and observe that the code
-        // continues to work just fine.
+        // continues to work just fine, even as you run the OpMode multiple times.
         this.motorLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         this.motorRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
 
