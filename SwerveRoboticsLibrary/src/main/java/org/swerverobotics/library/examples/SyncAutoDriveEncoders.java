@@ -79,14 +79,14 @@ public class SyncAutoDriveEncoders extends SynchronousOpMode
         this.motorRight.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
 
         // Wait until they are done
-        while (this.motorRight.isBusy() || this.motorRight.isBusy())
+        while (this.motorLeft.isBusy() || this.motorRight.isBusy())
             {
             telemetry.update();
             this.idle();
             }
 
         // Always leave the screen looking pretty
-        telemetry.update();
+        telemetry.updateForced();
         }
 
     //----------------------------------------------------------------------------------------------
@@ -96,13 +96,13 @@ public class SyncAutoDriveEncoders extends SynchronousOpMode
     void composeDashboard()
         {
         telemetry.addLine(
-                telemetry.item("left pos: ", new IFunc<Object>() { public Object value() { return motorLeft.getCurrentPosition(); }}),
+                telemetry.item("left: ", new IFunc<Object>() { public Object value() { return motorLeft.getCurrentPosition(); }}),
                 telemetry.item("target: ",   new IFunc<Object>() { public Object value() { return motorLeft.getTargetPosition(); }}),
                 telemetry.item("mode: ",     new IFunc<Object>() { public Object value() { return format(motorLeft.getMode()); }})
             );
 
         telemetry.addLine(
-                telemetry.item("right pos: ", new IFunc<Object>() { public Object value() { return motorRight.getCurrentPosition(); }}),
+                telemetry.item("right: ", new IFunc<Object>() { public Object value() { return motorRight.getCurrentPosition(); }}),
                 telemetry.item("target: ",    new IFunc<Object>() { public Object value() { return motorRight.getTargetPosition(); }}),
                 telemetry.item("mode: ",      new IFunc<Object>() { public Object value() { return format(motorRight.getMode()); }})
             );

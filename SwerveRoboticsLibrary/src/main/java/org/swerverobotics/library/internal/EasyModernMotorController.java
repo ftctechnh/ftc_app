@@ -25,7 +25,6 @@ public class EasyModernMotorController extends EasyModernController implements D
     // State
     //----------------------------------------------------------------------------------------------
 
-    private final IsBusyHelper[]                     isBusyHelpers;
     private DcMotor                                  motor1;
     private DcMotor                                  motor2;
     private final ModernRoboticsUsbDcMotorController target;
@@ -40,10 +39,6 @@ public class EasyModernMotorController extends EasyModernController implements D
 
         this.target  = target;
         this.findTargetNameAndMapping();
-
-        this.isBusyHelpers = new IsBusyHelper[motorLast +1];
-        for (int i = 0; i < this.isBusyHelpers.length; i++)
-            this.isBusyHelpers[i] = new IsBusyHelper();
         }
 
     static NoErrorReportingReadWriteRunnableStandard newDummyReadWriteRunnable(SerialNumber serialNumber)
@@ -199,54 +194,70 @@ public class EasyModernMotorController extends EasyModernController implements D
     // DcMotorController
     //----------------------------------------------------------------------------------------------
 
-    @Override public int getMotorCurrentPosition(int motor)
+    @Override public synchronized int getMotorCurrentPosition(int motor)
         {
         this.validateMotor(motor);
         byte[] bytes = this.read(ADDRESS_MOTOR_CURRENT_ENCODER_VALUE_MAP[motor], 4);
-        return TypeConversion.byteArrayToInt(bytes);
+        return TypeConversion.byteArrayToInt(bytes, ByteOrder.BIG_ENDIAN);
         }
 
-    @Override public int getMotorTargetPosition(int motor)
+    @Override public synchronized int getMotorTargetPosition(int motor)
         {
         this.validateMotor(motor);
         byte[] rgbPosition = this.read(ADDRESS_MOTOR_TARGET_ENCODER_VALUE_MAP[motor], 4);
-        return TypeConversion.byteArrayToInt(rgbPosition);
+        return TypeConversion.byteArrayToInt(rgbPosition, ByteOrder.BIG_ENDIAN);
         }
 
-    @Override public void setMotorTargetPosition(int motor, int position)
+    @Override public synchronized void setMotorTargetPosition(int motor, int position)
         {
         this.validateMotor(motor);
-        synchronized (this.isBusyHelpers[motor])
-            {
-            this.isBusyHelpers[motor].noteTargetPositionSet(position);
-            this.write(ADDRESS_MOTOR_TARGET_ENCODER_VALUE_MAP[motor], TypeConversion.intToByteArray(position));
-            }
+        this.write(ADDRESS_MOTOR_TARGET_ENCODER_VALUE_MAP[motor], TypeConversion.intToByteArray(position, ByteOrder.BIG_ENDIAN));
         }
 
-    @Override public boolean getMotorPowerFloat(int motor)
+    @Override public synchronized boolean getMotorPowerFloat(int motor)
         {
         this.validateMotor(motor);
         byte bPower = this.read(ADDRESS_MOTOR_POWER_MAP[motor]);
         return bPower == bPowerFloat;
         }
 
-    @Override public void setMotorPowerFloat(int motor)
+    @Override public synchronized void setMotorPowerFloat(int motor)
         {
         this.validateMotor(motor);
         this.write(ADDRESS_MOTOR_POWER_MAP[motor], new byte[]{(byte) bPowerFloat});
         }
 
-    @Override public boolean isBusy(int motor)
+    //----------------------------------------------------------------------------------------------
+    // Support
+    // http://ftcforum.usfirst.org/showthread.php?4639-New-release-of-FTC-SDK-and-FTC-apps-are-out-there&p=17430&viewfull=1#post17430
+    // http://ftcforum.usfirst.org/showthread.php?5369-DC-motor-controller-run-mode-definitions&p=20960&viewfull=1#post20960
+    //
+    // From the HiTechnic Motor Controller specification (and we guess that the Modern Motor Controller is similar):
+    //
+    //      The Run to position command will cause the firmware to run the motor to make the current encoder
+    //      value to become equal to the target encoder value. It will do this using a maximum rotation rate
+    //      as defined by the motor power byte. It will hold this position in a servo like mode until the Run
+    //      to position command is changed or the target encoder value is changed. While the Run to position
+    //      command is executing, the Busy bit will be set. Once the target position is achieved, the Busy bit
+    //      will be cleared. There may be a delay of up to 50mS after a Run to position command is initiated
+    //      before the Busy bit will be set.
+    //
+    //----------------------------------------------------------------------------------------------
+
+    static final int busyThreshold = 5;
+
+    @Override public synchronized boolean isBusy(int motor)
         {
         this.validateMotor(motor);
-        synchronized (this.isBusyHelpers[motor])
-            {
-            this.isBusyHelpers[motor].noteMotorPosition(this.getMotorCurrentPosition(motor));
-            return this.isBusyHelpers[motor].isBusy();
-            }
+
+        int cur = getMotorCurrentPosition(motor);
+        int tar = getMotorTargetPosition(motor);
+        RunMode mode = getMotorChannelMode(motor);
+
+        return mode==RunMode.RUN_TO_POSITION && (Math.abs(cur - tar) > busyThreshold);
         }
 
-    @Override public double getMotorPower(int motor)
+    @Override public synchronized double getMotorPower(int motor)
         {
         this.validateMotor(motor);
         byte bPower = this.read(ADDRESS_MOTOR_POWER_MAP[motor]);
@@ -261,7 +272,7 @@ public class EasyModernMotorController extends EasyModernController implements D
         return Range.clip(power, powerMin, powerMax);
         }
 
-    @Override public void setMotorPower(int motor, double power)
+    @Override public synchronized void setMotorPower(int motor, double power)
         {
         this.validateMotor(motor);
         power = Range.clip(power, powerMin, powerMax);   // NB: robot controller runtime previously threw on invalid range instead of clipping
@@ -269,48 +280,60 @@ public class EasyModernMotorController extends EasyModernController implements D
         this.write(ADDRESS_MOTOR_POWER_MAP[motor], new byte[]{(byte)((int)(power))});
         }
 
-    @Override public RunMode getMotorChannelMode(int motor)
+    @Override public synchronized RunMode getMotorChannelMode(int motor)
         {
         this.validateMotor(motor);
         return byteToRunMode(this.read(ADDRESS_MOTOR_MODE_MAP[motor]));
         }
 
-    @Override public void setMotorChannelMode(int motor, RunMode mode)
+    @Override public synchronized void setMotorChannelMode(int motor, RunMode mode)
         {
         this.validateMotor(motor);
-        byte bMode = runModeToByte(mode);
-        synchronized (this.isBusyHelpers[motor])
-            {
-            this.write(ADDRESS_MOTOR_MODE_MAP[motor], bMode);
-            this.isBusyHelpers[motor].noteMotorMode(mode);
+        byte bNewMode = runModeToByte(mode);
 
-            // If the mode is 'reset encoders', we don't want to return until the encoders have actually reset
-            //      http://ftcforum.usfirst.org/showthread.php?4924-Use-of-RUN_TO_POSITION-in-LineraOpMode&highlight=reset+encoders
-            //      http://ftcforum.usfirst.org/showthread.php?4567-Using-and-resetting-encoders-in-MIT-AI&p=19303&viewfull=1#post19303
-            // For us, here, we believe we'll always *immediately* have that be true, as our writes
-            // to the USB device actually happen when we issue them.
-            if (mode == RunMode.RESET_ENCODERS)
-                {
-                assertTrue(!BuildConfig.DEBUG || this.getMotorCurrentPosition(motor)==0);
-                }
-            else if (mode == RunMode.RUN_TO_POSITION)
-                {
-                // Enforce that in RUN_TO_POSITION, we always need *positive* power. DCMotor will
-                // take care of that if we set power *after* we set the mode, but not the other way
-                // around. So we handle that here.
-                double power = getMotorPower(motor);
-                if (power < 0)
-                    setMotorPower(motor, Math.abs(power));
-                }
+        this.write(ADDRESS_MOTOR_MODE_MAP[motor], bNewMode);
+
+        // The mode switch doesn't happen instantaneously. Wait for it,
+        // so that the programmer's model is that he just needs to set the
+        // mode and be done.
+        for (;;)
+            {
+            byte bCurrentMode = this.read(ADDRESS_MOTOR_MODE_MAP[motor]);
+            if (bCurrentMode == bNewMode)
+                break;
+
+            // The above read() read from cache. To avoid flooding the system,
+            // we wait for the next read cycle before we try again: the cache
+            // isn't going to change until then.
+            waitForReadComplete();
+            }
+
+        // If the mode is 'reset encoders', we don't want to return until the encoders have actually reset
+        //      http://ftcforum.usfirst.org/showthread.php?4924-Use-of-RUN_TO_POSITION-in-LineraOpMode&highlight=reset+encoders
+        //      http://ftcforum.usfirst.org/showthread.php?4567-Using-and-resetting-encoders-in-MIT-AI&p=19303&viewfull=1#post19303
+        // For us, here, we believe we'll always *immediately* have that be true, as our writes
+        // to the USB device actually happen when we issue them.
+        if (mode == RunMode.RESET_ENCODERS)
+            {
+            assertTrue(!BuildConfig.DEBUG || this.getMotorCurrentPosition(motor)==0);
+            }
+        else if (mode == RunMode.RUN_TO_POSITION)
+            {
+            // Enforce that in RUN_TO_POSITION, we always need *positive* power. DCMotor will
+            // take care of that if we set power *after* we set the mode, but not the other way
+            // around. So we handle that here.
+            double power = getMotorPower(motor);
+            if (power < 0)
+                setMotorPower(motor, Math.abs(power));
             }
         }
 
-    @Override public DeviceMode getMotorControllerDeviceMode()
+    @Override public synchronized DeviceMode getMotorControllerDeviceMode()
         {
         return DeviceMode.READ_WRITE;
         }
 
-    @Override public void setMotorControllerDeviceMode(DeviceMode deviceMode)
+    @Override public synchronized void setMotorControllerDeviceMode(DeviceMode deviceMode)
         {
         // Nothing to do
         }
@@ -333,89 +356,6 @@ public class EasyModernMotorController extends EasyModernController implements D
         int tenBits       = (buffer.getShort()>>6) & 0x3FF;
         double result     = ((double)tenBits) * 0.020;
         return result;
-        }
-
-    //----------------------------------------------------------------------------------------------
-    // Support
-    // http://ftcforum.usfirst.org/showthread.php?4639-New-release-of-FTC-SDK-and-FTC-apps-are-out-there&p=17430&viewfull=1#post17430
-    // http://ftcforum.usfirst.org/showthread.php?5369-DC-motor-controller-run-mode-definitions&p=20960&viewfull=1#post20960
-    //
-    // From the HiTechnic Motor Controller specification (and we guess that the Modern Motor Controller is similar):
-    //
-    //      The Run to position command will cause the firmware to run the motor to make the current encoder
-    //      value to become equal to the target encoder value. It will do this using a maximum rotation rate
-    //      as defined by the motor power byte. It will hold this position in a servo like mode until the Run
-    //      to position command is changed or the target encoder value is changed. While the Run to position
-    //      command is executing, the Busy bit will be set. Once the target position is achieved, the Busy bit
-    //      will be cleared. There may be a delay of up to 50mS after a Run to position command is initiated
-    //      before the Busy bit will be set.
-    //
-    //----------------------------------------------------------------------------------------------
-
-    public static class IsBusyHelper
-        {
-        //------------------------------------------------------------------------------------------
-        // State
-        //------------------------------------------------------------------------------------------
-
-        static final int busyThreshold = 5;
-
-        int     targetPosition;
-        int     currentPosition;
-        boolean targetPositionSet;
-        boolean currentPositionSet;
-        RunMode motorMode;
-
-        //------------------------------------------------------------------------------------------
-        // Construction
-        //------------------------------------------------------------------------------------------
-
-        public IsBusyHelper()
-            {
-            this.targetPosition      = 0;
-            this.currentPosition     = 0;
-            this.targetPositionSet   = false;
-            this.currentPositionSet  = false;
-            this.motorMode           = null;
-            }
-
-        //------------------------------------------------------------------------------------------
-        // Operations
-        //------------------------------------------------------------------------------------------
-
-        public synchronized boolean isBusy()
-            {
-            if (this.motorMode == RunMode.RUN_TO_POSITION)
-                {
-                if (this.currentPositionSet && this.targetPositionSet)
-                    {
-                    return Math.abs(this.currentPosition - this.targetPosition) > busyThreshold;
-                    }
-                }
-            return false;
-            }
-
-        public synchronized void noteMotorMode(RunMode motorMode)
-            {
-            this.motorMode = motorMode;
-            if (this.motorMode == RunMode.RESET_ENCODERS)
-                {
-                this.currentPosition = 0;
-                this.currentPositionSet = true;
-                }
-            }
-
-        public synchronized void noteTargetPositionSet(int position)
-            {
-            this.targetPosition = position;
-            this.targetPositionSet = true;
-            }
-
-        public synchronized void noteMotorPosition(int position)
-            {
-            this.currentPosition = position;
-            this.currentPositionSet = true;
-            }
         }
 
     //----------------------------------------------------------------------------------------------
