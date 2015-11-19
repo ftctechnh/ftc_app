@@ -71,7 +71,7 @@ import org.swerverobotics.library.interfaces.*;
  *
  */
 @TeleOp(name="AdafruitRGBExample")
-public class AdafruitRGBExample extends SynchronousOpMode {
+public class TestColor extends SynchronousOpMode {
 
   ColorSensor sensorRGB;
   float hue;

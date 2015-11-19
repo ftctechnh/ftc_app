@@ -44,7 +44,7 @@ import java.util.*;
  *
  * Our immediate goal here is to build a notification mechanism for both these situations.
  * So we build this weird beast that is both a motor and its own controller as that's the
- * most efficient way to accomplish the teast.
+ * most efficient way to accomplish the test.
  */
 public class RobotStateTransitionNotifier extends DcMotor implements DcMotorController
     {
@@ -86,7 +86,7 @@ public class RobotStateTransitionNotifier extends DcMotor implements DcMotorCont
     private static RobotStateTransitionNotifier create(HardwareMap map)
         {
         // Only need to create one instance per hardwareMap.
-        if (!ThunkingHardwareFactory.contains(map.dcMotorController, shutdownHookName))
+        if (!Util.contains(map.dcMotorController, shutdownHookName))
             {
             RobotStateTransitionNotifier hook = new RobotStateTransitionNotifier(map);
             map.dcMotorController.put(shutdownHookName, hook);
