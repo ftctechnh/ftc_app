@@ -305,7 +305,7 @@ public class EasyModernMotorController extends EasyModernController implements D
             // The above read() read from cache. To avoid flooding the system,
             // we wait for the next read cycle before we try again: the cache
             // isn't going to change until then.
-            waitForReadComplete();
+            waitForNextReadComplete();
             }
 
         // If the mode is 'reset encoders', we don't want to return until the encoders have actually reset
