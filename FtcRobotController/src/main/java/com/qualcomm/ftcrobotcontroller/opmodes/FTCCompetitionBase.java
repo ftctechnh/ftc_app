@@ -144,6 +144,13 @@ public class FTCCompetitionBase extends OpMode {
         PullUpHook.setPower(Out ? -1.0 : (In ? 1.0 : 0));
     }
 
+    void pullUpMountain(boolean Activate){
+        if (Activate){
+            this.PullupHook(false, true);
+            this.ArcadeDrive(-0.30,0);
+        }
+    }
+
     // Dumper Functions
     public void DumpTrash(boolean left,boolean right){
         DumpServo.setPosition(left ? 1 : (right ? 0 : 0.5));

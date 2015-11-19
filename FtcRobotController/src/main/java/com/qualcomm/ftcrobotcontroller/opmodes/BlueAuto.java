@@ -10,11 +10,12 @@ public class BlueAuto extends FTCCompetitionBase {
 
     Dstate dstate;
     Astate astate;
-    boolean EncoderTrigger;
+    boolean EncoderTrigger, HookRelease;
 
     BlueAuto(){
         dstate = Dstate.Stage1;
         astate = Astate.Stage1;
+        HookRelease = false;
     }
 
     // TODO: 11/15/2015 ensure correct cycling
@@ -41,12 +42,13 @@ public class BlueAuto extends FTCCompetitionBase {
             // TODO: 11/15/2015 Drive Backwards to Drive on Ramp
             case Stage3:
                 if (AutonDrive(750, -0.75D, 0.0D)){
-                    dstate = Dstate.Stage4;
+                    //dstate = Dstate.Stage4;
                     astate = Astate.Stage2;
                 }
                 break;
             // TODO: 11/15/2015 Winch up when ready 
             case Stage4:
+                this.pullUpMountain(true);
                 break;
         }
     }
@@ -61,16 +63,35 @@ public class BlueAuto extends FTCCompetitionBase {
             // TODO: 11/15/2015 Attach to bar 
             case Stage2:
                 if(getRuntime() > 500000){
-                    //Stop Tape Measure and start pushing down
+                    //Stop Tape Measure, start pushing down
+                    astate = Astate.Stage3;
+                    this.PullupHook(false, false);
+                    resetStartTime();
                 }
                 else{
                     // run tape measure
+                    this.PullupHook(true, false);
                 }
+
+                // TODO: 11/18/2015 Operate Drop hook
+                if(!HookRelease){
+                    this.AutonFlag(true, false);
+                    HookRelease = true;
+                }
+
                 break;
             // TODO: 11/15/2015 Push down the tape measure
             case Stage3:
-                // Pull up tape measure
-
+                // start pushing down tape
+                if (getRuntime() > 5000){
+                    // Stop pushing down tape
+                    this.setArmTilt(0);
+                    dstate = Dstate.Stage4;
+                }
+                else{
+                    // Start pushing down tape
+                    this.setArmTilt(-1.0);
+                }
                 break;
             case Stage4:
                 // stop tape measure?
