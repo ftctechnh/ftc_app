@@ -40,6 +40,7 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.hardware.usb.UsbManager;
+import android.net.wifi.p2p.WifiP2pDevice;
 import android.os.*;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -76,6 +77,7 @@ import static junit.framework.Assert.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
+import java.util.regex.Pattern;
 
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.internal.*;
@@ -397,6 +399,8 @@ public class FtcRobotControllerActivity extends Activity {
 
     //==============================================================================================
 
+    public static String LOGGING_TAG = SynchronousOpMode.LOGGING_TAG;
+
     /**
      * We are being notified that the FTC robot controller activity is being shut down.
      *
@@ -417,7 +421,7 @@ public class FtcRobotControllerActivity extends Activity {
         super.onDestroy();
 
         // Commit suicide
-        Log.i(SynchronousOpMode.LOGGING_TAG, "FtcRobotControllerActivity committing process suicide");
+        Log.i(LOGGING_TAG, "FtcRobotControllerActivity committing process suicide");
         int pid = android.os.Process.myPid();
         android.os.Process.killProcess(pid);
         }
@@ -516,6 +520,7 @@ public class FtcRobotControllerActivity extends Activity {
 
         }
 
+
     class SwerveUpdateUIHook extends UpdateUI
     // Hook used to augment the user interface
         {
@@ -525,6 +530,10 @@ public class FtcRobotControllerActivity extends Activity {
 
         FtcRobotControllerActivity activity;
         FtcRobotControllerService  controllerService;
+        Pattern                    legalWifiDirectNamePattern;
+        Pattern                    legalOsPattern1;
+        Pattern                    legalOsPattern2;
+        Pattern                    telephonePeerPattern;
 
         //------------------------------------------------------------------------------------------
         // Construction
@@ -535,6 +544,23 @@ public class FtcRobotControllerActivity extends Activity {
             super(activity, dimmer);
             this.activity = activity;
             this.controllerService = null;
+
+            this.legalOsPattern1            = Pattern.compile("4\\.2\\.\\d");
+            this.legalOsPattern2            = Pattern.compile("4\\.4\\.\\d");
+
+            /* The rule about how robot controllers and driver stations are to be named is the following:
+                 <RS02> Each Team MUST “name” their Robot Controller with their official FTC Team
+                 number and –RC (e.g. “1234-RC”). Each Team MUST “name” their Driver Station with
+                 their official FTC Team number and –DS (e.g. 1234-DS). Spare Android devices
+                 should be named with the Team number followed by a hyphen then a letter designation
+                 beginning with “B” (e.g. “1234-B-RC”, “1234-C-RC”).
+               We're going to enforce that here.
+            */
+            this.legalWifiDirectNamePattern = Pattern.compile("^\\d{1,5}(-[B-Z])?-(RC|DS)", Pattern.CASE_INSENSITIVE);
+
+            // We match for all 'telephone's per the Wifi Simple Configuration Technical Specification v2.0.4.
+            // See Table 41 in that document. Example: "10-0050F204-5".
+            this.telephonePeerPattern = Pattern.compile("10-0050F204-\\d+", Pattern.CASE_INSENSITIVE);
             }
 
         @Override
@@ -547,6 +573,26 @@ public class FtcRobotControllerActivity extends Activity {
         //------------------------------------------------------------------------------------------
         // Operations
         //------------------------------------------------------------------------------------------
+
+        boolean isValidWifiDirectName(String name)
+            {
+            return this.legalWifiDirectNamePattern.matcher(name).matches();
+            }
+
+        /** Is this peer a driver station? If in doubt, answer 'no'*/
+        boolean isDriverStation(WifiP2pDevice peer)
+            {
+            return this.telephonePeerPattern.matcher(peer.primaryDeviceType).matches();
+            }
+
+        void reportWifiDirectError(String format, Object... args)
+            {
+            String message = String.format(format, args);
+            // Show the message in the log
+            Log.w(LOGGING_TAG, String.format("wifi direct error: %s", message));
+            // Make the message appear on the driver station (only the first one will actually appear)
+            RobotLog.setGlobalErrorMsg(message);
+            }
 
         class CallbackHook extends UpdateUI.Callback
             {
@@ -573,9 +619,28 @@ public class FtcRobotControllerActivity extends Activity {
                 {
                 super.wifiDirectUpdate(event);
 
+                WifiDirectAssistant assistant = controllerService.getWifiDirectAssistant();
+
+                // Check the robot controller name for legality
+                String robotControllerName = assistant.getDeviceName();
+                if (!isValidWifiDirectName(robotControllerName))
+                    reportWifiDirectError("\"%s\" is not a legal robot controller name (see <RS02>)", robotControllerName);
+
+                // We'd like to check all the peers as well, but some of them may not be actually
+                // the driver station but instead, e.g., development laptops. So we need to be a
+                // little careful.
+                for (WifiP2pDevice peer : assistant.getPeers())
+                    {
+                    if (isDriverStation(peer))
+                        {
+                        if (!isValidWifiDirectName(peer.deviceName))
+                            reportWifiDirectError("\"%s\" is not a legal driver station name (see <RS02>)", peer.deviceName);
+                        }
+                    }
+
                 final String message = controllerService == null
                         ? ""
-                        : String.format("Wifi Direct passphrase: %s", controllerService.getWifiDirectAssistant().getPassphrase());
+                        : String.format("Wifi Direct passphrase: %s", assistant.getPassphrase());
 
                 SwerveUpdateUIHook.this.activity.runOnUiThread(new Runnable()
                     {
