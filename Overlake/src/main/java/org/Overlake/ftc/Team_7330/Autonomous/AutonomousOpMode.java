@@ -1,4 +1,4 @@
-package org.Overlake.ftc.Team_7330.Autonomous;
+package org.overlake.ftc.team_7330.Autonomous;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
