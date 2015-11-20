@@ -637,45 +637,49 @@ public class FtcRobotControllerActivity extends Activity {
                 {
                 super.wifiDirectUpdate(event);
 
-                WifiDirectAssistant assistant = controllerService.getWifiDirectAssistant();
-
-                // Check the robot controller name for legality
-                String robotControllerName = assistant.getDeviceName();
-                if (!isValidWifiDirectName(robotControllerName))
+                if (controllerService != null)
                     {
-                    if (containsNewline(robotControllerName))
-                        reportWifiDirectError("robot controller name \"%s\" contains a carriage return: PLEASE FIX immediately", withoutNewlines(robotControllerName));
-                    else
-                        reportWifiDirectError("\"%s\" is not a legal robot controller name (see <RS02>)", robotControllerName);
-                    }
+                    WifiDirectAssistant assistant = controllerService.getWifiDirectAssistant();
 
-                // We'd like to check all the peers as well, but some of them may not be actually
-                // the driver station but instead, e.g., development laptops. So we need to be a
-                // little careful.
-                for (WifiP2pDevice peer : assistant.getPeers())
-                    {
-                    if (isDriverStation(peer))
+                    // Check the robot controller name for legality
+                    String robotControllerName = assistant.getDeviceName();
+                    if (!isValidWifiDirectName(robotControllerName))
                         {
-                        if (!isValidWifiDirectName(peer.deviceName))
+                        if (containsNewline(robotControllerName))
+                            reportWifiDirectError("robot controller name \"%s\" contains a carriage return: PLEASE FIX immediately", withoutNewlines(robotControllerName));
+                        else
+                            reportWifiDirectError("\"%s\" is not a legal robot controller name (see <RS02>)", robotControllerName);
+                        }
+
+                    // We'd like to check all the peers as well, but some of them may not be actually
+                    // the driver station but instead, e.g., development laptops. So we need to be a
+                    // little careful.
+                    for (WifiP2pDevice peer : assistant.getPeers())
+                        {
+                        if (isDriverStation(peer))
                             {
-                            if (containsNewline(peer.deviceName))
-                                reportWifiDirectError("driver station name \"%s\" contains a carriage return: PLEASE FIX immediately", withoutNewlines(peer.deviceName));
-                            else
-                                reportWifiDirectError("\"%s\" is not a legal driver station name (see <RS02>)", peer.deviceName);
+                            if (!isValidWifiDirectName(peer.deviceName))
+                                {
+                                if (containsNewline(peer.deviceName))
+                                    reportWifiDirectError("driver station name \"%s\" contains a carriage return: PLEASE FIX immediately", withoutNewlines(peer.deviceName));
+                                else
+                                    reportWifiDirectError("\"%s\" is not a legal driver station name (see <RS02>)", peer.deviceName);
+                                }
                             }
                         }
                     }
 
                 final String message = controllerService == null
                         ? ""
-                        : String.format("Wifi Direct passphrase: %s", assistant.getPassphrase());
+                        : String.format("Wifi Direct passphrase: %s", controllerService.getWifiDirectAssistant().getPassphrase());
 
                 SwerveUpdateUIHook.this.activity.runOnUiThread(new Runnable()
+                {
+                @Override
+                public void run()
                     {
-                    @Override public void run()
-                        {
-                        activity.textWifiDirectPassphrase.setText(message);
-                        }
+                    activity.textWifiDirectPassphrase.setText(message);
+                    }
                     });
                 }
             }
