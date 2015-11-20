@@ -40,9 +40,9 @@ public class DucksTeleOp extends OpMode {
 //winch in and out
         if(gamepad1.a){
             winch.setPower(1);
-            winchwheel.setPower(1);
+            winchwheel.setPower(.8);
         } else if(gamepad1.b){
-            winch.setPower(-.8);
+            winch.setPower(-1);
             winchwheel.setPower(-1);
         } else{
             winch.setPower(0);

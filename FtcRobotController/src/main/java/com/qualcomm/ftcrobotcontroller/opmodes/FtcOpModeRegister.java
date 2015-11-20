@@ -64,7 +64,7 @@ public class FtcOpModeRegister implements OpModeRegister {
   //  manager.register("MotorMove",MotorMove.class);
     manager.register("MotorMoveAutonomouse", MotorMoveAutonomouse.class);
     manager.register("DucksTeleOp",DucksTeleOp.class);
-    manager.register("DucksAutonomous",DucksAtonomous.class);
+    manager.register("DucksAutonomous",DucksAutonomous.class);
 //    manager.register("ColorSensorAutonomouse", ColorSensorAutonomouse.class);
 
     /*
