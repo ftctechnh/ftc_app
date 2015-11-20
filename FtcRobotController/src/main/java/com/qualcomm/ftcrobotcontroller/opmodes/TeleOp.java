@@ -59,9 +59,9 @@ public class TeleOp extends OpMode {
 	Servo servoRight;
 	Servo servoLeft;
 
-	Double servoLeftPosition = 1.0;
-	Double servoRightPosition = 0.0;
-	Double servoChange = .01;
+	Double servoLeftPosition = 1.0; //Starting position of Left servo, 1.0 cause reversed from other servo
+	Double servoRightPosition = 0.0;//Starting pos of right servo, 0.0 cause reversed from other servo
+	Double servoChange = .01; //Value used to change the pos of servos
 	Double servoLower = 0.0; //Lower limit for servos
 	Double servoUpper = 1.0; //Upper limit for servos
 
@@ -137,6 +137,7 @@ public class TeleOp extends OpMode {
 		float rightMotorSpeed = gamepad1.right_stick_y;
 		float leftMotorSpeed = gamepad1.left_stick_y;
 
+		//Divided by 2 cause dont want to make arm fly away
 		float UpperMotorSpeed = gamepad2.left_stick_y/2f;
 		float LowerMotorSpeed = gamepad2.right_stick_y/2f;
 
@@ -161,7 +162,7 @@ public class TeleOp extends OpMode {
 		armUpperMotor.setPower(UpperMotorSpeed);
 		armLowerMotor.setPower(LowerMotorSpeed);
 
-		// update the position of the arm.
+		// update the grabber.
 		if (gamepad2.left_bumper) {
 			servoRightPosition += servoChange;
 			servoLeftPosition -= servoChange;
