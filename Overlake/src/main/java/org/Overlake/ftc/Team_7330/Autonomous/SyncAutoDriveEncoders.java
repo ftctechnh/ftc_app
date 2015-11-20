@@ -115,16 +115,30 @@ public class SyncAutoDriveEncoders extends SynchronousOpMode
     void composeDashboard()
         {
         telemetry.addLine(
-                telemetry.item("left: ", new IFunc<Object>() { public Object value() { return motorFrontLeft.getCurrentPosition(); }}),
-                telemetry.item("target: ",   new IFunc<Object>() { public Object value() { return motorFrontLeft.getTargetPosition(); }}),
-                telemetry.item("mode: ",     new IFunc<Object>() { public Object value() { return format(motorFrontLeft.getMode()); }})
+                telemetry.item("FL: ", new IFunc<Object>() { public Object value() { return motorFrontLeft.getCurrentPosition(); }}),
+                telemetry.item("FL target: ",   new IFunc<Object>() { public Object value() { return motorFrontLeft.getTargetPosition(); }}),
+                telemetry.item("FL mode: ",     new IFunc<Object>() { public Object value() { return format(motorFrontLeft.getMode()); }}),
+                telemetry.item("FL power: ",     new IFunc<Object>() { public Object value() { return motorFrontLeft.getPowerFloat(); }})
             );
 
         telemetry.addLine(
-                telemetry.item("right: ", new IFunc<Object>() { public Object value() { return motorFrontRight.getCurrentPosition(); }}),
-                telemetry.item("target: ",    new IFunc<Object>() { public Object value() { return motorFrontRight.getTargetPosition(); }}),
-                telemetry.item("mode: ",      new IFunc<Object>() { public Object value() { return format(motorFrontRight.getMode()); }})
+                telemetry.item("FR: ", new IFunc<Object>() { public Object value() { return motorFrontRight.getCurrentPosition(); }}),
+                telemetry.item("FR target: ",    new IFunc<Object>() { public Object value() { return motorFrontRight.getTargetPosition(); }}),
+                telemetry.item("FR mode: ",      new IFunc<Object>() { public Object value() { return format(motorFrontRight.getMode()); }}),
+                telemetry.item("FR power: ",     new IFunc<Object>() { public Object value() { return motorFrontRight.getPowerFloat(); }})
             );
+        telemetry.addLine(
+                telemetry.item("BL: ", new IFunc<Object>() { public Object value() { return motorBackLeft.getCurrentPosition(); }}),
+                telemetry.item("BL target: ",    new IFunc<Object>() { public Object value() { return motorBackLeft.getTargetPosition(); }}),
+                telemetry.item("BL mode: ",      new IFunc<Object>() { public Object value() { return format(motorBackLeft.getMode()); }}),
+                telemetry.item("BL power: ",     new IFunc<Object>() { public Object value() { return motorBackLeft.getPowerFloat(); }})
+        );
+        telemetry.addLine(
+                telemetry.item("BR: ", new IFunc<Object>() { public Object value() { return motorBackRight.getCurrentPosition(); }}),
+                telemetry.item("BR target: ",    new IFunc<Object>() { public Object value() { return motorBackRight.getTargetPosition(); }}),
+                telemetry.item("BR mode: ",      new IFunc<Object>() { public Object value() { return format(motorBackRight.getMode()); }}),
+                telemetry.item("BR power: ",     new IFunc<Object>() { public Object value() { return motorBackRight.getPowerFloat(); }})
+        );
         }
 
     String format(DcMotorController.RunMode mode)
