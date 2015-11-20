@@ -347,19 +347,19 @@ public class TeleOpTankTread extends OpMode {
 
         pusher.setPosition(pservoSpeed);
 
-        if (sc != null) {
-            sc.pwmDisable();
-            sc = null;
-        }
+        //if (sc != null) {
+        //    sc.pwmDisable();
+         //   sc = null;
+        //}
 
         bservoSpeed = 0.5f;
 
         button.setPosition(bservoSpeed);
 
-        if (sc != null) {
-            sc.pwmDisable();
-            sc = null;
-        }
+       // if (sc != null) {
+      //      sc.pwmDisable();
+        //    sc = null;
+        //}
 
 
     }
