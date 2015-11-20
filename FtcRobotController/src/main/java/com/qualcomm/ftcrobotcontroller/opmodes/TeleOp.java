@@ -59,8 +59,8 @@ public class TeleOp extends OpMode {
 	Servo servoRight;
 	Servo servoLeft;
 
-	Double servoLeftPosition = 0.0;
-	Double servoRightPosition = 1.0;
+	Double servoLeftPosition = 1.0;
+	Double servoRightPosition = 0.0;
 	Double servoChange = .01;
 	Double servoLower = 0.0; //Lower limit for servos
 	Double servoUpper = 1.0; //Upper limit for servos
