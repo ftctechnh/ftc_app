@@ -59,11 +59,11 @@ public class TeleOp extends OpMode {
 	Servo servoRight;
 	Servo servoLeft;
 
-	Double servoLeftPosition = 0.1;
-	Double servoRightPosition = 0.9;
+	Double servoLeftPosition = 0.0;
+	Double servoRightPosition = 1.0;
 	Double servoChange = .01;
-	Double servoLower = 0.1; //Lower limit for servos
-	Double servoUpper = 0.9; //Upper limit for servos
+	Double servoLower = 0.0; //Lower limit for servos
+	Double servoUpper = 1.0; //Upper limit for servos
 
 
 	/**
@@ -133,6 +133,7 @@ public class TeleOp extends OpMode {
 		// direction: left_stick_x ranges from -1 to 1, where -1 is full left
 		// and 1 is full right
 
+
 		float rightMotorSpeed = gamepad1.right_stick_y;
 		float leftMotorSpeed = gamepad1.left_stick_y;
 
@@ -185,6 +186,7 @@ public class TeleOp extends OpMode {
 		 * will return a null value. The legacy NXT-compatible motor controllers
 		 * are currently write only.
 		 */
+
 		telemetry.addData("Text", "*** Robot Data***");
 		telemetry.addData("Right Servo Pos",  "Right servo pos: " + String.format("%.2f", servoRightPosition));
 		telemetry.addData("Left Servo Pos", "Left Servo Pos: " + String.format("%.2f", servoLeftPosition));
