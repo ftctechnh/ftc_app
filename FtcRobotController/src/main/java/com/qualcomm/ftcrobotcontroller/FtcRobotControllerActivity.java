@@ -557,7 +557,6 @@ public class FtcRobotControllerActivity extends Activity {
             {
             if (controllerService != null)
                 {
-                Log.d(LOGGING_TAG, "verifyLegalPhoneNames(nonnull)");
                 WifiDirectAssistant assistant = controllerService.getWifiDirectAssistant();
 
                 // Check the robot controller name for legality. Sometimes, during startup, we get
@@ -579,7 +578,6 @@ public class FtcRobotControllerActivity extends Activity {
                 // little careful.
                 for (WifiP2pDevice peer : assistant.getPeers())
                     {
-                    Log.d(LOGGING_TAG, String.format("verifyLegalPhoneNames: peer: %s", peer.deviceName));
                     if (isDriverStation(peer))
                         {
                         if (!legalDSNamePattern.matcher(peer.deviceName).matches())
@@ -620,7 +618,6 @@ public class FtcRobotControllerActivity extends Activity {
         /** Is this peer a driver station? If in doubt, answer 'no'*/
         boolean isDriverStation(WifiP2pDevice peer)
             {
-            Log.v(LOGGING_TAG, String.format("primaryDeviceType=%s", peer.primaryDeviceType));
             return this.telephonePeerPattern.matcher(peer.primaryDeviceType).matches();
             }
 
