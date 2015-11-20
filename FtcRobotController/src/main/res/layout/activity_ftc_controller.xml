@@ -57,14 +57,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     <TextView
       android:id="@+id/textDeviceName"
-      android:layout_toRightOf="@id/robotIcon"
-      android:layout_toEndOf="@id/robotIcon"
-      android:layout_width="wrap_content"
+        android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:textColor="@color/white"
+      android:textColor="@color/black"
       android:padding="8dp"
       android:textSize="16sp"
-      android:textStyle="bold"/>
+      android:textStyle="bold"
+        android:layout_alignTop="@+id/robotIcon"
+        android:layout_toRightOf="@+id/robotIcon"
+        android:layout_toEndOf="@+id/robotIcon" />
 
     <ImageButton
       android:id="@+id/menu_buttons"
@@ -82,6 +83,18 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       android:layout_centerHorizontal="true"
       android:layout_margin="10dp"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Thunderbots RC"
+        android:id="@+id/textView"
+        android:layout_alignBottom="@+id/robotIcon"
+        android:layout_alignLeft="@+id/textDeviceName"
+        android:layout_alignStart="@+id/textDeviceName"
+        android:textColor="@color/black"
+        android:textSize="16sp" />
+
   </RelativeLayout>
   <!-- end of blue bar -->
 
@@ -96,7 +109,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin" >
+    android:paddingTop="@dimen/activity_vertical_margin"
+      android:background="@color/clouds">
 
     <TextView
       android:id="@+id/textWifiDirectStatus"

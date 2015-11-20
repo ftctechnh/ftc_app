@@ -52,14 +52,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         android:layout_height="wrap_content"
         android:text="Active Configuration File:"
         android:textColor="@color/white"
-        android:layout_weight="1"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:layout_weight="0.96"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:background="@color/belize_blue" />
 
     <TextView
         android:id="@+id/active_filename"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:background="@color/belize_blue" />
 
 </LinearLayout>
