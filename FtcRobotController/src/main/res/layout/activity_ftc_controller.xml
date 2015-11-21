@@ -100,8 +100,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     <include layout="@layout/header"
            android:id="@+id/included_header" />
+  <View
+      android:id="@+id/SplitLine_hor1"
+      android:layout_width="match_parent"
+      android:layout_height= "2dp"
+      android:background="#d8d8d8" />
 
-    <RelativeLayout
+  <RelativeLayout
     android:id="@+id/RelativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
