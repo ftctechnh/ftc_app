@@ -44,6 +44,9 @@ public class RedAuto extends OpMode
     private static final double left_correction = 1.0;
     private static final double right_correction = 1.0;
 
+    int step=0;
+    int lastStep=0;
+
 
 
 
@@ -69,7 +72,7 @@ public class RedAuto extends OpMode
         //set servo positions later
 
         front_left.setDirection(DcMotor.Direction.REVERSE);
-        back_right.setDirection(DcMotor.Direction.REVERSE);
+        back_left.setDirection(DcMotor.Direction.REVERSE);
 
         resetEncoders();
 
@@ -92,47 +95,54 @@ public class RedAuto extends OpMode
 
     @Override public void loop ()
     {
-        int step=0;
+        if(lastStep != step){
+            if(get_all_encoders()>10) {
+                runToPosition();
+                lastStep=step;
+            }
+        }
+        else{
+            switch(step){
+                case 0:
+                    if(run_motors_until(forward_power, forward_power, 4*2000)) step++;
+                    break;
+                case 1:
+                    if(run_motors_until(forward_power, -forward_power, 4000)) step++;
+                    telemetry.addData("Text", 0);
+                    break;
+                case 2:
+                    if(run_motors_until(forward_power, forward_power, 10000)) step++;
+                    break;
+                case 3:
+                    if(run_motors_until(turn_power, -turn_power, 1800)) step++;
+                    break;
+                case 4:
+                    if(run_motors_until(forward_power, forward_power, 1800)) step+=2;
+                    break;
+                case 5:
+                    //drop climbers code
+                    step++;
+                    break;
+                case 6:
+                    if(run_motors_until(-forward_power, -forward_power, 3600)) step++;
+                    break;
+                case 7:
+                    if (run_motors_until(-turn_power, turn_power, 7200)) step++;
+                    break;
+                case 8:
+                    if(run_motors_until(forward_power, forward_power, 20000)) step++;
+                    break;
+                case 9:
+                    if(run_motors_until(turn_power, -turn_power, 3600)) step++;
+                    break;
+                case 10:
+                    if(run_motors_until(forward_power, forward_power, 10000)) step++;
+                    break;
+                default:
+                    stop_motors();
+                    break;
 
-        switch(step){
-            case 0:
-                if(run_motors_until(forward_power, 2000)) step++;
-                break;
-            case 1:
-                if(turn_right_until(turn_power, 180)) step++;
-                break;
-            case 2:
-                if(run_motors_until(forward_power, 20000)) step++;
-                break;
-            case 3:
-                if(turn_right_until(turn_power, 180));
-                break;
-            case 4:
-                if(run_motors_until(forward_power, 180)) step++;
-                break;
-            case 5:
-                //drop climbers code
-                step++;
-                break;
-            case 6:
-                if(run_motors_until(-forward_power, 360)) step++;
-                break;
-            case 7:
-                if(turn_right_until(turn_power, 720)) step++;
-                break;
-            case 8:
-                if(run_motors_until(forward_power, 2000)) step++;
-                break;
-            case 9:
-                if(turn_left_until(turn_power, 360)) step++;
-                break;
-            case 10:
-                if(run_motors_until(forward_power, 1000)) step++;
-                break;
-            default:
-                stop_motors();
-                break;
-
+            }
         }
         telemetry.addData("Stuff", get_all_encoders());
         telemetry.addData("Step", step);
@@ -163,25 +173,17 @@ public class RedAuto extends OpMode
         resetEncoders();
     }
 
-    boolean run_motors_until(double power, double distance){
-        run_motors(power, power);
+    boolean run_motors_until(double lPower, double rPower, double distance){
+        run_motors(lPower, rPower);
         if(get_all_encoders() >= distance) {
             stop_motors();
             return true;
         }
-        else return false;
-    }
-
-    void turn_left(double power){
-        run_motors(-power, power);
-    }
-
-    void turn_right(double power){
-        run_motors(power, -power);
+        return false;
     }
 
     boolean turn_left_until(double power, double distance){
-        turn_left(power);
+        run_motors(power, -power);
         if(get_all_encoders()>=distance) {
             stop_motors();
             return true;
@@ -190,7 +192,7 @@ public class RedAuto extends OpMode
     }
 
     boolean turn_right_until(double power, double distance){
-        turn_right(power);
+        run_motors(-power, power);
         if(get_all_encoders()>=distance){
             stop_motors();
             return true;
@@ -206,15 +208,17 @@ public class RedAuto extends OpMode
     }
 
     void runToPosition(){
-        front_left.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
-        front_right.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
-        back_left.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
-        back_right.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        front_left.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        front_right.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        back_left.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        back_right.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        /*
         int falsePosition = 99999999;
         front_left.setTargetPosition(falsePosition);
         front_right.setTargetPosition(falsePosition);
         back_left.setTargetPosition(falsePosition);
         back_right.setTargetPosition(falsePosition);
+        */
     }
 
 } // PushBotAuto
