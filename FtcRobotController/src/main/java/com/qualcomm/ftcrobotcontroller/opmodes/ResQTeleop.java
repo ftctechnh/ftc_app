@@ -29,11 +29,13 @@ public class ResQTeleop extends OpMode {
     double boxservoPosition;
     double lastTime;
 
-    double climbServoEnd = 0.5;
-    double climbServo2End = 0.5;
+    double climbServoEnd = 0.95;
+    double climbServo2End = 0.05;
     double buttonServoDelta = 0.1;
     double clampDelta = 0.69;
-    double boxServoDelta = 0.74;
+    double boxServoRight = 1;
+    double boxServoLeft = 0.25;
+    double boxServoNull = 0.65;
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -62,19 +64,19 @@ public class ResQTeleop extends OpMode {
         mainRobot = new MainRobot(leftMotor, rightMotor, null, null, null, null, null);
         leftMotor = hardwareMap.dcMotor.get("leftwheel");
         rightMotor = hardwareMap.dcMotor.get("rightwheel");
-        //harvester = hardwareMap.dcMotor.get("sweeper");
+        harvester = hardwareMap.dcMotor.get("sweeper");
         linearSlide = hardwareMap.dcMotor.get("linearmotor");
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
         leftMotor.setDirection(DcMotor.Direction.FORWARD);
 
         climbservo = hardwareMap.servo.get("climbservo");
-        climbservoPosition = 0.3;
+        climbservoPosition = 0.4;
         climbservo2 = hardwareMap.servo.get("climbservo2");
-        climbservoPosition2 = 0.6;
+        climbservoPosition2 = 0.7;
         //buttonservo = hardwareMap.servo.get("buttonservo");
         //buttonservoPosition = 0.0;
         boxservo = hardwareMap.servo.get("boxservo");
-        boxservoPosition = 0.0;
+        boxservoPosition = 0.65;
 
 
         climbservo.setPosition(climbservoPosition);
@@ -100,9 +102,15 @@ public class ResQTeleop extends OpMode {
             rightMotor.setPower(rightThrottle);
             leftMotor.setPower(throttle);
         }
-        if (gamepad1.x || gamepad2.x) {
-            //harvester.setPower(.5);
+
+        if (gamepad1.left_trigger == 1 || gamepad2.left_trigger == 1 ) {
+            harvester.setPower(-0.5);
+        } else if (gamepad1.right_trigger == 1 || gamepad2.right_trigger == 1){
+            harvester.setPower(0.5);
+        } else {
+            harvester.setPower(0);
         }
+
         if (gamepad1.b || gamepad2.b) {
             //harvester.setPower(0);
             linearSlide.setPower(0);
@@ -113,21 +121,24 @@ public class ResQTeleop extends OpMode {
         if (gamepad1.a || gamepad2.a) {
             linearSlide.setPower(-.5);
         }
-        if (gamepad1.dpad_up || gamepad2.dpad_up) {
+        if (gamepad1.right_bumper || gamepad2.right_bumper) {
             climbservo.setPosition(climbServoEnd);
             climbservo2.setPosition(climbServo2End);
             //buttonservoPosition -= buttonServoDelta;
         }
-        if (gamepad1.dpad_down || gamepad1.dpad_down) {
+        if (gamepad1.left_bumper || gamepad1.left_bumper) {
             climbservo.setPosition(climbservoPosition);
             climbservo2.setPosition(climbservoPosition2);
             //buttonservoPosition += buttonServoDelta;
         }
         if (gamepad1.dpad_left || gamepad2.dpad_left) {
-            boxservoPosition += boxServoDelta;
+            boxservo.setPosition(boxServoLeft);
+        }
+        if (gamepad1.dpad_up || gamepad2.dpad_up) {
+            boxservo.setPosition(boxServoNull);
         }
         if (gamepad1.dpad_right || gamepad2.dpad_right) {
-            boxservoPosition -= boxServoDelta;
+            boxservo.setPosition(boxServoRight);
         }
         climbservoPosition = Range.clip(climbservoPosition, CLIMBSERVO_MIN_RANGE, CLIMBSERVO_MAX_RANGE);
         //climbservo.setPosition(climbservoPosition);
@@ -136,7 +147,6 @@ public class ResQTeleop extends OpMode {
         //buttonservoPosition = Range.clip(buttonservoPosition, BUTTONSERVO_MIN_RANGE, BUTTONSERVO_MAX_RANGE);
         //buttonservo.setPosition(buttonservoPosition);
         boxservoPosition = Range.clip(boxservoPosition, BOXSERVO_MIN_RANGE, BOXSERVO_MAX_RANGE);
-        boxservo.setPosition(boxservoPosition);
         //telemetry.addData("Button Servo Position: ", buttonservoPosition);
         telemetry.addData("Climb Servo Position: ", climbservo.getPosition());
         telemetry.addData("Climb Servo Position2: ", climbservo2.getPosition());

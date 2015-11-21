@@ -55,8 +55,8 @@ public class FtcOpModeRegister implements OpModeRegister {
      *
      * If two or more op modes are registered with the same name, the app will display an error.
      */
-    manager.register ("ResQAutoTesting", sweepertest.class);
-    manager.register("NullOp", NullOp.class);
+    //manager.register ("ResQAutoTesting", sweepertest.class);
+    //manager.register("NullOp", NullOp.class);
 
     //manager.register("MatrixK9TeleOp", MatrixK9TeleOp.class);
     //manager.register("K9TeleOp", K9TeleOp.class);
@@ -65,9 +65,9 @@ public class FtcOpModeRegister implements OpModeRegister {
 
     //Blue team work
     //manager.register ("Testing1010", Testing1010.class);
-    manager.register ("LineFollower", LineFollower.class);
+    //manager.register ("LineFollower", LineFollower.class);
     manager.register ("Calibration", Calibration.class);
-    manager.register("PitCrew", ResQTeleopPitCrew.class);
+    //manager.register("PitCrew", ResQTeleopPitCrew.class);
     //manager.register ("LightSensorCalibration", Calibration.class);
     //manager.register("K9MoveStraight", K9MoveStraight.class);
     /*
@@ -88,7 +88,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     //manager.register("LinearIrExample", LinearIrExample.class);
 
     
-    manager.register ("PushBotManual1", PushBotManual1.class);
+    //manager.register ("PushBotManual1", PushBotManual1.class);
     //manager.register ("PushBotAutoSensors", PushBotAutoSensors.class);
     //manager.register ("PushBotIrEvent", PushBotIrEvent.class);
     
@@ -107,7 +107,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("ResQAuto_R", ResQAutoRed.class);
     manager.register("ResQAuto_B", ResQAutoBlue.class);
     manager.register("ResQTeleop", ResQTeleop.class);
-    manager.register("SparringTeleOp",SparringTeleOp.class);
+    //manager.register("SparringTeleOp",SparringTeleOp.class);
     manager.register("ResQPitCrew", ResQTeleopPitCrew.class);
   }
 }

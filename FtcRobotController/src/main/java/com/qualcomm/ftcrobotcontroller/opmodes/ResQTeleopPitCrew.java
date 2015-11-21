@@ -88,7 +88,7 @@ public class ResQTeleopPitCrew extends OpMode {
         climbservo2 = hardwareMap.servo.get("climbservo2");
         climbservoPosition2 = 0.6;
         boxservo = hardwareMap.servo.get("boxservo");
-        boxservoPosition = 0.0;
+        boxservoPosition = 0.65;
         climbservo.setPosition(climbservoPosition);
         climbservo2.setPosition(climbservoPosition2);
         boxservo.setPosition(boxservoPosition);
