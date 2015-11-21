@@ -13,17 +13,23 @@ public class DragonoidsTeleOp extends DragonoidsOpMode {
     }
     @Override
     public void loop() {
-        // If y equals -1 then joystick is pushed all the way forward.
-        float left = -gamepad1.left_stick_y;
-        float right = -gamepad1.right_stick_y;
+        // Joystick values range from -1 to 1
+        float forwardAmount = -gamepad1.left_stick_y;
+        float turningAmount = -gamepad1.right_stick_x;
 
-        right = Range.clip(right, -1, 1);
-        left = Range.clip(left, -1, 1);
-        right = scaleInput(right);
-        left = scaleInput(left);
+        forwardAmount = Range.clip(forwardAmount, -1, 1);
+        turningAmount = Range.clip(turningAmount, -1, 1);
+        forwardAmount = (float) scaleInput(forwardAmount);
+        turningAmount = (float) scaleInput(turningAmount);
 
-        driveMotors.get("right").setPower(right);
-        driveMotors.get("left").setPower(left);
+
+        driveMotors.get("right").setPower(forwardAmount - turningAmount);
+        driveMotors.get("left").setPower(forwardAmount + turningAmount);
+
+        if (gamepad1.right_bumper) {
+            // Turn on the conveyor
+            auxMotors.get("conveyor").setPower(0.65);
+        }
 
         super.loop();
     }
@@ -32,7 +38,7 @@ public class DragonoidsTeleOp extends DragonoidsOpMode {
 	 * scaled value is less than linear.  This is to make it easier to drive
 	 * the robot more precisely at slower speeds.
 	 */
-    private float scaleInput(double dVal)  {
+    private float scaleInputOriginal(double dVal)  {
         double[] scaleArray = { 0.0, 0.05, 0.09, 0.10, 0.12, 0.15, 0.18, 0.24,
                 0.30, 0.36, 0.43, 0.50, 0.60, 0.72, 0.85, 1.00, 1.00 };
 
@@ -59,5 +65,15 @@ public class DragonoidsTeleOp extends DragonoidsOpMode {
 
         // return scaled value.
         return (float)dScale;
+    }
+    private double scaleInput (double value) {
+        // Return the value (from -1 to 1) squared to scale it quadratically
+        double magnitude = Math.pow(value, 2);
+        if (value < 0) {
+            return -1 * magnitude;
+        }
+        else {
+            return magnitude;
+        }
     }
 }

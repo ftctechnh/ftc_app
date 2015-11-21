@@ -10,8 +10,8 @@ public class DragonoidsTest extends DragonoidsOpMode {
     }
     @Override
     public void loop() {
-        climbMotors.get("right").setPower(0.1);
-        climbMotors.get("left").setPower(0.1);
+        //climbMotors.get("right").setPower(0.1);
+        //climbMotors.get("left").setPower(0.1);
 
         super.loop();
     }
