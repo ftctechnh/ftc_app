@@ -116,7 +116,7 @@ var activeTableTab = "activeTableTab";
 </dl>
 <dl>
 <dt>Direct Known Subclasses:</dt>
-<dd><a href="../../../org/usfirst/ftc/exampleteam/yourcodehere/MyFirstOpMode.html" title="class in org.usfirst.ftc.exampleteam.yourcodehere">MyFirstOpMode</a>, <a href="../../../org/swerverobotics/library/examples/SyncColorDemo.html" title="class in org.swerverobotics.library.examples">SyncColorDemo</a>, <a href="../../../org/swerverobotics/library/examples/SynchAnalogOutputDemo.html" title="class in org.swerverobotics.library.examples">SynchAnalogOutputDemo</a>, <a href="../../../org/swerverobotics/library/examples/SynchIMUDemo.html" title="class in org.swerverobotics.library.examples">SynchIMUDemo</a>, <a href="../../../org/swerverobotics/library/examples/SynchLEDDemo.html" title="class in org.swerverobotics.library.examples">SynchLEDDemo</a>, <a href="../../../org/swerverobotics/library/examples/SynchMotorLoopPerf.html" title="class in org.swerverobotics.library.examples">SynchMotorLoopPerf</a>, <a href="../../../org/swerverobotics/library/examples/SynchServoDemo.html" title="class in org.swerverobotics.library.examples">SynchServoDemo</a>, <a href="../../../org/swerverobotics/library/examples/SynchSkeletalOp.html" title="class in org.swerverobotics.library.examples">SynchSkeletalOp</a>, <a href="../../../org/swerverobotics/library/examples/SynchTelemetryOp.html" title="class in org.swerverobotics.library.examples">SynchTelemetryOp</a>, <a href="../../../org/swerverobotics/library/examples/SynchTeleOp.html" title="class in org.swerverobotics.library.examples">SynchTeleOp</a>, <a href="../../../org/swerverobotics/library/examples/SynchTeleOpModes.html" title="class in org.swerverobotics.library.examples">SynchTeleOpModes</a></dd>
+<dd><a href="../../../org/usfirst/ftc/exampleteam/yourcodehere/MyFirstOpMode.html" title="class in org.usfirst.ftc.exampleteam.yourcodehere">MyFirstOpMode</a>, <a href="../../../org/swerverobotics/library/examples/SyncAutoDriveEncoders.html" title="class in org.swerverobotics.library.examples">SyncAutoDriveEncoders</a>, <a href="../../../org/swerverobotics/library/examples/SyncAutoPolygon.html" title="class in org.swerverobotics.library.examples">SyncAutoPolygon</a>, <a href="../../../org/swerverobotics/library/examples/SyncAutoPolygonEncoders.html" title="class in org.swerverobotics.library.examples">SyncAutoPolygonEncoders</a>, <a href="../../../org/swerverobotics/library/examples/SyncAutoServoDemo.html" title="class in org.swerverobotics.library.examples">SyncAutoServoDemo</a>, <a href="../../../org/swerverobotics/library/examples/SyncColorDemo.html" title="class in org.swerverobotics.library.examples">SyncColorDemo</a>, <a href="../../../org/swerverobotics/library/examples/SynchAnalogOutputDemo.html" title="class in org.swerverobotics.library.examples">SynchAnalogOutputDemo</a>, <a href="../../../org/swerverobotics/library/examples/SynchIMUDemo.html" title="class in org.swerverobotics.library.examples">SynchIMUDemo</a>, <a href="../../../org/swerverobotics/library/examples/SynchLEDDemo.html" title="class in org.swerverobotics.library.examples">SynchLEDDemo</a>, <a href="../../../org/swerverobotics/library/examples/SynchMotorLoopPerf.html" title="class in org.swerverobotics.library.examples">SynchMotorLoopPerf</a>, <a href="../../../org/swerverobotics/library/examples/SynchServoDemo.html" title="class in org.swerverobotics.library.examples">SynchServoDemo</a>, <a href="../../../org/swerverobotics/library/examples/SynchSkeletalOp.html" title="class in org.swerverobotics.library.examples">SynchSkeletalOp</a>, <a href="../../../org/swerverobotics/library/examples/SynchTelemetryOp.html" title="class in org.swerverobotics.library.examples">SynchTelemetryOp</a>, <a href="../../../org/swerverobotics/library/examples/SynchTeleOp.html" title="class in org.swerverobotics.library.examples">SynchTeleOp</a>, <a href="../../../org/swerverobotics/library/examples/SynchTeleOpModes.html" title="class in org.swerverobotics.library.examples">SynchTeleOpModes</a></dd>
 </dl>
 <hr>
 <br>
@@ -292,7 +292,7 @@ implements <a href="../../../org/swerverobotics/library/interfaces/IThunkDispatc
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../org/swerverobotics/library/SynchronousOpMode.html#idle--">idle</a></span>()</code>
-<div class="block">Put the current thread to sleep for a bit as it has nothing better to do.</div>
+<div class="block">Puts the current thread to sleep for a bit as it has nothing better to do.</div>
 </td>
 </tr>
 <tr id="i8" class="altColor">
@@ -806,21 +806,18 @@ implements <a href="../../../org/swerverobotics/library/interfaces/IThunkDispatc
 <h4>idle</h4>
 <pre>public final&nbsp;void&nbsp;idle()
                 throws java.lang.InterruptedException</pre>
-<div class="block">Put the current thread to sleep for a bit as it has nothing better to do.
+<div class="block">Puts the current thread to sleep for a bit as it has nothing better to do.
 
  idle(), which must be called on a synchronous thread, never on the loop() thread, causes the
  synchronous thread to go to sleep until it is likely that there's something useful to do.
- Specifically, it currently waits at most until the next end of a loop() cycle, and might return
- much earlier if there is new gamepad state available.
 
  One should use this method when you have nothing better to do in your code, usually
- at the very end of your while(opModeIsActive()) loop in TeleOp. Calling Thread.yield()
- has similar effects, but idle() uses processor resources more effectively. Calling idle()
+ at the very end of your while(opModeIsActive()) loop in TeleOp. Calling idle()
  is entirely optional: it just helps make the system a little more responsive and a
  little more efficient.
 
- <a href="../../../org/swerverobotics/library/SynchronousOpMode.html#idle--"><code>idle()</code></a> is similar to waitOneFullHardwareCycle(), but makes no guarantees as to
- completing any particular number of hardware cycles, if any.</div>
+ <a href="../../../org/swerverobotics/library/SynchronousOpMode.html#idle--"><code>idle()</code></a> is conceptually related to waitOneFullHardwareCycle(), but makes no
+ guarantees as to completing any particular number of hardware cycles, if any.</div>
 <dl>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.lang.InterruptedException</code> - thrown if the thread is interrupted</dd>

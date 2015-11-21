@@ -22,9 +22,8 @@ public class SwerveFtcEventLoop extends FtcEventLoop
     // State
     //----------------------------------------------------------------------------------------------
 
-    FtcEventLoopHandler ftcEventLoopHandler;
-    EventLoopManager    eventLoopManager;
-    Semaphore semaphore = new Semaphore(0);
+    private FtcEventLoopHandler ftcEventLoopHandler;
+    private EventLoopManager    eventLoopManager;
 
     //----------------------------------------------------------------------------------------------
     // Construction

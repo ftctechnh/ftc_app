@@ -106,7 +106,7 @@ public class I2cDeviceReplacementHelper<TARGET>
 
     private void findTargetNameAndMapping()
         {
-        for (HardwareMap.DeviceMapping<?> mapping : deviceMappings(this.context.hardwareMap))
+        for (HardwareMap.DeviceMapping<?> mapping : Util.deviceMappings(this.context.hardwareMap))
             {
             for (Map.Entry<String,?> pair : mapping.entrySet())
                 {
@@ -118,35 +118,5 @@ public class I2cDeviceReplacementHelper<TARGET>
                     }
                 }
             }
-        }
-
-    static List<HardwareMap.DeviceMapping<?>> deviceMappings(HardwareMap map)
-    // Returns all the device mappings within the map
-        {
-        List<HardwareMap.DeviceMapping<?>> result = new LinkedList<HardwareMap.DeviceMapping<?>>();
-        result.add(map.dcMotorController);
-        result.add(map.servoController);
-        result.add(map.legacyModule);
-        result.add(map.deviceInterfaceModule);
-        result.add(map.colorSensor);
-        result.add(map.dcMotor);
-        result.add(map.gyroSensor);
-        result.add(map.servo);
-        result.add(map.analogInput);
-        result.add(map.digitalChannel);
-        result.add(map.opticalDistanceSensor);
-        result.add(map.touchSensor);
-        result.add(map.pwmOutput);
-        result.add(map.i2cDevice);
-        result.add(map.analogOutput);
-        result.add(map.led);
-        result.add(map.accelerationSensor);
-        result.add(map.compassSensor);
-        result.add(map.irSeekerSensor);
-        result.add(map.lightSensor);
-        result.add(map.ultrasonicSensor);
-        result.add(map.voltageSensor);
-        result.add(map.touchSensorMultiplexer);
-        return result;
         }
     }

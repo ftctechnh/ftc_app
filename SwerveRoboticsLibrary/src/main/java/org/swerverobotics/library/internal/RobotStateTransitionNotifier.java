@@ -86,7 +86,7 @@ public class RobotStateTransitionNotifier extends DcMotor implements DcMotorCont
     private static RobotStateTransitionNotifier create(HardwareMap map)
         {
         // Only need to create one instance per hardwareMap.
-        if (!ThunkingHardwareFactory.contains(map.dcMotorController, shutdownHookName))
+        if (!Util.contains(map.dcMotorController, shutdownHookName))
             {
             RobotStateTransitionNotifier hook = new RobotStateTransitionNotifier(map);
             map.dcMotorController.put(shutdownHookName, hook);

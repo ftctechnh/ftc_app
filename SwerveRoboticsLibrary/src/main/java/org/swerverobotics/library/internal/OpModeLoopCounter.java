@@ -11,7 +11,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * A simple little class that counts loop() calls in non-synchronous opmodes
+ * A simple little class that counts loop() calls for non-loop() opmodes
  */
 public class OpModeLoopCounter implements IOpModeLoopCounter
     {
@@ -43,25 +43,23 @@ public class OpModeLoopCounter implements IOpModeLoopCounter
 
         if (this.linearOpMode != null)
             {
-            this.executor.submit(new Runnable() {
-                @Override public void run()
+            this.executor.submit(new Runnable() { @Override public void run()
+                {
+                while (!stopRequested)
                     {
-                    while (!stopRequested)
-                        {
-                        try {
-                            synchronized (linearOpMode)
-                                {
-                                linearOpMode.wait(); // See LinearOpMode#loop()
-                                }
-                            }
-                        catch (InterruptedException e)
+                    try {
+                        synchronized (linearOpMode)
                             {
-                            break;
+                            linearOpMode.wait(); // See LinearOpMode#loop()
                             }
-                        linearCount.incrementAndGet();
                         }
+                    catch (InterruptedException e)
+                        {
+                        break;
+                        }
+                    linearCount.incrementAndGet();
                     }
-                });
+                }});
             }
         }
 
@@ -80,6 +78,7 @@ public class OpModeLoopCounter implements IOpModeLoopCounter
     @Override public synchronized void close()
         {
         this.stopRequested = true;
-        this.executor.shutdown();
+        this.executor.shutdownNow();
+        Util.awaitTermination(this.executor);
         }
     }
