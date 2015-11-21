@@ -45,13 +45,15 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    public EasyModernController(OpMode context, ModernRoboticsUsbDevice target, NoErrorReportingReadWriteRunnableStandard readWriteRunnable) throws RobotCoreException, InterruptedException
+    public EasyModernController(OpMode context, ModernRoboticsUsbDevice target, ReadWriteRunnableHandy readWriteRunnable) throws RobotCoreException, InterruptedException
         {
         // We *have to* give a live ReadWriteRunnable to our parent constructor, so we grudgingly do so
         super(target.getSerialNumber(), SwerveThreadContext.getEventLoopManager(), readWriteRunnable);
 
-        // Wait until the thing actually gets going
-        readWriteRunnable.semaphore.acquire();
+        // Wait until the thing actually gets going. We need it to get to the point where the
+        // 'this.running=true' has at least been set so that the 'this.running=false' we are
+        // about to do in the close() in next line down will sequence correctly against it.
+        readWriteRunnable.waitUntilRunGetsGoing();
 
         // Then shut it down right away, because we want to start disarmed until we fully configure
         closeModernRoboticsUsbDevice(this);
@@ -90,7 +92,9 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
         // Stop accepting new work
         service.shutdown();
 
-        // Set a dummy handler so that we don't end up closing the actual FT_device
+        // Set a dummy handler so that we don't end up closing the actual FT_device.
+        // Note that this overwrites a 'final' member variable, so there's a slight
+        // risk of running into optimization problems, but we live with that.
         RobotUsbDevice robotUsbDevice = new DummyRobotUsbDevice();
         ReadWriteRunnableUsbHandler dummyHandler = new ReadWriteRunnableUsbHandler(robotUsbDevice);
         MemberUtil.setHandlerOfReadWriteRunnableStandard(readWriteRunnableStandard, dummyHandler);
@@ -110,7 +114,7 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
         try
             {
             ExecutorService service = Executors.newSingleThreadScheduledExecutor();
-            ReadWriteRunnableStandard rwRunnable = new NoErrorReportingReadWriteRunnableStandard(usbDevice.getSerialNumber(), this.robotUsbDevice, cbMonitor, ibStart, false);
+            ReadWriteRunnableStandard rwRunnable = new ReadWriteRunnableHandy(usbDevice.getSerialNumber(), this.robotUsbDevice, cbMonitor, ibStart, false);
             //
             MemberUtil.setExecutorServiceModernRoboticsUsbDevice(usbDevice, service);
             MemberUtil.setReadWriteRunnableModernRoboticsUsbDevice(usbDevice, rwRunnable);
@@ -269,22 +273,64 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
         }
 
     /**
-     * This class is a ReadWriteRunnableStandard but one that doesn't report any errors
-     * due to connection failures in its blockUntilReady()
+     * A handler that let's you know when it's had methods called on it
      */
-    static class NoErrorReportingReadWriteRunnableStandard extends ReadWriteRunnableStandard
+    static class InterlockingReadWriteRunnableUsbHandler extends ReadWriteRunnableUsbHandler
         {
-        Semaphore semaphore = new Semaphore(0);
+        private ManualResetEvent methodCalled = new ManualResetEvent(false);
 
-        public NoErrorReportingReadWriteRunnableStandard(SerialNumber serialNumber, RobotUsbDevice device, int monitorLength, int startAddress, boolean debug)
+        public InterlockingReadWriteRunnableUsbHandler(RobotUsbDevice device)
+            {
+            super(device);
+            }
+
+        @Override public void purge(RobotUsbDevice.Channel channel) throws RobotCoreException
+            {
+            methodCalled.set();
+            super.purge(channel);
+            }
+
+        @Override public void read(int address, byte[] buffer) throws RobotCoreException, InterruptedException
+            {
+            methodCalled.set();
+            super.read(address, buffer);
+            }
+
+        @Override public void write(int address, byte[] buffer) throws RobotCoreException, InterruptedException
+            {
+            methodCalled.set();
+            super.write(address, buffer);
+            }
+
+        void awaitMethodCall() throws InterruptedException
+            {
+            this.methodCalled.waitOne();
+            }
+        }
+
+    /**
+     * This class is a ReadWriteRunnableStandard but one that doesn't report any errors
+     * due to connection failures in its blockUntilReady(). And you can interlock with its
+     * startup. And it sets it's thread name to be something recognizable. All very handy :-).
+     */
+    static class ReadWriteRunnableHandy extends ReadWriteRunnableStandard
+        {
+        public ReadWriteRunnableHandy(SerialNumber serialNumber, RobotUsbDevice device, int monitorLength, int startAddress, boolean debug)
             {
             super(serialNumber, device, monitorLength, startAddress, debug);
+            InterlockingReadWriteRunnableUsbHandler handler = new InterlockingReadWriteRunnableUsbHandler(device);
+            MemberUtil.setHandlerOfReadWriteRunnableStandard(this, handler);
+            }
+
+        void waitUntilRunGetsGoing() throws InterruptedException
+        // We ideally want to wait until after 'running' is set and the log is written
+            {
+            ((InterlockingReadWriteRunnableUsbHandler)this.usbHandler).awaitMethodCall();
             }
 
         @Override public void run()
             {
-            Thread.currentThread().setName("NoErrorReportingReadWriteRunnableStandard.run");
-            this.semaphore.release();
+            Thread.currentThread().setName("ReadWriteRunnableHandy.run");
             super.run();
             }
 

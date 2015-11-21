@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.hardware.usb.RobotUsbDevice;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.SerialNumber;
-import com.qualcomm.robotcore.util.TypeConversion;
 import org.swerverobotics.library.BuildConfig;
 import java.util.*;
 
@@ -58,10 +57,10 @@ public class EasyModernServoController extends EasyModernController implements S
         this.findTargetNameAndMapping();
         }
 
-    static NoErrorReportingReadWriteRunnableStandard newDummyReadWriteRunnable(SerialNumber serialNumber)
+    static ReadWriteRunnableHandy newDummyReadWriteRunnable(SerialNumber serialNumber)
         {
         RobotUsbDevice robotUsbDevice = new DummyRobotUsbDevice();
-        return new NoErrorReportingReadWriteRunnableStandard(serialNumber, robotUsbDevice, MONITOR_LENGTH, START_ADDRESS, false);
+        return new ReadWriteRunnableHandy(serialNumber, robotUsbDevice, MONITOR_LENGTH, START_ADDRESS, false);
         }
 
     public static ServoController create(OpMode context, ServoController target, Collection<Servo> servos)
