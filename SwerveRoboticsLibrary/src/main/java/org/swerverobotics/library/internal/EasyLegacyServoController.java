@@ -282,12 +282,7 @@ public class EasyLegacyServoController implements ServoController, IOpModeStateT
     public synchronized double getServoPosition(int servo)
         {
         validateServo(servo);
-        if (this.getPwmStatus() == PwmStatus.ENABLED)
-            {
-            return this.servoPositions[servo];
-            }
-        else
-            return 0;
+        return this.servoPositions[servo];
         }
 
     //----------------------------------------------------------------------------------------------
