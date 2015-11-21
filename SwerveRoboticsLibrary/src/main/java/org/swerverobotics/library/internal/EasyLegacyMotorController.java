@@ -386,13 +386,19 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
         //
         if (mode == RunMode.RESET_ENCODERS)
             {
-            assertTrue(!BuildConfig.DEBUG || this.getMotorCurrentPosition(motor)==0);
+            // Unclear if this is needed
+            while (this.getMotorTargetPosition(motor) != 0)
+                {
+                Thread.yield();
+                }
             }
         else if (mode == RunMode.RUN_TO_POSITION)
             {
             // Enforce that in RUN_TO_POSITION, we always need *positive* power. DCMotor will
             // take care of that if we set power *after* we set the mode, but not the other way
             // around. So we handle that here.
+            //
+            // Unclear that this is needed. The motor controller might take the absolute value automatically
             double power = getMotorPower(motor);
             if (power < 0)
                 setMotorPower(motor, Math.abs(power));
