@@ -33,7 +33,7 @@ public class EasyModernServoController extends EasyModernController implements S
     public static final byte PWM_DISABLE = -1;
     public static final byte PWM_ENABLE = 0;
     public static final byte PWM_ENABLE_WITHOUT_TIMEOUT = -86;
-    public static final byte START_ADDRESS = 64;
+    public static final byte START_ADDRESS = 0x40;
 
     public static final double positionMin = 0.0;
     public static final double positionMax = 1.0;
@@ -41,6 +41,7 @@ public class EasyModernServoController extends EasyModernController implements S
     public static final byte   bPositionMax = (byte)255;
 
     private List<Servo>                              servos;
+    private final double[]                           servoPositions;
     private final ModernRoboticsUsbServoController   target;
 
     //----------------------------------------------------------------------------------------------
@@ -53,6 +54,7 @@ public class EasyModernServoController extends EasyModernController implements S
 
         this.target  = target;
         this.servos  = new LinkedList<Servo>();
+        this.servoPositions  = new double[ADDRESS_CHANNEL_MAP.length];
         this.findTargetNameAndMapping();
         }
 
@@ -235,15 +237,17 @@ public class EasyModernServoController extends EasyModernController implements S
         double bPosition = Range.scale(position, positionMin, positionMax, bPositionMin, bPositionMax);
         this.write(ADDRESS_CHANNEL_MAP[servo], bPosition);
         this.pwmEnable();
+
+        // We remember the servo target positions so that getServoPosition can return something reasonable
+        this.servoPositions[servo] = position;
         }
 
     @Override
     public double getServoPosition(int servo)
+    // One would think we could just read the servo position registers. But they always report as zero
         {
         validateServo(servo);
-        byte bVal = this.read(ADDRESS_CHANNEL_MAP[servo], 1)[0];
-        double bPosition = TypeConversion.unsignedByteToDouble(bVal);
-        return Range.scale(bPosition, bPositionMin, bPositionMax, positionMin, positionMax);
+        return this.servoPositions[servo];
         }
 
     //----------------------------------------------------------------------------------------------
@@ -270,5 +274,4 @@ public class EasyModernServoController extends EasyModernController implements S
         {
         floatHardware();
         }
-
     }

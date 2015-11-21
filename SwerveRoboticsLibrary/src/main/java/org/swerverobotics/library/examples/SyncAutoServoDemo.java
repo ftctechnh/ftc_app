@@ -29,8 +29,10 @@ public class SyncAutoServoDemo extends SynchronousOpMode
             {
             this.servo.setPosition(0);
             delay();
+            telemetry.updateNow();
             this.servo.setPosition(1);
             delay();
+            telemetry.updateNow();
             }
         }
 
@@ -38,10 +40,7 @@ public class SyncAutoServoDemo extends SynchronousOpMode
         {
         ElapsedTime elapsed = new ElapsedTime();
         while (elapsed.time() < 0.25)
-            {
-            telemetry.update();
             this.idle();
-            }
         }
 
     void configureDashboard()

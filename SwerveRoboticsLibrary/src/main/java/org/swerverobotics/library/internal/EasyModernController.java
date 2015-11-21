@@ -32,7 +32,7 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
     protected HardwareMap.DeviceMapping     targetDeviceMapping;
     protected final RobotUsbDevice          robotUsbDevice;
 
-    enum WRITE_STATUS { IDLE, DIRTY, ISSUED, READ };
+    enum WRITE_STATUS { IDLE, DIRTY, READ };
 
     protected WRITE_STATUS                  writeStatus;
     protected final AtomicLong              readCompletionCount = new AtomicLong();
@@ -130,6 +130,7 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
     //
     // The key thing here is that we will block reads to wait until any pending writes have
     // completed before issuing, as that guarantees that they will see the effect of the writes.
+    // Second, we block *writes* on any pending writes so that we know they've issued.
     //----------------------------------------------------------------------------------------------
 
     @Override public void write(int address, byte[] data)
@@ -138,6 +139,18 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
             {
             synchronized (this.callbackLock)
                 {
+                // If there's another write ahead of us, then wait till it
+                // has been sent to the USB module before we do our write (which
+                // might, for example, set the same registers he was writing to a
+                // now different value. Think 'motor mode' as an example).
+                //
+                // TODO: consider write coalescing as we do in the legacy motor controller
+                while (this.writeStatus == WRITE_STATUS.DIRTY)
+                    {
+                    wait(this.callbackLock);
+                    }
+
+                // Write the data to the buffer and put off reads and writes until it gets out
                 this.writeStatus = WRITE_STATUS.DIRTY;
                 super.write(address, data);
                 }
@@ -146,34 +159,18 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
 
     @Override public byte[] read(int address, int size)
         {
-        // Make sure that any read we issue happens *after* any writes
-        // that have been queued but not yet been sent to the actual module.
         synchronized (this.concurrentClientLock)
             {
             synchronized (this.callbackLock)
                 {
+                // Make sure that any read we issue happens *after* any writes
+                // that have been send and then *after* we complete a read cycle
+                // following thereafter.
                 while (this.writeStatus != WRITE_STATUS.IDLE)
                     {
                     wait(this.callbackLock);
                     }
-                }
-
-            return super.read(address, size);
-            }
-        }
-
-    void waitForNextReadComplete()
-        {
-        synchronized (this.concurrentClientLock)
-            {
-            synchronized (this.callbackLock)
-                {
-                long cur = this.readCompletionCount.get();
-                long target = cur + 1;
-                while (this.readCompletionCount.get() < target)
-                    {
-                    wait(this.callbackLock);
-                    }
+                return super.read(address, size);
                 }
             }
         }
@@ -200,6 +197,24 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
                 this.writeStatus = WRITE_STATUS.IDLE;
             readCompletionCount.incrementAndGet();
             this.callbackLock.notifyAll();
+            }
+        }
+
+    void waitForNextReadComplete()
+    // TODO: it's unclear why the clients who currently use this really need to do so.
+    // But it's working for now, so we'll leave it and possibly tune later.
+        {
+        synchronized (this.concurrentClientLock)
+            {
+            synchronized (this.callbackLock)
+                {
+                long cur = this.readCompletionCount.get();
+                long target = cur + 1;
+                while (this.readCompletionCount.get() < target)
+                    {
+                    wait(this.callbackLock);
+                    }
+                }
             }
         }
 
