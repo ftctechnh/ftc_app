@@ -41,10 +41,10 @@ public class EasyModernMotorController extends EasyModernController implements D
         this.findTargetNameAndMapping();
         }
 
-    static NoErrorReportingReadWriteRunnableStandard newDummyReadWriteRunnable(SerialNumber serialNumber)
+    static ReadWriteRunnableHandy newDummyReadWriteRunnable(SerialNumber serialNumber)
         {
         RobotUsbDevice robotUsbDevice = new DummyRobotUsbDevice();
-        return new NoErrorReportingReadWriteRunnableStandard(serialNumber, robotUsbDevice, MONITOR_LENGTH, START_ADDRESS, false);
+        return new ReadWriteRunnableHandy(serialNumber, robotUsbDevice, MONITOR_LENGTH, START_ADDRESS, false);
         }
 
     public static DcMotorController create(OpMode context, DcMotorController target, DcMotor motor1, DcMotor motor2)
