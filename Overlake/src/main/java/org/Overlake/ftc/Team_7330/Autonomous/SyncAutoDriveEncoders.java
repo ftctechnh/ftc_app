@@ -63,7 +63,7 @@ public class SyncAutoDriveEncoders extends SynchronousOpMode
         this.motorBackRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
 
         // Drive forward a while. The parameters here are arbitrary; they're just for illustration
-        driveWithEncoders(4.7, 1.0);
+        driveWithEncoders(4.7, .6);
     }
 
     /** Drive (forward) the indicated number of motor shaft revolutions using the indicated power */
@@ -92,7 +92,7 @@ public class SyncAutoDriveEncoders extends SynchronousOpMode
         this.motorBackRight.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
 
         // Wait until they are done
-        while (this.motorFrontLeft.isBusy() || this.motorFrontRight.isBusy()||this.motorBackRight.isBusy()|| this.motorBackLeft.isBusy())
+        while (this.motorFrontLeft.isBusy() && this.motorFrontRight.isBusy() && this.motorBackRight.isBusy()&& this.motorBackLeft.isBusy())
             {
             telemetry.update();
             this.idle();
