@@ -98,10 +98,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </RelativeLayout>
   <!-- end of blue bar -->
 
-  <include layout="@layout/header"
-           android:id="@+id/included_header"/>
+    <include layout="@layout/header"
+           android:id="@+id/included_header" />
 
-  <RelativeLayout
+    <RelativeLayout
     android:id="@+id/RelativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"

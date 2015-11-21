@@ -34,39 +34,41 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/header"
-    android:layout_alignParentTop="true"
-    android:paddingLeft="0dp"
-    android:paddingRight="0dp"
-    android:paddingTop="0dp"
-    android:paddingBottom="0dp"
-    android:background="@color/belize_blue"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+         xmlns:android="http://schemas.android.com/apk/res/android"
+         android:id="@+id/header"
+         android:layout_alignParentTop="true"
+         android:paddingLeft="0dp"
+         android:paddingRight="0dp"
+         android:paddingTop="0dp"
+         android:paddingBottom="0dp"
+         android:background="@color/belize_blue"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:orientation="horizontal">
 
-    <Space
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent" />
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text=" Active Configuration File:"
-        android:textColor="@color/white"
-        android:layout_weight="0.96"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:background="@color/belize_blue"
-        android:layout_gravity="center_vertical" />
+         <Space
+             android:layout_width="wrap_content"
+             android:layout_height="match_parent" />
 
-    <TextView
-        android:id="@+id/active_filename"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:background="@color/belize_blue" />
 
-</LinearLayout>
+         <TextView
+             android:id="@+id/textView1"
+             android:layout_width="0dp"
+             android:layout_height="wrap_content"
+             android:text=" Active Configuration File:"
+             android:textColor="@color/white"
+             android:layout_weight="0.96"
+             android:textAppearance="?android:attr/textAppearanceSmall"
+             android:background="@color/belize_blue"
+             android:layout_gravity="center_vertical" />
+
+
+         <TextView
+             android:id="@+id/active_filename"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:textColor="@color/white"
+             android:textAppearance="?android:attr/textAppearanceSmall"
+             android:background="@color/belize_blue" />
+    </LinearLayout>
