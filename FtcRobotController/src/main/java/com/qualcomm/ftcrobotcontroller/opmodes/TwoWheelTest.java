@@ -4,17 +4,15 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
-public class DavTest extends OpMode {
+public class TwoWheelTest extends OpMode {
 
     DcMotor motorRight1;
-    DcMotor motorRight2;
     DcMotor motorLeft1;
-    DcMotor motorLeft2;
 
     /**
      * Constructor
      */
-    public DavTest() {
+    public TwoWheelTest() {
 
     }
 
@@ -40,11 +38,8 @@ public class DavTest extends OpMode {
 		 *   "motor_2" is on the left side of the bot and reversed.
 		 */
         motorRight1 = hardwareMap.dcMotor.get("motor_1_right");
-        motorRight2 = hardwareMap.dcMotor.get("motor_2_right");
         motorLeft1 = hardwareMap.dcMotor.get("motor_1_left");
-        motorLeft2 = hardwareMap.dcMotor.get("motor_2_left");
         motorRight1.setDirection(DcMotor.Direction.REVERSE);
-        motorRight2.setDirection(DcMotor.Direction.REVERSE);
 
     }
 
@@ -92,10 +87,7 @@ public class DavTest extends OpMode {
 
         // write the values to the motors
         motorLeft1.setPower(right1);
-        motorLeft2.setPower(left1);
-
         motorRight1.setPower(right2);
-        motorRight2.setPower(left2);
 
 		/*
 		 * Send telemetry data back to driver station. Note that if we are using

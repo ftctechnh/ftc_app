@@ -99,6 +99,7 @@ public class FtcOpModeRegister implements OpModeRegister {
 
     /* Custom Ops Modes here */
     manager.register("DavTest", DavTest.class);
+    manager.register("TwoWheelTest", TwoWheelTest.class);
 
   }
 }
