@@ -241,7 +241,8 @@ public class EasyModernServoController extends EasyModernController implements S
     public double getServoPosition(int servo)
         {
         validateServo(servo);
-        double bPosition = TypeConversion.unsignedByteToDouble(this.read(ADDRESS_CHANNEL_MAP[servo], 1)[0]);
+        byte bVal = this.read(ADDRESS_CHANNEL_MAP[servo], 1)[0];
+        double bPosition = TypeConversion.unsignedByteToDouble(bVal);
         return Range.scale(bPosition, bPositionMin, bPositionMax, positionMin, positionMax);
         }
 
