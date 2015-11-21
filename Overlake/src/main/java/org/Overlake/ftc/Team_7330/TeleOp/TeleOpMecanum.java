@@ -93,10 +93,10 @@ public class TeleOpMecanum extends OpMode {
 		leftY =  scaleJoystickValue(leftY);
 		
 		// write the values to the motors
-		motorFrontRight.setPower(Range.clip(leftY + rightX - leftX, -1, 1));
-		motorBackRight.setPower(Range.clip(leftY + rightX + leftX, -1, 1));
-		motorFrontLeft.setPower(Range.clip(leftY - rightX + leftX, -1, 1));
-		motorBackLeft.setPower(Range.clip(leftY - rightX - leftX, -1, 1));
+		motorFrontRight.setPower(Range.clip(leftY + rightX + leftX, -1, 1));
+		motorBackRight.setPower(Range.clip(leftY + rightX - leftX, -1, 1));
+		motorFrontLeft.setPower(Range.clip(leftY - rightX - leftX, -1, 1));
+		motorBackLeft.setPower(Range.clip(leftY - rightX + leftX, -1, 1));
 
 		/*
 		 * Send telemetry data back to driver station. Note that if we are using
