@@ -315,7 +315,11 @@ public class EasyModernMotorController extends EasyModernController implements D
         // to the USB device actually happen when we issue them.
         if (mode == RunMode.RESET_ENCODERS)
             {
-            assertTrue(!BuildConfig.DEBUG || this.getMotorCurrentPosition(motor)==0);
+            // Unclear if this is needed
+            while (this.getMotorTargetPosition(motor) != 0)
+                {
+                waitForNextReadComplete();
+                }
             }
         else if (mode == RunMode.RUN_TO_POSITION)
             {

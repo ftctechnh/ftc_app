@@ -331,7 +331,13 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
         @Override public void run()
             {
             Thread.currentThread().setName("ReadWriteRunnableHandy.run");
-            super.run();
+            try {
+                super.run();
+                }
+            catch (Exception e)
+                {
+                Log.d(LOGGING_TAG, String.format("ignoring exception thrown in rwrunhandy.run: %s", Util.getStackTrace(e)));
+                }
             }
 
         @Override public void blockUntilReady() throws RobotCoreException, InterruptedException
