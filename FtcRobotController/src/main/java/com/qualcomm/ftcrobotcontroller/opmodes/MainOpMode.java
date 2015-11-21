@@ -14,27 +14,6 @@ public class MainOpMode extends OpMode{
     DcMotor motorRightFront;
     DcMotor motorLeftFront;
 
-    // THREAD VARIABLES
-    volatile double armPower;
-
-    // THREADS
-
-    public class ArmThread implements Runnable {
-        public void run() {
-            while (!Thread.currentThread().isInterrupted()) {
-                armPower = gamepad2.right_stick_y ;
-                // Sleep for 10 ms.
-                try { Thread.sleep(10); }
-                // Catch an interrupt exception for the end of the thread.
-                catch (InterruptedException ex)
-                {Thread.currentThread().interrupt(); }
-            }
-            armPower=0.0; // stop the arm at the end
-        }
-    }
-
-    // THREAD INIT
-    Thread armThread = new Thread(new ArmThread());
 
     // CONSTRUCTOR
     public MainOpMode() {   }
@@ -47,9 +26,6 @@ public class MainOpMode extends OpMode{
 
         motorRightFront = hardwareMap.dcMotor.get("motor_2");
         motorRightBack = hardwareMap.dcMotor.get("motor_4");
-
-        armPower = 0;
-        armThread.start();
     }
 
     // Called repeatedly every 10 ms
@@ -71,7 +47,6 @@ public class MainOpMode extends OpMode{
         motorRightFront.setPower(0);
         motorRightBack.setPower(0);
 
-        armThread.interrupt();
     }
 
     // ADDITIONAL METHODS
