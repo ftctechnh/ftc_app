@@ -9,6 +9,9 @@ package org.swerverobotics.library.internal;
  * begun execution and positively indicated that it's good to go.
  *
  * This class helps to implement that handshake logic.
+ *
+ * That all said, this class is probably less useful than we initially thought it would be.
+ * And its implementation should be cleaned up to use ExecutorService's.
  */
 public class HandshakeThreadStarter
     {

@@ -1,22 +1,20 @@
 package org.swerverobotics.library.examples;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.*;
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.interfaces.*;
 
 /**
- * This autonomous OpMode drives the robot forward for a while, turns left, then drives forward
- * again and turns left, etc, until a polygon has been completed. The straights and turns are controlled
- * with simple time values and thus are necessarily only approximate and crude: the point here
- * is not to make a perfect regular polygon but rather to demonstrate the structure of code.
+ * This synchronous OpMode makes the the robot move in the shape
+ * of (approximately) a simple polygon using time-based motion limits.
  *
- * This OpMode expects two motors, named 'motorLeft' and 'motorRight' respectively. The
- * OpMode works with both legacy and modern motor controllers.
+ * It expects two motors, named "motorLeft" and "motorRight".
+ *
+ * @see SyncAutoPolygonEncoders
  */
-@Autonomous(name="Auto Polygon (Linear)", group="Swerve Examples")
+@Autonomous(name="Auto Polygon (Sync)", group="Swerve Examples")
 @Disabled
-public class LinearAutonomousPolygon extends LinearOpMode
+public class SyncAutoPolygon extends SynchronousOpMode
     {
     DcMotor motorRight;
     DcMotor motorLeft;
@@ -26,12 +24,11 @@ public class LinearAutonomousPolygon extends LinearOpMode
     final double drivePower = 1.0;
     final int  numSides     = 4;
 
-    public @Override void runOpMode() throws InterruptedException
+    public @Override void main() throws InterruptedException
         {
         motorLeft   = hardwareMap.dcMotor.get("motorLeft");
         motorRight  = hardwareMap.dcMotor.get("motorRight");
         motorLeft.setDirection(DcMotor.Direction.REVERSE);
-        ClassFactory.createEasyMotorController(this, motorLeft, motorRight);
 
         this.waitForStart();
 
@@ -63,3 +60,4 @@ public class LinearAutonomousPolygon extends LinearOpMode
         motorRight.setPower(0);
         }
     }
+

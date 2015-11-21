@@ -21,8 +21,6 @@ public class ThunkingHardwareFactory
     HardwareMap          unthunkedHwmap;
     HardwareMap          thunkedHwmap;
     boolean              useExperimental;
-    boolean              useEasyLegacyMotorController;
-
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -34,7 +32,6 @@ public class ThunkingHardwareFactory
         this.thunkedHwmap       = null;
         this.unthunkedHwmap     = context.hardwareMap;
         this.useExperimental    = useExperimental;
-        this.useEasyLegacyMotorController = true;
         }
     
     //----------------------------------------------------------------------------------------------
@@ -77,35 +74,57 @@ public class ThunkingHardwareFactory
         );
 
         //----------------------------------------------------------------------------
-        // Swapping in EasyLegacyMotorController in place of any legacy
-        // motor controllers.
+        // Swapping in new motor controller implementations in place of existing ones
         //----------------------------------------------------------------------------
 
-        if (this.useEasyLegacyMotorController)
+        // Group the motors and their controller together
+        Map<DcMotorController, List<DcMotor>> motors = new HashMap<DcMotorController, List<DcMotor>>();
+        for (DcMotor motor : this.unthunkedHwmap.dcMotor)
             {
-            // Group the motors and their controller together
-            Map<DcMotorController, List<DcMotor>> motors = new HashMap<DcMotorController, List<DcMotor>>();
-            for (DcMotor motor : this.unthunkedHwmap.dcMotor)
+            if (motors.containsKey(motor.getController()))
+                motors.get(motor.getController()).add(motor);
+            else
                 {
-                if (motors.containsKey(motor.getController()))
-                    motors.get(motor.getController()).add(motor);
-                else
-                    {
-                    List<DcMotor> list = new LinkedList<DcMotor>();
-                    list.add(motor);
-                    motors.put(motor.getController(), list);
-                    }
+                List<DcMotor> list = new LinkedList<DcMotor>();
+                list.add(motor);
+                motors.put(motor.getController(), list);
                 }
+            }
 
-            // For those controller which are legacy controllers, do a switch-er-roo.
-            for (DcMotorController controller : motors.keySet())
+        // Switcheroo the motor controllers
+        for (DcMotorController controller : motors.keySet())
+            {
+            if (MemberUtil.isLegacyMotorController(controller) || MemberUtil.isModernMotorController(controller))
                 {
-                if (MemberUtil.isLegacyMotorController(controller))
-                    {
-                    DcMotor motor1 = motors.get(controller).get(0);
-                    DcMotor motor2 = motors.get(controller).size() > 1 ? motors.get(controller).get(1) : null;
-                    ClassFactory.createEasyLegacyMotorController(this.context, motor1, motor2);
-                    }
+                DcMotor motor1 = motors.get(controller).get(0);
+                DcMotor motor2 = motors.get(controller).size() > 1 ? motors.get(controller).get(1) : null;
+                ClassFactory.createEasyMotorController(this.context, motor1, motor2);
+                }
+            }
+
+        //----------------------------------------------------------------------------
+        // Now the same for the servo controllers
+        //----------------------------------------------------------------------------
+
+        Map<ServoController, List<Servo>> servos = new HashMap<ServoController, List<Servo>>();
+        for (Servo servo : this.unthunkedHwmap.servo)
+            {
+            if (servos.containsKey(servo.getController()))
+                servos.get(servo.getController()).add(servo);
+            else
+                {
+                List<Servo> list = new LinkedList<Servo>();
+                list.add(servo);
+                servos.put(servo.getController(), list);
+                }
+            }
+
+        for (ServoController controller : servos.keySet())
+            {
+            if (MemberUtil.isModernServoController(controller) || MemberUtil.isLegacyServoController(controller))
+                {
+                Collection<Servo> thisControllersServos = servos.get(controller);
+                ClassFactory.createEasyServoController(this.context, thisControllersServos);
                 }
             }
 
@@ -120,10 +139,10 @@ public class ThunkingHardwareFactory
                 @Override public DcMotorController create(DcMotorController target)
                     {
                     if (target instanceof EasyLegacyMotorController)
-                        {
-                        // Put the EasyLegacyMotorController in the thunked map
                         return target;
-                        }
+
+                    if (target instanceof EasyModernMotorController)
+                        return target;
 
                     // Put a wrapping of the unthunked target in the thunked map
                     return ThunkedDCMotorController.create(target);
@@ -137,6 +156,12 @@ public class ThunkingHardwareFactory
                 {
                 @Override public ServoController create(ServoController target)
                     {
+                    if (target instanceof EasyLegacyServoController)
+                        return target;
+
+                    if (target instanceof EasyModernServoController)
+                        return target;
+
                     return ThunkedServoController.create(target);
                     }
                 }
@@ -362,7 +387,7 @@ public class ThunkingHardwareFactory
                 {
                 @Override public ColorSensor create(ColorSensor target)
                     {
-                    if (target instanceof SwerveColorSensor)
+                    if (target instanceof LegacyOrModernColorSensor)
                         {
                         return target;
                         }
@@ -422,15 +447,6 @@ public class ThunkingHardwareFactory
         {
         T create(T t);
         }
-    private interface IFuncArg<T,U>
-        {
-        T value(U u);
-        }
-    private interface IAction<T>
-        {
-        void doAction(T t);
-        }
-
 
     private <T> void createThunks(HardwareMap.DeviceMapping<T> from, HardwareMap.DeviceMapping<T> to, IThunkFactory<T> thunkFactory)
         {
@@ -472,60 +488,4 @@ public class ThunkingHardwareFactory
         return ifAbsent;
         }
 
-
-    //----------------------------------------------------------------------------------------------
-    // Skullduggery 
-    //----------------------------------------------------------------------------------------------
-
-    static <T> void remove(HardwareMap.DeviceMapping<T> from, IFuncArg<Boolean, T> predicate, IAction<T> action)
-        {
-        List<String> names = new LinkedList<String>();
-        for (Map.Entry<String,T> pair : from.entrySet())
-            {
-            T t = pair.getValue();
-            if (predicate==null || predicate.value(t))
-                {
-                names.add(pair.getKey());
-                if(action != null) action.doAction(t);
-                }
-            }
-        for (String name : names)
-            {
-            removeName(from, name);
-            }
-        }
-
-    static <T> void removeName(HardwareMap.DeviceMapping<T> entrySet, String name)
-        {
-        Util.<Map>getPrivateObjectField(entrySet,0).remove(name);
-        }
-
-    static <T> boolean contains(HardwareMap.DeviceMapping<T> map, String name)
-        {
-        for (Map.Entry<String,T> pair : map.entrySet())
-            {
-            if (pair.getKey().equals(name))
-                return true;
-            }
-        return false;
-        }
-
-    static int i2cAddrOfLegacyMotorController(DcMotorController controller)
-        {
-        // From the spec from HiTechnic:
-        //
-        // "The first motor controller in the daisy chain will use an I2C address of 02/03. Subsequent
-        // controllers will obtain addresses of 04/05, 06/07 and 08/09. Only four controllers may be
-        // daisy chained."
-        //
-        // The legacy module appears not to support daisy chaining; it only supports the first
-        // address. Note that these are clearly 8-bit addresses, not 7-bit.
-        //
-        return 0x02;
-        }
-
-    static void setController(DcMotor motor, DcMotorController controller)
-        {
-        Util.setPrivateObjectField(motor, 0, controller);
-        }
     }

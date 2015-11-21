@@ -18,11 +18,24 @@ switch motors from read mode to write mode and back again and the attendant comp
 loop counting, or waiting for hardware cycles that that requires. Just call setPower(), getPosition(),
 or whatever other motor methods you need to use, and the right things happen under the covers.
 
-EasyLegacyMotorController can be used from a LinearOpMode, SynchronousOpMode, or indeed any thread
-that can tolerate a call that might take many tens of milliseconds to execute (it is specifically
-*not* recommended that EasyLegacyMotorController be used on the loop() thread). In SynchronousOpModes,
-EasyLegacyMotorController is used automatically; in other OpModes it can be used by
-calling ClassFactory.createEasyMotorController(). 
+EasyLegacyMotorController can be used from any OpMode, or indeed any thread. In SynchronousOpModes, 
+EasyLegacyMotorController is used automatically; in other OpModes it can be used by calling 
+ClassFactory.createEasyMotorController().
+ 
+### Easy Modern Motor & Servo Controller and Easy Legacy Servo Controller
+In a conceptually similar way, alternate implementations for modern motor and servo controllers and
+for legacy servo controllers is also provided. The API simplifications for these controllers are less dramatic
+than for the easy legacy motor controller, but are worthwhile nevertheless. Most importantly, reads
+and writes to these device now happen (virtually) when you issue them, and reads or writes that follow
+a write are sequenced after that write so as to preserve causality. This simplifies programming. Change
+a motor mode? Fine, it's changed: anything else you do on that motor will be sure to have seen the effect
+of that change. You don't have to poll to see whether the mode change has taken effect. Reset the encoders
+and then immediately change to run with encoders? Perfectly fine. It just works. Additionally, a handful 
+of bug fixes is included. For example, Servo.getPosition() is now functionally useful.
+ 
+These easy controllers can be used from any OpMode or any thread. In SynchronousOpModes, they are used
+automatically; in other OpModes, they can be used by calling ClassFactory.createEasyMotorController()
+or ClassFactory.createEasyServoController() respectively.
 
 ### Alternate OpMode Registration 
 The library has an **alternate OpMode registration mechanism** (the old FtcOpModeRegister.register() still works too)

@@ -278,10 +278,19 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createEasyLegacyMotorController-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.DcMotor-com.qualcomm.robotcore.hardware.DcMotor-">createEasyLegacyMotorController(OpMode, DcMotor, DcMotor)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
 <dd>
-<div class="block">If the provided motors are using a legacy motor controller, swaps that controller out
- and installs an alternate 'EasyLegacyMotorController' DCMotorController implementation
- for the duration of the OpMode; if the motors are using a modern motor controller, the
- function has no effect.</div>
+<div class="block"><span class="deprecatedLabel">Deprecated.</span></div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createEasyMotorController-com.qualcomm.robotcore.eventloop.opmode.OpMode-com.qualcomm.robotcore.hardware.DcMotor-com.qualcomm.robotcore.hardware.DcMotor-">createEasyMotorController(OpMode, DcMotor, DcMotor)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
+<dd>
+<div class="block">If the provided motors are using a legacy motor controller, createEasyMotorController swaps
+ that controller out and installs an alternate 'EasyLegacyMotorController' DCMotorController
+ implementation for the duration of the OpMode.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createEasyServoController-com.qualcomm.robotcore.eventloop.opmode.OpMode-java.util.Collection-">createEasyServoController(OpMode, Collection&lt;Servo&gt;)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
+<dd>
+<div class="block">Creates an alternate 'easy' implementation of the controller for the indicated collection
+ of servos, which must all share the same controller, and must be <em>all</em> the servos
+ which are found on that controller.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/ClassFactory.html#createI2cDevice-com.qualcomm.robotcore.hardware.I2cDevice-">createI2cDevice(I2cDevice)</a></span> - Static method in class <a href="org/swerverobotics/library/ClassFactory.html" title="class in org.swerverobotics.library">ClassFactory</a></dt>
 <dd>
@@ -641,7 +650,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#idle--">idle()</a></span> - Method in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
 <dd>
-<div class="block">Put the current thread to sleep for a bit as it has nothing better to do.</div>
+<div class="block">Puts the current thread to sleep for a bit as it has nothing better to do.</div>
 </dd>
 <dt><a href="org/swerverobotics/library/interfaces/IFunc.html" title="interface in org.swerverobotics.library.interfaces"><span class="typeNameLink">IFunc</span></a>&lt;<a href="org/swerverobotics/library/interfaces/IFunc.html" title="type parameter in IFunc">TResult</a>&gt; - Interface in <a href="org/swerverobotics/library/interfaces/package-summary.html">org.swerverobotics.library.interfaces</a></dt>
 <dd>
@@ -834,6 +843,14 @@
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/MagneticFlux.html#MagneticFlux-org.swerverobotics.library.interfaces.II2cDeviceClient.TimestampedData-double-">MagneticFlux(II2cDeviceClient.TimestampedData, double)</a></span> - Constructor for class <a href="org/swerverobotics/library/interfaces/MagneticFlux.html" title="class in org.swerverobotics.library.interfaces">MagneticFlux</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/interfaces/Quaternion.html#magnitude--">magnitude()</a></span> - Method in class <a href="org/swerverobotics/library/interfaces/Quaternion.html" title="class in org.swerverobotics.library.interfaces">Quaternion</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/examples/SyncAutoDriveEncoders.html#main--">main()</a></span> - Method in class <a href="org/swerverobotics/library/examples/SyncAutoDriveEncoders.html" title="class in org.swerverobotics.library.examples">SyncAutoDriveEncoders</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/examples/SyncAutoPolygon.html#main--">main()</a></span> - Method in class <a href="org/swerverobotics/library/examples/SyncAutoPolygon.html" title="class in org.swerverobotics.library.examples">SyncAutoPolygon</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/examples/SyncAutoPolygonEncoders.html#main--">main()</a></span> - Method in class <a href="org/swerverobotics/library/examples/SyncAutoPolygonEncoders.html" title="class in org.swerverobotics.library.examples">SyncAutoPolygonEncoders</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/examples/SyncAutoServoDemo.html#main--">main()</a></span> - Method in class <a href="org/swerverobotics/library/examples/SyncAutoServoDemo.html" title="class in org.swerverobotics.library.examples">SyncAutoServoDemo</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/examples/SyncColorDemo.html#main--">main()</a></span> - Method in class <a href="org/swerverobotics/library/examples/SyncColorDemo.html" title="class in org.swerverobotics.library.examples">SyncColorDemo</a></dt>
 <dd>&nbsp;</dd>
@@ -1328,6 +1345,34 @@
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/SwerveUtil.html#SwerveUtil--">SwerveUtil()</a></span> - Constructor for class <a href="org/swerverobotics/library/SwerveUtil.html" title="class in org.swerverobotics.library">SwerveUtil</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="org/swerverobotics/library/examples/SyncAutoDriveEncoders.html" title="class in org.swerverobotics.library.examples"><span class="typeNameLink">SyncAutoDriveEncoders</span></a> - Class in <a href="org/swerverobotics/library/examples/package-summary.html">org.swerverobotics.library.examples</a></dt>
+<dd>
+<div class="block">This simple OpMode illustrates how to drive autonomously a certain distance using encoders.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/examples/SyncAutoDriveEncoders.html#SyncAutoDriveEncoders--">SyncAutoDriveEncoders()</a></span> - Constructor for class <a href="org/swerverobotics/library/examples/SyncAutoDriveEncoders.html" title="class in org.swerverobotics.library.examples">SyncAutoDriveEncoders</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="org/swerverobotics/library/examples/SyncAutoPolygon.html" title="class in org.swerverobotics.library.examples"><span class="typeNameLink">SyncAutoPolygon</span></a> - Class in <a href="org/swerverobotics/library/examples/package-summary.html">org.swerverobotics.library.examples</a></dt>
+<dd>
+<div class="block">This synchronous OpMode makes the the robot move in the shape
+ of (approximately) a simple polygon using time-based motion limits.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/examples/SyncAutoPolygon.html#SyncAutoPolygon--">SyncAutoPolygon()</a></span> - Constructor for class <a href="org/swerverobotics/library/examples/SyncAutoPolygon.html" title="class in org.swerverobotics.library.examples">SyncAutoPolygon</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="org/swerverobotics/library/examples/SyncAutoPolygonEncoders.html" title="class in org.swerverobotics.library.examples"><span class="typeNameLink">SyncAutoPolygonEncoders</span></a> - Class in <a href="org/swerverobotics/library/examples/package-summary.html">org.swerverobotics.library.examples</a></dt>
+<dd>
+<div class="block">This is similar to LinearAutonomousPolygon, but uses a 'run to position'
+ approach rather than a timed delay approach for determining when events
+ should end.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/examples/SyncAutoPolygonEncoders.html#SyncAutoPolygonEncoders--">SyncAutoPolygonEncoders()</a></span> - Constructor for class <a href="org/swerverobotics/library/examples/SyncAutoPolygonEncoders.html" title="class in org.swerverobotics.library.examples">SyncAutoPolygonEncoders</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="org/swerverobotics/library/examples/SyncAutoServoDemo.html" title="class in org.swerverobotics.library.examples"><span class="typeNameLink">SyncAutoServoDemo</span></a> - Class in <a href="org/swerverobotics/library/examples/package-summary.html">org.swerverobotics.library.examples</a></dt>
+<dd>
+<div class="block">This simple OpMode illustrates the basic use of a servo
+ from a synchronous OpMode.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/examples/SyncAutoServoDemo.html#SyncAutoServoDemo--">SyncAutoServoDemo()</a></span> - Constructor for class <a href="org/swerverobotics/library/examples/SyncAutoServoDemo.html" title="class in org.swerverobotics.library.examples">SyncAutoServoDemo</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="org/swerverobotics/library/examples/SyncColorDemo.html" title="class in org.swerverobotics.library.examples"><span class="typeNameLink">SyncColorDemo</span></a> - Class in <a href="org/swerverobotics/library/examples/package-summary.html">org.swerverobotics.library.examples</a></dt>
 <dd>
 <div class="block">This SynchronousOpMode illustrates a very simple use of the Swerve color
@@ -1481,6 +1526,10 @@
 <dd>
 <div class="block">Captures any new state available from the game pads, and answers as to whether
  anything is different from the previous state.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="org/swerverobotics/library/TelemetryDashboardAndLog.html#updateNow--">updateNow()</a></span> - Method in class <a href="org/swerverobotics/library/TelemetryDashboardAndLog.html" title="class in org.swerverobotics.library">TelemetryDashboardAndLog</a></dt>
+<dd>
+<div class="block">Like <a href="org/swerverobotics/library/TelemetryDashboardAndLog.html#update--"><code>TelemetryDashboardAndLog.update()</code></a>, but <em>always</em> transmits to the drive station.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="org/swerverobotics/library/SynchronousOpMode.html#useExperimentalThunking">useExperimentalThunking</a></span> - Variable in class <a href="org/swerverobotics/library/SynchronousOpMode.html" title="class in org.swerverobotics.library">SynchronousOpMode</a></dt>
 <dd>
