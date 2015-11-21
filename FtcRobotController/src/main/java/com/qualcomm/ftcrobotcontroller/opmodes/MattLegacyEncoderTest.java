@@ -4,6 +4,7 @@ import com.qualcomm.ftccommon.DbgLog;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 public class MattLegacyEncoderTest extends OpMode {
 
@@ -11,6 +12,7 @@ public class MattLegacyEncoderTest extends OpMode {
 
     DcMotorController motorController3;
     DcMotor motor6;
+    TouchSensor touchSensor;
 
     // 1. Create class variable
     HiTechnicMotorController hMotorController3;
@@ -25,6 +27,7 @@ public class MattLegacyEncoderTest extends OpMode {
     @Override
     public void init() {
 
+        touchSensor = hardwareMap.touchSensor.get("sensor_touch");
         motor6 = hardwareMap.dcMotor.get("motor_6");
         //motor6.setDirection(DcMotor.Direction.REVERSE);
 
@@ -47,10 +50,10 @@ public class MattLegacyEncoderTest extends OpMode {
 
         // Matt: finger positions
         final double FingerBasePower = -0.5;
-        final int FingerTolerance = 100;
+        final int FingerTolerance = 50;
         final int FingerStartPos = 0;
-        final int FingerMiddlePos = -500;
-        final int FingerDownPos = -1000;
+        final int FingerMiddlePos = -1500;
+        final int FingerDownPos = -2500;
         int currFingerPosition = 0;
         double fingerPower = 0.0;
 
@@ -62,9 +65,15 @@ public class MattLegacyEncoderTest extends OpMode {
             currFingerPosition = -1;
         }
 
-        if (gamepad1.dpad_up && (Math.abs(FingerStartPos - currFingerPosition) > FingerTolerance)) {
-            int fingerDirection = FingerStartPos - currFingerPosition > 0 ? -1 : 1;
-            fingerPower = fingerDirection * FingerBasePower;
+        if (gamepad1.dpad_up) {
+            // move fingers up until touch sensor is pressed
+            if (touchSensor.isPressed()) {
+                // stop and reset encoder
+                fingerPower = 0.0;
+                hMotorController3.resetMotor2Encoder();
+            } else {  // continue until touch sensor pressed
+                fingerPower = -FingerBasePower;
+            }
         } else if (gamepad1.dpad_right && (Math.abs(FingerMiddlePos - currFingerPosition) > FingerTolerance)) {
             int fingerDirection = FingerMiddlePos - currFingerPosition > 0 ? -1 : 1;
             fingerPower = fingerDirection * FingerBasePower;
