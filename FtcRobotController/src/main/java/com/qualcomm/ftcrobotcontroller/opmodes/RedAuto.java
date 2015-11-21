@@ -160,7 +160,7 @@ public class RedAuto extends OpMode
 
     void stop_motors(){
         run_motors(0, 0);
-        resetEncoders();-
+        resetEncoders();
     }
 
     boolean run_motors_until(double power, double distance){
