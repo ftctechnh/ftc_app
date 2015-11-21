@@ -22,9 +22,9 @@ public class DragonoidsTeleOp extends DragonoidsOpMode {
         forwardAmount = (float) scaleInput(forwardAmount);
         turningAmount = (float) scaleInput(turningAmount);
 
-
-        driveMotors.get("right").setPower(forwardAmount - turningAmount);
-        driveMotors.get("left").setPower(forwardAmount + turningAmount);
+        // TEMPORARY HACK OF A FIX OH GOD NO PLEASE FIX THIS
+        driveMotors.get("right").setPower(Range.clip(forwardAmount - turningAmount, -1, 1));
+        driveMotors.get("left").setPower(Range.clip(forwardAmount + turningAmount, -1, 1));
 
         if (gamepad1.right_bumper) {
             // Turn on the conveyor
