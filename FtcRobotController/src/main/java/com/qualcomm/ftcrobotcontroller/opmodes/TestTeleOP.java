@@ -32,19 +32,19 @@ public class TestTeleOP extends OpMode {
     Servo armBase;
     Servo armPrimary1;
     Servo armPrimary2;
-    Servo armSecondary1;
+    //Servo armSecondary1;
     //Servo armSecondary2;
     //Servo armHatch;
 
     private static final String baseName = "base";
     private static final String primary1Name = "primary_1";
     private static final String primary2Name = "primary_2";
-    private static final String secondary1Name = "secondary_1";
+    //private static final String secondary1Name = "secondary_1";
     //private static final String secondary2Name = "secondary_2";
     //private static final String hatchName = "hatch";
 
-    private boolean lastTriggerState = false;
-    private boolean armLockState = false;
+    //private boolean lastTriggerState = false;
+    //private boolean armLockState = false;
 
     //constructor
     public TestTeleOP() {
@@ -74,14 +74,15 @@ public class TestTeleOP extends OpMode {
         armBase = hardwareMap.servo.get(baseName);
         armPrimary1 = hardwareMap.servo.get(primary1Name);
         armPrimary2 = hardwareMap.servo.get(primary2Name);
-        armSecondary1 = hardwareMap.servo.get(secondary1Name);
+        //armSecondary1 = hardwareMap.servo.get(secondary1Name);
         //armSecondary2 = hardwareMap.servo.get(secondary2Name);
         //armHatch = hardwareMap.servo.get(hatchName);
 
         armPrimary1.setPosition(0.5);
         armPrimary2.setPosition(0.5);
-        armSecondary1.setPosition(0.5);
+        //armSecondary1.setPosition(0.5);
         armBase.setPosition(0.5);
+        //armHatch.setPosition(1.0);
     }
 
     @Override
@@ -128,9 +129,9 @@ public class TestTeleOP extends OpMode {
         telemetry.addData("Left Trigger", gamepad2.left_bumper);
         telemetry.addData("Right Trigger", gamepad2.right_bumper);
 
-        boolean triggers = gamepad2.left_bumper || gamepad2.right_bumper;
-        updateArmServos(gamepad2.left_stick_x, gamepad2.right_stick_x, gamepad2.left_trigger, gamepad2.right_trigger, triggers);
-        lastTriggerState = triggers;
+        //boolean bumpers = gamepad2.left_bumper || gamepad2.right_bumper;
+        updateArmServos(gamepad2.left_stick_x, gamepad2.right_stick_x, gamepad2.left_trigger, gamepad2.right_trigger, gamepad2.a);
+        //lastTriggerState = triggers;
     }
 
     @Override
@@ -173,7 +174,7 @@ public class TestTeleOP extends OpMode {
         return dScale;
     }
 
-    public void updateArmServos(double joystickLeftX, double joystickRightX, double leftTrigger, double rightTrigger, boolean triggers) {
+    public void updateArmServos(double joystickLeftX, double joystickRightX, double leftTrigger, double rightTrigger, boolean buttonA) {
 
         // toggle lock
         //if(triggers && !lastTriggerState) armLockState = !armLockState;
@@ -190,7 +191,7 @@ public class TestTeleOP extends OpMode {
             armPrimary2.setPosition(1.0 - (joystickLeftX + 1.0) / 2.0);
 
             // secondary joint control (right joystick)
-            armSecondary1.setPosition((joystickRightX + 1.0) / 2.0);
+            //armSecondary1.setPosition((joystickRightX + 1.0) / 2.0);
 
             // hatch control (A button)
             //if(buttonA) armHatch.setPosition(1.0);
