@@ -20,8 +20,8 @@ public class TestBot implements DriverInterface
     {
         leftMotor = hardwareMap.dcMotor.get(leftMotorName);
         rightMotor = hardwareMap.dcMotor.get(rightMotorName);
-        leftMotor.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
-        rightMotor.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        leftMotor.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        rightMotor.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
     }
 
@@ -29,10 +29,13 @@ public class TestBot implements DriverInterface
     @Override
     public void moveStraightEncoders(float inches, float speed)
     {
-        leftMotor.setTargetPosition((int)(111.11111*inches));
-        rightMotor.setTargetPosition((int)(111.11111 * inches));
+        int encoderTarget = ((int)(111.1111111*inches+leftMotor.getCurrentPosition()));
         leftMotor.setPower(speed);
         rightMotor.setPower(speed);
+        while(leftMotor.getCurrentPosition() < encoderTarget) {}
+        leftMotor.setPower(0);
+        rightMotor.setPower(0);
+
     }
 
     @Override

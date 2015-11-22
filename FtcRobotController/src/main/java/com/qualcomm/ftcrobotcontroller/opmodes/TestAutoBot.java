@@ -25,11 +25,13 @@ public class TestAutoBot extends OpMode
 
             public void start()
             {
+                telemetry.addData("running StartLoop", 0);
                 robot.moveStraightEncoders(10, .5f);
+
             }
             public void loop()
             {
-
+                telemetry.addData("RunningLoop", 1);
             }
 
             public void stop()
