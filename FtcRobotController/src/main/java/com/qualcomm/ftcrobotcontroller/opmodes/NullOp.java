@@ -70,5 +70,7 @@ public class NullOp extends OpMode {
   public void loop() {
     telemetry.addData("1 Start", "NullOp started at " + startDate);
     telemetry.addData("2 Status", "running for " + runtime.toString());
+    telemetry.addData("3 Left Stick", gamepad1.left_stick_y);
+    telemetry.addData("4 Right Stick", gamepad1.right_stick_y);
   }
 }
