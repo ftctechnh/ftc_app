@@ -52,6 +52,7 @@ public class TeleOpMecanum extends OpMode {
 	DcMotor motorBackRight;
 	DcMotor motorFrontLeft;
 	DcMotor motorBackLeft;
+	DcMotor churroMotor;
 
 	Servo servoRightWing;
 	Servo servoLeftWing;
@@ -64,6 +65,10 @@ public class TeleOpMecanum extends OpMode {
 	boolean rightWingDown = false;
 	boolean leftWingDown = false;
 	boolean climberRelease = false;
+
+	boolean slowChurro = false;
+	boolean rightBumpTwo = false;
+	boolean leftBumpTwo= false;
 
 	public TeleOpMecanum() {
 
@@ -80,10 +85,12 @@ public class TeleOpMecanum extends OpMode {
 		motorBackRight = hardwareMap.dcMotor.get("motorBackRight");
 		motorFrontLeft = hardwareMap.dcMotor.get("motorFrontLeft");
 		motorBackLeft = hardwareMap.dcMotor.get("motorBackLeft");
+		churroMotor = hardwareMap.dcMotor.get(("churroMotor"));
 
 		servoLeftWing = hardwareMap.servo.get("servoLeftWing");
 		servoRightWing = hardwareMap.servo.get("servoRightWing");
 		servoClimberRelease = hardwareMap.servo.get("servoClimberRelease");
+
 
 		motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
 		motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -105,6 +112,9 @@ public class TeleOpMecanum extends OpMode {
 		boolean rightBumper = gamepad2.right_bumper;
 		boolean leftBumper = gamepad2.left_bumper;
 		boolean b = gamepad2.b;
+		boolean slowChurro = gamepad2.a;
+		boolean rightBumpTwo = gamepad2.right_bumper;
+		boolean leftBumpTwo= gamepad2.left_bumper;
 
 		// scale the joystick value to make it easier to control
 		// the robot more precisely at slower speeds.
@@ -166,6 +176,27 @@ public class TeleOpMecanum extends OpMode {
 		else
 		{
 			servoLeftWing.setPosition(60);
+		}
+
+
+
+		if(rightBumpTwo)
+		{
+			if(slowChurro)
+				churroMotor.setPower(.8*.5);
+			else
+				churroMotor.setPower(.8);
+		}
+		else if(leftBumpTwo)
+		{
+			if(slowChurro)
+				churroMotor.setPower(-.8*.5);
+			else
+				churroMotor.setPower(-.8);
+		}
+		else
+		{
+			churroMotor.setPower(0);
 		}
 
 		wasB = b;
