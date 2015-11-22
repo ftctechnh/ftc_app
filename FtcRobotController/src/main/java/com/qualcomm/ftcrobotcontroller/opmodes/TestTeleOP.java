@@ -43,6 +43,9 @@ public class TestTeleOP extends OpMode {
     //private static final String secondary2Name = "secondary_2";
     //private static final String hatchName = "hatch";
 
+    private boolean lastTriggerState = false;
+    private boolean armLockState = false;
+
     //constructor
     public TestTeleOP() {
         //nope
@@ -64,6 +67,9 @@ public class TestTeleOP extends OpMode {
         //arm = hardwareMap.servo.get("servo_1");
         //claw = hardwareMap.servo.get("servo_6");
 
+        // set the gamepad 2 dead zone to 0
+        gamepad2.setJoystickDeadzone(0.0f);
+
         // robotic arm servos
         armBase = hardwareMap.servo.get(baseName);
         armPrimary1 = hardwareMap.servo.get(primary1Name);
@@ -71,6 +77,11 @@ public class TestTeleOP extends OpMode {
         armSecondary1 = hardwareMap.servo.get(secondary1Name);
         //armSecondary2 = hardwareMap.servo.get(secondary2Name);
         //armHatch = hardwareMap.servo.get(hatchName);
+
+        armPrimary1.setPosition(0.5);
+        armPrimary2.setPosition(0.5);
+        armSecondary1.setPosition(0.5);
+        armBase.setPosition(0.5);
     }
 
     @Override
@@ -112,12 +123,14 @@ public class TestTeleOP extends OpMode {
         telemetry.addData("Text", "*** F***YEAH!!!***");
         //telemetry.addData("arm", "arm:  " + String.format("%.2f", armPosition));
         //telemetry.addData("claw", "claw:  " + String.format("%.2f", clawPosition));
-        telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", leftThrottle));
+        telemetry.addData("left tgt pwr", "left  pwr: " + String.format("%.2f", leftThrottle));
         telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", rightThrottle));
         telemetry.addData("Left Trigger", gamepad2.left_bumper);
         telemetry.addData("Right Trigger", gamepad2.right_bumper);
 
-        updateArmServos(gamepad2.left_stick_x, gamepad2.right_stick_x, gamepad2.left_trigger, gamepad2.right_trigger, gamepad2.a);
+        boolean triggers = gamepad2.left_bumper || gamepad2.right_bumper;
+        updateArmServos(gamepad2.left_stick_x, gamepad2.right_stick_x, gamepad2.left_trigger, gamepad2.right_trigger, triggers);
+        lastTriggerState = triggers;
     }
 
     @Override
@@ -160,23 +173,29 @@ public class TestTeleOP extends OpMode {
         return dScale;
     }
 
-    public void updateArmServos(double joystickLeftX, double joystickRightX, double leftTrigger, double rightTrigger, boolean buttonA) {
+    public void updateArmServos(double joystickLeftX, double joystickRightX, double leftTrigger, double rightTrigger, boolean triggers) {
 
-        // base control (triggers)
-        if(leftTrigger > 0.0) armBase.setPosition(1.0);
-        else if(rightTrigger > 0.0) armBase.setPosition(0.0);
-        else armBase.setPosition(0.5);
+        // toggle lock
+        //if(triggers && !lastTriggerState) armLockState = !armLockState;
 
-        // primary joint control (left joystick)
-        armPrimary1.setPosition(Range.clip(armPrimary1.getPosition() + joystickLeftX / 2.0, 0.0, 1.0));
-        armPrimary2.setPosition(Range.clip(armPrimary2.getPosition() - joystickLeftX / 2.0, 0.0, 1.0));
+        //if(!armLockState)
+        //{
+            // base control (triggers)
+            if(leftTrigger > 0.0) armBase.setPosition(1.0);
+            else if(rightTrigger > 0.0) armBase.setPosition(0.0);
+            else armBase.setPosition(0.5);
 
-        // secondary joint control (right joystick)
-        armSecondary1.setPosition(Range.clip(armSecondary1.getPosition() + joystickRightX, 0.0, 1.0));
-        //armSecondary2.setPosition(Range.clip(armSecondary2.getPosition() - joystickRightX, 0.0, 1.0));
+            // primary joint control (left joystick)
+            armPrimary1.setPosition((joystickLeftX + 1.0) / 2.0);
+            armPrimary2.setPosition(1.0 - (joystickLeftX + 1.0) / 2.0);
 
-        // hatch control (A button)
-        //if(buttonA) armHatch.setPosition(1.0);
-        //else armHatch.setPosition(0.0);
+            // secondary joint control (right joystick)
+            armSecondary1.setPosition((joystickRightX + 1.0) / 2.0);
+
+            // hatch control (A button)
+            //if(buttonA) armHatch.setPosition(1.0);
+            //else armHatch.setPosition(0.0);
+        //}
+        //else armBase.setPosition(0.5);
     }
 }
