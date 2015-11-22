@@ -112,9 +112,9 @@ public class TeleOpMecanum extends OpMode {
 		boolean rightBumper = gamepad2.right_bumper;
 		boolean leftBumper = gamepad2.left_bumper;
 		boolean b = gamepad2.b;
-		boolean slowChurro = gamepad2.a;
-		boolean rightBumpTwo = gamepad2.right_bumper;
-		boolean leftBumpTwo= gamepad2.left_bumper;
+		boolean slowChurro = gamepad1.a;
+		boolean rightBumpTwo = gamepad1.right_bumper;
+		boolean leftBumpTwo= gamepad1.left_bumper;
 
 		// scale the joystick value to make it easier to control
 		// the robot more precisely at slower speeds.
@@ -153,29 +153,29 @@ public class TeleOpMecanum extends OpMode {
 
 		if (climberRelease)
 		{
-			servoClimberRelease.setPosition(40);
+			servoClimberRelease.setPosition(0.90);
 		}
 		else
 		{
-			servoClimberRelease.setPosition(60);
+			 servoClimberRelease.setPosition(0.10);
 		}
 
 		if (rightWingDown)
 		{
-			servoRightWing.setPosition(40);
+			servoRightWing.setPosition(0.85);
 		}
 		else
 		{
-			servoRightWing.setPosition(60);
+			servoRightWing.setPosition(0.10);
 		}
 
 		if (leftWingDown)
 		{
-			servoLeftWing.setPosition(40);
+			servoLeftWing.setPosition(0.10);
 		}
 		else
 		{
-			servoLeftWing.setPosition(60);
+			servoLeftWing.setPosition(0.83);
 		}
 
 
@@ -204,6 +204,8 @@ public class TeleOpMecanum extends OpMode {
 		wasRightBumper = rightBumper;
 
         telemetry.addData("Text", rightX + ", " + rightY + ", " + leftX + ", " + leftY);
+		telemetry.addData("rightWingPos",servoRightWing.getPosition());
+		telemetry.addData("leftWingPos",servoLeftWing.getPosition());
 	}
 
 	/*
