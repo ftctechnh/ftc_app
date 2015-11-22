@@ -33,6 +33,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.interfaces.*;
@@ -52,6 +53,18 @@ public class TeleOpMecanum extends OpMode {
 	DcMotor motorFrontLeft;
 	DcMotor motorBackLeft;
 
+	Servo servoRightWing;
+	Servo servoLeftWing;
+	Servo servoClimberRelease;
+
+	boolean wasRightBumper = false;
+	boolean wasLeftBumper = false;
+	boolean wasB = false;
+
+	boolean rightWingDown = false;
+	boolean leftWingDown = false;
+	boolean climberRelease = false;
+
 	public TeleOpMecanum() {
 
 	}
@@ -68,6 +81,10 @@ public class TeleOpMecanum extends OpMode {
 		motorFrontLeft = hardwareMap.dcMotor.get("motorFrontLeft");
 		motorBackLeft = hardwareMap.dcMotor.get("motorBackLeft");
 
+		servoLeftWing = hardwareMap.servo.get("servoLeftWing");
+		servoRightWing = hardwareMap.servo.get("servoRightWing");
+		servoClimberRelease = hardwareMap.servo.get("servoClimberRelease");
+
 		motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
 		motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
 	}
@@ -78,12 +95,16 @@ public class TeleOpMecanum extends OpMode {
 	 * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#run()
 	 */
 	@Override
-	public void loop() {
+	public void loop()
+	{
 		float rightX = Range.clip(gamepad1.right_stick_x, -1, 1);
 		float rightY = Range.clip(gamepad1.right_stick_y, -1, 1);
 		float leftX = Range.clip(gamepad1.left_stick_x, -1, 1);
 		float leftY = Range.clip(gamepad1.left_stick_y, -1, 1);
 
+		boolean rightBumper = gamepad2.right_bumper;
+		boolean leftBumper = gamepad2.left_bumper;
+		boolean b = gamepad2.b;
 
 		// scale the joystick value to make it easier to control
 		// the robot more precisely at slower speeds.
@@ -104,6 +125,53 @@ public class TeleOpMecanum extends OpMode {
 		 * will return a null value. The legacy NXT-compatible motor controllers
 		 * are currently write only.
 		 */
+
+		if (b && !wasB)
+		{
+			climberRelease = !climberRelease;
+		}
+
+		if (rightBumper && !wasRightBumper)
+		{
+			rightWingDown = !rightWingDown;
+		}
+
+		if (leftBumper && !wasLeftBumper)
+		{
+			leftWingDown = !leftWingDown;
+		}
+
+		if (climberRelease)
+		{
+			servoClimberRelease.setPosition(40);
+		}
+		else
+		{
+			servoClimberRelease.setPosition(60);
+		}
+
+		if (rightWingDown)
+		{
+			servoRightWing.setPosition(40);
+		}
+		else
+		{
+			servoRightWing.setPosition(60);
+		}
+
+		if (leftWingDown)
+		{
+			servoLeftWing.setPosition(40);
+		}
+		else
+		{
+			servoLeftWing.setPosition(60);
+		}
+
+		wasB = b;
+		wasLeftBumper = leftBumper;
+		wasRightBumper = rightBumper;
+
         telemetry.addData("Text", rightX + ", " + rightY + ", " + leftX + ", " + leftY);
 	}
 
