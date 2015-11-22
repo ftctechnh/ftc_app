@@ -10,7 +10,11 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
 import java.sql.Struct;
+
+import static java.lang.Thread.sleep;
 
 /**
  * Provide a basic autonomous operational mode that uses the left and right
@@ -71,11 +75,10 @@ public class RedAuto extends OpMode
 
         //set servo positions later
 
-        front_left.setDirection(DcMotor.Direction.REVERSE);
-        back_left.setDirection(DcMotor.Direction.REVERSE);
+        front_right.setDirection(DcMotor.Direction.REVERSE);
+        back_right.setDirection(DcMotor.Direction.REVERSE);
 
-        resetEncoders();
-
+        runToPosition();
     }
 
     //--------------------------------------------------------------------------
@@ -90,64 +93,79 @@ public class RedAuto extends OpMode
     @Override public void start ()
     {
         super.start();
-        runToPosition();
     } // start
 
     @Override public void loop ()
     {
-        if(lastStep != step){
-            if(get_all_encoders()>10) {
-                runToPosition();
-                lastStep=step;
-            }
-        }
-        else{
             switch(step){
                 case 0:
-                    if(run_motors_until(forward_power, forward_power, 4*2000)) step++;
+                    run_motors(forward_power, forward_power);
                     break;
                 case 1:
-                    if(run_motors_until(forward_power, -forward_power, 4000)) step++;
-                    telemetry.addData("Text", 0);
+                    bSleep(2000);
                     break;
                 case 2:
-                    if(run_motors_until(forward_power, forward_power, 10000)) step++;
+                    run_motors(forward_power, -forward_power);
                     break;
                 case 3:
-                    if(run_motors_until(turn_power, -turn_power, 1800)) step++;
+                    bSleep(1000);
                     break;
                 case 4:
-                    if(run_motors_until(forward_power, forward_power, 1800)) step+=2;
+                    run_motors(forward_power, forward_power);
                     break;
                 case 5:
-                    //drop climbers code
-                    step++;
+                    bSleep(5000);
                     break;
                 case 6:
-                    if(run_motors_until(-forward_power, -forward_power, 3600)) step++;
+                    run_motors(forward_power, -forward_power);
                     break;
                 case 7:
-                    if (run_motors_until(-turn_power, turn_power, 7200)) step++;
+                    bSleep(1800);
                     break;
                 case 8:
-                    if(run_motors_until(forward_power, forward_power, 20000)) step++;
+                    run_motors(forward_power, forward_power);
                     break;
                 case 9:
-                    if(run_motors_until(turn_power, -turn_power, 3600)) step++;
+                    bSleep(1800);
                     break;
                 case 10:
-                    if(run_motors_until(forward_power, forward_power, 10000)) step++;
+                    //drop climbers code
+                    break;
+                case 11:
+                    run_motors(-forward_power, -forward_power);
+                    break;
+                case 12:
+                    bSleep(3600);
+                    break;
+                case 13:
+                    run_motors(-forward_power, forward_power);
+                    break;
+                case 14:
+                    bSleep(1000);
+                    break;
+                case 15:
+                    run_motors(forward_power, forward_power);
+                    break;
+                case 16:
+                    bSleep(2000);
+                case 17:
+                    run_motors(forward_power, -forward_power);
+                    break;
+                case 18:
+                    bSleep(3600);
+                    break;
+                case 19:
+                    run_motors(forward_power, forward_power);
+                    break;
+                case 20:
+                    bSleep(2500);
                     break;
                 default:
                     stop_motors();
                     break;
-
             }
-        }
-        telemetry.addData("Stuff", get_all_encoders());
+        step++;
         telemetry.addData("Step", step);
-
-
     } // loop
 
     //supporting functions
@@ -170,16 +188,26 @@ public class RedAuto extends OpMode
 
     void stop_motors(){
         run_motors(0, 0);
-        resetEncoders();
     }
 
-    boolean run_motors_until(double lPower, double rPower, double distance){
+    boolean run_motors_until(double lPower, double rPower, long distance){
         run_motors(lPower, rPower);
-        if(get_all_encoders() >= distance) {
-            stop_motors();
-            return true;
+        try {
+            sleep(distance);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        return false;
+        stop_motors();
+        return true;
+    }
+
+    void bSleep(long time){
+        try {
+            sleep(time);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 
     boolean turn_left_until(double power, double distance){
@@ -208,10 +236,10 @@ public class RedAuto extends OpMode
     }
 
     void runToPosition(){
-        front_left.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        front_right.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        back_left.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        back_right.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        front_left.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        front_right.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        back_left.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        back_right.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
         /*
         int falsePosition = 99999999;
         front_left.setTargetPosition(falsePosition);
