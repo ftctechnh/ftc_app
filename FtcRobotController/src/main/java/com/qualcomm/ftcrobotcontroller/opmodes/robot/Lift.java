@@ -8,17 +8,17 @@ public class Lift {
     public DcMotor rightMotor;
     public DcMotor leftMotor;
 
-    /*
     public Servo leftShifter;
-    double leftShifterHighGear = 0.93;
-    double leftShifterLowGear = 0.75;
+    double leftShifterHighGear = 0.75;// 0.93;
+    double leftShifterLowGear = 0.93;//0.75;
 
     public Servo rightShifter;
-    double rightShifterHighGear = 0.35;
-    double rightShifterLowGear = 0.50;
+    double rightShifterHighGear = 0.50;//0.35;
+    double rightShifterLowGear = 0.35;//0.50;
 
     public boolean isShiftedHigh = true;
 
+    /*
     public Servo leftLock;
     double leftLockedPosition;
     double leftUnlockedPosition;
@@ -41,20 +41,23 @@ public class Lift {
         leftMotor = hardwareMap.dcMotor.get("leftLiftMotor");
         rightMotor = hardwareMap.dcMotor.get("rightLiftMotor");
 
-        /*
+
         leftShifter = hardwareMap.servo.get("leftLiftServo");
         rightShifter = hardwareMap.servo.get("rightLiftServo");
 
+
+        /*
         leftLock = hardwareMap.servo.get("leftLockServo");
         rightLock = hardwareMap.servo.get("rightLockServo");
         */
 
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
 
-        /*
         leftShifter.setPosition(leftShifterHighGear);
         rightShifter.setPosition(rightShifterHighGear);
 
+
+        /*
         leftLock.setPosition(leftUnlockedPosition);
         rightLock.setPosition(rightUnlockedPosition);
         */
@@ -73,7 +76,7 @@ public class Lift {
         this.setSpeed(error * KP);
     }
 
-    /*
+
     public void setGear(String gear){
 
         if(gear == "Low") {
@@ -86,6 +89,7 @@ public class Lift {
         }
     }
 
+    /*
     public void lock(){
         leftLock.setPosition(leftLockedPosition);
         rightLock.setPosition(rightLockedPosition);

@@ -37,9 +37,43 @@ public class ClassifiedTeleOp extends OpMode{
     @Override
     public void loop() {
 
+        /*
         //Left and right sticks are switched for driver preference
         drivetrain.tankDrive(-gamepad1.right_stick_y, -gamepad1.left_stick_y);
         lift.setSpeed(-gamepad2.left_stick_y);
+        */
+
+        //if(!lift.isLocked) {
+            if (lift.isShiftedHigh) {
+                drivetrain.arcadeDrive(gamepad1.left_stick_y, gamepad1.right_stick_x);
+                lift.setSpeed(gamepad2.left_stick_y);
+            } else {
+                lift.setSpeed(gamepad2.left_stick_y * 3.0 / 4.0);
+                drivetrain.arcadeDrive(-gamepad2.left_stick_y, 0);
+            }
+        //}
+        //else{
+        //    drivetrain.arcadeDrive(0,0);
+        //    lift.setSpeed(0);
+        //}
+
+        if(gamepad2.dpad_up){
+            lift.isShiftedHigh = true;
+
+            drivetrain.arcadeDrive(0,0);
+            lift.setSpeed(0);
+
+            lift.setGear("High");
+        }
+
+        if(gamepad2.dpad_down){
+            lift.isShiftedHigh = false;
+
+            drivetrain.arcadeDrive(0, 0);
+            lift.setSpeed(0);
+
+            lift.setGear("Low");
+        }
 
 
         if(gamepad1.left_bumper)
@@ -85,47 +119,8 @@ public class ClassifiedTeleOp extends OpMode{
         if(!(gamepad2.dpad_left || gamepad2.dpad_right))
             dumper.setNeutral();
 
-        /*
-        if(!lift.isLocked) {
-            if (lift.isShiftedHigh) {
-                drivetrain.arcadeDrive(gamepad1.left_stick_y, gamepad1.right_stick_x);
-                lift.setSpeed(gamepad2.left_stick_y);
-                //lift.targetPosition += 100 * gamepad2.left_stick_y;
-                //lift.updatePosition();
-            } else {
-                lift.setSpeed(gamepad2.left_stick_y * 3.0 / 4.0);
-                drivetrain.arcadeDrive(-gamepad2.left_stick_y, 0);
-            }
-        }
-        else{
-            drivetrain.arcadeDrive(0,0);
-            lift.setSpeed(0);
-        }
-        */
-
-
-
 
         /*
-        if(gamepad2.dpad_up){
-            lift.isShiftedHigh = true;
-
-            drivetrain.arcadeDrive(0,0);
-            lift.setSpeed(0);
-
-            lift.setGear("High");
-        }
-
-        if(gamepad2.dpad_down){
-            lift.isShiftedHigh = false;
-
-            drivetrain.arcadeDrive(0, 0);
-            lift.setSpeed(0);
-
-            lift.setGear("Low");
-        }
-
-
 
         if(gamepad2.y)
             arm.motor.setPower(arm.motorForwardSpeed);
