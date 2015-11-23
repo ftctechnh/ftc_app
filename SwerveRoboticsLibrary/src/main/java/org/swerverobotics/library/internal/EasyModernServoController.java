@@ -1,7 +1,7 @@
 package org.swerverobotics.library.internal;
 
 import android.util.Log;
-import com.qualcomm.hardware.*;
+import com.qualcomm.hardware.modernrobotics.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.exception.*;
 import com.qualcomm.robotcore.hardware.*;

@@ -1,7 +1,8 @@
 package org.swerverobotics.library.internal;
 
 import com.qualcomm.ftccommon.*;
-import com.qualcomm.hardware.*;
+import com.qualcomm.hardware.modernrobotics.*;
+import com.qualcomm.hardware.hitechnic.*;
 import com.qualcomm.modernrobotics.*;
 import com.qualcomm.robotcore.eventloop.*;
 import com.qualcomm.robotcore.hardware.*;
@@ -118,22 +119,22 @@ public class MemberUtil
 
     public static boolean isLegacyMotorController(DcMotorController controller)
         {
-        return controller instanceof com.qualcomm.hardware.HiTechnicNxtDcMotorController;
+        return controller instanceof HiTechnicNxtDcMotorController;
         }
 
     public static boolean isLegacyServoController(ServoController controller)
         {
-        return controller instanceof com.qualcomm.hardware.HiTechnicNxtServoController;
+        return controller instanceof HiTechnicNxtServoController;
         }
 
     public static boolean isModernMotorController(DcMotorController controller)
         {
-        return controller instanceof com.qualcomm.hardware.ModernRoboticsUsbDcMotorController;
+        return controller instanceof ModernRoboticsUsbDcMotorController;
         }
 
     public static boolean isModernServoController(ServoController controller)
         {
-        return controller instanceof com.qualcomm.hardware.ModernRoboticsUsbServoController;
+        return controller instanceof ModernRoboticsUsbServoController;
         }
 
     public static LegacyModule legacyModuleOfLegacyMotorController(DcMotorController controller)

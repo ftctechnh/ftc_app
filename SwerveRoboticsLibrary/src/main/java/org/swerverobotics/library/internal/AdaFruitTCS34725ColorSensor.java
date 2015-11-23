@@ -1,6 +1,7 @@
 package org.swerverobotics.library.internal;
 
 import android.graphics.Color;
+import com.qualcomm.hardware.adafruit.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
@@ -132,7 +133,7 @@ public class AdaFruitTCS34725ColorSensor extends ColorSensor implements IOpModeS
         int port;
         int i2cAddr8Bit;
 
-        if (target instanceof com.qualcomm.hardware.AdafruitI2cColorSensor)
+        if (target instanceof AdafruitI2cColorSensor)
             {
             controller  = MemberUtil.deviceInterfaceModuleOfAdaFruitColorSensor(target);
             port        = MemberUtil.portOfAdaFruitColorSensor(target);
