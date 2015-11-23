@@ -17,7 +17,7 @@ public class HiTechnicMotorController {
     private int motor2Encoder = 0;
     private double motor1Power = 0.0;
     private double motor2Power = 0.0;
-    private int state = 0;
+    /* private */ int state = 0;
     private int stateCnt = 0;
     private int nextState = 0;
     private DcMotorController motorController = null;
