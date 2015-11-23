@@ -29,8 +29,10 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
+/* Define the name and NAMESPACE of our program */
 package com.qualcomm.ftcrobotcontroller;
 
+/* Tell our program which other MODULES we'll be using */
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.ComponentName;
@@ -72,14 +74,17 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
 
+/* CLASS definition our program */
 public class FtcRobotControllerActivity extends Activity {
 
+  /* CONSTANTS that will be used later in our program */
   private static final int REQUEST_CONFIG_WIFI_CHANNEL = 1;
   private static final boolean USE_DEVICE_EMULATION = false;
   private static final int NUM_GAMEPADS = 2;
 
   public static final String CONFIGURE_FILENAME = "CONFIGURE_FILENAME";
 
+  /* VARIABLES that will be used later in our program */
   protected SharedPreferences preferences;
 
   protected UpdateUI.Callback callback;
@@ -90,6 +95,7 @@ public class FtcRobotControllerActivity extends Activity {
   protected TextView textDeviceName;
   protected TextView textWifiDirectStatus;
   protected TextView textRobotStatus;
+  /* Here we are INITIALIZING a variable */
   protected TextView[] textGamepad = new TextView[NUM_GAMEPADS];
   protected TextView textOpMode;
   protected TextView textErrorMessage;
@@ -124,6 +130,7 @@ public class FtcRobotControllerActivity extends Activity {
     }
   };
 
+  /* Now we OVERRIDE METHODS from the SUPER CLASS */
   @Override
   protected void onNewIntent(Intent intent) {
     super.onNewIntent(intent);
