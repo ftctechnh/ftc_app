@@ -2,8 +2,8 @@ package org.swerverobotics.library.internal;
 
 import android.graphics.Color;
 
-import com.qualcomm.hardware.HiTechnicNxtColorSensor;
-import com.qualcomm.hardware.ModernRoboticsI2cColorSensor;
+import com.qualcomm.hardware.hitechnic.*;
+import com.qualcomm.hardware.modernrobotics.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
