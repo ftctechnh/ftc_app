@@ -3,7 +3,7 @@
           xmlns:tools="http://schemas.android.com/tools"
           package="com.qualcomm.ftcrobotcontroller"
           android:versionCode="5"
-          android:versionName="1.25">
+          android:versionName="Intersect 8865 Version 2: 11/23/15">
 
 
   <uses-permission
