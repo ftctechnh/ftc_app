@@ -70,7 +70,6 @@ public class YushinAutonomous extends LinearOpMode {
         // make sure motor controller is ready
         boolean controller1ready = false; boolean controller0ready = false;
         while (!controller1ready || !controller0ready) {
-        // while (hMotorController0.state != 5 && hMotorController1.state != 5) {
             hMotorController1.process(); // get through the initialization states
             hMotorController0.process();
             if (hMotorController0.state == 5) {controller0ready = true;}
@@ -123,11 +122,7 @@ public class YushinAutonomous extends LinearOpMode {
             } // while less than encoder targert
 
             // stop motors
-            // make sure motor controllers went into write mode
-            //controller1ready = false; controller0ready = false;
-            //while (!controller1ready || !controller0ready) {
             for (int i=0; i < 5000; i++) {
-            // while (hMotorController0.state != 4 && hMotorController1.state != 4) {
                 hMotorController1.setMotor1Power(0.0);
                 hMotorController1.setMotor2Power(0.0);
                 hMotorController0.setMotor1Power(0.0);
@@ -135,8 +130,6 @@ public class YushinAutonomous extends LinearOpMode {
                 hMotorController1.process();
                 hMotorController0.process();
                 telemetry.addData("state", String.format("%d %d", hMotorController0.state, hMotorController1.state));
-                //if (hMotorController0.state == 4 && hMotorController0.getMotor2Power() == 0.0) {controller0ready = true;}
-                //if (hMotorController1.state == 4 && hMotorController1.getMotor2Power() == 0.0) {controller1ready = true;}
             }
             telemetry.addData("state", String.format("stopped %d %d", hMotorController0.state, hMotorController1.state));
 
