@@ -1,14 +1,14 @@
 /**
- * Created by edengh on 11/10/15.
+ * Created by edengh on 10/6/15.
  */
-//Eden
-//Emma
-//Use threads within Java
+//includes ramp pusher
+
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoController;
 import com.qualcomm.robotcore.util.Range;
 
 /**
@@ -17,16 +17,24 @@ import com.qualcomm.robotcore.util.Range;
  * Enables control of the robot via the gamepad
  */
 
-//public class TankWThreads implements Runnable {
+/**
+ *
+ *
+ class TankThread implements Runnable {
+ private Thread t;
+ private String Drive;
 
-   // public void run() {
-   // }
+ TankThread( String ArcadeDrive){
+ Drive = ArcadeDrive;
+ System.out;
+ }
+ }
+ */
+public class TankWThreads {
+    public static void main (String [] args) {
+        Drive mt = new Drive ();
+        mt.start ();
 
-    //public static void main(String args[]) {
-     //   (new Thread(new TankDrive())).start();
-   // }
-//}
+    }
+}
 
-//public class TankDrive extends Thread {
-
-//}
