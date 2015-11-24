@@ -9,12 +9,12 @@ public class Lift {
     public DcMotor leftMotor;
 
     public Servo leftShifter;
-    double leftShifterHighGear = 0.75;// 0.93;
-    double leftShifterLowGear = 0.93;//0.75;
+    double leftShifterHighGear =  0.93;
+    double leftShifterLowGear = 0.75;
 
     public Servo rightShifter;
-    double rightShifterHighGear = 0.50;//0.35;
-    double rightShifterLowGear = 0.35;//0.50;
+    double rightShifterHighGear = 0.35;
+    double rightShifterLowGear = 0.50;
 
     public boolean isShiftedHigh = true;
 

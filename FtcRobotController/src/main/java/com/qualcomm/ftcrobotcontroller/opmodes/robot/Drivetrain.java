@@ -25,8 +25,8 @@ public class Drivetrain {
         frontRight = hardwareMap.dcMotor.get("rightMotor1");
         backRight = hardwareMap.dcMotor.get("rightMotor2");
 
-        frontLeft.setDirection(DcMotor.Direction.REVERSE);
-        backLeft.setDirection(DcMotor.Direction.REVERSE);
+        frontRight.setDirection(DcMotor.Direction.REVERSE);
+        backRight.setDirection(DcMotor.Direction.REVERSE);
     }
 
     public void tankDrive(double leftSpeed,double rightSpeed) {
