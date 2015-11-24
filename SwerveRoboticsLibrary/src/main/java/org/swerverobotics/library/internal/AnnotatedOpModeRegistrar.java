@@ -178,7 +178,7 @@ public class AnnotatedOpModeRegistrar
             if (nameBuilder.length() > 0) nameBuilder.append(com.qualcomm.robotcore.util.Util.ASCII_RECORD_SEPARATOR);
             nameBuilder.append(getOpModeName(opMode));
             }
-        if (TypeConversion.stringToUtf8(nameBuilder.toString()).length >= Command.MAX_COMMAND_LENGTH)    // see Command.Command
+        if (TypeConversion.stringToUtf8(nameBuilder.toString()).length > Command.MAX_COMMAND_LENGTH)    // see Command.Command
             {
             reportOpModeConfigurationError("OpMode names are too long to be sent to the Driver Station");
             this.opModeManager.register("OpMode names too long", OpModeNamesTooLong.class);
