@@ -12,13 +12,13 @@ public class OurAutonomous extends OpMode{
     }
 
     final static int DEFAULT_SPEED = 50;
-    DcMotor armLowerMotor;
+    static DcMotor armLowerMotor;
     DcMotor armUpperMotor;
-    DcMotor rightMotor;
-    DcMotor leftMotor;
     boolean peopleAndLight = true;
     boolean climbing = false;
     static boolean isBlue = true;
+    DcMotor rightMotor;
+    DcMotor leftMotor;
 
     public void init(){
         armUpperMotor = hardwareMap.dcMotor.get("armUpperMotor");
@@ -40,10 +40,10 @@ public class OurAutonomous extends OpMode{
 
     public void peopleAndLight(){
         //dumpAndLight
-        moveForward(3000, rightMotor, leftMotor); //move in front of the light
-        turnRight(200, rightMotor, leftMotor); //face the light approximately
+        moveForward(3000); //move in front of the light
+        turnRight(200); //face the light approximately
 
-        moveForward(400, rightMotor, leftMotor); //CAN USE LINE FOLLOWING TO CENTER ROBOT AND TOUCH TO DETECT WALL.
+        moveForward(400); //CAN USE LINE FOLLOWING TO CENTER ROBOT AND TOUCH TO DETECT WALL.
         dumpClimbers(); //method to use the arm to dump the climbers into the bin that should be in front of the robot
         detectAndPushLight();//method to use the light sensor to see which button to push
         //make sure to have the methods return the robot to this position
@@ -60,17 +60,17 @@ public class OurAutonomous extends OpMode{
 
     public void climbFromBasket(){
         //the robot starts from the location that is at the end of the light and basket methods
-        moveBackward(400, rightMotor, leftMotor);//back up and turn (to reposition) to go straight onto mountain
-        turnLeft(200, rightMotor, leftMotor);
-        moveBackward(1500, rightMotor, leftMotor);
-        turnRight(500, rightMotor, leftMotor);
-        moveForward(1600, 100, rightMotor, leftMotor);
+        moveBackward(400);//back up and turn (to reposition) to go straight onto mountain
+        turnLeft(200);
+        moveBackward(1500);
+        turnRight(500);
+        moveForward(1600, 100);
     }
 
     public void climbFromStart(){
         //the robot starts from the position on the wall and then goes to climb
-        moveForward(1500, rightMotor, leftMotor);
-        turnRight(500, rightMotor, leftMotor);
+        moveForward(1500);
+        turnRight(500);
     }
 
     public void loop(){
@@ -79,9 +79,8 @@ public class OurAutonomous extends OpMode{
     public void stop(){
     }
 
-
-
-    public void moveForward(int distance, int speed, DcMotor rightMotor, DcMotor leftMotor){
+    
+    public void moveForward(int distance, int speed){
         //move for distance at speed using motors right and left
         int rightPos = rightMotor.getCurrentPosition();
         int leftPos = leftMotor.getCurrentPosition();
@@ -93,11 +92,11 @@ public class OurAutonomous extends OpMode{
         }
 
         telemetry.addData("Text", "*** Robot Data***");
-        telemetry.addData("Right Servo taarget Pos", "Right servo target pos: " + rightMotor.getTargetPosition());
-        telemetry.addData("Left Servo Pos", "Left Servo Pos: " + rightMotor.getCurrentPosition());
+        telemetry.addData("Motor target Pos", "Pos: " + rightMotor.getTargetPosition());
+        telemetry.addData("Motor current Pos", "Pos: " + rightMotor.getCurrentPosition());
     }
 
-    public static void moveBackward(int distance, int speed, DcMotor rightMotor, DcMotor leftMotor){
+    public void moveBackward(int distance, int speed){
         //move backward for distance at speed using motors right and left
         int rightPos = rightMotor.getCurrentPosition();
         int leftPos = leftMotor.getCurrentPosition();
@@ -109,7 +108,7 @@ public class OurAutonomous extends OpMode{
         }
     }
 
-    public static void turnRight(int distance, int speed, DcMotor rightMotor, DcMotor leftMotor){
+    public void turnRight(int distance, int speed){
         if(isBlue) {
             //turn right for distance at speed using motors right and left
             int rightPos = rightMotor.getCurrentPosition();
@@ -121,11 +120,11 @@ public class OurAutonomous extends OpMode{
                 leftMotor.setPower(speed);
             }
         }else{
-            turnLeft(distance, speed, rightMotor, leftMotor);
+            turnLeft(distance, speed);
         }
     }
 
-    public static void turnLeft(int distance, int speed, DcMotor rightMotor, DcMotor leftMotor){
+    public void turnLeft(int distance, int speed){
         if(isBlue) {
             //turn left for distance at speed using motors right and left
             int rightPos = rightMotor.getCurrentPosition();
@@ -137,20 +136,20 @@ public class OurAutonomous extends OpMode{
                 leftMotor.setPower(-speed);
             }
         }else{
-            turnRight(distance, speed, rightMotor, leftMotor);
+            turnRight(distance, speed);
         }
     }
 
-    public void moveForward(int distance, DcMotor rightMotor, DcMotor leftMotor){
-        moveForward(distance, DEFAULT_SPEED, rightMotor, leftMotor);
+    public void moveForward(int distance){
+        moveForward(distance, DEFAULT_SPEED);
     }
-    public static void moveBackward(int distance, DcMotor rightMotor, DcMotor leftMotor){
-        moveBackward(distance, DEFAULT_SPEED, rightMotor, leftMotor);
+    public void moveBackward(int distance){
+        moveBackward(distance, DEFAULT_SPEED);
     }
-    public static void turnRight(int distance, DcMotor rightMotor, DcMotor leftMotor){
-        turnRight(distance, DEFAULT_SPEED, rightMotor, leftMotor);
+    public void turnRight(int distance){
+        turnRight(distance, DEFAULT_SPEED);
     }
-    public static void turnLeft(int distance, DcMotor rightMotor, DcMotor leftMotor){
-        turnLeft(distance, DEFAULT_SPEED, rightMotor, leftMotor);
+    public void turnLeft(int distance){
+        turnLeft(distance, DEFAULT_SPEED);
     }
 }
