@@ -31,86 +31,37 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.ftccommon.DbgLog;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * TeleOp Mode
  * <p>
  *Enables control of the robot via the gamepad
  */
-public class ServoOp extends OpMode {
+public class WeCoServoOp extends OpMode {
 
   Servo servo1 ;
 
-    final static double servoMinRange = 0.0 ;
-    final static double servoMaxRange = 1.0 ;
-    double servoDelta = 0.25 ;
+    final static double servoMinRange = .1 ;
+    final static double servoMaxRange = 0.9 ;
     double servoPosition ;
-    boolean BbuttonOn= false;
-    ElapsedTime BbuttonTimmer = new ElapsedTime();
-    boolean AbuttonOn= false;
-    ElapsedTime AbuttonTimmer = new ElapsedTime();
-    double buttonResetTime = 0.25 ;
-
 
     @Override
   public void init() {
       servo1 = hardwareMap.servo.get("servo_1") ;
 
-      servoPosition = 0.5 ;
+      servoPosition = 0.1 ;
 
   }
 
   @Override
   public void loop() {
 
-    if (gamepad2.a || gamepad2.b) {
-
-        if (gamepad2.a && !AbuttonOn) {
-
-            servoPosition = servoPosition + servoDelta;
-            DbgLog.msg("=====Decrease arm position=====");
-            AbuttonOn = true;
-            AbuttonTimmer.reset();
-
-        }
-        if (AbuttonOn == true && (AbuttonTimmer.time() > buttonResetTime)) {
-            AbuttonOn = false;
-            DbgLog.msg("=====Reset AbuttonOn=====");
-        }
-
-
-        //DbgLog.msg("=====servoPosition====="+String.format("%f", servoPositionClipped)) ;
-
-        if (gamepad2.b && !BbuttonOn) {
-
-            servoPosition = servoPosition - servoDelta;
-            DbgLog.msg("=====Decrease arm position=====" + String.format("%f", servoPosition));
-            BbuttonOn = true;
-            BbuttonTimmer.reset();
-
-        }
-        if (BbuttonOn == true && (BbuttonTimmer.time() > buttonResetTime)) {
-            BbuttonOn = false;
-            DbgLog.msg("=====Reset BbuttonOn=====");
-        }
-
-
-        if ((gamepad2.a == false) && (gamepad2.b == false)) {
-            DbgLog.msg("=====Not Pressed=====");
-        }
-    } else if ((gamepad2.left_trigger > 0) || (gamepad2.right_trigger > 0)) {
-            servoPosition = servoPosition + (gamepad2.left_trigger / 100) - (gamepad2.right_trigger / 100);
-    }
-
+    servoPosition = servoPosition + (gamepad2.left_trigger/100) - (gamepad2.right_trigger/100) ;
     servoPosition = Range.clip(servoPosition, servoMinRange, servoMaxRange) ;
 
     servo1.setPosition(servoPosition);
@@ -126,10 +77,3 @@ public class ServoOp extends OpMode {
   }
 }
 
-/*
-    if (gamepad1.a || gamepad1.b) {
-      gamepad = "Gamepad a or b is pressed" ;
-    } else {
-      gamepad = "Gamepad is not pressed" ;
-    }
- */
