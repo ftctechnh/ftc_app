@@ -17,7 +17,7 @@ public class YushinAutonomous extends LinearOpMode {
     private DcMotor leftMotor2;
     private DcMotor rightMotor2;
 
-    // DcMotorController motorController1;
+    DcMotorController motorController1;
     DcMotorController motorController0;
 
     // heading is never negative, but it can flip from 1 to 359, so do modulus 180
@@ -37,26 +37,26 @@ public class YushinAutonomous extends LinearOpMode {
         return result;
     }
 
-    //HiTechnicMotorController hMotorController1;
+    HiTechnicMotorController hMotorController1;
     HiTechnicMotorController hMotorController0;
 
     @Override
     public void runOpMode() throws InterruptedException {
         leftMotor = hardwareMap.dcMotor.get("leftMotor");
-        //rightMotor = hardwareMap.dcMotor.get("rightMotor");
+        rightMotor = hardwareMap.dcMotor.get("rightMotor");
         leftMotor2 = hardwareMap.dcMotor.get("leftMotor2");
-        //rightMotor2 = hardwareMap.dcMotor.get("rightMotor2");
+        rightMotor2 = hardwareMap.dcMotor.get("rightMotor2");
         sensorGyro = hardwareMap.gyroSensor.get("gyro_sensor");
 
-        //motorController1 = rightMotor.getController();
+        motorController1 = rightMotor.getController();
         motorController0 = leftMotor.getController();
-        //hMotorController1 = new HiTechnicMotorController(motorController1);
+        hMotorController1 = new HiTechnicMotorController(motorController1);
         hMotorController0 = new HiTechnicMotorController(motorController0);
         //hMotorController1.setDebugLog(true);
         hMotorController0.setDebugLog(true);
         hMotorController0.resetMotor2Encoder();
         //hMotorController1.resetMotor2Encoder();
-        //hMotorController0.resetMotor1Encoder();
+        hMotorController0.resetMotor1Encoder();
         //hMotorController1.resetMotor1Encoder();
 
         // calibrate the gyro.
@@ -66,37 +66,39 @@ public class YushinAutonomous extends LinearOpMode {
         while (sensorGyro.isCalibrating()) {
             Thread.sleep(50);
         }
-        // for (int i = 0; i <= 60; i++) {
-        while (hMotorController0.state != 5) {
-            //hMotorController1.process(); // get through the initialization states
+
+        // make sure motor controller is ready
+        boolean controller1ready = false; boolean controller0ready = false;
+        while (!controller1ready || !controller0ready) {
+        // while (hMotorController0.state != 5 && hMotorController1.state != 5) {
+            hMotorController1.process(); // get through the initialization states
             hMotorController0.process();
-            telemetry.addData("state", String.format("%d", hMotorController0.state));
+            if (hMotorController0.state == 5) {controller0ready = true;}
+            if (hMotorController1.state == 5) {controller1ready = true;}
+            telemetry.addData("state", String.format("%d %d", hMotorController0.state, hMotorController1.state));
         }
-        telemetry.addData("state", String.format("waiting %d", hMotorController0.state));
+        telemetry.addData("state", String.format("waiting %d %d", hMotorController0.state, hMotorController1.state));
 
         // wait for the start button to be pressed.
         waitForStart();
 
-
-        while (opModeIsActive()) {
-
-            sensorGyro.resetZAxisIntegrator();
+         sensorGyro.resetZAxisIntegrator();
 
             // drive straight by gyro
             while (hMotorController0.getMotor2Encoder() < 10800) {
-                Thread.sleep(100);
-                //hMotorController1.process();
+                Thread.sleep(40);
+                hMotorController1.process();
                 hMotorController0.process();
-                telemetry.addData("count0", hMotorController0.getMotor2Encoder());
-                //telemetry.addData("count1", hMotorController1.getMotor2Encoder());
-                telemetry.addData("power0", hMotorController0.getMotor2Power());
-                //telemetry.addData("power1", hMotorController1.getMotor2Power());
+                telemetry.addData("counts", String.format("L:%05d R:%05d",
+                        hMotorController0.getMotor2Encoder(), hMotorController1.getMotor2Encoder()));
+                telemetry.addData("powerL", hMotorController0.getMotor2Power());
+                telemetry.addData("powerR", hMotorController1.getMotor2Power());
                 telemetry.addData("heading", String.format("h:%03d diff:%03d", sensorGyro.getHeading(), SubtractFromCurrHeading(0)));
-                telemetry.addData("state", String.format("%d", hMotorController0.state));
+                telemetry.addData("state", String.format("%d %d", hMotorController0.state, hMotorController1.state));
                 if (Math.abs(SubtractFromCurrHeading(0)) < GyroTolerance) {
                     // on course, go straight
-                    //hMotorController1.setMotor1Power(0.40);
-                    //hMotorController1.setMotor2Power(0.40);
+                    hMotorController1.setMotor1Power(-0.40);
+                    hMotorController1.setMotor2Power(-0.40);
                     hMotorController0.setMotor1Power(0.40);
                     hMotorController0.setMotor2Power(0.40);
                     //telemetry.addData("count","1");
@@ -104,21 +106,64 @@ public class YushinAutonomous extends LinearOpMode {
                 } else { // not on course, correct
                     if (SubtractFromCurrHeading(0) > 0) {
                         // correct left
-                        //hMotorController1.setMotor1Power(0.40);
-                        //hMotorController1.setMotor2Power(0.40);
+                        hMotorController1.setMotor1Power(-0.40);
+                        hMotorController1.setMotor2Power(-0.40);
                         hMotorController0.setMotor1Power(0.20);
                         hMotorController0.setMotor2Power(0.20);
 
                     } else {
                         // correct right
-                        //hMotorController1.setMotor1Power(0.20);
-                        //hMotorController1.setMotor2Power(0.20);
+                        hMotorController1.setMotor1Power(-0.20);
+                        hMotorController1.setMotor2Power(-0.20);
                         hMotorController0.setMotor1Power(0.40);
                         hMotorController0.setMotor2Power(0.40);
 
                     }
                 }
+            } // while less than encoder targert
+
+            // stop motors
+            // make sure motor controllers went into write mode
+            //controller1ready = false; controller0ready = false;
+            //while (!controller1ready || !controller0ready) {
+            for (int i=0; i < 5000; i++) {
+            // while (hMotorController0.state != 4 && hMotorController1.state != 4) {
+                hMotorController1.setMotor1Power(0.0);
+                hMotorController1.setMotor2Power(0.0);
+                hMotorController0.setMotor1Power(0.0);
+                hMotorController0.setMotor2Power(0.0);
+                hMotorController1.process();
+                hMotorController0.process();
+                telemetry.addData("state", String.format("%d %d", hMotorController0.state, hMotorController1.state));
+                //if (hMotorController0.state == 4 && hMotorController0.getMotor2Power() == 0.0) {controller0ready = true;}
+                //if (hMotorController1.state == 4 && hMotorController1.getMotor2Power() == 0.0) {controller1ready = true;}
             }
+            telemetry.addData("state", String.format("stopped %d %d", hMotorController0.state, hMotorController1.state));
+
+        // make 45 deg turn right
+        sensorGyro.resetZAxisIntegrator();
+        while (Math.abs(SubtractFromCurrHeading(45)) > GyroTolerance) {
+            hMotorController1.setMotor1Power(0.40);
+            hMotorController1.setMotor2Power(0.40);
+            hMotorController0.setMotor1Power(0.40);
+            hMotorController0.setMotor2Power(0.40);
+            hMotorController1.process();
+            hMotorController0.process();
+        }
+
+        // stop motors
+        for (int i=0; i < 5000; i++) {
+            hMotorController1.setMotor1Power(0.0);
+            hMotorController1.setMotor2Power(0.0);
+            hMotorController0.setMotor1Power(0.0);
+            hMotorController0.setMotor2Power(0.0);
+            hMotorController1.process();
+            hMotorController0.process();
+            telemetry.addData("state", String.format("%d %d", hMotorController0.state, hMotorController1.state));
+        }
+        telemetry.addData("state", String.format("done %d %d", hMotorController0.state, hMotorController1.state));
+
+
 // if (telemetry.addData("Red ", colorSensor.red()) < ){
 // hMotorController0.setMotor1Power(0.10);
 // hMotorController0.setMotor2Power(0.10);
@@ -126,6 +171,5 @@ public class YushinAutonomous extends LinearOpMode {
 // hMotorController1.setMotor2Power(0.10);
 // }
 
-        }
-    }
-}
+    } // run opmode
+} // class
