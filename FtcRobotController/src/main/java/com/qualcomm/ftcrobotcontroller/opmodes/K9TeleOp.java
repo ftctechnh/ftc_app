@@ -49,6 +49,54 @@ public class K9TeleOp extends OpMode {
 	 * Also, as the claw servo approaches 0, the claw opens up (drops the game element).
 	 */
 	// TETRIX VALUES.
+
+	public class RoboticArm {
+
+		Servo armBase;
+		Servo primaryArmOne;
+		Servo primaryArmTwo;
+		Servo secondaryArmOne;
+		Servo secondaryArmTwo;
+
+		public void callDuringInit() {
+
+			armBase = hardwareMap.servo.get("armBase");
+			primaryArmOne = hardwareMap.servo.get("primaryArmOne");
+			primaryArmTwo = hardwareMap.servo.get("primaryArmTwo");
+			secondaryArmOne = hardwareMap.servo.get("secondaryArmOne");
+			secondaryArmTwo = hardwareMap.servo.get("secondaryArmTwo");
+		}
+
+		public void zeroServos() {
+
+			primaryArmOne.setPosition(0.0);
+			primaryArmTwo.setPosition(0.0);
+			secondaryArmOne.setPosition(0.0);
+			secondaryArmTwo.setPosition(0.0);
+		}
+
+		public void update(double joystickLeftX, double joystickRightX, boolean buttonY, boolean buttonA) {
+
+			// base control
+			armBase.setPosition((joystickRightX + 1.0) / 2);
+
+			// primary joint control
+			primaryArmOne.setPosition((joystickRightX + 1.0) / 2);
+			primaryArmTwo.setPosition(1.0 - (joystickRightX + 1.0) / 2);
+
+			// secondary joint control
+			if(buttonY) {
+				secondaryArmOne.setPosition(1.0);
+				secondaryArmTwo.setPosition(0.0);
+			}
+			else if(buttonA) {
+				secondaryArmOne.setPosition(0.0);
+				secondaryArmTwo.setPosition(1.0);
+			}
+		}
+
+	}
+
 	final static double ARM_MIN_RANGE  = 0.20;
 	final static double ARM_MAX_RANGE  = 0.90;
 	final static double CLAW_MIN_RANGE  = 0.20;
