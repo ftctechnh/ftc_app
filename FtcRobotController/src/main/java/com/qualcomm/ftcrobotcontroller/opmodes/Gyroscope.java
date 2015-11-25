@@ -15,24 +15,26 @@ public class Gyroscope extends OpMode implements SensorEventListener
 {
     private SensorManager mSensorManager;
     private Sensor gyroscope;
-    private float[] gyroscopeVel = {0.0f,0.0f,0.0f};
+    private Sensor acceleration;
     private float[] mGyroscope = {0.0f, 0.0f, 0.0f};
     private float[] mAcceleration = {0.0f, 0.0f, 0.0f};
-    float azimuth = 0.0f;
-    float pitch = 0.0f;
-    float roll = 0.0f;
+    double azimuth = 0.0f;
+    double pitch = 0.0f;
+    double roll = 0.0f;
 
     @Override
     public void init()
     {
         mSensorManager = (SensorManager) hardwareMap.appContext.getSystemService(Context.SENSOR_SERVICE);
         gyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        acceleration = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
     }
 
     @Override
     public void start()
     {
         mSensorManager.registerListener(this, gyroscope, SensorManager.SENSOR_DELAY_UI);
+        mSensorManager.registerListener(this, acceleration, SensorManager.SENSOR_DELAY_UI);
     }
 
     public void loop()
@@ -46,6 +48,7 @@ public class Gyroscope extends OpMode implements SensorEventListener
     {
         mSensorManager.unregisterListener(this);
     }
+
     public void onSensorChanged(SensorEvent event)
     {
         if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
@@ -60,29 +63,19 @@ public class Gyroscope extends OpMode implements SensorEventListener
         {
             float R[] = new float[9];
             float I[] = new float[9];
-            boolean result = SensorManager.getRotationMatrix(R,I,mAcceleration,mGyroscope);
+            telemetry.addData("stuffs", mAcceleration[0]);
+            boolean result = SensorManager.getRotationMatrix(R,null,mAcceleration,mGyroscope);
+
             if(result)
             {
                 float orientation[] = new float[3];
                 SensorManager.getOrientation(R, orientation);
-                azimuth = orientation[0];
-                pitch = orientation[1];
-                roll = orientation[2];
+                azimuth = Math.toDegrees(orientation[0]);
+                pitch = Math.toDegrees(orientation[1]);
+                roll = Math.toDegrees(orientation[2]);
             }
         }
 
-
-
-
-
-        if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-            mGyroscope = event.values;
-            if (mGyroscope != null) {
-                gyroscopeVel[0] = mGyroscope[0];
-                gyroscopeVel[1] = mGyroscope[1];
-                gyroscopeVel[2] = mGyroscope[2];
-            }
-        }
     }
 
     @Override
