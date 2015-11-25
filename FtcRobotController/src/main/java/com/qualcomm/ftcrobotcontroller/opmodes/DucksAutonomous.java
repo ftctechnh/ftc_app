@@ -69,14 +69,11 @@ public class DucksAutonomous extends LinearOpMode{
 //            telemetry.addData("You are calibrating", "lmao");
 //        }
 
-        winch.setPower(-1);
-        winchwheel.setPower(-1);
-        Thread.sleep(5000);
+//        winch.setPower(-1);
+//        winchwheel.setPower(-1);
+//        Thread.sleep(5000);
 
-        winchwheel.setPower(.8
-
-
-        );
+        winchwheel.setPower(.8);
         winch.setPower(1);
         Thread.sleep(5000);
 

@@ -11,11 +11,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_6
         targetCompatibility JavaVersion.VERSION_1_7
     }
-<<<<<<< HEAD
+
     productFlavors {
     }
-=======
->>>>>>> d2628cb9549e0ef183d985cfab772534ef7863fc
+
 }
 
 buildscript {
