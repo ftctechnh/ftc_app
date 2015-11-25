@@ -14,8 +14,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import java.sql.Struct;
 
-import static java.lang.Thread.sleep;
-
 /**
  * Provide a basic autonomous operational mode that uses the left and right
  * drive motors and associated encoders implemented using a state machine for
@@ -78,7 +76,7 @@ public class RedAuto extends OpMode
         front_right.setDirection(DcMotor.Direction.REVERSE);
         back_right.setDirection(DcMotor.Direction.REVERSE);
 
-        runToPosition();
+        resetEncoders();
     }
 
     //--------------------------------------------------------------------------
@@ -188,17 +186,18 @@ public class RedAuto extends OpMode
 
     void stop_motors(){
         run_motors(0, 0);
+        resetEncoders();
     }
 
-    boolean run_motors_until(double lPower, double rPower, long distance){
+    void run_motors_until(int lPower, int rPower, int distance){
+        int lDistance, rDistance;
+        if(lPower > 0) lDistance = distance;
+        else lDistance = -distance;
+        
+        if(rPower > 0) rDistance = distance;
+        else rDistance = -distance;
+        runToPosition(lDistance, rDistance);
         run_motors(lPower, rPower);
-        try {
-            sleep(distance);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        stop_motors();
-        return true;
     }
 
     void bSleep(long time){
@@ -210,43 +209,33 @@ public class RedAuto extends OpMode
 
     }
 
-    boolean turn_left_until(double power, double distance){
+    void turn_left_until(double power, double distance){
+        runToPosition(distance, -distance);
         run_motors(power, -power);
-        if(get_all_encoders()>=distance) {
-            stop_motors();
-            return true;
-        }
-        else return false;
     }
 
-    boolean turn_right_until(double power, double distance){
+    void turn_right_until(double power, double distance){
+        runToPosition(-distance, distance);
         run_motors(-power, power);
-        if(get_all_encoders()>=distance){
-            stop_motors();
-            return true;
-        }
-        else return false;
     }
 
     void resetEncoders(){
-        front_left.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        front_right.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        back_left.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        back_right.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        front_left.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
+        front_right.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
+        back_left.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
+        back_right.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
     }
 
-    void runToPosition(){
-        front_left.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-        front_right.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-        back_left.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-        back_right.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-        /*
-        int falsePosition = 99999999;
-        front_left.setTargetPosition(falsePosition);
-        front_right.setTargetPosition(falsePosition);
-        back_left.setTargetPosition(falsePosition);
-        back_right.setTargetPosition(falsePosition);
-        */
+    void runToPosition(int lDistance, int rDistance){
+    	front_left.setTargetPosition(lDistance);
+    	front_right.setTargetPosition(rDistance);
+    	back_left.setTargetPosition(lDistance);
+    	back_right.setTargetPosition(rDistance);
+    	
+        front_left.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        front_right.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        back_left.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        back_right.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
     }
 
 } // PushBotAuto
