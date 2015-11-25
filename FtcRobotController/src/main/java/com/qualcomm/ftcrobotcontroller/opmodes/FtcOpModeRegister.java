@@ -66,6 +66,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("Accelerometer", AccelerationSensor.class);
     manager.register("Gyroscope", Gyroscope.class);
     manager.register("BeaconAuto", BeaconAuto.class);
+    manager.register("TestMove", TestMove.class);
 
 
     /*

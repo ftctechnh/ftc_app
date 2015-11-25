@@ -20,9 +20,9 @@ public class TestBot implements DriverInterface
     {
         leftMotor = hardwareMap.dcMotor.get(leftMotorName);
         rightMotor = hardwareMap.dcMotor.get(rightMotorName);
-        leftMotor.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        rightMotor.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
+        leftMotor.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        rightMotor.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
     }
 
 
@@ -35,7 +35,6 @@ public class TestBot implements DriverInterface
         while(leftMotor.getCurrentPosition() < encoderTarget) {}
         leftMotor.setPower(0);
         rightMotor.setPower(0);
-
     }
 
     @Override
