@@ -60,7 +60,8 @@ public class I2cGY85ReadData extends OpMode {
   public static final int ACC_DATAY0 = 0x34;
   public static final int ACC_DATAY1 = 0x35;
   public static final int ACC_DATAZ0 = 0x36;
-  public static final int ACC_DATAZ1 = 0x37;  public static final int TOTAL_MEMORY_LENGTH = 0x06;
+  public static final int ACC_DATAZ1 = 0x37;
+  public static final int TOTAL_MEMORY_LENGTH = 0x06;
 
   int port = 5;
 
@@ -72,11 +73,12 @@ public class I2cGY85ReadData extends OpMode {
   private int Xaxis = 0;
   private int Yaxis = 0;
   private int Zaxis = 0;
+  private int counter = 0;
 
   public void init() {
     DbgLog.msg("=====Start Init=====");
     dl = new DataLogger("ADXL345_Z_Accel");
-    ds = new Wire(hardwareMap, "GY85", 2*ADXL345_I2C_ADDRESS);
+    ds = new Wire(hardwareMap, "GY85", 2 * ADXL345_I2C_ADDRESS);
     DbgLog.msg("=====Initialized Items=====");
 
     dl.addField("Micros");      //Sensor reading time in microseconds
@@ -92,7 +94,7 @@ public class I2cGY85ReadData extends OpMode {
     DbgLog.msg("=====Data Format Done=====");
     ds.write(ACC_POWER_CTL, ACC_DISABLE_PM);
     DbgLog.msg("=====PM Done=====");
-    ds.requestFrom(ACC_DEVICE_ID,1);
+    ds.requestFrom(ACC_DEVICE_ID, 1);
   }
 
   @Override
@@ -105,7 +107,12 @@ public class I2cGY85ReadData extends OpMode {
       dl.newLine();
 
       readCount++;
-      telemetry.addData("ACC", "X-Axis: " + Xaxis + " Y-Axis: " + Yaxis + " Z-Axis: "+Zaxis);
+      telemetry.addData("ACC", "X-Axis: " + Xaxis + " Y-Axis: " + Yaxis + " Z-Axis: " + Zaxis);
+      String XaxisHex = Integer.toHexString(Xaxis);
+      String YaxisHex = Integer.toHexString(Yaxis);
+      String ZaxisHex = Integer.toHexString(Zaxis);
+      telemetry.addData("ACCHex", "X-Axis: " + XaxisHex + " Y-Axis: " + YaxisHex + " Z-Axis: " + ZaxisHex);
+
       telemetry.addData("Time", accTimeStamp / 1e6);
     }
 
@@ -113,54 +120,55 @@ public class I2cGY85ReadData extends OpMode {
 
   private boolean isACCUpdate() {
     boolean isNew = false;
-    if ((System.currentTimeMillis() - accTimeStamp) > 100 ) {
-      ds.write(ACC_DATAX0);
-      ds.requestFrom(ACC_DATAX0,6);
-      accTimeStamp    = System.currentTimeMillis();
-    }
+    if ((System.currentTimeMillis() - accTimeStamp) > 100) {
+      //ds.write(ACC_DATAX0);
+      ds.requestFrom(ACC_DATAX0, 6);
 
-    if (ds.responseCount() > 0) {
-      ds.getResponse();
-      int regNumber = ds.registerNumber();
-      if (ds.isRead()) {
-        int regCount = ds.available();
-        switch (regNumber) {
-          case ACC_DEVICE_ID:
-            if (regCount == 1) {
-              int acc_did = ds.read();
-              if ((acc_did & 0xFF) != 0xE5) {
-                DbgLog.msg(String.format("=====  DID 0x%02X =====",acc_did));
+      accTimeStamp = System.currentTimeMillis();
+
+      if ((ds.responseCount() > 0) && ds.getResponse() ){
+        int regNumber = ds.registerNumber();
+        if (ds.isRead()) {
+          int regCount = ds.available();
+          switch (regNumber) {
+            case ACC_DEVICE_ID:
+              if (regCount == 1) {
+                int acc_did = ds.read();
+                if ((acc_did & 0xFF) != 0xE5) {
+                  DbgLog.msg(String.format("=====  DID 0x%02X =====", acc_did));
+                } else {
+                  ds.requestFrom(ACC_DATAX0, 6);             // Request Data
+                  DbgLog.msg(String.format("=====  GOT DID =====", acc_did));
+                }
               } else {
-                ds.requestFrom(ACC_DATAX0, 6);             // Request Data
-                DbgLog.msg(String.format("=====  GOT DID =====", acc_did));
+                telemetry.addData("Error", regNumber + " length 1 != " + regCount);
+                DbgLog.msg(String.format("ERROR reg 0x%02X Len = 0x%02X (!= 1)", regNumber, regCount));
               }
-            } else {
-              telemetry.addData("Error", regNumber + " length 1 != " + regCount);
-              DbgLog.msg(String.format("ERROR reg 0x%02X Len = 0x%02X (!= 1)", regNumber, regCount));
-            }
-            break;
-          case ACC_DATAX0:
-            if (regCount == 6) {                        // Check register count
-              accTimeStamp = ds.micros();              // Reading time
-              Xaxis       = ds.readLH();              // Read X axis
-              Yaxis       = ds.readLH();              // Read Y axis
-              Zaxis       = ds.readLH();              // Read Z axis
-              isNew       = true;
-              DbgLog.msg(String.format("=====  GOT DATAX0 6 regs ====="));
-            } else {
-              telemetry.addData("Error", regNumber + " length 6 != " + regCount);
-              DbgLog.msg(String.format("ERROR reg 0x%02X Len = 0x%02X (!= 1)", regNumber, regCount));
-            }
-            break;
-          default:
-            telemetry.addData("Error", "Unexpected register " + regNumber);
-            break;
+              break;
+            case ACC_DATAX0:
+              if (regCount == 6) {                        // Check register count
+                accTimeStamp = ds.micros();              // Reading time
+                Xaxis = ds.readLH();              // Read X axis
+                Yaxis = ds.readLH();              // Read Y axis
+                Zaxis = ds.readLH();              // Read Z axis
+                isNew = true;
+                DbgLog.msg(String.format("=====  GOT DATAX0 6 regs" + counter +" ====="));
+                DbgLog.msg(String.format("=====  DataX " + Xaxis +" ====="));
+              } else {
+                telemetry.addData("Error", regNumber + " length 6 != " + regCount);
+                DbgLog.msg(String.format("ERROR reg 0x%02X Len = 0x%02X (!= 1)", regNumber, regCount));
+              }
+              break;
+            default:
+              telemetry.addData("Error", "Unexpected register " + regNumber);
+              break;
+          }
         }
       }
+      counter++;
     }
     return isNew;
   }
-
   public void stop() {
     dl.closeDataLogger();
     ds.close();
