@@ -85,7 +85,7 @@ public class YushinAutonomous extends LinearOpMode {
 
             // drive straight by gyro
             while (hMotorController0.getMotor2Encoder() < 10800) {
-                Thread.sleep(40);
+                Thread.sleep(10);
                 hMotorController1.process();
                 hMotorController0.process();
                 telemetry.addData("counts", String.format("L:%05d R:%05d",
