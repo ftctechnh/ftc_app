@@ -64,6 +64,7 @@ import com.qualcomm.ftccommon.UpdateUI;
 import com.qualcomm.ftcrobotcontroller.opmodes.FtcOpModeRegister;
 import com.qualcomm.hardware.HardwareFactory;
 import com.qualcomm.robotcore.eventloop.EventLoopManager;
+import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.configuration.Utility;
 import com.qualcomm.robotcore.robocol.*;
 import com.qualcomm.robotcore.robot.Robot;
@@ -566,10 +567,7 @@ public class FtcRobotControllerActivity extends Activity {
                     {
                     if (!legalRCNamePattern.matcher(robotControllerName).matches())
                         {
-                        if (containsNewline(robotControllerName))
-                            reportWifiDirectError("robot controller name \"%s\" contains a carriage return: PLEASE FIX immediately", withoutNewlines(robotControllerName));
-                        else
-                            reportWifiDirectError("\"%s\" is not a legal robot controller name (see <RS02>)", robotControllerName);
+                        reportWifiDirectError("\"%s\" is not a legal robot controller name (see <RS02>)", robotControllerName);
                         }
                     }
 
@@ -582,10 +580,7 @@ public class FtcRobotControllerActivity extends Activity {
                         {
                         if (!legalDSNamePattern.matcher(peer.deviceName).matches())
                             {
-                            if (containsNewline(peer.deviceName))
-                                reportWifiDirectError("driver station name \"%s\" contains a carriage return: PLEASE FIX immediately", withoutNewlines(peer.deviceName));
-                            else
-                                reportWifiDirectError("\"%s\" is not a legal driver station name (see <RS02>)", peer.deviceName);
+                            reportWifiDirectError("\"%s\" is not a legal driver station name (see <RS02>)", peer.deviceName);
                             }
                         }
                     }
@@ -595,25 +590,6 @@ public class FtcRobotControllerActivity extends Activity {
         //------------------------------------------------------------------------------------------
         // Utility
         //------------------------------------------------------------------------------------------
-
-        boolean containsNewline(String name)
-            {
-            return name.contains("\n") || name.contains("\r");
-            }
-        String withoutNewlines(String name)
-            {
-            StringBuilder result = new StringBuilder();
-            for (int ich = 0; ich < name.length(); ich++)
-                {
-                char ch = name.charAt(ich);
-                switch (ch)
-                    {
-                    case '\r':case '\n': break;
-                    default: result.append(ch); break;
-                    }
-                }
-            return result.toString();
-            }
 
         /** Is this peer a driver station? If in doubt, answer 'no'*/
         boolean isDriverStation(WifiP2pDevice peer)
