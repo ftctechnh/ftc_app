@@ -9,7 +9,6 @@ public interface AttachmentInterface
     void moveGrabberDown();
     void releaseClimbers();
     void grabClimbers();
-    void senseColor(/*param for value of blue*/);
     void primeObjectsInRobot();
     void loadGrabber();
     void collectObjects();
