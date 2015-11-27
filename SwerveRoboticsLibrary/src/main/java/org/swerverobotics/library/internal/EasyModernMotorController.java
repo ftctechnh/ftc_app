@@ -252,9 +252,8 @@ public class EasyModernMotorController extends EasyModernController implements D
 
         int cur = getMotorCurrentPosition(motor);
         int tar = getMotorTargetPosition(motor);
-        RunMode mode = getMotorChannelMode(motor);
 
-        return mode==RunMode.RUN_TO_POSITION && (Math.abs(cur - tar) > busyThreshold);
+        return (Math.abs(cur - tar) > busyThreshold);
         }
 
     @Override public synchronized double getMotorPower(int motor)
