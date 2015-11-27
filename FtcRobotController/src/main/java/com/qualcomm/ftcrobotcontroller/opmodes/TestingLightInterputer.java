@@ -22,16 +22,21 @@ public class TestingLightInterputer extends OpMode
         }
 public void loop()
     {
-        int redDiff = Math.abs(clearSensor.getLightDetectedRaw() - redSensor.getLightDetectedRaw());
-        int blueDiff = Math.abs(clearSensor.getLightDetectedRaw() - blueSensor.getLightDetectedRaw());
+        int clear = clearSensor.getLightDetectedRaw();
+        int redDiff = Math.abs(clear - redSensor.getLightDetectedRaw());
+        int blueDiff = Math.abs(clear - blueSensor.getLightDetectedRaw());
 
-        if ((redDiff/blueDiff) > (blueDiff/redDiff))
+        if (blueDiff >= (2 * redDiff))
         {
-            telemetry.addData("Beacon is blue", redSensor.getLightDetectedRaw());
+            telemetry.addData("Beacon is red", redSensor.getLightDetectedRaw());
         }
-        if ((redDiff/blueDiff) < (blueDiff/redDiff))
+        else if (redDiff >= (2 * blueDiff))
         {
-            telemetry.addData("Beacon is red", blueSensor.getLightDetectedRaw());
+            telemetry.addData("Beacon is blue", blueSensor.getLightDetectedRaw());
+        }
+        else
+        {
+            telemetry.addData("Beacon is undefined", 0);
         }
 
     }
@@ -39,8 +44,7 @@ public void stop()
         {
 
         }
-        }
+}
 
 
 
-        }
