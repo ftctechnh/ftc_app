@@ -52,9 +52,9 @@ public class Gyroscope extends OpMode implements SensorEventListener
     public void onSensorChanged(SensorEvent event)
     {
         if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
-        {
-            mAcceleration = event.values;
-        }
+    {
+        mAcceleration = event.values;
+    }
         if(event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
         {
             mGyroscope = event.values;
