@@ -24,51 +24,48 @@ public class DucksAutonomous extends LinearOpMode{
 
     }
 
-    public void goForward(double speed, long MS) throws InterruptedException{
+    public void goForward(double speed, long MS)throws InterruptedException{
         driveMC.setMotorPower(RIGHT,speed);
-        driveMC.setMotorPower(LEFT,-speed);
+        driveMC.setMotorPower(LEFT, -speed);
         Thread.sleep(MS);
         driveMC.setMotorPower(LEFT, 0);
-        driveMC.setMotorPower(RIGHT,0);
-        Thread.sleep(500);
+        driveMC.setMotorPower(RIGHT, 0);
     }
 
-    public void turnLeft (int degrees, double speed) throws InterruptedException{
+    public void turnLeft (int degrees, double speed){
         int startHeading=gyro.getHeading();
         int targetHeading=startHeading-degrees;
         if(targetHeading<0){
             targetHeading=targetHeading+360;
         }
         while(gyro.getHeading()<targetHeading-3 || gyro.getHeading()>targetHeading+3){
-            driveMC.setMotorPower(LEFT, speed);
-            driveMC.setMotorPower(RIGHT,speed);
+            if(driveMC.getMotorPower(LEFT)!=speed) {
+                driveMC.setMotorPower(LEFT, speed);
+                driveMC.setMotorPower(RIGHT, speed);
+            }
             telemetry.addData("currentheading", gyro.getHeading());
-            telemetry.addData("targetHeading",targetHeading);
+            telemetry.addData("targetHeading", targetHeading);
         }
         driveMC.setMotorPower(LEFT, 0);
         driveMC.setMotorPower(RIGHT, 0);
-        Thread.sleep(500);
     }
 
-    public void turnRight (int degrees,double speed) throws InterruptedException{
+    public void turnRight (int degrees,double speed){
         int startHeading=gyro.getHeading();
         int targetHeading=startHeading+degrees;
         if(targetHeading>360){
             targetHeading=targetHeading-360;
         }
-        while(gyro.getHeading()<targetHeading-5 || gyro.getHeading()>targetHeading+5){
-            printHeading();
+        while(gyro.getHeading()<targetHeading-3 || gyro.getHeading()>targetHeading+3){
+            if(driveMC.getMotorPower(LEFT)!=-speed) {
+                driveMC.setMotorPower(LEFT, -speed);
+                driveMC.setMotorPower(RIGHT, -speed);
+            }
             telemetry.addData("currentheading", gyro.getHeading());
-            telemetry.addData("targetHeading",targetHeading);
-            driveMC.setMotorPower(LEFT, -speed);
-            driveMC.setMotorPower(RIGHT, -speed);
+            telemetry.addData("targetHeading", targetHeading);
         }
         driveMC.setMotorPower(LEFT,0);
-        driveMC.setMotorPower(RIGHT,0);
-        Thread.sleep(500);
-    }
-    public void printHeading(){
-        telemetry.addData("currentHeading",gyro.getHeading());
+        driveMC.setMotorPower(RIGHT, 0);
     }
     @Override
     public void runOpMode() throws InterruptedException{
@@ -83,9 +80,15 @@ public class DucksAutonomous extends LinearOpMode{
 
         waitForStart();
 
-        //go forward from starting position
+        //assorted commands for testing gyro
         goForward(1, 1000);
-        turnLeft(90, 1);
+        turnRight(10, .8);
+        turnLeft(90, .8);
+        goForward(1, 1000);
+        turnRight(90, .8);
+        driveMC.setMotorPower(LEFT, 0);
+        driveMC.setMotorPower(RIGHT, 0);
+//        goForward(1,1000);
 
 //        //go forward after turning
 //        left.setPower(.5);
