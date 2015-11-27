@@ -7,6 +7,8 @@ android {
     }
     compileSdkVersion 'Google Inc.:Google APIs:19'
     buildToolsVersion '21.1.2'
+    productFlavors {
+    }
 }
 
 buildscript {
