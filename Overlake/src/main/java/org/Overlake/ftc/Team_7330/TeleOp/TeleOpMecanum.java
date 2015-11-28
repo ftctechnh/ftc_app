@@ -47,12 +47,13 @@ import org.swerverobotics.library.interfaces.*;
  */
 
 @TeleOp(name="TeleOpMecanum")
-public class TeleOpMecanum extends OpMode {
+public class  TeleOpMecanum extends OpMode {
 	DcMotor motorFrontRight;
 	DcMotor motorBackRight;
 	DcMotor motorFrontLeft;
 	DcMotor motorBackLeft;
 	DcMotor churroMotor;
+	DcMotor armMotor;
 
 	Servo servoRightWing;
 	Servo servoLeftWing;
@@ -65,10 +66,6 @@ public class TeleOpMecanum extends OpMode {
 	boolean rightWingDown = false;
 	boolean leftWingDown = false;
 	boolean climberRelease = false;
-
-	boolean slowChurro = false;
-	boolean rightBumpTwo = false;
-	boolean leftBumpTwo= false;
 
 	public TeleOpMecanum() {
 
@@ -86,11 +83,11 @@ public class TeleOpMecanum extends OpMode {
 		motorFrontLeft = hardwareMap.dcMotor.get("motorFrontLeft");
 		motorBackLeft = hardwareMap.dcMotor.get("motorBackLeft");
 		churroMotor = hardwareMap.dcMotor.get(("churroMotor"));
+		armMotor = hardwareMap.dcMotor.get(("armMotor"));
 
 		servoLeftWing = hardwareMap.servo.get("servoLeftWing");
 		servoRightWing = hardwareMap.servo.get("servoRightWing");
 		servoClimberRelease = hardwareMap.servo.get("servoClimberRelease");
-
 
 		motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
 		motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -112,9 +109,12 @@ public class TeleOpMecanum extends OpMode {
 		boolean rightBumper = gamepad2.right_bumper;
 		boolean leftBumper = gamepad2.left_bumper;
 		boolean b = gamepad2.b;
-		boolean slowChurro = gamepad1.a;
-		boolean rightBumpTwo = gamepad1.right_bumper;
-		boolean leftBumpTwo= gamepad1.left_bumper;
+
+		boolean upDpad = gamepad1.dpad_up;
+		boolean downDpad = gamepad1.dpad_down;
+
+		boolean upDpad2 = gamepad2.dpad_up;
+		boolean downDpad2 = gamepad2.dpad_down;
 
 		// scale the joystick value to make it easier to control
 		// the robot more precisely at slower speeds.
@@ -157,7 +157,7 @@ public class TeleOpMecanum extends OpMode {
 		}
 		else
 		{
-			 servoClimberRelease.setPosition(0.10);
+			 servoClimberRelease.setPosition(0);
 		}
 
 		if (rightWingDown)
@@ -178,26 +178,32 @@ public class TeleOpMecanum extends OpMode {
 			servoLeftWing.setPosition(0.83);
 		}
 
-
-
-		if(rightBumpTwo)
+		if (upDpad)
 		{
-			if(slowChurro)
-				churroMotor.setPower(.8*.5);
-			else
-				churroMotor.setPower(.8);
+			churroMotor.setPower(0.8);
 		}
-		else if(leftBumpTwo)
+		else if (downDpad)
 		{
-			if(slowChurro)
-				churroMotor.setPower(-.8*.5);
-			else
-				churroMotor.setPower(-.8);
+			churroMotor.setPower(-0.8);
 		}
 		else
 		{
 			churroMotor.setPower(0);
 		}
+
+		if (upDpad2)
+		{
+			armMotor.setPower(0.6);
+		}
+		else if (downDpad2)
+		{
+			armMotor.setPower(-0.6);
+		}
+		else
+		{
+			armMotor.setPower(0);
+		}
+
 
 		wasB = b;
 		wasLeftBumper = leftBumper;
