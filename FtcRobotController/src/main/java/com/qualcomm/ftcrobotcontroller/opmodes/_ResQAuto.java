@@ -46,7 +46,7 @@ public abstract class _ResQAuto extends LinearOpMode {
         double SECOND_SWEEP_DISTANCE = 40;
         double PUSH_BUTTON_DISTANCE = 20;
 
-        double EOPDThreshold = 0.5 * (BLACKVALUE + WHITEVALUE);
+
         double ultrasonicThreshold = 15;
         String date;
 
@@ -74,6 +74,7 @@ public abstract class _ResQAuto extends LinearOpMode {
             BLUEVALUE = 0.05;
         }
 
+        double EOPDThreshold = 0.5 * (BLACKVALUE + WHITEVALUE);
         final double POWER = 0.3;
         final double BASEPOWER = 0.2;
 
@@ -109,12 +110,12 @@ public abstract class _ResQAuto extends LinearOpMode {
         button2servoPosition = 0.3;
         button2Servo.setPosition(button2servoPosition);
 
-        leftsweeper = hardwareMap.servo.get("leftsweeper");
-        leftsweeperPosition = 0.8;
-        leftsweeper.setPosition(leftsweeperPosition);
-        rightsweeper = hardwareMap.servo.get("rightsweeper");
-        rightsweeperPosition = 0.2;
-        rightsweeper.setPosition(rightsweeperPosition);
+        //leftsweeper = hardwareMap.servo.get("//leftsweeper");
+        //leftsweeperPosition = 0.8;
+        //leftsweeper.setPosition(//leftsweeperPosition);
+        //rightsweeper = hardwareMap.servo.get("//rightsweeper");
+        //rightsweeperPosition = 0.2;
+        //rightsweeper.setPosition(//rightsweeperPosition);
         climberservo = hardwareMap.servo.get("climberservo");
         climberservoPosition = 0.0;
         climberservo.setPosition(climberservoPosition);
@@ -138,7 +139,9 @@ public abstract class _ResQAuto extends LinearOpMode {
         sleep(getDelay());
         telemetry.addData("InDelay", "no");
 
+        /*
         rightWheel.setPower(0.5);
+
         leftWheel.setPower(0.5);
         if (getDelay() == 0)
             sleep(3500);
@@ -148,40 +151,42 @@ public abstract class _ResQAuto extends LinearOpMode {
         leftWheel.setPower(0);
         //telemetry.addData("Encoder Value", rightWheel.getCurrentPosition());
 
+
         if (!firstSweep) {
             //if (getRedAlliance() == 1 && Math.abs(reflectance - REDVALUE) < 0.03) { //found the red tape before white tape, perfect place to sweep the debris into scoring region
             if (getRedAlliance() == 1){
                 leftWheel.setPower(0);
                 rightWheel.setPower(0);
                 //Sweeps the balls and boxes
-                rightsweeper.setPosition(1);
+                //rightsweeper.setPosition(1);
                 sleep(700);
-                leftsweeper.setPosition(0);
+                //leftsweeper.setPosition(0);
                 sleep(700);
-                rightsweeper.setPosition(0.2);
+                //rightsweeper.setPosition(0.2);
                 sleep(300);
-                leftsweeper.setPosition(1);
+                //leftsweeper.setPosition(1);
                 //sleep(500); //may need to move twice if too much debris accumulated
             //}else if (getRedAlliance() == 0 && Math.abs(reflectance - BLUEVALUE) < 0.03) { //found the blue tape before white tape, perfect place to sweep the debris into scoring region
             }else{
                 leftWheel.setPower(0);
                 rightWheel.setPower(0);
                 //Sweeps the balls and boxes
-                leftsweeper.setPosition(0);
+                //leftsweeper.setPosition(0);
                 sleep(700);
-                rightsweeper.setPosition(1);
+                //rightsweeper.setPosition(1);
                 sleep(700);
-                leftsweeper.setPosition(1);
+                //leftsweeper.setPosition(1);
                 sleep(300);
-                rightsweeper.setPosition(0.2);
+                //rightsweeper.setPosition(0.2);
 
                 // sleep(500); //may need to move twice if too much debris accumulated
             }
             firstSweep = true;
         }
-
+*/
         //This finds the white line
         //while(reflectance < (WHITEVALUE+REDVALUE)/2+0.02) {
+/*
         while(true){
             reflectance = opticalDistanceSensor.getLightDetected();
             telemetry.addData("Reflectance Value", reflectance);
@@ -218,7 +223,7 @@ public abstract class _ResQAuto extends LinearOpMode {
         rightWheel.setPower(0);
         sleep(700);
         //follow the left edge of the line
-        while(true) {
+  */      while(true) {
             waitOneFullHardwareCycle();
             double distance = ultrasonicSensor.getUltrasonicLevel();
             reflectance = opticalDistanceSensor.getLightDetected();
@@ -238,8 +243,8 @@ public abstract class _ResQAuto extends LinearOpMode {
 
                 valueS = Range.clip(valueS, -1, 1);
                 valueB = Range.clip(valueB, -1, 1);
-                leftWheel.setPower(valueB);
-                rightWheel.setPower(valueS);
+                leftWheel.setPower(valueS);
+                rightWheel.setPower(valueB);
 
             } else {
                 value = EOPDThreshold - reflectance;
@@ -250,38 +255,38 @@ public abstract class _ResQAuto extends LinearOpMode {
 
                 valueS = Range.clip(valueS, -1, 1);
                 valueB = Range.clip(valueB, -1, 1);
-                rightWheel.setPower(valueB);
-                leftWheel.setPower(valueS);
+                rightWheel.setPower(valueS);
+                leftWheel.setPower(valueB);
             }
 
             telemetry.addData("valueB", valueB);
             telemetry.addData("valueC", valueS);
             telemetry.addData("Reflectance Value", reflectance);
             telemetry.addData("Ultrasonic Value", distance);
-
+/*
             if (!secondSweep && 34 > distance) {
                 leftWheel.setPower(0);
                 rightWheel.setPower(0);
                 //Sweeps the balls and boxes
                 if(getRedAlliance()==1) {
                     //Sweeps the balls and boxes
-                    leftsweeper.setPosition(0);
+                    //leftsweeper.setPosition(0);
                     sleep(700);
-                    rightsweeper.setPosition(0.2);
-                    sleep(700);
-                    leftsweeper.setPosition(1);
-                    sleep(300);
-                    rightsweeper.setPosition(0);
                     //rightsweeper.setPosition(0.2);
+                    sleep(700);
+                    //leftsweeper.setPosition(1);
+                    sleep(300);
+                    //rightsweeper.setPosition(0);
+                    ////rightsweeper.setPosition(0.2);
                 } else {
                     //Sweeps the balls and boxes
-                    rightsweeper.setPosition(1);
+                    //rightsweeper.setPosition(1);
                     sleep(700);
-                    leftsweeper.setPosition(0.8);
+                    //leftsweeper.setPosition(0.8);
                     sleep(700);
-                    rightsweeper.setPosition(0.2);
+                    //rightsweeper.setPosition(0.2);
                     sleep(300);
-                    leftsweeper.setPosition(1);
+                    //leftsweeper.setPosition(1);
                     //leftWheel.setPower(-0.3);
                     //rightWheel.setPower(0.3);
                     //sleep(250);
@@ -291,15 +296,15 @@ public abstract class _ResQAuto extends LinearOpMode {
             if (!thirdSweep && 28 > distance) {
                 leftWheel.setPower(0);
                 rightWheel.setPower(0);
-                //leftsweeper.setPosition(0);
+                ////leftsweeper.setPosition(0);
                // sleep(700);
-                //rightsweeper.setPosition(1);
+                ////rightsweeper.setPosition(1);
                 //sleep(700);
-                //rightsweeper.setPosition(0.2);
+                ////rightsweeper.setPosition(0.2);
                 //sleep(300);
-                //leftsweeper.setPosition(1);
+                ////leftsweeper.setPosition(1);
                 thirdSweep = true;
-            }
+            }*/
             if(distance < 18 && distance>1) {
                 if (getRedAlliance() == 0) {
                     leftWheel.setPower(0.3);
