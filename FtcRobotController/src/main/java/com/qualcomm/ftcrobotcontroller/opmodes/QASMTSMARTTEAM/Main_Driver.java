@@ -9,7 +9,11 @@ import android.hardware.SensorManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.util.Range;
 
+import java.util.ArrayList;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 
 public class Main_Driver extends OpMode implements SensorEventListener {
 
@@ -22,8 +26,11 @@ public class Main_Driver extends OpMode implements SensorEventListener {
     double[] linear_acceleration = new double[3];
 
     //DcMotor objects
-    DcMotor frontLeft,frontRight,backLeft,backRight;
+    DcMotor frontLeft,frontRight,backLeft,backRight, pivot, linear;
 
+    // servos
+    double hand;
+    Servo servo;
     //Controller 1
     double lx, ly, rx, ry, l2, r2;
     boolean a ,b ,x ,y , l1, r1, du, dd, dl, dr;
@@ -40,7 +47,7 @@ public class Main_Driver extends OpMode implements SensorEventListener {
     double 	power_front_left,
             power_front_right,
             power_back_left,
-            power_back_right;
+            power_back_right = 0;
 
     //Specific to heading
     double heading = 0;
@@ -51,6 +58,8 @@ public class Main_Driver extends OpMode implements SensorEventListener {
     //Calculation
     double direction, magnitude, offset, resultant;
     double stopwatch, v, vd, ad, am, pam,  vt;
+
+    //ArrayList<Double> list = new ArrayList<Double>();
 
     // Motors
     double frv, flv, blv, brv, frp, flp, blp, brp;
@@ -86,16 +95,46 @@ public class Main_Driver extends OpMode implements SensorEventListener {
 		frontRight = hardwareMap.dcMotor.get("front_right");
 		backLeft = hardwareMap.dcMotor.get("back_left");
 		backRight = hardwareMap.dcMotor.get("back_right");
+
 		frontLeft.setDirection(DcMotor.Direction.REVERSE);
 		backLeft.setDirection(DcMotor.Direction.REVERSE);
+
 		frontLeft.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         frontRight.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         backLeft.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         backRight.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         */
+
+        try {
+            servo = hardwareMap.servo.get("hand");
+            frontLeft = hardwareMap.dcMotor.get("front_left");
+            frontRight = hardwareMap.dcMotor.get("front_right");
+            backLeft = hardwareMap.dcMotor.get("back_left");
+            backRight = hardwareMap.dcMotor.get("back_right");
+            pivot = hardwareMap.dcMotor.get("Pivot");
+            linear = hardwareMap.dcMotor.get("Linear");
+
+            frontRight.setDirection(DcMotor.Direction.REVERSE);
+            backRight.setDirection(DcMotor.Direction.REVERSE);
+
+        }
+        catch (Exception c)
+        {
+            telemetry.addData("robot is gonna die", 0);
+        }
+
     }
-
-
+    @Override
+    public void start()
+    {
+        frontLeft.setPower(0.5);
+        frontRight.setPower(0.5);
+        backLeft.setPower(0.5);
+        backRight.setPower(0.5);
+        double straightT = System.currentTimeMillis();
+        while(System.currentTimeMillis() < straightT + 1000)
+        {}
+    }
     @Override
     public void loop() {
 
@@ -117,9 +156,116 @@ public class Main_Driver extends OpMode implements SensorEventListener {
         dd = gamepad1.dpad_down;
         dl = gamepad1.dpad_left;
         dr = gamepad1.dpad_right;
+        ly2 = gamepad2.left_stick_y;
+        ry2 = gamepad2.right_stick_y;
+        l12 = gamepad2.left_bumper;
+        r12 = gamepad2.right_bumper;
 
         //TODO where is the position nevin?
         //frontLeft.getController().setMotorTargetPosition();
+
+        //Range.clip()
+
+        /*power_front_right = ly - lx - rx;
+        power_front_left  = ly + lx + rx;
+        power_back_left   = ly - lx + rx;
+        power_back_right  = ly + lx - rx;*/
+
+        /*if(l1)
+        {
+            power_front_left = 0.5;
+            frontLeft.setPower(power_front_left);
+        }
+        if(r1)
+        {
+            power_front_right = 0.5;
+            frontRight.setPower(power_front_right);
+        }
+        if(l2>0)
+        {
+            power_back_left = 0.5;
+            backLeft.setPower(power_back_left);
+
+        }
+        if(r2>0)
+        {
+            power_back_right = 0.5;
+            backRight.setPower(power_back_right);
+        }*/
+
+
+
+       /* power_front_right = 0.5 * rx;
+        power_front_left  = 0.5 * lx;
+        power_back_left   = 0.5 * rx;
+        power_back_right  = 0.5 * lx;*/
+
+        // result is assigned the value 1.0
+
+        //Ternary operator. 
+        //float result = true ? 1.0f : 2.0f;
+
+        try {
+            telemetry.addData("lx", lx);
+            telemetry.addData("ly", ly);
+            telemetry.addData("rx", rx);
+            telemetry.addData("ly2", ly2);
+            telemetry.addData("ry2", ry2);
+
+            if(l12)
+                hand += 0.02;
+            if(r12)
+                hand -= 0.02;
+
+
+            hand = Range.clip(hand, 0, 1);
+            servo.setPosition(hand);
+
+            //power_front_right = (ly + lx - rx) * 0.9;   //use ternary operators for this logical
+            //condition
+            //if the left stick values add up to 1 or even -1, and the right stick is not ze ro
+            //left sticks values * 0.5 + right stick * 0.5
+            //power_front_left = (ly - lx + rx) * 0.9;
+            //power_back_left = (ly + lx + rx) * 0.9;
+            //power_back_right = (ly - lx - rx) * 0.9;
+
+            /*
+            power_front_right = (ly+lx)*(1-rx) * 0.9;
+            power_front_left = (ly - lx + rx) * 0.9;
+            power_back_left = (ly + lx + rx) * 0.9;
+            power_back_right = (ly - lx)*(1-rx) * 0.9;
+            */
+
+            power_front_right = (ly + lx - rx) *0.9;
+            power_front_left = (ly - lx + rx) * 0.9;
+            power_back_left = (ly + lx + rx) * 0.9;
+            power_back_right = (ly - lx - rx) * 0.9;
+
+            if(power_front_right > 1)
+                power_front_right = 1;
+            if(power_back_left > 1)
+                power_back_left = 1;
+            if(power_front_left > 1)
+                power_front_left = 1;
+            if(power_back_right > 1)
+                power_back_right = 1;
+
+
+            telemetry.addData("fr", power_front_right);
+            telemetry.addData("fl", power_front_left);
+            telemetry.addData("bl", power_back_left);
+            telemetry.addData("br", power_back_right);
+
+            frontLeft.setPower(power_front_left);
+            frontRight.setPower(power_front_right);
+            backLeft.setPower(power_back_left);
+            backRight.setPower(power_back_right);
+            pivot.setPower(ly2*0.4);
+            linear.setPower(ry2);
+        }catch(Exception e)
+        {
+            telemetry.addData("MINT", "Mit die");
+        }
 
 
 		/*
@@ -131,22 +277,64 @@ public class Main_Driver extends OpMode implements SensorEventListener {
 		*
 		*
 		* */
-        if(!dPerspective){
-            if(!sync)
+
+
+
+
+
+
+        /*if(r1) {
+            if(ly!=0){
+            frontLeft.setPower(0.5*ly);
+            frontRight.setPower(0.5*ly);
+            backLeft.setPower(0.5*ly);
+            backRight.setPower(0.5*ly);
+        }}
+        if(l1)
+        {
+
+            if(lx<-0.01)
             {
+                power_front_right = -0.5 * lx;
+                power_front_left  = 0.5  * lx;
+                power_back_left   = -0.5 * lx;
+                power_back_right  = 0.5 * lx;
+                frontLeft.setPower(power_front_left);
+                frontRight.setPower(power_front_right);
+                backLeft.setPower(power_back_left);
+                backRight.setPower(power_back_right);
+
+            }
+            else if (lx > 0.01){
+
+                power_front_right = 0.5 * lx;
+                power_front_left  = -0.5 * lx;
+                power_back_left   = 0.5 * lx;
+                power_back_right  = -0.5 * lx;
+                frontLeft.setPower(power_front_left);
+                frontRight.setPower(power_front_right);
+                backLeft.setPower(power_back_left);
+                backRight.setPower(power_back_right);
+
+            }
+        }*/
+
+
+
+
+		/*if(!dPerspective){
+		    if(!sync)
+		    {
+                *//*
                 power_front_right = ly - lx - rx;
                 power_front_left  = ly + lx + rx;
                 power_back_left   = ly - lx + rx;
                 power_back_right  = ly + lx - rx;
-                if(power_front_right > 1)
-                    power_front_right = 1;
-                if(power_front_left > 1)
-                    power_front_left = 1;
-                if(power_back_left > 1)
-                    power_back_left = 1;
-                if(power_back_right > 1)
-                    power_back_left = 1;
-
+*//*
+                power_front_right = (ly + lx - rx)*0.3;
+                power_front_left  = (ly - lx + rx)*0.3;
+                power_back_left   = (ly + lx + rx)*0.3;
+                power_back_right  = (ly - lx - rx)*0.3;
             }
             else
             {
@@ -157,14 +345,9 @@ public class Main_Driver extends OpMode implements SensorEventListener {
             }
         }
         else{
-            //=================================================
-            //    Driver perspective
-            // *************************************************
+		//=================================================
+          //  Driver perspective
 
-            if(lx == 0 && ly == 0)
-            {
-                direction = 0;
-            }
             if(lx == 0 && ly != 0)
             {
                 if(ly > 0)
@@ -196,12 +379,19 @@ public class Main_Driver extends OpMode implements SensorEventListener {
             lx = (double) Math.cos(resultant) * magnitude;
 
 
-            if(!sync)
-            {
+             if(!sync)
+		    {
+
+                power_front_right = (ly + lx - rx)*0.3;
+                power_front_left  = (ly - lx + rx)*0.3;
+                power_back_left   = (ly + lx + rx)*0.3;
+                power_back_right  = (ly - lx - rx)*0.3;
+                *//*
                 power_front_right = ly - lx - rx;
                 power_front_left  = ly + lx + rx;
                 power_back_left   = ly - lx + rx;
                 power_back_right  = ly + lx - rx;
+                *//*
             }
             else
             {
@@ -278,27 +468,19 @@ public class Main_Driver extends OpMode implements SensorEventListener {
         backRight.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
 
 
-        // Adjust for any powers over 1
-        if(power_front_right > 1)
-            power_front_right = 1;
-        if(power_front_left > 1)
-            power_front_left = 1;
-        if(power_back_left > 1)
-            power_back_left = 1;
-        if(power_back_right > 1)
-            power_back_left = 1;
         // set powers to motors
-        frontLeft.setPower(power_front_left);
-        frontRight.setPower(power_front_right);
-        backLeft.setPower(power_back_left);
-        backRight.setPower(power_back_right);
+		frontLeft.setPower(power_front_left);
+		frontRight.setPower(power_front_right);
+		backLeft.setPower(power_back_left);
+		backRight.setPower(power_back_right);
+
 
 
 
 
 
         //Change modes - I'm changing this, checked with Rowan, to Y toggle
-        /*
+        *//*
         if(b&&r1)
         {
             dPerspective = false;
@@ -308,22 +490,11 @@ public class Main_Driver extends OpMode implements SensorEventListener {
             dPerspective = true;
             initial = false;
         }
-        */
+        *//*
 
         if(y)
         {
             dPerspective = !dPerspective;
-            //DONT USE THE SAME TO TOGGLE
-            /*
-            * the loop runs many times in a while, so you cannot accurately tell if
-            * it is switching modes
-            * and trust me it won't work as intended
-            *
-            * have y to change to driver perspective
-            * have x to change to non-driver perspective
-            *
-            * toggles won't work mate
-            * */
         }
         // Toggle Traction control
         if(r1)
@@ -366,7 +537,8 @@ public class Main_Driver extends OpMode implements SensorEventListener {
         }
 
 
-
+        telemetry.addData("value", ly);
+*/
 
 
     } // End Loop
@@ -410,6 +582,8 @@ public class Main_Driver extends OpMode implements SensorEventListener {
             ay = linear_acceleration[1];
             az = linear_acceleration[2];
 
+            //list.add(ax);
+
             /* Not gonna bother with this for now, maybe later
             // Attempt to calculate - no idea what's happening
             double elapsed = (System.currentTimeMillis() - stopwatch)/1000;
@@ -425,6 +599,7 @@ public class Main_Driver extends OpMode implements SensorEventListener {
             tvx = vx + pvx;
             v = Math.sqrt(tvy * tvy + tvx * tvx);
             vd = Math.atan(tvy/tvx);
+
             stopwatch = System.currentTimeMillis();
             pam = am;
             */
