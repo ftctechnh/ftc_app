@@ -84,7 +84,6 @@ public class Main_Driver extends OpMode implements SensorEventListener {
     double[] reducer = new double[4];
     boolean dPerspective = true;
     boolean tc = false;
-    boolean sync = false;
     public Main_Driver() {
 
     }
@@ -337,18 +336,12 @@ public class Main_Driver extends OpMode implements SensorEventListener {
 
 
 		if(!dPerspective){
-		    if(!sync)
+		    if(!a)
 		    {
-
-                power_front_right = ly - lx - rx;
-                power_front_left  = ly + lx + rx;
-                power_back_left   = ly - lx + rx;
-                power_back_right  = ly + lx - rx;
-
-                power_front_right = (ly + lx - rx)*0.3;
-                power_front_left  = (ly - lx + rx)*0.3;
-                power_back_left   = (ly + lx + rx)*0.3;
-                power_back_right  = (ly - lx - rx)*0.3;
+                power_front_right = (ly + lx - rx)*0.9;
+                power_front_left  = (ly - lx + rx)*0.9;
+                power_back_left   = (ly + lx + rx)*0.9;
+                power_back_right  = (ly - lx - rx)*0.9;
             }
             else
             {
@@ -393,18 +386,13 @@ public class Main_Driver extends OpMode implements SensorEventListener {
             lx = (double) Math.cos(resultant) * magnitude;
 
 
-             if(!sync)
+             if(!a)
 		    {
 
-                power_front_right = (ly + lx - rx)*0.3;
-                power_front_left  = (ly - lx + rx)*0.3;
-                power_back_left   = (ly + lx + rx)*0.3;
-                power_back_right  = (ly - lx - rx)*0.3;
-
-                power_front_right = ly - lx - rx;
-                power_front_left  = ly + lx + rx;
-                power_back_left   = ly - lx + rx;
-                power_back_right  = ly + lx - rx;
+                power_front_right = (ly + lx - rx)*0.9;
+                power_front_left  = (ly - lx + rx)*0.9;
+                power_back_left   = (ly + lx + rx)*0.9;
+                power_back_right  = (ly - lx - rx)*0.9;
 
             }
             else
@@ -518,10 +506,7 @@ public class Main_Driver extends OpMode implements SensorEventListener {
             r1p = false;
         }
         // Toggle motor sync
-        if(a)
-        {
-            sync = true;
-        }
+
         //Reset initial heading to current
         if(l1&&r1&&a)
         {
