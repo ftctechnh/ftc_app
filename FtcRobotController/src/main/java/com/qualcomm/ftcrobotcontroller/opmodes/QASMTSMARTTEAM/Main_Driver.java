@@ -48,6 +48,10 @@ public class Main_Driver extends OpMode implements SensorEventListener {
     // servos
     double hand;
     Servo servo;
+
+    // Linbae
+
+
     //Controller 1
     double lx, ly, rx, ry, l2, r2;
     boolean a ,b ,x ,y , l1, r1, du, dd, dl, dr;
@@ -65,7 +69,7 @@ public class Main_Driver extends OpMode implements SensorEventListener {
             power_front_right,
             power_back_left,
             power_back_right = 0;
-
+    double pivot_power, linear_power = 0;
     //Specific to heading
     double heading = 0;
     double initialHeading = 0;
@@ -250,7 +254,7 @@ public class Main_Driver extends OpMode implements SensorEventListener {
             power_front_left = (ly - lx + rx) * 0.9;
             power_back_left = (ly + lx + rx) * 0.9;
             power_back_right = (ly - lx)*(1-rx) * 0.9;
-            */
+
 
             power_front_right = (ly + lx - rx) *0.9;
             power_front_left = (ly - lx + rx) * 0.9;
@@ -266,18 +270,12 @@ public class Main_Driver extends OpMode implements SensorEventListener {
             if(power_back_right > 1)
                 power_back_right = 1;
 
+            */
 
-            telemetry.addData("fr", power_front_right);
-            telemetry.addData("fl", power_front_left);
-            telemetry.addData("bl", power_back_left);
-            telemetry.addData("br", power_back_right);
-
-            frontLeft.setPower(power_front_left);
-            frontRight.setPower(power_front_right);
-            backLeft.setPower(power_back_left);
-            backRight.setPower(power_back_right);
             pivot.setPower(ly2*0.4);
             linear.setPower(ry2);
+
+
         }catch(Exception e)
         {
             telemetry.addData("MINT", "Mit die");
@@ -403,7 +401,7 @@ public class Main_Driver extends OpMode implements SensorEventListener {
                 power_back_right  = ly ;
             }
 
-        } // finished assigning power values to variables
+        } // finished driver perspective and assigning powers
 
         // Traction control code
         if(tc)
@@ -461,13 +459,22 @@ public class Main_Driver extends OpMode implements SensorEventListener {
             power_back_right  -= reducer[3];
         } // finished scaling powers with reducers
 
+
+        // Pivot motor
+
+
+        // Linear motor
+
         // Reset encoders and timestamp
         // Always put this code after the Traction control block, but not inside
         motorWatch = System.currentTimeMillis();
+
         frontRight.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
         frontLeft.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
         backLeft.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
         backRight.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
+        pivot.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
+        linear.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
 
 
         // set powers to motors
