@@ -15,6 +15,23 @@ import java.util.ArrayList;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
+    /*
+    *
+    *
+    * Controls are defined here
+    *
+    * B + R1 = Non driver perspective (erase)
+    * B + L1 = Driver perspective (erase)
+    * Y      = Toggle Driver Perspective
+    * R1     = Right bumber of gamepad 1 toggles Traction Control
+    *
+    * L1 + R1 + A = Reset initial heading to current
+    *
+    *
+    *
+    *
+    * */
+
 public class Main_Driver extends OpMode implements SensorEventListener {
 
     //TODO look into vector products of axis for the implementation of vertical phone compass
@@ -279,17 +296,14 @@ public class Main_Driver extends OpMode implements SensorEventListener {
 		* */
 
 
-
-
-
-
-        /*if(r1) {
+        if(r1) {
             if(ly!=0){
-            frontLeft.setPower(0.5*ly);
-            frontRight.setPower(0.5*ly);
-            backLeft.setPower(0.5*ly);
-            backRight.setPower(0.5*ly);
-        }}
+                frontLeft.setPower(0.5*ly);
+                frontRight.setPower(0.5*ly);
+                backLeft.setPower(0.5*ly);
+                backRight.setPower(0.5*ly);
+            }
+        }
         if(l1)
         {
 
@@ -317,20 +331,20 @@ public class Main_Driver extends OpMode implements SensorEventListener {
                 backRight.setPower(power_back_right);
 
             }
-        }*/
+        }
 
 
 
 
-		/*if(!dPerspective){
+		if(!dPerspective){
 		    if(!sync)
 		    {
-                *//*
+
                 power_front_right = ly - lx - rx;
                 power_front_left  = ly + lx + rx;
                 power_back_left   = ly - lx + rx;
                 power_back_right  = ly + lx - rx;
-*//*
+
                 power_front_right = (ly + lx - rx)*0.3;
                 power_front_left  = (ly - lx + rx)*0.3;
                 power_back_left   = (ly + lx + rx)*0.3;
@@ -386,12 +400,12 @@ public class Main_Driver extends OpMode implements SensorEventListener {
                 power_front_left  = (ly - lx + rx)*0.3;
                 power_back_left   = (ly + lx + rx)*0.3;
                 power_back_right  = (ly - lx - rx)*0.3;
-                *//*
+
                 power_front_right = ly - lx - rx;
                 power_front_left  = ly + lx + rx;
                 power_back_left   = ly - lx + rx;
                 power_back_right  = ly + lx - rx;
-                *//*
+
             }
             else
             {
@@ -480,7 +494,7 @@ public class Main_Driver extends OpMode implements SensorEventListener {
 
 
         //Change modes - I'm changing this, checked with Rowan, to Y toggle
-        *//*
+
         if(b&&r1)
         {
             dPerspective = false;
@@ -490,7 +504,7 @@ public class Main_Driver extends OpMode implements SensorEventListener {
             dPerspective = true;
             initial = false;
         }
-        *//*
+
 
         if(y)
         {
@@ -538,7 +552,6 @@ public class Main_Driver extends OpMode implements SensorEventListener {
 
 
         telemetry.addData("value", ly);
-*/
 
 
     } // End Loop
@@ -645,22 +658,7 @@ public class Main_Driver extends OpMode implements SensorEventListener {
 
 
 
-    /*
-    *
-    *
-    * Controls are defined here
-    *
-    * B + R1 = Non driver perspective (erase)
-    * B + L1 = Driver perspective (erase)
-    * Y      = Toggle Driver Perspective
-    * R1     = Right bumber of gamepad 1 toggles Traction Control
-    *
-    * L1 + R1 + A = Reset initial heading to current
-    *
-    *
-    *
-    *
-    * */
+
 
 
 
