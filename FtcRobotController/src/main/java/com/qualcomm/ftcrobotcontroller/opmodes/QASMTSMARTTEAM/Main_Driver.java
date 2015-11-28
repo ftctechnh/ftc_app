@@ -51,7 +51,7 @@ public class Main_Driver extends OpMode implements SensorEventListener {
     //Controller 1
     double lx, ly, rx, ry, l2, r2;
     boolean a ,b ,x ,y , l1, r1, du, dd, dl, dr;
-
+    boolean yp, r1p;
     //Controller 2
     double lx2, ly2, rx2, ry2, l22, r22;
     boolean a2 ,b2 ,x2 ,y2 , l12, r12, du2, dd2, dl2, dr2;
@@ -495,25 +495,27 @@ public class Main_Driver extends OpMode implements SensorEventListener {
 
         //Change modes - I'm changing this, checked with Rowan, to Y toggle
 
-        if(b&&r1)
-        {
-            dPerspective = false;
-        }
-        if(b&&l1)
-        {
-            dPerspective = true;
-            initial = false;
-        }
 
-
+        // Toggle of driver perspective
         if(y)
         {
+            yp = true;
+        }
+        if(yp && !y)
+        {
             dPerspective = !dPerspective;
+            yp = false;
         }
         // Toggle Traction control
         if(r1)
         {
+            r1p = true;
+
+        }
+        if(r1p && !r1)
+        {
             tc = !tc;
+            r1p = false;
         }
         // Toggle motor sync
         if(a)
