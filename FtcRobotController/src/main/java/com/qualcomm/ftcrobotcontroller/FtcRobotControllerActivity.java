@@ -477,28 +477,7 @@ public class FtcRobotControllerActivity extends Activity {
 
             // Ok, the EventLoopManager is up and running. Install our hooks if we haven't already done so
 
-            // Make sure our event loop manager has a thread-safe socket. Doing so will allow us
-            // to explore the possibility of sending telemetry from other than the loop() thread.
-            RobocolDatagramSocket socket = MemberUtil.socketOfEventLoopManager(eventLoopManager);
-            if (socket != null)
-                {
-                if (socket instanceof ThreadSafeRobocolDatagramSocket)
-                    {
-                    }
-                else
-                    {
-                    // We should be inserting this hook before the socket manages to do anything
-                    assertTrue(!BuildConfig.DEBUG || socket.getState() == RobocolDatagramSocket.State.CLOSED);
-
-                    // Stuff in a replacement, thread-safe, socket.
-                    RobocolDatagramSocket newSocket = new ThreadSafeRobocolDatagramSocket();
-                    MemberUtil.setSocketOfEventLoopManager(eventLoopManager, newSocket);
-                    robot.socket = newSocket;
-                    Log.v(SynchronousOpMode.LOGGING_TAG, "installed ThreadSafeRobocolDatagramSocket");
-                    }
-                }
-
-            EventLoopManager.EventLoopMonitor monitor = MemberUtil.monitorOfEventLoopManager(eventLoopManager);
+            EventLoopManager.EventLoopMonitor monitor = eventLoopManager.getMonitor();
             if (monitor != null)
                 {
                 if (monitor instanceof SwerveEventLoopMonitorHook)
