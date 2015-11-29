@@ -55,22 +55,31 @@ public class Main_Driver extends OpMode implements SensorEventListener {
 
 
     //Controller 1
-    double lx, ly, rx, ry, l2, r2;
-    boolean a ,b ,x ,y , l1, r1, du, dd, dl, dr;
-    boolean yp, r1p;
+    //double lx, ly, rx, ry, l2, r2;
+    double lx, ly, rx, ry = 0;
+    //boolean a ,b ,x ,y , l1, r1, du, dd, dl, dr = false;
+    boolean a  ,y , l1, r1 = false;
+    boolean yp, r1p = false;
+
     //Controller 2
-    double lx2, ly2, rx2, ry2, l22, r22;
-    boolean a2 ,b2 ,x2 ,y2 , l12, r12, du2, dd2, dl2, dr2;
+    //double lx2, ly2, rx2, ry2, l22, r22;
+    double  ly2, ry2 = 0;
+    //boolean a2 ,b2 ,x2 ,y2 , l12, r12, du2, dd2, dl2, dr2 = false;
+    boolean  l12, r12 = false;
+
+
 
     float azimuth_angle;
     float pitch_angle;
     float roll_angle;
 
     //Motor powers
+    /*
     double 	power_front_left,
             power_front_right,
             power_back_left,
             power_back_right = 0;
+    */
     double[] motorPowers = new double[4];
 
     // Variables for normal drive
@@ -83,7 +92,7 @@ public class Main_Driver extends OpMode implements SensorEventListener {
     boolean initial = false;
 
 
-    //Calculation
+    // Driver Perspective Calculations
     double direction, magnitude, offset, resultant;
     double stopwatch, v, vd, ad, am, pam,  vt;
 
@@ -161,35 +170,37 @@ public class Main_Driver extends OpMode implements SensorEventListener {
         double straightT = System.currentTimeMillis();
         while(System.currentTimeMillis() < straightT + 1000)
         {}
+
     }
     @Override
     public void loop() {
 
 
-
+        // Controller 1
         lx = gamepad1.left_stick_x;
         ly = -	gamepad1.left_stick_y;		//UP RETURNS -(NEGATIVE) CORRECTION
         rx = gamepad1.right_stick_x;
         ry = -	gamepad1.right_stick_y;		//UP RETURNS -(NEGATIVE) CORRECTION
-        l2 = gamepad1.left_trigger;
-        r2 = gamepad1.right_trigger;
+        //l2 = gamepad1.left_trigger;
+        //r2 = gamepad1.right_trigger;
         a = gamepad1.a;
-        b = gamepad1.b;
-        x = gamepad1.x;
+        //b = gamepad1.b;
+        //x = gamepad1.x;
         y = gamepad1.y;
-        l1 = gamepad1.left_bumper;
+        //l1 = gamepad1.left_bumper;
         r1 = gamepad1.right_bumper;
-        du = gamepad1.dpad_up;
-        dd = gamepad1.dpad_down;
-        dl = gamepad1.dpad_left;
-        dr = gamepad1.dpad_right;
+        //du = gamepad1.dpad_up;
+        //dd = gamepad1.dpad_down;
+        //dl = gamepad1.dpad_left;
+        //dr = gamepad1.dpad_right;
+
+        // Controller 2
         ly2 = gamepad2.left_stick_y;
         ry2 = gamepad2.right_stick_y;
         l12 = gamepad2.left_bumper;
         r12 = gamepad2.right_bumper;
 
-        //TODO where is the position nevin?
-        //frontLeft.getController().setMotorTargetPosition();
+
 
         //Range.clip()
 
@@ -240,7 +251,7 @@ public class Main_Driver extends OpMode implements SensorEventListener {
                 hand += 0.02;
             if(r12)
                 hand -= 0.02;
-
+            // TODO: Figure out actual range of the hand
             hand = Range.clip(hand, 0, 1);
             servo.setPosition(hand);
 
@@ -403,16 +414,16 @@ public class Main_Driver extends OpMode implements SensorEventListener {
             }
             else
             {
-                direction = (double) Math.atan(ly/lx);
+                direction = Math.atan(ly/lx);
             }
 
-            magnitude = (double) Math.sqrt((ly * ly) + (lx * lx));
+            magnitude = Math.sqrt((ly * ly) + (lx * lx));
             offset = initialHeading - heading;
             //resultant = (double)6.283185 - (offset - direction);
             resultant = direction - offset;
 
-            ly = (double) Math.sin(resultant) * magnitude;
-            lx = (double) Math.cos(resultant) * magnitude;
+            ly = Math.sin(resultant) * magnitude;
+            lx =  Math.cos(resultant) * magnitude;
 
 
              if(!a)
@@ -459,12 +470,12 @@ public class Main_Driver extends OpMode implements SensorEventListener {
             }
 
         } // finished driver perspective and assigning powers
-
+        double elapsed = (System.currentTimeMillis() - motorWatch);
         // Traction control code
         if(tc)
         {
             // Take the time elapsed since encoders were last reset
-            double elapsed = (System.currentTimeMillis() - motorWatch);
+
             // get the motor rpms
             flv = Math.abs(frontLeft.getCurrentPosition()) / elapsed;
             frv = Math.abs(frontRight.getCurrentPosition()) / elapsed;
@@ -523,9 +534,11 @@ public class Main_Driver extends OpMode implements SensorEventListener {
 
         } // finished scaling powers with reducers
 
+        // Get elapsed time
+        elapsed = (System.currentTimeMillis() - motorWatch);
 
         // Pivot motor
-        double pivotSpeed = pivot.getCurrentPosition() / (System.currentTimeMillis() - motorWatch);
+        double pivotSpeed = pivot.getCurrentPosition() / (elapsed);
         if(pivotSpeed > ly2 * 0.5)
             pivot_power -= 0.05;
         else if(pivotSpeed < ly2 * 0.5)
@@ -536,7 +549,7 @@ public class Main_Driver extends OpMode implements SensorEventListener {
 
 
         // Linear motor
-        double linearSpeed = linear.getCurrentPosition() / (System.currentTimeMillis() -  motorWatch);
+        double linearSpeed = linear.getCurrentPosition() / (elapsed);
         if(pivotSpeed > ry2 * 0.5)
             linear_power -= 0.05;
         else if(pivotSpeed < ry2 * 0.5)
@@ -544,6 +557,9 @@ public class Main_Driver extends OpMode implements SensorEventListener {
 
         if(ry2 < 0.02 && ry2 > -0.02)
             linear_power = 0;
+
+
+
 
         // Reset encoders and timestamp
         // Always put this code after the Traction control block, but not inside
@@ -729,16 +745,5 @@ public class Main_Driver extends OpMode implements SensorEventListener {
     {}
     public void onAccuracyChanged(Sensor sensor, int accuracy)
     {}
-
-
-
-
-
-
-
-
-
-
-
 
 }
