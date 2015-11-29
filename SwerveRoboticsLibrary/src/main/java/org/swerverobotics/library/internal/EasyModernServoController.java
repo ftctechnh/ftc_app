@@ -36,8 +36,8 @@ public class EasyModernServoController extends EasyModernController implements S
 
     public static final double positionMin = 0.0;
     public static final double positionMax = 1.0;
-    public static final byte   bPositionMin = 0;
-    public static final byte   bPositionMax = (byte)255;
+    public static final double regPositionMin = 0;
+    public static final double regPositionMax = 255;
 
     private List<Servo>                              servos;
     private final double[]                           servoPositions;
@@ -233,7 +233,7 @@ public class EasyModernServoController extends EasyModernController implements S
         {
         validateServo(servo);
         position = Range.clip(position, positionMin, positionMax);  // note: runtime formerly threw on range error
-        double bPosition = Range.scale(position, positionMin, positionMax, bPositionMin, bPositionMax);
+        double bPosition = Range.scale(position, positionMin, positionMax, regPositionMin, regPositionMax);
         this.write(ADDRESS_CHANNEL_MAP[servo], bPosition);
         this.pwmEnable();
 
