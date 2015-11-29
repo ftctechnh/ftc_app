@@ -94,7 +94,7 @@ public class Main_Driver extends OpMode implements SensorEventListener {
 
     // Driver Perspective Calculations
     double direction, magnitude, offset, resultant;
-    double stopwatch, v, vd, ad, am, pam,  vt;
+    //double stopwatch, v, vd, ad, am, pam,  vt; // lol what are these variables?
 
     //ArrayList<Double> list = new ArrayList<Double>();
 
