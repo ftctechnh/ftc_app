@@ -251,10 +251,10 @@ public class TelemetryDashboardAndLog
 
     private static String getKey(int iLine)
         {
-        // At present (Aug 8, 2015), the driver station both sorts by the key we return here
-        // but also DISPLAYS it! Ugh. So we try to conserve space. And we use Unicode characters
-        // that don't actually take up space on the display.
-        return String.format("%c", 0x180 + iLine);
+        // Keys must be unique. If they start with nul, then they're not shown on the driver display.
+        // Historically, they were always shown, and sorted, so we used an increasing sequence
+        // of unrenderable strings.
+        return String.format("\0%c", 0x180 + iLine);
         }
 
      /**
@@ -357,6 +357,7 @@ public class TelemetryDashboardAndLog
             // Build an object to carry our telemetry data.
             // Transmit same to the driver station.
             Telemetry transmitter = new Telemetry();
+            transmitter.setSorted(false);
             //
             for (int i = 0; i < keys.size(); i++)
                 {
