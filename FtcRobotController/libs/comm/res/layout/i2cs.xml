@@ -1,0 +1,152 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".EditDigitalDevicesActivity"
+    android:orientation="vertical">
+
+    <include layout="@layout/header"
+        android:id="@+id/included_header"/>
+
+  <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin">
+    <Button
+      android:id="@+id/i2c_devices_saveButton"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginRight="5dp"
+      android:layout_marginEnd="5dp"
+      android:text="@string/done_button"
+      android:onClick="saveI2cDevices"
+      android:layout_gravity="center_horizontal"/>
+
+    <Button
+      android:id="@+id/i2c_devices_cancelButton"
+      android:layout_toRightOf="@id/i2c_devices_saveButton"
+      android:layout_toEndOf="@id/i2c_devices_saveButton"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginRight="5dp"
+      android:layout_marginEnd="5dp"
+      android:text="@string/cancel"
+      android:onClick="cancelI2cDevices"
+      android:layout_gravity="center_horizontal"/>
+  </RelativeLayout>
+
+  <!-- just draw a grey line -->
+  <View
+    android:layout_height="2dip"
+    android:background="@android:color/darker_gray"
+    android:layout_width="match_parent"/>
+
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <LinearLayout
+        android:keepScreenOn="true"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin" >
+
+
+      <!-- just draw a red line -->
+      <View
+        android:layout_height="2dip"
+        android:background="#FF0000"
+        android:layout_width="match_parent"/>
+
+        <TableLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/tableLayout_i2c_devices"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+        <!-- 2 columns -->
+        <TableRow
+            android:id="@+id/table_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dip" >
+
+            <TextView
+                android:id="@+id/port_title"
+                android:paddingRight="10dp"
+                android:paddingLeft="5dp"
+                android:text="@string/port"
+                android:textStyle="bold"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/attached_title"
+                android:text="@string/attached"
+                android:textStyle="bold"
+                android:textSize="12sp" />
+
+        </TableRow>
+
+        <!-- just draw a red line -->
+        <View
+            android:layout_height="2dip"
+            android:background="#FF0000" />
+
+      <!-- ****************************************************** i2c 5 ******************************************************-->
+    <LinearLayout
+      android:id="@+id/linearLayout_i2c5"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="10dp"
+      android:orientation="vertical" >
+    </LinearLayout>
+    <!-- ****************************************************** i2c 4 ******************************************************-->
+    <LinearLayout
+      android:id="@+id/linearLayout_i2c4"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="10dp"
+      android:orientation="vertical" >
+    </LinearLayout>
+      <!-- ****************************************************** i2c 3 ******************************************************-->
+    <LinearLayout
+      android:id="@+id/linearLayout_i2c3"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="10dp"
+      android:orientation="vertical" >
+    </LinearLayout>
+  <!-- ****************************************************** i2c 2 ******************************************************-->
+    <LinearLayout
+      android:id="@+id/linearLayout_i2c2"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="10dp"
+      android:orientation="vertical" >
+    </LinearLayout>
+    <!-- ****************************************************** i2c 1 ******************************************************-->
+    <LinearLayout
+      android:id="@+id/linearLayout_i2c1"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="10dp"
+      android:orientation="vertical" >
+    </LinearLayout>
+    <!-- ****************************************************** i2c 0 ******************************************************-->
+    <LinearLayout
+      android:id="@+id/linearLayout_i2c0"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="10dp"
+      android:orientation="vertical" >
+    </LinearLayout>
+      </TableLayout>
+    </LinearLayout>
+  </ScrollView>
+</LinearLayout>
+<!-- From: file:/Users/tom/Documents/workspace/ftc_sdk/lib/FtcCommon/src/main/res/layout/i2cs.xml -->

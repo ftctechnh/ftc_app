@@ -1,0 +1,54 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <TableRow
+    android:id="@+id/row_port_analogInput"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="2dip" >
+
+    <TextView
+      android:id="@+id/port_number_analogInput"
+      android:textStyle="bold"
+      android:textSize="22sp"
+      android:paddingRight="5dp"
+      android:paddingLeft="5dp"
+      android:text="0"/>
+
+    <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
+
+      <Spinner
+        android:id="@+id/choiceSpinner_analogInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:drawable/btn_dropdown"
+        android:entries="@array/choice_array_analogInput"
+        android:prompt="@string/choice_prompt_analogInput"
+        android:spinnerMode="dropdown" />
+
+      <EditText
+        android:id="@+id/editTextResult_analogInput"
+        android:layout_below="@id/choiceSpinner_analogInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:inputType="text"
+        android:maxLength="200"
+        android:hint="@string/input_name_hint">
+      </EditText>
+
+      <TextView
+        android:id="@+id/titleTextView_analogInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editTextResult_analogInput"
+        android:text="@string/input_name_label">
+      </TextView>
+    </RelativeLayout>
+  </TableRow>
+
+
+</merge>
+<!-- From: file:/Users/tom/Documents/workspace/ftc_sdk/lib/FtcCommon/src/main/res/layout/analog_input_device.xml -->

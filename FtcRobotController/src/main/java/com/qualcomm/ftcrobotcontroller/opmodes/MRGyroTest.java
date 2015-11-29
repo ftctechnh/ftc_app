@@ -37,6 +37,7 @@ import android.view.View;
 
 import com.qualcomm.ftccommon.DbgLog;
 import com.qualcomm.ftcrobotcontroller.R;
+import com.qualcomm.hardware.HiTechnicNxtGyroSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
@@ -53,7 +54,6 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
  *
  */
 public class MRGyroTest extends LinearOpMode {
-
 
   @Override
   public void runOpMode() throws InterruptedException {

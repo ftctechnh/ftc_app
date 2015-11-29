@@ -1,0 +1,116 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".FtcFileLoadActivity"
+                android:orientation="vertical">
+
+    <include layout="@layout/header"
+        android:id="@+id/included_header"/>
+
+    <LinearLayout
+      android:layout_below="@id/included_header"
+      android:layout_above="@+id/load_bottom"
+      android:id="@+id/holds_buttons"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:paddingBottom="8dp"
+      android:paddingLeft="@dimen/activity_horizontal_margin"
+      android:paddingRight="@dimen/activity_horizontal_margin"
+      android:paddingTop="5dp"
+      android:orientation="vertical">
+
+    <Button
+      android:id="@+id/new_button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="New"
+      android:textSize="16sp"
+      android:minHeight="0dp"
+      android:minWidth="0dp"
+      android:onClick="new_button"/>
+
+    <!-- red line -->
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="2dip"
+      android:background="#FF0000" />
+
+    <RelativeLayout
+      android:id="@+id/files_holder"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content">
+      <TextView
+        android:text="Available files:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="14sp"/>
+
+      <include
+        layout="@layout/info_button"
+        android:layout_width="60dp"
+        android:layout_height="60dp"/>
+
+    </RelativeLayout>
+
+    <ScrollView
+      android:fillViewport="true"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
+      <LinearLayout
+        android:id="@+id/inclusionlayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical" >
+      </LinearLayout>
+    </ScrollView>
+
+      <LinearLayout
+        android:id="@+id/empty_filelist"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
+  </LinearLayout>
+
+  <LinearLayout
+    android:id="@+id/load_bottom"
+    android:orientation="vertical"
+    android:layout_alignParentBottom="true"
+    android:paddingBottom="8dp"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!-- red line -->
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="2dip"
+      android:background="#FF0000" />
+    <RelativeLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:id="@+id/autoconfigure_holder"
+      android:orientation="horizontal">
+
+      <Button
+        android:id="@+id/autoconfigure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
+        android:onClick="launch_autoConfigure"
+        android:text="@string/autoconfigure" />
+
+      <include
+        layout="@layout/info_button"
+        android:layout_width="60dp"
+        android:layout_height="60dp"/>
+    </RelativeLayout>
+  </LinearLayout>
+</RelativeLayout>
+<!-- From: file:/Users/tom/Documents/workspace/ftc_sdk/lib/FtcCommon/src/main/res/layout/activity_load.xml -->

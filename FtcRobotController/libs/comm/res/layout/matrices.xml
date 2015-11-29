@@ -1,0 +1,222 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".EditMatrixControllerActivity"
+    android:orientation="vertical">
+
+    <include layout="@layout/header"
+        android:id="@+id/included_header"/>
+
+  <!-- ****************************************************** Save Button ******************************************************-->
+
+  <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin">
+    <Button
+      android:id="@+id/matrix_controller_saveButton"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginRight="5dp"
+      android:layout_marginEnd="5dp"
+      android:text="@string/done_button"
+      android:onClick="saveMatrixController"
+      android:layout_gravity="center_horizontal"/>
+
+    <Button
+      android:id="@+id/matrix_controller_cancelButton"
+      android:layout_toRightOf="@id/matrix_controller_saveButton"
+      android:layout_toEndOf="@id/matrix_controller_saveButton"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginRight="5dp"
+      android:layout_marginEnd="5dp"
+      android:text="@string/cancel"
+      android:onClick="cancelMatrixController"
+      android:layout_gravity="center_horizontal"/>
+
+  </RelativeLayout>
+
+  <!-- just draw a grey line -->
+  <View
+    android:layout_height="2dip"
+    android:background="@android:color/darker_gray"
+    android:layout_width="match_parent"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:keepScreenOn="true"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
+
+
+        <EditText
+            android:id="@+id/matrixcontroller_name"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/matrix_controller_name"
+            android:inputType="text"
+            android:maxLength="200"
+            android:hint="@string/name_prompt_text">
+        </EditText>
+
+        <TextView
+            android:id="@+id/controller_name_text"
+            android:layout_marginBottom="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/matrix_controller_name_prompt">
+        </TextView>
+
+      <!-- just draw a red line -->
+      <View
+        android:layout_height="2dip"
+        android:background="#FF0000"
+        android:layout_width="match_parent"/>
+
+        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                     android:id="@+id/tableLayout_pwm_devices"
+                     android:layout_width="match_parent"
+                     android:layout_height="match_parent" >
+
+            <!-- 2 columns -->
+            <TableRow
+                android:id="@+id/table_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dip" >
+
+                <TextView
+                    android:id="@+id/port_title"
+                    android:paddingRight="10dp"
+                    android:paddingEnd="5dp"
+                    android:paddingLeft="5dp"
+                    android:text="@string/port"
+                    android:textStyle="bold"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/attached_title"
+                    android:text="@string/attached"
+                    android:textStyle="bold"
+                    android:textSize="12sp" />
+
+
+            </TableRow>
+
+            <!-- just draw a red line -->
+            <View
+                android:layout_height="2dip"
+                android:background="#FF0000" />
+            <TextView
+                android:id="@+id/servos_title"
+                android:paddingRight="10dp"
+                android:paddingEnd="5dp"
+                android:paddingLeft="5dp"
+                android:text="@string/matrix_servo_title"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+
+            <!-- ****************************************************** Matrix 1 ******************************************************-->
+          <LinearLayout
+            android:id="@+id/linearLayout_matrix1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical" >
+          </LinearLayout>
+
+            <!-- ****************************************************** Matrix 2 ******************************************************-->
+          <LinearLayout
+            android:id="@+id/linearLayout_matrix2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical" >
+          </LinearLayout>
+
+            <!-- ****************************************************** Matrix 3 ******************************************************-->
+          <LinearLayout
+            android:id="@+id/linearLayout_matrix3"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical" >
+          </LinearLayout>
+
+            <!-- ****************************************************** Matrix 4 ******************************************************-->
+          <LinearLayout
+            android:id="@+id/linearLayout_matrix4"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical" >
+          </LinearLayout>
+
+            <!-- just draw a red line -->
+            <View
+                android:layout_height="2dip"
+                android:background="#FF0000" />
+            <TextView
+                android:id="@+id/motors_title"
+                android:paddingRight="10dp"
+                android:paddingEnd="5dp"
+                android:paddingLeft="5dp"
+                android:text="@string/matrix_motor_title"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+
+            <!-- ****************************************************** Matrix 5 ******************************************************-->
+          <LinearLayout
+            android:id="@+id/linearLayout_matrix5"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical" >
+          </LinearLayout>
+
+            <!-- ****************************************************** Matrix 6 ******************************************************-->
+          <LinearLayout
+            android:id="@+id/linearLayout_matrix6"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical" >
+          </LinearLayout>
+
+            <!-- ****************************************************** Matrix 7 ******************************************************-->
+            <LinearLayout
+                android:id="@+id/linearLayout_matrix7"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical" >
+            </LinearLayout>
+
+            <!-- ****************************************************** Matrix 8 ******************************************************-->
+            <LinearLayout
+                android:id="@+id/linearLayout_matrix8"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical" >
+            </LinearLayout>
+
+        </TableLayout>
+    </LinearLayout>
+  </ScrollView>
+</LinearLayout>
+<!-- From: file:/Users/tom/Documents/workspace/ftc_sdk/lib/FtcCommon/src/main/res/layout/matrices.xml -->

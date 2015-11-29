@@ -11,6 +11,7 @@ public class Motor {
     public DcMotor _motor;
     public String name;
     public boolean reversed;
+    private int diff = 0;
 
     public Motor(String nm, HardwareMap hwm)
     {
@@ -22,6 +23,7 @@ public class Motor {
         name = nm;
         _motor = hwm.dcMotor.get(name);
         reversed = rev;
+        diff = getEncoder();
     }
 
     public void reverse()
@@ -55,5 +57,15 @@ public class Motor {
         set(amt);
     }
 
+    public int getEncoder()
+    {
+        return _motor.getCurrentPosition();
+    }
 
+    public int encoderDiff()
+    {
+        int temp = diff;
+        diff = getEncoder();
+        return diff - temp;
+    }
 }

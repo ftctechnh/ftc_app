@@ -1,0 +1,49 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <TableRow
+    android:id="@+id/row_port_pwm"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="2dip" >
+
+    <TextView
+      android:id="@+id/port_number_pwm"
+      android:textStyle="bold"
+      android:textSize="22sp"
+      android:paddingRight="5dp"
+      android:paddingLeft="5dp"
+      android:text="0"/>
+
+    <CheckBox
+      android:id="@+id/checkbox_port_pwm"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"/>
+
+    <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
+
+      <EditText
+        android:id="@+id/editTextResult_pwm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:inputType="text"
+        android:maxLength="200"
+        android:hint="@string/input_name_hint">
+      </EditText>
+
+      <TextView
+        android:id="@+id/titleTextView_pwm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/editTextResult_pwm"
+        android:text="@string/input_name_label">
+      </TextView>
+    </RelativeLayout>
+  </TableRow>
+
+
+</merge>
+<!-- From: file:/Users/tom/Documents/workspace/ftc_sdk/lib/FtcCommon/src/main/res/layout/pwm_device.xml -->

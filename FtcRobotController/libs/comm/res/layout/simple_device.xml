@@ -1,0 +1,76 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:padding="0dp"
+            android:keepScreenOn="true"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".EditLegacyModuleControllerActivity" >
+
+            <TextView
+                android:id="@+id/portNumber"
+                android:textSize="12sp"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="@string/default_port"
+                android:visibility="invisible"/>
+
+
+            <!-- ****************************************************** Module ******************************************************-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/dropdown_layout">
+                <Spinner
+                    android:id="@+id/choiceSpinner_legacyModule"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:drawable/btn_dropdown"
+                    android:entries="@array/choice_array"
+                    android:prompt="@string/choice_prompt"
+                    android:spinnerMode="dropdown" />
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/editTextResult_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLength="200"
+                    android:hint="@string/name_prompt_text">
+                </EditText>
+
+                <TextView
+                    android:id="@+id/titleTextView_analogInput7"
+                    android:layout_marginBottom="5dp"
+                    android:paddingLeft="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/editTextResult_name"
+                    android:text="@string/name_prompt_undertext">
+                </TextView>
+
+                <Button
+                    android:id="@+id/edit_controller_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_below="@id/titleTextView_analogInput7"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:paddingRight="10dp"
+                    android:paddingLeft="10dp"
+                    android:layout_marginTop="0dp"
+                    android:text="@string/edit_controller"
+                    android:onClick="editController_portALL"
+                    android:visibility="invisible"/>
+            </RelativeLayout>
+        </LinearLayout>
+</merge>
+<!-- From: file:/Users/tom/Documents/workspace/ftc_sdk/lib/FtcCommon/src/main/res/layout/simple_device.xml -->
