@@ -47,11 +47,8 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
 
     public EasyModernController(OpMode context, ModernRoboticsUsbDevice target, ReadWriteRunnableHandy readWriteRunnable) throws RobotCoreException, InterruptedException
         {
-        // We *have to* give a live ReadWriteRunnable to our parent constructor, so we grudgingly do so
-        super(target.getSerialNumber(), SwerveThreadContext.getEventLoopManager(), readWriteRunnable);
-
-        // Then shut it down right away, because we want to start disarmed until we fully configure
-        closeModernRoboticsUsbDevice(this);
+        // Note that we don't give a ReadWriteRunnable to our parent constructor. This essentially just sets the serial number
+        super(target.getSerialNumber(), SwerveThreadContext.getEventLoopManager(), null);
 
         // Initialize the rest of our state
         this.context          = context;
@@ -82,20 +79,21 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
         {
         // Get access to the state
         ExecutorService service = MemberUtil.getExecutorServiceModernRoboticsUsbDevice(usbDevice);
-        ReadWriteRunnableStandard readWriteRunnableStandard = (ReadWriteRunnableStandard)MemberUtil.getReadWriteRunnableModernRoboticsUsbDevice(usbDevice);
 
         // Stop accepting new work
         service.shutdown();
 
-        // Set a dummy handler so that we don't end up closing the actual FT_device.
-        // Note that this overwrites a 'final' member variable, so there's a slight
-        // risk of running into optimization problems, but we live with that.
-        RobotUsbDevice robotUsbDevice = new DummyRobotUsbDevice();
-        ReadWriteRunnableUsbHandler dummyHandler = new ReadWriteRunnableUsbHandler(robotUsbDevice);
-        MemberUtil.setHandlerOfReadWriteRunnableStandard(readWriteRunnableStandard, dummyHandler);
+        ReadWriteRunnableStandard readWriteRunnableStandard = (ReadWriteRunnableStandard)MemberUtil.getReadWriteRunnableModernRoboticsUsbDevice(usbDevice);
+        if (readWriteRunnableStandard != null)
+            {
+            // Set a dummy handler so that we don't end up closing the actual FT_device.
+            RobotUsbDevice robotUsbDevice = new DummyRobotUsbDevice();
+            ReadWriteRunnableUsbHandler dummyHandler = new ReadWriteRunnableUsbHandler(robotUsbDevice);
+            MemberUtil.setHandlerOfReadWriteRunnableStandard(readWriteRunnableStandard, dummyHandler);
 
-        // Ok: actually carry out the close
-        readWriteRunnableStandard.close();
+            // Ok: actually carry out the close
+            readWriteRunnableStandard.close();
+            }
 
         // Wait until the thread terminates
         Util.awaitTermination(service);
@@ -110,9 +108,9 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
             //
             MemberUtil.setExecutorServiceModernRoboticsUsbDevice(usbDevice, service);
             MemberUtil.setReadWriteRunnableModernRoboticsUsbDevice(usbDevice, rwRunnable);
+            rwRunnable.setCallback(usbDevice);
             service.execute(rwRunnable);
             rwRunnable.blockUntilReady();
-            rwRunnable.setCallback(usbDevice);
             this.eventLoopManager.registerSyncdDevice(rwRunnable);
             }
         catch (Exception e)
