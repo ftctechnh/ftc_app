@@ -104,13 +104,7 @@ public class TestBot implements DriverInterface
     }
 
     @Override
-    public void spinOnCenter(float degrees, float speed, boolean isLeft)
-    {
-
-    }
-
-    @Override
-    public void stop()
+    public void spinOnCenter(float degrees, float speed)
     {
         leftMotor.setPower(0.0f);
         rightMotor.setPower(0.0f);
@@ -119,6 +113,48 @@ public class TestBot implements DriverInterface
         //makes sure the encoders reset
         while(leftMotor.getCurrentPosition() != 0){}
         while(rightMotor.getCurrentPosition() != 0){}
+        leftMotor.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        rightMotor.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        int encoderSpinTarget = ((int)(131.65432 * 47.12389 * degrees/360));
+        if(encoderSpinTarget > 0 && speed > 0)
+        {
+            leftMotor.setPower(speed);
+            rightMotor.setPower(-speed);
+            while(leftMotor.getCurrentPosition() < encoderSpinTarget){}
+            leftMotor.setPower(0.0f);
+            rightMotor.setPower(0.0f);
+        }
+        else if(encoderSpinTarget > 0 && speed < 0)
+        {
+            leftMotor.setPower(speed);
+            rightMotor.setPower(-speed);
+            while(rightMotor.getCurrentPosition() < encoderSpinTarget){}
+            leftMotor.setPower(0.0f);
+            rightMotor.setPower(0.0f);
+        }
+        else if(encoderSpinTarget < 0 && speed > 0)
+        {
+            leftMotor.setPower(-speed);
+            rightMotor.setPower(speed);
+            while(rightMotor.getCurrentPosition() < -encoderSpinTarget){}
+            leftMotor.setPower(0.0f);
+            rightMotor.setPower(0.0f);
+        }
+        else if(encoderSpinTarget < 0 && speed < 0)
+        {
+            leftMotor.setPower(-speed);
+            rightMotor.setPower(speed);
+            while(leftMotor.getCurrentPosition() < -encoderSpinTarget){}
+            leftMotor.setPower(0.0f);
+            rightMotor.setPower(0.0f);
+        }
+    }
+
+    @Override
+    public void stop()
+    {
+        leftMotor.setPower(0.0f);
+        rightMotor.setPower(0.0f);
     }
 
 }
