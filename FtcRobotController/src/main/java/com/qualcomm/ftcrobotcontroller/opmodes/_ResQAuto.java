@@ -14,11 +14,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-//TODO: Detect red/blue line, change ODS boundary DONE
-//TODO: Get sweeper working Done
-//TODO: Get button pushing working DONE
-//TODO: do dumping Done
-//TODO: Tune get out of the way Done
+
 public abstract class _ResQAuto extends LinearOpMode {
 
     @Override
@@ -26,6 +22,7 @@ public abstract class _ResQAuto extends LinearOpMode {
 
         DcMotor rightWheel;
         DcMotor leftWheel;
+        DcMotor sweeper;
         Servo buttonServo;
         Servo button2Servo;
         Servo leftsweeper;
@@ -102,13 +99,15 @@ public abstract class _ResQAuto extends LinearOpMode {
         leftWheel = hardwareMap.dcMotor.get("leftwheel");
         leftWheel.setDirection(DcMotor.Direction.REVERSE);
         rightWheel.setDirection(DcMotor.Direction.FORWARD);
+        sweeper = hardwareMap.dcMotor.get("sweeper");
 
         buttonServo = hardwareMap.servo.get("buttonservo");
-        buttonservoPosition = 0.3;
+        buttonservoPosition = 0.9;
         buttonServo.setPosition(buttonservoPosition);
         button2Servo = hardwareMap.servo.get("button2servo");
-        button2servoPosition = 0.3;
+        button2servoPosition = 0;
         button2Servo.setPosition(button2servoPosition);
+
 
         //leftsweeper = hardwareMap.servo.get("//leftsweeper");
         //leftsweeperPosition = 0.8;
@@ -223,8 +222,10 @@ public abstract class _ResQAuto extends LinearOpMode {
         rightWheel.setPower(0);
         sleep(700);
         //follow the left edge of the line
+
   */      while(true) {
             waitOneFullHardwareCycle();
+            sweeper.setPower(1);
             double distance = ultrasonicSensor.getUltrasonicLevel();
             reflectance = opticalDistanceSensor.getLightDetected();
 
@@ -234,8 +235,8 @@ public abstract class _ResQAuto extends LinearOpMode {
             double valueS;
             if (reflectance > EOPDThreshold) {
                 value = reflectance - EOPDThreshold ;
-                valueB = .1+3*value;
-                valueS = .1-3*value;
+                valueB = .1+1*value;
+                valueS = .1-1*value;
                 //valueB = (valueB)<1?valueB:1;
                 //valueS=(valueS)<1?valueS:1;
                 if (Math.abs(valueS) < 0.25)
@@ -248,8 +249,8 @@ public abstract class _ResQAuto extends LinearOpMode {
 
             } else {
                 value = EOPDThreshold - reflectance;
-                valueB = .1+3*value;
-                valueS = .1-3*value;
+                valueB = .1+1*value;
+                valueS = .1-1*value;
                 if (Math.abs(valueS) < .25)
                   valueS = (Math.signum(valueS) * 0.25);
 
@@ -324,34 +325,36 @@ public abstract class _ResQAuto extends LinearOpMode {
         telemetry.addData("Red", colorsensor.red());
         telemetry.addData("Blue", colorsensor.blue());
         if(colorsensor.red()<0.1&&colorsensor.blue()>0.1){
-            //go back
+            buttonServo.setPosition(0);
+            /*//go back
             leftWheel.setPower(-0.1);
             rightWheel.setPower(-0.1);
-            sleep(300);
+            sleep(300);*/
 
             if( getRedAlliance() == 1){
                 //If Alliance is red and the button is red
                 //Servo Down
-                buttonServo.setPosition(1);
+                button2Servo.setPosition(0);
                 sleep(1000);
 
             } else if (getRedAlliance() == 0){
-                button2Servo.setPosition(1);
+                //buttonServo.setPosition(1);
                 sleep(1000);
             }
 
         }else if (colorsensor.red()>0.1&&colorsensor.blue()<0.1){
-            //go back
+          /*  //go back
             leftWheel.setPower(-0.1);
             rightWheel.setPower(-0.1);
-            sleep(300);
+            sleep(300);*/
 
             if( getRedAlliance() == 1){
-                button2Servo.setPosition(1);
+                buttonServo.setPosition(1);
                 sleep(1000);
 
             } else if (getRedAlliance() == 0){
-                buttonServo.setPosition(1);
+                button2Servo.setPosition(0);
+                buttonServo.setPosition(0);
                 sleep(1000);
             }
         }
@@ -377,7 +380,7 @@ public abstract class _ResQAuto extends LinearOpMode {
             if (getRedAlliance() == 1) {
                 leftWheel.setPower(0.4);
                 rightWheel.setPower(-0.4);
-                sleep(2000);
+                sleep(500);
                 leftWheel.setPower(0.3);
                 leftWheel.setPower(0.3);
                 sleep(1500);
