@@ -137,6 +137,7 @@ public class DucksAutonomous extends LinearOpMode{
         waitForStart();
 
         //assorted commands for testing gyro
+        //test edit plz ignore ayy lmao
         sleep(500);
         turnRight(90,.5);
         sleep(500);
