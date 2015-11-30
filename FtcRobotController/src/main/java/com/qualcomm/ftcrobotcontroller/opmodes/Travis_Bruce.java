@@ -19,7 +19,7 @@ public class Travis_Bruce extends OpMode {
         leftMotor_1 = hardwareMap.dcMotor.get("left_drive_1");
         rightMotor_1 = hardwareMap.dcMotor.get("right_drive_1");
         leftMotor_2 = hardwareMap.dcMotor.get("left_drive_2");
-        rightMotor_2 = hardwareMap.dcMotor.get("right_drive_2")
+        rightMotor_2 = hardwareMap.dcMotor.get("right_drive_2");
         upperMotor= hardwareMap.dcMotor.get("small_arm");
         bottomMotor= hardwareMap.dcMotor.get("big_arm");
     }

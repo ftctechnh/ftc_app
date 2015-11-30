@@ -59,6 +59,7 @@ public class FtcOpModeRegister implements OpModeRegister {
 
     manager.register("Jonathan", Jonathan.class);
     manager.register("Rick", Rick.class);
+    manager.register("Travis_Bruce", Travis_Bruce.class);
     /*
      * Uncomment any of the following lines if you want to register an op mode.
      */
