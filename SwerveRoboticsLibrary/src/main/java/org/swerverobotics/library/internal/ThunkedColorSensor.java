@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 /**
  * Another in our series...
  */
-public class ThunkedColorSensor extends ColorSensor implements IThunkWrapper<ColorSensor>
+public class ThunkedColorSensor implements ColorSensor, IThunkWrapper<ColorSensor>
     {
     //----------------------------------------------------------------------------------------------
     // State

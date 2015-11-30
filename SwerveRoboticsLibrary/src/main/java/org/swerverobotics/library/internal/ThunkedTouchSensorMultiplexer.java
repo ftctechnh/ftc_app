@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.*;
 /**
  * Yet another!
  */
-public class ThunkedTouchSensorMultiplexer extends TouchSensorMultiplexer implements IThunkWrapper<TouchSensorMultiplexer>
+public class ThunkedTouchSensorMultiplexer implements TouchSensorMultiplexer, IThunkWrapper<TouchSensorMultiplexer>
     {
     //----------------------------------------------------------------------------------------------
     // State

@@ -8,7 +8,7 @@ import org.swerverobotics.library.*;
 /**
  * An IrSeekerSensor that can be called on a synchronous thread
  */
-public class ThunkedIrSeekerSensor extends IrSeekerSensor implements IThunkedReadWriteListener, IThunkWrapper<IrSeekerSensor>
+public class ThunkedIrSeekerSensor implements IrSeekerSensor, IThunkedReadWriteListener, IThunkWrapper<IrSeekerSensor>
     {
     //----------------------------------------------------------------------------------------------
     // State
