@@ -27,6 +27,12 @@ public class Drivetrain {
 
         frontRight.setDirection(DcMotor.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.REVERSE);
+
+        try {
+            resetEncoders();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public void tankDrive(double leftSpeed,double rightSpeed) {
@@ -52,18 +58,23 @@ public class Drivetrain {
         backRight.setPower(0);
     }
 
-    public void resetEncoders(){
-        this.brake();
+    public void resetEncoders() throws InterruptedException {
+        brake();
 
         frontLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         frontRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         backLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         backRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
 
+        sleep(50);
+
         frontLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         frontRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         backLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         backRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+
+        sleep(50);
+
     }
 
     public int getAverageEncoderValue(String side) {
@@ -78,8 +89,8 @@ public class Drivetrain {
         }
     }
 
-    public void drive(double inches, double speed){
-        this.resetEncoders();
+    public void drive(double inches, double speed) throws InterruptedException {
+        resetEncoders();
 
         double targetDistance = ticksPerRotation * inches/wheelCircumference;
 
@@ -91,4 +102,62 @@ public class Drivetrain {
         this.brake();
     }
 
+    public void moveDistance(int targetEncoderValue, double speed, double turn) throws InterruptedException {
+        resetEncoders();
+
+        while(Math.abs(getAverageEncoderValue("All")) < Math.abs(targetEncoderValue))
+        {
+            arcadeDrive(speed, turn);
+        }
+
+        arcadeDrive(0, 0);
+    }
+
+    public void moveDistance(int targetEncoderValue, double speed) throws InterruptedException {
+        resetEncoders();
+
+        while(Math.abs(getAverageEncoderValue("All")) < Math.abs(targetEncoderValue))
+        {
+            arcadeDrive(speed, 0);
+        }
+
+        arcadeDrive(0, 0);
+    }
+
+    public void turnDistance(int targetEncoderValue, double turn) throws InterruptedException {
+        resetEncoders();
+
+        while(Math.abs(getAverageEncoderValue("Left")) < Math.abs(targetEncoderValue) && Math.abs(getAverageEncoderValue("Right")) < Math.abs(targetEncoderValue))
+        {
+            arcadeDrive(0, turn);
+        }
+
+        arcadeDrive(0, 0);
+    }
+
+    public void turnLeftDistance(int targetEncoderValue, double speed) throws InterruptedException {
+        resetEncoders();
+
+        while(Math.abs(getAverageEncoderValue("Left")) < Math.abs(targetEncoderValue))
+        {
+            tankDrive(speed, 0);
+        }
+
+        arcadeDrive(0, 0);
+    }
+
+    public void turnRightDistance(int targetEncoderValue, double speed) throws InterruptedException {
+        resetEncoders();
+
+        while(Math.abs(getAverageEncoderValue("Right")) < Math.abs(targetEncoderValue))
+        {
+            tankDrive(0, speed);
+        }
+
+        arcadeDrive(0, 0);
+    }
+
+    public void sleep(long milliseconds) throws InterruptedException {
+        Thread.sleep(milliseconds);
+    }
 }

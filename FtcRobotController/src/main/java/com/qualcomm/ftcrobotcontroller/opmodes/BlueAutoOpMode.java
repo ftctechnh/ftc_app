@@ -17,7 +17,7 @@ public class BlueAutoOpMode extends OpMode {
 
     Servo rightButtonServo;
     Servo leftButtonServo;
-    //ColorSensor sensorRGB;
+    ColorSensor sensorRGB;
 
     double rightButtonServoPressed = 0.45;
     double leftButtonServoPressed = 0.57;
@@ -52,7 +52,11 @@ public class BlueAutoOpMode extends OpMode {
     @Override
     public void loop() {
 
-             drivetrain.drive(12,-0.5);
+        try {
+            drivetrain.drive(12,-0.5);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
        /* while (drivetrain.frontLeft.getCurrentPosition() < 1049 ){
 

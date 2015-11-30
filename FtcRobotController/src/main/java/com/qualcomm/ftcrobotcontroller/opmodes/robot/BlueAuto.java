@@ -41,7 +41,11 @@ public class BlueAuto extends OpMode {
         rightButtonServo.setPosition(0.5);
         leftButtonServo.setPosition(0.5);
 
-        drivetrain.resetEncoders();
+        try {
+            drivetrain.resetEncoders();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         drivetrain.frontLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         drivetrain.frontRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
@@ -63,8 +67,11 @@ public class BlueAuto extends OpMode {
     @Override
     public void loop() {
 
-        drivetrain.drive(12,-0.5);
-
+        try {
+            drivetrain.drive(12,-0.5);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
 
         telemetry.addData("rightMotor1", drivetrain.frontRight.getCurrentPosition());

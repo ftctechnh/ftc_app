@@ -19,9 +19,10 @@ public class ServoTest extends LinearOpMode  {
 
         while(opModeIsActive()){
 
+            //if(gamepad1.a)
             testServo.setPosition((gamepad1.left_stick_y + 1) / 2.0);
 
-
+            telemetry.addData("Servo Position:", testServo.getPosition());
         }
     }
 }
