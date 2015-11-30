@@ -350,8 +350,8 @@ public class Main_Driver extends OpMode implements SensorEventListener {
 		if(!dPerspective){
 		    if(!a)
 		    {
-                /*
 
+                /*
                 power_front_right = (ly + lx - rx)*0.9;
                 power_front_left  = (ly - lx + rx)*0.9;
                 power_back_left   = (ly + lx + rx)*0.9;
