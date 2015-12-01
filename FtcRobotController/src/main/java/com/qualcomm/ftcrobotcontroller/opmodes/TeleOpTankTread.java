@@ -44,6 +44,8 @@ public class TeleOpTankTread extends OpMode {
     final static double SNOWPLOW_MAX_RANGE = 0.7;
     final static double ClIMBER_MIN_RANGE = 0.20;
     final static double CLIMBER_MAX_RANGE = 0.7;
+    final static double SLIDER_MAX_RANGE = 0.9;
+    final static double SLIDER_MIN_RANGE = 0.2;
 
     // position of the arm servo.
     double pusherPosition;
@@ -51,6 +53,8 @@ public class TeleOpTankTread extends OpMode {
     double buttonPosition;
 
     double climberPosition;
+
+    double sliderPosition;
 
     double snowplowPosition;
 
@@ -78,6 +82,7 @@ public class TeleOpTankTread extends OpMode {
     Servo climber = null;
     Servo snowplow = null;
     Servo mtape = null;
+    Servo slider = null;
 
     DcMotor motorLowerHook = null;
     DcMotor motorUpperHook = null;
@@ -127,11 +132,13 @@ public class TeleOpTankTread extends OpMode {
         button = hardwareMap.servo.get("button");
         mtape = hardwareMap.servo.get("mtape");
         snowplow = hardwareMap.servo.get("snowplow");
+        slider = hardwareMap.servo.get("slider");
         button.setPosition(0.5);
         sc.pwmEnable();
         climberPosition = 0.2;
         mtapePosition = 0.2;
         snowplowPosition = 0.2;
+        sliderPosition = 0.2;
 
         motorRRight = hardwareMap.dcMotor.get("motor_right_rear"); //RRight
         motorRLeft = hardwareMap.dcMotor.get("motor_left_rear"); //RLeft
@@ -275,11 +282,22 @@ public class TeleOpTankTread extends OpMode {
         snowplowPosition = Range.clip(snowplowPosition, SNOWPLOW_MIN_RANGE, SNOWPLOW_MAX_RANGE);
         snowplow.setPosition(snowplowPosition);
 
+        if(gamepad2.left_bumper) {
+            sliderPosition = 0.9;
+        }
+
+        if(gamepad2.right_bumper) {
+            sliderPosition = 0.2;
+        }
+
+        sliderPosition = Range.clip(sliderPosition, SLIDER_MIN_RANGE, SLIDER_MAX_RANGE);
+        slider.setPosition(snowplowPosition);
+
         if(gamepad1.right_bumper) {
             mtapePosition = 0.90;
         }
 
-        if(gamepad2.left_bumper) {
+        if(gamepad1.left_bumper) {
             mtapePosition = 0.2;
         }
 
@@ -333,6 +351,7 @@ public class TeleOpTankTread extends OpMode {
         telemetry.addData("pusher servo",  "pusher servo: " + String.format("%.2f", pservoSpeed));
         telemetry.addData("button servo", "button servo: " + String.format("%.2f", bservoSpeed));
         telemetry.addData("climber", "climber:  " + String.format("%.2f", climberPosition));
+        telemetry.addData("slider", "slider: " + String.format("%.2f", sliderPosition));
 
     }
 
