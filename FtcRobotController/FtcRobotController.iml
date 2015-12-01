@@ -99,10 +99,6 @@
     <orderEntry type="library" exported="" name="Analytics-release-" level="project" />
     <orderEntry type="library" exported="" name="android-support-v4" level="project" />
     <orderEntry type="library" exported="" name="Hardware-release-" level="project" />
-<<<<<<< HEAD
     <orderEntry type="library" exported="" name="FtcCommon-release-" level="project" />
-=======
-    <orderEntry type="library" exported="" name="RobotCore-release-" level="project" />
->>>>>>> 0144c3c2ae35ebb113f7c372fa097c11cc2eadcd
   </component>
 </module>
