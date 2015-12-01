@@ -201,7 +201,7 @@ public class Wire implements I2cController.I2cPortReadyCallback {
 //------------------------------------------------- Main routine: Device CallBack -------------
 
     public void portIsReady(int port) {
-        DbgLog.msg(String.format("=====  PortIsReady ====="));
+       // DbgLog.msg(String.format("=====  PortIsReady ====="));
         if (isIdle) return;
         boolean isValidReply = false;
         try {
@@ -278,7 +278,7 @@ public class Wire implements I2cController.I2cPortReadyCallback {
     private void storeReceivedData() {
                                         // rCache has been locked
         long uMicros = (System.nanoTime() - startTime) / 1000L;
-        DbgLog.msg(String.format("=====  rCache value " + rCache[4] +" ====="));
+        //DbgLog.msg(String.format("=====  rCache value " + rCache[4] +" ====="));
 
         addToQueue(uMicros, rCache, upQueue);
     }
@@ -291,18 +291,18 @@ public class Wire implements I2cController.I2cPortReadyCallback {
         element.timeStamp   = timeStamp;
         element.cache       = new byte[length];
         for (int i = 0; i < length; i++) element.cache[i] = cache[i];
-        DbgLog.msg(String.format("=====  In addToQueCache value " + cache[4] +" ====="));
+        //DbgLog.msg(String.format("=====  In addToQueCache value " + cache[4] +" ====="));
         queue.add(element);
     }
 
     private long getFromQueue(byte[] cache, ArrayQueue queue) {
         Element element     = (org.usfirst.FTC5866.library.Wire.Element) queue.remove();
-        DbgLog.msg(String.format("=====  uQueue After" + queue.length() +" "+ element.cache[4]+" ====="));
+        //DbgLog.msg(String.format("=====  uQueue After" + queue.length() +" "+ element.cache[4]+" ====="));
         if (element == null) return 0;
         int length          = element.cache.length;
         long timeStamp      = element.timeStamp;
         for (int i = 0; i < length; i++) cache[i] = element.cache[i];
-        DbgLog.msg(String.format("=====  Cache value " + cache[4] +" ====="));
+        //DbgLog.msg(String.format("=====  Cache value " + cache[4] +" ====="));
 
         return timeStamp;
     }

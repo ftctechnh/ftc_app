@@ -33,24 +33,26 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.ftccommon.DbgLog;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
-import org.usfirst.FTC5866.library.*;
+
+import org.usfirst.FTC5866.library.DataLogger;
 import com.qualcomm.robotcore.util.RobotLog;
 import com.qualcomm.robotcore.util.TypeConversion;
+
 import java.util.concurrent.locks.Lock;
+
 
 /**
  * Example to read data from GY85 9DOF sensor
  */
 
 
-public class I2cGY85ReadData extends OpMode {
+public class I2cGY85ScratchReadData extends OpMode {
 
 
   public static final int ADXL345_I2C_ADDRESS = 0x53;
 
-  public static final int ACC_DEVICE_ID = 0xE5;
+  public static final int ACC_DEVICE_ID = 0x00;
   public static final int ACC_DATA_FORMAT = 0x31;
   public static final int ACC_SET_8G_MODE = 0x02;
   public static final int ACC_POWER_CTL = 0x2D;
@@ -61,13 +63,11 @@ public class I2cGY85ReadData extends OpMode {
   public static final int ACC_DATAY1 = 0x35;
   public static final int ACC_DATAZ0 = 0x36;
   public static final int ACC_DATAZ1 = 0x37;
-  public static final int ACC_FIFO_STATUS = 0x39;
   public static final int TOTAL_MEMORY_LENGTH = 0x06;
 
   int port = 5;
 
   private DataLogger dl;
-  private Wire ds;
   private int readCount = 0;
   private int distance;
   private long accTimeStamp;
@@ -77,7 +77,7 @@ public class I2cGY85ReadData extends OpMode {
   private int counter = 0;
 
   public void init() {
-    DbgLog.msg("=====Start Init=====");
+  /*  DbgLog.msg("=====Start Init=====");
     dl = new DataLogger("ADXL345_Z_Accel");
     ds = new Wire(hardwareMap, "GY85", 2 * ADXL345_I2C_ADDRESS);
     DbgLog.msg("=====Initialized Items=====");
@@ -87,15 +87,17 @@ public class I2cGY85ReadData extends OpMode {
     dl.addField("Y_Accel");
     dl.addField("Z_Accel");
     dl.newLine();
+    */
   }
 
   public void start() {
     DbgLog.msg("=====Start Acc Setup=====");
-    ds.write(ACC_DATA_FORMAT, ACC_SET_8G_MODE);
+    /*ds.write(ACC_DATA_FORMAT, ACC_SET_8G_MODE);
     DbgLog.msg("=====Data Format Done=====");
     ds.write(ACC_POWER_CTL, ACC_DISABLE_PM);
     DbgLog.msg("=====PM Done=====");
     ds.requestFrom(ACC_DEVICE_ID, 1);
+  */
   }
 
   @Override
@@ -121,15 +123,14 @@ public class I2cGY85ReadData extends OpMode {
 
   private boolean isACCUpdate() {
     boolean isNew = false;
-    if ((System.currentTimeMillis() - accTimeStamp) > 500) {
-      ds.write(ACC_FIFO_STATUS);
-      ds.requestFrom(ACC_FIFO_STATUS, 2);
-      ds.write(ACC_DATAX0);
+    if ((System.currentTimeMillis() - accTimeStamp) > 100) {
+    /*
+      //ds.write(ACC_DATAX0);
       ds.requestFrom(ACC_DATAX0, 6);
+
       accTimeStamp = System.currentTimeMillis();
 
-
-      if ((ds.responseCount() > 0) && ds.getResponse()) {
+      if ((ds.responseCount() > 0) && ds.getResponse() ){
         int regNumber = ds.registerNumber();
         if (ds.isRead()) {
           int regCount = ds.available();
@@ -137,7 +138,7 @@ public class I2cGY85ReadData extends OpMode {
             case ACC_DEVICE_ID:
               if (regCount == 1) {
                 int acc_did = ds.read();
-                if ((acc_did & 0xFF) != ACC_DEVICE_ID) {
+                if ((acc_did & 0xFF) != 0xE5) {
                   DbgLog.msg(String.format("=====  DID 0x%02X =====", acc_did));
                 } else {
                   ds.requestFrom(ACC_DATAX0, 6);             // Request Data
@@ -155,19 +156,11 @@ public class I2cGY85ReadData extends OpMode {
                 Yaxis = ds.readLH();              // Read Y axis
                 Zaxis = ds.readLH();              // Read Z axis
                 isNew = true;
-                DbgLog.msg(String.format("=====  GOT DATAX0 6 regs" + counter + " ====="));
-                DbgLog.msg(String.format("=====  DataX " + Xaxis + " ====="));
+                DbgLog.msg(String.format("=====  GOT DATAX0 6 regs" + counter +" ====="));
+                DbgLog.msg(String.format("=====  DataX " + Xaxis +" ====="));
               } else {
                 telemetry.addData("Error", regNumber + " length 6 != " + regCount);
                 DbgLog.msg(String.format("ERROR reg 0x%02X Len = 0x%02X (!= 1)", regNumber, regCount));
-              }
-              break;
-            case ACC_FIFO_STATUS:
-              if (regCount == 2) {
-                accTimeStamp = ds.micros();
-                int fifo0 = ds.read();
-                int fifo1 = ds.read();
-                DbgLog.msg(String.format("===== GOT FIFO_Stat 2 regs 0x%2X%2X =====", fifo0,fifo1));
               }
               break;
             default:
@@ -177,12 +170,12 @@ public class I2cGY85ReadData extends OpMode {
         }
       }
       counter++;
+      */
     }
     return isNew;
   }
-
   public void stop() {
-    dl.closeDataLogger();
-    ds.close();
+    //dl.closeDataLogger();
+    //ds.close();
   }
 }

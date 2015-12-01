@@ -40,6 +40,45 @@ public class CompassCalibration extends OpMode {
   // how long to hold before the next action
   final static double HOLD_POSITION = 3.0; // in seconds
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   // wheel speed
   final static double MOTOR_POWER = 0.2; // scale from 0 to 1
 
