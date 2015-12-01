@@ -38,6 +38,6 @@ public class PacmanBotManual3000 extends PacmanBotHardwareBase {
         setBelt(threeWay(gamepad.dpad_left, gamepad.dpad_right));
 
         setHookRelease(gamepad.x);
-        //setArm(Math.sin(timer.time()*4)); //Uncomment to annoy Jason.
+        //setArm(Math.sin(timer.time()*4)); //Uncomment to annoy people.
     }
 }
