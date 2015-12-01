@@ -48,9 +48,10 @@ public class PacmanBotHardwareBase extends OpMode {
     DcMotor winch;
     DcMotor belt;
 
-    Servo sweeper;
+    Servo color_arm;
     Servo thrower;
-    Servo release;
+    Servo hook_release;
+    Servo climber_release;
 
     Gamepad gamepad;
     int gamepadOverride=0;
@@ -180,19 +181,20 @@ public class PacmanBotHardwareBase extends OpMode {
 
         gamepad = new Gamepad();
 
-        sweeper = hardwareMap.servo.get("sweeper");
+        color_arm = hardwareMap.servo.get("sweeper");//color sensor arm thing
         thrower = hardwareMap.servo.get("thrower");
-        release = hardwareMap.servo.get("hook_release");
+        hook_release = hardwareMap.servo.get("hook_release");
+        climber_release = hardwareMap.servo.get("climber_release");
         thrower.setPosition(0.75);
-        sweeper.setPosition(0.53);
-        release.setPosition(0.53);
+        color_arm.setPosition(0.53);
+        hook_release.setPosition(0.53);
     }
     public void setThrower(boolean pos) {thrower.setPosition(pos ? 0.15 : 0.75);}
 
     public void setBelt(double power) {belt.setPower(power);}
 
     public void setSweeperPosition(boolean sweeperSide) {
-        sweeper.setPosition(sweeperSide ? .35 : .05);
+        color_arm.setPosition(sweeperSide ? .35 : .05);
     }
 
     public void setWinch(double power) {
@@ -201,7 +203,7 @@ public class PacmanBotHardwareBase extends OpMode {
     }
 
     public void releaseHook() {
-        release.setPosition(0);
+        hook_release.setPosition(0);
     }
 
     public double threeWay(boolean a,boolean b) {
