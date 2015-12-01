@@ -14,6 +14,9 @@ import com.qualcomm.robotcore.hardware.Servo;
  * You use it to interface to the hardware components.
  *
  * Change log:
+ * 1.6.1 - Removed more anti-idiomatic code
+ * 1.6.0 - Cleaned up drive methods
+ * 1.5.3 - Cleaned up setupHardware
  * 1.5.2 - Refactored out some anti-idiomatic code.
  * 1.5.0 - Added belt code
  * 1.4.3 - Refactor, added new code.
@@ -28,7 +31,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * 1.0.0 - First version.
 */
 public class PacmanBotHardwareBase extends OpMode {
-    final static public VersionNumber hwbVersion = new VersionNumber(1,5,2);
+    final static public VersionNumber hwbVersion = new VersionNumber(1,6,1);
 
     final static double REAR_MULTIPLIER = 0.667;
     final static double COLOR_DETECTION_THRESHOLD = 0.25;
@@ -117,16 +120,16 @@ public class PacmanBotHardwareBase extends OpMode {
 
     }
 
-    public void drive(double drive_rate, double turn_rate) {
-        drive_rate = -drive_rate;
-        drive_rate = limit(drive_rate,-driveClamp,driveClamp);
-        turn_rate = limit(turn_rate, -turnClamp, turnClamp);
-        drive_rate = exp(drive_rate, driveExponent);
-        turn_rate = exp(turn_rate,turnExponent);
-        drive_rate = drive_rate * driveMultiplier;
-        turn_rate = turn_rate * turnMultiplier;
-        double motorLeftPower = limit(drive_rate + turn_rate,-1,1);
-        double motorRightPower = limit(drive_rate - turn_rate,-1,1);
+    public void drive(double driveRate, double turnRate) {
+        driveRate = -driveRate;
+        driveRate = limit(driveRate,-driveClamp,driveClamp);
+        turnRate = limit(turnRate, -turnClamp, turnClamp);
+        driveRate = exp(driveRate, driveExponent);
+        turnRate = exp(turnRate,turnExponent);
+        driveRate = driveRate * driveMultiplier;
+        turnRate = turnRate * turnMultiplier;
+        double motorLeftPower = limit(driveRate + turnRate,-1,1);
+        double motorRightPower = limit(driveRate - turnRate,-1,1);
         motorLeftPower = exp(motorLeftPower,motorExponent) * finalRateMultiplier;
         motorRightPower = exp(motorRightPower,motorExponent) * finalRateMultiplier;
         telemetry.addData("Left",motorLeftPower);
@@ -166,33 +169,29 @@ public class PacmanBotHardwareBase extends OpMode {
         rearLeft.setDirection(DcMotor.Direction.FORWARD);
         rearRight.setDirection(DcMotor.Direction.REVERSE);
         brush.setDirection(DcMotor.Direction.FORWARD);
-        brush.setChannelMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-        frontLeft.setChannelMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-        frontRight.setChannelMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-        rearLeft.setChannelMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-        rearRight.setChannelMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
 
         winch = hardwareMap.dcMotor.get("winch");
         belt = hardwareMap.dcMotor.get("belt");
-        //hook.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 
         eye = hardwareMap.colorSensor.get("eye");
         setEyeLED(false);
 
-        gamepad = new Gamepad();
-
         arm = hardwareMap.servo.get("sweeper");//color sensor arm thing
         thrower = hardwareMap.servo.get("thrower");
         hookRelease = hardwareMap.servo.get("hook_release");
+
+        gamepad = new Gamepad();
+
         thrower.setPosition(0.75);
         arm.setPosition(0.53);
         hookRelease.setPosition(0.53);
     }
+
     public void setThrower(boolean pos) {thrower.setPosition(pos ? 0.15 : 0.75);}
 
     public void setBelt(double power) {belt.setPower(power);}
 
-    public void setArmPosition(double pos) {
+    public void setArm(double pos) {
         arm.setPosition(pos/2 + .53);
     }
 
