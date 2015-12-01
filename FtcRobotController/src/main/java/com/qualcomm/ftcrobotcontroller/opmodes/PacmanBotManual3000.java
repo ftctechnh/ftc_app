@@ -1,5 +1,7 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 /**
  * Created by tdoylend on 2015-11-28.
  *
@@ -9,6 +11,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 public class PacmanBotManual3000 extends PacmanBotHardwareBase {
 
     VersionNumber version = new VersionNumber(1,0,0);
+    ElapsedTime timer = new ElapsedTime();
 
     @Override
     public void init() {
@@ -17,6 +20,7 @@ public class PacmanBotManual3000 extends PacmanBotHardwareBase {
         telemetry.addData("HWB Version", hwbVersion.string());
 
         setupHardware();
+        timer.reset();
     }
 
     @Override
@@ -30,9 +34,10 @@ public class PacmanBotManual3000 extends PacmanBotHardwareBase {
 
         drive(drive_rate,turn_rate);
 
-        setBrush(threeWay(gamepad.a,gamepad.b));
-        setBelt(threeWay(gamepad.dpad_left,gamepad.dpad_right));
+        setBrush(threeWay(gamepad.a, gamepad.b));
+        setBelt(threeWay(gamepad.dpad_left, gamepad.dpad_right));
 
-        if (gamepad.x) releaseHook();
+        setHookRelease(gamepad.x);
+        //setArm(Math.sin(timer.time()*4)); //Uncomment to annoy Jason.
     }
 }

@@ -189,18 +189,18 @@ public class PacmanBotHardwareBase extends OpMode {
 
     public void setThrower(boolean pos) {thrower.setPosition(pos ? 0.15 : 0.75);}
 
-    public void setBelt(double power) {belt.setPower(power);}
+    public void setBelt(double power) { belt.setPower(-power); }
 
     public void setArm(double pos) {
-        arm.setPosition(pos/2 + .53);
+        arm.setPosition(pos/5 + .53);
     }
 
     public void setWinch(double power) {
         winch.setPower(WINCH_RATE * power);
     }
 
-    public void releaseHook() {
-        hookRelease.setPosition(0);
+    public void setHookRelease(boolean released) {
+        hookRelease.setPosition(released ? 0 : .55);
     }
 
     public double threeWay(boolean a,boolean b) {

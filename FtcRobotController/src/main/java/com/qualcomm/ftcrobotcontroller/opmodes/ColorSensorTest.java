@@ -107,7 +107,7 @@ public class ColorSensorTest extends PacmanBotHardwareBase {
 //                }
 //            }
             if (iterations < 20) {
-                color_arm.setPosition(0.5);
+                arm.setPosition(0.5);
                 red += eye.red();
                 blue += eye.blue();
             }
@@ -115,7 +115,7 @@ public class ColorSensorTest extends PacmanBotHardwareBase {
                 red1 = red;
                 blue1 = blue;
                 if (red < blue) {
-                    color_arm.setPosition(0.53);
+                    arm.setPosition(0.53);
                     drive = true;
                     timer.reset();
                     timer.startTime();
@@ -127,7 +127,7 @@ public class ColorSensorTest extends PacmanBotHardwareBase {
                 }
             }
             else if (iterations < 41 && checkRed) {
-                color_arm.setPosition(0.4);
+                arm.setPosition(0.4);
                 red += eye.red();
                 blue += eye.blue();
 //            blue += eye.blue();
@@ -150,7 +150,7 @@ public class ColorSensorTest extends PacmanBotHardwareBase {
             }
             else if(timer.time()>3.5 && drive) {
                 drive(0, 0);
-                color_arm.setPosition(0.6);
+                arm.setPosition(0.6);
                 thrower.setPosition(0);
             }
 
