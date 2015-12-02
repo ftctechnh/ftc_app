@@ -7,28 +7,18 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
  */
 public class BeaconAuto extends LinearOpMode
 {
-
-    DriverInterface robot = new TestBot(hardwareMap);
-
-    public void runOpMode()
+    @Override public void runOpMode() throws InterruptedException
     {
+        DriverInterface robot = new TestBot(hardwareMap);
+        waitForStart();
         robot.moveStraightEncoders(48, 1.0f);
-        robot.spinOnCenter(90, 0.75f, true);
+        robot.spinOnCenter(90, 0.75f);
         robot.moveStraightEncoders(48, 1.0f);
-        robot.spinOnCenter(90, 0.75f, false);
+        robot.spinOnCenter(-90, 0.75f);
         robot.moveStraightEncoders(24, 1.0f);
-        robot.spinOnCenter(90, 0.75f, true);
+        robot.spinOnCenter(90, 0.75f);
         robot.moveStraightEncoders(24, 1.0f);
-        try
-        {
-            sleep(10);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        robot.spinOnCenter(90, 0.75f, true);
+        robot.spinOnCenter(90, 0.75f);
         robot.moveStraightEncoders(24 , 1.0f);
         robot.stop();
 
