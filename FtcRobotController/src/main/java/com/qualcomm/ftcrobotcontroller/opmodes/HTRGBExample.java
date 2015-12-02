@@ -68,7 +68,7 @@ public abstract class HTRGBExample extends LinearOpMode {
 
 
     // turn the LED on in the beginning, just so user will know that the sensor is active.
-    sensorRGB.enableLed(true);
+    sensorRGB.enableLed(false);
   }
     // wait one cycle.
 

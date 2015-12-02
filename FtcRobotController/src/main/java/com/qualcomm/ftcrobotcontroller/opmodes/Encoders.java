@@ -1,5 +1,11 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
+import android.app.Activity;
+import android.graphics.Color;
+import android.view.View;
+
+import com.qualcomm.ftcrobotcontroller.R;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -28,7 +34,24 @@ public class Encoders extends  LinearOpMode {
     double encoder2;
     HTRGBExample color;
     int colortemp;
-    public void initiate () {
+    ColorSensor sensorRGB;
+    public void initsensor() throws InterruptedException {
+
+
+        // write some device information (connection info, name and type)
+        // to the log file.
+        hardwareMap.logDevices();
+
+        // get a reference to our ColorSensor object.
+        sensorRGB = hardwareMap.colorSensor.get("color");
+
+        // bEnabled represents the state of the LED.
+
+
+        // turn the LED on in the beginning, just so user will know that the sensor is active.
+        sensorRGB.enableLed(false);
+    }
+    public void initiate () throws InterruptedException{
         leftmotor = hardwareMap.dcMotor.get("leftmotor");
         rightmotor = hardwareMap.dcMotor.get("rightmotor");
         activegear = gear_ratio1;
@@ -36,7 +59,7 @@ public class Encoders extends  LinearOpMode {
 
         leftmotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         rightmotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        color.init_loop();
+        initsensor();
     }
 
     @Override
@@ -47,15 +70,17 @@ public class Encoders extends  LinearOpMode {
         waitOneFullHardwareCycle();
         rightmotor.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
         waitOneFullHardwareCycle();
-       // movebackward(10, .5);
+        // movebackward(10, .5);
         waitOneFullHardwareCycle();
-       // turnright(4, .5);
+        // turnright(4, .5);
         waitOneFullHardwareCycle();
-       // turnleft(4, .5);
+        // turnleft(4, .5);
         waitOneFullHardwareCycle();
-       // moveforward(10, .5);
-        colortemp = color.checksensor();
-        telemetry.addData("bluetest", colortemp);
+        // moveforward(10, .5);
+        while (1 == 1)
+        {
+        colortemp = checksensor();
+        }
     }
     public void moveforward(double move, double power) throws InterruptedException {
 
@@ -163,6 +188,42 @@ public class Encoders extends  LinearOpMode {
         waitOneFullHardwareCycle();
         rightmotor.setPower(0);
 
+    }
+    public int checksensor() throws InterruptedException{
+        // hsvValues is an array that will hold the hue, saturation, and value information.
+        float hsvValues[] = {0F,0F,0F};
+
+        // values is a reference to the hsvValues array.
+        final float values[] = hsvValues;
+
+        // get a reference to the RelativeLayout so we can change the background
+        // color of the Robot Controller app to match the hue detected by the RGB sensor.
+        final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(R.id.RelativeLayout);
+
+        // bPrevState and bCurrState represent the previous and current state of the button.
+        boolean bPrevState = false;
+        boolean bCurrState = false;
+
+        // while the op mode is active, loop and read the RGB data.
+        // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
+
+
+
+        // convert the RGB values to HSV values.
+        Color.RGBToHSV(sensorRGB.red(), sensorRGB.green(), sensorRGB.blue(), hsvValues);
+
+        // send the info back to driver station using telemetry function.
+        telemetry.addData("Clear", sensorRGB.alpha());
+        telemetry.addData("Red  ", sensorRGB.red());
+        telemetry.addData("Green", sensorRGB.green());
+        telemetry.addData("Blue ", sensorRGB.blue());
+        telemetry.addData("Hue", hsvValues[0]);
+
+        // change the background color to match the color detected by the RGB sensor.
+        // pass a reference to the hue, saturation, and value array as an argument
+        // to the HSVToColor method.
+        waitOneFullHardwareCycle();
+        return sensorRGB.blue();
     }
 }
 
