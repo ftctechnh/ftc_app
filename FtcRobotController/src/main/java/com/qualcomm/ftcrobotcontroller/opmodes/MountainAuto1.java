@@ -8,14 +8,16 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  */
 public class MountainAuto1 extends LinearOpMode
 {
-    DcMotor right;
-    DcMotor left;
-
+    DriverInterface drive = new TestBot(hardwareMap);
 
 
     @Override
     public void runOpMode() throws InterruptedException
     {
-
+        drive.moveStraightEncoders(24,1);
+        drive.spinOnCenter(45,.25,true);
+        drive.moveStraightEncoders(24,1);
+        drive.spinOnCenter(90,.25,true);
+        drive.moveStraightEncoders(28,1);
     }
 }
