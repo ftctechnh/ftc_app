@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.ftcrobotcontroller.opmodes.BasicMoveFunctions;
+import com.qualcomm.ftcrobotcontroller.opmodes.HTRGBExample;
 
 /**
  * Created by Robomain on 11/18/2015.
@@ -25,6 +26,8 @@ public class Encoders extends  LinearOpMode {
     BasicMoveFunctions command;
     double encoder1;
     double encoder2;
+    HTRGBExample color;
+    int colortemp;
     public void initiate () {
         leftmotor = hardwareMap.dcMotor.get("leftmotor");
         rightmotor = hardwareMap.dcMotor.get("rightmotor");
@@ -33,6 +36,7 @@ public class Encoders extends  LinearOpMode {
 
         leftmotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         rightmotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        color.init_loop();
     }
 
     @Override
@@ -43,13 +47,15 @@ public class Encoders extends  LinearOpMode {
         waitOneFullHardwareCycle();
         rightmotor.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
         waitOneFullHardwareCycle();
-        movebackward(10, .5);
+       // movebackward(10, .5);
         waitOneFullHardwareCycle();
-        turnright(4, .5);
+       // turnright(4, .5);
         waitOneFullHardwareCycle();
-        turnleft(4, .5);
+       // turnleft(4, .5);
         waitOneFullHardwareCycle();
-        moveforward(10, .5);
+       // moveforward(10, .5);
+        colortemp = color.checksensor();
+        telemetry.addData("bluetest", colortemp);
     }
     public void moveforward(double move, double power) throws InterruptedException {
 
