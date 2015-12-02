@@ -24,9 +24,10 @@ import com.qualcomm.ftcrobotcontroller.opmodes.*;
  * begin by copying the entire YourCodeHere folder, then renaming the src\main\java\org\...\yourcodehere
  * path to reflect your new package name, whatever that might be. That new package name will also
  * of course need to appear in your copied .java files (including package-info.java), so those will
- * need their 'package' statement at the top adjusted accordingly. Finally, perhaps less obviously,
+ * need their 'package' statement at the top adjusted accordingly. Perhaps less obviously,
  * the src\main\AndroidManifest.xml, which also contains the package name, will need to have the
- * 'package' attribute of the 'manifest' element adjusted.
+ * 'package' attribute of the 'manifest' element adjusted. Finally, the new modules should be added
+ * to the 'settings.gradle' file so they show up in Android Studio.
  *
  * @see TeleOp
  * @see Autonomous
