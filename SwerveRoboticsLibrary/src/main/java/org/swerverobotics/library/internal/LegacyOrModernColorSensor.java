@@ -16,7 +16,7 @@ import org.swerverobotics.library.interfaces.*;
  * Modern Robotics color sensor. The two are very similar I2C devices; it's easy
  * for them to share code.
  */
-public class LegacyOrModernColorSensor extends ColorSensor implements IOpModeStateTransitionEvents
+public class LegacyOrModernColorSensor implements ColorSensor, IOpModeStateTransitionEvents
     {
     //----------------------------------------------------------------------------------------------
     // State

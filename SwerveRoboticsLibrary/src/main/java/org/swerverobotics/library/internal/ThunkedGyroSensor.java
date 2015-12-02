@@ -6,7 +6,7 @@ import org.swerverobotics.library.interfaces.*;
 /**
  * A GyroSensor that can be called on a synchronous thread.
  */
-public class ThunkedGyroSensor extends GyroSensor implements IThunkWrapper<GyroSensor>
+public class ThunkedGyroSensor implements GyroSensor, IThunkWrapper<GyroSensor>
     {
     //----------------------------------------------------------------------------------------------
     // State
