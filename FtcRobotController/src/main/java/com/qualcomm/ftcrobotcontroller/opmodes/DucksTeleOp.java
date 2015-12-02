@@ -20,49 +20,39 @@ import java.util.logging.Handler;
 /**
  * Created by Dan on 11/9/2015.
  */
-public class DucksTeleOp extends OpMode {
-    static int WINCH=1;
-    static int WINCHPIVOT=2;
-    static int WINCHWHEEL=1;
-    static int RIGHT=2;
-    static int LEFT=1;
+public class DucksTeleOp extends TeleOpCommands {
     int UPDATES=0;
-    int toggleLeft=0;
-    int toggleRight=0;
+    long leftDown;
+    long leftUp;
+    long rightDown;
+    long rightUp;
     @Override
     public void init() {
-
+        driveMC=hardwareMap.dcMotorController.get("driveMC");
+        winchMC=hardwareMap.dcMotorController.get("winchMC");
+        wheelMC=hardwareMap.dcMotorController.get("wheelMC");
     }
 
     @Override
     public void loop() {
-        DcMotorController driveMC=hardwareMap.dcMotorController.get("driveMC");
-        DcMotorController winchMC=hardwareMap.dcMotorController.get("winchMC");
-        DcMotorController wheelMC=hardwareMap.dcMotorController.get("wheelMC");
-
-        Servo climbersLeft=hardwareMap.servo.get("climbersleft");
-        Servo climbersRight=hardwareMap.servo.get("climbersright");
-
 //left wheel
-        if(gamepad1.left_stick_y>.05 && driveMC.getMotorPower(LEFT)!=gamepad1.left_stick_y){
-            driveMC.setMotorPower(LEFT,Math.pow(gamepad1.left_stick_y, 2));
+        if(gamepad1.left_stick_y>0 && driveMC.getMotorPower(LEFT)!=scaleInput(gamepad1.left_stick_y)){
+//            driveMC.setMotorPower(LEFT,Math.pow(gamepad1.left_stick_y, 2));
+            driveMC.setMotorPower(LEFT,scaleInput(gamepad1.left_stick_y));
             UPDATES+=1;
-        }else if(gamepad1.left_stick_y<.05 && driveMC.getMotorPower(LEFT)!=gamepad1.left_stick_y) {
-            driveMC.setMotorPower(LEFT,-Math.pow(gamepad1.left_stick_y, 2));
-            UPDATES+=1;
-        } else if(Math.abs(gamepad1.left_stick_y)<.05 && driveMC.getMotorPower(LEFT)!=0){
-            driveMC.setMotorPower(LEFT,0);
+        }else if(gamepad1.left_stick_y<0 && driveMC.getMotorPower(LEFT)!=-scaleInput(gamepad1.left_stick_y)) {
+//            driveMC.setMotorPower(LEFT,-Math.pow(gamepad1.left_stick_y, 2));
+            driveMC.setMotorPower(LEFT,-scaleInput(gamepad1.left_stick_y));
             UPDATES+=1;
         }
 //right wheel
-        if(gamepad1.right_stick_y>.05 && driveMC.getMotorPower(RIGHT)!=gamepad1.right_stick_y){
-            driveMC.setMotorPower(RIGHT,-Math.pow(gamepad1.right_stick_y,2));
+        if(gamepad1.right_stick_y>0 && driveMC.getMotorPower(RIGHT)!=-scaleInput(gamepad1.right_stick_y)){
+//            driveMC.setMotorPower(RIGHT,-Math.pow(gamepad1.right_stick_y,2));
+            driveMC.setMotorPower(RIGHT,-scaleInput(gamepad1.right_stick_y));
             UPDATES+=1;
-        } else if(gamepad1.right_stick_y<.05 && driveMC.getMotorPower(RIGHT)!=gamepad1.right_stick_y){
-            driveMC.setMotorPower(RIGHT,Math.pow(gamepad1.right_stick_y,2));
-            UPDATES+=1;
-        }else if(Math.abs(gamepad1.right_stick_y)<.05 && driveMC.getMotorPower(RIGHT)!=0){
-            driveMC.setMotorPower(RIGHT,0);
+        } else if(gamepad1.right_stick_y<-.05 && driveMC.getMotorPower(RIGHT)!=scaleInput(gamepad1.right_stick_y)){
+//            driveMC.setMotorPower(RIGHT,Math.pow(gamepad1.right_stick_y,2));
+            driveMC.setMotorPower(RIGHT,scaleInput(gamepad1.right_stick_y));
             UPDATES+=1;
         }
 //winch in and out
