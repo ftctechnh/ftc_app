@@ -18,6 +18,7 @@ public class newBase extends OpMode
     DcMotor left;
     DcMotor grabber;
     Servo diverter;
+    PhoneGyrometer gyro;
 
 
     @Override
@@ -29,11 +30,13 @@ public class newBase extends OpMode
         frontLeft.close();
         backRight.close();
         backLeft.close();
+        gyro.onDestroy();
     }
 
     @Override
     public void init()
     {
+        gyro = new PhoneGyrometer(hardwareMap);
         gamepad1.setJoystickDeadzone(0.05f);
         right = hardwareMap.dcMotor.get("right");
         left = hardwareMap.dcMotor.get("left");
@@ -114,6 +117,7 @@ public class newBase extends OpMode
                 backLeft.setPower(0.0f);
             }
         }
+        telemetry.addData("gyroReading = ", gyro.getAzimuth());
     }
 
     void setDrive(double y1, double y2)
@@ -121,6 +125,5 @@ public class newBase extends OpMode
         right.setPower(y1);
         left.setPower(y2);
     }
-
 
 }

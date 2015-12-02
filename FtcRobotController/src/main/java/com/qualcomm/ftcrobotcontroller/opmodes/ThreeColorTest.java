@@ -18,12 +18,10 @@ public class ThreeColorTest extends OpMode{
         blueSensor = hardwareMap.lightSensor.get("blueSensor");
         clearSensor = hardwareMap.lightSensor.get("clearSensor");
         getColor = new ThreeLightColorSensor(redSensor, blueSensor, clearSensor);
-
     }
     public void loop()
     {
         telemetry.addData("The color is ", getColor.colorDetected());
-
     }
     public void stop()
     {
