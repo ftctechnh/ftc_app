@@ -26,7 +26,7 @@ public class ThreeLightColorSensor
         clear = clearSensor;
     }
 
-    public int colorDetected()
+    public String colorDetected()
     {
         int redLightDetected = red.getLightDetectedRaw();
         int blueLightDetected = blue.getLightDetectedRaw();
@@ -39,12 +39,17 @@ public class ThreeLightColorSensor
      //   if (blueLightDetected <= redLightDetected / 2 || redLightDetected <= blueLightDetected / 2) {
      // may need beacon detection code as it requires the color sensors to be close to the beacon
 
-            if (diffOfClearRed > diffOfClearBlue * 2) {
-                return blueDetected; //-1 means the light is blue
-            } else if (diffOfClearBlue < diffOfClearRed * 2) {
-                return redDetected; // returns 1, meaning that the light is red
-            } else {
-                return indeterminate;//0 means undefined color
+            if (diffOfClearRed > diffOfClearBlue * 2)
+            {
+                return "blue";
+            }
+            else if (diffOfClearBlue < diffOfClearRed * 2)
+            {
+                return "red";
+            }
+            else
+            {
+                return "undeterminate";
             }
 
 
