@@ -54,9 +54,23 @@ public class EETestAuton extends OpMode {
     final static double MOTOR_POWER = 0.15; // Higher values will cause the robot to move faster
     final static double HOLD_IR_SIGNAL_STRENGTH = 0.20; // Higher values will cause the robot to follow closer
     final static double LIGHT_THRESHOLD = 0.5;
+    final static double MTAPE_MIN_RANGE  = 0.20;
+    final static double MTAPE_MAX_RANGE  = 0.90;
+    final static double SNOWPLOW_MIN_RANGE = 0.2;
+    final static double SNOWPLOW_MAX_RANGE = 0.7;
+    final static double ClIMBER_MIN_RANGE = 0.20;
+    final static double CLIMBER_MAX_RANGE = 0.7;
+    final static double SLIDER_MAX_RANGE = 0.9;
+    final static double SLIDER_MIN_RANGE = 0.2;
 
-    double armPosition;
-    double clawPosition;
+
+    double climberPosition;
+
+    double sliderPosition;
+
+    double snowplowPosition;
+
+    double mtapePosition;
 
     private boolean complainLight = false;
 
@@ -108,8 +122,8 @@ public class EETestAuton extends OpMode {
 
 
         // set the starting position of the wrist and claw
-        armPosition = 0.4;
-        clawPosition = 0.25;
+        //armPosition = 0.4;
+        //clawPosition = 0.25;
 
 		/*
 		 * We also assume that we have a LEGO light sensor

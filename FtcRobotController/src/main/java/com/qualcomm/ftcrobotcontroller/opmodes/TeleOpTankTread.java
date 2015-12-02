@@ -48,9 +48,7 @@ public class TeleOpTankTread extends OpMode {
     final static double SLIDER_MIN_RANGE = 0.2;
 
     // position of the arm servo.
-    double pusherPosition;
 
-    double buttonPosition;
 
     double climberPosition;
 
@@ -77,18 +75,16 @@ public class TeleOpTankTread extends OpMode {
     DcMotor motorRRight = null;
     DcMotor motorFLeft = null;
     DcMotor motorRLeft = null;
-    Servo pusher = null;
     Servo button = null;
     Servo climber = null;
     Servo snowplow = null;
     Servo mtape = null;
     Servo slider = null;
 
-    DcMotor motorLowerHook = null;
-    DcMotor motorUpperHook = null;
+    DcMotor motorHook = null;
+    DcMotor motorPusher = null;
 
     float servoInput = 0.5f;
-    float pservoSpeed = 0.5f;
     float bservoSpeed = 0.5f;
 
     /**
@@ -114,20 +110,10 @@ public class TeleOpTankTread extends OpMode {
 		 * configured your robot and created the configuration file.
 		 */
 
-		/*
-		 * For the demo Tetrix K9 bot we assume the following,
-		 *   There are two motors "motor_1" and "motor_2"
-		 *   "motor_1" is on the right side of the bot.
-		 *   "motor_2" is on the left side of the bot and reversed.
-		 *
-		 * We also assume that there are two servos "servo_1" and "servo_6"
-		 *    "servo_1" controls the arm joint of the manipulator.
-		 *    "servo_6" controls the claw joint of the manipulator.
-		 */
 
         sc = hardwareMap.servoController.get("sc");
-        pusher = hardwareMap.servo.get("pusher");
-        pusher.setPosition(0.5);
+        //pusher = hardwareMap.servo.get("pusher");
+        //pusher.setPosition(0.5);
         climber = hardwareMap.servo.get("climber");
         button = hardwareMap.servo.get("button");
         mtape = hardwareMap.servo.get("mtape");
@@ -160,22 +146,11 @@ public class TeleOpTankTread extends OpMode {
         }
 
         try {
-            motorLowerHook = hardwareMap.dcMotor.get("motorLS");
-            motorUpperHook = hardwareMap.dcMotor.get("motorUS");
+            motorHook = hardwareMap.dcMotor.get("motorHook");
+            motorPusher = hardwareMap.dcMotor.get("pusher");
         } catch (Exception ex) {
 
         }
-
-
-
-
-
-        //arm = hardwareMap.servo.get("servo_1");
-        //claw = hardwareMap.servo.get("servo_6");
-
-        // assign the starting position of the wrist and claw
-        //armPosition = 0.2;
-        //clawPosition = 0.2;
     }
 
 
@@ -200,32 +175,32 @@ public class TeleOpTankTread extends OpMode {
         // and 1 is full right
         float drivespeed = -gamepad1.left_stick_y;
         float driveturn = gamepad1.right_stick_x;
-        float upperhook = gamepad2.left_stick_y;
-        float lowerhook = gamepad2.right_stick_y;
+        float hook = gamepad2.left_stick_y;
+        float pusher = gamepad2.right_stick_y;
         float right = drivespeed - driveturn;
         float left = drivespeed + driveturn;
 
         // clip the right/left values so that the values never exceed +/- 1
         right = Range.clip(right, -1, 1);
         left = Range.clip(left, -1, 1);
-        upperhook = Range.clip(upperhook, -1, 1);
-        lowerhook = Range.clip(lowerhook, -1,1);
+        hook = Range.clip(hook, -1, 1);
+        pusher = Range.clip(pusher, -1,1);
 
 
         // scale the joystick value to make it easier to control
         // the robot more precisely at slower speeds.
         right = (float)scaleInput(right);
         left =  (float)scaleInput(left);
-        upperhook = (float)scaleInput(upperhook);
-        lowerhook = (float)scaleInput(lowerhook);
+        hook = (float)scaleInput(hook);
+        pusher = (float)scaleInput(pusher);
 
         // write the values to the motors
 
         motorRRight.setPower(right);
         motorRLeft.setPower(left);
-        if (motorUpperHook != null) {
-            motorUpperHook.setPower(upperhook);
-            motorLowerHook.setPower(lowerhook);
+        if (motorHook != null) {
+            motorHook.setPower(hook);
+            motorPusher.setPower(pusher);
         }
 
         if (motorFRight != null) {
@@ -233,18 +208,6 @@ public class TeleOpTankTread extends OpMode {
             motorFLeft.setPower(left);
         }
 
-        if(gamepad1.a) {
-            pservoSpeed = 0.0f;
-        }
-        if(gamepad1.b) {
-            pservoSpeed = 1.0f;
-        }
-
-        if(gamepad1.a != true && gamepad1.b != true) {
-            pservoSpeed = 0.5f;
-        }
-
-        pusher.setPosition(pservoSpeed);
 
         if(gamepad1.x) {
             bservoSpeed = 0.0f;
@@ -348,7 +311,7 @@ public class TeleOpTankTread extends OpMode {
         telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", left));
         telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));
         telemetry.addData("servo in",  "servo in: " + String.format("%.2f", servoInput));
-        telemetry.addData("pusher servo",  "pusher servo: " + String.format("%.2f", pservoSpeed));
+        telemetry.addData("pusher servo",  "pusher servo: " + String.format("%.2f", pusher));
         telemetry.addData("button servo", "button servo: " + String.format("%.2f", bservoSpeed));
         telemetry.addData("climber", "climber:  " + String.format("%.2f", climberPosition));
         telemetry.addData("slider", "slider: " + String.format("%.2f", sliderPosition));
@@ -362,9 +325,6 @@ public class TeleOpTankTread extends OpMode {
      */
     @Override
     public void stop() {
-        pservoSpeed = 0.5f;
-
-        pusher.setPosition(pservoSpeed);
 
         //if (sc != null) {
         //    sc.pwmDisable();
