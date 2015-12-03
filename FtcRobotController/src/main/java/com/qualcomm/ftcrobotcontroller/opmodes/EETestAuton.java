@@ -35,6 +35,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 //eden
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.ndhsb.ftc7593.AutonChoice;
@@ -79,6 +80,10 @@ public class EETestAuton extends OpMode {
     DcMotor motorRRight = null;
     DcMotor motorRLeft = null;
     ColorSensor sensorRGB = null;
+    //for the gyro sensor
+    GyroSensor sensorGyro;
+    int xVal, yVal, zVal = 0;
+    int heading = 0;
 
     private org.ndhsb.ftc7593.AutonChoice[] autonSteps = {
             new AutonChoice(0.0,1.0,MOTOR_POWER,MOTOR_POWER), // from 0 to 1 s, run the motor at 0.15
@@ -134,12 +139,22 @@ public class EETestAuton extends OpMode {
             sensorRGB = hardwareMap.colorSensor.get("color_sensor");
 
             // turn on LED of light sensor.
-            sensorRGB.enableLed(true);
+            sensorRGB.enableLed(false);
         }
         catch (Exception ex) {
             if ( !complainLight) {
                 telemetry.addData("Err", "No light sensor!");
                 complainLight = true;
+            }
+        }
+        sensorGyro = hardwareMap.gyroSensor.get("gyro");
+        sensorGyro.calibrate();
+
+        while (sensorGyro.isCalibrating())  {
+            try {
+                Thread.sleep(50);
+            } catch (Exception ex) {
+
             }
         }
 
@@ -208,7 +223,7 @@ public class EETestAuton extends OpMode {
                 double sTime = value.startTime;
                 double eTime = value.endTime;
                 double time = mRuntime.time();
-                if ((sTime <= time) && (time <- eTime)) {
+                if ((sTime <= time) && (time <= eTime)) {
                     left = value.lMotor;
                     right = value.rMotor;
                     break;  // first rule to match wins and we leave the loop!
@@ -233,6 +248,10 @@ public class EETestAuton extends OpMode {
         if ( sensorRGB != null ) {
         }
 
+        xVal = sensorGyro.rawX();
+        yVal = sensorGyro.rawY();
+        zVal = sensorGyro.rawZ();
+        heading = sensorGyro.getHeading();
 
 		/*
 		 * Send telemetry data back to driver station. Note that if we are using
@@ -241,6 +260,11 @@ public class EETestAuton extends OpMode {
 		 * are currently write only.
 		 */
 
+
+        telemetry.addData("1. x", String.format("%03d", xVal));
+        telemetry.addData("2. y", String.format("%03d", yVal));
+        telemetry.addData("3. z", String.format("%03d", zVal));
+        telemetry.addData("4. h", String.format("%03d", heading));
         telemetry.addData("Text", "*** Robot Data***");
         telemetry.addData("time", "elapsed time: " + Double.toString(this.time));
         telemetry.addData("reflection", "reflection:  " + Double.toString(reflection));
