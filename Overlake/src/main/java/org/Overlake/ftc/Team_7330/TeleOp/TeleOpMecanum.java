@@ -180,11 +180,11 @@ public class  TeleOpMecanum extends OpMode {
 
 		if (upDpad)
 		{
-			churroMotor.setPower(0.8);
+			churroMotor.setPower(0.95);
 		}
 		else if (downDpad)
 		{
-			churroMotor.setPower(-0.8);
+			churroMotor.setPower(-0.95);
 		}
 		else
 		{
