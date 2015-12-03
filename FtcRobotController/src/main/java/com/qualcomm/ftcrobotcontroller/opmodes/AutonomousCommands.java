@@ -44,10 +44,10 @@ public class AutonomousCommands extends LinearOpMode{
             if(Math.abs(offset)<=2 && driveMC.getMotorPower(RIGHT)!=speed) {
                 driveMC.setMotorPower(RIGHT, speed);
                 driveMC.setMotorPower(LEFT, -speed);
-                telemetry.addData("offsettting",0);
+                telemetry.addData("offsetting",0);
             }
             if(2<Math.abs(offset) && Math.abs(offset)<=5){
-                telemetry.addData("offsettting",1);
+                telemetry.addData("offsetting",1);
                 if(offset<0 && driveMC.getMotorPower(RIGHT)!=speed-.5){
                     driveMC.setMotorPower(RIGHT, speed-.5);
                     driveMC.setMotorPower(LEFT,-speed);
@@ -58,7 +58,7 @@ public class AutonomousCommands extends LinearOpMode{
                 }
             }
             if(5<Math.abs(offset) && Math.abs(offset)<10){
-                telemetry.addData("offsettting",2);
+                telemetry.addData("offsetting",2);
                 if(offset<0 && driveMC.getMotorPower(RIGHT)!=speed-.7){
                     driveMC.setMotorPower(RIGHT, speed-.7);
                     driveMC.setMotorPower(LEFT,-speed);
@@ -69,7 +69,7 @@ public class AutonomousCommands extends LinearOpMode{
                 }
             }
             if(Math.abs(offset)>=10){
-                telemetry.addData("offsettting",3);
+                telemetry.addData("offsetting",3);
                 if(offset<0 && driveMC.getMotorPower(RIGHT)!=speed-.8){
                     driveMC.setMotorPower(RIGHT, speed-.8);
                     driveMC.setMotorPower(LEFT,-speed);

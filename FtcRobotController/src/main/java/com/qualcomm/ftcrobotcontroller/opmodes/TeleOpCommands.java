@@ -33,20 +33,16 @@ public class TeleOpCommands extends OpMode {
     double scaleInput(double dVal)  {
         double[] scaleArray = { 0.0, 0.05, 0.09, 0.10, 0.12, 0.15, 0.18, 0.24,
                 0.30, 0.36, 0.43, 0.50, 0.60, 0.72, 0.85, 1.00, 1.00 };
-
         // get the corresponding index for the scaleInput array.
         int index = (int) (dVal * 16.0);
-
         // index should be positive.
         if (index < 0) {
             index = -index;
         }
-
         // index cannot exceed size of array minus 1.
         if (index > 16) {
             index = 16;
         }
-
         // get value from the array.
         double dScale = 0.0;
         if (dVal < 0) {
@@ -54,18 +50,15 @@ public class TeleOpCommands extends OpMode {
         } else {
             dScale = scaleArray[index];
         }
-
         // return scaled value.
         return dScale;
     }
     public void setLeftPower(){
         if(gamepad1.left_stick_y>0 && driveMC.getMotorPower(LEFT)!=scaleInput(gamepad1.left_stick_y)){
-//            driveMC.setMotorPower(LEFT,Math.pow(gamepad1.left_stick_y, 2));
             driveMC.setMotorPower(LEFT,scaleInput(gamepad1.left_stick_y));
             UPDATES+=1;
             LEFTUPDATE=System.currentTimeMillis();
         }else if(gamepad1.left_stick_y<0 && driveMC.getMotorPower(LEFT)!=-scaleInput(gamepad1.left_stick_y)) {
-//            driveMC.setMotorPower(LEFT,-Math.pow(gamepad1.left_stick_y, 2));
             driveMC.setMotorPower(LEFT,-scaleInput(gamepad1.left_stick_y));
             UPDATES+=1;
             LEFTUPDATE=System.currentTimeMillis();
@@ -74,12 +67,10 @@ public class TeleOpCommands extends OpMode {
 
     public void setRightPower(){
         if(gamepad1.right_stick_y>0 && driveMC.getMotorPower(RIGHT)!=-scaleInput(gamepad1.right_stick_y)){
-//            driveMC.setMotorPower(RIGHT,-Math.pow(gamepad1.right_stick_y,2));
             driveMC.setMotorPower(RIGHT,-scaleInput(gamepad1.right_stick_y));
             UPDATES+=1;
             RIGHTUPDATE=System.currentTimeMillis();
         } else if(gamepad1.right_stick_y<-.05 && driveMC.getMotorPower(RIGHT)!=scaleInput(gamepad1.right_stick_y)){
-//            driveMC.setMotorPower(RIGHT,Math.pow(gamepad1.right_stick_y,2));
             driveMC.setMotorPower(RIGHT,scaleInput(gamepad1.right_stick_y));
             UPDATES+=1;
             RIGHTUPDATE=System.currentTimeMillis();

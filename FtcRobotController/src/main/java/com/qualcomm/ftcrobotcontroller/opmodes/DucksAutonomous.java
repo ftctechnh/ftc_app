@@ -17,6 +17,7 @@ import java.util.Timer;
 public class DucksAutonomous extends AutonomousCommands{
     @Override
     public void runOpMode() throws InterruptedException{
+        waitOneFullHardwareCycle();
         driveMC=hardwareMap.dcMotorController.get("driveMC");
         winchMC=hardwareMap.dcMotorController.get("winchMC");
         wheelMC=hardwareMap.dcMotorController.get("wheelMC");
@@ -44,7 +45,7 @@ public class DucksAutonomous extends AutonomousCommands{
         driveMC.setMotorPower(RIGHT, 0);
 //        goForward(1,1000);
 
-//        //go forward after turning
+//        //go forward after turning (obsolete)
 //        left.setPower(.5);
 //        right.setPower(-.5);
 //        Thread.sleep(1000);
@@ -53,7 +54,7 @@ public class DucksAutonomous extends AutonomousCommands{
 //
 //        turnLeft(75,.3);
 //
-//        //go forwards onto mountatin
+//        //go forwards onto mountatin (obsolete)
 //        left.setPower(.6);
 //        right.setPower(-.6);
 //        Thread.sleep(2000);
