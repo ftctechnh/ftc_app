@@ -23,19 +23,23 @@ import java.util.logging.Handler;
 public class DucksTeleOp extends TeleOpCommands {
     @Override
     public void init() {
-        driveMC=hardwareMap.dcMotorController.get("driveMC");
-        winchMC=hardwareMap.dcMotorController.get("winchMC");
-        wheelMC=hardwareMap.dcMotorController.get("wheelMC");
     }
 
     @Override
     public void loop() {
-        if(System.currentTimeMillis()-LEFTUPDATE>10){
-            setLeftPower();
-        }
-        if(System.currentTimeMillis()-RIGHTUPDATE>10){
-            setRightPower();
-        }
+        driveMC=hardwareMap.dcMotorController.get("driveMC");
+        winchMC=hardwareMap.dcMotorController.get("winchMC");
+        wheelMC=hardwareMap.dcMotorController.get("wheelMC");
+        climbersLeft=hardwareMap.servo.get("climbersleft");
+        climbersRight=hardwareMap.servo.get("climbersright");
+//        if(System.currentTimeMillis()-LEFTUPDATE>10){
+//            setLeftPower();
+//        }
+//        if(System.currentTimeMillis()-RIGHTUPDATE>10){
+//            setRightPower();
+//        }
+        setLeftPower();
+        setRightPower();
         setWinchPower();
         setPivotPower();
         setClimbersPosition();
@@ -43,6 +47,7 @@ public class DucksTeleOp extends TeleOpCommands {
         telemetry.addData("UPDATES",UPDATES);
         telemetry.addData("climbersLeft",climbersLeft.getPosition());
         telemetry.addData("climbersRight", climbersRight.getPosition());
+        telemetry.addData("motorpower",driveMC.getMotorPower(RIGHT));
     }
     @Override
     public void stop(){
