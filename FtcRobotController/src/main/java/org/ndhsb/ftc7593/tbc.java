@@ -137,13 +137,16 @@ public class tbc {
     }
 
     public static void initHardwareMap() {
-        sc = hardwareMap.servoController.get("sc");
-
-        climber = hardwareMap.servo.get("climber");
-        button = hardwareMap.servo.get("button");
-        mtape = hardwareMap.servo.get("mtape");
-        snowplow = hardwareMap.servo.get("snowplow");
-        slider = hardwareMap.servo.get("slider");
+        try {
+            sc = hardwareMap.servoController.get("sc");
+            // should make the try catch guards below fancier
+            climber = hardwareMap.servo.get("climber");
+            button = hardwareMap.servo.get("button");
+            mtape = hardwareMap.servo.get("mtape");
+            snowplow = hardwareMap.servo.get("snowplow");
+            slider = hardwareMap.servo.get("slider");
+        } catch (Exception ex) {
+        }
 
         initServoValues();
 
@@ -153,7 +156,9 @@ public class tbc {
         setMtapePosition(mtapePosition);
         setButtonServoSpeed(buttonServoSpeed);
 
-        sc.pwmEnable(); // enable servo controller PWM outputs
+        if (sc != null) {
+            sc.pwmEnable(); // enable servo controller PWM outputs
+        }
 
         motorRRight = hardwareMap.dcMotor.get("motor_right_rear"); //RRight
         motorRLeft = hardwareMap.dcMotor.get("motor_left_rear"); //RLeft
