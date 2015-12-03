@@ -1,5 +1,7 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 /**
  * Created by tdoylend on 2015-11-28.
  *
@@ -9,6 +11,13 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 public class PacmanBotManual3000 extends PacmanBotHardwareBase {
 
     VersionNumber version = new VersionNumber(1,0,0);
+    ElapsedTime timer = new ElapsedTime();
+
+    boolean highSpeed = false;
+    boolean hsBtn = false;
+
+    boolean flipperToggle = false;
+    boolean fBtn = false;
 
     @Override
     public void init() {
@@ -17,22 +26,47 @@ public class PacmanBotManual3000 extends PacmanBotHardwareBase {
         telemetry.addData("HWB Version", hwbVersion.string());
 
         setupHardware();
+        timer.reset();
     }
 
     @Override
     public void loop() {
         checkUsers();
 
-        setFinalRateMultiplier(gamepad.left_stick_button ? 1.0 : 0.25);
+        if (!hsBtn) {
+            if (gamepad.left_stick_button){
+                hsBtn=true;
+                highSpeed=!highSpeed;
+            } else {
+                hsBtn = false;
+            }
+        } else {
+            if (!gamepad.left_stick_button) hsBtn=false;
+        }
+
+        if (!fBtn) {
+            if (gamepad.y) {
+                fBtn=true;
+                flipperToggle=!flipperToggle;
+            }
+        } else if (!gamepad.y) fBtn=true;
+        setFlipper(flipperToggle);
+        setFinalRateMultiplier(highSpeed ? 1.0 : 0.25);
 
         double drive_rate = -gamepad.left_stick_y;
         double turn_rate  = gamepad.right_stick_x;
 
         drive(drive_rate,turn_rate);
 
-        setBrush(threeWay(gamepad.a,gamepad.b));
-        setBelt(threeWay(gamepad.dpad_left,gamepad.dpad_right));
+        setTire(threeWay(gamepad.left_bumper,gamepad.left_trigger>.5));
+        setWinch(threeWay(gamepad.right_bumper,gamepad.right_trigger>.5));
 
-        if (gamepad.x) releaseHook();
+        setBrush(threeWay(gamepad.a, gamepad.b));
+        setBelt(threeWay(gamepad.dpad_left, gamepad.dpad_right));
+
+        setHookRelease(gamepad.x);
+        //setArm(Math.sin(timer.time()*4)); //Uncomment to annoy people.
+
+
     }
 }
