@@ -39,6 +39,7 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.ndhsb.ftc7593.AutonChoice;
+import org.ndhsb.ftc7593.tbc;
 
 /**
  * Example autonomous program.
@@ -50,28 +51,15 @@ import org.ndhsb.ftc7593.AutonChoice;
  * The method getRunTime() returns the time that has elapsed since the op mode
  * starting running to when the method was called.
  */
+
 public class EETestAuton extends OpMode {
 
     final static double MOTOR_POWER = 0.15; // Higher values will cause the robot to move faster
+
+    /*
     final static double HOLD_IR_SIGNAL_STRENGTH = 0.20; // Higher values will cause the robot to follow closer
     final static double LIGHT_THRESHOLD = 0.5;
-    final static double MTAPE_MIN_RANGE  = 0.20;
-    final static double MTAPE_MAX_RANGE  = 0.90;
-    final static double SNOWPLOW_MIN_RANGE = 0.2;
-    final static double SNOWPLOW_MAX_RANGE = 0.7;
-    final static double ClIMBER_MIN_RANGE = 0.20;
-    final static double CLIMBER_MAX_RANGE = 0.7;
-    final static double SLIDER_MAX_RANGE = 0.9;
-    final static double SLIDER_MIN_RANGE = 0.2;
-
-
-    double climberPosition;
-
-    double sliderPosition;
-
-    double snowplowPosition;
-
-    double mtapePosition;
+    */
 
     private boolean complainLight = false;
 
@@ -79,6 +67,7 @@ public class EETestAuton extends OpMode {
     DcMotor motorFLeft = null;
     DcMotor motorRRight = null;
     DcMotor motorRLeft = null;
+
     ColorSensor sensorRGB = null;
     //for the gyro sensor
     GyroSensor sensorGyro;
@@ -86,15 +75,15 @@ public class EETestAuton extends OpMode {
     int heading = 0;
 
     private org.ndhsb.ftc7593.AutonChoice[] autonSteps = {
-            new AutonChoice(0.0,1.0,MOTOR_POWER,MOTOR_POWER), // from 0 to 1 s, run the motor at 0.15
-            new AutonChoice(5.0,8.5,MOTOR_POWER,MOTOR_POWER), // from 5 and 8.5 s, run the motor at 0.15
-            //new AutonChoice(5.0,8.5,0.0,0.0), // between 8 and 15 s, idle.
-            new AutonChoice(15.0,20.75,-MOTOR_POWER,MOTOR_POWER) // between 15 and 20.75 s, point turn left.
+            new AutonChoice(0.0,1.1,1.0,1.0), // from 0 to 1 s, run the motor at 0.15
+            new AutonChoice(2.0,2.8,0.5,-0.5), // from 0 to 1 s, run the motor at 0.15
+            new AutonChoice(3.5,6.5,1.0,1.0), // from 5 and 8.5 s, run the motor at 0.15
+            new AutonChoice(7.0,7.8,0.5,-0.5), // from 0 to 1 s, run the motor at 0.15
+            new AutonChoice(8.0,10.0,1.0,1.0), // from 0 to 1 s, run the motor at 0.15
+            new AutonChoice(15.0,20.75,0.0,0.0) // between 15 and 20.75 s, point turn left.
             };
 
     public ElapsedTime mRuntime = new ElapsedTime();   // Time into round. // MPH
-
-    //Emma
 
     /**
      * Constructor
@@ -270,6 +259,9 @@ public class EETestAuton extends OpMode {
         telemetry.addData("reflection", "reflection:  " + Double.toString(reflection));
         telemetry.addData("left tgt pwr",  "left  pwr: " + Double.toString(left));
         telemetry.addData("right tgt pwr", "right pwr: " + Double.toString(right));
+
+        //
+        // waitForNextHardwareCycle();
     }
 
     /*
@@ -284,6 +276,13 @@ public class EETestAuton extends OpMode {
         motorRLeft.setPower(0.0);
         motorFRight.setPower(0.0);
         motorFLeft.setPower(0.0);
+
+        if (false) {
+            motorFLeft = null;
+            motorFRight = null;
+            motorRLeft = null;
+            motorRRight = null;
+        }
     }
 
 }

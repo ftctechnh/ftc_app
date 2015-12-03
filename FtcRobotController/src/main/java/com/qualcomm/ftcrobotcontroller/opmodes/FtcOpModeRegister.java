@@ -58,19 +58,17 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("NullOp", NullOp.class);
 
     //manager.register("MatrixK9TeleOp", MatrixK9TeleOp.class);
-    manager.register("K9TeleOp", K9TeleOp.class);
-    manager.register("K9Line", K9Line.class);
-    manager.register ("PushBotAuto", PushBotAuto.class);
-    manager.register ("PushBotManual", PushBotManual.class);
+    //manager.register("K9TeleOp", K9TeleOp.class);
+    //manager.register("K9Line", K9Line.class);
+    //manager.register ("PushBotAuto", PushBotAuto.class);
+    //manager.register ("PushBotManual", PushBotManual.class);
     manager.register ("TeleOpTankTread", TeleOpTankTread.class);
     manager.register ("EETestAuton", EETestAuton.class);
     manager.register ("GyroTestOp", GyroTestOp.class);
-    manager.register ("BlinkOp", BlinkOp.class);
+    //manager.register ("BlinkOp", BlinkOp.class);
     manager.register ("SlideOpMode", SlideOpMode.class);
     manager.register("TankWThreads", TankWThreads.class);
     manager.register("Drive", Drive.class);
-
-
 
     /*
      * Uncomment any of the following lines if you want to register an op mode.

@@ -6,10 +6,9 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoController;
 import com.qualcomm.robotcore.util.Range;
+
+import org.ndhsb.ftc7593.tbc;
 
 /**
  * TeleOp Mode
@@ -32,31 +31,6 @@ class TankThread implements Runnable {
  */
 
 public class TeleOpTankTread extends OpMode {
-    /*
-	 * Note: the configuration of the servos is such that
-	 * as the arm servo approaches 0, the arm position moves up (away from the floor).
-	 * Also, as the claw servo approaches 0, the claw opens up (drops the game element).
-	 */
-    // TETRIX VALUES.
-    final static double MTAPE_MIN_RANGE  = 0.20;
-    final static double MTAPE_MAX_RANGE  = 0.90;
-    final static double SNOWPLOW_MIN_RANGE = 0.2;
-    final static double SNOWPLOW_MAX_RANGE = 0.7;
-    final static double ClIMBER_MIN_RANGE = 0.20;
-    final static double CLIMBER_MAX_RANGE = 0.7;
-    final static double SLIDER_MAX_RANGE = 0.9;
-    final static double SLIDER_MIN_RANGE = 0.2;
-
-    // position of the arm servo.
-
-
-    double climberPosition;
-
-    double sliderPosition;
-
-    double snowplowPosition;
-
-    double mtapePosition;
 
     // amount to change the arm servo position.
     double mtapeDelta = 0.1;
@@ -66,23 +40,6 @@ public class TeleOpTankTread extends OpMode {
 
     // amount to change the claw servo position by
     double snowplowDelta = 0.1;
-
-    // Eden
-    // Emma
-    ServoController sc = null;
-
-    DcMotor motorFRight = null;
-    DcMotor motorRRight = null;
-    DcMotor motorFLeft = null;
-    DcMotor motorRLeft = null;
-    Servo button = null;
-    Servo climber = null;
-    Servo snowplow = null;
-    Servo mtape = null;
-    Servo slider = null;
-
-    DcMotor motorHook = null;
-    DcMotor motorPusher = null;
 
     float servoInput = 0.5f;
     float bservoSpeed = 0.5f;
@@ -94,7 +51,6 @@ public class TeleOpTankTread extends OpMode {
 
     }
 
-
     /*
      * Code to run when the op mode is first enabled goes here
      *
@@ -102,57 +58,9 @@ public class TeleOpTankTread extends OpMode {
      */
     @Override
     public void init() {
-
-
-		/*
-		 * Use the hardwareMap to get the dc motors and servos by name. Note
-		 * that the names of the devices must match the names used when you
-		 * configured your robot and created the configuration file.
-		 */
-
-
-        sc = hardwareMap.servoController.get("sc");
-        //pusher = hardwareMap.servo.get("pusher");
-        //pusher.setPosition(0.5);
-        climber = hardwareMap.servo.get("climber");
-        button = hardwareMap.servo.get("button");
-        mtape = hardwareMap.servo.get("mtape");
-        snowplow = hardwareMap.servo.get("snowplow");
-        slider = hardwareMap.servo.get("slider");
-        button.setPosition(0.5);
-        sc.pwmEnable();
-        climberPosition = 0.2;
-        mtapePosition = 0.2;
-        snowplowPosition = 0.2;
-        sliderPosition = 0.2;
-
-        motorRRight = hardwareMap.dcMotor.get("motor_right_rear"); //RRight
-        motorRLeft = hardwareMap.dcMotor.get("motor_left_rear"); //RLeft
-
-        motorRLeft.setDirection(DcMotor.Direction.REVERSE);
-
-
-
-        /* Emma
-        * allows robot to run if there are only 2 motors
-        */
-        try {
-            motorFRight = hardwareMap.dcMotor.get("motor_right_front"); // FRight
-            motorFLeft = hardwareMap.dcMotor.get("motor_left_front"); // FLeft
-
-            motorFLeft.setDirection(DcMotor.Direction.REVERSE);
-        } catch (Exception ex) {
-
-        }
-
-        try {
-            motorHook = hardwareMap.dcMotor.get("motorHook");
-            motorPusher = hardwareMap.dcMotor.get("pusher");
-        } catch (Exception ex) {
-
-        }
+        tbc.hardwareMap = hardwareMap;
+        tbc.initHardwareMap();
     }
-
 
     /*
      * This method will be called repeatedly in a loop
@@ -173,10 +81,12 @@ public class TeleOpTankTread extends OpMode {
         // 1 is full down
         // direction: left_stick_x ranges from -1 to 1, where -1 is full left
         // and 1 is full right
+
         float drivespeed = -gamepad1.left_stick_y;
         float driveturn = gamepad1.right_stick_x;
         float hook = gamepad2.left_stick_y;
         float pusher = gamepad2.right_stick_y;
+
         float right = drivespeed - driveturn;
         float left = drivespeed + driveturn;
 
@@ -185,7 +95,6 @@ public class TeleOpTankTread extends OpMode {
         left = Range.clip(left, -1, 1);
         hook = Range.clip(hook, -1, 1);
         pusher = Range.clip(pusher, -1,1);
-
 
         // scale the joystick value to make it easier to control
         // the robot more precisely at slower speeds.
@@ -196,108 +105,59 @@ public class TeleOpTankTread extends OpMode {
 
         // write the values to the motors
 
-        motorRRight.setPower(right);
-        motorRLeft.setPower(left);
-        if (motorHook != null) {
-            motorHook.setPower(hook);
-            motorPusher.setPower(pusher);
-        }
+        tbc.setMotorRRightPower(right);
+        tbc.setMotorRLeftPower(left);
+        tbc.setMotorFRightPower(right);
+        tbc.setMotorFLeftPower(left );
 
-        if (motorFRight != null) {
-            motorFRight.setPower(right);
-            motorFLeft.setPower(left);
-        }
-
+        tbc.setMotorHookPower(hook);
 
         if(gamepad1.x) {
-            bservoSpeed = 0.0f;
+            tbc.buttonServoSpeed = 0.0f;
         }
-
         if(gamepad1.y) {
-            bservoSpeed = 1.0f;
+            tbc.buttonServoSpeed = 1.0f;
         }
-
         if(gamepad1.x != true && gamepad1.y != true) {
-            bservoSpeed = 0.5f;
+            tbc.buttonServoSpeed = 0.5f;
         }
-
-        button.setPosition(bservoSpeed);
+        tbc.setButtonServoSpeed(tbc.buttonServoSpeed);
 
         if(gamepad2.a) {
-            climberPosition = 0.90;
+            tbc.climberPosition = tbc.CLIMBER_MAX_RANGE;
         }
-
         if(gamepad2.b) {
-            climberPosition = 0.2;
+            tbc.climberPosition = tbc.CLIMBER_MIN_RANGE;
         }
-
-        climberPosition = Range.clip(climberPosition, ClIMBER_MIN_RANGE, CLIMBER_MAX_RANGE);
-        climber.setPosition(climberPosition);
+        tbc.climberPosition = Range.clip(tbc.climberPosition, tbc.CLIMBER_MIN_RANGE, tbc.CLIMBER_MAX_RANGE);
+        tbc.setClimberPosition(tbc.climberPosition);
 
         if(gamepad2.right_bumper) {
-            snowplowPosition = 0.90;
+            tbc.snowplowPosition = tbc.SNOWPLOW_MAX_RANGE;
         }
+        if(gamepad2.left_bumper) {
+            tbc.snowplowPosition = tbc.SNOWPLOW_MIN_RANGE;
+        }
+        tbc.snowplowPosition = Range.clip(tbc.snowplowPosition, tbc.SNOWPLOW_MIN_RANGE, tbc.SNOWPLOW_MAX_RANGE);
+        tbc.setSnowplowPosition(tbc.snowplowPosition);
 
         if(gamepad2.left_bumper) {
-            snowplowPosition = 0.2;
+            tbc.sliderPosition = tbc.SLIDER_MAX_RANGE;
         }
-
-        snowplowPosition = Range.clip(snowplowPosition, SNOWPLOW_MIN_RANGE, SNOWPLOW_MAX_RANGE);
-        snowplow.setPosition(snowplowPosition);
-
-        if(gamepad2.left_bumper) {
-            sliderPosition = 0.9;
-        }
-
         if(gamepad2.right_bumper) {
-            sliderPosition = 0.2;
+            tbc.sliderPosition = tbc.SLIDER_MIN_RANGE;
         }
-
-        sliderPosition = Range.clip(sliderPosition, SLIDER_MIN_RANGE, SLIDER_MAX_RANGE);
-        slider.setPosition(snowplowPosition);
+        tbc.sliderPosition = Range.clip(tbc.sliderPosition, tbc.SLIDER_MIN_RANGE, tbc.SLIDER_MAX_RANGE);
+        tbc.setSliderPosition(tbc.snowplowPosition);
 
         if(gamepad1.right_bumper) {
-            mtapePosition = 0.90;
+            tbc.mtapePosition = tbc.MTAPE_MAX_RANGE;
         }
-
         if(gamepad1.left_bumper) {
-            mtapePosition = 0.2;
+            tbc.mtapePosition = tbc.MTAPE_MIN_RANGE;
         }
-
-        mtapePosition = Range.clip(mtapePosition, MTAPE_MIN_RANGE, MTAPE_MAX_RANGE);
-        mtape.setPosition(mtapePosition);
-		/*
-		// update the position of the arm.
-		if (gamepad1.a) {
-			// if the A button is pushed on gamepad1, increment the position of
-			// the arm servo.
-			armPosition += armDelta;
-		}
-
-		if (gamepad1.y) {
-			// if the Y button is pushed on gamepad1, decrease the position of
-			// the arm servo.
-			armPosition -= armDelta;
-		}
-
-		// update the position of the claw
-		if (gamepad1.x) {
-			clawPosition += clawDelta;
-		}
-
-		if (gamepad1.b) {
-			clawPosition -= clawDelta;
-		}
-
-        // clip the position values so that they never exceed their allowed range.
-        armPosition = Range.clip(armPosition, ARM_MIN_RANGE, ARM_MAX_RANGE);
-        clawPosition = Range.clip(clawPosition, CLAW_MIN_RANGE, CLAW_MAX_RANGE);
-
-		// write position values to the wrist and claw servo
-		arm.setPosition(armPosition);
-		claw.setPosition(clawPosition);
-		*/
-
+        tbc.mtapePosition = Range.clip(tbc.mtapePosition, tbc.MTAPE_MIN_RANGE, tbc.MTAPE_MAX_RANGE);
+        tbc.setMtapePosition(tbc.mtapePosition);
 
 		/*
 		 * Send telemetry data back to driver station. Note that if we are using
@@ -312,10 +172,12 @@ public class TeleOpTankTread extends OpMode {
         telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));
         telemetry.addData("servo in",  "servo in: " + String.format("%.2f", servoInput));
         telemetry.addData("pusher servo",  "pusher servo: " + String.format("%.2f", pusher));
-        telemetry.addData("button servo", "button servo: " + String.format("%.2f", bservoSpeed));
-        telemetry.addData("climber", "climber:  " + String.format("%.2f", climberPosition));
-        telemetry.addData("slider", "slider: " + String.format("%.2f", sliderPosition));
+        telemetry.addData("button servo", "button servo: " + String.format("%.2f", tbc.buttonServoSpeed));
+        telemetry.addData("climber", "climber:  " + String.format("%.2f", tbc.climberPosition));
+        telemetry.addData("slider", "slider: " + String.format("%.2f", tbc.sliderPosition));
 
+        // if LinearOpMode
+        // waitOneFullHardwareCycle();
     }
 
     /*
@@ -326,23 +188,11 @@ public class TeleOpTankTread extends OpMode {
     @Override
     public void stop() {
 
-        //if (sc != null) {
-        //    sc.pwmDisable();
-         //   sc = null;
-        //}
+        tbc.buttonServoSpeed = 0.5f;
+        tbc.setButtonServoSpeed(tbc.buttonServoSpeed);
 
-        bservoSpeed = 0.5f;
-
-        button.setPosition(bservoSpeed);
-
-       // if (sc != null) {
-      //      sc.pwmDisable();
-        //    sc = null;
-        //}
-
-
+        tbc.destroyHardwareMap();
     }
-
 
     /*
      * This method scales the joystick input so for low joystick values, the
