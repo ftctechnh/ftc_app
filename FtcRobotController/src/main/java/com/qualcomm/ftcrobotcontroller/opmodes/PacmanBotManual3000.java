@@ -49,7 +49,8 @@ public class PacmanBotManual3000 extends PacmanBotHardwareBase {
                 fBtn=true;
                 flipperToggle=!flipperToggle;
             }
-        } else if (!gamepad.y) fBtn=true;
+        } else if (!gamepad.y) fBtn=false;
+        
         setFlipper(flipperToggle);
         setFinalRateMultiplier(highSpeed ? 1.0 : 0.25);
 
