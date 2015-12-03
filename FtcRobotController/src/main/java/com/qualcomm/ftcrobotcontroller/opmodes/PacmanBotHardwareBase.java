@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * You use it to interface to the hardware components.
  *
  * Change log:
+ * 1.6.3 - Adjusted to compensate for new wheels.
  * 1.6.2 - Added flipper.
  * 1.6.1 - Removed more anti-idiomatic code
  * 1.6.0 - Cleaned up drive methods
@@ -32,9 +33,9 @@ import com.qualcomm.robotcore.hardware.Servo;
  * 1.0.0 - First version.
 */
 public class PacmanBotHardwareBase extends OpMode {
-    final static public VersionNumber hwbVersion = new VersionNumber(1,6,2);
+    final static public VersionNumber hwbVersion = new VersionNumber(1,6,3);
 
-    final static double REAR_MULTIPLIER = 0.667;
+    final static double REAR_MULTIPLIER = -1.00;
     final static double COLOR_DETECTION_THRESHOLD = 0.25;
 
     final static double WINCH_RATE = 1.0;
