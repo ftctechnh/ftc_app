@@ -12,7 +12,7 @@ public class RootDrive extends Root {
 
     public Point sides;
     public Motor right, left;
-    public Motor ext, rot;
+    public Motor extr, rotr, extl, rotl;
 
     public RootDrive() {
         sides = new Point(0, 0);
@@ -22,40 +22,66 @@ public class RootDrive extends Root {
     @Override
     public void init()
     {
-        right = new Motor("right", hardwareMap);
-        left = new Motor("left", hardwareMap, true);
-        ext = new Motor("rightext", hardwareMap);
-        rot = new Motor("rightrot", hardwareMap);
+        right = new Motor("right", hardwareMap, true  );
+        left = new Motor("left", hardwareMap);
+        extr = new Motor("rightext", hardwareMap, true);
+        rotr = new Motor("rightrot", hardwareMap);
+        extl = new Motor("leftext", hardwareMap, true);
+        rotl = new Motor("leftrot", hardwareMap);
     }
 
     @Override
-    public void onJoy1_left()
+    public void onJoy2_left()
     {
-        left.scale(joy1.left.y + joy1.left.x);
-        right.scale(joy1.left.y - joy1.left.x);
+        left.scale(joy2.left.y + joy2.left.x);
+        right.scale(joy2.left.y - joy2.left.x);
     }
 
     @Override
     public void onJoy1_right()
     {
-        rot.scale(joy1.right.y);
+        rotr.scale(joy1.right.y);
     }
 
     @Override
     public void onJoy1_rt()
     {
-        ext.scale(gp_rt);
+        extr.scale(gp_rt);
     }
 
     @Override
     public void onJoy1_rb_press()
     {
-        ext.set(-0.5);
+        extr.set(-1);
     }
 
     @Override
     public void onJoy1_rb_release()
     {
-        ext.set(0);
+        extr.set(0);
+    }
+
+    @Override
+    public void onJoy1_left()
+    {
+        rotl.scale(joy1.left.y);
+    }
+
+    @Override
+    public void onJoy1_lt()
+    {
+        extl.scale(gp_lt);
+    }
+
+    @Override
+    public void onJoy1_lb_press()
+    {
+        extl.set(-1);
+    }
+
+    @Override
+    public void onJoy1_lb_release()
+    {
+        extl.set(0);
     }
 }
