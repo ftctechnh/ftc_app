@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * You use it to interface to the hardware components.
  *
  * Change log:
+ * 1.6.2 - Added flipper.
  * 1.6.1 - Removed more anti-idiomatic code
  * 1.6.0 - Cleaned up drive methods
  * 1.5.3 - Cleaned up setupHardware
@@ -31,7 +32,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * 1.0.0 - First version.
 */
 public class PacmanBotHardwareBase extends OpMode {
-    final static public VersionNumber hwbVersion = new VersionNumber(1,6,1);
+    final static public VersionNumber hwbVersion = new VersionNumber(1,6,2);
 
     final static double REAR_MULTIPLIER = 0.667;
     final static double COLOR_DETECTION_THRESHOLD = 0.25;
@@ -52,9 +53,12 @@ public class PacmanBotHardwareBase extends OpMode {
     DcMotor winch;
     DcMotor belt;
 
+    DcMotor tire;
+
     Servo arm;
     Servo thrower;
     Servo hookRelease;
+    Servo flipper;
 
     Gamepad gamepad;
     int gamepadOverride=0;
@@ -180,12 +184,19 @@ public class PacmanBotHardwareBase extends OpMode {
         thrower = hardwareMap.servo.get("thrower");
         hookRelease = hardwareMap.servo.get("hook_release");
 
+        tire = hardwareMap.dcMotor.get("tire");
+        flipper = hardwareMap.servo.get("flipper");
+
         gamepad = new Gamepad();
 
         thrower.setPosition(0.75);
         arm.setPosition(0.53);
         hookRelease.setPosition(0.53);
+        flipper.setPosition(0.5);
     }
+    public void setFlipper(boolean pos) { flipper.setPosition(pos ? 0 : 0.5);}
+
+    public void setTire(double power) {tire.setPower(power);}
 
     public void setThrower(boolean pos) {thrower.setPosition(pos ? 0.15 : 0.75);}
 
