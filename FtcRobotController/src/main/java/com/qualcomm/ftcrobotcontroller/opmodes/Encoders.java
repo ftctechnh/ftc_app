@@ -35,22 +35,8 @@ public class Encoders extends  LinearOpMode {
     HTRGBExample color;
     int colortemp;
     ColorSensor sensorRGB;
-    public void initsensor() throws InterruptedException {
+    Servo servo;
 
-
-        // write some device information (connection info, name and type)
-        // to the log file.
-        hardwareMap.logDevices();
-
-        // get a reference to our ColorSensor object.
-        sensorRGB = hardwareMap.colorSensor.get("color");
-
-        // bEnabled represents the state of the LED.
-
-
-        // turn the LED on in the beginning, just so user will know that the sensor is active.
-        sensorRGB.enableLed(false);
-    }
     public void initiate () throws InterruptedException{
         leftmotor = hardwareMap.dcMotor.get("leftmotor");
         rightmotor = hardwareMap.dcMotor.get("rightmotor");
@@ -59,7 +45,8 @@ public class Encoders extends  LinearOpMode {
 
         leftmotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         rightmotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        initsensor();
+        color.initsensor();
+        servo = hardwareMap.servo.get("servo");
     }
 
     @Override
@@ -77,9 +64,16 @@ public class Encoders extends  LinearOpMode {
         // turnleft(4, .5);
         waitOneFullHardwareCycle();
         // moveforward(10, .5);
-        while (1 == 1)
+        if(color.getBlue()<= color.getBlue())
         {
-        colortemp = checksensor();
+            servo.setPosition(50);
+        }
+        else if (color.getRed()<= color.getBlue())
+        {
+            servo.setPosition(80);
+        }
+        else {
+            System.out.print("checks failed");
         }
     }
     public void moveforward(double move, double power) throws InterruptedException {
@@ -189,41 +183,6 @@ public class Encoders extends  LinearOpMode {
         rightmotor.setPower(0);
 
     }
-    public int checksensor() throws InterruptedException{
-        // hsvValues is an array that will hold the hue, saturation, and value information.
-        float hsvValues[] = {0F,0F,0F};
 
-        // values is a reference to the hsvValues array.
-        final float values[] = hsvValues;
-
-        // get a reference to the RelativeLayout so we can change the background
-        // color of the Robot Controller app to match the hue detected by the RGB sensor.
-        final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(R.id.RelativeLayout);
-
-        // bPrevState and bCurrState represent the previous and current state of the button.
-        boolean bPrevState = false;
-        boolean bCurrState = false;
-
-        // while the op mode is active, loop and read the RGB data.
-        // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
-
-
-
-        // convert the RGB values to HSV values.
-        Color.RGBToHSV(sensorRGB.red(), sensorRGB.green(), sensorRGB.blue(), hsvValues);
-
-        // send the info back to driver station using telemetry function.
-        telemetry.addData("Clear", sensorRGB.alpha());
-        telemetry.addData("Red  ", sensorRGB.red());
-        telemetry.addData("Green", sensorRGB.green());
-        telemetry.addData("Blue ", sensorRGB.blue());
-        telemetry.addData("Hue", hsvValues[0]);
-
-        // change the background color to match the color detected by the RGB sensor.
-        // pass a reference to the hue, saturation, and value array as an argument
-        // to the HSVToColor method.
-        waitOneFullHardwareCycle();
-        return sensorRGB.blue();
-    }
 }
 
