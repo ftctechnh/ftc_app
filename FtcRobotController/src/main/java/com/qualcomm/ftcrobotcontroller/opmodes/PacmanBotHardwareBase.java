@@ -33,9 +33,9 @@ import com.qualcomm.robotcore.hardware.Servo;
  * 1.0.0 - First version.
 */
 public class PacmanBotHardwareBase extends OpMode {
-    final static public VersionNumber hwbVersion = new VersionNumber(1,6,2);
+    final static public VersionNumber hwbVersion = new VersionNumber(1,6,3);
 
-    final static double REAR_MULTIPLIER = 1.00;
+    final static double REAR_MULTIPLIER = -1.00;
     final static double COLOR_DETECTION_THRESHOLD = 0.25;
 
     final static double WINCH_RATE = 1.0;

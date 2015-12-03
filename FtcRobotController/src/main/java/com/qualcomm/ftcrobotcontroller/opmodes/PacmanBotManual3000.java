@@ -6,11 +6,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Created by tdoylend on 2015-11-28.
  *
  * Change log:
+ * 1.1.0 - Added tire toggle.
+ * 1.0.1 - Fixed toggle bug.
  * 1.0.0 - First version.
  */
 public class PacmanBotManual3000 extends PacmanBotHardwareBase {
 
-    VersionNumber version = new VersionNumber(1,0,0);
+    VersionNumber version = new VersionNumber(1,1,0);
     ElapsedTime timer = new ElapsedTime();
 
     boolean highSpeed = false;
@@ -18,6 +20,7 @@ public class PacmanBotManual3000 extends PacmanBotHardwareBase {
 
     boolean flipperToggle = false;
     boolean fBtn = false;
+    boolean tirePosition = false;
 
     @Override
     public void init() {
@@ -59,8 +62,13 @@ public class PacmanBotManual3000 extends PacmanBotHardwareBase {
 
         drive(drive_rate,turn_rate);
 
-        setTire(threeWay(gamepad.left_bumper,gamepad.left_trigger>.5));
-        setWinch(threeWay(gamepad.right_bumper,gamepad.right_trigger>.5));
+        if (gamepad.right_bumper) tirePosition = false;
+        if (gamepad.right_trigger>.5) tirePosition = true;
+
+        if ((timer.time() % 2) > 1) setTire(tirePosition ? 1 : -1);
+        else setTire(0);
+
+        setWinch(threeWay(gamepad.left_bumper,gamepad.left_trigger>.5));
 
         setBrush(threeWay(gamepad.a, gamepad.b));
         setBelt(threeWay(gamepad.dpad_left, gamepad.dpad_right));
