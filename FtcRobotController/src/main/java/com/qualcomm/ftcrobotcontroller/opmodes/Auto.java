@@ -15,6 +15,7 @@ public class Auto extends OpMode {
     public final double FAST_SPEED = 0.5;
     public final double SLOW_SPEED = 0.25;
     public final double SIG_WEIGHT = 10;
+    public final double VARIENCE = 0.1;
 
 
     // the path
@@ -42,6 +43,13 @@ public class Auto extends OpMode {
     boolean isRed = false;
 
     public Auto() {
+        
+    }
+
+    @Override
+    public void init() {
+        // set some consants...
+
         lightRight = hardwareMap.lightSensor.get("lightRight");
         lightLeft = hardwareMap.lightSensor.get("lightLeft");
         gyro = hardwareMap.gyroSensor.get("gyro");
@@ -53,22 +61,25 @@ public class Auto extends OpMode {
         rotLeft = new Motor("rotLeft", hardwareMap);
         extRight = new Motor("extRight", hardwareMap);
         extLeft = new Motor("extLeft", hardwareMap);
-    }
 
-    @Override
-    public void init() {
-        // set some consants...
-        forwardUntil(123, 10000);
+        lightRight.enableLED(true);
+        lightLeft.enableLED(true);
+
 
     }
 
     @Override
     public void loop()
     {
+        double myColor = 0.8;
+        double otherColor = 0.6;
 
+        forwardUntil(myColor, 2000, 4000); //  go straight until  
+
+        while(true) {};
     }
 
-    public void forwardUntil(int color, int guess)
+    public int forwardUntil(double color, int guess, int giveup)
     {
         double r = FAST_SPEED;
         double l = FAST_SPEED;
@@ -78,12 +89,11 @@ public class Auto extends OpMode {
         long timefirst = System.currentTimeMillis();
         long timelast = timefirst;
 
-        while(true)
+        while(timelast - timefirst < giveup)
         {
             long timediff = timelast;
             timelast = System.currentTimeMillis();
             timediff = timelast - timediff;
-            if(timelast - timefirst < guess) break;
 
             gypos += gyro.getRotation()*(timediff);
             //int avgchange = (right.encoderDiff()+left.encoderDiff())/2;
@@ -94,11 +104,35 @@ public class Auto extends OpMode {
             r = sigmoid(SIG_WEIGHT*drift);
             l = 1 - r;
 
-            right.set(r);
-            left.set(l);
+            if(timelast-timefirst > guess) set(r/2, l/2);
+            else set(r, l);
+
+            if(lightRight.getLightDetected() < color+VARIENCE && lightRight.getLightDetected > color-VARIENCE)
+            {
+                stop();
+                return 0;
+            }
+            else if(lightLeft.getLightDetected() < color+VARIENCE && lightLeft.getLightDetected > color-VARIENCE)
+            {
+                stop();
+                return 1;
+            }
         }
 
+        stop();
+        return -1;
+    }
 
+    public void turnDeg(boolean right, double degrees)
+    {
+        double gypos = 0;
+        long timefirst = System.currentTimeMillis();
+        long timelast = timefirst;
+
+        if(right) set(FAST_SPEED, -FAST_SPEED);
+        else set(-FAST_SPEED, FAST_SPEED);
+        while(gypos < degrees) {};
+        stop();
     }
 
     public double sigmoid(double inp)
@@ -107,15 +141,16 @@ public class Auto extends OpMode {
     }
 
 
-    public void forward(float speed)
+    public void set(float r, float l)
     {
-        right.set(speed);
-        left.set(speed);
+        right.set(r);
+        left.set(l);
     }
 
-    public void turn(int steps)
+    public void stop()
     {
-
+        right.set(0);
+        left.set(0);
     }
 
 }
