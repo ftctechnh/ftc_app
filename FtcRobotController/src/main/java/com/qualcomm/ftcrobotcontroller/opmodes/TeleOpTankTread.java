@@ -34,7 +34,7 @@ class TankThread implements Runnable {
 public class TeleOpTankTread extends OpMode {
 
     // amount to change the tape servo position.
-    double mtapeDelta = 0.1;
+    double mtapeDelta = 0.001;
 
     float servoInput = 0.5f;
     float bservoSpeed = 0.5f;
@@ -106,10 +106,10 @@ public class TeleOpTankTread extends OpMode {
 
         // write the values to the motors
 
-        tbc.setMotorRRightPower(right);
-        tbc.setMotorRLeftPower(left);
-        tbc.setMotorFRightPower(right);
-        tbc.setMotorFLeftPower(left );
+        tbc.setMotorRRightPower(-right);
+        tbc.setMotorRLeftPower(-left);
+        tbc.setMotorFRightPower(-right);
+        tbc.setMotorFLeftPower(-left );
 
         tbc.setMotorHookPower(hook);
 
@@ -136,6 +136,10 @@ public class TeleOpTankTread extends OpMode {
         if(gamepad2.right_bumper) {
             tbc.snowplowPosition = tbc.SNOWPLOW_MAX_RANGE;
         }
+
+        if(gamepad2.dpad_up) {
+            tbc.snowplowPosition = 0.4;
+        }
         if(gamepad2.left_bumper) {
             tbc.snowplowPosition = tbc.SNOWPLOW_MIN_RANGE;
         }
@@ -149,21 +153,20 @@ public class TeleOpTankTread extends OpMode {
             tbc.sliderPosition = tbc.SLIDER_MIN_RANGE;
         }
         tbc.sliderPosition = Range.clip(tbc.sliderPosition, tbc.SLIDER_MIN_RANGE, tbc.SLIDER_MAX_RANGE);
-        tbc.setSliderPosition(tbc.snowplowPosition);
+        tbc.setSliderPosition(tbc.sliderPosition);
 
-        // MPH
         Double mtapeNewPos = tbc.mtapePosition;
         if(gamepad1.right_bumper) {
-            if ((mRuntime.time() - eventStart) > 0.1) {
-                mtapeNewPos = tbc.mtapePosition + mtapeDelta;
-                eventStart = mRuntime.time();
-            }
+
+            mtapeNewPos = tbc.mtapePosition + mtapeDelta;
+
+
         }
         if(gamepad1.left_bumper) {
-            if ((mRuntime.time() - eventStart) > 0.1) {
-                mtapeNewPos = tbc.mtapePosition - mtapeDelta;
-                eventStart = mRuntime.time();
-            }
+
+            mtapeNewPos = tbc.mtapePosition - mtapeDelta;
+
+
         }
         tbc.mtapePosition = Range.clip(mtapeNewPos, tbc.MTAPE_MIN_RANGE, tbc.MTAPE_MAX_RANGE);
         tbc.setMtapePosition(tbc.mtapePosition);
