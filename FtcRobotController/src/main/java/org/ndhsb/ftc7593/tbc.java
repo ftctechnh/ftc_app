@@ -35,6 +35,7 @@ public class tbc {
     public final static double MTAPE_MIN_RANGE  = 0.0;
     public final static double MTAPE_MAX_RANGE  = 1.0;
     public final static double SNOWPLOW_MIN_RANGE = 0.20;
+    public final static double SNOWPLOW_MID_RANGE = 0.40;
     public final static double SNOWPLOW_MAX_RANGE = 0.70;
     public final static double CLIMBER_MIN_RANGE = 0.20;
     public final static double CLIMBER_MAX_RANGE = 0.70;

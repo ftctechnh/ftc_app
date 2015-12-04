@@ -149,7 +149,7 @@ public class TeleOpTankTread extends OpMode {
         }
 
         if(gamepad2.dpad_up) {
-            tbc.snowplowPosition = 0.4;
+            tbc.snowplowPosition = tbc.SNOWPLOW_MID_RANGE;
         }
         if(gamepad2.left_bumper) {
             tbc.snowplowPosition = tbc.SNOWPLOW_MIN_RANGE;
