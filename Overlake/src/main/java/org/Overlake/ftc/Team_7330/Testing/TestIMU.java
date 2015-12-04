@@ -24,6 +24,9 @@ public class TestIMU extends SynchronousOpMode {
     // could probably be read once per item, at only a small loss in display accuracy.
     EulerAngles angles;
     Position position;
+    Velocity velocity;
+    Acceleration acceleration;
+
     int                     loopCycles;
     int                     i2cCycles;
     double                  ms;
@@ -78,6 +81,10 @@ public class TestIMU extends SynchronousOpMode {
             // three times the necessary expense.
             angles     = imu.getAngularOrientation();
             position   = imu.getPosition();
+            velocity = imu.getVelocity();
+            acceleration = imu.getAcceleration();
+
+            imu.getAcceleration();
 
             // The rest of this is pretty cheap to acquire, but we may as well do it
             // all while we're gathering the above.
@@ -87,33 +94,25 @@ public class TestIMU extends SynchronousOpMode {
         }
         });
         telemetry.addLine(
-                telemetry.item("loop count: ", new IFunc<Object>()
-                {
-                    public Object value()
-                    {
+                telemetry.item("loop count: ", new IFunc<Object>() {
+                    public Object value() {
                         return loopCycles;
                     }
                 }),
-                telemetry.item("i2c cycle count: ", new IFunc<Object>()
-                {
-                    public Object value()
-                    {
+                telemetry.item("i2c cycle count: ", new IFunc<Object>() {
+                    public Object value() {
                         return i2cCycles;
                     }
                 }));
 
         telemetry.addLine(
-                telemetry.item("loop rate: ", new IFunc<Object>()
-                {
-                    public Object value()
-                    {
+                telemetry.item("loop rate: ", new IFunc<Object>() {
+                    public Object value() {
                         return formatRate(ms / loopCycles);
                     }
                 }),
-                telemetry.item("i2c cycle rate: ", new IFunc<Object>()
-                {
-                    public Object value()
-                    {
+                telemetry.item("i2c cycle rate: ", new IFunc<Object>() {
+                    public Object value() {
                         return formatRate(ms / i2cCycles);
                     }
                 }));
@@ -179,6 +178,62 @@ public class TestIMU extends SynchronousOpMode {
                         return formatPosition(position.z);
                     }
                 }));
+
+        telemetry.addLine(
+                telemetry.item("vx: ", new IFunc<Object>()
+                {
+                    public Object value()
+                    {
+                        return formatPosition(velocity.velocX);
+                    }
+                }),
+                telemetry.item("vy: ", new IFunc<Object>()
+                {
+                    public Object value()
+                    {
+                        return formatPosition(velocity.velocX);
+                    }
+                }),
+                telemetry.item("vz: ", new IFunc<Object>()
+                {
+                    public Object value()
+                    {
+                        return formatPosition(velocity.velocZ);
+                    }
+                }));
+
+        telemetry.addLine(
+                telemetry.item("ax: ", new IFunc<Object>()
+                {
+                    public Object value()
+                    {
+                        return formatPosition(acceleration.accelX);
+                    }
+                }),
+                telemetry.item("ay: ", new IFunc<Object>()
+                {
+                    public Object value()
+                    {
+                        return formatPosition(acceleration.accelY);
+                    }
+                }),
+                telemetry.item("az: ", new IFunc<Object>()
+                {
+                    public Object value()
+                    {
+                        return formatPosition(acceleration.accelZ);
+                    }
+                }));
+
+        telemetry.addLine(
+                telemetry.item("is accelerometer calibrated? ", new IFunc<Object>()
+                {
+                    public Object value()
+                    {
+                        return imu.isAccelerometerCalibrated();
+                    }
+                }));
+
     }
 
     String formatAngle(double angle)
