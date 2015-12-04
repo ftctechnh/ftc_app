@@ -33,21 +33,21 @@ public class tbc {
     public final static double MTAPE_MIN_RANGE  = 0.20;
     public final static double MTAPE_MAX_RANGE  = 0.90;
     public final static double SNOWPLOW_MIN_RANGE = 0.20;
-    public final static double SNOWPLOW_MAX_RANGE = 0.90;
+    public final static double SNOWPLOW_MAX_RANGE = 0.70;
     public final static double CLIMBER_MIN_RANGE = 0.20;
-    public final static double CLIMBER_MAX_RANGE = 0.90;
-    public final static double SLIDER_MIN_RANGE = 0.20;
-    public final static double SLIDER_MAX_RANGE = 0.90;
+    public final static double CLIMBER_MAX_RANGE = 0.70;
+    public final static double SLIDER_MIN_RANGE = 0.50;
+    public final static double SLIDER_MAX_RANGE = 0.99;
 
     public static double climberPosition = CLIMBER_MIN_RANGE;
-    public static double sliderPosition = SLIDER_MIN_RANGE;
+    public static double sliderPosition = SLIDER_MAX_RANGE;
     public static double snowplowPosition = SNOWPLOW_MIN_RANGE;
     public static double mtapePosition = MTAPE_MIN_RANGE;
     public static double buttonServoSpeed = 0.5;
 
     public static void initServoValues() {
         climberPosition = CLIMBER_MIN_RANGE;
-        sliderPosition = SLIDER_MIN_RANGE;
+        sliderPosition = SLIDER_MAX_RANGE;
         snowplowPosition = SNOWPLOW_MIN_RANGE;
         mtapePosition = MTAPE_MIN_RANGE;
         buttonServoSpeed = 0.5;
@@ -160,9 +160,12 @@ public class tbc {
             sc.pwmEnable(); // enable servo controller PWM outputs
         }
 
-        motorRRight = hardwareMap.dcMotor.get("motor_right_rear"); //RRight
-        motorRLeft = hardwareMap.dcMotor.get("motor_left_rear"); //RLeft
-        motorRLeft.setDirection(DcMotor.Direction.REVERSE);
+        try {
+            motorRRight = hardwareMap.dcMotor.get("motor_right_rear"); //RRight
+            motorRLeft = hardwareMap.dcMotor.get("motor_left_rear"); //RLeft
+            motorRLeft.setDirection(DcMotor.Direction.REVERSE);
+        } catch (Exception ex) {
+        }
 
         /*
         * allows robot to run if there are only 2 drive motors

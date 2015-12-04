@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<Robot>
+    <MotorController name="Motor Controller 2" serialNumber="AH00QK34">
+        <Motor name="motor_left_rear" port="1" />
+        <Motor name="motor_right_rear" port="2" />
+    </MotorController>
+    <MotorController name="Motor Controller 3" serialNumber="AH00QJJN">
+        <Motor name="motor_right_front" port="1" />
+        <Motor name="motor_left_front" port="2" />
+    </MotorController>
+    <MotorController name="Motor Controller 4" serialNumber="AL00UYQ7">
+        <Motor name="pusher" port="1" />
+        <Motor name="motorHook" port="2" />
+    </MotorController>
+    <ServoController name="sc" serialNumber="AL00XP8L">
+        <Servo name="slider" port="1" />
+        <Servo name="climber" port="2" />
+        <Servo name="mtape" port="3" />
+        <Servo name="button" port="4" />
+        <Servo name="snowplow" port="5" />
+    </ServoController>
+    <DeviceInterfaceModule name="Device Interface Module 3" serialNumber="AI02RLVA">
+        <Gyro name="mrgyro" port="0" />
+        <ColorSensor name="color" port="1" />
+    </DeviceInterfaceModule>
+</Robot>
