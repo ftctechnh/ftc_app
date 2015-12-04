@@ -63,18 +63,28 @@ public class EETestAuton extends OpMode {
 
     private boolean complainLight = false;
 
-    DcMotor motorFRight = null;
-    DcMotor motorFLeft = null;
-    DcMotor motorRRight = null;
-    DcMotor motorRLeft = null;
-
-    ColorSensor sensorRGB = null;
-    //for the gyro sensor
-    GyroSensor sensorGyro;
     int xVal, yVal, zVal = 0;
     int heading = 0;
+    int headingNow = 0;
 
-    private org.ndhsb.ftc7593.AutonChoice[] autonSteps = {
+    int turn = 0;
+
+    //
+    // public AutonChoice(double durationI,
+    //  double startTimeI, double endTimeI, double lMotorI, double rMotorI
+    //  double turnDegreesI) {
+    private org.ndhsb.ftc7593.AutonChoice[] autonSteps1 = {
+            new AutonChoice(1.1, 0.0,1.1,1.0,1.0, 0.0), //
+            new AutonChoice(0.8, 2.0,2.8,0.5,-0.5, 0.0), //
+            new AutonChoice(3.0, 3.5,6.5,1.0,1.0, 0.0), //
+            new AutonChoice(0.8, 7.0,7.8,0.5,-0.5, 0.0), //
+            new AutonChoice(2.0, 8.0,10.0,1.0,1.0, 0.0), //
+            new AutonChoice(5.75, 15.0,20.75,0.0,0.0, 0.0) //
+    };
+
+    /*
+    private org.ndhsb.ftc7593.AutonChoice[] autonSteps1 = {
+
             new AutonChoice(0.0,1.1,1.0,1.0), // from 0 to 1 s, run the motor at 0.15
             new AutonChoice(2.0,2.8,0.5,-0.5), // from 0 to 1 s, run the motor at 0.15
             new AutonChoice(3.5,6.5,1.0,1.0), // from 5 and 8.5 s, run the motor at 0.15
@@ -82,6 +92,7 @@ public class EETestAuton extends OpMode {
             new AutonChoice(8.0,10.0,1.0,1.0), // from 0 to 1 s, run the motor at 0.15
             new AutonChoice(15.0,20.75,0.0,0.0) // between 15 and 20.75 s, point turn left.
             };
+    */
 
     public ElapsedTime mRuntime = new ElapsedTime();   // Time into round. // MPH
 
@@ -92,6 +103,19 @@ public class EETestAuton extends OpMode {
 
     }
 
+    void compileAuton(org.ndhsb.ftc7593.AutonChoice[] a) {
+        double startTime = 0.0;
+        double endTime = 0.0;
+        for(AutonChoice value : a) {
+            if (value.duration == 0.0) {
+                value.duration = value.endTime - value.startTime;
+            }
+            value.startTime = startTime;
+            value.endTime = startTime + value.duration;
+            startTime = value.endTime;
+        }
+    }
+
     /*
      * Code to run when the op mode is first enabled goes here
      *
@@ -99,54 +123,23 @@ public class EETestAuton extends OpMode {
      */
     @Override
     public void init() {
+        compileAuton(autonSteps1);
 
-        motorRRight = hardwareMap.dcMotor.get("motor_right_rear"); //RRight
-        motorRLeft = hardwareMap.dcMotor.get("motor_left_rear"); //RLeft
+        tbc.hardwareMap = hardwareMap;
+        tbc.initHardwareMap();
 
-        motorRLeft.setDirection(DcMotor.Direction.REVERSE);
+        tbc.initServoValues();
 
-        try {
-            motorFRight = hardwareMap.dcMotor.get("motor_right_front"); // FRight
-            motorFLeft = hardwareMap.dcMotor.get("motor_left_front"); // FLeft
+        // will want to change these for auton
+        tbc.setClimberPosition(tbc.climberPosition);
+        tbc.setSliderPosition(tbc.sliderPosition);
+        tbc.setSnowplowPosition(tbc.snowplowPosition);
+        tbc.setMtapePosition(tbc.mtapePosition);
+        tbc.setButtonServoSpeed(tbc.buttonServoSpeed);
 
-            motorFLeft.setDirection(DcMotor.Direction.REVERSE);
-        } catch (Exception ex) {
-
+        if (tbc.sc != null) {
+            tbc.sc.pwmEnable(); // enable servo controller PWM outputs
         }
-
-
-        // set the starting position of the wrist and claw
-        //armPosition = 0.4;
-        //clawPosition = 0.25;
-
-		/*
-		 * We also assume that we have a LEGO light sensor
-		 * with a name of "light_sensor" configured for our robot.
-		 */
-
-        try {
-            sensorRGB = hardwareMap.colorSensor.get("color_sensor");
-
-            // turn on LED of light sensor.
-            sensorRGB.enableLed(false);
-        }
-        catch (Exception ex) {
-            if ( !complainLight) {
-                telemetry.addData("Err", "No light sensor!");
-                complainLight = true;
-            }
-        }
-        sensorGyro = hardwareMap.gyroSensor.get("gyro");
-        sensorGyro.calibrate();
-
-        while (sensorGyro.isCalibrating())  {
-            try {
-                Thread.sleep(50);
-            } catch (Exception ex) {
-
-            }
-        }
-
     }
 
     //--------------------------------------------------------------------------
@@ -172,87 +165,49 @@ public class EETestAuton extends OpMode {
 
         float hsvValues[] = {0F,0F,0F};
 
-        // keep manipulator out of the way.
-
-
-        /*
-         * Use the 'time' variable of this op mode to determine
-         * how to adjust the motor power.
-         * MPH - alter to use mRuntime object
-         */
-        if (false) {
-            if (mRuntime.time() <= 1) {
-                // from 0 to 1 seconds, run the motor at 0.15.
-                left = MOTOR_POWER;
-                right = MOTOR_POWER;
-            } else if (mRuntime.time() > 5 && mRuntime.time() <= 8.5) {
-                // between 5 and 8.5 seconds, point turn right.
-                left = MOTOR_POWER;
-                right = MOTOR_POWER;
-            } else if (mRuntime.time() > 8.5 && mRuntime.time() <= 15) {
-                // between 8 and 15 seconds, idle.
-                left = 0.0;
-                right = 0.0;
-            } else if (mRuntime.time() > 15d && mRuntime.time() <= 20.75d) {
-                // between 15 and 20.75 seconds, point turn left.
-                left = -MOTOR_POWER;
-                right = MOTOR_POWER;
-            } else {
-                // after 20.75 seconds, stop.
-                left = 0.0;
-                right = 0.0;
-            }
+        if (tbc.sensorRGB != null) {
+            // read the light sensor
         }
 
-        if (true) {
-            left = 0.0; // default speeds are 0.0
-            right = 0.0; // default speeds are 0.0
-            for(AutonChoice value : autonSteps)
-            {
-                double sTime = value.startTime;
-                double eTime = value.endTime;
-                double time = mRuntime.time();
-                if ((sTime <= time) && (time <= eTime)) {
-                    left = value.lMotor;
-                    right = value.rMotor;
-                    break;  // first rule to match wins and we leave the loop!
-                }
-                //double f = value.startTime;
-                //System.out.println(value);
+        if (tbc.sensorGyro != null) {
+            xVal = tbc.sensorGyro.rawX();
+            yVal = tbc.sensorGyro.rawY();
+            zVal = tbc.sensorGyro.rawZ();
+            heading = tbc.sensorGyro.getHeading();
+        }
+
+        left = 0.0; // default speeds are 0.0
+        right = 0.0; // default speeds are 0.0
+        for(AutonChoice value : autonSteps1)
+        {
+            double sTime = value.startTime;
+            double eTime = value.endTime;
+            double time = mRuntime.time();
+            if ((sTime <= time) && (time <= eTime)) {
+                left = value.lMotor;
+                right = value.rMotor;
+                turn = (int) value.turnDegrees;
+                headingNow = heading;
+
+                break;  // first rule to match wins and we leave the loop!
             }
+            //double f = value.startTime;
+            //System.out.println(value);
         }
 
 		/*
 		 * set the motor power
 		 */
-        motorRRight.setPower(right);
-        motorRLeft.setPower(left);
-        motorFRight.setPower(right);
-        motorFLeft.setPower(left);
 
-		/*
-		 * read the light sensor.
-		 */
-        //plan: wrap this in a try / catch block
-        if ( sensorRGB != null ) {
-        }
+        tbc.setMotorRRightPower((float) right);
+        tbc.setMotorRLeftPower((float) left);
+        tbc.setMotorFRightPower((float) right);
+        tbc.setMotorFLeftPower((float) left);
 
-        xVal = sensorGyro.rawX();
-        yVal = sensorGyro.rawY();
-        zVal = sensorGyro.rawZ();
-        heading = sensorGyro.getHeading();
-
-		/*
-		 * Send telemetry data back to driver station. Note that if we are using
-		 * a legacy NXT-compatible motor controller, then the getPower() method
-		 * will return a null value. The legacy NXT-compatible motor controllers
-		 * are currently write only.
-		 */
-
-
-        telemetry.addData("1. x", String.format("%03d", xVal));
-        telemetry.addData("2. y", String.format("%03d", yVal));
-        telemetry.addData("3. z", String.format("%03d", zVal));
+        // getPower()
+        //telemetry.addData("1. x", String.format("%03d", xVal));
+        //telemetry.addData("2. y", String.format("%03d", yVal));
+        //telemetry.addData("3. z", String.format("%03d", zVal));
         telemetry.addData("4. h", String.format("%03d", heading));
         telemetry.addData("Text", "*** Robot Data***");
         telemetry.addData("time", "elapsed time: " + Double.toString(this.time));
@@ -272,7 +227,8 @@ public class EETestAuton extends OpMode {
     @Override
     public void stop() {
         // make sure those motors are stopped!
-        motorRRight.setPower(0.0);
+        /*
+        tbc.setMotorRRightPower(0.0);
         motorRLeft.setPower(0.0);
         motorFRight.setPower(0.0);
         motorFLeft.setPower(0.0);
@@ -283,6 +239,7 @@ public class EETestAuton extends OpMode {
             motorRLeft = null;
             motorRRight = null;
         }
+        */
     }
 
 }

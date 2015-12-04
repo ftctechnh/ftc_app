@@ -1,6 +1,8 @@
 package org.ndhsb.ftc7593;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
@@ -67,6 +69,10 @@ public class tbc {
 
     public static DcMotor motorHook = null;
     public static DcMotor motorPusher = null;
+
+    public static ColorSensor sensorRGB = null;
+
+    public static GyroSensor sensorGyro = null;
 
     public static HardwareMap hardwareMap = null;
 
@@ -148,17 +154,6 @@ public class tbc {
         } catch (Exception ex) {
         }
 
-        initServoValues();
-
-        setClimberPosition(climberPosition);
-        setSliderPosition(sliderPosition);
-        setSnowplowPosition(snowplowPosition);
-        setMtapePosition(mtapePosition);
-        setButtonServoSpeed(buttonServoSpeed);
-
-        if (sc != null) {
-            sc.pwmEnable(); // enable servo controller PWM outputs
-        }
 
         try {
             motorRRight = hardwareMap.dcMotor.get("motor_right_rear"); //RRight
@@ -180,6 +175,23 @@ public class tbc {
         try {
             motorHook = hardwareMap.dcMotor.get("motorHook");
             motorPusher = hardwareMap.dcMotor.get("pusher");
+        } catch (Exception ex) {
+        }
+
+        try {
+            sensorRGB = hardwareMap.colorSensor.get("color_sensor");
+            // turn off LED of light sensor.
+            sensorRGB.enableLed(false);
+        }
+        catch (Exception ex) {
+        }
+
+        try {
+            sensorGyro = hardwareMap.gyroSensor.get("gyro");
+            sensorGyro.calibrate();
+            while (sensorGyro.isCalibrating())  {
+                Thread.sleep(50);
+            }
         } catch (Exception ex) {
         }
 

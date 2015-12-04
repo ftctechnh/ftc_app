@@ -47,7 +47,6 @@ public class TeleOpTankTread extends OpMode {
      * Constructor
      */
     public TeleOpTankTread() {
-
     }
 
     /*
@@ -59,6 +58,18 @@ public class TeleOpTankTread extends OpMode {
     public void init() {
         tbc.hardwareMap = hardwareMap;
         tbc.initHardwareMap();
+
+        tbc.initServoValues();
+
+        tbc.setClimberPosition(tbc.climberPosition);
+        tbc.setSliderPosition(tbc.sliderPosition);
+        tbc.setSnowplowPosition(tbc.snowplowPosition);
+        tbc.setMtapePosition(tbc.mtapePosition);
+        tbc.setButtonServoSpeed(tbc.buttonServoSpeed);
+
+        if (tbc.sc != null) {
+            tbc.sc.pwmEnable(); // enable servo controller PWM outputs
+        }
 
         mRuntime.reset();           // Zero game clock
     }
