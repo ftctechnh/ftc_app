@@ -33,19 +33,21 @@ public class RedBeaconFSM extends PacmanBotHardwareBase {
                 break;
             case 2:
                 drive(1,0);
-                if (timer.time()>=2.90) {state=3; timer.reset();}
+                if (timer.time()>=2.75) {state=3; timer.reset();}
                 break;
             case 3:
                 drive(0,-1);
-                if (timer.time()>=0.27) {state=4; timer.reset();}
+                if (timer.time()>=0.28) {state=4; timer.reset();}
                 break;
             case 4:
-                drive(0.25,0);
+                drive(0.25, 0);
                 if (timer.time()>=2.85) {state=100; timer.reset();}
+
                 break;
             case 100:
                 //This is the finished state.
                 drive(0,0);
+                setThrower(true);
                 telemetry.addData("State","FINISHED");
                 break;
         }
