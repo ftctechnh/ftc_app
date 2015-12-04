@@ -65,7 +65,7 @@ public class PacmanBotManual3000 extends PacmanBotHardwareBase {
         if (gamepad.right_bumper) tirePosition = false;
         if (gamepad.right_trigger>.5) tirePosition = true;
 
-        if ((timer.time() % 2) > 1) setTire(tirePosition ? 1 : -1);
+        if ((timer.time() % 0.5) > .25) setTire(tirePosition ? 1 : -1);
         else setTire(0);
 
         setWinch(threeWay(gamepad.left_bumper,gamepad.left_trigger>.5));
