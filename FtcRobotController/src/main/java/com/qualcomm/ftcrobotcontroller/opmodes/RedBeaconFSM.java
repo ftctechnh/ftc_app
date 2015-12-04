@@ -45,11 +45,6 @@ public class RedBeaconFSM extends PacmanBotHardwareBase {
                 if (timer.time()>=0.28) {state=4; timer.reset();}
                 break;
             case 4:
-<<<<<<< Updated upstream
-                drive(0.25, 0);
-                if (timer.time()>=2.85) {state=100; timer.reset();}
-
-=======
                 drive(0.25,0);
                 if (timer.time()>=2.85) {state=5; timer.reset();}
                 break;
@@ -69,11 +64,16 @@ public class RedBeaconFSM extends PacmanBotHardwareBase {
             case 8:
                 boolean startDetect=false;
                 for (int i=0;i<100;i++) {
-                    if (startDetect && colorArray[i]) {
+                    if (!startDetect && colorArray[i]) {
                         redStart=i;
                         startDetect=true;
                     }
+                    if (startDetect && !colorArray[i]) {
+                        redEnd = i;
+                        break;
+                    }
                 }
+                redMid = (redEnd - redStart)
                 state=9; break;
             case 100:
                 //This is the finished state.
