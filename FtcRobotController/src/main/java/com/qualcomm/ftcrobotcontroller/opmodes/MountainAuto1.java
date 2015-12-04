@@ -15,9 +15,10 @@ public class MountainAuto1 extends LinearOpMode
     public void runOpMode() throws InterruptedException
     {
         drive.moveStraightEncoders(24,1);
-        drive.spinOnCenter(45,.25,true);
-        drive.moveStraightEncoders(24,1);
-        drive.spinOnCenter(90,.25,true);
-        drive.moveStraightEncoders(28,1);
+        drive.spinOnCenter(drive.leftTurn(45), (float) 0.25); //leftTurn(45, .25);//(-45,.25);
+        drive.moveStraightEncoders(24, 1);
+        drive.spinOnCenter(drive.leftTurn(90), (float) 0.25);//leftTurn(90, 0.25);
+        drive.moveStraightEncoders(47, 1); //or use gyro to stop at a certain angle
+        //stop the bot
     }
 }

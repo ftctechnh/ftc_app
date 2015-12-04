@@ -61,6 +61,8 @@ public class TestBot implements DriverInterface
         }
     }
 
+
+
     @Override
     public void pivotTurn(float degrees, float speed)
     {
@@ -103,11 +105,8 @@ public class TestBot implements DriverInterface
     }
 
     @Override
-<<<<<<< HEAD
-    public void spinOnCenter(float degrees, double speed, boolean isLeft)
-=======
+
     public void spinOnCenter(float degrees, float speed)
->>>>>>> 391f300a6a28d4991caec65135a4be0ccea06f86
     {
         leftMotor.setPower(0.0f);
         rightMotor.setPower(0.0f);
@@ -153,6 +152,14 @@ public class TestBot implements DriverInterface
         }
     }
 
+    public float leftTurn(float degrees)
+    {
+        return degrees;
+    }
+    public float rightTurn(float degrees)
+    {
+        return degrees;
+    }
     @Override
     public void stop()
     {
