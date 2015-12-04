@@ -190,7 +190,7 @@ public class PacmanBotHardwareBase extends OpMode {
 
         gamepad = new Gamepad();
 
-        thrower.setPosition(0.75);
+        thrower.setPosition(0.65);
         arm.setPosition(0.53);
         hookRelease.setPosition(0.53);
         flipper.setPosition(0.5);
@@ -199,7 +199,7 @@ public class PacmanBotHardwareBase extends OpMode {
 
     public void setTire(double power) {tire.setPower(power);}
 
-    public void setThrower(boolean pos) {thrower.setPosition(pos ? 0.15 : 0.75);}
+    public void setThrower(boolean pos) {thrower.setPosition(pos ? 0.15 : 0.65);}
 
     public void setBelt(double power) { belt.setPower(-power); }
 
