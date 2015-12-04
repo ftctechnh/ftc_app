@@ -20,7 +20,7 @@ public class ThreeColorTest extends OpMode{
         clearSensor = hardwareMap.lightSensor.get("clearSensor");
         getColor = new ThreeLightColorSensor(redSensor, blueSensor, clearSensor);
     }
-    
+
     public void loop()
     {
         int colorDetected = getColor.colorDetected();
@@ -43,8 +43,8 @@ public class ThreeColorTest extends OpMode{
         telemetry.addData("redSensor " , redSensor.getLightDetectedRaw());
         telemetry.addData("clearSensor" , clearSensor.getLightDetectedRaw());
         telemetry.addData("blueSensor" , blueSensor.getLightDetectedRaw());
-        telemetry.addData("Diff of clear and red ",clearSensor.getLightDetectedRaw() - redSensor.getLightDetectedRaw());
-        telemetry.addData("Diff of clear and blue ",clearSensor.getLightDetectedRaw() - blueSensor.getLightDetectedRaw());
+        telemetry.addData("Diff of clear and red ",Math.abs(clearSensor.getLightDetectedRaw() - redSensor.getLightDetectedRaw()));
+        telemetry.addData("Diff of clear and blue ",Math.abs(clearSensor.getLightDetectedRaw() - blueSensor.getLightDetectedRaw()));
 
     }
     public void stop()
