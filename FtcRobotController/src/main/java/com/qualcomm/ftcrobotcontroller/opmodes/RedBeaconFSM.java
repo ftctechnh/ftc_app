@@ -12,6 +12,11 @@ public class RedBeaconFSM extends PacmanBotHardwareBase {
 
     ElapsedTime timer = new ElapsedTime();
     int state = -1;
+    int redStart = 0;
+    int redEnd = 0;
+    int redMid = 0;
+
+    boolean colorArray[];
 
     public void init() {
         setupHardware();
@@ -40,10 +45,37 @@ public class RedBeaconFSM extends PacmanBotHardwareBase {
                 if (timer.time()>=0.28) {state=4; timer.reset();}
                 break;
             case 4:
+<<<<<<< Updated upstream
                 drive(0.25, 0);
                 if (timer.time()>=2.85) {state=100; timer.reset();}
 
+=======
+                drive(0.25,0);
+                if (timer.time()>=2.85) {state=5; timer.reset();}
                 break;
+            case 5:
+                setThrower(true);
+                drive(0,0);
+                if (timer.time()>=2) {setThrower(false); state=6; timer.reset();}
+                break;
+            case 6:
+                if (timer.time()>=1) {state=7; timer.reset();}
+                break;
+            case 7:
+                setArm(timer.time()-1);
+                colorArray[(int)(timer.time()*50)] = (getEyeColor()==ColorDetected.COLOR_RED);
+                if (timer.time()>=1) {state=8; timer.reset();}
+>>>>>>> Stashed changes
+                break;
+            case 8:
+                boolean startDetect=false;
+                for (int i=0;i<100;i++) {
+                    if (startDetect && colorArray[i]) {
+                        redStart=i;
+                        startDetect=true;
+                    }
+                }
+                state=9; break;
             case 100:
                 //This is the finished state.
                 drive(0,0);
