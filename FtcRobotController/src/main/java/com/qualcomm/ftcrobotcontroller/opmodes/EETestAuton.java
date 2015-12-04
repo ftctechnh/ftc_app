@@ -31,6 +31,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import android.graphics.Color;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -168,6 +170,8 @@ public class EETestAuton extends OpMode {
         float hsvValues[] = {0F,0F,0F};
 
         if (tbc.sensorRGB != null) {
+            Color.RGBToHSV(tbc.sensorRGB.red() * 8, tbc.sensorRGB.green() * 8, tbc.sensorRGB.blue() * 8, hsvValues);
+
             // read the light sensor
         }
 
@@ -203,8 +207,8 @@ public class EETestAuton extends OpMode {
             if (Math.abs(turnAmount) > TOLERANCE) {
                 int sign = 1; // turn one direction
                 if (turnAmount < 0) sign = -1;
-                float turnSpeed = ((((float) turnAmount / 180.0f) * 0.9f) + 0.2f); // scale turn rate
-                left = (float) sign * turnSpeed;
+                float turnSpeed = (((((float) turnAmount / 180.0f) * 0.9f) * 0.5f) + 0.2f); // scale turn rate
+                left = (float) sign * turnSpeed;    // might need to flip this for turn direction.
                 right = -left;
             } else {
                 turn = 0; // stop the turn

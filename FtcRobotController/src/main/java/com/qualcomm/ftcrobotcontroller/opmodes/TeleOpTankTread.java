@@ -147,7 +147,6 @@ public class TeleOpTankTread extends OpMode {
         if(gamepad2.right_bumper) {
             tbc.snowplowPosition = tbc.SNOWPLOW_MAX_RANGE;
         }
-
         if(gamepad2.dpad_up) {
             tbc.snowplowPosition = tbc.SNOWPLOW_MID_RANGE;
         }
@@ -168,16 +167,10 @@ public class TeleOpTankTread extends OpMode {
 
         Double mtapeNewPos = tbc.mtapePosition;
         if(gamepad1.right_bumper) {
-
             mtapeNewPos = tbc.mtapePosition + mtapeDelta;
-
-
         }
         if(gamepad1.left_bumper) {
-
             mtapeNewPos = tbc.mtapePosition - mtapeDelta;
-
-
         }
         tbc.mtapePosition = Range.clip(mtapeNewPos, tbc.MTAPE_MIN_RANGE, tbc.MTAPE_MAX_RANGE);
         tbc.setMtapePosition(tbc.mtapePosition);

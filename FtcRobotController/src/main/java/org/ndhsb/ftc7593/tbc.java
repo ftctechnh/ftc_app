@@ -222,7 +222,8 @@ public class tbc {
         motorHook = null;
         motorPusher = null;
     }
-    /*
+
+/*
  * This method scales the joystick input so for low joystick values, the
  * scaled value is less than linear.  This is to make it easier to drive
  * the robot more precisely at slower speeds.
