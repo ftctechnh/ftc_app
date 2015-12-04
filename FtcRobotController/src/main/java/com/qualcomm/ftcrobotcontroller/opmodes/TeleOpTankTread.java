@@ -6,6 +6,7 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.ndhsb.ftc7593.tbc;
@@ -32,17 +33,15 @@ class TankThread implements Runnable {
 
 public class TeleOpTankTread extends OpMode {
 
-    // amount to change the arm servo position.
+    // amount to change the tape servo position.
     double mtapeDelta = 0.1;
-
-    // position of the claw servo
-    double clawPosition;
-
-    // amount to change the claw servo position by
-    double snowplowDelta = 0.1;
 
     float servoInput = 0.5f;
     float bservoSpeed = 0.5f;
+
+    public ElapsedTime mRuntime = new ElapsedTime();   // Time into round. // MPH
+
+    double eventStart = 0.0;
 
     /**
      * Constructor
@@ -60,6 +59,8 @@ public class TeleOpTankTread extends OpMode {
     public void init() {
         tbc.hardwareMap = hardwareMap;
         tbc.initHardwareMap();
+
+        mRuntime.reset();           // Zero game clock
     }
 
     /*
@@ -141,23 +142,35 @@ public class TeleOpTankTread extends OpMode {
         tbc.snowplowPosition = Range.clip(tbc.snowplowPosition, tbc.SNOWPLOW_MIN_RANGE, tbc.SNOWPLOW_MAX_RANGE);
         tbc.setSnowplowPosition(tbc.snowplowPosition);
 
-        if(gamepad2.left_bumper) {
+        if(gamepad2.x) {
             tbc.sliderPosition = tbc.SLIDER_MAX_RANGE;
         }
-        if(gamepad2.right_bumper) {
+        if(gamepad2.y) {
             tbc.sliderPosition = tbc.SLIDER_MIN_RANGE;
         }
         tbc.sliderPosition = Range.clip(tbc.sliderPosition, tbc.SLIDER_MIN_RANGE, tbc.SLIDER_MAX_RANGE);
         tbc.setSliderPosition(tbc.snowplowPosition);
 
+        // MPH
+        Double mtapeNewPos = tbc.mtapePosition;
         if(gamepad1.right_bumper) {
-            tbc.mtapePosition = tbc.MTAPE_MAX_RANGE;
+            if ((mRuntime.time() - eventStart) > 0.1) {
+                mtapeNewPos = tbc.mtapePosition + mtapeDelta;
+                eventStart = mRuntime.time();
+            }
         }
         if(gamepad1.left_bumper) {
-            tbc.mtapePosition = tbc.MTAPE_MIN_RANGE;
+            if ((mRuntime.time() - eventStart) > 0.1) {
+                mtapeNewPos = tbc.mtapePosition - mtapeDelta;
+                eventStart = mRuntime.time();
+            }
         }
-        tbc.mtapePosition = Range.clip(tbc.mtapePosition, tbc.MTAPE_MIN_RANGE, tbc.MTAPE_MAX_RANGE);
+        tbc.mtapePosition = Range.clip(mtapeNewPos, tbc.MTAPE_MIN_RANGE, tbc.MTAPE_MAX_RANGE);
         tbc.setMtapePosition(tbc.mtapePosition);
+
+        if ((!gamepad1.right_bumper) && (!gamepad1.left_bumper)) {
+            eventStart = mRuntime.time();
+        }
 
 		/*
 		 * Send telemetry data back to driver station. Note that if we are using
@@ -175,6 +188,7 @@ public class TeleOpTankTread extends OpMode {
         telemetry.addData("button servo", "button servo: " + String.format("%.2f", tbc.buttonServoSpeed));
         telemetry.addData("climber", "climber:  " + String.format("%.2f", tbc.climberPosition));
         telemetry.addData("slider", "slider: " + String.format("%.2f", tbc.sliderPosition));
+        telemetry.addData("mtape", "mtape: " + String.format("%.2f", tbc.mtapePosition));
 
         // if LinearOpMode
         // waitOneFullHardwareCycle();
