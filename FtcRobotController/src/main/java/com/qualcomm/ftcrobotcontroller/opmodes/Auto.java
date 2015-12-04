@@ -17,6 +17,11 @@ public class Auto extends OpMode {
     public final double SIG_WEIGHT = 10;
     public final double VARIENCE = 0.1;
 
+    public final int LIGHT_RIGHT = 0;
+    public final int LIGHT_LEFT = 1;
+    public final int LIGHT_UNKNOWN = -1;
+    public final boolean ONE_WHEEL = true;
+
 
     // the path
 
@@ -62,8 +67,8 @@ public class Auto extends OpMode {
         extRight = new Motor("extRight", hardwareMap);
         extLeft = new Motor("extLeft", hardwareMap);
 
-        lightRight.enableLED(true);
-        lightLeft.enableLED(true);
+        lightRight.enableLed(true);
+        lightLeft.enableLed(true);
 
 
     }
@@ -71,12 +76,32 @@ public class Auto extends OpMode {
     @Override
     public void loop()
     {
+        double white = 1.0;
         double myColor = 0.8;
         double otherColor = 0.6;
 
-        forwardUntil(myColor, 2000, 4000); //  go straight until  
 
-        while(true) {};
+        // to midfield stop at diagonal divide
+        int dir = forwardUntil(myColor, 2000, 3000);
+
+        // make the 90 turn based upon which light gets triggered
+        if(dir == LIGHT_RIGHT) turnDeg(false, 90);
+        else if(dir == LIGHT_LEFT) turnDeg(true, 90);
+        else turnDeg(true, 900);
+
+        // move until we find the score box
+        dir = forwardUntil(myColor, 1500, 2500);
+
+        // align ourselves with the score box
+        if(dir == LIGHT_RIGHT) turnTill(true, myColor);
+        else if(dir == LIGHT_LEFT) turnTill(false, myColor);
+
+        // turn ourselfves around
+        turnDeg(true, 90, ONE_WHEEL);
+        forwardUntil(white, 400, 800);
+        turnDeg(true, 90);
+
+        while(true) {}
     }
 
     public int forwardUntil(double color, int guess, int giveup)
@@ -107,15 +132,15 @@ public class Auto extends OpMode {
             if(timelast-timefirst > guess) set(r/2, l/2);
             else set(r, l);
 
-            if(lightRight.getLightDetected() < color+VARIENCE && lightRight.getLightDetected > color-VARIENCE)
+            if(lightRight.getLightDetected() < color+VARIENCE && lightRight.getLightDetected() > color-VARIENCE)
             {
                 stop();
-                return 0;
+                return LIGHT_RIGHT;
             }
-            else if(lightLeft.getLightDetected() < color+VARIENCE && lightLeft.getLightDetected > color-VARIENCE)
+            else if(lightLeft.getLightDetected() < color+VARIENCE && lightLeft.getLightDetected() > color-VARIENCE)
             {
                 stop();
-                return 1;
+                return LIGHT_LEFT;
             }
         }
 
@@ -125,13 +150,44 @@ public class Auto extends OpMode {
 
     public void turnDeg(boolean right, double degrees)
     {
+        turnDeg(right, degrees, false);
+    }
+
+    public void turnDeg(boolean right, double degrees, boolean onewheel)
+    {
         double gypos = 0;
         long timefirst = System.currentTimeMillis();
         long timelast = timefirst;
 
-        if(right) set(FAST_SPEED, -FAST_SPEED);
-        else set(-FAST_SPEED, FAST_SPEED);
+        if(onewheel)
+        {
+            if(!right) set(FAST_SPEED, 0);
+            else set(0, FAST_SPEED);
+        }
+        else
+        {
+            if(right) set(-FAST_SPEED, FAST_SPEED);
+            else set(FAST_SPEED, -FAST_SPEED);
+        }
+
         while(gypos < degrees) {};
+        stop();
+    }
+
+    public void turnTill(boolean right, double color)
+    {
+        if(right) set(0, FAST_SPEED);
+        else set(FAST_SPEED, 0);
+
+
+
+        if(right) {
+            while(lightLeft.getLightDetected() < color+VARIENCE && lightLeft.getLightDetected() > color-VARIENCE) {}
+        }
+        else {
+            while(lightRight.getLightDetected() < color+VARIENCE && lightRight.getLightDetected() > color-VARIENCE) {}
+        }
+
         stop();
     }
 
@@ -141,7 +197,7 @@ public class Auto extends OpMode {
     }
 
 
-    public void set(float r, float l)
+    public void set(double r, double l)
     {
         right.set(r);
         left.set(l);
