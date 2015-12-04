@@ -9,4 +9,6 @@ public interface DriverInterface
     void pivotTurn(float degrees, float speed);
     void spinOnCenter(float degrees,float speed);
     void stop();
+    float leftTurn(float degrees);
+    float rightTurn(float degrees);
 }
