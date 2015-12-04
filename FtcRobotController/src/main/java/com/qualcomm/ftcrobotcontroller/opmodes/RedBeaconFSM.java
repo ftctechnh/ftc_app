@@ -65,7 +65,6 @@ public class RedBeaconFSM extends PacmanBotHardwareBase {
                 setArm(timer.time()-1);
                 colorArray[(int)(timer.time()*50)] = (getEyeColor()==ColorDetected.COLOR_RED);
                 if (timer.time()>=1) {state=8; timer.reset();}
->>>>>>> Stashed changes
                 break;
             case 8:
                 boolean startDetect=false;
