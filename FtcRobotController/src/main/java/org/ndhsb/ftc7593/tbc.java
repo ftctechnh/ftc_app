@@ -14,15 +14,15 @@ import com.qualcomm.robotcore.hardware.ServoController;
  */
 
 // Todo list - probably better kept as Git "issues" but no time now
+    //-URGENT - motor direction on front right tank tread reversed for some reason
+    //-fix in code vs wires
+// -make sure both robots drive the same direction forward; this may require re-wiring the motor
+
 // (almost) done pending testing
     // -finish refactoring common auton / teleop code
     // -finish refactoring common init code
 
-
-
-// -make sure both robots drive the same direction forward; this may require re-wiring the motor
     //  control outputs
-    // -add "compiler" for autonlist
     // -add turn - by - gyro to auton
     // -encoder setup
     // -add color / light sensor tracking / steering
@@ -30,6 +30,10 @@ import com.qualcomm.robotcore.hardware.ServoController;
     // -add button pusher auton
     // -can we catch "EMERGENCY_STOP"?
     // -add "sniping" / driving mode to give fine-grain half-range control inputs
+
+// Done
+// -add "compiler" for autonlist
+
 
 public class tbc {
     public final static double MTAPE_MIN_RANGE  = 0.0;
@@ -183,8 +187,7 @@ public class tbc {
             sensorRGB = hardwareMap.colorSensor.get("color_sensor");
             // turn off LED of light sensor.
             sensorRGB.enableLed(false);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
         }
 
         try {

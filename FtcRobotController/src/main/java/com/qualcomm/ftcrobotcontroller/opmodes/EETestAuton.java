@@ -66,8 +66,10 @@ public class EETestAuton extends OpMode {
     int xVal, yVal, zVal = 0;
     int heading = 0;
     int headingNow = 0;
+    int targetHeading = 0;
 
     int turn = 0;
+    final static int TOLERANCE = 5; // error tolerance in degrees
 
     //
     // public AutonChoice(double durationI,
@@ -178,6 +180,7 @@ public class EETestAuton extends OpMode {
 
         left = 0.0; // default speeds are 0.0
         right = 0.0; // default speeds are 0.0
+        turn = 0; // default is straight
         for(AutonChoice value : autonSteps1)
         {
             double sTime = value.startTime;
@@ -188,11 +191,24 @@ public class EETestAuton extends OpMode {
                 right = value.rMotor;
                 turn = (int) value.turnDegrees;
                 headingNow = heading;
-
+                targetHeading = (headingNow + turn + 360) % 360; // compute target heading; make sure it's positive.
                 break;  // first rule to match wins and we leave the loop!
             }
             //double f = value.startTime;
             //System.out.println(value);
+        }
+
+        if (turn != 0) {
+            int turnAmount = (targetHeading - heading);
+            if (Math.abs(turnAmount) > TOLERANCE) {
+                int sign = 1; // turn one direction
+                if (turnAmount < 0) sign = -1;
+                float turnSpeed = ((((float) turnAmount / 180.0f) * 0.9f) + 0.2f); // scale turn rate
+                left = (float) sign * turnSpeed;
+                right = -left;
+            } else {
+                turn = 0; // stop the turn
+            }
         }
 
 		/*
