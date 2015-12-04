@@ -77,11 +77,12 @@ public class RedBeaconFSM extends PacmanBotHardwareBase {
                 state=100; break;
             case 100:
                 //This is the finished state.
-                drive(0,0);
+                drive(0, 0);
                 setThrower(true);
-                telemetry.addData("State","FINISHED");
+                telemetry.addData("State", "FINISHED");
                 telemetry.addData("Red Middle is",redMid);
-                telemetry.addData("That's", ((double)redMid)*200+1);
+                telemetry.addData("That's", ((double) redMid) * 200 + 1);
+                setArm(((double)redMid)*200+1);
                 break;
         }
     }
