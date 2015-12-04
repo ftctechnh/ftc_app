@@ -13,7 +13,7 @@ public class Move extends OpMode{
     public Move(){
     }
 
-    final static int speed = 50;
+    final static double speed = .5;
     static DcMotor armLowerMotor;
     DcMotor armUpperMotor;
     boolean peopleAndLight = true;
@@ -32,8 +32,11 @@ public class Move extends OpMode{
 
     public void start(){
         while(true) {
-            rightMotor.setPower(speed);
-            leftMotor.setPower(speed);
+            rightMotor.setPower((float).9);
+            leftMotor.setPower((float).9);
+            telemetry.addData("Text", "*** Robot Data***");
+            telemetry.addData("Motor target Pos", "Pos: " + rightMotor.getTargetPosition());
+            telemetry.addData("Motor current Pos", "Pos: " + rightMotor.getCurrentPosition());
         }
         /*
         int rightPos = rightMotor.getCurrentPosition();
@@ -45,9 +48,7 @@ public class Move extends OpMode{
             leftMotor.setPower(speed);
         }
 
-        telemetry.addData("Text", "*** Robot Data***");
-        telemetry.addData("Motor target Pos", "Pos: " + rightMotor.getTargetPosition());
-        telemetry.addData("Motor current Pos", "Pos: " + rightMotor.getCurrentPosition());
+
         */
     }
 
