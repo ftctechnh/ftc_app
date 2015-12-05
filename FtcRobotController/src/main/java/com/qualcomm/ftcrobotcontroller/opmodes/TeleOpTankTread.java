@@ -35,6 +35,7 @@ public class TeleOpTankTread extends OpMode {
 
     // amount to change the tape servo position.
     double mtapeDelta = 0.001;
+    double climberDelta = 0.005;
 
     float servoInput = 0.5f;
     float bservoSpeed = 0.5f;
@@ -124,18 +125,18 @@ public class TeleOpTankTread extends OpMode {
 
         tbc.setMotorHookPower(hook);
 
-        if(gamepad1.x) {
+        if(gamepad2.x) {
             tbc.buttonServoSpeed = 0.0f;
         }
-        if(gamepad1.y) {
+        if(gamepad2.y) {
             tbc.buttonServoSpeed = 1.0f;
         }
-        if(gamepad1.x != true && gamepad1.y != true) {
+        if(gamepad2.x != true && gamepad2.y != true) {
             tbc.buttonServoSpeed = 0.5f;
         }
         tbc.setButtonServoSpeed(tbc.buttonServoSpeed);
 
-        if(gamepad2.a) {
+        /*if(gamepad2.a) {
             tbc.climberPosition = tbc.CLIMBER_MAX_RANGE;
         }
         if(gamepad2.b) {
@@ -143,39 +144,50 @@ public class TeleOpTankTread extends OpMode {
         }
         tbc.climberPosition = Range.clip(tbc.climberPosition, tbc.CLIMBER_MIN_RANGE, tbc.CLIMBER_MAX_RANGE);
         tbc.setClimberPosition(tbc.climberPosition);
+        */
 
-        if(gamepad2.right_bumper) {
+        Double climberNewPos = tbc.climberPosition;
+        if(gamepad2.a) {
+            climberNewPos = tbc.climberPosition + climberDelta;
+        }
+        if(gamepad2.b) {
+            climberNewPos = tbc.climberPosition - climberDelta;
+        }
+        tbc.climberPosition = Range.clip(climberNewPos, tbc.CLIMBER_MIN_RANGE, tbc.CLIMBER_MAX_RANGE);
+        tbc.setClimberPosition(tbc.climberPosition);
+
+        if(gamepad1.right_bumper) {
             tbc.snowplowPosition = tbc.SNOWPLOW_MAX_RANGE;
         }
-        if(gamepad2.dpad_up) {
+        if(gamepad1.dpad_up) {
             tbc.snowplowPosition = tbc.SNOWPLOW_MID_RANGE;
         }
-        if(gamepad2.left_bumper) {
+        if(gamepad1.left_bumper) {
             tbc.snowplowPosition = tbc.SNOWPLOW_MIN_RANGE;
         }
         tbc.snowplowPosition = Range.clip(tbc.snowplowPosition, tbc.SNOWPLOW_MIN_RANGE, tbc.SNOWPLOW_MAX_RANGE);
         tbc.setSnowplowPosition(tbc.snowplowPosition);
 
-        if(gamepad2.x) {
+        if(gamepad1.x) {
             tbc.sliderPosition = tbc.SLIDER_MAX_RANGE;
         }
-        if(gamepad2.y) {
+        if(gamepad1.y) {
             tbc.sliderPosition = tbc.SLIDER_MIN_RANGE;
         }
         tbc.sliderPosition = Range.clip(tbc.sliderPosition, tbc.SLIDER_MIN_RANGE, tbc.SLIDER_MAX_RANGE);
         tbc.setSliderPosition(tbc.sliderPosition);
 
         Double mtapeNewPos = tbc.mtapePosition;
-        if(gamepad1.right_bumper) {
+        if(gamepad2.right_bumper) {
             mtapeNewPos = tbc.mtapePosition + mtapeDelta;
         }
-        if(gamepad1.left_bumper) {
+        if(gamepad2.left_bumper) {
             mtapeNewPos = tbc.mtapePosition - mtapeDelta;
         }
         tbc.mtapePosition = Range.clip(mtapeNewPos, tbc.MTAPE_MIN_RANGE, tbc.MTAPE_MAX_RANGE);
         tbc.setMtapePosition(tbc.mtapePosition);
 
-        if ((!gamepad1.right_bumper) && (!gamepad1.left_bumper)) {
+        if ((!gamepad2.right_bumper) && (!gamepad2.left_bumper)) {
             eventStart = mRuntime.time();
         }
 

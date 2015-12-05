@@ -78,12 +78,12 @@ public class EETestAuton extends OpMode {
     //  double startTimeI, double endTimeI, double lMotorI, double rMotorI
     //  double turnDegreesI) {
     private org.ndhsb.ftc7593.AutonChoice[] autonSteps1 = {
-            new AutonChoice(1.1, 0.0,1.1,1.0,1.0, 0.0), //
-            new AutonChoice(0.8, 2.0,2.8,0.5,-0.5, 0.0), //
-            new AutonChoice(3.0, 3.5,6.5,1.0,1.0, 0.0), //
-            new AutonChoice(0.8, 7.0,7.8,0.5,-0.5, 0.0), //
-            new AutonChoice(2.0, 8.0,10.0,1.0,1.0, 0.0), //
-            new AutonChoice(5.75, 15.0,20.75,0.0,0.0, 0.0) //
+            new AutonChoice(1.1, 0.0, 1.1, 1.0, 1.0, 0.0), // from 0 to 1 s, run the motor at 0.15
+            new AutonChoice(0.8, 2.0, 2.8, 0.5, -0.5, 0.0), // from 0 to 1 s, run the motor at 0.15
+            new AutonChoice(3.0, 3.5, 6.5, 1.0, 1.0, 0.0), // from 5 and 8.5 s, run the motor at 0.15
+            new AutonChoice(0.8, 7.0, 7.8, 0.5, -0.5, 0.0), // from 0 to 1 s, run the motor at 0.15
+            new AutonChoice(2.0, 8.0,10.0,1.0,1.0, 0.0), // from 0 to 1 s, run the motor at 0.15
+            new AutonChoice(5.75, 15.0,20.75,0.0,0.0, 0.0) // between 15 and 20.75 s, point turn left.
     };
 
     /*
@@ -194,7 +194,7 @@ public class EETestAuton extends OpMode {
                 left = value.lMotor;
                 right = value.rMotor;
                 turn = (int) value.turnDegrees;
-                headingNow = heading;
+                headingNow = heading; // ranges between 0 and 359
                 targetHeading = (headingNow + turn + 360) % 360; // compute target heading; make sure it's positive.
                 break;  // first rule to match wins and we leave the loop!
             }
@@ -202,14 +202,38 @@ public class EETestAuton extends OpMode {
             //System.out.println(value);
         }
 
+        // Eden points out that this number is between 0 and 359 not between -180 and + 180
+        // example case: heading: 350; turn: 45; target heading: 35 - so we should turn right 45
+        // example case: heading: 300; turn: 45; target heading: 345 - so we should turn right 45
+        // example case: heading: 310; turn: -45; target heading: 275 - so we should turn left 45
+        // example case: heading: 10; turn: -45; target heading: 325 - so we should turn left 45
+        //
         if (turn != 0) {
+
             int turnAmount = (targetHeading - heading);
+            // turnAmount -325
+            // turnAmount 45
+            // turnAmount -45
+            // turnAmount 315
+
             if (Math.abs(turnAmount) > TOLERANCE) {
+
                 int sign = 1; // turn one direction
                 if (turnAmount < 0) sign = -1;
-                float turnSpeed = (((((float) turnAmount / 180.0f) * 0.9f) * 0.5f) + 0.2f); // scale turn rate
+
+                //float turnSpeed = ((((float) turnAmount / 180.0f) * 0.8f) * 0.5f)  + 0.2f); // scale turn rate
+                float turnSpeed = (((float) turnAmount/ 400.0f) + 0.2f);
+
                 left = (float) sign * turnSpeed;    // might need to flip this for turn direction.
                 right = -left;
+
+                telemetry.addData("turn: heading: ",  String.format("%d", heading));
+                telemetry.addData("turn: targetHeading: ",  String.format("%d", targetHeading));
+                telemetry.addData("turn: turnAmount: ",  String.format("%d", turnAmount));
+                telemetry.addData("turn: left",  String.format("%.2f", left));
+                telemetry.addData("turn: right", String.format("%.2f", right));
+                System.out.println("turn: left" + String.format("%.2f", left));
+
             } else {
                 turn = 0; // stop the turn
             }
@@ -234,6 +258,7 @@ public class EETestAuton extends OpMode {
         telemetry.addData("reflection", "reflection:  " + Double.toString(reflection));
         telemetry.addData("left tgt pwr",  "left  pwr: " + Double.toString(left));
         telemetry.addData("right tgt pwr", "right pwr: " + Double.toString(right));
+
 
         //
         // waitForNextHardwareCycle();
