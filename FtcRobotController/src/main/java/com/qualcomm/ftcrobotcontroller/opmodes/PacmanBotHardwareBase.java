@@ -191,7 +191,7 @@ public class PacmanBotHardwareBase extends OpMode {
         gamepad = new Gamepad();
 
         thrower.setPosition(0.75);
-        arm.setPosition(0.53);
+        arm.setPosition(0.45);
         hookRelease.setPosition(0.53);
         flipper.setPosition(0.5);
     }
@@ -204,7 +204,7 @@ public class PacmanBotHardwareBase extends OpMode {
     public void setBelt(double power) { belt.setPower(-power); }
 
     public void setArm(double pos) {
-        arm.setPosition(pos/5 + .53);
+        arm.setPosition(pos/5 + .45);
     }
 
     public void setWinch(double power) {

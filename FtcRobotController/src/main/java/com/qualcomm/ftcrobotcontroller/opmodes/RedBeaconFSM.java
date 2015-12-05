@@ -76,7 +76,7 @@ public class RedBeaconFSM extends PacmanBotHardwareBase {
                 redMid = (redEnd - redStart)/2  +  redStart;
                 state=9; timer.reset(); break;
             case 9:
-                setArm(((double)redMid)*200-1);
+                setArm(((double)redMid)/50-1);
                 if (timer.time()>=1) {state=10; timer.reset();}
                 break;
             case 10:
