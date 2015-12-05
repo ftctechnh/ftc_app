@@ -26,6 +26,15 @@ public void loop()
         int redDiff = Math.abs(clear - redSensor.getLightDetectedRaw());
         int blueDiff = Math.abs(clear - blueSensor.getLightDetectedRaw());
 
+<<<<<<< HEAD
+        if (redDiff > blueDiff)
+        {
+            telemetry.addData("Beacon is red", redSensor.getLightDetectedRaw());
+        }
+        if (redDiff < blueDiff)
+        {
+            telemetry.addData("Beacon is blue", blueSensor.getLightDetectedRaw());
+=======
         if (blueDiff >= (2 * redDiff))
         {
             telemetry.addData("Beacon is red", redSensor.getLightDetectedRaw());
@@ -37,6 +46,7 @@ public void loop()
         else
         {
             telemetry.addData("Beacon is undefined", 0);
+>>>>>>> d6fbb34ea0dd2e4bd96fb43f4b93192c7e610d27
         }
     }
 public void stop()

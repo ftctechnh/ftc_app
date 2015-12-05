@@ -63,10 +63,13 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("Gyroscope", Gyroscope.class);
     manager.register("BeaconAuto", BeaconAuto.class);
     manager.register("TestMove", TestMove.class);
-
+<<<<<<< HEAD
     manager.register("ThreeLightColorTest", ThreeColorTest.class);
     manager.register("PhoneGyroTest",PhoneGyroTest.class);
+=======
     manager.register("CompBotTest", CompBotTest.class);
+
+>>>>>>> d6fbb34ea0dd2e4bd96fb43f4b93192c7e610d27
 
     /*
      * Uncomment any of the following lines if you want to register an op mode.
