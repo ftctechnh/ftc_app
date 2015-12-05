@@ -16,7 +16,7 @@ public class RedBeaconFSM extends PacmanBotHardwareBase {
     int redEnd = 0;
     int redMid = 0;
 
-    boolean colorArray[];
+    boolean colorArray[] = new boolean[128];
 
     public void init() {
         setupHardware();
@@ -74,15 +74,23 @@ public class RedBeaconFSM extends PacmanBotHardwareBase {
                     }
                 }
                 redMid = (redEnd - redStart)/2  +  redStart;
-                state=100; break;
+                state=9; timer.reset(); break;
+            case 9:
+                setArm(((double)redMid)*200-1);
+                if (timer.time()>=1) {state=10; timer.reset();}
+                break;
+            case 10:
+                drive(.5,0);
+                if (timer.time()>=.125) {state=100; timer.reset();}
+                break;
             case 100:
                 //This is the finished state.
                 drive(0, 0);
-                setThrower(true);
+                //setThrower(true);
                 telemetry.addData("State", "FINISHED");
                 telemetry.addData("Red Middle is",redMid);
-                telemetry.addData("That's", ((double) redMid) * 200 + 1);
-                setArm(((double)redMid)*200+1);
+                telemetry.addData("That's", ((double) redMid) * 200 - 1);
+                setArm(((double)redMid)*200-1);
                 break;
         }
     }
