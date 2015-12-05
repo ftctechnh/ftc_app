@@ -325,20 +325,14 @@ public abstract class _ResQAuto extends LinearOpMode {
         telemetry.addData("Red", colorsensor.red());
         telemetry.addData("Blue", colorsensor.blue());
         if(colorsensor.red()<0.1&&colorsensor.blue()>0.1){
-            buttonServo.setPosition(0);
-            /*//go back
-            leftWheel.setPower(-0.1);
-            rightWheel.setPower(-0.1);
-            sleep(300);*/
-
             if( getRedAlliance() == 1){
                 //If Alliance is red and the button is red
                 //Servo Down
-                button2Servo.setPosition(0);
+                buttonServo.setPosition(0.3);
                 sleep(1000);
 
             } else if (getRedAlliance() == 0){
-                //buttonServo.setPosition(1);
+                button2Servo.setPosition(0.8);
                 sleep(1000);
             }
 
@@ -349,13 +343,12 @@ public abstract class _ResQAuto extends LinearOpMode {
             sleep(300);*/
 
             if( getRedAlliance() == 1){
-                buttonServo.setPosition(1);
+                button2Servo.setPosition(0.6);
                 sleep(1000);
 
             } else if (getRedAlliance() == 0){
-                button2Servo.setPosition(0);
-                buttonServo.setPosition(0);
-                sleep(1000);
+                buttonServo.setPosition(0.3);
+                sleep(3000);
             }
         }
 
