@@ -22,12 +22,12 @@ public class RootDrive extends Root {
     @Override
     public void init()
     {
-        right = new Motor("right", hardwareMap, true  );
+        right = new Motor("right", hardwareMap, true);
         left = new Motor("left", hardwareMap);
-        extr = new Motor("rightext", hardwareMap, true);
+        extr = new Motor("rightext", hardwareMap);
         rotr = new Motor("rightrot", hardwareMap);
         extl = new Motor("leftext", hardwareMap, true);
-        rotl = new Motor("leftrot", hardwareMap);
+        rotl = new Motor("leftrot", hardwareMap, true);
     }
 
     @Override
@@ -40,19 +40,19 @@ public class RootDrive extends Root {
     @Override
     public void onJoy1_right()
     {
-        rotr.scale(joy1.right.y);
+        rotr.set(joy1.right.y/2);
     }
 
     @Override
     public void onJoy1_rt()
     {
-        extr.scale(gp_rt);
+        extr.scale(-gp_rt);
     }
 
     @Override
     public void onJoy1_rb_press()
     {
-        extr.set(-1);
+        extr.set(1);
     }
 
     @Override
@@ -64,19 +64,19 @@ public class RootDrive extends Root {
     @Override
     public void onJoy1_left()
     {
-        rotl.scale(joy1.left.y);
+        rotl.set(joy1.left.y/2);
     }
 
     @Override
     public void onJoy1_lt()
     {
-        extl.scale(gp_lt);
+        extl.scale(-gp_lt);
     }
 
     @Override
     public void onJoy1_lb_press()
     {
-        extl.set(-1);
+        extl.set(1);
     }
 
     @Override

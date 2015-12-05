@@ -1,6 +1,7 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.ftcrobotcontroller.bamboo.Motor;
+import com.qualcomm.ftcrobotcontroller.bamboo.Timing;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.LightSensor;
@@ -100,6 +101,15 @@ public class Auto extends OpMode {
         turnDeg(true, 90, ONE_WHEEL);
         forwardUntil(white, 400, 800);
         turnDeg(true, 90);
+
+        Timing climber = new Timing();
+        climber.append(right, 0.5, 0, 1000);
+        climber.append(left, 0.5, 0, 1000);
+        climber.append(rotRight, -0.5, 800, 1600);
+        climber.append(extRight, 0.5, 1100, 1900);
+        climber.append(rotRight, -0.1, 1900, 2600);
+        climber.execute();
+
 
         while(true) {}
     }
