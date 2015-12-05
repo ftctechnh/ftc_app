@@ -44,6 +44,21 @@ public class DragonoidsTeleOp extends DragonoidsOpMode {
             auxMotors.get("conveyor").setPower(0.0);
         }
 
+        if (gamepad2.dpad_left) {
+            //reverse the conveyor
+            auxMotors.get("knocker").setPower(0.45);
+        }
+        else {
+            //set conveyor motor to 0
+            auxMotors.get("knocker").setPower(0.0);
+        }
+        if (gamepad2.dpad_right) {
+            //reverse the conveyor
+            auxMotors.get("knocker").setPower(-0.45);
+        }
+        else {
+            //set conveyor motor to 0
+            auxMotors.get("knocker").setPower(0.0);
         }
 
         super.loop();
