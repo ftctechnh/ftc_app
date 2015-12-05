@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<Robot>
+    <DeviceInterfaceModule name="dim" serialNumber="AL00VCMS">
+        <AdafruitColorSensor name="color" port="3" />
+        <I2cDevice name="imu" port="5" />
+    </DeviceInterfaceModule>
+</Robot>

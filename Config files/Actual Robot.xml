@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<Robot>
+    <MotorController name="Extra Motor Controller" serialNumber="AL00VE0I">
+        <Motor name="churroMotor" port="1" />
+        <Motor name="armMotor" port="2" />
+    </MotorController>
+    <MotorController name="Front Motor Controller" serialNumber="AL00VCI0">
+        <Motor name="motorFrontLeft" port="1" />
+        <Motor name="motorFrontRight" port="2" />
+    </MotorController>
+    <ServoController name="Servo Controller" serialNumber="AL00VBDV">
+        <Servo name="servoLeftWing" port="1" />
+        <Servo name="servoRightWing" port="2" />
+        <Servo name="servoClimberRelease" port="3" />
+    </ServoController>
+    <DeviceInterfaceModule name="Device Interface Module" serialNumber="AL00VCMS">
+        <I2cDevice name="imu" port="0" />
+    </DeviceInterfaceModule>
+    <MotorController name="Back Motor Controller" serialNumber="AH00QJJM">
+        <Motor name="motorBackLeft" port="1" />
+        <Motor name="motorBackRight" port="2" />
+    </MotorController>
+</Robot>
