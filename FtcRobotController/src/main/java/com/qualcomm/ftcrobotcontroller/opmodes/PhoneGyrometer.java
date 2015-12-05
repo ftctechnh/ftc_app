@@ -74,8 +74,8 @@ public class PhoneGyrometer implements SensorEventListener
         float[] orientation = new float[3];
         SensorManager.getOrientation(R, orientation);
         azimuthArr.add(new Double(orientation[0]));
-        pitchArr.add(new Double(orientation[0]));
-        rollArr.add(new Double(orientation[0]));
+        pitchArr.add(new Double(orientation[1]));
+        rollArr.add(new Double(orientation[2]));
         azimuthArr.remove(0);
         pitchArr.remove(0);
         rollArr.remove(0);

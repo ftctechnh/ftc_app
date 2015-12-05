@@ -157,4 +157,16 @@ public class TestBot implements DriverInterface
         rightMotor.setPower(0.0f);
     }
 
+    @Override
+    public void pitchFrontTracks(float time, float speed)
+    {
+
+    }
+
+    @Override
+    public void pitchBackTracks(float time, float speed)
+    {
+
+    }
+
 }

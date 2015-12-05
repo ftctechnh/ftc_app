@@ -9,4 +9,6 @@ public interface DriverInterface
     void pivotTurn(float degrees, float speed);
     void spinOnCenter(float degrees,float speed);
     void stop();
+    void pitchFrontTracks(float time, float speed);
+    void pitchBackTracks(float time, float speed);
 }
