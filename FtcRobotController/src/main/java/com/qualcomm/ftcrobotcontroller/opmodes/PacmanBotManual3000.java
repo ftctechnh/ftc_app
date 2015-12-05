@@ -20,7 +20,7 @@ public class PacmanBotManual3000 extends PacmanBotHardwareBase {
 
     boolean flipperToggle = false;
     boolean fBtn = false;
-    
+
     @Override
     public void init() {
         telemetry.addData("Program","Manual Drive 3000");
@@ -58,10 +58,11 @@ public class PacmanBotManual3000 extends PacmanBotHardwareBase {
 
         double drive_rate = -gamepad.left_stick_y;
         double turn_rate  = gamepad.right_stick_x;
+        if (highSpeed) limit(turn_rate,-drive_rate,drive_rate);
 
         drive(drive_rate,turn_rate);
 
-        setTire(threeWay(gamepad.right_bumper,gamepad.right_trigger>.5));
+        setTire(threeWay(gamepad.right_bumper,gamepad.right_trigger>.5)/3);
 
         setWinch(threeWay(gamepad.left_bumper,gamepad.left_trigger>.5));
 
