@@ -89,11 +89,13 @@ public class _ResQAutoTesting extends LinearOpMode {
         sleep(getDelay);
         telemetry.addData("InDelay", "no");
 
-        rightWheel.setPower(0.5);
-        leftWheel.setPower(0.5);
+        rightWheel.setPower(0.2);
+        leftWheel.setPower(0.2);
+        sweeper.setPower(-1);
 
         if (getDelay == 0)
-            sleep(3500);
+            sleep(0);
+            //sleep(3500);
         else //with delay (2nd start), robot is placed farther
             sleep(4500);
         rightWheel.setPower(0);
@@ -115,7 +117,7 @@ public class _ResQAutoTesting extends LinearOpMode {
                     //Overshoot to left side of line only as BLUE alliance
                     leftWheel.setPower(0.1);
                     rightWheel.setPower(0.1);
-                    sleep(1500);
+                    sleep(800);
                     leftWheel.setPower(-0.3);
                     rightWheel.setPower(0.3);
                     sleep(700);
@@ -143,32 +145,17 @@ public class _ResQAutoTesting extends LinearOpMode {
 
             double valueB;
             double valueS;
-            if (reflectance > EOPDThreshold) {
+
                 value = reflectance - EOPDThreshold ;
-                valueB = .1+1*value;
-                valueS = .1-1*value;
-                //valueB = (valueB)<1?valueB:1;
-                //valueS=(valueS)<1?valueS:1;
-                if (Math.abs(valueS) < 0.25)
-                    valueS = (Math.signum(valueS) * 0.25);
+                valueB = .07-0.5*value;
+                valueS = .07+0.5*value;
+                if (Math.abs(valueB) < 0.2)
+                    valueS = (Math.signum(valueS) * 0.2);
 
                 valueS = Range.clip(valueS, -1, 1);
                 valueB = Range.clip(valueB, -1, 1);
                 leftWheel.setPower(valueS);
                 rightWheel.setPower(valueB);
-
-            } else {
-                value = EOPDThreshold - reflectance;
-                valueB = .1+1*value;
-                valueS = .1-1*value;
-                if (Math.abs(valueS) < .25)
-                    valueS = (Math.signum(valueS) * 0.25);
-
-                valueS = Range.clip(valueS, -1, 1);
-                valueB = Range.clip(valueB, -1, 1);
-                rightWheel.setPower(valueS);
-                leftWheel.setPower(valueB);
-            }
 
             telemetry.addData("valueB", valueB);
             telemetry.addData("valueC", valueS);
@@ -176,22 +163,19 @@ public class _ResQAutoTesting extends LinearOpMode {
             telemetry.addData("Ultrasonic Value", distance);
 
 
-            if(distance < 18 && distance>1) {
+            if(distance < 30 && distance>1) {
                 if (getRedAlliance == 0) {
                     leftWheel.setPower(0.3);
                     rightWheel.setPower(0);
                     sleep(200);
                     leftWheel.setPower(0);
-                    rightWheel.setPower(0);
-                } else {
-
                 }
                 break;
             }
         }
 
         colorsensor.enableLed(false);
-        sleep(500);
+        sleep(1500);
         telemetry.addData("Red", colorsensor.red());
         telemetry.addData("Blue", colorsensor.blue());
         if(colorsensor.red()<0.1&&colorsensor.blue()>0.1){
@@ -218,8 +202,12 @@ public class _ResQAutoTesting extends LinearOpMode {
 
             } else if (getRedAlliance == 0){
                 buttonServo.setPosition(0.3);
-                sleep(3000);
+                sleep(1000);
             }
+        } else {
+            button2Servo.setPosition(0.6);
+            buttonServo.setPosition(0.3);
+            sleep(1000);
         }
 
         leftWheel.setPower(0.1);
@@ -231,24 +219,24 @@ public class _ResQAutoTesting extends LinearOpMode {
         sleep(1500);
         climberservo.setPosition(0);
 
-        leftWheel.setPower(0.1);
-        rightWheel.setPower(0.1);
-        sleep(1200);
+        leftWheel.setPower(-0.1);
+        rightWheel.setPower(-0.1);
+        sleep(800);
 
         //End of Autonomous
         if (getDelay == 0) {
-            leftWheel.setPower(-0.3);
-            rightWheel.setPower(-0.3);
-            sleep(1000);
+            leftWheel.setPower(-0.2);
+            rightWheel.setPower(-0.2);
+            sleep(400);
             if (getRedAlliance == 1) {
-                leftWheel.setPower(0.4);
-                rightWheel.setPower(-0.4);
+                leftWheel.setPower(0.2);
+                rightWheel.setPower(-0.2);
                 sleep(500);
                 leftWheel.setPower(0.3);
                 leftWheel.setPower(0.3);
-                sleep(1500);
-                leftWheel.setPower(0.4);
-                rightWheel.setPower(-0.4);
+                sleep(700);
+                leftWheel.setPower(0.2);
+                rightWheel.setPower(-0.2);
                 sleep(500);
                 leftWheel.setPower(0.3);
                 rightWheel.setPower(0.3);
@@ -258,16 +246,16 @@ public class _ResQAutoTesting extends LinearOpMode {
             } else {
                 leftWheel.setPower(-0.4);
                 rightWheel.setPower(0.4);
-                sleep(3000);
-                leftWheel.setPower(0.3);
-                leftWheel.setPower(0.3);
                 sleep(1500);
+                leftWheel.setPower(0.3);
+                leftWheel.setPower(0.3);
+                sleep(700);
                 leftWheel.setPower(-0.4);
                 rightWheel.setPower(0.4);
-                sleep(1500);
+                sleep(700);
                 leftWheel.setPower(0.3);
                 rightWheel.setPower(0.3);
-                sleep(1500);
+                sleep(1400);
                 leftWheel.setPower(0);
                 rightWheel.setPower(0);
             }
