@@ -39,11 +39,16 @@ public class ThreeLightColorSensor
      //   if (blueLightDetected <= redLightDetected / 2 || redLightDetected <= blueLightDetected / 2) {
      // may need beacon detection code as it requires the color sensors to be close to the beacon
 
-            if (diffOfClearRed > diffOfClearBlue * 2) {
+            if (diffOfClearRed > diffOfClearBlue * 5)
+            {
                 return blueDetected; //-1 means the light is blue
-            } else if (diffOfClearBlue < diffOfClearRed * 2) {
+            }
+            else if (diffOfClearBlue > diffOfClearRed * 5)
+            {
                 return redDetected; // returns 1, meaning that the light is red
-            } else {
+            }
+            else
+            {
                 return indeterminate;//0 means undefined color
             }
 
@@ -54,4 +59,6 @@ public class ThreeLightColorSensor
 
 
     }
+
+
 }

@@ -1,6 +1,5 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -62,6 +61,8 @@ public class TestBot implements DriverInterface
         }
     }
 
+
+
     @Override
     public void pivotTurn(float degrees, float speed)
     {
@@ -104,6 +105,7 @@ public class TestBot implements DriverInterface
     }
 
     @Override
+
     public void spinOnCenter(float degrees, float speed)
     {
         leftMotor.setPower(0.0f);
@@ -150,6 +152,14 @@ public class TestBot implements DriverInterface
         }
     }
 
+    public float leftTurn(float degrees)
+    {
+        return degrees;
+    }
+    public float rightTurn(float degrees)
+    {
+        return degrees;
+    }
     @Override
     public void stop()
     {
