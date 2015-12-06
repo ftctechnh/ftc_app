@@ -173,10 +173,10 @@ public abstract class _ResQAuto extends LinearOpMode {
         }
 
         colorsensor.enableLed(false);
-        sleep(5000);
+        sleep(500);
         telemetry.addData("Red", colorsensor.red());
         telemetry.addData("Blue", colorsensor.blue());
-        sleep(5000);
+        sleep(500);
         if(colorsensor.red()<0.1&&colorsensor.blue()>0.1){
             if( getRedAlliance() == 1){
                 //If Alliance is red and the button is red
@@ -222,6 +222,10 @@ public abstract class _ResQAuto extends LinearOpMode {
         rightWheel.setPower(-0.1);
         sleep(800);
 
+        //reset servo
+        button2Servo.setPosition(0.6);
+        buttonServo.setPosition(0.3);
+        sleep(1000);
         //End of Autonomous
         if (getDelay() == 0) {
             leftWheel.setPower(-0.2);
