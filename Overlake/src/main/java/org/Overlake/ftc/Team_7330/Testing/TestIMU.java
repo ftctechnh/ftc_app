@@ -296,9 +296,9 @@ public class TestIMU extends SynchronousOpMode {
     {
         StringBuilder result = new StringBuilder();
 
-        result.append(String.format("s%d", (status >> 2) & 0x03));  // SYS calibration status
+        result.append(String.format("s%d", (status >> 6) & 0x03));  // SYS calibration status
         result.append(" ");
-        result.append(String.format("g%d", (status >> 2) & 0x03));  // GYR calibration status
+        result.append(String.format("g%d", (status >> 4) & 0x03));  // GYR calibration status
         result.append(" ");
         result.append(String.format("a%d", (status >> 2) & 0x03));  // ACC calibration status
         result.append(" ");
