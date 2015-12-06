@@ -6,11 +6,9 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 public interface DriverInterface
 {
     void moveStraightEncoders(float inches, float speed );
-    void pivotTurn(float degrees, float speed);
-    void spinOnCenter(float degrees,float speed);
+    void pivotTurn(float degrees, float speed, boolean useGyro);
+    void spinOnCenter(float degrees,float speed, boolean useGyro);
     void stop();
     void pitchFrontTracks(float time, float speed);
     void pitchBackTracks(float time, float speed);
-    float leftTurn(float degrees);
-    float rightTurn(float degrees);
 }

@@ -43,8 +43,8 @@ public class PhoneGyrometer implements SensorEventListener
         manager = (SensorManager)hardwareMap.appContext.getSystemService(Context.SENSOR_SERVICE);
         accelSensor = manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         magFieldSensor = manager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-        manager.registerListener(this, accelSensor, SensorManager.SENSOR_DELAY_UI);
-        manager.registerListener(this, magFieldSensor, SensorManager.SENSOR_DELAY_UI);
+        manager.registerListener(this, accelSensor, SensorManager.SENSOR_DELAY_FASTEST);
+        manager.registerListener(this, magFieldSensor, SensorManager.SENSOR_DELAY_FASTEST);
     }
 
     private double aveArr(ArrayList<Double> arr)
