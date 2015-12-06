@@ -47,9 +47,9 @@ public class RedLeftRamp extends OpMode {
     //  double startTimeI, double endTimeI, double lMotorI, double rMotorI
     //  double turnDegreesI) {
     private org.ndhsb.ftc7593.AutonChoice[] autonSteps1 = {
-            new AutonChoice(2.3, 0.0, 2.5, -1.0, -1.0, 0.0), // from 0 to 1 s, run the motor at 0.15
-            new AutonChoice(1.1, 4.0, 5.5, 0.5, -0.5, 0.0), // from 0 to 1 s, run the motor at 0.15
-            new AutonChoice(1.5, 5.5, 8.5, -1.0, -1.0, 0.0) // from 5 and 8.5 s, run the motor at 0.15
+            new AutonChoice(2.45, 0.0, 2.5, -1.0, -1.0, 0.2), // from 0 to 1 s, run the motor at 0.15
+            new AutonChoice(1.20, 4.0, 5.5, 0.5, -0.5, 0.2), // from 0 to 1 s, run the motor at 0.15
+            new AutonChoice(1.60, 5.5, 8.5, -1.0, -1.0, 0.7) // from 5 and 8.5 s, run the motor at 0.15
     };
 
     /*
@@ -104,7 +104,7 @@ public class RedLeftRamp extends OpMode {
         tbc.setClimberPosition(tbc.climberPosition);
         tbc.setSliderLPosition(tbc.sliderLPosition);
         tbc.setSliderRPosition(tbc.sliderRPosition);
-        tbc.setSnowplowPosition(tbc.snowplowPosition);
+        tbc.setSnowplowPosition(0.9);
         tbc.setMtapePosition(tbc.mtapePosition);
         tbc.setButtonServoSpeed(tbc.buttonServoSpeed);
 
@@ -152,7 +152,6 @@ public class RedLeftRamp extends OpMode {
 
         left = 0.0; // default speeds are 0.0
         right = 0.0; // default speeds are 0.0
-        turn = 0; // default is straight
         for(AutonChoice value : autonSteps1)
         {
             double sTime = value.startTime;
@@ -161,9 +160,7 @@ public class RedLeftRamp extends OpMode {
             if ((sTime <= time) && (time <= eTime)) {
                 left = value.lMotor;
                 right = value.rMotor;
-                turn = (int) value.turnDegrees;
-                headingNow = heading; // ranges between 0 and 359
-                targetHeading = (headingNow + turn + 360) % 360; // compute target heading; make sure it's positive.
+                tbc.setSnowplowPosition(value.turnDegrees);
                 break;  // first rule to match wins and we leave the loop!
             }
             //double f = value.startTime;
@@ -176,7 +173,7 @@ public class RedLeftRamp extends OpMode {
         // example case: heading: 310; turn: -45; target heading: 275 - so we should turn left 45
         // example case: heading: 10; turn: -45; target heading: 325 - so we should turn left 45
         //
-        if (turn != 0) {
+       /* if (turn != 0) {
 
             int turnAmount = (targetHeading - heading);
             // turnAmount -325
@@ -206,7 +203,7 @@ public class RedLeftRamp extends OpMode {
                 turn = 0; // stop the turn
             }
         }
-
+/*
 		/*
 		 * set the motor power
 		 */

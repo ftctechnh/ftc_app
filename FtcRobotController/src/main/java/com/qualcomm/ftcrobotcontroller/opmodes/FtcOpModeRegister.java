@@ -69,6 +69,10 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register ("SlideOpMode", SlideOpMode.class);
     manager.register("TankWThreads", TankWThreads.class);
     manager.register("Drive", Drive.class);
+    manager.register("BlueRightRamp", BlueRightRamp.class);
+    manager.register("RedLeftZone", RedLeftZone.class);
+    manager.register("RedLeftRamp", RedLeftRamp.class);
+    manager.register("BlueLeftZone", BlueLeftZone.class);
 
     /*
      * Uncomment any of the following lines if you want to register an op mode.

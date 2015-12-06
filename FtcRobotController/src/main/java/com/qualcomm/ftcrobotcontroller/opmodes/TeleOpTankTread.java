@@ -36,6 +36,7 @@ public class TeleOpTankTread extends OpMode {
     // amount to change the tape servo position.
     double mtapeDelta = 0.001;
     double climberDelta = 0.005;
+    double snowplowDelta = 0.005;
 
     float servoInput = 0.5f;
     float bservoSpeed = 0.5f;
@@ -63,7 +64,8 @@ public class TeleOpTankTread extends OpMode {
         tbc.initServoValues();
 
         tbc.setClimberPosition(tbc.climberPosition);
-        tbc.setSliderPosition(tbc.sliderPosition);
+        tbc.setSliderLPosition(tbc.sliderLPosition);
+        tbc.setSliderRPosition(tbc.sliderRPosition);
         tbc.setSnowplowPosition(tbc.snowplowPosition);
         tbc.setMtapePosition(tbc.mtapePosition);
         tbc.setButtonServoSpeed(tbc.buttonServoSpeed);
@@ -97,8 +99,8 @@ public class TeleOpTankTread extends OpMode {
 
         float drivespeed = -gamepad1.left_stick_y;
         float driveturn = gamepad1.right_stick_x;
-        float hook = gamepad2.left_stick_y;
-        float pusher = gamepad2.right_stick_y;
+        float hook = -gamepad2.right_stick_y;
+        float pusher = gamepad2.left_stick_y;
 
         float right = drivespeed - driveturn;
         float left = drivespeed + driveturn;
@@ -156,34 +158,51 @@ public class TeleOpTankTread extends OpMode {
         tbc.climberPosition = Range.clip(climberNewPos, tbc.CLIMBER_MIN_RANGE, tbc.CLIMBER_MAX_RANGE);
         tbc.setClimberPosition(tbc.climberPosition);
 
+        Double snowplowNewPos = tbc.snowplowPosition;
         if(gamepad1.right_bumper) {
-            tbc.snowplowPosition = tbc.SNOWPLOW_MAX_RANGE;
-        }
-        if(gamepad1.dpad_up) {
-            tbc.snowplowPosition = tbc.SNOWPLOW_MID_RANGE;
+            snowplowNewPos = tbc.snowplowPosition + snowplowDelta;
         }
         if(gamepad1.left_bumper) {
-            tbc.snowplowPosition = tbc.SNOWPLOW_MIN_RANGE;
+            snowplowNewPos = tbc.snowplowPosition - snowplowDelta;
         }
-        tbc.snowplowPosition = Range.clip(tbc.snowplowPosition, tbc.SNOWPLOW_MIN_RANGE, tbc.SNOWPLOW_MAX_RANGE);
+        if(gamepad1.dpad_down) {
+            snowplowNewPos = tbc.SNOWPLOW_MIN_RANGE;
+        }
+        tbc.snowplowPosition = Range.clip(snowplowNewPos, tbc.SNOWPLOW_MIN_RANGE, tbc.SNOWPLOW_MAX_RANGE);
         tbc.setSnowplowPosition(tbc.snowplowPosition);
 
         if(gamepad1.x) {
-            tbc.sliderPosition = tbc.SLIDER_MAX_RANGE;
+            tbc.sliderLPosition = tbc.SLIDERL_MAX_RANGE;
         }
         if(gamepad1.y) {
-            tbc.sliderPosition = tbc.SLIDER_MIN_RANGE;
+            tbc.sliderLPosition = tbc.SLIDERL_MIN_RANGE;
         }
-        tbc.sliderPosition = Range.clip(tbc.sliderPosition, tbc.SLIDER_MIN_RANGE, tbc.SLIDER_MAX_RANGE);
-        tbc.setSliderPosition(tbc.sliderPosition);
+        tbc.sliderLPosition = Range.clip(tbc.sliderLPosition, tbc.SLIDERL_MIN_RANGE, tbc.SLIDERL_MAX_RANGE);
+        tbc.setSliderLPosition(tbc.sliderLPosition);
+
+        if(gamepad1.a) {
+            tbc.sliderRPosition = tbc.SLIDERR_MAX_RANGE;
+        }
+        if(gamepad1.b) {
+            tbc.sliderRPosition = tbc.SLIDERR_MIN_RANGE;
+        }
+        tbc.sliderRPosition = Range.clip(tbc.sliderRPosition, tbc.SLIDERR_MIN_RANGE, tbc.SLIDERR_MAX_RANGE);
+        tbc.setSliderRPosition(tbc.sliderRPosition);
 
         Double mtapeNewPos = tbc.mtapePosition;
-        if(gamepad2.right_bumper) {
+        if(gamepad2.dpad_up) {
             mtapeNewPos = tbc.mtapePosition + mtapeDelta;
         }
-        if(gamepad2.left_bumper) {
+        if(gamepad2.dpad_down) {
             mtapeNewPos = tbc.mtapePosition - mtapeDelta;
         }
+        if(gamepad2.dpad_left) {
+            tbc.mtapePosition = tbc.MTAPE_MIN_RANGE;
+        }
+        if(gamepad2.dpad_right) {
+            tbc.mtapePosition = tbc.MTAPE_MAX_RANGE;
+        }
+
         tbc.mtapePosition = Range.clip(mtapeNewPos, tbc.MTAPE_MIN_RANGE, tbc.MTAPE_MAX_RANGE);
         tbc.setMtapePosition(tbc.mtapePosition);
 
@@ -206,7 +225,8 @@ public class TeleOpTankTread extends OpMode {
         telemetry.addData("pusher servo",  "pusher servo: " + String.format("%.2f", pusher));
         telemetry.addData("button servo", "button servo: " + String.format("%.2f", tbc.buttonServoSpeed));
         telemetry.addData("climber", "climber:  " + String.format("%.2f", tbc.climberPosition));
-        telemetry.addData("slider", "slider: " + String.format("%.2f", tbc.sliderPosition));
+        telemetry.addData("sliderL", "sliderL: " + String.format("%.2f", tbc.sliderLPosition));
+        telemetry.addData("sliderR", "sliderR:" + String.format("%.2f", tbc.sliderRPosition));
         telemetry.addData("mtape", "mtape: " + String.format("%.2f", tbc.mtapePosition));
 
         // if LinearOpMode

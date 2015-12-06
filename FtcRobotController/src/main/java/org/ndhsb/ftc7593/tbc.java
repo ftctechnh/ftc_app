@@ -42,19 +42,23 @@ public class tbc {
     public final static double SNOWPLOW_MID_RANGE = 0.40;
     public final static double SNOWPLOW_MAX_RANGE = 0.70;
     public final static double CLIMBER_MIN_RANGE = 0.0;
-    public final static double CLIMBER_MAX_RANGE = 0.70;
-    public final static double SLIDER_MIN_RANGE = 0.0;
-    public final static double SLIDER_MAX_RANGE = 0.50;
+    public final static double CLIMBER_MAX_RANGE = 1.0;
+    public final static double SLIDERL_MIN_RANGE = 0.0;
+    public final static double SLIDERL_MAX_RANGE = 0.50;
+    public final static double SLIDERR_MIN_RANGE = 0.3;
+    public final static double SLIDERR_MAX_RANGE = 1.0;
 
     public static double climberPosition = CLIMBER_MAX_RANGE;
-    public static double sliderPosition = SLIDER_MIN_RANGE;
+    public static double sliderLPosition = SLIDERL_MIN_RANGE;
+    public static double sliderRPosition = SLIDERR_MAX_RANGE;
     public static double snowplowPosition = SNOWPLOW_MIN_RANGE;
     public static double mtapePosition = MTAPE_MIN_RANGE;
     public static double buttonServoSpeed = 0.5;
 
     public static void initServoValues() {
         climberPosition = CLIMBER_MAX_RANGE;
-        sliderPosition = SLIDER_MAX_RANGE;
+        sliderLPosition = SLIDERL_MIN_RANGE;
+        sliderRPosition = SLIDERR_MAX_RANGE;
         snowplowPosition = SNOWPLOW_MIN_RANGE;
         mtapePosition = MTAPE_MIN_RANGE;
         buttonServoSpeed = 0.5;
@@ -65,7 +69,8 @@ public class tbc {
     public static Servo climber = null;
     public static Servo snowplow = null;
     public static Servo mtape = null;
-    public static Servo slider = null;
+    public static Servo sliderL = null;
+    public static Servo sliderR = null;
 
     public static DcMotor motorFRight = null;
     public static DcMotor motorFLeft = null;
@@ -87,9 +92,15 @@ public class tbc {
         }
     }
 
-    public static void setSliderPosition(Double sPos) {
-        if (slider != null) {
-            slider.setPosition(sPos);
+    public static void setSliderLPosition(Double sPos) {
+        if (sliderL != null) {
+            sliderL.setPosition(sPos);
+        }
+    }
+
+    public static void setSliderRPosition(Double sPos) {
+        if (sliderR != null) {
+            sliderR.setPosition(sPos);
         }
     }
 
@@ -155,7 +166,8 @@ public class tbc {
             button = hardwareMap.servo.get("button");
             mtape = hardwareMap.servo.get("mtape");
             snowplow = hardwareMap.servo.get("snowplow");
-            slider = hardwareMap.servo.get("slider");
+            sliderL = hardwareMap.servo.get("sliderL");
+            sliderR = hardwareMap.servo.get("sliderR");
         } catch (Exception ex) {
         }
 
@@ -184,7 +196,7 @@ public class tbc {
         }
 
         try {
-            sensorRGB = hardwareMap.colorSensor.get("color_sensor");
+            sensorRGB = hardwareMap.colorSensor.get("color");
             // turn off LED of light sensor.
             sensorRGB.enableLed(false);
         } catch (Exception ex) {
@@ -212,7 +224,8 @@ public class tbc {
         climber = null;
         snowplow = null;
         mtape = null;
-        slider = null;
+        sliderL = null;
+        sliderR = null;
 
         motorFRight = null;
         motorFLeft = null;

@@ -1,34 +1,3 @@
-/* Copyright (c) 2014 Qualcomm Technologies Inc
-
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without modification,
-are permitted (subject to the limitations in the disclaimer below) provided that
-the following conditions are met:
-
-Redistributions of source code must retain the above copyright notice, this list
-of conditions and the following disclaimer.
-
-Redistributions in binary form must reproduce the above copyright notice, this
-list of conditions and the following disclaimer in the documentation and/or
-other materials provided with the distribution.
-
-Neither the name of Qualcomm Technologies Inc nor the names of its contributors
-may be used to endorse or promote products derived from this software without
-specific prior written permission.
-
-NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
-LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
-
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import android.graphics.Color;
@@ -54,7 +23,7 @@ import org.ndhsb.ftc7593.tbc;
  * starting running to when the method was called.
  */
 
-public class EETestAuton extends OpMode {
+public class BlueLeftZone extends OpMode {
 
     final static double MOTOR_POWER = 0.15; // Higher values will cause the robot to move faster
 
@@ -78,12 +47,9 @@ public class EETestAuton extends OpMode {
     //  double startTimeI, double endTimeI, double lMotorI, double rMotorI
     //  double turnDegreesI) {
     private org.ndhsb.ftc7593.AutonChoice[] autonSteps1 = {
-            new AutonChoice(1.1, 0.0, 1.1, 1.0, 1.0, 0.0), // from 0 to 1 s, run the motor at 0.15
-            new AutonChoice(0.8, 2.0, 2.8, 0.5, -0.5, 0.0), // from 0 to 1 s, run the motor at 0.15
-            new AutonChoice(3.0, 3.5, 6.5, 1.0, 1.0, 0.0), // from 5 and 8.5 s, run the motor at 0.15
-            new AutonChoice(0.8, 7.0, 7.8, 0.5, -0.5, 0.0), // from 0 to 1 s, run the motor at 0.15
-            new AutonChoice(2.0, 8.0,10.0,1.0,1.0, 0.0), // from 0 to 1 s, run the motor at 0.15
-            new AutonChoice(5.75, 15.0,20.75,0.0,0.0, 0.0) // between 15 and 20.75 s, point turn left.
+            new AutonChoice(3.5, 0.0, 4.0, -1.0, -1.0, 0.0), // from 0 to 1 s, run the motor at 0.15
+            new AutonChoice(1.5, 4.0, 5.5, -0.5, 0.5, 0.0), // from 0 to 1 s, run the motor at 0.15
+            new AutonChoice(0.5, 5.5, 6.0, -1.0, -1.0, 0.0) // from 5 and 8.5 s, run the motor at 0.15
     };
 
     /*
@@ -103,7 +69,7 @@ public class EETestAuton extends OpMode {
     /**
      * Constructor
      */
-    public EETestAuton() {
+    public BlueLeftZone() {
 
     }
 
