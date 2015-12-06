@@ -206,7 +206,7 @@ public class MemberUtil
         }
     static DeviceInterfaceModule deviceModuleOfModernColorSensor(ColorSensor sensor)
         {
-        return Util.<DeviceInterfaceModule>getPrivateObjectField(sensor, 0);
+        return Util.<DeviceInterfaceModule>getPrivateObjectField(sensor, 1);    // 0 is now i2c address
         }
     static int portOfHiTechnicColorSensor(ColorSensor sensor)
         {
@@ -214,7 +214,7 @@ public class MemberUtil
         }
     static int portOfModernColorSensor(ColorSensor sensor)
         {
-        return Util.getPrivateIntField(sensor, 7);
+        return Util.getPrivateIntField(sensor, 8);
         }
 
     //----------------------------------------------------------------------------------------------
