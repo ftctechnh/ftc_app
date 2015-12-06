@@ -37,7 +37,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 /**
  * Register Op Modes
  */
-
 public class FtcOpModeRegister implements OpModeRegister {
 
   /**
@@ -64,10 +63,13 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("Gyroscope", Gyroscope.class);
     manager.register("BeaconAuto", BeaconAuto.class);
     manager.register("TestMove", TestMove.class);
-
+<<<<<<< HEAD
     manager.register("ThreeLightColorTest", ThreeColorTest.class);
     manager.register("PhoneGyroTest",PhoneGyroTest.class);
+=======
     manager.register("CompBotTest", CompBotTest.class);
+
+>>>>>>> d6fbb34ea0dd2e4bd96fb43f4b93192c7e610d27
 
     /*
      * Uncomment any of the following lines if you want to register an op mode.
@@ -76,7 +78,7 @@ public class FtcOpModeRegister implements OpModeRegister {
 
     manager.register("newBase", newBase.class);
 
-    manager.register("ThreeColorTest", ThreeColorTest.class);
+    manager.register("TestingLightInterputer", TestingLightInterputer.class);
 
     //manager.register("AdafruitRGBExample", AdafruitRGBExample.class);
     //manager.register("ColorSensorDriver", ColorSensorDriver.class);
