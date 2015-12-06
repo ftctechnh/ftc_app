@@ -11,7 +11,7 @@ public class CompBotTest extends LinearOpMode
    {
        DriverInterface robotDrive = new CompBot(hardwareMap);
        waitForStart();
-       robotDrive.spinOnCenter(-90, 1.0f);
+       robotDrive.spinOnCenter(-90, 1.0f, false);
        robotDrive.stop();
    }
 }
