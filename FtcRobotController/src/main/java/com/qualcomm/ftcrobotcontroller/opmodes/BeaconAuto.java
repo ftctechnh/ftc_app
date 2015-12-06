@@ -12,13 +12,13 @@ public class BeaconAuto extends LinearOpMode
         DriverInterface robot = new TestBot(hardwareMap);
         waitForStart();
         robot.moveStraightEncoders(48, 1.0f);
-        robot.spinOnCenter(90, 0.75f);
+        robot.spinOnCenter(90, 0.75f, true);
         robot.moveStraightEncoders(48, 1.0f);
-        robot.spinOnCenter(-90, 0.75f);
+        robot.spinOnCenter(-90, 0.75f,true);
         robot.moveStraightEncoders(24, 1.0f);
-        robot.spinOnCenter(90, 0.75f);
+        robot.spinOnCenter(90, 0.75f, true);
         robot.moveStraightEncoders(24, 1.0f);
-        robot.spinOnCenter(90, 0.75f);
+        robot.spinOnCenter(90, 0.75f, true);
         robot.moveStraightEncoders(24 , 1.0f);
         robot.stop();
 
