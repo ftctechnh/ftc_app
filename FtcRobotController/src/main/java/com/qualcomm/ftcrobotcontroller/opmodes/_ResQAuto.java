@@ -103,7 +103,7 @@ public abstract class _ResQAuto extends LinearOpMode {
             reflectance = opticalDistanceSensor.getLightDetected();
             telemetry.addData("Reflectance Value", reflectance);
 
-            if (Math.abs(reflectance - WHITEVALUE) < 0.05) { //found white tape
+            if (Math.abs(reflectance - WHITEVALUE) < 0.03) { //found white tape
                 leftWheel.setPower(0);
                 rightWheel.setPower(0);
                 sleep(200);

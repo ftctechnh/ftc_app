@@ -77,23 +77,24 @@ public class Calibration extends OpMode {
     }
 
     public void stop(){
-        try
-        {
-            File file = new File("/sdcard/FIRST/calibration.txt");
-            FileOutputStream fileoutput = new FileOutputStream(file);
-            PrintStream ps = new PrintStream(fileoutput);
-            String date = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
-            ps.println(date);
-            ps.println(redValue);
-            ps.println(blueValue);
-            ps.println(whiteValue);
-            ps.println(matValue);
+        if (redValue >  0 || blueValue > 0 || whiteValue > 0 || matValue > 0) {
+            try {
+                File file = new File("/sdcard/FIRST/calibration.txt");
+                FileOutputStream fileoutput = new FileOutputStream(file);
+                PrintStream ps = new PrintStream(fileoutput);
+                String date = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
+                ps.println(date);
+                ps.println(redValue);
+                ps.println(blueValue);
+                ps.println(whiteValue);
+                ps.println(matValue);
 
-            ps.close();
-            fileoutput.close();
+                ps.close();
+                fileoutput.close();
 
-        } catch (IOException e) {
-            e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

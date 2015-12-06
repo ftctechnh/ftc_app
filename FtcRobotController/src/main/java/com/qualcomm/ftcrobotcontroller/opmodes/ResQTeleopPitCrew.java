@@ -24,23 +24,26 @@ public class ResQTeleopPitCrew extends OpMode {
     final static double BOXSERVO_MAX_RANGE = 1;
     final static double CLAMP_MIN_RANGE = 0.01;
     final static double CLAMP_MAX_RANGE = 0.70;
+    final static double RELEASESERVO_MIN_RANGE = 0.01;
+    final static double RELEASESERVO_MAX_RANGE = 1;
+    final static double ADJUSTSERVO_MIN_RANGE = 0.01;
+    final static double ADJUSTSERVO_MAX_RANGE = 1;
 
     double climbservoPosition;
-    double climbservoPosition2;
     double clampPosition;
-    double boxservoPosition;
-    double lastTime;
     double buttonservoPosition;
-    double button2servoPosition;
-    double leftsweeperPosition;
-    double rightsweeperPosition;
-    double climberservoPosition;
+    double boxservoPosition;
+    double releaseservoPosition;
+    double adjustservoPosition;
 
-    double climbServoEnd = 0.5;
-    double climbServo2End = 0.5;
+    double climbServoEnd = 0.7;
+    //double climbServo2End = 0.05;
     double buttonServoDelta = 0.1;
     double clampDelta = 0.69;
-    double boxServoDelta = 0.74;
+    double adjustServoLeft = 0.25;
+    double adjustServoNull = 0.5;
+    double adjustServoRight = 0.75;
+    double releaseServoEnd = 0.5;
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -54,12 +57,8 @@ public class ResQTeleopPitCrew extends OpMode {
     Servo buttonservo;
     Servo clamp;
     Servo boxservo;
-    Servo buttonServo;
-    Servo button2Servo;
-    Servo leftsweeper;
-    Servo rightsweeper;
-    Servo climberservo;
-
+    Servo releaseservo;
+    Servo adjustservo;
     OpticalDistanceSensor opticalDistanceSensor;
     UltrasonicSensor ultrasonicSensor;
     ColorSensor colorsensor;
@@ -78,38 +77,28 @@ public class ResQTeleopPitCrew extends OpMode {
         mainRobot = new MainRobot(leftMotor, rightMotor, null, null, null, null, null);
         leftMotor = hardwareMap.dcMotor.get("leftwheel");
         rightMotor = hardwareMap.dcMotor.get("rightwheel");
-        //harvester = hardwareMap.dcMotor.get("sweeper");
+        harvester = hardwareMap.dcMotor.get("sweeper");
         linearSlide = hardwareMap.dcMotor.get("linearmotor");
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
         leftMotor.setDirection(DcMotor.Direction.FORWARD);
 
         climbservo = hardwareMap.servo.get("climbservo");
-        climbservoPosition = 0.3;
-        climbservo2 = hardwareMap.servo.get("climbservo2");
-        climbservoPosition2 = 0.6;
-        boxservo = hardwareMap.servo.get("boxservo");
-        boxservoPosition = 0.65;
+        climbservoPosition = 0;
+        //buttonservo = hardwareMap.servo.get("buttonservo");
+        //buttonservoPosition = 0.0;
+        //boxservo = hardwareMap.servo.get("boxservo");
+        //boxservoPosition = 0.65;
+        releaseservo = hardwareMap.servo.get("release");
+        releaseservoPosition = 0;
+        adjustservo = hardwareMap.servo.get("adjustservo");
+        //adjustservoPosition = 0;
+
+
         climbservo.setPosition(climbservoPosition);
-        climbservo2.setPosition(climbservoPosition2);
-        boxservo.setPosition(boxservoPosition);
-
-
-        buttonServo = hardwareMap.servo.get("buttonservo");
-        buttonservoPosition = 0.3;
-        buttonServo.setPosition(buttonservoPosition);
-        button2Servo = hardwareMap.servo.get("button2servo");
-        button2servoPosition = 0.3;
-        button2Servo.setPosition(button2servoPosition);
-
-        leftsweeper = hardwareMap.servo.get("leftsweeper");
-        leftsweeperPosition = 0.8;
-        leftsweeper.setPosition(leftsweeperPosition);
-        rightsweeper = hardwareMap.servo.get("rightsweeper");
-        rightsweeperPosition = 0.2;
-        rightsweeper.setPosition(rightsweeperPosition);
-        climberservo = hardwareMap.servo.get("climberservo");
-        climberservoPosition = 0.0;
-        climberservo.setPosition(climberservoPosition);
+        //buttonservo.setPosition(buttonservoPosition);
+        //boxservo.setPosition(boxservoPosition);
+        releaseservo.setPosition(releaseservoPosition);
+        adjustservo.setPosition(0.5);
 
         opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("sensor_EOPD");
         ultrasonicSensor = hardwareMap.ultrasonicSensor.get("sonic");
@@ -153,37 +142,32 @@ public class ResQTeleopPitCrew extends OpMode {
         }
         if (gamepad1.dpad_up || gamepad2.dpad_up) {
 
-            leftsweeper.setPosition(1);
+            /*leftsweeper.setPosition(1);
             rightsweeper.setPosition(1);
             buttonServo.setPosition(1);
             button2Servo.setPosition(1);
-            climberservo.setPosition(1);
-            boxservoPosition += boxServoDelta;
+            climberservo.setPosition(1);*/
             //buttonservoPosition -= buttonServoDelta;
         }
         if (gamepad1.dpad_down || gamepad1.dpad_down) {
 
-            leftsweeper.setPosition(0);
+            /*leftsweeper.setPosition(0);
             rightsweeper.setPosition(0);
             buttonServo.setPosition(0);
             button2Servo.setPosition(0);
-            climberservo.setPosition(0);
-            boxservoPosition -= boxServoDelta;
+            climberservo.setPosition(0);*/
             //buttonservoPosition += buttonServoDelta;
         }
         if (gamepad1.dpad_left || gamepad2.dpad_left) {
             climbservo.setPosition(climbServoEnd);
-            climbservo2.setPosition(climbServo2End);
         }
         if (gamepad1.dpad_right || gamepad2.dpad_right) {
             climbservo.setPosition(climbservoPosition);
-            climbservo2.setPosition(climbservoPosition2);
         }
         climbservoPosition = Range.clip(climbservoPosition, CLIMBSERVO_MIN_RANGE, CLIMBSERVO_MAX_RANGE);
-        climbservoPosition2 = Range.clip(climbservoPosition2, CLIMBSERVO2_MIN_RANGE, CLIMBSERVO2_MAX_RANGE);
 
-        boxservoPosition = Range.clip(boxservoPosition, BOXSERVO_MIN_RANGE, BOXSERVO_MAX_RANGE);
-        boxservo.setPosition(boxservoPosition);
+       // boxservoPosition = Range.clip(boxservoPosition, BOXSERVO_MIN_RANGE, BOXSERVO_MAX_RANGE);
+        //boxservo.setPosition(boxservoPosition);
         //telemetry.addData("Button Servo Position: ", buttonservoPosition);
         //telemetry.addData("Climb Servo Position: ", climbservo.getPosition());
         //telemetry.addData("Climb Servo Position2: ", climbservo2.getPosition());

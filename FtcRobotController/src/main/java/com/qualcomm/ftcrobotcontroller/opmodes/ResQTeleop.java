@@ -21,21 +21,26 @@ public class ResQTeleop extends OpMode {
     final static double BOXSERVO_MAX_RANGE = 1;
     final static double CLAMP_MIN_RANGE = 0.01;
     final static double CLAMP_MAX_RANGE = 0.70;
+    final static double RELEASESERVO_MIN_RANGE = 0.01;
+    final static double RELEASESERVO_MAX_RANGE = 1;
+    final static double ADJUSTSERVO_MIN_RANGE = 0.01;
+    final static double ADJUSTSERVO_MAX_RANGE = 1;
 
     double climbservoPosition;
-    double climbservoPosition2;
     double clampPosition;
     double buttonservoPosition;
     double boxservoPosition;
-    double lastTime;
+    double releaseservoPosition;
+    double adjustservoPosition;
 
-    double climbServoEnd = 0.95;
-    double climbServo2End = 0.05;
+    double climbServoEnd = 0.7;
+    //double climbServo2End = 0.05;
     double buttonServoDelta = 0.1;
     double clampDelta = 0.69;
-    double boxServoRight = 1;
-    double boxServoLeft = 0.25;
-    double boxServoNull = 0.65;
+    double adjustServoLeft = 0.25;
+    double adjustServoNull = 0.5;
+    double adjustServoRight = 0.75;
+    double releaseServoEnd = 0.5;
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -49,7 +54,8 @@ public class ResQTeleop extends OpMode {
     Servo buttonservo;
     Servo clamp;
     Servo boxservo;
-
+    Servo releaseservo;
+    Servo adjustservo;
     MainRobot mainRobot;
     public ResQTeleop() {
 
@@ -70,19 +76,22 @@ public class ResQTeleop extends OpMode {
         leftMotor.setDirection(DcMotor.Direction.FORWARD);
 
         climbservo = hardwareMap.servo.get("climbservo");
-        climbservoPosition = 0.4;
-        climbservo2 = hardwareMap.servo.get("climbservo2");
-        climbservoPosition2 = 0.7;
+        climbservoPosition = 0;
         //buttonservo = hardwareMap.servo.get("buttonservo");
         //buttonservoPosition = 0.0;
-        boxservo = hardwareMap.servo.get("boxservo");
-        boxservoPosition = 0.65;
+        //boxservo = hardwareMap.servo.get("boxservo");
+        //boxservoPosition = 0.65;
+        releaseservo = hardwareMap.servo.get("release");
+        releaseservoPosition = 0;
+        adjustservo = hardwareMap.servo.get("adjustservo");
+        //adjustservoPosition = 0;
 
 
         climbservo.setPosition(climbservoPosition);
-        climbservo2.setPosition(climbservoPosition2);
         //buttonservo.setPosition(buttonservoPosition);
-        boxservo.setPosition(boxservoPosition);
+        //boxservo.setPosition(boxservoPosition);
+        releaseservo.setPosition(releaseservoPosition);
+        adjustservo.setPosition(0.5);
     }
 
     /*
@@ -90,10 +99,10 @@ public class ResQTeleop extends OpMode {
     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
     */
     public void loop() {
-        float throttle = -gamepad1.left_stick_y;
-        float rightThrottle = -gamepad1.right_stick_y;
-        float secondThrottle = -gamepad2.left_stick_y;
-        float secondRightThrottle = -gamepad2.right_stick_y;
+        float throttle = gamepad1.left_stick_y;
+        float rightThrottle = gamepad1.right_stick_y;
+        float secondThrottle = gamepad2.left_stick_y;
+        float secondRightThrottle = gamepad2.right_stick_y;
 
         if (Math.abs(throttle) < 0.01 && Math.abs(rightThrottle) < 0.01) {
             rightMotor.setPower(secondRightThrottle);
@@ -104,52 +113,54 @@ public class ResQTeleop extends OpMode {
         }
 
         if (gamepad1.left_trigger == 1 || gamepad2.left_trigger == 1 ) {
-            harvester.setPower(-0.5);
+            linearSlide.setPower(-0.5);
         } else if (gamepad1.right_trigger == 1 || gamepad2.right_trigger == 1){
-            harvester.setPower(0.5);
+            linearSlide.setPower(0.5);
         } else {
-            harvester.setPower(0);
+            linearSlide.setPower(0);
         }
 
         if (gamepad1.b || gamepad2.b) {
             //harvester.setPower(0);
-            linearSlide.setPower(0);
+            harvester.setPower(0);
         }
         if (gamepad1.y || gamepad2.y) {
-            linearSlide.setPower(.5);
+            harvester.setPower(.5);
         }
         if (gamepad1.a || gamepad2.a) {
-            linearSlide.setPower(-.5);
+            harvester.setPower(-.5);
         }
         if (gamepad1.right_bumper || gamepad2.right_bumper) {
             climbservo.setPosition(climbServoEnd);
-            climbservo2.setPosition(climbServo2End);
             //buttonservoPosition -= buttonServoDelta;
         }
         if (gamepad1.left_bumper || gamepad1.left_bumper) {
-            climbservo.setPosition(climbservoPosition);
-            climbservo2.setPosition(climbservoPosition2);
+            climbservo.setPosition(0);
             //buttonservoPosition += buttonServoDelta;
         }
         if (gamepad1.dpad_left || gamepad2.dpad_left) {
-            boxservo.setPosition(boxServoLeft);
+            adjustservo.setPosition(1);
         }
         if (gamepad1.dpad_up || gamepad2.dpad_up) {
-            boxservo.setPosition(boxServoNull);
+            releaseservo.setPosition(0);
+            adjustservo.setPosition(0.5);
         }
         if (gamepad1.dpad_right || gamepad2.dpad_right) {
-            boxservo.setPosition(boxServoRight);
+            adjustservo.setPosition(0);
+        }
+        if (gamepad1.dpad_down || gamepad2.dpad_down) {
+            releaseservo.setPosition(releaseServoEnd);
         }
         climbservoPosition = Range.clip(climbservoPosition, CLIMBSERVO_MIN_RANGE, CLIMBSERVO_MAX_RANGE);
         //climbservo.setPosition(climbservoPosition);
-        climbservoPosition2 = Range.clip(climbservoPosition2, CLIMBSERVO2_MIN_RANGE, CLIMBSERVO2_MAX_RANGE);
         //climbservo2.setPosition(climbservoPosition2);
-        //buttonservoPosition = Range.clip(buttonservoPosition, BUTTONSERVO_MIN_RANGE, BUTTONSERVO_MAX_RANGE);
         //buttonservo.setPosition(buttonservoPosition);
-        boxservoPosition = Range.clip(boxservoPosition, BOXSERVO_MIN_RANGE, BOXSERVO_MAX_RANGE);
+        //boxservoPosition = Range.clip(boxservoPosition, BOXSERVO_MIN_RANGE, BOXSERVO_MAX_RANGE);
+        releaseservoPosition = Range.clip(releaseservoPosition, RELEASESERVO_MIN_RANGE, RELEASESERVO_MAX_RANGE);
+        adjustservoPosition = Range.clip(adjustservoPosition, ADJUSTSERVO_MIN_RANGE, ADJUSTSERVO_MAX_RANGE);
         //telemetry.addData("Button Servo Position: ", buttonservoPosition);
         telemetry.addData("Climb Servo Position: ", climbservo.getPosition());
-        telemetry.addData("Climb Servo Position2: ", climbservo2.getPosition());
+        telemetry.addData("Adjust Servo Position: ", adjustservo.getPosition());
     }
     public void stop() {
 
