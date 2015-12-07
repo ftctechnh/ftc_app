@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
+import static com.qualcomm.robotcore.hardware.DcMotor.Direction.FORWARD;
+
 /**
  * Created by Derek on 10/10/2015.
  */
@@ -16,6 +18,8 @@ public class Protobotteleop extends OpMode {
      */
     // TETRIX VALUES.
 
+    DcMotor motorBrush;
+    DcMotor motorLift;
     DcMotor motorFRight;
     DcMotor motorFLeft;
     DcMotor motorBRight;
@@ -41,6 +45,10 @@ public class Protobotteleop extends OpMode {
 		 *   "motor_1" is on the right side of the bot.
 		 *   "motor_2" is on the left side of the bot and reversed.
 		 */
+
+        motorBrush = hardwareMap.dcMotor.get("motorBrush");
+
+        motorLift = hardwareMap.dcMotor.get("motorLift");
 
         motorFRight = hardwareMap.dcMotor.get("motorFRight");
         motorFLeft = hardwareMap.dcMotor.get("motorFLeft");
@@ -70,24 +78,55 @@ public class Protobotteleop extends OpMode {
         float left = -gamepad1.left_stick_y;
         float right = -gamepad1.right_stick_y;
 
-
         // clip the right/left values so that the values never exceed +/- 1
         right = Range.clip(right, -1, 1);
         left = Range.clip(left, -1, 1);
 
         // scale the joystick value to make it easier to control
         // the robot more precisely at slower speeds.
-        right = (float)scaleInput(right);
-        left =  (float)scaleInput(left);
+        right = (float) scaleInput(right);
+        left = (float) scaleInput(left);
+
+        motorLift.setDirection(FORWARD);
+
+        // lift controls
+        if (!gamepad1.a) {
+            motorLift.setPower(0);
+        } else {
+            motorLift.setPower(1);
+            motorLift.setPower(1);
+            motorLift.setPower(1);
+        }
+
+        if (!gamepad1.y) {
+            motorLift.setPower(0);
+        } else {
+            motorLift.setDirection(DcMotor.Direction.REVERSE);
+            motorLift.setPower(1);
+        }
+
+        if (!gamepad1.x) {
+            motorBrush.setPower(0);
+        } else if ( !gamepad1.b ){
+            motorBrush.setDirection(DcMotor.Direction.REVERSE);
+            motorBrush.setPower(1);
+            motorBrush.setPower(1);
+            motorBrush.setPower(1);
+            }
+        else if (!gamepad1.b) {
+            motorBrush.setPower(0);
+        } else {
+            motorBrush.setPower(1);
+        }
 
         // write the values to the motors
-        motorFRight.setPower(right);
-        motorFLeft.setPower(left);
         motorBRight.setPower(right);
         motorBLeft.setPower(left);
 
 		/*
-		 * Send telemetry data back to driver station. Note that if we are using
+		 * Send telemetry data back to driver station. N
+        motorFRight.setPower(right);
+        motorFLeft.setPower(left);ote that if we are using
 		 * a legacy NXT-compatible motor controller, then the getPower() method
 		 * will return a null value. The legacy NXT-compatible motor controllers
 		 * are currently write only.
@@ -95,6 +134,8 @@ public class Protobotteleop extends OpMode {
         telemetry.addData("Text", "*** Robot Data***");
         telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", left));
         telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));
+        Object direction = motorLift.getDirection();
+        telemetry.addData("direction", "direction: " + String.valueOf(direction));
 
     }
 
