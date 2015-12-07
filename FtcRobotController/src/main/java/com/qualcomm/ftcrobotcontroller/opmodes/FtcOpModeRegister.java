@@ -67,6 +67,8 @@ public class FtcOpModeRegister implements OpModeRegister {
 
     manager.register("Move", Move.class);
 
+    manager.register("Move2", Move2.class);
+
 
     //manager.register("TestProgram2", TestProgram2.class);
     /*
