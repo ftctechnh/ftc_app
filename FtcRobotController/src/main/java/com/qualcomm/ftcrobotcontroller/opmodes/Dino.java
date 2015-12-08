@@ -5,35 +5,34 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
-
-public class Travis_Bruce extends OpMode {
-    DcMotor leftMotor_1;
-    DcMotor rightMotor_1;
-    DcMotor leftMotor_2;
-    DcMotor rightMotor_2;
+/**
+ * Created by rayzhang on 10/26/15.
+ */
+public class Dino extends OpMode {
+    //register motors
+    DcMotor leftMotor;
+    DcMotor rightMotor;
     DcMotor upperMotor;
     DcMotor bottomMotor;
-    //Servo leftsideServo;
-    //Servo rightsideServo;
+    Servo leftsideServo;
+    Servo rightsideServo;
     double leftservopos,rightservopos,deltapos=0.01;
     @Override
     public void init()
     {
-        leftMotor_1 = hardwareMap.dcMotor.get("left_motor_1");
-        rightMotor_1 = hardwareMap.dcMotor.get("right_motor_1");
-        leftMotor_2 = hardwareMap.dcMotor.get("left_motor_2");
-        rightMotor_2 = hardwareMap.dcMotor.get("right_motor_2");
-        //movement motors initialize
-        upperMotor= hardwareMap.dcMotor.get("small_arm");
-        bottomMotor= hardwareMap.dcMotor.get("big_arm");
-        //arm motors initialize
-        //leftsideServo = hardwareMap.servo.get("left_servo");
-        //rightsideServo = hardwareMap.servo.get("right_servo");
-        //leftservopos=0;
-        //rightservopos=0;
+        //initialize motors
+        leftMotor = hardwareMap.dcMotor.get("left_drive");
+        rightMotor = hardwareMap.dcMotor.get("right_drive");
+        upperMotor = hardwareMap.dcMotor.get("small_arm");
+        bottomMotor = hardwareMap.dcMotor.get("big_arm");
+        leftsideServo = hardwareMap.servo.get("left_servo");
+        rightsideServo = hardwareMap.servo.get("right_servo");
+        leftservopos=0;
+        rightservopos=0;
     }
     @Override
     public void loop() {
+        //initialize gamepad.
         float leftY = -gamepad1.left_stick_y;
         float rightY = gamepad1.right_stick_y;
         float rightTrigger = gamepad1.right_trigger;
@@ -62,52 +61,61 @@ public class Travis_Bruce extends OpMode {
         boolean b2 = gamepad2.b;
         boolean x2 = gamepad2.x;
         boolean y2 = gamepad2.y;
-        //get the information from gamepad. determine which one is pressing
-        /*if (b)
+        //bumpers control the arm move vertically
+        if (b2)
         {
             rightservopos+=deltapos;
         }
-        if (x)
+        if (x2)
         {
             rightservopos-=deltapos;
         }
-        if (right)
+        if (right2)
         {
             leftservopos+=deltapos;
         }
-        if (left)
+        if (left2)
         {
             leftservopos-=deltapos;
         }
         rightservopos = Range.clip(rightservopos, 0, 1);
         rightsideServo.setPosition(rightservopos);
         leftservopos = Range.clip(leftservopos, 0, 1);
-        leftsideServo.setPosition(leftservopos);*/
-        if (rightBumper) {
+        leftsideServo.setPosition(leftservopos);
+        if (rightBumper)
+        {
             upperMotor.setDirection(DcMotor.Direction.FORWARD);
             upperMotor.setPower(1);
         }
-        if (leftBumper) {
+        if (leftBumper)
+        {
             upperMotor.setDirection(DcMotor.Direction.REVERSE);
             upperMotor.setPower(1);
         }
-        if (!((leftTrigger < 0) && (rightTrigger > 0))) {
-            if (rightTrigger > 0) {
-                bottomMotor.setPower(rightTrigger);
+        //Triggers controls the arm horizontally
+        if (!((leftTrigger<0)&&(rightTrigger>0)))
+        {
+            if (rightTrigger>0)
+            {
+                bottomMotor.setPower(0.3*rightTrigger);
             }
-            if (leftTrigger < 0) {
-                bottomMotor.setPower(leftTrigger);
+            if (leftTrigger<0)
+            {
+                bottomMotor.setPower(0.3*leftTrigger);
             }
         }
-        if ((leftTrigger == 0) && (rightTrigger == 0)) {
+        //when trigger is not pressed, the motor stop
+        if ((leftTrigger==0)&&(rightTrigger==0))
+        {
             bottomMotor.setPower(0);
         }
-        if (!leftBumper && !rightBumper) {
+        //when bumper is not pressed, the motor stop
+        if ((leftBumper==false)&&(rightBumper==false))
+        {
             upperMotor.setPower(0);
         }
-        leftMotor_1.setPower(leftY);
-        leftMotor_2.setPower(leftY);
-        rightMotor_1.setPower(rightY);
-        rightMotor_2.setPower(rightY);
+        //joy stickers controls the movement
+        leftMotor.setPower(leftY);
+        rightMotor.setPower(rightY);
     }
 }

@@ -5,35 +5,34 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
-
-public class Travis_Bruce extends OpMode {
-    DcMotor leftMotor_1;
-    DcMotor rightMotor_1;
-    DcMotor leftMotor_2;
-    DcMotor rightMotor_2;
+/**
+ * Created by rayzhang on 11/10/15.
+ */
+public class Thor extends OpMode {
+    DcMotor leftMotor;
+    DcMotor rightMotor;
+    DcMotor leftClimb;
+    DcMotor rightClimb;
     DcMotor upperMotor;
     DcMotor bottomMotor;
     //Servo leftsideServo;
     //Servo rightsideServo;
-    double leftservopos,rightservopos,deltapos=0.01;
+    //double leftservopos,rightservopos,deltapos=0.01;
     @Override
-    public void init()
-    {
-        leftMotor_1 = hardwareMap.dcMotor.get("left_motor_1");
-        rightMotor_1 = hardwareMap.dcMotor.get("right_motor_1");
-        leftMotor_2 = hardwareMap.dcMotor.get("left_motor_2");
-        rightMotor_2 = hardwareMap.dcMotor.get("right_motor_2");
-        //movement motors initialize
+    public void init(){
+        leftMotor = hardwareMap.dcMotor.get("left_drive");
+        rightMotor = hardwareMap.dcMotor.get("right_drive");
+        leftClimb = hardwareMap.dcMotor.get("left_climb");
+        rightClimb = hardwareMap.dcMotor.get("right_climb");
         upperMotor= hardwareMap.dcMotor.get("small_arm");
         bottomMotor= hardwareMap.dcMotor.get("big_arm");
-        //arm motors initialize
         //leftsideServo = hardwareMap.servo.get("left_servo");
         //rightsideServo = hardwareMap.servo.get("right_servo");
         //leftservopos=0;
         //rightservopos=0;
     }
     @Override
-    public void loop() {
+    public void loop(){
         float leftY = -gamepad1.left_stick_y;
         float rightY = gamepad1.right_stick_y;
         float rightTrigger = gamepad1.right_trigger;
@@ -62,20 +61,19 @@ public class Travis_Bruce extends OpMode {
         boolean b2 = gamepad2.b;
         boolean x2 = gamepad2.x;
         boolean y2 = gamepad2.y;
-        //get the information from gamepad. determine which one is pressing
-        /*if (b)
+        /*if (b2)
         {
             rightservopos+=deltapos;
         }
-        if (x)
+        if (x2)
         {
             rightservopos-=deltapos;
         }
-        if (right)
+        if (right2)
         {
             leftservopos+=deltapos;
         }
-        if (left)
+        if (left2)
         {
             leftservopos-=deltapos;
         }
@@ -83,31 +81,61 @@ public class Travis_Bruce extends OpMode {
         rightsideServo.setPosition(rightservopos);
         leftservopos = Range.clip(leftservopos, 0, 1);
         leftsideServo.setPosition(leftservopos);*/
-        if (rightBumper) {
+        if (rightBumper2)
+        {
             upperMotor.setDirection(DcMotor.Direction.FORWARD);
             upperMotor.setPower(1);
         }
-        if (leftBumper) {
+        if (leftBumper2)
+        {
             upperMotor.setDirection(DcMotor.Direction.REVERSE);
             upperMotor.setPower(1);
         }
-        if (!((leftTrigger < 0) && (rightTrigger > 0))) {
-            if (rightTrigger > 0) {
-                bottomMotor.setPower(rightTrigger);
+        if (!((leftTrigger2<0)&&(rightTrigger2>0))) {
+            if (rightTrigger2 > 0) {
+                bottomMotor.setPower(0.75*rightTrigger2);
             }
-            if (leftTrigger < 0) {
-                bottomMotor.setPower(leftTrigger);
+            if (leftTrigger2 < 0) {
+                bottomMotor.setPower(0.75*leftTrigger2);
             }
         }
-        if ((leftTrigger == 0) && (rightTrigger == 0)) {
+        if ((leftTrigger2==0)&&(rightTrigger2==0))
+        {
             bottomMotor.setPower(0);
         }
-        if (!leftBumper && !rightBumper) {
+        if ((!leftBumper2)&&(!rightBumper2))
+        {
             upperMotor.setPower(0);
         }
-        leftMotor_1.setPower(leftY);
-        leftMotor_2.setPower(leftY);
-        rightMotor_1.setPower(rightY);
-        rightMotor_2.setPower(rightY);
+        if (up)
+        {
+            leftClimb.setDirection(DcMotor.Direction.REVERSE);
+            leftClimb.setPower(-1);
+        }
+        if (a)
+        {
+            rightClimb.setDirection(DcMotor.Direction.REVERSE);
+            rightClimb.setPower(-1);
+        }
+        if (y)
+        {
+            rightClimb.setDirection(DcMotor.Direction.FORWARD);
+            rightClimb.setPower(-1);
+        }
+        if (down)
+        {
+            leftClimb.setDirection(DcMotor.Direction.FORWARD);
+            leftClimb.setPower(-1);
+        }
+        if ((!a)&&(!y))
+        {
+            rightClimb.setPower(0);
+        }
+        if ((!up)&&(!down))
+        {
+            leftClimb.setPower(0);
+        }
+        leftMotor.setPower(-leftY);
+        rightMotor.setPower(-rightY);
     }
 }
