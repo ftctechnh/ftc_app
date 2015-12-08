@@ -196,21 +196,18 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
 
 
     /**
-     * Put the current thread to sleep for a bit as it has nothing better to do.
+     * Puts the current thread to sleep for a bit as it has nothing better to do.
      *
      * idle(), which must be called on a synchronous thread, never on the loop() thread, causes the
      * synchronous thread to go to sleep until it is likely that there's something useful to do.
-     * Specifically, it currently waits at most until the next end of a loop() cycle, and might return
-     * much earlier if there is new gamepad state available.
      *
      * One should use this method when you have nothing better to do in your code, usually
-     * at the very end of your while(opModeIsActive()) loop in TeleOp. Calling Thread.yield()
-     * has similar effects, but idle() uses processor resources more effectively. Calling idle()
+     * at the very end of your while(opModeIsActive()) loop in TeleOp. Calling idle()
      * is entirely optional: it just helps make the system a little more responsive and a
      * little more efficient.
      *
-     * {@link #idle()} is similar to waitOneFullHardwareCycle(), but makes no guarantees as to
-     * completing any particular number of hardware cycles, if any.
+     * {@link #idle()} is conceptually related to waitOneFullHardwareCycle(), but makes no
+     * guarantees as to completing any particular number of hardware cycles, if any.
      *
      * @throws InterruptedException thrown if the thread is interrupted
      * @see #main()
@@ -219,26 +216,13 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      */
     public final void idle() throws InterruptedException
         {
-        synchronized (this.loopLock)
-            {
-            // If new input has arrived since anyone last looked, then let our caller process that
-            // if he is looking at the game pad input. If he's not, or if there's nothing there,
-            // then we save some cycles and processing power by waiting instead of spinning.
-            if (this.gamepadInputQueried && isNewGamepadStateAvailable())
-                {
-                Thread.yield();     // avoid tight loop
-                return;
-                }
-            
-            // Otherwise, we know there's nothing to do until at least the next loop() call.
-            // The trouble is, it's hard to know when that is. We might be running here 
-            // *immediately* before loop() is about to run. Looking at loop counts could allow
-            // us to guarantee that we wait at least one whole cycle, yes, but that's overkill,
-            // that's not what we're looking for. So instead, we just wait until loop() pings us
-            // it the bottom of it's cycle, which may be a bit less than a whole loop(), but is
-            // the reasonable compromise.
-            this.loopLock.wait();
-            }
+        // Abort the world if the OpMode has been asked to stop
+        if (this.isStopRequested())
+            throw new InterruptedException();
+
+        // Otherwise, yield back our thread scheduling quantum and give other threads at
+        // our priority level a chance to run
+        Thread.yield();
         }
 
     /**
@@ -316,7 +300,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         {
         this.waitForLoopCycleEmptyOfActionKey
             (
-            SynchronousThreadContext.getThreadContext().actionKeyWritesFromThisThread
+            SwerveThreadContext.getThreadContext().actionKeyWritesFromThisThread
             );
         }
 
@@ -374,7 +358,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         //
         if (changed)
             {
-            Log.v(LOGGING_TAG, String.format("gamepad state: %d", this.gamepadStateCount.getAndIncrement()));
+            Log.v(LOGGING_TAG, String.format("gamepad state: #%d", this.gamepadStateCount.getAndIncrement()));
             }
         //
         this.gamePadCaptureStateChanged.compareAndSet(false, changed);
@@ -710,7 +694,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         if (this.isStopRequested())
             throw new IllegalStateException("createSynchronousWorkerThread: stop requested");
         
-        if (!isMain) SynchronousThreadContext.assertSynchronousThread();
+        if (!isMain) SwerveThreadContext.assertSynchronousThread();
         //
         Thread thread = new Thread(new SynchronousThreadRoot(threadBody, isMain));
         if (isMain)
@@ -727,7 +711,10 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     
     private void setThreadThunker()
         {
-        SynchronousThreadContext.create(this, this);
+        SwerveThreadContext context = SwerveThreadContext.createIfNecessary();
+        context.opMode = this;
+        context.thunker = this;
+        context.isSynchronousThread = true;
         }
 
     //----------------------------------------------------------------------------------------------
@@ -758,7 +745,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             this.hardwareMap          = this.hardwareFactory.createThunkedHardwareMap();
 
             // Similarly replace the telemetry variable
-            this.telemetry = new TelemetryDashboardAndLog(super.telemetry);
+            this.telemetry = new TelemetryDashboardAndLog();
 
             // Paranoia: clear any state that may just perhaps be lingering
             this.clearSingletons();
@@ -1067,7 +1054,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      */
     @Override public void executeOnLoopThread(Runnable action)
         {
-        SynchronousThreadContext.assertSynchronousThread();
+        SwerveThreadContext.assertSynchronousThread();
         this.actionQueueAndHistory.add(action);
         }
 
@@ -1080,7 +1067,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      */
     @Override public void executeSingletonOnLoopThread(int singletonKey, Runnable action)
         {
-        SynchronousThreadContext.assertSynchronousThread();
+        SwerveThreadContext.assertSynchronousThread();
         synchronized (this.singletonLoopActions)
             {
             this.singletonLoopActions.put(singletonKey, action);
@@ -1112,7 +1099,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      */
     public static IThunkDispatcher getThreadThunker()
         {
-        return SynchronousThreadContext.getContextualThunker();
+        return SwerveThreadContext.getThunker();
         }
 
     //----------------------------------------------------------------------------------------------
@@ -1121,7 +1108,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
 
     private static SynchronousOpMode getThreadSynchronousOpMode()
         {
-        return (SynchronousOpMode)(SynchronousThreadContext.getContextualOpMode());
+        return (SynchronousOpMode)(SwerveThreadContext.getOpMode());
         }
 
     /**
@@ -1153,7 +1140,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     /**
      * Advanced: Answer as to whether the current thread is in fact the loop thread
      * 
-     * @see SynchronousThreadContext#isSynchronousThread() 
+     * @see SwerveThreadContext#isSynchronousThread()
      */
     private boolean isLoopThread()
         {

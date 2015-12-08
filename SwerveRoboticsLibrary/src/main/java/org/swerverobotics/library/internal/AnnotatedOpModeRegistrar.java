@@ -4,8 +4,9 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 import com.qualcomm.robotcore.eventloop.opmode.*;
-
-import org.swerverobotics.library.SynchronousOpMode;
+import com.qualcomm.robotcore.robocol.*;
+import com.qualcomm.robotcore.util.*;
+import org.swerverobotics.library.*;
 import org.swerverobotics.library.interfaces.*;
 import java.io.*;
 import java.lang.reflect.*;
@@ -27,15 +28,16 @@ public class AnnotatedOpModeRegistrar
     // State
     //----------------------------------------------------------------------------------------------
 
-    private final String                     LOGGING_TAG = SynchronousOpMode.LOGGING_TAG;
+    private static final String              LOGGING_TAG = SynchronousOpMode.LOGGING_TAG;
 
-    LinkedList<String>                       partialClassNamesToIgnore;
+    List<Class>                              allClasses;
+    List<String>                             packagesAndClassesToIgnore;
 
     final OpModeManager                      opModeManager;
     final Context                            context;
     final DexFile                            dexFile;
 
-    final HashMap<String, LinkedList<Class>> opModeGroups;                          // key == group name
+    final HashMap<String, LinkedList<Class<OpMode>>> opModeGroups;                  // key == group name
     final String                             defaultOpModeGroupName = "$$$$$$$";    // arbitrary, but unlikely to be used by users
     final HashSet<Class>                     classesSeen;
     final HashMap<Class, String>             classNameOverrides;
@@ -58,6 +60,7 @@ public class AnnotatedOpModeRegistrar
             }
         catch (Exception e)
             {
+            Log.wtf(LOGGING_TAG, e);
             registrar = null;
             }
 
@@ -67,13 +70,16 @@ public class AnnotatedOpModeRegistrar
 
     private AnnotatedOpModeRegistrar(final OpModeManager opModeManager) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
         {
+        this.allClasses                = new LinkedList<Class>();
         this.opModeManager             = opModeManager;
         this.classNameOverrides        = new HashMap<>();
         this.opModeGroups              = new HashMap<>();
         this.classesSeen               = new HashSet<>();
-        this.partialClassNamesToIgnore = new LinkedList<>();
-        this.partialClassNamesToIgnore.add("com.google");
-        this.partialClassNamesToIgnore.add("io.netty");
+
+        // We ignore certain packages to make us more robust
+        this.packagesAndClassesToIgnore = new LinkedList<>();
+        this.packagesAndClassesToIgnore.add("com.google");
+        this.packagesAndClassesToIgnore.add("io.netty");
 
         // Find the file in which we are executing
         this.context = getApplicationContextRaw();
@@ -84,7 +90,7 @@ public class AnnotatedOpModeRegistrar
         {
         Class<?> activityThreadClass    = Class.forName("android.app.ActivityThread");
         Method methodCurrentApplication = activityThreadClass.getMethod("currentApplication");
-        return                            (Application) methodCurrentApplication.invoke(null, (Object[]) null);
+        return (Application) methodCurrentApplication.invoke(null, (Object[]) null);
         }
 
     /** Use magic to find the current application context */
@@ -112,14 +118,17 @@ public class AnnotatedOpModeRegistrar
         // Help with later debugging
         Thread.currentThread().setName("FtcRobotControllerService$b");
 
+        // Find every class of potential interest, just once
+        this.allClasses = findAllClasses();
+
         // Find all the candidates
         this.findOpModesFromClassAnnotations();
         this.processAnnotatedStaticMethods();
 
         // Sort the linked lists within opModes, first by flavor and second by name
-        Comparator<Class> comparator = new Comparator<Class>()
+        Comparator<Class<OpMode>> comparator = new Comparator<Class<OpMode>>()
             {
-            @Override public int compare(Class lhs, Class rhs)
+            @Override public int compare(Class<OpMode> lhs, Class<OpMode> rhs)
                 {
                 if (lhs.isAnnotationPresent(TeleOp.class) && rhs.isAnnotationPresent(TeleOp.class))
                     return getOpModeName(lhs).compareTo(getOpModeName(rhs));
@@ -143,17 +152,41 @@ public class AnnotatedOpModeRegistrar
 
         // Display each group on the driver station in alphabetical order according
         // to the name of the first member of each group.
-        TreeMap<String, LinkedList<Class>> sortedOpModes = new TreeMap<>();
+        TreeMap<String, LinkedList<Class<OpMode>>> sortedOpModes = new TreeMap<>();
         for (String groupName : opModeGroups.keySet())
             {
-            Class<? extends OpMode> groupSortKey = opModeGroups.get(groupName).getFirst();
+            Class<OpMode> groupSortKey = opModeGroups.get(groupName).getFirst();
             sortedOpModes.put(getOpModeName(groupSortKey), opModeGroups.get(groupName));
             }
 
-        // Finally, register all the OpModes
-        for (LinkedList<Class> opModeList : sortedOpModes.values())
+        // Flatten the list
+        List<Class<OpMode>> opModesToRegister = new LinkedList<Class<OpMode>>();
+        for (LinkedList<Class<OpMode>> opModeList : sortedOpModes.values())
             {
-            for (Class opMode : opModeList)
+            for (Class<OpMode> opMode : opModeList)
+                {
+                opModesToRegister.add(opMode);
+                }
+            }
+
+        // Check that the overall length of the OpMode names doesn't exceed the (paltry) length
+        // that can be transmitted from the robot controller to the driver station.
+        // See FtcEventLoop.sendOpModeList().
+        StringBuilder nameBuilder = new StringBuilder();
+        for (Class<OpMode> opMode : opModesToRegister)
+            {
+            if (nameBuilder.length() > 0) nameBuilder.append(com.qualcomm.robotcore.util.Util.ASCII_RECORD_SEPARATOR);
+            nameBuilder.append(getOpModeName(opMode));
+            }
+        if (TypeConversion.stringToUtf8(nameBuilder.toString()).length >= Command.MAX_COMMAND_LENGTH)    // see Command.Command
+            {
+            reportOpModeConfigurationError("OpMode names are too long to be sent to the Driver Station");
+            this.opModeManager.register("OpMode names too long", OpModeNamesTooLong.class);
+            }
+        else
+            {
+            // Finally, register all the OpModes
+            for (Class<OpMode> opMode : opModesToRegister)
                 {
                 String name = getOpModeName(opMode);
                 this.opModeManager.register(name, opMode);
@@ -162,22 +195,39 @@ public class AnnotatedOpModeRegistrar
             }
         }
 
+    void reportOpModeConfigurationError(String format, Object... args)
+        {
+        String message = String.format(format, args);
+        // Show the message in the log
+        Log.w(LOGGING_TAG, String.format("configuration error: %s", message));
+        // Make the message appear on the driver station (only the first one will actually appear)
+        RobotLog.setGlobalErrorMsg(message);
+        }
+
     /**
      * Find the list of OpMode classes which should be registered by looking
      * in the class annotations.
      */
     private void findOpModesFromClassAnnotations()
         {
-        List<Class> allClasses = findAllClasses();
-
-        for (Class clazz : allClasses)
+        for (Class clazz : this.allClasses)
             {
-            // If the class doesn't extend OpMode, that's an error, we'll ignore it
-            if (!isOpMode(clazz))
+            boolean isTeleOp     = clazz.isAnnotationPresent(TeleOp.class);
+            boolean isAutonomous = clazz.isAnnotationPresent(Autonomous.class);
+
+            // If it's neither teleop or autonomous, then it's not interesting to us
+            if (!isTeleOp && !isAutonomous)
                 continue;
 
-            // If we have BOTH autonomous and teleop annotations on a class, that's an error, we'll ignore it.
-            if (clazz.isAnnotationPresent(TeleOp.class) && clazz.isAnnotationPresent(Autonomous.class))
+            // If we have BOTH Autonomous and TeleOp annotations on a class, that's an error, we'll ignore it.
+            if (isTeleOp && isAutonomous)
+                {
+                reportOpModeConfigurationError("'%s' class is annotated both as 'TeleOp' and 'Autonomous'; please choose at most one", clazz.getSimpleName());
+                continue;
+                }
+
+            // There's some things we need to check about the actual class
+            if (!checkOpModeClassConstraints(clazz, null))
                 continue;
 
             // If the class has been annotated as @Disabled, then ignore it
@@ -185,13 +235,44 @@ public class AnnotatedOpModeRegistrar
                 continue;
 
             // It passes all our tests, add it!
-            addAnnotatedClass(clazz);
+            addAnnotatedOpMode(clazz);
             }
+        }
+
+    boolean checkOpModeClassConstraints(Class clazz, String opModeName)
+        {
+        // If the class doesn't extend OpMode, that's an error, we'll ignore it
+        if (!isOpMode(clazz))
+            {
+            reportOpModeConfigurationError("'%s' class doesn't inherit from the class 'OpMode'", clazz.getSimpleName());
+            return false;
+            }
+
+        // If it's not 'public', it can't be loaded by the system and won't work. We report
+        // the error and ignore
+        if (!Modifier.isPublic(clazz.getModifiers()))
+            {
+            reportOpModeConfigurationError("'%s' class is not declared 'public'", clazz.getSimpleName());
+            return false;
+            }
+
+        // Some opmode names aren't allowed to be used
+        if (opModeName == null)
+            {
+            opModeName = getOpModeName((Class<OpMode>)clazz);
+            }
+        if (!isLegalOpModeName(opModeName))
+            {
+            reportOpModeConfigurationError("\"%s\" is not a legal OpMode name", opModeName);
+            return false;
+            }
+
+        return true;
         }
 
     private void processAnnotatedStaticMethods()
         {
-        // This will, nicely, have duplicates removed. But it might contain methods
+        // This will, nicely, have duplicates removed by the time we get here. But it might contain methods
         // we can't actually invoke, so beware.
         Set<Method> registrarMethods = new HashSet<Method>();
         Set<Method> onRobotRunningMethods = new HashSet<Method>();
@@ -199,7 +280,7 @@ public class AnnotatedOpModeRegistrar
 
         findAnnotatedStaticMethodsOfInterest(registrarMethods, onRobotRunningMethods, onRobotStartupFailureMethods);
 
-        // Call the opmode registration methods now
+        // Call the OpMode registration methods now
         AnnotationOpModeManager manager = new AnnotationOpModeManager();
         for (Method method : registrarMethods)
             {
@@ -228,8 +309,7 @@ public class AnnotatedOpModeRegistrar
 
     private void findAnnotatedStaticMethodsOfInterest(Set<Method> registrarMethods, Set<Method> onRobotRunningMethods, Set<Method> onRobotStartupFailureMethods)
         {
-        List<Class> allClasses = findAllClasses();
-        for (Class clazz : allClasses)
+        for (Class clazz : this.allClasses)
             {
             List<Method> methods = Util.getDeclaredMethodsIncludingSuper(clazz);
             for (Method method : methods)
@@ -243,7 +323,7 @@ public class AnnotatedOpModeRegistrar
 
                 if (method.isAnnotationPresent(OpModeRegistrar.class))
                     {
-                    // the 1-parameter version is legacy
+                    // the 1-parameter version is legacy (just a manager) instead of also a context
                     if (getParameterCount(method)==1 || getParameterCount(method)==2)
                         registrarMethods.add(method);
                     }
@@ -265,26 +345,25 @@ public class AnnotatedOpModeRegistrar
 
     class AnnotationOpModeManager implements IOpModeManager
         {
-        public void register(Class opModeClass)
+        public void register(Class clazz)
             {
-            if (isOpMode(opModeClass)) // avoid downstream problems in our own code
+            if (checkOpModeClassConstraints(clazz, null))
                 {
-                addAnnotatedClass(opModeClass);
+                addAnnotatedOpMode((Class<OpMode>)clazz);
                 }
             }
 
-        public void register(String name, Class opModeClass)
+        public void register(String name, Class clazz)
             {
-            if (isOpMode(opModeClass))
+            if (checkOpModeClassConstraints(clazz, name))
                 {
-                addUserNamedClass(opModeClass, name);
+                addUserNamedOpMode((Class<OpMode>)clazz, name);
                 }
             }
 
         public void register(String name, OpMode opModeInstance)
             {
             // We just go ahead and register this, as there's nothing else to do.
-            // TODO: we could register these AFTER the classes, if we wanted to.
             opModeManager.register(name, opModeInstance);
             Log.d(LOGGING_TAG, String.format("registered instance {%s} as {%s}", opModeInstance.toString(), name));
             }
@@ -292,7 +371,7 @@ public class AnnotatedOpModeRegistrar
 
     /**
      * Find all the classes in the context in which we should consider looking, which
-     * currently?) is the entire .APK in which we are found.
+     * (currently?) is the entire .APK in which we are found.
      */
     private List<Class> findAllClasses()
         {
@@ -302,12 +381,11 @@ public class AnnotatedOpModeRegistrar
         LinkedList<String> classNames = new LinkedList<>(Collections.list(dexFile.entries()));
         for (String className : classNames)
             {
-            // Ignore classes that are in some domains we are to ignore
-            // TODO: simple containment probably isn't the right test here
+            // Ignore classes that are in some packages that we know aren't worth considering
             boolean shouldIgnore = false;
-            for (String domain : partialClassNamesToIgnore)
+            for (String packageName : packagesAndClassesToIgnore)
                 {
-                if (className.contains(domain))
+                if (Util.isPrefixOf(packageName, className))
                     {
                     shouldIgnore = true;
                     break;
@@ -323,12 +401,15 @@ public class AnnotatedOpModeRegistrar
                 }
             catch (NoClassDefFoundError|ClassNotFoundException ex)
                 {
+                // We can't find that class
                 Log.w(LOGGING_TAG, className + " " + ex.toString(), ex);
                 if (className.contains("$"))
                     {
-                    className = className.substring(0, className.indexOf("$") - 1);
+                    // Prevent loading similar inner classes, a performance optimization
+                    className = className.substring(0, className.indexOf("$") /*- 1*/);
                     }
-                partialClassNamesToIgnore.add(className);
+
+                packagesAndClassesToIgnore.add(className);
                 continue;
                 }
 
@@ -339,25 +420,25 @@ public class AnnotatedOpModeRegistrar
         return result;
         }
 
-    /** add this class, which has annotations, to the map of classes to register */
-    private void addAnnotatedClass(Class clazz)
+    /** add this class, which has opmode annotations, to the map of classes to register */
+    private void addAnnotatedOpMode(Class<OpMode> clazz)
         {
         if (clazz.isAnnotationPresent(TeleOp.class))
             {
             Annotation annotation = clazz.getAnnotation(TeleOp.class);
             String groupName = ((TeleOp) annotation).group();
-            addClassWithGroupName(clazz, groupName);
+            addOpModeWithGroupName(clazz, groupName);
             }
 
         if (clazz.isAnnotationPresent(Autonomous.class))
             {
             Annotation annotation = clazz.getAnnotation(Autonomous.class);
             String groupName = ((Autonomous) annotation).group();
-            addClassWithGroupName(clazz, groupName);
+            addOpModeWithGroupName(clazz, groupName);
             }
         }
 
-    private void addClassWithGroupName(Class clazz, String groupName)
+    private void addOpModeWithGroupName(Class<OpMode> clazz, String groupName)
         {
         if (groupName.equals(""))
             addToOpModeGroup(defaultOpModeGroupName, clazz);
@@ -367,14 +448,14 @@ public class AnnotatedOpModeRegistrar
 
     /** Add a class for which the user has provided the name as opposed to
      *  the name being taken from the class and its own annotations */
-    private void addUserNamedClass(Class clazz, String name)
+    private void addUserNamedOpMode(Class<OpMode> clazz, String name)
         {
         addToOpModeGroup(defaultOpModeGroupName, clazz);
         this.classNameOverrides.put(clazz, name);
         }
 
     /** Add a class to the map under the indicated key */
-    private void addToOpModeGroup(String groupName, Class clazz)
+    private void addToOpModeGroup(String groupName, Class<OpMode> clazz)
         {
         // Have we seen this class before?
         if (!this.classesSeen.contains(clazz))
@@ -387,20 +468,19 @@ public class AnnotatedOpModeRegistrar
                 }
             else
                 {
-                LinkedList<Class> temp = new LinkedList<>();
+                LinkedList<Class<OpMode>> temp = new LinkedList<>();
                 temp.add(clazz);
                 this.opModeGroups.put(groupName, temp);
                 }
             }
         else
             {
-            // We've already got this class somewhere; don't
-            // put it in a second time.
+            // We've already got this class somewhere; don't put it in a second time.
             }
         }
 
     /** Returns the name we are to use for this class in the driver station display */
-    private String getOpModeName(Class<? extends OpMode> opMode)
+    private String getOpModeName(Class<OpMode> opMode)
         {
         String name;
 
@@ -417,6 +497,20 @@ public class AnnotatedOpModeRegistrar
             name = opMode.getSimpleName();
 
         return name;
+        }
+
+    private boolean isLegalOpModeName(String name)
+        {
+        if (name == null)
+            return false;
+        switch (name)
+            {
+            case "":
+            case "Stop Robot":  // Reserved for use by the runtime infrastructure
+                return false;
+            default:
+                return true;
+            }
         }
 
     private boolean isOpMode(Class clazz)
@@ -436,4 +530,20 @@ public class AnnotatedOpModeRegistrar
         return false;
         }
 
+    /**
+     * An OpMode injected whenever too many OpModes have been declared, or the size of the characters
+     * in the names is greater than the allowable number within the FIRST SDK
+     */
+    public class OpModeNamesTooLong extends OpMode
+        {
+        @Override public void init()
+            {
+            telemetry.addData("", "The overall length of OpMode names is too long");
+            }
+
+        @Override public void loop()
+            {
+            telemetry.addData("", "The overall length of OpMode names is too long");
+            }
+        }
     }
