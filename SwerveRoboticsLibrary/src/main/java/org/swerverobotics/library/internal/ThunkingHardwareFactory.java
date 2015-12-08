@@ -121,7 +121,7 @@ public class ThunkingHardwareFactory
 
         for (ServoController controller : servos.keySet())
             {
-            if (MemberUtil.isModernServoController(controller))
+            if (MemberUtil.isModernServoController(controller) || MemberUtil.isLegacyServoController(controller))
                 {
                 Collection<Servo> thisControllersServos = servos.get(controller);
                 ClassFactory.createEasyServoController(this.context, thisControllersServos);
@@ -139,14 +139,10 @@ public class ThunkingHardwareFactory
                 @Override public DcMotorController create(DcMotorController target)
                     {
                     if (target instanceof EasyLegacyMotorController)
-                        {
                         return target;
-                        }
 
                     if (target instanceof EasyModernMotorController)
-                        {
                         return target;
-                        }
 
                     // Put a wrapping of the unthunked target in the thunked map
                     return ThunkedDCMotorController.create(target);
@@ -160,6 +156,12 @@ public class ThunkingHardwareFactory
                 {
                 @Override public ServoController create(ServoController target)
                     {
+                    if (target instanceof EasyLegacyServoController)
+                        return target;
+
+                    if (target instanceof EasyModernServoController)
+                        return target;
+
                     return ThunkedServoController.create(target);
                     }
                 }

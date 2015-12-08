@@ -4,7 +4,6 @@ import android.util.Log;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.robotcore.util.TypeConversion;
 import org.swerverobotics.library.BuildConfig;
 import org.swerverobotics.library.SynchronousOpMode;
 import org.swerverobotics.library.interfaces.*;
@@ -270,7 +269,7 @@ public class EasyLegacyServoController implements ServoController, IOpModeStateT
         {
         validateServo(servo);
         position = Range.clip(position, positionMin, positionMax);  // note: runtime formerly threw on range error
-        double bPosition = Range.scale(position, positionMin, positionMax, bPositionMin, bPositionMax);
+        double bPosition = Range.scale(position, positionMin, positionMax, regPositionMin, regPositionMax);
         this.write(ADDRESS_CHANNEL_MAP[servo], bPosition);
         this.pwmEnable();
 
@@ -282,12 +281,7 @@ public class EasyLegacyServoController implements ServoController, IOpModeStateT
     public synchronized double getServoPosition(int servo)
         {
         validateServo(servo);
-        if (this.getPwmStatus() == PwmStatus.ENABLED)
-            {
-            return this.servoPositions[servo];
-            }
-        else
-            return 0;
+        return this.servoPositions[servo];
         }
 
     //----------------------------------------------------------------------------------------------

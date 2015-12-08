@@ -111,7 +111,7 @@ public final class ClassFactory
             if (MemberUtil.isModernServoController(controller))
                 EasyModernServoController.create(context, controller, servos);
 
-            if (MemberUtil.isLegacyServoController(controller))
+            else if (MemberUtil.isLegacyServoController(controller))
                 EasyLegacyServoController.create(context, controller, servos);
             }
         else

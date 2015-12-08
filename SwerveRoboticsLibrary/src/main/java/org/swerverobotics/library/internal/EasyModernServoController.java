@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.hardware.usb.RobotUsbDevice;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.SerialNumber;
-import com.qualcomm.robotcore.util.TypeConversion;
 import org.swerverobotics.library.BuildConfig;
 import java.util.*;
 
@@ -33,14 +32,15 @@ public class EasyModernServoController extends EasyModernController implements S
     public static final byte PWM_DISABLE = -1;
     public static final byte PWM_ENABLE = 0;
     public static final byte PWM_ENABLE_WITHOUT_TIMEOUT = -86;
-    public static final byte START_ADDRESS = 64;
+    public static final byte START_ADDRESS = 0x40;
 
     public static final double positionMin = 0.0;
     public static final double positionMax = 1.0;
-    public static final byte   bPositionMin = 0;
-    public static final byte   bPositionMax = (byte)255;
+    public static final double regPositionMin = 0;
+    public static final double regPositionMax = 255;
 
     private List<Servo>                              servos;
+    private final double[]                           servoPositions;
     private final ModernRoboticsUsbServoController   target;
 
     //----------------------------------------------------------------------------------------------
@@ -53,13 +53,14 @@ public class EasyModernServoController extends EasyModernController implements S
 
         this.target  = target;
         this.servos  = new LinkedList<Servo>();
+        this.servoPositions  = new double[ADDRESS_CHANNEL_MAP.length];
         this.findTargetNameAndMapping();
         }
 
-    static NoErrorReportingReadWriteRunnableStandard newDummyReadWriteRunnable(SerialNumber serialNumber)
+    static ReadWriteRunnableHandy newDummyReadWriteRunnable(SerialNumber serialNumber)
         {
         RobotUsbDevice robotUsbDevice = new DummyRobotUsbDevice();
-        return new NoErrorReportingReadWriteRunnableStandard(serialNumber, robotUsbDevice, MONITOR_LENGTH, START_ADDRESS, false);
+        return new ReadWriteRunnableHandy(serialNumber, robotUsbDevice, MONITOR_LENGTH, START_ADDRESS, false);
         }
 
     public static ServoController create(OpMode context, ServoController target, Collection<Servo> servos)
@@ -232,17 +233,20 @@ public class EasyModernServoController extends EasyModernController implements S
         {
         validateServo(servo);
         position = Range.clip(position, positionMin, positionMax);  // note: runtime formerly threw on range error
-        double bPosition = Range.scale(position, positionMin, positionMax, bPositionMin, bPositionMax);
+        double bPosition = Range.scale(position, positionMin, positionMax, regPositionMin, regPositionMax);
         this.write(ADDRESS_CHANNEL_MAP[servo], bPosition);
         this.pwmEnable();
+
+        // We remember the servo target positions so that getServoPosition can return something reasonable
+        this.servoPositions[servo] = position;
         }
 
     @Override
     public double getServoPosition(int servo)
+    // One would think we could just read the servo position registers. But they always report as zero
         {
         validateServo(servo);
-        double bPosition = TypeConversion.unsignedByteToDouble(this.read(ADDRESS_CHANNEL_MAP[servo], 1)[0]);
-        return Range.scale(bPosition, bPositionMin, bPositionMax, positionMin, positionMax);
+        return this.servoPositions[servo];
         }
 
     //----------------------------------------------------------------------------------------------
@@ -269,5 +273,4 @@ public class EasyModernServoController extends EasyModernController implements S
         {
         floatHardware();
         }
-
     }
