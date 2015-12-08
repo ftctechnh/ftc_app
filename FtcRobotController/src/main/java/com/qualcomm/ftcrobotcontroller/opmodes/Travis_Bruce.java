@@ -20,8 +20,10 @@ public class Travis_Bruce extends OpMode {
         rightMotor_1 = hardwareMap.dcMotor.get("right_drive_1");
         leftMotor_2 = hardwareMap.dcMotor.get("left_drive_2");
         rightMotor_2 = hardwareMap.dcMotor.get("right_drive_2");
+        //movement motors initialize
         upperMotor= hardwareMap.dcMotor.get("small_arm");
         bottomMotor= hardwareMap.dcMotor.get("big_arm");
+        //arm motors initialize
     }
     @Override
     public void loop() {
@@ -35,6 +37,7 @@ public class Travis_Bruce extends OpMode {
         boolean b = gamepad1.b;
         boolean x = gamepad1.x;
         boolean y = gamepad1.y;
+        //get the information from gamepad. determine which one is pressing
         if (rightBumper) {
             upperMotor.setDirection(DcMotor.Direction.FORWARD);
             upperMotor.setPower(1);

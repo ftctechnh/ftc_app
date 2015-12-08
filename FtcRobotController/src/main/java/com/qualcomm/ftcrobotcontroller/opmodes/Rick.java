@@ -11,12 +11,16 @@ public class Rick extends OpMode {
     DcMotor rightMotor;
     DcMotor leftClimb;
     DcMotor rightClimb;
+    DcMotor upperMotor;
+    DcMotor bottomMotor;
     @Override
     public void init(){
         leftMotor = hardwareMap.dcMotor.get("left_drive");
         rightMotor = hardwareMap.dcMotor.get("right_drive");
-        leftClimb= hardwareMap.dcMotor.get("left_arm");
-        rightClimb= hardwareMap.dcMotor.get("right_arm");
+        leftClimb = hardwareMap.dcMotor.get("left_climb");
+        rightClimb = hardwareMap.dcMotor.get("right_climb");
+        upperMotor= hardwareMap.dcMotor.get("small_arm");
+        bottomMotor= hardwareMap.dcMotor.get("big_arm");
     }
     @Override
     public void loop(){
@@ -24,41 +28,56 @@ public class Rick extends OpMode {
         float rightY= -gamepad1.right_stick_y;
         float rightTrigger=gamepad1.right_trigger;
         float leftTrigger=-gamepad1.left_trigger;
+        boolean up=gamepad1.dpad_up;
+        boolean down=gamepad1.dpad_down;
         boolean leftBumper=gamepad1.left_bumper;
         boolean rightBumper=gamepad1.right_bumper;
         boolean a=gamepad1.a;
         boolean b=gamepad1.b;
         boolean x=gamepad1.x;
         boolean y=gamepad1.y;
-        if ((leftBumper)||(rightBumper))
+        if (rightBumper)
         {
-            if ((leftBumper) && (leftTrigger == 0))
+            upperMotor.setDirection(DcMotor.Direction.FORWARD);
+            upperMotor.setPower(1);
+        }
+        if (leftBumper)
+        {
+            upperMotor.setDirection(DcMotor.Direction.REVERSE);
+            upperMotor.setPower(1);
+        }
+        if (!((leftTrigger<0)&&(rightTrigger>0)))
+        {
+            if (rightTrigger>0)
             {
-                leftClimb.setDirection(DcMotor.Direction.REVERSE);
-                leftClimb.setPower(1);
+                bottomMotor.setPower(0.25*rightTrigger);
             }
-            else
+            if (leftTrigger<0)
             {
-                leftClimb.setDirection(DcMotor.Direction.FORWARD);
-                leftClimb.setPower(leftTrigger);
-            }
-            if ((rightBumper) && (rightTrigger == 0))
-            {
-                rightClimb.setDirection(DcMotor.Direction.REVERSE);
-                rightClimb.setPower(1);
-            }
-            else
-            {
-                rightClimb.setDirection(DcMotor.Direction.FORWARD);
-                rightClimb.setPower(rightTrigger);
+                bottomMotor.setPower(0.25*leftTrigger);
             }
         }
-        else
+        if ((leftTrigger==0)&&(rightTrigger==0))
         {
-            rightClimb.setDirection(DcMotor.Direction.FORWARD);
-            rightClimb.setPower(rightTrigger);
+            bottomMotor.setPower(0);
+        }
+        if ((leftBumper==false)&&(rightBumper==false))
+        {
+            upperMotor.setPower(0);
+        }
+        if (up)
+        {
             leftClimb.setDirection(DcMotor.Direction.FORWARD);
-            leftClimb.setPower(leftTrigger);
+            rightClimb.setDirection(DcMotor.Direction.FORWARD);
+            rightClimb.setPower(1);
+            leftClimb.setPower(1);
+        }
+        if (down)
+        {
+            leftClimb.setDirection(DcMotor.Direction.REVERSE);
+            rightClimb.setDirection(DcMotor.Direction.REVERSE);
+            rightClimb.setPower(1);
+            leftClimb.setPower(1);
         }
         leftMotor.setPower(leftY);
         rightMotor.setPower(rightY);
