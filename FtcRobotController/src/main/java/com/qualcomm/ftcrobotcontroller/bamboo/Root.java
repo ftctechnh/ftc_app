@@ -38,12 +38,12 @@ public class Root extends OpMode {
     @Override
     public void init()
     {
-        console.log("Root has initialized");
+        console.log("init", "Root has initialized");
     }
 
 
     @Override
-    public final void loop()
+    public void loop()
     {
         // some ugly stuff here....
 

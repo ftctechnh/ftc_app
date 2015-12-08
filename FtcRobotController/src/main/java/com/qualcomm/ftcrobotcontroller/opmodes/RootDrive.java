@@ -25,9 +25,9 @@ public class RootDrive extends Root {
         right = new Motor("right", hardwareMap, true);
         left = new Motor("left", hardwareMap);
         extr = new Motor("rightext", hardwareMap);
-        rotr = new Motor("rightrot", hardwareMap);
+        rotr = new Motor("rightrot", hardwareMap, true);
         extl = new Motor("leftext", hardwareMap, true);
-        rotl = new Motor("leftrot", hardwareMap, true);
+        rotl = new Motor("leftrot", hardwareMap);
     }
 
     @Override

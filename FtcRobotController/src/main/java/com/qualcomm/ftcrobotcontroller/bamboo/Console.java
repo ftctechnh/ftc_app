@@ -13,8 +13,8 @@ public class Console {
         telemetry = tele;
     }
 
-    public void log(String msg)
+    public void log(String ref, String msg)
     {
-        telemetry.addData("log",  msg);
+        telemetry.addData(ref,  msg);
     }
 }
