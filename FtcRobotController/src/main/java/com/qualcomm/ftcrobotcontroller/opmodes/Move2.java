@@ -28,6 +28,8 @@ public class Move2 extends OpMode{
         rightMotor = hardwareMap.dcMotor.get("motor_right");
         leftMotor = hardwareMap.dcMotor.get("motor_left");
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
+
+
     }
 
 
