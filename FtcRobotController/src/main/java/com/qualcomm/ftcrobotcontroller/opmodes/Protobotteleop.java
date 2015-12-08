@@ -47,9 +47,7 @@ public class Protobotteleop extends OpMode {
 		 */
 
         motorBrush = hardwareMap.dcMotor.get("motorBrush");
-
         motorLift = hardwareMap.dcMotor.get("motorLift");
-
         motorFRight = hardwareMap.dcMotor.get("motorFRight");
         motorFLeft = hardwareMap.dcMotor.get("motorFLeft");
         motorFRight.setDirection(DcMotor.Direction.REVERSE);
@@ -90,33 +88,33 @@ public class Protobotteleop extends OpMode {
         motorLift.setDirection(FORWARD);
 
         // lift controls
-        if (!gamepad1.a) {
+            // Makes Lift go In
+        if (gamepad1.a) {
+            motorLift.setDirection(DcMotor.Direction.FORWARD);
+            motorLift.setPower(1);
+            } else if (!gamepad1.a) {
             motorLift.setPower(0);
-        } else {
-            motorLift.setPower(1);
-            motorLift.setPower(1);
-            motorLift.setPower(1);
         }
-
-        if (!gamepad1.y) {
-            motorLift.setPower(0);
-        } else {
+            //Makes Lift go Out
+        if (gamepad1.y) {
             motorLift.setDirection(DcMotor.Direction.REVERSE);
             motorLift.setPower(1);
+            } else if (!gamepad1.y) {
+            motorLift.setPower(0);
         }
-
-        if (!gamepad1.x) {
+            //Makes Brush Push Blocks Out Of The Way
+        if (gamepad1.x) {
+            motorBrush.setDirection(DcMotor.Direction.FORWARD);
+            motorBrush.setPower(1);
+            } else if (!gamepad1.x) {
             motorBrush.setPower(0);
-        } else if ( !gamepad1.b ){
+        }
+            //Makes Brush Suck Up Blocks
+        if (gamepad1.b) {
             motorBrush.setDirection(DcMotor.Direction.REVERSE);
             motorBrush.setPower(1);
-            motorBrush.setPower(1);
-            motorBrush.setPower(1);
-            }
-        else if (!gamepad1.b) {
+            } else if (!gamepad1.b) {
             motorBrush.setPower(0);
-        } else {
-            motorBrush.setPower(1);
         }
 
         // write the values to the motors
