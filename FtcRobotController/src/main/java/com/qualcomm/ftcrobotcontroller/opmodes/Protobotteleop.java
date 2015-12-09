@@ -89,18 +89,19 @@ public class Protobotteleop extends OpMode {
 
         // lift controls
         // Makes Lift go In
-        if (gamepad1.a) {           //If A is Pressed Make Lift Go Up
+        if (gamepad1.a) {           //If A Is Pressed Make Lift Go Up
             motorLift.setPower(-1);
-        } else if (gamepad1.y) {    //If Y is Pressed Make
+        } else if (gamepad1.y) {    //If Y Is Pressed Make Lift Go Down
             motorLift.setPower(1);
-        } else {
+        } else {                    //Otherwise Stop Motor
             motorLift.setPower(0);
         }
-        if (gamepad1.x) {
+
+        if (gamepad1.x) {           //If X Is Pressed Make Brushes Push Debris
             motorBrush.setPower(1);
-        } else if (gamepad1.b) {
+        } else if (gamepad1.b) {    //If B Is Pressed Make Brushes Pickup Debris
             motorBrush.setPower(-1);
-        } else {
+        } else {                    //Otherwise Stop Motor
             motorBrush.setPower(0);
         }
 
