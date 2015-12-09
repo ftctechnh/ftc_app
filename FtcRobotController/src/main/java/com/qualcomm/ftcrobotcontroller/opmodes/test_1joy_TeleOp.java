@@ -51,6 +51,8 @@ public class test_1joy_TeleOp extends OpMode {
 	 * Also, as the claw servo approaches 0, the claw opens up (drops the game element).
 	 */
 
+	//SUCCESS
+
 	DcMotor motorRight;
 	DcMotor motorLeft;
 
