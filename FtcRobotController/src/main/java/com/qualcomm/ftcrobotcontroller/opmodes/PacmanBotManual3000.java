@@ -23,8 +23,8 @@ public class PacmanBotManual3000 extends PacmanBotHardwareBase {
 
     @Override
     public void init() {
-        telemetry.addData("Program","Manual Drive 3000");
-        telemetry.addData("Version",version.string());
+        telemetry.addData("Program", "Manual Drive 3000");
+        telemetry.addData("Version", version.string());
         telemetry.addData("HWB Version", hwbVersion.string());
 
         setupHardware();
@@ -60,16 +60,21 @@ public class PacmanBotManual3000 extends PacmanBotHardwareBase {
         double turn_rate  = gamepad.right_stick_x;
         if (highSpeed) limit(turn_rate,-drive_rate,drive_rate);
 
-        drive(drive_rate,turn_rate);
+        drive(drive_rate, turn_rate);
 
-        setTire(threeWay(gamepad.right_bumper,gamepad.right_trigger>.5)/3);
+        setTire(threeWay(gamepad.right_bumper, gamepad.right_trigger > .5) / 3);
 
-        setWinch(threeWay(gamepad.left_bumper,gamepad.left_trigger>.5));
+        setWinch(threeWay(gamepad.left_bumper, gamepad.left_trigger>.5));
 
         setBrush(threeWay(gamepad.a, gamepad.b));
-        setBelt(threeWay(gamepad.dpad_left, gamepad.dpad_right));
 
-        setHookRelease(gamepad.x);
+
+        setBelt(threeWay(gamepad.dpad_left, gamepad.dpad_right)*.35);
+
+        setThrower(gamepad.dpad_up);
+        setArm(gamepad.dpad_up ? .5 : 0);
+
+        //setHookRelease(gamepad.x);
 
         //setArm(Math.sin(timer.time()*4)); //Uncomment to annoy people.
 

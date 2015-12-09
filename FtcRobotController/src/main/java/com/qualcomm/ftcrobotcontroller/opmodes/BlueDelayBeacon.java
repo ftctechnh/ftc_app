@@ -2,7 +2,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-public class RedColorSense extends PacmanBotHardwareBase {
+public class BlueDelayBeacon extends PacmanBotHardwareBase {
     final static VersionNumber version = new VersionNumber(1,0,0);
     boolean set=false;
     boolean moveameoba=true;
@@ -39,19 +39,19 @@ public class RedColorSense extends PacmanBotHardwareBase {
             set=true;
             timer.reset();
         }
-        if (timer.time() < 1.15) {
+        if (timer.time() > 10 && timer.time() < 11.15) {
             drive(1,0); //1.15
         }
-        else if (timer.time() < 1.40) {
-            drive(0,-1); //1.4
+        else if (timer.time() < 11.55) {
+            drive(0,1); //1.4
         }
-        else if (timer.time() < 4.75) {
+        else if (timer.time() < 14.9) {
             drive(1,0); //3.75, 3.5
         }
-        else if (timer.time() < 5.0) {
-            drive(0,-1); //4.0, 3.75
+        else if (timer.time() < 15.3) {
+            drive(0,1); //4.0, 3.75
         }
-        else if (timer.time() < 6) {//5.4
+        else if (timer.time() < 16.3) {//5.4
             drive(0.5,0); //5.2, 5.4
         }
         else {
@@ -67,7 +67,7 @@ public class RedColorSense extends PacmanBotHardwareBase {
         else if (iterations == 20) {
             red1 = red;
             blue1 = blue;
-            if (red > blue) {
+            if (red < blue) {
                 arm.setPosition(0.53);
                 drive = true;
                 timer.reset();

@@ -1,12 +1,11 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
-/**
- * Created by sathk_000 on 12/3/2015.
- */
+
 public class RedMountainAuto extends PacmanBotHardwareBase {
     final static VersionNumber version = new VersionNumber(1,0,0);
     boolean set=false;
+    boolean moveameoba=true;
     ElapsedTime timer=new ElapsedTime();
 
     @Override
@@ -20,6 +19,12 @@ public class RedMountainAuto extends PacmanBotHardwareBase {
 
     @Override
     public void loop() {
+        if(moveameoba) {
+            brush.setPower(-1);
+        }
+        else {
+            brush.setPower(0);
+        }
         if (!set) {
             set = true;
             timer.reset();
@@ -35,6 +40,9 @@ public class RedMountainAuto extends PacmanBotHardwareBase {
 
         else if (timer.time() < 7.0) drive(0.25, 0);
 
-        else drive(0, 0);
+        else {
+            drive(0, 0);
+            moveameoba=false;
+        }
     }
 }

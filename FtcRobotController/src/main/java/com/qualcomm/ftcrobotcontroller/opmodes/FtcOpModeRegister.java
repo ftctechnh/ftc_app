@@ -45,23 +45,25 @@ public class FtcOpModeRegister implements OpModeRegister {
      * If two or more op modes are registered with the same name, the app will display an error.
      */
 
-        manager.register("Manual", PacmanBotManual3000.class);
-        manager.register("Color", ColorSensorTest.class);
-        manager.register("ServoTester",PacmanBotHardwareBase.class);
-        manager.register("RedBeaconAuto", RedBeaconAuto.class);
-        manager.register("BlueBeaconAuto",BlueBeaconAuto.class);
-        manager.register("RedMountainAuto",RedMountainAuto.class);
-        manager.register("Amazing Red button-pushy",RedColorSense.class);
-        //manager.register("RedBeaconTMD",RedBeaconTMD.class);
-        manager.register("RedBeaconFSM",RedBeaconFSM.class);
-
-        //manager.register("NullOp", NullOp.class);
-
-        //manager.register("MatrixK9TeleOp", MatrixK9TeleOp.class);
-        //manager.register("K9TeleOp", K9TeleOp.class);
-        //manager.register("K9Line", K9Line.class);
-        //manager.register ("PushBotAuto", PushBotAuto.class);
-        //manager.register ("PushBotManual", PushBotManual.class);
+        manager.register("Manual Drive", PacmanBotManual3000.class);
+        manager.register("Red Beacon Auto",RedColorSense.class);
+        manager.register("Blue Beacon Auto",BlueColorSense.class);
+        manager.register("Red Delay Beacon Auto",RedDelayBeacon.class);
+        manager.register("Blue Delay Beacon Auto",BlueDelayBeacon.class);
+        manager.register("Red Mountain Auto",RedMountainAuto.class);
+        manager.register("Blue Mountain Auto",BlueMountainAuto.class);
+//        manager.register("Red Beacon Auto", RedBeaconAuto.class);
+//        manager.register("Servo Tester",PacmanBotHardwareBase.class);
+//        manager.register("RedBeaconTMD",RedBeaconTMD.class);
+//        manager.register("Red Beacon FSM",RedBeaconFSM.class);
+//
+//        manager.register("NullOp", NullOp.class);
+//
+//        manager.register("MatrixK9TeleOp", MatrixK9TeleOp.class);
+//        manager.register("K9TeleOp", K9TeleOp.class);
+//        manager.register("K9Line", K9Line.class);
+//        manager.register ("PushBotAuto", PushBotAuto.class);
+//        manager.register ("PushBotManual", PushBotManual.class);
 
 
 
