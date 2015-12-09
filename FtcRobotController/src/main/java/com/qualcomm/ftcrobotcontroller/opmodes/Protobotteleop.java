@@ -92,7 +92,7 @@ public class Protobotteleop extends OpMode {
         // lift controls
         if (gamepad1.y) {
             motorLift.setPower(-1);
-        } else if (gamepad.a) {
+        } else if (gamepad1.a) {
             motorLift.setPower(1);
         } else {
             motorLift.setPower(0);
@@ -105,7 +105,7 @@ public class Protobotteleop extends OpMode {
             motorBrush.setPower(1);
             motorBrush.setPower(1);
             motorBrush.setPower(1);
-            }
+        }
         else if (!gamepad1.b) {
             motorBrush.setPower(0);
         } else {
