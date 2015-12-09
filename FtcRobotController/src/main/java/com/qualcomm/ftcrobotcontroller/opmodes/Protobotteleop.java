@@ -90,19 +90,12 @@ public class Protobotteleop extends OpMode {
         motorLift.setDirection(FORWARD);
 
         // lift controls
-        if (!gamepad1.a) {
-            motorLift.setPower(0);
+        if (gamepad1.y) {
+            motorLift.setPower(-1);
+        } else if (gamepad.a) {
+            motorLift.setPower(1);
         } else {
-            motorLift.setPower(1);
-            motorLift.setPower(1);
-            motorLift.setPower(1);
-        }
-
-        if (!gamepad1.y) {
             motorLift.setPower(0);
-        } else {
-            motorLift.setDirection(DcMotor.Direction.REVERSE);
-            motorLift.setPower(1);
         }
 
         if (!gamepad1.x) {
