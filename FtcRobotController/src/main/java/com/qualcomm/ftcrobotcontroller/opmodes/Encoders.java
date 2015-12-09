@@ -1,10 +1,17 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
+import android.app.Activity;
+import android.graphics.Color;
+import android.view.View;
+
+import com.qualcomm.ftcrobotcontroller.R;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.ftcrobotcontroller.opmodes.BasicMoveFunctions;
+import com.qualcomm.ftcrobotcontroller.opmodes.HTRGBExample;
 
 /**
  * Created by Robomain on 11/18/2015.
@@ -12,7 +19,7 @@ import com.qualcomm.ftcrobotcontroller.opmodes.BasicMoveFunctions;
 
 
 public class Encoders extends  LinearOpMode {
-    final static int encoder_kpr = 1120;
+      final static int encoder_kpr = 1120;
     final static double gear_ratio1 = 1;// unkown
     final static double gear_ratio2= 1.14;//unknown
     final static int wheel_diameter = 4;
@@ -22,19 +29,109 @@ public class Encoders extends  LinearOpMode {
     double distance;
     DcMotor leftmotor;
     DcMotor rightmotor;
-    BasicMoveFunctions command;
     double encoder1;
     double encoder2;
-    public void initiate () {
+    HTRGBExample color;
+    int colortemp;
+    ColorSensor sensorRGB;
+    Servo servo;
+    double move1;
+    public void initiate () throws InterruptedException {
         leftmotor = hardwareMap.dcMotor.get("leftmotor");
         rightmotor = hardwareMap.dcMotor.get("rightmotor");
         activegear = gear_ratio1;
         rightmotor.setDirection(DcMotor.Direction.REVERSE);
-
         leftmotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         rightmotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        sensorRGB = hardwareMap.colorSensor.get("color");
+        servo = hardwareMap.servo.get("servo");
+        initsensor();
+        servo.setPosition(.3);
+    }
+    public void initsensor() throws InterruptedException {
+
+
+        // write some device information (connection info, name and type)
+        // to the log file.
+        hardwareMap.logDevices();
+
+        // get a reference to our ColorSensor object.
+        sensorRGB = hardwareMap.colorSensor.get("color");
+
+        // bEnabled represents the state of the LED.
+
+
+        // turn the LED on in the beginning, just so user will know that the sensor is active.
+        sensorRGB.enableLed(false);
     }
 
+
+    public int getRed() throws InterruptedException {
+        // hsvValues is an array that will hold the hue, saturation, and value information.
+        float hsvValues[] = {0F, 0F, 0F};
+
+        // values is a reference to the hsvValues array.
+        final float values[] = hsvValues;
+
+        // get a reference to the RelativeLayout so we can change the background
+        // color of the Robot Controller app to match the hue detected by the RGB sensor.
+        final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(R.id.RelativeLayout);
+
+        // bPrevState and bCurrState represent the previous and current state of the button.
+        boolean bPrevState = false;
+        boolean bCurrState = false;
+
+        // while the op mode is active, loop and read the RGB data.
+        // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
+
+
+        // convert the RGB values to HSV values.
+        Color.RGBToHSV(sensorRGB.red(), sensorRGB.green(), sensorRGB.blue(), hsvValues);
+
+        // send the info back to driver station using telemetry function.
+        telemetry.addData("Clear", sensorRGB.alpha());
+        telemetry.addData("Red  ", sensorRGB.red());
+        telemetry.addData("Green", sensorRGB.green());
+        telemetry.addData("Blue ", sensorRGB.blue());
+        telemetry.addData("Hue", hsvValues[0]);
+
+        // change the background color to match the color detected by the RGB sensor.
+        // pass a reference to the hue, saturation, and value array as an argument
+        // to the HSVToColor method.
+        waitOneFullHardwareCycle();
+        return sensorRGB.red();
+    }
+
+    public int getBlue() throws InterruptedException {
+        // hsvValues is an array that will hold the hue, saturation, and value information.
+        float hsvValues[] = {0F, 0F, 0F};
+        sensorRGB = hardwareMap.colorSensor.get("color");
+        // values is a reference to the hsvValues array.
+        final float values[] = hsvValues;
+
+        // get a reference to the RelativeLayout so we can change the background
+        // color of the Robot Controller app to match the hue detected by the RGB sensor.
+        final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(R.id.RelativeLayout);
+
+        // bPrevState and bCurrState represent the previous and current state of the button.
+        boolean bPrevState = false;
+        boolean bCurrState = false;
+
+        // while the op mode is active, loop and read the RGB data.
+        // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
+
+
+        // convert the RGB values to HSV values.
+        Color.RGBToHSV(sensorRGB.red(), sensorRGB.green(), sensorRGB.blue(), hsvValues);
+
+        // send the info back to driver station using telemetry function.
+
+        // change the background color to match the color detected by the RGB sensor.
+        // pass a reference to the hue, saturation, and value array as an argument
+        // to the HSVToColor method.
+        waitOneFullHardwareCycle();
+        return sensorRGB.blue();
+    }
     @Override
     public void runOpMode() throws InterruptedException {
         initiate();
@@ -43,14 +140,38 @@ public class Encoders extends  LinearOpMode {
         waitOneFullHardwareCycle();
         rightmotor.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
         waitOneFullHardwareCycle();
-        movebackward(10, .5);
+        // movebackward(10, .5);
         waitOneFullHardwareCycle();
-        turnright(4, .5);
+        // turnright(4, .5);
         waitOneFullHardwareCycle();
-        turnleft(4, .5);
+        // turnleft(4, .5);
         waitOneFullHardwareCycle();
-        moveforward(10, .5);
+        // moveforward(10, .5);
+        if(getRed()< getBlue()) {
+            servo.setPosition(.5);
+            telemetry.addData("blue","blue");
+        }
+        else if (getRed()> getBlue()) {
+            servo.setPosition(.8);
+        }
+        else {
+            System.out.print("checks failed");
+        }
     }
+
+    /**
+     * changepower (int newpower) // i want to change power into new power
+     * {
+     *    power = newpower;
+     * }
+     */
+
+    /**
+     *
+     * @param move
+     * @param power
+     * @throws InterruptedException
+     */
     public void moveforward(double move, double power) throws InterruptedException {
 
 
@@ -80,7 +201,7 @@ public class Encoders extends  LinearOpMode {
     public void turnleft(double move, double power) throws InterruptedException {
 
         double distancetemp;
-        distancetemp = move * dpk;
+        move = move ;
         distance = distancetemp;
         encoder1 = encoder1- distancetemp;
         encoder2= encoder2+distancetemp;
@@ -158,5 +279,6 @@ public class Encoders extends  LinearOpMode {
         rightmotor.setPower(0);
 
     }
+
 }
 
