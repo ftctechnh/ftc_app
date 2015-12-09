@@ -17,7 +17,7 @@ public class Autonomous {
     double rightButtonServoPressed = 0.45;
     double leftButtonServoPressed = 0.57;
     double leftButtonServoReset = 0.43;
-    double rightButtonServoRest = 0.55;
+    double rightButtonServoReset = 0.55;
 
     public Autonomous(){
     }
@@ -53,7 +53,7 @@ public class Autonomous {
     public void ResetButtonPressers() throws InterruptedException {
 
         leftButtonServo.setPosition(leftButtonServoReset);
-        rightButtonServo.setPosition(rightButtonServoPressed);
+        rightButtonServo.setPosition(rightButtonServoReset);
         TimeUnit.MILLISECONDS.sleep(2100);
         leftButtonServo.setPosition(0.5);
         rightButtonServo.setPosition(0.5);
