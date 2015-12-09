@@ -47,9 +47,8 @@ public class Protobotteleop extends OpMode {
 		 */
 
         motorBrush = hardwareMap.dcMotor.get("motorBrush");
-
         motorLift = hardwareMap.dcMotor.get("motorLift");
-
+        motorLift.setDirection(DcMotor.Direction.REVERSE);
         motorFRight = hardwareMap.dcMotor.get("motorFRight");
         motorFLeft = hardwareMap.dcMotor.get("motorFLeft");
         motorFRight.setDirection(DcMotor.Direction.REVERSE);
@@ -87,29 +86,22 @@ public class Protobotteleop extends OpMode {
         right = (float) scaleInput(right);
         left = (float) scaleInput(left);
 
-        motorLift.setDirection(FORWARD);
 
         // lift controls
-        if (gamepad1.y) {
+        // Makes Lift go In
+        if (gamepad1.a) {           //If A is Pressed Make Lift Go Up
             motorLift.setPower(-1);
-        } else if (gamepad1.a) {
+        } else if (gamepad1.y) {    //If Y is Pressed Make
             motorLift.setPower(1);
         } else {
             motorLift.setPower(0);
         }
-
-        if (!gamepad1.x) {
-            motorBrush.setPower(0);
-        } else if ( !gamepad1.b ){
-            motorBrush.setDirection(DcMotor.Direction.REVERSE);
+        if (gamepad1.x) {
             motorBrush.setPower(1);
-            motorBrush.setPower(1);
-            motorBrush.setPower(1);
-        }
-        else if (!gamepad1.b) {
-            motorBrush.setPower(0);
+        } else if (gamepad1.b) {
+            motorBrush.setPower(-1);
         } else {
-            motorBrush.setPower(1);
+            motorBrush.setPower(0);
         }
 
         // write the values to the motors
