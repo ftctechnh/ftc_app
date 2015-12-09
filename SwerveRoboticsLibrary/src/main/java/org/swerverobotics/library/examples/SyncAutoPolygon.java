@@ -5,7 +5,12 @@ import org.swerverobotics.library.*;
 import org.swerverobotics.library.interfaces.*;
 
 /**
- * Documentation to come
+ * This synchronous OpMode makes the the robot move in the shape
+ * of (approximately) a simple polygon using time-based motion limits.
+ *
+ * It expects two motors, named "motorLeft" and "motorRight".
+ *
+ * @see SyncAutoPolygonEncoders
  */
 @Autonomous(name="Auto Polygon (Sync)", group="Swerve Examples")
 @Disabled

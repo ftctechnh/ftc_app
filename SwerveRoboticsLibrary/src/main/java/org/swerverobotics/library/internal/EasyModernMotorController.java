@@ -41,10 +41,10 @@ public class EasyModernMotorController extends EasyModernController implements D
         this.findTargetNameAndMapping();
         }
 
-    static NoErrorReportingReadWriteRunnableStandard newDummyReadWriteRunnable(SerialNumber serialNumber)
+    static ReadWriteRunnableHandy newDummyReadWriteRunnable(SerialNumber serialNumber)
         {
         RobotUsbDevice robotUsbDevice = new DummyRobotUsbDevice();
-        return new NoErrorReportingReadWriteRunnableStandard(serialNumber, robotUsbDevice, MONITOR_LENGTH, START_ADDRESS, false);
+        return new ReadWriteRunnableHandy(serialNumber, robotUsbDevice, MONITOR_LENGTH, START_ADDRESS, false);
         }
 
     public static DcMotorController create(OpMode context, DcMotorController target, DcMotor motor1, DcMotor motor2)
@@ -252,9 +252,8 @@ public class EasyModernMotorController extends EasyModernController implements D
 
         int cur = getMotorCurrentPosition(motor);
         int tar = getMotorTargetPosition(motor);
-        RunMode mode = getMotorChannelMode(motor);
 
-        return mode==RunMode.RUN_TO_POSITION && (Math.abs(cur - tar) > busyThreshold);
+        return (Math.abs(cur - tar) > busyThreshold);
         }
 
     @Override public synchronized double getMotorPower(int motor)
@@ -315,13 +314,19 @@ public class EasyModernMotorController extends EasyModernController implements D
         // to the USB device actually happen when we issue them.
         if (mode == RunMode.RESET_ENCODERS)
             {
-            assertTrue(!BuildConfig.DEBUG || this.getMotorCurrentPosition(motor)==0);
+            // Unclear if this is needed, but anecdotes from (e.g.) Dryw seem to indicate that it is
+            while (this.getMotorCurrentPosition(motor) != 0)
+                {
+                waitForNextReadComplete();
+                }
             }
         else if (mode == RunMode.RUN_TO_POSITION)
             {
             // Enforce that in RUN_TO_POSITION, we always need *positive* power. DCMotor will
             // take care of that if we set power *after* we set the mode, but not the other way
             // around. So we handle that here.
+            //
+            // Unclear that this is needed. The motor controller might take the absolute value automatically
             double power = getMotorPower(motor);
             if (power < 0)
                 setMotorPower(motor, Math.abs(power));
