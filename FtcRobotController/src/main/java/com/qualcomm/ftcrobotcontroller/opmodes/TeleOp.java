@@ -15,6 +15,12 @@ public class TeleOp extends OpMode {
     DcMotor arm;
     Servo servo;
     boolean locked;
+
+    /**
+     * @override for initiation
+     * the main initalization loop for the robots autonomous mode
+     *
+     */
     @Override
     public void init()
     {
