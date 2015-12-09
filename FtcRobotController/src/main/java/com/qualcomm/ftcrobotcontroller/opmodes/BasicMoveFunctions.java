@@ -31,7 +31,12 @@ public abstract class BasicMoveFunctions extends LinearOpMode {
         rightmotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
     }
 
-
+    /**
+     * move forward an amount
+     * @param move the distance to move in inches
+     * @param power the power to use
+     * @throws InterruptedException
+     */
     public void moveforward(int move, double power) throws InterruptedException {
 
     initiate();
@@ -62,6 +67,12 @@ public abstract class BasicMoveFunctions extends LinearOpMode {
 
     }
 
+    /**
+     * turn left for an amount
+     * @param move the distance to move
+     * @param power the power to use
+     * @throws InterruptedException
+     */
     public void turnleft(int move, double power) throws InterruptedException {
         initiate();
         double distancetemp;
@@ -89,6 +100,12 @@ public abstract class BasicMoveFunctions extends LinearOpMode {
         rightmotor.setPower(0);
     }
 
+    /**
+     * turn right for a distrace
+     * @param move the distance to move
+     * @param power the power of the motors
+     * @throws InterruptedException
+     */
     public void turnright(int move, double power) throws InterruptedException {
        initiate();
         double distancetemp;
@@ -116,6 +133,12 @@ public abstract class BasicMoveFunctions extends LinearOpMode {
         rightmotor.setPower(0);
     }
 
+    /**
+     * move backwards
+     * @param move the distance to move
+     * @param power the power to use to move
+     * @throws InterruptedException
+     */
     public void movebackward(int move, double power) throws InterruptedException {
         initiate();
         double distancetemp;

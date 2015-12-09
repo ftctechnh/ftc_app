@@ -14,7 +14,9 @@ import com.qualcomm.ftcrobotcontroller.opmodes.BasicMoveFunctions;
 import com.qualcomm.ftcrobotcontroller.opmodes.HTRGBExample;
 
 /**
- * Created by Robomain on 11/18/2015.
+ * @author Darron and Caiti
+ *  created 12/9/2015
+ *  ftc robot conroler autonomous base class
  */
 
 
@@ -36,7 +38,8 @@ public class Encoders extends  LinearOpMode {
     ColorSensor sensorRGB;
     Servo servo;
     double move1;
-    public void initiate () throws InterruptedException {
+
+    private void initiate () throws InterruptedException {
         leftmotor = hardwareMap.dcMotor.get("leftmotor");
         rightmotor = hardwareMap.dcMotor.get("rightmotor");
         activegear = gear_ratio1;
@@ -48,7 +51,9 @@ public class Encoders extends  LinearOpMode {
         initsensor();
         servo.setPosition(.3);
     }
-    public void initsensor() throws InterruptedException {
+
+
+    private void initsensor() throws InterruptedException {
 
 
         // write some device information (connection info, name and type)
@@ -66,7 +71,7 @@ public class Encoders extends  LinearOpMode {
     }
 
 
-    public int getRed() throws InterruptedException {
+    private int getRed() throws InterruptedException {
         // hsvValues is an array that will hold the hue, saturation, and value information.
         float hsvValues[] = {0F, 0F, 0F};
 
@@ -102,7 +107,7 @@ public class Encoders extends  LinearOpMode {
         return sensorRGB.red();
     }
 
-    public int getBlue() throws InterruptedException {
+    private int getBlue() throws InterruptedException {
         // hsvValues is an array that will hold the hue, saturation, and value information.
         float hsvValues[] = {0F, 0F, 0F};
         sensorRGB = hardwareMap.colorSensor.get("color");
@@ -159,17 +164,11 @@ public class Encoders extends  LinearOpMode {
         }
     }
 
-    /**
-     * changepower (int newpower) // i want to change power into new power
-     * {
-     *    power = newpower;
-     * }
-     */
 
     /**
-     *
-     * @param move
-     * @param power
+     * move forward for a number of counts
+     * @param move the distance to move in inches
+     * @param power the power to use
      * @throws InterruptedException
      */
     public void moveforward(double move, double power) throws InterruptedException {
@@ -198,6 +197,12 @@ public class Encoders extends  LinearOpMode {
         rightmotor.setPower(0);
     }
 
+    /**
+     * turn left for a number of counts
+     * @param move the distance to move in inches
+     * @param power the power to use
+     * @throws InterruptedException
+     */
     public void turnleft(double move, double power) throws InterruptedException {
 
         double distancetemp;
@@ -224,7 +229,12 @@ public class Encoders extends  LinearOpMode {
         rightmotor.setPower(0);
     }
 
-
+    /**
+     * turn right for a number of counts
+     * @param move the distance to move in inches
+     * @param power the power to use
+     * @throws InterruptedException
+     */
     public void turnright(double move, double power) throws InterruptedException {
 
         double distancetemp;
@@ -252,7 +262,12 @@ public class Encoders extends  LinearOpMode {
         leftmotor.setPower(0);
         rightmotor.setPower(0);
     }
-
+    /**
+     * move backwards for a number of counts
+     * @param move the distance to move in inches
+     * @param power the power to use
+     * @throws InterruptedException
+     */
     public void movebackward(double move, double power) throws InterruptedException {
 
         double distancetemp;
