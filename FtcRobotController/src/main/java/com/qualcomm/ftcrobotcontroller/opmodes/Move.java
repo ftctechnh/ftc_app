@@ -31,15 +31,28 @@ public class Move extends LinearOpMode{
     public void runOpMode(){
         armUpperMotor = hardwareMap.dcMotor.get("armUpperMotor");
         armLowerMotor = hardwareMap.dcMotor.get("armLowerMotor");
-        light = hardwareMap.dcMotor.get("");
+        light = hardwareMap.lightSensor.get("lightSensor");
         rightMotor = hardwareMap.dcMotor.get("motor_right");
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
         leftMotor = hardwareMap.dcMotor.get("motor_left");
         double lightVal;
+
+        //Code to test the light sensor
         while(true) {
             lightVal = light.getLightDetected();
             telemetry.addData("Text", "*** Robot Data***");
-            telemetry.addData("Light",  "Light: " + String.format("%.2f", (float)lightVal));
+            telemetry.addData("Light", "Light: " + String.format("%.2f", (float) lightVal));
         }
+
+        /*//move for distance (1000) at speed using motors right and left
+        int rightPos = rightMotor.getCurrentPosition();
+        int leftPos = leftMotor.getCurrentPosition();
+        rightMotor.setTargetPosition(distance + rightPos);
+        leftMotor.setTargetPosition(distance + leftPos);
+        while(rightMotor.getTargetPosition() > rightMotor.getCurrentPosition()){
+            rightMotor.setPower(speed);
+            leftMotor.setPower(speed);
+        }
+        */
     }
 }

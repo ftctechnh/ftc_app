@@ -79,7 +79,7 @@ public class OurAutonomous extends OpMode{
     public void stop(){
     }
 
-    
+
     public void moveForward(int distance, int speed){
         //move for distance at speed using motors right and left
         int rightPos = rightMotor.getCurrentPosition();
@@ -92,8 +92,8 @@ public class OurAutonomous extends OpMode{
         }
 
         telemetry.addData("Text", "*** Robot Data***");
-        telemetry.addData("Motor target Pos", "Pos: " + rightMotor.getTargetPosition());
         telemetry.addData("Motor current Pos", "Pos: " + rightMotor.getCurrentPosition());
+        telemetry.addData("Motor target Pos", "Pos: " + rightMotor.getTargetPosition());
     }
 
     public void moveBackward(int distance, int speed){
