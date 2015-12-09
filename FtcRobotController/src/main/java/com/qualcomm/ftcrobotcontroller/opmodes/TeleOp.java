@@ -5,7 +5,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
- * Created by Robomain on 11/3/2015.
+ * @author Darron and Caiti
+ *  created 12/9/2015
+ *  ftc robot conroler teleop class
  */
 public class TeleOp extends OpMode {
     DcMotor rightmotor;
@@ -18,7 +20,7 @@ public class TeleOp extends OpMode {
 
     /**
      * @override for initiation
-     * the main initalization loop for the robots autonomous mode
+     * the main initalization loop for the robots teleop mode
      *
      */
     @Override
@@ -34,7 +36,9 @@ public class TeleOp extends OpMode {
         arm = hardwareMap.dcMotor.get("arm");
     }
     @Override
-
+/**
+ * the loop to run during teleop
+ */
     public void loop()
     {
         float leftY = -gamepad1.left_stick_y;
