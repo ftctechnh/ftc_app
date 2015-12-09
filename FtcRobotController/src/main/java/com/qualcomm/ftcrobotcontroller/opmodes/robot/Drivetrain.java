@@ -13,26 +13,36 @@ public class Drivetrain {
     public DcMotor frontRight;
     public DcMotor backRight;
 
+    GyroSensor gyro;
+
+    int heading = 0;
+    int headingTolerance = 2;
+
     double wheelCircumference = 6 * Math.PI;
     double ticksPerRotation = 1049;
 
     public Drivetrain(){
     }
 
-    public void init(HardwareMap hardwareMap){
+    public void init(HardwareMap hardwareMap) throws InterruptedException {
         frontLeft = hardwareMap.dcMotor.get("leftMotor1");
         backLeft = hardwareMap.dcMotor.get("leftMotor2");
         frontRight = hardwareMap.dcMotor.get("rightMotor1");
         backRight = hardwareMap.dcMotor.get("rightMotor2");
 
+        gyro = hardwareMap.gyroSensor.get("gyro");
+
         frontRight.setDirection(DcMotor.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.REVERSE);
 
-        try {
-            resetEncoders();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        resetEncoders();
+
+        gyro.calibrate();
+
+        while (gyro.isCalibrating())  {
+            Thread.sleep(50);
         }
+
     }
 
     public void tankDrive(double leftSpeed,double rightSpeed) {
@@ -154,6 +164,45 @@ public class Drivetrain {
             tankDrive(0, speed);
         }
 
+        arcadeDrive(0, 0);
+    }
+
+    public void turnAngle(int targetAngle, double speed){
+
+        int currentHeading = gyro.getHeading();
+        int goalHeading = currentHeading + targetAngle;
+
+        speed = Math.copySign(speed, targetAngle);
+
+        while( (goalHeading - gyro.getHeading()) > headingTolerance){
+            arcadeDrive(0, speed);
+        }
+        arcadeDrive(0, 0);
+    }
+
+    public void turnLeftAngle(int targetAngle, double speed){
+
+        int currentHeading = gyro.getHeading();
+        int goalHeading = currentHeading + targetAngle;
+
+        speed = Math.copySign(speed, targetAngle);
+
+        while( (goalHeading - gyro.getHeading()) > headingTolerance){
+            tankDrive(speed, 0);
+        }
+        arcadeDrive(0, 0);
+    }
+
+    public void turnRightAngle(int targetAngle, double speed){
+
+        int currentHeading = gyro.getHeading();
+        int goalHeading = currentHeading + targetAngle;
+
+        speed = Math.copySign(speed, targetAngle);
+
+        while( (goalHeading - gyro.getHeading()) > headingTolerance){
+            tankDrive(0, speed);
+        }
         arcadeDrive(0, 0);
     }
 
