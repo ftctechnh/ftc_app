@@ -48,6 +48,7 @@ public class Protobotteleop extends OpMode {
 
         motorBrush = hardwareMap.dcMotor.get("motorBrush");
         motorLift = hardwareMap.dcMotor.get("motorLift");
+        motorLift.setDirection(DcMotor.Direction.REVERSE);
         motorFRight = hardwareMap.dcMotor.get("motorFRight");
         motorFLeft = hardwareMap.dcMotor.get("motorFLeft");
         motorFRight.setDirection(DcMotor.Direction.REVERSE);
@@ -85,35 +86,21 @@ public class Protobotteleop extends OpMode {
         right = (float) scaleInput(right);
         left = (float) scaleInput(left);
 
-        motorLift.setDirection(FORWARD);
 
         // lift controls
-            // Makes Lift go In
-        if (gamepad1.a) {
-            motorLift.setDirection(DcMotor.Direction.FORWARD);
+        // Makes Lift go In
+        if (gamepad1.a) {           //If A is Pressed Make Lift Go Up
+            motorLift.setPower(-1);
+        } else if (gamepad1.y) {    //If Y is Pressed Make
             motorLift.setPower(1);
-            } else if (!gamepad1.a) {
+        } else {
             motorLift.setPower(0);
         }
-            //Makes Lift go Out
-        if (gamepad1.y) {
-            motorLift.setDirection(DcMotor.Direction.REVERSE);
-            motorLift.setPower(1);
-            } else if (!gamepad1.y) {
-            motorLift.setPower(0);
-        }
-            //Makes Brush Push Blocks Out Of The Way
         if (gamepad1.x) {
-            motorBrush.setDirection(DcMotor.Direction.FORWARD);
             motorBrush.setPower(1);
-            } else if (!gamepad1.x) {
-            motorBrush.setPower(0);
-        }
-            //Makes Brush Suck Up Blocks
-        if (gamepad1.b) {
-            motorBrush.setDirection(DcMotor.Direction.REVERSE);
-            motorBrush.setPower(1);
-            } else if (!gamepad1.b) {
+        } else if (gamepad1.b) {
+            motorBrush.setPower(-1);
+        } else {
             motorBrush.setPower(0);
         }
 
