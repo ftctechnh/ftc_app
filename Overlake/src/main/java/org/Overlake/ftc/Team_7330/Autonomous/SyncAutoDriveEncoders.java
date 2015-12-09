@@ -24,7 +24,7 @@ public class SyncAutoDriveEncoders extends SynchronousOpMode
     // The number of encoder ticks per motor shaft revolution. 1440 is correct
     // for HiTechnic motors. Andy Mark motors are 1120 ticks per revolution.
     // http://www.cougarrobot.com/index.php?option=com_content&view=article&id=331%3Aandymark-neverest-motor-notes&catid=92%3Aftc-hardware&Itemid=140
-    final int encRotation = 1440;
+    final int encRotation = 1120;
 
     DcMotor motorBackRight;
     DcMotor motorBackLeft;
@@ -63,7 +63,7 @@ public class SyncAutoDriveEncoders extends SynchronousOpMode
         this.motorBackRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
 
         // Drive forward a while. The parameters here are arbitrary; they're just for illustration
-        driveWithEncoders(4.7, .6);
+        driveWithEncoders(3, .5);
     }
 
     /** Drive (forward) the indicated number of motor shaft revolutions using the indicated power */
@@ -72,18 +72,16 @@ public class SyncAutoDriveEncoders extends SynchronousOpMode
         // How far are we to move, in ticks instead of revolutions?
         int denc = (int)Math.round(revolutions * encRotation);
 
+        int frontLeftTarget = this.motorFrontLeft.getCurrentPosition() + denc;
+        int frontRightTarget = this.motorFrontRight.getCurrentPosition() + denc;
+        int backLeftTarget = this.motorBackLeft.getCurrentPosition() + denc;
+        int backRightTarget = this.motorBackRight.getCurrentPosition() + denc;
+
         // Tell the motors where we are going
-        this.motorFrontLeft.setTargetPosition(this.motorFrontLeft.getCurrentPosition() + denc);
-        this.motorFrontRight.setTargetPosition(this.motorFrontRight.getCurrentPosition() + denc);
-        this.motorBackLeft.setTargetPosition(this.motorBackLeft.getCurrentPosition() + denc);
-        this.motorBackRight.setTargetPosition(this.motorBackRight.getCurrentPosition() + denc);
-
-
-        // Give them the power level we want them to move at
-        this.motorFrontLeft.setPower(power);
-        this.motorFrontRight.setPower(power);
-        this.motorBackLeft.setPower(power);
-        this.motorBackRight.setPower(power);
+        this.motorFrontLeft.setTargetPosition(frontLeftTarget);
+        this.motorFrontRight.setTargetPosition(frontRightTarget);
+        this.motorBackLeft.setTargetPosition(backLeftTarget);
+        this.motorBackRight.setTargetPosition(backRightTarget);
 
         // Set them a-going
         this.motorFrontLeft.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
@@ -92,11 +90,23 @@ public class SyncAutoDriveEncoders extends SynchronousOpMode
         this.motorBackRight.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
 
         // Wait until they are done
-        while (this.motorFrontLeft.isBusy() && this.motorFrontRight.isBusy() && this.motorBackRight.isBusy()&& this.motorBackLeft.isBusy())
-            {
+        while (this.motorFrontLeft.isBusy() && this.motorFrontRight.isBusy() && this.motorBackRight.isBusy() && this.motorBackLeft.isBusy())
+        {
             telemetry.update();
             this.idle();
-            }
+
+            int minDistance = frontLeftTarget - this.motorFrontLeft.getCurrentPosition();
+            minDistance = Math.min(minDistance, frontRightTarget - this.motorFrontRight.getCurrentPosition());
+            minDistance = Math.min(minDistance, backLeftTarget - this.motorBackLeft.getCurrentPosition());
+            minDistance = Math.min(minDistance, backRightTarget - this.motorBackRight.getCurrentPosition());
+
+            double scaledPower = getPower(power, minDistance);
+
+            this.motorFrontLeft.setPower(scaledPower);
+            this.motorFrontRight.setPower(scaledPower);
+            this.motorBackLeft.setPower(scaledPower);
+            this.motorBackRight.setPower(scaledPower);
+        }
 
         // Now that we've arrived, kill the motors so they don't just sit there buzzing
         this.motorFrontLeft.setPower(0);
@@ -111,6 +121,11 @@ public class SyncAutoDriveEncoders extends SynchronousOpMode
     //----------------------------------------------------------------------------------------------
     // Utility
     //----------------------------------------------------------------------------------------------
+
+    double getPower(double power, int distance)
+    {
+        return power * (((Math.min((double)distance, (double)encRotation) / (double)encRotation) * 0.9) + 0.1);
+    }
 
     void composeDashboard()
         {
