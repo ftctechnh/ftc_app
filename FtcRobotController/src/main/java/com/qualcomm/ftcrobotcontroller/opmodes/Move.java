@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.hardware.HiTechnicNxtLightSensor;
 
 //import com.qualcomm.ftcrobotcontroller.opmodes.MC;
 //import com.qualcomm.robotcore.hardware.DcMotorController;
@@ -25,20 +26,23 @@ public class Move extends LinearOpMode{
     final static int distance = 1000;
     DcMotor rightMotor;
     DcMotor leftMotor;
-    LightSensor light;
+    HiTechnicNxtLightSensor light;
 
 
     public void runOpMode(){
         armUpperMotor = hardwareMap.dcMotor.get("armUpperMotor");
         armLowerMotor = hardwareMap.dcMotor.get("armLowerMotor");
-        light = hardwareMap.lightSensor.get("lightSensor");
+        light = (HiTechnicNxtLightSensor)hardwareMap.lightSensor.get("lightSensor");
+        //HiTechnicNxtLightSensor.get("lightSensor");
         rightMotor = hardwareMap.dcMotor.get("motor_right");
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
         leftMotor = hardwareMap.dcMotor.get("motor_left");
         double lightVal;
 
+        light.enableLed(true);
         //Code to test the light sensor
         while(true) {
+
             lightVal = light.getLightDetected();
             telemetry.addData("Text", "*** Robot Data***");
             telemetry.addData("Light", "Light: " + String.format("%.2f", (float) lightVal));
