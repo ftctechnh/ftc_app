@@ -2,6 +2,7 @@ package org.overlake.ftc.team_7330.Autonomous;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 
 import org.swerverobotics.library.SynchronousOpMode;
 
@@ -9,6 +10,9 @@ import org.swerverobotics.library.SynchronousOpMode;
  * Created by jacks on 11/13/2015.
  */
 public abstract class AutonomousOpMode extends SynchronousOpMode {
+
+    final int encRotation = 1120;
+
     DcMotor motorFrontRight;
     DcMotor motorBackRight;
     DcMotor motorFrontLeft;
@@ -72,5 +76,61 @@ public abstract class AutonomousOpMode extends SynchronousOpMode {
         motorBackLeft.setPower(leftMotorPower);
 
         //drive forward a bit
+    }
+
+    void driveWithEncoders(double revolutions, double power) throws InterruptedException
+    {
+        // How far are we to move, in ticks instead of revolutions?
+        int denc = (int)Math.round(revolutions * encRotation);
+
+        int frontLeftTarget = this.motorFrontLeft.getCurrentPosition() + denc;
+        int frontRightTarget = this.motorFrontRight.getCurrentPosition() + denc;
+        int backLeftTarget = this.motorBackLeft.getCurrentPosition() + denc;
+        int backRightTarget = this.motorBackRight.getCurrentPosition() + denc;
+
+        // Tell the motors where we are going
+        this.motorFrontLeft.setTargetPosition(frontLeftTarget);
+        this.motorFrontRight.setTargetPosition(frontRightTarget);
+        this.motorBackLeft.setTargetPosition(backLeftTarget);
+        this.motorBackRight.setTargetPosition(backRightTarget);
+
+        // Set them a-going
+        this.motorFrontLeft.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        this.motorFrontRight.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        this.motorBackLeft.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        this.motorBackRight.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+
+        // Wait until they are done
+        while (this.motorFrontLeft.isBusy() && this.motorFrontRight.isBusy() && this.motorBackRight.isBusy() && this.motorBackLeft.isBusy())
+        {
+            telemetry.update();
+            this.idle();
+
+            int minDistance = frontLeftTarget - this.motorFrontLeft.getCurrentPosition();
+            minDistance = Math.min(minDistance, frontRightTarget - this.motorFrontRight.getCurrentPosition());
+            minDistance = Math.min(minDistance, backLeftTarget - this.motorBackLeft.getCurrentPosition());
+            minDistance = Math.min(minDistance, backRightTarget - this.motorBackRight.getCurrentPosition());
+
+            double scaledPower = getPower(power, minDistance);
+
+            this.motorFrontLeft.setPower(scaledPower);
+            this.motorFrontRight.setPower(scaledPower);
+            this.motorBackLeft.setPower(scaledPower);
+            this.motorBackRight.setPower(scaledPower);
+        }
+
+        // Now that we've arrived, kill the motors so they don't just sit there buzzing
+        this.motorFrontLeft.setPower(0);
+        this.motorFrontRight.setPower(0);
+        this.motorBackLeft.setPower(0);
+        this.motorBackRight.setPower(0);
+
+        // Always leave the screen looking pretty
+        telemetry.updateNow();
+    }
+
+    double getPower(double power, int distance)
+    {
+        return power * (((Math.min((double)distance, (double)encRotation) / (double)encRotation) * 0.9) + 0.1);
     }
 }
