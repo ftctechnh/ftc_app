@@ -34,11 +34,11 @@ public abstract class AutonomousOpMode extends SynchronousOpMode {
 
     public void followColor(Color c, Side sensorSide, Side colorSide)
     {
-        double leftMotorPower = .25;     //should these have more scope? so they aren't reset every time ?
-        double rightMotorPower = .25;
+        double leftMotorPower = motorBackLeft.getPower();     //should these have more scope? so they aren't reset every time ?
+        double rightMotorPower = motorBackRight.getPower();
         double increment = .005;
 
-        if (isColor(c, sensorSide) == true)
+        if (isColor(c, sensorSide))
         {
             if (colorSide == Side.Left)      //if color side is left, veer right
             {
