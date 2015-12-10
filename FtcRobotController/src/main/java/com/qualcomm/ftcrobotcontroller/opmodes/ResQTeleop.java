@@ -27,6 +27,7 @@ public class ResQTeleop extends OpMode {
     final static double ADJUSTSERVO_MAX_RANGE = 1;
 
     double climbservoPosition;
+    double climbservo2Position;
     double clampPosition;
     double buttonservoPosition;
     double boxservoPosition;
@@ -34,7 +35,7 @@ public class ResQTeleop extends OpMode {
     double adjustservoPosition;
 
     double climbServoEnd = 0.7;
-    //double climbServo2End = 0.05;
+    double climbServo2End = 0.05;
     double buttonServoDelta = 0.1;
     double clampDelta = 0.69;
     double adjustServoLeft = 0.25;
@@ -75,7 +76,9 @@ public class ResQTeleop extends OpMode {
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
         leftMotor.setDirection(DcMotor.Direction.FORWARD);
 
-        climbservo = hardwareMap.servo.get("climbservo");
+        climbservo2 = hardwareMap.servo.get("leftclimb");
+        climbservo2Position = 0.7;
+        climbservo = hardwareMap.servo.get("rightclimb");
         climbservoPosition = 0;
         //buttonservo = hardwareMap.servo.get("buttonservo");
         //buttonservoPosition = 0.0;
@@ -132,10 +135,12 @@ public class ResQTeleop extends OpMode {
         }
         if (gamepad1.right_bumper || gamepad2.right_bumper) {
             climbservo.setPosition(climbServoEnd);
+            climbservo2.setPosition(climbServo2End);
             //buttonservoPosition -= buttonServoDelta;
         }
         if (gamepad1.left_bumper || gamepad1.left_bumper) {
             climbservo.setPosition(0);
+            climbservo2.setPosition(0.7);
             //buttonservoPosition += buttonServoDelta;
         }
         if (gamepad1.dpad_left || gamepad2.dpad_left) {
@@ -152,6 +157,7 @@ public class ResQTeleop extends OpMode {
             releaseservo.setPosition(releaseServoEnd);
         }
         climbservoPosition = Range.clip(climbservoPosition, CLIMBSERVO_MIN_RANGE, CLIMBSERVO_MAX_RANGE);
+        climbservo2Position = Range.clip(climbservo2Position, CLIMBSERVO2_MIN_RANGE, CLIMBSERVO2_MAX_RANGE);
         //climbservo.setPosition(climbservoPosition);
         //climbservo2.setPosition(climbservoPosition2);
         //buttonservo.setPosition(buttonservoPosition);
