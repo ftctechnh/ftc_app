@@ -137,6 +137,11 @@ public class Encoders extends  LinearOpMode {
         waitOneFullHardwareCycle();
         return sensorRGB.blue();
     }
+
+    /**
+     * @Override run the main opmode
+     * @throws InterruptedException
+     */
     @Override
     public void runOpMode() throws InterruptedException {
         initiate();
