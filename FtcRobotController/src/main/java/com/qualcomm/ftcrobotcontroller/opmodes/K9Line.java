@@ -131,7 +131,7 @@ public class K9Line extends OpMode {
 		/*
 		 * read the light sensor.
 		 */
-		reflection = reflectedLight.getLightLevel();
+		reflection = reflectedLight.getLightDetected();
 		
 		/*
 		 * compare measured value to threshold.

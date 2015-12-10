@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.powerstackers.resq.opmodes.ProtobotTeleop;
 import com.powerstackers.resq.opmodes.PurplePencil;
 import com.powerstackers.resq.opmodes.WorkshopTeleop;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
@@ -78,7 +79,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     //manager.register("K9TeleOp", K9TeleOp.class);
     manager.register("K9IrSeeker", K9IrSeeker.class);
     manager.register("OpticalTelemetry", OpticalTelemetry.class);
-    manager.register("Protobot" ,Protobotteleop.class);
+    manager.register("Protobot" ,ProtobotTeleop.class);
     //manager.register("K9Line", K9Line.class);
     //manager.register("K9AutoTime", K9AutoTime.class);
     //manager.register("IrSeekerOp", IrSeekerOp.class);
