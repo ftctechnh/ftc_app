@@ -40,15 +40,14 @@ public class Move extends LinearOpMode{
         double lightVal;
 
         light.enableLed(true);
-        //Code to test the light sensor
+        /*//Code to test the light sensor
         while(true) {
-
             lightVal = light.getLightDetected();
             telemetry.addData("Text", "*** Robot Data***");
             telemetry.addData("Light", "Light: " + String.format("%.2f", (float) lightVal));
-        }
+        }*/
 
-        /*//move for distance (1000) at speed using motors right and left
+        //move for distance (1000) at speed using motors right and left
         int rightPos = rightMotor.getCurrentPosition();
         int leftPos = leftMotor.getCurrentPosition();
         rightMotor.setTargetPosition(distance + rightPos);
@@ -57,6 +56,6 @@ public class Move extends LinearOpMode{
             rightMotor.setPower(speed);
             leftMotor.setPower(speed);
         }
-        */
+
     }
 }
