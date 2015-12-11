@@ -60,6 +60,14 @@ public class DragonoidsTeleOp extends DragonoidsOpMode {
             //set conveyor motor to 0
             auxMotors.get("knocker").setPower(0.0);
         }
+        if (gamepad2.a){
+            //opens the gate
+            servos.get("gate").setPosition(0.5);
+        }
+        else{
+            //closes the gate
+            servos.get("gate").setPosition(0.0);
+        }
 
         super.loop();
     }
