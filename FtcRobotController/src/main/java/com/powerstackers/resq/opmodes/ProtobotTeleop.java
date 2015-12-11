@@ -2,6 +2,7 @@ package com.powerstackers.resq.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.Direction.FORWARD;
@@ -17,6 +18,22 @@ public class ProtobotTeleop extends OpMode {
      * Also, as the claw servo approaches 0, the claw opens up (drops the game element).
      */
     // TETRIX VALUES.
+    final static double servoRight_MIN_RANGE  = 0.20;
+    final static double servoRight_MAX_RANGE  = 1.00;
+    final static double servoLeft_MIN_RANGE  = 0.20;
+    final static double servoLeft_MAX_RANGE  = 1.00;
+
+    // position of the arm servo.
+    double servoRightPosition;
+
+    // amount to change the arm servo position.
+    double servoRightDelta = 0.1;
+
+    // position of the claw servo
+    double servoLeftPosition;
+
+    // amount to change the claw servo position by
+    double servoLeftDelta = 0.1;
 
     DcMotor motorBrush;
     DcMotor motorLift;
@@ -24,6 +41,8 @@ public class ProtobotTeleop extends OpMode {
     DcMotor motorFLeft;
     DcMotor motorBRight;
     DcMotor motorBLeft;
+    Servo servoLeft;
+    Servo servoRight;
 
     public ProtobotTeleop() {
 
@@ -39,13 +58,6 @@ public class ProtobotTeleop extends OpMode {
 		 * configured your robot and created the configuration file.
 		 */
 
-		/*
-		 * For the demo Tetrix K9 bot we assume the following,
-		 *   There are two motors "motor_1" and "motor_2"
-		 *   "motor_1" is on the right side of the bot.
-		 *   "motor_2" is on the left side of the bot and reversed.
-		 */
-
         motorBrush = hardwareMap.dcMotor.get("motorBrush");
         motorLift = hardwareMap.dcMotor.get("motorLift");
         motorLift.setDirection(DcMotor.Direction.REVERSE);
@@ -55,6 +67,10 @@ public class ProtobotTeleop extends OpMode {
         motorBRight = hardwareMap.dcMotor.get("motorBRight");
         motorBLeft = hardwareMap.dcMotor.get("motorBLeft");
         motorBRight.setDirection(DcMotor.Direction.REVERSE);
+
+        servoLeft = hardwareMap.servo.get("servoLeft");
+        servoRight = hardwareMap.servo.get("servoRight");
+
     }
 
     /*
@@ -69,7 +85,7 @@ public class ProtobotTeleop extends OpMode {
 		 * Gamepad 1
 		 *
 		 * Gamepad 1 controls the motors via the left stick, and it controls the
-		 * wrist/claw via the a,b, x, y buttons
+		 * lift/Brushes via the a,b, x, y buttons
 		 */
 
         // tank drive
@@ -105,6 +121,36 @@ public class ProtobotTeleop extends OpMode {
             motorBrush.setPower(0);
         }
 
+        // update the position of the arm.
+        if (gamepad2.y) {
+            // if the A button is pushed on gamepad1, increment the position of
+            // the arm servo.
+            servoRightPosition += servoRightDelta;
+        }
+
+        if (gamepad2.x) {
+            // if the Y button is pushed on gamepad1, decrease the position of
+            // the arm servo.
+            servoRightPosition -= servoRightDelta;
+        }
+
+        // update the position of the claw
+        if (gamepad2.b) {
+            servoLeftPosition += servoLeftDelta;
+        }
+
+        if (gamepad2.a) {
+            servoLeftPosition -= servoLeftDelta;
+        }
+
+        // clip the position values so that they never exceed their allowed range.
+        servoRightPosition = Range.clip(servoRightPosition, servoRight_MIN_RANGE, servoRight_MAX_RANGE);
+        servoLeftPosition = Range.clip(servoLeftPosition, servoLeft_MIN_RANGE, servoLeft_MAX_RANGE);
+
+        // write position values to the wrist and claw servo
+        servoRight.setPosition(servoRightPosition);
+        servoLeft.setPosition(servoLeftPosition);
+
         // write the values to the motors
         motorBRight.setPower(right);
         motorBLeft.setPower(left);
@@ -120,8 +166,12 @@ public class ProtobotTeleop extends OpMode {
         telemetry.addData("Text", "*** Robot Data***");
         telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", left));
         telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));
-        Object direction = motorLift.getDirection();
-        telemetry.addData("direction", "direction: " + String.valueOf(direction));
+        Object Leftposition = servoLeft.getPosition();
+        Object Rightposition = servoRight.getPosition();
+        telemetry.addData("Servo Left", "Position: " + String.valueOf(Leftposition));
+        telemetry.addData("Servo Right", "Position: " + String.valueOf(Rightposition));
+        //Object direction = motorLift.getDirection();
+        //telemetry.addData("direction", "direction: " + String.valueOf(direction));
 
     }
 
