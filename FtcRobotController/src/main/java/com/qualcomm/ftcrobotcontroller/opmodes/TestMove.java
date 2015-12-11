@@ -13,12 +13,6 @@ public class TestMove extends LinearOpMode
 {
     @Override public void runOpMode()throws InterruptedException
    {
-       DriverInterface robotgo = new TestBot(hardwareMap);
-       waitForStart(); // this is so the robot moves when you hit the play button not the init button
-       robotgo.spinOnCenter(90, 1.0f);
-       robotgo.spinOnCenter(-90, -1.0f);
-       robotgo.spinOnCenter(-90, 1.0f);
-       robotgo.spinOnCenter(90, -1.0f);
-       stop();
+
    }
 }
