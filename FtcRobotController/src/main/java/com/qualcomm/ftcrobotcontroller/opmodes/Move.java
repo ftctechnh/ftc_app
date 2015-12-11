@@ -16,7 +16,6 @@ public class Move extends LinearOpMode{
     public Move(){
     }
 
-
     final static double speed = .5;
     static DcMotor armLowerMotor;
     DcMotor armUpperMotor;
@@ -52,7 +51,7 @@ public class Move extends LinearOpMode{
         int leftPos = leftMotor.getCurrentPosition();
         rightMotor.setTargetPosition(distance + rightPos);
         leftMotor.setTargetPosition(distance + leftPos);
-        while(rightMotor.getTargetPosition() > rightMotor.getCurrentPosition()){
+        while(leftMotor.getTargetPosition() > leftMotor.getCurrentPosition()){
             rightMotor.setPower(speed);
             leftMotor.setPower(speed);
         }
