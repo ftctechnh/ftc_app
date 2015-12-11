@@ -23,11 +23,11 @@ public class CompBot implements DriverInterface
     private static final String backRightMotorName = "backRight";
     private static final String leftMotorName = "left";
     private static final String rightMotorName = "right";
-    PhoneGyrometer gyro;
+    //PhoneGyrometer gyro;
 
     public CompBot(HardwareMap hardwareMap)
     {
-        gyro = new PhoneGyrometer(hardwareMap);
+       // gyro = new PhoneGyrometer(hardwareMap);
         leftMotor = hardwareMap.dcMotor.get(leftMotorName);
         rightMotor = hardwareMap.dcMotor.get(rightMotorName);
         rightMotor.setDirection(DcMotor.Direction.FORWARD);
@@ -82,9 +82,9 @@ public class CompBot implements DriverInterface
     }
 
     @Override
-    public void pivotTurn(float degrees, float speed, boolean  useGyro)
+    public void pivotTurn(float degrees, float speed)
     {
-        if(!useGyro) {
+
             leftMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
             rightMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
             //makes sure the encoders reset
@@ -120,10 +120,9 @@ public class CompBot implements DriverInterface
                 }
                 rightMotor.setPower(0.0f);
             }
-        }
-        else
-        {
-            if(degrees > 0)
+
+
+           /* if(degrees > 0)
             {
                 float startGyro = gyro.getPitch();
                 float endGyro = startGyro + degrees;
@@ -144,14 +143,14 @@ public class CompBot implements DriverInterface
 
                 }
                 rightMotor.setPower(0.0f);
-            }
-        }
+            }*/
+
     }
 
     @Override
-    public void spinOnCenter(float degrees, float speed, boolean useGyro)
+    public void spinOnCenter(float degrees, float speed)
     {
-        if(!useGyro) {
+
             leftMotor.setPower(0.0f);
             rightMotor.setPower(0.0f);
             leftMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
@@ -193,10 +192,9 @@ public class CompBot implements DriverInterface
                 leftMotor.setPower(0.0f);
                 rightMotor.setPower(0.0f);
             }
-        }
-        else
-        {
-            if(degrees > 0)
+
+
+            /*if(degrees > 0)
             {
                 float startGyro = gyro.getPitch();
                 float endGyro = startGyro + degrees;
@@ -221,8 +219,8 @@ public class CompBot implements DriverInterface
                 }
                 rightMotor.setPower(0.0f);
                 leftMotor.setPower(0.0f);
-            }
-        }
+            }*/
+
     }
 
     @Override
