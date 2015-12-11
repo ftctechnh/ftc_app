@@ -17,14 +17,12 @@ public class DragonoidsTeleOp extends DragonoidsOpMode {
         float forwardAmount = -gamepad1.left_stick_y;
         float turningAmount = -gamepad1.right_stick_x;
 
-        forwardAmount = Range.clip(forwardAmount, -1, 1);
-        turningAmount = Range.clip(turningAmount, -1, 1);
-        forwardAmount = (float) scaleInput(forwardAmount);
-        turningAmount = (float) scaleInput(turningAmount);
+        forwardAmount = Range.clip(scaleInput(forwardAmount), -1, 1);
+        turningAmount = Range.clip(scaleInput(turningAmount), -1, 1);
 
         // TEMPORARY HACK OF A FIX OH GOD NO PLEASE FIX THIS
-        driveMotors.get("right").setPower(Range.clip(forwardAmount - turningAmount, (float) -1.0, (float)1.0));
-        driveMotors.get("left").setPower(Range.clip(forwardAmount + turningAmount, (float) -1.0, (float)1.0));
+        driveMotors.get("right").setPower(Range.clip(forwardAmount - turningAmount, -1.0, 1.0));
+        driveMotors.get("left").setPower(Range.clip(forwardAmount + turningAmount, -1.0, 1.0));
 
         if (gamepad2.right_bumper) {
             // Turn on the conveyor
@@ -93,9 +91,9 @@ public class DragonoidsTeleOp extends DragonoidsOpMode {
         // return scaled value.
         return (float)dScale;
     }
-    private double scaleInput (double value) {
+    private float scaleInput (double value) {
         // Return the value (from -1 to 1) squared to scale it quadratically
-        double magnitude = Math.pow(value, 2);
+        float magnitude = (float) Math.pow(value, 2);
         if (value < 0) {
             return -1 * magnitude;
         }
