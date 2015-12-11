@@ -9,6 +9,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  */
 public class TestBot implements DriverInterface
 {
+    @Override
+    public void pitchAllTracksAndMoveRobot(float time, float speed) {
+
+    }
 
     static DcMotor leftMotor;
     static DcMotor rightMotor;
@@ -61,9 +65,16 @@ public class TestBot implements DriverInterface
         }
     }
 
+    @Override
+    public void pivotTurn(float degrees, float speed, boolean useGyro) {
 
+    }
 
     @Override
+    public void spinOnCenter(float degrees, float speed, boolean useGyro) {
+
+    }
+
     public void pivotTurn(float degrees, float speed)
     {
         leftMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
@@ -104,7 +115,7 @@ public class TestBot implements DriverInterface
         }
     }
 
-    @Override
+
 
     public void spinOnCenter(float degrees, float speed)
     {
@@ -179,4 +190,8 @@ public class TestBot implements DriverInterface
 
     }
 
+    @Override
+    public void pitchAllTracks(float time, float speed) {
+
+    }
 }

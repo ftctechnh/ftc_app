@@ -11,4 +11,6 @@ public interface DriverInterface
     void stop();
     void pitchFrontTracks(float time, float speed);
     void pitchBackTracks(float time, float speed);
+    void pitchAllTracks(float time, float speed);
+    void pitchAllTracksAndMoveRobot (float time, float speed);
 }

@@ -68,6 +68,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("ThreeLightColorTest", ThreeColorTest.class);
     manager.register("PhoneGyroTest",PhoneGyroTest.class);
     manager.register("CompBotTest", CompBotTest.class);
+    manager.register("MountainClimb", MountainAuto1.class);
 
     /*
      * Uncomment any of the following lines if you want to register an op mode.
