@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Hardware;
 import com.qualcomm.robotcore.util.Range;
 
 import java.util.concurrent.TimeUnit;
@@ -18,9 +19,8 @@ public class TestAuto extends LinearOpMode{
 
     Drivetrain drivetrain = new Drivetrain();
     Intake intake = new Intake();
-    Servo rightButtonServo;
-    Servo leftButtonServo;
-    ColorSensor sensorRGB;
+    Autonomous autonomous = new Autonomous();
+
 
     double rightButtonServoPressed = 0.45;
     double leftButtonServoPressed = 0.57;
@@ -33,10 +33,7 @@ public class TestAuto extends LinearOpMode{
 
         drivetrain.init(hardwareMap);
         intake.init(hardwareMap);
-        sensorRGB = hardwareMap.colorSensor.get("sensorRGB");
-        rightButtonServo = hardwareMap.servo.get("rightButtonServo");
-        leftButtonServo = hardwareMap.servo.get("leftButtonServo");
-
+        autonomous.init(hardwareMap);
         telemetry.addData("Initialization Complete", "");
 
 
@@ -63,21 +60,21 @@ public class TestAuto extends LinearOpMode{
         drivetrain.moveDistance(1000, 0.5);
         telemetry.addData("Step 5 Complete", ".");
 
-        isBlue = (sensorRGB.blue() > 0.5);
+        isBlue = (autonomous.sensorRGB.blue() > 0.5);
         telemetry.addData("Step 6 Complete", ".");
 
         drivetrain.moveDistance(500, -0.5);
         telemetry.addData("Step 7 Complete", ".");
 
-        if (sensorRGB.blue() == 1) {
-            rightButtonServo.setPosition(rightButtonServoPressed);
+        if (autonomous.sensorRGB.blue() == 1) {
+            autonomous.rightButtonServo.setPosition(rightButtonServoPressed);
             TimeUnit.MILLISECONDS.sleep(2100);
-            rightButtonServo.setPosition(0.5);
+            autonomous.rightButtonServo.setPosition(0.5);
         }
         else {
-            leftButtonServo.setPosition(leftButtonServoPressed);
+            autonomous.leftButtonServo.setPosition(leftButtonServoPressed);
             TimeUnit.MILLISECONDS.sleep(2100);
-            leftButtonServo.setPosition(0.5);
+            autonomous.leftButtonServo.setPosition(0.5);
         }
         telemetry.addData("Step 8 Complete", ".");
 
