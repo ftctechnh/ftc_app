@@ -110,6 +110,8 @@ public class FtcRobotControllerActivity extends Activity {
 
     protected FtcEventLoop eventLoop;
 
+    protected File configs;
+
     protected class RobotRestarter implements Restarter {
 
         public void requestRestart() {
@@ -160,6 +162,7 @@ public class FtcRobotControllerActivity extends Activity {
         switch1 = (Switch) findViewById(R.id.switch1);
         switch2 = (Switch) findViewById(R.id.switch2);
         delayNum = (EditText) findViewById(R.id.delayNum);
+        configs = new File(context.getFilesDir(), "auto.properties");
 
         switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -203,6 +206,20 @@ public class FtcRobotControllerActivity extends Activity {
 
         if (USE_DEVICE_EMULATION) {
             HardwareFactory.enableDeviceEmulation();
+        }
+    }
+
+    protected void writeConfig(String string)
+    {
+        String filename = "auto.properties";
+        FileOutputStream outputStream;
+
+        try {
+          outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
+          outputStream.write(string.getBytes());
+          outputStream.close();
+        } catch (Exception e) {
+          e.printStackTrace();
         }
     }
 
