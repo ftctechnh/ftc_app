@@ -221,8 +221,9 @@ public class MemberUtil
     // Legacy Module
     //----------------------------------------------------------------------------------------------
 
-    static I2cController.I2cPortReadyCallback[] callbacksOfLegacyModule(LegacyModule module)
+    static I2cController.I2cPortReadyCallback[] callbacksOfLegacyModule(LegacyModule imodule)
         {
+        ModernRoboticsUsbLegacyModule module = (ModernRoboticsUsbLegacyModule)imodule;
         return Util.<I2cController.I2cPortReadyCallback[]>getPrivateObjectField(module, 4);
         }
 
@@ -230,19 +231,20 @@ public class MemberUtil
     // Device Interface Module
     //----------------------------------------------------------------------------------------------
 
-    static I2cController.I2cPortReadyCallback[] callbacksOfDeviceInterfaceModule(DeviceInterfaceModule module)
+    static I2cController.I2cPortReadyCallback[] callbacksOfDeviceInterfaceModule(DeviceInterfaceModule imodule)
         {
-        return Util.<I2cController.I2cPortReadyCallback[]>getPrivateObjectField(module, 0);
-        }
-
-    public static I2cController i2cControllerOfI2cDevice(I2cDevice i2cDevice)
-        {
-        return Util.<I2cController>getPrivateObjectField(i2cDevice, 0);
+        ModernRoboticsUsbDeviceInterfaceModule module = (ModernRoboticsUsbDeviceInterfaceModule)imodule;
+        return Util.<I2cController.I2cPortReadyCallback[]>getPrivateObjectField(module, 3);
         }
 
     //----------------------------------------------------------------------------------------------
     // I2cDevice
     //----------------------------------------------------------------------------------------------
+
+    public static I2cController i2cControllerOfI2cDevice(I2cDevice i2cDevice)
+        {
+        return Util.<I2cController>getPrivateObjectField(i2cDevice, 0);
+        }
 
     public static int portOfI2cDevice(I2cDevice i2cDevice)
         {
