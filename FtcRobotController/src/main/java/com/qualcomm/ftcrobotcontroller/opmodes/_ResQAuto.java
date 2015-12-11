@@ -103,19 +103,22 @@ public abstract class _ResQAuto extends LinearOpMode {
             reflectance = opticalDistanceSensor.getLightDetected();
             telemetry.addData("Reflectance Value", reflectance);
 
-            if (Math.abs(reflectance - WHITEVALUE) < 0.03) { //found white tape
+            if (Math.abs(reflectance - WHITEVALUE) < 0.05) { //found white tape
                 leftWheel.setPower(0);
                 rightWheel.setPower(0);
                 sleep(200);
                 if (getRedAlliance() == 1) {
+                    leftWheel.setPower(0.1);
+                    rightWheel.setPower(0.1);
+                    sleep(500);
                     leftWheel.setPower(0.3);
                     rightWheel.setPower(-0.3);
-                    sleep(3200);
+                    sleep(1500);
                 } else {
                     //Overshoot to left side of line only as BLUE alliance
                     leftWheel.setPower(0.1);
                     rightWheel.setPower(0.1);
-                    sleep(800);
+                    sleep(600);
                     leftWheel.setPower(-0.3);
                     rightWheel.setPower(0.3);
                     sleep(700);
@@ -152,8 +155,13 @@ public abstract class _ResQAuto extends LinearOpMode {
 
             valueS = Range.clip(valueS, -1, 1);
             valueB = Range.clip(valueB, -1, 1);
-            leftWheel.setPower(valueS);
-            rightWheel.setPower(valueB);
+            if (getRedAlliance()==0) {
+                leftWheel.setPower(valueS);
+                rightWheel.setPower(valueB);
+            } else {
+                leftWheel.setPower(valueB);
+                rightWheel.setPower(valueS);
+            }
 
             telemetry.addData("valueB", valueB);
             telemetry.addData("valueC", valueS);
@@ -161,7 +169,7 @@ public abstract class _ResQAuto extends LinearOpMode {
             telemetry.addData("Ultrasonic Value", distance);
 
 
-            if(distance < 30 && distance>1) {
+            if(distance < 27 && distance>1) {
                 if (getRedAlliance() == 0) {
                     leftWheel.setPower(0.3);
                     rightWheel.setPower(0);
@@ -220,17 +228,15 @@ public abstract class _ResQAuto extends LinearOpMode {
 
         leftWheel.setPower(-0.1);
         rightWheel.setPower(-0.1);
-        sleep(800);
-
-        //reset servo
         button2Servo.setPosition(0.6);
         buttonServo.setPosition(0.3);
-        sleep(1000);
+        sleep(800);
+
         //End of Autonomous
         if (getDelay() == 0) {
             leftWheel.setPower(-0.2);
             rightWheel.setPower(-0.2);
-            sleep(400);
+            sleep(300);
             if (getRedAlliance() == 1) {
                 leftWheel.setPower(0.2);
                 rightWheel.setPower(-0.2);
@@ -243,7 +249,7 @@ public abstract class _ResQAuto extends LinearOpMode {
                 sleep(500);
                 leftWheel.setPower(0.3);
                 rightWheel.setPower(0.3);
-                sleep(2000);
+                sleep(2600);
                 leftWheel.setPower(0);
                 rightWheel.setPower(0);
             } else {
@@ -258,7 +264,7 @@ public abstract class _ResQAuto extends LinearOpMode {
                 sleep(700);
                 leftWheel.setPower(0.3);
                 rightWheel.setPower(0.3);
-                sleep(1400);
+                sleep(2000);
                 leftWheel.setPower(0);
                 rightWheel.setPower(0);
             }
