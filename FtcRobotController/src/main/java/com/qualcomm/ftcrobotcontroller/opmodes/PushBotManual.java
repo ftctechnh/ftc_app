@@ -74,8 +74,8 @@ public class PushBotManual extends PushBotTelemetry
         //
         // Manage the drive wheel motors.
         //
-        float l_left_drive_power = scale_motor_power (-gamepad1.left_stick_y);
-        float l_right_drive_power = scale_motor_power (-gamepad1.right_stick_y);
+        float l_left_drive_power = scale_motor_power (-gamepad1.right_stick_y);
+        float l_right_drive_power = scale_motor_power (-gamepad1.left_stick_y);
 
         set_drive_power (l_left_drive_power, l_right_drive_power);
 
@@ -89,7 +89,7 @@ public class PushBotManual extends PushBotTelemetry
         //
         // Servo Motors
         //
-        // Obtain the current values of the gamepad 'x' and 'b' buttons.
+        // Obtain the current values of the gamepad 'a' and 'b' buttons.
         //
         // Note that x and b buttons have boolean values of true and false.
         //
@@ -99,11 +99,11 @@ public class PushBotManual extends PushBotTelemetry
         // The setPosition methods write the motor power values to the Servo
         // class, but the positions aren't applied until this method ends.
         //
-        if (gamepad2.x)
+        if (gamepad2.dpad_up)
         {
             m_hand_position (a_hand_position () + 0.05);
         }
-        else if (gamepad2.b)
+        else if (gamepad2.dpad_down)
         {
             m_hand_position (a_hand_position () - 0.05);
         }

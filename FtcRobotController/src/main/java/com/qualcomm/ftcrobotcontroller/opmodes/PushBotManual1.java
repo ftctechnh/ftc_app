@@ -78,11 +78,11 @@ public class PushBotManual1 extends PushBotTelemetry
         float l_left_drive_power
             = (float)scale_motor_power (l_gp1_left_stick_y);
 
-        float l_gp1_right_stick_y = -gamepad1.right_stick_y;
+        float l_gp1_right_stick_y = -gamepad1.left_stick_y;
         float l_right_drive_power
-            = (float)scale_motor_power (l_gp1_right_stick_y);
+            = (float)scale_motor_power (l_gp1_left_stick_y);
 
-        set_drive_power (l_left_drive_power, l_right_drive_power);
+        set_drive_power (l_left_drive_power, l_left_drive_power);
 
         //
         // Manage the arm motor.  The right trigger makes the arm move from the
@@ -91,14 +91,14 @@ public class PushBotManual1 extends PushBotTelemetry
         //
         float l_left_arm_power
             = (float)scale_motor_power (gamepad1.right_trigger)
-            - (float)scale_motor_power (gamepad1.left_trigger);
+            - (float)scale_motor_power (gamepad1.right_trigger);
         m_left_arm_power (l_left_arm_power);
 
         //----------------------------------------------------------------------
         //
         // Servo Motors
         //
-        // Obtain the current values of the gamepad 'x' and 'b' buttons.
+        // Obtain the current values of the gamepad 'a' and 'b' buttons.
         //
         // Note that x and b buttons have boolean values of true and false.
         //
@@ -108,11 +108,11 @@ public class PushBotManual1 extends PushBotTelemetry
         // The setPosition methods write the motor power values to the Servo
         // class, but the positions aren't applied until this method ends.
         //
-        if (gamepad1.x)
+        if (gamepad1.b)
         {
             m_hand_position (a_hand_position () + 0.05);
         }
-        else if (gamepad1.b)
+        else if (gamepad1.x)
         {
             m_hand_position (a_hand_position () - 0.05);
         }
@@ -124,7 +124,7 @@ public class PushBotManual1 extends PushBotTelemetry
         update_gamepad_telemetry ();
         telemetry.addData
             ( "12"
-            , "Left Arm: " + l_left_arm_power
+            , "right Arm: " + l_left_arm_power
             );
 
     } // loop
