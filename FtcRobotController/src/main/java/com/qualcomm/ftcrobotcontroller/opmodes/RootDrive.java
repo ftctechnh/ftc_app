@@ -1,5 +1,6 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.qualcomm.ftcrobotcontroller.bamboo.BServo;
 import com.qualcomm.ftcrobotcontroller.bamboo.Motor;
 import com.qualcomm.ftcrobotcontroller.bamboo.Point;
 import com.qualcomm.ftcrobotcontroller.bamboo.Root;
@@ -10,9 +11,12 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  */
 public class RootDrive extends Root {
 
+    public final double SERVO_STEP = 0.001;
+
     public Point sides;
     public Motor right, left;
     public Motor extr, rotr, extl, rotl;
+    public BServo cdr, cdl;
 
     public RootDrive() {
         sides = new Point(0, 0);
@@ -28,6 +32,17 @@ public class RootDrive extends Root {
         rotr = new Motor("rightrot", hardwareMap, true);
         extl = new Motor("leftext", hardwareMap, true);
         rotl = new Motor("leftrot", hardwareMap);
+
+        cdr = new BServo("cdsRight", hardwareMap);
+        cdl = new BServo("cdsLeft", hardwareMap);
+    }
+
+    @Override
+    public void loop()
+    {
+        super.loop();
+        if(cdr.get() > 0 && gp2_rt < 0.2) cdr.inc(-SERVO_STEP);
+        if(cdl.get() > 0 && gp2_lt < 0.2) cdl.inc(-SERVO_STEP);
     }
 
     @Override
@@ -46,7 +61,7 @@ public class RootDrive extends Root {
     @Override
     public void onJoy1_rt()
     {
-        extr.scale(-gp_rt);
+        extr.scale(-gp1_rt);
     }
 
     @Override
@@ -70,7 +85,7 @@ public class RootDrive extends Root {
     @Override
     public void onJoy1_lt()
     {
-        extl.scale(-gp_lt);
+        extl.scale(-gp1_lt);
     }
 
     @Override
@@ -84,4 +99,23 @@ public class RootDrive extends Root {
     {
         extl.set(0);
     }
+
+    @Override
+    public void onJoy2_rt()
+    {
+        if(gp2_rt > 0.2)
+        {
+            cdr.inc(SERVO_STEP);
+        }
+    }
+
+    public void onJoy2_lt()
+    {
+        if(gp2_rt > 0.2)
+        {
+            cdl.inc(SERVO_STEP);
+        }
+    }
+
+
 }

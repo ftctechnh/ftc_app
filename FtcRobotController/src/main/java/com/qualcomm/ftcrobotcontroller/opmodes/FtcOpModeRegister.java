@@ -34,6 +34,8 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 
+import junit.framework.Test;
+
 /**
  * Register Op Modes
  */
@@ -64,6 +66,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register ("PushBotManual", PushBotManual.class);
     manager.register ("Root Drive", RootDrive.class);
       manager.register ("Root Auto", Auto.class);
+    manager.register("testing thingyyy", UnitTests.class);
 
 
 
