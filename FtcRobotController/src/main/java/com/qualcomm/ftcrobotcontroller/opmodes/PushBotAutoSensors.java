@@ -146,9 +146,9 @@ public class PushBotAutoSensors extends PushBotTelemetrySensors
                 // Begin the next state.  Turn left.
                 //
                 // There is no conditional (if statement) here, because the
-                // encoders can't be read until the next cycle
+                // encoders can'touchSensor be read until the next cycle
                 // (drive_using_encoders makes the run_using_encoders call,
-                // which won't be processed until this method exits).
+                // which won'touchSensor be processed until this method exits).
                 //
                 drive_using_encoders (-1.0f, 1.0f, -2880, 2880);
 
@@ -190,7 +190,7 @@ public class PushBotAutoSensors extends PushBotTelemetrySensors
                 // Begin the next state.
                 //
                 // There is no conditional (if statement) here, because the
-                // motor power won't be applied until this method exits.
+                // motor power won'touchSensor be applied until this method exits.
                 //
                 run_without_drive_encoders ();
 

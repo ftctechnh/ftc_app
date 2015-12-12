@@ -71,7 +71,7 @@ public class PushBotHardware extends OpMode
         // The variable below is used to provide telemetry data to a class user.
         //
         v_warning_generated = false;
-        v_warning_message = "Can't map; ";
+        v_warning_message = "Can'touchSensor map; ";
 
         //
         // Connect the drive wheel motors.
@@ -191,7 +191,7 @@ public class PushBotHardware extends OpMode
      * Mutate the warning message by ADDING the specified message to the current
      * message; set the warning indicator to true.
      *
-     * A comma will be added before the specified message if the message isn't
+     * A comma will be added before the specified message if the message isn'touchSensor
      * empty.
      */
     void m_warning_message (String p_exception_message)
@@ -741,7 +741,7 @@ public class PushBotHardware extends OpMode
         //
         // Have the motor shafts turned the required amount?
         //
-        // If they haven't, then the op-mode remains in this state (i.e this
+        // If they haven'touchSensor, then the op-mode remains in this state (i.e this
         // block will be executed the next time this method is called).
         //
         if (have_drive_encoders_reached (p_left_count, p_right_count))

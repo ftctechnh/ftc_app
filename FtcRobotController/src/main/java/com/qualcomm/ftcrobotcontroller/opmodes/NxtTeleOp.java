@@ -213,7 +213,7 @@ public class NxtTeleOp extends OpMode {
     }
 
     // To read any values from the NXT controllers, we need to switch into READ_ONLY mode.
-    // It takes time for the hardware to switch, so you can't switch modes within one loop of the
+    // It takes time for the hardware to switch, so you can'touchSensor switch modes within one loop of the
     // op mode. Every 17th loop, this op mode switches to READ_ONLY mode, and gets the current power.
     if (numOpLoops % 17 == 0){
       // Note: If you are using the NxtDcMotorController, you need to switch into "read" mode
