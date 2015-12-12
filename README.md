@@ -2,6 +2,8 @@
 
 This is the Powerstackers' personal fork of the FTC robot control app, for use with our robots that we will build this season. For information, contact us at powerstackers@gmail.com.
 
+We also make use of the Swerve Robotics FTC library, as published [here](https://github.com/SwerveRobotics/ftc_app).
+
 To use this SDK, download/clone the entire project to your local computer.
 Use Android Studio to import the folder  ("Import project (Eclipse ADT, Gradle, etc.)").
 

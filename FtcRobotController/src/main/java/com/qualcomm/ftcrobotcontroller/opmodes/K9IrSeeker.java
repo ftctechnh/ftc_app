@@ -43,7 +43,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
  * Enables control of the robot via the gamepad
  */
 public class K9IrSeeker extends OpMode {
-	
+
 	final static double MOTOR_POWER = 0.30; // Higher values will cause the robot to move faster
 	final static double HOLD_IR_SIGNAL_STRENGTH = 0.50; // Higher values will cause the robot to follow closer
 
@@ -56,7 +56,7 @@ public class K9IrSeeker extends OpMode {
 	Servo arm;
 	IrSeekerSensor irSeeker;
     TouchSensor touchSensor;
-	
+
 	/**
 	 * Constructor
 	 */
@@ -66,7 +66,7 @@ public class K9IrSeeker extends OpMode {
 
 	/*
 	 * Code to run when the op mode is first enabled goes here
-	 * 
+	 *
 	 * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
 	 */
 	@Override
@@ -77,13 +77,13 @@ public class K9IrSeeker extends OpMode {
 		 * Note that the names of the devices must match the names used
 		 * when you configured your robot and created the configuration file.
 		 */
-		
+
 		/*
 		 * For the demo Tetrix K9 bot we assume the following,
 		 *   There are two motors "motor_1" and "motor_2"
 		 *   "motor_1" is on the right side of the bot.
 		 *   "motor_2" is on the left side of the bot.
-		 *   
+		 *
 		 * We also assume that there are two servos "servo_1" and "servo_6"
 		 *    "servo_1" controls the arm joint of the manipulator.
 		 *    "servo_6" controls the claw joint of the manipulator.
@@ -91,7 +91,7 @@ public class K9IrSeeker extends OpMode {
 		motorRight = hardwareMap.dcMotor.get("motor_2");
 		motorLeft = hardwareMap.dcMotor.get("motor_1");
 		motorRight.setDirection(DcMotor.Direction.REVERSE);
-		
+
 		arm = hardwareMap.servo.get("servo_1");
 		claw = hardwareMap.servo.get("servo_6");
 
@@ -109,19 +109,18 @@ public class K9IrSeeker extends OpMode {
 
 	/*
 	 * This method will be called repeatedly in a loop
-	 * 
+	 *
 	 * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#run()
 	 */
 	@Override
 	public void loop() {
 		double angle = 0.0;
 		double strength = 0.0;
-		double left, right;
-		
+		double left, right = 0.0;
 		// keep manipulator out of the way.
 		arm.setPosition(armPosition);
 		claw.setPosition(clawPosition);
-	
+
 		/*
 		 * Do we detect an IR signal?
 		 */
@@ -129,7 +128,7 @@ public class K9IrSeeker extends OpMode {
 			/*
 			 * Signal was detected. Follow it.
 			 */
-			
+
 			/*
 			 * Get angle and strength of the signal.
 			 * Note an angle of zero implies straight ahead.
@@ -184,7 +183,6 @@ public class K9IrSeeker extends OpMode {
 			right = -MOTOR_POWER;
 		}
 
-
         /*
          * Stop the robot if the touch sensor is pressed
          */
@@ -192,7 +190,7 @@ public class K9IrSeeker extends OpMode {
             left = 0.0;
             right = 0.0;
         }
-		
+
 		/*
 		 * set the motor power
 		 */
@@ -216,7 +214,7 @@ public class K9IrSeeker extends OpMode {
 
 	/*
 	 * Code to run when the op mode is first disabled goes here
-	 * 
+	 *
 	 * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#stop()
 	 */
 	@Override
