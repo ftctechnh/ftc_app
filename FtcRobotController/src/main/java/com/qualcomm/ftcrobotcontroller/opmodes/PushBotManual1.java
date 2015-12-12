@@ -78,9 +78,9 @@ public class PushBotManual1 extends PushBotTelemetry
         float l_left_drive_power
             = (float)scale_motor_power (l_gp1_left_stick_y);
 
-        float l_gp1_right_stick_y = -gamepad1.left_stick_y;
+        float l_gp1_right_stick_y = -gamepad1.right_stick_y;
         float l_right_drive_power
-            = (float)scale_motor_power (l_gp1_left_stick_y);
+            = (float)scale_motor_power (l_gp1_right_stick_y);
 
         set_drive_power (l_left_drive_power, l_left_drive_power);
 
@@ -91,7 +91,7 @@ public class PushBotManual1 extends PushBotTelemetry
         //
         float l_left_arm_power
             = (float)scale_motor_power (gamepad1.right_trigger)
-            - (float)scale_motor_power (gamepad1.right_trigger);
+            - (float)scale_motor_power (gamepad1.left_trigger);
         m_left_arm_power (l_left_arm_power);
 
         //----------------------------------------------------------------------
@@ -124,7 +124,7 @@ public class PushBotManual1 extends PushBotTelemetry
         update_gamepad_telemetry ();
         telemetry.addData
             ( "12"
-            , "right Arm: " + l_left_arm_power
+            , "Left Arm: " + l_left_arm_power
             );
 
     } // loop
