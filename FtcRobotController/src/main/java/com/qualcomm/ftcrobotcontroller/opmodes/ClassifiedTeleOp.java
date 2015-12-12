@@ -23,7 +23,11 @@ public class ClassifiedTeleOp extends OpMode{
     @Override
     public void init() {
         lift.init(hardwareMap);
-        drivetrain.init(hardwareMap);
+        try {
+            drivetrain.init(hardwareMap);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         //arm.init(hardwareMap);
         intake.init(hardwareMap);
         dumper.init(hardwareMap);

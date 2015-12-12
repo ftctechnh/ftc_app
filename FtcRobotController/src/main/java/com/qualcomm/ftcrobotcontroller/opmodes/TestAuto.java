@@ -67,14 +67,14 @@ public class TestAuto extends LinearOpMode{
         telemetry.addData("Step 7 Complete", ".");
 
         if (autonomous.sensorRGB.blue() == 1) {
-            autonomous.rightButtonServo.setPosition(rightButtonServoPressed);
-            TimeUnit.MILLISECONDS.sleep(2100);
-            autonomous.rightButtonServo.setPosition(0.5);
-        }
-        else {
             autonomous.leftButtonServo.setPosition(leftButtonServoPressed);
             TimeUnit.MILLISECONDS.sleep(2100);
             autonomous.leftButtonServo.setPosition(0.5);
+        }
+        else {
+            autonomous.rightButtonServo.setPosition(rightButtonServoPressed);
+            TimeUnit.MILLISECONDS.sleep(2100);
+            autonomous.rightButtonServo.setPosition(0.5);
         }
         telemetry.addData("Step 8 Complete", ".");
 
