@@ -26,24 +26,33 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 /**
  * Teleop program made at the workshop.
+ * @author Jonathan Thomas
+ *
  */
 public class WorkshopTeleop extends OpMode{
 
     Robot robot;
 
+    /**
+     * Initialize the robot.
+     */
     @Override
     public void init() {
         robot = new Robot(this);
     }
 
+    /**
+     * Update the robot's state.
+     */
     @Override
     public void loop() {
 
+        /** Stores the light value detected by the optical distance sensor. */
         int light = robot.opticalSensor.getLightDetectedRaw();
 
         robot.toString();
 
 
-        //telemetry.addData("optical", String.format("%d", light));
+        telemetry.addData("optical", String.format("%d", light));
     }
 }
