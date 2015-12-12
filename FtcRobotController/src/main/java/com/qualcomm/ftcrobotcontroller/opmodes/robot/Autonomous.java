@@ -33,7 +33,7 @@ public class Autonomous {
 
     }
 
-    public void PressBlueButton() throws InterruptedException {
+    public void PressRightButton() throws InterruptedException {
 
             rightButtonServo.setPosition(rightButtonServoPressed);
             TimeUnit.MILLISECONDS.sleep(2100);
@@ -42,7 +42,7 @@ public class Autonomous {
 
     }
 
-    public void PressRedButton() throws InterruptedException {
+    public void PressLeftButton() throws InterruptedException {
 
             leftButtonServo.setPosition(leftButtonServoPressed);
             TimeUnit.MILLISECONDS.sleep(2100);
