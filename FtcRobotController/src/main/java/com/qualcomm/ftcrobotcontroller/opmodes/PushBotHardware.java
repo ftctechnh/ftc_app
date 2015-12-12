@@ -71,7 +71,7 @@ public class PushBotHardware extends OpMode
         // The variable below is used to provide telemetry data to a class user.
         //
         v_warning_generated = false;
-        v_warning_message = "Can'touchSensor map; ";
+        v_warning_message = "Can't map; ";
 
         //
         // Connect the drive wheel motors.
