@@ -11,6 +11,7 @@ public class RampBlue extends AutonomousOpMode
 {
     @Override protected void main() throws InterruptedException
     {
+        waitForStart();
         initializeAllDevices();
         driveWithEncoders(2.8,1.0);
         turn(45,.9);
