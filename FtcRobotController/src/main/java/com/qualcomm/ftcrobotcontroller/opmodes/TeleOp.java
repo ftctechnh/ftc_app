@@ -54,13 +54,18 @@ public class TeleOp extends OpMode {
 
 	DcMotor armLowerMotor;
 	DcMotor armUpperMotor;
+	DcMotor armUpperMotor2;
 	DcMotor rightMotor;
 	DcMotor leftMotor;
 	Servo servoRight;
-	Servo servoLeft;
+	//Servo servoLeft;
+	Servo servoFlip;
+	Float yasss = .5f;
+	int yasssCount = 0;
 
-	Double servoLeftPosition = 1.0; //Starting position of Left servo, 1.0 cause reversed from other servo
+	//Double servoLeftPosition = 1.0; //Starting position of Left servo, 1.0 cause reversed from other servo
 	Double servoRightPosition = 0.0;//Starting pos of right servo, 0.0 cause reversed from other servo
+	Double servoFlipPosition = 0.0;
 	Double servoChange = .01; //Value used to change the pos of servos
 	Double servoLower = 0.0; //Lower limit for servos
 	Double servoUpper = 1.0; //Upper limit for servos
@@ -101,13 +106,15 @@ public class TeleOp extends OpMode {
 
 		armUpperMotor = hardwareMap.dcMotor.get("armUpperMotor");
 		armLowerMotor = hardwareMap.dcMotor.get("armLowerMotor");
+		armUpperMotor2 = hardwareMap.dcMotor.get("armUpperMotor2");
 
 		rightMotor = hardwareMap.dcMotor.get("motor_right");
 		leftMotor = hardwareMap.dcMotor.get("motor_left");
 		leftMotor.setDirection(DcMotor.Direction.REVERSE);
 
 		servoRight = hardwareMap.servo.get("servoRight");
-		servoLeft = hardwareMap.servo.get("servoLeft");
+		//servoLeft = hardwareMap.servo.get("servoLeft");
+		servoFlip = hardwareMap.servo.get("servoFlip");
 
 
 	}
@@ -138,8 +145,8 @@ public class TeleOp extends OpMode {
 		float leftMotorSpeed = gamepad1.left_stick_y;
 
 		//Divided by 2 cause dont want to make arm fly away
-		float UpperMotorSpeed = gamepad2.left_stick_y/2f;
-		float LowerMotorSpeed = gamepad2.right_stick_y/2f;
+		float UpperMotorSpeed = gamepad2.left_stick_y*yasss;
+		float LowerMotorSpeed = gamepad2.right_stick_y*yasss;
 
 		// clip the right/left values so that the values never exceed +/- 1
 		rightMotorSpeed = Range.clip(rightMotorSpeed, -1f, 1f);
@@ -160,27 +167,50 @@ public class TeleOp extends OpMode {
 		leftMotor.setPower(leftMotorSpeed);
 
 		armUpperMotor.setPower(UpperMotorSpeed);
+		armUpperMotor2.setPower(UpperMotorSpeed);
 		armLowerMotor.setPower(LowerMotorSpeed);
 
 		// update the grabber.
 		if (gamepad2.left_bumper) {
 			servoRightPosition += servoChange;
-			servoLeftPosition -= servoChange;
+			//servoLeftPosition -= servoChange;
 		}
 
 		if (gamepad2.right_bumper) {
 			servoRightPosition -= servoChange;
-			servoLeftPosition += servoChange;
+			//servoLeftPosition += servoChange;
+		}
+
+		if (gamepad1.left_bumper) {
+			servoFlipPosition -= servoChange;
+		}
+
+		if (gamepad1.right_bumper) {
+			servoFlipPosition += servoChange;
+		}
+
+		if(gamepad2.y){
+			if(yasssCount == 0) {
+				yasss = .9f;
+				yasssCount = 1;
+			}
+		}
+
+		if(gamepad2.b){
+			if(yasssCount != 0){
+				yasss = .5f;
+				yasssCount = 0;
+			}
 		}
 
 
 		servoRightPosition = Range.clip(servoRightPosition, servoLower, servoUpper);
-		servoLeftPosition = Range.clip(servoLeftPosition, servoLower, servoUpper);
-
+		//servoLeftPosition = Range.clip(servoLeftPosition, servoLower, servoUpper);
+		servoFlipPosition = Range.clip(servoFlipPosition, servoLower, servoUpper);
 
 		servoRight.setPosition(servoRightPosition);
-		servoLeft.setPosition(servoLeftPosition);
-
+		//servoLeft.setPosition(servoLeftPosition);
+		servoFlip.setPosition(servoFlipPosition);
 		/*
 		 * Send telemetry data back to driver station. Note that if we are using
 		 * a legacy NXT-compatible motor controller, then the getPower() method
@@ -189,8 +219,9 @@ public class TeleOp extends OpMode {
 		 */
 
 		telemetry.addData("Text", "*** Robot Data***");
-		telemetry.addData("Right Servo Pos",  "Right servo pos: " + String.format("%.2f", servoRightPosition));
-		telemetry.addData("Left Servo Pos", "Left Servo Pos: " + String.format("%.2f", servoLeftPosition));
+		//telemetry.addData("Right Servo Pos",  "Right servo pos: " + String.format("%.2f", servoRightPosition));
+		//telemetry.addData("Left Servo Pos", "Left Servo Pos: " + String.format("%.2f", servoLeftPosition));
+		telemetry.addData("ServoFlip Pos", "ServoFLip pos: " + String.format("%.2f", servoFlipPosition));
 	}
 
 	//screb
