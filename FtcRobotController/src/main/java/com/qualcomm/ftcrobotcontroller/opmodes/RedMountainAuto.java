@@ -34,11 +34,11 @@ public class RedMountainAuto extends PacmanBotHardwareBase {
 
         else if (timer.time() < 1.45) drive(0, -1);
 
-        else if (timer.time() < 3.35) drive(0.5, 0);
+        else if (timer.time() < 4.35) drive(0.5, 0);
 
-        else if (timer.time() < 4.0) drive(0, -0.5);
+        else if (timer.time() < 4.8) drive(0, -0.5);
 
-        else if (timer.time() < 7.0) drive(0.25, 0);
+        else if (timer.time() < 7.2) drive(0.25, 0);
 
         else {
             drive(0, 0);
