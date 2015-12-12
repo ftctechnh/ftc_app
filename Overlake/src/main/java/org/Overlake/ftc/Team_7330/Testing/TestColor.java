@@ -71,15 +71,21 @@ import org.swerverobotics.library.interfaces.*;
  *
  */
 @TeleOp(name="AdafruitRGBExample")
-public class TestColor extends SynchronousOpMode {
+public class TestColor extends SynchronousOpMode
+{
 
-  ColorSensor sensorRGB;
-  float hue;
+  ColorSensor sensorRGBLeft;
+    ColorSensor sensorRGBRight;
+
+  float hueLeft;
+    float hueRight;
+
   DeviceInterfaceModule cdim;
 
   // we assume that the LED pin of the RGB sensor is connected to
   // digital port 5 (zero indexed).
-  static final int LED_CHANNEL = 5;
+  static final int LED_CHANNEL_L = 5;
+    static final int LED_CHANNEL_R = 4;
 
   @Override
   public void main() throws InterruptedException {
@@ -94,16 +100,21 @@ public class TestColor extends SynchronousOpMode {
     // set the digital channel to output mode.
     // remember, the Adafruit sensor is actually two devices.
     // It's an I2C sensor and it's also an LED that can be turned on or off.
-    cdim.setDigitalChannelMode(LED_CHANNEL, DigitalChannelController.Mode.OUTPUT);
+    cdim.setDigitalChannelMode(LED_CHANNEL_L, DigitalChannelController.Mode.OUTPUT);
+      cdim.setDigitalChannelMode(LED_CHANNEL_R, DigitalChannelController.Mode.OUTPUT);
 
-    // get a reference to our ColorSensor object.
-    sensorRGB = hardwareMap.colorSensor.get("color");
+
+      // get a reference to our ColorSensor object.
+    sensorRGBLeft = hardwareMap.colorSensor.get("colorLeft");
+      sensorRGBRight = hardwareMap.colorSensor.get("colorRight");
 
     // bEnabled represents the state of the LED.
-    boolean bEnabled = true;
+    boolean bEnabledLeft = true;
+      boolean bEnabledRight = true;
 
     // turn the LED on in the beginning, just so user will know that the sensor is active.
-    cdim.setDigitalChannelState(LED_CHANNEL, bEnabled);
+    cdim.setDigitalChannelState(LED_CHANNEL_L, bEnabledLeft);
+      cdim.setDigitalChannelState(LED_CHANNEL_R, bEnabledRight);
 
     // Set up our dashboard computations
     composeDashboard();
@@ -112,70 +123,43 @@ public class TestColor extends SynchronousOpMode {
     waitForStart();
 
     // hsvValues is an array that will hold the hue, saturation, and value information.
-    float hsvValues[] = {0F,0F,0F};
+    float hsvValuesLeft[] = {0F,0F,0F};
+      float hsvValuesRight[] = {0F,0F,0F};
 
-    // values is a reference to the hsvValues array.
-    final float values[] = hsvValues;
+    // values is a reference to the hsvValues arrays.
+    final float valuesLeft[] = hsvValuesLeft;
+      final float valuesRight[] = hsvValuesRight;
 
     // get a reference to the RelativeLayout so we can change the background
     // color of the Robot Controller app to match the hue detected by the RGB sensor.
-    final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(R.id.RelativeLayout);
+    // final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(R.id.RelativeLayout);
+    // ^^^Ruthie thinks this is really cool
 
     // bPrevState and bCurrState represent the previous and current state of the button.
-    boolean bPrevState = false;
-    boolean bCurrState = false;
+    // boolean bPrevState = false;
+    // boolean bCurrState = false;
 
     // while the op mode is active, loop and read the RGB data.
     // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
-    while (opModeIsActive()) {
-      // check the status of the x button on either gamepad.
-      bCurrState = gamepad1.x || gamepad2.x;
-
-      // check for button state transitions.
-      if (bCurrState == true && bCurrState != bPrevState)  {
-        // button is transitioning to a pressed state.
-
-        // print a debug statement.
-        DbgLog.msg("MY_DEBUG - x button was pressed!");
-
-        // update previous state variable.
-        bPrevState = bCurrState;
-
-        // on button press, enable the LED.
-        bEnabled = true;
-
-        // turn on the LED.
-        cdim.setDigitalChannelState(LED_CHANNEL, bEnabled);
-
-      } else if (bCurrState == false && bCurrState != bPrevState)  {
-        // button is transitioning to a released state.
-
-        // print a debug statement.
-        DbgLog.msg("MY_DEBUG - x button was released!");
-
-        // update previous state variable.
-        bPrevState = bCurrState;
-
-        // on button press, enable the LED.
-        bEnabled = false;
-
-        // turn off the LED.
-        cdim.setDigitalChannelState(LED_CHANNEL, bEnabled);
-      }
-
+    while (opModeIsActive())
+    {
       // convert the RGB values to HSV values.
-      Color.RGBToHSV((sensorRGB.red() * 255) / 800, (sensorRGB.green() * 255) / 800, (sensorRGB.blue() * 255) / 800, hsvValues);
+      Color.RGBToHSV((sensorRGBLeft.red() * 255) / 800, (sensorRGBLeft.green() * 255) / 800, (sensorRGBLeft.blue() * 255) / 800, hsvValuesLeft);
+        Color.RGBToHSV((sensorRGBRight.red() * 255) / 800, (sensorRGBRight.green() * 255) / 800, (sensorRGBRight.blue() * 255) / 800, hsvValuesRight);
 
-      this.hue = hsvValues[0];
+      this.hueLeft = hsvValuesLeft[0];
+        this.hueRight = hsvValuesRight[0];
 
       // change the background color to match the color detected by the RGB sensor.
       // pass a reference to the hue, saturation, and value array as an argument
       // to the HSVToColor method.
-      relativeLayout.post(new Runnable() {
+      /*
+        relativeLayout.post(new Runnable() {
         public void run() {
           relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, values));
         }
       });
+      */
 
       this.telemetry.update();
       this.idle();
@@ -193,41 +177,82 @@ public class TestColor extends SynchronousOpMode {
 
     // send the info back to driver station using telemetry function.
     telemetry.addLine(
-            telemetry.item("Red: ", new IFunc<Object>()
+            telemetry.item("Red Left: ", new IFunc<Object>()
             {
               public Object value()
               {
-                  return sensorRGB.red();
+                  return sensorRGBLeft.red();
               }
             }),
-            telemetry.item("Green: ", new IFunc<Object>()
+            telemetry.item("Green Left: ", new IFunc<Object>()
             {
               public Object value()
               {
-                  return sensorRGB.green();
+                  return sensorRGBLeft.green();
               }
             }),
-            telemetry.item("Blue: ", new IFunc<Object>()
+            telemetry.item("Blue Left: ", new IFunc<Object>()
             {
               public Object value()
               {
-                  return sensorRGB.blue();
+                  return sensorRGBLeft.blue();
               }
             })
     );
+
       telemetry.addLine(
-              telemetry.item("Hue: ", new IFunc<Object>()
+              telemetry.item("Red Right: ", new IFunc<Object>()
               {
                   public Object value()
                   {
-                      return hue;
+                      return sensorRGBRight.red();
                   }
               }),
-              telemetry.item("Alpha: ", new IFunc<Object>()
+              telemetry.item("Green Right: ", new IFunc<Object>()
               {
                   public Object value()
                   {
-                      return sensorRGB.alpha();
+                      return sensorRGBRight.green();
+                  }
+              }),
+              telemetry.item("Blue Right: ", new IFunc<Object>()
+              {
+                  public Object value()
+                  {
+                      return sensorRGBRight.blue();
+                  }
+              })
+      );
+
+      telemetry.addLine(
+              telemetry.item("Hue Left: ", new IFunc<Object>()
+              {
+                  public Object value()
+                  {
+                      return hueLeft;
+                  }
+              }),
+              telemetry.item("Alpha Left: ", new IFunc<Object>()
+              {
+                  public Object value()
+                  {
+                      return sensorRGBLeft.alpha();
+                  }
+              })
+      );
+      telemetry.addLine(
+              telemetry.item("Hue Right: ", new IFunc<Object>()
+              {
+                  public Object value()
+                  {
+                      return hueRight;
+                  }
+              }),
+              telemetry.item("Alpha Right: ", new IFunc<Object>()
+              {
+                  public Object value()
+                  {
+                      return sensorRGBRight.alpha();
                   }
               })
       );
