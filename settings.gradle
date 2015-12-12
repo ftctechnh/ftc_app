@@ -1,3 +1,5 @@
-include ':SwerveRoboticsLibrary', ':YourCodeHere'
+include ':SwerveRoboticsLibrary'
+include ':opencv-java'
+include ':ftc-visionlib'
 // FTC Apps
 include (':FtcRobotController')
