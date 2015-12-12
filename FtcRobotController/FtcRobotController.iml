@@ -94,8 +94,11 @@
     <orderEntry type="library" exported="" name="Analytics-release-" level="project" />
     <orderEntry type="library" exported="" name="FtcCommon-release-" level="project" />
     <orderEntry type="library" exported="" name="WirelessP2p-release-" level="project" />
+    <orderEntry type="library" exported="" name="annotations-13.0" level="project" />
     <orderEntry type="library" exported="" name="Hardware-release-" level="project" />
     <orderEntry type="library" exported="" name="RobotCore-release-" level="project" />
     <orderEntry type="module" module-name="SwerveRoboticsLibrary" exported="" />
+    <orderEntry type="module" module-name="opencv-java" exported="" />
+    <orderEntry type="module" module-name="ftc-visionlib" exported="" />
   </component>
 </module>
