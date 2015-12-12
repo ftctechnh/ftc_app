@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by Carlos on 11/23/2015.
  */
-public class TestAuto extends LinearOpMode{
+public class RedAuto extends LinearOpMode{
 
     Drivetrain drivetrain = new Drivetrain();
     Intake intake = new Intake();
@@ -25,7 +25,7 @@ public class TestAuto extends LinearOpMode{
     double rightButtonServoPressed = 0.45;
     double leftButtonServoPressed = 0.57;
 
-    boolean isBlue = false;
+    boolean isRed = false;
 
 
     @Override
@@ -43,43 +43,46 @@ public class TestAuto extends LinearOpMode{
 
         drivetrain.moveDistance(1500, 0.5);
         telemetry.addData("Step 1 Complete", ".");
+        sleep(500);
 
         drivetrain.turnDistance(674, -0.5);
         telemetry.addData("Step 2 Complete", ".");
+        sleep(500);
 
         intake.outward();
 
         drivetrain.moveDistance(4250, 0.5);
         telemetry.addData("Step 3 Complete", ".");
+        sleep(500);
 
         intake.stop();
 
         drivetrain.turnDistance(625, -0.5);
         telemetry.addData("Step 4 Complete", ".");
+        sleep(500);
 
         drivetrain.moveDistance(1000, 0.5);
         telemetry.addData("Step 5 Complete", ".");
+        sleep(500);
 
-        isBlue = (autonomous.sensorRGB.blue() > 0.5);
+        isRed = (autonomous.sensorRGB.red() > 0.5);
         telemetry.addData("Step 6 Complete", ".");
 
         drivetrain.moveDistance(500, -0.5);
         telemetry.addData("Step 7 Complete", ".");
+        sleep(500);
 
-        if (autonomous.sensorRGB.blue() == 1) {
-            autonomous.leftButtonServo.setPosition(leftButtonServoPressed);
-            TimeUnit.MILLISECONDS.sleep(2100);
-            autonomous.leftButtonServo.setPosition(0.5);
+        if (isRed) {
+            autonomous.PressLeftButton();
         }
         else {
-            autonomous.rightButtonServo.setPosition(rightButtonServoPressed);
-            TimeUnit.MILLISECONDS.sleep(2100);
-            autonomous.rightButtonServo.setPosition(0.5);
+            autonomous.PressRightButton();
         }
         telemetry.addData("Step 8 Complete", ".");
 
         drivetrain.moveDistance(750, 0.5);
         telemetry.addData("Step 9 Complete", ".");
+        sleep(500);
 
 
     }
