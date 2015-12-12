@@ -50,8 +50,8 @@ public class ColorSensorDriver extends LinearOpMode {
 
   ColorSensor colorSensor;
   DeviceInterfaceModule cdim;
-  //LED led;
-  TouchSensor t;
+  LED led;
+  TouchSensor touchSensor;
 
   @Override
   public void runOpMode() throws InterruptedException {
@@ -69,8 +69,9 @@ public class ColorSensorDriver extends LinearOpMode {
         colorSensor = hardwareMap.colorSensor.get("mr");
         break;
     }
-    //led = hardwareMap.led.get("led");
-    t = hardwareMap.touchSensor.get("t");
+
+    led = hardwareMap.led.get("led");
+    touchSensor = hardwareMap.touchSensor.get("touchSensor");
 
     waitForStart();
 
@@ -79,7 +80,7 @@ public class ColorSensorDriver extends LinearOpMode {
     final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(R.id.RelativeLayout);
     while (opModeIsActive()) {
 
-      enableLed(t.isPressed());
+      enableLed(touchSensor.isPressed());
 
       switch (device) {
         case HITECHNIC_NXT:

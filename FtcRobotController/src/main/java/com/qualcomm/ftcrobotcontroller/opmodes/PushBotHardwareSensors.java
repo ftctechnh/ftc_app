@@ -118,7 +118,7 @@ public class PushBotHardwareSensors extends PushBotTelemetry
                 {
                     m_warning_message ("sensor_ods/eopd/EOPD");
                     DbgLog.msg
-                        ( "Can't map sensor_ods nor sensor_eopd, nor" +
+                        ( "Can'touchSensor map sensor_ods nor sensor_eopd, nor" +
                             " sensor_EOPD ("
                         + p_exeception_EOPD.getLocalizedMessage ()
                         + ").\n"
@@ -288,7 +288,7 @@ public class PushBotHardwareSensors extends PushBotTelemetry
             l_return = drive_to_ir_beacon_running;
         }
         //
-        // The beacon can't be detected.
+        // The beacon can'touchSensor be detected.
         //
         else if (l_strength <= 0.0)
         {

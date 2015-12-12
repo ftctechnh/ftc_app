@@ -68,7 +68,7 @@ public class PushBotManual extends PushBotTelemetry
         // speeds.
         //
         // The setPower methods write the motor power values to the DcMotor
-        // class, but the power levels aren't applied until this method ends.
+        // class, but the power levels aren'touchSensor applied until this method ends.
         //
 
         //
@@ -97,7 +97,7 @@ public class PushBotManual extends PushBotTelemetry
         // [0,1].
         //
         // The setPosition methods write the motor power values to the Servo
-        // class, but the positions aren't applied until this method ends.
+        // class, but the positions aren'touchSensor applied until this method ends.
         //
         if (gamepad2.x)
         {

@@ -79,7 +79,7 @@ public class K9TeleOp extends OpMode {
 
 	}
 
-	/*
+	/**
 	 * Code to run when the op mode is first enabled goes here
 	 * 
 	 * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
@@ -116,10 +116,8 @@ public class K9TeleOp extends OpMode {
 		clawPosition = 0.2;
 	}
 
-	/*
-	 * This method will be called repeatedly in a loop
-	 * 
-	 * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#run()
+	/**
+	 * This method will be called repeatedly in a loop.
 	 */
 	@Override
 	public void loop() {
@@ -200,7 +198,7 @@ public class K9TeleOp extends OpMode {
 
 	}
 
-	/*
+	/**
 	 * Code to run when the op mode is first disabled goes here
 	 * 
 	 * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#stop()
@@ -211,10 +209,11 @@ public class K9TeleOp extends OpMode {
 	}
 
     	
-	/*
+	/**
 	 * This method scales the joystick input so for low joystick values, the 
 	 * scaled value is less than linear.  This is to make it easier to drive
 	 * the robot more precisely at slower speeds.
+	 * @param dVal Double to scale.
 	 */
 	double scaleInput(double dVal)  {
 		double[] scaleArray = { 0.0, 0.05, 0.09, 0.10, 0.12, 0.15, 0.18, 0.24,

@@ -105,7 +105,7 @@ public class PushBotAuto extends PushBotTelemetry
             //
             // Tell the system that motor encoders will be used.  This call MUST
             // be in this state and NOT the previous or the encoders will not
-            // work.  It doesn't need to be in subsequent states.
+            // work.  It doesn'touchSensor need to be in subsequent states.
             //
             run_using_encoders ();
 
@@ -117,7 +117,7 @@ public class PushBotAuto extends PushBotTelemetry
             //
             // Have the motor shafts turned the required amount?
             //
-            // If they haven't, then the op-mode remains in this state (i.e this
+            // If they haven'touchSensor, then the op-mode remains in this state (i.e this
             // block will be executed the next time this method is called).
             //
             if (have_drive_encoders_reached (2880, 2880))
