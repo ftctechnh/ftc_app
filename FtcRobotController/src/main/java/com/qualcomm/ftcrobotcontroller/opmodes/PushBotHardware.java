@@ -81,11 +81,22 @@ public class PushBotHardware extends OpMode
         //
         try
         {
-            v_motor_left_front_drive = hardwareMap.dcMotor.get ("left_drive");
+            v_motor_left_front_drive = hardwareMap.dcMotor.get ("left_front_drive");
         }
         catch (Exception p_exeception)
         {
-            m_warning_message("left_drive");
+            m_warning_message("left_front_drive");
+            DbgLog.msg (p_exeception.getLocalizedMessage ());
+
+            v_motor_left_front_drive = null;
+        }
+        try
+        {
+            v_motor_left_front_drive = hardwareMap.dcMotor.get ("left_right_drive");
+        }
+        catch (Exception p_exeception)
+        {
+            m_warning_message("left_right_drive");
             DbgLog.msg (p_exeception.getLocalizedMessage ());
 
             v_motor_left_front_drive = null;
@@ -93,12 +104,24 @@ public class PushBotHardware extends OpMode
 
         try
         {
-            v_motor_right_front_drive = hardwareMap.dcMotor.get ("right_drive");
+            v_motor_right_front_drive = hardwareMap.dcMotor.get ("right_front_drive");
             v_motor_right_front_drive.setDirection(DcMotor.Direction.REVERSE);
         }
         catch (Exception p_exeception)
         {
-            m_warning_message ("right_drive");
+            m_warning_message ("right_front_drive");
+            DbgLog.msg (p_exeception.getLocalizedMessage ());
+
+            v_motor_right_front_drive = null;
+        }
+        try
+        {
+            v_motor_right_front_drive = hardwareMap.dcMotor.get ("right_rear_drive");
+            v_motor_right_front_drive.setDirection(DcMotor.Direction.REVERSE);
+        }
+        catch (Exception p_exeception)
+        {
+            m_warning_message ("right_rear_drive");
             DbgLog.msg (p_exeception.getLocalizedMessage ());
 
             v_motor_right_front_drive = null;
