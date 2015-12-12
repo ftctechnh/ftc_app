@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.powerstackers.resq.opmodes.ColorSensorSense;
 import com.powerstackers.resq.opmodes.ProtobotTeleop;
 import com.powerstackers.resq.opmodes.PurplePencil;
 import com.powerstackers.resq.opmodes.WorkshopTeleop;
@@ -66,6 +67,7 @@ public class FtcOpModeRegister implements OpModeRegister {
 //    manager.register ("PushBotManual", PushBotManual.class);
 
     manager.register("WorkshopTeleop", WorkshopTeleop.class);
+    manager.register("ColorSensorSense", ColorSensorSense.class);
     manager.register("MatrixK9TeleOp", MatrixK9TeleOp.class);
    // manager.register("K9TeleOp", K9TeleOp.class);
     manager.register ("PushBotAuto", PushBotAuto.class);
@@ -84,7 +86,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     //manager.register("K9AutoTime", K9AutoTime.class);
     //manager.register("IrSeekerOp", IrSeekerOp.class);
     //manager.register("AdafruitRGBExample", AdafruitRGBExample.class);
-    //manager.register("ColorSensorDriver", ColorSensorDriver.class);
+    manager.register("ColorSensorDriver", ColorSensorDriver.class);
 
     //manager.register("IrSeekerOp", IrSeekerOp.class);
     //manager.register("CompassCalibration", CompassCalibration.class);

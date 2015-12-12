@@ -31,16 +31,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
-import android.app.Activity;
-import android.graphics.Color;
-import android.view.View;
+        import android.app.Activity;
+        import android.graphics.Color;
+        import android.view.View;
 
-import com.qualcomm.ftcrobotcontroller.R;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
-import com.qualcomm.robotcore.hardware.LED;
-import com.qualcomm.robotcore.hardware.TouchSensor;
+        import com.qualcomm.ftcrobotcontroller.R;
+        import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+        import com.qualcomm.robotcore.hardware.ColorSensor;
+        import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
+        import com.qualcomm.robotcore.hardware.LED;
+        import com.qualcomm.robotcore.hardware.TouchSensor;
 
 public class ColorSensorDriver extends LinearOpMode {
 
@@ -50,7 +50,7 @@ public class ColorSensorDriver extends LinearOpMode {
 
   ColorSensor colorSensor;
   DeviceInterfaceModule cdim;
-  LED led;
+  //LED led;
   TouchSensor t;
 
   @Override
@@ -69,7 +69,7 @@ public class ColorSensorDriver extends LinearOpMode {
         colorSensor = hardwareMap.colorSensor.get("mr");
         break;
     }
-    led = hardwareMap.led.get("led");
+    //led = hardwareMap.led.get("led");
     t = hardwareMap.touchSensor.get("t");
 
     waitForStart();
@@ -113,7 +113,7 @@ public class ColorSensorDriver extends LinearOpMode {
         colorSensor.enableLed(value);
         break;
       case ADAFRUIT:
-        led.enable(value);
+        //led.enable(value);
         break;
       case MODERN_ROBOTICS_I2C:
         colorSensor.enableLed(value);

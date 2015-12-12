@@ -20,8 +20,8 @@ public class ProtobotTeleop extends OpMode {
     // TETRIX VALUES.
     final static double servoRight_MIN_RANGE  = 0.20;
     final static double servoRight_MAX_RANGE  = 1.00;
-    final static double servoLeft_MIN_RANGE  = 0.20;
-    final static double servoLeft_MAX_RANGE  = 1.00;
+    final static double servoLeft_MIN_RANGE  = 0.80;
+    final static double servoLeft_MAX_RANGE  = 0.00;
 
     // position of the arm servo.
     double servoRightPosition;
