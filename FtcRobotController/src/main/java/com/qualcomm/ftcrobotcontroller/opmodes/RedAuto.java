@@ -24,6 +24,7 @@ public class RedAuto extends LinearOpMode{
 
     double rightButtonServoPressed = 0.45;
     double leftButtonServoPressed = 0.57;
+    Servo climberServo;
 
     boolean isRed = false;
 
@@ -32,9 +33,19 @@ public class RedAuto extends LinearOpMode{
     public void runOpMode() throws InterruptedException {
 
         drivetrain.init(hardwareMap);
+        telemetry.addData("Drivetrain Init Complete", "");
         intake.init(hardwareMap);
+        telemetry.addData("Intake Init Complete", "");
         autonomous.init(hardwareMap);
-        telemetry.addData("Initialization Complete", "");
+        telemetry.addData("Autonomous Init Complete", "");
+        autonomous.rightButtonServo.setPosition(0.5);
+        telemetry.addData("Right Button Servo Init Complete", "");
+        autonomous.leftButtonServo.setPosition(0.5);
+        telemetry.addData("Left Button Servo Init Complete", "");
+        climberServo = hardwareMap.servo.get("climberServo");
+        telemetry.addData("Climber Servo Init Complete", "");
+        climberServo.setPosition(1);
+        telemetry.addData("Climber Servo Init Position Complete", "");
 
 
         waitForStart();
@@ -45,7 +56,7 @@ public class RedAuto extends LinearOpMode{
         telemetry.addData("Step 1 Complete", ".");
         sleep(500);
 
-        drivetrain.turnDistance(674, -0.5);
+        drivetrain.turnAngle(45, 0.5);
         telemetry.addData("Step 2 Complete", ".");
         sleep(500);
 
@@ -57,22 +68,26 @@ public class RedAuto extends LinearOpMode{
 
         intake.stop();
 
-        drivetrain.turnDistance(625, -0.5);
+        drivetrain.turnAngle(45, -0.5);
         telemetry.addData("Step 4 Complete", ".");
         sleep(500);
 
-        drivetrain.moveDistance(1000, 0.5);
+        drivetrain.moveDistance(500, 0.25);
         telemetry.addData("Step 5 Complete", ".");
         sleep(500);
 
-        isRed = (autonomous.sensorRGB.red() > 0.5);
-        telemetry.addData("Step 6 Complete", ".");
+        climberServo.setPosition(0);
+        sleep(100);
+        climberServo.setPosition(1);
+
+        //isRed = (autonomous.sensorRGB.red() > 0.5);
+        //telemetry.addData("Step 6 Complete", ".");
 
         drivetrain.moveDistance(500, -0.5);
         telemetry.addData("Step 7 Complete", ".");
         sleep(500);
 
-        if (isRed) {
+        /*if (isRed) {
             autonomous.PressLeftButton();
         }
         else {
@@ -82,7 +97,7 @@ public class RedAuto extends LinearOpMode{
 
         drivetrain.moveDistance(750, 0.5);
         telemetry.addData("Step 9 Complete", ".");
-        sleep(500);
+        sleep(500);*/
 
 
     }

@@ -16,7 +16,7 @@ public class Drivetrain {
     GyroSensor gyro;
 
     int heading = 0;
-    int headingTolerance = 2;
+    public int headingTolerance = 2;
 
     double wheelCircumference = 6 * Math.PI;
     double ticksPerRotation = 1049;
@@ -170,11 +170,11 @@ public class Drivetrain {
     public void turnAngle(int targetAngle, double speed){
 
         int currentHeading = gyro.getHeading();
-        int goalHeading = currentHeading + targetAngle;
+        int goalHeading = (currentHeading + targetAngle)%360;
 
-        speed = Math.copySign(speed, targetAngle);
+        speed = Math.abs(speed) * targetAngle/Math.abs(targetAngle);
 
-        while( (goalHeading - gyro.getHeading()) > headingTolerance){
+        while( Math.abs(goalHeading - gyro.getHeading()) > headingTolerance){
             arcadeDrive(0, speed);
         }
         arcadeDrive(0, 0);
