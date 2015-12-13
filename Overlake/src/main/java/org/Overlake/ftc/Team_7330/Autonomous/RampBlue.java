@@ -13,9 +13,12 @@ public class RampBlue extends AutonomousOpMode
     {
         waitForStart();
         initializeAllDevices();
-        driveWithEncoders(2.8,1.0);
-        turn(45,.9);
-        driveWithEncoders(3.2,.4);
+        driveWithEncoders(1.0, .7);
+        turn(45, .7);
+        driveWithEncoders(3.0,.7);
+        driveWithEncoders(-1.0,-.7);
+        turn(55,.7);
+        driveWithEncoders(3,1.0);
     }
 
 
