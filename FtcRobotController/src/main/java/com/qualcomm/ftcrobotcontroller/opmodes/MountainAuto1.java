@@ -16,10 +16,10 @@ public class MountainAuto1 extends LinearOpMode
         drive = new CompBot(hardwareMap);
         drive.moveStraightEncoders(24, 1);
         drive.spinOnCenter(-45, (float) 0.25, false); //leftTurn(45, .25);//(-45,.25);
-        drive.moveStraightEncoders(25, 1);
+        drive.moveStraightEncoders(42, 1);
         drive.spinOnCenter(-90, (float) 0.25, false);//leftTurn(90, 0.25);
-        drive.pitchAllTracksAndMoveRobot(60, 1.00f);
-       //or use gyro to stop at a certain angle
+        drive.moveStraightEncoders(60, 1.00f);
+        //or use gyro to stop at a certain angle
         //stop the bot
     }
 }
