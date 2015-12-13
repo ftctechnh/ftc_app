@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 /**
  * Created by subash on 11/17/2015.
  */
-public class newBase extends OpMode
+public class CompBotTeleop extends OpMode
 {
     float speed = 1.0f;
     DcMotor frontRight;
@@ -17,7 +17,11 @@ public class newBase extends OpMode
     DcMotor right;
     DcMotor left;
     DcMotor grabber;
+    DcMotor winch;
     Servo diverter;
+    Servo dispenser;
+    Servo dispenserFlipper;
+    Servo tapeMeasure;
     PhoneGyrometer gyro;
 
 
@@ -30,6 +34,10 @@ public class newBase extends OpMode
         frontLeft.close();
         backRight.close();
         backLeft.close();
+        winch.close();
+        dispenser.close();
+        dispenserFlipper.close();
+        tapeMeasure.close();
         gyro.onDestroy();
     }
 
@@ -46,6 +54,10 @@ public class newBase extends OpMode
         backLeft = hardwareMap.dcMotor.get("backLeft");
         grabber = hardwareMap.dcMotor.get("grabber");
         diverter = hardwareMap.servo.get("diverter");
+        winch = hardwareMap.dcMotor.get("winch");
+        dispenser = hardwareMap.servo.get("dispenser");
+        dispenserFlipper = hardwareMap.servo.get("dispenserFlipper");
+        tapeMeasure = hardwareMap.servo.get("tapeMeasure");
         grabber.setDirection(DcMotor.Direction.REVERSE);
         right.setDirection(DcMotor.Direction.REVERSE);
         left.setDirection(DcMotor.Direction.FORWARD);
@@ -56,6 +68,9 @@ public class newBase extends OpMode
         diverter.setDirection(Servo.Direction.FORWARD);
         gamepad1.setJoystickDeadzone(0.01f);
         gamepad2.setJoystickDeadzone(0.01f);
+        dispenser.setPosition(0.5f);
+        dispenserFlipper.setPosition(1.0f);
+        tapeMeasure.setPosition(0.5f);
     }
 
     @Override
@@ -63,6 +78,9 @@ public class newBase extends OpMode
     {
         setDrive(gamepad1.right_stick_y, gamepad1.left_stick_y);
         grabber.setPower(gamepad2.left_stick_y);
+        winch.setPower(gamepad2.right_stick_y);
+        dispenser.setPosition(0.5f);
+        dispenserFlipper.setPosition(1.0f);
         if(gamepad2.right_stick_button)
         {
                 diverter.setPosition(1.0f);
@@ -74,6 +92,19 @@ public class newBase extends OpMode
         else
         {
                 diverter.setPosition(0.5f);
+        }
+
+        if(gamepad2.dpad_up)
+        {
+            tapeMeasure.setPosition(1.0f);
+        }
+        else if(gamepad2.dpad_down)
+        {
+            tapeMeasure.setPosition(0.0f);
+        }
+        else
+        {
+            tapeMeasure.setPosition(0.5f);
         }
 
         if(gamepad1.a)
@@ -117,7 +148,9 @@ public class newBase extends OpMode
                 backLeft.setPower(0.0f);
             }
         }
-        telemetry.addData("gyroReading = ", gyro.getAzimuth());
+        telemetry.addData("Azimuth = ", gyro.getAzimuth());
+        telemetry.addData("Pitch = ", gyro.getPitch());
+        telemetry.addData("Roll = ", gyro.getRoll());
     }
 
     void setDrive(double y1, double y2)
@@ -125,5 +158,7 @@ public class newBase extends OpMode
         right.setPower(y1);
         left.setPower(y2);
     }
+
+
 
 }

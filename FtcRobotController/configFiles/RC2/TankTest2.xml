@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<Robot>
+    <MotorController name="Motor Controller 1" serialNumber="AL00XPKZ">
+        <Motor name="rightBottomMotor" port="1" />
+        <Motor name="rightTopMotor" port="2" />
+    </MotorController>
+    <MotorController name="Motor Controller 2" serialNumber="AL00XT11">
+        <Motor name="leftBottomMotor" port="1" />
+        <Motor name="leftTopMotor" port="2" />
+    </MotorController>
+</Robot>

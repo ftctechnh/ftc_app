@@ -61,13 +61,6 @@ public class TestBot implements DriverInterface
         }
     }
 
-    public void pivotTurn(float degrees, float speed, boolean useGyro) {
-
-    }
-
-    public void spinOnCenter(float degrees, float speed) {
-
-    }
 
 
     public void pivotTurn(float degrees, float speed)
@@ -172,15 +165,7 @@ public class TestBot implements DriverInterface
         rightMotor.setPower(0.0f);
     }
 
-    @Override
-    public void pivotTurn(float degrees, float speed, boolean useGyro) {
 
-    }
-
-    @Override
-    public void spinOnCenter(float degrees, float speed, boolean useGyro) {
-
-    }
 
     @Override
     public void pitchFrontTracks(float time, float speed)

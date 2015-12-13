@@ -11,17 +11,16 @@ public class BeaconAuto extends LinearOpMode
 
     @Override public void runOpMode() throws InterruptedException
     {
-<<<<<<< HEAD
         DriverInterface robot = new CompBot(hardwareMap);
         waitForStart();
         robot.moveStraightEncoders(48, 1.0f);
-        robot.spinOnCenter(90, 0.75f, false);
+        robot.spinOnCenter(90, 0.75f);
         robot.moveStraightEncoders(48, 1.0f);
-        robot.spinOnCenter(-90, 0.75f, false);
+        robot.spinOnCenter(-90, 0.75f);
         robot.moveStraightEncoders(24, 1.0f);
-        robot.spinOnCenter(90, 0.75f, false);
+        robot.spinOnCenter(90, 0.75f);
         robot.moveStraightEncoders(24, 1.0f);
-        robot.spinOnCenter(90, 0.75f, false);
+        robot.spinOnCenter(90, 0.75f);
         robot.moveStraightEncoders(24 , 1.0f);
         robot.stop();
     }
