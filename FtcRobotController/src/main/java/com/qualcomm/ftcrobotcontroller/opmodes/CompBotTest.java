@@ -8,10 +8,5 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 public class CompBotTest extends LinearOpMode
 {
     @Override public void runOpMode() throws InterruptedException
-   {
-       DriverInterface robotDrive = new CompBot(hardwareMap);
-       waitForStart();
-       robotDrive.spinOnCenter(-90, 1.0f, false);
-       robotDrive.stop();
-   }
+   {}
 }

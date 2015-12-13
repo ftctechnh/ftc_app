@@ -61,6 +61,14 @@ public class TestBot implements DriverInterface
         }
     }
 
+    public void pivotTurn(float degrees, float speed, boolean useGyro) {
+
+    }
+
+    public void spinOnCenter(float degrees, float speed) {
+
+    }
+
 
     public void pivotTurn(float degrees, float speed)
     {

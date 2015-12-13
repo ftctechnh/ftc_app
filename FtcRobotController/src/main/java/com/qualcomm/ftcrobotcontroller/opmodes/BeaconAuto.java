@@ -7,8 +7,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
  */
 public class BeaconAuto extends LinearOpMode
 {
+    DriverInterface robot;
+
     @Override public void runOpMode() throws InterruptedException
     {
+<<<<<<< HEAD
         DriverInterface robot = new CompBot(hardwareMap);
         waitForStart();
         robot.moveStraightEncoders(48, 1.0f);
@@ -21,9 +24,5 @@ public class BeaconAuto extends LinearOpMode
         robot.spinOnCenter(90, 0.75f, false);
         robot.moveStraightEncoders(24 , 1.0f);
         robot.stop();
-
     }
-
-
-
 }
