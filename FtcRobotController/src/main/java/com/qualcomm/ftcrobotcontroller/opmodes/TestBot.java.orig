@@ -65,11 +65,14 @@ public class TestBot implements DriverInterface
 
     }
 
-    public void spinOnCenter(float degrees, float speed) {
+    public void spinOnCenter(float degrees, float speed, boolean useGyro) {
 
     }
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> 68a4dcf534a80f02f10f53b1ad9bfa17ae3d548e
     public void pivotTurn(float degrees, float speed)
     {
         leftMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
