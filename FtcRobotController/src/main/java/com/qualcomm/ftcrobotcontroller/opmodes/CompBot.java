@@ -3,13 +3,14 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import java.sql.Time;
 
 /**
  * Created by Peter on 12/3/2015.
  */
-public class CompBot implements DriverInterface
+public class CompBot implements DriverInterface, AttachmentInterface
 {
     static DcMotor leftMotor;
     static DcMotor rightMotor;
@@ -17,13 +18,76 @@ public class CompBot implements DriverInterface
     static DcMotor frontRightMotor;
     static DcMotor backLeftMotor;
     static DcMotor backRightMotor;
+    static DcMotor grabberMotor;
+    static DcMotor winchMotor;
+    static Servo diverterServo;
+    static Servo dispenserServo;
+    static Servo dispenserFlipperServo;
+    static Servo tapeMeasureServo;
     private static final String frontLeftMotorName = "frontLeft";
     private static final String frontRightMotorName = "frontRight";
     private static final String backLeftMotorName = "backLeft";
     private static final String backRightMotorName = "backRight";
     private static final String leftMotorName = "left";
     private static final String rightMotorName = "right";
+    private static final String grabberMotorName = "grabber";
+    private static final String winchMotorName = "winch";
+    private static final String diverterServoName = "diverter";
+    private static final String dispenserServoName = "dispenser";
+    private static final String dispenserFlipperServoName = "dispenserFlipper";
+    private static final String tapeMeasureServoName = "tapeMeasure";
     //PhoneGyrometer gyro;
+
+    public DcMotor getLeftMotor()
+    {
+        return leftMotor;
+    }
+
+    public DcMotor getRightMotor()
+    {
+        return rightMotor;
+    }
+    public DcMotor getFrontLeftMotor()
+    {
+        return frontLeftMotor;
+    }
+    public DcMotor getFrontRightMotor()
+    {
+        return frontRightMotor;
+    }
+    public DcMotor getBackLeftMotor()
+    {
+        return backLeftMotor;
+    }
+    public DcMotor getBackRightMotor()
+    {
+        return backRightMotor;
+    }
+    public DcMotor getGrabberMotor()
+    {
+        return  grabberMotor;
+    }
+    public DcMotor getWinchMotor()
+    {
+        return winchMotor;
+    }
+    public Servo getDiverterServo()
+    {
+        return diverterServo;
+    }
+    public Servo getDispenserServo()
+    {
+        return dispenserServo;
+    }
+    public Servo getDispenserFlipperServo()
+    {
+        return dispenserFlipperServo;
+    }
+    public Servo getTapeMeasureServo()
+    {
+        return tapeMeasureServo;
+    }
+
 
     public CompBot(HardwareMap hardwareMap)
     {
@@ -40,8 +104,27 @@ public class CompBot implements DriverInterface
         backRightMotor = hardwareMap.dcMotor.get(backRightMotorName);
         backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
         backRightMotor.setDirection(DcMotor.Direction.FORWARD);
+        grabberMotor = hardwareMap.dcMotor.get(grabberMotorName);
+        grabberMotor.setDirection(DcMotor.Direction.REVERSE);
+        winchMotor = hardwareMap.dcMotor.get(winchMotorName);
+        diverterServo = hardwareMap.servo.get(diverterServoName);
+        dispenserServo = hardwareMap.servo.get(dispenserServoName);
+        dispenserFlipperServo = hardwareMap.servo.get(dispenserFlipperServoName);
+        tapeMeasureServo = hardwareMap.servo.get(tapeMeasureServoName);
+        dispenserServo.setPosition(0.5f);
+        dispenserFlipperServo.setPosition(1.0f);
+        tapeMeasureServo.setPosition(0.5f);
     }
 
+    @Override
+    public void releaseClimbers() {
+
+    }
+
+    @Override
+    public void pushButton(boolean isButtonLeft) {
+
+    }
 
     @Override
     public void moveStraightEncoders(float inches, float speed)
@@ -258,6 +341,22 @@ public class CompBot implements DriverInterface
         }
         backLeftMotor.setPower(0.0f);
         backRightMotor.setPower(0.0f);
+    }
+
+    public void kill()
+    {
+        rightMotor.close();
+        leftMotor.close();
+        frontLeftMotor.close();
+        frontRightMotor.close();
+        backLeftMotor.close();
+        backRightMotor.close();
+        grabberMotor.close();
+        winchMotor.close();
+        diverterServo.close();
+        dispenserFlipperServo.close();
+        dispenserServo.close();
+        tapeMeasureServo.close();
     }
 
 }

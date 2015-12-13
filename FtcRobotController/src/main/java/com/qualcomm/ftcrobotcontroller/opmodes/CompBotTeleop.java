@@ -9,143 +9,99 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 public class CompBotTeleop extends OpMode
 {
-    float speed = 1.0f;
-    DcMotor frontRight;
-    DcMotor frontLeft;
-    DcMotor backRight;
-    DcMotor backLeft;
-    DcMotor right;
-    DcMotor left;
-    DcMotor grabber;
-    DcMotor winch;
-    Servo diverter;
-    Servo dispenser;
-    Servo dispenserFlipper;
-    Servo tapeMeasure;
     PhoneGyrometer gyro;
+    CompBot compBot = new CompBot(hardwareMap);
 
 
     @Override
     public void stop()
     {
-        right.close();
-        left.close();
-        frontRight.close();
-        frontLeft.close();
-        backRight.close();
-        backLeft.close();
-        winch.close();
-        dispenser.close();
-        dispenserFlipper.close();
-        tapeMeasure.close();
         gyro.onDestroy();
+        compBot.kill();
     }
 
     @Override
     public void init()
     {
         gyro = new PhoneGyrometer(hardwareMap);
-        gamepad1.setJoystickDeadzone(0.05f);
-        right = hardwareMap.dcMotor.get("right");
-        left = hardwareMap.dcMotor.get("left");
-        frontRight = hardwareMap.dcMotor.get("frontRight");
-        frontLeft = hardwareMap.dcMotor.get("frontLeft");
-        backRight = hardwareMap.dcMotor.get("backRight");
-        backLeft = hardwareMap.dcMotor.get("backLeft");
-        grabber = hardwareMap.dcMotor.get("grabber");
-        diverter = hardwareMap.servo.get("diverter");
-        winch = hardwareMap.dcMotor.get("winch");
-        dispenser = hardwareMap.servo.get("dispenser");
-        dispenserFlipper = hardwareMap.servo.get("dispenserFlipper");
-        tapeMeasure = hardwareMap.servo.get("tapeMeasure");
-        grabber.setDirection(DcMotor.Direction.REVERSE);
-        right.setDirection(DcMotor.Direction.REVERSE);
-        left.setDirection(DcMotor.Direction.FORWARD);
-        frontRight.setDirection(DcMotor.Direction.FORWARD);
-        frontLeft.setDirection(DcMotor.Direction.REVERSE);
-        backRight.setDirection(DcMotor.Direction.FORWARD);
-        backLeft.setDirection(DcMotor.Direction.REVERSE);
-        diverter.setDirection(Servo.Direction.FORWARD);
         gamepad1.setJoystickDeadzone(0.01f);
         gamepad2.setJoystickDeadzone(0.01f);
-        dispenser.setPosition(0.5f);
-        dispenserFlipper.setPosition(1.0f);
-        tapeMeasure.setPosition(0.5f);
     }
 
     @Override
     public void loop()
     {
-        setDrive(gamepad1.right_stick_y, gamepad1.left_stick_y);
-        grabber.setPower(gamepad2.left_stick_y);
-        winch.setPower(gamepad2.right_stick_y);
-        dispenser.setPosition(0.5f);
-        dispenserFlipper.setPosition(1.0f);
+        compBot.getRightMotor().setPower(gamepad1.left_stick_y);
+        compBot.getLeftMotor().setPower(gamepad1.right_stick_y);
+        compBot.getGrabberMotor().setPower(gamepad2.left_stick_y);
+        compBot.getWinchMotor().setPower(gamepad2.right_stick_y);
+        compBot.getDispenserServo().setPosition(0.5f);
+        compBot.getDispenserFlipperServo().setPosition(1.0f);
         if(gamepad2.right_stick_button)
         {
-                diverter.setPosition(1.0f);
+            compBot.getDiverterServo().setPosition(1.0f);
         }
         else if(gamepad2.left_stick_button)
         {
-                diverter.setPosition(0.0f);
+            compBot.getDiverterServo().setPosition(0.0f);
         }
         else
         {
-                diverter.setPosition(0.5f);
+            compBot.getDiverterServo().setPosition(0.5f);
         }
 
         if(gamepad2.dpad_up)
         {
-            tapeMeasure.setPosition(1.0f);
+            compBot.getTapeMeasureServo().setPosition(1.0f);
         }
         else if(gamepad2.dpad_down)
         {
-            tapeMeasure.setPosition(0.0f);
+            compBot.getTapeMeasureServo().setPosition(0.0f);
         }
         else
         {
-            tapeMeasure.setPosition(0.5f);
+            compBot.getTapeMeasureServo().setPosition(0.5f);
         }
 
         if(gamepad1.a)
         {
-            frontRight.setPower(-0.2f);
-            frontLeft.setPower(-0.2f);
-            backRight.setPower(0.2f);
-            backLeft.setPower(0.2f);
+            compBot.getFrontRightMotor().setPower(-0.2f);
+            compBot.getFrontLeftMotor().setPower(-0.2f);
+            compBot.getBackLeftMotor().setPower(0.2f);
+            compBot.getBackRightMotor().setPower(0.2f);
         }
         else
         {
 
             if(gamepad1.right_bumper)
             {
-                frontRight.setPower(speed);
-                frontLeft.setPower(speed);
+                compBot.getFrontRightMotor().setPower(1.0f);
+                compBot.getFrontLeftMotor().setPower(1.0f);
             }
             else if(gamepad1.right_trigger > 0.05f)
             {
-                frontRight.setPower(-speed);
-                frontLeft.setPower(-speed);
+                compBot.getFrontRightMotor().setPower(-1.0f);
+                compBot.getFrontLeftMotor().setPower(-1.0f);
             }
             else
             {
-                frontRight.setPower(0.0f);
-                frontLeft.setPower(0.0f);
+                compBot.getFrontRightMotor().setPower(0.0f);
+                compBot.getFrontLeftMotor().setPower(0.0f);
             }
             if(gamepad1.left_bumper)
             {
-                backRight.setPower(speed);
-                backLeft.setPower(speed);
+                compBot.getBackLeftMotor().setPower(1.0f);
+                compBot.getBackRightMotor().setPower(1.0f);
             }
             else if(gamepad1.left_trigger > 0.05f)
             {
-                backRight.setPower(-speed);
-                backLeft.setPower(-speed);
+                compBot.getBackLeftMotor().setPower(-1.0f);
+                compBot.getBackRightMotor().setPower(-1.0f);
             }
             else
             {
-                backRight.setPower(0.0f);
-                backLeft.setPower(0.0f);
+                compBot.getBackLeftMotor().setPower(0.0f);
+                compBot.getBackRightMotor().setPower(0.0f);
             }
         }
         telemetry.addData("Azimuth = ", gyro.getAzimuth());
@@ -153,11 +109,6 @@ public class CompBotTeleop extends OpMode
         telemetry.addData("Roll = ", gyro.getRoll());
     }
 
-    void setDrive(double y1, double y2)
-    {
-        right.setPower(y1);
-        left.setPower(y2);
-    }
 
 
 
