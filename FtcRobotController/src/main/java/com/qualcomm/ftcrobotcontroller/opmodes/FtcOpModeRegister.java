@@ -34,6 +34,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.powerstackers.resq.opmodes.ColorSensorSense;
 import com.powerstackers.resq.opmodes.ProtobotTeleop;
 import com.powerstackers.resq.opmodes.PurplePencil;
+import com.powerstackers.resq.opmodes.Tedbot;
 import com.powerstackers.resq.opmodes.WorkshopTeleop;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
@@ -82,10 +83,10 @@ public class FtcOpModeRegister implements OpModeRegister
 
     manager.register("WorkshopTeleop", WorkshopTeleop.class);
     manager.register("ColorSensorSense", ColorSensorSense.class);
-    manager.register("MatrixK9TeleOp", MatrixK9TeleOp.class);
-   // manager.register("K9TeleOp", K9TeleOp.class);
-    manager.register ("PushBotAuto", PushBotAuto.class);
-    manager.register ("PushBotManual", PushBotManual.class);
+    //manager.register("MatrixK9TeleOp", MatrixK9TeleOp.class);
+    // manager.register("K9TeleOp", K9TeleOp.class);
+    //manager.register ("PushBotAuto", PushBotAuto.class);
+    //manager.register ("PushBotManual", PushBotManual.class);
     manager.register("Purple Pencil", PurplePencil.class);
 
     /*
@@ -94,13 +95,14 @@ public class FtcOpModeRegister implements OpModeRegister
 
     //manager.register("K9TeleOp", K9TeleOp.class);
     manager.register("K9IrSeeker", K9IrSeeker.class);
-    manager.register("OpticalTelemetry", OpticalTelemetry.class);
-    manager.register("Protobot" ,ProtobotTeleop.class);
+    //manager.register("OpticalTelemetry", OpticalTelemetry.class);
+    manager.register("Protobot" , ProtobotTeleop.class);
+    manager.register("Tedbot", Tedbot.class);
     //manager.register("K9Line", K9Line.class);
     //manager.register("K9AutoTime", K9AutoTime.class);
     //manager.register("IrSeekerOp", IrSeekerOp.class);
     //manager.register("AdafruitRGBExample", AdafruitRGBExample.class);
-    manager.register("ColorSensorDriver", ColorSensorDriver.class);
+    //manager.register("ColorSensorDriver", ColorSensorDriver.class);
 
     //manager.register("IrSeekerOp", IrSeekerOp.class);
     //manager.register("CompassCalibration", CompassCalibration.class);

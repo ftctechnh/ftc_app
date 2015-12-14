@@ -10,12 +10,10 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.swerverobotics.library.ClassFactory;
 
-import static com.qualcomm.robotcore.hardware.DcMotor.Direction.FORWARD;
-
 /**
- * Created by Derek on 10/10/2015.
+ * Created by Derek on 12/12/2015.
  */
-public class ProtobotTeleop extends OpMode {
+public class Tedbot extends OpMode {
 
     /*
      * Note: the configuration of the servos is such that
@@ -23,40 +21,41 @@ public class ProtobotTeleop extends OpMode {
      * Also, as the claw servo approaches 0, the claw opens up (drops the game element).
      */
     // TETRIX VALUES.
-    final static double servoRight_MIN_RANGE  = 0.20;
-    final static double servoRight_MAX_RANGE  = 1.00;
-    final static double servoLeft_MIN_RANGE  = 0.80;
-    final static double servoLeft_MAX_RANGE  = 0.00;
+//    final static double servoRight_MIN_RANGE  = 0.20;
+//    final static double servoRight_MAX_RANGE  = 1.00;
+//    final static double servoLeft_MIN_RANGE  = 0.80;
+//    final static double servoLeft_MAX_RANGE  = 0.00;
 
     // position of the arm servo.
-    double servoRightPosition;
+//    double servoRightPosition;
 
     // amount to change the arm servo position.
-    double servoRightDelta = 0.1;
+//    double servoRightDelta = 0.1;
 
     // position of the claw servo
-    double servoLeftPosition;
+//    double servoLeftPosition;
 
     // amount to change the claw servo position by
-    double servoLeftDelta = 0.1;
+//    double servoLeftDelta = 0.1;
 
     //Color Values
     float hsvValues[] = {0, 0, 0};
     final float values[] = hsvValues;
 
     DeviceInterfaceModule cdim;
-    ColorSensor colorSensor;
+    ColorSensor colorBSensor;
+    ColorSensor colorFSensor;
     TouchSensor touchSensor;
-    DcMotor motorBrush;
-    DcMotor motorLift;
-    DcMotor motorFRight;
-    DcMotor motorFLeft;
+    //DcMotor motorBrush;
+    //DcMotor motorLift;
+//    DcMotor motorFRight;
+//    DcMotor motorFLeft;
     DcMotor motorBRight;
     DcMotor motorBLeft;
-    Servo servoLeft;
-    Servo servoRight;
+    //Servo servoLeft;
+    //Servo servoRight;
 
-    public ProtobotTeleop() {
+    public Tedbot() {
 
     }
 
@@ -73,22 +72,24 @@ public class ProtobotTeleop extends OpMode {
         hardwareMap.logDevices();
         cdim = hardwareMap.deviceInterfaceModule.get("dim");
         //Sensors
-        colorSensor = ClassFactory.createSwerveColorSensor(this, this.hardwareMap.colorSensor.get("colorSensor"));
-        colorSensor.enableLed(true);
+        colorBSensor = ClassFactory.createSwerveColorSensor(this, this.hardwareMap.colorSensor.get("colorBSensor"));
+        colorBSensor.enableLed(true);
+        colorFSensor = ClassFactory.createSwerveColorSensor(this, this.hardwareMap.colorSensor.get("colorFSensor"));
+        colorFSensor.enableLed(true);
         touchSensor = hardwareMap.touchSensor.get("touchSensor");
         //Motors
-        motorBrush = hardwareMap.dcMotor.get("motorBrush");
-        motorLift = hardwareMap.dcMotor.get("motorLift");
-        motorLift.setDirection(DcMotor.Direction.REVERSE);
-        motorFRight = hardwareMap.dcMotor.get("motorFRight");
-        motorFLeft = hardwareMap.dcMotor.get("motorFLeft");
-        motorFRight.setDirection(DcMotor.Direction.REVERSE);
+        //motorBrush = hardwareMap.dcMotor.get("motorBrush");
+        //motorLift = hardwareMap.dcMotor.get("motorLift");
+        //motorLift.setDirection(DcMotor.Direction.REVERSE);
+//        motorFRight = hardwareMap.dcMotor.get("motorFRight");
+//        motorFLeft = hardwareMap.dcMotor.get("motorFLeft");
+//        motorFRight.setDirection(DcMotor.Direction.REVERSE);
         motorBRight = hardwareMap.dcMotor.get("motorBRight");
         motorBLeft = hardwareMap.dcMotor.get("motorBLeft");
         motorBRight.setDirection(DcMotor.Direction.REVERSE);
         //Servos
-        servoLeft = hardwareMap.servo.get("servoLeft");
-        servoRight = hardwareMap.servo.get("servoRight");
+        //servoLeft = hardwareMap.servo.get("servoLeft");
+        //servoRight = hardwareMap.servo.get("servoRight");
 
     }
 
@@ -121,58 +122,77 @@ public class ProtobotTeleop extends OpMode {
         right = (float) scaleInput(right);
         left = (float) scaleInput(left);
 
+        String turning;
+
+        //ColorSensor Controls
+        if (colorFSensor.blue() > 5.0 && (colorFSensor.red() < 5.0)) {
+            motorBLeft.setPower(0.25);
+            motorBRight.setPower(-0.25);
+            turning = "right";
+        } else if (colorFSensor.red() > 5.0 && (colorFSensor.blue() < 5.0)) {
+            motorBLeft.setPower(-0.25);
+            motorBRight.setPower(0.25);
+            turning = "left";
+        } else {
+            motorBLeft.setPower(0);
+            motorBRight.setPower(0);
+            turning = "none";
+        }
+
 
         // lift controls
         // Makes Lift go In
-        if (gamepad1.a) {           //If A Is Pressed Make Lift Go Up
-            motorLift.setPower(-1);
-        } else if (gamepad1.y) {    //If Y Is Pressed Make Lift Go Down
-            motorLift.setPower(1);
-        } else {                    //Otherwise Stop Motor
-            motorLift.setPower(0);
-        }
-
-        if (gamepad1.x) {           //If X Is Pressed Make Brushes Push Debris
-            motorBrush.setPower(1);
-        } else if (gamepad1.b) {    //If B Is Pressed Make Brushes Pickup Debris
-            motorBrush.setPower(-1);
-        } else {                    //Otherwise Stop Motor
-            motorBrush.setPower(0);
-        }
+//        if (gamepad1.a) {           //If A Is Pressed Make Lift Go Up
+//            motorLift.setPower(-1);
+//        } else if (gamepad1.y) {    //If Y Is Pressed Make Lift Go Down
+//            motorLift.setPower(1);
+//        } else {                    //Otherwise Stop Motor
+//            motorLift.setPower(0);
+//        }
+//
+//        if (gamepad1.x) {           //If X Is Pressed Make Brushes Push Debris
+//            motorBrush.setPower(1);
+//        } else if (gamepad1.b) {    //If B Is Pressed Make Brushes Pickup Debris
+//            motorBrush.setPower(-1);
+//        } else {                    //Otherwise Stop Motor
+//            motorBrush.setPower(0);
+//        }
 
         // update the position of the arm.
-        if (gamepad2.y) {
-            // if the A button is pushed on gamepad1, increment the position of
-            // the arm servo.
-            servoRightPosition += servoRightDelta;
-        }
-
-        if (gamepad2.x) {
-            // if the Y button is pushed on gamepad1, decrease the position of
-            // the arm servo.
-            servoRightPosition -= servoRightDelta;
-        }
-
-        // update the position of the claw
-        if (gamepad2.b) {
-            servoLeftPosition += servoLeftDelta;
-        }
-
-        if (gamepad2.a) {
-            servoLeftPosition -= servoLeftDelta;
-        }
-
-        // clip the position values so that they never exceed their allowed range.
-        servoRightPosition = Range.clip(servoRightPosition, servoRight_MIN_RANGE, servoRight_MAX_RANGE);
-        servoLeftPosition = Range.clip(servoLeftPosition, servoLeft_MIN_RANGE, servoLeft_MAX_RANGE);
+//        if (gamepad2.y) {
+//            // if the A button is pushed on gamepad1, increment the position of
+//            // the arm servo.
+//            servoRightPosition += servoRightDelta;
+//        }
+//
+//        if (gamepad2.x) {
+//            // if the Y button is pushed on gamepad1, decrease the position of
+//            // the arm servo.
+//            servoRightPosition -= servoRightDelta;
+//        }
+//
+//        // update the position of the claw
+//        if (gamepad2.b) {
+//            servoLeftPosition += servoLeftDelta;
+//        }
+//
+//        if (gamepad2.a) {
+//            servoLeftPosition -= servoLeftDelta;
+//        }
+//
+//        // clip the position values so that they never exceed their allowed range.
+//        servoRightPosition = Range.clip(servoRightPosition, servoRight_MIN_RANGE, servoRight_MAX_RANGE);
+//        servoLeftPosition = Range.clip(servoLeftPosition, servoLeft_MIN_RANGE, servoLeft_MAX_RANGE);
 
         // write position values to the wrist and claw servo
-        servoRight.setPosition(servoRightPosition);
-        servoLeft.setPosition(servoLeftPosition);
+//        servoRight.setPosition(servoRightPosition);
+//        servoLeft.setPosition(servoLeftPosition);
 
         // write the values to the motors
-        motorBRight.setPower(right);
-        motorBLeft.setPower(left);
+        {
+//            motorBRight.setPower(right);
+//            motorBLeft.setPower(left);
+        }
 
 		/*
 		 * Send telemetry data back to driver station. N
@@ -185,16 +205,20 @@ public class ProtobotTeleop extends OpMode {
         telemetry.addData("Text", "*** Robot Data***");
         telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", left));
         telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));
-        Object Leftposition = servoLeft.getPosition();
-        Object Rightposition = servoRight.getPosition();
-        telemetry.addData("Servo Left", "Position: " + String.valueOf(Leftposition));
-        telemetry.addData("Servo Right", "Position: " + String.valueOf(Rightposition));
+//        Object Leftposition = servoLeft.getPosition();
+//        Object Rightposition = servoRight.getPosition();
+//        telemetry.addData("Servo Left", "Position: " + String.valueOf(Leftposition));
+//        telemetry.addData("Servo Right", "Position: " + String.valueOf(Rightposition));
         //Color Telemetry
-        telemetry.addData("Clear", colorSensor.alpha());
-        telemetry.addData("Red  ", colorSensor.red());
-        telemetry.addData("Green", colorSensor.green());
-        telemetry.addData("Blue ", colorSensor.blue());
+        //telemetry.addData("Clear", colorFSensor.alpha());
+//        telemetry.addData("FRed  ", colorFSensor.red());
+//        //telemetry.addData("Green", colorFSensor.green());
+//        telemetry.addData("FBlue ", colorFSensor.blue());
         telemetry.addData("Hue", hsvValues[0]);
+        telemetry.addData("BRed", colorBSensor.red());
+        telemetry.addData("BGreen", colorBSensor.green());
+        telemetry.addData("Bblue", colorBSensor.blue());
+        telemetry.addData("Turn", turning);
         //Object direction = motorLift.getDirection();
         //telemetry.addData("direction", "direction: " + String.valueOf(direction));
 

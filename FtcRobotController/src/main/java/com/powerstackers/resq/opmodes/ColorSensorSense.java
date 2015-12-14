@@ -6,10 +6,13 @@ import android.hardware.Sensor;
 import android.view.View;
 
 import com.qualcomm.ftcrobotcontroller.R;
+import com.qualcomm.hardware.ModernRoboticsI2cColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+
+import org.swerverobotics.library.ClassFactory;
 
 /**
  * Created by Derek on 12/12/2015.
@@ -17,23 +20,20 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 public class ColorSensorSense extends OpMode {
 
     ColorSensor colorSensor;
+    TouchSensor touchSensor;
     DeviceInterfaceModule cdim;
-    //LED led;
-    TouchSensor t;
 
+    //Color Values
     float hsvValues[] = {0, 0, 0};
     final float values[] = hsvValues;
-    //final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(R.id.RelativeLayout);
 
 
     @Override
     public void init() {
         hardwareMap.logDevices();
         cdim = hardwareMap.deviceInterfaceModule.get("dim");
-        colorSensor = hardwareMap.colorSensor.get("mr");
-        //relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, values));
-        //led = hardwareMap.led.get("led");
-        t = hardwareMap.touchSensor.get("t");
+        colorSensor = ClassFactory.createSwerveColorSensor(this, this.hardwareMap.colorSensor.get("colorSensor"));
+        touchSensor = hardwareMap.touchSensor.get("touchSensor");
         colorSensor.enableLed(true);
 
     }
