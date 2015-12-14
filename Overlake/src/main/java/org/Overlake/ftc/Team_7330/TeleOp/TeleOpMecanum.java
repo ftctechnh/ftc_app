@@ -171,11 +171,11 @@ public class  TeleOpMecanum extends OpMode {
 
 		if (leftWingDown)
 		{
-			servoLeftWing.setPosition(0.10);
+			servoLeftWing.setPosition(0.20);
 		}
 		else
 		{
-			servoLeftWing.setPosition(0.83);
+			servoLeftWing.setPosition(0.93);
 		}
 
 		if (upDpad)
