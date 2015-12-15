@@ -6,7 +6,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * @author Darron and Caiti
- *  created 12/9/2015
+
+ * created 12/9/2015
  *  ftc robot conroler teleop class
  */
 public class TeleOp extends OpMode {
@@ -17,6 +18,7 @@ public class TeleOp extends OpMode {
     DcMotor arm;
     Servo servo;
     boolean locked;
+    String position;
 
     /**
      * @override for initiation
@@ -33,11 +35,16 @@ public class TeleOp extends OpMode {
         rightmotor2 = hardwareMap.dcMotor.get("rightmotor2");
         servo = hardwareMap.servo.get("servo");
         rightmotor.setDirection(DcMotor.Direction.REVERSE);
+        rightmotor2.setDirection(DcMotor.Direction.REVERSE);
         arm = hardwareMap.dcMotor.get("arm");
+        servo.setPosition(.605);
+       position = "b";
     }
     @Override
 /**
  * the loop to run during teleop
+ * gives power to the motors and servos
+ * based on user commands
  */
     public void loop()
     {
@@ -58,15 +65,24 @@ public class TeleOp extends OpMode {
             leftmotor.setPower(leftY);
             rightmotor.setPower(rightY);
         }
-        if (gamepad1.y)
-        {
-            servo.setPosition(0);
-        }
-        else if(gamepad1.b) {
-        servo.setPosition(.6);
-        }
+         if (gamepad1.x) {
+             if (position.equals("a")) {
+                 servo.setPosition(.583);
+             } else if (position.equals("a")) {
+                 servo.setPosition(.582);
+             } else {
+                 servo.setPosition(.585);
+             }
+         }
+
         else if(gamepad1.a) {
-            servo.setPosition(.8);
+            servo.setPosition(.56);
+             position = "a";
+        }
+        else if(gamepad1.b)
+        {
+            servo.setPosition(.605);
+            position = "b";
         }
         if (gamepad2.a)
         {
@@ -85,7 +101,7 @@ public class TeleOp extends OpMode {
         telemetry.addData("power arm",rightY2);
         telemetry.addData("power left", leftY);
         telemetry.addData("is half power on", gamepad1.left_bumper);
-        telemetry.addData("servo postion", servo.getPosition() );//may have to remove
         telemetry.addData("estop",locked);
+        telemetry.addData("position", position);
     }
 }
