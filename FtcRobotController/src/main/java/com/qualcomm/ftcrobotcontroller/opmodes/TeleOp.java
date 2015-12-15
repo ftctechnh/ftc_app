@@ -3,7 +3,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-
+import com.qualcomm.ftcrobotcontroller.opmodes.Accelorometer;
 /**
  * @author Darron and Caiti
 
@@ -19,7 +19,7 @@ public class TeleOp extends OpMode {
     Servo servo;
     boolean locked;
     String position;
-
+    Accelorometer accel;
     /**
      * @override for initiation
      * the main initalization loop for the robots teleop mode
@@ -39,6 +39,7 @@ public class TeleOp extends OpMode {
         arm = hardwareMap.dcMotor.get("arm");
         servo.setPosition(.605);
        position = "b";
+        accel = new Accelorometer();
     }
     @Override
 /**
@@ -97,11 +98,11 @@ public class TeleOp extends OpMode {
             }
         }
         arm.setPower(rightY2);
-        telemetry.addData("power right",rightY);
-        telemetry.addData("power arm",rightY2);
-        telemetry.addData("power left", leftY);
         telemetry.addData("is half power on", gamepad1.left_bumper);
         telemetry.addData("estop",locked);
         telemetry.addData("position", position);
+        telemetry.addData("x",accel.getXAxis());
+        telemetry.addData("y",accel.getYAxis());
+        telemetry.addData("z",accel.getZAxis());
     }
 }
