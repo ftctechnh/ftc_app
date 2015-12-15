@@ -152,7 +152,7 @@ or cloning, you can download a full copy of the source in .zip form from one of 
 If you have previously forked the FTC HQ tree from https://github.com/ftctechnh/ftc_app and you
 are moderately git-savvy, you can easily upgrade to the Swerve Library by adding a new remote 
 of https://github.com/SwerveRobotics/ftc_app to your git tree and initiating a pull from that remote.
-If that's greek to you, gives is a ring, and we'll help you through it.
+If that's greek to you, give us a ring, and we'll help you through it.
  
 Documentation is available in the SwerveRoboticsLibrary/doc/javadoc directory.
 There are also several examples of using the library to be found in the 'examples'
