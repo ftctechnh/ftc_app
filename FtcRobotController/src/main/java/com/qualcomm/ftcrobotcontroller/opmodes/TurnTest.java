@@ -28,26 +28,31 @@ public class TurnTest extends LinearOpMode {
 
         waitForStart();
         gyro.calibrate();
+        telemetry.addData("Gyro Calibration Complete", "");
 
-        while(opModeIsActive()) {
-            while( Math.abs(gyro.getHeading()-90) > 3){
+        while (opModeIsActive()) {
+
+
+            while (Math.abs(gyro.getHeading()-90) < 10) {
                 drivetrain.arcadeDrive(0, speed);
-                telemetry.addData("4. h", String.format("%03d", heading));
+                telemetry.addData("Heading ", String.format("%03d", gyro.getHeading()));
             }
             drivetrain.arcadeDrive(0, 0);
             sleep(5000);
-            /*
-            currentHeading = 0;
-            goalHeading = (currentHeading + targetAngle)%360;
-            speed = Math.abs(speed) * targetAngle/Math.abs(targetAngle);
 
-            while( Math.abs(goalHeading - gyro.getHeading()) > drivetrain.headingTolerance){
-                drivetrain.arcadeDrive(0, speed);
-            }
-            drivetrain.arcadeDrive(0, 0);
-            sleep(5000);
-            */
         }
+        /*
+        currentHeading = 0;
+        goalHeading = (currentHeading + targetAngle)%360;
+        speed = Math.abs(speed) * targetAngle/Math.abs(targetAngle);
+
+        while( Math.abs(goalHeading - gyro.getHeading()) > drivetrain.headingTolerance){
+            drivetrain.arcadeDrive(0, speed);
+        }
+        drivetrain.arcadeDrive(0, 0);
+        sleep(5000);
+        */
+
         /*
 
         */

@@ -13,7 +13,7 @@ public class Drivetrain {
     public DcMotor frontRight;
     public DcMotor backRight;
 
-    GyroSensor gyro;
+    //GyroSensor gyro;
 
     int heading = 0;
     public int headingTolerance = 2;
@@ -30,18 +30,20 @@ public class Drivetrain {
         frontRight = hardwareMap.dcMotor.get("rightMotor1");
         backRight = hardwareMap.dcMotor.get("rightMotor2");
 
-        gyro = hardwareMap.gyroSensor.get("gyro");
+        //gyro = hardwareMap.gyroSensor.get("gyro");
 
         frontRight.setDirection(DcMotor.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.REVERSE);
 
         resetEncoders();
 
-        gyro.calibrate();
+        //gyro.calibrate();
 
+        /*
         while (gyro.isCalibrating())  {
             Thread.sleep(50);
         }
+        */
 
     }
 
@@ -167,6 +169,7 @@ public class Drivetrain {
         arcadeDrive(0, 0);
     }
 
+    /*
     public void turnAngle(int targetAngle, double speed){
 
         int currentHeading = gyro.getHeading();
@@ -205,6 +208,7 @@ public class Drivetrain {
         }
         arcadeDrive(0, 0);
     }
+    */
 
     public void sleep(long milliseconds) throws InterruptedException {
         Thread.sleep(milliseconds);

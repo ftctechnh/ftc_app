@@ -56,6 +56,7 @@ public class RedAuto extends LinearOpMode{
         telemetry.addData("Step 1 Complete", ".");
         sleep(500);
 
+        /*
         drivetrain.turnAngle(45, 0.5);
         telemetry.addData("Step 2 Complete", ".");
         sleep(500);
@@ -98,6 +99,7 @@ public class RedAuto extends LinearOpMode{
         drivetrain.moveDistance(750, 0.5);
         telemetry.addData("Step 9 Complete", ".");
         sleep(500);*/
+
 
 
     }
