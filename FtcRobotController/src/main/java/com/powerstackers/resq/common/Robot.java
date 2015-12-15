@@ -1,8 +1,7 @@
 /*
  * Copyright (C) 2015 Powerstackers
  *
- * Basic configurations and capabilities of our
- *
+ * Basic configurations and capabilities of our robot.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,11 +27,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 /**
- * Created by Jonathan on 9/26/2015.
+ * A general representation of a robot, with simple interaction methods.
+ * @author Jonathan Thomas
  */
 public class Robot {
-    private DcMotor motorLeft;
-    private DcMotor motorRight;
+    private DcMotor motorLeftA;
+    private DcMotor motorLeftB;
+    private DcMotor motorRightA;
+    private DcMotor motorRightB;
 
     private Servo servoArm;
     private Servo servoClaw;
@@ -40,9 +42,15 @@ public class Robot {
     private TouchSensor touchSensor;
     public OpticalDistanceSensor opticalSensor;
 
+    /**
+     * Construct a Robot object.
+     * @param mode The OpMode in which the robot is being used.
+     */
     public Robot(OpMode mode) {
-        motorLeft = mode.hardwareMap.dcMotor.get("motor_1");
-        motorRight = mode.hardwareMap.dcMotor.get("motor_2");
+        motorLeftA = mode.hardwareMap.dcMotor.get("motor_1");
+        motorLeftB = mode.hardwareMap.dcMotor.get("motor_3");
+        motorRightA = mode.hardwareMap.dcMotor.get("motor_2");
+        motorRightB = mode.hardwareMap.dcMotor.get("motor_4");
 
         servoArm = mode.hardwareMap.servo.get("servo_1");
         servoClaw = mode.hardwareMap.servo.get("servo_6");
@@ -51,9 +59,22 @@ public class Robot {
         opticalSensor = mode.hardwareMap.opticalDistanceSensor.get("optical_distance_sensor");
     }
 
-    public void setPower(double power) {
-        motorLeft.setPower(power);
-        motorRight.setPower(power);
+    /**
+     * Set the power for the right side drive motors.
+     * @param power Double from 0 to 1.
+     */
+    public void setPowerRight(double power) {
+        motorRightA.setPower(power);
+        motorRightB.setPower(power);
+    }
+
+    /**
+     * Set the power for the left side drive motors.
+     * @param power Double from 0 to 1.
+     */
+    public void setPowerLeft(double power) {
+        motorLeftA.setPower(power);
+        motorLeftB.setPower(power);
     }
 
 

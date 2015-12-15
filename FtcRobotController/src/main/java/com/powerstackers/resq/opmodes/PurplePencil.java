@@ -4,7 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
- * Created by Jonathan on 11/5/2015.
+ * Very simple op mode for testing with Leena.
+ * @author Jonathan Thomas
  */
 public class PurplePencil extends OpMode{
 
