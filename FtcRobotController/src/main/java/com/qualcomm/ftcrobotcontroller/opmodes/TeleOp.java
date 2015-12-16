@@ -38,7 +38,6 @@ public class TeleOp extends OpMode {
         return sensorRGB.blue();
     }
     /**
-     * @override for initiation
      * the main initalization loop for the robots teleop mode
      *
      */
