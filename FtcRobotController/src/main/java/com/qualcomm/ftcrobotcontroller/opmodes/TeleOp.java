@@ -52,23 +52,20 @@ public class TeleOp extends OpMode {
 
 
 
-	DcMotor armLowerMotor;
-	DcMotor armUpperMotor;
-	DcMotor armUpperMotor2;
-	DcMotor rightMotor;
-	DcMotor leftMotor;
-	Servo servoRight;
-	//Servo servoLeft;
-	Servo servoFlip;
-	Float yasss = .5f;
+	DcMotor armLowerMotor, armUpperMotor, armUpperMotor2;//arm motors
+	DcMotor rightMotor, leftMotor;//drive motors
+	Servo servoRight;//climber switch
+	Servo servoLeftFlip, servoRightFlip;//swings out to hit levers
+	float yasss = .5f;
 	int yasssCount = 0;
 
 	//Double servoLeftPosition = 1.0; //Starting position of Left servo, 1.0 cause reversed from other servo
-	Double servoRightPosition = 0.0;//Starting pos of right servo, 0.0 cause reversed from other servo
-	Double servoFlipPosition = 0.0;
-	Double servoChange = .01; //Value used to change the pos of servos
-	Double servoLower = 0.0; //Lower limit for servos
-	Double servoUpper = 1.0; //Upper limit for servos
+	double servoRightPosition = 0.0;//Starting pos of right servo, 0.0 cause reversed from other servo
+	double servoLeftFlipPosition = 0.0;
+	double servoRightFlipPosition = 0.0;
+	double servoChange = .01; //Value used to change the pos of servos
+	double servoLower = 0.0; //Lower limit for servos
+	double servoUpper = 1.0; //Upper limit for servos
 
 
 	/**
@@ -113,8 +110,9 @@ public class TeleOp extends OpMode {
 		leftMotor.setDirection(DcMotor.Direction.REVERSE);
 
 		servoRight = hardwareMap.servo.get("servoRight");
-		//servoLeft = hardwareMap.servo.get("servoLeft");
-		servoFlip = hardwareMap.servo.get("servoFlip");
+
+		servoLeftFlip = hardwareMap.servo.get("servoLeftFlip");
+		servoRightFlip = hardwareMap.servo.get("servoRightFlip");
 
 
 	}
@@ -173,20 +171,26 @@ public class TeleOp extends OpMode {
 		// update the grabber.
 		if (gamepad2.left_bumper) {
 			servoRightPosition += servoChange;
-			//servoLeftPosition -= servoChange;
 		}
 
 		if (gamepad2.right_bumper) {
 			servoRightPosition -= servoChange;
-			//servoLeftPosition += servoChange;
 		}
 
 		if (gamepad1.left_bumper) {
-			servoFlipPosition -= servoChange;
+			servoLeftFlipPosition += servoChange;
 		}
 
 		if (gamepad1.right_bumper) {
-			servoFlipPosition += servoChange;
+			servoRightFlipPosition += servoChange;
+		}
+
+		if(gamepad1.left_trigger > .5){
+			servoLeftFlipPosition -= servoChange;
+		}
+
+		if(gamepad1.right_trigger > .5){
+			servoRightFlipPosition -= servoChange;
 		}
 
 		if(gamepad2.y){
@@ -205,12 +209,14 @@ public class TeleOp extends OpMode {
 
 
 		servoRightPosition = Range.clip(servoRightPosition, servoLower, servoUpper);
-		//servoLeftPosition = Range.clip(servoLeftPosition, servoLower, servoUpper);
-		servoFlipPosition = Range.clip(servoFlipPosition, servoLower, servoUpper);
+
+		servoLeftFlipPosition = Range.clip(servoLeftFlipPosition, servoLower, servoUpper);
+		servoRightFlipPosition = Range.clip(servoRightFlipPosition, servoLower, servoUpper);
 
 		servoRight.setPosition(servoRightPosition);
-		//servoLeft.setPosition(servoLeftPosition);
-		servoFlip.setPosition(servoFlipPosition);
+
+		servoLeftFlip.setPosition(servoLeftFlipPosition);
+		servoRightFlip.setPosition(servoRightFlipPosition);
 		/*
 		 * Send telemetry data back to driver station. Note that if we are using
 		 * a legacy NXT-compatible motor controller, then the getPower() method
@@ -221,7 +227,7 @@ public class TeleOp extends OpMode {
 		telemetry.addData("Text", "*** Robot Data***");
 		//telemetry.addData("Right Servo Pos",  "Right servo pos: " + String.format("%.2f", servoRightPosition));
 		//telemetry.addData("Left Servo Pos", "Left Servo Pos: " + String.format("%.2f", servoLeftPosition));
-		telemetry.addData("ServoFlip Pos", "ServoFLip pos: " + String.format("%.2f", servoFlipPosition));
+		//telemetry.addData("ServoFlip Pos", "ServoFLip pos: " + String.format("%.2f", servoFlipPosition));
 	}
 
 	//screb
