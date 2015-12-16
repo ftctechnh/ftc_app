@@ -1,9 +1,10 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
-
+import android.graphics.Color;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.ftcrobotcontroller.opmodes.Accelorometer;
+
 /**
  * @author Darron and Caiti
 
@@ -12,33 +13,46 @@ import com.qualcomm.ftcrobotcontroller.opmodes.Accelorometer;
  */
 public class TeleOp extends OpMode {
     DcMotor rightmotor;
-    DcMotor leftmotor;
-    DcMotor leftmotor2;
-    DcMotor rightmotor2;
+    DcMotor leftmotor = hardwareMap.dcMotor.get("leftmotor");
+    DcMotor leftmotor2 = hardwareMap.dcMotor.get("leftmotor2");
+    DcMotor rightmotor2 = hardwareMap.dcMotor.get("rightmotor2");
     DcMotor arm;
-    Servo servo;
+    Servo shifter;
     boolean locked;
     String position;
     Accelorometer accel;
+    ColorSensor sensorRGB = hardwareMap.colorSensor.get("color");
+    private void initsensor() throws InterruptedException {
+        hardwareMap.logDevices();
+        sensorRGB = hardwareMap.colorSensor.get("color");
+        sensorRGB.enableLed(false);
+    }
+    private int getRed() throws InterruptedException {
+        float hsvValues[] = {0F, 0F, 0F};
+        Color.RGBToHSV(sensorRGB.red(), sensorRGB.green(), sensorRGB.blue(), hsvValues);
+        return sensorRGB.red();
+    }
+    private int getBlue() throws InterruptedException {
+        float hsvValues[] = {0F, 0F, 0F};
+        Color.RGBToHSV(sensorRGB.red(), sensorRGB.green(), sensorRGB.blue(), hsvValues);
+        return sensorRGB.blue();
+    }
     /**
      * @override for initiation
      * the main initalization loop for the robots teleop mode
      *
      */
+
     @Override
     public void init()
     {
-
-        leftmotor = hardwareMap.dcMotor.get("leftmotor");
         rightmotor =hardwareMap.dcMotor.get("rightmotor");
-        leftmotor2 = hardwareMap.dcMotor.get("leftmotor2");
-        rightmotor2 = hardwareMap.dcMotor.get("rightmotor2");
-        servo = hardwareMap.servo.get("servo");
+        shifter = hardwareMap.servo.get("shifter");
         rightmotor.setDirection(DcMotor.Direction.REVERSE);
         rightmotor2.setDirection(DcMotor.Direction.REVERSE);
         arm = hardwareMap.dcMotor.get("arm");
-        servo.setPosition(.605);
-       position = "b";
+        shifter.setPosition(.605);
+        position = "b";
         accel = new Accelorometer();
     }
     @Override
@@ -68,21 +82,21 @@ public class TeleOp extends OpMode {
         }
          if (gamepad1.x) {
              if (position.equals("a")) {
-                 servo.setPosition(.583);
+                 shifter.setPosition(.583);
              } else if (position.equals("b")) {
-                 servo.setPosition(.582);
+                 shifter.setPosition(.582);
              } else {
-                 servo.setPosition(.585);
+                 shifter.setPosition(.585);
              }
          }
 
         else if(gamepad1.a) {
-            servo.setPosition(.56);
+            shifter.setPosition(.56);
              position = "a";
         }
         else if(gamepad1.b)
         {
-            servo.setPosition(.605);
+            shifter.setPosition(.605);
             position = "b";
         }
         if (gamepad2.a)
