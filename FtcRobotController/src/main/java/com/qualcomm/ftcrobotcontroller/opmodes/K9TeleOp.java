@@ -117,7 +117,7 @@ public class K9TeleOp extends OpMode {
 
 	/*
 	 * This method will be called repeatedly in a loop
-	 * 
+	 *
 	 * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#run()
 	 */
 	@Override
@@ -125,7 +125,7 @@ public class K9TeleOp extends OpMode {
 
 		/*
 		 * Gamepad 1
-		 * 
+		 *
 		 * Gamepad 1 controls the motors via the left stick, and it controls the
 		 * wrist/claw via the a,b, x, y buttons
 		 */
@@ -147,7 +147,7 @@ public class K9TeleOp extends OpMode {
 		// the robot more precisely at slower speeds.
 		right = (float)scaleInput(right);
 		left =  (float)scaleInput(left);
-		
+
 		// write the values to the motors
 		motorRight.setPower(right);
 		motorLeft.setPower(left);
@@ -200,7 +200,7 @@ public class K9TeleOp extends OpMode {
 
 	/*
 	 * Code to run when the op mode is first disabled goes here
-	 * 
+	 *
 	 * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#stop()
 	 */
 	@Override
@@ -208,19 +208,19 @@ public class K9TeleOp extends OpMode {
 
 	}
 
-    	
+
 	/*
-	 * This method scales the joystick input so for low joystick values, the 
+	 * This method scales the joystick input so for low joystick values, the
 	 * scaled value is less than linear.  This is to make it easier to drive
 	 * the robot more precisely at slower speeds.
 	 */
 	double scaleInput(double dVal)  {
 		double[] scaleArray = { 0.0, 0.05, 0.09, 0.10, 0.12, 0.15, 0.18, 0.24,
 				0.30, 0.36, 0.43, 0.50, 0.60, 0.72, 0.85, 1.00, 1.00 };
-		
+
 		// get the corresponding index for the scaleInput array.
 		int index = (int) (dVal * 16.0);
-		
+
 		// index should be positive.
 		if (index < 0) {
 			index = -index;
