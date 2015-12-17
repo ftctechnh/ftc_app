@@ -29,31 +29,29 @@ public abstract class AutonomousOpMode extends SynchronousOpMode {
     DcMotor motorFrontLeft;
     DcMotor motorBackLeft;
 
-    ColorSensor sensorRGBLeft;
-    ColorSensor sensorRGBRight;
+    ColorSensor sensorRGB;
 
     public enum Color { Red, Blue, White }
     public enum Side { Left, Right }
 
-    //sensorSide refers to which colorSensor we are using, the one on the left or right side of robot
-    //colorSide tells if the color of the line we are following is on the left or right
+    //colorSide tells if the color of the line we are following is on the left or right of the sensor
 
-    public boolean isColor(Color c, Side sensorSide)
+    public boolean isColor(Color c)
     {
-        //if the sensor on the side from the parameter sees the color,
+        //if the sensor sees the parameter color,
         return true;
 
         //else if this sensor doesn't see the color
         // return false;
     }
 
-    public void followColor(Color c, Side sensorSide, Side colorSide)
+    public void followColor(Color c, Side colorSide)
     {
-        double leftMotorPower = motorBackLeft.getPower();     //should these have more scope? so they aren't reset every time ?
+        double leftMotorPower = motorBackLeft.getPower();
         double rightMotorPower = motorBackRight.getPower();
         double increment = .005;
 
-        if (isColor(c, sensorSide))
+        if (isColor(c))
         {
             if (colorSide == Side.Left)      //if color side is left, veer right
             {
@@ -79,7 +77,7 @@ public abstract class AutonomousOpMode extends SynchronousOpMode {
                 leftMotorPower += increment;
                 rightMotorPower -= increment;
             }
-            }
+        }
 
         motorFrontRight.setPower(rightMotorPower);
         motorBackRight.setPower(rightMotorPower);
