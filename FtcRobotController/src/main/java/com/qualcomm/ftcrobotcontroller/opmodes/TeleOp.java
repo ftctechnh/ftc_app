@@ -49,9 +49,7 @@ public class TeleOp extends OpMode {
 	 * Also, as the claw servo approaches 0, the claw opens up (drops the game element).
 	 */
 	// TETRIX VALUES.
-
-
-
+	
 	DcMotor armLowerMotor, armUpperMotor, armUpperMotor2;//arm motors
 	DcMotor rightMotor, leftMotor;//drive motors
 	Servo servoRight;//climber switch
