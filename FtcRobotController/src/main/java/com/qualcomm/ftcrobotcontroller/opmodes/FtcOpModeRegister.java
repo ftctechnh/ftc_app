@@ -47,6 +47,15 @@ public class FtcOpModeRegister implements OpModeRegister {
    */
   public void register(OpModeManager manager) {
 
+    /* Custom Ops Modes here */
+    manager.register("DavTest", DavTest.class);
+    manager.register("TwoWheelTest", TwoWheelTest.class);
+    manager.register("ArmTest", ArmTest.class);
+    manager.register("TitanArmTest", TitanArmTest.class);
+    manager.register("ServoTest", ServoTest.class);
+    manager.register("TitanServoTest", TitanServoTest.class);
+    manager.register("ServoTest1", ServoTest1.class);
+
     /*
      * register your op modes here.
      * The first parameter is the name of the op mode
@@ -97,9 +106,6 @@ public class FtcOpModeRegister implements OpModeRegister {
     //manager.register("PushBotIrSeek", PushBotIrSeek.java);
     //manager.register("PushBotSquare", PushBotSquare.java);
 
-    /* Custom Ops Modes here */
-    manager.register("DavTest", DavTest.class);
-    manager.register("TwoWheelTest", TwoWheelTest.class);
 
   }
 }
