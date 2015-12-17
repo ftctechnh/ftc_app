@@ -52,28 +52,33 @@ public class RedAuto extends LinearOpMode{
 
         telemetry.addData("Start Autonomous", ".");
 
-        drivetrain.moveDistance(1500, 0.5);
+        drivetrain.moveDistance(1200, .75);
         telemetry.addData("Step 1 Complete", ".");
-        sleep(500);
 
-        /*
-        drivetrain.turnAngle(45, 0.5);
+        while(drivetrain.getHeading() < 45 || drivetrain.getHeading() > 60)
+            drivetrain.arcadeDrive(0,-1);
+
+        drivetrain.arcadeDrive(0, 0);
         telemetry.addData("Step 2 Complete", ".");
         sleep(500);
 
         intake.outward();
-
-        drivetrain.moveDistance(4250, 0.5);
-        telemetry.addData("Step 3 Complete", ".");
+        drivetrain.resetEncoders();
         sleep(500);
+
+        drivetrain.moveDistance(3800, 0.75);
+        telemetry.addData("Step 3 Complete", ".");
+
+        while(drivetrain.getHeading() < 90)
+            drivetrain.arcadeDrive(0,-1);
+
+        drivetrain.arcadeDrive(0, 0);
+        telemetry.addData("Step 4 Complete", ".");
 
         intake.stop();
-
-        drivetrain.turnAngle(45, -0.5);
-        telemetry.addData("Step 4 Complete", ".");
         sleep(500);
 
-        drivetrain.moveDistance(500, 0.25);
+        drivetrain.moveDistance(250, 0.5);
         telemetry.addData("Step 5 Complete", ".");
         sleep(500);
 
