@@ -39,16 +39,18 @@ public class Move2 extends OpMode{
 
     public void loop(){
 
-        if(rightMotor.getCurrentPosition() == 0 && i != 3){
+        if(rightMotor.getCurrentPosition() == 0){
 
             i = 1;
-            rightMotor.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
             rightMotor.setDirection(DcMotor.Direction.REVERSE);
-            rightMotor.setTargetPosition(10000);
+            rightMotor.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
+            leftMotor.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
 
-            if (rightMotor.getCurrentPosition() < rightMotor.getTargetPosition()){
+            rightMotor.setTargetPosition(-10000);
+            leftMotor.setTargetPosition(-10000);
+            if (rightMotor.getCurrentPosition() > rightMotor.getTargetPosition()){
                 i = 2;
-                rightMotor.setPower(.75);
+                rightMotor.setPower(-.75);
                 leftMotor.setPower(-.75);
             }else {
                 rightMotor.setPower(0);
