@@ -24,6 +24,7 @@ public class CompBot implements DriverInterface, AttachmentInterface
     static Servo dispenserServo;
     static Servo dispenserFlipperServo;
     static Servo tapeMeasureServo;
+    static Servo climberReleaseServo;
     private static final String frontLeftMotorName = "frontLeft";
     private static final String frontRightMotorName = "frontRight";
     private static final String backLeftMotorName = "backLeft";
@@ -36,6 +37,7 @@ public class CompBot implements DriverInterface, AttachmentInterface
     private static final String dispenserServoName = "dispenser";
     private static final String dispenserFlipperServoName = "dispenserFlipper";
     private static final String tapeMeasureServoName = "tapeMeasure";
+    private static final String climberReleaseServoName = "climberRelease";
     //PhoneGyrometer gyro;
 
     public DcMotor getLeftMotor()
@@ -87,6 +89,10 @@ public class CompBot implements DriverInterface, AttachmentInterface
     {
         return tapeMeasureServo;
     }
+    public Servo getClimberReleaseServo()
+    {
+        return climberReleaseServo;
+    }
 
 
     public CompBot(HardwareMap hardwareMap)
@@ -111,9 +117,11 @@ public class CompBot implements DriverInterface, AttachmentInterface
         dispenserServo = hardwareMap.servo.get(dispenserServoName);
         dispenserFlipperServo = hardwareMap.servo.get(dispenserFlipperServoName);
         tapeMeasureServo = hardwareMap.servo.get(tapeMeasureServoName);
+        climberReleaseServo = hardwareMap.servo.get(climberReleaseServoName);
         dispenserServo.setPosition(0.5f);
         dispenserFlipperServo.setPosition(1.0f);
         tapeMeasureServo.setPosition(0.5f);
+        climberReleaseServo.setPosition(1.0f);
     }
 
     @Override
@@ -357,6 +365,7 @@ public class CompBot implements DriverInterface, AttachmentInterface
         dispenserFlipperServo.close();
         dispenserServo.close();
         tapeMeasureServo.close();
+        climberReleaseServo.close();
     }
 
 }
