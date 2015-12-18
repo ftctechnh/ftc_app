@@ -45,13 +45,13 @@ public class FtcOpModeRegister implements OpModeRegister {
      * If two or more op modes are registered with the same name, the app will display an error.
      */
 
-        manager.register("Manual Drive", PacmanBotManual3000.class);
-        manager.register("Red Beacon Auto",RedColorSense.class);
-        manager.register("Blue Beacon Auto",BlueColorSense.class);
-        manager.register("Red Delay Beacon Auto",RedDelayBeacon.class);
-        manager.register("Blue Delay Beacon Auto",BlueDelayBeacon.class);
-        manager.register("Red Mountain Auto",RedMountainAuto.class);
-        manager.register("Blue Mountain Auto",BlueMountainAuto.class);
+        //manager.register("Manual Drive", PacmanBotManual3000.class);
+        //manager.register("Red Beacon Auto",RedColorSense.class);
+        //manager.register("Blue Beacon Auto",BlueColorSense.class);
+        //manager.register("Red Delay Beacon Auto",RedDelayBeacon.class);
+        //manager.register("Blue Delay Beacon Auto",BlueDelayBeacon.class);
+        //manager.register("Red Mountain Auto",RedMountainAuto.class);
+        manager.register("RedBeaconRoute2",RedBeaconRoute2.class);
 //        manager.register("Red Beacon Auto", RedBeaconAuto.class);
 //        manager.register("Servo Tester",PacmanBotHardwareBase.class);
 //        manager.register("RedBeaconTMD",RedBeaconTMD.class);

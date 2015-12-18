@@ -73,7 +73,7 @@ public class RedBeaconFSM extends PacmanBotHardwareBase {
                         break;
                     }
                 }
-<<<<<<< Updated upstream
+
                 redMid = (redEnd - redStart)/2  +  redStart;
                 state=9; timer.reset(); break;
             case 9:
@@ -84,10 +84,7 @@ public class RedBeaconFSM extends PacmanBotHardwareBase {
                 drive(.5,0);
                 if (timer.time()>=.125) {state=100; timer.reset();}
                 break;
-=======
-                redMid = (redEnd - redStart);
-                state=9; break;
->>>>>>> Stashed changes
+
             case 100:
                 //This is the finished state.
                 drive(0, 0);
