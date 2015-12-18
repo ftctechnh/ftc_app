@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<Robot>
+    <LegacyModuleController name="Legacy Module 1" serialNumber="AL00YCBX">
+    </LegacyModuleController>
+    <MotorController name="Motor Controller 1" serialNumber="AL00V2J0">
+        <Motor name="leftMotor" port="1" />
+        <Motor name="rightMotor" port="2" />
+    </MotorController>
+</Robot>
