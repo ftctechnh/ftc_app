@@ -46,12 +46,12 @@ public class Move2 extends OpMode{
             rightMotor.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
             leftMotor.setChannelMode(DcMotorController.RunMode.RUN_TO_POSITION);
 
-            rightMotor.setTargetPosition(-10000);
-            leftMotor.setTargetPosition(-10000);
+            rightMotor.setTargetPosition(-16000);
+            leftMotor.setTargetPosition(-16000);
             if (rightMotor.getCurrentPosition() > rightMotor.getTargetPosition()){
                 i = 2;
-                rightMotor.setPower(-.5);
-                leftMotor.setPower(-.5);
+                rightMotor.setPower(-.35);
+                leftMotor.setPower(-.35);
             }else {
                 rightMotor.setPower(0);
                 leftMotor.setPower(0);
@@ -80,5 +80,5 @@ public class Move2 extends OpMode{
         telemetry.addData("RightMotor pos: ", "RightMotor pos: " + rightMotor.getCurrentPosition());
         //telemetry.addData("Leftmotor pos: ", "LeftMotor pos: " + leftMotor.getCurrentPosition());
     }
-
+//hi pat
 }
