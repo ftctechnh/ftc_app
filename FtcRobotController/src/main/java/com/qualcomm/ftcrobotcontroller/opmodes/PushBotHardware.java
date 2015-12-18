@@ -92,11 +92,11 @@ public class PushBotHardware extends OpMode
         }
         try
         {
-            v_motor_left_front_drive = hardwareMap.dcMotor.get ("left_right_drive");
+            v_motor_left_front_drive = hardwareMap.dcMotor.get ("left_rear_drive");
         }
         catch (Exception p_exeception)
         {
-            m_warning_message("left_right_drive");
+            m_warning_message("left_rear_drive");
             DbgLog.msg (p_exeception.getLocalizedMessage ());
 
             v_motor_left_front_drive = null;
