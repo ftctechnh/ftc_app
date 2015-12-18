@@ -16,12 +16,14 @@ public class TeleOp extends OpMode {
     DcMotor leftmotor;
     DcMotor leftmotor2;
     DcMotor rightmotor2;
-    DcMotor arm;
     Servo shifter;
     boolean locked;
     String position;
     Accelorometer accel;
     ColorSensor sensorRGB;
+    DcMotor pully;
+    DcMotor arm1;
+    DcMotor arm2;
     private void initsensor() throws InterruptedException {
         hardwareMap.logDevices();
         sensorRGB = hardwareMap.colorSensor.get("color");
@@ -49,10 +51,11 @@ public class TeleOp extends OpMode {
        leftmotor2 = hardwareMap.dcMotor.get("leftmotor2");
        rightmotor2 = hardwareMap.dcMotor.get("rightmotor2");
         rightmotor =hardwareMap.dcMotor.get("rightmotor");
+        arm1 = hardwareMap.dcMotor.get("arm1");
+        arm2 = hardwareMap.dcMotor.get("arm2");
         shifter = hardwareMap.servo.get("shifter");
         rightmotor.setDirection(DcMotor.Direction.REVERSE);
         rightmotor2.setDirection(DcMotor.Direction.REVERSE);
-        arm = hardwareMap.dcMotor.get("arm");
         shifter.setPosition(.605);
         position = "b";
         accel = new Accelorometer();
@@ -62,14 +65,15 @@ public class TeleOp extends OpMode {
     /**
      * the loop to run during teleop
      * gives power to the motors and servos
-     * based on user commands
+     * based on user input.
      */
     @Override
     public void loop()
     {
         float leftY = -gamepad1.left_stick_y;
         float rightY = -gamepad1.right_stick_y;
-        float rightY2 = -gamepad1.right_stick_y;
+        float rightY2 = -gamepad2.right_stick_y;
+        float leftY2 = -gamepad2.left_stick_y;
         if(gamepad1.left_bumper)
         {
             leftmotor.setPower(.5*leftY);
@@ -103,6 +107,16 @@ public class TeleOp extends OpMode {
             shifter.setPosition(.605);
             position = "b";
         }
+        arm1.setPower(rightY2);
+        arm2.setPower(leftY2);
+        if (gamepad2.y)
+        {
+            pully.setPower(.5);
+        }
+        else if (gamepad2.x)
+        {
+            pully.setPower(-.5);
+        }
         if (gamepad2.a)
         {
             while (!( gamepad2.b))
@@ -113,9 +127,9 @@ public class TeleOp extends OpMode {
                 rightmotor2.setPower(.0);
                 locked = true;
                 telemetry.addData("estop",locked);
+                telemetry.addData("to resume press", " b");
             }
         }
-        arm.setPower(rightY2);
         telemetry.addData("is half power on", gamepad1.left_bumper);
         telemetry.addData("estop",locked);
         telemetry.addData("position", position);
