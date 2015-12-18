@@ -50,8 +50,8 @@ public class Move2 extends OpMode{
             leftMotor.setTargetPosition(-10000);
             if (rightMotor.getCurrentPosition() > rightMotor.getTargetPosition()){
                 i = 2;
-                rightMotor.setPower(-.75);
-                leftMotor.setPower(-.75);
+                rightMotor.setPower(-.5);
+                leftMotor.setPower(-.5);
             }else {
                 rightMotor.setPower(0);
                 leftMotor.setPower(0);
