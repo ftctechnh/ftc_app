@@ -13,15 +13,15 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 public class TeleOp extends OpMode {
     DcMotor rightmotor;
-    DcMotor leftmotor = hardwareMap.dcMotor.get("leftmotor");
-    DcMotor leftmotor2 = hardwareMap.dcMotor.get("leftmotor2");
-    DcMotor rightmotor2 = hardwareMap.dcMotor.get("rightmotor2");
+    DcMotor leftmotor;
+    DcMotor leftmotor2;
+    DcMotor rightmotor2;
     DcMotor arm;
     Servo shifter;
     boolean locked;
     String position;
     Accelorometer accel;
-    ColorSensor sensorRGB = hardwareMap.colorSensor.get("color");
+    ColorSensor sensorRGB;
     private void initsensor() throws InterruptedException {
         hardwareMap.logDevices();
         sensorRGB = hardwareMap.colorSensor.get("color");
@@ -45,6 +45,9 @@ public class TeleOp extends OpMode {
     @Override
     public void init()
     {
+        leftmotor = hardwareMap.dcMotor.get("leftmotor");
+       leftmotor2 = hardwareMap.dcMotor.get("leftmotor2");
+       rightmotor2 = hardwareMap.dcMotor.get("rightmotor2");
         rightmotor =hardwareMap.dcMotor.get("rightmotor");
         shifter = hardwareMap.servo.get("shifter");
         rightmotor.setDirection(DcMotor.Direction.REVERSE);
@@ -53,13 +56,15 @@ public class TeleOp extends OpMode {
         shifter.setPosition(.605);
         position = "b";
         accel = new Accelorometer();
+        accel.init();
+        accel.start();
     }
+    /**
+     * the loop to run during teleop
+     * gives power to the motors and servos
+     * based on user commands
+     */
     @Override
-/**
- * the loop to run during teleop
- * gives power to the motors and servos
- * based on user commands
- */
     public void loop()
     {
         float leftY = -gamepad1.left_stick_y;
@@ -81,11 +86,11 @@ public class TeleOp extends OpMode {
         }
          if (gamepad1.x) {
              if (position.equals("a")) {
-                 shifter.setPosition(.583);
+                 shifter.setPosition(.581);
              } else if (position.equals("b")) {
                  shifter.setPosition(.582);
              } else {
-                 shifter.setPosition(.585);
+                 shifter.setPosition(.581);
              }
          }
 

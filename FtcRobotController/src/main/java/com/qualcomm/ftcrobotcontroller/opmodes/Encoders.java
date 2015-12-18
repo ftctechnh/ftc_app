@@ -28,11 +28,14 @@ public class Encoders extends  LinearOpMode {
     ColorSensor sensorRGB = hardwareMap.colorSensor.get("color");
     Servo shifter;
     Servo servo;
-    DcMotor leftmotor2 = hardwareMap.dcMotor.get("leftmotor2");
-    DcMotor rightmotor2 = hardwareMap.dcMotor.get("rightmotor2");
+    DcMotor leftmotor2;
+    DcMotor rightmotor2;
     private void initiate () throws InterruptedException {
         leftmotor = hardwareMap.dcMotor.get("leftmotor");
         rightmotor = hardwareMap.dcMotor.get("rightmotor");
+        leftmotor2 = hardwareMap.dcMotor.get("leftmotor2");
+        rightmotor2 = hardwareMap.dcMotor.get("rightmotor2");
+
         activegear = gear_ratio1;
         rightmotor.setDirection(DcMotor.Direction.REVERSE);
         rightmotor2.setDirection(DcMotor.Direction.REVERSE);
@@ -125,6 +128,7 @@ public class Encoders extends  LinearOpMode {
         distance = distancetemp;
         int is;
         is = 0;
+
         encoder1 = encoder1+(int) distancetemp;
         encoder2= encoder2+(int)distancetemp;
         leftmotor.setTargetPosition((int) (encoder1));
