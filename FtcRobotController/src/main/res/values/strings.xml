@@ -35,7 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 <resources>
 
-  <string name="app_name">FTC Robot Controller</string>
+  <string name="app_name">FTC Robert Robot</string>
   <string name="ok">OK</string>
 
   <string name="pref_configure_robot_title">Robot Configuration Settings</string>
