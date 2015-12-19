@@ -315,6 +315,49 @@ public class CompBot implements DriverInterface, AttachmentInterface
     }
 
     @Override
+    public void pitchAllTracks(float time, float speed)
+    {
+        double timeStart = System.currentTimeMillis();
+        double timeEnd = timeStart + (1000 * time);
+        frontLeftMotor.setPower(speed);
+        frontRightMotor.setPower(speed);
+        backLeftMotor.setPower(speed);
+        backRightMotor.setPower(speed);
+        while (System.currentTimeMillis() < timeEnd)
+        {
+
+        }
+        frontLeftMotor.setPower(0.0f);
+        frontRightMotor.setPower(0.0f);
+        backLeftMotor.setPower(0.0f);
+        backRightMotor.setPower(0.0f);
+
+    }
+
+    @Override
+    public void pitchAllTracksAndMoveRobot(float time, float speed)
+    {
+        double timeStart = System.currentTimeMillis();
+        double timeEnd = timeStart + (1000 * time);
+        frontLeftMotor.setPower(speed);
+        frontRightMotor.setPower(speed);
+        backLeftMotor.setPower(speed);
+        backRightMotor.setPower(speed);
+        leftMotor.setPower(speed);
+        rightMotor. setPower(speed);
+        while (System.currentTimeMillis() < timeEnd)
+        {
+
+        }
+        frontLeftMotor.setPower(0.0f);
+        frontRightMotor.setPower(0.0f);
+        backLeftMotor.setPower(0.0f);
+        backRightMotor.setPower(0.0f);
+        leftMotor.setPower(0);
+        rightMotor. setPower(0);
+    }
+
+    @Override
     public void stop()
     {
         leftMotor.setPower(0.0f);
