@@ -19,7 +19,10 @@ public class PhoneGyroTest extends OpMode {
     }
 
     public void loop() {
-        telemetry.addData("firstAzimuth = ", gyro.getAzimuth());
+        telemetry.addData("Azimuth = ", gyro.getAzimuth());
+        telemetry.addData("Pitch = ", gyro.getPitch());
+        telemetry.addData("Roll = ", gyro.getRoll());
+
         //right.setPower(1.0f);
     }
 

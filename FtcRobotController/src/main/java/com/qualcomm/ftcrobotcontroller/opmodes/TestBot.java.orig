@@ -61,8 +61,18 @@ public class TestBot implements DriverInterface
         }
     }
 
+    public void pivotTurn(float degrees, float speed, boolean useGyro) {
 
+    }
 
+    public void spinOnCenter(float degrees, float speed, boolean useGyro) {
+
+    }
+
+<<<<<<< HEAD
+=======
+
+>>>>>>> 68a4dcf534a80f02f10f53b1ad9bfa17ae3d548e
     public void pivotTurn(float degrees, float speed)
     {
         leftMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
@@ -165,7 +175,15 @@ public class TestBot implements DriverInterface
         rightMotor.setPower(0.0f);
     }
 
+    @Override
+    public void pivotTurn(float degrees, float speed, boolean useGyro) {
 
+    }
+
+    @Override
+    public void spinOnCenter(float degrees, float speed, boolean useGyro) {
+
+    }
 
     @Override
     public void pitchFrontTracks(float time, float speed)
