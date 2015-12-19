@@ -64,7 +64,7 @@ public class PacmanBotHWB2 extends OpMode {
         double right;
         left = driveRate;
         right= driveRate;
-        if (turnRate<0) right += -turnRate;
+        if (turnRate<0) right -= turnRate;
         if (turnRate>0) left  += turnRate;
         driveRaw(left,right);
 
