@@ -1,6 +1,7 @@
 package com.qualcomm.ftcrobotcontroller.bamboo;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 /**
@@ -22,6 +23,7 @@ public class Motor {
     {
         name = nm;
         _motor = hwm.dcMotor.get(name);
+
         reversed = rev;
         diff = getEncoder();
     }

@@ -1,5 +1,6 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.qualcomm.ftcrobotcontroller.bamboo.Motor;
 import com.qualcomm.ftcrobotcontroller.bamboo.Root;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.GyroSensor;
@@ -24,6 +25,9 @@ public class UnitTests extends OpMode {
     long timefirst = System.currentTimeMillis();
     long timelast = timefirst;
 
+    public Motor m;
+    public Motor b;
+
     @Override
     public void init()
     {
@@ -31,8 +35,14 @@ public class UnitTests extends OpMode {
         lLeft = hardwareMap.lightSensor.get("lightLeft");
         gyro = hardwareMap.gyroSensor.get("gyro");
 
+        m = new Motor("right", hardwareMap);
+        b = new Motor("left", hardwareMap);
+
         lRight.enableLed(true);
         lLeft.enableLed(true);
+
+        //m.set(1);
+        //b.set(-1);
     }
 
     @Override
@@ -49,5 +59,6 @@ public class UnitTests extends OpMode {
 
         telemetry.addData("ls", "(" + (int) (lRight.getLightDetected() * 100) + ", " + (int) (lLeft.getLightDetected() * 100) + ")");
         telemetry.addData("gy", gyro.getRotation() + ", " + gypos);
+        telemetry.addData("bro", m._motor.getCurrentPosition()+", "+b._motor.getCurrentPosition());
     }
 }
