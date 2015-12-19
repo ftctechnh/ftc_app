@@ -4,6 +4,10 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Date;
+import java.util.Calendar;
 
 /**
  * @author Darron and Caiti
@@ -24,6 +28,13 @@ public class TeleOp extends OpMode {
     DcMotor pully;
     DcMotor arm1;
     DcMotor arm2;
+    Calendar time;
+    float velocity1;
+   double distanceX;
+    long currenttime;
+    long pasttime;
+    long deltaTime;
+    List<Float> list = new ArrayList<Float>();
     private void initsensor() throws InterruptedException {
         hardwareMap.logDevices();
         sensorRGB = hardwareMap.colorSensor.get("color");
@@ -61,6 +72,10 @@ public class TeleOp extends OpMode {
         accel = new Accelorometer();
         accel.init();
         accel.start();
+        velocity1 = 0;
+        distanceX = 0;
+               currenttime  = 1000* time.getTimeInMillis();
+        pasttime=1000*time.getTimeInMillis();
     }
     /**
      * the loop to run during teleop
@@ -138,8 +153,19 @@ public class TeleOp extends OpMode {
         telemetry.addData("is half power on", gamepad1.left_bumper);
         telemetry.addData("estop",locked);
         telemetry.addData("position", position);
-        telemetry.addData("x",accel.getXAxis());
-        telemetry.addData("y",accel.getYAxis());
+        telemetry.addData("x", accel.getXAxis());
+        telemetry.addData("y", accel.getYAxis());
         telemetry.addData("z",accel.getZAxis());
+        telemetry.addData("distanceX", updateMovementX());
+    }
+    private double updateMovementX()
+    {   float acceli = accel.getXAxis();
+        currenttime=1000*time.getTimeInMillis();
+       deltaTime = currenttime - pasttime;
+        distanceX= distanceX+ (velocity1 * deltaTime)+(.5*acceli*(deltaTime*deltaTime));
+        velocity1 = velocity1+(acceli*deltaTime);
+        pasttime = currenttime;
+        return distanceX;
+
     }
 }
