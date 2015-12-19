@@ -93,21 +93,11 @@ public class TeleOp extends OpMode {
         float rightX = -gamepad1.right_stick_x;
         float rightX2 = -gamepad2.right_stick_x;
         float leftX2 = -gamepad2.left_stick_x;
-        if(leftX<=leftY)
 
-        {
-            leftmotor.setPower(leftY);
-            rightmotor.setPower(rightY);
-            leftmotor2.setPower(leftY);
-            rightmotor2.setPower(rightY);
-        }
-        else {
-
-            leftmotor2.setPower(leftX);
-            rightmotor2.setPower(-rightX);
-            leftmotor.setPower(leftX);
-            rightmotor.setPower(-rightX);
-        }
+        leftmotor.setPower(leftY);
+        rightmotor.setPower(rightY);
+        leftmotor2.setPower(leftY);
+        rightmotor2.setPower(rightY);
          if (gamepad1.x) {
              if (position.equals("a")) {
                  shifter.setPosition(.581);
