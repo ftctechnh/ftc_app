@@ -7,7 +7,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
  * 1.0.0 - First version.
  */
 
-public class PacmanBotManual extends PacmanBotHWB2 {
+public class PacmanBotManualRed extends PacmanBotHWB2 {
 
     VersionNumber version = new VersionNumber(1,0,0);
     final boolean side = true; //False is red, True is blue
