@@ -32,6 +32,7 @@ public class PacmanBotHWB2 extends OpMode {
     DcMotor collector;          //'Fuzzy amoeba'
 
     DcMotor basket;             //Debris basket swivel
+    DcMotor tail;               //Tail wheel
 
     //Servo section
 
@@ -109,6 +110,9 @@ public class PacmanBotHWB2 extends OpMode {
     public void setWinch(double power) {
         winch.setPower(power);
     }
+    public void setTail(double power) {
+        tail.setPower(power);
+    }
 
     public void setupHardware() {
 
@@ -134,6 +138,8 @@ public class PacmanBotHWB2 extends OpMode {
         release = hardwareMap.servo.get("release");
 
         release.setPosition(.2);
+
+        tail = hardwareMap.dcMotor.get("tail");
         //finger.setPosition(.5);
 
 
