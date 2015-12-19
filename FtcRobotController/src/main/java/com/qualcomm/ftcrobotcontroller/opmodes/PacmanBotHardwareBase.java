@@ -53,7 +53,6 @@ public class PacmanBotHardwareBase extends OpMode {
 
     DcMotor winch;
     DcMotor belt;
-
     DcMotor tire;
 
     Servo arm;

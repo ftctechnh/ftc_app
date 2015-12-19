@@ -21,13 +21,12 @@ public class PacmanBotHWB2 extends OpMode {
     @Override
     public void loop() {}
 
-    //Motor section
+    //DC Motor section
 
     DcMotor frontLeft;          //Drive motors
     DcMotor rearLeft;
     DcMotor rearRight;
     DcMotor frontRight;
-
     DcMotor winch;              //Winch motor
     DcMotor collector;          //'Fuzzy amoeba'
 
