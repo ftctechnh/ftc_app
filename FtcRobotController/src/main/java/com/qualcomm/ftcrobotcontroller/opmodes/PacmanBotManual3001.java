@@ -19,6 +19,6 @@ public class PacmanBotManual3001 extends PacmanBotHWB2 {
 
     public void loop() {
 
-        drive(gamepad1.left_stick_y,gamepad1.right_stick_x);
+        drive(-gamepad1.left_stick_y,gamepad1.right_stick_x);
     }
 }

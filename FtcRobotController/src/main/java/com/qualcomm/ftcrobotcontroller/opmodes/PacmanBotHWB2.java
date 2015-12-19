@@ -39,6 +39,7 @@ public class PacmanBotHWB2 extends OpMode {
     Servo dumper;               //People-dumper
     Servo finger;               //Climber-release 'finger'
     Servo release;              //Hook release
+    Servo angular;              //Angles the doorslides
 
     //Configuration section
 
@@ -55,7 +56,7 @@ public class PacmanBotHWB2 extends OpMode {
         /* Standard (non-mountain) drive. */
         driveRate = limit(driveRate, -1, 1);
         turnRate  = limit(turnRate, -1, 1);
-        driveRaw(driveRate+turnRate,driveRate-turnRate);
+        driveRaw(driveRate+=turnRate,driveRate-turnRate);
     }
     public void driveMtn(double driveRate,double turnRate) {
         driveRate = limit(driveRate, -1, 1);
@@ -114,36 +115,37 @@ public class PacmanBotHWB2 extends OpMode {
     }
 
     public void setupHardware() {
+        //front_ctrl - bottom
+        frontLeft = hardwareMap.dcMotor.get("front_left"); //1
+        frontRight = hardwareMap.dcMotor.get("front_right"); //2
 
-        frontLeft = hardwareMap.dcMotor.get("frontleft");
-        frontRight = hardwareMap.dcMotor.get("frontright");
-        rearLeft = hardwareMap.dcMotor.get("rearleft");
-        rearRight = hardwareMap.dcMotor.get("rearright");
+        //rear_ctrl - 2nd from bottom
+        rearLeft = hardwareMap.dcMotor.get("rear_left"); //1
+        rearRight = hardwareMap.dcMotor.get("rear_right"); //2
 
-        winch = hardwareMap.dcMotor.get("winch");
-        collector = hardwareMap.dcMotor.get("collector");
+        //hook_ctrl - 3rd from the bottom
+        tail = hardwareMap.dcMotor.get("tail"); //1
+        collector = hardwareMap.dcMotor.get("collector"); //2
 
-        basket = hardwareMap.dcMotor.get("basket");
-
+        //Motor Controller 1 - 4th from bottom
+        basket = hardwareMap.dcMotor.get("basket"); //1
+        winch = hardwareMap.dcMotor.get("winch"); //2
         basket.setMode(DcMotorController.RunMode.RESET_ENCODERS);
 
-        door = hardwareMap.servo.get("door");
-        dumper = hardwareMap.servo.get("thrower");
+        //Servo Controller 1 - Top
+        finger = hardwareMap.servo.get("finger"); //2
+        dumper = hardwareMap.servo.get("thrower"); //3
+        release = hardwareMap.servo.get("release"); //4
+        //THOMAS, CODE for 5!!!!! It is the thing that positions the door slides. We called it "angular".
+        angular = hardwareMap.servo.get("angular"); //5
+        door = hardwareMap.servo.get("door"); //6
 
         door.setPosition(.55);
         dumper.setPosition(.8);
-
-        finger = hardwareMap.servo.get("finger");
-        release = hardwareMap.servo.get("release");
-
         release.setPosition(.2);
 
-        tail = hardwareMap.dcMotor.get("tail");
         //finger.setPosition(.5);
-
-
         //slideRelease = hardwareMap.servo.get("sliderelease");
-
         //hook = hardwareMap.servo.get("hook");
         //aim = hardwareMap.servo.get("aim");
     }
