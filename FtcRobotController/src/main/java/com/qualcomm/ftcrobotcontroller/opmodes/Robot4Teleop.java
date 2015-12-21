@@ -2,6 +2,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 public class Robot4Teleop extends OpMode {
 
@@ -9,6 +10,8 @@ public class Robot4Teleop extends OpMode {
     DcMotor backRightMotor;
     DcMotor frontRightMotor;
     DcMotor backLeftMotor;
+
+    Servo clampServo;
 
 
     public void init() {
@@ -18,6 +21,8 @@ public class Robot4Teleop extends OpMode {
         backRightMotor = hardwareMap.dcMotor.get("backR");
         backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
         frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
+
+        clampServo = hardwareMap.servo.get("clamp");
 
     }
 
@@ -34,7 +39,7 @@ public class Robot4Teleop extends OpMode {
         float secondThrottle = gamepad2.left_stick_y;
         float secondRightThrottle = gamepad2.right_stick_y;
 
-        throttle=(Math.abs(throttle) < 0.05) ? 0:throttle;
+        throttle=(Math.abs(throttle) < 0.3) ? 0:throttle;
         rightThrottle=(Math.abs(rightThrottle) < 0.05) ? 0:rightThrottle;
         setMotors(throttle,rightThrottle,throttle,rightThrottle);
 
@@ -49,10 +54,10 @@ public class Robot4Teleop extends OpMode {
 
         }
         if (gamepad1.y || gamepad2.y) {
-
+            clampServo.setPosition(0);
         }
         if (gamepad1.a || gamepad2.a) {
-
+            clampServo.setPosition(1);
         }
         if (gamepad1.right_bumper || gamepad2.right_bumper) {
 

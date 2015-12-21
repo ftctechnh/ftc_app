@@ -20,8 +20,10 @@ public abstract class _ResQAuto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        DcMotor rightWheel;
-        DcMotor leftWheel;
+        DcMotor frontRightWheel;
+        DcMotor frontLeftWheel;
+        DcMotor backRightWheel;
+        DcMotor backLeftWheel;
         DcMotor sweeper;
         Servo buttonServo;
         Servo button2Servo;
@@ -60,22 +62,26 @@ public abstract class _ResQAuto extends LinearOpMode {
 
 
         double value;
-        rightWheel = hardwareMap.dcMotor.get("rightwheel");
-        leftWheel = hardwareMap.dcMotor.get("leftwheel");
-        leftWheel.setDirection(DcMotor.Direction.FORWARD);
-        rightWheel.setDirection(DcMotor.Direction.REVERSE);
-        sweeper = hardwareMap.dcMotor.get("sweeper");
+        frontRightWheel = hardwareMap.dcMotor.get("frontR");
+        frontLeftWheel = hardwareMap.dcMotor.get("frontL");
+        backRightWheel = hardwareMap.dcMotor.get("backR");
+        backLeftWheel = hardwareMap.dcMotor.get("backL");
+        frontLeftWheel.setDirection(DcMotor.Direction.FORWARD);
+        backLeftWheel.setDirection(DcMotor.Direction.REVERSE);
+        frontRightWheel.setDirection(DcMotor.Direction.REVERSE);
+        backRightWheel.setDirection(DcMotor.Direction.FORWARD);
+        //sweeper = hardwareMap.dcMotor.get("sweeper");
 
-        buttonServo = hardwareMap.servo.get("buttonservo");
+        buttonServo = hardwareMap.servo.get("leftbutton");
         buttonServo.setPosition(0.9);
-        button2Servo = hardwareMap.servo.get("button2servo");
+        button2Servo = hardwareMap.servo.get("rightbutton");
         button2Servo.setPosition(0);
-        climberservo = hardwareMap.servo.get("climberservo");
+        climberservo = hardwareMap.servo.get("climber");
         climberservo.setPosition(0.0);
 
-        opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("sensor_EOPD");
-        ultrasonicSensor = hardwareMap.ultrasonicSensor.get("sonic");
-        colorsensor = hardwareMap.colorSensor.get("colorsensor");
+        opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("light");
+        ultrasonicSensor = hardwareMap.ultrasonicSensor.get("ultrasonic");
+        colorsensor = hardwareMap.colorSensor.get("color");
         colorsensor.enableLed(false);
 
 
@@ -87,58 +93,82 @@ public abstract class _ResQAuto extends LinearOpMode {
         sleep(getDelay());
         telemetry.addData("InDelay", "no");
 
-        rightWheel.setPower(0.2);
-        leftWheel.setPower(0.2);
-        sweeper.setPower(-1);
+        frontRightWheel.setPower(0.2);
+        frontLeftWheel.setPower(0.2);
+        backRightWheel.setPower(0.2);
+        backLeftWheel.setPower(0.2);
+        //sweeper.setPower(-1);
 
         if (getDelay() == 0)
             sleep(0);
             //sleep(3500);
         else //with delay (2nd start), robot is placed farther
             sleep(4500);
-        rightWheel.setPower(0);
-        leftWheel.setPower(0);
+        frontRightWheel.setPower(0);
+        frontLeftWheel.setPower(0);
+        backRightWheel.setPower(0);
+        backLeftWheel.setPower(0);
 
         while(true){
             reflectance = opticalDistanceSensor.getLightDetected();
             telemetry.addData("Reflectance Value", reflectance);
 
             if (Math.abs(reflectance - WHITEVALUE) < 0.05) { //found white tape
-                leftWheel.setPower(0);
-                rightWheel.setPower(0);
+                frontRightWheel.setPower(0);
+                frontLeftWheel.setPower(0);
+                backRightWheel.setPower(0);
+                backLeftWheel.setPower(0);
                 sleep(200);
                 if (getRedAlliance() == 1) {
-                    leftWheel.setPower(0.1);
-                    rightWheel.setPower(0.1);
-                    sleep(500);
-                    leftWheel.setPower(0.3);
-                    rightWheel.setPower(-0.3);
-                    sleep(1500);
+                    /*frontRightWheel.setPower(-.25);
+                    frontLeftWheel.setPower(-.25);
+                    backRightWheel.setPower(-.25);
+                    backLeftWheel.setPower(-.25);
+                    sleep(450);
+                    frontLeftWheel.setPower(0.9);
+                    backLeftWheel.setPower(0.9);
+                    frontRightWheel.setPower(-0.50);
+                    backRightWheel.setPower(-0.50);
+                    sleep(750);
+                    */
+                    /*frontLeftWheel.setPower(0.2);
+                    backLeftWheel.setPower(0.2);
+                    frontRightWheel.setPower(0.2);
+                    backRightWheel.setPower(0.2);
+                    sleep(200);*/
                 } else {
                     //Overshoot to left side of line only as BLUE alliance
-                    leftWheel.setPower(0.1);
-                    rightWheel.setPower(0.1);
-                    sleep(600);
-                    leftWheel.setPower(-0.3);
-                    rightWheel.setPower(0.3);
-                    sleep(700);
+                    /*frontLeftWheel.setPower(0.1);
+                    backLeftWheel.setPower(0.1);
+                    frontRightWheel.setPower(0.1);
+                    backRightWheel.setPower(0.1);
+                    sleep(80);*/
+                    frontLeftWheel.setPower(-0.3);
+                    backLeftWheel.setPower(-0.3);
+                    frontRightWheel.setPower(0.3);
+                    backRightWheel.setPower(0.3);
+                    sleep(50);
 
                 }
                 break;
             }
 
-            leftWheel.setPower(0.2);
-            rightWheel.setPower(0.2);
+            frontLeftWheel.setPower(0.2);
+            backLeftWheel.setPower(0.2);
+            frontRightWheel.setPower(0.2);
+            backRightWheel.setPower(0.2);
             waitForNextHardwareCycle();
         }
-        leftWheel.setPower(0);
-        rightWheel.setPower(0);
+        frontRightWheel.setPower(0);
+        frontLeftWheel.setPower(0);
+        backRightWheel.setPower(0);
+        backLeftWheel.setPower(0);
         sleep(700);
         //follow the left edge of the line
 
         while(true) {
             waitOneFullHardwareCycle();
-            sweeper.setPower(1);
+            //sweeper.setPower(1);
             double distance = ultrasonicSensor.getUltrasonicLevel();
             reflectance = opticalDistanceSensor.getLightDetected();
 
@@ -156,11 +186,15 @@ public abstract class _ResQAuto extends LinearOpMode {
             valueS = Range.clip(valueS, -1, 1);
             valueB = Range.clip(valueB, -1, 1);
             if (getRedAlliance()==0) {
-                leftWheel.setPower(valueS);
-                rightWheel.setPower(valueB);
+                frontLeftWheel.setPower(valueS);
+                backLeftWheel.setPower(valueS);
+                frontRightWheel.setPower(valueB);
+                backRightWheel.setPower(valueB);
             } else {
-                leftWheel.setPower(valueB);
-                rightWheel.setPower(valueS);
+                frontLeftWheel.setPower(valueB);
+                backLeftWheel.setPower(valueB);
+                frontRightWheel.setPower(valueS);
+                backRightWheel.setPower(valueS);
             }
 
             telemetry.addData("valueB", valueB);
@@ -169,12 +203,20 @@ public abstract class _ResQAuto extends LinearOpMode {
             telemetry.addData("Ultrasonic Value", distance);
 
 
-            if(distance < 27 && distance>1) {
+            if(distance < 24 && distance>1) {
                 if (getRedAlliance() == 0) {
-                    leftWheel.setPower(0.3);
-                    rightWheel.setPower(0);
-                    sleep(200);
-                    leftWheel.setPower(0);
+                    /*frontLeftWheel.setPower(0.3);
+                    backLeftWheel.setPower(0.3);*/
+                    frontRightWheel.setPower(0);
+                    backRightWheel.setPower(0);
+                    //sleep(200);
+                    frontLeftWheel.setPower(0);
+                    backLeftWheel.setPower(0);
+               }else{
+                    frontRightWheel.setPower(0);
+                    backRightWheel.setPower(0);
+                    frontLeftWheel.setPower(0);
+                    backLeftWheel.setPower(0);
                 }
                 break;
             }
@@ -186,13 +228,13 @@ public abstract class _ResQAuto extends LinearOpMode {
         telemetry.addData("Blue", colorsensor.blue());
         sleep(500);
         if(colorsensor.red()<0.1&&colorsensor.blue()>0.1){
-            if( getRedAlliance() == 1){
+            /*if( getRedAlliance() == 1){
                 //If Alliance is red and the button is red
                 //Servo Down
                 buttonServo.setPosition(0.3);
                 sleep(1000);
 
-            } else if (getRedAlliance() == 0){
+            } else*/ if (getRedAlliance() == 0){
                 button2Servo.setPosition(0.8);
                 sleep(1000);
             }
@@ -203,11 +245,11 @@ public abstract class _ResQAuto extends LinearOpMode {
             rightWheel.setPower(-0.1);
             sleep(300);*/
 
-            if( getRedAlliance() == 1){
+           /* if( getRedAlliance() == 1){
                 button2Servo.setPosition(0.6);
                 sleep(1000);
 
-            } else if (getRedAlliance() == 0){
+            } else */ if (getRedAlliance() == 0){
                 buttonServo.setPosition(0.3);
                 sleep(1000);
             }
@@ -217,8 +259,10 @@ public abstract class _ResQAuto extends LinearOpMode {
             sleep(1000);
         }
 
-        leftWheel.setPower(0.1);
-        rightWheel.setPower(0.1);
+        frontLeftWheel.setPower(0.1);
+        backLeftWheel.setPower(0.1);
+        frontRightWheel.setPower(0.1);
+        backRightWheel.setPower(0.1);
         sleep(200);
 
         //Dump climbers
@@ -226,47 +270,63 @@ public abstract class _ResQAuto extends LinearOpMode {
         sleep(1500);
         climberservo.setPosition(0);
 
-        leftWheel.setPower(-0.1);
-        rightWheel.setPower(-0.1);
+        frontLeftWheel.setPower(-0.1);
+        backLeftWheel.setPower(-0.1);
+        frontRightWheel.setPower(-0.1);
+        backRightWheel.setPower(-0.1);
         button2Servo.setPosition(0.6);
         buttonServo.setPosition(0.3);
         sleep(800);
 
         //End of Autonomous
         if (getDelay() == 0) {
-            leftWheel.setPower(-0.2);
-            rightWheel.setPower(-0.2);
+            frontLeftWheel.setPower(-0.2);
+            backLeftWheel.setPower(-0.2);
+            frontRightWheel.setPower(-0.2);
+            backRightWheel.setPower(-0.2);
             sleep(300);
             if (getRedAlliance() == 1) {
-                leftWheel.setPower(0.2);
-                rightWheel.setPower(-0.2);
+                frontLeftWheel.setPower(0.2);
+                backLeftWheel.setPower(0.2);
+                frontRightWheel.setPower(-0.2);
+                backRightWheel.setPower(-0.2);
                 sleep(500);
-                leftWheel.setPower(0.3);
-                leftWheel.setPower(0.3);
-                sleep(700);
-                leftWheel.setPower(0.2);
-                rightWheel.setPower(-0.2);
-                sleep(500);
-                leftWheel.setPower(0.3);
-                rightWheel.setPower(0.3);
-                sleep(2600);
-                leftWheel.setPower(0);
-                rightWheel.setPower(0);
+                frontLeftWheel.setPower(0.6);
+                backLeftWheel.setPower(0.6);
+                frontRightWheel.setPower(0.6);
+                backRightWheel.setPower(0.6);
+                sleep(1200);
+                frontRightWheel.setPower(0);
+                frontLeftWheel.setPower(0);
+                backRightWheel.setPower(0);
+                backLeftWheel.setPower(0);
             } else {
-                leftWheel.setPower(-0.4);
-                rightWheel.setPower(0.4);
-                sleep(1500);
-                leftWheel.setPower(0.3);
-                leftWheel.setPower(0.3);
-                sleep(700);
-                leftWheel.setPower(-0.4);
-                rightWheel.setPower(0.4);
-                sleep(700);
-                leftWheel.setPower(0.3);
-                rightWheel.setPower(0.3);
-                sleep(2000);
-                leftWheel.setPower(0);
-                rightWheel.setPower(0);
+                frontLeftWheel.setPower(-0.4);
+                backLeftWheel.setPower(-0.4);
+                frontRightWheel.setPower(0.4);
+                backRightWheel.setPower(0.4);
+                sleep(600);
+                frontLeftWheel.setPower(0.3);
+                backLeftWheel.setPower(0.3);
+                frontRightWheel.setPower(0.3);
+                backRightWheel.setPower(0.3);
+                sleep(500);
+                /*frontLeftWheel.setPower(-0.4);
+                backLeftWheel.setPower(-0.4);
+                frontRightWheel.setPower(0.4);
+                backRightWheel.setPower(0.4);
+                sleep(700);*/
+                frontLeftWheel.setPower(0.3);
+                backLeftWheel.setPower(0.3);
+                frontRightWheel.setPower(0.3);
+                backRightWheel.setPower(0.3);
+                sleep(900);
+                frontRightWheel.setPower(0);
+                frontLeftWheel.setPower(0);
+                backRightWheel.setPower(0);
+                backLeftWheel.setPower(0);
+                buttonServo.setPosition(0);
+                button2Servo.setPosition(0.9);
             }
         }
     }

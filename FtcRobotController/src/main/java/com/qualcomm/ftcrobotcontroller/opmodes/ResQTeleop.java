@@ -91,6 +91,7 @@ public class ResQTeleop extends OpMode {
 
 
         climbservo.setPosition(climbservoPosition);
+        climbservo2.setPosition(climbservo2Position);
         //buttonservo.setPosition(buttonservoPosition);
         //boxservo.setPosition(boxservoPosition);
         releaseservo.setPosition(releaseservoPosition);
@@ -144,14 +145,14 @@ public class ResQTeleop extends OpMode {
             //buttonservoPosition += buttonServoDelta;
         }
         if (gamepad1.dpad_left || gamepad2.dpad_left) {
-            adjustservo.setPosition(1);
+            adjustservo.setPosition(0);
         }
         if (gamepad1.dpad_up || gamepad2.dpad_up) {
             releaseservo.setPosition(0);
             adjustservo.setPosition(0.5);
         }
         if (gamepad1.dpad_right || gamepad2.dpad_right) {
-            adjustservo.setPosition(0);
+            adjustservo.setPosition(1);
         }
         if (gamepad1.dpad_down || gamepad2.dpad_down) {
             releaseservo.setPosition(releaseServoEnd);
