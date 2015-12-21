@@ -81,27 +81,50 @@ public class PushBotHardware extends OpMode
         //
         try
         {
-            v_motor_left_drive = hardwareMap.dcMotor.get ("left_drive");
+            v_motor_left_front_drive = hardwareMap.dcMotor.get ("left_front_drive");
         }
         catch (Exception p_exeception)
         {
-            m_warning_message ("left_drive");
+            m_warning_message("left_front_drive");
             DbgLog.msg (p_exeception.getLocalizedMessage ());
 
-            v_motor_left_drive = null;
+            v_motor_left_front_drive = null;
+        }
+        try
+        {
+            v_motor_left_front_drive = hardwareMap.dcMotor.get ("left_rear_drive");
+        }
+        catch (Exception p_exeception)
+        {
+            m_warning_message("left_rear_drive");
+            DbgLog.msg (p_exeception.getLocalizedMessage ());
+
+            v_motor_left_front_drive = null;
         }
 
         try
         {
-            v_motor_right_drive = hardwareMap.dcMotor.get ("right_drive");
-            v_motor_right_drive.setDirection (DcMotor.Direction.REVERSE);
+            v_motor_right_front_drive = hardwareMap.dcMotor.get ("right_front_drive");
+            v_motor_right_front_drive.setDirection(DcMotor.Direction.REVERSE);
         }
         catch (Exception p_exeception)
         {
-            m_warning_message ("right_drive");
+            m_warning_message ("right_front_drive");
             DbgLog.msg (p_exeception.getLocalizedMessage ());
 
-            v_motor_right_drive = null;
+            v_motor_right_front_drive = null;
+        }
+        try
+        {
+            v_motor_right_front_drive = hardwareMap.dcMotor.get ("right_rear_drive");
+            v_motor_right_front_drive.setDirection(DcMotor.Direction.REVERSE);
+        }
+        catch (Exception p_exeception)
+        {
+            m_warning_message ("right_rear_drive");
+            DbgLog.msg (p_exeception.getLocalizedMessage ());
+
+            v_motor_right_front_drive = null;
         }
 
         //
@@ -328,11 +351,14 @@ public class PushBotHardware extends OpMode
     {
         double l_return = 0.0;
 
-        if (v_motor_left_drive != null)
+        if (v_motor_left_front_drive != null)
         {
-            l_return = v_motor_left_drive.getPower ();
+            l_return = v_motor_left_front_drive.getPower ();
         }
-
+       else if (v_motor_left_rear_drive != null)
+        {
+            l_return = v_motor_left_rear_drive.getPower ();
+        }
         return l_return;
 
     } // a_left_drive_power
@@ -348,11 +374,14 @@ public class PushBotHardware extends OpMode
     {
         double l_return = 0.0;
 
-        if (v_motor_right_drive != null)
+        if (v_motor_right_front_drive != null)
         {
-            l_return = v_motor_right_drive.getPower ();
+            l_return = v_motor_right_front_drive.getPower ();
         }
-
+       else if (v_motor_right_rear_drive != null)
+        {
+            l_return = v_motor_right_rear_drive.getPower ();
+        }
         return l_return;
 
     } // a_right_drive_power
@@ -367,13 +396,21 @@ public class PushBotHardware extends OpMode
     void set_drive_power (double p_left_power, double p_right_power)
 
     {
-        if (v_motor_left_drive != null)
+        if (v_motor_left_front_drive != null)
         {
-            v_motor_left_drive.setPower (p_left_power);
+            v_motor_left_front_drive.setPower (p_left_power);
         }
-        if (v_motor_right_drive != null)
+        if (v_motor_right_front_drive != null)
         {
-            v_motor_right_drive.setPower (p_right_power);
+            v_motor_right_front_drive.setPower (p_right_power);
+        }
+        if (v_motor_left_rear_drive != null)
+        {
+            v_motor_left_rear_drive.setPower (p_left_power);
+        }
+        if (v_motor_right_rear_drive != null)
+        {
+            v_motor_right_rear_drive.setPower(p_right_power);
         }
 
     } // set_drive_power
@@ -388,13 +425,18 @@ public class PushBotHardware extends OpMode
     public void run_using_left_drive_encoder ()
 
     {
-        if (v_motor_left_drive != null)
+        if (v_motor_left_front_drive != null)
         {
-            v_motor_left_drive.setMode
+            v_motor_left_front_drive.setMode
                 ( DcMotorController.RunMode.RUN_USING_ENCODERS
                 );
         }
-
+        if (v_motor_left_rear_drive != null)
+        {
+            v_motor_left_rear_drive.setMode
+                    ( DcMotorController.RunMode.RUN_USING_ENCODERS
+                    );
+        }
     } // run_using_left_drive_encoder
 
     //--------------------------------------------------------------------------
@@ -407,13 +449,18 @@ public class PushBotHardware extends OpMode
     public void run_using_right_drive_encoder ()
 
     {
-        if (v_motor_right_drive != null)
+        if (v_motor_right_front_drive != null)
         {
-            v_motor_right_drive.setMode
+            v_motor_right_front_drive.setMode
                 ( DcMotorController.RunMode.RUN_USING_ENCODERS
                 );
         }
-
+        if (v_motor_right_rear_drive != null)
+        {
+            v_motor_right_rear_drive.setMode
+                ( DcMotorController.RunMode.RUN_USING_ENCODERS
+                );
+        }
     } // run_using_right_drive_encoder
 
     //--------------------------------------------------------------------------
@@ -444,12 +491,12 @@ public class PushBotHardware extends OpMode
     public void run_without_left_drive_encoder ()
 
     {
-        if (v_motor_left_drive != null)
+        if (v_motor_left_front_drive != null)
         {
-            if (v_motor_left_drive.getMode () ==
+            if (v_motor_left_front_drive.getMode () ==
                 DcMotorController.RunMode.RESET_ENCODERS)
             {
-                v_motor_left_drive.setMode
+                v_motor_left_front_drive.setMode
                     ( DcMotorController.RunMode.RUN_WITHOUT_ENCODERS
                     );
             }
@@ -467,12 +514,12 @@ public class PushBotHardware extends OpMode
     public void run_without_right_drive_encoder ()
 
     {
-        if (v_motor_right_drive != null)
+        if (v_motor_right_front_drive != null)
         {
-            if (v_motor_right_drive.getMode () ==
+            if (v_motor_right_front_drive.getMode () ==
                 DcMotorController.RunMode.RESET_ENCODERS)
             {
-                v_motor_right_drive.setMode
+                v_motor_right_front_drive.setMode
                     ( DcMotorController.RunMode.RUN_WITHOUT_ENCODERS
                     );
             }
@@ -508,13 +555,18 @@ public class PushBotHardware extends OpMode
     public void reset_left_drive_encoder ()
 
     {
-        if (v_motor_left_drive != null)
+        if (v_motor_left_front_drive != null)
         {
-            v_motor_left_drive.setMode
+            v_motor_left_front_drive.setMode
                 ( DcMotorController.RunMode.RESET_ENCODERS
                 );
         }
-
+        if (v_motor_left_rear_drive != null)
+        {
+            v_motor_left_rear_drive.setMode
+                    ( DcMotorController.RunMode.RESET_ENCODERS
+                    );
+        }
     } // reset_left_drive_encoder
 
     //--------------------------------------------------------------------------
@@ -527,13 +579,18 @@ public class PushBotHardware extends OpMode
     public void reset_right_drive_encoder ()
 
     {
-        if (v_motor_right_drive != null)
+        if (v_motor_right_front_drive != null)
         {
-            v_motor_right_drive.setMode
+            v_motor_right_front_drive.setMode
                 ( DcMotorController.RunMode.RESET_ENCODERS
                 );
         }
-
+        if (v_motor_right_rear_drive != null)
+        {
+            v_motor_right_rear_drive.setMode
+                    ( DcMotorController.RunMode.RESET_ENCODERS
+                    );
+        }
     } // reset_right_drive_encoder
 
     //--------------------------------------------------------------------------
@@ -565,11 +622,14 @@ public class PushBotHardware extends OpMode
     {
         int l_return = 0;
 
-        if (v_motor_left_drive != null)
+        if (v_motor_left_front_drive != null)
         {
-            l_return = v_motor_left_drive.getCurrentPosition ();
+            l_return = v_motor_left_front_drive.getCurrentPosition ();
         }
-
+        if (v_motor_left_rear_drive != null)
+        {
+            l_return = v_motor_left_rear_drive.getCurrentPosition ();
+        }
         return l_return;
 
     } // a_left_encoder_count
@@ -582,15 +642,17 @@ public class PushBotHardware extends OpMode
      * Access the right encoder's count.
      */
     int a_right_encoder_count ()
-
     {
         int l_return = 0;
 
-        if (v_motor_right_drive != null)
+        if (v_motor_right_front_drive != null)
         {
-            l_return = v_motor_right_drive.getCurrentPosition ();
+            l_return = v_motor_right_front_drive.getCurrentPosition ();
         }
-
+        if (v_motor_right_rear_drive != null)
+        {
+            l_return = v_motor_right_rear_drive.getCurrentPosition ();
+        }
         return l_return;
 
     } // a_right_encoder_count
@@ -603,21 +665,20 @@ public class PushBotHardware extends OpMode
      * Indicate whether the left drive motor's encoder has reached a value.
      */
     boolean has_left_drive_encoder_reached (double p_count)
-
     {
         //
         // Assume failure.
         //
         boolean l_return = false;
 
-        if (v_motor_left_drive != null)
+        if (v_motor_left_front_drive != null)
         {
             //
             // Has the encoder reached the specified values?
             //
             // TODO Implement stall code using these variables.
             //
-            if (Math.abs (v_motor_left_drive.getCurrentPosition ()) > p_count)
+            if (Math.abs (v_motor_left_front_drive.getCurrentPosition ()) > p_count)
             {
                 //
                 // Set the status to a positive indication.
@@ -625,13 +686,26 @@ public class PushBotHardware extends OpMode
                 l_return = true;
             }
         }
-
+        if (v_motor_left_rear_drive != null) {
+            //
+            // Has the encoder reached the specified values?
+            //
+            // TODO Implement stall code using these variables.
+            //
+            if (Math.abs(v_motor_left_rear_drive.getCurrentPosition()) > p_count) {
+                //
+                // Set the status to a positive indication.
+                //
+                l_return = true;
+            }
+        }
         //
         // Return the status.
         //
         return l_return;
 
-    } // has_left_drive_encoder_reached
+    }
+    // has_left_drive_encoder_reached
 
     //--------------------------------------------------------------------------
     //
@@ -648,14 +722,14 @@ public class PushBotHardware extends OpMode
         //
         boolean l_return = false;
 
-        if (v_motor_right_drive != null)
+        if (v_motor_right_front_drive != null)
         {
             //
             // Have the encoders reached the specified values?
             //
             // TODO Implement stall code using these variables.
             //
-            if (Math.abs (v_motor_right_drive.getCurrentPosition ()) > p_count)
+            if (Math.abs (v_motor_right_front_drive.getCurrentPosition ()) > p_count)
             {
                 //
                 // Set the status to a positive indication.
@@ -663,14 +737,26 @@ public class PushBotHardware extends OpMode
                 l_return = true;
             }
         }
-
+        if (v_motor_right_rear_drive != null) {
+            //
+            // Have the encoders reached the specified values?
+            //
+            // TODO Implement stall code using these variables.
+            //
+            if (Math.abs(v_motor_right_rear_drive.getCurrentPosition()) > p_count) {
+                //
+                // Set the status to a positive indication.
+                //
+                l_return = true;
+            }
+        }
         //
         // Return the status.
         //
         return l_return;
 
-    } // has_right_drive_encoder_reached
-
+    }
+     // has_right_drive_encoder_reached
     //--------------------------------------------------------------------------
     //
     // have_drive_encoders_reached
@@ -1000,22 +1086,22 @@ public class PushBotHardware extends OpMode
 
     //--------------------------------------------------------------------------
     //
-    // v_motor_left_drive
+    // v_motor_left_front_drive
     //
     /**
      * Manage the aspects of the left drive motor.
      */
-    private DcMotor v_motor_left_drive;
-
+    private DcMotor v_motor_left_front_drive;
+    private DcMotor v_motor_left_rear_drive;
     //--------------------------------------------------------------------------
     //
-    // v_motor_right_drive
+    // v_motor_right_front_drive
     //
     /**
      * Manage the aspects of the right drive motor.
      */
-    private DcMotor v_motor_right_drive;
-
+    private DcMotor v_motor_right_front_drive;
+    private DcMotor v_motor_right_rear_drive;
     //--------------------------------------------------------------------------
     //
     // v_motor_left_arm
