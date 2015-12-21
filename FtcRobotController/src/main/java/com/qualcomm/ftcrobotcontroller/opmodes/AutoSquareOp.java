@@ -11,7 +11,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 public class AutoSquareOp extends OpMode {
 
-    public double count = 0 ;
 
 
     @Override
@@ -21,8 +20,6 @@ public class AutoSquareOp extends OpMode {
 
     DcMotor motor1;
     DcMotor motor2;
-    DcMotor motor3;
-    DcMotor motor4;
 
     public AutoSquareOp() {
 
