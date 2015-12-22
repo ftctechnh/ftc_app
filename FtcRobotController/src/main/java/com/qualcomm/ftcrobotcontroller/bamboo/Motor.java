@@ -12,7 +12,7 @@ public class Motor {
     public DcMotor _motor;
     public String name;
     public boolean reversed;
-    private int diff = 0;
+    private double diff = 0;
 
     public Motor(String nm, HardwareMap hwm)
     {
@@ -25,7 +25,7 @@ public class Motor {
         _motor = hwm.dcMotor.get(name);
 
         reversed = rev;
-        diff = getEncoder();
+        diff = turns();
     }
 
     public void reverse()
@@ -59,15 +59,28 @@ public class Motor {
         set(amt);
     }
 
-    public int getEncoder()
+    public int ticks()
     {
+        if(reversed) return -_motor.getCurrentPosition();
         return _motor.getCurrentPosition();
     }
 
-    public int encoderDiff()
+    public double turns()
     {
-        int temp = diff;
-        diff = getEncoder();
+        if(reversed) return -_motor.getCurrentPosition() / (1080.0);
+        return _motor.getCurrentPosition()/(1080.0);
+    }
+
+    public int degrees()
+    {
+        if(reversed) return -_motor.getCurrentPosition() / 3;
+        return _motor.getCurrentPosition() / 3;
+    }
+
+    public double turnDiff()
+    {
+        double temp = diff;
+        diff = turns();
         return diff - temp;
     }
 }

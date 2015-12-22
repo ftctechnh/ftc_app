@@ -66,7 +66,6 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register ("PushBotManual", PushBotManual.class);
     manager.register ("Root Drive", RootDrive.class);
       manager.register ("Root Auto", Auto.class);
-    manager.register("testing thingyyy", UnitTests.class);
 
 
 

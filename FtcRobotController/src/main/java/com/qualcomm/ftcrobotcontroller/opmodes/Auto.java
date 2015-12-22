@@ -63,10 +63,10 @@ public class Auto extends OpMode {
         right = new Motor("right", hardwareMap);
         left = new Motor("left", hardwareMap, true);
 
-        rotRight = new Motor("rotRight", hardwareMap);
-        rotLeft = new Motor("rotLeft", hardwareMap);
-        extRight = new Motor("extRight", hardwareMap);
-        extLeft = new Motor("extLeft", hardwareMap);
+        rotRight = new Motor("rightrot", hardwareMap);
+        rotLeft = new Motor("leftrot", hardwareMap);
+        extRight = new Motor("rightext", hardwareMap);
+        extLeft = new Motor("leftext", hardwareMap);
 
         lightRight.enableLed(true);
         lightLeft.enableLed(true);

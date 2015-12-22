@@ -41,6 +41,8 @@ public class Root extends OpMode {
     public void onJoy2_rb_release() {}
     public void onJoy2_lb_release() {}
 
+    public void update() {};
+
 
     @Override
     public void init()
@@ -53,6 +55,7 @@ public class Root extends OpMode {
     public void loop()
     {
         // joystick one bumpers and triggers
+        update();
 
         if(gp1_rb != gamepad1.right_bumper)
         {
@@ -81,7 +84,6 @@ public class Root extends OpMode {
         }
 
         // now joystick number two.
-        // dewin is the bestest
 
         if(gp2_rb != gamepad2.right_bumper)
         {
@@ -92,7 +94,7 @@ public class Root extends OpMode {
 
         if(gp2_lb != gamepad2.left_bumper)
         {
-            if(gamepad1.left_bumper) onJoy2_lb_press();
+            if(gamepad2.left_bumper) onJoy2_lb_press();
             else onJoy2_lb_release();
             gp2_lb = !gp2_lb;
         }

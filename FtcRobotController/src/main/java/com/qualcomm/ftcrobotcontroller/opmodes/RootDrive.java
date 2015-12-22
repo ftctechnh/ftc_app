@@ -4,6 +4,7 @@ import com.qualcomm.ftcrobotcontroller.bamboo.BServo;
 import com.qualcomm.ftcrobotcontroller.bamboo.Motor;
 import com.qualcomm.ftcrobotcontroller.bamboo.Point;
 import com.qualcomm.ftcrobotcontroller.bamboo.Root;
+import com.qualcomm.ftcrobotcontroller.bamboo.SensorPool;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
@@ -18,14 +19,15 @@ public class RootDrive extends Root {
     public Motor extr, rotr, extl, rotl;
     public BServo cdr, cdl;
 
+    public SensorPool sp;
+
     public RootDrive() {
         sides = new Point(0, 0);
 
     }
 
     @Override
-    public void init()
-    {
+    public void init() {
         right = new Motor("right", hardwareMap, true);
         left = new Motor("left", hardwareMap);
         extr = new Motor("rightext", hardwareMap);
@@ -34,15 +36,15 @@ public class RootDrive extends Root {
         rotl = new Motor("leftrot", hardwareMap);
 
         cdr = new BServo("cdsRight", hardwareMap);
-        cdl = new BServo("cdsLeft", hardwareMap);
+        cdl = new BServo("cdsLeft", hardwareMap, true);
+
+        sp = new SensorPool(hardwareMap, console);
     }
 
     @Override
-    public void loop()
+    public void update()
     {
-        super.loop();
-        if(cdr.get() > 0 && gp2_rt < 0.2) cdr.inc(-SERVO_STEP);
-        if(cdl.get() > 0 && gp2_lt < 0.2) cdl.inc(-SERVO_STEP);
+        sp.update();
     }
 
     @Override
@@ -55,7 +57,7 @@ public class RootDrive extends Root {
     @Override
     public void onJoy1_right()
     {
-        rotr.set(joy1.right.y/2);
+        rotr.set(joy1.right.y / 2);
     }
 
     @Override
@@ -79,7 +81,7 @@ public class RootDrive extends Root {
     @Override
     public void onJoy1_left()
     {
-        rotl.set(joy1.left.y/2);
+        rotl.set(joy1.left.y / 2);
     }
 
     @Override
@@ -101,21 +103,32 @@ public class RootDrive extends Root {
     }
 
     @Override
-    public void onJoy2_rt()
+    public void onJoy2_rb_press()
     {
-        if(gp2_rt > 0.2)
-        {
-            cdr.inc(SERVO_STEP);
-        }
+        cdr.set(1);
     }
 
-    public void onJoy2_lt()
+    @Override
+    public void onJoy2_rb_release()
     {
-        if(gp2_rt > 0.2)
-        {
-            cdl.inc(SERVO_STEP);
-        }
+        cdr.set(0);
     }
+
+    @Override
+    public void onJoy2_lb_press()
+    {
+        cdl.set(1);
+        console.log("ahh", cdl.get() + "");
+
+    }
+
+    @Override
+    public void onJoy2_lb_release()
+    {
+        cdl.set(0);
+        console.log("ahh", cdl.get()+"");
+    }
+
 
 
 }

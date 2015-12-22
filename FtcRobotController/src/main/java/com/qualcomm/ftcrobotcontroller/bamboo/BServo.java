@@ -13,7 +13,13 @@ public class BServo {
 
     public BServo(String name, HardwareMap hwm)
     {
+        this(name, hwm, false);
+    }
+
+    public BServo(String name, HardwareMap hwm, boolean rev)
+    {
         _servo = hwm.servo.get(name);
+        if(rev) _servo.setDirection(Servo.Direction.REVERSE);
     }
 
     public void set(double amt)
