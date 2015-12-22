@@ -53,7 +53,7 @@ public class Calibration extends OpMode {
 
     @Override
     public void init() {
-        opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("sensor_EOPD");
+        opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("light");
     }
 
     public void loop() {
