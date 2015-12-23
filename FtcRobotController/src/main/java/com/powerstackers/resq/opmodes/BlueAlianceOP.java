@@ -13,11 +13,6 @@ import org.swerverobotics.library.ClassFactory;
  */
 public class BlueAlianceOP extends OpMode {
 
-    /**
-     * Note: the configuration of the servos is such that
-     * as the arm servo approaches 0, the arm position moves up (away from the floor).
-     * Also, as the claw servo approaches 0, the claw opens up (drops the game element).
-     */
     /** TETRIX VALUES.
      *
      */
@@ -92,7 +87,7 @@ public class BlueAlianceOP extends OpMode {
          */
         servoBeaconPosition = Range.clip(servoBeaconPosition, servoBeacon_MIN_RANGE, servoBeacon_MAX_RANGE);
 
-        /**write position values to the wrist and claw servo
+        /**write position values to the servos
          *
          */
         servoBeacon.setPosition(servoBeaconPosition);

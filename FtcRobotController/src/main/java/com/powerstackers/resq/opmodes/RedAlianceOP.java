@@ -88,7 +88,7 @@ public class RedAlianceOP extends OpMode {
          */
         servoBeaconPosition = Range.clip(servoBeaconPosition, servoBeacon_MIN_RANGE, servoBeacon_MAX_RANGE);
 
-        /**write position values to the wrist and claw servo
+        /**write position values to the servos
          *
          */
         servoBeacon.setPosition(servoBeaconPosition);

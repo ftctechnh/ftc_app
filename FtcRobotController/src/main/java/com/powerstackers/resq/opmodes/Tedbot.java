@@ -15,28 +15,21 @@ import org.swerverobotics.library.ClassFactory;
  */
 public class Tedbot extends OpMode {
 
-    /*
+    /**
      * Note: the configuration of the servos is such that
      * as the arm servo approaches 0, the arm position moves up (away from the floor).
      * Also, as the claw servo approaches 0, the claw opens up (drops the game element).
      */
-    // TETRIX VALUES.
-//    final static double servoRight_MIN_RANGE  = 0.20;
-//    final static double servoRight_MAX_RANGE  = 1.00;
-//    final static double servoLeft_MIN_RANGE  = 0.80;
-//    final static double servoLeft_MAX_RANGE  = 0.00;
+    /** TETRIX VALUES.
+     *
+     */
+    final static double servoBeacon_MIN_RANGE  = 0.00;
+    final static double servoBeacon_MAX_RANGE  = 1.00;
 
-    // position of the arm servo.
-//    double servoRightPosition;
-
-    // amount to change the arm servo position.
-//    double servoRightDelta = 0.1;
-
-    // position of the claw servo
-//    double servoLeftPosition;
-
-    // amount to change the claw servo position by
-//    double servoLeftDelta = 0.1;
+    /** position of servo <Value of Variable>
+     *
+     */
+    double servoBeaconPosition;
 
     //Color Values
     float hsvValues[] = {0, 0, 0};
@@ -46,14 +39,9 @@ public class Tedbot extends OpMode {
     ColorSensor colorBSensor;
     ColorSensor colorFSensor;
     TouchSensor touchSensor;
-    //DcMotor motorBrush;
-    //DcMotor motorLift;
-//    DcMotor motorFRight;
-//    DcMotor motorFLeft;
     DcMotor motorBRight;
     DcMotor motorBLeft;
-    //Servo servoLeft;
-    //Servo servoRight;
+    Servo servoBeacon;
 
     public Tedbot() {
 
@@ -63,7 +51,7 @@ public class Tedbot extends OpMode {
     public void init() {
 
 
-		/*
+		/**
 		 * Use the hardwareMap to get the dc motors and servos by name. Note
 		 * that the names of the devices must match the names used when you
 		 * configured your robot and created the configuration file.
@@ -71,25 +59,26 @@ public class Tedbot extends OpMode {
 
         hardwareMap.logDevices();
         cdim = hardwareMap.deviceInterfaceModule.get("dim");
-        //Sensors
+
+        /**
+         * Sensors
+         */
         colorBSensor = ClassFactory.createSwerveColorSensor(this, this.hardwareMap.colorSensor.get("colorBSensor"));
         colorBSensor.enableLed(true);
         colorFSensor = ClassFactory.createSwerveColorSensor(this, this.hardwareMap.colorSensor.get("colorFSensor"));
         colorFSensor.enableLed(true);
         touchSensor = hardwareMap.touchSensor.get("touchSensor");
-        //Motors
-        //motorBrush = hardwareMap.dcMotor.get("motorBrush");
-        //motorLift = hardwareMap.dcMotor.get("motorLift");
-        //motorLift.setDirection(DcMotor.Direction.REVERSE);
-//        motorFRight = hardwareMap.dcMotor.get("motorFRight");
-//        motorFLeft = hardwareMap.dcMotor.get("motorFLeft");
-//        motorFRight.setDirection(DcMotor.Direction.REVERSE);
+
+        /**
+         * Motors
+         */
         motorBRight = hardwareMap.dcMotor.get("motorBRight");
         motorBLeft = hardwareMap.dcMotor.get("motorBLeft");
         motorBRight.setDirection(DcMotor.Direction.REVERSE);
-        //Servos
-        //servoLeft = hardwareMap.servo.get("servoLeft");
-        //servoRight = hardwareMap.servo.get("servoRight");
+        /**
+         * Servos
+         */
+        servoBeacon = hardwareMap.servo.get("servoBeacon");
 
     }
 
@@ -101,30 +90,36 @@ public class Tedbot extends OpMode {
     @Override
     public void loop() {
 
-		/*
+		/**
 		 * Gamepad 1
 		 *
 		 * Gamepad 1 controls the motors via the left stick, and it controls the
 		 * lift/Brushes via the a,b, x, y buttons
 		 */
 
-        // tank drive
-        // note that if y equal -1 then joystick is pushed all of the way forward.
+        /** tank drive
+         * note that if y equal -1 then joystick is pushed all of the way forward.
+         */
         float left = -gamepad1.left_stick_y;
         float right = -gamepad1.right_stick_y;
 
-        // clip the right/left values so that the values never exceed +/- 1
+        /** clip the right/left values so that the values never exceed +/- 1
+         *
+         */
         right = Range.clip(right, -1, 1);
         left = Range.clip(left, -1, 1);
 
-        // scale the joystick value to make it easier to control
-        // the robot more precisely at slower speeds.
+        /** scale the joystick value to make it easier to control
+         * the robot more precisely at slower speeds.
+         */
         right = (float) scaleInput(right);
         left = (float) scaleInput(left);
 
         String turning;
 
-        //ColorSensor Controls
+        /** ColorSensor Controls
+         *
+         */
         if (colorFSensor.blue() > 5.0 && (colorFSensor.red() < 5.0)) {
             motorBLeft.setPower(0.25);
             motorBRight.setPower(-0.25);
@@ -139,22 +134,23 @@ public class Tedbot extends OpMode {
             turning = "none";
         }
 
-//
-//        // clip the position values so that they never exceed their allowed range.
-//        servoRightPosition = Range.clip(servoRightPosition, servoRight_MIN_RANGE, servoRight_MAX_RANGE);
-//        servoLeftPosition = Range.clip(servoLeftPosition, servoLeft_MIN_RANGE, servoLeft_MAX_RANGE);
+        /** clip the position values so that they never exceed their allowed range.
+         *
+         */
+        servoBeaconPosition = Range.clip(servoBeaconPosition, servoBeacon_MIN_RANGE, servoBeacon_MAX_RANGE);
 
-        // write position values to the wrist and claw servo
-//        servoRight.setPosition(servoRightPosition);
-//        servoLeft.setPosition(servoLeftPosition);
+        /**write position values to the servos
+         *
+         */
+        servoBeacon.setPosition(servoBeaconPosition);
 
         // write the values to the motors
         {
-//            motorBRight.setPower(right);
-//            motorBLeft.setPower(left);
+            motorBRight.setPower(right);
+            motorBLeft.setPower(left);
         }
 
-		/*
+		/**
 		 * Send telemetry data back to driver station. N
         motorFRight.setPower(right);
         motorFLeft.setPower(left);ote that if we are using
@@ -165,22 +161,13 @@ public class Tedbot extends OpMode {
         telemetry.addData("Text", "*** Robot Data***");
         telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", left));
         telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));
-//        Object Leftposition = servoLeft.getPosition();
-//        Object Rightposition = servoRight.getPosition();
-//        telemetry.addData("Servo Left", "Position: " + String.valueOf(Leftposition));
-//        telemetry.addData("Servo Right", "Position: " + String.valueOf(Rightposition));
+
         //Color Telemetry
-        //telemetry.addData("Clear", colorFSensor.alpha());
-//        telemetry.addData("FRed  ", colorFSensor.red());
-//        //telemetry.addData("Green", colorFSensor.green());
-//        telemetry.addData("FBlue ", colorFSensor.blue());
         telemetry.addData("Hue", hsvValues[0]);
         telemetry.addData("BRed", colorBSensor.red());
         telemetry.addData("BGreen", colorBSensor.green());
         telemetry.addData("Bblue", colorBSensor.blue());
         telemetry.addData("Turn", turning);
-        //Object direction = motorLift.getDirection();
-        //telemetry.addData("direction", "direction: " + String.valueOf(direction));
 
     }
 
@@ -195,7 +182,7 @@ public class Tedbot extends OpMode {
     }
 
 
-    /*
+    /**
      * This method scales the joystick input so for low joystick values, the
      * scaled value is less than linear.  This is to make it easier to drive
      * the robot more precisely at slower speeds.
