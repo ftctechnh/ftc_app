@@ -36,8 +36,7 @@ public class Tedbot extends OpMode {
     final float values[] = hsvValues;
 
     DeviceInterfaceModule cdim;
-    ColorSensor colorBSensor;
-    ColorSensor colorFSensor;
+    ColorSensor colorSensor;
     TouchSensor touchSensor;
     DcMotor motorBRight;
     DcMotor motorBLeft;
@@ -63,10 +62,8 @@ public class Tedbot extends OpMode {
         /**
          * Sensors
          */
-        colorBSensor = ClassFactory.createSwerveColorSensor(this, this.hardwareMap.colorSensor.get("colorBSensor"));
-        colorBSensor.enableLed(true);
-        colorFSensor = ClassFactory.createSwerveColorSensor(this, this.hardwareMap.colorSensor.get("colorFSensor"));
-        colorFSensor.enableLed(true);
+        colorSensor = ClassFactory.createSwerveColorSensor(this, this.hardwareMap.colorSensor.get("colorSensor"));
+        colorSensor.enableLed(true);
         touchSensor = hardwareMap.touchSensor.get("touchSensor");
 
         /**
@@ -120,18 +117,13 @@ public class Tedbot extends OpMode {
         /** ColorSensor Controls
          *
          */
-        if (colorFSensor.blue() > 5.0 && (colorFSensor.red() < 5.0)) {
-            motorBLeft.setPower(0.25);
-            motorBRight.setPower(-0.25);
-            turning = "right";
-        } else if (colorFSensor.red() > 5.0 && (colorFSensor.blue() < 5.0)) {
-            motorBLeft.setPower(-0.25);
-            motorBRight.setPower(0.25);
-            turning = "left";
+        if (colorSensor.blue() > colorSensor.red()) {
+            servoBeaconPosition = 0.20;
+
+        } else if (colorSensor.red() > colorSensor.blue()) {
+            servoBeaconPosition = 0.80;
         } else {
-            motorBLeft.setPower(0);
-            motorBRight.setPower(0);
-            turning = "none";
+            servoBeaconPosition = 0.50;
         }
 
         /** clip the position values so that they never exceed their allowed range.
@@ -164,10 +156,9 @@ public class Tedbot extends OpMode {
 
         //Color Telemetry
         telemetry.addData("Hue", hsvValues[0]);
-        telemetry.addData("BRed", colorBSensor.red());
-        telemetry.addData("BGreen", colorBSensor.green());
-        telemetry.addData("Bblue", colorBSensor.blue());
-        telemetry.addData("Turn", turning);
+        telemetry.addData("Red", colorSensor.red());
+        telemetry.addData("Green", colorSensor.green());
+        telemetry.addData("blue", colorSensor.blue());
 
     }
 
