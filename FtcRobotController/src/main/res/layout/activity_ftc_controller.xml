@@ -35,7 +35,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FtcRobotControllerActivity"
+    tools:context=".opmodes.main.FtcRobotControllerActivity"
     android:focusable="true"
     android:id="@+id/entire_screen"
     android:orientation="vertical">
