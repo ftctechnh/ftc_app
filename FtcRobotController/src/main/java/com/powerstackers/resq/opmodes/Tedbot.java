@@ -139,46 +139,6 @@ public class Tedbot extends OpMode {
             turning = "none";
         }
 
-
-        // lift controls
-        // Makes Lift go In
-//        if (gamepad1.a) {           //If A Is Pressed Make Lift Go Up
-//            motorLift.setPower(-1);
-//        } else if (gamepad1.y) {    //If Y Is Pressed Make Lift Go Down
-//            motorLift.setPower(1);
-//        } else {                    //Otherwise Stop Motor
-//            motorLift.setPower(0);
-//        }
-//
-//        if (gamepad1.x) {           //If X Is Pressed Make Brushes Push Debris
-//            motorBrush.setPower(1);
-//        } else if (gamepad1.b) {    //If B Is Pressed Make Brushes Pickup Debris
-//            motorBrush.setPower(-1);
-//        } else {                    //Otherwise Stop Motor
-//            motorBrush.setPower(0);
-//        }
-
-        // update the position of the arm.
-//        if (gamepad2.y) {
-//            // if the A button is pushed on gamepad1, increment the position of
-//            // the arm servo.
-//            servoRightPosition += servoRightDelta;
-//        }
-//
-//        if (gamepad2.x) {
-//            // if the Y button is pushed on gamepad1, decrease the position of
-//            // the arm servo.
-//            servoRightPosition -= servoRightDelta;
-//        }
-//
-//        // update the position of the claw
-//        if (gamepad2.b) {
-//            servoLeftPosition += servoLeftDelta;
-//        }
-//
-//        if (gamepad2.a) {
-//            servoLeftPosition -= servoLeftDelta;
-//        }
 //
 //        // clip the position values so that they never exceed their allowed range.
 //        servoRightPosition = Range.clip(servoRightPosition, servoRight_MIN_RANGE, servoRight_MAX_RANGE);
