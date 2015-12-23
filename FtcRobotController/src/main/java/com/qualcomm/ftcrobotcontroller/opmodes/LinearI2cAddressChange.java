@@ -61,7 +61,7 @@ public class LinearI2cAddressChange extends LinearOpMode {
   public static final int TOTAL_MEMORY_LENGTH = 0x0c;
   public static final int BUFFER_CHANGE_ADDRESS_LENGTH = 0x03;
 
-  int port = 3;
+  int port = 5;
 
   byte[] readCache;
   Lock readLock;
