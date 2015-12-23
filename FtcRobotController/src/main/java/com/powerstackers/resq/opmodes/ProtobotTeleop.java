@@ -25,10 +25,10 @@ public class ProtobotTeleop extends OpMode {
     /** TETRIX VALUES.
      *
      */
-//    final static double servoRight_MIN_RANGE  = 0.20;
-//    final static double servoRight_MAX_RANGE  = 1.00;
-//    final static double servoLeft_MIN_RANGE  = 0.20;
-//    final static double servoLeft_MAX_RANGE  = 0.80;
+    final static double servoRight_MIN_RANGE  = 0.20;
+    final static double servoRight_MAX_RANGE  = 1.00;
+    final static double servoLeft_MIN_RANGE  = 0.20;
+    final static double servoLeft_MAX_RANGE  = 0.80;
 //    final static double servoTest_MIN_RANGE = 0.00;
 //    final static double servoTest_MAX_RANGE = 1.00;
     final static double servoBeacon_MIN_RANGE  = 0.00;
@@ -57,15 +57,15 @@ public class ProtobotTeleop extends OpMode {
 
     DeviceInterfaceModule cdim;
     ColorSensor colorSensor;
-//    TouchSensor touchSensor;
-//    DcMotor motorBrush;
-//    DcMotor motorLift;
-//    DcMotor motorFRight;
-//    DcMotor motorFLeft;
-//    DcMotor motorBRight;
-//    DcMotor motorBLeft;
-//    Servo servoLeft;
-//    Servo servoRight;
+    TouchSensor touchSensor;
+    DcMotor motorBrush;
+    DcMotor motorLift;
+    DcMotor motorFRight;
+    DcMotor motorFLeft;
+    DcMotor motorBRight;
+    DcMotor motorBLeft;
+    Servo servoLeft;
+    Servo servoRight;
 //    Servo servoTest;
     Servo servoBeacon;
 
@@ -88,24 +88,24 @@ public class ProtobotTeleop extends OpMode {
         //Sensors
         colorSensor = ClassFactory.createSwerveColorSensor(this, this.hardwareMap.colorSensor.get("colorSensor"));
         colorSensor.enableLed(true);
-//        touchSensor = hardwareMap.touchSensor.get("touchSensor");
+        touchSensor = hardwareMap.touchSensor.get("touchSensor");
         /**Motors
          *
          */
-//        motorBrush = hardwareMap.dcMotor.get("motorBrush");
-//        motorLift = hardwareMap.dcMotor.get("motorLift");
-//        motorLift.setDirection(DcMotor.Direction.REVERSE);
-//        motorFRight = hardwareMap.dcMotor.get("motorFRight");
-//        motorFLeft = hardwareMap.dcMotor.get("motorFLeft");
-//        motorFRight.setDirection(DcMotor.Direction.REVERSE);
-//        motorBRight = hardwareMap.dcMotor.get("motorBRight");
-//        motorBLeft = hardwareMap.dcMotor.get("motorBLeft");
-//        motorBRight.setDirection(DcMotor.Direction.REVERSE);
+        motorBrush = hardwareMap.dcMotor.get("motorBrush");
+        motorLift = hardwareMap.dcMotor.get("motorLift");
+        motorLift.setDirection(DcMotor.Direction.REVERSE);
+        motorFRight = hardwareMap.dcMotor.get("motorFRight");
+        motorFLeft = hardwareMap.dcMotor.get("motorFLeft");
+        motorFRight.setDirection(DcMotor.Direction.REVERSE);
+        motorBRight = hardwareMap.dcMotor.get("motorBRight");
+        motorBLeft = hardwareMap.dcMotor.get("motorBLeft");
+        motorBRight.setDirection(DcMotor.Direction.REVERSE);
         /**Servos
          *
          */
-//        servoLeft = hardwareMap.servo.get("servoLeft");
-//        servoRight = hardwareMap.servo.get("servoRight");
+        servoLeft = hardwareMap.servo.get("servoLeft");
+        servoRight = hardwareMap.servo.get("servoRight");
 //        servoTest = hardwareMap.servo.get("servoTest");
 //        servoTest.setDirection(Servo.Direction.REVERSE);
         servoBeacon = hardwareMap.servo.get("servoBeacon");
@@ -153,21 +153,23 @@ public class ProtobotTeleop extends OpMode {
 
         // Makes Lift go In
 
-//        if (gamepad1.a) {           //If A Is Pressed Make Lift Go Up
-//            motorLift.setPower(-1);
-//        } else if (gamepad1.y) {    //If Y Is Pressed Make Lift Go Down
-//            motorLift.setPower(1);
-//        } else {                    //Otherwise Stop Motor
-//            motorLift.setPower(0);
-//        }
+        if (gamepad1.a) {           //If A Is Pressed Make Lift Go Up
+            motorLift.setPower(-1);
+        } else if (gamepad1.y) {    //If Y Is Pressed Make Lift Go Down
+            motorLift.setPower(1);
+        } else {                    //Otherwise Stop Motor
+            motorLift.setPower(0);
+        }
+
         // Makes Lift Go Out
-//        if (gamepad1.x) {           //If X Is Pressed Make Brushes Push Debris
-//            motorBrush.setPower(1);
-//        } else if (gamepad1.b) {    //If B Is Pressed Make Brushes Pickup Debris
-//            motorBrush.setPower(-1);
-//        } else {                    //Otherwise Stop Motor
-//            motorBrush.setPower(0);
-//        }
+
+        if (gamepad1.x) {           //If X Is Pressed Make Brushes Push Debris
+            motorBrush.setPower(1);
+        } else if (gamepad1.b) {    //If B Is Pressed Make Brushes Pickup Debris
+            motorBrush.setPower(-1);
+        } else {                    //Otherwise Stop Motor
+            motorBrush.setPower(0);
+        }
 
         /** update the position of the arm.
          *
@@ -183,7 +185,6 @@ public class ProtobotTeleop extends OpMode {
             servoRightPosition -= servoRightDelta;
         }
 
-         //update the position of the left servo
         if (gamepad2.b) {
             servoLeftPosition += servoLeftDelta;
         }
@@ -214,26 +215,26 @@ public class ProtobotTeleop extends OpMode {
         /** clip the position values so that they never exceed their allowed range.
          *
          */
-//        servoRightPosition = Range.clip(servoRightPosition, servoRight_MIN_RANGE, servoRight_MAX_RANGE);
-//        servoLeftPosition = Range.clip(servoLeftPosition, servoLeft_MIN_RANGE, servoLeft_MAX_RANGE);
+        servoRightPosition = Range.clip(servoRightPosition, servoRight_MIN_RANGE, servoRight_MAX_RANGE);
+        servoLeftPosition = Range.clip(servoLeftPosition, servoLeft_MIN_RANGE, servoLeft_MAX_RANGE);
 //        servoTestPosition = Range.clip(servoTestPosition, servoTest_MIN_RANGE, servoTest_MAX_RANGE);
         servoBeaconPosition = Range.clip(servoBeaconPosition, servoBeacon_MIN_RANGE, servoBeacon_MAX_RANGE);
 
         /**write position values to the wrist and claw servo
          *
          */
-//        servoRight.setPosition(servoRightPosition);
-//        servoLeft.setPosition(servoLeftPosition);
+        servoRight.setPosition(servoRightPosition);
+        servoLeft.setPosition(servoLeftPosition);
 //        servoTest.setPosition(servoTestPosition);
         servoBeacon.setPosition(servoBeaconPosition);
 
         /** write the values to the motors
          *
          */
-//        motorFRight.setPower(right);
-//        motorBRight.setPower(right);
-//        motorFLeft.setPower(left);
-//        motorBLeft.setPower(left);
+        motorFRight.setPower(right);
+        motorBRight.setPower(right);
+        motorFLeft.setPower(left);
+        motorBLeft.setPower(left);
 
 		/**
 		 * Send telemetry data back to driver station. N
@@ -246,10 +247,6 @@ public class ProtobotTeleop extends OpMode {
         telemetry.addData("Text", "*** Robot Data***");
         telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", left));
         telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));
-//        Object Leftposition = servoLeft.getPosition();
-//        Object Rightposition = servoRight.getPosition();
-//        telemetry.addData("Servo Left", "Position: " + String.valueOf(Leftposition));
-//        telemetry.addData("Servo Right", "Position: " + String.valueOf(Rightposition));
         /**Color Telemetry
          *
          */
@@ -264,8 +261,12 @@ public class ProtobotTeleop extends OpMode {
         /**servo Telemetry
          *
          */
+//        Object Leftposition = servoLeft.getPosition();
+//        Object Rightposition = servoRight.getPosition();
+//        telemetry.addData("Servo Left", "Position: " + String.valueOf(Leftposition));
+//        telemetry.addData("Servo Right", "Position: " + String.valueOf(Rightposition));
 //        telemetry.addData("servotest", "position: " + String.valueOf(servoTestPosition));
-        telemetry.addData("servoBeacon", "position: " + String.valueOf(servoBeaconPosition));
+//        telemetry.addData("servoBeacon", "position: " + String.valueOf(servoBeaconPosition));
 
         }
 
