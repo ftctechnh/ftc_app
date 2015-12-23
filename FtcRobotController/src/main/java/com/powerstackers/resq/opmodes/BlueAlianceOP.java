@@ -2,20 +2,16 @@ package com.powerstackers.resq.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.swerverobotics.library.ClassFactory;
 
-import static com.qualcomm.robotcore.hardware.DcMotor.Direction.FORWARD;
-
 /**
  * Created by Derek on 10/10/2015.
  */
-public class ProtobotTeleop extends OpMode {
+public class BlueAlianceOP extends OpMode {
 
     /**
      * Note: the configuration of the servos is such that
@@ -46,7 +42,7 @@ public class ProtobotTeleop extends OpMode {
      */
     double servoRightPosition;
     double servoLeftPosition;
-//    double servoTestPosition;
+    //    double servoTestPosition;
     double servoBeaconPosition;
 
     /**Color Values
@@ -57,7 +53,7 @@ public class ProtobotTeleop extends OpMode {
 
     DeviceInterfaceModule cdim;
     ColorSensor colorSensor;
-//    TouchSensor touchSensor;
+    //    TouchSensor touchSensor;
 //    DcMotor motorBrush;
 //    DcMotor motorLift;
 //    DcMotor motorFRight;
@@ -69,7 +65,7 @@ public class ProtobotTeleop extends OpMode {
 //    Servo servoTest;
     Servo servoBeacon;
 
-    public ProtobotTeleop() {
+    public BlueAlianceOP() {
 
     }
 
@@ -77,11 +73,11 @@ public class ProtobotTeleop extends OpMode {
     public void init() {
 
 
-		/**
-		 * Use the hardwareMap to get the dc motors and servos by name. Note
-		 * that the names of the devices must match the names used when you
-		 * configured your robot and created the configuration file.
-		 */
+        /**
+         * Use the hardwareMap to get the dc motors and servos by name. Note
+         * that the names of the devices must match the names used when you
+         * configured your robot and created the configuration file.
+         */
 
         hardwareMap.logDevices();
         cdim = hardwareMap.deviceInterfaceModule.get("dim");
@@ -121,12 +117,12 @@ public class ProtobotTeleop extends OpMode {
     @Override
     public void loop() {
 
-		/**
-		 * Gamepad 1
-		 *
-		 * Gamepad 1 controls the motors via the left stick, and it controls the
-		 * lift/Brushes via the a,b, x, y buttons
-		 */
+        /**
+         * Gamepad 1
+         *
+         * Gamepad 1 controls the motors via the left stick, and it controls the
+         * lift/Brushes via the a,b, x, y buttons
+         */
 
         /** tank drive
          * note that if y equal -1 then joystick is pushed all of the way forward.
@@ -183,7 +179,7 @@ public class ProtobotTeleop extends OpMode {
             servoRightPosition -= servoRightDelta;
         }
 
-         //update the position of the left servo
+        //update the position of the left servo
         if (gamepad2.b) {
             servoLeftPosition += servoLeftDelta;
         }
@@ -201,10 +197,10 @@ public class ProtobotTeleop extends OpMode {
 //        }
 
         //ColorSensor Controls
-        if (colorSensor.blue() > colorSensor.red()) {
+        if (colorSensor.red() > colorSensor.red()) {
             servoBeaconPosition = 0.20;
 
-        } else if (colorSensor.red() > colorSensor.blue()) {
+        } else if (colorSensor.blue() > colorSensor.blue()) {
             servoBeaconPosition = 0.80;
         } else {
             servoBeaconPosition = 0.50;
@@ -235,14 +231,14 @@ public class ProtobotTeleop extends OpMode {
 //        motorFLeft.setPower(left);
 //        motorBLeft.setPower(left);
 
-		/**
-		 * Send telemetry data back to driver station. N
-        motorFRight.setPower(right);
-        motorFLeft.setPower(left);ote that if we are using
-		 * a legacy NXT-compatible motor controller, then the getPower() method
-		 * will return a null value. The legacy NXT-compatible motor controllers
-		 * are currently write only.
-		 */
+        /**
+         * Send telemetry data back to driver station. N
+         motorFRight.setPower(right);
+         motorFLeft.setPower(left);ote that if we are using
+         * a legacy NXT-compatible motor controller, then the getPower() method
+         * will return a null value. The legacy NXT-compatible motor controllers
+         * are currently write only.
+         */
         telemetry.addData("Text", "*** Robot Data***");
         telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", left));
         telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));
@@ -267,7 +263,7 @@ public class ProtobotTeleop extends OpMode {
 //        telemetry.addData("servotest", "position: " + String.valueOf(servoTestPosition));
         telemetry.addData("servoBeacon", "position: " + String.valueOf(servoBeaconPosition));
 
-        }
+    }
 
     /*
      * Code to run when the op mode is first disabled goes here

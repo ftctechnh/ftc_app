@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.powerstackers.resq.opmodes.BlueAlianceOP;
 import com.powerstackers.resq.opmodes.ColorSensorSense;
 import com.powerstackers.resq.opmodes.ProtobotTeleop;
 import com.powerstackers.resq.opmodes.PurplePencil;
@@ -75,61 +76,71 @@ public class FtcOpModeRegister implements OpModeRegister
      * Uncomment any of the following lines if you want to register an op mode,
      * or do that registration in a static method annotated as @OpModeRegistrar.
      */
-    manager.register("NullOp", NullOp.class);
-//
-//    manager.register("K9TeleOp", K9TeleOp.class);
-//    manager.register ("PushBotAuto", PushBotAuto.class);
-//    manager.register ("PushBotManual", PushBotManual.class);
-
-    manager.register("WorkshopTeleop", WorkshopTeleop.class);
-    manager.register("ColorSensorSense", ColorSensorSense.class);
-    //manager.register("MatrixK9TeleOp", MatrixK9TeleOp.class);
-    // manager.register("K9TeleOp", K9TeleOp.class);
-    //manager.register ("PushBotAuto", PushBotAuto.class);
-    //manager.register ("PushBotManual", PushBotManual.class);
-    manager.register("Purple Pencil", PurplePencil.class);
-
     /*
      * Uncomment any of the following lines if you want to register an op mode.
      */
+    /**
+     * OTHER OPMODES:
+     */
+    manager.register("NullOp", NullOp.class);
 
-    //manager.register("K9TeleOp", K9TeleOp.class);
+    /**
+     * K9 OPMODES:
+     */
     manager.register("K9IrSeeker", K9IrSeeker.class);
-    //manager.register("OpticalTelemetry", OpticalTelemetry.class);
-    manager.register("Protobot" , ProtobotTeleop.class);
-    manager.register("Tedbot", Tedbot.class);
     //manager.register("K9Line", K9Line.class);
-    //manager.register("K9AutoTime", K9AutoTime.class);
-    //manager.register("IrSeekerOp", IrSeekerOp.class);
+    //
+    //manager.register("K9TeleOp", K9TeleOp.class);
+    //manager.register("MatrixK9TeleOp", MatrixK9TeleOp.class);
+
+    /**
+     * SENSOR OPMODES:
+     */
     //manager.register("AdafruitRGBExample", AdafruitRGBExample.class);
     //manager.register("ColorSensorDriver", ColorSensorDriver.class);
-
-    //manager.register("IrSeekerOp", IrSeekerOp.class);
     //manager.register("CompassCalibration", CompassCalibration.class);
-    //manager.register("I2cAddressChangeExample", LinearI2cAddressChange.class);
-
-//    manager.register("PushBotManual", PushBotManual.class);
-//    manager.register("PushBotAuto", PushBotAuto.class);
-//    manager.register("PushBotDriveTouch", PushBotDriveTouch.class);
-//    manager.register("PushBotIrSeek", PushBotIrSeek.class);
-//    manager.register("PushBotSquare", PushBotSquare.class);
+    //
+    //manager.register("IrSeekerOp", IrSeekerOp.class);
+    //
+    //
+    //manager.register("OpticalTelemetry", OpticalTelemetry.class);
     //manager.register("NxtTeleOp", NxtTeleOp.class);
 
-    //manager.register("LinearK9TeleOp", LinearK9TeleOp.class);
+    /**
+     * LINEAR OPMODES:
+     */
+    //manager.register("I2cAddressChangeExample", LinearI2cAddressChange.class);
     //manager.register("LinearIrExample", LinearIrExample.class);
+    //manager.register("LinearK9TeleOp", LinearK9TeleOp.class);
 
-
-    //manager.register ("PushBotManual1", PushBotManual1.class);
+    /**
+     * PUSHBOT OPMODES:
+     */
+    //manager.register("PushBotAuto", PushBotAuto.class);
     //manager.register ("PushBotAutoSensors", PushBotAutoSensors.class);
+    //manager.register("PushBotDriveTouch", PushBotDriveTouch.class);
+    //
+    //
     //manager.register ("PushBotIrEvent", PushBotIrEvent.class);
-
+    //manager.register("PushBotIrSeek", PushBotIrSeek.class);
+    // manager.register("PushBotManual", PushBotManual.class);
+    //manager.register ("PushBotManual1", PushBotManual1.class);
     //manager.register ("PushBotManualSensors", PushBotManualSensors.class);
     //manager.register ("PushBotOdsDetectEvent", PushBotOdsDetectEvent.class);
     //manager.register ("PushBotOdsFollowEvent", PushBotOdsFollowEvent.class);
-    //manager.register ("PushBotTouchEvent", PushBotTouchEvent.class);    
-
-    //manager.register("PushBotDriveTouch", PushBotDriveTouch.class);
-    //manager.register("PushBotIrSeek", PushBotIrSeek.class);
     //manager.register("PushBotSquare", PushBotSquare.class);
+    //
+    //
+    //manager.register ("PushBotTouchEvent", PushBotTouchEvent.class);
+
+    /**
+     * POWERSTACKERS OPMODES:
+     */
+    manager.register("BlueAllianceOP", BlueAlianceOP.class);
+    manager.register("ColorSensorSense", ColorSensorSense.class);
+    manager.register("Protobot" , ProtobotTeleop.class);
+    manager.register("Purple Pencil", PurplePencil.class);
+    manager.register("Tedbot", Tedbot.class);
+    manager.register("WorkshopTeleop", WorkshopTeleop.class);
   }
 }
