@@ -11,7 +11,7 @@ import org.swerverobotics.library.ClassFactory;
 /**
  * Created by Derek on 10/10/2015.
  */
-public class BlueAlianceOP extends OpMode {
+public class RedAlianceOP extends OpMode {
 
     /**
      * Note: the configuration of the servos is such that
@@ -65,7 +65,7 @@ public class BlueAlianceOP extends OpMode {
 //    Servo servoTest;
     Servo servoBeacon;
 
-    public BlueAlianceOP() {
+    public RedAlianceOP() {
 
     }
 
@@ -197,10 +197,10 @@ public class BlueAlianceOP extends OpMode {
 //        }
 
         //ColorSensor Controls
-        if (colorSensor.red() > colorSensor.blue()) {
+        if (colorSensor.blue() > colorSensor.red()) {
             servoBeaconPosition = 0.20;
 
-        } else if (colorSensor.blue() > colorSensor.red()) {
+        } else if (colorSensor.red() > colorSensor.blue()) {
             servoBeaconPosition = 0.80;
         } else {
             servoBeaconPosition = 0.50;
