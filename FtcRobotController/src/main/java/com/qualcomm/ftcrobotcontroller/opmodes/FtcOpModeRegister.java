@@ -58,6 +58,7 @@ public class FtcOpModeRegister implements OpModeRegister {
         manager.register("Manual Drive", PacmanBotManual3001.class);
         manager.register("NullOp", NullOp.class);
         manager.register("RedBeacon2", RedBeaconRoute2.class);
+        manager.register("Encoder Test", EncoderTest.class);
 //        manager.register("MatrixK9TeleOp", MatrixK9TeleOp.class);
 //        manager.register("K9TeleOp", K9TeleOp.class);
 //        manager.register("K9Line", K9Line.class);
