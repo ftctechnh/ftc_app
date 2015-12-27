@@ -10,8 +10,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class CompBotTeleop extends OpMode
 {
     CompBot compBot;
-
-
     @Override
     public void stop()
     {
