@@ -39,6 +39,13 @@ public class CompBot implements DriverInterface, AttachmentInterface
     private static final String tapeMeasureServoName = "tapeMeasure";
     private static final String climberReleaseServoName = "climberRelease";
     //PhoneGyrometer gyro;
+    boolean vendDeploy = false;
+    boolean buttonArm = true;
+    boolean speedSwitch = false;
+    boolean buttonReady = true;
+    boolean switchSides = false;
+    boolean buttonStatus = true;
+
 
     public DcMotor getLeftMotor()
     {
@@ -94,6 +101,10 @@ public class CompBot implements DriverInterface, AttachmentInterface
         return climberReleaseServo;
     }
 
+    public boolean flipBool(boolean bool)
+    {
+        return bool != bool;
+    }
 
     public CompBot(HardwareMap hardwareMap)
     {
@@ -122,6 +133,7 @@ public class CompBot implements DriverInterface, AttachmentInterface
         dispenserFlipperServo.setPosition(1.0f);
         tapeMeasureServo.setPosition(0.5f);
         climberReleaseServo.setPosition(1.0f);
+        diverterServo.setPosition(0.5f);
     }
 
     @Override
@@ -313,6 +325,57 @@ public class CompBot implements DriverInterface, AttachmentInterface
             }*/
 
     }
+    public void checkAndFlipDispenserServo(boolean button) {
+        if (button) {
+            vendDeploy ^= buttonArm;
+            buttonArm = false;
+        } else {
+            buttonArm = true;
+        }
+        if (vendDeploy)
+        {
+            getDispenserFlipperServo().setPosition(0.0f);
+        }
+        else
+        {
+            getDispenserFlipperServo().setPosition(1.0f);
+        }
+    }
+
+    public void toggleRotorSpeed(boolean button, float speed) {
+        if (button) {
+            speedSwitch ^= buttonReady;
+            buttonReady = false;
+        } else {
+            buttonReady = true;
+        }
+        if (speedSwitch)
+        {
+            speed = 0.85f;
+        }
+        else
+        {
+            speed = 0.65f;
+        }
+    }
+
+    public void toggleSides(boolean button, boolean correct) {
+        if (button) {
+            switchSides ^= buttonStatus;
+            buttonStatus = false;
+        } else {
+            buttonStatus = true;
+        }
+        if (switchSides)
+        {
+            correct = false;
+        }
+        else
+        {
+            correct = true;
+        }
+    }
+
 
     @Override
     public void pitchAllTracks(float time, float speed)
@@ -344,7 +407,7 @@ public class CompBot implements DriverInterface, AttachmentInterface
         backLeftMotor.setPower(speed);
         backRightMotor.setPower(speed);
         leftMotor.setPower(speed);
-        rightMotor. setPower(speed);
+        rightMotor.setPower(speed);
         while (System.currentTimeMillis() < timeEnd)
         {
 
