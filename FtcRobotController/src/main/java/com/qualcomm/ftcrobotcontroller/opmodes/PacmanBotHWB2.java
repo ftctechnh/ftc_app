@@ -153,7 +153,7 @@ public class PacmanBotHWB2 extends OpMode {
     public void update() {
         if (beginFlag) {
             beginFlag=false;
-            basket.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+            basket.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
         }
     }
 }
