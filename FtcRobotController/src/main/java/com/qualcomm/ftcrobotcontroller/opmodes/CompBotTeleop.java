@@ -9,14 +9,10 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 public class CompBotTeleop extends OpMode
 {
-    PhoneGyrometer gyro;
     CompBot compBot;
-
-
     @Override
     public void stop()
     {
-        gyro.onDestroy();
         compBot.kill();
     }
 
@@ -24,7 +20,6 @@ public class CompBotTeleop extends OpMode
     public void init()
     {
         compBot = new CompBot(hardwareMap);
-        gyro = new PhoneGyrometer(hardwareMap);
         gamepad1.setJoystickDeadzone(0.01f);
         gamepad2.setJoystickDeadzone(0.01f);
     }
@@ -133,9 +128,6 @@ public class CompBotTeleop extends OpMode
                 compBot.getBackRightMotor().setPower(0.0f);
             }
         }
-        telemetry.addData("Azimuth = ", gyro.getAzimuth());
-        telemetry.addData("Pitch = ", gyro.getPitch());
-        telemetry.addData("Roll = ", gyro.getRoll());
     }
 
 

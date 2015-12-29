@@ -66,6 +66,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     /*
      * Uncomment any of the following lines if you want to register an op mode.
      */
+    manager.register("CompBotTeleopV2", CompBotTeleopV2.class);
 
     manager.register("CompBotTeleop", CompBotTeleop.class);
 
