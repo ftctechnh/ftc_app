@@ -109,35 +109,35 @@ public class Robot {
 
     /**
      * Set the movement of the tape measure motor.
-     * @param setting ServoSetting enum value; FORWARD, STOP, or REVERSE.
+     * @param setting MotorSetting enum value; FORWARD, STOP, or REVERSE.
      */
-    public void setTapeMeasure(ServoSetting setting) {
+    public void setTapeMeasure(MotorSetting setting) {
         toggleCRServo(servoTapeMeasure, setting);
     }
 
     /**
      * Set the movement of the brush motor.
-     * @param setting ServoSetting indicating the direction.
+     * @param setting MotorSetting indicating the direction.
      */
-    public void setBrush(ServoSetting setting) {
+    public void setBrush(MotorSetting setting) {
         toggleMotor(motorBrush, setting, BRUSH_SPEED);
     }
 
     /**
      * Set the direction of the lift: REVERSE, STOP, or FORWARD.
-     * @param setting ServoSetting enum indicating the direction.
+     * @param setting MotorSetting enum indicating the direction.
      */
-    public void setLift(ServoSetting setting) {
+    public void setLift(MotorSetting setting) {
         toggleMotor(motorLift, setting, LIFT_SPEED);
     }
 
     /**
      * Toggles a motor between three settings: FORWARD, STOP, and REVERSE.
      * @param toToggle Motor to change.
-     * @param setting ServoSetting indicating the direction.
+     * @param setting MotorSetting indicating the direction.
      * @param power Power value to use.
      */
-    private void toggleMotor(DcMotor toToggle, ServoSetting setting, double power) {
+    private void toggleMotor(DcMotor toToggle, MotorSetting setting, double power) {
         switch (setting) {
             case REVERSE:
                 toToggle.setPower(-power);
@@ -157,9 +157,9 @@ public class Robot {
     /**
      * Toggle a continuous rotation servo in one of three directions: FORWARD, STOP, and REVERSE.
      * @param toToggle Servo to toggle.
-     * @param setting ServoSetting indicating the direction.
+     * @param setting MotorSetting indicating the direction.
      */
-    private void toggleCRServo(Servo toToggle, ServoSetting setting) {
+    private void toggleCRServo(Servo toToggle, MotorSetting setting) {
         switch (setting) {
             case REVERSE:
                 toToggle.setPosition(CRS_REVERSE);
