@@ -25,10 +25,13 @@ import com.powerstackers.resq.common.ServoSetting;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.Range;
 
+import org.swerverobotics.library.interfaces.TeleOp;
+
 /**
  * This is the opmode for use on our competition robot during teleop.
  * @author Jonathan Thomas
  */
+@TeleOp
 public class ResqTeleop extends OpMode {
 
     private static final float MINIMUM_JOYSTICK_THRESHOLD = 0.15F;
@@ -50,15 +53,15 @@ public class ResqTeleop extends OpMode {
     public void loop() {
 
         // We like to use tank drive.
-        float stickvalueP1Left = -gamepad1.left_stick_y;
-        float stickvalueP1Right = -gamepad1.right_stick_y;
+        float stickValueP1Left = -gamepad1.left_stick_y;
+        float stickValueP1Right = -gamepad1.right_stick_y;
         ServoSetting settingTapeMeasureServo = ServoSetting.STOP;
         ServoSetting settingLiftMotor = ServoSetting.STOP;
         ServoSetting settingBrushMotor = ServoSetting.STOP;
 
         // Trim and scale the joystick values.
-        stickvalueP1Left = (float) scaleInput(Range.clip(stickvalueP1Left, -1, 1));
-        stickvalueP1Right = (float) scaleInput(Range.clip(stickvalueP1Right, -1, 1));
+        stickValueP1Left = (float) scaleInput(Range.clip(stickValueP1Left, -1, 1));
+        stickValueP1Right = (float) scaleInput(Range.clip(stickValueP1Right, -1, 1));
 
         // Set the lift motor setting.
         if (gamepad1.a) {
@@ -88,11 +91,11 @@ public class ResqTeleop extends OpMode {
         }
 
         // Last of all, update the motor values.
-        if (abs(stickvalueP1Left) > MINIMUM_JOYSTICK_THRESHOLD) {
-            robot.setPowerLeft(stickvalueP1Left);
+        if (abs(stickValueP1Left) > MINIMUM_JOYSTICK_THRESHOLD) {
+            robot.setPowerLeft(stickValueP1Left);
         }
-        if (abs(stickvalueP1Right) > MINIMUM_JOYSTICK_THRESHOLD) {
-            robot.setPowerRight(stickvalueP1Right);
+        if (abs(stickValueP1Right) > MINIMUM_JOYSTICK_THRESHOLD) {
+            robot.setPowerRight(stickValueP1Right);
         }
         robot.setTapeMeasure(settingTapeMeasureServo);
         robot.setLift(settingLiftMotor);
