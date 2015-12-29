@@ -55,9 +55,9 @@ public class ResqTeleop extends OpMode {
         // We like to use tank drive.
         float stickValueP1Left = -gamepad1.left_stick_y;
         float stickValueP1Right = -gamepad1.right_stick_y;
-        MotorSetting settingTapeMeasureServo = MotorSetting.STOP;
-        MotorSetting settingLiftMotor = MotorSetting.STOP;
-        MotorSetting settingBrushMotor = MotorSetting.STOP;
+        MotorSetting settingTapeMeasureServo;
+        MotorSetting settingLiftMotor;
+        MotorSetting settingBrushMotor;
 
         // Trim and scale the joystick values.
         stickValueP1Left = (float) scaleInput(Range.clip(stickValueP1Left, -1, 1));
@@ -138,7 +138,7 @@ public class ResqTeleop extends OpMode {
         }
 
         // get value from the array.
-        double dScale = 0.0;
+        double dScale;
         if (dVal < 0) {
             dScale = -scaleArray[index];
         } else {
