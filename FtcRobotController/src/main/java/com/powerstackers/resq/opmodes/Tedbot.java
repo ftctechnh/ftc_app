@@ -62,7 +62,8 @@ public class Tedbot extends OpMode {
         /*
          * Sensors
          */
-        colorSensor = ClassFactory.createSwerveColorSensor(this, this.hardwareMap.colorSensor.get("colorSensor"));
+        colorSensor = ClassFactory.createSwerveColorSensor(this,
+                this.hardwareMap.colorSensor.get("colorSensor"));
         colorSensor.enableLed(true);
         touchSensor = hardwareMap.touchSensor.get("touchSensor");
 
@@ -79,7 +80,7 @@ public class Tedbot extends OpMode {
 
     }
 
-    /*
+    /**
      * This method will be called repeatedly in a loop
      *
      * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#run()
@@ -94,29 +95,23 @@ public class Tedbot extends OpMode {
 		 * lift/Brushes via the a,b, x, y buttons
 		 */
 
-        /* tank drive
-         * note that if y equal -1 then joystick is pushed all of the way forward.
-         */
+        // tank drive
+        // note that if y equal -1 then joystick is pushed all of the way forward.
         float left = -gamepad1.left_stick_y;
         float right = -gamepad1.right_stick_y;
 
-        /* clip the right/left values so that the values never exceed +/- 1
-         *
-         */
+        // clip the right/left values so that the values never exceed +/- 1
         right = Range.clip(right, -1, 1);
         left = Range.clip(left, -1, 1);
 
-        /* scale the joystick value to make it easier to control
-         * the robot more precisely at slower speeds.
-         */
+        // scale the joystick value to make it easier to control the robot more precisely
+        // at slower speeds.
         right = (float) scaleInput(right);
         left = (float) scaleInput(left);
 
         String turning;
 
-        /* ColorSensor Controls
-         *
-         */
+        // ColorSensor Controls
         if (colorSensor.blue() > colorSensor.red()) {
             servoBeaconPosition = 0.20;
 
@@ -126,21 +121,15 @@ public class Tedbot extends OpMode {
             servoBeaconPosition = 0.50;
         }
 
-        /* clip the position values so that they never exceed their allowed range.
-         *
-         */
+        // clip the position values so that they never exceed their allowed range.
         servoBeaconPosition = Range.clip(servoBeaconPosition, servoBeacon_MIN_RANGE, servoBeacon_MAX_RANGE);
 
-        /*write position values to the servos
-         *
-         */
+        // write position values to the servos
         servoBeacon.setPosition(servoBeaconPosition);
 
         // write the values to the motors
-        {
-            motorBRight.setPower(right);
-            motorBLeft.setPower(left);
-        }
+        motorBRight.setPower(right);
+        motorBLeft.setPower(left);
 
 		/*
 		 * Send telemetry data back to driver station. N
