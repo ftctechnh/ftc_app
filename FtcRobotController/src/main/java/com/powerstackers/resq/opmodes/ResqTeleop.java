@@ -20,8 +20,8 @@
 
 package com.powerstackers.resq.opmodes;
 
+import com.powerstackers.resq.common.MotorSetting;
 import com.powerstackers.resq.common.Robot;
-import com.powerstackers.resq.common.ServoSetting;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.Range;
 
@@ -55,9 +55,9 @@ public class ResqTeleop extends OpMode {
         // We like to use tank drive.
         float stickValueP1Left = -gamepad1.left_stick_y;
         float stickValueP1Right = -gamepad1.right_stick_y;
-        ServoSetting settingTapeMeasureServo = ServoSetting.STOP;
-        ServoSetting settingLiftMotor = ServoSetting.STOP;
-        ServoSetting settingBrushMotor = ServoSetting.STOP;
+        MotorSetting settingTapeMeasureServo;
+        MotorSetting settingLiftMotor;
+        MotorSetting settingBrushMotor;
 
         // Trim and scale the joystick values.
         stickValueP1Left = (float) scaleInput(Range.clip(stickValueP1Left, -1, 1));
@@ -65,29 +65,29 @@ public class ResqTeleop extends OpMode {
 
         // Set the lift motor setting.
         if (gamepad1.a) {
-            settingLiftMotor = ServoSetting.REVERSE;
+            settingLiftMotor = MotorSetting.REVERSE;
         } else if (gamepad1.y) {
-            settingLiftMotor = ServoSetting.FORWARD;
+            settingLiftMotor = MotorSetting.FORWARD;
         } else {
-            settingLiftMotor = ServoSetting.STOP;
+            settingLiftMotor = MotorSetting.STOP;
         }
 
         // Set the brush motor setting.
         if (gamepad1.x) {
-            settingBrushMotor = ServoSetting.FORWARD;
+            settingBrushMotor = MotorSetting.FORWARD;
         } else if (gamepad1.b) {
-            settingBrushMotor = ServoSetting.REVERSE;
+            settingBrushMotor = MotorSetting.REVERSE;
         } else {
-            settingBrushMotor = ServoSetting.STOP;
+            settingBrushMotor = MotorSetting.STOP;
         }
 
         // Set the tape measure setting.
         if (gamepad2.a) {
-            settingTapeMeasureServo = ServoSetting.REVERSE;
+            settingTapeMeasureServo = MotorSetting.REVERSE;
         } else if (gamepad2.y) {
-            settingTapeMeasureServo = ServoSetting.FORWARD;
+            settingTapeMeasureServo = MotorSetting.FORWARD;
         } else {
-            settingTapeMeasureServo = ServoSetting.STOP;
+            settingTapeMeasureServo = MotorSetting.STOP;
         }
 
         // Last of all, update the motor values.
@@ -138,7 +138,7 @@ public class ResqTeleop extends OpMode {
         }
 
         // get value from the array.
-        double dScale = 0.0;
+        double dScale;
         if (dVal < 0) {
             dScale = -scaleArray[index];
         } else {

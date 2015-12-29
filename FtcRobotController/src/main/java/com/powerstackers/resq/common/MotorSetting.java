@@ -24,6 +24,6 @@ package com.powerstackers.resq.common;
  * Enum with values for continuous rotation servos: forward, stop, and reverse.
  * @author Jonathan Thomas
  */
-public enum ServoSetting {
+public enum MotorSetting {
     REVERSE, STOP, FORWARD
 }
