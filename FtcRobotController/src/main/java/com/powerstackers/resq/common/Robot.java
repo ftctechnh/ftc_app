@@ -31,6 +31,12 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
  * @author Jonathan Thomas
  */
 public class Robot {
+
+    // Final constants
+    private static final double CRS_REVERSE = 0.0;
+    private static final double CRS_STOP = 0.5;
+    private static final double CRS_FORWARD = 1.0;
+
     private DcMotor motorLeftA;
     private DcMotor motorLeftB;
     private DcMotor motorRightA;
@@ -38,6 +44,7 @@ public class Robot {
 
     private Servo servoArm;
     private Servo servoClaw;
+    private Servo servoTapeMeasure;
 
     private TouchSensor touchSensor;
     public OpticalDistanceSensor opticalSensor;
@@ -54,6 +61,7 @@ public class Robot {
 
         servoArm = mode.hardwareMap.servo.get("servo_1");
         servoClaw = mode.hardwareMap.servo.get("servo_6");
+        servoTapeMeasure = mode.hardwareMap.servo.get("servo_2");
 
         touchSensor = mode.hardwareMap.touchSensor.get("touch_sensor");
         opticalSensor = mode.hardwareMap.opticalDistanceSensor.get("optical_distance_sensor");
@@ -77,5 +85,23 @@ public class Robot {
         motorLeftB.setPower(power);
     }
 
-
+    /**
+     * Set the movement of the tape measure motor.
+     * @param setting ServoSetting enum value; FORWARD, STOP, or REVERSE.
+     */
+    public void setTapeMeasure(ServoSetting setting) {
+        switch (setting) {
+            case REVERSE:
+                servoTapeMeasure.setPosition(CRS_REVERSE);
+                break;
+            case STOP:
+                servoTapeMeasure.setPosition(CRS_STOP);
+                break;
+            case FORWARD:
+                servoTapeMeasure.setPosition(CRS_FORWARD);
+                break;
+            default:
+                servoTapeMeasure.setPosition(CRS_STOP);
+        }
+    }
 }
