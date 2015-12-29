@@ -85,7 +85,6 @@ public class Tedbot extends OpMode {
     /**
      * This method will be called repeatedly in a loop
      *
-     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#run()
      */
     @Override
     public void loop() {
