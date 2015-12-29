@@ -24,6 +24,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
@@ -57,6 +58,7 @@ public class Robot {
     private DeviceInterfaceModule dim;
     private ColorSensor sensorColor;
     private TouchSensor sensorTouch;
+    public OpticalDistanceSensor opticalSensor;
 
     /**
      * Construct a Robot object.
@@ -83,6 +85,7 @@ public class Robot {
         sensorColor = ClassFactory.createSwerveColorSensor(mode,
                 mode.hardwareMap.colorSensor.get("sensorColor"));
         sensorColor.enableLed(true);
+        opticalSensor = mode.hardwareMap.opticalDistanceSensor.get("opticalDistance");
 
     }
 

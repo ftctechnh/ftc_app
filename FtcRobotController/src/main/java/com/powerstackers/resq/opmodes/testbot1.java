@@ -4,9 +4,14 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
+import org.swerverobotics.library.interfaces.TeleOp;
+
 /**
- * Created by Derek on 12/6/2015.
+ *
+ * @author Derek Helm
+ *
  */
+@TeleOp
 public class testbot1 extends OpMode{
 
     DcMotor mototBrush;

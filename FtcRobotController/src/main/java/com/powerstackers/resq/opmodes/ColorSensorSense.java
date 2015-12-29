@@ -13,10 +13,12 @@ import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.swerverobotics.library.ClassFactory;
+import org.swerverobotics.library.interfaces.TeleOp;
 
 /**
  * Created by Derek on 12/12/2015.
  */
+@TeleOp
 public class ColorSensorSense extends OpMode {
 
     ColorSensor colorSensor;

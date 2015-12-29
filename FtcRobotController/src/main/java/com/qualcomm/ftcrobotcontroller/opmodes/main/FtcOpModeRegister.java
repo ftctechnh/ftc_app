@@ -40,38 +40,37 @@ import com.qualcomm.ftcrobotcontroller.opmodes.NullOp;
 import com.qualcomm.ftcrobotcontroller.opmodes.k9.K9IrSeeker;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
+
 import org.swerverobotics.library.internal.AnnotatedOpModeRegistrar;
 
 /**
  * Register Op Modes
  */
-public class FtcOpModeRegister implements OpModeRegister 
-    {
-  /**
+public class FtcOpModeRegister implements OpModeRegister {
+    /**
      * The Op Mode Manager will call this method when it wants a list of all available op modes.
      * OpModes which are registered during this call will form the contents of the OpMode
      * list on the driver station.
-   *
+     * <p/>
      * There are two ways you can register an OpMode.
-     *
+     * <p/>
      * 1)   Manually, by calling manager.register(displayName, class) here, where
-     *      displayName is the name you want to show up in on the driver station
-     *      and class is the class which should be instantiated to service that OpMode,
-     *
-     * 2)   Dynamically, by annotating your OpModes with @Autonomous or @TeleOp annotations,  
-     *      or using a static @OpModeRegistrar method.
+     * displayName is the name you want to show up in on the driver station
+     * and class is the class which should be instantiated to service that OpMode,
+     * <p/>
+     * 2)   Dynamically, by annotating your OpModes with @Autonomous or @TeleOp annotations,
+     * or using a static @OpModeRegistrar method.
      *
      * @param manager the manager to use for manual registration
-     *
      * @see org.swerverobotics.library.interfaces.Autonomous
      * @see org.swerverobotics.library.interfaces.TeleOp
      * @see org.swerverobotics.library.interfaces.Disabled
      * @see org.swerverobotics.library.interfaces.OpModeRegistrar
      * @see org.swerverobotics.library.examples.SynchTeleOp
-   */
-  @Override
-  public void register(OpModeManager manager) {
-    AnnotatedOpModeRegistrar.register(manager);
+     */
+    @Override
+    public void register(OpModeManager manager) {
+        AnnotatedOpModeRegistrar.register(manager);
 
     /*
      * Uncomment any of the following lines if you want to register an op mode,
@@ -80,63 +79,66 @@ public class FtcOpModeRegister implements OpModeRegister
     /*
      * Uncomment any of the following lines if you want to register an op mode.
      */
-    /**
-     * OTHER OPMODES:
-     */
-    manager.register("NullOp", NullOp.class);
+        /**
+         * OTHER OPMODES:
+         */
+        manager.register("NullOp", NullOp.class);
 
-    /**
-     * K9 OPMODES:
-     */
-    manager.register("K9IrSeeker", K9IrSeeker.class);
-    //manager.register("K9Line", K9Line.class);
-    //
-    //manager.register("K9TeleOp", K9TeleOp.class);
-    //manager.register("MatrixK9TeleOp", MatrixK9TeleOp.class);
+        /**
+         * K9 OPMODES:
+         */
+        manager.register("K9IrSeeker", K9IrSeeker.class);
+        //manager.register("K9Line", K9Line.class);
+        //
+        //manager.register("K9TeleOp", K9TeleOp.class);
+        //manager.register("MatrixK9TeleOp", MatrixK9TeleOp.class);
 
-    /**
-     * SENSOR OPMODES:
-     */
-    //manager.register("AdafruitRGBExample", AdafruitRGBExample.class);
-    //manager.register("ColorSensorDriver", ColorSensorDriver.class);
-    //manager.register("CompassCalibration", CompassCalibration.class);
-    //
-    //manager.register("IrSeekerOp", IrSeekerOp.class);
-    //
-    //
-    //manager.register("OpticalTelemetry", OpticalTelemetry.class);
-    //manager.register("NxtTeleOp", NxtTeleOp.class);
+        /**
+         * SENSOR OPMODES:
+         */
+        //manager.register("AdafruitRGBExample", AdafruitRGBExample.class);
+        //manager.register("ColorSensorDriver", ColorSensorDriver.class);
+        //manager.register("CompassCalibration", CompassCalibration.class);
+        //
+        //manager.register("IrSeekerOp", IrSeekerOp.class);
+        //
+        //
+        //manager.register("OpticalTelemetry", OpticalTelemetry.class);
+        //manager.register("NxtTeleOp", NxtTeleOp.class);
 
-    /**
-     * LINEAR OPMODES:
-     */
-    //manager.register("I2cAddressChangeExample", LinearI2cAddressChange.class);
-    //manager.register("LinearIrExample", LinearIrExample.class);
-    //manager.register("LinearK9TeleOp", LinearK9TeleOp.class);
+        /**
+         * LINEAR OPMODES:
+         */
+        //manager.register("I2cAddressChangeExample", LinearI2cAddressChange.class);
+        //manager.register("LinearIrExample", LinearIrExample.class);
+        //manager.register("LinearK9TeleOp", LinearK9TeleOp.class);
 
-    /**
-     * PUSHBOT OPMODES:
-     */
-    //manager.register("PushBotAuto", PushBotAuto.class);
-    //manager.register ("PushBotAutoSensors", PushBotAutoSensors.class);
-    //manager.register("PushBotDriveTouch", PushBotDriveTouch.class);
-    //
-    //
-    //manager.register ("PushBotIrEvent", PushBotIrEvent.class);
-    //manager.register("PushBotIrSeek", PushBotIrSeek.class);
-    // manager.register("PushBotManual", PushBotManual.class);
-    //manager.register ("PushBotManual1", PushBotManual1.class);
-    //manager.register ("PushBotManualSensors", PushBotManualSensors.class);
-    //manager.register ("PushBotOdsDetectEvent", PushBotOdsDetectEvent.class);
-    //manager.register ("PushBotOdsFollowEvent", PushBotOdsFollowEvent.class);
-    //manager.register("PushBotSquare", PushBotSquare.class);
-    //
-    //
-    //manager.register ("PushBotTouchEvent", PushBotTouchEvent.class);
+        /**
+         * PUSHBOT OPMODES:
+         */
+        //manager.register("PushBotAuto", PushBotAuto.class);
+        //manager.register ("PushBotAutoSensors", PushBotAutoSensors.class);
+        //manager.register("PushBotDriveTouch", PushBotDriveTouch.class);
+        //
+        //
+        //manager.register ("PushBotIrEvent", PushBotIrEvent.class);
+        //manager.register("PushBotIrSeek", PushBotIrSeek.class);
+        // manager.register("PushBotManual", PushBotManual.class);
+        //manager.register ("PushBotManual1", PushBotManual1.class);
+        //manager.register ("PushBotManualSensors", PushBotManualSensors.class);
+        //manager.register ("PushBotOdsDetectEvent", PushBotOdsDetectEvent.class);
+        //manager.register ("PushBotOdsFollowEvent", PushBotOdsFollowEvent.class);
+        //manager.register("PushBotSquare", PushBotSquare.class);
+        //
+        //
+        //manager.register ("PushBotTouchEvent", PushBotTouchEvent.class);
 
-    /**
-     * POWERSTACKERS OPMODES:
-     */
+        /**
+         * POWERSTACKERS OPMODES:
+         */
+        // All of our opmodes make use of the annotations provided by the Swerve library.
+        // You should use those on any class you want to register, rather than registering it here.
+    /*
       manager.register("BlueAllianceOP", BlueAlianceOP.class);
       manager.register("RedAllianceOP", RedAlianceOP.class);
       manager.register("ColorSensorSense", ColorSensorSense.class);
@@ -144,5 +146,6 @@ public class FtcOpModeRegister implements OpModeRegister
 //      manager.register("Purple Pencil", PurplePencil.class);
       manager.register("Tedbot", Tedbot.class);
 //      manager.register("WorkshopTeleop", WorkshopTeleop.class);
-  }
+  */
+    }
 }
