@@ -109,19 +109,7 @@ public class Robot {
      * @param setting ServoSetting enum value; FORWARD, STOP, or REVERSE.
      */
     public void setTapeMeasure(ServoSetting setting) {
-        switch (setting) {
-            case REVERSE:
-                servoTapeMeasure.setPosition(CRS_REVERSE);
-                break;
-            case STOP:
-                servoTapeMeasure.setPosition(CRS_STOP);
-                break;
-            case FORWARD:
-                servoTapeMeasure.setPosition(CRS_FORWARD);
-                break;
-            default:
-                servoTapeMeasure.setPosition(CRS_STOP);
-        }
+        toggleCRServo(servoTapeMeasure, setting);
     }
 
     /**
@@ -129,20 +117,7 @@ public class Robot {
      * @param setting ServoSetting indicating the direction.
      */
     public void setBrush(ServoSetting setting) {
-        switch (setting) {
-            case REVERSE:
-                motorBrush.setPower(-BRUSH_SPEED);
-                break;
-            case STOP:
-                motorBrush.setPower(0);
-                break;
-            case FORWARD:
-                motorBrush.setPower(BRUSH_SPEED);
-                break;
-            default:
-                motorBrush.setPower(0);
-                break;
-        }
+        toggleMotor(motorBrush, setting, BRUSH_SPEED);
     }
 
     /**
@@ -150,19 +125,50 @@ public class Robot {
      * @param setting ServoSetting enum indicating the direction.
      */
     public void setLift(ServoSetting setting) {
+        toggleMotor(motorLift, setting, LIFT_SPEED);
+    }
+
+    /**
+     * Toggles a motor between three settings: FORWARD, STOP, and REVERSE.
+     * @param toToggle Motor to change.
+     * @param setting ServoSetting indicating the direction.
+     * @param power Power value to use.
+     */
+    private void toggleMotor(DcMotor toToggle, ServoSetting setting, double power) {
         switch (setting) {
             case REVERSE:
-                motorLift.setPower(-LIFT_SPEED);
+                toToggle.setPower(-power);
                 break;
             case STOP:
-                motorLift.setPower(0);
+                toToggle.setPower(0);
                 break;
             case FORWARD:
-                motorLift.setPower(LIFT_SPEED);
+                toToggle.setPower(power);
                 break;
             default:
-                motorLift.setPower(0);
+                toToggle.setPower(0);
                 break;
+        }
+    }
+
+    /**
+     * Toggle a continuous rotation servo in one of three directions: FORWARD, STOP, and REVERSE.
+     * @param toToggle Servo to toggle.
+     * @param setting ServoSetting indicating the direction.
+     */
+    private void toggleCRServo(Servo toToggle, ServoSetting setting) {
+        switch (setting) {
+            case REVERSE:
+                toToggle.setPosition(CRS_REVERSE);
+                break;
+            case STOP:
+                toToggle.setPosition(CRS_STOP);
+                break;
+            case FORWARD:
+                toToggle.setPosition(CRS_FORWARD);
+                break;
+            default:
+                toToggle.setPosition(CRS_STOP);
         }
     }
 }
