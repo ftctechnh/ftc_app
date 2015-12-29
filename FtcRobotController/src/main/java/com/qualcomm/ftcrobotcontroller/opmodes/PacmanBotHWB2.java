@@ -39,7 +39,7 @@ public class PacmanBotHWB2 extends OpMode {
     Servo dumper;               //People-dumper
     Servo finger;               //Climber-release 'finger'
     Servo release;              //Hook release
-    Servo angular;              //Angles the doorslides
+    Servo angular;              //Angles the liner slides
 
     //Configuration section
 
