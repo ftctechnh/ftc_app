@@ -43,4 +43,8 @@ public class ServoManager8737 {
 
     }
 
+    public boolean isBusy() {
+        return (mServo.getPosition() != mFinalPosition);
+    }
+
 }
