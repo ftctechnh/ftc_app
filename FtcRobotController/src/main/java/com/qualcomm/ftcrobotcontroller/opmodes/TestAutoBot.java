@@ -1,8 +1,9 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorController.RunMode;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 
 
 
@@ -12,39 +13,43 @@ import com.qualcomm.robotcore.hardware.DcMotorController.RunMode;
 public class TestAutoBot extends OpMode
 {
 
-    DcMotor leftMotor;
-    DcMotor rightMotor;
+        DcMotorController dcMotorController;
+        DcMotor leftMotor;
+        DcMotor rightMotor;
+        static int encoderTarget;
+                public void init()
+                {
+                    dcMotorController = hardwareMap.dcMotorController.get("Motor Controller 1");
+                    telemetry.addData("start init", 0);
+                    leftMotor = hardwareMap.dcMotor.get("leftMotor");
+                    rightMotor = hardwareMap.dcMotor.get("rightMotor");
+                    telemetry.addData("added motors", 0);
+                    leftMotor.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+                    rightMotor.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+                    telemetry.addData("set modes", 0);
+                    rightMotor.setDirection(DcMotor.Direction.REVERSE);
+                    telemetry.addData("finished!", 0);
+                }
 
-            public void init()
-            {
-                leftMotor = hardwareMap.dcMotor.get("leftMotor");
-                rightMotor = hardwareMap.dcMotor.get("rightMotor");
-                rightMotor.setDirection(DcMotor.Direction.REVERSE);
-                leftMotor.setMode(RunMode.RUN_USING_ENCODERS);
-                rightMotor.setMode(RunMode.RUN_USING_ENCODERS);
-            }
-            public void loop()
-            {
-                telemetry.addData("leftMotor", leftMotor.getCurrentPosition());
-                int encoderTarget = ((int)(111.1111111*12+leftMotor.getCurrentPosition()));
-                leftMotor.setPower(1.0);
-                rightMotor.setPower(1.0);
-                while(leftMotor.getCurrentPosition() < encoderTarget) {}
-                leftMotor.setPower(0);
-                rightMotor.setPower(0);
-                try
+
+                public void loop()
                 {
-                    wait(10000);
+                    //telemetry.addData("startMotor", 0);
+                    encoderTarget = (int)(111.11111111*12+leftMotor.getCurrentPosition());
+                    //leftMotor.setPower(1.0f);
+                    //rightMotor.setPower(1.0f);
+                    //while(leftMotor.getCurrentPosition()<encoderTarget)
+                    //{
+                        telemetry.addData("leftMotor", leftMotor.getCurrentPosition());
+                        telemetry.addData("target", encoderTarget);
+                    //}
+                    //leftMotor.setPower(0);
+                    //rightMotor.setPower(0);*/
+                    //telemetry.addData("stopped", 0);
+                    leftMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+                    rightMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
                 }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-            }
-            public void stop()
-            {
-                leftMotor.setPower(0.0f);
-                rightMotor.setPower(0.0f);
-            }
+                public void stop(){}
+
 
 }

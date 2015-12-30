@@ -6,12 +6,11 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 public class PracticeAttachments implements AttachmentInterface
 {
 
-    @Override
     public void moveGrabberUp() {
 
     }
 
-    @Override
+
     public void moveGrabberDown() {
 
     }
@@ -21,22 +20,22 @@ public class PracticeAttachments implements AttachmentInterface
 
     }
 
-    @Override
+    
     public void grabClimbers() {
 
     }
 
-    @Override
+
     public void primeObjectsInRobot() {
 
     }
 
-    @Override
+
     public void loadGrabber() {
 
     }
 
-    @Override
+
     public void collectObjects() {
 
     }

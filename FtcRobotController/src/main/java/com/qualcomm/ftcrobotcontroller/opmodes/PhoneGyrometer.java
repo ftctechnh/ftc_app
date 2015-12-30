@@ -5,13 +5,8 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.provider.ContactsContract;
-import android.service.textservice.SpellCheckerService;
-
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.Hardware;
-
-import java.util.ServiceConfigurationError;
+import java.util.ArrayList;
 
 /**
  * Created by subash on 11/27/2015.
@@ -23,6 +18,9 @@ public class PhoneGyrometer implements SensorEventListener
     private static Sensor magFieldSensor;
     private static float[] accelFloats = {0.0f, 0.0f, 0.0f};
     private static float[] magFieldFloats = {0.0f, 0.0f, 0.0f};
+    private static ArrayList <Double> azimuthArr = new ArrayList<Double>();
+    private static ArrayList <Double> pitchArr = new ArrayList<Double>();
+    private static ArrayList <Double> rollArr = new ArrayList<Double>();
     static float azimuth = 0.0f;
     static float pitch = 0.0f;
     static float roll = 0.0f;
@@ -32,6 +30,12 @@ public class PhoneGyrometer implements SensorEventListener
     {
         this.hardwareMap = hardwareMap;
         onCreate(this.hardwareMap);
+        for(int i = 0; i < 7; i++)
+        {
+            azimuthArr.add(0.0);
+            pitchArr.add(0.0);
+            rollArr.add(0.0);
+        }
     }
 
     private void onCreate(HardwareMap hardwareMap)
@@ -39,9 +43,21 @@ public class PhoneGyrometer implements SensorEventListener
         manager = (SensorManager)hardwareMap.appContext.getSystemService(Context.SENSOR_SERVICE);
         accelSensor = manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         magFieldSensor = manager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-        manager.registerListener(this, accelSensor, SensorManager.SENSOR_DELAY_UI);
-        manager.registerListener(this, magFieldSensor, SensorManager.SENSOR_DELAY_UI);
+        manager.registerListener(this, accelSensor, SensorManager.SENSOR_DELAY_FASTEST);
+        manager.registerListener(this, magFieldSensor, SensorManager.SENSOR_DELAY_FASTEST);
     }
+
+    private double aveArr(ArrayList<Double> arr)
+    {
+        double ave = 0.0f;
+        for(Double temp:arr)
+        {
+            ave += temp;
+        }
+        return (ave/arr.size());
+    }
+
+
     @Override
     public void onSensorChanged(SensorEvent event)
     {
@@ -57,9 +73,15 @@ public class PhoneGyrometer implements SensorEventListener
         SensorManager.getRotationMatrix(R, null, accelFloats, magFieldFloats);
         float[] orientation = new float[3];
         SensorManager.getOrientation(R, orientation);
-        azimuth = (float) Math.toDegrees(orientation[0]);
-        pitch = (float) Math.toDegrees(orientation[1]);
-        roll = (float) Math.toDegrees(orientation[2]);
+        azimuthArr.add(new Double(orientation[0]));
+        pitchArr.add(new Double(orientation[1]));
+        rollArr.add(new Double(orientation[2]));
+        azimuthArr.remove(0);
+        pitchArr.remove(0);
+        rollArr.remove(0);
+        azimuth = (float) Math.toDegrees(aveArr(azimuthArr));
+        pitch = (float) Math.toDegrees(aveArr(pitchArr));
+        roll = (float) Math.toDegrees(aveArr(rollArr));
     }
 
     public float getAzimuth()

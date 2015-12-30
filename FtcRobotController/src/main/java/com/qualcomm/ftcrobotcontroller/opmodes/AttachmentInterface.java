@@ -5,12 +5,6 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
  */
 public interface AttachmentInterface
 {
-    void moveGrabberUp();
-    void moveGrabberDown();
     void releaseClimbers();
-    void grabClimbers();
-    void primeObjectsInRobot();
-    void loadGrabber();
-    void collectObjects();
     void pushButton(boolean isButtonLeft);
 }
