@@ -16,7 +16,7 @@ public class BasketController {
         mHomePos=homePos;
         mOutPos=outPos;
         mDoor=door;
-        mBasketController=new RunToPositionController(basket);
+        mBasketController=new RunToPositionController(basket,false);
         close();
     }
 

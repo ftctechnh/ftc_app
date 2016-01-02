@@ -75,8 +75,8 @@ public class PacmanBotHWB2 extends OpMode {
         right=limit(right,-1,1);
         left  *= driveFinalMultiplier;
         right *= driveFinalMultiplier;
-        rearLeft.setPower(-left);
-        frontLeft.setPower(-left);
+        rearLeft.setPower(left);
+        frontLeft.setPower(left);
         rearRight.setPower(right);
         frontRight.setPower(right);
     }
@@ -122,6 +122,10 @@ public class PacmanBotHWB2 extends OpMode {
         //rear_ctrl - 2nd from bottom
         rearLeft = hardwareMap.dcMotor.get("rear_left"); //1
         rearRight = hardwareMap.dcMotor.get("rear_right"); //2
+
+        //reverses left motors to allow for consistent forward power settings
+        frontLeft.setDirection(DcMotor.Direction.REVERSE);
+        rearLeft.setDirection(DcMotor.Direction.REVERSE);
 
         //hook_ctrl - 3rd from the bottom
         tail = hardwareMap.dcMotor.get("tail"); //1
