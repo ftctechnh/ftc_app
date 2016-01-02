@@ -76,6 +76,10 @@ public class FtcOpModeRegister implements OpModeRegister {
 
     manager.register("BlueMountainClimb", BlueMountClimb1.class);
 
+   // manager.register("BeaconZoneRed", BeaconZoneRed.class);
+    manager.register("BeaconZoneRedOp" , BeaconZoneRedOp.class);
+
+
     //manager.register("AdafruitRGBExample", AdafruitRGBExample.class);
     //manager.register("ColorSensorDriver", ColorSensorDriver.class);
 
