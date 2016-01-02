@@ -42,6 +42,7 @@ public class PacmanBotManualBlue extends PacmanBotHWB2 {
         telemetry.addData("Basket Position",basket.getCurrentPosition());
         telemetry.addData("Mountain Mode", mtnMode ? "ON" : "OFF");
 
+
         setBasket(threeWay(gamepad1.dpad_left, gamepad1.dpad_right));
 
         setDoor(gamepad1.a || gamepad1.y);

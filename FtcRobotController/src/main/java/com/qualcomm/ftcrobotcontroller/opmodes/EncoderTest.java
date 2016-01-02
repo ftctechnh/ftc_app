@@ -5,50 +5,53 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class EncoderTest extends PacmanBotHWB2 {
     boolean first=true,out,moveBasket;
+    BasketController basketController;
     ElapsedTime timer = new ElapsedTime();
-    ElapsedTime timer2 = new ElapsedTime();
+    boolean isOpen=false;
+    boolean startBusy = false;
+    int b=0;
+    int maxDumpRange=185;
 
-    final static VersionNumber version = new VersionNumber(1,0,0);
     @Override
     public void init() {
-        telemetry.addData("Program", "Pacman Auto");
-        telemetry.addData("Version", version.string());
-        telemetry.addData("Hardware Base Version", hwbVersion.string());
         setupHardware();
+        basketController=new BasketController(basket,door,0,maxDumpRange);
     }
 
     @Override
     public void loop() {
+        basketController.check();
         if(first) {
             first=false;
-            update();
-            basket.setPower(0.35);
-            basket.setTargetPosition(150);
-            timer.reset();
         }
-        else if(!basket.isBusy() && timer.time()>0.2 && !moveBasket) {
-            basket.setPower(0);
-            timer.reset();
-            moveBasket=true;
+        if((gamepad1.x) && b!=1) {
+            b=1;
+            basketController.swing(maxDumpRange, 0.4);
+            startBusy = basketController.isBusy();
         }
-        else if(timer.time()>1 && timer.time()<10 && moveBasket) {
-            basket.setPower(0.8);
-            if(out && !basket.isBusy() && timer2.time()>0.2) {
-                basket.setTargetPosition(170);
-                timer2.reset();
-                out=!out;
+        if((gamepad1.b) && b!=2) {
+            b=2;
+            basketController.swing(0, 0.4);
+            startBusy = basketController.isBusy();
+        }
+        if((gamepad1.y) && b!=3) {
+            b=3;
+            basketController.dump(.4);
+            startBusy = basketController.isBusy();
+        }
+        if(gamepad1.a) {
+            b=4;
+            if(isOpen) {
+                basketController.close();
             }
-            else if(!basket.isBusy() && timer2.time()>0.2){
-                basket.setTargetPosition(130);
-                timer2.reset();
-                out=!out;
+            else {
+                basketController.open();
             }
+            isOpen=!isOpen;
         }
-        else {
-            basket.setPower(0);
-        }
-        telemetry.addData("Encoder", basket.getCurrentPosition());
-        telemetry.addData("Busy", basket.isBusy());
+        telemetry.addData("b",b);
+        telemetry.addData("isBusy", basketController.isBusy());
+        telemetry.addData("StartBusy", startBusy);
     }
 }
 
