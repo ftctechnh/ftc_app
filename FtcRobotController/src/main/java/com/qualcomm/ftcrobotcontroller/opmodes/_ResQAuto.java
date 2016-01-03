@@ -28,6 +28,8 @@ public abstract class _ResQAuto extends LinearOpMode {
         Servo buttonServo;
         Servo button2Servo;
         Servo climberservo;
+        Servo twistServo;
+        Servo releaseServo;
         OpticalDistanceSensor opticalDistanceSensor;
         UltrasonicSensor ultrasonicSensor;
         ColorSensor colorsensor;
@@ -70,24 +72,28 @@ public abstract class _ResQAuto extends LinearOpMode {
         backLeftWheel.setDirection(DcMotor.Direction.REVERSE);
         frontRightWheel.setDirection(DcMotor.Direction.REVERSE);
         backRightWheel.setDirection(DcMotor.Direction.FORWARD);
-        //sweeper = hardwareMap.dcMotor.get("sweeper");
+        sweeper = hardwareMap.dcMotor.get("sweeper");
 
         buttonServo = hardwareMap.servo.get("leftbutton");
         buttonServo.setPosition(0.9);
         button2Servo = hardwareMap.servo.get("rightbutton");
-        button2Servo.setPosition(0);
-        climberservo = hardwareMap.servo.get("climber");
-        climberservo.setPosition(0.0);
+        button2Servo.setPosition(0.8);
+        //climberservo = hardwareMap.servo;.get("climber");
+        //climberservo.setPosition(0.0);
+        twistServo = hardwareMap.servo.get("twist");
+        twistServo.setPosition(0.5);
+        releaseServo = hardwareMap.servo.get("release");
+        releaseServo.setPosition(0.5);
 
-        opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("light");
         ultrasonicSensor = hardwareMap.ultrasonicSensor.get("ultrasonic");
+        opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("light");
         colorsensor = hardwareMap.colorSensor.get("color");
         colorsensor.enableLed(false);
 
 
 
         waitForStart();
-
+        sweeper.setPower(-0.8);
         //do we need delay
         telemetry.addData("InDelay", "yes");
         sleep(getDelay());
@@ -168,7 +174,7 @@ public abstract class _ResQAuto extends LinearOpMode {
 
         while(true) {
             waitOneFullHardwareCycle();
-            //sweeper.setPower(1);
+            sweeper.setPower(1);
             double distance = ultrasonicSensor.getUltrasonicLevel();
             reflectance = opticalDistanceSensor.getLightDetected();
 
@@ -228,55 +234,79 @@ public abstract class _ResQAuto extends LinearOpMode {
         telemetry.addData("Blue", colorsensor.blue());
         sleep(500);
         if(colorsensor.red()<0.1&&colorsensor.blue()>0.1){
-            /*if( getRedAlliance() == 1){
-                //If Alliance is red and the button is red
-                //Servo Down
+            if (getRedAlliance() == 0){
+                //button2Servo.setPosition(0.8);
+                //sleep(1000);
+                frontLeftWheel.setPower(-0.1);
+                backLeftWheel.setPower(-0.1);
+                frontRightWheel.setPower(0.1);
+                backRightWheel.setPower(0.1);
+                sleep(100);
+                frontLeftWheel.setPower(0.2);
+                backLeftWheel.setPower(0.2);
+                frontRightWheel.setPower(0.2);
+                backRightWheel.setPower(0.2);
+                sleep(150);
+                button2Servo.setPosition(0);
+                buttonServo.setPosition(0.8);
+                sleep(1000);
+            } else {
+                button2Servo.setPosition(0);
                 buttonServo.setPosition(0.3);
                 sleep(1000);
-
-            } else*/ if (getRedAlliance() == 0){
-                button2Servo.setPosition(0.8);
-                sleep(1000);
+                frontLeftWheel.setPower(0.2);
+                backLeftWheel.setPower(0.2);
+                frontRightWheel.setPower(0.2);
+                backRightWheel.setPower(0.2);
+                sleep(400);
             }
 
-        }else if (colorsensor.red()>0.1&&colorsensor.blue()<0.1){
-          /*  //go back
-            leftWheel.setPower(-0.1);
-            rightWheel.setPower(-0.1);
-            sleep(300);*/
-
-           /* if( getRedAlliance() == 1){
-                button2Servo.setPosition(0.6);
-                sleep(1000);
-
-            } else */ if (getRedAlliance() == 0){
+        }else if (colorsensor.red() > 0.1 &&colorsensor.blue()<0.1){
+            if (getRedAlliance() == 1){
+                //buttonServo.setPosition(0.7);
+                //sleep(1000);
+                button2Servo.setPosition(0);
                 buttonServo.setPosition(0.3);
                 sleep(1000);
+                frontLeftWheel.setPower(0.2);
+                backLeftWheel.setPower(0.2);
+                frontRightWheel.setPower(0.2);
+                backRightWheel.setPower(0.2);
+                sleep(400);
+            } else {
+                frontLeftWheel.setPower(-0.1);
+                backLeftWheel.setPower(-0.1);
+                frontRightWheel.setPower(0.1);
+                backRightWheel.setPower(0.1);
+                sleep(100);
+                button2Servo.setPosition(0);
+                buttonServo.setPosition(0.8);
+                sleep(1000);
+                frontLeftWheel.setPower(0.2);
+                backLeftWheel.setPower(0.2);
+                frontRightWheel.setPower(0.2);
+                backRightWheel.setPower(0.2);
+                sleep(400);
+
             }
         } else {
-            button2Servo.setPosition(0.6);
-            buttonServo.setPosition(0.3);
-            sleep(1000);
+
         }
 
-        frontLeftWheel.setPower(0.1);
-        backLeftWheel.setPower(0.1);
-        frontRightWheel.setPower(0.1);
-        backRightWheel.setPower(0.1);
-        sleep(200);
+
 
         //Dump climbers
-        climberservo.setPosition(1);
-        sleep(1500);
-        climberservo.setPosition(0);
+        //climberservo.setPosition(1);
+        //sleep(1500);
+        //climberservo.setPosition(0);
 
         frontLeftWheel.setPower(-0.1);
         backLeftWheel.setPower(-0.1);
         frontRightWheel.setPower(-0.1);
         backRightWheel.setPower(-0.1);
-        button2Servo.setPosition(0.6);
-        buttonServo.setPosition(0.3);
-        sleep(800);
+        //button2Servo.setPosition(0.6);
+        //buttonServo.setPosition(0.3);
+        sleep(1000);
 
         //End of Autonomous
         if (getDelay() == 0) {
@@ -290,7 +320,7 @@ public abstract class _ResQAuto extends LinearOpMode {
                 backLeftWheel.setPower(0.2);
                 frontRightWheel.setPower(-0.2);
                 backRightWheel.setPower(-0.2);
-                sleep(500);
+                sleep(900);
                 frontLeftWheel.setPower(0.6);
                 backLeftWheel.setPower(0.6);
                 frontRightWheel.setPower(0.6);
@@ -305,22 +335,17 @@ public abstract class _ResQAuto extends LinearOpMode {
                 backLeftWheel.setPower(-0.4);
                 frontRightWheel.setPower(0.4);
                 backRightWheel.setPower(0.4);
-                sleep(600);
+                sleep(900);
                 frontLeftWheel.setPower(0.3);
                 backLeftWheel.setPower(0.3);
                 frontRightWheel.setPower(0.3);
                 backRightWheel.setPower(0.3);
                 sleep(500);
-                /*frontLeftWheel.setPower(-0.4);
-                backLeftWheel.setPower(-0.4);
-                frontRightWheel.setPower(0.4);
-                backRightWheel.setPower(0.4);
-                sleep(700);*/
                 frontLeftWheel.setPower(0.3);
                 backLeftWheel.setPower(0.3);
                 frontRightWheel.setPower(0.3);
                 backRightWheel.setPower(0.3);
-                sleep(900);
+                sleep(300);
                 frontRightWheel.setPower(0);
                 frontLeftWheel.setPower(0);
                 backRightWheel.setPower(0);
