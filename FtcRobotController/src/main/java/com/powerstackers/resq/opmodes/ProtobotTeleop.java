@@ -31,8 +31,8 @@ public class ProtobotTeleop extends OpMode {
     final static double servoLeft_MAX_RANGE  = 0.80;
 //    final static double servoTest_MIN_RANGE = 0.00;
 //    final static double servoTest_MAX_RANGE = 1.00;
-    final static double servoBeacon_MIN_RANGE  = 0.00;
-    final static double servoBeacon_MAX_RANGE  = 1.00;
+//    final static double servoBeacon_MIN_RANGE  = 0.00;
+//    final static double servoBeacon_MAX_RANGE  = 1.00;
 
     /** amount to change the servo position by
      *
@@ -47,7 +47,7 @@ public class ProtobotTeleop extends OpMode {
     double servoRightPosition;
     double servoLeftPosition;
 //    double servoTestPosition;
-    double servoBeaconPosition;
+//    double servoBeaconPosition;
 
     /**Color Values
      *
@@ -56,8 +56,8 @@ public class ProtobotTeleop extends OpMode {
     final float values[] = hsvValues;
 
     DeviceInterfaceModule cdim;
-    ColorSensor colorSensor;
-    TouchSensor touchSensor;
+//    ColorSensor colorSensor;
+//    TouchSensor touchSensor;
     DcMotor motorBrush;
     DcMotor motorLift;
     DcMotor motorFRight;
@@ -67,7 +67,7 @@ public class ProtobotTeleop extends OpMode {
     Servo servoLeft;
     Servo servoRight;
 //    Servo servoTest;
-    Servo servoBeacon;
+//    Servo servoBeacon;
 
     public ProtobotTeleop() {
 
@@ -86,9 +86,9 @@ public class ProtobotTeleop extends OpMode {
         hardwareMap.logDevices();
         cdim = hardwareMap.deviceInterfaceModule.get("dim");
         //Sensors
-        colorSensor = ClassFactory.createSwerveColorSensor(this, this.hardwareMap.colorSensor.get("colorSensor"));
-        colorSensor.enableLed(true);
-        touchSensor = hardwareMap.touchSensor.get("touchSensor");
+//        colorSensor = ClassFactory.createSwerveColorSensor(this, this.hardwareMap.colorSensor.get("colorSensor"));
+//        colorSensor.enableLed(true);
+//        touchSensor = hardwareMap.touchSensor.get("touchSensor");
         /**Motors
          *
          */
@@ -108,8 +108,8 @@ public class ProtobotTeleop extends OpMode {
         servoRight = hardwareMap.servo.get("servoRight");
 //        servoTest = hardwareMap.servo.get("servoTest");
 //        servoTest.setDirection(Servo.Direction.REVERSE);
-        servoBeacon = hardwareMap.servo.get("servoBeacon");
-        servoBeaconPosition = 0.50;
+//        servoBeacon = hardwareMap.servo.get("servoBeacon");
+//        servoBeaconPosition = 0.50;
 
     }
 
@@ -202,14 +202,14 @@ public class ProtobotTeleop extends OpMode {
 //        }
 
         //ColorSensor Controls
-        if (colorSensor.blue() > colorSensor.red()) {
-            servoBeaconPosition = 0.20;
-
-        } else if (colorSensor.red() > colorSensor.blue()) {
-            servoBeaconPosition = 0.80;
-        } else {
-            servoBeaconPosition = 0.50;
-        }
+//        if (colorSensor.blue() > colorSensor.red()) {
+//            servoBeaconPosition = 0.20;
+//
+//        } else if (colorSensor.red() > colorSensor.blue()) {
+//            servoBeaconPosition = 0.80;
+//        } else {
+//            servoBeaconPosition = 0.50;
+//        }
 
 
         /** clip the position values so that they never exceed their allowed range.
@@ -218,7 +218,7 @@ public class ProtobotTeleop extends OpMode {
         servoRightPosition = Range.clip(servoRightPosition, servoRight_MIN_RANGE, servoRight_MAX_RANGE);
         servoLeftPosition = Range.clip(servoLeftPosition, servoLeft_MIN_RANGE, servoLeft_MAX_RANGE);
 //        servoTestPosition = Range.clip(servoTestPosition, servoTest_MIN_RANGE, servoTest_MAX_RANGE);
-        servoBeaconPosition = Range.clip(servoBeaconPosition, servoBeacon_MIN_RANGE, servoBeacon_MAX_RANGE);
+//        servoBeaconPosition = Range.clip(servoBeaconPosition, servoBeacon_MIN_RANGE, servoBeacon_MAX_RANGE);
 
         /**write position values to the wrist and claw servo
          *
@@ -226,7 +226,7 @@ public class ProtobotTeleop extends OpMode {
         servoRight.setPosition(servoRightPosition);
         servoLeft.setPosition(servoLeftPosition);
 //        servoTest.setPosition(servoTestPosition);
-        servoBeacon.setPosition(servoBeaconPosition);
+//        servoBeacon.setPosition(servoBeaconPosition);
 
         /** write the values to the motors
          *
@@ -250,11 +250,11 @@ public class ProtobotTeleop extends OpMode {
         /**Color Telemetry
          *
          */
-        telemetry.addData("Clear", colorSensor.alpha());
-        telemetry.addData("Red  ", colorSensor.red());
-        telemetry.addData("Green", colorSensor.green());
-        telemetry.addData("Blue ", colorSensor.blue());
-        telemetry.addData("Hue", hsvValues[0]);
+//        telemetry.addData("Clear", colorSensor.alpha());
+//        telemetry.addData("Red  ", colorSensor.red());
+//        telemetry.addData("Green", colorSensor.green());
+//        telemetry.addData("Blue ", colorSensor.blue());
+//        telemetry.addData("Hue", hsvValues[0]);
         //Object direction = motorLift.getDirection();
         //telemetry.addData("direction", "direction: " + String.valueOf(direction));
 

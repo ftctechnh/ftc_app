@@ -36,6 +36,7 @@ import com.powerstackers.resq.opmodes.ColorSensorSense;
 import com.powerstackers.resq.opmodes.ProtobotTeleop;
 import com.powerstackers.resq.opmodes.RedAlianceOP;
 import com.powerstackers.resq.opmodes.Tedbot;
+import com.powerstackers.resq.opmodes.testbot1;
 import com.qualcomm.ftcrobotcontroller.opmodes.NullOp;
 import com.qualcomm.ftcrobotcontroller.opmodes.k9.K9IrSeeker;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
@@ -144,5 +145,6 @@ public class FtcOpModeRegister implements OpModeRegister
 //      manager.register("Purple Pencil", PurplePencil.class);
       manager.register("Tedbot", Tedbot.class);
 //      manager.register("WorkshopTeleop", WorkshopTeleop.class);
+    manager.register("testbot1", testbot1.class);
   }
 }
