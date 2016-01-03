@@ -10,8 +10,6 @@ import org.swerverobotics.library.interfaces.TeleOp;
  * Very simple op mode for testing with Leena.
  * @author Jonathan Thomas
  */
-@TeleOp
-@Disabled
 public class PurplePencil extends OpMode{
 
     private DcMotor motor;
