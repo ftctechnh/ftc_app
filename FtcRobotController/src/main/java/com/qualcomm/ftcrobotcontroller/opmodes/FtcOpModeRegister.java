@@ -63,7 +63,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     //manager.register ("WeCoServoOp", WeCoServoOp.class) ;
 
     manager.register("NullOp", NullOp.class);
-
+    manager.register("WeCoLifterTeleOp", WeCoLifterTeleOp.class);
     manager.register ("PushBotAuto", PushBotAuto.class);
     manager.register ("PushBotManual", PushBotManual.class);
     manager.register ("WeCoAutoTriangle", WeCoAutoTriangle.class);
