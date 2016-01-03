@@ -61,7 +61,7 @@ public class Robot4Teleop extends OpMode {
         twistServo = hardwareMap.servo.get("twist");
         twistServo.setPosition(0.3);
         releaseServo = hardwareMap.servo.get("release");
-        releaseServo.setPosition(0.1);
+        releaseServo.setPosition(0.9);
         clampServo = hardwareMap.servo.get("clamp");
         clampServo.setPosition(CLAMP_SERVO_INIT);
         lButtonServo = hardwareMap.servo.get("leftbutton");
