@@ -31,8 +31,8 @@ public class ProtobotTeleop extends OpMode {
     final static double servoRight_MAX_RANGE  = 1.00;
     final static double servoLeft_MIN_RANGE  = 0.20;
     final static double servoLeft_MAX_RANGE  = 0.80;
-//    final static double servoTest_MIN_RANGE = 0.00;
-//    final static double servoTest_MAX_RANGE = 1.00;
+    final static double servoTape_MIN_RANGE = 0.00;
+    final static double servoTape_MAX_RANGE = 1.00;
 //    final static double servoBeacon_MIN_RANGE  = 0.00;
 //    final static double servoBeacon_MAX_RANGE  = 1.00;
 
@@ -41,14 +41,14 @@ public class ProtobotTeleop extends OpMode {
      */
     double servoRightDelta = 0.1;
     double servoLeftDelta = 0.1;
-    double servoTestDelta = 0.5;
+    double servoTapeDelta = 0.5;
 
     /** position of servo <Value of Variable>
      *
      */
     double servoRightPosition;
     double servoLeftPosition;
-//    double servoTestPosition;
+    double servoTapePosition;
 //    double servoBeaconPosition;
 
     /**Color Values
@@ -68,7 +68,7 @@ public class ProtobotTeleop extends OpMode {
     DcMotor motorBLeft;
     Servo servoLeft;
     Servo servoRight;
-//    Servo servoTest;
+    Servo servoTape;
 //    Servo servoBeacon;
 
     public ProtobotTeleop() {
@@ -108,8 +108,8 @@ public class ProtobotTeleop extends OpMode {
          */
         servoLeft = hardwareMap.servo.get("servoLeft");
         servoRight = hardwareMap.servo.get("servoRight");
-//        servoTest = hardwareMap.servo.get("servoTest");
-//        servoTest.setDirection(Servo.Direction.REVERSE);
+        servoTape = hardwareMap.servo.get("servoTape");
+        servoTape.setDirection(Servo.Direction.REVERSE);
 //        servoBeacon = hardwareMap.servo.get("servoBeacon");
 //        servoBeaconPosition = 0.50;
 
@@ -195,13 +195,13 @@ public class ProtobotTeleop extends OpMode {
             servoLeftPosition -= servoLeftDelta;
         }
 
-//        if (gamepad2.dpad_left) {
-//            servoTestPosition += servoTestDelta;
-//        } else if (gamepad2.dpad_right) {
-//            servoTestPosition -= servoTestDelta;
-//        } else {
-//            servoTestPosition = 0.50;
-//        }
+        if (gamepad2.dpad_left) {
+            servoTapePosition += servoTapeDelta;
+        } else if (gamepad2.dpad_right) {
+            servoTapePosition -= servoTapeDelta;
+        } else {
+            servoTapePosition = 0.50;
+        }
 
         //ColorSensor Controls
 //        if (colorSensor.blue() > colorSensor.red()) {
@@ -219,7 +219,7 @@ public class ProtobotTeleop extends OpMode {
          */
         servoRightPosition = Range.clip(servoRightPosition, servoRight_MIN_RANGE, servoRight_MAX_RANGE);
         servoLeftPosition = Range.clip(servoLeftPosition, servoLeft_MIN_RANGE, servoLeft_MAX_RANGE);
-//        servoTestPosition = Range.clip(servoTestPosition, servoTest_MIN_RANGE, servoTest_MAX_RANGE);
+        servoTapePosition = Range.clip(servoTapePosition, servoTape_MIN_RANGE, servoTape_MAX_RANGE);
 //        servoBeaconPosition = Range.clip(servoBeaconPosition, servoBeacon_MIN_RANGE, servoBeacon_MAX_RANGE);
 
         /**write position values to the wrist and claw servo
@@ -227,7 +227,7 @@ public class ProtobotTeleop extends OpMode {
          */
         servoRight.setPosition(servoRightPosition);
         servoLeft.setPosition(servoLeftPosition);
-//        servoTest.setPosition(servoTestPosition);
+        servoTape.setPosition(servoTapePosition);
 //        servoBeacon.setPosition(servoBeaconPosition);
 
         /** write the values to the motors
