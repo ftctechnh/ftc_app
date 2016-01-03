@@ -1,6 +1,7 @@
 package com.qualcomm.ftcrobotcontroller.walnutLibrary;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * Created by Yan Vologzhanin on 1/2/2016.
@@ -13,14 +14,22 @@ public class IncSpinner extends walnutMotor{
     }
     private analogValues tableConstant;
     private int tablePos;
+    //Used if you need to reverse orientation
+    private double orientation;
+    private double deadZone;
 
     //Constructor
     public IncSpinner(DcMotor myMotor, String myName, boolean checkEncoders,
-                      analogValues myControl) {
+                      analogValues myControl, boolean reverse, double myDeadzone) {
         super(myMotor,myName, checkEncoders);
         //Assign Table Position
         tableConstant = myControl;
         setTable(myControl);
+        if(reverse)
+            orientation = -1;
+        else
+            orientation = 1;
+        deadZone = myDeadzone;
     }
 
     //Extra Getters and Setters
@@ -116,7 +125,9 @@ public class IncSpinner extends walnutMotor{
     //Teleop Methods
     //@Override
     public void operate(){
-        this.getMotor().setPower(walnutMotor.GamepadUpdater.floatValues[tablePos]);
+        double val = walnutMotor.GamepadUpdater.doubleValues[tablePos];
+        if(Math.abs(val)>deadZone)
+            this.getMotor().setPower(val*orientation);
     }
     //Autonomous Methods in Walnut Motor (Called "powerMotor(int pow)")
 }

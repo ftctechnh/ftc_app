@@ -19,24 +19,24 @@ public class DigSpinner extends walnutMotor {
     //Used to program buttons
     public class buttonEvent{
         private int tablePos;
-        private float pow;
+        private double pow;
         private boolean isSticky;
         //Construcor
-        public buttonEvent(String daButton, float myPow){
+        public buttonEvent(String daButton, double myPow){
             //Get table position from noncase sensitive button name
             tablePos = findTablePos(digValues.valueOf(daButton.toUpperCase()));
             pow = myPow;
             //Congradulatiionsns, you found a secret :D
             isSticky = true;
         }
-        public buttonEvent(String daButton, float myPow, boolean sticky){
+        public buttonEvent(String daButton, double myPow, boolean sticky){
             //Get table position from noncase sensitive button name
             tablePos = findTablePos(digValues.valueOf(daButton.toUpperCase()));
             pow = myPow;
             isSticky = sticky;
         }
         //Getters
-        public float getPow(){
+        public double getPow(){
             return pow;
         }
         public boolean checkSticky(){
@@ -124,36 +124,21 @@ public class DigSpinner extends walnutMotor {
     //Constructors
     //Create a forward and backward button event
     public DigSpinner(DcMotor myMotor, String myName, boolean encoderCheck,
-                      String forwardButton, float forwardPower, boolean forwardSticky,
-                      String backwardButton, float backwardPower, boolean backwardSticky){
+                      String button, double power, boolean sticky){
         //Create the motor
         super(myMotor, myName, encoderCheck);
         //Initilize and add button events
         buttonEvent forward =
-                new buttonEvent(forwardButton, forwardPower, forwardSticky);
-        buttonEvent backward =
-                new buttonEvent(backwardButton, backwardPower, backwardSticky);
+                new buttonEvent(button, power, sticky);
 
+        //Create list of buttons and add our first one
         Buttons = new ArrayList<buttonEvent>();
         Buttons.add(forward);
-        Buttons.add(backward);
     }
-    //Do all of the above, but make a "stop" button event
-    //(only useful for non-sticky buttons)
-    public DigSpinner(DcMotor myMotor, String myName, boolean encoderCheck,
-                      String forwardButton, float forwardPower, boolean forwardSticky,
-                      String backwardButton, float backwardPower, boolean backwardSticky,
-                      String stopButton, float stopPower, boolean stopSticky){
-        //Call original constructor to do most work
-        this(myMotor, myName,encoderCheck,
-        forwardButton,forwardPower, forwardSticky,
-        backwardButton, backwardPower, backwardSticky);
+    public void addButton(String button, double power, boolean sticky){
+        Buttons.add(new buttonEvent(button, power, sticky));
+    }
 
-        buttonEvent stop =
-                new buttonEvent(stopButton, stopPower, stopSticky);
-        Buttons.add(stop);
-    }
-    //Same as the ones above, but all power is the same so it is declared once
 
 
     //Getters and Setters

@@ -17,7 +17,7 @@ public abstract class walnutMotor {
     private boolean hasEncoders;
     public static class GamepadUpdater implements Runnable{
         public static boolean canProcess = false;
-        public static float[] floatValues = new float[12];
+        public static double[] doubleValues = new double[12];
         public static boolean[] boolValues = new boolean[30];
         public Gamepad gamepad1Pointer;
         public Gamepad gamepad2Pointer;
@@ -82,19 +82,19 @@ public abstract class walnutMotor {
             //Will loop and update values until told to stop
             while(canProcess){
                 //Analog Values
-                floatValues[0] = gamepad1Pointer.left_stick_x;
-                floatValues[1] = gamepad1Pointer.left_stick_y;
-                floatValues[2] = gamepad1Pointer.right_stick_x;
-                floatValues[3] = gamepad1Pointer.right_stick_y;
-                floatValues[4] = gamepad1Pointer.left_trigger;
-                floatValues[5] = gamepad1Pointer.right_trigger;
+                doubleValues[0] = gamepad1Pointer.left_stick_x;
+                doubleValues[1] = gamepad1Pointer.left_stick_y;
+                doubleValues[2] = gamepad1Pointer.right_stick_x;
+                doubleValues[3] = gamepad1Pointer.right_stick_y;
+                doubleValues[4] = gamepad1Pointer.left_trigger;
+                doubleValues[5] = gamepad1Pointer.right_trigger;
 
-                floatValues[6] = gamepad2Pointer.left_stick_x;
-                floatValues[7] = gamepad2Pointer.left_stick_y;
-                floatValues[8] = gamepad2Pointer.right_stick_x;
-                floatValues[9] = gamepad2Pointer.right_stick_y;
-                floatValues[10] = gamepad2Pointer.left_trigger;
-                floatValues[11] = gamepad2Pointer.right_trigger;
+                doubleValues[6] = gamepad2Pointer.left_stick_x;
+                doubleValues[7] = gamepad2Pointer.left_stick_y;
+                doubleValues[8] = gamepad2Pointer.right_stick_x;
+                doubleValues[9] = gamepad2Pointer.right_stick_y;
+                doubleValues[10] = gamepad2Pointer.left_trigger;
+                doubleValues[11] = gamepad2Pointer.right_trigger;
                 //Digital Values
                 boolValues[0] = gamepad1Pointer.a;
                 boolValues[1] = gamepad1Pointer.b;
@@ -140,7 +140,7 @@ public abstract class walnutMotor {
         name = myName;
         if(encoderCheck){
             hasEncoders = true;
-            motor.setChannelMode
+            motor.setMode
                     (DcMotorController.RunMode.valueOf("RUN_USING_ENCODERS"));
         }
         else
@@ -150,7 +150,7 @@ public abstract class walnutMotor {
     public DcMotor getMotor(){
         return motor;
     }
-    public boolean checkEcoders(){
+    public boolean checkEncoders(){
         return hasEncoders;
     }
     public void setName(String myName){
@@ -166,11 +166,11 @@ public abstract class walnutMotor {
     public String toString(){
         return this.name;
     }
-    public void powerMotor(float pow){
+    public void powerMotor(double pow){
         if(pow>=-1.0&&pow <=1.0)
             motor.setPower(pow);
         else
             System.err.println("Invalid Power Value");
     }
-    abstract void operate();
+    public abstract void operate();
 }
