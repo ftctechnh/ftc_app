@@ -79,14 +79,14 @@ public class PushBotTelemetry extends PushBotHardware
         //
         telemetry.addData
             ( "01"
-            , "Left Drive: "
+            , "Left SimpleDrive: "
                 + a_left_drive_power ()
                 + ", "
                 + a_left_encoder_count ()
             );
         telemetry.addData
             ( "02"
-            , "Right Drive: "
+            , "Right SimpleDrive: "
                 + a_right_drive_power ()
                 + ", "
                 + a_right_encoder_count ()

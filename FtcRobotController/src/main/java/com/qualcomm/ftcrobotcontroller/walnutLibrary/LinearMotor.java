@@ -25,7 +25,6 @@ public abstract class LinearMotor{
         speedLimit = 0;
         if(encoderCheck){
             motor.setMode((DcMotorController.RunMode.valueOf("RUN_USING_ENCODERS")));
-            motor.setMode((DcMotorController.RunMode.valueOf("RESET_ENCODERS")));
         }
         if(isReversed){
             orientation = -1;

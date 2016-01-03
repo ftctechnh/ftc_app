@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 /**
  * Created by Yan Vologzhanin on 1/2/2016.
  */
-public class linearWalnutOpMode extends LinearOpMode {
+public class LinearWalnutOpMode extends LinearOpMode {
     //Initilize HardWare
     private DcMotor motorLeft;
     private DcMotor motorRight;
@@ -30,7 +30,7 @@ public class linearWalnutOpMode extends LinearOpMode {
         catch(InterruptedException e){
             Thread.currentThread().interrupt();
         }
-        //Drive Forward
+        //SimpleDrive Forward
         leftDrive.operate(24,1);
         rightDrive.operate(24,1);
 

@@ -62,8 +62,8 @@ public class FtcOpModeRegister implements OpModeRegister {
         //manager.register("K9Line", K9Line.class);
         //manager.register ("PushBotAuto", PushBotAuto.class);
         //manager.register ("PushBotManual", PushBotManual.class);
-        manager.register("linearWalnutOpmode",linearWalnutOpMode.class);
-        manager.register("New Walnut TeleOp(experimental)",walnutTeleOp.class);
+        manager.register("linearWalnutOpmode",LinearWalnutOpMode.class);
+        manager.register("New Walnut TeleOp(experimental)",WalnutTeleOp.class);
         manager.register("Current Walnut TeleOp", TeleTest.class);
 
 
