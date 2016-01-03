@@ -246,13 +246,23 @@ public abstract class _ResQAuto extends LinearOpMode {
                 backLeftWheel.setPower(0.2);
                 frontRightWheel.setPower(0.2);
                 backRightWheel.setPower(0.2);
-                sleep(150);
+                sleep(250);
+                frontLeftWheel.setPower(-0.2);
+                backLeftWheel.setPower(-0.2);
+                frontRightWheel.setPower(-0.2);
+                backRightWheel.setPower(-0.2);
+                sleep(350);
+                frontLeftWheel.setPower(0);
+                backLeftWheel.setPower(0);
+                frontRightWheel.setPower(0);
+                backRightWheel.setPower(0);
+                sleep(350);
                 button2Servo.setPosition(0);
                 buttonServo.setPosition(0.8);
                 sleep(1000);
             } else {
                 button2Servo.setPosition(0);
-                buttonServo.setPosition(0.3);
+                buttonServo.setPosition(0.4);
                 sleep(1000);
                 frontLeftWheel.setPower(0.2);
                 backLeftWheel.setPower(0.2);
@@ -265,14 +275,24 @@ public abstract class _ResQAuto extends LinearOpMode {
             if (getRedAlliance() == 1){
                 //buttonServo.setPosition(0.7);
                 //sleep(1000);
-                button2Servo.setPosition(0);
-                buttonServo.setPosition(0.3);
-                sleep(1000);
                 frontLeftWheel.setPower(0.2);
                 backLeftWheel.setPower(0.2);
                 frontRightWheel.setPower(0.2);
                 backRightWheel.setPower(0.2);
                 sleep(400);
+                frontLeftWheel.setPower(-0.2);
+                backLeftWheel.setPower(-0.2);
+                frontRightWheel.setPower(-0.2);
+                backRightWheel.setPower(-0.2);
+                sleep(350);
+                frontLeftWheel.setPower(0);
+                backLeftWheel.setPower(0);
+                frontRightWheel.setPower(0);
+                backRightWheel.setPower(0);
+                sleep(500);
+                button2Servo.setPosition(0);
+                buttonServo.setPosition(0.3);
+                sleep(1000);
             } else {
                 frontLeftWheel.setPower(-0.1);
                 backLeftWheel.setPower(-0.1);
@@ -306,7 +326,7 @@ public abstract class _ResQAuto extends LinearOpMode {
         backRightWheel.setPower(-0.1);
         //button2Servo.setPosition(0.6);
         //buttonServo.setPosition(0.3);
-        sleep(1000);
+        sleep(1100);
 
         //End of Autonomous
         if (getDelay() == 0) {
@@ -320,12 +340,12 @@ public abstract class _ResQAuto extends LinearOpMode {
                 backLeftWheel.setPower(0.2);
                 frontRightWheel.setPower(-0.2);
                 backRightWheel.setPower(-0.2);
-                sleep(900);
-                frontLeftWheel.setPower(0.6);
-                backLeftWheel.setPower(0.6);
-                frontRightWheel.setPower(0.6);
-                backRightWheel.setPower(0.6);
-                sleep(1200);
+                sleep(1500);
+                frontLeftWheel.setPower(0.3);
+                backLeftWheel.setPower(0.3);
+                frontRightWheel.setPower(0.3);
+                backRightWheel.setPower(0.3);
+                sleep(1400);
                 frontRightWheel.setPower(0);
                 frontLeftWheel.setPower(0);
                 backRightWheel.setPower(0);
@@ -345,7 +365,7 @@ public abstract class _ResQAuto extends LinearOpMode {
                 backLeftWheel.setPower(0.3);
                 frontRightWheel.setPower(0.3);
                 backRightWheel.setPower(0.3);
-                sleep(300);
+                sleep(400);
                 frontRightWheel.setPower(0);
                 frontLeftWheel.setPower(0);
                 backRightWheel.setPower(0);
