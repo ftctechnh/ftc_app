@@ -1,12 +1,11 @@
 package com.qualcomm.ftcrobotcontroller.walnutLibrary;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * Created by Yan Vologzhanin on 1/2/2016.
  */
-public class IncSpinner extends walnutMotor{
+public class IncSpinner extends WalnutMotor {
     public enum analogValues{
         LEFTX1(),LEFTY1(),RIGHTX1(),RIGHTY1(),LEFTZ1(),RIGHTZ1(),
                 LEFTX2(),LEFTY2(),RIGHTX2(),RIGHTY2(),LEFTZ2(),RIGHTZ2();
@@ -20,11 +19,13 @@ public class IncSpinner extends walnutMotor{
 
     //Constructor
     public IncSpinner(DcMotor myMotor, String myName, boolean checkEncoders,
-                      analogValues myControl, boolean reverse, double myDeadzone) {
+                      String myControl, boolean reverse, double myDeadzone) {
         super(myMotor,myName, checkEncoders);
         //Assign Table Position
-        tableConstant = myControl;
-        setTable(myControl);
+        String nonCaseSensetive = myControl.toUpperCase();
+        //@TODO Do I Need this field?
+        tableConstant = analogValues.valueOf(nonCaseSensetive);
+        setTable(analogValues.valueOf(nonCaseSensetive));
         if(reverse)
             orientation = -1;
         else
@@ -125,7 +126,7 @@ public class IncSpinner extends walnutMotor{
     //Teleop Methods
     //@Override
     public void operate(){
-        double val = walnutMotor.GamepadUpdater.doubleValues[tablePos];
+        double val = WalnutMotor.GamepadUpdater.doubleValues[tablePos];
         if(Math.abs(val)>deadZone)
             this.getMotor().setPower(val*orientation);
     }

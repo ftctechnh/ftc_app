@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 /**
  * Created by Yan Vologzhanin on 1/2/2016.
  */
-public abstract class walnutMotor {
+public abstract class WalnutMotor {
     //Field
     private DcMotor motor;
     //Used for telemetry
@@ -135,7 +135,7 @@ public abstract class walnutMotor {
         }
     }
     //Constructor
-    walnutMotor(DcMotor myMotor,String myName, boolean encoderCheck){
+    WalnutMotor(DcMotor myMotor, String myName, boolean encoderCheck){
         motor = myMotor;
         name = myName;
         if(encoderCheck){

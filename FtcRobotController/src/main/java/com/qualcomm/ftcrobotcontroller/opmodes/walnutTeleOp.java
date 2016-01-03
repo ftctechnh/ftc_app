@@ -13,9 +13,9 @@ import java.util.ArrayList;
 /**
  * Created by Yan Vologzhanin on 1/2/2016.
  */
-public class walnutTeleOp extends OpMode{
+public class WalnutTeleOp extends OpMode{
     //Initilze new thread
-    private static walnutMotor.GamepadUpdater updater = new walnutMotor.GamepadUpdater();
+    private static WalnutMotor.GamepadUpdater updater = new WalnutMotor.GamepadUpdater();
     private static Thread processor = new Thread(updater);
 
     //Physical Hardware
@@ -27,7 +27,7 @@ public class walnutTeleOp extends OpMode{
     private Servo belt;
     private Servo doors;
     //Button Assignments
-    private ArrayList<walnutMotor> motors;
+    private ArrayList<WalnutMotor> motors;
     private IncSpinner leftDrive;
     private IncSpinner rightDrive;
     private DigSpinner intake;
@@ -42,12 +42,9 @@ public class walnutTeleOp extends OpMode{
         intakeSpinners = hardwareMap.dcMotor.get("spinners");
         spool = hardwareMap.dcMotor.get("slideLeft");
         //Assign Buttons
-        leftDrive = new IncSpinner(motorLeft,"Left Drive",true,
-                IncSpinner.analogValues.valueOf("LEFTY1"), true, 0.05);
-        rightDrive = new IncSpinner(motorRight,"Right Drive",true,
-                IncSpinner.analogValues.valueOf("RIGHTY1"), false, 0.05);
-        slides = new IncSpinner(spool, "Slider", false,
-                IncSpinner.analogValues.valueOf("LEFTY2"),false,0.25);
+        leftDrive = new IncSpinner(motorLeft,"Left SimpleDrive",true,"LEFTY1", true, 0.05);
+        rightDrive = new IncSpinner(motorRight,"Right SimpleDrive",true,"RIGHTY1", false, 0.05);
+        slides = new IncSpinner(spool, "Slider", false, "LEFTY2",false,0.25);
 
         intake = new DigSpinner(intakeSpinners,"intake",false,
                 "A2",-1,true);

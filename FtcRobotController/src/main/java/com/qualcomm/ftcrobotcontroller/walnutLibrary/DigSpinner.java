@@ -7,7 +7,7 @@ import java.util.ArrayList;
 /**
  * Created by Yan Vologzhanin on 1/2/2016.
  */
-public class DigSpinner extends walnutMotor {
+public class DigSpinner extends WalnutMotor {
     //Fields
     //All available buttons... EVER (pls ;-;)
     public enum digValues{
@@ -149,10 +149,10 @@ public class DigSpinner extends walnutMotor {
         buttonEvent temp;
         for(int i = 0;i<Buttons.size();i++){
             temp = Buttons.get(i);
-            if(walnutMotor.GamepadUpdater.boolValues[temp.getPos()]){
+            if(WalnutMotor.GamepadUpdater.boolValues[temp.getPos()]){
                 this.powerMotor(temp.getPow());
             }
-            if(!temp.checkSticky()&&!walnutMotor.GamepadUpdater.boolValues[temp.getPos()]){
+            if(!temp.checkSticky()&&!WalnutMotor.GamepadUpdater.boolValues[temp.getPos()]){
                 this.stopMotor();
             }
 
