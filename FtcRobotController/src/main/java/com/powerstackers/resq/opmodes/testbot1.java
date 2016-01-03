@@ -8,10 +8,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
 
-import org.swerverobotics.library.ClassFactory;
-
 /**
- * Created by Derek on 12/6/2015.
+ *
+ * @author Derek Helm
+ *
  */
 public class testbot1 extends OpMode {
 

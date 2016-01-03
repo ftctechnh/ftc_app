@@ -9,12 +9,14 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.swerverobotics.library.ClassFactory;
+import org.swerverobotics.library.interfaces.TeleOp;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.Direction.FORWARD;
 
 /**
  * Created by Derek on 10/10/2015.
  */
+@TeleOp
 public class ProtobotTeleop extends OpMode {
 
     /**

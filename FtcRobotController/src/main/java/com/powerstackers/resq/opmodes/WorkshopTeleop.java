@@ -24,11 +24,14 @@ package com.powerstackers.resq.opmodes;
 import com.powerstackers.resq.common.Robot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import org.swerverobotics.library.interfaces.TeleOp;
+
 /**
  * Teleop program made at the workshop.
  * @author Jonathan Thomas
  *
  */
+@TeleOp
 public class WorkshopTeleop extends OpMode{
 
     Robot robot;

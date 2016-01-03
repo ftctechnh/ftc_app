@@ -7,25 +7,27 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.swerverobotics.library.ClassFactory;
+import org.swerverobotics.library.interfaces.TeleOp;
 
 /**
- * Created by Derek on 10/10/2015.
+ * @author Derek Helm
  */
+@TeleOp
 public class BlueAlianceOP extends OpMode {
 
-    /** TETRIX VALUES.
-     *
+    /*
+     * TETRIX VALUES.
      */
     final static double servoBeacon_MIN_RANGE  = 0.00;
     final static double servoBeacon_MAX_RANGE  = 1.00;
 
-    /** position of servo <Value of Variable>
-     *
+    /*
+     * position of servo <Value of Variable>
      */
     double servoBeaconPosition;
 
-    /**Color Values
-     *
+    /*
+     * Color Values
      */
     float hsvValues[] = {0, 0, 0};
     final float values[] = hsvValues;
@@ -43,7 +45,7 @@ public class BlueAlianceOP extends OpMode {
     public void init() {
 
 
-        /**
+        /*
          * Use the hardwareMap to get the dc motors and servos by name. Note
          * that the names of the devices must match the names used when you
          * configured your robot and created the configuration file.
@@ -55,8 +57,8 @@ public class BlueAlianceOP extends OpMode {
         colorSensor = ClassFactory.createSwerveColorSensor(this, this.hardwareMap.colorSensor.get("colorSensor"));
         colorSensor.enableLed(true);
 //        touchSensor = hardwareMap.touchSensor.get("touchSensor");
-        /**Servos
-         *
+        /*
+         * Servos
          */
         servoBeacon = hardwareMap.servo.get("servoBeacon");
         servoBeaconPosition = 0.50;
@@ -82,17 +84,17 @@ public class BlueAlianceOP extends OpMode {
         }
 
 
-        /** clip the position values so that they never exceed their allowed range.
-         *
+        /*
+         * clip the position values so that they never exceed their allowed range.
          */
         servoBeaconPosition = Range.clip(servoBeaconPosition, servoBeacon_MIN_RANGE, servoBeacon_MAX_RANGE);
 
-        /**write position values to the servos
-         *
+        /*
+         * write position values to the servos
          */
         servoBeacon.setPosition(servoBeaconPosition);
 
-        /**
+        /*
          * Send telemetry data back to driver station. N
          motorFRight.setPower(right);
          motorFLeft.setPower(left);ote that if we are using
@@ -102,16 +104,16 @@ public class BlueAlianceOP extends OpMode {
          */
         telemetry.addData("Text", "*** Robot Data***");
 
-        /**Color Telemetry
-         *
+        /*
+         * Color Telemetry
          */
         telemetry.addData("Clear", colorSensor.alpha());
         telemetry.addData("Red  ", colorSensor.red());
         telemetry.addData("Green", colorSensor.green());
         telemetry.addData("Blue ", colorSensor.blue());
 
-        /**servo Telemetry
-         *
+        /*
+         * servo Telemetry
          */
         telemetry.addData("servoBeacon", "position: " + String.valueOf(servoBeaconPosition));
 

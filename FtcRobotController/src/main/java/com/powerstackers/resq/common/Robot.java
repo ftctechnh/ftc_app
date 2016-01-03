@@ -21,25 +21,43 @@
 package com.powerstackers.resq.common;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+
+import org.swerverobotics.library.ClassFactory;
 
 /**
  * A general representation of a robot, with simple interaction methods.
  * @author Jonathan Thomas
  */
 public class Robot {
+
+    // Final constants
+    private static final double CRS_REVERSE = 0.0;
+    private static final double CRS_STOP    = 0.5;
+    private static final double CRS_FORWARD = 1.0;
+    private static final double LIFT_SPEED  = 1.0;
+    private static final double BRUSH_SPEED = 1.0;
+
     private DcMotor motorLeftA;
     private DcMotor motorLeftB;
     private DcMotor motorRightA;
     private DcMotor motorRightB;
+    private DcMotor motorBrush;
+    private DcMotor motorLift;
 
-    private Servo servoArm;
-    private Servo servoClaw;
+    private Servo servoTapeMeasure;
+    private Servo servoBeacon;
+    private Servo servoRight;
+    private Servo servoLeft;
 
-    private TouchSensor touchSensor;
+    private DeviceInterfaceModule dim;
+    private ColorSensor sensorColor;
+    private TouchSensor sensorTouch;
     public OpticalDistanceSensor opticalSensor;
 
     /**
@@ -47,16 +65,28 @@ public class Robot {
      * @param mode The OpMode in which the robot is being used.
      */
     public Robot(OpMode mode) {
-        motorLeftA = mode.hardwareMap.dcMotor.get("motor_1");
-        motorLeftB = mode.hardwareMap.dcMotor.get("motor_3");
-        motorRightA = mode.hardwareMap.dcMotor.get("motor_2");
-        motorRightB = mode.hardwareMap.dcMotor.get("motor_4");
+        motorLeftA  = mode.hardwareMap.dcMotor.get("motorFLeft");
+        motorLeftB  = mode.hardwareMap.dcMotor.get("motorBLeft");
+        motorRightA = mode.hardwareMap.dcMotor.get("motorFRight");
+        motorRightB = mode.hardwareMap.dcMotor.get("motorBRight");
+        motorBrush  = mode.hardwareMap.dcMotor.get("motorBrush");
+        motorLift   = mode.hardwareMap.dcMotor.get("motorLift");
 
-        servoArm = mode.hardwareMap.servo.get("servo_1");
-        servoClaw = mode.hardwareMap.servo.get("servo_6");
+        motorLift.setDirection(DcMotor.Direction.REVERSE);
+        motorRightA.setDirection(DcMotor.Direction.REVERSE);
+        motorRightB.setDirection(DcMotor.Direction.REVERSE);
 
-        touchSensor = mode.hardwareMap.touchSensor.get("touch_sensor");
-        opticalSensor = mode.hardwareMap.opticalDistanceSensor.get("optical_distance_sensor");
+        servoTapeMeasure = mode.hardwareMap.servo.get("servo_2");
+        servoBeacon      = mode.hardwareMap.servo.get("servoBeacon");
+        servoRight       = mode.hardwareMap.servo.get("servoRight");
+        servoLeft        = mode.hardwareMap.servo.get("servoLeft");
+
+        dim = mode.hardwareMap.deviceInterfaceModule.get("dim");
+        sensorColor = ClassFactory.createSwerveColorSensor(mode,
+                mode.hardwareMap.colorSensor.get("sensorColor"));
+        sensorColor.enableLed(true);
+        opticalSensor = mode.hardwareMap.opticalDistanceSensor.get("opticalDistance");
+
     }
 
     /**
@@ -77,5 +107,71 @@ public class Robot {
         motorLeftB.setPower(power);
     }
 
+    /**
+     * Set the movement of the tape measure motor.
+     * @param setting ServoSetting enum value; FORWARD, STOP, or REVERSE.
+     */
+    public void setTapeMeasure(ServoSetting setting) {
+        toggleCRServo(servoTapeMeasure, setting);
+    }
 
+    /**
+     * Set the movement of the brush motor.
+     * @param setting ServoSetting indicating the direction.
+     */
+    public void setBrush(ServoSetting setting) {
+        toggleMotor(motorBrush, setting, BRUSH_SPEED);
+    }
+
+    /**
+     * Set the direction of the lift: REVERSE, STOP, or FORWARD.
+     * @param setting ServoSetting enum indicating the direction.
+     */
+    public void setLift(ServoSetting setting) {
+        toggleMotor(motorLift, setting, LIFT_SPEED);
+    }
+
+    /**
+     * Toggles a motor between three settings: FORWARD, STOP, and REVERSE.
+     * @param toToggle Motor to change.
+     * @param setting ServoSetting indicating the direction.
+     * @param power Power value to use.
+     */
+    private void toggleMotor(DcMotor toToggle, ServoSetting setting, double power) {
+        switch (setting) {
+            case REVERSE:
+                toToggle.setPower(-power);
+                break;
+            case STOP:
+                toToggle.setPower(0);
+                break;
+            case FORWARD:
+                toToggle.setPower(power);
+                break;
+            default:
+                toToggle.setPower(0);
+                break;
+        }
+    }
+
+    /**
+     * Toggle a continuous rotation servo in one of three directions: FORWARD, STOP, and REVERSE.
+     * @param toToggle Servo to toggle.
+     * @param setting ServoSetting indicating the direction.
+     */
+    private void toggleCRServo(Servo toToggle, ServoSetting setting) {
+        switch (setting) {
+            case REVERSE:
+                toToggle.setPosition(CRS_REVERSE);
+                break;
+            case STOP:
+                toToggle.setPosition(CRS_STOP);
+                break;
+            case FORWARD:
+                toToggle.setPosition(CRS_FORWARD);
+                break;
+            default:
+                toToggle.setPosition(CRS_STOP);
+        }
+    }
 }
