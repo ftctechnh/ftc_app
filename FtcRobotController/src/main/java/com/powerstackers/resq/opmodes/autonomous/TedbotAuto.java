@@ -12,7 +12,7 @@ import org.swerverobotics.library.ClassFactory;
 /**
  * Created by Derek on 12/23/2015.
  */
-public class Tedbot_Auto extends LinearOpMode {
+public class TedbotAuto extends LinearOpMode {
 
     final static double servoBeacon_MIN_RANGE  = 0.00;
     final static double servoBeacon_MAX_RANGE  = 1.00;
