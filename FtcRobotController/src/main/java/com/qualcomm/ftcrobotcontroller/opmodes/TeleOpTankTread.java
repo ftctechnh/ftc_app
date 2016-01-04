@@ -6,6 +6,7 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -69,6 +70,13 @@ public class TeleOpTankTread extends OpMode {
         tbc.setSnowplowPosition(tbc.snowplowPosition);
         tbc.setMtapePosition(tbc.mtapePosition);
         tbc.setButtonServoSpeed(tbc.buttonServoSpeed);
+        //tbc.setMotorRRightPower(0.0f);
+        //tbc.setMotorRLeftPower(0.0f);
+        //tbc.setMotorFLeftPower(0.0f);
+       // tbc.setMotorFRightPower(0.0f);
+        tbc.setDriveMode(DcMotorController.RunMode.RESET_ENCODERS);
+        tbc.setDriveMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+
 
         if (tbc.sc != null) {
             tbc.sc.pwmEnable(); // enable servo controller PWM outputs
@@ -228,7 +236,10 @@ public class TeleOpTankTread extends OpMode {
         telemetry.addData("sliderL", "sliderL: " + String.format("%.2f", tbc.sliderLPosition));
         telemetry.addData("sliderR", "sliderR:" + String.format("%.2f", tbc.sliderRPosition));
         telemetry.addData("mtape", "mtape: " + String.format("%.2f", tbc.mtapePosition));
-
+        telemetry.addData("lf encoder", "lf encoder:" + String.format("%d", tbc.motorFLeft.getCurrentPosition()));
+        telemetry.addData("rf encoder", "rf encoder:" + String.format("%d", tbc.motorFRight.getCurrentPosition()));
+        telemetry.addData("lr encoder", "lr encoder:" + String.format("%d", tbc.motorRLeft.getCurrentPosition()));
+        telemetry.addData("rr encoder", "rr encoder:" + String.format("%d", tbc.motorRRight.getCurrentPosition()));
         // if LinearOpMode
         // waitOneFullHardwareCycle();
     }
