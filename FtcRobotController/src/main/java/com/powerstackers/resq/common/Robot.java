@@ -76,7 +76,7 @@ public class Robot {
         motorRightA.setDirection(DcMotor.Direction.REVERSE);
         motorRightB.setDirection(DcMotor.Direction.REVERSE);
 
-        servoTapeMeasure = mode.hardwareMap.servo.get("servo_2");
+        servoTapeMeasure = mode.hardwareMap.servo.get("servoTapeMeasure");
         servoBeacon      = mode.hardwareMap.servo.get("servoBeacon");
         servoRight       = mode.hardwareMap.servo.get("servoRight");
         servoLeft        = mode.hardwareMap.servo.get("servoLeft");
