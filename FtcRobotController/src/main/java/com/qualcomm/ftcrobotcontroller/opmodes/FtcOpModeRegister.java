@@ -73,11 +73,11 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("RedLeftZone", RedLeftZone.class);
     manager.register("RedLeftRamp", RedLeftRamp.class);
     manager.register("BlueLeftZone", BlueLeftZone.class);
-
+    manager.register("MRRGBExample", MRRGBExample.class);
     /*
      * Uncomment any of the following lines if you want to register an op mode.
      */
-    manager.register("MR Gyro Test", MRGyroTest.class);
+    //manager.register("MR Gyro Test", MRGyroTest.class);
 
     //manager.register("AdafruitRGBExample", AdafruitRGBExample.class);
     //manager.register("ColorSensorDriver", ColorSensorDriver.class);
