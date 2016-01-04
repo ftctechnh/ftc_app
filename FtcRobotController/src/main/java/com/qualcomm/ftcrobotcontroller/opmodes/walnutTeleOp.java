@@ -15,8 +15,8 @@ import java.util.ArrayList;
  */
 public class WalnutTeleOp extends OpMode{
     //Initilze new thread
-    private static WalnutMotor.GamepadUpdater updater = new WalnutMotor.GamepadUpdater();
-    private static Thread processor = new Thread(updater);
+    private WalnutMotor.GamepadUpdater updater;
+    private Thread processor;
 
     //Physical Hardware
     private DcMotor motorLeft;
@@ -38,7 +38,7 @@ public class WalnutTeleOp extends OpMode{
     public void init(){
         //Initilize Hardware
         motorLeft = hardwareMap.dcMotor.get("motorLeft");
-        motorRight = hardwareMap.dcMotor.get("slideRight");
+        motorRight = hardwareMap.dcMotor.get("motorRight");
         intakeSpinners = hardwareMap.dcMotor.get("spinners");
         spool = hardwareMap.dcMotor.get("slideLeft");
         //Assign Buttons
@@ -49,8 +49,8 @@ public class WalnutTeleOp extends OpMode{
         intake = new DigSpinner(intakeSpinners,"intake",false,
                 "A2",-1,true);
         intake.addButton("B2",0,true);
-
-        //Add Buttons to arrayList
+        //Add Buttons to arrayList and initilize
+        motors = new ArrayList<WalnutMotor>();
         motors.add(leftDrive);
         motors.add(rightDrive);
         motors.add(slides);
@@ -60,6 +60,9 @@ public class WalnutTeleOp extends OpMode{
         doors = hardwareMap.servo.get("doors");
         belt.setPosition(0.5);
         doors.setPosition(0.5);
+        //Initilize Stuff for Processing
+        updater = new WalnutMotor.GamepadUpdater();
+        processor = new Thread(updater);
     }
     public void start(){
         //Start Gamepad Processing
@@ -72,15 +75,13 @@ public class WalnutTeleOp extends OpMode{
             motors.get(i).operate();
         }
         //Why Servos why???
-        belt.setPosition(1-(gamepad2.right_stick_x+1.0)/2.0);
-        doors.setPosition((gamepad2.left_stick_x/2.0)+0.5);
+        belt.setPosition(1 - (gamepad2.right_stick_x + 1.0) / 2.0);
+        doors.setPosition((gamepad2.left_stick_x / 2.0) + 0.5);
     }
     public void stop(){
-        //Stop motors
-        for(int i=0;i<motors.size();i++){
-            motors.get(i).stopMotor();
-        }
-        //Reset Servos
+       for(int i = 0;i<motors.size();i++){
+           motors.get(i).stopMotor();
+       }
         belt.setPosition(0.5);
         doors.setPosition(0.5);
     }

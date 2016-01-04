@@ -12,6 +12,7 @@ public class DistanceMotor extends LinearMotor implements Runnable{
     //Please measure in Inches
     private double circumference;
     private double gearRatio;
+    private int distance;
     public DistanceMotor(DcMotor myMotor, String myName, boolean encoderCheck,boolean isReveresed,
                          double myDiameter,double myGearRatio, int myEncoder){
         super(myMotor, myName, encoderCheck,isReveresed);
@@ -21,7 +22,7 @@ public class DistanceMotor extends LinearMotor implements Runnable{
         encoderRot = myEncoder;
     }
     public void operate(double inches, double mySpeedLimit){
-        int distance = (int)(inches * circumference * gearRatio);
+        distance = (int)(inches * circumference * gearRatio);
         speedLimit = mySpeedLimit*orientation;
         motor.setTargetPosition(distance);
         motor.setPower(speedLimit);
@@ -29,7 +30,7 @@ public class DistanceMotor extends LinearMotor implements Runnable{
     }
     public void run(){
         //Keep checking if the motor is busy before resseting encoders
-        while(motor.isBusy()){
+        while(motor.getCurrentPosition()<distance){
             try{
                 Thread.sleep(WAITRESOLUTION);
             }
