@@ -62,13 +62,10 @@ public class IncSpinner extends WalnutMotor {
             case(11):
                 return "RIGHTZ2";
             default:
-                System.err.println("Invalid input method");
-                throw new IndexOutOfBoundsException("Called on out of bounds table val");
+                return "RIGHTZ2";
         }
     }
     private void setTable(analogValues myControl){
-        if(myControl == null)
-            throw new IndexOutOfBoundsException("Null Inpute");
         switch(myControl){
             case LEFTX1:
                 tablePos = 0;
@@ -107,7 +104,7 @@ public class IncSpinner extends WalnutMotor {
                 tablePos = 11;
                 break;
             default:
-                throw new IndexOutOfBoundsException("Invalid Input");
+                tablePos = 0;
         }
     }
     public void setTablePos(String myControl){
@@ -118,8 +115,7 @@ public class IncSpinner extends WalnutMotor {
         if(n>=0&&n<=11)
             tablePos = n;
         else{
-            System.err.println("Invalid table index");
-            throw new IndexOutOfBoundsException();
+            tablePos =0;
         }
 
     }

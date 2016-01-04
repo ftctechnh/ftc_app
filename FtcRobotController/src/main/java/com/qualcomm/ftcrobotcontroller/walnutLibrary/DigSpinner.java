@@ -112,7 +112,7 @@ public class DigSpinner extends WalnutMotor {
                 case RSTICK2:
                     return 29;
                 default:
-                    throw new IndexOutOfBoundsException();
+                    return 0;
             }
         }
         public int findTable(String daButton){

@@ -75,9 +75,6 @@ public abstract class WalnutMotor {
         }
         //Method that starts at thread and updates neccesary parts
         public void run(){
-            if(gamepad1Pointer==null || gamepad2Pointer==null) {
-                throw new NullPointerException("Started Process without Gamepads");
-            }
             canProcess = true;
             //Will loop and update values until told to stop
             while(canProcess){
@@ -142,6 +139,7 @@ public abstract class WalnutMotor {
             hasEncoders = true;
             motor.setMode
                     (DcMotorController.RunMode.valueOf("RUN_USING_ENCODERS"));
+            motor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         }
         else
             hasEncoders = false;
