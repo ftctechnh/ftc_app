@@ -2,6 +2,7 @@ package org.ndhsb.ftc7593;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -54,6 +55,7 @@ public class tbc {
     public static double snowplowPosition = SNOWPLOW_MIN_RANGE;
     public static double mtapePosition = MTAPE_MIN_RANGE;
     public static double buttonServoSpeed = 0.5;
+
 
     public static void initServoValues() {
         climberPosition = CLIMBER_MAX_RANGE;
@@ -158,6 +160,32 @@ public class tbc {
         }
     }
 
+    public static void setDriveMode(DcMotorController.RunMode mode) {
+        if (motorRLeft != null) {
+            if (motorRLeft.getMode() != mode) {
+                motorRLeft.setMode(mode);
+            }
+        }
+
+        if (motorFLeft != null) {
+            if (motorFLeft.getMode() != mode) {
+                motorFLeft.setMode(mode);
+            }
+        }
+
+        if (motorRRight != null) {
+            if (motorRRight.getMode() != mode) {
+                motorRRight.setMode(mode);
+            }
+        }
+
+        if (motorFRight != null) {
+            if (motorFRight.getMode() != mode) {
+                motorFRight.setMode(mode);
+            }
+        }
+    }
+
     public static void initHardwareMap() {
         try {
             sc = hardwareMap.servoController.get("sc");
@@ -234,6 +262,7 @@ public class tbc {
 
         motorHook = null;
         motorPusher = null;
+        sensorRGB = null;
     }
 
 /*
