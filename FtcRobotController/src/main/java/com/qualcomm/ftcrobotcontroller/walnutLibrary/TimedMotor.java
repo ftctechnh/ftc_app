@@ -23,7 +23,7 @@ public class TimedMotor extends LinearMotor implements Runnable{
         new Thread(this).start();
 
     }
-    public void operate(int mSecs, double mySpeedLimit){
+    public void operateMSecs(int mSecs, double mySpeedLimit){
         numMSecs = mSecs;
         speedLimit = mySpeedLimit;
         //Start parrallel Process
