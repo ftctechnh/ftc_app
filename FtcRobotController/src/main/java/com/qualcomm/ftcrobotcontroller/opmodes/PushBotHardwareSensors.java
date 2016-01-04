@@ -255,7 +255,7 @@ public class PushBotHardwareSensors extends PushBotTelemetry
     // drive_to_ir_beacon
     //
     /**
-     * Drive toward the IR beacon.
+     * SimpleDrive toward the IR beacon.
      */
     final int drive_to_ir_beacon_not_detected = -2;
     final int drive_to_ir_beacon_invalid = -1; // Unknown failure

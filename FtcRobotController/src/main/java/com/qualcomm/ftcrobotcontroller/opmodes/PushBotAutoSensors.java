@@ -93,7 +93,7 @@ public class PushBotAutoSensors extends PushBotTelemetrySensors
             if (have_drive_encoders_reset ())
             {
                 //
-                // Begin the next state.  Drive forward.
+                // Begin the next state.  SimpleDrive forward.
                 //
                 drive_using_encoders (-1.0f, 1.0f, -2880, 2880);
 
@@ -109,7 +109,7 @@ public class PushBotAutoSensors extends PushBotTelemetrySensors
         //
         case 1:
             //
-            // Drive forward at full power until the encoders trip.
+            // SimpleDrive forward at full power until the encoders trip.
             //
             // Forward motion is achieved when the first and second parameters
             // are the same and positive.
@@ -205,7 +205,7 @@ public class PushBotAutoSensors extends PushBotTelemetrySensors
         //
         case 5:
             //
-            // Drive forward until a white line is detected.
+            // SimpleDrive forward until a white line is detected.
             //
             //
             // If a white line has been detected, then set the power level to
@@ -280,7 +280,7 @@ public class PushBotAutoSensors extends PushBotTelemetrySensors
         // Send telemetry data to the driver station.
         //
         update_telemetry (); // Update common telemetry
-        telemetry.addData ("11", "Drive State: " + v_state);
+        telemetry.addData ("11", "SimpleDrive State: " + v_state);
         telemetry.addData ("12", "Arm State: " + v_arm_state);
 
     } // loop

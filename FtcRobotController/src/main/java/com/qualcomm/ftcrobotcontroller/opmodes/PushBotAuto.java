@@ -99,7 +99,7 @@ public class PushBotAuto extends PushBotTelemetry
 
             break;
         //
-        // Drive forward until the encoders exceed the specified values.
+        // SimpleDrive forward until the encoders exceed the specified values.
         //
         case 1:
             //
