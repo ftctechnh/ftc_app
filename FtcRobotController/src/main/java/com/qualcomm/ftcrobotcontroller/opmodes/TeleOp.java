@@ -54,6 +54,7 @@ public class TeleOp extends OpMode {
 	DcMotor rightMotor, leftMotor;//drive motors
 	Servo servoRight;//climber switch
 	Servo servoLeftFlip, servoRightFlip;//swings out to hit levers
+	Servo servoArmJam;
 	float yasss = .5f;
 	int yasssCount = 0;
 
@@ -61,6 +62,7 @@ public class TeleOp extends OpMode {
 	double servoRightPosition = 0.0;//Starting pos of right servo, 0.0 cause reversed from other servo
 	double servoLeftFlipPosition = 0.0;
 	double servoRightFlipPosition = 0.0;
+	double servoArmJamPosition = 0.0;
 	double servoChange = .01; //Value used to change the pos of servos
 	double servoLower = 0.0; //Lower limit for servos
 	double servoUpper = 1.0; //Upper limit for servos
@@ -111,6 +113,7 @@ public class TeleOp extends OpMode {
 
 		servoLeftFlip = hardwareMap.servo.get("servoLeftFlip");
 		servoRightFlip = hardwareMap.servo.get("servoRightFlip");
+		servoArmJam = hardwareMap.servo.get("servoArmJam");
 
 
 	}
@@ -184,11 +187,19 @@ public class TeleOp extends OpMode {
 		}
 
 		if(gamepad1.left_trigger > .5){
-			servoLeftFlipPosition -= servoChange;
+			servoLeftFlipPosition += servoChange;
 		}
 
 		if(gamepad1.right_trigger > .5){
-			servoRightFlipPosition += servoChange;
+			servoRightFlipPosition -= servoChange;
+		}
+
+		if(gamepad1.a){
+			servoArmJamPosition -= servoChange;
+		}
+
+		if(gamepad1.b){
+			servoArmJamPosition += servoChange;
 		}
 
 		if(gamepad2.y){
@@ -210,9 +221,10 @@ public class TeleOp extends OpMode {
 
 		servoLeftFlipPosition = Range.clip(servoLeftFlipPosition, servoLower, servoUpper);
 		servoRightFlipPosition = Range.clip(servoRightFlipPosition, servoLower, servoUpper);
-
+		servoArmJamPosition = Range.clip(servoArmJamPosition, servoLower, servoUpper);
+		
 		servoRight.setPosition(servoRightPosition);
-
+		servoArmJam.setPosition(servoArmJamPosition);
 		servoLeftFlip.setPosition(servoLeftFlipPosition);
 		servoRightFlip.setPosition(servoRightFlipPosition);
 		/*
