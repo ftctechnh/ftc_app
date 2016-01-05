@@ -75,7 +75,7 @@ public class TeleOpTankTread extends OpMode {
         //tbc.setMotorFLeftPower(0.0f);
        // tbc.setMotorFRightPower(0.0f);
         tbc.setDriveMode(DcMotorController.RunMode.RESET_ENCODERS);
-        tbc.setDriveMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        //tbc.setDriveMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
 
 
         if (tbc.sc != null) {
@@ -92,6 +92,8 @@ public class TeleOpTankTread extends OpMode {
      */
     @Override
     public void loop() {
+
+        tbc.setDriveMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
 
 		/*
 		 * Gamepad 1

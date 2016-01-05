@@ -1,4 +1,4 @@
-/*package com.qualcomm.ftcrobotcontroller.opmodes;
+package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -9,27 +9,16 @@ import org.ndhsb.ftc7593.AutonChoice;
 
 public class EncoderAuton extends PushBotHardware {
 
-    public ElapsedTime mRuntime = new ElapsedTime();
 
     public EncoderAuton() {
-
-        tbc.setMotorFLeftPower();
-        tbc.setMotorFRightPower();
-        tbc.setMotorRLeftPower();
-        tbc.setMotorRRightPower();
-
-        tbc.setMotorFLeftPower();
-        tbc.setMotorFRightPower();
-        tbc.setMotorRLeftPower();
-        tbc.setMotorRRightPower();
-
-        tbc.setMotorFLeftPower();
-        tbc.setMotorFRightPower();
-        tbc.setMotorRLeftPower();
-        tbc.setMotorRRightPower();
     }
+    public ElapsedTime mRuntime = new ElapsedTime();
+
+    double time = mRuntime.time();
 
     public void init() {
+        telemetry.addData("init", "init");
+
         tbc.hardwareMap = hardwareMap;
         tbc.initHardwareMap();
 
@@ -50,17 +39,59 @@ public class EncoderAuton extends PushBotHardware {
     }
 
     public void loop() {
-
-
-
         telemetry.addData("Text", "*** Robot Data***");
         // telemetry.addData("arm", "arm:  " + String.format("%.2f", armPosition));
         // telemetry.addData("claw", "claw:  " + String.format("%.2f", clawPosition));
+        // telemetry.addData("left", "left:" + String.format("%.2f", tbc.motorFLeft));
         telemetry.addData("button servo", "button servo: " + String.format("%.2f", tbc.buttonServoSpeed));
         telemetry.addData("climber", "climber:  " + String.format("%.2f", tbc.climberPosition));
         telemetry.addData("sliderL", "sliderL: " + String.format("%.2f", tbc.sliderLPosition));
         telemetry.addData("sliderR", "sliderR:" + String.format("%.2f", tbc.sliderRPosition));
         telemetry.addData("mtape", "mtape: " + String.format("%.2f", tbc.mtapePosition));
+
+        while (Math.abs(tbc.motorFLeft.getCurrentPosition()) < 13500) {
+            tbc.setMotorFLeftPower(-1.0f);
+            tbc.setMotorFRightPower(-1.0f);
+            tbc.setMotorRRightPower(-1.0f);
+            tbc.setMotorRLeftPower(-1.0f);
+        }
+
+        tbc.setMotorFLeftPower(0.0f);
+        tbc.setMotorFRightPower(0.0f);
+        tbc.setMotorRRightPower(0.0f);
+        tbc.setMotorRLeftPower(0.0f);
+
+        while (Math.abs(tbc.motorFLeft.getCurrentPosition()) < 12300) {
+            tbc.setMotorFLeftPower(1.0f);
+            tbc.setMotorFRightPower(1.0f);
+            tbc.setMotorRRightPower(-1.0f);
+            tbc.setMotorRLeftPower(-1.0f);
+        }
+
+        tbc.setMotorFLeftPower(0.0f);
+        tbc.setMotorFRightPower(0.0f);
+        tbc.setMotorRRightPower(0.0f);
+        tbc.setMotorRLeftPower(0.0f);
+        tbc.setSnowplowPosition(0.4);
+
+        while (Math.abs(tbc.motorFLeft.getCurrentPosition()) < 13700) {
+            tbc.setMotorFLeftPower(-1.0f);
+            tbc.setMotorFRightPower(-1.0f);
+            tbc.setMotorRRightPower(-1.0f);
+            tbc.setMotorRLeftPower(-1.0f);
+        }
+
+        tbc.setMotorFLeftPower(0.0f);
+        tbc.setMotorFRightPower(0.0f);
+        tbc.setMotorRRightPower(0.0f);
+        tbc.setMotorRLeftPower(0.0f);
+
+        mRuntime.reset();
+
+        while (time <= 0.5) {
+            tbc.setButtonServoSpeed(0.5);
+        }
+
+        tbc.setClimberPosition(0.0);
     }
 }
-*/
