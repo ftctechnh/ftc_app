@@ -222,7 +222,7 @@ public class TeleOp extends OpMode {
 		servoLeftFlipPosition = Range.clip(servoLeftFlipPosition, servoLower, servoUpper);
 		servoRightFlipPosition = Range.clip(servoRightFlipPosition, servoLower, servoUpper);
 		servoArmJamPosition = Range.clip(servoArmJamPosition, servoLower, servoUpper);
-		
+
 		servoRight.setPosition(servoRightPosition);
 		servoArmJam.setPosition(servoArmJamPosition);
 		servoLeftFlip.setPosition(servoLeftFlipPosition);
