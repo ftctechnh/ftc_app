@@ -128,6 +128,13 @@ public class WeCoTeleOp extends OpMode {
     float motor1power = -gamepad1.left_stick_y + gamepad1.right_stick_x ;
     float motor2power = -gamepad1.left_stick_y - gamepad1.right_stick_x ;
 
+//clips motor and servo power/position
+    motor1power = Range.clip(motor1power, motorPowerMin, motorPowerMax) ;
+    motor2power = Range.clip(motor2power, motorPowerMin, motorPowerMax) ;
+    servoPosition = Range.clip(servoPosition, servoMinRange, servoMaxRange) ;
+
+
+//Defines scale
     if (gamepad1.left_bumper) {
 
       scaleNum += 1 ;
@@ -144,17 +151,9 @@ public class WeCoTeleOp extends OpMode {
       motor2power = scale2(motor2power, gamepad1.left_trigger) ;
     }
 
-//clips motor and servo power/position
-    double motor1powerClipped = Range.clip(motor1power, motorPowerMin, motorPowerMax) ;
-    double motor2powerClipped = Range.clip(motor2power, motorPowerMin, motorPowerMax) ;
-    servoPosition = Range.clip(servoPosition, servoMinRange, servoMaxRange) ;
-
-
-//Defines scale
-
     //sets motor and servo power/position
-    motor1.setPower(motor1powerClipped) ;
-    motor2.setPower(motor2powerClipped) ;
+    motor1.setPower(motor1power) ;
+    motor2.setPower(motor2power) ;
     servo1.setPosition(servoPosition);
 
 // gets current position and uses formula to find rotations or distance in inches
@@ -166,8 +165,8 @@ public class WeCoTeleOp extends OpMode {
 
 //telemetry data
     //telemetry.addData("Left Stick", "Left Stick is at " + String.format("%.2f", gamepad1.left_stick_y)); //left stick y-axis poition
-    telemetry.addData("0 Motor 1", "Motor 1 power is " + String.format("%.2f", motor1powerClipped)); //motor 1 power
-    telemetry.addData("0 Motor 2", "Motor 2 power is " + String.format("%.2f", motor2powerClipped)); // motor 2 power
+    telemetry.addData("0 Motor 1", "Motor 1 power is " + String.format("%.2f", motor1power)); //motor 1 power
+    telemetry.addData("0 Motor 2", "Motor 2 power is " + String.format("%.2f", motor2power)); // motor 2 power
     telemetry.addData("1 Left Distance", "Left motor has gone " + String.format("%.2f", position1) + " rotations"); //distance in rotations
     telemetry.addData("1 Right Distance", "Right motor has gone " + String.format("%.2f", position2) + " rotations"); //distance in rotations
     telemetry.addData("2 Left Trigger", "Left Trigger is at " + String.format("%.2f", gamepad2.left_trigger)); // right trigger position

@@ -121,7 +121,7 @@ public class I2cGY85ReadData extends OpMode {
 
   private boolean isACCUpdate() {
     boolean isNew = false;
-    if ((System.currentTimeMillis() - accTimeStamp) > 1000 ) {
+    if ((System.currentTimeMillis() - accTimeStamp) > 500) {
       ds.write(ACC_FIFO_STATUS);
       ds.requestFrom(ACC_FIFO_STATUS, 2);
       ds.write(ACC_DATAX0);
@@ -155,19 +155,11 @@ public class I2cGY85ReadData extends OpMode {
                 Yaxis = ds.readLH();              // Read Y axis
                 Zaxis = ds.readLH();              // Read Z axis
                 isNew = true;
-              DbgLog.msg(String.format("=====  GOT DATAX0 6 regs ====="));
+                DbgLog.msg(String.format("=====  GOT DATAX0 6 regs" + counter + " ====="));
                 DbgLog.msg(String.format("=====  DataX " + Xaxis + " ====="));
               } else {
                 telemetry.addData("Error", regNumber + " length 6 != " + regCount);
                 DbgLog.msg(String.format("ERROR reg 0x%02X Len = 0x%02X (!= 1)", regNumber, regCount));
-            }
-            break;
-          case 0x39:
-            if (regCount == 2) {// Check register count
-              accTimeStamp = ds.micros();
-              int fifo = ds.read();
-              fifo = ds.read();
-              DbgLog.msg(String.format("=====  GOT FIFO_Stat 2 regs 0x%X=====", fifo));
               }
               break;
             case ACC_FIFO_STATUS:
