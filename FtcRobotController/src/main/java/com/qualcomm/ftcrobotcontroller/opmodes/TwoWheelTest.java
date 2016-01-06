@@ -39,7 +39,7 @@ public class TwoWheelTest extends OpMode {
 		 */
         motorRight1 = hardwareMap.dcMotor.get("motor_1_right");
         motorLeft1 = hardwareMap.dcMotor.get("motor_1_left");
-        motorRight1.setDirection(DcMotor.Direction.REVERSE);
+        motorLeft1.setDirection(DcMotor.Direction.REVERSE);
 
     }
 

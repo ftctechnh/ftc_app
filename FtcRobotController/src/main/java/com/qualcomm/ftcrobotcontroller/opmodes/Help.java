@@ -5,19 +5,21 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
-public class TitanArmTest extends OpMode {
+public class Help extends OpMode {
 
     DcMotor ArmMotor;
     Servo arm;
+    double armDelta = 0.5;
     double armPosition;
-
+    final static double ARM_MIN_RANGE  = 0;
+    final static double ARM_MAX_RANGE  = 1;
     /**
      * Constructor
      */
-
-    public TitanArmTest() {
+    public Help() {
 
     }
+
 
     public void init() {
 
@@ -34,32 +36,39 @@ public class TitanArmTest extends OpMode {
         float right = throttle - direction;
         float left = throttle + direction;
 
-        float throttle1 = -gamepad1.right_stick_y;
-        float direction1 = gamepad1.right_stick_x;
-        float right1 = throttle1 - direction1;
-        float left1 = throttle1 + direction1;
-
         // clip the right/left values so that the values never exceed +/- 1
         right = Range.clip(right, -1, 1);
         left = Range.clip(left, -1, 1);
-        right1 = Range.clip(right1, -1, 1);
-        left1 = Range.clip(left1, -1, 1);
-
 
         // scale the joystick value to make it easier to control
         // the robot more precisely at slower speeds.
         right = (float)scaleInput(right);
         left =  (float)scaleInput(left);
-        right1 = (float)scaleInput(right1);
-        left1 =  (float)scaleInput(left1);
-
 
         // write the values to the motors
         ArmMotor.setPower(right);
 
-
         // update the position of the arm.
+        if (gamepad1.x) {
+            // if the A button is pushed on gamepad1, increment the position of
+            // the arm servo.
+            armPosition += armDelta;
+        }
 
+        if (gamepad1.y) {
+            // if the Y button is pushed on gamepad1, decrease the position of
+            // the arm servo.
+            armPosition -= armDelta;
+        }
+
+
+        // clip the position values so that they never exceed their allowed range.
+        //right = right * 2;
+        armPosition = Range.clip(armPosition, ARM_MIN_RANGE, ARM_MAX_RANGE);
+
+
+        // write position values to the wrist and claw servo
+        arm.setPosition(armPosition);
 
     }
     double scaleInput(double dVal)  {
