@@ -43,6 +43,8 @@ import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -82,6 +84,8 @@ public class FtcRobotControllerActivity extends Activity {
     private static final int REQUEST_CONFIG_WIFI_CHANNEL = 1;
     private static final boolean USE_DEVICE_EMULATION = false;
     private static final int NUM_GAMEPADS = 2;
+
+    public static int waittime;
 
     public static final String CONFIGURE_FILENAME = "CONFIGURE_FILENAME";
 
@@ -164,8 +168,7 @@ public class FtcRobotControllerActivity extends Activity {
         switch1 = (Switch) findViewById(R.id.switch1);
         switch2 = (Switch) findViewById(R.id.switch2);
         delayNum = (EditText) findViewById(R.id.delayNum);
-        configs = new File(context.getFilesDir(), "auto.properties");
-
+        waittime = 0;
         switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 // do something, the isChecked will be
@@ -180,6 +183,21 @@ public class FtcRobotControllerActivity extends Activity {
                     switch1.setText("Blue Team");
                 }
             }
+        });
+
+        delayNum.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                if(isInteger(s.toString()))
+                waittime = Integer.parseInt(s.toString());
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
         });
 
 
@@ -222,6 +240,16 @@ public class FtcRobotControllerActivity extends Activity {
           outputStream.close();
         } catch (Exception e) {
           e.printStackTrace();
+        }
+    }
+
+    public boolean isInteger( String input ) {
+        try {
+            Integer.parseInt( input );
+            return true;
+        }
+        catch( Exception e ) {
+            return false;
         }
     }
 

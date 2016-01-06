@@ -62,7 +62,7 @@ public class SensorPool {
         l = 1 - r;
 
         console.log("ls", "(" + (int) (lRight.getLightDetected() * 100) + ", " + (int) (lLeft.getLightDetected() * 100) + ")");
-        console.log("gy", df.format(gyro.dps()) + ", " + df.format(gypos) + ", " + df.format(drift));
+        console.log("gy",df.format(gyro.rotation())+", "+df.format(gyro.dps()) + ", " + df.format(gypos) + ", " + df.format(drift));
         console.log("bro", df.format(right.turns()) + ", " + df.format(left.turns()));
         console.log("rl", df.format(r)+", "+df.format(l));
     }

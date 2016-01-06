@@ -17,8 +17,13 @@ public class Gyro {
 
     public double dps()
     {
-        if(_gyro.getRotation() != 587 && _gyro.getRotation() != 588)
-            return ((_gyro.getRotation()-587)/(1000));
+        if(_gyro.getRotation() != 590 && _gyro.getRotation() != 591)
+            return ((_gyro.getRotation()-590)/(1000));
         return 0;
+    }
+
+    public double rotation()
+    {
+        return _gyro.getRotation();
     }
 }

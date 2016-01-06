@@ -1,21 +1,30 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.qualcomm.ftcrobotcontroller.FtcRobotControllerActivity;
+import com.qualcomm.ftcrobotcontroller.bamboo.Gyro;
+import com.qualcomm.ftcrobotcontroller.bamboo.Light;
 import com.qualcomm.ftcrobotcontroller.bamboo.Motor;
 import com.qualcomm.ftcrobotcontroller.bamboo.Timing;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.LightSensor;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.text.DecimalFormat;
+
 /**
  * Created by alex on 11/24/15.
  */
-public class Auto extends OpMode {
+public class Auto extends LinearOpMode {
 
     // ok so what do I need to have here.. a move, and a turn?
 
     public final double FAST_SPEED = 0.5;
     public final double SLOW_SPEED = 0.25;
-    public final double SIG_WEIGHT = 10;
+    public final double SIG_WEIGHT = 15;
     public final double VARIENCE = 0.1;
 
     public final int LIGHT_RIGHT = 0;
@@ -35,87 +44,101 @@ public class Auto extends OpMode {
     // use the robot as a fulcrum to calculate our position???
     //
 
-    LightSensor lightRight;
-    LightSensor lightLeft;
-    GyroSensor gyro;
+    Light lightRight;
+    Light lightLeft;
+    Gyro gyro;
+    int wait;
 
-    Motor right;
-    Motor left;
-    Motor rotRight;
-    Motor rotLeft;
-    Motor extRight;
-    Motor extLeft;
+    Motor right, left, rotLeft, rotRight, extLeft, extRight;
 
     boolean isRed = false;
 
     public Auto() {
-        
     }
 
     @Override
-    public void init() {
+    public void runOpMode() throws InterruptedException {
         // set some consants...
 
-        lightRight = hardwareMap.lightSensor.get("lightRight");
-        lightLeft = hardwareMap.lightSensor.get("lightLeft");
-        gyro = hardwareMap.gyroSensor.get("gyro");
+
+
+        lightRight = new Light("lightRight", hardwareMap);
+        lightLeft = new Light("lightLeft", hardwareMap);
+        gyro = new Gyro("gyro", hardwareMap);
 
         right = new Motor("right", hardwareMap);
         left = new Motor("left", hardwareMap, true);
 
-        rotRight = new Motor("rightrot", hardwareMap);
+        rotRight = new Motor("rightrot", hardwareMap, true);
         rotLeft = new Motor("leftrot", hardwareMap);
         extRight = new Motor("rightext", hardwareMap);
-        extLeft = new Motor("leftext", hardwareMap);
+        extLeft = new Motor("leftext", hardwareMap, true);
 
-        lightRight.enableLed(true);
-        lightLeft.enableLed(true);
+        lightRight.enable();
+        lightLeft.enable();
 
+        telemetry.addData("wait", FtcRobotControllerActivity.waittime);
 
-    }
+        waitForStart();
 
-    @Override
-    public void loop()
-    {
-        double white = 1.0;
-        double myColor = 0.8;
-        double otherColor = 0.6;
+            if (FtcRobotControllerActivity.waittime != 0) {
+                long st = System.currentTimeMillis();
+                while ((System.currentTimeMillis() - st) / 1000 < FtcRobotControllerActivity.waittime && opModeIsActive()) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            telemetry.addData("made", "it");
 
+            double white = 1.0;
+            double myColor = 0.8;
+            double otherColor = 0.6;
 
-        // to midfield stop at diagonal divide
-        int dir = forwardUntil(myColor, 2000, 3000);
+            // to midfield stop at diagonal divide
+            int dir = forwardUntil(myColor, 2000, 4000);
 
-        // make the 90 turn based upon which light gets triggered
-        if(dir == LIGHT_RIGHT) turnDeg(false, 90);
-        else if(dir == LIGHT_LEFT) turnDeg(true, 90);
-        else turnDeg(true, 900);
+           /* // make the 90 turn based upon which light gets triggered
+            if (dir == LIGHT_RIGHT) turnDeg(false, 90);
+            else if (dir == LIGHT_LEFT) turnDeg(true, 90);
+            else turnDeg(true, 900);
 
-        // move until we find the score box
-        dir = forwardUntil(myColor, 1500, 2500);
+            // move until we find the score box
+            dir = forwardUntil(myColor, 1500, 2500);
 
-        // align ourselves with the score box
-        if(dir == LIGHT_RIGHT) turnTill(true, myColor);
-        else if(dir == LIGHT_LEFT) turnTill(false, myColor);
+            // align ourselves with the score box
+            if (dir == LIGHT_RIGHT) turnTill(true, myColor);
+            else if (dir == LIGHT_LEFT) turnTill(false, myColor);
 
-        // turn ourselfves around
-        turnDeg(true, 90, ONE_WHEEL);
-        forwardUntil(white, 400, 800);
-        turnDeg(true, 90);
+            // turn ourselfves around
+            turnDeg(true, 90, ONE_WHEEL);
+            forwardUntil(white, 400, 800);
+            turnDeg(true, 90);
 
-        Timing climber = new Timing();
-        climber.append(right, 0.5, 0, 1000);
-        climber.append(left, 0.5, 0, 1000);
-        climber.append(rotRight, -0.5, 800, 1600);
-        climber.append(extRight, 0.5, 1100, 1900);
-        climber.append(rotRight, -0.1, 1900, 2600);
-        climber.execute();
+            Timing climber = new Timing();
+            climber.append(right, 0.5, 0, 1000);
+            climber.append(left, 0.5, 0, 1000);
+            climber.append(rotRight, -0.5, 800, 1600);
+            climber.append(extRight, 0.5, 1100, 1900);
+            climber.append(rotRight, -0.1, 1900, 2600);
+            climber.execute();*/
 
-
-        while(true) {}
-    }
+        }
 
     public int forwardUntil(double color, int guess, int giveup)
     {
+        return forwardUntil(color, guess, giveup, false);
+    }
+
+    public int forwardUntil(double color, int guess, int giveup, boolean negate)
+    {
+
+        DecimalFormat df = new DecimalFormat("###.##");
+
+        telemetry.addData("fu", "starting");
+
         double r = FAST_SPEED;
         double l = FAST_SPEED;
 
@@ -124,37 +147,52 @@ public class Auto extends OpMode {
         long timefirst = System.currentTimeMillis();
         long timelast = timefirst;
 
-        while(timelast - timefirst < giveup)
+        while(timelast - timefirst < giveup && opModeIsActive())
         {
             long timediff = timelast;
             timelast = System.currentTimeMillis();
             timediff = timelast - timediff;
+            gypos += gyro.dps() * (timediff);
+            double avgchange = (right.turnDiff()+left.turnDiff())/2;
+            drift += gypos * avgchange;
 
-            gypos += gyro.getRotation()*(timediff);
-            //int avgchange = (right.encoderDiff()+left.encoderDiff())/2;
-            long avgchange = timediff;
-            drift += gypos*avgchange;
+            l = sigmoid(drift/SIG_WEIGHT);
+            r = 1 - l;
 
-            // how do we correct our route
-            r = sigmoid(SIG_WEIGHT*drift);
-            l = 1 - r;
+            if(negate) {
+                double temp = -r;
+                r = -l;
+                l = temp;
+            }
 
-            if(timelast-timefirst > guess) set(r/2, l/2);
-            else set(r, l);
-
-            if(lightRight.getLightDetected() < color+VARIENCE && lightRight.getLightDetected() > color-VARIENCE)
+            if(timelast-timefirst > guess)
             {
-                stop();
+                set(r/2, l/2);
+                telemetry.addData("fu", df.format(r/2)+", "+df.format(l/2)+"/ guessing"+ (timelast - timefirst));
+            }
+            else {
+                set(r, l);
+                telemetry.addData("fu", df.format(r)+", "+df.format(l)+"/ moving"+ (timelast - timefirst));
+            }
+
+            if(lightRight.get() < color+VARIENCE && lightRight.get() > color-VARIENCE)
+            {
+                zero();
                 return LIGHT_RIGHT;
             }
-            else if(lightLeft.getLightDetected() < color+VARIENCE && lightLeft.getLightDetected() > color-VARIENCE)
+            else if(lightLeft.get() < color+VARIENCE && lightLeft.get() > color-VARIENCE)
             {
-                stop();
+                zero();
                 return LIGHT_LEFT;
             }
+
+            telemetry.addData("gy", df.format(gyro.rotation()) + ", " + df.format(gyro.dps()) + ", " + df.format(gypos) + ", " + df.format(drift));
+            telemetry.addData("ls", "(" + (int) (lightLeft.get() * 100) + ", " + (int) (lightRight.get() * 100) + ")");
+
+
         }
 
-        stop();
+        zero();
         return -1;
     }
 
@@ -181,7 +219,7 @@ public class Auto extends OpMode {
         }
 
         while(gypos < degrees) {};
-        stop();
+        zero();
     }
 
     public void turnTill(boolean right, double color)
@@ -189,16 +227,14 @@ public class Auto extends OpMode {
         if(right) set(0, FAST_SPEED);
         else set(FAST_SPEED, 0);
 
-
-
         if(right) {
-            while(lightLeft.getLightDetected() < color+VARIENCE && lightLeft.getLightDetected() > color-VARIENCE) {}
+            while(lightLeft.get() < color+VARIENCE && lightLeft.get() > color-VARIENCE) {}
         }
         else {
-            while(lightRight.getLightDetected() < color+VARIENCE && lightRight.getLightDetected() > color-VARIENCE) {}
+            while(lightRight.get() < color+VARIENCE && lightRight.get() > color-VARIENCE) {}
         }
 
-        stop();
+        zero();
     }
 
     public double sigmoid(double inp)
@@ -213,10 +249,9 @@ public class Auto extends OpMode {
         left.set(l);
     }
 
-    public void stop()
+    public void zero()
     {
-        right.set(0);
-        left.set(0);
+        set(0.0, 0.0);
     }
 
 }
