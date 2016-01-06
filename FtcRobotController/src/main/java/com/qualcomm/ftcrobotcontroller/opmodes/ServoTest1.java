@@ -16,7 +16,7 @@ public class ServoTest1 extends OpMode {
     double armPosition1;
     double armDelta2 = 0.5;
     double armPosition2;
-    float Degree
+    float scaleInput;
 
     /**
      * Constructor
@@ -38,6 +38,20 @@ public class ServoTest1 extends OpMode {
     }
 
     public void loop() {
+
+        float throttle = -gamepad1.left_stick_y;
+        float direction = gamepad1.left_stick_x;
+        float right = throttle - direction;
+        float left = throttle + direction;
+
+
+        right = Range.clip(right, -1, 1);
+        left = Range.clip(left, -1, 1);
+
+        right = (float)scaleInput(right);
+        left =  (float)scaleInput(left);
+
+
 
         // update the position of the arm.
 
@@ -72,13 +86,11 @@ public class ServoTest1 extends OpMode {
         arm2.setPosition(armPosition1);
         arm3.setPosition(armPosition2);
 
-        Degree = joytoworld * 170;
 
-        arm1.setAngle(Degree);
 
     }
 
-    double joytoworld(double dVal) {
+    double scaleInput(double dVal) {
         double[] scaleArray = {0.0, 0.05, 0.09, 0.10, 0.12, 0.15, 0.18, 0.24,
                 0.30, 0.36, 0.43, 0.50, 0.60, 0.72, 0.85, 1.00, 1.00};
 
