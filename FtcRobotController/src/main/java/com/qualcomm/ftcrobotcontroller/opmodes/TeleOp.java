@@ -60,9 +60,9 @@ public class TeleOp extends OpMode {
 
 	//Double servoLeftPosition = 1.0; //Starting position of Left servo, 1.0 cause reversed from other servo
 	double servoRightPosition = 0.0;//Starting pos of right servo, 0.0 cause reversed from other servo
-	double servoLeftFlipPosition = 0.0;
-	double servoRightFlipPosition = 0.0;
-	double servoArmJamPosition = 0.0;
+	double servoLeftFlipPosition = 0.1;
+	double servoRightFlipPosition = 0.7;
+	double servoArmJamPosition = 1;
 	double servoChange = .01; //Value used to change the pos of servos
 	double servoLower = 0.0; //Lower limit for servos
 	double servoUpper = 1.0; //Upper limit for servos
@@ -182,16 +182,16 @@ public class TeleOp extends OpMode {
 			servoLeftFlipPosition += servoChange;
 		}
 
+		if(gamepad1.left_trigger > .5){
+			servoLeftFlipPosition -= servoChange;
+		}
+
 		if (gamepad1.right_bumper) {
 			servoRightFlipPosition -= servoChange;
 		}
 
-		if(gamepad1.left_trigger > .5){
-			servoLeftFlipPosition += servoChange;
-		}
-
 		if(gamepad1.right_trigger > .5){
-			servoRightFlipPosition -= servoChange;
+			servoRightFlipPosition += servoChange;
 		}
 
 		if(gamepad1.a){
