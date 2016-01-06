@@ -12,7 +12,6 @@ import org.swerverobotics.library.interfaces.TeleOp;
 /**
  * @author Derek Helm
  */
-@TeleOp
 public class RedAlianceOP extends OpMode {
 
     /*

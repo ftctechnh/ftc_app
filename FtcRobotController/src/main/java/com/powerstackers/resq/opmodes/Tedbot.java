@@ -14,7 +14,6 @@ import org.swerverobotics.library.interfaces.TeleOp;
 /**
  * @author Derek Helm
  */
-@TeleOp
 public class Tedbot extends OpMode {
 
     /*
@@ -39,6 +38,7 @@ public class Tedbot extends OpMode {
 
     DeviceInterfaceModule cdim;
     ColorSensor colorSensor;
+    ColorSensor colorFSensor;
     TouchSensor touchSensor;
     DcMotor motorBRight;
     DcMotor motorBLeft;
@@ -67,6 +67,8 @@ public class Tedbot extends OpMode {
         colorSensor = ClassFactory.createSwerveColorSensor(this,
                 this.hardwareMap.colorSensor.get("colorSensor"));
         colorSensor.enableLed(true);
+        colorFSensor = ClassFactory.createSwerveColorSensor(this, this.hardwareMap.colorSensor.get("colorFSensor"));
+        colorFSensor.enableLed(true);
         touchSensor = hardwareMap.touchSensor.get("touchSensor");
 
         /*
@@ -110,9 +112,10 @@ public class Tedbot extends OpMode {
         right = (float) scaleInput(right);
         left = (float) scaleInput(left);
 
-        String turning;
+        /** ColorSensor Controls
+         *
+         */
 
-        // ColorSensor Controls
         if (colorSensor.blue() > colorSensor.red()) {
             servoBeaconPosition = 0.20;
 
