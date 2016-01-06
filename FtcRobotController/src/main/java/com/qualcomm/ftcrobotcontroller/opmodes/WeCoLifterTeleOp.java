@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.hardware.DeviceInterfaceModule
 /**
  * Created by akhil on 12/22/2015.
  */
@@ -15,10 +16,14 @@ public class WeCoLifterTeleOp extends OpMode {
 
     }
     DcMotor motorLifter;
+    DeviceInterfaceModule lifterHolofectSensor;
 
     Servo servoLifter;
     Servo servoHook;
 
+    public enum POSITION {Top, Middle, Bottom}
+    public POSITION currentPosition = Bottom
+    double stickDirection = 0
     double maxServoIncrease = 0.01 ;
     double servoPrevious = servoLifter.getPosition() ;
     double servoTimer = 0;
@@ -35,6 +40,7 @@ public class WeCoLifterTeleOp extends OpMode {
     public void start(){
 
         motorLifter = hardwareMap.dcMotor.get("motor_3");
+	lifterHolofectSensor = hardwareMap.deviceInterfaceModule.get("holofect_1");
 
         servoLifter = hardwareMap.servo.get("servo_2");
         servoHook = hardwareMap.servo.get("servo_3");
@@ -45,7 +51,28 @@ public class WeCoLifterTeleOp extends OpMode {
     public void loop() {
         //sets motor power
         float motorLifterpower = -gamepad2.left_stick_y  ;
-
+	if (lifterHolofectSensor == 1) {
+	    if (stickDirection == 1 || currentPosition == Top) {
+		currentPosition = Top ;
+		if (stickDirection = 0) {
+		    motorLifterpower = -gamepad2.left_stick_y ;
+		} else {
+		    motorLifterpower = 0
+		}
+	    }
+	    if (stickDirection == 0 || currentPosition == Bottom) {
+		currentPosition = Bottom ;
+		if (stickDirection = 1) {
+		    motorLifterpower = -gamepad2.left_stick_y ;
+		} else {
+		    motorLifterpower = 0
+		}
+	    }
+	}
+	if (lifterHolofectSensor == 0) {
+	    currentPosition = Middle 
+	}
+		
         servoLifterPosition = servoLifterPosition + -gamepad2.right_stick_y/500;
         if (gamepad2.right_stick_button == true) {
             servoLifterPosition = servoLifterZero;
@@ -80,6 +107,11 @@ public class WeCoLifterTeleOp extends OpMode {
         servoHook.setPosition(servoHookPosition);
 
         servoPrevious = servoLifter.getPosition() ;
+	if (-gamepad2.left_stick_y > 0) {
+	stickDirection = 1
+	} else if (-gamepad2.left_stick_y < 0) {
+	stickDirection = 0
+	}
 
         telemetry.addData("0 Motor Lifter", "Motor Lifter power is " + String.format("%.2f", motorLifterpower)); //motor Lifter power
         telemetry.addData("Servo Lifter Position", "Servo Lifter is at " + String.format("%f", servoLifterPosition)) ; //servo lifter position
