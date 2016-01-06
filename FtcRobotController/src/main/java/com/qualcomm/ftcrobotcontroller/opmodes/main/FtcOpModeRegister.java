@@ -142,10 +142,9 @@ public class FtcOpModeRegister implements OpModeRegister {
         manager.register("BlueAllianceOP", BlueAlianceOP.class);
         manager.register("RedAllianceOP", RedAlianceOP.class);
         manager.register("ColorSensorSense", ColorSensorSense.class);
-        manager.register("Protobot", ProtobotTeleop.class);
+        manager.register("ProtobotOP", ProtobotTeleop.class);
 //      manager.register("Purple Pencil", PurplePencil.class);
         manager.register("Tedbot", Tedbot.class);
-//      manager.register("WorkshopTeleop", WorkshopTeleop.class);
         manager.register("testbot1", testbot1.class);
     }
 }

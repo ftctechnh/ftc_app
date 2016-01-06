@@ -16,7 +16,6 @@ import static com.qualcomm.robotcore.hardware.DcMotor.Direction.FORWARD;
 /**
  * Created by Derek on 10/10/2015.
  */
-@TeleOp
 public class ProtobotTeleop extends OpMode {
 
     /**
@@ -27,28 +26,28 @@ public class ProtobotTeleop extends OpMode {
     /** TETRIX VALUES.
      *
      */
-    final static double servoRight_MIN_RANGE  = 0.20;
-    final static double servoRight_MAX_RANGE  = 1.00;
-    final static double servoLeft_MIN_RANGE  = 0.20;
-    final static double servoLeft_MAX_RANGE  = 0.80;
-    final static double servoTape_MIN_RANGE = 0.00;
-    final static double servoTape_MAX_RANGE = 1.00;
+//    final static double servoRight_MIN_RANGE  = 0.20;
+//    final static double servoRight_MAX_RANGE  = 1.00;
+//    final static double servoLeft_MIN_RANGE  = 0.20;
+//    final static double servoLeft_MAX_RANGE  = 0.80;
+//    final static double servoTape_MIN_RANGE = 0.00;
+//    final static double servoTape_MAX_RANGE = 1.00;
 //    final static double servoBeacon_MIN_RANGE  = 0.00;
 //    final static double servoBeacon_MAX_RANGE  = 1.00;
 
     /** amount to change the servo position by
      *
      */
-    double servoRightDelta = 0.1;
-    double servoLeftDelta = 0.1;
-    double servoTapeDelta = 0.5;
+//    double servoRightDelta = 0.1;
+//    double servoLeftDelta = 0.1;
+//    double servoTapeDelta = 0.5;
 
     /** position of servo <Value of Variable>
      *
      */
-    double servoRightPosition;
-    double servoLeftPosition;
-    double servoTapePosition;
+//    double servoRightPosition;
+//    double servoLeftPosition;
+//    double servoTapePosition;
 //    double servoBeaconPosition;
 
     /**Color Values
@@ -57,18 +56,18 @@ public class ProtobotTeleop extends OpMode {
     float hsvValues[] = {0, 0, 0};
     final float values[] = hsvValues;
 
-    DeviceInterfaceModule cdim;
+//    DeviceInterfaceModule cdim;
 //    ColorSensor colorSensor;
 //    TouchSensor touchSensor;
     DcMotor motorBrush;
-    DcMotor motorLift;
+//    DcMotor motorLift;
     DcMotor motorFRight;
     DcMotor motorFLeft;
     DcMotor motorBRight;
     DcMotor motorBLeft;
-    Servo servoLeft;
-    Servo servoRight;
-    Servo servoTape;
+//    Servo servoLeft;
+//    Servo servoRight;
+//    Servo servoTape;
 //    Servo servoBeacon;
 
     public ProtobotTeleop() {
@@ -86,7 +85,7 @@ public class ProtobotTeleop extends OpMode {
 		 */
 
         hardwareMap.logDevices();
-        cdim = hardwareMap.deviceInterfaceModule.get("dim");
+//        cdim = hardwareMap.deviceInterfaceModule.get("dim");
         //Sensors
 //        colorSensor = ClassFactory.createSwerveColorSensor(this, this.hardwareMap.colorSensor.get("colorSensor"));
 //        colorSensor.enableLed(true);
@@ -95,8 +94,8 @@ public class ProtobotTeleop extends OpMode {
          *
          */
         motorBrush = hardwareMap.dcMotor.get("motorBrush");
-        motorLift = hardwareMap.dcMotor.get("motorLift");
-        motorLift.setDirection(DcMotor.Direction.REVERSE);
+//        motorLift = hardwareMap.dcMotor.get("motorLift");
+//        motorLift.setDirection(DcMotor.Direction.REVERSE);
         motorFRight = hardwareMap.dcMotor.get("motorFRight");
         motorFLeft = hardwareMap.dcMotor.get("motorFLeft");
         motorFRight.setDirection(DcMotor.Direction.REVERSE);
@@ -106,10 +105,10 @@ public class ProtobotTeleop extends OpMode {
         /**Servos
          *
          */
-        servoLeft = hardwareMap.servo.get("servoLeft");
-        servoRight = hardwareMap.servo.get("servoRight");
-        servoTape = hardwareMap.servo.get("servoTape");
-        servoTape.setDirection(Servo.Direction.REVERSE);
+//        servoLeft = hardwareMap.servo.get("servoLeft");
+//        servoRight = hardwareMap.servo.get("servoRight");
+//        servoTape = hardwareMap.servo.get("servoTape");
+//        servoTape.setDirection(Servo.Direction.REVERSE);
 //        servoBeacon = hardwareMap.servo.get("servoBeacon");
 //        servoBeaconPosition = 0.50;
 
@@ -155,13 +154,13 @@ public class ProtobotTeleop extends OpMode {
 
         // Makes Lift go In
 
-        if (gamepad1.a) {           //If A Is Pressed Make Lift Go Up
-            motorLift.setPower(-1);
-        } else if (gamepad1.y) {    //If Y Is Pressed Make Lift Go Down
-            motorLift.setPower(1);
-        } else {                    //Otherwise Stop Motor
-            motorLift.setPower(0);
-        }
+//        if (gamepad1.a) {           //If A Is Pressed Make Lift Go Up
+//            motorLift.setPower(-1);
+//        } else if (gamepad1.y) {    //If Y Is Pressed Make Lift Go Down
+//            motorLift.setPower(1);
+//        } else {                    //Otherwise Stop Motor
+//            motorLift.setPower(0);
+//        }
 
         // Makes Lift Go Out
 
@@ -176,32 +175,32 @@ public class ProtobotTeleop extends OpMode {
         /** update the position of the arm.
          *
          */
-        if (gamepad2.y) {
-            // if the A button is pushed on gamepad1, increment the position of
-            // the right servo.
-            servoRightPosition += servoRightDelta;
-        }
-
-        if (gamepad2.x) {
-            //if the Y button is pushed on gamepad1, decrease the position of the arm servo.
-            servoRightPosition -= servoRightDelta;
-        }
-
-        if (gamepad2.b) {
-            servoLeftPosition += servoLeftDelta;
-        }
-
-        if (gamepad2.a) {
-            servoLeftPosition -= servoLeftDelta;
-        }
-
-        if (gamepad2.dpad_left) {
-            servoTapePosition += servoTapeDelta;
-        } else if (gamepad2.dpad_right) {
-            servoTapePosition -= servoTapeDelta;
-        } else {
-            servoTapePosition = 0.50;
-        }
+//        if (gamepad2.y) {
+//            // if the A button is pushed on gamepad1, increment the position of
+//            // the right servo.
+//            servoRightPosition += servoRightDelta;
+//        }
+//
+//        if (gamepad2.x) {
+//            //if the Y button is pushed on gamepad1, decrease the position of the arm servo.
+//            servoRightPosition -= servoRightDelta;
+//        }
+//
+//        if (gamepad2.b) {
+//            servoLeftPosition += servoLeftDelta;
+//        }
+//
+//        if (gamepad2.a) {
+//            servoLeftPosition -= servoLeftDelta;
+//        }
+//
+//        if (gamepad2.dpad_left) {
+//            servoTapePosition += servoTapeDelta;
+//        } else if (gamepad2.dpad_right) {
+//            servoTapePosition -= servoTapeDelta;
+//        } else {
+//            servoTapePosition = 0.50;
+//        }
 
         //ColorSensor Controls
 //        if (colorSensor.blue() > colorSensor.red()) {
@@ -217,17 +216,17 @@ public class ProtobotTeleop extends OpMode {
         /** clip the position values so that they never exceed their allowed range.
          *
          */
-        servoRightPosition = Range.clip(servoRightPosition, servoRight_MIN_RANGE, servoRight_MAX_RANGE);
-        servoLeftPosition = Range.clip(servoLeftPosition, servoLeft_MIN_RANGE, servoLeft_MAX_RANGE);
-        servoTapePosition = Range.clip(servoTapePosition, servoTape_MIN_RANGE, servoTape_MAX_RANGE);
+//        servoRightPosition = Range.clip(servoRightPosition, servoRight_MIN_RANGE, servoRight_MAX_RANGE);
+//        servoLeftPosition = Range.clip(servoLeftPosition, servoLeft_MIN_RANGE, servoLeft_MAX_RANGE);
+//        servoTapePosition = Range.clip(servoTapePosition, servoTape_MIN_RANGE, servoTape_MAX_RANGE);
 //        servoBeaconPosition = Range.clip(servoBeaconPosition, servoBeacon_MIN_RANGE, servoBeacon_MAX_RANGE);
 
         /**write position values to the wrist and claw servo
          *
          */
-        servoRight.setPosition(servoRightPosition);
-        servoLeft.setPosition(servoLeftPosition);
-        servoTape.setPosition(servoTapePosition);
+//        servoRight.setPosition(servoRightPosition);
+//        servoLeft.setPosition(servoLeftPosition);
+//        servoTape.setPosition(servoTapePosition);
 //        servoBeacon.setPosition(servoBeaconPosition);
 
         /** write the values to the motors
