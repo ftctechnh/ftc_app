@@ -174,4 +174,12 @@ public class Robot {
                 toToggle.setPosition(CRS_STOP);
         }
     }
+
+    /**
+     * 
+     * @param allianceColor
+     */
+    public void pressBeacon(AllianceColor allianceColor) {
+
+    }
 }
