@@ -31,6 +31,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.qualcomm.ftcrobotcontroller.opmodes.red.RedBeaconRoute2;
+import com.qualcomm.ftcrobotcontroller.opmodes.diag.DiagEncoder;
+import com.qualcomm.ftcrobotcontroller.opmodes.red.RedManualDrive;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 
@@ -41,7 +44,9 @@ import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 public class FtcOpModeRegister implements OpModeRegister {
 
   public void register(OpModeManager manager) {
-      manager.register("NullOp", NullOp.class);
+      manager.register("Encoder Diagnostic", DiagEncoder.class);
+      manager.register("RED - Manual Drive", RedManualDrive.class);
+      manager.register("RED - Beacon Route 2.0", RedBeaconRoute2.class);
   }
 
 }

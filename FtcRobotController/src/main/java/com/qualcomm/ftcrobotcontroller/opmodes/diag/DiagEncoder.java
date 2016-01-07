@@ -22,6 +22,8 @@ public class DiagEncoder extends OpMode {
     public void init() {
         telemetry.addData("Diagnostic","Encoder Test");
 
+        motor = hardwareMap.dcMotor.get("motor");
+
         motor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         motor.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
     }
