@@ -21,6 +21,7 @@ public class TwoPositionServo {
         this.servo = servo;
         this.off = off;
         this.on = on;
+        this.set(false);
     }
 
     public void set(boolean position) {
