@@ -3,6 +3,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
@@ -10,103 +11,94 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import com.technicbots.MainRobot;
 
+import java.util.Date;
+
 
 public class ResQTeleopPitCrew extends OpMode {
     private ElapsedTime mStateTime = new ElapsedTime();
     //experimental
-    final static double CLIMBSERVO_MIN_RANGE  = 0.01;
-    final static double CLIMBSERVO_MAX_RANGE  = 1;
-    final static double CLIMBSERVO2_MIN_RANGE  = 0.01;
-    final static double CLIMBSERVO2_MAX_RANGE  = 1;
-    final static double BUTTONSERVO_MIN_RANGE  = 0.01;
-    final static double BUTTONSERVO_MAX_RANGE  = 1;
-    final static double BOXSERVO_MIN_RANGE = 0.01;
-    final static double BOXSERVO_MAX_RANGE = 1;
-    final static double CLAMP_MIN_RANGE = 0.01;
-    final static double CLAMP_MAX_RANGE = 0.70;
-    final static double RELEASESERVO_MIN_RANGE = 0.01;
-    final static double RELEASESERVO_MAX_RANGE = 1;
-    final static double ADJUSTSERVO_MIN_RANGE = 0.01;
-    final static double ADJUSTSERVO_MAX_RANGE = 1;
+    DcMotor frontLeftMotor;
+    DcMotor backRightMotor;
+    DcMotor frontRightMotor;
+    DcMotor backLeftMotor;
+    DcMotor adjustMotor;
+    DcMotor linearMotor;
+    DcMotor harvesterMotor;
+    //DcMotor hangMotor;
 
-    double climbservoPosition;
-    double clampPosition;
-    double buttonservoPosition;
-    double boxservoPosition;
-    double releaseservoPosition;
-    double adjustservoPosition;
+    Servo clampServo;
+    Servo twistServo;
+    Servo releaseServo;
+    Servo lButtonServo;
+    Servo rButtonServo;
+    Servo hookServo;
 
-    double climbServoEnd = 0.7;
-    //double climbServo2End = 0.05;
-    double buttonServoDelta = 0.1;
-    double clampDelta = 0.69;
-    double adjustServoLeft = 0.25;
-    double adjustServoNull = 0.5;
-    double adjustServoRight = 0.75;
-    double releaseServoEnd = 0.5;
+    private static int ADJUST_MOTOR_TARGET = 0;
+    private static int LINEAR_MOTOR_TARGET = 0;
 
-    private ElapsedTime runtime = new ElapsedTime();
+    private static double RELEASE_SERVO_INIT = 0; //Lower is left, higher is right
+    private static double CLAMP_SERVO_INIT = 0.25;
+    private static double TWIST_SERVO_INIT = 1;
+    private static double HOOK_SERVO_INIT = 1;
+    //Timing
+    private Date resetStartingTime;
+    private Date hangStartingTime;
+    //States
+    boolean reset_state = false;
+    boolean hang_back_state = false;
+    boolean up_pressed = false;
 
-    DcMotor linearSlide;
-    DcMotor rightMotor;
-    DcMotor leftMotor;
-    DcMotor harvester;
-
-    Servo climbservo;
-    Servo climbservo2;
-    Servo buttonservo;
-    Servo clamp;
-    Servo boxservo;
-    Servo releaseservo;
-    Servo adjustservo;
     OpticalDistanceSensor opticalDistanceSensor;
     UltrasonicSensor ultrasonicSensor;
     ColorSensor colorsensor;
 
-    MainRobot mainRobot;
-    public ResQTeleopPitCrew() {
-
-    }
-
-    /*
-    * Code to run when the op mode is first enabled goes here
-    * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
-    */
     public void init() {
+        //driving wheel motors
+        frontLeftMotor = hardwareMap.dcMotor.get("frontL");
+        frontRightMotor = hardwareMap.dcMotor.get("frontR");
+        backLeftMotor = hardwareMap.dcMotor.get("backL");
+        backRightMotor = hardwareMap.dcMotor.get("backR");
+        backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
+        frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
+        //linear slide tilt motor
+        adjustMotor = hardwareMap.dcMotor.get("adjust");
+        adjustMotor.getController().setMotorChannelMode(1, DcMotorController.RunMode.RESET_ENCODERS);
+        adjustMotor.getController().setMotorChannelMode(1, DcMotorController.RunMode.RUN_USING_ENCODERS);
+        adjustMotor.setDirection(DcMotor.Direction.FORWARD);
+        //linear slide extend motor
+        linearMotor = hardwareMap.dcMotor.get("linear");
+        linearMotor.getController().setMotorChannelMode(2, DcMotorController.RunMode.RESET_ENCODERS);
+        linearMotor.getController().setMotorChannelMode(2, DcMotorController.RunMode.RUN_USING_ENCODERS);
+        linearMotor.setDirection(DcMotor.Direction.FORWARD);
+        //sweeper motor
+        harvesterMotor = hardwareMap.dcMotor.get("sweeper");
+        harvesterMotor.setDirection(DcMotor.Direction.FORWARD);
+        //Hang Motor
+        //hangMotor = hardwareMap.dcMotor.get("hang");
+        //hangMotor.setDirection(DcMotor.Direction.FORWARD);
 
-        mainRobot = new MainRobot(leftMotor, rightMotor, null, null, null, null, null);
-        leftMotor = hardwareMap.dcMotor.get("leftwheel");
-        rightMotor = hardwareMap.dcMotor.get("rightwheel");
-        harvester = hardwareMap.dcMotor.get("sweeper");
-        linearSlide = hardwareMap.dcMotor.get("linearmotor");
-        rightMotor.setDirection(DcMotor.Direction.REVERSE);
-        leftMotor.setDirection(DcMotor.Direction.FORWARD);
+        //Box servos
+        twistServo = hardwareMap.servo.get("twist");
+        twistServo.setPosition(TWIST_SERVO_INIT);
+        releaseServo = hardwareMap.servo.get("release");
+        releaseServo.setPosition(RELEASE_SERVO_INIT);
+        //Mountain clamp servo
+        clampServo = hardwareMap.servo.get("clamp");
+        clampServo.setPosition(CLAMP_SERVO_INIT);
+        //Button Servos(AUTONOMOUS ONLY)
+        lButtonServo = hardwareMap.servo.get("leftbutton");
+        lButtonServo.setPosition(0.2);
+        rButtonServo = hardwareMap.servo.get("rightbutton");
+        rButtonServo.setPosition(1);
+        //All clear servo
+        hookServo = hardwareMap.servo.get("signal");
+        hookServo.setPosition(HOOK_SERVO_INIT);
 
-        climbservo = hardwareMap.servo.get("climbservo");
-        climbservoPosition = 0;
-        //buttonservo = hardwareMap.servo.get("buttonservo");
-        //buttonservoPosition = 0.0;
-        //boxservo = hardwareMap.servo.get("boxservo");
-        //boxservoPosition = 0.65;
-        releaseservo = hardwareMap.servo.get("release");
-        releaseservoPosition = 0;
-        adjustservo = hardwareMap.servo.get("adjustservo");
-        //adjustservoPosition = 0;
-
-
-        climbservo.setPosition(climbservoPosition);
-        //buttonservo.setPosition(buttonservoPosition);
-        //boxservo.setPosition(boxservoPosition);
-        releaseservo.setPosition(releaseservoPosition);
-        adjustservo.setPosition(0.5);
-
-        opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("sensor_EOPD");
-        ultrasonicSensor = hardwareMap.ultrasonicSensor.get("sonic");
-        colorsensor = hardwareMap.colorSensor.get("colorsensor");
+        ultrasonicSensor = hardwareMap.ultrasonicSensor.get("ultrasonic");
+        opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("light");
+        colorsensor = hardwareMap.colorSensor.get("color");
         colorsensor.enableLed(false);
-
     }
-
     /*
     * This method will be called repeatedly in a loop
     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
@@ -121,33 +113,35 @@ public class ResQTeleopPitCrew extends OpMode {
         double reflectance = opticalDistanceSensor.getLightDetected();
 
         if (Math.abs(throttle) < 0.01 && Math.abs(rightThrottle) < 0.01) {
-            rightMotor.setPower(secondRightThrottle);
-            leftMotor.setPower(secondThrottle);
+            frontRightMotor.setPower(secondRightThrottle);
+            backRightMotor.setPower(secondRightThrottle);
+            frontLeftMotor.setPower(secondThrottle);
+            frontLeftMotor.setPower(secondThrottle);
         } else {
-            rightMotor.setPower(rightThrottle);
-            leftMotor.setPower(throttle);
+            frontRightMotor.setPower(rightThrottle);
+            backRightMotor.setPower(rightThrottle);
+            frontLeftMotor.setPower(throttle);
+            frontLeftMotor.setPower(throttle);
         }
         if (gamepad1.x || gamepad2.x) {
             //harvester.setPower(.5);
         }
         if (gamepad1.b || gamepad2.b) {
             //harvester.setPower(0);
-            linearSlide.setPower(0);
+            linearMotor.setPower(0);
         }
         if (gamepad1.y || gamepad2.y) {
-            linearSlide.setPower(.5);
+            linearMotor.setPower(.5);
         }
         if (gamepad1.a || gamepad2.a) {
-            linearSlide.setPower(-.5);
+            linearMotor.setPower(-.5);
         }
         if (gamepad1.dpad_up || gamepad2.dpad_up) {
-
-            /*leftsweeper.setPosition(1);
-            rightsweeper.setPosition(1);
-            buttonServo.setPosition(1);
-            button2Servo.setPosition(1);
-            climberservo.setPosition(1);*/
-            //buttonservoPosition -= buttonServoDelta;
+            rButtonServo.setPosition(0.5);
+            lButtonServo.setPosition(0.5);
+            hookServo.setPosition(0.5);
+            twistServo.setPosition(0.5);
+            releaseServo.setPosition(0.5);
         }
         if (gamepad1.dpad_down || gamepad1.dpad_down) {
 
@@ -159,13 +153,10 @@ public class ResQTeleopPitCrew extends OpMode {
             //buttonservoPosition += buttonServoDelta;
         }
         if (gamepad1.dpad_left || gamepad2.dpad_left) {
-            climbservo.setPosition(climbServoEnd);
+            clampServo.setPosition(0.5);
         }
         if (gamepad1.dpad_right || gamepad2.dpad_right) {
-            climbservo.setPosition(climbservoPosition);
         }
-        climbservoPosition = Range.clip(climbservoPosition, CLIMBSERVO_MIN_RANGE, CLIMBSERVO_MAX_RANGE);
-
        // boxservoPosition = Range.clip(boxservoPosition, BOXSERVO_MIN_RANGE, BOXSERVO_MAX_RANGE);
         //boxservo.setPosition(boxservoPosition);
         //telemetry.addData("Button Servo Position: ", buttonservoPosition);

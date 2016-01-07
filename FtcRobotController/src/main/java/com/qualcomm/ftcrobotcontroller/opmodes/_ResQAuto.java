@@ -30,6 +30,7 @@ public abstract class _ResQAuto extends LinearOpMode {
         Servo climberservo;
         Servo twistServo;
         Servo releaseServo;
+        Servo hookServo;
         OpticalDistanceSensor opticalDistanceSensor;
         UltrasonicSensor ultrasonicSensor;
         ColorSensor colorsensor;
@@ -81,9 +82,11 @@ public abstract class _ResQAuto extends LinearOpMode {
         //climberservo = hardwareMap.servo;.get("climber");
         //climberservo.setPosition(0.0);
         twistServo = hardwareMap.servo.get("twist");
-        twistServo.setPosition(0.5);
+        twistServo.setPosition(1);
         releaseServo = hardwareMap.servo.get("release");
-        releaseServo.setPosition(0.5);
+        releaseServo.setPosition(0);
+        hookServo = hardwareMap.servo.get("signal");
+        hookServo.setPosition(1);
 
         ultrasonicSensor = hardwareMap.ultrasonicSensor.get("ultrasonic");
         opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("light");
