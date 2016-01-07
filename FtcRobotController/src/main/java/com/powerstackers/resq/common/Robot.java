@@ -176,7 +176,7 @@ public class Robot {
     }
 
     /**
-     * 
+     *
      * @param allianceColor
      */
     public void pressBeacon(AllianceColor allianceColor) {
