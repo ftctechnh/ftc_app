@@ -36,6 +36,7 @@ android {
 }
 
 repositories {
+    mavenCentral();
     flatDir {
         dirs '../FtcRobotController/libs'
     }
@@ -49,6 +50,7 @@ dependencies {
     compile (name:'ModernRobotics-release', ext:'aar')
     compile (name:'Analytics-release', ext:'aar')
     compile (name:'WirelessP2p-release', ext:'aar')
+    compile 'com.google.code.gson:gson:2.3';
     compile project(':SwerveRoboticsLibrary')
     compile project(':FtcRobotController')
 }
