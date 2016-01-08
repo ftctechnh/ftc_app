@@ -93,8 +93,7 @@ public abstract class _ResQAuto extends LinearOpMode {
         colorsensor = hardwareMap.colorSensor.get("color");
         colorsensor.enableLed(false);
 
-
-
+        //Actual Stuff Starts Here
         waitForStart();
         sweeper.setPower(-0.8);
         //do we need delay
@@ -118,6 +117,7 @@ public abstract class _ResQAuto extends LinearOpMode {
         backRightWheel.setPower(0);
         backLeftWheel.setPower(0);
 
+        //Drive forward until reach line
         while(true){
             reflectance = opticalDistanceSensor.getLightDetected();
             telemetry.addData("Reflectance Value", reflectance);
@@ -173,8 +173,8 @@ public abstract class _ResQAuto extends LinearOpMode {
         backRightWheel.setPower(0);
         backLeftWheel.setPower(0);
         sleep(700);
-        //follow the left edge of the line
 
+        //follow the left edge of the line
         while(true) {
             waitOneFullHardwareCycle();
             sweeper.setPower(1);
@@ -182,6 +182,7 @@ public abstract class _ResQAuto extends LinearOpMode {
             reflectance = opticalDistanceSensor.getLightDetected();
 
             telemetry.addData("Current Status: Linefollower", "Current Status: Linefollower");
+            //Line Follower
 
             double valueB;
             double valueS;
@@ -211,7 +212,7 @@ public abstract class _ResQAuto extends LinearOpMode {
             telemetry.addData("Reflectance Value", reflectance);
             telemetry.addData("Ultrasonic Value", distance);
 
-
+            //Wait until ultrasonic distance <24
             if(distance < 24 && distance>1) {
                 if (getRedAlliance() == 0) {
                     /*frontLeftWheel.setPower(0.3);
@@ -236,6 +237,8 @@ public abstract class _ResQAuto extends LinearOpMode {
         telemetry.addData("Red", colorsensor.red());
         telemetry.addData("Blue", colorsensor.blue());
         sleep(500);
+
+        //Color Sensor Logic
         if(colorsensor.red()<0.1&&colorsensor.blue()>0.1){
             if (getRedAlliance() == 0){
                 //button2Servo.setPosition(0.8);
@@ -318,11 +321,7 @@ public abstract class _ResQAuto extends LinearOpMode {
 
 
 
-        //Dump climbers
-        //climberservo.setPosition(1);
-        //sleep(1500);
-        //climberservo.setPosition(0);
-
+        //Drive off to the side
         frontLeftWheel.setPower(-0.1);
         backLeftWheel.setPower(-0.1);
         frontRightWheel.setPower(-0.1);
