@@ -1,6 +1,7 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.ndhsb.ftc7593.tbc;
@@ -28,15 +29,26 @@ public class EncoderAuton extends OpMode {
         tbc.setSnowplowPosition(tbc.snowplowPosition);
         tbc.setMtapePosition(tbc.mtapePosition);
         tbc.setButtonServoSpeed(tbc.buttonServoSpeed);
+        //tbc.setMotorRRightPower(0.0f);
+        //tbc.setMotorRLeftPower(0.0f);
+        //tbc.setMotorFLeftPower(0.0f);
+        // tbc.setMotorFRightPower(0.0f);
+        tbc.setDriveMode(DcMotorController.RunMode.RESET_ENCODERS);
+        //tbc.setDriveMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+
 
         if (tbc.sc != null) {
             tbc.sc.pwmEnable(); // enable servo controller PWM outputs
         }
 
-        mRuntime.reset();
+        mRuntime.reset();           // Zero game clock
     }
 
     public void loop() {
+
+
+        tbc.setDriveMode(DcMotorController.RunMode.RUN_TO_POSITION);
+
         telemetry.addData("Text", "*** Robot Data***");
         // telemetry.addData("arm", "arm:  " + String.format("%.2f", armPosition));
         // telemetry.addData("claw", "claw:  " + String.format("%.2f", clawPosition));
@@ -46,45 +58,18 @@ public class EncoderAuton extends OpMode {
         telemetry.addData("sliderL", "sliderL: " + String.format("%.2f", tbc.sliderLPosition));
         telemetry.addData("sliderR", "sliderR:" + String.format("%.2f", tbc.sliderRPosition));
         telemetry.addData("mtape", "mtape: " + String.format("%.2f", tbc.mtapePosition));
-        
-        while (Math.abs(tbc.motorFLeft.getCurrentPosition()) < 13500) {
+
+
+            tbc.motorFRight.setTargetPosition(2000);
+            tbc.motorRLeft.setTargetPosition(2000);
+            tbc.motorFLeft.setTargetPosition(2000);
+            tbc.motorRRight.setTargetPosition(2000);
             tbc.setMotorFLeftPower(-1.0f);
             tbc.setMotorFRightPower(-1.0f);
-            tbc.setMotorRRightPower(-1.0f);
             tbc.setMotorRLeftPower(-1.0f);
-        }
-        if (false) {
+            tbc.setMotorRRightPower(-1.0f);
 
 
-            tbc.setMotorFLeftPower(0.0f);
-            tbc.setMotorFRightPower(0.0f);
-            tbc.setMotorRRightPower(0.0f);
-            tbc.setMotorRLeftPower(0.0f);
-
-            while (Math.abs(tbc.motorFLeft.getCurrentPosition()) < 12300) {
-                tbc.setMotorFLeftPower(1.0f);
-                tbc.setMotorFRightPower(1.0f);
-                tbc.setMotorRRightPower(-1.0f);
-                tbc.setMotorRLeftPower(-1.0f);
-            }
-
-            tbc.setMotorFLeftPower(0.0f);
-            tbc.setMotorFRightPower(0.0f);
-            tbc.setMotorRRightPower(0.0f);
-            tbc.setMotorRLeftPower(0.0f);
-            tbc.setSnowplowPosition(0.4);
-
-            while (Math.abs(tbc.motorFLeft.getCurrentPosition()) < 13700) {
-                tbc.setMotorFLeftPower(-1.0f);
-                tbc.setMotorFRightPower(-1.0f);
-                tbc.setMotorRRightPower(-1.0f);
-                tbc.setMotorRLeftPower(-1.0f);
-            }
-
-            tbc.setMotorFLeftPower(0.0f);
-            tbc.setMotorFRightPower(0.0f);
-            tbc.setMotorRRightPower(0.0f);
-            tbc.setMotorRLeftPower(0.0f);
 
             mRuntime.reset();
 
@@ -94,6 +79,6 @@ public class EncoderAuton extends OpMode {
 
             tbc.setClimberPosition(0.0);
 
-        }
+        
     }
 }
