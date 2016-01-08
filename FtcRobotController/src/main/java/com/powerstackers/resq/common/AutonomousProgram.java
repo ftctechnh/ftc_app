@@ -20,6 +20,12 @@ public class AutonomousProgram extends SynchronousOpMode {
      */
     @Override
     protected void main() throws InterruptedException {
+        // Initialize any sensors and servos
+
+        // Wait for the start of the match
         this.waitForStart();
+
+        // Run any actions we desire
+
     }
 }

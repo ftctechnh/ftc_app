@@ -27,6 +27,7 @@ import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.util.Range;
 
 import org.swerverobotics.library.ClassFactory;
 
@@ -42,6 +43,9 @@ public class Robot {
     private static final double CRS_FORWARD = 1.0;
     private static final double LIFT_SPEED  = 1.0;
     private static final double BRUSH_SPEED = 1.0;
+    private static final double BEACON_TAP_LEFT = 0.8;
+    private static final double BEACON_TAP_RIGHT = 0.2;
+    private static final double BEACON_RESTING = 0.5;
 
     private DcMotor motorLeftA;
     private DcMotor motorLeftB;
@@ -87,6 +91,13 @@ public class Robot {
         sensorColor.enableLed(true);
         opticalSensor = mode.hardwareMap.opticalDistanceSensor.get("opticalDistance");
 
+    }
+
+    /**
+     * Initialize the robot's servos and sensors.
+     */
+    public void initializeRobot() {
+        servoBeacon.setPosition(BEACON_RESTING);
     }
 
     /**
@@ -173,5 +184,42 @@ public class Robot {
             default:
                 toToggle.setPosition(CRS_STOP);
         }
+    }
+
+    /**
+     * Trim a servo value between the minimum and maximum ranges.
+     * @param servoValue Value to trim.
+     * @return A raw double with the trimmed value.
+     */
+    private double trimServoValue(double servoValue) {
+        return Range.clip(servoValue, 0.0, 1.0);
+    }
+
+    /**
+     * Tap the beacon on the correct side.
+     * @param allianceColor The color that we are currently playing as.
+     */
+    public void tapBeacon(AllianceColor allianceColor) {
+
+        AllianceColor dominantColor;
+        double positionBeaconServo;
+
+        // Detect the color shown on the beacon's left half, and record it.
+        if (sensorColor.red() > sensorColor.blue()) {
+            dominantColor = AllianceColor.RED;
+        } else {
+            dominantColor = AllianceColor.BLUE;
+        }
+
+        // Tap the correct side based on the dominant color.
+        if (dominantColor == allianceColor) {
+            positionBeaconServo = BEACON_TAP_LEFT;
+        } else {
+            positionBeaconServo = BEACON_TAP_RIGHT;
+        }
+
+        // Trim the servo value and set the servo position.
+        positionBeaconServo = Range.clip(positionBeaconServo, 0.0, 1.0);
+        servoBeacon.setPosition(positionBeaconServo);
     }
 }
