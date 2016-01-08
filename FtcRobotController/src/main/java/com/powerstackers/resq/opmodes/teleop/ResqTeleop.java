@@ -38,6 +38,23 @@ public class ResqTeleop extends OpMode {
     private static final float MINIMUM_JOYSTICK_THRESHOLD = 0.15F;
 
     Robot robot;
+    
+    float stickValueP1Left;
+    float stickValueP1Right;
+    MotorSetting settingTapeMeasureServo;
+    MotorSetting settingLiftMotor;
+    MotorSetting settingBrushMotor;
+
+    boolean buttonLiftOut;
+    boolean buttonLiftIn;
+    boolean buttonBrushOn;
+    boolean buttonBrushRev;
+
+    boolean buttonTapeOut;
+    boolean buttonTapeIn;
+    boolean buttonHopperLeft;
+    boolean buttonHopperRight;
+    boolean buttonClimbers;
 
     /**
      * Initialize the robot.
@@ -53,28 +70,21 @@ public class ResqTeleop extends OpMode {
     @Override
     public void loop() {
 
-        // We like to use tank drive.
-        float stickValueP1Left = -gamepad1.left_stick_y;
-        float stickValueP1Right = -gamepad1.right_stick_y;
-        MotorSetting settingTapeMeasureServo;
-        MotorSetting settingLiftMotor;
-        MotorSetting settingBrushMotor;
-
         // Read the joystick and determine what motor setting to use.
-        stickValueP1Left = (float) scaleInput(Range.clip(stickValueP1Left, -1, 1));
-        stickValueP1Right = (float) scaleInput(Range.clip(stickValueP1Right, -1, 1));
+        stickValueP1Left = (float) scaleInput(Range.clip(-gamepad1.left_stick_y, -1, 1));
+        stickValueP1Right = (float) scaleInput(Range.clip(-gamepad1.right_stick_y, -1, 1));
 
         // Neatly read all the button assignments for clarity purposes.
-        boolean buttonLiftOut     = gamepad1.left_bumper;
-        boolean buttonLiftIn      = gamepad1.left_trigger > 0.0;
-        boolean buttonBrushOn     = gamepad1.right_bumper;
-        boolean buttonBrushRev    = gamepad1.right_trigger > 0.0;
+        buttonLiftOut     = gamepad1.left_bumper;
+        buttonLiftIn      = gamepad1.left_trigger > 0.0;
+        buttonBrushOn     = gamepad1.right_bumper;
+        buttonBrushRev    = gamepad1.right_trigger > 0.0;
 
-        boolean buttonTapeOut     = gamepad2.y;
-        boolean buttonTapeIn      = gamepad2.a;
-        boolean buttonHopperLeft  = gamepad2.left_bumper;
-        boolean buttonHopperRight = gamepad2.right_bumper;
-        boolean buttonClimbers    = gamepad2.right_trigger > 0.0;
+        buttonTapeOut     = gamepad2.y;
+        buttonTapeIn      = gamepad2.a;
+        buttonHopperLeft  = gamepad2.left_bumper;
+        buttonHopperRight = gamepad2.right_bumper;
+        buttonClimbers    = gamepad2.right_trigger > 0.0;
 
         // Set the lift motor value.
         if (buttonLiftOut) {
