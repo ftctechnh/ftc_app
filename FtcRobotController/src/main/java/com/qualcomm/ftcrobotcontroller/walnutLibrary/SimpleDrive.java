@@ -26,10 +26,10 @@ public class SimpleDrive {
                        double myRightDeadzone)
     {
         //Create new IncSpinners and assign to other constructor
-        this(new IncSpinner(myLeft,myLeftName,checkLeftEncoders,
-                myLeftControl,leftReverse,myLeftDeadzone),
-                new IncSpinner(myRight,myRightName,checkRightEncoders,
-                myRightControl,rightReverse,myRightDeadzone));
+        this(new IncSpinner(myLeft, myLeftName, checkLeftEncoders,
+                        myLeftControl, leftReverse, myLeftDeadzone),
+                new IncSpinner(myRight, myRightName, checkRightEncoders,
+                        myRightControl, rightReverse, myRightDeadzone));
 
     }
     //Getters and Setters
@@ -73,6 +73,10 @@ public class SimpleDrive {
         }
     }
     //Autonomous
-
+    protected void operateSpecificDrive(ArrayList<IncSpinner> myMotors, double pow){
+        for(int i=0;i<myMotors.size();i++){
+            myMotors.get(i).powerMotor(pow);
+        }
+    }
 
 }
