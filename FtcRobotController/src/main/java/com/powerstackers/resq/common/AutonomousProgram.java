@@ -26,6 +26,6 @@ public class AutonomousProgram extends SynchronousOpMode {
         this.waitForStart();
 
         // Run any actions we desire
-
+        robot.tapBeacon(allianceColor);
     }
 }

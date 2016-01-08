@@ -5,6 +5,7 @@ import com.powerstackers.resq.common.AutonomousProgram;
 
 /**
  * @author Jonathan Thomas
+ *
  */
 public class RedAutonomous extends AutonomousProgram {
     public RedAutonomous() {
