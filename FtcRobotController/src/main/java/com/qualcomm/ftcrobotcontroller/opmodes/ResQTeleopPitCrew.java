@@ -104,10 +104,10 @@ public class ResQTeleopPitCrew extends OpMode {
     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
     */
     public void loop() {
-        float throttle = -gamepad1.left_stick_y;
-        float rightThrottle = -gamepad1.right_stick_y;
-        float secondThrottle = -gamepad2.left_stick_y;
-        float secondRightThrottle = -gamepad2.right_stick_y;
+        float throttle = gamepad1.left_stick_y;
+        float rightThrottle = gamepad1.right_stick_y;
+        float secondThrottle = gamepad2.left_stick_y;
+        float secondRightThrottle = gamepad2.right_stick_y;
 
         double distance = ultrasonicSensor.getUltrasonicLevel();
         double reflectance = opticalDistanceSensor.getLightDetected();
@@ -116,12 +116,12 @@ public class ResQTeleopPitCrew extends OpMode {
             frontRightMotor.setPower(secondRightThrottle);
             backRightMotor.setPower(secondRightThrottle);
             frontLeftMotor.setPower(secondThrottle);
-            frontLeftMotor.setPower(secondThrottle);
+            backLeftMotor.setPower(secondThrottle);
         } else {
             frontRightMotor.setPower(rightThrottle);
             backRightMotor.setPower(rightThrottle);
             frontLeftMotor.setPower(throttle);
-            frontLeftMotor.setPower(throttle);
+            backLeftMotor.setPower(throttle);
         }
         if (gamepad1.x || gamepad2.x) {
             //harvester.setPower(.5);
@@ -142,9 +142,9 @@ public class ResQTeleopPitCrew extends OpMode {
             hookServo.setPosition(0.5);
             twistServo.setPosition(0.5);
             releaseServo.setPosition(0.5);
+            clampServo.setPosition(0);
         }
         if (gamepad1.dpad_down || gamepad1.dpad_down) {
-
             /*leftsweeper.setPosition(0);
             rightsweeper.setPosition(0);
             buttonServo.setPosition(0);
@@ -153,9 +153,10 @@ public class ResQTeleopPitCrew extends OpMode {
             //buttonservoPosition += buttonServoDelta;
         }
         if (gamepad1.dpad_left || gamepad2.dpad_left) {
-            clampServo.setPosition(0.5);
+            adjustMotor.setPower(0.05);
         }
         if (gamepad1.dpad_right || gamepad2.dpad_right) {
+            adjustMotor.setPower(-0.05);
         }
        // boxservoPosition = Range.clip(boxservoPosition, BOXSERVO_MIN_RANGE, BOXSERVO_MAX_RANGE);
         //boxservo.setPosition(boxservoPosition);

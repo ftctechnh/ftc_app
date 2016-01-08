@@ -30,7 +30,7 @@ public class Robot4Teleop extends OpMode {
     private static int LINEAR_MOTOR_TARGET = 0;
 
     private static double RELEASE_SERVO_INIT = 0; //Lower is left, higher is right
-    private static double CLAMP_SERVO_INIT = 0.25;
+    private static double CLAMP_SERVO_INIT = 0.32;
     private static double TWIST_SERVO_INIT = 1;
     private static double HOOK_SERVO_INIT = 1;
     //Timing
@@ -115,7 +115,7 @@ public class Robot4Teleop extends OpMode {
                 } else {
                     adjustMotor.setPower(0);
                     //Clear reset state after linear motor stops
-                    if (Math.abs(linearMotor.getPower()) < .01) {
+                    if (Math.abs(linearMotor.getCurrentPosition() - LINEAR_MOTOR_TARGET) < 25) {
                         reset_state = false;
                     }
                 }
@@ -127,7 +127,7 @@ public class Robot4Teleop extends OpMode {
                 } else {
                     linearMotor.setPower(0);
                     //Clear reset state after linear motor stops
-                    if (Math.abs(adjustMotor.getPower()) < .01) {
+                    if (Math.abs(adjustMotor.getCurrentPosition() - ADJUST_MOTOR_TARGET) < 25) {
                         reset_state = false;
                     }
                 }
@@ -167,7 +167,7 @@ public class Robot4Teleop extends OpMode {
                 //releaseServo.setPosition(RELEASE_SERVO_INIT);
                 //twistServo.setPosition(1);
                 resetStartingTime = new Date();
-                releaseServo.setPosition(0.3);
+                releaseServo.setPosition(0.55);
                 if (new Date().getTime() - resetStartingTime.getTime() > 2000) {
                     //Reset release servo
                     releaseServo.setPosition(RELEASE_SERVO_INIT);

@@ -1,1 +1,7 @@
-package com.qualcomm.ftcrobotcontroller.opmodes;import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;import com.technicbots.Testing1010;public class FtcOpModeRegister implements OpModeRegister{public void register(OpModeManager manager){manager.register("ResQAutoTesting",_ResQAutoTesting.class);manager.register("ServoTest",_ServoTest.class);manager.register("Calibration",Calibration.class);manager.register("NullOp",NullOp.class);manager.register("K9TeleOp",K9TeleOp.class);manager.register("PushBotAuto",PushBotAuto.class);manager.register("PushBotManual",PushBotManual.class);manager.register("Robot4Teleop",Robot4Teleop.class);manager.register("MR Gyro Test",MRGyroTest.class);manager.register("ResQAuto_D_R",ResQAutoDelayRed.class);manager.register("ResQAuto_D_B",ResQAutoDelayBlue.class);manager.register("ResQAuto_R",ResQAutoRed.class);manager.register("ResQAuto_B",ResQAutoBlue.class);manager.register("ResQTeleop",ResQTeleop.class);manager.register("ResQPitCrew",ResQTeleopPitCrew.class);}}
+package com.qualcomm.ftcrobotcontroller.opmodes;
+import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
+import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
+import com.technicbots.Testing1010;
+public class FtcOpModeRegister implements OpModeRegister
+{public void register(OpModeManager manager)
+{manager.register("Calibration",Calibration.class);manager.register("Robot4Teleop",Robot4Teleop.class);manager.register("ResQAuto_D_R",ResQAutoDelayRed.class);manager.register("ResQAuto_D_B",ResQAutoDelayBlue.class);manager.register("ResQAuto_R",ResQAutoRed.class);manager.register("ResQAuto_B",ResQAutoBlue.class);manager.register("ResQPitCrew",ResQTeleopPitCrew.class);}}
