@@ -5,16 +5,18 @@ import com.google.gson.annotations.*;
 /**
  * Created by leeac on 1/6/2016.
  */
-public class HueCalibration
+public class HueData
 {
     @Expose public double hueMin;
     @Expose public double hueMax;
     @Expose public double hueAverage;
 
+    public boolean hasData;
+
     private double runningTotal;
     private int count;
 
-    public HueCalibration()
+    public HueData()
     {
         this.hueMin = 180.0;
         this.hueMax = -180.0;
@@ -23,8 +25,15 @@ public class HueCalibration
         this.count = 0;
     }
 
-    public void AddSample(double value)
+    public boolean isHue(double value)
     {
+        return value >= hueMin && value <= hueMax;
+    }
+
+    public void addSample(double value)
+    {
+        hasData = true;
+
         if (value < this.hueMin)
             this.hueMin = value;
 
