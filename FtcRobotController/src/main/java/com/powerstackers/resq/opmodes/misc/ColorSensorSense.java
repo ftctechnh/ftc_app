@@ -1,4 +1,4 @@
-package com.powerstackers.resq.opmodes;
+package com.powerstackers.resq.opmodes.misc;
 
 import android.app.Activity;
 import android.graphics.Color;

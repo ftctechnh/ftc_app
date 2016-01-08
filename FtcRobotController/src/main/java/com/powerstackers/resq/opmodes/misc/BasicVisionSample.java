@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
 
-package com.powerstackers.resq.opmodes;
+package com.powerstackers.resq.opmodes.misc;
 
 import org.lasarobotics.vision.test.android.Cameras;
 import org.lasarobotics.vision.test.opmode.VisionExtensions;

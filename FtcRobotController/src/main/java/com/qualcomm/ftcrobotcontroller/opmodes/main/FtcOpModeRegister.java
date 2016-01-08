@@ -31,12 +31,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes.main;
 
-import com.powerstackers.resq.opmodes.BlueAlianceOP;
-import com.powerstackers.resq.opmodes.ColorSensorSense;
-import com.powerstackers.resq.opmodes.ProtobotTeleop;
-import com.powerstackers.resq.opmodes.RedAlianceOP;
-import com.powerstackers.resq.opmodes.Tedbot;
-import com.powerstackers.resq.opmodes.testbot1;
+import com.powerstackers.resq.opmodes.autonomous.BlueAlianceOP;
+import com.powerstackers.resq.opmodes.misc.ColorSensorSense;
+import com.powerstackers.resq.opmodes.teleop.ProtobotTeleop;
+import com.powerstackers.resq.opmodes.autonomous.RedAlianceOP;
+import com.powerstackers.resq.opmodes.misc.Tedbot;
+import com.powerstackers.resq.opmodes.teleop.testbot1;
 import com.qualcomm.ftcrobotcontroller.opmodes.NullOp;
 import com.qualcomm.ftcrobotcontroller.opmodes.k9.K9IrSeeker;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;

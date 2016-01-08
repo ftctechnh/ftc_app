@@ -18,7 +18,7 @@
  *
  */
 
-package com.powerstackers.resq.opmodes;
+package com.powerstackers.resq.opmodes.teleop;
 
 import com.powerstackers.resq.common.MotorSetting;
 import com.powerstackers.resq.common.Robot;

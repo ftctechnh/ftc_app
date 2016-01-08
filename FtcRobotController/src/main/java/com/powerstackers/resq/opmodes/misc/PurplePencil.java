@@ -1,4 +1,4 @@
-package com.powerstackers.resq.opmodes;
+package com.powerstackers.resq.opmodes.misc;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;

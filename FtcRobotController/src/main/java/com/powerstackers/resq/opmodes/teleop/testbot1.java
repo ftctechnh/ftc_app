@@ -1,4 +1,4 @@
-package com.powerstackers.resq.opmodes;
+package com.powerstackers.resq.opmodes.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;

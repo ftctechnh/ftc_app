@@ -1,4 +1,25 @@
-package com.powerstackers.resq.opmodes;
+/*
+ * Copyright (C) 2015 Powerstackers
+ *
+ * Code to run our 2015-16 robot.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+
+package com.powerstackers.resq.opmodes.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -12,7 +33,7 @@ import org.swerverobotics.library.interfaces.TeleOp;
 /**
  * @author Derek Helm
  */
-public class BlueAlianceOP extends OpMode {
+public class RedAlianceOP extends OpMode {
 
     /*
      * TETRIX VALUES.
@@ -36,7 +57,7 @@ public class BlueAlianceOP extends OpMode {
     //    TouchSensor touchSensor;
     Servo servoBeacon;
 
-    public BlueAlianceOP() {
+    public RedAlianceOP() {
 
     }
 
@@ -56,6 +77,7 @@ public class BlueAlianceOP extends OpMode {
         colorSensor = ClassFactory.createSwerveColorSensor(this, this.hardwareMap.colorSensor.get("colorSensor"));
         colorSensor.enableLed(true);
 //        touchSensor = hardwareMap.touchSensor.get("touchSensor");
+
         /*
          * Servos
          */
@@ -73,10 +95,10 @@ public class BlueAlianceOP extends OpMode {
     public void loop() {
 
         //ColorSensor Controls
-        if (colorSensor.red() > colorSensor.blue()) {
+        if (colorSensor.blue() > colorSensor.red()) {
             servoBeaconPosition = 0.20;
 
-        } else if (colorSensor.blue() > colorSensor.red()) {
+        } else if (colorSensor.red() > colorSensor.blue()) {
             servoBeaconPosition = 0.80;
         } else {
             servoBeaconPosition = 0.50;
@@ -110,6 +132,7 @@ public class BlueAlianceOP extends OpMode {
         telemetry.addData("Red  ", colorSensor.red());
         telemetry.addData("Green", colorSensor.green());
         telemetry.addData("Blue ", colorSensor.blue());
+        telemetry.addData("Hue", hsvValues[0]);
 
         /*
          * servo Telemetry
