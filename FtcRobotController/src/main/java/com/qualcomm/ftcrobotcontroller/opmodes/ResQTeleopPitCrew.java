@@ -123,18 +123,20 @@ public class ResQTeleopPitCrew extends OpMode {
             frontLeftMotor.setPower(throttle);
             backLeftMotor.setPower(throttle);
         }
-        if (gamepad1.x || gamepad2.x) {
-            //harvester.setPower(.5);
+        if (gamepad1.b == false && gamepad2.b == false && gamepad1.x == false && gamepad2.x == false)
+        {
+            //Stop the adjust motor if the x axis of the dpad is not touched
+            adjustMotor.setPower(0);
+        }
+        if (gamepad1.x  || gamepad2.x) {
+            //Adjust motor turns right and twist servo sets to turn left
+            adjustMotor.setPower(-0.05);
+            twistServo.setPosition(0.6);
         }
         if (gamepad1.b || gamepad2.b) {
-            //harvester.setPower(0);
-            linearMotor.setPower(0);
-        }
-        if (gamepad1.y || gamepad2.y) {
-            linearMotor.setPower(.5);
-        }
-        if (gamepad1.a || gamepad2.a) {
-            linearMotor.setPower(-.5);
+            //Adjust motor turns left and twist servo sets to turn right
+            adjustMotor.setPower(0.05);
+            twistServo.setPosition(0.32);
         }
         if (gamepad1.dpad_up || gamepad2.dpad_up) {
             rButtonServo.setPosition(0.5);
@@ -145,6 +147,7 @@ public class ResQTeleopPitCrew extends OpMode {
             clampServo.setPosition(0);
         }
         if (gamepad1.dpad_down || gamepad1.dpad_down) {
+            adjustMotor.setPower(0);
             /*leftsweeper.setPosition(0);
             rightsweeper.setPosition(0);
             buttonServo.setPosition(0);
@@ -157,6 +160,17 @@ public class ResQTeleopPitCrew extends OpMode {
         }
         if (gamepad1.dpad_right || gamepad2.dpad_right) {
             adjustMotor.setPower(-0.05);
+        }
+        if (gamepad1.left_trigger == 1 || gamepad2.left_trigger == 1) {
+            //Linear Motor shrinks
+            linearMotor.setPower(-0.5);
+        } else if (gamepad1.right_trigger == 1 || gamepad2.right_trigger == 1) {
+            //Linear Motor extends
+            linearMotor.setPower(0.5);
+        } else {
+            //Linear Motor stops
+            linearMotor.setPower(0);
+            //hangMotor.setPower(0);
         }
        // boxservoPosition = Range.clip(boxservoPosition, BOXSERVO_MIN_RANGE, BOXSERVO_MAX_RANGE);
         //boxservo.setPosition(boxservoPosition);
