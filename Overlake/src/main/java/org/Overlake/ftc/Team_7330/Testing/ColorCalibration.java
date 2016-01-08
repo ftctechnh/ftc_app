@@ -16,6 +16,7 @@ public class ColorCalibration extends SynchronousOpMode
     DeviceInterfaceModule cdim;
     static final int LED_CHANNEL = 5;
 
+    // TODO: Implement this program for multiple sensors with an array of sensors
     SensorData[] data = new SensorData[1];
     int dataIndex; // used in composeDashboard to overcome scope problems
 
