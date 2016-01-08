@@ -44,15 +44,15 @@ public class DragonoidsOpMode extends OpMode {
         driveMotors.get("rightOne").setPower(0);
         driveMotors.get("rightTwo").setPower(0);
         driveMotors.get("leftOne").setPower(0);
-        driveMotors.get("leftOTwo").setPower(0);
+        driveMotors.get("leftTwo").setPower(0);
         auxMotors.get("conveyor").setPower(0);
         auxMotors.get("knocker").setPower(0);
 
     }
 
     private void outputTelemetry() {
-        telemetry.addData("Right drive motor power", driveMotors.get("right").getPower());
-        telemetry.addData("Left drive motor power", driveMotors.get("left").getPower());
+//        telemetry.addData("Right drive motor power", driveMotors.get("rightOneDrive").getPower());
+//        telemetry.addData("Left drive motor power", driveMotors.get("leftOneDrive").getPower());
         telemetry.addData("Conveyor motor power", auxMotors.get("conveyor").getPower());
         telemetry.addData("Knocker motor power", auxMotors.get("knocker").getPower());
     }
