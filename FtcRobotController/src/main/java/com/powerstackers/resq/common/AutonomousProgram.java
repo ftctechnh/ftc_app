@@ -41,7 +41,7 @@ public class AutonomousProgram extends SynchronousOpMode {
     @Override
     protected void main() throws InterruptedException {
         // Initialize any sensors and servos
-
+        robot.initializeRobot();
         // Wait for the start of the match
         this.waitForStart();
 
