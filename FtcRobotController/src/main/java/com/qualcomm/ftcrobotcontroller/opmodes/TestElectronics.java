@@ -22,7 +22,6 @@ public class TestElectronics extends LinearOpMode
         waitForStart();
         test1.setPower(1);
         test2.setPower(1);
-        test3.setPower(1)
-        ;
+        test3.setPower(1);
     }
 }
