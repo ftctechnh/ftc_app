@@ -25,24 +25,28 @@ public class HueData
         this.count = 0;
     }
 
-    public boolean isHue(double value)
-    {
-        return value >= hueMin && value <= hueMax;
-    }
-
     public void addSample(double value)
     {
         hasData = true;
 
         if (value < this.hueMin)
+        {
             this.hueMin = value;
+        }
 
         if (value > this.hueMax)
+        {
             this.hueMax = value;
+        }
 
         this.runningTotal += value;
         this.count++;
         this.hueAverage = this.runningTotal / this.count;
+    }
+
+    public boolean isHue(double value)
+    {
+        return value >= hueMin && value <= hueMax;
     }
 }
 
