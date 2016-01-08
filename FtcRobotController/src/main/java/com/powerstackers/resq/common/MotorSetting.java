@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2015 Powerstackers
  *
- * Different settings for servos.
+ * Different settings for motors.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
