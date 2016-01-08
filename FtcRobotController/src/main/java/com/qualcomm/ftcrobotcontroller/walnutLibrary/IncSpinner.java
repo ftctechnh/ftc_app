@@ -125,6 +125,8 @@ public class IncSpinner extends WalnutMotor {
         double val = WalnutMotor.GamepadUpdater.doubleValues[tablePos];
         if(Math.abs(val)>deadZone)
             this.getMotor().setPower(val*orientation);
+        else
+            this.stopMotor();
     }
     //Autonomous Methods in Walnut Motor (Called "powerMotor(int pow)")
 }
