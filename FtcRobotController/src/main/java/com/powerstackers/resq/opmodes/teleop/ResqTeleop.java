@@ -60,11 +60,11 @@ public class ResqTeleop extends OpMode {
         MotorSetting settingLiftMotor;
         MotorSetting settingBrushMotor;
 
-        // Trim and scale the joystick values.
+        // Read the joystick and determine what motor setting to use.
         stickValueP1Left = (float) scaleInput(Range.clip(stickValueP1Left, -1, 1));
         stickValueP1Right = (float) scaleInput(Range.clip(stickValueP1Right, -1, 1));
 
-        // Set the lift motor setting.
+        // Set the lift motor value.
         if (gamepad1.a) {
             settingLiftMotor = MotorSetting.REVERSE;
         } else if (gamepad1.y) {
@@ -73,7 +73,7 @@ public class ResqTeleop extends OpMode {
             settingLiftMotor = MotorSetting.STOP;
         }
 
-        // Set the brush motor setting.
+        // Set the brush motor value.
         if (gamepad1.x) {
             settingBrushMotor = MotorSetting.FORWARD;
         } else if (gamepad1.b) {
@@ -82,7 +82,7 @@ public class ResqTeleop extends OpMode {
             settingBrushMotor = MotorSetting.STOP;
         }
 
-        // Set the tape measure setting.
+        // Set the tape measure value.
         if (gamepad2.a) {
             settingTapeMeasureServo = MotorSetting.REVERSE;
         } else if (gamepad2.y) {
@@ -92,16 +92,24 @@ public class ResqTeleop extends OpMode {
         }
 
         // Set the hopper doors.
+        // Hopper left
         if (gamepad2.left_bumper) {
             robot.setHopperLeft(DoorSetting.OPEN);
         } else {
             robot.setHopperLeft(DoorSetting.CLOSE);
         }
-
+        // Hopper right
         if (gamepad2.right_bumper) {
             robot.setHopperRight(DoorSetting.OPEN);
         } else {
             robot.setHopperRight(DoorSetting.CLOSE);
+        }
+
+        // Set the climber flipper value.
+        if (gamepad2.right_trigger) {
+            robot.setClimberFlipper(DoorSetting.OPEN);
+        } else {
+            robot.setClimberFlipper(DoorSetting.CLOSE);
         }
 
         // Last of all, update the motor values.

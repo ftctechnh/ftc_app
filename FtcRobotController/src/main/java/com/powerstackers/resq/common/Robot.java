@@ -49,6 +49,7 @@ public class Robot {
     private Servo servoBeacon;
     private Servo servoHopperRight;
     private Servo servoHopperLeft;
+    private Servo servoClimberFlipper;
 
     private DeviceInterfaceModule dim;
     private ColorSensor sensorColor;
@@ -76,6 +77,7 @@ public class Robot {
         servoBeacon      = mode.hardwareMap.servo.get("servoBeacon");
         servoHopperRight = mode.hardwareMap.servo.get("servoHopperRight");
         servoHopperLeft = mode.hardwareMap.servo.get("servoHopperLeft");
+        servoClimberFlipper = mode.hardwareMap.servo.get("servoClimbers");
 
         dim = mode.hardwareMap.deviceInterfaceModule.get("dim");
         sensorColor = ClassFactory.createSwerveColorSensor(mode,
@@ -247,6 +249,20 @@ public class Robot {
     }
 
     /**
+     * Set the climber flipping device to either extended or retracted position.
+     * In this case, the OPEN setting indicates extended, and the CLOSED setting is its resting
+     * position.
+     * @param doorSetting DoorSetting indicating the position.
+     */
+    public void setClimberFlipper(DoorSetting doorSetting) {
+        if (doorSetting == DoorSetting.OPEN) {
+            servoClimberFlipper.setPosition(RobotConstants.CLIMBER_RETRACT);
+        } else {
+            servoClimberFlipper.setPosition(RobotConstants.CLIMBER_EXTEND);
+        }
+    }
+
+    /**
      * Move the robot a specific distance forwards or backwards.
      * To specify the distance, pass a double representing the number of <b>inches</b> that you would
      * like the robot to move. To move backwards, simply pass a negative number.
@@ -266,6 +282,6 @@ public class Robot {
      * @param degrees A double representing the distance to turn.
      */
     public void turnDegrees(double degrees) {
-
+        // TODO Actually make this method work
     }
 }
