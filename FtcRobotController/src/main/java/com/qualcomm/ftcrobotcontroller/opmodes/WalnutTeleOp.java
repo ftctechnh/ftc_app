@@ -77,6 +77,9 @@ public class WalnutTeleOp extends OpMode{
         //Why Servos why???
         belt.setPosition(1 - (gamepad2.right_stick_x + 1.0) / 2.0);
         doors.setPosition((gamepad2.left_stick_x / 2.0) + 0.5);
+        //Used to compare actual and abstract values to see if value is updating fast enough
+        telemetry.addData("Direct Gamepad", String.format("%2f", gamepad1.left_stick_y));
+        telemetry.addData("Gamepad Updater",String.format("%2f",WalnutMotor.GamepadUpdater.doubleValues[1]));
     }
     public void stop(){
        for(int i = 0;i<motors.size();i++){
@@ -84,5 +87,6 @@ public class WalnutTeleOp extends OpMode{
        }
         belt.setPosition(0.5);
         doors.setPosition(0.5);
+        WalnutMotor.GamepadUpdater.turnOffProcessing();
     }
 }
