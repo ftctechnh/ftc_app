@@ -25,7 +25,7 @@ public class DragonoidsOpMode extends OpMode {
         auxMotors.put("conveyor", hardwareMap.dcMotor.get("conveyor"));
         auxMotors.put("knocker", hardwareMap.dcMotor.get("knocker"));
 
-        servos.put("gate", hardwareMap.servo.get("gate"));
+//        servos.put("gate", hardwareMap.servo.get("gate"));
     }
     @Override
     public void loop() {

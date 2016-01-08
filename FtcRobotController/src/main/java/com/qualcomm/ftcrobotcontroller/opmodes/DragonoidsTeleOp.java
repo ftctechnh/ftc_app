@@ -47,15 +47,15 @@ public class DragonoidsTeleOp extends DragonoidsOpMode {
         else {
             auxMotors.get("knocker").setPower(0.0);
         }
-
-        if (gamepad2.a){
-            // Open the gate
-            servos.get("gate").setPosition(0.5);
-        }
-        else{
-            // Close the gate
-            servos.get("gate").setPosition(0.0);
-        }
+//      Commented cause we don't have it
+//        if (gamepad2.a){
+//            // Open the gate
+//            servos.get("gate").setPosition(0.5);
+//        }
+//        else{
+//            // Close the gate
+//            servos.get("gate").setPosition(0.0);
+//        }
 
         super.loop();
     }
