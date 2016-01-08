@@ -20,6 +20,7 @@
 
 package com.powerstackers.resq.opmodes.teleop;
 
+import com.powerstackers.resq.common.DoorSetting;
 import com.powerstackers.resq.common.MotorSetting;
 import com.powerstackers.resq.common.Robot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -88,6 +89,19 @@ public class ResqTeleop extends OpMode {
             settingTapeMeasureServo = MotorSetting.FORWARD;
         } else {
             settingTapeMeasureServo = MotorSetting.STOP;
+        }
+
+        // Set the hopper doors.
+        if (gamepad2.left_bumper) {
+            robot.setHopperLeft(DoorSetting.OPEN);
+        } else {
+            robot.setHopperLeft(DoorSetting.CLOSE);
+        }
+
+        if (gamepad2.right_bumper) {
+            robot.setHopperRight(DoorSetting.OPEN);
+        } else {
+            robot.setHopperRight(DoorSetting.CLOSE);
         }
 
         // Last of all, update the motor values.

@@ -38,8 +38,6 @@ import org.swerverobotics.library.ClassFactory;
  */
 public class Robot {
 
-    // Final constants
-
     private DcMotor motorLeftA;
     private DcMotor motorLeftB;
     private DcMotor motorRightA;
