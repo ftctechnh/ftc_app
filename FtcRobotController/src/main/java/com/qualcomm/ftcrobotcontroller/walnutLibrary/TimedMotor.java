@@ -10,7 +10,7 @@ public class TimedMotor extends LinearMotor implements Runnable{
     public static final int NSECSINSEC = 1000000;
     private int numMSecs;
 
-    TimedMotor(DcMotor myMotor, String name,boolean encoderCheck, boolean isReversed){
+    public TimedMotor(DcMotor myMotor, String name,boolean encoderCheck, boolean isReversed){
         super(myMotor, name, encoderCheck,isReversed);
         numMSecs = 0;
     }
@@ -23,13 +23,6 @@ public class TimedMotor extends LinearMotor implements Runnable{
         new Thread(this).start();
 
     }
-    public void operateMSecs(int mSecs, double mySpeedLimit){
-        numMSecs = mSecs;
-        speedLimit = mySpeedLimit;
-        //Start parrallel Process
-        new Thread(this).start();
-
-    }
 
     public void run(){
         motor.setPower(speedLimit);
@@ -37,8 +30,12 @@ public class TimedMotor extends LinearMotor implements Runnable{
             Thread.sleep(numMSecs);
         }
         catch(InterruptedException e){
+            //@TODO: Overkill?
+            stopMotor();
             Thread.currentThread().interrupt();
         }
-        stopMotor();
+        finally {
+            stopMotor();
+        }
     }
 }
