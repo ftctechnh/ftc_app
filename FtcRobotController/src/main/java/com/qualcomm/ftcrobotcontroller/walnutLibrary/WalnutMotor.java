@@ -127,7 +127,7 @@ public abstract class WalnutMotor {
             }
         }
         //Called by elsewhere in the program to terminate processing
-        public void turnOffProcessing(){
+        public static void turnOffProcessing(){
             canProcess = false;
         }
     }
