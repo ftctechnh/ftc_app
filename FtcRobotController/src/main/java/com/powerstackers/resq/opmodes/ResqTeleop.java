@@ -31,6 +31,7 @@ import org.swerverobotics.library.interfaces.TeleOp;
  * This is the opmode for use on our competition robot during teleop.
  * @author Jonathan Thomas
  */
+@TeleOp(name = "Res-Q Tele-op", group = "Powerstackers")
 public class ResqTeleop extends OpMode {
 
     private static final float MINIMUM_JOYSTICK_THRESHOLD = 0.15F;
