@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<Robot>
+    <DeviceInterfaceModule name="dim" serialNumber="AI02RI51">
+        <Gyro name="sensorGyro" port="4" />
+        <ColorSensor name="sensorColor" port="5" />
+    </DeviceInterfaceModule>
+    <MotorController name="Motor Controller 2" serialNumber="AL00VV80">
+        <Motor name="motorLift" port="1" />
+        <Motor name="motorBRight" port="2" />
+    </MotorController>
+    <ServoController name="Servo Controller 1" serialNumber="AI02QTJ2">
+        <Servo name="servoTapeExtend" port="1" />
+        <Servo name="servoTapeTilt" port="2" />
+        <Servo name="servoHopperLeft" port="3" />
+        <Servo name="servoHopperRight" port="4" />
+        <Servo name="servoClimbers" port="5" />
+    </ServoController>
+    <MotorController name="Motor Controller 4" serialNumber="AL00UYTB">
+        <Motor name="motorBLeft" port="1" />
+        <Motor name="motorBrush" port="2" />
+    </MotorController>
+    <MotorController name="Motor Controller 1" serialNumber="AL00VGKN">
+        <Motor name="motorFLeft" port="1" />
+        <Motor name="motorFRight" port="2" />
+    </MotorController>
+</Robot>

@@ -53,9 +53,9 @@ public class Robot {
 
     private DeviceInterfaceModule dim;
     private ColorSensor sensorColor;
-    private TouchSensor sensorTouch;
+//    private TouchSensor sensorTouch;
     private GyroSensor sensorGyro;
-    public OpticalDistanceSensor opticalSensor;
+//    public OpticalDistanceSensor opticalSensor;
 
     /**
      * Construct a Robot object.
@@ -83,7 +83,7 @@ public class Robot {
         sensorColor = ClassFactory.createSwerveColorSensor(mode,
                 mode.hardwareMap.colorSensor.get("sensorColor"));
         sensorColor.enableLed(true);
-        opticalSensor = mode.hardwareMap.opticalDistanceSensor.get("opticalDistance");
+//        opticalSensor = mode.hardwareMap.opticalDistanceSensor.get("opticalDistance");
         sensorGyro = mode.hardwareMap.gyroSensor.get("sensorGyro");
 
     }
