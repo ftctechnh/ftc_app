@@ -106,17 +106,17 @@ public class ResqTeleop extends OpMode {
         }
 
         // Set the climber flipper value.
-        if (gamepad2.right_trigger) {
+        if (gamepad2.right_trigger > 0.0) { // TODO Are triggers variable? I thought they were buttons.
             robot.setClimberFlipper(DoorSetting.OPEN);
         } else {
             robot.setClimberFlipper(DoorSetting.CLOSE);
         }
 
         // Last of all, update the motor values.
-        if (abs(stickValueP1Left) > MINIMUM_JOYSTICK_THRESHOLD) {
+        if (absoluteValue(stickValueP1Left) > MINIMUM_JOYSTICK_THRESHOLD) {
             robot.setPowerLeft(stickValueP1Left);
         }
-        if (abs(stickValueP1Right) > MINIMUM_JOYSTICK_THRESHOLD) {
+        if (absoluteValue(stickValueP1Right) > MINIMUM_JOYSTICK_THRESHOLD) {
             robot.setPowerRight(stickValueP1Right);
         }
         robot.setTapeMeasure(settingTapeMeasureServo);
@@ -129,7 +129,7 @@ public class ResqTeleop extends OpMode {
      * @param in Floating point number.
      * @return Positive float.
      */
-    private float abs(float in) {
+    private float absoluteValue(float in) {
         if (in > 0) {
             return in;
         } else {
