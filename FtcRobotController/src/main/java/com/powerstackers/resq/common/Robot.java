@@ -250,10 +250,11 @@ public class Robot {
      * Move the robot a specific distance forwards or backwards.
      * To specify the distance, pass a double representing the number of <b>inches</b> that you would
      * like the robot to move. To move backwards, simply pass a negative number.
-     * @param distance A double representing the distance to move.
+     * @param distance An integer representing the distance to move.
      */
-    public void moveDistance(double distance) {
-
+    public void moveDistance(int distance) {
+        motorLeftA.setTargetPosition(motorLeftA.getCurrentPosition() + distance);
+        motorRightA.setTargetPosition(motorRightA.getCurrentPosition() + distance);
     }
 
     /**
