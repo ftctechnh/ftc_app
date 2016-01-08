@@ -81,6 +81,7 @@ public class CompBotTeleopV2 extends OpMode {
 
 
             if (gamepad1.a) {
+                telemetry.addData("a button pressed", 0);
                 compBot.getFrontRightMotor().setPower(-0.2f);
                 compBot.getFrontLeftMotor().setPower(-0.2f);
                 compBot.getBackLeftMotor().setPower(-0.2f);
@@ -110,4 +111,8 @@ public class CompBotTeleopV2 extends OpMode {
                     }
                 }
     }
+
+
+
+
 }

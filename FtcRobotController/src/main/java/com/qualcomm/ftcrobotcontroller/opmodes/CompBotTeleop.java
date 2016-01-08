@@ -63,7 +63,7 @@ public class CompBotTeleop extends OpMode
         }
         else if(gamepad2.y)
         {
-            compBot.getClimberReleaseServo().setPosition(0.5f);
+
         }
 
         if(gamepad2.x)
