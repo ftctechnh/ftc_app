@@ -1,5 +1,8 @@
 package com.qualcomm.ftcrobotcontroller;
 
+/**
+ * Constant values to get hardware, and other values.
+ */
 public class Values {
 
     public static final double SERVO_INCREMENT = 0.01;
