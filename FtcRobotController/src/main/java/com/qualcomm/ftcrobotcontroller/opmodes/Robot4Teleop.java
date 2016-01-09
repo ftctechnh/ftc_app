@@ -103,12 +103,12 @@ public class Robot4Teleop extends OpMode {
         secondThrottle = (Math.abs(secondThrottle) < 0.3) ? 0 : secondThrottle;
         secondRightThrottle = (Math.abs(secondRightThrottle) < 0.05) ? 0 : secondRightThrottle;
         //DON'T TOUCH(Calling the Set Motors method)
-        setMotors(throttle, rightThrottle, throttle, rightThrottle);
-        setMotors(secondThrottle, secondRightThrottle, secondThrottle, secondRightThrottle);
 
-        if (Math.abs(throttle) < .05 && Math.abs(secondThrottle) < .05)
+        if (Math.abs(throttle) < .05 && Math.abs(rightThrottle) < .05)
         {
             setMotors(secondThrottle, secondRightThrottle, secondThrottle, secondRightThrottle);
+        } else {
+            setMotors(throttle, rightThrottle, throttle, rightThrottle);
         }
 
         //State when the linear slide is reset
