@@ -56,6 +56,8 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("TitanServoTest", TitanServoTest.class);
     manager.register("ServoTest1", ServoTest1.class);
     manager.register("Help", Help.class);
+    manager.register("ContinuousServo", ContinuousServo.class);
+    manager.register("TeenTitanGo", TeenTitanGo.class);
 
     /*
      * register your op modes here.
