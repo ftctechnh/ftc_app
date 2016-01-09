@@ -81,7 +81,7 @@ public class Robot {
 
         servoHopperLeft.setPosition(RobotConstants.HOPPER_LEFT_CLOSE);
         servoHopperRight.setPosition(RobotConstants.HOPPER_RIGHT_CLOSE);
-        servoClimberFlipper.setPosition(RobotConstants.CLIMBER_RETRACT);
+        servoClimberFlipper.setPosition(RobotConstants.CLIMBER_EXTEND);
 
         dim = mode.hardwareMap.deviceInterfaceModule.get("dim");
         sensorColor = ClassFactory.createSwerveColorSensor(mode,
@@ -97,7 +97,7 @@ public class Robot {
      */
     public void initializeRobot() /*throws InterruptedException */{
         servoBeacon.setPosition(RobotConstants.BEACON_RESTING);
-        servoClimberFlipper.setPosition(RobotConstants.CLIMBER_DOWN);
+        servoClimberFlipper.setPosition(RobotConstants.CLIMBER_EXTEND);
         servoHopperLeft.setPosition(RobotConstants.HOPPER_LEFT_CLOSE);
         servoHopperRight.setPosition(RobotConstants.HOPPER_RIGHT_CLOSE);
         //sensorGyro.calibrate();
