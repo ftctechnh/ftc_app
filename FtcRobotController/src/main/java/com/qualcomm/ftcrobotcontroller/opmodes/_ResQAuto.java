@@ -78,7 +78,7 @@ public abstract class _ResQAuto extends LinearOpMode {
         buttonServo = hardwareMap.servo.get("leftbutton");
         buttonServo.setPosition(0.9);
         button2Servo = hardwareMap.servo.get("rightbutton");
-        button2Servo.setPosition(0.8);
+        button2Servo.setPosition(0.7);
         //climberservo = hardwareMap.servo;.get("climber");
         //climberservo.setPosition(0.0);
         twistServo = hardwareMap.servo.get("twist");
