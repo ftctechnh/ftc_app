@@ -43,7 +43,7 @@ public class RedBeaconRoute2 extends PacmanBotHardwareBase3 {
         else if (timer.time() < forwardTime+turnTime){
             drive.driveStd(0, -0.25);
         }
-        else if (timer.time() < forwardTime+turnTime+4.95) {
+        else if (timer.time() < forwardTime+turnTime+5.95) {
             drive.driveStd(0.25, 0); //1.15
         }
         /*
@@ -51,9 +51,13 @@ public class RedBeaconRoute2 extends PacmanBotHardwareBase3 {
             drive.driveStd(0, 0.25);
         }
         */
-        else if (timer.time() < forwardTime+turnTime+5.35) {
-            drive.driveStd(0.25, 0);
+        else if (timer.time() < forwardTime+turnTime+6.45) {
+            drive.driveStd(0, -0.25);
         }
+        else if (timer.time() < forwardTime+turnTime+7.45   ) {
+            drive.driveStd(0.25,0);
+        }
+        /*
         else if (timer.time()<forwardTime+turnTime+8.27) {
             drive.driveStd(0, -0.25);
         }
@@ -63,10 +67,12 @@ public class RedBeaconRoute2 extends PacmanBotHardwareBase3 {
         else if (timer.time()<forwardTime+turnTime+13.95) {
             drive.driveStd(0, -0.25);
         }
+        */
         else {
             drive.driveStd(0, 0);
             //setDumper (true);
             moveameoba = false;
         }
+
     }
 }
