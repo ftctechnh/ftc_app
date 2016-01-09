@@ -150,7 +150,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="isRed"
+        android:text="Red Team"
         android:id="@+id/switch1"
         android:layout_below="@+id/textErrorMessage"
         android:layout_alignLeft="@+id/editText"
@@ -164,19 +164,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         android:ems="10"
         android:id="@+id/delayNum"
         android:text="0"
-        android:layout_below="@+id/switch2"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <Switch
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="something"
-        android:id="@+id/switch2"
-        android:layout_below="@+id/switch1"
-        android:layout_alignLeft="@+id/switch1"
-        android:layout_alignStart="@+id/switch1"
-        android:checked="false" />
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/switch1" />
 
   </RelativeLayout>
 </LinearLayout>

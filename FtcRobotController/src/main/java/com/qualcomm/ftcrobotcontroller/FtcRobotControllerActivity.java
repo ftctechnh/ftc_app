@@ -86,6 +86,7 @@ public class FtcRobotControllerActivity extends Activity {
     private static final int NUM_GAMEPADS = 2;
 
     public static int waittime;
+    public static boolean isRed;
 
     public static final String CONFIGURE_FILENAME = "CONFIGURE_FILENAME";
 
@@ -166,21 +167,23 @@ public class FtcRobotControllerActivity extends Activity {
         });
 
         switch1 = (Switch) findViewById(R.id.switch1);
-        switch2 = (Switch) findViewById(R.id.switch2);
         delayNum = (EditText) findViewById(R.id.delayNum);
         waittime = 0;
+        isRed = true;
         switch1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 // do something, the isChecked will be
                 // true if the switch is in the On position
 
-                if(isChecked)
+                if(!isChecked)
                 {
                     switch1.setText("Red Team");
+                    isRed = true;
                 }
                 else
                 {
                     switch1.setText("Blue Team");
+                    isRed = false;
                 }
             }
         });

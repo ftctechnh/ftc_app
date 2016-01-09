@@ -1,5 +1,7 @@
 package com.qualcomm.ftcrobotcontroller.bamboo;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
 import java.util.Vector;
 
 /**

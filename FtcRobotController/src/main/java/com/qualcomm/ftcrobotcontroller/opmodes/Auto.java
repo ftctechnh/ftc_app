@@ -22,6 +22,11 @@ public class Auto extends LinearOpMode {
 
     // ok so what do I need to have here.. a move, and a turn?
 
+    private final double FIRST_FORWARD = 16;
+    private final double SECOND_FORWARD = 1;
+    private final double AMT_ROT = 45;
+
+
     public final double FAST_SPEED = 0.5;
     public final double SLOW_SPEED = 0.25;
     public final double SIG_WEIGHT = 15;
@@ -58,9 +63,7 @@ public class Auto extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        // set some consants...
-
-
+        // set some constants...
 
         lightRight = new Light("lightRight", hardwareMap);
         lightLeft = new Light("lightLeft", hardwareMap);
@@ -81,6 +84,8 @@ public class Auto extends LinearOpMode {
 
         waitForStart();
 
+        // wait for the time which is set in the robot controller application.
+
             if (FtcRobotControllerActivity.waittime != 0) {
                 long st = System.currentTimeMillis();
                 while ((System.currentTimeMillis() - st) / 1000 < FtcRobotControllerActivity.waittime && opModeIsActive()) {
@@ -91,33 +96,23 @@ public class Auto extends LinearOpMode {
                     }
                 }
             }
-            telemetry.addData("made", "it");
 
             double white = 1.0;
             double myColor = 0.8;
             double otherColor = 0.6;
 
             // to midfield stop at diagonal divide
-            int dir = forwardUntil(myColor, 2000, 4000);
+            forwardUntil(FIRST_FORWARD);
 
-           /* // make the 90 turn based upon which light gets triggered
-            if (dir == LIGHT_RIGHT) turnDeg(false, 90);
-            else if (dir == LIGHT_LEFT) turnDeg(true, 90);
-            else turnDeg(true, 900);
+            // now which way do we turn...?
+            turnDeg(FtcRobotControllerActivity.isRed, AMT_ROT);
 
-            // move until we find the score box
-            dir = forwardUntil(myColor, 1500, 2500);
+            Timing test = new Timing();
+            test.append(right, 0.5, 0, 3000);
+            test.execute();
 
-            // align ourselves with the score box
-            if (dir == LIGHT_RIGHT) turnTill(true, myColor);
-            else if (dir == LIGHT_LEFT) turnTill(false, myColor);
 
-            // turn ourselfves around
-            turnDeg(true, 90, ONE_WHEEL);
-            forwardUntil(white, 400, 800);
-            turnDeg(true, 90);
-
-            Timing climber = new Timing();
+            /*Timing climber = new Timing();
             climber.append(right, 0.5, 0, 1000);
             climber.append(left, 0.5, 0, 1000);
             climber.append(rotRight, -0.5, 800, 1600);
@@ -127,12 +122,7 @@ public class Auto extends LinearOpMode {
 
         }
 
-    public int forwardUntil(double color, int guess, int giveup)
-    {
-        return forwardUntil(color, guess, giveup, false);
-    }
-
-    public int forwardUntil(double color, int guess, int giveup, boolean negate)
+    public void forwardUntil(double turns)
     {
 
         DecimalFormat df = new DecimalFormat("###.##");
@@ -147,53 +137,39 @@ public class Auto extends LinearOpMode {
         long timefirst = System.currentTimeMillis();
         long timelast = timefirst;
 
-        while(timelast - timefirst < giveup && opModeIsActive())
+        double totDist = 0;
+
+        while(totDist < turns && opModeIsActive())
         {
+            // so we are trying to calculate the amount off cource we currently are
+            // it terms of wheel rotations, to get this we need a few things
+            // our current angle in degrees
+            // the amount in turns we've moved since last frame.
+            // the integral of[ sin (angle) * dist traveled ]
+            // should give us that value
+
             long timediff = timelast;
             timelast = System.currentTimeMillis();
             timediff = timelast - timediff;
             gypos += gyro.dps() * (timediff);
             double avgchange = (right.turnDiff()+left.turnDiff())/2;
-            drift += gypos * avgchange;
+            drift += Math.sin(Math.PI*(gypos/180)) * avgchange;
+            totDist += Math.cos(Math.PI*(gypos/180)) * avgchange;
+
+            // now we have the drift from course, we correct naturally
+            // with the use of a sigmoid function
+            // the function balances left and right to correct back to the mean
+            // along the line, adjust sig weight as needed.
 
             l = sigmoid(drift/SIG_WEIGHT);
             r = 1 - l;
 
-            if(negate) {
-                double temp = -r;
-                r = -l;
-                l = temp;
-            }
-
-            if(timelast-timefirst > guess)
-            {
-                set(r/2, l/2);
-                telemetry.addData("fu", df.format(r/2)+", "+df.format(l/2)+"/ guessing"+ (timelast - timefirst));
-            }
-            else {
-                set(r, l);
-                telemetry.addData("fu", df.format(r)+", "+df.format(l)+"/ moving"+ (timelast - timefirst));
-            }
-
-            if(lightRight.get() < color+VARIENCE && lightRight.get() > color-VARIENCE)
-            {
-                zero();
-                return LIGHT_RIGHT;
-            }
-            else if(lightLeft.get() < color+VARIENCE && lightLeft.get() > color-VARIENCE)
-            {
-                zero();
-                return LIGHT_LEFT;
-            }
-
+            set(r, l);
+            telemetry.addData("fu", df.format(r)+", "+df.format(l)+"/ moving"+ (totDist));
             telemetry.addData("gy", df.format(gyro.rotation()) + ", " + df.format(gyro.dps()) + ", " + df.format(gypos) + ", " + df.format(drift));
-            telemetry.addData("ls", "(" + (int) (lightLeft.get() * 100) + ", " + (int) (lightRight.get() * 100) + ")");
-
-
+            //telemetry.addData("ls", "(" + (int) (lightLeft.get() * 100) + ", " + (int) (lightRight.get() * 100) + ")");
         }
-
         zero();
-        return -1;
     }
 
     public void turnDeg(boolean right, double degrees)
@@ -218,7 +194,12 @@ public class Auto extends LinearOpMode {
             else set(FAST_SPEED, -FAST_SPEED);
         }
 
-        while(gypos < degrees) {};
+        while(gypos < degrees && opModeIsActive()) {
+            long timediff = timelast;
+            timelast = System.currentTimeMillis();
+            timediff = timelast - timediff;
+            gypos += gyro.dps() * (timediff);
+        };
         zero();
     }
 
