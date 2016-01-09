@@ -11,10 +11,11 @@ public class RobotConstants {
 
     public static final double HOPPER_RIGHT_OPEN  = 0.6;
     public static final double HOPPER_RIGHT_CLOSE = 0.0;
-    public static final double HOPPER_LEFT_OPEN   = 0.4; // TODO Left door servo doesn't get power
-    public static final double HOPPER_LEFT_CLOSE  = 0.6;
+    public static final double HOPPER_LEFT_OPEN   = 0.3; // TODO Left door servo doesn't get power
+    public static final double HOPPER_LEFT_CLOSE  = 1.0;
     public static final double CLIMBER_EXTEND     = 0.17;
     public static final double CLIMBER_RETRACT    = 1.0;
+    public static final double CLIMBER_DOWN       = 0.0;
 
     public static final double BEACON_TAP_LEFT  = 0.8;
     public static final double BEACON_TAP_RIGHT = 0.2;

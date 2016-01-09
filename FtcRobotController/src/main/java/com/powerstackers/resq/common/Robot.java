@@ -79,6 +79,10 @@ public class Robot {
         servoHopperLeft = mode.hardwareMap.servo.get("servoHopperLeft");
         servoClimberFlipper = mode.hardwareMap.servo.get("servoClimbers");
 
+        servoHopperLeft.setPosition(RobotConstants.HOPPER_LEFT_CLOSE);
+        servoHopperRight.setPosition(RobotConstants.HOPPER_RIGHT_CLOSE);
+        servoClimberFlipper.setPosition(RobotConstants.CLIMBER_RETRACT);
+
         dim = mode.hardwareMap.deviceInterfaceModule.get("dim");
         sensorColor = ClassFactory.createSwerveColorSensor(mode,
                 mode.hardwareMap.colorSensor.get("sensorColor"));
@@ -91,14 +95,16 @@ public class Robot {
     /**
      * Initialize the robot's servos and sensors.
      */
-    public void initializeRobot() throws InterruptedException {
+    public void initializeRobot() /*throws InterruptedException */{
         servoBeacon.setPosition(RobotConstants.BEACON_RESTING);
-
-        sensorGyro.calibrate();
+        servoClimberFlipper.setPosition(RobotConstants.CLIMBER_DOWN);
+        servoHopperLeft.setPosition(RobotConstants.HOPPER_LEFT_CLOSE);
+        servoHopperRight.setPosition(RobotConstants.HOPPER_RIGHT_CLOSE);
+        //sensorGyro.calibrate();
         // Give the gyroscope some time to calibrate
-        while (sensorGyro.isCalibrating()) {
-            Thread.sleep(50L);
-        }
+//        while (sensorGyro.isCalibrating()) {
+//            Thread.sleep(50L);
+//        }
     }
 
     /**

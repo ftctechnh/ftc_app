@@ -21,6 +21,8 @@ public class ServoTester extends OpMode {
         servoClimbers = hardwareMap.servo.get("servoClimbers");
         servoHopperLeft = hardwareMap.servo.get("servoHopperLeft");
         servoHopperRight = hardwareMap.servo.get("servoHopperRight");
+
+        servoClimbers.setPosition(1.0);
     }
 
     double hopperLeftPosition = 0.5;
