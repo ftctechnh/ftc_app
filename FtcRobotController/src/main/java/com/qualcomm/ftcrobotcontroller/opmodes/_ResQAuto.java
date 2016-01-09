@@ -95,23 +95,25 @@ public abstract class _ResQAuto extends LinearOpMode {
 
         //Actual Stuff Starts Here
         waitForStart();
-        sweeper.setPower(-0.8);
         //do we need delay
         telemetry.addData("InDelay", "yes");
         sleep(getDelay());
         telemetry.addData("InDelay", "no");
-
-        frontRightWheel.setPower(0.2);
-        frontLeftWheel.setPower(0.2);
-        backRightWheel.setPower(0.2);
-        backLeftWheel.setPower(0.2);
-        //sweeper.setPower(-1);
 
         if (getDelay() == 0)
             sleep(0);
             //sleep(3500);
         else //with delay (2nd start), robot is placed farther
             sleep(4500);
+
+        sweeper.setPower(-0.8);
+        frontRightWheel.setPower(0.2);
+        frontLeftWheel.setPower(0.2);
+        backRightWheel.setPower(0.2);
+        backLeftWheel.setPower(0.2);
+        //sweeper.setPower(-1);
+
+
         frontRightWheel.setPower(0);
         frontLeftWheel.setPower(0);
         backRightWheel.setPower(0);
