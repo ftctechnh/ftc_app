@@ -1,0 +1,56 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion "22.0.1"
+
+    defaultConfig {
+        applicationId 'com.qualcomm.ftcrobotcontroller'
+        minSdkVersion 16
+        targetSdkVersion 19
+
+        // Note: this versionCode must be kept in sync with the
+        //      android:versionCode="5"
+        // attribute that is found in the AndroidManifest.xml file of the FtcRobotController
+        // module from FTC HQ. If this is not done, the robot controller may potentially have
+        // multiple versions of the app simultaneously installed, which can lead to confusion.
+        //
+        // The versionName need not match; you can set that to what you may please.
+        //
+        // See also: http://developer.android.com/tools/building/configuring-gradle.html
+        //
+        versionCode 5                       // http://developer.android.com/tools/publishing/versioning.html
+        versionName '@string/version_name'  // http://developer.android.com/tools/publishing/versioning.html
+    }
+    buildTypes {
+        release {
+            debuggable true
+        }
+        debug {
+            debuggable true
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }    
+}
+
+repositories {
+    flatDir {
+        dirs '../FtcRobotController/libs'
+    }
+}
+
+dependencies {
+    compile files('libs/android-support-v4.jar')
+    compile (name:'RobotCore-release', ext:'aar')
+    compile (name:'Hardware-release', ext:'aar')
+    compile (name:'FtcCommon-release', ext:'aar')
+    compile (name:'ModernRobotics-release', ext:'aar')
+    compile (name:'Analytics-release', ext:'aar')
+    compile (name:'WirelessP2p-release', ext:'aar')
+    compile project(':SwerveRoboticsLibrary')
+    compile project(':FtcRobotController')
+}

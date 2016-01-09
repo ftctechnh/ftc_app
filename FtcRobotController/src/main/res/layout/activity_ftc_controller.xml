@@ -46,14 +46,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     android:layout_width="fill_parent"
     android:layout_height="80dp"
     android:background="@color/black">
+    <!-- Change @drawable/icon_robotcontroller to @drawable/swervelogo to show the Swerve logo -->
+    <!-- or add your own image alongside these in the same folder and use that!                -->
     <ImageView
       android:id="@+id/robotIcon"
-      android:layout_width="40dp"
-      android:layout_height="wrap_content"
+      android:src="@drawable/icon_robotcontroller"
+      android:layout_width="wrap_content"
+      android:layout_height="fill_parent"
       android:adjustViewBounds="true"
-      android:layout_margin="5dp"
-      android:layout_centerVertical="true"
-      android:background="@drawable/icon_robotcontroller"/>
+      android:layout_margin="1dp"/>
 
     <TextView
       android:id="@+id/textDeviceName"
@@ -63,7 +64,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       android:layout_height="wrap_content"
       android:textColor="@color/white"
       android:padding="8dp"
-      android:textSize="16sp"
+      android:textSize="24sp"
       android:textStyle="bold"/>
 
     <ImageButton
@@ -102,13 +103,23 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       android:id="@+id/textWifiDirectStatus"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:textAppearance="?android:attr/textAppearanceMedium"
+      android:text="" />
+
+    <TextView
+      android:id="@+id/textWifiDirectPassphrase"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:textAppearance="?android:attr/textAppearanceMedium"
+      android:layout_below="@+id/textWifiDirectStatus"
       android:text="" />
 
     <TextView
       android:id="@+id/textRobotStatus"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_below="@+id/textWifiDirectStatus"
+      android:layout_below="@+id/textWifiDirectPassphrase"
+      android:textAppearance="?android:attr/textAppearanceMedium"
       android:text="" />
 
     <TextView
@@ -116,6 +127,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_below="@+id/textRobotStatus"
+      android:textAppearance="?android:attr/textAppearanceMedium"
       android:text="" />
 
     <TextView
@@ -127,6 +139,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       android:textStyle="bold"
       android:minLines="2"
       android:maxLines="4"
+      android:textAppearance="?android:attr/textAppearanceMedium"
       android:text="" />
 
     <TextView
