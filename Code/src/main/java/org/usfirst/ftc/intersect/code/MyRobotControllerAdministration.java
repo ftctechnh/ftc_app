@@ -1,12 +1,12 @@
-package org.usfirst.ftc.exampleteam.yourcodehere;
+package org.usfirst.ftc.intersect.code;
 
 import android.content.Context;
-import android.media.MediaPlayer;
-
+import com.qualcomm.ftcrobotcontroller.opmodes.NxtTeleOp;
 import org.swerverobotics.library.SwerveUtil;
+import org.swerverobotics.library.examples.LinearAutonomousPolygon;
+import org.swerverobotics.library.examples.SynchTeleOp;
+import org.swerverobotics.library.examples.SynchTelemetryOp;
 import org.swerverobotics.library.interfaces.*;
-import org.swerverobotics.library.examples.*;
-import com.qualcomm.ftcrobotcontroller.opmodes.*;
 
 /**
  * MyRobotControllerAdministration is a container for 'administrative' methods that interact
@@ -19,9 +19,9 @@ import com.qualcomm.ftcrobotcontroller.opmodes.*;
  * important thing is the annotations with which they are decorated.
  *
  * As we've written things here, the code resides in an Android module named 'YourCodeHere' which
- * contains a package named 'org.usfirst.ftc.exampleteam.yourcodehere'. If you wish to change that,
+ * contains a package named 'org.usfirst.ftc.intersect.code'. If you wish to change that,
  * or to create multiple such modules with different names, that's pretty straightforward: you can
- * begin by copying the entire YourCodeHere folder, then renaming the src\main\java\org\...\yourcodehere
+ * begin by copying the entire YourCodeHere folder, then renaming the src\main\java\org\...\code
  * path to reflect your new package name, whatever that might be. That new package name will also
  * of course need to appear in your copied .java files (including package-info.java), so those will
  * need their 'package' statement at the top adjusted accordingly. Perhaps less obviously,
