@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 /**
  * Register Op Modes
  */
+
 public class FtcOpModeRegister implements OpModeRegister {
 
   /**
@@ -55,31 +56,28 @@ public class FtcOpModeRegister implements OpModeRegister {
      * If two or more op modes are registered with the same name, the app will display an error.
      */
 
-    manager.register("NullOp", NullOp.class);
 
     //manager.register("MatrixK9TeleOp", MatrixK9TeleOp.class);
-    manager.register("TestAutoBot", TestAutoBot.class);
-    manager.register("Accelerometer", AccelerationSensor.class);
-    manager.register("Gyroscope", Gyroscope.class);
-    manager.register("BeaconAuto", BeaconAuto.class);
-    manager.register("TestMove", TestMove.class);
-<<<<<<< HEAD
-    manager.register("ThreeLightColorTest", ThreeColorTest.class);
-    manager.register("PhoneGyroTest",PhoneGyroTest.class);
-=======
-    manager.register("CompBotTest", CompBotTest.class);
+    //manager.register("BeaconAuto", BeaconAuto.class);
 
->>>>>>> d6fbb34ea0dd2e4bd96fb43f4b93192c7e610d27
+    //manager.register("ThreeLightColorTest", ThreeColorTest.class);
+    //manager.register("PhoneGyroTest",PhoneGyroTest.class);
 
     /*
      * Uncomment any of the following lines if you want to register an op mode.
      */
-    manager.register("MR Gyro Test", MRGyroTest.class);
+    manager.register("CompBotTeleopV2", CompBotTeleopV2.class);
 
-    manager.register("newBase", newBase.class);
+    manager.register("CompBotTeleop", CompBotTeleop.class);
 
-    manager.register("TestingLightInterputer", TestingLightInterputer.class);
+   //manager.register("ThreeColorTest", ThreeColorTest.class);
 
+    manager.register("RedMountainClimb", RedMountainAuto1.class);
+
+    manager.register("BlueMountainClimb", BlueMountClimb1.class);
+
+
+    manager.register("CompBotTeleopV3",  CompBotTeleopV3.class);
     //manager.register("AdafruitRGBExample", AdafruitRGBExample.class);
     //manager.register("ColorSensorDriver", ColorSensorDriver.class);
 

@@ -46,6 +46,13 @@ public class CompBot implements DriverInterface, AttachmentInterface
     boolean switchSides = false;
     boolean buttonStatus = true;
 
+    boolean climberArm = true;
+    int climberPosition = 0;
+
+    boolean rotatorArmUp = true;
+    boolean rotatorArmDown = true;
+    float rotatorSpeed = 1.0f;
+
 
     public DcMotor getLeftMotor()
     {
@@ -325,6 +332,67 @@ public class CompBot implements DriverInterface, AttachmentInterface
             }*/
 
     }
+
+
+    public void climberPos(boolean button)
+    {
+        if(button)
+        {
+            if(climberArm)
+            {
+                climberPosition++;
+                if (climberPosition >= 3) {
+                    climberPosition = 0;
+                }
+            }
+            climberArm = false;
+        }
+        else
+        {
+            climberArm = true;
+        }
+    }
+    public void rotorUp(boolean button)
+    {
+        if(button)
+        {
+            if(rotatorArmUp)
+            {
+                rotatorSpeed=rotatorSpeed+0.1f;
+                if(rotatorSpeed > 1.0f)
+                {
+                    rotatorSpeed = 1.0f;
+                }
+                rotatorArmUp = false;
+            }
+        }
+        else
+        {
+            rotatorArmUp = true;
+        }
+    }
+
+    public void rotorDown(boolean button)
+    {
+        if(button)
+        {
+            if(rotatorArmDown)
+            {
+                rotatorSpeed=rotatorSpeed-0.1f;
+                if(rotatorSpeed < 0.4f)
+                {
+                    rotatorSpeed = 0.4f;
+                }
+                rotatorArmDown = false;
+            }
+        }
+        else
+        {
+            rotatorArmDown = true;
+        }
+    }
+
+
     public void checkAndFlipDispenserServo(boolean button) {
         if (button) {
             vendDeploy ^= buttonArm;

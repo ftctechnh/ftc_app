@@ -11,39 +11,33 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  */
 public class BeaconZoneRedOp extends OpMode
 {
-    DriverInterface drive;
+    CompBot drive;
+    public boolean run;
 
     @Override
     public void init()
     {
         drive = new CompBot(hardwareMap);
-        telemetry.addData("1. waiting for start", 0);
+        run = true;
     }
 
     @Override
     public void loop()
     {
+        if ( run )
+        {
+        /*drive.moveStraightEncoders(36, 1);
 
-        telemetry.addData("(2)Before moving forward 36 inches", 2);
-        drive.moveStraightEncoders(36,1);
+        drive.spinOnCenter(45, (float) 0.5); //leftTurn(45, .25);//(-45,.25);
 
-        telemetry.addData("(3)Before spinning 45 degrees", 2);
-        drive.spinOnCenter(45, (float) 0.25); //leftTurn(45, .25);//(-45,.25);
-
-        telemetry.addData("(4)Before moving forward 96 inches or 4 blocks", 2);
         drive.moveStraightEncoders(96, 1);
 
-        telemetry.addData("(5)Before spinning 45 degrees counter clockwise", 2);
-        drive.spinOnCenter(45, (float) 0.25);//leftTurn(90, 0.25); //should only be 90 but calibration
+        drive.spinOnCenter(45, (float) 0.5);//leftTurn(90, 0.25); //should only be 90 but calibration
 
-        telemetry.addData("(5)Before going forward 6 inches",2);
-        drive.moveStraightEncoders(6, 1); //or use gyro to stop at a certain angle
-        //stop the bot
-
-        try {
-            wait(60000);
-        } catch(InterruptedException ex) {
-
+        drive.moveStraightEncoders(6, 1); //or use gyro to stop at a certain angle*/
+            drive.getLeftMotor().setPower(1);
+            drive.getRightMotor().setPower(1);
+            run = false;
         }
 
     }
