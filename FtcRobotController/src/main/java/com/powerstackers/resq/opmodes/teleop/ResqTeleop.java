@@ -76,7 +76,7 @@ public class ResqTeleop extends OpMode {
 
         // Neatly read all the button assignments for clarity purposes.
         buttonLiftOut     = gamepad1.left_bumper;
-        buttonLiftIn      = gamepad1.left_trigger > 0.0;
+        buttonLiftIn      = gamepad1.right_bumper;
 
         // Everyone wants the manipulator to control the brush
         buttonBrushOn     = gamepad2.y;
