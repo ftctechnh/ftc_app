@@ -139,12 +139,12 @@ public class FtcOpModeRegister implements OpModeRegister {
          */
         // All of our opmodes make use of the annotations provided by the Swerve library.
         // You should use those on any class you want to register, rather than registering it here.
-        manager.register("BlueAllianceOP", BlueAlianceOP.class);
-        manager.register("RedAllianceOP", RedAlianceOP.class);
-        manager.register("ColorSensorSense", ColorSensorSense.class);
-        manager.register("ProtobotOP", ProtobotTeleop.class);
-//      manager.register("Purple Pencil", PurplePencil.class);
-        manager.register("Tedbot", Tedbot.class);
-        manager.register("testbot1", testbot1.class);
+//        manager.register("BlueAllianceOP", BlueAlianceOP.class);
+//        manager.register("RedAllianceOP", RedAlianceOP.class);
+//        manager.register("ColorSensorSense", ColorSensorSense.class);
+//        manager.register("ProtobotOP", ProtobotTeleop.class);
+////      manager.register("Purple Pencil", PurplePencil.class);
+//        manager.register("Tedbot", Tedbot.class);
+//        manager.register("testbot1", testbot1.class);
     }
 }

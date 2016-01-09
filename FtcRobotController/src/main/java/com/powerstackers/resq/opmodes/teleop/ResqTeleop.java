@@ -38,6 +38,23 @@ public class ResqTeleop extends OpMode {
     private static final float MINIMUM_JOYSTICK_THRESHOLD = 0.15F;
 
     Robot robot;
+    
+    float stickValueP1Left;
+    float stickValueP1Right;
+    MotorSetting settingTapeMeasureServo;
+    MotorSetting settingLiftMotor;
+    MotorSetting settingBrushMotor;
+
+    boolean buttonLiftOut;
+    boolean buttonLiftIn;
+    boolean buttonBrushOn;
+    boolean buttonBrushRev;
+
+    boolean buttonTapeOut;
+    boolean buttonTapeIn;
+    boolean buttonHopperLeft;
+    boolean buttonHopperRight;
+    boolean buttonClimbers;
 
     /**
      * Initialize the robot.
@@ -53,39 +70,44 @@ public class ResqTeleop extends OpMode {
     @Override
     public void loop() {
 
-        // We like to use tank drive.
-        float stickValueP1Left = -gamepad1.left_stick_y;
-        float stickValueP1Right = -gamepad1.right_stick_y;
-        MotorSetting settingTapeMeasureServo;
-        MotorSetting settingLiftMotor;
-        MotorSetting settingBrushMotor;
-
         // Read the joystick and determine what motor setting to use.
-        stickValueP1Left = (float) scaleInput(Range.clip(stickValueP1Left, -1, 1));
-        stickValueP1Right = (float) scaleInput(Range.clip(stickValueP1Right, -1, 1));
+        stickValueP1Left = (float) scaleInput(Range.clip(-gamepad1.left_stick_y, -1, 1));
+        stickValueP1Right = (float) scaleInput(Range.clip(-gamepad1.right_stick_y, -1, 1));
+
+        // Neatly read all the button assignments for clarity purposes.
+        buttonLiftOut     = gamepad1.left_bumper;
+        buttonLiftIn      = gamepad1.left_trigger > 0.0;
+        buttonBrushOn     = gamepad1.right_bumper;
+        buttonBrushRev    = gamepad1.right_trigger > 0.0;
+
+        buttonTapeOut     = gamepad2.y;
+        buttonTapeIn      = gamepad2.a;
+        buttonHopperLeft  = gamepad2.left_bumper;
+        buttonHopperRight = gamepad2.right_bumper;
+        buttonClimbers    = gamepad2.right_trigger > 0.0;
 
         // Set the lift motor value.
-        if (gamepad1.a) {
+        if (buttonLiftOut) {
             settingLiftMotor = MotorSetting.REVERSE;
-        } else if (gamepad1.y) {
+        } else if (buttonLiftIn) {
             settingLiftMotor = MotorSetting.FORWARD;
         } else {
             settingLiftMotor = MotorSetting.STOP;
         }
 
         // Set the brush motor value.
-        if (gamepad1.x) {
+        if (buttonBrushOn) {
             settingBrushMotor = MotorSetting.FORWARD;
-        } else if (gamepad1.b) {
+        } else if (buttonBrushRev) {
             settingBrushMotor = MotorSetting.REVERSE;
         } else {
             settingBrushMotor = MotorSetting.STOP;
         }
 
         // Set the tape measure value.
-        if (gamepad2.a) {
+        if (buttonTapeOut) {
             settingTapeMeasureServo = MotorSetting.REVERSE;
-        } else if (gamepad2.y) {
+        } else if (buttonTapeIn) {
             settingTapeMeasureServo = MotorSetting.FORWARD;
         } else {
             settingTapeMeasureServo = MotorSetting.STOP;
@@ -93,20 +115,20 @@ public class ResqTeleop extends OpMode {
 
         // Set the hopper doors.
         // Hopper left
-        if (gamepad2.left_bumper) {
+        if (buttonHopperLeft) {
             robot.setHopperLeft(DoorSetting.OPEN);
         } else {
             robot.setHopperLeft(DoorSetting.CLOSE);
         }
         // Hopper right
-        if (gamepad2.right_bumper) {
+        if (buttonHopperRight) {
             robot.setHopperRight(DoorSetting.OPEN);
         } else {
             robot.setHopperRight(DoorSetting.CLOSE);
         }
 
         // Set the climber flipper value.
-        if (gamepad2.right_trigger > 0.0) { // TODO Are triggers variable? I thought they were buttons.
+        if (buttonClimbers) { // TODO Are triggers variable? I thought they were buttons.
             robot.setClimberFlipper(DoorSetting.OPEN);
         } else {
             robot.setClimberFlipper(DoorSetting.CLOSE);
