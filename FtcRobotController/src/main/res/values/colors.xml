@@ -34,12 +34,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
 <resources>
-  <color name="light_red_background">#790E15</color>
-  <color name="dark_red_background">#3F0206</color>
-  <color name="medium_red_background">#4e0106</color>
-  <color name="very_bright_red">#bf0510</color>
-  <color name="bright_red">#A6040E</color>
-  <color name="bright_red_text">#ff0a19</color>
+  <color name="light_red_background">#1A1A59</color>
+  <color name="dark_red_background">#09093B</color>
+  <color name="medium_red_background">#1A1A59</color>
+  <color name="very_bright_red">#343477</color>
+  <color name="bright_red">#1A1A59</color>
+  <color name="bright_red_text">#1A1A59</color>
   <color name="white">#FFFFFF</color>
   <color name="black">#000000</color>
   <color name="transparent_color">#00000000</color>
