@@ -137,13 +137,21 @@ public class ResqTeleop extends OpMode {
         // Last of all, update the motor values.
         if (absoluteValue(stickValueP1Left) > MINIMUM_JOYSTICK_THRESHOLD) {
             robot.setPowerLeft(stickValueP1Left);
+        } else {
+            robot.setPowerLeft(0);
         }
+
         if (absoluteValue(stickValueP1Right) > MINIMUM_JOYSTICK_THRESHOLD) {
             robot.setPowerRight(stickValueP1Right);
+        } else {
+            robot.setPowerRight(0);
         }
         robot.setTapeMeasure(settingTapeMeasureServo);
         robot.setLift(settingLiftMotor);
         robot.setBrush(settingBrushMotor);
+
+        telemetry.addData("right stick", stickValueP1Right);
+        telemetry.addData("left stick ", stickValueP1Left);
     }
 
     /**
