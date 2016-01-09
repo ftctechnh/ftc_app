@@ -9,11 +9,12 @@
         <Motor name="motorBRight" port="2" />
     </MotorController>
     <ServoController name="Servo Controller 1" serialNumber="AI02QTJ2">
-        <Servo name="servoTapeExtend" port="1" />
+        <Servo name="servoTapeMeasure" port="1" />
         <Servo name="servoTapeTilt" port="2" />
         <Servo name="servoHopperLeft" port="3" />
         <Servo name="servoHopperRight" port="4" />
         <Servo name="servoClimbers" port="5" />
+        <Servo name="servoBeacon" port="6" />
     </ServoController>
     <MotorController name="Motor Controller 4" serialNumber="AL00UYTB">
         <Motor name="motorBLeft" port="1" />
