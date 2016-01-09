@@ -215,7 +215,7 @@ public abstract class _ResQAuto extends LinearOpMode {
             telemetry.addData("Ultrasonic Value", distance);
 
             //Wait until ultrasonic distance <24
-            if(distance < 24 && distance>1) {
+            if(distance < 25 && distance>1) {
                 if (getRedAlliance() == 0) {
                     /*frontLeftWheel.setPower(0.3);
                     backLeftWheel.setPower(0.3);*/
@@ -349,7 +349,7 @@ public abstract class _ResQAuto extends LinearOpMode {
                 backLeftWheel.setPower(0.3);
                 frontRightWheel.setPower(0.3);
                 backRightWheel.setPower(0.3);
-                sleep(1400);
+                sleep(1450);
                 frontRightWheel.setPower(0);
                 frontLeftWheel.setPower(0);
                 backRightWheel.setPower(0);
@@ -369,7 +369,7 @@ public abstract class _ResQAuto extends LinearOpMode {
                 backLeftWheel.setPower(0.3);
                 frontRightWheel.setPower(0.3);
                 backRightWheel.setPower(0.3);
-                sleep(400);
+                sleep(450);
                 frontRightWheel.setPower(0);
                 frontLeftWheel.setPower(0);
                 backRightWheel.setPower(0);
