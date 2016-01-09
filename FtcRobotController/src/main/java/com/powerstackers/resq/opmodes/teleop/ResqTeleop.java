@@ -38,7 +38,7 @@ public class ResqTeleop extends OpMode {
     private static final float MINIMUM_JOYSTICK_THRESHOLD = 0.15F;
 
     Robot robot;
-    
+
     float stickValueP1Left;
     float stickValueP1Right;
     MotorSetting settingTapeMeasureServo;
