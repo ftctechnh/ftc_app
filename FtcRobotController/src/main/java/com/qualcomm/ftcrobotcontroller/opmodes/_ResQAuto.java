@@ -215,7 +215,7 @@ public abstract class _ResQAuto extends LinearOpMode {
             telemetry.addData("Ultrasonic Value", distance);
 
             //Wait until ultrasonic distance <24
-            if(distance < 25 && distance>1) {
+            if(distance < 24 && distance>1) {
                 if (getRedAlliance() == 0) {
                     /*frontLeftWheel.setPower(0.3);
                     backLeftWheel.setPower(0.3);*/
@@ -245,21 +245,26 @@ public abstract class _ResQAuto extends LinearOpMode {
             if (getRedAlliance() == 0){
                 //button2Servo.setPosition(0.8);
                 //sleep(1000);
+                //BLUE alliance detecting BLUE color
+                //tilt
                 frontLeftWheel.setPower(-0.1);
                 backLeftWheel.setPower(-0.1);
                 frontRightWheel.setPower(0.1);
                 backRightWheel.setPower(0.1);
                 sleep(100);
+                //go forward to push button
                 frontLeftWheel.setPower(0.2);
                 backLeftWheel.setPower(0.2);
                 frontRightWheel.setPower(0.2);
                 backRightWheel.setPower(0.2);
-                sleep(350);
+                sleep(380);
+                //go backward to get ready for climbers
                 frontLeftWheel.setPower(-0.2);
                 backLeftWheel.setPower(-0.2);
                 frontRightWheel.setPower(-0.2);
                 backRightWheel.setPower(-0.2);
-                sleep(350);
+                sleep(400);
+                //stop then throw in climbers
                 frontLeftWheel.setPower(0);
                 backLeftWheel.setPower(0);
                 frontRightWheel.setPower(0);
@@ -283,6 +288,13 @@ public abstract class _ResQAuto extends LinearOpMode {
             if (getRedAlliance() == 1){
                 //buttonServo.setPosition(0.7);
                 //sleep(1000);
+                //tilt to left
+                frontLeftWheel.setPower(0.1);
+                backLeftWheel.setPower(0.1);
+                frontRightWheel.setPower(-0.1);
+                backRightWheel.setPower(-0.1);
+                sleep(250);
+                //move forward to push the button
                 frontLeftWheel.setPower(0.2);
                 backLeftWheel.setPower(0.2);
                 frontRightWheel.setPower(0.2);
@@ -292,7 +304,7 @@ public abstract class _ResQAuto extends LinearOpMode {
                 backLeftWheel.setPower(-0.2);
                 frontRightWheel.setPower(-0.2);
                 backRightWheel.setPower(-0.2);
-                sleep(350);
+                sleep(400);
                 frontLeftWheel.setPower(0);
                 backLeftWheel.setPower(0);
                 frontRightWheel.setPower(0);
@@ -334,17 +346,17 @@ public abstract class _ResQAuto extends LinearOpMode {
 
         //End of Autonomous
         if (getDelay() == 0) {
-            frontLeftWheel.setPower(-0.2);
-            backLeftWheel.setPower(-0.2);
-            frontRightWheel.setPower(-0.2);
-            backRightWheel.setPower(-0.2);
-            sleep(300);
+            frontLeftWheel.setPower(-0.5);
+            backLeftWheel.setPower(-0.5);
+            frontRightWheel.setPower(-0.5);
+            backRightWheel.setPower(-0.5);
+            sleep(400);
             if (getRedAlliance() == 1) {
                 frontLeftWheel.setPower(0.2);
                 backLeftWheel.setPower(0.2);
                 frontRightWheel.setPower(-0.2);
                 backRightWheel.setPower(-0.2);
-                sleep(1500);
+                sleep(1700);
                 frontLeftWheel.setPower(0.3);
                 backLeftWheel.setPower(0.3);
                 frontRightWheel.setPower(0.3);
@@ -359,7 +371,7 @@ public abstract class _ResQAuto extends LinearOpMode {
                 backLeftWheel.setPower(-0.4);
                 frontRightWheel.setPower(0.4);
                 backRightWheel.setPower(0.4);
-                sleep(900);
+                sleep(1000);
                 frontLeftWheel.setPower(0.3);
                 backLeftWheel.setPower(0.3);
                 frontRightWheel.setPower(0.3);
@@ -378,6 +390,8 @@ public abstract class _ResQAuto extends LinearOpMode {
                 button2Servo.setPosition(0.9);
             }
         }
+
+        sweeper.setPower(0);
     }
 
 
