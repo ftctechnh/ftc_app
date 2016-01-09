@@ -136,6 +136,7 @@ public class K9TankDrive extends OpMode {
 		// clip the right/left values so that the values never exceed +/- 1
 		right = Range.clip(right, -1, 1);
 		left = Range.clip(left, -1, 1);
+		motorRight.setPower(right);
 
 		// scale the joystick value to make it easier to control
 		// the robot more precisely at slower speeds.
@@ -143,7 +144,6 @@ public class K9TankDrive extends OpMode {
 		left =  (float)scaleInput(left);
 
 		// write the values to the motors
-		motorRight.setPower(right);
 		motorLeft.setPower(left);
 
 		// update the position of the arm.
