@@ -2,6 +2,7 @@ package com.powerstackers.resq.opmodes.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
@@ -35,6 +36,10 @@ public class BlueAlianceOP extends OpMode {
     ColorSensor colorSensor;
     //    TouchSensor touchSensor;
     Servo servoBeacon;
+    DcMotor motorFRight;
+    DcMotor motorFLeft;
+    DcMotor motorBRight;
+    DcMotor motorBLeft;
 
     public BlueAlianceOP() {
 
@@ -62,6 +67,17 @@ public class BlueAlianceOP extends OpMode {
         servoBeacon = hardwareMap.servo.get("servoBeacon");
         servoBeaconPosition = 0.50;
 
+        /*
+         * Motors
+         */
+        motorFRight = hardwareMap.dcMotor.get("motorFRight");
+        motorFLeft = hardwareMap.dcMotor.get("motorFLeft");
+        motorFRight.setDirection(DcMotor.Direction.REVERSE);
+        motorBRight = hardwareMap.dcMotor.get("motorBRight");
+        motorBLeft = hardwareMap.dcMotor.get("motorBLeft");
+        motorBRight.setDirection(DcMotor.Direction.REVERSE);
+
+
     }
 
     /*
@@ -81,6 +97,8 @@ public class BlueAlianceOP extends OpMode {
         } else {
             servoBeaconPosition = 0.50;
         }
+
+
 
 
         /*
