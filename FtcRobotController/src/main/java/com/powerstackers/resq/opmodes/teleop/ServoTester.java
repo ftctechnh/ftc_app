@@ -2,10 +2,14 @@ package com.powerstackers.resq.opmodes.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
+
+import org.swerverobotics.library.interfaces.TeleOp;
 
 /**
  * @author Jonathan
  */
+@TeleOp(name = "Servo Tester Op", group = "Powerstackers")
 public class ServoTester extends OpMode {
 
     Servo servoHopperLeft;
@@ -46,6 +50,10 @@ public class ServoTester extends OpMode {
         } else if (gamepad1.left_bumper) {
             hopperLeftPosition -= 0.01;
         }
+
+        hopperLeftPosition = Range.clip(hopperLeftPosition, 0.0, 1.0);
+        hopperRightPosition = Range.clip(hopperRightPosition, 0.0, 1.0);
+        climbersPosition = Range.clip(climbersPosition, 0.0, 1.0);
 
         servoHopperRight.setPosition(hopperRightPosition);
         servoHopperLeft.setPosition(hopperLeftPosition);
