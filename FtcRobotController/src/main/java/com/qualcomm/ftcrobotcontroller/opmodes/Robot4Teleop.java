@@ -100,8 +100,16 @@ public class Robot4Teleop extends OpMode {
         //DON'T TOUCH(Dead zone code)
         throttle = (Math.abs(throttle) < 0.3) ? 0 : throttle;
         rightThrottle = (Math.abs(rightThrottle) < 0.05) ? 0 : rightThrottle;
+        secondThrottle = (Math.abs(secondThrottle) < 0.3) ? 0 : secondThrottle;
+        secondRightThrottle = (Math.abs(secondRightThrottle) < 0.05) ? 0 : secondRightThrottle;
         //DON'T TOUCH(Calling the Set Motors method)
-        setMotors(throttle, rightThrottle, throttle, rightThrottle);
+
+        if (Math.abs(throttle) < .05 && Math.abs(rightThrottle) < .05)
+        {
+            setMotors(secondThrottle, secondRightThrottle, secondThrottle, secondRightThrottle);
+        } else {
+            setMotors(throttle, rightThrottle, throttle, rightThrottle);
+        }
 
         //State when the linear slide is reset
         if (reset_state) {
@@ -142,11 +150,6 @@ public class Robot4Teleop extends OpMode {
             hang_back_state = false;
         } */
         else {
-            if (gamepad1.left_trigger == 0 && gamepad2.left_trigger == 0 && gamepad1.right_trigger == 0 && gamepad2.right_trigger == 0
-                    && gamepad1.x == false && gamepad2.x == false) {
-                //DONT TOUCH
-                // hangMotor.setPower(0);
-            }
             if (gamepad1.b == false && gamepad2.b == false && gamepad1.x == false && gamepad2.x == false)
             {
                 //Stop the adjust motor if the x axis of the dpad is not touched
@@ -187,7 +190,7 @@ public class Robot4Teleop extends OpMode {
                 //Harvester Move
                 harvesterMotor.setPower(0.3);
             }
-            if (gamepad1.left_bumper || gamepad1.left_bumper) {
+            if (gamepad1.left_bumper || gamepad2.left_bumper) {
                 //Harvester Stop
                 harvesterMotor.setPower(0);
             }
