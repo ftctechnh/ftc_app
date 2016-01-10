@@ -61,7 +61,7 @@ public abstract class _ResQAuto extends LinearOpMode {
             e.printStackTrace();
         }
 
-        double EOPDThreshold = 0.3 * BLACKVALUE + 0.7* WHITEVALUE;
+        double EOPDThreshold = 0.4 * BLACKVALUE + 0.6* WHITEVALUE;
 
 
         double value;
@@ -107,10 +107,11 @@ public abstract class _ResQAuto extends LinearOpMode {
             sleep(4500);
 
         sweeper.setPower(-0.8);
-        frontRightWheel.setPower(0.2);
-        frontLeftWheel.setPower(0.2);
-        backRightWheel.setPower(0.2);
-        backLeftWheel.setPower(0.2);
+        frontRightWheel.setPower(0.3);
+        frontLeftWheel.setPower(0.3);
+        backRightWheel.setPower(0.3);
+        backLeftWheel.setPower(0.3);
+        sleep(3000);
         //sweeper.setPower(-1);
 
 
@@ -164,10 +165,10 @@ public abstract class _ResQAuto extends LinearOpMode {
                 break;
             }
 
-            frontLeftWheel.setPower(0.2);
-            backLeftWheel.setPower(0.2);
-            frontRightWheel.setPower(0.2);
-            backRightWheel.setPower(0.2);
+            frontLeftWheel.setPower(0.1);
+            backLeftWheel.setPower(0.1);
+            frontRightWheel.setPower(0.1);
+            backRightWheel.setPower(0.1);
             waitForNextHardwareCycle();
         }
         frontRightWheel.setPower(0);
@@ -215,7 +216,7 @@ public abstract class _ResQAuto extends LinearOpMode {
             telemetry.addData("Ultrasonic Value", distance);
 
             //Wait until ultrasonic distance <24
-            if(distance < 25 && distance>1) {
+            if(distance < 24 && distance>1) {
                 if (getRedAlliance() == 0) {
                     /*frontLeftWheel.setPower(0.3);
                     backLeftWheel.setPower(0.3);*/
@@ -378,6 +379,11 @@ public abstract class _ResQAuto extends LinearOpMode {
                 button2Servo.setPosition(0.9);
             }
         }
+        frontRightWheel.setPower(0);
+        frontLeftWheel.setPower(0);
+        backRightWheel.setPower(0);
+        backLeftWheel.setPower(0);
+        sweeper.setPower(0);
     }
 
 

@@ -7,6 +7,7 @@ import android.os.Environment;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
@@ -30,10 +31,18 @@ public class Calibration extends OpMode {
 
     OpticalDistanceSensor opticalDistanceSensor;
 
+    DcMotor frontLeftMotor;
+    DcMotor backRightMotor;
+    DcMotor frontRightMotor;
+    DcMotor backLeftMotor;
+
     double redValue;
     double blueValue;
     double whiteValue;
     double matValue;
+
+
+    //linear slide tilt motor
 
     public boolean isExternalStorageWritable() {
         String state = Environment.getExternalStorageState();
@@ -53,10 +62,33 @@ public class Calibration extends OpMode {
 
     @Override
     public void init() {
+
         opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("light");
+        frontLeftMotor = hardwareMap.dcMotor.get("frontL");
+        frontRightMotor = hardwareMap.dcMotor.get("frontR");
+        backLeftMotor = hardwareMap.dcMotor.get("backL");
+        backRightMotor = hardwareMap.dcMotor.get("backR");
+        backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
+        frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
     }
 
     public void loop() {
+        float throttle = gamepad1.left_stick_y;
+        float rightThrottle = gamepad1.right_stick_y;
+        float secondThrottle = gamepad2.left_stick_y;
+        float secondRightThrottle = gamepad2.right_stick_y;
+
+        if (Math.abs(throttle) < 0.01 && Math.abs(rightThrottle) < 0.01) {
+            frontRightMotor.setPower(secondRightThrottle);
+            backRightMotor.setPower(secondRightThrottle);
+            frontLeftMotor.setPower(secondThrottle);
+            backLeftMotor.setPower(secondThrottle);
+        } else {
+            frontRightMotor.setPower(rightThrottle);
+            backRightMotor.setPower(rightThrottle);
+            frontLeftMotor.setPower(throttle);
+            backLeftMotor.setPower(throttle);
+        }
         telemetry.addData("blueValue", blueValue);
         telemetry.addData("redValue", redValue);
         telemetry.addData("whiteValue", whiteValue);
