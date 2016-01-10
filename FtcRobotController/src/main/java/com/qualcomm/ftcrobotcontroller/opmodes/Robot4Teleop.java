@@ -150,12 +150,11 @@ public class Robot4Teleop extends OpMode {
             hang_back_state = false;
         } */
         else {
-            if (gamepad1.b == false && gamepad2.b == false && gamepad1.x == false && gamepad2.x == false)
-            {
+            if (gamepad1.b == false && gamepad2.b == false && gamepad1.x == false && gamepad2.x == false) {
                 //Stop the adjust motor if the x axis of the dpad is not touched
                 adjustMotor.setPower(0);
             }
-            if (gamepad1.x  || gamepad2.x) {
+            if (gamepad1.x || gamepad2.x) {
                 //Adjust motor turns right and twist servo sets to turn left
                 adjustMotor.setPower(-0.05);
                 twistServo.setPosition(0.6);
@@ -213,6 +212,11 @@ public class Robot4Teleop extends OpMode {
             if (gamepad1.dpad_down || gamepad2.dpad_down) {
                 //Clamp Servo down
                 clampServo.setPosition(0);
+            }
+            if (gamepad1.left_stick_button || gamepad2.left_stick_button) {
+                rButtonServo.setPosition(0);
+            } else {
+                rButtonServo.setPosition(1);
             }
             if (gamepad1.left_trigger == 1 || gamepad2.left_trigger == 1) {
                 //Linear Motor shrinks

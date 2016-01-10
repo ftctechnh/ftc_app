@@ -63,7 +63,6 @@ public abstract class _ResQAuto extends LinearOpMode {
 
         double EOPDThreshold = 0.4 * BLACKVALUE + 0.6* WHITEVALUE;
 
-
         double value;
         frontRightWheel = hardwareMap.dcMotor.get("frontR");
         frontLeftWheel = hardwareMap.dcMotor.get("frontL");
