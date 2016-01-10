@@ -11,11 +11,22 @@ import com.qualcomm.robotcore.util.Range;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 
 public abstract class _ResQAuto extends LinearOpMode {
+
+    //Array for sensor values
+    List<String> debugValues = new ArrayList<String>();
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy.MM.dd hh:mm:ss:SSS");
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -62,6 +73,7 @@ public abstract class _ResQAuto extends LinearOpMode {
         }
 
         double EOPDThreshold = 0.4 * BLACKVALUE + 0.6* WHITEVALUE;
+        debugValues.add(formatter.format(new Date()) + "EOPDThreshold:" + EOPDThreshold);
 
         double value;
         frontRightWheel = hardwareMap.dcMotor.get("frontR");
@@ -105,6 +117,8 @@ public abstract class _ResQAuto extends LinearOpMode {
         else //with delay (2nd start), robot is placed farther
             sleep(4500);
 
+        debugValues.add(formatter.format(new Date()) + "Starting Run");
+
         sweeper.setPower(-0.8);
         frontRightWheel.setPower(0.3);
         frontLeftWheel.setPower(0.3);
@@ -123,8 +137,10 @@ public abstract class _ResQAuto extends LinearOpMode {
         while(true){
             reflectance = opticalDistanceSensor.getLightDetected();
             telemetry.addData("Reflectance Value", reflectance);
+            debugValues.add(formatter.format(new Date()) + "Reflectance Value:" + reflectance);
 
             if (Math.abs(reflectance - WHITEVALUE) < 0.05) { //found white tape
+                debugValues.add(formatter.format(new Date()) + "Found white tape");
                 frontRightWheel.setPower(0);
                 frontLeftWheel.setPower(0);
                 backRightWheel.setPower(0);
@@ -177,11 +193,14 @@ public abstract class _ResQAuto extends LinearOpMode {
         sleep(700);
 
         //follow the left edge of the line
+        debugValues.add(formatter.format(new Date()) + "Entering Line Follower");
         while(true) {
             waitOneFullHardwareCycle();
             sweeper.setPower(1);
             double distance = ultrasonicSensor.getUltrasonicLevel();
             reflectance = opticalDistanceSensor.getLightDetected();
+            debugValues.add(formatter.format(new Date()) + "Reflectance:" + reflectance);
+            debugValues.add(formatter.format(new Date()) + "Distance:" + distance);
 
             telemetry.addData("Current Status: Linefollower", "Current Status: Linefollower");
             //Line Follower
@@ -190,6 +209,7 @@ public abstract class _ResQAuto extends LinearOpMode {
             double valueS;
 
             value = reflectance - EOPDThreshold ;
+            debugValues.add(formatter.format(new Date()) + "Correction Error:" + value);
             valueB = .07-0.5*value;
             valueS = .07+0.5*value;
             if (Math.abs(valueB) < 0.2)
@@ -197,6 +217,7 @@ public abstract class _ResQAuto extends LinearOpMode {
 
             valueS = Range.clip(valueS, -1, 1);
             valueB = Range.clip(valueB, -1, 1);
+            debugValues.add(formatter.format(new Date()) + "Correction values:" + valueS + "/" + valueB);
             if (getRedAlliance()==0) {
                 frontLeftWheel.setPower(valueS);
                 backLeftWheel.setPower(valueS);
@@ -233,7 +254,7 @@ public abstract class _ResQAuto extends LinearOpMode {
                 break;
             }
         }
-
+        debugValues.add(formatter.format(new Date()) + "Finish line follower");
         colorsensor.enableLed(false);
         sleep(500);
         telemetry.addData("Red", colorsensor.red());
@@ -242,6 +263,7 @@ public abstract class _ResQAuto extends LinearOpMode {
 
         //Color Sensor Logic
         if(colorsensor.red()<0.1&&colorsensor.blue()>0.1){
+            debugValues.add(formatter.format(new Date()) + "Detect Blue Value" + colorsensor.blue());
             if (getRedAlliance() == 0){
                 //button2Servo.setPosition(0.8);
                 //sleep(1000);
@@ -280,6 +302,7 @@ public abstract class _ResQAuto extends LinearOpMode {
             }
 
         }else if (colorsensor.red() > 0.1 &&colorsensor.blue()<0.1){
+            debugValues.add(formatter.format(new Date()) + "Detect Red Value" + colorsensor.red());
             if (getRedAlliance() == 1){
                 //buttonServo.setPosition(0.7);
                 //sleep(1000);
@@ -333,6 +356,7 @@ public abstract class _ResQAuto extends LinearOpMode {
         sleep(1100);
 
         //End of Autonomous
+        debugValues.add(formatter.format(new Date()) + "End of Autonomous, Navigation start");
         if (getDelay() == 0) {
             frontLeftWheel.setPower(-0.2);
             backLeftWheel.setPower(-0.2);
@@ -383,6 +407,24 @@ public abstract class _ResQAuto extends LinearOpMode {
         backRightWheel.setPower(0);
         backLeftWheel.setPower(0);
         sweeper.setPower(0);
+        debugValues.add(formatter.format(new Date()) + "Autonomous Completed");
+
+        //Write sensor values to file
+        try {
+            SimpleDateFormat f = new SimpleDateFormat("MMdd_HHmm");
+            File file = new File("/sdcard/FIRST/debugFor" + f.format(new Date()) + ".txt");
+            FileOutputStream fileoutput = new FileOutputStream(file);
+            PrintStream ps = new PrintStream(fileoutput);
+            for (String s: debugValues) {
+                ps.println(s);
+            }
+            ps.close();
+            fileoutput.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 
