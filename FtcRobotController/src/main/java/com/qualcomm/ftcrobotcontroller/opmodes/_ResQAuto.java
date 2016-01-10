@@ -61,7 +61,7 @@ public abstract class _ResQAuto extends LinearOpMode {
             e.printStackTrace();
         }
 
-        double EOPDThreshold = 0.5 * (BLACKVALUE + WHITEVALUE);
+        double EOPDThreshold = 0.3 * BLACKVALUE + 0.7* WHITEVALUE;
 
 
         double value;
@@ -190,8 +190,8 @@ public abstract class _ResQAuto extends LinearOpMode {
             double valueS;
 
             value = reflectance - EOPDThreshold ;
-            valueB = .07-0.5*value;
-            valueS = .07+0.5*value;
+            valueB = .07-0.6*value;
+            valueS = .07+0.6*value;
             if (Math.abs(valueB) < 0.2)
                 valueS = (Math.signum(valueS) * 0.2);
 
@@ -259,7 +259,7 @@ public abstract class _ResQAuto extends LinearOpMode {
                 backLeftWheel.setPower(-0.2);
                 frontRightWheel.setPower(-0.2);
                 backRightWheel.setPower(-0.2);
-                sleep(350);
+                sleep(300);
                 frontLeftWheel.setPower(0);
                 backLeftWheel.setPower(0);
                 frontRightWheel.setPower(0);
