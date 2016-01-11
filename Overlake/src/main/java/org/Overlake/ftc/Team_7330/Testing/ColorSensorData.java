@@ -1,4 +1,4 @@
-package org.Overlake.ftc.Team_7330.Testing;
+package org.overlake.ftc.team_7330.Testing;
 
 import java.io.*;
 import com.google.gson.*;
@@ -7,7 +7,7 @@ import com.google.gson.annotations.*;
 /**
  * Created by leeac on 1/6/2016.
  */
-public class SensorData
+public class ColorSensorData
 {
     @Expose public HueData grayTile;
     @Expose public HueData redTape;
@@ -16,7 +16,7 @@ public class SensorData
     @Expose public HueData redBeacon;
     @Expose public HueData blueBeacon;
 
-    public SensorData()
+    public ColorSensorData()
     {
         grayTile = new HueData();
         redTape = new HueData();
@@ -46,17 +46,17 @@ public class SensorData
         return gson;
     }
 
-    public static SensorData[] fromJson(String json)
+    public static ColorSensorData[] fromJson(String json)
     {
-        return getGson().fromJson(json, SensorData[].class);
+        return getGson().fromJson(json, ColorSensorData[].class);
     }
 
-    public static String toJson(SensorData[] values)
+    public static String toJson(ColorSensorData[] values)
     {
         return getGson().toJson(values);
     }
 
-    public static SensorData[] fromFile(String fileName)
+    public static ColorSensorData[] fromFile(String fileName)
     {
         try
         {
@@ -65,33 +65,40 @@ public class SensorData
 
             String json = reader.readLine();
 
+            reader.close();
             fileReader.close();
 
-            return SensorData.fromJson(json);
+            return ColorSensorData.fromJson(json);
 
         }
         catch (IOException exception)
         {
+            String s = exception.getMessage();
+            String s2 = s;
         }
 
         return null;
     }
 
-    public static void toFile(String fileName, SensorData[] values)
+    public static void toFile(String fileName, ColorSensorData[] values)
     {
         try
         {
             FileWriter fileWriter = new FileWriter(fileName);
             BufferedWriter writer = new BufferedWriter(fileWriter);
 
-            String json = SensorData.toJson(values);
+            String json = ColorSensorData.toJson(values);
 
             writer.write(json);
+            writer.write("\n");
+            writer.close();
 
             fileWriter.close();
         }
         catch (IOException exception)
         {
+            String s = exception.getMessage();
+            String s2 = s;
         }
     }
 }

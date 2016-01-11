@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.DigitalChannelController;
 
-import org.Overlake.ftc.Team_7330.Testing.HueData;
-import org.Overlake.ftc.Team_7330.Testing.SensorData;
+import org.overlake.ftc.team_7330.Testing.HueData;
+import org.overlake.ftc.team_7330.Testing.ColorSensorData;
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.interfaces.*;
 
@@ -17,7 +17,7 @@ public class ColorCalibration extends SynchronousOpMode
     static final int LED_CHANNEL = 5;
 
     // TODO: Implement this program for multiple sensors with an array of sensors
-    SensorData[] data = new SensorData[1];
+    ColorSensorData[] data = new ColorSensorData[1];
     int dataIndex; // used in composeDashboard to overcome scope problems
 
     @Override
@@ -34,6 +34,7 @@ public class ColorCalibration extends SynchronousOpMode
 
         for (int i = 0; i < data.length; i++)
         {
+            data[i] = new ColorSensorData();
             getData(data[i].grayTile);
             getData(data[i].redTape);
             getData(data[i].blueTape);
@@ -42,7 +43,7 @@ public class ColorCalibration extends SynchronousOpMode
             getData(data[i].blueBeacon);
         }
 
-        SensorData.toFile("SensorData.json", data);
+        ColorSensorData.toFile("/sdcard/FIRST/colorSensorData.txt", data);
     }
 
     public void getData(HueData hue)
@@ -56,14 +57,13 @@ public class ColorCalibration extends SynchronousOpMode
 
         for(int i = 0; i < 10; i++)
         {
-            hue.addSample(convertColor(sensorRGB.red(), sensorRGB.green(), sensorRGB.blue()));
+            hue.addSample(hueFromRGB(sensorRGB.red(), sensorRGB.green(), sensorRGB.blue()));
             waitMs(200);
+            telemetry.update();
         }
-
-        telemetry.update();
     }
 
-    public static double convertColor(int r, int g, int b)
+    public static double hueFromRGB(int r, int g, int b)
     {
         double y = Math.sqrt(3) * (g - b);
         double x = 2 * r - g - b;

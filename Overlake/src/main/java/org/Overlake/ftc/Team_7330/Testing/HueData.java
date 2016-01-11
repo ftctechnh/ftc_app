@@ -1,4 +1,4 @@
-package org.Overlake.ftc.Team_7330.Testing;
+package org.overlake.ftc.team_7330.Testing;
 
 import com.google.gson.annotations.*;
 
@@ -46,7 +46,7 @@ public class HueData
 
     public boolean isHue(double value)
     {
-        return value >= hueMin && value <= hueMax;
+        return (value >= hueMin) && (value <= hueMax);
     }
 }
 
