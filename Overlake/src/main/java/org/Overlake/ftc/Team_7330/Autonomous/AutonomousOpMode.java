@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 
-import org.Overlake.ftc.Team_7330.Testing.HueData;
-import org.Overlake.ftc.Team_7330.Testing.SensorData;
+import org.overlake.ftc.team_7330.Testing.HueData;
+import org.overlake.ftc.team_7330.Testing.ColorSensorData;
 import org.swerverobotics.library.ClassFactory;
 import org.swerverobotics.library.SynchronousOpMode;
 import org.swerverobotics.library.interfaces.IBNO055IMU;
@@ -17,7 +17,7 @@ import org.swerverobotics.library.interfaces.Velocity;
  */
 public abstract class AutonomousOpMode extends SynchronousOpMode {
     final int encRotation = 1120;
-    SensorData data;
+    ColorSensorData data;
 
     double heading = 0;
     double targetHeading = 0;
