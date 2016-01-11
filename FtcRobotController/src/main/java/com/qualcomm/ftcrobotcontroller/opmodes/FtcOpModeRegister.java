@@ -70,9 +70,7 @@ public class FtcOpModeRegister implements OpModeRegister {
 
 
 
-    manager.register ("I2cGY85ReadData", I2cGY85ReadData.class);
-
-    /*
+       /*
      * Uncomment any of the following lines if you want to register an op mode.
      */
 
