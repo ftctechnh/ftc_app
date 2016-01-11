@@ -30,8 +30,8 @@ public class ColorCalibration extends SynchronousOpMode
         cdim.setDigitalChannelState(LED_CHANNEL, true);
 
         composeDashboard();
-        waitForStart();
 
+        this.telemetry.update();
         for (int i = 0; i < data.length; i++)
         {
             data[i] = new ColorSensorData();
@@ -49,7 +49,7 @@ public class ColorCalibration extends SynchronousOpMode
     public void getData(HueData hue)
     {
         boolean wasA = gamepad1.a;
-        while(!(gamepad1.a && !wasA))
+        while(!(gamepad1.a && !wasA)) // while(!gamepad1.a || wasA)
         {
             wasA = gamepad1.a;
             waitMs(100);
@@ -58,8 +58,8 @@ public class ColorCalibration extends SynchronousOpMode
         for(int i = 0; i < 10; i++)
         {
             hue.addSample(hueFromRGB(sensorRGB.red(), sensorRGB.green(), sensorRGB.blue()));
+            this.telemetry.update();
             waitMs(200);
-            telemetry.update();
         }
     }
 
