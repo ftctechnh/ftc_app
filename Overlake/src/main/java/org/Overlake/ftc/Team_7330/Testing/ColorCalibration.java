@@ -103,7 +103,7 @@ public class ColorCalibration extends SynchronousOpMode
                 })
         );
 
-        for (dataIndex = 0; dataIndex < data.length; dataIndex++)
+        /*for (dataIndex = 0; dataIndex < data.length; dataIndex++)
         {
             telemetry.addLine(
                     telemetry.item(dataIndex + ": ", new IFunc<Object>()
@@ -114,7 +114,7 @@ public class ColorCalibration extends SynchronousOpMode
                         }
                     })
             );
-        }
+        }*/
     }
 }
 
