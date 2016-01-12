@@ -38,27 +38,27 @@ public class TeleOp extends SynchronousOpMode {
 
 	@Override public void main() throws InterruptedException {
 		//Initialize hardware
-		//frontRightWheel = hardwareMap.dcMotor.get("fr");
-		//frontLeftWheel = hardwareMap.dcMotor.get("fl");
-		//backRightWheel = hardwareMap.dcMotor.get("br");
-		//backLeftWheel = hardwareMap.dcMotor.get("bl");
+		frontRightWheel = hardwareMap.dcMotor.get("frontRightWheel");
+		frontLeftWheel = hardwareMap.dcMotor.get("frontLeftWheel");
+		backRightWheel = hardwareMap.dcMotor.get("backRightWheel");
+		backLeftWheel = hardwareMap.dcMotor.get("backLeftWheel");
 
-		linearSlideR = hardwareMap.dcMotor.get("fr");
-		linearSlideL = hardwareMap.dcMotor.get("fl");
+		linearSlideR = hardwareMap.dcMotor.get("linearSlideR");
+		linearSlideL = hardwareMap.dcMotor.get("linearSlideL");
 
 		containerTilt = hardwareMap.servo.get("containerTilt");
 
-		//sweeper = hardwareMap.dcMotor.get("sweeper");
+		sweeper = hardwareMap.dcMotor.get("sweeper");
 
 		//Set motor channel modes and direction
-		/*frontRightWheel.setDirection(DcMotor.Direction.FORWARD);
+		frontRightWheel.setDirection(DcMotor.Direction.FORWARD);
 		frontRightWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
 		frontLeftWheel.setDirection(DcMotor.Direction.REVERSE);
 		frontLeftWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
 		backRightWheel.setDirection(DcMotor.Direction.FORWARD);
 		backRightWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
 		backLeftWheel.setDirection(DcMotor.Direction.REVERSE);
-		backLeftWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);*/
+		backLeftWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
 
 		linearSlideR.setDirection(DcMotor.Direction.REVERSE);
 		linearSlideR.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
@@ -81,19 +81,19 @@ public class TeleOp extends SynchronousOpMode {
 				containerTiltRight = gamepad1.dpad_right || gamepad2.dpad_right;
 				containerTiltLeft = gamepad1.dpad_left || gamepad1.dpad_left;
 
-				/*if(gamepad1.right_bumper || gamepad2.right_bumper) {
+				if(gamepad1.right_bumper || gamepad2.right_bumper) {
 					sweeperForward = !sweeperForward;
 					sweeperBackward = false;
 				} else if(gamepad1.left_bumper || gamepad2.left_bumper) {
 					sweeperBackward  = !sweeperBackward;
 					sweeperForward = false;
-				}*/
+				}
 
 				//Use gamepad values to move robot
-				/*Functions.moveTwoMotors(frontRightWheel, backRightWheel,
+				Functions.moveTwoMotors(frontRightWheel, backRightWheel,
 						Functions.convertGamepad(rightWheel));
 				Functions.moveTwoMotors(frontLeftWheel, backLeftWheel,
-						Functions.convertGamepad(leftWheel));*/
+						Functions.convertGamepad(leftWheel));
 
 				if(linearSlideForward) {
 					Functions.moveTwoMotors(linearSlideR, linearSlideL, 0.3);
@@ -111,13 +111,13 @@ public class TeleOp extends SynchronousOpMode {
 							.setPosition(containerTilt.getPosition() - 0.005);
 				}
 
-				/*if(sweeperForward) {
+				if(sweeperForward) {
 					sweeper.setPower(0.5);
 				} else if(sweeperBackward){
 					sweeper.setPower(-0.5);
 				} else {
 					sweeper.setPower(0);
-				}*/
+				}
 			}
 
 			telemetry.update();

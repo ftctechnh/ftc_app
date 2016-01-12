@@ -12,7 +12,7 @@ public class SkeletalOpMode extends SynchronousOpMode {
 	//Declare gamepad objects
 
 	@Override public void main() throws InterruptedException {
-		//Initialize haedware
+		//Initialize hardware
 
 		//Wait for the game to start
 		waitForStart();
