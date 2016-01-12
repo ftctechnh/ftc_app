@@ -38,7 +38,7 @@ public class ResqTeleop extends OpMode {
     private static final float MINIMUM_JOYSTICK_THRESHOLD = 0.15F;
 
     Robot robot;
-    
+
     float stickValueP1Left;
     float stickValueP1Right;
     MotorSetting settingTapeMeasureServo;
@@ -76,9 +76,11 @@ public class ResqTeleop extends OpMode {
 
         // Neatly read all the button assignments for clarity purposes.
         buttonLiftOut     = gamepad1.left_bumper;
-        buttonLiftIn      = gamepad1.left_trigger > 0.0;
-        buttonBrushOn     = gamepad1.right_bumper;
-        buttonBrushRev    = gamepad1.right_trigger > 0.0;
+        buttonLiftIn      = gamepad1.right_bumper;
+
+        // Everyone wants the manipulator to control the brush
+        buttonBrushOn     = gamepad2.y;
+        buttonBrushRev    = gamepad2.a;
 
         buttonTapeOut     = gamepad2.y;
         buttonTapeIn      = gamepad2.a;
@@ -136,14 +138,22 @@ public class ResqTeleop extends OpMode {
 
         // Last of all, update the motor values.
         if (absoluteValue(stickValueP1Left) > MINIMUM_JOYSTICK_THRESHOLD) {
-            robot.setPowerLeft(stickValueP1Left);
+            robot.setPowerRight(-stickValueP1Left);
+        } else {
+            robot.setPowerRight(0);
         }
+
         if (absoluteValue(stickValueP1Right) > MINIMUM_JOYSTICK_THRESHOLD) {
-            robot.setPowerRight(stickValueP1Right);
+            robot.setPowerLeft(-stickValueP1Right);
+        } else {
+            robot.setPowerLeft(0);
         }
         robot.setTapeMeasure(settingTapeMeasureServo);
         robot.setLift(settingLiftMotor);
         robot.setBrush(settingBrushMotor);
+
+        telemetry.addData("right stick", stickValueP1Right);
+        telemetry.addData("left stick ", stickValueP1Left);
     }
 
     /**
