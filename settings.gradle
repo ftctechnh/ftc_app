@@ -1,2 +1,4 @@
+include ':SwerveRoboticsLibrary'
+include ':Overlake'
 // FTC Apps
 include (':FtcRobotController')
