@@ -1,6 +1,7 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.ftcrobotcontroller.Values;
+import com.qualcomm.ftcrobotcontroller.hardware.HardwareManager;
 import com.qualcomm.ftcrobotcontroller.hardware.Power;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -43,9 +44,10 @@ public class BotAuton extends LinearOpMode {
     }
 
     public void initMotors() {
-        motorRight = hardwareMap.dcMotor.get(Values.RIGHT_MOTOR);
+        HardwareManager manager = new HardwareManager(hardwareMap);
+        motorRight = manager.getMotor(Values.RIGHT_MOTOR);
         motorRight.setDirection(DcMotor.Direction.REVERSE);
-        motorLeft = hardwareMap.dcMotor.get(Values.LEFT_MOTOR);
+        motorLeft = manager.getMotor(Values.LEFT_MOTOR);
     }
 
     public void stopMotors() {

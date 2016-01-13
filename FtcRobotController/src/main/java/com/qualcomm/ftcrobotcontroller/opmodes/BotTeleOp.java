@@ -1,6 +1,7 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.ftcrobotcontroller.Values;
+import com.qualcomm.ftcrobotcontroller.hardware.HardwareManager;
 import com.qualcomm.ftcrobotcontroller.hardware.Power;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -24,13 +25,14 @@ public class BotTeleOp extends OpMode {
 
     @Override
     public void init() {
-        motorRight = hardwareMap.dcMotor.get(Values.RIGHT_MOTOR);
+        HardwareManager manager = new HardwareManager(hardwareMap);
+        motorRight = manager.getMotor(Values.RIGHT_MOTOR);
         motorRight.setDirection(DcMotor.Direction.REVERSE);
-        motorLeft = hardwareMap.dcMotor.get(Values.LEFT_MOTOR);
-        arm1 = hardwareMap.servo.get(Values.ARM_1);
-        arm2 = hardwareMap.servo.get(Values.ARM_2);
-        claw1 = hardwareMap.servo.get(Values.CLAW_1);
-        claw2 = hardwareMap.servo.get(Values.CLAW_2);
+        motorLeft = manager.getMotor(Values.LEFT_MOTOR);
+        arm1 = manager.getServo(Values.ARM_1);
+        arm2 = manager.getServo(Values.ARM_2);
+        claw1 = manager.getServo(Values.CLAW_1);
+        claw2 = manager.getServo(Values.CLAW_2);
     }
 
     @Override
