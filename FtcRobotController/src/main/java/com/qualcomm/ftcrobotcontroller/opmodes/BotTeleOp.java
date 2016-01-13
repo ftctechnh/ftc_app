@@ -40,19 +40,19 @@ public class BotTeleOp extends OpMode {
         motorLeft.setPower(Power.speedCurve(gamepad1.left_stick_y) * SPEED_FACTOR);
         motorRight.setPower(Power.speedCurve(gamepad1.right_stick_y) * SPEED_FACTOR);
 
-        if (gamepad1.y && arm1 != null && arm2 != null) {
+        if (gamepad1.y) {
             arm1.setPosition(Power.powerClamp(arm1.getPosition() + Values.SERVO_INCREMENT));
             arm2.setPosition(Power.powerClamp(arm2.getPosition() - Values.SERVO_INCREMENT));
-        } else if (gamepad1.a && arm1 != null && arm2 != null) {
+        } else if (gamepad1.a) {
             arm1.setPosition(Power.powerClamp(arm1.getPosition() - Values.SERVO_INCREMENT));
             arm2.setPosition(Power.powerClamp(arm2.getPosition() + Values.SERVO_INCREMENT));
         }
 
-        if (gamepad1.x && claw1 != null && claw2 != null) {
+        if (gamepad1.x) {
             claw1.setPosition(Values.CLAW_OPEN);
             claw2.setPosition(Values.CLAW_CLOSED);
         }
-        if (gamepad1.b && claw1 != null && claw2 != null) {
+        if (gamepad1.b) {
             claw1.setPosition(Values.CLAW_CLOSED);
             claw2.setPosition(Values.CLAW_OPEN);
         }
@@ -64,7 +64,7 @@ public class BotTeleOp extends OpMode {
             SPEED_FACTOR = 0.5f;
         }
 
-        telemetry.addData("Title", "*** Robot Data***");
+        telemetry.addData("Title", "***Robot Data***");
         telemetry.addData("Right Motor", "Right:" + motorRight.getPower());
         telemetry.addData("Left Motor", "Left:" + motorLeft.getPower());
         telemetry.addData("Arm 1", "Arm 1:" + arm1.getPosition());

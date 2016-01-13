@@ -26,16 +26,12 @@ public class MotorRunner {
      * @param power The power to run at
      * @param unit  The unit to run
      */
-    public static void run(DcMotor motor, double power, Unit unit) {
+    public static void run(DcMotor motor, double power, Unit unit) throws InterruptedException {
         if (motor != null) {
             if (unit instanceof TimeUnit) {
-                try {
-                    motor.setPower(power);
-                    Thread.sleep(unit.getValue());
-                    motor.setPower(0);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                motor.setPower(power);
+                Thread.sleep(unit.getValue());
+                motor.setPower(0);
             } else if (unit instanceof EncoderUnit) {
                 motor.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
                 motor.setTargetPosition((int) unit.getValue());
