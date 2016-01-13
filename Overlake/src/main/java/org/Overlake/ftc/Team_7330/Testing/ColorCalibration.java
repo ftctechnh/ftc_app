@@ -1,5 +1,7 @@
 package org.overlake.ftc.team_7330.Testing;
 
+import android.widget.Button;
+
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.DigitalChannelController;
@@ -8,6 +10,8 @@ import org.overlake.ftc.team_7330.Testing.HueData;
 import org.overlake.ftc.team_7330.Testing.ColorSensorData;
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.interfaces.*;
+
+import java.util.EmptyStackException;
 
 @TeleOp(name="ColorCalibration")
 public class ColorCalibration extends SynchronousOpMode
@@ -18,7 +22,7 @@ public class ColorCalibration extends SynchronousOpMode
 
     // TODO: Implement this program for multiple sensors with an array of sensors
     ColorSensorData[] data = new ColorSensorData[1];
-    int dataIndex; // used in composeDashboard to overcome scope problems
+    String message = "Program starting (next: grayTile)";
 
     @Override
     public void main() throws InterruptedException
@@ -30,37 +34,47 @@ public class ColorCalibration extends SynchronousOpMode
         cdim.setDigitalChannelState(LED_CHANNEL, true);
 
         composeDashboard();
+        telemetry.update();
 
-        this.telemetry.update();
         for (int i = 0; i < data.length; i++)
         {
             data[i] = new ColorSensorData();
-            getData(data[i].grayTile);
-            getData(data[i].redTape);
-            getData(data[i].blueTape);
-            getData(data[i].whiteTape);
-            getData(data[i].redBeacon);
-            getData(data[i].blueBeacon);
+            getData(data[i].grayTile, "Gray tile calibrated (next: redTape)");
+            getData(data[i].redTape, "Red tape calibrated (next: blueTape)");
+            getData(data[i].blueTape, "Blue tape calibrated (next: whiteTape)");
+            getData(data[i].whiteTape, "White tape calibrated (next: redBeacon)");
+            getData(data[i].redBeacon, "Red beacon calibrated (next: blueBeacon)");
+            getData(data[i].blueBeacon, "Blue beacon calibrated (sending to file)");
         }
 
         ColorSensorData.toFile("/sdcard/FIRST/colorSensorData.txt", data);
+        message = "Sent to file!";
+        telemetry.update();
     }
 
-    public void getData(HueData hue)
+    public void getData(HueData hue, String message)
     {
-        boolean wasA = gamepad1.a;
-        while(!(gamepad1.a && !wasA)) // while(!gamepad1.a || wasA)
+        boolean a = false;
+        while (!a)
         {
-            wasA = gamepad1.a;
-            waitMs(100);
+            updateGamepads();
+            a = gamepad1.a;
         }
 
-        for(int i = 0; i < 10; i++)
+        boolean b = false;
+        while (!b)
         {
+            updateGamepads();
+            b = gamepad1.b;
+        }
+
+        for(int i = 0; i < 10; i++) {
             hue.addSample(hueFromRGB(sensorRGB.red(), sensorRGB.green(), sensorRGB.blue()));
-            this.telemetry.update();
             waitMs(200);
         }
+
+        this.message = message;
+        telemetry.update();
     }
 
     public static double hueFromRGB(int r, int g, int b)
@@ -103,18 +117,15 @@ public class ColorCalibration extends SynchronousOpMode
                 })
         );
 
-        /*for (dataIndex = 0; dataIndex < data.length; dataIndex++)
-        {
-            telemetry.addLine(
-                    telemetry.item(dataIndex + ": ", new IFunc<Object>()
+        telemetry.addLine(
+                telemetry.item("Message: ", new IFunc<Object>()
+                {
+                    public Object value()
                     {
-                        public Object value()
-                        {
-                            return data[dataIndex].toString();
-                        }
-                    })
-            );
-        }*/
+                        return message;
+                    }
+                })
+        );
     }
 }
 
