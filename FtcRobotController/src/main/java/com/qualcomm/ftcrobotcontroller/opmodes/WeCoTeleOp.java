@@ -1,4 +1,4 @@
-/* Copyright (c) 2014, 2015 Qualcomm Technologies Inc
+ /* Copyright (c) 2014, 2015 Qualcomm Technologies Inc
 
 All rights reserved.
 
@@ -32,6 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.robocol.Telemetry;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import java.text.SimpleDateFormat;
@@ -52,86 +53,83 @@ public class WeCoTeleOp extends OpMode {
 
   DcMotor motor1 ;
   DcMotor motor2 ;
-  Servo servo1 ;
+  DcMotor motorLifter;
+  DigitalChannel lifterHolofectSensor;
+  Servo servoHook;
+
+  final static double servoHookMinRange = 0.0 ;
+  final static double servoHookMaxRange = 1.0 ;
+  public enum POSITION {TOP, MIDDLE, BOTTOM}
+  public POSITION currentPosition = POSITION.BOTTOM;
+  double stickDirection = 0;
+  double servoHookPosition = 1;
 
   final static double servoMinRange = 0.0 ;
   final static double servoMaxRange = 1.0 ;
-  double servoDelta = 0.25 ;
-  double servoPosition ;
-  boolean BbuttonOn= false;
-  ElapsedTime BbuttonTimmer = new ElapsedTime();
-  boolean AbuttonOn= false;
-  ElapsedTime AbuttonTimmer = new ElapsedTime();
-  double buttonResetTime = 0.25 ;
+  float motor1power ;
+  float motor2power ;
   float motorPowerMin = -1 ;
   float motorPowerMax = 1  ;
+  float motorLifterPower ;
   int scaleNum = 0 ;
   float wheelDiameter = 4 ;
+  double position1 ;
+  double position2 ;
 
 
   @Override
   public void start() {
 
-    motor1 = hardwareMap.dcMotor.get("motor_1") ;
-    motor2 = hardwareMap.dcMotor.get("motor_2") ;
-    servo1 = hardwareMap.servo.get("servo_1") ;
+    motor1 = hardwareMap.dcMotor.get("motorRight") ;
+    motor2 = hardwareMap.dcMotor.get("motorLeft") ;
+    motorLifter = hardwareMap.dcMotor.get("motorLifter");
+    lifterHolofectSensor =  hardwareMap.digitalChannel.get("halleffect_1");
+    servoHook = hardwareMap.servo.get("servoHook");
 
     motor1.setDirection(DcMotor.Direction.REVERSE) ;
 
-    servoPosition = 0.5 ;
   }
 
   @Override
   public void loop() {
-//increase servo position by a set amount
-    if (gamepad2.a || gamepad2.b) {
-
-      if (gamepad2.a && !AbuttonOn) {
-
-        servoPosition = servoPosition + servoDelta;
-        DbgLog.msg("=====Decrease arm position=====");
-        AbuttonOn = true;
-        AbuttonTimmer.reset();
-
-      }
-      if (AbuttonOn == true && (AbuttonTimmer.time() > buttonResetTime)) {
-        AbuttonOn = false;
-        DbgLog.msg("=====Reset AbuttonOn=====");
-      }
-
-
-      //DbgLog.msg("=====servoPosition====="+String.format("%f", servoPositionClipped)) ;
-
-      if (gamepad2.b && !BbuttonOn) {
-
-        servoPosition = servoPosition - servoDelta;
-        DbgLog.msg("=====Decrease arm position=====" + String.format("%f", servoPosition));
-        BbuttonOn = true;
-        BbuttonTimmer.reset();
-
-      }
-      if (BbuttonOn == true && (BbuttonTimmer.time() > buttonResetTime)) {
-        BbuttonOn = false;
-        DbgLog.msg("=====Reset BbuttonOn=====");
-      }
-
-
-      if ((gamepad2.a == false) && (gamepad2.b == false)) {
-        DbgLog.msg("=====Not Pressed=====");
-      }
-    } else if ((gamepad2.left_trigger > 0) || (gamepad2.right_trigger > 0)) {
-      //increase servo position proportionally
-      servoPosition = servoPosition + (gamepad2.left_trigger / 100) - (gamepad2.right_trigger / 100);
-    }
 
 //sets motor power
-    float motor1power = -gamepad1.left_stick_y + gamepad1.right_stick_x ;
-    float motor2power = -gamepad1.left_stick_y - gamepad1.right_stick_x ;
+    motor1power = -gamepad1.left_stick_y + gamepad1.right_stick_x ;
+    motor2power = -gamepad1.left_stick_y - gamepad1.right_stick_x ;
+    motorLifterPower = -gamepad2.left_stick_y ;
 
-//clips motor and servo power/position
-    motor1power = Range.clip(motor1power, motorPowerMin, motorPowerMax) ;
-    motor2power = Range.clip(motor2power, motorPowerMin, motorPowerMax) ;
-    servoPosition = Range.clip(servoPosition, servoMinRange, servoMaxRange) ;
+    if(lifterHolofectSensor.getState() == false) {
+      DbgLog.msg("==== Hall Effect On ===");
+    }
+    if (lifterHolofectSensor.getState() == false) {
+      if (stickDirection == 1 || currentPosition == POSITION.TOP) {
+        currentPosition = POSITION.TOP ;
+        if (stickDirection == 0) {
+          motorLifterPower = -gamepad2.left_stick_y ;
+        } else {
+          motorLifterPower = 0;
+        }
+      }
+      if (stickDirection == 0 || currentPosition == POSITION.BOTTOM) {
+        currentPosition = POSITION.BOTTOM ;
+        if (stickDirection == 1) {
+          motorLifterPower = -gamepad2.left_stick_y ;
+        } else {
+          motorLifterPower = 0;
+        }
+      }
+    }
+    if (lifterHolofectSensor.getState() == true) {
+      currentPosition = POSITION.MIDDLE;
+    }
+
+    if (gamepad2.right_trigger == 1 ) {
+      DbgLog.msg("===== Set Hook to 1 =====");
+      servoHookPosition = 1.0 ;
+    } else if (gamepad2.left_trigger  == 1) {
+      DbgLog.msg("===== Set Hook to 0 =====");
+      servoHookPosition = 0.0 ;
+    }
 
 
 //Defines scale
@@ -147,21 +145,41 @@ public class WeCoTeleOp extends OpMode {
     }
 
     if (gamepad1.right_trigger > 0) {
-      motor1power = scale2(motor1power, gamepad1.left_trigger) ;
-      motor2power = scale2(motor2power, gamepad1.left_trigger) ;
+      motor1power = scale2(motor1power, gamepad1.left_trigger);
+      motor2power = scale2(motor2power, gamepad1.left_trigger);
     }
+
+//clips motor and servo power/position
+    motor1power = Range.clip(motor1power, motorPowerMin, motorPowerMax) ;
+    motor2power = Range.clip(motor2power, motorPowerMin, motorPowerMax) ;
+    motorLifterPower = Range.clip(motorLifterPower, motorPowerMin, motorPowerMax) ;
+    servoHookPosition = Range.clip(servoHookPosition, servoHookMinRange, servoHookMaxRange) ;
+
+
+
+
 
     //sets motor and servo power/position
     motor1.setPower(motor1power) ;
     motor2.setPower(motor2power) ;
-    servo1.setPosition(servoPosition);
+    motorLifter.setPower(motorLifterPower) ;
+    servoHook.setPosition(servoHookPosition);
+
+
 
 // gets current position and uses formula to find rotations or distance in inches
-    double position1 = -motor1.getCurrentPosition() ;
-    double position2 = motor2.getCurrentPosition() ;
+    position1 = -motor1.getCurrentPosition() ;
+    position2 = motor2.getCurrentPosition() ;
 
     position1 = (position1/2500)  /* * (wheelDiameter*3.14159265358)*/;
     position2 = (position2/2500) /* * (wheelDiameter*3.14159265358)*/;
+
+    if (-gamepad2.left_stick_y > 0) {
+      stickDirection = 1;
+    } else if (-gamepad2.left_stick_y < 0) {
+      stickDirection = 0;
+    }
+
 
 //telemetry data
     //telemetry.addData("Left Stick", "Left Stick is at " + String.format("%.2f", gamepad1.left_stick_y)); //left stick y-axis poition
@@ -169,9 +187,8 @@ public class WeCoTeleOp extends OpMode {
     telemetry.addData("0 Motor 2", "Motor 2 power is " + String.format("%.2f", motor2power)); // motor 2 power
     telemetry.addData("1 Left Distance", "Left motor has gone " + String.format("%.2f", position1) + " rotations"); //distance in rotations
     telemetry.addData("1 Right Distance", "Right motor has gone " + String.format("%.2f", position2) + " rotations"); //distance in rotations
-    telemetry.addData("2 Left Trigger", "Left Trigger is at " + String.format("%.2f", gamepad2.left_trigger)); // right trigger position
-    telemetry.addData("2 Right Trigger", "Right Trigger is at " + String.format("%.2f", gamepad2.right_trigger)); // right trigger position
-    telemetry.addData("Servo Position", "Servo is at " + String.format("%f", servoPosition)) ; //servo position
+    telemetry.addData("Motor Lifter", "Motor Lifter power is " + String.format("%.2f", motorLifterPower)); //motor Lifter power
+    telemetry.addData("Servo Hook Position", "Servo Hook is at " + String.format("%f", servoHookPosition)) ; //servo hook position
 
 
   }
