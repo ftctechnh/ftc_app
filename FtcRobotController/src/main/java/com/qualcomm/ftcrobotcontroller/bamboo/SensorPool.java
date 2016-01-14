@@ -31,6 +31,8 @@ public class SensorPool {
         right = new Motor("right", hardwareMap);
         left = new Motor("left", hardwareMap, true);
 
+        rrot = new Motor("rightrot", hardwareMap);
+
         lRight.enableLed(true);
         lLeft.enableLed(true);
 
@@ -44,6 +46,7 @@ public class SensorPool {
 
     public Motor right;
     public Motor left;
+    public Motor rrot, lrot;
 
     private DecimalFormat df;
 
@@ -58,6 +61,8 @@ public class SensorPool {
         double avgchange = (right.turnDiff()+left.turnDiff())/2;
         drift += gypos * avgchange;
 
+        double dpsr = (rrot.turnDiff()*360)*(timediff);
+
         r = sigmoid(drift*0.05);
         l = 1 - r;
 
@@ -65,6 +70,7 @@ public class SensorPool {
         console.log("gy",df.format(gyro.rotation())+", "+df.format(gyro.dps()) + ", " + df.format(gypos) + ", " + df.format(drift));
         console.log("bro", df.format(right.turns()) + ", " + df.format(left.turns()));
         console.log("rl", df.format(r)+", "+df.format(l));
+        console.log("ggg", df.format(dpsr)+",  "+df.format(rrot.get()));
     }
 
     public double sigmoid(double inp)
