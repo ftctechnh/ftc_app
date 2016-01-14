@@ -19,7 +19,7 @@ public class protoAuto extends LinearOpMode {
 
         waitForStart();
 
-        while (RobotAuto.enRightPosition > RobotAuto.EnRightDelta || RobotAuto.enLeftPosition > RobotAuto.EnLeftDelta) {
+        while (RobotAuto.enRightPosition > RobotAuto.EnRightS1 || RobotAuto.enLeftPosition > RobotAuto.EnLeftS1) {
             RobotAuto.enLeftPosition = RobotAuto.motorBLeft.getCurrentPosition();
             RobotAuto.enRightPosition = RobotAuto.motorBRight.getCurrentPosition();
             RobotAuto.motorFRight.setPower(RobotAuto.EnRightpower);
@@ -29,7 +29,7 @@ public class protoAuto extends LinearOpMode {
             telemetry.addData("EncoderL", "Value: " + String.valueOf(RobotAuto.motorBLeft.getCurrentPosition()));
             telemetry.addData("EncoderR", "Value: " + String.valueOf(RobotAuto.motorBRight.getCurrentPosition()));
 
-//            if (RobotAuto.enLeftPosition > RobotAuto.EnLeftDelta && RobotAuto.enRightPosition > RobotAuto.EnRightDelta) {
+//            if (RobotAuto.enLeftPosition > RobotAuto.EnLeftS1 && RobotAuto.enRightPosition > RobotAuto.EnRightS1) {
 //
 //                RobotAuto.motorBLeft.setPower(0);
 //                RobotAuto.motorBRight.setPower(0);
