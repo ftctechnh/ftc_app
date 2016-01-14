@@ -1,7 +1,7 @@
 package com.powerstackers.resq.opmodes.autonomous;
 
+import com.powerstackers.resq.common.RobotAuto;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 
@@ -9,23 +9,6 @@ import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
  * Created by Derek on 12/23/2015.
  */
 public class TedbotAuto extends LinearOpMode {
-
-//    final static double servoBeacon_MIN_RANGE  = 0.00;
-//    final static double servoBeacon_MAX_RANGE  = 1.00;
-
-    double enRightPosition = 0.0;
-    double enLeftPosition = 0.0;
-
-    double EnRightpower = 1;
-    double EnLeftpower = 1;
-
-    double EnRightDelta = -1000;
-    double EnLeftDelta = 1000;
-
-    /** position of servo <Value of Variable>
-     *
-     */
-//    double servoBeaconPosition;
 
     //Color Values
     float hsvValues[] = {0, 0, 0};
@@ -35,9 +18,6 @@ public class TedbotAuto extends LinearOpMode {
 //    ColorSensor colorSensor;
 //    ColorSensor colorFSensor;
 //    TouchSensor touchSensor;
-    DcMotor motorBRight;
-    DcMotor motorBLeft;
-//    Servo servoBeacon;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -63,11 +43,8 @@ public class TedbotAuto extends LinearOpMode {
         /**
          * Motors
          */
-        motorBRight = hardwareMap.dcMotor.get("motorBRight");
-        motorBLeft = hardwareMap.dcMotor.get("motorBLeft");
-        motorBRight.setDirection(DcMotor.Direction.REVERSE);
-        motorBRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        motorBLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        RobotAuto.motorBRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        RobotAuto.motorBLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 
         /**
          * Servos
@@ -77,13 +54,13 @@ public class TedbotAuto extends LinearOpMode {
         // wait for the start button to be pressed
         waitForStart();
 //                enLeftPosition < EnLeftDelta ||
-        while (enRightPosition > EnRightDelta) {
-            enLeftPosition = motorBLeft.getCurrentPosition();
-            enRightPosition = motorBRight.getCurrentPosition();
-            motorBRight.setPower(1);
-            motorBLeft.setPower(1);
-            telemetry.addData("EncoderBL", "Value: " + String.valueOf(motorBLeft.getCurrentPosition()));
-            telemetry.addData("EncoderBR", "Value: " + String.valueOf(motorBRight.getCurrentPosition()));
+        while (RobotAuto.enRightPosition > RobotAuto.EnRightDelta) {
+            RobotAuto.enLeftPosition = RobotAuto.motorBLeft.getCurrentPosition();
+            RobotAuto.enRightPosition = RobotAuto.motorBRight.getCurrentPosition();
+            RobotAuto.motorBRight.setPower(1);
+            RobotAuto.motorBLeft.setPower(1);
+            telemetry.addData("EncoderBL", "Value: " + String.valueOf(RobotAuto.motorBLeft.getCurrentPosition()));
+            telemetry.addData("EncoderBR", "Value: " + String.valueOf(RobotAuto.motorBRight.getCurrentPosition()));
 
 //            if (enLeftPosition > EnLeftDelta && enRightPosition > EnRightDelta) {
 //
@@ -93,13 +70,13 @@ public class TedbotAuto extends LinearOpMode {
 //            }
         }
 
-        motorBLeft.setPower(0);
-        motorBRight.setPower(0);
-        motorBLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        motorBRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        RobotAuto.motorBLeft.setPower(0);
+        RobotAuto.motorBRight.setPower(0);
+        RobotAuto.motorBLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        RobotAuto.motorBRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
 
         // Motor controls
-//        motorBLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS); // set to button later
+//        motorBLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS); //TODO set to button later
 //        motorBRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
 //        motorBLeft.setTargetPosition(1000);
 //        motorBRight.setTargetPosition(1000);
