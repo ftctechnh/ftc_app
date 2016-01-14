@@ -16,10 +16,10 @@ public class TedbotAuto extends LinearOpMode {
     double enRightPosition = 0.0;
     double enLeftPosition = 0.0;
 
-    double EnRightPower = 1;
+    double EnRightpower = 1;
     double EnLeftpower = 1;
 
-    double EnRightDelta = 1000;
+    double EnRightDelta = -1000;
     double EnLeftDelta = 1000;
 
     /** position of servo <Value of Variable>
@@ -75,25 +75,34 @@ public class TedbotAuto extends LinearOpMode {
 //        servoBeacon = hardwareMap.servo.get("servoBeacon");
 
         // wait for the start button to be pressed
-//        waitForStart();
-
-
-        enRightPosition = motorBRight.getCurrentPosition();
-
-        while (enLeftPosition < EnLeftDelta) {
+        waitForStart();
+//                enLeftPosition < EnLeftDelta ||
+        while (enRightPosition > EnRightDelta) {
             enLeftPosition = motorBLeft.getCurrentPosition();
-            motorBLeft.setPower(EnLeftpower);
+            enRightPosition = motorBRight.getCurrentPosition();
+            motorBRight.setPower(1);
+            motorBLeft.setPower(1);
             telemetry.addData("EncoderBL", "Value: " + String.valueOf(motorBLeft.getCurrentPosition()));
             telemetry.addData("EncoderBR", "Value: " + String.valueOf(motorBRight.getCurrentPosition()));
+
+//            if (enLeftPosition > EnLeftDelta && enRightPosition > EnRightDelta) {
+//
+//                motorBLeft.setPower(0);
+//                motorBRight.setPower(0);
+//
+//            }
         }
 
         motorBLeft.setPower(0);
+        motorBRight.setPower(0);
+        motorBLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        motorBRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
 
         // Motor controls
-        motorBLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS); // set to button later
-        motorBRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        motorBLeft.setTargetPosition(1000);
-        motorBRight.setTargetPosition(1000);
+//        motorBLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS); // set to button later
+//        motorBRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+//        motorBLeft.setTargetPosition(1000);
+//        motorBRight.setTargetPosition(1000);
 //       while (true) {
 
 
