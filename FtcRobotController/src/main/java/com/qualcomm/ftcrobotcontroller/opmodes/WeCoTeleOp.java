@@ -61,7 +61,8 @@ public class WeCoTeleOp extends OpMode {
   final static double servoHookMaxRange = 1.0 ;
   public enum POSITION {TOP, MIDDLE, BOTTOM}
   public POSITION currentPosition = POSITION.BOTTOM;
-  double stickDirection = 0;
+  public enum DIRECTION {DOWN, UP};
+  DIRECTION stickDirection = DIRECTION.DOWN;
   double servoHookPosition = 1;
 
   final static double servoMinRange = 0.0 ;
@@ -85,9 +86,7 @@ public class WeCoTeleOp extends OpMode {
     motorLifter = hardwareMap.dcMotor.get("motorLifter");
     lifterHolofectSensor =  hardwareMap.digitalChannel.get("halleffect_1");
     servoHook = hardwareMap.servo.get("servoHook");
-
     motor1.setDirection(DcMotor.Direction.REVERSE) ;
-
   }
 
   @Override
@@ -102,17 +101,17 @@ public class WeCoTeleOp extends OpMode {
       DbgLog.msg("==== Hall Effect On ===");
     }
     if (lifterHolofectSensor.getState() == false) {
-      if (stickDirection == 1 || currentPosition == POSITION.TOP) {
+      if (stickDirection == DIRECTION.UP || currentPosition == POSITION.TOP) {
         currentPosition = POSITION.TOP ;
-        if (stickDirection == 0) {
+        if (stickDirection == DIRECTION.DOWN) {
           motorLifterPower = -gamepad2.left_stick_y ;
         } else {
           motorLifterPower = 0;
         }
       }
-      if (stickDirection == 0 || currentPosition == POSITION.BOTTOM) {
+      if (stickDirection == DIRECTION.DOWN || currentPosition == POSITION.BOTTOM) {
         currentPosition = POSITION.BOTTOM ;
-        if (stickDirection == 1) {
+        if (stickDirection == DIRECTION.UP) {
           motorLifterPower = -gamepad2.left_stick_y ;
         } else {
           motorLifterPower = 0;
@@ -134,14 +133,12 @@ public class WeCoTeleOp extends OpMode {
 
 //Defines scale
     if (gamepad1.left_bumper) {
-
       scaleNum += 1 ;
     }
 
     if (scaleNum % 2 == 1) {
       motor1power = scale1(motor1power) ;
       motor2power = scale1(motor2power) ;
-
     }
 
     if (gamepad1.right_trigger > 0) {
@@ -155,17 +152,11 @@ public class WeCoTeleOp extends OpMode {
     motorLifterPower = Range.clip(motorLifterPower, motorPowerMin, motorPowerMax) ;
     servoHookPosition = Range.clip(servoHookPosition, servoHookMinRange, servoHookMaxRange) ;
 
-
-
-
-
     //sets motor and servo power/position
     motor1.setPower(motor1power) ;
     motor2.setPower(motor2power) ;
     motorLifter.setPower(motorLifterPower) ;
     servoHook.setPosition(servoHookPosition);
-
-
 
 // gets current position and uses formula to find rotations or distance in inches
     position1 = -motor1.getCurrentPosition() ;
@@ -175,9 +166,9 @@ public class WeCoTeleOp extends OpMode {
     position2 = (position2/2500) /* * (wheelDiameter*3.14159265358)*/;
 
     if (-gamepad2.left_stick_y > 0) {
-      stickDirection = 1;
+      stickDirection = DIRECTION.UP;
     } else if (-gamepad2.left_stick_y < 0) {
-      stickDirection = 0;
+      stickDirection = DIRECTION.DOWN;
     }
 
 
