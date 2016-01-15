@@ -43,6 +43,8 @@ public class DucksTeleOp extends TeleOpCommands {
         setWinchPower();
         setPivotPower();
         setClimbersPosition();
+        setSweeperPower();
+        setTrayPosition();
 
         telemetry.addData("UPDATES",UPDATES);
         telemetry.addData("climbersLeft",climbersLeft.getPosition());

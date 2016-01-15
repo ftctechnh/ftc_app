@@ -20,6 +20,9 @@ public class TeleOpCommands extends OpMode {
     public static int RIGHT=1;
     public static int LEFT=1;
     public static int SWEEPER=2;
+    public static double TRAYLEFT=0;
+    public static double TRAYRIGHT=1;
+    public static double TRAYLEVEL=.5;
     public int UPDATES=0;
     public GyroSensor gyro;
     public DcMotorController leftsweepMC;
@@ -30,6 +33,7 @@ public class TeleOpCommands extends OpMode {
     public Servo tray;
     public long LEFTUPDATE=0;
     public long RIGHTUPDATE=0;
+
 
     double scaleInput(double dVal)  {
         double[] scaleArray = { 0.0, 0.05, 0.09, 0.10, 0.12, 0.15, 0.18, 0.24,
@@ -56,6 +60,30 @@ public class TeleOpCommands extends OpMode {
         }
 //        // return scaled value.
         return dScale;
+    }
+    public void setSweeperPower(){
+        if(gamepad2.a && leftsweepMC.getMotorPower(SWEEPER)!=1){
+            leftsweepMC.setMotorPower(SWEEPER,1);
+            UPDATES+=1;
+        } else if (gamepad2.y && leftsweepMC.getMotorPower(SWEEPER)!=-1) {
+            leftsweepMC.setMotorPower(SWEEPER,-1);
+            UPDATES+=1;
+        }else if(gamepad2.x || gamepad2.y && leftsweepMC.getMotorPower(SWEEPER)!=0){
+            leftsweepMC.setMotorPower(SWEEPER,0);
+            UPDATES+=1;
+        }
+    }
+    public void setTrayPosition(){
+        if(gamepad2.dpad_up && tray.getPosition()!=TRAYLEVEL){
+            tray.setPosition(TRAYLEVEL);
+            UPDATES+=1;
+        }else if(gamepad2.dpad_left && tray.getPosition()!=TRAYLEFT){
+            tray.setPosition(TRAYLEFT);
+            UPDATES+=1;
+        }else if(gamepad2.dpad_right && tray.getPosition()!=TRAYRIGHT){
+            tray.setPosition(TRAYRIGHT);
+            UPDATES+=1;
+        }
     }
     public void setLeftPower(){
         if(gamepad1.left_stick_y>.05 && leftsweepMC.getMotorPower(LEFT)!=scaleInput(gamepad1.left_stick_y)){
