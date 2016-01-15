@@ -66,17 +66,17 @@ public class FtcOpModeRegister implements OpModeRegister {
     /*
      * Uncomment any of the following lines if you want to register an op mode.
      */
-    manager.register("CompBotTeleopV2", CompBotTeleopV2.class);
 
-    manager.register("CompBotTeleop", CompBotTeleop.class);
+
+
 
    //manager.register("ThreeColorTest", ThreeColorTest.class);
 
-    manager.register("RedMountainClimb", RedMountainAuto1.class);
-
-    manager.register("BlueMountainClimb", BlueMountClimb1.class);
 
 
+
+
+    manager.register("LinearOpTest", LinearOpTest.class);
     manager.register("CompBotTeleopV3",  CompBotTeleopV3.class);
     //manager.register("AdafruitRGBExample", AdafruitRGBExample.class);
     //manager.register("ColorSensorDriver", ColorSensorDriver.class);
