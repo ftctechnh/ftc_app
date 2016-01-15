@@ -46,14 +46,14 @@ public class TeleOp extends SynchronousOpMode {
 		linearSlideR = hardwareMap.dcMotor.get("linearSlideR");
 		linearSlideL = hardwareMap.dcMotor.get("linearSlideL");
 
-		containerTilt = hardwareMap.servo.get("containerTilt");
+		//containerTilt = hardwareMap.servo.get("containerTilt");
 
 		sweeper = hardwareMap.dcMotor.get("sweeper");
 
 		//Set motor channel modes and direction
-		frontRightWheel.setDirection(DcMotor.Direction.FORWARD);
+		frontRightWheel.setDirection(DcMotor.Direction.REVERSE);
 		frontRightWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-		frontLeftWheel.setDirection(DcMotor.Direction.REVERSE);
+		frontLeftWheel.setDirection(DcMotor.Direction.FORWARD);
 		frontLeftWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
 		backRightWheel.setDirection(DcMotor.Direction.FORWARD);
 		backRightWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
