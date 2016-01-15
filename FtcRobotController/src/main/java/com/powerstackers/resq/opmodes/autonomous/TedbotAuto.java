@@ -1,7 +1,7 @@
 package com.powerstackers.resq.opmodes.autonomous;
 
-import com.powerstackers.resq.common.RobotAuto;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 
@@ -9,6 +9,19 @@ import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
  * Created by Derek on 12/23/2015.
  */
 public class TedbotAuto extends LinearOpMode {
+
+
+    double enRightPosition = 0.0;
+    double enLeftPosition = 0.0;
+
+//    double EnRightpower = 1;
+//    double EnLeftpower = 1;
+
+    // Robot Movements in steps
+    double EnRightS1 = -1000;
+//    double EnLeftS1 = 1000;
+    double EnRightS2 = -500;
+//    double EnLeftS2 = 500;
 
     //Color Values
     float hsvValues[] = {0, 0, 0};
@@ -19,10 +32,13 @@ public class TedbotAuto extends LinearOpMode {
 //    ColorSensor colorFSensor;
 //    TouchSensor touchSensor;
 
+    DcMotor motorBRight;
+    DcMotor motorBLeft;
+
     @Override
     public void runOpMode() throws InterruptedException {
 
-        /**
+        /*
          * Use the hardwareMap to get the dc motors and servos by name. Note
          * that the names of the devices must match the names used when you
          * configured your robot and created the configuration file.
@@ -31,7 +47,14 @@ public class TedbotAuto extends LinearOpMode {
         hardwareMap.logDevices();
         cdim = hardwareMap.deviceInterfaceModule.get("dim");
 
-        /**
+        /*Motors
+         *
+         */
+        motorBRight = hardwareMap.dcMotor.get("motorBRight");
+        motorBLeft = hardwareMap.dcMotor.get("motorBLeft");
+        motorBRight.setDirection(DcMotor.Direction.REVERSE);
+
+        /*
          * Sensors
          */
 //        colorSensor = ClassFactory.createSwerveColorSensor(this, this.hardwareMap.colorSensor.get("colorSensor"));
@@ -40,22 +63,23 @@ public class TedbotAuto extends LinearOpMode {
 //        colorFSensor.enableLed(true);
 //        touchSensor = hardwareMap.touchSensor.get("touchSensor");
 
-        /**
+        /*
          * Motors
          */
-        RobotAuto.motorBRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        RobotAuto.motorBLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        motorBRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+//        motorBLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        motorBRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
 
         // wait for the start button to be pressed
         waitForStart();
 
-        while (RobotAuto.enRightPosition > RobotAuto.EnRightS1) {
-            RobotAuto.enLeftPosition=RobotAuto.motorBLeft.getCurrentPosition();
-            RobotAuto.enRightPosition=RobotAuto.motorBRight.getCurrentPosition();
-            RobotAuto.motorBRight.setPower(1);
-            RobotAuto.motorBLeft.setPower(1);
-            telemetry.addData("EncoderBL","Value: "+String.valueOf(RobotAuto.motorBLeft.getCurrentPosition()));
-            telemetry.addData("EncoderBR","Value: "+String.valueOf(RobotAuto.motorBRight.getCurrentPosition()));
+        while (enRightPosition > EnRightS1) {
+//            enLeftPosition = motorBLeft.getCurrentPosition();
+           enRightPosition = motorBRight.getCurrentPosition();
+            motorBRight.setPower(1);
+            motorBLeft.setPower(1);
+            telemetry.addData("EncoderBL", "Value: " + String.valueOf(motorBLeft.getCurrentPosition()));
+            telemetry.addData("EncoderBR","Value: "+String.valueOf(motorBRight.getCurrentPosition()));
 
 
 //            if (enLeftPosition > EnLeftS1 && enRightPosition > EnRightS1) {
@@ -66,41 +90,42 @@ public class TedbotAuto extends LinearOpMode {
 //            }
         }
 
-        RobotAuto.motorBLeft.setPower(0);
-        RobotAuto.motorBRight.setPower(0);
-        RobotAuto.motorBLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        RobotAuto.motorBRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        motorBLeft.setPower(0);
+        motorBRight.setPower(0);
+//        motorBLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        motorBRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        motorBRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 
-        wait(5000);
-
-        while (RobotAuto.enRightPosition > RobotAuto.EnRightS2) {
-            RobotAuto.enLeftPosition = RobotAuto.motorBLeft.getCurrentPosition();
-            RobotAuto.enRightPosition = RobotAuto.motorBRight.getCurrentPosition();
-            RobotAuto.motorBRight.setPower(1);
-            RobotAuto.motorBLeft.setPower(-1);
-            telemetry.addData("EncoderBL", "Value: " + String.valueOf(RobotAuto.motorBLeft.getCurrentPosition()));
-            telemetry.addData("EncoderBR", "Value: " + String.valueOf(RobotAuto.motorBRight.getCurrentPosition()));
+        while (enRightPosition < EnRightS2) {
+//            enLeftPosition = motorBLeft.getCurrentPosition();
+            enRightPosition = motorBRight.getCurrentPosition();
+            motorBRight.setPower(1);
+            motorBLeft.setPower(-1);
+            telemetry.addData("EncoderBL", "Value: " + String.valueOf(motorBLeft.getCurrentPosition()));
+            telemetry.addData("EncoderBR", "Value: " + String.valueOf(motorBRight.getCurrentPosition()));
         }
 
-        RobotAuto.motorBLeft.setPower(0);
-        RobotAuto.motorBRight.setPower(0);
-        RobotAuto.motorBLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        RobotAuto.motorBRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        motorBLeft.setPower(0);
+        motorBRight.setPower(0);
+//        motorBLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        motorBRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        motorBRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 
-        while (RobotAuto.enRightPosition > RobotAuto.EnRightS1) {
-            RobotAuto.enLeftPosition = RobotAuto.motorBLeft.getCurrentPosition();
-            RobotAuto.enRightPosition = RobotAuto.motorBRight.getCurrentPosition();
-            RobotAuto.motorBRight.setPower(1);
-            RobotAuto.motorBLeft.setPower(1);
-            telemetry.addData("EncoderBL", "Value: " + String.valueOf(RobotAuto.motorBLeft.getCurrentPosition()));
-            telemetry.addData("EncoderBR", "Value: " + String.valueOf(RobotAuto.motorBRight.getCurrentPosition()));
+        while (enRightPosition > EnRightS1) {
+//            enLeftPosition = motorBLeft.getCurrentPosition();
+            enRightPosition = motorBRight.getCurrentPosition();
+            motorBRight.setPower(1);
+            motorBLeft.setPower(1);
+            telemetry.addData("EncoderBL", "Value: " + String.valueOf(motorBLeft.getCurrentPosition()));
+            telemetry.addData("EncoderBR", "Value: " + String.valueOf(motorBRight.getCurrentPosition()));
 
         }
 
-        RobotAuto.motorBLeft.setPower(0);
-        RobotAuto.motorBRight.setPower(0);
-        RobotAuto.motorBLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        RobotAuto.motorBRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        motorBLeft.setPower(0);
+        motorBRight.setPower(0);
+//        motorBLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        motorBRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        motorBRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 
         // Motor controls
 //        motorBLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS); //TODO set to button later
@@ -114,7 +139,7 @@ public class TedbotAuto extends LinearOpMode {
 
 
 
-        /** ColorSensor Controls
+        /* ColorSensor Controls
          *
          */
 //        if (colorSensor.blue() > colorSensor.red()) {
@@ -128,6 +153,6 @@ public class TedbotAuto extends LinearOpMode {
 
 
 
-
+//    stop();
     }
 }
