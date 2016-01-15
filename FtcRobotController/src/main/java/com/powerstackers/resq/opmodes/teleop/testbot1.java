@@ -23,18 +23,26 @@ public class testbot1 extends OpMode {
     /** TETRIX VALUES.
      *
      */
-        final static double servoTest_MIN_RANGE = 0.00;
+    final static double servoTest_MIN_RANGE = 0.00;
     final static double servoTest_MAX_RANGE = 1.00;
+    final static double servoAxle_MIN_RANGE = 0.00;
+    final static double servoAxle_MAX_RANGE = 1.00;
 
     /** amount to change the servo position by
      *
      */
     double servoTestDelta = 0.5;
 
+    public float getServoAxleDelta() {
+        return 0.005f;
+    }
+
     /** position of servo <Value of Variable>
      *
      */
     double servoTestPosition;
+    double servoAxlePosition;
+    double servoAxleNPosition;
 
     /**Color Values
      *
@@ -43,7 +51,8 @@ public class testbot1 extends OpMode {
     final float values[] = hsvValues;
 
     DeviceInterfaceModule cdim;
-        Servo servoTest;
+    Servo servoTest;
+    Servo servoAxle;
 
     @Override
     public void init() {
@@ -62,6 +71,7 @@ public class testbot1 extends OpMode {
          */
         servoTest = hardwareMap.servo.get("servoTest");
         servoTest.setDirection(Servo.Direction.REVERSE);
+        servoAxle = hardwareMap.servo.get("servoAxle");
 
     }
 
@@ -111,10 +121,20 @@ public class testbot1 extends OpMode {
         }
 
 
+        if (gamepad2.dpad_up) {
+            servoAxlePosition += getServoAxleDelta();
+        } else if (gamepad2.dpad_down) {
+            servoAxlePosition -= getServoAxleDelta();
+        } else {
+            servoAxle.setPosition(servoAxlePosition);
+        }
+
+
         /** clip the position values so that they never exceed their allowed range.
          *
          */
         servoTestPosition = Range.clip(servoTestPosition, servoTest_MIN_RANGE, servoTest_MAX_RANGE);
+        servoAxlePosition = Range.clip(servoAxlePosition, servoAxle_MIN_RANGE, servoAxle_MAX_RANGE);
 
         /**write position values to the wrist and claw servo
          *
@@ -156,6 +176,7 @@ public class testbot1 extends OpMode {
 //        telemetry.addData("Servo Right", "Position: " + String.valueOf(Rightposition));
 //        telemetry.addData("servotest", "position: " + String.valueOf(servoTestPosition));
 //        telemetry.addData("servoBeacon", "position: " + String.valueOf(servoBeaconPosition));
+        telemetry.addData("servoAxle", "position: " + String.valueOf(servoAxlePosition));
 
     }
 

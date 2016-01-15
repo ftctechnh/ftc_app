@@ -35,8 +35,7 @@ public class ProtobotTeleop extends OpMode {
      * Note: the configuration of the servos is such that
      * as the arm servo approaches 0, the arm position moves up (away from the floor).
      * Also, as the claw servo approaches 0, the claw opens up (drops the game element).
-     */
-    /* TETRIX VALUES.
+     * TETRIX VALUES.
      *
      */
 //    final static double servoRight_MIN_RANGE  = 0.20;
