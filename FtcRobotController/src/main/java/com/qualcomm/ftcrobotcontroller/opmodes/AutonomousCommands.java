@@ -11,13 +11,14 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
 public class AutonomousCommands extends LinearOpMode{
     public static int WINCH=1;
     public static int WINCHPIVOT=2;
-    public static int WINCHWHEEL=1;
-    public static int RIGHT=2;
+    public static int WINCHWHEEL=2;
+    public static int RIGHT=1;
     public static int LEFT=1;
+    public static int SWEEPER=2;
     public GyroSensor gyro;
-    public DcMotorController winchMC;
-    public DcMotorController driveMC;
-    public DcMotorController wheelMC;
+    public DcMotorController winchwheelMC;
+    public DcMotorController leftsweepMC;
+    public DcMotorController rightpivotMC;
     public ColorSensor color;
     @Override
     public void runOpMode() throws InterruptedException {
@@ -41,47 +42,47 @@ public class AutonomousCommands extends LinearOpMode{
                 offset=offset-360;
             }
             telemetry.addData("offset",offset);
-            if(Math.abs(offset)<=2 && driveMC.getMotorPower(RIGHT)!=speed) {
-                driveMC.setMotorPower(RIGHT, speed);
-                driveMC.setMotorPower(LEFT, -speed);
+            if(Math.abs(offset)<=2 && rightpivotMC.getMotorPower(RIGHT)!=speed) {
+                rightpivotMC.setMotorPower(RIGHT, speed);
+                leftsweepMC.setMotorPower(LEFT, -speed);
                 telemetry.addData("offsetting",0);
             }
             if(2<Math.abs(offset) && Math.abs(offset)<=5){
                 telemetry.addData("offsetting",1);
-                if(offset<0 && driveMC.getMotorPower(RIGHT)!=speed-.5){
-                    driveMC.setMotorPower(RIGHT, speed-.5);
-                    driveMC.setMotorPower(LEFT,-speed);
+                if(offset<0 && rightpivotMC.getMotorPower(RIGHT)!=speed-.5){
+                    rightpivotMC.setMotorPower(RIGHT, speed-.5);
+                    leftsweepMC.setMotorPower(LEFT,-speed);
                 }
-                if(offset>0 && driveMC.getMotorPower(LEFT)!=-speed+.5){
-                    driveMC.setMotorPower(RIGHT, speed);
-                    driveMC.setMotorPower(LEFT,-speed+.5);
+                if(offset>0 && leftsweepMC.getMotorPower(LEFT)!=-speed+.5){
+                    rightpivotMC.setMotorPower(RIGHT, speed);
+                    leftsweepMC.setMotorPower(LEFT,-speed+.5);
                 }
             }
             if(5<Math.abs(offset) && Math.abs(offset)<10){
                 telemetry.addData("offsetting",2);
-                if(offset<0 && driveMC.getMotorPower(RIGHT)!=speed-.7){
-                    driveMC.setMotorPower(RIGHT, speed-.7);
-                    driveMC.setMotorPower(LEFT,-speed);
+                if(offset<0 && rightpivotMC.getMotorPower(RIGHT)!=speed-.7){
+                    rightpivotMC.setMotorPower(RIGHT, speed-.7);
+                    leftsweepMC.setMotorPower(LEFT,-speed);
                 }
-                if(offset>0 && driveMC.getMotorPower(LEFT)!=-speed+.7){
-                    driveMC.setMotorPower(RIGHT, speed);
-                    driveMC.setMotorPower(LEFT,-speed+.7);
+                if(offset>0 && leftsweepMC.getMotorPower(LEFT)!=-speed+.7){
+                    rightpivotMC.setMotorPower(RIGHT, speed);
+                    leftsweepMC.setMotorPower(LEFT,-speed+.7);
                 }
             }
             if(Math.abs(offset)>=10){
                 telemetry.addData("offsetting",3);
-                if(offset<0 && driveMC.getMotorPower(RIGHT)!=speed-.8){
-                    driveMC.setMotorPower(RIGHT, speed-.8);
-                    driveMC.setMotorPower(LEFT,-speed);
+                if(offset<0 && rightpivotMC.getMotorPower(RIGHT)!=speed-.8){
+                    rightpivotMC.setMotorPower(RIGHT, speed-.8);
+                    leftsweepMC.setMotorPower(LEFT,-speed);
                 }
-                if(offset>0 && driveMC.getMotorPower(LEFT)!=-speed+.8){
-                    driveMC.setMotorPower(RIGHT, speed);
-                    driveMC.setMotorPower(LEFT,-speed+.8);
+                if(offset>0 && leftsweepMC.getMotorPower(LEFT)!=-speed+.8){
+                    rightpivotMC.setMotorPower(RIGHT, speed);
+                    leftsweepMC.setMotorPower(LEFT,-speed+.8);
                 }
             }
         }
-        driveMC.setMotorPower(LEFT, 0);
-        driveMC.setMotorPower(RIGHT, 0);
+        leftsweepMC.setMotorPower(LEFT, 0);
+        rightpivotMC.setMotorPower(RIGHT, 0);
     }
 
     public void turnLeft (int degrees, double speed){
@@ -91,15 +92,15 @@ public class AutonomousCommands extends LinearOpMode{
             targetHeading=targetHeading+360;
         }
         while(gyro.getHeading()<targetHeading-2 || gyro.getHeading()>targetHeading+2){
-            if(driveMC.getMotorPower(LEFT)!=speed) {
-                driveMC.setMotorPower(LEFT, speed);
-                driveMC.setMotorPower(RIGHT, speed);
+            if(leftsweepMC.getMotorPower(LEFT)!=speed) {
+                leftsweepMC.setMotorPower(LEFT, speed);
+                rightpivotMC.setMotorPower(RIGHT, speed);
             }
             telemetry.addData("currentheading", gyro.getHeading());
             telemetry.addData("targetHeading", targetHeading);
         }
-        driveMC.setMotorPower(LEFT, 0);
-        driveMC.setMotorPower(RIGHT, 0);
+        leftsweepMC.setMotorPower(LEFT, 0);
+        rightpivotMC.setMotorPower(RIGHT, 0);
     }
 
     public void turnRight (int degrees,double speed){
@@ -109,15 +110,15 @@ public class AutonomousCommands extends LinearOpMode{
             targetHeading=targetHeading-360;
         }
         while(gyro.getHeading()<targetHeading-2 || gyro.getHeading()>targetHeading+2){
-            if(driveMC.getMotorPower(LEFT)!=-speed) {
-                driveMC.setMotorPower(LEFT, -speed);
-                driveMC.setMotorPower(RIGHT, -speed);
+            if(leftsweepMC.getMotorPower(LEFT)!=-speed) {
+                leftsweepMC.setMotorPower(LEFT, -speed);
+                rightpivotMC.setMotorPower(RIGHT, -speed);
             }
              telemetry.addData("currentheading", gyro.getHeading());
             telemetry.addData("targetHeading", targetHeading);
         }
-        driveMC.setMotorPower(LEFT,0);
-        driveMC.setMotorPower(RIGHT, 0);
+        leftsweepMC.setMotorPower(LEFT,0);
+        rightpivotMC.setMotorPower(RIGHT, 0);
     }
 
 }
