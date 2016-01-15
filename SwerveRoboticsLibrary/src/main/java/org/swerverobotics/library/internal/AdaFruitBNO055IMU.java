@@ -36,7 +36,12 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
     private HandshakeThreadStarter accelerationMananger;
     private static final int       msAccelerationIntegrationStopWait = 20;
     private static final int       msAwaitChipId                     = 2000;
-    private static final int       msAwaitSelfTest                   = 500;
+    private static final int       msAwaitSelfTest                   = 2000;
+    // The msAwaitSelfTest value is lore. We choose here to use the same value for awaiting chip id,
+    // on the (not completely unreasonable) theory that similar things are happening in the chip in both
+    // cases. A survey of other libraries is as follows:
+    //  1000ms:     https://github.com/OpenROV/openrov-software-arduino/blob/master/OpenROV/BNO055.cpp
+    //              https://github.com/alexstyl/Adafruit-BNO055-SparkCore-port/blob/master/Adafruit_BNO055.cpp
 
     // We always read as much as we can when we have nothing else to do
     private static final II2cDeviceClient.READ_MODE readMode = II2cDeviceClient.READ_MODE.REPEAT;
@@ -190,14 +195,22 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         // Switch back
         write8(REGISTER.PAGE_ID, 0);
 
-        // Run a self test. This appears to be a necessary step in order for the 
-        // sensor to be able to actually be used.
+        // Run a self test. This appears to be a necessary step in order for the
+        // sensor to be able to actually be used. That is, we've observed that absent this,
+        // the sensors do not return correct data. We wish that were documented somewhere.
         write8(REGISTER.SYS_TRIGGER, read8(REGISTER.SYS_TRIGGER) | 0x01);           // SYS_TRIGGER=0x3F
         elapsed.reset();
         boolean selfTestSuccessful = false;
+
+        // Per Section 3.9.2 Built In Self Test, when we manually kick of a self test,
+        // the accelerometer, gyro, and magnetometer are tested, but the microcontroller is not.
+        // So: we only wait for successful results from those three.
+        final int successfulResult = 0x07;
+        final int successfulResultMask = 0x07;
+
         while (!selfTestSuccessful && milliseconds(elapsed) < msAwaitSelfTest)
             {
-            selfTestSuccessful = (read8(REGISTER.SELFTEST_RESULT)&0x0F) == 0x0F;    // SELFTEST_RESULT=0x36
+            selfTestSuccessful = (read8(REGISTER.SELFTEST_RESULT)&successfulResultMask) == successfulResult;    // SELFTEST_RESULT=0x36
             }
         if (!selfTestSuccessful)
             throw new BNO055InitializationException(this, "self test failed");
