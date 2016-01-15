@@ -1,7 +1,6 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
-import com.qualcomm.ftcrobotcontroller.walnutLibrary.DistanceMotor;
-import com.qualcomm.ftcrobotcontroller.walnutLibrary.TimedMotor;
+import com.walnuthillseagles.WalnutLibrary.TimedMotor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 

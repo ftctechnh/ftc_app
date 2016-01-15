@@ -1,7 +1,6 @@
-package com.qualcomm.ftcrobotcontroller.walnutLibrary;
+package com.walnuthillseagles.WalnutLibrary;
 
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Gamepad;

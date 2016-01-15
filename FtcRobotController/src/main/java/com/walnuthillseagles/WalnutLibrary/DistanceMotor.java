@@ -1,4 +1,4 @@
-package com.qualcomm.ftcrobotcontroller.walnutLibrary;
+package com.walnuthillseagles.WalnutLibrary;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;

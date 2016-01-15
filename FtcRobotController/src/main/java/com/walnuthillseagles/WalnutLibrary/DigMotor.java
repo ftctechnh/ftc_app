@@ -1,4 +1,4 @@
-package com.qualcomm.ftcrobotcontroller.walnutLibrary;
+package com.walnuthillseagles.WalnutLibrary;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -7,7 +7,7 @@ import java.util.ArrayList;
 /**
  * Created by Yan Vologzhanin on 1/2/2016.
  */
-public class DigSpinner extends WalnutMotor {
+public class DigMotor extends WalnutMotor {
     //Fields
     //All available buttons... EVER (pls ;-;)
     public enum digValues{
@@ -123,8 +123,8 @@ public class DigSpinner extends WalnutMotor {
     private ArrayList<buttonEvent> Buttons;
     //Constructors
     //Create a forward and backward button event
-    public DigSpinner(DcMotor myMotor, String myName, boolean encoderCheck,
-                      String button, double power, boolean sticky){
+    public DigMotor(DcMotor myMotor, String myName, boolean encoderCheck,
+                    String button, double power, boolean sticky){
         //Create the motor
         super(myMotor, myName, encoderCheck);
         //Initilize and add button events

@@ -4,7 +4,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 //Walnut Imports
-import com.qualcomm.ftcrobotcontroller.walnutLibrary.*;
+import com.walnuthillseagles.WalnutLibrary.*;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -28,10 +28,10 @@ public class WalnutTeleOp extends OpMode{
     private Servo doors;
     //Button Assignments
     private ArrayList<WalnutMotor> motors;
-    private IncSpinner leftDrive;
-    private IncSpinner rightDrive;
-    private DigSpinner intake;
-    private IncSpinner slides;
+    private IncMotor leftDrive;
+    private IncMotor rightDrive;
+    private DigMotor intake;
+    private IncMotor slides;
     //No Button assignments available for servos :(
 
     //FTC Methods
@@ -42,11 +42,11 @@ public class WalnutTeleOp extends OpMode{
         intakeSpinners = hardwareMap.dcMotor.get("spinners");
         spool = hardwareMap.dcMotor.get("slideLeft");
         //Assign Buttons
-        leftDrive = new IncSpinner(motorLeft,"Left SimpleDrive",true,"LEFTY1", false, 0.05);
-        rightDrive = new IncSpinner(motorRight,"Right SimpleDrive",true,"RIGHTY1", false, 0.05);
-        slides = new IncSpinner(spool, "Slider", false, "LEFTY2",false,0.25);
+        leftDrive = new IncMotor(motorLeft,"Left SimpleDrive",true,"LEFTY1", false, 0.05);
+        rightDrive = new IncMotor(motorRight,"Right SimpleDrive",true,"RIGHTY1", false, 0.05);
+        slides = new IncMotor(spool, "Slider", false, "LEFTY2",false,0.25);
 
-        intake = new DigSpinner(intakeSpinners,"intake",false,
+        intake = new DigMotor(intakeSpinners,"intake",false,
                 "A2",-1,true);
         intake.addButton("B2",0,true);
         //Add Buttons to arrayList and initilize

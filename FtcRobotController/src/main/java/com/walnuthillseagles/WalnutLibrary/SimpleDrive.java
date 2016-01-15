@@ -1,19 +1,19 @@
-package com.qualcomm.ftcrobotcontroller.walnutLibrary;
+package com.walnuthillseagles.WalnutLibrary;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import java.util.ArrayList;
 
 public class SimpleDrive {
-    private ArrayList<IncSpinner> rightMotors;
-    private ArrayList<IncSpinner>  leftMotors;
+    private ArrayList<IncMotor> rightMotors;
+    private ArrayList<IncMotor>  leftMotors;
 
     //Constructors
     //Constructor for IncSpinners
-    public SimpleDrive(IncSpinner myLeft, IncSpinner myRight)
+    public SimpleDrive(IncMotor myLeft, IncMotor myRight)
     {
-        rightMotors = new ArrayList<IncSpinner>();
-        leftMotors = new ArrayList<IncSpinner>();
+        rightMotors = new ArrayList<IncMotor>();
+        leftMotors = new ArrayList<IncMotor>();
         rightMotors.add(myRight);
         leftMotors.add(myLeft);
     }
@@ -26,22 +26,22 @@ public class SimpleDrive {
                        double myRightDeadzone)
     {
         //Create new IncSpinners and assign to other constructor
-        this(new IncSpinner(myLeft, myLeftName, checkLeftEncoders,
+        this(new IncMotor(myLeft, myLeftName, checkLeftEncoders,
                         myLeftControl, leftReverse, myLeftDeadzone),
-                new IncSpinner(myRight, myRightName, checkRightEncoders,
+                new IncMotor(myRight, myRightName, checkRightEncoders,
                         myRightControl, rightReverse, myRightDeadzone));
 
     }
     //Getters and Setters
-    public ArrayList<IncSpinner> getLeftMotors(){
+    public ArrayList<IncMotor> getLeftMotors(){
         return leftMotors;
     }
-    public ArrayList<IncSpinner> getRightMotors(){
+    public ArrayList<IncMotor> getRightMotors(){
         return rightMotors;
     }
     //Will return null if it cannot find motor
-    public IncSpinner getMotor(String name){
-        IncSpinner ret;
+    public IncMotor getMotor(String name){
+        IncMotor ret;
         for(int i=0;i<rightMotors.size();i++){
             ret = rightMotors.get(i);
             if(ret.toString().equals(name))
@@ -56,15 +56,15 @@ public class SimpleDrive {
         return null;
     }
 
-    public void addLeftMotor(IncSpinner myLeft){
+    public void addLeftMotor(IncMotor myLeft){
         leftMotors.add(myLeft);
     }
-    public void addRightMotor(IncSpinner myRight){
+    public void addRightMotor(IncMotor myRight){
         rightMotors.add(myRight);
     }
     //Teleop
     public void operateDrive(){
-        IncSpinner ret;
+        IncMotor ret;
         for(int i=0;i<rightMotors.size();i++){
             rightMotors.get(i).operate();
         }
@@ -73,7 +73,7 @@ public class SimpleDrive {
         }
     }
     //Autonomous
-    protected void operateSpecificDrive(ArrayList<IncSpinner> myMotors, double pow){
+    protected void operateSpecificDrive(ArrayList<IncMotor> myMotors, double pow){
         for(int i=0;i<myMotors.size();i++){
             myMotors.get(i).powerMotor(pow);
         }

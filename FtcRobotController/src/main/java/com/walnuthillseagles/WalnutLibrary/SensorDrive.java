@@ -1,4 +1,4 @@
-package com.qualcomm.ftcrobotcontroller.walnutLibrary;
+package com.walnuthillseagles.WalnutLibrary;
 
 import com.qualcomm.robotcore.hardware.AccelerationSensor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
@@ -15,14 +15,14 @@ public class SensorDrive extends SimpleDrive {
     //Value used when motors need to be realigned
     public static final double MOTORADJUSTMENTPOW = 0.8;
     //Gyro only
-    public SensorDrive(IncSpinner myLeft, IncSpinner myRight, GyroSensor myGyro){
+    public SensorDrive(IncMotor myLeft, IncMotor myRight, GyroSensor myGyro){
         super(myLeft,myRight);
         gyro = myGyro;
         gyroOnly = true;
     }
 
     //Add an Accelerameter
-    public SensorDrive(IncSpinner myLeft, IncSpinner myRight,
+    public SensorDrive(IncMotor myLeft, IncMotor myRight,
                        GyroSensor myGyro,AccelerationSensor myAccel){
         this(myLeft, myRight, myGyro);
         accel = myAccel;

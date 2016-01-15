@@ -1,4 +1,4 @@
-package com.qualcomm.ftcrobotcontroller.walnutLibrary;
+package com.walnuthillseagles.WalnutLibrary;
 
 /**
  * Created by Yan Vologzhanin on 1/6/2016.
@@ -6,10 +6,10 @@ package com.qualcomm.ftcrobotcontroller.walnutLibrary;
 public class ButtonEvent {
     private int tablePos;
     private double pow;
-    private boolean isSticky;
+    private boolean isToggle;
     public enum digValues{
         A1, B1, X1, Y1, BACK1, START1, GUIDE1, LEFT1,RIGHT1,
-        DOWN1, UP1,LBUMP1,RBUMP1,LSTICK1, RSTICK1,
+        DOWN1, UP1, LBUMP1,RBUMP1, LSTICK1, RSTICK1,
         A2, B2, X2, Y2, BACK2, START2, GUIDE2, LEFT2, RIGHT2,
         DOWN2, UP2,LBUMP2, RBUMP2, LSTICK2, RSTICK2;
     }
@@ -20,26 +20,20 @@ public class ButtonEvent {
         tablePos = findTablePos(digValues.valueOf(daButton.toUpperCase()));
         pow = myPow;
         //Congradulatiionsns, you found a secret :D
-        isSticky = true;
+        isToggle = true;
     }
-    public ButtonEvent(String daButton, double myPow, boolean sticky){
+    public ButtonEvent(String daButton, double myPow, boolean Toggle){
         //Get table position from noncase sensitive button name
         tablePos = findTablePos(digValues.valueOf(daButton.toUpperCase()));
         pow = myPow;
-        isSticky = sticky;
+        isToggle = Toggle;
     }
     //Getters
     public double getPow(){
         return pow;
     }
-    public boolean checkSticky(){
-        return isSticky;
-    }
     public int getPos(){
         return tablePos;
-    }
-    public void setSticky(boolean sticky){
-        isSticky = sticky;
     }
     //Utility Methods
     private int findTablePos(digValues daButton){

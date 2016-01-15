@@ -1,7 +1,6 @@
-package com.qualcomm.ftcrobotcontroller.walnutLibrary;
+package com.walnuthillseagles.WalnutLibrary;
 
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.ftcrobotcontroller.walnutLibrary.DigSpinner;
 
 import java.util.ArrayList;
 
