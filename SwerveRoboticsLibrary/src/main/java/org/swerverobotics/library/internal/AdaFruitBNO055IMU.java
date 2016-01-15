@@ -213,7 +213,10 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
             selfTestSuccessful = (read8(REGISTER.SELFTEST_RESULT)&successfulResultMask) == successfulResult;    // SELFTEST_RESULT=0x36
             }
         if (!selfTestSuccessful)
-            throw new BNO055InitializationException(this, "self test failed");
+            {
+            int result = read8(REGISTER.SELFTEST_RESULT);
+            throw new BNO055InitializationException(this, String.format("self test failed: 0x%02x", result));
+            }
 
         if (this.parameters.calibrationData != null)
             writeCalibrationData(this.parameters.calibrationData);
