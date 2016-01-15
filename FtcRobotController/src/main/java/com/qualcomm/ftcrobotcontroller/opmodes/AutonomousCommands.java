@@ -113,7 +113,7 @@ public class AutonomousCommands extends LinearOpMode{
                 driveMC.setMotorPower(LEFT, -speed);
                 driveMC.setMotorPower(RIGHT, -speed);
             }
-            telemetry.addData("currentheading", gyro.getHeading());
+             telemetry.addData("currentheading", gyro.getHeading());
             telemetry.addData("targetHeading", targetHeading);
         }
         driveMC.setMotorPower(LEFT,0);

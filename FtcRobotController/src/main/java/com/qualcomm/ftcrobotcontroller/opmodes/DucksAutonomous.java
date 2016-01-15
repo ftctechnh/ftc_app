@@ -28,21 +28,13 @@ public class DucksAutonomous extends AutonomousCommands{
         }
         waitForStart();
 
-        //assorted commands for testing gyro
-        sleep(500);
-        turnRight(90,.5);
-        sleep(500);
-        turnLeft(90,.5);
-        sleep(500);
-        goForward(.8, 1000);
-        sleep(500);
-        turnRight(180,1);
-        sleep(500);
-        goForward(.8,1000);
-        sleep(500);
-        turnLeft(180,1);
-        driveMC.setMotorPower(LEFT, 0);
-        driveMC.setMotorPower(RIGHT, 0);
+        goForward(.5,2000);
+        turnRight(45,.5);
+        goForward(.5,3000);
+        turnRight(45,.5);
+        goForward(.3,10000);
+        //assorted commancds for testing gyro
+
 //        goForward(1,1000);
 
 //        //go forward after turning (obsolete)
@@ -54,7 +46,7 @@ public class DucksAutonomous extends AutonomousCommands{
 //
 //        turnLeft(75,.3);
 //
-//        //go forwards onto mountatin (obsolete)
+//        //go forwards onto mountain (obsolete)
 //        left.setPower(.6);
 //        right.setPower(-.6);
 //        Thread.sleep(2000);
