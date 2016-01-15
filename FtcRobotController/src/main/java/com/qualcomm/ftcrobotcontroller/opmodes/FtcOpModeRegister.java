@@ -72,7 +72,7 @@ public class FtcOpModeRegister implements OpModeRegister {
 
    //manager.register("ThreeColorTest", ThreeColorTest.class);
 
-    manager.register("RedMountainClimb", RedMountainAuto1.class);
+    manager.register("RedMountainClimbv2", RedMountainAuto1v2.class);
 
     manager.register("BlueMountainClimb", BlueMountClimb1.class);
 

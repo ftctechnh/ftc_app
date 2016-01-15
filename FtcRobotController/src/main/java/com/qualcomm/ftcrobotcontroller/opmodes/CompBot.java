@@ -400,7 +400,7 @@ public class CompBot implements DriverInterface, AttachmentInterface
     @Override
     public void pitchAllTracksAndMoveRobot(float time, float speed)
     {
-        double timeStart = System.currentTimeMillis();
+        double timeStart = System.currentTimeMillis ();
         double timeEnd = timeStart + (1000 * time);
         frontLeftMotor.setPower(speed);
         frontRightMotor.setPower(speed);
