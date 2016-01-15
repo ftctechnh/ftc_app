@@ -48,11 +48,32 @@ public interface IBNO055IMU
         /** units in which temperature are measured. See Section 3.6.1 (p31) of the BNO055 specification */
         public TEMPUNIT         temperatureUnit     = TEMPUNIT.CELSIUS;
         /** units in which angles and angular rates are measured. See Section 3.6.1 (p31) of the BNO055 specification */
-        public ANGLEUNIT        angleunit           = ANGLEUNIT.RADIANS;
+        public ANGLEUNIT        angleUnit           = ANGLEUNIT.RADIANS;
         /** units in which accelerations are measured. See Section 3.6.1 (p31) of the BNO055 specification */
-        public ACCELUNIT        accelunit           = ACCELUNIT.METERS_PERSEC_PERSEC;
+        public ACCELUNIT        accelUnit           = ACCELUNIT.METERS_PERSEC_PERSEC;
         /** directional convention for measureing pitch angles. See Section 3.6.1 (p31) of the BNO055 specification */
-        public PITCHMODE        pitchmode           = PITCHMODE.ANDROID;    // Section 3.6.2
+        public PITCHMODE        pitchMode           = PITCHMODE.ANDROID;    // Section 3.6.2
+
+        /** accelerometer range. See Section 3.5.2 (p27) and Table 3-4 (p21) of the BNO055 specification */
+        public ACCELRANGE       accelRange          = ACCELRANGE.G4;
+        /** accelerometer bandwidth. See Section 3.5.2 (p27) and Table 3-4 (p21) of the BNO055 specification */
+        public ACCELBANDWIDTH   accelBandwidth      = ACCELBANDWIDTH.HZ62_5;
+        /** accelerometer power mode. See Section 3.5.2 (p27) and Section 4.2.2 (p77) of the BNO055 specification */
+        public ACCELPOWERMODE   accelPowerMode      = ACCELPOWERMODE.NORMAL;
+
+        /** gyroscope range. See Section 3.5.2 (p27) and Table 3-4 (p21) of the BNO055 specification */
+        public GYRORANGE        gyroRange           = GYRORANGE.DPS2000;
+        /** gyroscope bandwidth. See Section 3.5.2 (p27) and Table 3-4 (p21) of the BNO055 specification */
+        public GYROBANDWIDTH    gyroBandwidth       = GYROBANDWIDTH.HZ32;
+        /** gyroscope power mode. See Section 3.5.2 (p27) and Section 4.4.4 (p78) of the BNO055 specification */
+        public GYROPOWERMODE    gyroPowerMode       = GYROPOWERMODE.NORMAL;
+
+        /** magnetometer data rate. See Section 3.5.3 (p27) and Section 4.4.3 (p77) of the BNO055 specification */
+        public MAGRATE          magRate             = MAGRATE.HZ10;
+        /** magnetometer op mode. See Section 3.5.3 (p27) and Section 4.4.3 (p77) of the BNO055 specification */
+        public MAGOPMODE        magOpMode           = MAGOPMODE.REGULAR;
+        /** magnetometer power mode. See Section 3.5.3 (p27) and Section 4.4.3 (p77) of the BNO055 specification */
+        public MAGPOWERMODE     magPowerMode        = MAGPOWERMODE.NORMAL;
 
         /** calibration data with which the BNO055 should be initialized */
         public byte[]           calibrationData     = null;
@@ -307,6 +328,17 @@ public interface IBNO055IMU
     enum ACCELUNIT  { METERS_PERSEC_PERSEC(0), MILLIGALS(1);               public final byte bVal; ACCELUNIT(int i) { bVal =(byte)i; }}
     enum PITCHMODE  { WINDOWS(0), ANDROID(1);                              public final byte bVal; PITCHMODE(int i) { bVal =(byte)i; }}
 
+    enum GYRORANGE      { DPS2000(0), DPS1000(1), DPS500(2), DPS250(3), DPS125(4);                               public final byte bVal; GYRORANGE(int i)      { bVal =(byte)(i<<0);}}
+    enum GYROBANDWIDTH  { HZ523(0), HZ230(1), HZ116(2), HZ47(3), HZ23(4), HZ12(5), HZ64(6), HZ32(7);             public final byte bVal; GYROBANDWIDTH(int i)  { bVal =(byte)(i<<3);}}
+    enum GYROPOWERMODE  { NORMAL(0), FAST(1), DEEP(2), SUSPEND(3), ADVANCED(4) ;                                 public final byte bVal; GYROPOWERMODE(int i)  { bVal =(byte)(i<<0);}}
+    enum ACCELRANGE     { G2(0), G4(1), G8(2), G16(3);                                                           public final byte bVal; ACCELRANGE(int i)     { bVal =(byte)(i<<0);}}
+    enum ACCELBANDWIDTH { HZ7_81(0), HZ15_63(1), HZ31_25(2), HZ62_5(3), HZ125(4), HZ250(5), HZ500(6), HZ1000(7); public final byte bVal; ACCELBANDWIDTH(int i) { bVal =(byte)(i<<2);}}
+    enum ACCELPOWERMODE { NORMAL(0), SUSPEND(1), LOW1(2), STANDBY(3), LOW2(4), DEEP(5);                          public final byte bVal; ACCELPOWERMODE(int i) { bVal =(byte)(i<<5);}}
+
+    enum MAGRATE        { HZ2(0), HZ6(1), HZ8(2), HZ10(3), HZ15(4), HZ20(5), HZ25(6), HZ30(7);                   public final byte bVal; MAGRATE(int i)        { bVal =(byte)(i<<0);}}
+    enum MAGOPMODE      { LOW(0), REGULAR(1), ENHANCED(2), HIGH(3);                                              public final byte bVal; MAGOPMODE(int i)      { bVal =(byte)(i<<3);}}
+    enum MAGPOWERMODE   { NORMAL(0), SLEEP(1), SUSPEND(2), FORCE(3);                                             public final byte bVal; MAGPOWERMODE(int i)      { bVal =(byte)(i<<5);}}
+
     /**
      * Sensor modes are described in Table 3-5 (p21) of the BNO055 specification,
      * where they are termed "operation modes".
@@ -472,7 +504,16 @@ public interface IBNO055IMU
             ACCEL_RADIUS_LSB(0X67),
             ACCEL_RADIUS_MSB(0X68),
             MAG_RADIUS_LSB(0X69),
-            MAG_RADIUS_MSB(0X6A);
+            MAG_RADIUS_MSB(0X6A),
+
+            /** Selected Page 1 registers */
+            ACC_CONFIG(0x08),
+            MAG_CONFIG(0x09),
+            GYR_CONFIG_0(0x0A),
+            GYR_CONFIG_1(0x0B),
+            ACC_SLEEP_CONFIG(0x0C),
+            GYR_SLEEP_CONFIG(0x0D);
+
         //------------------------------------------------------------------------------------------
         public final byte bVal;
         private REGISTER(int i)
