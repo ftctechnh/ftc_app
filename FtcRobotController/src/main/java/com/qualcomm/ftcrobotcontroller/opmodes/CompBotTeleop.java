@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 /**
  * Created by subash on 11/17/2015.
  */
+
 public class CompBotTeleop extends OpMode
 {
     CompBot compBot;
@@ -44,7 +45,7 @@ public class CompBotTeleop extends OpMode
             compBot.getDiverterServo().setPosition(0.5f);
         }
 
-        if(gamepad2.dpad_up)
+        /*if(gamepad2.dpad_up)
         {
             compBot.getTapeMeasureServo().setPosition(1.0f);
         }
@@ -55,15 +56,17 @@ public class CompBotTeleop extends OpMode
         else
         {
             compBot.getTapeMeasureServo().setPosition(0.5f);
-        }
+        }*/
 
         if(gamepad2.a)
         {
-            compBot.getClimberReleaseServo().setPosition(1.0f);
+            compBot.getClimberReleaseServoRight().setPosition(1.0f);
+            compBot.getClimberReleaseServoLeft().setPosition(0.0f);
         }
         else if(gamepad2.y)
         {
-            compBot.getClimberReleaseServo().setPosition(0.5f);
+            compBot.getClimberReleaseServoRight().setPosition(0.4f);
+            compBot.getClimberReleaseServoLeft().setPosition(0.6f);
         }
 
         if(gamepad2.x)

@@ -197,7 +197,6 @@ public class FtcRobotControllerActivity extends Activity {
         return false;
       }
     });
-
   }
 
   @Override

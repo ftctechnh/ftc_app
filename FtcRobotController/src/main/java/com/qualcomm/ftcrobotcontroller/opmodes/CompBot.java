@@ -23,8 +23,9 @@ public class CompBot implements DriverInterface, AttachmentInterface
     static Servo diverterServo;
     static Servo dispenserServo;
     static Servo dispenserFlipperServo;
-    static Servo tapeMeasureServo;
-    static Servo climberReleaseServo;
+    //static Servo tapeMeasureServo;
+    static Servo climberReleaseServoRight;
+    static Servo climberReleaseServoLeft;
     private static final String frontLeftMotorName = "frontLeft";
     private static final String frontRightMotorName = "frontRight";
     private static final String backLeftMotorName = "backLeft";
@@ -36,8 +37,9 @@ public class CompBot implements DriverInterface, AttachmentInterface
     private static final String diverterServoName = "diverter";
     private static final String dispenserServoName = "dispenser";
     private static final String dispenserFlipperServoName = "dispenserFlipper";
-    private static final String tapeMeasureServoName = "tapeMeasure";
-    private static final String climberReleaseServoName = "climberRelease";
+    //private static final String tapeMeasureServoName = "tapeMeasure";
+    private static final String climberReleaseServoRightName = "climberReleaseRight";
+    private static final String climberReleaseServoLeftName = "climberReleaseLeft";
     //PhoneGyrometer gyro;
     boolean vendDeploy = false;
     boolean buttonArm = true;
@@ -45,6 +47,13 @@ public class CompBot implements DriverInterface, AttachmentInterface
     boolean buttonReady = true;
     boolean switchSides = false;
     boolean buttonStatus = true;
+
+    boolean climberArm = true;
+    int climberPosition = 0;
+
+    boolean rotatorArmUp = true;
+    boolean rotatorArmDown = true;
+    float rotatorSpeed = 1.0f;
 
 
     public DcMotor getLeftMotor()
@@ -92,13 +101,17 @@ public class CompBot implements DriverInterface, AttachmentInterface
     {
         return dispenserFlipperServo;
     }
-    public Servo getTapeMeasureServo()
+   /* public Servo getTapeMeasureServo()
     {
         return tapeMeasureServo;
-    }
-    public Servo getClimberReleaseServo()
+    }*/
+    public Servo getClimberReleaseServoRight()
     {
-        return climberReleaseServo;
+        return climberReleaseServoRight;
+    }
+    public Servo getClimberReleaseServoLeft()
+    {
+        return climberReleaseServoLeft;
     }
 
     public boolean flipBool(boolean bool)
@@ -127,12 +140,14 @@ public class CompBot implements DriverInterface, AttachmentInterface
         diverterServo = hardwareMap.servo.get(diverterServoName);
         dispenserServo = hardwareMap.servo.get(dispenserServoName);
         dispenserFlipperServo = hardwareMap.servo.get(dispenserFlipperServoName);
-        tapeMeasureServo = hardwareMap.servo.get(tapeMeasureServoName);
-        climberReleaseServo = hardwareMap.servo.get(climberReleaseServoName);
+        //tapeMeasureServo = hardwareMap.servo.get(tapeMeasureServoName);
+        climberReleaseServoRight = hardwareMap.servo.get(climberReleaseServoRightName);
+        climberReleaseServoLeft = hardwareMap.servo.get(climberReleaseServoLeftName);
         dispenserServo.setPosition(0.5f);
         dispenserFlipperServo.setPosition(1.0f);
-        tapeMeasureServo.setPosition(0.5f);
-        climberReleaseServo.setPosition(1.0f);
+       //tapeMeasureServo.setPosition(0.5f);
+        climberReleaseServoRight.setPosition(1.0f);
+        climberReleaseServoLeft.setPosition(0.0f);
         diverterServo.setPosition(0.5f);
     }
 
@@ -325,6 +340,67 @@ public class CompBot implements DriverInterface, AttachmentInterface
             }*/
 
     }
+
+
+    public void climberPos(boolean button)
+    {
+        if(button)
+        {
+            if(climberArm)
+            {
+                climberPosition++;
+                if (climberPosition >= 3) {
+                    climberPosition = 0;
+                }
+            }
+            climberArm = false;
+        }
+        else
+        {
+            climberArm = true;
+        }
+    }
+    public void rotorUp(boolean button)
+    {
+        if(button)
+        {
+            if(rotatorArmUp)
+            {
+                rotatorSpeed=rotatorSpeed+0.1f;
+                if(rotatorSpeed > 1.0f)
+                {
+                    rotatorSpeed = 1.0f;
+                }
+                rotatorArmUp = false;
+            }
+        }
+        else
+        {
+            rotatorArmUp = true;
+        }
+    }
+
+    public void rotorDown(boolean button)
+    {
+        if(button)
+        {
+            if(rotatorArmDown)
+            {
+                rotatorSpeed=rotatorSpeed-0.1f;
+                if(rotatorSpeed < 0.4f)
+                {
+                    rotatorSpeed = 0.4f;
+                }
+                rotatorArmDown = false;
+            }
+        }
+        else
+        {
+            rotatorArmDown = true;
+        }
+    }
+
+
     public void checkAndFlipDispenserServo(boolean button) {
         if (button) {
             vendDeploy ^= buttonArm;
@@ -470,8 +546,9 @@ public class CompBot implements DriverInterface, AttachmentInterface
         diverterServo.close();
         dispenserFlipperServo.close();
         dispenserServo.close();
-        tapeMeasureServo.close();
-        climberReleaseServo.close();
+        //tapeMeasureServo.close();
+        climberReleaseServoRight.close();
+        climberReleaseServoLeft.close();
     }
 
 }

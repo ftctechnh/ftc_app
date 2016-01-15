@@ -35,13 +35,13 @@ public class CompBotTeleopV2 extends OpMode {
             compBot.getDiverterServo().setPosition(0.5f);
         }
 
-        if (gamepad2.dpad_up) {
+       /* if (gamepad2.dpad_up) {
             compBot.getTapeMeasureServo().setPosition(1.0f);
         } else if (gamepad2.dpad_down) {
             compBot.getTapeMeasureServo().setPosition(0.0f);
         } else {
             compBot.getTapeMeasureServo().setPosition(0.5f);
-        }
+        }*/
 
         if (gamepad2.a) {
             compBot.getGrabberMotor().setPower(-1.0f);
@@ -54,9 +54,12 @@ public class CompBotTeleopV2 extends OpMode {
         }
 
         if (gamepad2.x) {
-            compBot.getClimberReleaseServo().setPosition(0.5f);
-        } else if (gamepad2.y) {
-            compBot.getClimberReleaseServo().setPosition(0.0f);
+            compBot.getClimberReleaseServoRight().setPosition(1.0f);
+            compBot.getClimberReleaseServoLeft().setPosition(0.0f);
+        } else if (gamepad2.y)
+        {
+            compBot.getClimberReleaseServoRight().setPosition(0.4f);
+            compBot.getClimberReleaseServoLeft().setPosition(0.6f);
         }
 
         if (gamepad2.left_trigger > 0.5f) {
@@ -81,6 +84,7 @@ public class CompBotTeleopV2 extends OpMode {
 
 
             if (gamepad1.a) {
+                telemetry.addData("a button pressed", 0);
                 compBot.getFrontRightMotor().setPower(-0.2f);
                 compBot.getFrontLeftMotor().setPower(-0.2f);
                 compBot.getBackLeftMotor().setPower(-0.2f);
@@ -110,4 +114,8 @@ public class CompBotTeleopV2 extends OpMode {
                     }
                 }
     }
+
+
+
+
 }
