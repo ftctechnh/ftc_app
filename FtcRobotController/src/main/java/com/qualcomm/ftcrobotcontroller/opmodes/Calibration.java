@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
 import java.io.BufferedReader;
@@ -35,6 +36,9 @@ public class Calibration extends OpMode {
     DcMotor backRightMotor;
     DcMotor frontRightMotor;
     DcMotor backLeftMotor;
+    DcMotor linearMotor;
+
+    Servo rButtonServo;
 
     double redValue;
     double blueValue;
@@ -70,6 +74,9 @@ public class Calibration extends OpMode {
         backRightMotor = hardwareMap.dcMotor.get("backR");
         backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
         frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
+
+        rButtonServo = hardwareMap.servo.get("rightbutton");
+        rButtonServo.setPosition(1);
     }
 
     public void loop() {
@@ -105,6 +112,11 @@ public class Calibration extends OpMode {
         }
         if (gamepad1.a) { //Black
             matValue = opticalDistanceSensor.getLightDetected();
+        }
+        if (gamepad1.left_stick_button || gamepad2.left_stick_button) {
+            rButtonServo.setPosition(0);
+        } else {
+            rButtonServo.setPosition(1);
         }
     }
 
