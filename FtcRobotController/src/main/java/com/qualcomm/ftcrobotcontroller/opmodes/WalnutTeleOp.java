@@ -42,7 +42,7 @@ public class WalnutTeleOp extends OpMode{
         intakeSpinners = hardwareMap.dcMotor.get("spinners");
         spool = hardwareMap.dcMotor.get("slideLeft");
         //Assign Buttons
-        leftDrive = new IncSpinner(motorLeft,"Left SimpleDrive",true,"LEFTY1", true, 0.05);
+        leftDrive = new IncSpinner(motorLeft,"Left SimpleDrive",true,"LEFTY1", false, 0.05);
         rightDrive = new IncSpinner(motorRight,"Right SimpleDrive",true,"RIGHTY1", false, 0.05);
         slides = new IncSpinner(spool, "Slider", false, "LEFTY2",false,0.25);
 
@@ -77,9 +77,9 @@ public class WalnutTeleOp extends OpMode{
         //Why Servos why???
         belt.setPosition(1 - (gamepad2.right_stick_x + 1.0) / 2.0);
         doors.setPosition((gamepad2.left_stick_x / 2.0) + 0.5);
+        //motorLeft.setPower(WalnutMotor.GamepadUpdater.doubleValues[1]);
         //Used to compare actual and abstract values to see if value is updating fast enough
-        telemetry.addData("Direct Gamepad", String.format("%2f", gamepad1.left_stick_y));
-        telemetry.addData("Gamepad Updater",String.format("%2f",WalnutMotor.GamepadUpdater.doubleValues[1]));
+        telemetry.addData("Direct Gamepad", String.format("%d", motorRight.getCurrentPosition()));
     }
     public void stop(){
        for(int i = 0;i<motors.size();i++){

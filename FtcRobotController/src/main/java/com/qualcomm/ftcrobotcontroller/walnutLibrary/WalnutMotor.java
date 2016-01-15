@@ -137,12 +137,14 @@ public abstract class WalnutMotor {
         name = myName;
         if(encoderCheck){
             hasEncoders = true;
-            motor.setMode
-                    (DcMotorController.RunMode.valueOf("RUN_USING_ENCODERS"));
             motor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+            motor.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         }
-        else
+        else{
             hasEncoders = false;
+            motor.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        }
+
     }
     //Getters and Setters
     public DcMotor getMotor(){
@@ -159,6 +161,10 @@ public abstract class WalnutMotor {
     }
     //Methods
     public void stopMotor(){
+        if(hasEncoders){
+            motor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+            motor.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        }
         motor.setPower(0);
     }
     public String toString(){
