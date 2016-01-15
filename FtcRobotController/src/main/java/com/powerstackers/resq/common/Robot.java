@@ -44,6 +44,8 @@ public class Robot {
     private DcMotor motorRightB;
     private DcMotor motorBrush;
     private DcMotor motorLift;
+    private DcMotor motorLHang;
+    private DcMotor motorRHang;
 
     private Servo servoTapeMeasure;
     private Servo servoBeacon;
@@ -68,7 +70,10 @@ public class Robot {
         motorRightB = mode.hardwareMap.dcMotor.get("motorBRight");
         motorBrush  = mode.hardwareMap.dcMotor.get("motorBrush");
         motorLift   = mode.hardwareMap.dcMotor.get("motorLift");
+        motorLHang  = mode.hardwareMap.dcMotor.get("motorLHang");
+        motorRHang  = mode.hardwareMap.dcMotor.get("motorRHang");
 
+        motorRHang.setDirection(DcMotor.Direction.REVERSE);
         motorLift.setDirection(DcMotor.Direction.REVERSE);
         motorRightA.setDirection(DcMotor.Direction.REVERSE);
         motorRightB.setDirection(DcMotor.Direction.REVERSE);
@@ -147,6 +152,15 @@ public class Robot {
      */
     public void setLift(MotorSetting setting) {
         toggleMotor(motorLift, setting, RobotConstants.LIFT_SPEED);
+    }
+
+    /**
+     * set direction of Hang: Reverse, Stop, or Forward.
+     * @param  setting MotorSetting enum indicating the direction.
+     */
+    public void setHang(MotorSetting setting) {
+        toggleMotor(motorLHang, setting, RobotConstants.HANG_SPEED);
+        toggleMotor(motorRHang, setting, RobotConstants.HANG_SPEED);
     }
 
     /**
