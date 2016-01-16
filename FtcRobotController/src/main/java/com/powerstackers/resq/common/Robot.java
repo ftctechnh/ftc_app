@@ -80,7 +80,7 @@ public class Robot {
         motorWinchRight.setDirection(DcMotor.Direction.REVERSE);
 
         servoTapeMeasure = mode.hardwareMap.servo.get("servoTapeMeasure");
-        servoTapeMeasure = mode.hardwareMap.servo.get("servoTapeTilt");
+        servoTapeTilt = mode.hardwareMap.servo.get("servoTapeTilt");
 //        servoBeacon      = mode.hardwareMap.servo.get("servoBeacon");
 //        servoHopperRight = mode.hardwareMap.servo.get("servoHopperRight");
         servoHopperLeft = mode.hardwareMap.servo.get("servoHopperLeft");

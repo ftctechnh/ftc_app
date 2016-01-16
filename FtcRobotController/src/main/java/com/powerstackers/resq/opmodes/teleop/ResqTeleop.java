@@ -147,9 +147,13 @@ public class ResqTeleop extends OpMode {
         }
 
         if (buttonTapeUp) {
-            robot.setTapeTilt(tapeTiltPosition + servoDelta);
+            tapeTiltPosition += servoDelta;
+            Range.clip(tapeTiltPosition, 0.0, 1.0);
+            robot.setTapeTilt(tapeTiltPosition);
         } else if (buttonTapeDown) {
-            robot.setTapeTilt(tapeTiltPosition - servoDelta);
+            tapeTiltPosition -= servoDelta;
+            Range.clip(tapeTiltPosition, 0.0, 1.0);
+            robot.setTapeTilt(tapeTiltPosition);
         }
 
         // Set the hopper doors.
