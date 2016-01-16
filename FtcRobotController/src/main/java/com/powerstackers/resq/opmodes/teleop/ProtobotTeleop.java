@@ -85,7 +85,7 @@ public class ProtobotTeleop extends OpMode {
 //    Servo servoRight;
     Servo servoTape;
     Servo servoPivot;
-//    Servo servoBeacon;
+
 
     public ProtobotTeleop() {
 
@@ -246,7 +246,7 @@ public class ProtobotTeleop extends OpMode {
 //        servoLeftPosition = Range.clip(servoLeftPosition, servoLeft_MIN_RANGE, servoLeft_MAX_RANGE);
         servoTapePosition = Range.clip(servoTapePosition, servoTape_MIN_RANGE, servoTape_MAX_RANGE);
 //        servoPivotPosition = Range.clip
-//        servoBeaconPosition = Range.clip(servoBeaconPosition, servoBeacon_MIN_RANGE, servoBeacon_MAX_RANGE);
+//
 
         /* write position values to the wrist and claw servo
          *

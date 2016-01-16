@@ -48,11 +48,14 @@ public class ResqTeleop extends OpMode {
     float stickValueP1Right;
     float stickValueP2Left;
     MotorSetting settingTapeMeasureServo;
-    MotorSetting settingLiftMotor;
-    MotorSetting settingBrushMotor;
+    MotorSetting settingLiftMotor = MotorSetting.STOP;
+    MotorSetting settingBrushMotor = MotorSetting.STOP;
+    MotorSetting settingHangMotor = MotorSetting.STOP;
 
     boolean buttonLiftOut;
     boolean buttonLiftIn;
+    boolean buttonHangOut;
+    boolean buttonHangIn;
     boolean buttonBrushOn;
     boolean buttonBrushRev;
 
@@ -94,13 +97,17 @@ public class ResqTeleop extends OpMode {
         // Neatly read all the button assignments for clarity purposes.
         buttonLiftOut     = gamepad1.left_bumper;
         buttonLiftIn      = gamepad1.right_bumper;
+        buttonHangIn      = gamepad1.dpad_down;
+        buttonHangOut     = gamepad1.dpad_up;
 
         // Everyone wants the manipulator to control the brush
-        buttonBrushOn     = gamepad2.y;
-        buttonBrushRev    = gamepad2.a;
+        buttonBrushOn     = gamepad2.x;
+        buttonBrushRev    = gamepad2.b;
 
-        buttonTapeOut     = gamepad2.y;
-        buttonTapeIn      = gamepad2.a;
+        buttonTapeOut     = gamepad2.dpad_right;
+        buttonTapeIn      = gamepad2.dpad_left;
+//        buttonTapeUp      = gamepad2.dpad_up;
+//        buttonTapeDown    = gamepad2.dpad_down;
         buttonHopperLeft  = gamepad2.left_bumper;
         buttonHopperRight = gamepad2.right_bumper;
         buttonClimbers    = gamepad2.right_trigger > 0.5;
@@ -154,8 +161,17 @@ public class ResqTeleop extends OpMode {
             robot.setAllianceHopper(DoorSetting.CLOSE, allianceColor);
         }
 
+        //Hang
+        if (buttonHangIn) {
+            robot.setHang(MotorSetting.FORWARD);
+        } else if (buttonHangOut) {
+            robot.setHang(MotorSetting.REVERSE);
+        } else {
+            robot.setHang(MotorSetting.STOP);
+        }
+
         // Set the climber flipper value.
-        if (buttonClimbers) { // TODO Are triggers variable? I thought they were buttons.
+        if (buttonClimbers) { // TODO Are triggers variable? I thought they were buttons. -derek = yes
             robot.setClimberFlipper(DoorSetting.OPEN);
         } else {
             robot.setClimberFlipper(DoorSetting.CLOSE);
@@ -193,6 +209,7 @@ public class ResqTeleop extends OpMode {
         robot.setTapeMeasure(settingTapeMeasureServo);
         robot.setLift(settingLiftMotor);
         robot.setBrush(settingBrushMotor);
+        robot.setHang(settingHangMotor);
 
         telemetry.addData("right stick", stickValueP1Right);
         telemetry.addData("left stick ", stickValueP1Left);

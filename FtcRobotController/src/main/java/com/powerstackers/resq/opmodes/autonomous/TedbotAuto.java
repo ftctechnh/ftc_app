@@ -10,22 +10,18 @@ import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
  */
 public class TedbotAuto extends LinearOpMode {
 
-//    final static double servoBeacon_MIN_RANGE  = 0.00;
-//    final static double servoBeacon_MAX_RANGE  = 1.00;
 
     double enRightPosition = 0.0;
     double enLeftPosition = 0.0;
 
-    double EnRightPower = 1;
-    double EnLeftpower = 1;
+//    double EnRightpower = 1;
+//    double EnLeftpower = 1;
 
-    double EnRightDelta = 1000;
-    double EnLeftDelta = 1000;
-
-    /** position of servo <Value of Variable>
-     *
-     */
-//    double servoBeaconPosition;
+    // Robot Movements in steps
+    double EnRightS1 = -1000;
+//    double EnLeftS1 = 1000;
+    double EnRightS2 = -500;
+//    double EnLeftS2 = 500;
 
     //Color Values
     float hsvValues[] = {0, 0, 0};
@@ -35,14 +31,14 @@ public class TedbotAuto extends LinearOpMode {
 //    ColorSensor colorSensor;
 //    ColorSensor colorFSensor;
 //    TouchSensor touchSensor;
+
     DcMotor motorBRight;
     DcMotor motorBLeft;
-//    Servo servoBeacon;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-        /**
+        /*
          * Use the hardwareMap to get the dc motors and servos by name. Note
          * that the names of the devices must match the names used when you
          * configured your robot and created the configuration file.
@@ -51,7 +47,14 @@ public class TedbotAuto extends LinearOpMode {
         hardwareMap.logDevices();
         cdim = hardwareMap.deviceInterfaceModule.get("dim");
 
-        /**
+        /*Motors
+         *
+         */
+        motorBRight = hardwareMap.dcMotor.get("motorBRight");
+        motorBLeft = hardwareMap.dcMotor.get("motorBLeft");
+        motorBRight.setDirection(DcMotor.Direction.REVERSE);
+
+        /*
          * Sensors
          */
 //        colorSensor = ClassFactory.createSwerveColorSensor(this, this.hardwareMap.colorSensor.get("colorSensor"));
@@ -60,40 +63,75 @@ public class TedbotAuto extends LinearOpMode {
 //        colorFSensor.enableLed(true);
 //        touchSensor = hardwareMap.touchSensor.get("touchSensor");
 
-        /**
+        /*
          * Motors
          */
-        motorBRight = hardwareMap.dcMotor.get("motorBRight");
-        motorBLeft = hardwareMap.dcMotor.get("motorBLeft");
-        motorBRight.setDirection(DcMotor.Direction.REVERSE);
         motorBRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        motorBLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-
-        /**
-         * Servos
-         */
-//        servoBeacon = hardwareMap.servo.get("servoBeacon");
+//        motorBLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        motorBRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
 
         // wait for the start button to be pressed
-//        waitForStart();
+        waitForStart();
+
+        while (enRightPosition > EnRightS1) {
+//            enLeftPosition = motorBLeft.getCurrentPosition();
+           enRightPosition = motorBRight.getCurrentPosition();
+            motorBRight.setPower(1);
+            motorBLeft.setPower(1);
+            telemetry.addData("EncoderBL", "Value: " + String.valueOf(motorBLeft.getCurrentPosition()));
+            telemetry.addData("EncoderBR","Value: "+String.valueOf(motorBRight.getCurrentPosition()));
 
 
-        enRightPosition = motorBRight.getCurrentPosition();
+//            if (enLeftPosition > EnLeftS1 && enRightPosition > EnRightS1) {
+//
+//                motorBLeft.setPower(0);
+//                motorBRight.setPower(0);
+//
+//            }
+        }
 
-        while (enLeftPosition < EnLeftDelta) {
-            enLeftPosition = motorBLeft.getCurrentPosition();
-            motorBLeft.setPower(EnLeftpower);
+        motorBLeft.setPower(0);
+        motorBRight.setPower(0);
+//        motorBLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        motorBRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        motorBRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+
+        while (enRightPosition < EnRightS2) {
+//            enLeftPosition = motorBLeft.getCurrentPosition();
+            enRightPosition = motorBRight.getCurrentPosition();
+            motorBRight.setPower(1);
+            motorBLeft.setPower(-1);
             telemetry.addData("EncoderBL", "Value: " + String.valueOf(motorBLeft.getCurrentPosition()));
             telemetry.addData("EncoderBR", "Value: " + String.valueOf(motorBRight.getCurrentPosition()));
         }
 
         motorBLeft.setPower(0);
+        motorBRight.setPower(0);
+//        motorBLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        motorBRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        motorBRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+
+        while (enRightPosition > EnRightS1) {
+//            enLeftPosition = motorBLeft.getCurrentPosition();
+            enRightPosition = motorBRight.getCurrentPosition();
+            motorBRight.setPower(1);
+            motorBLeft.setPower(1);
+            telemetry.addData("EncoderBL", "Value: " + String.valueOf(motorBLeft.getCurrentPosition()));
+            telemetry.addData("EncoderBR", "Value: " + String.valueOf(motorBRight.getCurrentPosition()));
+
+        }
+
+        motorBLeft.setPower(0);
+        motorBRight.setPower(0);
+//        motorBLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        motorBRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        motorBRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 
         // Motor controls
-        motorBLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS); // set to button later
-        motorBRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        motorBLeft.setTargetPosition(1000);
-        motorBRight.setTargetPosition(1000);
+//        motorBLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS); //TODO set to button later
+//        motorBRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+//        motorBLeft.setTargetPosition(1000);
+//        motorBRight.setTargetPosition(1000);
 //       while (true) {
 
 
@@ -101,20 +139,20 @@ public class TedbotAuto extends LinearOpMode {
 
 
 
-        /** ColorSensor Controls
+        /* ColorSensor Controls
          *
          */
 //        if (colorSensor.blue() > colorSensor.red()) {
-//            servoBeaconPosition = 0.20;
+//            RobotAuto.servoBeaconPosition = 0.20;
 //
 //        } else if (colorSensor.red() > colorSensor.blue()) {
-//            servoBeaconPosition = 0.80;
+//            RobotAuto.servoBeaconPosition = 0.80;
 //        } else {
-//            servoBeaconPosition = 0.50;
+//            RobotAuto.servoBeaconPosition = 0.50;
 //        }
 
 
 
-
+//    stop();
     }
 }
