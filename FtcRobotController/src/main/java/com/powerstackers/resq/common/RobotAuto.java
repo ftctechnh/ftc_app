@@ -35,8 +35,8 @@ public class RobotAuto {
     public static final double EnLeftpower = -1;
 
     // Robot Movements in steps
-    public static final double EnRightS1 = -9600;
-    public static final double EnLeftS1 = 9600;
+    public static final double EnRightS1 = -9000;
+    public static final double EnLeftS1 = 9000;
     public static final double EnRightS2 = -500;
     public static final double EnLeftS2 = 500;
 
