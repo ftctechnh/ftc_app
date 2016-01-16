@@ -38,13 +38,13 @@ public class DigMotor extends WalnutMotor {
         for(int i = 0;i<Buttons.size();i++){
             temp = Buttons.get(i);
             if(WalnutMotor.GamepadUpdater.boolValues[temp.getPos()]){
-                this.powerMotor(temp.getPow());
+                this.power(temp.getPow());
             }
             else if(!temp.checkToggle()&&!WalnutMotor.GamepadUpdater.boolValues[temp.getPos()]){
-                this.stopMotor();
+                this.stop();
             }
 
         }
     }
-    //Autonomous Methods in Walnut Motor (Called "powerMotor(int pow)")
+    //Autonomous Methods in Walnut Motor (Called "power(int pow)")
 }

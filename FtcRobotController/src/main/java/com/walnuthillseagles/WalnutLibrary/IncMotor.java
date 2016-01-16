@@ -126,7 +126,7 @@ public class IncMotor extends WalnutMotor {
         if(Math.abs(val)>deadZone)
             this.getMotor().setPower(val*orientation);
         else
-            this.stopMotor();
+            this.stop();
     }
-    //Autonomous Methods in Walnut Motor (Called "powerMotor(int pow)")
+    //Autonomous Methods in Walnut Motor (Called "power(int pow)")
 }

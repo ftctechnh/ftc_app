@@ -75,7 +75,7 @@ public class SimpleDrive {
     //Autonomous
     protected void operateSpecificDrive(ArrayList<IncMotor> myMotors, double pow){
         for(int i=0;i<myMotors.size();i++){
-            myMotors.get(i).powerMotor(pow);
+            myMotors.get(i).power(pow);
         }
     }
 

@@ -79,7 +79,7 @@ public class WalnutTeleOp extends OpMode{
     }
     public void stop(){
        for(int i = 0;i<motors.size();i++){
-           motors.get(i).stopMotor();
+           motors.get(i).stop();
        }
         belt.setPosition(0.5);
         doors.setPosition(0.5);

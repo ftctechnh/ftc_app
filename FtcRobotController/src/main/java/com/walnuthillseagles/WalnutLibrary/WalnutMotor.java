@@ -166,7 +166,7 @@ public abstract class WalnutMotor {
         name = myName;
     }
     //Methods
-    public void stopMotor(){
+    public void stop(){
         if(hasEncoders){
             motor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
             motor.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
@@ -174,7 +174,7 @@ public abstract class WalnutMotor {
         motor.setPower(0);
     }
 
-    public void powerMotor(double pow){
+    public void power(double pow){
         if(pow>=-1.0&&pow <=1.0)
             motor.setPower(pow);
         else
