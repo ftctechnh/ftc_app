@@ -31,12 +31,12 @@ public class RobotAuto {
     public static double enRightPosition = 0.0;
     public static double enLeftPosition = 0.0;
 
-    public static final double EnRightpower = 1;
-    public static final double EnLeftpower = 1;
+    public static final double EnRightpower = -1;
+    public static final double EnLeftpower = -1;
 
     // Robot Movements in steps
-    public static final double EnRightS1 = -1000;
-    public static final double EnLeftS1 = 1000;
+    public static final double EnRightS1 = -9600;
+    public static final double EnLeftS1 = 9600;
     public static final double EnRightS2 = -500;
     public static final double EnLeftS2 = 500;
 
