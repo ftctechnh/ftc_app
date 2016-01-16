@@ -165,9 +165,6 @@ public abstract class WalnutMotor {
     public void setName(String myName){
         name = myName;
     }
-    public void setMotor(DcMotor myMotor){
-        motor = myMotor;
-    }
     //Methods
     public void stopMotor(){
         if(hasEncoders){
