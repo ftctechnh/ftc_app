@@ -25,9 +25,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.GyroSensor;
-import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.swerverobotics.library.ClassFactory;
@@ -52,6 +50,8 @@ public class Robot {
     private Servo servoHopperRight;
     private Servo servoHopperLeft;
     private Servo servoClimberFlipper;
+    private Servo servoChurroLeft;
+    private Servo servoChurroRight;
 
     private DeviceInterfaceModule dim;
     private ColorSensor sensorColor;
@@ -83,10 +83,14 @@ public class Robot {
         servoHopperRight = mode.hardwareMap.servo.get("servoHopperRight");
         servoHopperLeft = mode.hardwareMap.servo.get("servoHopperLeft");
         servoClimberFlipper = mode.hardwareMap.servo.get("servoClimbers");
+        servoChurroLeft = mode.hardwareMap.servo.get("servoChurroLeft");
+        servoChurroRight = mode.hardwareMap.servo.get("servoChurroRight");
 
         servoHopperLeft.setPosition(RobotConstants.HOPPER_LEFT_CLOSE);
         servoHopperRight.setPosition(RobotConstants.HOPPER_RIGHT_CLOSE);
         servoClimberFlipper.setPosition(RobotConstants.CLIMBER_EXTEND);
+        servoChurroRight.setPosition(RobotConstants.CHURRO_RIGHT_OPEN);
+        servoChurroLeft.setPosition(RobotConstants.CHURRO_LEFT_OPEN);
 
         dim = mode.hardwareMap.deviceInterfaceModule.get("dim");
         sensorColor = ClassFactory.createSwerveColorSensor(mode,
@@ -105,6 +109,8 @@ public class Robot {
         servoClimberFlipper.setPosition(RobotConstants.CLIMBER_EXTEND);
         servoHopperLeft.setPosition(RobotConstants.HOPPER_LEFT_CLOSE);
         servoHopperRight.setPosition(RobotConstants.HOPPER_RIGHT_CLOSE);
+        servoChurroRight.setPosition(RobotConstants.CHURRO_RIGHT_OPEN);
+        servoChurroLeft.setPosition(RobotConstants.CHURRO_LEFT_OPEN);
         //sensorGyro.calibrate();
         // Give the gyroscope some time to calibrate
 //        while (sensorGyro.isCalibrating()) {
@@ -279,6 +285,22 @@ public class Robot {
             servoClimberFlipper.setPosition(RobotConstants.CLIMBER_RETRACT);
         } else {
             servoClimberFlipper.setPosition(RobotConstants.CLIMBER_EXTEND);
+        }
+    }
+
+    /**
+     * Set the position of the churro grabber servos.
+     * In this case, the OPEN position is the retracted, <b>not grabbing</b> position, and close is
+     * the opposite.
+     * @param doorSetting DoorSetting indicating the position.
+     */
+    public void setChurroGrabbers(DoorSetting doorSetting) {
+        if (doorSetting == DoorSetting.OPEN) {
+            servoChurroLeft.setPosition(RobotConstants.CHURRO_LEFT_OPEN);
+            servoChurroRight.setPosition(RobotConstants.CHURRO_RIGHT_OPEN);
+        } else {
+            servoChurroLeft.setPosition(RobotConstants.CHURRO_LEFT_CLOSE);
+            servoChurroRight.setPosition(RobotConstants.CHURRO_RIGHT_CLOSE);
         }
     }
 

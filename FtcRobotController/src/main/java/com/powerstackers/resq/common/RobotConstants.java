@@ -20,6 +20,11 @@ public class RobotConstants {
     public static final double BEACON_TAP_RIGHT = 0.2;
     public static final double BEACON_RESTING   = 0.5;
 
+    public static final double CHURRO_LEFT_OPEN = 0.0;
+    public static final double CHURRO_LEFT_CLOSE = 0.0;
+    public static final double CHURRO_RIGHT_OPEN = 0.0;
+    public static final double CHURRO_RIGHT_CLOSE = 0.0;
+
     // Motor speeds
     public static final double LIFT_SPEED  = 1.0;
     public static final double BRUSH_SPEED = 1.0;
