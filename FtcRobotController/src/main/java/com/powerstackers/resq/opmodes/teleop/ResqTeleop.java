@@ -161,15 +161,6 @@ public class ResqTeleop extends OpMode {
             robot.setAllianceHopper(DoorSetting.CLOSE, allianceColor);
         }
 
-        //Hang
-        if (buttonHangIn) {
-            robot.setHang(MotorSetting.FORWARD);
-        } else if (buttonHangOut) {
-            robot.setHang(MotorSetting.REVERSE);
-        } else {
-            robot.setHang(MotorSetting.STOP);
-        }
-
         // Set the climber flipper value.
         if (buttonClimbers) { // TODO Are triggers variable? I thought they were buttons. -derek = yes
             robot.setClimberFlipper(DoorSetting.OPEN);
@@ -178,11 +169,11 @@ public class ResqTeleop extends OpMode {
         }
 
         // Set the churro grabber value
-        // NOTE: We want the grabbers to go down when the driver holds the button.
+        // NOTE: We want the grabbers to go up when the driver holds the button.
         if (buttonChurros) {
-            robot.setChurroGrabbers(DoorSetting.CLOSE);
-        } else {
             robot.setChurroGrabbers(DoorSetting.OPEN);
+        } else {
+            robot.setChurroGrabbers(DoorSetting.CLOSE);
         }
 
         // Last of all, update the motor values.
@@ -198,6 +189,7 @@ public class ResqTeleop extends OpMode {
             robot.setPowerLeft(0);
         }
 
+        // Winch motor control
         if (stickValueP2Left > MINIMUM_JOYSTICK_THRESHOLD) {
             robot.setWinch(MotorSetting.FORWARD);
         } else if (stickValueP2Left < -MINIMUM_JOYSTICK_THRESHOLD) {
@@ -209,7 +201,6 @@ public class ResqTeleop extends OpMode {
         robot.setTapeMeasure(settingTapeMeasureServo);
         robot.setLift(settingLiftMotor);
         robot.setBrush(settingBrushMotor);
-        robot.setHang(settingHangMotor);
 
         telemetry.addData("right stick", stickValueP1Right);
         telemetry.addData("left stick ", stickValueP1Left);
