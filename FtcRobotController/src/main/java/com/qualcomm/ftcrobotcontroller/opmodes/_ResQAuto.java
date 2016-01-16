@@ -126,11 +126,11 @@ public abstract class _ResQAuto extends LinearOpMode {
         debugValues.add(formatter.format(new Date()) + "Starting Run");
         //turn on sweeper, move forward
         //Goes quickly at 0.3 for 3 seconds, then goes slower
-        sweeper.setPower(-0.8);
-        frontRightWheel.setPower(0.3);
-        frontLeftWheel.setPower(0.3);
-        backRightWheel.setPower(0.3);
-        backLeftWheel.setPower(0.3);
+       //sweeper.setPower(-0.8);
+        frontRightWheel.setPower(0.2);
+        frontLeftWheel.setPower(0.2);
+        backRightWheel.setPower(0.2);
+        backLeftWheel.setPower(0.2);
         sleep(3000);
         sweeper.setPower(-1);
 
