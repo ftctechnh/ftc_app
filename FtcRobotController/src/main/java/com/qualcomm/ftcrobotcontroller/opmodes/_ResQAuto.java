@@ -294,7 +294,7 @@ public abstract class _ResQAuto extends LinearOpMode {
                 backLeftWheel.setPower(0.2);
                 frontRightWheel.setPower(0.2);
                 backRightWheel.setPower(0.2);
-                sleep(350);
+                sleep(1200);
                 //backward
                 frontLeftWheel.setPower(-0.2);
                 backLeftWheel.setPower(-0.2);
@@ -308,25 +308,21 @@ public abstract class _ResQAuto extends LinearOpMode {
                 backRightWheel.setPower(0);
                 sleep(350);
                 //dump climbers
-                button2Servo.setPosition(0.5);
-                buttonServo.setPosition(0.7);
-                sleep(750);
                 button2Servo.setPosition(0.05);
-                sleep(1000);
+                buttonServo.setPosition(0.7);
+                sleep(1500);
             } else {
                 //servoMove(button2Servo, 0.7, 0.05, -0.1, 200);
                 //position servo
-                button2Servo.setPosition(0.5);
-                buttonServo.setPosition(0.4);
-                sleep(600);
                 button2Servo.setPosition(0.05);
-                sleep(1000);
+                buttonServo.setPosition(0.4);
+                sleep(1500);
                 //go forward
                 frontLeftWheel.setPower(0.2);
                 backLeftWheel.setPower(0.2);
                 frontRightWheel.setPower(0.2);
                 backRightWheel.setPower(0.2);
-                sleep(400);
+                sleep(300);
             }
             //If detect red
         }else if (colorsensor.red() > 0.1 &&colorsensor.blue()<0.1){
@@ -343,7 +339,7 @@ public abstract class _ResQAuto extends LinearOpMode {
                 backLeftWheel.setPower(-0.2);
                 frontRightWheel.setPower(-0.2);
                 backRightWheel.setPower(-0.2);
-                sleep(350);
+                sleep(300);
                 //stop
                 frontLeftWheel.setPower(0);
                 backLeftWheel.setPower(0);
@@ -351,10 +347,8 @@ public abstract class _ResQAuto extends LinearOpMode {
                 backRightWheel.setPower(0);
                 sleep(500);
                 //activate servos
-                button2Servo.setPosition(0.5);
-                sleep(600);
                 button2Servo.setPosition(0.05);
-                sleep(1000);
+                sleep(1600);
             } else {
                 //Tilt robot to the right
                 frontLeftWheel.setPower(-0.1);
@@ -363,17 +357,15 @@ public abstract class _ResQAuto extends LinearOpMode {
                 backRightWheel.setPower(0.1);
                 sleep(300);
                 //set servo
-                button2Servo.setPosition(0.5);
                 buttonServo.setPosition(0.8);
-                sleep(600);
                 button2Servo.setPosition(0.05);
-                sleep(1000);
+                sleep(1600);
                 //forward
                 frontLeftWheel.setPower(0.2);
                 backLeftWheel.setPower(0.2);
                 frontRightWheel.setPower(0.2);
                 backRightWheel.setPower(0.2);
-                sleep(400);
+                sleep(370);
 
             }
         } else {
@@ -407,13 +399,13 @@ public abstract class _ResQAuto extends LinearOpMode {
                 backLeftWheel.setPower(0.2);
                 frontRightWheel.setPower(-0.2);
                 backRightWheel.setPower(-0.2);
-                sleep(1500);
+                sleep(1700);
                 //forward
                 frontLeftWheel.setPower(0.3);
                 backLeftWheel.setPower(0.3);
                 frontRightWheel.setPower(0.3);
                 backRightWheel.setPower(0.3);
-                sleep(1450);
+                sleep(1350);
                 //stop
                 frontRightWheel.setPower(0);
                 frontLeftWheel.setPower(0);
