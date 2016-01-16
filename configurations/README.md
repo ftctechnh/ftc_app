@@ -24,9 +24,9 @@
 * 1: servoTapeMeasure
 * 2: servoTapeTilt
 * 3: servoHopperLeft
-* 4: servoHopperRight
+* 4: servoChurroLeft
 * 5: servoClimbers
-* 6: servoBeacon
+* 6: servoChurroRight
 
 ## Device Interface Module
 * Serial no: AI02RI51
