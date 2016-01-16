@@ -43,21 +43,28 @@ public class protoAuto extends LinearOpMode {
          */
         motorBRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         motorBLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        motorFRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        motorFLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         motorBRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         motorBLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        motorFRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        motorFLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
 
         waitForStart();
 
-        while (RobotAuto.enRightPosition > RobotAuto.EnRightS1 || RobotAuto.enLeftPosition > RobotAuto.EnLeftS1) {
-            RobotAuto.enLeftPosition = motorBLeft.getCurrentPosition();
-            RobotAuto.enRightPosition = motorBRight.getCurrentPosition();
+        while (RobotAuto.enRightPosition > RobotAuto.EnRightS1 || RobotAuto.enLeftPosition > RobotAuto.EnLeftS1 || motorBRight.getCurrentPosition() > RobotAuto.EnRightS1 || motorBLeft.getCurrentPosition() > RobotAuto.EnLeftS1) {
+            RobotAuto.enLeftPosition = motorFLeft.getCurrentPosition();
+            RobotAuto.enRightPosition = motorFRight.getCurrentPosition();
             motorBrush.setPower(1);
-            motorFRight.setPower(RobotAuto.EnRightpower);
-            motorBRight.setPower(RobotAuto.EnRightpower);
-            motorFLeft.setPower(RobotAuto.EnLeftpower);
-            motorBLeft.setPower(RobotAuto.EnLeftpower);
-            telemetry.addData("EncoderL", "Value: " + String.valueOf(motorBLeft.getCurrentPosition()));
-            telemetry.addData("EncoderR", "Value: " + String.valueOf(motorBRight.getCurrentPosition()));
+            motorFRight.setPower(1);
+            motorBRight.setPower(1);
+            motorFLeft.setPower(1);
+            motorBLeft.setPower(1);
+            telemetry.addData("EncoderBL", "Value: " + String.valueOf(motorBLeft.getCurrentPosition()));
+            telemetry.addData("EncoderBR", "Value: " + String.valueOf(motorBRight.getCurrentPosition()));
+            telemetry.addData("EncoderFR", "Value: " + String.valueOf(motorFRight.getCurrentPosition()));
+            telemetry.addData("EncoderFL", "Value: " + String.valueOf(motorFLeft.getCurrentPosition()));
+            telemetry.addData("motorFRight", "Power: " + String.valueOf(motorFRight.getPower()));
 
 //            if (RobotAuto.enLeftPosition > RobotAuto.EnLeftS1 && RobotAuto.enRightPosition > RobotAuto.EnRightS1) {
 //
@@ -67,6 +74,7 @@ public class protoAuto extends LinearOpMode {
 //            }
 
         }
+
         motorBrush.setPower(0);
         motorBLeft.setPower(0);
         motorBRight.setPower(0);
