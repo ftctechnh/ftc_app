@@ -31,8 +31,8 @@ public class Autonomous extends SynchronousOpMode {
 		sweeper = hardwareMap.dcMotor.get("sweeper");
 
 		//Set motor directions
-		frontRightWheel.setDirection(DcMotor.Direction.FORWARD);
-		frontLeftWheel.setDirection(DcMotor.Direction.REVERSE);
+		frontRightWheel.setDirection(DcMotor.Direction.REVERSE);
+		frontLeftWheel.setDirection(DcMotor.Direction.FORWARD);
 		backRightWheel.setDirection(DcMotor.Direction.FORWARD);
 		backLeftWheel.setDirection(DcMotor.Direction.REVERSE);
 
@@ -69,12 +69,12 @@ public class Autonomous extends SynchronousOpMode {
 
 	public static void moveRobotRotations(double rotations, double power, TelemetryDashboardAndLog telemetry) {
 		prepareMotors();
-		backRightWheel.setTargetPosition(
-				(int) (Functions.neveRestPPR * rotations));
-		backLeftWheel.setTargetPosition(
-				(int) (Functions.neveRestPPR * rotations));
+		backRightWheel.setTargetPosition((int)(rotations));
+		backLeftWheel.setTargetPosition((int)(rotations));
 		backRightWheel.setPower(power);
 		backLeftWheel.setPower(power);
+		frontLeftWheel.setPower(power);
+		frontRightWheel.setPower(power);
 
 		while(!(backRightWheel.getCurrentPosition() >= backRightWheel.getTargetPosition()-Functions.encoderError && backRightWheel.getCurrentPosition() <= backRightWheel.getTargetPosition()+Functions.encoderError) && !(backLeftWheel.getCurrentPosition() >= backLeftWheel.getTargetPosition()-Functions.encoderError && backLeftWheel.getCurrentPosition() <= backLeftWheel.getTargetPosition()+Functions.encoderError)) {
 			telemetry.addData("Right: ", backRightWheel.getCurrentPosition());

@@ -109,21 +109,21 @@ public class TeleOp extends SynchronousOpMode {
 					Functions.moveTwoMotors(linearSlideR, linearSlideL, 0.0);
 				}
 
-				if(tubeExtend) {
+				/*if(tubeExtend) {
 					tubeExtender.setPosition(0.75);
 				} else if(tubeRetract) {
 					tubeExtender.setPosition(-0.75);
 				} else {
 					tubeExtender.setPosition(0);
-				}
+				}*/
 
-				if(containerTiltRight) {
+				/*if(containerTiltRight) {
 					containerTilt
 							.setPosition(containerTilt.getPosition() + 0.005);
 				} else if(containerTiltLeft) {
 					containerTilt
 							.setPosition(containerTilt.getPosition() - 0.005);
-				}
+				}*/
 
 				if(sweeperForward) {
 					sweeper.setPower(-1.0);
