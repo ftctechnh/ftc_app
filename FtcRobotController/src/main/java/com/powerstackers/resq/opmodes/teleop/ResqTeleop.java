@@ -146,7 +146,7 @@ public class ResqTeleop extends OpMode {
         }
 
         // Set the climber flipper value.
-        if (buttonClimbers) { // TODO Are triggers variable? I thought they were buttons.
+        if (buttonClimbers) { // TODO Are triggers variable? I thought they were buttons. -derek = yes
             robot.setClimberFlipper(DoorSetting.OPEN);
         } else {
             robot.setClimberFlipper(DoorSetting.CLOSE);
