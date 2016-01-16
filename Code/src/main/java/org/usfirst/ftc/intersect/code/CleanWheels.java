@@ -1,13 +1,20 @@
 package org.usfirst.ftc.intersect.code;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import org.swerverobotics.library.SynchronousOpMode;
+import org.swerverobotics.library.interfaces.*;
 
 /**
- * A skeletal do-nothing OpMode. It is used as
+ * A Maintenance OpMode. It is used to clean the
  */
 
+@org.swerverobotics.library.interfaces.TeleOp(name = "Clean Wheels")
 public class CleanWheels extends SynchronousOpMode {
 	//Declare hardware
+	static DcMotor frontRightWheel;
+	static DcMotor frontLeftWheel;
+	static DcMotor backRightWheel;
+	static DcMotor backLeftWheel;
 
 	//Declare gamepad objects
 	boolean cleanFrontLeft = false;
@@ -17,6 +24,10 @@ public class CleanWheels extends SynchronousOpMode {
 
 	@Override public void main() throws InterruptedException {
 		//Initialize hardware
+		frontRightWheel = hardwareMap.dcMotor.get("frontRightWheel");
+		frontLeftWheel = hardwareMap.dcMotor.get("frontLeftWheel");
+		backRightWheel = hardwareMap.dcMotor.get("backRightWheel");
+		backLeftWheel = hardwareMap.dcMotor.get("backLeftWheel");
 
 		//Wait for the game to start
 		waitForStart();
@@ -30,18 +41,18 @@ public class CleanWheels extends SynchronousOpMode {
 				cleanBackRight = gamepad1.a || gamepad2.a;
 
 				if(cleanBackRight){
-					Autonomous.backRightWheel.setPower(0.1);
+					backRightWheel.setPower(0.1);
 				} else if (cleanBackLeft){
-					Autonomous.backLeftWheel.setPower(0.1);
+					backLeftWheel.setPower(0.1);
 				}else if (cleanFrontRight) {
-					Autonomous.frontRightWheel.setPower(0.1);
+					frontRightWheel.setPower(0.1);
 				}else if (cleanFrontLeft) {
-					Autonomous.frontLeftWheel.setPower(0.1);
+					frontLeftWheel.setPower(0.1);
 				}else{
-					Autonomous.frontLeftWheel.setPower(0);
-					Autonomous.frontRightWheel.setPower(0);
-					Autonomous.backRightWheel.setPower(0);
-					Autonomous.backLeftWheel.setPower(0);
+					frontLeftWheel.setPower(0);
+					frontRightWheel.setPower(0);
+					backRightWheel.setPower(0);
+					backLeftWheel.setPower(0);
 				}
 
 			}

@@ -40,7 +40,7 @@ public class Autonomous extends SynchronousOpMode {
 		waitForStart();
 
 		//Autonomous Start
-		while(opModeIsActive()) {
+		if(opModeIsActive()) {
 
 		}
 		//Autonomous End

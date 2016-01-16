@@ -3,7 +3,7 @@ package org.usfirst.ftc.intersect.code;
 import org.swerverobotics.library.SynchronousOpMode;
 
 /**
- * A skeletal do-nothing OpMode. It is used as
+ * A skeletal do-nothing OpMode.
  */
 
 public class SkeletalOpMode extends SynchronousOpMode {

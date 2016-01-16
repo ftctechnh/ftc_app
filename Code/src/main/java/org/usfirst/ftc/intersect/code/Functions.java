@@ -14,7 +14,7 @@ public class Functions {
 	public static double backWheelCircumfrence = 3*3*Math.PI;
 
 
-	public static Double convertGamepad(float y) {
+	public static double convertGamepad(float y) {
 		int m;
 
 		if(y < 0) {
@@ -26,7 +26,7 @@ public class Functions {
 	}
 
 	public static void moveTwoMotors(DcMotor motor1, DcMotor motor2,
-			Double power) {
+			double power) {
 		motor1.setPower(power);
 		motor2.setPower(power);
 	}
