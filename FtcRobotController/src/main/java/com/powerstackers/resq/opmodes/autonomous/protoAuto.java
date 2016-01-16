@@ -10,7 +10,6 @@ import org.swerverobotics.library.interfaces.Autonomous;
 /**
  * Created by Derek on 1/14/2016.
  */
-@Autonomous(name = "USE THIS AUTONOMOUS", group = "Powerstackers")
 public class ProtoAuto extends LinearOpMode {
 
 
