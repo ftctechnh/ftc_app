@@ -55,6 +55,7 @@ public class ResqTeleop extends OpMode {
     boolean buttonHopperLeft;
     boolean buttonHopperRight;
     boolean buttonClimbers;
+    boolean buttonChurros;
 
     /**
      * Initialize the robot.
@@ -87,6 +88,7 @@ public class ResqTeleop extends OpMode {
         buttonHopperLeft  = gamepad2.left_bumper;
         buttonHopperRight = gamepad2.right_bumper;
         buttonClimbers    = gamepad2.right_trigger > 0.5;
+        buttonChurros     = gamepad1.right_trigger > 0.5;
 
         // Set the lift motor value.
         if (buttonLiftOut) {
@@ -134,6 +136,14 @@ public class ResqTeleop extends OpMode {
             robot.setClimberFlipper(DoorSetting.OPEN);
         } else {
             robot.setClimberFlipper(DoorSetting.CLOSE);
+        }
+
+        // Set the churro grabber value
+        // NOTE: We want the grabbers to go down when the driver holds the button.
+        if (buttonChurros) {
+            robot.setChurroGrabbers(DoorSetting.CLOSE);
+        } else {
+            robot.setChurroGrabbers(DoorSetting.OPEN);
         }
 
         // Last of all, update the motor values.
