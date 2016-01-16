@@ -2,6 +2,7 @@ package com.powerstackers.resq.opmodes.autonomous;
 
 import com.powerstackers.resq.common.RobotAuto;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 
 import org.swerverobotics.library.interfaces.Autonomous;
@@ -12,6 +13,14 @@ import org.swerverobotics.library.interfaces.Autonomous;
 @Autonomous(name = "USE THIS AUTONOMOUS", group = "Powerstackers")
 public class ProtoAuto extends LinearOpMode {
 
+
+    DcMotor motorBrush;
+    DcMotor motorLift;
+    DcMotor motorFRight;
+    DcMotor motorFLeft;
+    DcMotor motorBRight;
+    DcMotor motorBLeft;
+
     /*Color Values
      *
      */
@@ -21,27 +30,44 @@ public class ProtoAuto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
+        motorBrush = hardwareMap.dcMotor.get("motorBrush");
+        motorLift = hardwareMap.dcMotor.get("motorLift");
+        motorLift.setDirection(DcMotor.Direction.REVERSE);
+        motorFRight = hardwareMap.dcMotor.get("motorFRight");
+        motorFLeft = hardwareMap.dcMotor.get("motorFLeft");
+        motorFRight.setDirection(DcMotor.Direction.REVERSE);
+        motorBRight = hardwareMap.dcMotor.get("motorBRight");
+        motorBLeft = hardwareMap.dcMotor.get("motorBLeft");
+        motorBRight.setDirection(DcMotor.Direction.REVERSE);
 
 
         /*
          * Motors
          */
-        RobotAuto.motorBRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        RobotAuto.motorBLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        RobotAuto.motorBRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        motorBRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        motorBLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        motorFRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        motorFLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        motorBRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        motorBLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        motorFRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        motorFLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
 
         waitForStart();
 
-        while (RobotAuto.enRightPosition > RobotAuto.EnRightS1 || RobotAuto.enLeftPosition > RobotAuto.EnLeftS1) {
-            RobotAuto.enLeftPosition = RobotAuto.motorBLeft.getCurrentPosition();
-            RobotAuto.enRightPosition = RobotAuto.motorBRight.getCurrentPosition();
-            RobotAuto.motorBrush.setPower(1);
-            RobotAuto.motorFRight.setPower(RobotAuto.EnRightpower);
-            RobotAuto.motorBRight.setPower(RobotAuto.EnRightpower);
-            RobotAuto.motorFLeft.setPower(RobotAuto.EnLeftpower);
-            RobotAuto.motorBLeft.setPower(RobotAuto.EnLeftpower);
-            telemetry.addData("EncoderL", "Value: " + String.valueOf(RobotAuto.motorBLeft.getCurrentPosition()));
-            telemetry.addData("EncoderR", "Value: " + String.valueOf(RobotAuto.motorBRight.getCurrentPosition()));
+        while (RobotAuto.enRightPosition < -9000 || RobotAuto.enLeftPosition > 9000 || motorBRight.getCurrentPosition() < -9000 || motorBLeft.getCurrentPosition() > 9000) {
+            RobotAuto.enLeftPosition = motorFLeft.getCurrentPosition();
+            RobotAuto.enRightPosition = motorFRight.getCurrentPosition();
+            motorBrush.setPower(1);
+            motorFRight.setPower(1);
+            motorBRight.setPower(1);
+            motorFLeft.setPower(1);
+            motorBLeft.setPower(1);
+            telemetry.addData("EncoderBL", "Value: " + String.valueOf(motorBLeft.getCurrentPosition()));
+            telemetry.addData("EncoderBR", "Value: " + String.valueOf(motorBRight.getCurrentPosition()));
+            telemetry.addData("EncoderFR", "Value: " + String.valueOf(motorFRight.getCurrentPosition()));
+            telemetry.addData("EncoderFL", "Value: " + String.valueOf(motorFLeft.getCurrentPosition()));
+            telemetry.addData("motorFRight", "Power: " + String.valueOf(motorFRight.getPower()));
 
 //            if (RobotAuto.enLeftPosition > RobotAuto.EnLeftS1 && RobotAuto.enRightPosition > RobotAuto.EnRightS1) {
 //
@@ -51,12 +77,13 @@ public class ProtoAuto extends LinearOpMode {
 //            }
 
         }
-        RobotAuto.motorBrush.setPower(0);
-        RobotAuto.motorBLeft.setPower(0);
-        RobotAuto.motorBRight.setPower(0);
-        RobotAuto.motorBLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        RobotAuto.motorBRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        RobotAuto.motorBRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+
+        motorBrush.setPower(0);
+        motorBLeft.setPower(0);
+        motorBRight.setPower(0);
+        motorBLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        motorBRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        motorBRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 
     }
 }

@@ -31,12 +31,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes.main;
 
-import com.powerstackers.resq.opmodes.autonomous.BlueAlianceOP;
 import com.powerstackers.resq.opmodes.autonomous.TedbotAuto;
-import com.powerstackers.resq.opmodes.misc.ColorSensorSense;
-import com.powerstackers.resq.opmodes.teleop.ProtobotTeleop;
-import com.powerstackers.resq.opmodes.autonomous.RedAlianceOP;
-import com.powerstackers.resq.opmodes.misc.Tedbot;
+import com.powerstackers.resq.opmodes.autonomous.protoAuto;
 import com.powerstackers.resq.opmodes.teleop.testbot1;
 import com.qualcomm.ftcrobotcontroller.opmodes.NullOp;
 import com.qualcomm.ftcrobotcontroller.opmodes.k9.K9IrSeeker;
@@ -148,5 +144,6 @@ public class FtcOpModeRegister implements OpModeRegister {
 //        manager.register("Tedbot", Tedbot.class);
         manager.register("Auto Ted", TedbotAuto.class);
         manager.register("testbot1", testbot1.class);
+        manager.register("protoAuto", protoAuto.class);
     }
 }
