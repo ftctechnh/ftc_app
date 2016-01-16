@@ -1,6 +1,7 @@
-package com.walnuthillseagles.WalnutLibrary;
+package com.walnutHillsEagles.WalnutLibrary;
 
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -68,7 +69,7 @@ public abstract class WalnutMotor {
         28 - Gamepad 2, left stick button (LSTICK2)
         29 - Gamepad 2, right stick button (RSTICK2)
         ---------------------------------------------*/
-        public void setGamepads(Gamepad newGamepad1, Gamepad newGamepad2){
+        private void setGamepads(Gamepad newGamepad1, Gamepad newGamepad2){
             gamepad1Pointer=newGamepad1;
             gamepad2Pointer=newGamepad2;
         }
@@ -126,8 +127,14 @@ public abstract class WalnutMotor {
             }
         }
         //Called by elsewhere in the program to terminate processing
-        public static void turnOffProcessing(){
+        public static void stopProcessing(){
             canProcess = false;
+        }
+        public static void startProcessing(OpMode myOpmode){
+            GamepadUpdater updater = new WalnutMotor.GamepadUpdater();
+            Thread processor = new Thread(updater);
+            updater.setGamepads(myOpmode.gamepad1, myOpmode.gamepad2);
+            processor.start();
         }
     }
     //Constructor

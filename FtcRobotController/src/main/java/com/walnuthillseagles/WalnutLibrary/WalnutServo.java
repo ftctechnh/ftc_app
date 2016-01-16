@@ -1,4 +1,4 @@
-package com.walnuthillseagles.WalnutLibrary;
+package com.walnutHillsEagles.WalnutLibrary;
 
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -21,6 +21,8 @@ public class WalnutServo {
         ButtonEvent firstButton = new ButtonEvent(daButton,myPos,sticky);
         buttons.add(firstButton);
         startPos = myStartPos;
+        //Reset Servo
+        resetServo();
 
     }
     public void addButton(String daButton, double myPos, boolean sticky){
@@ -35,7 +37,7 @@ public class WalnutServo {
                 //@TODO Change method name here to make more sense
                 servo.setPosition(temp.getPow());
             }
-            if(!temp.checkSticky()&&!WalnutMotor.GamepadUpdater.boolValues[temp.getPos()]){
+            else if(!temp.checkToggle()&&!WalnutMotor.GamepadUpdater.boolValues[temp.getPos()]){
                 this.resetServo();
             }
 

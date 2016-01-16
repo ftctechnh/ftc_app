@@ -1,4 +1,4 @@
-package com.walnuthillseagles.WalnutLibrary;
+package com.walnutHillsEagles.WalnutLibrary;
 
 /**
  * Created by Yan Vologzhanin on 1/2/2016.

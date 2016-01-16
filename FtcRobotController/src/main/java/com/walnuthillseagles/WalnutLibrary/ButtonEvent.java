@@ -1,4 +1,4 @@
-package com.walnuthillseagles.WalnutLibrary;
+package com.walnutHillsEagles.WalnutLibrary;
 
 /**
  * Created by Yan Vologzhanin on 1/6/2016.
@@ -31,6 +31,9 @@ public class ButtonEvent {
     //Getters
     public double getPow(){
         return pow;
+    }
+    public boolean checkToggle(){
+        return isToggle;
     }
     public int getPos(){
         return tablePos;

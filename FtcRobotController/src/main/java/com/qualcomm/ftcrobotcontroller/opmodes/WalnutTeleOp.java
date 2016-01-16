@@ -4,7 +4,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 //Walnut Imports
-import com.walnuthillseagles.WalnutLibrary.*;
+import com.walnutHillsEagles.WalnutLibrary.*;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -15,8 +15,6 @@ import java.util.ArrayList;
  */
 public class WalnutTeleOp extends OpMode{
     //Initilze new thread
-    private WalnutMotor.GamepadUpdater updater;
-    private Thread processor;
 
     //Physical Hardware
     private DcMotor motorLeft;
@@ -48,7 +46,7 @@ public class WalnutTeleOp extends OpMode{
 
         intake = new DigMotor(intakeSpinners,"intake",false,
                 "A2",-1,true);
-        intake.addButton("B2",0,true);
+        intake.addButton("B2", 0, true);
         //Add Buttons to arrayList and initilize
         motors = new ArrayList<WalnutMotor>();
         motors.add(leftDrive);
@@ -61,13 +59,11 @@ public class WalnutTeleOp extends OpMode{
         belt.setPosition(0.5);
         doors.setPosition(0.5);
         //Initilize Stuff for Processing
-        updater = new WalnutMotor.GamepadUpdater();
-        processor = new Thread(updater);
+
     }
     public void start(){
         //Start Gamepad Processing
-        updater.setGamepads(gamepad1, gamepad2);
-        processor.start();
+        WalnutMotor.GamepadUpdater.startProcessing(this);
     }
     public void loop(){
         //Process motors
@@ -87,6 +83,6 @@ public class WalnutTeleOp extends OpMode{
        }
         belt.setPosition(0.5);
         doors.setPosition(0.5);
-        WalnutMotor.GamepadUpdater.turnOffProcessing();
+        WalnutMotor.GamepadUpdater.stopProcessing();
     }
 }
