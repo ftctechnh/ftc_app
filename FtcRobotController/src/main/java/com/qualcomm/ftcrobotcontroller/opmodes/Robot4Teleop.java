@@ -78,7 +78,7 @@ public class Robot4Teleop extends OpMode {
         lButtonServo = hardwareMap.servo.get("leftbutton");
         lButtonServo.setPosition(0.2);
         rButtonServo = hardwareMap.servo.get("rightbutton");
-        rButtonServo.setPosition(1);
+        rButtonServo.setPosition(0.6);
         //All clear servo
         hookServo = hardwareMap.servo.get("signal");
         hookServo.setPosition(HOOK_SERVO_INIT);
@@ -199,7 +199,7 @@ public class Robot4Teleop extends OpMode {
                 //hangStartingTime = new Date();
                 //hangMotor.setPower(0.5);
                 //temp way to reset all clear servo
-                hookServo.setPosition(1);
+                releaseServo.setPosition(RELEASE_SERVO_INIT);
             }
             if (gamepad1.dpad_up || gamepad2.dpad_up) {
                 //Clamp Servo up
@@ -207,15 +207,16 @@ public class Robot4Teleop extends OpMode {
             }
             if (gamepad1.dpad_right || gamepad2.dpad_right) {
                 //Hook servo hits the all clear signal
-                hookServo.setPosition(0.20);
+                releaseServo.setPosition(1);
             }
             if (gamepad1.dpad_down || gamepad2.dpad_down) {
                 //Clamp Servo down
                 clampServo.setPosition(0);
             }
             if (gamepad1.left_stick_button || gamepad2.left_stick_button) {
-                rButtonServo.setPosition(0);
-            } else {
+                rButtonServo.setPosition(0.05);
+            }
+            if (gamepad1.right_stick_button || gamepad2.right_stick_button) {
                 rButtonServo.setPosition(1);
             }
             if (gamepad1.left_trigger == 1 || gamepad2.left_trigger == 1) {
