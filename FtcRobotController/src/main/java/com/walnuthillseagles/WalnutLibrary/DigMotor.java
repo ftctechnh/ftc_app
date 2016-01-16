@@ -20,17 +20,17 @@ public class DigMotor extends WalnutMotor {
     //Constructors
     //Create a forward and backward button event
     public DigMotor(DcMotor myMotor, String myName, boolean encoderCheck,
-                    String button, double power, boolean sticky){
+                    String button, double power, boolean toggle){
         //Create the motor
         super(myMotor, myName, encoderCheck);
         //Initilize and add button events
-        ButtonEvent forward = new ButtonEvent(button, power, sticky);
+        ButtonEvent forward = new ButtonEvent(button, power, toggle);
         //Create list of buttons and add our first one
         Buttons = new ArrayList<ButtonEvent>();
         Buttons.add(forward);
     }
-    public void addButton(String button, double power, boolean sticky){
-        Buttons.add(new ButtonEvent(button, power, sticky));
+    public void addButton(String button, double power, boolean toggle){
+        Buttons.add(new ButtonEvent(button, power, toggle));
     }
     //Teleop Methods
     public void operate(){

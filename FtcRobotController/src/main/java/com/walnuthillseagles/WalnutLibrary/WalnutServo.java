@@ -15,18 +15,18 @@ public class WalnutServo {
 
 
     public WalnutServo(Servo myServo, double myStartPos,
-                       String daButton, double myPos, boolean sticky){
+                       String daButton, double myPos, boolean toggle){
         Servo servo = myServo;
         buttons = new ArrayList<ButtonEvent>();
-        ButtonEvent firstButton = new ButtonEvent(daButton,myPos,sticky);
+        ButtonEvent firstButton = new ButtonEvent(daButton,myPos,toggle);
         buttons.add(firstButton);
         startPos = myStartPos;
         //Reset Servo
         resetServo();
 
     }
-    public void addButton(String daButton, double myPos, boolean sticky){
-        ButtonEvent newButton = new ButtonEvent(daButton,myPos,sticky);
+    public void addButton(String daButton, double myPos, boolean toggle){
+        ButtonEvent newButton = new ButtonEvent(daButton,myPos,toggle);
         buttons.add(newButton);
     }
     public void operate(){
