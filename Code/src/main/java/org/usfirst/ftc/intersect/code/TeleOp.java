@@ -20,10 +20,8 @@ public class TeleOp extends SynchronousOpMode {
 	DcMotor linearSlideL;
 
 	Servo containerTilt;
-
+	Servo tubeExtender;
 	DcMotor sweeper;
-
-	Servo mountainClimber;
 
 	//Declare gamepad objects
 	float rightWheel;
@@ -38,8 +36,8 @@ public class TeleOp extends SynchronousOpMode {
 	boolean sweeperForward = false;
 	boolean sweeperBackward = false;
 
-	boolean mountainClimberUsed = false;
-
+	boolean tubeExtend = false;
+	boolean tubeRetract = false;
 	@Override public void main() throws InterruptedException {
 		//Initialize hardware
 		frontRightWheel = hardwareMap.dcMotor.get("frontRightWheel");
@@ -51,15 +49,14 @@ public class TeleOp extends SynchronousOpMode {
 		linearSlideL = hardwareMap.dcMotor.get("linearSlideL");
 
 		//containerTilt = hardwareMap.servo.get("containerTilt");
+        //tubeExtender = hardwareMap.servo.get("tubeExtender");
 
 		sweeper = hardwareMap.dcMotor.get("sweeper");
 
-		//mountainClimber = hardwareMap.servo.get("mountainClimber");
-
 		//Set motor channel modes and direction
-		frontRightWheel.setDirection(DcMotor.Direction.FORWARD);
+		frontRightWheel.setDirection(DcMotor.Direction.REVERSE);
 		frontRightWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-		frontLeftWheel.setDirection(DcMotor.Direction.REVERSE);
+		frontLeftWheel.setDirection(DcMotor.Direction.FORWARD);
 		frontLeftWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
 		backRightWheel.setDirection(DcMotor.Direction.FORWARD);
 		backRightWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
@@ -81,59 +78,60 @@ public class TeleOp extends SynchronousOpMode {
 				rightWheel = gamepad1.right_stick_y;
 				leftWheel = gamepad1.left_stick_y;
 
-				linearSlideForward = gamepad1.a || gamepad2.a;
-				linearSlideBackward = gamepad1.b || gamepad2.b;
+				linearSlideForward = gamepad1.right_bumper || gamepad2.right_bumper;
+				linearSlideBackward = gamepad1.left_bumper || gamepad2.left_bumper;
 
-				//containerTiltRight = gamepad1.dpad_right || gamepad2.dpad_right;
-				//containerTiltLeft = gamepad1.dpad_left || gamepad1.dpad_left;
+				containerTiltRight = gamepad1.dpad_right || gamepad2.dpad_right;
+				containerTiltLeft = gamepad1.dpad_left || gamepad1.dpad_left;
 
-				if(gamepad1.right_bumper || gamepad2.right_bumper) {
+				tubeExtend = gamepad1.x || gamepad2.x;
+				tubeRetract = gamepad1.b || gamepad2.b;
+
+				if(gamepad1.a || gamepad2.a) {
 					sweeperForward = !sweeperForward;
 					sweeperBackward = false;
-				} else if(gamepad1.left_bumper || gamepad2.left_bumper) {
+				} else if(gamepad1.y || gamepad2.y) {
 					sweeperBackward  = !sweeperBackward;
 					sweeperForward = false;
 				}
 
-				if(gamepad1.x || gamepad2.x) {
-					mountainClimberUsed = !mountainClimberUsed;
-				}
-
 				//Use gamepad values to move robot
-				Functions.moveTwoMotors(frontRightWheel, backRightWheel,
-						Functions.convertGamepad(rightWheel), true);
-				Functions.moveTwoMotors(frontLeftWheel, backLeftWheel,
-						Functions.convertGamepad(leftWheel), true);
+				Functions.moveTwoMotors(backRightWheel,frontRightWheel,
+						Functions.convertGamepad(rightWheel));
+				Functions.moveTwoMotors( backLeftWheel,frontLeftWheel,
+						Functions.convertGamepad(leftWheel));
 
 				if(linearSlideForward) {
-					Functions.moveTwoMotors(linearSlideR, linearSlideL, 0.5);
+					Functions.moveTwoMotors(linearSlideR, linearSlideL, 0.3);
 				} else if(linearSlideBackward) {
-					Functions.moveTwoMotors(linearSlideR, linearSlideL, -0.5);
+					Functions.moveTwoMotors(linearSlideR, linearSlideL, -0.3);
 				} else {
 					Functions.moveTwoMotors(linearSlideR, linearSlideL, 0.0);
 				}
 
-				/*if(containerTiltRight) {
+				if(tubeExtend) {
+					tubeExtender.setPosition(0.75);
+				} else if(tubeRetract) {
+					tubeExtender.setPosition(-0.75);
+				} else {
+					tubeExtender.setPosition(0);
+				}
+
+				if(containerTiltRight) {
 					containerTilt
 							.setPosition(containerTilt.getPosition() + 0.005);
 				} else if(containerTiltLeft) {
 					containerTilt
 							.setPosition(containerTilt.getPosition() - 0.005);
-				}*/
+				}
 
 				if(sweeperForward) {
-					sweeper.setPower(1.0);
+					sweeper.setPower(-1.0);
 				} else if(sweeperBackward){
 					sweeper.setPower(1.0);
 				} else {
 					sweeper.setPower(0);
 				}
-
-				/*if(mountainClimberUsed) {
-					mountainClimber.setPosition(1.0);
-				} else {
-					mountainClimber.setPosition(1.0);
-				}*/
 			}
 
 			telemetry.update();
