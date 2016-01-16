@@ -20,12 +20,14 @@
 
 package com.powerstackers.resq.opmodes.teleop;
 
+import com.powerstackers.resq.common.AllianceColor;
 import com.powerstackers.resq.common.DoorSetting;
 import com.powerstackers.resq.common.MotorSetting;
 import com.powerstackers.resq.common.Robot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.Range;
 
+import org.swerverobotics.library.interfaces.Disabled;
 import org.swerverobotics.library.interfaces.TeleOp;
 
 /**
@@ -33,9 +35,12 @@ import org.swerverobotics.library.interfaces.TeleOp;
  * @author Jonathan Thomas
  */
 @TeleOp(name = "Res-Q Tele-op", group = "Powerstackers")
+@Disabled
 public class ResqTeleop extends OpMode {
 
     private static final float MINIMUM_JOYSTICK_THRESHOLD = 0.15F;
+
+    AllianceColor allianceColor;
 
     Robot robot;
 
@@ -56,6 +61,15 @@ public class ResqTeleop extends OpMode {
     boolean buttonHopperRight;
     boolean buttonClimbers;
     boolean buttonChurros;
+    boolean buttonBothHoppers;
+
+    /**
+     * Generate a new Teleop program with the given alliance color.
+     * @param allianceColor The color that we are playing as this round.
+     */
+    public ResqTeleop(AllianceColor allianceColor) {
+        this.allianceColor = allianceColor;
+    }
 
     /**
      * Initialize the robot.
@@ -89,6 +103,7 @@ public class ResqTeleop extends OpMode {
         buttonHopperRight = gamepad2.right_bumper;
         buttonClimbers    = gamepad2.right_trigger > 0.5;
         buttonChurros     = gamepad1.right_trigger > 0.5;
+        buttonBothHoppers = gamepad2.right_bumper;
 
         // Set the lift motor value.
         if (buttonLiftOut) {
@@ -119,16 +134,22 @@ public class ResqTeleop extends OpMode {
 
         // Set the hopper doors.
         // Hopper left
-        if (buttonHopperLeft) {
+        /*if (buttonHopperLeft) {
             robot.setHopperLeft(DoorSetting.OPEN);
         } else {
             robot.setHopperLeft(DoorSetting.CLOSE);
-        }
+        }*/
         // Hopper right
-        if (buttonHopperRight) {
+        /*if (buttonHopperRight) {
             robot.setHopperRight(DoorSetting.OPEN);
         } else {
             robot.setHopperRight(DoorSetting.CLOSE);
+        }*/
+
+        if (buttonBothHoppers) {
+            robot.setAllianceHopper(DoorSetting.OPEN, allianceColor);
+        } else {
+            robot.setAllianceHopper(DoorSetting.CLOSE, allianceColor);
         }
 
         // Set the climber flipper value.

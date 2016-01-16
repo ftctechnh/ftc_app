@@ -45,7 +45,7 @@ public class Robot {
 
     private Servo servoTapeMeasure;
     private Servo servoBeacon;
-    private Servo servoHopperRight;
+//    private Servo servoHopperRight;
     private Servo servoHopperLeft;
     private Servo servoClimberFlipper;
     private Servo servoChurroLeft;
@@ -75,14 +75,14 @@ public class Robot {
 
         servoTapeMeasure = mode.hardwareMap.servo.get("servoTapeMeasure");
         servoBeacon      = mode.hardwareMap.servo.get("servoBeacon");
-        servoHopperRight = mode.hardwareMap.servo.get("servoHopperRight");
+//        servoHopperRight = mode.hardwareMap.servo.get("servoHopperRight");
         servoHopperLeft = mode.hardwareMap.servo.get("servoHopperLeft");
         servoClimberFlipper = mode.hardwareMap.servo.get("servoClimbers");
         servoChurroLeft = mode.hardwareMap.servo.get("servoChurroLeft");
         servoChurroRight = mode.hardwareMap.servo.get("servoChurroRight");
 
         servoHopperLeft.setPosition(RobotConstants.HOPPER_LEFT_CLOSE);
-        servoHopperRight.setPosition(RobotConstants.HOPPER_RIGHT_CLOSE);
+//        servoHopperRight.setPosition(RobotConstants.HOPPER_RIGHT_CLOSE);
         servoClimberFlipper.setPosition(RobotConstants.CLIMBER_EXTEND);
         servoChurroRight.setPosition(RobotConstants.CHURRO_RIGHT_OPEN);
         servoChurroLeft.setPosition(RobotConstants.CHURRO_LEFT_OPEN);
@@ -103,7 +103,7 @@ public class Robot {
         servoBeacon.setPosition(RobotConstants.BEACON_RESTING);
         servoClimberFlipper.setPosition(RobotConstants.CLIMBER_EXTEND);
         servoHopperLeft.setPosition(RobotConstants.HOPPER_LEFT_CLOSE);
-        servoHopperRight.setPosition(RobotConstants.HOPPER_RIGHT_CLOSE);
+//        servoHopperRight.setPosition(RobotConstants.HOPPER_RIGHT_CLOSE);
         servoChurroRight.setPosition(RobotConstants.CHURRO_RIGHT_OPEN);
         servoChurroLeft.setPosition(RobotConstants.CHURRO_LEFT_OPEN);
         //sensorGyro.calibrate();
@@ -239,14 +239,14 @@ public class Robot {
     /**
      * Set the right hopper door to open or close.
      * @param doorSetting DoorSetting to set the door to.
-     */
+     *//*
     public void setHopperRight(DoorSetting doorSetting) {
         if (doorSetting == DoorSetting.OPEN) {
             servoHopperRight.setPosition(RobotConstants.HOPPER_RIGHT_OPEN);
         } else {
             servoHopperRight.setPosition(RobotConstants.HOPPER_RIGHT_CLOSE);
         }
-    }
+    }*/
 
     /**
      * Set the left hopper door to open or close.
@@ -257,6 +257,17 @@ public class Robot {
             servoHopperLeft.setPosition(RobotConstants.HOPPER_LEFT_OPEN);
         } else {
             servoHopperLeft.setPosition(RobotConstants.HOPPER_LEFT_CLOSE);
+        }
+    }
+
+    public void setAllianceHopper(DoorSetting doorSetting, AllianceColor allianceColor) {
+        // If we are red, we should dump to the left. Blue, to the right.
+        if (allianceColor == AllianceColor.RED) {
+            servoHopperLeft.setPosition((doorSetting==DoorSetting.OPEN)?
+                    RobotConstants.HOPPER_LEFT_OPEN : RobotConstants.HOPPER_LEFT_CLOSE);
+        } else {
+            servoHopperLeft.setPosition((doorSetting==DoorSetting.OPEN)?
+                    RobotConstants.HOPPER_RIGHT_OPEN : RobotConstants.HOPPER_RIGHT_CLOSE);
         }
     }
 
