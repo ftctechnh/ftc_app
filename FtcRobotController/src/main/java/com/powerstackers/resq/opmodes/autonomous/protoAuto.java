@@ -4,10 +4,13 @@ import com.powerstackers.resq.common.RobotAuto;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 
+import org.swerverobotics.library.interfaces.Autonomous;
+
 /**
  * Created by Derek on 1/14/2016.
  */
-public class protoAuto extends LinearOpMode {
+@Autonomous(name = "USE THIS AUTONOMOUS", group = "Powerstackers")
+public class ProtoAuto extends LinearOpMode {
 
     /*Color Values
      *
