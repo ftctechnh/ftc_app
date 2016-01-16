@@ -159,6 +159,9 @@ public abstract class WalnutMotor {
     public boolean checkEncoders(){
         return hasEncoders;
     }
+    public String getName(){
+        return name;
+    }
     public void setName(String myName){
         name = myName;
     }
