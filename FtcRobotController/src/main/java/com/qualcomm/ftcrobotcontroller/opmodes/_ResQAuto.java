@@ -46,15 +46,16 @@ public abstract class _ResQAuto extends LinearOpMode {
         UltrasonicSensor ultrasonicSensor;
         ColorSensor colorsensor;
 
+        //No need to tune these unless calibration is broken.
         double reflectance = 0;
         double BLACKVALUE = 0.01;
         double WHITEVALUE = 0.4;
         double REDVALUE = 0.3;
         double BLUEVALUE = 0.05;
-        // double MARGIN = 0.03;//needs to be tuned
+        // double MARGIN = 0.03;
 
         String date;
-
+        //load calibration values
         try
         {
             File file = new File("/sdcard/FIRST/calibration.txt");
@@ -79,7 +80,7 @@ public abstract class _ResQAuto extends LinearOpMode {
         double EOPDThreshold = 0.1 * BLACKVALUE + 0.9 * WHITEVALUE;
         debugValues.add(formatter.format(new Date()) + " EOPDThreshold:" + EOPDThreshold);
 
-
+        //map the code to hardware map
         double value;
         frontRightWheel = hardwareMap.dcMotor.get("frontR");
         frontLeftWheel = hardwareMap.dcMotor.get("frontL");
@@ -123,7 +124,8 @@ public abstract class _ResQAuto extends LinearOpMode {
             sleep(4500);
 
         debugValues.add(formatter.format(new Date()) + "Starting Run");
-
+        //turn on sweeper, move forward
+        //Goes quickly at 0.3 for 3 seconds, then goes slower
         sweeper.setPower(-0.8);
         frontRightWheel.setPower(0.3);
         frontLeftWheel.setPower(0.3);
@@ -139,6 +141,7 @@ public abstract class _ResQAuto extends LinearOpMode {
         backLeftWheel.setPower(0);
 
         //Drive forward until reach line
+        //Slow down to 0.1
         while(true){
             reflectance = opticalDistanceSensor.getLightDetected();
             telemetry.addData("Reflectance Value", reflectance);
@@ -184,7 +187,7 @@ public abstract class _ResQAuto extends LinearOpMode {
                 }
                 break;
             }
-
+            //set speed here for driving to line
             frontLeftWheel.setPower(0.1);
             backLeftWheel.setPower(0.1);
             frontRightWheel.setPower(0.1);
@@ -223,6 +226,7 @@ public abstract class _ResQAuto extends LinearOpMode {
 
             valueS = Range.clip(valueS, -1, 1);
             valueB = Range.clip(valueB, -1, 1);*/
+            //Set values for line follower
             valueB = .12;
             if (value > 0) {
                 valueS = .18;
@@ -248,6 +252,7 @@ public abstract class _ResQAuto extends LinearOpMode {
             telemetry.addData("Ultrasonic Value", distance);
 
             //Wait until ultrasonic distance <24
+            //Ignore the if/else
             if(distance < 24 && distance>1) {
                 if (getRedAlliance() == 0) {
                     /*frontLeftWheel.setPower(0.3);
@@ -274,6 +279,7 @@ public abstract class _ResQAuto extends LinearOpMode {
         sleep(500);
 
         //Color Sensor Logic
+        //For detect blue
         if(colorsensor.red()<0.1&&colorsensor.blue()>0.1){
             debugValues.add(formatter.format(new Date()) + "Detect Blue Value" + colorsensor.blue());
             if (getRedAlliance() == 0){
@@ -283,21 +289,25 @@ public abstract class _ResQAuto extends LinearOpMode {
                 frontRightWheel.setPower(0.1);
                 backRightWheel.setPower(0.1);
                 sleep(300);
+                //forward
                 frontLeftWheel.setPower(0.2);
                 backLeftWheel.setPower(0.2);
                 frontRightWheel.setPower(0.2);
                 backRightWheel.setPower(0.2);
                 sleep(350);
+                //backward
                 frontLeftWheel.setPower(-0.2);
                 backLeftWheel.setPower(-0.2);
                 frontRightWheel.setPower(-0.2);
                 backRightWheel.setPower(-0.2);
                 sleep(370);
+                //stop
                 frontLeftWheel.setPower(0);
                 backLeftWheel.setPower(0);
                 frontRightWheel.setPower(0);
                 backRightWheel.setPower(0);
                 sleep(350);
+                //dump climbers
                 button2Servo.setPosition(0.5);
                 buttonServo.setPosition(0.7);
                 sleep(750);
@@ -305,36 +315,42 @@ public abstract class _ResQAuto extends LinearOpMode {
                 sleep(1000);
             } else {
                 //servoMove(button2Servo, 0.7, 0.05, -0.1, 200);
+                //position servo
                 button2Servo.setPosition(0.5);
                 buttonServo.setPosition(0.4);
                 sleep(600);
                 button2Servo.setPosition(0.05);
                 sleep(1000);
+                //go forward
                 frontLeftWheel.setPower(0.2);
                 backLeftWheel.setPower(0.2);
                 frontRightWheel.setPower(0.2);
                 backRightWheel.setPower(0.2);
                 sleep(400);
             }
-
+            //If detect red
         }else if (colorsensor.red() > 0.1 &&colorsensor.blue()<0.1){
             debugValues.add(formatter.format(new Date()) + "Detect Red Value" + colorsensor.red());
             if (getRedAlliance() == 1){
+                //forward
                 frontLeftWheel.setPower(0.2);
                 backLeftWheel.setPower(0.2);
                 frontRightWheel.setPower(0.2);
                 backRightWheel.setPower(0.2);
                 sleep(400);
+                //backwards
                 frontLeftWheel.setPower(-0.2);
                 backLeftWheel.setPower(-0.2);
                 frontRightWheel.setPower(-0.2);
                 backRightWheel.setPower(-0.2);
                 sleep(350);
+                //stop
                 frontLeftWheel.setPower(0);
                 backLeftWheel.setPower(0);
                 frontRightWheel.setPower(0);
                 backRightWheel.setPower(0);
                 sleep(500);
+                //activate servos
                 button2Servo.setPosition(0.5);
                 sleep(600);
                 button2Servo.setPosition(0.05);
@@ -346,11 +362,13 @@ public abstract class _ResQAuto extends LinearOpMode {
                 frontRightWheel.setPower(0.1);
                 backRightWheel.setPower(0.1);
                 sleep(300);
+                //set servo
                 button2Servo.setPosition(0.5);
                 buttonServo.setPosition(0.8);
                 sleep(600);
                 button2Servo.setPosition(0.05);
                 sleep(1000);
+                //forward
                 frontLeftWheel.setPower(0.2);
                 backLeftWheel.setPower(0.2);
                 frontRightWheel.setPower(0.2);
@@ -359,7 +377,7 @@ public abstract class _ResQAuto extends LinearOpMode {
 
             }
         } else {
-
+            //do nothing
         }
 
 
@@ -376,42 +394,51 @@ public abstract class _ResQAuto extends LinearOpMode {
         //End of Autonomous
         debugValues.add(formatter.format(new Date()) + "End of Autonomous, Navigation start");
         if (getDelay() == 0) {
+            //move to the side only if first
+            //go back
             frontLeftWheel.setPower(-0.2);
             backLeftWheel.setPower(-0.2);
             frontRightWheel.setPower(-0.2);
             backRightWheel.setPower(-0.2);
             sleep(300);
             if (getRedAlliance() == 1) {
+                //turn left
                 frontLeftWheel.setPower(0.2);
                 backLeftWheel.setPower(0.2);
                 frontRightWheel.setPower(-0.2);
                 backRightWheel.setPower(-0.2);
                 sleep(1500);
+                //forward
                 frontLeftWheel.setPower(0.3);
                 backLeftWheel.setPower(0.3);
                 frontRightWheel.setPower(0.3);
                 backRightWheel.setPower(0.3);
                 sleep(1450);
+                //stop
                 frontRightWheel.setPower(0);
                 frontLeftWheel.setPower(0);
                 backRightWheel.setPower(0);
                 backLeftWheel.setPower(0);
             } else {
+                //Turn right(on blue alliance)
                 frontLeftWheel.setPower(-0.4);
                 backLeftWheel.setPower(-0.4);
                 frontRightWheel.setPower(0.4);
                 backRightWheel.setPower(0.4);
                 sleep(900);
+                //forward
                 frontLeftWheel.setPower(0.3);
                 backLeftWheel.setPower(0.3);
                 frontRightWheel.setPower(0.3);
                 backRightWheel.setPower(0.3);
                 sleep(500);
+                //forward more
                 frontLeftWheel.setPower(0.3);
                 backLeftWheel.setPower(0.3);
                 frontRightWheel.setPower(0.3);
                 backRightWheel.setPower(0.3);
                 sleep(450);
+                //stop
                 frontRightWheel.setPower(0);
                 frontLeftWheel.setPower(0);
                 backRightWheel.setPower(0);
@@ -420,6 +447,7 @@ public abstract class _ResQAuto extends LinearOpMode {
                // button2Servo.setPosition(0.9);
             }
         }
+        //stop
         frontRightWheel.setPower(0);
         frontLeftWheel.setPower(0);
         backRightWheel.setPower(0);
