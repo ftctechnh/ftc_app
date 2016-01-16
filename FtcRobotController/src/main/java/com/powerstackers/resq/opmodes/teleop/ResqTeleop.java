@@ -53,7 +53,7 @@ public class ResqTeleop extends OpMode {
     MotorSetting settingBrushMotor = MotorSetting.STOP;
     MotorSetting settingHangMotor = MotorSetting.STOP;
     double tapeTiltPosition = RobotConstants.TAPE_FLAT;
-    final double servoDelta = 0.05;
+    final double servoDelta = 0.005;
 
     boolean buttonLiftOut;
     boolean buttonLiftIn;
@@ -219,6 +219,7 @@ public class ResqTeleop extends OpMode {
 
         telemetry.addData("right stick", stickValueP1Right);
         telemetry.addData("left stick ", stickValueP1Left);
+        telemetry.addData("tape tilt servo", tapeTiltPosition);
     }
 
     /**

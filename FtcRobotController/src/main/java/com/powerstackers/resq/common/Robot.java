@@ -94,6 +94,7 @@ public class Robot {
         servoChurroRight.setPosition(RobotConstants.CHURRO_RIGHT_OPEN);
         servoChurroLeft.setPosition(RobotConstants.CHURRO_LEFT_OPEN);
         servoTapeTilt.setPosition(RobotConstants.TAPE_FLAT);
+        servoTapeMeasure.setPosition(0.5);
 
         dim = mode.hardwareMap.deviceInterfaceModule.get("dim");
         sensorColor = ClassFactory.createSwerveColorSensor(mode,
