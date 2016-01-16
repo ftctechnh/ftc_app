@@ -86,7 +86,7 @@ public class ResqTeleop extends OpMode {
         buttonTapeIn      = gamepad2.a;
         buttonHopperLeft  = gamepad2.left_bumper;
         buttonHopperRight = gamepad2.right_bumper;
-        buttonClimbers    = gamepad2.right_trigger > 0.0;
+        buttonClimbers    = gamepad2.right_trigger > 0.5;
 
         // Set the lift motor value.
         if (buttonLiftOut) {
