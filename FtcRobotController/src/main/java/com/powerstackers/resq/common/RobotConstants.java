@@ -24,6 +24,7 @@ public class RobotConstants {
     public static final double CHURRO_LEFT_CLOSE = 0.0;
     public static final double CHURRO_RIGHT_OPEN = 0.0;
     public static final double CHURRO_RIGHT_CLOSE = 1.0;
+    public static final double TAPE_FLAT = 0.0;
 
     // Motor speeds
     public static final double LIFT_SPEED  = 1.0;

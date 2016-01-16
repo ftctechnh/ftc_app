@@ -24,6 +24,7 @@ import com.powerstackers.resq.common.AllianceColor;
 import com.powerstackers.resq.common.DoorSetting;
 import com.powerstackers.resq.common.MotorSetting;
 import com.powerstackers.resq.common.Robot;
+import com.powerstackers.resq.common.RobotConstants;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.Range;
 
@@ -51,6 +52,8 @@ public class ResqTeleop extends OpMode {
     MotorSetting settingLiftMotor = MotorSetting.STOP;
     MotorSetting settingBrushMotor = MotorSetting.STOP;
     MotorSetting settingHangMotor = MotorSetting.STOP;
+    double tapeTiltPosition = RobotConstants.TAPE_FLAT;
+    final double servoDelta = 0.05;
 
     boolean buttonLiftOut;
     boolean buttonLiftIn;
@@ -61,6 +64,8 @@ public class ResqTeleop extends OpMode {
 
     boolean buttonTapeOut;
     boolean buttonTapeIn;
+    boolean buttonTapeUp;
+    boolean buttonTapeDown;
     boolean buttonHopperLeft;
     boolean buttonHopperRight;
     boolean buttonClimbers;
@@ -106,8 +111,8 @@ public class ResqTeleop extends OpMode {
 
         buttonTapeOut     = gamepad2.dpad_right;
         buttonTapeIn      = gamepad2.dpad_left;
-//        buttonTapeUp      = gamepad2.dpad_up;
-//        buttonTapeDown    = gamepad2.dpad_down;
+        buttonTapeUp      = gamepad2.dpad_up;
+        buttonTapeDown    = gamepad2.dpad_down;
         buttonHopperLeft  = gamepad2.left_bumper;
         buttonHopperRight = gamepad2.right_bumper;
         buttonClimbers    = gamepad2.right_trigger > 0.5;
@@ -139,6 +144,12 @@ public class ResqTeleop extends OpMode {
             settingTapeMeasureServo = MotorSetting.FORWARD;
         } else {
             settingTapeMeasureServo = MotorSetting.STOP;
+        }
+
+        if (buttonTapeUp) {
+            robot.setTapeTilt(tapeTiltPosition + servoDelta);
+        } else if (buttonTapeDown) {
+            robot.setTapeTilt(tapeTiltPosition - servoDelta);
         }
 
         // Set the hopper doors.

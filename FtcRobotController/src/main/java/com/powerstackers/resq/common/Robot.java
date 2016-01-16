@@ -46,6 +46,7 @@ public class Robot {
     private DcMotor motorWinchRight;
 
     private Servo servoTapeMeasure;
+    private Servo servoTapeTilt;
 //    private Servo servoBeacon;
 //    private Servo servoHopperRight;
     private Servo servoHopperLeft;
@@ -79,6 +80,7 @@ public class Robot {
         motorWinchRight.setDirection(DcMotor.Direction.REVERSE);
 
         servoTapeMeasure = mode.hardwareMap.servo.get("servoTapeMeasure");
+        servoTapeMeasure = mode.hardwareMap.servo.get("servoTapeTilt");
 //        servoBeacon      = mode.hardwareMap.servo.get("servoBeacon");
 //        servoHopperRight = mode.hardwareMap.servo.get("servoHopperRight");
         servoHopperLeft = mode.hardwareMap.servo.get("servoHopperLeft");
@@ -91,6 +93,7 @@ public class Robot {
         servoClimberFlipper.setPosition(RobotConstants.CLIMBER_EXTEND);
         servoChurroRight.setPosition(RobotConstants.CHURRO_RIGHT_OPEN);
         servoChurroLeft.setPosition(RobotConstants.CHURRO_LEFT_OPEN);
+        servoTapeTilt.setPosition(RobotConstants.TAPE_FLAT);
 
         dim = mode.hardwareMap.deviceInterfaceModule.get("dim");
         sensorColor = ClassFactory.createSwerveColorSensor(mode,
@@ -111,6 +114,7 @@ public class Robot {
 //        servoHopperRight.setPosition(RobotConstants.HOPPER_RIGHT_CLOSE);
         servoChurroRight.setPosition(RobotConstants.CHURRO_RIGHT_OPEN);
         servoChurroLeft.setPosition(RobotConstants.CHURRO_LEFT_OPEN);
+        servoTapeTilt.setPosition(RobotConstants.TAPE_FLAT);
         //sensorGyro.calibrate();
         // Give the gyroscope some time to calibrate
 //        while (sensorGyro.isCalibrating()) {
@@ -158,6 +162,16 @@ public class Robot {
      */
     public void setLift(MotorSetting setting) {
         toggleMotor(motorLift, setting, RobotConstants.LIFT_SPEED);
+    }
+
+    /**
+     * Set the position of the tape tilt servo.
+     * @param position Double position to set.
+     */
+    public void setTapeTilt(double position) {
+        if (position >= 0.0 && position <= 1.0) {
+            servoTapeTilt.setPosition(position);
+        }
     }
 
     /**
