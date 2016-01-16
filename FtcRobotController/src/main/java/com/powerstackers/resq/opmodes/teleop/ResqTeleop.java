@@ -162,13 +162,13 @@ public class ResqTeleop extends OpMode {
         }
 
         //Hang
-        if (buttonHangIn) {
-            robot.setHang(MotorSetting.FORWARD);
-        } else if (buttonHangOut) {
-            robot.setHang(MotorSetting.REVERSE);
-        } else {
-            robot.setHang(MotorSetting.STOP);
-        }
+//        if (buttonHangIn) {
+//            robot.setHang(MotorSetting.FORWARD);
+//        } else if (buttonHangOut) {
+//            robot.setHang(MotorSetting.REVERSE);
+//        } else {
+//            robot.setHang(MotorSetting.STOP);
+//        }
 
         // Set the climber flipper value.
         if (buttonClimbers) { // TODO Are triggers variable? I thought they were buttons. -derek = yes
@@ -209,7 +209,7 @@ public class ResqTeleop extends OpMode {
         robot.setTapeMeasure(settingTapeMeasureServo);
         robot.setLift(settingLiftMotor);
         robot.setBrush(settingBrushMotor);
-        robot.setHang(settingHangMotor);
+//        robot.setHang(settingHangMotor);
 
         telemetry.addData("right stick", stickValueP1Right);
         telemetry.addData("left stick ", stickValueP1Left);
