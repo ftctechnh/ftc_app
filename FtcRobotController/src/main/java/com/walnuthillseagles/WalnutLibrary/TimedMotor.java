@@ -29,6 +29,7 @@ public class TimedMotor extends LinearMotor implements Runnable{
         motor.setPower(speedLimit);
         try{
             Thread.sleep(numMSecs);
+            stopMotor();
         }
         catch(InterruptedException e){
             //@TODO: Overkill?
@@ -38,5 +39,6 @@ public class TimedMotor extends LinearMotor implements Runnable{
         finally {
             stopMotor();
         }
+        stopMotor();
     }
 }
