@@ -5,12 +5,13 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 
+import org.swerverobotics.library.SynchronousOpMode;
 import org.swerverobotics.library.interfaces.Autonomous;
 
 /**
  * Created by Derek on 1/14/2016.
  */
-public class ProtoAuto extends LinearOpMode {
+public class ProtoAuto extends SynchronousOpMode {
 
 
     DcMotor motorBrush;
@@ -27,7 +28,7 @@ public class ProtoAuto extends LinearOpMode {
     final float values[] = hsvValues;
 
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void main() throws InterruptedException {
 
         motorBrush = hardwareMap.dcMotor.get("motorBrush");
         motorLift = hardwareMap.dcMotor.get("motorLift");
@@ -54,14 +55,17 @@ public class ProtoAuto extends LinearOpMode {
 
         waitForStart();
 
-        while (RobotAuto.enRightPosition < -9000 || RobotAuto.enLeftPosition > 9000 || motorBRight.getCurrentPosition() < -9000 || motorBLeft.getCurrentPosition() > 9000) {
+        while (RobotAuto.enRightPosition < -9000
+                || RobotAuto.enLeftPosition > 9000
+                || motorBRight.getCurrentPosition() < -9000
+                || motorBLeft.getCurrentPosition() > 9000) {
             RobotAuto.enLeftPosition = motorFLeft.getCurrentPosition();
             RobotAuto.enRightPosition = motorFRight.getCurrentPosition();
-            motorBrush.setPower(1);
-            motorFRight.setPower(1);
-            motorBRight.setPower(1);
-            motorFLeft.setPower(1);
-            motorBLeft.setPower(1);
+            motorBrush.setPower(1.0);
+            motorFRight.setPower(1.0);
+            motorBRight.setPower(1.0);
+            motorFLeft.setPower(1.0);
+            motorBLeft.setPower(1.0);
             telemetry.addData("EncoderBL", "Value: " + String.valueOf(motorBLeft.getCurrentPosition()));
             telemetry.addData("EncoderBR", "Value: " + String.valueOf(motorBRight.getCurrentPosition()));
             telemetry.addData("EncoderFR", "Value: " + String.valueOf(motorFRight.getCurrentPosition()));
