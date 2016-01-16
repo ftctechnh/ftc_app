@@ -46,7 +46,7 @@ public class Robot {
     private DcMotor motorWinchRight;
 
     private Servo servoTapeMeasure;
-    private Servo servoBeacon;
+//    private Servo servoBeacon;
 //    private Servo servoHopperRight;
     private Servo servoHopperLeft;
     private Servo servoClimberFlipper;
@@ -79,7 +79,7 @@ public class Robot {
         motorWinchRight.setDirection(DcMotor.Direction.REVERSE);
 
         servoTapeMeasure = mode.hardwareMap.servo.get("servoTapeMeasure");
-        servoBeacon      = mode.hardwareMap.servo.get("servoBeacon");
+//        servoBeacon      = mode.hardwareMap.servo.get("servoBeacon");
 //        servoHopperRight = mode.hardwareMap.servo.get("servoHopperRight");
         servoHopperLeft = mode.hardwareMap.servo.get("servoHopperLeft");
         servoClimberFlipper = mode.hardwareMap.servo.get("servoClimbers");
@@ -105,7 +105,7 @@ public class Robot {
      * Initialize the robot's servos and sensors.
      */
     public void initializeRobot() /*throws InterruptedException */{
-        servoBeacon.setPosition(RobotConstants.BEACON_RESTING);
+//        servoBeacon.setPosition(RobotConstants.BEACON_RESTING);
         servoClimberFlipper.setPosition(RobotConstants.CLIMBER_EXTEND);
         servoHopperLeft.setPosition(RobotConstants.HOPPER_LEFT_CLOSE);
 //        servoHopperRight.setPosition(RobotConstants.HOPPER_RIGHT_CLOSE);
@@ -238,7 +238,7 @@ public class Robot {
 
         // Trim the servo value and set the servo position.
         positionBeaconServo = trimServoValue(positionBeaconServo);
-        servoBeacon.setPosition(positionBeaconServo);
+//        servoBeacon.setPosition(positionBeaconServo);
     }
 
     /**

@@ -12,9 +12,9 @@
         <Servo name="servoTapeMeasure" port="1" />
         <Servo name="servoTapeTilt" port="2" />
         <Servo name="servoHopperLeft" port="3" />
-        <Servo name="servoHopperRight" port="4" />
+        <Servo name="servoChurroLeft" port="4" />
         <Servo name="servoClimbers" port="5" />
-        <Servo name="servoBeacon" port="6" />
+        <Servo name="servoChurroRight" port="6" />
     </ServoController>
     <MotorController name="Motor Controller 4" serialNumber="AL00UYTB">
         <Motor name="motorBLeft" port="1" />
@@ -23,5 +23,9 @@
     <MotorController name="Motor Controller 1" serialNumber="AL00VGKN">
         <Motor name="motorFLeft" port="1" />
         <Motor name="motorFRight" port="2" />
+    </MotorController>
+    <MotorController name="Motor Controller 3" serialNumber="AL00UWHD">
+        <Motor name="motorLHang" port="1" />
+        <Motor name="motorRHang" port="2" />
     </MotorController>
 </Robot>
