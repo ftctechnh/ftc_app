@@ -28,4 +28,5 @@ public class RobotConstants {
     // Motor speeds
     public static final double LIFT_SPEED  = 1.0;
     public static final double BRUSH_SPEED = 1.0;
+    public static final double WINCH_SPEED = 1.0;
 }

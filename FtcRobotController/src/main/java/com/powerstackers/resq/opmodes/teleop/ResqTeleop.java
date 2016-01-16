@@ -46,6 +46,7 @@ public class ResqTeleop extends OpMode {
 
     float stickValueP1Left;
     float stickValueP1Right;
+    float stickValueP2Left;
     MotorSetting settingTapeMeasureServo;
     MotorSetting settingLiftMotor;
     MotorSetting settingBrushMotor;
@@ -88,6 +89,7 @@ public class ResqTeleop extends OpMode {
         // Read the joystick and determine what motor setting to use.
         stickValueP1Left = (float) scaleInput(Range.clip(-gamepad1.left_stick_y, -1, 1));
         stickValueP1Right = (float) scaleInput(Range.clip(-gamepad1.right_stick_y, -1, 1));
+        stickValueP2Left = (float) scaleInput(Range.clip(-gamepad2.left_stick_y, -1, 1));
 
         // Neatly read all the button assignments for clarity purposes.
         buttonLiftOut     = gamepad1.left_bumper;
@@ -179,6 +181,15 @@ public class ResqTeleop extends OpMode {
         } else {
             robot.setPowerLeft(0);
         }
+
+        if (stickValueP2Left > MINIMUM_JOYSTICK_THRESHOLD) {
+            robot.setWinch(MotorSetting.FORWARD);
+        } else if (stickValueP2Left < -MINIMUM_JOYSTICK_THRESHOLD) {
+            robot.setWinch(MotorSetting.REVERSE);
+        } else {
+            robot.setWinch(MotorSetting.STOP);
+        }
+
         robot.setTapeMeasure(settingTapeMeasureServo);
         robot.setLift(settingLiftMotor);
         robot.setBrush(settingBrushMotor);

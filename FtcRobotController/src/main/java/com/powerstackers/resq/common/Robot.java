@@ -42,6 +42,8 @@ public class Robot {
     private DcMotor motorRightB;
     private DcMotor motorBrush;
     private DcMotor motorLift;
+    private DcMotor motorWinchLeft;
+    private DcMotor motorWinchRight;
 
     private Servo servoTapeMeasure;
     private Servo servoBeacon;
@@ -68,10 +70,13 @@ public class Robot {
         motorRightB = mode.hardwareMap.dcMotor.get("motorBRight");
         motorBrush  = mode.hardwareMap.dcMotor.get("motorBrush");
         motorLift   = mode.hardwareMap.dcMotor.get("motorLift");
+        motorWinchLeft = mode.hardwareMap.dcMotor.get("motorLHang");
+        motorWinchRight = mode.hardwareMap.dcMotor.get("motorRHang");
 
         motorLift.setDirection(DcMotor.Direction.REVERSE);
         motorRightA.setDirection(DcMotor.Direction.REVERSE);
         motorRightB.setDirection(DcMotor.Direction.REVERSE);
+        motorWinchRight.setDirection(DcMotor.Direction.REVERSE);
 
         servoTapeMeasure = mode.hardwareMap.servo.get("servoTapeMeasure");
         servoBeacon      = mode.hardwareMap.servo.get("servoBeacon");
@@ -299,6 +304,15 @@ public class Robot {
             servoChurroLeft.setPosition(RobotConstants.CHURRO_LEFT_CLOSE);
             servoChurroRight.setPosition(RobotConstants.CHURRO_RIGHT_CLOSE);
         }
+    }
+
+    /**
+     * Set the winch motors.
+     * @param motorSetting MotorSetting indicating the direction.
+     */
+    public void setWinch(MotorSetting motorSetting) {
+        toggleMotor(motorWinchLeft, motorSetting, RobotConstants.WINCH_SPEED);
+        toggleMotor(motorWinchRight, motorSetting, RobotConstants.WINCH_SPEED);
     }
 
     /**
