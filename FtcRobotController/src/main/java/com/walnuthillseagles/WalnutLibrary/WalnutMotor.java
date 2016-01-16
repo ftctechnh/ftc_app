@@ -159,8 +159,8 @@ public abstract class WalnutMotor {
     public boolean checkEncoders(){
         return hasEncoders;
     }
-    public String getName(){
-        return name;
+    public String toString(){
+        return this.name;
     }
     public void setName(String myName){
         name = myName;
@@ -173,9 +173,7 @@ public abstract class WalnutMotor {
         }
         motor.setPower(0);
     }
-    public String toString(){
-        return this.name;
-    }
+
     public void powerMotor(double pow){
         if(pow>=-1.0&&pow <=1.0)
             motor.setPower(pow);
