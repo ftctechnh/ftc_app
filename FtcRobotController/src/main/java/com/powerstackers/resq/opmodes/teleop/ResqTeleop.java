@@ -45,13 +45,12 @@ public class ResqTeleop extends OpMode {
 
     Robot robot;
 
-    float stickValueP1Left;
-    float stickValueP1Right;
-    float stickValueP2Left;
+    float stickDriveLeft;
+    float stickDriveRight;
+    float stickWinch;
     MotorSetting settingTapeMeasureServo;
     MotorSetting settingLiftMotor = MotorSetting.STOP;
     MotorSetting settingBrushMotor = MotorSetting.STOP;
-    MotorSetting settingHangMotor = MotorSetting.STOP;
     double tapeTiltPosition = RobotConstants.TAPE_FLAT;
     final double servoDelta = 0.005;
 
@@ -95,9 +94,9 @@ public class ResqTeleop extends OpMode {
     public void loop() {
 
         // Read the joystick and determine what motor setting to use.
-        stickValueP1Left = (float) scaleInput(Range.clip(-gamepad1.left_stick_y, -1, 1));
-        stickValueP1Right = (float) scaleInput(Range.clip(-gamepad1.right_stick_y, -1, 1));
-        stickValueP2Left = (float) scaleInput(Range.clip(-gamepad2.left_stick_y, -1, 1));
+        stickDriveLeft  = (float) scaleInput(Range.clip(-gamepad1.left_stick_y, -1, 1));
+        stickDriveRight = (float) scaleInput(Range.clip(-gamepad1.right_stick_y, -1, 1));
+        stickWinch      = (float) scaleInput(Range.clip(-gamepad2.left_stick_y, -1, 1));
 
         // Neatly read all the button assignments for clarity purposes.
         buttonLiftOut     = gamepad1.left_bumper;
@@ -113,10 +112,12 @@ public class ResqTeleop extends OpMode {
         buttonTapeIn      = gamepad2.dpad_left;
         buttonTapeUp      = gamepad2.dpad_up;
         buttonTapeDown    = gamepad2.dpad_down;
+
         buttonHopperLeft  = gamepad2.left_bumper;
         buttonHopperRight = gamepad2.right_bumper;
         buttonClimbers    = gamepad2.right_trigger > 0.5;
         buttonChurros     = gamepad1.right_trigger > 0.5;
+
         buttonBothHoppers = gamepad2.right_bumper;
 
         // Set the lift motor value.
@@ -146,6 +147,7 @@ public class ResqTeleop extends OpMode {
             settingTapeMeasureServo = MotorSetting.STOP;
         }
 
+        // Increment or decrement the tape measure tipper
         if (buttonTapeUp) {
             tapeTiltPosition += servoDelta;
             Range.clip(tapeTiltPosition, 0.0, 1.0);
@@ -177,7 +179,7 @@ public class ResqTeleop extends OpMode {
         }
 
         // Set the climber flipper value.
-        if (buttonClimbers) { // TODO Are triggers variable? I thought they were buttons. -derek = yes
+        if (buttonClimbers) {
             robot.setClimberFlipper(DoorSetting.OPEN);
         } else {
             robot.setClimberFlipper(DoorSetting.CLOSE);
@@ -192,22 +194,25 @@ public class ResqTeleop extends OpMode {
         }
 
         // Last of all, update the motor values.
-        if (absoluteValue(stickValueP1Left) > MINIMUM_JOYSTICK_THRESHOLD) {
-            robot.setPowerRight(-stickValueP1Left);
+        // Left drive motors
+        // TODO Motors are backwards.
+        if (absoluteValue(stickDriveLeft) > MINIMUM_JOYSTICK_THRESHOLD) {
+            robot.setPowerRight(-stickDriveLeft);
         } else {
             robot.setPowerRight(0);
         }
 
-        if (absoluteValue(stickValueP1Right) > MINIMUM_JOYSTICK_THRESHOLD) {
-            robot.setPowerLeft(-stickValueP1Right);
+        // Right drive motors
+        if (absoluteValue(stickDriveRight) > MINIMUM_JOYSTICK_THRESHOLD) {
+            robot.setPowerLeft(-stickDriveRight);
         } else {
             robot.setPowerLeft(0);
         }
 
         // Winch motor control
-        if (stickValueP2Left > MINIMUM_JOYSTICK_THRESHOLD) {
+        if (stickWinch > MINIMUM_JOYSTICK_THRESHOLD) {
             robot.setWinch(MotorSetting.FORWARD);
-        } else if (stickValueP2Left < -MINIMUM_JOYSTICK_THRESHOLD) {
+        } else if (stickWinch < -MINIMUM_JOYSTICK_THRESHOLD) {
             robot.setWinch(MotorSetting.REVERSE);
         } else {
             robot.setWinch(MotorSetting.STOP);
@@ -217,8 +222,8 @@ public class ResqTeleop extends OpMode {
         robot.setLift(settingLiftMotor);
         robot.setBrush(settingBrushMotor);
 
-        telemetry.addData("right stick", stickValueP1Right);
-        telemetry.addData("left stick ", stickValueP1Left);
+        telemetry.addData("right stick", stickDriveRight);
+        telemetry.addData("left stick ", stickDriveLeft);
         telemetry.addData("tape tilt servo", tapeTiltPosition);
     }
 
