@@ -31,15 +31,19 @@ public class Timing {
         powers.add(power);
         ends.add(delay+length);
         isRunning.add(false);
+
     }
 
-    public void execute()
+    public void execute(LinearOpMode wfs)
     {
+        wfs.telemetry.addData("num", motors.size());
         int current = 0;
 
         int moves = motors.size()*2;
+
         for(int j=0;j<moves;j++)
         {
+            if(!wfs.opModeIsActive()) return;
             long min = 999999999;
             int minnum = 0;
             for(int i=0;i<motors.size();i++)
@@ -55,9 +59,9 @@ public class Timing {
                     minnum = i;
                 }
             }
-
+            wfs.telemetry.addData("this", min);
             try {
-                Thread.sleep(min);
+                wfs.sleep(min);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -70,6 +74,7 @@ public class Timing {
             {
                 isRunning.set(minnum, true);
                 motors.get(minnum).set(powers.get(minnum));
+                wfs.telemetry.addData("here", "yes");
             }
         }
     }

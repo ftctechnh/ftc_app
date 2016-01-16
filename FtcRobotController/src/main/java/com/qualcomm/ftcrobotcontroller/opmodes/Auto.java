@@ -22,7 +22,7 @@ public class Auto extends LinearOpMode {
 
     // ok so what do I need to have here.. a move, and a turn?
 
-    private final double FIRST_FORWARD = 16;
+    private final double FIRST_FORWARD = 10;
     private final double SECOND_FORWARD = 1;
     private final double AMT_ROT = 45;
 
@@ -102,14 +102,14 @@ public class Auto extends LinearOpMode {
             double otherColor = 0.6;
 
             // to midfield stop at diagonal divide
-            forwardUntil(FIRST_FORWARD);
+            //forwardUntil(FIRST_FORWARD);
 
             // now which way do we turn...?
-            turnDeg(FtcRobotControllerActivity.isRed, AMT_ROT);
+            //turnDeg(FtcRobotControllerActivity.isRed, AMT_ROT);
 
             Timing test = new Timing();
-            test.append(right, 0.5, 0, 3000);
-            test.execute();
+            test.append(right, 0.5, 1000, 3000);
+            test.execute(this);
 
 
             /*Timing climber = new Timing();
