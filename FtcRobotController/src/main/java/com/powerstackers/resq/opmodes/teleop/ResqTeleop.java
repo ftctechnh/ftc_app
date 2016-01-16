@@ -199,6 +199,15 @@ public class ResqTeleop extends OpMode {
     }
 
     /**
+     * Stop the robot and make any final assignments.
+     */
+    @Override
+    public void stop() {
+        // Engage the churro grabbers when the match ends.
+        robot.setChurroGrabbers(DoorSetting.CLOSE);
+    }
+
+    /**
      * Return the absolute value of a float.
      * @param in Floating point number.
      * @return Positive float.
