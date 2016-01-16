@@ -23,6 +23,8 @@ public class TeleOp extends SynchronousOpMode {
 
 	DcMotor sweeper;
 
+	Servo mountainClimber;
+
 	//Declare gamepad objects
 	float rightWheel;
 	float leftWheel;
@@ -36,6 +38,8 @@ public class TeleOp extends SynchronousOpMode {
 	boolean sweeperForward = false;
 	boolean sweeperBackward = false;
 
+	boolean mountainClimberUsed = false;
+
 	@Override public void main() throws InterruptedException {
 		//Initialize hardware
 		frontRightWheel = hardwareMap.dcMotor.get("frontRightWheel");
@@ -46,9 +50,11 @@ public class TeleOp extends SynchronousOpMode {
 		linearSlideR = hardwareMap.dcMotor.get("linearSlideR");
 		linearSlideL = hardwareMap.dcMotor.get("linearSlideL");
 
-		containerTilt = hardwareMap.servo.get("containerTilt");
+		//containerTilt = hardwareMap.servo.get("containerTilt");
 
 		sweeper = hardwareMap.dcMotor.get("sweeper");
+
+		//mountainClimber = hardwareMap.servo.get("mountainClimber");
 
 		//Set motor channel modes and direction
 		frontRightWheel.setDirection(DcMotor.Direction.FORWARD);
@@ -78,8 +84,8 @@ public class TeleOp extends SynchronousOpMode {
 				linearSlideForward = gamepad1.a || gamepad2.a;
 				linearSlideBackward = gamepad1.b || gamepad2.b;
 
-				containerTiltRight = gamepad1.dpad_right || gamepad2.dpad_right;
-				containerTiltLeft = gamepad1.dpad_left || gamepad1.dpad_left;
+				//containerTiltRight = gamepad1.dpad_right || gamepad2.dpad_right;
+				//containerTiltLeft = gamepad1.dpad_left || gamepad1.dpad_left;
 
 				if(gamepad1.right_bumper || gamepad2.right_bumper) {
 					sweeperForward = !sweeperForward;
@@ -89,35 +95,45 @@ public class TeleOp extends SynchronousOpMode {
 					sweeperForward = false;
 				}
 
+				if(gamepad1.x || gamepad2.x) {
+					mountainClimberUsed = !mountainClimberUsed;
+				}
+
 				//Use gamepad values to move robot
 				Functions.moveTwoMotors(frontRightWheel, backRightWheel,
-						Functions.convertGamepad(rightWheel));
+						Functions.convertGamepad(rightWheel), true);
 				Functions.moveTwoMotors(frontLeftWheel, backLeftWheel,
-						Functions.convertGamepad(leftWheel));
+						Functions.convertGamepad(leftWheel), true);
 
 				if(linearSlideForward) {
-					Functions.moveTwoMotors(linearSlideR, linearSlideL, 0.3);
+					Functions.moveTwoMotors(linearSlideR, linearSlideL, 0.5);
 				} else if(linearSlideBackward) {
-					Functions.moveTwoMotors(linearSlideR, linearSlideL, -0.3);
+					Functions.moveTwoMotors(linearSlideR, linearSlideL, -0.5);
 				} else {
 					Functions.moveTwoMotors(linearSlideR, linearSlideL, 0.0);
 				}
 
-				if(containerTiltRight) {
+				/*if(containerTiltRight) {
 					containerTilt
 							.setPosition(containerTilt.getPosition() + 0.005);
 				} else if(containerTiltLeft) {
 					containerTilt
 							.setPosition(containerTilt.getPosition() - 0.005);
-				}
+				}*/
 
 				if(sweeperForward) {
-					sweeper.setPower(0.5);
+					sweeper.setPower(1.0);
 				} else if(sweeperBackward){
-					sweeper.setPower(-0.5);
+					sweeper.setPower(1.0);
 				} else {
 					sweeper.setPower(0);
 				}
+
+				/*if(mountainClimberUsed) {
+					mountainClimber.setPosition(1.0);
+				} else {
+					mountainClimber.setPosition(1.0);
+				}*/
 			}
 
 			telemetry.update();

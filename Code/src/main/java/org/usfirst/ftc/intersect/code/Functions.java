@@ -3,7 +3,17 @@ package org.usfirst.ftc.intersect.code;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class Functions {
-	public static Double convertGamepad(float y) {
+	//Important ratios for different types of motors
+	public static int neveRestPPR = 1120;
+	public static int tetrixPPR = 1440;
+	public static int neveRestDegreeRatio = neveRestPPR / 360;
+	public static int tetrixDegreeRatio = tetrixPPR / 360;
+	public static double neveRestTetrixSpeedRatio = 150 / 160;
+	public static double encoderError = 4.0;
+	public static double backWheelCircumfrence = 3*3*Math.PI;
+
+
+	public static double convertGamepad(float y) {
 		int m;
 
 		if(y < 0) {
@@ -15,8 +25,16 @@ public class Functions {
 	}
 
 	public static void moveTwoMotors(DcMotor motor1, DcMotor motor2,
-			Double power) {
+			double power, boolean wheels) {
+		if(wheels) {
+			motor1.setPower(power * Functions.neveRestTetrixSpeedRatio);
+		}
 		motor1.setPower(power);
 		motor2.setPower(power);
+	}
+
+	public static void moveTwoMotors(DcMotor motor1, DcMotor motor2,
+			double power) {
+		moveTwoMotors(motor1, motor2, power, false);
 	}
 }
