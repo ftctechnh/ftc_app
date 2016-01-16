@@ -52,7 +52,7 @@ public class protoAuto extends LinearOpMode {
 
         waitForStart();
 
-        while (RobotAuto.enRightPosition > RobotAuto.EnRightS1 || RobotAuto.enLeftPosition > RobotAuto.EnLeftS1 || motorBRight.getCurrentPosition() > RobotAuto.EnRightS1 || motorBLeft.getCurrentPosition() > RobotAuto.EnLeftS1) {
+        while (RobotAuto.enRightPosition < -9000 || RobotAuto.enLeftPosition > 9000 || motorBRight.getCurrentPosition() < -9000 || motorBLeft.getCurrentPosition() > 9000) {
             RobotAuto.enLeftPosition = motorFLeft.getCurrentPosition();
             RobotAuto.enRightPosition = motorFRight.getCurrentPosition();
             motorBrush.setPower(1);
