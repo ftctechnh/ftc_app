@@ -1,19 +1,55 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.GyroSensor;
-import com.qualcomm.robotcore.util.Range;
+public class DragonoidsAuto extends DragonoidsOpMode implements SensorEventListener {
+    private SensorManager sensorManager;
+    private Sensor rotationSensor;
+    // Switch to TYPE_GAME_ROTATION_VECTOR if magnetic field disturbances cause issues with inertial navigation
+    private int sensorType = Sensor.TYPE_ROTATION_VECTOR;
+    private float yaw;
+    private float pitch;
+    private float roll;
 
-import java.util.HashMap;
-
-public class DragonoidsAuto extends DragonoidsOpMode {
     @Override
     public void init() {
         super.init();
+        // Set up the rotationSensor
+        this.sensorManager = (SensorManager) hardwareMap.appContext.getSystemService(Context.SENSOR_SERVICE);
+        this.rotationSensor = sensorManager.getDefaultSensor(this.sensorType);
+        if (this.rotationSensor != null) {
+            this.sensorManager.registerListener(this, this.rotationSensor, SensorManager.SENSOR_DELAY_GAME);
+        }
+        else {
+            telemetry.addData("Error", "Rotation vector sensor not found");
+        }
+    }
+    // For rotation vector sensor data
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() != this.sensorType) return;
+
+        float[] rotationMatrix = new float[9];
+        // Documentation for these SensorManager.* methods can be found at https://developer.android.com/reference/android/hardware/SensorManager.html
+        SensorManager.getRotationMatrixFromVector(rotationMatrix, event.values);
+        SensorManager.remapCoordinateSystem(rotationMatrix, SensorManager.AXIS_X, SensorManager.AXIS_Z, rotationMatrix);
+        float[] orientation = new float[3];
+        SensorManager.getOrientation(rotationMatrix, orientation);
+        // Convert the orientation from radians to degrees
+        this.yaw = (float) Math.toDegrees(orientation[0]);
+        this.pitch = (float) Math.toDegrees(orientation[1]);
+        this.roll = (float) Math.toDegrees(orientation[2]);
+        telemetry.addData("Yaw", this.yaw);
+        telemetry.addData("Pitch", this.pitch);
+        telemetry.addData("Roll", this.roll);
+    }
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        telemetry.addData("Rotation accuracy changed", accuracy);
     }
 
     public int getRightEncoderValue() {
