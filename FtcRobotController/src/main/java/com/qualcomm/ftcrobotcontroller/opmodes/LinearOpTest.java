@@ -22,13 +22,33 @@ public class LinearOpTest extends LinearOpMode
         left.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         right.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         waitForStart();
-        {
+        {//move forward a distance
             left.setPower(1.0f);
             right.setPower(1.0f);
             while(left.getCurrentPosition() < 1000 | right.getCurrentPosition() < 1000){}
             left.setPower(0f);
             right.setPower(0f);
         }
-
+        {//rotate right a distance
+            left.setPower(1.0f);
+            right.setPower(-1.0f);
+            while(left.getCurrentPosition() < 1000 | right.getCurrentPosition() > -1000){}
+            left.setPower(0f);
+            right.setPower(0f);
+        }
+        {//rotate left a distance
+            left.setPower(-1.0f);
+            right.setPower(1.0f);
+            while(right.getCurrentPosition() < 1000 | left.getCurrentPosition() > -1000){}
+            left.setPower(0f);
+            right.setPower(0f);
+        }
+        {//move backwards a distance
+            left.setPower(-1.0f);
+            right.setPower(-1.0f);
+            while(left.getCurrentPosition() > -1000 | right.getCurrentPosition() > -1000){}
+            left.setPower(0f);
+            right.setPower(0f);
+        }
     }
 }
