@@ -49,7 +49,24 @@ public class DragonoidsAuto extends DragonoidsOpMode implements SensorEventListe
     }
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        telemetry.addData("Rotation accuracy changed", accuracy);
+        String description;
+        switch (accuracy) {
+            case SensorManager.SENSOR_STATUS_UNRELIABLE:
+                description = "Unreliable";
+                break;
+            case SensorManager.SENSOR_STATUS_ACCURACY_LOW:
+                description = "Low accuracy";
+                break;
+            case SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM:
+                description = "Medium accuracy";
+                break;
+            case SensorManager.SENSOR_STATUS_ACCURACY_HIGH:
+                description = "High accuracy";
+                break;
+            default:
+                description = "None?";
+        }
+        telemetry.addData("Rotation accuracy changed", String.format("%s (%d)", description, accuracy));
     }
 
     public int getRightEncoderValue() {
