@@ -1,5 +1,6 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.walnutHillsEagles.WalnutLibrary.DistanceMotor;
 import com.walnutHillsEagles.WalnutLibrary.TimedMotor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -13,16 +14,16 @@ public class LinearWalnutOpMode extends LinearOpMode {
     private DcMotor motorRight;
 
     //Assign Hardware
-    private TimedMotor leftDrive;
-    private TimedMotor rightDrive;
+    private DistanceMotor leftDrive;
+    private DistanceMotor rightDrive;
 
     public void runOpMode(){
         //Initilize  Hardware
         motorLeft = hardwareMap.dcMotor.get("motorLeft");
         motorRight = hardwareMap.dcMotor.get("motorRight");
         //Assign Hardware
-        leftDrive = new TimedMotor(motorLeft,"Left Drive",false,false);
-        rightDrive = new TimedMotor(motorRight,"Right Drive",false,true);
+        leftDrive = new DistanceMotor(motorLeft,"Left Drive",true,false,4,1,1440);
+        rightDrive = new DistanceMotor(motorRight,"Right Drive",true,true,4,1,1440);
         //Wait for Start
         try{
             waitForStart();
@@ -31,7 +32,8 @@ public class LinearWalnutOpMode extends LinearOpMode {
             Thread.currentThread().interrupt();
         }
         //SimpleDrive Forward
-        leftDrive.operate(3,1);
-        rightDrive.operate(3,1);
+        rightDrive.operate(6,1);
+        leftDrive.operate(6,1);
+
     }
 }

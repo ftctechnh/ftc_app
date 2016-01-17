@@ -7,7 +7,7 @@ package com.walnutHillsEagles.WalnutLibrary;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 
-public abstract class LinearMotor{
+public abstract class LinearMotor implements Runnable{
     //Field
     protected DcMotor motor;
     protected String name;
@@ -25,7 +25,6 @@ public abstract class LinearMotor{
         speedLimit = 0;
         if(encoderCheck){
             motor.setMode((DcMotorController.RunMode.valueOf("RUN_USING_ENCODERS")));
-            motor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         }
         if(isReversed){
             orientation = -1;

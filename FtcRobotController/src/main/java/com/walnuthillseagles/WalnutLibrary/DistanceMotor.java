@@ -1,5 +1,6 @@
 package com.walnutHillsEagles.WalnutLibrary;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 
@@ -12,20 +13,39 @@ public class DistanceMotor extends LinearMotor implements Runnable{
     //Please measure in Inches
     private double circumference;
     private double gearRatio;
+    //Distance value used in operate
     private int distance;
+    //Current value of encoders since it cannot restart
+    private int currentPosition;
+    //Create timer
+    private LinearOpMode myOp;
+    //Create Direction
+    private boolean isForward;
     public DistanceMotor(DcMotor myMotor, String myName, boolean encoderCheck,boolean isReveresed,
                          double myDiameter,double myGearRatio, int myEncoder){
         super(myMotor, myName, encoderCheck,isReveresed);
         motor.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        currentPosition = motor.getCurrentPosition();
         circumference = myDiameter*Math.PI;
         gearRatio = myGearRatio;
         encoderRot = myEncoder;
         distance = 0;
         speedLimit = 0;
+        //Create for timer
+        myOp = new LinearOpMode() {
+            @Override
+            public void runOpMode() throws InterruptedException {
+                return;
+            }
+        };
+        isForward = true;
     }
     //Starts operation with given parameters
     public void operate(double inches, double mySpeedLimit){
-        distance = (int)(inches * circumference * gearRatio);
+        distance = (int)(inches * circumference * gearRatio)+currentPosition;
+        isForward = true;
+        if(inches<0)
+            isForward=false;
         speedLimit = mySpeedLimit*orientation;
         motor.setTargetPosition(distance);
         motor.setPower(speedLimit);
@@ -36,22 +56,32 @@ public class DistanceMotor extends LinearMotor implements Runnable{
         speedLimit = mySpeedLimit;
     }
     public void run(){
-        //Keep if encoders have passed distance before continueing
-        while(motor.getCurrentPosition()<distance){
-            try{
-                Thread.sleep(WAITRESOLUTION);
+        while((isForward&&checkForward())||(!isForward&&checkBackward())) {
+            try {
+                myOp.sleep(WAITRESOLUTION);
                 motor.setPower(speedLimit);
-            }
-            catch(InterruptedException e){
+            } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
+            finally{
+                currentPosition=motor.getCurrentPosition();
+            }
         }
+        //Keep if encoders have passed distance before continueing
         stopMotor();
         resetPoistion();
-        //Reset Encoders
-        motor.setMode(DcMotorController.RunMode.valueOf("RESET_ENCODERS"));
+        //Reset Encoders NOTICE: Reset encoders is bugged
+        //motor.setMode(DcMotorController.RunMode.valueOf("RESET_ENCODERS"));
     }
     public void resetPoistion(){
-        motor.setTargetPosition(0);
+        motor.setTargetPosition(currentPosition);
+    }
+    private boolean checkForward(){
+        return motor.getCurrentPosition()<distance;
+    }
+
+
+    private boolean checkBackward(){
+        return motor.getCurrentPosition()>distance;
     }
 }
