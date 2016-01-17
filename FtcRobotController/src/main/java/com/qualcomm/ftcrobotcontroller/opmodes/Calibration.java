@@ -39,6 +39,7 @@ public class Calibration extends OpMode {
     DcMotor linearMotor;
 
     Servo rButtonServo;
+    Servo twistServo;
 
     double redValue;
     double blueValue;
@@ -77,6 +78,9 @@ public class Calibration extends OpMode {
 
         rButtonServo = hardwareMap.servo.get("rightbutton");
         rButtonServo.setPosition(1);
+
+        twistServo = hardwareMap.servo.get("twist");
+        twistServo.setPosition(1);
     }
 
     public void loop() {

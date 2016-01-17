@@ -98,8 +98,8 @@ public abstract class _ResQAuto extends LinearOpMode {
         button2Servo.setPosition(0.7);
         //climberservo = hardwareMap.servo;.get("climber");
         //climberservo.setPosition(0.0);
-        //twistServo = hardwareMap.servo.get("twist");
-        //twistServo.setPosition(1);
+        twistServo = hardwareMap.servo.get("twist");
+        twistServo.setPosition(1);
         //releaseServo = hardwareMap.servo.get("release");
         //releaseServo.setPosition(0);
         //hookServo = hardwareMap.servo.get("signal");
@@ -280,9 +280,10 @@ public abstract class _ResQAuto extends LinearOpMode {
 
         //Color Sensor Logic
         //For detect blue
-        if(colorsensor.red()<0.1&&colorsensor.blue()>0.1){
-            debugValues.add(formatter.format(new Date()) + "Detect Blue Value" + colorsensor.blue());
-            if (getRedAlliance() == 0){
+        //if(colorsensor.red()<0.1&&colorsensor.blue()>0.1){
+        if(colorsensor.red()<colorsensor.blue()) {
+            debugValues.add(formatter.format(new Date()) + "Detect Blue Value" + colorsensor.blue() + ", Red" + colorsensor.red());
+            if (getRedAlliance() == 0) {
                 //tilt to the right
                 frontLeftWheel.setPower(-0.1);
                 backLeftWheel.setPower(-0.1);
@@ -325,8 +326,9 @@ public abstract class _ResQAuto extends LinearOpMode {
                 sleep(300);
             }
             //If detect red
-        }else if (colorsensor.red() > 0.1 &&colorsensor.blue()<0.1){
-            debugValues.add(formatter.format(new Date()) + "Detect Red Value" + colorsensor.red());
+            //  }else if (colorsensor.red() > 0.1 &&colorsensor.blue()<0.1){
+        } else if (colorsensor.red()>colorsensor.blue()) {
+            debugValues.add(formatter.format(new Date()) + "Detect Red Value" + colorsensor.red() + ", Blue" + colorsensor.blue());
             if (getRedAlliance() == 1){
                 //forward
                 frontLeftWheel.setPower(0.2);
@@ -339,7 +341,7 @@ public abstract class _ResQAuto extends LinearOpMode {
                 backLeftWheel.setPower(-0.2);
                 frontRightWheel.setPower(-0.2);
                 backRightWheel.setPower(-0.2);
-                sleep(300);
+                sleep(350);
                 //stop
                 frontLeftWheel.setPower(0);
                 backLeftWheel.setPower(0);
