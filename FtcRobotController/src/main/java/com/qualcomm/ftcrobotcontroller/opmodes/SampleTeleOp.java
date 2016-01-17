@@ -13,7 +13,7 @@ import java.util.ArrayList;
 /**
  * Created by Yan Vologzhanin on 1/2/2016.
  */
-public class WalnutTeleOp extends OpMode{
+public class SampleTeleOp extends OpMode{
     //Initilze new thread
 
     //Physical Hardware
