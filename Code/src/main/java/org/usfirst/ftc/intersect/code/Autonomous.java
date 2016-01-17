@@ -27,7 +27,6 @@ public class Autonomous extends SynchronousOpMode {
     static DcMotor frontLeftWheel;
     static DcMotor backRightWheel;
     static DcMotor backLeftWheel;
-
     static DcMotor sweeper;
 
     static ColorSensor lineColor;
@@ -71,18 +70,11 @@ public class Autonomous extends SynchronousOpMode {
 
         //Autonomous Start
         waitForStart();
-        while (opModeIsActive()) {
+        if (opModeIsActive()) {
             telemetry.clearDashboard();
-            double ultraVal = ultrasonic.getUltrasonicLevel();
-            //stopAtWhite(1, 20000, telemetry);
-            telemetry.addData("Ultrasonic", ultraVal);
-            //telemetry.addData("Heading", gyro.getHeading());
-            //telemetry.update();
-            //turnRobotrightDegrees(180, 0.3, 100, telemetry);
-            //telemetry.addData("Heading", gyro.getHeading());
+            telemetry.addData("Autonomous", "Running");
             telemetry.update();
-            telemetry.addData("Debug", "Done");
-            telemetry.update();
+
         }
         //Autonomous End
     }
@@ -149,7 +141,7 @@ public class Autonomous extends SynchronousOpMode {
         moveRobotPower(0);
     }
 
-    public static void turnRobotrightDegrees(int degrees, double power, int timeout, TelemetryDashboardAndLog telemetry) {
+    public static void turnRobotRightDegrees(int degrees, double power, int timeout, TelemetryDashboardAndLog telemetry) {
         int start = gyro.getHeading();
         int heading = start;
         long endtime = System.currentTimeMillis() + timeout * 1000;
@@ -166,6 +158,8 @@ public class Autonomous extends SynchronousOpMode {
         }
         backLeftWheel.setPower(power);
         backRightWheel.setPower(-power);
+        frontRightWheel.setPower(-power);
+        frontLeftWheel.setPower(power);
         while ((heading < target) && (System.currentTimeMillis() < endtime)) {
             heading = gyro.getHeading();
             if (heading > protectedValue) {
@@ -175,11 +169,14 @@ public class Autonomous extends SynchronousOpMode {
             telemetry.addData("Start", start);
             telemetry.addData("Heading", gyro.getHeading());
             telemetry.addData("Target", target);
-            telemetry.addData("Protect", protectedValue);
+            telemetry.addData("Protected Value", protectedValue);
             telemetry.update();
         }
         backLeftWheel.setPower(0);
         backRightWheel.setPower(0);
+        frontRightWheel.setPower(0);
+        frontLeftWheel.setPower(0);
+
         telemetry.addData("Start", start);
         telemetry.addData("Heading", gyro.getHeading());
         telemetry.addData("Target", target);
@@ -187,6 +184,48 @@ public class Autonomous extends SynchronousOpMode {
         telemetry.update();
 
     }
+	public static void turnRobotLeftDegrees(int degrees, double power, int timeout, TelemetryDashboardAndLog telemetry) {
+		int start = gyro.getHeading();
+		int heading = start;
+		long endtime = System.currentTimeMillis() + timeout * 1000;
+		int protectedValue = start + 20;
+		int target = start + degrees;
+		if (target >= 360) {
+			target = target - 360;
+		}
+		if (protectedValue >= 360) {
+			protectedValue = protectedValue - 360;
+		}
+		else if (target < start) {
+			protectedValue = -1;
+		}
+		backLeftWheel.setPower(-power);
+		backRightWheel.setPower(power);
+        frontRightWheel.setPower(power);
+        frontLeftWheel.setPower(-power);
+		while ((heading > target) && (System.currentTimeMillis() < endtime)) {
+			heading = gyro.getHeading();
+			if (heading < protectedValue) {
+				heading = heading + 360;
+			}
+
+			telemetry.addData("Start", start);
+			telemetry.addData("Heading", gyro.getHeading());
+			telemetry.addData("Target", target);
+			telemetry.addData("Protect", protectedValue);
+			telemetry.update();
+		}
+		backLeftWheel.setPower(0);
+		backRightWheel.setPower(0);
+        frontRightWheel.setPower(0);
+        frontLeftWheel.setPower(0);
+		telemetry.addData("Start", start);
+		telemetry.addData("Heading", gyro.getHeading());
+		telemetry.addData("Target", target);
+		telemetry.addData("Protect", protectedValue);
+		telemetry.update();
+
+	}
 
 
 }
