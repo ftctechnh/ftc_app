@@ -97,6 +97,7 @@ public class Autonomous extends SynchronousOpMode {
         frontLeftWheel.setPower(power);
         backRightWheel.setPower(power);
         backLeftWheel.setPower(power);
+        //moves robot
 
     }
 
