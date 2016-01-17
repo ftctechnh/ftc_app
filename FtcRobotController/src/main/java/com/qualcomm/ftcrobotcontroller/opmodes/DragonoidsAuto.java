@@ -22,7 +22,7 @@ public class DragonoidsAuto extends DragonoidsOpMode implements SensorEventListe
         this.sensorManager = (SensorManager) hardwareMap.appContext.getSystemService(Context.SENSOR_SERVICE);
         this.rotationSensor = sensorManager.getDefaultSensor(this.sensorType);
         if (this.rotationSensor != null) {
-            this.sensorManager.registerListener(this, this.rotationSensor, SensorManager.SENSOR_DELAY_GAME);
+            this.sensorManager.registerListener(this, this.rotationSensor, SensorManager.SENSOR_DELAY_FASTEST);
         }
         else {
             telemetry.addData("Error", "Rotation vector sensor not found");
