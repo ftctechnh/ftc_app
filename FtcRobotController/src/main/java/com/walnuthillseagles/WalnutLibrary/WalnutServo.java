@@ -22,7 +22,7 @@ public class WalnutServo implements Drivable{
         buttons.add(firstButton);
         startPos = myStartPos;
         //Reset Servo
-        resetServo();
+        stop();
 
     }
     public void addButton(String daButton, double myPos, boolean toggle){
@@ -38,12 +38,12 @@ public class WalnutServo implements Drivable{
                 servo.setPosition(temp.getPow());
             }
             else if(!temp.checkToggle()&&!WalnutMotor.GamepadUpdater.boolValues[temp.getPos()]){
-                this.resetServo();
+                this.stop();
             }
 
         }
     }
-    public void resetServo(){
+    public void stop(){
         servo.setPosition(startPos);
     }
 }

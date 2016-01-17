@@ -5,4 +5,5 @@ package com.walnutHillsEagles.WalnutLibrary;
  */
 public interface Drivable {
     public abstract void operate();
+    public abstract void stop();
 }
