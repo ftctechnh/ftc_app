@@ -30,4 +30,12 @@ public class Functions {
 		motor1.setPower(power);
 		motor2.setPower(power);
 	}
+
+    public static void waitFor(int mill) {
+        try {
+            Thread.sleep(mill);
+        } catch(Exception e) {
+            Thread.currentThread().interrupt();
+        }
+    }
 }
