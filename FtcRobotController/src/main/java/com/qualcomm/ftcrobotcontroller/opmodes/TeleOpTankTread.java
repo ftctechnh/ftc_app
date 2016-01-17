@@ -110,7 +110,7 @@ public class TeleOpTankTread extends OpMode {
         float drivespeed = -gamepad1.left_stick_y;
         float driveturn = gamepad1.right_stick_x;
         float hook = -gamepad2.right_stick_y;
-        float pusher = gamepad2.left_stick_y;
+        float intake = gamepad2.left_stick_y;
 
         float right = drivespeed - driveturn;
         float left = drivespeed + driveturn;
@@ -119,14 +119,14 @@ public class TeleOpTankTread extends OpMode {
         right = Range.clip(right, -1, 1);
         left = Range.clip(left, -1, 1);
         hook = Range.clip(hook, -1, 1);
-        pusher = Range.clip(pusher, -1,1);
+        intake = Range.clip(intake, -1,1);
 
         // scale the joystick value to make it easier to control
         // the robot more precisely at slower speeds.
         right = (float)scaleInput(right);
         left =  (float)scaleInput(left);
         hook = (float)scaleInput(hook);
-        pusher = (float)scaleInput(pusher);
+        intake = (float)scaleInput(intake);
 
         // write the values to the motors
 
@@ -136,6 +136,7 @@ public class TeleOpTankTread extends OpMode {
         tbc.setMotorFLeftPower(-left );
 
         tbc.setMotorHookPower(hook);
+        tbc.setMotorPusherPower(intake);
 
         if(gamepad2.x) {
             tbc.buttonServoSpeed = 0.0f;
@@ -232,7 +233,7 @@ public class TeleOpTankTread extends OpMode {
         telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", left));
         telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));
         telemetry.addData("servo in",  "servo in: " + String.format("%.2f", servoInput));
-        telemetry.addData("pusher servo",  "pusher servo: " + String.format("%.2f", pusher));
+        telemetry.addData("intake",  "intake: " + String.format("%.2f", intake));
         telemetry.addData("button servo", "button servo: " + String.format("%.2f", tbc.buttonServoSpeed));
         telemetry.addData("climber", "climber:  " + String.format("%.2f", tbc.climberPosition));
         telemetry.addData("sliderL", "sliderL: " + String.format("%.2f", tbc.sliderLPosition));
