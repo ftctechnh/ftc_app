@@ -33,12 +33,13 @@ public class DragonoidsAuto extends DragonoidsOpMode implements SensorEventListe
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() != this.sensorType) return;
 
-        float[] rotationMatrix = new float[9];
+        float[] rotationMatrix1 = new float[9];
+        float[] rotationMatrix2 = new float[9];
         // Documentation for these SensorManager.* methods can be found at https://developer.android.com/reference/android/hardware/SensorManager.html
-        SensorManager.getRotationMatrixFromVector(rotationMatrix, event.values);
-        SensorManager.remapCoordinateSystem(rotationMatrix, SensorManager.AXIS_X, SensorManager.AXIS_Z, rotationMatrix);
+        SensorManager.getRotationMatrixFromVector(rotationMatrix1, event.values);
+        SensorManager.remapCoordinateSystem(rotationMatrix1, SensorManager.AXIS_X, SensorManager.AXIS_Z, rotationMatrix2);
         float[] orientation = new float[3];
-        SensorManager.getOrientation(rotationMatrix, orientation);
+        SensorManager.getOrientation(rotationMatrix2, orientation);
         // Convert the orientation from radians to degrees
         this.yaw = (float) Math.toDegrees(orientation[0]);
         this.pitch = (float) Math.toDegrees(orientation[1]);
