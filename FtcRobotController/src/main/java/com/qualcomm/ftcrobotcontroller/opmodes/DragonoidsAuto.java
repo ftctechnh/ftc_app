@@ -6,7 +6,9 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
-public class DragonoidsAuto extends DragonoidsOpMode implements SensorEventListener {
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+public class DragonoidsAuto extends LinearOpMode implements SensorEventListener {
     private SensorManager sensorManager;
     private Sensor rotationSensor;
     // Switch to TYPE_GAME_ROTATION_VECTOR if magnetic field disturbances cause issues with inertial navigation
@@ -15,9 +17,8 @@ public class DragonoidsAuto extends DragonoidsOpMode implements SensorEventListe
     private float pitch;
     private float roll;
 
-    @Override
-    public void init() {
-        super.init();
+    public void initialize() {
+        DragonoidsGlobal.init(hardwareMap);
         // Set up the rotation vector sensor
         this.sensorManager = (SensorManager) hardwareMap.appContext.getSystemService(Context.SENSOR_SERVICE);
         this.rotationSensor = sensorManager.getDefaultSensor(this.sensorType);
@@ -74,14 +75,14 @@ public class DragonoidsAuto extends DragonoidsOpMode implements SensorEventListe
 
     public int getRightEncoderValue() {
         int total = 0;
-        total += driveMotors.get("rightOne").getCurrentPosition();
-        total += driveMotors.get("rightTwo").getCurrentPosition();
+        total += DragonoidsGlobal.rightOne.getCurrentPosition();
+        total += DragonoidsGlobal.rightTwo.getCurrentPosition();
         return total / 2;
     }
     public int getLeftEncoderValue() {
         int total = 0;
-        total += driveMotors.get("leftOne").getCurrentPosition();
-        total += driveMotors.get("leftTwo").getCurrentPosition();
+        total += DragonoidsGlobal.leftOne.getCurrentPosition();
+        total += DragonoidsGlobal.leftTwo.getCurrentPosition();
         return total / 2;
     }
 
@@ -90,34 +91,38 @@ public class DragonoidsAuto extends DragonoidsOpMode implements SensorEventListe
     }
 
     @Override
-    public void loop() {
-        // Choose flow based on alliance color
+    public void runOpMode() throws InterruptedException {
+        this.initialize();
+        waitForStart();
 
-        // Drive forward a bit
+        while (opModeIsActive()) {
+            // Choose flow based on alliance color
 
-        // Use the phone's IMU to make a precise 45 degree turn
+            // Drive forward a bit
 
-        // Drive forward to the beacon zone
+            // Use the phone's IMU to make a precise 45 degree turn
 
-        // Turn 45 degrees again
+            // Drive forward to the beacon zone
 
-        // Drive forward to color detection distance
+            // Turn 45 degrees again
 
-        // Detect color of the beacon
+            // Drive forward to color detection distance
 
-        // Drive forward or extend arm to push the correct button
+            // Detect color of the beacon
 
-        // Deposit climbers in the bucket behind the beacon
+            // Drive forward or extend arm to push the correct button
 
-        // Reverse out of the beacon area (or turn 180 degrees and then drive forward)
+            // Deposit climbers in the bucket behind the beacon
 
-        // Turn -45 degrees
+            // Reverse out of the beacon area (or turn 180 degrees and then drive forward)
 
-        // Drive forward as far as possible up the mountain
+            // Turn -45 degrees
 
-        // Use the "churro grabbers" to gain more traction and hoist the robot up the
-        // remaining portion of the mountain after the normal wheels begin to slip
+            // Drive forward as far as possible up the mountain
 
-        super.loop();
+            // Use the "churro grabbers" to gain more traction and hoist the robot up the
+            // remaining portion of the mountain after the normal wheels begin to slip
+        }
+        DragonoidsGlobal.stopAll();
     }
 }

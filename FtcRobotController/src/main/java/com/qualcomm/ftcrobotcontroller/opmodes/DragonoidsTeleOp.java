@@ -6,10 +6,10 @@ import com.qualcomm.robotcore.util.Range;
 
 import java.util.HashMap;
 
-public class DragonoidsTeleOp extends DragonoidsOpMode {
+public class DragonoidsTeleOp extends OpMode {
     @Override
     public void init() {
-        super.init();
+        DragonoidsGlobal.init(hardwareMap);
     }
     @Override
     public void loop() {
@@ -23,41 +23,53 @@ public class DragonoidsTeleOp extends DragonoidsOpMode {
         // TEMPORARY HACK OF A FIX OH GOD NO PLEASE FIX THIS
         double rightDrivePower = Range.clip(forwardAmount - turningAmount, -1.0, 1.0);
         double leftDrivePower = Range.clip(forwardAmount + turningAmount, -1.0, 1.0);
-        super.setDrivePower(rightDrivePower, leftDrivePower);
+        DragonoidsGlobal.setDrivePower(rightDrivePower, leftDrivePower);
 
         if (gamepad2.right_bumper) {
             // Turn on the conveyor
-            auxMotors.get("conveyor").setPower(0.45);
+            DragonoidsGlobal.conveyor.setPower(0.45);
         }
         else if (gamepad2.left_bumper) {
             // Reverse the conveyor
-            auxMotors.get("conveyor").setPower(-0.25);
+            DragonoidsGlobal.conveyor.setPower(-0.25);
         }
         else {
             // Stop conveyor motor
-            auxMotors.get("conveyor").setPower(0.0);
+            DragonoidsGlobal.conveyor.setPower(0.0);
         }
 
         if (gamepad2.dpad_left) {
-            auxMotors.get("knocker").setPower(0.45);
+            DragonoidsGlobal.knocker.setPower(0.45);
         }
         else if (gamepad2.dpad_right) {
-            auxMotors.get("knocker").setPower(-0.45);
+            DragonoidsGlobal.knocker.setPower(-0.45);
         }
         else {
-            auxMotors.get("knocker").setPower(0.0);
+            DragonoidsGlobal.knocker.setPower(0.0);
         }
 //      Commented cause we don't have it
 //        if (gamepad2.a){
 //            // Open the gate
-//            servos.get("gate").setPosition(0.5);
+//            DragonoidsGlobal.gate.setPosition(0.5);
 //        }
 //        else{
 //            // Close the gate
-//            servos.get("gate").setPosition(0.0);
+//            DragonoidsGlobal.gate.setPosition(0.0);
 //        }
 
-        super.loop();
+        this.outputTelemetry();
+    }
+    private void outputTelemetry() {
+        //telemetry.addData("Right drive motor power", driveMotors.get("rightOneDrive").getPower());
+        //telemetry.addData("Left drive motor power", driveMotors.get("leftOneDrive").getPower());
+        telemetry.addData("Conveyor motor power", DragonoidsGlobal.conveyor.getPower());
+        telemetry.addData("Knocker motor power", DragonoidsGlobal.knocker.getPower());
+    }
+    @Override
+    public void stop() {
+        // Stop all motors
+        DragonoidsGlobal.stopAll();
+        super.stop();
     }
     /*
 	 * This method scales the joystick input so for low joystick values, the
