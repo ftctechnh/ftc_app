@@ -18,7 +18,7 @@ public class DragonoidsAuto extends DragonoidsOpMode implements SensorEventListe
     @Override
     public void init() {
         super.init();
-        // Set up the rotationSensor
+        // Set up the rotation vector sensor
         this.sensorManager = (SensorManager) hardwareMap.appContext.getSystemService(Context.SENSOR_SERVICE);
         this.rotationSensor = sensorManager.getDefaultSensor(this.sensorType);
         if (this.rotationSensor != null) {
@@ -50,6 +50,8 @@ public class DragonoidsAuto extends DragonoidsOpMode implements SensorEventListe
     }
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        if (sensor.getType() != this.sensorType) return;
+
         String description;
         switch (accuracy) {
             case SensorManager.SENSOR_STATUS_UNRELIABLE:
