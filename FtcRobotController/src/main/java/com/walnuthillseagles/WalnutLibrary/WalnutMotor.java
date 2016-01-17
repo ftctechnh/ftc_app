@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 /**
  * Created by Yan Vologzhanin on 1/2/2016.
  */
-public abstract class WalnutMotor {
+public abstract class WalnutMotor implements Drivable{
     //Field
     private DcMotor motor;
     //Used for telemetry

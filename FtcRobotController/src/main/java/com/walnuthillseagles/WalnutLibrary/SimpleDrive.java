@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import java.util.ArrayList;
 
+@Deprecated
 public class SimpleDrive {
     private ArrayList<IncMotor> rightMotors;
     private ArrayList<IncMotor>  leftMotors;

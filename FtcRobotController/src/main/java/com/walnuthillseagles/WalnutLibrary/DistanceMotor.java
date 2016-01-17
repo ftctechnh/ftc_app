@@ -8,8 +8,11 @@ import com.qualcomm.robotcore.hardware.DcMotorController;
  * Created by Yan Vologzhanin on 1/2/2016.
  */
 public class DistanceMotor extends LinearMotor implements Runnable{
+    //Constants
     //How often the code will check if its current operation is done
     public static final long WAITRESOLUTION = 100;
+    //Precisions of wheels. Smaller = better/ less consistant
+    public static final int RANGEVAL = 30;
     //Please measure in Inches
     private double circumference;
     private double gearRatio;
@@ -20,35 +23,34 @@ public class DistanceMotor extends LinearMotor implements Runnable{
     //Create timer
     private LinearOpMode myOp;
     //Create Direction
-    private boolean isForward;
     public DistanceMotor(DcMotor myMotor, String myName, boolean encoderCheck,boolean isReveresed,
                          double myDiameter,double myGearRatio, int myEncoder){
-        super(myMotor, myName, encoderCheck,isReveresed);
+        //Create Motor
+        super(myMotor, myName, encoderCheck, isReveresed);
         motor.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
-        currentPosition = motor.getCurrentPosition();
+
+        //Values involving bot
         circumference = myDiameter*Math.PI;
         gearRatio = myGearRatio;
         encoderRot = myEncoder;
+
+        //Values involving distances
+        currentPosition = motor.getCurrentPosition();
         distance = 0;
         speedLimit = 0;
-        //Create for timer
+        //Create timer
         myOp = new LinearOpMode() {
             @Override
             public void runOpMode() throws InterruptedException {
                 return;
             }
         };
-        isForward = true;
     }
     //Starts operation with given parameters
     public void operate(double inches, double mySpeedLimit){
-        distance = (int)(inches * circumference * gearRatio)+currentPosition;
-        isForward = true;
-        if(inches<0)
-            isForward=false;
+        distance = (int)(inches * circumference * gearRatio)+ currentPosition;
         speedLimit = mySpeedLimit*orientation;
-        motor.setTargetPosition(distance);
-        motor.setPower(speedLimit);
+        //Start new process
         new Thread(this).start();
     }
     //Allows other methods to change speed midway through method
@@ -56,10 +58,15 @@ public class DistanceMotor extends LinearMotor implements Runnable{
         speedLimit = mySpeedLimit;
     }
     public void run(){
-        while((isForward&&checkForward())||(!isForward&&checkBackward())) {
+        //Go for it
+        motor.setTargetPosition(distance);
+        motor.setPower(speedLimit);
+        //Wait until in Pos
+        //@TODO Better way to do this?
+        while(!inRange(distance,motor.getCurrentPosition())) {
             try {
                 myOp.sleep(WAITRESOLUTION);
-                motor.setPower(speedLimit);
+
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
@@ -69,19 +76,16 @@ public class DistanceMotor extends LinearMotor implements Runnable{
         }
         //Keep if encoders have passed distance before continueing
         stopMotor();
+        currentPosition=motor.getCurrentPosition();
         resetPoistion();
         //Reset Encoders NOTICE: Reset encoders is bugged
         //motor.setMode(DcMotorController.RunMode.valueOf("RESET_ENCODERS"));
     }
-    public void resetPoistion(){
+    //Private helper methods
+    private void resetPoistion(){
         motor.setTargetPosition(currentPosition);
     }
-    private boolean checkForward(){
-        return motor.getCurrentPosition()<distance;
-    }
-
-
-    private boolean checkBackward(){
-        return motor.getCurrentPosition()>distance;
+    private boolean inRange(int target, int current){
+        return (current > target-RANGEVAL) && (current < target+RANGEVAL);
     }
 }

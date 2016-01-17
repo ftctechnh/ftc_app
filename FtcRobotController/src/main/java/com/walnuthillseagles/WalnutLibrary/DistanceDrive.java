@@ -5,18 +5,25 @@ import java.util.ArrayList;
 /**
  * Created by Yan Vologzhanin on 1/4/2016.
  */
+
 public class DistanceDrive {
     private ArrayList<DistanceMotor> leftDrive;
     private ArrayList<DistanceMotor> rightDrive;
     private double robotWidth;
 
+    //Just cause
+    public static final int REVERSEORIENTATION = -1;
+
     public static final double MOTORADJUSTMENTPOW = 0.8;
     //Constructor used for first two motors
     public DistanceDrive(DistanceMotor myLeft, DistanceMotor myRight, double width){
+        //Initilize ArrayLists
         leftDrive = new ArrayList<DistanceMotor>();
         rightDrive = new ArrayList<DistanceMotor>();
+        //Add motors to these lists
         leftDrive.add(myLeft);
         rightDrive.add(myRight);
+        //Initilize other variables
         robotWidth = width;
     }
     //Add additional motors
@@ -27,17 +34,10 @@ public class DistanceDrive {
         rightDrive.add(myRight);
     }
     //Autonomous Methods
-    public void linearDrive(double inches, double pow ,boolean isForward){
-        //Initilize with assumption of going backwards, then check direction
-        double orientation = -1;
-        if(isForward){
-            orientation = 1;
-        }
-        //do Necessary calculation
-        double distance = inches*orientation;
+    public void linearDrive(double inches, double pow){
         //Tell motors to start
-        operateMotors(leftDrive,distance,pow);
-        operateMotors(rightDrive,distance,pow);
+        operateMotors(leftDrive,inches,pow);
+        operateMotors(rightDrive,inches,pow);
     }
     //Left is positive, right is negetive
     public void tankTurn(double degrees, double pow){
@@ -45,10 +45,9 @@ public class DistanceDrive {
         double distance = (Math.PI * robotWidth)/factor;
         //One is inverted to create a tank turn
         operateMotors(leftDrive,distance,pow);
-        operateMotors(rightDrive,distance*-1,pow*-1);
-
+        operateMotors(rightDrive,distance*REVERSEORIENTATION,pow*REVERSEORIENTATION);
     }
-    //Used to activate motors
+    //Helpper Private methods
     private void operateMotors(ArrayList<DistanceMotor> myMotors, double distance, double pow){
         for(int i=0;i<myMotors.size();i++){
             myMotors.get(i).operate(distance,pow);

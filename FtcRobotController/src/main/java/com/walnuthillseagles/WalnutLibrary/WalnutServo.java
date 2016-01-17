@@ -7,7 +7,7 @@ import java.util.ArrayList;
 /**
  * Created by Yan Vologzhanin on 1/4/2016.
  */
-public class WalnutServo {
+public class WalnutServo implements Drivable{
     private Servo servo;
     private ArrayList<ButtonEvent> buttons;
 

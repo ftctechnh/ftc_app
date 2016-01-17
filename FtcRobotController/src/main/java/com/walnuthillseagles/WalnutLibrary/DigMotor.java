@@ -7,7 +7,7 @@ import java.util.ArrayList;
 /**
  * Created by Yan Vologzhanin on 1/2/2016.
  */
-public class DigMotor extends WalnutMotor {
+public class DigMotor extends WalnutMotor implements Drivable{
     //Fields
     //All available buttons... EVER (pls ;-;)
     public enum digValues{

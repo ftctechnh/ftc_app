@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 /**
  * Created by Yan Vologzhanin on 1/2/2016.
  */
-public class IncMotor extends WalnutMotor {
+public class IncMotor extends WalnutMotor implements Drivable{
     public enum analogValues{
         LEFTX1(),LEFTY1(),RIGHTX1(),RIGHTY1(),LEFTZ1(),RIGHTZ1(),
                 LEFTX2(),LEFTY2(),RIGHTX2(),RIGHTY2(),LEFTZ2(),RIGHTZ2();
