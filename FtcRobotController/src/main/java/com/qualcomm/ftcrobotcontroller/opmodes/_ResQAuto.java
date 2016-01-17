@@ -371,7 +371,7 @@ public abstract class _ResQAuto extends LinearOpMode {
 
             }
         } else {
-            //do nothing
+            debugValues.add(formatter.format(new Date()) + "None Detected, Red" + colorsensor.red() + ", Blue" + colorsensor.blue());
         }
 
 
