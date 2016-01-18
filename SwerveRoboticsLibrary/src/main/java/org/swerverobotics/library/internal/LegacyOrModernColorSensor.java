@@ -2,8 +2,8 @@ package org.swerverobotics.library.internal;
 
 import android.graphics.Color;
 
-import com.qualcomm.hardware.HiTechnicNxtColorSensor;
-import com.qualcomm.hardware.ModernRoboticsI2cColorSensor;
+import com.qualcomm.hardware.hitechnic.*;
+import com.qualcomm.hardware.modernrobotics.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
@@ -16,7 +16,7 @@ import org.swerverobotics.library.interfaces.*;
  * Modern Robotics color sensor. The two are very similar I2C devices; it's easy
  * for them to share code.
  */
-public class LegacyOrModernColorSensor extends ColorSensor implements IOpModeStateTransitionEvents
+public class LegacyOrModernColorSensor implements ColorSensor, IOpModeStateTransitionEvents
     {
     //----------------------------------------------------------------------------------------------
     // State
