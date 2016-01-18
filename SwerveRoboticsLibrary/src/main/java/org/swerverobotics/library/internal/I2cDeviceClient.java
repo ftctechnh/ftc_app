@@ -300,22 +300,6 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
     // Operations
     //----------------------------------------------------------------------------------------------
 
-    @Override public void executeActionWhileLocked(Runnable action)
-        {
-        synchronized (this.concurrentClientLock)
-            {
-            action.run();
-            }
-        }
-
-    @Override public <T> T executeFunctionWhileLocked(IFunc<T> func)
-        {
-        synchronized (this.concurrentClientLock)
-            {
-            return func.value();
-            }
-        }
-
     /**
      * Sets the set of I2C device registers that we wish to read.
      */
@@ -332,14 +316,20 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                 else
                     {
                     // Remember the new window, but get a fresh copy so we can implement the read mode policy
-                    this.readWindow = newWindow.freshCopy();
+                    setReadWindowInternal(newWindow.readableCopy());
                     assertTrue(!BuildConfig.DEBUG || (this.readWindow.isOkToRead() && this.readWindow.maySwitchToReadMode()));
-
-                    // Let others know of the update
-                    this.readWindowChanged = true;
                     }
                 }
             }
+        }
+
+    /** locks must be externally taken */
+    private void setReadWindowInternal(ReadWindow newWindow)
+        {
+        this.readWindow = newWindow;
+
+        // Let others (specifically, the callback) know of the update
+        this.readWindowChanged = true;
         }
 
     /**
@@ -391,6 +381,10 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
 
     /**
      * Read a contiguous set of registers.
+     *
+     * This is the core read routine. Note that the current read window is never
+     * adjusted or invalidated by the execution of this function; that helps support
+     * concurrent clients.
      */
     @Override public TimestampedData readTimeStamped(int ireg, int creg)
         {
@@ -410,6 +404,9 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                         {
                         this.callbackLock.wait();
                         }
+
+                    // Remember what the read window was on entry so we can restore it later if needed
+                    ReadWindow prevReadWindow = this.readWindow;
 
                     // Is what's in the read cache right now or shortly will be have what we want?
                     if (readCacheValidityCurrentOrImminent() && readWindowActuallyRead != null && readWindowActuallyRead.contains(ireg, creg))
@@ -435,7 +432,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                             if (readWindowRangeOk)
                                 {
                                 // log(Log.VERBOSE, String.format("reuse window: (0x%02x,%d)", ireg, creg));
-                                setReadWindow(this.readWindow);
+                                setReadWindow(this.readWindow);     // will make a readable copy
                                 }
                             else
                                 {
@@ -474,6 +471,12 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                         // readCacheStatus or writeCacheStatus
                         if (this.readCacheStatus==READ_CACHE_STATUS.VALID_ONLYONCE)
                             this.readCacheStatus=READ_CACHE_STATUS.IDLE;
+
+                        // Restore any read window that we may have disturbed
+                        if (this.readWindow != prevReadWindow)
+                            {
+                            setReadWindowInternal(prevReadWindow);
+                            }
                         }
                     }
                 }
@@ -489,13 +492,8 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
 
     @Override public TimestampedData readTimeStamped(final int ireg, final int creg, final ReadWindow readWindowNeeded, final ReadWindow readWindowSet)
         {
-        return this.executeFunctionWhileLocked(new IFunc<TimestampedData>() {
-            @Override public TimestampedData value()
-                {
-                ensureReadWindow(readWindowNeeded, readWindowSet);
-                return readTimeStamped(ireg, creg);
-                }
-            });
+        ensureReadWindow(readWindowNeeded, readWindowSet);
+        return readTimeStamped(ireg, creg);
         }
 
     private boolean readCacheValidityCurrentOrImminent()
