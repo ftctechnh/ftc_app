@@ -1,6 +1,5 @@
 package com.powerstackers.resq.opmodes.autonomous;
 
-import com.powerstackers.resq.common.RobotAuto;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
@@ -43,22 +42,20 @@ public class ProtoAuto extends LinearOpMode { //no SYNCHRONUS
         /*
          * Motors
          */
-        motorBRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         motorFRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         motorFLeft.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
         motorBLeft.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-        motorBRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         motorFRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
 
         waitForStart();
 
-        while (enRightPosition > -9000) {
+        while (enRightPosition > -4820) {
             enRightPosition = motorFRight.getCurrentPosition();
             motorBrush.setPower(1.0);
-            motorFRight.setPower(1.0);
-            motorBRight.setPower(1.0);
-            motorFLeft.setPower(1.0);
-            motorBLeft.setPower(1.0);
+            motorFRight.setPower(0.15);
+            motorBRight.setPower(0.15);
+            motorFLeft.setPower(0.10);
+            motorBLeft.setPower(0.10);
             telemetry.addData("EncoderBL", "Value: " + String.valueOf(motorBLeft.getCurrentPosition()));
             telemetry.addData("EncoderBR", "Value: " + String.valueOf(motorBRight.getCurrentPosition()));
             telemetry.addData("EncoderFR", "Value: " + String.valueOf(motorFRight.getCurrentPosition()));
@@ -78,8 +75,16 @@ public class ProtoAuto extends LinearOpMode { //no SYNCHRONUS
         motorFRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         motorFLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
 
-        while (motorFLeft.getPower() < 1)
+        while (motorFLeft.getPower() < 1) {
             telemetry.addData("stop", "power: " + String.valueOf(motorBLeft.getPower()));
         }
 
+        stop();
+
+        motorBrush.setPower(0);
+        motorBLeft.setPower(0);
+        motorBRight.setPower(0);
+        motorFLeft.setPower(0);
+        motorFRight.setPower(0);
     }
+}
