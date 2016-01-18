@@ -8,8 +8,9 @@ import com.qualcomm.robotcore.hardware.DcMotorController;
 /**
  * Created by Derek on 1/14/2016.
  */
-public class protoAuto extends LinearOpMode {
+public class ProtoAuto extends LinearOpMode { //no SYNCHRONUS
 
+    double enLeftPosition = 0.0;
 
     DcMotor motorBrush;
     DcMotor motorLift;
@@ -18,14 +19,17 @@ public class protoAuto extends LinearOpMode {
     DcMotor motorBRight;
     DcMotor motorBLeft;
 
-    /*Color Values
-     *
-     */
-    float hsvValues[] = {0, 0, 0};
-    final float values[] = hsvValues;
+//    /*Color Values
+//     *
+//     */
+//    float hsvValues[] = {0, 0, 0};
+//    final float values[] = hsvValues;
 
     @Override
     public void runOpMode() throws InterruptedException {
+
+
+        double enRightPosition = 0.0;
 
         motorBrush = hardwareMap.dcMotor.get("motorBrush");
         motorLift = hardwareMap.dcMotor.get("motorLift");
@@ -42,44 +46,43 @@ public class protoAuto extends LinearOpMode {
          * Motors
          */
         motorBRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        motorBLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         motorFRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        motorFLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        motorBRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        motorBLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        motorFRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        motorFLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        motorFLeft.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        motorBLeft.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
 
         waitForStart();
 
-        while (enRightPosition > -4500) {
-            RobotAuto.enRightPosition = motorFRight.getCurrentPosition();
-            motorBrush.setPower(1);
-            motorFRight.setPower(1);
-            motorBRight.setPower(1);
-            motorFLeft.setPower(1);
-            motorBLeft.setPower(1);
+        while (enRightPosition > -4820) {
+            enRightPosition = motorFRight.getCurrentPosition();
+            motorBrush.setPower(1.0);
+            motorFRight.setPower(0.15);
+            motorBRight.setPower(0.15);
+            motorFLeft.setPower(0.10);
+            motorBLeft.setPower(0.10);
             telemetry.addData("EncoderBL", "Value: " + String.valueOf(motorBLeft.getCurrentPosition()));
             telemetry.addData("EncoderBR", "Value: " + String.valueOf(motorBRight.getCurrentPosition()));
             telemetry.addData("EncoderFR", "Value: " + String.valueOf(motorFRight.getCurrentPosition()));
             telemetry.addData("EncoderFL", "Value: " + String.valueOf(motorFLeft.getCurrentPosition()));
             telemetry.addData("motorFRight", "Power: " + String.valueOf(motorFRight.getPower()));
-
-//            if (RobotAuto.enLeftPosition > RobotAuto.EnLeftS1 && RobotAuto.enRightPosition > RobotAuto.EnRightS1) {
-//
-//                RobotAuto.motorBLeft.setPower(0);
-//                RobotAuto.motorBRight.setPower(0);
-//
-//            }
+            telemetry.addData("motorBRight", "Power: " + String.valueOf(motorBRight.getPower()));
+            telemetry.addData("motorFLeft", "Power: " + String.valueOf(motorFLeft.getPower()));
+            telemetry.addData("motorBLeft", "Power: " + String.valueOf(motorBLeft.getPower()));
 
         }
 
         motorBrush.setPower(0);
         motorBLeft.setPower(0);
         motorBRight.setPower(0);
+        motorFLeft.setPower(0);
+        motorFRight.setPower(0);
+
         motorBLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         motorBRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        motorBRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        motorFRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        motorFLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+
+        while (motorFLeft.getPower() < 1)
+            telemetry.addData("stop", "power: " + String.valueOf(motorBLeft.getPower()));
+        }
 
     }
-}
