@@ -338,7 +338,6 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     /** Capture the gamepad state so that it will be available for a later updateGamepads() */
     private void captureGamepadState()
         {
-        // Called from loop()
         boolean changed1 = true, changed2 = true;
         //
         if (this.gamepad1Captured == null)
@@ -791,9 +790,11 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         {
         this.preInitLoopHook();
 
-        // Make waitOneFullHardwareCycle work before start is called
         synchronized (this.loopLock)
             {
+            // Capture the gamepad state for later processing
+            this.captureGamepadState();
+
             this.loopLock.notifyAll();
             }
 
