@@ -198,7 +198,7 @@ public class ThunkingHardwareFactory
                     ServoController targetController = target.getController();
                     ServoController controller = findWrapper(thunkedHwmap.servoController, targetController, ThunkedServoController.create(targetController));
 
-                    return new ThreadSafeServo(
+                    return new EasyServo(
                             controller,
                             target.getPortNumber(),
                             target.getDirection()
