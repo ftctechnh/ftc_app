@@ -17,8 +17,11 @@ public class EncoderAuton extends OpMode {
     public ElapsedTime mRuntime = new ElapsedTime();
 
     double time = mRuntime.time();
+    double s2starttime;
     double s3starttime;
     double s4starttime;
+    double s5starttime;
+
     double climberDelta = 0.005;
     int state = 0;
 
@@ -75,67 +78,73 @@ public class EncoderAuton extends OpMode {
         telemetry.addData("rr encoder", "rr encoder:" + String.format("%d", tbc.motorRRight.getCurrentPosition()));
 
         if (state == 0) {
-            tbc.motorRLeft.setTargetPosition(-12000);
+            tbc.motorRLeft.setTargetPosition(-12000); // -12000
             tbc.motorFLeft.setTargetPosition(-12000);
-            tbc.motorRRight.setTargetPosition(-12400);
-            tbc.motorFRight.setTargetPosition(-12400);
+            tbc.motorRRight.setTargetPosition(-12500); // -12400
+            tbc.motorFRight.setTargetPosition(-12500); // -10600
 
             tbc.setMotorRLeftPower(-1.0f);
             tbc.setMotorFLeftPower(-1.0f);
             tbc.setMotorRRightPower(-1.0f);
             tbc.setMotorFRightPower(-1.0f);
 
-            if  (
+
+/*
                     (Math.abs(tbc.motorRLeft.getCurrentPosition() - tbc.motorRLeft.getTargetPosition()) < 100) &&
                     (Math.abs(tbc.motorFLeft.getCurrentPosition() - tbc.motorFLeft.getTargetPosition()) < 100) &&
                     (Math.abs(tbc.motorRRight.getCurrentPosition() - tbc.motorRRight.getTargetPosition()) < 100) &&
                     (Math.abs(tbc.motorFRight.getCurrentPosition() - tbc.motorFRight.getTargetPosition()) < 100)
-                    )
+
+*/
+
+            if  ((tbc.motorRLeft.getPower() == 0.0) &&
+                    (tbc.motorFLeft.getPower() == 0.0) &&
+                    (tbc.motorRRight.getPower() == 0.0) &&
+                    (tbc.motorFRight.getPower() == 0.0))
             {
-                state = 6; // should be 1, but just a test.
-                Log.d("EncoderAuton", "rl:" + String.format("%.2f", tbc.motorRLeft.getPower()));
-                Log.d("EncoderAuton", "fl:" + String.format("%.2f", tbc.motorFLeft.getPower()));
-                Log.d("EncoderAuton", "rr:" + String.format("%.2f", tbc.motorRRight.getPower()));
-                Log.d("EncoderAuton", "fr:" + String.format("%.2f", tbc.motorFRight.getPower()));
+                Log.d("EncoderAuton", "state 0; next state is 1");
+                state = 1; // should be 1, but just a test.
+                //Log.d("EncoderAuton", "rl:" + String.format("%.2f", tbc.motorRLeft.getPower()));
+                //Log.d("EncoderAuton", "fl:" + String.format("%.2f", tbc.motorFLeft.getPower()));
+                //Log.d("EncoderAuton", "rr:" + String.format("%.2f", tbc.motorRRight.getPower()));
+                //Log.d("EncoderAuton", "fr:" + String.format("%.2f", tbc.motorFRight.getPower()));
             }
         }
 
         if (state == 1) {
-            tbc.motorFRight.setTargetPosition(-134000);
-            tbc.motorRLeft.setTargetPosition(-11000);
-            tbc.motorFLeft.setTargetPosition(-11000);
-            tbc.motorRRight.setTargetPosition(-13400);
+            tbc.motorRLeft.setTargetPosition(-12000);
+            tbc.motorFLeft.setTargetPosition(-12000);
+            tbc.motorRRight.setTargetPosition(-14400);
+            tbc.motorFRight.setTargetPosition(-14400);
 
             tbc.setMotorRLeftPower(0.5f);
-            tbc.setMotorFRightPower(-0.5f);
             tbc.setMotorFLeftPower(0.5f);
             tbc.setMotorRRightPower(-0.5f);
+            tbc.setMotorFRightPower(-0.5f);
 
-            if  (
-                    (Math.abs(tbc.motorFRight.getCurrentPosition() - -13400) < 200) &&
+           /* (Math.abs(tbc.motorFRight.getCurrentPosition() - -13400) < 200) &&
                     (Math.abs(tbc.motorRRight.getCurrentPosition() - -134000) < 200) &&
                     (Math.abs(tbc.motorFLeft.getCurrentPosition() - -11000) < 200) &&
                     (Math.abs(tbc.motorRLeft.getCurrentPosition() - -11000) < 200))
+                    */
+
+            if  ( (tbc.motorRLeft.getPower() == 0.0) &&
+                    (tbc.motorFLeft.getPower() == 0.0) &&
+                    (tbc.motorRRight.getPower() == 0.0) &&
+                    (tbc.motorFRight.getPower() == 0.0))
+
             {
-                state = 2;
+                Log.d("EncoderAuton", "state 1; next state is 2");
+                state = 2; // should be 2
+                s2starttime = mRuntime.time();
             }
         }
 
         if (state == 2) {
-            tbc.motorFRight.setTargetPosition(-15500);
-            tbc.motorRLeft.setTargetPosition(-13100);
-            tbc.motorFLeft.setTargetPosition(-13100);
-            tbc.motorRRight.setTargetPosition(-15500);
-            tbc.setMotorRLeftPower(-0.5f);
-            tbc.setMotorFRightPower(-0.5f);
-            tbc.setMotorFLeftPower(-0.5f);
-            tbc.setMotorRRightPower(-0.5f);
+            double s2elapsed = mRuntime.time() - s2starttime;
 
-            if ( (Math.abs(tbc.motorFRight.getCurrentPosition() - -15500) < 100)
-                    && (Math.abs(tbc.motorRRight.getCurrentPosition() - -15500) < 100)
-                    && (Math.abs(tbc.motorFLeft.getCurrentPosition() - -13100) < 100)
-                    && (Math.abs(tbc.motorRLeft.getCurrentPosition() - -13100) < 100))
-            {
+            if (s2elapsed > 10.0) {
+                Log.d("EncoderAuton", "state 2; next state is 3");
                 state = 3;
                 s3starttime = mRuntime.time();
             }
@@ -144,28 +153,78 @@ public class EncoderAuton extends OpMode {
         if (state == 3) {
             double s3elapsed = mRuntime.time() - s3starttime;
 
-            tbc.buttonServoSpeed = 1.0f;
+            tbc.motorRLeft.setTargetPosition(-13500);
+            tbc.motorFLeft.setTargetPosition(-13500);
+            tbc.motorRRight.setTargetPosition(-15900);
+            tbc.motorFRight.setTargetPosition(-15900);
 
-            if (s3elapsed > 2.0) {
-                state = 4;
+            tbc.setMotorRLeftPower(-0.5f);
+            tbc.setMotorFLeftPower(-0.5f);
+            tbc.setMotorRRightPower(-0.5f);
+            tbc.setMotorFRightPower(-0.5f);
+
+            /*(Math.abs(tbc.motorFRight.getCurrentPosition() - -15500) < 100)
+                    && (Math.abs(tbc.motorRRight.getCurrentPosition() - -15500) < 100)
+                    && (Math.abs(tbc.motorFLeft.getCurrentPosition() - -13100) < 100)
+                    && (Math.abs(tbc.motorRLeft.getCurrentPosition() - -13100) < 100)*/
+
+
+            if (s3elapsed > 2) {
+                Log.d("EncoderAuton", "rl:" + String.format("%.2f", tbc.motorRLeft.getPower()));
+                Log.d("EncoderAuton", "fl:" + String.format("%.2f", tbc.motorFLeft.getPower()));
+                Log.d("EncoderAuton", "rr:" + String.format("%.2f", tbc.motorRRight.getPower()));
+                Log.d("EncoderAuton", "fr:" + String.format("%.2f", tbc.motorFRight.getPower()));
+
+                Log.d("EncoderAuton", "timeout state 3; next state is 4");
+                state = 4; //should be 4
+                s4starttime = mRuntime.time();
+            }
+
+            if ((tbc.motorRLeft.getPower() == 0.0) &&
+                    (tbc.motorFLeft.getPower() == 0.0) &&
+                    (tbc.motorRRight.getPower() == 0.0) &&
+                    (tbc.motorFRight.getPower() == 0.0)
+                    )
+            {
+                Log.d("EncoderAuton", "state 3; next state is 4");
+                state = 4; //should be 4
+                s4starttime = mRuntime.time();
+            }
+        }
+
+        if (state == 4) {
+
+            double s4elapsed = mRuntime.time() - s4starttime;
+
+            tbc.buttonServoSpeed = 0.0f;
+            tbc.setButtonServoSpeed(tbc.buttonServoSpeed);
+
+            if (s4elapsed > 2.0) {
+                tbc.buttonServoSpeed = 0.5f;
+                tbc.setButtonServoSpeed(tbc.buttonServoSpeed);
+
+                Log.d("EncoderAuton", "state 4; next state is 5");
+                state = 5;
+                s5starttime = mRuntime.time();
             }
 
         }
 
-        if (state == 4) {
-            double s4elapsed = mRuntime.time() - s4starttime; // [MPH - where does s4starttime get set! ?]
+        if (state == 5) {
+            double s5elapsed = mRuntime.time() - s5starttime; // [MPH - where does s4starttime get set! ?]
             Double climberNewPos = tbc.climberPosition;
 
             climberNewPos = tbc.climberPosition + climberDelta;
             tbc.climberPosition = Range.clip(climberNewPos, tbc.CLIMBER_MIN_RANGE, tbc.CLIMBER_MAX_RANGE);
             tbc.setClimberPosition(tbc.climberPosition);
 
-            if (s4elapsed > 5.0) {
-                state = 5;
+            if (s5elapsed > 5.0) {
+                Log.d("EncoderAuton", "state 5; next state is 6");
+                state = 6;
             }
         }
 
-        if (state == 5) {
+        if (state == 6) {
             tbc.setClimberPosition(0.0);
         }
 
