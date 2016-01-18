@@ -169,29 +169,12 @@ public class AnnotatedOpModeRegistrar
                 }
             }
 
-        // Check that the overall length of the OpMode names doesn't exceed the (paltry) length
-        // that can be transmitted from the robot controller to the driver station.
-        // See FtcEventLoop.sendOpModeList().
-        StringBuilder nameBuilder = new StringBuilder();
+        // Finally, register all the OpModes
         for (Class<OpMode> opMode : opModesToRegister)
             {
-            if (nameBuilder.length() > 0) nameBuilder.append(com.qualcomm.robotcore.util.Util.ASCII_RECORD_SEPARATOR);
-            nameBuilder.append(getOpModeName(opMode));
-            }
-        if (TypeConversion.stringToUtf8(nameBuilder.toString()).length >= Command.MAX_COMMAND_LENGTH)    // see Command.Command
-            {
-            reportOpModeConfigurationError("OpMode names are too long to be sent to the Driver Station");
-            this.opModeManager.register("OpMode names too long", OpModeNamesTooLong.class);
-            }
-        else
-            {
-            // Finally, register all the OpModes
-            for (Class<OpMode> opMode : opModesToRegister)
-                {
-                String name = getOpModeName(opMode);
-                this.opModeManager.register(name, opMode);
-                Log.d(LOGGING_TAG, String.format("registered {%s} as {%s}", opMode.getSimpleName(), name));
-                }
+            String name = getOpModeName(opMode);
+            this.opModeManager.register(name, opMode);
+            Log.d(LOGGING_TAG, String.format("registered {%s} as {%s}", opMode.getSimpleName(), name));
             }
         }
 

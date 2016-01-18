@@ -6,7 +6,7 @@ import org.swerverobotics.library.interfaces.*;
 /**
  * Another in our series
  */
-public class ThunkedTouchSensor extends TouchSensor implements IThunkWrapper<TouchSensor>
+public class ThunkedTouchSensor implements TouchSensor, IThunkWrapper<TouchSensor>
     {
     //----------------------------------------------------------------------------------------------
     // State
