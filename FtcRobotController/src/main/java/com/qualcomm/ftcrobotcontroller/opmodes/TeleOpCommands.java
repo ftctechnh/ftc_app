@@ -20,9 +20,9 @@ public class TeleOpCommands extends OpMode {
     public static int RIGHT=1;
     public static int LEFT=1;
     public static int SWEEPER=2;
-    public static double TRAYLEFT=0;
-    public static double TRAYRIGHT=1;
-    public static double TRAYLEVEL=.5;
+    public static double TRAYLEFT=.1;
+    public static double TRAYRIGHT=.9;
+    public static double TRAYLEVEL=.6;
     public int UPDATES=0;
     public GyroSensor gyro;
     public DcMotorController leftsweepMC;
@@ -62,13 +62,13 @@ public class TeleOpCommands extends OpMode {
         return dScale;
     }
     public void setSweeperPower(){
-        if(gamepad2.a && leftsweepMC.getMotorPower(SWEEPER)!=1){
-            leftsweepMC.setMotorPower(SWEEPER,1);
-            UPDATES+=1;
-        } else if (gamepad2.y && leftsweepMC.getMotorPower(SWEEPER)!=-1) {
+        if(gamepad2.a && leftsweepMC.getMotorPower(SWEEPER)!=-1){
             leftsweepMC.setMotorPower(SWEEPER,-1);
             UPDATES+=1;
-        }else if(gamepad2.x || gamepad2.y && leftsweepMC.getMotorPower(SWEEPER)!=0){
+        } else if (gamepad2.y && leftsweepMC.getMotorPower(SWEEPER)!=1) {
+            leftsweepMC.setMotorPower(SWEEPER,1);
+            UPDATES+=1;
+        }else if(gamepad2.b && leftsweepMC.getMotorPower(SWEEPER)!=0){
             leftsweepMC.setMotorPower(SWEEPER,0);
             UPDATES+=1;
         }
@@ -147,7 +147,7 @@ public class TeleOpCommands extends OpMode {
         }
         //right climbers down
         if(gamepad1.dpad_right && Math.abs(climbersRight.getPosition() - .25)>.1){
-            climbersRight.setPosition(.25);
+            climbersRight.setPosition(.4);
             UPDATES+=1;
         }
         //left climbers up
