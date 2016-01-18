@@ -45,8 +45,8 @@ public class tbc {
     public final static double CLIMBER_MIN_RANGE = 0.0;
     public final static double CLIMBER_MAX_RANGE = 1.0;
     public final static double SLIDERL_MIN_RANGE = 0.0;
-    public final static double SLIDERL_MAX_RANGE = 0.50;
-    public final static double SLIDERR_MIN_RANGE = 0.3;
+    public final static double SLIDERL_MAX_RANGE = 1.0; //0.50
+    public final static double SLIDERR_MIN_RANGE = 0.0; //0.30
     public final static double SLIDERR_MAX_RANGE = 1.0;
 
     public static double climberPosition = CLIMBER_MAX_RANGE;
