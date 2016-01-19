@@ -197,7 +197,7 @@ public class Robot4Teleop extends OpMode {
             }
             if (gamepad1.left_bumper || gamepad2.left_bumper) {
                 //Harvester Stop
-                harvesterMotor.setPower(0);
+                harvesterMotor.setPower(-0.3);
             }
             if (gamepad1.dpad_left || gamepad2.dpad_left) {
                 //DONT TOUCH(x not enabled)
@@ -230,6 +230,7 @@ public class Robot4Teleop extends OpMode {
                 rButtonServo.setPosition(1);
             }
             if (gamepad1.left_trigger == 1 || gamepad2.left_trigger == 1) {
+                harvesterMotor.setPower(0);
                 //Linear Motor shrinks
                 linearMotor.setPower(-0.5);
                 //DONT TOUCH
@@ -237,6 +238,7 @@ public class Robot4Teleop extends OpMode {
                    // hangMotor.setPower(-0.5);
                 }
             } else if (gamepad1.right_trigger == 1 || gamepad2.right_trigger == 1) {
+                harvesterMotor.setPower(0);
                 //Linear Motor extends
                 linearMotor.setPower(0.5);
                 //DONT TOUCH
