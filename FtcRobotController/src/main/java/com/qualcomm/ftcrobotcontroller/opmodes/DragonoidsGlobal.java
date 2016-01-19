@@ -24,8 +24,8 @@ public class DragonoidsGlobal {
         conveyor = hardwareMap.dcMotor.get("conveyor");
         knocker = hardwareMap.dcMotor.get("knocker");
 
-        gate = hardwareMap.servo.get("gate");
-        tilter = hardwareMap.servo.get("tilter");
+        //gate = hardwareMap.servo.get("gate");
+        //tilter = hardwareMap.servo.get("tilter");
     }
 
     public static void setDrivePower(double rightPower, double leftPower) {
