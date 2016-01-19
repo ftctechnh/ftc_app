@@ -36,6 +36,7 @@ public class DragonoidsGlobal {
     }
 
     public static void setServos(){
+        gate.setPosition(0.6);
     }
 
     public static void stopMotors() {
