@@ -76,6 +76,7 @@ public class EncoderAuton extends OpMode {
         telemetry.addData("rf encoder", "rf encoder:" + String.format("%d", tbc.motorFRight.getCurrentPosition()));
         telemetry.addData("lr encoder", "lr encoder:" + String.format("%d", tbc.motorRLeft.getCurrentPosition()));
         telemetry.addData("rr encoder", "rr encoder:" + String.format("%d", tbc.motorRRight.getCurrentPosition()));
+        //telemetry.addData("state", "state:" + String.format("%.d", state));
 
         if (state == 0) {
             tbc.motorRLeft.setTargetPosition(-12000); // -12000
@@ -153,10 +154,10 @@ public class EncoderAuton extends OpMode {
         if (state == 3) {
             double s3elapsed = mRuntime.time() - s3starttime;
 
-            tbc.motorRLeft.setTargetPosition(-13500);
-            tbc.motorFLeft.setTargetPosition(-13500);
-            tbc.motorRRight.setTargetPosition(-15900);
-            tbc.motorFRight.setTargetPosition(-15900);
+            tbc.motorRLeft.setTargetPosition(-13700);
+            tbc.motorFLeft.setTargetPosition(-13700);
+            tbc.motorRRight.setTargetPosition(-16100);
+            tbc.motorFRight.setTargetPosition(-16100);
 
             tbc.setMotorRLeftPower(-0.5f);
             tbc.setMotorFLeftPower(-0.5f);
@@ -207,18 +208,17 @@ public class EncoderAuton extends OpMode {
                 state = 5;
                 s5starttime = mRuntime.time();
             }
-
         }
 
+        Double climberNewPos = tbc.climberPosition;
         if (state == 5) {
             double s5elapsed = mRuntime.time() - s5starttime; // [MPH - where does s4starttime get set! ?]
-            Double climberNewPos = tbc.climberPosition;
 
-            climberNewPos = tbc.climberPosition + climberDelta;
+            climberNewPos = tbc.climberPosition - climberDelta;
             tbc.climberPosition = Range.clip(climberNewPos, tbc.CLIMBER_MIN_RANGE, tbc.CLIMBER_MAX_RANGE);
             tbc.setClimberPosition(tbc.climberPosition);
 
-            if (s5elapsed > 5.0) {
+            if (s5elapsed > 10.0) {
                 Log.d("EncoderAuton", "state 5; next state is 6");
                 state = 6;
             }

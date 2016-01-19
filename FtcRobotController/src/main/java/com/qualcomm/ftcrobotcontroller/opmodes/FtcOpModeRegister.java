@@ -74,6 +74,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("RedLeftRamp", RedLeftRamp.class);
     manager.register("BlueLeftZone", BlueLeftZone.class);
     manager.register("MRRGBExample", MRRGBExample.class);
+    manager.register("LineAuton", LineAuton.class);
     /*
      * Uncomment any of the following lines if you want to register an op mode.
      */
