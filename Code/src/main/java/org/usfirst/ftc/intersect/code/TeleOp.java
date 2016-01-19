@@ -3,6 +3,7 @@ package org.usfirst.ftc.intersect.code;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
+
 import org.swerverobotics.library.SynchronousOpMode;
 
 /**
@@ -21,6 +22,10 @@ public class TeleOp extends SynchronousOpMode {
 
 	Servo containerTilt;
 	Servo tubeExtender;
+
+    Servo mountainClimber;
+    Servo mountainClimberRelease;
+
 	DcMotor sweeper;
 
 	//Declare gamepad objects
@@ -38,6 +43,13 @@ public class TeleOp extends SynchronousOpMode {
 
 	boolean tubeExtend = false;
 	boolean tubeRetract = false;
+
+    boolean positionClimbersForward = false;
+    boolean positionClimbersBackward = false;
+    boolean releaseClimbers = false;
+
+    float slowDriveBack;
+    float slowDriveForward;
 	@Override public void main() throws InterruptedException {
 		//Initialize hardware
 		frontRightWheel = hardwareMap.dcMotor.get("frontRightWheel");
@@ -48,8 +60,11 @@ public class TeleOp extends SynchronousOpMode {
 		linearSlideR = hardwareMap.dcMotor.get("linearSlideR");
 		linearSlideL = hardwareMap.dcMotor.get("linearSlideL");
 
-		//containerTilt = hardwareMap.servo.get("containerTilt");
-        //tubeExtender = hardwareMap.servo.get("tubeExtender");
+		/*containerTilt = hardwareMap.servo.get("containerTilt");
+        tubeExtender = hardwareMap.servo.get("tubeExtender");*/
+
+        mountainClimber = hardwareMap.servo.get("mountainClimber");
+        mountainClimberRelease = hardwareMap.servo.get("mountainClimberRelease");
 
 		sweeper = hardwareMap.dcMotor.get("sweeper");
 
@@ -68,6 +83,9 @@ public class TeleOp extends SynchronousOpMode {
 		linearSlideL.setDirection(DcMotor.Direction.FORWARD);
 		linearSlideL.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
 
+        mountainClimber.setDirection(Servo.Direction.FORWARD);
+        mountainClimberRelease.setDirection(Servo.Direction.REVERSE);
+
 		//Wait for the game to start
 		waitForStart();
 
@@ -81,11 +99,18 @@ public class TeleOp extends SynchronousOpMode {
 				linearSlideForward = gamepad1.right_bumper || gamepad2.right_bumper;
 				linearSlideBackward = gamepad1.left_bumper || gamepad2.left_bumper;
 
-				containerTiltRight = gamepad1.dpad_right || gamepad2.dpad_right;
+				/*containerTiltRight = gamepad1.dpad_right || gamepad2.dpad_right;
 				containerTiltLeft = gamepad1.dpad_left || gamepad1.dpad_left;
 
 				tubeExtend = gamepad1.x || gamepad2.x;
-				tubeRetract = gamepad1.b || gamepad2.b;
+				tubeRetract = gamepad1.b || gamepad2.b;*/
+
+                positionClimbersForward = gamepad1.dpad_up || gamepad2.dpad_up;
+                positionClimbersBackward = gamepad1.dpad_down || gamepad2.dpad_down;
+                releaseClimbers = gamepad1.start || gamepad2.start;
+
+                slowDriveBack = gamepad1.left_trigger;
+                slowDriveForward = gamepad1.right_trigger;
 
 				if(gamepad1.a || gamepad2.a) {
 					sweeperForward = !sweeperForward;
@@ -96,34 +121,52 @@ public class TeleOp extends SynchronousOpMode {
 				}
 
 				//Use gamepad values to move robot
-				Functions.moveTwoMotors(backRightWheel,frontRightWheel,
-						Functions.convertGamepad(rightWheel));
-				Functions.moveTwoMotors( backLeftWheel,frontLeftWheel,
-						Functions.convertGamepad(leftWheel));
-
+				Functions.moveTwoMotors(backRightWheel,frontRightWheel, Functions.convertGamepad(rightWheel));
+				Functions.moveTwoMotors( backLeftWheel,frontLeftWheel, Functions.convertGamepad(leftWheel));
 				if(linearSlideForward) {
-					Functions.moveTwoMotors(linearSlideR, linearSlideL, 0.3);
+                    Functions.moveTwoMotors(linearSlideR, linearSlideL, 0.3);
 				} else if(linearSlideBackward) {
-					Functions.moveTwoMotors(linearSlideR, linearSlideL, -0.3);
+                    Functions.moveTwoMotors(linearSlideR, linearSlideL, -0.3);
 				} else {
-					Functions.moveTwoMotors(linearSlideR, linearSlideL, 0.0);
+                    Functions.moveTwoMotors(linearSlideR, linearSlideL, 0.0);
 				}
 
 				/*if(tubeExtend) {
-					tubeExtender.setPosition(0.75);
+                    tubeExtender.setPosition(0.75);
 				} else if(tubeRetract) {
 					tubeExtender.setPosition(-0.75);
 				} else {
 					tubeExtender.setPosition(0);
-				}*/
+				}
 
-				/*if(containerTiltRight) {
-					containerTilt
-							.setPosition(containerTilt.getPosition() + 0.005);
+				if(containerTiltRight) {
+                    containerTilt
+                            .setPosition(containerTilt.getPosition() + 0.005);
 				} else if(containerTiltLeft) {
 					containerTilt
 							.setPosition(containerTilt.getPosition() - 0.005);
 				}*/
+
+                if(positionClimbersForward) {
+                    try {
+                        mountainClimber.setPosition(mountainClimber.getPosition() + 0.1);
+                    } catch(Exception e) {
+
+                    }
+                    positionClimbersBackward = false;
+                } else if(positionClimbersBackward) {
+                    try {
+                        mountainClimber.setPosition((mountainClimber.getPosition() - 0.1));
+                    } catch(Exception e) {
+
+                    }
+                    positionClimbersForward = false;
+                }
+                if(releaseClimbers) {
+                    mountainClimberRelease.setPosition(2.0);
+                } else {
+                    mountainClimberRelease.setPosition(0.0);
+                }
 
 				if(sweeperForward) {
 					sweeper.setPower(-1.0);
