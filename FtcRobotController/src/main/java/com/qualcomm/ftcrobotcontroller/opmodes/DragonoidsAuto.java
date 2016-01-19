@@ -16,6 +16,8 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
     private float yaw;
     private float pitch;
     private float roll;
+    // Autonomous constants
+    private final double turnPower = 0.3;
 
     public void initialize() {
         DragonoidsGlobal.init(hardwareMap);
@@ -86,8 +88,36 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
         return total / 2;
     }
 
-    public void turn() {
+    protected enum Direction {
+        Right, Left
+    }
 
+    public void turn(Direction direction, float degrees) throws InterruptedException {
+        float startingRotation = this.yaw;
+        float targetRotation;
+
+        if (direction == Direction.Left) {
+            targetRotation = startingRotation - degrees;
+            if (targetRotation <= -180) {
+                targetRotation += 360;
+            }
+            while (this.yaw > targetRotation) {
+                DragonoidsGlobal.setDrivePower(-turnPower, turnPower);
+                waitOneFullHardwareCycle();
+            }
+        }
+
+        if (direction == Direction.Right) {
+            targetRotation = startingRotation + degrees;
+            if (targetRotation >= 180) {
+                targetRotation -= 360;
+            }
+            while (this.yaw < targetRotation) {
+                DragonoidsGlobal.setDrivePower(turnPower, -turnPower);
+                waitOneFullHardwareCycle();
+            }
+        }
+        DragonoidsGlobal.stopMotors();
     }
 
     @Override
