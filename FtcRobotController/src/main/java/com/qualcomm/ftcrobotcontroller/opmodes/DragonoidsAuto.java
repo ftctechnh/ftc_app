@@ -17,7 +17,11 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
     private float pitch;
     private float roll;
     // Autonomous constants
+    private final double drivePower = 0.5;
     private final double turnPower = 0.3;
+    private final int step1Distance = 500;
+    private final int step2Distance = 2000;
+    private final int step3Distance = 500;
 
     public void initialize() {
         DragonoidsGlobal.init(hardwareMap);
@@ -119,40 +123,44 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
         }
         DragonoidsGlobal.stopMotors();
     }
+    public void drive(int distance) {
+        while ((this.getLeftEncoderValue() + this.getRightEncoderValue())/ 2 < distance) {
+            DragonoidsGlobal.setDrivePower(drivePower, drivePower);
+        }
+        DragonoidsGlobal.stopMotors();
+    }
 
     @Override
     public void runOpMode() throws InterruptedException {
         this.initialize();
         waitForStart();
+        // Choose flow based on alliance color (we're assuming red)
 
-        while (opModeIsActive()) {
-            // Choose flow based on alliance color
+        // Drive forward a bit
+        this.drive(step1Distance);
+        // Use the phone's IMU to make a precise 45 degree turn
+        this.turn(Direction.Left, 45);
+        // Drive forward to the beacon zone
+        this.drive(step2Distance);
+        // Turn 45 degrees again
+        this.turn(Direction.Left, 45);
+        // Drive forward to color detection distance
+        this.drive(step3Distance);
+        // Detect color of the beacon
 
-            // Drive forward a bit
+        // Drive forward or extend arm to push the correct button
 
-            // Use the phone's IMU to make a precise 45 degree turn
+        // Deposit climbers in the bucket behind the beacon
 
-            // Drive forward to the beacon zone
+        // Reverse out of the beacon area (or turn 180 degrees and then drive forward)
 
-            // Turn 45 degrees again
+        // Turn -45 degrees
 
-            // Drive forward to color detection distance
+        // Drive forward as far as possible up the mountain
 
-            // Detect color of the beacon
+        // Use the "churro grabbers" to gain more traction and hoist the robot up the
+        // remaining portion of the mountain after the normal wheels begin to slip
 
-            // Drive forward or extend arm to push the correct button
-
-            // Deposit climbers in the bucket behind the beacon
-
-            // Reverse out of the beacon area (or turn 180 degrees and then drive forward)
-
-            // Turn -45 degrees
-
-            // Drive forward as far as possible up the mountain
-
-            // Use the "churro grabbers" to gain more traction and hoist the robot up the
-            // remaining portion of the mountain after the normal wheels begin to slip
-        }
         DragonoidsGlobal.stopAll();
     }
 }
