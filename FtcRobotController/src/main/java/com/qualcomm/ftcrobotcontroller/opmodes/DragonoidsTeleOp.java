@@ -50,11 +50,13 @@ public class DragonoidsTeleOp extends OpMode {
 //      Commented cause we don't have it
         if (gamepad2.a){
             // Open the gate
-            DragonoidsGlobal.gate.setPosition(0.5);
+            DragonoidsGlobal.gate.setPosition(0.6);
+            DragonoidsGlobal.tilter.setPosition(0.5);
         }
         else{
             // Close the gate
-            DragonoidsGlobal.gate.setPosition(0.0);
+            DragonoidsGlobal.gate.setPosition(0);
+            DragonoidsGlobal.tilter.setPosition(0);
         }
 
         this.outputTelemetry();
