@@ -1,14 +1,14 @@
 package org.swerverobotics.library.internal;
 
 import junit.framework.Assert;
+import com.qualcomm.hardware.hitechnic.*;
 import com.qualcomm.robotcore.hardware.*;
 import org.swerverobotics.library.*;
-import org.swerverobotics.library.interfaces.*;
 
 /**
  * An IrSeekerSensor that can be called on a synchronous thread
  */
-public class ThunkedIrSeekerSensor extends IrSeekerSensor implements IThunkedReadWriteListener, IThunkWrapper<IrSeekerSensor>
+public class ThunkedIrSeekerSensor implements IrSeekerSensor, IThunkedReadWriteListener, IThunkWrapper<IrSeekerSensor>
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -141,7 +141,7 @@ public class ThunkedIrSeekerSensor extends IrSeekerSensor implements IThunkedRea
         //
         // But this is better:
         //
-        return this.target instanceof com.qualcomm.hardware.HiTechnicNxtIrSeekerSensor;
+        return this.target instanceof HiTechnicNxtIrSeekerSensor;
         }
     private boolean isOffline()
         {
