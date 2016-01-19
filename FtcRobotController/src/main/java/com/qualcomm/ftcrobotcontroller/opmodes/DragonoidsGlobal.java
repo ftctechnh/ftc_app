@@ -11,6 +11,7 @@ public class DragonoidsGlobal {
     public static DcMotor knocker, conveyor;
     // Servos
     public static Servo gate;
+    // Gate
 
     public static void init(HardwareMap hardwareMap) {
         rightOne = hardwareMap.dcMotor.get("rightOneDrive");
@@ -24,7 +25,7 @@ public class DragonoidsGlobal {
         conveyor = hardwareMap.dcMotor.get("conveyor");
         knocker = hardwareMap.dcMotor.get("knocker");
 
-        //gate = hardwareMap.servo.get("gate");
+        gate = hardwareMap.servo.get("gate");
     }
 
     public static void setDrivePower(double rightPower, double leftPower) {
@@ -33,6 +34,11 @@ public class DragonoidsGlobal {
         leftOne.setPower(leftPower);
         leftTwo.setPower(leftPower);
     }
+
+    public static void setServos(){
+        gate.setPosition(0.6);
+    }
+
     public static void stopMotors() {
         setDrivePower(0, 0);
     }

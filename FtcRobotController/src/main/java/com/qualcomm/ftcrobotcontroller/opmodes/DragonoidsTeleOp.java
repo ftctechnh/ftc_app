@@ -48,14 +48,14 @@ public class DragonoidsTeleOp extends OpMode {
             DragonoidsGlobal.knocker.setPower(0.0);
         }
 //      Commented cause we don't have it
-//        if (gamepad2.a){
-//            // Open the gate
-//            DragonoidsGlobal.gate.setPosition(0.5);
-//        }
-//        else{
-//            // Close the gate
-//            DragonoidsGlobal.gate.setPosition(0.0);
-//        }
+        if (gamepad2.a){
+            // Open the gate
+            DragonoidsGlobal.gate.setPosition(0.5);
+        }
+        else{
+            // Close the gate
+            DragonoidsGlobal.gate.setPosition(0.0);
+        }
 
         this.outputTelemetry();
     }
