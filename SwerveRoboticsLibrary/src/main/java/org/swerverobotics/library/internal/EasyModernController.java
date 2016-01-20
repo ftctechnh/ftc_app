@@ -30,7 +30,7 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
     protected boolean                       isArmed;
     protected String                        targetName;
     protected HardwareMap.DeviceMapping     targetDeviceMapping;
-    protected final RobotUsbDevice          robotUsbDevice;
+    protected RobotUsbDevice                robotUsbDevice;
 
     enum WRITE_STATUS { IDLE, DIRTY, READ };
 
@@ -45,7 +45,7 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    public EasyModernController(OpMode context, ModernRoboticsUsbDevice target, ReadWriteRunnableHandy readWriteRunnable) throws RobotCoreException, InterruptedException
+    public void initialize(OpMode context, ModernRoboticsUsbDevice target, ModernRoboticsUsbDevice.CreateReadWriteRunnable createReadWriteRunnable) throws RobotCoreException, InterruptedException
         {
         // Initialize the rest of our state
         this.context          = context;
@@ -65,17 +65,8 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
                         return EasyModernController.this.robotUsbDevice;
                         }
                     },
-                new ModernRoboticsUsbDevice.CreateReadWriteRunnable()
-                    {
-                    @Override
-                    public ReadWriteRunnable create(RobotUsbDevice robotUsbDevice) throws RobotCoreException, InterruptedException
-                        {
-                        return null;
-                        }
-                    }
+                createReadWriteRunnable
             );
-
-
         }
 
     //----------------------------------------------------------------------------------------------
@@ -94,42 +85,20 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
     static void disarmModernRoboticsUSBDevice(ModernRoboticsUsbDevice usbDevice)
     // Close down the usbDevice in a robust and reliable way
         {
-        // Get access to the state
-        ExecutorService service = usbDevice.getExecutorService();
-
-        // Stop accepting new work
-        service.shutdown();
-
-        // Disarm the readWriteRunnable
-        ReadWriteRunnableStandard readWriteRunnableStandard = (ReadWriteRunnableStandard)usbDevice.getReadWriteRunnable();
-        if (readWriteRunnableStandard != null)
-            {
-            // Set a dummy handler so that we don't end up closing the actual FT_device.
-            RobotUsbDevice robotUsbDevice = new DummyModernRoboticsRobotUsbDevice();
-            ReadWriteRunnableUsbHandler dummyHandler = new ReadWriteRunnableUsbHandler(robotUsbDevice);
-            readWriteRunnableStandard.setUsbHandler(dummyHandler);
-
-            // Ok: actually carry out the close
-            readWriteRunnableStandard.close();
+        try {
+            usbDevice.disarmDevice();
             }
-
-        // Wait until the thread terminates
-        Util.awaitTermination(service);
+        catch (Exception e)
+            {
+            Util.handleCapturedException(e);
+            }
         }
 
-    void armModernRoboticsUSBDevice(ModernRoboticsUsbDevice usbDevice, int cbMonitor, int ibStart)
+    void armModernRoboticsUSBDevice(ModernRoboticsUsbDevice usbDevice)
         {
         try
             {
-            ExecutorService service = Executors.newSingleThreadScheduledExecutor();
-            ReadWriteRunnableStandard rwRunnable = new ReadWriteRunnableHandy(usbDevice.getSerialNumber(), this.robotUsbDevice, cbMonitor, ibStart, false);
-            //
-            usbDevice.setExecutorService(service);
-            usbDevice.setReadWriteRunnable(rwRunnable);
-            rwRunnable.setCallback(usbDevice);
-            service.execute(rwRunnable);
-            rwRunnable.blockUntilReady();
-            this.eventLoopManager.registerSyncdDevice(rwRunnable);
+            usbDevice.armDevice();
             }
         catch (Exception e)
             {
