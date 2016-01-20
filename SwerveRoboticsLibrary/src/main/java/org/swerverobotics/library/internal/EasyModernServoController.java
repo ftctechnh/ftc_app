@@ -59,7 +59,7 @@ public class EasyModernServoController extends EasyModernController implements S
 
     static ReadWriteRunnableHandy newDummyReadWriteRunnable(SerialNumber serialNumber)
         {
-        RobotUsbDevice robotUsbDevice = new DummyRobotUsbDevice();
+        RobotUsbDevice robotUsbDevice = new DummyModernRoboticsRobotUsbDevice();
         return new ReadWriteRunnableHandy(serialNumber, robotUsbDevice, MONITOR_LENGTH, START_ADDRESS, false);
         }
 
@@ -142,9 +142,9 @@ public class EasyModernServoController extends EasyModernController implements S
             this.usurpDevices();
 
             // Turn off target's usb stuff
-            this.eventLoopManager.unregisterSyncdDevice(MemberUtil.getReadWriteRunnableModernRoboticsUsbDevice(this.target));
+            this.eventLoopManager.unregisterSyncdDevice(this.target.getReadWriteRunnable());
             this.floatHardware(target);
-            this.closeModernRoboticsUsbDevice(target);
+            this.disarmModernRoboticsUSBDevice(target);
             //
             if (this.targetName != null)
                 {
@@ -153,7 +153,7 @@ public class EasyModernServoController extends EasyModernController implements S
             this.isArmed = true;
 
             // Turn on our usb stuff
-            this.installReadWriteRunnable(this, MONITOR_LENGTH, START_ADDRESS);
+            this.armModernRoboticsUSBDevice(this, MONITOR_LENGTH, START_ADDRESS);
 
             this.floatHardware();
             Log.d(LOGGING_TAG, String.format("....armed \"%s\"", this.getConnectionInfo()));
@@ -177,7 +177,7 @@ public class EasyModernServoController extends EasyModernController implements S
                 }
 
             // Turn target's usb stuff back on
-            this.installReadWriteRunnable(this.target, MONITOR_LENGTH, START_ADDRESS);
+            this.armModernRoboticsUSBDevice(this.target, MONITOR_LENGTH, START_ADDRESS);
 
             this.deusurpDevices();
             Log.d(LOGGING_TAG, String.format("....disarmed \"%s\"", this.getConnectionInfo()));
@@ -191,7 +191,7 @@ public class EasyModernServoController extends EasyModernController implements S
     @Override public void close()
         {
         floatHardware();
-        closeModernRoboticsUsbDevice(this);
+        disarmModernRoboticsUSBDevice(this);
         }
 
     @Override public String getConnectionInfo()

@@ -17,57 +17,6 @@ import java.util.concurrent.*;
 public class MemberUtil
     {
     //----------------------------------------------------------------------------------------------
-    // ReadWriteRunnableStandard
-    //----------------------------------------------------------------------------------------------
-
-    public static ReadWriteRunnableUsbHandler getHandlerOfReadWriteRunnableStandard(ReadWriteRunnableStandard readWriteRunnableStandard)
-        {
-        return Util.<ReadWriteRunnableUsbHandler>getPrivateObjectField(readWriteRunnableStandard, 14);
-        }
-    public static void setHandlerOfReadWriteRunnableStandard(ReadWriteRunnableStandard readWriteRunnableStandard, ReadWriteRunnableUsbHandler handler)
-        {
-        Util.setPrivateObjectField(readWriteRunnableStandard, 14, handler);
-        }
-
-    public static void setRunningReadWriteRunnableStandard(ReadWriteRunnableStandard readWriteRunnableStandard, boolean isRunning)
-        {
-        Util.setPrivateBooleanField(readWriteRunnableStandard, 6, isRunning);
-        }
-
-    //----------------------------------------------------------------------------------------------
-    // ReadWriteRunnableUsbHandler
-    //----------------------------------------------------------------------------------------------
-
-    public static RobotUsbDevice getRobotUsbDeviceOfReadWriteRunnableUsbHandler(ReadWriteRunnableUsbHandler handler)
-        {
-        return Util.<RobotUsbDevice>getPrivateObjectField(handler, 2);
-        }
-
-    //----------------------------------------------------------------------------------------------
-    // ModernRoboticsUsbDevice
-    //----------------------------------------------------------------------------------------------
-
-    public static ReadWriteRunnable getReadWriteRunnableModernRoboticsUsbDevice(ModernRoboticsUsbDevice device)
-    // Here we rely on the fact that ReadWriteRunnableBlocking inherits from ReadWriteRunnableStandard
-        {
-        return Util.<ReadWriteRunnableStandard>getPrivateObjectField(device, 0);
-        }
-    public static void setReadWriteRunnableModernRoboticsUsbDevice(ModernRoboticsUsbDevice device, ReadWriteRunnable readWriteRunnableStandard)
-        {
-        Util.setPrivateObjectField(device, 0, readWriteRunnableStandard);
-        }
-
-    public static void setExecutorServiceModernRoboticsUsbDevice(ModernRoboticsUsbDevice device, ExecutorService service)
-        {
-        Util.setPrivateObjectField(device, 1, service);
-        }
-    public static ExecutorService getExecutorServiceModernRoboticsUsbDevice(ModernRoboticsUsbDevice device)
-        {
-        return Util.<ExecutorService>getPrivateObjectField(device, 1);
-        }
-
-
-    //----------------------------------------------------------------------------------------------
     // FtcRobotControllerService
     //----------------------------------------------------------------------------------------------
 

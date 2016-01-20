@@ -43,7 +43,7 @@ public class EasyModernMotorController extends EasyModernController implements D
 
     static ReadWriteRunnableHandy newDummyReadWriteRunnable(SerialNumber serialNumber)
         {
-        RobotUsbDevice robotUsbDevice = new DummyRobotUsbDevice();
+        RobotUsbDevice robotUsbDevice = new DummyModernRoboticsRobotUsbDevice();
         return new ReadWriteRunnableHandy(serialNumber, robotUsbDevice, MONITOR_LENGTH, START_ADDRESS, false);
         }
 
@@ -125,9 +125,9 @@ public class EasyModernMotorController extends EasyModernController implements D
             this.usurpDevices();
 
             // Turn off target's usb stuff
-            this.eventLoopManager.unregisterSyncdDevice(MemberUtil.getReadWriteRunnableModernRoboticsUsbDevice(this.target));
+            this.eventLoopManager.unregisterSyncdDevice(this.target.getReadWriteRunnable());
             this.floatHardware(target);
-            this.closeModernRoboticsUsbDevice(target);
+            this.disarmModernRoboticsUSBDevice(target);
             //
             if (this.targetName != null)
                 {
@@ -137,7 +137,7 @@ public class EasyModernMotorController extends EasyModernController implements D
             this.isArmed = true;
 
             // Turn on our usb stuff
-            this.installReadWriteRunnable(this, MONITOR_LENGTH, START_ADDRESS);
+            this.armModernRoboticsUSBDevice(this, MONITOR_LENGTH, START_ADDRESS);
 
             this.initPID();
             this.floatHardware();
@@ -163,7 +163,7 @@ public class EasyModernMotorController extends EasyModernController implements D
                 }
 
             // Turn target's usb stuff back on
-            this.installReadWriteRunnable(this.target, MONITOR_LENGTH, START_ADDRESS);
+            this.armModernRoboticsUSBDevice(this.target, MONITOR_LENGTH, START_ADDRESS);
 
             this.deusurpDevices();
             Log.d(LOGGING_TAG, String.format("....disarmed \"%s\"", this.getConnectionInfo()));
@@ -177,7 +177,7 @@ public class EasyModernMotorController extends EasyModernController implements D
     @Override public void close()
         {
         this.floatHardware();
-        closeModernRoboticsUsbDevice(this);
+        disarmModernRoboticsUSBDevice(this);
         }
 
     @Override public String getConnectionInfo()

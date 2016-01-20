@@ -56,9 +56,8 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
         this.isArmed          = false;
         this.writeStatus      = WRITE_STATUS.IDLE;
 
-        ReadWriteRunnableStandard   targetReadWriteRunnable = (ReadWriteRunnableStandard)MemberUtil.getReadWriteRunnableModernRoboticsUsbDevice(target);
-        ReadWriteRunnableUsbHandler targetHandler           = MemberUtil.getHandlerOfReadWriteRunnableStandard(targetReadWriteRunnable);
-        this.robotUsbDevice                                 = MemberUtil.getRobotUsbDeviceOfReadWriteRunnableUsbHandler(targetHandler);
+        ReadWriteRunnableStandard targetReadWriteRunnable = (ReadWriteRunnableStandard)target.getReadWriteRunnable();
+        this.robotUsbDevice = targetReadWriteRunnable.getRobotUsbDevice();
         }
 
     //----------------------------------------------------------------------------------------------
@@ -74,22 +73,23 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
 
     public abstract void disarm();
 
-    static void closeModernRoboticsUsbDevice(ModernRoboticsUsbDevice usbDevice)
+    static void disarmModernRoboticsUSBDevice(ModernRoboticsUsbDevice usbDevice)
     // Close down the usbDevice in a robust and reliable way
         {
         // Get access to the state
-        ExecutorService service = MemberUtil.getExecutorServiceModernRoboticsUsbDevice(usbDevice);
+        ExecutorService service = usbDevice.getExecutorService();
 
         // Stop accepting new work
         service.shutdown();
 
-        ReadWriteRunnableStandard readWriteRunnableStandard = (ReadWriteRunnableStandard)MemberUtil.getReadWriteRunnableModernRoboticsUsbDevice(usbDevice);
+        // Disarm the readWriteRunnable
+        ReadWriteRunnableStandard readWriteRunnableStandard = (ReadWriteRunnableStandard)usbDevice.getReadWriteRunnable();
         if (readWriteRunnableStandard != null)
             {
             // Set a dummy handler so that we don't end up closing the actual FT_device.
-            RobotUsbDevice robotUsbDevice = new DummyRobotUsbDevice();
+            RobotUsbDevice robotUsbDevice = new DummyModernRoboticsRobotUsbDevice();
             ReadWriteRunnableUsbHandler dummyHandler = new ReadWriteRunnableUsbHandler(robotUsbDevice);
-            MemberUtil.setHandlerOfReadWriteRunnableStandard(readWriteRunnableStandard, dummyHandler);
+            readWriteRunnableStandard.setUsbHandler(dummyHandler);
 
             // Ok: actually carry out the close
             readWriteRunnableStandard.close();
@@ -99,15 +99,15 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
         Util.awaitTermination(service);
         }
 
-    void installReadWriteRunnable(ModernRoboticsUsbDevice usbDevice, int cbMonitor, int ibStart)
+    void armModernRoboticsUSBDevice(ModernRoboticsUsbDevice usbDevice, int cbMonitor, int ibStart)
         {
         try
             {
             ExecutorService service = Executors.newSingleThreadScheduledExecutor();
             ReadWriteRunnableStandard rwRunnable = new ReadWriteRunnableHandy(usbDevice.getSerialNumber(), this.robotUsbDevice, cbMonitor, ibStart, false);
             //
-            MemberUtil.setExecutorServiceModernRoboticsUsbDevice(usbDevice, service);
-            MemberUtil.setReadWriteRunnableModernRoboticsUsbDevice(usbDevice, rwRunnable);
+            usbDevice.setExecutorService(service);
+            usbDevice.setReadWriteRunnable(rwRunnable);
             rwRunnable.setCallback(usbDevice);
             service.execute(rwRunnable);
             rwRunnable.blockUntilReady();
@@ -232,35 +232,6 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
     //----------------------------------------------------------------------------------------------
     // Shims
     //----------------------------------------------------------------------------------------------
-
-    /**
-     * This class implements a dummy RobotUsbDevice that will apparently successfully do reads and
-     * writes but doesn't actually do anything.
-     */
-    static class DummyRobotUsbDevice implements RobotUsbDevice
-        {
-        byte cbExpected = 0;
-        @Override public void close()  {}
-        @Override public void setBaudRate(int i) throws RobotCoreException {}
-        @Override public void setDataCharacteristics(byte b, byte b1, byte b2) throws RobotCoreException  {}
-        @Override public void setLatencyTimer(int i) throws RobotCoreException {}
-        @Override public void purge(Channel channel) throws RobotCoreException {}
-        @Override public int read(byte[] bytes) throws RobotCoreException { return this.read(bytes, bytes.length, 0/*bogus*/); }
-        @Override public void write(byte[] bytes) throws RobotCoreException
-            {
-            // Write commands have zero-sized responses, read commands indicate their expected size
-            byte bCommand = bytes[2];
-            this.cbExpected = bCommand==0 ? 0/*write*/ : bytes[4] /*read*/;
-            }
-        @Override public int read(byte[] bytes, int cbReadExpected, int timeout) throws RobotCoreException
-            {
-            // Need to set the 'sync' bytes correctly, and set the sizes
-            bytes[0]    = (byte)0x33;
-            bytes[1]    = (byte)0xCC;
-            bytes[4]    = (byte)cbExpected;
-            return cbReadExpected;
-            }
-        }
 
     /**
      * This class is a ReadWriteRunnableStandard but one that doesn't report any errors
