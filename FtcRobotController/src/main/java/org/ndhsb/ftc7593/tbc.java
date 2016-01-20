@@ -41,12 +41,12 @@ public class tbc {
     public final static double MTAPE_MAX_RANGE  = 1.0;
     public final static double SNOWPLOW_MIN_RANGE = 0.10;
     public final static double SNOWPLOW_MID_RANGE = 0.40;
-    public final static double SNOWPLOW_MAX_RANGE = 0.70;
+    public final static double SNOWPLOW_MAX_RANGE = 1.0;
     public final static double CLIMBER_MIN_RANGE = 0.0;
     public final static double CLIMBER_MAX_RANGE = 1.0;
     public final static double SLIDERL_MIN_RANGE = 0.0;
-    public final static double SLIDERL_MAX_RANGE = 0.70; //0.50
-    public final static double SLIDERR_MIN_RANGE = 0.30; //0.30
+    public final static double SLIDERL_MAX_RANGE = 0.50; //0.50
+    public final static double SLIDERR_MIN_RANGE = 0.50; //0.30
     public final static double SLIDERR_MAX_RANGE = 1.0;
 
     public static double climberPosition = CLIMBER_MAX_RANGE;

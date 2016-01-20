@@ -9,10 +9,10 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.ndhsb.ftc7593.tbc;
 
-public class EncoderAuton extends OpMode {
+public class EncoderAutonBlue extends OpMode {
 
 
-    public EncoderAuton() {
+    public EncoderAutonBlue() {
     }
     public ElapsedTime mRuntime = new ElapsedTime();
 
@@ -113,10 +113,10 @@ public class EncoderAuton extends OpMode {
         }
 
         if (state == 1) {
-            tbc.motorRLeft.setTargetPosition(-12400);
-            tbc.motorFLeft.setTargetPosition(-12400);
-            tbc.motorRRight.setTargetPosition(-14800);
-            tbc.motorFRight.setTargetPosition(-14800);
+            tbc.motorRLeft.setTargetPosition(-14300); //-12400
+            tbc.motorFLeft.setTargetPosition(-14300); //-12400
+            tbc.motorRRight.setTargetPosition(-12900); //-14800
+            tbc.motorFRight.setTargetPosition(-12900); //-14800
 
             tbc.setMotorRLeftPower(0.5f);
             tbc.setMotorFLeftPower(0.5f);
@@ -154,10 +154,10 @@ public class EncoderAuton extends OpMode {
         if (state == 3) {
             double s3elapsed = mRuntime.time() - s3starttime;
 
-            tbc.motorRLeft.setTargetPosition(-13900);
-            tbc.motorFLeft.setTargetPosition(-13900);
-            tbc.motorRRight.setTargetPosition(-16300);
-            tbc.motorFRight.setTargetPosition(-16300);
+            tbc.motorRLeft.setTargetPosition(-15800);
+            tbc.motorFLeft.setTargetPosition(-15800);
+            tbc.motorRRight.setTargetPosition(-14400); //-16300
+            tbc.motorFRight.setTargetPosition(-14400);
 
             tbc.setMotorRLeftPower(-0.5f);
             tbc.setMotorFLeftPower(-0.5f);
@@ -229,13 +229,13 @@ public class EncoderAuton extends OpMode {
         }
 
 
-            //mRuntime.reset();
+        //mRuntime.reset();
 
-           // while (time <= 0.5) {
-               // tbc.setButtonServoSpeed(0.5);
-           // }
+        // while (time <= 0.5) {
+        // tbc.setButtonServoSpeed(0.5);
+        // }
 
-            //tbc.setClimberPosition(0.0);
+        //tbc.setClimberPosition(0.0);
 
 
     }
