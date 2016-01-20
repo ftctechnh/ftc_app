@@ -28,9 +28,50 @@ public class MainOpMode extends OpMode{
     double rightArmPosition, leftArmPosition, lipServoPosition;
 
 
-    // CONSTRUCTOR
-    public MainOpMode() {   }
+    // CONSTRUCTOR and Electronics Diagram
+    public MainOpMode() {
+    /*
+    Note- There is no constructor
 
+    Explaination of the electronics -
+    There are 3 motor controller hubs and 1 servo controller hubs
+    Each of these are connected to a central power/controller hub.
+    This hub is connected to the phone.
+
+    Each of the 4 motor/servo controllers are connected both by power and USB to the central hub.
+    Then, each of the motors are placed into a motor controller near them, and the servos are placed into the singular servo controller.
+
+    Offical Electronics Layout Diagram/Documentation:
+
+    C.P.D.M. or CPDM (Core Power Distribution Module)
+    |
+    |                                   |--- dcMotor (sucker)
+    |- Motor Controller 1 (AL00VV17) ---|
+    |                                   |--- dcMotor (motor_RF)
+    |
+    |                                   |--- dcMotor (linear)
+    |- Motor Controller 2 (AL00UXSC) ---|
+    |                                   |--- dcMotor (motor_LF)
+    |
+    |                                   |--- Servo (servo_1)
+    |- Servo Controller 1 (AL00YBDM) ---|--- Servo (servo_2)
+    |                                   |--- Servo (servo_3)
+    |                                   |--- Servo (servo_4)
+    |                                   |--- Servo (servo_5)
+    |                                   |--- Servo (servo_6)
+    |
+    |                                   |--- dcMotor (motor_RB)
+    |- Motor Controller 3 (AL00XUI0) ---|
+                                        |--- dcMotor (motor_LB)
+
+
+
+
+
+    */
+    }
+
+    //Variable Init
     // Called when robot is first enabled
     @Override
     public void init() {
@@ -52,6 +93,7 @@ public class MainOpMode extends OpMode{
         lipServoPosition = 0;
     }
 
+    //Loop
     // Called repeatedly every 10 ms
     @Override
     public void loop() {

@@ -6,8 +6,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Created by JackV on 9/20/15.
  */
 public class ArcadeDrive {
+    //Defining motor objects
     DcMotor motorRightBack, motorLeftBack, motorRightFront, motorLeftFront;
 
+
+    //class constructor (defines the varibles when the class is ran)
     public ArcadeDrive(DcMotor motorRightBack, DcMotor motorLeftBack, DcMotor motorRightFront, DcMotor motorLeftFront) {
         this.motorRightBack = motorRightBack;
         this.motorLeftBack = motorLeftBack;

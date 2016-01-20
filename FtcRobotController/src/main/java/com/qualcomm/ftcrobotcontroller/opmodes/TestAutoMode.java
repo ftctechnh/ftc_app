@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+
 /**
  * Created by JackV on 9/12/15.
  */
@@ -13,6 +14,10 @@ public class TestAutoMode extends LinearOpMode {
     DcMotor motorLeft;
     Servo claw;
     Servo arm;
+
+
+
+
 
     @Override
     public void runOpMode() throws InterruptedException {
