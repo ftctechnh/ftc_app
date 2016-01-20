@@ -47,9 +47,6 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
 
     public EasyModernController(OpMode context, ModernRoboticsUsbDevice target, ReadWriteRunnableHandy readWriteRunnable) throws RobotCoreException, InterruptedException
         {
-        // Note that we don't give a ReadWriteRunnable to our parent constructor. This essentially just sets the serial number
-        super(target.getSerialNumber(), SwerveThreadContext.getEventLoopManager(), null);
-
         // Initialize the rest of our state
         this.context          = context;
         this.eventLoopManager = SwerveThreadContext.getEventLoopManager();
@@ -58,6 +55,27 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
 
         ReadWriteRunnableStandard targetReadWriteRunnable = (ReadWriteRunnableStandard)target.getReadWriteRunnable();
         this.robotUsbDevice = targetReadWriteRunnable.getRobotUsbDevice();
+
+        super.initialize(target.getSerialNumber(), SwerveThreadContext.getEventLoopManager(),
+                new ModernRoboticsUsbDevice.CreateRobotUsbDevice()
+                    {
+                    @Override
+                    public RobotUsbDevice create() throws RobotCoreException, InterruptedException
+                        {
+                        return EasyModernController.this.robotUsbDevice;
+                        }
+                    },
+                new ModernRoboticsUsbDevice.CreateReadWriteRunnable()
+                    {
+                    @Override
+                    public ReadWriteRunnable create(RobotUsbDevice robotUsbDevice) throws RobotCoreException, InterruptedException
+                        {
+                        return null;
+                        }
+                    }
+            );
+
+
         }
 
     //----------------------------------------------------------------------------------------------

@@ -37,7 +37,7 @@ public class EasyModernMotorController extends EasyModernController implements D
         {
         super(context, target, newDummyReadWriteRunnable(target.getSerialNumber()));
 
-        this.target  = target;
+        this.target = target;
         this.findTargetNameAndMapping();
         }
 
