@@ -47,9 +47,15 @@ public class EasyModernServoController extends EasyModernController implements S
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    private EasyModernServoController(OpMode context, ModernRoboticsUsbServoController target) throws RobotCoreException, InterruptedException
+    private EasyModernServoController(OpMode context, final ModernRoboticsUsbServoController target) throws RobotCoreException, InterruptedException
         {
-        super(context, target, newDummyReadWriteRunnable(target.getSerialNumber()));
+        super.initialize(context, target, new ModernRoboticsUsbDevice.CreateReadWriteRunnable() {
+            @Override
+            public ReadWriteRunnable create(RobotUsbDevice robotUsbDevice) throws RobotCoreException, InterruptedException
+                {
+                return newDummyReadWriteRunnable(target.getSerialNumber());
+                }
+            });
 
         this.target  = target;
         this.servos  = new LinkedList<Servo>();
@@ -153,7 +159,7 @@ public class EasyModernServoController extends EasyModernController implements S
             this.isArmed = true;
 
             // Turn on our usb stuff
-            this.armModernRoboticsUSBDevice(this, MONITOR_LENGTH, START_ADDRESS);
+            this.armModernRoboticsUSBDevice(this);
 
             this.floatHardware();
             Log.d(LOGGING_TAG, String.format("....armed \"%s\"", this.getConnectionInfo()));
@@ -177,7 +183,7 @@ public class EasyModernServoController extends EasyModernController implements S
                 }
 
             // Turn target's usb stuff back on
-            this.armModernRoboticsUSBDevice(this.target, MONITOR_LENGTH, START_ADDRESS);
+            this.armModernRoboticsUSBDevice(this.target);
 
             this.deusurpDevices();
             Log.d(LOGGING_TAG, String.format("....disarmed \"%s\"", this.getConnectionInfo()));
