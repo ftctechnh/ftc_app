@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoController;
 
 import java.lang.reflect.Array;
 
@@ -20,9 +21,14 @@ public class TeleOpCommands extends OpMode {
     public static int RIGHT=1;
     public static int LEFT=1;
     public static int SWEEPER=2;
-    public static double TRAYLEFT=.1;
+    public static double TRAYLEFT=.2;
+    public static double LEFTLEVEL=.5;
     public static double TRAYRIGHT=.9;
-    public static double TRAYLEVEL=.6;
+    public static double RIGHTLEVEL=.5;
+    public static double TRAYDELTA=.01;
+    public static double TRAYMARGIN=.03;
+    double targetPosition;
+    double currentPosition;
     public int UPDATES=0;
     public GyroSensor gyro;
     public DcMotorController leftsweepMC;
@@ -74,15 +80,24 @@ public class TeleOpCommands extends OpMode {
         }
     }
     public void setTrayPosition(){
-        if(gamepad2.dpad_up && tray.getPosition()!=TRAYLEVEL){
-            tray.setPosition(TRAYLEVEL);
-            UPDATES+=1;
-        }else if(gamepad2.dpad_left && tray.getPosition()!=TRAYLEFT){
-            tray.setPosition(TRAYLEFT);
-            UPDATES+=1;
-        }else if(gamepad2.dpad_right && tray.getPosition()!=TRAYRIGHT){
-            tray.setPosition(TRAYRIGHT);
-            UPDATES+=1;
+        if(gamepad2.dpad_up){
+           targetPosition=LEFTLEVEL;
+        }else if(gamepad2.dpad_left){
+            targetPosition=TRAYLEFT;
+        }else if(gamepad2.dpad_right){
+           targetPosition=TRAYRIGHT;
+        }else if(gamepad2.dpad_down){
+            targetPosition=RIGHTLEVEL;
+        }
+        currentPosition=tray.getPosition();
+        if(Math.abs(targetPosition-currentPosition)>TRAYMARGIN) {
+            if (targetPosition - currentPosition < 0) {
+                currentPosition = currentPosition - TRAYDELTA;
+                tray.setPosition(currentPosition);
+            }else if(targetPosition-currentPosition>0){
+                currentPosition=currentPosition+TRAYDELTA;
+                tray.setPosition(currentPosition);
+            }
         }
     }
     public void setLeftPower(){
