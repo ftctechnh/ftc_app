@@ -198,38 +198,4 @@ public class MemberUtil
         {
         return Util.getPrivateIntField(sensor, 8);
         }
-
-    //----------------------------------------------------------------------------------------------
-    // Legacy Module
-    //----------------------------------------------------------------------------------------------
-
-    static I2cController.I2cPortReadyCallback[] callbacksOfLegacyModule(LegacyModule imodule)
-        {
-        ModernRoboticsUsbLegacyModule module = (ModernRoboticsUsbLegacyModule)imodule;
-        return Util.<I2cController.I2cPortReadyCallback[]>getPrivateObjectField(module, 4);
-        }
-
-    //----------------------------------------------------------------------------------------------
-    // Device Interface Module
-    //----------------------------------------------------------------------------------------------
-
-    static I2cController.I2cPortReadyCallback[] callbacksOfDeviceInterfaceModule(DeviceInterfaceModule imodule)
-        {
-        ModernRoboticsUsbDeviceInterfaceModule module = (ModernRoboticsUsbDeviceInterfaceModule)imodule;
-        return Util.<I2cController.I2cPortReadyCallback[]>getPrivateObjectField(module, 3);
-        }
-
-    //----------------------------------------------------------------------------------------------
-    // I2cDevice
-    //----------------------------------------------------------------------------------------------
-
-    public static I2cController i2cControllerOfI2cDevice(I2cDevice i2cDevice)
-        {
-        return Util.<I2cController>getPrivateObjectField(i2cDevice, 0);
-        }
-
-    public static int portOfI2cDevice(I2cDevice i2cDevice)
-        {
-        return Util.getPrivateIntField(i2cDevice, 1);
-        }
     }
