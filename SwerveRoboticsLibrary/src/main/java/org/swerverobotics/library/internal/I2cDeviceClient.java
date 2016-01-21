@@ -212,6 +212,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                     {
                     this.heartbeatExecutor = Executors.newSingleThreadExecutor();
                     this.i2cDevice.registerForI2cPortReadyCallback(this.callback);
+                    this.i2cDevice.registerForI2cNotificationsCallback(this.callback);
                     }
                 this.isArmed = true;
                 }
@@ -255,6 +256,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
 
                             // Finally, disconnect us from our I2cDevice
                             this.i2cDevice.deregisterForPortReadyCallback();
+                            this.i2cDevice.deregisterForI2cNotificationsCallback();
                             }
                         }
 
@@ -781,7 +783,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         FROM_USER_WRITE
         }
 
-    private class Callback implements I2cController.I2cPortReadyCallback
+    private class Callback implements I2cController.I2cPortReadyCallback, I2cController.I2cNotificationsCallback
         {
         //------------------------------------------------------------------------------------------
         // State, kept in member variables so we can divy the updateStateMachines() logic
@@ -809,6 +811,18 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         // USB device is not currently busy.
             {
             updateStateMachines(UPDATE_STATE_MACHINE.FROM_CALLBACK);
+            }
+
+        @Override public void onStartNotifications(int port)
+            {
+            }
+
+        @Override public void onStopNotifications(int port)
+        // We're being told that we're not going to get any more portIsReady callbacks. For now
+        // all we do is display an error and give up. In future, we could deal with this more robustly
+        // by essentially disarming ourselves manually and carefully.
+            {
+            RobotLog.setGlobalErrorMsg(String.format("unexpected stop, %s is shutting down; warning=\"%s\"", i2cDevice.getDeviceName(), RobotLog.getGlobalWarningMessage()));
             }
 
         // The user has new data for us to write. We could do nothing, in which case the data

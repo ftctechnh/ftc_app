@@ -506,6 +506,12 @@ public class FtcRobotControllerActivity extends Activity {
             if (newState == RobotState.RUNNING)
                 this.activity.nameVerifier.verifyLegalPhoneNames();
             }
+
+        @Override
+        public void onErrorOrWarning()
+          {
+          // Nothing to do
+          }
         }
 
     class SwervePhoneNameVerifier

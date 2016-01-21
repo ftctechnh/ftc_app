@@ -31,6 +31,7 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
     protected String                        targetName;
     protected HardwareMap.DeviceMapping     targetDeviceMapping;
     protected RobotUsbDevice                robotUsbDevice;
+    protected boolean                       readWriteRunnableIsRunning;
 
     enum WRITE_STATUS { IDLE, DIRTY, READ };
 
@@ -52,6 +53,7 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
         this.eventLoopManager = SwerveThreadContext.getEventLoopManager();
         this.isArmed          = false;
         this.writeStatus      = WRITE_STATUS.IDLE;
+        this.readWriteRunnableIsRunning = false;
 
         ReadWriteRunnableStandard targetReadWriteRunnable = (ReadWriteRunnableStandard)target.getReadWriteRunnable();
         this.robotUsbDevice = targetReadWriteRunnable.getRobotUsbDevice();
@@ -128,7 +130,8 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
                 // TODO: consider write coalescing as we do in the legacy motor controller
                 while (this.writeStatus == WRITE_STATUS.DIRTY)
                     {
-                    wait(this.callbackLock);
+                    if (!waitForCallback())
+                        return;         // interrupted or readWriteRunnable is dead, no point in writing
                     }
 
                 // Write the data to the buffer and put off reads and writes until it gets out
@@ -149,7 +152,8 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
                 // following thereafter.
                 while (this.writeStatus != WRITE_STATUS.IDLE)
                     {
-                    wait(this.callbackLock);
+                    if (!waitForCallback())
+                        break;          // interrupted or readWriteRunnable is dead, just read stale data (?)
                     }
                 return super.read(address, size);
                 }
@@ -193,21 +197,39 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
                 long target = cur + 1;
                 while (this.readCompletionCount.get() < target)
                     {
-                    wait(this.callbackLock);
+                    if (!waitForCallback())
+                        return;     // interrupted or readWriteRunnable is dead, deem us to have completed
                     }
                 }
             }
         }
 
-    void wait(Object o)
+    @Override public void startupComplete()
         {
-        try {
-            o.wait();
-            }
-        catch (InterruptedException e)
+        this.readWriteRunnableIsRunning = true;
+        }
+
+    @Override public void shutdownComplete()
+        {
+        this.readWriteRunnableIsRunning = false;
+        this.callbackLock.notifyAll();  // wake up any waiter
+        }
+
+    boolean waitForCallback()
+        {
+        boolean interrupted = false;
+        if (this.readWriteRunnableIsRunning)
             {
-            Util.handleCapturedInterrupt(e);
+            try {
+                callbackLock.wait();
+                }
+            catch (InterruptedException e)
+                {
+                interrupted = true;
+                Util.handleCapturedInterrupt(e);
+                }
             }
+        return !interrupted && this.readWriteRunnableIsRunning;
         }
 
     //----------------------------------------------------------------------------------------------
