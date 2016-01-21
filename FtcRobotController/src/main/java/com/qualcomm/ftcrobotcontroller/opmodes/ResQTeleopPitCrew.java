@@ -32,6 +32,7 @@ public class ResQTeleopPitCrew extends OpMode {
     Servo lButtonServo;
     Servo rButtonServo;
     Servo hookServo;
+    Servo zipLineServo;
 
     private static int ADJUST_MOTOR_TARGET = 0;
     private static int LINEAR_MOTOR_TARGET = 0;
@@ -87,12 +88,15 @@ public class ResQTeleopPitCrew extends OpMode {
         clampServo.setPosition(CLAMP_SERVO_INIT);
         //Button Servos(AUTONOMOUS ONLY)
         lButtonServo = hardwareMap.servo.get("leftbutton");
-        lButtonServo.setPosition(0.2);
+        lButtonServo.setPosition(0.9);
         rButtonServo = hardwareMap.servo.get("rightbutton");
-        rButtonServo.setPosition(1);
+        rButtonServo.setPosition(0.7);
         //All clear servo
-        hookServo = hardwareMap.servo.get("signal");
-        hookServo.setPosition(HOOK_SERVO_INIT);
+        //hookServo = hardwareMap.servo.get("signal");
+       // hookServo.setPosition(HOOK_SERVO_INIT);
+        //Zipline servo
+        zipLineServo = hardwareMap.servo.get("zipline");
+        zipLineServo.setPosition(1);
 
         ultrasonicSensor = hardwareMap.ultrasonicSensor.get("ultrasonic");
         opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("light");
@@ -141,10 +145,11 @@ public class ResQTeleopPitCrew extends OpMode {
         if (gamepad1.dpad_up || gamepad2.dpad_up) {
             rButtonServo.setPosition(0.5);
             lButtonServo.setPosition(0.5);
-            hookServo.setPosition(0.5);
+            //hookServo.setPosition(0.5);
             twistServo.setPosition(0.5);
             releaseServo.setPosition(0.5);
             clampServo.setPosition(0);
+            zipLineServo.setPosition(0.1);
         }
         if (gamepad1.dpad_down || gamepad1.dpad_down) {
             adjustMotor.setPower(0);

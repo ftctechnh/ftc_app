@@ -34,7 +34,7 @@ public class Robot4Teleop extends OpMode {
     private static double CLAMP_SERVO_INIT = 0.32;
     private static double TWIST_SERVO_INIT = 1;
     private static double HOOK_SERVO_INIT = 1;
-    private static double ZIP_SERVO_INIT = 0.5;
+    private static double ZIP_SERVO_INIT = 1;
     //Timing
     private Date resetStartingTime;
     private Date hangStartingTime;
@@ -205,7 +205,7 @@ public class Robot4Teleop extends OpMode {
                 //hangStartingTime = new Date();
                 //hangMotor.setPower(0.5);
                 //temp way to reset all clear servo
-                zipLineServo.setPosition(1);
+                zipLineServo.setPosition(0);
 
             }
             if (gamepad1.dpad_left == false && gamepad2.dpad_left == false && gamepad1.dpad_right == false && gamepad2.dpad_right) {
@@ -217,7 +217,7 @@ public class Robot4Teleop extends OpMode {
             }
             if (gamepad1.dpad_right || gamepad2.dpad_right) {
                 //Hook servo hits the all clear signal
-                zipLineServo.setPosition(0);
+                zipLineServo.setPosition(ZIP_SERVO_INIT);
             }
             if (gamepad1.dpad_down || gamepad2.dpad_down) {
                 //Clamp Servo down
