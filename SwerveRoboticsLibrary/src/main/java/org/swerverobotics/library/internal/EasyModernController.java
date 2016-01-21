@@ -26,11 +26,9 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
     public static final String LOGGING_TAG = SynchronousOpMode.LOGGING_TAG;
 
     protected OpMode                        context;
-    protected EventLoopManager              eventLoopManager;
     protected boolean                       isArmed;
     protected String                        targetName;
     protected HardwareMap.DeviceMapping     targetDeviceMapping;
-    protected RobotUsbDevice                robotUsbDevice;
     protected boolean                       readWriteRunnableIsRunning;
 
     enum WRITE_STATUS { IDLE, DIRTY, READ };
@@ -46,29 +44,15 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    public void initialize(OpMode context, ModernRoboticsUsbDevice target, ModernRoboticsUsbDevice.CreateReadWriteRunnable createReadWriteRunnable) throws RobotCoreException, InterruptedException
+    public EasyModernController(OpMode context, ModernRoboticsUsbDevice target, ModernRoboticsUsbDevice.CreateReadWriteRunnable createReadWriteRunnable) throws RobotCoreException, InterruptedException
         {
+        super(target.getSerialNumber(), SwerveThreadContext.getEventLoopManager(), target.getOpenRobotUsbDevice(), createReadWriteRunnable);
+
         // Initialize the rest of our state
         this.context          = context;
-        this.eventLoopManager = SwerveThreadContext.getEventLoopManager();
         this.isArmed          = false;
         this.writeStatus      = WRITE_STATUS.IDLE;
         this.readWriteRunnableIsRunning = false;
-
-        ReadWriteRunnableStandard targetReadWriteRunnable = (ReadWriteRunnableStandard)target.getReadWriteRunnable();
-        this.robotUsbDevice = targetReadWriteRunnable.getRobotUsbDevice();
-
-        super.initialize(target.getSerialNumber(), SwerveThreadContext.getEventLoopManager(),
-                new ModernRoboticsUsbDevice.CreateRobotUsbDevice()
-                    {
-                    @Override
-                    public RobotUsbDevice create() throws RobotCoreException, InterruptedException
-                        {
-                        return EasyModernController.this.robotUsbDevice;
-                        }
-                    },
-                createReadWriteRunnable
-            );
         }
 
     //----------------------------------------------------------------------------------------------
@@ -96,7 +80,7 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
             }
         }
 
-    void armModernRoboticsUSBDevice(ModernRoboticsUsbDevice usbDevice)
+    static void armModernRoboticsUSBDevice(ModernRoboticsUsbDevice usbDevice)
         {
         try
             {
@@ -237,40 +221,6 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
     //----------------------------------------------------------------------------------------------
 
     public abstract String getDeviceName();
-
-    //----------------------------------------------------------------------------------------------
-    // Shims
-    //----------------------------------------------------------------------------------------------
-
-    /**
-     * This class is a ReadWriteRunnableStandard but one that doesn't report any errors
-     * due to connection failures in its blockUntilReady(). And you can interlock with its
-     * startup. And it sets it's thread name to be something recognizable. All very handy :-).
-     */
-    static class ReadWriteRunnableHandy extends ReadWriteRunnableStandard
-        {
-        public ReadWriteRunnableHandy(SerialNumber serialNumber, RobotUsbDevice device, int monitorLength, int startAddress, boolean debug)
-            {
-            super(serialNumber, device, monitorLength, startAddress, debug);
-            }
-
-        @Override public void run()
-            {
-            Thread.currentThread().setName("ReadWriteRunnableHandy.run");
-            try {
-                super.run();
-                }
-            catch (Exception e)
-                {
-                Log.d(LOGGING_TAG, String.format("ignoring exception thrown in rwrunhandy.run: %s", Util.getStackTrace(e)));
-                }
-            }
-
-        @Override public void blockUntilReady() throws RobotCoreException, InterruptedException
-            {
-            // Do nothing. In particular, don't report any errors
-            }
-        }
 
     //----------------------------------------------------------------------------------------------
     // IOpModeStateTransitionEvents
