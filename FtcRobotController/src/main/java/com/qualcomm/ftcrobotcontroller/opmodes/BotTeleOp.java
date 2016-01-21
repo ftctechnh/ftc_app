@@ -1,5 +1,6 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.qualcomm.ftcrobotcontroller.CycleTimer;
 import com.qualcomm.ftcrobotcontroller.Values;
 import com.qualcomm.ftcrobotcontroller.hardware.HardwareManager;
 import com.qualcomm.ftcrobotcontroller.hardware.Power;
@@ -14,10 +15,11 @@ public class BotTeleOp extends OpMode {
 
     DcMotor tape;
 
-    Servo arm1;
-    Servo arm2;
-    Servo claw1;
-    Servo claw2;
+    Servo leftArm;
+    Servo rightArm;
+
+    boolean btnSideLeft;
+    boolean btnSideRight;
 
     @Override
     public void init() {
@@ -29,33 +31,16 @@ public class BotTeleOp extends OpMode {
 
         tape = manager.getMotor(Values.TAPE);
 
-        arm1 = manager.getServo(Values.ARM_1);
-        arm2 = manager.getServo(Values.ARM_2);
-        claw1 = manager.getServo(Values.CLAW_1);
-        claw2 = manager.getServo(Values.CLAW_2);
+        leftArm = manager.getServo(Values.LEFT_ARM);
+        rightArm = manager.getServo(Values.RIGHT_ARM);
     }
 
     @Override
     public void loop() {
+        CycleTimer.update();
+
         motorLeft.setPower(Power.speedCurve(gamepad1.left_stick_y) * gamepad1.left_trigger);
         motorRight.setPower(Power.speedCurve(gamepad1.right_stick_y) * gamepad1.right_trigger);
-
-        if (gamepad1.y) {
-            arm1.setPosition(Power.powerClamp(arm1.getPosition() + Values.SERVO_INCREMENT));
-            arm2.setPosition(Power.powerClamp(arm2.getPosition() - Values.SERVO_INCREMENT));
-        } else if (gamepad1.a) {
-            arm1.setPosition(Power.powerClamp(arm1.getPosition() - Values.SERVO_INCREMENT));
-            arm2.setPosition(Power.powerClamp(arm2.getPosition() + Values.SERVO_INCREMENT));
-        }
-
-        if (gamepad1.x) {
-            claw1.setPosition(Values.CLAW_OPEN);
-            claw2.setPosition(Values.CLAW_CLOSED);
-        }
-        if (gamepad1.b) {
-            claw1.setPosition(Values.CLAW_CLOSED);
-            claw2.setPosition(Values.CLAW_OPEN);
-        }
 
         if (gamepad1.dpad_up) {
             tape.setPower(Power.NORMAL_SPEED);
@@ -65,14 +50,30 @@ public class BotTeleOp extends OpMode {
             tape.setPower(Power.FULL_STOP);
         }
 
+        if (gamepad1.left_bumper && !btnSideLeft) {
+            btnSideLeft = true;
+            if (leftArm.getPosition() == Values.SIDE_ARM_IN)
+                leftArm.setPosition(Values.SIDE_ARM_OUT);
+            else
+                leftArm.setPosition(Values.SIDE_ARM_IN);
+        } else {
+            btnSideLeft = false;
+        }
+
+        if (gamepad1.right_bumper && !btnSideRight) {
+            btnSideRight = true;
+            if (rightArm.getPosition() == Values.SIDE_ARM_IN)
+                rightArm.setPosition(Values.SIDE_ARM_OUT);
+            else
+                rightArm.setPosition(Values.SIDE_ARM_IN);
+        } else {
+            btnSideRight = false;
+        }
+
         telemetry.addData("Title", "***Robot Data***");
         telemetry.addData("Right Motor", "Right:" + motorRight.getPower());
         telemetry.addData("Left Motor", "Left:" + motorLeft.getPower());
         telemetry.addData("Tape Motor", "Tape:" + tape.getPower());
-        telemetry.addData("Arm 1", "Arm 1:" + arm1.getPosition());
-        telemetry.addData("Arm 2", "Arm 2:" + arm2.getPosition());
-        telemetry.addData("Claw 1", "Claw 1:" + claw1.getPosition());
-        telemetry.addData("Claw 2", "Claw 2:" + claw2.getPosition());
     }
 
     @Override
