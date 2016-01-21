@@ -19,4 +19,5 @@ public class Values {
     public static final String CLAW_1 = "claw1";
     public static final String CLAW_2 = "claw2";
 
+    public static final String TAPE = "tape";
 }
