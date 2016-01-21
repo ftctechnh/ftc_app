@@ -13,6 +13,7 @@ public class BlueMountClimb1 extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
     {
+        /*
         drive = new CompBot(hardwareMap);
 
         //wait for start
@@ -65,5 +66,6 @@ public class BlueMountClimb1 extends LinearOpMode
 
 
         //stop the bot
+        */
     }
 }
