@@ -55,7 +55,9 @@ public class Autonomous extends SynchronousOpMode {
         backLeftWheel.setDirection(DcMotor.Direction.REVERSE);
 
         mountainClimber.setDirection(Servo.Direction.FORWARD);
+        mountainClimber.setPosition(0.25);
         mountainClimberRelease.setDirection(Servo.Direction.REVERSE);
+        mountainClimberRelease.setPosition(0);
 
 
         telemetry.clearDashboard();
@@ -79,15 +81,31 @@ public class Autonomous extends SynchronousOpMode {
         //Autonomous Start
         waitForStart();
         if (opModeIsActive()) {
+            double ultraVal = ultrasonic.getUltrasonicLevel();
             telemetry.clearDashboard();
             telemetry.addData("Autonomous", "Running");
             telemetry.update();
-            long endTime = System.currentTimeMillis() + 1000000000L;
-            while(System.currentTimeMillis() < endTime) {
-                dumpClimbers(telemetry);
-                Functions.waitFor(5000);
+            moveRobotInches(80, 0.5, telemetry);
+            Functions.waitFor(5000);
+            stopAtWhite(0.3, 10000, telemetry);
+            Functions.waitFor(5000);
+            turnRobotLeftDegrees(50, 0.4, 5000, telemetry);
+            Functions.waitFor(5000);
+            moveRobotSeconds(3, 0.3);
+            Functions.waitFor(5000);
+            while (ultraVal < 15) {
+                moveRobotPower(-0.3);
             }
-            end();
+            dumpClimbers(telemetry);
+            Functions.waitFor(5000);
+            while (ultraVal < 30) {
+
+
+                moveRobotPower(-0.3);
+            }
+            turnRobotRightDegrees(180, 0.5, 10000, telemetry);
+
+
         }
         telemetry.addData("Autonomous", "Done");
         //Autonomous End
