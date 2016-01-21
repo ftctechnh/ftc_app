@@ -11,8 +11,6 @@ public interface II2cDevice extends HardwareDevice
     int     getI2cAddr();
     void    setI2cAddr(int i2cAddr8Bit);
     
-    void    deregisterForPortReadyCallback();
-
     void    enableI2cReadMode(int ib, int cb);
 
     void    enableI2cWriteMode(int ib, int cb);
@@ -36,6 +34,16 @@ public interface II2cDevice extends HardwareDevice
     void    readI2cCacheFromController();
 
     void    registerForI2cPortReadyCallback(I2cController.I2cPortReadyCallback callback);
+
+    I2cController.I2cPortReadyCallback getI2cPortReadyCallback();
+
+    void    deregisterForPortReadyCallback();
+
+    void    registerForI2cNotificationsCallback(I2cController.I2cNotificationsCallback callback);
+
+    I2cController.I2cNotificationsCallback getI2cNotificationsCallback();
+
+    void    deregisterForI2cNotificationsCallback();
 
     void    setI2cPortActionFlag();
 
