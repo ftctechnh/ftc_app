@@ -242,8 +242,8 @@ public final class ClassFactory
      */
     public static II2cDevice createI2cDevice(I2cDevice i2cDevice)
         {
-        I2cController i2cController = MemberUtil.i2cControllerOfI2cDevice(i2cDevice);
-        int port                    = MemberUtil.portOfI2cDevice(i2cDevice);
+        I2cController i2cController = i2cDevice.getController();
+        int port                    = i2cDevice.getPort();
         return createI2cDevice(i2cController, port);
         }
 
