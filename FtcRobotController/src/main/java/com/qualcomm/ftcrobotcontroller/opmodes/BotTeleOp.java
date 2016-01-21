@@ -9,8 +9,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class BotTeleOp extends OpMode {
 
-    double SPEED_FACTOR = 0.5;
-
     DcMotor motorRight;
     DcMotor motorLeft;
 
@@ -20,10 +18,6 @@ public class BotTeleOp extends OpMode {
     Servo arm2;
     Servo claw1;
     Servo claw2;
-
-    public BotTeleOp() {
-
-    }
 
     @Override
     public void init() {
@@ -43,8 +37,8 @@ public class BotTeleOp extends OpMode {
 
     @Override
     public void loop() {
-        motorLeft.setPower(Power.speedCurve(gamepad1.left_stick_y) * SPEED_FACTOR);
-        motorRight.setPower(Power.speedCurve(gamepad1.right_stick_y) * SPEED_FACTOR);
+        motorLeft.setPower(Power.speedCurve(gamepad1.left_stick_y) * gamepad1.left_trigger);
+        motorRight.setPower(Power.speedCurve(gamepad1.right_stick_y) * gamepad1.right_trigger);
 
         if (gamepad1.y) {
             arm1.setPosition(Power.powerClamp(arm1.getPosition() + Values.SERVO_INCREMENT));
@@ -69,13 +63,6 @@ public class BotTeleOp extends OpMode {
             tape.setPower(-Power.NORMAL_SPEED);
         } else {
             tape.setPower(Power.FULL_STOP);
-        }
-
-        if (gamepad1.left_bumper) {
-            SPEED_FACTOR = 1.0;
-        }
-        if (gamepad1.right_bumper) {
-            SPEED_FACTOR = 0.5;
         }
 
         telemetry.addData("Title", "***Robot Data***");
