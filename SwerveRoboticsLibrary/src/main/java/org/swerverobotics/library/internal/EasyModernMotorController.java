@@ -117,56 +117,64 @@ public class EasyModernMotorController extends EasyModernController implements D
 
     private static final String swerveVoltageSensorName = " |Swerve|Modern|VoltageSensor| ";
 
-    @Override public void arm()
+    @Override public void arm() throws RobotCoreException, InterruptedException
         {
-        if (!this.isArmed())
+        synchronized (this.armingLock)
             {
-            Log.d(LOGGING_TAG, String.format("arming \"%s\"....", this.getConnectionInfo()));
-            this.usurpDevices();
-
-            // Turn off target's usb stuff
-            this.eventLoopManager.unregisterSyncdDevice(this.target.getReadWriteRunnable());
-            this.floatHardware(target);
-            disarmModernRoboticsUSBDevice(target);
-            //
-            if (this.targetName != null)
+            if (!this.isArmed())
                 {
-                this.targetDeviceMapping.put(this.targetName, this);
-                this.context.hardwareMap.voltageSensor.put(this.targetName, this);
+                Log.d(LOGGING_TAG, String.format("arming \"%s\"....", this.getConnectionInfo()));
+
+                // Turn off target
+                target.disarm();
+
+                // Swizzle while no one is on
+                this.usurpDevices();
+                if (this.targetName != null)
+                    {
+                    this.targetDeviceMapping.put(this.targetName, this);
+                    this.context.hardwareMap.voltageSensor.put(this.targetName, this);
+                    }
+
+                // Turn us on
+                this.armDevice();
+                this.isArmed = true;
+
+                // Initialize
+                this.initPID();
+                this.floatHardware();
+
+                Log.d(LOGGING_TAG, String.format("....armed \"%s\"", this.getConnectionInfo()));
                 }
-            this.isArmed = true;
-
-            // Turn on our usb stuff
-            armModernRoboticsUSBDevice(this);
-
-            this.initPID();
-            this.floatHardware();
-            Log.d(LOGGING_TAG, String.format("....armed \"%s\"", this.getConnectionInfo()));
             }
         }
 
-    @Override public void disarm()
+    @Override public void disarm() throws RobotCoreException, InterruptedException
         {
-        if (this.isArmed())
+        synchronized (this.armingLock)
             {
-            Log.d(LOGGING_TAG, String.format("disarming \"%s\"....", this.getConnectionInfo()));
-
-            // Turn off our usb stuff
-            this.eventLoopManager.unregisterSyncdDevice(this.readWriteRunnable);
-            this.close();
-            //
-            this.isArmed = false;
-            if (this.targetName != null)
+            if (this.isArmed())
                 {
-                this.targetDeviceMapping.put(this.targetName, this.target);
-                this.context.hardwareMap.voltageSensor.put(this.targetName, this.target);
+                Log.d(LOGGING_TAG, String.format("disarming \"%s\"....", this.getConnectionInfo()));
+
+                // Turn us off
+                this.floatHardware();
+                this.disarmDevice();
+                this.isArmed = false;
+
+                // Swizzle while no one is on
+                this.deusurpDevices();
+                if (this.targetName != null)
+                    {
+                    this.targetDeviceMapping.put(this.targetName, this.target);
+                    this.context.hardwareMap.voltageSensor.put(this.targetName, this.target);
+                    }
+
+                // Turn target back on
+                this.target.arm();
+
+                Log.d(LOGGING_TAG, String.format("....disarmed \"%s\"", this.getConnectionInfo()));
                 }
-
-            // Turn target's usb stuff back on
-            armModernRoboticsUSBDevice(this.target);
-
-            this.deusurpDevices();
-            Log.d(LOGGING_TAG, String.format("....disarmed \"%s\"", this.getConnectionInfo()));
             }
         }
 
@@ -174,10 +182,24 @@ public class EasyModernMotorController extends EasyModernController implements D
     // HardwareDevice
     //----------------------------------------------------------------------------------------------
 
+    // Close should *not* restart the target
     @Override public void close()
         {
-        this.floatHardware();
-        disarmModernRoboticsUSBDevice(this);
+        synchronized (this.armingLock)
+            {
+            try {
+                if (this.isArmed())
+                    {
+                    floatHardware();
+                    this.disarmDevice();
+                    this.isArmed = false;
+                    }
+                }
+            catch (Exception e)
+                {
+                Util.handleCapturedException(e);
+                }
+            }
         }
 
     @Override public String getConnectionInfo()
