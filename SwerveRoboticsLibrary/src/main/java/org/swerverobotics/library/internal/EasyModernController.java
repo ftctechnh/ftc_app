@@ -26,7 +26,6 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
     public static final String LOGGING_TAG = SynchronousOpMode.LOGGING_TAG;
 
     protected OpMode                        context;
-    protected boolean                       isArmed;
     protected String                        targetName;
     protected HardwareMap.DeviceMapping     targetDeviceMapping;
     protected boolean                       readWriteRunnableIsRunning;
@@ -50,46 +49,8 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
 
         // Initialize the rest of our state
         this.context          = context;
-        this.isArmed          = false;
         this.writeStatus      = WRITE_STATUS.IDLE;
         this.readWriteRunnableIsRunning = false;
-        }
-
-    //----------------------------------------------------------------------------------------------
-    // Arming and disarming
-    //----------------------------------------------------------------------------------------------
-
-    public boolean isArmed()
-        {
-        return this.isArmed;
-        }
-
-    public abstract void arm();
-
-    public abstract void disarm();
-
-    static void disarmModernRoboticsUSBDevice(ModernRoboticsUsbDevice usbDevice)
-    // Close down the usbDevice in a robust and reliable way
-        {
-        try {
-            usbDevice.disarmDevice();
-            }
-        catch (Exception e)
-            {
-            Util.handleCapturedException(e);
-            }
-        }
-
-    static void armModernRoboticsUSBDevice(ModernRoboticsUsbDevice usbDevice)
-        {
-        try
-            {
-            usbDevice.armDevice();
-            }
-        catch (Exception e)
-            {
-            Util.handleCapturedException(e);
-            }
         }
 
     //----------------------------------------------------------------------------------------------
@@ -234,7 +195,13 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
         if (this.isArmed())
             {
             this.stopHardware();  // mirror StopRobotOpMode
-            this.disarm();
+            try {
+                this.disarm();
+                }
+            catch (Exception e)
+                {
+                Util.handleCapturedException(e);
+                }
             }
         Log.d(LOGGING_TAG, "EasyModern: ... done");
         return true;    // unregister us
