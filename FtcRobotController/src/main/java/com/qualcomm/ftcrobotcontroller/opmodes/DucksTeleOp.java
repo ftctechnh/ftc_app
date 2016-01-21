@@ -23,22 +23,22 @@ import java.util.logging.Handler;
 public class DucksTeleOp extends TeleOpCommands {
     @Override
     public void init() {
-    }
-
-    @Override
-    public void loop() {
         winchwheelMC=hardwareMap.dcMotorController.get("winchwheelMC");
         leftsweepMC=hardwareMap.dcMotorController.get("leftsweepMC");
         rightpivotMC=hardwareMap.dcMotorController.get("rightpivotMC");
         climbersLeft=hardwareMap.servo.get("climbersLeft");
         climbersRight=hardwareMap.servo.get("climbersRight");
         tray=hardwareMap.servo.get("tray");
-//        if(System.currentTimeMillis()-LEFTUPDATE>10){
-//            setLeftPower();
-//        }
-//        if(System.currentTimeMillis()-RIGHTUPDATE>10){
-//            setRightPower();
-//        }
+
+        tray.setPosition(.5);
+        climbersRight.setPosition(1);
+        climbersLeft.setPosition(.3);
+    }
+
+    @Override
+    public void loop() {
+
+
         setLeftPower();
         setRightPower();
         setWinchPower();
