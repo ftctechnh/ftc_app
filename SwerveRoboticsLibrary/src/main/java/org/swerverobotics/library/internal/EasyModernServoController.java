@@ -49,11 +49,11 @@ public class EasyModernServoController extends EasyModernController implements S
 
     private EasyModernServoController(OpMode context, final ModernRoboticsUsbServoController target) throws RobotCoreException, InterruptedException
         {
-        super.initialize(context, target, new ModernRoboticsUsbDevice.CreateReadWriteRunnable() {
+        super(context, target, new ModernRoboticsUsbDevice.CreateReadWriteRunnable() {
             @Override
             public ReadWriteRunnable create(RobotUsbDevice robotUsbDevice) throws RobotCoreException, InterruptedException
                 {
-                return newDummyReadWriteRunnable(target.getSerialNumber());
+                return new ReadWriteRunnableStandard(target.getSerialNumber(), robotUsbDevice, MONITOR_LENGTH, START_ADDRESS, false);
                 }
             });
 
@@ -61,12 +61,6 @@ public class EasyModernServoController extends EasyModernController implements S
         this.servos  = new LinkedList<Servo>();
         this.servoPositions  = new double[ADDRESS_CHANNEL_MAP.length];
         this.findTargetNameAndMapping();
-        }
-
-    static ReadWriteRunnableHandy newDummyReadWriteRunnable(SerialNumber serialNumber)
-        {
-        RobotUsbDevice robotUsbDevice = new DummyModernRoboticsRobotUsbDevice();
-        return new ReadWriteRunnableHandy(serialNumber, robotUsbDevice, MONITOR_LENGTH, START_ADDRESS, false);
         }
 
     public static ServoController create(OpMode context, ServoController target, Collection<Servo> servos)
