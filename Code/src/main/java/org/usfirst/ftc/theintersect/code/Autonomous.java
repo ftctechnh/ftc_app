@@ -1,4 +1,4 @@
-package org.usfirst.ftc.intersect.code;
+package org.usfirst.ftc.theintersect.code;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;

@@ -6,7 +6,7 @@ import org.swerverobotics.library.interfaces.*;
 /**
  * An AccelerationSensor that can be called on the main() thread.
  */
-public class ThunkedAccelerationSensor extends AccelerationSensor implements IThunkWrapper<AccelerationSensor>
+public class ThunkedAccelerationSensor implements AccelerationSensor, IThunkWrapper<AccelerationSensor>
     {
     //----------------------------------------------------------------------------------------------
     // State

@@ -1,6 +1,7 @@
 package org.swerverobotics.library.internal;
 
-import com.qualcomm.hardware.*;
+import com.qualcomm.hardware.hitechnic.*;
+import com.qualcomm.hardware.modernrobotics.*;
 import com.qualcomm.robotcore.eventloop.opmode.*;
 import com.qualcomm.robotcore.hardware.*;
 import org.swerverobotics.library.*;
@@ -198,7 +199,7 @@ public class ThunkingHardwareFactory
                     ServoController targetController = target.getController();
                     ServoController controller = findWrapper(thunkedHwmap.servoController, targetController, ThunkedServoController.create(targetController));
 
-                    return new ThreadSafeServo(
+                    return new EasyServo(
                             controller,
                             target.getPortNumber(),
                             target.getDirection()

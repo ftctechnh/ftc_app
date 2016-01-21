@@ -1,9 +1,8 @@
-package org.usfirst.ftc.intersect.code;
+package org.usfirst.ftc.theintersect.code;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class Functions {
-
 	//Important ratios for different types of motors
 	public static int neveRestPPR = 1120;
 	public static int tetrixPPR = 1440;

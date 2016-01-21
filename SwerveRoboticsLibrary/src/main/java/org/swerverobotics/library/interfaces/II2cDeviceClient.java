@@ -77,7 +77,6 @@ public interface II2cDeviceClient extends HardwareDevice
      *
      * @see #setReadWindow(ReadWindow)
      * @see #read8(int)
-     * @see #executeFunctionWhileLocked(IFunc)
      */
     void ensureReadWindow(ReadWindow windowNeeded, ReadWindow windowToSet);
 
@@ -130,14 +129,6 @@ public interface II2cDeviceClient extends HardwareDevice
      * a new read fresh window will be created with the same set of registers. Otherwise, a
      * window that exactly covers the requested set of registers will be created.</p>
      *
-     * <p>If one is trying to optimize the the register window by calling
-     * {@link #ensureReadWindow(ReadWindow, ReadWindow) ensureReadWindow()}, this auto-window
-     * creation can cause difficulties if any concurrent access is present. In such situations,
-     * {@link #executeFunctionWhileLocked(IFunc)} can be used to allow you to atomically both
-     * set the read window and execute a read without the possibility of the read window being
-     * re-adjusted in the middle.
-     * </p>
-     *
      * @param ireg  the register number of the first byte register to read
      * @param creg  the number of bytes / registers to read
      * @return      the data which was read, together with the timestamp
@@ -145,7 +136,6 @@ public interface II2cDeviceClient extends HardwareDevice
      * @see #read(int, int)
      * @see #read8(int)
      * @see #ensureReadWindow(ReadWindow, ReadWindow)
-     * @see #executeFunctionWhileLocked(IFunc)
      */
     TimestampedData readTimeStamped(int ireg, int creg);
     
@@ -172,7 +162,6 @@ public interface II2cDeviceClient extends HardwareDevice
      *
      * @see #ensureReadWindow(ReadWindow, ReadWindow)
      * @see #readTimeStamped(int, int)
-     * @see #executeFunctionWhileLocked(IFunc)
      */
     TimestampedData readTimeStamped(int ireg, int creg, ReadWindow readWindowNeeded, ReadWindow readWindowSet);
 
@@ -238,30 +227,6 @@ public interface II2cDeviceClient extends HardwareDevice
     void waitForWriteCompletions();
 
     //----------------------------------------------------------------------------------------------
-    // Concurrency management
-    //----------------------------------------------------------------------------------------------
-
-    /**
-     * Executes the indicated action while holding the concurrency lock on the object
-     * so as to prevent other threads from interleaving.
-     *
-     * @param action the action to execute
-     * @see #executeFunctionWhileLocked(IFunc)
-     */
-    void executeActionWhileLocked(Runnable action);
-
-    /**
-     * Executes the indicated function while holding the concurrency lock on the object
-     * so as to prevent other threads from interleaving. Returns the value of the function.
-     *
-     * @param function      the function to execute
-     * @param <T>           the type of the data returned from the function
-     * @return              the datum value returned from the function
-     * @see #executeActionWhileLocked(Runnable)
-     */
-    <T> T executeFunctionWhileLocked(IFunc<T> function);
-
-    //----------------------------------------------------------------------------------------------
     // Heartbeats
     //----------------------------------------------------------------------------------------------
 
@@ -317,13 +282,7 @@ public interface II2cDeviceClient extends HardwareDevice
         /** Priority #2: re-issue the last I2C write operation, if possible. */
         public boolean      rewriteLastWritten  = false;
 
-        /** Priority #3: explicitly read a given register window. Note that using
-         * this form of heartbeat may cause the I2C device to experience concurrency it
-         * otherwise might not support for this heartbeat form may make use of
-         * worker threads.
-         *
-         * @see #executeFunctionWhileLocked(IFunc)
-         */
+        /** Priority #3: explicitly read a given register window             */
         public ReadWindow   heartbeatReadWindow = null;
         }
 
@@ -567,9 +526,9 @@ public interface II2cDeviceClient extends HardwareDevice
 
         /**
          * Returns a copy of this window but with the {@link #readIssued} flag clear
-         * @return a fresh readable copy of the window
+         * @return a fresh copy of the window into which data can actually be read.
          */
-        public ReadWindow freshCopy()
+        public ReadWindow readableCopy()
             {
             return new ReadWindow(this.iregFirst, this.creg, this.readMode);
             }

@@ -36,7 +36,12 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
     private HandshakeThreadStarter accelerationMananger;
     private static final int       msAccelerationIntegrationStopWait = 20;
     private static final int       msAwaitChipId                     = 2000;
-    private static final int       msAwaitSelfTest                   = 500;
+    private static final int       msAwaitSelfTest                   = 2000;
+    // The msAwaitSelfTest value is lore. We choose here to use the same value for awaiting chip id,
+    // on the (not completely unreasonable) theory that similar things are happening in the chip in both
+    // cases. A survey of other libraries is as follows:
+    //  1000ms:     https://github.com/OpenROV/openrov-software-arduino/blob/master/OpenROV/BNO055.cpp
+    //              https://github.com/alexstyl/Adafruit-BNO055-SparkCore-port/blob/master/Adafruit_BNO055.cpp
 
     // We always read as much as we can when we have nothing else to do
     private static final II2cDeviceClient.READ_MODE readMode = II2cDeviceClient.READ_MODE.REPEAT;
@@ -166,11 +171,11 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         write8(REGISTER.PAGE_ID, 0);
         
         // Set the output units. Section 3.6, p31
-        int unitsel = (parameters.pitchmode.bVal << 7) |       // pitch angle convention
+        int unitsel = (parameters.pitchMode.bVal << 7) |       // pitch angle convention
                       (parameters.temperatureUnit.bVal << 4) | // temperature
-                      (parameters.angleunit.bVal << 2) |       // euler angle units
-                      (parameters.angleunit.bVal << 1) |       // gyro units, per second
-                      (parameters.accelunit.bVal /*<< 0*/);    // accelerometer units
+                      (parameters.angleUnit.bVal << 2) |       // euler angle units
+                      (parameters.angleUnit.bVal << 1) |       // gyro units, per second
+                      (parameters.accelUnit.bVal /*<< 0*/);    // accelerometer units
         write8(REGISTER.UNIT_SEL, unitsel);
         
         // Use or don't use the external crystal
@@ -178,17 +183,40 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         write8(REGISTER.SYS_TRIGGER, parameters.useExternalCrystal ? 0x80 : 0x00);
         delayLoreExtra(10);
 
-        // Run a self test. This appears to be a necessary step in order for the 
-        // sensor to be able to actually be used.
+        // Switch to page 1 so we can write some more registers
+        write8(REGISTER.PAGE_ID, 1);
+
+        // Configure selected page 1 registers
+        write8(REGISTER.ACC_CONFIG, parameters.accelPowerMode.bVal | parameters.accelBandwidth.bVal | parameters.accelRange.bVal);
+        write8(REGISTER.MAG_CONFIG, parameters.magPowerMode.bVal | parameters.magOpMode.bVal | parameters.magRate.bVal);
+        write8(REGISTER.GYR_CONFIG_0, parameters.gyroBandwidth.bVal | parameters.gyroRange.bVal);
+        write8(REGISTER.GYR_CONFIG_1, parameters.gyroPowerMode.bVal);
+
+        // Switch back
+        write8(REGISTER.PAGE_ID, 0);
+
+        // Run a self test. This appears to be a necessary step in order for the
+        // sensor to be able to actually be used. That is, we've observed that absent this,
+        // the sensors do not return correct data. We wish that were documented somewhere.
         write8(REGISTER.SYS_TRIGGER, read8(REGISTER.SYS_TRIGGER) | 0x01);           // SYS_TRIGGER=0x3F
         elapsed.reset();
         boolean selfTestSuccessful = false;
+
+        // Per Section 3.9.2 Built In Self Test, when we manually kick of a self test,
+        // the accelerometer, gyro, and magnetometer are tested, but the microcontroller is not.
+        // So: we only wait for successful results from those three.
+        final int successfulResult = 0x07;
+        final int successfulResultMask = 0x07;
+
         while (!selfTestSuccessful && milliseconds(elapsed) < msAwaitSelfTest)
             {
-            selfTestSuccessful = (read8(REGISTER.SELFTEST_RESULT)&0x0F) == 0x0F;    // SELFTEST_RESULT=0x36
+            selfTestSuccessful = (read8(REGISTER.SELFTEST_RESULT)&successfulResultMask) == successfulResult;    // SELFTEST_RESULT=0x36
             }
         if (!selfTestSuccessful)
-            throw new BNO055InitializationException(this, "self test failed");
+            {
+            int result = read8(REGISTER.SELFTEST_RESULT);
+            throw new BNO055InitializationException(this, String.format("self test failed: 0x%02x", result));
+            }
 
         if (this.parameters.calibrationData != null)
             writeCalibrationData(this.parameters.calibrationData);
@@ -341,20 +369,14 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
 
     public synchronized Quaternion getQuaternionOrientation()
         {
-        return this.deviceClient.executeFunctionWhileLocked(new IFunc<Quaternion>()
-            {
-            @Override public Quaternion value()
-                {
-                // Ensure we can see the registers we need
-                deviceClient.ensureReadWindow(
-                        new II2cDeviceClient.ReadWindow(REGISTER.QUATERNION_DATA_W_LSB.bVal, 8, readMode),
-                        upperWindow);
+        // Ensure we can see the registers we need
+        deviceClient.ensureReadWindow(
+                new II2cDeviceClient.ReadWindow(REGISTER.QUATERNION_DATA_W_LSB.bVal, 8, readMode),
+                upperWindow);
 
-                // Section 3.6.5.5 of BNO055 specification
-                II2cDeviceClient.TimestampedData ts = deviceClient.readTimeStamped(REGISTER.QUATERNION_DATA_W_LSB.bVal, 8);
-                return new Quaternion(ts, (1 << 14));
-                }
-            });
+        // Section 3.6.5.5 of BNO055 specification
+        II2cDeviceClient.TimestampedData ts = deviceClient.readTimeStamped(REGISTER.QUATERNION_DATA_W_LSB.bVal, 8);
+        return new Quaternion(ts, (1 << 14));
         }
 
     /**
@@ -363,7 +385,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
      */
     private double getAngularScale()
         {
-        return this.parameters.angleunit == ANGLEUNIT.DEGREES ? 16.0 : 900.0;
+        return this.parameters.angleUnit == ANGLEUNIT.DEGREES ? 16.0 : 900.0;
         }
 
     /**
@@ -372,7 +394,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
      */
     private double getAccelerationScale()
         {
-        return this.parameters.accelunit == ACCELUNIT.METERS_PERSEC_PERSEC ? 100.0 : 1.0;
+        return this.parameters.accelUnit == ACCELUNIT.METERS_PERSEC_PERSEC ? 100.0 : 1.0;
         }
 
     /**
@@ -387,17 +409,11 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
 
     private II2cDeviceClient.TimestampedData getVector(final VECTOR vector)
         {
-        return this.deviceClient.executeFunctionWhileLocked(new IFunc<II2cDeviceClient.TimestampedData>()
-            {
-            @Override public II2cDeviceClient.TimestampedData value()
-                {
-                // Ensure that the 6 bytes for this vector are visible in the register window.
-                ensureReadWindow(new II2cDeviceClient.ReadWindow(vector.getValue(), 6, readMode));
+        // Ensure that the 6 bytes for this vector are visible in the register window.
+        ensureReadWindow(new II2cDeviceClient.ReadWindow(vector.getValue(), 6, readMode));
 
-                // Read the data
-                return deviceClient.readTimeStamped(vector.getValue(), 6);
-                }
-            });
+        // Read the data
+        return deviceClient.readTimeStamped(vector.getValue(), 6);
         }
 
     //------------------------------------------------------------------------------------------
@@ -588,26 +604,14 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
 
     @Override public synchronized byte read8(final REGISTER reg)
         {
-        return this.deviceClient.executeFunctionWhileLocked(new IFunc<Byte>()
-            {
-            @Override public Byte value()
-                {
-                ensureReadWindow(new II2cDeviceClient.ReadWindow(reg.bVal, 1, readMode));
-                return deviceClient.read8(reg.bVal);
-                }
-            });
+        ensureReadWindow(new II2cDeviceClient.ReadWindow(reg.bVal, 1, readMode));
+        return deviceClient.read8(reg.bVal);
         }
 
     @Override public synchronized byte[] read(final REGISTER reg, final int cb)
         {
-        return this.deviceClient.executeFunctionWhileLocked(new IFunc<byte[]>()
-            {
-            @Override public byte[] value()
-                {
-                ensureReadWindow(new II2cDeviceClient.ReadWindow(reg.bVal, cb, readMode));
-                return deviceClient.read(reg.bVal, cb);
-                }
-            });
+        ensureReadWindow(new II2cDeviceClient.ReadWindow(reg.bVal, cb, readMode));
+        return deviceClient.read(reg.bVal, cb);
         }
 
     @Override public void write8(REGISTER reg, int data)
