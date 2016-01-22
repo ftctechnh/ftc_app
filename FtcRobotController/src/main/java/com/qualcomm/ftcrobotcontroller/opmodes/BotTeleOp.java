@@ -26,8 +26,8 @@ public class BotTeleOp extends OpMode {
         HardwareManager manager = new HardwareManager(hardwareMap);
 
         motorRight = manager.getMotor(Values.RIGHT_MOTOR);
-        motorRight.setDirection(DcMotor.Direction.REVERSE);
         motorLeft = manager.getMotor(Values.LEFT_MOTOR);
+        motorLeft.setDirection(DcMotor.Direction.REVERSE);
 
         tape = manager.getMotor(Values.TAPE);
 

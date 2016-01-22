@@ -46,8 +46,8 @@ public class BotAuton extends LinearOpMode {
     public void initMotors() {
         HardwareManager manager = new HardwareManager(hardwareMap);
         motorRight = manager.getMotor(Values.RIGHT_MOTOR);
-        motorRight.setDirection(DcMotor.Direction.REVERSE);
         motorLeft = manager.getMotor(Values.LEFT_MOTOR);
+        motorLeft.setDirection(DcMotor.Direction.REVERSE);
     }
 
     public void stopMotors() {
