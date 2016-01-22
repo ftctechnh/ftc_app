@@ -25,11 +25,17 @@ public class DragonoidsTeleOp extends OpMode {
         double leftDrivePower = Range.clip(forwardAmount + turningAmount, -1.0, 1.0);
         DragonoidsGlobal.setDrivePower(rightDrivePower, leftDrivePower);
 
-        if (gamepad2.right_bumper) {
+        if (gamepad2.right_trigger > 0.8) {
             // Turn on the conveyor
+            DragonoidsGlobal.conveyor.setPower(0.70);
+        }
+        else if (gamepad2.right_trigger > 0.4) {
             DragonoidsGlobal.conveyor.setPower(0.45);
         }
-        else if (gamepad2.left_bumper) {
+        else if (gamepad2.right_trigger > 0.1) {
+            DragonoidsGlobal.conveyor.setPower(0.10);
+        }
+        else if (gamepad2.right_bumper) {
             // Reverse the conveyor
             DragonoidsGlobal.conveyor.setPower(-0.25);
         }
