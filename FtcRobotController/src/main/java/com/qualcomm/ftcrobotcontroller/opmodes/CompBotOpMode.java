@@ -152,6 +152,8 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
         climberReleaseServoRight.setPosition(1.0f);
         climberReleaseServoLeft.setPosition(0.0f);
         diverterServo.setPosition(0.5f);
+        leftMotor.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        rightMotor.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
     }
 
     @Override
@@ -164,15 +166,30 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
 
     }
 
+    public boolean doneWithPrev()
+    {
+        if(forwardDirection)
+        {
+            if(motorUsed.getCurrentPosition()<=encoderTarget)
+            {
+                return false;
+            }
+        }
+        else
+        {
+            if(motorUsed.getCurrentPosition()>=encoderTarget)
+            {
+                return false;
+            }
+        }
+        leftMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        rightMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        return true;
+    }
+
     @Override
     public void moveStraightEncoders(float inches, float speed)
     {
-        while(leftMotor.getCurrentPosition() != 0){}
-        while(rightMotor.getCurrentPosition() != 0){}
-        /*leftMotor.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
-        rightMotor.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
-        leftMotor.setTargetPosition((int)(131.65432 * inches));
-        rightMotor.setTargetPosition((int)(131.65432 * inches));*///previous code to run to set positions with setTargetPosition function
         leftMotor.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         rightMotor.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         if(speed < 0)
@@ -180,7 +197,12 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
             speed*=-1.0;
             inches*=-1.0;
         }
-        int encoderTarget = ((int)(123.42844 * inches));
+        this.encoderTarget = (int) (131.65432 * inches);
+        leftMotor.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        rightMotor.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        leftMotor.setTargetPosition(this.encoderTarget);
+        rightMotor.setTargetPosition(this.encoderTarget);
+
         if(encoderTarget > 0)
         {
             leftMotor.setPower(speed);
@@ -194,7 +216,6 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
             this.forwardDirection = false;
         }
         motorUsed = rightMotor;
-        this.encoderTarget = encoderTarget;
     }
 
 
@@ -508,27 +529,7 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
     }
 
 
-    public boolean doneWithPrev()
-    {
-        //leftMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        //rightMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        //makes sure the encoders reset
-        if(forwardDirection)
-        {
-            if(motorUsed.getCurrentPosition()<=encoderTarget)
-            {
-                return false;
-            }
-        }
-        else
-        {
-            if(motorUsed.getCurrentPosition()>=encoderTarget)
-            {
-                return false;
-            }
-        }
-        return true;
-    }
+
 
 
     public void pitchFrontTracks(float time, float speed)
