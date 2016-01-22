@@ -24,12 +24,13 @@ public class BotAuton extends LinearOpMode {
         Thread.sleep(4456);
         //100% speed, 10.49 ft forward
         stopMotors();
-        motorRight.setPower(Power.NORMAL_SPEED);
+        motorLeft.setPower(Power.NORMAL_SPEED);
         Thread.sleep(300);
         //this is a guess for 90 degree turn to the right
         stopMotors();
         motorRight.setPower(Power.NORMAL_SPEED);
-        Thread.sleep(17);
+        motorLeft.setPower(Power.NORMAL_SPEED);
+        Thread.sleep(1700);
         //75% speed, 36 inches forward
         stopMotors();
         dump.setPosition(Values.DUMP_DOWN);
