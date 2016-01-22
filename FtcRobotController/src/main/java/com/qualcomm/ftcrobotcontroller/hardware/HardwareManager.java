@@ -32,10 +32,14 @@ public class HardwareManager {
      * @return A DcMotor
      */
     public DcMotor getMotor(String name) {
-        DcMotor motor = map.dcMotor.get(name);
-        if (motor == null)
-            motor = new NullDcMotor();
-        return motor;
+        try {
+            DcMotor motor = map.dcMotor.get(name);
+            if (motor == null)
+                motor = new NullDcMotor();
+            return motor;
+        } catch (IllegalArgumentException e) {
+            return new NullDcMotor();
+        }
     }
 
     /**
@@ -45,10 +49,15 @@ public class HardwareManager {
      * @return A servo
      */
     public Servo getServo(String name) {
-        Servo servo = map.servo.get(name);
-        if (servo == null)
-            servo = new NullServo();
-        return servo;
+        try {
+            Servo servo = map.servo.get(name);
+            if (servo == null)
+                servo = new NullServo();
+            return servo;
+        } catch (IllegalArgumentException e) {
+            return new NullServo();
+        }
+
     }
 
 }
