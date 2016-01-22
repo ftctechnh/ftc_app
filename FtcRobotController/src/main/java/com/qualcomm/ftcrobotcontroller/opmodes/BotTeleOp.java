@@ -13,7 +13,8 @@ public class BotTeleOp extends OpMode {
     DcMotor motorRight;
     DcMotor motorLeft;
 
-    DcMotor tape;
+    DcMotor tape1;
+    DcMotor tape2;
 
     Servo leftArm;
     Servo rightArm;
@@ -29,7 +30,8 @@ public class BotTeleOp extends OpMode {
         motorLeft = manager.getMotor(Values.LEFT_MOTOR);
         motorLeft.setDirection(DcMotor.Direction.REVERSE);
 
-        tape = manager.getMotor(Values.TAPE);
+        tape1 = manager.getMotor(Values.TAPE_1);
+        tape2 = manager.getMotor(Values.TAPE_2);
 
         leftArm = manager.getServo(Values.LEFT_ARM);
         rightArm = manager.getServo(Values.RIGHT_ARM);
@@ -42,13 +44,8 @@ public class BotTeleOp extends OpMode {
         motorLeft.setPower(Power.speedCurve(gamepad1.left_stick_y) * (1 - gamepad1.left_trigger));
         motorRight.setPower(Power.speedCurve(gamepad1.right_stick_y) * (1 - gamepad1.right_trigger));
 
-        if (gamepad2.dpad_up) {
-            tape.setPower(Power.NORMAL_SPEED);
-        } else if (gamepad2.dpad_down) {
-            tape.setPower(-Power.NORMAL_SPEED);
-        } else {
-            tape.setPower(Power.FULL_STOP);
-        }
+        tape1.setPower(Power.speedCurve(gamepad2.left_stick_y));
+        tape2.setPower(Power.speedCurve(gamepad2.right_stick_y));
 
         if (gamepad2.left_bumper && !btnSideLeft) {
             btnSideLeft = true;
@@ -73,14 +70,16 @@ public class BotTeleOp extends OpMode {
         telemetry.addData("Title", "***Robot Data***");
         telemetry.addData("Right Motor", "Right:" + motorRight.getPower());
         telemetry.addData("Left Motor", "Left:" + motorLeft.getPower());
-        telemetry.addData("Tape Motor", "Tape:" + tape.getPower());
+        telemetry.addData("Tape 1", "Tape 1:" + tape1.getPower());
+        telemetry.addData("Tape 2", "Tape 2:" + tape2.getPower());
     }
 
     @Override
     public void stop() {
         motorLeft.setPower(Power.FULL_STOP);
         motorRight.setPower(Power.FULL_STOP);
-        tape.setPower(Power.FULL_STOP);
+        tape1.setPower(Power.FULL_STOP);
+        tape2.setPower(Power.FULL_STOP);
     }
 
 }

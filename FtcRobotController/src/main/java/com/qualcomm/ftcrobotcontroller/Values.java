@@ -24,7 +24,8 @@ public class Values {
     public static final String RIGHT_ARM = "right_arm";
     public static final String LEFT_ARM = "left_arm";
 
-    public static final String TAPE = "tape";
+    public static final String TAPE_1 = "tape1";
+    public static final String TAPE_2 = "tape2";
 
     public static final String DUMP = "dump";
 
