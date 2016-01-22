@@ -10,12 +10,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 public class DragonoidsAuto extends LinearOpMode implements SensorEventListener {
     private SensorManager sensorManager;
-    private Sensor rotationSensor;
-    // Switch to TYPE_GAME_ROTATION_VECTOR if magnetic field disturbances cause issues with inertial navigation
-    private int sensorType = Sensor.TYPE_ROTATION_VECTOR;
-    private float yaw;
-    private float pitch;
-    private float roll;
+    private Sensor gyroSensor;
+    private int sensorType = Sensor.TYPE_GYROSCOPE;
+    private static final float nanoSecondsToSeconds = 1.0f / 1000000000.0f;
+    private float lastGyroTimestamp = 0;
+    private float heading = 0; // In radians
+    private float headingDegrees = 0; // In degrees (use in autonomous flow)
     // Autonomous constants
     private final double drivePower = 0.5;
     private final double turnPower = 0.3;
@@ -27,33 +27,31 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
         DragonoidsGlobal.init(hardwareMap);
         // Set up the rotation vector sensor
         this.sensorManager = (SensorManager) hardwareMap.appContext.getSystemService(Context.SENSOR_SERVICE);
-        this.rotationSensor = sensorManager.getDefaultSensor(this.sensorType);
-        if (this.rotationSensor != null) {
-            this.sensorManager.registerListener(this, this.rotationSensor, SensorManager.SENSOR_DELAY_FASTEST);
+        this.gyroSensor = sensorManager.getDefaultSensor(this.sensorType);
+        if (this.gyroSensor != null) {
+            this.sensorManager.registerListener(this, this.gyroSensor, SensorManager.SENSOR_DELAY_FASTEST);
         }
         else {
-            telemetry.addData("Error", "Rotation vector sensor not found");
+            telemetry.addData("Error", "Gyroscope sensor not found");
         }
     }
-    // For rotation vector sensor data
+    // For gyro sensor data
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() != this.sensorType) return;
 
-        float[] rotationMatrix1 = new float[9];
-        float[] rotationMatrix2 = new float[9];
-        // Documentation for these SensorManager.* methods can be found at https://developer.android.com/reference/android/hardware/SensorManager.html
-        SensorManager.getRotationMatrixFromVector(rotationMatrix1, event.values);
-        SensorManager.remapCoordinateSystem(rotationMatrix1, SensorManager.AXIS_X, SensorManager.AXIS_Z, rotationMatrix2);
-        float[] orientation = new float[3];
-        SensorManager.getOrientation(rotationMatrix2, orientation);
-        // Convert the orientation from radians to degrees
-        this.yaw = (float) Math.toDegrees(orientation[0]);
-        this.pitch = (float) Math.toDegrees(orientation[1]);
-        this.roll = (float) Math.toDegrees(orientation[2]);
-        telemetry.addData("Yaw", this.yaw);
-        telemetry.addData("Pitch", this.pitch);
-        telemetry.addData("Roll", this.roll);
+        if (lastGyroTimestamp != 0) {
+            final float dT = (event.timestamp - lastGyroTimestamp) * nanoSecondsToSeconds;
+            heading += dT * event.values[1];
+            headingDegrees = (float) Math.toDegrees(heading);
+        }
+        lastGyroTimestamp = event.timestamp;
+
+        telemetry.addData("Heading", headingDegrees);
+        telemetry.addData("Right1 encoder", DragonoidsGlobal.rightOne.getCurrentPosition());
+        telemetry.addData("Right2 encoder", DragonoidsGlobal.rightTwo.getCurrentPosition());
+        telemetry.addData("Left1  encoder", DragonoidsGlobal.leftOne.getCurrentPosition());
+        telemetry.addData("Left2  encoder", DragonoidsGlobal.leftTwo.getCurrentPosition());
     }
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -76,7 +74,7 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
             default:
                 description = "None?";
         }
-        telemetry.addData("Rotation accuracy changed", String.format("%s (%d)", description, accuracy));
+        telemetry.addData("Gyro accuracy changed", String.format("%s (%d)", description, accuracy));
     }
 
     public int getRightEncoderValue() {
@@ -97,15 +95,12 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
     }
 
     public void turn(Direction direction, float degrees) throws InterruptedException {
-        float startingRotation = this.yaw;
+        float startingRotation = this.headingDegrees;
         float targetRotation;
 
         if (direction == Direction.Left) {
             targetRotation = startingRotation - degrees;
-            if (targetRotation <= -180) {
-                targetRotation += 360;
-            }
-            while (this.yaw > targetRotation) {
+            while (this.headingDegrees > targetRotation) {
                 DragonoidsGlobal.setDrivePower(-turnPower, turnPower);
                 waitOneFullHardwareCycle();
             }
@@ -113,10 +108,7 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
 
         if (direction == Direction.Right) {
             targetRotation = startingRotation + degrees;
-            if (targetRotation >= 180) {
-                targetRotation -= 360;
-            }
-            while (this.yaw < targetRotation) {
+            while (this.headingDegrees < targetRotation) {
                 DragonoidsGlobal.setDrivePower(turnPower, -turnPower);
                 waitOneFullHardwareCycle();
             }
@@ -124,7 +116,7 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
         DragonoidsGlobal.stopMotors();
     }
     public void drive(int distance) {
-        while ((this.getLeftEncoderValue() + this.getRightEncoderValue())/ 2 < distance) {
+        while ((this.getLeftEncoderValue() + this.getRightEncoderValue()) / 2 < distance) {
             DragonoidsGlobal.setDrivePower(drivePower, drivePower);
         }
         DragonoidsGlobal.stopMotors();
