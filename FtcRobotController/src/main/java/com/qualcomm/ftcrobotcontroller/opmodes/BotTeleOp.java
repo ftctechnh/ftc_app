@@ -39,10 +39,10 @@ public class BotTeleOp extends OpMode {
     public void loop() {
         CycleTimer.update();
 
-        motorLeft.setPower(Power.speedCurve(gamepad1.left_stick_y) * gamepad1.left_trigger);
-        motorRight.setPower(Power.speedCurve(gamepad1.right_stick_y) * gamepad1.right_trigger);
+        motorLeft.setPower(Power.speedCurve(gamepad1.left_stick_y) * (1 - gamepad1.left_trigger));
+        motorRight.setPower(Power.speedCurve(gamepad1.right_stick_y) * (1 - gamepad1.right_trigger));
 
-        if (gamepad1.dpad_up) {
+        if (gamepad2.dpad_up) {
             tape.setPower(Power.NORMAL_SPEED);
         } else if (gamepad2.dpad_down) {
             tape.setPower(-Power.NORMAL_SPEED);
@@ -50,7 +50,7 @@ public class BotTeleOp extends OpMode {
             tape.setPower(Power.FULL_STOP);
         }
 
-        if (gamepad1.left_bumper && !btnSideLeft) {
+        if (gamepad2.left_bumper && !btnSideLeft) {
             btnSideLeft = true;
             if (leftArm.getPosition() == Values.SIDE_ARM_IN)
                 leftArm.setPosition(Values.SIDE_ARM_OUT);
@@ -60,7 +60,7 @@ public class BotTeleOp extends OpMode {
             btnSideLeft = false;
         }
 
-        if (gamepad1.right_bumper && !btnSideRight) {
+        if (gamepad2.right_bumper && !btnSideRight) {
             btnSideRight = true;
             if (rightArm.getPosition() == Values.SIDE_ARM_IN)
                 rightArm.setPosition(Values.SIDE_ARM_OUT);
