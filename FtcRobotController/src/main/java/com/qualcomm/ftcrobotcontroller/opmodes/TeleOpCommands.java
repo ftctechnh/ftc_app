@@ -40,6 +40,9 @@ public class TeleOpCommands extends OpMode {
     public long LEFTUPDATE=0;
     public long RIGHTUPDATE=0;
 
+    //Gamepad1: DPAD is climbers, Joysticks are driving
+
+    //Gamepad2 DPAD is tray, XYAB is winch, triggers are sweeper
 
     double scaleInput(double dVal)  {
         double[] scaleArray = { 0.0, 0.05, 0.09, 0.10, 0.12, 0.15, 0.18, 0.24,
@@ -68,13 +71,13 @@ public class TeleOpCommands extends OpMode {
         return dScale;
     }
     public void setSweeperPower(){
-        if(gamepad2.a && leftsweepMC.getMotorPower(SWEEPER)!=-1){
+        if(gamepad2.right_bumper && leftsweepMC.getMotorPower(SWEEPER)!=-1){
             leftsweepMC.setMotorPower(SWEEPER,-1);
             UPDATES+=1;
-        } else if (gamepad2.y && leftsweepMC.getMotorPower(SWEEPER)!=1) {
+        } else if (gamepad2.left_bumper && leftsweepMC.getMotorPower(SWEEPER)!=1) {
             leftsweepMC.setMotorPower(SWEEPER,1);
             UPDATES+=1;
-        }else if(gamepad2.b && leftsweepMC.getMotorPower(SWEEPER)!=0){
+        }else if(gamepad2.left_stick_button && leftsweepMC.getMotorPower(SWEEPER)!=0){
             leftsweepMC.setMotorPower(SWEEPER,0);
             UPDATES+=1;
         }
@@ -128,28 +131,28 @@ public class TeleOpCommands extends OpMode {
         }
     }
     public void setWinchPower(){
-        if(gamepad1.a && winchwheelMC.getMotorPower(WINCH)!=1){
+        if(gamepad2.a && winchwheelMC.getMotorPower(WINCH)!=1){
             winchwheelMC.setMotorPower(WINCH,1);
           winchwheelMC.setMotorPower(WINCHWHEEL, .2);
             UPDATES+=1;
-        } else if(gamepad1.b && winchwheelMC.getMotorPower(WINCH)!=-1){
+        } else if(gamepad2.b && winchwheelMC.getMotorPower(WINCH)!=-1){
             winchwheelMC.setMotorPower(WINCH, -1);
            winchwheelMC.setMotorPower(WINCHWHEEL,-1);
             UPDATES+=1;
-        } else if(!gamepad1.a && !gamepad1.b && winchwheelMC.getMotorPower(WINCH)!=0){
+        } else if(!gamepad2.a && !gamepad2.b && winchwheelMC.getMotorPower(WINCH)!=0){
             winchwheelMC.setMotorPower(WINCH, 0);
            winchwheelMC.setMotorPower(WINCHWHEEL,0);
             UPDATES+=1;
         }
     }
     public void setPivotPower(){
-        if(gamepad1.y && rightpivotMC.getMotorPower(WINCHPIVOT)!=.2){
+        if(gamepad2.y && rightpivotMC.getMotorPower(WINCHPIVOT)!=.2){
             rightpivotMC.setMotorPower(WINCHPIVOT,.2);
             UPDATES+=1;
-        } else if(gamepad1.x && rightpivotMC.getMotorPower(WINCHPIVOT)!=-.1){
+        } else if(gamepad2.x && rightpivotMC.getMotorPower(WINCHPIVOT)!=-.1){
             rightpivotMC.setMotorPower(WINCHPIVOT,-.1);
             UPDATES+=1;
-        } else if(!gamepad1.y && !gamepad1.x && rightpivotMC.getMotorPower(WINCHPIVOT)!=0) {
+        } else if(!gamepad2.y && !gamepad2.x && rightpivotMC.getMotorPower(WINCHPIVOT)!=0) {
             rightpivotMC.setMotorPower(WINCHPIVOT,0);
             UPDATES+=1;
         }
