@@ -79,10 +79,10 @@ public class EncoderAutonBlue extends OpMode {
         //telemetry.addData("state", "state:" + String.format("%.d", state));
 
         if (state == 0) {
-            tbc.motorRLeft.setTargetPosition(-12400); // -12000
-            tbc.motorFLeft.setTargetPosition(-12400);
-            tbc.motorRRight.setTargetPosition(-12900); // -12400
-            tbc.motorFRight.setTargetPosition(-12900); // -10600
+            tbc.motorRLeft.setTargetPosition(-10800); // -12000
+            tbc.motorFLeft.setTargetPosition(-10800);
+            tbc.motorRRight.setTargetPosition(-11300); // -12400
+            tbc.motorFRight.setTargetPosition(-11300); // -10600
 
             tbc.setMotorRLeftPower(-1.0f);
             tbc.setMotorFLeftPower(-1.0f);
@@ -113,10 +113,10 @@ public class EncoderAutonBlue extends OpMode {
         }
 
         if (state == 1) {
-            tbc.motorRLeft.setTargetPosition(-14300); //-12400
-            tbc.motorFLeft.setTargetPosition(-14300); //-12400
-            tbc.motorRRight.setTargetPosition(-12900); //-14800
-            tbc.motorFRight.setTargetPosition(-12900); //-14800
+            tbc.motorRLeft.setTargetPosition(-13600); //-12400
+            tbc.motorFLeft.setTargetPosition(-13600); //-12400
+            tbc.motorRRight.setTargetPosition(-11300); //-14800
+            tbc.motorFRight.setTargetPosition(-11300); //-14800
 
             tbc.setMotorRLeftPower(0.5f);
             tbc.setMotorFLeftPower(0.5f);
@@ -154,10 +154,10 @@ public class EncoderAutonBlue extends OpMode {
         if (state == 3) {
             double s3elapsed = mRuntime.time() - s3starttime;
 
-            tbc.motorRLeft.setTargetPosition(-15800);
-            tbc.motorFLeft.setTargetPosition(-15800);
-            tbc.motorRRight.setTargetPosition(-14400); //-16300
-            tbc.motorFRight.setTargetPosition(-14400);
+            tbc.motorRLeft.setTargetPosition(-14800);
+            tbc.motorFLeft.setTargetPosition(-14800);
+            tbc.motorRRight.setTargetPosition(-12500); //-16300
+            tbc.motorFRight.setTargetPosition(-12500);
 
             tbc.setMotorRLeftPower(-0.5f);
             tbc.setMotorFLeftPower(-0.5f);
