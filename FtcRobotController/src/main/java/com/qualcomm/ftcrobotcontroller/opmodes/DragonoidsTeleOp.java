@@ -38,25 +38,14 @@ public class DragonoidsTeleOp extends OpMode {
             DragonoidsGlobal.conveyor.setPower(0.0);
         }
 
-        if (gamepad2.dpad_left) {
-            DragonoidsGlobal.knocker.setPower(0.45);
-        }
-        else if (gamepad2.dpad_right) {
-            DragonoidsGlobal.knocker.setPower(-0.45);
-        }
-        else {
-            DragonoidsGlobal.knocker.setPower(0.0);
-        }
 //      Commented cause we don't have it
         if (gamepad2.a){
             // Open the gate
             DragonoidsGlobal.gate.setPosition(0.6);
-            DragonoidsGlobal.tilter.setPosition(0.5);
         }
         else{
             // Close the gate
             DragonoidsGlobal.gate.setPosition(0);
-            DragonoidsGlobal.tilter.setPosition(0);
         }
 
         this.outputTelemetry();
@@ -65,7 +54,6 @@ public class DragonoidsTeleOp extends OpMode {
         //telemetry.addData("Right drive motor power", driveMotors.get("rightOneDrive").getPower());
         //telemetry.addData("Left drive motor power", driveMotors.get("leftOneDrive").getPower());
         telemetry.addData("Conveyor motor power", DragonoidsGlobal.conveyor.getPower());
-        telemetry.addData("Knocker motor power", DragonoidsGlobal.knocker.getPower());
     }
     @Override
     public void stop() {
