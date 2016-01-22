@@ -98,8 +98,8 @@ public class TeleOp extends SynchronousOpMode {
         //Game Loop
         while (opModeIsActive()) {
             //Defines gamepad buttons for buttons that are held
-            containerTiltRight = gamepad1.dpad_right || gamepad2.dpad_right;
-            containerTiltLeft = gamepad1.dpad_left || gamepad1.dpad_left;
+            containerTiltRight = gamepad1.dpad_left || gamepad2.dpad_left;
+            containerTiltLeft = gamepad1.dpad_right || gamepad1.dpad_right;
 
             tubeExtend = gamepad1.x || gamepad2.x;
             tubeRetract = gamepad1.b || gamepad2.b;
@@ -187,10 +187,10 @@ public class TeleOp extends SynchronousOpMode {
                     sweeper.setPower(0);
                 }
 
-                frontRightWheel.setPower((slowDriveForward - slowDriveBack) * 0.15);
-                frontLeftWheel.setPower((slowDriveForward - slowDriveBack) * 0.15);
-                backRightWheel.setPower((slowDriveForward - slowDriveBack) * 0.15);
-                backLeftWheel.setPower((slowDriveForward - slowDriveBack) * 0.15);
+                frontRightWheel.setPower((slowDriveForward - slowDriveBack) * 0.25);
+                frontLeftWheel.setPower((slowDriveForward - slowDriveBack) * 0.25);
+                backRightWheel.setPower((slowDriveForward - slowDriveBack) * 0.25);
+                backLeftWheel.setPower((slowDriveForward - slowDriveBack) * 0.25);
             }
 
             telemetry.addData("mountainClimber", mountainClimber.getPosition());

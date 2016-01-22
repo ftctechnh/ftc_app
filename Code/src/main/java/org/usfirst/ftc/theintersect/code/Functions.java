@@ -10,7 +10,7 @@ public class Functions {
 	public static int tetrixDegreeRatio = tetrixPPR / 360;
 	public static double neveRestTetrixSpeedRatio = 150 / 160;
 	public static double encoderError = 4.0;
-	public static double colorError = 4.0;
+	public static double colorError = 2.0;
 	public static double backWheelCircumfrence = 3*3*Math.PI;
 
 

@@ -4,7 +4,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.swerverobotics.library.SynchronousOpMode;
-import org.swerverobotics.library.interfaces.*;
+import org.swerverobotics.library.interfaces.Autonomous;
+import org.swerverobotics.library.interfaces.Disabled;
+import org.swerverobotics.library.interfaces.IFunc;
 
 /**
  * This simple OpMode illustrates the basic use of a servo
@@ -12,7 +14,7 @@ import org.swerverobotics.library.interfaces.*;
  * "servo". It works with both modern and legacy servo controllers.
  */
 @Autonomous(name="Auto Servo (Sync)", group="Swerve Examples")
-// @Disabled
+@Disabled
 public class SyncAutoServoDemo extends SynchronousOpMode
     {
     Servo servo;

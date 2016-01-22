@@ -1,12 +1,13 @@
 package org.usfirst.ftc.theintersect.code;
 
 import android.content.Context;
-import com.qualcomm.ftcrobotcontroller.opmodes.NxtTeleOp;
+
 import org.swerverobotics.library.SwerveUtil;
-import org.swerverobotics.library.examples.LinearAutonomousPolygon;
 import org.swerverobotics.library.examples.SynchTeleOp;
-import org.swerverobotics.library.examples.SynchTelemetryOp;
-import org.swerverobotics.library.interfaces.*;
+import org.swerverobotics.library.interfaces.IOpModeManager;
+import org.swerverobotics.library.interfaces.OnRobotRunning;
+import org.swerverobotics.library.interfaces.OnRobotStartupFailure;
+import org.swerverobotics.library.interfaces.OpModeRegistrar;
 
 /**
  * MyRobotControllerAdministration is a container for 'administrative' methods that interact
@@ -49,16 +50,11 @@ public class MyRobotControllerAdministration
      * @param manager   the object through which registrations are effected
      */
     @OpModeRegistrar
-    public static void registerMyOpModes(Context context, IOpModeManager manager)
-        {
-        // As an example, we here register some examples from the Swerve library
-        // and one of the FTC HQ example opmodes. You'll probably want to change that.
-
-        manager.register(SynchTeleOp.class);
-        manager.register(SynchTelemetryOp.class);
-        manager.register(LinearAutonomousPolygon.class);
-        manager.register("FTC HQ NxtTeleOp", NxtTeleOp.class);
-        }
+    public static void registerMyOpModes(Context context, IOpModeManager manager) {
+        manager.register("Autonomous", Autonomous.class);
+        manager.register("TeleOp", TeleOp.class);
+        manager.register("Clean Wheels", CleanWheels.class);
+    }
 
     /**
      * Any public static method annotated with {@link OnRobotRunning} is invoked when the robot
