@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-public class BotAuton extends LinearOpMode {
+public class BotAutonBlue extends LinearOpMode {
 
     DcMotor motorRight;
     DcMotor motorLeft;
