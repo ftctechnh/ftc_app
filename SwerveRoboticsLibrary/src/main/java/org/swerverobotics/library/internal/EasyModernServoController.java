@@ -201,6 +201,7 @@ public class EasyModernServoController extends EasyModernController implements S
         {
         try {
             this.disarmDevice();
+            this.target.close();
             }
         catch (Exception e)
             {
