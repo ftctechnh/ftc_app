@@ -1,5 +1,7 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import android.util.Log;
+
 import com.qualcomm.ftcrobotcontroller.Values;
 import com.qualcomm.ftcrobotcontroller.hardware.HardwareManager;
 import com.qualcomm.ftcrobotcontroller.hardware.MotorRunner;
@@ -20,6 +22,7 @@ public class BotAutonRed extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         initMotors();
         waitForStart();
+        Log.w("Auton", "Starting Auton");
         //Autonomous starts here
 
         //Drive to bucket, backwards
@@ -53,7 +56,6 @@ public class BotAutonRed extends LinearOpMode {
 
         motorRight = manager.getMotor(Values.RIGHT_MOTOR);
         motorLeft = manager.getMotor(Values.LEFT_MOTOR);
-        motorLeft.setDirection(DcMotor.Direction.REVERSE);
 
         dump = manager.getServo(Values.DUMP);
     }

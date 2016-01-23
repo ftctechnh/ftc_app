@@ -1,5 +1,7 @@
 package com.qualcomm.ftcrobotcontroller.hardware;
 
+import android.util.Log;
+
 import com.qualcomm.ftcrobotcontroller.CycleTimer;
 import com.qualcomm.ftcrobotcontroller.units.EncoderUnit;
 import com.qualcomm.ftcrobotcontroller.units.TimeUnit;
@@ -16,6 +18,8 @@ import java.util.Iterator;
  */
 public class MotorRunner {
 
+    final static String TAG = "Motor Runner";
+
     private static ArrayList<RunEvent> events = new ArrayList<RunEvent>();
 
     /**
@@ -27,6 +31,7 @@ public class MotorRunner {
     public static void setMotorPowers(DcMotor[] motors, double power) {
         for (DcMotor motor : motors) {
             motor.setPower(power);
+            Log.w(TAG, "Set motor power:" + power);
         }
     }
 
@@ -45,10 +50,17 @@ public class MotorRunner {
                 Thread.sleep(unit.getValue());
                 motor.setPower(0);
             } else if (unit instanceof EncoderUnit) {
+                Log.w(TAG, "Encoder Unit:" + unit.getValue());
+                motor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
                 motor.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
                 motor.setTargetPosition((int) unit.getValue());
+                Log.w(TAG, "Set target position");
                 motor.setPower(power);
-                while (motor.isBusy()) ;
+                Log.w(TAG, "Set power");
+                while (motor.isBusy()) {
+                    Log.w(TAG, "Encoder" + motor.getCurrentPosition());
+                }
+                Log.w(TAG, "Done");
                 motor.setPower(0);
                 motor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
                 motor.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
@@ -72,10 +84,17 @@ public class MotorRunner {
                 Thread.sleep(unit.getValue());
                 setMotorPowers(motors, 0);
             } else if (unit instanceof EncoderUnit) {
+                Log.w(TAG, "Encoder Unit:" + unit.getValue());
+                motors[0].setMode(DcMotorController.RunMode.RESET_ENCODERS);
                 motors[0].setMode(DcMotorController.RunMode.RUN_TO_POSITION);
                 motors[0].setTargetPosition((int) unit.getValue());
+                Log.w(TAG, "Set target");
                 setMotorPowers(motors, power);
-                while (motors[0].isBusy()) ;
+                Log.w(TAG, "Set Powers:" + motors[0].isBusy());
+                while (true || motors[0].isBusy()) {
+                    Log.w(TAG, "Encoder" + motors[0].getCurrentPosition());
+                }
+                Log.w(TAG, "Done");
                 setMotorPowers(motors, 0);
                 motors[0].setMode(DcMotorController.RunMode.RESET_ENCODERS);
                 motors[0].setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);

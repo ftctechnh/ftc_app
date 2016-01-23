@@ -53,7 +53,6 @@ public class BotAutonBlue extends LinearOpMode {
 
         motorRight = manager.getMotor(Values.RIGHT_MOTOR);
         motorLeft = manager.getMotor(Values.LEFT_MOTOR);
-        motorLeft.setDirection(DcMotor.Direction.REVERSE);
 
         dump = manager.getServo(Values.DUMP);
     }
