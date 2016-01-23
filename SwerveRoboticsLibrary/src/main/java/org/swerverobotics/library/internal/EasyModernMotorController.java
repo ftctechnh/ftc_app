@@ -186,6 +186,7 @@ public class EasyModernMotorController extends EasyModernController implements D
     @Override protected void doCloseFromOther()
         {
         try {
+            this.target.close();
             this.disarmDevice();
             }
         catch (Exception e)
