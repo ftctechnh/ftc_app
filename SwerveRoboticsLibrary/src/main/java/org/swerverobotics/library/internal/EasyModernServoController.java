@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.exception.*;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.hardware.usb.RobotUsbDevice;
 import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.robotcore.util.SerialNumber;
+
 import org.swerverobotics.library.BuildConfig;
 import java.util.*;
 
@@ -70,7 +70,7 @@ public class EasyModernServoController extends EasyModernController implements S
                 {
                 EasyModernServoController controller = new EasyModernServoController(context, (ModernRoboticsUsbServoController) target);
                 controller.setServos(servos);
-                controller.arm();
+                controller.armOrPretend();
                 return controller;
                 }
             else
@@ -184,7 +184,7 @@ public class EasyModernServoController extends EasyModernController implements S
             }
 
         // Turn target back on
-        this.target.arm();
+        this.restoreTargetArmOrPretend();
 
         Log.d(LOGGING_TAG, String.format("....disarmed \"%s\"", this.getConnectionInfo()));
         }
