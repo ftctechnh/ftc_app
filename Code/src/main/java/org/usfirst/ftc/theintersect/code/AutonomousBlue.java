@@ -11,11 +11,11 @@ import org.swerverobotics.library.SynchronousOpMode;
 import org.swerverobotics.library.TelemetryDashboardAndLog;
 
 /**
- * An Autonomous.
+ * An AutonomousBlue.
  */
 
-@org.swerverobotics.library.interfaces.Autonomous(name = "Autonomous")
-public class Autonomous extends SynchronousOpMode {
+@org.swerverobotics.library.interfaces.Autonomous(name = "Autonomous Blue")
+public class AutonomousBlue extends SynchronousOpMode {
     //Declare hardware
     static DcMotor frontRightWheel;
     static DcMotor frontLeftWheel;
@@ -24,7 +24,7 @@ public class Autonomous extends SynchronousOpMode {
     static DcMotor sweeper;
 
     static ColorSensor lineColor;
-    static int black;
+    String color = "b";
     static GyroSensor gyro;
     static UltrasonicSensor ultrasonic;
 
@@ -73,56 +73,65 @@ public class Autonomous extends SynchronousOpMode {
         telemetry.update();
         //Enable the LED for the line following color sensor
         lineColor.enableLed(true);
-        black = (lineColor.red() + lineColor.green() + lineColor.blue())/3;
 
         //Gyro Calibration
-        gyro.calibrate();
+        /*gyro.calibrate();
         while(gyro.isCalibrating()) {
             telemetry.addData("Gyro Calibration", "Calibrating");
             telemetry.update();
         }
         //telemetry.addData("Gyro Calibration", "Calibration Done");
-        telemetry.update();
+        telemetry.update();*/
 
         //Reset position of all the servos
         mountainClimber.setPosition(0);
         mountainClimberRelease.setPosition(0);
 
-        //Autonomous Start
+        //AutonomousBlue Start
         waitForStart();
         if (opModeIsActive()) {
+            if (color.equals("b")) {
+                moveEncoderBackward(7000, 0.5, telemetry);
+                Functions.waitFor(1000);
+                stopAtWhite(0.25, 1000, telemetry);
+                Functions.waitFor(1000);
+                moveEncoderBackward(800, 0.5, telemetry);
+                turnRightBackwards(1200, 0.5, telemetry);
+            }
+        } else if (color.equals("r")) {
             moveEncoderBackward(7000, 0.5, telemetry);
             Functions.waitFor(1000);
             stopAtWhite(0.25, 1000, telemetry);
             Functions.waitFor(1000);
-            moveEncoderBackward(850, 0.5, telemetry);
-            turnRightBackwards(1200, 0.5, telemetry);
-            Functions.waitFor(3000);
-            moveBackwardsTime(0.2,3000);
+            moveEncoderForward(500, 0.5, telemetry);
+            turnLeftBackwards(1200, 0.5, telemetry);
+        } else {
+            simpleAutonomous(telemetry);
+            return;
+        }
+
+            Functions.waitFor(1000);
+            moveBackwardsTime(0.2, 3000);
             moveRobotPower(0, 0);
-            while(ultrasonic.getUltrasonicLevel() < 15) {
+            while (ultrasonic.getUltrasonicLevel() < 15) {
                 moveRobotPower(0.2, 0.2);
             }
-            moveRobotPower(0,0);
-            Functions.waitFor(3000);
+            moveRobotPower(0, 0);
+            Functions.waitFor(1000);
             dumpClimbersUltra(telemetry);
-            telemetry.addData("Ultrasonic" , ultrasonic.getUltrasonicLevel());
-            telemetry.update();
-            //moveForwardsTime(0.1,2000);
-            //moveRobotRotations(-5, 0.5, telemetry);
-            //Functions.waitFor(5000);
-
-            //Functions.waitFor(1000);
-            //turnRobotRightDegrees(45, 0.5, 25, telemetry);
-            //Functions.waitFor(5000);
-            //dumpClimbers(telemetry);
             end();
-        }
-        telemetry.addData("Autonomous", "Done");
-        //Autonomous End
+
+        telemetry.addData("AutonomousBlue", "Done");
+        //AutonomousBlue End
     }
 
     //Functions
+
+    public static void simpleAutonomous(TelemetryDashboardAndLog telemetry){
+        moveEncoderBackward(7100, 0.5, telemetry);
+        dumpClimbers(0.8);
+        end();
+    }
     public static void moveBackwardsTime(double power, int time){
         moveRobotPower(-power,-power);
         Functions.waitFor(time);
@@ -135,7 +144,11 @@ public class Autonomous extends SynchronousOpMode {
         moveRobotPower(0,0);
     }
     public static void turnRightBackwards(double rotation, double power, TelemetryDashboardAndLog telemetry){
-        moveRobotEncoder(-rotation, rotation, -power, power , telemetry);
+        moveRobotEncoder(-rotation, rotation, -power, power, telemetry);
+        moveRobotPower(0,0);
+    }
+    public static void turnLeftBackwards(double rotation, double power, TelemetryDashboardAndLog telemetry){
+        moveRobotEncoder(rotation, -rotation, power, -power , telemetry);
         moveRobotPower(0,0);
     }
 
@@ -251,11 +264,12 @@ public class Autonomous extends SynchronousOpMode {
         mountainClimberRelease.setPosition(0);
     }
     public static void dumpClimbersUltra(TelemetryDashboardAndLog telemetry) {
-        double[] positions = {98,100, 102.8, 105.6, 108.4, 111.2, 114, 116.8, 119.6, 119.4, 120.2, 125, 137.8, 133.6, 135.4, 137.2, 142, 141.5, 147.6, 150.4, 153.2, 156, 160, 165, 167   , 170};
+        double[] positions = {98, 100, 102.8, 105.6, 108.4, 111.2, 114, 116.8, 129.6, 129.4, 120.2, 125, 137.8, 133.6, 135.4, 137.2, 142, 141.5, 147.6, 150.4, 153.2, 156, 160, 165, 167   , 170};
         double ultraVal  = ultrasonic.getUltrasonicLevel();
+        telemetry.addData("Ultrasonic Level", ultraVal);
         telemetry.update();
-        if(ultraVal < 5) {
-            ultraVal = 5;
+        if(ultraVal <= 5) {
+            return;
         } else if (ultraVal >= 25) {
             return;
         }

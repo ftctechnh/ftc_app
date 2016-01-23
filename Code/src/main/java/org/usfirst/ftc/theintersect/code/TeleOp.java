@@ -97,15 +97,14 @@ public class TeleOp extends SynchronousOpMode {
         tubeExtender.setDirection(Servo.Direction.REVERSE);
         tubeExtender.setPosition(0.5);
         mountainClimber.setDirection(Servo.Direction.FORWARD);
-        mountainClimber.setPosition(0.05);
         mountainClimberRelease.setDirection(Servo.Direction.REVERSE);
-        mountainClimberRelease.setPosition(0);
         bumper.setDirection(Servo.Direction.FORWARD);
         bumper.setPosition(0);
         //Wait for the game to start
         waitForStart();
+        long endTime = System.currentTimeMillis() + 120000;
         //Game Loop
-        while (opModeIsActive()) {
+        while (opModeIsActive() && System.currentTimeMillis() < endTime) {
             //Defines gamepad buttons for buttons that are held
             containerTiltRight = gamepad1.dpad_left || gamepad2.dpad_left;
             containerTiltLeft = gamepad1.dpad_right || gamepad2.dpad_right;

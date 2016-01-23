@@ -104,12 +104,12 @@ public class FunctionsOld {
 
 	//Moves the robot(all four motors) a certain amount of rotations
 	/*public static void moveRobotRotations (Double rotations, double power, DcMotorController controller1, DcMotorController controller2, DcMotorController controller3, Telemetry telemetry) {
-		moveDegreesTetrix(Autonomous.rFmotor, (int) (rotations * 360), -power,
+		moveDegreesTetrix(AutonomousBlue.rFmotor, (int) (rotations * 360), -power,
 				controller3, telemetry);
-        moveDegreesTetrix(Autonomous.lFmotor, (int) (rotations * 360), power,
+        moveDegreesTetrix(AutonomousBlue.lFmotor, (int) (rotations * 360), power,
 				controller3, telemetry);
-        moveDegreesTetrix(Autonomous.rBmotor, (int) (rotations * 360), -power, controller1, telemetry);
-        moveDegreesTetrix(Autonomous.lBmotor, (int) (rotations * 360), power,
+        moveDegreesTetrix(AutonomousBlue.rBmotor, (int) (rotations * 360), -power, controller1, telemetry);
+        moveDegreesTetrix(AutonomousBlue.lBmotor, (int) (rotations * 360), power,
 				controller2, telemetry);
 
 	}*/
@@ -183,8 +183,8 @@ public class FunctionsOld {
 	/*public static void moveNinches(double inches, double power,Telemetry telemetry){
 		double n = inches*(360/12.56);
         int m = (int)(n);
-        moveDegreesTetrix(Autonomous.rBmotor, m, power, Autonomous.controller1, telemetry);
-        moveDegreesTetrix(Autonomous.lBmotor, m, power, Autonomous.controller2, telemetry);
+        moveDegreesTetrix(AutonomousBlue.rBmotor, m, power, AutonomousBlue.controller1, telemetry);
+        moveDegreesTetrix(AutonomousBlue.lBmotor, m, power, AutonomousBlue.controller2, telemetry);
 	}
     //Moves the robot to get into position near the beacon
     public static void beacon(int sensorOffset, String targetColor, DcMotorController controller1, DcMotorController controller2, DcMotorController controller3, ColorSensor colorSensor, Telemetry telemetry) {
@@ -192,23 +192,23 @@ public class FunctionsOld {
             moveNinches(1,0.5,telemetry);
         }
 		FunctionsOld.moveNinches(sensorOffset, 0.5, telemetry);
-        FunctionsOld.pushButton(Autonomous.buttonPusher, 0.0);
+        FunctionsOld.pushButton(AutonomousBlue.buttonPusher, 0.0);
     }*/
 
 	//Turns the robot right with extreme customizability a certain amount of degrees using the MR Gyro Sensor
 	/*public static void turnRobotRightDegrees(GyroSensor gyro , int degrees, Double Rpower,Double Lpower, Telemetry telemetry){
 		/*while(gyro.getRotation() < degrees){
-			moveSpeed(Autonomous.lFmotor, power);
-			moveSpeed(Autonomous.rFmotor, -power);
-			moveSpeed(Autonomous.lBmotor, power);
-			moveSpeed(Autonomous.rBmotor, -power);
+			moveSpeed(AutonomousBlue.lFmotor, power);
+			moveSpeed(AutonomousBlue.rFmotor, -power);
+			moveSpeed(AutonomousBlue.lBmotor, power);
+			moveSpeed(AutonomousBlue.rBmotor, -power);
 		}
         if(!gyro.isCalibrating()) {
             int start = gyro.getHeading();
             int heading = gyro.getHeading();
             while (heading - start < degrees) {
-                moveSpeed(Autonomous.lBmotor, Lpower);
-                moveSpeed(Autonomous.rBmotor, Rpower);
+                moveSpeed(AutonomousBlue.lBmotor, Lpower);
+                moveSpeed(AutonomousBlue.rBmotor, Rpower);
                 telemetry.addData("Gyro Z", gyro.rawZ());
                 telemetry.addData("Heading", gyro.getHeading());
                 heading = gyro.getHeading();
@@ -216,25 +216,25 @@ public class FunctionsOld {
                     heading = gyro.getHeading() + 360 ;
                 }
             }
-            moveSpeed(Autonomous.lBmotor, 0);
-            moveSpeed(Autonomous.rBmotor, 0);
+            moveSpeed(AutonomousBlue.lBmotor, 0);
+            moveSpeed(AutonomousBlue.rBmotor, 0);
         }
 	}
 
 	//Turns the robot left with extreme customizability a certain amount of degrees using the MR Gyro Sensor
 	public static void turnRobotLeftDegrees(GyroSensor gyro , int degrees, Double Rpower,Double Lpower, Telemetry telemetry){
 		/*while(gyro.getRotation() < degrees){
-			moveSpeed(Autonomous.lFmotor, -power);
-			moveSpeed(Autonomous.rFmotor, power);
-			moveSpeed(Autonomous.lBmotor, -power);
-			moveSpeed(Autonomous.rBmotor, power);
+			moveSpeed(AutonomousBlue.lFmotor, -power);
+			moveSpeed(AutonomousBlue.rFmotor, power);
+			moveSpeed(AutonomousBlue.lBmotor, -power);
+			moveSpeed(AutonomousBlue.rBmotor, power);
 		}
         if(!gyro.isCalibrating()) {
             int start = gyro.getHeading();
             int heading = gyro.getHeading();
             while (start - heading < degrees) {
-                moveSpeed(Autonomous.lBmotor, -Lpower);
-                moveSpeed(Autonomous.rBmotor, -Rpower);
+                moveSpeed(AutonomousBlue.lBmotor, -Lpower);
+                moveSpeed(AutonomousBlue.rBmotor, -Rpower);
                 telemetry.addData("Gyro Z", gyro.rawZ());
                 telemetry.addData("Heading", gyro.getHeading());
                 heading = gyro.getHeading();
@@ -242,8 +242,8 @@ public class FunctionsOld {
                     heading = gyro.getHeading() - 360;
                 }
             }
-            moveSpeed(Autonomous.lBmotor, 0);
-            moveSpeed(Autonomous.rBmotor, 0);
+            moveSpeed(AutonomousBlue.lBmotor, 0);
+            moveSpeed(AutonomousBlue.rBmotor, 0);
         }
 	}*/
 
