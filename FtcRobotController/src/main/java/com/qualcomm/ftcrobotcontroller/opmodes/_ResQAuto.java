@@ -98,7 +98,7 @@ public abstract class _ResQAuto extends LinearOpMode {
         buttonServo = hardwareMap.servo.get("leftbutton");
         buttonServo.setPosition(0.9);
         button2Servo = hardwareMap.servo.get("rightbutton");
-        button2Servo.setPosition(0.7);
+        button2Servo.setPosition(0.5);
         //climberservo = hardwareMap.servo;.get("climber");
         //climberservo.setPosition(0.0);
         twistServo = hardwareMap.servo.get("twist");
@@ -132,11 +132,11 @@ public abstract class _ResQAuto extends LinearOpMode {
         //turn on sweeper, move forward
         //Goes quickly at 0.3 for 3 seconds, then goes slower
        //sweeper.setPower(-0.8);
-        frontRightWheel.setPower(0.2);
-        frontLeftWheel.setPower(0.2);
-        backRightWheel.setPower(0.2);
-        backLeftWheel.setPower(0.2);
-       // sleep(3000);
+        frontRightWheel.setPower(0.1);
+        frontLeftWheel.setPower(0.1);
+        backRightWheel.setPower(0.1);
+        backLeftWheel.setPower(0.1);
+        sleep(3000);
         sweeper.setPower(-1);
 
 
@@ -342,18 +342,18 @@ public abstract class _ResQAuto extends LinearOpMode {
                 backLeftWheel.setPower(-0.1);
                 frontRightWheel.setPower(0.1);
                 backRightWheel.setPower(0.1);
-                sleep(300);
+                sleep(450);
                 //servoMove(button2Servo, 0.7, 0.05, -0.1, 200);
                 //position servo
                 button2Servo.setPosition(0.05);
-                buttonServo.setPosition(0.4);
+                buttonServo.setPosition(0.5);
                 sleep(1500);
                 //go forward
-                frontLeftWheel.setPower(0.15);
+                /*frontLeftWheel.setPower(0.15);
                 backLeftWheel.setPower(0.15);
                 frontRightWheel.setPower(0.15);
                 backRightWheel.setPower(0.15);
-                sleep(300);
+                sleep(500);*/
             }
             //If detect red
             //  }else if (colorsensor.red() > 0.1 &&colorsensor.blue()<0.1){
