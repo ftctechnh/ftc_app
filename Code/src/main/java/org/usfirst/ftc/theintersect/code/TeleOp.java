@@ -28,6 +28,8 @@ public class TeleOp extends SynchronousOpMode {
 
     DcMotor sweeper;
 
+    Servo bumper;
+
     //Declare gamepad objects
     float rightWheel;
     float leftWheel;
@@ -47,6 +49,9 @@ public class TeleOp extends SynchronousOpMode {
     boolean positionClimbersForward = false;
     boolean positionClimbersBackward = false;
     boolean releaseClimbers = false;
+
+    boolean bumperDown = true;
+    boolean bumperUp = false;
 
     float slowDriveBack;
     float slowDriveForward;
@@ -70,6 +75,8 @@ public class TeleOp extends SynchronousOpMode {
 
         sweeper = hardwareMap.dcMotor.get("sweeper");
 
+        bumper = hardwareMap.servo.get("bumper");
+
         //Set motor channel modes and direction
         frontRightWheel.setDirection(DcMotor.Direction.REVERSE);
         frontRightWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
@@ -90,16 +97,18 @@ public class TeleOp extends SynchronousOpMode {
         tubeExtender.setDirection(Servo.Direction.REVERSE);
         tubeExtender.setPosition(0.5);
         mountainClimber.setDirection(Servo.Direction.FORWARD);
-        mountainClimber.setPosition(0.25);
+        mountainClimber.setPosition(0.05);
         mountainClimberRelease.setDirection(Servo.Direction.REVERSE);
         mountainClimberRelease.setPosition(0);
+        bumper.setDirection(Servo.Direction.FORWARD);
+        bumper.setPosition(0);
         //Wait for the game to start
         waitForStart();
         //Game Loop
         while (opModeIsActive()) {
             //Defines gamepad buttons for buttons that are held
             containerTiltRight = gamepad1.dpad_left || gamepad2.dpad_left;
-            containerTiltLeft = gamepad1.dpad_right || gamepad1.dpad_right;
+            containerTiltLeft = gamepad1.dpad_right || gamepad2.dpad_right;
 
             tubeExtend = gamepad1.x || gamepad2.x;
             tubeRetract = gamepad1.b || gamepad2.b;
@@ -107,11 +116,12 @@ public class TeleOp extends SynchronousOpMode {
             positionClimbersForward = gamepad1.dpad_up || gamepad2.dpad_up;
             positionClimbersBackward = gamepad1.dpad_down || gamepad2.dpad_down;
             releaseClimbers = gamepad1.start || gamepad2.start;
+
             //Moves robot when some of the buttons are held
             if(tubeExtend) {
                 tubeExtender.setPosition(0.75);
             } else if(tubeRetract) {
-                tubeExtender.setPosition(-0.75);
+                tubeExtender.setPosition(-0.9);
             } else {
                 tubeExtender.setPosition(0.5);
             }
@@ -146,6 +156,7 @@ public class TeleOp extends SynchronousOpMode {
             } else {
                 mountainClimberRelease.setPosition(0.0);
             }
+
             //For buttons that are not held
             if (updateGamepads()) {
                 //Defines gamepad buttons
@@ -158,6 +169,11 @@ public class TeleOp extends SynchronousOpMode {
                 slowDriveBack = gamepad1.left_trigger;
                 slowDriveForward = gamepad1.right_trigger;
 
+                if(gamepad1.back || gamepad2.back) {
+                    bumperUp = !bumperUp;
+                    bumperDown = !bumperDown;
+                }
+
                 if (gamepad1.a || gamepad2.a) {
                     sweeperForward = !sweeperForward;
                     sweeperBackward = false;
@@ -165,12 +181,22 @@ public class TeleOp extends SynchronousOpMode {
                     sweeperBackward = !sweeperBackward;
                     sweeperForward = false;
                 }
-                sweeperForward = gamepad1.a;
-                sweeperBackward = gamepad1.y;
+
+                sweeperForward = gamepad1.a || gamepad2.a;
+                sweeperBackward = gamepad1.y || gamepad2.y;
 
                 //Use gamepad values to move robot
-                Functions.moveTwoMotors(backRightWheel, frontRightWheel, Functions.convertGamepad(rightWheel));
-                Functions.moveTwoMotors(backLeftWheel, frontLeftWheel, Functions.convertGamepad(leftWheel));
+                if(slowDriveForward != 0 || slowDriveBack != 0) {
+                    Functions.moveTwoMotors(backRightWheel, frontRightWheel, (slowDriveForward - slowDriveBack) * 0.25);
+                    Functions.moveTwoMotors(backLeftWheel, frontLeftWheel, (slowDriveForward - slowDriveBack) * 0.25);
+                } else if(rightWheel != 0 || leftWheel != 0) {
+                    Functions.moveTwoMotors(backRightWheel, frontRightWheel, Functions.convertGamepad(rightWheel));
+                    Functions.moveTwoMotors(backLeftWheel, frontLeftWheel, Functions.convertGamepad(leftWheel));
+                } else {
+                    Functions.moveTwoMotors(backRightWheel, frontRightWheel, 0);
+                    Functions.moveTwoMotors(backLeftWheel, frontLeftWheel, 0);
+                }
+
                 if (linearSlideForward) {
                     Functions.moveTwoMotors(linearSlideR, linearSlideL, 0.3);
                 } else if (linearSlideBackward) {
@@ -187,17 +213,13 @@ public class TeleOp extends SynchronousOpMode {
                     sweeper.setPower(0);
                 }
 
-                frontRightWheel.setPower((slowDriveForward - slowDriveBack) * 0.25);
-                frontLeftWheel.setPower((slowDriveForward - slowDriveBack) * 0.25);
-                backRightWheel.setPower((slowDriveForward - slowDriveBack) * 0.25);
-                backLeftWheel.setPower((slowDriveForward - slowDriveBack) * 0.25);
+                if(bumperDown) {
+                    bumper.setPosition(0);
+                } else {
+                    bumper.setPosition(1);
+                }
             }
 
-            telemetry.addData("mountainClimber", mountainClimber.getPosition());
-            telemetry.addData("mountainClimberRelease", mountainClimberRelease.getPosition());
-            telemetry.addData("tubeExtender", tubeExtender.getPosition());
-            telemetry.addData("containerTilt", containerTilt.getPosition());
-            telemetry.update();
             idle();
         }
     }
