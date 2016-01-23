@@ -91,7 +91,7 @@ public class EasyModernMotorController extends EasyModernController implements D
 
     private void setMotors(DcMotor motor1, DcMotor motor2)
         {
-        assertTrue(!BuildConfig.DEBUG || !this.isArmed());
+        assertTrue(!BuildConfig.DEBUG || this.armingState==ARMINGSTATE.DISARMED);
 
         if ((motor1 != null && motor1.getController() != this.target)
          || (motor2 != null && motor2.getController() != this.target))
@@ -117,65 +117,63 @@ public class EasyModernMotorController extends EasyModernController implements D
 
     private static final String swerveVoltageSensorName = " |Swerve|Modern|VoltageSensor| ";
 
-    @Override public void arm() throws RobotCoreException, InterruptedException
+    @Override protected void doArm() throws RobotCoreException, InterruptedException
         {
-        synchronized (this.armingLock)
-            {
-            if (!this.isArmed())
-                {
-                Log.d(LOGGING_TAG, String.format("arming \"%s\"....", this.getConnectionInfo()));
-
-                // Turn off target
-                target.disarm();
-
-                // Swizzle while no one is on
-                this.usurpDevices();
-                if (this.targetName != null)
-                    {
-                    this.targetDeviceMapping.put(this.targetName, this);
-                    this.context.hardwareMap.voltageSensor.put(this.targetName, this);
-                    }
-
-                // Turn us on
-                this.armDevice();
-                this.isArmed = true;
-
-                // Initialize
-                this.initPID();
-                this.floatHardware();
-
-                Log.d(LOGGING_TAG, String.format("....armed \"%s\"", this.getConnectionInfo()));
-                }
-            }
+        doArmOrPretend(true);
+        }
+    @Override protected void doPretend() throws RobotCoreException, InterruptedException
+        {
+        doArmOrPretend(false);
         }
 
-    @Override public void disarm() throws RobotCoreException, InterruptedException
+    private void doArmOrPretend(boolean isArm) throws RobotCoreException, InterruptedException
         {
-        synchronized (this.armingLock)
+        Log.d(LOGGING_TAG, String.format("arming \"%s\"....", this.getConnectionInfo()));
+
+        // Turn off target
+        target.disarm();
+
+        // Swizzle while no one is on
+        this.usurpDevices();
+        if (this.targetName != null)
             {
-            if (this.isArmed())
-                {
-                Log.d(LOGGING_TAG, String.format("disarming \"%s\"....", this.getConnectionInfo()));
-
-                // Turn us off
-                this.floatHardware();
-                this.disarmDevice();
-                this.isArmed = false;
-
-                // Swizzle while no one is on
-                this.deusurpDevices();
-                if (this.targetName != null)
-                    {
-                    this.targetDeviceMapping.put(this.targetName, this.target);
-                    this.context.hardwareMap.voltageSensor.put(this.targetName, this.target);
-                    }
-
-                // Turn target back on
-                this.target.arm();
-
-                Log.d(LOGGING_TAG, String.format("....disarmed \"%s\"", this.getConnectionInfo()));
-                }
+            this.targetDeviceMapping.put(this.targetName, this);
+            this.context.hardwareMap.voltageSensor.put(this.targetName, this);
             }
+
+        // Turn us on
+        if (isArm)
+            this.armDevice();
+        else
+            this.pretendDevice();
+
+        // Initialize
+        this.initPID();
+        this.floatHardware();
+
+        Log.d(LOGGING_TAG, String.format("....armed \"%s\"", this.getConnectionInfo()));
+        }
+
+    @Override protected void doDisarm() throws RobotCoreException, InterruptedException
+        {
+        Log.d(LOGGING_TAG, String.format("disarming \"%s\"....", this.getConnectionInfo()));
+
+        // Turn us off
+        this.floatHardware();
+        this.disarmDevice();
+
+        // Swizzle while no one is on
+        this.deusurpDevices();
+        if (this.targetName != null)
+            {
+            this.targetDeviceMapping.put(this.targetName, this.target);
+            this.context.hardwareMap.voltageSensor.put(this.targetName, this.target);
+            }
+
+        // Turn target back on
+        this.target.arm();
+
+        Log.d(LOGGING_TAG, String.format("....disarmed \"%s\"", this.getConnectionInfo()));
         }
 
     //----------------------------------------------------------------------------------------------
@@ -183,22 +181,15 @@ public class EasyModernMotorController extends EasyModernController implements D
     //----------------------------------------------------------------------------------------------
 
     // Close should *not* restart the target
-    @Override public void close()
+    @Override protected void doClose()
         {
-        synchronized (this.armingLock)
+        try {
+            floatHardware();
+            this.disarmDevice();
+            }
+        catch (Exception e)
             {
-            try {
-                if (this.isArmed())
-                    {
-                    floatHardware();
-                    this.disarmDevice();
-                    this.isArmed = false;
-                    }
-                }
-            catch (Exception e)
-                {
-                Util.handleCapturedException(e);
-                }
+            Util.handleCapturedException(e);
             }
         }
 
