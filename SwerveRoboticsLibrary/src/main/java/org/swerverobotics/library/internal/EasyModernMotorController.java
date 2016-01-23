@@ -54,7 +54,7 @@ public class EasyModernMotorController extends EasyModernController implements D
                 {
                 EasyModernMotorController controller = new EasyModernMotorController(context, (ModernRoboticsUsbDcMotorController) target);
                 controller.setMotors(motor1, motor2);
-                controller.arm();
+                controller.armOrPretend();
                 return controller;
                 }
             else
@@ -171,7 +171,7 @@ public class EasyModernMotorController extends EasyModernController implements D
             }
 
         // Turn target back on
-        this.target.arm();
+        this.restoreTargetArmOrPretend();
 
         Log.d(LOGGING_TAG, String.format("....disarmed \"%s\"", this.getConnectionInfo()));
         }
@@ -307,6 +307,7 @@ public class EasyModernMotorController extends EasyModernController implements D
     @Override public synchronized void setMotorChannelMode(int motor, RunMode mode)
         {
         this.validateMotor(motor);
+
         byte bNewMode = runModeToByte(mode);
 
         this.write(ADDRESS_MOTOR_MODE_MAP[motor], bNewMode);
@@ -316,6 +317,8 @@ public class EasyModernMotorController extends EasyModernController implements D
         // mode and be done.
         for (;;)
             {
+            if (!this.isArmed()) return;
+
             byte bCurrentMode = this.read(ADDRESS_MOTOR_MODE_MAP[motor]);
             if (bCurrentMode == bNewMode)
                 break;
@@ -336,6 +339,7 @@ public class EasyModernMotorController extends EasyModernController implements D
             // Unclear if this is needed, but anecdotes from (e.g.) Dryw seem to indicate that it is
             while (this.getMotorCurrentPosition(motor) != 0)
                 {
+                if (!this.isArmed()) return;
                 waitForNextReadComplete();
                 }
             }

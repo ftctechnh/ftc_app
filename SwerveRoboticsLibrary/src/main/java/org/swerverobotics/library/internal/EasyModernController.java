@@ -26,9 +26,12 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
     public static final String LOGGING_TAG = SynchronousOpMode.LOGGING_TAG;
 
     protected OpMode                        context;
+    protected final ModernRoboticsUsbDevice target;
     protected String                        targetName;
     protected HardwareMap.DeviceMapping     targetDeviceMapping;
     protected boolean                       readWriteRunnableIsRunning;
+
+    private final HardwareArmDisarm.ARMINGSTATE targetArmingState;
 
     enum WRITE_STATUS { IDLE, DIRTY, READ };
 
@@ -51,6 +54,29 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
         this.context          = context;
         this.writeStatus      = WRITE_STATUS.IDLE;
         this.readWriteRunnableIsRunning = false;
+        this.target            = target;
+        this.targetArmingState = target.getArmingState();
+
+        switch (targetArmingState)
+            {
+            case ARMED:
+            case PRETENDING:
+                break;
+            default:
+                throw new RobotCoreException("EasyModernController instantiated on target in state %s", targetArmingState);
+            }
+        }
+
+    //----------------------------------------------------------------------------------------------
+    // Arming and disarming
+    //----------------------------------------------------------------------------------------------
+
+    protected void restoreTargetArmOrPretend() throws RobotCoreException, InterruptedException
+        {
+        if (targetArmingState==ARMINGSTATE.ARMED)
+            target.arm();
+        else
+            target.pretend();
         }
 
     //----------------------------------------------------------------------------------------------
@@ -75,6 +101,8 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
                 // TODO: consider write coalescing as we do in the legacy motor controller
                 while (this.writeStatus == WRITE_STATUS.DIRTY)
                     {
+                    if (!this.isArmed())
+                        return;
                     if (!waitForCallback())
                         return;         // interrupted or readWriteRunnable is dead, no point in writing
                     }
@@ -97,6 +125,8 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
                 // following thereafter.
                 while (this.writeStatus != WRITE_STATUS.IDLE)
                     {
+                    if (!this.isArmed())
+                        break;
                     if (!waitForCallback())
                         break;          // interrupted or readWriteRunnable is dead, just read stale data (?)
                     }
@@ -142,6 +172,8 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
                 long target = cur + 1;
                 while (this.readCompletionCount.get() < target)
                     {
+                    if (!this.isArmed())
+                        return;
                     if (!waitForCallback())
                         return;     // interrupted or readWriteRunnable is dead, deem us to have completed
                     }
