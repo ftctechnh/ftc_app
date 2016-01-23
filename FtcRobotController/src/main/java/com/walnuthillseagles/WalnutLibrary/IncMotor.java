@@ -7,9 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  */
 public class IncMotor extends WalnutMotor implements Drivable{
     public enum analogValues{
-        LEFTX1(),LEFTY1(),RIGHTX1(),RIGHTY1(),LEFTZ1(),RIGHTZ1(),
-                LEFTX2(),LEFTY2(),RIGHTX2(),RIGHTY2(),LEFTZ2(),RIGHTZ2();
-        analogValues(){}
+        LEFTX1,LEFTY1,RIGHTX1,RIGHTY1,LEFTZ1,RIGHTZ1,
+                LEFTX2,LEFTY2,RIGHTX2,RIGHTY2,LEFTZ2,RIGHTZ2;
     }
     private analogValues tableConstant;
     private int tablePos;

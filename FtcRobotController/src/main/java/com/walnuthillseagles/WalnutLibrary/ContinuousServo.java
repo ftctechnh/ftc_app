@@ -16,6 +16,8 @@ public class ContinuousServo implements Drivable {
     //ranges
     private double upperRange;
     private double lowerRange;
+    //Control Stick
+    
 
     public ContinuousServo(Servo myServo, double center, double max, double min){
         servo = myServo;
