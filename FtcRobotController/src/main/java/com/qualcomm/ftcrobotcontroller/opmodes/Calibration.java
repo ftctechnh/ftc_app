@@ -40,6 +40,7 @@ public class Calibration extends OpMode {
 
     Servo rButtonServo;
     Servo twistServo;
+    Servo zipLineServo;
 
     double redValue;
     double blueValue;
@@ -81,6 +82,9 @@ public class Calibration extends OpMode {
 
         twistServo = hardwareMap.servo.get("twist");
         twistServo.setPosition(1);
+
+        zipLineServo = hardwareMap.servo.get("zipline");
+        zipLineServo.setPosition(1);
     }
 
     public void loop() {
