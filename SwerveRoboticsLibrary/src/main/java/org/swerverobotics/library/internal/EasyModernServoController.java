@@ -189,22 +189,28 @@ public class EasyModernServoController extends EasyModernController implements S
         Log.d(LOGGING_TAG, String.format("....disarmed \"%s\"", this.getConnectionInfo()));
         }
 
-    //----------------------------------------------------------------------------------------------
-    // HardwareDevice
-    //----------------------------------------------------------------------------------------------
 
     // Close should *not* restart the target
-    @Override protected void doClose()
+    @Override protected void doCloseFromArmed()
+        {
+        floatHardware();
+        doCloseFromOther();
+        }
+
+    @Override protected void doCloseFromOther()
         {
         try {
-            floatHardware();
             this.disarmDevice();
-        }
+            }
         catch (Exception e)
             {
             Util.handleCapturedException(e);
             }
         }
+
+    //----------------------------------------------------------------------------------------------
+    // HardwareDevice
+    //----------------------------------------------------------------------------------------------
 
     @Override public String getConnectionInfo()
         {

@@ -176,15 +176,16 @@ public class EasyModernMotorController extends EasyModernController implements D
         Log.d(LOGGING_TAG, String.format("....disarmed \"%s\"", this.getConnectionInfo()));
         }
 
-    //----------------------------------------------------------------------------------------------
-    // HardwareDevice
-    //----------------------------------------------------------------------------------------------
-
     // Close should *not* restart the target
-    @Override protected void doClose()
+    @Override protected void doCloseFromArmed()
+        {
+        floatHardware();
+        doCloseFromOther();
+        }
+
+    @Override protected void doCloseFromOther()
         {
         try {
-            floatHardware();
             this.disarmDevice();
             }
         catch (Exception e)
@@ -192,6 +193,10 @@ public class EasyModernMotorController extends EasyModernController implements D
             Util.handleCapturedException(e);
             }
         }
+
+    //----------------------------------------------------------------------------------------------
+    // HardwareDevice
+    //----------------------------------------------------------------------------------------------
 
     @Override public String getConnectionInfo()
         {
