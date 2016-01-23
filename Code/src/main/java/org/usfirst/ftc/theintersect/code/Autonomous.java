@@ -91,14 +91,27 @@ public class Autonomous extends SynchronousOpMode {
         //Autonomous Start
         waitForStart();
         if (opModeIsActive()) {
-            telemetry.clearDashboard();
-            telemetry.addData("Autonomous", "Running");
+            moveEncoderBackward(7000, 0.5, telemetry);
+            Functions.waitFor(1000);
+            stopAtWhite(0.25, 1000, telemetry);
+            Functions.waitFor(1000);
+            moveEncoderBackward(850, 0.5, telemetry);
+            turnRightBackwards(1200, 0.5, telemetry);
+            Functions.waitFor(3000);
+            moveBackwardsTime(0.2,3000);
+            moveRobotPower(0, 0);
+            while(ultrasonic.getUltrasonicLevel() < 15) {
+                moveRobotPower(0.2, 0.2);
+            }
+            moveRobotPower(0,0);
+            Functions.waitFor(3000);
+            dumpClimbersUltra(telemetry);
+            telemetry.addData("Ultrasonic" , ultrasonic.getUltrasonicLevel());
             telemetry.update();
-            moveEncoderBackward(7100, 0.5, telemetry);
-            dumpClimbers(0.8);
+            //moveForwardsTime(0.1,2000);
             //moveRobotRotations(-5, 0.5, telemetry);
             //Functions.waitFor(5000);
-            //stopAtWhite(-0.2, 1000, telemetry);
+
             //Functions.waitFor(1000);
             //turnRobotRightDegrees(45, 0.5, 25, telemetry);
             //Functions.waitFor(5000);
@@ -110,8 +123,27 @@ public class Autonomous extends SynchronousOpMode {
     }
 
     //Functions
+    public static void moveBackwardsTime(double power, int time){
+        moveRobotPower(-power,-power);
+        Functions.waitFor(time);
+        moveRobotPower(0,0);
+    }
+
+    public static void moveForwardsTime(double power, int time){
+        moveRobotPower(power,power);
+        Functions.waitFor(time);
+        moveRobotPower(0,0);
+    }
+    public static void turnRightBackwards(double rotation, double power, TelemetryDashboardAndLog telemetry){
+        moveRobotEncoder(-rotation, rotation, -power, power , telemetry);
+        moveRobotPower(0,0);
+    }
+
+
     public static void moveEncoderBackward(double rotation, double power, TelemetryDashboardAndLog telemetry) {
         moveRobotEncoder(-rotation, -rotation, -power, -power, telemetry);
+
+
     }
 
     public static void moveEncoderForward(double rotation, double power, TelemetryDashboardAndLog telemetry) {
@@ -178,19 +210,19 @@ public class Autonomous extends SynchronousOpMode {
         int blue = lineColor.blue();
         double average = (red + green + blue)/3.0;
         //if(average > 15 /*+ Functions.colorError && red >= average-Functions.colorError && red <= average+Functions.colorError && green >= average-Functions.colorError && green <= average+Functions.colorError && blue >= average-Functions.colorError && blue <= average+Functions.colorError*/) {
-        if (red >15 && blue > 15 && green > 15){
-            telemetry.addData("Red", red);
+        if (red >10 && blue > 10 && green > 10){
+            /*telemetry.addData("Red", red);
             telemetry.addData("Blue" , blue);
             telemetry.addData("Green", green);
             telemetry.addData("Average" , average);
             telemetry.addData("Debug", "Success");
-            telemetry.update();
+            telemetry.update();*/
             return true;
         }
-        telemetry.addData("Red", red);
+        /*telemetry.addData("Red", red);
         telemetry.addData("Blue", blue);
         telemetry.addData("Green", green);
-        telemetry.update();
+        telemetry.update();*/
         return false;
     }
 
@@ -218,7 +250,29 @@ public class Autonomous extends SynchronousOpMode {
         Functions.waitFor(2000);
         mountainClimberRelease.setPosition(0);
     }
-
+    public static void dumpClimbersUltra(TelemetryDashboardAndLog telemetry) {
+        double[] positions = {98,100, 102.8, 105.6, 108.4, 111.2, 114, 116.8, 119.6, 119.4, 120.2, 125, 137.8, 133.6, 135.4, 137.2, 142, 141.5, 147.6, 150.4, 153.2, 156, 160, 165, 167   , 170};
+        double ultraVal  = ultrasonic.getUltrasonicLevel();
+        telemetry.update();
+        if(ultraVal < 5) {
+            ultraVal = 5;
+        } else if (ultraVal >= 25) {
+            return;
+        }
+        telemetry.clearDashboard();
+        telemetry.addData("Ultrasonic Level", ultraVal);
+        telemetry.addData("Dumper Position", positions[(int) ultraVal - 5] / 180.0);
+        telemetry.update();
+        mountainClimber.setPosition((positions[(int) ultraVal -5]) / 180.0);
+        Functions.waitFor(3000);
+        mountainClimberRelease.setPosition(2.0);
+        Functions.waitFor(3000);
+        mountainClimberRelease.setPosition(0.0);
+        Functions.waitFor(100);
+        mountainClimberRelease.setPosition(2.0);
+        Functions.waitFor(100);
+        mountainClimberRelease.setPosition(0.0);
+    }
     //Resets the encoders and forces the motors to run to the target position
     public static void resetEncoders() {
         backRightWheel.setMode(DcMotorController.RunMode.RESET_ENCODERS);
@@ -259,11 +313,11 @@ public class Autonomous extends SynchronousOpMode {
         moveRobotPower(0, 0);
     }
 
-    public static void moveRobotEncoder(double rightRotations, double leftRotations, double leftPower, double rightPower, TelemetryDashboardAndLog telemetry) {
+    public static void moveRobotEncoder(double rightRotations, double leftRotations, double rightPower, double leftPower, TelemetryDashboardAndLog telemetry) {
         resetEncoders();
         backRightWheel.setTargetPosition((int) rightRotations);
         backLeftWheel.setTargetPosition((int) leftRotations);
-        moveRobotPower(leftPower, rightPower);
+        moveRobotPower(leftPower,rightPower);
 
         /*while(!(Math.abs(backRightWheel.getCurrentPosition()) >= Math.abs(backRightWheel.getTargetPosition())
                 - Functions.encoderError && Math.abs(backRightWheel.getCurrentPosition())
@@ -276,10 +330,27 @@ public class Autonomous extends SynchronousOpMode {
             telemetry.update();
         }
         moveRobotPower(0, 0);*/
-        while(backRightWheel.isBusy() && backLeftWheel.isBusy()) {
-            Functions.waitFor(10);
+        if (leftRotations == 0){
+            while(backRightWheel.isBusy() /*|| backLeftWheel.isBusy()*/) {
+                Functions.waitFor(10);
+            }
+        } else if(rightRotations == 0){
+            while(backLeftWheel.isBusy() /*|| backLeftWheel.isBusy()*/) {
+                Functions.waitFor(10);
+            }
+        } else {
+            while(backRightWheel.isBusy() || backLeftWheel.isBusy()) {
+                Functions.waitFor(10);
+            }
         }
-        moveRobotPower(0, 0);
+        disableEncoders();
+        moveRobotPower(0,0);
+        telemetry.update();
+
+        //backRightWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        //backLeftWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        //resetEncoders();
+
     }
 
     //Moves the robot a certain amount of degrees
@@ -314,19 +385,17 @@ public class Autonomous extends SynchronousOpMode {
     }*/
 
     //Moves the robot until the robot is above white by using the MR Color Sensor
-    /*public static void stopAtWhite(double power, long timeout, TelemetryDashboardAndLog telemetry) {
-        moveRobotPower(power);
-        telemetry.addData("Color Sensing" , "Sensing");
-        telemetry.update();
+    public static void stopAtWhite(double power, long timeout, TelemetryDashboardAndLog telemetry) {
+        moveRobotPower(-power,-power);
         long endTime = System.currentTimeMillis() + (timeout*1000);
         while (System.currentTimeMillis() < endTime) {
             if(detectWhite(telemetry)) {
                 break;
             }
         }
-        moveRobotPower(0);
+        moveRobotPower(0,0);
         Functions.waitFor(5000);
-    }*/
+    }
 
     //Turns the robot right a certain amount of degrees using the MR Gyro Sensor
     public static void turnRobotRightDegrees(int degrees, double power, int timeout, TelemetryDashboardAndLog telemetry) {
@@ -446,6 +515,13 @@ public class Autonomous extends SynchronousOpMode {
             telemetry.update();
             Functions.waitFor(500);
         }
+    }
+
+    public static void disableEncoders(){
+        backRightWheel.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        backRightWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        backLeftWheel.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        backLeftWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
     }
 
     //Sets all the motor powers to 0 and closes all the hardware devices
