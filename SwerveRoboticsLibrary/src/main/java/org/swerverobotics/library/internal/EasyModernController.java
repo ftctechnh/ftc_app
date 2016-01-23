@@ -192,16 +192,13 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
     @Override synchronized public boolean onUserOpModeStop()
         {
         Log.d(LOGGING_TAG, String.format("EasyModern: auto-stopping %s...", this.getSerialNumber().toString()));
-        if (this.isArmed())
+        this.stopHardware();  // mirror StopRobotOpMode
+        try {
+            this.disarm();
+            }
+        catch (Exception e)
             {
-            this.stopHardware();  // mirror StopRobotOpMode
-            try {
-                this.disarm();
-                }
-            catch (Exception e)
-                {
-                Util.handleCapturedException(e);
-                }
+            Util.handleCapturedException(e);
             }
         Log.d(LOGGING_TAG, "EasyModern: ... done");
         return true;    // unregister us

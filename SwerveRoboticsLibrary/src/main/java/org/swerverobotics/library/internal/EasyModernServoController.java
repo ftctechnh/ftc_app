@@ -107,7 +107,7 @@ public class EasyModernServoController extends EasyModernController implements S
 
     private void setServos(Collection<Servo> servos)
         {
-        assertTrue(!BuildConfig.DEBUG || !this.isArmed());
+        assertTrue(!BuildConfig.DEBUG || this.armingState==ARMINGSTATE.DISARMED);
 
         for (Servo servo : servos)
             {
@@ -134,61 +134,59 @@ public class EasyModernServoController extends EasyModernController implements S
             }
         }
 
-    @Override public void arm() throws RobotCoreException, InterruptedException
+    @Override protected void doArm() throws RobotCoreException, InterruptedException
         {
-        synchronized (this.armingLock)
-            {
-            if (!this.isArmed())
-                {
-                Log.d(LOGGING_TAG, String.format("arming \"%s\"....", this.getConnectionInfo()));
-
-                // Turn off target
-                this.floatHardware(target);
-                target.disarm();
-
-                // Swizzle while no one is on
-                this.usurpDevices();
-                if (this.targetName != null)
-                    {
-                    this.targetDeviceMapping.put(this.targetName, this);
-                    }
-
-                // Turn us on
-                this.armDevice();
-                this.isArmed = true;
-
-                // Initialize
-                this.floatHardware();
-                Log.d(LOGGING_TAG, String.format("....armed \"%s\"", this.getConnectionInfo()));
-                }
-            }
+        doArmOrPretend(true);
+        }
+    @Override protected void doPretend() throws RobotCoreException, InterruptedException
+        {
+        doArmOrPretend(false);
         }
 
-    @Override public void disarm() throws RobotCoreException, InterruptedException
+    private void doArmOrPretend(boolean isArm) throws RobotCoreException, InterruptedException
         {
-        synchronized (this.armingLock)
+        Log.d(LOGGING_TAG, String.format("arming \"%s\"....", this.getConnectionInfo()));
+
+        // Turn off target
+        this.floatHardware(target);
+        target.disarm();
+
+        // Swizzle while no one is on
+        this.usurpDevices();
+        if (this.targetName != null)
             {
-            if (this.isArmed())
-                {
-                Log.d(LOGGING_TAG, String.format("disarming \"%s\"....", this.getConnectionInfo()));
-
-                // Turn us off
-                this.disarmDevice();
-                this.isArmed = false;
-
-                // Swizzle while no one is on
-                this.deusurpDevices();
-                if (this.targetName != null)
-                    {
-                    this.targetDeviceMapping.put(this.targetName, this.target);
-                    }
-
-                // Turn target back on
-                this.target.arm();
-
-                Log.d(LOGGING_TAG, String.format("....disarmed \"%s\"", this.getConnectionInfo()));
-                }
+            this.targetDeviceMapping.put(this.targetName, this);
             }
+
+        // Turn us on
+        if (isArm)
+            this.armDevice();
+        else
+            this.pretendDevice();
+
+        // Initialize
+        this.floatHardware();
+        Log.d(LOGGING_TAG, String.format("....armed \"%s\"", this.getConnectionInfo()));
+        }
+
+    @Override protected void doDisarm() throws RobotCoreException, InterruptedException
+        {
+        Log.d(LOGGING_TAG, String.format("disarming \"%s\"....", this.getConnectionInfo()));
+
+        // Turn us off
+        this.disarmDevice();
+
+        // Swizzle while no one is on
+        this.deusurpDevices();
+        if (this.targetName != null)
+            {
+            this.targetDeviceMapping.put(this.targetName, this.target);
+            }
+
+        // Turn target back on
+        this.target.arm();
+
+        Log.d(LOGGING_TAG, String.format("....disarmed \"%s\"", this.getConnectionInfo()));
         }
 
     //----------------------------------------------------------------------------------------------
@@ -196,22 +194,15 @@ public class EasyModernServoController extends EasyModernController implements S
     //----------------------------------------------------------------------------------------------
 
     // Close should *not* restart the target
-    @Override public void close()
+    @Override protected void doClose()
         {
-        synchronized (this.armingLock)
+        try {
+            floatHardware();
+            this.disarmDevice();
+        }
+        catch (Exception e)
             {
-            try {
-                if (this.isArmed())
-                    {
-                    floatHardware();
-                    this.disarmDevice();
-                    this.isArmed = false;
-                    }
-                }
-            catch (Exception e)
-                {
-                Util.handleCapturedException(e);
-                }
+            Util.handleCapturedException(e);
             }
         }
 
