@@ -159,7 +159,10 @@ public class Autonomous extends SynchronousOpMode {
 
     //Detects white
     public static boolean detectWhite(TelemetryDashboardAndLog telemetry) {
-        double average = (lineColor.red() + lineColor.green() + lineColor.blue())/3;
+		int red = lineColor.red();
+		int green = lineColor.green();
+		int blue = lineColor.blue();
+        double average = (red + lineColor.green() + lineColor.blue())/3;
         if(average > 0 && lineColor.red() >= average-Functions.colorError && lineColor.red() <= average+Functions.colorError && lineColor.green() >= average-Functions.colorError && lineColor.green() <= average+Functions.colorError && lineColor.blue() >= average-Functions.colorError && lineColor.blue() <= average+Functions.colorError) {
             telemetry.addData("Red", lineColor.red());
             telemetry.addData("Blue" , lineColor.blue());
@@ -178,18 +181,19 @@ public class Autonomous extends SynchronousOpMode {
     public static void dumpClimbers(TelemetryDashboardAndLog telemetry) {
         double[] positions = {100, 102.8, 105.6, 108.4, 111.2, 114, 116.8, 119.6, 121.4, 123.2, 128, 130.8, 133.6, 136.4, 139.2, 142, 141.5, 147.6, 150.4, 153.2, 156, 0, 0, 0, 0, 170};
         double ultraVal  = ultrasonic.getUltrasonicLevel();
-        telemetry.clearDashboard();
-        telemetry.addData("Ultrasonic Level", ultraVal);
-        telemetry.addData("Dumper Position", positions[(int) ultraVal - 5] / 180);
-        telemetry.update();
         if(ultraVal < 5) {
             ultraVal = 5;
         } else if (ultraVal >= 30) {
             ultraVal = 30;
         }
+        telemetry.clearDashboard();
+        telemetry.addData("Ultrasonic Level", ultraVal);
+        telemetry.addData("Dumper Position", positions[(int) ultraVal - 5] / 180);
+        telemetry.update();
+
         mountainClimber.setPosition(positions[(int) ultraVal - 5] / 180);
         Functions.waitFor(5000);
-        mountainClimberRelease.setPosition(2.0);
+        mountainClimberRelease.setPosition(1.0);
         Functions.waitFor(5000);
         mountainClimberRelease.setPosition(0.0);
 
@@ -224,8 +228,8 @@ public class Autonomous extends SynchronousOpMode {
         moveRobotPower(power);
 
         while (!(backRightWheel.getCurrentPosition() >= backRightWheel.getTargetPosition() - Functions.encoderError && backRightWheel.getCurrentPosition() <= backRightWheel.getTargetPosition() + Functions.encoderError) && !(backLeftWheel.getCurrentPosition() >= backLeftWheel.getTargetPosition() - Functions.encoderError && backLeftWheel.getCurrentPosition() <= backLeftWheel.getTargetPosition() + Functions.encoderError)) {
-            telemetry.addData("Right: ", backRightWheel.getCurrentPosition());
-            telemetry.addData("Left: ", backLeftWheel.getCurrentPosition());
+            telemetry.addData("Right: ", backRightWheel.getCurrentPosition()/Functions.neveRestPPR);
+            telemetry.addData("Left: ", backLeftWheel.getCurrentPosition()/Functions.neveRestPPR);
             telemetry.update();
         }
         moveRobotPower(0);
@@ -237,10 +241,9 @@ public class Autonomous extends SynchronousOpMode {
         backRightWheel.setTargetPosition((int) (degrees*Functions.neveRestDegreeRatio));
         backLeftWheel.setTargetPosition((int) (degrees*Functions.neveRestDegreeRatio));
         moveRobotPower(power);
-
         while (!(backRightWheel.getCurrentPosition() >= backRightWheel.getTargetPosition() - Functions.encoderError && backRightWheel.getCurrentPosition() <= backRightWheel.getTargetPosition() + Functions.encoderError) && !(backLeftWheel.getCurrentPosition() >= backLeftWheel.getTargetPosition() - Functions.encoderError && backLeftWheel.getCurrentPosition() <= backLeftWheel.getTargetPosition() + Functions.encoderError)) {
-            telemetry.addData("Right: ", backRightWheel.getCurrentPosition());
-            telemetry.addData("Left: ", backLeftWheel.getCurrentPosition());
+            telemetry.addData("Right: ", backRightWheel.getCurrentPosition()/Functions.neveRestDegreeRatio);
+            telemetry.addData("Left: ", backLeftWheel.getCurrentPosition()/Functions.neveRestDegreeRatio);
             telemetry.update();
         }
         moveRobotPower(0);

@@ -81,13 +81,13 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 19 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="android-support-v4" level="project" />
-    <orderEntry type="library" exported="" name="ModernRobotics-release-" level="project" />
-    <orderEntry type="library" exported="" name="Analytics-release-" level="project" />
-    <orderEntry type="library" exported="" name="FtcCommon-release-" level="project" />
-    <orderEntry type="library" exported="" name="WirelessP2p-release-" level="project" />
-    <orderEntry type="library" exported="" name="Hardware-release-" level="project" />
     <orderEntry type="library" exported="" name="RobotCore-release-" level="project" />
+    <orderEntry type="library" exported="" name="ModernRobotics-release-" level="project" />
+    <orderEntry type="library" exported="" name="WirelessP2p-release-" level="project" />
+    <orderEntry type="library" exported="" name="Analytics-release-" level="project" />
+    <orderEntry type="library" exported="" name="android-support-v4" level="project" />
+    <orderEntry type="library" exported="" name="Hardware-release-" level="project" />
+    <orderEntry type="library" exported="" name="FtcCommon-release-" level="project" />
     <orderEntry type="module" module-name="SwerveRoboticsLibrary" exported="" />
   </component>
 </module>
