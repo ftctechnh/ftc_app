@@ -19,21 +19,33 @@ public class BotAutonRed extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         initMotors();
-        //autonomous here
-        //full speed = 2.35294 ft/sec
-        MotorRunner.run(new DcMotor[]{motorLeft, motorRight}, Power.FULL_SPEED, new EncoderUnit(319.752f, 10.4f, EncoderUnit.ROTATION_ANDYMARK));
-        //100% speed, estimated 10.49 ft forward
-        MotorRunner.run(motorRight, Power.FULL_SPEED, new EncoderUnit(3, 10.4f, EncoderUnit.ROTATION_ANDYMARK));
-        //this is a guess for 90 degree turn to the left
-        stopMotors();
-        MotorRunner.run(new DcMotor[]{motorLeft, motorRight}, Power.FULL_SPEED, new EncoderUnit(91.44f, 10.4f, EncoderUnit.ROTATION_ANDYMARK));
-        //100% speed, 3 ft inches forward
-        stopMotors();
+        waitForStart();
+        //Autonomous starts here
+
+        //Drive to bucket, backwards
+        MotorRunner.run(new DcMotor[]{motorLeft, motorRight}, -Power.NORMAL_SPEED,
+                new EncoderUnit((int) (Values.DRIVE_BUCKET * EncoderUnit.ROTATION_ANDYMARK)));
+
+        //Dump
         dump.setPosition(Values.DUMP_DOWN);
         Thread.sleep(1000);
         dump.setPosition(Values.DUMP_UP);
-        //dump climbers here?
-        stopMotors();
+
+        //Turn to align fowards
+        MotorRunner.run(motorLeft, Power.NORMAL_SPEED,
+                new EncoderUnit((int) (Values.TURN_AWAY * EncoderUnit.ROTATION_ANDYMARK)));
+
+        //Line up to mountain
+        MotorRunner.run(new DcMotor[]{motorLeft, motorRight}, Power.NORMAL_SPEED,
+                new EncoderUnit((int) (Values.DRIVE_AWAY * EncoderUnit.ROTATION_ANDYMARK)));
+
+        //Turn perpendicular to the mountain
+        MotorRunner.run(motorLeft, Power.NORMAL_SPEED,
+                new EncoderUnit((int) (Values.TURN_MOUNTAIN * EncoderUnit.ROTATION_ANDYMARK)));
+
+        //Drive on to mountain
+        MotorRunner.run(new DcMotor[]{motorLeft, motorRight}, Power.NORMAL_SPEED,
+                new EncoderUnit((int) (Values.DRIVE_MOUNTAIN * EncoderUnit.ROTATION_ANDYMARK)));
     }
 
     public void initMotors() {
