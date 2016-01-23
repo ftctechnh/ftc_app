@@ -14,6 +14,8 @@ public class TeenTitanGo extends OpMode {
     DcMotor motorLeft;
     DcMotor motorScore;
 
+    Servo bucketServo;
+    Servo contServo;
     Servo rightTriggerArm;
     Servo leftTriggerArm;
     double rightTriggerArmDelta = 0.5;
@@ -27,17 +29,12 @@ public class TeenTitanGo extends OpMode {
 
     }
 
-    public void initTriggerArms() {
-
-
-
-    }
-
     public void initMotors() {
 
         motorRight = hardwareMap.dcMotor.get("motor_right");
         motorLeft = hardwareMap.dcMotor.get("motor_left");
         motorLeft.setDirection(DcMotor.Direction.REVERSE);
+
 
     }
 
@@ -45,13 +42,48 @@ public class TeenTitanGo extends OpMode {
 
         motorScore = hardwareMap.dcMotor.get("motor_score");
         motorScore.setDirection(DcMotor.Direction.REVERSE);
+
     }
+
+    public void initTriggerArms() {
+
+        rightTriggerArm = hardwareMap.servo.get("servo_right_trigger");
+        leftTriggerArm = hardwareMap.servo.get("servo_left_trigger");
+
+        rightTriggerArmPosition = 0;
+        leftTriggerArmPosition = 0;
+
+        rightTriggerArm.setPosition(0);
+        leftTriggerArm.setPosition(0);
+
+    }
+
+    public void initContServo(){
+
+        contServo = hardwareMap.servo.get("cont_servo");
+        contServo.setPosition(0.5);
+
+    }
+
+    public void initBucketServo(){
+
+        bucketServo = hardwareMap.servo.get("bucket_servo");
+        bucketServo.setPosition(.5);
+
+    }
+
 
     public void init() {
 
         initMotors();
 
         initScoreArm();
+
+        initContServo();
+
+        initBucketServo();
+
+        initTriggerArms();
 
     }
 
@@ -77,8 +109,8 @@ public class TeenTitanGo extends OpMode {
         right2 = (float)scaleInput(right2);
         left2 =  (float)scaleInput(left2);
 
-        motorLeft.setPower(right1);
-        motorRight.setPower(right2);
+        motorLeft.setPower(right2);
+        motorRight.setPower(right1);
 
 
     }
@@ -100,11 +132,72 @@ public class TeenTitanGo extends OpMode {
 
     }
 
+    public void loopTriggerArm(){
+
+
+        if (gamepad2.x) {
+
+            rightTriggerArmPosition += rightTriggerArmDelta;
+        }
+
+        else {
+
+            rightTriggerArmPosition -= rightTriggerArmDelta;
+
+        }
+
+        if (gamepad2.b) {
+
+            leftTriggerArmPosition -= leftTriggerArmDelta;
+
+        }
+
+        else{
+
+            leftTriggerArmPosition += leftTriggerArmDelta;
+
+        }
+
+
+
+        rightTriggerArmPosition = Range.clip(rightTriggerArmPosition, ARM_MIN_RANGE, ARM_MAX_RANGE);
+        leftTriggerArmPosition = Range.clip(leftTriggerArmPosition, ARM_MIN_RANGE, ARM_MAX_RANGE);
+
+
+        rightTriggerArm.setPosition(rightTriggerArmPosition);
+        leftTriggerArm.setPosition(leftTriggerArmPosition);
+
+
+    }
+
+    public void loopContServo(){
+
+        if (gamepad2.y){
+            contServo.setPosition(1);
+
+        }
+
+        else if (gamepad2.a){
+            contServo.setPosition(0);
+
+        }
+
+        else {
+            contServo.setPosition(.5);
+
+        }
+
+    }
+
     public void loop(){
 
         loopDriverMotors();
 
         loopScoreMotor();
+
+        loopContServo();
+
+        loopTriggerArm();
 
     }
 
