@@ -4,16 +4,16 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Created by mars on 1/7/16.
  */
 public class ContinuousServo extends OpMode {
 
-    Servo arm1;
-    double armDelta = 0.5;
-    double armPosition;
-    final static double ARM_MIN_RANGE = 0;
-    final static double ARM_MAX_RANGE = 1;
+    Servo contServo;
+    double servoPosition = 0.0;
+
 
     /**
      * Constructor
@@ -24,43 +24,108 @@ public class ContinuousServo extends OpMode {
 
     public void init() {
 
-        arm1 = hardwareMap.servo.get("servo1");
-
-        armPosition = 180;
-
-        arm1.setPosition(180);
-
+        contServo = hardwareMap.servo.get("servo");
+        contServo.setPosition(.5);
 
     }
 
     public void loop() {
 
-        // update the position of the arm.
+     /*   if (gamepad1.a){
+            contServo.setPosition(.4);
+        }
+
+        if (gamepad1.b){
+            contServo.setPosition(.41);
+        }
+
+        if (gamepad1.x){
+            contServo.setPosition(.42);
+        }
+
+        if (gamepad1.y){
+            contServo.setPosition(.43);
+        }
+
+        if (gamepad1.left_bumper){
+            contServo.setPosition(.44);
+        }
+
+        if (gamepad1.right_bumper){
+            contServo.setPosition(.45);
+        }
+*/
+
+
+        if (gamepad1.a){
+            contServo.setPosition(1);
+            //contServo.setDirection(Servo.Direction.REVERSE);
+        }
+
+        if (gamepad1.b){
+            contServo.setPosition(0);
+        }
+
+        if (gamepad1.x){
+            contServo.setPosition(.5);
+            //contServo.setDirection(Servo.Direction.FORWARD);
+        }
+
+        //if (gamepad1.y){
+            //contServo.setPosition(.41);
+        //}
+
+            //contServo.setDirection(Servo.Direction.REVERSE);
+       // }
+
+        telemetry.addData("Servo Pos", String.format("%.2f", contServo.getPosition()));
+        telemetry.addData("Servo Dir", contServo.getDirection());
+
+        /*if (gamepad1.a){
+
+            for(double i = 0.0; i <= 1.0; i += 0.01) {
+
+                contServo.setPosition(i);
+                telemetry.addData("i", String.format("%.2f", i));
+                telemetry.addData("Servo Pos", String.format("%.2f", contServo.getPosition()));
+                try {
+                    wait(1500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+
+
         if (gamepad1.a) {
-            // if the A button is pushed on gamepad1, increment the position of
-            // the arm servo.
-            armPosition += armDelta;
-
+            contServo.setDirection(Servo.Direction.REVERSE);
+            contServo.setPosition(0.0);
         }
-
         if (gamepad1.b) {
-            // if the A button is pushed on gamepad1, increment the position of
-            // the arm servo.
-            armPosition -= armDelta;
-
+            contServo.setPosition(1.0);
+            contServo.setDirection(Servo.Direction.FORWARD);
         }
 
 
+        telemetry.addData("Servo Pos", String.format("%.2f", contServo.getPosition()));
+        telemetry.addData("Servo Dir", contServo.getDirection());
 
 
-        // clip the position values so that they never exceed their allowed range.
-        //right = right * 2;
-        armPosition = Range.clip(armPosition, ARM_MIN_RANGE, ARM_MAX_RANGE);
+        telemetry.addData("Servo Pos", String.format("%.2f", contServo.getPosition()));
 
+        if (gamepad1.a){
 
-        arm1.setPosition(armPosition);
+            contServo.setPosition(servoPosition);
 
+            if (servoPosition <= .95){
 
+                servoPosition += 0.05;
+
+            }
+
+        }
+*/
     }
 
     double scaleInput(double dVal) {

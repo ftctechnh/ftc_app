@@ -46,7 +46,9 @@ public class FtcOpModeRegister implements OpModeRegister {
    * @param manager op mode manager
    */
   public void register(OpModeManager manager) {
-
+    manager.register("TeenTitanGo", TeenTitanGo.class);
+    manager.register("OhmIZeus", OhmIZeus.class);
+    manager.register("Autobots", Autobots.class);
     /* Custom Ops Modes here */
     manager.register("DavTest", DavTest.class);
     manager.register("TwoWheelTest", TwoWheelTest.class);
@@ -55,9 +57,9 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("ServoTest", ServoTest.class);
     manager.register("TitanServoTest", TitanServoTest.class);
     manager.register("ServoTest1", ServoTest1.class);
-    manager.register("Help", Help.class);
     manager.register("ContinuousServo", ContinuousServo.class);
-    manager.register("TeenTitanGo", TeenTitanGo.class);
+  //  manager.register("Help", Help.class);
+   // manager.register("ServoBucket", ServoBucket.class);
 
     /*
      * register your op modes here.
@@ -67,14 +69,14 @@ public class FtcOpModeRegister implements OpModeRegister {
      * If two or more op modes are registered with the same name, the app will display an error.
      */
 
-    manager.register("NullOp", NullOp.class);
+ //   manager.register("NullOp", NullOp.class);
 
     //manager.register("MatrixK9TeleOp", MatrixK9TeleOp.class);
-    manager.register("K9TeleOp", K9TeleOp.class);
+   /* manager.register("K9TeleOp", K9TeleOp.class);
     manager.register("K9Line", K9Line.class);
     manager.register ("PushBotAuto", PushBotAuto.class);
     manager.register ("PushBotManual", PushBotManual.class);
-
+*/
 
 
     /*

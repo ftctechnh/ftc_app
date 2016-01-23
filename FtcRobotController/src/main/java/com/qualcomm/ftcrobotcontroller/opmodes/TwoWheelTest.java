@@ -51,6 +51,7 @@ public class TwoWheelTest extends OpMode {
     @Override
     public void loop() {
 
+
 		/*
 		 * Gamepad 1
 		 * 
@@ -62,7 +63,11 @@ public class TwoWheelTest extends OpMode {
         // 1 is full down
         // direction: left_stick_x ranges from -1 to 1, where -1 is full left
         // and 1 is full right
-        float throttle1 = -gamepad1.left_stick_y;
+        float throttle = gamepad1.left_trigger;
+
+
+
+/*        float throttle1 = -gamepad1.left_stick_y;
         float direction1 = gamepad1.left_stick_x;
         float right1 = throttle1 - direction1;
         float left1 = throttle1 + direction1;
@@ -72,6 +77,7 @@ public class TwoWheelTest extends OpMode {
         float right2 = throttle2 - direction2;
         float left2 = throttle2 + direction2;
 
+ */
         // clip the right/left values so that the values never exceed +/- 1
         right1 = Range.clip(right1, -1, 1);
         left1 = Range.clip(left1, -1, 1);
@@ -96,10 +102,12 @@ public class TwoWheelTest extends OpMode {
 		 * are currently write only.
 		 */
         telemetry.addData("Text", "*** b Robot Data***");
-        telemetry.addData("left1 tgt pwr",  "left1  pwr: " + String.format("%.2f", left1));
+/*      telemetry.addData("left1 tgt pwr",  "left1  pwr: " + String.format("%.2f", left1));
         telemetry.addData("right1 tgt pwr", "right1 pwr: " + String.format("%.2f", right1));
         telemetry.addData("left2 tgt pwr",  "left2  pwr: " + String.format("%.2f", left2));
         telemetry.addData("right2 tgt pwr", "right2 pwr: " + String.format("%.2f", right2));
+*/
+        telemetry.addData("rightTrigger tgt power" + )
 
     }
 
