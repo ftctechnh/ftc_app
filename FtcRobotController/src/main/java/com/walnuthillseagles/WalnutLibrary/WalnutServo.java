@@ -1,4 +1,4 @@
-package com.walnutHillsEagles.WalnutLibrary;
+package com.walnuthillseagles.walnutlibrary;
 
 import com.qualcomm.robotcore.hardware.Servo;
 

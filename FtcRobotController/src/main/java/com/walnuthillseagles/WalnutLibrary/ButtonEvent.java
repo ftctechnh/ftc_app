@@ -1,4 +1,4 @@
-package com.walnutHillsEagles.WalnutLibrary;
+package com.walnuthillseagles.walnutlibrary;
 //Beta is Beta
 /**
  * Created by Yan Vologzhanin on 1/6/2016.

@@ -1,6 +1,5 @@
-package com.walnutHillsEagles.WalnutLibrary;
+package com.walnuthillseagles.walnutlibrary;
 
-import com.qualcomm.robotcore.hardware.AccelerationSensor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 
 /**

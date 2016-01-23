@@ -1,4 +1,4 @@
-package com.walnutHillsEagles.WalnutLibrary;
+package com.walnuthillseagles.walnutlibrary;
 
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -13,17 +13,26 @@ public class ContinuousServo implements Drivable {
     private double trueCenter;
     private double trueMax;
     private double trueMin;
+    //ranges
+    private double upperRange;
+    private double lowerRange;
 
     public ContinuousServo(Servo myServo, double center, double max, double min){
         servo = myServo;
         trueCenter = center;
         trueMax = max;
         trueMin = min;
+        //Initilize Ranges
+        
     }
     public void operate(){
 
     }
     public void stop(){
 
+    }
+
+    private double scaleInput(){
+        return 0;
     }
 }
