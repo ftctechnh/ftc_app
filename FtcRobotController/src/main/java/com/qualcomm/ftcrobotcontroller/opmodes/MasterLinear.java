@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.walnuthillseagles.walnutlibrary.DistanceDrive;
 import com.walnuthillseagles.walnutlibrary.DistanceMotor;
 import com.walnuthillseagles.walnutlibrary.LinearControlScheme;
+import com.walnuthillseagles.walnutlibrary.TimedMotor;
 import com.walnuthillseagles.walnutlibrary.WalnutServo;
 
 /**
@@ -13,14 +14,24 @@ import com.walnuthillseagles.walnutlibrary.WalnutServo;
  */
 public class MasterLinear extends LinearOpMode {
     //Parameters for Instance
-    private String team;
-    private double delay;
+    private int turnorientation;
+    private long delay;
     private int posNumber;
-    //Robot Hardware
+    //Important Constants
+    public static final double MSECSTOSECS = 1000;
+    //@param myDelay is in seconds
     public void initializeInstance(int startingPos, double myDelay, String myTeam){
         posNumber = startingPos;
-        delay = myDelay;
+        delay = (long) (myDelay*MSECSTOSECS);
         String team = myTeam.toUpperCase();
+        if(team.equals("RED"))
+            turnorientation = -1;
+        else if(team.equals("BLUE"))
+            turnorientation = 1;
+        else{
+            telemetry.addData("ERROR:","Invalid team given");
+            throw(new IndexOutOfBoundsException());
+        }
         runOpMode();
     }
     public void runOpMode(){
@@ -37,11 +48,13 @@ public class MasterLinear extends LinearOpMode {
                 new DistanceMotor(leftDrive,"Left",true, false,4,1,1440),
                 new DistanceMotor(rightDrive,"Right",true,true,4,1,1440),
                 18);
+        TimedMotor slider = new TimedMotor(slides,"slides",false,false);
         //Push to arraylist
         LinearControlScheme items = new LinearControlScheme();
         items.add(walnutDrive);
         items.add(climberBelt);
         items.add(hook);
+        items.add(slider);
         //Wait for Start
         try{
             waitForStart();
@@ -51,7 +64,9 @@ public class MasterLinear extends LinearOpMode {
         }
         //Linear OpMode GOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
         try{
-            sleep(1);
+            sleep(delay);
+            walnutDrive.linearDrive(-3.024,1);
+
         }
         catch(InterruptedException e)
         {

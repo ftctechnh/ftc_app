@@ -34,6 +34,9 @@ public abstract class LinearMotor implements Runnable, Auto {
         }
     }
     public abstract void operate(double val, double mySpeedLimit);
+    public DcMotor getMotor(){
+        return motor;
+    }
     public void stop(){
         motor.setPower(0);
     }
