@@ -91,9 +91,9 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
         {
         HiTechnicNxtDcMotorController legacyTarget = (HiTechnicNxtDcMotorController)target;
 
-        LegacyModule legacyModule = legacyTarget.getLegacyModule();
+        I2cController module      = legacyTarget.getI2cController();
         int          targetPort   = legacyTarget.getPort();
-        this.helper          = new I2cDeviceReplacementHelper<DcMotorController>(context, this, target, legacyModule, targetPort);
+        this.helper          = new I2cDeviceReplacementHelper<DcMotorController>(context, this, target, module, targetPort);
 
         this.context         = context;
         this.i2cDeviceClient = ii2cDeviceClient;
@@ -131,12 +131,12 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
             {
             HiTechnicNxtDcMotorController legacyTarget = (HiTechnicNxtDcMotorController)target;
 
-            LegacyModule legacyModule = legacyTarget.getLegacyModule();
+            I2cController module      = legacyTarget.getI2cController();
             int          port         = legacyTarget.getPort();
             int          i2cAddr8Bit  = MemberUtil.i2cAddrOfLegacyMotorController(target);
 
             // Make a new legacy motor controller
-            II2cDevice i2cDevice                 = new I2cDeviceOnI2cDeviceController(legacyModule, port);
+            II2cDevice i2cDevice                 = new I2cDeviceOnI2cDeviceController(module, port);
             I2cDeviceClient i2cDeviceClient      = new I2cDeviceClient(context, i2cDevice, i2cAddr8Bit, false);
             EasyLegacyMotorController controller = new EasyLegacyMotorController(context, i2cDeviceClient, target);
 
