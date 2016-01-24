@@ -135,8 +135,9 @@ public class AdaFruitTCS34725ColorSensor implements ColorSensor, IOpModeStateTra
 
         if (target instanceof AdafruitI2cColorSensor)
             {
-            controller  = MemberUtil.deviceInterfaceModuleOfAdaFruitColorSensor(target);
-            port        = MemberUtil.portOfAdaFruitColorSensor(target);
+            AdafruitI2cColorSensor colorTarget = (AdafruitI2cColorSensor)target;
+            controller  = colorTarget.getDeviceInterfaceModule();
+            port        = colorTarget.getPort();
             i2cAddr8Bit = ADDRESS_I2C;
             }
         else

@@ -31,7 +31,7 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
     protected HardwareMap.DeviceMapping     targetDeviceMapping;
     protected boolean                       readWriteRunnableIsRunning;
 
-    private final HardwareArmDisarm.ARMINGSTATE targetArmingState;
+    private final HWModuleArmDisarm.ARMINGSTATE targetArmingState;
 
     enum WRITE_STATUS { IDLE, DIRTY, READ };
 

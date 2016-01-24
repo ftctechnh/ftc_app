@@ -2,6 +2,7 @@ package org.swerverobotics.library.internal;
 
 import android.util.Log;
 
+import com.qualcomm.hardware.hitechnic.HiTechnicNxtDcMotorController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
@@ -88,8 +89,10 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
 
     private EasyLegacyMotorController(OpMode context, II2cDeviceClient ii2cDeviceClient, DcMotorController target)
         {
-        LegacyModule legacyModule = MemberUtil.legacyModuleOfLegacyMotorController(target);
-        int          targetPort   = MemberUtil.portOfLegacyMotorController(target);
+        HiTechnicNxtDcMotorController legacyTarget = (HiTechnicNxtDcMotorController)target;
+
+        LegacyModule legacyModule = legacyTarget.getLegacyModule();
+        int          targetPort   = legacyTarget.getPort();
         this.helper          = new I2cDeviceReplacementHelper<DcMotorController>(context, this, target, legacyModule, targetPort);
 
         this.context         = context;
@@ -126,8 +129,10 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
         {
         if (MemberUtil.isLegacyMotorController(target))
             {
-            LegacyModule legacyModule = MemberUtil.legacyModuleOfLegacyMotorController(target);
-            int          port         = MemberUtil.portOfLegacyMotorController(target);
+            HiTechnicNxtDcMotorController legacyTarget = (HiTechnicNxtDcMotorController)target;
+
+            LegacyModule legacyModule = legacyTarget.getLegacyModule();
+            int          port         = legacyTarget.getPort();
             int          i2cAddr8Bit  = MemberUtil.i2cAddrOfLegacyMotorController(target);
 
             // Make a new legacy motor controller

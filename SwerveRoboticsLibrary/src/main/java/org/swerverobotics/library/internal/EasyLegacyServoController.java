@@ -1,6 +1,8 @@
 package org.swerverobotics.library.internal;
 
 import android.util.Log;
+
+import com.qualcomm.hardware.hitechnic.HiTechnicNxtServoController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.Range;
@@ -61,8 +63,9 @@ public class EasyLegacyServoController implements ServoController, IOpModeStateT
 
     private EasyLegacyServoController(OpMode context, II2cDeviceClient ii2cDeviceClient, ServoController target)
         {
-        LegacyModule legacyModule = MemberUtil.legacyModuleOfLegacyServoController(target);
-        int          targetPort   = MemberUtil.portOfLegacyServoController(target);
+        HiTechnicNxtServoController legacyTarget = (HiTechnicNxtServoController)target;
+        LegacyModule legacyModule = legacyTarget.getLegacyModule();
+        int          targetPort   = legacyTarget.getPort();
         this.helper          = new I2cDeviceReplacementHelper<ServoController>(context, this, target, legacyModule, targetPort);
 
         this.i2cDeviceClient = ii2cDeviceClient;
@@ -95,8 +98,9 @@ public class EasyLegacyServoController implements ServoController, IOpModeStateT
         {
         if (MemberUtil.isLegacyServoController(target))
             {
-            LegacyModule legacyModule = MemberUtil.legacyModuleOfLegacyServoController(target);
-            int          port         = MemberUtil.portOfLegacyServoController(target);
+            HiTechnicNxtServoController legacyTarget = (HiTechnicNxtServoController)target;
+            LegacyModule legacyModule = legacyTarget.getLegacyModule();
+            int          port         = legacyTarget.getPort();
             int          i2cAddr8Bit  = MemberUtil.i2cAddrOfLegacyServoController(target);
 
             // Make a new legacy servo controller

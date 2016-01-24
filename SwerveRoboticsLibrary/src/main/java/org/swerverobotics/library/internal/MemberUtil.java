@@ -49,24 +49,6 @@ public class MemberUtil
         return controller instanceof ModernRoboticsUsbServoController;
         }
 
-    public static LegacyModule legacyModuleOfLegacyMotorController(DcMotorController controller)
-        {
-        return Util.<LegacyModule>getPrivateObjectField(controller, 0);
-        }
-    public static int portOfLegacyMotorController(DcMotorController controller)
-        {
-        return Util.getPrivateIntField(controller, 5);
-        }
-
-    public static LegacyModule legacyModuleOfLegacyServoController(ServoController controller)
-        {
-        return Util.<LegacyModule>getPrivateObjectField(controller, 0);
-        }
-    public static int portOfLegacyServoController(ServoController controller)
-        {
-        return Util.getPrivateIntField(controller, 3);
-        }
-
     public static int i2cAddrOfLegacyMotorController(DcMotorController controller)
         {
         // From the spec from HiTechnic:
@@ -104,26 +86,9 @@ public class MemberUtil
     // Color Sensors
     //----------------------------------------------------------------------------------------------
 
-    static DeviceInterfaceModule deviceInterfaceModuleOfAdaFruitColorSensor(ColorSensor sensor)
-        {
-        return Util.<DeviceInterfaceModule>getPrivateObjectField(sensor, 0);
-        }
-    static int portOfAdaFruitColorSensor(ColorSensor sensor)
-        {
-        return Util.getPrivateIntField(sensor, 5);
-        }
-
-    static LegacyModule legacyModuleOfHiTechnicColorSensor(ColorSensor sensor)
-        {
-        return Util.<LegacyModule>getPrivateObjectField(sensor, 0);
-        }
     static DeviceInterfaceModule deviceModuleOfModernColorSensor(ColorSensor sensor)
         {
         return Util.<DeviceInterfaceModule>getPrivateObjectField(sensor, 1);    // 0 is now i2c address
-        }
-    static int portOfHiTechnicColorSensor(ColorSensor sensor)
-        {
-        return Util.getPrivateIntField(sensor, 7);
         }
     static int portOfModernColorSensor(ColorSensor sensor)
         {
