@@ -22,8 +22,7 @@ public class SwerveFtcEventLoop extends FtcEventLoop
     // State
     //----------------------------------------------------------------------------------------------
 
-    private FtcEventLoopHandler ftcEventLoopHandler;
-    private EventLoopManager    eventLoopManager;
+    private EventLoopManager  eventLoopManager;
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -32,24 +31,19 @@ public class SwerveFtcEventLoop extends FtcEventLoop
     public SwerveFtcEventLoop(HardwareFactory hardwareFactory, OpModeRegister register, UpdateUI.Callback callback, Context robotControllerContext)
         {
         super(hardwareFactory, register, callback, robotControllerContext);
-        this.ftcEventLoopHandler = MemberUtil.handlerOfFtcEventLoop(this);
         setEventLoopManager();
         }
 
     void setEventLoopManager()
         {
         if (null == this.eventLoopManager)
-            this.eventLoopManager = MemberUtil.eventLoopManagerOfFtcEventLoopHandler(this.ftcEventLoopHandler);
+            this.eventLoopManager = this.ftcEventLoopHandler.getEventLoopManager();
         }
 
     //----------------------------------------------------------------------------------------------
     // Operations
     //----------------------------------------------------------------------------------------------
 
-    public FtcEventLoopHandler getFtcEventLoopHandler()
-        {
-        return this.ftcEventLoopHandler;
-        }
     public EventLoopManager getEventLoopManager()
         {
         return this.eventLoopManager;
