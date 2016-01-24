@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import java.sql.Time;
+import java.util.Date;
 
 /**
  * Created by Kaitlin on 1/15/2016.
@@ -54,6 +55,9 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
     boolean rotatorArmUp = true;
     boolean rotatorArmDown = true;
     float rotatorSpeed = 1.0f;
+
+    Date clock;
+    long targetTime;
 
     private DcMotor motorUsed = rightMotor;
     private int encoderTarget = -30;
@@ -124,6 +128,8 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
 
     public CompBotOpMode(HardwareMap hardwareMap)
     {
+        clock = new Date();
+        targetTime = 0;
         // gyro = new PhoneGyrometer(hardwareMap);
         leftMotor = hardwareMap.dcMotor.get(leftMotorName);
         rightMotor = hardwareMap.dcMotor.get(rightMotorName);
@@ -195,6 +201,7 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
         }
         motorUsed = rightMotor;
         this.encoderTarget = encoderTarget;
+        targetTime = clock.getTime() + 5000;
     }
 
 
@@ -263,7 +270,6 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
 
     }
 
-    @Override
     public void spinOnCenter(float degrees, float speed)
     {
 
@@ -513,6 +519,7 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
         //leftMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         //rightMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         //makes sure the encoders reset
+        /*
         if(forwardDirection)
         {
             if(motorUsed.getCurrentPosition()<=encoderTarget)
@@ -527,7 +534,9 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
                 return false;
             }
         }
-        return true;
+        stop();*/
+        //return true;
+        return (clock.getTime() >= targetTime);
     }
 
 

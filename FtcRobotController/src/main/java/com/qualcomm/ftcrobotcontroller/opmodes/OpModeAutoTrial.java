@@ -1,6 +1,7 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 /**
  * Created by Kaitlin on 1/15/16.
@@ -8,42 +9,62 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 public class OpModeAutoTrial extends OpMode implements DriverInterface
 {
     CompBotOpMode compBot;
-    int step;
+     int step;
 
     @Override
     public void init()
     {
-        int step = 1;
+        compBot = new CompBotOpMode(hardwareMap);
+        compBot.stop();
+        step = 1;
+        telemetry.addData("init",0);
     }
 
     @Override
     public void loop()
     {
+        telemetry.addData("start loop",1);
+
         if(compBot.doneWithPrev())
         {
+            telemetry.addData("done with prevjherwhhhhhgre",2);
+
             switch(step)
             {
                 case 1:
-                    compBot.moveStraightEncoders(5, (float).9);
+                    telemetry.addData("move straight",3);
+                    compBot.moveStraightEncoders(5, (float) .9);
+                    //compBot.stop();
                     break;
 
                 case 2:
-                    compBot.moveStraightEncoders(-5,(float).9);
+                    telemetry.addData("move back",4);
+                    compBot.moveStraightEncoders(-5, (float) .9);
+                    //compBot.stop();
                     break;
                 case 3:
-                    compBot.moveStraightEncoders(5,(float).9);
+                    telemetry.addData("move forward 2",5);
+                    compBot.moveStraightEncoders(5, (float) .9);
+                    //compBot.stop();
                     break;
                 default:
+                    telemetry.addData("default",0);
                     compBot.stop();
                     break;
             }
             step++;
+
         }
+        else
+        {
+            telemetry.addData("else",3);
+        }
+
     }
 
     @Override
     public void moveStraightEncoders(float inches, float speed) { }
 
-    @Override
+
     public void spinOnCenter(float degrees, float speed) { }
 }
