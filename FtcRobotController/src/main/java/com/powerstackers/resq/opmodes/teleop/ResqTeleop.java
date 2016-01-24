@@ -20,9 +20,6 @@
 
 package com.powerstackers.resq.opmodes.teleop;
 
-import com.powerstackers.resq.common.AllianceColor;
-import com.powerstackers.resq.common.DoorSetting;
-import com.powerstackers.resq.common.MotorSetting;
 import com.powerstackers.resq.common.Robot;
 import com.powerstackers.resq.common.RobotConstants;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -30,6 +27,10 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.swerverobotics.library.interfaces.Disabled;
 import org.swerverobotics.library.interfaces.TeleOp;
+
+import static com.powerstackers.resq.common.enums.PublicEnums.AllianceColor;
+import static com.powerstackers.resq.common.enums.PublicEnums.DoorSetting;
+import static com.powerstackers.resq.common.enums.PublicEnums.MotorSetting;
 
 /**
  * This is the opmode for use on our competition robot during teleop.
@@ -160,23 +161,23 @@ public class ResqTeleop extends OpMode {
 
         // Set the hopper doors.
         // Hopper left
-        /*if (buttonHopperLeft) {
+        if (buttonHopperLeft) {
             robot.setHopperLeft(DoorSetting.OPEN);
         } else {
             robot.setHopperLeft(DoorSetting.CLOSE);
-        }*/
+        }
         // Hopper right
-        /*if (buttonHopperRight) {
+        if (buttonHopperRight) {
             robot.setHopperRight(DoorSetting.OPEN);
         } else {
             robot.setHopperRight(DoorSetting.CLOSE);
-        }*/
-
-        if (buttonBothHoppers) {
-            robot.setAllianceHopper(DoorSetting.OPEN, allianceColor);
-        } else {
-            robot.setAllianceHopper(DoorSetting.CLOSE, allianceColor);
         }
+
+//        if (buttonBothHoppers) {
+//            robot.setAllianceHopper(DoorSetting.OPEN, allianceColor);
+//        } else {
+//            robot.setAllianceHopper(DoorSetting.CLOSE, allianceColor);
+//        }
 
         // Set the climber flipper value.
         if (buttonClimbers) {
@@ -225,6 +226,7 @@ public class ResqTeleop extends OpMode {
         telemetry.addData("right stick", stickDriveRight);
         telemetry.addData("left stick ", stickDriveLeft);
         telemetry.addData("tape tilt servo", tapeTiltPosition);
+//        telemetry.addData("hopper tilt pos", robot.hopperTiltPosition);
     }
 
     /**

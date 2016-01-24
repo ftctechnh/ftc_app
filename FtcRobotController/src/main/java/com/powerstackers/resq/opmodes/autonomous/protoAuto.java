@@ -42,10 +42,15 @@ public class ProtoAuto extends LinearOpMode { //no SYNCHRONUS
         /*
          * Motors
          */
+        motorBRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         motorFRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        motorFLeft.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-        motorBLeft.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        motorFLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        motorBLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+
         motorFRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        motorBRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        motorFLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        motorBLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
 
         waitForStart();
 
@@ -74,6 +79,8 @@ public class ProtoAuto extends LinearOpMode { //no SYNCHRONUS
         motorBRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         motorFRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         motorFLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+
+        waitOneFullHardwareCycle();
 
         while (motorFLeft.getPower() < 1) {
             telemetry.addData("stop", "power: " + String.valueOf(motorBLeft.getPower()));

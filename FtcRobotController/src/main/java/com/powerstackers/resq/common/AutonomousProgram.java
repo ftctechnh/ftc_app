@@ -20,7 +20,11 @@
 
 package com.powerstackers.resq.common;
 
+import com.powerstackers.resq.common.enums.PublicEnums;
+
 import org.swerverobotics.library.SynchronousOpMode;
+
+import static com.powerstackers.resq.common.enums.PublicEnums.*;
 
 /**
  * @author Jonathan Thomas

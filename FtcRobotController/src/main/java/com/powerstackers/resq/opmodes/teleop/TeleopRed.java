@@ -1,6 +1,6 @@
 package com.powerstackers.resq.opmodes.teleop;
 
-import com.powerstackers.resq.common.AllianceColor;
+import com.powerstackers.resq.common.enums.PublicEnums.AllianceColor;
 
 import org.swerverobotics.library.interfaces.TeleOp;
 

@@ -30,6 +30,10 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.swerverobotics.library.ClassFactory;
 
+import static com.powerstackers.resq.common.enums.PublicEnums.AllianceColor;
+import static com.powerstackers.resq.common.enums.PublicEnums.DoorSetting;
+import static com.powerstackers.resq.common.enums.PublicEnums.MotorSetting;
+
 /**
  * A general representation of a robot, with simple interaction methods.
  * @author Jonathan Thomas
@@ -48,8 +52,9 @@ public class Robot {
     private Servo servoTapeMeasure;
     private Servo servoTapeTilt;
 //    private Servo servoBeacon;
-//    private Servo servoHopperRight;
+    private Servo servoHopperRight;
     private Servo servoHopperLeft;
+    private Servo servoHopperTilt;
     private Servo servoClimberFlipper;
     private Servo servoChurroLeft;
     private Servo servoChurroRight;
@@ -82,14 +87,16 @@ public class Robot {
         servoTapeMeasure = mode.hardwareMap.servo.get("servoTapeMeasure");
         servoTapeTilt = mode.hardwareMap.servo.get("servoTapeTilt");
 //        servoBeacon      = mode.hardwareMap.servo.get("servoBeacon");
-//        servoHopperRight = mode.hardwareMap.servo.get("servoHopperRight");
+        servoHopperRight = mode.hardwareMap.servo.get("servoHopperRight");
         servoHopperLeft = mode.hardwareMap.servo.get("servoHopperLeft");
+        servoHopperTilt = mode.hardwareMap.servo.get("servoHopperTilt");
         servoClimberFlipper = mode.hardwareMap.servo.get("servoClimbers");
         servoChurroLeft = mode.hardwareMap.servo.get("servoChurroLeft");
         servoChurroRight = mode.hardwareMap.servo.get("servoChurroRight");
 
         servoHopperLeft.setPosition(RobotConstants.HOPPER_LEFT_CLOSE);
 //        servoHopperRight.setPosition(RobotConstants.HOPPER_RIGHT_CLOSE);
+        servoHopperTilt.setPosition(RobotConstants.HOPPER_TILT_RESTING);
         servoClimberFlipper.setPosition(RobotConstants.CLIMBER_EXTEND);
         servoChurroRight.setPosition(RobotConstants.CHURRO_RIGHT_OPEN);
         servoChurroLeft.setPosition(RobotConstants.CHURRO_LEFT_OPEN);
@@ -109,10 +116,14 @@ public class Robot {
      * Initialize the robot's servos and sensors.
      */
     public void initializeRobot() /*throws InterruptedException */{
+//
+//       double hopperTiltPosition = servoHopperTilt.getPosition();
+
 //        servoBeacon.setPosition(RobotConstants.BEACON_RESTING);
         servoClimberFlipper.setPosition(RobotConstants.CLIMBER_EXTEND);
         servoHopperLeft.setPosition(RobotConstants.HOPPER_LEFT_CLOSE);
-//        servoHopperRight.setPosition(RobotConstants.HOPPER_RIGHT_CLOSE);
+        servoHopperRight.setPosition(RobotConstants.HOPPER_RIGHT_CLOSE);
+        servoHopperTilt.setPosition(RobotConstants.HOPPER_TILT_RESTING);
         servoChurroRight.setPosition(RobotConstants.CHURRO_RIGHT_OPEN);
         servoChurroLeft.setPosition(RobotConstants.CHURRO_LEFT_OPEN);
         servoTapeTilt.setPosition(RobotConstants.TAPE_FLAT);
@@ -139,6 +150,11 @@ public class Robot {
     public void setPowerLeft(double power) {
         motorLeftA.setPower(power);
         motorLeftB.setPower(power);
+    }
+
+    public void setPowerAll(double power) {
+        setPowerLeft(power);
+        setPowerRight(power);
     }
 
     /**
@@ -259,14 +275,16 @@ public class Robot {
     /**
      * Set the right hopper door to open or close.
      * @param doorSetting DoorSetting to set the door to.
-     *//*
-    public void setHopperRight(DoorSetting doorSetting) {
+     */
+    public void setHopperRight(DoorSetting doorSetting) {      // TODO WHY U DO DIS JOHN ~DEREK
         if (doorSetting == DoorSetting.OPEN) {
             servoHopperRight.setPosition(RobotConstants.HOPPER_RIGHT_OPEN);
+            servoHopperTilt.setPosition(RobotConstants.HOPPER_TILT_RIGHT);
         } else {
             servoHopperRight.setPosition(RobotConstants.HOPPER_RIGHT_CLOSE);
+            servoHopperTilt.setPosition(RobotConstants.HOPPER_TILT_RESTING);
         }
-    }*/
+    }
 
     /**
      * Set the left hopper door to open or close.
@@ -275,21 +293,23 @@ public class Robot {
     public void setHopperLeft(DoorSetting doorSetting) {
         if (doorSetting == DoorSetting.OPEN) {
             servoHopperLeft.setPosition(RobotConstants.HOPPER_LEFT_OPEN);
+            servoHopperTilt.setPosition(RobotConstants.HOPPER_TILT_LEFT);
         } else {
             servoHopperLeft.setPosition(RobotConstants.HOPPER_LEFT_CLOSE);
+            servoHopperTilt.setPosition(RobotConstants.HOPPER_TILT_RESTING);
         }
     }
 
-    public void setAllianceHopper(DoorSetting doorSetting, AllianceColor allianceColor) {
-        // If we are red, we should dump to the left. Blue, to the right.
-        if (allianceColor == AllianceColor.RED) {
-            servoHopperLeft.setPosition((doorSetting==DoorSetting.OPEN)?
-                    RobotConstants.HOPPER_LEFT_OPEN : RobotConstants.HOPPER_LEFT_CLOSE);
-        } else {
-            servoHopperLeft.setPosition((doorSetting==DoorSetting.OPEN)?
-                    RobotConstants.HOPPER_RIGHT_OPEN : RobotConstants.HOPPER_RIGHT_CLOSE);
-        }
-    }
+//    public void setAllianceHopper(DoorSetting doorSetting, AllianceColor allianceColor) {
+//        // If we are red, we should dump to the left. Blue, to the right.
+//        if (allianceColor == AllianceColor.RED) {
+//            servoHopperLeft.setPosition((doorSetting==DoorSetting.OPEN)?
+//                    RobotConstants.HOPPER_LEFT_OPEN : RobotConstants.HOPPER_LEFT_CLOSE);
+//        } else {
+//            servoHopperLeft.setPosition((doorSetting==DoorSetting.OPEN)?
+//                    RobotConstants.HOPPER_RIGHT_OPEN : RobotConstants.HOPPER_RIGHT_CLOSE);
+//        }
+//    }
 
     /**
      * Set the climber flipping device to either extended or retracted position.
@@ -339,6 +359,14 @@ public class Robot {
     public void moveDistance(int distance) {
         motorLeftA.setTargetPosition(motorLeftA.getCurrentPosition() + distance);
         motorRightA.setTargetPosition(motorRightA.getCurrentPosition() + distance);
+    }
+
+    public long getLeftEncoder() {
+        return motorLeftA.getCurrentPosition();
+    }
+
+    public long getRightEncoder() {
+        return motorRightA.getCurrentPosition();
     }
 
     /**
