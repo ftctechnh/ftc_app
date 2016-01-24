@@ -37,7 +37,7 @@ public class DistanceDrive {
     public void linearDrive(double inches, double pow){
         //Tell motors to start
         operateMotors(leftDrive,inches,pow);
-        operateMotors(rightDrive,inches,pow);
+        operateMotors(rightDrive, inches, pow);
     }
     //Left is positive, right is negetive
     public void tankTurn(double degrees, double pow){
@@ -46,6 +46,12 @@ public class DistanceDrive {
         //One is inverted to create a tank turn
         operateMotors(leftDrive,distance,pow);
         operateMotors(rightDrive,distance*REVERSEORIENTATION,pow*REVERSEORIENTATION);
+    }
+    public void stop(){
+        for(int i=0;i<leftDrive.size();i++)
+            leftDrive.get(i).stop();
+        for(int i=0;i<rightDrive.size();i++)
+            rightDrive.get(i).stop();
     }
     //Helpper Private methods
     private void operateMotors(ArrayList<DistanceMotor> myMotors, double distance, double pow){

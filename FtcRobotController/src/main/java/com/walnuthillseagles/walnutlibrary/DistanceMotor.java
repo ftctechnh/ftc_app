@@ -75,14 +75,18 @@ public class DistanceMotor extends LinearMotor implements Runnable{
             }
         }
         //Keep if encoders have passed distance before continueing
-        stopMotor();
-        currentPosition=motor.getCurrentPosition();
-        resetPoistion();
+        stop();
         //Reset Encoders NOTICE: Reset encoders is bugged
         //motor.setMode(DcMotorController.RunMode.valueOf("RESET_ENCODERS"));
     }
+    @Override
+    public void stop(){
+        motor.setPower(0);
+        resetPoistion();
+    }
     //Private helper methods
     private void resetPoistion(){
+        currentPosition=motor.getCurrentPosition();
         motor.setTargetPosition(currentPosition);
     }
     private boolean inRange(int target, int current){

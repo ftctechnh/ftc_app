@@ -45,15 +45,15 @@ public class TimedMotor extends LinearMotor implements Runnable{
         }
         catch(InterruptedException e){
             //@TODO: Overkill?
-            stopMotor();
+            stop();
             hasStopped=true;
             Thread.currentThread().interrupt();
         }
         finally {
-            stopMotor();
+            stop();
             hasStopped=true;
         }
-        stopMotor();
+        stop();
         hasStopped=true;
     }
     //Nasty Debugging stuff
