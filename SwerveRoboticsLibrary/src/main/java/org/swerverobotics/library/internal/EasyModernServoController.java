@@ -145,7 +145,7 @@ public class EasyModernServoController extends EasyModernController implements S
 
     private void doArmOrPretend(boolean isArm) throws RobotCoreException, InterruptedException
         {
-        Log.d(LOGGING_TAG, String.format("arming \"%s\"....", this.getConnectionInfo()));
+        Log.d(LOGGING_TAG, String.format("arming servo controller \"%s\"%s....", this.getConnectionInfo(), (isArm ? "" : " (pretend)")));
 
         // Turn off target
         this.floatHardware(target);

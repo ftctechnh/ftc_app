@@ -128,7 +128,7 @@ public class EasyModernMotorController extends EasyModernController implements D
 
     private void doArmOrPretend(boolean isArm) throws RobotCoreException, InterruptedException
         {
-        Log.d(LOGGING_TAG, String.format("arming \"%s\"....", this.getConnectionInfo()));
+        Log.d(LOGGING_TAG, String.format("arming motor controller \"%s\"%s....", this.getConnectionInfo(), (isArm ? "" : " (pretend)")));
 
         // Turn off target
         target.disarm();

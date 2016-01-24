@@ -189,7 +189,10 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
     @Override public void shutdownComplete()
         {
         this.readWriteRunnableIsRunning = false;
-        this.callbackLock.notifyAll();  // wake up any waiter
+        synchronized (this.callbackLock)
+            {
+            this.callbackLock.notifyAll();  // wake up any waiter
+            }
         }
 
     boolean waitForCallback()
