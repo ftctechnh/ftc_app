@@ -392,17 +392,17 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         {
         try
             {
+            if (!this.isArmed || this.disarming)
+                {
+                // Return fake data
+                TimestampedData result = new TimestampedData();
+                result.data     = new byte[creg];       // all zeros
+                result.nanoTime = System.nanoTime();
+                return result;
+                }
+
             synchronized (this.concurrentClientLock)
                 {
-                if (!this.isArmed || this.disarming)
-                    {
-                    // Return fake data
-                    TimestampedData result = new TimestampedData();
-                    result.data     = new byte[creg];       // all zeros
-                    result.nanoTime = System.nanoTime();
-                    return result;
-                    }
-
                 synchronized (this.callbackLock)
                     {
                     // Wait until the write cache isn't busy. This honors the visibility semantic
@@ -584,7 +584,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                     this.cregWrite      = data.length;
 
                     // Indicate we are dirty so the callback will write us out
-                    this.writeCacheStatus = WRITE_CACHE_STATUS.DIRTY;
+                    setWriteCacheStatusIfArmed(WRITE_CACHE_STATUS.DIRTY);
 
                     // Provide the data we want to write
                     this.writeCacheLock.lock();
@@ -653,7 +653,13 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
             this.callbackLock.wait();
             }
         }
-    
+
+    void setWriteCacheStatusIfArmed(WRITE_CACHE_STATUS status)
+        {
+        if (this.isArmed && !this.disarming)
+            this.writeCacheStatus = status;
+        }
+
     @Override public Thread getCallbackThread()
         {
         synchronized (this.concurrentClientLock)
@@ -880,7 +886,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
 
         void issueWrite()
             {
-            writeCacheStatus = WRITE_CACHE_STATUS.QUEUED;
+            setWriteCacheStatusIfArmed(WRITE_CACHE_STATUS.QUEUED);
             i2cDevice.enableI2cWriteMode(iregWriteFirst, cregWrite);
             enabledWriteMode = true;
 
@@ -1001,7 +1007,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                         {
                         writeCacheStatus = WRITE_CACHE_STATUS.IDLE;
                         // Our write mode status should have been reported back to us
-                        assertTrue(!BuildConfig.DEBUG || i2cDevice.isI2cPortInWriteMode());
+                        assertTrue(!BuildConfig.DEBUG || !isArmed || disarming || i2cDevice.isI2cPortInWriteMode());
                         }
 
                     //--------------------------------------------------------------------------
