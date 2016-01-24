@@ -20,8 +20,8 @@
 
 package com.powerstackers.resq.opmodes.autonomous;
 
-import com.powerstackers.resq.common.AllianceColor;
 import com.powerstackers.resq.common.AutonomousProgram;
+import com.powerstackers.resq.common.enums.PublicEnums.AllianceColor;
 
 import org.swerverobotics.library.interfaces.Autonomous;
 
