@@ -66,7 +66,11 @@ public class MasterLinear extends LinearOpMode {
         try{
             sleep(delay);
             walnutDrive.linearDrive(-3.024,1);
-
+            walnutDrive.waitForCompletion();
+            sleep(500);
+            slider.operate(3.25,1);
+            slider.waitForCompletion();
+            climberBelt.getServo().setPosition(0);
         }
         catch(InterruptedException e)
         {

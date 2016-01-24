@@ -53,6 +53,9 @@ public class WalnutServo implements Drivable, Auto {
     public void operate(double pos){
         servo.setPosition(pos);
     }
+    public Servo getServo(){
+        return servo;
+    }
     //@TODO Figure out how to make this more useful.
     public void waitForCompletion() throws InterruptedException{
         Thread.sleep(1);
