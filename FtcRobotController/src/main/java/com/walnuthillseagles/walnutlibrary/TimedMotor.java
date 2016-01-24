@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 /**
  * Created by Yan Vologzhanin on 1/2/2016.
  */
-public class TimedMotor extends LinearMotor implements Runnable{
+public class TimedMotor extends LinearMotor implements Runnable, Stoppable {
     public static final int MSECSINSEC = 1000;
     public static final int NSECSINSEC = 1000000;
     private int numMSecs;

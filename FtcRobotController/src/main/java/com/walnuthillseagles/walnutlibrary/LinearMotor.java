@@ -7,7 +7,7 @@ package com.walnuthillseagles.walnutlibrary;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 
-public abstract class LinearMotor implements Runnable{
+public abstract class LinearMotor implements Runnable, Stoppable {
     //Field
     protected DcMotor motor;
     protected String name;
