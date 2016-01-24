@@ -45,13 +45,20 @@ public class DistanceDrive implements Auto {
         double distance = (Math.PI * robotWidth)/factor;
         //One is inverted to create a tank turn
         operateMotors(leftDrive,distance,pow);
-        operateMotors(rightDrive,distance*REVERSEORIENTATION,pow*REVERSEORIENTATION);
+        operateMotors(rightDrive, distance * REVERSEORIENTATION, pow * REVERSEORIENTATION);
     }
     public void stop(){
         for(int i=0;i<leftDrive.size();i++)
             leftDrive.get(i).stop();
         for(int i=0;i<rightDrive.size();i++)
             rightDrive.get(i).stop();
+    }
+    //Timers
+    public void waitForCompletion() throws InterruptedException{
+        for(int i=0;i<leftDrive.size();i++)
+            leftDrive.get(i).waitForCompletion();
+        for(int i=0;i<rightDrive.size();i++)
+            rightDrive.get(i).waitForCompletion();
     }
     //Helpper Private methods
     private void operateMotors(ArrayList<DistanceMotor> myMotors, double distance, double pow){

@@ -12,7 +12,6 @@ public class TimedMotor extends LinearMotor implements Runnable, Auto {
     private int numMSecs;
     private Thread runner;
     //Debuging variable
-    private boolean hasStopped;
     private LinearOpMode myOp;
 
 
@@ -20,7 +19,6 @@ public class TimedMotor extends LinearMotor implements Runnable, Auto {
     public TimedMotor(DcMotor myMotor, String name,boolean encoderCheck, boolean isReversed){
         super(myMotor, name, encoderCheck,isReversed);
         numMSecs = 0;
-        hasStopped = false;
         myOp = new LinearOpMode() {
             @Override
             public void runOpMode() throws InterruptedException {
@@ -46,21 +44,15 @@ public class TimedMotor extends LinearMotor implements Runnable, Auto {
         catch(InterruptedException e){
             //@TODO: Overkill?
             stop();
-            hasStopped=true;
             Thread.currentThread().interrupt();
         }
         finally {
             stop();
-            hasStopped=true;
         }
         stop();
-        hasStopped=true;
     }
-    //Nasty Debugging stuff
-    public boolean getStopped(){
-        return hasStopped;
+    public void waitForCompletion() throws InterruptedException{
+        runner.join();
     }
-    public void setStopped(boolean val){
-        hasStopped=val;
-    }
+
 }
