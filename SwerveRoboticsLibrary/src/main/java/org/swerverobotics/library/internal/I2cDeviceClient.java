@@ -919,10 +919,6 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
 
                 if (caller == UPDATE_STATE_MACHINE.FROM_CALLBACK)
                     {
-                    // Set the thread name to make the system more debuggable
-                    if (0 == hardwareCycleCount)
-                        Thread.currentThread().setName(String.format("RWLoop(%s)", i2cDevice.getDeviceName()));
-
                     // Update cycle statistics
                     hardwareCycleCount++;
                     }
