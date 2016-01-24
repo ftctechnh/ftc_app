@@ -17,8 +17,8 @@ public class PublicEnums {
         RED, BLUE
     }
 
-//    public enum TiltSetting {
-//        RIGHT, RESTING, LEFT
-//
-//    }
+    public enum TiltSetting {
+        RIGHT, RESTING, LEFT
+
+    }
 }

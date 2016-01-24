@@ -31,6 +31,7 @@ import org.swerverobotics.library.interfaces.TeleOp;
 import static com.powerstackers.resq.common.enums.PublicEnums.AllianceColor;
 import static com.powerstackers.resq.common.enums.PublicEnums.DoorSetting;
 import static com.powerstackers.resq.common.enums.PublicEnums.MotorSetting;
+import static com.powerstackers.resq.common.enums.PublicEnums.TiltSetting;
 
 /**
  * This is the opmode for use on our competition robot during teleop.
@@ -70,7 +71,7 @@ public class ResqTeleop extends OpMode {
     boolean buttonHopperRight;
     boolean buttonClimbers;
     boolean buttonChurros;
-    boolean buttonBothHoppers;
+//    boolean buttonBothHoppers;
 
     /**
      * Generate a new Teleop program with the given alliance color.
@@ -95,31 +96,31 @@ public class ResqTeleop extends OpMode {
     public void loop() {
 
         // Read the joystick and determine what motor setting to use.
-        stickDriveLeft  = (float) scaleInput(Range.clip(-gamepad1.left_stick_y, -1, 1));
+        stickDriveLeft = (float) scaleInput(Range.clip(-gamepad1.left_stick_y, -1, 1));
         stickDriveRight = (float) scaleInput(Range.clip(-gamepad1.right_stick_y, -1, 1));
-        stickWinch      = (float) scaleInput(Range.clip(-gamepad2.left_stick_y, -1, 1));
+        stickWinch = (float) scaleInput(Range.clip(-gamepad2.left_stick_y, -1, 1));
 
         // Neatly read all the button assignments for clarity purposes.
-        buttonLiftOut     = gamepad1.left_bumper;
-        buttonLiftIn      = gamepad1.right_bumper;
-        buttonHangIn      = gamepad1.dpad_down;
-        buttonHangOut     = gamepad1.dpad_up;
+        buttonLiftOut = gamepad1.left_bumper;
+        buttonLiftIn = gamepad1.right_bumper;
+        buttonHangIn = gamepad1.dpad_down;
+        buttonHangOut = gamepad1.dpad_up;
 
         // Everyone wants the manipulator to control the brush
-        buttonBrushOn     = gamepad2.x;
-        buttonBrushRev    = gamepad2.b;
+        buttonBrushOn = gamepad2.x;
+        buttonBrushRev = gamepad2.b;
 
-        buttonTapeOut     = gamepad2.dpad_right;
-        buttonTapeIn      = gamepad2.dpad_left;
-        buttonTapeUp      = gamepad2.dpad_up;
-        buttonTapeDown    = gamepad2.dpad_down;
+        buttonTapeOut = gamepad2.dpad_right;
+        buttonTapeIn = gamepad2.dpad_left;
+        buttonTapeUp = gamepad2.dpad_up;
+        buttonTapeDown = gamepad2.dpad_down;
 
-        buttonHopperLeft  = gamepad2.left_bumper;
+        buttonHopperLeft = gamepad2.left_bumper;
         buttonHopperRight = gamepad2.right_bumper;
-        buttonClimbers    = gamepad2.right_trigger > 0.5;
-        buttonChurros     = gamepad1.right_trigger > 0.5;
+        buttonClimbers = gamepad2.right_trigger > 0.5;
+        buttonChurros = gamepad1.right_trigger > 0.5;
 
-        buttonBothHoppers = gamepad2.right_bumper;
+//        buttonBothHoppers = gamepad2.right_bumper;
 
         // Set the lift motor value.
         if (buttonLiftOut) {
@@ -163,17 +164,17 @@ public class ResqTeleop extends OpMode {
         // Hopper left
         if (buttonHopperLeft) {
             robot.setHopperLeft(DoorSetting.OPEN);
-        } else {
-            robot.setHopperLeft(DoorSetting.CLOSE);
-        }
-        // Hopper right
-        if (buttonHopperRight) {
+            robot.setHopperTiltLeft(TiltSetting.LEFT);
+        }else if (buttonHopperRight) {
             robot.setHopperRight(DoorSetting.OPEN);
-        } else {
+            robot.setHopperTiltRight(TiltSetting.RIGHT);
+        }else {
+            robot.setHopperLeft(DoorSetting.CLOSE);
             robot.setHopperRight(DoorSetting.CLOSE);
+            robot.setHopperTiltLeft(TiltSetting.RESTING);
         }
 
-//        if (buttonBothHoppers) {
+//        if (buttonHopperLeft) {
 //            robot.setAllianceHopper(DoorSetting.OPEN, allianceColor);
 //        } else {
 //            robot.setAllianceHopper(DoorSetting.CLOSE, allianceColor);

@@ -33,6 +33,7 @@ import org.swerverobotics.library.ClassFactory;
 import static com.powerstackers.resq.common.enums.PublicEnums.AllianceColor;
 import static com.powerstackers.resq.common.enums.PublicEnums.DoorSetting;
 import static com.powerstackers.resq.common.enums.PublicEnums.MotorSetting;
+import static com.powerstackers.resq.common.enums.PublicEnums.TiltSetting;
 
 /**
  * A general representation of a robot, with simple interaction methods.
@@ -274,24 +275,30 @@ public class Robot {
 
     /**
      * Set the right hopper door to open or close.
-     * @param doorSetting DoorSetting to set the door to.
+     * @param doorRightSetting DoorSetting to set the door to.
      */
-    public void setHopperRight(DoorSetting doorSetting) {      // TODO WHY U DO DIS JOHN ~DEREK
-        if (doorSetting == DoorSetting.OPEN) {
+    public void setHopperRight(DoorSetting doorRightSetting) {
+        if (doorRightSetting == DoorSetting.OPEN) {
             servoHopperRight.setPosition(RobotConstants.HOPPER_RIGHT_OPEN);
-            servoHopperTilt.setPosition(RobotConstants.HOPPER_TILT_RIGHT);
         } else {
             servoHopperRight.setPosition(RobotConstants.HOPPER_RIGHT_CLOSE);
+        }
+    }
+
+    public void setHopperTiltRight(TiltSetting tiltsetting) {
+        if (tiltsetting == TiltSetting.RIGHT) {
+            servoHopperTilt.setPosition(RobotConstants.HOPPER_TILT_RIGHT);
+        } else {
             servoHopperTilt.setPosition(RobotConstants.HOPPER_TILT_RESTING);
         }
     }
 
     /**
      * Set the left hopper door to open or close.
-     * @param doorSetting DoorSetting to set the door to.
+     * @param doorLeftSetting DoorSetting to set the door to.
      */
-    public void setHopperLeft(DoorSetting doorSetting) {
-        if (doorSetting == DoorSetting.OPEN) {
+    public void setHopperLeft(DoorSetting doorLeftSetting) {
+        if (doorLeftSetting == DoorSetting.OPEN) {
             servoHopperLeft.setPosition(RobotConstants.HOPPER_LEFT_OPEN);
             servoHopperTilt.setPosition(RobotConstants.HOPPER_TILT_LEFT);
         } else {
@@ -300,13 +307,33 @@ public class Robot {
         }
     }
 
+    public void setHopperTiltLeft(TiltSetting tiltsetting) {
+        if (tiltsetting == TiltSetting.LEFT) {
+            servoHopperTilt.setPosition(RobotConstants.HOPPER_TILT_LEFT);
+        } else {
+            servoHopperTilt.setPosition(RobotConstants.HOPPER_TILT_RESTING);
+        }
+    }
+
 //    public void setAllianceHopper(DoorSetting doorSetting, AllianceColor allianceColor) {
 //        // If we are red, we should dump to the left. Blue, to the right.
 //        if (allianceColor == AllianceColor.RED) {
+//            servoHopperTilt.setPosition(RobotConstants.HOPPER_TILT_LEFT);
 //            servoHopperLeft.setPosition((doorSetting==DoorSetting.OPEN)?
 //                    RobotConstants.HOPPER_LEFT_OPEN : RobotConstants.HOPPER_LEFT_CLOSE);
 //        } else {
+//            servoHopperTilt.setPosition(RobotConstants.HOPPER_TILT_RESTING);
 //            servoHopperLeft.setPosition((doorSetting==DoorSetting.OPEN)?
+//                    RobotConstants.HOPPER_LEFT_OPEN : RobotConstants.HOPPER_LEFT_CLOSE);
+//        }
+//
+//        if (allianceColor == AllianceColor.BLUE) {
+//            servoHopperTilt.setPosition(RobotConstants.HOPPER_TILT_RIGHT);
+//            servoHopperRight.setPosition((doorSetting==DoorSetting.OPEN)?
+//                    RobotConstants.HOPPER_RIGHT_OPEN : RobotConstants.HOPPER_RIGHT_CLOSE);
+//        } else {
+//            servoHopperTilt.setPosition(RobotConstants.HOPPER_TILT_RESTING);
+//            servoHopperRight.setPosition((doorSetting==DoorSetting.OPEN)?
 //                    RobotConstants.HOPPER_RIGHT_OPEN : RobotConstants.HOPPER_RIGHT_CLOSE);
 //        }
 //    }
