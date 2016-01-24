@@ -395,7 +395,13 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
             synchronized (this.concurrentClientLock)
                 {
                 if (!this.isArmed || this.disarming)
-                    throw new IllegalStateException("can't read from I2cDeviceClient while not armed");
+                    {
+                    // Return fake data
+                    TimestampedData result = new TimestampedData();
+                    result.data     = new byte[creg];       // all zeros
+                    result.nanoTime = System.nanoTime();
+                    return result;
+                    }
 
                 synchronized (this.callbackLock)
                     {
@@ -537,7 +543,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
             synchronized (this.concurrentClientLock)
                 {
                 if (!this.isArmed || this.disarming)
-                    throw new IllegalStateException("can't write to I2cDeviceClient while not armed");
+                    return; // Ignore the write
 
                 if (data.length > ReadWindow.cregWriteMax)
                     throw new IllegalArgumentException(String.format("write request of %d bytes is too large; max is %d", data.length, ReadWindow.cregWriteMax));
@@ -818,11 +824,26 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
             }
 
         @Override public void onStopNotifications(int port)
-        // We're being told that we're not going to get any more portIsReady callbacks. For now
-        // all we do is display an error and give up. In future, we could deal with this more robustly
-        // by essentially disarming ourselves manually and carefully.
+        // We're being told that we're not going to get any more portIsReady callbacks.
             {
-            RobotLog.setGlobalErrorMsg(String.format("unexpected stop, %s is shutting down; warning=\"%s\"", i2cDevice.getDeviceName(), RobotLog.getGlobalWarningMessage()));
+            // Halt any new reads or writes
+            disarming = true;
+
+            // Wake up anyone who's waiting
+            synchronized (callbackLock)
+                {
+                // Complete any writes
+                writeCacheStatus = WRITE_CACHE_STATUS.IDLE;
+
+                // Lie and say that the data in the read cache is valid
+                readCacheStatus = READ_CACHE_STATUS.VALID_QUEUED;
+
+                // Wake up anyone who was waiting
+                callbackLock.notifyAll();
+                }
+
+            // Actually fully disarm
+            disarm();
             }
 
         // The user has new data for us to write. We could do nothing, in which case the data
