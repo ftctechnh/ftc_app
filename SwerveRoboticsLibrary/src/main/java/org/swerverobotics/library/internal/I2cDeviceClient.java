@@ -35,20 +35,17 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
     private       String        loggingTag;                 // what we annotate our logging with
     private final ElapsedTime   timeSinceLastHeartbeat;     // keeps track of our need for doing heartbeats
 
-    private final byte[]        readCache;                  // the buffer into which reads are retrieved
-    private final byte[]        writeCache;                 // the buffer that we write from 
+    private       byte[]        readCache;                  // the buffer into which reads are retrieved
+    private       byte[]        writeCache;                 // the buffer that we write from
     private static final int    dibCacheOverhead = 4;       // this many bytes at start of writeCache are system overhead
     private static final int    ibActionFlag = 31;          // index of the action flag in our write cache
-    private final Lock          readCacheLock;              // lock we must hold to look at readCache
-    private final Lock          writeCacheLock;             // lock we must old to look at writeCache
+    private       Lock          readCacheLock;              // lock we must hold to look at readCache
+    private       Lock          writeCacheLock;             // lock we must old to look at writeCache
 
     private final Object        armingLock           = new Object();
     private final Object        concurrentClientLock = new Object(); // the lock we use to serialize against concurrent clients of us. Can't acquire this AFTER the callback lock.
     private final Object        callbackLock         = new Object(); // the lock we use to synchronize with our callback.
 
-    private volatile Thread              callbackThread;             // the thread on which we observe our callbacks to be made
-    private volatile int                 callbackThreadOriginalPriority; // original priority of the callback thread
-    private volatile int                 callbackThreadPriorityBoost;    // the boost we give to it
     private volatile ReadWindow          readWindow;                 // the set of registers to look at when we are in read mode. May be null, indicating no read needed
     private volatile ReadWindow          readWindowActuallyRead;     // the read window that was really read. readWindow will be a (possibly non-proper) subset of this
     private volatile ReadWindow          readWindowSentToController; // the read window we last issued to the controller module. May disappear before read() returns
@@ -123,9 +120,6 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         this.isArmed                = false;
         this.disarming              = false;
         this.callback               = new Callback();
-        this.callbackThread         = null;
-        this.callbackThreadOriginalPriority = 0;    // not known
-        this.callbackThreadPriorityBoost = 0;       // no boost
         this.hardwareCycleCount     = 0;
         this.loggingEnabled         = false;
         this.loggingTag             = String.format("%s:client(%s)", SynchronousOpMode.LOGGING_TAG, i2cDevice.getDeviceName());;
@@ -135,11 +129,6 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         this.heartbeatAction        = null;
         this.heartbeatExecutor      = null;
 
-        this.readCache      = this.i2cDevice.getI2cReadCache();
-        this.readCacheLock  = this.i2cDevice.getI2cReadCacheLock();
-        this.writeCache     = this.i2cDevice.getI2cWriteCache();
-        this.writeCacheLock = this.i2cDevice.getI2cWriteCacheLock();
-        
         this.readWindow                 = null;
         this.readWindowActuallyRead     = null;
         this.readWindowSentToController = null;
@@ -151,8 +140,18 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         this.writeCacheStatus = WRITE_CACHE_STATUS.IDLE;
         this.modeCacheStatus  = MODE_CACHE_STATUS.IDLE;
 
+        initializeFromController();
+
         if (closeOnOpModeStop)
             RobotStateTransitionNotifier.register(context, this);
+        }
+
+    void initializeFromController()
+        {
+        this.readCache      = this.i2cDevice.getI2cReadCache();
+        this.readCacheLock  = this.i2cDevice.getI2cReadCacheLock();
+        this.writeCache     = this.i2cDevice.getI2cWriteCache();
+        this.writeCacheLock = this.i2cDevice.getI2cWriteCacheLock();
         }
 
     @Override public boolean onUserOpModeStop()
@@ -660,17 +659,6 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
             this.writeCacheStatus = status;
         }
 
-    @Override public Thread getCallbackThread()
-        {
-        synchronized (this.concurrentClientLock)
-            {
-            synchronized (this.callbackLock)
-                {
-                return this.callbackThread;
-                }
-            }
-        }
-    
     @Override public int getI2cCycleCount()
         {
         synchronized (this.concurrentClientLock)
@@ -748,28 +736,6 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
             }
         }
 
-    @Override public void setThreadPriorityBoost(int priorityBoost)
-        {
-        synchronized (this.concurrentClientLock)
-            {
-            synchronized (this.callbackLock)
-                {
-                this.callbackThreadPriorityBoost = priorityBoost;
-                }
-            }
-        }
-
-    @Override public int getThreadPriorityBoost()
-        {
-        synchronized (this.concurrentClientLock)
-            {
-            synchronized (this.callbackLock)
-                {
-                return this.callbackThreadPriorityBoost;
-                }
-            }
-        }
-
     private void log(int verbosity, String message)
         {
         switch (verbosity)
@@ -798,7 +764,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
     private class Callback implements I2cController.I2cPortReadyCallback, I2cController.I2cNotificationsCallback
         {
         //------------------------------------------------------------------------------------------
-        // State, kept in member variables so we can divy the updateStateMachines() logic
+        // State, kept in member variables so we can divvy the updateStateMachines() logic
         // across multiple function
         //------------------------------------------------------------------------------------------
 
@@ -825,31 +791,42 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
             updateStateMachines(UPDATE_STATE_MACHINE.FROM_CALLBACK);
             }
 
-        @Override public void onStartNotifications(int port)
+        @Override public void onPortIsReadyCallbacksBegin(int port)
             {
             }
 
-        @Override public void onStopNotifications(int port)
+        @Override public void onPortIsReadyCallbacksEnd(int port)
         // We're being told that we're not going to get any more portIsReady callbacks.
             {
             // Halt any new reads or writes
             disarming = true;
 
-            // Wake up anyone who's waiting
-            synchronized (callbackLock)
+            // Honor lock order
+            synchronized (armingLock)
                 {
-                // Complete any writes
-                writeCacheStatus = WRITE_CACHE_STATUS.IDLE;
+                // Wake up anyone who's waiting
+                synchronized (callbackLock)
+                    {
+                    // Complete any writes
+                    writeCacheStatus = WRITE_CACHE_STATUS.IDLE;
 
-                // Lie and say that the data in the read cache is valid
-                readCacheStatus = READ_CACHE_STATUS.VALID_QUEUED;
+                    // Lie and say that the data in the read cache is valid
+                    readCacheStatus = READ_CACHE_STATUS.VALID_QUEUED;
 
-                // Wake up anyone who was waiting
-                callbackLock.notifyAll();
+                    // Wake up anyone who was waiting
+                    callbackLock.notifyAll();
+                    }
+
+                // Actually fully disarm
+                disarm();
                 }
+            }
 
-            // Actually fully disarm
-            disarm();
+        @Override
+        public void initializeFromController(int i) throws InterruptedException
+        // Our controller has (re)entered either the armed or the pretend state
+            {
+            // TO DO: call initializeFromController(), having acquired the appropriate locks
             }
 
         // The user has new data for us to write. We could do nothing, in which case the data
@@ -930,7 +907,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                 // later if they are.
                 if (caller==UPDATE_STATE_MACHINE.FROM_USER_WRITE)
                     {
-                    if (!i2cDevice.isI2cPortReady() || callbackThread==null)
+                    if (!i2cDevice.isI2cPortReady())
                         return;
 
                     // Optimized calling from user mode is not yet implemented
@@ -942,31 +919,9 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
 
                 if (caller == UPDATE_STATE_MACHINE.FROM_CALLBACK)
                     {
-                    // Capture the current callback thread if we haven't already
-                    if (callbackThread == null)
-                        {
-                        callbackThread = Thread.currentThread();
-                        callbackThreadOriginalPriority = callbackThread.getPriority();
-                        }
-                    else
-                        assertTrue(!BuildConfig.DEBUG || callbackThread.getId() == Thread.currentThread().getId());
-
                     // Set the thread name to make the system more debuggable
                     if (0 == hardwareCycleCount)
                         Thread.currentThread().setName(String.format("RWLoop(%s)", i2cDevice.getDeviceName()));
-
-                    // Adjust the target thread priority. Note that we only ever adjust it upwards,
-                    // not downwards, because in reality the thread is shared by other I2C objects
-                    // on the same controller and we don't want to fight with their understanding
-                    // of what the priority should be.
-                    int targetPriority = callbackThreadOriginalPriority + callbackThreadPriorityBoost;
-                    if (callbackThread.getPriority() < targetPriority)
-                        {
-                        try {
-                            callbackThread.setPriority(targetPriority);
-                            }
-                        catch (Exception e) { /* ignore: just run as is */}
-                        }
 
                     // Update cycle statistics
                     hardwareCycleCount++;
