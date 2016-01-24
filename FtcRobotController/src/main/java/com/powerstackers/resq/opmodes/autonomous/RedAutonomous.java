@@ -20,8 +20,8 @@
 
 package com.powerstackers.resq.opmodes.autonomous;
 
-import com.powerstackers.resq.common.AllianceColor;
 import com.powerstackers.resq.common.AutonomousProgram;
+import com.powerstackers.resq.common.enums.PublicEnums;
 
 import org.swerverobotics.library.interfaces.Autonomous;
 
@@ -32,6 +32,6 @@ import org.swerverobotics.library.interfaces.Autonomous;
 @Autonomous(name = "Red autonomous", group = "Powerstackers")
 public class RedAutonomous extends AutonomousProgram {
     public RedAutonomous() {
-        super(AllianceColor.RED);
+        super(PublicEnums.AllianceColor.RED);
     }
 }
