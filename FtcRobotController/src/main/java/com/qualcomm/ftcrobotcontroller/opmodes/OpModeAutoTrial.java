@@ -27,7 +27,7 @@ public class OpModeAutoTrial extends OpMode implements DriverInterface
 
         if(compBot.doneWithPrev())
         {
-            telemetry.addData("done with prevjherwhhhhhgre",2);
+            telemetry.addData("done with prevjherwhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhgre",2);
 
             switch(step)
             {
@@ -53,11 +53,10 @@ public class OpModeAutoTrial extends OpMode implements DriverInterface
                     break;
             }
             step++;
-
         }
         else
         {
-            telemetry.addData("else",3);
+            telemetry.addData("running step",step);
         }
 
     }

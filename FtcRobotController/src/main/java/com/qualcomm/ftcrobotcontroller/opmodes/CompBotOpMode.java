@@ -59,7 +59,8 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
     Date clock;
     long targetTime;
 
-    private DcMotor motorUsed = rightMotor;
+    //private DcMotor motorUsed = rightMotor;
+    boolean useRightMotor = true;
     private int encoderTarget = -30;
     private boolean forwardDirection = true;
 
@@ -161,9 +162,7 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
     }
 
     @Override
-    public void releaseClimbers() {
-
-    }
+    public void releaseClimbers() {}
 
     @Override
     public void pushButton(boolean isButtonLeft) {
@@ -186,8 +185,8 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
             speed*=-1.0;
             inches*=-1.0;
         }
-        int encoderTarget = ((int)(123.42844 * inches));
-        if(encoderTarget > 0)
+        int encoderChange = ((int)(123.42844 * inches));
+        if(encoderChange > 0)
         {
             leftMotor.setPower(speed);
             rightMotor.setPower(speed);
@@ -199,15 +198,16 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
             rightMotor.setPower(-speed);
             this.forwardDirection = false;
         }
-        motorUsed = rightMotor;
-        this.encoderTarget = encoderTarget;
+        //motorUsed = rightMotor;
+        useRightMotor = true;
+        encoderTarget += encoderChange;
+        clock = new Date();
         targetTime = clock.getTime() + 5000;
     }
 
 
     public void pivotTurn(float degrees, float speed)
     {
-
         leftMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         rightMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         //makes sure the encoders reset
@@ -519,24 +519,33 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
         //leftMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         //rightMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         //makes sure the encoders reset
-        /*
+
+        long currentPosition;
+
+        if (useRightMotor)
+        {
+            currentPosition = rightMotor.getCurrentPosition();
+        }
+        else
+        {
+            currentPosition = leftMotor.getCurrentPosition();
+        }
         if(forwardDirection)
         {
-            if(motorUsed.getCurrentPosition()<=encoderTarget)
+            if(currentPosition<=encoderTarget)
             {
                 return false;
             }
         }
         else
         {
-            if(motorUsed.getCurrentPosition()>=encoderTarget)
+            if(currentPosition>=encoderTarget)
             {
                 return false;
             }
         }
-        stop();*/
-        //return true;
-        return (clock.getTime() >= targetTime);
+        stop();
+        return true;
     }
 
 
