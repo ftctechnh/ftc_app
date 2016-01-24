@@ -57,6 +57,7 @@ public class FtcOpModeRegister implements OpModeRegister {
 
 
     manager.register("K9TeleOp", K9TeleOp.class);
+    manager.register("LinearTest",DefaultLinear.class);
 
   }
 }

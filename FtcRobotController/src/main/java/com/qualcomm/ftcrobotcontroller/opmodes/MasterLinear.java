@@ -21,7 +21,7 @@ public class MasterLinear extends LinearOpMode {
     //Important Constants
     public static final double MSECSTOSECS = 1000;
     //@param myDelay is in seconds
-    public void initializeInstance(int startingPos, double myDelay, String myTeam){
+    public MasterLinear(int startingPos, double myDelay, String myTeam)throws InterruptedException{
         posNumber = startingPos;
         delay = (long) (myDelay*MSECSTOSECS);
         String team = myTeam.toUpperCase();
@@ -31,6 +31,7 @@ public class MasterLinear extends LinearOpMode {
             turnorientation = 1;
         else{
             telemetry.addData("ERROR:","Invalid team given");
+            Thread.sleep(5000);
             throw(new IndexOutOfBoundsException());
         }
         runOpMode();
