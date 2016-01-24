@@ -5,12 +5,12 @@ import java.util.ArrayList;
 /**
  * Created by Yan Vologzhanin on 1/23/2016.
  */
-public class LinearControlScheme implements Stoppable {
-    ArrayList<Stoppable> hardware;
+public class LinearControlScheme implements Auto {
+    ArrayList<Auto> hardware;
     public LinearControlScheme(){
-        hardware=new ArrayList<Stoppable>();
+        hardware=new ArrayList<Auto>();
     }
-    public void add(Stoppable item){
+    public void add(Auto item){
         hardware.add(item);
     }
     public void stop(){

@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorController;
 /**
  * Created by Yan Vologzhanin on 1/2/2016.
  */
-public class DistanceMotor extends LinearMotor implements Runnable, Stoppable {
+public class DistanceMotor extends LinearMotor implements Runnable, Auto {
     //Constants
     //How often the code will check if its current operation is done
     public static final long WAITRESOLUTION = 100;

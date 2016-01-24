@@ -7,26 +7,29 @@ import java.util.ArrayList;
 /**
  * Created by Yan Vologzhanin on 1/4/2016.
  */
-public class WalnutServo implements Drivable{
+public class WalnutServo implements Drivable, Auto {
     private Servo servo;
     private ArrayList<ButtonEvent> buttons;
 
     private double startPos;
 
-
-    public WalnutServo(Servo myServo, double myStartPos,
-                       String daButton, double myPos, boolean toggle){
+    //Auto Constructor
+    public WalnutServo(Servo myServo, double myStartPos){
         Servo servo = myServo;
-        buttons = new ArrayList<ButtonEvent>();
-        ButtonEvent firstButton = new ButtonEvent(daButton,myPos,toggle);
-        buttons.add(firstButton);
         startPos = myStartPos;
         //Reset Servo
         stop();
-
+    }
+    //TeleOp Constructor
+    public WalnutServo(Servo myServo, double myStartPos,
+                       String daButton, double myPos, boolean toggle){
+        this(myServo,myStartPos);
+        buttons = new ArrayList<ButtonEvent>();
+        ButtonEvent firstButton = new ButtonEvent(daButton, myPos, toggle);
+        buttons.add(firstButton);
     }
     public void addButton(String daButton, double myPos, boolean toggle){
-        ButtonEvent newButton = new ButtonEvent(daButton,myPos,toggle);
+        ButtonEvent newButton = new ButtonEvent(daButton, myPos, toggle);
         buttons.add(newButton);
     }
     public void operate(){
@@ -45,5 +48,9 @@ public class WalnutServo implements Drivable{
     }
     public void stop(){
         servo.setPosition(startPos);
+    }
+    //Auto Stuff
+    public void operate(double pos){
+        servo.setPosition(pos);
     }
 }
