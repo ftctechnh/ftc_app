@@ -50,8 +50,7 @@ public class WalnutServo implements Drivable, Auto {
         servo.setPosition(startPos);
     }
     //Auto Stuff
-    public void operate(double pos, double nothing){
+    public void operate(double pos){
         servo.setPosition(pos);
-        //Useless variable is useless
     }
 }

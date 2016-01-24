@@ -13,6 +13,7 @@ public abstract class LinearMotor implements Runnable, Auto {
     protected String name;
     protected boolean hasEncoders;
     protected double speedLimit;
+    protected boolean isDone;
     //Value for a full encoder rotation
     protected int encoderRot;
     protected int orientation;
