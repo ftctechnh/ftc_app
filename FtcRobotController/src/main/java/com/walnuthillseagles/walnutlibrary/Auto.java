@@ -5,5 +5,5 @@ package com.walnuthillseagles.walnutlibrary;
  */
 public interface Auto {
     public abstract void stop();
-    public abstract void operate(double val);
+    public abstract void operate(double val1, double val2);
 }
