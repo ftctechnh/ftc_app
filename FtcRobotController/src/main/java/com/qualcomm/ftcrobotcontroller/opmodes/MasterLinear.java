@@ -16,6 +16,7 @@ public class MasterLinear extends LinearOpMode {
     //Parameters for Instance
     private int turnorientation;
     private long delay;
+    //@TODO Use this guy
     private int posNumber;
     //Important Constants
     public static final double MSECSTOSECS = 1000;
@@ -34,6 +35,7 @@ public class MasterLinear extends LinearOpMode {
         }
         runOpMode();
     }
+    @Override
     public void runOpMode(){
         //initialize Hardware Phase
         //Drive
@@ -62,15 +64,35 @@ public class MasterLinear extends LinearOpMode {
         catch (InterruptedException e){
             Thread.currentThread().interrupt();
         }
-        //Linear OpMode GOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+        //Linear OpMode GOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!!!!!!!!!!!!!!!!!!!!!!!!!!!
         try{
+            //Implement Delay
             sleep(delay);
-            walnutDrive.linearDrive(-3.024,1);
+            //@TODO Modify Distances
+            //@TODO Improve Readability
+            //Drive out
+            walnutDrive.linearDrive(-115, 1);
             walnutDrive.waitForCompletion();
             sleep(500);
-            slider.operate(3.25,1);
+            slider.operate(3.25, 1);
             slider.waitForCompletion();
-            climberBelt.getServo().setPosition(0);
+            //Deposit Climber
+            climberBelt.operate(0);
+            sleep(1500);
+            climberBelt.operate(0.5);
+            //Drive some more???
+            walnutDrive.linearDrive(40, 1);
+            walnutDrive.waitForCompletion();
+            walnutDrive.tankTurn(turnorientation*90,1);
+            walnutDrive.waitForCompletion();
+            //Reverse to turn and climb mountain
+            walnutDrive.linearDrive(-100, 1);
+            walnutDrive.waitForCompletion();
+            walnutDrive.tankTurn(turnorientation*-90,1);
+            walnutDrive.waitForCompletion();
+            walnutDrive.linearDrive(100,1);
+            hook.operate(1);
+            walnutDrive.waitForCompletion();
         }
         catch(InterruptedException e)
         {
