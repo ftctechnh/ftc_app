@@ -30,6 +30,15 @@ public class MainOpMode extends OpMode{
 
     // CONSTRUCTOR and Electronics Diagram
     public MainOpMode() {
+
+        /*
+        Controls as of now -
+        Bumpers are to go backwards
+        Triggers are forwards
+
+
+        */
+
     /*
     Note- There is no constructor
 
@@ -97,11 +106,43 @@ public class MainOpMode extends OpMode{
     // Called repeatedly every 10 ms
     @Override
     public void loop() {
+
+        //Left
+        if(gamepad1.left_trigger >= 0.0){
+            motorLeftFront.setPower(-1);
+            motorLeftBack.setPower(1);
+        }else if(gamepad1.left_bumper){
+            motorLeftFront.setPower(1);
+            motorLeftBack.setPower(-1);
+        }else{
+            motorLeftFront.setPower(0);
+            motorLeftBack.setPower(0);
+        }
+
+
+        //Right
+
+        if(gamepad1.right_trigger == 0.0){
+            motorRightFront.setPower(-1);
+            motorRightBack.setPower(-1);
+        }else if(gamepad1.right_bumper){
+            motorRightFront.setPower(1);
+            motorRightBack.setPower(1);
+        }else{
+            motorRightFront.setPower(0);
+            motorRightBack.setPower(0);
+        }
+
+
+
+        //If we get a new controller use this code instead
+        /*
         motorLeftFront.setPower(-squareInputs(gamepad1.left_stick_y));
         motorLeftBack.setPower(-squareInputs(gamepad1.left_stick_y));
 
         motorRightFront.setPower(squareInputs(gamepad1.right_stick_y));
         motorRightBack.setPower(squareInputs(gamepad1.right_stick_y));
+        */
 
         if (gamepad2.b) {
             // if the A button is pushed on gamepad1, increment the position of
