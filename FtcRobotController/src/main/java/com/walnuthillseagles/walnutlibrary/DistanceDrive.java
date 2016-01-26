@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * Created by Yan Vologzhanin on 1/4/2016.
  */
 
-public class DistanceDrive implements Auto {
+public class DistanceDrive {
     private ArrayList<DistanceMotor> leftDrive;
     private ArrayList<DistanceMotor> rightDrive;
     private double robotWidth;

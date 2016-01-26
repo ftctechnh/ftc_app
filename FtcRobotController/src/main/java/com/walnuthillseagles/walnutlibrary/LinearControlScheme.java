@@ -18,4 +18,14 @@ public class LinearControlScheme implements Auto {
             hardware.get(i).stop();
         }
     }
+    public void waitForCompletion() throws InterruptedException{
+        for(int i=0;i<hardware.size();i++){
+            hardware.get(i).waitForCompletion();
+        }
+    }
+    public void operate(double val){
+        for(int i=0;i<hardware.size();i++){
+            hardware.get(i).operate(val);
+        }
+    }
 }

@@ -6,4 +6,5 @@ package com.walnuthillseagles.walnutlibrary;
 public interface Auto {
     public abstract void stop();
     public abstract void waitForCompletion() throws InterruptedException;
+    public abstract void operate(double val);
 }

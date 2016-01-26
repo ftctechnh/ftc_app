@@ -25,8 +25,10 @@ public abstract class LinearMotor implements Runnable, Auto {
         hasEncoders = encoderCheck;
         speedLimit = 0;
         if(encoderCheck){
-            motor.setMode((DcMotorController.RunMode.valueOf("RUN_USING_ENCODERS")));
+            motor.setMode((DcMotorController.RunMode.RUN_USING_ENCODERS));
         }
+        else
+            motor.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
         if(isReversed){
             orientation = -1;
         }

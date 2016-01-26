@@ -56,6 +56,9 @@ public class DistanceMotor extends LinearMotor implements Runnable, Auto {
         runner = new Thread(this);
         runner.start();
     }
+    public void operate(double inches){
+        this.operate(inches, 1);
+    }
     //Allows other methods to change speed midway through method
     public void changeSpeedLimit(double mySpeedLimit){
         speedLimit = mySpeedLimit;
