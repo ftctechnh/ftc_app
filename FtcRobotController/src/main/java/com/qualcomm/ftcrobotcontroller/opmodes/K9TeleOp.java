@@ -1,7 +1,7 @@
 /* Copyright (c) 2014 Qualcomm Technologies Inc
 
 All rights reserved.
-
+//RANDOM COMMENT THAT ONLY PROVES THE SSH WORKS
 Redistribution and use in source and binary forms, with or without modification,
 are permitted (subject to the limitations in the disclaimer below) provided that
 the following conditions are met:
