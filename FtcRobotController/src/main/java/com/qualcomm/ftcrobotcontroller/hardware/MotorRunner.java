@@ -75,7 +75,7 @@ public class MotorRunner {
                 Log.w(TAG, "Set target");
                 setMotorPowers(motors, power);
                 Log.w(TAG, "Set Powers:" + motors[0].isBusy());
-                while (true || motors[0].isBusy()) {
+                while (motors[0].isBusy()) {
                     mode.waitOneFullHardwareCycle();
                     Log.w(TAG, "Encoder" + motors[0].getCurrentPosition());
                 }
