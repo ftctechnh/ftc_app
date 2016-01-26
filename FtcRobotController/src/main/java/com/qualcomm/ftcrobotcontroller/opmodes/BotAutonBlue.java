@@ -23,7 +23,7 @@ public class BotAutonBlue extends LinearOpMode {
         //Autonomous starts here
 
         //Drive to bucket, backwards
-        MotorRunner.run(new DcMotor[]{motorLeft, motorRight}, -Power.NORMAL_SPEED,
+        MotorRunner.run(this, new DcMotor[]{motorLeft, motorRight}, -Power.NORMAL_SPEED,
                 new EncoderUnit((int) (Values.DRIVE_BUCKET * EncoderUnit.ROTATION_ANDYMARK)));
 
         //Dump
@@ -32,19 +32,19 @@ public class BotAutonBlue extends LinearOpMode {
         dump.setPosition(Values.DUMP_UP);
 
         //Turn to align fowards
-        MotorRunner.run(motorRight, Power.NORMAL_SPEED,
+        MotorRunner.run(this, motorRight, Power.NORMAL_SPEED,
                 new EncoderUnit((int) (Values.TURN_AWAY * EncoderUnit.ROTATION_ANDYMARK)));
 
         //Line up to mountain
-        MotorRunner.run(new DcMotor[]{motorLeft, motorRight}, Power.NORMAL_SPEED,
+        MotorRunner.run(this, new DcMotor[]{motorLeft, motorRight}, Power.NORMAL_SPEED,
                 new EncoderUnit((int) (Values.DRIVE_AWAY * EncoderUnit.ROTATION_ANDYMARK)));
 
         //Turn perpendicular to the mountain
-        MotorRunner.run(motorRight, Power.NORMAL_SPEED,
+        MotorRunner.run(this, motorRight, Power.NORMAL_SPEED,
                 new EncoderUnit((int) (Values.TURN_MOUNTAIN * EncoderUnit.ROTATION_ANDYMARK)));
 
         //Drive on to mountain
-        MotorRunner.run(new DcMotor[]{motorLeft, motorRight}, Power.NORMAL_SPEED,
+        MotorRunner.run(this, new DcMotor[]{motorLeft, motorRight}, Power.NORMAL_SPEED,
                 new EncoderUnit((int) (Values.DRIVE_MOUNTAIN * EncoderUnit.ROTATION_ANDYMARK)));
     }
 

@@ -39,33 +39,13 @@ public class MotorRunner {
      * Runs a {@link DcMotor} with an {@link Unit}
      * This function will block, only use in a {@link LinearOpMode}
      *
+     * @param mode Your OpMode
      * @param motor The motor to run
      * @param power The power to run at
      * @param unit  The unit to run
      */
-    public static void run(DcMotor motor, double power, Unit unit) throws InterruptedException {
-        if (motor != null) {
-            if (unit instanceof TimeUnit) {
-                motor.setPower(power);
-                Thread.sleep(unit.getValue());
-                motor.setPower(0);
-            } else if (unit instanceof EncoderUnit) {
-                Log.w(TAG, "Encoder Unit:" + unit.getValue());
-                motor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-                motor.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
-                motor.setTargetPosition((int) unit.getValue());
-                Log.w(TAG, "Set target position");
-                motor.setPower(power);
-                Log.w(TAG, "Set power");
-                while (motor.isBusy()) {
-                    Log.w(TAG, "Encoder" + motor.getCurrentPosition());
-                }
-                Log.w(TAG, "Done");
-                motor.setPower(0);
-                motor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-                motor.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-            }
-        }
+    public static void run(LinearOpMode mode, DcMotor motor, double power, Unit unit) throws InterruptedException {
+        run(mode, new DcMotor[]{motor}, power, unit);
     }
 
     /**
@@ -73,11 +53,12 @@ public class MotorRunner {
      * The the first element in the array must be a motor with an encoder
      * This function will block, only use in a {@link LinearOpMode}
      *
+     * @param mode Your OpMode
      * @param motors The motors to run
      * @param power  The power to run at
      * @param unit   The unit to run
      */
-    public static void run(DcMotor[] motors, double power, Unit unit) throws InterruptedException {
+    public static void run(LinearOpMode mode, DcMotor[] motors, double power, Unit unit) throws InterruptedException {
         if (motors[0] != null) {
             if (unit instanceof TimeUnit) {
                 setMotorPowers(motors, power);
@@ -86,18 +67,24 @@ public class MotorRunner {
             } else if (unit instanceof EncoderUnit) {
                 Log.w(TAG, "Encoder Unit:" + unit.getValue());
                 motors[0].setMode(DcMotorController.RunMode.RESET_ENCODERS);
+                mode.waitOneFullHardwareCycle();
                 motors[0].setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+                mode.waitOneFullHardwareCycle();
                 motors[0].setTargetPosition((int) unit.getValue());
+                mode.waitOneFullHardwareCycle();
                 Log.w(TAG, "Set target");
                 setMotorPowers(motors, power);
                 Log.w(TAG, "Set Powers:" + motors[0].isBusy());
                 while (true || motors[0].isBusy()) {
+                    mode.waitOneFullHardwareCycle();
                     Log.w(TAG, "Encoder" + motors[0].getCurrentPosition());
                 }
                 Log.w(TAG, "Done");
                 setMotorPowers(motors, 0);
                 motors[0].setMode(DcMotorController.RunMode.RESET_ENCODERS);
+                mode.waitOneFullHardwareCycle();
                 motors[0].setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+                mode.waitOneFullHardwareCycle();
             }
         }
     }
