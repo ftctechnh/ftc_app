@@ -19,4 +19,9 @@ public class ControlScheme {
             controls.get(i).operate();
         }
     }
+    public void stop(){
+        for(int i=0;i<controls.size();i++){
+            controls.get(i).operate();
+        }
+    }
 }
