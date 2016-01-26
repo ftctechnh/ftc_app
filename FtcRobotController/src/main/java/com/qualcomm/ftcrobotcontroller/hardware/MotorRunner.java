@@ -65,21 +65,19 @@ public class MotorRunner {
                 Thread.sleep(unit.getValue());
                 setMotorPowers(motors, 0);
             } else if (unit instanceof EncoderUnit) {
-                Log.w(TAG, "Encoder Unit:" + unit.getValue());
+                mode.telemetry.addData("Log", "Encoder Unit:" + unit.getValue());
                 motors[0].setMode(DcMotorController.RunMode.RESET_ENCODERS);
                 mode.waitOneFullHardwareCycle();
                 motors[0].setMode(DcMotorController.RunMode.RUN_TO_POSITION);
                 mode.waitOneFullHardwareCycle();
                 motors[0].setTargetPosition((int) unit.getValue());
                 mode.waitOneFullHardwareCycle();
-                Log.w(TAG, "Set target");
                 setMotorPowers(motors, power);
-                Log.w(TAG, "Set Powers:" + motors[0].isBusy());
                 while (motors[0].isBusy()) {
                     mode.waitOneFullHardwareCycle();
-                    Log.w(TAG, "Encoder" + motors[0].getCurrentPosition());
+                    mode.telemetry.addData("Enocder Value", "Encoder Position:" + motors[0].getCurrentPosition());
                 }
-                Log.w(TAG, "Done");
+                mode.telemetry.addData("Log", "Done Waiting");
                 setMotorPowers(motors, 0);
                 motors[0].setMode(DcMotorController.RunMode.RESET_ENCODERS);
                 mode.waitOneFullHardwareCycle();
@@ -126,7 +124,7 @@ public class MotorRunner {
      * If this returns false, it is unsafe to use the motor
      *
      * @param motor The motor to test
-     * @return Wheter the motor is done or not.
+     * @return Whether the motor is done or not.
      */
     public static boolean doneWith(DcMotor motor) {
         for (RunEvent event : events) {
