@@ -31,7 +31,7 @@ public class BotAutonBlue extends LinearOpMode {
         Thread.sleep(1000);
         dump.setPosition(Values.DUMP_UP);
 
-        //Turn to align fowards
+        //Turn to align forwards
         MotorRunner.run(this, motorRight, Power.NORMAL_SPEED,
                 new EncoderUnit((int) (Values.TURN_AWAY * EncoderUnit.ROTATION_ANDYMARK)));
 
