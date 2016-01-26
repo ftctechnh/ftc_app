@@ -19,6 +19,9 @@ public class ControlScheme {
             controls.get(i).operate();
         }
     }
+    public void add(Drivable item){
+        controls.add(item);
+    }
     public void stop(){
         for(int i=0;i<controls.size();i++){
             controls.get(i).operate();

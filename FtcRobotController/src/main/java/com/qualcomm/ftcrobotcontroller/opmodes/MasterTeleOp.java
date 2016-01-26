@@ -52,16 +52,16 @@ public class MasterTeleOp extends OpMode{
 	leftDrive =
 	    new IncMotor(left, "Left Drive", true, "LEFTY1", true, 0.05);
 	//Spinners
-	spinners = 
-	    new DigMotor(spinMotor, "Spinners", false, "B2", true, 0);
-	spinners.addButton("A2", true, -1);
-	spinners.addButton("X2", true, 1);
+	spinner =
+	    new DigMotor(spinMotor, "Spinners", false, "B2", 0,true);
+	spinner.addButton("A2", -1,true);
+	spinner.addButton("X2", 1, true);
 	//Other
 	slider = 
 	    new IncMotor(slideMotors, "Sliders", false, "LEFTY2", false, 0.25);
 	//@TODO Figure out how Servos want to be used
 	belt = new WalnutServo(beltServo, 0.5, "LEFT2", 1, false);
-	belt.addButton(RIGHT2, -1, false);
+	belt.addButton("RIGHT2", -1, false);
 	
 	door = new WalnutServo(doorServo, 1,"LBUMP2", 1, true);
 	door.addButton("RBUMP2", -1, true);
