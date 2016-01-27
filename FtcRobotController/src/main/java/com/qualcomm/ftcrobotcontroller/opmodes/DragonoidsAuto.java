@@ -35,6 +35,13 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
             telemetry.addData("Error", "Gyroscope sensor not found");
         }
     }
+    private void outputTelemetry() {
+        telemetry.addData("Heading", headingDegrees);
+        telemetry.addData("Right1 encoder", DragonoidsGlobal.rightOne.getCurrentPosition());
+        telemetry.addData("Right2 encoder", DragonoidsGlobal.rightTwo.getCurrentPosition());
+        telemetry.addData("Left1  encoder", DragonoidsGlobal.leftOne.getCurrentPosition());
+        telemetry.addData("Left2  encoder", DragonoidsGlobal.leftTwo.getCurrentPosition());
+    }
     // For gyro sensor data
     @Override
     public void onSensorChanged(SensorEvent event) {
@@ -47,11 +54,7 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
         }
         lastGyroTimestamp = event.timestamp;
 
-        telemetry.addData("Heading", headingDegrees);
-        telemetry.addData("Right1 encoder", DragonoidsGlobal.rightOne.getCurrentPosition());
-        telemetry.addData("Right2 encoder", DragonoidsGlobal.rightTwo.getCurrentPosition());
-        telemetry.addData("Left1  encoder", DragonoidsGlobal.leftOne.getCurrentPosition());
-        telemetry.addData("Left2  encoder", DragonoidsGlobal.leftTwo.getCurrentPosition());
+        this.outputTelemetry();
     }
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
