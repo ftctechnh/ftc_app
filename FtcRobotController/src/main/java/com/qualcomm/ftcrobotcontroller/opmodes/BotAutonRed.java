@@ -56,7 +56,9 @@ public class BotAutonRed extends LinearOpMode {
         HardwareManager manager = new HardwareManager(hardwareMap);
 
         motorRight = manager.getMotor(Values.RIGHT_MOTOR);
+        motorRight.setDirection(DcMotor.Direction.REVERSE);
         motorLeft = manager.getMotor(Values.LEFT_MOTOR);
+        motorLeft.setDirection(DcMotor.Direction.REVERSE);
 
         dump = manager.getServo(Values.DUMP);
     }
@@ -64,8 +66,6 @@ public class BotAutonRed extends LinearOpMode {
     public void stopMotors() {
         motorLeft.setPower(Power.FULL_STOP);
         motorRight.setPower(Power.FULL_STOP);
-        motorLeft.setDirection(DcMotor.Direction.REVERSE);
-        motorRight.setDirection(DcMotor.Direction.REVERSE);
     }
 }
 
