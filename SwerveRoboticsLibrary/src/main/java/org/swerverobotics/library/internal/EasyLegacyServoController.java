@@ -164,8 +164,7 @@ public class EasyLegacyServoController implements ServoController, IOpModeStateT
 
             this.helper.arm();
 
-            // TODO: BUG: arming is a problem, if the underlying module is broken by, e.g.,
-            // the usb cable being pulled
+            // TODO: BUG: arming is a problem, if the underlying module is broken by, e.g., the usb cable being pulled
             this.i2cDeviceClient.arm();
             this.floatHardware();
             }
