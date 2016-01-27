@@ -75,7 +75,7 @@ public class MotorRunner {
                 setMotorPowers(motors, power);
                 while (motors[0].isBusy()) {
                     mode.waitOneFullHardwareCycle();
-                    mode.telemetry.addData("Enocder Value", "Encoder Position:" + motors[0].getCurrentPosition());
+                    mode.telemetry.addData("Encoder Value", "Encoder Position:" + motors[0].getCurrentPosition());
                 }
                 mode.telemetry.addData("Log", "Done Waiting");
                 setMotorPowers(motors, 0);
