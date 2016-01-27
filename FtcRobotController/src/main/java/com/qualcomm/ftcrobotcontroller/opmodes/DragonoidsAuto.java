@@ -7,8 +7,10 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.IrSeekerSensor;
 
 public class DragonoidsAuto extends LinearOpMode implements SensorEventListener {
+    // Gyro sensor
     private SensorManager sensorManager;
     private Sensor gyroSensor;
     private int sensorType = Sensor.TYPE_GYROSCOPE;
@@ -16,6 +18,8 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
     private float lastGyroTimestamp = 0;
     private float heading = 0; // In radians
     private float headingDegrees = 0; // In degrees (use in autonomous flow)
+    // IR sensor
+    private IrSeekerSensor irSensor;
     // Autonomous constants
     private final double drivePower = 0.5;
     private final double turnPower = 0.3;
@@ -34,6 +38,8 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
         else {
             telemetry.addData("Error", "Gyroscope sensor not found");
         }
+        // Set up the IR sensor
+        this.irSensor = hardwareMap.irSeekerSensor.get("ir_sensor");
     }
     private void outputTelemetry() {
         telemetry.addData("Heading", headingDegrees);
