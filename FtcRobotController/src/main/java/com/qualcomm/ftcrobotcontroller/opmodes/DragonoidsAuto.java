@@ -124,35 +124,41 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
 
     @Override
     public void runOpMode() throws InterruptedException {
-        this.initialize();
-        waitForStart();
-        // Choose flow based on alliance color (we're assuming red)
+        try {
+            this.initialize();
+            waitForStart();
+            // Choose flow based on alliance color (we're assuming red)
 
-        // Drive forward a bit
-        this.drive(step1Distance);
-        // Use the phone's IMU to make a precise 45 degree turn
-        this.turn(Direction.Left, 45);
-        // Drive forward to the beacon zone
-        this.drive(step2Distance);
-        // Turn 45 degrees again
-        this.turn(Direction.Left, 45);
-        // Drive forward to color detection distance
-        this.drive(step3Distance);
-        // Detect color of the beacon
+            // Drive forward a bit
+            this.drive(step1Distance);
+            // Use the phone's IMU to make a precise 45 degree turn
+            this.turn(Direction.Left, 45);
+            // Drive forward to the beacon zone
+            this.drive(step2Distance);
+            // Turn 45 degrees again
+            this.turn(Direction.Left, 45);
+            // Drive forward to color detection distance
+            this.drive(step3Distance);
+            // Detect color of the beacon
 
-        // Drive forward or extend arm to push the correct button
+            // Drive forward or extend arm to push the correct button
 
-        // Deposit climbers in the bucket behind the beacon
+            // Deposit climbers in the bucket behind the beacon
 
-        // Reverse out of the beacon area (or turn 180 degrees and then drive forward)
+            // Reverse out of the beacon area (or turn 180 degrees and then drive forward)
 
-        // Turn -45 degrees
+            // Turn -45 degrees
 
-        // Drive forward as far as possible up the mountain
+            // Drive forward as far as possible up the mountain
 
-        // Use the "churro grabbers" to gain more traction and hoist the robot up the
-        // remaining portion of the mountain after the normal wheels begin to slip
+            // Use the "churro grabbers" to gain more traction and hoist the robot up the
+            // remaining portion of the mountain after the normal wheels begin to slip
 
-        DragonoidsGlobal.stopAll();
+            DragonoidsGlobal.stopAll();
+        }
+        catch (Exception e) {
+            DragonoidsGlobal.stopAll();
+            throw e;
+        }
     }
 }
