@@ -295,26 +295,6 @@ public class Util
         return result;
         }
 
-    static Field getFieldByIndex(Class klass, int index)
-        {
-        Field result = null;
-        try {
-            Class fieldClass = klass;
-
-            List<Field> fieldFields = getLocalDeclaredNonStaticFields(fieldClass, false);
-
-            result = fieldFields.get(index);
-
-            if (!result.isAccessible())
-                result.setAccessible(true);
-            }
-        catch (Exception ignored)
-            {
-            result = null;
-            }
-        return result;
-        }
-
     static Comparator<Field> fieldComparator = new Comparator<Field>()
     // A comparator that sorts fields according to their declaration order
         {
