@@ -7,6 +7,7 @@ import com.qualcomm.ftcrobotcontroller.hardware.HardwareManager;
 import com.qualcomm.ftcrobotcontroller.hardware.MotorRunner;
 import com.qualcomm.ftcrobotcontroller.hardware.Power;
 import com.qualcomm.ftcrobotcontroller.units.EncoderUnit;
+import com.qualcomm.ftcrobotcontroller.units.TimeUnit;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -36,19 +37,19 @@ public class BotAutonRed extends LinearOpMode {
 
         //Turn to align fowards
         MotorRunner.run(this, motorLeft, Power.NORMAL_SPEED,
-                new EncoderUnit((int) (Values.TURN_AWAY * EncoderUnit.ROTATION_ANDYMARK)));
+                new TimeUnit(Values.TURN_AWAY));
 
         //Line up to mountain
         MotorRunner.run(this, new DcMotor[]{motorLeft, motorRight}, Power.NORMAL_SPEED,
-                new EncoderUnit((int) (Values.DRIVE_AWAY * EncoderUnit.ROTATION_ANDYMARK)));
+                new TimeUnit(Values.DRIVE_AWAY * EncoderUnit.ROTATION_ANDYMARK));
 
         //Turn perpendicular to the mountain
         MotorRunner.run(this, motorLeft, Power.NORMAL_SPEED,
-                new EncoderUnit((int) (Values.TURN_MOUNTAIN * EncoderUnit.ROTATION_ANDYMARK)));
+                new TimeUnit(Values.TURN_MOUNTAIN));
 
         //Drive on to mountain
         MotorRunner.run(this, new DcMotor[]{motorLeft, motorRight}, Power.NORMAL_SPEED,
-                new EncoderUnit((int) (Values.DRIVE_MOUNTAIN * EncoderUnit.ROTATION_ANDYMARK)));
+                new TimeUnit(Values.DRIVE_MOUNTAIN));
     }
 
     public void initMotors() {

@@ -15,12 +15,12 @@ public class Values {
     public static final double DUMP_UP = 0.0;
     public static final double DUMP_DOWN = 0.75;
 
-    public static final double DRIVE_BUCKET = 5;
-    public static final double DRIVE_AWAY = 4;
-    public static final double DRIVE_MOUNTAIN = 4;
+    public static final float DRIVE_BUCKET = 5;
+    public static final float DRIVE_AWAY = 4;
+    public static final float DRIVE_MOUNTAIN = 4;
 
-    public static final double TURN_AWAY = 1;
-    public static final double TURN_MOUNTAIN = 2;
+    public static final float TURN_AWAY = 1;
+    public static final float TURN_MOUNTAIN = 2;
 
     public static final String RIGHT_MOTOR = "motor_right";
     public static final String LEFT_MOTOR = "left_motor";
