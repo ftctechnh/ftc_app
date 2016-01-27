@@ -52,6 +52,7 @@ public class TeleOp extends OpMode {
 
 	DcMotor armLowerMotor, armUpperMotor, armUpperMotor2;//arm motors
 	DcMotor rightMotor, leftMotor;//drive motors
+	DcMotor chinHook;
 	Servo servoRight;//climber switch
 	Servo servoLeftFlip, servoRightFlip;//swings out to hit levers
 	Servo servoArmJam;
@@ -109,11 +110,15 @@ public class TeleOp extends OpMode {
 		leftMotor = hardwareMap.dcMotor.get("motor_left");
 		leftMotor.setDirection(DcMotor.Direction.REVERSE);
 
+		chinHook = hardwareMap.dcMotor.get("chinHook");
+
 		servoRight = hardwareMap.servo.get("servoRight");
 
 		servoLeftFlip = hardwareMap.servo.get("servoLeftFlip");
 		servoRightFlip = hardwareMap.servo.get("servoRightFlip");
 		servoArmJam = hardwareMap.servo.get("servoArmJam");
+
+
 
 
 	}
@@ -214,6 +219,14 @@ public class TeleOp extends OpMode {
 				yasss = .5f;
 				yasssCount = 0;
 			}
+		}
+
+		if(gamepad2.left_trigger > .5){
+			chinHook.setPower(.3);
+		}else if(gamepad2.right_trigger > .5){
+			chinHook.setPower(-.3);
+		}else{
+			chinHook.setPower(0);
 		}
 
 
