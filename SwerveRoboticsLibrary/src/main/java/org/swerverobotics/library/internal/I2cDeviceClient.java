@@ -129,29 +129,30 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         this.heartbeatAction        = null;
         this.heartbeatExecutor      = null;
 
-        this.readWindow                 = null;
-        this.readWindowActuallyRead     = null;
-        this.readWindowSentToController = null;
-        this.readWindowChanged          = false;
-        this.readWindowSentToControllerInitialized = false;
+        this.readWindow             = null;
+        initializeFromController();
+        if (closeOnOpModeStop)
+            RobotStateTransitionNotifier.register(context, this);
+        }
+
+    void initializeFromController()
+    // All the state that we maintain that is tied to the state of our controller
+        {
+        this.readCache      = this.i2cDevice.getI2cReadCache();
+        this.readCacheLock  = this.i2cDevice.getI2cReadCacheLock();
+        this.writeCache     = this.i2cDevice.getI2cWriteCache();
+        this.writeCacheLock = this.i2cDevice.getI2cWriteCacheLock();
 
         this.nanoTimeReadCacheValid = 0;
         this.readCacheStatus  = READ_CACHE_STATUS.IDLE;
         this.writeCacheStatus = WRITE_CACHE_STATUS.IDLE;
         this.modeCacheStatus  = MODE_CACHE_STATUS.IDLE;
 
-        initializeFromController();
+        this.readWindowActuallyRead     = null;
+        this.readWindowSentToController = null;
+        this.readWindowSentToControllerInitialized = false;
 
-        if (closeOnOpModeStop)
-            RobotStateTransitionNotifier.register(context, this);
-        }
-
-    void initializeFromController()
-        {
-        this.readCache      = this.i2cDevice.getI2cReadCache();
-        this.readCacheLock  = this.i2cDevice.getI2cReadCacheLock();
-        this.writeCache     = this.i2cDevice.getI2cWriteCache();
-        this.writeCacheLock = this.i2cDevice.getI2cWriteCacheLock();
+        this.readWindowChanged = true;
         }
 
     @Override public boolean onUserOpModeStop()
@@ -793,14 +794,43 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
 
         @Override public void onPortIsReadyCallbacksBegin(int port)
             {
+            // TODO: arm(); do we want to do this?
+            // TODO: we don't get this notification the first time, only later. is the notification actually useful?
             }
 
         @Override public void onPortIsReadyCallbacksEnd(int port)
         // We're being told that we're not going to get any more portIsReady callbacks.
             {
-            // Halt any new reads or writes
-            disarming = true;
+            haltNewReadsAndWrites();
+            pokeInFlightReadersAndWritersThenDisarm();
+            }
 
+        @Override
+        public void onControllerNewlyArmedOrPretending(int i) throws InterruptedException
+        // Our controller has (re)entered either the armed or the pretend state
+            {
+            haltNewReadsAndWrites();
+
+            synchronized (armingLock)
+                {
+                pokeInFlightReadersAndWritersThenDisarm();
+
+                // REVIEW: what locking is needed for this?
+                I2cDeviceClient.this.initializeFromController();
+
+                // Start up again on the new guy
+                // TODO: only if we were armed?
+                arm();
+                }
+            }
+
+        void haltNewReadsAndWrites()
+            {
+            disarming = true;
+            }
+
+        void pokeInFlightReadersAndWritersThenDisarm()
+            {
             // Honor lock order
             synchronized (armingLock)
                 {
@@ -822,12 +852,6 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                 }
             }
 
-        @Override
-        public void initializeFromController(int i) throws InterruptedException
-        // Our controller has (re)entered either the armed or the pretend state
-            {
-            // TO DO: call initializeFromController(), having acquired the appropriate locks
-            }
 
         // The user has new data for us to write. We could do nothing, in which case the data
         // will go out at the next callback cycle just fine, or we could try to push it out
