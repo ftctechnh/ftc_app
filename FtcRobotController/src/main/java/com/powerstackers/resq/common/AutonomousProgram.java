@@ -20,11 +20,12 @@
 
 package com.powerstackers.resq.common;
 
-import com.powerstackers.resq.common.enums.PublicEnums;
-
 import org.swerverobotics.library.SynchronousOpMode;
 
-import static com.powerstackers.resq.common.enums.PublicEnums.*;
+import static com.powerstackers.resq.common.enums.PublicEnums.AllianceColor;
+import static com.powerstackers.resq.common.enums.PublicEnums.AllianceColor.RED;
+import static com.powerstackers.resq.common.enums.PublicEnums.DoorSetting;
+import static com.powerstackers.resq.common.enums.PublicEnums.MotorSetting;
 
 /**
  * @author Jonathan Thomas
@@ -32,11 +33,11 @@ import static com.powerstackers.resq.common.enums.PublicEnums.*;
 public class AutonomousProgram extends SynchronousOpMode {
 
     AllianceColor allianceColor;
-    Robot robot;
+    RobotAuto robot;
 
     public AutonomousProgram(AllianceColor allianceColor) {
         this.allianceColor = allianceColor;
-        this.robot = new Robot(this);
+        this.robot = new RobotAuto(this);
     }
 
     /**
@@ -48,6 +49,15 @@ public class AutonomousProgram extends SynchronousOpMode {
         robot.initializeRobot();
         // Wait for the start of the match
         this.waitForStart();
+
+        if (allianceColor== RED) {
+            robot.setBrush(MotorSetting.FORWARD);
+            robot.algorithm.goTicks(robot.algorithm.inchesToTicks(68), 0.4);
+            robot.setBrush(MotorSetting.STOP);
+            robot.turnDegrees(45, 0.4);
+            robot.algorithm.goTicks(robot.algorithm.inchesToTicks(22), 0.4);
+            robot.setClimberFlipper(DoorSetting.OPEN);
+        }
 
         // Run any actions we desire
         robot.tapBeacon(allianceColor);

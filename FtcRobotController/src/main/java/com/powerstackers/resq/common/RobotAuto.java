@@ -1,9 +1,9 @@
 package com.powerstackers.resq.common;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
@@ -12,6 +12,7 @@ import org.swerverobotics.library.ClassFactory;
 import static com.powerstackers.resq.common.enums.PublicEnums.AllianceColor;
 import static com.powerstackers.resq.common.enums.PublicEnums.DoorSetting;
 import static com.powerstackers.resq.common.enums.PublicEnums.MotorSetting;
+import static java.lang.Math.abs;
 
 /**
  * Created by Derek on 1/14/2016.
@@ -55,7 +56,7 @@ public class RobotAuto {
     private DeviceInterfaceModule dim;
     private ColorSensor sensorColor;
     //    private TouchSensor sensorTouch;
-//    private GyroSensor sensorGyro;
+    private GyroSensor sensorGyro;
 //    private ColorSensor colorSensor;
 //    public OpticalDistanceSensor opticalSensor;
 
@@ -63,7 +64,7 @@ public class RobotAuto {
      * Construct a Robot object.
      * @param mode The OpMode in which the robot is being used.
      */
-    public RobotAuto(LinearOpMode mode) {
+    public RobotAuto(AutonomousProgram mode) {
         motorLeftA  = mode.hardwareMap.dcMotor.get("motorFLeft");
         motorLeftB  = mode.hardwareMap.dcMotor.get("motorBLeft");
         motorRightA = mode.hardwareMap.dcMotor.get("motorFRight");
@@ -89,7 +90,7 @@ public class RobotAuto {
                 mode.hardwareMap.colorSensor.get("sensorColor"));
         sensorColor.enableLed(true);
 //        opticalSensor = mode.hardwareMap.opticalDistanceSensor.get("opticalDistance");
-//        sensorGyro = mode.hardwareMap.gyroSensor.get("sensorGyro");
+        sensorGyro = mode.hardwareMap.gyroSensor.get("sensorGyro");
 //        sensorColor = mode.hardwareMap.colorSensor.get("sensorColor");
 //
 //        colorSensor = ClassFactory.createSwerveColorSensor(mode, mode.hardwareMap.colorSensor.get("colorSensor"));
@@ -107,11 +108,7 @@ public class RobotAuto {
         servoClimberFlipper.setPosition(RobotConstants.CLIMBER_EXTEND);
         servoChurroRight.setPosition(RobotConstants.CHURRO_RIGHT_OPEN);
         servoChurroLeft.setPosition(RobotConstants.CHURRO_LEFT_OPEN);
-        //sensorGyro.calibrate();
-        // Give the gyroscope some time to calibrate
-//        while (sensorGyro.isCalibrating()) {
-//            Thread.sleep(50L);
-//        }
+        sensorGyro.calibrate();
     }
 
     /**
@@ -303,8 +300,26 @@ public class RobotAuto {
      * clockwise, and a positive number will turn counter-clockwise.
      * @param degrees A double representing the distance to turn.
      */
-    public void turnDegrees(double degrees) {
+    public void turnDegrees(double degrees, double speed) {
         // TODO Actually make this method work
+        sensorGyro.calibrate();
+        while (sensorGyro.isCalibrating()){
+
+        }
+
+        if(degrees < 0)
+        {
+            setPowerLeft(-1 * speed);
+            setPowerRight(speed);
+        } else {
+            setPowerLeft(speed);
+            setPowerRight(-1 * speed);
+        }
+
+        while (abs(sensorGyro.getRotation()) < abs(degrees)) {
+
+        }
+        setPowerAll(0);
     }
 
     public void loop() {

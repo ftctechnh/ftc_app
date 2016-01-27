@@ -30,7 +30,7 @@ public class JonsAlgo {
     *	inchesToTicks
     *	Convert a distance in inches to a number of ticks
     */
-    double inchesToTicks(float inches)
+    long inchesToTicks(double inches)
     {
         // Given a distance in inches, calculate the equivalent distance in motor encoder ticks.
         // We calculate this by taking the number of wheel rotations (inches/(PI*wheelDiameter)) multiplied
@@ -41,7 +41,7 @@ public class JonsAlgo {
 	/*writeDebugStreamLine("Drive gear multiplier: %f", 1/driveGearMultiplier);
 	writeDebugStreamLine("Ticks per revolution: %d", ticksPerRevolution);
 	writeDebugStreamLine("Inches to travel: %f", (inches/(PI*wheelDiameter)));*/
-        return (1/driveGearMultiplier)*ticksPerRevolution*(inches/(PI*wheelDiameter));
+        return (long) ((1/driveGearMultiplier)*ticksPerRevolution*(inches/(PI*wheelDiameter)));
     }
 
     /*
@@ -61,7 +61,7 @@ public class JonsAlgo {
     *	goTicks
     *	Move the robot a discance in ticks
     */
-    void goTicks(long ticks, int speed/*, bool collisionAvoidance*/)
+    void goTicks(long ticks, double speed/*, bool collisionAvoidance*/)
     {
 
         long startLeft = robot.getLeftEncoder();
@@ -143,6 +143,8 @@ public class JonsAlgo {
 
         // Decide whether to turn clockwise or counterclockwise.
         // A positive degree target inmplies turning counterclockwise. A negative target implies clockwise.
+
+
         if(degrees < 0)
         {
             robot.setPowerLeft(-1 * speed);
@@ -164,7 +166,7 @@ public class JonsAlgo {
             //writeDebugStreamLine("%d", time1[T1];
             //ClearTimer(T1);
             // 10 millisecond interval
-            wait(10);
+//            wait(10);
 
             // Calculate the gyro's angular velocity reading.
             // The reading is given as the current sensor value, minus any initial spin that the gyro may have had.

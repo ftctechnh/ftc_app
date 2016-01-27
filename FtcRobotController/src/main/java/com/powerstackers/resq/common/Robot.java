@@ -30,6 +30,29 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.swerverobotics.library.ClassFactory;
 
+import static com.powerstackers.resq.common.RobotConstants.BEACON_TAP_LEFT;
+import static com.powerstackers.resq.common.RobotConstants.BEACON_TAP_RIGHT;
+import static com.powerstackers.resq.common.RobotConstants.BRUSH_SPEED;
+import static com.powerstackers.resq.common.RobotConstants.CHURRO_LEFT_CLOSE;
+import static com.powerstackers.resq.common.RobotConstants.CHURRO_LEFT_OPEN;
+import static com.powerstackers.resq.common.RobotConstants.CHURRO_RIGHT_CLOSE;
+import static com.powerstackers.resq.common.RobotConstants.CHURRO_RIGHT_OPEN;
+import static com.powerstackers.resq.common.RobotConstants.CLIMBER_EXTEND;
+import static com.powerstackers.resq.common.RobotConstants.CLIMBER_RETRACT;
+import static com.powerstackers.resq.common.RobotConstants.CRS_FORWARD;
+import static com.powerstackers.resq.common.RobotConstants.CRS_REVERSE;
+import static com.powerstackers.resq.common.RobotConstants.CRS_STOP;
+import static com.powerstackers.resq.common.RobotConstants.HOPPER_LEFT_CLOSE;
+import static com.powerstackers.resq.common.RobotConstants.HOPPER_LEFT_OPEN;
+import static com.powerstackers.resq.common.RobotConstants.HOPPER_RIGHT_CLOSE;
+import static com.powerstackers.resq.common.RobotConstants.HOPPER_RIGHT_OPEN;
+import static com.powerstackers.resq.common.RobotConstants.HOPPER_TILT_LEFT;
+import static com.powerstackers.resq.common.RobotConstants.HOPPER_TILT_RESTING;
+import static com.powerstackers.resq.common.RobotConstants.HOPPER_TILT_RIGHT;
+import static com.powerstackers.resq.common.RobotConstants.LIFT_SPEED;
+import static com.powerstackers.resq.common.RobotConstants.TAPE_FLAT;
+import static com.powerstackers.resq.common.RobotConstants.TRIMM_MOTOR;
+import static com.powerstackers.resq.common.RobotConstants.WINCH_SPEED;
 import static com.powerstackers.resq.common.enums.PublicEnums.AllianceColor;
 import static com.powerstackers.resq.common.enums.PublicEnums.DoorSetting;
 import static com.powerstackers.resq.common.enums.PublicEnums.MotorSetting;
@@ -95,13 +118,13 @@ public class Robot {
         servoChurroLeft = mode.hardwareMap.servo.get("servoChurroLeft");
         servoChurroRight = mode.hardwareMap.servo.get("servoChurroRight");
 
-        servoHopperLeft.setPosition(RobotConstants.HOPPER_LEFT_CLOSE);
+        servoHopperLeft.setPosition(HOPPER_LEFT_CLOSE);
 //        servoHopperRight.setPosition(RobotConstants.HOPPER_RIGHT_CLOSE);
-        servoHopperTilt.setPosition(RobotConstants.HOPPER_TILT_RESTING);
-        servoClimberFlipper.setPosition(RobotConstants.CLIMBER_EXTEND);
-        servoChurroRight.setPosition(RobotConstants.CHURRO_RIGHT_OPEN);
-        servoChurroLeft.setPosition(RobotConstants.CHURRO_LEFT_OPEN);
-        servoTapeTilt.setPosition(RobotConstants.TAPE_FLAT);
+        servoHopperTilt.setPosition(HOPPER_TILT_RESTING);
+        servoClimberFlipper.setPosition(CLIMBER_EXTEND);
+        servoChurroRight.setPosition(CHURRO_RIGHT_OPEN);
+        servoChurroLeft.setPosition(CHURRO_LEFT_OPEN);
+        servoTapeTilt.setPosition(TAPE_FLAT);
         servoTapeMeasure.setPosition(0.5);
 
         dim = mode.hardwareMap.deviceInterfaceModule.get("dim");
@@ -121,13 +144,13 @@ public class Robot {
 //       double hopperTiltPosition = servoHopperTilt.getPosition();
 
 //        servoBeacon.setPosition(RobotConstants.BEACON_RESTING);
-        servoClimberFlipper.setPosition(RobotConstants.CLIMBER_EXTEND);
-        servoHopperLeft.setPosition(RobotConstants.HOPPER_LEFT_CLOSE);
-        servoHopperRight.setPosition(RobotConstants.HOPPER_RIGHT_CLOSE);
-        servoHopperTilt.setPosition(RobotConstants.HOPPER_TILT_RESTING);
-        servoChurroRight.setPosition(RobotConstants.CHURRO_RIGHT_OPEN);
-        servoChurroLeft.setPosition(RobotConstants.CHURRO_LEFT_OPEN);
-        servoTapeTilt.setPosition(RobotConstants.TAPE_FLAT);
+        servoClimberFlipper.setPosition(CLIMBER_EXTEND);
+        servoHopperLeft.setPosition(HOPPER_LEFT_CLOSE);
+        servoHopperRight.setPosition(HOPPER_RIGHT_CLOSE);
+        servoHopperTilt.setPosition(HOPPER_TILT_RESTING);
+        servoChurroRight.setPosition(CHURRO_RIGHT_OPEN);
+        servoChurroLeft.setPosition(CHURRO_LEFT_OPEN);
+        servoTapeTilt.setPosition(TAPE_FLAT);
         //sensorGyro.calibrate();
         // Give the gyroscope some time to calibrate
 //        while (sensorGyro.isCalibrating()) {
@@ -140,7 +163,7 @@ public class Robot {
      * @param power Double from 0 to 1.
      */
     public void setPowerRight(double power) {
-        motorRightA.setPower(power);
+        motorRightA.setPower(power*TRIMM_MOTOR);
         motorRightB.setPower(power);
     }
 
@@ -149,7 +172,7 @@ public class Robot {
      * @param power Double from 0 to 1.
      */
     public void setPowerLeft(double power) {
-        motorLeftA.setPower(power);
+        motorLeftA.setPower(power*TRIMM_MOTOR);
         motorLeftB.setPower(power);
     }
 
@@ -171,7 +194,7 @@ public class Robot {
      * @param setting MotorSetting indicating the direction.
      */
     public void setBrush(MotorSetting setting) {
-        toggleMotor(motorBrush, setting, RobotConstants.BRUSH_SPEED);
+        toggleMotor(motorBrush, setting, BRUSH_SPEED);
     }
 
     /**
@@ -179,7 +202,7 @@ public class Robot {
      * @param setting MotorSetting enum indicating the direction.
      */
     public void setLift(MotorSetting setting) {
-        toggleMotor(motorLift, setting, RobotConstants.LIFT_SPEED);
+        toggleMotor(motorLift, setting, LIFT_SPEED);
     }
 
     /**
@@ -223,16 +246,16 @@ public class Robot {
     private void toggleCRServo(Servo toToggle, MotorSetting setting) {
         switch (setting) {
             case REVERSE:
-                toToggle.setPosition(RobotConstants.CRS_REVERSE);
+                toToggle.setPosition(CRS_REVERSE);
                 break;
             case STOP:
-                toToggle.setPosition(RobotConstants.CRS_STOP);
+                toToggle.setPosition(CRS_STOP);
                 break;
             case FORWARD:
-                toToggle.setPosition(RobotConstants.CRS_FORWARD);
+                toToggle.setPosition(CRS_FORWARD);
                 break;
             default:
-                toToggle.setPosition(RobotConstants.CRS_STOP);
+                toToggle.setPosition(CRS_STOP);
         }
     }
 
@@ -263,9 +286,9 @@ public class Robot {
 
         // Tap the correct side based on the dominant color.
         if (dominantColor == allianceColor) {
-            positionBeaconServo = RobotConstants.BEACON_TAP_LEFT;
+            positionBeaconServo = BEACON_TAP_LEFT;
         } else {
-            positionBeaconServo = RobotConstants.BEACON_TAP_RIGHT;
+            positionBeaconServo = BEACON_TAP_RIGHT;
         }
 
         // Trim the servo value and set the servo position.
@@ -279,17 +302,17 @@ public class Robot {
      */
     public void setHopperRight(DoorSetting doorRightSetting) {
         if (doorRightSetting == DoorSetting.OPEN) {
-            servoHopperRight.setPosition(RobotConstants.HOPPER_RIGHT_OPEN);
+            servoHopperRight.setPosition(HOPPER_RIGHT_OPEN);
         } else {
-            servoHopperRight.setPosition(RobotConstants.HOPPER_RIGHT_CLOSE);
+            servoHopperRight.setPosition(HOPPER_RIGHT_CLOSE);
         }
     }
 
     public void setHopperTiltRight(TiltSetting tiltsetting) {
         if (tiltsetting == TiltSetting.RIGHT) {
-            servoHopperTilt.setPosition(RobotConstants.HOPPER_TILT_RIGHT);
+            servoHopperTilt.setPosition(HOPPER_TILT_RIGHT);
         } else {
-            servoHopperTilt.setPosition(RobotConstants.HOPPER_TILT_RESTING);
+            servoHopperTilt.setPosition(HOPPER_TILT_RESTING);
         }
     }
 
@@ -299,19 +322,19 @@ public class Robot {
      */
     public void setHopperLeft(DoorSetting doorLeftSetting) {
         if (doorLeftSetting == DoorSetting.OPEN) {
-            servoHopperLeft.setPosition(RobotConstants.HOPPER_LEFT_OPEN);
-            servoHopperTilt.setPosition(RobotConstants.HOPPER_TILT_LEFT);
+            servoHopperLeft.setPosition(HOPPER_LEFT_OPEN);
+            servoHopperTilt.setPosition(HOPPER_TILT_LEFT);
         } else {
-            servoHopperLeft.setPosition(RobotConstants.HOPPER_LEFT_CLOSE);
-            servoHopperTilt.setPosition(RobotConstants.HOPPER_TILT_RESTING);
+            servoHopperLeft.setPosition(HOPPER_LEFT_CLOSE);
+            servoHopperTilt.setPosition(HOPPER_TILT_RESTING);
         }
     }
 
     public void setHopperTiltLeft(TiltSetting tiltsetting) {
         if (tiltsetting == TiltSetting.LEFT) {
-            servoHopperTilt.setPosition(RobotConstants.HOPPER_TILT_LEFT);
+            servoHopperTilt.setPosition(HOPPER_TILT_LEFT);
         } else {
-            servoHopperTilt.setPosition(RobotConstants.HOPPER_TILT_RESTING);
+            servoHopperTilt.setPosition(HOPPER_TILT_RESTING);
         }
     }
 
@@ -346,9 +369,9 @@ public class Robot {
      */
     public void setClimberFlipper(DoorSetting doorSetting) {
         if (doorSetting == DoorSetting.OPEN) {
-            servoClimberFlipper.setPosition(RobotConstants.CLIMBER_RETRACT);
+            servoClimberFlipper.setPosition(CLIMBER_RETRACT);
         } else {
-            servoClimberFlipper.setPosition(RobotConstants.CLIMBER_EXTEND);
+            servoClimberFlipper.setPosition(CLIMBER_EXTEND);
         }
     }
 
@@ -360,11 +383,11 @@ public class Robot {
      */
     public void setChurroGrabbers(DoorSetting doorSetting) {
         if (doorSetting == DoorSetting.OPEN) {
-            servoChurroLeft.setPosition(RobotConstants.CHURRO_LEFT_OPEN);
-            servoChurroRight.setPosition(RobotConstants.CHURRO_RIGHT_OPEN);
+            servoChurroLeft.setPosition(CHURRO_LEFT_OPEN);
+            servoChurroRight.setPosition(CHURRO_RIGHT_OPEN);
         } else {
-            servoChurroLeft.setPosition(RobotConstants.CHURRO_LEFT_CLOSE);
-            servoChurroRight.setPosition(RobotConstants.CHURRO_RIGHT_CLOSE);
+            servoChurroLeft.setPosition(CHURRO_LEFT_CLOSE);
+            servoChurroRight.setPosition(CHURRO_RIGHT_CLOSE);
         }
     }
 
@@ -373,8 +396,8 @@ public class Robot {
      * @param motorSetting MotorSetting indicating the direction.
      */
     public void setWinch(MotorSetting motorSetting) {
-        toggleMotor(motorWinchLeft, motorSetting, RobotConstants.WINCH_SPEED);
-        toggleMotor(motorWinchRight, motorSetting, RobotConstants.WINCH_SPEED);
+        toggleMotor(motorWinchLeft, motorSetting, WINCH_SPEED);
+        toggleMotor(motorWinchRight, motorSetting, WINCH_SPEED);
     }
 
     /**

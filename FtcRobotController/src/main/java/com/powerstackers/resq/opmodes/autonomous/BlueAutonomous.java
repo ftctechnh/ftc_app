@@ -33,4 +33,5 @@ public class BlueAutonomous extends AutonomousProgram {
     public BlueAutonomous() {
         super(AllianceColor.BLUE);
     }
+
 }
