@@ -14,8 +14,8 @@ public class RobotConstants {
     public static final double HOPPER_RIGHT_OPEN   = 0.55; // TODO Left door servo doesn't get power 7
     public static final double HOPPER_RIGHT_CLOSE  = 0.0;
     public static final double HOPPER_TILT_RESTING = 0.5;
-    public static final double HOPPER_TILT_LEFT    = 0.01;
-    public static final double HOPPER_TILT_RIGHT   = 0.8;
+    public static final double HOPPER_TILT_LEFT    = 0.1;
+    public static final double HOPPER_TILT_RIGHT   = 0.9; //0.8;
     public static final double CLIMBER_EXTEND      = 1.0;
     public static final double CLIMBER_RETRACT     = 0.17;
 

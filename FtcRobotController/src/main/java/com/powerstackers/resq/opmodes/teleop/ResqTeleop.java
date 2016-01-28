@@ -162,10 +162,10 @@ public class ResqTeleop extends OpMode {
 
         // Set the hopper doors.
         // Hopper left
-        if (buttonHopperLeft) {
+        if (buttonHopperRight) {
             robot.setHopperLeft(DoorSetting.OPEN);
             robot.setHopperTiltLeft(TiltSetting.LEFT);
-        }else if (buttonHopperRight) {
+        }else if (buttonHopperLeft) {
             robot.setHopperRight(DoorSetting.OPEN);
             robot.setHopperTiltRight(TiltSetting.RIGHT);
         }else {
