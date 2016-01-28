@@ -36,17 +36,15 @@ public class AutonomousBlue extends SynchronousOpMode {
     @Override
     public void main() throws InterruptedException {
         //Initialize hardware
-        frontRightWheel = hardwareMap.dcMotor.get("frontRightWheel");
-        frontLeftWheel = hardwareMap.dcMotor.get("frontLeftWheel");
-        backRightWheel = hardwareMap.dcMotor.get("backRightWheel");
-        backLeftWheel = hardwareMap.dcMotor.get("backLeftWheel");
+        rightWheel = hardwareMap.dcMotor.get("rightWheel");
+        leftWheel = hardwareMap.dcMotor.get("leftWheel");
 
         sweeper = hardwareMap.dcMotor.get("sweeper");
 
         lineColor = hardwareMap.colorSensor.get("lineColor");
         gyro = hardwareMap.gyroSensor.get("gyro");
         ultrasonic = hardwareMap.ultrasonicSensor.get("ultrasonic");
-        containerTilt = hardwareMap.servo.get("containerTilt");
+        containerTilt = hardwareMap.servo.get("tubeTilt");
         tubeExtender = hardwareMap.servo.get("tubeExtender");
         mountainClimber = hardwareMap.servo.get("mountainClimber");
         mountainClimberRelease = hardwareMap.servo.get("mountainClimberRelease");
@@ -54,10 +52,8 @@ public class AutonomousBlue extends SynchronousOpMode {
         bumper = hardwareMap.servo.get("bumper");
 
         //Set motor and servo directions
-        frontRightWheel.setDirection(DcMotor.Direction.REVERSE);
-        frontLeftWheel.setDirection(DcMotor.Direction.FORWARD);
-        backRightWheel.setDirection(DcMotor.Direction.FORWARD);
-        backLeftWheel.setDirection(DcMotor.Direction.REVERSE);
+        rightWheel.setDirection(DcMotor.Direction.REVERSE);
+        leftWheel.setDirection(DcMotor.Direction.FORWARD);
 
         mountainClimber.setDirection(Servo.Direction.FORWARD);
         mountainClimber.setPosition(0.05);
@@ -166,12 +162,12 @@ public class AutonomousBlue extends SynchronousOpMode {
     //Turns robot using motor encoders
    /*public static void backwardRightTurn(double rotations, double power) {
         resetEncoders();
-        backRightWheel.setTargetPosition((int) (rotations * Functions.neveRestPPR));
-        backLeftWheel.setPower(0);
-        frontLeftWheel.setPower(0);
-        frontLeftWheel.setPower(power);
-        frontRightWheel.setPower(power);
-        while(frontRightWheel.isBusy() || frontLeftWheel.isBusy()) {
+        rightWheel.setTargetPosition((int) (rotations * Functions.neveRestPPR));
+        leftWheel.setPower(0);
+        leftWheel.setPower(0);
+        leftWheel.setPower(power);
+        rightWheel.setPower(power);
+        while(rightWheel.isBusy() || leftWheel.isBusy()) {
             Functions.waitFor(100);
         }
         moveRobotPower(0);
@@ -197,15 +193,15 @@ public class AutonomousBlue extends SynchronousOpMode {
                     break;
                 }
                 if (color.equals("B")) {
-                    frontRightWheel.setPower(-0.25);
-                    frontRightWheel.setPower(-0.25);
-                    frontLeftWheel.setPower(0.25);
-                    backLeftWheel.setPower(0.25);
+                    rightWheel.setPower(-0.25);
+                    rightWheel.setPower(-0.25);
+                    leftWheel.setPower(0.25);
+                    leftWheel.setPower(0.25);
                 } else {
-                    frontRightWheel.setPower(0.25);
-                    frontLeftWheel.setPower(0.25);
-                    backRightWheel.setPower(-0.25);
-                    backLeftWheel.setPower(-0.25);
+                    rightWheel.setPower(0.25);
+                    leftWheel.setPower(0.25);
+                    rightWheel.setPower(-0.25);
+                    leftWheel.setPower(-0.25);
                 }
 
                 while (!detectWhite(telemetry)) {
@@ -310,14 +306,14 @@ public class AutonomousBlue extends SynchronousOpMode {
         backLeftWheel.setTargetPosition((int) (leftRotations * Functions.neveRestPPR));
         moveRobotPower(leftPower, rightPower);
 
-        /*while(!(Math.abs(backRightWheel.getCurrentPosition()) >= Math.abs(backRightWheel.getTargetPosition())
-                - Functions.encoderError && Math.abs(backRightWheel.getCurrentPosition())
-                <= Math.abs(backRightWheel.getTargetPosition()) + Functions.encoderError)
-                && !(Math.abs(backLeftWheel.getCurrentPosition()) >= Math.abs(backLeftWheel.getTargetPosition())
-                - Functions.encoderError && backLeftWheel.getCurrentPosition()
-                <= Math.abs(backLeftWheel.getTargetPosition()) + Functions.encoderError)) {
-            telemetry.addData("Right: ", backRightWheel.getCurrentPosition());
-            telemetry.addData("Left: ", backLeftWheel.getCurrentPosition());
+        /*while(!(Math.abs(rightWheel.getCurrentPosition()) >= Math.abs(rightWheel.getTargetPosition())
+                - Functions.encoderError && Math.abs(rightWheel.getCurrentPosition())
+                <= Math.abs(rightWheel.getTargetPosition()) + Functions.encoderError)
+                && !(Math.abs(leftWheel.getCurrentPosition()) >= Math.abs(leftWheel.getTargetPosition())
+                - Functions.encoderError && leftWheel.getCurrentPosition()
+                <= Math.abs(leftWheel.getTargetPosition()) + Functions.encoderError)) {
+            telemetry.addData("Right: ", rightWheel.getCurrentPosition());
+            telemetry.addData("Left: ", leftWheel.getCurrentPosition());
             telemetry.update();
         }
         moveRobotPower(0, 0);*/
@@ -333,23 +329,23 @@ public class AutonomousBlue extends SynchronousOpMode {
         backLeftWheel.setTargetPosition((int) leftRotations);
         moveRobotPower(leftPower,rightPower);
 
-        /*while(!(Math.abs(backRightWheel.getCurrentPosition()) >= Math.abs(backRightWheel.getTargetPosition())
-                - Functions.encoderError && Math.abs(backRightWheel.getCurrentPosition())
-                <= Math.abs(backRightWheel.getTargetPosition()) + Functions.encoderError)
-                && !(Math.abs(backLeftWheel.getCurrentPosition()) >= Math.abs(backLeftWheel.getTargetPosition())
-                - Functions.encoderError && backLeftWheel.getCurrentPosition()
-                <= Math.abs(backLeftWheel.getTargetPosition()) + Functions.encoderError)) {
-            telemetry.addData("Right: ", backRightWheel.getCurrentPosition());
-            telemetry.addData("Left: ", backLeftWheel.getCurrentPosition());
+        /*while(!(Math.abs(rightWheel.getCurrentPosition()) >= Math.abs(rightWheel.getTargetPosition())
+                - Functions.encoderError && Math.abs(rightWheel.getCurrentPosition())
+                <= Math.abs(rightWheel.getTargetPosition()) + Functions.encoderError)
+                && !(Math.abs(leftWheel.getCurrentPosition()) >= Math.abs(leftWheel.getTargetPosition())
+                - Functions.encoderError && leftWheel.getCurrentPosition()
+                <= Math.abs(leftWheel.getTargetPosition()) + Functions.encoderError)) {
+            telemetry.addData("Right: ", rightWheel.getCurrentPosition());
+            telemetry.addData("Left: ", leftWheel.getCurrentPosition());
             telemetry.update();
         }
         moveRobotPower(0, 0);*/
         if (leftRotations == 0){
-            while(backRightWheel.isBusy() /*|| backLeftWheel.isBusy()*/) {
+            while(backRightWheel.isBusy() /*|| leftWheel.isBusy()*/) {
                 Functions.waitFor(10);
             }
         } else if(rightRotations == 0){
-            while(backLeftWheel.isBusy() /*|| backLeftWheel.isBusy()*/) {
+            while(backLeftWheel.isBusy() /*|| leftWheel.isBusy()*/) {
                 Functions.waitFor(10);
             }
         } else {
@@ -358,11 +354,11 @@ public class AutonomousBlue extends SynchronousOpMode {
             }
         }
         disableEncoders();
-        moveRobotPower(0,0);
+        moveRobotPower(0, 0);
         telemetry.update();
 
-        //backRightWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-        //backLeftWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        //rightWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        //leftWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
         //resetEncoders();
 
     }
@@ -370,13 +366,13 @@ public class AutonomousBlue extends SynchronousOpMode {
     //Moves the robot a certain amount of degrees
     /*public static void moveRobotDegrees(double degrees, double power, TelemetryDashboardAndLog telemetry) {
         resetEncoders();
-        backRightWheel.setTargetPosition((int) (degrees*Functions.neveRestDegreeRatio));
-        backLeftWheel.setTargetPosition((int) (degrees*Functions.neveRestDegreeRatio));
+        rightWheel.setTargetPosition((int) (degrees*Functions.neveRestDegreeRatio));
+        leftWheel.setTargetPosition((int) (degrees*Functions.neveRestDegreeRatio));
         moveRobotPower(power);
 
-        while (!(backRightWheel.getCurrentPosition() >= backRightWheel.getTargetPosition() - Functions.encoderError && backRightWheel.getCurrentPosition() <= backRightWheel.getTargetPosition() + Functions.encoderError) && !(backLeftWheel.getCurrentPosition() >= backLeftWheel.getTargetPosition() - Functions.encoderError && backLeftWheel.getCurrentPosition() <= backLeftWheel.getTargetPosition() + Functions.encoderError)) {
-            telemetry.addData("Right: ", backRightWheel.getCurrentPosition());
-            telemetry.addData("Left: ", backLeftWheel.getCurrentPosition());
+        while (!(rightWheel.getCurrentPosition() >= rightWheel.getTargetPosition() - Functions.encoderError && rightWheel.getCurrentPosition() <= rightWheel.getTargetPosition() + Functions.encoderError) && !(leftWheel.getCurrentPosition() >= leftWheel.getTargetPosition() - Functions.encoderError && leftWheel.getCurrentPosition() <= leftWheel.getTargetPosition() + Functions.encoderError)) {
+            telemetry.addData("Right: ", rightWheel.getCurrentPosition());
+            telemetry.addData("Left: ", leftWheel.getCurrentPosition());
             telemetry.update();
         }
         moveRobotPower(0);

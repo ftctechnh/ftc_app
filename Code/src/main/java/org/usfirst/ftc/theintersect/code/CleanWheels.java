@@ -1,6 +1,7 @@
 package org.usfirst.ftc.theintersect.code;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+
 import org.swerverobotics.library.SynchronousOpMode;
 
 /**
@@ -23,10 +24,10 @@ public class CleanWheels extends SynchronousOpMode {
 
 	@Override public void main() throws InterruptedException {
 		//Initialize hardware
-		frontRightWheel = hardwareMap.dcMotor.get("frontRightWheel");
-		frontLeftWheel = hardwareMap.dcMotor.get("frontLeftWheel");
-		backRightWheel = hardwareMap.dcMotor.get("backRightWheel");
-		backLeftWheel = hardwareMap.dcMotor.get("backLeftWheel");
+		frontRightWheel = hardwareMap.dcMotor.get("rightWheel");
+		frontLeftWheel = hardwareMap.dcMotor.get("leftWheel");
+		backRightWheel = hardwareMap.dcMotor.get("rightWheel");
+		backLeftWheel = hardwareMap.dcMotor.get("leftWheel");
 
 		//Wait for the game to start
 		waitForStart();

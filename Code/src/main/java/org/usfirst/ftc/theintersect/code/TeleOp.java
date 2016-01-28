@@ -12,27 +12,25 @@ import org.swerverobotics.library.SynchronousOpMode;
 @org.swerverobotics.library.interfaces.TeleOp(name = "TeleOp")
 public class TeleOp extends SynchronousOpMode {
     //Declare hardware
-    DcMotor frontRightWheel;
-    DcMotor frontLeftWheel;
-    DcMotor backRightWheel;
-    DcMotor backLeftWheel;
+    static DcMotor rightWheel;
+    static DcMotor leftWheel;
 
-    DcMotor linearSlideR;
-    DcMotor linearSlideL;
+    static DcMotor linearSlideR;
+    static DcMotor linearSlideL;
 
-    Servo containerTilt;
-    Servo tubeExtender;
+    static DcMotor sweeper;
 
-    Servo mountainClimber;
-    Servo mountainClimberRelease;
+    static Servo tubeTilt;
+    static Servo tubeExtender;
 
-    DcMotor sweeper;
+    static Servo mountainClimber;
+    static Servo mountainClimberRelease;
 
-    Servo bumper;
+    static Servo bumper;
 
     //Declare gamepad objects
-    float rightWheel;
-    float leftWheel;
+    float rightWheelPower;
+    float leftWheelPower;
 
     boolean linearSlideForward = false;
     boolean linearSlideBackward = false;
@@ -59,15 +57,13 @@ public class TeleOp extends SynchronousOpMode {
     @Override
     public void main() throws InterruptedException {
         //Initialize hardware
-        frontRightWheel = hardwareMap.dcMotor.get("frontRightWheel");
-        frontLeftWheel = hardwareMap.dcMotor.get("frontLeftWheel");
-        backRightWheel = hardwareMap.dcMotor.get("backRightWheel");
-        backLeftWheel = hardwareMap.dcMotor.get("backLeftWheel");
+        rightWheel = hardwareMap.dcMotor.get("rightWheel");
+        leftWheel = hardwareMap.dcMotor.get("leftWheel");
 
         linearSlideR = hardwareMap.dcMotor.get("linearSlideR");
         linearSlideL = hardwareMap.dcMotor.get("linearSlideL");
 
-        containerTilt = hardwareMap.servo.get("containerTilt");
+        tubeTilt = hardwareMap.servo.get("tubeTilt");
         tubeExtender = hardwareMap.servo.get("tubeExtender");
 
         mountainClimber = hardwareMap.servo.get("mountainClimber");
@@ -78,29 +74,24 @@ public class TeleOp extends SynchronousOpMode {
         bumper = hardwareMap.servo.get("bumper");
 
         //Set motor channel modes and direction
-        frontRightWheel.setDirection(DcMotor.Direction.REVERSE);
-        frontRightWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-        frontLeftWheel.setDirection(DcMotor.Direction.FORWARD);
-        frontLeftWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-        backRightWheel.setDirection(DcMotor.Direction.FORWARD);
-        backRightWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-        backLeftWheel.setDirection(DcMotor.Direction.REVERSE);
-        backLeftWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        rightWheel.setDirection(DcMotor.Direction.REVERSE);
+        rightWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        leftWheel.setDirection(DcMotor.Direction.FORWARD);
+        leftWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
 
         linearSlideR.setDirection(DcMotor.Direction.REVERSE);
         linearSlideR.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
         linearSlideL.setDirection(DcMotor.Direction.FORWARD);
         linearSlideL.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
 
-        containerTilt.setDirection(Servo.Direction.REVERSE);
-        containerTilt.setPosition(0.5);
+        tubeTilt.setDirection(Servo.Direction.REVERSE);
         tubeExtender.setDirection(Servo.Direction.REVERSE);
-        tubeExtender.setPosition(0.5);
         mountainClimber.setDirection(Servo.Direction.FORWARD);
         mountainClimberRelease.setDirection(Servo.Direction.REVERSE);
         bumper.setDirection(Servo.Direction.FORWARD);
-        bumper.setPosition(0);
         //Wait for the game to start
+        teleopInit();
+
         waitForStart();
         long endTime = System.currentTimeMillis() + 120000;
         //Game Loop
@@ -126,11 +117,11 @@ public class TeleOp extends SynchronousOpMode {
             }
 
             if(containerTiltRight) {
-                containerTilt.setPosition(containerTilt.getPosition() + 0.01);
+                tubeTilt.setPosition(tubeTilt.getPosition() + 0.01);
             } else if(containerTiltLeft) {
-                containerTilt.setPosition(containerTilt.getPosition() - 0.01);
+                tubeTilt.setPosition(tubeTilt.getPosition() - 0.01);
             } else {
-                containerTilt.setPosition(containerTilt.getPosition());
+                tubeTilt.setPosition(tubeTilt.getPosition());
             }
 
             if(positionClimbersForward) {
@@ -159,8 +150,8 @@ public class TeleOp extends SynchronousOpMode {
             //For buttons that are not held
             if (updateGamepads()) {
                 //Defines gamepad buttons
-                rightWheel = gamepad1.right_stick_y;
-                leftWheel = gamepad1.left_stick_y;
+                rightWheelPower = gamepad1.right_stick_y;
+                leftWheelPower = gamepad1.left_stick_y;
 
                 linearSlideForward = gamepad1.right_bumper || gamepad2.right_bumper;
                 linearSlideBackward = gamepad1.left_bumper || gamepad2.left_bumper;
@@ -186,14 +177,14 @@ public class TeleOp extends SynchronousOpMode {
 
                 //Use gamepad values to move robot
                 if(slowDriveForward != 0 || slowDriveBack != 0) {
-                    Functions.moveTwoMotors(backRightWheel, frontRightWheel, (slowDriveForward - slowDriveBack) * 0.25);
-                    Functions.moveTwoMotors(backLeftWheel, frontLeftWheel, (slowDriveForward - slowDriveBack) * 0.25);
-                } else if(rightWheel != 0 || leftWheel != 0) {
-                    Functions.moveTwoMotors(backRightWheel, frontRightWheel, Functions.convertGamepad(rightWheel));
-                    Functions.moveTwoMotors(backLeftWheel, frontLeftWheel, Functions.convertGamepad(leftWheel));
+                    Functions.moveTwoMotors(rightWheel, rightWheel, (slowDriveForward - slowDriveBack) * 0.25);
+                    Functions.moveTwoMotors(leftWheel, leftWheel, (slowDriveForward - slowDriveBack) * 0.25);
+                } else if(rightWheelPower != 0 || leftWheelPower != 0) {
+                    Functions.moveTwoMotors(rightWheel, rightWheel, Functions.convertGamepad(rightWheelPower));
+                    Functions.moveTwoMotors(leftWheel, leftWheel, Functions.convertGamepad(leftWheelPower));
                 } else {
-                    Functions.moveTwoMotors(backRightWheel, frontRightWheel, 0);
-                    Functions.moveTwoMotors(backLeftWheel, frontLeftWheel, 0);
+                    Functions.moveTwoMotors(rightWheel, rightWheel, 0);
+                    Functions.moveTwoMotors(leftWheel, leftWheel, 0);
                 }
 
                 if (linearSlideForward) {
@@ -219,7 +210,15 @@ public class TeleOp extends SynchronousOpMode {
                 }
             }
 
+
             idle();
         }
+
+    } public static void teleopInit(){
+        mountainClimber.setPosition(Functions.mountainClimberInitPosition);
+        mountainClimberRelease.setPosition(Functions.mountainClimberReleaseInitPosition);
+        tubeExtender.setPosition(Functions.tubeExtenderInitPosition);
+        tubeTilt.setPosition(Functions.tubeTiltInitPosition);
+        bumper.setPosition(Functions.bumperInitPosition);
     }
 }

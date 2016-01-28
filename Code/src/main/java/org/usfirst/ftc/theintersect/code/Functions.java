@@ -12,9 +12,16 @@ public class Functions {
 	public static double encoderError = 4.0;
 	public static double colorError = 2.0;
 	public static double backWheelCircumfrence = 6*Math.PI;
+	public static double mountainClimberInitPosition = 0.1;
+    public static double mountainClimberReleaseInitPosition = 0.0;
+    public static double bumperInitPosition = 0.0;
+    public static double tubeExtenderInitPosition = 0.0;
+    public static double tubeTiltInitPosition = 0.0;
 
 
-	public static double convertGamepad(float y) {
+
+
+    public static double convertGamepad(float y) {
 		int m;
 
 		if(y < 0) {
