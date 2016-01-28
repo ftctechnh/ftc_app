@@ -28,7 +28,9 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
 
     public final II2cDevice     i2cDevice;                  // the device we are talking to
     private       boolean       isArmed;                    // whether we are armed or not
-    private       boolean       disarming;                  // whether we are in the process of disarming
+    private       int           preventReadsOrWrites;       //
+    private       boolean       armingIsDesired;            // user's arming intent
+    private       boolean       closing;
 
     private final Callback      callback;                   // the callback object on which we actually receive callbacks
     private       boolean       loggingEnabled;             // whether we are to log to Logcat or not
@@ -117,8 +119,10 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         i2cDevice.setI2cAddr(i2cAddr8Bit);
 
         this.i2cDevice              = i2cDevice;
+        this.armingIsDesired        = false;
+        this.closing                = false;
         this.isArmed                = false;
-        this.disarming              = false;
+        this.preventReadsOrWrites   = 0;
         this.callback               = new Callback();
         this.hardwareCycleCount     = 0;
         this.loggingEnabled         = false;
@@ -130,7 +134,10 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         this.heartbeatExecutor      = null;
 
         this.readWindow             = null;
+
         initializeFromController();
+        this.i2cDevice.registerForI2cNotificationsCallback(this.callback);
+
         if (closeOnOpModeStop)
             RobotStateTransitionNotifier.register(context, this);
         }
@@ -206,31 +213,71 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         //
         synchronized (this.armingLock)
             {
+            this.armingIsDesired = true;
+            adjustArmingState();;
+            }
+        }
+
+    void armInternal()
+        {
+        // The arming lock is distinct from the concurrentClientLock because we need to be
+        // able to drain heartbeats while disarming, so can't own the concurrentClientLock then,
+        // but we still need to be able to lock out arm() and disarm() against each other.
+        // Locking order: armingLock > concurrentClientLock > callbackLock
+        //
+        synchronized (this.armingLock)
+            {
             if (!this.isArmed)
                 {
+                log(Log.VERBOSE, "arming %s...", this.i2cDevice.getDeviceName());
+                //
                 synchronized (this.callbackLock)
                     {
                     this.heartbeatExecutor = Executors.newSingleThreadExecutor();
                     this.i2cDevice.registerForI2cPortReadyCallback(this.callback);
-                    this.i2cDevice.registerForI2cNotificationsCallback(this.callback);
                     }
                 this.isArmed = true;
+                //
+                log(Log.VERBOSE, "...arming %s complete", this.i2cDevice.getDeviceName());
                 }
+            }
+        }
+
+    /** adjust the arming state to reflect the user's intent */
+    void adjustArmingState()
+        {
+        synchronized (this.armingLock)
+            {
+            if (!this.isArmed && this.armingIsDesired)
+                this.armInternal();
+            else if (this.isArmed && !this.armingIsDesired)
+                this.disarmInternal();
             }
         }
 
     @Override public boolean isArmed()
         {
-        return this.isArmed;
+        return this.armingIsDesired;    // note!
         }
 
     @Override public void disarm()
+        {
+        synchronized (this.armingLock)
+            {
+            this.armingIsDesired = false;
+            this.adjustArmingState();
+            }
+        }
+
+    void disarmInternal()
         {
         try {
             synchronized (this.armingLock)
                 {
                 if (this.isArmed)
                     {
+                    log(Log.VERBOSE, "disarming %s...", this.i2cDevice.getDeviceName());
+
                     // We can't hold the concurrent client lock while we drain the heartbeat
                     // as that might be doing an external top-level read. But the semantic of
                     // Executors guarantees us this call returns any actions we've scheduled
@@ -238,7 +285,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                     Util.shutdownAndAwaitTermination(this.heartbeatExecutor);
 
                     // Prevent any new read or write from starting
-                    this.disarming = true;
+                    this.preventReadsOrWrites();
 
                     // Synchronizing on the concurrent client lock means we'll wait until any *existing*
                     // write()s finish up and return
@@ -256,12 +303,13 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
 
                             // Finally, disconnect us from our I2cDevice
                             this.i2cDevice.deregisterForPortReadyCallback();
-                            this.i2cDevice.deregisterForI2cNotificationsCallback();
                             }
                         }
 
                     this.isArmed = false;
-                    this.disarming = false;
+                    this.enableReadsOrWrites();
+
+                    log(Log.VERBOSE, "...disarming %s complete", this.i2cDevice.getDeviceName());
                     }
                 }
             }
@@ -269,6 +317,19 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
             {
             handleCapturedInterrupt(e);
             }
+        }
+
+    void preventReadsOrWrites()
+        {
+        this.preventReadsOrWrites++;
+        }
+    void enableReadsOrWrites()
+        {
+        this.preventReadsOrWrites--;
+        }
+    boolean areReadsOrWritesEnabled()
+        {
+        return this.preventReadsOrWrites > 0;
         }
 
     //----------------------------------------------------------------------------------------------
@@ -292,6 +353,9 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
 
     public void close()
         {
+        this.closing = true;
+        this.i2cDevice.deregisterForI2cNotificationsCallback();
+
         this.disarm();
 
         // We do NOT close() our i2cDevice, as we conceptually are a client of
@@ -392,7 +456,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         {
         try
             {
-            if (!this.isArmed || this.disarming)
+            if (!this.isArmed || !this.areReadsOrWritesEnabled())
                 {
                 // Return fake data
                 TimestampedData result = new TimestampedData();
@@ -542,7 +606,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
             {
             synchronized (this.concurrentClientLock)
                 {
-                if (!this.isArmed || this.disarming)
+                if (!this.isArmed || !this.areReadsOrWritesEnabled())
                     return; // Ignore the write
 
                 if (data.length > ReadWindow.cregWriteMax)
@@ -654,9 +718,11 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
             }
         }
 
+    /** set the write cache status, but don't disturb (from idle) if we're not open for business */
+    /* TODO: not sure if this is really needed */
     void setWriteCacheStatusIfArmed(WRITE_CACHE_STATUS status)
         {
-        if (this.isArmed && !this.disarming)
+        if (this.isArmed && this.areReadsOrWritesEnabled())
             this.writeCacheStatus = status;
         }
 
@@ -801,16 +867,23 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         @Override public void onPortIsReadyCallbacksEnd(int port)
         // We're being told that we're not going to get any more portIsReady callbacks.
             {
-            haltNewReadsAndWrites();
-            pokeInFlightReadersAndWritersThenDisarm();
+            if (closing)
+                return; // ignore
+
+            preventReadsOrWrites();
+            synchronized (armingLock)
+                {
+                pokeInFlightReadersAndWritersThenDisarm();
+                enableReadsOrWrites();
+                }
             }
 
         @Override
         public void onControllerNewlyArmedOrPretending(int i) throws InterruptedException
         // Our controller has (re)entered either the armed or the pretend state
             {
-            haltNewReadsAndWrites();
-
+            log(Log.VERBOSE, "%s newly armed or pretending....", i2cDevice.getDeviceName());
+            preventReadsOrWrites();
             synchronized (armingLock)
                 {
                 pokeInFlightReadersAndWritersThenDisarm();
@@ -819,37 +892,29 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                 I2cDeviceClient.this.initializeFromController();
 
                 // Start up again on the new guy
-                // TODO: only if we were armed?
-                arm();
+                adjustArmingState();
+                enableReadsOrWrites();
                 }
-            }
-
-        void haltNewReadsAndWrites()
-            {
-            disarming = true;
+            log(Log.VERBOSE, "... done %s newly armed or pretending", i2cDevice.getDeviceName());
             }
 
         void pokeInFlightReadersAndWritersThenDisarm()
             {
-            // Honor lock order
-            synchronized (armingLock)
+            // Wake up anyone who's waiting
+            synchronized (callbackLock)
                 {
-                // Wake up anyone who's waiting
-                synchronized (callbackLock)
-                    {
-                    // Complete any writes
-                    writeCacheStatus = WRITE_CACHE_STATUS.IDLE;
+                // Complete any writes
+                writeCacheStatus = WRITE_CACHE_STATUS.IDLE;
 
-                    // Lie and say that the data in the read cache is valid
-                    readCacheStatus = READ_CACHE_STATUS.VALID_QUEUED;
+                // Lie and say that the data in the read cache is valid
+                readCacheStatus = READ_CACHE_STATUS.VALID_QUEUED;
 
-                    // Wake up anyone who was waiting
-                    callbackLock.notifyAll();
-                    }
-
-                // Actually fully disarm
-                disarm();
+                // Actually wake folk up
+                callbackLock.notifyAll();
                 }
+
+            // Actually fully disarm
+            disarm();
             }
 
 
@@ -982,7 +1047,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                         {
                         writeCacheStatus = WRITE_CACHE_STATUS.IDLE;
                         // Our write mode status should have been reported back to us
-                        assertTrue(!BuildConfig.DEBUG || !isArmed || disarming || i2cDevice.isI2cPortInWriteMode());
+                        assertTrue(!BuildConfig.DEBUG || !isArmed || !areReadsOrWritesEnabled() || i2cDevice.isI2cPortInWriteMode());
                         }
 
                     //--------------------------------------------------------------------------
