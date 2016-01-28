@@ -13,7 +13,7 @@ public class Values {
     public static final double SIDE_ARM_OUT = 0.5;
 
     public static final double DUMP_UP = 0.0;
-    public static final double DUMP_DOWN = 0.75;
+    public static final double DUMP_DOWN = 0.2;
 
     public static final float DRIVE_BUCKET = 5;
     public static final float DRIVE_AWAY = 4;

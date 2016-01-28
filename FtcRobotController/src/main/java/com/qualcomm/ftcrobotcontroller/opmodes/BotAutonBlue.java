@@ -34,19 +34,19 @@ public class BotAutonBlue extends LinearOpMode {
 
         //Turn to align forwards
         MotorRunner.run(this, motorRight, Power.NORMAL_SPEED,
-                new TimeUnit(Values.TURN_AWAY * EncoderUnit.ROTATION_ANDYMARK));
+                new TimeUnit(Values.TURN_AWAY));
 
         //Line up to mountain
         MotorRunner.run(this, new DcMotor[]{motorLeft, motorRight}, Power.NORMAL_SPEED,
-                new TimeUnit(Values.DRIVE_AWAY * EncoderUnit.ROTATION_ANDYMARK));
+                new TimeUnit(Values.DRIVE_AWAY));
 
         //Turn perpendicular to the mountain
         MotorRunner.run(this, motorRight, Power.NORMAL_SPEED,
-                new TimeUnit(Values.TURN_MOUNTAIN * EncoderUnit.ROTATION_ANDYMARK));
+                new TimeUnit(Values.TURN_MOUNTAIN));
 
         //Drive on to mountain
         MotorRunner.run(this, new DcMotor[]{motorLeft, motorRight}, Power.NORMAL_SPEED,
-                new TimeUnit(Values.DRIVE_MOUNTAIN * EncoderUnit.ROTATION_ANDYMARK));
+                new TimeUnit(Values.DRIVE_MOUNTAIN));
     }
 
     public void initMotors() {

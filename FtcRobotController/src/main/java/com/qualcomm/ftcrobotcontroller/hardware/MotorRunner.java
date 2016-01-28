@@ -68,14 +68,19 @@ public class MotorRunner {
                 mode.telemetry.addData("Log", "Encoder Unit:" + unit.getValue());
                 motors[0].setMode(DcMotorController.RunMode.RESET_ENCODERS);
                 mode.waitOneFullHardwareCycle();
-                motors[0].setMode(DcMotorController.RunMode.RUN_TO_POSITION);
-                mode.waitOneFullHardwareCycle();
-                motors[0].setTargetPosition((int) unit.getValue());
+                motors[0].setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
                 mode.waitOneFullHardwareCycle();
                 setMotorPowers(motors, power);
-                while (motors[0].isBusy()) {
-                    mode.waitOneFullHardwareCycle();
-                    mode.telemetry.addData("Encoder Value", "Encoder Position:" + motors[0].getCurrentPosition());
+                if (unit.getValue() > 0) {
+                    while (motors[0].getCurrentPosition() < unit.getValue()) {
+                        mode.waitOneFullHardwareCycle();
+                        mode.telemetry.addData("Encoder Value", "Encoder Position:" + motors[0].getCurrentPosition());
+                    }
+                } else if (unit.getValue() < 0) {
+                    while (motors[0].getCurrentPosition() > -unit.getValue()) {
+                        mode.waitOneFullHardwareCycle();
+                        mode.telemetry.addData("Encoder Value", "Encoder Position:" + motors[0].getCurrentPosition());
+                    }
                 }
                 mode.telemetry.addData("Log", "Done Waiting");
                 setMotorPowers(motors, 0);

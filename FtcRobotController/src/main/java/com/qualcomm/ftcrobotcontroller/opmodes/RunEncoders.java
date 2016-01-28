@@ -6,17 +6,14 @@ import com.qualcomm.ftcrobotcontroller.Values;
 import com.qualcomm.ftcrobotcontroller.hardware.HardwareManager;
 import com.qualcomm.ftcrobotcontroller.hardware.MotorRunner;
 import com.qualcomm.ftcrobotcontroller.hardware.Power;
-import com.qualcomm.ftcrobotcontroller.units.TimeUnit;
+import com.qualcomm.ftcrobotcontroller.units.EncoderUnit;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 
-public class BotAutonRed extends LinearOpMode {
+public class RunEncoders extends LinearOpMode {
 
     DcMotor motorRight;
     DcMotor motorLeft;
-
-    Servo dump;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -25,30 +22,9 @@ public class BotAutonRed extends LinearOpMode {
         Log.w("Auton", "Starting Auton");
         //Autonomous starts here
 
-        //Drive to bucket, backwards
-        MotorRunner.run(this, new DcMotor[]{motorLeft, motorRight}, -Power.NORMAL_SPEED,
-                new TimeUnit(Values.DRIVE_BUCKET));
-
-        //Dump
-        dump.setPosition(Values.DUMP_DOWN);
-        Thread.sleep(1000);
-        dump.setPosition(Values.DUMP_UP);
-
-        //Turn to align forwards
-        MotorRunner.run(this, motorLeft, Power.NORMAL_SPEED,
-                new TimeUnit(Values.TURN_AWAY));
-
-        //Line up to mountain
+        //Test encoders
         MotorRunner.run(this, new DcMotor[]{motorLeft, motorRight}, Power.NORMAL_SPEED,
-                new TimeUnit(Values.DRIVE_AWAY));
-
-        //Turn perpendicular to the mountain
-        MotorRunner.run(this, motorLeft, Power.NORMAL_SPEED,
-                new TimeUnit(Values.TURN_MOUNTAIN));
-
-        //Drive on to mountain
-        MotorRunner.run(this, new DcMotor[]{motorLeft, motorRight}, Power.NORMAL_SPEED,
-                new TimeUnit(Values.DRIVE_MOUNTAIN));
+                new EncoderUnit((int) (EncoderUnit.ROTATION_ANDYMARK)));
     }
 
     public void initMotors() {
@@ -58,8 +34,6 @@ public class BotAutonRed extends LinearOpMode {
         motorRight.setDirection(DcMotor.Direction.REVERSE);
         motorLeft = manager.getMotor(Values.LEFT_MOTOR);
         motorLeft.setDirection(DcMotor.Direction.REVERSE);
-
-        dump = manager.getServo(Values.DUMP);
     }
 
     public void stopMotors() {
