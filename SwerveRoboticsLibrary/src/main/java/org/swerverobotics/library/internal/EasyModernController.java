@@ -30,6 +30,7 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
     protected String                        targetName;
     protected HardwareMap.DeviceMapping     targetDeviceMapping;
     protected boolean                       readWriteRunnableIsRunning;
+    protected AtomicInteger                 callbackWaiterCount;
 
     private final HWModuleArmDisarm.ARMINGSTATE targetArmingState;
 
@@ -54,6 +55,7 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
         this.context          = context;
         this.writeStatus      = WRITE_STATUS.IDLE;
         this.readWriteRunnableIsRunning = false;
+        this.callbackWaiterCount = new AtomicInteger();
         this.target            = target;
         this.targetArmingState = target.getArmingState();
 
@@ -74,7 +76,7 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
     protected void restoreTargetArmOrPretend() throws RobotCoreException, InterruptedException
         {
         if (targetArmingState==ARMINGSTATE.ARMED)
-            target.arm();
+            target.armOrPretend();
         else
             target.pretend();
         }
@@ -102,14 +104,21 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
                 while (this.writeStatus == WRITE_STATUS.DIRTY)
                     {
                     if (!this.isArmed())
-                        return;
+                        break;
                     if (!waitForCallback())
-                        return;         // interrupted or readWriteRunnable is dead, no point in writing
+                        break;
                     }
 
-                // Write the data to the buffer and put off reads and writes until it gets out
-                this.writeStatus = WRITE_STATUS.DIRTY;
-                super.write(address, data);
+                if (isOkToReadOrWrite())
+                    {
+                    // Write the data to the buffer and put off reads and writes until it gets out
+                    this.writeStatus = WRITE_STATUS.DIRTY;
+                    super.write(address, data);
+                    }
+                else
+                    {
+                    // Ignore
+                    }
                 }
             }
         }
@@ -128,9 +137,13 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
                     if (!this.isArmed())
                         break;
                     if (!waitForCallback())
-                        break;          // interrupted or readWriteRunnable is dead, just read stale data (?)
+                        break;
                     }
-                return super.read(address, size);
+
+                if (isOkToReadOrWrite())
+                    return super.read(address, size);
+                else
+                    return new byte[size];
                 }
             }
         }
@@ -181,6 +194,11 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
             }
         }
 
+    boolean isOkToReadOrWrite()
+        {
+        return this.isArmed() && this.readWriteRunnableIsRunning;
+        }
+
     @Override public void startupComplete()
         {
         this.readWriteRunnableIsRunning = true;
@@ -188,15 +206,23 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
 
     @Override public void shutdownComplete()
         {
+        Log.v(LOGGING_TAG, String.format("received shutdownComplete: %s", this.serialNumber.toString()));
         this.readWriteRunnableIsRunning = false;
         synchronized (this.callbackLock)
             {
+            this.writeStatus = WRITE_STATUS.IDLE;
             this.callbackLock.notifyAll();  // wake up any waiter
             }
+
+        // It's important that by here there be no more waiters: that is, everyone
+        // who needs to see that readWriteRunnableIsRunning is false will have noted same.
+        while (this.callbackWaiterCount.get() > 0)
+            Thread.yield();
         }
 
     boolean waitForCallback()
         {
+        this.callbackWaiterCount.incrementAndGet();
         boolean interrupted = false;
         if (this.readWriteRunnableIsRunning)
             {
@@ -209,7 +235,9 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
                 Util.handleCapturedInterrupt(e);
                 }
             }
-        return !interrupted && this.readWriteRunnableIsRunning;
+        boolean result = !interrupted && this.readWriteRunnableIsRunning;
+        this.callbackWaiterCount.decrementAndGet();
+        return result;
         }
 
     //----------------------------------------------------------------------------------------------

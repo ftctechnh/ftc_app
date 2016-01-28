@@ -329,7 +329,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         }
     boolean areReadsOrWritesEnabled()
         {
-        return this.preventReadsOrWrites > 0;
+        return this.preventReadsOrWrites == 0;
         }
 
     //----------------------------------------------------------------------------------------------

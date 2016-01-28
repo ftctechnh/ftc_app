@@ -145,7 +145,7 @@ public class EasyModernServoController extends EasyModernController implements S
 
     private void doArmOrPretend(boolean isArm) throws RobotCoreException, InterruptedException
         {
-        Log.d(LOGGING_TAG, String.format("arming servo controller \"%s\"%s....", this.getConnectionInfo(), (isArm ? "" : " (pretend)")));
+        Log.d(LOGGING_TAG, String.format("arming servo controller \"%s\"%s...", this.getConnectionInfo(), (isArm ? "" : " (pretend)")));
 
         // Turn off target
         this.floatHardware(target);
@@ -166,12 +166,12 @@ public class EasyModernServoController extends EasyModernController implements S
 
         // Initialize
         this.floatHardware();
-        Log.d(LOGGING_TAG, String.format("....armed \"%s\"", this.getConnectionInfo()));
+        Log.d(LOGGING_TAG, String.format("...armed \"%s\"", this.getConnectionInfo()));
         }
 
     @Override protected void doDisarm() throws RobotCoreException, InterruptedException
         {
-        Log.d(LOGGING_TAG, String.format("disarming \"%s\"....", this.getConnectionInfo()));
+        Log.d(LOGGING_TAG, String.format("disarming servo controller \"%s\"...", this.getConnectionInfo()));
 
         // Turn us off
         this.disarmDevice();
@@ -186,7 +186,7 @@ public class EasyModernServoController extends EasyModernController implements S
         // Turn target back on
         this.restoreTargetArmOrPretend();
 
-        Log.d(LOGGING_TAG, String.format("....disarmed \"%s\"", this.getConnectionInfo()));
+        Log.d(LOGGING_TAG, String.format("...disarmed \"%s\"", this.getConnectionInfo()));
         }
 
 

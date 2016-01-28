@@ -128,7 +128,7 @@ public class EasyModernMotorController extends EasyModernController implements D
 
     private void doArmOrPretend(boolean isArm) throws RobotCoreException, InterruptedException
         {
-        Log.d(LOGGING_TAG, String.format("arming motor controller \"%s\"%s....", this.getConnectionInfo(), (isArm ? "" : " (pretend)")));
+        Log.d(LOGGING_TAG, String.format("arming motor controller \"%s\"%s...", this.getConnectionInfo(), (isArm ? "" : " (pretend)")));
 
         // Turn off target
         target.disarm();
@@ -151,12 +151,12 @@ public class EasyModernMotorController extends EasyModernController implements D
         this.initPID();
         this.floatHardware();
 
-        Log.d(LOGGING_TAG, String.format("....armed \"%s\"", this.getConnectionInfo()));
+        Log.d(LOGGING_TAG, String.format("...armed \"%s\"", this.getConnectionInfo()));
         }
 
     @Override protected void doDisarm() throws RobotCoreException, InterruptedException
         {
-        Log.d(LOGGING_TAG, String.format("disarming \"%s\"....", this.getConnectionInfo()));
+        Log.d(LOGGING_TAG, String.format("disarming motor controller \"%s\"...", this.getConnectionInfo()));
 
         // Turn us off
         this.floatHardware();
@@ -173,7 +173,7 @@ public class EasyModernMotorController extends EasyModernController implements D
         // Turn target back on
         this.restoreTargetArmOrPretend();
 
-        Log.d(LOGGING_TAG, String.format("....disarmed \"%s\"", this.getConnectionInfo()));
+        Log.d(LOGGING_TAG, String.format("...disarmed \"%s\"", this.getConnectionInfo()));
         }
 
     // Close should *not* restart the target
