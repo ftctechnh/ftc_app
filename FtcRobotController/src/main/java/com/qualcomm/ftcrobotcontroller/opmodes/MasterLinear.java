@@ -21,7 +21,7 @@ public class MasterLinear extends LinearOpMode {
     //Important Constants
     public static final double MSECSTOSECS = 1000;
     //@param myDelay is in seconds
-    public MasterLinear(int startingPos, double myDelay, String myTeam)throws InterruptedException{
+    public MasterLinear(int startingPos, double myDelay, String myTeam){
         posNumber = startingPos;
         delay = (long) (myDelay*MSECSTOSECS);
         String team = myTeam.toUpperCase();
@@ -30,11 +30,15 @@ public class MasterLinear extends LinearOpMode {
         else if(team.equals("BLUE"))
             turnorientation = 1;
         else{
-            telemetry.addData("ERROR:","Invalid team given");
-            Thread.sleep(5000);
-            throw(new IndexOutOfBoundsException());
+            throw(new IndexOutOfBoundsException("Invalid Team Name given for Auto Program"));
         }
-        runOpMode();
+	try{
+	    runOpMode();
+	}
+	catch(InterruptedException e){
+	    Thread.currentThread().interrupt();
+	}
+        
     }
     @Override
     public void runOpMode(){
@@ -64,6 +68,7 @@ public class MasterLinear extends LinearOpMode {
             waitForStart();
         }
         catch (InterruptedException e){
+	    items.stop();
             Thread.currentThread().interrupt();
         }
         //Linear OpMode GOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -95,6 +100,7 @@ public class MasterLinear extends LinearOpMode {
             walnutDrive.linearDrive(100,1);
             hookServo.operate(1);
             walnutDrive.waitForCompletion();
+	    items.stop();
         }
         catch(InterruptedException e)
         {
