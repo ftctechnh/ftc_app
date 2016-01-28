@@ -25,6 +25,9 @@ public class BotAutonRed extends LinearOpMode {
         Log.w("Auton", "Starting Auton");
         //Autonomous starts here
 
+        //Wait for motors to initialize
+        Thread.sleep(1000);
+
         //Drive to bucket, backwards
         MotorRunner.run(this, new DcMotor[]{motorLeft, motorRight}, -Power.NORMAL_SPEED,
                 new TimeUnit(Values.DRIVE_BUCKET));
