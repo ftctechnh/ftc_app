@@ -29,7 +29,7 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
     protected boolean                       readWriteRunnableIsRunning;
     protected AtomicInteger                 callbackWaiterCount;
 
-    private final HWModuleArmDisarm.ARMINGSTATE targetArmingState;
+    private final UsbModule.ARMINGSTATE     targetArmingState;
 
     enum WRITE_STATUS { IDLE, DIRTY, READ };
 
