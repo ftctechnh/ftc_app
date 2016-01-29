@@ -58,7 +58,7 @@ public class LinearAutonomous extends LinearOpMode {
 	}
 
 
-    public static void setDirections() {
+    public static void directionInit() {
         rightWheel.setDirection(DcMotor.Direction.REVERSE);
         leftWheel.setDirection(DcMotor.Direction.FORWARD);
         mountainClimber.setDirection(Servo.Direction.FORWARD);
@@ -70,7 +70,7 @@ public class LinearAutonomous extends LinearOpMode {
 
 	public static void autonomousInit() {
 		servoInit();
-        setDirections();
+        directionInit();
 	}
 
     public static void servoInit(){
