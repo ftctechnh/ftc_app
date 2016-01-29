@@ -16,6 +16,7 @@ public class Values {
     public static final double DUMP_DOWN = 0.2;
 
     public static final float DRIVE_BUCKET = 7.1f;
+    public static final float DRIVE_SMALL = 1.2f;
     public static final float DRIVE_AWAY = 6f;
     public static final float DRIVE_MOUNTAIN = 7f;
 

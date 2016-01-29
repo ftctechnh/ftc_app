@@ -37,6 +37,10 @@ public class ClarkAutonRed extends LinearOpMode{
             MotorRunner.run(this, motorLeft, -Power.FULL_SPEED,
                     new TimeUnit(Values.TURN_FLUSH));
 
+            //Go forward a bit more
+            MotorRunner.run(this, new DcMotor[]{motorLeft, motorRight}, -Power.FULL_SPEED,
+                    new TimeUnit(Values.DRIVE_SMALL));
+
             //Dump
             dump.setPosition(Values.DUMP_DOWN);
             Thread.sleep(1000);
