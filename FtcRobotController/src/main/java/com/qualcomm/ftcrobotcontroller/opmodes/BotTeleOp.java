@@ -21,8 +21,8 @@ public class BotTeleOp extends OpMode {
 
     Servo dump;
 
-    boolean btnSideLeft;
-    boolean btnSideRight;
+    boolean btnSideLeft = false;
+    boolean btnSideRight = false;
 
     int tapeMod = 1;
 
@@ -36,7 +36,9 @@ public class BotTeleOp extends OpMode {
         motorLeft.setDirection(DcMotor.Direction.REVERSE);
 
         tape1 = manager.getMotor(Values.TAPE_1);
+        tape1.setDirection(DcMotor.Direction.REVERSE);
         tape2 = manager.getMotor(Values.TAPE_2);
+        tape2.setDirection(DcMotor.Direction.REVERSE);
 
         leftArm = manager.getServo(Values.LEFT_ARM);
         rightArm = manager.getServo(Values.RIGHT_ARM);
@@ -51,39 +53,33 @@ public class BotTeleOp extends OpMode {
         motorLeft.setPower(Power.speedCurve(gamepad1.left_stick_y));
         motorRight.setPower(Power.speedCurve(gamepad1.right_stick_y));
 
-        tape1.setPower(gamepad1.left_trigger * tapeMod);
-        tape2.setPower(gamepad1.right_trigger * tapeMod);
+        tape1.setPower(Power.speedCurve(gamepad2.left_stick_y));
+        tape2.setPower(Power.speedCurve(gamepad2.right_stick_y));
 
-        if (gamepad1.left_bumper && !btnSideLeft) {
+        if (gamepad2.left_bumper && !btnSideLeft) {
             btnSideLeft = true;
             if (leftArm.getPosition() == Values.SIDE_ARM_IN)
                 leftArm.setPosition(Values.SIDE_ARM_OUT);
             else
                 leftArm.setPosition(Values.SIDE_ARM_IN);
-        } else {
+        } else if (!gamepad2.left_bumper) {
             btnSideLeft = false;
         }
 
-        if (gamepad1.right_bumper && !btnSideRight) {
+        if (gamepad2.right_bumper && !btnSideRight) {
             btnSideRight = true;
             if (rightArm.getPosition() == Values.SIDE_ARM_IN)
                 rightArm.setPosition(Values.SIDE_ARM_OUT);
             else
                 rightArm.setPosition(Values.SIDE_ARM_IN);
-        } else {
+        } else if (!gamepad2.right_bumper) {
             btnSideRight = false;
         }
 
-        if (gamepad1.y) {
+        if (gamepad2.y) {
             dump.setPosition(Values.DUMP_UP);
-        } else if (gamepad1.a) {
+        } else if (gamepad2.a) {
             dump.setPosition(Values.DUMP_DOWN);
-        }
-
-        if (gamepad1.x) {
-            tapeMod = 1;
-        } else if (gamepad1.b) {
-            tapeMod = -1;
         }
 
         telemetry.addData("Title", "***Robot Data***");

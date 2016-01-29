@@ -29,38 +29,25 @@ public class BotAutonRed extends LinearOpMode {
         Thread.sleep(1000);
 
         //Drive to bucket, backwards
-        MotorRunner.run(this, new DcMotor[]{motorLeft, motorRight}, -Power.NORMAL_SPEED,
+        MotorRunner.run(this, new DcMotor[]{motorLeft, motorRight}, -Power.FULL_SPEED,
                 new TimeUnit(Values.DRIVE_BUCKET));
+
+
+        //Turn to align flush
+        MotorRunner.run(this, motorRight, -Power.FULL_SPEED,
+                new TimeUnit(Values.TURN_FLUSH));
 
         //Dump
         dump.setPosition(Values.DUMP_DOWN);
         Thread.sleep(1000);
         dump.setPosition(Values.DUMP_UP);
-
-        //Turn to align forwards
-        MotorRunner.run(this, motorLeft, Power.NORMAL_SPEED,
-                new TimeUnit(Values.TURN_AWAY));
-
-        //Line up to mountain
-        MotorRunner.run(this, new DcMotor[]{motorLeft, motorRight}, Power.NORMAL_SPEED,
-                new TimeUnit(Values.DRIVE_AWAY));
-
-        //Turn perpendicular to the mountain
-        MotorRunner.run(this, motorLeft, Power.NORMAL_SPEED,
-                new TimeUnit(Values.TURN_MOUNTAIN));
-
-        //Drive on to mountain
-        MotorRunner.run(this, new DcMotor[]{motorLeft, motorRight}, Power.NORMAL_SPEED,
-                new TimeUnit(Values.DRIVE_MOUNTAIN));
     }
 
     public void initMotors() {
         HardwareManager manager = new HardwareManager(hardwareMap);
 
         motorRight = manager.getMotor(Values.RIGHT_MOTOR);
-        motorRight.setDirection(DcMotor.Direction.REVERSE);
         motorLeft = manager.getMotor(Values.LEFT_MOTOR);
-        motorLeft.setDirection(DcMotor.Direction.REVERSE);
 
         dump = manager.getServo(Values.DUMP);
     }
