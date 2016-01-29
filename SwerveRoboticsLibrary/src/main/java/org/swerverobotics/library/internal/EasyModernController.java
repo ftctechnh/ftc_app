@@ -5,6 +5,7 @@ import com.qualcomm.hardware.modernrobotics.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.exception.*;
 import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.hardware.usb.*;
 
 import org.swerverobotics.library.*;
 
@@ -29,7 +30,7 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
     protected boolean                       readWriteRunnableIsRunning;
     protected AtomicInteger                 callbackWaiterCount;
 
-    private final UsbModule.ARMINGSTATE     targetArmingState;
+    private final RobotUsbModule.ARMINGSTATE targetArmingState;
 
     enum WRITE_STATUS { IDLE, DIRTY, READ };
 
