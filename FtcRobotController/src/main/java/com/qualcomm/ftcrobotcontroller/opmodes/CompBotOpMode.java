@@ -58,10 +58,11 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
 
     Date clock;
     long targetTime;
+    long currentPosition;
 
     //private DcMotor motorUsed = rightMotor;
     boolean useRightMotor = true;
-    private int encoderTarget = -30;
+    private long encoderTarget = -30;
     private boolean forwardDirection = true;
 
     public DcMotor getLeftMotor()
@@ -186,6 +187,8 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
             inches*=-1.0;
         }
         int encoderChange = ((int)(123.42844 * inches));
+        currentPosition = leftMotor.getCurrentPosition();
+        encoderTarget = currentPosition + encoderChange;
         if(encoderChange > 0)
         {
             leftMotor.setPower(speed);
@@ -199,10 +202,10 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
             this.forwardDirection = false;
         }
         //motorUsed = rightMotor;
-        useRightMotor = true;
-        encoderTarget += encoderChange;
+        useRightMotor = false;
+        //encoderTarget += encoderChange;
         clock = new Date();
-        targetTime = clock.getTime() + 5000;
+        //targetTime = clock.getTime() + 5000;
     }
 
 
@@ -520,7 +523,7 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
         //rightMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         //makes sure the encoders reset
 
-        long currentPosition;
+        //long currentPosition;
 
         if (useRightMotor)
         {
@@ -594,6 +597,16 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
         //tapeMeasureServo.close();
         climberReleaseServoRight.close();
         climberReleaseServoLeft.close();
+    }
+
+    public long returnCurrent()
+    {
+        return currentPosition;
+    }
+
+    public long returnTarget()
+    {
+        return encoderTarget;
     }
 
 }

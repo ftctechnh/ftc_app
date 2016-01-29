@@ -32,24 +32,24 @@ public class OpModeAutoTrial extends OpMode implements DriverInterface
             switch(step)
             {
                 case 1:
-                    telemetry.addData("move straight",3);
+                    telemetry.addData("move straight",1);
                     compBot.moveStraightEncoders(5, (float) .9);
                     //compBot.stop();
                     break;
 
                 case 2:
-                    telemetry.addData("move back",4);
-                    compBot.moveStraightEncoders(-5, (float) .9);
+                    telemetry.addData("move back", 2);
+                    //compBot.moveStraightEncoders(-5, (float) .9);
                     //compBot.stop();
                     break;
                 case 3:
-                    telemetry.addData("move forward 2",5);
-                    compBot.moveStraightEncoders(5, (float) .9);
+                    telemetry.addData("move forward 2", 3);
+                    //compBot.moveStraightEncoders(5, (float) .9);
                     //compBot.stop();
                     break;
                 default:
-                    telemetry.addData("default",0);
-                    compBot.stop();
+                    telemetry.addData("default", step);
+                    //compBot.stop();
                     break;
             }
             step++;
@@ -57,6 +57,8 @@ public class OpModeAutoTrial extends OpMode implements DriverInterface
         else
         {
             telemetry.addData("running step",step);
+            telemetry.addData("Current is", compBot.returnCurrent());
+            telemetry.addData("Target is", compBot.returnTarget());
         }
 
     }
