@@ -47,7 +47,6 @@ public class LinearAutonomous extends LinearOpMode {
 		bumper = hardwareMap.servo.get("bumper");
         ClassFactory.createSwerveColorSensor(this, lineColor);
 
-        //INIT
         autonomousInit();
 
 		waitForStart();
