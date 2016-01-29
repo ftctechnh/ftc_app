@@ -135,8 +135,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
 
         this.readWindow             = null;
 
-        initializeFromController();
-        this.i2cDevice.registerForI2cNotificationsCallback(this.callback);
+        this.i2cDevice.registerForPortReadyBeginEndCallback(this.callback);
 
         if (closeOnOpModeStop)
             RobotStateTransitionNotifier.register(context, this);
@@ -354,7 +353,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
     public void close()
         {
         this.closing = true;
-        this.i2cDevice.deregisterForI2cNotificationsCallback();
+        this.i2cDevice.deregisterForPortReadyBeginEndCallback();
 
         this.disarm();
 
@@ -828,7 +827,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         FROM_USER_WRITE
         }
 
-    private class Callback implements I2cController.I2cPortReadyCallback, I2cController.I2cNotificationsCallback
+    private class Callback implements I2cController.I2cPortReadyCallback, I2cController.I2cPortReadyBeginEndNotifications
         {
         //------------------------------------------------------------------------------------------
         // State, kept in member variables so we can divvy the updateStateMachines() logic
@@ -860,42 +859,47 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
 
         @Override public void onPortIsReadyCallbacksBegin(int port)
             {
-            // TODO: arm(); do we want to do this?
-            // TODO: we don't get this notification the first time, only later. is the notification actually useful?
+            try {
+                log(Log.VERBOSE, "%s: onPortIsReadyCallbacksBegin...", i2cDevice.getDeviceName());
+                preventReadsOrWrites();
+                synchronized (armingLock)
+                    {
+                    pokeInFlightReadersAndWritersThenDisarm();
+
+                    // REVIEW: what locking is needed for this?
+                    I2cDeviceClient.this.initializeFromController();
+
+                    // Start up again on the new guy
+                    adjustArmingState();
+                    enableReadsOrWrites();
+                    }
+                }
+            finally
+                {
+                log(Log.VERBOSE, "...done: %s: onPortIsReadyCallbacksBegin", i2cDevice.getDeviceName());
+                }
             }
 
         @Override public void onPortIsReadyCallbacksEnd(int port)
         // We're being told that we're not going to get any more portIsReady callbacks.
             {
-            if (closing)
-                return; // ignore
+            try {
+                log(Log.VERBOSE, "%s: onPortIsReadyCallbacksEnd...", i2cDevice.getDeviceName());
 
-            preventReadsOrWrites();
-            synchronized (armingLock)
-                {
-                pokeInFlightReadersAndWritersThenDisarm();
-                enableReadsOrWrites();
+                if (closing)
+                    return; // ignore
+
+                preventReadsOrWrites();
+                synchronized (armingLock)
+                    {
+                    pokeInFlightReadersAndWritersThenDisarm();
+                    enableReadsOrWrites();
+                    }
                 }
-            }
-
-        @Override
-        public void onControllerNewlyArmedOrPretending(int i) throws InterruptedException
-        // Our controller has (re)entered either the armed or the pretend state
-            {
-            log(Log.VERBOSE, "%s newly armed or pretending....", i2cDevice.getDeviceName());
-            preventReadsOrWrites();
-            synchronized (armingLock)
+            finally
                 {
-                pokeInFlightReadersAndWritersThenDisarm();
-
-                // REVIEW: what locking is needed for this?
-                I2cDeviceClient.this.initializeFromController();
-
-                // Start up again on the new guy
-                adjustArmingState();
-                enableReadsOrWrites();
+                log(Log.VERBOSE, "...done: %s: onPortIsReadyCallbacksEnd", i2cDevice.getDeviceName());
                 }
-            log(Log.VERBOSE, "... done %s newly armed or pretending", i2cDevice.getDeviceName());
             }
 
         void pokeInFlightReadersAndWritersThenDisarm()
