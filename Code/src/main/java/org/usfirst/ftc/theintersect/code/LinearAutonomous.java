@@ -1,7 +1,13 @@
 package org.usfirst.ftc.theintersect.code;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.hardware.GyroSensor;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.UltrasonicSensor;
+
 import org.swerverobotics.library.ClassFactory;
 
 @org.swerverobotics.library.interfaces.Autonomous(name = "LinearAutonomous")
@@ -115,7 +121,7 @@ public class LinearAutonomous extends LinearOpMode {
 		leftWheel.setPower(-power);
 	}
 
-	public static void moveRobotBackRotations(double rotations, double power,
+	public static void moveRobotBackwardRotations(double rotations, double power,
 			long timeoutMill) {
 		long endTime = System.currentTimeMillis() + timeoutMill;
 		resetEncoders();
@@ -147,7 +153,7 @@ public class LinearAutonomous extends LinearOpMode {
 		}
 	}
 
-	public static void spinRobotLeftDegrees(double degrees, double power,
+	public static void spinRobotLeftRotations(double degrees, double power,
 			long timeoutMill) {
 		long endTime = System.currentTimeMillis() + timeoutMill;
 		resetEncoders();
@@ -163,7 +169,7 @@ public class LinearAutonomous extends LinearOpMode {
 		}
 	}
 
-	public static void spinRobotRightDegrees(double degrees, double power,
+	public static void spinRobotRightRotations(double degrees, double power,
 			long timeoutMill) {
 		long endTime = System.currentTimeMillis() + timeoutMill;
 		resetEncoders();
@@ -179,7 +185,7 @@ public class LinearAutonomous extends LinearOpMode {
 		}
 	}
 
-	public static void turnRobotRightForwardDegrees(double degrees, double
+	public static void turnRobotRightForwardRotations(double degrees, double
 			power, long timeoutMill) {
 		long endTime = System.currentTimeMillis() + timeoutMill;
 		resetEncoders();
@@ -195,7 +201,7 @@ public class LinearAutonomous extends LinearOpMode {
 		}
 	}
 
-	public static void turnRobotLeftForwardDegrees(double degrees, double
+	public static void turnRobotLeftForwardRotations(double degrees, double
 			power, long timeoutMill) {
 		long endTime = System.currentTimeMillis() + timeoutMill;
 		resetEncoders();
@@ -211,7 +217,7 @@ public class LinearAutonomous extends LinearOpMode {
 		}
 	}
 
-	public static void turnRobotRightBackwardDegrees(double degrees, double
+	public static void turnRobotRightBackwardRotations(double degrees, double
 			power, long timeoutMill) {
 		long endTime = System.currentTimeMillis() + timeoutMill;
 		resetEncoders();
@@ -227,7 +233,7 @@ public class LinearAutonomous extends LinearOpMode {
 		}
 	}
 
-	public static void turnRobotLeftBackwardDegrees(double degrees, double
+	public static void turnRobotLeftBackwardRotations(double degrees, double
 			power, long timeoutMill) {
 		long endTime = System.currentTimeMillis() + timeoutMill;
 		resetEncoders();
