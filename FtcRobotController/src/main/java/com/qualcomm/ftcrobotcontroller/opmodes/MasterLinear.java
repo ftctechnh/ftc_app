@@ -32,12 +32,7 @@ public class MasterLinear extends LinearOpMode {
         else{
             throw(new IndexOutOfBoundsException("Invalid Team Name given for Auto Program"));
         }
-	try{
 	    runOpMode();
-	}
-	catch(InterruptedException e){
-	    Thread.currentThread().interrupt();
-	}
         
     }
     @Override

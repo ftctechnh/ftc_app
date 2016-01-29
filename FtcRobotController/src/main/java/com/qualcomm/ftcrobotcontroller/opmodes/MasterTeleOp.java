@@ -30,7 +30,7 @@ public class MasterTeleOp extends OpMode{
     private IncMotor leftDrive;
 
     private IncMotor slider;
-    private IncMotor rightSlider;
+    private IncMotor sliderRight;
     private DigMotor spinner;
     
     private WalnutServo belt;

@@ -7,11 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
  */
 public class DefaultLinear extends LinearOpMode {
     public void runOpMode(){
-        try{
             MasterLinear runner = new MasterLinear(0,0,"BLUE");
-        }
-        catch(InterruptedException e){
-            Thread.currentThread().interrupt();
-        }
+
     }
 }
