@@ -5,7 +5,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 19
     }
-    compileSdkVersion 'Google Inc.:Google APIs:19'
+    compileSdkVersion 19
     buildToolsVersion '21.1.2'
 }
 
@@ -44,4 +44,11 @@ dependencies {
     compile(name: 'ModernRobotics-release', ext: 'aar')
     compile(name: 'Analytics-release', ext: 'aar')
     compile(name: 'WirelessP2p-release', ext: 'aar')
+}
+
+task genJavadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    destinationDir = file("../javadoc/")
+    failOnError false
 }
