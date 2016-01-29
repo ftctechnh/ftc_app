@@ -47,13 +47,13 @@ public class EasyModernServoController extends EasyModernController implements S
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    private EasyModernServoController(OpMode context, final ModernRoboticsUsbServoController target) throws RobotCoreException, InterruptedException
+    private EasyModernServoController(final OpMode context, final ModernRoboticsUsbServoController target) throws RobotCoreException, InterruptedException
         {
         super(context, target, new ModernRoboticsUsbDevice.CreateReadWriteRunnable() {
             @Override
             public ReadWriteRunnable create(RobotUsbDevice robotUsbDevice) throws RobotCoreException, InterruptedException
                 {
-                return new ReadWriteRunnableStandard(target.getSerialNumber(), robotUsbDevice, MONITOR_LENGTH, START_ADDRESS, false);
+                return new ReadWriteRunnableStandard(context.hardwareMap.appContext, target.getSerialNumber(), robotUsbDevice, MONITOR_LENGTH, START_ADDRESS, false);
                 }
             });
 
@@ -87,7 +87,7 @@ public class EasyModernServoController extends EasyModernController implements S
 
     private void findTargetNameAndMapping()
         {
-        for (HardwareMap.DeviceMapping<?> mapping : Util.deviceMappings(this.context.hardwareMap))
+        for (HardwareMap.DeviceMapping<?> mapping : Util.deviceMappings(this.opmodeContext.hardwareMap))
             {
             for (Map.Entry<String,?> pair : mapping.entrySet())
                 {

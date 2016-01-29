@@ -2,15 +2,12 @@ package org.swerverobotics.library.internal;
 
 import android.util.Log;
 import com.qualcomm.hardware.modernrobotics.*;
-import com.qualcomm.modernrobotics.*;
-import com.qualcomm.robotcore.eventloop.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.exception.*;
 import com.qualcomm.robotcore.hardware.*;
-import com.qualcomm.robotcore.hardware.usb.RobotUsbDevice;
-import com.qualcomm.robotcore.util.*;
+
 import org.swerverobotics.library.*;
-import java.util.concurrent.*;
+
 import java.util.concurrent.atomic.*;
 
 /**
@@ -25,7 +22,7 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
 
     public static final String LOGGING_TAG = SynchronousOpMode.LOGGING_TAG;
 
-    protected OpMode                        context;
+    protected OpMode                        opmodeContext;
     protected final ModernRoboticsUsbDevice target;
     protected String                        targetName;
     protected HardwareMap.DeviceMapping     targetDeviceMapping;
@@ -47,12 +44,12 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    public EasyModernController(OpMode context, ModernRoboticsUsbDevice target, ModernRoboticsUsbDevice.CreateReadWriteRunnable createReadWriteRunnable) throws RobotCoreException, InterruptedException
+    public EasyModernController(OpMode opmodeContext, ModernRoboticsUsbDevice target, ModernRoboticsUsbDevice.CreateReadWriteRunnable createReadWriteRunnable) throws RobotCoreException, InterruptedException
         {
-        super(target.getSerialNumber(), SwerveThreadContext.getEventLoopManager(), target.getOpenRobotUsbDevice(), createReadWriteRunnable);
+        super(opmodeContext.hardwareMap.appContext, target.getSerialNumber(), SwerveThreadContext.getEventLoopManager(), target.getOpenRobotUsbDevice(), createReadWriteRunnable);
 
         // Initialize the rest of our state
-        this.context          = context;
+        this.opmodeContext    = opmodeContext;
         this.writeStatus      = WRITE_STATUS.IDLE;
         this.readWriteRunnableIsRunning = false;
         this.callbackWaiterCount = new AtomicInteger();

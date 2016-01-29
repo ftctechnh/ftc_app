@@ -33,13 +33,13 @@ public class EasyModernMotorController extends EasyModernController implements D
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    private EasyModernMotorController(OpMode context, final ModernRoboticsUsbDcMotorController target) throws RobotCoreException, InterruptedException
+    private EasyModernMotorController(final OpMode context, final ModernRoboticsUsbDcMotorController target) throws RobotCoreException, InterruptedException
         {
         super(context, target, new ModernRoboticsUsbDevice.CreateReadWriteRunnable() {
             @Override
             public ReadWriteRunnable create(RobotUsbDevice robotUsbDevice) throws RobotCoreException, InterruptedException
                 {
-                return new ReadWriteRunnableStandard(target.getSerialNumber(), robotUsbDevice, MONITOR_LENGTH, START_ADDRESS, false);
+                return new ReadWriteRunnableStandard(context.hardwareMap.appContext, target.getSerialNumber(), robotUsbDevice, MONITOR_LENGTH, START_ADDRESS, false);
                 }
             });
 
@@ -71,7 +71,7 @@ public class EasyModernMotorController extends EasyModernController implements D
 
     private void findTargetNameAndMapping()
         {
-        for (HardwareMap.DeviceMapping<?> mapping : Util.deviceMappings(this.context.hardwareMap))
+        for (HardwareMap.DeviceMapping<?> mapping : Util.deviceMappings(this.opmodeContext.hardwareMap))
             {
             for (Map.Entry<String,?> pair : mapping.entrySet())
                 {
@@ -138,7 +138,7 @@ public class EasyModernMotorController extends EasyModernController implements D
         if (this.targetName != null)
             {
             this.targetDeviceMapping.put(this.targetName, this);
-            this.context.hardwareMap.voltageSensor.put(this.targetName, this);
+            this.opmodeContext.hardwareMap.voltageSensor.put(this.targetName, this);
             }
 
         // Turn us on
@@ -167,7 +167,7 @@ public class EasyModernMotorController extends EasyModernController implements D
         if (this.targetName != null)
             {
             this.targetDeviceMapping.put(this.targetName, this.target);
-            this.context.hardwareMap.voltageSensor.put(this.targetName, this.target);
+            this.opmodeContext.hardwareMap.voltageSensor.put(this.targetName, this.target);
             }
 
         // Turn target back on
