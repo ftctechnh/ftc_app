@@ -13,6 +13,9 @@ public class MainOpMode extends OpMode{
     final static double ARM_MIN_RANGE  = 0;
     final static double ARM_MAX_RANGE  = 1;
 
+    static Boolean servo_right_on = false;
+    static Boolean servo_left_on;
+
     double armDelta = 0.05;
 
     // MOTOR VALUES
@@ -25,7 +28,7 @@ public class MainOpMode extends OpMode{
 
     Servo servo_right, servo_left, servo_lip;
 
-    double rightArmPosition, leftArmPosition, lipServoPosition;
+    double rightArmPosition, leftArmPosition;
 
 
     // CONSTRUCTOR and Electronics Diagram
@@ -95,23 +98,40 @@ public class MainOpMode extends OpMode{
 
         servo_right = hardwareMap.servo.get("servo_1");
         servo_left = hardwareMap.servo.get("servo_2");
-        servo_lip = hardwareMap.servo.get("servo_3");
+
 
         rightArmPosition = 1;
         leftArmPosition = 0;
-        lipServoPosition = 0;
+
+
     }
 
     //Loop
     // Called repeatedly every 10 ms
     @Override
     public void loop() {
+        rightArmPosition = 1.3;
+        // For right 1 is the top and 0 is the bottom
 
+        leftArmPosition = 0.14;
+        //for left 0 is the top and 1 is the bottom
+
+/*
+        motorLeftFront.setPower(-gamepad1.left_stick_y);
+        motorLeftBack.setPower(gamepad1.left_stick_y);
+
+        motorRightFront.setPower(-gamepad1.right_stick_y);
+        motorRightBack.setPower(-gamepad1.right_stick_y);
+*/
         //Left
-        if(gamepad1.left_trigger >= 0.0){
+        /*
+
+        if(gamepad1.left_trigger >= 0.49803925){
             motorLeftFront.setPower(-1);
             motorLeftBack.setPower(1);
-        }else if(gamepad1.left_bumper){
+        }else
+
+        if(gamepad1.left_bumper){
             motorLeftFront.setPower(1);
             motorLeftBack.setPower(-1);
         }else{
@@ -122,7 +142,7 @@ public class MainOpMode extends OpMode{
 
         //Right
 
-        if(gamepad1.right_trigger == 0.0){
+        if(gamepad1.right_trigger >= 0.49803925){
             motorRightFront.setPower(-1);
             motorRightBack.setPower(-1);
         }else if(gamepad1.right_bumper){
@@ -132,43 +152,58 @@ public class MainOpMode extends OpMode{
             motorRightFront.setPower(0);
             motorRightBack.setPower(0);
         }
-
+*/
 
 
         //If we get a new controller use this code instead
-        /*
-        motorLeftFront.setPower(-squareInputs(gamepad1.left_stick_y));
-        motorLeftBack.setPower(-squareInputs(gamepad1.left_stick_y));
 
-        motorRightFront.setPower(squareInputs(gamepad1.right_stick_y));
-        motorRightBack.setPower(squareInputs(gamepad1.right_stick_y));
-        */
+        motorLeftFront.setPower(squareInputs(gamepad2.left_stick_y));
+        motorLeftBack.setPower(-squareInputs(gamepad2.left_stick_y));
 
-        if (gamepad2.b) {
+        motorRightFront.setPower(squareInputs(gamepad2.right_stick_y));
+        motorRightBack.setPower(squareInputs(gamepad2.right_stick_y));
+
+/*
+        if (gamepad1.b) {
             // if the A button is pushed on gamepad1, increment the position of
             // the arm servo.
-            rightArmPosition = .25;
-            leftArmPosition = .75;
+            if(servo_left_on){
+                leftArmPosition = 0.25;
+                servo_left_on = false;
+            }else{
+                leftArmPosition = 0.75;
+                servo_left_on = true;
+            }
+        }
+        if (gamepad1.y) {
+            // if the A button is pushed on gamepad1, increment the position of
+            // the arm servo.
+            if(servo_right_on){
+                leftArmPosition = 0.0;
+                servo_right_on = false;
+            }else{
+                leftArmPosition = 0.5;
+                servo_right_on = true;
+            }
         }
 
-        if (gamepad2.left_bumper) {
-            lipServoPosition = 0;
-        }
-
-        if (gamepad2.right_bumper) {
-            lipServoPosition = .5;
-        }
+*/
 
 
         if (gamepad2.y) {
             // if the Y button is pushed on gamepad1, decrease the position of
             // the arm servo.
-            rightArmPosition = 1;
-            leftArmPosition = 0;
-        }
 
+            leftArmPosition = 0.64;
+        }
+        if (gamepad2.b) {
+            // if the Y button is pushed on gamepad1, decrease the position of
+            // the arm servo.
+
+            rightArmPosition = 0.;
+        }
         if (gamepad1.a) {
-            sucker.setPower(-1);
+            sucker.setPower(1);
         }
         if (gamepad1.x)
             sucker.setPower(0);
@@ -183,11 +218,11 @@ public class MainOpMode extends OpMode{
 
         rightArmPosition = Range.clip(rightArmPosition, ARM_MIN_RANGE, ARM_MAX_RANGE);
         leftArmPosition = Range.clip(leftArmPosition, ARM_MIN_RANGE, ARM_MAX_RANGE);
-        lipServoPosition = Range.clip(lipServoPosition, ARM_MIN_RANGE, ARM_MAX_RANGE);
+
 
         servo_right.setPosition(rightArmPosition);
         servo_left.setPosition(leftArmPosition);
-        servo_lip.setPosition(lipServoPosition);
+
 
         telemetry.addData("Left Stick", gamepad1.left_stick_y);
         telemetry.addData("Right Stick", gamepad1.right_stick_y);
