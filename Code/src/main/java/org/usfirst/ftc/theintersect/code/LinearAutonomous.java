@@ -36,29 +36,19 @@ public class LinearAutonomous extends LinearOpMode {
 	public void runOpMode() throws InterruptedException {
 		rightWheel = hardwareMap.dcMotor.get("rightWheel");
 		leftWheel = hardwareMap.dcMotor.get("leftWheel");
-
 		sweeper = hardwareMap.dcMotor.get("sweeper");
-
 		lineColor = hardwareMap.colorSensor.get("lineColor");
 		gyro = hardwareMap.gyroSensor.get("gyro");
 		ultrasonic = hardwareMap.ultrasonicSensor.get("ultrasonic");
 		tubeTilt = hardwareMap.servo.get("tubeTilt");
 		tubeExtender = hardwareMap.servo.get("tubeExtender");
 		mountainClimber = hardwareMap.servo.get("mountainClimber");
-		mountainClimberRelease = hardwareMap.servo
-				.get("mountainClimberRelease");
-
+		mountainClimberRelease = hardwareMap.servo.get("mountainClimberRelease");
 		bumper = hardwareMap.servo.get("bumper");
+        ClassFactory.createSwerveColorSensor(this, lineColor);
 
-		rightWheel.setDirection(DcMotor.Direction.REVERSE);
-		leftWheel.setDirection(DcMotor.Direction.FORWARD);
-		mountainClimber.setDirection(Servo.Direction.FORWARD);
-		mountainClimberRelease.setDirection(Servo.Direction.REVERSE);
-		bumper.setDirection(Servo.Direction.FORWARD);
-		tubeExtender.setDirection(Servo.Direction.REVERSE);
-		tubeTilt.setDirection(Servo.Direction.REVERSE);
-		autonomousInit();
-		ClassFactory.createSwerveColorSensor(this, lineColor);
+        //INIT
+        autonomousInit();
 
 		waitForStart();
 
@@ -68,13 +58,29 @@ public class LinearAutonomous extends LinearOpMode {
 		}
 	}
 
+
+    public static void setDirections() {
+        rightWheel.setDirection(DcMotor.Direction.REVERSE);
+        leftWheel.setDirection(DcMotor.Direction.FORWARD);
+        mountainClimber.setDirection(Servo.Direction.FORWARD);
+        mountainClimberRelease.setDirection(Servo.Direction.REVERSE);
+        bumper.setDirection(Servo.Direction.FORWARD);
+        tubeExtender.setDirection(Servo.Direction.REVERSE);
+        tubeTilt.setDirection(Servo.Direction.REVERSE);
+    }
+
 	public static void autonomousInit() {
-		mountainClimber.setPosition(0.1);
-		mountainClimberRelease.setPosition(0.0);
-		tubeExtender.setPosition(0.55);
-		tubeTilt.setPosition(0.5);
-		bumper.setPosition(0);
+		servoInit();
+        setDirections();
 	}
+
+    public static void servoInit(){
+        mountainClimber.setPosition(Functions.mountainClimberInitPosition);
+        mountainClimberRelease.setPosition(Functions.mountainClimberReleaseInitPosition);
+        tubeExtender.setPosition(Functions.tubeExtenderInitPosition);
+        tubeTilt.setPosition(Functions.tubeTiltInitPosition);
+        bumper.setPosition(Functions.bumperInitPosition);
+    }
 
 	public static void moveRobotForward(double leftPower, double rightPower) {
 		leftWheel.setPower(leftPower);
@@ -248,6 +254,8 @@ public class LinearAutonomous extends LinearOpMode {
 			}
 		}
 	}
+
+
 
 	public static void resetEncoders() {
 		rightWheel.setMode(DcMotorController.RunMode.RESET_ENCODERS);
