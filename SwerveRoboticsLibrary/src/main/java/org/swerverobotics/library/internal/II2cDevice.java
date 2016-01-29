@@ -39,11 +39,11 @@ public interface II2cDevice extends HardwareDevice
 
     void    deregisterForPortReadyCallback();
 
-    void    registerForI2cNotificationsCallback(I2cController.I2cNotificationsCallback callback);
+    void registerForPortReadyBeginEndCallback(I2cController.I2cPortReadyBeginEndNotifications callback);
 
-    I2cController.I2cNotificationsCallback getI2cNotificationsCallback();
+    I2cController.I2cPortReadyBeginEndNotifications getPortReadyBeginEndCallback();
 
-    void    deregisterForI2cNotificationsCallback();
+    void deregisterForPortReadyBeginEndCallback();
 
     void    setI2cPortActionFlag();
 

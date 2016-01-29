@@ -171,18 +171,18 @@ public final class I2cDeviceOnI2cDeviceController implements II2cDevice
         this.controller.registerForI2cPortReadyCallback(callback, port);
         }
 
-    @Override public void registerForI2cNotificationsCallback(I2cController.I2cNotificationsCallback callback)
+    @Override public void registerForPortReadyBeginEndCallback(I2cController.I2cPortReadyBeginEndNotifications callback)
         {
-        this.controller.registerForI2cNotificationsCallback(callback, port);
+        this.controller.registerForPortReadyBeginEndCallback(callback, port);
         }
 
-    @Override public I2cController.I2cNotificationsCallback getI2cNotificationsCallback()
+    @Override public I2cController.I2cPortReadyBeginEndNotifications getPortReadyBeginEndCallback()
         {
-        return this.controller.getI2cNotificationsCallback(port);
+        return this.controller.getPortReadyBeginEndCallback(port);
         }
 
-    @Override public void deregisterForI2cNotificationsCallback()
+    @Override public void deregisterForPortReadyBeginEndCallback()
         {
-        this.controller.deregisterForI2cNotificationsCallback(port);
+        this.controller.deregisterForPortReadyBeginEndCallback(port);
         }
     }
