@@ -370,13 +370,13 @@ public class ThunkingHardwareFactory
                 }
         );
 
-        // Thunk the voltage sensors
+        // Copy the voltage sensors
         createThunks(unthunkedHwmap.voltageSensor, thunkedHwmap.voltageSensor,
                 new IThunkFactory<VoltageSensor>()
                 {
                 @Override public VoltageSensor create(VoltageSensor target)
                     {
-                    return (target instanceof EasyLegacyMotorController) ? target : ThunkedVoltageSensor.create(target);
+                    return target;
                     }
                 }
         );
