@@ -9,7 +9,7 @@ public class DragonoidsGlobal {
     public static DcMotor rightOne, rightTwo, leftOne, leftTwo;
     // Aux motors
     public static DcMotor conveyor;
-    //slider motors
+    // Slider motors
     public static DcMotor leftSlider, rightSlider;
     // Servos
     public static Servo gate;
@@ -40,8 +40,8 @@ public class DragonoidsGlobal {
         leftTwo.setPower(leftPower);
     }
 
-    public static void setServos(){
-        gate.setPosition(.75);
+    public static void resetServos(){
+        gate.setPosition(0.75);
     }
 
     public static void stopMotors() {
@@ -51,7 +51,8 @@ public class DragonoidsGlobal {
         // Stop all motors
         stopMotors();
         conveyor.setPower(0);
-        setServos();
-
+        leftSlider.setPower(0);
+        rightSlider.setPower(0);
+        resetServos();
     }
 }
