@@ -19,7 +19,7 @@ android {
         //
         // See also: http://developer.android.com/tools/building/configuring-gradle.html
         //
-        versionCode 5                       // http://developer.android.com/tools/publishing/versioning.html
+        versionCode 6                       // http://developer.android.com/tools/publishing/versioning.html
         versionName '@string/version_name'  // http://developer.android.com/tools/publishing/versioning.html
     }
     buildTypes {

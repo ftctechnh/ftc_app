@@ -33,18 +33,18 @@ public class EasyModernMotorController extends EasyModernController implements D
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    private EasyModernMotorController(OpMode context, ModernRoboticsUsbDcMotorController target) throws RobotCoreException, InterruptedException
+    private EasyModernMotorController(final OpMode context, final ModernRoboticsUsbDcMotorController target) throws RobotCoreException, InterruptedException
         {
-        super(context, target, newDummyReadWriteRunnable(target.getSerialNumber()));
+        super(context, target, new ModernRoboticsUsbDevice.CreateReadWriteRunnable() {
+            @Override
+            public ReadWriteRunnable create(RobotUsbDevice robotUsbDevice) throws RobotCoreException, InterruptedException
+                {
+                return new ReadWriteRunnableStandard(context.hardwareMap.appContext, target.getSerialNumber(), robotUsbDevice, MONITOR_LENGTH, START_ADDRESS, false);
+                }
+            });
 
-        this.target  = target;
+        this.target = target;
         this.findTargetNameAndMapping();
-        }
-
-    static ReadWriteRunnableHandy newDummyReadWriteRunnable(SerialNumber serialNumber)
-        {
-        RobotUsbDevice robotUsbDevice = new DummyRobotUsbDevice();
-        return new ReadWriteRunnableHandy(serialNumber, robotUsbDevice, MONITOR_LENGTH, START_ADDRESS, false);
         }
 
     public static DcMotorController create(OpMode context, DcMotorController target, DcMotor motor1, DcMotor motor2)
@@ -54,7 +54,7 @@ public class EasyModernMotorController extends EasyModernController implements D
                 {
                 EasyModernMotorController controller = new EasyModernMotorController(context, (ModernRoboticsUsbDcMotorController) target);
                 controller.setMotors(motor1, motor2);
-                controller.arm();
+                controller.armOrPretend();
                 return controller;
                 }
             else
@@ -71,7 +71,7 @@ public class EasyModernMotorController extends EasyModernController implements D
 
     private void findTargetNameAndMapping()
         {
-        for (HardwareMap.DeviceMapping<?> mapping : Util.deviceMappings(this.context.hardwareMap))
+        for (HardwareMap.DeviceMapping<?> mapping : Util.deviceMappings(this.opmodeContext.hardwareMap))
             {
             for (Map.Entry<String,?> pair : mapping.entrySet())
                 {
@@ -91,7 +91,7 @@ public class EasyModernMotorController extends EasyModernController implements D
 
     private void setMotors(DcMotor motor1, DcMotor motor2)
         {
-        assertTrue(!BuildConfig.DEBUG || !this.isArmed());
+        assertTrue(!BuildConfig.DEBUG || this.armingState==ARMINGSTATE.DISARMED);
 
         if ((motor1 != null && motor1.getController() != this.target)
          || (motor2 != null && motor2.getController() != this.target))
@@ -117,68 +117,91 @@ public class EasyModernMotorController extends EasyModernController implements D
 
     private static final String swerveVoltageSensorName = " |Swerve|Modern|VoltageSensor| ";
 
-    @Override public void arm()
+    @Override protected void doArm() throws RobotCoreException, InterruptedException
         {
-        if (!this.isArmed())
-            {
-            Log.d(LOGGING_TAG, String.format("arming \"%s\"....", this.getConnectionInfo()));
-            this.usurpDevices();
-
-            // Turn off target's usb stuff
-            this.eventLoopManager.unregisterSyncdDevice(MemberUtil.getReadWriteRunnableModernRoboticsUsbDevice(this.target));
-            this.floatHardware(target);
-            this.closeModernRoboticsUsbDevice(target);
-            //
-            if (this.targetName != null)
-                {
-                this.targetDeviceMapping.put(this.targetName, this);
-                this.context.hardwareMap.voltageSensor.put(this.targetName, this);
-                }
-            this.isArmed = true;
-
-            // Turn on our usb stuff
-            this.installReadWriteRunnable(this, MONITOR_LENGTH, START_ADDRESS);
-
-            this.initPID();
-            this.floatHardware();
-            Log.d(LOGGING_TAG, String.format("....armed \"%s\"", this.getConnectionInfo()));
-            }
+        doArmOrPretend(true);
+        }
+    @Override protected void doPretend() throws RobotCoreException, InterruptedException
+        {
+        doArmOrPretend(false);
         }
 
-    @Override public void disarm()
+    private void doArmOrPretend(boolean isArm) throws RobotCoreException, InterruptedException
         {
-        if (this.isArmed())
+        Log.d(LOGGING_TAG, String.format("arming motor controller \"%s\"%s...", this.getConnectionInfo(), (isArm ? "" : " (pretend)")));
+
+        // Turn off target
+        target.disarm();
+        target.suppressGlobalWarning(true);
+
+        // Swizzle while no one is on
+        this.usurpDevices();
+        if (this.targetName != null)
             {
-            Log.d(LOGGING_TAG, String.format("disarming \"%s\"....", this.getConnectionInfo()));
+            this.targetDeviceMapping.put(this.targetName, this);
+            this.opmodeContext.hardwareMap.voltageSensor.put(this.targetName, this);
+            }
 
-            // Turn off our usb stuff
-            this.eventLoopManager.unregisterSyncdDevice(this.readWriteRunnable);
-            this.close();
-            //
-            this.isArmed = false;
-            if (this.targetName != null)
-                {
-                this.targetDeviceMapping.put(this.targetName, this.target);
-                this.context.hardwareMap.voltageSensor.put(this.targetName, this.target);
-                }
+        // Turn us on
+        this.suppressGlobalWarning(false);
+        if (isArm)
+            this.armDevice();
+        else
+            this.pretendDevice();
 
-            // Turn target's usb stuff back on
-            this.installReadWriteRunnable(this.target, MONITOR_LENGTH, START_ADDRESS);
+        // Initialize
+        this.initPID();
+        this.floatHardware();
 
-            this.deusurpDevices();
-            Log.d(LOGGING_TAG, String.format("....disarmed \"%s\"", this.getConnectionInfo()));
+        Log.d(LOGGING_TAG, String.format("...armed \"%s\"", this.getConnectionInfo()));
+        }
+
+    @Override protected void doDisarm() throws RobotCoreException, InterruptedException
+        {
+        Log.d(LOGGING_TAG, String.format("disarming motor controller \"%s\"...", this.getConnectionInfo()));
+
+        // Turn us off
+        this.floatHardware();
+        this.disarmDevice();
+        this.suppressGlobalWarning(true);
+
+        // Swizzle while no one is on
+        this.deusurpDevices();
+        if (this.targetName != null)
+            {
+            this.targetDeviceMapping.put(this.targetName, this.target);
+            this.opmodeContext.hardwareMap.voltageSensor.put(this.targetName, this.target);
+            }
+
+        // Turn target back on
+        target.suppressGlobalWarning(false);
+        this.restoreTargetArmOrPretend();
+
+        Log.d(LOGGING_TAG, String.format("...disarmed \"%s\"", this.getConnectionInfo()));
+        }
+
+    // Close should *not* restart the target
+    @Override protected void doCloseFromArmed()
+        {
+        floatHardware();
+        doCloseFromOther();
+        }
+
+    @Override protected void doCloseFromOther()
+        {
+        try {
+            this.target.close();
+            this.disarmDevice();
+            }
+        catch (Exception e)
+            {
+            Util.handleCapturedException(e);
             }
         }
 
     //----------------------------------------------------------------------------------------------
     // HardwareDevice
     //----------------------------------------------------------------------------------------------
-
-    @Override public void close()
-        {
-        this.floatHardware();
-        closeModernRoboticsUsbDevice(this);
-        }
 
     @Override public String getConnectionInfo()
         {
@@ -288,6 +311,7 @@ public class EasyModernMotorController extends EasyModernController implements D
     @Override public synchronized void setMotorChannelMode(int motor, RunMode mode)
         {
         this.validateMotor(motor);
+
         byte bNewMode = runModeToByte(mode);
 
         this.write(ADDRESS_MOTOR_MODE_MAP[motor], bNewMode);
@@ -297,6 +321,8 @@ public class EasyModernMotorController extends EasyModernController implements D
         // mode and be done.
         for (;;)
             {
+            if (!this.isArmed()) break;
+
             byte bCurrentMode = this.read(ADDRESS_MOTOR_MODE_MAP[motor]);
             if (bCurrentMode == bNewMode)
                 break;
@@ -317,6 +343,7 @@ public class EasyModernMotorController extends EasyModernController implements D
             // Unclear if this is needed, but anecdotes from (e.g.) Dryw seem to indicate that it is
             while (this.getMotorCurrentPosition(motor) != 0)
                 {
+                if (!this.isArmed()) break;
                 waitForNextReadComplete();
                 }
             }

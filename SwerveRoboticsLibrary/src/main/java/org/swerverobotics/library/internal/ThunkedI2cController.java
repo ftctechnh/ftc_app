@@ -207,20 +207,34 @@ public class ThunkedI2cController implements I2cController, IThunkWrapper<I2cCon
         return target.isI2cPortReady(physicalPort);
         }
 
-    /**
-     * @hide
-     */
-    @Override public synchronized void registerForI2cPortReadyCallback(final I2cController.I2cPortReadyCallback callback, final int physicalPort)
+    @Override public void registerForI2cPortReadyCallback(final I2cController.I2cPortReadyCallback callback, final int physicalPort)
         {
         target.registerForI2cPortReadyCallback(callback, physicalPort);
         }
 
-    /**
-     * @hide
-     */
-    @Override public synchronized void deregisterForPortReadyCallback(final int physicalPort)
+    @Override public I2cPortReadyCallback getI2cPortReadyCallback(int i)
+        {
+        return target.getI2cPortReadyCallback(i);
+        }
+
+    @Override public void deregisterForPortReadyCallback(final int physicalPort)
         {
         target.deregisterForPortReadyCallback(physicalPort);
+        }
+
+    @Override public void registerForPortReadyBeginEndCallback(I2cPortReadyBeginEndNotifications i2cNotificationsCallback, int i)
+        {
+        target.registerForPortReadyBeginEndCallback(i2cNotificationsCallback, i);
+        }
+
+    @Override public I2cPortReadyBeginEndNotifications getPortReadyBeginEndCallback(int i)
+        {
+        return target.getPortReadyBeginEndCallback(i);
+        }
+
+    @Override public void deregisterForPortReadyBeginEndCallback(int i)
+        {
+        target.deregisterForPortReadyBeginEndCallback(i);
         }
 
     }

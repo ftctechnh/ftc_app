@@ -127,7 +127,6 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
         // Propagate relevant parameters to our device client
         this.getI2cDeviceClient().setLogging(parameters.loggingEnabled);
         this.getI2cDeviceClient().setLoggingTag(parameters.loggingTag);
-        this.getI2cDeviceClient().setThreadPriorityBoost(parameters.threadPriorityBoost);
 
         // Lore: "send a throw-away command [...] just to make sure the BNO is in a good state
         // and ready to accept commands (this seems to be necessary after a hard power down)."

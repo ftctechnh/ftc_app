@@ -92,15 +92,17 @@ public class LegacyOrModernColorSensor implements ColorSensor, IOpModeStateTrans
 
         if (target instanceof HiTechnicNxtColorSensor)
             {
-            controller  = MemberUtil.legacyModuleOfHiTechnicColorSensor(target);
-            port        = MemberUtil.portOfHiTechnicColorSensor(target);
+            HiTechnicNxtColorSensor colorTarget = (HiTechnicNxtColorSensor)target;
+            controller  = colorTarget.getI2cController();
+            port        = colorTarget.getPort();
             i2cAddr8Bit = ADDRESS_I2C_HITECHNIC;
             flavor      = ClassFactory.SENSOR_FLAVOR.HITECHNIC;
             }
         else if (target instanceof ModernRoboticsI2cColorSensor)
             {
-            controller  = MemberUtil.deviceModuleOfModernColorSensor(target);
-            port        = MemberUtil.portOfModernColorSensor(target);
+            ModernRoboticsI2cColorSensor colorTarget = (ModernRoboticsI2cColorSensor)target;
+            controller  = colorTarget.getI2cController();
+            port        = colorTarget.getPort();
             i2cAddr8Bit = target.getI2cAddress();
             flavor      = ClassFactory.SENSOR_FLAVOR.MODERNROBOTICS;
             }
