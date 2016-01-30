@@ -321,7 +321,7 @@ public class EasyModernMotorController extends EasyModernController implements D
         // mode and be done.
         for (;;)
             {
-            if (!this.isArmed()) return;
+            if (!this.isArmed()) break;
 
             byte bCurrentMode = this.read(ADDRESS_MOTOR_MODE_MAP[motor]);
             if (bCurrentMode == bNewMode)
@@ -343,7 +343,7 @@ public class EasyModernMotorController extends EasyModernController implements D
             // Unclear if this is needed, but anecdotes from (e.g.) Dryw seem to indicate that it is
             while (this.getMotorCurrentPosition(motor) != 0)
                 {
-                if (!this.isArmed()) return;
+                if (!this.isArmed()) break;
                 waitForNextReadComplete();
                 }
             }
