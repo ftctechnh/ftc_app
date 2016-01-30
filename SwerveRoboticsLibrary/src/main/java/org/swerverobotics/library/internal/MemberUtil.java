@@ -3,13 +3,8 @@ package org.swerverobotics.library.internal;
 import com.qualcomm.ftccommon.*;
 import com.qualcomm.hardware.modernrobotics.*;
 import com.qualcomm.hardware.hitechnic.*;
-import com.qualcomm.modernrobotics.*;
-import com.qualcomm.robotcore.eventloop.*;
 import com.qualcomm.robotcore.hardware.*;
-import com.qualcomm.robotcore.hardware.usb.*;
-import com.qualcomm.robotcore.robocol.*;
 import com.qualcomm.robotcore.robot.*;
-import java.util.concurrent.*;
 
 /**
  * Skullduggery we wish we didn't have to do.
@@ -69,7 +64,7 @@ public class MemberUtil
         }
 
     //----------------------------------------------------------------------------------------------
-    // DCMotor
+    // DCMotor and Servo
     //----------------------------------------------------------------------------------------------
 
     public static void setControllerOfMotor(DcMotor motor, DcMotorController controller)
@@ -80,18 +75,5 @@ public class MemberUtil
     public static void setControllerOfServo(Servo servo, ServoController controller)
         {
         Util.setPrivateObjectField(servo, 0, controller);
-        }
-
-    //----------------------------------------------------------------------------------------------
-    // Color Sensors
-    //----------------------------------------------------------------------------------------------
-
-    static DeviceInterfaceModule deviceModuleOfModernColorSensor(ColorSensor sensor)
-        {
-        return Util.<DeviceInterfaceModule>getPrivateObjectField(sensor, 1);    // 0 is now i2c address
-        }
-    static int portOfModernColorSensor(ColorSensor sensor)
-        {
-        return Util.getPrivateIntField(sensor, 8);
         }
     }
