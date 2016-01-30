@@ -14,8 +14,8 @@ public class DragonoidsTeleOp extends OpMode {
     @Override
     public void loop() {
         // Joystick values range from -1 to 1
-        float forwardAmount = -gamepad1.right_stick_x;
-        float turningAmount = -gamepad1.left_stick_y;
+        float forwardAmount = gamepad1.right_stick_x;
+        float turningAmount = gamepad1.left_stick_y;
 
         forwardAmount = Range.clip(scaleInput(forwardAmount), -1, 1);
         turningAmount = Range.clip(scaleInput(turningAmount), -1, 1);
