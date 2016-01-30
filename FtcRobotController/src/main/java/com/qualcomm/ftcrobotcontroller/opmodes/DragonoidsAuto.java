@@ -75,7 +75,7 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
                 headingCompensation = totalError / ((event.timestamp - firstGyroTimestamp) * nanoSecondsToSeconds);
                 calibrationComplete = true;
                 // Make a sound to notify that calibration is complete
-                ToneGenerator toneGenerator = new ToneGenerator(AudioManager.STREAM_ALARM, 75);
+                ToneGenerator toneGenerator = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
                 toneGenerator.startTone(ToneGenerator.TONE_CDMA_PRESSHOLDKEY_LITE);
             }
         }
