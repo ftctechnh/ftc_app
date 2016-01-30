@@ -2,8 +2,13 @@ package org.usfirst.ftc.theintersect.code;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.robocol.Telemetry;
+
 import org.swerverobotics.library.ClassFactory;
 
 import java.util.Arrays;
@@ -51,56 +56,47 @@ public class LinearAutonomous extends LinearOpMode {
 		mountainClimberRelease = hardwareMap.servo.get("mountainClimberRelease");
 		bumper = hardwareMap.servo.get("bumper");
 
-		autonomousInit();
+
+		autonomousInit(telemetry);
 		/*ClassFactory.createEasyMotorController(this, linearSlideL,
 				linearSlideR);
 		ClassFactory.createEasyMotorController(this, rightWheel, leftWheel);
 		ClassFactory.createEasyMotorController(this, sweeper, null);*/
-		ClassFactory.createEasyServoController(this, Arrays.asList
-				(mountainClimberRelease, mountainClimber, tubeExtender,
-						tubeTilt, bumper));
+		ClassFactory.createEasyServoController(this, Arrays.asList(mountainClimberRelease, mountainClimber, tubeExtender, tubeTilt, bumper));
 		ClassFactory.createSwerveColorSensor(this, lineColor);
 
-		lineColor.enableLed(true);
-		//Gyro Calibration
-		gyro.calibrate();
-		gyro.setHeadingMode(
-				ModernRoboticsI2cGyro.HeadingMode.HEADING_CARTESIAN);
-		while(gyro.isCalibrating()) {
-			telemetry.addData("Gyro Calibration: ", "Calibrating Gyro");
-		}
-		telemetry.addData("Gyro Calibration: ", "Calibration Complete");
 
 		//Delay And Team Selection
+
 		while(true) {
-			if(gamepad1.x) {
-				team = "Blue";
-			} else if(gamepad1.b) {
-				team = "Read";
-			} else if(gamepad1.dpad_up) {
-				delay += 1;
-			} else if(gamepad1.dpad_down) {
-				delay -= 1;
-				if(delay < 0) {
-					delay = 0;
-				}
-			} else if(gamepad1.a) {
-				telemetry.addData("Team: ", team + " Confirmed!");
-				telemetry.addData("Delay: ", delay + " Confirmed!");
-				break;
-			}
-			telemetry.addData("Team", team);
-			telemetry.addData("Delay", delay);
-			sleep(300);
+            if (gamepad1.x) {
+                team = "Blue";
+            } else if (gamepad1.b) {
+                team = "Red";
+            } else if (gamepad1.dpad_up) {
+                delay += 1;
+            } else if (gamepad1.dpad_down) {
+                delay -= 1;
+                if (delay < 0) {
+                    delay = 0;
+                }
+            } else if (gamepad1.a) {
+                telemetry.addData("Team: ", team + " Confirmed!");
+                telemetry.addData("Delay: ", delay + " Confirmed!");
+                break;
+            }
+            telemetry.addData("Team", team);
+            telemetry.addData("Delay", delay);
+            sleep(300);
 		}
 
 		waitForStart();
+
 		if(opModeIsActive()) {
 			telemetry.clearData();
 			//Starting based off of the delay
 			sleep(delay * 1000);
 			//Autonomous Routine
-			spinRobotLeftDegrees(20, 0.5, 10000000, telemetry);
 			end();
 		}
 	}
@@ -116,9 +112,22 @@ public class LinearAutonomous extends LinearOpMode {
         tubeTilt.setDirection(Servo.Direction.REVERSE);
     }
 
-	public static void autonomousInit() {
-		servoInit();
+
+    public static void gyroInit(Telemetry telemetry) {
+        gyro.calibrate();
+        gyro.setHeadingMode(
+                ModernRoboticsI2cGyro.HeadingMode.HEADING_CARTESIAN);
+        while (gyro.isCalibrating()) {
+            telemetry.addData("Gyro Calibration: ", "Calibrating Gyro");
+        }
+        telemetry.addData("Gyro Calibration: ", "Calibration Complete");
+    }
+
+	public static void autonomousInit(Telemetry telemetry) {
+        lineColor.enableLed(true);
+        servoInit();
         directionInit();
+        gyroInit(telemetry);
 	}
 
     public static void servoInit(){
@@ -313,8 +322,7 @@ public class LinearAutonomous extends LinearOpMode {
 		}
 	}
 
-	public static void spinRobotLeftDegrees(int degrees, double power,
-			long timeoutMill, Telemetry telemetry) {
+	public static void spinRobotLeftDegrees(int degrees, double power, long timeoutMill, Telemetry telemetry) {
 		long endTime = System.currentTimeMillis() + timeoutMill;
 		int endPosition = gyro.getIntegratedZValue() + degrees;
 		spinRobotLeft(power);

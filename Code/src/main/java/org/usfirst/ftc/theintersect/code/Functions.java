@@ -17,6 +17,8 @@ public class Functions {
 	public static double bumperInitPosition = 0.0;
 	public static double tubeExtenderInitPosition = 0.0;
 	public static double tubeTiltInitPosition = 0.0;
+    public static double churroHookDownPos = 0.0;
+    public static double churroHookUpPos = 1.0;
 
 	public static double convertGamepad(float y) {
 		int m;

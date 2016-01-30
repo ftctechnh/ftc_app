@@ -3,6 +3,7 @@ package org.usfirst.ftc.theintersect.code;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
+
 import org.swerverobotics.library.ClassFactory;
 import org.swerverobotics.library.SynchronousOpMode;
 
@@ -30,6 +31,9 @@ public class TeleOp extends SynchronousOpMode {
 
 	static Servo bumper;
 
+	static Servo churroHookLeft;
+	static Servo churroHookRight;
+
 	//Declare gamepad objects
 	float rightWheelPower;
 	float leftWheelPower;
@@ -53,6 +57,9 @@ public class TeleOp extends SynchronousOpMode {
 	boolean bumperDown = true;
 	boolean bumperUp = false;
 
+	boolean churroHooksDown = false;
+	boolean toggleChurroHooks = false;
+
 	float slowDriveBack;
 	float slowDriveForward;
 
@@ -69,12 +76,13 @@ public class TeleOp extends SynchronousOpMode {
 		tubeExtender = hardwareMap.servo.get("tubeExtender");
 
 		mountainClimber = hardwareMap.servo.get("mountainClimber");
-		mountainClimberRelease = hardwareMap.servo
-				.get("mountainClimberRelease");
+		mountainClimberRelease = hardwareMap.servo.get("mountainClimberRelease");
 
 		sweeper = hardwareMap.dcMotor.get("sweeper");
 
 		bumper = hardwareMap.servo.get("bumper");
+		//churroHookLeft = hardwareMap.servo.get("churroHookLeft");
+		//churroHookRight = hardwareMap.servo.get("churroHookRight");
 
 		//Set motor channel modes and direction
 		rightWheel.setDirection(DcMotor.Direction.REVERSE);
@@ -117,6 +125,8 @@ public class TeleOp extends SynchronousOpMode {
 			positionClimbersBackward = gamepad1.dpad_down || gamepad2.dpad_down;
 			releaseClimbers = gamepad1.start || gamepad2.start;
 
+			toggleChurroHooks = gamepad1.left_stick_button;
+
 			//Moves robot when some of the buttons are held
 			if(tubeExtend) {
 				tubeExtender.setPosition(0.75);
@@ -125,6 +135,18 @@ public class TeleOp extends SynchronousOpMode {
 			} else {
 				tubeExtender.setPosition(0.5);
 			}
+            if (toggleChurroHooks && churroHooksDown) {
+                churroHookLeft.setPosition(Functions.churroHookUpPos);
+                churroHookRight.setPosition(Functions.churroHookUpPos);
+                churroHooksDown = false;
+            } else if (toggleChurroHooks && !churroHooksDown) {
+                churroHookLeft.setPosition(Functions.churroHookDownPos);
+                churroHookRight.setPosition(Functions.churroHookDownPos);
+                churroHooksDown = false;
+            }else {
+                return;
+            }
+
 
 			if(containerTiltRight) {
 				tubeTilt.setPosition(tubeTilt.getPosition() + 0.01);
@@ -170,8 +192,8 @@ public class TeleOp extends SynchronousOpMode {
 				linearSlideBackward =
 						gamepad1.left_bumper || gamepad2.left_bumper;
 
-				slowDriveBack = gamepad1.left_trigger;
-				slowDriveForward = gamepad1.right_trigger;
+				/*slowDriveBack = gamepad1.left_trigger;
+				slowDriveForward = gamepad1.right_trigger;!!*/
 
 				if(gamepad1.back || gamepad2.back) {
 					bumperUp = !bumperUp;
@@ -186,15 +208,17 @@ public class TeleOp extends SynchronousOpMode {
 					sweeperForward = false;
 				}
 
+
+
 				sweeperForward = gamepad1.a || gamepad2.a;
 				sweeperBackward = gamepad1.y || gamepad2.y;
 
 				//Use gamepad values to move robot
-				if(slowDriveForward != 0 || slowDriveBack != 0) {
+				/*if(slowDriveForward != 0 || slowDriveBack != 0) {
 					Functions.moveTwoMotors(rightWheel, rightWheel,
 							(slowDriveForward - slowDriveBack) * 0.25);
 					Functions.moveTwoMotors(leftWheel, leftWheel,
-							(slowDriveForward - slowDriveBack) * 0.25);
+							(slowDriveForward - slowDriveBack) * 0.25);*/
 				} else if(rightWheelPower != 0 || leftWheelPower != 0) {
 					Functions.moveTwoMotors(rightWheel, rightWheel,
 							Functions.convertGamepad(rightWheelPower));
