@@ -11,10 +11,11 @@
 //import org.swerverobotics.library.TelemetryDashboardAndLog;
 //
 ///**
-// * An AutonomousBlue.
+// * An Autonomous for the Blue Team
 // */
 //
 //@org.swerverobotics.library.interfaces.Autonomous(name = "Autonomous Blue")
+//@org.swerverobotics.library.interfaces.Disabled
 //public class AutonomousBlue extends SynchronousOpMode {
 //    //Declare hardware
 //    static DcMotor frontRightWheel;

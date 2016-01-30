@@ -3,7 +3,10 @@ package org.usfirst.ftc.theintersect.code;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
+import org.swerverobotics.library.ClassFactory;
 import org.swerverobotics.library.SynchronousOpMode;
+
+import java.util.Arrays;
 
 /**
  * Main TeleOp
@@ -91,6 +94,13 @@ public class TeleOp extends SynchronousOpMode {
 		bumper.setDirection(Servo.Direction.FORWARD);
 		//Wait for the game to start
 		teleopInit();
+		/*ClassFactory.createEasyMotorController(this, linearSlideL,
+				linearSlideR);
+		ClassFactory.createEasyMotorController(this, rightWheel, leftWheel);
+		ClassFactory.createEasyMotorController(this, sweeper, null);*/
+		ClassFactory.createEasyServoController(this, Arrays.asList
+				(mountainClimberRelease, mountainClimber, tubeExtender,
+						tubeTilt, bumper));
 
 		waitForStart();
 		long endTime = System.currentTimeMillis() + 120000;

@@ -1,20 +1,15 @@
 package org.usfirst.ftc.theintersect.code;
 
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.robotcore.hardware.GyroSensor;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.UltrasonicSensor;
-
+import com.qualcomm.robotcore.hardware.*;
 import org.swerverobotics.library.SynchronousOpMode;
 import org.swerverobotics.library.TelemetryDashboardAndLog;
 
 /**
- * An AutonomousBlue.
+ * An Autonomous for the Red Team
  */
 
 @org.swerverobotics.library.interfaces.Autonomous(name = "Autonomous Red")
+@org.swerverobotics.library.interfaces.Disabled
 public class AutonomousRed extends SynchronousOpMode {
     //Declare hardware
     static DcMotor frontRightWheel;
@@ -442,11 +437,11 @@ public class AutonomousRed extends SynchronousOpMode {
         backRightWheel.setPower(-power);
         frontRightWheel.setPower(-power);
         frontLeftWheel.setPower(power);
-        heading = gyro.getHeading();;
-        if (heading > protectedValue) {
-            heading = heading - 360;
-        }
-        //while ((heading < target) && (System.currentTimeMillis() < endtime)) {
+		heading = gyro.getHeading();
+		if(heading > protectedValue) {
+			heading = heading - 360;
+		}
+		//while ((heading < target) && (System.currentTimeMillis() < endtime)) {
         while (heading < target) {
             heading = gyro.getHeading();
             if (heading > protectedValue) {

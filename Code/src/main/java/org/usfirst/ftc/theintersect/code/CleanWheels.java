@@ -1,14 +1,12 @@
 package org.usfirst.ftc.theintersect.code;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-
 import org.swerverobotics.library.SynchronousOpMode;
 
 /**
- * A Maintenance OpMode. It is used to clean the
+ * A Maintenance OpMode. It is used to clean the area around the wheels
  */
 
-@org.swerverobotics.library.interfaces.TeleOp(name = "Clean Wheels")
 public class CleanWheels extends SynchronousOpMode {
 	//Declare hardware
 	static DcMotor frontRightWheel;

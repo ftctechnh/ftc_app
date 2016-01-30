@@ -1,9 +1,7 @@
 package org.usfirst.ftc.theintersect.code;
 
 import android.content.Context;
-
 import org.swerverobotics.library.SwerveUtil;
-import org.swerverobotics.library.examples.SynchTeleOp;
 import org.swerverobotics.library.interfaces.IOpModeManager;
 import org.swerverobotics.library.interfaces.OnRobotRunning;
 import org.swerverobotics.library.interfaces.OnRobotStartupFailure;
@@ -31,10 +29,9 @@ import org.swerverobotics.library.interfaces.OpModeRegistrar;
  * to the 'settings.gradle' file so they show up in Android Studio.
  *
  * @see TeleOp
- * @see AutonomousBlue
+ * @see LinearAutonomous
  * @see OpModeRegistrar
  * @see OnRobotRunning
- * @see SynchTeleOp
  */
 public class MyRobotControllerAdministration
     {
@@ -43,16 +40,14 @@ public class MyRobotControllerAdministration
      * your needs: the specific OpModes that are registered as this code comes from
      * the factory are probably not what you want. For your own OpModes, though you could register them
      * here, it is preferable to annotate them in their own source with {@link TeleOp}
-     * or {@link AutonomousBlue} annotations, as appropriate.
-     *
-     * @param context   the application context of the robot controller application. Not often
-     *                  actually used in OpMode registrar functions.
+	 * or {@link LinearAutonomous} annotations, as appropriate.
+	 *
+	 * @param context   the application context of the robot controller application. Not often
+	 *                  actually used in OpMode registrar functions.
      * @param manager   the object through which registrations are effected
      */
     @OpModeRegistrar
     public static void registerMyOpModes(Context context, IOpModeManager manager) {
-        manager.register("AutonomousBlue", AutonomousBlue.class);
-        manager.register("TeleOp", TeleOp.class);
         manager.register("Clean Wheels", CleanWheels.class);
     }
 
