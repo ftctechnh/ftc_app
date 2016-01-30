@@ -150,6 +150,7 @@ public class EasyModernServoController extends EasyModernController implements S
         // Turn off target
         this.floatHardware(target);
         target.disarm();
+        target.suppressGlobalWarning(true);
 
         // Swizzle while no one is on
         this.usurpDevices();
@@ -159,6 +160,7 @@ public class EasyModernServoController extends EasyModernController implements S
             }
 
         // Turn us on
+        this.suppressGlobalWarning(false);
         if (isArm)
             this.armDevice();
         else
@@ -175,6 +177,7 @@ public class EasyModernServoController extends EasyModernController implements S
 
         // Turn us off
         this.disarmDevice();
+        this.suppressGlobalWarning(true);
 
         // Swizzle while no one is on
         this.deusurpDevices();
@@ -184,6 +187,7 @@ public class EasyModernServoController extends EasyModernController implements S
             }
 
         // Turn target back on
+        target.suppressGlobalWarning(false);
         this.restoreTargetArmOrPretend();
 
         Log.d(LOGGING_TAG, String.format("...disarmed \"%s\"", this.getConnectionInfo()));
