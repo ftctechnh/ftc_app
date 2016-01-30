@@ -9,7 +9,7 @@ import android.media.AudioManager;
 import android.media.ToneGenerator;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.IrSeekerSensor;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 
 public class DragonoidsAuto extends LinearOpMode implements SensorEventListener {
     // Gyro sensor
@@ -25,8 +25,8 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
     private float firstGyroTimestamp = 0;
     private float totalError = 0;
     private double headingCompensation = 0;
-    // IR sensor
-    private IrSeekerSensor irSensor;
+    // Optical distance sensor
+    private OpticalDistanceSensor distanceSensor;
     // Autonomous constants
     private final double drivePower = 0.5;
     private final double turnPower = 0.3;
@@ -45,8 +45,8 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
         else {
             telemetry.addData("Error", "Gyroscope sensor not found");
         }
-        // Set up the IR sensor
-        this.irSensor = hardwareMap.irSeekerSensor.get("ir_sensor");
+        // Set up the distance sensor
+        this.distanceSensor = hardwareMap.opticalDistanceSensor.get("distance_sensor");
     }
     private void outputTelemetry() {
         telemetry.addData("Heading", headingDegrees);
