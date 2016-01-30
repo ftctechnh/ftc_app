@@ -5,6 +5,8 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.IrSeekerSensor;
@@ -18,6 +20,11 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
     private float lastGyroTimestamp = 0;
     private float heading = 0; // In radians
     private float headingDegrees = 0; // In degrees (use in autonomous flow)
+    private final float secondsToCalibrate = 5;
+    private boolean calibrationComplete = false;
+    private float firstTimestamp = 0;
+    private float totalError = 0;
+    private double headingCompensation = 0;
     // IR sensor
     private IrSeekerSensor irSensor;
     // Autonomous constants
@@ -53,9 +60,26 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() != this.sensorType) return;
 
-        if (lastGyroTimestamp != 0) {
-            final float dT = (event.timestamp - lastGyroTimestamp) * nanoSecondsToSeconds;
-            heading += dT * event.values[1];
+        final float dT = (event.timestamp - lastGyroTimestamp) * nanoSecondsToSeconds;
+        if (lastGyroTimestamp != 0 && !calibrationComplete) {
+            if (firstTimestamp == 0) {
+                firstTimestamp = event.timestamp;
+            }
+            if ((event.timestamp - firstTimestamp) * nanoSecondsToSeconds < secondsToCalibrate) {
+                // Keep measuring error
+                totalError += dT * event.values[1];
+            }
+            else {
+                // Done calibrating
+                headingCompensation = totalError / ((event.timestamp - firstTimestamp) * nanoSecondsToSeconds);
+                calibrationComplete = true;
+                // Make a sound to notify that calibration is complete
+                ToneGenerator toneGenerator = new ToneGenerator(AudioManager.STREAM_ALARM, 75);
+                toneGenerator.startTone(ToneGenerator.TONE_CDMA_PRESSHOLDKEY_LITE);
+            }
+        }
+        if (lastGyroTimestamp != 0 && calibrationComplete) {
+            heading += (dT * event.values[1]) - (dT * headingCompensation);
             headingDegrees = (float) Math.toDegrees(heading);
         }
         lastGyroTimestamp = event.timestamp;
