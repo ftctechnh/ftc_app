@@ -56,6 +56,7 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
         this.callbackWaiterCount = new AtomicInteger();
         this.target            = target;
         this.targetArmingState = target.getArmingState();
+        this.suppressGlobalWarning(true);   // because we start out disarmed
 
         switch (targetArmingState)
             {

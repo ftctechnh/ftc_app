@@ -132,6 +132,7 @@ public class EasyModernMotorController extends EasyModernController implements D
 
         // Turn off target
         target.disarm();
+        target.suppressGlobalWarning(true);
 
         // Swizzle while no one is on
         this.usurpDevices();
@@ -142,6 +143,7 @@ public class EasyModernMotorController extends EasyModernController implements D
             }
 
         // Turn us on
+        this.suppressGlobalWarning(false);
         if (isArm)
             this.armDevice();
         else
@@ -161,6 +163,7 @@ public class EasyModernMotorController extends EasyModernController implements D
         // Turn us off
         this.floatHardware();
         this.disarmDevice();
+        this.suppressGlobalWarning(true);
 
         // Swizzle while no one is on
         this.deusurpDevices();
@@ -171,6 +174,7 @@ public class EasyModernMotorController extends EasyModernController implements D
             }
 
         // Turn target back on
+        target.suppressGlobalWarning(false);
         this.restoreTargetArmOrPretend();
 
         Log.d(LOGGING_TAG, String.format("...disarmed \"%s\"", this.getConnectionInfo()));
