@@ -2,6 +2,7 @@ package org.swerverobotics.library.internal;
 
 import android.util.Log;
 
+import com.qualcomm.hardware.hitechnic.HiTechnicNxtDcMotorController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
@@ -88,9 +89,11 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
 
     private EasyLegacyMotorController(OpMode context, II2cDeviceClient ii2cDeviceClient, DcMotorController target)
         {
-        LegacyModule legacyModule = MemberUtil.legacyModuleOfLegacyMotorController(target);
-        int          targetPort   = MemberUtil.portOfLegacyMotorController(target);
-        this.helper          = new I2cDeviceReplacementHelper<DcMotorController>(context, this, target, legacyModule, targetPort);
+        HiTechnicNxtDcMotorController legacyTarget = (HiTechnicNxtDcMotorController)target;
+
+        I2cController module      = legacyTarget.getI2cController();
+        int          targetPort   = legacyTarget.getPort();
+        this.helper          = new I2cDeviceReplacementHelper<DcMotorController>(context, this, target, module, targetPort);
 
         this.context         = context;
         this.i2cDeviceClient = ii2cDeviceClient;
@@ -126,12 +129,14 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
         {
         if (MemberUtil.isLegacyMotorController(target))
             {
-            LegacyModule legacyModule = MemberUtil.legacyModuleOfLegacyMotorController(target);
-            int          port         = MemberUtil.portOfLegacyMotorController(target);
+            HiTechnicNxtDcMotorController legacyTarget = (HiTechnicNxtDcMotorController)target;
+
+            I2cController module      = legacyTarget.getI2cController();
+            int          port         = legacyTarget.getPort();
             int          i2cAddr8Bit  = MemberUtil.i2cAddrOfLegacyMotorController(target);
 
             // Make a new legacy motor controller
-            II2cDevice i2cDevice                 = new I2cDeviceOnI2cDeviceController(legacyModule, port);
+            II2cDevice i2cDevice                 = new I2cDeviceOnI2cDeviceController(module, port);
             I2cDeviceClient i2cDeviceClient      = new I2cDeviceClient(context, i2cDevice, i2cAddr8Bit, false);
             EasyLegacyMotorController controller = new EasyLegacyMotorController(context, i2cDeviceClient, target);
 

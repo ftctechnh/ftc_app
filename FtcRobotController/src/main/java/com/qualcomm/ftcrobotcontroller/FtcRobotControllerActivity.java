@@ -39,6 +39,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.os.*;
@@ -140,9 +141,10 @@ public class FtcRobotControllerActivity extends Activity {
   @Override
   protected void onNewIntent(Intent intent) {
     super.onNewIntent(intent);
-    if (UsbManager.ACTION_USB_ACCESSORY_ATTACHED.equals(intent.getAction())) {
-      // a new USB device has been attached
-      DbgLog.msg("USB Device attached; app restart may be needed");
+
+    if (UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(intent.getAction())) {
+      UsbDevice usbDevice = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+      this.eventLoop.onUsbDeviceAttached(usbDevice);
     }
   }
 
@@ -501,11 +503,18 @@ public class FtcRobotControllerActivity extends Activity {
         public void onStateChange(RobotState newState)
             {
             this.prevMonitor.onStateChange(newState);
+
             RobotStateTransitionNotifier.onRobotStateChange(newState);
 
             if (newState == RobotState.RUNNING)
                 this.activity.nameVerifier.verifyLegalPhoneNames();
             }
+
+        @Override
+        public void onErrorOrWarning()
+          {
+          this.prevMonitor.onErrorOrWarning();
+          }
         }
 
     class SwervePhoneNameVerifier

@@ -1,6 +1,8 @@
 package org.swerverobotics.library.internal;
 
 import android.util.Log;
+
+import com.qualcomm.hardware.hitechnic.HiTechnicNxtServoController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.Range;
@@ -61,9 +63,10 @@ public class EasyLegacyServoController implements ServoController, IOpModeStateT
 
     private EasyLegacyServoController(OpMode context, II2cDeviceClient ii2cDeviceClient, ServoController target)
         {
-        LegacyModule legacyModule = MemberUtil.legacyModuleOfLegacyServoController(target);
-        int          targetPort   = MemberUtil.portOfLegacyServoController(target);
-        this.helper          = new I2cDeviceReplacementHelper<ServoController>(context, this, target, legacyModule, targetPort);
+        HiTechnicNxtServoController legacyTarget = (HiTechnicNxtServoController)target;
+        I2cController module      = legacyTarget.getI2cController();
+        int          targetPort   = legacyTarget.getPort();
+        this.helper          = new I2cDeviceReplacementHelper<ServoController>(context, this, target, module, targetPort);
 
         this.i2cDeviceClient = ii2cDeviceClient;
         this.target          = target;
@@ -95,12 +98,13 @@ public class EasyLegacyServoController implements ServoController, IOpModeStateT
         {
         if (MemberUtil.isLegacyServoController(target))
             {
-            LegacyModule legacyModule = MemberUtil.legacyModuleOfLegacyServoController(target);
-            int          port         = MemberUtil.portOfLegacyServoController(target);
+            HiTechnicNxtServoController legacyTarget = (HiTechnicNxtServoController)target;
+            I2cController module      = legacyTarget.getI2cController();
+            int          port         = legacyTarget.getPort();
             int          i2cAddr8Bit  = MemberUtil.i2cAddrOfLegacyServoController(target);
 
             // Make a new legacy servo controller
-            II2cDevice i2cDevice                 = new I2cDeviceOnI2cDeviceController(legacyModule, port);
+            II2cDevice i2cDevice                 = new I2cDeviceOnI2cDeviceController(module, port);
             I2cDeviceClient i2cDeviceClient      = new I2cDeviceClient(context, i2cDevice, i2cAddr8Bit, false);
             EasyLegacyServoController controller = new EasyLegacyServoController(context, i2cDeviceClient, target);
 

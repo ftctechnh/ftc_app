@@ -54,11 +54,11 @@ public class I2cDeviceReplacementHelper<TARGET>
 
         if (controller instanceof LegacyModule)
             {
-            this.targetCallback = MemberUtil.callbacksOfLegacyModule((LegacyModule)controller)[targetPort];
+            this.targetCallback = controller.getI2cPortReadyCallback(targetPort);
             }
         else if (controller instanceof DeviceInterfaceModule)
             {
-            this.targetCallback = MemberUtil.callbacksOfDeviceInterfaceModule((DeviceInterfaceModule)controller)[targetPort];
+            this.targetCallback = controller.getI2cPortReadyCallback(targetPort);
             }
         else
             throw new IllegalArgumentException(String.format("unknown controller flavor: %s", controller.getClass().getSimpleName()));
