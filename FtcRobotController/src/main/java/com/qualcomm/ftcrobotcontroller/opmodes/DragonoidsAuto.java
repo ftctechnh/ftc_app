@@ -36,7 +36,8 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
 
     public void initialize() {
         DragonoidsGlobal.init(hardwareMap);
-        // Set up the rotation vector sensor
+        DragonoidsGlobal.stopAll();
+        // Set up the gyro sensor
         this.sensorManager = (SensorManager) hardwareMap.appContext.getSystemService(Context.SENSOR_SERVICE);
         this.gyroSensor = sensorManager.getDefaultSensor(this.sensorType);
         if (this.gyroSensor != null) {
