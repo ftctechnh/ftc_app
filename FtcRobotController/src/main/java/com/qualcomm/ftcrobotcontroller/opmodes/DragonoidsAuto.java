@@ -124,7 +124,7 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
     }
 
     protected enum Direction {
-        Right, Left
+        Right, Left, Forward, Backward
     }
 
     public void turn(Direction direction, float degrees) throws InterruptedException {
@@ -148,10 +148,25 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
         }
         DragonoidsGlobal.stopMotors();
     }
-    public void drive(int distance) {
+    public void drive(Direction direction, int distance) {
         while ((this.getLeftEncoderValue() + this.getRightEncoderValue()) / 2 < distance) {
+            if (direction == Direction.Forward) {
+                DragonoidsGlobal.setDrivePower(drivePower, drivePower);
+            }
+            if (direction == Direction.Backward) {
+                DragonoidsGlobal.setDrivePower(-drivePower, -drivePower);
+            }
+        }
+        DragonoidsGlobal.stopMotors();
+    }
+    public void driveTime(Direction direction, long milliseconds) throws InterruptedException {
+        if (direction == Direction.Forward) {
             DragonoidsGlobal.setDrivePower(drivePower, drivePower);
         }
+        if (direction == Direction.Backward) {
+            DragonoidsGlobal.setDrivePower(-drivePower, -drivePower);
+        }
+        sleep(milliseconds);
         DragonoidsGlobal.stopMotors();
     }
 
@@ -163,15 +178,18 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
             // Choose flow based on alliance color (we're assuming red)
 
             // Drive forward a bit
-            this.drive(step1Distance);
+            //this.drive(Direction.Forward, step1Distance);
+            this.driveTime(Direction.Forward, 1000);
             // Use the phone's IMU to make a precise 45 degree turn
             this.turn(Direction.Left, 45);
             // Drive forward to the beacon zone
-            this.drive(step2Distance);
+            //this.drive(Direction.Forward, step2Distance);
+            this.driveTime(Direction.Forward, 1000);
             // Turn 45 degrees again
             this.turn(Direction.Left, 45);
             // Drive forward to color detection distance
-            this.drive(step3Distance);
+            //this.drive(Direction.Forward, step3Distance);
+            this.driveTime(Direction.Forward, 1000);
             // Detect color of the beacon
 
             // Drive forward or extend arm to push the correct button
