@@ -22,7 +22,7 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
     private float headingDegrees = 0; // In degrees (use in autonomous flow)
     private final float secondsToCalibrate = 5;
     private boolean calibrationComplete = false;
-    private float firstTimestamp = 0;
+    private float firstGyroTimestamp = 0;
     private float totalError = 0;
     private double headingCompensation = 0;
     // IR sensor
@@ -62,16 +62,16 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
 
         final float dT = (event.timestamp - lastGyroTimestamp) * nanoSecondsToSeconds;
         if (lastGyroTimestamp != 0 && !calibrationComplete) {
-            if (firstTimestamp == 0) {
-                firstTimestamp = event.timestamp;
+            if (firstGyroTimestamp == 0) {
+                firstGyroTimestamp = event.timestamp;
             }
-            if ((event.timestamp - firstTimestamp) * nanoSecondsToSeconds < secondsToCalibrate) {
+            if ((event.timestamp - firstGyroTimestamp) * nanoSecondsToSeconds < secondsToCalibrate) {
                 // Keep measuring error
                 totalError += dT * event.values[1];
             }
             else {
                 // Done calibrating
-                headingCompensation = totalError / ((event.timestamp - firstTimestamp) * nanoSecondsToSeconds);
+                headingCompensation = totalError / ((event.timestamp - firstGyroTimestamp) * nanoSecondsToSeconds);
                 calibrationComplete = true;
                 // Make a sound to notify that calibration is complete
                 ToneGenerator toneGenerator = new ToneGenerator(AudioManager.STREAM_ALARM, 75);
