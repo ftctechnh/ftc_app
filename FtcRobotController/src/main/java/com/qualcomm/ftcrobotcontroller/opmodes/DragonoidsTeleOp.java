@@ -25,6 +25,7 @@ public class DragonoidsTeleOp extends OpMode {
         double leftDrivePower = Range.clip(forwardAmount + turningAmount, -1.0, 1.0);
         DragonoidsGlobal.setDrivePower(rightDrivePower, leftDrivePower);
 
+        // right trigger start conveyor
         if (gamepad2.right_trigger > 0.8) {
             // Turn on the conveyor
             DragonoidsGlobal.conveyor.setPower(0.70);
@@ -35,7 +36,8 @@ public class DragonoidsTeleOp extends OpMode {
         else if (gamepad2.right_trigger > 0.1) {
             DragonoidsGlobal.conveyor.setPower(0.10);
         }
-        else if (gamepad2.right_bumper) {
+        // left trigger reverse conveyor
+        else if (gamepad2.left_trigger > 0.2) {
             // Reverse the conveyor
             DragonoidsGlobal.conveyor.setPower(-0.25);
         }
@@ -44,15 +46,36 @@ public class DragonoidsTeleOp extends OpMode {
             DragonoidsGlobal.conveyor.setPower(0.0);
         }
 
-//      Commented cause we don't have it
+        // a button sets position of gate controller
         if (gamepad2.a){
             // Open the gate
-            DragonoidsGlobal.gate.setPosition(0.6);
+            DragonoidsGlobal.gate.setPosition(0.0);
         }
         else{
             // Close the gate
-            DragonoidsGlobal.gate.setPosition(0);
+            DragonoidsGlobal.gate.setPosition(0.75);
         }
+
+        // move the slider forward
+        if (gamepad2.right_bumper) {
+            // turn on slider
+            DragonoidsGlobal.rightSlider.setPower(1.00);
+            DragonoidsGlobal.leftSlider.setPower(1.00);
+        }
+
+        //reverse the slider
+        else if (gamepad2.left_bumper) {
+            //turn on slider backwards
+            DragonoidsGlobal.rightSlider.setPower(-0.5);
+            DragonoidsGlobal.leftSlider.setPower(-0.5);
+
+        }
+
+        else {
+            DragonoidsGlobal.rightSlider.setPower(0.0);
+            DragonoidsGlobal.leftSlider.setPower(0.0);
+        }
+
 
         this.outputTelemetry();
     }
@@ -60,6 +83,7 @@ public class DragonoidsTeleOp extends OpMode {
         //telemetry.addData("Right drive motor power", driveMotors.get("rightOneDrive").getPower());
         //telemetry.addData("Left drive motor power", driveMotors.get("leftOneDrive").getPower());
         telemetry.addData("Conveyor motor power", DragonoidsGlobal.conveyor.getPower());
+        telemetry.addData("Servo Position", DragonoidsGlobal.gate.getPosition());
     }
     @Override
     public void stop() {
@@ -67,6 +91,7 @@ public class DragonoidsTeleOp extends OpMode {
         DragonoidsGlobal.stopAll();
         super.stop();
     }
+
     /*
 	 * This method scales the joystick input so for low joystick values, the
 	 * scaled value is less than linear.  This is to make it easier to drive
