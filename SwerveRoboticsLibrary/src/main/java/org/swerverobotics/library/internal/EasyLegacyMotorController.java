@@ -223,7 +223,6 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
 
             this.helper.arm();
 
-            // TODO: BUG: arming is a problem, if the underlying module is broken by, e.g., the usb cable being pulled
             this.i2cDeviceClient.arm();
             this.registerVoltageSensor();
             this.initPID();
