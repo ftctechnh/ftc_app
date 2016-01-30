@@ -68,7 +68,7 @@ public class LinearAutonomous extends LinearOpMode {
 
 		//Delay And Team Selection
 
-		while(true) {
+		/*while(true) {
             if (gamepad1.x) {
                 team = "Blue";
             } else if (gamepad1.b) {
@@ -88,23 +88,28 @@ public class LinearAutonomous extends LinearOpMode {
             telemetry.addData("Team", team);
             telemetry.addData("Delay", delay);
             sleep(300);
-		}
+		}*/
 
 		waitForStart();
 
 		if(opModeIsActive()) {
 			telemetry.clearData();
 			//Starting based off of the delay
-			sleep(delay * 1000);
+			//sleep(delay * 1000);
 			//Autonomous Routine
-			end();
+			spinRobotLeftDegrees(270,0.3,60000,telemetry);
+            spinRobotLeftDegrees(360,0.3,60000,telemetry);
+            spinRobotLeftDegrees(430,0.3,60000,telemetry);
+
+
+            end();
 		}
 	}
 
 
     public static void directionInit() {
-        rightWheel.setDirection(DcMotor.Direction.REVERSE);
-        leftWheel.setDirection(DcMotor.Direction.FORWARD);
+        rightWheel.setDirection(DcMotor.Direction.FORWARD);
+        leftWheel.setDirection(DcMotor.Direction.REVERSE);
         mountainClimber.setDirection(Servo.Direction.FORWARD);
         mountainClimberRelease.setDirection(Servo.Direction.REVERSE);
         bumper.setDirection(Servo.Direction.FORWARD);
@@ -324,22 +329,51 @@ public class LinearAutonomous extends LinearOpMode {
 
 	public static void spinRobotLeftDegrees(int degrees, double power, long timeoutMill, Telemetry telemetry) {
 		long endTime = System.currentTimeMillis() + timeoutMill;
-		int endPosition = gyro.getIntegratedZValue() + degrees;
-		spinRobotLeft(power);
-		while(endTime > System.currentTimeMillis() && gyro.getIntegratedZValue()
-				!= endPosition) {
-			if(endPosition > gyro.getIntegratedZValue()) {
-				spinRobotRight(0.1);
-			}
-			telemetry.addData("Z", gyro.getIntegratedZValue());
-			telemetry.addData("Final", endPosition);
-		}
-		stopRobot();
+		int startPosition1 = gyro.getIntegratedZValue();
+		int currentPosition;
+        Functions.waitFor(1000);
+        int startPosition2;
+        startPosition2 = 0;
+        int endPosition = startPosition2 + degrees;
+        int previousPosition;
+        int repeatCount = 0;
+
+        previousPosition = gyro.getIntegratedZValue();
+        while (repeatCount < 10 ){
+            currentPosition = gyro.getIntegratedZValue();
+            if ( currentPosition == previousPosition) {
+                repeatCount++;
+                telemetry.addData("CurrentHeading", currentPosition);
+            } else {
+                previousPosition = currentPosition;
+                repeatCount = 0;
+            }
+            Functions.waitFor(500);
+        }
+        endTime = System.currentTimeMillis() + timeoutMill;
+        startPosition1 = gyro.getIntegratedZValue();
+        endPosition = startPosition1 + degrees;
+
+        spinRobotLeft(power);
+		while(System.currentTimeMillis() < endTime && (currentPosition = gyro.getIntegratedZValue()) < endPosition)
+		{
+            Functions.waitFor(1);
+			telemetry.addData("CurrentHeading", currentPosition);
+            telemetry.addData("Endposition ", endPosition);
+            telemetry.addData("startPosition1", startPosition1);
+            telemetry.addData("startPosition2", startPosition2);
+
+        }
+        spinRobotLeft(0);
+        telemetry.addData("Endposition ", endPosition);
+        telemetry.addData("startPosition1" , startPosition1);
+        telemetry.addData("startPosition2" , startPosition2);
+        telemetry.addData("Done?" , "Yes");
+        stopRobot();
 	}
 
-	public static void spinRobotRightDegrees(int degrees, double power,
-			long timeoutMill) {
-		long endTime = -System.currentTimeMillis() - timeoutMill;
+	public static void spinRobotRightDegrees(int degrees, double power, long timeoutMill) {
+		long endTime = System.currentTimeMillis() + timeoutMill;
 		int endPosition = gyro.getIntegratedZValue() + degrees;
 		spinRobotRight(power);
 		while(endTime > System.currentTimeMillis()) {
