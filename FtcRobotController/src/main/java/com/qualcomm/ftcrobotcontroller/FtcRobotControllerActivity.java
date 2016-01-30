@@ -503,6 +503,7 @@ public class FtcRobotControllerActivity extends Activity {
         public void onStateChange(RobotState newState)
             {
             this.prevMonitor.onStateChange(newState);
+
             RobotStateTransitionNotifier.onRobotStateChange(newState);
 
             if (newState == RobotState.RUNNING)
@@ -512,7 +513,7 @@ public class FtcRobotControllerActivity extends Activity {
         @Override
         public void onErrorOrWarning()
           {
-          // Nothing to do
+          this.prevMonitor.onErrorOrWarning();
           }
         }
 
