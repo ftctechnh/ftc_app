@@ -41,7 +41,7 @@ public class DragonoidsGlobal {
     }
 
     public static void setServos(){
-        gate.setPosition(0);
+        gate.setPosition(.75);
     }
 
     public static void stopMotors() {
@@ -51,6 +51,7 @@ public class DragonoidsGlobal {
         // Stop all motors
         stopMotors();
         conveyor.setPower(0);
+        setServos();
 
     }
 }

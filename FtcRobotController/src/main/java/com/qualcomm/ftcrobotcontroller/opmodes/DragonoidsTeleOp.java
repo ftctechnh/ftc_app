@@ -46,14 +46,14 @@ public class DragonoidsTeleOp extends OpMode {
             DragonoidsGlobal.conveyor.setPower(0.0);
         }
 
-//      Commented cause we don't have it
+        // a button sets position of gate controller
         if (gamepad2.a){
             // Open the gate
-            DragonoidsGlobal.gate.setPosition(0.6);
+            DragonoidsGlobal.gate.setPosition(0.0);
         }
         else{
             // Close the gate
-            DragonoidsGlobal.gate.setPosition(0);
+            DragonoidsGlobal.gate.setPosition(0.75);
         }
 
         // move the slider forward
@@ -83,6 +83,7 @@ public class DragonoidsTeleOp extends OpMode {
         //telemetry.addData("Right drive motor power", driveMotors.get("rightOneDrive").getPower());
         //telemetry.addData("Left drive motor power", driveMotors.get("leftOneDrive").getPower());
         telemetry.addData("Conveyor motor power", DragonoidsGlobal.conveyor.getPower());
+        telemetry.addData("Servo Position", DragonoidsGlobal.gate.getPosition());
     }
     @Override
     public void stop() {
