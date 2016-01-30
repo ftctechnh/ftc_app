@@ -176,6 +176,8 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
         try {
             this.initialize();
             waitForStart();
+            // Run the conveyor backwards so that debris doesn't get caught in the robot
+            DragonoidsGlobal.conveyor.setPower(-0.25);
             // Choose flow based on alliance color (we're assuming red)
 
             // Drive forward a bit
