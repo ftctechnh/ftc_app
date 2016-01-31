@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import java.sql.Time;
+import java.util.Date;
 
 /**
  * Created by Kaitlin on 1/15/2016.
@@ -55,8 +56,13 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
     boolean rotatorArmDown = true;
     float rotatorSpeed = 1.0f;
 
-    private DcMotor motorUsed = rightMotor;
-    private int encoderTarget = -30;
+    Date clock;
+    long targetTime;
+    long currentPosition;
+
+    //private DcMotor motorUsed = rightMotor;
+    boolean useRightMotor = true;
+    private long encoderTarget = -30;
     private boolean forwardDirection = true;
 
     public DcMotor getLeftMotor()
@@ -124,6 +130,8 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
 
     public CompBotOpMode(HardwareMap hardwareMap)
     {
+        clock = new Date();
+        targetTime = 0;
         // gyro = new PhoneGyrometer(hardwareMap);
         leftMotor = hardwareMap.dcMotor.get(leftMotorName);
         rightMotor = hardwareMap.dcMotor.get(rightMotorName);
@@ -155,9 +163,7 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
     }
 
     @Override
-    public void releaseClimbers() {
-
-    }
+    public void releaseClimbers() {}
 
     @Override
     public void pushButton(boolean isButtonLeft) {
@@ -180,8 +186,10 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
             speed*=-1.0;
             inches*=-1.0;
         }
-        int encoderTarget = ((int)(123.42844 * inches));
-        if(encoderTarget > 0)
+        int encoderChange = ((int)(123.42844 * inches));
+        currentPosition = leftMotor.getCurrentPosition();
+        encoderTarget = currentPosition + encoderChange;
+        if(encoderChange > 0)
         {
             leftMotor.setPower(speed);
             rightMotor.setPower(speed);
@@ -193,14 +201,16 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
             rightMotor.setPower(-speed);
             this.forwardDirection = false;
         }
-        motorUsed = rightMotor;
-        this.encoderTarget = encoderTarget;
+        //motorUsed = rightMotor;
+        useRightMotor = false;
+        //encoderTarget += encoderChange;
+        clock = new Date();
+        //targetTime = clock.getTime() + 5000;
     }
 
 
     public void pivotTurn(float degrees, float speed)
     {
-
         leftMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         rightMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         //makes sure the encoders reset
@@ -263,7 +273,6 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
 
     }
 
-    @Override
     public void spinOnCenter(float degrees, float speed)
     {
 
@@ -513,20 +522,32 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
         //leftMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         //rightMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         //makes sure the encoders reset
+
+        //long currentPosition;
+
+        if (useRightMotor)
+        {
+            currentPosition = rightMotor.getCurrentPosition();
+        }
+        else
+        {
+            currentPosition = leftMotor.getCurrentPosition();
+        }
         if(forwardDirection)
         {
-            if(motorUsed.getCurrentPosition()<=encoderTarget)
+            if(currentPosition<=encoderTarget)
             {
                 return false;
             }
         }
         else
         {
-            if(motorUsed.getCurrentPosition()>=encoderTarget)
+            if(currentPosition>=encoderTarget)
             {
                 return false;
             }
         }
+        stop();
         return true;
     }
 
@@ -576,6 +597,16 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
         //tapeMeasureServo.close();
         climberReleaseServoRight.close();
         climberReleaseServoLeft.close();
+    }
+
+    public long returnCurrent()
+    {
+        return currentPosition;
+    }
+
+    public long returnTarget()
+    {
+        return encoderTarget;
     }
 
 }
