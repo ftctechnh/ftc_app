@@ -315,6 +315,12 @@ public abstract class _ResQAuto extends LinearOpMode {
                 frontRightWheel.setPower(0);
                 backRightWheel.setPower(0);
                 sleep(350);
+                //forward
+                frontLeftWheel.setPower(0.1);
+                backLeftWheel.setPower(0.1);
+                frontRightWheel.setPower(0.1);
+                backRightWheel.setPower(0.1);
+                sleep(100);
                 //dump climbers
                 button2Servo.setPosition(0.05);
                 buttonServo.setPosition(0.7);
@@ -338,7 +344,8 @@ public abstract class _ResQAuto extends LinearOpMode {
                 frontRightWheel.setPower(0);
                 backRightWheel.setPower(0);
                 //Tilt robot to the right
-                frontLeftWheel.setPower(-0.1);
+                frontLeftWheel.setPower
+                        (-0.1);
                 backLeftWheel.setPower(-0.1);
                 frontRightWheel.setPower(0.1);
                 backRightWheel.setPower(0.1);
@@ -347,13 +354,13 @@ public abstract class _ResQAuto extends LinearOpMode {
                 //position servo
                 button2Servo.setPosition(0.05);
                 buttonServo.setPosition(0.5);
-                sleep(1500);
+                sleep(800);
                 //go forward
-                /*frontLeftWheel.setPower(0.15);
+                frontLeftWheel.setPower(0.15);
                 backLeftWheel.setPower(0.15);
                 frontRightWheel.setPower(0.15);
                 backRightWheel.setPower(0.15);
-                sleep(500);*/
+                sleep(500);
             }
             //If detect red
             //  }else if (colorsensor.red() > 0.1 &&colorsensor.blue()<0.1){
@@ -380,7 +387,13 @@ public abstract class _ResQAuto extends LinearOpMode {
                 sleep(500);
                 //activate servos
                 button2Servo.setPosition(0.05);
-                sleep(1600);
+                sleep(800);
+                //forward
+                frontLeftWheel.setPower(0.2);
+                backLeftWheel.setPower(0.2);
+                frontRightWheel.setPower(0.2);
+                backRightWheel.setPower(0.2);
+                sleep(240);
             } else {
                 //Tilt robot to the right
                 frontLeftWheel.setPower(-0.1);
