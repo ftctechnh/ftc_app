@@ -507,6 +507,27 @@ public abstract class _ResQAuto extends LinearOpMode {
         }
 
     }
+    private void encoderDrive(double distance, double power) throws InterruptedException
+    {
+        DcMotor frontRightWheel;
+        DcMotor frontLeftWheel;
+        DcMotor backRightWheel;
+        DcMotor backLeftWheel;
+        frontRightWheel = hardwareMap.dcMotor.get("frontR");
+        frontLeftWheel = hardwareMap.dcMotor.get("frontL");
+        backRightWheel = hardwareMap.dcMotor.get("backR");
+        backLeftWheel = hardwareMap.dcMotor.get("backL");
+        frontLeftWheel.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        frontLeftWheel.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+      /*  while (encoder.distance<distance){
+        frontRightWheel.setPower(power);
+        frontLeftWheel.setPower(power);
+        backRightWheel.setPower(power);
+        backLeftWheel.setPower(power);
+        waitForNextHardwareCycle();
+    }*/
+
+    }
     private void servoMove(Servo s1, double initPos, double endPos, double delta, long delay) throws InterruptedException
     {
         double tempPos = initPos;
