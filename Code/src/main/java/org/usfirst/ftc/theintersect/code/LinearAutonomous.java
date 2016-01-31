@@ -254,7 +254,7 @@ public class LinearAutonomous extends LinearOpMode {
         long endTime = System.currentTimeMillis() + timeoutMill;
         double encoderVal = rotations * Functions.neveRestDegreeRatio;
 
-        // setup run to positon mode
+        // setup run to position mode
         rightWheel.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
         leftWheel.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
         // set target position
@@ -274,18 +274,29 @@ public class LinearAutonomous extends LinearOpMode {
 
     public static void moveRobotForwardRotations(double rotations, double power,
                                                  long timeoutMill) {
+
+        resetEncoders(); // reset encoder and turn on run_to_position mode
         long endTime = System.currentTimeMillis() + timeoutMill;
-        resetEncoders();
         double encoderVal = rotations * Functions.neveRestDegreeRatio;
-        rightWheel.setTargetPosition((int) -encoderVal);
-        leftWheel.setTargetPosition((int) -encoderVal);
-        while(endTime > System.currentTimeMillis()) {
-            moveRobotForward(power, power);
-            if(!rightWheel.isBusy() && !leftWheel.isBusy()) {
-                stopRobot();
-            }
+
+        // setup run to position mode
+        rightWheel.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        leftWheel.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        // set target position
+        rightWheel.setTargetPosition((int) encoderVal);
+        leftWheel.setTargetPosition((int) encoderVal);
+        // set target speed
+        rightWheel.setPower(power);
+        leftWheel.setPower(power);
+
+        while( ( System.currentTimeMillis() < endTime) &&
+                (rightWheel.getTargetPosition() < encoderVal) &&
+                (leftWheel.getTargetPosition()  < encoderVal) ){
+            Functions.waitFor(50);
         }
+        stopRobot();
     }
+
 	public static void moveRobotBackwardRotationsGyro(double rotations, double power, long timeoutMill, Telemetry telemetry) {
         long endTime;
         double adjustedPower;
@@ -297,15 +308,20 @@ public class LinearAutonomous extends LinearOpMode {
 
         // set target encoder value to both wheels
         double encoderVal = rotations * Functions.neveRestDegreeRatio;
-        resetEncoders(); // reset Encoder to 0 and turn on RUN_TO_POSITION mode
-        rightWheel.setTargetPosition(-(int) encoderVal);
-        leftWheel.setTargetPosition(-(int) encoderVal);
+        resetEncoders(); // reset Encoder to 0
+        rightWheel.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        leftWheel.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 
-        telemetry.addData("Target position L:", leftWheel.getTargetPosition());
-        telemetry.addData("Target position R:", rightWheel.getCurrentPosition());
         endTime = System.currentTimeMillis() + timeoutMill;
 
-        while( System.currentTimeMillis() < endTime ) { // check timeout
+        while ( (rightWheel.getCurrentPosition() > encoderVal ) ||
+                ( leftWheel.getCurrentPosition() > encoderVal)) {
+
+            if ( System.currentTimeMillis() > endTime ) { // check timeout
+                telemetry.addData("Timeout", System.currentTimeMillis());
+                break;
+            }
+
             int currentHeading = gyro.getIntegratedZValue(); // current heading
             int delta = currentHeading - targetHeading; // heading drift
 
@@ -325,16 +341,12 @@ public class LinearAutonomous extends LinearOpMode {
                 leftpower = power;
                 rightpower = adjustedPower;
             }
-            moveRobotBackward(leftpower, rightpower);
+            moveRobotBackward(leftpower, rightpower); // set motor power
             telemetry.addData("Current position L:", leftWheel.getCurrentPosition());
             telemetry.addData("Current position R:", rightWheel.getCurrentPosition());
-			if(!rightWheel.isBusy() && !leftWheel.isBusy()) {
-				telemetry.addData("rightWheelbusy", rightWheel.isBusy() );
-				break;
-			}
 		}
-        telemetry.addData("Complete", targetHeading);
         stopRobot();
+        telemetry.addData("Complete", targetHeading);
 	}
 
 
