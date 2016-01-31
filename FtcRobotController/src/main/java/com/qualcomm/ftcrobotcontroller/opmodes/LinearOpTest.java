@@ -7,23 +7,18 @@ import com.qualcomm.robotcore.hardware.DcMotorController;
 /**
  * Created by Peter on 1/15/2016.
  */
-public class LinearOpTest extends LinearOpMode
+public class LinearOpTest extends AutonomousTime_T
 {
-    DcMotor left;
-    DcMotor right;
+    @Override
     public void runOpMode() throws InterruptedException
     {
-        left = hardwareMap.dcMotor.get("leftDrive");
-        right = hardwareMap.dcMotor.get("rightDrive");
+        left = hardwareMap.dcMotor.get("left");
+        right = hardwareMap.dcMotor.get("right");
         left.setDirection(DcMotor.Direction.REVERSE);
-        // here is where distances will go in
-        float forward1 = 1;
+        right.setDirection(DcMotor.Direction.FORWARD);
         waitForStart();
-        //here is where the commands go
-        left.setPower(1.0f);
-        right.setPower(1.0f);
-        wait((long) forward1 * 1000);
-        left.setPower(0f);
-        right.setPower(0f);
+        Forwards(12, true);
+        sleep(100);
+        Forwards(12, false);
     }
 }
