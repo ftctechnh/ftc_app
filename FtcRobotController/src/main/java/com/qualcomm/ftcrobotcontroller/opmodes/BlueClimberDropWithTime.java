@@ -5,9 +5,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 
 /**
- * Created by Peter&Kaitlin on 1/15/2016.
+ * Created by Kaitlin on 1/15/2016.
  */
-public class LinearOpTest extends AutonomousTime_T
+public class BlueClimberDropWithTime extends AutonomousTime_T
 {
     @Override
     public void runOpMode() throws InterruptedException
