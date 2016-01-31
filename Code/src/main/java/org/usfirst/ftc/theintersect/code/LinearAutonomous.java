@@ -98,8 +98,8 @@ public class LinearAutonomous extends LinearOpMode {
 			//sleep(delay * 1000);
 			//Autonomous Routine
 			spinRobotLeftDegrees(270,0.3,60000,telemetry);
-            spinRobotLeftDegrees(360,0.3,60000,telemetry);
-            spinRobotLeftDegrees(430,0.3,60000,telemetry);
+            spinRobotLeftDegrees(360, 0.3, 60000, telemetry);
+            spinRobotLeftDegrees(430, 0.3, 60000, telemetry);
 
 
             end();
@@ -119,13 +119,44 @@ public class LinearAutonomous extends LinearOpMode {
 
 
     public static void gyroInit(Telemetry telemetry) {
+        int previousPosition;
+        int repeatCount = 0;
+        int currentPosition;
+
         gyro.calibrate();
         gyro.setHeadingMode(
                 ModernRoboticsI2cGyro.HeadingMode.HEADING_CARTESIAN);
         while (gyro.isCalibrating()) {
-            telemetry.addData("Gyro Calibration: ", "Calibrating Gyro");
+            telemetry.addData("gyroInit: ", "Calibrating Gyro");
         }
-        telemetry.addData("Gyro Calibration: ", "Calibration Complete");
+        telemetry.addData("gyroInit: ", "Calibration Complete");
+        previousPosition = gyro.getIntegratedZValue();
+        initGyroHeading(telemetry);
+    }
+
+    // setup gyro so it will have stable reading of heading
+    public static void initGyroHeading(Telemetry telemetry ) {
+        int repeatCount = 0;
+        int currentPosition;
+        int previousPosition;
+        int totalCount = 0;
+
+        previousPosition = gyro.getIntegratedZValue();
+        Functions.waitFor(500);
+        while (repeatCount < 5 ){
+            currentPosition = gyro.getIntegratedZValue();
+            if ( currentPosition == previousPosition) {
+                repeatCount++;
+                telemetry.addData("initGyroHeading CurrentHeading", currentPosition);
+            } else {
+                previousPosition = currentPosition;
+                repeatCount = 0;
+            }
+            Functions.waitFor(500);
+            totalCount++;
+        }
+        telemetry.addData("initGyroHeading: Done ", totalCount);
+
     }
 
 	public static void autonomousInit(Telemetry telemetry) {
@@ -328,31 +359,16 @@ public class LinearAutonomous extends LinearOpMode {
 	}
 
 	public static void spinRobotLeftDegrees(int degrees, double power, long timeoutMill, Telemetry telemetry) {
-		long endTime = System.currentTimeMillis() + timeoutMill;
-		int startPosition1 = gyro.getIntegratedZValue();
+		long endTime;
+		int startPosition;
 		int currentPosition;
-        Functions.waitFor(1000);
-        int startPosition2;
-        startPosition2 = 0;
-        int endPosition = startPosition2 + degrees;
-        int previousPosition;
-        int repeatCount = 0;
+        int endPosition;
 
-        previousPosition = gyro.getIntegratedZValue();
-        while (repeatCount < 10 ){
-            currentPosition = gyro.getIntegratedZValue();
-            if ( currentPosition == previousPosition) {
-                repeatCount++;
-                telemetry.addData("CurrentHeading", currentPosition);
-            } else {
-                previousPosition = currentPosition;
-                repeatCount = 0;
-            }
-            Functions.waitFor(500);
-        }
+        initGyroHeading(telemetry);
+        startPosition = gyro.getIntegratedZValue();
+        endPosition = startPosition + degrees;
         endTime = System.currentTimeMillis() + timeoutMill;
-        startPosition1 = gyro.getIntegratedZValue();
-        endPosition = startPosition1 + degrees;
+        telemetry.addData("startPosition ", startPosition);
 
         spinRobotLeft(power);
 		while(System.currentTimeMillis() < endTime && (currentPosition = gyro.getIntegratedZValue()) < endPosition)
@@ -360,14 +376,9 @@ public class LinearAutonomous extends LinearOpMode {
             Functions.waitFor(1);
 			telemetry.addData("CurrentHeading", currentPosition);
             telemetry.addData("Endposition ", endPosition);
-            telemetry.addData("startPosition1", startPosition1);
-            telemetry.addData("startPosition2", startPosition2);
-
         }
         spinRobotLeft(0);
         telemetry.addData("Endposition ", endPosition);
-        telemetry.addData("startPosition1" , startPosition1);
-        telemetry.addData("startPosition2" , startPosition2);
         telemetry.addData("Done?" , "Yes");
         stopRobot();
 	}
