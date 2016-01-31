@@ -97,9 +97,10 @@ public class LinearAutonomous extends LinearOpMode {
 			//Starting based off of the delay
 			//sleep(delay * 1000);
 			//Autonomous Routine
-			spinRobotLeftDegrees(270,0.3,60000,telemetry);
-            spinRobotLeftDegrees(360, 0.3, 60000, telemetry);
-            spinRobotLeftDegrees(430, 0.3, 60000, telemetry);
+            moveRobotBackwardRotationsGyro(3000, 0.4, 10000);
+			//spinRobotLeftDegrees(90,0.3,60000,telemetry);
+            //spinRobotLeftDegrees(90, 0.3, 60000, telemetry);
+            //spinRobotLeftDegrees(90, 0.3, 60000, telemetry);
 
 
             end();
@@ -184,6 +185,7 @@ public class LinearAutonomous extends LinearOpMode {
 		rightWheel.setPower(-rightPower);
 	}
 
+
 	public static void stopRobot() {
 		leftWheel.setPower(0);
 		rightWheel.setPower(0);
@@ -200,6 +202,19 @@ public class LinearAutonomous extends LinearOpMode {
 		Functions.waitFor(seconds * 1000);
 		stopRobot();
 	}
+
+    public static void moveRobotForwardTimeGyro(int seconds, double power) {
+        moveRobotForward(power, power);
+        Functions.waitFor(seconds * 1000);
+        stopRobot();
+    }
+
+    public static void moveRobotBackwardTimeGyro(int seconds, double power) {
+        moveRobotBackward(power, power);
+        Functions.waitFor(seconds * 1000);
+        stopRobot();
+    }
+
 
 	public static void turnRobotLeftForward(double power) {
 		rightWheel.setPower(power);
@@ -230,16 +245,68 @@ public class LinearAutonomous extends LinearOpMode {
 		rightWheel.setPower(-power);
 		leftWheel.setPower(power);
 	}
+    public static void moveRobotBackwardRotations(double rotations, double power,
+                                                  long timeoutMill) {
+        long endTime = System.currentTimeMillis() + timeoutMill;
+        resetEncoders();
+        double encoderVal = rotations * Functions.neveRestDegreeRatio;
+        rightWheel.setTargetPosition(-(int) encoderVal);
+        leftWheel.setTargetPosition(-(int) encoderVal);
+        while(endTime > System.currentTimeMillis()) {
+            moveRobotBackward(power, power);
+            if(!rightWheel.isBusy() && !leftWheel.isBusy()) {
+                stopRobot();
+                break;
+            }
+        }
+    }
 
-	public static void moveRobotBackwardRotations(double rotations, double power,
-			long timeoutMill) {
+    public static void moveRobotForwardRotations(double rotations, double power,
+                                                 long timeoutMill) {
+        long endTime = System.currentTimeMillis() + timeoutMill;
+        resetEncoders();
+        double encoderVal = rotations * Functions.neveRestDegreeRatio;
+        rightWheel.setTargetPosition((int) -encoderVal);
+        leftWheel.setTargetPosition((int) -encoderVal);
+        while(endTime > System.currentTimeMillis()) {
+            moveRobotForward(power, power);
+            if(!rightWheel.isBusy() && !leftWheel.isBusy()) {
+                stopRobot();
+            }
+        }
+    }
+	public static void moveRobotBackwardRotationsGyro(double rotations, double power, long timeoutMill) {
 		long endTime = System.currentTimeMillis() + timeoutMill;
 		resetEncoders();
 		double encoderVal = rotations * Functions.neveRestDegreeRatio;
 		rightWheel.setTargetPosition(-(int) encoderVal);
 		leftWheel.setTargetPosition(-(int) encoderVal);
-		while(endTime > System.currentTimeMillis()) {
-			moveRobotBackward(power, power);
+        double adjustedPower;
+        int targetHeading = gyro.getIntegratedZValue();
+
+        // start robot
+        moveRobotBackward(power, power);
+
+
+		while(endTime > System.currentTimeMillis()) { // check timeout
+            int currentHeading = gyro.getIntegratedZValue();
+            int delta = currentHeading - targetHeading;
+            int x = delta;
+
+            if ( x < 0) x = -x;
+            adjustedPower = power + (x/Functions.straightGyroCorrectionFactor);
+            if(adjustedPower > Functions.adjustedPowerMax){
+                adjustedPower = Functions.adjustedPowerMax;
+            }else if (adjustedPower < Functions.adjustedPowerMin){
+                adjustedPower = Functions.adjustedPowerMin;
+            }
+
+            if( delta < 0 ){ //drifting right
+                moveRobotBackward(adjustedPower, power);
+            } else if (delta > 0){ //drifting left
+                moveRobotBackward(power, adjustedPower);
+            }
+
 			if(!rightWheel.isBusy() && !leftWheel.isBusy()) {
 				stopRobot();
 				break;
@@ -247,16 +314,27 @@ public class LinearAutonomous extends LinearOpMode {
 		}
 	}
 
-	public static void moveRobotForwardRotations(double rotations, double power,
+	public static void moveRobotForwardRotationsGyro(double rotations, double power,
 			long timeoutMill) {
 		long endTime = System.currentTimeMillis() + timeoutMill;
 		resetEncoders();
 		double encoderVal = rotations * Functions.neveRestDegreeRatio;
 		rightWheel.setTargetPosition((int) -encoderVal);
 		leftWheel.setTargetPosition((int) -encoderVal);
+        double adjustedPower = power + (gyro.getIntegratedZValue()/Functions.straightGyroCorrectionFactor);
+        if(adjustedPower > 1.0){
+            adjustedPower = 1.0;
+        }else if (adjustedPower < 0){
+            adjustedPower = 0.0;
+        }
 		while(endTime > System.currentTimeMillis()) {
-			moveRobotForward(power, power);
-			if(!rightWheel.isBusy() && !leftWheel.isBusy()) {
+            if(gyro.getIntegratedZValue() < 0){ //drifting right
+                moveRobotForward( adjustedPower, power);
+            } else if (gyro.getIntegratedZValue() > 0){ //drifting left
+                moveRobotForward(power, adjustedPower);
+            }else {
+                moveRobotForward(power , power);
+            }			if(!rightWheel.isBusy() && !leftWheel.isBusy()) {
 				stopRobot();
 			}
 		}
@@ -382,6 +460,7 @@ public class LinearAutonomous extends LinearOpMode {
         telemetry.addData("Done?" , "Yes");
         stopRobot();
 	}
+
 
 	public static void spinRobotRightDegrees(int degrees, double power, long timeoutMill) {
 		long endTime = System.currentTimeMillis() + timeoutMill;

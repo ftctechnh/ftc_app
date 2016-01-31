@@ -19,6 +19,9 @@ public class Functions {
 	public static double tubeTiltInitPosition = 0.0;
     public static double churroHookDownPos = 0.0;
     public static double churroHookUpPos = 1.0;
+	public static double straightGyroCorrectionFactor = 20.0;
+	public static double adjustedPowerMax = 0.9;
+	public static double adjustedPowerMin = 0.25;
 
 	public static double convertGamepad(float y) {
 		int m;
