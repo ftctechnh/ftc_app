@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.Range;
 
 import java.io.BufferedReader;
@@ -128,15 +129,15 @@ public class _ResQAutoTesting extends LinearOpMode {
         //turn on sweeper, move forward
         backRightWheel.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         backRightWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-        encoderDrive(4750, 0.3);
+        encoderDrive(5250, 0.3);
         frontLeftWheel.setPower(-0.3);
         backLeftWheel.setPower(-0.3);
         frontRightWheel.setPower(0.3);
         backRightWheel.setPower(0.3);
-        sleep(450);
+        sleep(350);
         backRightWheel.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         backRightWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-        encoderDrive(4000, 0.3);
+        encoderDrive(3200, 0.3);
 
         //Drive forward until reach line
         //Slow down to 0.1
@@ -152,28 +153,31 @@ public class _ResQAutoTesting extends LinearOpMode {
                 frontLeftWheel.setPower(0);
                 backRightWheel.setPower(0);
                 backLeftWheel.setPower(0);
-                sleep(300);
+                sleep(100);
                 if (getRedAlliance() == 1) {
                     frontLeftWheel.setPower(0.3);
                     backLeftWheel.setPower(0.3);
                     frontRightWheel.setPower(-0.3);
                     backRightWheel.setPower(-0.3);
-                    sleep(50);
+                    sleep(60);
                 } else {
                     frontLeftWheel.setPower(-0.3);
                     backLeftWheel.setPower(-0.3);
                     frontRightWheel.setPower(0.3);
                     backRightWheel.setPower(0.3);
-                    sleep(50);
+                    sleep(60);
 
                 }
+                backRightWheel.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+                backRightWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+                encoderDrive(50, 0.3);
                 break;
             }
             //set speed here for driving to line
-            frontLeftWheel.setPower(-0.1);
-            backLeftWheel.setPower(-0.1);
-            frontRightWheel.setPower(-0.1);
-            backRightWheel.setPower(0.1);
+            frontLeftWheel.setPower(-0.2);
+            backLeftWheel.setPower(-0.2);
+            frontRightWheel.setPower(-0.2);
+            backRightWheel.setPower(-0.2);
 
         }
 
@@ -197,7 +201,7 @@ public class _ResQAutoTesting extends LinearOpMode {
             value = reflectance - EOPDThreshold;
             debugValues.add(formatter.format(new Date()) + "Correction Error:" + value);
             //Set values for line follower
-            valueB = .12;
+            valueB = .2;
             if (value > 0) {
                 valueS = .18;
             } else {
