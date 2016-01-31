@@ -19,8 +19,8 @@ import java.util.Arrays;
 
 @org.swerverobotics.library.interfaces.Autonomous(name = "Autonomous")
 public class LinearAutonomous extends LinearOpMode {
-	String team = "8865";
-	int delay = 0;
+//	String team = "8865";
+//	int delay = 0;
 
 	static DcMotor rightWheel;
 	static DcMotor leftWheel;
@@ -116,13 +116,14 @@ public class LinearAutonomous extends LinearOpMode {
         bumper.setDirection(Servo.Direction.FORWARD);
         tubeExtender.setDirection(Servo.Direction.REVERSE);
         tubeTilt.setDirection(Servo.Direction.REVERSE);
+
+        rightWheel.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        leftWheel.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+
     }
 
 
     public static void gyroInit(Telemetry telemetry) {
-        int previousPosition;
-        int repeatCount = 0;
-        int currentPosition;
 
         gyro.calibrate();
         gyro.setHeadingMode(
@@ -131,7 +132,6 @@ public class LinearAutonomous extends LinearOpMode {
             telemetry.addData("gyroInit: ", "Calibrating Gyro");
         }
         telemetry.addData("gyroInit: ", "Calibration Complete");
-        previousPosition = gyro.getIntegratedZValue();
         initGyroHeading(telemetry);
     }
 
@@ -245,22 +245,31 @@ public class LinearAutonomous extends LinearOpMode {
 		rightWheel.setPower(-power);
 		leftWheel.setPower(power);
 	}
+
+    // Move Robot backwoard based on encoder setting
+    // Use run to position mode
     public static void moveRobotBackwardRotations(double rotations, double power,
                                                   long timeoutMill) {
+        resetEncoders(); // reset encoder and turn on run_to_position mode
         long endTime = System.currentTimeMillis() + timeoutMill;
-        resetEncoders();
         double encoderVal = rotations * Functions.neveRestDegreeRatio;
+
+        // setup run to positon mode
+        rightWheel.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        leftWheel.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        // set target position
         rightWheel.setTargetPosition(-(int) encoderVal);
         leftWheel.setTargetPosition(-(int) encoderVal);
-        while(endTime > System.currentTimeMillis()) {
-            moveRobotBackward(power, power);
-            while(rightWheel.isBusy() && leftWheel.isBusy()) {
-                Functions.waitFor(50);
-            }
-            break;
+        // set target speed
+        rightWheel.setPower(power);
+        leftWheel.setPower(power);
+
+        while( ( System.currentTimeMillis() < endTime) &&
+               (rightWheel.getTargetPosition() > encoderVal) &&
+               (leftWheel.getTargetPosition()  > encoderVal) ){
+            Functions.waitFor(50);
         }
         stopRobot();
-
     }
 
     public static void moveRobotForwardRotations(double rotations, double power,
@@ -278,8 +287,7 @@ public class LinearAutonomous extends LinearOpMode {
         }
     }
 	public static void moveRobotBackwardRotationsGyro(double rotations, double power, long timeoutMill, Telemetry telemetry) {
-		long endTime = System.currentTimeMillis() + timeoutMill;
-        resetEncoders();
+        long endTime;
         double adjustedPower;
         int targetHeading = gyro.getIntegratedZValue();
         double leftpower = power;
@@ -289,40 +297,39 @@ public class LinearAutonomous extends LinearOpMode {
 
         // set target encoder value to both wheels
         double encoderVal = rotations * Functions.neveRestDegreeRatio;
+        resetEncoders(); // reset Encoder to 0 and turn on RUN_TO_POSITION mode
         rightWheel.setTargetPosition(-(int) encoderVal);
         leftWheel.setTargetPosition(-(int) encoderVal);
 
+        telemetry.addData("Target position L:", leftWheel.getTargetPosition());
+        telemetry.addData("Target position R:", rightWheel.getCurrentPosition());
+        endTime = System.currentTimeMillis() + timeoutMill;
 
-		while( System.currentTimeMillis() < endTime ) { // check timeout
-            int currentHeading = gyro.getIntegratedZValue();
-            int delta = currentHeading - targetHeading;
-            int x = delta;
+        while( System.currentTimeMillis() < endTime ) { // check timeout
+            int currentHeading = gyro.getIntegratedZValue(); // current heading
+            int delta = currentHeading - targetHeading; // heading drift
 
-            if ( x < 0) x = -x;
-            adjustedPower = power + (x/Functions.straightGyroCorrectionFactor);
+            adjustedPower = power + (Math.abs(delta)/Functions.straightGyroCorrectionFactor);
             if(adjustedPower > Functions.adjustedPowerMax){
                 adjustedPower = Functions.adjustedPowerMax;
             }else if (adjustedPower < Functions.adjustedPowerMin){
                 adjustedPower = Functions.adjustedPowerMin;
             }
             telemetry.addData("currentHeading", currentHeading);
-            telemetry.addData("adjustpower", adjustedPower);
 
             if( delta < 0 ){ //drifting right
                 leftpower = adjustedPower;
                 rightpower = power;
-                telemetry.addData("adjust left", adjustedPower);
 
             } else if (delta > 0){ //drifting left
                 leftpower = power;
                 rightpower = adjustedPower;
-                telemetry.addData("adjust right", adjustedPower);
             }
             moveRobotBackward(leftpower, rightpower);
-
+            telemetry.addData("Current position L:", leftWheel.getCurrentPosition());
+            telemetry.addData("Current position R:", rightWheel.getCurrentPosition());
 			if(!rightWheel.isBusy() && !leftWheel.isBusy()) {
 				telemetry.addData("rightWheelbusy", rightWheel.isBusy() );
-                telemetry.addData("leftWheelbusy", leftWheel.isBusy() );
 				break;
 			}
 		}
@@ -546,9 +553,15 @@ public class LinearAutonomous extends LinearOpMode {
 
 	public static void resetEncoders() {
 		rightWheel.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-		rightWheel.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
 		leftWheel.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-		leftWheel.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+
+        while(rightWheel.getTargetPosition() != 0 ) {
+            Functions.waitFor(50);
+        }
+
+        while(leftWheel.getTargetPosition() != 0 ) {
+            Functions.waitFor(50);
+        }
 	}
 
 	public static void end() {
