@@ -19,7 +19,7 @@ import java.util.Arrays;
 
 @org.swerverobotics.library.interfaces.Autonomous(name = "Autonomous")
 public class LinearAutonomous extends LinearOpMode {
-	String team = "";
+	String team = "8865";
 	int delay = 0;
 
 	static DcMotor rightWheel;
@@ -97,12 +97,12 @@ public class LinearAutonomous extends LinearOpMode {
 			//Starting based off of the delay
 			//sleep(delay * 1000);
 			//Autonomous Routine
-            moveRobotBackwardRotationsGyro(3000, 0.4, 10000);
+            telemetry.addData("Status" , "working...");
+            moveRobotBackwardRotations(1500, 0.5, 10000);
+            telemetry.addData("Status" , "done");
 			//spinRobotLeftDegrees(90,0.3,60000,telemetry);
             //spinRobotLeftDegrees(90, 0.3, 60000, telemetry);
             //spinRobotLeftDegrees(90, 0.3, 60000, telemetry);
-
-
             end();
 		}
 	}
@@ -254,11 +254,13 @@ public class LinearAutonomous extends LinearOpMode {
         leftWheel.setTargetPosition(-(int) encoderVal);
         while(endTime > System.currentTimeMillis()) {
             moveRobotBackward(power, power);
-            if(!rightWheel.isBusy() && !leftWheel.isBusy()) {
-                stopRobot();
-                break;
+            while(rightWheel.isBusy() && leftWheel.isBusy()) {
+                Functions.waitFor(50);
             }
+            break;
         }
+        stopRobot();
+
     }
 
     public static void moveRobotForwardRotations(double rotations, double power,
@@ -275,20 +277,23 @@ public class LinearAutonomous extends LinearOpMode {
             }
         }
     }
-	public static void moveRobotBackwardRotationsGyro(double rotations, double power, long timeoutMill) {
+	public static void moveRobotBackwardRotationsGyro(double rotations, double power, long timeoutMill, Telemetry telemetry) {
 		long endTime = System.currentTimeMillis() + timeoutMill;
-		resetEncoders();
-		double encoderVal = rotations * Functions.neveRestDegreeRatio;
-		rightWheel.setTargetPosition(-(int) encoderVal);
-		leftWheel.setTargetPosition(-(int) encoderVal);
+        resetEncoders();
         double adjustedPower;
         int targetHeading = gyro.getIntegratedZValue();
+        double leftpower = power;
+        double rightpower = power;
 
-        // start robot
-        moveRobotBackward(power, power);
+        telemetry.addData("moveRobotBackwardRotationsGyro", targetHeading);
+
+        // set target encoder value to both wheels
+        double encoderVal = rotations * Functions.neveRestDegreeRatio;
+        rightWheel.setTargetPosition(-(int) encoderVal);
+        leftWheel.setTargetPosition(-(int) encoderVal);
 
 
-		while(endTime > System.currentTimeMillis()) { // check timeout
+		while( System.currentTimeMillis() < endTime ) { // check timeout
             int currentHeading = gyro.getIntegratedZValue();
             int delta = currentHeading - targetHeading;
             int x = delta;
@@ -300,19 +305,31 @@ public class LinearAutonomous extends LinearOpMode {
             }else if (adjustedPower < Functions.adjustedPowerMin){
                 adjustedPower = Functions.adjustedPowerMin;
             }
+            telemetry.addData("currentHeading", currentHeading);
+            telemetry.addData("adjustpower", adjustedPower);
 
             if( delta < 0 ){ //drifting right
-                moveRobotBackward(adjustedPower, power);
+                leftpower = adjustedPower;
+                rightpower = power;
+                telemetry.addData("adjust left", adjustedPower);
+
             } else if (delta > 0){ //drifting left
-                moveRobotBackward(power, adjustedPower);
+                leftpower = power;
+                rightpower = adjustedPower;
+                telemetry.addData("adjust right", adjustedPower);
             }
+            moveRobotBackward(leftpower, rightpower);
 
 			if(!rightWheel.isBusy() && !leftWheel.isBusy()) {
-				stopRobot();
+				telemetry.addData("rightWheelbusy", rightWheel.isBusy() );
+                telemetry.addData("leftWheelbusy", leftWheel.isBusy() );
 				break;
 			}
 		}
+        telemetry.addData("Complete", targetHeading);
+        stopRobot();
 	}
+
 
 	public static void moveRobotForwardRotationsGyro(double rotations, double power,
 			long timeoutMill) {
