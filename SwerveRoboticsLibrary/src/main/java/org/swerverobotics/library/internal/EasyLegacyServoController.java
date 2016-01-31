@@ -109,7 +109,7 @@ public class EasyLegacyServoController implements ServoController, IOpModeStateT
             EasyLegacyServoController controller = new EasyLegacyServoController(context, i2cDeviceClient, target);
 
             controller.setServos(servos);
-            controller.arm();
+            controller.engage();
 
             return controller;
             }
@@ -128,7 +128,7 @@ public class EasyLegacyServoController implements ServoController, IOpModeStateT
 
     private void setServos(Collection<Servo> servos)
         {
-        assertTrue(!BuildConfig.DEBUG || !this.isArmed());
+        assertTrue(!BuildConfig.DEBUG || !this.isEngaged());
 
         for (Servo servo : servos)
             {
@@ -155,33 +155,33 @@ public class EasyLegacyServoController implements ServoController, IOpModeStateT
             }
         }
 
-    synchronized private void arm()
+    synchronized private void engage()
     // Disarm the existing controller and arm us
         {
-        if (!this.isArmed())
+        if (!this.isEngaged())
             {
             this.usurpDevices();
 
-            this.helper.arm();
+            this.helper.engage();
 
-            this.i2cDeviceClient.arm();
+            this.i2cDeviceClient.engage();
             this.floatHardware();
             }
         }
 
-    synchronized private boolean isArmed()
+    synchronized private boolean isEngaged()
         {
-        return this.helper.isArmed();
+        return this.helper.isEngaged();
         }
 
-    synchronized private void disarm()
+    synchronized private void disengage()
     // Disarm us and re-arm the target
         {
-        if (this.isArmed())
+        if (this.isEngaged())
             {
-            this.i2cDeviceClient.disarm();
+            this.i2cDeviceClient.disengage();
 
-            this.helper.disarm();
+            this.helper.disengage();
 
             this.deusurpDevices();
             }
@@ -208,10 +208,10 @@ public class EasyLegacyServoController implements ServoController, IOpModeStateT
 
     @Override public synchronized void close()
         {
-        if (this.isArmed())
+        if (this.isEngaged())
             {
             this.floatHardware(); // mirrors robot controller runtime behavior
-            this.disarm();
+            this.disengage();
             }
         }
 
@@ -222,10 +222,10 @@ public class EasyLegacyServoController implements ServoController, IOpModeStateT
     @Override synchronized public boolean onUserOpModeStop()
         {
         Log.d(LOGGING_TAG, "Easy: auto-stopping...");
-        if (this.isArmed())
+        if (this.isEngaged())
             {
             this.stopHardware();  // mirror StopRobotOpMode
-            this.disarm();
+            this.disengage();
             }
         Log.d(LOGGING_TAG, "Easy: ... done");
         return true;    // unregister us
@@ -294,7 +294,7 @@ public class EasyLegacyServoController implements ServoController, IOpModeStateT
 
     synchronized void write(int ireg, byte bData)
         {
-        if (this.isArmed())
+        if (this.isEngaged())
             this.i2cDeviceClient.write8(ireg, bData);
         }
 

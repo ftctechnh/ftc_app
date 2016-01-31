@@ -2,6 +2,8 @@ package org.swerverobotics.library.interfaces;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.hardware.usb.RobotUsbModule;
+
 import org.swerverobotics.library.*;
 
 /**
@@ -314,23 +316,44 @@ public interface II2cDeviceClient extends HardwareDevice
      * the underlying I2cDevice. Only one client of an I2cDevice may register for callbacks
      * at any given time; if multiple clients exist, they must be coordinated so as to use
      * the I2cDevice sequentially. This method is idempotent.
-     * @see #disarm()
-     * @see #isArmed()
+     *
+     * Note: even though a device client is armed, it is not necessarily the case that it
+     * is actually talking to and communicating with it's underlying hardware, for the
+     * I2cController on which it resides may, for example, be currently disconnected. To
+     * discern whether the actual hardware is currently being communicated with,
+     * see {@link #getArmingState()}.
+     *
+     * @see #disengage()
+     * @see #isEngaged()
+     * @see #getArmingState()
      */
-    void arm();
+    void engage();
 
     /**
-     * Answers as to whether this I2cDeviceClient is currently armed.
+     * Answers as to whether this I2cDeviceClient is currently armed; that is, whether
+     * {@link #engage()} has been called.
+     *
      * @return whether the client is currently armed
-     * @see #arm()
+     * @see #engage()
      */
-    boolean isArmed();
+    boolean isEngaged();
 
     /**
      * Disarms the client if it is currently armed. This method is idempotent.
-     * @see #arm()
+     *
+     * @see #engage()
      */
-    void disarm();
+    void disengage();
+
+    /**
+     * Returns whether, as of this instant, this device client is currently in communication
+     * with its underlying hardware (which will never be the case if the device client is not
+     * engaged), or whether it is in some other state.
+     *
+     * @return the arming state of this device client
+     * @see #engage()
+     */
+    boolean isArmed();
 
     /**
      * Close down and disable this device. Once this is done, the object instance cannot

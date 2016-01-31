@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.hardware.usb.RobotUsbModule;
 import com.qualcomm.robotcore.util.*;
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.exceptions.*;
@@ -26,11 +27,14 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
     // State
     //----------------------------------------------------------------------------------------------
 
-    public final II2cDevice     i2cDevice;                  // the device we are talking to
-    private       boolean       isArmed;                    // whether we are armed or not
+    private final II2cDevice     i2cDevice;                  // the device we are talking to
+    private       I2cController  controller;
+    private       RobotUsbModule robotUsbModule;
+
+    private       boolean       isHooked;                   // whether we are connected to the underling device or not
+    private       boolean       isEngaged;                  // user's hooking *intent*
     private       int           preventReadsOrWrites;       //
-    private       boolean       armingIsDesired;            // user's arming intent
-    private       boolean       closing;
+    private       boolean       closing;                    //
 
     private final Callback      callback;                   // the callback object on which we actually receive callbacks
     private       boolean       loggingEnabled;             // whether we are to log to Logcat or not
@@ -44,7 +48,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
     private       Lock          readCacheLock;              // lock we must hold to look at readCache
     private       Lock          writeCacheLock;             // lock we must old to look at writeCache
 
-    private final Object        armingLock           = new Object();
+    private final Object engagementLock = new Object();
     private final Object        concurrentClientLock = new Object(); // the lock we use to serialize against concurrent clients of us. Can't acquire this AFTER the callback lock.
     private final Object        callbackLock         = new Object(); // the lock we use to synchronize with our callback.
 
@@ -119,9 +123,11 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         i2cDevice.setI2cAddr(i2cAddr8Bit);
 
         this.i2cDevice              = i2cDevice;
-        this.armingIsDesired        = false;
+        this.controller             = i2cDevice.getI2cController();
+        this.robotUsbModule         = (this.controller instanceof RobotUsbModule) ? (RobotUsbModule)this.controller : null;
+        this.isEngaged              = false;
         this.closing                = false;
-        this.isArmed                = false;
+        this.isHooked               = false;
         this.preventReadsOrWrites   = 0;
         this.callback               = new Callback();
         this.hardwareCycleCount     = 0;
@@ -181,101 +187,116 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
 
     @Override public void setI2cAddr(int i2cAddr8Bit)
         {
-        synchronized (this.armingLock)
+        synchronized (this.engagementLock)
             {
             if (this.i2cDevice.getI2cAddr() != i2cAddr8Bit)
                 {
-                boolean wasArmed = this.isArmed;
-                this.disarm();
+                boolean wasArmed = this.isHooked;
+                this.disengage();
                 //
                 this.i2cDevice.setI2cAddr(i2cAddr8Bit);
                 //
-                if (wasArmed) this.arm();
+                if (wasArmed) this.engage();
                 }
             }
         }
 
     @Override public int getI2cAddr()
         {
-        synchronized (this.armingLock)
+        synchronized (this.engagementLock)
             {
             return this.i2cDevice.getI2cAddr();
             }
         }
 
-    @Override public void arm()
+    @Override public void engage()
         {
         // The arming lock is distinct from the concurrentClientLock because we need to be
         // able to drain heartbeats while disarming, so can't own the concurrentClientLock then,
-        // but we still need to be able to lock out arm() and disarm() against each other.
+        // but we still need to be able to lock out engage() and disengage() against each other.
         // Locking order: armingLock > concurrentClientLock > callbackLock
         //
-        synchronized (this.armingLock)
+        synchronized (this.engagementLock)
             {
-            this.armingIsDesired = true;
-            adjustArmingState();;
+            this.isEngaged = true;
+            adjustHooking();
             }
         }
 
-    void armInternal()
+    void hook()
         {
-        // The arming lock is distinct from the concurrentClientLock because we need to be
+        // engagementLock is distinct from the concurrentClientLock because we need to be
         // able to drain heartbeats while disarming, so can't own the concurrentClientLock then,
-        // but we still need to be able to lock out arm() and disarm() against each other.
-        // Locking order: armingLock > concurrentClientLock > callbackLock
+        // but we still need to be able to lock out engage() and disengage() against each other.
+        // Locking order: engagementLock > concurrentClientLock > callbackLock
         //
-        synchronized (this.armingLock)
+        synchronized (this.engagementLock)
             {
-            if (!this.isArmed)
+            if (!this.isHooked)
                 {
-                log(Log.VERBOSE, "arming %s...", this.i2cDevice.getDeviceName());
+                log(Log.VERBOSE, "hooking %s...", this.i2cDevice.getDeviceName());
                 //
                 synchronized (this.callbackLock)
                     {
                     this.heartbeatExecutor = Executors.newSingleThreadExecutor();
                     this.i2cDevice.registerForI2cPortReadyCallback(this.callback);
                     }
-                this.isArmed = true;
+                this.isHooked = true;
                 //
-                log(Log.VERBOSE, "...arming %s complete", this.i2cDevice.getDeviceName());
+                log(Log.VERBOSE, "...hooking %s complete", this.i2cDevice.getDeviceName());
                 }
             }
         }
 
-    /** adjust the arming state to reflect the user's intent */
-    void adjustArmingState()
+    /** adjust the hooking state to reflect the user's engagement intent */
+    void adjustHooking()
         {
-        synchronized (this.armingLock)
+        synchronized (this.engagementLock)
             {
-            if (!this.isArmed && this.armingIsDesired)
-                this.armInternal();
-            else if (this.isArmed && !this.armingIsDesired)
-                this.disarmInternal();
+            if (!this.isHooked && this.isEngaged)
+                this.hook();
+            else if (this.isHooked && !this.isEngaged)
+                this.unhook();
             }
+        }
+
+    @Override public boolean isEngaged()
+        {
+        return this.isEngaged;
         }
 
     @Override public boolean isArmed()
+    // REVIEW: it might be better to have this askable directly of an I2cDevice rather
+    // than having to dig under the covers to its controller
         {
-        return this.armingIsDesired;    // note!
-        }
-
-    @Override public void disarm()
-        {
-        synchronized (this.armingLock)
+        synchronized (this.engagementLock)
             {
-            this.armingIsDesired = false;
-            this.adjustArmingState();
+            if (this.isHooked)
+                {
+                if (this.robotUsbModule != null)
+                    return this.robotUsbModule.getArmingState() == RobotUsbModule.ARMINGSTATE.ARMED;
+                }
+            return false;
             }
         }
 
-    void disarmInternal()
+    @Override public void disengage()
+        {
+        synchronized (this.engagementLock)
+            {
+            this.isEngaged = false;
+            this.adjustHooking();
+            }
+        }
+
+    void unhook()
         {
         try {
-            synchronized (this.armingLock)
+            synchronized (this.engagementLock)
                 {
-                if (this.isArmed)
+                if (this.isHooked)
                     {
-                    log(Log.VERBOSE, "disarming %s...", this.i2cDevice.getDeviceName());
+                    log(Log.VERBOSE, "unhooking %s...", this.i2cDevice.getDeviceName());
 
                     // We can't hold the concurrent client lock while we drain the heartbeat
                     // as that might be doing an external top-level read. But the semantic of
@@ -305,10 +326,10 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                             }
                         }
 
-                    this.isArmed = false;
+                    this.isHooked = false;
                     this.enableReadsOrWrites();
 
-                    log(Log.VERBOSE, "...disarming %s complete", this.i2cDevice.getDeviceName());
+                    log(Log.VERBOSE, "...unhooking %s complete", this.i2cDevice.getDeviceName());
                     }
                 }
             }
@@ -355,7 +376,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         this.closing = true;
         this.i2cDevice.deregisterForPortReadyBeginEndCallback();
 
-        this.disarm();
+        this.disengage();
 
         // We do NOT close() our i2cDevice, as we conceptually are a client of
         // the device, not it's owner.
@@ -455,7 +476,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         {
         try
             {
-            if (!this.isArmed || !this.areReadsOrWritesEnabled())
+            if (!this.isHooked || !this.areReadsOrWritesEnabled())
                 {
                 // Return fake data
                 TimestampedData result = new TimestampedData();
@@ -605,7 +626,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
             {
             synchronized (this.concurrentClientLock)
                 {
-                if (!this.isArmed || !this.areReadsOrWritesEnabled())
+                if (!this.isHooked || !this.areReadsOrWritesEnabled())
                     return; // Ignore the write
 
                 if (data.length > ReadWindow.cregWriteMax)
@@ -647,7 +668,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                     this.cregWrite      = data.length;
 
                     // Indicate we are dirty so the callback will write us out
-                    setWriteCacheStatusIfArmed(WRITE_CACHE_STATUS.DIRTY);
+                    setWriteCacheStatusIfHooked(WRITE_CACHE_STATUS.DIRTY);
 
                     // Provide the data we want to write
                     this.writeCacheLock.lock();
@@ -719,9 +740,9 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
 
     /** set the write cache status, but don't disturb (from idle) if we're not open for business */
     /* TODO: not sure if this is really needed */
-    void setWriteCacheStatusIfArmed(WRITE_CACHE_STATUS status)
+    void setWriteCacheStatusIfHooked(WRITE_CACHE_STATUS status)
         {
-        if (this.isArmed && this.areReadsOrWritesEnabled())
+        if (this.isHooked && this.areReadsOrWritesEnabled())
             this.writeCacheStatus = status;
         }
 
@@ -862,15 +883,15 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
             try {
                 log(Log.VERBOSE, "%s: onPortIsReadyCallbacksBegin...", i2cDevice.getDeviceName());
                 preventReadsOrWrites();
-                synchronized (armingLock)
+                synchronized (engagementLock)
                     {
-                    pokeInFlightReadersAndWritersThenDisarm();
+                    pokeInFlightReadersAndWritersThenUnhook();
 
                     // REVIEW: what locking is needed for this?
                     I2cDeviceClient.this.initializeFromController();
 
-                    // Start up again on the new guy
-                    adjustArmingState();
+                    // Start up again on the new guy if we should
+                    adjustHooking();
                     enableReadsOrWrites();
                     }
                 }
@@ -890,9 +911,9 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                     return; // ignore
 
                 preventReadsOrWrites();
-                synchronized (armingLock)
+                synchronized (engagementLock)
                     {
-                    pokeInFlightReadersAndWritersThenDisarm();
+                    pokeInFlightReadersAndWritersThenUnhook();
                     enableReadsOrWrites();
                     }
                 }
@@ -902,7 +923,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                 }
             }
 
-        void pokeInFlightReadersAndWritersThenDisarm()
+        void pokeInFlightReadersAndWritersThenUnhook()
             {
             // Wake up anyone who's waiting
             synchronized (callbackLock)
@@ -917,8 +938,8 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                 callbackLock.notifyAll();
                 }
 
-            // Actually fully disarm
-            disarm();
+            // Actually unhook
+            unhook();
             }
 
 
@@ -956,7 +977,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
 
         void issueWrite()
             {
-            setWriteCacheStatusIfArmed(WRITE_CACHE_STATUS.QUEUED);
+            setWriteCacheStatusIfHooked(WRITE_CACHE_STATUS.QUEUED);
             i2cDevice.enableI2cWriteMode(iregWriteFirst, cregWrite);
             enabledWriteMode = true;
 
@@ -1051,7 +1072,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                         {
                         writeCacheStatus = WRITE_CACHE_STATUS.IDLE;
                         // Our write mode status should have been reported back to us
-                        assertTrue(!BuildConfig.DEBUG || !isArmed || !areReadsOrWritesEnabled() || i2cDevice.isI2cPortInWriteMode());
+                        assertTrue(!BuildConfig.DEBUG || !isHooked || !areReadsOrWritesEnabled() || i2cDevice.isI2cPortInWriteMode());
                         }
 
                     //--------------------------------------------------------------------------

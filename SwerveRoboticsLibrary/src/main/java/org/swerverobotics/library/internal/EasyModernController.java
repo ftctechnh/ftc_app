@@ -193,7 +193,7 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
             }
         }
 
-    boolean isOkToReadOrWrite()
+    protected boolean isOkToReadOrWrite()
         {
         return this.isArmed() && this.readWriteRunnableIsRunning;
         }
