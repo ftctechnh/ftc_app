@@ -268,7 +268,7 @@ public final class ClassFactory
      * @param i2cAddr8Bit           the I2C address at which the client is to communicate
      * @param closeOnOpModeStop     if true, then when the OpMode stops, the client will automatically close
      * @return                      the newly instantiated I2c device client
-     * @see II2cDeviceClient#arm()
+     * @see II2cDeviceClient#engage()
      */
     public static II2cDeviceClient createI2cDeviceClient(OpMode context, I2cDevice i2cDevice, int i2cAddr8Bit, boolean closeOnOpModeStop)
         {
@@ -286,7 +286,7 @@ public final class ClassFactory
      * @param i2cAddr8Bit           the I2C address at which the client is to communicate
      * @param closeOnOpModeStop     if true, then when the OpMode stops, the client will automatically close
      * @return                      the newly instantiated I2c device client
-     * @see II2cDeviceClient#arm()
+     * @see II2cDeviceClient#engage()
      */
     public static II2cDeviceClient createI2cDeviceClient(OpMode context, II2cDevice i2cDevice, int i2cAddr8Bit, boolean closeOnOpModeStop)
         {

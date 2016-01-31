@@ -117,25 +117,25 @@ public class LegacyOrModernColorSensor implements ColorSensor, IOpModeStateTrans
         II2cDevice i2cDevice             = new I2cDeviceOnI2cDeviceController(controller, port);
         I2cDeviceClient i2cDeviceClient  = new I2cDeviceClient(context, i2cDevice, i2cAddr8Bit, false);
         LegacyOrModernColorSensor result = new LegacyOrModernColorSensor(context, i2cDeviceClient, flavor, target, controller, port);
-        result.arm();
+        result.engage();
         return result;
         }
 
-    private void arm()
+    private void engage()
         {
-        if (!this.helper.isArmed())
+        if (!this.helper.isEngaged())
             {
-            this.helper.arm();
-            this.i2cDeviceClient.arm();
+            this.helper.engage();
+            this.i2cDeviceClient.engage();
             }
         }
 
-    private void disarm()
+    private void disengage()
         {
-        if (this.helper.isArmed())
+        if (this.helper.isEngaged())
             {
-            this.i2cDeviceClient.disarm();
-            this.helper.disarm();
+            this.i2cDeviceClient.disengage();
+            this.helper.disengage();
             }
         }
 
@@ -145,7 +145,7 @@ public class LegacyOrModernColorSensor implements ColorSensor, IOpModeStateTrans
 
     @Override synchronized public boolean onUserOpModeStop()
         {
-        this.disarm();
+        this.disengage();
         return true;    // unregister us
         }
 

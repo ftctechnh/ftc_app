@@ -6,7 +6,7 @@ import java.util.concurrent.locks.Lock;
 /**
  * 
  */
-public interface II2cDevice extends HardwareDevice
+public interface II2cDevice extends HardwareDevice, I2cControllerPortDevice
     {
     int     getI2cAddr();
     void    setI2cAddr(int i2cAddr8Bit);

@@ -74,6 +74,22 @@ public final class I2cDeviceOnI2cDeviceController implements II2cDevice
         }
 
     //----------------------------------------------------------------------------------------------
+    // I2cControllerPortDevice
+    //----------------------------------------------------------------------------------------------
+
+    @Override
+    public I2cController getI2cController()
+        {
+        return this.controller;
+        }
+
+    @Override
+    public int getPort()
+        {
+        return this.port;
+        }
+
+    //----------------------------------------------------------------------------------------------
     // II2cDevice
     //----------------------------------------------------------------------------------------------
 

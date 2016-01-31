@@ -24,7 +24,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
     // State
     //------------------------------------------------------------------------------------------
 
-    private final OpMode           context;
+    private final OpMode           opmodeContext;
     private final II2cDeviceClient deviceClient;
     private Parameters             parameters;
     private SENSOR_MODE            currentMode;
@@ -58,30 +58,30 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
     /** 
      * Instantiate an AdaFruitBNO055IMU on the indicated device whose I2C address is the one indicated.
      */
-    public AdaFruitBNO055IMU(OpMode context, I2cDevice i2cDevice, int i2cAddr8Bit)
+    public AdaFruitBNO055IMU(OpMode opmodeContext, I2cDevice i2cDevice, int i2cAddr8Bit)
         {
-        this.context                = context;
+        this.opmodeContext          = opmodeContext;
 
         // We don't have the device auto-close since *we* handle the shutdown logic
-        this.deviceClient           = ClassFactory.createI2cDeviceClient(context, ClassFactory.createI2cDevice(i2cDevice), i2cAddr8Bit, false);
+        this.deviceClient           = ClassFactory.createI2cDeviceClient(opmodeContext, ClassFactory.createI2cDevice(i2cDevice), i2cAddr8Bit, false);
         this.deviceClient.setReadWindow(lowerWindow);
-        this.deviceClient.arm();
+        this.deviceClient.engage();
 
         this.parameters            = null;
         this.currentMode           = null;
         this.accelerationAlgorithm = new NaiveAccelerationIntegrator();
         this.accelerationMananger  = null;
 
-        RobotStateTransitionNotifier.register(context, this);
+        RobotStateTransitionNotifier.register(opmodeContext, this);
         }
 
     /**
      * Instantiate an AdaFruitBNO055IMU and then initialize it with the indicated set of parameters.
      */
-    public static IBNO055IMU create(OpMode context, I2cDevice i2cDevice, Parameters parameters)
+    public static IBNO055IMU create(OpMode opmodeContext, I2cDevice i2cDevice, Parameters parameters)
         {
         // Create a sensor which is a client of i2cDevice
-        IBNO055IMU result = new AdaFruitBNO055IMU(context, i2cDevice, parameters.i2cAddr8Bit.bVal);
+        IBNO055IMU result = new AdaFruitBNO055IMU(opmodeContext, i2cDevice, parameters.i2cAddr8Bit.bVal);
         
         // Initialize it with the indicated parameters
         result.initialize(parameters);
