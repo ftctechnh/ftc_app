@@ -17,8 +17,12 @@ public class LinearOpTest extends AutonomousTime_T
         left.setDirection(DcMotor.Direction.REVERSE);
         right.setDirection(DcMotor.Direction.FORWARD);
         waitForStart();
-        Forwards(12, true);
-        sleep(100);
-        Forwards(12, false);
+        Forwards(24, true);
+        turnOnCenter(48, true);
+        Forwards((float) 76.25, true);
+        turnOnCenter(48, true);
+        Forwards(15, true);
+        //Forwards(6,true);
+        //turnOnCenter(90, false);
     }
 }

@@ -268,7 +268,6 @@ public class CompBot implements DriverInterface, AttachmentInterface
     @Override
     public void spinOnCenter(float degrees, float speed)
     {
-
             leftMotor.setPower(0.0f);
             rightMotor.setPower(0.0f);
             leftMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
