@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.robocol.Telemetry;
 
 import org.swerverobotics.library.ClassFactory;
+import org.swerverobotics.library.TelemetryDashboardAndLog;
 
 import java.util.Arrays;
 
@@ -97,8 +98,13 @@ public class LinearAutonomous extends LinearOpMode {
 			//Starting based off of the delay
 			//sleep(delay * 1000);
 			//Autonomous Routine
-            telemetry.addData("Status" , "working...");
-            moveRobotBackwardRotations(1500, 0.5, 10000);
+            telemetry.addData("Status", "working...");
+            //moveRobotBackwardRotations(1500,0.3,10);
+            moveRobotBackwardTime(2.4, 0.3);
+            sleep(2000);
+            spinRobotRightDegrees(90,0.3,10000);
+            //followLine(telemetry);
+            //moveRobotBackwardRotationsGyro(1500, 0.5, 10000, telemetry);
             telemetry.addData("Status" , "done");
 			//spinRobotLeftDegrees(90,0.3,60000,telemetry);
             //spinRobotLeftDegrees(90, 0.3, 60000, telemetry);
@@ -197,9 +203,9 @@ public class LinearAutonomous extends LinearOpMode {
 		stopRobot();
 	}
 
-	public static void moveRobotBackwardTime(int seconds, double power) {
+	public static void moveRobotBackwardTime(double seconds, double power) {
 		moveRobotBackward(power, power);
-		Functions.waitFor(seconds * 1000);
+		Functions.waitFor((int)(seconds * 1000));
 		stopRobot();
 	}
 
@@ -483,17 +489,21 @@ public class LinearAutonomous extends LinearOpMode {
         endPosition = startPosition + degrees;
         endTime = System.currentTimeMillis() + timeoutMill;
         telemetry.addData("startPosition ", startPosition);
-
+        int stopos = 0;
         spinRobotLeft(power);
 		while(System.currentTimeMillis() < endTime && (currentPosition = gyro.getIntegratedZValue()) < endPosition)
 		{
-            Functions.waitFor(1);
-			telemetry.addData("CurrentHeading", currentPosition);
-            telemetry.addData("Endposition ", endPosition);
+            stopos = gyro.getIntegratedZValue();
+			//telemetry.addData("CurrentHeading", currentPosition);
+            //telemetry.addData("Endposition ", endPosition);
         }
-        spinRobotLeft(0);
-        telemetry.addData("Endposition ", endPosition);
-        telemetry.addData("Done?" , "Yes");
+        stopRobot();
+        telemetry.addData("StopPos" , stopos);
+        Functions.waitFor(1000);
+        int momentumPos = gyro.getIntegratedZValue();
+        telemetry.addData("MomentumPos", momentumPos);
+        //telemetry.addData("Endposition ", endPosition);
+        //telemetry.addData("Done?" , "Yes");
         stopRobot();
 	}
 
@@ -575,6 +585,46 @@ public class LinearAutonomous extends LinearOpMode {
             Functions.waitFor(50);
         }
 	}
+
+    public static void followLine(Telemetry telemetry){
+        boolean right = true;
+        boolean following = true;
+        while(following && ultrasonic.getUltrasonicLevel()>5){
+            if(detectWhite(telemetry)){
+                if(right = false){
+                    turnRobotLeftForward(0.1);
+                } else{
+                    turnRobotRightForward(0.1);
+                }
+                while (!detectWhite(telemetry)){
+                    if(right = false){
+                        right = true ;
+                    } else{
+                        right = false;
+                    }
+                }
+                right = true;
+            }
+        }
+
+    }
+
+
+    public static boolean detectWhite(Telemetry telemetry) {
+        int red = lineColor.red();
+        int green = lineColor.green();
+        int blue = lineColor.blue();
+        if (red >Functions.whiteThreshold && blue > Functions.whiteThreshold && green > Functions.whiteThreshold){
+            /*telemetry.addData("Red", red);
+            telemetry.addData("Blue" , blue);
+            telemetry.addData("Green", green);
+            telemetry.addData("Average" , average);
+            telemetry.addData("Debug", "Success");
+            telemetry.update();*/
+            return true;
+        }
+        return false;
+    }
 
 	public static void end() {
 		stopRobot();
