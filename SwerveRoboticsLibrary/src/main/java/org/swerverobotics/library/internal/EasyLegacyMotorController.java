@@ -20,7 +20,7 @@ import static junit.framework.Assert.*;
  * @see org.swerverobotics.library.ClassFactory#createEasyLegacyMotorController(OpMode, DcMotor, DcMotor)
  * @see org.swerverobotics.library.SynchronousOpMode#useExperimentalThunking
  */
-public final class EasyLegacyMotorController implements DcMotorController, IThunkWrapper<DcMotorController>, VoltageSensor, IOpModeStateTransitionEvents
+public final class EasyLegacyMotorController implements DcMotorController, IThunkWrapper<DcMotorController>, VoltageSensor, IOpModeStateTransitionEvents, Engagable
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -214,7 +214,7 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
             }
         }
 
-    private void engage()
+    synchronized public void engage()
     // Disarm the existing controller and arm us
         {
         if (!this.isEngaged())
@@ -230,12 +230,12 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
             }
         }
 
-    private boolean isEngaged()
+    synchronized public boolean isEngaged()
         {
         return this.helper.isEngaged();
         }
 
-    private void disengage()
+    synchronized public void disengage()
     // Disarm us and re-arm the target
         {
         if (this.isEngaged())

@@ -1,7 +1,9 @@
 package org.swerverobotics.library.internal;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
+import com.qualcomm.robotcore.hardware.Engagable;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.I2cController;
 import com.qualcomm.robotcore.hardware.LegacyModule;
@@ -71,11 +73,12 @@ public class I2cDeviceReplacementHelper<TARGET>
         {
         if (!this.isEngaged)
             {
-            // Have the existing controller stop using the callback
-            this.controller.deregisterForPortReadyCallback(this.targetPort);
+            // Have the existing controller stop managing its hardware
+            ((Engagable)this.target).disengage();
 
             // Put ourselves in the hardware map
             if (this.targetName != null) this.targetDeviceMapping.put(this.targetName, this.client);
+
             this.isEngaged = true;
             }
         }
@@ -90,7 +93,7 @@ public class I2cDeviceReplacementHelper<TARGET>
             if (this.targetName != null) this.targetDeviceMapping.put(this.targetName, this.target);
 
             // Start up the original controller again
-            this.controller.registerForI2cPortReadyCallback(this.targetCallback, this.targetPort);
+            ((Engagable)this.target).engage();
             }
         }
 

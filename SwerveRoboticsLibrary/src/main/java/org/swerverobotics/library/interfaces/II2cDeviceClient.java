@@ -42,7 +42,7 @@ import org.swerverobotics.library.*;
  * @see #ensureReadWindow(ReadWindow, ReadWindow)
  * @see #setHeartbeatAction(HeartbeatAction)
  */
-public interface II2cDeviceClient extends HardwareDevice
+public interface II2cDeviceClient extends HardwareDevice, Engagable
     {
     //----------------------------------------------------------------------------------------------
     // ReadWindow management
@@ -321,11 +321,11 @@ public interface II2cDeviceClient extends HardwareDevice
      * is actually talking to and communicating with it's underlying hardware, for the
      * I2cController on which it resides may, for example, be currently disconnected. To
      * discern whether the actual hardware is currently being communicated with,
-     * see {@link #getArmingState()}.
+     * see {@link #isArmed()}.
      *
      * @see #disengage()
      * @see #isEngaged()
-     * @see #getArmingState()
+     * @see #isArmed()
      */
     void engage();
 

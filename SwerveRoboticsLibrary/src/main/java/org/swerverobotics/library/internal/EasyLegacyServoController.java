@@ -17,7 +17,7 @@ import static org.swerverobotics.library.internal.EasyModernServoController.*;
 /**
  * An alternative implementation of a Legacy Servo controller.
  */
-public class EasyLegacyServoController implements ServoController, IOpModeStateTransitionEvents
+public class EasyLegacyServoController implements ServoController, IOpModeStateTransitionEvents, Engagable
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -155,7 +155,7 @@ public class EasyLegacyServoController implements ServoController, IOpModeStateT
             }
         }
 
-    synchronized private void engage()
+    synchronized public void engage()
     // Disarm the existing controller and arm us
         {
         if (!this.isEngaged())
@@ -169,12 +169,12 @@ public class EasyLegacyServoController implements ServoController, IOpModeStateT
             }
         }
 
-    synchronized private boolean isEngaged()
+    synchronized public boolean isEngaged()
         {
         return this.helper.isEngaged();
         }
 
-    synchronized private void disengage()
+    synchronized public void disengage()
     // Disarm us and re-arm the target
         {
         if (this.isEngaged())
