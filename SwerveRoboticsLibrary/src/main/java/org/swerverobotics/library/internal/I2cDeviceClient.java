@@ -12,6 +12,7 @@ import org.swerverobotics.library.interfaces.*;
 
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.*;
 import static junit.framework.Assert.*;
 import static org.swerverobotics.library.internal.Util.*;
@@ -21,7 +22,7 @@ import static org.swerverobotics.library.internal.Util.*;
  * an instance of I2cDevice. There's a really whole lot of hard stuff this does for you
  *
  */
-public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTransitionEvents
+public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTransitionEvents, Engagable
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -33,7 +34,9 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
 
     private       boolean       isHooked;                   // whether we are connected to the underling device or not
     private       boolean       isEngaged;                  // user's hooking *intent*
-    private       int           preventReadsOrWrites;       //
+    private final AtomicInteger readerWriterPreventionCount;// used to be able to prevent new readers and writers
+    private final ReadWriteLock readerWriterGate;           // used to be able to drain extant readers and writers
+    private final AtomicInteger readerWriterCount;          // for debugging
     private       boolean       closing;                    //
 
     private final Callback      callback;                   // the callback object on which we actually receive callbacks
@@ -47,8 +50,9 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
     private static final int    ibActionFlag = 31;          // index of the action flag in our write cache
     private       Lock          readCacheLock;              // lock we must hold to look at readCache
     private       Lock          writeCacheLock;             // lock we must old to look at writeCache
+    private final int           msCallbackLockWaitQuantum = 60;      // arbitrary, but long enough that we don't hit it in common usage, only in shutdown situations
 
-    private final Object engagementLock = new Object();
+    private final Object        engagementLock       = new Object();
     private final Object        concurrentClientLock = new Object(); // the lock we use to serialize against concurrent clients of us. Can't acquire this AFTER the callback lock.
     private final Object        callbackLock         = new Object(); // the lock we use to synchronize with our callback.
 
@@ -128,11 +132,13 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         this.isEngaged              = false;
         this.closing                = false;
         this.isHooked               = false;
-        this.preventReadsOrWrites   = 0;
+        this.readerWriterPreventionCount = new AtomicInteger(0);
+        this.readerWriterGate       = new ReentrantReadWriteLock();
+        this.readerWriterCount      = new AtomicInteger(0);
         this.callback               = new Callback();
         this.hardwareCycleCount     = 0;
         this.loggingEnabled         = false;
-        this.loggingTag             = String.format("%s:client(%s)", SynchronousOpMode.LOGGING_TAG, i2cDevice.getDeviceName());;
+        this.loggingTag             = String.format("%s:i2cClient(%s)", SynchronousOpMode.LOGGING_TAG, i2cDevice.getConnectionInfo());;
         this.timeSinceLastHeartbeat = new ElapsedTime();
         this.timeSinceLastHeartbeat.reset();
         this.msHeartbeatInterval    = 0;
@@ -211,7 +217,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
 
     @Override public void engage()
         {
-        // The arming lock is distinct from the concurrentClientLock because we need to be
+        // The engagement lock is distinct from the concurrentClientLock because we need to be
         // able to drain heartbeats while disarming, so can't own the concurrentClientLock then,
         // but we still need to be able to lock out engage() and disengage() against each other.
         // Locking order: armingLock > concurrentClientLock > callbackLock
@@ -234,7 +240,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
             {
             if (!this.isHooked)
                 {
-                log(Log.VERBOSE, "hooking %s...", this.i2cDevice.getDeviceName());
+                log(Log.VERBOSE, "hooking ...");
                 //
                 synchronized (this.callbackLock)
                     {
@@ -243,7 +249,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                     }
                 this.isHooked = true;
                 //
-                log(Log.VERBOSE, "...hooking %s complete", this.i2cDevice.getDeviceName());
+                log(Log.VERBOSE, "... hooking complete");
                 }
             }
         }
@@ -296,7 +302,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                 {
                 if (this.isHooked)
                     {
-                    log(Log.VERBOSE, "unhooking %s...", this.i2cDevice.getDeviceName());
+                    log(Log.VERBOSE, "unhooking ...");
 
                     // We can't hold the concurrent client lock while we drain the heartbeat
                     // as that might be doing an external top-level read. But the semantic of
@@ -304,32 +310,28 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                     // have in fact been completed.
                     Util.shutdownAndAwaitTermination(this.heartbeatExecutor);
 
-                    // Prevent any new read or write from starting
-                    this.preventReadsOrWrites();
+                    // Drain extant readers and writers
+                    this.disableReadsAndWrites();
+                    this.gracefullyDrainReadersAndWriters();
 
-                    // Synchronizing on the concurrent client lock means we'll wait until any *existing*
-                    // write()s finish up and return
-                    synchronized (this.concurrentClientLock)
+                    synchronized (this.callbackLock)
                         {
-                        synchronized (this.callbackLock)
-                            {
-                            // There may be still data that needs to get out to the controller.
-                            // Wait until that happens.
-                            waitForWriteCompletionInternal();
+                        // There may be still data that needs to get out to the controller.
+                        // Wait until that happens.
+                        waitForWriteCompletionInternal();
 
-                            // Now we know that the callback isn't executing, we can pull the
-                            // rug out from under his use of the heartbeater
-                            this.heartbeatExecutor = null;
+                        // Now we know that the callback isn't executing, we can pull the
+                        // rug out from under his use of the heartbeater
+                        this.heartbeatExecutor = null;
 
-                            // Finally, disconnect us from our I2cDevice
-                            this.i2cDevice.deregisterForPortReadyCallback();
-                            }
+                        // Finally, disconnect us from our I2cDevice
+                        this.i2cDevice.deregisterForPortReadyCallback();
                         }
 
                     this.isHooked = false;
-                    this.enableReadsOrWrites();
+                    this.enableReadsAndWrites();
 
-                    log(Log.VERBOSE, "...unhooking %s complete", this.i2cDevice.getDeviceName());
+                    log(Log.VERBOSE, "...unhooking complete");
                     }
                 }
             }
@@ -339,17 +341,112 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
             }
         }
 
-    void preventReadsOrWrites()
+    void disableReadsAndWrites()
         {
-        this.preventReadsOrWrites++;
+        this.readerWriterPreventionCount.incrementAndGet();
         }
-    void enableReadsOrWrites()
+    void enableReadsAndWrites()
         {
-        this.preventReadsOrWrites--;
+        this.readerWriterPreventionCount.decrementAndGet();
         }
-    boolean areReadsOrWritesEnabled()
+    boolean newReadsAndWritesAllowed()
         {
-        return this.preventReadsOrWrites == 0;
+        return this.readerWriterPreventionCount.get() == 0;
+        }
+
+    void gracefullyDrainReadersAndWriters()
+        {
+        boolean interrupted = false;
+        disableReadsAndWrites();
+
+        for (;;)
+            {
+            try {
+                // Note: we can't hold the concurrentClientLock or the callbackLock as
+                // we attempt to take the readerWriterGate here, lest deadlock.
+                if (readerWriterGate.writeLock().tryLock(20, TimeUnit.MILLISECONDS))
+                    {
+                    // gate acquired exclusively, so no extant readers or writers exist
+                    readerWriterGate.writeLock().unlock();
+                    break;
+                    }
+                else
+                    {
+                    // We timed out before hitting the lock. Run around the block again.
+                    }
+                }
+            catch (InterruptedException e)
+                {
+                interrupted = true;
+                }
+            }
+
+        if (interrupted)
+            Thread.currentThread().interrupt();
+
+        assertTrue(!BuildConfig.DEBUG || readerWriterCount.get()==0);
+        enableReadsAndWrites();
+        }
+
+    void forceDrainReadersAndWriters()
+        {
+        boolean interrupted = false;
+        boolean exitLoop = false;
+        disableReadsAndWrites();
+
+        for (;;)
+            {
+            synchronized (callbackLock)
+                {
+                // Set the write cache status to idle to kick anyone out of waiting for it to idle
+                writeCacheStatus = WRITE_CACHE_STATUS.IDLE;
+
+                // Lie and say that the data in the read cache is valid
+                readCacheStatus = READ_CACHE_STATUS.VALID_QUEUED;
+
+                // Actually wake folk up
+                callbackLock.notifyAll();
+                }
+
+            if (exitLoop)
+                break;
+
+            try {
+                // Note: we can't hold the concurrentClientLock or the callbackLock as
+                // we attempt to take the readerWriterGate here, lest deadlock.
+                if (readerWriterGate.writeLock().tryLock(20, TimeUnit.MILLISECONDS))
+                    {
+                    // gate acquired exclusively, so no extant readers or writers exist
+                    readerWriterGate.writeLock().unlock();
+                    exitLoop = true;
+                    }
+                else
+                    {
+                    // We timed out before hitting the lock. Repoke the cache statuses
+                    // and try again.
+                    }
+                }
+            catch (InterruptedException e)
+                {
+                interrupted = true;
+                }
+            }
+
+        if (interrupted)
+            Thread.currentThread().interrupt();
+
+        assertTrue(!BuildConfig.DEBUG || readerWriterCount.get()==0);
+        enableReadsAndWrites();
+        }
+
+    boolean isControllerArmed()
+        {
+        if (controller instanceof RobotUsbModule)
+            {
+            RobotUsbModule module = (RobotUsbModule)controller;
+            return module.getArmingState() == RobotUsbModule.ARMINGSTATE.ARMED;
+            }
+        return true;    // REVIEW
         }
 
     //----------------------------------------------------------------------------------------------
@@ -476,101 +573,103 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         {
         try
             {
-            if (!this.isHooked || !this.areReadsOrWritesEnabled())
-                {
-                // Return fake data
-                TimestampedData result = new TimestampedData();
-                result.data     = new byte[creg];       // all zeros
-                result.nanoTime = System.nanoTime();
-                return result;
-                }
+            // Take the readerWriterLock so that others will be able to track when reads and writes have drained
+            acquireReaderLockShared();
+            try {
+                if (!this.openForReading())
+                    return makeFakeData(ireg, creg);
 
-            synchronized (this.concurrentClientLock)
-                {
-                synchronized (this.callbackLock)
+                synchronized (this.concurrentClientLock)
                     {
-                    // Wait until the write cache isn't busy. This honors the visibility semantic
-                    // we intend to portray, namely that issuing a read after a write has been
-                    // issued will see the state AFTER the write has had a chance to take effect.
-                    while (this.writeCacheStatus != WRITE_CACHE_STATUS.IDLE)
+                    synchronized (this.callbackLock)
                         {
-                        this.callbackLock.wait();
-                        }
-
-                    // Remember what the read window was on entry so we can restore it later if needed
-                    ReadWindow prevReadWindow = this.readWindow;
-
-                    // Is what's in the read cache right now or shortly will be have what we want?
-                    if (readCacheValidityCurrentOrImminent() && readWindowActuallyRead != null && readWindowActuallyRead.contains(ireg, creg))
-                        {
-                        // Ok, we don't have to issue a read, but we may have to wait for validity,
-                        // which we we do in a moment down below
-                        // log(Log.VERBOSE, String.format("read from cache: (0x%02x,%d)", ireg, creg));
-                        }
-                    else
-                        {
-                        // We have to issue a new read. We do so by setting the read window to something
-                        // that is readable; this is noticed by the callback which then services the read.
-
-                        // If there's no read window given or what's there either can't service any
-                        // more reads or it doesn't contain the required registers, auto-make a new window.
-                        boolean readWindowRangeOk = this.readWindow != null && this.readWindow.contains(ireg, creg);
-
-                        if (!readWindowRangeOk || !this.readWindow.isOkToRead() || !this.readWindow.maySwitchToReadMode())
+                        // Wait until the write cache isn't busy. This honors the visibility semantic
+                        // we intend to portray, namely that issuing a read after a write has been
+                        // issued will see the state AFTER the write has had a chance to take effect.
+                        while (this.writeCacheStatus != WRITE_CACHE_STATUS.IDLE)
                             {
-                            // If we can re-use the window that was there before that will help increase
-                            // the chance that we don't need to take the time to switch the controller to
-                            // read mode (with a different window) and thus can respond faster.
-                            if (readWindowRangeOk)
+                            this.callbackLock.wait(msCallbackLockWaitQuantum);
+                            }
+
+                        // Remember what the read window was on entry so we can restore it later if needed
+                        ReadWindow prevReadWindow = this.readWindow;
+
+                        // Is what's in the read cache right now or shortly will be have what we want?
+                        if (readCacheValidityCurrentOrImminent() && readWindowActuallyRead != null && readWindowActuallyRead.contains(ireg, creg))
+                            {
+                            // Ok, we don't have to issue a read, but we may have to wait for validity,
+                            // which we we do in a moment down below
+                            // log(Log.VERBOSE, String.format("read from cache: (0x%02x,%d)", ireg, creg));
+                            }
+                        else
+                            {
+                            // We have to issue a new read. We do so by setting the read window to something
+                            // that is readable; this is noticed by the callback which then services the read.
+
+                            // If there's no read window given or what's there either can't service any
+                            // more reads or it doesn't contain the required registers, auto-make a new window.
+                            boolean readWindowRangeOk = this.readWindow != null && this.readWindow.contains(ireg, creg);
+
+                            if (!readWindowRangeOk || !this.readWindow.isOkToRead() || !this.readWindow.maySwitchToReadMode())
                                 {
-                                // log(Log.VERBOSE, String.format("reuse window: (0x%02x,%d)", ireg, creg));
-                                setReadWindow(this.readWindow);     // will make a readable copy
-                                }
-                            else
-                                {
-                                // Make a one-shot that just covers the data we need right now
-                                // log(Log.VERBOSE, String.format("make one shot: (0x%02x,%d)", ireg, creg));
-                                setReadWindow(new ReadWindow(ireg, creg, READ_MODE.ONLY_ONCE));
+                                // If we can re-use the window that was there before that will help increase
+                                // the chance that we don't need to take the time to switch the controller to
+                                // read mode (with a different window) and thus can respond faster.
+                                if (readWindowRangeOk)
+                                    {
+                                    // log(Log.VERBOSE, String.format("reuse window: (0x%02x,%d)", ireg, creg));
+                                    setReadWindow(this.readWindow);     // will make a readable copy
+                                    }
+                                else
+                                    {
+                                    // Make a one-shot that just covers the data we need right now
+                                    // log(Log.VERBOSE, String.format("make one shot: (0x%02x,%d)", ireg, creg));
+                                    setReadWindow(new ReadWindow(ireg, creg, READ_MODE.ONLY_ONCE));
+                                    }
                                 }
                             }
-                        }
 
-                    // Wait until the read cache is valid
-                    while (!readCacheIsValid())
-                        {
-                        this.callbackLock.wait();
-                        }
-
-                    // Extract the data and return!
-                    this.readCacheLock.lockInterruptibly();
-                    try
-                        {
-                        assertTrue(!BuildConfig.DEBUG || this.readWindowActuallyRead.contains(this.readWindow));
-
-                        // The data of interest is somewhere in the read window, but not necessarily at the start.
-                        int ibFirst            = ireg - this.readWindowActuallyRead.getIregFirst() + dibCacheOverhead;
-                        TimestampedData result = new TimestampedData();
-                        result.data            = Arrays.copyOfRange(this.readCache, ibFirst, ibFirst + creg);
-                        result.nanoTime        = this.nanoTimeReadCacheValid;
-                        return result;
-                        }
-                    finally
-                        {
-                        this.readCacheLock.unlock();
-
-                        // If that was a one-time read, invalidate the data so we won't read it again a second time.
-                        // Note that this is the only place outside of the callback that we ever update
-                        // readCacheStatus or writeCacheStatus
-                        if (this.readCacheStatus==READ_CACHE_STATUS.VALID_ONLYONCE)
-                            this.readCacheStatus=READ_CACHE_STATUS.IDLE;
-
-                        // Restore any read window that we may have disturbed
-                        if (this.readWindow != prevReadWindow)
+                        // Wait until the read cache is valid
+                        while (!readCacheIsValid())
                             {
-                            setReadWindowInternal(prevReadWindow);
+                            this.callbackLock.wait(msCallbackLockWaitQuantum);
+                            }
+
+                        // Extract the data and return!
+                        this.readCacheLock.lockInterruptibly();
+                        try
+                            {
+                            assertTrue(!BuildConfig.DEBUG || this.readWindowActuallyRead.contains(this.readWindow));
+
+                            // The data of interest is somewhere in the read window, but not necessarily at the start.
+                            int ibFirst            = ireg - this.readWindowActuallyRead.getIregFirst() + dibCacheOverhead;
+                            TimestampedData result = new TimestampedData();
+                            result.data            = Arrays.copyOfRange(this.readCache, ibFirst, ibFirst + creg);
+                            result.nanoTime        = this.nanoTimeReadCacheValid;
+                            return result;
+                            }
+                        finally
+                            {
+                            this.readCacheLock.unlock();
+
+                            // If that was a one-time read, invalidate the data so we won't read it again a second time.
+                            // Note that this is the only place outside of the callback that we ever update
+                            // readCacheStatus or writeCacheStatus
+                            if (this.readCacheStatus==READ_CACHE_STATUS.VALID_ONLYONCE)
+                                this.readCacheStatus=READ_CACHE_STATUS.IDLE;
+
+                            // Restore any read window that we may have disturbed
+                            if (this.readWindow != prevReadWindow)
+                                {
+                                setReadWindowInternal(prevReadWindow);
+                                }
                             }
                         }
                     }
+                }
+            finally
+                {
+                releaseReaderLockShared();
                 }
             }
         catch (InterruptedException e)
@@ -580,6 +679,33 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
             // Can't return (no data to return!) so we must throw
             throw SwerveRuntimeException.wrap(e);
             }
+        }
+
+    boolean openForReading()
+        {
+        return this.isHooked && this.newReadsAndWritesAllowed();
+        }
+    boolean openForWriting()
+        {
+        return this.isHooked && this.newReadsAndWritesAllowed();
+        }
+    void acquireReaderLockShared() throws InterruptedException
+        {
+        this.readerWriterGate.readLock().lockInterruptibly();
+        this.readerWriterCount.incrementAndGet();
+        }
+    void releaseReaderLockShared()
+        {
+        this.readerWriterCount.decrementAndGet();
+        this.readerWriterGate.readLock().unlock();
+        }
+
+    TimestampedData makeFakeData(int ireg, int creg)
+        {
+        TimestampedData result = new TimestampedData();
+        result.data     = new byte[creg];       // all zeros
+        result.nanoTime = System.nanoTime();
+        return result;
         }
 
     @Override public TimestampedData readTimeStamped(final int ireg, final int creg, final ReadWindow readWindowNeeded, final ReadWindow readWindowSet)
@@ -602,7 +728,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
      */
     @Override public void write8(int ireg, int data)
         {
-        this.write(ireg, new byte[] {(byte) data});
+        this.write(ireg, new byte[]{(byte) data});
         }
     @Override public void write8(int ireg, int data, boolean waitforCompletion)
         {
@@ -624,74 +750,82 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         {
         try
             {
-            synchronized (this.concurrentClientLock)
-                {
-                if (!this.isHooked || !this.areReadsOrWritesEnabled())
+            // Take the readerWriterLock so that others will be able to track when reads and writes have drained
+            acquireReaderLockShared();
+            try {
+                if (!openForWriting())
                     return; // Ignore the write
 
-                if (data.length > ReadWindow.cregWriteMax)
-                    throw new IllegalArgumentException(String.format("write request of %d bytes is too large; max is %d", data.length, ReadWindow.cregWriteMax));
-
-                synchronized (this.callbackLock)
+                synchronized (this.concurrentClientLock)
                     {
-                    // If there's already a pending write, can we coalesce?
-                    boolean doCoalesce = false;
-                    if (this.writeCacheStatus == WRITE_CACHE_STATUS.DIRTY && this.cregWrite + data.length <= ReadWindow.cregWriteMax)
+                    if (data.length > ReadWindow.cregWriteMax)
+                        throw new IllegalArgumentException(String.format("write request of %d bytes is too large; max is %d", data.length, ReadWindow.cregWriteMax));
+
+                    synchronized (this.callbackLock)
                         {
-                        if (ireg + data.length == this.iregWriteFirst)
+                        // If there's already a pending write, can we coalesce?
+                        boolean doCoalesce = false;
+                        if (this.writeCacheStatus == WRITE_CACHE_STATUS.DIRTY && this.cregWrite + data.length <= ReadWindow.cregWriteMax)
                             {
-                            // New data is immediately before the old data.
-                            // leave ireg is unchanged
-                            data = Util.concatenateByteArrays(data, readWriteCache());
-                            doCoalesce = true;
+                            if (ireg + data.length == this.iregWriteFirst)
+                                {
+                                // New data is immediately before the old data.
+                                // leave ireg is unchanged
+                                data = Util.concatenateByteArrays(data, readWriteCache());
+                                doCoalesce = true;
+                                }
+                            else if (this.iregWriteFirst + this.cregWrite == ireg)
+                                {
+                                // New data is immediately after the new data.
+                                ireg = this.iregWriteFirst;
+                                data = Util.concatenateByteArrays(readWriteCache(), data);
+                                doCoalesce = true;
+                                }
                             }
-                        else if (this.iregWriteFirst + this.cregWrite == ireg)
+
+                        // if (doCoalesce) this.log(Log.VERBOSE, "coalesced write");
+
+                        // Wait until we can write to the write cache. If we are coalescing, then
+                        // we don't ever wait, as we're just modifying what's there
+                        while (!doCoalesce && this.writeCacheStatus != WRITE_CACHE_STATUS.IDLE)
                             {
-                            // New data is immediately after the new data.
-                            ireg = this.iregWriteFirst;
-                            data = Util.concatenateByteArrays(readWriteCache(), data);
-                            doCoalesce = true;
+                            this.callbackLock.wait(msCallbackLockWaitQuantum);
                             }
-                        }
 
-                    // if (doCoalesce) this.log(Log.VERBOSE, "coalesced write");
+                        // Indicate where we want to write
+                        this.iregWriteFirst = ireg;
+                        this.cregWrite      = data.length;
 
-                    // Wait until we can write to the write cache. If we are coalescing, then
-                    // we don't ever wait, as we're just modifying what's there
-                    while (!doCoalesce && this.writeCacheStatus != WRITE_CACHE_STATUS.IDLE)
-                        {
-                        this.callbackLock.wait();
-                        }
+                        // Indicate we are dirty so the callback will write us out
+                        setWriteCacheStatusIfHooked(WRITE_CACHE_STATUS.DIRTY);
 
-                    // Indicate where we want to write
-                    this.iregWriteFirst = ireg;
-                    this.cregWrite      = data.length;
+                        // Provide the data we want to write
+                        this.writeCacheLock.lock();
+                        try
+                            {
+                            System.arraycopy(data, 0, this.writeCache, dibCacheOverhead, data.length);
+                            }
+                        finally
+                            {
+                            this.writeCacheLock.unlock();
+                            }
 
-                    // Indicate we are dirty so the callback will write us out
-                    setWriteCacheStatusIfHooked(WRITE_CACHE_STATUS.DIRTY);
+                        // Let the callback know we've got new data for him
+                        this.callback.onNewDataToWrite();
 
-                    // Provide the data we want to write
-                    this.writeCacheLock.lock();
-                    try
-                        {
-                        System.arraycopy(data, 0, this.writeCache, dibCacheOverhead, data.length);
-                        }
-                    finally
-                        {
-                        this.writeCacheLock.unlock();
-                        }
-
-                    // Let the callback know we've got new data for him
-                    this.callback.onNewDataToWrite();
-
-                    if (waitForCompletion)
-                        {
-                        // Wait until the write at least issues to the device controller. This will
-                        // help make any delays/sleeps that follow a write() be more deterministically
-                        // relative to the actual I2C device write.
-                        waitForWriteCompletionInternal();
+                        if (waitForCompletion)
+                            {
+                            // Wait until the write at least issues to the device controller. This will
+                            // help make any delays/sleeps that follow a write() be more deterministically
+                            // relative to the actual I2C device write.
+                            waitForWriteCompletionInternal();
+                            }
                         }
                     }
+                }
+            finally
+                {
+                releaseReaderLockShared();
                 }
             }
         catch (InterruptedException e)
@@ -734,7 +868,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         {
         while (writeCacheStatus != WRITE_CACHE_STATUS.IDLE)
             {
-            this.callbackLock.wait();
+            this.callbackLock.wait(msCallbackLockWaitQuantum);
             }
         }
 
@@ -742,7 +876,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
     /* TODO: not sure if this is really needed */
     void setWriteCacheStatusIfHooked(WRITE_CACHE_STATUS status)
         {
-        if (this.isHooked && this.areReadsOrWritesEnabled())
+        if (this.isHooked && this.newReadsAndWritesAllowed())
             this.writeCacheStatus = status;
         }
 
@@ -866,6 +1000,8 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         WRITE_CACHE_STATUS prevWriteCacheStatus = WRITE_CACHE_STATUS.IDLE;
         MODE_CACHE_STATUS  prevModeCacheStatus  = MODE_CACHE_STATUS.IDLE;
 
+        boolean onCallbacksBeginLeftReadsAndWritesEnabled = true;
+
         //------------------------------------------------------------------------------------------
         // Main entry points
         //------------------------------------------------------------------------------------------
@@ -881,23 +1017,34 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         @Override public void onPortIsReadyCallbacksBegin(int port)
             {
             try {
-                log(Log.VERBOSE, "%s: onPortIsReadyCallbacksBegin...", i2cDevice.getDeviceName());
-                preventReadsOrWrites();
+                log(Log.VERBOSE, "onPortIsReadyCallbacksBegin ...");
                 synchronized (engagementLock)
                     {
-                    pokeInFlightReadersAndWritersThenUnhook();
+                    disableReadsAndWrites();
+                    forceDrainReadersAndWriters();
+                    unhook();
 
                     // REVIEW: what locking is needed for this?
                     I2cDeviceClient.this.initializeFromController();
 
                     // Start up again on the new guy if we should
-                    adjustHooking();
-                    enableReadsOrWrites();
+                    if (isControllerArmed())
+                        {
+                        adjustHooking();
+                        enableReadsAndWrites();
+                        onCallbacksBeginLeftReadsAndWritesEnabled = true;
+                        }
+                    else
+                        {
+                        // No point in reenabling against a pretender; that just causes trouble.
+                        // Bit of a hack, yes, as it SHOULD work. But that's just so hard...
+                        onCallbacksBeginLeftReadsAndWritesEnabled = false;
+                        }
                     }
                 }
             finally
                 {
-                log(Log.VERBOSE, "...done: %s: onPortIsReadyCallbacksBegin", i2cDevice.getDeviceName());
+                log(Log.VERBOSE, "... onPortIsReadyCallbacksBegin complete");
                 }
             }
 
@@ -905,43 +1052,27 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         // We're being told that we're not going to get any more portIsReady callbacks.
             {
             try {
-                log(Log.VERBOSE, "%s: onPortIsReadyCallbacksEnd...", i2cDevice.getDeviceName());
+                log(Log.VERBOSE, "onPortIsReadyCallbacksEnd ...");
 
                 if (closing)
                     return; // ignore
 
-                preventReadsOrWrites();
                 synchronized (engagementLock)
                     {
-                    pokeInFlightReadersAndWritersThenUnhook();
-                    enableReadsOrWrites();
+                    if (onCallbacksBeginLeftReadsAndWritesEnabled)
+                        disableReadsAndWrites();
+
+                    forceDrainReadersAndWriters();
+                    unhook();
+                    assertTrue(!BuildConfig.DEBUG || !openForReading() && !openForWriting());
+                    enableReadsAndWrites();
                     }
                 }
             finally
                 {
-                log(Log.VERBOSE, "...done: %s: onPortIsReadyCallbacksEnd", i2cDevice.getDeviceName());
+                log(Log.VERBOSE, "... onPortIsReadyCallbacksEnd complete");
                 }
             }
-
-        void pokeInFlightReadersAndWritersThenUnhook()
-            {
-            // Wake up anyone who's waiting
-            synchronized (callbackLock)
-                {
-                // Complete any writes
-                writeCacheStatus = WRITE_CACHE_STATUS.IDLE;
-
-                // Lie and say that the data in the read cache is valid
-                readCacheStatus = READ_CACHE_STATUS.VALID_QUEUED;
-
-                // Actually wake folk up
-                callbackLock.notifyAll();
-                }
-
-            // Actually unhook
-            unhook();
-            }
-
 
         // The user has new data for us to write. We could do nothing, in which case the data
         // will go out at the next callback cycle just fine, or we could try to push it out
@@ -1072,7 +1203,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                         {
                         writeCacheStatus = WRITE_CACHE_STATUS.IDLE;
                         // Our write mode status should have been reported back to us
-                        assertTrue(!BuildConfig.DEBUG || !isHooked || !areReadsOrWritesEnabled() || i2cDevice.isI2cPortInWriteMode());
+                        assertTrue(!BuildConfig.DEBUG || !isHooked || !newReadsAndWritesAllowed() || i2cDevice.isI2cPortInWriteMode());
                         }
 
                     //--------------------------------------------------------------------------
