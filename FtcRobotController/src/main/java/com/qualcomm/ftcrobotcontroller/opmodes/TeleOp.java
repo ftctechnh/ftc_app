@@ -52,7 +52,7 @@ public class TeleOp extends OpMode {
 
 	DcMotor armLowerMotor, armUpperMotor, armUpperMotor2;//arm motors
 	DcMotor rightMotor, leftMotor;//drive motors
-	DcMotor chinHook;
+	DcMotor chinHook, wenchMotor;
 	Servo servoRight;//climber switch
 	Servo servoLeftFlip, servoRightFlip;//swings out to hit levers
 	Servo servoArmJam;
@@ -62,7 +62,7 @@ public class TeleOp extends OpMode {
 	//Double servoLeftPosition = 1.0; //Starting position of Left servo, 1.0 cause reversed from other servo
 	double servoRightPosition = 0.0;//Starting pos of right servo, 0.0 cause reversed from other servo
 	double servoLeftFlipPosition = 0.1;
-	double servoRightFlipPosition = 0.7;
+	double servoRightFlipPosition = 0.1;
 	double servoArmJamPosition = 1;
 	double servoChange = .01; //Value used to change the pos of servos
 	double servoLower = 0.0; //Lower limit for servos
@@ -118,6 +118,7 @@ public class TeleOp extends OpMode {
 		servoRightFlip = hardwareMap.servo.get("servoRightFlip");
 		servoArmJam = hardwareMap.servo.get("servoArmJam");
 
+		wenchMotor = hardwareMap.dcMotor.get("wenchMotor");
 
 
 
@@ -205,6 +206,14 @@ public class TeleOp extends OpMode {
 
 		if(gamepad1.b){
 			servoArmJamPosition += servoChange;
+		}
+
+		if(gamepad1.x){
+			wenchMotor.setPower(.5);
+		}else if(gamepad1.y){
+			wenchMotor.setPower(-.5);
+		}else{
+			wenchMotor.setPower(0);
 		}
 
 		if(gamepad2.y){
