@@ -224,7 +224,6 @@ public interface II2cDeviceClient extends HardwareDevice, Engagable
 
     /**
      * Waits for any previously issued writes to complete.
-     * @throws InterruptedException
      */
     void waitForWriteCompletions();
 
