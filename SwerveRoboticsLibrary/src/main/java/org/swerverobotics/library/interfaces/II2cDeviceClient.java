@@ -312,12 +312,12 @@ public interface II2cDeviceClient extends HardwareDevice, Engagable
     void setLoggingTag(String loggingTag);
 
     /**
-     * Arms the client for operation. This involves registering for callbacks with
+     * Engages the client for operation. This involves registering for callbacks with
      * the underlying I2cDevice. Only one client of an I2cDevice may register for callbacks
      * at any given time; if multiple clients exist, they must be coordinated so as to use
      * the I2cDevice sequentially. This method is idempotent.
      *
-     * Note: even though a device client is armed, it is not necessarily the case that it
+     * Note: even though a device client is engaged, it is not necessarily the case that it
      * is actually talking to and communicating with it's underlying hardware, for the
      * I2cController on which it resides may, for example, be currently disconnected. To
      * discern whether the actual hardware is currently being communicated with,
@@ -330,7 +330,7 @@ public interface II2cDeviceClient extends HardwareDevice, Engagable
     void engage();
 
     /**
-     * Answers as to whether this I2cDeviceClient is currently armed; that is, whether
+     * Answers as to whether this I2cDeviceClient is currently engaged; that is, whether
      * {@link #engage()} has been called.
      *
      * @return whether the client is currently armed
@@ -339,7 +339,7 @@ public interface II2cDeviceClient extends HardwareDevice, Engagable
     boolean isEngaged();
 
     /**
-     * Disarms the client if it is currently armed. This method is idempotent.
+     * Disengages the client if it is currently engaged. This method is idempotent.
      *
      * @see #engage()
      */
