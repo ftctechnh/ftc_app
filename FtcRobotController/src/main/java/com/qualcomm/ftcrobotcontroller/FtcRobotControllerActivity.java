@@ -41,6 +41,9 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
+import android.net.wifi.WifiManager;
+import android.os.Bundle;
+import android.os.IBinder;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.os.*;
 import android.preference.PreferenceManager;
@@ -92,6 +95,7 @@ public class FtcRobotControllerActivity extends Activity {
 
   public static final String CONFIGURE_FILENAME = "CONFIGURE_FILENAME";
 
+  protected WifiManager.WifiLock wifiLock;
   protected SharedPreferences preferences;
 
   protected UpdateUI.Callback callback;
@@ -181,12 +185,15 @@ public class FtcRobotControllerActivity extends Activity {
     updateUI = new SwerveUpdateUIHook(this, dimmer);
     updateUI.setRestarter(restarter);
     updateUI.setTextViews(textWifiDirectStatus, textRobotStatus,
-            textGamepad, textOpMode, textErrorMessage, textDeviceName);
+        textGamepad, textOpMode, textErrorMessage, textDeviceName);
     callback = updateUI.new CallbackHook();
     nameVerifier = new SwervePhoneNameVerifier();
 
     PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
     preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+    WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
+    wifiLock = wifiManager.createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, "");
 
     hittingMenuButtonBrightensScreen();
 
@@ -215,6 +222,7 @@ public class FtcRobotControllerActivity extends Activity {
       }
     });
 
+    wifiLock.acquire();
   }
 
   @Override
@@ -234,6 +242,8 @@ public class FtcRobotControllerActivity extends Activity {
     if (controllerService != null) unbindService(connection);
 
     RobotLog.cancelWriteLogcatToDisk(this);
+
+    wifiLock.release();
   }
 
   @Override
@@ -291,10 +301,10 @@ public class FtcRobotControllerActivity extends Activity {
         startActivity(viewLogsIntent);
         return true;
     }
-    return super.onOptionsItemSelected(item);
-  }
+        return super.onOptionsItemSelected(item);
+    }
 
-@Override
+  @Override
   public void onConfigurationChanged(Configuration newConfig) {
     super.onConfigurationChanged(newConfig);
     // don't destroy assets on screen rotation
@@ -663,12 +673,12 @@ public class FtcRobotControllerActivity extends Activity {
                     {
                     activity.textWifiDirectPassphrase.setText(message);
                     }
-                });
-                }
+    });
+  }
 
             }
         }
-  }
+}
 
 
 
