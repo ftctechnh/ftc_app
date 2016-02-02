@@ -42,7 +42,8 @@ public class MasterLinear extends LinearOpMode {
         DcMotor leftMotor = hardwareMap.dcMotor.get("motorLeft");
         DcMotor rightMotor = hardwareMap.dcMotor.get("motorRight");
         //Other
-        //DcMotor slideRightMotor = hardwareMap.dcMotor.get("slider");
+        DcMotor slideLeftMotor = hardwareMap.dcMotor.get("slideLeft");
+        DcMotor slideRightMotor = hardwareMap.dcMotor.get("slideRight");
         WalnutServo belt = new WalnutServo(hardwareMap.servo.get("belt"),0.5);
         WalnutServo doors = new WalnutServo(hardwareMap.servo.get("doors"),1);
         WalnutServo hook = new WalnutServo(hardwareMap.servo.get("hook"),0);
@@ -51,7 +52,8 @@ public class MasterLinear extends LinearOpMode {
         DistanceMotor rightDrive = new DistanceMotor(rightMotor,"Right",true,true,4,1,1440);
 
         DistanceDrive walnutDrive = new DistanceDrive(leftDrive, rightDrive,18);
-        //TimedMotor slider = new TimedMotor(slideMotors,"slides",false,false);
+        TimedMotor slideLeft = new TimedMotor(slideLeftMotor,"slides",false,false);
+        TimedMotor slideRight = new TimedMotor(slideRightMotor, "slides", false, true);
         //Push to arraylist
         LinearControlScheme items = new LinearControlScheme();
         items.add(leftDrive);
@@ -59,7 +61,8 @@ public class MasterLinear extends LinearOpMode {
         items.add(belt);
         items.add(hook);
         items.add(doors);
-        //items.add(slider);
+        items.add(slideLeft);
+        items.add(slideRight);
         //Wait for Start
         try{
             waitForStart();
