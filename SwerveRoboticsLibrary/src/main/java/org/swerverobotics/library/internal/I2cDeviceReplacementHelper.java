@@ -25,39 +25,23 @@ public class I2cDeviceReplacementHelper<TARGET>
     private TARGET                              target;
     private String                              targetName;
     private HardwareMap.DeviceMapping           targetDeviceMapping;
-    private I2cController                       controller;
-    private int                                 targetPort;
-    private I2cController.I2cPortReadyCallback  targetCallback;
     private boolean                             isEngaged;
 
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    public I2cDeviceReplacementHelper(OpMode context, TARGET client, /* may be null */ TARGET target, I2cController controller, int targetPort)
+    public I2cDeviceReplacementHelper(OpMode context, TARGET client, /* may be null */ TARGET target)
         {
         this.context        = context;
         this.isEngaged      = false;
         this.client         = client;
         this.target         = target;       // may be null
-        this.controller     = controller;
-        this.targetPort     = targetPort;
 
         this.targetName     = null;
         this.targetDeviceMapping = null;
         if (this.target != null)
             findTargetNameAndMapping();
-
-        if (controller instanceof LegacyModule)
-            {
-            this.targetCallback = controller.getI2cPortReadyCallback(targetPort);
-            }
-        else if (controller instanceof DeviceInterfaceModule)
-            {
-            this.targetCallback = controller.getI2cPortReadyCallback(targetPort);
-            }
-        else
-            throw new IllegalArgumentException(String.format("unknown controller flavor: %s", controller.getClass().getSimpleName()));
         }
 
     //----------------------------------------------------------------------------------------------
