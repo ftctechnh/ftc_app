@@ -4,10 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.walnuthillseagles.walnutlibrary.*;
-import com.walnuthillseagles.walnutlibrary.DistanceDrive;
-import com.walnuthillseagles.walnutlibrary.DistanceMotor;
-import com.walnuthillseagles.walnutlibrary.LinearControlScheme;
-import com.walnuthillseagles.walnutlibrary.TimedMotor;
 import com.walnuthillseagles.walnutlibrary.WalnutServo;
 
 public class MasterTeleOp extends OpMode{
@@ -18,32 +14,32 @@ public class MasterTeleOp extends OpMode{
     //Other
     private DcMotor spinMotor;
     //@NOTE: Motor is Y Split
-    private DcMotor slideLeftMotors;
-    private DcMotor slideRightMotors;
+    private DcMotor slideLeftMotor;
+    private DcMotor slideRightMotor;
     
     private Servo beltServo;
     private Servo doorServo;
-    private Servo hookServo;
+    //private Servo hookServo;
     
     //Assignment
     private IncMotor rightDrive;
     private IncMotor leftDrive;
 
-    private IncMotor slider;
-    private IncMotor sliderRight;
+    private IncMotor slideLeft;
+    private IncMotor slideRight;
     private DigMotor spinner;
     
     private WalnutServo belt;
     private WalnutServo door;
-    private WalnutServo hook;
+    //private WalnutServo hook;
     //Control Scheme
     ControlScheme buttons;
     public void init(){
 	//Init Hardware
 	right = hardwareMap.dcMotor.get("motorRight");
 	left = hardwareMap.dcMotor.get("motorLeft");
-	slideLeftMotors = hardwareMap.dcMotor.get("slideLeft");
-	slideRightMotors = hardwareMap.dcMotor.get("slideRight");
+	slideLeftMotor = hardwareMap.dcMotor.get("slideLeft");
+	slideRightMotor = hardwareMap.dcMotor.get("slideRight");
 
 	spinMotor = hardwareMap.dcMotor.get("spinners");
 	
@@ -61,10 +57,10 @@ public class MasterTeleOp extends OpMode{
 	spinner.addButton("A2", -1,true);
 	spinner.addButton("X2", 1, true);
 	//Other
-	slider = 
-	    new IncMotor(slideLeftMotors, "Sliders", false, "LEFTY2", false, 0.25);
-	sliderRight =
-	    new IncMotor(slideRightMotors, "Sliders", false, "LEFTY2", true, 0.25);
+	slideLeft =
+	    new IncMotor(slideLeftMotor, "Sliders", false, "LEFTY2", false, 0.25);
+	slideRight =
+	    new IncMotor(slideRightMotor, "Sliders", false, "LEFTY2", true, 0.25);
 	//@TODO Figure out how Servos want to be used
 	belt = new WalnutServo(beltServo, 0.5, "LEFT2", 1, false);
 	belt.addButton("RIGHT2", -1, false);
@@ -72,16 +68,18 @@ public class MasterTeleOp extends OpMode{
 	door = new WalnutServo(doorServo, 0.5,"LBUMP2", 1, false);
 	door.addButton("RBUMP2", -1, false);
 
+	/*
 	hook = new WalnutServo(hookServo, 0, "RBUMP1", 0, true);
-	hook.addButton("LBUMP1",1,true);
+	hook.addButton("LBUMP1",1,true);*/
 	//Add all items to control scheme
 	buttons = new ControlScheme();
 	buttons.add(leftDrive);
 	buttons.add(rightDrive);
 	//Uncomment these lines when all objects made 
 	
-	buttons.add(slider);
+	buttons.add(slideLeft);
 	buttons.add(spinner);
+		buttons.add(slideRight);
 	
 	buttons.add(belt);
 	buttons.add(door);

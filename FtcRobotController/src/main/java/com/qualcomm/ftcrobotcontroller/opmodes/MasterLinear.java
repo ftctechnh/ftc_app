@@ -39,10 +39,10 @@ public class MasterLinear extends LinearOpMode {
     public void runOpMode(){
         //initialize Hardware Phase
         //Drive
-        DcMotor leftMotor = hardwareMap.dcMotor.get("leftMotor");
-        DcMotor rightMotor = hardwareMap.dcMotor.get("rightMotor");
+        DcMotor leftMotor = hardwareMap.dcMotor.get("motorLeft");
+        DcMotor rightMotor = hardwareMap.dcMotor.get("motorRight");
         //Other
-        DcMotor slideMotors = hardwareMap.dcMotor.get("slider");
+        //DcMotor slideMotors = hardwareMap.dcMotor.get("slider");
         WalnutServo beltServo = new WalnutServo(hardwareMap.servo.get("belt"),0.5);
         WalnutServo hookServo = new WalnutServo(hardwareMap.servo.get("hook"),0);
         //initialize assignment phase
@@ -50,14 +50,14 @@ public class MasterLinear extends LinearOpMode {
         DistanceMotor rightDrive = new DistanceMotor(rightMotor,"Right",true,true,4,1,1440);
 
         DistanceDrive walnutDrive = new DistanceDrive(leftDrive, rightDrive,18);
-        TimedMotor slider = new TimedMotor(slideMotors,"slides",false,false);
+        //TimedMotor slider = new TimedMotor(slideMotors,"slides",false,false);
         //Push to arraylist
         LinearControlScheme items = new LinearControlScheme();
         items.add(leftDrive);
         items.add(rightDrive);
         items.add(beltServo);
         items.add(hookServo);
-        items.add(slider);
+        //items.add(slider);
         //Wait for Start
         try{
             waitForStart();
@@ -76,8 +76,8 @@ public class MasterLinear extends LinearOpMode {
             walnutDrive.linearDrive(-115, 1);
             walnutDrive.waitForCompletion();
             sleep(500);
-            slider.operate(3.25, 1);
-            slider.waitForCompletion();
+            //slider.operate(3.25, 1);
+            //slider.waitForCompletion();
             //Deposit Climber
             beltServo.operate(0);
             sleep(1500);
