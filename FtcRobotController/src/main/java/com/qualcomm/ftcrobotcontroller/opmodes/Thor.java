@@ -15,9 +15,10 @@ public class Thor extends OpMode {
     DcMotor rightClimb;
     DcMotor upperMotor;
     DcMotor bottomMotor;
-    //Servo leftsideServo;
-    //Servo rightsideServo;
-    //double leftservopos,rightservopos,deltapos=0.01;
+    Servo leftsideServo;
+    Servo rightsideServo;
+    double leftservopos,rightservopos;
+    double deltapos=0.01;
     @Override
     public void init(){
         leftMotor = hardwareMap.dcMotor.get("left_drive");
@@ -26,13 +27,15 @@ public class Thor extends OpMode {
         rightClimb = hardwareMap.dcMotor.get("right_climb");
         upperMotor= hardwareMap.dcMotor.get("small_arm");
         bottomMotor= hardwareMap.dcMotor.get("big_arm");
-        //leftsideServo = hardwareMap.servo.get("left_servo");
-        //rightsideServo = hardwareMap.servo.get("right_servo");
-        //leftservopos=0;
-        //rightservopos=0;
+        leftsideServo = hardwareMap.servo.get("left_servo");
+        rightsideServo = hardwareMap.servo.get("right_servo");
+        leftMotor.setDirection(DcMotor.Direction.REVERSE);
+        rightMotor.setDirection(DcMotor.Direction.REVERSE);
+        rightservopos = 0.5;
+        leftservopos = 0.5;
     }
     @Override
-    public void loop(){
+    public void loop() {
         float leftY = -gamepad1.left_stick_y;
         float rightY = gamepad1.right_stick_y;
         float rightTrigger = gamepad1.right_trigger;
@@ -61,71 +64,89 @@ public class Thor extends OpMode {
         boolean b2 = gamepad2.b;
         boolean x2 = gamepad2.x;
         boolean y2 = gamepad2.y;
-        /*if (b2)
-        {
-            rightservopos+=deltapos;
+        if (!((b2) && (x2))) {
+            if (b2) {
+                rightservopos = 1;
+            }
+            if (x2) {
+                rightservopos = 0;
+            }
+        } else {
+            rightservopos = 0.5;
         }
-        if (x2)
-        {
-            rightservopos-=deltapos;
+        if ((!x2) && (!b2)) {
+            rightservopos = 0.5;
         }
-        if (right2)
-        {
-            leftservopos+=deltapos;
+        if (!((left2) && (right2))) {
+            if (right2) {
+                leftservopos = 1;
+            }
+            if (left2) {
+                leftservopos = 0;
+            }
+        } else {
+            leftservopos = 0.5;
         }
-        if (left2)
-        {
-            leftservopos-=deltapos;
+        if ((!right2) && (!left2)) {
+            leftservopos = 0.5;
         }
-        rightservopos = Range.clip(rightservopos, 0, 1);
         rightsideServo.setPosition(rightservopos);
-        leftservopos = Range.clip(leftservopos, 0, 1);
-        leftsideServo.setPosition(leftservopos);*/
-        if (rightBumper2)
-        {
-            upperMotor.setDirection(DcMotor.Direction.FORWARD);
-            upperMotor.setPower(1);
-        }
-        if (leftBumper2)
-        {
-            upperMotor.setDirection(DcMotor.Direction.REVERSE);
-            upperMotor.setPower(1);
-        }
-        if (!((leftTrigger2<0)&&(rightTrigger2>0))) {
-            if (rightTrigger2 > 0) {
-                bottomMotor.setPower(0.75*rightTrigger2);
-            }
-            if (leftTrigger2 < 0) {
-                bottomMotor.setPower(0.75*leftTrigger2);
-            }
-        }
-        if ((leftTrigger2==0)&&(rightTrigger2==0))
-        {
-            bottomMotor.setPower(0);
-        }
-        if ((!leftBumper2)&&(!rightBumper2))
-        {
+        leftsideServo.setPosition(leftservopos);
+        if ((rightBumper2) && (leftBumper2)) {
             upperMotor.setPower(0);
         }
-        if (up)
-        {
-            leftClimb.setDirection(DcMotor.Direction.REVERSE);
-            leftClimb.setPower(-1);
+        else {
+            if (rightBumper2) {
+                upperMotor.setDirection(DcMotor.Direction.FORWARD);
+                upperMotor.setPower(1);
+            }
+            if (leftBumper2) {
+                upperMotor.setDirection(DcMotor.Direction.REVERSE);
+                upperMotor.setPower(1);
+            }
         }
-        if (a)
-        {
-            rightClimb.setDirection(DcMotor.Direction.REVERSE);
-            rightClimb.setPower(-1);
+        if (!((leftTrigger2 < 0) && (rightTrigger2 > 0))) {
+            if (rightTrigger2 > 0) {
+                bottomMotor.setPower(0.75 * rightTrigger2);
+            }
+            if (leftTrigger2 < 0) {
+                bottomMotor.setPower(0.75 * leftTrigger2);
+            }
         }
-        if (y)
-        {
-            rightClimb.setDirection(DcMotor.Direction.FORWARD);
-            rightClimb.setPower(-1);
+        if ((leftTrigger2 == 0) && (rightTrigger2 == 0)) {
+            bottomMotor.setPower(0);
         }
-        if (down)
-        {
-            leftClimb.setDirection(DcMotor.Direction.FORWARD);
-            leftClimb.setPower(-1);
+        if ((!leftBumper2) && (!rightBumper2)) {
+            upperMotor.setPower(0);
+        }
+        if ((up) && (down)) {
+            leftClimb.setPower(0);
+        }
+        else {
+            if (up) {
+                leftClimb.setDirection(DcMotor.Direction.FORWARD);
+                leftClimb.setPower(1);
+            }
+            if (down) {
+                leftClimb.setDirection(DcMotor.Direction.REVERSE);
+                leftClimb.setPower(1);
+            }
+
+        }
+        if ((a) && (y)){
+            rightClimb.setPower(0);
+        }
+        else {
+            if (a)
+            {
+                rightClimb.setDirection(DcMotor.Direction.REVERSE);
+                rightClimb.setPower(-1);
+            }
+            if (y)
+            {
+                rightClimb.setDirection(DcMotor.Direction.FORWARD);
+                rightClimb.setPower(-1);
+            }
         }
         if ((!a)&&(!y))
         {
@@ -135,7 +156,7 @@ public class Thor extends OpMode {
         {
             leftClimb.setPower(0);
         }
-        leftMotor.setPower(-leftY);
-        rightMotor.setPower(-rightY);
+        leftMotor.setPower(leftY);
+        rightMotor.setPower(rightY);
     }
 }

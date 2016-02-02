@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 public class Dino_auto extends OpMode {
     DcMotor leftMotor;
@@ -26,8 +25,8 @@ public class Dino_auto extends OpMode {
         bottomMotor = hardwareMap.dcMotor.get("big_arm");
         leftsideServo = hardwareMap.servo.get("left_servo");
         rightsideServo = hardwareMap.servo.get("right_servo");
-        leftservopos = 0;
-        rightservopos = 0;
+        leftservopos = leftsideServo.getPosition();
+        rightservopos = leftsideServo.getPosition();
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
     }
 
@@ -39,11 +38,11 @@ public class Dino_auto extends OpMode {
             k=false;
         }
         if (timer.time()<=2) {
-                leftMotor.setPower(1);
-                rightMotor.setPower(1);
-            }
+            leftMotor.setPower(1);
+            rightMotor.setPower(1);
+        }
         else
-            if ((timer.time()>2) && (timer.time()<3)) {
+            if ((timer.time()>2) && (timer.time()<=3)) {
                 leftMotor.setPower(-1);
                 rightMotor.setPower(1);
             }
