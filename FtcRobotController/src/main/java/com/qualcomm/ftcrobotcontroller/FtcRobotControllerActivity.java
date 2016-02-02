@@ -154,8 +154,10 @@ public class FtcRobotControllerActivity extends Activity {
       if (usbDevice != null) {  // paranoia
         // We might get attachment notifications before the event loop is set up, so
         // we hold on to them and pass them along only when we're good and ready.
-        receivedUsbAttachmentNotifications.add(usbDevice);
-        passReceivedUsbAttachmentsToEventLoop();
+        if (receivedUsbAttachmentNotifications != null) { // *total* paranoia
+          receivedUsbAttachmentNotifications.add(usbDevice);
+          passReceivedUsbAttachmentsToEventLoop();
+        }
       }
     }
   }
