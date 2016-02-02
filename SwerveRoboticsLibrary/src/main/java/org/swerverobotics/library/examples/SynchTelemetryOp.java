@@ -20,8 +20,15 @@ public class SynchTelemetryOp extends SynchronousOpMode
         this.telemetry.log.setDisplayOldToNew(false);   // And we show the log in new to old order, just because we want to
         this.telemetry.log.setCapacity(10);             // We can control the number of lines used by the log
 
-        // Wait until we've been given the ok to go
-        this.waitForStart();
+        // Wait until we've been given the ok to go. For fun, put out some
+        // telemetry while we're doing so.
+        while (!isStarted())
+            {
+            this.telemetry.addData("time", format(elapsed));
+            this.telemetry.update();
+            this.idle();
+            }
+
         final int loopCountStart = getLoopCount();
 
         // Go go gadget robot!
