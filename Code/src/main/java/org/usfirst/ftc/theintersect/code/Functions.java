@@ -22,6 +22,7 @@ public class Functions {
 	public static double straightGyroCorrectionFactor = 20.0;
 	public static double adjustedPowerMax = 0.9;
 	public static double adjustedPowerMin = 0.25;
+	public static double whiteThreshold = 10;
 
 	public static double convertGamepad(float y) {
 		int m;
