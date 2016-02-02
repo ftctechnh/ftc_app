@@ -6,13 +6,11 @@ import java.util.concurrent.locks.Lock;
 /**
  * 
  */
-public interface II2cDevice extends HardwareDevice
+public interface II2cDevice extends HardwareDevice, I2cControllerPortDevice
     {
     int     getI2cAddr();
     void    setI2cAddr(int i2cAddr8Bit);
     
-    void    deregisterForPortReadyCallback();
-
     void    enableI2cReadMode(int ib, int cb);
 
     void    enableI2cWriteMode(int ib, int cb);
@@ -36,6 +34,16 @@ public interface II2cDevice extends HardwareDevice
     void    readI2cCacheFromController();
 
     void    registerForI2cPortReadyCallback(I2cController.I2cPortReadyCallback callback);
+
+    I2cController.I2cPortReadyCallback getI2cPortReadyCallback();
+
+    void    deregisterForPortReadyCallback();
+
+    void registerForPortReadyBeginEndCallback(I2cController.I2cPortReadyBeginEndNotifications callback);
+
+    I2cController.I2cPortReadyBeginEndNotifications getPortReadyBeginEndCallback();
+
+    void deregisterForPortReadyBeginEndCallback();
 
     void    setI2cPortActionFlag();
 

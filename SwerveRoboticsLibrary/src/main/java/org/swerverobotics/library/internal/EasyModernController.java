@@ -2,15 +2,13 @@ package org.swerverobotics.library.internal;
 
 import android.util.Log;
 import com.qualcomm.hardware.modernrobotics.*;
-import com.qualcomm.modernrobotics.*;
-import com.qualcomm.robotcore.eventloop.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.exception.*;
 import com.qualcomm.robotcore.hardware.*;
-import com.qualcomm.robotcore.hardware.usb.RobotUsbDevice;
-import com.qualcomm.robotcore.util.*;
+import com.qualcomm.robotcore.hardware.usb.*;
+
 import org.swerverobotics.library.*;
-import java.util.concurrent.*;
+
 import java.util.concurrent.atomic.*;
 
 /**
@@ -25,12 +23,14 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
 
     public static final String LOGGING_TAG = SynchronousOpMode.LOGGING_TAG;
 
-    protected OpMode                        context;
-    protected EventLoopManager              eventLoopManager;
-    protected boolean                       isArmed;
+    protected OpMode                        opmodeContext;
+    protected final ModernRoboticsUsbDevice target;
     protected String                        targetName;
     protected HardwareMap.DeviceMapping     targetDeviceMapping;
-    protected final RobotUsbDevice          robotUsbDevice;
+    protected boolean                       readWriteRunnableIsRunning;
+    protected AtomicInteger                 callbackWaiterCount;
+
+    private final RobotUsbModule.ARMINGSTATE targetArmingState;
 
     enum WRITE_STATUS { IDLE, DIRTY, READ };
 
@@ -45,78 +45,39 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    public EasyModernController(OpMode context, ModernRoboticsUsbDevice target, ReadWriteRunnableHandy readWriteRunnable) throws RobotCoreException, InterruptedException
+    public EasyModernController(OpMode opmodeContext, ModernRoboticsUsbDevice target, ModernRoboticsUsbDevice.CreateReadWriteRunnable createReadWriteRunnable) throws RobotCoreException, InterruptedException
         {
-        // Note that we don't give a ReadWriteRunnable to our parent constructor. This essentially just sets the serial number
-        super(target.getSerialNumber(), SwerveThreadContext.getEventLoopManager(), null);
+        super(opmodeContext.hardwareMap.appContext, target.getSerialNumber(), SwerveThreadContext.getEventLoopManager(), target.getOpenRobotUsbDevice(), createReadWriteRunnable);
 
         // Initialize the rest of our state
-        this.context          = context;
-        this.eventLoopManager = SwerveThreadContext.getEventLoopManager();
-        this.isArmed          = false;
+        this.opmodeContext    = opmodeContext;
         this.writeStatus      = WRITE_STATUS.IDLE;
+        this.readWriteRunnableIsRunning = false;
+        this.callbackWaiterCount = new AtomicInteger();
+        this.target            = target;
+        this.targetArmingState = target.getArmingState();
+        this.suppressGlobalWarning(true);   // because we start out disarmed
 
-        ReadWriteRunnableStandard   targetReadWriteRunnable = (ReadWriteRunnableStandard)MemberUtil.getReadWriteRunnableModernRoboticsUsbDevice(target);
-        ReadWriteRunnableUsbHandler targetHandler           = MemberUtil.getHandlerOfReadWriteRunnableStandard(targetReadWriteRunnable);
-        this.robotUsbDevice                                 = MemberUtil.getRobotUsbDeviceOfReadWriteRunnableUsbHandler(targetHandler);
+        switch (targetArmingState)
+            {
+            case ARMED:
+            case PRETENDING:
+                break;
+            default:
+                throw new RobotCoreException("EasyModernController instantiated on target in state %s", targetArmingState);
+            }
         }
 
     //----------------------------------------------------------------------------------------------
     // Arming and disarming
     //----------------------------------------------------------------------------------------------
 
-    public boolean isArmed()
+    protected void restoreTargetArmOrPretend() throws RobotCoreException, InterruptedException
         {
-        return this.isArmed;
-        }
-
-    public abstract void arm();
-
-    public abstract void disarm();
-
-    static void closeModernRoboticsUsbDevice(ModernRoboticsUsbDevice usbDevice)
-    // Close down the usbDevice in a robust and reliable way
-        {
-        // Get access to the state
-        ExecutorService service = MemberUtil.getExecutorServiceModernRoboticsUsbDevice(usbDevice);
-
-        // Stop accepting new work
-        service.shutdown();
-
-        ReadWriteRunnableStandard readWriteRunnableStandard = (ReadWriteRunnableStandard)MemberUtil.getReadWriteRunnableModernRoboticsUsbDevice(usbDevice);
-        if (readWriteRunnableStandard != null)
-            {
-            // Set a dummy handler so that we don't end up closing the actual FT_device.
-            RobotUsbDevice robotUsbDevice = new DummyRobotUsbDevice();
-            ReadWriteRunnableUsbHandler dummyHandler = new ReadWriteRunnableUsbHandler(robotUsbDevice);
-            MemberUtil.setHandlerOfReadWriteRunnableStandard(readWriteRunnableStandard, dummyHandler);
-
-            // Ok: actually carry out the close
-            readWriteRunnableStandard.close();
-            }
-
-        // Wait until the thread terminates
-        Util.awaitTermination(service);
-        }
-
-    void installReadWriteRunnable(ModernRoboticsUsbDevice usbDevice, int cbMonitor, int ibStart)
-        {
-        try
-            {
-            ExecutorService service = Executors.newSingleThreadScheduledExecutor();
-            ReadWriteRunnableStandard rwRunnable = new ReadWriteRunnableHandy(usbDevice.getSerialNumber(), this.robotUsbDevice, cbMonitor, ibStart, false);
-            //
-            MemberUtil.setExecutorServiceModernRoboticsUsbDevice(usbDevice, service);
-            MemberUtil.setReadWriteRunnableModernRoboticsUsbDevice(usbDevice, rwRunnable);
-            rwRunnable.setCallback(usbDevice);
-            service.execute(rwRunnable);
-            rwRunnable.blockUntilReady();
-            this.eventLoopManager.registerSyncdDevice(rwRunnable);
-            }
-        catch (Exception e)
-            {
-            Util.handleCapturedException(e);
-            }
+        if (targetArmingState==ARMINGSTATE.ARMED)
+            target.armOrPretend();
+        else
+            target.pretend();
         }
 
     //----------------------------------------------------------------------------------------------
@@ -141,12 +102,22 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
                 // TODO: consider write coalescing as we do in the legacy motor controller
                 while (this.writeStatus == WRITE_STATUS.DIRTY)
                     {
-                    wait(this.callbackLock);
+                    if (!this.isArmed())
+                        break;
+                    if (!waitForCallback())
+                        break;
                     }
 
-                // Write the data to the buffer and put off reads and writes until it gets out
-                this.writeStatus = WRITE_STATUS.DIRTY;
-                super.write(address, data);
+                if (isOkToReadOrWrite())
+                    {
+                    // Write the data to the buffer and put off reads and writes until it gets out
+                    this.writeStatus = WRITE_STATUS.DIRTY;
+                    super.write(address, data);
+                    }
+                else
+                    {
+                    // Ignore
+                    }
                 }
             }
         }
@@ -162,9 +133,16 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
                 // following thereafter.
                 while (this.writeStatus != WRITE_STATUS.IDLE)
                     {
-                    wait(this.callbackLock);
+                    if (!this.isArmed())
+                        break;
+                    if (!waitForCallback())
+                        break;
                     }
-                return super.read(address, size);
+
+                if (isOkToReadOrWrite())
+                    return super.read(address, size);
+                else
+                    return new byte[size];
                 }
             }
         }
@@ -206,21 +184,59 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
                 long target = cur + 1;
                 while (this.readCompletionCount.get() < target)
                     {
-                    wait(this.callbackLock);
+                    if (!this.isArmed())
+                        return;
+                    if (!waitForCallback())
+                        return;     // interrupted or readWriteRunnable is dead, deem us to have completed
                     }
                 }
             }
         }
 
-    void wait(Object o)
+    protected boolean isOkToReadOrWrite()
         {
-        try {
-            o.wait();
-            }
-        catch (InterruptedException e)
+        return this.isArmed() && this.readWriteRunnableIsRunning;
+        }
+
+    @Override public void startupComplete()
+        {
+        this.readWriteRunnableIsRunning = true;
+        }
+
+    @Override public void shutdownComplete()
+        {
+        Log.v(LOGGING_TAG, String.format("received shutdownComplete: %s", this.serialNumber.toString()));
+        this.readWriteRunnableIsRunning = false;
+        synchronized (this.callbackLock)
             {
-            Util.handleCapturedInterrupt(e);
+            this.writeStatus = WRITE_STATUS.IDLE;
+            this.callbackLock.notifyAll();  // wake up any waiter
             }
+
+        // It's important that by here there be no more waiters: that is, everyone
+        // who needs to see that readWriteRunnableIsRunning is false will have noted same.
+        while (this.callbackWaiterCount.get() > 0)
+            Thread.yield();
+        }
+
+    boolean waitForCallback()
+        {
+        this.callbackWaiterCount.incrementAndGet();
+        boolean interrupted = false;
+        if (this.readWriteRunnableIsRunning)
+            {
+            try {
+                callbackLock.wait();
+                }
+            catch (InterruptedException e)
+                {
+                interrupted = true;
+                Util.handleCapturedInterrupt(e);
+                }
+            }
+        boolean result = !interrupted && this.readWriteRunnableIsRunning;
+        this.callbackWaiterCount.decrementAndGet();
+        return result;
         }
 
     //----------------------------------------------------------------------------------------------
@@ -228,69 +244,6 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
     //----------------------------------------------------------------------------------------------
 
     public abstract String getDeviceName();
-
-    //----------------------------------------------------------------------------------------------
-    // Shims
-    //----------------------------------------------------------------------------------------------
-
-    /**
-     * This class implements a dummy RobotUsbDevice that will apparently successfully do reads and
-     * writes but doesn't actually do anything.
-     */
-    static class DummyRobotUsbDevice implements RobotUsbDevice
-        {
-        byte cbExpected = 0;
-        @Override public void close()  {}
-        @Override public void setBaudRate(int i) throws RobotCoreException {}
-        @Override public void setDataCharacteristics(byte b, byte b1, byte b2) throws RobotCoreException  {}
-        @Override public void setLatencyTimer(int i) throws RobotCoreException {}
-        @Override public void purge(Channel channel) throws RobotCoreException {}
-        @Override public int read(byte[] bytes) throws RobotCoreException { return this.read(bytes, bytes.length, 0/*bogus*/); }
-        @Override public void write(byte[] bytes) throws RobotCoreException
-            {
-            // Write commands have zero-sized responses, read commands indicate their expected size
-            byte bCommand = bytes[2];
-            this.cbExpected = bCommand==0 ? 0/*write*/ : bytes[4] /*read*/;
-            }
-        @Override public int read(byte[] bytes, int cbReadExpected, int timeout) throws RobotCoreException
-            {
-            // Need to set the 'sync' bytes correctly, and set the sizes
-            bytes[0]    = (byte)0x33;
-            bytes[1]    = (byte)0xCC;
-            bytes[4]    = (byte)cbExpected;
-            return cbReadExpected;
-            }
-        }
-
-    /**
-     * This class is a ReadWriteRunnableStandard but one that doesn't report any errors
-     * due to connection failures in its blockUntilReady(). And you can interlock with its
-     * startup. And it sets it's thread name to be something recognizable. All very handy :-).
-     */
-    static class ReadWriteRunnableHandy extends ReadWriteRunnableStandard
-        {
-        public ReadWriteRunnableHandy(SerialNumber serialNumber, RobotUsbDevice device, int monitorLength, int startAddress, boolean debug)
-            {
-            super(serialNumber, device, monitorLength, startAddress, debug);
-            }
-
-        @Override public void run()
-            {
-            Thread.currentThread().setName("ReadWriteRunnableHandy.run");
-            try {
-                super.run();
-                }
-            catch (Exception e)
-                {
-                Log.d(LOGGING_TAG, String.format("ignoring exception thrown in rwrunhandy.run: %s", Util.getStackTrace(e)));
-                }
-            }
-
-        @Override public void blockUntilReady() throws RobotCoreException, InterruptedException
-            {
-            // Do nothing. In particular, don't report any errors
-            }
-        }
 
     //----------------------------------------------------------------------------------------------
     // IOpModeStateTransitionEvents
@@ -301,10 +254,13 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
     @Override synchronized public boolean onUserOpModeStop()
         {
         Log.d(LOGGING_TAG, String.format("EasyModern: auto-stopping %s...", this.getSerialNumber().toString()));
-        if (this.isArmed())
-            {
-            this.stopHardware();  // mirror StopRobotOpMode
+        this.stopHardware();  // mirror StopRobotOpMode
+        try {
             this.disarm();
+            }
+        catch (Exception e)
+            {
+            Util.handleCapturedException(e);
             }
         Log.d(LOGGING_TAG, "EasyModern: ... done");
         return true;    // unregister us
