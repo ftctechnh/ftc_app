@@ -135,6 +135,8 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
             status = getSystemStatus();
             if (status == expectedStatus)
                 return;
+
+            log_w("retrying IMU initialization: unexpected system status %d; expected %d", status, expectedStatus);
             }
 
         throw new BNO055InitializationException(this, String.format("unexpected system status %d; expected %d", status, expectedStatus));
@@ -678,6 +680,15 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
             {
             String message = String.format(format, args);
             Log.d(getLoggingTag(), message);
+            }
+        }
+
+    private void log_w(String format, Object... args)
+        {
+        if (this.parameters.loggingEnabled)
+            {
+            String message = String.format(format, args);
+            Log.w(getLoggingTag(), message);
             }
         }
 
