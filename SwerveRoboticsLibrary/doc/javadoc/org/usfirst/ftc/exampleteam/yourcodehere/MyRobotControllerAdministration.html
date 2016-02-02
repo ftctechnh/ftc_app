@@ -124,9 +124,10 @@ extends java.lang.Object</pre>
  begin by copying the entire YourCodeHere folder, then renaming the src\main\java\org\...\yourcodehere
  path to reflect your new package name, whatever that might be. That new package name will also
  of course need to appear in your copied .java files (including package-info.java), so those will
- need their 'package' statement at the top adjusted accordingly. Finally, perhaps less obviously,
+ need their 'package' statement at the top adjusted accordingly. Perhaps less obviously,
  the src\main\AndroidManifest.xml, which also contains the package name, will need to have the
- 'package' attribute of the 'manifest' element adjusted.</div>
+ 'package' attribute of the 'manifest' element adjusted. Finally, the new modules should be added
+ to the 'settings.gradle' file so they show up in Android Studio.</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../../org/swerverobotics/library/interfaces/TeleOp.html" title="annotation in org.swerverobotics.library.interfaces"><code>TeleOp</code></a>, 
@@ -172,7 +173,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>static void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/usfirst/ftc/exampleteam/yourcodehere/MyRobotControllerAdministration.html#playSoundOnRobotRunning-Context-">playSoundOnRobotRunning</a></span>(Context&nbsp;context)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/usfirst/ftc/exampleteam/yourcodehere/MyRobotControllerAdministration.html#playSoundOnRobotRunning-android.content.Context-">playSoundOnRobotRunning</a></span>(android.content.Context&nbsp;context)</code>
 <div class="block">Any public static method annotated with <a href="../../../../../org/swerverobotics/library/interfaces/OnRobotRunning.html" title="annotation in org.swerverobotics.library.interfaces"><code>OnRobotRunning</code></a> is invoked when the robot
  object in the robot controller application enters the running state following an initial
  boot or a 'restart robot'.</div>
@@ -180,7 +181,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>static void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/usfirst/ftc/exampleteam/yourcodehere/MyRobotControllerAdministration.html#playSoundOnRobotStartupFailure-Context-">playSoundOnRobotStartupFailure</a></span>(Context&nbsp;context)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/usfirst/ftc/exampleteam/yourcodehere/MyRobotControllerAdministration.html#playSoundOnRobotStartupFailure-android.content.Context-">playSoundOnRobotStartupFailure</a></span>(android.content.Context&nbsp;context)</code>
 <div class="block">Any public static method annotated with <a href="../../../../../org/swerverobotics/library/interfaces/OnRobotStartupFailure.html" title="annotation in org.swerverobotics.library.interfaces"><code>OnRobotStartupFailure</code></a> is invoked when the robot
  object in the robot controller application fails to enter the running state during
  an attempt to do so.</div>
@@ -188,7 +189,7 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>static void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/usfirst/ftc/exampleteam/yourcodehere/MyRobotControllerAdministration.html#registerMyOpModes-Context-org.swerverobotics.library.interfaces.IOpModeManager-">registerMyOpModes</a></span>(Context&nbsp;context,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../org/usfirst/ftc/exampleteam/yourcodehere/MyRobotControllerAdministration.html#registerMyOpModes-android.content.Context-org.swerverobotics.library.interfaces.IOpModeManager-">registerMyOpModes</a></span>(android.content.Context&nbsp;context,
                  <a href="../../../../../org/swerverobotics/library/interfaces/IOpModeManager.html" title="interface in org.swerverobotics.library.interfaces">IOpModeManager</a>&nbsp;manager)</code>
 <div class="block">Registers any library OpModes that you wish to display.</div>
 </td>
@@ -232,14 +233,14 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="registerMyOpModes-Context-org.swerverobotics.library.interfaces.IOpModeManager-">
+<a name="registerMyOpModes-android.content.Context-org.swerverobotics.library.interfaces.IOpModeManager-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>registerMyOpModes</h4>
 <pre><a href="../../../../../org/swerverobotics/library/interfaces/OpModeRegistrar.html" title="annotation in org.swerverobotics.library.interfaces">@OpModeRegistrar</a>
-public static&nbsp;void&nbsp;registerMyOpModes(Context&nbsp;context,
+public static&nbsp;void&nbsp;registerMyOpModes(android.content.Context&nbsp;context,
                                                        <a href="../../../../../org/swerverobotics/library/interfaces/IOpModeManager.html" title="interface in org.swerverobotics.library.interfaces">IOpModeManager</a>&nbsp;manager)</pre>
 <div class="block">Registers any library OpModes that you wish to display. Change this code to suit
  your needs: the specific OpModes that are registered as this code comes from
@@ -254,14 +255,14 @@ public static&nbsp;void&nbsp;registerMyOpModes(Context&nbsp;context,
 </dl>
 </li>
 </ul>
-<a name="playSoundOnRobotRunning-Context-">
+<a name="playSoundOnRobotRunning-android.content.Context-">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>playSoundOnRobotRunning</h4>
 <pre><a href="../../../../../org/swerverobotics/library/interfaces/OnRobotRunning.html" title="annotation in org.swerverobotics.library.interfaces">@OnRobotRunning</a>
-public static&nbsp;void&nbsp;playSoundOnRobotRunning(Context&nbsp;context)</pre>
+public static&nbsp;void&nbsp;playSoundOnRobotRunning(android.content.Context&nbsp;context)</pre>
 <div class="block">Any public static method annotated with <a href="../../../../../org/swerverobotics/library/interfaces/OnRobotRunning.html" title="annotation in org.swerverobotics.library.interfaces"><code>OnRobotRunning</code></a> is invoked when the robot
  object in the robot controller application enters the running state following an initial
  boot or a 'restart robot'. One thing useful to do here is to play a sound of some sort
@@ -275,18 +276,18 @@ public static&nbsp;void&nbsp;playSoundOnRobotRunning(Context&nbsp;context)</pre>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../../org/swerverobotics/library/interfaces/OnRobotRunning.html" title="annotation in org.swerverobotics.library.interfaces"><code>OnRobotRunning</code></a>, 
 <a href="../../../../../org/swerverobotics/library/interfaces/OnRobotStartupFailure.html" title="annotation in org.swerverobotics.library.interfaces"><code>OnRobotStartupFailure</code></a>, 
-<a href="../../../../../org/usfirst/ftc/exampleteam/yourcodehere/MyRobotControllerAdministration.html#playSoundOnRobotStartupFailure-Context-"><code>playSoundOnRobotStartupFailure(Context)</code></a></dd>
+<a href="../../../../../org/usfirst/ftc/exampleteam/yourcodehere/MyRobotControllerAdministration.html#playSoundOnRobotStartupFailure-android.content.Context-"><code>playSoundOnRobotStartupFailure(Context)</code></a></dd>
 </dl>
 </li>
 </ul>
-<a name="playSoundOnRobotStartupFailure-Context-">
+<a name="playSoundOnRobotStartupFailure-android.content.Context-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>playSoundOnRobotStartupFailure</h4>
 <pre><a href="../../../../../org/swerverobotics/library/interfaces/OnRobotStartupFailure.html" title="annotation in org.swerverobotics.library.interfaces">@OnRobotStartupFailure</a>
-public static&nbsp;void&nbsp;playSoundOnRobotStartupFailure(Context&nbsp;context)</pre>
+public static&nbsp;void&nbsp;playSoundOnRobotStartupFailure(android.content.Context&nbsp;context)</pre>
 <div class="block">Any public static method annotated with <a href="../../../../../org/swerverobotics/library/interfaces/OnRobotStartupFailure.html" title="annotation in org.swerverobotics.library.interfaces"><code>OnRobotStartupFailure</code></a> is invoked when the robot
  object in the robot controller application fails to enter the running state during
  an attempt to do so. A common cause of such failures is a mismatch between the robot
@@ -297,7 +298,7 @@ public static&nbsp;void&nbsp;playSoundOnRobotStartupFailure(Context&nbsp;context
                   interacting with other parts of the Android system, such creating a
                   MediaPlayer.</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
-<dd><a href="../../../../../org/usfirst/ftc/exampleteam/yourcodehere/MyRobotControllerAdministration.html#playSoundOnRobotRunning-Context-"><code>playSoundOnRobotRunning(Context)</code></a></dd>
+<dd><a href="../../../../../org/usfirst/ftc/exampleteam/yourcodehere/MyRobotControllerAdministration.html#playSoundOnRobotRunning-android.content.Context-"><code>playSoundOnRobotRunning(Context)</code></a></dd>
 </dl>
 </li>
 </ul>
