@@ -112,12 +112,43 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
     //------------------------------------------------------------------------------------------
     // IBNO055IMU initialization
     //------------------------------------------------------------------------------------------
-    
+
     /**
      * Initialize the device to be running in the indicated operation mode
      */
     public void initialize(Parameters parameters)
         {
+        // We retry the initialization a few times: it's been reported to fail, intermittently,
+        // but, so far as we can tell, entirely non-deterministically. Ideally, we'd like that to
+        // never happen, but in light of our (current) inability to figure out how to prevent that,
+        // we simply retry the initialization if it seems to fail.
+
+        int expectedStatus = parameters.mode.isFusionMode() ? 5 : 6;
+        int status = 0;
+
+        for (int attempt=0; attempt < 4; attempt++)
+            {
+            initializeOnce(parameters);
+
+            // At this point, the chip should in fact report correctly that it's in the mode requested.
+            // See Section '4.3.58 SYS_STATUS' of the BNO055 specification
+            status = getSystemStatus();
+            if (status == expectedStatus)
+                return;
+            }
+
+        throw new BNO055InitializationException(this, String.format("unexpected system status %d; expected %d", status, expectedStatus));
+        }
+
+    /**
+     * Do one attempt at initializing the device to be running in the indicated operation mode
+     */
+    protected void initializeOnce(Parameters parameters)
+        {
+        // Validate parameters
+        if (SENSOR_MODE.CONFIG == parameters.mode)
+            throw new IllegalArgumentException("SENSOR_MODE.CONFIG illegal for use in AdaFruitBNO055IMU.initialize()");
+
         // Remember the parameters for future use
         this.parameters = parameters;
         ElapsedTime elapsed = new ElapsedTime();
@@ -142,7 +173,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
                 throw new UnexpectedI2CDeviceException(chipId);
             }
         
-        // Make sure we are in config mode
+        // Get us into config mode, for sure
         setSensorMode(SENSOR_MODE.CONFIG);
         
         // Reset the system, and wait for the chip id register to switch back from its reset state 
@@ -174,13 +205,13 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, II2cDeviceClientUser
                       (parameters.temperatureUnit.bVal << 4) | // temperature
                       (parameters.angleUnit.bVal << 2) |       // euler angle units
                       (parameters.angleUnit.bVal << 1) |       // gyro units, per second
-                      (parameters.accelUnit.bVal /*<< 0*/);    // accelerometer units
+                (parameters.accelUnit.bVal /*<< 0*/);    // accelerometer units
         write8(REGISTER.UNIT_SEL, unitsel);
         
         // Use or don't use the external crystal
         // See Section 5.5 (p100) of the BNO055 specification.
         write8(REGISTER.SYS_TRIGGER, parameters.useExternalCrystal ? 0x80 : 0x00);
-        delayLoreExtra(10);
+        delayLoreExtra(50);
 
         // Switch to page 1 so we can write some more registers
         write8(REGISTER.PAGE_ID, 1);

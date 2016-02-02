@@ -348,6 +348,23 @@ public interface IBNO055IMU
         //------------------------------------------------------------------------------------------
         public final byte bVal;
         SENSOR_MODE(int i) { this.bVal = (byte) i; }
+
+        /** Is this SENSOR_MODE one of the fusion modes in which the BNO055 operates? */
+        public boolean isFusionMode()
+            {
+            // See Table 3-5, p21, of the BNO055 specification
+            switch (this)
+                {
+                case IMU:
+                case COMPASS:
+                case M4G:
+                case NDOF_FMC_OFF:
+                case NDOF:
+                    return true;
+                default:
+                    return false;
+                }
+            }
         }
 
     /**
