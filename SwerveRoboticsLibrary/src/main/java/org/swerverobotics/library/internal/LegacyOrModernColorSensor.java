@@ -57,8 +57,7 @@ public class LegacyOrModernColorSensor implements ColorSensor, IOpModeStateTrans
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    private LegacyOrModernColorSensor(OpMode context, I2cDeviceClient i2cDeviceClient, ClassFactory.SENSOR_FLAVOR flavor, ColorSensor target,
-                                      I2cController controller, int targetPort)
+    private LegacyOrModernColorSensor(OpMode context, I2cDeviceClient i2cDeviceClient, ClassFactory.SENSOR_FLAVOR flavor, ColorSensor target)
         {
         switch (flavor)
             {
@@ -69,7 +68,7 @@ public class LegacyOrModernColorSensor implements ColorSensor, IOpModeStateTrans
                 throw new IllegalArgumentException(String.format("unimplemented color sensor flavor: %s", flavor.toString()));
             }
 
-        this.helper          = new I2cDeviceReplacementHelper<ColorSensor>(context, this, target, controller, targetPort);
+        this.helper          = new I2cDeviceReplacementHelper<ColorSensor>(context, this, target);
         this.i2cDeviceClient = i2cDeviceClient;
         this.flavor          = flavor;
         this.ledIsEnabled    = false;
@@ -92,15 +91,17 @@ public class LegacyOrModernColorSensor implements ColorSensor, IOpModeStateTrans
 
         if (target instanceof HiTechnicNxtColorSensor)
             {
-            controller  = MemberUtil.legacyModuleOfHiTechnicColorSensor(target);
-            port        = MemberUtil.portOfHiTechnicColorSensor(target);
+            HiTechnicNxtColorSensor colorTarget = (HiTechnicNxtColorSensor)target;
+            controller  = colorTarget.getI2cController();
+            port        = colorTarget.getPort();
             i2cAddr8Bit = ADDRESS_I2C_HITECHNIC;
             flavor      = ClassFactory.SENSOR_FLAVOR.HITECHNIC;
             }
         else if (target instanceof ModernRoboticsI2cColorSensor)
             {
-            controller  = MemberUtil.deviceModuleOfModernColorSensor(target);
-            port        = MemberUtil.portOfModernColorSensor(target);
+            ModernRoboticsI2cColorSensor colorTarget = (ModernRoboticsI2cColorSensor)target;
+            controller  = colorTarget.getI2cController();
+            port        = colorTarget.getPort();
             i2cAddr8Bit = target.getI2cAddress();
             flavor      = ClassFactory.SENSOR_FLAVOR.MODERNROBOTICS;
             }
@@ -114,26 +115,26 @@ public class LegacyOrModernColorSensor implements ColorSensor, IOpModeStateTrans
         {
         II2cDevice i2cDevice             = new I2cDeviceOnI2cDeviceController(controller, port);
         I2cDeviceClient i2cDeviceClient  = new I2cDeviceClient(context, i2cDevice, i2cAddr8Bit, false);
-        LegacyOrModernColorSensor result = new LegacyOrModernColorSensor(context, i2cDeviceClient, flavor, target, controller, port);
-        result.arm();
+        LegacyOrModernColorSensor result = new LegacyOrModernColorSensor(context, i2cDeviceClient, flavor, target);
+        result.engage();
         return result;
         }
 
-    private void arm()
+    private void engage()
         {
-        if (!this.helper.isArmed())
+        if (!this.helper.isEngaged())
             {
-            this.helper.arm();
-            this.i2cDeviceClient.arm();
+            this.helper.engage();
+            this.i2cDeviceClient.engage();
             }
         }
 
-    private void disarm()
+    private void disengage()
         {
-        if (this.helper.isArmed())
+        if (this.helper.isEngaged())
             {
-            this.i2cDeviceClient.disarm();
-            this.helper.disarm();
+            this.i2cDeviceClient.disengage();
+            this.helper.disengage();
             }
         }
 
@@ -143,7 +144,7 @@ public class LegacyOrModernColorSensor implements ColorSensor, IOpModeStateTrans
 
     @Override synchronized public boolean onUserOpModeStop()
         {
-        this.disarm();
+        this.disengage();
         return true;    // unregister us
         }
 

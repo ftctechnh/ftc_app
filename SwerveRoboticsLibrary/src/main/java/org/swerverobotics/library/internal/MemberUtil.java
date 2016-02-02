@@ -3,13 +3,8 @@ package org.swerverobotics.library.internal;
 import com.qualcomm.ftccommon.*;
 import com.qualcomm.hardware.modernrobotics.*;
 import com.qualcomm.hardware.hitechnic.*;
-import com.qualcomm.modernrobotics.*;
-import com.qualcomm.robotcore.eventloop.*;
 import com.qualcomm.robotcore.hardware.*;
-import com.qualcomm.robotcore.hardware.usb.*;
-import com.qualcomm.robotcore.robocol.*;
 import com.qualcomm.robotcore.robot.*;
-import java.util.concurrent.*;
 
 /**
  * Skullduggery we wish we didn't have to do.
@@ -17,81 +12,12 @@ import java.util.concurrent.*;
 public class MemberUtil
     {
     //----------------------------------------------------------------------------------------------
-    // ReadWriteRunnableStandard
-    //----------------------------------------------------------------------------------------------
-
-    public static ReadWriteRunnableUsbHandler getHandlerOfReadWriteRunnableStandard(ReadWriteRunnableStandard readWriteRunnableStandard)
-        {
-        return Util.<ReadWriteRunnableUsbHandler>getPrivateObjectField(readWriteRunnableStandard, 14);
-        }
-    public static void setHandlerOfReadWriteRunnableStandard(ReadWriteRunnableStandard readWriteRunnableStandard, ReadWriteRunnableUsbHandler handler)
-        {
-        Util.setPrivateObjectField(readWriteRunnableStandard, 14, handler);
-        }
-
-    public static void setRunningReadWriteRunnableStandard(ReadWriteRunnableStandard readWriteRunnableStandard, boolean isRunning)
-        {
-        Util.setPrivateBooleanField(readWriteRunnableStandard, 6, isRunning);
-        }
-
-    //----------------------------------------------------------------------------------------------
-    // ReadWriteRunnableUsbHandler
-    //----------------------------------------------------------------------------------------------
-
-    public static RobotUsbDevice getRobotUsbDeviceOfReadWriteRunnableUsbHandler(ReadWriteRunnableUsbHandler handler)
-        {
-        return Util.<RobotUsbDevice>getPrivateObjectField(handler, 2);
-        }
-
-    //----------------------------------------------------------------------------------------------
-    // ModernRoboticsUsbDevice
-    //----------------------------------------------------------------------------------------------
-
-    public static ReadWriteRunnable getReadWriteRunnableModernRoboticsUsbDevice(ModernRoboticsUsbDevice device)
-    // Here we rely on the fact that ReadWriteRunnableBlocking inherits from ReadWriteRunnableStandard
-        {
-        return Util.<ReadWriteRunnableStandard>getPrivateObjectField(device, 0);
-        }
-    public static void setReadWriteRunnableModernRoboticsUsbDevice(ModernRoboticsUsbDevice device, ReadWriteRunnable readWriteRunnableStandard)
-        {
-        Util.setPrivateObjectField(device, 0, readWriteRunnableStandard);
-        }
-
-    public static void setExecutorServiceModernRoboticsUsbDevice(ModernRoboticsUsbDevice device, ExecutorService service)
-        {
-        Util.setPrivateObjectField(device, 1, service);
-        }
-    public static ExecutorService getExecutorServiceModernRoboticsUsbDevice(ModernRoboticsUsbDevice device)
-        {
-        return Util.<ExecutorService>getPrivateObjectField(device, 1);
-        }
-
-
-    //----------------------------------------------------------------------------------------------
     // FtcRobotControllerService
     //----------------------------------------------------------------------------------------------
 
     public static Robot robotOfFtcRobotControllerService(FtcRobotControllerService service)
         {
         return Util.<Robot>getPrivateObjectField(service, 2+7);
-        }
-
-    //----------------------------------------------------------------------------------------------
-    // FTCEventLoop
-    //----------------------------------------------------------------------------------------------
-
-    public static FtcEventLoopHandler handlerOfFtcEventLoop(FtcEventLoop ftcEventLoop)
-        {
-        return Util.<FtcEventLoopHandler>getPrivateObjectField(ftcEventLoop, 0);
-        }
-
-    //----------------------------------------------------------------------------------------------
-    // FtcEventLoopHandler
-    //----------------------------------------------------------------------------------------------
-
-    public static EventLoopManager eventLoopManagerOfFtcEventLoopHandler(FtcEventLoopHandler ftcEventLoopHandler)
-        {
-        return Util.<EventLoopManager>getPrivateObjectField(ftcEventLoopHandler, 0);
         }
 
     //----------------------------------------------------------------------------------------------
@@ -118,24 +44,6 @@ public class MemberUtil
         return controller instanceof ModernRoboticsUsbServoController;
         }
 
-    public static LegacyModule legacyModuleOfLegacyMotorController(DcMotorController controller)
-        {
-        return Util.<LegacyModule>getPrivateObjectField(controller, 0);
-        }
-    public static int portOfLegacyMotorController(DcMotorController controller)
-        {
-        return Util.getPrivateIntField(controller, 5);
-        }
-
-    public static LegacyModule legacyModuleOfLegacyServoController(ServoController controller)
-        {
-        return Util.<LegacyModule>getPrivateObjectField(controller, 0);
-        }
-    public static int portOfLegacyServoController(ServoController controller)
-        {
-        return Util.getPrivateIntField(controller, 3);
-        }
-
     public static int i2cAddrOfLegacyMotorController(DcMotorController controller)
         {
         // From the spec from HiTechnic:
@@ -156,7 +64,7 @@ public class MemberUtil
         }
 
     //----------------------------------------------------------------------------------------------
-    // DCMotor
+    // DCMotor and Servo
     //----------------------------------------------------------------------------------------------
 
     public static void setControllerOfMotor(DcMotor motor, DcMotorController controller)
@@ -167,69 +75,5 @@ public class MemberUtil
     public static void setControllerOfServo(Servo servo, ServoController controller)
         {
         Util.setPrivateObjectField(servo, 0, controller);
-        }
-
-    //----------------------------------------------------------------------------------------------
-    // Color Sensors
-    //----------------------------------------------------------------------------------------------
-
-    static DeviceInterfaceModule deviceInterfaceModuleOfAdaFruitColorSensor(ColorSensor sensor)
-        {
-        return Util.<DeviceInterfaceModule>getPrivateObjectField(sensor, 0);
-        }
-    static int portOfAdaFruitColorSensor(ColorSensor sensor)
-        {
-        return Util.getPrivateIntField(sensor, 5);
-        }
-
-    static LegacyModule legacyModuleOfHiTechnicColorSensor(ColorSensor sensor)
-        {
-        return Util.<LegacyModule>getPrivateObjectField(sensor, 0);
-        }
-    static DeviceInterfaceModule deviceModuleOfModernColorSensor(ColorSensor sensor)
-        {
-        return Util.<DeviceInterfaceModule>getPrivateObjectField(sensor, 1);    // 0 is now i2c address
-        }
-    static int portOfHiTechnicColorSensor(ColorSensor sensor)
-        {
-        return Util.getPrivateIntField(sensor, 7);
-        }
-    static int portOfModernColorSensor(ColorSensor sensor)
-        {
-        return Util.getPrivateIntField(sensor, 8);
-        }
-
-    //----------------------------------------------------------------------------------------------
-    // Legacy Module
-    //----------------------------------------------------------------------------------------------
-
-    static I2cController.I2cPortReadyCallback[] callbacksOfLegacyModule(LegacyModule imodule)
-        {
-        ModernRoboticsUsbLegacyModule module = (ModernRoboticsUsbLegacyModule)imodule;
-        return Util.<I2cController.I2cPortReadyCallback[]>getPrivateObjectField(module, 4);
-        }
-
-    //----------------------------------------------------------------------------------------------
-    // Device Interface Module
-    //----------------------------------------------------------------------------------------------
-
-    static I2cController.I2cPortReadyCallback[] callbacksOfDeviceInterfaceModule(DeviceInterfaceModule imodule)
-        {
-        ModernRoboticsUsbDeviceInterfaceModule module = (ModernRoboticsUsbDeviceInterfaceModule)imodule;
-        return Util.<I2cController.I2cPortReadyCallback[]>getPrivateObjectField(module, 3);
-        }
-
-    //----------------------------------------------------------------------------------------------
-    // I2cDevice
-    //----------------------------------------------------------------------------------------------
-
-    public static I2cController i2cControllerOfI2cDevice(I2cDevice i2cDevice)
-        {
-        return Util.<I2cController>getPrivateObjectField(i2cDevice, 0);
-        }
-
-    public static int portOfI2cDevice(I2cDevice i2cDevice)
-        {
-        return Util.getPrivateIntField(i2cDevice, 1);
         }
     }

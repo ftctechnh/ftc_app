@@ -82,11 +82,6 @@ public interface IBNO055IMU
          * If not specified, a simple but not especially effective internal algorithm will be used. */
         public IAccelerationIntegrator accelerationIntegrationAlgorithm = null;
 
-        /** the boost in thread priority to use for data acquisition. A small increase in the
-         * thread priority can help reduce timestamping jitter and improve acceleration integration
-         * at only a small detriment to other parts of the system. */
-        public int              threadPriorityBoost = 0;
-        
         /** debugging aid: enable logging for this device? */
         public boolean          loggingEnabled      = false;
         /** debugging aid: the logging tag to use when logging */
@@ -353,6 +348,23 @@ public interface IBNO055IMU
         //------------------------------------------------------------------------------------------
         public final byte bVal;
         SENSOR_MODE(int i) { this.bVal = (byte) i; }
+
+        /** Is this SENSOR_MODE one of the fusion modes in which the BNO055 operates? */
+        public boolean isFusionMode()
+            {
+            // See Table 3-5, p21, of the BNO055 specification
+            switch (this)
+                {
+                case IMU:
+                case COMPASS:
+                case M4G:
+                case NDOF_FMC_OFF:
+                case NDOF:
+                    return true;
+                default:
+                    return false;
+                }
+            }
         }
 
     /**

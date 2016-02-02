@@ -516,26 +516,34 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule, IThu
 
     @Override public void registerForI2cPortReadyCallback(final I2cController.I2cPortReadyCallback callback, final int physicalPort)
         {
-        (new ThunkForWriting()
-            {
-            @Override protected void actionOnLoopThread()
-                {
-                target.registerForI2cPortReadyCallback(callback, physicalPort);
-                }
-            }).doWriteOperation();
+        target.registerForI2cPortReadyCallback(callback, physicalPort);
+        }
+
+    @Override public I2cPortReadyCallback getI2cPortReadyCallback(int i)
+        {
+        return target.getI2cPortReadyCallback(i);
         }
 
     @Override public void deregisterForPortReadyCallback(final int physicalPort)
         {
-        (new ThunkForWriting()
-            {
-            @Override protected void actionOnLoopThread()
-                {
-                target.deregisterForPortReadyCallback(physicalPort);
-                }
-            }).doWriteOperation();
+        target.deregisterForPortReadyCallback(physicalPort);
         }
-    
+
+    @Override public void registerForPortReadyBeginEndCallback(I2cPortReadyBeginEndNotifications i2cNotificationsCallback, int i)
+        {
+        target.registerForPortReadyBeginEndCallback(i2cNotificationsCallback, i);
+        }
+
+    @Override public I2cPortReadyBeginEndNotifications getPortReadyBeginEndCallback(int i)
+        {
+        return target.getPortReadyBeginEndCallback(i);
+        }
+
+    @Override public void deregisterForPortReadyBeginEndCallback(int i)
+        {
+        target.deregisterForPortReadyBeginEndCallback(i);
+        }
+
     //----------------------------------------------------------------------------------------------
     // PWMOutputController
     //----------------------------------------------------------------------------------------------

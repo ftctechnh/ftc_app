@@ -113,9 +113,9 @@ public class AdaFruitTCS34725ColorSensor implements ColorSensor, IOpModeStateTra
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    private AdaFruitTCS34725ColorSensor(OpMode context, I2cDeviceClient i2cDeviceClient, ColorSensor target, I2cController controller, int targetPort)
+    private AdaFruitTCS34725ColorSensor(OpMode context, I2cDeviceClient i2cDeviceClient, ColorSensor target)
         {
-        this.helper          = new I2cDeviceReplacementHelper<ColorSensor>(context, this, target, controller, targetPort);
+        this.helper          = new I2cDeviceReplacementHelper<ColorSensor>(context, this, target);
         this.i2cDeviceClient = i2cDeviceClient;
         this.ledIsEnabled    = false;
         this.ledStateIsKnown = false;
@@ -135,8 +135,9 @@ public class AdaFruitTCS34725ColorSensor implements ColorSensor, IOpModeStateTra
 
         if (target instanceof AdafruitI2cColorSensor)
             {
-            controller  = MemberUtil.deviceInterfaceModuleOfAdaFruitColorSensor(target);
-            port        = MemberUtil.portOfAdaFruitColorSensor(target);
+            AdafruitI2cColorSensor colorTarget = (AdafruitI2cColorSensor)target;
+            controller  = colorTarget.getI2cController();
+            port        = colorTarget.getPort();
             i2cAddr8Bit = ADDRESS_I2C;
             }
         else
@@ -149,8 +150,8 @@ public class AdaFruitTCS34725ColorSensor implements ColorSensor, IOpModeStateTra
         {
         II2cDevice i2cDevice               = new I2cDeviceOnI2cDeviceController(controller, port);
         I2cDeviceClient i2cDeviceClient    = new I2cDeviceClient(context, i2cDevice, i2cAddr8Bit, false);
-        AdaFruitTCS34725ColorSensor result = new AdaFruitTCS34725ColorSensor(context, i2cDeviceClient, target, controller, port);
-        result.arm();
+        AdaFruitTCS34725ColorSensor result = new AdaFruitTCS34725ColorSensor(context, i2cDeviceClient, target);
+        result.engage();
         result.initialize(new Parameters());
         return result;
         }
@@ -209,21 +210,21 @@ public class AdaFruitTCS34725ColorSensor implements ColorSensor, IOpModeStateTra
             }
         }
 
-    private void arm()
+    private void engage()
         {
-        if (!this.helper.isArmed())
+        if (!this.helper.isEngaged())
             {
-            this.helper.arm();
-            this.i2cDeviceClient.arm();
+            this.helper.engage();
+            this.i2cDeviceClient.engage();
             }
         }
 
-    private void disarm()
+    private void disengage()
         {
-        if (this.helper.isArmed())
+        if (this.helper.isEngaged())
             {
-            this.i2cDeviceClient.disarm();
-            this.helper.disarm();
+            this.i2cDeviceClient.disengage();
+            this.helper.disengage();
             }
         }
 
@@ -233,7 +234,7 @@ public class AdaFruitTCS34725ColorSensor implements ColorSensor, IOpModeStateTra
 
     @Override synchronized public boolean onUserOpModeStop()
         {
-        this.disarm();
+        this.disengage();
         return true;    // unregister us
         }
 
