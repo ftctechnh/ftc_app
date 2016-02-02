@@ -1007,6 +1007,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         MODE_CACHE_STATUS  prevModeCacheStatus  = MODE_CACHE_STATUS.IDLE;
 
         boolean doModuleIsArmedWorkEnabledWrites = false;
+        boolean haveSeenModuleIsArmedWork        = false;
 
         //------------------------------------------------------------------------------------------
         // I2cController.I2cPortReadyCallback
@@ -1073,7 +1074,6 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                 }
             }
 
-
         void doModuleIsArmedWork(boolean arming)
             {
             try {
@@ -1104,6 +1104,8 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                         }
                     else
                         doModuleIsArmedWorkEnabledWrites = false;
+
+                    haveSeenModuleIsArmedWork = true;
                     }
                 }
             finally
@@ -1121,6 +1123,9 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                 if (closing)
                     return; // ignore
 
+                if (!haveSeenModuleIsArmedWork)
+                    return; // ReadWriteRunnable started then suddenly stopped before owner finished arming
+
                 synchronized (engagementLock)
                     {
                     if (doModuleIsArmedWorkEnabledWrites)
@@ -1132,6 +1137,8 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                     unhook();
                     assertTrue(!BuildConfig.DEBUG || !openForReading() && !openForWriting());
                     enableReadsAndWrites();
+
+                    haveSeenModuleIsArmedWork = false;
                     }
                 }
             finally
