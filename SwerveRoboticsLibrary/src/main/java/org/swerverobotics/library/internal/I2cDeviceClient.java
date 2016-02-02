@@ -1006,6 +1006,8 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         WRITE_CACHE_STATUS prevWriteCacheStatus = WRITE_CACHE_STATUS.IDLE;
         MODE_CACHE_STATUS  prevModeCacheStatus  = MODE_CACHE_STATUS.IDLE;
 
+        boolean doModuleIsArmedWorkEnabledWrites = false;
+
         //------------------------------------------------------------------------------------------
         // I2cController.I2cPortReadyCallback
         //------------------------------------------------------------------------------------------
@@ -1029,8 +1031,13 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                 {
                 case ARMED:
                     log(Log.VERBOSE, "onArmed ...");
-                    doModuleIsArmedWork();
+                    doModuleIsArmedWork(true);
                     log(Log.VERBOSE, "... onArmed");
+                    break;
+                case PRETENDING:
+                    log(Log.VERBOSE, "onPretending ...");
+                    doModuleIsArmedWork(false);
+                    log(Log.VERBOSE, "... onPretending");
                     break;
                 case DISARMED:
                     // Unnecessary: we WILL get the onPortIsReadyCallbacksEnd() notification;
@@ -1050,9 +1057,14 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
             // we'll wait until the
             log(Log.VERBOSE, "doPortIsReadyCallbackBeginWork ...");
             try {
-                if (robotUsbModule.getArmingState() == RobotUsbModule.ARMINGSTATE.ARMED)
+                switch (robotUsbModule.getArmingState())
                     {
-                    doModuleIsArmedWork();
+                    case ARMED:
+                        doModuleIsArmedWork(true);
+                        break;
+                    case PRETENDING:
+                        doModuleIsArmedWork(false);
+                        break;
                     }
                 }
             finally
@@ -1062,7 +1074,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
             }
 
 
-        void doModuleIsArmedWork()
+        void doModuleIsArmedWork(boolean arming)
             {
             try {
                 log(Log.VERBOSE, "doModuleIsArmedWork ...");
@@ -1076,7 +1088,22 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                     I2cDeviceClient.this.attachToController();
 
                     adjustHooking();
-                    enableReadsAndWrites();
+
+                    // We are a little paranoid here. In theory, we ought to be able to work perfectly
+                    // fine against a module that is pretending. But it's more robust of us to just leave
+                    // reads and writes disabled at our upper surface rather than relying on that emulation
+                    // to work. Moreover, during development, we hit a number of deadlocks when we tried,
+                    // THOUGH those deadlocks might actually have been due to use not using onModuleStateChange
+                    // to do the work but rather ONLY onPortIsReadyCallbacksBegin. That bug MIGHT have been
+                    // the whole story, but it might not, and we're just too worn out to find out. So we take
+                    // the robust, easy way out. For now, at least.
+                    if (arming)
+                        {
+                        enableReadsAndWrites();
+                        doModuleIsArmedWorkEnabledWrites = true;
+                        }
+                    else
+                        doModuleIsArmedWorkEnabledWrites = false;
                     }
                 }
             finally
@@ -1096,7 +1123,10 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
 
                 synchronized (engagementLock)
                     {
-                    disableReadsAndWrites();
+                    if (doModuleIsArmedWorkEnabledWrites)
+                        {
+                        disableReadsAndWrites();
+                        }
 
                     forceDrainReadersAndWriters();
                     unhook();
