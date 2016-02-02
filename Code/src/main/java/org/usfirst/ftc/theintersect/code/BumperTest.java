@@ -1,19 +1,9 @@
 package org.usfirst.ftc.theintersect.code;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.robotcore.hardware.GyroSensor;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.UltrasonicSensor;
-import org.swerverobotics.library.TelemetryDashboardAndLog;
-
-import org.swerverobotics.library.ClassFactory;
+import com.qualcomm.robotcore.hardware.*;
 import org.swerverobotics.library.SynchronousOpMode;
-
-import java.util.Arrays;
+import org.swerverobotics.library.TelemetryDashboardAndLog;
 
 /**
  * An Autonomous for both teams using the LinearOpMode
@@ -21,14 +11,12 @@ import java.util.Arrays;
 
 @org.swerverobotics.library.interfaces.Autonomous(name = "BumperTest")
 public class BumperTest extends SynchronousOpMode {
-	String team = "8865";
-	int delay = 0;
+	static String team = "8865";
+	static int delay = 0;
+	static long endTime;
 
 	static DcMotor rightWheel;
 	static DcMotor leftWheel;
-
-	static DcMotor linearSlideR;
-	static DcMotor linearSlideL;
 
 	static DcMotor sweeper;
 
@@ -44,6 +32,8 @@ public class BumperTest extends SynchronousOpMode {
 	static ModernRoboticsI2cGyro gyro;
 	static UltrasonicSensor ultrasonic;
 
+	Thread mountainClimberMove;
+
 	@Override
 	public void main() throws InterruptedException{
         rightWheel = hardwareMap.dcMotor.get("rightWheel");
@@ -58,24 +48,19 @@ public class BumperTest extends SynchronousOpMode {
         mountainClimberRelease = hardwareMap.servo.get("mountainClimberRelease");
         bumper = hardwareMap.servo.get("bumper");
 
-
-		/*ClassFactory.createEasyMotorController(this, linearSlideL,
-				linearSlideR);
-		ClassFactory.createEasyMotorController(this, rightWheel, leftWheel);
-		ClassFactory.createEasyMotorController(this, sweeper, null);
-        ClassFactory.createEasyServoController(this, Arrays.asList(mountainClimberRelease, mountainClimber, tubeExtender, tubeTilt, bumper));
-        ClassFactory.createSwerveColorSensor(this, lineColor);*/
         autonomousInit(telemetry);
         lineColor.enableLed(true);
 
         //Delay And Team Selection
-        /*while(true) {
-            if (updateGamepads()) {
+		while(true) {
+			if (updateGamepads()) {
                 if (gamepad1.x) {
                     team = "Blue";
-                } else if (gamepad1.b) {
+					//dim.setLED(0, true);
+				} else if (gamepad1.b) {
                     team = "Red";
-                } else if (gamepad1.dpad_up) {
+					//dim.setLED(1, true);
+				} else if (gamepad1.dpad_up) {
                     delay += 1;
                 } else if (gamepad1.dpad_down) {
                     delay -= 1;
@@ -92,11 +77,25 @@ public class BumperTest extends SynchronousOpMode {
                 telemetry.addData("Delay", delay);
                 telemetry.updateNow();
             }
-        }*/
+		}
 
-        waitForStart();
+		mountainClimberMove = new Thread() {
+			public void run() {
+				while(endTime > System.currentTimeMillis()) {
+					if((endTime - 2000) < System.currentTimeMillis()) {
+						mountainClimber.setPosition(0.5);
+						break;
+					}
+				}
+			}
+		};
+		waitForStart();
+		mountainClimberMove.start();
+		Functions.waitFor(delay * 1000);
+		endTime = System.currentTimeMillis() + 30000;
 
-        if(opModeIsActive() && !isStopRequested()) {
+		while(opModeIsActive() && !isStopRequested() && endTime > System
+				.currentTimeMillis()) {
 			telemetry.clearDashboard();
 			//Starting based off of the delay
 			//sleep(delay * 1000);
@@ -110,10 +109,10 @@ public class BumperTest extends SynchronousOpMode {
             //turnRobotLeftBackwardDegrees(270, 0.5, 10000000000L);
             moveRobotBackwardTime(2.4, 0.3);
             Functions.waitFor(2000);
-            spinC(90, 0.5, 5000);
-            Functions.waitFor(3000);
-            spinCC(270, 0.5, 5000);
-            telemetry.addData("Status", "Done");
+			spinCGyroCorrection(90, 0.5, 5000);
+			Functions.waitFor(3000);
+			spinCCGyroCorrection(270, 0.5, 5000);
+			telemetry.addData("Status", "Done");
             telemetry.updateNow();
 			//spinRobotLeftDegrees(90,0.3,60000,telemetry);
             //spinRobotLeftDegrees(90, 0.3, 60000, telemetry);
@@ -143,8 +142,8 @@ public class BumperTest extends SynchronousOpMode {
 
         gyro.calibrate();
         gyro.setHeadingMode(
-                ModernRoboticsI2cGyro.HeadingMode.HEADING_CARTESIAN);
-        while (gyro.isCalibrating()) {
+				ModernRoboticsI2cGyro.HeadingMode.HEADING_CARTESIAN);
+		while (gyro.isCalibrating()) {
             telemetry.addData("gyroInit: ", "Calibrating Gyro");
             telemetry.updateNow();
         }
@@ -188,8 +187,9 @@ public class BumperTest extends SynchronousOpMode {
 
     public static void servoInit(){
         mountainClimber.setPosition(Functions.mountainClimberInitPosition);
-        mountainClimberRelease.setPosition(Functions.mountainClimberReleaseInitPosition);
-        tubeExtender.setPosition(Functions.tubeExtenderInitPosition);
+		mountainClimberRelease.setPosition(
+				Functions.mountainClimberReleaseClose);
+		tubeExtender.setPosition(Functions.tubeExtenderInitPosition);
         tubeTilt.setPosition(Functions.tubeTiltInitPosition);
         bumper.setPosition(Functions.bumperInitPosition);
     }
@@ -218,8 +218,8 @@ public class BumperTest extends SynchronousOpMode {
 
     public static void moveRobotBackwardTime(double seconds, double power) {
         moveRobotBackward(power, power);
-        Functions.waitFor((int)seconds * 1000);
-        stopRobot();
+		Functions.waitFor((int) seconds * 1000);
+		stopRobot();
     }
 
     public static void moveRobotForwardTimeGyro(int seconds, double power) {
@@ -618,8 +618,9 @@ public class BumperTest extends SynchronousOpMode {
         stopRobot();
     }
 
-    public static void spinC(int degrees , double power, long timeoutMill) {
-        long endTime = System.currentTimeMillis() + timeoutMill;
+	public static void spinCGyroCorrection(int degrees, double power, long
+			timeoutMill) {
+		long endTime = System.currentTimeMillis() + timeoutMill;
         int endPosition = gyro.getIntegratedZValue() - degrees;
         boolean control = false;
         resetEncoders(); // reset encoder and turn on run_to_position mode
@@ -639,8 +640,9 @@ public class BumperTest extends SynchronousOpMode {
         stopRobot();
     }
 
-    public static void spinCC(int degrees , double power, long timeoutMill) {
-        long endTime = System.currentTimeMillis() + timeoutMill;
+	public static void spinCCGyroCorrection(int degrees, double power, long
+			timeoutMill) {
+		long endTime = System.currentTimeMillis() + timeoutMill;
         int endPosition = gyro.getIntegratedZValue() + degrees;
         boolean control = false;
         resetEncoders(); // reset encoder and turn on run_to_position mode
@@ -659,6 +661,80 @@ public class BumperTest extends SynchronousOpMode {
         }
         stopRobot();
     }
+
+	public static void spinCGyroNoCorrection(int degrees, double power, long
+			timeoutMill) {
+		long endTime = System.currentTimeMillis() + timeoutMill;
+		int endPosition = gyro.getIntegratedZValue() - degrees;
+		boolean control = false;
+		resetEncoders(); // reset encoder and turn on run_to_position mode
+		leftWheel.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+		rightWheel.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+		spinRobotRight(power);
+		while(endTime > System.currentTimeMillis()) {
+			if(endPosition <= gyro.getIntegratedZValue()) {
+				break;
+			}
+		}
+		stopRobot();
+	}
+
+	public static void spinCCGyroNoCorrection(int degrees, double power, long
+			timeoutMill) {
+		long endTime = System.currentTimeMillis() + timeoutMill;
+		int endPosition = gyro.getIntegratedZValue() + degrees;
+		boolean control = false;
+		resetEncoders(); // reset encoder and turn on run_to_position mode
+		leftWheel.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+		rightWheel.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+		spinRobotLeft(power);
+		while(endTime > System.currentTimeMillis()) {
+			if(endPosition >= gyro.getIntegratedZValue()) {
+				break;
+			}
+		}
+		stopRobot();
+	}
+
+	public static void spinCTime(double seconds, double power) {
+		spinRobotRight(power);
+		Functions.waitFor((int) (seconds * 1000));
+		stopRobot();
+	}
+
+	public static void spinCCTime(double seconds, double power) {
+		spinRobotLeft(power);
+		Functions.waitFor((int) (seconds * 1000));
+		stopRobot();
+	}
+
+	public static void spinCRotations(double degrees, double power, long
+			timeout) {
+		long endTime = System.currentTimeMillis() + timeout;
+		int endPos = (int) (degrees * Functions.neveRestDegreeRatio);
+		rightWheel.setTargetPosition(-endPos);
+		leftWheel.setTargetPosition(endPos);
+		moveRobotForward(power, power);
+		while(endTime > System.currentTimeMillis()) {
+			if(!rightWheel.isBusy() && !leftWheel.isBusy()) {
+				break;
+			}
+		}
+	}
+
+	public static void spinCCRotations(double degrees, double power, long
+			timeout) {
+		long endTime = System.currentTimeMillis() + timeout;
+		int endPos = (int) (degrees * Functions.neveRestDegreeRatio);
+		rightWheel.setTargetPosition(endPos);
+		leftWheel.setTargetPosition(-endPos);
+		moveRobotForward(power, power);
+		while(endTime > System.currentTimeMillis()) {
+			if(!rightWheel.isBusy() && !leftWheel.isBusy()) {
+				break;
+			}
+		}
+	}
 
     //Moves the robot until the robot is above white by using the MR Color Sensor
     public static void stopAtWhite(double power, long timeout, TelemetryDashboardAndLog telemetry) {
@@ -704,11 +780,9 @@ public class BumperTest extends SynchronousOpMode {
 	}
 
 	public static void end() {
-		stopRobot();
-		rightWheel.close();
-		leftWheel.close();
-		sweeper.setPower(0);
-		sweeper.close();
+		rightWheel.setPowerFloat();
+		leftWheel.setPowerFloat();
+		sweeper.setPowerFloat();
 		lineColor.enableLed(false);
 		lineColor.close();
 	}

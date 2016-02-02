@@ -3,7 +3,6 @@ package org.usfirst.ftc.theintersect.code;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
-
 import org.swerverobotics.library.ClassFactory;
 import org.swerverobotics.library.SynchronousOpMode;
 
@@ -250,16 +249,23 @@ public class TeleOp extends SynchronousOpMode {
 
             idle();
         }
-    }
+		end();
+	}
 
 
 
 	public static void teleInit() {
-		mountainClimber.setPosition(Functions.mountainClimberInitPosition);
-		mountainClimberRelease.setPosition(
-				Functions.mountainClimberReleaseInitPosition);
+		mountainClimber.setPosition(Functions.mountainClimberTelePosition);
+		mountainClimberRelease
+				.setPosition(Functions.mountainClimberReleaseClose);
 		tubeExtender.setPosition(Functions.tubeExtenderInitPosition);
 		tubeTilt.setPosition(Functions.tubeTiltInitPosition);
 		bumper.setPosition(Functions.bumperInitPosition);
+	}
+
+	public static void end() {
+		rightWheel.setPowerFloat();
+		leftWheel.setPowerFloat();
+		sweeper.setPowerFloat();
 	}
 }

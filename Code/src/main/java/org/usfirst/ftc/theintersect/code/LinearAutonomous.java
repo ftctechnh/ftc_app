@@ -2,15 +2,9 @@ package org.usfirst.ftc.theintersect.code;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.UltrasonicSensor;
+import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.robocol.Telemetry;
-
 import org.swerverobotics.library.ClassFactory;
-import org.swerverobotics.library.TelemetryDashboardAndLog;
 
 import java.util.Arrays;
 
@@ -59,10 +53,10 @@ public class LinearAutonomous extends LinearOpMode {
 
 
 		autonomousInit(telemetry);
-		/*ClassFactory.createEasyMotorController(this, linearSlideL,
+		ClassFactory.createEasyMotorController(this, linearSlideL,
 				linearSlideR);
 		ClassFactory.createEasyMotorController(this, rightWheel, leftWheel);
-		ClassFactory.createEasyMotorController(this, sweeper, null);*/
+		ClassFactory.createEasyMotorController(this, sweeper, null);
 		ClassFactory.createEasyServoController(this, Arrays.asList(mountainClimberRelease, mountainClimber, tubeExtender, tubeTilt, bumper));
 		ClassFactory.createSwerveColorSensor(this, lineColor);
 
@@ -175,8 +169,9 @@ public class LinearAutonomous extends LinearOpMode {
 
     public static void servoInit(){
         mountainClimber.setPosition(Functions.mountainClimberInitPosition);
-        mountainClimberRelease.setPosition(Functions.mountainClimberReleaseInitPosition);
-        tubeExtender.setPosition(Functions.tubeExtenderInitPosition);
+		mountainClimberRelease.setPosition(Functions
+				.mountainClimberTelePosition);
+		tubeExtender.setPosition(Functions.tubeExtenderInitPosition);
         tubeTilt.setPosition(Functions.tubeTiltInitPosition);
         bumper.setPosition(Functions.bumperInitPosition);
     }
@@ -597,12 +592,8 @@ public class LinearAutonomous extends LinearOpMode {
                     turnRobotRightForward(0.1);
                 }
                 while (!detectWhite(telemetry)){
-                    if(right = false){
-                        right = true ;
-                    } else{
-                        right = false;
-                    }
-                }
+					right = right = false;
+				}
                 right = true;
             }
         }
@@ -614,17 +605,9 @@ public class LinearAutonomous extends LinearOpMode {
         int red = lineColor.red();
         int green = lineColor.green();
         int blue = lineColor.blue();
-        if (red >Functions.whiteThreshold && blue > Functions.whiteThreshold && green > Functions.whiteThreshold){
-            /*telemetry.addData("Red", red);
-            telemetry.addData("Blue" , blue);
-            telemetry.addData("Green", green);
-            telemetry.addData("Average" , average);
-            telemetry.addData("Debug", "Success");
-            telemetry.update();*/
-            return true;
-        }
-        return false;
-    }
+		return red > Functions.whiteThreshold && blue > Functions.whiteThreshold
+				&& green > Functions.whiteThreshold;
+	}
 
 	public static void end() {
 		stopRobot();
