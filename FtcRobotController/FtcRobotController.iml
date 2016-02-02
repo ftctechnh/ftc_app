@@ -94,8 +94,8 @@
     <orderEntry type="library" exported="" name="android-support-v4" level="project" />
     <orderEntry type="library" exported="" name="Hardware-release-" level="project" />
     <orderEntry type="library" exported="" name="FtcCommon-release-" level="project" />
-    <orderEntry type="library" exported="" name="usb-Google Inc.:Google APIs:19" level="project" />
-    <orderEntry type="library" exported="" name="effects-Google Inc.:Google APIs:19" level="project" />
-    <orderEntry type="library" exported="" name="maps-Google Inc.:Google APIs:19" level="project" />
+    <orderEntry type="library" exported="" name="_Users_rayzhang_Library_Android_sdk_add_ons_addon_google_apis_google_19_1_libs_usb_jar-Google Inc.:Google APIs:19" level="project" />
+    <orderEntry type="library" exported="" name="_Users_rayzhang_Library_Android_sdk_add_ons_addon_google_apis_google_19_1_libs_effects_jar-Google Inc.:Google APIs:19" level="project" />
+    <orderEntry type="library" exported="" name="_Users_rayzhang_Library_Android_sdk_add_ons_addon_google_apis_google_19_1_libs_maps_jar-Google Inc.:Google APIs:19" level="project" />
   </component>
 </module>

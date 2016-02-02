@@ -78,11 +78,11 @@ public class PushBotManualSensors extends PushBotTelemetrySensors
         //
         float l_gp1_left_stick_y = -gamepad1.left_stick_y;
         float l_left_drive_power
-            = (float)scale_motor_power (l_gp1_left_stick_y);
+            = scale_motor_power (l_gp1_left_stick_y);
 
         float l_gp1_right_stick_y = -gamepad1.right_stick_y;
         float l_right_drive_power
-            = (float)scale_motor_power (l_gp1_right_stick_y);
+            = scale_motor_power (l_gp1_right_stick_y);
 
         set_drive_power (l_left_drive_power, l_right_drive_power);
 
@@ -139,7 +139,7 @@ public class PushBotManualSensors extends PushBotTelemetrySensors
         {
             v_raise_arm_automatically = false;
 
-            l_arm_command = (float)scale_motor_power (l_gp2_left_stick_y);
+            l_arm_command = scale_motor_power (l_gp2_left_stick_y);
         }
         m_left_arm_power (l_arm_command);
 
