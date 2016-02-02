@@ -37,6 +37,7 @@ public class SyncMotorServoTest extends SynchronousOpMode
             servoPosition += 1. / 256.;
             if (servoPosition >= 1)
                 servoPosition = 0;
+
             servo.setPosition(servoPosition);
 
             motor.setPower(0.1);
@@ -44,9 +45,6 @@ public class SyncMotorServoTest extends SynchronousOpMode
             telemetry.addData("position", servoPosition);
             telemetry.update();
             this.idle();
-
-            // paranoia about swamping motor controller
-            Thread.sleep(20);
             }
         }
     }
