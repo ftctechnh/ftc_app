@@ -42,9 +42,10 @@ public class MasterLinear extends LinearOpMode {
         DcMotor leftMotor = hardwareMap.dcMotor.get("motorLeft");
         DcMotor rightMotor = hardwareMap.dcMotor.get("motorRight");
         //Other
-        //DcMotor slideMotors = hardwareMap.dcMotor.get("slider");
-        WalnutServo beltServo = new WalnutServo(hardwareMap.servo.get("belt"),0.5);
-        WalnutServo hookServo = new WalnutServo(hardwareMap.servo.get("hook"),0);
+        //DcMotor slideRightMotor = hardwareMap.dcMotor.get("slider");
+        WalnutServo belt = new WalnutServo(hardwareMap.servo.get("belt"),0.5);
+        WalnutServo doors = new WalnutServo(hardwareMap.servo.get("doors"),1);
+        WalnutServo hook = new WalnutServo(hardwareMap.servo.get("hook"),0);
         //initialize assignment phase
         DistanceMotor leftDrive = new DistanceMotor(leftMotor,"Left",true, false,4,1,1440);
         DistanceMotor rightDrive = new DistanceMotor(rightMotor,"Right",true,true,4,1,1440);
@@ -55,8 +56,9 @@ public class MasterLinear extends LinearOpMode {
         LinearControlScheme items = new LinearControlScheme();
         items.add(leftDrive);
         items.add(rightDrive);
-        items.add(beltServo);
-        items.add(hookServo);
+        items.add(belt);
+        items.add(hook);
+        items.add(doors);
         //items.add(slider);
         //Wait for Start
         try{
@@ -79,9 +81,9 @@ public class MasterLinear extends LinearOpMode {
             //slider.operate(3.25, 1);
             //slider.waitForCompletion();
             //Deposit Climber
-            beltServo.operate(0);
+            belt.operate(0);
             sleep(1500);
-            beltServo.operate(0.5);
+            belt.operate(0.5);
             //Drive some more???
             walnutDrive.linearDrive(40, 1);
             walnutDrive.waitForCompletion();
@@ -93,9 +95,9 @@ public class MasterLinear extends LinearOpMode {
             walnutDrive.tankTurn(turnorientation*-90,1);
             walnutDrive.waitForCompletion();
             walnutDrive.linearDrive(100,1);
-            hookServo.operate(1);
+            hook.operate(1);
             walnutDrive.waitForCompletion();
-	    items.stop();
+	        items.stop();
         }
         catch(InterruptedException e)
         {
