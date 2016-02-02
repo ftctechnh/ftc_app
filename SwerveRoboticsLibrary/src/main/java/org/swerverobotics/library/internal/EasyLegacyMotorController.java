@@ -3,6 +3,7 @@ package org.swerverobotics.library.internal;
 import android.util.Log;
 
 import com.qualcomm.hardware.hitechnic.HiTechnicNxtDcMotorController;
+import com.qualcomm.hardware.hitechnic.HiTechnicNxtServoController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.hardware.usb.RobotUsbModule;
@@ -20,7 +21,7 @@ import static junit.framework.Assert.*;
  * @see org.swerverobotics.library.ClassFactory#createEasyLegacyMotorController(OpMode, DcMotor, DcMotor)
  * @see org.swerverobotics.library.SynchronousOpMode#useExperimentalThunking
  */
-public final class EasyLegacyMotorController implements DcMotorController, IThunkWrapper<DcMotorController>, VoltageSensor, IOpModeStateTransitionEvents, Engagable
+public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl implements DcMotorController, IThunkWrapper<DcMotorController>, VoltageSensor, IOpModeStateTransitionEvents, Engagable
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -89,11 +90,8 @@ public final class EasyLegacyMotorController implements DcMotorController, IThun
 
     private EasyLegacyMotorController(OpMode context, II2cDeviceClient ii2cDeviceClient, DcMotorController target)
         {
-        HiTechnicNxtDcMotorController legacyTarget = (HiTechnicNxtDcMotorController)target;
-
-        I2cController module      = legacyTarget.getI2cController();
-        int          targetPort   = legacyTarget.getPort();
-        this.helper          = new I2cDeviceReplacementHelper<DcMotorController>(context, this, target, module, targetPort);
+        super(((I2cControllerPortDevice)target).getI2cController(), ((I2cControllerPortDevice)target).getPort());
+        this.helper          = new I2cDeviceReplacementHelper<DcMotorController>(context, this, target);
 
         this.context         = context;
         this.i2cDeviceClient = ii2cDeviceClient;

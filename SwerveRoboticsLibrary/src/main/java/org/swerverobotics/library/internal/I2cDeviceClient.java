@@ -128,7 +128,6 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
 
         this.i2cDevice              = i2cDevice;
         this.controller             = i2cDevice.getI2cController();
-        this.robotUsbModule         = (this.controller instanceof RobotUsbModule) ? (RobotUsbModule)this.controller : null;
         this.isEngaged              = false;
         this.closing                = false;
         this.isHooked               = false;
@@ -147,13 +146,21 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
 
         this.readWindow             = null;
 
+        if (this.controller instanceof RobotUsbModule)
+            {
+            this.robotUsbModule = (RobotUsbModule)this.controller;
+            this.robotUsbModule.registerCallback(this.callback);
+            }
+        else
+            throw new IllegalArgumentException("I2cController must also be a RobotUsbModule");
+
         this.i2cDevice.registerForPortReadyBeginEndCallback(this.callback);
 
         if (closeOnOpModeStop)
             RobotStateTransitionNotifier.register(context, this);
         }
 
-    void initializeFromController()
+    void attachToController()
     // All the state that we maintain that is tied to the state of our controller
         {
         this.readCache      = this.i2cDevice.getI2cReadCache();
@@ -439,16 +446,6 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         enableReadsAndWrites();
         }
 
-    boolean isControllerArmed()
-        {
-        if (controller instanceof RobotUsbModule)
-            {
-            RobotUsbModule module = (RobotUsbModule)controller;
-            return module.getArmingState() == RobotUsbModule.ARMINGSTATE.ARMED;
-            }
-        return true;    // REVIEW
-        }
-
     //----------------------------------------------------------------------------------------------
     // HardwareDevice
     //----------------------------------------------------------------------------------------------
@@ -691,12 +688,18 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         }
     void acquireReaderLockShared() throws InterruptedException
         {
-        this.readerWriterGate.readLock().lockInterruptibly();
-        this.readerWriterCount.incrementAndGet();
+        try {
+            this.readerWriterGate.readLock().lockInterruptibly();
+            this.readerWriterCount.incrementAndGet();   // for debugging
+            }
+        catch (InterruptedException e)
+            {
+            throw e;    // for debugging
+            }
         }
     void releaseReaderLockShared()
         {
-        this.readerWriterCount.decrementAndGet();
+        this.readerWriterCount.decrementAndGet();       // for debugging
         this.readerWriterGate.readLock().unlock();
         }
 
@@ -982,7 +985,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         FROM_USER_WRITE
         }
 
-    private class Callback implements I2cController.I2cPortReadyCallback, I2cController.I2cPortReadyBeginEndNotifications
+    private class Callback implements I2cController.I2cPortReadyCallback, I2cController.I2cPortReadyBeginEndNotifications, RobotUsbModule.ArmingStateCallback
         {
         //------------------------------------------------------------------------------------------
         // State, kept in member variables so we can divvy the updateStateMachines() logic
@@ -1000,10 +1003,8 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         WRITE_CACHE_STATUS prevWriteCacheStatus = WRITE_CACHE_STATUS.IDLE;
         MODE_CACHE_STATUS  prevModeCacheStatus  = MODE_CACHE_STATUS.IDLE;
 
-        boolean onCallbacksBeginLeftReadsAndWritesEnabled = true;
-
         //------------------------------------------------------------------------------------------
-        // Main entry points
+        // I2cController.I2cPortReadyCallback
         //------------------------------------------------------------------------------------------
 
         @Override public void portIsReady(int port)
@@ -1014,10 +1015,54 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
             updateStateMachines(UPDATE_STATE_MACHINE.FROM_CALLBACK);
             }
 
+        //------------------------------------------------------------------------------------------
+        // RobotUsbModule.ArmingStateCallback
+        //------------------------------------------------------------------------------------------
+
+        @Override
+        public void onModuleStateChange(RobotUsbModule robotUsbModule, RobotUsbModule.ARMINGSTATE armingstate)
+            {
+            switch (armingstate)
+                {
+                case ARMED:
+                    log(Log.VERBOSE, "onArmed ...");
+                    doModuleIsArmedWork();
+                    log(Log.VERBOSE, "... onArmed");
+                    break;
+                case DISARMED:
+                    // Unnecessary: we WILL get the onPortIsReadyCallbacksEnd() notification;
+                    break;
+                }
+            }
+
+        //------------------------------------------------------------------------------------------
+        // I2cController.I2cPortReadyBeginEndNotifications
+        //------------------------------------------------------------------------------------------
+
         @Override public void onPortIsReadyCallbacksBegin(int port)
             {
+            // We get this callback when we register for portIsReadyCallbacks and our module
+            // is either armed or pretending. If it's armed already, we're not going to get
+            // a notification that it changes into the armed state. So hook up now! Otherwise,
+            // we'll wait until the
+            log(Log.VERBOSE, "doPortIsReadyCallbackBeginWork ...");
             try {
-                log(Log.VERBOSE, "onPortIsReadyCallbacksBegin ...");
+                if (robotUsbModule.getArmingState() == RobotUsbModule.ARMINGSTATE.ARMED)
+                    {
+                    doModuleIsArmedWork();
+                    }
+                }
+            finally
+                {
+                log(Log.VERBOSE, "... doPortIsReadyCallbackBeginWork complete");
+                }
+            }
+
+
+        void doModuleIsArmedWork()
+            {
+            try {
+                log(Log.VERBOSE, "doModuleIsArmedWork ...");
                 synchronized (engagementLock)
                     {
                     disableReadsAndWrites();
@@ -1025,26 +1070,15 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                     unhook();
 
                     // REVIEW: what locking is needed for this?
-                    I2cDeviceClient.this.initializeFromController();
+                    I2cDeviceClient.this.attachToController();
 
-                    // Start up again on the new guy if we should
-                    if (isControllerArmed())
-                        {
-                        adjustHooking();
-                        enableReadsAndWrites();
-                        onCallbacksBeginLeftReadsAndWritesEnabled = true;
-                        }
-                    else
-                        {
-                        // No point in reenabling against a pretender; that just causes trouble.
-                        // Bit of a hack, yes, as it SHOULD work. But that's just so hard...
-                        onCallbacksBeginLeftReadsAndWritesEnabled = false;
-                        }
+                    adjustHooking();
+                    enableReadsAndWrites();
                     }
                 }
             finally
                 {
-                log(Log.VERBOSE, "... onPortIsReadyCallbacksBegin complete");
+                log(Log.VERBOSE, "... doModuleIsArmedWork complete");
                 }
             }
 
@@ -1059,8 +1093,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
 
                 synchronized (engagementLock)
                     {
-                    if (onCallbacksBeginLeftReadsAndWritesEnabled)
-                        disableReadsAndWrites();
+                    disableReadsAndWrites();
 
                     forceDrainReadersAndWriters();
                     unhook();
@@ -1073,6 +1106,10 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                 log(Log.VERBOSE, "... onPortIsReadyCallbacksEnd complete");
                 }
             }
+
+        //------------------------------------------------------------------------------------------
+        // Other entry points
+        //------------------------------------------------------------------------------------------
 
         // The user has new data for us to write. We could do nothing, in which case the data
         // will go out at the next callback cycle just fine, or we could try to push it out
@@ -1202,8 +1239,18 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                     if (writeCacheStatus == WRITE_CACHE_STATUS.QUEUED)
                         {
                         writeCacheStatus = WRITE_CACHE_STATUS.IDLE;
-                        // Our write mode status should have been reported back to us
-                        assertTrue(!BuildConfig.DEBUG || !isHooked || !newReadsAndWritesAllowed() || i2cDevice.isI2cPortInWriteMode());
+                        // Our write mode status should have been reported back to us. And it
+                        // always will, so long as our module remains operational.
+                        //
+                        // But that might not happen *right* at the moment our module disconnects:
+                        // we've lost communication; we're not going to see the write mode status
+                        // reported back, but the hole module-disconnect-handing sequence has yet to
+                        // tear everything down in response.
+                        //
+                        // There doesn't seem to be any way to reliably do an assert, as that loss
+                        // of connection might have not yet got through to *anybody*.
+                        //
+                        // assertTrue(!BuildConfig.DEBUG || !isHooked || !newReadsAndWritesAllowed() || i2cDevice.isI2cPortInWriteMode());
                         }
 
                     //--------------------------------------------------------------------------

@@ -17,7 +17,7 @@ import static org.swerverobotics.library.internal.EasyModernServoController.*;
 /**
  * An alternative implementation of a Legacy Servo controller.
  */
-public class EasyLegacyServoController implements ServoController, IOpModeStateTransitionEvents, Engagable
+public class EasyLegacyServoController extends I2cControllerPortDeviceImpl implements ServoController, IOpModeStateTransitionEvents, Engagable
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -63,11 +63,8 @@ public class EasyLegacyServoController implements ServoController, IOpModeStateT
 
     private EasyLegacyServoController(OpMode context, II2cDeviceClient ii2cDeviceClient, ServoController target)
         {
-        HiTechnicNxtServoController legacyTarget = (HiTechnicNxtServoController)target;
-        I2cController module      = legacyTarget.getI2cController();
-        int          targetPort   = legacyTarget.getPort();
-        this.helper          = new I2cDeviceReplacementHelper<ServoController>(context, this, target, module, targetPort);
-
+        super(((I2cControllerPortDevice)target).getI2cController(), ((I2cControllerPortDevice)target).getPort());
+        this.helper          = new I2cDeviceReplacementHelper<ServoController>(context, this, target);
         this.i2cDeviceClient = ii2cDeviceClient;
         this.target          = target;
         this.servos          = new LinkedList<Servo>();
