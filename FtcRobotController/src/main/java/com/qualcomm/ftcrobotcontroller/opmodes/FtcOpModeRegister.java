@@ -60,7 +60,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("Dino", Dino.class);
     manager.register("Dino_auto",Dino_auto.class);
     manager.register("Thor", Thor.class);
-    manager.register("Thor_Auto", Thor.class);
+    manager.register("Thor_Auto", Thor_auto.class);
     /*
      * Uncomment any of the following lines if you want to register an op mode.
      */
