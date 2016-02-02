@@ -177,6 +177,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         this.readWindowSentToController = null;
         this.readWindowSentToControllerInitialized = false;
 
+        // So the callback will do it's thing to refresh based on the now-current window
         this.readWindowChanged = true;
         }
 
@@ -410,6 +411,8 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
 
                 // Lie and say that the data in the read cache is valid
                 readCacheStatus = READ_CACHE_STATUS.VALID_QUEUED;
+                readWindowChanged = false;
+                assertTrue(!BuildConfig.DEBUG || readCacheIsValid());
 
                 // Actually wake folk up
                 callbackLock.notifyAll();
