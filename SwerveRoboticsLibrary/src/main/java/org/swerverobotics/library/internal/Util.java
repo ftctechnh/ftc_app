@@ -630,14 +630,14 @@ public class Util
 
     public static void handleCapturedInterrupt(InterruptedException e)
         {
-        handleCapturedException((Exception)e);
+        Thread.currentThread().interrupt();
         }
 
     public static void handleCapturedException(Exception e)
         {
-        if (e instanceof InterruptedException || e instanceof RuntimeInterruptedException);
+        if (e instanceof InterruptedException || e instanceof RuntimeInterruptedException)
             Thread.currentThread().interrupt();
-
-        throw SwerveRuntimeException.wrap(e);
+        else
+            throw SwerveRuntimeException.wrap(e);
         }
     }

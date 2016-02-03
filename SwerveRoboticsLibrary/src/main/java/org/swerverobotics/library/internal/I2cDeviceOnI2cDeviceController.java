@@ -51,7 +51,7 @@ public final class I2cDeviceOnI2cDeviceController implements II2cDevice
 
     @Override public String getDeviceName()
         {
-        return String.format("I2C(0x%02X)", this.i2cAddr8Bit);
+        return String.format("Swerve I2cDeviceOnI2cController");
         }
     
     @Override public String getConnectionInfo()
@@ -71,6 +71,22 @@ public final class I2cDeviceOnI2cDeviceController implements II2cDevice
     @Override public void close()
         {
         // There's nothing in particular we need to do to shut this down.
+        }
+
+    //----------------------------------------------------------------------------------------------
+    // I2cControllerPortDevice
+    //----------------------------------------------------------------------------------------------
+
+    @Override
+    public I2cController getI2cController()
+        {
+        return this.controller;
+        }
+
+    @Override
+    public int getPort()
+        {
+        return this.port;
         }
 
     //----------------------------------------------------------------------------------------------
@@ -161,9 +177,28 @@ public final class I2cDeviceOnI2cDeviceController implements II2cDevice
         this.controller.deregisterForPortReadyCallback(port);
         }
 
+    @Override public I2cController.I2cPortReadyCallback getI2cPortReadyCallback()
+        {
+        return this.controller.getI2cPortReadyCallback(port);
+        }
+
     @Override public void registerForI2cPortReadyCallback(I2cController.I2cPortReadyCallback callback)
         {
         this.controller.registerForI2cPortReadyCallback(callback, port);
         }
 
+    @Override public void registerForPortReadyBeginEndCallback(I2cController.I2cPortReadyBeginEndNotifications callback)
+        {
+        this.controller.registerForPortReadyBeginEndCallback(callback, port);
+        }
+
+    @Override public I2cController.I2cPortReadyBeginEndNotifications getPortReadyBeginEndCallback()
+        {
+        return this.controller.getPortReadyBeginEndCallback(port);
+        }
+
+    @Override public void deregisterForPortReadyBeginEndCallback()
+        {
+        this.controller.deregisterForPortReadyBeginEndCallback(port);
+        }
     }

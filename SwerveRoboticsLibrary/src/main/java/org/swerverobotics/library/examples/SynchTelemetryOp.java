@@ -1,17 +1,16 @@
 package org.swerverobotics.library.examples;
 
 import org.swerverobotics.library.*;
-import org.swerverobotics.library.interfaces.Autonomous;
 import org.swerverobotics.library.interfaces.Disabled;
 import org.swerverobotics.library.interfaces.TeleOp;
 
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.*;
 
 /**
  * An example that illustrates use of the telemetry dashboard and log in a synchronous OpMode
  */
 @TeleOp(name="Telemetry (sync)", group="Swerve Examples")
-@Disabled
 public class SynchTelemetryOp extends SynchronousOpMode
     {
     @Override protected void main() throws InterruptedException
@@ -21,8 +20,15 @@ public class SynchTelemetryOp extends SynchronousOpMode
         this.telemetry.log.setDisplayOldToNew(false);   // And we show the log in new to old order, just because we want to
         this.telemetry.log.setCapacity(10);             // We can control the number of lines used by the log
 
-        // Wait until we've been given the ok to go
-        this.waitForStart();
+        // Wait until we've been given the ok to go. For fun, put out some
+        // telemetry while we're doing so.
+        while (!isStarted())
+            {
+            this.telemetry.addData("time", format(elapsed));
+            this.telemetry.update();
+            this.idle();
+            }
+
         final int loopCountStart = getLoopCount();
 
         // Go go gadget robot!
@@ -37,8 +43,9 @@ public class SynchTelemetryOp extends SynchronousOpMode
 
             // Update the telemetry dashboard with fresh values
             this.telemetry.addData("time",  format(elapsed));
-            this.telemetry.addData("count", getLoopCount() - loopCountStart);
-            this.telemetry.addData("ms/loop",  format(elapsed.time()*1000.0 / (getLoopCount() - loopCountStart)) + "ms");
+            this.telemetry.addData("count", format(getLoopCount() - loopCountStart));
+            this.telemetry.addData("ms/loop", format(elapsed.time() * 1000.0 / (getLoopCount() - loopCountStart)) + "ms");
+            this.telemetry.addData("voltage", format(getBatteryVoltage()));
 
             // Update driver station and wait until there's something useful to do
             this.telemetry.update();
@@ -54,5 +61,24 @@ public class SynchTelemetryOp extends SynchronousOpMode
     String format(double d)
         {
         return String.format("%.1f", d);
+        }
+    String format(int i)
+        {
+        return String.format("%d", i);
+        }
+
+    // Compute the current battery voltage, just for fun
+    double getBatteryVoltage()
+        {
+        double result = Double.POSITIVE_INFINITY;
+        for (VoltageSensor sensor : this.hardwareMap.voltageSensor)
+            {
+            double voltage = sensor.getVoltage();
+            if (voltage > 0)
+                {
+                result = Math.min(result, voltage);
+                }
+            }
+        return result;
         }
     }

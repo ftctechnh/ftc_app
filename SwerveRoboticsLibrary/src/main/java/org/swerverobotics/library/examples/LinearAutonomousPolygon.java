@@ -14,7 +14,7 @@ import org.swerverobotics.library.interfaces.*;
  * This OpMode expects two motors, named 'motorLeft' and 'motorRight' respectively. The
  * OpMode works with both legacy and modern motor controllers.
  */
-@Autonomous(name="Auto Polygon (Linear)", group="Swerve Examples")
+@Autonomous(name="Auto Polygon (Linear, Easy)", group="Swerve Examples")
 @Disabled
 public class LinearAutonomousPolygon extends LinearOpMode
     {
