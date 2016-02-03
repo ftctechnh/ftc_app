@@ -202,7 +202,6 @@ public class FtcRobotControllerActivity extends Activity {
         return false;
       }
     });
-
     wifiLock.acquire();
   }
 
