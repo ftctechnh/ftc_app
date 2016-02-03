@@ -79,6 +79,7 @@ public class TwoWheelTest extends OpMode {
 
  */
         // clip the right/left values so that the values never exceed +/- 1
+        /*
         right1 = Range.clip(right1, -1, 1);
         left1 = Range.clip(left1, -1, 1);
         right2 = Range.clip(right2, -1, 1);
@@ -91,9 +92,11 @@ public class TwoWheelTest extends OpMode {
         right2 = (float)scaleInput(right2);
         left2 =  (float)scaleInput(left2);
 
+
         // write the values to the motors
         motorLeft1.setPower(right1);
         motorRight1.setPower(right2);
+        */
 
 		/*
 		 * Send telemetry data back to driver station. Note that if we are using
@@ -107,7 +110,7 @@ public class TwoWheelTest extends OpMode {
         telemetry.addData("left2 tgt pwr",  "left2  pwr: " + String.format("%.2f", left2));
         telemetry.addData("right2 tgt pwr", "right2 pwr: " + String.format("%.2f", right2));
 */
-        telemetry.addData("rightTrigger tgt power" + )
+        //telemetry.addData("rightTrigger tgt power");
 
     }
 
