@@ -1,6 +1,7 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 /**
  * Created by Kaitlin on 1/15/16.
@@ -8,53 +9,44 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 public class OpModeAutoTrial extends OpMode implements DriverInterface
 {
     CompBotOpMode compBot;
-    int step;
+     int step;
 
     @Override
     public void init()
     {
-        telemetry.addData("initBegin", -2);
         compBot = new CompBotOpMode(hardwareMap);
+        compBot.stop();
         step = 1;
-        telemetry.addData("initEnd", -1);
+        telemetry.addData("init",0);
     }
 
     @Override
     public void loop()
     {
-        telemetry.addData("begin", 0);
-        telemetry.addData("encoderValue = ", compBot.getRightMotor().getCurrentPosition());
-        if(compBot.doneWithPrev())
-        {
-            telemetry.addData("firstStep ", 1);
-            switch(step)
-            {
-                case 1:
-                    compBot.moveStraightEncoders(5, (float).9);
-                    telemetry.addData("firstCase ", 2);
-                    break;
-
-                case 2:
-                    compBot.moveStraightEncoders(-5,(float).9);
-                    telemetry.addData("secondCase ", 3);
-                    break;
-                case 3:
-                    compBot.moveStraightEncoders(5,(float).9);
-                    telemetry.addData("thirdCase ", 4);
+                    telemetry.addData("move forward 2", 3);
+                    //compBot.moveStraightEncoders(5, (float) .9);
+                    //compBot.stop();
                     break;
                 default:
-                    compBot.stop();
-                    telemetry.addData("fourthCase ", 5);
+                    telemetry.addData("default", step);
+                    //compBot.stop();
                     break;
             }
             step++;
             telemetry.addData("stepped ", 6);
         }
+        else
+        {
+            telemetry.addData("running step",step);
+            telemetry.addData("Current is", compBot.returnCurrent());
+            telemetry.addData("Target is", compBot.returnTarget());
+        }
+
     }
 
     @Override
     public void moveStraightEncoders(float inches, float speed) { }
 
-    @Override
+
     public void spinOnCenter(float degrees, float speed) { }
 }
