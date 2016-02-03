@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -200,6 +201,21 @@ public class SensorAuton extends OpMode {
         }
 
         if (state == 4) {
+            double reflection = 0.0;
+
+            reflection = tbc.light1.getLightDetected();
+
+            if (reflection < 0.0) {
+                tbc.setMotorRLeftPower(0.5f);
+                tbc.setMotorFLeftPower(0.5f);
+                tbc.setMotorRRightPower(0.5f);
+                tbc.setMotorFRightPower(0.5f);
+            } else if (reflection == 0.0) {
+                state = 5;
+            }
+        }
+
+        if (state == 5) {
 
             double s4elapsed = mRuntime.time() - s4starttime;
 
@@ -211,13 +227,13 @@ public class SensorAuton extends OpMode {
                 tbc.setButtonServoSpeed(tbc.buttonServoSpeed);
 
                 Log.d("EncoderAuton", "state 4; next state is 5");
-                state = 5;
+                state = 6;
                 s5starttime = mRuntime.time();
             }
         }
 
         Double climberNewPos = tbc.climberPosition;
-        if (state == 5) {
+        if (state == 6) {
             double s5elapsed = mRuntime.time() - s5starttime; // [MPH - where does s4starttime get set! ?]
 
             climberNewPos = tbc.climberPosition - climberDelta;
@@ -226,11 +242,11 @@ public class SensorAuton extends OpMode {
 
             if (s5elapsed > 10.0) {
                 Log.d("EncoderAuton", "state 5; next state is 6");
-                state = 6;
+                state = 7;
             }
         }
 
-        if (state == 6) {
+        if (state == 7) {
             tbc.setClimberPosition(0.0);
         }
 

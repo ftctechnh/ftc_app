@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
+import com.qualcomm.robotcore.hardware.LightSensor;
 
 /**
  * Created by mhaeberli on 12/3/15.
@@ -83,6 +84,7 @@ public class tbc {
     public static DcMotor motorPusher = null;
 
     public static ColorSensor sensorRGB = null;
+    public static LightSensor light1 = null;
 
     public static GyroSensor sensorGyro = null;
 
@@ -227,6 +229,12 @@ public class tbc {
             sensorRGB = hardwareMap.colorSensor.get("color");
             // turn off LED of light sensor.
             sensorRGB.enableLed(false);
+        } catch (Exception ex) {
+        }
+
+        try {
+            light1 = hardwareMap.lightSensor.get("light1");
+            light1.enableLed(true);
         } catch (Exception ex) {
         }
 

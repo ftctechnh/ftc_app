@@ -1,8 +1,3 @@
-/**
- * Created by edengh on 10/6/15.
- */
-//includes ramp pusher
-
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -38,6 +33,7 @@ public class TeleOpTankTread extends OpMode {
     double mtapeDelta = 0.001;
     double climberDelta = 0.005;
     double snowplowDelta = 0.005;
+    double reflection;
 
     float servoInput = 0.5f;
     float bservoSpeed = 0.5f;
@@ -95,6 +91,7 @@ public class TeleOpTankTread extends OpMode {
 
         tbc.setDriveMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
 
+        reflection = tbc.light1.getLightDetected();
 		/*
 		 * Gamepad 1
 		 *
@@ -230,6 +227,7 @@ public class TeleOpTankTread extends OpMode {
         telemetry.addData("Text", "*** Robot Data***");
         // telemetry.addData("arm", "arm:  " + String.format("%.2f", armPosition));
         // telemetry.addData("claw", "claw:  " + String.format("%.2f", clawPosition));
+        telemetry.addData("light", "light: " + String.format("%d", reflection));
         telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", left));
         telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));
         telemetry.addData("servo in",  "servo in: " + String.format("%.2f", servoInput));
