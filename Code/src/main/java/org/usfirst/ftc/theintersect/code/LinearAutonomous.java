@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.robocol.Telemetry;
 import org.swerverobotics.library.ClassFactory;
+import org.swerverobotics.library.TelemetryDashboardAndLog;
 
 import java.util.Arrays;
 
@@ -97,7 +98,7 @@ public class LinearAutonomous extends LinearOpMode {
             moveRobotBackwardTime(2.4, 0.3);
             sleep(2000);
             spinRobotRightDegrees(90,0.3,10000);
-            //followLine(telemetry);
+            followLine(telemetry);
             //moveRobotBackwardRotationsGyro(1500, 0.5, 10000, telemetry);
             telemetry.addData("Status" , "done");
 			//spinRobotLeftDegrees(90,0.3,60000,telemetry);
@@ -581,33 +582,56 @@ public class LinearAutonomous extends LinearOpMode {
         }
 	}
 
-    public static void followLine(Telemetry telemetry){
-        boolean right = true;
-        boolean following = true;
-        while(following && ultrasonic.getUltrasonicLevel()>5){
-            if(detectWhite(telemetry)){
-                if(right = false){
-                    turnRobotLeftForward(0.1);
-                } else{
-                    turnRobotRightForward(0.1);
-                }
-                while (!detectWhite(telemetry)){
-					right = right = false;
-				}
-                right = true;
-            }
-        }
-
+    public enum Position {
+        LEFT,
+        CENTER,
+        RIGHT
     }
 
 
-    public static boolean detectWhite(Telemetry telemetry) {
-        int red = lineColor.red();
-        int green = lineColor.green();
-        int blue = lineColor.blue();
-		return red > Functions.whiteThreshold && blue > Functions.whiteThreshold
-				&& green > Functions.whiteThreshold;
-	}
+    public static void followLine(Position previousPosition, boolean right ,Telemetry telemetry) {
+
+        boolean white;
+        Position currentPosition = Position.CENTER;
+
+        while (ultrasonic.getUltrasonicLevel() > 5) {
+            white = detectWhite(telemetry);
+            switch (currentPosition) {
+                case LEFT: //on the  left
+                    turnRobotRightForward(0.1);
+                    if (white) {
+                        previousPosition = Position.LEFT;
+                        currentPosition = Position.CENTER; // move to center
+                    }
+                    break;
+
+                case CENTER:
+                    if (!white) {
+                        if (previousPosition == Position.LEFT) {
+                            turnRobotRightForward(0.1);
+                            currentPosition = Position.RIGHT;
+                        } else {
+                            turnRobotLeftForward();
+                            currentPosition = Position.LEFT;
+                        }
+                        break;
+                    }
+
+                case RIGHT:
+                    turnRobotLeftForward(0.1);
+                    if (white) {
+                        previousPosition = Position.RIGHT;
+                        currentPosition = Position.CENTER; // move to center
+                    }
+                    break;
+            }
+        }
+    }
+
+
+
+
+
 
 	public static void end() {
 		stopRobot();
