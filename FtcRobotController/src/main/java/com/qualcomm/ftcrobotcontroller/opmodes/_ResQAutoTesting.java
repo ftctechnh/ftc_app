@@ -80,7 +80,7 @@ public class _ResQAutoTesting extends LinearOpMode {
         } else {
             debugValues.add(formatter.format(new Date()) + " Red ");
         }
-        double EOPDThreshold = 0.2 * BLACKVALUE + 0.8 * WHITEVALUE;
+        double EOPDThreshold = 0.4 * BLACKVALUE + 0.6 * WHITEVALUE;
         debugValues.add(formatter.format(new Date()) + " EOPDThreshold:" + EOPDThreshold);
 
         //map the code to hardware map
@@ -105,9 +105,9 @@ public class _ResQAutoTesting extends LinearOpMode {
         twistServo = hardwareMap.servo.get("twist");
         twistServo.setPosition(1);
         zipLineServo = hardwareMap.servo.get("zipline");
-        zipLineServo.setPosition(1);
+        zipLineServo.setPosition(1);*/
         ultrasonicSensor = hardwareMap.ultrasonicSensor.get("ultrasonic");
-        */
+
         opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("light");
         // colorsensor = hardwareMap.colorSensor.get("color");
         // colorsensor.enableLed(false);
@@ -147,7 +147,7 @@ public class _ResQAutoTesting extends LinearOpMode {
             telemetry.addData("Reflectance Value", reflectance);
             debugValues.add(formatter.format(new Date()) + "Reflectance Value: " + reflectance);
 
-            if (Math.abs(reflectance - WHITEVALUE) < 0.03) { //found white tape
+            if (Math.abs(reflectance - WHITEVALUE) < 0.1) { //found white tape
                 debugValues.add(formatter.format(new Date()) + "Found white tape");
                 frontRightWheel.setPower(0);
                 frontLeftWheel.setPower(0);
@@ -187,10 +187,10 @@ public class _ResQAutoTesting extends LinearOpMode {
         while (true) {
             waitOneFullHardwareCycle();
             //  sweeper.setPower(1);
-            // double distance = ultrasonicSensor.getUltrasonicLevel();
+            double distance = ultrasonicSensor.getUltrasonicLevel();
             reflectance = opticalDistanceSensor.getLightDetected();
             debugValues.add(formatter.format(new Date()) + "Reflectance:" + reflectance);
-            // debugValues.add(formatter.format(new Date()) + "Distance:" + distance);
+            debugValues.add(formatter.format(new Date()) + "Distance:" + distance);
 
             telemetry.addData("Current Status: Linefollower", "Current Status: Linefollower");
             //Line Follower
@@ -201,11 +201,11 @@ public class _ResQAutoTesting extends LinearOpMode {
             value = reflectance - EOPDThreshold;
             debugValues.add(formatter.format(new Date()) + "Correction Error:" + value);
             //Set values for line follower
-            valueB = .2;
+            valueB = .15;
             if (value > 0) {
-                valueS = .18;
+                valueS = .25;
             } else {
-                valueS = -.18;
+                valueS = -.25;
             }
             debugValues.add(formatter.format(new Date()) + "Correction values(after):" + valueS + "/" + valueB);
             if (getRedAlliance() == 0) {
@@ -223,13 +223,14 @@ public class _ResQAutoTesting extends LinearOpMode {
             telemetry.addData("valueB", valueB);
             telemetry.addData("valueC", valueS);
             telemetry.addData("Reflectance Value", reflectance);
-            //telemetry.addData("Ultrasonic Value", distance);
+            telemetry.addData("Ultrasonic Value", distance);
 
-            /*
+
             Date now = new Date();
             //Wait until ultrasonic distance <=22 and 3.5 seconds after line follower starts
             //Ignore the if/else
-            if(distance <= 22 && distance > 1 && now.getTime() - lineFollowerStart.getTime() > 3500) {
+            //if(distance <= 22 && distance > 1 && now.getTime() - lineFollowerStart.getTime() > 3500) {
+            if(distance <= 22 && distance > 1){
                     frontRightWheel.setPower(0);
                     backRightWheel.setPower(0);
                     frontLeftWheel.setPower(0);
@@ -237,13 +238,32 @@ public class _ResQAutoTesting extends LinearOpMode {
                 break;
             }
         }
-        */
+
             debugValues.add(formatter.format(new Date()) + "Finish line follower");
           /*  colorsensor.enableLed(false);
             sleep(500);
             telemetry.addData("Red", colorsensor.red());
             telemetry.addData("Blue", colorsensor.blue());
             sleep(500);*/
+
+        writeToDebugFile();
+    }
+
+    private void writeToDebugFile(){
+        //Write sensor values to file
+        try {
+            SimpleDateFormat f = new SimpleDateFormat("MMdd_HHmm");
+            File file = new File("/sdcard/FIRST/debugFor" + f.format(new Date()) + ".txt");
+            FileOutputStream fileoutput = new FileOutputStream(file);
+            PrintStream ps = new PrintStream(fileoutput);
+            for (String s: debugValues) {
+                ps.println(s);
+            }
+            ps.close();
+            fileoutput.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
     private void encoderDrive(int distance, double power) throws InterruptedException
