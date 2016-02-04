@@ -113,9 +113,9 @@ public class AdaFruitTCS34725ColorSensor implements ColorSensor, IOpModeStateTra
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    private AdaFruitTCS34725ColorSensor(OpMode context, I2cDeviceClient i2cDeviceClient, ColorSensor target)
+    private AdaFruitTCS34725ColorSensor(OpMode context, I2cDeviceClient i2cDeviceClient, ColorSensor target, I2cController controller, int targetPort)
         {
-        this.helper          = new I2cDeviceReplacementHelper<ColorSensor>(context, this, target);
+        this.helper          = new I2cDeviceReplacementHelper<ColorSensor>(context, this, target, controller, targetPort);
         this.i2cDeviceClient = i2cDeviceClient;
         this.ledIsEnabled    = false;
         this.ledStateIsKnown = false;
@@ -150,7 +150,7 @@ public class AdaFruitTCS34725ColorSensor implements ColorSensor, IOpModeStateTra
         {
         II2cDevice i2cDevice               = new I2cDeviceOnI2cDeviceController(controller, port);
         I2cDeviceClient i2cDeviceClient    = new I2cDeviceClient(context, i2cDevice, i2cAddr8Bit, false);
-        AdaFruitTCS34725ColorSensor result = new AdaFruitTCS34725ColorSensor(context, i2cDeviceClient, target);
+        AdaFruitTCS34725ColorSensor result = new AdaFruitTCS34725ColorSensor(context, i2cDeviceClient, target, controller, port);
         result.engage();
         result.initialize(new Parameters());
         return result;

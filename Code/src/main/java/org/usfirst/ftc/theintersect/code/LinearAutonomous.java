@@ -98,7 +98,7 @@ public class LinearAutonomous extends LinearOpMode {
             moveRobotBackwardTime(2.4, 0.3);
             sleep(2000);
             spinRobotRightDegrees(90,0.3,10000);
-            followLine(telemetry);
+            followLine(Position.RIGHT, false, telemetry);
             //moveRobotBackwardRotationsGyro(1500, 0.5, 10000, telemetry);
             telemetry.addData("Status" , "done");
 			//spinRobotLeftDegrees(90,0.3,60000,telemetry);
@@ -588,6 +588,28 @@ public class LinearAutonomous extends LinearOpMode {
         RIGHT
     }
 
+	//Detects white
+	public static boolean detectWhite(Telemetry telemetry) {
+		int red = lineColor.red();
+		int green = lineColor.green();
+		int blue = lineColor.blue();
+		double average = (red + green + blue)/3.0;
+		//if(average > 15 /*+ Functions.colorError && red >= average-Functions.colorError && red <= average+Functions.colorError && green >= average-Functions.colorError && green <= average+Functions.colorError && blue >= average-Functions.colorError && blue <= average+Functions.colorError*/) {
+		if (red >10 && blue > 10 && green > 10){
+            /*telemetry.addData("Red", red);
+            telemetry.addData("Blue" , blue);
+            telemetry.addData("Green", green);
+            telemetry.addData("Average" , average);
+            telemetry.addData("Debug", "Success");
+            telemetry.update();*/
+			return true;
+		}
+        /*telemetry.addData("Red", red);
+        telemetry.addData("Blue", blue);
+        telemetry.addData("Green", green);
+        telemetry.update();*/
+		return false;
+	}
 
     public static void followLine(Position previousPosition, boolean right ,Telemetry telemetry) {
 
@@ -611,7 +633,7 @@ public class LinearAutonomous extends LinearOpMode {
                             turnRobotRightForward(0.1);
                             currentPosition = Position.RIGHT;
                         } else {
-                            turnRobotLeftForward();
+                            turnRobotLeftForward(0.1);
                             currentPosition = Position.LEFT;
                         }
                         break;

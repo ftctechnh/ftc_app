@@ -838,7 +838,7 @@ public class SynchronousAutonomous extends SynchronousOpMode {
         stopRobot();
         }
 
-    ./*public static void ultrasonicSpin(double power , TelemetryDashboardAndLog telemetry){
+    /*public static void ultrasonicSpin(double power , TelemetryDashboardAndLog telemetry){
         while(ultrasonicLeft.getUltrasonicLevel() != ultrasonicRight.getUltrasonicLevel()){
             while(ultrasonicLeft.getUltrasonicLevel() > ultrasonicRight.getUltrasonicLevel()){
                 spinRobotRight(power);
