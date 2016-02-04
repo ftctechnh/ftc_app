@@ -139,20 +139,25 @@ public class RobotStateTransitionNotifier extends DcMotor implements DcMotorCont
 
     synchronized void onUserOpModeStop()
         {
-        List<IOpModeStateTransitionEvents> toRemove = new LinkedList<IOpModeStateTransitionEvents>();
-        for (IOpModeStateTransitionEvents registrant : this.registrants)
+        if (this.registrants.size() > 0)
             {
-            if (registrant.onUserOpModeStop())
-                toRemove.add(registrant);
-            }
+            Log.d(SynchronousOpMode.LOGGING_TAG, "user opmode stop ... -----------------------------");
+            List<IOpModeStateTransitionEvents> toRemove = new LinkedList<IOpModeStateTransitionEvents>();
+            for (IOpModeStateTransitionEvents registrant : this.registrants)
+                {
+                if (registrant.onUserOpModeStop())
+                    toRemove.add(registrant);
+                }
 
-        for (IOpModeStateTransitionEvents registrant : toRemove)
-            unregister(registrant);
+            for (IOpModeStateTransitionEvents registrant : toRemove)
+                unregister(registrant);
+            Log.d(SynchronousOpMode.LOGGING_TAG, "... user opmode stop complete --------------------");
+            }
         }
 
     synchronized void onRobotShutdown()
         {
-        Log.d(SynchronousOpMode.LOGGING_TAG, "state xtion: robot shutdown");
+        Log.d(SynchronousOpMode.LOGGING_TAG, "state xtion: robot shutdown ... ----------------------");
         if (!this.shutdownProcessed)
             {
             this.shutdownProcessed = true;
@@ -167,6 +172,7 @@ public class RobotStateTransitionNotifier extends DcMotor implements DcMotorCont
             for (IOpModeStateTransitionEvents registrant : toRemove)
                 unregister(registrant);
             }
+        Log.d(SynchronousOpMode.LOGGING_TAG, "... state xtion: robot shutdown complete -------------");
         }
 
     public static synchronized void onRobotUpdate(final String status)

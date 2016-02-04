@@ -1,6 +1,8 @@
 package org.swerverobotics.library.internal;
 
 import android.util.Log;
+
+import com.qualcomm.hardware.HardwareFactory;
 import com.qualcomm.hardware.modernrobotics.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.exception.*;
@@ -74,10 +76,12 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
 
     protected void restoreTargetArmOrPretend() throws RobotCoreException, InterruptedException
         {
+        Log.v(LOGGING_TAG, String.format("restoring target %s ...", HardwareFactory.getSerialNumberDisplayName(this.serialNumber)));
         if (targetArmingState==ARMINGSTATE.ARMED)
             target.armOrPretend();
         else
             target.pretend();
+        Log.v(LOGGING_TAG, String.format("... restoring target %s complete", HardwareFactory.getSerialNumberDisplayName(this.serialNumber)));
         }
 
     //----------------------------------------------------------------------------------------------
@@ -253,7 +257,7 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
 
     @Override synchronized public boolean onUserOpModeStop()
         {
-        Log.d(LOGGING_TAG, String.format("EasyModern: auto-stopping %s...", this.getSerialNumber().toString()));
+        Log.d(LOGGING_TAG, String.format("EasyModern: auto-stopping %s...", HardwareFactory.getSerialNumberDisplayName(this.serialNumber)));
         this.stopHardware();  // mirror StopRobotOpMode
         try {
             this.disarm();
@@ -262,19 +266,19 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
             {
             Util.handleCapturedException(e);
             }
-        Log.d(LOGGING_TAG, "EasyModern: ... done");
+        Log.d(LOGGING_TAG, String.format("EasyModern: ... auto-stopping %s complete", HardwareFactory.getSerialNumberDisplayName(serialNumber)));
         return true;    // unregister us
         }
 
     @Override synchronized public boolean onRobotShutdown()
         {
-        Log.d(LOGGING_TAG, String.format("EasyModern: auto-closing %s...", this.getSerialNumber().toString()));
+        Log.d(LOGGING_TAG, String.format("EasyModern: auto-closing %s...", HardwareFactory.getSerialNumberDisplayName(this.serialNumber)));
 
         // We actually shouldn't be here by now, having received a onUserOpModeStop()
         // after which we should have been unregistered. But we close down anyway.
         this.close();
 
-        Log.d(LOGGING_TAG, "EasyModern: ... done");
+        Log.d(LOGGING_TAG, String.format("EasyModern: ... auto-closing %s complete", HardwareFactory.getSerialNumberDisplayName(this.serialNumber)));
         return true;    // unregister us
         }
     }
