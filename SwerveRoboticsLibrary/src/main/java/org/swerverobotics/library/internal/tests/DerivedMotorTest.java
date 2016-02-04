@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.robot.Robot;
 
 import org.swerverobotics.library.ClassFactory;
 import org.swerverobotics.library.interfaces.Disabled;
@@ -12,8 +13,16 @@ import org.swerverobotics.library.interfaces.TeleOp;
 @TeleOp(name="Derived Motor Test (Raw)", group="Swerve Tests")
 public class DerivedMotorTest extends OpMode
     {
-    Team25DcMotor leftMotor;
-    Team25DcMotor rightMotor;
+    public static class DerivedMotor extends DcMotor
+        {
+        public DerivedMotor(DcMotorController controller, int portNumber)
+            {
+            super(controller, portNumber);
+            }
+        }
+
+    DerivedMotor leftMotor;
+    DerivedMotor rightMotor;
     DcMotorController easyMotorController;
 
     @Override
@@ -22,8 +31,8 @@ public class DerivedMotorTest extends OpMode
         DcMotor lTmp = hardwareMap.dcMotor.get("motorLeft");
         DcMotor rTmp = hardwareMap.dcMotor.get("motorRight");
 
-        leftMotor = new Team25DcMotor(null, lTmp.getController(), 1);
-        rightMotor = new Team25DcMotor(null, rTmp.getController(), 2);
+        leftMotor = new DerivedMotor(lTmp.getController(), 1);
+        rightMotor = new DerivedMotor(rTmp.getController(), 2);
 
         easyMotorController = ClassFactory.createEasyMotorController(this, leftMotor, rightMotor);
         }
@@ -31,12 +40,5 @@ public class DerivedMotorTest extends OpMode
     @Override
     public void loop()
         {
-        }
-
-    @Override
-    public void stop()
-        {
-//         easyMotorController.close();
-//         easyMotorController = null;
         }
     }
