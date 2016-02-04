@@ -88,10 +88,10 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    private EasyLegacyMotorController(OpMode context, II2cDeviceClient ii2cDeviceClient, DcMotorController target)
+    private EasyLegacyMotorController(OpMode context, II2cDeviceClient ii2cDeviceClient, DcMotorController target, I2cController controller, int targetPort)
         {
         super(((I2cControllerPortDevice)target).getI2cController(), ((I2cControllerPortDevice)target).getPort());
-        this.helper          = new I2cDeviceReplacementHelper<DcMotorController>(context, this, target);
+        this.helper          = new I2cDeviceReplacementHelper<DcMotorController>(context, this, target, controller, targetPort);
 
         this.context         = context;
         this.i2cDeviceClient = ii2cDeviceClient;
@@ -136,7 +136,7 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
             // Make a new legacy motor controller
             II2cDevice i2cDevice                 = new I2cDeviceOnI2cDeviceController(module, port);
             I2cDeviceClient i2cDeviceClient      = new I2cDeviceClient(context, i2cDevice, i2cAddr8Bit, false);
-            EasyLegacyMotorController controller = new EasyLegacyMotorController(context, i2cDeviceClient, target);
+            EasyLegacyMotorController controller = new EasyLegacyMotorController(context, i2cDeviceClient, target, module, port);
 
             controller.setMotors(motor1, motor2);
             controller.engage();
