@@ -1,6 +1,8 @@
 package org.swerverobotics.library.internal;
 
 import android.util.Log;
+
+import com.qualcomm.hardware.HardwareFactory;
 import com.qualcomm.hardware.modernrobotics.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.exception.*;
@@ -45,6 +47,8 @@ public class EasyModernMotorController extends EasyModernController implements D
 
         this.target = target;
         this.findTargetNameAndMapping();
+
+        RobotStateTransitionNotifier.register(opmodeContext, this);
         }
 
     public static DcMotorController create(OpMode context, DcMotorController target, DcMotor motor1, DcMotor motor2)
@@ -128,7 +132,7 @@ public class EasyModernMotorController extends EasyModernController implements D
 
     private void doArmOrPretend(boolean isArm) throws RobotCoreException, InterruptedException
         {
-        Log.d(LOGGING_TAG, String.format("arming motor controller \"%s\"%s...", this.getConnectionInfo(), (isArm ? "" : " (pretend)")));
+        Log.d(LOGGING_TAG, String.format("arming easy motor controller %s%s...", HardwareFactory.getSerialNumberDisplayName(this.serialNumber), (isArm ? "" : " (pretend)")));
 
         // Turn off target
         target.disarm();
@@ -153,12 +157,12 @@ public class EasyModernMotorController extends EasyModernController implements D
         this.initPID();
         this.floatHardware();
 
-        Log.d(LOGGING_TAG, String.format("...armed \"%s\"", this.getConnectionInfo()));
+        Log.d(LOGGING_TAG, String.format("...arming easy motor controller %s complete", HardwareFactory.getSerialNumberDisplayName(this.serialNumber)));
         }
 
     @Override protected void doDisarm() throws RobotCoreException, InterruptedException
         {
-        Log.d(LOGGING_TAG, String.format("disarming motor controller \"%s\"...", this.getConnectionInfo()));
+        Log.d(LOGGING_TAG, String.format("disarming easy motor controller %s...", HardwareFactory.getSerialNumberDisplayName(this.serialNumber)));
 
         // Turn us off
         this.floatHardware();
@@ -177,20 +181,27 @@ public class EasyModernMotorController extends EasyModernController implements D
         target.suppressGlobalWarning(false);
         this.restoreTargetArmOrPretend();
 
-        Log.d(LOGGING_TAG, String.format("...disarmed \"%s\"", this.getConnectionInfo()));
+        Log.d(LOGGING_TAG, String.format("...disarming easy motor controller %s complete", HardwareFactory.getSerialNumberDisplayName(this.serialNumber)));
         }
 
-    // Close should *not* restart the target
+    // Close should *not* restart the target. But if we're armed, he's not in the hw map, and
+    // so won't be himself closed.
     @Override protected void doCloseFromArmed()
         {
         floatHardware();
-        doCloseFromOther();
+        try {
+            this.target.close();
+            this.disarmDevice();
+            }
+        catch (Exception e)
+            {
+            Util.handleCapturedException(e);
+            }
         }
 
     @Override protected void doCloseFromOther()
         {
         try {
-            this.target.close();
             this.disarmDevice();
             }
         catch (Exception e)
