@@ -61,10 +61,10 @@ public class EasyLegacyServoController extends I2cControllerPortDeviceImpl imple
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    private EasyLegacyServoController(OpMode context, II2cDeviceClient ii2cDeviceClient, ServoController target)
+    private EasyLegacyServoController(OpMode context, II2cDeviceClient ii2cDeviceClient, ServoController target, I2cController controller, int targetPort)
         {
         super(((I2cControllerPortDevice)target).getI2cController(), ((I2cControllerPortDevice)target).getPort());
-        this.helper          = new I2cDeviceReplacementHelper<ServoController>(context, this, target);
+        this.helper          = new I2cDeviceReplacementHelper<ServoController>(context, this, target, controller, targetPort);
         this.i2cDeviceClient = ii2cDeviceClient;
         this.target          = target;
         this.servos          = new LinkedList<Servo>();
@@ -103,7 +103,7 @@ public class EasyLegacyServoController extends I2cControllerPortDeviceImpl imple
             // Make a new legacy servo controller
             II2cDevice i2cDevice                 = new I2cDeviceOnI2cDeviceController(module, port);
             I2cDeviceClient i2cDeviceClient      = new I2cDeviceClient(context, i2cDevice, i2cAddr8Bit, false);
-            EasyLegacyServoController controller = new EasyLegacyServoController(context, i2cDeviceClient, target);
+            EasyLegacyServoController controller = new EasyLegacyServoController(context, i2cDeviceClient, target, module, port);
 
             controller.setServos(servos);
             controller.engage();

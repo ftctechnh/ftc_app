@@ -56,10 +56,11 @@ public final class ClassFactory
      * @param opmodeContext the OpMode within which this creation is occurring
      * @param motor1    one of the up-to-two motor controllers which share a legacy motor controller. May be null.
      * @param motor2    the possibly other motor controller on the same controller. May be null.
+     * @return the newly created easy motor controller, or null the target controller was of an unknown type
      *
      * @see org.swerverobotics.library.examples.SynchMotorLoopPerf
      */
-    public static void createEasyMotorController(OpMode opmodeContext, DcMotor motor1, DcMotor motor2)
+    public static DcMotorController createEasyMotorController(OpMode opmodeContext, DcMotor motor1, DcMotor motor2)
         {
         DcMotorController target = motor1==null ? null : motor1.getController();
 
@@ -67,10 +68,13 @@ public final class ClassFactory
             throw new IllegalArgumentException("motors do not share the same controller");
 
         if (MemberUtil.isLegacyMotorController(target))
-            EasyLegacyMotorController.create(opmodeContext, target, motor1, motor2);
+            return EasyLegacyMotorController.create(opmodeContext, target, motor1, motor2);
 
         else if (MemberUtil.isModernMotorController(target))
-            EasyModernMotorController.create(opmodeContext, target, motor1, motor2);
+            return EasyModernMotorController.create(opmodeContext, target, motor1, motor2);
+
+        else
+            return null;
         }
 
     @Deprecated
@@ -92,10 +96,11 @@ public final class ClassFactory
      * @param opmodeContext the OpMode within which the creation is occurring
      * @param servos    the list of servos whose controller implementation we are to change.
      *                  May not be null or empty.
+     * @return the newly created easy servo controller, or null the target controller was of an unknown type
      *
      * @see #createEasyMotorController(OpMode, DcMotor, DcMotor)
      */
-    public static void createEasyServoController(OpMode opmodeContext, Collection<Servo> servos)
+    public static ServoController createEasyServoController(OpMode opmodeContext, Collection<Servo> servos)
         {
         if (servos != null && !servos.isEmpty())
             {
@@ -109,10 +114,13 @@ public final class ClassFactory
                 }
 
             if (MemberUtil.isModernServoController(controller))
-                EasyModernServoController.create(opmodeContext, controller, servos);
+                return EasyModernServoController.create(opmodeContext, controller, servos);
 
             else if (MemberUtil.isLegacyServoController(controller))
-                EasyLegacyServoController.create(opmodeContext, controller, servos);
+                return EasyLegacyServoController.create(opmodeContext, controller, servos);
+
+            else
+                return null;
             }
         else
             throw new IllegalArgumentException("no servos provided");
