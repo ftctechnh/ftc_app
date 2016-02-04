@@ -1,6 +1,8 @@
 package org.swerverobotics.library.internal;
 
 import android.util.Log;
+
+import com.qualcomm.hardware.HardwareFactory;
 import com.qualcomm.hardware.modernrobotics.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.exception.*;
@@ -61,6 +63,8 @@ public class EasyModernServoController extends EasyModernController implements S
         this.servos  = new LinkedList<Servo>();
         this.servoPositions  = new double[ADDRESS_CHANNEL_MAP.length];
         this.findTargetNameAndMapping();
+
+        RobotStateTransitionNotifier.register(opmodeContext, this);
         }
 
     public static ServoController create(OpMode context, ServoController target, Collection<Servo> servos)
@@ -145,7 +149,7 @@ public class EasyModernServoController extends EasyModernController implements S
 
     private void doArmOrPretend(boolean isArm) throws RobotCoreException, InterruptedException
         {
-        Log.d(LOGGING_TAG, String.format("arming servo controller \"%s\"%s...", this.getConnectionInfo(), (isArm ? "" : " (pretend)")));
+        Log.d(LOGGING_TAG, String.format("arming easy servo controller %s%s...", HardwareFactory.getSerialNumberDisplayName(this.serialNumber), (isArm ? "" : " (pretend)")));
 
         // Turn off target
         this.floatHardware(target);
@@ -168,12 +172,12 @@ public class EasyModernServoController extends EasyModernController implements S
 
         // Initialize
         this.floatHardware();
-        Log.d(LOGGING_TAG, String.format("...armed \"%s\"", this.getConnectionInfo()));
+        Log.d(LOGGING_TAG, String.format("...arming easy servo controller %s complete", HardwareFactory.getSerialNumberDisplayName(this.serialNumber)));
         }
 
     @Override protected void doDisarm() throws RobotCoreException, InterruptedException
         {
-        Log.d(LOGGING_TAG, String.format("disarming servo controller \"%s\"...", this.getConnectionInfo()));
+        Log.d(LOGGING_TAG, String.format("disarming easy servo controller \"%s\"...", HardwareFactory.getSerialNumberDisplayName(this.serialNumber)));
 
         // Turn us off
         this.disarmDevice();
@@ -190,7 +194,7 @@ public class EasyModernServoController extends EasyModernController implements S
         target.suppressGlobalWarning(false);
         this.restoreTargetArmOrPretend();
 
-        Log.d(LOGGING_TAG, String.format("...disarmed \"%s\"", this.getConnectionInfo()));
+        Log.d(LOGGING_TAG, String.format("...disarming easy servo controller %s complete", HardwareFactory.getSerialNumberDisplayName(this.serialNumber)));
         }
 
 
@@ -198,14 +202,20 @@ public class EasyModernServoController extends EasyModernController implements S
     @Override protected void doCloseFromArmed()
         {
         floatHardware();
-        doCloseFromOther();
+        try {
+            this.disarmDevice();
+            this.target.close();
+            }
+        catch (Exception e)
+            {
+            Util.handleCapturedException(e);
+            }
         }
 
     @Override protected void doCloseFromOther()
         {
         try {
             this.disarmDevice();
-            this.target.close();
             }
         catch (Exception e)
             {
