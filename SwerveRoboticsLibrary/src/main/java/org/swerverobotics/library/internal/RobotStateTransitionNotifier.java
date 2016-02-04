@@ -2,9 +2,8 @@ package org.swerverobotics.library.internal;
 
 import android.content.Context;
 import android.util.Log;
-import com.qualcomm.robotcore.eventloop.EventLoopManager;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.robot.RobotState;
 
 import org.swerverobotics.library.SynchronousOpMode;
@@ -46,19 +45,18 @@ import java.util.*;
  * So we build this weird beast that is both a motor and its own controller as that's the
  * most efficient way to accomplish the test.
  */
-public class RobotStateTransitionNotifier extends DcMotor implements DcMotorController
+public class RobotStateTransitionNotifier
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    static final String       shutdownHookName    = " |Swerve|ShutdownHook| ";
-    static       Context      applicationContext  = null;
-    static       List<Method> onRobotRunningMethods = new LinkedList<Method>();
-    static       List<Method> onRobotStartupFailureMethods = new LinkedList<Method>();
-    static       List<Runnable> onRobotUpdateActions = new LinkedList<Runnable>();
+    static       Context        applicationContext           = null;
+    static       List<Method>   onRobotRunningMethods        = new LinkedList<Method>();
+    static       List<Method>   onRobotStartupFailureMethods = new LinkedList<Method>();
+    static       List<Runnable> onRobotUpdateActions         = new LinkedList<Runnable>();
+    static       RobotStateTransitionNotifier theInstance    = new RobotStateTransitionNotifier();
 
-    public  final HardwareMap                           hardwareMap;
     private final List<IOpModeStateTransitionEvents>    registrants;
                   boolean                               shutdownProcessed;
 
@@ -66,40 +64,28 @@ public class RobotStateTransitionNotifier extends DcMotor implements DcMotorCont
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    RobotStateTransitionNotifier(HardwareMap hardwareMap)
+    RobotStateTransitionNotifier()
         {
-        super(null, 0);
-        this.controller        = this;
-        this.hardwareMap       = hardwareMap;
         this.registrants       = new LinkedList<IOpModeStateTransitionEvents>();
         this.shutdownProcessed = false;
         }
 
-    public static void register(OpMode context, IOpModeStateTransitionEvents registrant)
+    public static void register(OpMode opModeContext, IOpModeStateTransitionEvents registrant)
         {
-        if (context != null)
-            {
-            create(context.hardwareMap).register(registrant);
-            }
+        // The opmode context in which the registration happens is currently not used.
+        getInstance().registerRegistrant(registrant);
         }
 
-    private static RobotStateTransitionNotifier create(HardwareMap map)
+    public static RobotStateTransitionNotifier getInstance()
         {
-        // Only need to create one instance per hardwareMap.
-        if (!Util.contains(map.dcMotorController, shutdownHookName))
-            {
-            RobotStateTransitionNotifier hook = new RobotStateTransitionNotifier(map);
-            map.dcMotorController.put(shutdownHookName, hook);
-            map.dcMotor.put(shutdownHookName, hook);
-            }
-        return (RobotStateTransitionNotifier)map.dcMotorController.get(shutdownHookName);
+        return theInstance;
         }
 
     //----------------------------------------------------------------------------------------------
     // Registration
     //----------------------------------------------------------------------------------------------
 
-    synchronized void register(IOpModeStateTransitionEvents him)
+    synchronized void registerRegistrant(IOpModeStateTransitionEvents him)
         {
         this.registrants.add(him);
         }
@@ -138,6 +124,7 @@ public class RobotStateTransitionNotifier extends DcMotor implements DcMotorCont
     //----------------------------------------------------------------------------------------------
 
     synchronized void onUserOpModeStop()
+    // WAS: called by our DcMotorController.setPower() implementation
         {
         if (this.registrants.size() > 0)
             {
@@ -156,6 +143,7 @@ public class RobotStateTransitionNotifier extends DcMotor implements DcMotorCont
         }
 
     synchronized void onRobotShutdown()
+    // WAS: called by our HardwareDevice.close() implementation
         {
         Log.d(SynchronousOpMode.LOGGING_TAG, "state xtion: robot shutdown ... ----------------------");
         if (!this.shutdownProcessed)
@@ -217,90 +205,5 @@ public class RobotStateTransitionNotifier extends DcMotor implements DcMotorCont
                     }
                 break;
             }
-        }
-
-    //----------------------------------------------------------------------------------------------
-    // HardwareDevice
-    //----------------------------------------------------------------------------------------------
-
-    @Override public synchronized void close()
-        {
-        this.onRobotShutdown();
-        }
-
-    @Override public synchronized int getVersion()
-        {
-        return 1;
-        }
-
-    @Override public synchronized String getConnectionInfo()
-        {
-        return "unconnected";
-        }
-
-    @Override public synchronized String getDeviceName()
-        {
-        return "Swerve Shutdown Hook Monitor";
-        }
-
-
-    //----------------------------------------------------------------------------------------------
-    // DCMotorController
-    //----------------------------------------------------------------------------------------------
-
-    @Override public synchronized void setMotorPower(final int channel, final double power)
-        {
-        this.onUserOpModeStop();
-        }
-
-    @Override public synchronized void setMotorControllerDeviceMode(final DeviceMode mode)
-        {
-        }
-
-    @Override public synchronized DeviceMode getMotorControllerDeviceMode()
-        {
-        return DeviceMode.READ_WRITE;
-        }
-
-    @Override public synchronized void setMotorChannelMode(final int channel, final DcMotorController.RunMode mode)
-        {
-        }
-
-    @Override public synchronized DcMotorController.RunMode getMotorChannelMode(final int channel)
-        {
-        return RunMode.RUN_WITHOUT_ENCODERS;
-        }
-
-    @Override public synchronized double getMotorPower(final int channel)
-        {
-        return 0;
-        }
-
-    @Override public synchronized boolean isBusy(final int channel)
-        {
-        return false;
-        }
-
-    @Override public synchronized void setMotorPowerFloat(final int channel)
-        {
-        }
-
-    @Override public synchronized boolean getMotorPowerFloat(final int channel)
-        {
-        return false;
-        }
-
-    @Override public synchronized void setMotorTargetPosition(final int channel, final int position)
-        {
-        }
-
-    @Override public synchronized int getMotorTargetPosition(final int channel)
-        {
-        return 0;
-        }
-
-    @Override public synchronized int getMotorCurrentPosition(final int channel)
-        {
-        return 0;
         }
     }
