@@ -321,25 +321,25 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
 
     @Override synchronized public boolean onUserOpModeStop()
         {
-        Log.d(LOGGING_TAG, "Easy: auto-stopping...");
+        Log.d(LOGGING_TAG, "Easy legacy motor: auto-stopping...");
         if (this.isEngaged())
             {
             this.stopMotors();  // mirror StopRobotOpMode
             this.disengage();
             }
-        Log.d(LOGGING_TAG, "Easy: ... done");
+        Log.d(LOGGING_TAG, "Easy legacy motor: ... auto-stopping complete");
         return true;    // unregister us
         }
 
     @Override synchronized public boolean onRobotShutdown()
         {
-        Log.d(LOGGING_TAG, "Easy: auto-closing...");
+        Log.d(LOGGING_TAG, "Easy legacy motor: auto-closing...");
 
         // We actually shouldn't be here by now, having received a onUserOpModeStop()
         // after which we should have been unregistered. But we close down anyway.
         this.close();
 
-        Log.d(LOGGING_TAG, "Easy: ... done");
+        Log.d(LOGGING_TAG, "Easy legacy motor: ... auto-closing complete");
         return true;    // unregister us
         }
 
