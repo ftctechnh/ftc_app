@@ -92,6 +92,9 @@ public class TwoWheelTest extends OpMode {
         right2 = (float)scaleInput(right2);
         left2 =  (float)scaleInput(left2);
 
+        // write the values to the motors
+        motorLeft1.setPower(right1);
+        motorRight1.setPower(right2);
 
         // write the values to the motors
         motorLeft1.setPower(right1);

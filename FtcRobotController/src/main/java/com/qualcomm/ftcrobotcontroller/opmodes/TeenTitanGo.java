@@ -13,9 +13,9 @@ public class TeenTitanGo extends OpMode {
     DcMotor motorRight;
     DcMotor motorLeft;
     DcMotor motorScore;
+    DcMotor harvestMotor;
 
-    Servo bucketServo;
-    Servo contServo;
+  //  Servo bucketServo;
     Servo rightTriggerArm;
     Servo leftTriggerArm;
     double rightTriggerArmDelta = 0.5;
@@ -33,7 +33,7 @@ public class TeenTitanGo extends OpMode {
 
         motorRight = hardwareMap.dcMotor.get("motor_right");
         motorLeft = hardwareMap.dcMotor.get("motor_left");
-        motorLeft.setDirection(DcMotor.Direction.REVERSE);
+        motorRight.setDirection(DcMotor.Direction.REVERSE);
 
 
     }
@@ -49,6 +49,8 @@ public class TeenTitanGo extends OpMode {
 
         rightTriggerArm = hardwareMap.servo.get("servo_right_trigger");
         leftTriggerArm = hardwareMap.servo.get("servo_left_trigger");
+        rightTriggerArm.setDirection(Servo.Direction.REVERSE);
+        leftTriggerArm.setDirection(Servo.Direction.REVERSE);
 
         rightTriggerArmPosition = 0;
         leftTriggerArmPosition = 0;
@@ -58,20 +60,18 @@ public class TeenTitanGo extends OpMode {
 
     }
 
-    public void initContServo(){
+    public void initHarvestMotor(){
 
-        contServo = hardwareMap.servo.get("cont_servo");
-        contServo.setPosition(0.5);
-
+        harvestMotor = hardwareMap.dcMotor.get("harvester_motor");
     }
 
-    public void initBucketServo(){
+ /*   public void initBucketServo(){
 
         bucketServo = hardwareMap.servo.get("bucket_servo");
         bucketServo.setPosition(.5);
 
     }
-
+*/
 
     public void init() {
 
@@ -79,9 +79,9 @@ public class TeenTitanGo extends OpMode {
 
         initScoreArm();
 
-        initContServo();
+        initHarvestMotor();
 
-        initBucketServo();
+//        initBucketServo();
 
         initTriggerArms();
 
@@ -109,8 +109,8 @@ public class TeenTitanGo extends OpMode {
         right2 = (float)scaleInput(right2);
         left2 =  (float)scaleInput(left2);
 
-        motorLeft.setPower(right2);
-        motorRight.setPower(right1);
+        motorLeft.setPower(right1);
+        motorRight.setPower(right2);
 
 
     }
@@ -135,7 +135,7 @@ public class TeenTitanGo extends OpMode {
     public void loopTriggerArm(){
 
 
-        if (gamepad2.x) {
+        if (gamepad2.right_bumper) {
 
             rightTriggerArmPosition += rightTriggerArmDelta;
         }
@@ -146,7 +146,7 @@ public class TeenTitanGo extends OpMode {
 
         }
 
-        if (gamepad2.b) {
+        if (gamepad2.left_bumper) {
 
             leftTriggerArmPosition -= leftTriggerArmDelta;
 
@@ -168,26 +168,26 @@ public class TeenTitanGo extends OpMode {
         leftTriggerArm.setPosition(leftTriggerArmPosition);
 
 
-    }
-
-    public void loopContServo(){
-
-        if (gamepad2.y){
-            contServo.setPosition(1);
-
-        }
-
-        else if (gamepad2.a){
-            contServo.setPosition(0);
-
-        }
-
-        else {
-            contServo.setPosition(.5);
-
-        }
 
     }
+
+    public void loopHarvestMotor() {
+        float throttle3 = -gamepad2.left_stick_y;
+        float direction3 = gamepad2.left_stick_x;
+        float right3 = throttle3 - direction3;
+        float left3 = throttle3 + direction3;
+
+        right3 = Range.clip(right3, -1, 1);
+        left3 = Range.clip(left3, -1, 1);
+
+        right3 = (float)scaleInput(right3);
+        left3 =  (float)scaleInput(left3);
+
+        harvestMotor.setPower(right3);
+
+
+    }
+
 
     public void loop(){
 
@@ -195,7 +195,7 @@ public class TeenTitanGo extends OpMode {
 
         loopScoreMotor();
 
-        loopContServo();
+        loopHarvestMotor();
 
         loopTriggerArm();
 
