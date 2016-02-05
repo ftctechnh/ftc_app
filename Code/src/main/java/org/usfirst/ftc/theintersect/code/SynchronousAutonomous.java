@@ -1,9 +1,10 @@
 package org.usfirst.ftc.theintersect.code;
 
+import android.provider.Settings;
+
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.robocol.Telemetry;
-
 import org.swerverobotics.library.SynchronousOpMode;
 import org.swerverobotics.library.TelemetryDashboardAndLog;
 
@@ -32,18 +33,23 @@ public class SynchronousAutonomous extends SynchronousOpMode {
 
     static ColorSensor lineColor;
     static ModernRoboticsI2cGyro gyro;
-    static UltrasonicSensor ultrasonic;
+    static UltrasonicSensor ultrasonicLeft;
+    static UltrasonicSensor ultrasonicRight;
 
     Thread mountainClimberMove;
 
     @Override
     public void main() throws InterruptedException {
         rightWheel = hardwareMap.dcMotor.get("rightWheel");
-        leftWheel = hardwareMap.dcMotor.get("leftWheel");
+        leftWheel  = hardwareMap.dcMotor.get("leftWheel");
+
         sweeper = hardwareMap.dcMotor.get("sweeper");
         lineColor = hardwareMap.colorSensor.get("lineColor");
         gyro = (ModernRoboticsI2cGyro) unthunkedHardwareMap.gyroSensor.get("gyro");
-        ultrasonic = hardwareMap.ultrasonicSensor.get("ultrasonic");
+
+        ultrasonicLeft =  hardwareMap.ultrasonicSensor.get("ultrasonicLeft");
+        ultrasonicRight = hardwareMap.ultrasonicSensor.get("ultrasonicRight");
+
         tubeTilt = hardwareMap.servo.get("tubeTilt");
         tubeExtender = hardwareMap.servo.get("tubeExtender");
         mountainClimber = hardwareMap.servo.get("mountainClimber");
@@ -51,10 +57,10 @@ public class SynchronousAutonomous extends SynchronousOpMode {
         bumper = hardwareMap.servo.get("bumper");
 
         autonomousInit(telemetry);
-        lineColor.enableLed(true);
+//        lineColor.enableLed(true); Done in autonomousInit already
 
         //Delay And Team Selection
-        while (true) {
+/*        while (true) {
             if (updateGamepads()) {
                 if (gamepad1.x) {
                     team = "Blue";
@@ -81,6 +87,8 @@ public class SynchronousAutonomous extends SynchronousOpMode {
             }
         }
 
+*/
+/*
         mountainClimberMove = new Thread() {
             public void run() {
                 while (endTime > System.currentTimeMillis()) {
@@ -91,31 +99,43 @@ public class SynchronousAutonomous extends SynchronousOpMode {
                 }
             }
         };
-        waitForStart();
-        mountainClimberMove.start();
-        Functions.waitFor(delay * 1000);
-        endTime = System.currentTimeMillis() + 30000;
 
-        while (opModeIsActive() && !isStopRequested() && endTime > System
-                .currentTimeMillis()) {
-            telemetry.clearDashboard();
+*/
+
+        waitForStart();
+//        mountainClimberMove.start();
+//        Functions.waitFor(delay * 1000);
+        endTime = System.currentTimeMillis() + 30000;
+        telemetry.clearDashboard();
+        telemetry.addData("gyroInit: ", endTime);
+        telemetry.updateNow();
+        while (opModeIsActive() && !isStopRequested() && endTime > System.currentTimeMillis()) {
             //Starting based off of the delay
             //sleep(delay * 1000);
             //Autonomous Routine
             telemetry.addData("Status", "Working...");
-            telemetry.updateNow();
+            double left;
+            double right;
+            left = ultrasonicLeft.getUltrasonicLevel();
+            right= ultrasonicRight.getUltrasonicLevel();
+           // telemetry.addData("Right",right);
+            //telemetry.addData("Left ",left);
+            //telemetry.updateNow();
+            //telemetry.updateNow();
+            ultrasonicSpin(0.1, telemetry);
+            Functions.waitFor(10000);
             /*moveRobotBackwardTime(1, 0.2);
             Functions.waitFor(3000);
             stopAtWhite(0.2, 10000000000L, telemetry);
             Functions.waitFor(3000);*/
             //turnRobotLeftBackwardDegrees(270, 0.5, 10000000000L);
-            moveRobotBackwardTime(2.4, 0.3);
-            Functions.waitFor(2000);
-            spinClockwiseGyroCorrection(90, 0.5, 5000);
-            Functions.waitFor(3000);
-            spinCounterClockwiseGyroCorrection(270, 0.5, 5000);
-            telemetry.addData("Status", "Done");
-            telemetry.updateNow();
+//            moveRobotBackwardTime(2.4, 0.3);
+//            Functions.waitFor(2000);
+//            spinClockwiseGyroCorrection(90, 0.5, 5000);
+//            Functions.waitFor(3000);
+//            spinCounterClockwiseGyroCorrection(270, 0.5, 5000);
+           // telemetry.addData("Status", "Done");
+            //telemetry.updateNow();
             //spinRobotLeftDegrees(90,0.3,60000,telemetry);
             //spinRobotLeftDegrees(90, 0.3, 60000, telemetry);
             //spinRobotLeftDegrees(90, 0.3, 60000, telemetry);
@@ -182,8 +202,11 @@ public class SynchronousAutonomous extends SynchronousOpMode {
 
     public static void autonomousInit(TelemetryDashboardAndLog telemetry) {
         lineColor.enableLed(true);
-        servoInit();
+//        servoInit();
         directionInit();
+        resetEncoders();
+        rightWheel.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        leftWheel.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         gyroInit(telemetry);
     }
 
@@ -784,7 +807,7 @@ public class SynchronousAutonomous extends SynchronousOpMode {
         boolean white;
         Position currentPosition = Position.CENTER;
 
-        while (ultrasonic.getUltrasonicLevel() > 5) {
+        while (ultrasonicLeft.getUltrasonicLevel() > 5) {
             white = detectWhite(telemetry);
             switch (currentPosition) {
                 case LEFT: //on the  left
@@ -819,7 +842,7 @@ public class SynchronousAutonomous extends SynchronousOpMode {
     }*/
 
     public static void followLine(double power , startingPosition startingposition, TelemetryDashboardAndLog telemetry) {
-        while (ultrasonic.getUltrasonicLevel() > 5) {
+        while (ultrasonicLeft.getUltrasonicLevel() > 5) {
             switch (startingposition){
                 case RIGHT:
                     if (detectWhite(telemetry)) {
@@ -838,25 +861,43 @@ public class SynchronousAutonomous extends SynchronousOpMode {
         stopRobot();
         }
 
-    /*public static void ultrasonicSpin(double power , TelemetryDashboardAndLog telemetry){
-        while(ultrasonicLeft.getUltrasonicLevel() != ultrasonicRight.getUltrasonicLevel()){
-            while(ultrasonicLeft.getUltrasonicLevel() > ultrasonicRight.getUltrasonicLevel()){
-                spinRobotRight(power);
+    public static void ultrasonicSpin(double power , TelemetryDashboardAndLog telemetry){
+        double right;
+        double left;
+        do {
+            left = ultrasonicLeft.getUltrasonicLevel();
+            right= ultrasonicRight.getUltrasonicLevel();
+            telemetry.addData("Right",right);
+            telemetry.addData("Left ",left);
+            telemetry.updateNow();
+
+            if( left > right) {
+                //spinRobotRight(power);
+            }else if ( left < right ){
+                //spinRobotLeft(power);
             }
-            while(ultrasonicLeft.getUltrasonicLevel() < ultrasonicRight.getUltrasonicLevel()){
-                spinRobotLeft(power);
-                ;
-            }
-        }stopRobot();
-        telemetry.addData("Done");
+        } while ( Math.abs(left-right) > 1 );
+        stopRobot();
+        telemetry.addData("ultrasonicSpin", "done");
+        telemetry.addData("Right",right);
+        telemetry.addData("Left ",left);
         telemetry.updateNow();
-    }*/
-	public static void resetEncoders() {
-		rightWheel.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-		rightWheel.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
-		leftWheel.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-		leftWheel.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
-	}
+    }
+
+    // Reset Encoder of both motors
+    //
+    public static void resetEncoders() {
+        rightWheel.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        leftWheel.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+
+        while(rightWheel.getTargetPosition() != 0 ) {
+            Functions.waitFor(50);
+        }
+
+        while(leftWheel.getTargetPosition() != 0 ) {
+            Functions.waitFor(50);
+        }
+    }
 
 	public static void end() {
 		rightWheel.setPowerFloat();
