@@ -23,26 +23,6 @@ public class OpModeAutoTrial extends OpMode implements DriverInterface
     @Override
     public void loop()
     {
-        telemetry.addData("start loop",1);
-
-        if(compBot.doneWithPrev())
-        {
-            telemetry.addData("done with prevjherwhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhgre",2);
-
-            switch(step)
-            {
-                case 1:
-                    telemetry.addData("move straight",1);
-                    compBot.moveStraightEncoders(5, (float) .9);
-                    //compBot.stop();
-                    break;
-
-                case 2:
-                    telemetry.addData("move back", 2);
-                    //compBot.moveStraightEncoders(-5, (float) .9);
-                    //compBot.stop();
-                    break;
-                case 3:
                     telemetry.addData("move forward 2", 3);
                     //compBot.moveStraightEncoders(5, (float) .9);
                     //compBot.stop();
@@ -53,6 +33,7 @@ public class OpModeAutoTrial extends OpMode implements DriverInterface
                     break;
             }
             step++;
+            telemetry.addData("stepped ", 6);
         }
         else
         {

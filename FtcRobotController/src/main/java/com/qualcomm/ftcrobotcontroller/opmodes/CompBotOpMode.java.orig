@@ -203,10 +203,20 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
             speed*=-1.0;
             inches*=-1.0;
         }
+<<<<<<< HEAD
+        this.encoderTarget = (int) (131.65432 * inches);
+        leftMotor.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        rightMotor.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        leftMotor.setTargetPosition(this.encoderTarget);
+        rightMotor.setTargetPosition(this.encoderTarget);
+
+        if(encoderTarget > 0)
+=======
         int encoderChange = ((int)(123.42844 * inches));
         currentPosition = leftMotor.getCurrentPosition();
         encoderTarget = currentPosition + encoderChange;
         if(encoderChange > 0)
+>>>>>>> 077de47d4ed6931da070d72ac8746db20775eeee
         {
             leftMotor.setPower(speed);
             rightMotor.setPower(speed);
@@ -218,11 +228,15 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
             rightMotor.setPower(-speed);
             this.forwardDirection = false;
         }
+<<<<<<< HEAD
+        motorUsed = rightMotor;
+=======
         //motorUsed = rightMotor;
         useRightMotor = false;
         //encoderTarget += encoderChange;
         clock = new Date();
         //targetTime = clock.getTime() + 5000;
+>>>>>>> 077de47d4ed6931da070d72ac8746db20775eeee
     }
 
 
@@ -425,8 +439,7 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
     }
 
 
-    public void checkAndFlipDispenserServo(boolean button)
-    {
+    public void checkAndFlipDispenserServo(boolean button) {
         if (button) {
             vendDeploy ^= buttonArm;
             buttonArm = false;
@@ -535,6 +548,9 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
     }
 
 
+<<<<<<< HEAD
+
+=======
     public boolean doneWithPrev()
     {
         //leftMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
@@ -568,6 +584,7 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
         stop();
         return true;
     }
+>>>>>>> 077de47d4ed6931da070d72ac8746db20775eeee
 
 
     public void pitchFrontTracks(float time, float speed)
