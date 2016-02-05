@@ -18,9 +18,9 @@ public class RedClimberDropWithTime extends AutonomousTime_T
         right.setDirection(DcMotor.Direction.FORWARD);
         waitForStart();
         Forwards(24, true);
-        turnOnCenter(48, true);
+        turnOnCenter(48, false);
         Forwards((float) 76.25, true);
-        turnOnCenter(48, true);
+        turnOnCenter(48, false);
         Forwards(15, true);
         //try to do the flips
 
