@@ -152,13 +152,13 @@ public class OhmIZeus extends OpMode {
 
     public void loopSusanMotor() {
 
-        if (gamepad1.right_bumper) {
-            motorLazySusan.setPower(0.5);
+        if (gamepad2.right_bumper) {
+            motorLazySusan.setPower(-0.25);
         }
         else
 
-        if (gamepad1.left_bumper){
-            motorLazySusan.setPower(-0.5);
+        if (gamepad2.left_bumper){
+            motorLazySusan.setPower(0.25);
         }
         else
         {
@@ -197,13 +197,13 @@ public class OhmIZeus extends OpMode {
     public void loopWristMotor() {
 
 
-        if (gamepad2.dpad_right) {
-            motorWrist.setPower(0.5);
+        if (gamepad2.dpad_up) {
+            motorWrist.setPower(0.25);
         }
         else
 
-        if (gamepad2.dpad_left){
-            motorWrist.setPower(-0.5);
+        if (gamepad2.dpad_down){
+            motorWrist.setPower(-0.25);
         }
         else
         {
@@ -241,12 +241,12 @@ public class OhmIZeus extends OpMode {
 
     public void loopBucketServo() {
 
-        if (gamepad2.dpad_up) {
+        if (gamepad2.b) {
 
             bucketPosition += bucketDelta;
         }
 
-        if (gamepad2.dpad_down) {
+        if (gamepad2.a) {
 
             bucketPosition -= bucketDelta;
         }

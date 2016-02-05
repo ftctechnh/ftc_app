@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.Range;
 /**
  * Created by alex marler on 1/21/16.
  */
-public class OhmIZeusTest extends OpMode {
+public class OhmIZeusOld extends OpMode {
 
     DcMotor motorRight1;
     DcMotor motorRight2;
@@ -31,7 +31,7 @@ public class OhmIZeusTest extends OpMode {
 
 
 
-    public OhmIZeusTest() {
+    public OhmIZeusOld() {
 
 
     }
@@ -152,13 +152,13 @@ public class OhmIZeusTest extends OpMode {
 
     public void loopSusanMotor() {
 
-        if (gamepad2.right_bumper) {
-            motorLazySusan.setPower(0.25);
+        if (gamepad1.right_bumper) {
+            motorLazySusan.setPower(0.5);
         }
         else
 
-        if (gamepad2.left_bumper){
-            motorLazySusan.setPower(-0.25);
+        if (gamepad1.left_bumper){
+            motorLazySusan.setPower(-0.5);
         }
         else
         {
@@ -197,13 +197,13 @@ public class OhmIZeusTest extends OpMode {
     public void loopWristMotor() {
 
 
-        if (gamepad2.dpad_up) {
-            motorWrist.setPower(0.25);
+        if (gamepad2.dpad_right) {
+            motorWrist.setPower(0.5);
         }
         else
 
-        if (gamepad2.dpad_down){
-            motorWrist.setPower(-0.25);
+        if (gamepad2.dpad_left){
+            motorWrist.setPower(-0.5);
         }
         else
         {
@@ -241,12 +241,12 @@ public class OhmIZeusTest extends OpMode {
 
     public void loopBucketServo() {
 
-        if (gamepad2.b) {
+        if (gamepad2.dpad_up) {
 
             bucketPosition += bucketDelta;
         }
 
-        if (gamepad2.a) {
+        if (gamepad2.dpad_down) {
 
             bucketPosition -= bucketDelta;
         }

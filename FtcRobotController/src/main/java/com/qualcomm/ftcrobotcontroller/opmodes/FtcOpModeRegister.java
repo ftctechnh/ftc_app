@@ -48,20 +48,20 @@ public class FtcOpModeRegister implements OpModeRegister {
   public void register(OpModeManager manager) {
     manager.register("TeenTitanGo", TeenTitanGo.class);
     manager.register("OhmIZeus", OhmIZeus.class);
-    manager.register("Autobots", Autobots.class);
+//    manager.register("Autobots", Autobots.class);
     /* Custom Ops Modes here */
-    manager.register("DavTest", DavTest.class);
-    manager.register("TwoWheelTest", TwoWheelTest.class);
-    manager.register("ArmTest", ArmTest.class);
-    manager.register("TitanArmTest", TitanArmTest.class);
-    manager.register("ServoTest", ServoTest.class);
-    manager.register("TitanServoTest", TitanServoTest.class);
-    manager.register("ServoTest1", ServoTest1.class);
-    manager.register("ServoBucket", ServoBucket.class);
-    manager.register("ContinuousServo", ContinuousServo.class);
-    manager.register("OhmIZeusTest", OhmIZeusTest.class);
+//    manager.register("DavTest", DavTest.class);
+//    manager.register("TwoWheelTest", TwoWheelTest.class);
+//    manager.register("ArmTest", ArmTest.class);
+//    manager.register("TitanArmTest", TitanArmTest.class);
+//    manager.register("ServoTest", ServoTest.class);
+//    manager.register("TitanServoTest", TitanServoTest.class);
+//    manager.register("ServoTest1", ServoTest1.class);
+//    manager.register("ServoBucket", ServoBucket.class);
+//    manager.register("ContinuousServo", ContinuousServo.class);
+//    manager.register("OhmIZeusOld", OhmIZeusOld.class);
   //  manager.register("Help", Help.class);
-   // manager.register("ServoBucket", ServoBucket.class);
+  //  manager.register("ServoBucket", ServoBucket.class);
 
     /*
      * register your op modes here.
@@ -84,7 +84,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     /*
      * Uncomment any of the following lines if you want to register an op mode.
      */
-    manager.register("MR Gyro Test", MRGyroTest.class);
+//    manager.register("MR Gyro Test", MRGyroTest.class);
 
     //manager.register("AdafruitRGBExample", AdafruitRGBExample.class);
     //manager.register("ColorSensorDriver", ColorSensorDriver.class);
