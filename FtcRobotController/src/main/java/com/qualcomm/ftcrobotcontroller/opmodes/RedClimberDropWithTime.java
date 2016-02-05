@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorController;
 /**
  * Created by Kaitlin on 1/15/2016.
  */
-public class BlueClimberDropWithTime extends AutonomousTime_T
+public class RedClimberDropWithTime extends AutonomousTime_T
 {
     @Override
     public void runOpMode() throws InterruptedException
