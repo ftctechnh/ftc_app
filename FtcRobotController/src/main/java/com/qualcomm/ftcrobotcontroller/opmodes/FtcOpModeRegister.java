@@ -72,6 +72,7 @@ public class FtcOpModeRegister implements OpModeRegister {
 
    //manager.register("ThreeColorTest", ThreeColorTest.class);
     manager.register("CompBotTeleopV3",  CompBotTeleopV3.class);
+    manager.register("RedClimberAuto", RedClimberDropWithTime.class);
     manager.register("BlueClimberAuto", BlueClimberDropWithTime.class);
     //manager.register("TimeTrial" , AutonomousTime_T.class);
     //manager.register("AdafruitRGBExample", AdafruitRGBExample.class);
