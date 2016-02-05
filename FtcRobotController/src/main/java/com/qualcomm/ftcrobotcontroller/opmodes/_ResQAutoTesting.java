@@ -213,10 +213,11 @@ public class _ResQAutoTesting extends LinearOpMode {
         colorsensor.enableLed(false);
         int redTotal = 0;
         int blueTotal = 0;
-        for (int i = 0; i < 1000; i++) { //Runs 1000 times, tune this
+        for (int i = 0; i < 500; i++) { //Runs 500 times, tune this
             redTotal += colorsensor.red(); // Add to the values
             blueTotal += colorsensor.blue();
             sleep(2); //Pause between loops
+            waitOneFullHardwareCycle();
         }
         telemetry.addData("Red Total", redTotal);
         telemetry.addData("Blue Total", blueTotal);
