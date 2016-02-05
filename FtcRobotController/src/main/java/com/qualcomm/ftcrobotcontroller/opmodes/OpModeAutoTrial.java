@@ -8,6 +8,27 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  */
 public class OpModeAutoTrial extends OpMode implements DriverInterface
 {
+    @Override
+    public void moveStraightEncoders(float inches, float speed) {
+
+    }
+
+    @Override
+    public void spinOnCenter(float degrees, float speed) {
+
+    }
+
+    @Override
+    public void init() {
+
+    }
+
+    @Override
+    public void loop() {
+
+    }
+}
+    /*
     CompBotOpMode compBot;
      int step;
 
@@ -35,6 +56,7 @@ public class OpModeAutoTrial extends OpMode implements DriverInterface
             step++;
             telemetry.addData("stepped ", 6);
         }
+    /*
         else
         {
             telemetry.addData("running step",step);
@@ -44,9 +66,11 @@ public class OpModeAutoTrial extends OpMode implements DriverInterface
 
     }
 
+
     @Override
     public void moveStraightEncoders(float inches, float speed) { }
 
 
     public void spinOnCenter(float degrees, float speed) { }
-}
+    */
+

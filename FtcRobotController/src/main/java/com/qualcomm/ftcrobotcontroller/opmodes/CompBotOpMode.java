@@ -13,6 +13,31 @@ import java.util.Date;
  */
 public class CompBotOpMode implements DriverInterface, AttachmentInterface
 {
+    @Override
+    public void releaseClimbers() {
+
+    }
+
+    @Override
+    public void pushButton(boolean isButtonLeft) {
+
+    }
+
+    @Override
+    public void moveStraightEncoders(float inches, float speed) {
+
+    }
+
+    @Override
+    public void spinOnCenter(float degrees, float speed) {
+
+    }
+
+    @Override
+    public void stop() {
+
+    }
+    /*
     static DcMotor leftMotor;
     static DcMotor rightMotor;
     static DcMotor frontLeftMotor;
@@ -113,7 +138,7 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
     /* public Servo getTapeMeasureServo()
      {
          return tapeMeasureServo;
-     }*/
+     }
     public Servo getClimberReleaseServoRight()
     {
         return climberReleaseServoRight;
@@ -239,7 +264,7 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
                 rightMotor.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
                 leftMotor.setTargetPosition((int)(131.65432 * inches));
                 rightMotor.setTargetPosition((int)(131.65432 * inches));*///previous code to run to set positions with setTargetPosition function
-        leftMotor.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        /*leftMotor.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         rightMotor.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);//15.75 inc diameter
         int encoderPivotTarget = ((int) (123.42844 * 148.44024 * degrees / 360));//148.44024 is different than the calculation of the original turn diameter due to the robot jiggling and turning only half of its intended turn
         if (encoderPivotTarget > 0 && speed > 0) {
@@ -287,7 +312,7 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
                 }
                 rightMotor.setPower(0.0f);
             }*/
-
+/*
     }
 
     public void spinOnCenter(float degrees, float speed)
@@ -362,7 +387,7 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
                 rightMotor.setPower(0.0f);
                 leftMotor.setPower(0.0f);
             }*/
-
+/*
     }
 
 
@@ -427,10 +452,13 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
 
     public void checkAndFlipDispenserServo(boolean button)
     {
-        if (button) {
+        if (button)
+        {
             vendDeploy ^= buttonArm;
             buttonArm = false;
-        } else {
+        }
+        else
+        {
             buttonArm = true;
         }
         if (vendDeploy)
@@ -626,5 +654,5 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
     {
         return encoderTarget;
     }
-
+ */
 }
