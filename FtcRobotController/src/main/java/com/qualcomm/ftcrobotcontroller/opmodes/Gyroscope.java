@@ -8,6 +8,8 @@ import android.hardware.SensorManager;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import java.util.ArrayList;
+
 /**
  * Created by Kaitlin 11/10/15.
  */
@@ -15,46 +17,77 @@ public class Gyroscope extends OpMode implements SensorEventListener
 {
     private SensorManager mSensorManager;
     private Sensor gyroscope;
-    private float[] gyroscopeVel = {0.0f,0.0f,0.0f};
-    private float[] mGyroscope;
+    private Sensor acceleration;
+    private float[] mGyroscope = {0.0f, 0.0f, 0.0f};
+    private float[] mAcceleration = {0.0f, 0.0f, 0.0f};
+    ArrayList <Double> azimutharr = new ArrayList<Double>(80);
+    double[] pitchArr = new double[]{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+    double[] rollArr = new double[]{0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+    double azimuth = 0.0f;
+    double pitch = 0.0f;
+    double roll = 0.0f;
+    int index = 0;
 
-
-    public Gyroscope()
-    {}
 
     @Override
     public void init()
     {
         mSensorManager = (SensorManager) hardwareMap.appContext.getSystemService(Context.SENSOR_SERVICE);
         gyroscope = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        acceleration = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
+        for(int i = 0; i< azimutharr.size(); i++)
+        {
+            azimutharr.set(i, 0.0);
+        }
     }
 
     @Override
     public void start()
     {
         mSensorManager.registerListener(this, gyroscope, SensorManager.SENSOR_DELAY_UI);
+        mSensorManager.registerListener(this, acceleration,  SensorManager.SENSOR_DELAY_UI);
     }
 
     public void loop()
     {
-        telemetry.addData("x-axis",  gyroscopeVel[0]);
-        telemetry.addData("y-axis",  gyroscopeVel[1]);
-        telemetry.addData("z-axis", gyroscopeVel[2]);
+        telemetry.addData("azimuth ",  (azimuth));
+        telemetry.addData("pitch ",  (pitch));
+        telemetry.addData("roll ",  (roll));
     }
 
     public void stop()
     {
         mSensorManager.unregisterListener(this);
     }
-    public void onSensorChanged(SensorEvent event) {
-        if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+
+    public void onSensorChanged(SensorEvent event)
+    {
+        if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
+    {
+        mAcceleration = event.values;
+    }
+        if(event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
+        {
             mGyroscope = event.values;
-            if (mGyroscope != null) {
-                gyroscopeVel[0] = mGyroscope[0]; // Acceleration minus Gx on the x-axis
-                gyroscopeVel[1] = mGyroscope[1]; // Acceleration minus Gy on the y-axis
-                gyroscopeVel[2] = mGyroscope[2]; // Acceleration minus Gz on the z-axis
+        }
+        if(mAcceleration != null && mGyroscope != null)
+        {
+            float R[] = new float[9];
+            float I[] = new float[9];
+            telemetry.addData("stuffs", mAcceleration[0]);
+            boolean result = SensorManager.getRotationMatrix(R,null,mAcceleration,mGyroscope);
+
+            if(result)
+            {
+                float orientation[] = new float[3];
+                SensorManager.getOrientation(R, orientation);
+                azimuth = Math.toDegrees(orientation[0]);
+                pitch = Math.toDegrees(orientation[1]);
+                roll = Math.toDegrees(orientation[2]);
             }
         }
+
     }
 
     @Override

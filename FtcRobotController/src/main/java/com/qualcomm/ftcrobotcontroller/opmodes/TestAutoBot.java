@@ -1,12 +1,11 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.robotcore.hardware.DcMotorController.RunMode;
 
-import java.sql.Driver;
+
 
 /**
  * Created by Peter on 10/25/2015.
@@ -14,28 +13,43 @@ import java.sql.Driver;
 public class TestAutoBot extends OpMode
 {
 
-    DriverInterface robot;
+        DcMotorController dcMotorController;
+        DcMotor leftMotor;
+        DcMotor rightMotor;
+        static int encoderTarget;
+                public void init()
+                {
+                    dcMotorController = hardwareMap.dcMotorController.get("Motor Controller 1");
+                    telemetry.addData("start init", 0);
+                    leftMotor = hardwareMap.dcMotor.get("leftMotor");
+                    rightMotor = hardwareMap.dcMotor.get("rightMotor");
+                    telemetry.addData("added motors", 0);
+                    leftMotor.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+                    rightMotor.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+                    telemetry.addData("set modes", 0);
+                    rightMotor.setDirection(DcMotor.Direction.REVERSE);
+                    telemetry.addData("finished!", 0);
+                }
 
 
-            public void init()
-            {
-               robot = new TestBot(hardwareMap);
+                public void loop()
+                {
+                    //telemetry.addData("startMotor", 0);
+                    encoderTarget = (int)(111.11111111*12+leftMotor.getCurrentPosition());
+                    //leftMotor.setPower(1.0f);
+                    //rightMotor.setPower(1.0f);
+                    //while(leftMotor.getCurrentPosition()<encoderTarget)
+                    //{
+                        telemetry.addData("leftMotor", leftMotor.getCurrentPosition());
+                        telemetry.addData("target", encoderTarget);
+                    //}
+                    //leftMotor.setPower(0);
+                    //rightMotor.setPower(0);*/
+                    //telemetry.addData("stopped", 0);
+                    leftMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+                    rightMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+                }
+                public void stop(){}
 
-            }
 
-            public void start()
-            {
-                telemetry.addData("running StartLoop", 0);
-                robot.moveStraightEncoders(10, .5f);
-
-            }
-            public void loop()
-            {
-                telemetry.addData("RunningLoop", 1);
-            }
-
-            public void stop()
-            {
-                stop();
-            }
 }

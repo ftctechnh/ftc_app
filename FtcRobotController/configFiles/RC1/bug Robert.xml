@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<Robot>
+    <MotorController name="Grabber controller" serialNumber="AL00XPKZ">
+        <Motor name="grabber" port="1" />
+        <Motor name="winch" port="2" />
+    </MotorController>
+    <MotorController name="Motor Controller 1" serialNumber="AL00VVFF">
+        <Motor name="frontLeft" port="1" />
+        <Motor name="frontRight" port="2" />
+    </MotorController>
+    <MotorController name="Drive Motors" serialNumber="AL00XT11">
+        <Motor name="right" port="1" />
+        <Motor name="left" port="2" />
+    </MotorController>
+    <ServoController name="Servo Controller 4" serialNumber="AL00YAZZ">
+        <Servo name="diverter" port="1" />
+        <Servo name="dispenserFlipper" port="2" />
+        <Servo name="dispenser" port="3" />
+        <Servo name="tapeMeasure" port="4" />
+        <Servo name="climberRelease" port="5" />
+    </ServoController>
+    <MotorController name="back tilt" serialNumber="AL00UYEO">
+        <Motor name="backRight" port="1" />
+        <Motor name="backLeft" port="2" />
+    </MotorController>
+</Robot>
