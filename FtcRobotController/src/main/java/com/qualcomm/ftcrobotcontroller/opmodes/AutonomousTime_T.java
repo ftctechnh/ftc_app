@@ -2,6 +2,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import java.lang.Math;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -13,6 +14,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class AutonomousTime_T extends LinearOpMode {
     DcMotor left;
     DcMotor right;
+    Servo climberReleaseServo;
 
     static DcMotor leftMotor;
     static DcMotor rightMotor;
@@ -103,7 +105,6 @@ public class AutonomousTime_T extends LinearOpMode {
         sleep(100);
     }
 
-    //m public void flippythethingy (float degrees, boolean isFullyDispensed)
     public void initialize()
     {
         // gyro = new PhoneGyrometer(hardwareMap);
@@ -135,4 +136,32 @@ public class AutonomousTime_T extends LinearOpMode {
         climberReleaseServoLeft.setPosition(0.0f);
         diverterServo.setPosition(0.5f);
     }
+    public void flippythethingyANDdispense (float degrees, boolean isFullyDispensed)
+    {
+        climberReleaseServo().setPosition(1.0f);
+    }
+
+    private Servo climberReleaseServo()
+    {
+        return climberReleaseServo;
+    }
+
+    /*
+    public void toggleRotorSpeed(boolean button, float speed) {
+        if (button) {
+            speedSwitch ^= buttonReady;
+            buttonReady = false;
+        } else {
+            buttonReady = true;
+        }
+        if (speedSwitch)
+        {
+            speed = 0.85f;
+        }
+        else
+        {
+            speed = 0.65f;
+        }
+    }
+     */
 }
