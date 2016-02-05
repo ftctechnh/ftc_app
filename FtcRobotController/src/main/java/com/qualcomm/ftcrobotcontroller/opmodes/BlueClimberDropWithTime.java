@@ -22,7 +22,7 @@ public class BlueClimberDropWithTime extends AutonomousTime_T
         Forwards((float) 76.25, true);
         turnOnCenter(48, true);
         Forwards(15, true);
-        //Forwards(6,true);
-        //turnOnCenter(90, false);
+        //try to do the flips
+
     }
 }
