@@ -9,13 +9,11 @@ import com.qualcomm.robotcore.hardware.DcMotorController;
  */
 public class LinearOpTest extends AutonomousTime_T
 {
+
     @Override
     public void runOpMode() throws InterruptedException
     {
-        left = hardwareMap.dcMotor.get("left");
-        right = hardwareMap.dcMotor.get("right");
-        left.setDirection(DcMotor.Direction.REVERSE);
-        right.setDirection(DcMotor.Direction.FORWARD);
+        initialize();
         waitForStart();
         Forwards(24, true);
         turnOnCenter(48, true);
