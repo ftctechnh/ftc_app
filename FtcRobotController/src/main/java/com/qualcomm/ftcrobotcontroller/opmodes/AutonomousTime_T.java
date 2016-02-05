@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class AutonomousTime_T extends LinearOpMode {
     DcMotor left;
     DcMotor right;
-    
+
     static DcMotor leftMotor;
     static DcMotor rightMotor;
     static DcMotor frontLeftMotor;
