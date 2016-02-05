@@ -15,7 +15,6 @@ public class TeenTitanGo extends OpMode {
     DcMotor motorScore;
     DcMotor harvestMotor;
 
-  //  Servo bucketServo;
     Servo rightTriggerArm;
     Servo leftTriggerArm;
     double rightTriggerArmDelta = 0.5;
@@ -63,15 +62,8 @@ public class TeenTitanGo extends OpMode {
     public void initHarvestMotor(){
 
         harvestMotor = hardwareMap.dcMotor.get("harvester_motor");
+        harvestMotor.setDirection(DcMotor.Direction.REVERSE);
     }
-
- /*   public void initBucketServo(){
-
-        bucketServo = hardwareMap.servo.get("bucket_servo");
-        bucketServo.setPosition(.5);
-
-    }
-*/
 
     public void init() {
 
@@ -80,8 +72,6 @@ public class TeenTitanGo extends OpMode {
         initScoreArm();
 
         initHarvestMotor();
-
-//        initBucketServo();
 
         initTriggerArms();
 
