@@ -5,22 +5,24 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 
 /**
- * Created by Peter&Kaitlin on 1/15/2016.
+ * Created by Kaitlin on 1/15/2016.
  */
-public class LinearOpTest extends AutonomousTime_T
+public class BlueClimberDropWithTime extends AutonomousTime_T
 {
-
     @Override
     public void runOpMode() throws InterruptedException
     {
-        initialize();
+        left = hardwareMap.dcMotor.get("left");
+        right = hardwareMap.dcMotor.get("right");
+        left.setDirection(DcMotor.Direction.REVERSE);
+        right.setDirection(DcMotor.Direction.FORWARD);
         waitForStart();
         Forwards(24, true);
         turnOnCenter(48, true);
         Forwards((float) 76.25, true);
         turnOnCenter(48, true);
         Forwards(15, true);
-        //Forwards(6,true);
-        //turnOnCenter(90, false);
+        //try to do the flips
+
     }
 }

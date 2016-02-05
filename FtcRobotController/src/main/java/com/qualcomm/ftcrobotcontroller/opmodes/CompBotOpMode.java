@@ -425,7 +425,8 @@ public class CompBotOpMode implements DriverInterface, AttachmentInterface
     }
 
 
-    public void checkAndFlipDispenserServo(boolean button) {
+    public void checkAndFlipDispenserServo(boolean button)
+    {
         if (button) {
             vendDeploy ^= buttonArm;
             buttonArm = false;
