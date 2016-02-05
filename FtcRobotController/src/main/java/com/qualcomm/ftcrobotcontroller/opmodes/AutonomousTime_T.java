@@ -2,14 +2,37 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+<<<<<<< HEAD
+import java.lang.Math;
+=======
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+>>>>>>> 96304c93f9a80dd981e4e22aa5e93960d2619135
 /**
  * Created by Peter on 1/31/2016.
+ * Edited by Kaitlin on 1/31/2016
  */
 public class AutonomousTime_T extends LinearOpMode
 {
+<<<<<<< HEAD
+    DcMotor left;
+    DcMotor right;
+
+    public void runOpMode() throws InterruptedException  { }
+
+    public void Forwards (float inches, boolean isForward) throws InterruptedException
+    {
+        if (isForward)
+        {
+            left.setPower(1.0f);
+            right.setPower(1.0f);
+        }
+        else
+        {
+            left.setPower(-1.0f);
+            right.setPower(-1.0f);
+=======
     static DcMotor leftMotor;
     static DcMotor rightMotor;
     static DcMotor frontLeftMotor;
@@ -73,8 +96,36 @@ public class AutonomousTime_T extends LinearOpMode
             sleep((long) (inches * 50.9554));
             leftMotor.setPower(0f);
             rightMotor.setPower(0f);
+>>>>>>> 96304c93f9a80dd981e4e22aa5e93960d2619135
         }
+        sleep((long) (inches * 50.9554));
+        left.setPower(0f);
+        right.setPower(0f);
+        sleep(100);
     }
+<<<<<<< HEAD
+
+    public void turnOnCenter (float degrees, boolean isLeft) throws InterruptedException
+    {
+        float inches = (float) ((degrees)*(Math.PI * 20)/180);
+        if(isLeft)
+        {
+            left.setPower(-1.0f);
+            right.setPower(1.0f);
+        }
+        else
+        {
+            left.setPower(1.0f);
+            right.setPower(-1.0f);
+        }
+        sleep((long) (inches * 50.9554));
+        left.setPower(0f);
+        right.setPower(0f);
+        sleep(100);
+    }
+
+    //m public void flippythethingy (float degrees, boolean isFullyDispensed)
+=======
     public void initialize()
     {
         // gyro = new PhoneGyrometer(hardwareMap);
@@ -106,4 +157,5 @@ public class AutonomousTime_T extends LinearOpMode
         climberReleaseServoLeft.setPosition(0.0f);
         diverterServo.setPosition(0.5f);
     }
+>>>>>>> 96304c93f9a80dd981e4e22aa5e93960d2619135
 }
