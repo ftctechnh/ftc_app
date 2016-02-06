@@ -176,7 +176,7 @@ public class JonsAlgo {
 
                 // Set the opposite drive motor to full power to finish aligning the robot
                 if (!rightDone) {
-                   robot.setPowerRight(ALIGN_FORWARD?100:-100);
+                   robot.setPowerRight(forwardBackward?100:-100);
                 }
             }
             // If the right motor hasn't changed an acceptable amount in the last second, then it has met resistance
@@ -187,7 +187,7 @@ public class JonsAlgo {
 
                 // Set the opposite drive motor to full poewr to finish aligning the robot
                 if (!leftDone) {
-                    robot.setPowerLeft(ALIGN_FORWARD?100:-100);
+                    robot.setPowerLeft(forwardBackward?100:-100);
                 }
             }
 

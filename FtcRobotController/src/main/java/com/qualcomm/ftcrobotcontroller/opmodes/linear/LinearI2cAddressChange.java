@@ -106,7 +106,7 @@ public class LinearI2cAddressChange extends LinearOpMode {
     // I2c addresses on Modern Robotics devices must be divisible by 2, and between 0x7e and 0x10
     // Different hardware may have different rules.
     // Be sure to read the requirements for the hardware you're using!
-    IrSeekerSensor.throwIfModernRoboticsI2cAddressIsInvalid(newAddress);
+//    IrSeekerSensor.throwIfModernRoboticsI2cAddressIsInvalid(newAddress);
 
     // wait for the start button to be pressed
     waitForStart();
