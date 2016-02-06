@@ -1,19 +1,11 @@
 package com.powerstackers.resq.opmodes.misc;
 
-import android.app.Activity;
-import android.graphics.Color;
-import android.hardware.Sensor;
-import android.view.View;
-
-import com.qualcomm.ftcrobotcontroller.R;
-import com.qualcomm.hardware.ModernRoboticsI2cColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.swerverobotics.library.ClassFactory;
-import org.swerverobotics.library.interfaces.TeleOp;
 
 /**
  * Created by Derek on 12/12/2015.
