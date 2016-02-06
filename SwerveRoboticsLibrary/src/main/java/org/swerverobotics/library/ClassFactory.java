@@ -28,7 +28,7 @@ public final class ClassFactory
      * use, this function has no effect. The APIs to easy legacy and modern motor controllers
      * are <em>identical</em>, which helps simplify programming.
      *
-     * <p>EasyLegacyMotorController is implemented on top of an {@link II2cDeviceClient} instance
+     * <p>EasyLegacyMotorController is implemented on top of an {@link I2cDeviceClient} instance
      * which completely handles all the complexities of read vs write mode switching and the
      * like, allowing the logic inside the controller itself to be extraordinarily simple.
      * In particular, the manual mode switching and loop() counting necessary with the stock
@@ -243,12 +243,16 @@ public final class ClassFactory
     //----------------------------------------------------------------------------------------------
 
     /**
-     * Creates an II2cDevice interface around an I2cDevice.
+     * Creates an independent I2cDevice implementation using information from an existing
+     * I2cDevice as connectivity information. This is deprecated, as the underlying SDK now
+     * has I2cDevice as an interface separate from implementation, so there's no need to have
+     * our own here.
      *
      * @param i2cDevice the device to wrap
      * @return          the II2cDevice wrapping
      */
-    public static II2cDevice createI2cDevice(I2cDevice i2cDevice)
+    @Deprecated
+    public static I2cDevice createI2cDevice(I2cDevice i2cDevice)
         {
         I2cController i2cController = i2cDevice.getI2cController();
         int port                    = i2cDevice.getPort();
@@ -262,31 +266,13 @@ public final class ClassFactory
      * @param port          the port on the controller to use
      * @return              the created II2cDevice instance
      */
-    public static II2cDevice createI2cDevice(I2cController i2cController, int port)
+    public static I2cDevice createI2cDevice(I2cController i2cController, int port)
         {
-        return new I2cDeviceOnI2cDeviceController(i2cController, port);
+        return new I2cDeviceImpl(i2cController, port);
         }
 
     /**
-     * Create a new II2cDeviceClient on an I2cDevice instance. The client is initially disengaged,
-     * and must be engaged before use.
-     *
-     * @param opmodeContext         the OpMode within which the creation is taking place
-     * @param i2cDevice             the II2cDevice to wrap
-     * @param i2cAddr8Bit           the I2C address at which the client is to communicate
-     * @param closeOnOpModeStop     if true, then when the OpMode stops, the client will automatically close
-     * @return                      the newly instantiated I2c device client
-     * @see II2cDeviceClient#engage()
-     */
-    public static II2cDeviceClient createI2cDeviceClient(OpMode opmodeContext, I2cDevice i2cDevice, int i2cAddr8Bit, boolean closeOnOpModeStop)
-        {
-        II2cDevice ii2cDevice = createI2cDevice(i2cDevice);
-        return createI2cDeviceClient(opmodeContext, ii2cDevice, i2cAddr8Bit, closeOnOpModeStop);
-        }
-
-
-    /**
-     * Create a new II2cDeviceClient on an II2cDevice instance. The client is initially
+     * Create a new II2cDeviceClient on an I2cDevice instance. The client is initially
      * disengaged, and must be engaged before use.
      *
      * @param opmodeContext         the OpMode within which the creation is taking place
@@ -294,11 +280,11 @@ public final class ClassFactory
      * @param i2cAddr8Bit           the I2C address at which the client is to communicate
      * @param closeOnOpModeStop     if true, then when the OpMode stops, the client will automatically close
      * @return                      the newly instantiated I2c device client
-     * @see II2cDeviceClient#engage()
+     * @see I2cDeviceClient#engage()
      */
-    public static II2cDeviceClient createI2cDeviceClient(OpMode opmodeContext, II2cDevice i2cDevice, int i2cAddr8Bit, boolean closeOnOpModeStop)
+    public static I2cDeviceClient createI2cDeviceClient(OpMode opmodeContext, I2cDevice i2cDevice, int i2cAddr8Bit, boolean closeOnOpModeStop)
         {
-        return new I2cDeviceClient(opmodeContext, i2cDevice, i2cAddr8Bit, closeOnOpModeStop);
+        return new I2cDeviceClientImpl(opmodeContext, i2cDevice, i2cAddr8Bit, closeOnOpModeStop);
         }
 
     //----------------------------------------------------------------------------------------------

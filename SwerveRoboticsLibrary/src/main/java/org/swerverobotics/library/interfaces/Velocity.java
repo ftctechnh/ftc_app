@@ -39,7 +39,7 @@ public class Velocity
         this.velocZ = velocZ;
         this.nanoTime = nanoTime;
         }
-    public Velocity(II2cDeviceClient.TimestampedData ts, double scale)
+    public Velocity(I2cDeviceClient.TimestampedData ts, double scale)
         {
         ByteBuffer buffer = ByteBuffer.wrap(ts.data).order(ByteOrder.LITTLE_ENDIAN);
         this.velocX = buffer.getShort() / scale;

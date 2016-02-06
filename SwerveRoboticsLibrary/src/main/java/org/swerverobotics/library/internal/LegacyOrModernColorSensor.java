@@ -74,10 +74,10 @@ public class LegacyOrModernColorSensor implements ColorSensor, IOpModeStateTrans
         this.ledIsEnabled    = false;
         this.ledStateIsKnown = false;
 
-        this.i2cDeviceClient.setReadWindow(new II2cDeviceClient.ReadWindow(
+        this.i2cDeviceClient.setReadWindow(new I2cDeviceClient.ReadWindow(
                 this.getOffsetBase() + OFFSET_READ_FIRST,
                 OFFSET_READ_MAX - OFFSET_READ_FIRST,
-                II2cDeviceClient.READ_MODE.REPEAT));
+                I2cDeviceClient.READ_MODE.REPEAT));
 
         RobotStateTransitionNotifier.register(context, this);
         }
@@ -113,8 +113,8 @@ public class LegacyOrModernColorSensor implements ColorSensor, IOpModeStateTrans
 
     public static ColorSensor create(OpMode context, I2cController controller, int port, int i2cAddr8Bit, ClassFactory.SENSOR_FLAVOR flavor, ColorSensor target)
         {
-        II2cDevice i2cDevice             = new I2cDeviceOnI2cDeviceController(controller, port);
-        I2cDeviceClient i2cDeviceClient  = new I2cDeviceClient(context, i2cDevice, i2cAddr8Bit, false);
+        I2cDevice i2cDevice              = new I2cDeviceImpl(controller, port);
+        I2cDeviceClient i2cDeviceClient  = new I2cDeviceClientImpl(context, i2cDevice, i2cAddr8Bit, false);
         LegacyOrModernColorSensor result = new LegacyOrModernColorSensor(context, i2cDeviceClient, flavor, target, controller, port);
         result.engage();
         return result;
