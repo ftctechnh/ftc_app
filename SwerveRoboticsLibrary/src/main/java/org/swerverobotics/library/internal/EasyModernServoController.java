@@ -1,13 +1,15 @@
 package org.swerverobotics.library.internal;
 
 import android.util.Log;
-import com.qualcomm.hardware.*;
+
+import com.qualcomm.hardware.HardwareFactory;
+import com.qualcomm.hardware.modernrobotics.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.exception.*;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.hardware.usb.RobotUsbDevice;
 import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.robotcore.util.SerialNumber;
+
 import org.swerverobotics.library.BuildConfig;
 import java.util.*;
 
@@ -47,20 +49,22 @@ public class EasyModernServoController extends EasyModernController implements S
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    private EasyModernServoController(OpMode context, ModernRoboticsUsbServoController target) throws RobotCoreException, InterruptedException
+    private EasyModernServoController(final OpMode context, final ModernRoboticsUsbServoController target) throws RobotCoreException, InterruptedException
         {
-        super(context, target, newDummyReadWriteRunnable(target.getSerialNumber()));
+        super(context, target, new ModernRoboticsUsbDevice.CreateReadWriteRunnable() {
+            @Override
+            public ReadWriteRunnable create(RobotUsbDevice robotUsbDevice) throws RobotCoreException, InterruptedException
+                {
+                return new ReadWriteRunnableStandard(context.hardwareMap.appContext, target.getSerialNumber(), robotUsbDevice, MONITOR_LENGTH, START_ADDRESS, false);
+                }
+            });
 
         this.target  = target;
         this.servos  = new LinkedList<Servo>();
         this.servoPositions  = new double[ADDRESS_CHANNEL_MAP.length];
         this.findTargetNameAndMapping();
-        }
 
-    static ReadWriteRunnableHandy newDummyReadWriteRunnable(SerialNumber serialNumber)
-        {
-        RobotUsbDevice robotUsbDevice = new DummyRobotUsbDevice();
-        return new ReadWriteRunnableHandy(serialNumber, robotUsbDevice, MONITOR_LENGTH, START_ADDRESS, false);
+        RobotStateTransitionNotifier.register(opmodeContext, this);
         }
 
     public static ServoController create(OpMode context, ServoController target, Collection<Servo> servos)
@@ -70,7 +74,7 @@ public class EasyModernServoController extends EasyModernController implements S
                 {
                 EasyModernServoController controller = new EasyModernServoController(context, (ModernRoboticsUsbServoController) target);
                 controller.setServos(servos);
-                controller.arm();
+                controller.armOrPretend();
                 return controller;
                 }
             else
@@ -87,7 +91,7 @@ public class EasyModernServoController extends EasyModernController implements S
 
     private void findTargetNameAndMapping()
         {
-        for (HardwareMap.DeviceMapping<?> mapping : Util.deviceMappings(this.context.hardwareMap))
+        for (HardwareMap.DeviceMapping<?> mapping : Util.deviceMappings(this.opmodeContext.hardwareMap))
             {
             for (Map.Entry<String,?> pair : mapping.entrySet())
                 {
@@ -107,7 +111,7 @@ public class EasyModernServoController extends EasyModernController implements S
 
     private void setServos(Collection<Servo> servos)
         {
-        assertTrue(!BuildConfig.DEBUG || !this.isArmed());
+        assertTrue(!BuildConfig.DEBUG || this.armingState==ARMINGSTATE.DISARMED);
 
         for (Servo servo : servos)
             {
@@ -134,65 +138,94 @@ public class EasyModernServoController extends EasyModernController implements S
             }
         }
 
-    @Override public void arm()
+    @Override protected void doArm() throws RobotCoreException, InterruptedException
         {
-        if (!this.isArmed())
+        doArmOrPretend(true);
+        }
+    @Override protected void doPretend() throws RobotCoreException, InterruptedException
+        {
+        doArmOrPretend(false);
+        }
+
+    private void doArmOrPretend(boolean isArm) throws RobotCoreException, InterruptedException
+        {
+        Log.d(LOGGING_TAG, String.format("arming easy servo controller %s%s...", HardwareFactory.getSerialNumberDisplayName(this.serialNumber), (isArm ? "" : " (pretend)")));
+
+        // Turn off target
+        this.floatHardware(target);
+        target.disarm();
+        target.suppressGlobalWarning(true);
+
+        // Swizzle while no one is on
+        this.usurpDevices();
+        if (this.targetName != null)
             {
-            Log.d(LOGGING_TAG, String.format("arming \"%s\"....", this.getConnectionInfo()));
-            this.usurpDevices();
+            this.targetDeviceMapping.put(this.targetName, this);
+            }
 
-            // Turn off target's usb stuff
-            this.eventLoopManager.unregisterSyncdDevice(MemberUtil.getReadWriteRunnableModernRoboticsUsbDevice(this.target));
-            this.floatHardware(target);
-            this.closeModernRoboticsUsbDevice(target);
-            //
-            if (this.targetName != null)
-                {
-                this.targetDeviceMapping.put(this.targetName, this);
-                }
-            this.isArmed = true;
+        // Turn us on
+        this.suppressGlobalWarning(false);
+        if (isArm)
+            this.armDevice();
+        else
+            this.pretendDevice();
 
-            // Turn on our usb stuff
-            this.installReadWriteRunnable(this, MONITOR_LENGTH, START_ADDRESS);
+        // Initialize
+        this.floatHardware();
+        Log.d(LOGGING_TAG, String.format("...arming easy servo controller %s complete", HardwareFactory.getSerialNumberDisplayName(this.serialNumber)));
+        }
 
-            this.floatHardware();
-            Log.d(LOGGING_TAG, String.format("....armed \"%s\"", this.getConnectionInfo()));
+    @Override protected void doDisarm() throws RobotCoreException, InterruptedException
+        {
+        Log.d(LOGGING_TAG, String.format("disarming easy servo controller \"%s\"...", HardwareFactory.getSerialNumberDisplayName(this.serialNumber)));
+
+        // Turn us off
+        this.disarmDevice();
+        this.suppressGlobalWarning(true);
+
+        // Swizzle while no one is on
+        this.deusurpDevices();
+        if (this.targetName != null)
+            {
+            this.targetDeviceMapping.put(this.targetName, this.target);
+            }
+
+        // Turn target back on
+        target.suppressGlobalWarning(false);
+        this.restoreTargetArmOrPretend();
+
+        Log.d(LOGGING_TAG, String.format("...disarming easy servo controller %s complete", HardwareFactory.getSerialNumberDisplayName(this.serialNumber)));
+        }
+
+
+    // Close should *not* restart the target
+    @Override protected void doCloseFromArmed()
+        {
+        floatHardware();
+        try {
+            this.disarmDevice();
+            this.target.close();
+            }
+        catch (Exception e)
+            {
+            Util.handleCapturedException(e);
             }
         }
 
-    @Override public void disarm()
+    @Override protected void doCloseFromOther()
         {
-        if (this.isArmed())
+        try {
+            this.disarmDevice();
+            }
+        catch (Exception e)
             {
-            Log.d(LOGGING_TAG, String.format("disarming \"%s\"....", this.getConnectionInfo()));
-
-            // Turn off our usb stuff
-            this.eventLoopManager.unregisterSyncdDevice(this.readWriteRunnable);
-            this.close();
-            //
-            this.isArmed = false;
-            if (this.targetName != null)
-                {
-                this.targetDeviceMapping.put(this.targetName, this.target);
-                }
-
-            // Turn target's usb stuff back on
-            this.installReadWriteRunnable(this.target, MONITOR_LENGTH, START_ADDRESS);
-
-            this.deusurpDevices();
-            Log.d(LOGGING_TAG, String.format("....disarmed \"%s\"", this.getConnectionInfo()));
+            Util.handleCapturedException(e);
             }
         }
 
     //----------------------------------------------------------------------------------------------
     // HardwareDevice
     //----------------------------------------------------------------------------------------------
-
-    @Override public void close()
-        {
-        floatHardware();
-        closeModernRoboticsUsbDevice(this);
-        }
 
     @Override public String getConnectionInfo()
         {

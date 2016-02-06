@@ -1,6 +1,7 @@
 package org.swerverobotics.library.internal;
 
-import com.qualcomm.hardware.*;
+import com.qualcomm.hardware.hitechnic.*;
+import com.qualcomm.hardware.modernrobotics.*;
 import com.qualcomm.robotcore.eventloop.opmode.*;
 import com.qualcomm.robotcore.hardware.*;
 import org.swerverobotics.library.*;
@@ -17,7 +18,7 @@ public class ThunkingHardwareFactory
     // State 
     //----------------------------------------------------------------------------------------------
 
-    OpMode               context;
+    OpMode               opmodeContext;
     HardwareMap          unthunkedHwmap;
     HardwareMap          thunkedHwmap;
     boolean              useExperimental;
@@ -26,11 +27,11 @@ public class ThunkingHardwareFactory
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    public ThunkingHardwareFactory(OpMode context, boolean useExperimental)
+    public ThunkingHardwareFactory(OpMode opmodeContext, boolean useExperimental)
         {
-        this.context            = context;
+        this.opmodeContext      = opmodeContext;
         this.thunkedHwmap       = null;
-        this.unthunkedHwmap     = context.hardwareMap;
+        this.unthunkedHwmap     = opmodeContext.hardwareMap;
         this.useExperimental    = useExperimental;
         }
     
@@ -45,7 +46,7 @@ public class ThunkingHardwareFactory
      */
     public final HardwareMap createThunkedHardwareMap()
         {
-        this.thunkedHwmap = new HardwareMap();
+        this.thunkedHwmap = new HardwareMap(this.opmodeContext.hardwareMap.appContext);
 
         //----------------------------------------------------------------------------
         // Modules
@@ -98,7 +99,7 @@ public class ThunkingHardwareFactory
                 {
                 DcMotor motor1 = motors.get(controller).get(0);
                 DcMotor motor2 = motors.get(controller).size() > 1 ? motors.get(controller).get(1) : null;
-                ClassFactory.createEasyMotorController(this.context, motor1, motor2);
+                ClassFactory.createEasyMotorController(this.opmodeContext, motor1, motor2);
                 }
             }
 
@@ -124,7 +125,7 @@ public class ThunkingHardwareFactory
             if (MemberUtil.isModernServoController(controller) || MemberUtil.isLegacyServoController(controller))
                 {
                 Collection<Servo> thisControllersServos = servos.get(controller);
-                ClassFactory.createEasyServoController(this.context, thisControllersServos);
+                ClassFactory.createEasyServoController(this.opmodeContext, thisControllersServos);
                 }
             }
 
@@ -198,7 +199,7 @@ public class ThunkingHardwareFactory
                     ServoController targetController = target.getController();
                     ServoController controller = findWrapper(thunkedHwmap.servoController, targetController, ThunkedServoController.create(targetController));
 
-                    return new ThreadSafeServo(
+                    return new EasyServo(
                             controller,
                             target.getPortNumber(),
                             target.getDirection()
@@ -369,13 +370,13 @@ public class ThunkingHardwareFactory
                 }
         );
 
-        // Thunk the voltage sensors
+        // Copy the voltage sensors
         createThunks(unthunkedHwmap.voltageSensor, thunkedHwmap.voltageSensor,
                 new IThunkFactory<VoltageSensor>()
                 {
                 @Override public VoltageSensor create(VoltageSensor target)
                     {
-                    return (target instanceof EasyLegacyMotorController) ? target : ThunkedVoltageSensor.create(target);
+                    return target;
                     }
                 }
         );
@@ -393,7 +394,7 @@ public class ThunkingHardwareFactory
                         }
                     else if (target instanceof HiTechnicNxtColorSensor || target instanceof ModernRoboticsI2cColorSensor)
                         {
-                        return ClassFactory.createSwerveColorSensor(context, target);
+                        return ClassFactory.createSwerveColorSensor(opmodeContext, target);
                         }
                     else
                         return ThunkedColorSensor.create(target);
@@ -422,18 +423,6 @@ public class ThunkingHardwareFactory
                     }
                 }
         );
-
-        //----------------------------------------------------------------------------
-        // Context
-        //----------------------------------------------------------------------------
-
-        // Carry over the app context
-        thunkedHwmap.appContext = unthunkedHwmap.appContext;
-
-        // If they haven't actually given us one (early versions of the runtime didn't actually set one),
-        // then fill one in through the use of magic.
-        if (thunkedHwmap.appContext == null)
-            thunkedHwmap.appContext = AnnotatedOpModeRegistrar.getApplicationContext();
 
         return thunkedHwmap;
         }

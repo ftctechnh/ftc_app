@@ -6,7 +6,7 @@ import org.swerverobotics.library.interfaces.*;
 /**
  * A LightSensor that can be called on a synchronous thread.
  */
-public class ThunkedLightSensor extends LightSensor implements IThunkWrapper<LightSensor>
+public class ThunkedLightSensor implements LightSensor, IThunkWrapper<LightSensor>
     {
     //----------------------------------------------------------------------------------------------
     // State

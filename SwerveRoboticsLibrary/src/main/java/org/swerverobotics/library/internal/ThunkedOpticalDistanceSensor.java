@@ -6,7 +6,7 @@ import org.swerverobotics.library.interfaces.*;
 /**
  * Another in our story
  */
-public class ThunkedOpticalDistanceSensor extends OpticalDistanceSensor implements IThunkWrapper<OpticalDistanceSensor>
+public class ThunkedOpticalDistanceSensor implements OpticalDistanceSensor, IThunkWrapper<OpticalDistanceSensor>
     {
     //----------------------------------------------------------------------------------------------
     // State

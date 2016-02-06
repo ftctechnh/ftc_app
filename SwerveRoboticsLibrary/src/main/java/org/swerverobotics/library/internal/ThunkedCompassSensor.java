@@ -1,14 +1,14 @@
 package org.swerverobotics.library.internal;
 
+import com.qualcomm.hardware.hitechnic.*;
 import com.qualcomm.robotcore.hardware.*;
 import static junit.framework.Assert.*;
 import org.swerverobotics.library.*;
-import org.swerverobotics.library.interfaces.*;
 
 /**
  * A CompassSensor that can be called on the main() thread.
  */
-public class ThunkedCompassSensor extends CompassSensor implements IThunkedReadWriteListener, IThunkWrapper<CompassSensor>
+public class ThunkedCompassSensor implements CompassSensor, IThunkedReadWriteListener, IThunkWrapper<CompassSensor>
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -123,7 +123,7 @@ public class ThunkedCompassSensor extends CompassSensor implements IThunkedReadW
         //
         // But this is better:
         //
-        return this.target instanceof com.qualcomm.hardware.HiTechnicNxtCompassSensor;
+        return this.target instanceof HiTechnicNxtCompassSensor;
         }
     private boolean isOffline()
         {

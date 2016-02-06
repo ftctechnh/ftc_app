@@ -1,17 +1,13 @@
 package org.swerverobotics.library.internal;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
+import com.qualcomm.robotcore.hardware.Engagable;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.I2cController;
 import com.qualcomm.robotcore.hardware.LegacyModule;
 
-import org.swerverobotics.library.exceptions.RuntimeInterruptedException;
-
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,7 +28,7 @@ public class I2cDeviceReplacementHelper<TARGET>
     private I2cController                       controller;
     private int                                 targetPort;
     private I2cController.I2cPortReadyCallback  targetCallback;
-    private boolean                             isArmed;
+    private boolean                             isEngaged;
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -41,62 +37,59 @@ public class I2cDeviceReplacementHelper<TARGET>
     public I2cDeviceReplacementHelper(OpMode context, TARGET client, /* may be null */ TARGET target, I2cController controller, int targetPort)
         {
         this.context        = context;
-        this.isArmed        = false;
+        this.isEngaged      = false;
         this.client         = client;
         this.target         = target;       // may be null
         this.controller     = controller;
         this.targetPort     = targetPort;
+        this.targetCallback = controller.getI2cPortReadyCallback(targetPort);
 
         this.targetName     = null;
         this.targetDeviceMapping = null;
         if (this.target != null)
             findTargetNameAndMapping();
-
-        if (controller instanceof LegacyModule)
-            {
-            this.targetCallback = MemberUtil.callbacksOfLegacyModule((LegacyModule)controller)[targetPort];
-            }
-        else if (controller instanceof DeviceInterfaceModule)
-            {
-            this.targetCallback = MemberUtil.callbacksOfDeviceInterfaceModule((DeviceInterfaceModule)controller)[targetPort];
-            }
-        else
-            throw new IllegalArgumentException(String.format("unknown controller flavor: %s", controller.getClass().getSimpleName()));
         }
 
     //----------------------------------------------------------------------------------------------
     // Operations
     //----------------------------------------------------------------------------------------------
 
-    boolean isArmed()
+    boolean isEngaged()
         {
-        return this.isArmed;
+        return this.isEngaged;
         }
 
-    void arm()
+    void engage()
         {
-        if (!this.isArmed)
+        if (!this.isEngaged)
             {
-            // Have the existing controller stop using the callback
-            this.controller.deregisterForPortReadyCallback(this.targetPort);
+            // Have the existing controller stop managing its hardware
+            if (target instanceof Engagable)
+                ((Engagable)this.target).disengage();
+            else
+                this.controller.deregisterForPortReadyCallback(this.targetPort);
 
             // Put ourselves in the hardware map
             if (this.targetName != null) this.targetDeviceMapping.put(this.targetName, this.client);
-            this.isArmed = true;
+
+            this.isEngaged = true;
             }
         }
 
-    void disarm()
+    void disengage()
         {
-        if (this.isArmed)
+        if (this.isEngaged)
             {
-            this.isArmed = false;
+            this.isEngaged = false;
 
             // Put the original guy back in the hardware map
             if (this.targetName != null) this.targetDeviceMapping.put(this.targetName, this.target);
 
             // Start up the original controller again
-            this.controller.registerForI2cPortReadyCallback(this.targetCallback, this.targetPort);
+            if (target instanceof Engagable)
+                ((Engagable)this.target).engage();
+            else
+                this.controller.registerForI2cPortReadyCallback(this.targetCallback, this.targetPort);
             }
         }
 

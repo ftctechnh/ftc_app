@@ -1,6 +1,8 @@
 package org.swerverobotics.library.internal;
 
 import android.util.Log;
+
+import com.qualcomm.hardware.hitechnic.HiTechnicNxtServoController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.Range;
@@ -15,7 +17,7 @@ import static org.swerverobotics.library.internal.EasyModernServoController.*;
 /**
  * An alternative implementation of a Legacy Servo controller.
  */
-public class EasyLegacyServoController implements ServoController, IOpModeStateTransitionEvents
+public class EasyLegacyServoController extends I2cControllerPortDeviceImpl implements ServoController, IOpModeStateTransitionEvents, Engagable
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -59,12 +61,10 @@ public class EasyLegacyServoController implements ServoController, IOpModeStateT
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    private EasyLegacyServoController(OpMode context, II2cDeviceClient ii2cDeviceClient, ServoController target)
+    private EasyLegacyServoController(OpMode context, II2cDeviceClient ii2cDeviceClient, ServoController target, I2cController controller, int targetPort)
         {
-        LegacyModule legacyModule = MemberUtil.legacyModuleOfLegacyServoController(target);
-        int          targetPort   = MemberUtil.portOfLegacyServoController(target);
-        this.helper          = new I2cDeviceReplacementHelper<ServoController>(context, this, target, legacyModule, targetPort);
-
+        super(((I2cControllerPortDevice)target).getI2cController(), ((I2cControllerPortDevice)target).getPort());
+        this.helper          = new I2cDeviceReplacementHelper<ServoController>(context, this, target, controller, targetPort);
         this.i2cDeviceClient = ii2cDeviceClient;
         this.target          = target;
         this.servos          = new LinkedList<Servo>();
@@ -95,17 +95,18 @@ public class EasyLegacyServoController implements ServoController, IOpModeStateT
         {
         if (MemberUtil.isLegacyServoController(target))
             {
-            LegacyModule legacyModule = MemberUtil.legacyModuleOfLegacyServoController(target);
-            int          port         = MemberUtil.portOfLegacyServoController(target);
+            HiTechnicNxtServoController legacyTarget = (HiTechnicNxtServoController)target;
+            I2cController module      = legacyTarget.getI2cController();
+            int          port         = legacyTarget.getPort();
             int          i2cAddr8Bit  = MemberUtil.i2cAddrOfLegacyServoController(target);
 
             // Make a new legacy servo controller
-            II2cDevice i2cDevice                 = new I2cDeviceOnI2cDeviceController(legacyModule, port);
+            II2cDevice i2cDevice                 = new I2cDeviceOnI2cDeviceController(module, port);
             I2cDeviceClient i2cDeviceClient      = new I2cDeviceClient(context, i2cDevice, i2cAddr8Bit, false);
-            EasyLegacyServoController controller = new EasyLegacyServoController(context, i2cDeviceClient, target);
+            EasyLegacyServoController controller = new EasyLegacyServoController(context, i2cDeviceClient, target, module, port);
 
             controller.setServos(servos);
-            controller.arm();
+            controller.engage();
 
             return controller;
             }
@@ -124,7 +125,7 @@ public class EasyLegacyServoController implements ServoController, IOpModeStateT
 
     private void setServos(Collection<Servo> servos)
         {
-        assertTrue(!BuildConfig.DEBUG || !this.isArmed());
+        assertTrue(!BuildConfig.DEBUG || !this.isEngaged());
 
         for (Servo servo : servos)
             {
@@ -151,33 +152,33 @@ public class EasyLegacyServoController implements ServoController, IOpModeStateT
             }
         }
 
-    synchronized private void arm()
+    synchronized public void engage()
     // Disarm the existing controller and arm us
         {
-        if (!this.isArmed())
+        if (!this.isEngaged())
             {
             this.usurpDevices();
 
-            this.helper.arm();
+            this.helper.engage();
 
-            this.i2cDeviceClient.arm();
+            this.i2cDeviceClient.engage();
             this.floatHardware();
             }
         }
 
-    synchronized private boolean isArmed()
+    synchronized public boolean isEngaged()
         {
-        return this.helper.isArmed();
+        return this.helper.isEngaged();
         }
 
-    synchronized private void disarm()
+    synchronized public void disengage()
     // Disarm us and re-arm the target
         {
-        if (this.isArmed())
+        if (this.isEngaged())
             {
-            this.i2cDeviceClient.disarm();
+            this.i2cDeviceClient.disengage();
 
-            this.helper.disarm();
+            this.helper.disengage();
 
             this.deusurpDevices();
             }
@@ -204,10 +205,10 @@ public class EasyLegacyServoController implements ServoController, IOpModeStateT
 
     @Override public synchronized void close()
         {
-        if (this.isArmed())
+        if (this.isEngaged())
             {
             this.floatHardware(); // mirrors robot controller runtime behavior
-            this.disarm();
+            this.disengage();
             }
         }
 
@@ -218,10 +219,10 @@ public class EasyLegacyServoController implements ServoController, IOpModeStateT
     @Override synchronized public boolean onUserOpModeStop()
         {
         Log.d(LOGGING_TAG, "Easy: auto-stopping...");
-        if (this.isArmed())
+        if (this.isEngaged())
             {
             this.stopHardware();  // mirror StopRobotOpMode
-            this.disarm();
+            this.disengage();
             }
         Log.d(LOGGING_TAG, "Easy: ... done");
         return true;    // unregister us
@@ -290,7 +291,7 @@ public class EasyLegacyServoController implements ServoController, IOpModeStateT
 
     synchronized void write(int ireg, byte bData)
         {
-        if (this.isArmed())
+        if (this.isEngaged())
             this.i2cDeviceClient.write8(ireg, bData);
         }
 

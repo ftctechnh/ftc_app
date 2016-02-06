@@ -53,13 +53,14 @@ public final class ClassFactory
      * motors; the existing controller is disabled. When the current OpMode is complete, the processed
      * is reversed.
      *
-     * @param context   the OpMode within which this creation is occurring
+     * @param opmodeContext the OpMode within which this creation is occurring
      * @param motor1    one of the up-to-two motor controllers which share a legacy motor controller. May be null.
      * @param motor2    the possibly other motor controller on the same controller. May be null.
+     * @return the newly created easy motor controller, or null the target controller was of an unknown type
      *
      * @see org.swerverobotics.library.examples.SynchMotorLoopPerf
      */
-    public static void createEasyMotorController(OpMode context, DcMotor motor1, DcMotor motor2)
+    public static DcMotorController createEasyMotorController(OpMode opmodeContext, DcMotor motor1, DcMotor motor2)
         {
         DcMotorController target = motor1==null ? null : motor1.getController();
 
@@ -67,16 +68,19 @@ public final class ClassFactory
             throw new IllegalArgumentException("motors do not share the same controller");
 
         if (MemberUtil.isLegacyMotorController(target))
-            EasyLegacyMotorController.create(context, target, motor1, motor2);
+            return EasyLegacyMotorController.create(opmodeContext, target, motor1, motor2);
 
         else if (MemberUtil.isModernMotorController(target))
-            EasyModernMotorController.create(context, target, motor1, motor2);
+            return EasyModernMotorController.create(opmodeContext, target, motor1, motor2);
+
+        else
+            return null;
         }
 
     @Deprecated
-    public static void createEasyLegacyMotorController(OpMode context, DcMotor motor1, DcMotor motor2)
+    public static void createEasyLegacyMotorController(OpMode opmodeContext, DcMotor motor1, DcMotor motor2)
         {
-        createEasyMotorController(context, motor1, motor2);
+        createEasyMotorController(opmodeContext, motor1, motor2);
         }
 
     /**
@@ -89,13 +93,14 @@ public final class ClassFactory
      * end of the next loop() cycle, which simplifies programming. This is similar to the
      * enhancements found in the easy motor controller. Some small bugs are also fixed.
      *
-     * @param context   the OpMode within which the creation is occurring
+     * @param opmodeContext the OpMode within which the creation is occurring
      * @param servos    the list of servos whose controller implementation we are to change.
      *                  May not be null or empty.
+     * @return the newly created easy servo controller, or null the target controller was of an unknown type
      *
      * @see #createEasyMotorController(OpMode, DcMotor, DcMotor)
      */
-    public static void createEasyServoController(OpMode context, Collection<Servo> servos)
+    public static ServoController createEasyServoController(OpMode opmodeContext, Collection<Servo> servos)
         {
         if (servos != null && !servos.isEmpty())
             {
@@ -109,10 +114,13 @@ public final class ClassFactory
                 }
 
             if (MemberUtil.isModernServoController(controller))
-                EasyModernServoController.create(context, controller, servos);
+                return EasyModernServoController.create(opmodeContext, controller, servos);
 
             else if (MemberUtil.isLegacyServoController(controller))
-                EasyLegacyServoController.create(context, controller, servos);
+                return EasyLegacyServoController.create(opmodeContext, controller, servos);
+
+            else
+                return null;
             }
         else
             throw new IllegalArgumentException("no servos provided");
@@ -129,14 +137,14 @@ public final class ClassFactory
      * Instantiates a driver object for a  AdaFruit BNO055 sensor which resides at the indicated I2cDevice using
      * default values for configuration parameters.
      *
-     * @param context       the OpMode within which this creation is taking place
+     * @param opmodeContext the OpMode within which this creation is taking place
      * @param i2cDevice     the robot controller runtime object representing the sensor
      * @return              the interface to the instantiated sensor object.
      * @see #createAdaFruitBNO055IMU(OpMode, I2cDevice, IBNO055IMU.Parameters)
      */
-    public static IBNO055IMU createAdaFruitBNO055IMU(OpMode context, I2cDevice i2cDevice)
+    public static IBNO055IMU createAdaFruitBNO055IMU(OpMode opmodeContext, I2cDevice i2cDevice)
         {
-        return createAdaFruitBNO055IMU(context, i2cDevice, new IBNO055IMU.Parameters());
+        return createAdaFruitBNO055IMU(opmodeContext, i2cDevice, new IBNO055IMU.Parameters());
         }
 
     /**
@@ -178,7 +186,7 @@ public final class ClassFactory
      * {@link org.swerverobotics.library.interfaces.IBNO055IMU.Parameters#calibrationData parameters.calibrationData}
      * where they will automatically be applied.</p>
      *
-     * @param context       the OpMode within which this creation is taking place
+     * @param opmodeContext the OpMode within which this creation is taking place
      * @param i2cDevice     the robot controller runtime object representing the sensor
      * @param parameters    the parameters with which the sensor should be initialized
      * @return              the interface to the instantiated sensor object. This object also
@@ -186,9 +194,9 @@ public final class ClassFactory
      *                      for debugging.
      * @see #createAdaFruitBNO055IMU(OpMode, I2cDevice)
      */
-    public static IBNO055IMU createAdaFruitBNO055IMU(OpMode context, I2cDevice i2cDevice, IBNO055IMU.Parameters parameters)
+    public static IBNO055IMU createAdaFruitBNO055IMU(OpMode opmodeContext, I2cDevice i2cDevice, IBNO055IMU.Parameters parameters)
         {
-        return AdaFruitBNO055IMU.create(context, i2cDevice, parameters);
+        return AdaFruitBNO055IMU.create(opmodeContext, i2cDevice, parameters);
         }
 
 
@@ -197,7 +205,7 @@ public final class ClassFactory
      * disabled in the process. The alternate implementation robustly implements the ColorSensor
      * functionality.
      *
-     * @param context       the OpMode within which this sensor is to be used
+     * @param opmodeContext the OpMode within which this sensor is to be used
      * @param target        the sensor whose implementation we are to replace
      * @return an alternate color sensor implementation
      *
@@ -205,15 +213,15 @@ public final class ClassFactory
      * @see org.swerverobotics.library.examples.LinearColorDemo
      * @see org.swerverobotics.library.examples.SyncColorDemo
      */
-    public static ColorSensor createSwerveColorSensor(OpMode context, ColorSensor target)
+    public static ColorSensor createSwerveColorSensor(OpMode opmodeContext, ColorSensor target)
         {
-        return LegacyOrModernColorSensor.create(context, target);
+        return LegacyOrModernColorSensor.create(opmodeContext, target);
         }
 
     /**
      * Creates a implementation of a color sensor from the provided information.
      *
-     * @param context       the OpMode within which this sensor is to be used
+     * @param opmodeContext the OpMode within which this sensor is to be used
      * @param controller    the controller on which the sensor resides
      * @param port          the port on the controller at which it so resides
      * @param i2cAddr8Bit   the I2C address of the sensor
@@ -224,9 +232,9 @@ public final class ClassFactory
      * @see org.swerverobotics.library.examples.LinearColorDemo
      * @see org.swerverobotics.library.examples.SyncColorDemo
      */
-    public static ColorSensor createSwerveColorSensor(OpMode context, I2cController controller, int port, int i2cAddr8Bit, ClassFactory.SENSOR_FLAVOR flavor)
+    public static ColorSensor createSwerveColorSensor(OpMode opmodeContext, I2cController controller, int port, int i2cAddr8Bit, ClassFactory.SENSOR_FLAVOR flavor)
         {
-        return LegacyOrModernColorSensor.create(context, controller, port, i2cAddr8Bit, flavor, null);
+        return LegacyOrModernColorSensor.create(opmodeContext, controller, port, i2cAddr8Bit, flavor, null);
         }
 
 
@@ -242,8 +250,8 @@ public final class ClassFactory
      */
     public static II2cDevice createI2cDevice(I2cDevice i2cDevice)
         {
-        I2cController i2cController = MemberUtil.i2cControllerOfI2cDevice(i2cDevice);
-        int port                    = MemberUtil.portOfI2cDevice(i2cDevice);
+        I2cController i2cController = i2cDevice.getController();
+        int port                    = i2cDevice.getPort();
         return createI2cDevice(i2cController, port);
         }
 
@@ -260,37 +268,37 @@ public final class ClassFactory
         }
 
     /**
-     * Create a new II2cDeviceClient on an I2cDevice instance. The client is initially disarmed,
-     * and must be armed before use.
+     * Create a new II2cDeviceClient on an I2cDevice instance. The client is initially disengaged,
+     * and must be engaged before use.
      *
-     * @param context               the OpMode within which the creation is taking place
+     * @param opmodeContext         the OpMode within which the creation is taking place
      * @param i2cDevice             the II2cDevice to wrap
      * @param i2cAddr8Bit           the I2C address at which the client is to communicate
      * @param closeOnOpModeStop     if true, then when the OpMode stops, the client will automatically close
      * @return                      the newly instantiated I2c device client
-     * @see II2cDeviceClient#arm()
+     * @see II2cDeviceClient#engage()
      */
-    public static II2cDeviceClient createI2cDeviceClient(OpMode context, I2cDevice i2cDevice, int i2cAddr8Bit, boolean closeOnOpModeStop)
+    public static II2cDeviceClient createI2cDeviceClient(OpMode opmodeContext, I2cDevice i2cDevice, int i2cAddr8Bit, boolean closeOnOpModeStop)
         {
         II2cDevice ii2cDevice = createI2cDevice(i2cDevice);
-        return createI2cDeviceClient(context, ii2cDevice, i2cAddr8Bit, closeOnOpModeStop);
+        return createI2cDeviceClient(opmodeContext, ii2cDevice, i2cAddr8Bit, closeOnOpModeStop);
         }
 
 
     /**
      * Create a new II2cDeviceClient on an II2cDevice instance. The client is initially
-     * disarmed, and must be armed before use.
+     * disengaged, and must be engaged before use.
      *
-     * @param context               the OpMode within which the creation is taking place
+     * @param opmodeContext         the OpMode within which the creation is taking place
      * @param i2cDevice             the II2cDevice to wrap
      * @param i2cAddr8Bit           the I2C address at which the client is to communicate
      * @param closeOnOpModeStop     if true, then when the OpMode stops, the client will automatically close
      * @return                      the newly instantiated I2c device client
-     * @see II2cDeviceClient#arm()
+     * @see II2cDeviceClient#engage()
      */
-    public static II2cDeviceClient createI2cDeviceClient(OpMode context, II2cDevice i2cDevice, int i2cAddr8Bit, boolean closeOnOpModeStop)
+    public static II2cDeviceClient createI2cDeviceClient(OpMode opmodeContext, II2cDevice i2cDevice, int i2cAddr8Bit, boolean closeOnOpModeStop)
         {
-        return new I2cDeviceClient(context, i2cDevice, i2cAddr8Bit, closeOnOpModeStop);
+        return new I2cDeviceClient(opmodeContext, i2cDevice, i2cAddr8Bit, closeOnOpModeStop);
         }
 
     //----------------------------------------------------------------------------------------------

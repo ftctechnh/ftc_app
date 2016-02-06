@@ -6,9 +6,12 @@ import com.qualcomm.ftccommon.FtcEventLoopHandler;
 import com.qualcomm.ftccommon.UpdateUI;
 import com.qualcomm.hardware.HardwareFactory;
 import com.qualcomm.robotcore.eventloop.EventLoopManager;
+import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 import com.qualcomm.robotcore.exception.RobotCoreException;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.robocol.Command;
+import com.qualcomm.robotcore.util.RobotLog;
 
 import java.util.concurrent.Semaphore;
 
@@ -22,8 +25,8 @@ public class SwerveFtcEventLoop extends FtcEventLoop
     // State
     //----------------------------------------------------------------------------------------------
 
-    private FtcEventLoopHandler ftcEventLoopHandler;
-    private EventLoopManager    eventLoopManager;
+    protected SwerveOpModeManager swerveOpModeManager;
+    protected EventLoopManager    eventLoopManager;
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -32,24 +35,26 @@ public class SwerveFtcEventLoop extends FtcEventLoop
     public SwerveFtcEventLoop(HardwareFactory hardwareFactory, OpModeRegister register, UpdateUI.Callback callback, Context robotControllerContext)
         {
         super(hardwareFactory, register, callback, robotControllerContext);
-        this.ftcEventLoopHandler = MemberUtil.handlerOfFtcEventLoop(this);
         setEventLoopManager();
+        }
+
+    @Override
+    protected OpModeManager createOpModeManager()
+        {
+        this.swerveOpModeManager = new SwerveOpModeManager(new HardwareMap(this.robotControllerContext));
+        return this.swerveOpModeManager;
         }
 
     void setEventLoopManager()
         {
         if (null == this.eventLoopManager)
-            this.eventLoopManager = MemberUtil.eventLoopManagerOfFtcEventLoopHandler(this.ftcEventLoopHandler);
+            this.eventLoopManager = this.ftcEventLoopHandler.getEventLoopManager();
         }
 
     //----------------------------------------------------------------------------------------------
     // Operations
     //----------------------------------------------------------------------------------------------
 
-    public FtcEventLoopHandler getFtcEventLoopHandler()
-        {
-        return this.ftcEventLoopHandler;
-        }
     public EventLoopManager getEventLoopManager()
         {
         return this.eventLoopManager;
@@ -64,5 +69,14 @@ public class SwerveFtcEventLoop extends FtcEventLoop
         setEventLoopManager();
         //
         super.loop();
+        }
+
+    @Override
+    public synchronized void teardown() throws RobotCoreException
+        {
+        // Do our shutdown first so that the system 'teardown' log messages are
+        // really at the end.
+        this.swerveOpModeManager.onRobotShutdown();
+        super.teardown();
         }
     }

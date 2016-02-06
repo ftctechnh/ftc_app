@@ -2,13 +2,11 @@ package org.swerverobotics.library.internal;
 
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
-import org.swerverobotics.library.*;
+
 import org.swerverobotics.library.exceptions.*;
 import java.lang.reflect.*;
 import java.util.*;
 import java.util.concurrent.*;
-
-import static junit.framework.Assert.*;
 
 /**
  * Various internal utilities that assist us.
@@ -214,23 +212,84 @@ public class Util
     // Private field access - utility
     //----------------------------------------------------------------------------------------------
 
-    // The Field of the 'fieldDexIndex' field of class Field
+    // Dalvik VM: the Field of the 'fieldDexIndex' field of class Field
     static Field fieldDexIndexField = getFieldDexIndexField();
+
+    // ART VM: The Field of the 'artField' field of class Field (Lollipop and greater)
+    static Field fieldArtField = getFieldArtField();
+    // ART VM: The dexIndex field of an ArtField
+    static Field fieldArtFieldDexIndex = getFieldArtFieldDexIndex();
 
     static Field getFieldDexIndexField()
     // Find the Field for the 'fieldDexIndex' field of class Field.
+    // This works on the Dalvik VM.
         {
-        Class   fieldClass      = Field.class;
-        Class   fieldSuperClass = fieldClass.getSuperclass();
-        assertTrue(!BuildConfig.DEBUG || fieldSuperClass.getSuperclass() == Object.class);
+        Field result = null;
+        try {
+            Class   fieldClass      = Field.class;
+            Class   fieldSuperClass = fieldClass.getSuperclass();
 
-        List<Field> superFields = getLocalDeclaredNonStaticFields(fieldSuperClass, false);
-        List<Field> fieldFields = getLocalDeclaredNonStaticFields(fieldClass, false);
+            List<Field> superFields = getLocalDeclaredNonStaticFields(fieldSuperClass, false);
+            List<Field> fieldFields = getLocalDeclaredNonStaticFields(fieldClass, false);
 
-        int iFieldTarget = 7;
+            int iFieldTarget = 7;
 
-        Field result = fieldFields.get(iFieldTarget - superFields.size());
-        if (!result.isAccessible())
+            result = fieldFields.get(iFieldTarget - superFields.size());
+            if (!result.isAccessible())
+                result.setAccessible(true);
+            }
+        catch (Exception ignored)
+            {
+            result = null;
+            }
+        return result;
+        }
+
+    static Field getFieldArtField()
+    // Find the Field for the 'artField' field of class Field
+    // This works on the ART VM.
+        {
+        return getFieldByName(Field.class, "artField");
+        }
+
+    static Field getFieldArtFieldDexIndex()
+    // Field the 'fieldDexIndex' field of the class ArtField
+    // This works on the ART VM.
+        {
+        Field result = null;
+        try {
+            Class classArtField = Class.forName("java.lang.reflect.ArtField");
+            if (classArtField != null)
+                return getFieldByName(classArtField, "fieldDexIndex");
+            }
+        catch (Exception e)
+            {
+            result = null;
+            }
+        return result;
+        }
+
+    static Field getFieldByName(Class klass, String name)
+        {
+        Field result = null;
+        try {
+            List<Field> fieldFields = getLocalDeclaredNonStaticFields(klass, false);
+
+            for (Field field : fieldFields)
+                {
+                if (field.getName().equals(name))
+                    {
+                    result = field;
+                    break;
+                    }
+                }
+            }
+        catch (Exception e)
+            {
+            result = null;
+            }
+
+        if (result != null && !result.isAccessible())
             result.setAccessible(true);
 
         return result;
@@ -248,13 +307,26 @@ public class Util
     static int getSortIndex(Field field)
     // Returns a sort key that will sort Fields in their declared order
         {
+        int result = -1;
         try {
-            return fieldDexIndexField.getInt(field);
+            if (fieldDexIndexField != null)
+                {
+                // Dalvik VM
+                result = fieldDexIndexField.getInt(field);
+                }
+
+            else if (fieldArtField != null)
+                {
+                // ART VM
+                Object artField = fieldArtField.get(field);
+                result = fieldArtFieldDexIndex.getInt(artField);
+                }
             }
         catch (IllegalAccessException e)
             {
             throw SwerveRuntimeException.wrap(e);
             }
+        return result;
         }
 
     //----------------------------------------------------------------------------------------------
@@ -293,7 +365,8 @@ public class Util
         {
         if (clazz.getSuperclass() == null)
             {
-            return getLocalDeclaredNonStaticFields(clazz, sort);
+            List<Field> result = /*getLocalDeclaredNonStaticFields(clazz, sort)*/ /*only want user-visible ones*/ new LinkedList<Field>();
+            return result;
             }
         else
             {
@@ -557,14 +630,14 @@ public class Util
 
     public static void handleCapturedInterrupt(InterruptedException e)
         {
-        handleCapturedException((Exception)e);
+        Thread.currentThread().interrupt();
         }
 
     public static void handleCapturedException(Exception e)
         {
-        if (e instanceof InterruptedException || e instanceof RuntimeInterruptedException);
+        if (e instanceof InterruptedException || e instanceof RuntimeInterruptedException)
             Thread.currentThread().interrupt();
-
-        throw SwerveRuntimeException.wrap(e);
+        else
+            throw SwerveRuntimeException.wrap(e);
         }
     }

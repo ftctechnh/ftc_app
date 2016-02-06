@@ -1,6 +1,7 @@
 package org.swerverobotics.library.internal;
 
 import android.graphics.Color;
+import com.qualcomm.hardware.adafruit.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
@@ -18,7 +19,7 @@ import static org.swerverobotics.library.internal.Util.handleCapturedInterrupt;
  * https://www.adafruit.com/products/1334?&main_page=product_info&products_id=1334
  * https://github.com/adafruit/Adafruit_TCS34725
  */
-public class AdaFruitTCS34725ColorSensor extends ColorSensor implements IOpModeStateTransitionEvents
+public class AdaFruitTCS34725ColorSensor implements ColorSensor, IOpModeStateTransitionEvents
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -132,10 +133,11 @@ public class AdaFruitTCS34725ColorSensor extends ColorSensor implements IOpModeS
         int port;
         int i2cAddr8Bit;
 
-        if (target instanceof com.qualcomm.hardware.AdafruitI2cColorSensor)
+        if (target instanceof AdafruitI2cColorSensor)
             {
-            controller  = MemberUtil.deviceInterfaceModuleOfAdaFruitColorSensor(target);
-            port        = MemberUtil.portOfAdaFruitColorSensor(target);
+            AdafruitI2cColorSensor colorTarget = (AdafruitI2cColorSensor)target;
+            controller  = colorTarget.getI2cController();
+            port        = colorTarget.getPort();
             i2cAddr8Bit = ADDRESS_I2C;
             }
         else
@@ -149,7 +151,7 @@ public class AdaFruitTCS34725ColorSensor extends ColorSensor implements IOpModeS
         II2cDevice i2cDevice               = new I2cDeviceOnI2cDeviceController(controller, port);
         I2cDeviceClient i2cDeviceClient    = new I2cDeviceClient(context, i2cDevice, i2cAddr8Bit, false);
         AdaFruitTCS34725ColorSensor result = new AdaFruitTCS34725ColorSensor(context, i2cDeviceClient, target, controller, port);
-        result.arm();
+        result.engage();
         result.initialize(new Parameters());
         return result;
         }
@@ -208,21 +210,21 @@ public class AdaFruitTCS34725ColorSensor extends ColorSensor implements IOpModeS
             }
         }
 
-    private void arm()
+    private void engage()
         {
-        if (!this.helper.isArmed())
+        if (!this.helper.isEngaged())
             {
-            this.helper.arm();
-            this.i2cDeviceClient.arm();
+            this.helper.engage();
+            this.i2cDeviceClient.engage();
             }
         }
 
-    private void disarm()
+    private void disengage()
         {
-        if (this.helper.isArmed())
+        if (this.helper.isEngaged())
             {
-            this.i2cDeviceClient.disarm();
-            this.helper.disarm();
+            this.i2cDeviceClient.disengage();
+            this.helper.disengage();
             }
         }
 
@@ -232,7 +234,7 @@ public class AdaFruitTCS34725ColorSensor extends ColorSensor implements IOpModeS
 
     @Override synchronized public boolean onUserOpModeStop()
         {
-        this.disarm();
+        this.disengage();
         return true;    // unregister us
         }
 
