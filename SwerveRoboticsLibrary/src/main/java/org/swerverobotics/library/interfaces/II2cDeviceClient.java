@@ -227,6 +227,24 @@ public interface II2cDeviceClient extends HardwareDevice, Engagable
      */
     void waitForWriteCompletions();
 
+    /**
+     * Enables or disables an optimization wherein writes to two sets of adjacent register
+     * ranges may be coalesced into a single I2c transaction if the second write comes along
+     * while the first is still queued for writing. By default, write coalescing is disabled.
+     * @param enable whether to enable write coalescing or not
+     *
+     * @see #isWriteCoalescingEnabled()
+     */
+    void enableWriteCoalescing(boolean enable);
+
+    /**
+     * Answers as to whether write coalescing is currently enabled on this device.
+     * @return whether write coalescing is currently enabled or not.
+     *
+     * @see #enableWriteCoalescing(boolean)
+     */
+    boolean isWriteCoalescingEnabled();
+
     //----------------------------------------------------------------------------------------------
     // Heartbeats
     //----------------------------------------------------------------------------------------------
