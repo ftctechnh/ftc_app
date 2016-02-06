@@ -85,7 +85,7 @@ public class SynchIMUDemo extends SynchronousOpMode
                 // The rest of this is pretty cheap to acquire, but we may as well do it
                 // all while we're gathering the above.
                 loopCycles = getLoopCount();
-                i2cCycles  = ((II2cDeviceClientUser) imu).getI2cDeviceClient().getI2cCycleCount();
+                i2cCycles  = ((I2cDeviceClientUser) imu).getI2cDeviceClient().getI2cCycleCount();
                 ms         = elapsed.time() * 1000.0;
                 }
             });

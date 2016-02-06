@@ -3,10 +3,8 @@ package org.swerverobotics.library.internal;
 import android.util.Log;
 
 import com.qualcomm.hardware.hitechnic.HiTechnicNxtDcMotorController;
-import com.qualcomm.hardware.hitechnic.HiTechnicNxtServoController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
-import com.qualcomm.robotcore.hardware.usb.RobotUsbModule;
 import com.qualcomm.robotcore.util.*;
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.exceptions.*;
@@ -77,7 +75,7 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
     private static final double powerMax = 1.0;
 
     private final OpMode                    context;
-    private final II2cDeviceClient          i2cDeviceClient;
+    private final I2cDeviceClient           i2cDeviceClient;
     private final DcMotorController         target;
     I2cDeviceReplacementHelper<DcMotorController> helper;
 
@@ -88,7 +86,7 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    private EasyLegacyMotorController(OpMode context, II2cDeviceClient ii2cDeviceClient, DcMotorController target, I2cController controller, int targetPort)
+    private EasyLegacyMotorController(OpMode context, I2cDeviceClient ii2cDeviceClient, DcMotorController target, I2cController controller, int targetPort)
         {
         super(((I2cControllerPortDevice)target).getI2cController(), ((I2cControllerPortDevice)target).getPort());
         this.helper          = new I2cDeviceReplacementHelper<DcMotorController>(context, this, target, controller, targetPort);
@@ -106,10 +104,10 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
         // heartbeats which are as minimally disruptive as possible. Note as a matter of interest
         // that the heartbeat mechanism used by ModernRoboticsNxtDcMotorController is analogous to
         // 'rewriteLastWritten'.
-        II2cDeviceClient.HeartbeatAction heartbeatAction = new II2cDeviceClient.HeartbeatAction();
+        I2cDeviceClient.HeartbeatAction heartbeatAction = new I2cDeviceClient.HeartbeatAction();
         heartbeatAction.rereadLastRead      = true;
         heartbeatAction.rewriteLastWritten  = true;
-        heartbeatAction.heartbeatReadWindow = new II2cDeviceClient.ReadWindow(mpMotorRegCurrentEncoderValue[1], 1, II2cDeviceClient.READ_MODE.ONLY_ONCE);
+        heartbeatAction.heartbeatReadWindow = new I2cDeviceClient.ReadWindow(mpMotorRegCurrentEncoderValue[1], 1, I2cDeviceClient.READ_MODE.ONLY_ONCE);
 
         this.i2cDeviceClient.setHeartbeatAction(heartbeatAction);
         this.i2cDeviceClient.setHeartbeatInterval(2000);
@@ -121,7 +119,7 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
         // into read mode and possibly do more than one read we will use this window
         // and won't have to fiddle with the 'switch to read mode' each and every time.
         // We include everything from the 'Motor 1 target encoder value' through the battery voltage.
-        this.i2cDeviceClient.setReadWindow(new II2cDeviceClient.ReadWindow(iRegWindowFirst, iRegWindowMax-iRegWindowFirst, II2cDeviceClient.READ_MODE.BALANCED));
+        this.i2cDeviceClient.setReadWindow(new I2cDeviceClient.ReadWindow(iRegWindowFirst, iRegWindowMax-iRegWindowFirst, I2cDeviceClient.READ_MODE.BALANCED));
         }
 
     public static DcMotorController create(OpMode context, DcMotorController target, DcMotor motor1, DcMotor motor2)
@@ -135,8 +133,8 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
             int          i2cAddr8Bit  = MemberUtil.i2cAddrOfLegacyMotorController(target);
 
             // Make a new legacy motor controller
-            II2cDevice i2cDevice                 = new I2cDeviceOnI2cDeviceController(module, port);
-            I2cDeviceClient i2cDeviceClient      = new I2cDeviceClient(context, i2cDevice, i2cAddr8Bit, false);
+            I2cDevice i2cDevice                  = new I2cDeviceImpl(module, port);
+            I2cDeviceClient i2cDeviceClient      = new I2cDeviceClientImpl(context, i2cDevice, i2cAddr8Bit, false);
             EasyLegacyMotorController controller = new EasyLegacyMotorController(context, i2cDeviceClient, target, module, port);
 
             controller.setMotors(motor1, motor2);

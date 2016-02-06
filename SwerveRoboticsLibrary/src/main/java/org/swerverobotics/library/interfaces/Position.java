@@ -39,7 +39,7 @@ public class Position
         this.z = z;
         this.nanoTime = nanoTime;
         }
-    public Position(II2cDeviceClient.TimestampedData ts, double scale)
+    public Position(I2cDeviceClient.TimestampedData ts, double scale)
         {
         ByteBuffer buffer = ByteBuffer.wrap(ts.data).order(ByteOrder.LITTLE_ENDIAN);
         this.x = buffer.getShort() / scale;

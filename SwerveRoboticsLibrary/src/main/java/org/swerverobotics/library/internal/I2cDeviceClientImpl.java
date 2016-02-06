@@ -22,13 +22,13 @@ import static org.swerverobotics.library.internal.Util.*;
  * an instance of I2cDevice. There's a really whole lot of hard stuff this does for you
  *
  */
-public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTransitionEvents, Engagable
+public final class I2cDeviceClientImpl implements I2cDeviceClient, IOpModeStateTransitionEvents, Engagable
     {
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
-    private final II2cDevice     i2cDevice;                  // the device we are talking to
+    private final I2cDevice      i2cDevice;                  // the device we are talking to
     private       I2cController  controller;
     private       RobotUsbModule robotUsbModule;
 
@@ -123,7 +123,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
      * @param i2cDevice             the device we are to be a client of
      * @param i2cAddr8Bit           its 8 bit i2cAddress
      */
-    public I2cDeviceClient(OpMode context, II2cDevice i2cDevice, int i2cAddr8Bit, boolean closeOnOpModeStop)
+    public I2cDeviceClientImpl(OpMode context, I2cDevice i2cDevice, int i2cAddr8Bit, boolean closeOnOpModeStop)
         {
         i2cDevice.setI2cAddr(i2cAddr8Bit);
 
@@ -1107,7 +1107,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                     unhook();
 
                     // REVIEW: what locking is needed for this?
-                    I2cDeviceClient.this.attachToController();
+                    I2cDeviceClientImpl.this.attachToController();
 
                     adjustHooking();
 
@@ -1481,7 +1481,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                                             @Override public void run()
                                                 {
                                                 try {
-                                                    I2cDeviceClient.this.read(window.getIregFirst(), window.getCreg());
+                                                    I2cDeviceClientImpl.this.read(window.getIregFirst(), window.getCreg());
                                                     }
                                                 catch (Exception e) // paranoia
                                                     {

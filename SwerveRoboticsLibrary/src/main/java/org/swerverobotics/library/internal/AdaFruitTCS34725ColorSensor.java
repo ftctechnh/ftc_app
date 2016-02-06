@@ -120,9 +120,9 @@ public class AdaFruitTCS34725ColorSensor implements ColorSensor, IOpModeStateTra
         this.ledIsEnabled    = false;
         this.ledStateIsKnown = false;
 
-        this.i2cDeviceClient.setReadWindow(new II2cDeviceClient.ReadWindow(
+        this.i2cDeviceClient.setReadWindow(new I2cDeviceClient.ReadWindow(
                 IREG_READ_FIRST, IREG_READ_LAST - IREG_READ_FIRST + 1,
-                II2cDeviceClient.READ_MODE.REPEAT));
+                I2cDeviceClient.READ_MODE.REPEAT));
 
         RobotStateTransitionNotifier.register(context, this);
         }
@@ -148,8 +148,8 @@ public class AdaFruitTCS34725ColorSensor implements ColorSensor, IOpModeStateTra
 
     public static ColorSensor create(OpMode context, I2cController controller, int port, int i2cAddr8Bit, ColorSensor target)
         {
-        II2cDevice i2cDevice               = new I2cDeviceOnI2cDeviceController(controller, port);
-        I2cDeviceClient i2cDeviceClient    = new I2cDeviceClient(context, i2cDevice, i2cAddr8Bit, false);
+        I2cDevice i2cDevice                = new I2cDeviceImpl(controller, port);
+        I2cDeviceClient i2cDeviceClient    = new I2cDeviceClientImpl(context, i2cDevice, i2cAddr8Bit, false);
         AdaFruitTCS34725ColorSensor result = new AdaFruitTCS34725ColorSensor(context, i2cDeviceClient, target, controller, port);
         result.engage();
         result.initialize(new Parameters());

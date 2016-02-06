@@ -40,7 +40,7 @@ public class Acceleration
         this.accelZ = accelZ;
         this.nanoTime = nanoTime;
         }
-    public Acceleration(II2cDeviceClient.TimestampedData ts, double scale)
+    public Acceleration(I2cDeviceClient.TimestampedData ts, double scale)
         {
         ByteBuffer buffer = ByteBuffer.wrap(ts.data).order(ByteOrder.LITTLE_ENDIAN);
         this.accelX = buffer.getShort() / scale;
