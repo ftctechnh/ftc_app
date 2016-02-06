@@ -17,7 +17,7 @@ public class JonsAlgo {
 /*
 *	GLOBAL CONSTANTS
 */
-    private
+//    private
     double ticksPerRevolution = 1120;	// Number of encoder ticks per motor rotation
     double wheelDiameter = 4;	// Diameter of your wheels in inches
     double driveGearMultiplier = 1.0;		// Drive gear multiplier.
@@ -30,7 +30,7 @@ public class JonsAlgo {
     *	inchesToTicks
     *	Convert a distance in inches to a number of ticks
     */
-    long inchesToTicks(double inches)
+   public long inchesToTicks(double inches)
     {
         // Given a distance in inches, calculate the equivalent distance in motor encoder ticks.
         // We calculate this by taking the number of wheel rotations (inches/(PI*wheelDiameter)) multiplied
@@ -48,7 +48,7 @@ public class JonsAlgo {
     *	ticksToInches
     *	Convert a number of ticks to a distance in inches
     */
-    double ticksToInches(long ticks)
+    public double ticksToInches(long ticks)
     {
         // Given a number of encoder ticks, calculate the equivalent distance in inches.
         // We calculate this by taking the number of ticks traveled, divided by the number of ticks per revolution,
@@ -61,15 +61,15 @@ public class JonsAlgo {
     *	goTicks
     *	Move the robot a discance in ticks
     */
-    void goTicks(long ticks, double speed/*, bool collisionAvoidance*/)
+    public void goTicks(long ticks, double speed/*, bool collisionAvoidance*/)
     {
 
-        long startLeft = robot.getLeftEncoder();
+//        long startLeft = robot.getLeftEncoder();
         long startRight = robot.getRightEncoder();
 
         // Target encoder values for the left and right motors
         long targetRight = startRight + ticks;
-        long targetLeft = startLeft + ticks;
+//        long targetLeft = startLeft + ticks;
 
         double leftCorrect	= 1.0;
         double rightCorrect	= 0.9;
@@ -92,7 +92,7 @@ public class JonsAlgo {
             // While this function runs, keep the robot on a constant heading
             //StartTask(stablizePath);
             // Wait until both motors have reached the target
-            while(robot.getLeftEncoder() < targetLeft && robot.getRightEncoder() < targetRight)
+            while( robot.getRightEncoder() < targetRight) //robot.getLeftEncoder() < targetLeft &&
             {
                 //writeDebugStreamLine("Curr: %d\tTarg: %d", nMotorEncoder[mDriveLeft], targetLeft);
             }
@@ -112,7 +112,7 @@ public class JonsAlgo {
             // While this function runs, keep the robot on a constant heading
             //StartTask(stablizePath);
             // Wait until both motors have reached the target
-            while(robot.getLeftEncoder() > targetLeft && robot.getRightEncoder() > targetRight)
+            while( robot.getRightEncoder() > targetRight) //robot.getLeftEncoder() > targetLeft &&
             {
                 //writeDebugStreamLine("Curr: %d\tTarg: %d", nMotorEncoder[mDriveLeft], targetLeft);
             }

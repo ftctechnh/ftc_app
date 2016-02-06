@@ -22,6 +22,8 @@ package com.powerstackers.resq.opmodes.autonomous;
 
 import com.powerstackers.resq.common.AutonomousProgram;
 import com.powerstackers.resq.common.enums.PublicEnums.AllianceColor;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.swerverobotics.library.interfaces.Autonomous;
 
@@ -29,9 +31,16 @@ import org.swerverobotics.library.interfaces.Autonomous;
  * @author Jonathan Thomas
  */
 @Autonomous(name = "Blue autonomous", group = "Powerstackers")
-public class BlueAutonomous extends AutonomousProgram {
+public class BlueAutonomous extends LinearOpMode {
+    DcMotor motor;
     public BlueAutonomous() {
-        super(AllianceColor.BLUE);
+
+        motor = hardwareMap.dcMotor.get("motorFLeft");
+    }
+
+    @Override
+    public void runOpMode() throws InterruptedException {
+
     }
 
 }

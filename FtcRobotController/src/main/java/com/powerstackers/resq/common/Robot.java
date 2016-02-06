@@ -83,10 +83,10 @@ public class Robot {
     private Servo servoChurroLeft;
     private Servo servoChurroRight;
 
-    private DeviceInterfaceModule dim;
-    private ColorSensor sensorColor;
+//    private DeviceInterfaceModule dim;
+//    private ColorSensor sensorColor;
 //    private TouchSensor sensorTouch;
-    private GyroSensor sensorGyro;
+//    private GyroSensor sensorGyro;
 //    public OpticalDistanceSensor opticalSensor;
 
     /**
@@ -127,12 +127,12 @@ public class Robot {
         servoTapeTilt.setPosition(TAPE_FLAT);
         servoTapeMeasure.setPosition(0.5);
 
-        dim = mode.hardwareMap.deviceInterfaceModule.get("dim");
-        sensorColor = ClassFactory.createSwerveColorSensor(mode,
-                mode.hardwareMap.colorSensor.get("sensorColor"));
-        sensorColor.enableLed(true);
+//        dim = mode.hardwareMap.deviceInterfaceModule.get("dim");
+//        sensorColor = ClassFactory.createSwerveColorSensor(mode,
+//                mode.hardwareMap.colorSensor.get("sensorColor"));
+//        sensorColor.enableLed(true);
 //        opticalSensor = mode.hardwareMap.opticalDistanceSensor.get("opticalDistance");
-        sensorGyro = mode.hardwareMap.gyroSensor.get("sensorGyro");
+//        sensorGyro = mode.hardwareMap.gyroSensor.get("sensorGyro");
 
     }
 
@@ -272,29 +272,29 @@ public class Robot {
      * Tap the beacon on the correct side.
      * @param allianceColor The color that we are currently playing as.
      */
-    public void tapBeacon(AllianceColor allianceColor) {
-
-        AllianceColor dominantColor;
-        double positionBeaconServo;
-
-        // Detect the color shown on the beacon's left half, and record it.
-        if (sensorColor.red() > sensorColor.blue()) {
-            dominantColor = AllianceColor.RED;
-        } else {
-            dominantColor = AllianceColor.BLUE;
-        }
-
-        // Tap the correct side based on the dominant color.
-        if (dominantColor == allianceColor) {
-            positionBeaconServo = BEACON_TAP_LEFT;
-        } else {
-            positionBeaconServo = BEACON_TAP_RIGHT;
-        }
+//    public void tapBeacon(AllianceColor allianceColor) {
+//
+//        AllianceColor dominantColor;
+//        double positionBeaconServo;
+//
+//        // Detect the color shown on the beacon's left half, and record it.
+//        if (sensorColor.red() > sensorColor.blue()) {
+//            dominantColor = AllianceColor.RED;
+//        } else {
+//            dominantColor = AllianceColor.BLUE;
+//        }
+//
+//        // Tap the correct side based on the dominant color.
+//        if (dominantColor == allianceColor) {
+//            positionBeaconServo = BEACON_TAP_LEFT;
+//        } else {
+//            positionBeaconServo = BEACON_TAP_RIGHT;
+//        }
 
         // Trim the servo value and set the servo position.
-        positionBeaconServo = trimServoValue(positionBeaconServo);
+//        positionBeaconServo = trimServoValue(positionBeaconServo);
 //        servoBeacon.setPosition(positionBeaconServo);
-    }
+//    }
 
     /**
      * Set the right hopper door to open or close.
@@ -310,7 +310,7 @@ public class Robot {
 
     public void setHopperTiltRight(TiltSetting tiltsetting) {
         if (tiltsetting == TiltSetting.RIGHT) {
-            servoHopperTilt.setPosition(HOPPER_TILT_RIGHT);
+            servoHopperTilt.setPosition(HOPPER_TILT_LEFT);
         } else {
             servoHopperTilt.setPosition(HOPPER_TILT_RESTING);
         }
@@ -332,7 +332,7 @@ public class Robot {
 
     public void setHopperTiltLeft(TiltSetting tiltsetting) {
         if (tiltsetting == TiltSetting.LEFT) {
-            servoHopperTilt.setPosition(HOPPER_TILT_LEFT);
+            servoHopperTilt.setPosition(HOPPER_TILT_RIGHT);
         } else {
             servoHopperTilt.setPosition(HOPPER_TILT_RESTING);
         }

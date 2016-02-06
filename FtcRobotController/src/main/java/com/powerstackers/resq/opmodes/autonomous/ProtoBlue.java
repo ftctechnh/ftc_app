@@ -1,7 +1,7 @@
 package com.powerstackers.resq.opmodes.autonomous;
 
-import com.powerstackers.resq.common.enums.PublicEnums.MotorSetting;
 import com.powerstackers.resq.common.RobotAuto;
+import com.powerstackers.resq.common.enums.PublicEnums.MotorSetting;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 /**
@@ -10,10 +10,22 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 public class ProtoBlue extends LinearOpMode {
 
     RobotAuto robot;
-    MotorSetting settingBrushMotor = MotorSetting.STOP;
+//    MotorSetting settingBrushMotor = MotorSetting.STOP;
 
     @Override
     public void runOpMode() throws InterruptedException {
+
+//        robot.initializeRobot();
+
+        waitForStart();
+
+        if (opModeIsActive()==true) {
+            robot.setBrush(MotorSetting.FORWARD);
+            robot.algorithm.goTicks(robot.algorithm.inchesToTicks(68), 0.4);
+            robot.setBrush(MotorSetting.STOP);
+        }
+
+        stop();
 
 
         /*

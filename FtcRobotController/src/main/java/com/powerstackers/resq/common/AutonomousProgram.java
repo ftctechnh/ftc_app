@@ -20,20 +20,22 @@
 
 package com.powerstackers.resq.common;
 
-import org.swerverobotics.library.SynchronousOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import static com.powerstackers.resq.common.enums.PublicEnums.AllianceColor;
+import static com.powerstackers.resq.common.enums.PublicEnums.AllianceColor.BLUE;
 import static com.powerstackers.resq.common.enums.PublicEnums.AllianceColor.RED;
-import static com.powerstackers.resq.common.enums.PublicEnums.DoorSetting;
 import static com.powerstackers.resq.common.enums.PublicEnums.MotorSetting;
 
 /**
  * @author Jonathan Thomas
  */
-public class AutonomousProgram extends SynchronousOpMode {
+public class AutonomousProgram extends LinearOpMode {
 
     AllianceColor allianceColor;
     RobotAuto robot;
+
+    public AutonomousProgram(){}
 
     public AutonomousProgram(AllianceColor allianceColor) {
         this.allianceColor = allianceColor;
@@ -44,7 +46,7 @@ public class AutonomousProgram extends SynchronousOpMode {
      * Run the actual program.
      */
     @Override
-    protected void main() throws InterruptedException {
+    public void runOpMode() throws InterruptedException {
         // Initialize any sensors and servos
         robot.initializeRobot();
         // Wait for the start of the match
@@ -54,12 +56,23 @@ public class AutonomousProgram extends SynchronousOpMode {
             robot.setBrush(MotorSetting.FORWARD);
             robot.algorithm.goTicks(robot.algorithm.inchesToTicks(68), 0.4);
             robot.setBrush(MotorSetting.STOP);
-            robot.turnDegrees(45, 0.4);
-            robot.algorithm.goTicks(robot.algorithm.inchesToTicks(22), 0.4);
-            robot.setClimberFlipper(DoorSetting.OPEN);
+//            robot.turnDegrees(45, 0.4);
+//            robot.algorithm.goTicks(robot.algorithm.inchesToTicks(22), 0.4);
+//            robot.setClimberFlipper(DoorSetting.OPEN);
+        } else if (allianceColor== BLUE) {
+            robot.setBrush(MotorSetting.FORWARD);
+            robot.algorithm.goTicks(robot.algorithm.inchesToTicks(68), 0.4);
+            robot.setBrush(MotorSetting.STOP);
+//            robot.turnDegrees(-45, 0.4);
+//            robot.algorithm.goTicks(robot.algorithm.inchesToTicks(22), 0.4);
+//            robot.setClimberFlipper(DoorSetting.OPEN);
+        } else {
+            telemetry.addData("choosered", "deprecated: ");
+            stop();
         }
 
+
         // Run any actions we desire
-        robot.tapBeacon(allianceColor);
+//        robot.tapBeacon(allianceColor);
     }
 }

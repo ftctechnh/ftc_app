@@ -1,44 +1,40 @@
 package com.powerstackers.resq.common;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
-import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
-import org.swerverobotics.library.ClassFactory;
-
 import static com.powerstackers.resq.common.enums.PublicEnums.AllianceColor;
-import static com.powerstackers.resq.common.enums.PublicEnums.DoorSetting;
 import static com.powerstackers.resq.common.enums.PublicEnums.MotorSetting;
-import static java.lang.Math.abs;
 
 /**
  * Created by Derek on 1/14/2016.
  */
 public class RobotAuto {
 
-    public static double enRightPosition = 0.0;
-    public static double enLeftPosition = 0.0;
-
-    public static final double EnRightpower = 1;
-    public static final double EnLeftpower = 1;
+//    public static double enRightPosition = 0.0;
+//    public static double enLeftPosition = 0.0;
+//
+//    public static final double EnRightpower = 1;
+//    public static final double EnLeftpower = 1;
 
     // Robot Movements in steps
-    public static final double EnRightS1 = -9000;
-    public static final double EnLeftS1 = 9000;
+//    public static final double EnRightS1 = -9000;
+//    public static final double EnLeftS1 = 9000;
 //    public static final double EnRightS2 = -500;
 //    public static final double EnLeftS2 = 500;
 
 
 //    set range of servo
-    private static final double servoBeacon_MIN_RANGE  = 0.00;
-    private static final double servoBeacon_MAX_RANGE  = 1.00;
+//    private static final double servoBeacon_MIN_RANGE  = 0.00;
+//    private static final double servoBeacon_MAX_RANGE  = 1.00;
 
 
 //    position of servo <Value of Variable>
-    public static double servoBeaconPosition;
+//    public static double servoBeaconPosition;
 
     public JonsAlgo algorithm;
 
@@ -47,16 +43,16 @@ public class RobotAuto {
     private DcMotor motorRightA;
     private DcMotor motorRightB;
     private DcMotor motorBrush;
-    private DcMotor motorLift;
+//    private DcMotor motorLift;
 //    private Servo servoBeacon;
-    private Servo servoClimberFlipper;
-    private Servo servoChurroLeft;
-    private Servo servoChurroRight;
+//    private Servo servoClimberFlipper;
+//    private Servo servoChurroLeft;
+//    private Servo servoChurroRight;
 
-    private DeviceInterfaceModule dim;
-    private ColorSensor sensorColor;
+//    private DeviceInterfaceModule dim;
+//    private ColorSensor sensorColor;
     //    private TouchSensor sensorTouch;
-    private GyroSensor sensorGyro;
+//    private GyroSensor sensorGyro;
 //    private ColorSensor colorSensor;
 //    public OpticalDistanceSensor opticalSensor;
 
@@ -64,39 +60,39 @@ public class RobotAuto {
      * Construct a Robot object.
      * @param mode The OpMode in which the robot is being used.
      */
-    public RobotAuto(AutonomousProgram mode) {
+    public RobotAuto(OpMode mode) {
         motorLeftA  = mode.hardwareMap.dcMotor.get("motorFLeft");
         motorLeftB  = mode.hardwareMap.dcMotor.get("motorBLeft");
         motorRightA = mode.hardwareMap.dcMotor.get("motorFRight");
         motorRightB = mode.hardwareMap.dcMotor.get("motorBRight");
         motorBrush  = mode.hardwareMap.dcMotor.get("motorBrush");
-        motorLift   = mode.hardwareMap.dcMotor.get("motorLift");
+//        motorLift   = mode.hardwareMap.dcMotor.get("motorLift");
 
-        motorLift.setDirection(DcMotor.Direction.REVERSE);
+//        motorLift.setDirection(DcMotor.Direction.REVERSE);
         motorRightA.setDirection(DcMotor.Direction.REVERSE);
         motorRightB.setDirection(DcMotor.Direction.REVERSE);
 
 //        servoBeacon      = mode.hardwareMap.servo.get("servoBeacon");
-        servoClimberFlipper = mode.hardwareMap.servo.get("servoClimbers");
-        servoChurroLeft = mode.hardwareMap.servo.get("servoChurroLeft");
-        servoChurroRight = mode.hardwareMap.servo.get("servoChurroRight");
+//        servoClimberFlipper = mode.hardwareMap.servo.get("servoClimbers");
+//        servoChurroLeft = mode.hardwareMap.servo.get("servoChurroLeft");
+//        servoChurroRight = mode.hardwareMap.servo.get("servoChurroRight");
+//
+//        servoClimberFlipper.setPosition(RobotConstants.CLIMBER_EXTEND);
+//        servoChurroRight.setPosition(RobotConstants.CHURRO_RIGHT_OPEN);
+//        servoChurroLeft.setPosition(RobotConstants.CHURRO_LEFT_OPEN);
 
-        servoClimberFlipper.setPosition(RobotConstants.CLIMBER_EXTEND);
-        servoChurroRight.setPosition(RobotConstants.CHURRO_RIGHT_OPEN);
-        servoChurroLeft.setPosition(RobotConstants.CHURRO_LEFT_OPEN);
-
-        dim = mode.hardwareMap.deviceInterfaceModule.get("dim");
-        sensorColor = ClassFactory.createSwerveColorSensor(mode,
-                mode.hardwareMap.colorSensor.get("sensorColor"));
-        sensorColor.enableLed(true);
+//        dim = mode.hardwareMap.deviceInterfaceModule.get("dim");
+//        sensorColor = ClassFactory.createSwerveColorSensor(mode,
+//                mode.hardwareMap.colorSensor.get("sensorColor"));
+//        sensorColor.enableLed(true);
 //        opticalSensor = mode.hardwareMap.opticalDistanceSensor.get("opticalDistance");
-        sensorGyro = mode.hardwareMap.gyroSensor.get("sensorGyro");
+//        sensorGyro = mode.hardwareMap.gyroSensor.get("sensorGyro");
 //        sensorColor = mode.hardwareMap.colorSensor.get("sensorColor");
 //
 //        colorSensor = ClassFactory.createSwerveColorSensor(mode, mode.hardwareMap.colorSensor.get("colorSensor"));
 //        colorSensor.enableLed(true);
 
-        algorithm = new JonsAlgo(this);
+        algorithm = new JonsAlgo(new RobotAuto(new AutonomousProgram(AllianceColor.BLUE)));
 
     }
 
@@ -105,10 +101,10 @@ public class RobotAuto {
      */
     public void initializeRobot() /*throws InterruptedException */{
 //        servoBeacon.setPosition(RobotConstants.BEACON_RESTING);
-        servoClimberFlipper.setPosition(RobotConstants.CLIMBER_EXTEND);
-        servoChurroRight.setPosition(RobotConstants.CHURRO_RIGHT_OPEN);
-        servoChurroLeft.setPosition(RobotConstants.CHURRO_LEFT_OPEN);
-        sensorGyro.calibrate();
+//        servoClimberFlipper.setPosition(RobotConstants.CLIMBER_EXTEND);
+//        servoChurroRight.setPosition(RobotConstants.CHURRO_RIGHT_OPEN);
+//        servoChurroLeft.setPosition(RobotConstants.CHURRO_LEFT_OPEN);
+//        sensorGyro.calibrate();
     }
 
     /**
@@ -146,9 +142,9 @@ public class RobotAuto {
      * Set the direction of the lift: REVERSE, STOP, or FORWARD.
      * @param setting MotorSetting enum indicating the direction.
      */
-    public void setLift(MotorSetting setting) {
-        toggleMotor(motorLift, setting, RobotConstants.LIFT_SPEED);
-    }
+//    public void setLift(MotorSetting setting) {
+//        toggleMotor(motorLift, setting, RobotConstants.LIFT_SPEED);
+//    }
 
     /**
      * Toggles a motor between three settings: FORWARD, STOP, and REVERSE.
@@ -207,29 +203,29 @@ public class RobotAuto {
      * Tap the beacon on the correct side.
      * @param allianceColor The color that we are currently playing as.
      */
-    public void tapBeacon(AllianceColor allianceColor) {
-
-        AllianceColor dominantColor;
-        double positionBeaconServo;
-
-        // Detect the color shown on the beacon's left half, and record it.
-        if (sensorColor.red() > sensorColor.blue()) {
-            dominantColor = AllianceColor.RED;
-        } else {
-            dominantColor = AllianceColor.BLUE;
-        }
-
-        // Tap the correct side based on the dominant color.
-        if (dominantColor == allianceColor) {
-            positionBeaconServo = RobotConstants.BEACON_TAP_LEFT;
-        } else {
-            positionBeaconServo = RobotConstants.BEACON_TAP_RIGHT;
-        }
+//    public void tapBeacon(AllianceColor allianceColor) {
+//
+//        AllianceColor dominantColor;
+//        double positionBeaconServo;
+//
+//        // Detect the color shown on the beacon's left half, and record it.
+//        if (sensorColor.red() > sensorColor.blue()) {
+//            dominantColor = AllianceColor.RED;
+//        } else {
+//            dominantColor = AllianceColor.BLUE;
+//        }
+//
+//        // Tap the correct side based on the dominant color.
+//        if (dominantColor == allianceColor) {
+//            positionBeaconServo = RobotConstants.BEACON_TAP_LEFT;
+//        } else {
+//            positionBeaconServo = RobotConstants.BEACON_TAP_RIGHT;
+//        }
 
         // Trim the servo value and set the servo position.
-        positionBeaconServo = trimServoValue(positionBeaconServo);
+//        positionBeaconServo = trimServoValue(positionBeaconServo);
 //        servoBeacon.setPosition(positionBeaconServo);
-    }
+//    }
 
     /**
      * Set the right hopper door to open or close.
@@ -237,7 +233,11 @@ public class RobotAuto {
      *//*
     public void setHopperRight(DoorSetting doorSetting) {
         if (doorSetting == DoorSetting.OPEN) {
-            servoHopperRight.setPosition(RobotConstants.HOPPER_RIGHT_OPEN);
+            servoHopperRight.setPosition(RobotCoblic void loop() {
+
+        servoBeaconPosition = Range.clip(servoBeaconPosition, servoBeacon_MIN_RANGE, servoBeacon_MAX_RANGE);
+
+    }nstants.HOPPER_RIGHT_OPEN);
         } else {
             servoHopperRight.setPosition(RobotConstants.HOPPER_RIGHT_CLOSE);
         }
@@ -249,13 +249,13 @@ public class RobotAuto {
      * position.
      * @param doorSetting DoorSetting indicating the position.
      */
-    public void setClimberFlipper(DoorSetting doorSetting) {
-        if (doorSetting == DoorSetting.OPEN) {
-            servoClimberFlipper.setPosition(RobotConstants.CLIMBER_RETRACT);
-        } else {
-            servoClimberFlipper.setPosition(RobotConstants.CLIMBER_EXTEND);
-        }
-    }
+//    public void setClimberFlipper(DoorSetting doorSetting) {
+//        if (doorSetting == DoorSetting.OPEN) {
+//            servoClimberFlipper.setPosition(RobotConstants.CLIMBER_RETRACT);
+//        } else {
+//            servoClimberFlipper.setPosition(RobotConstants.CLIMBER_EXTEND);
+//        }
+//    }
 
     /**
      * Set the position of the churro grabber servos.
@@ -263,15 +263,15 @@ public class RobotAuto {
      * the opposite.
      * @param doorSetting DoorSetting indicating the position.
      */
-    public void setChurroGrabbers(DoorSetting doorSetting) {
-        if (doorSetting == DoorSetting.OPEN) {
-            servoChurroLeft.setPosition(RobotConstants.CHURRO_LEFT_OPEN);
-            servoChurroRight.setPosition(RobotConstants.CHURRO_RIGHT_OPEN);
-        } else {
-            servoChurroLeft.setPosition(RobotConstants.CHURRO_LEFT_CLOSE);
-            servoChurroRight.setPosition(RobotConstants.CHURRO_RIGHT_CLOSE);
-        }
-    }
+//    public void setChurroGrabbers(DoorSetting doorSetting) {
+//        if (doorSetting == DoorSetting.OPEN) {
+//            servoChurroLeft.setPosition(RobotConstants.CHURRO_LEFT_OPEN);
+//            servoChurroRight.setPosition(RobotConstants.CHURRO_RIGHT_OPEN);
+//        } else {
+//            servoChurroLeft.setPosition(RobotConstants.CHURRO_LEFT_CLOSE);
+//            servoChurroRight.setPosition(RobotConstants.CHURRO_RIGHT_CLOSE);
+//        }
+//    }
 
     /**
      * Move the robot a specific distance forwards or backwards.
@@ -300,32 +300,32 @@ public class RobotAuto {
      * clockwise, and a positive number will turn counter-clockwise.
      * @param degrees A double representing the distance to turn.
      */
-    public void turnDegrees(double degrees, double speed) {
+//    public void turnDegrees(double degrees, double speed) {
         // TODO Actually make this method work
-        sensorGyro.calibrate();
-        while (sensorGyro.isCalibrating()){
+//        sensorGyro.calibrate();
+//        while (sensorGyro.isCalibrating()){
+//
+//        }
+//
+//        if(degrees < 0)
+//        {
+//            setPowerLeft(-1 * speed);
+//            setPowerRight(speed);
+//        } else {
+//            setPowerLeft(speed);
+//            setPowerRight(-1 * speed);
+//        }
+//
+//        while (abs(sensorGyro.getRotation()) < abs(degrees)) {
+//
+//        }
+//        setPowerAll(0);
+//    }
 
-        }
-
-        if(degrees < 0)
-        {
-            setPowerLeft(-1 * speed);
-            setPowerRight(speed);
-        } else {
-            setPowerLeft(speed);
-            setPowerRight(-1 * speed);
-        }
-
-        while (abs(sensorGyro.getRotation()) < abs(degrees)) {
-
-        }
-        setPowerAll(0);
-    }
-
-    public void loop() {
-
-        servoBeaconPosition = Range.clip(servoBeaconPosition, servoBeacon_MIN_RANGE, servoBeacon_MAX_RANGE);
-
-    }
+//    public void loop() {
+//
+//        servoBeaconPosition = Range.clip(servoBeaconPosition, servoBeacon_MIN_RANGE, servoBeacon_MAX_RANGE);
+//
+//    }
 
 }
