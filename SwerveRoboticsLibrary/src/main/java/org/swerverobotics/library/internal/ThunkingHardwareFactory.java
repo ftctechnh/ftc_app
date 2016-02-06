@@ -260,10 +260,7 @@ public class ThunkingHardwareFactory
                 {
                 @Override public I2cDevice create(I2cDevice target)
                     {
-                    return new ThreadSafeI2cDevice(
-                            ThunkedI2cController.create(ThreadSafeI2cDevice.getController(target)),
-                            ThreadSafeI2cDevice.getChannel(target)
-                    );
+                    return target;
                     }
                 }
         );
