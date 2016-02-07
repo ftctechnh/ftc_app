@@ -3,10 +3,10 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 /**
  * Created by Samuel on 11/1/2015.
  */
-public class ResQAutoDelayRed extends _ResQAuto{
+public class ResQAutoDelayRed extends _ResQAuto {
     @Override
     protected int getDelay() {
-        return 10000;
+        return 1;
     }
 
     @Override
