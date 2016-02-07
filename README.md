@@ -15,12 +15,12 @@ Notable features of the Swerve Robotics FTC Library include the following.
 **EasyLegacyMotorController** is a replacement for the stock DCMotorController implementation
 used with legacy HiTechnic motor controllers. EasyLegacyMotorController does away with the need to manually
 switch motors from read mode to write mode and back again and the attendant complex delay management,
-loop counting, or waiting for hardware cycles that that requires. Just call setPower(), getPosition(),
+loop counting, or waiting for hardware cycles that that requires. Just call `setPower()`, `getPosition()`,
 or whatever other motor methods you need to use, and the right things happen under the covers.
 
 EasyLegacyMotorController can be used from any OpMode, or indeed any thread. In SynchronousOpModes, 
 EasyLegacyMotorController is used automatically; in other OpModes it can be used by calling 
-ClassFactory.createEasyMotorController().
+`ClassFactory.createEasyMotorController()`.
  
 ### Easy Modern Motor & Servo Controller and Easy Legacy Servo Controller
 In a conceptually similar way, alternate implementations for modern motor and servo controllers and
@@ -31,18 +31,18 @@ a write are sequenced after that write so as to preserve causality. This simplif
 a motor mode? Fine, it's changed: anything else you do on that motor will be sure to have seen the effect
 of that change. You don't have to poll to see whether the mode change has taken effect. Reset the encoders
 and then immediately change to run with encoders? Perfectly fine. It just works. Additionally, a handful 
-of bug fixes is included. For example, Servo.getPosition() is now functionally useful.
+of bug fixes is included. For example, `Servo.getPosition()` is now functionally useful.
  
 These easy controllers can be used from any OpMode or any thread. In SynchronousOpModes, they are used
-automatically; in other OpModes, they can be used by calling ClassFactory.createEasyMotorController()
-or ClassFactory.createEasyServoController() respectively.
+automatically; in other OpModes, they can be used by calling `ClassFactory.createEasyMotorController()`
+or `ClassFactory.createEasyServoController()` respectively.
 
 ### Alternate OpMode Registration 
-The library has an **alternate OpMode registration mechanism** (the old FtcOpModeRegister.register() still works too)
-that allows you to register your own OpModes simply by decorating them with @TeleOp or @Autonomous annotations.
+The library has an **alternate OpMode registration mechanism** (the old `FtcOpModeRegister.register()` still works too)
+that allows you to register your own OpModes simply by decorating them with `@TeleOp` or `@Autonomous` annotations.
 This helps promote clean living and easier integration of library updates over time by avoiding
 editing code that lives in libraries owned by others. To register OpModes that aren't your own,
-a related annotation, @OpModeRegistrar, can be placed on a method in your code which is to be called
+a related annotation, `@OpModeRegistrar`, can be placed on a method in your code which is to be called
 as part of the registration process. Take a look at the YourCodeHere module for an example of
 how this works. We'd like to thank [dmssargent](https://github.com/dmssargent/Xtensible-ftc_app/blob/master/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/FtcOpModeRegister.java)
 for illustrating how this all might be technically accomplished.
@@ -51,7 +51,7 @@ for illustrating how this all might be technically accomplished.
 The library contains a [**SynchronousOpMode**](https://htmlpreview.github.io/?https://github.com/swerverobotics/ftc_app/blob/master/SwerveRoboticsLibrary/doc/javadoc/org/swerverobotics/library/SynchronousOpMode.html)
 class that brings back the synchronous, linear programming style
 with which teams have been familiar with from previous seasons in RobotC, and which is more amenable
-to teaching to beginning programmers than the event-driven / loop() callback programming
+to teaching to beginning programmers than the event-driven / `loop()` callback programming
 model native to the robot controller runtime. SynchronousOpMode is similar to [LinearOpMode](https://htmlpreview.github.io/?https://github.com/ftctechnh/ftc_app/blob/master/doc/javadoc/com/qualcomm/robotcore/eventloop/opmode/LinearOpMode.html)
 but contains several enhancements, improved robustness, and several fixes. All hardware objects
 visible in SynchronousOpModes are thread-safe, in that they can be manipulated concurrently by
@@ -64,9 +64,9 @@ writing in or migrating to SynchronousOpMode is found just below.
 The library contains an enhanced form of telemetry containing a **dashboard** and a **log**. On the driver station display,
 the dashboard appears at the top, followed by as many of the recent log messages as will reasonably 
 fit. The dashboard can be preconfigured just once with unevaluated computations to form the lines
-on the dashboard, and / or the lines can be created dynamically with addData() calls as in
-the robot controller runtime. You call telemetry.update() to compose
-the current dashboard and transmit to the driver station. Only a subset of update() calls
+on the dashboard, and / or the lines can be created dynamically with `addData()` calls as in
+the robot controller runtime. You call `telemetry.update()` to compose
+the current dashboard and transmit to the driver station. Only a subset of `update()` calls
 actually transmit, saving bandwith on the network and data acquistion time on the controller.
 Log messages can be written to the log at any time, and these are sent to the driver station as
 soon as possible. The enhanced telemetry class can be used both by synchronous and non-synchronous
@@ -74,13 +74,13 @@ opmodes, but is used automatically in SynchronousOpModes.
 
 ### Easy I2C Programming
 The library contains an **I2cDeviceClient** class that wraps I2cDevice instances and makes them easy to use by handling
-read-vs-write mode switches and attendant waits automatically and transparently. Just call read8()
-or write8() (and friends) to read and write device registers and the rest is taken care of.
+read-vs-write mode switches and attendant waits automatically and transparently. Just call `read8()`
+or `write8()` (and friends) to read and write device registers and the rest is taken care of.
 With the I2C register map you get from the sensor manufacturer in hand, it's now just dead easy to
 write your own code to talk to new I2C devices. Note that I2cDeviceClient is also decoupled
 from SynchronousOpMode, in that one need not be using SynchronousOpMode to use I2cDeviceClient.
 However as some operations are lengthy, a worker thread is suggested in that case in order to avoid
-long-running operations on the loop() thread.
+long-running operations on the `loop()` thread.
 
 ### AdaFruit IMU Support
 The library contains a class that is built on I2cDeviceClient that provides a semantic interface to the **Bosch BNO055 absolute
@@ -105,13 +105,13 @@ robustly implements the color sensor semeantics. In particular, the LED works re
 The fifteen second summary of how to use SynchronousOpMode is as follows:
 
 *   Inherit your opmode from SynchronousOpMode instead of OpMode or LinearOpMode.
-*   Implement your code in a main() method whose signature is:
+*   Implement your code in a `main()` method whose signature is:
 
         @Override protected void main() throws InterruptedException
-*   Initialize your hardware variables at the top of main() instead of in start(). Otherwise,
+*   Initialize your hardware variables at the top of `main()` instead of in `start()`. Otherwise,
     the use of hardware objects (DcMotor, Servo, GamePads, etc) is the same as in the usual robot
     controller runtime.
-*   The core of the body of main() for a typical TeleOp OpMode should look like
+*   The core of the body of `main()` for a typical TeleOp OpMode should look like
 
         // Initialize stuff (not shown)
         
@@ -127,14 +127,14 @@ The fifteen second summary of how to use SynchronousOpMode is as follows:
             }
 
 That's it! Autonomous OpModes are even simpler: just write what you want the robot to do
-after the waitForStart().
+after `waitForStart()`.
 
 Migrating from LinearOpMode to SyncronousOpMode is easy, usually simply involving 
 
 * changing the OpMode base class to SynchronousOpMode from LinearOpMode
-* changing the name of your runOpMode() method to main()
-* adding 'telemetry.update()' and 'this.idle()' to the bottom of your while(opModeIsActive()) loop
-* optionally removing waitOneFullHardwareCycle() calls, as they are no longer necessary
+* changing the name of your `runOpMode()` method to `main()`
+* adding `telemetry.update()` and `this.idle()` to the bottom of your `while(opModeIsActive())` loop
+* optionally removing `waitOneFullHardwareCycle()` calls, as they are no longer necessary
 
 The Swerve Library now appears to be quite stable and functional. Our own teams are actively
 developing their competition code using it. It currently is synchronized to the release from
