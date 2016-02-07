@@ -25,7 +25,7 @@ public class Robot4Teleop extends OpMode {
     Servo lButtonServo;
     Servo rButtonServo;
     Servo hookServo;
-    Servo zipLineServo;
+    //Servo zipLineServo;
 
     private static int ADJUST_MOTOR_TARGET = 0;
     private static int LINEAR_MOTOR_TARGET = 0;
@@ -85,8 +85,8 @@ public class Robot4Teleop extends OpMode {
         //hookServo = hardwareMap.servo.get("signal");
         //hookServo.setPosition(HOOK_SERVO_INIT);
         //Zip line servo
-        zipLineServo = hardwareMap.servo.get("zipline");
-        zipLineServo.setPosition(ZIP_SERVO_INIT);
+        //zipLineServo = hardwareMap.servo.get("zipline");
+        //zipLineServo.setPosition(ZIP_SERVO_INIT);
     }
     //Set Motors method
     public void setMotors(double FrontL, double FrontR, double BackL, double BackR){
@@ -188,7 +188,7 @@ public class Robot4Teleop extends OpMode {
                 //twistServo.setPosition(0.2);
                 releaseServo.setPosition(RELEASE_SERVO_INIT);
                 twistServo.setPosition(TWIST_SERVO_INIT);
-                zipLineServo.setPosition(ZIP_SERVO_INIT);
+                //zipLineServo.setPosition(ZIP_SERVO_INIT);
                 reset_state = true;
             }
             if (gamepad1.right_bumper || gamepad2.right_bumper) {
@@ -205,11 +205,11 @@ public class Robot4Teleop extends OpMode {
                 //hangStartingTime = new Date();
                 //hangMotor.setPower(0.5);
                 //temp way to reset all clear servo
-                zipLineServo.setPosition(0);
+                //zipLineServo.setPosition(0);
 
             }
             if (gamepad1.dpad_left == false && gamepad2.dpad_left == false && gamepad1.dpad_right == false && gamepad2.dpad_right) {
-                zipLineServo.setPosition(0.5);
+                //zipLineServo.setPosition(0.5);
             }
             if (gamepad1.dpad_up || gamepad2.dpad_up) {
                 //Clamp Servo up
@@ -217,7 +217,7 @@ public class Robot4Teleop extends OpMode {
             }
             if (gamepad1.dpad_right || gamepad2.dpad_right) {
                 //Hook servo hits the all clear signal
-                zipLineServo.setPosition(ZIP_SERVO_INIT);
+                //zipLineServo.setPosition(ZIP_SERVO_INIT);
             }
             if (gamepad1.dpad_down || gamepad2.dpad_down) {
                 //Clamp Servo down

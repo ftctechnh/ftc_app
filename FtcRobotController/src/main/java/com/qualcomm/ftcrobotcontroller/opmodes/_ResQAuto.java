@@ -107,8 +107,8 @@ public abstract class _ResQAuto extends LinearOpMode {
         //releaseServo.setPosition(0);
         //hookServo = hardwareMap.servo.get("signal");
         //hookServo.setPosition(1);
-        zipLineServo = hardwareMap.servo.get("zipline");
-        zipLineServo.setPosition(1);
+        //zipLineServo = hardwareMap.servo.get("zipline");
+        //zipLineServo.setPosition(1);
 
         ultrasonicSensor = hardwareMap.ultrasonicSensor.get("ultrasonic");
         opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("light");
