@@ -80,7 +80,7 @@ public class Robot4Teleop extends OpMode {
         lButtonServo = hardwareMap.servo.get("leftbutton");
         lButtonServo.setPosition(0.2);
         rButtonServo = hardwareMap.servo.get("rightbutton");
-        rButtonServo.setPosition(0.6);
+        rButtonServo.setPosition(1);
         //All clear servo
         //hookServo = hardwareMap.servo.get("signal");
         //hookServo.setPosition(HOOK_SERVO_INIT);
