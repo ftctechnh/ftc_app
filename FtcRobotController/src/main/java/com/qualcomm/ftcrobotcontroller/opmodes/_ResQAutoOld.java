@@ -130,15 +130,12 @@ public abstract class _ResQAutoOld extends LinearOpMode {
 
         debugValues.add(formatter.format(new Date()) + "Starting Run");
         //turn on sweeper, move forward
-        //Goes quickly at 0.3 for 3 seconds, then goes slower
-       //sweeper.setPower(-0.8);
         frontRightWheel.setPower(0.1);
         frontLeftWheel.setPower(0.1);
         backRightWheel.setPower(0.1);
         backLeftWheel.setPower(0.1);
         sleep(3000);
         sweeper.setPower(-1);
-
 
         frontRightWheel.setPower(0);
         frontLeftWheel.setPower(0);
@@ -159,36 +156,13 @@ public abstract class _ResQAutoOld extends LinearOpMode {
                 backRightWheel.setPower(0);
                 backLeftWheel.setPower(0);
                 sleep(200);
-                if (getRedAlliance() == 1) {
-                    /*frontRightWheel.setPower(-.25);
-                    frontLeftWheel.setPower(-.25);
-                    backRightWheel.setPower(-.25);
-                    backLeftWheel.setPower(-.25);
-                    sleep(450);
-                    frontLeftWheel.setPower(0.9);
-                    backLeftWheel.setPower(0.9);
-                    frontRightWheel.setPower(-0.50);
-                    backRightWheel.setPower(-0.50);
-                    sleep(750);
-                    */
-                    /*frontLeftWheel.setPower(0.2);
-                    backLeftWheel.setPower(0.2);
-                    frontRightWheel.setPower(0.2);
-                    backRightWheel.setPower(0.2);
-                    sleep(200);*/
-                } else {
+                if (getRedAlliance() == 0) {
                     //Overshoot to left side of line only as BLUE alliance
-                    /*frontLeftWheel.setPower(0.1);
-                    backLeftWheel.setPower(0.1);
-                    frontRightWheel.setPower(0.1);
-                    backRightWheel.setPower(0.1);
-                    sleep(80);*/
                     frontLeftWheel.setPower(-0.3);
                     backLeftWheel.setPower(-0.3);
                     frontRightWheel.setPower(0.3);
                     backRightWheel.setPower(0.3);
                     sleep(50);
-
                 }
                 break;
             }

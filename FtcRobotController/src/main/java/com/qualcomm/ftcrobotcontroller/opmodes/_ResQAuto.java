@@ -1,6 +1,5 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 import android.util.Log;
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -84,7 +83,6 @@ abstract public class _ResQAuto extends LinearOpMode {
         backRightWheel.setDirection(DcMotor.Direction.FORWARD);
         backRightWheel.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         backRightWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-
         sweeper = hardwareMap.dcMotor.get("sweeper");
         buttonServo = hardwareMap.servo.get("leftbutton");
         buttonServo.setPosition(1);
@@ -98,7 +96,6 @@ abstract public class _ResQAuto extends LinearOpMode {
         opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("light");
         colorsensor = hardwareMap.colorSensor.get("color");
         colorsensor.enableLed(false);
-
         //Actual Stuff Starts Here
         waitForStart();
         //do we need delay
@@ -115,64 +112,93 @@ abstract public class _ResQAuto extends LinearOpMode {
         //turn on sweeper, move forward
         backRightWheel.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         backRightWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-        sweeper.setPower(-1);
-        encoderDrive(5250, 0.3); //Forward
-        if(getRedAlliance()==1) {
+        if(getRedAlliance()==0){
+            debugValues.add(formatter.format(new Date()) + "Starting Run");
+            //turn on sweeper, move forward
+            frontRightWheel.setPower(0.1);
+            frontLeftWheel.setPower(0.1);
+            backRightWheel.setPower(0.1);
+            backLeftWheel.setPower(0.1);
+            sleep(3000);
+            sweeper.setPower(-1);
+            stopRobot();
+            //Drive forward until reach line
+            while(true){
+                reflectance = opticalDistanceSensor.getLightDetected();
+                telemetry.addData("Reflectance Value", reflectance);
+                debugValues.add(formatter.format(new Date()) + "Reflectance Value: " + reflectance);
+                if (Math.abs(reflectance - WHITEVALUE) < 0.03) { //found white tape
+                    debugValues.add(formatter.format(new Date()) + "Found white tape");
+                    stopRobot();
+                    if (getRedAlliance() == 0) {
+                        //Overshoot to left side of line only as BLUE alliance
+                        frontLeftWheel.setPower(-0.3);
+                        backLeftWheel.setPower(-0.3);
+                        frontRightWheel.setPower(0.3);
+                        backRightWheel.setPower(0.3);
+                        sleep(50);
+                    }
+                    break;
+                }
+                //set speed here for driving to line
+                frontLeftWheel.setPower(0.1);
+                backLeftWheel.setPower(0.1);
+                frontRightWheel.setPower(0.1);
+                backRightWheel.setPower(0.1);
+                waitForNextHardwareCycle();
+            }
+            stopRobot();
+        } else {
+            sweeper.setPower(-1);
+            encoderDrive(5250, 0.3); //Forward
             frontLeftWheel.setPower(-0.5); //Turn here
             backLeftWheel.setPower(-0.4);
             frontRightWheel.setPower(0.5);
             backRightWheel.setPower(0.4);
             sleep(250);
-        }
-        else {
-            frontLeftWheel.setPower(0.5); //Turn here
-            backLeftWheel.setPower(0.4);
-            frontRightWheel.setPower(-0.5);
-            backRightWheel.setPower(-0.4);
-            sleep(250);
-        }
-        backRightWheel.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        backRightWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-        encoderDrive(2700, 0.3); // Overshoot the line
-        //Drive backward until reach line
-        //Slow down to 0.2
-        while (true) {
-            waitOneFullHardwareCycle();
-            reflectance = opticalDistanceSensor.getLightDetected();
-            telemetry.addData("Reflectance Value", reflectance);
-            Log.i("Reflectance Value", Double.toString(reflectance-WHITEVALUE));
-            debugValues.add(formatter.format(new Date()) + "Reflectance Value: " + reflectance);
-            if (Math.abs(reflectance - WHITEVALUE) < 0.15) { //found white tape
-                debugValues.add(formatter.format(new Date()) + "Found white tape");
-                frontRightWheel.setPower(0);
-                frontLeftWheel.setPower(0);
-                backRightWheel.setPower(0);
-                backLeftWheel.setPower(0);
-                sleep(200);
-                if (getRedAlliance() == 1) {
-                    frontLeftWheel.setPower(0.3);
-                    backLeftWheel.setPower(0.3);
-                    frontRightWheel.setPower(-0.3);
-                    backRightWheel.setPower(-0.3);
-                    sleep(60);
-                } else {
-                    frontLeftWheel.setPower(-0.3);
-                    backLeftWheel.setPower(-0.3);
-                    frontRightWheel.setPower(0.3);
-                    backRightWheel.setPower(0.3);
-                    sleep(60);
+            backRightWheel.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+            backRightWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+            encoderDrive(2700, 0.3); // Overshoot the line
+            //Drive backward until reach line
+            //Slow down to 0.2
+            while (true) {
+                waitOneFullHardwareCycle();
+                reflectance = opticalDistanceSensor.getLightDetected();
+                telemetry.addData("Reflectance Value", reflectance);
+                Log.i("Reflectance Value", Double.toString(reflectance - WHITEVALUE));
+                debugValues.add(formatter.format(new Date()) + "Reflectance Value: " + reflectance);
+                if (Math.abs(reflectance - WHITEVALUE) < 0.15) { //found white tape
+                    debugValues.add(formatter.format(new Date()) + "Found white tape");
+                    frontRightWheel.setPower(0);
+                    frontLeftWheel.setPower(0);
+                    backRightWheel.setPower(0);
+                    backLeftWheel.setPower(0);
+                    sleep(200);
+                    if (getRedAlliance() == 1) {
+                        frontLeftWheel.setPower(0.3);
+                        backLeftWheel.setPower(0.3);
+                        frontRightWheel.setPower(-0.3);
+                        backRightWheel.setPower(-0.3);
+                        sleep(60);
+                    } else {
+                        frontLeftWheel.setPower(-0.3);
+                        backLeftWheel.setPower(-0.3);
+                        frontRightWheel.setPower(0.3);
+                        backRightWheel.setPower(0.3);
+                        sleep(60);
+                    }
+                    backRightWheel.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+                    backRightWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+                    encoderDrive(50, 0.3);
+                    sweeper.setPower(0);
+                    break;
                 }
-                backRightWheel.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-                backRightWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-                encoderDrive(50, 0.3);
-                sweeper.setPower(0);
-                break;
+                //set speed here for driving to line
+                frontLeftWheel.setPower(-0.1);
+                backLeftWheel.setPower(-0.1);
+                frontRightWheel.setPower(-0.1);
+                backRightWheel.setPower(-0.1);
             }
-            //set speed here for driving to line
-            frontLeftWheel.setPower(-0.1);
-            backLeftWheel.setPower(-0.1);
-            frontRightWheel.setPower(-0.1);
-            backRightWheel.setPower(-0.1);
         }
         //follow the left edge of the line
         Date lineFollowerStart = new Date();
