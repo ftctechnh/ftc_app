@@ -26,6 +26,10 @@ import static java.lang.Math.PI;
 import static java.lang.Math.abs;
 
 /**
+ * Contains basic utility functions for autonomous control.
+ * Things like turning, going in straight lines, and moving various manipulators can be controlled
+ * from inside this class.
+ *
  * @author Jonathan Thomas
  */
 public class JonsAlgo {
@@ -33,6 +37,10 @@ public class JonsAlgo {
     RobotAuto robot;
     OpMode mode;
 
+    /**
+     * Create a new JonsAlgo object. RobotAuto passed in must have a working parent opmode.
+     * @param robot Robot object to use.
+     */
     public JonsAlgo(RobotAuto robot) {
         this.robot = robot;
         this.mode = robot.getParentOpMode();
@@ -41,7 +49,13 @@ public class JonsAlgo {
     /*
     *	GLOBAL CONSTANTS
     */
-    double ticksPerRevolution = 1120; // Number of encoder ticks per motor rotation
+    /**
+     * Stores the number of encoder ticks in one motor revolution.
+     * For AndyMark Neverest 40's, it's 280. The encoder tick count is actually 7 pulses per
+     * revolution. Since the gearbox increases the number of rotations by a factor of 40, the final
+     * count is 7 * 40 = 280. For 20 or 60 reduction motors, the  number would be different.
+     */
+    double ticksPerRevolution = 280; // Number of encoder ticks per motor rotation
     double wheelDiameter = 4;         // Diameter of your wheels in inches
     double driveGearMultiplier = 1.0; // Drive gear multiplier.
     // EXAMPLE: If your drive train is geared 2:1 (1 motor rotation = 2 wheel rotations), set this to 2
