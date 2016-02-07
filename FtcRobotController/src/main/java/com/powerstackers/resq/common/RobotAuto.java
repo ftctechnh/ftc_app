@@ -1,13 +1,10 @@
 package com.powerstackers.resq.common;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
-import static com.powerstackers.resq.common.enums.PublicEnums.AllianceColor;
 import static com.powerstackers.resq.common.enums.PublicEnums.MotorSetting;
 
 /**

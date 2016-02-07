@@ -108,7 +108,9 @@ public class JonsAlgo {
             robot.setPowerRight(-speed * rightCorrect);
 
             // Wait until both motors have reached the target
-            while( robot.getRightEncoder() > targetRight) {}
+            while( robot.getRightEncoder() > targetRight) {
+                mode.telemetry.addData("Data2", robot.getRightEncoder());
+            }
 
             // Turn off the drive motors here
             robot.setPowerLeft(0);
