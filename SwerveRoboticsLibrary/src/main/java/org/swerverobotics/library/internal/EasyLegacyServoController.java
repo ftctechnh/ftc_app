@@ -82,6 +82,7 @@ public class EasyLegacyServoController extends I2cControllerPortDeviceImpl imple
 
         this.i2cDeviceClient.setHeartbeatAction(heartbeatAction);
         this.i2cDeviceClient.setHeartbeatInterval(9000);
+        this.i2cDeviceClient.enableWriteCoalescing(true);   // it's useful to us, at least in theory, if several positions must be set. And it is harmless, here.
 
         // Also: set up a read-window. We make it BALANCED to avoid unnecessary ping-ponging
         // between read mode and write mode, since motors are read about as much as they are

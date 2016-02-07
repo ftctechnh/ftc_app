@@ -113,6 +113,7 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
 
         this.i2cDeviceClient.setHeartbeatAction(heartbeatAction);
         this.i2cDeviceClient.setHeartbeatInterval(2000);
+        this.i2cDeviceClient.enableWriteCoalescing(true);   // it's useful to us, particularly for setting motor speeds
 
         // Also: set up a read-window. We make it BALANCED to avoid unnecessary ping-ponging
         // between read mode and write mode, since motors are read about as much as they are
