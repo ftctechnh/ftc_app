@@ -39,6 +39,7 @@ public class RobotAuto {
 //    position of servo <Value of Variable>
 //    public static double servoBeaconPosition;
 
+    public OpMode   mode;
     public JonsAlgo algorithm;
 
     private DcMotor motorLeftA;
@@ -64,6 +65,9 @@ public class RobotAuto {
      * @param mode The OpMode in which the robot is being used.
      */
     public RobotAuto(OpMode mode) {
+
+        this.mode = mode;
+
         motorLeftA  = mode.hardwareMap.dcMotor.get("motorFLeft");
         motorLeftB  = mode.hardwareMap.dcMotor.get("motorBLeft");
         motorRightA = mode.hardwareMap.dcMotor.get("motorFRight");
@@ -330,5 +334,9 @@ public class RobotAuto {
 //        servoBeaconPosition = Range.clip(servoBeaconPosition, servoBeacon_MIN_RANGE, servoBeacon_MAX_RANGE);
 //
 //    }
+
+    public OpMode getParentOpMode() {
+        return mode;
+    }
 
 }

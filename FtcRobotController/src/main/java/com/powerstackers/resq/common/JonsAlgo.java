@@ -20,6 +20,8 @@
 
 package com.powerstackers.resq.common;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+
 import static java.lang.Math.PI;
 import static java.lang.Math.abs;
 
@@ -29,9 +31,11 @@ import static java.lang.Math.abs;
 public class JonsAlgo {
 
     RobotAuto robot;
+    OpMode mode;
 
     public JonsAlgo(RobotAuto robot) {
         this.robot = robot;
+        this.mode = robot.getParentOpMode();
     }
 
     /*
@@ -91,7 +95,9 @@ public class JonsAlgo {
             robot.setPowerRight(speed * rightCorrect);
 
             // Wait until both motors have reached the target
-            while ( robot.getRightEncoder() < targetRight) {}
+            while ( robot.getRightEncoder() < targetRight) {
+                mode.telemetry.addData("Data", robot.getRightEncoder());
+            }
 
             // Stop the drive motors here
             robot.setPowerLeft(0);
@@ -114,8 +120,8 @@ public class JonsAlgo {
      * Turn the robot a certain number of degrees.
      * Indicating a negative degree number will turn the robot clockwise. A positive number will
      * turn the robot counterclockwise.
-     * @param  [description]
-     * @param  [description]
+     * @param  degrees  The distance in degrees to turn.
+     * @param  speed    The speed at which to turn.
      */
     void turnDegrees(double degrees, int speed) throws InterruptedException {
 
