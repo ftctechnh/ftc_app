@@ -1,5 +1,4 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -9,7 +8,6 @@ import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.Range;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -21,16 +19,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-
 public class _ResQAutoTesting extends LinearOpMode {
-
     DcMotor frontRightWheel;
     DcMotor frontLeftWheel;
     DcMotor backRightWheel;
     DcMotor backLeftWheel;
     DcMotor sweeper;
-
     Servo buttonServo;
     Servo button2Servo;
     Servo climberservo;
@@ -38,18 +32,14 @@ public class _ResQAutoTesting extends LinearOpMode {
     Servo releaseServo;
     Servo hookServo;
     Servo zipLineServo;
-
     OpticalDistanceSensor opticalDistanceSensor;
     UltrasonicSensor ultrasonicSensor;
     ColorSensor colorsensor;
-
     //Array for sensor values
-    List<String> debugValues = new ArrayList<String>();
+    List < String > debugValues = new ArrayList < String > ();
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy.MM.dd hh:mm:ss:SSS ");
-
     @Override
     public void runOpMode() throws InterruptedException {
-
         //No need to tune these unless calibration is broken.
         double reflectance = 0;
         double BLACKVALUE = 0.01;
@@ -57,7 +47,6 @@ public class _ResQAutoTesting extends LinearOpMode {
         double REDVALUE = 0.3;
         double BLUEVALUE = 0.05;
         // double MARGIN = 0.03;
-
         String date;
         //load calibration values
         try {
@@ -69,7 +58,6 @@ public class _ResQAutoTesting extends LinearOpMode {
             WHITEVALUE = Double.parseDouble(br.readLine());
             BLACKVALUE = Double.parseDouble(br.readLine());
             br.close();
-
         } catch (IOException e) {
             e.printStackTrace();
         } catch (NullPointerException e) {
@@ -82,7 +70,6 @@ public class _ResQAutoTesting extends LinearOpMode {
         }
         double EOPDThreshold = 0.4 * BLACKVALUE + 0.6 * WHITEVALUE;
         debugValues.add(formatter.format(new Date()) + " EOPDThreshold:" + EOPDThreshold);
-
         //map the code to hardware map
         double value;
         frontRightWheel = hardwareMap.dcMotor.get("frontR");
@@ -97,7 +84,6 @@ public class _ResQAutoTesting extends LinearOpMode {
         backRightWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
         /*
         sweeper = hardwareMap.dcMotor.get("sweeper");
-
         buttonServo = hardwareMap.servo.get("leftbutton");
         buttonServo.setPosition(0.9);
         button2Servo = hardwareMap.servo.get("rightbutton");
@@ -107,46 +93,40 @@ public class _ResQAutoTesting extends LinearOpMode {
         zipLineServo = hardwareMap.servo.get("zipline");
         zipLineServo.setPosition(1);*/
         ultrasonicSensor = hardwareMap.ultrasonicSensor.get("ultrasonic");
-
         opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("light");
-        // colorsensor = hardwareMap.colorSensor.get("color");
-        // colorsensor.enableLed(false);
-
+        colorsensor = hardwareMap.colorSensor.get("color");
+        colorsensor.enableLed(false);
         //Actual Stuff Starts Here
         waitForStart();
         //do we need delay
         telemetry.addData("InDelay", "yes");
         sleep(getDelay());
         telemetry.addData("InDelay", "no");
-
         if (getDelay() == 0)
             sleep(0);
             //sleep(3500);
         else //with delay (2nd start), robot is placed farther
             sleep(4500);
-
         debugValues.add(formatter.format(new Date()) + "Starting Run");
         //turn on sweeper, move forward
         backRightWheel.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         backRightWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-        encoderDrive(5250, 0.3);
-        frontLeftWheel.setPower(-0.3);
+        encoderDrive(5250, 0.3); //Forward
+        frontLeftWheel.setPower(-0.3); //Turn here
         backLeftWheel.setPower(-0.3);
         frontRightWheel.setPower(0.3);
         backRightWheel.setPower(0.3);
         sleep(350);
         backRightWheel.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         backRightWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-        encoderDrive(3200, 0.3);
-
-        //Drive forward until reach line
-        //Slow down to 0.1
+        encoderDrive(3200, 0.3); // Overshoot the line
+        //Drive backward until reach line
+        //Slow down to 0.2
         while (true) {
             waitOneFullHardwareCycle();
             reflectance = opticalDistanceSensor.getLightDetected();
             telemetry.addData("Reflectance Value", reflectance);
             debugValues.add(formatter.format(new Date()) + "Reflectance Value: " + reflectance);
-
             if (Math.abs(reflectance - WHITEVALUE) < 0.1) { //found white tape
                 debugValues.add(formatter.format(new Date()) + "Found white tape");
                 frontRightWheel.setPower(0);
@@ -166,7 +146,6 @@ public class _ResQAutoTesting extends LinearOpMode {
                     frontRightWheel.setPower(0.3);
                     backRightWheel.setPower(0.3);
                     sleep(60);
-
                 }
                 backRightWheel.setMode(DcMotorController.RunMode.RESET_ENCODERS);
                 backRightWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
@@ -178,9 +157,7 @@ public class _ResQAutoTesting extends LinearOpMode {
             backLeftWheel.setPower(-0.2);
             frontRightWheel.setPower(-0.2);
             backRightWheel.setPower(-0.2);
-
         }
-
         //follow the left edge of the line
         Date lineFollowerStart = new Date();
         debugValues.add(formatter.format(lineFollowerStart) + "Entering Line Follower");
@@ -191,13 +168,10 @@ public class _ResQAutoTesting extends LinearOpMode {
             reflectance = opticalDistanceSensor.getLightDetected();
             debugValues.add(formatter.format(new Date()) + "Reflectance:" + reflectance);
             debugValues.add(formatter.format(new Date()) + "Distance:" + distance);
-
             telemetry.addData("Current Status: Linefollower", "Current Status: Linefollower");
             //Line Follower
-
             double valueB;
             double valueS;
-
             value = reflectance - EOPDThreshold;
             debugValues.add(formatter.format(new Date()) + "Correction Error:" + value);
             //Set values for line follower
@@ -219,37 +193,174 @@ public class _ResQAutoTesting extends LinearOpMode {
                 frontRightWheel.setPower(valueS);
                 backRightWheel.setPower(valueS);
             }
-
             telemetry.addData("valueB", valueB);
             telemetry.addData("valueC", valueS);
             telemetry.addData("Reflectance Value", reflectance);
             telemetry.addData("Ultrasonic Value", distance);
-
-
             Date now = new Date();
             //Wait until ultrasonic distance <=22 and 3.5 seconds after line follower starts
             //Ignore the if/else
             //if(distance <= 22 && distance > 1 && now.getTime() - lineFollowerStart.getTime() > 3500) {
-            if(distance <= 22 && distance > 1){
-                    frontRightWheel.setPower(0);
-                    backRightWheel.setPower(0);
-                    frontLeftWheel.setPower(0);
-                    backLeftWheel.setPower(0);
+            if (distance <= 22 && distance > 1) {
+                frontRightWheel.setPower(0);
+                backRightWheel.setPower(0);
+                frontLeftWheel.setPower(0);
+                backLeftWheel.setPower(0);
                 break;
             }
         }
-
-            debugValues.add(formatter.format(new Date()) + "Finish line follower");
-          /*  colorsensor.enableLed(false);
-            sleep(500);
-            telemetry.addData("Red", colorsensor.red());
-            telemetry.addData("Blue", colorsensor.blue());
-            sleep(500);*/
-
+        debugValues.add(formatter.format(new Date()) + "Running color sensors");
+        colorsensor.enableLed(false);
+        int redTotal = 0;
+        int blueTotal = 0;
+        for (int i = 0; i < 500; i++) { //Runs 500 times, tune this
+            redTotal += colorsensor.red(); // Add to the values
+            blueTotal += colorsensor.blue();
+            sleep(2); //Pause between loops
+            waitOneFullHardwareCycle();
+        }
+        telemetry.addData("Red Total", redTotal);
+        telemetry.addData("Blue Total", blueTotal);
+        if (redTotal > 30 || blueTotal > 30) { //Only run if with readings
+            if (redTotal < blueTotal) {
+                debugValues.add(formatter.format(new Date()) + "Detect Blue Value" + blueTotal + ", Red" + redTotal);
+                if (getRedAlliance() == 0) {
+                    //forward
+                    frontLeftWheel.setPower(0.2);
+                    backLeftWheel.setPower(0.2);
+                    frontRightWheel.setPower(0.2);
+                    backRightWheel.setPower(0.2);
+                    sleep(650);
+                    //backward
+                    frontLeftWheel.setPower(-0.2);
+                    backLeftWheel.setPower(-0.2);
+                    frontRightWheel.setPower(-0.2);
+                    backRightWheel.setPower(-0.2);
+                    sleep(350);
+                    //tilt to the right
+                    frontLeftWheel.setPower(-0.1);
+                    backLeftWheel.setPower(-0.1);
+                    frontRightWheel.setPower(0.1);
+                    backRightWheel.setPower(0.1);
+                    sleep(400);
+                    //stop
+                    frontLeftWheel.setPower(0);
+                    backLeftWheel.setPower(0);
+                    frontRightWheel.setPower(0);
+                    backRightWheel.setPower(0);
+                    sleep(350);
+                    //forward
+                    frontLeftWheel.setPower(0.1);
+                    backLeftWheel.setPower(0.1);
+                    frontRightWheel.setPower(0.1);
+                    backRightWheel.setPower(0.1);
+                    sleep(100);
+                    //dump climbers
+                    button2Servo.setPosition(0.05);
+                    buttonServo.setPosition(0.7);
+                    sleep(1500);
+                    //forward
+                    frontLeftWheel.setPower(0.1);
+                    backLeftWheel.setPower(0.1);
+                    frontRightWheel.setPower(0.1);
+                    backRightWheel.setPower(0.1);
+                    sleep(300);
+                } else {
+                    //go backward
+                    frontLeftWheel.setPower(-0.2);
+                    backLeftWheel.setPower(-0.2);
+                    frontRightWheel.setPower(-0.2);
+                    backRightWheel.setPower(-0.2);
+                    sleep(100);
+                    //stop
+                    frontLeftWheel.setPower(0);
+                    backLeftWheel.setPower(0);
+                    frontRightWheel.setPower(0);
+                    backRightWheel.setPower(0);
+                    //Tilt robot to the right
+                    frontLeftWheel.setPower(-0.1);
+                    backLeftWheel.setPower(-0.1);
+                    frontRightWheel.setPower(0.1);
+                    backRightWheel.setPower(0.1);
+                    sleep(450);
+                    //servoMove(button2Servo, 0.7, 0.05, -0.1, 200);
+                    //position servo
+                    button2Servo.setPosition(0.05);
+                    buttonServo.setPosition(0.5);
+                    sleep(800);
+                    //go forward
+                    frontLeftWheel.setPower(0.15);
+                    backLeftWheel.setPower(0.15);
+                    frontRightWheel.setPower(0.15);
+                    backRightWheel.setPower(0.15);
+                    sleep(500);
+                }
+            } else if (redTotal > blueTotal) {
+                debugValues.add(formatter.format(new Date()) + "Detect Red Value" + redTotal + ", Blue" + blueTotal);
+                if (getRedAlliance() == 1) {
+                    //forward
+                    frontLeftWheel.setPower(0.2);
+                    backLeftWheel.setPower(0.2);
+                    frontRightWheel.setPower(0.2);
+                    backRightWheel.setPower(0.2);
+                    sleep(400);
+                    //backwards
+                    frontLeftWheel.setPower(-0.2);
+                    backLeftWheel.setPower(-0.2);
+                    frontRightWheel.setPower(-0.2);
+                    backRightWheel.setPower(-0.2);
+                    sleep(350);
+                    //stop
+                    frontLeftWheel.setPower(0);
+                    backLeftWheel.setPower(0);
+                    frontRightWheel.setPower(0);
+                    backRightWheel.setPower(0);
+                    sleep(500);
+                    //activate servos
+                    button2Servo.setPosition(0.05);
+                    sleep(800);
+                    //forward
+                    frontLeftWheel.setPower(0.2);
+                    backLeftWheel.setPower(0.2);
+                    frontRightWheel.setPower(0.2);
+                    backRightWheel.setPower(0.2);
+                    sleep(240);
+                } else {
+                    //Tilt robot to the right
+                    frontLeftWheel.setPower(-0.1);
+                    backLeftWheel.setPower(-0.1);
+                    frontRightWheel.setPower(0.1);
+                    backRightWheel.setPower(0.1);
+                    sleep(300);
+                    //backward
+                    frontLeftWheel.setPower(-0.2);
+                    backLeftWheel.setPower(-0.2);
+                    frontRightWheel.setPower(-0.2);
+                    backRightWheel.setPower(-0.2);
+                    sleep(200);
+                    //stop
+                    frontLeftWheel.setPower(0);
+                    backLeftWheel.setPower(0);
+                    frontRightWheel.setPower(0);
+                    backRightWheel.setPower(0);
+                    //set servo
+                    buttonServo.setPosition(0.8);
+                    button2Servo.setPosition(0);
+                    sleep(1600);
+                    //forward
+                    frontLeftWheel.setPower(0.15);
+                    backLeftWheel.setPower(0.15);
+                    frontRightWheel.setPower(0.15);
+                    backRightWheel.setPower(0.15);
+                    sleep(450);
+                }
+            }
+        } else {
+            debugValues.add(formatter.format(new Date()) + "None Detected, Red" + redTotal + ", Blue" + blueTotal);
+        }
         writeToDebugFile();
     }
-
-    private void writeToDebugFile(){
+    private void writeToDebugFile() {
         //Write sensor values to file
         try {
             SimpleDateFormat f = new SimpleDateFormat("MMdd_HHmm");
@@ -261,39 +372,32 @@ public class _ResQAutoTesting extends LinearOpMode {
             }
             ps.close();
             fileoutput.close();
-
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    private void encoderDrive(int distance, double power) throws InterruptedException
-    {
+    private void encoderDrive(int distance, double power) throws InterruptedException {
         backRightWheel.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         backRightWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
         int startDistance = backRightWheel.getCurrentPosition();
-
-        while (-1*(startDistance-backRightWheel.getCurrentPosition())<distance){
-            telemetry.addData("Distance", -1*(startDistance-backRightWheel.getCurrentPosition()));
+        while (-1 * (startDistance - backRightWheel.getCurrentPosition()) < distance) {
+            telemetry.addData("Distance", -1 * (startDistance - backRightWheel.getCurrentPosition()));
             frontRightWheel.setPower(power);
             frontLeftWheel.setPower(power);
             backRightWheel.setPower(power);
             backLeftWheel.setPower(power);
             waitOneFullHardwareCycle();
-    }
+        }
         frontRightWheel.setPower(0);
         frontLeftWheel.setPower(0);
         backRightWheel.setPower(0);
         backLeftWheel.setPower(0);
         backRightWheel.setMode(DcMotorController.RunMode.RESET_ENCODERS);
     }
-
-    protected int getDelay(){
+    protected int getDelay() {
         return 0;
     }
-
-
-    protected int getRedAlliance(){
+    protected int getRedAlliance() {
         return 1;
     }
-
 }
