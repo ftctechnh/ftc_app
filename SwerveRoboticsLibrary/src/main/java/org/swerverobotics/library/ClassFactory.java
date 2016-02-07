@@ -260,7 +260,7 @@ public final class ClassFactory
         }
 
     /**
-     * Creates an II2Device instance on a specific port on an I2cDeviceController
+     * Creates an I2Device instance on a specific port on an I2cDeviceController
      *
      * @param i2cController the controller on which to create the device
      * @param port          the port on the controller to use
@@ -272,7 +272,7 @@ public final class ClassFactory
         }
 
     /**
-     * Create a new II2cDeviceClient on an I2cDevice instance. The client is initially
+     * Create a new I2cDeviceClient on an I2cDevice instance. The client is initially
      * disengaged, and must be engaged before use.
      *
      * @param opmodeContext         the OpMode within which the creation is taking place
