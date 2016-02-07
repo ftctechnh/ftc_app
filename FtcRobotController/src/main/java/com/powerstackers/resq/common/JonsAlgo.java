@@ -55,7 +55,7 @@ public class JonsAlgo {
      * revolution. Since the gearbox increases the number of rotations by a factor of 40, the final
      * count is 7 * 40 = 280. For 20 or 60 reduction motors, the  number would be different.
      */
-    double ticksPerRevolution = 280; // Number of encoder ticks per motor rotation
+    double ticksPerRevolution = 1100; // Number of encoder ticks per motor rotation
     double wheelDiameter = 4;         // Diameter of your wheels in inches
     double driveGearMultiplier = 1.0; // Drive gear multiplier.
     // EXAMPLE: If your drive train is geared 2:1 (1 motor rotation = 2 wheel rotations), set this to 2
@@ -103,27 +103,29 @@ public class JonsAlgo {
         double leftCorrect	= 1.0;
         double rightCorrect	= 0.9;
 
-        if (ticks > 0) {
+        if (ticks < 0) {
             // Set the drive motors to the given speed
             robot.setPowerLeft(speed * leftCorrect);
             robot.setPowerRight(speed * rightCorrect);
 
             // Wait until both motors have reached the target
-            while ( robot.getRightEncoder() < targetRight) {
+            while ( robot.getRightEncoder() > targetRight) {
                 mode.telemetry.addData("Data", robot.getRightEncoder());
+                mode.telemetry.addData("Encoder target", targetRight);
             }
 
             // Stop the drive motors here
             robot.setPowerLeft(0);
             robot.setPowerRight(0);
-        } else if(ticks < 0) {
+        } else if (ticks > 0){
             // Set the drive motors to the speed (in reverse)
             robot.setPowerLeft(-speed * leftCorrect);
             robot.setPowerRight(-speed * rightCorrect);
 
             // Wait until both motors have reached the target
-            while( robot.getRightEncoder() > targetRight) {
+            while( robot.getRightEncoder() < targetRight) {
                 mode.telemetry.addData("Data2", robot.getRightEncoder());
+                mode.telemetry.addData("Encoder target", targetRight);
             }
 
             // Turn off the drive motors here
