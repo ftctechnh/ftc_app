@@ -138,7 +138,7 @@ Migrating from LinearOpMode to SyncronousOpMode is easy, usually simply involvin
 
 The Swerve Library now appears to be quite stable and functional. Our own teams are actively
 developing their competition code using it. It currently is synchronized to the release from
-FTC HQ that was published November 4th, 2015. Please be sure to **update your driver station**
+FTC HQ that was published January 4th, 2016 (version 1.5). Please be sure to **update your driver station**
 app to the latest-available version.
 
 ## Installing the Library
