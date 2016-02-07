@@ -39,7 +39,6 @@ public class AutonomousProgram extends LinearOpMode {
 
     public AutonomousProgram(AllianceColor allianceColor) {
         this.allianceColor = allianceColor;
-        this.robot = new RobotAuto(this);
     }
 
     /**
@@ -48,6 +47,7 @@ public class AutonomousProgram extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         // Initialize any sensors and servos
+        robot = new RobotAuto(this);
         robot.initializeRobot();
         // Wait for the start of the match
         this.waitForStart();

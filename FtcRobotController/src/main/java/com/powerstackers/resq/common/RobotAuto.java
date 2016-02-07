@@ -11,7 +11,10 @@ import static com.powerstackers.resq.common.enums.PublicEnums.AllianceColor;
 import static com.powerstackers.resq.common.enums.PublicEnums.MotorSetting;
 
 /**
- * Created by Derek on 1/14/2016.
+ * <b>IMPORTANT:</b> This class must be instantiated INSIDE a {@code runOpMode()} method. It can't be done
+ * before that, or you'll get a NullPointerException.
+ *
+ * @author Derek Helm
  */
 public class RobotAuto {
 
@@ -92,7 +95,7 @@ public class RobotAuto {
 //        colorSensor = ClassFactory.createSwerveColorSensor(mode, mode.hardwareMap.colorSensor.get("colorSensor"));
 //        colorSensor.enableLed(true);
 
-        algorithm = new JonsAlgo(new RobotAuto(new AutonomousProgram(AllianceColor.BLUE)));
+        algorithm = new JonsAlgo(this);
 
     }
 
