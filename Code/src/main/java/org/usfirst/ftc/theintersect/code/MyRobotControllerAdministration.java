@@ -1,6 +1,7 @@
 package org.usfirst.ftc.theintersect.code;
 
 import android.content.Context;
+
 import org.swerverobotics.library.SwerveUtil;
 import org.swerverobotics.library.interfaces.IOpModeManager;
 import org.swerverobotics.library.interfaces.OnRobotRunning;
@@ -48,7 +49,7 @@ public class MyRobotControllerAdministration
      */
     @OpModeRegistrar
     public static void registerMyOpModes(Context context, IOpModeManager manager) {
-        manager.register("Clean Wheels", CleanWheels.class);
+        manager.register("Clean Wheels", TestMotor.class);
     }
 
     /**
