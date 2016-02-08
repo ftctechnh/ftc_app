@@ -11,17 +11,19 @@ public class WalnutServo implements Drivable, Auto {
     private Servo servo;
     private ArrayList<ButtonEvent> buttons;
     private double startPos;
+    private boolean isToggle;
 
-    public WalnutServo(Servo myServo, double myStartPos){
+    public WalnutServo(Servo myServo, double myStartPos, boolean myToggle){
         servo = myServo;
         startPos = myStartPos;
         buttons = new ArrayList<ButtonEvent>();
+        isToggle=myToggle;
         //Reset Servo
         stop();
     }
 
-    public void addButton(String daButton, double myPos, boolean toggle){
-        ButtonEvent newButton = new ButtonEvent(daButton, myPos, toggle);
+    public void addButton(String daButton, double myPos){
+        ButtonEvent newButton = new ButtonEvent(daButton, myPos, true);
         buttons.add(newButton);
     }
     public void operate(){
@@ -32,7 +34,7 @@ public class WalnutServo implements Drivable, Auto {
                 //@TODO Change method name here to make more sense
                 servo.setPosition(temp.getPow());
             }
-            else if(!temp.checkToggle()&&!VirtualGamepad.boolValues[temp.getPos()]){
+            else if(!isToggle&&!VirtualGamepad.boolValues[temp.getPos()]){
                 this.stop();
             }
         }

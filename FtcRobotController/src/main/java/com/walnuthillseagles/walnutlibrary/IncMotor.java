@@ -118,8 +118,10 @@ public class IncMotor extends TeleMotor implements Drivable{
     //@Override
     public void operate(){
         double val = VirtualGamepad.doubleValues[tablePos];
-        if(Math.abs(val)>deadZone)
+        if(Math.abs(val)>deadZone )
             this.getMotor().setPower(val*orientation);
+        else if(Math.abs(val)>0.95)
+            this.getMotor().setPower(0.95 * orientation);
         else
             this.stop();
     }

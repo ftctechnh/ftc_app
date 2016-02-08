@@ -19,13 +19,15 @@ public class DigMotor extends TeleMotor implements Drivable{
     private ArrayList<ButtonEvent> Buttons;
     //Constructors
     //Create a forward and backward button event
-    public DigMotor(DcMotor myMotor, String myName, boolean encoderCheck){
+    private boolean isToggle;
+    public DigMotor(DcMotor myMotor, String myName, boolean encoderCheck, boolean myToggle){
         //Create the motor
         super(myMotor, myName, encoderCheck);
         Buttons = new ArrayList<ButtonEvent>();
+        isToggle=myToggle;
     }
-    public void addButton(String button, double power, boolean toggle){
-        Buttons.add(new ButtonEvent(button, power, toggle));
+    public void addButton(String button, double power){
+        Buttons.add(new ButtonEvent(button, power, true));
     }
     //Teleop Methods
     public void operate(){
@@ -35,7 +37,7 @@ public class DigMotor extends TeleMotor implements Drivable{
             if(VirtualGamepad.boolValues[temp.getPos()]){
                 this.power(temp.getPow());
             }
-            else if(!temp.checkToggle()&&!VirtualGamepad.boolValues[temp.getPos()]){
+            else if(!isToggle&&!VirtualGamepad.boolValues[temp.getPos()]){
                 this.stop();
             }
 
