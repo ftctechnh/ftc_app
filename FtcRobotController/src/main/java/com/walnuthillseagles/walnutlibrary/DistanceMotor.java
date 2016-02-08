@@ -1,6 +1,5 @@
 package com.walnuthillseagles.walnutlibrary;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 
@@ -86,7 +85,5 @@ public class DistanceMotor extends LinearMotor implements Runnable, Auto {
         motor.wait(WAITRESOLUTION);
     }
     //Private helper methods
-    private boolean inRange(int target, int current){
-        return (current > target-RANGEVAL) && (current < target+RANGEVAL);
-    }
+
 }
