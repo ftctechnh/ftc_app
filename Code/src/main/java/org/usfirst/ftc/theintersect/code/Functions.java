@@ -25,6 +25,8 @@ public class Functions {
 	public static double adjustedPowerMax = 0.9;
 	public static double adjustedPowerMin = 0.25;
 	public static double whiteThreshold = 10;
+	public static double barHookDownPos = 0.0;
+	public static double barHookUpPos = 1.0;
 
 	public static double convertGamepad(float y) {
 		int m;

@@ -3,6 +3,7 @@ package org.usfirst.ftc.theintersect.code;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
+
 import org.swerverobotics.library.ClassFactory;
 import org.swerverobotics.library.SynchronousOpMode;
 
@@ -30,8 +31,11 @@ public class TeleOp extends SynchronousOpMode {
 
 	static Servo bumper;
 
-	static Servo churroHookLeft;
-	static Servo churroHookRight;
+    static Servo leftChurroHook;
+    static Servo rightChurroHook;
+
+    static Servo leftBarHook;
+    static Servo rightBarHook;
 
 	//Declare gamepad objects
 	float rightWheelPower;
@@ -56,8 +60,11 @@ public class TeleOp extends SynchronousOpMode {
 	boolean bumperDown = true;
 	boolean bumperUp = false;
 
-	//boolean churroHooksDown = false;
-	//boolean toggleChurroHooks = false;
+	boolean churroHooksDown = false;
+    boolean toggleChurroHooks = false;
+
+    boolean barHooksDown = false;
+    boolean toggleBarHooks = false;
 
 	float slowDriveBack;
 	float slowDriveForward;
@@ -80,8 +87,13 @@ public class TeleOp extends SynchronousOpMode {
         sweeper = hardwareMap.dcMotor.get("sweeper");
 
         bumper = hardwareMap.servo.get("bumper");
-        //churroHookLeft = hardwareMap.servo.get("churroHookLeft");
-        //churroHookRight = hardwareMap.servo.get("churroHookRight");
+
+        leftChurroHook = hardwareMap.servo.get("leftChurroHook");
+        rightChurroHook = hardwareMap.servo.get("rightChurroHook");
+
+        leftBarHook = hardwareMap.servo.get("leftBarHook");
+        rightBarHook = hardwareMap.servo.get("rightBarHook");
+
 
         //Set motor channel modes and direction
         rightWheel.setDirection(DcMotor.Direction.REVERSE);
@@ -123,7 +135,8 @@ public class TeleOp extends SynchronousOpMode {
             positionClimbersForward = gamepad1.dpad_up || gamepad2.dpad_up;
             positionClimbersBackward = gamepad1.dpad_down || gamepad2.dpad_down;
             releaseClimbers = gamepad1.start || gamepad2.start;
-            //toggleChurroHooks = gamepad1.left_stick_button;
+            toggleChurroHooks = gamepad1.right_stick_button || gamepad2.right_stick_button;
+            toggleBarHooks = gamepad1.left_stick_button || gamepad2.left_stick_button;
 
             //Moves robot when some of the buttons are held
             if (tubeExtend) {
@@ -133,17 +146,17 @@ public class TeleOp extends SynchronousOpMode {
             } else {
                 tubeExtender.setPosition(0.5);
             }
-            /*if (toggleChurroHooks && churroHooksDown) {
-                churroHookLeft.setPosition(Functions.churroHookUpPos);
-                churroHookRight.setPosition(Functions.churroHookUpPos);
+            if (toggleChurroHooks && churroHooksDown) {
+                leftChurroHook.setPosition(Functions.churroHookUpPos);
+                rightChurroHook.setPosition(Functions.churroHookUpPos);
+                Functions.waitFor(500);
                 churroHooksDown = false;
             } else if (toggleChurroHooks && !churroHooksDown) {
-                churroHookLeft.setPosition(Functions.churroHookDownPos);
-                churroHookRight.setPosition(Functions.churroHookDownPos);
-                churroHooksDown = false;
-            } else {
-                return;
-            }*/
+                leftChurroHook.setPosition(Functions.churroHookDownPos);
+                rightChurroHook.setPosition(Functions.churroHookDownPos);
+                Functions.waitFor(500);
+                churroHooksDown = true;
+            }
 
 
             if (containerTiltRight) {
@@ -154,10 +167,22 @@ public class TeleOp extends SynchronousOpMode {
                 tubeTilt.setPosition(tubeTilt.getPosition());
             }
 
+            if (toggleBarHooks && barHooksDown) {
+                leftBarHook.setPosition(Functions.barHookUpPos);
+                rightBarHook.setPosition(Functions.barHookUpPos);
+                Functions.waitFor(500);
+                barHooksDown = false;
+            } else if (toggleChurroHooks && !barHooksDown) {
+                leftBarHook.setPosition(Functions.barHookDownPos);
+                rightBarHook.setPosition(Functions.barHookDownPos);
+                Functions.waitFor(500);
+                barHooksDown = true;
+            }
+
             if (positionClimbersForward) {
                 try {
                     mountainClimber.setPosition(
-                            mountainClimber.getPosition() + 0.01);
+                            mountainClimber.getPosition() + 0.05);
                 } catch (Exception e) {
 
                 }
@@ -165,7 +190,7 @@ public class TeleOp extends SynchronousOpMode {
             } else if (positionClimbersBackward) {
                 try {
                     mountainClimber.setPosition(
-                            (mountainClimber.getPosition() - 0.01));
+                            (mountainClimber.getPosition() - 0.05));
                 } catch (Exception e) {
 
                 }
@@ -261,6 +286,11 @@ public class TeleOp extends SynchronousOpMode {
 		tubeExtender.setPosition(Functions.tubeExtenderInitPosition);
 		tubeTilt.setPosition(Functions.tubeTiltInitPosition);
 		bumper.setPosition(Functions.bumperInitPosition);
+        rightChurroHook.setPosition(Functions.churroHookUpPos);
+        leftChurroHook.setPosition(Functions.churroHookUpPos);
+        rightBarHook.setPosition(Functions.barHookUpPos);
+        leftBarHook.setPosition(Functions.barHookUpPos);
+
 	}
 
 	public static void end() {

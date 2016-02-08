@@ -1,10 +1,12 @@
 package org.usfirst.ftc.theintersect.code;
 
-import android.provider.Settings;
-
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
-import com.qualcomm.robotcore.hardware.*;
-import com.qualcomm.robotcore.robocol.Telemetry;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.UltrasonicSensor;
+
 import org.swerverobotics.library.SynchronousOpMode;
 import org.swerverobotics.library.TelemetryDashboardAndLog;
 
@@ -31,15 +33,17 @@ public class SynchronousAutonomous extends SynchronousOpMode {
 
     static Servo bumper;
 
+
+
     static ColorSensor lineColor;
     static ModernRoboticsI2cGyro gyro;
-    static UltrasonicSensor ultrasonicLeft;
-    static UltrasonicSensor ultrasonicRight;
+    static UltrasonicSensor ultrasonic;
 
     Thread mountainClimberMove;
 
     @Override
     public void main() throws InterruptedException {
+
         rightWheel = hardwareMap.dcMotor.get("rightWheel");
         leftWheel  = hardwareMap.dcMotor.get("leftWheel");
 
@@ -47,8 +51,7 @@ public class SynchronousAutonomous extends SynchronousOpMode {
         lineColor = hardwareMap.colorSensor.get("lineColor");
         gyro = (ModernRoboticsI2cGyro) unthunkedHardwareMap.gyroSensor.get("gyro");
 
-        ultrasonicLeft =  hardwareMap.ultrasonicSensor.get("ultrasonicLeft");
-        ultrasonicRight = hardwareMap.ultrasonicSensor.get("ultrasonicRight");
+        ultrasonic =  hardwareMap.ultrasonicSensor.get("ultrasonic");
 
         tubeTilt = hardwareMap.servo.get("tubeTilt");
         tubeExtender = hardwareMap.servo.get("tubeExtender");
@@ -56,11 +59,12 @@ public class SynchronousAutonomous extends SynchronousOpMode {
         mountainClimberRelease = hardwareMap.servo.get("mountainClimberRelease");
         bumper = hardwareMap.servo.get("bumper");
 
+
         autonomousInit(telemetry);
 //        lineColor.enableLed(true); Done in autonomousInit already
 
         //Delay And Team Selection
-/*        while (true) {
+         while (true) {
             if (updateGamepads()) {
                 if (gamepad1.x) {
                     team = "Blue";
@@ -87,8 +91,8 @@ public class SynchronousAutonomous extends SynchronousOpMode {
             }
         }
 
-*/
-/*
+
+
         mountainClimberMove = new Thread() {
             public void run() {
                 while (endTime > System.currentTimeMillis()) {
@@ -100,7 +104,7 @@ public class SynchronousAutonomous extends SynchronousOpMode {
             }
         };
 
-*/
+
 
         waitForStart();
 //        mountainClimberMove.start();
@@ -114,32 +118,9 @@ public class SynchronousAutonomous extends SynchronousOpMode {
             //sleep(delay * 1000);
             //Autonomous Routine
             telemetry.addData("Status", "Working...");
-            double left;
-            double right;
-            left = ultrasonicLeft.getUltrasonicLevel();
-            right= ultrasonicRight.getUltrasonicLevel();
-           // telemetry.addData("Right",right);
-            //telemetry.addData("Left ",left);
-            //telemetry.updateNow();
-            //telemetry.updateNow();
-            ultrasonicSpin(0.1, telemetry);
-            Functions.waitFor(10000);
-            /*moveRobotBackwardTime(1, 0.2);
-            Functions.waitFor(3000);
-            stopAtWhite(0.2, 10000000000L, telemetry);
-            Functions.waitFor(3000);*/
-            //turnRobotLeftBackwardDegrees(270, 0.5, 10000000000L);
-//            moveRobotBackwardTime(2.4, 0.3);
-//            Functions.waitFor(2000);
-//            spinClockwiseGyroCorrection(90, 0.5, 5000);
-//            Functions.waitFor(3000);
-//            spinCounterClockwiseGyroCorrection(270, 0.5, 5000);
-           // telemetry.addData("Status", "Done");
-            //telemetry.updateNow();
-            //spinRobotLeftDegrees(90,0.3,60000,telemetry);
-            //spinRobotLeftDegrees(90, 0.3, 60000, telemetry);
-            //spinRobotLeftDegrees(90, 0.3, 60000, telemetry);
+
             end();
+            telemetry.addData("Status", "Done!");
         }
         end();
     }
@@ -842,7 +823,7 @@ public class SynchronousAutonomous extends SynchronousOpMode {
     }*/
 
     public static void followLine(double power , startingPosition startingposition, TelemetryDashboardAndLog telemetry) {
-        while (ultrasonicLeft.getUltrasonicLevel() > 5) {
+        while (ultrasonic.getUltrasonicLevel() > 5) {
             switch (startingposition){
                 case RIGHT:
                     if (detectWhite(telemetry)) {
@@ -861,7 +842,7 @@ public class SynchronousAutonomous extends SynchronousOpMode {
         stopRobot();
         }
 
-    public static void ultrasonicSpin(double power , TelemetryDashboardAndLog telemetry){
+   /* public static void ultrasonicSpin(double power , TelemetryDashboardAndLog telemetry){
         double right;
         double left;
         do {
@@ -882,7 +863,7 @@ public class SynchronousAutonomous extends SynchronousOpMode {
         telemetry.addData("Right",right);
         telemetry.addData("Left ",left);
         telemetry.updateNow();
-    }
+    }*/
 
     // Reset Encoder of both motors
     //
