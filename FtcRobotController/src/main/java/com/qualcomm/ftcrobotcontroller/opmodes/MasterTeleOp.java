@@ -53,8 +53,8 @@ public class MasterTeleOp extends OpMode{
         leftDrive =
             new IncMotor(leftMotor, "Left Drive", false, "LEFTY1", true, 0.05);
         //Spinners
-        spinner =
-            new DigMotor(spinMotor, "Spinners", false, "B2", 0,true);
+        spinner = new DigMotor(spinMotor, "Spinners", false);
+        spinner.addButton("B2", 0,true);
         spinner.addButton("A2", -1,true);
         spinner.addButton("X2", 1, true);
         //Other
@@ -63,13 +63,16 @@ public class MasterTeleOp extends OpMode{
         slideRight =
             new IncMotor(slideRightMotor, "Sliders", false, "LEFTY2", true, 0.25);
         //@TODO Figure out how Servos want to be used
-        belt = new WalnutServo(beltServo, 0.5, "LEFT2", 1, false);
+        belt = new WalnutServo(beltServo, 0.5);
+        belt.addButton("LEFT2", 1, false);
         belt.addButton("RIGHT2", -1, false);
 
-        door = new WalnutServo(doorServo, 0.5,"LBUMP2", 1, false);
+        door = new WalnutServo(doorServo, 0.5);
+        door.addButton("LBUMP2", 1, false);
         door.addButton("RBUMP2", -1, false);
 
-        hook = new WalnutServo(hookServo,0,"UP1",1, true);
+        hook = new WalnutServo(hookServo,0);
+        hook.addButton("UP1",1, true);
 
         /*
         hook = new WalnutServo(hookServo, 0, "RBUMP1", 0, true);
@@ -89,7 +92,7 @@ public class MasterTeleOp extends OpMode{
         //buttons.add(hook);
     }
     public void start(){
-    WalnutMotor.GamepadUpdater.startProcessing(this);
+    VirtualGamepad.startProcessing(this);
     }
     public void loop(){
     buttons.operate();

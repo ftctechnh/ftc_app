@@ -10,18 +10,15 @@ import com.qualcomm.robotcore.hardware.DcMotorController;
 public class DistanceMotor extends LinearMotor implements Runnable, Auto {
     //Constants
     //How often the code will check if its current operation is done
-    public static final long WAITRESOLUTION = 100;
-    //Precisions of wheels. Smaller = better/ less consistant
+
+    //Precisions of wheels.
     public static final int RANGEVAL = 30;
+    //Fields
     //Please measure in Inches
     private double circumference;
     private double gearRatio;
     //Distance value used in operate
     private int distance;
-    //Current value of encoders since it cannot restart
-    private int currentPosition;
-    //Create timer
-    private LinearOpMode myOp;
     //Parrallel Thread
     private Thread runner;
     public DistanceMotor(DcMotor myMotor, String myName, boolean encoderCheck,boolean isReveresed,
@@ -36,22 +33,16 @@ public class DistanceMotor extends LinearMotor implements Runnable, Auto {
         encoderRot = myEncoder;
 
         //Values involving distances
-        currentPosition = motor.getCurrentPosition();
         distance = 0;
         speedLimit = 0;
-        //Create timer
-        myOp = new LinearOpMode() {
-            @Override
-            public void runOpMode() throws InterruptedException {
-                return;
-            }
-        };
+
         runner = new Thread();
     }
     //Starts operation with given parameters
     public void operate(double inches, double mySpeedLimit){
-        distance = (int)(inches * circumference * gearRatio)+ currentPosition;
-        speedLimit = mySpeedLimit*orientation;
+        //@TODO Does this handle Going backwards?
+        distance = (int)((inches / circumference) * gearRatio * orientation);
+        speedLimit = mySpeedLimit;
         //Start new process
         runner = new Thread(this);
         runner.start();
@@ -71,34 +62,30 @@ public class DistanceMotor extends LinearMotor implements Runnable, Auto {
         //@TODO Better way to do this?
         while(!inRange(distance,motor.getCurrentPosition())) {
             try {
-                myOp.sleep(WAITRESOLUTION);
+                motor.wait(WAITRESOLUTION);
 
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
-            finally{
-                currentPosition=motor.getCurrentPosition();
-            }
         }
         //Keep if encoders have passed distance before continueing
-        stop();
+        //@TODO Should I just throw the exception up at this point?
+        try{
+            this.resetEncoder();
+        } catch (InterruptedException e){
+            this.stop();
+            Thread.currentThread().interrupt();
+        }
+
         //Reset Encoders NOTICE: Reset encoders is bugged
         //motor.setMode(DcMotorController.RunMode.valueOf("RESET_ENCODERS"));
-    }
-    @Override
-    public void stop(){
-        motor.setPower(0);
-        resetPoistion();
     }
     //Timers
     public void waitForCompletion() throws InterruptedException{
         runner.join();
+        motor.wait(WAITRESOLUTION);
     }
     //Private helper methods
-    private void resetPoistion(){
-        currentPosition=motor.getCurrentPosition();
-        motor.setTargetPosition(currentPosition);
-    }
     private boolean inRange(int target, int current){
         return (current > target-RANGEVAL) && (current < target+RANGEVAL);
     }

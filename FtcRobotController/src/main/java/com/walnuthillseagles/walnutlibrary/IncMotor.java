@@ -5,12 +5,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 /**
  * Created by Yan Vologzhanin on 1/2/2016.
  */
-public class IncMotor extends WalnutMotor implements Drivable{
-    public enum analogValues{
-        LEFTX1,LEFTY1,RIGHTX1,RIGHTY1,LEFTZ1,RIGHTZ1,
-                LEFTX2,LEFTY2,RIGHTX2,RIGHTY2,LEFTZ2,RIGHTZ2;
-    }
-    private analogValues tableConstant;
+public class IncMotor extends TeleMotor implements Drivable{
+    private AnalogValues tableConstant;
     private int tablePos;
     //Used if you need to reverse orientation
     private double orientation;
@@ -23,8 +19,8 @@ public class IncMotor extends WalnutMotor implements Drivable{
         //Assign Table Position
         String nonCaseSensetive = myControl.toUpperCase();
         //@TODO Do I Need this field?
-        tableConstant = analogValues.valueOf(nonCaseSensetive);
-        setTable(analogValues.valueOf(nonCaseSensetive));
+        tableConstant = AnalogValues.valueOf(nonCaseSensetive);
+        setTable(AnalogValues.valueOf(nonCaseSensetive));
         if(reverse)
             orientation = -1;
         else
@@ -64,7 +60,7 @@ public class IncMotor extends WalnutMotor implements Drivable{
                 return "RIGHTZ2";
         }
     }
-    private void setTable(analogValues myControl){
+    private void setTable(AnalogValues myControl){
         switch(myControl){
             case LEFTX1:
                 tablePos = 0;
@@ -108,7 +104,7 @@ public class IncMotor extends WalnutMotor implements Drivable{
     }
     public void setTablePos(String myControl){
         String nonCaseSensetive = myControl.toUpperCase();
-        setTable(analogValues.valueOf(nonCaseSensetive));
+        setTable(AnalogValues.valueOf(nonCaseSensetive));
     }
     public void directSetTablePos(int n){
         if(n>=0&&n<=11)
@@ -121,7 +117,7 @@ public class IncMotor extends WalnutMotor implements Drivable{
     //Teleop Methods
     //@Override
     public void operate(){
-        double val = WalnutMotor.GamepadUpdater.doubleValues[tablePos];
+        double val = VirtualGamepad.doubleValues[tablePos];
         if(Math.abs(val)>deadZone)
             this.getMotor().setPower(val*orientation);
         else
