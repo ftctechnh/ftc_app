@@ -29,7 +29,7 @@ public class MasterTeleOp extends OpMode{
     private IncMotor slideRight;
     private DigMotor spinner;
 
-    private WalnutServo belt;
+    private ContinousServo belt;
     private WalnutServo door;
     private WalnutServo hook;
     //Control Scheme
@@ -53,26 +53,23 @@ public class MasterTeleOp extends OpMode{
         leftDrive =
             new IncMotor(leftMotor, "Left Drive", false, "LEFTY1", true, 0.05);
         //Spinners
-        spinner = new DigMotor(spinMotor, "Spinners", false);
-        spinner.addButton("B2", 0,true);
-        spinner.addButton("A2", -1,true);
-        spinner.addButton("X2", 1, true);
+        spinner = new DigMotor(spinMotor, "Spinners", false, true);
+        spinner.addButton("B2", 0);
+        spinner.addButton("A2", -1);
+        spinner.addButton("Y2", 1);
         //Other
         slideLeft =
             new IncMotor(slideLeftMotor, "Sliders", false, "LEFTY2", false, 0.25);
         slideRight =
             new IncMotor(slideRightMotor, "Sliders", false, "LEFTY2", true, 0.25);
         //@TODO Figure out how Servos want to be used
-        belt = new WalnutServo(beltServo, 0.5);
-        belt.addButton("LEFT2", 1, false);
-        belt.addButton("RIGHT2", -1, false);
+        belt = new ContinousServo(beltServo, "Belt",0.5,"RIGHTX2",false,0.1);
 
-        door = new WalnutServo(doorServo, 0.5);
-        door.addButton("LBUMP2", 1, false);
-        door.addButton("RBUMP2", -1, false);
 
-        hook = new WalnutServo(hookServo,0);
-        hook.addButton("UP1",1, true);
+
+        hook = new WalnutServo(hookServo,0,true);
+        hook.addButton("LBUMP1",1);
+        hook.addButton("RBUMP1",0);
 
         /*
         hook = new WalnutServo(hookServo, 0, "RBUMP1", 0, true);
@@ -88,8 +85,8 @@ public class MasterTeleOp extends OpMode{
         buttons.add(slideRight);
 
         buttons.add(belt);
-        buttons.add(door);
-        //buttons.add(hook);
+        //buttons.add(door);
+        buttons.add(hook);
     }
     public void start(){
     VirtualGamepad.startProcessing(this);
