@@ -27,6 +27,8 @@ public class Functions {
 	public static double whiteThreshold = 10;
 	public static double barHookDownPos = 0.0;
 	public static double barHookUpPos = 1.0;
+	public static double linearSlidePower = 0.5;
+    public static double triggerThreshold = 0.1;
 
 	public static double convertGamepad(float y) {
 		int m;

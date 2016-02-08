@@ -34,7 +34,6 @@ public class SynchronousAutonomous extends SynchronousOpMode {
     static Servo bumper;
 
 
-
     static ColorSensor lineColor;
     static ModernRoboticsI2cGyro gyro;
     static UltrasonicSensor ultrasonic;
@@ -183,7 +182,7 @@ public class SynchronousAutonomous extends SynchronousOpMode {
 
     public static void autonomousInit(TelemetryDashboardAndLog telemetry) {
         lineColor.enableLed(true);
-//        servoInit();
+        servoInit();
         directionInit();
         resetEncoders();
         rightWheel.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
@@ -199,6 +198,97 @@ public class SynchronousAutonomous extends SynchronousOpMode {
         tubeTilt.setPosition(Functions.tubeTiltInitPosition);
         bumper.setPosition(Functions.bumperInitPosition);
     }
+
+    public static double calculateArmPosition(double dist, TelemetryDashboardAndLog telemetry) {
+        final double basketOffset = 5.0; // offset between wall and basket
+        final double armLength = 40.5;   // Length of the mountain climber
+
+        double armDegree;
+        double armPosition;
+
+        // Set min and Max distance for angular calculation
+        // the distance is the distance of the wall, it needs to be adjusted for
+        dist = dist + basketOffset;
+        if (dist < 5) { // too close
+            dist = 5.0;
+        } else if (dist > ( armLength + 10 ) ) { // too far
+            dist = 0.0;
+        } else if ( dist > armLength ) {
+            dist = armLength;
+        }
+        armDegree = Math.toDegrees(Math.acos(dist / armLength));
+        armPosition = (180 - armDegree)/200;
+        telemetry.addData("Degree", armDegree);
+        return armPosition;
+    }
+
+    // Read ultrasound sensor distance 5 times and remove min/max readings
+    public static double getUSDistance( UltrasonicSensor ultrasonic, TelemetryDashboardAndLog telemetry ){
+        double minDistance = 1000;
+        double maxDistance = 0;
+        double Distance = 0;
+        for ( int i = 0; i < 5; i++ ) {
+            double dist = ultrasonic.getUltrasonicLevel();
+            Distance += dist;
+            if (dist > maxDistance) {
+                maxDistance = dist;
+            } else if (dist < minDistance) {
+                minDistance = dist;
+            }
+            Functions.waitFor(50);
+        }
+        Distance = (Distance- minDistance - maxDistance ) / 3;
+        telemetry.addData("min ", minDistance);
+        telemetry.addData("max ", maxDistance);
+        telemetry.addData("Distance ", Distance);
+
+        return(Distance);
+    }
+
+    public static void dumpClimbersUltra(TelemetryDashboardAndLog telemetry) {
+        //set the position for arm based on ultrasonic sensor
+        mountainClimber.setPosition(calculateArmPosition(getUSDistance(ultrasonic,telemetry),telemetry));
+        Functions.waitFor(1000);
+        mountainClimberRelease.setPosition(Functions.mountainClimberReleaseOpen);
+        Functions.waitFor(100);
+        mountainClimberRelease.setPosition(Functions.mountainClimberReleaseClose);
+        Functions.waitFor(100);
+        mountainClimberRelease.setPosition(Functions.mountainClimberReleaseOpen);
+        Functions.waitFor(100);
+        mountainClimberRelease.setPosition(Functions.mountainClimberReleaseClose);
+        Functions.waitFor(100);
+        mountainClimberRelease.setPosition(Functions.mountainClimberReleaseOpen);
+        Functions.waitFor(100);
+        mountainClimberRelease.setPosition(Functions.mountainClimberReleaseClose);
+        Functions.waitFor(100);
+        mountainClimberRelease.setPosition(Functions.mountainClimberReleaseOpen);
+        Functions.waitFor(100);
+        mountainClimberRelease.setPosition(Functions.mountainClimberReleaseClose);
+    }
+
+    /*public static void dumpClimbersUltra(TelemetryDashboardAndLog telemetry) {
+        double[] positions = {98,100, 102.8, 105.6, 108.4, 111.2, 114, 116.8, 119.6, 119.4, 120.2, 125, 137.8, 133.6, 135.4, 137.2, 142, 141.5, 147.6, 150.4, 153.2, 156, 160, 165, 167   , 170};
+        double ultraVal  = ultrasonic.getUltrasonicLevel();
+        telemetry.update();
+        if(ultraVal < 5) {
+            ultraVal = 5;
+        } else if (ultraVal >= 25) {
+            return;
+        }
+        telemetry.clearDashboard();
+        telemetry.addData("Ultrasonic Level", ultraVal);
+        telemetry.addData("Dumper Position", positions[(int) ultraVal - 5] / 180.0);
+        telemetry.update();
+        mountainClimber.setPosition((positions[(int) ultraVal -5]) / 180.0);
+        Functions.waitFor(3000);
+        mountainClimberRelease.setPosition(2.0);
+        Functions.waitFor(3000);
+        mountainClimberRelease.setPosition(0.0);
+        Functions.waitFor(100);
+        mountainClimberRelease.setPosition(2.0);
+        Functions.waitFor(100);
+        mountainClimberRelease.setPosition(0.0);
+    }*/
 
     public static void moveRobotForward(double leftPower, double rightPower) {
         leftWheel.setPower(leftPower);

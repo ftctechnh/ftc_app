@@ -18,12 +18,14 @@ public class TeleOp extends SynchronousOpMode {
 	static DcMotor rightWheel;
 	static DcMotor leftWheel;
 
-	static DcMotor linearSlideR;
-	static DcMotor linearSlideL;
+	static DcMotor linearSlide;
 
 	static DcMotor sweeper;
 
-	static Servo tubeTilt;
+    static DcMotor leftHangString;
+    static DcMotor rightHangString;
+
+    static Servo tubeTilt;
 	static Servo tubeExtender;
 
 	static Servo mountainClimber;
@@ -75,8 +77,11 @@ public class TeleOp extends SynchronousOpMode {
         rightWheel = hardwareMap.dcMotor.get("rightWheel");
         leftWheel = hardwareMap.dcMotor.get("leftWheel");
 
-        linearSlideR = hardwareMap.dcMotor.get("linearSlideR");
-        linearSlideL = hardwareMap.dcMotor.get("linearSlideL");
+        linearSlide = hardwareMap.dcMotor.get("linearSlide");
+
+        leftHangString = hardwareMap.dcMotor.get("leftHangString");
+        rightHangString = hardwareMap.dcMotor.get("rightHangString");
+
 
         tubeTilt = hardwareMap.servo.get("tubeTilt");
         tubeExtender = hardwareMap.servo.get("tubeExtender");
@@ -101,10 +106,14 @@ public class TeleOp extends SynchronousOpMode {
         leftWheel.setDirection(DcMotor.Direction.FORWARD);
         leftWheel.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
 
-        linearSlideR.setDirection(DcMotor.Direction.REVERSE);
-        linearSlideR.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-        linearSlideL.setDirection(DcMotor.Direction.FORWARD);
-        linearSlideL.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        linearSlide.setDirection(DcMotor.Direction.REVERSE);
+        linearSlide.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+
+        leftHangString.setDirection(DcMotor.Direction.FORWARD);
+        leftHangString.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+
+        rightHangString.setDirection(DcMotor.Direction.FORWARD);
+        rightHangString.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
 
         tubeTilt.setDirection(Servo.Direction.REVERSE);
         tubeExtender.setDirection(Servo.Direction.REVERSE);
@@ -112,15 +121,14 @@ public class TeleOp extends SynchronousOpMode {
         mountainClimberRelease.setDirection(Servo.Direction.REVERSE);
         bumper.setDirection(Servo.Direction.FORWARD);
         //Wait for the game to start
-        teleInit();
-		/*ClassFactory.createEasyMotorController(this, linearSlideL,
-				linearSlideR);
+		/*ClassFactory.createEasyMotorController(this, linearSlide,
+				linearSlide);
 		ClassFactory.createEasyMotorController(this, rightWheel, leftWheel);
 		ClassFactory.createEasyMotorController(this, sweeper, null);*/
         ClassFactory.createEasyServoController(this, Arrays.asList
                 (mountainClimberRelease, mountainClimber, tubeExtender,
                         tubeTilt, bumper));
-
+        teleInit();
         waitForStart();
         long endTime = System.currentTimeMillis() + 120000;
         //Game Loop
@@ -179,7 +187,25 @@ public class TeleOp extends SynchronousOpMode {
                 barHooksDown = true;
             }
 
-            if (positionClimbersForward) {
+            if(gamepad1.right_trigger > Functions.triggerThreshold){
+                leftHangString.setPower(gamepad1.right_trigger);
+                rightHangString.setPower(gamepad1.right_trigger);
+            } else if (gamepad2.right_trigger > Functions.triggerThreshold){
+                leftHangString.setPower(gamepad2.right_trigger);
+                rightHangString.setPower(gamepad2.right_trigger);
+            } else if(gamepad1.left_trigger > Functions.triggerThreshold){
+                leftHangString.setPower(gamepad1.left_trigger);
+                rightHangString.setPower(gamepad1.left_trigger);
+            } else if(gamepad2.left_trigger > Functions.triggerThreshold){
+                leftHangString.setPower(gamepad2.left_trigger);
+                rightHangString.setPower(gamepad2.left_trigger);
+            } else{
+                leftHangString.setPower(0);
+                rightHangString.setPower(0);
+            }
+
+
+                if (positionClimbersForward) {
                 try {
                     mountainClimber.setPosition(
                             mountainClimber.getPosition() + 0.05);
@@ -250,11 +276,11 @@ public class TeleOp extends SynchronousOpMode {
                 }
 
                 if (linearSlideForward) {
-                    Functions.moveTwoMotors(linearSlideR, linearSlideL, 0.3);
+                    linearSlide.setPower(Functions.linearSlidePower);
                 } else if (linearSlideBackward) {
-                    Functions.moveTwoMotors(linearSlideR, linearSlideL, -0.3);
+                    linearSlide.setPower(Functions.linearSlidePower);
                 } else {
-                    Functions.moveTwoMotors(linearSlideR, linearSlideL, 0.0);
+                    linearSlide.setPower(0);
                 }
 
                 if (sweeperForward) {

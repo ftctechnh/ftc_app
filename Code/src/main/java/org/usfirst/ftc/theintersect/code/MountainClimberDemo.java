@@ -2,8 +2,12 @@ package org.usfirst.ftc.theintersect.code;
 
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
-import com.qualcomm.robotcore.hardware.*;
-import com.qualcomm.robotcore.robocol.Telemetry;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.UltrasonicSensor;
+
 import org.swerverobotics.library.SynchronousOpMode;
 import org.swerverobotics.library.TelemetryDashboardAndLog;
 
@@ -107,12 +111,12 @@ public class MountainClimberDemo extends SynchronousOpMode {
     }
 
     // Read ultrasound sensor distance 5 times and remove min/max readings
-    public static double getUSDistance( UltrasonicSensor ultrasonicLeft, TelemetryDashboardAndLog telemetry ){
+    public static double getUSDistance( UltrasonicSensor ultrasonic, TelemetryDashboardAndLog telemetry ){
         double minDistance = 1000;
         double maxDistance = 0;
         double leftDistance = 0;
         for ( int i = 0; i < 5; i++ ) {
-            double dist = ultrasonicLeft.getUltrasonicLevel();
+            double dist = ultrasonic.getUltrasonicLevel();
             leftDistance += dist;
             if (dist > maxDistance) {
                 maxDistance = dist;
