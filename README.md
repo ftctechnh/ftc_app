@@ -31,7 +31,7 @@ After you finish merging everything and resolving any conflicts if necessary, yo
     # Then just push the code to the remote.
     git push origin master
 
-For a more detailed guide, try out https://guides.github.com/activities/hello-world/. It's a bit of a learning curve, but Git and Github are immensely powerful tools. You can always post on the FTC forum for help!
+For a more detailed guide, try out https://git-scm.com/book/en/v2/Getting-Started-Git-Basics and https://guides.github.com/activities/hello-world/. It's a bit of a learning curve, but Git and Github are immensely powerful tools. You can always post on the FTC forum for help!
 
 
 ## Documentation
