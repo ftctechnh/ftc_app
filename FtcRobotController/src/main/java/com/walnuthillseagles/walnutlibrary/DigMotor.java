@@ -38,7 +38,7 @@ public class DigMotor extends TeleMotor implements Drivable{
                 this.power(temp.getPow());
             }
             else if(!isToggle&&!VirtualGamepad.boolValues[temp.getPos()]){
-                this.stop();
+                this.fullStop();
             }
 
         }

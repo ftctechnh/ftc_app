@@ -50,13 +50,13 @@ public class TimedMotor extends LinearMotor implements Runnable, Auto {
         }
         catch(InterruptedException e){
             //@TODO: Overkill?
-            stop();
+            fullStop();
             Thread.currentThread().interrupt();
         }
         finally {
-            stop();
+            fullStop();
         }
-        stop();
+        fullStop();
     }
     public void waitForCompletion() throws InterruptedException{
         runner.join();

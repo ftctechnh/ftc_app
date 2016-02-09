@@ -50,7 +50,7 @@ public class SimpleMotor {
         name = myName;
     }
     //Methods
-    public void stop(){
+    public void fullStop(){
         motor.setPower(0);
         if(hasEncoders){
             try{
@@ -62,6 +62,9 @@ public class SimpleMotor {
             }
 
         }
+    }
+    public void stop(){
+        motor.setPower(0);
     }
     public void power(double pow){
         if(pow>=-1.0&&pow <=1.0)

@@ -53,11 +53,11 @@ public class LinearMotor extends SimpleMotor implements Runnable, Auto {
                 motor.wait(WAITRESOLUTION);
             }
             catch(InterruptedException e){
-                this.stop();
+                this.fullStop();
                 notStopped = false;
             }
         }
-        this.stop();
+        this.fullStop();
     }
     protected boolean inRange(int target, int current){
         return (current > target-TOLERANCE) && (current < target+TOLERANCE);

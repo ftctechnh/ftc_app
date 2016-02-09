@@ -49,9 +49,9 @@ public class DistanceDrive {
     }
     public void stop(){
         for(int i=0;i<leftDrive.size();i++)
-            leftDrive.get(i).stop();
+            leftDrive.get(i).fullStop();
         for(int i=0;i<rightDrive.size();i++)
-            rightDrive.get(i).stop();
+            rightDrive.get(i).fullStop();
     }
     //Timers
     public void waitForCompletion() throws InterruptedException{

@@ -69,7 +69,7 @@ public class VirtualGamepad implements Runnable{
     //Method that starts at thread and updates neccesary parts
     public void run() {
         canProcess = true;
-        //Will loop and update values until told to stop
+        //Will loop and update values until told to fullStop
         while (canProcess) {
             //Analog Values
             doubleValues[0] = gamepad1Pointer.left_stick_x;

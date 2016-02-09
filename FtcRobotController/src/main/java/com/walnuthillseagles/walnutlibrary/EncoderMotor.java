@@ -47,7 +47,7 @@ public class EncoderMotor extends LinearMotor implements Runnable, Auto{
             try{
                 if(Math.abs(motor.getCurrentPosition())>= Math.abs(distance)-ENCODERTOLERANCE){
                     //Includes Reset command
-                    this.stop();
+                    this.fullStop();
                     canProcess = false;
                 }
                 else

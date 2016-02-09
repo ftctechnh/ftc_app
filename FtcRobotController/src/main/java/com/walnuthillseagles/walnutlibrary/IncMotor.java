@@ -123,7 +123,7 @@ public class IncMotor extends TeleMotor implements Drivable{
         else if(Math.abs(val)>0.95)
             this.getMotor().setPower(0.95 * orientation);
         else
-            this.stop();
+            this.fullStop();
     }
     //Autonomous Methods in Walnut Motor (Called "power(int pow)")
 }

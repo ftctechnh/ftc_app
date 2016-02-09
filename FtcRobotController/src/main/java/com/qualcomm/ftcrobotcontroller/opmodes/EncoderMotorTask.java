@@ -71,7 +71,7 @@ public class EncoderMotorTask {
 
 
     public void stop() throws InterruptedException {
-        opMode.telemetry.addData(name + ": Stoping motor ", "stop");
+        opMode.telemetry.addData(name + ": Stoping motor ", "fullStop");
         running = false;
         motor.setPower(0);
 

@@ -72,7 +72,7 @@ public class DistanceMotor extends LinearMotor implements Runnable, Auto {
         try{
             this.resetEncoder();
         } catch (InterruptedException e){
-            this.stop();
+            this.fullStop();
             Thread.currentThread().interrupt();
         }
 

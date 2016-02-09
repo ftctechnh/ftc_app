@@ -43,14 +43,15 @@ public class GyroDrive implements Runnable{
     }
     public void tankTurn(int degrees){
         double turnOrientation = (degrees < 0) ? -1: 1;
-        double tempHeading = degrees;
-        double currentPos = gyro.getHeading();
-        while(currentPos +tempHeading > 360){
+        int tempHeading = degrees;
+        int currentPos = gyro.getHeading();
+        while(currentPos +tempHeading >= 360){
             tempHeading -= 360;
         }
-        while(currentPos - tempHeading < 360){
+        while(currentPos + tempHeading < 0){
             tempHeading += 360;
         }
+        targetHeading = currentPos + tempHeading;
         left.setPower(MAX_SPEED * turnOrientation);
         right.setPower(-MAX_SPEED * turnOrientation);
         runner = new Thread(this);
@@ -62,7 +63,20 @@ public class GyroDrive implements Runnable{
         runner.join();
     }
     public void run(){
-
+        boolean canProcess = true;
+        while(!(Math.abs(gyro.getHeading()-targetHeading)>=GYROTOLERANCE) && canProcess){
+            try{
+                left.sleep(WAITRESOLUTION);
+            }
+            catch(InterruptedException e){
+                left.stop();
+                right.stop();
+                canProcess = false;
+                Thread.currentThread().interrupt();
+            }
+        }
+        left.stop();
+        right.stop();
     }
     //Stuff I worry about
 }
