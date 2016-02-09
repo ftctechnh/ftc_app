@@ -1,3 +1,5 @@
+import java.util.regex.Pattern
+
 apply plugin: 'com.android.application'
 
 android {
@@ -15,11 +17,17 @@ android {
         // module from FTC HQ. If this is not done, the robot controller may potentially have
         // multiple versions of the app simultaneously installed, which can lead to confusion.
         //
-        // The versionName need not match; you can set that to what you may please.
-        //
+        // Here, we have a funky little Groovy script to maintain that correspondence automatically
         // See also: http://developer.android.com/tools/building/configuring-gradle.html
-        //
-        versionCode 6                       // http://developer.android.com/tools/publishing/versioning.html
+
+        def manifestFile = file('../FtcRobotController/src/main/AndroidManifest.xml');
+        def pattern      = Pattern.compile("versionCode=\"(\\d+)\"")
+        def manifestText = manifestFile.getText()
+        def matcher      = pattern.matcher(manifestText)
+        matcher.find()
+        def code = Integer.parseInt(matcher.group(1))
+
+        versionCode code                    // http://developer.android.com/tools/publishing/versioning.html
         versionName '@string/version_name'  // http://developer.android.com/tools/publishing/versioning.html
     }
     buildTypes {
@@ -34,7 +42,7 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
-    }    
+    }
 }
 
 repositories {
