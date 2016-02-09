@@ -8,6 +8,37 @@ The FTC Driver Station app is available through Google Play.
 To use this SDK, download/clone the entire project to your local computer.
 Use Android Studio to import the folder  ("Import project (Eclipse ADT, Gradle, etc.)").
 
+
+## How to use Git and GitHub
+
+Do not submit a *pull request* to this repository unless you actually intend to submit an improvement to the underlying code for all teams! You probably mean instead to do a *merge* with the "upstream" repository (this one), which will add the newest SDK updates to your team's private repository.
+
+To do this, first merge the new changes into your `master` branch like this: (If there are any merge conflicts, Git will let you know how to resolve them.)
+
+    git pull https://github.com/ftctechnh/ftc_app master
+
+To make this easier, you might want to assign https://github.com/ftctechnh/ftc_app as a remote.
+
+    # Run once
+    git remote add upstream https://github.com/ftctechnh/ftc_app
+    # Now all you have to type is this:
+    git pull upstream master
+
+After you finish merging everything and resolving any conflicts if necessary, you'll need to push it back up to your own repository.
+
+    # If you haven't done so already, you should assign your GitHub repository as a remote.
+    git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPOSITORY
+    # Then just push the code to the remote.
+    git push origin master
+
+For a more detailed guide, try out some of the following links! It's a bit of a learning curve, but Git and Github are immensely powerful tools. You can always post on the FTC forum for help!
+* https://git-scm.com/book/en/v2/Getting-Started-Git-Basics *Git's official guide.*
+* https://guides.github.com/activities/hello-world/ *GitHub's official tutorial.*
+* http://saasrobotics.com/presentation-git-your-ftc-on/ *An FTCer-written intro to both Git and GitHub.*
+
+
+## Documentation
+
 Documentation for the FTC SDK are included with this repository.  There is a subfolder called "doc" which contains several subfolders:
 
  * The folder "apk" contains the .apk files for the FTC Driver Station and FTC Robot Controller apps.
@@ -18,7 +49,8 @@ For technical questions regarding the SDK, please visit the FTC Technology forum
 
   http://ftcforum.usfirst.org/forumdisplay.php?156-FTC-Technology
 
-**************************************************************************************
+
+## Release Notes
 
 Release 16.01.04
 
