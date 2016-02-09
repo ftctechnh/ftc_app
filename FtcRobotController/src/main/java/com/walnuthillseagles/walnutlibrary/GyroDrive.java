@@ -77,6 +77,14 @@ public class GyroDrive implements Runnable{
         }
         left.stop();
         right.stop();
+        try{
+            left.resetEncoder();
+            right.resetEncoder();
+        }
+        catch(InterruptedException e){
+            Thread.currentThread();
+        }
+
     }
     //Stuff I worry about
 }

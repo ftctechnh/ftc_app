@@ -59,6 +59,7 @@ public class EncoderMotor extends LinearMotor implements Runnable, Auto{
             }
 
         }
+        this.fullStop();
 
     }
     public void waitForCompletion() throws InterruptedException{
