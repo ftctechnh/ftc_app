@@ -55,7 +55,7 @@ public class JonsAlgo {
      * revolution. Since the gearbox increases the number of rotations by a factor of 40, the final
      * count is 7 * 40 = 280. For 20 or 60 reduction motors, the  number would be different.
      */
-    double ticksPerRevolution = 1100; // Number of encoder ticks per motor rotation
+    double ticksPerRevolution = 1120; // Number of encoder ticks per motor rotation
     double wheelDiameter = 4;         // Diameter of your wheels in inches
     double driveGearMultiplier = 1.0; // Drive gear multiplier.
     // EXAMPLE: If your drive train is geared 2:1 (1 motor rotation = 2 wheel rotations), set this to 2
@@ -101,7 +101,7 @@ public class JonsAlgo {
 //        long targetLeft = startLeft + ticks;
 
         double leftCorrect	= 1.0;
-        double rightCorrect	= 0.9;
+        double rightCorrect	= 0.8;
 
         if (ticks < 0) {
             // Set the drive motors to the given speed
@@ -141,28 +141,34 @@ public class JonsAlgo {
      * @param  degrees  The distance in degrees to turn.
      * @param  speed    The speed at which to turn.
      */
-    void turnDegrees(double degrees, int speed) throws InterruptedException {
+    public void turnDegrees(double degrees, double speed) throws InterruptedException {
 
-        double degreesSoFar = 0;
+        double degreesSoFar = robot.getGyroHeading();
 
-        if (degrees < 0) {
+        if (degrees < 180) {
             robot.setPowerLeft(-1 * speed);
             robot.setPowerRight(speed);
-        } else {
-           robot.setPowerLeft(speed);
+//            mode.telemetry.addData("gyro1", robot.getGyroHeading());
+        } else if (degrees > 180) {
+            robot.setPowerLeft(speed);
             robot.setPowerRight(-1 * speed);
+//            mode.telemetry.addData("gyro2", robot.getGyroHeading());
+        } else {
+            robot.setPowerAll(0);
         }
 
         // For as long as the current degree measure doesn't equal the target. This will work in the clockwise and
         // counterclockwise directions, since we are comparing the absolute values
-        while (abs(degreesSoFar) < abs(degrees)) {}
+        while ((degreesSoFar) > (degrees)) {
+            mode.telemetry.addData("gyrocompare", robot.getGyroHeading());
+        }
 
         // Stop all drive motors
         robot.setPowerAll(0);
 
-        if (abs(degreesSoFar - degrees) > turnOvershootThreshold) {
-            turnDegrees(-1*(degreesSoFar - degrees), 50);
-        }
+//        if (abs(degreesSoFar - degrees) > turnOvershootThreshold) {
+//            turnDegrees(-1*(degreesSoFar - degrees), 0.50);
+//        }
     }
 
     /**

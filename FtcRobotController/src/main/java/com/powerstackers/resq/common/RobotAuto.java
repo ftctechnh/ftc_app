@@ -1,11 +1,14 @@
 package com.powerstackers.resq.common;
 
+import com.powerstackers.resq.common.enums.PublicEnums.DoorSetting;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import static com.powerstackers.resq.common.enums.PublicEnums.MotorSetting;
+import static java.lang.Math.abs;
 
 /**
  * <b>IMPORTANT:</b> This class must be instantiated INSIDE a {@code runOpMode()} method. It can't be done
@@ -46,14 +49,14 @@ public class RobotAuto {
     private DcMotor motorBrush;
 //    private DcMotor motorLift;
 //    private Servo servoBeacon;
-//    private Servo servoClimberFlipper;
-//    private Servo servoChurroLeft;
-//    private Servo servoChurroRight;
+    private Servo servoClimberFlipper;
+    private Servo servoChurroLeft;
+    private Servo servoChurroRight;
 
 //    private DeviceInterfaceModule dim;
 //    private ColorSensor sensorColor;
     //    private TouchSensor sensorTouch;
-//    private GyroSensor sensorGyro;
+    private GyroSensor sensorGyro;
 //    private ColorSensor colorSensor;
 //    public OpticalDistanceSensor opticalSensor;
 
@@ -77,20 +80,20 @@ public class RobotAuto {
         motorRightB.setDirection(DcMotor.Direction.REVERSE);
 
 //        servoBeacon      = mode.hardwareMap.servo.get("servoBeacon");
-//        servoClimberFlipper = mode.hardwareMap.servo.get("servoClimbers");
-//        servoChurroLeft = mode.hardwareMap.servo.get("servoChurroLeft");
-//        servoChurroRight = mode.hardwareMap.servo.get("servoChurroRight");
+        servoClimberFlipper = mode.hardwareMap.servo.get("servoClimbers");
+        servoChurroLeft = mode.hardwareMap.servo.get("servoChurroLeft");
+        servoChurroRight = mode.hardwareMap.servo.get("servoChurroRight");
 //
-//        servoClimberFlipper.setPosition(RobotConstants.CLIMBER_EXTEND);
-//        servoChurroRight.setPosition(RobotConstants.CHURRO_RIGHT_OPEN);
-//        servoChurroLeft.setPosition(RobotConstants.CHURRO_LEFT_OPEN);
+        servoClimberFlipper.setPosition(RobotConstants.CLIMBER_EXTEND);
+        servoChurroRight.setPosition(RobotConstants.CHURRO_RIGHT_CLOSE);
+        servoChurroLeft.setPosition(RobotConstants.CHURRO_LEFT_CLOSE);
 
 //        dim = mode.hardwareMap.deviceInterfaceModule.get("dim");
 //        sensorColor = ClassFactory.createSwerveColorSensor(mode,
 //                mode.hardwareMap.colorSensor.get("sensorColor"));
 //        sensorColor.enableLed(true);
 //        opticalSensor = mode.hardwareMap.opticalDistanceSensor.get("opticalDistance");
-//        sensorGyro = mode.hardwareMap.gyroSensor.get("sensorGyro");
+        sensorGyro = mode.hardwareMap.gyroSensor.get("sensorGyro");
 //        sensorColor = mode.hardwareMap.colorSensor.get("sensorColor");
 //
 //        colorSensor = ClassFactory.createSwerveColorSensor(mode, mode.hardwareMap.colorSensor.get("colorSensor"));
@@ -105,10 +108,10 @@ public class RobotAuto {
      */
     public void initializeRobot() /*throws InterruptedException */{
 //        servoBeacon.setPosition(RobotConstants.BEACON_RESTING);
-//        servoClimberFlipper.setPosition(RobotConstants.CLIMBER_EXTEND);
+        servoClimberFlipper.setPosition(RobotConstants.CLIMBER_EXTEND);
 //        servoChurroRight.setPosition(RobotConstants.CHURRO_RIGHT_OPEN);
 //        servoChurroLeft.setPosition(RobotConstants.CHURRO_LEFT_OPEN);
-//        sensorGyro.calibrate();
+        sensorGyro.calibrate();
     }
 
     /**
@@ -232,7 +235,7 @@ public class RobotAuto {
 //    }
 
     /**
-     * Set the right hopper door to open or close.
+     * Set themode.telemetry.addData("gyro2", robot.getGyroHeading()); right hopper door to open or close.
      * @param doorSetting DoorSetting to set the door to.
      *//*
     public void setHopperRight(DoorSetting doorSetting) {
@@ -253,13 +256,13 @@ public class RobotAuto {
      * position.
      * @param doorSetting DoorSetting indicating the position.
      */
-//    public void setClimberFlipper(DoorSetting doorSetting) {
-//        if (doorSetting == DoorSetting.OPEN) {
-//            servoClimberFlipper.setPosition(RobotConstants.CLIMBER_RETRACT);
-//        } else {
-//            servoClimberFlipper.setPosition(RobotConstants.CLIMBER_EXTEND);
-//        }
-//    }
+    public void setClimberFlipper(DoorSetting doorSetting) {
+        if (doorSetting == DoorSetting.OPEN) {
+            servoClimberFlipper.setPosition(RobotConstants.CLIMBER_RETRACT);
+        } else {
+            servoClimberFlipper.setPosition(RobotConstants.CLIMBER_EXTEND);
+        }
+    }
 
     /**
      * Set the position of the churro grabber servos.
@@ -267,15 +270,15 @@ public class RobotAuto {
      * the opposite.
      * @param doorSetting DoorSetting indicating the position.
      */
-//    public void setChurroGrabbers(DoorSetting doorSetting) {
-//        if (doorSetting == DoorSetting.OPEN) {
-//            servoChurroLeft.setPosition(RobotConstants.CHURRO_LEFT_OPEN);
-//            servoChurroRight.setPosition(RobotConstants.CHURRO_RIGHT_OPEN);
-//        } else {
-//            servoChurroLeft.setPosition(RobotConstants.CHURRO_LEFT_CLOSE);
-//            servoChurroRight.setPosition(RobotConstants.CHURRO_RIGHT_CLOSE);
-//        }
-//    }
+    public void setChurroGrabbers(DoorSetting doorSetting) {
+        if (doorSetting == DoorSetting.OPEN) {
+            servoChurroLeft.setPosition(RobotConstants.CHURRO_LEFT_OPEN);
+            servoChurroRight.setPosition(RobotConstants.CHURRO_RIGHT_OPEN);
+        } else {
+            servoChurroLeft.setPosition(RobotConstants.CHURRO_LEFT_CLOSE);
+            servoChurroRight.setPosition(RobotConstants.CHURRO_RIGHT_CLOSE);
+        }
+    }
 
     /**
      * Move the robot a specific distance forwards or backwards.
@@ -296,16 +299,40 @@ public class RobotAuto {
         return motorRightA.getCurrentPosition();
     }
 
+    public double getGyroHeading() {
+        return  sensorGyro.getHeading();
+    }
+
+    public void calibrateGyro() {
+        sensorGyro.calibrate();
+    }
+
+    public  boolean isGyrocalibrate() {
+        return sensorGyro.isCalibrating();
+    }
+
+    public double getrawXGyro() {
+        return sensorGyro.rawX();
+    }
+
+    public double getrawYGyro() {
+        return sensorGyro.rawY();
+    }
+
+    public double getrawZGyro() {
+        return sensorGyro.rawZ();
+    }
+
     /**
      * Turn the robot a specific number of degrees clockwise or counter-clockwise.
      * To specify the number of degrees to turn, pass a double representing the number of
      * <b>degrees</b> to turn. It should be noted that the degrees you turn assume standard position
      * when looking at the robot from above. In other words, passing a negative number will turn
      * clockwise, and a positive number will turn counter-clockwise.
-     * @param degrees A double representing the distance to turn.
+     * @param //degrees A double representing the distance to turn.
      */
 //    public void turnDegrees(double degrees, double speed) {
-        // TODO Actually make this method work
+//        // TODO Actually make this method work
 //        sensorGyro.calibrate();
 //        while (sensorGyro.isCalibrating()){
 //

@@ -20,6 +20,7 @@
 
 package com.powerstackers.resq.common;
 
+import com.powerstackers.resq.common.enums.PublicEnums.DoorSetting;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import static com.powerstackers.resq.common.enums.PublicEnums.AllianceColor;
@@ -35,7 +36,7 @@ public class AutonomousProgram extends LinearOpMode {
     AllianceColor allianceColor;
     RobotAuto robot;
 
-    public AutonomousProgram(){}
+//    public AutonomousProgram(){}
 
     public AutonomousProgram(AllianceColor allianceColor) {
         this.allianceColor = allianceColor;
@@ -49,23 +50,38 @@ public class AutonomousProgram extends LinearOpMode {
         // Initialize any sensors and servos
         robot = new RobotAuto(this);
         robot.initializeRobot();
+        robot.calibrateGyro();
         // Wait for the start of the match
         this.waitForStart();
 
         if (allianceColor== RED) {
+            robot.setChurroGrabbers(DoorSetting.CLOSE);
             robot.setBrush(MotorSetting.FORWARD);
             robot.algorithm.goTicks(robot.algorithm.inchesToTicks(68), 0.4);
             robot.setBrush(MotorSetting.STOP);
-//            robot.turnDegrees(45, 0.4);
-//            robot.algorithm.goTicks(robot.algorithm.inchesToTicks(22), 0.4);
-//            robot.setClimberFlipper(DoorSetting.OPEN);
+//            robot.calibrateGyro();
+//            while(robot.isGyrocalibrate()){
+//                robot.setPowerAll(0);
+//                waitOneFullHardwareCycle();
+//                waitOneFullHardwareCycle();
+//                waitOneFullHardwareCycle();
+//            }
+//            waitOneFullHardwareCycle();
+            robot.algorithm.turnDegrees(45, 1);
+            robot.algorithm.goTicks(robot.algorithm.inchesToTicks(22), 0.4);
+            robot.setClimberFlipper(DoorSetting.OPEN);
         } else if (allianceColor== BLUE) {
+            robot.setChurroGrabbers(DoorSetting.CLOSE);
             robot.setBrush(MotorSetting.FORWARD);
             robot.algorithm.goTicks(robot.algorithm.inchesToTicks(68), 0.4);
             robot.setBrush(MotorSetting.STOP);
-//            robot.turnDegrees(-45, 0.4);
-//            robot.algorithm.goTicks(robot.algorithm.inchesToTicks(22), 0.4);
-//            robot.setClimberFlipper(DoorSetting.OPEN);
+            robot.calibrateGyro();
+            while(robot.isGyrocalibrate()){
+
+            }
+            robot.algorithm.turnDegrees(315, 0.8);
+            robot.algorithm.goTicks(robot.algorithm.inchesToTicks(22), 0.4);
+            robot.setClimberFlipper(DoorSetting.OPEN);
         } else {
             telemetry.addData("choosered", "deprecated: ");
             stop();

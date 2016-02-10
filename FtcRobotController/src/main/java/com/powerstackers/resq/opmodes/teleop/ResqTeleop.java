@@ -56,6 +56,7 @@ public class ResqTeleop extends OpMode {
     double tapeTiltPosition = RobotConstants.TAPE_FLAT;
     final double servoDelta = 0.005;
 
+    boolean buttonGyro;
     boolean buttonLiftOut;
     boolean buttonLiftIn;
     boolean buttonHangOut;
@@ -63,14 +64,17 @@ public class ResqTeleop extends OpMode {
     boolean buttonBrushOn;
     boolean buttonBrushRev;
 
-    boolean buttonTapeOut;
-    boolean buttonTapeIn;
-    boolean buttonTapeUp;
-    boolean buttonTapeDown;
+//    boolean buttonTapeOut;
+//    boolean buttonTapeIn;
+//    boolean buttonTapeUp;
+//    boolean buttonTapeDown;
+
     boolean buttonHopperLeft;
     boolean buttonHopperRight;
     boolean buttonClimbers;
     boolean buttonChurros;
+//    boolean buttonZipLeft;
+//    boolean buttonZipRight;
 //    boolean buttonBothHoppers;
 
     /**
@@ -105,15 +109,19 @@ public class ResqTeleop extends OpMode {
         buttonLiftIn = gamepad1.right_bumper;
         buttonHangIn = gamepad1.dpad_down;
         buttonHangOut = gamepad1.dpad_up;
+        buttonGyro   = gamepad1.right_trigger > 0.5;
 
         // Everyone wants the manipulator to control the brush
         buttonBrushOn = gamepad2.x;
         buttonBrushRev = gamepad2.b;
 
-        buttonTapeOut = gamepad2.dpad_right;
-        buttonTapeIn = gamepad2.dpad_left;
-        buttonTapeUp = gamepad2.dpad_up;
-        buttonTapeDown = gamepad2.dpad_down;
+//        buttonTapeOut = gamepad2.dpad_right;
+//        buttonTapeIn = gamepad2.dpad_left;     //buttons deprecated
+//        buttonTapeUp = gamepad2.dpad_up;
+//        buttonTapeDown = gamepad2.dpad_down;
+
+//        buttonZipLeft  = gamepad2.dpad_left;
+//        buttonZipRight = gamepad2.dpad_right;
 
         buttonHopperLeft = gamepad2.left_bumper;
         buttonHopperRight = gamepad2.right_bumper;
@@ -121,6 +129,11 @@ public class ResqTeleop extends OpMode {
         buttonChurros = gamepad2.left_trigger > 0.5;  //gave to manipulator
 
 //        buttonBothHoppers = gamepad2.right_bumper;
+
+        //calibrate gyro
+        if (buttonGyro) {
+            robot.calibrateGyro();
+        }
 
         // Set the lift motor value.
         if (buttonLiftOut) {
@@ -141,24 +154,24 @@ public class ResqTeleop extends OpMode {
         }
 
         // Set the tape measure value.
-        if (buttonTapeOut) {
-            settingTapeMeasureServo = MotorSetting.REVERSE;
-        } else if (buttonTapeIn) {
-            settingTapeMeasureServo = MotorSetting.FORWARD;
-        } else {
-            settingTapeMeasureServo = MotorSetting.STOP;
-        }
+//        if (buttonTapeOut) {
+//            settingTapeMeasureServo = MotorSetting.REVERSE;
+//        } else if (buttonTapeIn) {
+//            settingTapeMeasureServo = MotorSetting.FORWARD;
+//        } else {
+//            settingTapeMeasureServo = MotorSetting.STOP;
+//        }
 
         // Increment or decrement the tape measure tipper
-        if (buttonTapeUp) {
-            tapeTiltPosition += servoDelta;
-            Range.clip(tapeTiltPosition, 0.0, 1.0);
-            robot.setTapeTilt(tapeTiltPosition);
-        } else if (buttonTapeDown) {
-            tapeTiltPosition -= servoDelta;
-            Range.clip(tapeTiltPosition, 0.0, 1.0);
-            robot.setTapeTilt(tapeTiltPosition);
-        }
+//        if (buttonTapeUp) {
+//            tapeTiltPosition += servoDelta;
+//            Range.clip(tapeTiltPosition, 0.0, 1.0);
+//            robot.setTapeTilt(tapeTiltPosition);
+//        } else if (buttonTapeDown) {
+//            tapeTiltPosition -= servoDelta;
+//            Range.clip(tapeTiltPosition, 0.0, 1.0);
+//            robot.setTapeTilt(tapeTiltPosition);
+//        }
 
         // Set the hopper doors.
         // Hopper left
@@ -195,6 +208,19 @@ public class ResqTeleop extends OpMode {
             robot.setChurroGrabbers(DoorSetting.CLOSE);
         }
 
+        //set the Ziline Values
+//        if (buttonZipLeft) {
+//            robot.setZiplineLeft(DoorSetting.OPEN);
+//        } else {
+//            robot.setZiplineLeft(DoorSetting.CLOSE);
+//        }
+//
+//        if (buttonZipRight) {
+//            robot.setZiplineRight(DoorSetting.OPEN);
+//        } else {
+//            robot.setZiplineRight(DoorSetting.CLOSE);
+//        }
+
         // Last of all, update the motor values.
         // Left drive motors
         // TODO Motors are backwards.
@@ -220,13 +246,18 @@ public class ResqTeleop extends OpMode {
             robot.setWinch(MotorSetting.STOP);
         }
 
-        robot.setTapeMeasure(settingTapeMeasureServo);
+//        robot.setTapeMeasure(settingTapeMeasureServo);
         robot.setLift(settingLiftMotor);
         robot.setBrush(settingBrushMotor);
 
         telemetry.addData("right stick", stickDriveRight);
         telemetry.addData("left stick ", stickDriveLeft);
         telemetry.addData("tape tilt servo", tapeTiltPosition);
+//        telemetry.addData("gyro rotation", robot.getGyroRotation());
+        telemetry.addData("gyro Heading", robot.getGyroHeading());
+        telemetry.addData("gyroRawX", robot.getrawXGyro());
+        telemetry.addData("gyroRawY", robot.getrawYGyro());
+        telemetry.addData("gyroRawZ", robot.getrawZGyro());
 //        telemetry.addData("hopper tilt pos", robot.hopperTiltPosition);
     }
 

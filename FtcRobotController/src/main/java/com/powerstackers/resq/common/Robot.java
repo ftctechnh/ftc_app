@@ -21,17 +21,11 @@
 package com.powerstackers.resq.common;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
-import org.swerverobotics.library.ClassFactory;
-
-import static com.powerstackers.resq.common.RobotConstants.BEACON_TAP_LEFT;
-import static com.powerstackers.resq.common.RobotConstants.BEACON_TAP_RIGHT;
 import static com.powerstackers.resq.common.RobotConstants.BRUSH_SPEED;
 import static com.powerstackers.resq.common.RobotConstants.CHURRO_LEFT_CLOSE;
 import static com.powerstackers.resq.common.RobotConstants.CHURRO_LEFT_OPEN;
@@ -50,10 +44,8 @@ import static com.powerstackers.resq.common.RobotConstants.HOPPER_TILT_LEFT;
 import static com.powerstackers.resq.common.RobotConstants.HOPPER_TILT_RESTING;
 import static com.powerstackers.resq.common.RobotConstants.HOPPER_TILT_RIGHT;
 import static com.powerstackers.resq.common.RobotConstants.LIFT_SPEED;
-import static com.powerstackers.resq.common.RobotConstants.TAPE_FLAT;
 import static com.powerstackers.resq.common.RobotConstants.TRIMM_MOTOR;
 import static com.powerstackers.resq.common.RobotConstants.WINCH_SPEED;
-import static com.powerstackers.resq.common.enums.PublicEnums.AllianceColor;
 import static com.powerstackers.resq.common.enums.PublicEnums.DoorSetting;
 import static com.powerstackers.resq.common.enums.PublicEnums.MotorSetting;
 import static com.powerstackers.resq.common.enums.PublicEnums.TiltSetting;
@@ -73,8 +65,8 @@ public class Robot {
     private DcMotor motorWinchLeft;
     private DcMotor motorWinchRight;
 
-    private Servo servoTapeMeasure;
-    private Servo servoTapeTilt;
+//    private Servo servoTapeMeasure;
+//    private Servo servoTapeTilt;
 //    private Servo servoBeacon;
     private Servo servoHopperRight;
     private Servo servoHopperLeft;
@@ -82,11 +74,13 @@ public class Robot {
     private Servo servoClimberFlipper;
     private Servo servoChurroLeft;
     private Servo servoChurroRight;
+//    private Servo servoZippLineLeft;
+//    private Servo servoZippLineRight;
 
 //    private DeviceInterfaceModule dim;
 //    private ColorSensor sensorColor;
 //    private TouchSensor sensorTouch;
-//    private GyroSensor sensorGyro;
+    private GyroSensor sensorGyro;
 //    public OpticalDistanceSensor opticalSensor;
 
     /**
@@ -94,13 +88,13 @@ public class Robot {
      * @param mode The OpMode in which the robot is being used.
      */
     public Robot(OpMode mode) {
-        motorLeftA  = mode.hardwareMap.dcMotor.get("motorFLeft");
-        motorLeftB  = mode.hardwareMap.dcMotor.get("motorBLeft");
-        motorRightA = mode.hardwareMap.dcMotor.get("motorFRight");
-        motorRightB = mode.hardwareMap.dcMotor.get("motorBRight");
-        motorBrush  = mode.hardwareMap.dcMotor.get("motorBrush");
-        motorLift   = mode.hardwareMap.dcMotor.get("motorLift");
-        motorWinchLeft = mode.hardwareMap.dcMotor.get("motorLHang");
+        motorLeftA      = mode.hardwareMap.dcMotor.get("motorFLeft");
+        motorLeftB      = mode.hardwareMap.dcMotor.get("motorBLeft");
+        motorRightA     = mode.hardwareMap.dcMotor.get("motorFRight");
+        motorRightB     = mode.hardwareMap.dcMotor.get("motorBRight");
+        motorBrush      = mode.hardwareMap.dcMotor.get("motorBrush");
+        motorLift       = mode.hardwareMap.dcMotor.get("motorLift");
+        motorWinchLeft  = mode.hardwareMap.dcMotor.get("motorLHang");
         motorWinchRight = mode.hardwareMap.dcMotor.get("motorRHang");
 
         motorLift.setDirection(DcMotor.Direction.REVERSE);
@@ -108,15 +102,17 @@ public class Robot {
         motorRightB.setDirection(DcMotor.Direction.REVERSE);
         motorWinchRight.setDirection(DcMotor.Direction.REVERSE);
 
-        servoTapeMeasure = mode.hardwareMap.servo.get("servoTapeMeasure");
-        servoTapeTilt = mode.hardwareMap.servo.get("servoTapeTilt");
-//        servoBeacon      = mode.hardwareMap.servo.get("servoBeacon");
-        servoHopperRight = mode.hardwareMap.servo.get("servoHopperRight");
-        servoHopperLeft = mode.hardwareMap.servo.get("servoHopperLeft");
-        servoHopperTilt = mode.hardwareMap.servo.get("servoHopperTilt");
+//        servoTapeMeasure    = mode.hardwareMap.servo.get("servoTapeMeasure");
+//        servoTapeTilt       = mode.hardwareMap.servo.get("servoTapeTilt");
+//        servoBeacon         = mode.hardwareMap.servo.get("servoBeacon");
+        servoHopperRight    = mode.hardwareMap.servo.get("servoHopperRight");
+        servoHopperLeft     = mode.hardwareMap.servo.get("servoHopperLeft");
+        servoHopperTilt     = mode.hardwareMap.servo.get("servoHopperTilt");
         servoClimberFlipper = mode.hardwareMap.servo.get("servoClimbers");
-        servoChurroLeft = mode.hardwareMap.servo.get("servoChurroLeft");
-        servoChurroRight = mode.hardwareMap.servo.get("servoChurroRight");
+        servoChurroLeft     = mode.hardwareMap.servo.get("servoChurroLeft");
+        servoChurroRight    = mode.hardwareMap.servo.get("servoChurroRight");
+//        servoZippLineLeft   = mode.hardwareMap.servo.get("servoZipplineLeft");
+//        servoZippLineRight  = mode.hardwareMap.servo.get("servoZipplineRight");
 
         servoHopperLeft.setPosition(HOPPER_LEFT_CLOSE);
 //        servoHopperRight.setPosition(RobotConstants.HOPPER_RIGHT_CLOSE);
@@ -124,15 +120,15 @@ public class Robot {
         servoClimberFlipper.setPosition(CLIMBER_EXTEND);
         servoChurroRight.setPosition(CHURRO_RIGHT_OPEN);
         servoChurroLeft.setPosition(CHURRO_LEFT_OPEN);
-        servoTapeTilt.setPosition(TAPE_FLAT);
-        servoTapeMeasure.setPosition(0.5);
+//        servoTapeTilt.setPosition(TAPE_FLAT);
+//        servoTapeMeasure.setPosition(0.5);
 
 //        dim = mode.hardwareMap.deviceInterfaceModule.get("dim");
 //        sensorColor = ClassFactory.createSwerveColorSensor(mode,
 //                mode.hardwareMap.colorSensor.get("sensorColor"));
 //        sensorColor.enableLed(true);
 //        opticalSensor = mode.hardwareMap.opticalDistanceSensor.get("opticalDistance");
-//        sensorGyro = mode.hardwareMap.gyroSensor.get("sensorGyro");
+        sensorGyro = mode.hardwareMap.gyroSensor.get("sensorGyro");
 
     }
 
@@ -150,9 +146,9 @@ public class Robot {
         servoHopperTilt.setPosition(HOPPER_TILT_RESTING);
         servoChurroRight.setPosition(CHURRO_RIGHT_OPEN);
         servoChurroLeft.setPosition(CHURRO_LEFT_OPEN);
-        servoTapeTilt.setPosition(TAPE_FLAT);
-        //sensorGyro.calibrate();
-        // Give the gyroscope some time to calibrate
+//        servoTapeTilt.setPosition(TAPE_FLAT);
+        sensorGyro.calibrate();
+         //Give the gyroscope some time to calibrate
 //        while (sensorGyro.isCalibrating()) {
 //            Thread.sleep(50L);
 //        }
@@ -185,9 +181,9 @@ public class Robot {
      * Set the movement of the tape measure motor.
      * @param setting MotorSetting enum value; FORWARD, STOP, or REVERSE.
      */
-    public void setTapeMeasure(MotorSetting setting) {
-        toggleCRServo(servoTapeMeasure, setting);
-    }
+//    public void setTapeMeasure(MotorSetting setting) {
+//        toggleCRServo(servoTapeMeasure, setting);
+//    }
 
     /**
      * Set the movement of the brush motor.
@@ -209,11 +205,11 @@ public class Robot {
      * Set the position of the tape tilt servo.
      * @param position Double position to set.
      */
-    public void setTapeTilt(double position) {
-        if (position >= 0.0 && position <= 1.0) {
-            servoTapeTilt.setPosition(position);
-        }
-    }
+//    public void setTapeTilt(double position) {
+//        if (position >= 0.0 && position <= 1.0) {
+//            servoTapeTilt.setPosition(position);
+//        }
+//    }
 
     /**
      * Toggles a motor between three settings: FORWARD, STOP, and REVERSE.
@@ -391,6 +387,22 @@ public class Robot {
         }
     }
 
+//    public void setZiplineLeft(DoorSetting doorSetting) {
+//        if(doorSetting == DoorSetting.OPEN) {
+//            servoZippLineLeft.setPosition(ZIPLINE_LEFT_OPEN);
+//        } else {
+//            servoZippLineLeft.setPosition(ZIPLINE_LEFT_CLOSE);
+//        }
+//    }
+//
+//    public void setZiplineRight(DoorSetting doorSetting) {
+//        if(doorSetting == DoorSetting.OPEN) {
+//            servoZippLineRight.setPosition(ZIPLINE_RIGHT_OPEN);
+//        } else {
+//            servoZippLineRight.setPosition(ZIPLINE_RIGHT_CLOSE);
+//        }
+//    }
+
     /**
      * Set the winch motors.
      * @param motorSetting MotorSetting indicating the direction.
@@ -398,6 +410,26 @@ public class Robot {
     public void setWinch(MotorSetting motorSetting) {
         toggleMotor(motorWinchLeft, motorSetting, WINCH_SPEED);
         toggleMotor(motorWinchRight, motorSetting, WINCH_SPEED);
+    }
+
+    public void calibrateGyro(){
+        sensorGyro.calibrate();
+    }
+
+    public  boolean isGyrocalibrate() {
+        return sensorGyro.isCalibrating();
+    }
+
+    public double getrawXGyro() {
+        return sensorGyro.rawX();
+    }
+
+    public double getrawYGyro() {
+        return sensorGyro.rawY();
+    }
+
+    public double getrawZGyro() {
+        return sensorGyro.rawZ();
     }
 
     /**
@@ -419,6 +451,14 @@ public class Robot {
         return motorRightA.getCurrentPosition();
     }
 
+//    public double getGyroRotation(){
+//        return sensorGyro.getRotation();
+//    }
+
+    public long getGyroHeading() {
+        return sensorGyro.getHeading();
+    }
+
     /**
      * Turn the robot a specific number of degrees clockwise or counter-clockwise.
      * To specify the number of degrees to turn, pass a double representing the number of
@@ -428,6 +468,6 @@ public class Robot {
      * @param degrees A double representing the distance to turn.
      */
     public void turnDegrees(double degrees) {
-        // TODO Actually make this method work
+        // TODO Actually make this method work //Put in JonsAlgo
     }
 }
