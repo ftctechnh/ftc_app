@@ -562,27 +562,28 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, I2cDeviceSynchUser, 
         @Override public void update(Acceleration accelNext)
             {
             // We should always be given a timestamp here
-            assertTrue(accelNext.nanoTime != 0);
-
-            // Log the incoming accelerations
-            log_v("a: %f %f %f %f", accelNext.accelX, accelNext.accelY, accelNext.accelZ, acceleration == null ? 0 : (accelNext.nanoTime - acceleration.nanoTime) * 1e-9);
-
-            // We can only integrate if we have a previous acceleration to baseline from
-            if (acceleration != null)
+            if (accelNext.nanoTime != 0)
                 {
-                Acceleration accelPrev    = acceleration;
-                Velocity     velocityPrev = velocity;
+                // Log the incoming accelerations
+                log_v("a: %f %f %f %f", accelNext.accelX, accelNext.accelY, accelNext.accelZ, acceleration == null ? 0 : (accelNext.nanoTime - acceleration.nanoTime) * 1e-9);
 
-                acceleration = accelNext;
+                // We can only integrate if we have a previous acceleration to baseline from
+                if (acceleration != null)
+                    {
+                    Acceleration accelPrev    = acceleration;
+                    Velocity     velocityPrev = velocity;
 
-                Velocity deltaVelocity = meanIntegrate(acceleration, accelPrev);
-                velocity = plus(velocity, deltaVelocity);
+                    acceleration = accelNext;
 
-                Position deltaPosition = meanIntegrate(velocity, velocityPrev);
-                position = plus(position, deltaPosition);
+                    Velocity deltaVelocity = meanIntegrate(acceleration, accelPrev);
+                    velocity = plus(velocity, deltaVelocity);
+
+                    Position deltaPosition = meanIntegrate(velocity, velocityPrev);
+                    position = plus(position, deltaPosition);
+                    }
+                else
+                    acceleration = accelNext;
                 }
-            else
-                acceleration = accelNext;
             }
         }
 
