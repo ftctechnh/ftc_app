@@ -181,7 +181,7 @@ public class ThunkingHardwareFactory
                     DcMotorController targetController = target.getController();
                     DcMotorController controller = findWrapper(thunkedHwmap.dcMotorController, targetController, ThunkedDCMotorController.create(targetController));
                     
-                    return new ThreadSafeDcMotor(
+                    return new EasyDcMotor(
                             controller,
                             target.getPortNumber(),
                             target.getDirection()

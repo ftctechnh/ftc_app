@@ -1,7 +1,6 @@
 package org.swerverobotics.library.internal;
 
 import com.qualcomm.robotcore.hardware.*;
-import com.qualcomm.robotcore.util.*;
 
 /**
  * EasyServo modifies the FTC-provided Servo so that it is thread-safe.
@@ -13,7 +12,7 @@ public class EasyServo extends com.qualcomm.robotcore.hardware.Servo
     // State
     //----------------------------------------------------------------------------------------------
 
-    Double lastKnownPosition;
+    protected final LastKnown<Double> lastKnownPosition;
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -22,7 +21,7 @@ public class EasyServo extends com.qualcomm.robotcore.hardware.Servo
     public EasyServo(ServoController controller, int portNumber, Servo.Direction direction)
         {
         super(controller, portNumber, direction);
-        this.lastKnownPosition = null;
+        this.lastKnownPosition = new LastKnown<Double>();
         }
 
     //----------------------------------------------------------------------------------------------
@@ -36,16 +35,15 @@ public class EasyServo extends com.qualcomm.robotcore.hardware.Servo
         super.setDirection(direction);
 
         // If the direction changed, our known position may now be off
-        this.lastKnownPosition = null;
+        this.lastKnownPosition.invalidate();
         }
 
     @Override
     public synchronized void setPosition(double position)
         {
         // super uses direction, minPosition, maxPosition
-        if (this.lastKnownPosition == null || this.lastKnownPosition != position)
+        if (!lastKnownPosition.updateValue(position))
             {
-            this.lastKnownPosition = position;
             super.setPosition(position);
             }
         }
@@ -64,7 +62,7 @@ public class EasyServo extends com.qualcomm.robotcore.hardware.Servo
         super.scaleRange(min, max);
 
         // If the scale range changed, our known position may now be off
-        this.lastKnownPosition = null;
+        this.lastKnownPosition.invalidate();
         }
 
     }
