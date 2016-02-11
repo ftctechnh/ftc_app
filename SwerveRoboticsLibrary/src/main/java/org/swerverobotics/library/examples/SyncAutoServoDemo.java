@@ -39,7 +39,7 @@ public class SyncAutoServoDemo extends SynchronousOpMode
     void delay() throws InterruptedException
         {
         ElapsedTime elapsed = new ElapsedTime();
-        while (elapsed.time() < 0.25)
+        while (elapsed.seconds() < 0.25)
             this.idle();
         }
 

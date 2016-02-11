@@ -47,7 +47,7 @@ public class SynchMotorLoopPerf extends SynchronousOpMode
             rightPosition = useBothMotors ? rightMotor.getCurrentPosition() : 0;
 
             long loopCount = getLoopCount() - loopCountStart;
-            double ms = elapsed.time() * 1000;
+            double ms = elapsed.milliseconds();
 
             // Need to call this or we won't see any gamepad changes
             updateGamepads();

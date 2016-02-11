@@ -1200,7 +1200,7 @@ public final class I2cDeviceClientImpl implements I2cDeviceClient, IOpModeStateT
                 setActionFlag     = false;
                 queueFullWrite    = false;
                 queueRead         = false;
-                heartbeatRequired = (msHeartbeatInterval > 0 && milliseconds(timeSinceLastHeartbeat) >= msHeartbeatInterval);
+                heartbeatRequired = (msHeartbeatInterval > 0 && timeSinceLastHeartbeat.milliseconds() >= msHeartbeatInterval);
                 enabledReadMode   = false;
                 enabledWriteMode  = false;
                 

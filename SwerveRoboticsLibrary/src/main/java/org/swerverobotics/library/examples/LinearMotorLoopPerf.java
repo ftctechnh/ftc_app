@@ -49,7 +49,7 @@ public class LinearMotorLoopPerf extends LinearOpMode
             int position = leftMotor.getCurrentPosition();
 
             long loopCount = this.loopCounter.getLoopCount() - loopCountStart;
-            double ms = elapsed.time() * 1000;
+            double ms = elapsed.milliseconds();
 
             if (gamepad1.left_bumper)
                 leftMotor.setPower(0.5);
