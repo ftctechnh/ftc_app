@@ -27,7 +27,7 @@ public abstract class SwerveRuntimeException extends RuntimeException
             return (RuntimeException)e;
 
         if (e instanceof InterruptedException)
-            return new RuntimeInterruptedException((InterruptedException)e);
+            return new RuntimeInterruptedException((InterruptedException)e);    // REVIEW: use CancellationException instead?
 
         return new RuntimeException(e);
         }
