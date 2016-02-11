@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
 
 import org.swerverobotics.library.ClassFactory;
-import org.swerverobotics.library.interfaces.*;
 
 /**
  * This class implements a driver for either a HiTechnic color sensor or a
@@ -114,7 +113,7 @@ public class LegacyOrModernColorSensor implements ColorSensor, IOpModeStateTrans
     public static ColorSensor create(OpMode context, I2cController controller, int port, int i2cAddr8Bit, ClassFactory.SENSOR_FLAVOR flavor, ColorSensor target)
         {
         I2cDevice i2cDevice              = new I2cDeviceImpl(controller, port);
-        I2cDeviceSynch i2CDeviceSynch = new I2CDeviceSynchImpl(context, i2cDevice, i2cAddr8Bit, false);
+        I2cDeviceSynch i2CDeviceSynch    = new I2cDeviceSynchImpl(context, i2cDevice, i2cAddr8Bit, false);
         LegacyOrModernColorSensor result = new LegacyOrModernColorSensor(context, i2CDeviceSynch, flavor, target, controller, port);
         result.engage();
         return result;
