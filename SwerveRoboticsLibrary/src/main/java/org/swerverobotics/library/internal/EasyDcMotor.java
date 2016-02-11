@@ -1,19 +1,28 @@
 package org.swerverobotics.library.internal;
 
-import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 
-/**
- * ThreadSafeServo modifies the FTC-provided DCMotor so that it is thread-safe.
- */
-public class ThreadSafeDcMotor extends DcMotor
+public class EasyDcMotor extends DcMotor
     {
+    //----------------------------------------------------------------------------------------------
+    // State
+    //----------------------------------------------------------------------------------------------
+
+    protected final LastKnown<Double>                       lastKnownPower;
+    protected final LastKnown<DcMotor.Direction>            lastKnownDirection;
+    protected final LastKnown<DcMotorController.RunMode>    lastKnownMode;
+
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    public ThreadSafeDcMotor(DcMotorController controller, int portNumber, DcMotor.Direction direction)
+    public EasyDcMotor(DcMotorController controller, int portNumber, DcMotor.Direction direction)
         {
         super(controller, portNumber, direction);
+        this.lastKnownPower     = new LastKnown<Double>();
+        this.lastKnownDirection = new LastKnown<Direction>();
+        this.lastKnownMode      = new LastKnown<DcMotorController.RunMode>();
         }
 
     //----------------------------------------------------------------------------------------------
@@ -23,13 +32,19 @@ public class ThreadSafeDcMotor extends DcMotor
     public synchronized void setDirection(DcMotor.Direction direction)
         {
         // super writes direction
-        super.setDirection(direction);
+        if (!lastKnownDirection.isValue(direction))
+            {
+            super.setDirection(direction);
+            }
         }
 
     public synchronized void setPower(double power)
         {
         // super reads direction, mode
-        super.setPower(power);
+        if (!lastKnownPower.isValue(power))
+            {
+            super.setPower(power);
+            }
         }
 
     public synchronized double getPower()
@@ -42,13 +57,19 @@ public class ThreadSafeDcMotor extends DcMotor
     public synchronized void setChannelMode(DcMotorController.RunMode mode)
         {
         // super writes mode
-        super.setChannelMode(mode);
+        if (!lastKnownMode.isValue(mode))
+            {
+            super.setChannelMode(mode);
+            }
         }
 
     public synchronized void setMode(DcMotorController.RunMode mode)
         {
         // super writes mode
-        super.setMode(mode);
+        if (!lastKnownMode.isValue(mode))
+            {
+            super.setMode(mode);
+            }
         }
 
     @Deprecated
@@ -61,4 +82,5 @@ public class ThreadSafeDcMotor extends DcMotor
         {
         return super.getMode();
         }
+
     }
