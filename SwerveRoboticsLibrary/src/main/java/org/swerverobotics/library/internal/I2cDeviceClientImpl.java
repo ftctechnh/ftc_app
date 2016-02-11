@@ -71,7 +71,6 @@ public final class I2cDeviceClientImpl implements I2cDeviceClient, IOpModeStateT
     private volatile int                 msHeartbeatInterval;        // time between heartbeats; zero is 'none necessary'
     private volatile HeartbeatAction     heartbeatAction;            // the action to take when a heartbeat is needed. May be null.
     private volatile ExecutorService     heartbeatExecutor;          // used to schedule heartbeats when we need to read from the outside
-    private volatile int                 hardwareCycleCount;         // number of callbacks that we've received
 
     /** Keeps track of what we know about about the state of 'readCache' */
     private enum READ_CACHE_STATUS
@@ -136,7 +135,6 @@ public final class I2cDeviceClientImpl implements I2cDeviceClient, IOpModeStateT
         this.readerWriterGate       = new ReentrantReadWriteLock();
         this.readerWriterCount      = new AtomicInteger(0);
         this.callback               = new Callback();
-        this.hardwareCycleCount     = 0;
         this.loggingEnabled         = false;
         this.loggingTag             = String.format("%s:i2cClient(%s)", SynchronousOpMode.LOGGING_TAG, i2cDevice.getConnectionInfo());;
         this.timeSinceLastHeartbeat = new ElapsedTime();
@@ -905,17 +903,6 @@ public final class I2cDeviceClientImpl implements I2cDeviceClient, IOpModeStateT
             }
         }
 
-    @Override public int getI2cCycleCount()
-        {
-        synchronized (this.concurrentClientLock)
-            {
-            synchronized (this.callbackLock)
-                {
-                return this.hardwareCycleCount;
-                }
-            }
-        }
-    
     @Override public void setLogging(boolean enabled)
         {
         synchronized (this.concurrentClientLock)
@@ -1208,12 +1195,6 @@ public final class I2cDeviceClientImpl implements I2cDeviceClient, IOpModeStateT
             synchronized (callbackLock)
                 {
                 //----------------------------------------------------------------------------------
-                // Some ancillary bookkeeping
-
-                // Update cycle statistics
-                hardwareCycleCount++;
-
-                //----------------------------------------------------------------------------------
                 // Initialize state for managing state transition
 
                 setActionFlag     = false;
@@ -1228,8 +1209,6 @@ public final class I2cDeviceClientImpl implements I2cDeviceClient, IOpModeStateT
                 prevModeCacheStatus  = modeCacheStatus;
 
                 //----------------------------------------------------------------------------------
-                // Handle the state machine
-                //
                 // Deal with the fact that we've completed any previous queueing operation
 
                 if (modeCacheStatus == MODE_CACHE_STATUS.QUEUED)
@@ -1484,7 +1463,7 @@ public final class I2cDeviceClientImpl implements I2cDeviceClient, IOpModeStateT
                 if (loggingEnabled)
                     {
                     StringBuilder message = new StringBuilder();
-                    message.append(String.format("cyc %d", hardwareCycleCount));
+                    message.append(String.format("cyc %d", i2cDevice.getCallbackCount()));
                     if (setActionFlag)                            message.append("|flag");
                     if (setActionFlag && !queueFullWrite)         message.append("|f");
                     else if (queueFullWrite)                      message.append("|w");
