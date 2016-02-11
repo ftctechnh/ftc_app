@@ -122,7 +122,7 @@ public final class I2cDeviceSynchImpl implements I2cDeviceSynch, IOpModeStateTra
         this.readerWriterCount      = new AtomicInteger(0);
         this.callback               = new Callback();
         this.loggingEnabled         = false;
-        this.loggingTag             = String.format("%s:i2cClient(%s)", SynchronousOpMode.LOGGING_TAG, i2cDevice.getConnectionInfo());;
+        this.loggingTag             = String.format("%s:i2cSynch(%s)", RobotLog.TAG, i2cDevice.getConnectionInfo());;
         this.timeSinceLastHeartbeat = new ElapsedTime();
         this.timeSinceLastHeartbeat.reset();
         this.msHeartbeatInterval    = 0;
