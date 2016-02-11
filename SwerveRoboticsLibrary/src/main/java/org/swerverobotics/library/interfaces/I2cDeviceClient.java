@@ -317,6 +317,34 @@ public interface I2cDeviceClient extends HardwareDevice, Engagable
     //----------------------------------------------------------------------------------------------
 
     /**
+     * Returns whether, as of this instant, this device client is alive and operational in
+     * its normally expected mode; that is, whether it is currently in communication
+     * with its underlying hardware or whether it is in some other state. Note that a device
+     * client which is not engaged will never report as armed.
+     *
+     * @return the arming state of this device client
+     * @see Engagable#engage()
+     */
+    boolean isArmed();
+
+    /**
+     * Sets the I2C address of the underlying client. If necessary, the client may be briefly
+     * disengaged (and then automatically reengaged) in the process.
+     * @param i2cAddr8Bit the new I2C address
+     */
+    void setI2cAddr(int i2cAddr8Bit);
+
+    /**
+     * Returns the I2C address currently being used by this device client
+     * @return the current I2C address
+     */
+    int getI2cAddr();
+
+    //----------------------------------------------------------------------------------------------
+    // Debugging
+    //----------------------------------------------------------------------------------------------
+
+    /**
      * Returns the number of I2C cycles that we've seen for this device. This at times
      * can be a useful debugging aid, but probably isn't useful for much more.
      *
@@ -334,29 +362,6 @@ public interface I2cDeviceClient extends HardwareDevice, Engagable
      * @param loggingTag    the logging tag to sue
      */
     void setLoggingTag(String loggingTag);
-
-    /**
-     * Returns whether, as of this instant, this device client is currently in communication
-     * with its underlying hardware (which will never be the case if the device client is not
-     * engaged), or whether it is in some other state.
-     *
-     * @return the arming state of this device client
-     * @see #engage()
-     */
-    boolean isArmed();
-
-    /**
-     * Sets the I2C address of the underlying client. If necessary, the client is briefly
-     * disarmed and automatically rearmed in the process.
-     * @param i2cAddr8Bit the new I2C address
-     */
-    void setI2cAddr(int i2cAddr8Bit);
-
-    /**
-     * Returns the I2C address currently being used.
-     * @return the current I2C address
-     */
-    int getI2cAddr();
 
     //----------------------------------------------------------------------------------------------
     // RegWindow
