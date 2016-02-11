@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.hardware.usb.RobotUsbModule;
 import com.qualcomm.robotcore.util.*;
-import org.swerverobotics.library.exceptions.*;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -660,8 +659,11 @@ public final class I2cDeviceSynchImpl implements I2cDeviceSynch, IOpModeStateTra
             {
             Thread.currentThread().interrupt();
 
-            // Can't return (no data to return!) so we must throw
-            throw SwerveRuntimeException.wrap(e);
+            // Can't return (no data to return!) so we must throw a runtime exception. Consideration
+            // was given to enhancing method signatures here with 'throws InterruptedException' but
+            // that ends up percolating what is basically a non-recoverable error all the way out and
+            // then up through user's code, making it much more difficult to use.
+            throw new CancellationException("I2cDeviceSyncImpl.readTimeStamped interrupted");
             }
         }
 
@@ -675,14 +677,8 @@ public final class I2cDeviceSynchImpl implements I2cDeviceSynch, IOpModeStateTra
         }
     void acquireReaderLockShared() throws InterruptedException
         {
-        try {
-            this.readerWriterGate.readLock().lockInterruptibly();
-            this.readerWriterCount.incrementAndGet();   // for debugging
-            }
-        catch (InterruptedException e)
-            {
-            throw e;    // for debugging
-            }
+        this.readerWriterGate.readLock().lockInterruptibly();
+        this.readerWriterCount.incrementAndGet();   // for debugging
         }
     void releaseReaderLockShared()
         {
