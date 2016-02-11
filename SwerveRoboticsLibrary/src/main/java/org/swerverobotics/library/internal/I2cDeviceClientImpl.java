@@ -47,11 +47,10 @@ public final class I2cDeviceClientImpl implements I2cDeviceClient, IOpModeStateT
     private       byte[]        readCache;                  // the buffer into which reads are retrieved
     private       byte[]        writeCache;                 // the buffer that we write from
     private static final int    dibCacheOverhead = 4;       // this many bytes at start of writeCache are system overhead
-    private static final int    ibActionFlag = 31;          // index of the action flag in our write cache
     private       Lock          readCacheLock;              // lock we must hold to look at readCache
     private       Lock          writeCacheLock;             // lock we must old to look at writeCache
     private final int           msCallbackLockWaitQuantum = 60;      // arbitrary, but long enough that we don't hit it in common usage, only in shutdown situations
-    private       boolean       isWriteCoalescingEnabled;            //
+    private       boolean       isWriteCoalescingEnabled;            // are we allowed to coalesce adjacent writes, or must we issue them in order separately?
 
     private final Object        engagementLock       = new Object();
     private final Object        concurrentClientLock = new Object(); // the lock we use to serialize against concurrent clients of us. Can't acquire this AFTER the callback lock.
@@ -65,7 +64,6 @@ public final class I2cDeviceClientImpl implements I2cDeviceClient, IOpModeStateT
     private volatile long                nanoTimeReadCacheValid;     // the time on the System.nanoTime() clock at which the read cache was last set as valid
     private volatile READ_CACHE_STATUS   readCacheStatus;            // what we know about the contents of readCache
     private volatile WRITE_CACHE_STATUS  writeCacheStatus;           // what we know about the (payload) contents of writeCache
-    private volatile MODE_CACHE_STATUS   modeCacheStatus;            // what we know about the first four bytes of writeCache (mostly a debugging aid)
     private volatile int                 iregWriteFirst;             // when writeCacheStatus is DIRTY, this is where we want to write
     private volatile int                 cregWrite;
     private volatile int                 msHeartbeatInterval;        // time between heartbeats; zero is 'none necessary'
@@ -100,16 +98,6 @@ public final class I2cDeviceClientImpl implements I2cDeviceClient, IOpModeStateT
         QUEUED,             // write cache is currently being written to module, not yet returned
         }
 
-    /** Keeps track about what we know about the state of the first four bytes of the
-     * write cache, which are used for requesting a mode switch.
-     */
-    private enum MODE_CACHE_STATUS
-        {
-        IDLE,               // mode byte are quiesent
-        DIRTY,              // mode bytes have changed, and need to be pushed to the module
-        QUEUED,             // mode bytes have been queued to the module, but not yet returned.
-        }
-    
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
@@ -171,7 +159,6 @@ public final class I2cDeviceClientImpl implements I2cDeviceClient, IOpModeStateT
         this.nanoTimeReadCacheValid = 0;
         this.readCacheStatus  = READ_CACHE_STATUS.IDLE;
         this.writeCacheStatus = WRITE_CACHE_STATUS.IDLE;
-        this.modeCacheStatus  = MODE_CACHE_STATUS.IDLE;
 
         this.readWindowActuallyRead     = null;
         this.readWindowSentToController = null;
@@ -1002,7 +989,6 @@ public final class I2cDeviceClientImpl implements I2cDeviceClient, IOpModeStateT
 
         READ_CACHE_STATUS  prevReadCacheStatus  = READ_CACHE_STATUS.IDLE;
         WRITE_CACHE_STATUS prevWriteCacheStatus = WRITE_CACHE_STATUS.IDLE;
-        MODE_CACHE_STATUS  prevModeCacheStatus  = MODE_CACHE_STATUS.IDLE;
 
         boolean doModuleIsArmedWorkEnabledWrites = false;
         boolean haveSeenModuleIsArmedWork        = false;
@@ -1162,8 +1148,6 @@ public final class I2cDeviceClientImpl implements I2cDeviceClient, IOpModeStateT
             setActionFlag   = true;     // causes an I2C read to happen
             queueFullWrite  = true;     // for just the mode bytes
             queueRead       = true;     // read the mode byte so we can tell when the switch is done
-
-            dirtyModeCacheStatus();
             }
 
         void issueWrite()
@@ -1179,14 +1163,6 @@ public final class I2cDeviceClientImpl implements I2cDeviceClient, IOpModeStateT
             setActionFlag  = true;      // causes the I2C write to happen
             queueFullWrite = true;      // for the mode byte and the payload
             queueRead      = true;      // read the mode byte too so that isI2cPortInReadMode() will report correctly
-
-            dirtyModeCacheStatus();
-            }
-
-        void dirtyModeCacheStatus()
-            {
-            assertTrue(!BuildConfig.DEBUG || modeCacheStatus == MODE_CACHE_STATUS.IDLE);
-            modeCacheStatus = MODE_CACHE_STATUS.DIRTY;
             }
 
         void updateStateMachines()
@@ -1206,13 +1182,9 @@ public final class I2cDeviceClientImpl implements I2cDeviceClient, IOpModeStateT
                 
                 prevReadCacheStatus  = readCacheStatus;
                 prevWriteCacheStatus = writeCacheStatus;
-                prevModeCacheStatus  = modeCacheStatus;
 
                 //----------------------------------------------------------------------------------
                 // Deal with the fact that we've completed any previous queueing operation
-
-                if (modeCacheStatus == MODE_CACHE_STATUS.QUEUED)
-                    modeCacheStatus = MODE_CACHE_STATUS.IDLE;
 
                 if (readCacheStatus == READ_CACHE_STATUS.QUEUED || readCacheStatus == READ_CACHE_STATUS.VALID_QUEUED)
                     {
@@ -1444,9 +1416,6 @@ public final class I2cDeviceClientImpl implements I2cDeviceClient, IOpModeStateT
                 else if (queueFullWrite)
                     {
                     i2cDevice.writeI2cCacheToController();
-                    //
-                    if (modeCacheStatus == MODE_CACHE_STATUS.DIRTY)
-                        modeCacheStatus =  MODE_CACHE_STATUS.QUEUED;
                     }
 
                 // Queue a read after queuing any write for a bit of paranoia: if we're mode switching
@@ -1471,7 +1440,6 @@ public final class I2cDeviceClientImpl implements I2cDeviceClient, IOpModeStateT
                     if (queueRead)                                message.append("|r");
                     if (readCacheStatus != prevReadCacheStatus)   message.append("| R." + prevReadCacheStatus.toString() + "->" + readCacheStatus.toString());
                     if (writeCacheStatus != prevWriteCacheStatus) message.append("| W." + prevWriteCacheStatus.toString() + "->" + writeCacheStatus.toString());
-                 // if (modeCacheStatus != prevModeCacheStatus)   message.append("| M." + prevModeCacheStatus.toString() + "->" + modeCacheStatus.toString());
                     if (enabledWriteMode)                         message.append(String.format("| setWrite(0x%02x,%d)", iregWriteFirst, cregWrite));
                     if (enabledReadMode)                          message.append(String.format("| setRead(0x%02x,%d)", readWindow.getRegisterFirst(), readWindow.getRegisterCount()));
 
