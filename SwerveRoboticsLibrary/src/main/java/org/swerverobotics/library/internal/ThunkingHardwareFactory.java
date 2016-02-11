@@ -172,38 +172,24 @@ public class ThunkingHardwareFactory
         // Actuators
         //----------------------------------------------------------------------------
         
-        // Thunk the DC motors
+        // Process the DC motors
         createThunks(unthunkedHwmap.dcMotor, thunkedHwmap.dcMotor,
             new IThunkFactory<DcMotor>()
                 {
                 @Override public DcMotor create(DcMotor target)
                     {
-                    DcMotorController targetController = target.getController();
-                    DcMotorController controller = findWrapper(thunkedHwmap.dcMotorController, targetController, ThunkedDCMotorController.create(targetController));
-                    
-                    return new EasyDcMotor(
-                            controller,
-                            target.getPortNumber(),
-                            target.getDirection()
-                        );
+                    return target;
                     }
                 }
         );
 
-        // Thunk the servos
+        // Process the servos
         createThunks(unthunkedHwmap.servo, thunkedHwmap.servo,
             new IThunkFactory<Servo>()
                 {
                 @Override public Servo create(Servo target)
                     {
-                    ServoController targetController = target.getController();
-                    ServoController controller = findWrapper(thunkedHwmap.servoController, targetController, ThunkedServoController.create(targetController));
-
-                    return new EasyServo(
-                            controller,
-                            target.getPortNumber(),
-                            target.getDirection()
-                    );
+                    return target;
                     }
                 }
         );
