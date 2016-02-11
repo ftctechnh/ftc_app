@@ -1,9 +1,9 @@
 package org.swerverobotics.library.interfaces;
 
 /**
- * Code that previously used II2cDeviceClientUser should use I2cDeviceClientUser instead.
+ * Code that previously used II2cDeviceClientUser should use {@link I2cDeviceSynchUser} instead.
  */
 @Deprecated
-public interface II2cDeviceClientUser extends I2cDeviceClientUser
+public interface II2cDeviceClientUser extends I2cDeviceSynchUser
     {
     }

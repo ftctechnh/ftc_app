@@ -6,14 +6,15 @@ import com.qualcomm.robotcore.hardware.*;
 import org.swerverobotics.library.*;
 
 /**
- * I2cDeviceClient is an interface that exposes functionality for interacting with I2c devices.
+ * {@link I2cDeviceSynch} is an interface that exposes functionality for interacting with I2c
+ * devices. Its methods are synchronous, in that they complete their action before returning to the
+ * caller.
  *
- * <p>Having created an I2cDeviceClient instance, reads and writes are performed by calling
- * {@link #read8(int) read8()} and {@link #write8(int, int) write8()} or
- * {@link #read(int, int) read()} and {@link #write(int, byte[]) write()} respectively. These
- * calls are synchronous; they block until their action is semantically complete. No attention
- * to 'read mode' or 'write mode' is required. Simply call reads and writes as you need them, and
- * the right thing happens.</p>
+ * <p>Methods are provided to read and write data simply and straightforwardly. Singleton bytes
+ * or larger quantities of data can be read or written using {@link #read8(int) read8()} and
+ * {@link #write8(int, int) write8()} or {@link #read(int, int) read()} and {@link #write(int, byte[]) write()}
+ * respectively. No attention to 'read mode' or 'write mode' is required. Simply call reads
+ * and writes as you need them, and the right thing happens.</p>
  *
  * <p>On causality: regarding the sequencing of reads and writes, two important points are
  * worthy of mention. First, reads and writes are ultimately issued to the controller in the same
@@ -27,9 +28,9 @@ import org.swerverobotics.library.*;
  * <p>A word about optimizing reads. In I2cDevice, reads are accomplished by calling
  * {@link I2cDevice#enableI2cReadMode(int, int, int) enableI2cReadMode()} to indicate a set of
  * registers which are to be read from the I2C device. <em>Changing</em> that set of registers
- * is a relatively time consuming operation, on the order of several tens of milliseconds. If your
+ * is a relatively time consuming operation, perhaps on the order of several tens of milliseconds. If your
  * code wishes to read some registers at some times and then others at another, it behooves you to
- * set up a {@link I2cDeviceClient.ReadWindow ReadWindow} that
+ * set up a {@link I2cDeviceSynch.ReadWindow ReadWindow} that
  * covers them all (if it can): the read window will be read all at once, then subsequent read()
  * operations will return various parts of that already retrieved data (if still valid) without
  * the need to invoke another enableI2cReadMode() expense. Note that this is purely an optimization:
@@ -44,20 +45,15 @@ import org.swerverobotics.library.*;
  * <p>For devices that automatically shutdown if no communication is received in a certain
  * duration, a heartbeat facility is optionally provided.</p>
  *
- * <p>I2cDeviceClient extends HardwareDevice, which means it supports a {@link #close()} operation. Calling
- * {@link #close()} closes down and disables the device. Once this is done, the object instance cannot
- * support further read() or write() calls. Note that calling {@link #close()} on an I2cDeviceClient
- * does NOT also close() the underlying I2cDevice: we here are a *client* of the I2cDevice, not
- * its owner. If your I2cDevice has a non-trivial close() semantic, you are yourself responsible for
- * calling that method at an appropriate time.
-</p>
- *
- * @see ClassFactory#createI2cDeviceClient(OpMode, I2cDevice, int, boolean)
- * @see I2cDeviceClient.ReadWindow
- * @see #ensureReadWindow(ReadWindow, ReadWindow)
- * @see #setHeartbeatAction(HeartbeatAction)
+ * <p>{@link I2cDeviceSynch} extends HardwareDevice, which means it supports a {@link #close()}
+ * operation. Calling {@link #close()} closes down and disables the device. Once this is done, the
+ * object instance cannot support further read() or write() calls. For {@link I2cDeviceSynch}
+ * instances layered on underlying I2cDevice objects, note that calling {@link I2cDeviceSynch#close()}
+ * does NOT also close() the underlying device: in such cases, the {@link I2cDeviceSynch}  is
+ * a *client* of the underlying device, not its owner. If your underlying device has a non-trivial
+ * close() semantic, you are yourself responsible for calling that method at an appropriate time.</p>
  */
-public interface I2cDeviceClient extends HardwareDevice, Engagable
+public interface I2cDeviceSynch extends HardwareDevice, Engagable
     {
     //----------------------------------------------------------------------------------------------
     // ReadWindow management
@@ -134,7 +130,7 @@ public interface I2cDeviceClient extends HardwareDevice, Engagable
      * milliseconds to execute, and thus should not be called from the loop() thread.
      *
      * <p>You can always just call this method without worrying at all about
-     * {@link I2cDeviceClient.ReadWindow read windows},
+     * {@link I2cDeviceSynch.ReadWindow read windows},
      * that will work, but usually it is more efficient to take some thought and care as to what set
      * of registers the I2C device controller is being set up to read, as adjusting that window
      * of registers incurs significant extra time.</p>
@@ -142,7 +138,7 @@ public interface I2cDeviceClient extends HardwareDevice, Engagable
      * <p>If the current read window can't be used to read the requested registers, then
      * a new read window will automatically be created as follows. If the current read window is non
      * null and wholly contains the registers to read but can't be read because it is a used-up
-     * {@link I2cDeviceClient.READ_MODE#ONLY_ONCE} window,
+     * {@link I2cDeviceSynch.READ_MODE#ONLY_ONCE} window,
      * a new read fresh window will be created with the same set of registers. Otherwise, a
      * window that exactly covers the requested set of registers will be created.</p>
      *

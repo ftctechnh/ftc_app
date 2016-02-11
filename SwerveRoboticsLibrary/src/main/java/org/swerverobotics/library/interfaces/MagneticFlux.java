@@ -39,7 +39,7 @@ public class MagneticFlux
         this.z = z;
         this.nanoTime = nanoTime;
         }
-    public MagneticFlux(I2cDeviceClient.TimestampedData ts, double scale)
+    public MagneticFlux(I2cDeviceSynch.TimestampedData ts, double scale)
         {
         ByteBuffer buffer = ByteBuffer.wrap(ts.data).order(ByteOrder.LITTLE_ENDIAN);
         this.x = buffer.getShort() / scale;

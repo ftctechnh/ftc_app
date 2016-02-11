@@ -18,11 +18,11 @@ import static junit.framework.Assert.*;
 import static org.swerverobotics.library.internal.Util.*;
 
 /**
- * I2cDeviceClient is a utility class that makes it easy to read or write data to 
+ * {@link I2CDeviceSynchImpl} is a utility class that makes it easy to read or write data to
  * an instance of I2cDevice. There's a really whole lot of hard stuff this does for you
  *
  */
-public final class I2cDeviceClientImpl implements I2cDeviceClient, IOpModeStateTransitionEvents, Engagable
+public final class I2CDeviceSynchImpl implements I2cDeviceSynch, IOpModeStateTransitionEvents, Engagable
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -103,14 +103,14 @@ public final class I2cDeviceClientImpl implements I2cDeviceClient, IOpModeStateT
     //----------------------------------------------------------------------------------------------
 
     /**
-     * Instantiate an I2cDeviceClient instance in the indicated device with the indicated
+     * Instantiate an {@link I2CDeviceSynchImpl} instance in the indicated device with the indicated
      * initial window of registers being read.
      *
      * @param context               the OpMode within which the creation is taking place
      * @param i2cDevice             the device we are to be a client of
      * @param i2cAddr8Bit           its 8 bit i2cAddress
      */
-    public I2cDeviceClientImpl(OpMode context, I2cDevice i2cDevice, int i2cAddr8Bit, boolean closeOnOpModeStop)
+    public I2CDeviceSynchImpl(OpMode context, I2cDevice i2cDevice, int i2cAddr8Bit, boolean closeOnOpModeStop)
         {
         i2cDevice.setI2cAddr(i2cAddr8Bit);
 
@@ -1068,8 +1068,8 @@ public final class I2cDeviceClientImpl implements I2cDeviceClient, IOpModeStateT
                     forceDrainReadersAndWriters();
                     unhook();
 
-                    // REVIEW: what locking is needed for this?
-                    I2cDeviceClientImpl.this.attachToController();
+                    // WRONG: REVIEW: what locking is needed for this? Any?
+                    I2CDeviceSynchImpl.this.attachToController();
 
                     adjustHooking();
 
@@ -1375,7 +1375,7 @@ public final class I2cDeviceClientImpl implements I2cDeviceClient, IOpModeStateT
                                         @Override public void run()
                                             {
                                             try {
-                                                I2cDeviceClientImpl.this.read(window.getRegisterFirst(), window.getRegisterCount());
+                                                I2CDeviceSynchImpl.this.read(window.getRegisterFirst(), window.getRegisterCount());
                                                 }
                                             catch (Exception e) // paranoia
                                                 {

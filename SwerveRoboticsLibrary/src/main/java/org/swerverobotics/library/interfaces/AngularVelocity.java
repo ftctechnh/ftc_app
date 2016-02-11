@@ -39,7 +39,7 @@ public class AngularVelocity
         this.rateZ = rateZ;
         this.nanoTime = nanoTime;
         }
-    public AngularVelocity(I2cDeviceClient.TimestampedData ts, double scale)
+    public AngularVelocity(I2cDeviceSynch.TimestampedData ts, double scale)
         {
         ByteBuffer buffer = ByteBuffer.wrap(ts.data).order(ByteOrder.LITTLE_ENDIAN);
         this.rateX = buffer.getShort() / scale;
