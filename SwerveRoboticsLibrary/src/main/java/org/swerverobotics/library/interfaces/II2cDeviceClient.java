@@ -1,5 +1,7 @@
 package org.swerverobotics.library.interfaces;
 
+import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
+
 /**
  * Code that previously used II2cDeviceClient should use {@link I2cDeviceSynch} instead
  */
