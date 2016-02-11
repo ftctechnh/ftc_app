@@ -256,7 +256,7 @@ public class TeleOp extends SynchronousOpMode {
                 }
 
                 if (linearSlideForward) {
-                    linearSlide.setPower(Functions.linearSlidePower);
+                    linearSlide.setPower(-Functions.linearSlidePower);
                 } else if (linearSlideBackward) {
 					linearSlide.setPower(-Functions.linearSlidePower);
 				} else {
