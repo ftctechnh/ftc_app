@@ -81,7 +81,7 @@ public class PushBotHardware extends OpMode
         //
         try
         {
-            v_motor_left_drive = hardwareMap.dcMotor.get ("left_drive");
+            v_motor_left_drive = hardwareMap.dcMotor.get ("motor_left");
         }
         catch (Exception p_exeception)
         {
@@ -93,7 +93,7 @@ public class PushBotHardware extends OpMode
 
         try
         {
-            v_motor_right_drive = hardwareMap.dcMotor.get ("right_drive");
+            v_motor_right_drive = hardwareMap.dcMotor.get ("motor_right");
             v_motor_right_drive.setDirection (DcMotor.Direction.REVERSE);
         }
         catch (Exception p_exeception)

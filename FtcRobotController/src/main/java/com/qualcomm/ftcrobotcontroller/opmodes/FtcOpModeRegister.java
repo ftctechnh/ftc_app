@@ -48,7 +48,7 @@ public class FtcOpModeRegister implements OpModeRegister {
   public void register(OpModeManager manager) {
     manager.register("TeenTitanGo", TeenTitanGo.class);
     manager.register("OhmIZeus", OhmIZeus.class);
-//    manager.register("Autobots", Autobots.class);
+    manager.register("Autobots", Autobots.class);
     /* Custom Ops Modes here */
 //    manager.register("DavTest", DavTest.class);
 //    manager.register("TwoWheelTest", TwoWheelTest.class);
@@ -76,9 +76,10 @@ public class FtcOpModeRegister implements OpModeRegister {
     //manager.register("MatrixK9TeleOp", MatrixK9TeleOp.class);
    /* manager.register("K9TeleOp", K9TeleOp.class);
     manager.register("K9Line", K9Line.class);
-    manager.register ("PushBotAuto", PushBotAuto.class);
+
     manager.register ("PushBotManual", PushBotManual.class);
 */
+      manager.register ("PushBotAuto", PushBotAuto.class);
 
 
     /*
@@ -101,7 +102,7 @@ public class FtcOpModeRegister implements OpModeRegister {
 
 
     //manager.register ("PushBotManual1", PushBotManual1.class);
-    //manager.register ("PushBotAutoSensors", PushBotAutoSensors.class);
+    manager.register ("PushBotAutoSensors", PushBotAutoSensors.class);
     //manager.register ("PushBotIrEvent", PushBotIrEvent.class);
 
     //manager.register ("PushBotManualSensors", PushBotManualSensors.class);
