@@ -151,6 +151,11 @@ public class ThunkedI2cController implements I2cController, IThunkWrapper<I2cCon
         target.setI2cPortActionFlag(physicalPort);
         }
 
+    @Override public void clearI2cPortActionFlag(final int physicalPort)
+        {
+        target.clearI2cPortActionFlag(physicalPort);
+        }
+
     @Override public boolean isI2cPortActionFlagSet(final int physicalPort)
         {
         return target.isI2cPortActionFlagSet(physicalPort);
