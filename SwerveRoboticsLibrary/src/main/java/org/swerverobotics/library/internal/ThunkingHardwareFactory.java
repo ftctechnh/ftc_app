@@ -178,7 +178,15 @@ public class ThunkingHardwareFactory
                 {
                 @Override public DcMotor create(DcMotor target)
                     {
-                    return target;
+                    // REVIEW: return target; might just work fine
+                    DcMotorController targetController = target.getController();
+                    DcMotorController controller = findWrapper(thunkedHwmap.dcMotorController, targetController, ThunkedDCMotorController.create(targetController));
+
+                    return new DcMotor(
+                            controller,
+                            target.getPortNumber(),
+                            target.getDirection()
+                        );
                     }
                 }
         );
@@ -189,7 +197,15 @@ public class ThunkingHardwareFactory
                 {
                 @Override public Servo create(Servo target)
                     {
-                    return target;
+                    // REVIEW: return target; might just work fine
+                    ServoController targetController = target.getController();
+                    ServoController controller = findWrapper(thunkedHwmap.servoController, targetController, ThunkedServoController.create(targetController));
+
+                    return new Servo(
+                            controller,
+                            target.getPortNumber(),
+                            target.getDirection()
+                    );
                     }
                 }
         );
