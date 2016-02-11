@@ -63,7 +63,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, I2cDeviceSynchUser, 
         this.opmodeContext          = opmodeContext;
 
         // We don't have the device auto-close since *we* handle the shutdown logic
-        this.deviceClient           = ClassFactory.createI2cDeviceSynch(opmodeContext, i2cDevice, i2cAddr8Bit, false);
+        this.deviceClient           = ClassFactory.createI2cDeviceSynch(i2cDevice, i2cAddr8Bit);
         this.deviceClient.setReadWindow(lowerWindow);
         this.deviceClient.engage();
 

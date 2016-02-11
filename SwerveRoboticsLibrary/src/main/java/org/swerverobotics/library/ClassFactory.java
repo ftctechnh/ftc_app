@@ -272,25 +272,25 @@ public final class ClassFactory
         }
 
     /**
-     * Create a new I2cDeviceSynch on an I2cDevice instance. The client is initially
+     * Create a new I2cDeviceSynch on an I2cDevice instance. The new device is initially
      * disengaged, and must be engaged before use.
      *
-     * @param opmodeContext         the OpMode within which the creation is taking place
      * @param i2cDevice             the II2cDevice to wrap
      * @param i2cAddr8Bit           the I2C address at which the client is to communicate
-     * @param closeOnOpModeStop     if true, then when the OpMode stops, the client will automatically close
-     * @return                      the newly instantiated I2c device client
-     * @see I2cDeviceSynch#engage()
+     * @return                      the newly instantiated device
+     * @see Engagable#engage()
      */
-    public static I2cDeviceSynch createI2cDeviceSynch(OpMode opmodeContext, I2cDevice i2cDevice, int i2cAddr8Bit, boolean closeOnOpModeStop)
+    public static I2cDeviceSynch createI2cDeviceSynch(I2cDevice i2cDevice, int i2cAddr8Bit)
         {
-        return new I2cDeviceSynchImpl(opmodeContext, i2cDevice, i2cAddr8Bit, closeOnOpModeStop);
+        return new I2cDeviceSynchImpl(i2cDevice, i2cAddr8Bit);
         }
 
     @Deprecated
     public static I2cDeviceSynch createI2cDeviceClient(OpMode opmodeContext, I2cDevice i2cDevice, int i2cAddr8Bit, boolean closeOnOpModeStop)
         {
-        return createI2cDeviceSynch(opmodeContext, i2cDevice, i2cAddr8Bit, closeOnOpModeStop);
+        if (closeOnOpModeStop)
+            throw new UnsupportedOperationException("support for auto-closing on opmode stop has been removed");
+        return createI2cDeviceSynch(i2cDevice, i2cAddr8Bit);
         }
 
     //----------------------------------------------------------------------------------------------
