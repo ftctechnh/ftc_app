@@ -95,7 +95,7 @@ public class EasyModernMotorController extends EasyModernController implements D
 
     private void setMotors(DcMotor motor1, DcMotor motor2)
         {
-        assertTrue(!BuildConfig.DEBUG || this.armingState==ARMINGSTATE.DISARMED);
+        assertTrue(this.armingState==ARMINGSTATE.DISARMED);
 
         if ((motor1 != null && motor1.getController() != this.target)
          || (motor2 != null && motor2.getController() != this.target))

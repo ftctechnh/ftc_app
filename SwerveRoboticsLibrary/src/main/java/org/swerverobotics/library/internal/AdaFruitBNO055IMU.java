@@ -562,7 +562,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, I2cDeviceSynchUser, 
         @Override public void update(Acceleration accelNext)
             {
             // We should always be given a timestamp here
-            assertTrue(!BuildConfig.DEBUG || accelNext.nanoTime != 0);
+            assertTrue(accelNext.nanoTime != 0);
 
             // Log the incoming accelerations
             log_v("a: %f %f %f %f", accelNext.accelX, accelNext.accelY, accelNext.accelZ, acceleration == null ? 0 : (accelNext.nanoTime - acceleration.nanoTime) * 1e-9);

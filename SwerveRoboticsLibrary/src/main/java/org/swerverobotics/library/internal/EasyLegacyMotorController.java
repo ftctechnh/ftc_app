@@ -157,7 +157,7 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
 
     private void setMotors(DcMotor motor1, DcMotor motor2)
         {
-        assertTrue(!BuildConfig.DEBUG || !this.isEngaged());
+        assertTrue(!this.isEngaged());
 
         if ((motor1 != null && motor1.getController() != this.target)
          || (motor2 != null && motor2.getController() != this.target))

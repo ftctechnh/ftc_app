@@ -38,7 +38,7 @@ public class ThunkedCompassSensor implements CompassSensor, IThunkedReadWriteLis
         if (this.isTargetLegacy())
             {
             // Make sure our hack is at least plausible
-            assertTrue(!BuildConfig.DEBUG || (Util.<Object>getPrivateObjectField(target, 6) instanceof CompassMode));
+            assertTrue(Util.<Object>getPrivateObjectField(target, 6) instanceof CompassMode);
             }
         }
 
