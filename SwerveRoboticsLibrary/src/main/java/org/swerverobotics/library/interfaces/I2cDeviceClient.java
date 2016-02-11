@@ -223,9 +223,9 @@ public interface I2cDeviceClient extends HardwareDevice, Engagable
     void write8(int ireg, int bVal, boolean waitForCompletion);
 
     /**
-     * Writes data to a set of registers, beginning with the one indicated. The data will be
-     * written to the I2C device as expeditiously as possible. The call may or may block until the write
-     * has been issued to the device controller.
+     * Writes data to a set of registers, beginning with the one indicated. The call may or may
+     * block until the write has been issued to the device controller according to a caller-provided
+     * parameter.
      *
      * @param ireg                  the first of the registers which is to be written
      * @param data                  the data which is to be written to the registers
