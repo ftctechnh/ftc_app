@@ -404,6 +404,17 @@ public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule, IThu
         }).doWriteOperation();
         }
 
+    @Override public void clearI2cPortActionFlag(final int physicalPort)
+        {
+        (new ThunkForWriting()
+        {
+        @Override protected void actionOnLoopThread()
+            {
+            target.clearI2cPortActionFlag(physicalPort);
+            }
+        }).doWriteOperation();
+        }
+
     @Override public boolean isI2cPortActionFlagSet(final int physicalPort)
         {
         return (new ThunkForReading<Boolean>()

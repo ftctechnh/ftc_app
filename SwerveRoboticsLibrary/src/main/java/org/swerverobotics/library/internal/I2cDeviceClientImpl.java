@@ -1228,18 +1228,6 @@ public final class I2cDeviceClientImpl implements I2cDeviceClient, IOpModeStateT
             modeCacheStatus = MODE_CACHE_STATUS.DIRTY;
             }
 
-        private void clearActionFlag()
-            {
-            try {
-                writeCacheLock.lock();
-                writeCache[ibActionFlag] = 0;
-                }
-            finally
-                {
-                writeCacheLock.unlock();
-                }
-            }
-
         void updateStateMachines(UPDATE_STATE_MACHINE caller)
         // We've got quite the little state machine here!
             {
@@ -1520,7 +1508,7 @@ public final class I2cDeviceClientImpl implements I2cDeviceClient, IOpModeStateT
                 if (setActionFlag)
                     i2cDevice.setI2cPortActionFlag();
                 else
-                    clearActionFlag();
+                    i2cDevice.clearI2cPortActionFlag();
 
                 if (setActionFlag && !queueFullWrite)
                     {
