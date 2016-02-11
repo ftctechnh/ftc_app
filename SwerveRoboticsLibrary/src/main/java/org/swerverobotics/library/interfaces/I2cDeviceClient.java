@@ -426,13 +426,13 @@ public interface I2cDeviceClient extends HardwareDevice, Engagable
 
         /**
          * enableI2cReadMode and enableI2cWriteMode both impose a maximum length
-         * on the size of data that can be read or written at one time. cregReadMax
-         * and cregWriteMax indicate those maximum sizes.
-         * @see #cregWriteMax
+         * on the size of data that can be read or written at one time. {@link #READ_REGISTER_COUNT_MAX}
+         * and {@link #WRITE_REGISTER_COUNT_MAX} indicate those maximum sizes.
+         * @see #WRITE_REGISTER_COUNT_MAX
          */
-        public static final int cregReadMax = 26;   // No, not 27: the CDIM can't handle 27
-        /** @see #cregReadMax */
-        public static final int cregWriteMax = 26;  // the CDIM might be able to do 27, not just 26, but we're paranoid
+        public static final int READ_REGISTER_COUNT_MAX = 26;   // No, not 27: the CDIM can't handle 27
+        /** @see #READ_REGISTER_COUNT_MAX */
+        public static final int WRITE_REGISTER_COUNT_MAX = 26;  // the CDIM might be able to do 27, not just 26, but we're paranoid
 
         /**
          * The first register in the window
@@ -449,24 +449,24 @@ public interface I2cDeviceClient extends HardwareDevice, Engagable
         /**
          * Whether a read has been issued for this window or not
          */
-        private boolean readIssued;
+        private boolean usedForRead;
 
 
         /**
          * Returns the first register in the window
          * @return the first register in the window
          */
-        public int getIregFirst() { return this.iregFirst; }
+        public int getRegisterFirst() { return this.iregFirst; }
         /**
          * Returns the first register NOT in the window
          * @return the first register NOT in the window
          */
-        public int getIregMax()   { return this.iregFirst + this.creg; }
+        public int getRegisterMax()   { return this.iregFirst + this.creg; }
         /**
          * Returns the number of registers in the window
          * @return the number of registers in the window
          */
-        public int getCreg()      { return this.creg; }
+        public int getRegisterCount()      { return this.creg; }
         /**
          * Returns the mode of the window
          * @return the mode of the window
@@ -476,20 +476,20 @@ public interface I2cDeviceClient extends HardwareDevice, Engagable
          * Returns whether a read has ever been issued for this window or not
          * @return whether a read has ever been issued for this window or not
          */
-        public boolean getReadIssued() { return this.readIssued; }
+        public boolean hasWindowBeenUsedForRead() { return this.usedForRead; }
         /**
          * Sets that a read has in fact been issued for this window
          */
-        public void setReadIssued() { this.readIssued = true; }
+        public void noteWindowUsedForRead() { this.usedForRead = true; }
 
         /**
          * Answers as to whether we're allowed to read using this window. This will return
-         * false for ONLY_ONCE windows after {@link #setReadIssued()} has been called on them.
+         * false for ONLY_ONCE windows after {@link #noteWindowUsedForRead()} has been called on them.
          * @return whether it is permitted to perform a read for this window.
          */
-        public boolean isOkToRead()
+        public boolean canBeUsedToRead()
             {
-            return !this.readIssued || this.readMode != READ_MODE.ONLY_ONCE;
+            return !this.usedForRead || this.readMode != READ_MODE.ONLY_ONCE;
             }
 
         /**
@@ -497,9 +497,9 @@ public interface I2cDeviceClient extends HardwareDevice, Engagable
          * to read-mode when there's nothing else for the device to be doing.
          * @return whether this device should cause a read mode transition
          */
-        public boolean maySwitchToReadMode()
+        public boolean mayInitiateSwitchToReadMode()
             {
-            return !this.readIssued || this.readMode == READ_MODE.REPEAT;
+            return !this.usedForRead || this.readMode == READ_MODE.REPEAT;
             }
 
         //------------------------------------------------------------------------------------------
@@ -516,15 +516,15 @@ public interface I2cDeviceClient extends HardwareDevice, Engagable
         public ReadWindow(int iregFirst, int creg, READ_MODE readMode)
             {
             this.readMode   = readMode;
-            this.readIssued = false;
+            this.usedForRead = false;
             this.iregFirst  = iregFirst;
             this.creg       = creg;
-            if (creg < 0 || creg > cregReadMax)
-                throw new IllegalArgumentException(String.format("buffer length %d invalid; max is %d", creg, cregReadMax));
+            if (creg < 0 || creg > READ_REGISTER_COUNT_MAX)
+                throw new IllegalArgumentException(String.format("buffer length %d invalid; max is %d", creg, READ_REGISTER_COUNT_MAX));
             }
 
         /**
-         * Returns a copy of this window but with the {@link #readIssued} flag clear
+         * Returns a copy of this window but with the {@link #usedForRead} flag clear
          * @return a fresh copy of the window into which data can actually be read.
          */
         public ReadWindow readableCopy()
@@ -547,8 +547,8 @@ public interface I2cDeviceClient extends HardwareDevice, Engagable
             if (him == null)
                 return false;
             
-            return this.getIregFirst() == him.getIregFirst() 
-                    && this.getCreg() == him.getCreg()
+            return this.getRegisterFirst() == him.getRegisterFirst()
+                    && this.getRegisterCount() == him.getRegisterCount()
                     && this.getReadMode() == him.getReadMode();
             }
         
@@ -564,7 +564,7 @@ public interface I2cDeviceClient extends HardwareDevice, Engagable
             if (him==null)
                 return false;
 
-            return this.getIregFirst() <= him.getIregFirst() && him.getIregMax() <= this.getIregMax();
+            return this.getRegisterFirst() <= him.getRegisterFirst() && him.getRegisterMax() <= this.getRegisterMax();
             }
 
         /**

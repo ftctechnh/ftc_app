@@ -494,7 +494,7 @@ public final class I2cDeviceClientImpl implements I2cDeviceClient, IOpModeStateT
             {
             synchronized (this.callbackLock)
                 {
-                if (this.readWindow != null && this.readWindow.isOkToRead() && this.readWindow.maySwitchToReadMode() && this.readWindow.sameAsIncludingMode(newWindow))
+                if (this.readWindow != null && this.readWindow.canBeUsedToRead() && this.readWindow.mayInitiateSwitchToReadMode() && this.readWindow.sameAsIncludingMode(newWindow))
                     {
                     // What's there is good; we don't need to change anything
                     }
@@ -502,7 +502,7 @@ public final class I2cDeviceClientImpl implements I2cDeviceClient, IOpModeStateT
                     {
                     // Remember the new window, but get a fresh copy so we can implement the read mode policy
                     setReadWindowInternal(newWindow.readableCopy());
-                    assertTrue(!BuildConfig.DEBUG || (this.readWindow.isOkToRead() && this.readWindow.maySwitchToReadMode()));
+                    assertTrue(!BuildConfig.DEBUG || (this.readWindow.canBeUsedToRead() && this.readWindow.mayInitiateSwitchToReadMode()));
                     }
                 }
             }
@@ -612,7 +612,7 @@ public final class I2cDeviceClientImpl implements I2cDeviceClient, IOpModeStateT
                             // more reads or it doesn't contain the required registers, auto-make a new window.
                             boolean readWindowRangeOk = this.readWindow != null && this.readWindow.contains(ireg, creg);
 
-                            if (!readWindowRangeOk || !this.readWindow.isOkToRead() || !this.readWindow.maySwitchToReadMode())
+                            if (!readWindowRangeOk || !this.readWindow.canBeUsedToRead() || !this.readWindow.mayInitiateSwitchToReadMode())
                                 {
                                 // If we can re-use the window that was there before that will help increase
                                 // the chance that we don't need to take the time to switch the controller to
@@ -644,7 +644,7 @@ public final class I2cDeviceClientImpl implements I2cDeviceClient, IOpModeStateT
                             assertTrue(!BuildConfig.DEBUG || this.readWindowActuallyRead.contains(this.readWindow));
 
                             // The data of interest is somewhere in the read window, but not necessarily at the start.
-                            int ibFirst            = ireg - this.readWindowActuallyRead.getIregFirst() + dibCacheOverhead;
+                            int ibFirst            = ireg - this.readWindowActuallyRead.getRegisterFirst() + dibCacheOverhead;
                             TimestampedData result = new TimestampedData();
                             result.data            = Arrays.copyOfRange(this.readCache, ibFirst, ibFirst + creg);
                             result.nanoTime        = this.nanoTimeReadCacheValid;
@@ -766,8 +766,8 @@ public final class I2cDeviceClientImpl implements I2cDeviceClient, IOpModeStateT
 
                 synchronized (this.concurrentClientLock)
                     {
-                    if (data.length > ReadWindow.cregWriteMax)
-                        throw new IllegalArgumentException(String.format("write request of %d bytes is too large; max is %d", data.length, ReadWindow.cregWriteMax));
+                    if (data.length > ReadWindow.WRITE_REGISTER_COUNT_MAX)
+                        throw new IllegalArgumentException(String.format("write request of %d bytes is too large; max is %d", data.length, ReadWindow.WRITE_REGISTER_COUNT_MAX));
 
                     synchronized (this.callbackLock)
                         {
@@ -775,7 +775,7 @@ public final class I2cDeviceClientImpl implements I2cDeviceClient, IOpModeStateT
                         boolean doCoalesce = false;
                         if (this.isWriteCoalescingEnabled
                                 && this.writeCacheStatus == WRITE_CACHE_STATUS.DIRTY
-                                && this.cregWrite + data.length <= ReadWindow.cregWriteMax)
+                                && this.cregWrite + data.length <= ReadWindow.WRITE_REGISTER_COUNT_MAX)
                             {
                             if (ireg + data.length == this.iregWriteFirst)
                                 {
@@ -1165,7 +1165,7 @@ public final class I2cDeviceClientImpl implements I2cDeviceClient, IOpModeStateT
         void startSwitchingToReadMode(ReadWindow window)
             {
             readCacheStatus = READ_CACHE_STATUS.SWITCHINGTOREADMODE;
-            i2cDevice.enableI2cReadMode(window.getIregFirst(), window.getCreg());
+            i2cDevice.enableI2cReadMode(window.getRegisterFirst(), window.getRegisterCount());
             enabledReadMode = true;
 
             // Remember what we actually told the controller
@@ -1315,7 +1315,7 @@ public final class I2cDeviceClientImpl implements I2cDeviceClient, IOpModeStateT
                                 && readWindowSentToController.contains(readWindow)
                                 && i2cDevice.isI2cPortInReadMode());
 
-                        if (readWindow.isOkToRead() && (readSwitchUnnecessary || readWindow.maySwitchToReadMode()))
+                        if (readWindow.canBeUsedToRead() && (readSwitchUnnecessary || readWindow.mayInitiateSwitchToReadMode()))
                             {
                             if (readSwitchUnnecessary)
                                 {
@@ -1341,7 +1341,7 @@ public final class I2cDeviceClientImpl implements I2cDeviceClient, IOpModeStateT
                         {
                         // Remember that we've used this window in a read operation. This doesn't
                         // matter for REPEATs, but does for the other modes
-                        readWindow.setReadIssued();
+                        readWindow.noteWindowUsedForRead();
                         }
                     else
                         {
@@ -1359,7 +1359,7 @@ public final class I2cDeviceClientImpl implements I2cDeviceClient, IOpModeStateT
 
                 else if (readCacheStatus == READ_CACHE_STATUS.QUEUE_COMPLETED)
                     {
-                    if (readWindow != null && readWindow.isOkToRead())
+                    if (readWindow != null && readWindow.canBeUsedToRead())
                         {
                         readCacheStatus = READ_CACHE_STATUS.VALID_QUEUED;
                         setActionFlag = true;           // actually do an I2C read
@@ -1424,7 +1424,7 @@ public final class I2cDeviceClientImpl implements I2cDeviceClient, IOpModeStateT
                                         @Override public void run()
                                             {
                                             try {
-                                                I2cDeviceClientImpl.this.read(window.getIregFirst(), window.getCreg());
+                                                I2cDeviceClientImpl.this.read(window.getRegisterFirst(), window.getRegisterCount());
                                                 }
                                             catch (Exception e) // paranoia
                                                 {
@@ -1494,7 +1494,7 @@ public final class I2cDeviceClientImpl implements I2cDeviceClient, IOpModeStateT
                     if (writeCacheStatus != prevWriteCacheStatus) message.append("| W." + prevWriteCacheStatus.toString() + "->" + writeCacheStatus.toString());
                  // if (modeCacheStatus != prevModeCacheStatus)   message.append("| M." + prevModeCacheStatus.toString() + "->" + modeCacheStatus.toString());
                     if (enabledWriteMode)                         message.append(String.format("| setWrite(0x%02x,%d)", iregWriteFirst, cregWrite));
-                    if (enabledReadMode)                          message.append(String.format("| setRead(0x%02x,%d)", readWindow.getIregFirst(), readWindow.getCreg()));
+                    if (enabledReadMode)                          message.append(String.format("| setRead(0x%02x,%d)", readWindow.getRegisterFirst(), readWindow.getRegisterCount()));
 
                     log(Log.DEBUG, message.toString());
                     }
