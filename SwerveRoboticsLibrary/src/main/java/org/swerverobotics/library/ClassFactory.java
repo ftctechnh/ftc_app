@@ -28,7 +28,7 @@ public final class ClassFactory
      * use, this function has no effect. The APIs to easy legacy and modern motor controllers
      * are <em>identical</em>, which helps simplify programming.
      *
-     * <p>EasyLegacyMotorController is implemented on top of an {@link I2cDeviceClient} instance
+     * <p>EasyLegacyMotorController is implemented on top of an {@link I2cDeviceSynch} instance
      * which completely handles all the complexities of read vs write mode switching and the
      * like, allowing the logic inside the controller itself to be extraordinarily simple.
      * In particular, the manual mode switching and loop() counting necessary with the stock
@@ -190,7 +190,7 @@ public final class ClassFactory
      * @param i2cDevice     the robot controller runtime object representing the sensor
      * @param parameters    the parameters with which the sensor should be initialized
      * @return              the interface to the instantiated sensor object. This object also
-     *                      supports the II2cDeviceClientUser interface, which can be useful
+     *                      supports the I2cDeviceSynchUser interface, which can be useful
      *                      for debugging.
      * @see #createAdaFruitBNO055IMU(OpMode, I2cDevice)
      */
@@ -272,7 +272,7 @@ public final class ClassFactory
         }
 
     /**
-     * Create a new I2cDeviceClient on an I2cDevice instance. The client is initially
+     * Create a new I2cDeviceSynch on an I2cDevice instance. The client is initially
      * disengaged, and must be engaged before use.
      *
      * @param opmodeContext         the OpMode within which the creation is taking place
@@ -280,11 +280,17 @@ public final class ClassFactory
      * @param i2cAddr8Bit           the I2C address at which the client is to communicate
      * @param closeOnOpModeStop     if true, then when the OpMode stops, the client will automatically close
      * @return                      the newly instantiated I2c device client
-     * @see I2cDeviceClient#engage()
+     * @see I2cDeviceSynch#engage()
      */
-    public static I2cDeviceClient createI2cDeviceClient(OpMode opmodeContext, I2cDevice i2cDevice, int i2cAddr8Bit, boolean closeOnOpModeStop)
+    public static I2cDeviceSynch createI2cDeviceSynch(OpMode opmodeContext, I2cDevice i2cDevice, int i2cAddr8Bit, boolean closeOnOpModeStop)
         {
-        return new I2cDeviceClientImpl(opmodeContext, i2cDevice, i2cAddr8Bit, closeOnOpModeStop);
+        return new I2CDeviceSynchImpl(opmodeContext, i2cDevice, i2cAddr8Bit, closeOnOpModeStop);
+        }
+
+    @Deprecated
+    public static I2cDeviceSynch createI2cDeviceClient(OpMode opmodeContext, I2cDevice i2cDevice, int i2cAddr8Bit, boolean closeOnOpModeStop)
+        {
+        return createI2cDeviceSynch(opmodeContext, i2cDevice, i2cAddr8Bit, closeOnOpModeStop);
         }
 
     //----------------------------------------------------------------------------------------------

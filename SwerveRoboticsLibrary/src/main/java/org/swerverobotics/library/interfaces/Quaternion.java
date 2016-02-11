@@ -43,7 +43,7 @@ public class Quaternion
         this.z = z;
         this.nanoTime = nanoTime;
         }
-    public Quaternion(I2cDeviceClient.TimestampedData ts, double scale)
+    public Quaternion(I2cDeviceSynch.TimestampedData ts, double scale)
         {
         ByteBuffer buffer = ByteBuffer.wrap(ts.data).order(ByteOrder.LITTLE_ENDIAN);
         this.w = buffer.getShort() / scale;

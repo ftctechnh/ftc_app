@@ -40,7 +40,7 @@ public class EulerAngles
         this.pitch    = pitch;
         this.nanoTime = nanoTime;
         }
-    public EulerAngles(I2cDeviceClient.TimestampedData ts, double scale)
+    public EulerAngles(I2cDeviceSynch.TimestampedData ts, double scale)
         {
         ByteBuffer buffer = ByteBuffer.wrap(ts.data).order(ByteOrder.LITTLE_ENDIAN);
         this.heading = buffer.getShort() / scale;

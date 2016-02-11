@@ -75,7 +75,7 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
     private static final double powerMax = 1.0;
 
     private final OpMode                    context;
-    private final I2cDeviceClient           i2cDeviceClient;
+    private final I2cDeviceSynch            i2cDeviceSynch;
     private final DcMotorController         target;
     I2cDeviceReplacementHelper<DcMotorController> helper;
 
@@ -86,16 +86,16 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    private EasyLegacyMotorController(OpMode context, I2cDeviceClient ii2cDeviceClient, DcMotorController target, I2cController controller, int targetPort)
+    private EasyLegacyMotorController(OpMode context, I2cDeviceSynch i2cDeviceSynch, DcMotorController target, I2cController controller, int targetPort)
         {
         super(((I2cControllerPortDevice)target).getI2cController(), ((I2cControllerPortDevice)target).getPort());
-        this.helper          = new I2cDeviceReplacementHelper<DcMotorController>(context, this, target, controller, targetPort);
+        this.helper         = new I2cDeviceReplacementHelper<DcMotorController>(context, this, target, controller, targetPort);
 
-        this.context         = context;
-        this.i2cDeviceClient = ii2cDeviceClient;
-        this.target          = target;
-        this.motor1          = null;
-        this.motor2          = null;
+        this.context        = context;
+        this.i2cDeviceSynch = i2cDeviceSynch;
+        this.target         = target;
+        this.motor1         = null;
+        this.motor2         = null;
 
         RobotStateTransitionNotifier.register(context, this);
 
@@ -104,14 +104,14 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
         // heartbeats which are as minimally disruptive as possible. Note as a matter of interest
         // that the heartbeat mechanism used by ModernRoboticsNxtDcMotorController is analogous to
         // 'rewriteLastWritten'.
-        I2cDeviceClient.HeartbeatAction heartbeatAction = new I2cDeviceClient.HeartbeatAction();
+        I2cDeviceSynch.HeartbeatAction heartbeatAction = new I2cDeviceSynch.HeartbeatAction();
         heartbeatAction.rereadLastRead      = true;
         heartbeatAction.rewriteLastWritten  = true;
-        heartbeatAction.heartbeatReadWindow = new I2cDeviceClient.ReadWindow(mpMotorRegCurrentEncoderValue[1], 1, I2cDeviceClient.READ_MODE.ONLY_ONCE);
+        heartbeatAction.heartbeatReadWindow = new I2cDeviceSynch.ReadWindow(mpMotorRegCurrentEncoderValue[1], 1, I2cDeviceSynch.READ_MODE.ONLY_ONCE);
 
-        this.i2cDeviceClient.setHeartbeatAction(heartbeatAction);
-        this.i2cDeviceClient.setHeartbeatInterval(2000);
-        this.i2cDeviceClient.enableWriteCoalescing(true);   // it's useful to us, particularly for setting motor speeds
+        this.i2cDeviceSynch.setHeartbeatAction(heartbeatAction);
+        this.i2cDeviceSynch.setHeartbeatInterval(2000);
+        this.i2cDeviceSynch.enableWriteCoalescing(true);   // it's useful to us, particularly for setting motor speeds
 
         // Also: set up a read-window. We make it BALANCED to avoid unnecessary ping-ponging
         // between read mode and write mode, since motors are read about as much as they are
@@ -119,7 +119,7 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
         // into read mode and possibly do more than one read we will use this window
         // and won't have to fiddle with the 'switch to read mode' each and every time.
         // We include everything from the 'Motor 1 target encoder value' through the battery voltage.
-        this.i2cDeviceClient.setReadWindow(new I2cDeviceClient.ReadWindow(iRegWindowFirst, iRegWindowMax-iRegWindowFirst, I2cDeviceClient.READ_MODE.BALANCED));
+        this.i2cDeviceSynch.setReadWindow(new I2cDeviceSynch.ReadWindow(iRegWindowFirst, iRegWindowMax - iRegWindowFirst, I2cDeviceSynch.READ_MODE.BALANCED));
         }
 
     public static DcMotorController create(OpMode context, DcMotorController target, DcMotor motor1, DcMotor motor2)
@@ -134,8 +134,8 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
 
             // Make a new legacy motor controller
             I2cDevice i2cDevice                  = new I2cDeviceImpl(module, port);
-            I2cDeviceClient i2cDeviceClient      = new I2cDeviceClientImpl(context, i2cDevice, i2cAddr8Bit, false);
-            EasyLegacyMotorController controller = new EasyLegacyMotorController(context, i2cDeviceClient, target, module, port);
+            I2cDeviceSynch i2CDeviceSynch = new I2CDeviceSynchImpl(context, i2cDevice, i2cAddr8Bit, false);
+            EasyLegacyMotorController controller = new EasyLegacyMotorController(context, i2CDeviceSynch, target, module, port);
 
             controller.setMotors(motor1, motor2);
             controller.engage();
@@ -220,7 +220,7 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
 
             this.helper.engage();
 
-            this.i2cDeviceClient.engage();
+            this.i2cDeviceSynch.engage();
             this.registerVoltageSensor();
             this.initPID();
             this.floatMotors();
@@ -238,7 +238,7 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
         if (this.isEngaged())
             {
             this.unregisterVoltageSensor();
-            this.i2cDeviceClient.disengage();
+            this.i2cDeviceSynch.disengage();
 
             this.helper.disengage();
 
@@ -263,7 +263,7 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
         {
         try {
             // Register is per the HiTechnic motor controller specification
-            byte[] bytes = this.i2cDeviceClient.read(0x54, 2);
+            byte[] bytes = this.i2cDeviceSynch.read(0x54, 2);
 
             // "The high byte is the upper 8 bits of a 10 bit value. It may be used as an 8 bit
             // representation of the battery voltage in units of 80mV. This provides a measurement
@@ -297,7 +297,7 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
 
     @Override public String getConnectionInfo()
         {
-        return this.i2cDeviceClient.getConnectionInfo();
+        return this.i2cDeviceSynch.getConnectionInfo();
         }
 
     @Override public int getVersion()
@@ -348,7 +348,7 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
 
     private boolean isArmed()
         {
-        return this.i2cDeviceClient.isArmed();
+        return this.i2cDeviceSynch.isArmed();
         }
 
     @Override public synchronized void setMotorControllerDeviceMode(DcMotorController.DeviceMode port)
@@ -377,7 +377,7 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
             {
             if (!this.isArmed()) break;
 
-            byte bCurrentMode = this.i2cDeviceClient.read8(mpMotorRegMotorMode[motor]);
+            byte bCurrentMode = this.i2cDeviceSynch.read8(mpMotorRegMotorMode[motor]);
             if (bCurrentMode == bNewMode)
                 break;
             Thread.yield();;
@@ -420,7 +420,7 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
     @Override public synchronized DcMotorController.RunMode getMotorChannelMode(int motor)
         {
         this.validateMotor(motor);
-        byte b = this.i2cDeviceClient.read8(mpMotorRegMotorMode[motor]);
+        byte b = this.i2cDeviceSynch.read8(mpMotorRegMotorMode[motor]);
         return modeFromByte(b);
         }
 
@@ -467,7 +467,7 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
     @Override public synchronized double getMotorPower(int motor)
         {
         this.validateMotor(motor);
-        byte bPower = this.i2cDeviceClient.read8(mpMotorRegMotorMode[motor]);
+        byte bPower = this.i2cDeviceSynch.read8(mpMotorRegMotorMode[motor]);
         
         // Float counts as zero power
         if (bPower == bPowerFloat)
@@ -489,7 +489,7 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
     @Override public synchronized boolean getMotorPowerFloat(int motor)
         {
         this.validateMotor(motor);
-        byte bPower = this.i2cDeviceClient.read8(mpMotorRegMotorMode[motor]);
+        byte bPower = this.i2cDeviceSynch.read8(mpMotorRegMotorMode[motor]);
         return bPower == bPowerFloat;
         }
 
@@ -503,14 +503,14 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
     @Override public synchronized int getMotorTargetPosition(int motor)
         {
         this.validateMotor(motor);
-        byte[] bytes = this.i2cDeviceClient.read(mpMotorRegTargetEncoderValue[motor], cbEncoder);
+        byte[] bytes = this.i2cDeviceSynch.read(mpMotorRegTargetEncoderValue[motor], cbEncoder);
         return TypeConversion.byteArrayToInt(bytes, ByteOrder.BIG_ENDIAN);
         }
 
     @Override public synchronized int getMotorCurrentPosition(int motor)
         {
         this.validateMotor(motor);
-        byte[] bytes = this.i2cDeviceClient.read(mpMotorRegCurrentEncoderValue[motor], cbEncoder);
+        byte[] bytes = this.i2cDeviceSynch.read(mpMotorRegCurrentEncoderValue[motor], cbEncoder);
         return TypeConversion.byteArrayToInt(bytes, ByteOrder.BIG_ENDIAN);
         }
     
@@ -521,13 +521,13 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
     private void write8(int ireg, byte data)
         {
         if (this.isEngaged())
-            this.i2cDeviceClient.write8(ireg, data, false);
+            this.i2cDeviceSynch.write8(ireg, data, false);
         }
 
     private void write(int ireg, byte[] data)
         {
         if (this.isEngaged())
-            this.i2cDeviceClient.write(ireg, data, false);
+            this.i2cDeviceSynch.write(ireg, data, false);
         }
 
     private void initPID()
@@ -540,7 +540,7 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
         Log.d(LOGGING_TAG, "floating motors");
         this.setMotorPowerFloat(1);
         this.setMotorPowerFloat(2);
-        i2cDeviceClient.waitForWriteCompletions();  // paranoia about safety
+        i2cDeviceSynch.waitForWriteCompletions();  // paranoia about safety, probably no longer needed as ReadWriteRunnable's now drain writes on close
         }
 
     private void stopMotors()
@@ -548,7 +548,7 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
         Log.d(LOGGING_TAG, "stopping motors");
         this.setMotorPower(1, 0);
         this.setMotorPower(2, 0);
-        i2cDeviceClient.waitForWriteCompletions();  // paranoia about safety
+        i2cDeviceSynch.waitForWriteCompletions();  // paranoia about safety, probably no longer needed
         }
 
     private void validateMotor(int motor)
