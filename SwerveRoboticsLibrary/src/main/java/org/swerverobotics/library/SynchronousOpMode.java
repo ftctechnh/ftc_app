@@ -536,7 +536,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
 
         synchronized void add(Runnable action)
             {
-            assertTrue(!BuildConfig.DEBUG || action!=null);
+            assertTrue(action!=null);
             this.queue.add(action);
             this.onChanged();
             }
@@ -838,7 +838,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             this.preLoopHook();
 
             // Validate our assumption of init() and loop() running on the same thread.
-            assertTrue(!BuildConfig.DEBUG || this.isLoopThread());
+            assertTrue(this.isLoopThread());
 
             synchronized (this.loopLock)
                 {

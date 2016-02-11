@@ -89,7 +89,7 @@ public class SwerveThreadContext
 
     public static void assertSynchronousThread()
         {
-        junit.framework.Assert.assertTrue(!BuildConfig.DEBUG || isSynchronousThread());
+        junit.framework.Assert.assertTrue(isSynchronousThread());
         }
     public static boolean isSynchronousThread()
         {

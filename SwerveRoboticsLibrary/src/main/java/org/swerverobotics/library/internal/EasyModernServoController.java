@@ -111,7 +111,7 @@ public class EasyModernServoController extends EasyModernController implements S
 
     private void setServos(Collection<Servo> servos)
         {
-        assertTrue(!BuildConfig.DEBUG || this.armingState==ARMINGSTATE.DISARMED);
+        assertTrue(this.armingState==ARMINGSTATE.DISARMED);
 
         for (Servo servo : servos)
             {

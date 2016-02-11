@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.hardware.usb.RobotUsbModule;
 import com.qualcomm.robotcore.util.*;
-import org.swerverobotics.library.*;
 import org.swerverobotics.library.exceptions.*;
 
 import java.util.*;
@@ -377,7 +376,7 @@ public final class I2cDeviceSynchImpl implements I2cDeviceSynch, IOpModeStateTra
         if (interrupted)
             Thread.currentThread().interrupt();
 
-        assertTrue(!BuildConfig.DEBUG || readerWriterCount.get()==0);
+        assertTrue(readerWriterCount.get()==0);
         enableReadsAndWrites();
         }
 
@@ -397,7 +396,7 @@ public final class I2cDeviceSynchImpl implements I2cDeviceSynch, IOpModeStateTra
                 // Lie and say that the data in the read cache is valid
                 readCacheStatus = READ_CACHE_STATUS.VALID_QUEUED;
                 readWindowChanged = false;
-                assertTrue(!BuildConfig.DEBUG || readCacheIsValid());
+                assertTrue(readCacheIsValid());
 
                 // Actually wake folk up
                 callbackLock.notifyAll();
@@ -430,7 +429,7 @@ public final class I2cDeviceSynchImpl implements I2cDeviceSynch, IOpModeStateTra
         if (interrupted)
             Thread.currentThread().interrupt();
 
-        assertTrue(!BuildConfig.DEBUG || readerWriterCount.get()==0);
+        assertTrue(readerWriterCount.get()==0);
         enableReadsAndWrites();
         }
 
@@ -485,7 +484,7 @@ public final class I2cDeviceSynchImpl implements I2cDeviceSynch, IOpModeStateTra
                     {
                     // Remember the new window, but get a fresh copy so we can implement the read mode policy
                     setReadWindowInternal(newWindow.readableCopy());
-                    assertTrue(!BuildConfig.DEBUG || (this.readWindow.canBeUsedToRead() && this.readWindow.mayInitiateSwitchToReadMode()));
+                    assertTrue(this.readWindow.canBeUsedToRead() && this.readWindow.mayInitiateSwitchToReadMode());
                     }
                 }
             }
@@ -624,7 +623,7 @@ public final class I2cDeviceSynchImpl implements I2cDeviceSynch, IOpModeStateTra
                         this.readCacheLock.lockInterruptibly();
                         try
                             {
-                            assertTrue(!BuildConfig.DEBUG || this.readWindowActuallyRead.contains(this.readWindow));
+                            assertTrue(this.readWindowActuallyRead.contains(this.readWindow));
 
                             // The data of interest is somewhere in the read window, but not necessarily at the start.
                             int ibFirst            = ireg - this.readWindowActuallyRead.getRegisterFirst() + dibCacheOverhead;
@@ -1117,7 +1116,7 @@ public final class I2cDeviceSynchImpl implements I2cDeviceSynch, IOpModeStateTra
 
                     forceDrainReadersAndWriters();
                     unhook();
-                    assertTrue(!BuildConfig.DEBUG || !openForReading() && !openForWriting());
+                    assertTrue(!openForReading() && !openForWriting());
                     enableReadsAndWrites();
 
                     haveSeenModuleIsArmedWork = false;
@@ -1204,18 +1203,17 @@ public final class I2cDeviceSynchImpl implements I2cDeviceSynch, IOpModeStateTra
                     // There doesn't seem to be any way to reliably do an assert, as that loss
                     // of connection might have not yet got through to *anybody*.
                     //
-                    // assertTrue(!BuildConfig.DEBUG || !isHooked || !newReadsAndWritesAllowed() || i2cDevice.isI2cPortInWriteMode());
+                    // assertTrue(!isHooked || !newReadsAndWritesAllowed() || i2cDevice.isI2cPortInWriteMode());
                     }
 
                 //--------------------------------------------------------------------------
                 // That limits the number of states the caches can now be in
 
-                assertTrue(!BuildConfig.DEBUG ||
-                                 (readCacheStatus==READ_CACHE_STATUS.IDLE
-                                ||readCacheStatus==READ_CACHE_STATUS.SWITCHINGTOREADMODE
-                                ||readCacheStatus==READ_CACHE_STATUS.VALID_ONLYONCE
-                                ||readCacheStatus==READ_CACHE_STATUS.QUEUE_COMPLETED));
-                assertTrue(!BuildConfig.DEBUG || (writeCacheStatus == WRITE_CACHE_STATUS.IDLE || writeCacheStatus == WRITE_CACHE_STATUS.DIRTY));
+                assertTrue(readCacheStatus==READ_CACHE_STATUS.IDLE
+                         ||readCacheStatus==READ_CACHE_STATUS.SWITCHINGTOREADMODE
+                         ||readCacheStatus==READ_CACHE_STATUS.VALID_ONLYONCE
+                         ||readCacheStatus==READ_CACHE_STATUS.QUEUE_COMPLETED);
+                assertTrue(writeCacheStatus == WRITE_CACHE_STATUS.IDLE || writeCacheStatus == WRITE_CACHE_STATUS.DIRTY);
 
                 //--------------------------------------------------------------------------
                 // Complete any read mode switch if there is one
@@ -1347,7 +1345,7 @@ public final class I2cDeviceSynchImpl implements I2cDeviceSynch, IOpModeStateTra
                                 }
                             else
                                 {
-                                assertTrue(!BuildConfig.DEBUG || readCacheStatus==READ_CACHE_STATUS.SWITCHINGTOREADMODE);
+                                assertTrue(readCacheStatus==READ_CACHE_STATUS.SWITCHINGTOREADMODE);
                                 }
                             }
 

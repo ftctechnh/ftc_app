@@ -126,7 +126,7 @@ public class EasyLegacyServoController extends I2cControllerPortDeviceImpl imple
 
     private void setServos(Collection<Servo> servos)
         {
-        assertTrue(!BuildConfig.DEBUG || !this.isEngaged());
+        assertTrue(!this.isEngaged());
 
         for (Servo servo : servos)
             {
