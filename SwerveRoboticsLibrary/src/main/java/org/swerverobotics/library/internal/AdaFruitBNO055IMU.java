@@ -189,7 +189,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, I2cDeviceClientUser,
             if (chipId == bCHIP_ID_VALUE)
                 break;
             delayExtra(10);
-            if (milliseconds(elapsed) > msAwaitChipId)
+            if (elapsed.milliseconds() > msAwaitChipId)
                 throw new BNO055InitializationException(this, "failed to retrieve chip id");
             }
         delayLoreExtra(50);
@@ -240,7 +240,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, I2cDeviceClientUser,
         final int successfulResult = 0x07;
         final int successfulResultMask = 0x07;
 
-        while (!selfTestSuccessful && milliseconds(elapsed) < msAwaitSelfTest)
+        while (!selfTestSuccessful && elapsed.milliseconds() < msAwaitSelfTest)
             {
             selfTestSuccessful = (read8(REGISTER.SELFTEST_RESULT)&successfulResultMask) == successfulResult;    // SELFTEST_RESULT=0x36
             }

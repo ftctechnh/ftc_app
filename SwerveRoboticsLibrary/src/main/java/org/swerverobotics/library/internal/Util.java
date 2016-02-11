@@ -146,11 +146,6 @@ public class Util
     // Miscellany
     //----------------------------------------------------------------------------------------------
 
-    static public double milliseconds(ElapsedTime elapsed)
-        {
-        return elapsed.time() * 1000.0;
-        }
-
     static public String getStackTrace(Exception e)
         {
         StringBuilder result = new StringBuilder();

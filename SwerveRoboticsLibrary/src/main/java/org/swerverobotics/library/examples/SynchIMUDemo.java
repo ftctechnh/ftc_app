@@ -89,7 +89,7 @@ public class SynchIMUDemo extends SynchronousOpMode
                 // all while we're gathering the above.
                 loopCycles = getLoopCount();
                 i2cCycles  = i2cDevice.getCallbackCount();
-                ms         = elapsed.time() * 1000.0;
+                ms         = elapsed.milliseconds();
                 }
             });
         telemetry.addLine(

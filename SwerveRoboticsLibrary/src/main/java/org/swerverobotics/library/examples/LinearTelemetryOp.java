@@ -39,7 +39,7 @@ public class LinearTelemetryOp extends LinearOpMode
                 // Update the telemetry dashboard with fresh values
                 this.telemetry.addData("time",  format(elapsed));
                 this.telemetry.addData("count", loopCounter.getLoopCount() - loopCountStart);
-                this.telemetry.addData("ms/loop", format(elapsed.time() * 1000.0 / (loopCounter.getLoopCount() - loopCountStart)) + "ms");
+                this.telemetry.addData("ms/loop", format(elapsed.milliseconds() / (loopCounter.getLoopCount() - loopCountStart)) + "ms");
 
                 // Update driver station and wait until there's something useful to do
                 this.telemetry.update();
@@ -55,7 +55,7 @@ public class LinearTelemetryOp extends LinearOpMode
     // A couple of handy functions for formatting data for the dashboard
     String format(ElapsedTime elapsed)
         {
-        return String.format("%.1fs", elapsed.time());
+        return String.format("%.1fs", elapsed.seconds());
         }
     String format(double d)
         {
