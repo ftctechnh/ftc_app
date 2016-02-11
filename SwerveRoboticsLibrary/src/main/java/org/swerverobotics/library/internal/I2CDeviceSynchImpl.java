@@ -14,7 +14,6 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.*;
 import static junit.framework.Assert.*;
-import static org.swerverobotics.library.internal.Util.*;
 
 /**
  * {@link I2cDeviceSynchImpl} is a utility class that makes it easy to read or write data to
@@ -331,7 +330,7 @@ public final class I2cDeviceSynchImpl implements I2cDeviceSynch, IOpModeStateTra
             }
         catch (InterruptedException e)
             {
-            handleCapturedInterrupt(e);
+            Thread.currentThread().interrupt();
             }
         }
 
@@ -660,7 +659,7 @@ public final class I2cDeviceSynchImpl implements I2cDeviceSynch, IOpModeStateTra
             }
         catch (InterruptedException e)
             {
-            handleCapturedInterrupt(e);
+            Thread.currentThread().interrupt();
 
             // Can't return (no data to return!) so we must throw
             throw SwerveRuntimeException.wrap(e);
@@ -821,7 +820,7 @@ public final class I2cDeviceSynchImpl implements I2cDeviceSynch, IOpModeStateTra
             }
         catch (InterruptedException e)
             {
-            handleCapturedInterrupt(e);
+            Thread.currentThread().interrupt();
             }
         }
 
@@ -838,7 +837,7 @@ public final class I2cDeviceSynchImpl implements I2cDeviceSynch, IOpModeStateTra
             }
         catch (InterruptedException e)
             {
-            handleCapturedInterrupt(e);
+            Thread.currentThread().interrupt();
             }
         }
 
