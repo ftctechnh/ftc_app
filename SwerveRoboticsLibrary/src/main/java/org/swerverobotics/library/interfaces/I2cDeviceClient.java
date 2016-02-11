@@ -16,6 +16,15 @@ import org.swerverobotics.library.*;
  * to 'read mode' or 'write mode' is required. Simply call reads and writes as you need them, and
  * the right thing happens.</p>
  *
+ * <p>On causality: regarding the sequencing of reads and writes, two important points are
+ * worthy of mention. First, reads and writes are ultimately issued to the controller in the same
+ * chronological order they were received by the device client instance. Second, even more
+ * importantly, reads *always* see the effect of preceding writes on the controller. That is,
+ * a read that follows a write will ensure that, first, the write gets issued to the controller, and
+ * then, second, a read from the controller is subsequently issued. By contrast, absent such
+ * constraints, a read might quickly return freshly-read data already present without having to
+ * interact with the controller. Which brings us to...</p>
+ *
  * <p>A word about optimizing reads. In I2cDevice, reads are accomplished by calling
  * {@link I2cDevice#enableI2cReadMode(int, int, int) enableI2cReadMode()} to indicate a set of
  * registers which are to be read from the I2C device. <em>Changing</em> that set of registers
@@ -180,7 +189,7 @@ public interface I2cDeviceClient extends HardwareDevice, Engagable
 
     /**
      * Writes a byte to the indicated register. The call does not return until the write has
-     * been queued to the device controller.
+     * been written to the device controller.
      * 
      * @param ireg      the register number that is to be written
      * @param bVal      the byte which is to be written to that register
@@ -190,11 +199,9 @@ public interface I2cDeviceClient extends HardwareDevice, Engagable
     void write8(int ireg, int bVal);
 
     /**
-     * Writes data to a set of registers, beginning with the one indicated. The data will be
-     * written to the I2C device as expeditiously as possible. This method will not return until
-     * the data has been written to the device controller; however, that does not necessarily
-     * indicate that the data has been issued in an I2C write transaction, though that ought
-     * to happen a short deterministic time later.
+     * Writes data to a set of registers, beginning with the one indicated. This method will not
+     * return until the data has been written to the device controller; however, that does
+     * not necessarily indicate that the data has been issued in an I2C write transaction.
      * 
      * @param ireg      the first of the registers which is to be written
      * @param data      the data which is to be written to the registers
@@ -206,7 +213,7 @@ public interface I2cDeviceClient extends HardwareDevice, Engagable
 
     /**
      * Writes a byte to the indicated register. The call may or may block until the write
-     * has been issued to the device controller
+     * has been issued to the device controller according to a caller-provided parameter.
      *
      * @param ireg                  the register number that is to be written
      * @param bVal                  the byte which is to be written to that register
@@ -230,7 +237,7 @@ public interface I2cDeviceClient extends HardwareDevice, Engagable
     void write(int ireg, byte[] data, boolean waitForCompletion);
 
     /**
-     * Waits for any previously issued writes to complete.
+     * Waits for any previously issued writes to be written to the device controller.
      */
     void waitForWriteCompletions();
 
