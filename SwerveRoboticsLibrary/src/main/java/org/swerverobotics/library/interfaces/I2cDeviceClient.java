@@ -6,10 +6,9 @@ import com.qualcomm.robotcore.hardware.*;
 import org.swerverobotics.library.*;
 
 /**
- * II2cDeviceClient is the public interface to a utility class that makes it easier to
- * use I2cDevice instances.
+ * I2cDeviceClient is an interface that exposes functionality for interacting with I2c devices.
  *
- * <p>Having created an II2cDeviceClient instance, reads and writes are performed by calling
+ * <p>Having created an I2cDeviceClient instance, reads and writes are performed by calling
  * {@link #read8(int) read8()} and {@link #write8(int, int) write8()} or
  * {@link #read(int, int) read()} and {@link #write(int, byte[]) write()} respectively. These
  * calls are synchronous; they block until their action is semantically complete. No attention
