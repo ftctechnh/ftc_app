@@ -284,7 +284,7 @@ public final class ClassFactory
      */
     public static I2cDeviceSynch createI2cDeviceSynch(OpMode opmodeContext, I2cDevice i2cDevice, int i2cAddr8Bit, boolean closeOnOpModeStop)
         {
-        return new I2CDeviceSynchImpl(opmodeContext, i2cDevice, i2cAddr8Bit, closeOnOpModeStop);
+        return new I2cDeviceSynchImpl(opmodeContext, i2cDevice, i2cAddr8Bit, closeOnOpModeStop);
         }
 
     @Deprecated

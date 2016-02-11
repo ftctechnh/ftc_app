@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.exceptions.*;
-import org.swerverobotics.library.interfaces.*;
+
 import java.nio.*;
 
 import static junit.framework.Assert.*;
@@ -134,7 +134,7 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
 
             // Make a new legacy motor controller
             I2cDevice i2cDevice                  = new I2cDeviceImpl(module, port);
-            I2cDeviceSynch i2CDeviceSynch = new I2CDeviceSynchImpl(context, i2cDevice, i2cAddr8Bit, false);
+            I2cDeviceSynch i2CDeviceSynch        = new I2cDeviceSynchImpl(context, i2cDevice, i2cAddr8Bit, false);
             EasyLegacyMotorController controller = new EasyLegacyMotorController(context, i2CDeviceSynch, target, module, port);
 
             controller.setMotors(motor1, motor2);

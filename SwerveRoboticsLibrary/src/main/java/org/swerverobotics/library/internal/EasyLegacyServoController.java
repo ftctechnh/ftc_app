@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.Range;
 import org.swerverobotics.library.BuildConfig;
 import org.swerverobotics.library.SynchronousOpMode;
-import org.swerverobotics.library.interfaces.*;
+
 import java.util.*;
 
 import static junit.framework.Assert.*;
@@ -103,7 +103,7 @@ public class EasyLegacyServoController extends I2cControllerPortDeviceImpl imple
 
             // Make a new legacy servo controller
             I2cDevice i2cDevice                  = new I2cDeviceImpl(module, port);
-            I2cDeviceSynch i2CDeviceSynch = new I2CDeviceSynchImpl(context, i2cDevice, i2cAddr8Bit, false);
+            I2cDeviceSynch i2CDeviceSynch        = new I2cDeviceSynchImpl(context, i2cDevice, i2cAddr8Bit, false);
             EasyLegacyServoController controller = new EasyLegacyServoController(context, i2CDeviceSynch, target, module, port);
 
             controller.setServos(servos);
