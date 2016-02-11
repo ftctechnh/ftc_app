@@ -348,6 +348,10 @@ public interface I2cDeviceClient extends HardwareDevice, Engagable
      * Returns the number of I2C cycles that we've seen for this device. This at times
      * can be a useful debugging aid, but probably isn't useful for much more.
      *
+     * TODO: this doesn't belong in this interface. In fact, this interface reflects functionality
+     * that has nothing to do with I2cDevice's per se; we should think of a better name than
+     * I2cDeviceClient.
+     *
      * @return the current I2C cycle count
      */
     int getI2cCycleCount();
