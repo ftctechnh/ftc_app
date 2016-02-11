@@ -134,7 +134,7 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
 
             // Make a new legacy motor controller
             I2cDevice i2cDevice                  = new I2cDeviceImpl(module, port);
-            I2cDeviceSynch i2CDeviceSynch        = new I2cDeviceSynchImpl(context, i2cDevice, i2cAddr8Bit, false);
+            I2cDeviceSynch i2CDeviceSynch        = new I2cDeviceSynchImpl(i2cDevice, i2cAddr8Bit);
             EasyLegacyMotorController controller = new EasyLegacyMotorController(context, i2CDeviceSynch, target, module, port);
 
             controller.setMotors(motor1, motor2);

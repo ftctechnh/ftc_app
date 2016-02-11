@@ -18,7 +18,7 @@ import static junit.framework.Assert.*;
  * an instance of I2cDevice. There's a really whole lot of hard stuff this does for you
  *
  */
-public final class I2cDeviceSynchImpl implements I2cDeviceSynch, IOpModeStateTransitionEvents, Engagable
+public final class I2cDeviceSynchImpl implements I2cDeviceSynch, Engagable
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -102,11 +102,10 @@ public final class I2cDeviceSynchImpl implements I2cDeviceSynch, IOpModeStateTra
      * Instantiate an {@link I2cDeviceSynchImpl} instance in the indicated device with the indicated
      * initial window of registers being read.
      *
-     * @param context               the OpMode within which the creation is taking place
      * @param i2cDevice             the device we are to be a client of
      * @param i2cAddr8Bit           its 8 bit i2cAddress
      */
-    public I2cDeviceSynchImpl(OpMode context, I2cDevice i2cDevice, int i2cAddr8Bit, boolean closeOnOpModeStop)
+    public I2cDeviceSynchImpl(I2cDevice i2cDevice, int i2cAddr8Bit)
         {
         i2cDevice.setI2cAddr(i2cAddr8Bit);
 
@@ -139,9 +138,6 @@ public final class I2cDeviceSynchImpl implements I2cDeviceSynch, IOpModeStateTra
             throw new IllegalArgumentException("I2cController must also be a RobotUsbModule");
 
         this.i2cDevice.registerForPortReadyBeginEndCallback(this.callback);
-
-        if (closeOnOpModeStop)
-            RobotStateTransitionNotifier.register(context, this);
         }
 
     void attachToController()
@@ -162,24 +158,6 @@ public final class I2cDeviceSynchImpl implements I2cDeviceSynch, IOpModeStateTra
 
         // So the callback will do it's thing to refresh based on the now-current window
         this.hasReadWindowChanged = true;
-        }
-
-    @Override public boolean onUserOpModeStop()
-        {
-        synchronized (this.concurrentClientLock)
-            {
-            this.close();
-            return true;
-            }
-        }
-
-    @Override public boolean onRobotShutdown()
-        {
-        synchronized (this.concurrentClientLock)
-            {
-            this.close();
-            return true;
-            }
         }
 
     @Override public void setI2cAddr(int i2cAddr8Bit)
