@@ -145,11 +145,11 @@ public class JonsAlgo {
 
         double degreesSoFar = robot.getGyroHeading();
 
-        if (degrees < 180) {
+        if (degrees > 180) {                                            //left
             robot.setPowerLeft(-1 * speed);
             robot.setPowerRight(speed);
 //            mode.telemetry.addData("gyro1", robot.getGyroHeading());
-        } else if (degrees > 180) {
+        } else if (degrees < 180) {                                     //right
             robot.setPowerLeft(speed);
             robot.setPowerRight(-1 * speed);
 //            mode.telemetry.addData("gyro2", robot.getGyroHeading());

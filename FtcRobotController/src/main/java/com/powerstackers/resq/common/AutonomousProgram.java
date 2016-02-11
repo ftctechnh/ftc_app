@@ -67,7 +67,7 @@ public class AutonomousProgram extends LinearOpMode {
 //                waitOneFullHardwareCycle();
 //            }
 //            waitOneFullHardwareCycle();
-            robot.algorithm.turnDegrees(45, 1);
+            robot.algorithm.turnDegrees(45, 0.8);
             robot.algorithm.goTicks(robot.algorithm.inchesToTicks(22), 0.4);
             robot.setClimberFlipper(DoorSetting.OPEN);
         } else if (allianceColor== BLUE) {
