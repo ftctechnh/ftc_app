@@ -1,5 +1,6 @@
 package org.swerverobotics.library.interfaces;
 
+import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
