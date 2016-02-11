@@ -277,7 +277,8 @@ public final class I2cDeviceSynchImpl implements I2cDeviceSynch, Engagable
                     // as that might be doing an external top-level read. But the semantic of
                     // Executors guarantees us this call returns any actions we've scheduled
                     // have in fact been completed.
-                    Util.shutdownAndAwaitTermination(this.heartbeatExecutor);
+                    this.heartbeatExecutor.shutdown();
+                    this.heartbeatExecutor.awaitTermination(30, TimeUnit.DAYS);
 
                     // Drain extant readers and writers
                     this.disableReadsAndWrites();
@@ -737,14 +738,14 @@ public final class I2cDeviceSynchImpl implements I2cDeviceSynch, Engagable
                                 {
                                 // New data is immediately before the old data.
                                 // leave ireg is unchanged
-                                data = Util.concatenateByteArrays(data, readWriteCache());
+                                data = concatenateByteArrays(data, readWriteCache());
                                 doCoalesce = true;
                                 }
                             else if (this.iregWriteFirst + this.cregWrite == ireg)
                                 {
                                 // New data is immediately after the new data.
                                 ireg = this.iregWriteFirst;
-                                data = Util.concatenateByteArrays(readWriteCache(), data);
+                                data = concatenateByteArrays(readWriteCache(), data);
                                 doCoalesce = true;
                                 }
                             }
@@ -795,6 +796,14 @@ public final class I2cDeviceSynchImpl implements I2cDeviceSynch, Engagable
             {
             Thread.currentThread().interrupt();
             }
+        }
+
+    private static byte[] concatenateByteArrays(byte[] left, byte[] right)
+        {
+        byte[] result = new byte[left.length + right.length];
+        System.arraycopy(left,  0, result, 0,           left.length);
+        System.arraycopy(right, 0, result, left.length, right.length);
+        return result;
         }
 
     @Override public void waitForWriteCompletions()
