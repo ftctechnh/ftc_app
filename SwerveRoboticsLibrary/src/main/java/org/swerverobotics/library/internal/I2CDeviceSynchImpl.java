@@ -56,8 +56,8 @@ public final class I2cDeviceSynchImpl implements I2cDeviceSynch, IOpModeStateTra
     private volatile ReadWindow          readWindow;                 // the set of registers to look at when we are in read mode. May be null, indicating no read needed
     private volatile ReadWindow          readWindowActuallyRead;     // the read window that was really read. readWindow will be a (possibly non-proper) subset of this
     private volatile ReadWindow          readWindowSentToController; // the read window we last issued to the controller module. May disappear before read() returns
-    private volatile boolean             readWindowSentToControllerInitialized; // whether readWindowSentToController has valid data or not
-    private volatile boolean             readWindowChanged;          // whether regWindow has changed since the hw cycle loop last took note
+    private volatile boolean             isReadWindowSentToControllerInitialized; // whether readWindowSentToController has valid data or not
+    private volatile boolean             hasReadWindowChanged;       // whether regWindow has changed since the hw cycle loop last took note
     private volatile long                nanoTimeReadCacheValid;     // the time on the System.nanoTime() clock at which the read cache was last set as valid
     private volatile READ_CACHE_STATUS   readCacheStatus;            // what we know about the contents of readCache
     private volatile WRITE_CACHE_STATUS  writeCacheStatus;           // what we know about the (payload) contents of writeCache
@@ -159,10 +159,10 @@ public final class I2cDeviceSynchImpl implements I2cDeviceSynch, IOpModeStateTra
 
         this.readWindowActuallyRead     = null;
         this.readWindowSentToController = null;
-        this.readWindowSentToControllerInitialized = false;
+        this.isReadWindowSentToControllerInitialized = false;
 
         // So the callback will do it's thing to refresh based on the now-current window
-        this.readWindowChanged = true;
+        this.hasReadWindowChanged = true;
         }
 
     @Override public boolean onUserOpModeStop()
@@ -395,7 +395,7 @@ public final class I2cDeviceSynchImpl implements I2cDeviceSynch, IOpModeStateTra
 
                 // Lie and say that the data in the read cache is valid
                 readCacheStatus = READ_CACHE_STATUS.VALID_QUEUED;
-                readWindowChanged = false;
+                hasReadWindowChanged = false;
                 assertTrue(readCacheIsValid());
 
                 // Actually wake folk up
@@ -496,7 +496,7 @@ public final class I2cDeviceSynchImpl implements I2cDeviceSynch, IOpModeStateTra
         this.readWindow = newWindow;
 
         // Let others (specifically, the callback) know of the update
-        this.readWindowChanged = true;
+        this.hasReadWindowChanged = true;
         }
 
     /**
@@ -706,11 +706,11 @@ public final class I2cDeviceSynchImpl implements I2cDeviceSynch, IOpModeStateTra
 
     private boolean readCacheValidityCurrentOrImminent()
         {
-        return this.readCacheStatus != READ_CACHE_STATUS.IDLE && !this.readWindowChanged;
+        return this.readCacheStatus != READ_CACHE_STATUS.IDLE && !this.hasReadWindowChanged;
         }
     private boolean readCacheIsValid()
         {
-        return this.readCacheStatus.isValid() && !this.readWindowChanged;
+        return this.readCacheStatus.isValid() && !this.hasReadWindowChanged;
         }
 
     /**
@@ -1140,7 +1140,7 @@ public final class I2cDeviceSynchImpl implements I2cDeviceSynch, IOpModeStateTra
 
             // Remember what we actually told the controller
             readWindowSentToController = window;
-            readWindowSentToControllerInitialized = true;
+            isReadWindowSentToControllerInitialized = true;
 
             setActionFlag   = true;     // causes an I2C read to happen
             queueFullWrite  = true;     // for just the mode bytes
@@ -1155,7 +1155,7 @@ public final class I2cDeviceSynchImpl implements I2cDeviceSynch, IOpModeStateTra
 
             // This might be only paranoia, but we're not certain. In any case, it's safe.
             readWindowSentToController = null;
-            readWindowSentToControllerInitialized = true;
+            isReadWindowSentToControllerInitialized = true;
 
             setActionFlag  = true;      // causes the I2C write to happen
             queueFullWrite = true;      // for the mode byte and the payload
@@ -1250,7 +1250,7 @@ public final class I2cDeviceSynchImpl implements I2cDeviceSynch, IOpModeStateTra
                 //--------------------------------------------------------------------------
                 // Initiate reading if we should. Be sure to honor the policy of the read mode.
 
-                else if (readCacheStatus == READ_CACHE_STATUS.IDLE || readWindowChanged)
+                else if (readCacheStatus == READ_CACHE_STATUS.IDLE || hasReadWindowChanged)
                     {
                     boolean issuedRead = false;
                     if (readWindow != null)
@@ -1296,7 +1296,7 @@ public final class I2cDeviceSynchImpl implements I2cDeviceSynch, IOpModeStateTra
                         readCacheStatus = READ_CACHE_STATUS.IDLE;
                         }
 
-                    readWindowChanged = false;
+                    hasReadWindowChanged = false;
                     }
 
                 //--------------------------------------------------------------------------
@@ -1349,7 +1349,7 @@ public final class I2cDeviceSynchImpl implements I2cDeviceSynch, IOpModeStateTra
                                 }
                             }
 
-                        else if (readWindowSentToControllerInitialized && readWindowSentToController == null && heartbeatAction.rewriteLastWritten)
+                        else if (isReadWindowSentToControllerInitialized && readWindowSentToController == null && heartbeatAction.rewriteLastWritten)
                             {
                             // Controller is in write mode, and the write cache has what we last wrote
                             queueFullWrite = true;
