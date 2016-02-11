@@ -36,6 +36,14 @@ import org.swerverobotics.library.*;
  * <p>For devices that automatically shutdown if no communication is received in a certain
  * duration, a heartbeat facility is optionally provided.</p>
  *
+ * <p>I2cDeviceClient extends HardwareDevice, which means it supports a {@link #close()} operation. Calling
+ * {@link #close()} closes down and disables the device. Once this is done, the object instance cannot
+ * support further read() or write() calls. Note that calling {@link #close()} on an I2cDeviceClient
+ * does NOT also close() the underlying I2cDevice: we here are a *client* of the I2cDevice, not
+ * its owner. If your I2cDevice has a non-trivial close() semantic, you are yourself responsible for
+ * calling that method at an appropriate time.
+</p>
+ *
  * @see ClassFactory#createI2cDeviceClient(OpMode, I2cDevice, int, boolean)
  * @see I2cDeviceClient.ReadWindow
  * @see #ensureReadWindow(ReadWindow, ReadWindow)
@@ -328,40 +336,6 @@ public interface I2cDeviceClient extends HardwareDevice, Engagable
     void setLoggingTag(String loggingTag);
 
     /**
-     * Engages the client for operation. This involves registering for callbacks with
-     * the underlying I2cDevice. Only one client of an I2cDevice may register for callbacks
-     * at any given time; if multiple clients exist, they must be coordinated so as to use
-     * the I2cDevice sequentially. This method is idempotent.
-     *
-     * Note: even though a device client is engaged, it is not necessarily the case that it
-     * is actually talking to and communicating with it's underlying hardware, for the
-     * I2cController on which it resides may, for example, be currently disconnected. To
-     * discern whether the actual hardware is currently being communicated with,
-     * see {@link #isArmed()}.
-     *
-     * @see #disengage()
-     * @see #isEngaged()
-     * @see #isArmed()
-     */
-    void engage();
-
-    /**
-     * Answers as to whether this I2cDeviceClient is currently engaged; that is, whether
-     * {@link #engage()} has been called.
-     *
-     * @return whether the client is currently armed
-     * @see #engage()
-     */
-    boolean isEngaged();
-
-    /**
-     * Disengages the client if it is currently engaged. This method is idempotent.
-     *
-     * @see #engage()
-     */
-    void disengage();
-
-    /**
      * Returns whether, as of this instant, this device client is currently in communication
      * with its underlying hardware (which will never be the case if the device client is not
      * engaged), or whether it is in some other state.
@@ -370,15 +344,6 @@ public interface I2cDeviceClient extends HardwareDevice, Engagable
      * @see #engage()
      */
     boolean isArmed();
-
-    /**
-     * Close down and disable this device. Once this is done, the object instance cannot
-     * support further read() or write() calls. Note that calling close() here does NOT
-     * also close() the underlying I2cDevice: we here are a *client* of the I2cDevice, not
-     * its owner. If your I2cDevice has a non-trivial close() semantic, you are yourself
-     * responsible for calling that method at an appropriate time.
-     */
-    void close();
 
     /**
      * Sets the I2C address of the underlying client. If necessary, the client is briefly
