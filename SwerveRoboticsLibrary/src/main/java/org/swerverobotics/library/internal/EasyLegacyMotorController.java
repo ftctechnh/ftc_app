@@ -187,12 +187,7 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
         {
         if (this.context != null)
             {
-            // Are there any voltage sensors there in the map the robot controller runtime made?
-            if (this.context.hardwareMap.voltageSensor.size() == 0)
-                {
-                // No, there isn't. Well, we're one. We'll take up the challenge!
-                this.context.hardwareMap.voltageSensor.put(swerveVoltageSensorName, this);
-                }
+            this.context.hardwareMap.voltageSensor.put(swerveVoltageSensorName, this);
             }
         }
 
@@ -218,6 +213,10 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
             {
             this.usurpDevices();
 
+            if (this.context != null && this.helper.targetName != null)
+                {
+                Util.removeName(this.context.hardwareMap.voltageSensor, this.helper.targetName);
+                }
             this.helper.engage();
 
             this.i2cDeviceSynch.engage();
@@ -241,6 +240,11 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
             this.i2cDeviceSynch.disengage();
 
             this.helper.disengage();
+
+            if (this.context != null && this.helper.targetName != null && this.target instanceof VoltageSensor)
+                {
+                this.context.hardwareMap.voltageSensor.put(this.helper.targetName, (VoltageSensor)this.target);
+                }
 
             this.deusurpDevices();
             }
