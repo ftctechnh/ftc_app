@@ -46,6 +46,10 @@ import static com.powerstackers.resq.common.RobotConstants.HOPPER_TILT_RIGHT;
 import static com.powerstackers.resq.common.RobotConstants.LIFT_SPEED;
 import static com.powerstackers.resq.common.RobotConstants.TRIMM_MOTOR;
 import static com.powerstackers.resq.common.RobotConstants.WINCH_SPEED;
+import static com.powerstackers.resq.common.RobotConstants.ZIPLINE_LEFT_CLOSE;
+import static com.powerstackers.resq.common.RobotConstants.ZIPLINE_LEFT_OPEN;
+import static com.powerstackers.resq.common.RobotConstants.ZIPLINE_RIGHT_CLOSE;
+import static com.powerstackers.resq.common.RobotConstants.ZIPLINE_RIGHT_OPEN;
 import static com.powerstackers.resq.common.enums.PublicEnums.DoorSetting;
 import static com.powerstackers.resq.common.enums.PublicEnums.MotorSetting;
 import static com.powerstackers.resq.common.enums.PublicEnums.TiltSetting;
@@ -74,8 +78,11 @@ public class Robot {
     private Servo servoClimberFlipper;
     private Servo servoChurroLeft;
     private Servo servoChurroRight;
-//    private Servo servoZippLineLeft;
-//    private Servo servoZippLineRight;
+    private Servo servoLiftLeft;
+    private Servo servoLiftRight;
+    private Servo servoZippLineLeft;
+    private Servo servoZippLineRight;
+    private Servo servoHook;
 
 //    private DeviceInterfaceModule dim;
 //    private ColorSensor sensorColor;
@@ -111,8 +118,11 @@ public class Robot {
         servoClimberFlipper = mode.hardwareMap.servo.get("servoClimbers");
         servoChurroLeft     = mode.hardwareMap.servo.get("servoChurroLeft");
         servoChurroRight    = mode.hardwareMap.servo.get("servoChurroRight");
-//        servoZippLineLeft   = mode.hardwareMap.servo.get("servoZipplineLeft");
-//        servoZippLineRight  = mode.hardwareMap.servo.get("servoZipplineRight");
+        servoLiftLeft       = mode.hardwareMap.servo.get("servoLiftLeft");
+        servoLiftRight      = mode.hardwareMap.servo.get("servoLiftRight");
+        servoZippLineLeft   = mode.hardwareMap.servo.get("servoZipplineLeft");
+        servoZippLineRight  = mode.hardwareMap.servo.get("servoZipplineRight");
+        servoHook           = mode.hardwareMap.servo.get("servoHook");
 
         servoHopperLeft.setPosition(HOPPER_LEFT_CLOSE);
 //        servoHopperRight.setPosition(RobotConstants.HOPPER_RIGHT_CLOSE);
@@ -120,6 +130,9 @@ public class Robot {
         servoClimberFlipper.setPosition(CLIMBER_EXTEND);
         servoChurroRight.setPosition(CHURRO_RIGHT_OPEN);
         servoChurroLeft.setPosition(CHURRO_LEFT_OPEN);
+        servoLiftLeft.setPosition(CRS_STOP);
+        servoLiftRight.setPosition(CRS_STOP);
+        servoHook.setPosition(CRS_STOP);
 //        servoTapeTilt.setPosition(TAPE_FLAT);
 //        servoTapeMeasure.setPosition(0.5);
 
@@ -146,6 +159,9 @@ public class Robot {
         servoHopperTilt.setPosition(HOPPER_TILT_RESTING);
         servoChurroRight.setPosition(CHURRO_RIGHT_OPEN);
         servoChurroLeft.setPosition(CHURRO_LEFT_OPEN);
+        servoLiftLeft.setPosition(CRS_STOP);
+        servoLiftRight.setPosition(CRS_STOP);
+        servoHook.setPosition(CRS_STOP);
 //        servoTapeTilt.setPosition(TAPE_FLAT);
         sensorGyro.calibrate();
          //Give the gyroscope some time to calibrate
@@ -199,6 +215,18 @@ public class Robot {
      */
     public void setLift(MotorSetting setting) {
         toggleMotor(motorLift, setting, LIFT_SPEED);
+    }
+
+    public void setLiftHeightLeft(MotorSetting setting) {
+        toggleCRServo(servoLiftLeft, setting);
+    }
+
+    public void setLiftHeightRight(MotorSetting setting) {
+        toggleCRServo(servoLiftRight, setting);
+    }
+
+    public void setHookPosition(MotorSetting setting) {
+        toggleCRServo(servoHook, setting);
     }
 
     /**
@@ -387,21 +415,21 @@ public class Robot {
         }
     }
 
-//    public void setZiplineLeft(DoorSetting doorSetting) {
-//        if(doorSetting == DoorSetting.OPEN) {
-//            servoZippLineLeft.setPosition(ZIPLINE_LEFT_OPEN);
-//        } else {
-//            servoZippLineLeft.setPosition(ZIPLINE_LEFT_CLOSE);
-//        }
-//    }
-//
-//    public void setZiplineRight(DoorSetting doorSetting) {
-//        if(doorSetting == DoorSetting.OPEN) {
-//            servoZippLineRight.setPosition(ZIPLINE_RIGHT_OPEN);
-//        } else {
-//            servoZippLineRight.setPosition(ZIPLINE_RIGHT_CLOSE);
-//        }
-//    }
+    public void setZiplineLeft(DoorSetting doorSetting) {
+        if(doorSetting == DoorSetting.OPEN) {
+            servoZippLineLeft.setPosition(ZIPLINE_LEFT_OPEN);
+        } else {
+            servoZippLineLeft.setPosition(ZIPLINE_LEFT_CLOSE);
+        }
+    }
+
+    public void setZiplineRight(DoorSetting doorSetting) {
+        if(doorSetting == DoorSetting.OPEN) {
+            servoZippLineRight.setPosition(ZIPLINE_RIGHT_OPEN);
+        } else {
+            servoZippLineRight.setPosition(ZIPLINE_RIGHT_CLOSE);
+        }
+    }
 
     /**
      * Set the winch motors.
@@ -418,18 +446,6 @@ public class Robot {
 
     public  boolean isGyrocalibrate() {
         return sensorGyro.isCalibrating();
-    }
-
-    public double getrawXGyro() {
-        return sensorGyro.rawX();
-    }
-
-    public double getrawYGyro() {
-        return sensorGyro.rawY();
-    }
-
-    public double getrawZGyro() {
-        return sensorGyro.rawZ();
     }
 
     /**

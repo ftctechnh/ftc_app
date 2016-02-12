@@ -27,10 +27,10 @@ public class RobotConstants {
     public static final double CHURRO_LEFT_CLOSE   = 0.0;
     public static final double CHURRO_RIGHT_OPEN   = 0.0;
     public static final double CHURRO_RIGHT_CLOSE  = 1.0;
-//    public static final double ZIPLINE_LEFT_OPEN   = 0.5;
-//    public static final double ZIPLINE_LEFT_CLOSE  = 0.0;
-//    public static final double ZIPLINE_RIGHT_OPEN  = 0.0;
-//    public static final double ZIPLINE_RIGHT_CLOSE = 0.5;
+    public static final double ZIPLINE_LEFT_OPEN   = 0.5;
+    public static final double ZIPLINE_LEFT_CLOSE  = 0.0;
+    public static final double ZIPLINE_RIGHT_OPEN  = 0.0;
+    public static final double ZIPLINE_RIGHT_CLOSE = 0.5;
     public static final double TAPE_FLAT           = 1.0;
     public static final double TRIMM_MOTOR         = 0.88888888888;
 
