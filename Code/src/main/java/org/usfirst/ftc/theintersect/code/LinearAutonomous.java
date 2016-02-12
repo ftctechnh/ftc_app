@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.robocol.Telemetry;
 import org.swerverobotics.library.ClassFactory;
-import org.swerverobotics.library.TelemetryDashboardAndLog;
+import org.swerverobotics.library.interfaces.Disabled;
 
 import java.util.Arrays;
 
@@ -14,6 +14,7 @@ import java.util.Arrays;
  */
 
 @org.swerverobotics.library.interfaces.Autonomous(name = "Autonomous")
+@Disabled
 public class LinearAutonomous extends LinearOpMode {
 //	String team = "8865";
 //	int delay = 0;
