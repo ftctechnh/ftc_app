@@ -70,7 +70,7 @@ public class K9AutoTime extends OpMode {
 
 	/*
 	 * Code to run when the op mode is first enabled goes here
-	 * 
+	 *
 	 * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
 	 */
 	@Override
@@ -81,13 +81,13 @@ public class K9AutoTime extends OpMode {
 		 * Note that the names of the devices must match the names used
 		 * when you configured your robot and created the configuration file.
 		 */
-		
+
 		/*
 		 * For the demo Tetrix K9 bot we assume the following,
 		 *   There are two motors "motor_1" and "motor_2"
 		 *   "motor_1" is on the right side of the bot.
 		 *   "motor_2" is on the left side of the bot..
-		 *   
+		 *
 		 * We also assume that there are two servos "servo_1" and "servo_6"
 		 *    "servo_1" controls the arm joint of the manipulator.
 		 *    "servo_6" controls the claw joint of the manipulator.
@@ -95,7 +95,7 @@ public class K9AutoTime extends OpMode {
 		motorRight = hardwareMap.dcMotor.get("motor_2");
 		motorLeft = hardwareMap.dcMotor.get("motor_1");
 		motorLeft.setDirection(DcMotor.Direction.REVERSE);
-		
+
 		arm = hardwareMap.servo.get("servo_1");
 		claw = hardwareMap.servo.get("servo_6");
 
@@ -115,14 +115,14 @@ public class K9AutoTime extends OpMode {
 
 	/*
 	 * This method will be called repeatedly in a loop
-	 * 
+	 *
 	 * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#run()
 	 */
 	@Override
 	public void loop() {
 		double reflection = 0.0;
 		double left, right = 0.0;
-		
+
 		// keep manipulator out of the way.
 		arm.setPosition(armPosition);
 		claw.setPosition(clawPosition);
@@ -164,7 +164,7 @@ public class K9AutoTime extends OpMode {
 		 * read the light sensor.
 		 */
 		//reflection = reflectedLight.getLightLevel();
-		
+
 		/*
 		 * Send telemetry data back to driver station. Note that if we are using
 		 * a legacy NXT-compatible motor controller, then the getPower() method
@@ -181,7 +181,7 @@ public class K9AutoTime extends OpMode {
 
 	/*
 	 * Code to run when the op mode is first disabled goes here
-	 * 
+	 *
 	 * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#stop()
 	 */
 	@Override
