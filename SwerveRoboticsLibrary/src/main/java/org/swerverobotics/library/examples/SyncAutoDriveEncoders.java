@@ -1,9 +1,11 @@
 package org.swerverobotics.library.examples;
 
-import com.qualcomm.robotcore.hardware.*;
-
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 import org.swerverobotics.library.SynchronousOpMode;
-import org.swerverobotics.library.interfaces.*;
+import org.swerverobotics.library.interfaces.Autonomous;
+import org.swerverobotics.library.interfaces.Disabled;
+import org.swerverobotics.library.interfaces.IFunc;
 
 /**
  * This simple OpMode illustrates how to drive autonomously a certain distance using encoders.
@@ -12,7 +14,7 @@ import org.swerverobotics.library.interfaces.*;
  * named "motorLeft" and "motorRight".
  */
 @Autonomous(name="Auto Drive (Sync)", group="Swerve Examples")
-// @Disabled
+@Disabled
 public class SyncAutoDriveEncoders extends SynchronousOpMode
     {
     //----------------------------------------------------------------------------------------------
