@@ -21,6 +21,8 @@ public final class ClassFactory
     //----------------------------------------------------------------------------------------------
 
     /**
+     * Deprecated because this functionality is now included in the core SDK.
+     *
      * If the provided motors are using a legacy motor controller, createEasyMotorController swaps
      * that controller out and installs an alternate 'EasyLegacyMotorController' DCMotorController
      * implementation for the duration of the OpMode. If the motors are using a modern motor controller,
@@ -60,6 +62,7 @@ public final class ClassFactory
      *
      * @see org.swerverobotics.library.examples.SynchMotorLoopPerf
      */
+    @Deprecated
     public static DcMotorController createEasyMotorController(OpMode opmodeContext, DcMotor motor1, DcMotor motor2)
         {
         DcMotorController target = motor1==null ? null : motor1.getController();
@@ -77,6 +80,9 @@ public final class ClassFactory
             return null;
         }
 
+    /**
+     * Deprecated because of API name: insufficiently general.
+     */
     @Deprecated
     public static void createEasyLegacyMotorController(OpMode opmodeContext, DcMotor motor1, DcMotor motor2)
         {
@@ -100,6 +106,7 @@ public final class ClassFactory
      *
      * @see #createEasyMotorController(OpMode, DcMotor, DcMotor)
      */
+    @Deprecated // because functionality is included in SDK servo controller implementations
     public static ServoController createEasyServoController(OpMode opmodeContext, Collection<Servo> servos)
         {
         if (servos != null && !servos.isEmpty())
