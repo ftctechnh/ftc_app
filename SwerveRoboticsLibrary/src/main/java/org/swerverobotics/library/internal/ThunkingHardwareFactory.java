@@ -95,7 +95,7 @@ public class ThunkingHardwareFactory
         // Switcheroo the motor controllers
         for (DcMotorController controller : motors.keySet())
             {
-            if (MemberUtil.isLegacyMotorController(controller) || MemberUtil.isModernMotorController(controller))
+            if (MemberUtil.isModernMotorController(controller))
                 {
                 DcMotor motor1 = motors.get(controller).get(0);
                 DcMotor motor2 = motors.get(controller).size() > 1 ? motors.get(controller).get(1) : null;
@@ -122,7 +122,7 @@ public class ThunkingHardwareFactory
 
         for (ServoController controller : servos.keySet())
             {
-            if (MemberUtil.isModernServoController(controller) || MemberUtil.isLegacyServoController(controller))
+            if (MemberUtil.isModernServoController(controller))
                 {
                 Collection<Servo> thisControllersServos = servos.get(controller);
                 ClassFactory.createEasyServoController(this.opmodeContext, thisControllersServos);
@@ -145,6 +145,9 @@ public class ThunkingHardwareFactory
                     if (target instanceof EasyModernMotorController)
                         return target;
 
+                    if (target instanceof HiTechnicNxtDcMotorController)
+                        return target;
+
                     // Put a wrapping of the unthunked target in the thunked map
                     return ThunkedDCMotorController.create(target);
                     }
@@ -161,6 +164,9 @@ public class ThunkingHardwareFactory
                         return target;
 
                     if (target instanceof EasyModernServoController)
+                        return target;
+
+                    if (target instanceof HiTechnicNxtServoController)
                         return target;
 
                     return ThunkedServoController.create(target);
