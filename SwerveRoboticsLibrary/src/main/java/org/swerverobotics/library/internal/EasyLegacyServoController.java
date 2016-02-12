@@ -6,7 +6,7 @@ import com.qualcomm.hardware.hitechnic.HiTechnicNxtServoController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.Range;
-import org.swerverobotics.library.BuildConfig;
+
 import org.swerverobotics.library.SynchronousOpMode;
 
 import java.util.*;
@@ -51,7 +51,7 @@ public class EasyLegacyServoController extends I2cControllerPortDeviceImpl imple
     private static final int iRegWindowFirst = 0x40;
     private static final int iRegWindowMax   = 0x48+1;  // first register not included
 
-    private final I2cDeviceSynch                i2CDeviceSynch;
+    private final I2cDeviceSynch                i2cDeviceSynch;
     private List<Servo>                         servos;
     private final double[]                      servoPositions;
     private final ServoController               target;
@@ -61,11 +61,11 @@ public class EasyLegacyServoController extends I2cControllerPortDeviceImpl imple
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    private EasyLegacyServoController(OpMode context, I2cDeviceSynch ii2CDeviceSynch, ServoController target, I2cController controller, int targetPort)
+    private EasyLegacyServoController(OpMode context, I2cDeviceSynch i2CDeviceSynch, ServoController target, I2cController controller, int targetPort)
         {
         super(((I2cControllerPortDevice)target).getI2cController(), ((I2cControllerPortDevice)target).getPort());
         this.helper         = new I2cDeviceReplacementHelper<ServoController>(context, this, target, controller, targetPort);
-        this.i2CDeviceSynch = ii2CDeviceSynch;
+        this.i2cDeviceSynch = i2CDeviceSynch;
         this.target         = target;
         this.servos         = new LinkedList<Servo>();
         this.servoPositions = new double[ADDRESS_CHANNEL_MAP.length];
@@ -80,16 +80,16 @@ public class EasyLegacyServoController extends I2cControllerPortDeviceImpl imple
         heartbeatAction.rewriteLastWritten  = true;
         heartbeatAction.heartbeatReadWindow = new I2cDeviceSynch.ReadWindow(ADDRESS_CHANNEL_MAP[1], 1, I2cDeviceSynch.READ_MODE.ONLY_ONCE);
 
-        this.i2CDeviceSynch.setHeartbeatAction(heartbeatAction);
-        this.i2CDeviceSynch.setHeartbeatInterval(9000);
-        this.i2CDeviceSynch.enableWriteCoalescing(true);   // it's useful to us, at least in theory, if several positions must be set. And it is harmless, here.
+        this.i2cDeviceSynch.setHeartbeatAction(heartbeatAction);
+        this.i2cDeviceSynch.setHeartbeatInterval(9000);
+        this.i2cDeviceSynch.enableWriteCoalescing(true);   // it's useful to us, at least in theory, if several positions must be set. And it is harmless, here.
 
         // Also: set up a read-window. We make it BALANCED to avoid unnecessary ping-ponging
         // between read mode and write mode, since motors are read about as much as they are
         // written, but we make it relatively large so that least that when we DO go
         // into read mode and possibly do more than one read we will use this window
         // and won't have to fiddle with the 'switch to read mode' each and every time.
-        this.i2CDeviceSynch.setReadWindow(new I2cDeviceSynch.ReadWindow(iRegWindowFirst, iRegWindowMax-iRegWindowFirst, I2cDeviceSynch.READ_MODE.BALANCED));
+        this.i2cDeviceSynch.setReadWindow(new I2cDeviceSynch.ReadWindow(iRegWindowFirst, iRegWindowMax - iRegWindowFirst, I2cDeviceSynch.READ_MODE.BALANCED));
         }
 
     public static ServoController create(OpMode context, ServoController target, Collection<Servo> servos)
@@ -162,7 +162,7 @@ public class EasyLegacyServoController extends I2cControllerPortDeviceImpl imple
 
             this.helper.engage();
 
-            this.i2CDeviceSynch.engage();
+            this.i2cDeviceSynch.engage();
             this.floatHardware();
             }
         }
@@ -177,7 +177,7 @@ public class EasyLegacyServoController extends I2cControllerPortDeviceImpl imple
         {
         if (this.isEngaged())
             {
-            this.i2CDeviceSynch.disengage();
+            this.i2cDeviceSynch.disengage();
 
             this.helper.disengage();
 
@@ -196,7 +196,7 @@ public class EasyLegacyServoController extends I2cControllerPortDeviceImpl imple
 
     @Override public String getConnectionInfo()
         {
-        return this.i2CDeviceSynch.getConnectionInfo();
+        return this.i2cDeviceSynch.getConnectionInfo();
         }
 
     @Override public int getVersion()
@@ -293,7 +293,7 @@ public class EasyLegacyServoController extends I2cControllerPortDeviceImpl imple
     synchronized void write(int ireg, byte bData)
         {
         if (this.isEngaged())
-            this.i2CDeviceSynch.write8(ireg, bData);
+            this.i2cDeviceSynch.write8(ireg, bData);
         }
 
     public void write(int ireg, double bData)
@@ -303,7 +303,7 @@ public class EasyLegacyServoController extends I2cControllerPortDeviceImpl imple
 
     synchronized byte[] read(int ireg, int cb)
         {
-        return this.i2CDeviceSynch.read(ireg, cb);
+        return this.i2cDeviceSynch.read(ireg, cb);
         }
 
     private void validateServo(int servo)
