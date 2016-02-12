@@ -20,15 +20,15 @@ public class I2cDeviceReplacementHelper<TARGET>
     // State
     //----------------------------------------------------------------------------------------------
 
-    private OpMode                              context;
-    private TARGET                              client;
-    private TARGET                              target;
-    private String                              targetName;
-    private HardwareMap.DeviceMapping           targetDeviceMapping;
-    private I2cController                       controller;
-    private int                                 targetPort;
-    private I2cController.I2cPortReadyCallback  targetCallback;
-    private boolean                             isEngaged;
+    public OpMode                              context;
+    public TARGET                              client;
+    public TARGET                              target;
+    public String                              targetName;
+    public HardwareMap.DeviceMapping           targetDeviceMapping;
+    public I2cController                       controller;
+    public int                                 targetPort;
+    public I2cController.I2cPortReadyCallback  targetCallback;
+    public boolean                             isEngaged;
 
     //----------------------------------------------------------------------------------------------
     // Construction
