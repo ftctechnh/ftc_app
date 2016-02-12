@@ -181,28 +181,22 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
         if (this.motor2 != null) MemberUtil.setControllerOfMotor(this.motor2, this.target);
         }
 
-    private static final String swerveVoltageSensorName = " |Swerve|Legacy|VoltageSensor| ";
-
     private void registerVoltageSensor()
         {
-        if (this.context != null)
+        if (this.context != null && this.helper.targetName != null)
             {
-            this.context.hardwareMap.voltageSensor.put(swerveVoltageSensorName, this);
+            this.context.hardwareMap.voltageSensor.put(this.helper.targetName, this);
             }
         }
 
     private void unregisterVoltageSensor()
         {
-        if (this.context != null)
+        if (this.context != null && this.helper.targetName != null)
             {
-            if (Util.contains(this.context.hardwareMap.voltageSensor, swerveVoltageSensorName))
-                {
-                VoltageSensor voltageSensor = this.context.hardwareMap.voltageSensor.get(swerveVoltageSensorName);
-                if (voltageSensor == (VoltageSensor)this)
-                    {
-                    Util.removeName(this.context.hardwareMap.voltageSensor, swerveVoltageSensorName);
-                    }
-                }
+            if (this.target instanceof VoltageSensor)
+                this.context.hardwareMap.voltageSensor.put(this.helper.targetName, (VoltageSensor) this.target);
+            else
+                Util.removeName(this.context.hardwareMap.voltageSensor, this.helper.targetName);
             }
         }
 
@@ -213,10 +207,6 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
             {
             this.usurpDevices();
 
-            if (this.context != null && this.helper.targetName != null)
-                {
-                Util.removeName(this.context.hardwareMap.voltageSensor, this.helper.targetName);
-                }
             this.helper.engage();
 
             this.i2cDeviceSynch.engage();
@@ -240,11 +230,6 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
             this.i2cDeviceSynch.disengage();
 
             this.helper.disengage();
-
-            if (this.context != null && this.helper.targetName != null && this.target instanceof VoltageSensor)
-                {
-                this.context.hardwareMap.voltageSensor.put(this.helper.targetName, (VoltageSensor)this.target);
-                }
 
             this.deusurpDevices();
             }
