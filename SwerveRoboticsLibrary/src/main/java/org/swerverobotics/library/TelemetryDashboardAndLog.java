@@ -122,7 +122,7 @@ public class TelemetryDashboardAndLog
     private boolean                 updateSinceAddComposedLine = false;
 
     private long                    nanoLastUpdate = 0;
-    private EventLoopManager        eventLoopManager;
+    private OpMode                  opMode;
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -144,10 +144,15 @@ public class TelemetryDashboardAndLog
      */
     public TelemetryDashboardAndLog()
         {
-        SwerveThreadContext context = SwerveThreadContext.getThreadContext();
-        this.eventLoopManager = context.swerveFtcEventLoop.getEventLoopManager();
-        this.log = new Log();
+        this(SwerveThreadContext.getOpMode());
+        }
+
+    public TelemetryDashboardAndLog(OpMode opMode)
+        {
+        if (null == opMode) throw new IllegalArgumentException("TelemetryDashboardAndLog opMode can't be null");
         //
+        this.opMode = opMode;
+        this.log = new Log();
         this.clearDashboard();
         }
 
@@ -367,7 +372,7 @@ public class TelemetryDashboardAndLog
                 }
             //
             if (transmitter.hasData())
-                this.eventLoopManager.sendTelemetryData(transmitter);
+                this.opMode.updateTelemetryNow(transmitter);
 
             // Update our state for the next time around
             this.nanoLastUpdate = nanoNow;
