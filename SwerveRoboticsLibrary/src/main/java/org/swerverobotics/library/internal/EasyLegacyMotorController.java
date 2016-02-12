@@ -400,7 +400,7 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
         if (mode == RunMode.RESET_ENCODERS)
             {
             // Unclear if this is needed
-            while (this.getMotorTargetPosition(motor) != 0)
+            while (this.getMotorCurrentPosition(motor) != 0)
                 {
                 if (!this.isArmed()) break;
                 Thread.yield();
