@@ -77,47 +77,6 @@ public class SynchronousOpModeHardwareFactory
         );
 
         //----------------------------------------------------------------------------
-        // Swapping in new motor controller implementations in place of existing ones
-        //----------------------------------------------------------------------------
-
-        // Group the motors and their controller together
-        Map<DcMotorController, List<DcMotor>> motors = new HashMap<DcMotorController, List<DcMotor>>();
-        for (DcMotor motor : this.unthunkedHwmap.dcMotor)
-            {
-            if (motors.containsKey(motor.getController()))
-                motors.get(motor.getController()).add(motor);
-            else
-                {
-                List<DcMotor> list = new LinkedList<DcMotor>();
-                list.add(motor);
-                motors.put(motor.getController(), list);
-                }
-            }
-
-        // Switcheroo the motor controllers
-        // No longer necessary
-
-        //----------------------------------------------------------------------------
-        // Now the same for the servo controllers
-        //----------------------------------------------------------------------------
-
-        Map<ServoController, List<Servo>> servos = new HashMap<ServoController, List<Servo>>();
-        for (Servo servo : this.unthunkedHwmap.servo)
-            {
-            if (servos.containsKey(servo.getController()))
-                servos.get(servo.getController()).add(servo);
-            else
-                {
-                List<Servo> list = new LinkedList<Servo>();
-                list.add(servo);
-                servos.put(servo.getController(), list);
-                }
-            }
-
-        // Switcheroo the servo controllers
-        // No longer necessary
-
-        //----------------------------------------------------------------------------
         // Controllers
         //----------------------------------------------------------------------------
 
