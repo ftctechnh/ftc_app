@@ -92,20 +92,16 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
 
     /**
      * We define a *local* hardwareMap variable here to hide the one in our base
-     * class as the one we want user code to see is the one with the thunking in it.
+     * class as the one we want user code to see is the one with the processing in it.
+     * The original map is still available if one casts to OpMode and *then* retrieves
+     * the map.
      */
     public HardwareMap hardwareMap = null;
 
     /**
-     * Advanced: unthunkedHardwareMap contains the original hardware map provided
-     * in OpMode before it was replaced with a version that does thunking.
+     * Advanced: use experimental approaches to processing hardware devices
      */
-    public HardwareMap unthunkedHardwareMap = null;
-
-    /**
-     * Advanced: use experimental approaches to thunking hardware devices
-     */
-    protected boolean useExperimentalThunking = false;
+    protected boolean useExperimentalHardwareMap = false;
 
     //----------------------------------------------------------------------------------------------
     // Key threading-related methods
@@ -431,7 +427,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
 
     private volatile boolean                started;
     private volatile boolean                stopRequested;
-    private         ThunkingHardwareFactory hardwareFactory = null;
+    private SynchronousOpModeHardwareFactory hardwareFactory = null;
     private final   ActionQueueAndHistory   actionQueueAndHistory = new ActionQueueAndHistory();
     private         AtomicBoolean           gamePadCaptureStateChanged = new AtomicBoolean(false);
     private         boolean                 gamepadInputQueried = false;
@@ -730,19 +726,14 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             // Call the subclass hook in case they might want to do something interesting
             this.preInitHook();
 
-            // Make this thread easy to find in the debugger
-            Thread.currentThread().setName("FTC loop() thread");
-
             // Remember who the loop thread is so that we know whom to communicate with from a
             // synchronous thread. Note: we ASSUME here that init() and loop() run on the same thread
             loopThread = Thread.currentThread();
 
-            // Remember the old hardware map somewhere that user code can easily get at it if it wants.
-            this.unthunkedHardwareMap = super.hardwareMap;
-            // Make a new thunking one, and remember it in a variable that shadows the super one.
+            // Make a new processed hardware map, and remember it in a variable that shadows the super one.
             // Note that we always leave the super one unchanged; this is important to OpModeShutdownNotifier.
-            this.hardwareFactory      = new ThunkingHardwareFactory(this, this.useExperimentalThunking);
-            this.hardwareMap          = this.hardwareFactory.createThunkedHardwareMap();
+            this.hardwareFactory = new SynchronousOpModeHardwareFactory(this, this.useExperimentalHardwareMap);
+            this.hardwareMap     = this.hardwareFactory.createProcessedHardwareMap();
 
             // Similarly replace the telemetry variable
             this.telemetry = new TelemetryDashboardAndLog();
