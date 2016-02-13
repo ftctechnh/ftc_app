@@ -6,6 +6,10 @@ import com.qualcomm.robotcore.util.SerialNumber;
 import org.swerverobotics.library.interfaces.*;
 import java.util.concurrent.locks.Lock;
 
+/**
+ * @deprecated Thunking of legacy modules is no longer necessary
+ */
+@Deprecated
 public class ThunkedLegacyModule implements LegacyModule, IThunkWrapper<LegacyModule>
     {
     //----------------------------------------------------------------------------------------------

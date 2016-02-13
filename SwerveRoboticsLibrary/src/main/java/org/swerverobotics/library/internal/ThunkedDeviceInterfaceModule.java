@@ -5,7 +5,10 @@ import com.qualcomm.robotcore.util.*;
 import org.swerverobotics.library.interfaces.*;
 import java.util.concurrent.locks.Lock;
 
-
+/**
+ * @deprecated Thunking is not needed for device interface modules any more
+ */
+@Deprecated
 public class ThunkedDeviceInterfaceModule implements DeviceInterfaceModule, IThunkWrapper<DeviceInterfaceModule>
     {
     //----------------------------------------------------------------------------------------------
