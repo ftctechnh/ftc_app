@@ -16,7 +16,11 @@ import static org.swerverobotics.library.internal.EasyModernServoController.*;
 
 /**
  * An alternative implementation of a Legacy Servo controller.
+ *
+ * @deprecated The functionality provided by this class has been migrated to the core SDK
+ *             controller implementation.
  */
+@Deprecated
 public class EasyLegacyServoController extends I2cControllerPortDeviceImpl implements ServoController, IOpModeStateTransitionEvents, Engagable
     {
     //----------------------------------------------------------------------------------------------

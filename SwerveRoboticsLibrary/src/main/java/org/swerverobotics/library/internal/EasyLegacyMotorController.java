@@ -18,7 +18,11 @@ import static junit.framework.Assert.*;
  *
  * @see org.swerverobotics.library.ClassFactory#createEasyLegacyMotorController(OpMode, DcMotor, DcMotor)
  * @see org.swerverobotics.library.SynchronousOpMode#useExperimentalThunking
+ *
+ * @deprecated The functionality provided by this class has been migrated to the core SDK
+ *             controller implementation.
  */
+@Deprecated
 public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl implements DcMotorController, IThunkWrapper<DcMotorController>, VoltageSensor, IOpModeStateTransitionEvents, Engagable
     {
     //----------------------------------------------------------------------------------------------

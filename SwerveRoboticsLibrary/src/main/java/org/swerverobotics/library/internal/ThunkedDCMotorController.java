@@ -7,7 +7,10 @@ import org.swerverobotics.library.*;
  * An implementation of DcMotorController that talks to a non-thunking target implementation
  * by thunking all calls over to the loop thread and back gain. The implementation automatically
  * takes care of read and write device mode switching.
+ *
+ * @deprecated This thunking support simply is no longer necessary.
  */
+@Deprecated
 public class ThunkedDCMotorController implements DcMotorController, IThunkedReadWriteListener, IThunkWrapper<DcMotorController>
     {
     //----------------------------------------------------------------------------------------------

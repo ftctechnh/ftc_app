@@ -3,8 +3,9 @@ package org.swerverobotics.library.interfaces;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 
 /**
- * I2cDeviceSynchUser allows one to retrieve an underlying I2cDeviceSynch from
- * an object that represents an I2C hardware sensor or other device
+ * {@link I2cDeviceSynchUser} allows one to retrieve an underlying {@link I2cDeviceSynch} from
+ * an a client of the latter. Such objects usually represent an semantic layer for an I2c sensor
+ * or actuator.
  */
 public interface I2cDeviceSynchUser
     {

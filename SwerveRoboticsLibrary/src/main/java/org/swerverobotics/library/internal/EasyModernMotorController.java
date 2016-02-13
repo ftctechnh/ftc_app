@@ -20,7 +20,11 @@ import static junit.framework.Assert.assertTrue;
  * An alternate implementation of the driver for a Modern Robotics DC Motor Controller.
  * This implementation doesn't use a blocking ReadWriteRunnable; that greatly simplifies
  * programming.
+ *
+ * @deprecated The functionality provided by this class has been migrated to the core SDK
+ *             controller implementation.
  */
+@Deprecated
 public class EasyModernMotorController extends EasyModernController implements DcMotorController, VoltageSensor
     {
     //----------------------------------------------------------------------------------------------

@@ -21,7 +21,8 @@ public final class ClassFactory
     //----------------------------------------------------------------------------------------------
 
     /**
-     * Deprecated because this functionality is now included in the core SDK.
+     * @deprecated This functionality is now included in the core SDK; the implementation of this
+     *             method is now effectively a nop.
      *
      * If the provided motors are using a legacy motor controller, createEasyMotorController swaps
      * that controller out and installs an alternate 'EasyLegacyMotorController' DCMotorController
@@ -70,18 +71,12 @@ public final class ClassFactory
         if (motor2 != null && target != null && motor2.getController()!=target)
             throw new IllegalArgumentException("motors do not share the same controller");
 
-        if (MemberUtil.isLegacyMotorController(target))
-            return EasyLegacyMotorController.create(opmodeContext, target, motor1, motor2);
-
-        else if (MemberUtil.isModernMotorController(target))
-            return EasyModernMotorController.create(opmodeContext, target, motor1, motor2);
-
-        else
-            return null;
+        return target;
         }
 
     /**
-     * Deprecated because of API name: insufficiently general.
+     * @deprecated Deprecated because of a poor choice of API name: insufficiently general.
+     * @see #createEasyMotorController(OpMode, DcMotor, DcMotor)
      */
     @Deprecated
     public static void createEasyLegacyMotorController(OpMode opmodeContext, DcMotor motor1, DcMotor motor2)
@@ -90,6 +85,9 @@ public final class ClassFactory
         }
 
     /**
+     * @deprecated This functionality is now included in the core SDK; the implementation of this
+     *             method is now effectively a nop.
+     *
      * Creates an alternate 'easy' implementation of the controller for the indicated collection
      * of servos, which must all share the same controller, and must be <em>all</em> the servos
      * which are found on that controller.
@@ -106,7 +104,7 @@ public final class ClassFactory
      *
      * @see #createEasyMotorController(OpMode, DcMotor, DcMotor)
      */
-    @Deprecated // because functionality is included in SDK servo controller implementations
+    @Deprecated
     public static ServoController createEasyServoController(OpMode opmodeContext, Collection<Servo> servos)
         {
         if (servos != null && !servos.isEmpty())
@@ -120,14 +118,7 @@ public final class ClassFactory
                     throw new IllegalArgumentException("not all servos share the same controller");
                 }
 
-            if (MemberUtil.isModernServoController(controller))
-                return EasyModernServoController.create(opmodeContext, controller, servos);
-
-            else if (MemberUtil.isLegacyServoController(controller))
-                return EasyLegacyServoController.create(opmodeContext, controller, servos);
-
-            else
-                return null;
+            return controller;
             }
         else
             throw new IllegalArgumentException("no servos provided");
@@ -257,6 +248,9 @@ public final class ClassFactory
      *
      * @param i2cDevice the device to wrap
      * @return          the II2cDevice wrapping
+     *
+     * @deprecated I2cDevice, as defined in the SDK, is now an interface, not an implementation, so
+     *             this API is no longer necessary.
      */
     @Deprecated
     public static I2cDevice createI2cDevice(I2cDevice i2cDevice)
@@ -292,6 +286,11 @@ public final class ClassFactory
         return new I2cDeviceSynchImpl(i2cDevice, i2cAddr8Bit);
         }
 
+    /**
+     * @deprecated The creation API has been renamed to match changes in interface nomenclature.
+     *             Use {@link #createI2cDeviceSynch(I2cDevice, int) createI2cDeviceSynch()} instead.
+     * @see #createI2cDeviceSynch(I2cDevice, int)
+     */
     @Deprecated
     public static I2cDeviceSynch createI2cDeviceClient(OpMode opmodeContext, I2cDevice i2cDevice, int i2cAddr8Bit, boolean closeOnOpModeStop)
         {

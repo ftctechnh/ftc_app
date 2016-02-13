@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.*;
 import java.util.concurrent.locks.Lock;
 
 /**
- * Code that previously used I2cDeviceOnI2cDeviceController should use I2cDeviceImpl instead
+ * @deprecated Code that previously used I2cDeviceOnI2cDeviceController should use I2cDeviceImpl instead
  */
 @Deprecated
 public final class I2cDeviceOnI2cDeviceController extends I2cDeviceImpl

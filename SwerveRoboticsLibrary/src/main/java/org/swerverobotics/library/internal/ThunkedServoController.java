@@ -6,7 +6,9 @@ import org.swerverobotics.library.interfaces.*;
 /**
  * An implementation of ServoController that talks to a non-thunking target implementation
  * by thunking all calls over to the loop thread and back gain.
+ * @deprecated thunking just isn't needed
  */
+@Deprecated
 public class ThunkedServoController implements ServoController,IThunkWrapper<ServoController>
     {
     //----------------------------------------------------------------------------------------------
