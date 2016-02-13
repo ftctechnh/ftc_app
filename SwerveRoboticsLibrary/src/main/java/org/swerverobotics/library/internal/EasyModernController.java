@@ -16,7 +16,11 @@ import java.util.concurrent.atomic.*;
 /**
  * Base class common to both easy modern servo and motor controllers. Handles glue about
  * talking to a ModernRobotics USB device, notably arming and disarming help.
+
+ * @deprecated The functionality provided by this class has been migrated to the core SDK
+ *             controller implementation.
  */
+@Deprecated
 public abstract class EasyModernController extends ModernRoboticsUsbDevice implements IOpModeStateTransitionEvents
     {
     //----------------------------------------------------------------------------------------------

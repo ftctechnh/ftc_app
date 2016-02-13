@@ -133,43 +133,26 @@ public class ThunkingHardwareFactory
         // Controllers
         //----------------------------------------------------------------------------
 
-        // Thunk the motor controllers
+        // Process the motor controllers
         createThunks(unthunkedHwmap.dcMotorController, thunkedHwmap.dcMotorController,
             new IThunkFactory<DcMotorController>()
                 {
                 @Override public DcMotorController create(DcMotorController target)
                     {
-                    if (target instanceof EasyLegacyMotorController)
-                        return target;
-
-                    if (target instanceof EasyModernMotorController)
-                        return target;
-
-                    if (target instanceof HiTechnicNxtDcMotorController)
-                        return target;
-
-                    // Put a wrapping of the unthunked target in the thunked map
-                    return ThunkedDCMotorController.create(target);
+                    // All the implementations in the SDK are good
+                    return target;
                     }
                 }
             );
 
-        // Thunk the servo controllers
+        // Process the servo controllers
         createThunks(unthunkedHwmap.servoController, thunkedHwmap.servoController,
             new IThunkFactory<ServoController>()
                 {
                 @Override public ServoController create(ServoController target)
                     {
-                    if (target instanceof EasyLegacyServoController)
-                        return target;
-
-                    if (target instanceof EasyModernServoController)
-                        return target;
-
-                    if (target instanceof HiTechnicNxtServoController)
-                        return target;
-
-                    return ThunkedServoController.create(target);
+                    // All the implementations in the SDK are good
+                    return target;
                     }
                 }
         );
@@ -184,15 +167,7 @@ public class ThunkingHardwareFactory
                 {
                 @Override public DcMotor create(DcMotor target)
                     {
-                    // REVIEW: return target; might just work fine
-                    DcMotorController targetController = target.getController();
-                    DcMotorController controller = findWrapper(thunkedHwmap.dcMotorController, targetController, ThunkedDCMotorController.create(targetController));
-
-                    return new DcMotor(
-                            controller,
-                            target.getPortNumber(),
-                            target.getDirection()
-                        );
+                    return target;
                     }
                 }
         );
@@ -203,15 +178,7 @@ public class ThunkingHardwareFactory
                 {
                 @Override public Servo create(Servo target)
                     {
-                    // REVIEW: return target; might just work fine
-                    ServoController targetController = target.getController();
-                    ServoController controller = findWrapper(thunkedHwmap.servoController, targetController, ThunkedServoController.create(targetController));
-
-                    return new Servo(
-                            controller,
-                            target.getPortNumber(),
-                            target.getDirection()
-                    );
+                    return target;
                     }
                 }
         );

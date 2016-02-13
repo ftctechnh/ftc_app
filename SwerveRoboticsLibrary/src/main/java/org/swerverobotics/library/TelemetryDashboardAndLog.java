@@ -132,6 +132,7 @@ public class TelemetryDashboardAndLog
      * Instantiate a new telemetry dashboard and log for use within a given OpMode
      *
      * @param notUsed the previous telemetry object that the new one is to take over from
+     * @deprecated This constructor is no longer necessary. Use {@link #TelemetryDashboardAndLog()} instead.
      */
     @Deprecated
     public TelemetryDashboardAndLog(Telemetry notUsed)
@@ -140,18 +141,25 @@ public class TelemetryDashboardAndLog
         }
 
     /**
-     * Instantiate a new telemetry dashboard and log
+     * Instantiate a new telemetry dashboard and log. This constructor ONLY functions from within
+     * a synchronous OpMode.
+     * @see #TelemetryDashboardAndLog(OpMode)
      */
     public TelemetryDashboardAndLog()
         {
         this(SwerveThreadContext.getOpMode());
         }
 
-    public TelemetryDashboardAndLog(OpMode opMode)
+    /**
+     * Instantiate a new telemetry dashboard and log. This constructor functions from within any
+     * flavor of OpMode.
+     * @param opModeContext The OpMode within which the instance is to be used.
+     */
+    public TelemetryDashboardAndLog(OpMode opModeContext)
         {
-        if (null == opMode) throw new IllegalArgumentException("TelemetryDashboardAndLog opMode can't be null");
+        if (null == opModeContext) throw new IllegalArgumentException("TelemetryDashboardAndLog opModeContext can't be null");
         //
-        this.opMode = opMode;
+        this.opMode = opModeContext;
         this.log = new Log();
         this.clearDashboard();
         }

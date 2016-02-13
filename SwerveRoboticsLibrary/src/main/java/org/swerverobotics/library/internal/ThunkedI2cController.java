@@ -10,7 +10,10 @@ import java.util.concurrent.locks.Lock;
  * ThunkedI2cController implements I2cController interface by thunking over to a target
  * I2cController on the loop() thread, except where it can get away with performing operations 
  * locally (which turns out to be a lot).
+ *
+ * @deprecated no longer necessary, or used
  */
+@Deprecated
 public class ThunkedI2cController implements I2cController, IThunkWrapper<I2cController>
     {
     //----------------------------------------------------------------------------------------------

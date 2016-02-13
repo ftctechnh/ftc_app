@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.hardware.usb.RobotUsbDevice;
 import com.qualcomm.robotcore.util.Range;
 
-import org.swerverobotics.library.BuildConfig;
 import java.util.*;
 
 import static junit.framework.Assert.*;
@@ -19,7 +18,11 @@ import static junit.framework.Assert.*;
 /**
  * An alternate implementation of the driver for a Modern Robotics Servo Controller.
  * This implementation doesn't use a blocking ReadWriteRunnable; that simplifies programming.
+ *
+ * @deprecated The functionality provided by this class has been migrated to the core SDK
+ *             controller implementation.
  */
+@Deprecated
 public class EasyModernServoController extends EasyModernController implements ServoController
     {
     //----------------------------------------------------------------------------------------------
@@ -42,7 +45,7 @@ public class EasyModernServoController extends EasyModernController implements S
     public static final double regPositionMax = 255;
 
     private List<Servo>                              servos;
-    private final double[]                           servoPositions;
+    private final double[]                           commandedServoPositions;
     private final ModernRoboticsUsbServoController   target;
 
     //----------------------------------------------------------------------------------------------
@@ -61,7 +64,7 @@ public class EasyModernServoController extends EasyModernController implements S
 
         this.target  = target;
         this.servos  = new LinkedList<Servo>();
-        this.servoPositions  = new double[ADDRESS_CHANNEL_MAP.length];
+        this.commandedServoPositions = new double[ADDRESS_CHANNEL_MAP.length];
         this.findTargetNameAndMapping();
 
         RobotStateTransitionNotifier.register(opmodeContext, this);
@@ -271,7 +274,7 @@ public class EasyModernServoController extends EasyModernController implements S
         this.pwmEnable();
 
         // We remember the servo target positions so that getServoPosition can return something reasonable
-        this.servoPositions[servo] = position;
+        this.commandedServoPositions[servo] = position;
         }
 
     @Override
@@ -279,7 +282,7 @@ public class EasyModernServoController extends EasyModernController implements S
     // One would think we could just read the servo position registers. But they always report as zero
         {
         validateServo(servo);
-        return this.servoPositions[servo];
+        return this.commandedServoPositions[servo];
         }
 
     //----------------------------------------------------------------------------------------------
