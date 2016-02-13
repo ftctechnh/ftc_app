@@ -13,19 +13,32 @@ public class TeenTitanGo extends OpMode {
     DcMotor motorRight;
     DcMotor motorLeft;
     DcMotor motorScore;
+
     DcMotor harvestMotor;
+
+    DcMotor rightWinchMotor;
+    DcMotor leftWinchMotor;
 
     Servo rightTriggerArm;
     Servo leftTriggerArm;
+
+    Servo bucketServo;
+
     double rightTriggerArmDelta = 0.5;
     double rightTriggerArmPosition;
     double leftTriggerArmDelta = 0.5;
     double leftTriggerArmPosition;
+
+    double bucketServoDelta = 0.01;
+    double bucketServoPosition;
+
     final static double ARM_MIN_RANGE  = 0;
     final static double ARM_MAX_RANGE  = 1;
 
-    public TeenTitanGo() {
+    final static double BUCKET_MIN_RANGE  = 0;
+    final static double BUCKET_MAX_RANGE  = 1;
 
+    public TeenTitanGo() {
     }
 
     public void initMotors() {
@@ -33,15 +46,12 @@ public class TeenTitanGo extends OpMode {
         motorRight = hardwareMap.dcMotor.get("motor_right");
         motorLeft = hardwareMap.dcMotor.get("motor_left");
         motorRight.setDirection(DcMotor.Direction.REVERSE);
-
-
     }
 
     public void initScoreArm() {
 
         motorScore = hardwareMap.dcMotor.get("motor_score");
         motorScore.setDirection(DcMotor.Direction.REVERSE);
-
     }
 
     public void initTriggerArms() {
@@ -49,32 +59,58 @@ public class TeenTitanGo extends OpMode {
         rightTriggerArm = hardwareMap.servo.get("servo_right_trigger");
         leftTriggerArm = hardwareMap.servo.get("servo_left_trigger");
         rightTriggerArm.setDirection(Servo.Direction.REVERSE);
-        leftTriggerArm.setDirection(Servo.Direction.REVERSE);
+//        leftTriggerArm.setDirection(Servo.Direction.REVERSE);
 
-        rightTriggerArmPosition = 0;
-        leftTriggerArmPosition = 0;
+        rightTriggerArmPosition = 0.0;
+        leftTriggerArmPosition = 0.0;
 
-        rightTriggerArm.setPosition(0);
-        leftTriggerArm.setPosition(0);
+        rightTriggerArm.setPosition(rightTriggerArmPosition);
+        leftTriggerArm.setPosition(leftTriggerArmPosition);
+    }
+
+    public void initBucketServo() {
+
+        bucketServo = hardwareMap.servo.get("bucket_servo");
+
+        bucketServoPosition = 0.4;
+
+        bucketServo.setPosition(bucketServoPosition);
 
     }
 
-    public void initHarvestMotor(){
+    public void initHarvestMotor() {
 
         harvestMotor = hardwareMap.dcMotor.get("harvester_motor");
-        harvestMotor.setDirection(DcMotor.Direction.REVERSE);
+    }
+
+    public void initWinchMotors() {
+  /*      try {
+            rightWinchMotor = hardwareMap.dcMotor.get("right_winch");
+            rightWinchMotor.setDirection(DcMotor.Direction.REVERSE);
+        } catch (Exception fooExcep) {
+            telemetry.addData("Failed to init rightWinchMotor");
+            rightWinchMotor = null;
+        }
+        try {
+            leftWinchMotor = hardwareMap.dcMotor.get("left_winch");
+        } catch (Exception barExcep) {
+            telemetry.addData("Failed to init leftWinchMotor");
+            leftWinchMotor = null;
+        }
+    */
+        rightWinchMotor = hardwareMap.dcMotor.get("right_winch");
+        rightWinchMotor.setDirection(DcMotor.Direction.REVERSE);
+        leftWinchMotor = hardwareMap.dcMotor.get("left_winch");
     }
 
     public void init() {
 
         initMotors();
-
         initScoreArm();
-
+        initBucketServo();
         initHarvestMotor();
-
         initTriggerArms();
-
+        initWinchMotors();
     }
 
     public void loopDriverMotors(){
@@ -101,8 +137,6 @@ public class TeenTitanGo extends OpMode {
 
         motorLeft.setPower(right1);
         motorRight.setPower(right2);
-
-
     }
 
     public void loopScoreMotor(){
@@ -119,49 +153,66 @@ public class TeenTitanGo extends OpMode {
         left =  (float)scaleInput(left);
 
         motorScore.setPower(right);
-
     }
 
-    public void loopTriggerArm(){
+    public void loopBucketServo() {
 
+        if (gamepad2.b) {
+            bucketServoPosition += bucketServoDelta;
+            bucketServoPosition = Range.clip(bucketServoPosition, BUCKET_MIN_RANGE, BUCKET_MAX_RANGE);
+            bucketServo.setPosition(bucketServoPosition);
+        }
+        if (gamepad2.x) {
+            bucketServoPosition -= bucketServoDelta;
+            bucketServoPosition = Range.clip(bucketServoPosition, BUCKET_MIN_RANGE, BUCKET_MAX_RANGE);
+            bucketServo.setPosition(bucketServoPosition);
+        }
+        if (gamepad2.y) {
+            bucketServoPosition = .4;
+            bucketServo.setPosition(bucketServoPosition);
+        }
 
-        if (gamepad2.right_bumper) {
+        telemetry.addData("Bucket Pos", bucketServo.getPosition());
+    }
 
+    public void loopTriggerArm() {
+
+        if (gamepad2.dpad_right) {
             rightTriggerArmPosition += rightTriggerArmDelta;
+            rightTriggerArmPosition = Range.clip(rightTriggerArmPosition, ARM_MIN_RANGE, ARM_MAX_RANGE);
+            rightTriggerArm.setPosition(rightTriggerArmPosition);
         }
-
-        else {
-
-            rightTriggerArmPosition -= rightTriggerArmDelta;
-
-        }
-
-        if (gamepad2.left_bumper) {
-
+        else if (gamepad2.dpad_left) {
             leftTriggerArmPosition -= leftTriggerArmDelta;
-
+            leftTriggerArmPosition = Range.clip(leftTriggerArmPosition, ARM_MIN_RANGE, ARM_MAX_RANGE);
+            leftTriggerArm.setPosition(leftTriggerArmPosition);
+        } else {
+            if (leftTriggerArm.getPosition() != 0.0) {
+                leftTriggerArm.setPosition(0.0);
+            }
+            if (rightTriggerArm.getPosition() != 0.0) {
+                rightTriggerArm.setPosition(0.0);
+            }
         }
 
-        else{
+        telemetry.addData("Right Triggerarm", rightTriggerArm.getPosition());
+        telemetry.addData("Left Triggerarm", leftTriggerArm.getPosition());
 
-            leftTriggerArmPosition += leftTriggerArmDelta;
-
+/*        if (gamepad2.x) {
+            rightTriggerArm.setPosition(rightTriggerArmPosition);
+            leftTriggerArm.setPosition(leftTriggerArmPosition);
         }
-
-
-
-        rightTriggerArmPosition = Range.clip(rightTriggerArmPosition, ARM_MIN_RANGE, ARM_MAX_RANGE);
-        leftTriggerArmPosition = Range.clip(leftTriggerArmPosition, ARM_MIN_RANGE, ARM_MAX_RANGE);
-
-
-        rightTriggerArm.setPosition(rightTriggerArmPosition);
-        leftTriggerArm.setPosition(leftTriggerArmPosition);
-
-
-
-    }
+        else if (gamepad2.b) {
+            rightTriggerArm.setPosition(rightTriggerArmPosition);
+            leftTriggerArm.setPosition(leftTriggerArmPosition);
+        } else {
+            rightTriggerArm.setPosition(.4);
+            leftTriggerArm.setPosition(.4);
+        }
+*/    }
 
     public void loopHarvestMotor() {
+
         float throttle3 = -gamepad2.left_stick_y;
         float direction3 = gamepad2.left_stick_x;
         float right3 = throttle3 - direction3;
@@ -174,21 +225,71 @@ public class TeenTitanGo extends OpMode {
         left3 =  (float)scaleInput(left3);
 
         harvestMotor.setPower(right3);
-
-
     }
 
+    public void loopWinchMotors() {
+/*
+        float throttle4 = -gamepad2.left_trigger;
+        float direction4 = gamepad2.right_trigger;
+        float right4 = throttle4 - direction4;
+        float left4 = throttle4 + direction4;
+
+        right4 = (float) Range.clip(right4, 0, 0.01);
+        left4 = (float) Range.clip(left4, 0, 0.01);
+
+        right4 = (float)scaleInput(right4);
+        left4 =  (float)scaleInput(left4);
+*/
+
+//        (this && that) this and that
+//        (this || that) this or that
+        // (this || that || those) this or that or those
+        // (this && (that || those)) this and either that or those
+
+/*        if (leftWinchMotor != null && gamepad2.left_trigger > 0) {
+            leftWinchMotor.setPower(0.5);
+        }
+        if (leftWinchMotor != null && gamepad2.dpad_left) {
+            leftWinchMotor.setPower(-0.5);
+        }
+        if (rightWinchMotor != null && gamepad2.right_bumper) {
+            rightWinchMotor.setPower(0.5);
+        }
+        if (rightWinchMotor != null && gamepad2.dpad_right) {
+            rightWinchMotor.setPower(-0.5);
+        }
+                /* Work In Progress
+        if (leftWinchMotor != null && rightWinchMotor != null && gamepad2.dpad_up) {
+            leftWinchMotor.setPower(0.0);
+            rightWinchMotor.setPower(0.0);
+        }
+*/
+        if (gamepad2.left_bumper) {
+            leftWinchMotor.setPower(0.5);
+        }
+        else if (gamepad2.left_trigger > 0) {
+            leftWinchMotor.setPower(-0.5);
+        }
+        else if (gamepad2.right_bumper) {
+            rightWinchMotor.setPower(0.5);
+        }
+       else  if (gamepad2.right_trigger > 0) {
+            rightWinchMotor.setPower(-0.5);
+        }
+        else {
+            leftWinchMotor.setPower(0.0);
+            rightWinchMotor.setPower(0.0);
+        }
+    }
 
     public void loop(){
 
         loopDriverMotors();
-
         loopScoreMotor();
-
+        loopBucketServo();
         loopHarvestMotor();
-
         loopTriggerArm();
-
+        loopWinchMotors();
     }
 
     @Override

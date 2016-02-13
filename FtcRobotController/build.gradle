@@ -20,7 +20,7 @@ android {
         versionProps.store(versionPropsFile.newWriter(), null)
 
         defaultConfig {
-            versionName "1.1." + code + " (" + new Date() + ")"
+            versionName "1.5." + code + " (" + new Date() + ")"
             minSdkVersion 16
             targetSdkVersion 19
         }

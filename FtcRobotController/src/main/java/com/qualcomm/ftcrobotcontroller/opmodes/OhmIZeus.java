@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.Range;
 
 
 /**
- * Created by alex marler on 1/21/16.
+ * Created by alex on 1/21/16.
  */
 public class OhmIZeus extends OpMode {
 
@@ -153,12 +153,12 @@ public class OhmIZeus extends OpMode {
     public void loopSusanMotor() {
 
         if (gamepad2.right_bumper) {
-            motorLazySusan.setPower(-0.25);
+            motorLazySusan.setPower(-0.35);
         }
         else
 
         if (gamepad2.left_bumper){
-            motorLazySusan.setPower(0.25);
+            motorLazySusan.setPower(0.35);
         }
         else
         {
@@ -198,12 +198,12 @@ public class OhmIZeus extends OpMode {
 
 
         if (gamepad2.dpad_up) {
-            motorWrist.setPower(0.25);
+            motorWrist.setPower(0.40);
         }
         else
 
         if (gamepad2.dpad_down){
-            motorWrist.setPower(-0.25);
+            motorWrist.setPower(-0.40);
         }
         else
         {
