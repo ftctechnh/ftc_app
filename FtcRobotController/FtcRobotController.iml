@@ -101,8 +101,5 @@
     <orderEntry type="library" exported="" name="WirelessP2p-release-" level="project" />
     <orderEntry type="library" exported="" name="Hardware-release-" level="project" />
     <orderEntry type="library" exported="" name="RobotCore-release-" level="project" />
-    <orderEntry type="library" exported="" name="effects-android-19" level="project" />
-    <orderEntry type="library" exported="" name="usb-android-19" level="project" />
-    <orderEntry type="library" exported="" name="maps-android-19" level="project" />
   </component>
 </module>
