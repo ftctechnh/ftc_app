@@ -51,10 +51,7 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
     }
     private void outputTelemetry() {
         telemetry.addData("Heading", headingDegrees);
-        telemetry.addData("Right1 encoder", DragonoidsGlobal.rightOne.getCurrentPosition());
-        telemetry.addData("Right2 encoder", DragonoidsGlobal.rightTwo.getCurrentPosition());
-        telemetry.addData("Left1  encoder", DragonoidsGlobal.leftOne.getCurrentPosition());
-        telemetry.addData("Left2  encoder", DragonoidsGlobal.leftTwo.getCurrentPosition());
+        telemetry.addData("Runtime", getRuntime());
     }
     // For gyro sensor data
     @Override
@@ -167,7 +164,11 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
         if (direction == Direction.Backward) {
             DragonoidsGlobal.setDrivePower(-drivePower, -drivePower);
         }
-        sleep(milliseconds);
+        double startTime = getRuntime();
+        double runTime = milliseconds / 1000.0;
+        while ((getRuntime() - startTime) < runTime) {
+            waitOneFullHardwareCycle();
+        }
         DragonoidsGlobal.stopMotors();
     }
 
