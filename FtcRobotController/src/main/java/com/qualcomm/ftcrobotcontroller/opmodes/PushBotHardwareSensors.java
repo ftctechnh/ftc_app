@@ -356,7 +356,8 @@ public class PushBotHardwareSensors extends PushBotTelemetry
             // tape?
             //
             telemetry.addData ("ODS", "getLightDetected(): " + v_sensor_ods.getLightDetected ());
-            if (v_sensor_ods.getLightDetected () < 0.15) // > 0.8
+            //if (v_sensor_ods.getLightDetected () < 0.15) // > 0.8
+            if (v_sensor_ods.getLightDetected() > 0.12)
             {
                 l_return = true;
             }

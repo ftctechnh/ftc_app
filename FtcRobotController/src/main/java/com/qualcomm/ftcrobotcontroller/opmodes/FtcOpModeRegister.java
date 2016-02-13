@@ -49,6 +49,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("TeenTitanGo", TeenTitanGo.class);
     manager.register("OhmIZeus", OhmIZeus.class);
     manager.register("Autobots", Autobots.class);
+    manager.register("OhmIZeusNew", OhmIZeusNew.class);
     /* Custom Ops Modes here */
 //    manager.register("DavTest", DavTest.class);
 //    manager.register("TwoWheelTest", TwoWheelTest.class);

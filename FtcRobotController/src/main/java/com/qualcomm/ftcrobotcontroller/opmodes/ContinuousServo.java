@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.Range;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by mars on 1/7/16.
+ * Created by THE OVERLORDS on 1/7/16.
  */
 public class ContinuousServo extends OpMode {
 
