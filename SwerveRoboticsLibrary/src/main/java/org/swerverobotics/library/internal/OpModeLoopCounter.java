@@ -11,7 +11,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * A simple little class that counts loop() calls for non-loop() opmodes
+ * A simple little class that counts loop() calls for non-loop() opmodes.
+ * Don't forget to close() the counter when you're done with it
  */
 public class OpModeLoopCounter implements IOpModeLoopCounter
     {

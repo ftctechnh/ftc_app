@@ -736,7 +736,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             this.hardwareMap     = this.hardwareFactory.createProcessedHardwareMap();
 
             // Similarly replace the telemetry variable
-            this.telemetry = new TelemetryDashboardAndLog();
+            this.telemetry = new TelemetryDashboardAndLog(this);
 
             // Paranoia: clear any state that may just perhaps be lingering
             this.clearSingletons();
