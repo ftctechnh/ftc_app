@@ -31,6 +31,7 @@ public class DragonoidsGlobal {
         leftSlider.setDirection(DcMotor.Direction.REVERSE);
 
         gate = hardwareMap.servo.get("gate");
+        resetServos();
     }
 
     public static void setDrivePower(double rightPower, double leftPower) {
