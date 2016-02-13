@@ -59,7 +59,7 @@ public class SynchronousOpModeHardwareFactory
                 @Override
                 public LegacyModule create(LegacyModule target)
                     {
-                    return ThunkedLegacyModule.create(target);
+                    return target;
                     }
                 }
         );
@@ -71,7 +71,7 @@ public class SynchronousOpModeHardwareFactory
                 @Override
                 public DeviceInterfaceModule create(DeviceInterfaceModule target)
                     {
-                    return ThunkedDeviceInterfaceModule.create(target);
+                    return target;
                     }
                 }
         );
