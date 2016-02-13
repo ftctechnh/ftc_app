@@ -57,7 +57,16 @@ public class FtcOpModeRegister implements OpModeRegister {
         /*
          * Our Modes
          */
+
+        //Tele ops
         manager.register("Primary Op Mode", MainOpMode.class);
+
+
+        //Auto modes
+        manager.register("Child Mode x25", AutoMode3.class);
+        manager.register("Child Mode x50", AutoMode2.class);
+        manager.register("Child Mode x100", AutoMode1.class);
+
 
 
     }

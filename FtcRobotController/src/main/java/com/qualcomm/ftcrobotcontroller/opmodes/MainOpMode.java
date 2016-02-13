@@ -25,10 +25,16 @@ public class MainOpMode extends OpMode{
     DcMotor motorLeftFront;
     DcMotor sucker;
     DcMotor linear;
+    //Arm Servos
+    Servo servo_right, servo_left;
+    //Tube Servos
+    Servo servo_tube,  servo_free;
 
-    Servo servo_right, servo_left, servo_lip;
+
+
 
     double rightArmPosition, leftArmPosition;
+    double tubeArmPosition, freeArmPositon;
 
 
     // CONSTRUCTOR and Electronics Diagram
@@ -36,8 +42,39 @@ public class MainOpMode extends OpMode{
 
         /*
         Controls as of now -
-        Bumpers are to go backwards
-        Triggers are forwards
+        Gamepad 2 -
+            ~ Driving
+                - Left Thumbstick
+                    Left-side Motors
+                - Right Thumbstick
+                    Right-side Motors
+            ~ Spinner
+                - A
+                    Start Spinner
+                - X
+                    Stop Spinner
+            ~ Arm Servos
+                - B
+                    Right-side Arm
+                - Y
+                    Left-side Arm
+
+        Gamepad 1 -
+            ~ Linear Slides
+                - Direction Pad (DPad) Up arrow
+                    Move slides up
+                - Direction Pad (DPad) Down arrow
+                    Move slides down
+            ~ Tube Servos
+                - 1 (X)
+                    Tilt towards the front
+                - 2 (A)
+                    Tilt towards the back
+            ~ Freedom Servos (The servos that let the objects out)
+                - 3 (B)
+                    Open
+                - 4 (Y)
+                    Close
 
 
         */
@@ -76,6 +113,7 @@ public class MainOpMode extends OpMode{
     |- Motor Controller 3 (AL00XUI0) ---|
                                         |--- dcMotor (motor_LB)
 
+//penis
 
 
 
@@ -87,21 +125,30 @@ public class MainOpMode extends OpMode{
     // Called when robot is first enabled
     @Override
     public void init() {
+        //Motors
         motorLeftFront = hardwareMap.dcMotor.get("motor_LF");
         motorLeftBack = hardwareMap.dcMotor.get("motor_LB");
 
         motorRightFront = hardwareMap.dcMotor.get("motor_RF");
         motorRightBack = hardwareMap.dcMotor.get("motor_RB");
 
+        //Sucker
         sucker = hardwareMap.dcMotor.get("sucker");
+        //Linear Slides
         linear = hardwareMap.dcMotor.get("linear");
 
+        //Servo arms
         servo_right = hardwareMap.servo.get("servo_1");
         servo_left = hardwareMap.servo.get("servo_2");
 
+        //Tube servos
+        servo_tube = hardwareMap.servo.get("servo_3");
+        servo_free = hardwareMap.servo.get("servo_4");
 
-        rightArmPosition = 1;
-        leftArmPosition = 0;
+
+
+        rightArmPosition = 0.93;
+        leftArmPosition = 0.15;
 
 
     }
@@ -110,52 +157,11 @@ public class MainOpMode extends OpMode{
     // Called repeatedly every 10 ms
     @Override
     public void loop() {
-        rightArmPosition = 1.3;
-        // For right 1 is the top and 0 is the bottom
 
-        leftArmPosition = 0.14;
-        //for left 0 is the top and 1 is the bottom
+        freeArmPositon = 0.4;
 
-/*
-        motorLeftFront.setPower(-gamepad1.left_stick_y);
-        motorLeftBack.setPower(gamepad1.left_stick_y);
+        tubeArmPosition = 0.40;
 
-        motorRightFront.setPower(-gamepad1.right_stick_y);
-        motorRightBack.setPower(-gamepad1.right_stick_y);
-*/
-        //Left
-        /*
-
-        if(gamepad1.left_trigger >= 0.49803925){
-            motorLeftFront.setPower(-1);
-            motorLeftBack.setPower(1);
-        }else
-
-        if(gamepad1.left_bumper){
-            motorLeftFront.setPower(1);
-            motorLeftBack.setPower(-1);
-        }else{
-            motorLeftFront.setPower(0);
-            motorLeftBack.setPower(0);
-        }
-
-
-        //Right
-
-        if(gamepad1.right_trigger >= 0.49803925){
-            motorRightFront.setPower(-1);
-            motorRightBack.setPower(-1);
-        }else if(gamepad1.right_bumper){
-            motorRightFront.setPower(1);
-            motorRightBack.setPower(1);
-        }else{
-            motorRightFront.setPower(0);
-            motorRightBack.setPower(0);
-        }
-*/
-
-
-        //If we get a new controller use this code instead
 
         motorLeftFront.setPower(squareInputs(gamepad2.left_stick_y));
         motorLeftBack.setPower(-squareInputs(gamepad2.left_stick_y));
@@ -163,57 +169,34 @@ public class MainOpMode extends OpMode{
         motorRightFront.setPower(squareInputs(gamepad2.right_stick_y));
         motorRightBack.setPower(squareInputs(gamepad2.right_stick_y));
 
-/*
-        if (gamepad1.b) {
-            // if the A button is pushed on gamepad1, increment the position of
-            // the arm servo.
-            if(servo_left_on){
-                leftArmPosition = 0.25;
-                servo_left_on = false;
-            }else{
-                leftArmPosition = 0.75;
-                servo_left_on = true;
-            }
+
+
+        if(!gamepad2.right_bumper){
+            rightArmPosition = 0.30;
         }
-        if (gamepad1.y) {
-            // if the A button is pushed on gamepad1, increment the position of
-            // the arm servo.
-            if(servo_right_on){
-                leftArmPosition = 0.0;
-                servo_right_on = false;
-            }else{
-                leftArmPosition = 0.5;
-                servo_right_on = true;
-            }
+        if(!gamepad2.left_bumper){
+            leftArmPosition = 0.70;
         }
 
-*/
-
-
-        if (gamepad2.y) {
-            // if the Y button is pushed on gamepad1, decrease the position of
-            // the arm servo.
-
-            leftArmPosition = 0.64;
-        }
-        if (gamepad2.b) {
-            // if the Y button is pushed on gamepad1, decrease the position of
-            // the arm servo.
-
-            rightArmPosition = 0.;
-        }
-        if (gamepad1.a) {
+        if (gamepad2.a) {
             sucker.setPower(1);
         }
-        if (gamepad1.x)
+        if (gamepad2.x)
             sucker.setPower(0);
 
-        if (gamepad2.dpad_down) {
+        if (gamepad1.dpad_down) {
             linear.setPower(1);
-        } else if (gamepad2.dpad_up){
+        } else if (gamepad1.dpad_up){
             linear.setPower(-1);
         } else {
             linear.setPower(0);
+        }
+
+        if (gamepad1.a) {
+            tubeArmPosition = 1;
+        }
+        if (gamepad1.right_bumper) {
+            freeArmPositon = 0;
         }
 
         rightArmPosition = Range.clip(rightArmPosition, ARM_MIN_RANGE, ARM_MAX_RANGE);
@@ -222,6 +205,8 @@ public class MainOpMode extends OpMode{
 
         servo_right.setPosition(rightArmPosition);
         servo_left.setPosition(leftArmPosition);
+        servo_tube.setPosition(tubeArmPosition);
+        servo_free.setPosition(freeArmPositon);
 
 
         telemetry.addData("Left Stick", gamepad1.left_stick_y);
