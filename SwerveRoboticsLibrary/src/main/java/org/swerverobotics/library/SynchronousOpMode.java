@@ -99,6 +99,24 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     public HardwareMap hardwareMap = null;
 
     /**
+     * Advanced: unthunkedHardwareMap contains the original hardware map provided
+     * in OpMode before it was replaced with a version that does thunking.
+     * @deprecated This member variable is redundant; use {@link #getUnprocessedHardwareMap()} instead.
+     */
+    @Deprecated
+    public HardwareMap unthunkedHardwareMap = null;
+
+    /**
+     * Returns the hardware map as originally created by the robot controller runtime, unoptimized
+     * and unprocessed by the SynchronousOpMode.
+     * @return the hardware map as originally created by the robot controller runtime
+     */
+    public HardwareMap getUnprocessedHardwareMap()
+        {
+        return super.hardwareMap;
+        }
+
+    /**
      * Advanced: use experimental approaches to processing hardware devices
      */
     protected boolean useExperimentalHardwareMap = false;
@@ -730,6 +748,8 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             // synchronous thread. Note: we ASSUME here that init() and loop() run on the same thread
             loopThread = Thread.currentThread();
 
+            // Remember the old hardware map somewhere that user code can easily get at it if it wants.
+            this.unthunkedHardwareMap = super.hardwareMap;
             // Make a new processed hardware map, and remember it in a variable that shadows the super one.
             // Note that we always leave the super one unchanged; this is important to OpModeShutdownNotifier.
             this.hardwareFactory = new SynchronousOpModeHardwareFactory(this, this.useExperimentalHardwareMap);
