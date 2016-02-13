@@ -16,8 +16,6 @@ import static junit.framework.Assert.*;
 /**
  * An alternative implementation of a Legacy DC Motor controller.
  *
- * @see org.swerverobotics.library.ClassFactory#createEasyLegacyMotorController(OpMode, DcMotor, DcMotor)
- *
  * @deprecated The functionality provided by this class has been migrated to the core SDK
  *             controller implementation.
  */

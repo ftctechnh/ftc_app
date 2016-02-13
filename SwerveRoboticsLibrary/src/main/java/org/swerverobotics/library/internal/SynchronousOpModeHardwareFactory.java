@@ -95,15 +95,7 @@ public class SynchronousOpModeHardwareFactory
             }
 
         // Switcheroo the motor controllers
-        for (DcMotorController controller : motors.keySet())
-            {
-            if (MemberUtil.isModernMotorController(controller))
-                {
-                DcMotor motor1 = motors.get(controller).get(0);
-                DcMotor motor2 = motors.get(controller).size() > 1 ? motors.get(controller).get(1) : null;
-                ClassFactory.createEasyMotorController(this.opmodeContext, motor1, motor2);
-                }
-            }
+        // No longer necessary
 
         //----------------------------------------------------------------------------
         // Now the same for the servo controllers
@@ -122,14 +114,8 @@ public class SynchronousOpModeHardwareFactory
                 }
             }
 
-        for (ServoController controller : servos.keySet())
-            {
-            if (MemberUtil.isModernServoController(controller))
-                {
-                Collection<Servo> thisControllersServos = servos.get(controller);
-                ClassFactory.createEasyServoController(this.opmodeContext, thisControllersServos);
-                }
-            }
+        // Switcheroo the servo controllers
+        // No longer necessary
 
         //----------------------------------------------------------------------------
         // Controllers
