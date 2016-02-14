@@ -61,10 +61,11 @@ public class SynchMotorLoopPerf extends SynchronousOpMode
             else
                 powerMotors(0.25);
 
+            telemetry.addData("both motors",   ((Boolean)useBothMotors).toString());
             telemetry.addData("position",      String.format("left=%d right=%d", leftPosition, rightPosition));
-            telemetry.addData("#loop()",       loopCount);
-            telemetry.addData("#spin",         spinCount);
-            telemetry.addData("#loop()/#spin", String.format("%.1f", loopCount / (double)spinCount));
+            telemetry.addData("loopCount",     loopCount);
+            telemetry.addData("spinCount",     spinCount);
+            telemetry.addData("#loop/#spin",   String.format("%.1f", loopCount / (double)spinCount));
             telemetry.addData("ms/spin",       String.format("%.1f ms", ms / spinCount));
             telemetry.addData("ms/loop",       String.format("%.1f ms", ms / loopCount));
             telemetry.update();

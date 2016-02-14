@@ -212,8 +212,41 @@ public class TelemetryDashboardAndLog
      */
     public synchronized void addData(String caption, float value)
         {
-        this.addData(caption, (double)value);
+        this.addComposedLine(caption, Float.toString(value));
         }
+
+    /**
+     * Add a one-time message to the dashboard. This message is erased after
+     * update() is called and must be reissued if it is to be shown
+     * in subsequent update() cycles.
+     *
+     * @param caption   the caption to put on the message
+     * @param value     the value to be formatted and displayed
+     *
+     * @see #addData(String, String)
+     * @see Telemetry#addData(String, float)
+     */
+    public synchronized void addData(String caption, int value)
+        {
+        this.addComposedLine(caption, Integer.toString(value));
+        }
+
+    /**
+     * Add a one-time message to the dashboard. This message is erased after
+     * update() is called and must be reissued if it is to be shown
+     * in subsequent update() cycles.
+     *
+     * @param caption   the caption to put on the message
+     * @param value     the value to be formatted and displayed
+     *
+     * @see #addData(String, String)
+     * @see Telemetry#addData(String, float)
+     */
+    public synchronized void addData(String caption, long value)
+        {
+        this.addComposedLine(caption, Long.toString(value));
+        }
+
 
     /**
      * Add a one-time message to the dashboard. This message is erased after
