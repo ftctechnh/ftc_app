@@ -149,7 +149,7 @@ public class AdaFruitTCS34725ColorSensor implements ColorSensor, IOpModeStateTra
     public static ColorSensor create(OpMode context, I2cController controller, int port, int i2cAddr8Bit, ColorSensor target)
         {
         I2cDevice i2cDevice                 = new I2cDeviceImpl(controller, port);
-        I2cDeviceSynch i2CDeviceSynch       = new I2cDeviceSynchImpl(i2cDevice, i2cAddr8Bit);
+        I2cDeviceSynch i2CDeviceSynch       = new I2cDeviceSynchImpl(i2cDevice, i2cAddr8Bit, false /*REVIEW: it seems like i2cDevice would never get closed*/);
         AdaFruitTCS34725ColorSensor result  = new AdaFruitTCS34725ColorSensor(context, i2CDeviceSynch, target, controller, port);
         result.engage();
         result.initialize(new Parameters());

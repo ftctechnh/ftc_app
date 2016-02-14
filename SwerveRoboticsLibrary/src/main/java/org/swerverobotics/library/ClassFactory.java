@@ -274,7 +274,8 @@ public final class ClassFactory
 
     /**
      * Create a new I2cDeviceSynch on an I2cDevice instance. The new device is initially
-     * disengaged, and must be engaged before use.
+     * disengaged, and must be engaged before use. Closing the returned object does *not*
+     * automatically close the underlying I2cDevice.
      *
      * @param i2cDevice             the II2cDevice to wrap
      * @param i2cAddr8Bit           the I2C address at which the client is to communicate
@@ -283,7 +284,7 @@ public final class ClassFactory
      */
     public static I2cDeviceSynch createI2cDeviceSynch(I2cDevice i2cDevice, int i2cAddr8Bit)
         {
-        return new I2cDeviceSynchImpl(i2cDevice, i2cAddr8Bit);
+        return new I2cDeviceSynchImpl(i2cDevice, i2cAddr8Bit, false);
         }
 
     /**
