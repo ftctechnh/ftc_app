@@ -107,7 +107,7 @@ public class EasyLegacyServoController extends I2cControllerPortDeviceImpl imple
 
             // Make a new legacy servo controller
             I2cDevice i2cDevice                  = new I2cDeviceImpl(module, port);
-            I2cDeviceSynch i2CDeviceSynch        = new I2cDeviceSynchImpl(i2cDevice, i2cAddr8Bit);
+            I2cDeviceSynch i2CDeviceSynch        = new I2cDeviceSynchImpl(i2cDevice, i2cAddr8Bit, false /*REVIEW*/);
             EasyLegacyServoController controller = new EasyLegacyServoController(context, i2CDeviceSynch, target, module, port);
 
             controller.setServos(servos);
