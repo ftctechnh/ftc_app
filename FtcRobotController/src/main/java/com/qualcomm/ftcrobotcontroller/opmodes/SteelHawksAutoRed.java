@@ -25,12 +25,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.qualcomm.hardware.hitechnic.HiTechnicNxtDcMotorController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.hardware.TouchSensor;
+
+
 import java.util.Timer;
 
 /**
@@ -38,7 +40,7 @@ import java.util.Timer;
  * //<p>
  * Enables control of the robot via the gamepad
  */
-public class SteelHawksOp extends OpMode {
+public class SteelHawksAutoRed extends OpMode {
 
 	/*
 	 * Note: the configuration of the servos is such that
@@ -67,7 +69,7 @@ public class SteelHawksOp extends OpMode {
 	DcMotor motorRight; //driving
 	DcMotor motorLeft; //driving
 	DcMotor harvester;
-	DcMotor motorArm; //moving Arm up 
+	DcMotor motorArm; //moving Arm up
 	DcMotor motorArmDump; //dumping Arm
 
 	DcMotorController.DeviceMode devMode;
@@ -86,13 +88,15 @@ public class SteelHawksOp extends OpMode {
 	double closingArmStart = 0;
 	double closingArmEnd = 0;
 
+	double start = 0, end = 0;
+
 	//Servo claw;
 	//Servo arm;
 
 	/**
 	 * Constructor
 	 */
-	public SteelHawksOp() {
+	public SteelHawksAutoRed() {
 
 	}
 
@@ -110,7 +114,6 @@ public class SteelHawksOp extends OpMode {
 		 * that the names of the devices must match the names used when you
 		 * configured your robot and created the configuration file.
 		 */
-		
 
 
 		devMode = DcMotorController.DeviceMode.WRITE_ONLY;
@@ -120,14 +123,13 @@ public class SteelHawksOp extends OpMode {
 		motorLeft = hardwareMap.dcMotor.get("motor_1");
 		harvester = hardwareMap.dcMotor.get("harvester");
 
-		motorLeft.setDirection(DcMotor.Direction.REVERSE);
-
+		autoTouch = hardwareMap.touchSensor.get ("sensor_touch");
 		/*motorArm = hardwareMap.dcMotor.get("motor_3");
 		motorArmDump = hardwareMap.dcMotor.get("motor_4");*/
+
 		harvesterController = hardwareMap.dcMotorController.get("harvesterController");
 
-
-
+		motorLeft.setDirection(DcMotor.Direction.REVERSE);
 		
 		/*arm = hardwareMap.servo.get("servo_1");
 		claw = hardwareMap.servo.get("servo_6");
@@ -191,8 +193,57 @@ public class SteelHawksOp extends OpMode {
 		motorLeft.setPower(leftMotorPower);
 		//motorArm.setPower(movongArmUp);
 		//motorArm2.setPower(dumpingArm);
-		harvesterController.setMotorPower(1,.5);
+
+
+		//turn left for .5 sec
+		start = System.currentTimeMillis();
+		end = start + 1000*.5;
+
+		while (System.currentTimeMillis() < end) {
+			motorRight.setPower(0.5);
+			motorLeft.setPower(0);
+
+
+
+		}
+		// move forward for 2 sec
+		start = System.currentTimeMillis();
+		end = start + 1000*2;
+
+		while (System.currentTimeMillis() < end) {
+			motorRight.setPower(1);
+			motorLeft.setPower(1);
+
+
+		//turn left for .5 sec
+		}
+		start = System.currentTimeMillis();
+		end = start + 1000*.5;
+
+		while (System.currentTimeMillis() < end) {
+			motorRight.setPower(0.5);
+			motorLeft.setPower(0);
+
+		// turn until touch sensor is pressed
+
+		}
+
+		while (autoTouch.getValue()==0) {
+			if (autoTouch.isPressed()) {
+				//Stop when in contact with wall
+				motorRight.setPower(0);
+				motorLeft.setPower(0);
+				System.exit(0);
+
+			} else {
+				motorLeft.setPower(.75);
+				motorRight.setPower(.75);
+
+			}
+
+		}
 /*
+
 
 		//SAVE THIS CODE FOR LATER IF NEEDED
 		// update the position of the arm.
