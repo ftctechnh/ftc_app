@@ -64,7 +64,7 @@ public class LinearMotorLoopPerf extends LinearOpMode
             telemetry.addData("ms/loop",       String.format("%.1f ms", ms / loopCount));
 
             spinCount++;
-            Thread.yield();
+            this.idle();
             }
         }
     }

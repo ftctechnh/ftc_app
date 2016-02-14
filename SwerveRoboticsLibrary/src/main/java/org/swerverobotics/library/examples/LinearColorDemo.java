@@ -43,6 +43,8 @@ public class LinearColorDemo extends LinearOpMode
             telemetry.addData("green", this.color.green());
             telemetry.addData("blue",  this.color.blue());
             telemetry.addData("alpha", this.color.alpha());
+            this.updateTelemetry(telemetry);
+            this.idle();
             }
 
         }
