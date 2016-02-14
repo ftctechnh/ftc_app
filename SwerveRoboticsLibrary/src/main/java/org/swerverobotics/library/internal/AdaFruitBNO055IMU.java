@@ -9,6 +9,10 @@ import org.swerverobotics.library.*;
 import org.swerverobotics.library.exceptions.*;
 import org.swerverobotics.library.interfaces.*;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 import static org.swerverobotics.library.internal.Util.*;
 import static junit.framework.Assert.*;
 import static org.swerverobotics.library.interfaces.NavUtil.*;
@@ -33,7 +37,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, I2cDeviceSynchUser, 
     private IAccelerationIntegrator accelerationAlgorithm;
 
     private final Object           startStopLock = new Object();
-    private HandshakeThreadStarter accelerationMananger;
+    private ExecutorService        accelerationMananger;
     private static final int       msAccelerationIntegrationStopWait = 20;
     private static final int       msAwaitChipId                     = 2000;
     private static final int       msAwaitSelfTest                   = 2000;
@@ -497,10 +501,10 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, I2cDeviceSynchUser, 
             this.accelerationAlgorithm.initialize(initalPosition, initialVelocity);
 
             // Make a new thread on which to do the integration
-            this.accelerationMananger = new HandshakeThreadStarter("integrator", new AccelerationManager(msPollInterval));
+            this.accelerationMananger = Executors.newSingleThreadExecutor();
 
             // Start the whole schebang a rockin...
-            this.accelerationMananger.start();
+            this.accelerationMananger.execute(new AccelerationManager(msPollInterval));
             }
         }
     
@@ -511,7 +515,14 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, I2cDeviceSynchUser, 
             // Stop the integration thread
             if (this.accelerationMananger != null)
                 {
-                this.accelerationMananger.stop(msAccelerationIntegrationStopWait);
+                this.accelerationMananger.shutdownNow();
+                try {
+                    this.accelerationMananger.awaitTermination(30, TimeUnit.DAYS);
+                    }
+                catch (InterruptedException e)
+                    {
+                    Thread.currentThread().interrupt();
+                    }
                 this.accelerationMananger = null;
                 }
             }
@@ -588,26 +599,23 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, I2cDeviceSynchUser, 
         }
 
     /** Maintains current velocity and position by integrating acceleration */
-    class AccelerationManager implements IHandshakeable
+    class AccelerationManager implements Runnable
         {
         private final int msPollInterval;
-        private final static long nsPerMs = 1000000;
+        private final static long nsPerMs = ElapsedTime.MILLIS_IN_NANO;
         
         AccelerationManager(int msPollInterval)
             {
             this.msPollInterval = msPollInterval;
             }
         
-        @Override public void run(HandshakeThreadStarter starter)
+        @Override public void run()
             {
-            // Let the starter know we're up and running
-            starter.doHandshake();
-
             // Don't let inappropriate exceptions sneak out
             try
                 {
                 // Loop until we're asked to stop
-                while (!starter.isStopRequested())
+                while (!isStopRequested())
                     {
                     // Read the latest available acceleration
                     final Acceleration accelNext = AdaFruitBNO055IMU.this.getLinearAcceleration();
@@ -635,15 +643,20 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, I2cDeviceSynchUser, 
             }
         }
 
+    boolean isStopRequested()
+        {
+        return Thread.currentThread().isInterrupted();
+        }
+
     @Override public synchronized byte read8(final REGISTER reg)
         {
-        ensureReadWindow(new I2cDeviceSynch.ReadWindow(reg.bVal, 1, readMode));
+        // ensureReadWindow(new I2cDeviceSynch.ReadWindow(reg.bVal, 1, readMode)); // no longer needed: a READ_ONCE window will automatically be used, if needed
         return deviceClient.read8(reg.bVal);
         }
 
     @Override public synchronized byte[] read(final REGISTER reg, final int cb)
         {
-        ensureReadWindow(new I2cDeviceSynch.ReadWindow(reg.bVal, cb, readMode));
+        // ensureReadWindow(new I2cDeviceSynch.ReadWindow(reg.bVal, cb, readMode)); // no longer needed: a READ_ONCE window will automatically be used, if needed
         return deviceClient.read(reg.bVal, cb);
         }
 
