@@ -44,7 +44,7 @@ public class OpModeLoopCounter implements IOpModeLoopCounter
 
         if (this.linearOpMode != null)
             {
-            this.executor.submit(new Runnable() { @Override public void run()
+            this.executor.execute(new Runnable() { @Override public void run()
                 {
                 while (!stopRequested)
                     {
