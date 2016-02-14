@@ -371,7 +371,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         //
         if (changed)
             {
-            Log.v(LOGGING_TAG, String.format("gamepad state: #%d", this.gamepadStateCount.getAndIncrement()));
+            // Log.v(LOGGING_TAG, String.format("gamepad state: #%d", this.gamepadStateCount.getAndIncrement()));
             }
         //
         this.gamePadCaptureStateChanged.compareAndSet(false, changed);
