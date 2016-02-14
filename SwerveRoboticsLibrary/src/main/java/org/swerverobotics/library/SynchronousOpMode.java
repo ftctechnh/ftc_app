@@ -93,8 +93,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     /**
      * We define a *local* hardwareMap variable here to hide the one in our base
      * class as the one we want user code to see is the one with the processing in it.
-     * The original map is still available if one casts to OpMode and *then* retrieves
-     * the map.
+     * The original map is still available with {@link #getUnprocessedHardwareMap()}.
      */
     public HardwareMap hardwareMap = null;
 
