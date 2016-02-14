@@ -43,7 +43,7 @@ public class LinearTelemetryOp extends LinearOpMode
 
                 // Update driver station and wait until there's something useful to do
                 this.telemetry.update();
-                this.waitOneFullHardwareCycle();
+                this.idle();
                 }
             }
         finally
