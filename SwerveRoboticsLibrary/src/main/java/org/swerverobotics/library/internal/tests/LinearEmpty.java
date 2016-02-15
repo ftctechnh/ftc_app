@@ -16,6 +16,7 @@ public class LinearEmpty extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
         {
+        waitForStart();
         DbgLog.msg("executed Linear Empty OpMode");
         }
     }
