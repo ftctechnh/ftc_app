@@ -138,52 +138,43 @@ public class SynchronousOpModeHardwareFactory
         // Sensors
         //----------------------------------------------------------------------------
 
-        // Thunk the analog inputs
+        // Process the analog inputs
         processHardwareMapping(unthunkedHwmap.analogInput, thunkedHwmap.analogInput,
                 new IFactory<AnalogInput>()
                 {
                 @Override
                 public AnalogInput create(AnalogInput target)
                     {
-                    return new ThreadSafeAnalogInput(
-                            ThunkedAnalogInputController.create(ThreadSafeAnalogInput.getController(target)),
-                            ThreadSafeAnalogInput.getChannel(target)
-                    );
+                    return target;
                     }
                 }
         );
 
-        // Thunk the analog outputs
+        // Process the analog outputs
         processHardwareMapping(unthunkedHwmap.analogOutput, thunkedHwmap.analogOutput,
                 new IFactory<AnalogOutput>()
                 {
                 @Override
                 public AnalogOutput create(AnalogOutput target)
                     {
-                    return new ThreadSafeAnalogOutput(
-                            ThunkedAnalogOutputController.create(ThreadSafeAnalogOutput.getController(target)),
-                            ThreadSafeAnalogOutput.getChannel(target)
-                    );
+                    return target;
                     }
                 }
         );
 
-        // Thunk the pwm outputs
+        // Process the pwm outputs
         processHardwareMapping(unthunkedHwmap.pwmOutput, thunkedHwmap.pwmOutput,
                 new IFactory<PWMOutput>()
                 {
                 @Override
                 public PWMOutput create(PWMOutput target)
                     {
-                    return new ThreadSafePWMOutput(
-                            ThunkedPWMOutputController.create(ThreadSafePWMOutput.getController(target)),
-                            ThreadSafePWMOutput.getChannel(target)
-                    );
+                    return target;
                     }
                 }
         );
 
-        // Thunk the i2c devices
+        // Process the i2c devices
         processHardwareMapping(unthunkedHwmap.i2cDevice, thunkedHwmap.i2cDevice,
                 new IFactory<I2cDevice>()
                 {
@@ -195,22 +186,19 @@ public class SynchronousOpModeHardwareFactory
                 }
         );
 
-        // Thunk the digital channels
+        // Process the digital channels
         processHardwareMapping(unthunkedHwmap.digitalChannel, thunkedHwmap.digitalChannel,
                 new IFactory<DigitalChannel>()
                 {
                 @Override
                 public DigitalChannel create(DigitalChannel target)
                     {
-                    return new ThreadSafeDigitalChannel(
-                            ThunkedDigitalChannelController.create(ThreadSafeDigitalChannel.getController(target)),
-                            ThreadSafeDigitalChannel.getChannel(target)
-                    );
+                    return target;
                     }
                 }
         );
 
-        // Thunk the acceleration sensors
+        // Process the acceleration sensors
         processHardwareMapping(unthunkedHwmap.accelerationSensor, thunkedHwmap.accelerationSensor,
                 new IFactory<AccelerationSensor>()
                 {
@@ -222,7 +210,7 @@ public class SynchronousOpModeHardwareFactory
                 }
         );
 
-        // Thunk the compass sensors
+        // Process the compass sensors
         processHardwareMapping(unthunkedHwmap.compassSensor, thunkedHwmap.compassSensor,
                 new IFactory<CompassSensor>()
                 {
@@ -234,7 +222,7 @@ public class SynchronousOpModeHardwareFactory
                 }
         );
 
-        // Thunk the gyro sensors
+        // Process the gyro sensors
         processHardwareMapping(unthunkedHwmap.gyroSensor, thunkedHwmap.gyroSensor,
                 new IFactory<GyroSensor>()
                 {
@@ -246,7 +234,7 @@ public class SynchronousOpModeHardwareFactory
                 }
         );
 
-        // Thunk the IR seekers
+        // Process the IR seekers
         processHardwareMapping(unthunkedHwmap.irSeekerSensor, thunkedHwmap.irSeekerSensor,
                 new IFactory<IrSeekerSensor>()
                 {
@@ -258,7 +246,7 @@ public class SynchronousOpModeHardwareFactory
                 }
         );
 
-        // Thunk the light sensors
+        // Process the light sensors
         processHardwareMapping(unthunkedHwmap.lightSensor, thunkedHwmap.lightSensor,
                 new IFactory<LightSensor>()
                 {
@@ -270,7 +258,7 @@ public class SynchronousOpModeHardwareFactory
                 }
         );
 
-        // Thunk the optical distance sensors
+        // Process the optical distance sensors
         processHardwareMapping(unthunkedHwmap.opticalDistanceSensor, thunkedHwmap.opticalDistanceSensor,
                 new IFactory<OpticalDistanceSensor>()
                 {
@@ -282,7 +270,7 @@ public class SynchronousOpModeHardwareFactory
                 }
         );
 
-        // Thunk the touch sensors
+        // Process the touch sensors
         processHardwareMapping(unthunkedHwmap.touchSensor, thunkedHwmap.touchSensor,
                 new IFactory<TouchSensor>()
                 {
@@ -294,7 +282,7 @@ public class SynchronousOpModeHardwareFactory
                 }
         );
 
-        // Thunk the ultrasonic sensors
+        // Process the ultrasonic sensors
         processHardwareMapping(unthunkedHwmap.ultrasonicSensor, thunkedHwmap.ultrasonicSensor,
                 new IFactory<UltrasonicSensor>()
                 {
@@ -306,7 +294,7 @@ public class SynchronousOpModeHardwareFactory
                 }
         );
 
-        // Copy the voltage sensors
+        // Process the voltage sensors
         processHardwareMapping(unthunkedHwmap.voltageSensor, thunkedHwmap.voltageSensor,
                 new IFactory<VoltageSensor>()
                 {
@@ -340,7 +328,7 @@ public class SynchronousOpModeHardwareFactory
                 }
         );
 
-        // Thunk the LEDs
+        // Process the LEDs
         processHardwareMapping(unthunkedHwmap.led, thunkedHwmap.led,
                 new IFactory<LED>()
                 {
@@ -352,7 +340,7 @@ public class SynchronousOpModeHardwareFactory
                 }
         );
 
-        // Thunk the TouchSensorMultiplexers
+        // Process the TouchSensorMultiplexers
         processHardwareMapping(unthunkedHwmap.touchSensorMultiplexer, thunkedHwmap.touchSensorMultiplexer,
                 new IFactory<TouchSensorMultiplexer>()
                 {
