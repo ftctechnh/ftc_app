@@ -575,6 +575,8 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             try
                 {
                 this.threadBody.run();
+                if (this.isMain)
+                    requestOpModeStop();
                 }
             catch (InterruptedException|RuntimeInterruptedException ignored)
                 {
