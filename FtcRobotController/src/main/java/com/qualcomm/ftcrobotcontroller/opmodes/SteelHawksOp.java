@@ -28,47 +28,26 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
-import java.util.Timer;
+
 
 /**
- * TeleOp Mode
+ * SteelHawks OpMode
  * //<p>
  * Enables control of the robot via the gamepad
  */
 public class SteelHawksOp extends OpMode {
 
-	/*
-	 * Note: the configuration of the servos is such that
-	 * as the arm servo approaches 0, the arm position moves up (away from the floor).
-	 * Also, as the claw servo approaches 0, the claw opens up (drops the game element).
-	 */
-	// TETRIX VALUES.
-	final static double ARM_MIN_RANGE  = 0.20;
-	final static double ARM_MAX_RANGE  = 0.90;
-	final static double CLAW_MIN_RANGE  = 0.20;
-	final static double CLAW_MAX_RANGE  = 0.7;
-	Timer timer = new Timer();
 
-	// position of the arm servo.
-	double armPosition;
 
-	// amount to change the arm servo position.
-	double armDelta = 0.1;
 
-	// position of the claw servo
-	double clawPosition;
-
-	// amount to change the claw servo position by
-	double clawDelta = 0.1;
 
 	DcMotor motorRight; //driving
 	DcMotor motorLeft; //driving
 	DcMotor harvester;
-	DcMotor motorArm; //moving Arm up 
-	DcMotor motorArmDump; //dumping Arm
+	DcMotor motorArm;
+	DcMotor motorArmDump;
 
 	DcMotorController.DeviceMode devMode;
 	DcMotorController harvesterController;
@@ -86,8 +65,6 @@ public class SteelHawksOp extends OpMode {
 	double closingArmStart = 0;
 	double closingArmEnd = 0;
 
-	//Servo claw;
-	//Servo arm;
 
 	/**
 	 * Constructor
@@ -127,15 +104,6 @@ public class SteelHawksOp extends OpMode {
 		harvesterController = hardwareMap.dcMotorController.get("harvesterController");
 
 
-
-		
-		/*arm = hardwareMap.servo.get("servo_1");
-		claw = hardwareMap.servo.get("servo_6");
-		*/
-
-		// assign the starting position of the wrist and claw
-		//armPosition = 0.2;
-		//clawPosition = 0.2;
 	}
 
 	/*\\
@@ -147,10 +115,10 @@ public class SteelHawksOp extends OpMode {
 	public void loop() {
 
 		/*
-		 * Gamepad 1
+		 *
 		 * 
-		 * Gamepad 1 controls the motors via the left stick, and it controls the
-		 * wrist/claw via the a,b, x, y buttons
+		 * Gamepad 1 controls the driving via the left and right stick of Gamepad 1
+		 * Gamepad 2 controls the arm and the dumping action via the left and right stick of Gamepad 2
 		 */
 
 		// throttle: left_stick_y ranges from -1 to 1, where -1 is full up, and
@@ -189,7 +157,7 @@ public class SteelHawksOp extends OpMode {
 		// write the values to the motors
 		motorRight.setPower(rightMotorPower);
 		motorLeft.setPower(leftMotorPower);
-		//motorArm.setPower(movongArmUp);
+		//motorArm.setPower(movingArmUp);
 		//motorArm2.setPower(dumpingArm);
 		harvesterController.setMotorPower(1,.5);
 /*
@@ -275,8 +243,8 @@ public class SteelHawksOp extends OpMode {
 		 * are currently write only.
 		 */
 		telemetry.addData("Text", "*** Robot Data***");
-		telemetry.addData("arm", "arm:  " + String.format("%.2f", armPosition));
-		telemetry.addData("claw", "claw:  " + String.format("%.2f", clawPosition));
+		//telemetry.addData("arm", "arm:  " + String.format("%.2f", movingArmUp));
+		//telemetry.addData("claw", "claw:  " + String.format("%.2f", dumpingArm));
 		telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", leftMotorPower));
 		telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", rightMotorPower));
 
