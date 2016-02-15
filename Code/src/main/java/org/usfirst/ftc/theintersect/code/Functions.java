@@ -19,26 +19,18 @@ public class Functions {
 	public static double bumperInitPosition = 0.0;
 	public static double tubeExtenderInitPosition = 0.5;
 	public static double tubeTiltInitPosition = 0.5;
-    public static double churroHookLeftDownPos = 0.1;
-    public static double churroHookRightUpPos = 0.1;
-    public static double churroHookLeftUpPos = 0.9;
-    public static double churroHookRightDownPos = 0.9;
+	public static double churroHookDownPos = 0.0;
+	public static double churroHookUpPos = 1.0;
 	public static double straightGyroCorrectionFactor = 20.0;
 	public static double adjustedPowerMax = 0.9;
 	public static double adjustedPowerMin = 0.25;
 	public static double whiteThreshold = 10;
-	public static double barHookRightUpPos = 0.1;
-	public static double barHookRightDownPos = 0.9;
-    public static double barHookLeftUpPos = 0.9;
-    public static double barHookLeftDownPos = 0.1;
+	public static double barHookDownPos = 0.0;
+	public static double barHookUpPos = 1.0;
 	public static double linearSlidePower = 0.5;
-    public static double triggerThreshold = 0.2;
-	public static double sweeperPower = 0.5;
-    public static double bumperDownPos = 1.0;
-    public static double bumperUpPos = 0.0;
+	public static double triggerThreshold = 0.1;
 
-
-    public static double convertGamepad(float y) {
+	public static double convertGamepad(float y) {
 		int m;
 
 		if(y < 0) {
