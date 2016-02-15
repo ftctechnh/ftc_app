@@ -1,17 +1,15 @@
 package org.swerverobotics.library.internal;
 
-import com.qualcomm.hardware.hitechnic.*;
-import com.qualcomm.hardware.modernrobotics.*;
 import com.qualcomm.robotcore.eventloop.opmode.*;
 import com.qualcomm.robotcore.hardware.*;
-import org.swerverobotics.library.*;
+
 import org.swerverobotics.library.interfaces.*;
 
 import java.util.*;
 
 /**
  * SynchronousOpModeHardwareFactory processes an SDK-provided hardware map so as to allow
- * SynchronousOpMode to function correctly.
+ * SynchronousOpMode to function better.
  */
 public class SynchronousOpModeHardwareFactory
     {
@@ -20,8 +18,8 @@ public class SynchronousOpModeHardwareFactory
     //----------------------------------------------------------------------------------------------
 
     OpMode               opmodeContext;
-    HardwareMap          unthunkedHwmap;
-    HardwareMap          thunkedHwmap;
+    HardwareMap          unprocessedMap;
+    HardwareMap          processedMap;
     boolean              useExperimental;
 
     //----------------------------------------------------------------------------------------------
@@ -31,8 +29,8 @@ public class SynchronousOpModeHardwareFactory
     public SynchronousOpModeHardwareFactory(OpMode opmodeContext, boolean useExperimental)
         {
         this.opmodeContext      = opmodeContext;
-        this.thunkedHwmap       = null;
-        this.unthunkedHwmap     = opmodeContext.hardwareMap;
+        this.processedMap       = null;
+        this.unprocessedMap     = opmodeContext.hardwareMap;
         this.useExperimental    = useExperimental;
         }
     
@@ -46,14 +44,14 @@ public class SynchronousOpModeHardwareFactory
      */
     public final HardwareMap createProcessedHardwareMap()
         {
-        this.thunkedHwmap = new HardwareMap(this.opmodeContext.hardwareMap.appContext);
+        this.processedMap = new HardwareMap(this.opmodeContext.hardwareMap.appContext);
 
         //----------------------------------------------------------------------------
         // Modules
         //----------------------------------------------------------------------------
 
         // Process the legacy modules
-        processHardwareMapping(unthunkedHwmap.legacyModule, thunkedHwmap.legacyModule,
+        processHardwareMapping(unprocessedMap.legacyModule, processedMap.legacyModule,
                 new IFactory<LegacyModule>()
                 {
                 @Override
@@ -65,7 +63,7 @@ public class SynchronousOpModeHardwareFactory
         );
 
         // Process the core device interface modules
-        processHardwareMapping(unthunkedHwmap.deviceInterfaceModule, thunkedHwmap.deviceInterfaceModule,
+        processHardwareMapping(unprocessedMap.deviceInterfaceModule, processedMap.deviceInterfaceModule,
                 new IFactory<DeviceInterfaceModule>()
                 {
                 @Override
@@ -81,26 +79,24 @@ public class SynchronousOpModeHardwareFactory
         //----------------------------------------------------------------------------
 
         // Process the motor controllers
-        processHardwareMapping(unthunkedHwmap.dcMotorController, thunkedHwmap.dcMotorController,
+        processHardwareMapping(unprocessedMap.dcMotorController, processedMap.dcMotorController,
                 new IFactory<DcMotorController>()
                 {
                 @Override
                 public DcMotorController create(DcMotorController target)
                     {
-                    // All the implementations in the SDK are good
                     return target;
                     }
                 }
         );
 
         // Process the servo controllers
-        processHardwareMapping(unthunkedHwmap.servoController, thunkedHwmap.servoController,
+        processHardwareMapping(unprocessedMap.servoController, processedMap.servoController,
                 new IFactory<ServoController>()
                 {
                 @Override
                 public ServoController create(ServoController target)
                     {
-                    // All the implementations in the SDK are good
                     return target;
                     }
                 }
@@ -111,7 +107,7 @@ public class SynchronousOpModeHardwareFactory
         //----------------------------------------------------------------------------
         
         // Process the DC motors
-        processHardwareMapping(unthunkedHwmap.dcMotor, thunkedHwmap.dcMotor,
+        processHardwareMapping(unprocessedMap.dcMotor, processedMap.dcMotor,
                 new IFactory<DcMotor>()
                 {
                 @Override
@@ -123,7 +119,7 @@ public class SynchronousOpModeHardwareFactory
         );
 
         // Process the servos
-        processHardwareMapping(unthunkedHwmap.servo, thunkedHwmap.servo,
+        processHardwareMapping(unprocessedMap.servo, processedMap.servo,
                 new IFactory<Servo>()
                 {
                 @Override
@@ -139,7 +135,7 @@ public class SynchronousOpModeHardwareFactory
         //----------------------------------------------------------------------------
 
         // Process the analog inputs
-        processHardwareMapping(unthunkedHwmap.analogInput, thunkedHwmap.analogInput,
+        processHardwareMapping(unprocessedMap.analogInput, processedMap.analogInput,
                 new IFactory<AnalogInput>()
                 {
                 @Override
@@ -151,7 +147,7 @@ public class SynchronousOpModeHardwareFactory
         );
 
         // Process the analog outputs
-        processHardwareMapping(unthunkedHwmap.analogOutput, thunkedHwmap.analogOutput,
+        processHardwareMapping(unprocessedMap.analogOutput, processedMap.analogOutput,
                 new IFactory<AnalogOutput>()
                 {
                 @Override
@@ -163,7 +159,7 @@ public class SynchronousOpModeHardwareFactory
         );
 
         // Process the pwm outputs
-        processHardwareMapping(unthunkedHwmap.pwmOutput, thunkedHwmap.pwmOutput,
+        processHardwareMapping(unprocessedMap.pwmOutput, processedMap.pwmOutput,
                 new IFactory<PWMOutput>()
                 {
                 @Override
@@ -175,7 +171,7 @@ public class SynchronousOpModeHardwareFactory
         );
 
         // Process the i2c devices
-        processHardwareMapping(unthunkedHwmap.i2cDevice, thunkedHwmap.i2cDevice,
+        processHardwareMapping(unprocessedMap.i2cDevice, processedMap.i2cDevice,
                 new IFactory<I2cDevice>()
                 {
                 @Override
@@ -187,7 +183,7 @@ public class SynchronousOpModeHardwareFactory
         );
 
         // Process the digital channels
-        processHardwareMapping(unthunkedHwmap.digitalChannel, thunkedHwmap.digitalChannel,
+        processHardwareMapping(unprocessedMap.digitalChannel, processedMap.digitalChannel,
                 new IFactory<DigitalChannel>()
                 {
                 @Override
@@ -199,103 +195,103 @@ public class SynchronousOpModeHardwareFactory
         );
 
         // Process the acceleration sensors
-        processHardwareMapping(unthunkedHwmap.accelerationSensor, thunkedHwmap.accelerationSensor,
+        processHardwareMapping(unprocessedMap.accelerationSensor, processedMap.accelerationSensor,
                 new IFactory<AccelerationSensor>()
                 {
                 @Override
                 public AccelerationSensor create(AccelerationSensor target)
                     {
-                    return ThunkedAccelerationSensor.create(target);
+                    return target;
                     }
                 }
         );
 
         // Process the compass sensors
-        processHardwareMapping(unthunkedHwmap.compassSensor, thunkedHwmap.compassSensor,
+        processHardwareMapping(unprocessedMap.compassSensor, processedMap.compassSensor,
                 new IFactory<CompassSensor>()
                 {
                 @Override
                 public CompassSensor create(CompassSensor target)
                     {
-                    return ThunkedCompassSensor.create(target);
+                    return target;
                     }
                 }
         );
 
         // Process the gyro sensors
-        processHardwareMapping(unthunkedHwmap.gyroSensor, thunkedHwmap.gyroSensor,
+        processHardwareMapping(unprocessedMap.gyroSensor, processedMap.gyroSensor,
                 new IFactory<GyroSensor>()
                 {
                 @Override
                 public GyroSensor create(GyroSensor target)
                     {
-                    return ThunkedGyroSensor.create(target);
+                    return target;
                     }
                 }
         );
 
         // Process the IR seekers
-        processHardwareMapping(unthunkedHwmap.irSeekerSensor, thunkedHwmap.irSeekerSensor,
+        processHardwareMapping(unprocessedMap.irSeekerSensor, processedMap.irSeekerSensor,
                 new IFactory<IrSeekerSensor>()
                 {
                 @Override
                 public IrSeekerSensor create(IrSeekerSensor target)
                     {
-                    return ThunkedIrSeekerSensor.create(target);
+                    return target;
                     }
                 }
         );
 
         // Process the light sensors
-        processHardwareMapping(unthunkedHwmap.lightSensor, thunkedHwmap.lightSensor,
+        processHardwareMapping(unprocessedMap.lightSensor, processedMap.lightSensor,
                 new IFactory<LightSensor>()
                 {
                 @Override
                 public LightSensor create(LightSensor target)
                     {
-                    return ThunkedLightSensor.create(target);
+                    return target;
                     }
                 }
         );
 
         // Process the optical distance sensors
-        processHardwareMapping(unthunkedHwmap.opticalDistanceSensor, thunkedHwmap.opticalDistanceSensor,
+        processHardwareMapping(unprocessedMap.opticalDistanceSensor, processedMap.opticalDistanceSensor,
                 new IFactory<OpticalDistanceSensor>()
                 {
                 @Override
                 public OpticalDistanceSensor create(OpticalDistanceSensor target)
                     {
-                    return ThunkedOpticalDistanceSensor.create(target);
+                    return target;
                     }
                 }
         );
 
         // Process the touch sensors
-        processHardwareMapping(unthunkedHwmap.touchSensor, thunkedHwmap.touchSensor,
+        processHardwareMapping(unprocessedMap.touchSensor, processedMap.touchSensor,
                 new IFactory<TouchSensor>()
                 {
                 @Override
                 public TouchSensor create(TouchSensor target)
                     {
-                    return ThunkedTouchSensor.create(target);
+                    return target;
                     }
                 }
         );
 
         // Process the ultrasonic sensors
-        processHardwareMapping(unthunkedHwmap.ultrasonicSensor, thunkedHwmap.ultrasonicSensor,
+        processHardwareMapping(unprocessedMap.ultrasonicSensor, processedMap.ultrasonicSensor,
                 new IFactory<UltrasonicSensor>()
                 {
                 @Override
                 public UltrasonicSensor create(UltrasonicSensor target)
                     {
-                    return ThunkedUltrasonicSensor.create(target);
+                    return target;
                     }
                 }
         );
 
         // Process the voltage sensors
-        processHardwareMapping(unthunkedHwmap.voltageSensor, thunkedHwmap.voltageSensor,
+        processHardwareMapping(unprocessedMap.voltageSensor, processedMap.voltageSensor,
                 new IFactory<VoltageSensor>()
                 {
                 @Override
@@ -306,53 +302,43 @@ public class SynchronousOpModeHardwareFactory
                 }
         );
 
-        // Thunk or reimplement the color sensors
-        // NOTE: Use of Swerve color sensor implementation is currently disabled pending testing
-        processHardwareMapping(unthunkedHwmap.colorSensor, thunkedHwmap.colorSensor,
+        // Process the color sensors
+        processHardwareMapping(unprocessedMap.colorSensor, processedMap.colorSensor,
                 new IFactory<ColorSensor>()
                 {
                 @Override
                 public ColorSensor create(ColorSensor target)
                     {
-                    if (target instanceof LegacyOrModernColorSensor)
-                        {
-                        return target;
-                        }
-                    else if (target instanceof HiTechnicNxtColorSensor || target instanceof ModernRoboticsI2cColorSensor)
-                        {
-                        return ClassFactory.createSwerveColorSensor(opmodeContext, target);
-                        }
-                    else
-                        return ThunkedColorSensor.create(target);
+                    return target;
                     }
                 }
         );
 
         // Process the LEDs
-        processHardwareMapping(unthunkedHwmap.led, thunkedHwmap.led,
+        processHardwareMapping(unprocessedMap.led, processedMap.led,
                 new IFactory<LED>()
                 {
                 @Override
                 public LED create(LED target)
                     {
-                    return ThunkedLED.create(target);
+                    return target;
                     }
                 }
         );
 
         // Process the TouchSensorMultiplexers
-        processHardwareMapping(unthunkedHwmap.touchSensorMultiplexer, thunkedHwmap.touchSensorMultiplexer,
+        processHardwareMapping(unprocessedMap.touchSensorMultiplexer, processedMap.touchSensorMultiplexer,
                 new IFactory<TouchSensorMultiplexer>()
                 {
                 @Override
                 public TouchSensorMultiplexer create(TouchSensorMultiplexer target)
                     {
-                    return ThunkedTouchSensorMultiplexer.create(target);
+                    return target;
                     }
                 }
         );
 
-        return thunkedHwmap;
+        return processedMap;
         }
 
     public void stop()
