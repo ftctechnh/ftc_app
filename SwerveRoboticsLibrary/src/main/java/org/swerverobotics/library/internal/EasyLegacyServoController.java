@@ -1,17 +1,19 @@
 package org.swerverobotics.library.internal;
 
 import android.util.Log;
-
 import com.qualcomm.hardware.hitechnic.HiTechnicNxtServoController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.Range;
 import org.swerverobotics.library.BuildConfig;
 import org.swerverobotics.library.SynchronousOpMode;
-import org.swerverobotics.library.interfaces.*;
-import java.util.*;
+import org.swerverobotics.library.interfaces.II2cDeviceClient;
 
-import static junit.framework.Assert.*;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+
+import static junit.framework.Assert.assertTrue;
 import static org.swerverobotics.library.internal.EasyModernServoController.*;
 
 /**
@@ -82,6 +84,8 @@ public class EasyLegacyServoController extends I2cControllerPortDeviceImpl imple
 
         this.i2cDeviceClient.setHeartbeatAction(heartbeatAction);
         this.i2cDeviceClient.setHeartbeatInterval(9000);
+            this.i2cDeviceClient.enableWriteCoalescing(
+                    true);   // it's useful to us, at least in theory, if several positions must be set. And it is harmless, here.
 
         // Also: set up a read-window. We make it BALANCED to avoid unnecessary ping-ponging
         // between read mode and write mode, since motors are read about as much as they are

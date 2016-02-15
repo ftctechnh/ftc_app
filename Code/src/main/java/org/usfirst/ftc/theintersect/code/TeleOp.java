@@ -78,8 +78,8 @@ public class TeleOp extends SynchronousOpMode {
         leftHangString = hardwareMap.dcMotor.get("leftHangString");
         rightHangString = hardwareMap.dcMotor.get("rightHangString");
 
-		//tubeTilt = hardwareMap.servo.get("tubeTilt");
-		//tubeExtender = hardwareMap.servo.get("tubeExtender");
+		tubeTilt = hardwareMap.servo.get("tubeTilt");
+		tubeExtender = hardwareMap.servo.get("tubeExtender");
 
         mountainClimber = hardwareMap.servo.get("mountainClimber");
         mountainClimberRelease = hardwareMap.servo.get("mountainClimberRelease");
@@ -91,8 +91,8 @@ public class TeleOp extends SynchronousOpMode {
         leftChurroHook = hardwareMap.servo.get("leftChurroHook");
         rightChurroHook = hardwareMap.servo.get("rightChurroHook");
 
-		//leftBarHook = hardwareMap.servo.get("leftBarHook");
-		//rightBarHook = hardwareMap.servo.get("rightBarHook");
+		leftBarHook = hardwareMap.servo.get("leftBarHook");
+		rightBarHook = hardwareMap.servo.get("rightBarHook");
 
 
         //Set motor channel modes and direction
@@ -111,15 +111,21 @@ public class TeleOp extends SynchronousOpMode {
 		rightHangString.setDirection(DcMotor.Direction.REVERSE);
 		rightHangString.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
 
-		//tubeTilt.setDirection(Servo.Direction.REVERSE);
-		//tubeExtender.setDirection(Servo.Direction.REVERSE);
+		tubeTilt.setDirection(Servo.Direction.REVERSE);
+		tubeExtender.setDirection(Servo.Direction.REVERSE);
 		mountainClimber.setDirection(Servo.Direction.FORWARD);
 		mountainClimberRelease.setDirection(Servo.Direction.REVERSE);
-        bumper.setDirection(Servo.Direction.FORWARD);
+		bumper.setDirection(Servo.Direction.REVERSE);
+		rightChurroHook.setDirection(Servo.Direction.REVERSE);
+		leftChurroHook.setDirection(Servo.Direction.FORWARD);
+		rightBarHook.setDirection(Servo.Direction.FORWARD);
+		leftBarHook.setDirection(Servo.Direction.REVERSE);
 
-		teleInit();
+		preStartInit();
 		//Wait for the game to start
 		waitForStart();
+		teleInit();
+
         long endTime = System.currentTimeMillis() + 120000;
         //Game Loop
         while (opModeIsActive() && System.currentTimeMillis() < endTime) {
@@ -133,27 +139,27 @@ public class TeleOp extends SynchronousOpMode {
             positionClimbersForward = gamepad1.dpad_up || gamepad2.dpad_up;
             positionClimbersBackward = gamepad1.dpad_down || gamepad2.dpad_down;
             releaseClimbers = gamepad1.start || gamepad2.start;
-			//toggleBarHooks = gamepad1.left_stick_button || gamepad2
-			//.left_stick_button;
+			toggleBarHooks =
+					gamepad1.left_stick_button || gamepad2.left_stick_button;
 
             //Moves robot when some of the buttons are held
-			/*if (tubeExtend) {
+			if(tubeExtend) {
 				tubeExtender.setPosition(0.75);
             } else if (tubeRetract) {
                 tubeExtender.setPosition(-0.9);
             } else {
                 tubeExtender.setPosition(0.5);
-            }*/
+			}
 
-            /*if (containerTiltRight) {
+			if(containerTiltRight) {
 				tubeTilt.setPosition(tubeTilt.getPosition() + 0.01);
             } else if (containerTiltLeft) {
                 tubeTilt.setPosition(tubeTilt.getPosition() - 0.01);
             } else {
                 tubeTilt.setPosition(tubeTilt.getPosition());
-            }*/
+			}
 
-            /*if (toggleBarHooks && barHooksDown) {
+			if(toggleBarHooks && barHooksDown) {
 				leftBarHook.setPosition(Functions.barHookUpPos);
                 rightBarHook.setPosition(Functions.barHookUpPos);
                 Functions.waitFor(500);
@@ -163,7 +169,7 @@ public class TeleOp extends SynchronousOpMode {
                 rightBarHook.setPosition(Functions.barHookDownPos);
                 Functions.waitFor(500);
                 barHooksDown = true;
-            }*/
+			}
 
             if(gamepad1.right_trigger > Functions.triggerThreshold){
                 leftHangString.setPower(gamepad1.right_trigger);
@@ -302,18 +308,33 @@ public class TeleOp extends SynchronousOpMode {
 
 
 	public static void teleInit() {
-		mountainClimber.setPosition(Functions.mountainClimberTelePosition);
-		mountainClimberRelease
-				.setPosition(Functions.mountainClimberReleaseClose);
-		//tubeExtender.setPosition(Functions.tubeExtenderInitPosition);
-		//tubeTilt.setPosition(Functions.tubeTiltInitPosition);
+		mountainClimber.setPosition(Functions.mountainClimberInitPosition);
+		mountainClimberRelease.setPosition(
+				Functions.mountainClimberReleaseClose);
+		tubeExtender.setPosition(Functions.tubeExtenderInitPosition);
+		tubeTilt.setPosition(Functions.tubeTiltInitPosition);
 		bumper.setPosition(Functions.bumperInitPosition);
         rightChurroHook.setPosition(Functions.churroHookUpPos);
         leftChurroHook.setPosition(Functions.churroHookUpPos);
 		rightHangString.setPower(0);
 		leftHangString.setPower(0);
-		//rightBarHook.setPosition(Functions.barHookUpPos);
-		//leftBarHook.setPosition(Functions.barHookUpPos);
+		rightBarHook.setPosition(Functions.barHookUpPos);
+		leftBarHook.setPosition(Functions.barHookUpPos);
+	}
+
+	public void preStartInit() {
+		mountainClimber.setPosition(Functions.mountainClimberTelePosition);
+		mountainClimberRelease
+				.setPosition(Functions.mountainClimberReleaseClose);
+		tubeExtender.setPosition(Functions.tubeExtenderInitPosition);
+		tubeTilt.setPosition(Functions.tubeTiltInitPosition);
+		bumper.setPosition(Functions.bumperInitPosition);
+		rightChurroHook.setPosition(Functions.churroHookUpPos);
+		leftChurroHook.setPosition(Functions.churroHookUpPos);
+		rightHangString.setPower(0);
+		leftHangString.setPower(0);
+		rightBarHook.setPosition(Functions.barHookUpPos);
+		leftBarHook.setPosition(Functions.barHookUpPos);
 	}
 
 	public static void end() {

@@ -17,9 +17,9 @@ public class Functions {
 	public static double mountainClimberReleaseOpen = 0.0;
 	public static double mountainClimberReleaseClose = 1.0;
 	public static double bumperInitPosition = 0.0;
-	public static double tubeExtenderInitPosition = 0.0;
-	public static double tubeTiltInitPosition = 0.0;
-    public static double churroHookDownPos = 0.0;
+	public static double tubeExtenderInitPosition = 0.5;
+	public static double tubeTiltInitPosition = 0.5;
+	public static double churroHookDownPos = 0.0;
     public static double churroHookUpPos = 1.0;
 	public static double straightGyroCorrectionFactor = 20.0;
 	public static double adjustedPowerMax = 0.9;

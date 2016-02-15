@@ -1,21 +1,29 @@
 package org.swerverobotics.library.internal;
 
 import android.util.Log;
-
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.hardware.Engagable;
+import com.qualcomm.robotcore.hardware.I2cController;
 import com.qualcomm.robotcore.hardware.usb.RobotUsbModule;
-import com.qualcomm.robotcore.util.*;
-import org.swerverobotics.library.*;
-import org.swerverobotics.library.exceptions.*;
-import org.swerverobotics.library.interfaces.*;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import org.swerverobotics.library.BuildConfig;
+import org.swerverobotics.library.SynchronousOpMode;
+import org.swerverobotics.library.exceptions.SwerveRuntimeException;
+import org.swerverobotics.library.interfaces.II2cDeviceClient;
 
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.*;
-import static junit.framework.Assert.*;
-import static org.swerverobotics.library.internal.Util.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import static junit.framework.Assert.assertTrue;
+import static org.swerverobotics.library.internal.Util.handleCapturedInterrupt;
+import static org.swerverobotics.library.internal.Util.milliseconds;
 
 /**
  * I2cDeviceClient is a utility class that makes it easy to read or write data to 
@@ -51,6 +59,7 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
     private       Lock          readCacheLock;              // lock we must hold to look at readCache
     private       Lock          writeCacheLock;             // lock we must old to look at writeCache
     private final int           msCallbackLockWaitQuantum = 60;      // arbitrary, but long enough that we don't hit it in common usage, only in shutdown situations
+        private boolean isWriteCoalescingEnabled;            //
 
     private final Object        engagementLock       = new Object();
     private final Object        concurrentClientLock = new Object(); // the lock we use to serialize against concurrent clients of us. Can't acquire this AFTER the callback lock.
@@ -137,12 +146,15 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         this.callback               = new Callback();
         this.hardwareCycleCount     = 0;
         this.loggingEnabled         = false;
-        this.loggingTag             = String.format("%s:i2cClient(%s)", SynchronousOpMode.LOGGING_TAG, i2cDevice.getConnectionInfo());;
-        this.timeSinceLastHeartbeat = new ElapsedTime();
+            this.loggingTag = String
+                    .format("%s:i2cClient(%s)", SynchronousOpMode.LOGGING_TAG,
+                            i2cDevice.getConnectionInfo());
+            this.timeSinceLastHeartbeat = new ElapsedTime();
         this.timeSinceLastHeartbeat.reset();
         this.msHeartbeatInterval    = 0;
         this.heartbeatAction        = null;
         this.heartbeatExecutor      = null;
+            this.isWriteCoalescingEnabled = false;
 
         this.readWindow             = null;
 
@@ -771,7 +783,11 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
                         {
                         // If there's already a pending write, can we coalesce?
                         boolean doCoalesce = false;
-                        if (this.writeCacheStatus == WRITE_CACHE_STATUS.DIRTY && this.cregWrite + data.length <= ReadWindow.cregWriteMax)
+                            if(this.isWriteCoalescingEnabled
+                                    && this.writeCacheStatus
+                                    == WRITE_CACHE_STATUS.DIRTY
+                                    && this.cregWrite + data.length
+                                    <= ReadWindow.cregWriteMax)
                             {
                             if (ireg + data.length == this.iregWriteFirst)
                                 {
@@ -884,6 +900,20 @@ public final class I2cDeviceClient implements II2cDeviceClient, IOpModeStateTran
         {
         if (this.isHooked && this.newReadsAndWritesAllowed())
             this.writeCacheStatus = status;
+        }
+
+        @Override
+        public void enableWriteCoalescing(boolean enable) {
+            synchronized(this.concurrentClientLock) {
+                this.isWriteCoalescingEnabled = enable;
+            }
+        }
+
+        @Override
+        public boolean isWriteCoalescingEnabled() {
+            synchronized(this.concurrentClientLock) {
+                return this.isWriteCoalescingEnabled;
+            }
         }
 
     @Override public int getI2cCycleCount()
