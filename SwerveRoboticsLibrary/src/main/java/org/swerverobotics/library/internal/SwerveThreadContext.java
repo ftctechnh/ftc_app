@@ -15,11 +15,6 @@ public class SwerveThreadContext
     // Only to be accessed directly by internal Swerve Library components. All others to use methods.
     //----------------------------------------------------------------------------------------------
 
-    /**
-     * The action key used for write thunks that are issued by this thread
-     */
-    public int actionKeyWritesFromThisThread = Thunk.getNewActionKey();
-
     public final Thread     thread;
     public OpMode           opMode;
     public IThunkDispatcher thunker;
@@ -66,6 +61,8 @@ public class SwerveThreadContext
         {
         return tlsThreadContext.get();
         }
+
+    @Deprecated
     public static IThunkDispatcher getThunker()
         {
         return getThreadContext()==null ? null : getThreadContext().thunker;
@@ -101,7 +98,7 @@ public class SwerveThreadContext
         {
         return this.isSynchronousThread;
         }
-    public IThunkDispatcher thisGetThunker()
+    @Deprecated public IThunkDispatcher thisGetThunker()
         {
         return this.thunker;
         }

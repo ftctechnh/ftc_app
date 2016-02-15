@@ -10,7 +10,7 @@ import org.swerverobotics.library.SynchronousOpMode;
  *
  * @see <a href="https://en.wikipedia.org/wiki/Thunk">https://en.wikipedia.org/wiki/Thunk</a>
  */
-public abstract class Thunk implements Runnable, IActionKeyed
+public abstract class Thunk implements Runnable
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -19,7 +19,6 @@ public abstract class Thunk implements Runnable, IActionKeyed
     private   final SwerveThreadContext      context;
     protected final Object                   theLock;
     protected       RuntimeException         exception;
-    public    final List<Integer>            actionKeys;
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -30,35 +29,8 @@ public abstract class Thunk implements Runnable, IActionKeyed
         this.context    = SwerveThreadContext.getThreadContext();
         this.theLock    = new Object();
         this.exception  = null;
-        this.actionKeys = new LinkedList<Integer>();
         }
 
-    //----------------------------------------------------------------------------------------------
-    // Action key management
-    //----------------------------------------------------------------------------------------------
-
-    public static final int          nullActionKey = 0;
-    static AtomicInteger             prevActionKey = new AtomicInteger(nullActionKey);
-    
-    public static int getNewActionKey()
-        {
-        return prevActionKey.incrementAndGet();
-        }
-    
-    public void addActionKey(int actionKey)
-        {
-        this.actionKeys.add(actionKey);
-        }
-
-    //----------------------------------------------------------------------------------------------
-    // IActionKeyed
-    //----------------------------------------------------------------------------------------------
-    
-    @Override public List<Integer> getActionKeys()
-        {
-        return this.actionKeys;
-        }
-    
     //----------------------------------------------------------------------------------------------
     // Actions
     //----------------------------------------------------------------------------------------------
