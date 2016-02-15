@@ -308,13 +308,12 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      * completed when waitForThreadsWritesToReachHardware() returns.
      *
      * @throws InterruptedException thrown if the thread is interrupted
+     * @deprecated Thunking support is being removed
      */
+    @Deprecated
     public void waitForThreadsWritesToReachHardware() throws InterruptedException
         {
-        this.waitForLoopCycleEmptyOfActionKey
-            (
-            SwerveThreadContext.getThreadContext().actionKeyWritesFromThisThread
-            );
+        // Nothing here any more
         }
 
     //----------------------------------------------------------------------------------------------
@@ -477,39 +476,9 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     private class ActionQueueAndHistory
         {
         //-----------------------------------------------------------------------
-        // Types
-
-        private class ActionKeyHistory
-            {
-            private boolean[] array;
-
-            ActionKeyHistory()
-                {
-                this.array = new boolean[30];   // 30 is pretty arbitrary
-                }
-
-            void put(int index, boolean value)
-                {
-                if (index >= this.array.length)
-                    {
-                    this.array = Arrays.copyOf(this.array, Math.max(this.array.length,index) + 5);
-                    }
-                this.array[index] = value;
-                }
-
-            boolean valueAt(int index)
-                {
-                if (index >= this.array.length)
-                    return false;
-                return this.array[index];
-                }
-            }
-
-        //-----------------------------------------------------------------------
         // State
 
         Queue<Runnable>  queue;
-        ActionKeyHistory history;
         Queue<Runnable>  historicalActions;
 
         //-----------------------------------------------------------------------
@@ -518,17 +487,12 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         ActionQueueAndHistory()
             {
             this.queue   = this.newQueue();
-            this.history = this.newHistory();
             if (BuildConfig.DEBUG && false)
                 this.historicalActions = new LinkedList<Runnable>();
             }
         private Queue<Runnable> newQueue()
             {
             return new LinkedList<Runnable>();
-            }
-        private ActionKeyHistory newHistory()
-            {
-            return new ActionKeyHistory();
             }
 
         //-----------------------------------------------------------------------
@@ -537,13 +501,11 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         synchronized void clear()
             {
             this.queue   = this.newQueue();
-            this.history = this.newHistory();
             this.onChanged();
             }
 
         synchronized void clearHistory()
             {
-            this.history = this.newHistory();
             this.onChanged();
             }
 
@@ -559,14 +521,6 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             Runnable result = this.queue.poll();
             if (result != null)
                 {
-                if (result instanceof IActionKeyed)
-                    {
-                    IActionKeyed keyed = (IActionKeyed)result;
-                    for (int actionKey : keyed.getActionKeys())
-                        {
-                        this.history.put(actionKey, true);
-                        }
-                    }
                 if (this.historicalActions != null)
                     {
                     this.historicalActions.add(result);
@@ -575,34 +529,6 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
                 this.onChanged();
                 }
             return result;
-            }
-
-        synchronized boolean containsActionKey(int queryKey)
-            {
-            // Is the key present in our history?
-            if (this.history.valueAt(queryKey))
-                {
-                return true;
-                }
-
-            // Is the key present in pending stuff?
-            for (Runnable action : this.queue)
-                {
-                if (action instanceof IActionKeyed)
-                    {
-                    IActionKeyed keyed = (IActionKeyed)action;
-                    for (int actionKey : keyed.getActionKeys())
-                        {
-                        if (actionKey == queryKey)
-                            {
-                            return true;
-                            }
-                        }
-                    }
-                }
-
-            // Not present
-            return false;
             }
 
         private void onChanged()
@@ -1127,26 +1053,13 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      * Advanced/Internal: Wait until we encounter a loop() cycle that doesn't (yet) contain any actions which
      * are also thunks and whose key is the one indicated.
      * @param actionKey the key used to indicate which actions are of interest
-     */
-    private void waitForLoopCycleEmptyOfActionKey(int actionKey) throws InterruptedException
-        {
-        synchronized (this.actionQueueAndHistory)
-            {
-            while (this.actionQueueAndHistory.containsActionKey(actionKey))
-                {
-                this.actionQueueAndHistory.waitForChange();
-                }
-            }
-        }
-    /**
-     * Advanced/Internal: Wait until we encounter a loop() cycle that doesn't (yet) contain any actions which
-     * are also thunks and whose key is the one indicated.
-     * @param actionKey the key used to indicate which actions are of interest
      * @throws InterruptedException thrown if the thread is interrupted
+     * @deprecated action key support is being removed
      */
+    @Deprecated
     public static void synchronousThreadWaitForLoopCycleEmptyOfActionKey(int actionKey) throws InterruptedException
         {
-        SynchronousOpMode.getThreadSynchronousOpMode().waitForLoopCycleEmptyOfActionKey(actionKey);
+        // Nothing here any more
         }
 
     /**

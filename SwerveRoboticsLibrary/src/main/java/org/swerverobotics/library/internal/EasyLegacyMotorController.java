@@ -20,7 +20,7 @@ import static junit.framework.Assert.*;
  *             controller implementation.
  */
 @Deprecated
-public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl implements DcMotorController, IThunkWrapper<DcMotorController>, VoltageSensor, IOpModeStateTransitionEvents, Engagable
+public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl implements DcMotorController, VoltageSensor, IOpModeStateTransitionEvents, Engagable
     {
     //----------------------------------------------------------------------------------------------
     // State
@@ -234,15 +234,6 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
 
             this.deusurpDevices();
             }
-        }
-
-    //----------------------------------------------------------------------------------------------
-    // IHardwareWrapper
-    //----------------------------------------------------------------------------------------------
-    
-    @Override public DcMotorController getWrappedTarget()
-        {
-        return target;
         }
 
     //----------------------------------------------------------------------------------------------

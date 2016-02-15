@@ -7,7 +7,10 @@ import org.swerverobotics.library.SynchronousOpMode;
  *
  * @see SynchronousOpMode#getThreadThunker()
  * @see <a href="https://en.wikipedia.org/wiki/Thunk">https://en.wikipedia.org/wiki/Thunk</a>
+ *
+ * @deprecated Thunking is being removed; please advise if this is problematic
  */
+@Deprecated
 public interface IThunkDispatcher
     {
     /**
