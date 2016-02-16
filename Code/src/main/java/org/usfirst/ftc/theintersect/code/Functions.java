@@ -19,10 +19,8 @@ public class Functions {
 	public static double bumperInitPosition = 0.0;
 	public static double tubeExtenderInitPosition = 0.5;
 	public static double tubeTiltInitPosition = 0.5;
-    public static double churroHookLeftDownPos = 0.1;
-    public static double churroHookRightUpPos = 0.1;
-    public static double churroHookLeftUpPos = 0.9;
-    public static double churroHookRightDownPos = 0.9;
+    public static double churroHookDownPos = 0.1;
+    public static double churroHookUpPos = 0.9;
 	public static double straightGyroCorrectionFactor = 20.0;
 	public static double adjustedPowerMax = 0.9;
 	public static double adjustedPowerMin = 0.25;

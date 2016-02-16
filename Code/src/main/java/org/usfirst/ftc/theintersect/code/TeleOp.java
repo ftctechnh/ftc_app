@@ -70,6 +70,9 @@ public class TeleOp extends SynchronousOpMode {
 	float slowDriveBack;
 	float slowDriveForward;
 
+    boolean autoHookChurro;
+    boolean autoUnhookChurro;
+
 	@Override
 	public void main() throws InterruptedException {
         //Initialize hardware
@@ -118,6 +121,7 @@ public class TeleOp extends SynchronousOpMode {
         tubeExtender.setDirection(Servo.Direction.REVERSE);
         mountainClimber.setDirection(Servo.Direction.FORWARD);
         mountainClimberRelease.setDirection(Servo.Direction.REVERSE);
+        rightChurroHook.setDirection(Servo.Direction.REVERSE);
         bumper.setDirection(Servo.Direction.FORWARD);
         //Wait for the game to start
 		/*ClassFactory.createEasyMotorController(this, linearSlide,
@@ -143,6 +147,9 @@ public class TeleOp extends SynchronousOpMode {
 
             toggleBumper = gamepad1.back || gamepad2.back;
 
+            //autoHookChurro = gamepad1.dpad_up || gamepad2.dpad_up;
+            //autoUnhookChurro = gamepad1.dpad_down || gamepad2.dpad_down;
+
             positionClimbersForward = gamepad1.dpad_up || gamepad2.dpad_up;
             positionClimbersBackward = gamepad1.dpad_down || gamepad2.dpad_down;
             //releaseClimbers = gamepad1.start || gamepad2.start;
@@ -158,17 +165,16 @@ public class TeleOp extends SynchronousOpMode {
                 tubeExtender.setPosition(0.5);
             }
             if (toggleChurroHooks && churroHooksDown) {
-                leftChurroHook.setPosition(Functions.churroHookLeftUpPos);
-                rightChurroHook.setPosition(Functions.churroHookRightUpPos);
+                leftChurroHook.setPosition(Functions.churroHookUpPos);
+                rightChurroHook.setPosition(Functions.churroHookUpPos);
                 Functions.waitFor(250);
                 churroHooksDown = false;
             } else if (toggleChurroHooks && !churroHooksDown) {
-                leftChurroHook.setPosition(Functions.churroHookLeftDownPos);
-                rightChurroHook.setPosition(Functions.churroHookRightDownPos);
+                leftChurroHook.setPosition(Functions.churroHookDownPos);
+                rightChurroHook.setPosition(Functions.churroHookDownPos);
                 Functions.waitFor(250);
                 churroHooksDown = true;
             }
-
 
             if (containerTiltRight) {
                 tubeTilt.setPosition(tubeTilt.getPosition() + 0.02);
@@ -183,7 +189,7 @@ public class TeleOp extends SynchronousOpMode {
                 rightBarHook.setPosition(Functions.barHookRightUpPos);
                 Functions.waitFor(250);
                 barHooksDown = false;
-            } else if (toggleChurroHooks && !barHooksDown) {
+            } else if (toggleBarHooks && !barHooksDown) {
                 leftBarHook.setPosition(Functions.barHookLeftDownPos);
                 rightBarHook.setPosition(Functions.barHookRightDownPos);
                 Functions.waitFor(250);
@@ -207,8 +213,16 @@ public class TeleOp extends SynchronousOpMode {
                 rightHangString.setPower(0);
             }
 
+            if(autoHookChurro) {
+                autoHookChurro(2,0.7);
+            }
 
-                if (positionClimbersForward) {
+            if(autoUnhookChurro){
+                autoUnhookChurro(1,0.7);
+            }
+
+
+            if (positionClimbersForward) {
                 try {
                     mountainClimber.setPosition(
                             mountainClimber.getPosition() + 0.03);
@@ -220,12 +234,12 @@ public class TeleOp extends SynchronousOpMode {
                 try {
                     mountainClimber.setPosition(
                             (mountainClimber.getPosition() - 0.03));
-                } catch (Exception e) {
+                } catch(Exception e) {
 
                 }
                 positionClimbersForward = false;
             } else {
-                    mountainClimber.setPosition(mountainClimber.getPosition());
+                mountainClimber.setPosition(mountainClimber.getPosition());
             }
             if (releaseClimbers) {
                 mountainClimberRelease.setPosition(1.0);
@@ -244,8 +258,8 @@ public class TeleOp extends SynchronousOpMode {
                 linearSlideBackward =
                         gamepad1.left_bumper || gamepad2.left_bumper;
 
-				/*slowDriveBack = gamepad1.left_trigger;
-				slowDriveForward = gamepad1.right_trigger;!!*/
+                /*slowDriveBack = gamepad1.left_trigger;
+                slowDriveForward = gamepad1.right_trigger;!!*/
 
 
                 if (gamepad1.a || gamepad2.a) {
@@ -261,12 +275,12 @@ public class TeleOp extends SynchronousOpMode {
                 sweeperBackward = gamepad1.y || gamepad2.y;
 
                 //Use gamepad values to move robot
-				if(slowDriveForward != 0 || slowDriveBack != 0) {
-					Functions.moveTwoMotors(rightWheel, rightWheel,
-							(slowDriveForward - slowDriveBack) * 0.25);
-					Functions.moveTwoMotors(leftWheel, leftWheel,
-							(slowDriveForward - slowDriveBack) * 0.25);
-			} else if (rightWheelPower != 0 || leftWheelPower != 0) {
+                if (slowDriveForward != 0 || slowDriveBack != 0) {
+                    Functions.moveTwoMotors(rightWheel, rightWheel,
+                            (slowDriveForward - slowDriveBack) * 0.25);
+                    Functions.moveTwoMotors(leftWheel, leftWheel,
+                            (slowDriveForward - slowDriveBack) * 0.25);
+                } else if (rightWheelPower != 0 || leftWheelPower != 0) {
                     rightWheel.setPower(rightWheelPower);
                     leftWheel.setPower(leftWheelPower);
                 } else {
@@ -300,13 +314,54 @@ public class TeleOp extends SynchronousOpMode {
                     bumperDown = true;
                 }
             }
-
             idle();
         }
 		end();
 	}
 
+    public static void moveSlidesUpTime(int time, double power){
+        linearSlide.setPower(-power);
+        Functions.waitFor(time * 1000);
+        linearSlide.setPower(0);
+    }
 
+    public static void stopRobot() {
+        leftWheel.setPower(0);
+        rightWheel.setPower(0);
+    }
+
+    public static void moveRobotForward(double leftPower, double rightPower) {
+        leftWheel.setPower(-leftPower);
+        rightWheel.setPower(-rightPower);
+    }
+
+    public static void moveRobotBackward(double leftPower, double rightPower) {
+        leftWheel.setPower(leftPower);
+        rightWheel.setPower(rightPower);
+    }
+    public static void moveRobotForwardTime(int seconds, double power) {
+        moveRobotForward(power, power);
+        Functions.waitFor(seconds * 1000);
+        stopRobot();
+    }
+
+    public static void moveRobotBackwardTime(double seconds, double power) {
+        moveRobotBackward(power, power);
+        Functions.waitFor((int) seconds * 1000);
+        stopRobot();
+    }
+    public static void autoHookChurro(int time, double speed){
+        moveSlidesUpTime(2,0.5);
+        moveRobotForwardTime(time, speed);
+        leftChurroHook.setPosition(Functions.churroHookDownPos);
+        rightChurroHook.setPosition(Functions.churroHookDownPos);
+    }
+
+    public static void autoUnhookChurro(int time, double speed){
+        moveRobotForwardTime(time, speed);
+        leftChurroHook.setPosition(Functions.churroHookDownPos);
+        rightChurroHook.setPosition(Functions.churroHookDownPos);
+    }
 
 	public static void teleInit() {
         mountainClimber.setPosition(Functions.mountainClimberTelePosition);
@@ -315,8 +370,8 @@ public class TeleOp extends SynchronousOpMode {
 		tubeExtender.setPosition(Functions.tubeExtenderInitPosition);
 		tubeTilt.setPosition(Functions.tubeTiltInitPosition);
 		bumper.setPosition(Functions.bumperInitPosition);
-        rightChurroHook.setPosition(Functions.churroHookRightUpPos);
-        leftChurroHook.setPosition(Functions.churroHookLeftUpPos);
+        rightChurroHook.setPosition(Functions.churroHookUpPos);
+        leftChurroHook.setPosition(Functions.churroHookUpPos);
         rightBarHook.setPosition(Functions.barHookLeftDownPos);
         leftBarHook.setPosition(Functions.barHookRightDownPos);
 
