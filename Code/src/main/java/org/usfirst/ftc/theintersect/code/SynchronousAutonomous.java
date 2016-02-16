@@ -28,6 +28,13 @@ public class SynchronousAutonomous extends SynchronousOpMode {
 
     static Servo bumper;
 
+	static DcMotor rightHangString;
+	static DcMotor leftHangString;
+	static Servo rightChurroHook;
+	static Servo leftChurroHook;
+	static Servo rightBarHook;
+	static Servo leftBarHook;
+
 
     static ColorSensor lineColor;
     static ModernRoboticsI2cGyro gyro;
@@ -52,9 +59,14 @@ public class SynchronousAutonomous extends SynchronousOpMode {
         mountainClimberRelease = hardwareMap.servo.get("mountainClimberRelease");
         bumper = hardwareMap.servo.get("bumper");
 
+		rightHangString = hardwareMap.dcMotor.get("rightHangString");
+		leftHangString = hardwareMap.dcMotor.get("leftHangString");
+		rightChurroHook = hardwareMap.servo.get("rightChurroHook");
+		leftChurroHook = hardwareMap.servo.get("leftChurroHook");
+		rightBarHook = hardwareMap.servo.get("rightBarHook");
+		leftBarHook = hardwareMap.servo.get("leftBarHook");
 
         autonomousInit(telemetry);
-//        lineColor.enableLed(true); Done in autonomousInit already
 
         //Delay And Team Selection
          while (true) {
@@ -98,55 +110,79 @@ public class SynchronousAutonomous extends SynchronousOpMode {
         };
 
 
-
         waitForStart();
-//        mountainClimberMove.start();
-//        Functions.waitFor(delay * 1000);
-        endTime = System.currentTimeMillis() + 30000;
+		mountainClimberMove.start();
+		endTime = System.currentTimeMillis() + 30000;
         telemetry.clearDashboard();
         telemetry.addData("gyroInit: ", endTime);
         telemetry.updateNow();
-        while (opModeIsActive() && !isStopRequested() && endTime > System.currentTimeMillis()) {
-            //Starting based off of the delay
-            //sleep(delay * 1000);
-            //Autonomous Routine
+		if(opModeIsActive() && !isStopRequested() && endTime > System
+				.currentTimeMillis()) {
+			//Starting based off of the delay
+			Functions.waitFor(delay * 1000);
+			//Autonomous Routine
             telemetry.addData("Status", "Working...");
-
-            end();
-            telemetry.addData("Status", "Done!");
+			if(team.equals("Blue")) {
+				moveRobotBackwardTime(2.5, 0.4);
+				debugWait(3000);
+				stopAtWhite(0.4, 10000000000L, telemetry);
+				debugWait(3000);
+				spinClockwiseGyroCorrection(50, 0.4, 10000000000L);
+				debugWait(3000);
+				moveRobotBackwardTime(2, 0.5);
+				debugWait(3000);
+				while(ultrasonic.getUltrasonicLevel() < 15) {
+					moveRobotForward(0.2, 0.2);
+				}
+				stopRobot();
+				debugWait(3000);
+				dumpClimbersUltra(telemetry);
+				debugWait(1000000000);
+				end();
+			}
+			telemetry.addData("Status", "Done!");
         }
         end();
     }
 
+	public static void debugWait(int mill) {
+		Functions.waitFor(100);
+	}
 
     public static void directionInit() {
-        rightWheel.setDirection(DcMotor.Direction.FORWARD);
-        leftWheel.setDirection(DcMotor.Direction.REVERSE);
-        mountainClimber.setDirection(Servo.Direction.FORWARD);
-        mountainClimberRelease.setDirection(Servo.Direction.REVERSE);
-        bumper.setDirection(Servo.Direction.FORWARD);
-        tubeExtender.setDirection(Servo.Direction.REVERSE);
-        tubeTilt.setDirection(Servo.Direction.REVERSE);
+		//Set motor channel modes and direction
+		rightWheel.setDirection(DcMotor.Direction.REVERSE);
+		leftWheel.setDirection(DcMotor.Direction.FORWARD);
+		leftHangString.setDirection(DcMotor.Direction.REVERSE);
+		rightHangString.setDirection(DcMotor.Direction.REVERSE);
+		tubeTilt.setDirection(Servo.Direction.REVERSE);
+		tubeExtender.setDirection(Servo.Direction.REVERSE);
+		mountainClimber.setDirection(Servo.Direction.FORWARD);
+		mountainClimberRelease.setDirection(Servo.Direction.REVERSE);
+		bumper.setDirection(Servo.Direction.REVERSE);
+		rightChurroHook.setDirection(Servo.Direction.REVERSE);
+		leftChurroHook.setDirection(Servo.Direction.FORWARD);
+		rightBarHook.setDirection(Servo.Direction.FORWARD);
+		leftBarHook.setDirection(Servo.Direction.REVERSE);
 
-        rightWheel.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        leftWheel.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-
-    }
+		rightWheel.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+		leftWheel.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+	}
 
 
     public static void gyroInit(TelemetryDashboardAndLog telemetry) {
 
         gyro.calibrate();
-        gyro.setHeadingMode(
-                ModernRoboticsI2cGyro.HeadingMode.HEADING_CARTESIAN);
-        while (gyro.isCalibrating()) {
-            telemetry.addData("gyroInit: ", "Calibrating Gyro");
-            telemetry.updateNow();
+		gyro.setHeadingMode(
+				ModernRoboticsI2cGyro.HeadingMode.HEADING_CARTESIAN);
+		while (gyro.isCalibrating()) {
+			telemetry.addData("gyroInit: ", "Calibrating Gyro");
+			telemetry.updateNow();
         }
         telemetry.addData("gyroInit: ", "Calibration Complete");
-        telemetry.updateNow();
-        initGyroHeading(telemetry);
-    }
+		telemetry.updateNow();
+		initGyroHeading(telemetry);
+	}
 
     // setup gyro so it will have stable reading of heading
     public static void initGyroHeading(TelemetryDashboardAndLog telemetry) {
@@ -156,8 +192,8 @@ public class SynchronousAutonomous extends SynchronousOpMode {
         int totalCount = 0;
 
         previousPosition = gyro.getIntegratedZValue();
-        Functions.waitFor(500);
-        while (repeatCount < 5) {
+		Functions.waitFor(500);
+		while (repeatCount < 5) {
             currentPosition = gyro.getIntegratedZValue();
             if (currentPosition == previousPosition) {
                 repeatCount++;
@@ -170,28 +206,45 @@ public class SynchronousAutonomous extends SynchronousOpMode {
             Functions.waitFor(500);
             totalCount++;
         }
-        telemetry.addData("initGyroHeading: Done ", totalCount);
-        telemetry.updateNow();
-    }
+		telemetry.addData("initGyroHeading: Done ", totalCount);
+		telemetry.updateNow();
+	}
+
+	public static void preStartInit() {
+		mountainClimber.setPosition(Functions.mountainClimberTelePosition);
+		mountainClimberRelease
+				.setPosition(Functions.mountainClimberReleaseClose);
+		tubeExtender.setPosition(Functions.tubeExtenderInitPosition);
+		tubeTilt.setPosition(Functions.tubeTiltInitPosition);
+		bumper.setPosition(Functions.bumperInitPosition);
+		rightChurroHook.setPosition(Functions.churroHookUpPos);
+		leftChurroHook.setPosition(Functions.churroHookUpPos);
+		rightHangString.setPower(0);
+		leftHangString.setPower(0);
+		rightBarHook.setPosition(Functions.barHookUpPos);
+		leftBarHook.setPosition(Functions.barHookUpPos);
+	}
 
     public static void autonomousInit(TelemetryDashboardAndLog telemetry) {
         lineColor.enableLed(true);
-        servoInit();
-        directionInit();
-        resetEncoders();
-        rightWheel.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        leftWheel.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-        gyroInit(telemetry);
-    }
+		directionInit();
+		preStartInit();
+		servoInit();
+		resetEncoders();
+		rightWheel.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+		leftWheel.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+		gyroInit(telemetry);
+	}
 
     public static void servoInit() {
-        mountainClimber.setPosition(Functions.mountainClimberInitPosition);
-        mountainClimberRelease.setPosition(
-                Functions.mountainClimberReleaseClose);
-        tubeExtender.setPosition(Functions.tubeExtenderInitPosition);
+		mountainClimber.setPosition(Functions.mountainClimberTelePosition);
+		mountainClimberRelease
+				.setPosition(Functions.mountainClimberReleaseClose);
+		tubeExtender.setPosition(Functions.tubeExtenderInitPosition);
         tubeTilt.setPosition(Functions.tubeTiltInitPosition);
-        bumper.setPosition(Functions.bumperInitPosition);
-    }
+		bumper.setPosition(Functions.bumperInitPosition);
+	}
+
 
     public static double calculateArmPosition(double dist, TelemetryDashboardAndLog telemetry) {
         final double basketOffset = 5.0; // offset between wall and basket
@@ -232,9 +285,9 @@ public class SynchronousAutonomous extends SynchronousOpMode {
             Functions.waitFor(50);
         }
         Distance = (Distance- minDistance - maxDistance ) / 3;
-        telemetry.addData("min ", minDistance);
-        telemetry.addData("max ", maxDistance);
-        telemetry.addData("Distance ", Distance);
+		telemetry.addData("min ", minDistance);
+		telemetry.addData("max ", maxDistance);
+		telemetry.addData("Distance ", Distance);
 
         return(Distance);
     }
@@ -242,14 +295,14 @@ public class SynchronousAutonomous extends SynchronousOpMode {
     public static void dumpClimbersUltra(TelemetryDashboardAndLog telemetry) {
         //set the position for arm based on ultrasonic sensor
         mountainClimber.setPosition(calculateArmPosition(getUSDistance(ultrasonic,telemetry),telemetry));
-        Functions.waitFor(1000);
+		Functions.waitFor(2000);
+		mountainClimberRelease.setPosition(Functions.mountainClimberReleaseOpen);
+		Functions.waitFor(500);
+		mountainClimberRelease.setPosition(Functions.mountainClimberReleaseClose);
+        Functions.waitFor(100);
         mountainClimberRelease.setPosition(Functions.mountainClimberReleaseOpen);
-        Functions.waitFor(100);
-        mountainClimberRelease.setPosition(Functions.mountainClimberReleaseClose);
-        Functions.waitFor(100);
-        mountainClimberRelease.setPosition(Functions.mountainClimberReleaseOpen);
-        Functions.waitFor(100);
-        mountainClimberRelease.setPosition(Functions.mountainClimberReleaseClose);
+		Functions.waitFor(1000);
+		mountainClimberRelease.setPosition(Functions.mountainClimberReleaseClose);
         Functions.waitFor(100);
         mountainClimberRelease.setPosition(Functions.mountainClimberReleaseOpen);
         Functions.waitFor(100);
@@ -296,32 +349,32 @@ public class SynchronousAutonomous extends SynchronousOpMode {
 
 
     public static void stopRobot() {
-        leftWheel.setPower(0);
-        rightWheel.setPower(0);
-    }
+		leftWheel.setPower(0);
+		rightWheel.setPower(0);
+	}
 
     public static void moveRobotForwardTime(int seconds, double power) {
-        moveRobotForward(power, power);
-        Functions.waitFor(seconds * 1000);
+		moveRobotForward(power, power);
+		Functions.waitFor(seconds * 1000);
         stopRobot();
     }
 
     public static void moveRobotBackwardTime(double seconds, double power) {
-        moveRobotBackward(power, power);
-        Functions.waitFor((int) seconds * 1000);
+		moveRobotBackward(power, power);
+		Functions.waitFor((int) seconds * 1000);
         stopRobot();
     }
 
     public static void moveRobotForwardTimeGyro(int seconds, double power) {
-        moveRobotForward(power, power);
-        Functions.waitFor(seconds * 1000);
+		moveRobotForward(power, power);
+		Functions.waitFor(seconds * 1000);
         stopRobot();
     }
 
     public static void moveRobotBackwardTimeGyro(int seconds, double power) {
         moveRobotBackward(power, power);
-        Functions.waitFor(seconds * 1000);
-        stopRobot();
+		Functions.waitFor(seconds * 1000);
+		stopRobot();
     }
 
 
@@ -357,9 +410,9 @@ public class SynchronousAutonomous extends SynchronousOpMode {
 
     // Move Robot backwoard based on encoder setting
     // Use run to position mode
-    public static void moveRobotBackwardRotations(double rotations, double power,
-                                                  long timeoutMill) {
-        resetEncoders(); // reset encoder and turn on run_to_position mode
+	public static void moveRobotBackwardRotations(double rotations, double
+			power, long timeoutMill) {
+		resetEncoders(); // reset encoder and turn on run_to_position mode
         long endTime = System.currentTimeMillis() + timeoutMill;
         double encoderVal = rotations * Functions.neveRestDegreeRatio;
 
@@ -373,10 +426,14 @@ public class SynchronousAutonomous extends SynchronousOpMode {
         rightWheel.setPower(power);
         leftWheel.setPower(power);
 
-        while ((System.currentTimeMillis() < endTime) &&
-                (rightWheel.getTargetPosition() > encoderVal) &&
-                (leftWheel.getTargetPosition() > encoderVal)) {
-            Functions.waitFor(50);
+		while((System.currentTimeMillis() < endTime)) {
+			//(rightWheel.getTargetPosition() > encoderVal) &&
+			//(leftWheel.getTargetPosition() > encoderVal)) {
+			if(!rightWheel.isBusy() && !leftWheel.isBusy()) {
+				stopRobot();
+				break;
+			}
+			Functions.waitFor(50);
         }
         stopRobot();
     }
@@ -398,11 +455,15 @@ public class SynchronousAutonomous extends SynchronousOpMode {
         rightWheel.setPower(power);
         leftWheel.setPower(power);
 
-        while ((System.currentTimeMillis() < endTime) &&
-                (rightWheel.getTargetPosition() < encoderVal) &&
-                (leftWheel.getTargetPosition() < encoderVal)) {
-            Functions.waitFor(50);
-        }
+		while((System.currentTimeMillis() < endTime)) {
+			//(rightWheel.getTargetPosition() < encoderVal) &&
+			//(leftWheel.getTargetPosition() < encoderVal)) {
+			if(!rightWheel.isBusy() && !leftWheel.isBusy()) {
+				stopRobot();
+				break;
+			}
+			Functions.waitFor(50);
+		}
         stopRobot();
     }
 
@@ -965,9 +1026,10 @@ public class SynchronousAutonomous extends SynchronousOpMode {
     }
 
 	public static void end() {
-		rightWheel.setPowerFloat();
-		leftWheel.setPowerFloat();
-		sweeper.setPowerFloat();
+		stopRobot();
+		rightWheel.close();
+		leftWheel.close();
+		sweeper.setPower(0);
 		lineColor.enableLed(false);
 		lineColor.close();
 	}

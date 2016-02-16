@@ -1,19 +1,20 @@
 package org.swerverobotics.library.internal;
 
 import android.util.Log;
-
 import com.qualcomm.hardware.hitechnic.HiTechnicNxtDcMotorController;
-import com.qualcomm.hardware.hitechnic.HiTechnicNxtServoController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
-import com.qualcomm.robotcore.hardware.usb.RobotUsbModule;
-import com.qualcomm.robotcore.util.*;
-import org.swerverobotics.library.*;
-import org.swerverobotics.library.exceptions.*;
-import org.swerverobotics.library.interfaces.*;
-import java.nio.*;
+import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.util.TypeConversion;
+import org.swerverobotics.library.BuildConfig;
+import org.swerverobotics.library.SynchronousOpMode;
+import org.swerverobotics.library.exceptions.RuntimeInterruptedException;
+import org.swerverobotics.library.interfaces.II2cDeviceClient;
 
-import static junit.framework.Assert.*;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+
+import static junit.framework.Assert.assertTrue;
 
 /**
  * An alternative implementation of a Legacy DC Motor controller.
@@ -113,6 +114,8 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
 
         this.i2cDeviceClient.setHeartbeatAction(heartbeatAction);
         this.i2cDeviceClient.setHeartbeatInterval(2000);
+            this.i2cDeviceClient.enableWriteCoalescing(
+                    true);   // it's useful to us, particularly for setting motor speeds
 
         // Also: set up a read-window. We make it BALANCED to avoid unnecessary ping-ponging
         // between read mode and write mode, since motors are read about as much as they are
@@ -204,7 +207,7 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
             if (Util.contains(this.context.hardwareMap.voltageSensor, swerveVoltageSensorName))
                 {
                 VoltageSensor voltageSensor = this.context.hardwareMap.voltageSensor.get(swerveVoltageSensorName);
-                if (voltageSensor == (VoltageSensor)this)
+                    if(voltageSensor == this)
                     {
                     Util.removeName(this.context.hardwareMap.voltageSensor, swerveVoltageSensorName);
                     }
@@ -321,25 +324,25 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
 
     @Override synchronized public boolean onUserOpModeStop()
         {
-        Log.d(LOGGING_TAG, "Easy: auto-stopping...");
+            Log.d(LOGGING_TAG, "Easy legacy motor: auto-stopping...");
         if (this.isEngaged())
             {
             this.stopMotors();  // mirror StopRobotOpMode
             this.disengage();
             }
-        Log.d(LOGGING_TAG, "Easy: ... done");
+            Log.d(LOGGING_TAG, "Easy legacy motor: ... auto-stopping complete");
         return true;    // unregister us
         }
 
     @Override synchronized public boolean onRobotShutdown()
         {
-        Log.d(LOGGING_TAG, "Easy: auto-closing...");
+            Log.d(LOGGING_TAG, "Easy legacy motor: auto-closing...");
 
         // We actually shouldn't be here by now, having received a onUserOpModeStop()
         // after which we should have been unregistered. But we close down anyway.
         this.close();
 
-        Log.d(LOGGING_TAG, "Easy: ... done");
+            Log.d(LOGGING_TAG, "Easy legacy motor: ... auto-closing complete");
         return true;    // unregister us
         }
 
@@ -381,7 +384,7 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
             byte bCurrentMode = this.i2cDeviceClient.read8(mpMotorRegMotorMode[motor]);
             if (bCurrentMode == bNewMode)
                 break;
-            Thread.yield();;
+                Thread.yield();
             }
 
         // If the mode is 'reset encoders', we don't want to return until the encoders have actually reset
@@ -399,7 +402,7 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
         if (mode == RunMode.RESET_ENCODERS)
             {
             // Unclear if this is needed
-            while (this.getMotorTargetPosition(motor) != 0)
+                while(this.getMotorCurrentPosition(motor) != 0)
                 {
                 if (!this.isArmed()) break;
                 Thread.yield();
