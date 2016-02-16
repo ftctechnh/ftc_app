@@ -46,7 +46,7 @@ public class SteelHawksOp extends OpMode {
 	DcMotor motorRight; //driving
 	DcMotor motorLeft; //driving
 	DcMotor harvester;
-	DcMotor motorArm;
+	DcMotor motorArmUp;
 	DcMotor motorArmDump;
 
 	DcMotorController.DeviceMode devMode;
@@ -95,14 +95,15 @@ public class SteelHawksOp extends OpMode {
 
 		motorRight = hardwareMap.dcMotor.get("motor_2");
 		motorLeft = hardwareMap.dcMotor.get("motor_1");
-		harvester = hardwareMap.dcMotor.get("harvester");
+
 
 		motorLeft.setDirection(DcMotor.Direction.REVERSE);
 
-		/*motorArm = hardwareMap.dcMotor.get("motor_3");
-		motorArmDump = hardwareMap.dcMotor.get("motor_4");*/
-		harvesterController = hardwareMap.dcMotorController.get("harvesterController");
+		motorArmUp = hardwareMap.dcMotor.get("motor_3");
+		motorArmDump = hardwareMap.dcMotor.get("motor_4");
 
+		harvesterController = hardwareMap.dcMotorController.get("harvesterController");
+		harvester = hardwareMap.dcMotor.get("harvester");
 
 	}
 
@@ -127,22 +128,22 @@ public class SteelHawksOp extends OpMode {
 		// and 1 is full right
 		float leftMotorPower = gamepad1.left_stick_y;
 		float rightMotorPower = gamepad1.right_stick_y;
-		//float movingArmUp = gamepad2.left_stick_y;
-		//float dumpingArm = gamepad2.right_stick_x;
+		float movingArmUp = gamepad2.left_stick_y;
+		float dumpingArm = gamepad2.right_stick_x;
 
 
 		// clip the right/left values so that the values never exceed +/- 1
 		leftMotorPower = Range.clip(leftMotorPower, -1, 1);
 		rightMotorPower = Range.clip(rightMotorPower, -1, 1);
-		//movingArmup = Range.clip(movingArmup, -1, 1)
-		//dumpingArm = Range.clip(right, -1, 1)
+		movingArmUp = Range.clip(movingArmUp, -1, 1);
+		dumpingArm = Range.clip(dumpingArm, -1, 1);
 
 		// scale the joystick value to make it easier to control
 		// the robot more precisely at slower speeds.
 		leftMotorPower = (float)scaleInput(leftMotorPower);
 		rightMotorPower =  (float)scaleInput(rightMotorPower);
-		//movingArmUp=  (float)scaleInput(movingArmUp);
-		//dumpingArn =  (float)scaleInput(dumpingArm);
+		movingArmUp=  (float)scaleInput(movingArmUp);
+		dumpingArm =  (float)scaleInput(dumpingArm);
 
 
 
@@ -157,8 +158,8 @@ public class SteelHawksOp extends OpMode {
 		// write the values to the motors
 		motorRight.setPower(rightMotorPower);
 		motorLeft.setPower(leftMotorPower);
-		//motorArm.setPower(movingArmUp);
-		//motorArm2.setPower(dumpingArm);
+		motorArmUp.setPower(movingArmUp);
+		motorArmDump.setPower(dumpingArm);
 		harvesterController.setMotorPower(1,.5);
 /*
 
@@ -243,8 +244,8 @@ public class SteelHawksOp extends OpMode {
 		 * are currently write only.
 		 */
 		telemetry.addData("Text", "*** Robot Data***");
-		//telemetry.addData("arm", "arm:  " + String.format("%.2f", movingArmUp));
-		//telemetry.addData("claw", "claw:  " + String.format("%.2f", dumpingArm));
+		telemetry.addData("arm", "arm:  " + String.format("%.2f", movingArmUp));
+		telemetry.addData("claw", "claw:  " + String.format("%.2f", dumpingArm));
 		telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", leftMotorPower));
 		telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", rightMotorPower));
 
