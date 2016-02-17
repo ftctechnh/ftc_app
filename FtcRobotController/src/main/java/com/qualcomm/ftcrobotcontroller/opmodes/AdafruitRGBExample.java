@@ -58,11 +58,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannelController;
  *
  * The op mode assumes that the Core Device Interface Module
  * is configured with a name of "dim" and that the Adafruit color sensor
-<<<<<<< HEAD
  * is configured as an I2C device with a name of "lady".
-=======
- * is configured as an I2C device with a name of "color".
->>>>>>> refs/remotes/ftctechnh/master
  *
  * It also assumes that the LED pin of the RGB sensor
  * is connected to the signal pin of digital port #5 (zero indexed)
@@ -96,11 +92,7 @@ public class AdafruitRGBExample extends LinearOpMode {
     cdim.setDigitalChannelMode(LED_CHANNEL, DigitalChannelController.Mode.OUTPUT);
 
     // get a reference to our ColorSensor object.
-<<<<<<< HEAD
     sensorRGB = hardwareMap.colorSensor.get("lady");
-=======
-    sensorRGB = hardwareMap.colorSensor.get("color");
->>>>>>> refs/remotes/ftctechnh/master
 
     // bEnabled represents the state of the LED.
     boolean bEnabled = true;

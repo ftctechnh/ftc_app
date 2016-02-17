@@ -390,11 +390,7 @@ public class PushBotHardware extends OpMode
     {
         if (v_motor_left_drive != null)
         {
-<<<<<<< HEAD
             v_motor_left_drive.setChannelMode
-=======
-            v_motor_left_drive.setMode
->>>>>>> refs/remotes/ftctechnh/master
                 ( DcMotorController.RunMode.RUN_USING_ENCODERS
                 );
         }
@@ -413,11 +409,7 @@ public class PushBotHardware extends OpMode
     {
         if (v_motor_right_drive != null)
         {
-<<<<<<< HEAD
             v_motor_right_drive.setChannelMode
-=======
-            v_motor_right_drive.setMode
->>>>>>> refs/remotes/ftctechnh/master
                 ( DcMotorController.RunMode.RUN_USING_ENCODERS
                 );
         }
@@ -454,17 +446,10 @@ public class PushBotHardware extends OpMode
     {
         if (v_motor_left_drive != null)
         {
-<<<<<<< HEAD
             if (v_motor_left_drive.getChannelMode () ==
                 DcMotorController.RunMode.RESET_ENCODERS)
             {
                 v_motor_left_drive.setChannelMode
-=======
-            if (v_motor_left_drive.getMode () ==
-                DcMotorController.RunMode.RESET_ENCODERS)
-            {
-                v_motor_left_drive.setMode
->>>>>>> refs/remotes/ftctechnh/master
                     ( DcMotorController.RunMode.RUN_WITHOUT_ENCODERS
                     );
             }
@@ -484,17 +469,10 @@ public class PushBotHardware extends OpMode
     {
         if (v_motor_right_drive != null)
         {
-<<<<<<< HEAD
             if (v_motor_right_drive.getChannelMode () ==
                 DcMotorController.RunMode.RESET_ENCODERS)
             {
                 v_motor_right_drive.setChannelMode
-=======
-            if (v_motor_right_drive.getMode () ==
-                DcMotorController.RunMode.RESET_ENCODERS)
-            {
-                v_motor_right_drive.setMode
->>>>>>> refs/remotes/ftctechnh/master
                     ( DcMotorController.RunMode.RUN_WITHOUT_ENCODERS
                     );
             }
@@ -532,11 +510,7 @@ public class PushBotHardware extends OpMode
     {
         if (v_motor_left_drive != null)
         {
-<<<<<<< HEAD
             v_motor_left_drive.setChannelMode
-=======
-            v_motor_left_drive.setMode
->>>>>>> refs/remotes/ftctechnh/master
                 ( DcMotorController.RunMode.RESET_ENCODERS
                 );
         }
@@ -555,11 +529,7 @@ public class PushBotHardware extends OpMode
     {
         if (v_motor_right_drive != null)
         {
-<<<<<<< HEAD
             v_motor_right_drive.setChannelMode
-=======
-            v_motor_right_drive.setMode
->>>>>>> refs/remotes/ftctechnh/master
                 ( DcMotorController.RunMode.RESET_ENCODERS
                 );
         }

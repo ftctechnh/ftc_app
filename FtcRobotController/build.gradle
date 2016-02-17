@@ -1,30 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-<<<<<<< HEAD
     compileSdkVersion = 'Google Inc.:Google APIs:21'
     buildToolsVersion = '21.1.2'
 
-=======
->>>>>>> refs/remotes/ftctechnh/master
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 21
     }
-}
-
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:1.2.3'
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
-    }
-    compileSdkVersion 'Google Inc.:Google APIs:19'
-    buildToolsVersion '21.1.2'
 }
 
 buildscript {
@@ -56,19 +39,10 @@ allprojects {
 
 dependencies {
     compile files('libs/android-support-v4.jar')
-<<<<<<< HEAD
     compile (name:'RobotCore-release', ext:'aar')
     compile (name:'Hardware-release', ext:'aar')
     compile (name:'FtcCommon-release', ext:'aar')
     compile (name:'ModernRobotics-release', ext:'aar')
     compile (name:'Analytics-release', ext:'aar')
     compile (name:'WirelessP2p-release', ext:'aar')
-=======
-    compile(name: 'RobotCore-release', ext: 'aar')
-    compile(name: 'Hardware-release', ext: 'aar')
-    compile(name: 'FtcCommon-release', ext: 'aar')
-    compile(name: 'ModernRobotics-release', ext: 'aar')
-    compile(name: 'Analytics-release', ext: 'aar')
-    compile(name: 'WirelessP2p-release', ext: 'aar')
->>>>>>> refs/remotes/ftctechnh/master
 }
