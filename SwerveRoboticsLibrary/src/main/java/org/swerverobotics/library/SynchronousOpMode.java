@@ -578,7 +578,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
                 if (this.isMain)
                     requestOpModeStop();
                 }
-            catch (InterruptedException|RuntimeInterruptedException ignored)
+            catch (InterruptedException|RuntimeInterruptedException|CancellationException ignored)
                 {
                 // If the main() method itself doesn't catch the interrupt, at least
                 // we will do so here. The whole point of such interrupts is to
