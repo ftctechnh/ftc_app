@@ -80,7 +80,11 @@ public class K9TankDrive extends OpMode {
 
 	/*
 	 * Code to run when the op mode is first enabled goes here
+<<<<<<< HEAD
 	 * 
+=======
+	 *
+>>>>>>> refs/remotes/ftctechnh/master
 	 * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
 	 */
 	@Override
@@ -90,13 +94,21 @@ public class K9TankDrive extends OpMode {
 		 * that the names of the devices must match the names used when you
 		 * configured your robot and created the configuration file.
 		 */
+<<<<<<< HEAD
 		
+=======
+
+>>>>>>> refs/remotes/ftctechnh/master
 		/*
 		 * For the demo Tetrix K9 bot we assume the following,
 		 *   There are two motors "motor_1" and "motor_2"
 		 *   "motor_1" is on the right side of the bot.
 		 *   "motor_2" is on the left side of the bot.
+<<<<<<< HEAD
 		 *   
+=======
+		 *
+>>>>>>> refs/remotes/ftctechnh/master
 		 * We also assume that there are two servos "servo_1" and "servo_6"
 		 *    "servo_1" controls the arm joint of the manipulator.
 		 *    "servo_6" controls the claw joint of the manipulator.
@@ -104,7 +116,11 @@ public class K9TankDrive extends OpMode {
 		motorRight = hardwareMap.dcMotor.get("motor_2");
 		motorLeft = hardwareMap.dcMotor.get("motor_1");
 		motorLeft.setDirection(DcMotor.Direction.REVERSE);
+<<<<<<< HEAD
 		
+=======
+
+>>>>>>> refs/remotes/ftctechnh/master
 		arm = hardwareMap.servo.get("servo_1");
 		claw = hardwareMap.servo.get("servo_6");
 
@@ -115,7 +131,11 @@ public class K9TankDrive extends OpMode {
 
 	/*
 	 * This method will be called repeatedly in a loop
+<<<<<<< HEAD
 	 * 
+=======
+	 *
+>>>>>>> refs/remotes/ftctechnh/master
 	 * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#run()
 	 */
 	@Override
@@ -123,7 +143,11 @@ public class K9TankDrive extends OpMode {
 
 		/*
 		 * Gamepad 1
+<<<<<<< HEAD
 		 * 
+=======
+		 *
+>>>>>>> refs/remotes/ftctechnh/master
 		 * Gamepad 1 controls the motors via the left stick, and it controls the
 		 * wrist/claw via the a,b, x, y buttons
 		 */
@@ -141,7 +165,11 @@ public class K9TankDrive extends OpMode {
 		// the robot more precisely at slower speeds.
 		right = (float)scaleInput(right);
 		left =  (float)scaleInput(left);
+<<<<<<< HEAD
 		
+=======
+
+>>>>>>> refs/remotes/ftctechnh/master
 		// write the values to the motors
 		motorRight.setPower(right);
 		motorLeft.setPower(left);
@@ -205,26 +233,43 @@ public class K9TankDrive extends OpMode {
 
 	/*
 	 * Code to run when the op mode is first disabled goes here
+<<<<<<< HEAD
 	 * 
+=======
+	 *
+>>>>>>> refs/remotes/ftctechnh/master
 	 * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#stop()
 	 */
 	@Override
 	public void stop() {
 
 	}
+<<<<<<< HEAD
 	
 	/*
 	 * This method scales the joystick input so for low joystick values, the 
+=======
+
+	/*
+	 * This method scales the joystick input so for low joystick values, the
+>>>>>>> refs/remotes/ftctechnh/master
 	 * scaled value is less than linear.  This is to make it easier to drive
 	 * the robot more precisely at slower speeds.
 	 */
 	double scaleInput(double dVal)  {
 		double[] scaleArray = { 0.0, 0.05, 0.09, 0.10, 0.12, 0.15, 0.18, 0.24,
 				0.30, 0.36, 0.43, 0.50, 0.60, 0.72, 0.85, 1.00, 1.00 };
+<<<<<<< HEAD
 		
 		// get the corresponding index for the scaleInput array.
 		int index = (int) (dVal * 16.0);
 		
+=======
+
+		// get the corresponding index for the scaleInput array.
+		int index = (int) (dVal * 16.0);
+
+>>>>>>> refs/remotes/ftctechnh/master
 		// index should be positive.
 		if (index < 0) {
 			index = -index;
