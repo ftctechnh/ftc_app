@@ -130,30 +130,6 @@ public class SteelHawksOp extends OpMode {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	DcMotor motorRight; //driving
 
 
@@ -169,33 +145,13 @@ public class SteelHawksOp extends OpMode {
 	DcMotor motorArmDump;
 
 
-
-
-
-
-
 	DcMotorController.DeviceMode devMode;
 
 
-	DcMotorController harvesterController;
-
-
-
-
-
+	DcMotorController legacyController;
 
 
 	TouchSensor autoTouch;
-
-
-
-
-
-
-
-
-
-
 
 
 	boolean isMoving = false;
@@ -223,16 +179,6 @@ public class SteelHawksOp extends OpMode {
 
 
 	double closingArmEnd = 0;
-
-
-
-
-
-
-
-
-
-
 
 
 	/**
@@ -280,17 +226,6 @@ public class SteelHawksOp extends OpMode {
 
 	public void init() {
 
-
-
-
-
-
-
-
-
-
-
-
 		/*
 
 
@@ -305,32 +240,7 @@ public class SteelHawksOp extends OpMode {
 
 		 */
 
-
-		
-
-
-
-
-
-
-
-
-
-
-
-
 		devMode = DcMotorController.DeviceMode.WRITE_ONLY;
-
-
-
-
-
-
-
-
-
-
-
 
 		motorRight = hardwareMap.dcMotor.get("motor_2");
 
@@ -338,23 +248,7 @@ public class SteelHawksOp extends OpMode {
 		motorLeft = hardwareMap.dcMotor.get("motor_1");
 
 
-
-
-
-
-
-
-
-
-
-
 		motorLeft.setDirection(DcMotor.Direction.REVERSE);
-
-
-
-
-
-
 
 		motorArmUp = hardwareMap.dcMotor.get("motor_3");
 
@@ -362,19 +256,10 @@ public class SteelHawksOp extends OpMode {
 		motorArmDump = hardwareMap.dcMotor.get("motor_4");
 
 
-
-
-
-
-
-		harvesterController = hardwareMap.dcMotorController.get("harvesterController");
+		legacyController = hardwareMap.dcMotorController.get("legacyController");
 
 
 		harvester = hardwareMap.dcMotor.get("harvester");
-
-
-
-
 
 
 
@@ -405,13 +290,6 @@ public class SteelHawksOp extends OpMode {
 
 
 	public void loop() {
-
-
-
-
-
-
-
 		/*
 
 
@@ -428,10 +306,6 @@ public class SteelHawksOp extends OpMode {
 
 
 		 */
-
-
-
-
 
 
 
@@ -457,15 +331,6 @@ public class SteelHawksOp extends OpMode {
 
 
 		float dumpingArm = gamepad2.right_stick_x;
-
-
-
-
-
-
-
-
-
 
 
 
@@ -508,70 +373,6 @@ public class SteelHawksOp extends OpMode {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		// write here the values for the arm motor, remember that you only need throttle and to change for gamepad2 (and left stick)
-
-
-
- if(gamepad1.right_trigger > 0.2)
-{  
-harvesterController.setMotorPower(1, .5)
-}
-else
-{
-harvesterController.setMotorPower(1, 0)
-}
- if(gamepad1.left_trigger > 0.2)
-{  
-harvesterController.setMotorPower(1, -.5)
-}
-else
-{
-harvesterController.setMotorPower(1, 0)
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		// write here the values for the dump motor, remember you only need the throttle and to change for gamepad2 (and right stick)
-
-
-
-
-
-
-
 		// write the values to the motors
 
 
@@ -581,13 +382,28 @@ harvesterController.setMotorPower(1, 0)
 		motorLeft.setPower(leftMotorPower);
 
 
-		motorArmUp.setMotorPower(2,movingArmUp);
+		legacyController.setMotorPower(2, movingArmUp);
 
 
 		motorArmDump.setPower(dumpingArm);
 
 
-		harvesterController.setMotorPower(1,.5);
+		if(gamepad1.right_trigger > 0.2)
+		{
+			legacyController.setMotorPower(1, .5);
+		}
+		else
+		{
+			legacyController.setMotorPower(1, 0);
+		}
+		if(gamepad1.left_trigger > 0.2)
+		{
+			legacyController.setMotorPower(1, -.5);
+		}
+		else
+		{
+			legacyController.setMotorPower(1, 0);
+		}
 
 
 /*
