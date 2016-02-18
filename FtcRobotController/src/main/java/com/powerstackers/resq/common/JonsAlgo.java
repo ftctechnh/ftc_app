@@ -59,7 +59,7 @@ public class JonsAlgo {
     double wheelDiameter = 4;         // Diameter of your wheels in inches
     double driveGearMultiplier = 1.0; // Drive gear multiplier.
     // EXAMPLE: If your drive train is geared 2:1 (1 motor rotation = 2 wheel rotations), set this to 2
-    double turnOvershootThreshold = 0.1;
+//    double turnOvershootThreshold = 0.1;
 
     /**
      * Converts a distance in inches to a distance in encoder ticks.
@@ -101,7 +101,7 @@ public class JonsAlgo {
 //        long targetLeft = startLeft + ticks;
 
         double leftCorrect	= 1.0;
-        double rightCorrect	= 0.8;
+        double rightCorrect	= 0.95;
 
         if (ticks < 0) {
             // Set the drive motors to the given speed
@@ -144,6 +144,8 @@ public class JonsAlgo {
     public void turnDegrees(double degrees, double speed) throws InterruptedException {
 
         double degreesSoFar = robot.getGyroHeading();
+
+//        if (Range.clip(degrees ))
 
         if (degrees > 180) {                                            //left
             robot.setPowerLeft(-1 * speed);

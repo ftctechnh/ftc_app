@@ -51,7 +51,7 @@ public class AutonomousProgram extends LinearOpMode {
         robot = new RobotAuto(this);
         robot.initializeRobot();
         robot.calibrateGyro();
-        // Wait for the start of the match
+        // Wait for the start of the match!Thread.interrupted()
         this.waitForStart();
 
         if (allianceColor== RED) {
@@ -59,7 +59,8 @@ public class AutonomousProgram extends LinearOpMode {
             robot.setBrush(MotorSetting.FORWARD);
             robot.algorithm.goTicks(robot.algorithm.inchesToTicks(68), 0.4);
             robot.setBrush(MotorSetting.STOP);
-//            robot.calibrateGyro();
+            robot.calibrateGyro();
+            sleep(5000);
 //            while(robot.isGyrocalibrate()){
 //                robot.setPowerAll(0);
 //                waitOneFullHardwareCycle();
@@ -75,13 +76,13 @@ public class AutonomousProgram extends LinearOpMode {
             robot.setBrush(MotorSetting.FORWARD);
             robot.algorithm.goTicks(robot.algorithm.inchesToTicks(68), 0.4);
             robot.setBrush(MotorSetting.STOP);
-            robot.calibrateGyro();
-            while(robot.isGyrocalibrate()){
-
-            }
-            robot.algorithm.turnDegrees(315, 0.8);
-            robot.algorithm.goTicks(robot.algorithm.inchesToTicks(22), 0.4);
-            robot.setClimberFlipper(DoorSetting.OPEN);
+//            robot.calibrateGyro();
+//            while(robot.isGyrocalibrate() || !Thread.interrupted()){
+//
+//            }
+//            robot.algorithm.turnDegrees(315, 0.8);
+//            robot.algorithm.goTicks(robot.algorithm.inchesToTicks(22), 0.4);
+//            robot.setClimberFlipper(DoorSetting.OPEN);
         } else {
             telemetry.addData("choosered", "deprecated: ");
             stop();

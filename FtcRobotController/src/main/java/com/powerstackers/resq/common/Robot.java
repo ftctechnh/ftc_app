@@ -133,6 +133,8 @@ public class Robot {
         servoLiftLeft.setPosition(CRS_STOP);
         servoLiftRight.setPosition(CRS_STOP);
         servoHook.setPosition(CRS_STOP);
+        servoZippLineLeft.setPosition(ZIPLINE_LEFT_CLOSE);
+        servoZippLineRight.setPosition(ZIPLINE_RIGHT_CLOSE);
 //        servoTapeTilt.setPosition(TAPE_FLAT);
 //        servoTapeMeasure.setPosition(0.5);
 
@@ -162,6 +164,8 @@ public class Robot {
         servoLiftLeft.setPosition(CRS_STOP);
         servoLiftRight.setPosition(CRS_STOP);
         servoHook.setPosition(CRS_STOP);
+        servoZippLineLeft.setPosition(ZIPLINE_LEFT_CLOSE);
+        servoZippLineRight.setPosition(ZIPLINE_RIGHT_CLOSE);
 //        servoTapeTilt.setPosition(TAPE_FLAT);
         sensorGyro.calibrate();
          //Give the gyroscope some time to calibrate

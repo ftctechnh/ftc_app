@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
+import static com.powerstackers.resq.common.RobotConstants.CRS_STOP;
 import static com.powerstackers.resq.common.enums.PublicEnums.MotorSetting;
-import static java.lang.Math.abs;
 
 /**
  * <b>IMPORTANT:</b> This class must be instantiated INSIDE a {@code runOpMode()} method. It can't be done
@@ -52,6 +52,8 @@ public class RobotAuto {
     private Servo servoClimberFlipper;
     private Servo servoChurroLeft;
     private Servo servoChurroRight;
+    private Servo servoLiftLeft;
+    private Servo servoLiftRight;
 
 //    private DeviceInterfaceModule dim;
 //    private ColorSensor sensorColor;
@@ -88,6 +90,9 @@ public class RobotAuto {
         servoChurroRight.setPosition(RobotConstants.CHURRO_RIGHT_CLOSE);
         servoChurroLeft.setPosition(RobotConstants.CHURRO_LEFT_CLOSE);
 
+        servoLiftLeft       = mode.hardwareMap.servo.get("servoLiftLeft");
+        servoLiftRight      = mode.hardwareMap.servo.get("servoLiftRight");
+
 //        dim = mode.hardwareMap.deviceInterfaceModule.get("dim");
 //        sensorColor = ClassFactory.createSwerveColorSensor(mode,
 //                mode.hardwareMap.colorSensor.get("sensorColor"));
@@ -101,6 +106,10 @@ public class RobotAuto {
 
         algorithm = new JonsAlgo(this);
 
+
+        servoLiftLeft.setPosition(CRS_STOP);
+        servoLiftRight.setPosition(CRS_STOP);
+
     }
 
     /**
@@ -112,6 +121,9 @@ public class RobotAuto {
 //        servoChurroRight.setPosition(RobotConstants.CHURRO_RIGHT_OPEN);
 //        servoChurroLeft.setPosition(RobotConstants.CHURRO_LEFT_OPEN);
         sensorGyro.calibrate();
+
+        servoLiftLeft.setPosition(CRS_STOP);
+        servoLiftRight.setPosition(CRS_STOP);
     }
 
     /**
