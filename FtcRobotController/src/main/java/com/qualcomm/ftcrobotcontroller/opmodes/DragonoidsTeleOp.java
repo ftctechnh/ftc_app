@@ -25,44 +25,53 @@ public class DragonoidsTeleOp extends OpMode {
         double leftDrivePower = Range.clip(forwardAmount + turningAmount, -1.0, 1.0);
         DragonoidsGlobal.setDrivePower(rightDrivePower, leftDrivePower);
 
+        // Conveyor
+        final double conveyorMaxPower = 0.70;
+        final double conveyorMidPower = 0.45;
+        final double conveyorMinPower = 0.10;
         if (gamepad2.right_trigger > 0.8) {
             // Turn on the conveyor
-            DragonoidsGlobal.conveyor.setPower(0.70);
+            DragonoidsGlobal.conveyor.setPower(conveyorMaxPower);
         }
         else if (gamepad2.right_trigger > 0.4) {
-            DragonoidsGlobal.conveyor.setPower(0.45);
+            DragonoidsGlobal.conveyor.setPower(conveyorMidPower);
         }
         else if (gamepad2.right_trigger > 0.1) {
-            DragonoidsGlobal.conveyor.setPower(0.10);
+            DragonoidsGlobal.conveyor.setPower(conveyorMinPower);
         }
         else if (gamepad2.left_trigger > 0.2) {
             // Reverse the conveyor
-            DragonoidsGlobal.conveyor.setPower(-0.25);
+            DragonoidsGlobal.conveyor.setPower(-conveyorMidPower);
         }
         else {
             // Stop conveyor motor
             DragonoidsGlobal.conveyor.setPower(0.0);
         }
 
-        // The A button sets position of the gate controller
+        // Gate
+        final double gateOpenPosition = 0.0;
+        final double gateClosedPosition = 0.75;
         if (gamepad2.a){
             // Open the gate
-            DragonoidsGlobal.gate.setPosition(0.0);
+            DragonoidsGlobal.gate.setPosition(gateOpenPosition);
         }
         else {
             // Close the gate
-            DragonoidsGlobal.gate.setPosition(0.75);
+            DragonoidsGlobal.gate.setPosition(gateClosedPosition);
         }
 
+        // Slider
+        final double sliderForwardPower = 1.0;
+        final double sliderBackwardPower = -0.5;
         if (gamepad2.right_bumper) {
             // Move the slider forward
-            DragonoidsGlobal.rightSlider.setPower(1.0);
-            DragonoidsGlobal.leftSlider.setPower(1.0);
+            DragonoidsGlobal.rightSlider.setPower(sliderForwardPower);
+            DragonoidsGlobal.leftSlider.setPower(sliderForwardPower);
         }
         else if (gamepad2.left_bumper) {
             // Reverse the slider
-            DragonoidsGlobal.rightSlider.setPower(-0.5);
-            DragonoidsGlobal.leftSlider.setPower(-0.5);
+            DragonoidsGlobal.rightSlider.setPower(sliderBackwardPower);
+            DragonoidsGlobal.leftSlider.setPower(sliderBackwardPower);
         }
         else {
             DragonoidsGlobal.rightSlider.setPower(0.0);
