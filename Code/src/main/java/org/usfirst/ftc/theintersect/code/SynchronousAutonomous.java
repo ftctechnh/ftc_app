@@ -221,8 +221,8 @@ public class SynchronousAutonomous extends SynchronousOpMode {
 		leftChurroHook.setPosition(Functions.churroHookUpPos);
 		rightHangString.setPower(0);
 		leftHangString.setPower(0);
-		rightBarHook.setPosition(Functions.barHookUpPos);
-		leftBarHook.setPosition(Functions.barHookUpPos);
+		rightBarHook.setPosition(Functions.barHookRightUpPos);
+		leftBarHook.setPosition(Functions.barHookLeftUpPos);
 	}
 
     public static void autonomousInit(TelemetryDashboardAndLog telemetry) {

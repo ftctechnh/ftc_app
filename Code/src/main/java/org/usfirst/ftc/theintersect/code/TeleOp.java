@@ -145,7 +145,7 @@ public class TeleOp extends SynchronousOpMode {
             tubeExtend = gamepad1.x || gamepad2.x;
             tubeRetract = gamepad1.b || gamepad2.b;
 
-            toggleBumper = gamepad1.back || gamepad2.back;
+            //toggleBumper = gamepad1.back || gamepad2.back;
 
             //autoHookChurro = gamepad1.dpad_up || gamepad2.dpad_up;
             //autoUnhookChurro = gamepad1.dpad_down || gamepad2.dpad_down;
@@ -154,7 +154,7 @@ public class TeleOp extends SynchronousOpMode {
             positionClimbersBackward = gamepad1.dpad_down || gamepad2.dpad_down;
             //releaseClimbers = gamepad1.start || gamepad2.start;
             toggleChurroHooks = gamepad1.start || gamepad2.start; /*gamepad1.right_stick_button || gamepad2.right_stick_button;*/
-            toggleBarHooks = gamepad1.left_stick_button || gamepad2.left_stick_button;
+            toggleBarHooks = gamepad1.back || gamepad2.back; /*gamepad1.left_stick_button || gamepad2.left_stick_button;*/
 
             //Moves robot when some of the buttons are held
             if (tubeExtend) {
