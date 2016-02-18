@@ -27,6 +27,7 @@ public class DragonoidsTest extends OpMode {
             testMotor.setPower(-maxPower);
         }
         else {
+            testMotor.setPower(0);
             DragonoidsGlobal.stopAll();
         }
 
