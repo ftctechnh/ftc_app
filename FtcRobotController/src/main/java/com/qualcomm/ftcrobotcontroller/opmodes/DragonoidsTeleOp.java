@@ -69,6 +69,25 @@ public class DragonoidsTeleOp extends OpMode {
             DragonoidsGlobal.leftSlider.setPower(0.0);
         }
 
+        // Dispenser
+        final double dispenserMaxPower = 0.65;
+        final double dispenserMidPower = 0.30;
+        if (gamepad2.dpad_up) {
+            DragonoidsGlobal.dispenser.setPower(dispenserMaxPower);
+        }
+        else if (gamepad2.dpad_down) {
+            DragonoidsGlobal.dispenser.setPower(-dispenserMaxPower);
+        }
+        else if (gamepad2.dpad_right) {
+            DragonoidsGlobal.dispenser.setPower(dispenserMidPower);
+        }
+        else if (gamepad2.dpad_left) {
+            DragonoidsGlobal.dispenser.setPower(-dispenserMidPower);
+        }
+        else {
+            DragonoidsGlobal.dispenser.setPower(0.0);
+        }
+
         this.outputTelemetry();
     }
     private void outputTelemetry() {
