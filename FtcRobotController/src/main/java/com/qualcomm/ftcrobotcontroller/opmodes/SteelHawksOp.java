@@ -151,7 +151,7 @@ public class SteelHawksOp extends OpMode {
 	DcMotorController legacyController;
 
 
-	TouchSensor autoTouch;
+	TouchSensor autoTouch, armTouch;
 
 
 	boolean isMoving = false;
@@ -260,6 +260,9 @@ public class SteelHawksOp extends OpMode {
 
 
 		harvester = hardwareMap.dcMotor.get("harvester");
+
+		armTouch = hardwareMap.touchSensor.get("armTouch");
+		autoTouch = hardwareMap.touchSensor.get("autoTouch");
 
 
 
@@ -382,7 +385,8 @@ public class SteelHawksOp extends OpMode {
 		motorLeft.setPower(leftMotorPower);
 
 
-		legacyController.setMotorPower(2, movingArmUp);
+
+		legacyController.setMotorPower(1, .5); //harvester
 
 
 		motorArmDump.setPower(dumpingArm);
@@ -392,11 +396,7 @@ public class SteelHawksOp extends OpMode {
 		{
 			legacyController.setMotorPower(1, .5);
 		}
-		else
-		{
-			legacyController.setMotorPower(1, 0);
-		}
-		if(gamepad1.left_trigger > 0.2)
+		else if(gamepad1.left_trigger > 0.2)
 		{
 			legacyController.setMotorPower(1, -.5);
 		}
@@ -406,9 +406,17 @@ public class SteelHawksOp extends OpMode {
 		}
 
 
+if (armTouch.getValue() == 0) {
+	if (armTouch.isPressed()) {
+		//Stop when in contact with arm
+		legacyController.setMotorPower(2, 0);
+	}
+	else {
+		legacyController.setMotorPower(2, movingArmUp);
+	}
+}
+
 /*
-
-
 
 
 

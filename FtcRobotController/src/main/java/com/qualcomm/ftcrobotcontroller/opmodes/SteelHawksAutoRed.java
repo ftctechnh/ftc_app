@@ -42,41 +42,33 @@ import java.util.Timer;
  */
 public class SteelHawksAutoRed extends OpMode {
 
-	/*
-	 * Note: the configuration of the servos is such that
-	 * as the arm servo approaches 0, the arm position moves up (away from the floor).
-	 * Also, as the claw servo approaches 0, the claw opens up (drops the game element).
-	 */
-	// TETRIX VALUES.
-	final static double ARM_MIN_RANGE  = 0.20;
-	final static double ARM_MAX_RANGE  = 0.90;
-	final static double CLAW_MIN_RANGE  = 0.20;
-	final static double CLAW_MAX_RANGE  = 0.7;
-	Timer timer = new Timer();
-
-	// position of the arm servo.
-	double armPosition;
-
-	// amount to change the arm servo position.
-	double armDelta = 0.1;
-
-	// position of the claw servo
-	double clawPosition;
-
-	// amount to change the claw servo position by
-	double clawDelta = 0.1;
-
 	DcMotor motorRight; //driving
+
+
 	DcMotor motorLeft; //driving
+
+
 	DcMotor harvester;
-	DcMotor motorArm; //moving Arm up
-	DcMotor motorArmDump; //dumping Arm
+
+
+	DcMotor motorArmUp;
+
+
+	DcMotor motorArmDump;
+
 
 	DcMotorController.DeviceMode devMode;
-	DcMotorController harvesterController;
 
-	TouchSensor autoTouch;
 
+	DcMotorController legacyController;
+
+
+	TouchSensor autoTouch, armTouch;
+
+
+
+
+	float leftMotorPower, rightMotorPower;
 
 	boolean isMoving = false;
 	double movingArmUpstart = 0;
@@ -118,26 +110,27 @@ public class SteelHawksAutoRed extends OpMode {
 
 		devMode = DcMotorController.DeviceMode.WRITE_ONLY;
 
-
 		motorRight = hardwareMap.dcMotor.get("motor_2");
+
+
 		motorLeft = hardwareMap.dcMotor.get("motor_1");
-		harvester = hardwareMap.dcMotor.get("harvester");
 
-		autoTouch = hardwareMap.touchSensor.get ("sensor_touch");
-		/*motorArm = hardwareMap.dcMotor.get("motor_3");
-		motorArmDump = hardwareMap.dcMotor.get("motor_4");*/
-
-		harvesterController = hardwareMap.dcMotorController.get("harvesterController");
 
 		motorLeft.setDirection(DcMotor.Direction.REVERSE);
-		
-		/*arm = hardwareMap.servo.get("servo_1");
-		claw = hardwareMap.servo.get("servo_6");
-		*/
 
-		// assign the starting position of the wrist and claw
-		//armPosition = 0.2;
-		//clawPosition = 0.2;
+		motorArmUp = hardwareMap.dcMotor.get("motor_3");
+
+
+		motorArmDump = hardwareMap.dcMotor.get("motor_4");
+
+
+		legacyController = hardwareMap.dcMotorController.get("legacyController");
+
+
+		harvester = hardwareMap.dcMotor.get("harvester");
+
+		armTouch = hardwareMap.touchSensor.get("armTouch");
+		autoTouch = hardwareMap.touchSensor.get("autoTouch");
 	}
 
 	/*\\
@@ -159,24 +152,11 @@ public class SteelHawksAutoRed extends OpMode {
 		// 1 is full down
 		// direction: left_stick_x ranges from -1 to 1, where -1 is full left
 		// and 1 is full right
-		float leftMotorPower = gamepad1.left_stick_y;
-		float rightMotorPower = gamepad1.right_stick_y;
-		//float movingArmUp = gamepad2.left_stick_y;
-		//float dumpingArm = gamepad2.right_stick_x;
+
 
 
 		// clip the right/left values so that the values never exceed +/- 1
-		leftMotorPower = Range.clip(leftMotorPower, -1, 1);
-		rightMotorPower = Range.clip(rightMotorPower, -1, 1);
-		//movingArmup = Range.clip(movingArmup, -1, 1)
-		//dumpingArm = Range.clip(right, -1, 1)
 
-		// scale the joystick value to make it easier to control
-		// the robot more precisely at slower speeds.
-		leftMotorPower = (float)scaleInput(leftMotorPower);
-		rightMotorPower =  (float)scaleInput(rightMotorPower);
-		//movingArmUp=  (float)scaleInput(movingArmUp);
-		//dumpingArn =  (float)scaleInput(dumpingArm);
 
 
 
@@ -189,20 +169,19 @@ public class SteelHawksAutoRed extends OpMode {
 		// write here the values for the dump motor, remember you only need the throttle and to change for gamepad2 (and right stick)
 
 		// write the values to the motors
-		motorRight.setPower(rightMotorPower);
-		motorLeft.setPower(leftMotorPower);
+
 		//motorArm.setPower(movongArmUp);
 		//motorArm2.setPower(dumpingArm);
 
 
 		//turn left for .5 sec
-		start = System.currentTimeMillis();
+		start = this.time;
 		end = start + 1000*.5;
 
-		while (System.currentTimeMillis() < end) {
+		while (this.time < end) {
 			motorRight.setPower(0.5);
 			motorLeft.setPower(0);
-
+			telemetry.addData("Text", "*** Loop 1***");
 
 
 		}
@@ -210,9 +189,10 @@ public class SteelHawksAutoRed extends OpMode {
 		start = System.currentTimeMillis();
 		end = start + 1000*2;
 
-		while (System.currentTimeMillis() < end) {
+		while (this.time < end) {
 			motorRight.setPower(1);
 			motorLeft.setPower(1);
+			telemetry.addData("Text", "*** Loop 2***");
 
 
 		//turn left for .5 sec
@@ -220,10 +200,10 @@ public class SteelHawksAutoRed extends OpMode {
 		start = System.currentTimeMillis();
 		end = start + 1000*.5;
 
-		while (System.currentTimeMillis() < end) {
+		while (this.time < end) {
 			motorRight.setPower(0.5);
 			motorLeft.setPower(0);
-
+			telemetry.addData("Text", "*** Loop 3***");
 		// turn until touch sensor is pressed
 
 		}
@@ -233,12 +213,13 @@ public class SteelHawksAutoRed extends OpMode {
 				//Stop when in contact with wall
 				motorRight.setPower(0);
 				motorLeft.setPower(0);
+				telemetry.addData("Text", "*** Loop 4 ***");
 				System.exit(0);
 
 			} else {
 				motorLeft.setPower(.75);
 				motorRight.setPower(.75);
-
+				telemetry.addData("Text", "*** Loop 5***");
 			}
 
 		}
@@ -326,8 +307,6 @@ public class SteelHawksAutoRed extends OpMode {
 		 * are currently write only.
 		 */
 		telemetry.addData("Text", "*** Robot Data***");
-		telemetry.addData("arm", "arm:  " + String.format("%.2f", armPosition));
-		telemetry.addData("claw", "claw:  " + String.format("%.2f", clawPosition));
 		telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", leftMotorPower));
 		telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", rightMotorPower));
 
