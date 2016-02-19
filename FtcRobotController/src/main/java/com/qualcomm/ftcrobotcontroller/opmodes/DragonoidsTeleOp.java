@@ -88,18 +88,13 @@ public class DragonoidsTeleOp extends OpMode {
         float dispenserControl2 = gamepad2.right_stick_x;
         if (Math.abs(dispenserControl1) > threshold) {
             // Control dispenser with greater power control
-            double dispenserPower = Math.signum(dispenserControl1) * Range.scale(Math.abs(dispenserControl1), 0, 1, dispenserMaxPower - controlRange, dispenserMaxPower + controlRange);
-            telemetry.addData("Dispenser power", dispenserPower);
-            DragonoidsGlobal.dispenser.setPower(dispenserPower);
+            DragonoidsGlobal.dispenser.setPower(Math.signum(dispenserControl1) * Range.scale(Math.abs(dispenserControl1), 0, 1, dispenserMaxPower - controlRange, dispenserMaxPower + controlRange));
         }
         else if (Math.abs(dispenserControl2) > threshold) {
             // Control dispenser with medium power control
-            double dispenserPower = Math.signum(dispenserControl2) * Range.scale(Math.abs(dispenserControl2), 0, 1, dispenserMidPower - controlRange, dispenserMidPower + controlRange);
-            telemetry.addData("Dispenser power", dispenserPower);
-            DragonoidsGlobal.dispenser.setPower(dispenserPower);
+            DragonoidsGlobal.dispenser.setPower(Math.signum(dispenserControl2) * Range.scale(Math.abs(dispenserControl2), 0, 1, dispenserMidPower - controlRange, dispenserMidPower + controlRange));
         }
         else {
-            telemetry.addData("Dispenser power", 0);
             DragonoidsGlobal.dispenser.setPower(0.0);
         }
 
@@ -109,6 +104,7 @@ public class DragonoidsTeleOp extends OpMode {
         //telemetry.addData("Right drive motor power", driveMotors.get("rightOneDrive").getPower());
         //telemetry.addData("Left drive motor power", driveMotors.get("leftOneDrive").getPower());
         //telemetry.addData("Conveyor motor power", DragonoidsGlobal.conveyor.getPower());
+        telemetry.addData("Dispenser motor power", DragonoidsGlobal.dispenser.getPower());
         //telemetry.addData("Servo Position", DragonoidsGlobal.gate.getPosition());
     }
     @Override
