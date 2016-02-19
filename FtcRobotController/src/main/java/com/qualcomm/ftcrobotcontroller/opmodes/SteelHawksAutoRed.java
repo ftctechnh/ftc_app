@@ -81,6 +81,8 @@ public class SteelHawksAutoRed extends OpMode {
 	double closingArmEnd = 0;
 
 	double start = 0, end = 0;
+	double motorPowerLeft, motorPowerRight;
+	boolean killTheBot = false;
 
 	//Servo claw;
 	//Servo arm;
@@ -154,16 +156,10 @@ public class SteelHawksAutoRed extends OpMode {
 		// and 1 is full right
 
 
-
 		// clip the right/left values so that the values never exceed +/- 1
 
 
-
-
 		// write here the values for the arm motor, remember that you only need throttle and to change for gamepad2 (and left stick)
-
-
-
 
 
 		// write here the values for the dump motor, remember you only need the throttle and to change for gamepad2 (and right stick)
@@ -175,54 +171,55 @@ public class SteelHawksAutoRed extends OpMode {
 
 
 		//turn left for .5 sec
-		start = this.time;
-		end = start + 1000*.5;
 
-		while (this.time < end) {
-			motorRight.setPower(0.5);
-			motorLeft.setPower(0);
+	if (killTheBot == false) {
+		if (this.time <= .5) {
+			motorPowerRight = (0.5);
+			motorPowerLeft = (0);
 			telemetry.addData("Text", "*** Loop 1***");
 
 
 		}
 		// move forward for 2 sec
-		start = System.currentTimeMillis();
-		end = start + 1000*2;
 
-		while (this.time < end) {
-			motorRight.setPower(1);
-			motorLeft.setPower(1);
+		if (this.time > .5 && this.time <= 2.5) {
+			motorPowerRight = (1);
+			motorPowerLeft = (1);
 			telemetry.addData("Text", "*** Loop 2***");
 
 
-		//turn left for .5 sec
 		}
-		start = System.currentTimeMillis();
-		end = start + 1000*.5;
 
-		while (this.time < end) {
-			motorRight.setPower(0.5);
-			motorLeft.setPower(0);
+		//turn left for .5 sec
+
+		if (this.time > 2.5 && this.time <= 3.0) {
+			motorPowerRight = (0.5);
+			motorPowerLeft = (0);
 			telemetry.addData("Text", "*** Loop 3***");
+
+		}
 		// turn until touch sensor is pressed
 
-		}
+		if (this.time > 3.0 && autoTouch.getValue() == 0) {
 
-		while (autoTouch.getValue()==0) {
+			motorPowerLeft = (.75);
+			motorPowerRight = .75;
+
 			if (autoTouch.isPressed()) {
-				//Stop when in contact with wall
-				motorRight.setPower(0);
-				motorLeft.setPower(0);
-				telemetry.addData("Text", "*** Loop 4 ***");
-				System.exit(0);
+				motorPowerLeft = 0;
+				motorPowerRight = 0;
+				killTheBot = true;
 
-			} else {
-				motorLeft.setPower(.75);
-				motorRight.setPower(.75);
-				telemetry.addData("Text", "*** Loop 5***");
 			}
 
+			telemetry.addData("Text", "*** Loop 5***");
+
+
 		}
+
+		motorLeft.setPower(motorPowerLeft);
+		motorRight.setPower(motorPowerRight);
+	}
 /*
 
 

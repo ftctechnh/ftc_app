@@ -35,10 +35,8 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.robotcore.hardware.TouchSensor;
-import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.Servo;
-
+import com.qualcomm.robotcore.util.Range;
 
 
 /**
@@ -48,12 +46,15 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 
 
-public class RoboWolvesOp extends OpMode {
+public class RoboWolvesLegacy extends OpMode {
 
 	DcMotor motorRight; //driving
 	DcMotor motorLeft; //driving
-	DcMotor motorShoulder;
-	DcMotor motorElbow;
+	DcMotor motorShoulder1;
+	DcMotor motorShoulder2;
+
+	DcMotor motorElbow1;
+	DcMotor motorElbow2;
 
 	Servo servoHook;
 	Servo servoPusher;
@@ -63,6 +64,9 @@ public class RoboWolvesOp extends OpMode {
 
 	double servoDelta = .1;
 
+	DcMotorController.DeviceMode devMode;
+	DcMotorController legacyController;
+
 
 
 	/**
@@ -70,7 +74,7 @@ public class RoboWolvesOp extends OpMode {
 	 */
 
 
-	RoboWolvesOp() {
+	RoboWolvesLegacy() {
 
 	}
 
@@ -98,11 +102,17 @@ public class RoboWolvesOp extends OpMode {
 		motorLeft = hardwareMap.dcMotor.get("motorLeft");
 		motorLeft.setDirection(DcMotor.Direction.REVERSE);
 
-		motorShoulder = hardwareMap.dcMotor.get("motorShoulder");
-		motorElbow = hardwareMap.dcMotor.get("motorElbow");
+		motorShoulder1 = hardwareMap.dcMotor.get("motorShoulder1");
+		motorElbow1 = hardwareMap.dcMotor.get("motorElbow1");
+		motorShoulder2 = hardwareMap.dcMotor.get("motorShoulder2");
+		motorElbow2 = hardwareMap.dcMotor.get("motorElbow2");
 
 		servoHook = hardwareMap.servo.get("servoHook");
 		servoPusher = hardwareMap.servo.get("servoPusher");
+
+		legacyController = hardwareMap.dcMotorController.get("legacyController");
+		devMode = DcMotorController.DeviceMode.WRITE_ONLY;
+
 
 	}
 
@@ -145,7 +155,7 @@ public class RoboWolvesOp extends OpMode {
 		shoulderMotorPower=  (float)scaleInput(shoulderMotorPower);
 		elbowMotorPower =  (float)scaleInput(elbowMotorPower);
 
-		/*
+
 		if (gamepad1.a) {
 			// if the A button is pushed on gamepad1, increment the position of
 			// the arm servo.
@@ -177,14 +187,17 @@ public class RoboWolvesOp extends OpMode {
 
 
 
-*/
+
 		// write the values to the motors
 
+		legacyController.setMotorPower(1,leftMotorPower);
+		legacyController.setMotorPower(2, rightMotorPower);
 
-		motorRight.setPower(rightMotorPower);
-		motorLeft.setPower(leftMotorPower);
-		motorElbow.setPower(elbowMotorPower);
-		motorShoulder.setPower(shoulderMotorPower);
+		motorElbow1.setPower(elbowMotorPower);
+		motorElbow2.setPower(elbowMotorPower);
+		motorShoulder1.setPower(shoulderMotorPower);
+		motorShoulder2.setPower(shoulderMotorPower);
+
 
 
 
