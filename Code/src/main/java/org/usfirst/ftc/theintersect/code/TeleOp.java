@@ -129,10 +129,9 @@ public class TeleOp extends SynchronousOpMode {
 		ClassFactory.createEasyMotorController(this, rightWheel, leftWheel);
 		ClassFactory.createEasyMotorController(this, sweeper, null);*/
         ClassFactory.createEasyServoController(this, Arrays.asList
-                (mountainClimberRelease, mountainClimber,tubeExtender,
-                        tubeTilt));
+                (mountainClimberRelease, mountainClimber,tubeExtender));
         ClassFactory.createEasyServoController(this, Arrays.asList
-                (leftChurroHook, rightChurroHook, bumper));
+                (leftChurroHook, rightChurroHook, bumper, tubeTilt));
         teleInit();
         waitForStart();
         long endTime = System.currentTimeMillis() + 120000;
@@ -185,13 +184,13 @@ public class TeleOp extends SynchronousOpMode {
             }
 
             if (toggleBarHooks && barHooksDown) {
-                leftBarHook.setPosition(Functions.barHookLeftUpPos);
+                leftBarHook.setPosition(Functions.barHookUpPos);
                 rightBarHook.setPosition(Functions.barHookRightUpPos);
                 Functions.waitFor(250);
                 barHooksDown = false;
             } else if (toggleBarHooks && !barHooksDown) {
                 leftBarHook.setPosition(Functions.barHookLeftDownPos);
-                rightBarHook.setPosition(Functions.barHookRightDownPos);
+                rightBarHook.setPosition(Functions.barHookDownPos);
                 Functions.waitFor(250);
                 barHooksDown = true;
             }
@@ -372,8 +371,8 @@ public class TeleOp extends SynchronousOpMode {
 		bumper.setPosition(Functions.bumperInitPosition);
         rightChurroHook.setPosition(Functions.churroHookUpPos);
         leftChurroHook.setPosition(Functions.churroHookUpPos);
-        rightBarHook.setPosition(Functions.barHookLeftDownPos);
-        leftBarHook.setPosition(Functions.barHookRightDownPos);
+        rightBarHook.setPosition(Functions.barHookDownPos);
+        leftBarHook.setPosition(Functions.barHookDownPos);
 
 	}
 
