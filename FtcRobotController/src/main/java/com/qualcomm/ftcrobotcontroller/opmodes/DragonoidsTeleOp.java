@@ -81,21 +81,27 @@ public class DragonoidsTeleOp extends OpMode {
         // Dispenser
         final double dispenserMaxPower = 0.65;
         final double dispenserMidPower = 0.30;
-        final double controlRange = 0.10;
+        final double controlRange = 0.20;
         final double threshold = 0.10;
         // Negate values because pushing the stick forward yields a negative position
-        float dispenserControl1 = -gamepad2.left_stick_y;
-        float dispenserControl2 = -gamepad2.right_stick_y;
-
+        float dispenserControl1 = gamepad2.left_stick_x;
+        float dispenserControl2 = gamepad2.right_stick_x;
+        float dispenserControl1Sign = Math.signum(dispenserControl1);
+        float dispenserControl2Sign = Math.signum(dispenserControl2);
         if (Math.abs(dispenserControl1) > threshold) {
             // Control dispenser with greater power control
-            DragonoidsGlobal.dispenser.setPower(Range.scale(dispenserControl1, -1, 1, dispenserMaxPower - controlRange, dispenserMaxPower + controlRange));
+            double dispenserPower = dispenserControl1Sign * Range.scale(Math.abs(dispenserControl1), 0, 1, dispenserMaxPower - controlRange, dispenserMaxPower + controlRange);
+            telemetry.addData("Dispenser power", dispenserPower);
+            DragonoidsGlobal.dispenser.setPower(dispenserPower);
         }
         else if (Math.abs(dispenserControl2) > threshold) {
             // Control dispenser with medium power control
-            DragonoidsGlobal.dispenser.setPower(Range.scale(dispenserControl2, -1, 1, dispenserMidPower - controlRange, dispenserMidPower + controlRange));
+            double dispenserPower = dispenserControl2Sign * Range.scale(Math.abs(dispenserControl2), 0, 1, dispenserMidPower - controlRange, dispenserMidPower + controlRange);
+            telemetry.addData("Dispenser power", dispenserPower);
+            DragonoidsGlobal.dispenser.setPower(dispenserPower);
         }
         else {
+            telemetry.addData("Dispenser power", 0);
             DragonoidsGlobal.dispenser.setPower(0.0);
         }
 
@@ -104,8 +110,8 @@ public class DragonoidsTeleOp extends OpMode {
     private void outputTelemetry() {
         //telemetry.addData("Right drive motor power", driveMotors.get("rightOneDrive").getPower());
         //telemetry.addData("Left drive motor power", driveMotors.get("leftOneDrive").getPower());
-        telemetry.addData("Conveyor motor power", DragonoidsGlobal.conveyor.getPower());
-        telemetry.addData("Servo Position", DragonoidsGlobal.gate.getPosition());
+        //telemetry.addData("Conveyor motor power", DragonoidsGlobal.conveyor.getPower());
+        //telemetry.addData("Servo Position", DragonoidsGlobal.gate.getPosition());
     }
     @Override
     public void stop() {
