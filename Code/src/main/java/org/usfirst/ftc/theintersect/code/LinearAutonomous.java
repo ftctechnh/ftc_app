@@ -13,7 +13,7 @@ import java.util.Arrays;
  * An Autonomous for both teams using the LinearOpMode
  */
 
-@org.swerverobotics.library.interfaces.Autonomous(name = "Autonomous")
+@org.swerverobotics.library.interfaces.Autonomous(name = "Linear Autonomous")
 @Disabled
 public class LinearAutonomous extends LinearOpMode {
 //	String team = "8865";
@@ -478,7 +478,6 @@ public class LinearAutonomous extends LinearOpMode {
 	public static void spinRobotLeftDegrees(int degrees, double power, long timeoutMill, Telemetry telemetry) {
 		long endTime;
 		int startPosition;
-		int currentPosition;
         int endPosition;
 
         initGyroHeading(telemetry);
@@ -488,7 +487,8 @@ public class LinearAutonomous extends LinearOpMode {
         telemetry.addData("startPosition ", startPosition);
         int stopos = 0;
         spinRobotLeft(power);
-		while(System.currentTimeMillis() < endTime && (currentPosition = gyro.getIntegratedZValue()) < endPosition)
+		while(System.currentTimeMillis() < endTime
+				&& (gyro.getIntegratedZValue()) < endPosition)
 		{
             stopos = gyro.getIntegratedZValue();
 			//telemetry.addData("CurrentHeading", currentPosition);

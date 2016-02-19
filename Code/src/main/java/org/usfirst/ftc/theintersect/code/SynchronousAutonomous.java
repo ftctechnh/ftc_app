@@ -9,7 +9,7 @@ import org.swerverobotics.library.TelemetryDashboardAndLog;
  * An Autonomous for both teams using the LinearOpMode
  */
 
-@org.swerverobotics.library.interfaces.Autonomous(name = "Synchronous Autonomous")
+@org.swerverobotics.library.interfaces.Autonomous(name = "Autonomous")
 public class SynchronousAutonomous extends SynchronousOpMode {
     static String team = "8865";
     static int delay = 0;

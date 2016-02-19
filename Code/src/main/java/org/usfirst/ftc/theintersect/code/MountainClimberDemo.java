@@ -1,13 +1,7 @@
 package org.usfirst.ftc.theintersect.code;
 
-
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.UltrasonicSensor;
-
+import com.qualcomm.robotcore.hardware.*;
 import org.swerverobotics.library.SynchronousOpMode;
 import org.swerverobotics.library.TelemetryDashboardAndLog;
 
@@ -15,7 +9,7 @@ import org.swerverobotics.library.TelemetryDashboardAndLog;
  * An Autonomous for both teams using the LinearOpMode
  */
 
-@org.swerverobotics.library.interfaces.Autonomous(name = "MountainClimberDemo")
+@org.swerverobotics.library.interfaces.Autonomous(name = "Mountain Climber Demo")
 public class MountainClimberDemo extends SynchronousOpMode {
 
     static String team = "8865";

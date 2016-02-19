@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.swerverobotics.library.ClassFactory;
 import org.swerverobotics.library.SynchronousOpMode;
 
 import java.util.Arrays;
@@ -124,14 +123,6 @@ public class TeleOp extends SynchronousOpMode {
         rightChurroHook.setDirection(Servo.Direction.REVERSE);
         bumper.setDirection(Servo.Direction.FORWARD);
         //Wait for the game to start
-		/*ClassFactory.createEasyMotorController(this, linearSlide,
-				linearSlide);
-		ClassFactory.createEasyMotorController(this, rightWheel, leftWheel);
-		ClassFactory.createEasyMotorController(this, sweeper, null);*/
-        ClassFactory.createEasyServoController(this, Arrays.asList
-                (mountainClimberRelease, mountainClimber,tubeExtender));
-        ClassFactory.createEasyServoController(this, Arrays.asList
-                (leftChurroHook, rightChurroHook, bumper, tubeTilt));
         teleInit();
         waitForStart();
         long endTime = System.currentTimeMillis() + 120000;
