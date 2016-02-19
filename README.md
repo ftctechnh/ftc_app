@@ -137,8 +137,8 @@ Migrating from LinearOpMode to SyncronousOpMode is easy, usually simply involvin
 * optionally removing `waitOneFullHardwareCycle()` calls, as they are no longer necessary
 
 The Swerve Library now appears to be quite stable and functional. Our own teams are actively
-developing their competition code using it. It currently is synchronized to the release from
-FTC HQ that was published January 4th, 2016 (version 1.5). Please be sure to **update your driver station**
+developing their competition code using it. It currently is synchronized to the beta release from
+FTC HQ that was published Feb 2nd, 2016 (version 1.6). Please be sure to **update your driver station**
 app to the latest-available version.
 
 ## Installing the Library
