@@ -81,17 +81,19 @@ public class DragonoidsTeleOp extends OpMode {
         // Dispenser
         final double dispenserMaxPower = 0.65;
         final double dispenserMidPower = 0.30;
-        if (gamepad2.dpad_up) {
-            DragonoidsGlobal.dispenser.setPower(dispenserMaxPower);
+        final double controlRange = 0.10;
+        final double threshold = 0.10;
+        // Negate values because pushing the stick forward yields a negative position
+        float dispenserControl1 = -gamepad2.left_stick_y;
+        float dispenserControl2 = -gamepad2.right_stick_y;
+
+        if (Math.abs(dispenserControl1) > threshold) {
+            // Control dispenser with greater power control
+            DragonoidsGlobal.dispenser.setPower(Range.scale(dispenserControl1, -1, 1, dispenserMaxPower - controlRange, dispenserMaxPower + controlRange));
         }
-        else if (gamepad2.dpad_down) {
-            DragonoidsGlobal.dispenser.setPower(-dispenserMaxPower);
-        }
-        else if (gamepad2.dpad_right) {
-            DragonoidsGlobal.dispenser.setPower(dispenserMidPower);
-        }
-        else if (gamepad2.dpad_left) {
-            DragonoidsGlobal.dispenser.setPower(-dispenserMidPower);
+        else if (Math.abs(dispenserControl2) > threshold) {
+            // Control dispenser with medium power control
+            DragonoidsGlobal.dispenser.setPower(Range.scale(dispenserControl2, -1, 1, dispenserMidPower - controlRange, dispenserMidPower + controlRange));
         }
         else {
             DragonoidsGlobal.dispenser.setPower(0.0);
