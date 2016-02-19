@@ -53,6 +53,7 @@ public class DragonoidsGlobal {
         // Stop all motors
         stopMotors();
         conveyor.setPower(0);
+        dispenser.setPower(0);
         leftSlider.setPower(0);
         rightSlider.setPower(0);
         resetServos();
