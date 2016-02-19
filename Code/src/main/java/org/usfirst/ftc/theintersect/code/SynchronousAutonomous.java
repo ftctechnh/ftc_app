@@ -1,7 +1,12 @@
 package org.usfirst.ftc.theintersect.code;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
-import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.UltrasonicSensor;
+
 import org.swerverobotics.library.SynchronousOpMode;
 import org.swerverobotics.library.TelemetryDashboardAndLog;
 
@@ -41,6 +46,7 @@ public class SynchronousAutonomous extends SynchronousOpMode {
     static UltrasonicSensor ultrasonic;
 
     Thread mountainClimberMove;
+    Thread guaranteeStopRobot;
 
     @Override
     public void main() throws InterruptedException {
@@ -109,45 +115,72 @@ public class SynchronousAutonomous extends SynchronousOpMode {
             }
         };
 
+        guaranteeStopRobot = new Thread() {
+            public void run() {
+                while (endTime > System.currentTimeMillis()) {
+                    if (isStopRequested() || endTime > System.currentTimeMillis()) {
+                        break;
+                    }
+                }
+                while (!isStopRequested()) {
+                    end();
+                }
+            }
+        };
+
 
         waitForStart();
 		mountainClimberMove.start();
-		endTime = System.currentTimeMillis() + 30000;
+        guaranteeStopRobot.start();
+        endTime = System.currentTimeMillis() + 30000;
         telemetry.clearDashboard();
         telemetry.addData("gyroInit: ", endTime);
         telemetry.updateNow();
-		if(opModeIsActive() && !isStopRequested() && endTime > System
-				.currentTimeMillis()) {
-			//Starting based off of the delay
+        if (opModeIsActive() && endTime > System.currentTimeMillis()) {
+            //Starting based off of the delay
 			Functions.waitFor(delay * 1000);
 			//Autonomous Routine !!!!
             telemetry.addData("Status", "Working...");
 			if(team.equals("Blue")) {
 				moveRobotBackwardTime(2.5, 0.4);
-				debugWait(3000);
-				stopAtWhite(0.4, 10000000000L, telemetry);
-				debugWait(3000);
-				spinClockwiseGyroCorrection(50, 0.4, 10000000000L);
-				debugWait(3000);
-				moveRobotBackwardTime(2, 0.5);
-				debugWait(3000);
-				while(ultrasonic.getUltrasonicLevel() < 15) {
+                debugWait();
+                stopAtWhite(0.4, 10000000000L, telemetry);
+                debugWait();
+                spinClockwiseGyroCorrection(50, 0.4, 10000000000L);
+                debugWait();
+                moveRobotBackwardTime(2, 0.5);
+                debugWait();
+                while(ultrasonic.getUltrasonicLevel() < 15) {
 					moveRobotForward(0.2, 0.2);
 				}
 				stopRobot();
-				debugWait(3000);
-				dumpClimbersUltra(telemetry);
-				debugWait(1000000000);
-				end();
-			}
-			telemetry.addData("Status", "Done!");
+                debugWait();
+                dumpClimbersUltra(telemetry);
+                debugWait();
+            } else if (team.equals("Red")) {
+                moveRobotBackwardTime(2.5, 0.4);
+                debugWait();
+                detectWhite(telemetry);
+                debugWait();
+                spinClockwiseGyroCorrection(40, 0.4, 10000000000L);
+                debugWait();
+                moveRobotBackwardTime(2, 0.5);
+                debugWait();
+                while (ultrasonic.getUltrasonicLevel() < 15) {
+                    moveRobotForward(0.2, 0.2);
+                }
+                stopRobot();
+                debugWait();
+                dumpClimbersUltra(telemetry);
+            }
+            telemetry.addData("Status", "Done!");
         }
         end();
     }
 
-	public static void debugWait(int mill) {
-		Functions.waitFor(100);
-	}
+    public static void debugWait() {
+        Functions.waitFor(3000);
+    }
 
     public static void directionInit() {
 		//Set motor channel modes and direction
@@ -174,8 +207,8 @@ public class SynchronousAutonomous extends SynchronousOpMode {
 
         gyro.calibrate();
 		gyro.setHeadingMode(
-				ModernRoboticsI2cGyro.HeadingMode.HEADING_CARTESIAN);
-		while (gyro.isCalibrating()) {
+                ModernRoboticsI2cGyro.HeadingMode.HEADING_CARTESIAN);
+        while (gyro.isCalibrating()) {
 			telemetry.addData("gyroInit: ", "Calibrating Gyro");
 			telemetry.updateNow();
         }
@@ -1027,10 +1060,9 @@ public class SynchronousAutonomous extends SynchronousOpMode {
 
 	public static void end() {
 		stopRobot();
-		rightWheel.close();
-		leftWheel.close();
 		sweeper.setPower(0);
-		lineColor.enableLed(false);
-		lineColor.close();
-	}
+        leftHangString.setPower(0);
+        rightHangString.setPower(0);
+        lineColor.enableLed(false);
+    }
 }

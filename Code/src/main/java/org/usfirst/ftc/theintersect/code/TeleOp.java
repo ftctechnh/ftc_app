@@ -6,8 +6,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.swerverobotics.library.SynchronousOpMode;
 
-import java.util.Arrays;
-
 /**
  * Main TeleOp
  */
@@ -122,10 +120,11 @@ public class TeleOp extends SynchronousOpMode {
         mountainClimberRelease.setDirection(Servo.Direction.REVERSE);
         rightChurroHook.setDirection(Servo.Direction.REVERSE);
         bumper.setDirection(Servo.Direction.FORWARD);
+
         //Wait for the game to start
         teleInit();
         waitForStart();
-        long endTime = System.currentTimeMillis() + 120000;
+        //long endTime = System.currentTimeMillis() + 120000;
         //Game Loop
         while (opModeIsActive() /*&& System.currentTimeMillis() < endTime*/) {
             //Defines gamepad buttons for buttons that are held
@@ -142,9 +141,9 @@ public class TeleOp extends SynchronousOpMode {
 
             positionClimbersForward = gamepad1.dpad_up || gamepad2.dpad_up;
             positionClimbersBackward = gamepad1.dpad_down || gamepad2.dpad_down;
-            //releaseClimbers = gamepad1.start || gamepad2.start;
+            releaseClimbers = gamepad2.back;
             toggleChurroHooks = gamepad1.start || gamepad2.start; /*gamepad1.right_stick_button || gamepad2.right_stick_button;*/
-            toggleBarHooks = gamepad1.back || gamepad2.back; /*gamepad1.left_stick_button || gamepad2.left_stick_button;*/
+            toggleBarHooks = gamepad1.back; /*gamepad1.left_stick_button || gamepad2.left_stick_button;*/
 
             //Moves robot when some of the buttons are held
             if (tubeExtend) {
@@ -204,7 +203,7 @@ public class TeleOp extends SynchronousOpMode {
             }
 
             if(autoHookChurro) {
-                autoHookChurro(2,0.7);
+                autoHookChurro(2, 0.7);
             }
 
             if(autoUnhookChurro){
@@ -232,9 +231,9 @@ public class TeleOp extends SynchronousOpMode {
                 mountainClimber.setPosition(mountainClimber.getPosition());
             }
             if (releaseClimbers) {
-                mountainClimberRelease.setPosition(1.0);
+                mountainClimberRelease.setPosition(Functions.mountainClimberReleaseOpen);
             } else {
-                mountainClimberRelease.setPosition(0.0);
+                mountainClimberRelease.setPosition(Functions.mountainClimberReleaseClose);
             }
 
             //For buttons that are not held
@@ -304,6 +303,11 @@ public class TeleOp extends SynchronousOpMode {
                     bumperDown = true;
                 }
             }
+
+            if (isStopRequested()) {
+                break;
+            }
+
             idle();
         }
 		end();
@@ -362,14 +366,16 @@ public class TeleOp extends SynchronousOpMode {
 		bumper.setPosition(Functions.bumperInitPosition);
         rightChurroHook.setPosition(Functions.churroHookUpPos);
         leftChurroHook.setPosition(Functions.churroHookUpPos);
-        rightBarHook.setPosition(Functions.barHookDownPos);
-        leftBarHook.setPosition(Functions.barHookDownPos);
-
-	}
+        rightBarHook.setPosition(Functions.barHookTeleInitPos);
+        leftBarHook.setPosition(Functions.barHookTeleInitPos);
+    }
 
 	public static void end() {
-		rightWheel.setPowerFloat();
-		leftWheel.setPowerFloat();
-		sweeper.setPowerFloat();
-	}
+        rightWheel.setPower(0);
+        leftWheel.setPower(0);
+        linearSlide.setPower(0);
+        sweeper.setPower(0);
+        leftHangString.setPower(0);
+        rightHangString.setPower(0);
+    }
 }
