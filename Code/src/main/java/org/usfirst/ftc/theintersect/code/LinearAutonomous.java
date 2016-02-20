@@ -2,8 +2,13 @@ package org.usfirst.ftc.theintersect.code;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.robocol.Telemetry;
+
 import org.swerverobotics.library.ClassFactory;
 import org.swerverobotics.library.interfaces.Disabled;
 
@@ -172,7 +177,7 @@ public class LinearAutonomous extends LinearOpMode {
     public static void servoInit(){
         mountainClimber.setPosition(Functions.mountainClimberInitPosition);
 		mountainClimberRelease.setPosition(Functions
-				.mountainClimberTelePosition);
+				.mountainClimberInitPosition);
 		tubeExtender.setPosition(Functions.tubeExtenderInitPosition);
         tubeTilt.setPosition(Functions.tubeTiltInitPosition);
         bumper.setPosition(Functions.bumperInitPosition);

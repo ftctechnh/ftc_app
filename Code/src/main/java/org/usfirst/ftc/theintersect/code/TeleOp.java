@@ -56,19 +56,23 @@ public class TeleOp extends SynchronousOpMode {
 	boolean positionClimbersBackward = false;
 	boolean releaseClimbers = false;
 
-	boolean bumperDown = true;
-    boolean toggleBumper = false;
-	boolean churroHooksDown = false;
+    boolean bumperUp = false;
+    boolean bumperDown = false;
     boolean toggleChurroHooks = false;
+    boolean churroHooksDown = false;
+    boolean churroHooksUp = false;
 
     boolean barHooksDown = false;
     boolean toggleBarHooks = false;
 
+    boolean extendLeftHangString = false;
+    boolean extendRightHangString = false;
+    boolean retractRightHangString = false;
+    boolean retractLeftHangString = false;
+
 	float slowDriveBack;
 	float slowDriveForward;
 
-    boolean autoHookChurro;
-    boolean autoUnhookChurro;
 
 	@Override
 	public void main() throws InterruptedException {
@@ -119,6 +123,7 @@ public class TeleOp extends SynchronousOpMode {
         mountainClimber.setDirection(Servo.Direction.FORWARD);
         mountainClimberRelease.setDirection(Servo.Direction.REVERSE);
         rightChurroHook.setDirection(Servo.Direction.REVERSE);
+        rightBarHook.setDirection(Servo.Direction.REVERSE);
         bumper.setDirection(Servo.Direction.FORWARD);
 
         //Wait for the game to start
@@ -127,29 +132,72 @@ public class TeleOp extends SynchronousOpMode {
         //long endTime = System.currentTimeMillis() + 120000;
         //Game Loop
         while (opModeIsActive() /*&& System.currentTimeMillis() < endTime*/) {
-            //Defines gamepad buttons for buttons that are held
-            containerTiltRight = gamepad1.dpad_left || gamepad2.dpad_left;
-            containerTiltLeft = gamepad1.dpad_right || gamepad2.dpad_right;
+            //CONTROLS
 
-            tubeExtend = gamepad1.x || gamepad2.x;
-            tubeRetract = gamepad1.b || gamepad2.b;
-
-            //toggleBumper = gamepad1.back || gamepad2.back;
-
-            //autoHookChurro = gamepad1.dpad_up || gamepad2.dpad_up;
-            //autoUnhookChurro = gamepad1.dpad_down || gamepad2.dpad_down;
-
-            positionClimbersForward = gamepad1.dpad_up || gamepad2.dpad_up;
-            positionClimbersBackward = gamepad1.dpad_down || gamepad2.dpad_down;
+            toggleChurroHooks = gamepad1.back;
+            positionClimbersForward = gamepad2.dpad_up;
+            positionClimbersBackward = gamepad2.dpad_down;
             releaseClimbers = gamepad2.back;
-            toggleChurroHooks = gamepad1.start || gamepad2.start; /*gamepad1.right_stick_button || gamepad2.right_stick_button;*/
-            toggleBarHooks = gamepad1.back; /*gamepad1.left_stick_button || gamepad2.left_stick_button;*/
+            toggleBarHooks = gamepad2.start;
+            tubeExtend = gamepad1.x;
+            tubeRetract = gamepad1.b;
+            containerTiltRight = gamepad1.dpad_left;
+            containerTiltLeft = gamepad1.dpad_right;
+            sweeperForward = gamepad1.y || gamepad2.y;
+            sweeperBackward = gamepad1.a || gamepad2.a;
+            linearSlideForward = gamepad2.right_bumper;
+            linearSlideBackward = gamepad2.left_bumper;
+            bumperDown = gamepad1.dpad_down || gamepad2.b;
+            bumperUp = gamepad1.dpad_up || gamepad2.x;
+            retractLeftHangString = gamepad1.left_bumper;
+            retractRightHangString = gamepad1.right_bumper;
+            extendLeftHangString = gamepad1.left_trigger > Functions.triggerThreshold;
+            extendRightHangString = gamepad1.right_trigger > Functions.triggerThreshold;
+
 
             //Moves robot when some of the buttons are held
+            if (extendRightHangString) {
+                rightHangString.setPower(-Functions.hangStringPower);
+            } else if (retractRightHangString) {
+                rightHangString.setPower(Functions.hangStringPower);
+            } else {
+                rightHangString.setPower(0);
+            }
+            if (extendLeftHangString) {
+                leftHangString.setPower(-Functions.hangStringPower);
+            } else if (retractLeftHangString) {
+                leftHangString.setPower(Functions.hangStringPower);
+            } else {
+                leftHangString.setPower(0);
+            }
+            if (linearSlideForward) {
+                linearSlide.setPower(-Functions.linearSlidePower);
+            } else if (linearSlideBackward) {
+                linearSlide.setPower(Functions.linearSlidePower);
+            } else {
+                linearSlide.setPower(0);
+            }
+
+            if (bumperDown) {
+                bumper.setPosition(0.9);
+            } else if (bumperUp) {
+                bumper.setPosition(0.1);
+            } else {
+                bumper.setPosition(0.5);
+            }
+
+            if (sweeperForward) {
+                sweeper.setPower(-Functions.sweeperPower);
+            } else if (sweeperBackward) {
+                sweeper.setPower(Functions.sweeperPower);
+            } else {
+                sweeper.setPower(0);
+            }
+
             if (tubeExtend) {
                 tubeExtender.setPosition(0.75);
             } else if (tubeRetract) {
-                tubeExtender.setPosition(-0.9);
+                tubeExtender.setPosition(0.9);
             } else {
                 tubeExtender.setPosition(0.5);
             }
@@ -175,11 +223,11 @@ public class TeleOp extends SynchronousOpMode {
 
             if (toggleBarHooks && barHooksDown) {
                 leftBarHook.setPosition(Functions.barHookUpPos);
-                rightBarHook.setPosition(Functions.barHookRightUpPos);
+                rightBarHook.setPosition(Functions.barHookUpPos);
                 Functions.waitFor(250);
                 barHooksDown = false;
             } else if (toggleBarHooks && !barHooksDown) {
-                leftBarHook.setPosition(Functions.barHookLeftDownPos);
+                leftBarHook.setPosition(Functions.barHookDownPos);
                 rightBarHook.setPosition(Functions.barHookDownPos);
                 Functions.waitFor(250);
                 barHooksDown = true;
@@ -203,7 +251,7 @@ public class TeleOp extends SynchronousOpMode {
                 rightHangString.setPower(0);
             }*/
 
-            if (gamepad1.right_trigger > Functions.triggerThreshold) {
+            /*if (gamepad1.right_trigger > Functions.triggerThreshold) {
                 //leftHangString.setPower(gamepad1.right_trigger);
                 rightHangString.setPower(gamepad1.right_trigger);
             } else if (gamepad2.right_trigger > Functions.triggerThreshold) {
@@ -218,16 +266,7 @@ public class TeleOp extends SynchronousOpMode {
             } else {
                 leftHangString.setPower(0);
                 rightHangString.setPower(0);
-            }
-
-            if(autoHookChurro) {
-                autoHookChurro(2, 0.7);
-            }
-
-            if(autoUnhookChurro){
-                autoUnhookChurro(1,0.7);
-            }
-
+            }*/
 
             if (positionClimbersForward) {
                 try {
@@ -260,26 +299,8 @@ public class TeleOp extends SynchronousOpMode {
                 rightWheelPower = gamepad1.right_stick_y;
                 leftWheelPower = gamepad1.left_stick_y;
 
-                linearSlideForward =
-                        gamepad1.right_bumper || gamepad2.right_bumper;
-                linearSlideBackward =
-                        gamepad1.left_bumper || gamepad2.left_bumper;
-
                 /*slowDriveBack = gamepad1.left_trigger;
                 slowDriveForward = gamepad1.right_trigger;!!*/
-
-
-                if (gamepad1.a || gamepad2.a) {
-                    sweeperForward = !sweeperForward;
-                    sweeperBackward = false;
-                } else if (gamepad1.y || gamepad2.y) {
-                    sweeperBackward = !sweeperBackward;
-                    sweeperForward = false;
-                }
-
-
-                sweeperForward = gamepad1.a || gamepad2.a;
-                sweeperBackward = gamepad1.y || gamepad2.y;
 
                 //Use gamepad values to move robot
                 if (slowDriveForward != 0 || slowDriveBack != 0) {
@@ -294,38 +315,10 @@ public class TeleOp extends SynchronousOpMode {
                     leftWheel.setPower(0);
                     rightWheel.setPower(0);
                 }
-
-                if (linearSlideForward) {
-                    linearSlide.setPower(-Functions.linearSlidePower);
-                } else if (linearSlideBackward) {
-                    linearSlide.setPower(Functions.linearSlidePower);
-                } else {
-                    linearSlide.setPower(0);
-                }
-
-                if (sweeperForward) {
-                    sweeper.setPower(-Functions.sweeperPower);
-                } else if (sweeperBackward) {
-                    sweeper.setPower(Functions.sweeperPower);
-                } else {
-                    sweeper.setPower(0);
-                }
-
-                if (toggleBumper && bumperDown) {
-                    bumper.setPosition(Functions.bumperUpPos);
-                    Functions.waitFor(250);
-                    bumperDown = false;
-                } else if (toggleBumper && !bumperDown) {
-                    bumper.setPosition(Functions.bumperDownPos);
-                    Functions.waitFor(250);
-                    bumperDown = true;
-                }
             }
-
             if (isStopRequested()) {
                 break;
             }
-
             idle();
         }
 		end();
@@ -376,10 +369,9 @@ public class TeleOp extends SynchronousOpMode {
     }
 
 	public static void teleInit() {
-        mountainClimber.setPosition(Functions.mountainClimberTelePosition);
-        mountainClimberRelease
-				.setPosition(Functions.mountainClimberReleaseClose);
-		tubeExtender.setPosition(Functions.tubeExtenderInitPosition);
+        mountainClimber.setPosition(Functions.mountainClimberInitPosition);
+        mountainClimberRelease.setPosition(Functions.mountainClimberReleaseClose);
+        tubeExtender.setPosition(Functions.tubeExtenderInitPosition);
 		tubeTilt.setPosition(Functions.tubeTiltInitPosition);
 		bumper.setPosition(Functions.bumperInitPosition);
         rightChurroHook.setPosition(Functions.churroHookUpPos);

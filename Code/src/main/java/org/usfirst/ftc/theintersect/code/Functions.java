@@ -13,7 +13,6 @@ public class Functions {
 	public static double colorError = 2.0;
     public static double backWheelCircumfrence = 4 * Math.PI;
     public static double mountainClimberInitPosition = 0.1;
-	public static double mountainClimberTelePosition = 0.01;
 	public static double mountainClimberReleaseOpen = 0.0;
 	public static double mountainClimberReleaseClose = 1.0;
 	public static double bumperInitPosition = 0.0;
@@ -25,9 +24,8 @@ public class Functions {
 	public static double adjustedPowerMax = 0.9;
 	public static double adjustedPowerMin = 0.25;
 	public static double whiteThreshold = 10;
-	public static double barHookRightUpPos = 0.1;
-	public static double barHookDownPos = 0.9;
-    public static double barHookUpPos = 0.9;
+    public static double barHookDownPos = 0.1;
+    public static double barHookUpPos = 0.8;
     public static double barHookTeleInitPos = 0.5;
     public static double barHookLeftDownPos = 0.1;
 	public static double linearSlidePower = 0.5;
@@ -35,6 +33,7 @@ public class Functions {
 	public static double sweeperPower = 0.5;
     public static double bumperDownPos = 1.0;
     public static double bumperUpPos = 0.0;
+    public static double hangStringPower = 0.5;
 
 
     public static double convertGamepad(float y) {

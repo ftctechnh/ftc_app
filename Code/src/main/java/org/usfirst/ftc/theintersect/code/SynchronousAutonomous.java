@@ -244,10 +244,9 @@ public class SynchronousAutonomous extends SynchronousOpMode {
 	}
 
 	public static void preStartInit() {
-		mountainClimber.setPosition(Functions.mountainClimberTelePosition);
-		mountainClimberRelease
-				.setPosition(Functions.mountainClimberReleaseClose);
-		tubeExtender.setPosition(Functions.tubeExtenderInitPosition);
+        mountainClimber.setPosition(Functions.mountainClimberInitPosition);
+        mountainClimberRelease.setPosition(Functions.mountainClimberReleaseClose);
+        tubeExtender.setPosition(Functions.tubeExtenderInitPosition);
 		tubeTilt.setPosition(Functions.tubeTiltInitPosition);
 		bumper.setPosition(Functions.bumperInitPosition);
 		rightChurroHook.setPosition(Functions.churroHookUpPos);
@@ -270,8 +269,8 @@ public class SynchronousAutonomous extends SynchronousOpMode {
 	}
 
     public static void servoInit() {
-		mountainClimber.setPosition(Functions.mountainClimberTelePosition);
-		mountainClimberRelease
+        mountainClimber.setPosition(Functions.mountainClimberInitPosition);
+        mountainClimberRelease
 				.setPosition(Functions.mountainClimberReleaseClose);
 		tubeExtender.setPosition(Functions.tubeExtenderInitPosition);
         tubeTilt.setPosition(Functions.tubeTiltInitPosition);
