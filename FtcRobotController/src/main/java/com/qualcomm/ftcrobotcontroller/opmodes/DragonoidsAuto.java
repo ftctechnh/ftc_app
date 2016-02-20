@@ -170,8 +170,15 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
         DragonoidsGlobal.stopMotors();
     }
 
+    protected enum Alliance {
+        Red, Blue
+    }
     @Override
     public void runOpMode() throws InterruptedException {
+        // Change this and upload depending on alliance color
+        final Alliance alliance = Alliance.Blue;
+        final Direction turnDirection = (alliance == Alliance.Blue) ? Direction.Right : Direction.Left;
+
         try {
             this.initialize();
             waitForStart();
@@ -183,12 +190,12 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
             //this.drive(Direction.Forward, step1Distance);
             this.driveTime(Direction.Forward, 1000);
             // Use the phone's IMU to make a precise 45 degree turn
-            this.turn(Direction.Right, 45);
+            this.turn(turnDirection, 45);
             // Drive forward to the beacon zone
             //this.drive(Direction.Forward, step2Distance);
             this.driveTime(Direction.Forward, 2000);
             // Turn 45 degrees again
-            this.turn(Direction.Right, 45);
+            this.turn(turnDirection, 45);
             // Drive forward to color detection distance
             //this.drive(Direction.Forward, step3Distance);
             while (DragonoidsGlobal.opticalDistanceSensor.getLightDetected() < 0.1) {
