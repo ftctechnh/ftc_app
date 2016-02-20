@@ -12,7 +12,7 @@ public class DragonoidsGlobal {
     // Slider motors
     public static DcMotor leftSlider, rightSlider;
     // Servos
-    public static Servo gate;
+    public static Servo gate, rightClimber, leftClimber;
 
     public static void init(HardwareMap hardwareMap) {
         rightOne = hardwareMap.dcMotor.get("rightOneDrive");
@@ -32,6 +32,8 @@ public class DragonoidsGlobal {
         leftSlider.setDirection(DcMotor.Direction.REVERSE);
 
         gate = hardwareMap.servo.get("gate");
+        rightClimber = hardwareMap.servo.get("rightClimber");
+        leftClimber = hardwareMap.servo.get("leftClimber");
         resetServos();
     }
 
@@ -44,6 +46,8 @@ public class DragonoidsGlobal {
 
     public static void resetServos(){
         gate.setPosition(0.75);
+        rightClimber.setPosition(0.0);
+        leftClimber.setPosition(0.0);
     }
 
     public static void stopMotors() {

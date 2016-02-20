@@ -49,15 +49,32 @@ public class DragonoidsTeleOp extends OpMode {
         }
 
         // Gate
-        final double gateOpenPosition = 0.0;
-        final double gateClosedPosition = 0.75;
+        final double gateOpen = 0.0;
+        final double gateClosed = 0.75;
         if (gamepad2.a){
             // Open the gate
-            DragonoidsGlobal.gate.setPosition(gateOpenPosition);
+            DragonoidsGlobal.gate.setPosition(gateOpen);
         }
         else {
             // Close the gate
-            DragonoidsGlobal.gate.setPosition(gateClosedPosition);
+            DragonoidsGlobal.gate.setPosition(gateClosed);
+        }
+        // Climber release
+        final double rightClimberOpen = 0.0;
+        final double rightClimberClosed = 0.5;
+        final double leftClimberOpen = 0.0;
+        final double leftClimberClosed = 0.5;
+        if (gamepad2.right_bumper) {
+            DragonoidsGlobal.rightClimber.setPosition(rightClimberOpen);
+        }
+        else {
+            DragonoidsGlobal.rightClimber.setPosition(rightClimberClosed);
+        }
+        if (gamepad2.left_bumper) {
+            DragonoidsGlobal.leftClimber.setPosition(leftClimberOpen);
+        }
+        else {
+            DragonoidsGlobal.leftClimber.setPosition(leftClimberClosed);
         }
 
         // Slider
