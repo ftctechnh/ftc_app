@@ -127,18 +127,18 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
         float startingRotation = this.headingDegrees;
         float targetRotation;
 
-        if (direction == Direction.Left) {
+        if (direction == Direction.Right) {
             targetRotation = startingRotation - degrees;
             while (this.headingDegrees > targetRotation) {
-                DragonoidsGlobal.setDrivePower(-turnPower, turnPower);
+                DragonoidsGlobal.setDrivePower(turnPower, -turnPower);
                 waitOneFullHardwareCycle();
             }
         }
 
-        if (direction == Direction.Right) {
+        if (direction == Direction.Left) {
             targetRotation = startingRotation + degrees;
             while (this.headingDegrees < targetRotation) {
-                DragonoidsGlobal.setDrivePower(turnPower, -turnPower);
+                DragonoidsGlobal.setDrivePower(-turnPower, turnPower);
                 waitOneFullHardwareCycle();
             }
         }
