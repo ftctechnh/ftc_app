@@ -203,9 +203,9 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
             }
             DragonoidsGlobal.stopMotors();
             // Deposit climbers into bucket
-            DragonoidsGlobal.autonomousClimbers.setPosition(1.0);
-            sleep(1000);
             DragonoidsGlobal.autonomousClimbers.setPosition(0.0);
+            sleep(1000);
+            DragonoidsGlobal.autonomousClimbers.setPosition(1.0);
             // Detect color of the beacon
             if (DragonoidsGlobal.colorSensor.red() > DragonoidsGlobal.colorSensor.blue()) {
                 // Red color detected
