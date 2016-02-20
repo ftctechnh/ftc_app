@@ -56,26 +56,8 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
         if (event.sensor.getType() != this.sensorType) return;
 
         final float dT = (event.timestamp - lastGyroTimestamp) * nanoSecondsToSeconds;
-        if (lastGyroTimestamp != 0 && !calibrationComplete) {
-            if (firstGyroTimestamp == 0) {
-                firstGyroTimestamp = event.timestamp;
-            }
-            if ((event.timestamp - firstGyroTimestamp) * nanoSecondsToSeconds < secondsToCalibrate) {
-                // Keep measuring error
-                // Gyroscope event.values[2] is the z-axis according to https://developer.android.com/images/axis_device.png
-                totalError += dT * event.values[2];
-            }
-            else {
-                // Done calibrating
-                headingCompensation = totalError / ((event.timestamp - firstGyroTimestamp) * nanoSecondsToSeconds);
-                calibrationComplete = true;
-                // Make a sound to notify that calibration is complete
-                ToneGenerator toneGenerator = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
-                toneGenerator.startTone(ToneGenerator.TONE_CDMA_PRESSHOLDKEY_LITE);
-            }
-        }
-        if (lastGyroTimestamp != 0 && calibrationComplete) {
-            heading += (dT * event.values[2]) - (dT * headingCompensation);
+        if (lastGyroTimestamp != 0) {
+            heading += (dT * event.values[2]);
             headingDegrees = (float) Math.toDegrees(heading);
         }
         lastGyroTimestamp = event.timestamp;
