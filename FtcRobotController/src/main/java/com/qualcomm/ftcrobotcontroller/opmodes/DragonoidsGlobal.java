@@ -25,8 +25,8 @@ public class DragonoidsGlobal {
         leftOne = hardwareMap.dcMotor.get("leftOneDrive");
         leftTwo = hardwareMap.dcMotor.get("leftTwoDrive");
 
-        rightTwo.setDirection(DcMotor.Direction.REVERSE);
-        leftOne.setDirection(DcMotor.Direction.REVERSE);
+        rightOne.setDirection(DcMotor.Direction.REVERSE);
+        leftTwo.setDirection(DcMotor.Direction.REVERSE);
 
         conveyor = hardwareMap.dcMotor.get("conveyor");
         dispenser = hardwareMap.dcMotor.get("dispenser");
