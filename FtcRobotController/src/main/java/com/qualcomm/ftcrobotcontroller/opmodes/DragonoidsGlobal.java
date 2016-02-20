@@ -1,7 +1,9 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class DragonoidsGlobal {
@@ -13,6 +15,9 @@ public class DragonoidsGlobal {
     public static DcMotor leftSlider, rightSlider;
     // Servos
     public static Servo gate, rightClimber, leftClimber;
+    // Sensors
+    public static ColorSensor colorSensor;
+    public static OpticalDistanceSensor opticalDistanceSensor;
 
     public static void init(HardwareMap hardwareMap) {
         rightOne = hardwareMap.dcMotor.get("rightOneDrive");
@@ -35,6 +40,11 @@ public class DragonoidsGlobal {
         rightClimber = hardwareMap.servo.get("rightClimber");
         leftClimber = hardwareMap.servo.get("leftClimber");
         resetServos();
+
+        colorSensor = hardwareMap.colorSensor.get("color");
+        opticalDistanceSensor = hardwareMap.opticalDistanceSensor.get("distance");
+        // Enable to read reflected light and disable to read emitted light
+        colorSensor.enableLed(true);
     }
 
     public static void setDrivePower(double rightPower, double leftPower) {

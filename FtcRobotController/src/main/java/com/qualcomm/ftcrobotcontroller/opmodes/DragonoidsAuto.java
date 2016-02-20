@@ -25,8 +25,6 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
     private float firstGyroTimestamp = 0;
     private float totalError = 0;
     private double headingCompensation = 0;
-    // Optical distance sensor
-    private OpticalDistanceSensor distanceSensor;
     // Autonomous constants
     private final double drivePower = 0.5;
     private final double turnPower = 0.3;
@@ -46,8 +44,6 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
         else {
             telemetry.addData("Error", "Gyroscope sensor not found");
         }
-        // Set up the distance sensor
-        //this.distanceSensor = hardwareMap.opticalDistanceSensor.get("distance_sensor");
     }
     private void outputTelemetry() {
         telemetry.addData("Heading", headingDegrees);
