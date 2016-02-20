@@ -26,8 +26,9 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
     private float totalError = 0;
     private double headingCompensation = 0;
     // Autonomous constants
-    private final double drivePower = 0.5;
-    private final double turnPower = 0.3;
+    private final double drivePower = 0.4;
+    private final double driveMinPower = 0.2;
+    private final double turnPower = 0.4;
     private final int step1Distance = 500;
     private final int step2Distance = 2000;
     private final int step3Distance = 500;
@@ -182,17 +183,27 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
             //this.drive(Direction.Forward, step1Distance);
             this.driveTime(Direction.Forward, 1000);
             // Use the phone's IMU to make a precise 45 degree turn
-            this.turn(Direction.Left, 45);
+            this.turn(Direction.Right, 45);
             // Drive forward to the beacon zone
             //this.drive(Direction.Forward, step2Distance);
-            this.driveTime(Direction.Forward, 1000);
+            this.driveTime(Direction.Forward, 2000);
             // Turn 45 degrees again
-            this.turn(Direction.Left, 45);
+            this.turn(Direction.Right, 45);
             // Drive forward to color detection distance
             //this.drive(Direction.Forward, step3Distance);
-            this.driveTime(Direction.Forward, 1000);
+            while (DragonoidsGlobal.opticalDistanceSensor.getLightDetected() < 0.1) {
+                DragonoidsGlobal.setDrivePower(driveMinPower, driveMinPower);
+            }
+            DragonoidsGlobal.stopMotors();
             // Detect color of the beacon
+            if (DragonoidsGlobal.colorSensor.red() > DragonoidsGlobal.colorSensor.blue()) {
+                // Red color detected
 
+            }
+            else {
+                // Blue color detected
+
+            }
             // Drive forward or extend arm to push the correct button
 
             // Deposit climbers in the bucket behind the beacon
