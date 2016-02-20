@@ -65,7 +65,8 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
             }
             if ((event.timestamp - firstGyroTimestamp) * nanoSecondsToSeconds < secondsToCalibrate) {
                 // Keep measuring error
-                totalError += dT * event.values[1];
+                // Gyroscope event.values[2] is the z-axis according to https://developer.android.com/images/axis_device.png
+                totalError += dT * event.values[2];
             }
             else {
                 // Done calibrating
@@ -77,7 +78,7 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
             }
         }
         if (lastGyroTimestamp != 0 && calibrationComplete) {
-            heading += (dT * event.values[1]) - (dT * headingCompensation);
+            heading += (dT * event.values[2]) - (dT * headingCompensation);
             headingDegrees = (float) Math.toDegrees(heading);
         }
         lastGyroTimestamp = event.timestamp;
