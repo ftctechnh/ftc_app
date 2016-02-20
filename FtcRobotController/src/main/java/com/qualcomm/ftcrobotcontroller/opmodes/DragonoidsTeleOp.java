@@ -48,24 +48,13 @@ public class DragonoidsTeleOp extends OpMode {
             DragonoidsGlobal.conveyor.setPower(0.0);
         }
 
-        // Gate
-        final double gateOpen = 0.0;
-        final double gateClosed = 0.75;
-        if (gamepad2.a){
-            // Open the gate
-            DragonoidsGlobal.gate.setPosition(gateOpen);
-        }
-        else {
-            // Close the gate
-            DragonoidsGlobal.gate.setPosition(gateClosed);
-        }
         // Climber release
         final double rightClimberOpen = 0.0;
         final double rightClimberClosed = 0.5;
         final double leftClimberOpen = 0.0;
         final double leftClimberClosed = 0.5;
-        final double autonomousClimbersClosed = 0.0;
-        final double autonomousClimbersOpen = 1.0;
+        final double autonomousClimbersClosed = 1.0;
+        final double autonomousClimbersOpen = 0.0;
         // Red B button for releasing climbers when in red alliance
         if (gamepad2.b) {
             DragonoidsGlobal.rightClimber.setPosition(rightClimberOpen);
