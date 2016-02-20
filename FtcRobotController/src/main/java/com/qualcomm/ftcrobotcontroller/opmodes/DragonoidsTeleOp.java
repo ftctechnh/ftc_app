@@ -64,6 +64,8 @@ public class DragonoidsTeleOp extends OpMode {
         final double rightClimberClosed = 0.5;
         final double leftClimberOpen = 0.0;
         final double leftClimberClosed = 0.5;
+        final double autonomousClimbersClosed = 0.0;
+        final double autonomousClimbersOpen = 1.0;
         // Red B button for releasing climbers when in red alliance
         if (gamepad2.b) {
             DragonoidsGlobal.rightClimber.setPosition(rightClimberOpen);
@@ -77,6 +79,13 @@ public class DragonoidsTeleOp extends OpMode {
         }
         else {
             DragonoidsGlobal.leftClimber.setPosition(leftClimberClosed);
+        }
+        // Y button for testing
+        if (gamepad2.y) {
+            DragonoidsGlobal.autonomousClimbers.setPosition(autonomousClimbersOpen);
+        }
+        else {
+            DragonoidsGlobal.autonomousClimbers.setPosition(autonomousClimbersClosed);
         }
 
         // Slider
