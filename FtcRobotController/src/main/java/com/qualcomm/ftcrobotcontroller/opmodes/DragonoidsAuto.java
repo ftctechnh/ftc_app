@@ -27,7 +27,7 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
     private double headingCompensation = 0;
     // Autonomous constants
     private final double drivePower = 0.4;
-    private final double driveMinPower = 0.2;
+    private final double driveMinPower = 0.35;
     private final double turnPower = 0.4;
     private final int step1Distance = 500;
     private final int step2Distance = 2000;
@@ -193,9 +193,9 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
             this.turn(turnDirection, 45);
             // Drive forward to the beacon zone
             //this.drive(Direction.Forward, step2Distance);
-            this.driveTime(Direction.Forward, 2000);
+            this.driveTime(Direction.Forward, 2500);
             // Turn 45 degrees again
-            this.turn(turnDirection, 45);
+            this.turn(turnDirection, 40);
             // Drive forward to color detection distance
             //this.drive(Direction.Forward, step3Distance);
             double odsStartTime = getRuntime();
