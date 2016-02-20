@@ -185,7 +185,8 @@ public class TeleOp extends SynchronousOpMode {
                 barHooksDown = true;
             }
 
-            if(gamepad1.right_trigger > Functions.triggerThreshold){
+            //Old code (right trigger hangs, left trigger unhangs)
+            /*if(gamepad1.right_trigger > Functions.triggerThreshold){
                 leftHangString.setPower(gamepad1.right_trigger);
                 rightHangString.setPower(gamepad1.right_trigger);
             } else if (gamepad2.right_trigger > Functions.triggerThreshold){
@@ -198,6 +199,23 @@ public class TeleOp extends SynchronousOpMode {
                 leftHangString.setPower(-gamepad2.left_trigger);
                 rightHangString.setPower(-gamepad2.left_trigger);
             } else{
+                leftHangString.setPower(0);
+                rightHangString.setPower(0);
+            }*/
+
+            if (gamepad1.right_trigger > Functions.triggerThreshold) {
+                //leftHangString.setPower(gamepad1.right_trigger);
+                rightHangString.setPower(gamepad1.right_trigger);
+            } else if (gamepad2.right_trigger > Functions.triggerThreshold) {
+                leftHangString.setPower(gamepad2.right_trigger);
+                rightHangString.setPower(gamepad2.right_trigger);
+            } else if (gamepad1.left_trigger > Functions.triggerThreshold) {
+                leftHangString.setPower(gamepad1.left_trigger);
+                //rightHangString.setPower(-gamepad1.left_trigger);
+            } else if (gamepad2.left_trigger > Functions.triggerThreshold) {
+                leftHangString.setPower(-gamepad2.left_trigger);
+                rightHangString.setPower(-gamepad2.left_trigger);
+            } else {
                 leftHangString.setPower(0);
                 rightHangString.setPower(0);
             }
