@@ -79,7 +79,7 @@ public class DragonoidsTeleOp extends OpMode {
         }
 
         // Dispenser
-        final double dispenserMaxPower = 0.65;
+        final double dispenserMaxPower = 0.80;
         final double dispenserMidPower = 0.30;
         final double controlRange = 0.20;
         final double threshold = 0.10;
