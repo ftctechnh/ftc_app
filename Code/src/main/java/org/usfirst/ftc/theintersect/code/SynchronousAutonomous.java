@@ -46,7 +46,6 @@ public class SynchronousAutonomous extends SynchronousOpMode {
     static UltrasonicSensor ultrasonic;
 
     Thread mountainClimberMove;
-    Thread guaranteeStopRobot;
 
     @Override
     public void main() throws InterruptedException {
@@ -115,23 +114,8 @@ public class SynchronousAutonomous extends SynchronousOpMode {
             }
         };
 
-        guaranteeStopRobot = new Thread() {
-            public void run() {
-                while (endTime > System.currentTimeMillis()) {
-                    if (isStopRequested() || endTime > System.currentTimeMillis()) {
-                        break;
-                    }
-                }
-                while (!isStopRequested()) {
-                    end();
-                }
-            }
-        };
-
-
         waitForStart();
 		mountainClimberMove.start();
-        guaranteeStopRobot.start();
         endTime = System.currentTimeMillis() + 30000;
         telemetry.clearDashboard();
         telemetry.addData("gyroInit: ", endTime);
@@ -158,11 +142,12 @@ public class SynchronousAutonomous extends SynchronousOpMode {
                 dumpClimbersUltra(telemetry);
                 debugWait();
             } else if (team.equals("Red")) {
-                moveRobotBackwardTime(2.5, 0.4);
+                moveRobotBackwardTime(3, 0.4);
                 debugWait();
-                detectWhite(telemetry);
+                stopAtWhite(0.5, 10000000000L, telemetry);
                 debugWait();
-                spinClockwiseGyroCorrection(40, 0.4, 10000000000L);
+                moveRobotForwardRotations(360, 0.5, 10000000000L);
+                spinCounterClockwiseGyroCorrection(45, 0.4, 10000000000L);
                 debugWait();
                 moveRobotBackwardTime(2, 0.5);
                 debugWait();
@@ -179,7 +164,7 @@ public class SynchronousAutonomous extends SynchronousOpMode {
     }
 
     public static void debugWait() {
-        Functions.waitFor(3000);
+        Functions.waitFor(500);
     }
 
     public static void directionInit() {
@@ -253,9 +238,9 @@ public class SynchronousAutonomous extends SynchronousOpMode {
 		leftChurroHook.setPosition(Functions.churroHookUpPos);
 		rightHangString.setPower(0);
 		leftHangString.setPower(0);
-		rightBarHook.setPosition(Functions.barHookUpPos);
-		leftBarHook.setPosition(Functions.barHookUpPos);
-	}
+        rightBarHook.setPosition(Functions.barHookAutoInitPos);
+        leftBarHook.setPosition(Functions.barHookAutoInitPos);
+    }
 
     public static void autonomousInit(TelemetryDashboardAndLog telemetry) {
         lineColor.enableLed(true);
@@ -385,9 +370,9 @@ public class SynchronousAutonomous extends SynchronousOpMode {
 		rightWheel.setPower(0);
 	}
 
-    public static void moveRobotForwardTime(int seconds, double power) {
-		moveRobotForward(power, power);
-		Functions.waitFor(seconds * 1000);
+    public static void moveRobotForwardTime(double seconds, double power) {
+        moveRobotForward(power, power);
+        Functions.waitFor((int) (seconds * 1000));
         stopRobot();
     }
 
