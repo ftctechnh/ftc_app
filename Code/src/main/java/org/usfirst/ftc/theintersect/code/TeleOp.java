@@ -73,10 +73,6 @@ public class TeleOp extends SynchronousOpMode {
 	float slowDriveBack;
 	float slowDriveForward;
 
-    int extendCount = 0;
-    int retractCount = 0;
-    int normalCount = 0;
-
 	@Override
 	public void main() throws InterruptedException {
         //Initialize hardware
@@ -139,21 +135,22 @@ public class TeleOp extends SynchronousOpMode {
             positionClimbersForward = gamepad2.dpad_up;
             positionClimbersBackward = gamepad2.dpad_down;
             releaseClimbers = gamepad2.back;
-            containerTiltRight = gamepad1.dpad_left;
-            containerTiltLeft = gamepad1.dpad_right;
+            containerTiltRight = gamepad1.dpad_right;
+            containerTiltLeft = gamepad1.dpad_left;
             sweeperForward = (gamepad1.y || gamepad2.y);
             sweeperBackward = (gamepad1.a || gamepad2.a);
-            linearSlideForward = gamepad2.right_bumper;
-            linearSlideBackward = gamepad2.left_bumper;
-            //bumperDown = (gamepad1.dpad_down || gamepad2.b);
+            linearSlideForward = gamepad2.right_bumper || gamepad2.right_bumper;
+            linearSlideBackward = gamepad2.left_bumper || gamepad2.left_bumper;
             bumperDown = gamepad2.b;
-            //bumperUp = (gamepad1.dpad_up || gamepad2.x);
             bumperUp = gamepad2.x;
-            retractLeftHangString = gamepad1.left_bumper;
-            retractRightHangString = gamepad1.right_bumper;
-            extendLeftHangString = gamepad1.left_trigger > Functions.triggerThreshold;
-            extendRightHangString = gamepad1.right_trigger > Functions.triggerThreshold;
-
+            //retractLeftHangString = gamepad1.left_bumper;
+            //retractRightHangString = gamepad1.right_bumper;
+			retractLeftHangString = gamepad1.left_trigger > Functions
+					.triggerThreshold || gamepad2.left_trigger > Functions.triggerThreshold;
+			retractRightHangString = gamepad1.right_trigger > Functions
+					.triggerThreshold || gamepad2.left_trigger > Functions.triggerThreshold;
+			extendLeftHangString = extendRightHangString = gamepad2
+					.right_trigger > Functions.triggerThreshold;
 
             //Moves robot when some of the buttons are held
             if (extendRightHangString) {
@@ -179,11 +176,19 @@ public class TeleOp extends SynchronousOpMode {
             }
 
             if (bumperDown) {
-                //bumper.setPosition(0.9);
+                try {
+					bumper.setPosition(bumper.getPosition() + 0.1);
+				} catch(Exception e) {
+
+				}
             } else if (bumperUp) {
-                //bumper.setPosition(0.1);
+                try {
+					bumper.setPosition(bumper.getPosition() - 0.1);
+				} catch(Exception e) {
+
+				}
             } else {
-                //bumper.setPosition(0.5);
+                bumper.setPosition(0.5);
             }
 
             if (sweeperForward) {
@@ -195,11 +200,23 @@ public class TeleOp extends SynchronousOpMode {
             }
 
             if (containerTiltRight) {
-                tubeTilt.setPosition(tubeTilt.getPosition() + 0.02);
+				try {
+					tubeTilt.setPosition(tubeTilt.getPosition() + 0.02);
+				} catch (Exception e) {
+
+				}
             } else if (containerTiltLeft) {
-                tubeTilt.setPosition(tubeTilt.getPosition() - 0.02);
+				try {
+					tubeTilt.setPosition(tubeTilt.getPosition() - 0.02);
+				} catch(Exception e) {
+
+				}
             } else {
-                tubeTilt.setPosition(tubeTilt.getPosition());
+				try {
+					tubeTilt.setPosition(tubeTilt.getPosition());
+				} catch(Exception e) {
+
+				}
             }
 
 
@@ -270,8 +287,8 @@ public class TeleOp extends SynchronousOpMode {
                 leftWheelPower = gamepad1.left_stick_y;
                 tubeExtend = gamepad1.x;
                 tubeRetract = gamepad1.b;
-                toggleChurroHooks = gamepad1.back;
-                toggleBarHooks = gamepad2.start;
+                toggleChurroHooks = gamepad1.start || gamepad2.start;
+                toggleBarHooks = gamepad1.back;
 
                 /*slowDriveBack = gamepad1.left_trigger;
                 slowDriveForward = gamepad1.right_trigger;!!*/
@@ -292,31 +309,11 @@ public class TeleOp extends SynchronousOpMode {
             }
 
             if (tubeRetract) {
-                tubeExtender.setPosition(0.15);
-                bumper.setPosition(0.15);
-                /*try {
-                    tubeExtender.setPosition(tubeExtender.getPosition() + 0.05);
-                    bumper.setPosition(bumper.getPosition() + 0.05);
-                } catch(Exception e) {
-
-                }*/
-                retractCount += 1;
+				tubeExtender.setPosition(0.9);
             } else if (tubeExtend) {
-                tubeExtender.setPosition(0.9);
-                bumper.setPosition(0.9);
-                /*try {
-                    tubeExtender.setPosition(tubeExtender.getPosition() - 0.005);
-                    bumper.setPosition(bumper.getPosition() - 0.005);
-                } catch(Exception e) {
-
-                }*/
-                extendCount += 1;
+				tubeExtender.setPosition(0.15);
             } else {
-                tubeExtender.setPosition(0.5);
-                bumper.setPosition(0.5);
-                /*tubeExtender.setPosition(tubeExtender.getPosition());
-                bumper.setPosition(bumper.getPosition());*/
-                normalCount += 1;
+				tubeExtender.setPosition(0.5);
             }
 
             if (toggleChurroHooks && churroHooksDown) {
@@ -341,18 +338,6 @@ public class TeleOp extends SynchronousOpMode {
 
             if (isStopRequested()) {
                 break;
-            }
-
-            if ((retractCount + extendCount + normalCount) >= 1) {
-                telemetry.addData("Retract Count", retractCount);
-                telemetry.addData("Extend Count", extendCount);
-                telemetry.addData("Normal Count", normalCount);
-                telemetry.addData("Bumper Position", bumper.getPosition());
-                telemetry.addData("Tube Extender Position", tubeExtender.getPosition());
-                telemetry.updateNow();
-                retractCount = 0;
-                extendCount = 0;
-                normalCount = 0;
             }
 
             idle();
@@ -423,5 +408,7 @@ public class TeleOp extends SynchronousOpMode {
         sweeper.setPower(0);
         leftHangString.setPower(0);
         rightHangString.setPower(0);
+		bumper.setPosition(Functions.bumperInitPosition);
+		tubeExtender.setPosition(Functions.tubeExtenderInitPosition);
     }
 }

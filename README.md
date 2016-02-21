@@ -137,9 +137,10 @@ Migrating from LinearOpMode to SyncronousOpMode is easy, usually simply involvin
 * optionally removing `waitOneFullHardwareCycle()` calls, as they are no longer necessary
 
 The Swerve Library now appears to be quite stable and functional. Our own teams are actively
-developing their competition code using it. It currently is synchronized to the release from
-FTC HQ that was published January 4th, 2016 (version 1.5). Please be sure to **update your driver station**
-app to the latest-available version.
+developing their competition code using it. It currently is synchronized to the beta release from
+FTC HQ that was published Feb 2nd, 2016 (version 1.6). 
+
+Please be sure to **update your driver station** app to the latest-available version by side-loading the .APK from the doc\apk directory. Side loading can be accomplished by any of several means. See the ADB command 'install' command, for example (ADB is found in the Android SDK). Alternately, any of several PC applications (such as http://apkinstaller.com/) and Android APK Installer apps (found in the Play Store) can be used. The thread here (http://ftcforum.usfirst.org/showthread.php?6101-FTC-Beta-Branch&p=24750#post24750) might also be helpful.
 
 ## Installing the Library
 

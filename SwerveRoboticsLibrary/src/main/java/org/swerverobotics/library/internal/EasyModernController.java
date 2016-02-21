@@ -1,16 +1,17 @@
 package org.swerverobotics.library.internal;
 
 import android.util.Log;
-import com.qualcomm.hardware.HardwareFactory;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsUsbDevice;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.exception.RobotCoreException;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.usb.RobotUsbModule;
-import org.swerverobotics.library.SynchronousOpMode;
 
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
+import com.qualcomm.hardware.HardwareFactory;
+import com.qualcomm.hardware.modernrobotics.*;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.exception.*;
+import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.hardware.usb.*;
+
+import org.swerverobotics.library.*;
+
+import java.util.concurrent.atomic.*;
 
 /**
  * Base class common to both easy modern servo and motor controllers. Handles glue about
@@ -33,9 +34,9 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
 
     private final RobotUsbModule.ARMINGSTATE targetArmingState;
 
-        enum WRITE_STATUS {IDLE, DIRTY, READ}
+    enum WRITE_STATUS { IDLE, DIRTY, READ };
 
-        protected WRITE_STATUS writeStatus;
+    protected WRITE_STATUS                  writeStatus;
     protected final AtomicLong              readCompletionCount = new AtomicLong();
     // Locking hierarchy is in the order listed
     protected final Object                  concurrentClientLock = new Object();
@@ -75,16 +76,12 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
 
     protected void restoreTargetArmOrPretend() throws RobotCoreException, InterruptedException
         {
-            Log.v(LOGGING_TAG, String.format("restoring target %s ...",
-                    HardwareFactory
-                            .getSerialNumberDisplayName(this.serialNumber)));
+        Log.v(LOGGING_TAG, String.format("restoring target %s ...", HardwareFactory.getSerialNumberDisplayName(this.serialNumber)));
         if (targetArmingState==ARMINGSTATE.ARMED)
             target.armOrPretend();
         else
             target.pretend();
-            Log.v(LOGGING_TAG, String.format("... restoring target %s complete",
-                    HardwareFactory
-                            .getSerialNumberDisplayName(this.serialNumber)));
+        Log.v(LOGGING_TAG, String.format("... restoring target %s complete", HardwareFactory.getSerialNumberDisplayName(this.serialNumber)));
         }
 
     //----------------------------------------------------------------------------------------------
@@ -260,9 +257,7 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
 
     @Override synchronized public boolean onUserOpModeStop()
         {
-            Log.d(LOGGING_TAG, String.format("EasyModern: auto-stopping %s...",
-                    HardwareFactory
-                            .getSerialNumberDisplayName(this.serialNumber)));
+        Log.d(LOGGING_TAG, String.format("EasyModern: auto-stopping %s...", HardwareFactory.getSerialNumberDisplayName(this.serialNumber)));
         this.stopHardware();  // mirror StopRobotOpMode
         try {
             this.disarm();
@@ -271,27 +266,19 @@ public abstract class EasyModernController extends ModernRoboticsUsbDevice imple
             {
             Util.handleCapturedException(e);
             }
-            Log.d(LOGGING_TAG,
-                    String.format("EasyModern: ... auto-stopping %s complete",
-                            HardwareFactory
-                                    .getSerialNumberDisplayName(serialNumber)));
+        Log.d(LOGGING_TAG, String.format("EasyModern: ... auto-stopping %s complete", HardwareFactory.getSerialNumberDisplayName(serialNumber)));
         return true;    // unregister us
         }
 
     @Override synchronized public boolean onRobotShutdown()
         {
-            Log.d(LOGGING_TAG, String.format("EasyModern: auto-closing %s...",
-                    HardwareFactory
-                            .getSerialNumberDisplayName(this.serialNumber)));
+        Log.d(LOGGING_TAG, String.format("EasyModern: auto-closing %s...", HardwareFactory.getSerialNumberDisplayName(this.serialNumber)));
 
         // We actually shouldn't be here by now, having received a onUserOpModeStop()
         // after which we should have been unregistered. But we close down anyway.
         this.close();
 
-            Log.d(LOGGING_TAG,
-                    String.format("EasyModern: ... auto-closing %s complete",
-                            HardwareFactory.getSerialNumberDisplayName(
-                                    this.serialNumber)));
+        Log.d(LOGGING_TAG, String.format("EasyModern: ... auto-closing %s complete", HardwareFactory.getSerialNumberDisplayName(this.serialNumber)));
         return true;    // unregister us
         }
     }

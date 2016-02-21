@@ -1,25 +1,18 @@
 package org.swerverobotics.library.internal;
 
 import android.util.Log;
-import com.qualcomm.hardware.HardwareFactory;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsUsbDcMotorController;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsUsbDevice;
-import com.qualcomm.hardware.modernrobotics.ReadWriteRunnable;
-import com.qualcomm.hardware.modernrobotics.ReadWriteRunnableStandard;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.exception.RobotCoreException;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.VoltageSensor;
-import com.qualcomm.robotcore.hardware.usb.RobotUsbDevice;
-import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.robotcore.util.TypeConversion;
-import org.swerverobotics.library.BuildConfig;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.Map;
+import com.qualcomm.hardware.HardwareFactory;
+import com.qualcomm.hardware.modernrobotics.*;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.exception.*;
+import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.hardware.usb.*;
+import com.qualcomm.robotcore.util.*;
+
+import org.swerverobotics.library.BuildConfig;
+import java.nio.*;
+import java.util.*;
 
 import static junit.framework.Assert.assertTrue;
 
@@ -55,7 +48,7 @@ public class EasyModernMotorController extends EasyModernController implements D
         this.target = target;
         this.findTargetNameAndMapping();
 
-            RobotStateTransitionNotifier.register(opmodeContext, this);
+        RobotStateTransitionNotifier.register(opmodeContext, this);
         }
 
     public static DcMotorController create(OpMode context, DcMotorController target, DcMotor motor1, DcMotor motor2)
@@ -139,11 +132,7 @@ public class EasyModernMotorController extends EasyModernController implements D
 
     private void doArmOrPretend(boolean isArm) throws RobotCoreException, InterruptedException
         {
-            Log.d(LOGGING_TAG,
-                    String.format("arming easy motor controller %s%s...",
-                            HardwareFactory.getSerialNumberDisplayName(
-                                    this.serialNumber),
-                            (isArm ? "" : " (pretend)")));
+        Log.d(LOGGING_TAG, String.format("arming easy motor controller %s%s...", HardwareFactory.getSerialNumberDisplayName(this.serialNumber), (isArm ? "" : " (pretend)")));
 
         // Turn off target
         target.disarm();
@@ -168,18 +157,12 @@ public class EasyModernMotorController extends EasyModernController implements D
         this.initPID();
         this.floatHardware();
 
-            Log.d(LOGGING_TAG,
-                    String.format("...arming easy motor controller %s complete",
-                            HardwareFactory.getSerialNumberDisplayName(
-                                    this.serialNumber)));
+        Log.d(LOGGING_TAG, String.format("...arming easy motor controller %s complete", HardwareFactory.getSerialNumberDisplayName(this.serialNumber)));
         }
 
     @Override protected void doDisarm() throws RobotCoreException, InterruptedException
         {
-            Log.d(LOGGING_TAG,
-                    String.format("disarming easy motor controller %s...",
-                            HardwareFactory.getSerialNumberDisplayName(
-                                    this.serialNumber)));
+        Log.d(LOGGING_TAG, String.format("disarming easy motor controller %s...", HardwareFactory.getSerialNumberDisplayName(this.serialNumber)));
 
         // Turn us off
         this.floatHardware();
@@ -198,22 +181,21 @@ public class EasyModernMotorController extends EasyModernController implements D
         target.suppressGlobalWarning(false);
         this.restoreTargetArmOrPretend();
 
-            Log.d(LOGGING_TAG, String.format(
-                    "...disarming easy motor controller %s complete",
-                    HardwareFactory
-                            .getSerialNumberDisplayName(this.serialNumber)));
+        Log.d(LOGGING_TAG, String.format("...disarming easy motor controller %s complete", HardwareFactory.getSerialNumberDisplayName(this.serialNumber)));
         }
 
-        // Close should *not* restart the target. But if we're armed, he's not in the hw map, and
-        // so won't be himself closed.
+    // Close should *not* restart the target. But if we're armed, he's not in the hw map, and
+    // so won't be himself closed.
     @Override protected void doCloseFromArmed()
         {
         floatHardware();
-            try {
-                this.target.close();
-                this.disarmDevice();
-            } catch(Exception e) {
-                Util.handleCapturedException(e);
+        try {
+            this.target.close();
+            this.disarmDevice();
+            }
+        catch (Exception e)
+            {
+            Util.handleCapturedException(e);
             }
         }
 
@@ -276,8 +258,7 @@ public class EasyModernMotorController extends EasyModernController implements D
     @Override public synchronized void setMotorPowerFloat(int motor)
         {
         this.validateMotor(motor);
-            this.write(ADDRESS_MOTOR_POWER_MAP[motor],
-                    new byte[] { bPowerFloat });
+        this.write(ADDRESS_MOTOR_POWER_MAP[motor], new byte[]{(byte) bPowerFloat});
         }
 
     //----------------------------------------------------------------------------------------------

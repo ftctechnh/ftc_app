@@ -2,14 +2,14 @@ package org.swerverobotics.library.internal;
 
 import android.content.Context;
 import android.util.Log;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.robot.RobotState;
+
 import org.swerverobotics.library.SynchronousOpMode;
 
-import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.lang.reflect.*;
+import java.util.*;
 
 /**
  * The point of all this is to hook into the robot controller runtime in order to
@@ -51,11 +51,11 @@ public class RobotStateTransitionNotifier
     // State
     //----------------------------------------------------------------------------------------------
 
-        static Context applicationContext = null;
-        static List<Method> onRobotRunningMethods = new LinkedList<Method>();
-        static List<Method> onRobotStartupFailureMethods = new LinkedList<Method>();
-        static List<Runnable> onRobotUpdateActions = new LinkedList<Runnable>();
-        static RobotStateTransitionNotifier theInstance = new RobotStateTransitionNotifier();
+    static       Context        applicationContext           = null;
+    static       List<Method>   onRobotRunningMethods        = new LinkedList<Method>();
+    static       List<Method>   onRobotStartupFailureMethods = new LinkedList<Method>();
+    static       List<Runnable> onRobotUpdateActions         = new LinkedList<Runnable>();
+    static       RobotStateTransitionNotifier theInstance    = new RobotStateTransitionNotifier();
 
     private final List<IOpModeStateTransitionEvents>    registrants;
                   boolean                               shutdownProcessed;
@@ -64,29 +64,28 @@ public class RobotStateTransitionNotifier
     // Construction
     //----------------------------------------------------------------------------------------------
 
-        RobotStateTransitionNotifier()
+    RobotStateTransitionNotifier()
         {
         this.registrants       = new LinkedList<IOpModeStateTransitionEvents>();
         this.shutdownProcessed = false;
         }
 
-        public static void register(OpMode opModeContext,
-                IOpModeStateTransitionEvents registrant)
+    public static void register(OpMode opModeContext, IOpModeStateTransitionEvents registrant)
         {
-            // The opmode context in which the registration happens is currently not used.
-            getInstance().registerRegistrant(registrant);
+        // The opmode context in which the registration happens is currently not used.
+        getInstance().registerRegistrant(registrant);
         }
 
-        public static RobotStateTransitionNotifier getInstance()
+    public static RobotStateTransitionNotifier getInstance()
         {
-            return theInstance;
+        return theInstance;
         }
 
     //----------------------------------------------------------------------------------------------
     // Registration
     //----------------------------------------------------------------------------------------------
 
-        synchronized void registerRegistrant(IOpModeStateTransitionEvents him)
+    synchronized void registerRegistrant(IOpModeStateTransitionEvents him)
         {
         this.registrants.add(him);
         }
@@ -127,28 +126,26 @@ public class RobotStateTransitionNotifier
     synchronized void onUserOpModeStop()
     // WAS: called by our DcMotorController.setPower() implementation
         {
-            if(this.registrants.size() > 0)
+        if (this.registrants.size() > 0)
             {
-                Log.d(SynchronousOpMode.LOGGING_TAG,
-                        "user opmode stop ... -----------------------------");
-                List<IOpModeStateTransitionEvents> toRemove = new LinkedList<IOpModeStateTransitionEvents>();
-                for(IOpModeStateTransitionEvents registrant : this.registrants) {
-                    if(registrant.onUserOpModeStop())
-                        toRemove.add(registrant);
+            Log.d(SynchronousOpMode.LOGGING_TAG, "user opmode stop ... -----------------------------");
+            List<IOpModeStateTransitionEvents> toRemove = new LinkedList<IOpModeStateTransitionEvents>();
+            for (IOpModeStateTransitionEvents registrant : this.registrants)
+                {
+                if (registrant.onUserOpModeStop())
+                    toRemove.add(registrant);
                 }
 
-                for(IOpModeStateTransitionEvents registrant : toRemove)
-                    unregister(registrant);
-                Log.d(SynchronousOpMode.LOGGING_TAG,
-                        "... user opmode stop complete --------------------");
+            for (IOpModeStateTransitionEvents registrant : toRemove)
+                unregister(registrant);
+            Log.d(SynchronousOpMode.LOGGING_TAG, "... user opmode stop complete --------------------");
             }
         }
 
     synchronized void onRobotShutdown()
     // WAS: called by our HardwareDevice.close() implementation
         {
-            Log.d(SynchronousOpMode.LOGGING_TAG,
-                    "state xtion: robot shutdown ... ----------------------");
+        Log.d(SynchronousOpMode.LOGGING_TAG, "state xtion: robot shutdown ... ----------------------");
         if (!this.shutdownProcessed)
             {
             this.shutdownProcessed = true;
@@ -163,8 +160,7 @@ public class RobotStateTransitionNotifier
             for (IOpModeStateTransitionEvents registrant : toRemove)
                 unregister(registrant);
             }
-            Log.d(SynchronousOpMode.LOGGING_TAG,
-                    "... state xtion: robot shutdown complete -------------");
+        Log.d(SynchronousOpMode.LOGGING_TAG, "... state xtion: robot shutdown complete -------------");
         }
 
     public static synchronized void onRobotUpdate(final String status)

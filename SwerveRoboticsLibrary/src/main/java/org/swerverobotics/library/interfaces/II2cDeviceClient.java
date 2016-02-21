@@ -1,10 +1,10 @@
 package org.swerverobotics.library.interfaces;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.Engagable;
-import com.qualcomm.robotcore.hardware.HardwareDevice;
-import com.qualcomm.robotcore.hardware.I2cDevice;
-import org.swerverobotics.library.ClassFactory;
+import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.hardware.usb.RobotUsbModule;
+
+import org.swerverobotics.library.*;
 
 /**
  * II2cDeviceClient is the public interface to a utility class that makes it easier to
@@ -227,23 +227,23 @@ public interface II2cDeviceClient extends HardwareDevice, Engagable
      */
     void waitForWriteCompletions();
 
-        /**
-         * Enables or disables an optimization wherein writes to two sets of adjacent register
-         * ranges may be coalesced into a single I2c transaction if the second write comes along
-         * while the first is still queued for writing. By default, write coalescing is disabled.
-         *
-         * @param enable whether to enable write coalescing or not
-         * @see #isWriteCoalescingEnabled()
-         */
-        void enableWriteCoalescing(boolean enable);
+    /**
+     * Enables or disables an optimization wherein writes to two sets of adjacent register
+     * ranges may be coalesced into a single I2c transaction if the second write comes along
+     * while the first is still queued for writing. By default, write coalescing is disabled.
+     * @param enable whether to enable write coalescing or not
+     *
+     * @see #isWriteCoalescingEnabled()
+     */
+    void enableWriteCoalescing(boolean enable);
 
-        /**
-         * Answers as to whether write coalescing is currently enabled on this device.
-         *
-         * @return whether write coalescing is currently enabled or not.
-         * @see #enableWriteCoalescing(boolean)
-         */
-        boolean isWriteCoalescingEnabled();
+    /**
+     * Answers as to whether write coalescing is currently enabled on this device.
+     * @return whether write coalescing is currently enabled or not.
+     *
+     * @see #enableWriteCoalescing(boolean)
+     */
+    boolean isWriteCoalescingEnabled();
 
     //----------------------------------------------------------------------------------------------
     // Heartbeats
@@ -432,9 +432,10 @@ public interface II2cDeviceClient extends HardwareDevice, Engagable
          * from the I2C device.
          */
         ONLY_ONCE
-        }
+        };
 
-        /**
+
+    /**
      * RegWindow is a utility class for managing the window of I2C register bytes that
      * are read from our I2C device on every hardware cycle
      */

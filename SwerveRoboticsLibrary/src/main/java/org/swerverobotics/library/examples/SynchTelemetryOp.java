@@ -1,16 +1,16 @@
 package org.swerverobotics.library.examples;
 
-import com.qualcomm.robotcore.hardware.VoltageSensor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import org.swerverobotics.library.SynchronousOpMode;
+import org.swerverobotics.library.*;
 import org.swerverobotics.library.interfaces.Disabled;
 import org.swerverobotics.library.interfaces.TeleOp;
+
+import com.qualcomm.robotcore.hardware.VoltageSensor;
+import com.qualcomm.robotcore.util.*;
 
 /**
  * An example that illustrates use of the telemetry dashboard and log in a synchronous OpMode
  */
 @TeleOp(name="Telemetry (sync)", group="Swerve Examples")
-@Disabled
 public class SynchTelemetryOp extends SynchronousOpMode
     {
     @Override protected void main() throws InterruptedException

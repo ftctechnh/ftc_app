@@ -34,16 +34,14 @@ android {
         // See also: http://developer.android.com/tools/building/configuring-gradle.html
 
         def manifestFile = file('../FtcRobotController/src/main/AndroidManifest.xml');
-        def pattern = Pattern.compile("versionCode=\"(\\d+)\"")
+        def pattern      = Pattern.compile("versionCode=\"(\\d+)\"")
         def manifestText = manifestFile.getText()
-        def matcher = pattern.matcher(manifestText)
+        def matcher      = pattern.matcher(manifestText)
         matcher.find()
         def code = Integer.parseInt(matcher.group(1))
 
-        versionCode code
-        // http://developer.android.com/tools/publishing/versioning.html
-        versionName '@string/version_name'
-        // http://developer.android.com/tools/publishing/versioning.html
+        versionCode code                    // http://developer.android.com/tools/publishing/versioning.html
+        versionName '@string/version_name'  // http://developer.android.com/tools/publishing/versioning.html
     }
     buildTypes {
         release {
@@ -68,12 +66,12 @@ repositories {
 
 dependencies {
     compile files('libs/android-support-v4.jar')
-    compile(name: 'RobotCore-release', ext: 'aar')
-    compile(name: 'Hardware-release', ext: 'aar')
-    compile(name: 'FtcCommon-release', ext: 'aar')
-    compile(name: 'ModernRobotics-release', ext: 'aar')
-    compile(name: 'Analytics-release', ext: 'aar')
-    compile(name: 'WirelessP2p-release', ext: 'aar')
+    compile (name:'RobotCore-release', ext:'aar')
+    compile (name:'Hardware-release', ext:'aar')
+    compile (name:'FtcCommon-release', ext:'aar')
+    compile (name:'ModernRobotics-release', ext:'aar')
+    compile (name:'Analytics-release', ext:'aar')
+    compile (name:'WirelessP2p-release', ext:'aar')
     compile project(':SwerveRoboticsLibrary')
     compile project(':FtcRobotController')
 }
