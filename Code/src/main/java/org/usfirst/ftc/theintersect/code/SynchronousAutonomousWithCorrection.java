@@ -869,23 +869,86 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
         stopRobot();
     }
 
+    // Gyro turn  - turning robot clock wise using Gyro reading
+    //      Turning has 2 stages -
+    //          initial turn:  turn until within 5 degree accuracy using full power
+    //          fine tuning stage: turn till within 1 degree accuracy using 0.1 power
+    //   Todo
+    //        1. test and see if 2 degree threshold is correct
+    //        2. decide if we can use 0.1 power to turn robot
+    //
     public static void spinClockwiseGyroNoCorrection(int degrees, double power, long
             timeoutMill) {
         long endTime = System.currentTimeMillis() + timeoutMill;
-        int endPosition = gyro.getIntegratedZValue() - degrees;
-        boolean control = false;
+        int endHeading = gyro.getIntegratedZValue() - degrees;
+        boolean fineAdjustment = false;
         resetEncoders(); // reset encoder and turn on run_to_position mode
         leftWheel.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         rightWheel.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         spinRobotRight(power);
         while (endTime > System.currentTimeMillis()) {
-            if (endPosition <= gyro.getIntegratedZValue()) {
-                break;
+            int currentHeading = gyro.getIntegratedZValue();
+            if (!fineAdjustment) { // initial turn
+                if (Math.abs(endHeading - currentHeading ) <= 5) {
+                    // stop turning
+                    stopRobot();
+                    fineAdjustment = true; // enter fine tuning state
+                }
+            } else { // fine tuning
+                if (Math.abs(endHeading - currentHeading) <= 1) {
+                    // stop if within 1 degree
+                    break;
+                }
+                if (endHeading < gyro.getIntegratedZValue()) {
+                     spinRobotRight(0.1);
+                } else {
+                     spinRobotLeft(0.1);
+                }
             }
         }
         stopRobot();
     }
 
+    // Gyro turn  - turning robot counter clock wise using Gyro reading
+    //      Turning has 2 stages -
+    //          initial turn:  turn until within 5 degree accuracy using full power
+    //          fine tuning stage: turn till within 1 degree accuracy using 0.1 power
+    //   Todo
+    //        1. test and see if 2 degree threshold is correct
+    //        2. decide if we can use 0.1 power to turn robot
+    //
+    public static void spinCounterClockwiseGyroNoCorrection(int degrees, double power, long
+            timeoutMill) {
+        long endTime = System.currentTimeMillis() + timeoutMill;
+        int endHeading = gyro.getIntegratedZValue() - degrees;
+        boolean fineAdjustment = false;
+        resetEncoders(); // reset encoder and turn on run_to_position mode
+        leftWheel.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        rightWheel.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        spinRobotLeft(power);
+        while (endTime > System.currentTimeMillis()) {
+            int currentHeading = gyro.getIntegratedZValue();
+            if (!fineAdjustment) { // initial turn
+                if (Math.abs(endHeading - currentHeading ) <= 5) {
+                    // stop turning
+                    stopRobot();
+                    fineAdjustment = true; // enter fine tuning state
+                }
+            } else { // fine tuning
+                if (Math.abs(endHeading - currentHeading) <= 1) {
+                    // stop if within 1 degree
+                    break;
+                }
+                if (endHeading < gyro.getIntegratedZValue()) {
+                    spinRobotRight(0.1);
+                } else {
+                    spinRobotLeft(0.1);
+                }
+            }
+        }
+        stopRobot();
+    }
+/*
     public static void spinCounterClockwiseGyroNoCorrection(int degrees, double power, long
             timeoutMill) {
         long endTime = System.currentTimeMillis() + timeoutMill;
@@ -902,7 +965,7 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
         }
         stopRobot();
     }
-
+*/
     public static void spinClockwiseTime(double seconds, double power) {
         spinRobotRight(power);
         Functions.waitFor((int) (seconds * 1000));
