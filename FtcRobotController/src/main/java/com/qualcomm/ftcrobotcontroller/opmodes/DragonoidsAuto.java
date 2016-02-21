@@ -48,7 +48,10 @@ public class DragonoidsAuto extends LinearOpMode implements SensorEventListener 
     }
     private void outputTelemetry() {
         telemetry.addData("Heading", headingDegrees);
-        telemetry.addData("Runtime", getRuntime());
+        telemetry.addData("RightOne", DragonoidsGlobal.rightOne.getCurrentPosition());
+        telemetry.addData("RightTwo", DragonoidsGlobal.rightTwo.getCurrentPosition());
+        telemetry.addData("Left  One", DragonoidsGlobal.leftOne.getCurrentPosition());
+        telemetry.addData("Left  Two", DragonoidsGlobal.leftTwo.getCurrentPosition());
     }
     // For gyro sensor data
     @Override
