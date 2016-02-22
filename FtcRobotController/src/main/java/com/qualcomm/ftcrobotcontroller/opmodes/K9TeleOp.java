@@ -58,13 +58,13 @@ public class K9TeleOp extends OpMode {
 	double armPosition;
 
 	// amount to change the arm servo position.
-	double armDelta = 0.1;
+	double armDelta = 0.01;
 
 	// position of the claw servo
 	double clawPosition;
 
 	// amount to change the claw servo position by
-	double clawDelta = 0.1;
+	double clawDelta = 0.01;
 
 	DcMotor motorRight;
 	DcMotor motorLeft;
@@ -135,7 +135,7 @@ public class K9TeleOp extends OpMode {
 		// direction: left_stick_x ranges from -1 to 1, where -1 is full left
 		// and 1 is full right
 		float throttle = -gamepad1.left_stick_y;
-		float direction = gamepad1.left_stick_x;
+		float direction = gamepad1.right_stick_x;
 		float right = throttle - direction;
 		float left = throttle + direction;
 
