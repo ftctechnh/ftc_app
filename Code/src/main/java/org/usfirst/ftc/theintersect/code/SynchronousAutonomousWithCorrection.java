@@ -157,59 +157,35 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
                 stopRobot();
                 debugWait();
                 dumpClimbersUltra(telemetry);
-                 /*else{
-                    // drive back towards white line
-                    moveRobotForwardTime();
-                    spinClockwiseGyroCorrection(40+85, 0.4, 10000000000L);
-                    debugWait();
-                    stopAtWhite(0.4, 2, telemetry);
-                    debugWait();
-                    spinCounterClockwiseGyroCorrection(85, 0.4, 10000000000L);
-                    debugWait();
-                    moveRobotBackwardTime(2, 0.5);
-                    debugWait();
-                    while (ultrasonic.getUltrasonicLevel() < 15) {
-                        moveRobotForward(0.2, 0.2);
-                    }
-                    stopRobot();
-                    debugWait();
-                    dumpClimbersUltra(telemetry);
-                }*/
             } else if (team.equals("Red")) {
-                //moveRobotBackwardTime(3, 0.4);
-                moveRobotBackwardRotations(2000, 0.4, 10);
+                moveRobotBackwardTime(3500, 0.4);
+                //moveRobotBackwardRotations(2000, 0.4, 10*1000);
                 debugWait();
                 //stopAtWhiteDetect(1.0, 3000, telemetry);
-                stopAtWhite(1.0, 3000, telemetry);
+                stopAtWhiteDetect(0.5, 1750, telemetry);
                 debugWait();
-                if(detectedWhite == true) {
-                    moveRobotForwardRotations(360, 0.5, 10000000000L);
-                    spinCounterClockwiseGyroCorrection(45, 0.4, 10000000000L);
+                while(detectedWhite == false) {
+                    moveRobotForwardTime(1250 ,0.5);
                     debugWait();
-                    moveRobotBackwardTime(2, 0.5);
+                    spinCounterClockwiseGyroNoCorrection(10,0.3,3000);
                     debugWait();
-                    while (ultrasonic.getUltrasonicLevel() < 15) {
-                        moveRobotForward(0.2, 0.2);
+                    stopAtWhiteDetect(0.5, 1250, telemetry);
+                    Try++;
+                    debugWait();
+                    if( Try == 3){
+                        break;
                     }
-                    stopRobot();
-                    debugWait();
-                    dumpClimbersUltra(telemetry);
-                }else{
-                    spinCounterClockwiseGyroCorrection(140, 0.4, 10000000000L);
-                    debugWait();
-                    stopAtWhite(0.4, 2, telemetry);
-                    debugWait();
-                    spinClockwiseGyroCorrection(90, 0.4, 10000000000L);
-                    debugWait();
-                    moveRobotBackwardTime(2, 0.5);
-                    debugWait();
-                    while (ultrasonic.getUltrasonicLevel() < 15) {
-                        moveRobotForward(0.2, 0.2);
-                    }
-                    stopRobot();
-                    debugWait();
-                    dumpClimbersUltra(telemetry);
                 }
+                spinCounterClockwiseGyroCorrection(45 - (Try * 10), 0.4, 10000000000L);
+                debugWait();
+                //moveRobotBackwardTime(1500, 0.5);
+                debugWait();
+                while (ultrasonic.getUltrasonicLevel() > 15) {
+                    moveRobotBackward(0.2, 0.2);
+                }
+                stopRobot();
+                debugWait();
+                dumpClimbersUltra(telemetry);
             }
             telemetry.addData("Status", "Done!");
         }
