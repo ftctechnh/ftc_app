@@ -1,5 +1,6 @@
 package org.ndhsb.ftc7593;
 
+import com.qualcomm.ftcrobotcontroller.opmodes.ColorSensorDriver;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
@@ -56,7 +57,9 @@ public class tbc {
     public static double snowplowPosition = SNOWPLOW_MIN_RANGE;
     public static double mtapePosition = MTAPE_MIN_RANGE;
     public static double buttonServoSpeed = 0.5;
+    public static double slideServoSpeed = 0.5;
 
+    public ColorSensorDriver.ColorSensorDevice device = ColorSensorDriver.ColorSensorDevice.MODERN_ROBOTICS_I2C;
 
     public static void initServoValues() {
         climberPosition = CLIMBER_MAX_RANGE;
@@ -65,6 +68,7 @@ public class tbc {
         snowplowPosition = SNOWPLOW_MIN_RANGE;
         mtapePosition = MTAPE_MIN_RANGE;
         buttonServoSpeed = 0.5;
+        slideServoSpeed = 0.5;
     }
 
     public static ServoController sc = null;
@@ -74,6 +78,10 @@ public class tbc {
     public static Servo mtape = null;
     public static Servo sliderL = null;
     public static Servo sliderR = null;
+    public static Servo slide1 = null;
+    public static Servo slide2 = null;
+    public static Servo slide3 = null;
+    public static Servo box = null;
 
     public static DcMotor motorFRight = null;
     public static DcMotor motorFLeft = null;
@@ -83,8 +91,8 @@ public class tbc {
     public static DcMotor motorHook = null;
     public static DcMotor motorPusher = null;
 
-    public static ColorSensor sensorRGB = null;
-    public static LightSensor light1 = null;
+    public static ColorSensor light2 = null;
+    public static ColorSensor light1 = null;
 
     public static GyroSensor sensorGyro = null;
 
@@ -123,6 +131,30 @@ public class tbc {
     public static void setButtonServoSpeed(Double bPos) {
         if (button != null) {
             button.setPosition(bPos);
+        }
+    }
+
+    public static void setSlide1ServoSpeed(Double sPos) {
+        if (slide1 != null) {
+            slide1.setPosition(sPos);
+        }
+    }
+
+    public static void setSlide2ServoSpeed(Double sPos) {
+        if (slide2 != null) {
+            slide2.setPosition(sPos);
+        }
+    }
+
+    public static void setSlide3ServoSpeed(Double sPos) {
+        if (slide3 != null) {
+            slide3.setPosition(sPos);
+        }
+    }
+
+    public static void setBoxServoPosition(Double sPos) {
+        if (box != null) {
+            box.setPosition(sPos);
         }
     }
 
@@ -198,6 +230,10 @@ public class tbc {
             snowplow = hardwareMap.servo.get("snowplow");
             sliderL = hardwareMap.servo.get("sliderL");
             sliderR = hardwareMap.servo.get("sliderR");
+            slide1 = hardwareMap.servo.get("slide1");
+            slide2 = hardwareMap.servo.get("slide2");
+            slide3 = hardwareMap.servo.get("slide3");
+            box = hardwareMap.servo.get("box");
         } catch (Exception ex) {
         }
 
@@ -226,14 +262,15 @@ public class tbc {
         }
 
         try {
-            sensorRGB = hardwareMap.colorSensor.get("color");
-            // turn off LED of light sensor.
-            sensorRGB.enableLed(false);
+            light2 = hardwareMap.colorSensor.get("light2");
+            light2.setI2cAddress(0x40);
+            light2.enableLed(true);
         } catch (Exception ex) {
         }
 
         try {
-            light1 = hardwareMap.lightSensor.get("light1");
+            light1 = hardwareMap.colorSensor.get("light1");
+            light1.setI2cAddress(0x3e);
             light1.enableLed(true);
         } catch (Exception ex) {
         }
@@ -262,6 +299,10 @@ public class tbc {
         mtape = null;
         sliderL = null;
         sliderR = null;
+        slide1 = null;
+        slide2 = null;
+        slide3 = null;
+        box = null;
 
         motorFRight = null;
         motorFLeft = null;
@@ -270,7 +311,7 @@ public class tbc {
 
         motorHook = null;
         motorPusher = null;
-        sensorRGB = null;
+        light2 = null;
     }
 
 /*

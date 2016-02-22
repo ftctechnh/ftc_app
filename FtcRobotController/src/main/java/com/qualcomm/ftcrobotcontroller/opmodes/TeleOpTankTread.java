@@ -66,13 +66,10 @@ public class TeleOpTankTread extends OpMode {
         tbc.setSnowplowPosition(tbc.snowplowPosition);
         tbc.setMtapePosition(tbc.mtapePosition);
         tbc.setButtonServoSpeed(tbc.buttonServoSpeed);
-        //tbc.setMotorRRightPower(0.0f);
-        //tbc.setMotorRLeftPower(0.0f);
-        //tbc.setMotorFLeftPower(0.0f);
-       // tbc.setMotorFRightPower(0.0f);
+        tbc.setSlide1ServoSpeed(tbc.slideServoSpeed);
+        tbc.setSlide2ServoSpeed(tbc.slideServoSpeed);
+        tbc.setSlide3ServoSpeed(tbc.slideServoSpeed);
         tbc.setDriveMode(DcMotorController.RunMode.RESET_ENCODERS);
-        //tbc.setDriveMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
-
 
         if (tbc.sc != null) {
             tbc.sc.pwmEnable(); // enable servo controller PWM outputs
@@ -81,28 +78,12 @@ public class TeleOpTankTread extends OpMode {
         mRuntime.reset();           // Zero game clock
     }
 
-    /*
-     * This method will be called repeatedly in a loop
-     *
-     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#run()
-     */
-    @Override
+
     public void loop() {
 
         tbc.setDriveMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
 
-        reflection = tbc.light1.getLightDetected();
-		/*
-		 * Gamepad 1
-		 *
-		 * Gamepad 1 controls the motors via the left stick, and it controls the
-		 * wrist/claw via the a,b, x, y buttons
-		 */
-
-        // throttle: left_stick_y ranges from -1 to 1, where -1 is full up, and
-        // 1 is full down
-        // direction: left_stick_x ranges from -1 to 1, where -1 is full left
-        // and 1 is full right
+        reflection = tbc.light1.alpha();
 
         float drivespeed = -gamepad1.left_stick_y;
         float driveturn = gamepad1.right_stick_x;
@@ -173,13 +154,10 @@ public class TeleOpTankTread extends OpMode {
         if(gamepad1.left_bumper) {
             snowplowNewPos = tbc.snowplowPosition - snowplowDelta;
         }
-        if(gamepad1.dpad_down) {
-            snowplowNewPos = tbc.SNOWPLOW_MIN_RANGE;
-        }
         tbc.snowplowPosition = Range.clip(snowplowNewPos, tbc.SNOWPLOW_MIN_RANGE, tbc.SNOWPLOW_MAX_RANGE);
         tbc.setSnowplowPosition(tbc.snowplowPosition);
 
-        if(gamepad1.x) {
+        if(gamepad2.x) {
             tbc.sliderLPosition = tbc.SLIDERL_MAX_RANGE;
         }
         if(gamepad1.y) {
@@ -188,7 +166,7 @@ public class TeleOpTankTread extends OpMode {
         tbc.sliderLPosition = Range.clip(tbc.sliderLPosition, tbc.SLIDERL_MIN_RANGE, tbc.SLIDERL_MAX_RANGE);
         tbc.setSliderLPosition(tbc.sliderLPosition);
 
-        if(gamepad1.a) {
+        if(gamepad2.a) {
             tbc.sliderRPosition = tbc.SLIDERR_MAX_RANGE;
         }
         if(gamepad1.b) {
@@ -214,6 +192,20 @@ public class TeleOpTankTread extends OpMode {
         tbc.mtapePosition = Range.clip(mtapeNewPos, tbc.MTAPE_MIN_RANGE, tbc.MTAPE_MAX_RANGE);
         tbc.setMtapePosition(tbc.mtapePosition);
 
+        if(gamepad1.dpad_down) {
+            tbc.slideServoSpeed = 0.0f;
+        }
+        if(gamepad1.dpad_up) {
+            tbc.slideServoSpeed = 1.0f;
+        }
+        if(gamepad1.dpad_down != true && gamepad1.dpad_up != true) {
+            tbc.slideServoSpeed = 0.5f;
+        }
+        tbc.setSlide1ServoSpeed(tbc.slideServoSpeed);
+        tbc.setSlide2ServoSpeed(tbc.slideServoSpeed);
+        tbc.setSlide2ServoSpeed(tbc.slideServoSpeed);
+
+
         if ((!gamepad2.right_bumper) && (!gamepad2.left_bumper)) {
             eventStart = mRuntime.time();
         }
@@ -227,7 +219,7 @@ public class TeleOpTankTread extends OpMode {
         telemetry.addData("Text", "*** Robot Data***");
         // telemetry.addData("arm", "arm:  " + String.format("%.2f", armPosition));
         // telemetry.addData("claw", "claw:  " + String.format("%.2f", clawPosition));
-        telemetry.addData("light", "light: " + String.format("%d", reflection));
+        telemetry.addData("light", "light: " + String.format("%.2f", reflection));
         telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", left));
         telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));
         telemetry.addData("servo in",  "servo in: " + String.format("%.2f", servoInput));

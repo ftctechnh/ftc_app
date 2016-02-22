@@ -139,11 +139,11 @@ public class BlueLeftRamp extends OpMode {
 
         float hsvValues[] = {0F,0F,0F};
 
-        if (tbc.sensorRGB != null) {
-            Color.RGBToHSV(tbc.sensorRGB.red() * 8, tbc.sensorRGB.green() * 8, tbc.sensorRGB.blue() * 8, hsvValues);
+       // if (tbc.sensorRGB != null) {
+         //   Color.RGBToHSV(tbc.sensorRGB.red() * 8, tbc.sensorRGB.green() * 8, tbc.sensorRGB.blue() * 8, hsvValues);
 
             // read the light sensor
-        }
+        //}
 
        /* if (tbc.sensorGyro != null) {
             xVal = tbc.sensorGyro.rawX();

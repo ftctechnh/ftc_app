@@ -200,22 +200,40 @@ public class SensorAuton extends OpMode {
             }
         }
 
+
         if (state == 4) {
             double reflection = 0.0;
 
-            reflection = tbc.light1.getLightDetected();
+            reflection = tbc.light1.alpha();
 
-            if (reflection < 0.0) {
+            if (reflection < 0.3) {
                 tbc.setMotorRLeftPower(0.5f);
                 tbc.setMotorFLeftPower(0.5f);
                 tbc.setMotorRRightPower(0.5f);
                 tbc.setMotorFRightPower(0.5f);
-            } else if (reflection == 0.0) {
+            } else if (reflection == 0.3) {
                 state = 5;
             }
         }
 
         if (state == 5) {
+            double reflection = 0.0;
+            double reflection2 = 0.0;
+
+            reflection = tbc.light1.alpha();
+            reflection2 = tbc.light2.alpha();
+
+            if (reflection < 0.3 && reflection2 < 0.3) {
+                tbc.setMotorRLeftPower(-0.5f);
+                tbc.setMotorFLeftPower(-0.5f);
+                tbc.setMotorRRightPower(0.5f);
+                tbc.setMotorFRightPower(0.5f);
+            } else if (reflection == 0.3) {
+                state = 6;
+            }
+        }
+
+        if (state == 6) {
 
             double s4elapsed = mRuntime.time() - s4starttime;
 
@@ -227,13 +245,13 @@ public class SensorAuton extends OpMode {
                 tbc.setButtonServoSpeed(tbc.buttonServoSpeed);
 
                 Log.d("EncoderAuton", "state 4; next state is 5");
-                state = 6;
+                state = 7;
                 s5starttime = mRuntime.time();
             }
         }
 
         Double climberNewPos = tbc.climberPosition;
-        if (state == 6) {
+        if (state == 7) {
             double s5elapsed = mRuntime.time() - s5starttime; // [MPH - where does s4starttime get set! ?]
 
             climberNewPos = tbc.climberPosition - climberDelta;
@@ -242,11 +260,11 @@ public class SensorAuton extends OpMode {
 
             if (s5elapsed > 10.0) {
                 Log.d("EncoderAuton", "state 5; next state is 6");
-                state = 7;
+                state = 8;
             }
         }
 
-        if (state == 7) {
+        if (state == 8) {
             tbc.setClimberPosition(0.0);
         }
 
