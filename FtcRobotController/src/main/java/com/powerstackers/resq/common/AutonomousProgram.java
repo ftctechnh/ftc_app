@@ -57,10 +57,10 @@ public class AutonomousProgram extends LinearOpMode {
         if (allianceColor== RED) {
             robot.setChurroGrabbers(DoorSetting.CLOSE);
             robot.setBrush(MotorSetting.FORWARD);
-            robot.algorithm.goTicks(robot.algorithm.inchesToTicks(68), 0.4);
+            robot.algorithm.goTicks(robot.algorithm.inchesToTicks(58), 0.4);
             robot.setBrush(MotorSetting.STOP);
-            robot.calibrateGyro();
-            sleep(5000);
+//            robot.calibrateGyro();
+//            sleep(5000);
 //            while(robot.isGyrocalibrate()){
 //                robot.setPowerAll(0);
 //                waitOneFullHardwareCycle();
@@ -68,13 +68,13 @@ public class AutonomousProgram extends LinearOpMode {
 //                waitOneFullHardwareCycle();
 //            }
 //            waitOneFullHardwareCycle();
-            robot.algorithm.turnDegrees(45, 0.8);
-            robot.algorithm.goTicks(robot.algorithm.inchesToTicks(22), 0.4);
-            robot.setClimberFlipper(DoorSetting.OPEN);
+//            robot.algorithm.turnDegrees(45, 0.8);
+//            robot.algorithm.goTicks(robot.algorithm.inchesToTicks(22), 0.4);
+//            robot.setClimberFlipper(DoorSetting.OPEN);
         } else if (allianceColor== BLUE) {
             robot.setChurroGrabbers(DoorSetting.CLOSE);
             robot.setBrush(MotorSetting.FORWARD);
-            robot.algorithm.goTicks(robot.algorithm.inchesToTicks(68), 0.4);
+            robot.algorithm.goTicks(robot.algorithm.inchesToTicks(68), -0.4);
             robot.setBrush(MotorSetting.STOP);
 //            robot.calibrateGyro();
 //            while(robot.isGyrocalibrate() || !Thread.interrupted()){

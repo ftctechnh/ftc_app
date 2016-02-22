@@ -23,6 +23,7 @@ package com.powerstackers.resq.opmodes.teleop;
 import com.powerstackers.resq.common.Robot;
 import com.powerstackers.resq.common.RobotConstants;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.swerverobotics.library.interfaces.Disabled;
@@ -31,7 +32,6 @@ import org.swerverobotics.library.interfaces.TeleOp;
 import static com.powerstackers.resq.common.enums.PublicEnums.AllianceColor;
 import static com.powerstackers.resq.common.enums.PublicEnums.DoorSetting;
 import static com.powerstackers.resq.common.enums.PublicEnums.MotorSetting;
-import static com.powerstackers.resq.common.enums.PublicEnums.TiltSetting;
 
 /**
  * This is the opmode for use on our competition robot during teleop.
@@ -78,6 +78,8 @@ public class ResqTeleop extends OpMode {
     boolean buttonHookIn;
     boolean buttonZipLeft;
     boolean buttonZipRight;
+    boolean buttonHopperSlideLeft;
+    boolean buttonHopperSlideRight;
 //    boolean buttonBothHoppers;
 
     /**
@@ -127,6 +129,8 @@ public class ResqTeleop extends OpMode {
 
         buttonZipLeft  = gamepad2.dpad_left;
         buttonZipRight = gamepad2.dpad_right;
+        buttonHopperSlideLeft = gamepad2.dpad_up;
+        buttonHopperSlideRight = gamepad2.dpad_down;
 
         buttonHopperLeft = gamepad2.left_bumper;
         buttonHopperRight = gamepad2.right_bumper;
@@ -201,14 +205,22 @@ public class ResqTeleop extends OpMode {
         // Hopper left
         if (buttonHopperRight) {
             robot.setHopperLeft(DoorSetting.OPEN);
-            robot.setHopperTiltLeft(TiltSetting.LEFT);
+//            robot.setHopperSlidePosition(MotorSetting.REVERSE);
         }else if (buttonHopperLeft) {
             robot.setHopperRight(DoorSetting.OPEN);
-            robot.setHopperTiltRight(TiltSetting.RIGHT);
-        }else {
+//            robot.setHopperSlidePosition(MotorSetting.FORWARD);
+        } else {
             robot.setHopperLeft(DoorSetting.CLOSE);
             robot.setHopperRight(DoorSetting.CLOSE);
-            robot.setHopperTiltLeft(TiltSetting.RESTING);
+//            robot.setHopperSlidePosition(MotorSetting.STOP);
+        }
+
+        if (buttonHopperSlideLeft) {
+            robot.setHopperSlidePosition(MotorSetting.REVERSE);
+        } else if (buttonHopperSlideRight) {
+            robot.setHopperSlidePosition(MotorSetting.FORWARD);
+        } else {
+            robot.setHopperSlidePosition(MotorSetting.STOP);
         }
 
 //        if (buttonHopperLeft) {

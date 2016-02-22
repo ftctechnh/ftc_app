@@ -9,7 +9,7 @@ public class RobotConstants {
     public static final double CRS_STOP    = 0.5;
     public static final double CRS_FORWARD = 1.0;
 
-    public static final double HOPPER_LEFT_OPEN    = 0.1; //was 0.3
+    public static final double HOPPER_LEFT_OPEN    = 0.2; //was 0.3
     public static final double HOPPER_LEFT_CLOSE   = 1.0;
     public static final double HOPPER_RIGHT_OPEN   = 0.8; // TODO Left door servo doesn't get power 7
     public static final double HOPPER_RIGHT_CLOSE  = 0.0;

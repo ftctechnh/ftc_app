@@ -74,7 +74,7 @@ public class Robot {
 //    private Servo servoBeacon;
     private Servo servoHopperRight;
     private Servo servoHopperLeft;
-    private Servo servoHopperTilt;
+    private Servo servoHopperSlide;
     private Servo servoClimberFlipper;
     private Servo servoChurroLeft;
     private Servo servoChurroRight;
@@ -114,7 +114,7 @@ public class Robot {
 //        servoBeacon         = mode.hardwareMap.servo.get("servoBeacon");
         servoHopperRight    = mode.hardwareMap.servo.get("servoHopperRight");
         servoHopperLeft     = mode.hardwareMap.servo.get("servoHopperLeft");
-        servoHopperTilt     = mode.hardwareMap.servo.get("servoHopperTilt");
+        servoHopperSlide     = mode.hardwareMap.servo.get("servoHopperSlide");
         servoClimberFlipper = mode.hardwareMap.servo.get("servoClimbers");
         servoChurroLeft     = mode.hardwareMap.servo.get("servoChurroLeft");
         servoChurroRight    = mode.hardwareMap.servo.get("servoChurroRight");
@@ -126,7 +126,7 @@ public class Robot {
 
         servoHopperLeft.setPosition(HOPPER_LEFT_CLOSE);
 //        servoHopperRight.setPosition(RobotConstants.HOPPER_RIGHT_CLOSE);
-        servoHopperTilt.setPosition(HOPPER_TILT_RESTING);
+        servoHopperSlide.setPosition(CRS_STOP);
         servoClimberFlipper.setPosition(CLIMBER_EXTEND);
         servoChurroRight.setPosition(CHURRO_RIGHT_OPEN);
         servoChurroLeft.setPosition(CHURRO_LEFT_OPEN);
@@ -158,7 +158,7 @@ public class Robot {
         servoClimberFlipper.setPosition(CLIMBER_EXTEND);
         servoHopperLeft.setPosition(HOPPER_LEFT_CLOSE);
         servoHopperRight.setPosition(HOPPER_RIGHT_CLOSE);
-        servoHopperTilt.setPosition(HOPPER_TILT_RESTING);
+        servoHopperSlide.setPosition(CRS_STOP);
         servoChurroRight.setPosition(CHURRO_RIGHT_OPEN);
         servoChurroLeft.setPosition(CHURRO_LEFT_OPEN);
         servoLiftLeft.setPosition(CRS_STOP);
@@ -336,12 +336,8 @@ public class Robot {
         }
     }
 
-    public void setHopperTiltRight(TiltSetting tiltsetting) {
-        if (tiltsetting == TiltSetting.RIGHT) {
-            servoHopperTilt.setPosition(HOPPER_TILT_LEFT);
-        } else {
-            servoHopperTilt.setPosition(HOPPER_TILT_RESTING);
-        }
+    public void setHopperSlidePosition(MotorSetting slidesetting) {
+            toggleCRServo(servoHopperSlide, slidesetting);
     }
 
     /**
@@ -351,18 +347,10 @@ public class Robot {
     public void setHopperLeft(DoorSetting doorLeftSetting) {
         if (doorLeftSetting == DoorSetting.OPEN) {
             servoHopperLeft.setPosition(HOPPER_LEFT_OPEN);
-            servoHopperTilt.setPosition(HOPPER_TILT_LEFT);
+//            servoHopperSlide.setPosition(CRS_FORWARD);
         } else {
             servoHopperLeft.setPosition(HOPPER_LEFT_CLOSE);
-            servoHopperTilt.setPosition(HOPPER_TILT_RESTING);
-        }
-    }
-
-    public void setHopperTiltLeft(TiltSetting tiltsetting) {
-        if (tiltsetting == TiltSetting.LEFT) {
-            servoHopperTilt.setPosition(HOPPER_TILT_RIGHT);
-        } else {
-            servoHopperTilt.setPosition(HOPPER_TILT_RESTING);
+//            servoHopperSlide.setPosition(CRS_REVERSE);
         }
     }
 
