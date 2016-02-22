@@ -179,13 +179,13 @@ public class SteelHawksOp extends OpMode {
         * Gamepad 2 controls the arm and the dumping action via the left and right stick of Gamepad 2
         */
 
-		float leftMotorPower = -gamepad1.left_stick_y;
+		float leftMotorPower = gamepad1.left_stick_y;
 
 
-		float rightMotorPower = gamepad1.right_stick_y;
+		float rightMotorPower = -gamepad1.right_stick_y;
 
 
-		float movingArmUp = gamepad2.left_stick_y;
+		float movingArmUp = -gamepad2.left_stick_y;
 
 
 		float dumpingArm = gamepad2.right_stick_x;
@@ -206,7 +206,7 @@ public class SteelHawksOp extends OpMode {
 
 		dumpingArm = Range.clip(dumpingArm, -1, 1);
 
-		if (movingArmUp >= .3)
+		/*if (movingArmUp >= .3)
 			movingArmUp = (float)0.3;
 		else if (movingArmUp <= -.3)
 			movingArmUp = (float)-0.3;
@@ -215,7 +215,7 @@ public class SteelHawksOp extends OpMode {
 			movingArmUp = (float)0.3;
 		else if (dumpingArm <= -.3)
 			movingArmUp = (float)-0.3;
-
+*/
 
 		// scale the joystick value to make it easier to control
 		// the robot more precisely at slower speeds.
@@ -234,12 +234,12 @@ public class SteelHawksOp extends OpMode {
 
 		motorArmDump.setPower(dumpingArm);
 
-
-		if (gamepad1.right_trigger > 0.2)
+		//Harvester
+		if (gamepad2.right_trigger > 0.2)
 		{
 			legacyController.setMotorPower(1, .5);
 		}
-		else if(gamepad1.left_trigger > 0.2)
+		else if(gamepad2.left_trigger > 0.2)
 		{
 			legacyController.setMotorPower(1, -.5);
 		}
@@ -249,10 +249,14 @@ public class SteelHawksOp extends OpMode {
 		}
 
 
-
-		if (!armTouch.isPressed())
+		//Arm lift
+		if (armTouch.isPressed() && movingArmUp > 0)
 			{
-			legacyController.setMotorPower(2, movingArmUp);
+			legacyController.setMotorPower(2, 0);
+		}
+		else
+		{
+			legacyController.setMotorPower(2, movingArmUp/2);
 		}
 
 /*

@@ -70,7 +70,7 @@ public class RoboWolvesOp extends OpMode {
 	 */
 
 
-	RoboWolvesOp() {
+	public RoboWolvesOp() {
 
 	}
 
@@ -145,39 +145,39 @@ public class RoboWolvesOp extends OpMode {
 		shoulderMotorPower=  (float)scaleInput(shoulderMotorPower);
 		elbowMotorPower =  (float)scaleInput(elbowMotorPower);
 
-		/*
-		if (gamepad1.a) {
+
+		/*if (gamepad2.a) {
 			// if the A button is pushed on gamepad1, increment the position of
 			// the arm servo.
 			hookPosition += servoDelta;
 		}
 
-		if (gamepad1.y) {
+		if (gamepad2.y) {
 			// if the Y button is pushed on gamepad1, decrease the position of
 			// the arm servo.
 			hookPosition -= servoDelta;
 		}
 
 		// update the position of the claw
-		if (gamepad1.x) {
+		if (gamepad2.x) {
 			pusherPosition += servoDelta;
 		}
 
-		if (gamepad1.b) {
+		if (gamepad2.b) {
 			pusherPosition -= servoDelta;
-		}
+		}*/
 
 		// clip the position values so that they never exceed their allowed range.
 		//hookPosition = Range.clip(hookPositi, ARM_MIN_RANGE, ARM_MAX_RANGE);
 		//pusherPosition = Range.clip(clawPosition, CLAW_MIN_RANGE, CLAW_MAX_RANGE);
 
 		// write position values to the wrist and claw servo
-		servoHook.setPosition(hookPosition);
+		/*servoHook.setPosition(hookPosition);
 		servoPusher.setPosition(pusherPosition);
-
-
-
 */
+
+
+
 		// write the values to the motors
 
 
@@ -196,14 +196,14 @@ public class RoboWolvesOp extends OpMode {
 	 * are currently write only.
 	 */
 
-
+/*
 		telemetry.addData("Text", "*** RoboWolves Supercool Robot Data***");
 		telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", leftMotorPower));
 		telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", rightMotorPower));
 		telemetry.addData("shoulder tgt pwr", "shoulder pwr: " + String.format("%.2f", shoulderMotorPower));
 		telemetry.addData("elbow tgt pwr", "elbow pwr: " + String.format("%.2f", elbowMotorPower));
 		telemetry.addData("hook tgt pwr", "hook pwr: " + String.format("%.2f", hookPosition));
-		telemetry.addData("pusher tgt pwr", "pusher pwr: " + String.format("%.2f", pusherPosition));
+		telemetry.addData("pusher tgt pwr", "pusher pwr: " + String.format("%.2f", pusherPosition));*/
 	}
 
 

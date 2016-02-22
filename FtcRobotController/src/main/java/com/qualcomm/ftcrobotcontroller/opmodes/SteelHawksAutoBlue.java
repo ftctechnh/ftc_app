@@ -40,7 +40,7 @@ import java.util.Timer;
  * //<p>
  * Enables control of the robot via the gamepad
  */
-public class SteelHawksAutoRed extends OpMode {
+public class SteelHawksAutoBlue extends OpMode {
 
 	DcMotor motorRight; //driving
 
@@ -90,7 +90,7 @@ public class SteelHawksAutoRed extends OpMode {
 	/**
 	 * Constructor
 	 */
-	public SteelHawksAutoRed() {
+	public SteelHawksAutoBlue() {
 
 	}
 
@@ -172,54 +172,54 @@ public class SteelHawksAutoRed extends OpMode {
 
 		//turn left for .5 sec
 
-	if (killTheBot == false)
-		if (this.time <= 1) {
-			motorPowerRight = (0.5);
-			motorPowerLeft = (0);
-			telemetry.addData("Text", "*** Loop 1***");
+		if (killTheBot == false) {
+			if (this.time <= 1) {
+				motorPowerRight = (0);
+				motorPowerLeft = (0.5);
+				telemetry.addData("Text", "*** Loop 1***");
 
 
-		}
-		// move forward for 2 sec
+			}
+			// move forward for 2 sec
 
-		if (this.time > .5 && this.time <= 2.5) {
-			motorPowerRight = (1);
-			motorPowerLeft = (1);
-			telemetry.addData("Text", "*** Loop 2***");
+			if (this.time > .5 && this.time <= 2.5) {
+				motorPowerRight = (1);
+				motorPowerLeft = (1);
+				telemetry.addData("Text", "*** Loop 2***");
 
-
-		}
-
-		//turn left for .5 sec
-
-		if (this.time > 2.5 && this.time <= 3.0) {
-			motorPowerRight = (0.5);
-			motorPowerLeft = (0);
-			telemetry.addData("Text", "*** Loop 3***");
-
-		}
-		// turn until touch sensor is pressed
-
-		if (this.time > 3.0 && autoTouch.getValue() == 0) {
-
-			motorPowerLeft = (.75);
-			motorPowerRight = .75;
-
-			if (autoTouch.isPressed()) {
-				motorPowerLeft = 0;
-				motorPowerRight = 0;
-				killTheBot = true;
 
 			}
 
-			telemetry.addData("Text", "*** Loop 5***");
+			//turn left for .5 sec
+
+			if (this.time > 2.5 && this.time <= 3.0) {
+				motorPowerRight = (0);
+				motorPowerLeft = (0.5);
+				telemetry.addData("Text", "*** Loop 3***");
+
+			}
+			// turn until touch sensor is pressed
+
+			if (this.time > 3.0 && autoTouch.getValue() == 0) {
+
+				motorPowerLeft = (.75);
+				motorPowerRight = .75;
+
+				if (autoTouch.isPressed()) {
+					motorPowerLeft = 0;
+					motorPowerRight = 0;
+					killTheBot = true;
+
+				}
+
+				telemetry.addData("Text", "*** Loop 5***");
 
 
+			}
+
+			motorLeft.setPower(motorPowerLeft);
+			motorRight.setPower(motorPowerRight);
 		}
-
-		motorLeft.setPower(motorPowerLeft);
-		motorRight.setPower(motorPowerRight);
-	}
 /*
 
 
@@ -303,11 +303,11 @@ public class SteelHawksAutoRed extends OpMode {
 		 * will return a null value. The legacy NXT-compatible motor controllers
 		 * are currently write only.
 		 */
-		///telemetry.addData("Text", "*** Robot Data***");
-		//telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", leftMotorPower));
-		//telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", rightMotorPower));
+		telemetry.addData("Text", "*** Robot Data***");
+		telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", leftMotorPower));
+		telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", rightMotorPower));
 
-
+	}
 
 	/*
 	 * Code to run when the op mode is first disabled goes here
