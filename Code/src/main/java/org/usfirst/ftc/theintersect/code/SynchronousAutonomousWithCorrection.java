@@ -1,7 +1,6 @@
 package org.usfirst.ftc.theintersect.code;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
-import com.qualcomm.robotcore.eventloop.SyncdDevice;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
@@ -15,7 +14,7 @@ import org.swerverobotics.library.TelemetryDashboardAndLog;
  * An Autonomous for both teams using the LinearOpMode
  */
 
-@org.swerverobotics.library.interfaces.Autonomous(name = "Autonomous")
+@org.swerverobotics.library.interfaces.Autonomous(name = "AutonomousWithCorrection")
 public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
     static String team = "8865";
     static int delay = 0;
@@ -47,8 +46,9 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
     static UltrasonicSensor ultrasonic;
 
     public static boolean detectedWhite;
+    public static int Try = 0;
 
-    Thread mountainClimberMove;
+    //Thread mountainClimberMove;
 
     @Override
     public void main() throws InterruptedException {
@@ -106,7 +106,7 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
 
 
 
-        mountainClimberMove = new Thread() {
+        /*mountainClimberMove = new Thread() {
             public void run() {
                 while (endTime > System.currentTimeMillis()) {
                     if ((endTime - 2000) < System.currentTimeMillis()) {
@@ -115,10 +115,10 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
                     }
                 }
             }
-        };
+        };*/
 
         waitForStart();
-		mountainClimberMove.start();
+		//mountainClimberMove.start();
         endTime = System.currentTimeMillis() + 30000;
         telemetry.clearDashboard();
         telemetry.addData("gyroInit: ", endTime);
@@ -129,29 +129,42 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
 			//Autonomous Routine !!!!
             telemetry.addData("Status", "Working...");
 			if(team.equals("Blue")) {
-				//moveRobotBackwardTime(2.5, 0.4);
-                moveRobotBackwardRotations(800, 0.4, 10*1000);
+				moveRobotBackwardTime(3500, 0.4);
+                //moveRobotBackwardRotations(2000, 0.4, 10*1000);
                 debugWait();
-                stopAtWhiteDetect(0.4, 3, telemetry);
+                //stopAtWhiteDetect(1.0, 3000, telemetry);
+                stopAtWhiteDetect(0.5, 1750, telemetry);
                 debugWait();
-                if(detectedWhite == true) {
-                    spinClockwiseGyroCorrection(50, 0.4, 10000000000L);
+                while(detectedWhite == false) {
+                    moveRobotForwardTime(1250 ,0.5);
                     debugWait();
-                    moveRobotBackwardTime(2, 0.5);
+                    spinClockwiseGyroNoCorrection(10,0.3,3000);
                     debugWait();
-                    while (ultrasonic.getUltrasonicLevel() < 15) {
-                        moveRobotForward(0.2, 0.2);
+                    stopAtWhiteDetect(0.5, 1250, telemetry);
+                    Try++;
+                    debugWait();
+                    if( Try == 3){
+                        break;
                     }
-                    stopRobot();
-                    debugWait();
-                    dumpClimbersUltra(telemetry);
-                } else{
+                }
+                spinClockwiseGyroCorrection(45 - (Try * 10), 0.4, 10000000000L);
+                debugWait();
+                //moveRobotBackwardTime(1500, 0.5);
+                debugWait();
+                while (ultrasonic.getUltrasonicLevel() > 15) {
+                    moveRobotBackward(0.2, 0.2);
+                }
+                stopRobot();
+                debugWait();
+                dumpClimbersUltra(telemetry);
+                 /*else{
                     // drive back towards white line
-                    spinClockwiseGyroCorrection(40+90, 0.4, 10000000000L);
+                    moveRobotForwardTime();
+                    spinClockwiseGyroCorrection(40+85, 0.4, 10000000000L);
                     debugWait();
                     stopAtWhite(0.4, 2, telemetry);
                     debugWait();
-                    spinCounterClockwiseGyroCorrection(90, 0.4, 10000000000L);
+                    spinCounterClockwiseGyroCorrection(85, 0.4, 10000000000L);
                     debugWait();
                     moveRobotBackwardTime(2, 0.5);
                     debugWait();
@@ -161,12 +174,13 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
                     stopRobot();
                     debugWait();
                     dumpClimbersUltra(telemetry);
-                }
+                }*/
             } else if (team.equals("Red")) {
                 //moveRobotBackwardTime(3, 0.4);
-                moveRobotBackwardRotations(800, 0.4, 10);
+                moveRobotBackwardRotations(2000, 0.4, 10);
                 debugWait();
-                stopAtWhiteDetect(0.5, 3, telemetry);
+                //stopAtWhiteDetect(1.0, 3000, telemetry);
+                stopAtWhite(1.0, 3000, telemetry);
                 debugWait();
                 if(detectedWhite == true) {
                     moveRobotForwardRotations(360, 0.5, 10000000000L);
@@ -222,15 +236,15 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
 		rightBarHook.setDirection(Servo.Direction.FORWARD);
 		leftBarHook.setDirection(Servo.Direction.REVERSE);
 
-		rightWheel.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-		leftWheel.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        rightWheel.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        leftWheel.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 	}
 
 
     public static void gyroInit(TelemetryDashboardAndLog telemetry) {
 
         gyro.calibrate();
-		gyro.setHeadingMode(
+        gyro.setHeadingMode(
                 ModernRoboticsI2cGyro.HeadingMode.HEADING_CARTESIAN);
         while (gyro.isCalibrating()) {
 			telemetry.addData("gyroInit: ", "Calibrating Gyro");
@@ -263,7 +277,7 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
             Functions.waitFor(500);
             totalCount++;
         }
-		telemetry.addData("initGyroHeading: Done ", totalCount);
+        telemetry.addData("initGyroHeading: Done ", totalCount);
 		telemetry.updateNow();
 	}
 
@@ -275,7 +289,7 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
 		bumper.setPosition(Functions.bumperInitPosition);
 		rightChurroHook.setPosition(Functions.churroHookUpPos);
 		leftChurroHook.setPosition(Functions.churroHookUpPos);
-		rightHangString.setPower(0);
+        rightHangString.setPower(0);
 		leftHangString.setPower(0);
         rightBarHook.setPosition(Functions.barHookAutoInitPos);
         leftBarHook.setPosition(Functions.barHookAutoInitPos);
@@ -285,10 +299,10 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
         lineColor.enableLed(true);
 		directionInit();
 		preStartInit();
-		servoInit();
-		resetEncoders();
-		rightWheel.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-		leftWheel.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        servoInit();
+        resetEncoders();
+        rightWheel.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+        leftWheel.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 		gyroInit(telemetry);
 	}
 
@@ -303,8 +317,8 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
 
 
     public static double calculateArmPosition(double dist, TelemetryDashboardAndLog telemetry) {
-        final double basketOffset = 5.0; // offset between wall and basket
-        final double armLength = 40.5;   // Length of the mountain climber
+        final double basketOffset = 8.0; // offset between wall and basket
+        final double armLength = 36.8;   // Length of the mountain climber
 
         double armDegree;
         double armPosition;
@@ -340,7 +354,7 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
             }
             Functions.waitFor(50);
         }
-        Distance = (Distance- minDistance - maxDistance ) / 3;
+        Distance = (Distance - minDistance - maxDistance ) / 3;
 		telemetry.addData("min ", minDistance);
 		telemetry.addData("max ", maxDistance);
 		telemetry.addData("Distance ", Distance);
@@ -409,15 +423,15 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
 		rightWheel.setPower(0);
 	}
 
-    public static void moveRobotForwardTime(double seconds, double power) {
+    public static void moveRobotForwardTime(double milliseconds, double power) {
         moveRobotForward(power, power);
-        Functions.waitFor((int) (seconds * 1000));
+        Functions.waitFor((int) (milliseconds));
         stopRobot();
     }
 
-    public static void moveRobotBackwardTime(double seconds, double power) {
+    public static void moveRobotBackwardTime(double milliseconds, double power) {
 		moveRobotBackward(power, power);
-		Functions.waitFor((int) seconds * 1000);
+		Functions.waitFor((int) milliseconds);
         stopRobot();
     }
 
@@ -1020,7 +1034,7 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
     public static void stopAtWhiteDetect(double power, long timeout, TelemetryDashboardAndLog telemetry) {
         detectedWhite = false;
         moveRobotBackward(power, power);
-        long endTime = System.currentTimeMillis() + (timeout * 1000);
+        long endTime = System.currentTimeMillis() + (timeout);
         while (System.currentTimeMillis() < endTime) {
             if (detectWhite(telemetry)) {
                 detectedWhite = true;

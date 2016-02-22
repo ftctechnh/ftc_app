@@ -139,10 +139,10 @@ public class TeleOp extends SynchronousOpMode {
             containerTiltLeft = gamepad1.dpad_left;
             sweeperForward = (gamepad1.y || gamepad2.y);
             sweeperBackward = (gamepad1.a || gamepad2.a);
-            linearSlideForward = gamepad2.right_bumper || gamepad2.right_bumper;
-            linearSlideBackward = gamepad2.left_bumper || gamepad2.left_bumper;
-            bumperDown = gamepad2.b;
-            bumperUp = gamepad2.x;
+            linearSlideForward = gamepad2.right_bumper || gamepad1.right_bumper;
+            linearSlideBackward = gamepad2.left_bumper || gamepad1.left_bumper;
+            bumperDown = gamepad2.b || gamepad1.b;
+            bumperUp = gamepad2.x || gamepad1.x;
             //retractLeftHangString = gamepad1.left_bumper;
             //retractRightHangString = gamepad1.right_bumper;
 			retractLeftHangString = gamepad1.left_trigger > Functions
@@ -285,8 +285,8 @@ public class TeleOp extends SynchronousOpMode {
                 //Defines gamepad buttons for toggle buttons
                 rightWheelPower = gamepad1.right_stick_y;
                 leftWheelPower = gamepad1.left_stick_y;
-                tubeExtend = gamepad1.x;
-                tubeRetract = gamepad1.b;
+                tubeExtend = gamepad1.dpad_up;
+                tubeRetract = gamepad1.dpad_down;
                 toggleChurroHooks = gamepad1.start || gamepad2.start;
                 toggleBarHooks = gamepad1.back;
 
@@ -319,20 +319,25 @@ public class TeleOp extends SynchronousOpMode {
             if (toggleChurroHooks && churroHooksDown) {
                 leftChurroHook.setPosition(Functions.churroHookUpPos);
                 rightChurroHook.setPosition(Functions.churroHookUpPos);
+                Functions.waitFor(250);
                 churroHooksDown = false;
             } else if (toggleChurroHooks && !churroHooksDown) {
                 leftChurroHook.setPosition(Functions.churroHookDownPos);
                 rightChurroHook.setPosition(Functions.churroHookDownPos);
+                Functions.waitFor(250);
                 churroHooksDown = true;
             }
 
             if (toggleBarHooks && barHooksDown) {
                 leftBarHook.setPosition(Functions.barHookUpPos);
                 rightBarHook.setPosition(Functions.barHookUpPos);
+                Functions.waitFor(250);
                 barHooksDown = false;
             } else if (toggleBarHooks && !barHooksDown) {
                 leftBarHook.setPosition(Functions.barHookDownPos);
                 rightBarHook.setPosition(Functions.barHookDownPos);
+                Functions.waitFor(250);
+
                 barHooksDown = true;
             }
 
@@ -397,8 +402,8 @@ public class TeleOp extends SynchronousOpMode {
 		bumper.setPosition(Functions.bumperInitPosition);
         rightChurroHook.setPosition(Functions.churroHookUpPos);
         leftChurroHook.setPosition(Functions.churroHookUpPos);
-        rightBarHook.setPosition(Functions.barHookTeleInitPos);
-        leftBarHook.setPosition(Functions.barHookTeleInitPos);
+        rightBarHook.setPosition(Functions.barHookDownPos);
+        leftBarHook.setPosition(Functions.barHookDownPos);
     }
 
 	public static void end() {
