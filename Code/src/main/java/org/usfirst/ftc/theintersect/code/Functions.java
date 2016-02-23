@@ -29,11 +29,11 @@ public class Functions {
     public static double barHookTeleInitPos = 0.5;
     public static double barHookAutoInitPos = 1.0;
     public static double linearSlidePower = 0.5;
-    public static double triggerThreshold = 0.2;
-    public static double sweeperPower = 0.65;
+	public static double triggerThreshold = 0.6;
+	public static double sweeperPower = 0.65;
     public static double bumperDownPos = 1.0;
     public static double bumperUpPos = 0.0;
-    public static double hangStringPower = 0.5;
+	public static double hangStringPower = 0.75;
 
 
     public static double convertGamepad(float y) {
