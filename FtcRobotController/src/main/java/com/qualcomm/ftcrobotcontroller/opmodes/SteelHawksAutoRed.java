@@ -169,51 +169,55 @@ public class SteelHawksAutoRed extends OpMode {
 		//motorArm.setPower(movongArmUp);
 		//motorArm2.setPower(dumpingArm);
 
-
-		//turn left for .5 sec
-
-	if (killTheBot == false)
+    
+    
+    // if the code has not run, killTheBot will be false (default).
+    // This if statement will run the code since it was never run.
+    
+	if (!killTheBot) {
+    
+    // Time gone by: 0 - 1 sec
+		// Turn left for .5 sec
 		if (this.time <= 1) {
 			motorPowerRight = (0.5);
 			motorPowerLeft = (0);
-			telemetry.addData("Text", "*** Loop 1***");
 
 
 		}
-		// move forward for 2 sec
-
+    
+    // Time gone by: 0.6 - 2.5  sec
+		// Move forward for 2 sec
 		if (this.time > .5 && this.time <= 2.5) {
 			motorPowerRight = (1);
 			motorPowerLeft = (1);
-			telemetry.addData("Text", "*** Loop 2***");
 
 
 		}
-
-		//turn left for .5 sec
-
+    
+    // Time gone by: 2.6 - 3 sec
+		// Turn left for .5 sec
 		if (this.time > 2.5 && this.time <= 3.0) {
 			motorPowerRight = (0.5);
 			motorPowerLeft = (0);
-			telemetry.addData("Text", "*** Loop 3***");
 
 		}
-		// turn until touch sensor is pressed
-
-		if (this.time > 3.0 && autoTouch.getValue() == 0) {
-
+    
+    // Time gone by: 3 to *whatever* sec
+		// Move forward until touch sensor is pressed
+		if (this.time > 3.0) {
+      // Go forward, slower than before
 			motorPowerLeft = (.75);
 			motorPowerRight = .75;
-
+			
+      // If the touch sensor is pressed
 			if (autoTouch.isPressed()) {
+        // Stop moving
 				motorPowerLeft = 0;
 				motorPowerRight = 0;
+        // This will stop the code from running again
 				killTheBot = true;
 
 			}
-
-			telemetry.addData("Text", "*** Loop 5***");
-
 
 		}
 
@@ -221,8 +225,6 @@ public class SteelHawksAutoRed extends OpMode {
 		motorRight.setPower(motorPowerRight);
 	}
 /*
-
-
 		//SAVE THIS CODE FOR LATER IF NEEDED
 		// update the position of the arm.
 		if (gamepad1.y && isMoving == false) {
@@ -238,7 +240,6 @@ public class SteelHawksAutoRed extends OpMode {
 			motorArm.setPower(0);
 			isMoving = false;
 		}
-
 		if (gamepad1.a && isMoving ==false) {
 			// if the A button is pushed on gamepad1, decrease the position of
 			// the arm servo.
@@ -251,11 +252,8 @@ public class SteelHawksAutoRed extends OpMode {
 		{
 			motorArm.setPower(-0.2);
 			isMoving = true;
-
 		}
-
 		// update the position of the claw
-
 		if (gamepad1.x && isMoving==false) {
 			// if the A button is pushed on gamepad1, decrease the position of
 			// the arm servo.
@@ -268,9 +266,7 @@ public class SteelHawksAutoRed extends OpMode {
 		{
 			motorArm.setPower(-0.2);
 			isMoving = true;
-
 		}
-
 		if (gamepad1.b && isMoving==false) {
 			// if the A button is pushed on gamepad1, decrease the position of
 			// the arm servo.
@@ -278,23 +274,15 @@ public class SteelHawksAutoRed extends OpMode {
 			isMoving = true;
 			closingArmStart = System.currentTimeMillis();
 			closingArmEnd = closingArmStart + 0.5*1000;
-
 		}
 		if(closingArmEnd<System.currentTimeMillis())
 		{
 			motorArmDump.setPower(-0.2);
 			isMoving = true;
-
 		}
-
-
-
 		// clip the position values so that they never exceed their allowed range.
-
-
 		// write position values to the wrist and claw servo
 		
-
 */
 
 		/*
