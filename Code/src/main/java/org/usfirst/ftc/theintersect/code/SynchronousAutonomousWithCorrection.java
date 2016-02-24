@@ -147,7 +147,7 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
                         break;
                     }
                 }
-                spinClockwiseGyroCorrection(45 - (Try * 10), 0.4, 10000000000L);
+                spinClockwiseGyroCorrection(45 - (Try * 10), 0.4, 5000);
                 debugWait();
                 //moveRobotBackwardTime(1500, 0.5);
                 debugWait();
@@ -176,7 +176,7 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
                         break;
                     }
                 }
-                spinCounterClockwiseGyroCorrection(45 - (Try * 10), 0.4, 10000000000L);
+                spinCounterClockwiseGyroCorrection(45 - (Try * 10), 0.4, 5000);
                 debugWait();
                 //moveRobotBackwardTime(1500, 0.5);
                 debugWait();
@@ -193,7 +193,7 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
     }
 
     public static void debugWait() {
-        Functions.waitFor(500);
+        Functions.waitFor(Functions.debugWaitTime);
     }
 
     public static void directionInit() {
@@ -909,6 +909,9 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
     //
     public static void spinCounterClockwiseGyroNoCorrection(int degrees, double power, long
             timeoutMill) {
+        int loopCount = 0;
+        int overShootCount = 0;
+        int underShootCount = 0;
         long endTime = System.currentTimeMillis() + timeoutMill;
         int endHeading = gyro.getIntegratedZValue() - degrees;
         boolean fineAdjustment = false;
@@ -917,6 +920,7 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
         rightWheel.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         spinRobotLeft(power);
         while (endTime > System.currentTimeMillis()) {
+            loopCount++;
             int currentHeading = gyro.getIntegratedZValue();
             if (!fineAdjustment) { // initial turn
                 if (Math.abs(endHeading - currentHeading ) <= 5) {
@@ -930,8 +934,10 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
                     break;
                 }
                 if (endHeading < gyro.getIntegratedZValue()) {
+                    overShootCount++;
                     spinRobotRight(0.1);
                 } else {
+                    underShootCount++;
                     spinRobotLeft(0.1);
                 }
             }

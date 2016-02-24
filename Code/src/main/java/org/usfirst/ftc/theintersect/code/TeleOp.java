@@ -70,6 +70,11 @@ public class TeleOp extends SynchronousOpMode {
     boolean retractRightHangString = false;
     boolean retractLeftHangString = false;
 
+    boolean extendLeftHangStringTurbo = false;
+    boolean extendRightHangStringTurbo = false;
+    boolean retractRightHangStringTurbo = false;
+    boolean retractLeftHangStringTurbo = false;
+
 	float slowDriveBack;
 	float slowDriveForward;
 
@@ -146,11 +151,19 @@ public class TeleOp extends SynchronousOpMode {
             //retractLeftHangString = gamepad1.left_bumper;
             //retractRightHangString = gamepad1.right_bumper;
 			retractLeftHangString = gamepad1.left_trigger > Functions
-					.triggerThreshold || gamepad2.right_trigger > Functions.triggerThreshold;
-			retractRightHangString = gamepad1.right_trigger > Functions
-					.triggerThreshold || gamepad2.right_trigger > Functions.triggerThreshold;
-			extendLeftHangString = extendRightHangString = gamepad2
-					.left_trigger > Functions.triggerThreshold;
+                    .triggerThreshold && gamepad1.left_trigger < Functions.turboTriggerThreshold || gamepad2.right_trigger > Functions.triggerThreshold && gamepad2.right_trigger < Functions.turboTriggerThreshold;
+            retractRightHangString = gamepad1.right_trigger > Functions
+                    .triggerThreshold && gamepad1.right_trigger < Functions.turboTriggerThreshold || gamepad2.right_trigger > Functions.triggerThreshold && gamepad2.right_trigger < Functions.turboTriggerThreshold;
+            extendLeftHangString = extendRightHangString = gamepad2
+                    .left_trigger > Functions.triggerThreshold && gamepad2.left_trigger < Functions.turboTriggerThreshold;
+
+            retractLeftHangStringTurbo = gamepad1.left_trigger > Functions
+                    .turboTriggerThreshold;
+            retractRightHangStringTurbo = gamepad1.right_trigger > Functions
+                    .turboTriggerThreshold;
+            extendLeftHangStringTurbo = extendRightHangString = gamepad2
+                    .left_trigger > Functions.turboTriggerThreshold;
+
 
             //Moves robot when some of the buttons are held
             if (extendRightHangString) {
@@ -167,6 +180,22 @@ public class TeleOp extends SynchronousOpMode {
             } else {
                 leftHangString.setPower(0);
             }
+
+            if (extendRightHangStringTurbo) {
+                rightHangString.setPower(-Functions.turboHangStringPower);
+            } else if (retractRightHangStringTurbo) {
+                rightHangString.setPower(Functions.turboHangStringPower);
+            } else {
+                rightHangString.setPower(0);
+            }
+            if (extendLeftHangStringTurbo) {
+                leftHangString.setPower(-Functions.turboHangStringPower);
+            } else if (retractLeftHangStringTurbo) {
+                leftHangString.setPower(Functions.turboHangStringPower);
+            } else {
+                leftHangString.setPower(0);
+            }
+
             if (linearSlideForward) {
                 linearSlide.setPower(-Functions.linearSlidePower);
             } else if (linearSlideBackward) {

@@ -24,16 +24,20 @@ public class Functions {
 	public static double adjustedPowerMax = 0.9;
 	public static double adjustedPowerMin = 0.25;
 	public static double whiteThreshold = 10;
-    public static double barHookDownPos = 0.1;
+    public static double barHookDownPos = 0.3;
     public static double barHookUpPos = 0.8;
     public static double barHookTeleInitPos = 0.5;
     public static double barHookAutoInitPos = 1.0;
     public static double linearSlidePower = 0.5;
     public static double triggerThreshold = 0.7;
+    public static double turboTriggerThreshold = 0.95;
+    public static double turboHangStringPower = 1.0;
     public static double sweeperPower = 0.65;
     public static double bumperDownPos = 1.0;
     public static double bumperUpPos = 0.0;
-    public static double hangStringPower = 0.5;
+    public static double hangStringPower = 0.8;
+    public static int debugWaitTime = 300;
+
 
 
     public static double convertGamepad(float y) {
