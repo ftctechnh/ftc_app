@@ -58,6 +58,7 @@ public class tbc {
     public static double mtapePosition = MTAPE_MIN_RANGE;
     public static double buttonServoSpeed = 0.5;
     public static double slideServoSpeed = 0.5;
+    public static double dumperServoSpeed = 0.5;
 
     public ColorSensorDriver.ColorSensorDevice device = ColorSensorDriver.ColorSensorDevice.MODERN_ROBOTICS_I2C;
 
@@ -69,6 +70,7 @@ public class tbc {
         mtapePosition = MTAPE_MIN_RANGE;
         buttonServoSpeed = 0.5;
         slideServoSpeed = 0.5;
+        dumperServoSpeed = 0.5;
     }
 
     public static ServoController sc = null;
@@ -90,6 +92,7 @@ public class tbc {
 
     public static DcMotor motorHook = null;
     public static DcMotor motorPusher = null;
+    public static DcMotor motorIntake = null;
 
     public static ColorSensor light2 = null;
     public static ColorSensor light1 = null;
@@ -152,7 +155,7 @@ public class tbc {
         }
     }
 
-    public static void setBoxServoPosition(Double sPos) {
+    public static void setBoxServoSpeed(Double sPos) {
         if (box != null) {
             box.setPosition(sPos);
         }
@@ -191,6 +194,12 @@ public class tbc {
     public static void setMotorPusherPower(float power) {
         if (motorPusher != null) {
             motorPusher.setPower(power);
+        }
+    }
+
+    public static void setMotorIntakePower(float power) {
+        if (motorIntake != null) {
+            motorIntake.setPower(power);
         }
     }
 
@@ -258,6 +267,7 @@ public class tbc {
         try {
             motorHook = hardwareMap.dcMotor.get("motorHook");
             motorPusher = hardwareMap.dcMotor.get("pusher");
+            motorIntake = hardwareMap.dcMotor.get("intake");
         } catch (Exception ex) {
         }
 
@@ -311,6 +321,7 @@ public class tbc {
 
         motorHook = null;
         motorPusher = null;
+        motorIntake = null;
         light2 = null;
     }
 

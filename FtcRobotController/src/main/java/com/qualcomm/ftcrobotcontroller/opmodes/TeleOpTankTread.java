@@ -88,7 +88,8 @@ public class TeleOpTankTread extends OpMode {
         float drivespeed = -gamepad1.left_stick_y;
         float driveturn = gamepad1.right_stick_x;
         float hook = -gamepad2.right_stick_y;
-        float intake = gamepad2.left_stick_y;
+        float hook2 = gamepad2.right_stick_y;
+        float slide = gamepad2.left_stick_y;
 
         float right = drivespeed - driveturn;
         float left = drivespeed + driveturn;
@@ -97,24 +98,36 @@ public class TeleOpTankTread extends OpMode {
         right = Range.clip(right, -1, 1);
         left = Range.clip(left, -1, 1);
         hook = Range.clip(hook, -1, 1);
-        intake = Range.clip(intake, -1,1);
+        hook2 = Range.clip(hook2, -1, 1);
 
         // scale the joystick value to make it easier to control
         // the robot more precisely at slower speeds.
         right = (float)scaleInput(right);
         left =  (float)scaleInput(left);
         hook = (float)scaleInput(hook);
-        intake = (float)scaleInput(intake);
+        hook2 = (float)scaleInput(hook2);
 
         // write the values to the motors
 
         tbc.setMotorRRightPower(-right);
         tbc.setMotorRLeftPower(-left);
         tbc.setMotorFRightPower(-right);
-        tbc.setMotorFLeftPower(-left );
+        tbc.setMotorFLeftPower(-left);
 
         tbc.setMotorHookPower(hook);
-        tbc.setMotorPusherPower(intake);
+        tbc.setMotorPusherPower(hook2);
+
+        if(gamepad1.dpad_up) {
+            tbc.setMotorIntakePower(1);
+        }
+
+        if(gamepad1.dpad_down) {
+            tbc.setMotorIntakePower(-1);
+        }
+
+        if(!gamepad1.dpad_up && !gamepad1.dpad_down) {
+            tbc.setMotorIntakePower(0);
+        }
 
         if(gamepad2.x) {
             tbc.buttonServoSpeed = 0.0f;
@@ -126,6 +139,17 @@ public class TeleOpTankTread extends OpMode {
             tbc.buttonServoSpeed = 0.5f;
         }
         tbc.setButtonServoSpeed(tbc.buttonServoSpeed);
+
+        if(gamepad2.left_bumper) {
+            tbc.dumperServoSpeed = 0.0f;
+        }
+        if(gamepad2.right_bumper) {
+            tbc.dumperServoSpeed = 1.0f;
+        }
+        if(gamepad2.left_bumper != true && gamepad2.right_bumper != true) {
+            tbc.dumperServoSpeed = 0.5f;
+        }
+        tbc.setBoxServoSpeed(tbc.dumperServoSpeed);
 
         /*if(gamepad2.a) {
             tbc.climberPosition = tbc.CLIMBER_MAX_RANGE;
@@ -157,7 +181,7 @@ public class TeleOpTankTread extends OpMode {
         tbc.snowplowPosition = Range.clip(snowplowNewPos, tbc.SNOWPLOW_MIN_RANGE, tbc.SNOWPLOW_MAX_RANGE);
         tbc.setSnowplowPosition(tbc.snowplowPosition);
 
-        if(gamepad2.x) {
+        if(gamepad1.x) {
             tbc.sliderLPosition = tbc.SLIDERL_MAX_RANGE;
         }
         if(gamepad1.y) {
@@ -166,7 +190,7 @@ public class TeleOpTankTread extends OpMode {
         tbc.sliderLPosition = Range.clip(tbc.sliderLPosition, tbc.SLIDERL_MIN_RANGE, tbc.SLIDERL_MAX_RANGE);
         tbc.setSliderLPosition(tbc.sliderLPosition);
 
-        if(gamepad2.a) {
+        if(gamepad1.a) {
             tbc.sliderRPosition = tbc.SLIDERR_MAX_RANGE;
         }
         if(gamepad1.b) {
@@ -192,13 +216,13 @@ public class TeleOpTankTread extends OpMode {
         tbc.mtapePosition = Range.clip(mtapeNewPos, tbc.MTAPE_MIN_RANGE, tbc.MTAPE_MAX_RANGE);
         tbc.setMtapePosition(tbc.mtapePosition);
 
-        if(gamepad1.dpad_down) {
+        if(slide < -10) {
             tbc.slideServoSpeed = 0.0f;
         }
-        if(gamepad1.dpad_up) {
+        if(slide > 10) {
             tbc.slideServoSpeed = 1.0f;
         }
-        if(gamepad1.dpad_down != true && gamepad1.dpad_up != true) {
+        if(Math.abs(slide) < 10) {
             tbc.slideServoSpeed = 0.5f;
         }
         tbc.setSlide1ServoSpeed(tbc.slideServoSpeed);
@@ -206,7 +230,7 @@ public class TeleOpTankTread extends OpMode {
         tbc.setSlide2ServoSpeed(tbc.slideServoSpeed);
 
 
-        if ((!gamepad2.right_bumper) && (!gamepad2.left_bumper)) {
+        if ((!gamepad2.back) && (!gamepad2.start)) {
             eventStart = mRuntime.time();
         }
 
@@ -223,7 +247,7 @@ public class TeleOpTankTread extends OpMode {
         telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", left));
         telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", right));
         telemetry.addData("servo in",  "servo in: " + String.format("%.2f", servoInput));
-        telemetry.addData("intake",  "intake: " + String.format("%.2f", intake));
+      
         telemetry.addData("button servo", "button servo: " + String.format("%.2f", tbc.buttonServoSpeed));
         telemetry.addData("climber", "climber:  " + String.format("%.2f", tbc.climberPosition));
         telemetry.addData("sliderL", "sliderL: " + String.format("%.2f", tbc.sliderLPosition));
