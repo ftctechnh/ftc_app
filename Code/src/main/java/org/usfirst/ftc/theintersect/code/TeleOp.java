@@ -146,11 +146,11 @@ public class TeleOp extends SynchronousOpMode {
             //retractLeftHangString = gamepad1.left_bumper;
             //retractRightHangString = gamepad1.right_bumper;
 			retractLeftHangString = gamepad1.left_trigger > Functions
-					.triggerThreshold || gamepad2.left_trigger > Functions.triggerThreshold;
+					.triggerThreshold || gamepad2.right_trigger > Functions.triggerThreshold;
 			retractRightHangString = gamepad1.right_trigger > Functions
-					.triggerThreshold || gamepad2.left_trigger > Functions.triggerThreshold;
+					.triggerThreshold || gamepad2.right_trigger > Functions.triggerThreshold;
 			extendLeftHangString = extendRightHangString = gamepad2
-					.right_trigger > Functions.triggerThreshold;
+					.left_trigger > Functions.triggerThreshold;
 
             //Moves robot when some of the buttons are held
             if (extendRightHangString) {
