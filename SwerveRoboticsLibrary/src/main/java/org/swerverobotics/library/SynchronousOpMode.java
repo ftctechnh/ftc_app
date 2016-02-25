@@ -7,6 +7,9 @@ import android.util.*;
 import static junit.framework.Assert.*;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.ThreadPool;
+
 import org.swerverobotics.library.exceptions.*;
 import org.swerverobotics.library.interfaces.*;
 import org.swerverobotics.library.internal.*;
@@ -57,7 +60,7 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     public TelemetryDashboardAndLog telemetry;
 
     /** Advanced: the number of nanoseconds in a millisecond. */
-    public static final long NANO_TO_MILLI = 1000000;
+    public static final long NANO_TO_MILLI = ElapsedTime.MILLIS_IN_NANO;
 
     /**
      * Advanced: msLoopDwellMax is the (soft) maximum number of milliseconds that
@@ -281,14 +284,12 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      * {@link #opModeIsActive()} and return from their loop body if the opMode has stopped.
      *
      * @param threadBody the code to execute on the newly created thread
-     * @return a new synchronous thread on which the indicated code will run. The thread has
-     *         not yet been started.
      * @see #main()
      * @see #opModeIsActive()
      */
-    public Thread createSynchronousWorkerThread(IInterruptableRunnable threadBody)
+    public void createSynchronousWorkerThread(IInterruptableRunnable threadBody)
         {
-        return this.createSynchronousWorkerThread(threadBody, false);
+        this.createSynchronousWorkerThread(threadBody, false);
         }
 
     /**
@@ -452,12 +453,10 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     private static  AtomicInteger           prevSingletonKey = new AtomicInteger(0);
 
     private         Thread                  loopThread;
-    private         Thread                  mainThread;
-    private final   Collection<Thread>      synchronousWorkerThreads = new ConcurrentLinkedQueue<Thread>();
+    private final   ExecutorService         mainThreadExecutor    = ThreadPool.newSingleThreadExecutor();
+    private final   ExecutorService         workerThreadsExecutor = ThreadPool.newCachedThreadPool();
     private         RuntimeException        exceptionThrownOnMainThread;
     private final   AtomicReference<RuntimeException> firstExceptionThrownOnASynchronousWorkerThread = new AtomicReference<RuntimeException>();
-    private final static int                msWaitForMainThreadTermination              = 250;
-    private final static int                msWaitForSynchronousWorkerThreadTermination = 50;
 
     private         Gamepad                 gamepad1Captured = null;
     private         Gamepad                 gamepad2Captured = null;
@@ -602,52 +601,22 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             }
         }
 
-    private void interruptSynchronousThreads()
-        {
-        for (Thread thread : this.synchronousWorkerThreads)
-            {
-            thread.interrupt();
-            }
-        if (this.mainThread != null)
-            {
-            this.mainThread.interrupt();
-            }
-        }
-
-    private void waitForSynchronousWorkerThreads(int msWait) throws InterruptedException
-        {
-        for (Thread thread : this.synchronousWorkerThreads)
-            {
-            thread.join(msWait);
-            }
-        }
-
-    private void waitForMainThread(int msWait) throws InterruptedException
-        {
-        if (this.mainThread != null)
-            {
-            this.mainThread.join(msWait);
-            }
-        }
-
-    private Thread createSynchronousWorkerThread(IInterruptableRunnable threadBody, boolean isMain)
+    private void createSynchronousWorkerThread(final IInterruptableRunnable threadBody, final boolean isMain)
         {
         if (this.isStopRequested())
             throw new IllegalStateException("createSynchronousWorkerThread: stop requested");
         
         if (!isMain) SwerveThreadContext.assertSynchronousThread();
         //
-        Thread thread = new Thread(new SynchronousThreadRoot(threadBody, isMain));
-        if (isMain)
+        ExecutorService service = isMain ? this.mainThreadExecutor : this.workerThreadsExecutor;
+        //
+        service.execute(new Runnable()
             {
-            thread.setName("Sync main");
-            }
-        else
-            {
-            thread.setName("Sync worker");
-            this.synchronousWorkerThreads.add(thread);
-            }
-        return thread;
+            @Override public void run()
+                {
+                ThreadPool.logThreadLifeCycle(isMain ? "synch main" : "synch worker", new SynchronousThreadRoot(threadBody, isMain));
+                }
+            });
         }
     
     private void setThreadThunker()
@@ -688,7 +657,6 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             // Paranoia: clear any state that may just perhaps be lingering
             this.clearSingletons();
             this.actionQueueAndHistory.clear();
-            this.synchronousWorkerThreads.clear();
 
             // We're being asked to start, not stop
             this.started = false;
@@ -699,15 +667,15 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             this.firstExceptionThrownOnASynchronousWorkerThread.set(null);
 
             // Create the main thread and start it up and going!
-            this.mainThread = this.createSynchronousWorkerThread(new IInterruptableRunnable()
+            this.createSynchronousWorkerThread(new IInterruptableRunnable()
                 {
-                @Override public void run() throws InterruptedException
+                @Override
+                public void run() throws InterruptedException
                     {
                     Log.d(LOGGING_TAG, String.format("starting OpMode {%s}", SynchronousOpMode.this.getClass().getSimpleName()));
                     SynchronousOpMode.this.main();
                     }
                 }, true);
-            this.mainThread.start();
 
             // Call the subclass hook in case they might want to do something interesting
             this.postInitHook();
@@ -886,22 +854,13 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             // Next time synchronous threads ask, yes, we do want to stop
             this.stopRequested = true;
 
-            try {
-                // Give all of our worker threads a heads up to get out of town
-                this.interruptSynchronousThreads();
+            // Give all of our worker threads a heads up to get out of town
+            this.workerThreadsExecutor.shutdownNow();
+            this.mainThreadExecutor.shutdownNow();
 
-                // Serially wait for these folk to pack up and leave
-                this.waitForSynchronousWorkerThreads(this.msWaitForSynchronousWorkerThreadTermination);
-                this.waitForMainThread(this.msWaitForMainThreadTermination);
-                }
-            catch (InterruptedException e)
-                {
-                // We were waiting for the threads to shutdown but then *we* got an interrupt
-                // while doing so. That's an entirely unexpected situation; it shouldn't happen
-                // architecturally in the robot controller app.
-                Log.e(LOGGING_TAG, String.format("unexpected interrupt: %s", Util.getStackTrace(e)));
-                throw SwerveRuntimeException.wrap(e);
-                }
+            // Serially wait for these folk to pack up and leave
+            ThreadPool.awaitTerminationOrExitApplication(this.workerThreadsExecutor, 30, TimeUnit.SECONDS, "synchronous threads", "unreasonable delay in user code?");
+            ThreadPool.awaitTerminationOrExitApplication(this.mainThreadExecutor, 30, TimeUnit.SECONDS, "synchronous main thread", "unreasonable delay in user code?");
 
             if (this.hardwareFactory != null)
                 {
