@@ -105,10 +105,8 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
         // heartbeats which are as minimally disruptive as possible. Note as a matter of interest
         // that the heartbeat mechanism used by ModernRoboticsNxtDcMotorController is analogous to
         // 'rewriteLastWritten'.
-        I2cDeviceSynch.HeartbeatAction heartbeatAction = new I2cDeviceSynch.HeartbeatAction();
-        heartbeatAction.rereadLastRead      = true;
-        heartbeatAction.rewriteLastWritten  = true;
-        heartbeatAction.heartbeatReadWindow = new I2cDeviceSynch.ReadWindow(mpMotorRegCurrentEncoderValue[1], 1, I2cDeviceSynch.ReadMode.ONLY_ONCE);
+        I2cDeviceSynch.HeartbeatAction heartbeatAction = new I2cDeviceSynch.HeartbeatAction(true, true,
+            new I2cDeviceSynch.ReadWindow(mpMotorRegCurrentEncoderValue[1], 1, I2cDeviceSynch.ReadMode.ONLY_ONCE));
 
         this.i2cDeviceSynch.setHeartbeatAction(heartbeatAction);
         this.i2cDeviceSynch.setHeartbeatInterval(2000);

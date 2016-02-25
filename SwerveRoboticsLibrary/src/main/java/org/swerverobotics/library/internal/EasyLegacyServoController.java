@@ -79,10 +79,8 @@ public class EasyLegacyServoController extends I2cControllerPortDeviceImpl imple
         // The NXT HiTechnic servo controller will time out if it doesn't receive any I2C communication for
         // 10.0 seconds. So we set up a heartbeat request to try to prevent that. We try to use
         // heartbeats which are as minimally disruptive as possible.
-        I2cDeviceSynch.HeartbeatAction heartbeatAction = new I2cDeviceSynch.HeartbeatAction();
-        heartbeatAction.rereadLastRead      = true;
-        heartbeatAction.rewriteLastWritten  = true;
-        heartbeatAction.heartbeatReadWindow = new I2cDeviceSynch.ReadWindow(ADDRESS_CHANNEL_MAP[1], 1, I2cDeviceSynch.ReadMode.ONLY_ONCE);
+        I2cDeviceSynch.HeartbeatAction heartbeatAction = new I2cDeviceSynch.HeartbeatAction(true, true,
+            new I2cDeviceSynch.ReadWindow(ADDRESS_CHANNEL_MAP[1], 1, I2cDeviceSynch.ReadMode.ONLY_ONCE));
 
         this.i2cDeviceSynch.setHeartbeatAction(heartbeatAction);
         this.i2cDeviceSynch.setHeartbeatInterval(9000);
