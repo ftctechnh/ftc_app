@@ -76,7 +76,7 @@ public class LegacyOrModernColorSensor implements ColorSensor, IOpModeStateTrans
         this.i2CDeviceSynch.setReadWindow(new I2cDeviceSynch.ReadWindow(
                 this.getOffsetBase() + OFFSET_READ_FIRST,
                 OFFSET_READ_MAX - OFFSET_READ_FIRST,
-                I2cDeviceSynch.READ_MODE.REPEAT));
+                I2cDeviceSynch.ReadMode.REPEAT));
 
         RobotStateTransitionNotifier.register(context, this);
         }
