@@ -79,10 +79,8 @@ public class EasyLegacyServoController extends I2cControllerPortDeviceImpl imple
         // The NXT HiTechnic servo controller will time out if it doesn't receive any I2C communication for
         // 10.0 seconds. So we set up a heartbeat request to try to prevent that. We try to use
         // heartbeats which are as minimally disruptive as possible.
-        I2cDeviceSynch.HeartbeatAction heartbeatAction = new I2cDeviceSynch.HeartbeatAction();
-        heartbeatAction.rereadLastRead      = true;
-        heartbeatAction.rewriteLastWritten  = true;
-        heartbeatAction.heartbeatReadWindow = new I2cDeviceSynch.ReadWindow(ADDRESS_CHANNEL_MAP[1], 1, I2cDeviceSynch.READ_MODE.ONLY_ONCE);
+        I2cDeviceSynch.HeartbeatAction heartbeatAction = new I2cDeviceSynch.HeartbeatAction(true, true,
+            new I2cDeviceSynch.ReadWindow(ADDRESS_CHANNEL_MAP[1], 1, I2cDeviceSynch.ReadMode.ONLY_ONCE));
 
         this.i2cDeviceSynch.setHeartbeatAction(heartbeatAction);
         this.i2cDeviceSynch.setHeartbeatInterval(9000);
@@ -93,7 +91,7 @@ public class EasyLegacyServoController extends I2cControllerPortDeviceImpl imple
         // written, but we make it relatively large so that least that when we DO go
         // into read mode and possibly do more than one read we will use this window
         // and won't have to fiddle with the 'switch to read mode' each and every time.
-        this.i2cDeviceSynch.setReadWindow(new I2cDeviceSynch.ReadWindow(iRegWindowFirst, iRegWindowMax - iRegWindowFirst, I2cDeviceSynch.READ_MODE.BALANCED));
+        this.i2cDeviceSynch.setReadWindow(new I2cDeviceSynch.ReadWindow(iRegWindowFirst, iRegWindowMax - iRegWindowFirst, I2cDeviceSynch.ReadMode.BALANCED));
         }
 
     public static ServoController create(OpMode context, ServoController target, Collection<Servo> servos)
