@@ -99,23 +99,18 @@ public class SteelHawksOp extends OpMode {
 
 	DcMotor motorRight; //driving
 	DcMotor motorLeft; //driving
-	DcMotor harvester;
-	DcMotor motorArmUp;
-	DcMotor motorArmDump;
-	DcMotorController.DeviceMode devMode;
-	DcMotorController legacyController;
-	TouchSensor autoTouch, armTouch;
-
+	DcMotor motorHarvester;
+	DcMotor motorShoulder;
+	DcMotor motorArm;
+	DcMotor motorWinch;
+  
+	Servo leftClimber;
+	Servo rightClimber;
+	Servo winchHook;
+  
+	TouchSensor autoTouch;
 
 	boolean isMoving = false;
-	double movingArmUpstart = 0;
-	double  movingArmUpend =0;
-	double movingArmDownstart = 0;
-	double  movingArmDownend =0;
-	double dumpArmStart = 0;
-	double dumpArmEnd = 0;
-	double closingArmStart = 0;
-	double closingArmEnd = 0;
 
 	/**
 
@@ -151,14 +146,17 @@ public class SteelHawksOp extends OpMode {
          * configured your robot and created the configuration file.
      */
 
-		devMode = DcMotorController.DeviceMode.WRITE_ONLY;
-		motorRight = hardwareMap.dcMotor.get("motor_2");
-		motorLeft = hardwareMap.dcMotor.get("motor_1");
-		motorArmUp = hardwareMap.dcMotor.get("motor_3");
-		motorArmDump = hardwareMap.dcMotor.get("motor_4");
-		legacyController = hardwareMap.dcMotorController.get("legacyController");
-		harvester = hardwareMap.dcMotor.get("harvester");
-		armTouch = hardwareMap.touchSensor.get("armTouch");
+		motorRight = hardwareMap.dcMotor.get("motorRight");
+		motorLeft = hardwareMap.dcMotor.get("motorLeft");
+		motorHarvester = hardwareMap.dcMotor.get("motorHarvester");
+		motorShoulder = hardwareMap.dcMotor.get("motorShoulder");
+		motorArm = hardwareMap.dcMotor.get("motorArm");
+		motorWinch = hardwareMap.dcMotor.get("motorWinch");
+		
+		leftClimber = hardwareMap.Servo.get("leftClimber");
+		rightClimber = hardwareMap.Servo.get("rightClimber");
+		winchHook = hardwareMap.Servo.get("winchHook");
+		
 		autoTouch = hardwareMap.touchSensor.get("autoTouch");
 
 	}
