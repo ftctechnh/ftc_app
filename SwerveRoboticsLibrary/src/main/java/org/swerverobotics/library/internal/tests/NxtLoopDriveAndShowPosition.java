@@ -44,7 +44,7 @@ import org.swerverobotics.library.interfaces.TeleOp;
  * Demonstrates how to use a DC motor controller to display encoder values.
  */
 @TeleOp(name="Drive, Show Position (Loop)", group="Swerve Tests")
-//@Disabled
+@Disabled
 public class NxtLoopDriveAndShowPosition extends OpMode {
 
 	//----------------------------------------------------------------------------------------------
