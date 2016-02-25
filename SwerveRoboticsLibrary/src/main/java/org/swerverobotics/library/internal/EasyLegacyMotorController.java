@@ -105,10 +105,8 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
         // heartbeats which are as minimally disruptive as possible. Note as a matter of interest
         // that the heartbeat mechanism used by ModernRoboticsNxtDcMotorController is analogous to
         // 'rewriteLastWritten'.
-        I2cDeviceSynch.HeartbeatAction heartbeatAction = new I2cDeviceSynch.HeartbeatAction();
-        heartbeatAction.rereadLastRead      = true;
-        heartbeatAction.rewriteLastWritten  = true;
-        heartbeatAction.heartbeatReadWindow = new I2cDeviceSynch.ReadWindow(mpMotorRegCurrentEncoderValue[1], 1, I2cDeviceSynch.READ_MODE.ONLY_ONCE);
+        I2cDeviceSynch.HeartbeatAction heartbeatAction = new I2cDeviceSynch.HeartbeatAction(true, true,
+            new I2cDeviceSynch.ReadWindow(mpMotorRegCurrentEncoderValue[1], 1, I2cDeviceSynch.ReadMode.ONLY_ONCE));
 
         this.i2cDeviceSynch.setHeartbeatAction(heartbeatAction);
         this.i2cDeviceSynch.setHeartbeatInterval(2000);
@@ -120,7 +118,7 @@ public final class EasyLegacyMotorController extends I2cControllerPortDeviceImpl
         // into read mode and possibly do more than one read we will use this window
         // and won't have to fiddle with the 'switch to read mode' each and every time.
         // We include everything from the 'Motor 1 target encoder value' through the battery voltage.
-        this.i2cDeviceSynch.setReadWindow(new I2cDeviceSynch.ReadWindow(iRegWindowFirst, iRegWindowMax - iRegWindowFirst, I2cDeviceSynch.READ_MODE.BALANCED));
+        this.i2cDeviceSynch.setReadWindow(new I2cDeviceSynch.ReadWindow(iRegWindowFirst, iRegWindowMax - iRegWindowFirst, I2cDeviceSynch.ReadMode.BALANCED));
         }
 
     public static DcMotorController create(OpMode context, DcMotorController target, DcMotor motor1, DcMotor motor2)

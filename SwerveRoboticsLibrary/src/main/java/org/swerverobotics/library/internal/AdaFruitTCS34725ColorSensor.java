@@ -122,7 +122,7 @@ public class AdaFruitTCS34725ColorSensor implements ColorSensor, IOpModeStateTra
 
         this.i2CDeviceSynch.setReadWindow(new I2cDeviceSynch.ReadWindow(
                 IREG_READ_FIRST, IREG_READ_LAST - IREG_READ_FIRST + 1,
-                I2cDeviceSynch.READ_MODE.REPEAT));
+                I2cDeviceSynch.ReadMode.REPEAT));
 
         RobotStateTransitionNotifier.register(context, this);
         }

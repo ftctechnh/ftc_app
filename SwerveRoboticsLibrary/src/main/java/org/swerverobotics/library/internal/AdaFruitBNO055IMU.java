@@ -48,7 +48,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, I2cDeviceSynchUser, 
     //              https://github.com/alexstyl/Adafruit-BNO055-SparkCore-port/blob/master/Adafruit_BNO055.cpp
 
     // We always read as much as we can when we have nothing else to do
-    private static final I2cDeviceSynch.READ_MODE readMode = I2cDeviceSynch.READ_MODE.REPEAT;
+    private static final I2cDeviceSynch.ReadMode readMode = I2cDeviceSynch.ReadMode.REPEAT;
 
     // There is a big difference in the polling interval we see when debugging
     // and what we see when running free. The former is ~70ms, the latter about ~15ms.
