@@ -150,10 +150,10 @@ public class TeleOp extends SynchronousOpMode {
             bumperUp = gamepad2.x || gamepad1.x;
             //retractLeftHangString = gamepad1.left_bumper;
             //retractRightHangString = gamepad1.right_bumper;
-			retractLeftHangString = gamepad1.left_trigger > Functions
-                    .triggerThreshold && gamepad1.left_trigger < Functions.turboTriggerThreshold || gamepad2.right_trigger > Functions.triggerThreshold && gamepad2.right_trigger < Functions.turboTriggerThreshold;
-            retractRightHangString = gamepad1.right_trigger > Functions
-                    .triggerThreshold && gamepad1.right_trigger < Functions.turboTriggerThreshold || gamepad2.right_trigger > Functions.triggerThreshold && gamepad2.right_trigger < Functions.turboTriggerThreshold;
+            retractLeftHangString = (gamepad1.left_trigger > Functions
+                    .triggerThreshold && gamepad1.left_trigger < Functions.turboTriggerThreshold) || (gamepad2.right_trigger > Functions.triggerThreshold && gamepad2.right_trigger < Functions.turboTriggerThreshold);
+            retractRightHangString = (gamepad1.right_trigger > Functions
+                    .triggerThreshold && gamepad1.right_trigger < Functions.turboTriggerThreshold) || (gamepad2.right_trigger > Functions.triggerThreshold && gamepad2.right_trigger < Functions.turboTriggerThreshold);
             extendLeftHangString = extendRightHangString = gamepad2
                     .left_trigger > Functions.triggerThreshold && gamepad2.left_trigger < Functions.turboTriggerThreshold;
 
@@ -166,14 +166,22 @@ public class TeleOp extends SynchronousOpMode {
 
 
             //Moves robot when some of the buttons are held
-            if (extendRightHangString) {
+            if (extendRightHangStringTurbo) {
+                rightHangString.setPower(-Functions.turboHangStringPower);
+            } else if (retractRightHangStringTurbo) {
+                rightHangString.setPower(Functions.turboHangStringPower);
+            } else if (extendRightHangString) {
                 rightHangString.setPower(-Functions.hangStringPower);
             } else if (retractRightHangString) {
                 rightHangString.setPower(Functions.hangStringPower);
             } else {
                 rightHangString.setPower(0);
             }
-            if (extendLeftHangString) {
+            if (extendLeftHangStringTurbo) {
+                leftHangString.setPower(-Functions.turboHangStringPower);
+            } else if (retractLeftHangStringTurbo) {
+                leftHangString.setPower(Functions.turboHangStringPower);
+            } else if (extendLeftHangString) {
                 leftHangString.setPower(-Functions.hangStringPower);
             } else if (retractLeftHangString) {
                 leftHangString.setPower(Functions.hangStringPower);
@@ -181,7 +189,7 @@ public class TeleOp extends SynchronousOpMode {
                 leftHangString.setPower(0);
             }
 
-            if (extendRightHangStringTurbo) {
+            /*if (extendRightHangStringTurbo) {
                 rightHangString.setPower(-Functions.turboHangStringPower);
             } else if (retractRightHangStringTurbo) {
                 rightHangString.setPower(Functions.turboHangStringPower);
@@ -194,7 +202,7 @@ public class TeleOp extends SynchronousOpMode {
                 leftHangString.setPower(Functions.turboHangStringPower);
             } else {
                 leftHangString.setPower(0);
-            }
+            }*/
 
             if (linearSlideForward) {
                 linearSlide.setPower(-Functions.linearSlidePower);
