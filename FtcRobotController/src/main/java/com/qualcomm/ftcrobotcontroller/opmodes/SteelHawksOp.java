@@ -199,7 +199,7 @@ public class SteelHawksOp extends OpMode {
 	    	isTurboOnGamePad1 = false;
 	    }
 
-	boolean winchPower = gamepad1.right_bumper;
+	    boolean winchPower = gamepad1.right_bumper;
         boolean winchPowerReversed = gamepad1.left_bumper;
 
 
@@ -224,7 +224,10 @@ public class SteelHawksOp extends OpMode {
 
         float winchHookPower = gamepad2.right_trigger;
         float reversedWinchHookPower = gamepad2.left_trigger;
+
+        
        
+
         
         /*
         GamePad1:
@@ -295,6 +298,16 @@ public class SteelHawksOp extends OpMode {
 	motorLeft.setPower(isTurboOnGamePad1 == true ? leftMotorPower : leftMotorPower/2);
 	motorShoulder.setPower(isTurboOnGamePad2 == true ? shoulderPower : shoulderPower/2);
 	motorArm.setPower(isTurboOnGamePad2 == true ? armPower : armPower/2);
+
+	if(winchHookPower > 0.2)
+	{
+		winchHook.setPower(winchHookPower/2);
+	}
+   if(winchHookPowerReversed > 0.2)
+	{
+		winchHook.setPower(winchHookPowerReversed/2);
+	}	
+
 	
 	if(harvesterPower > 0.2 && harvesterPower <0.6)
 	{
@@ -312,6 +325,26 @@ public class SteelHawksOp extends OpMode {
 	{
 	motorHarvester.setPower(1);
 	}
+
+	if(rightPower == true)
+        {
+        	climber.setPosition(1)
+        }
+
+     if(leftPower == true)
+        {
+        	climber.setPower(-1);
+       }
+
+      if(winchHookPower == true)
+      {
+      	motorWinch.setPower(0.5);
+      }
+      if(winchPowerReversed == true)
+      {
+      	motorWinch.setPower(-0.5);
+      }
+
 
 	
 
