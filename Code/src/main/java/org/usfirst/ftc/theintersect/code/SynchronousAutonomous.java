@@ -1,12 +1,7 @@
 package org.usfirst.ftc.theintersect.code;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.UltrasonicSensor;
-
+import com.qualcomm.robotcore.hardware.*;
 import org.swerverobotics.library.SynchronousOpMode;
 import org.swerverobotics.library.TelemetryDashboardAndLog;
 
@@ -128,9 +123,9 @@ public class SynchronousAutonomous extends SynchronousOpMode {
 			if(team.equals("Blue")) {
 				moveRobotBackwardTime(2.5, 0.4);
                 debugWait();
-                stopAtWhite(0.4, 10000000000L, telemetry);
+                stopAtWhite(0.4, 30000, telemetry);
                 debugWait();
-                spinClockwiseGyroCorrection(50, 0.4, 10000000000L);
+                spinClockwiseGyroCorrection(50, 0.4, 30000);
                 debugWait();
                 moveRobotBackwardTime(2, 0.5);
                 debugWait();
@@ -144,10 +139,10 @@ public class SynchronousAutonomous extends SynchronousOpMode {
             } else if (team.equals("Red")) {
                 moveRobotBackwardTime(3, 0.4);
                 debugWait();
-                stopAtWhite(0.5, 10000000000L, telemetry);
+                stopAtWhite(0.5, 30000, telemetry);
                 debugWait();
-                moveRobotForwardRotations(360, 0.5, 10000000000L);
-                spinCounterClockwiseGyroCorrection(45, 0.4, 10000000000L);
+                moveRobotForwardRotations(360, 0.5, 30000);
+                spinCounterClockwiseGyroCorrection(45, 0.4, 30000);
                 debugWait();
                 moveRobotBackwardTime(2, 0.5);
                 debugWait();
