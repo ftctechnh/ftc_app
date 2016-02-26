@@ -1,4 +1,3 @@
-
 /* Copyright (c) 2014 Qualcomm Technologies Inc
 
 
@@ -104,18 +103,19 @@ public class SteelHawksOp extends OpMode {
 	DcMotor motorArm;
 	DcMotor motorWinch;
   
-	Servo leftClimber;
-	Servo rightClimber;
+	Servo climber;
 	Servo winchHook;
   
 	TouchSensor autoTouch;
+	boolean isTurboOnGamePad1;
+	boolean isTurboOnGamePad2;
 
 	boolean isMoving = false;
 
+	//TODO: climberSwitch, winchHook, winch, 
+
 	/**
-
 	 * Constructor
-
 	 */
 
 	public SteelHawksOp()
@@ -140,24 +140,23 @@ public class SteelHawksOp extends OpMode {
 
 	public void init() {
 
-		/*
+	/*
     	 * Use the hardwareMap to get the dc motors and servos by name. Note
          * that the names of the devices must match the names used when you
          * configured your robot and created the configuration file.
      */
 
-		motorRight = hardwareMap.dcMotor.get("motorRight");
-		motorLeft = hardwareMap.dcMotor.get("motorLeft");
-		motorHarvester = hardwareMap.dcMotor.get("motorHarvester");
-		motorShoulder = hardwareMap.dcMotor.get("motorShoulder");
-		motorArm = hardwareMap.dcMotor.get("motorArm");
-		motorWinch = hardwareMap.dcMotor.get("motorWinch");
-		
-		leftClimber = hardwareMap.Servo.get("leftClimber");
-		rightClimber = hardwareMap.Servo.get("rightClimber");
-		winchHook = hardwareMap.Servo.get("winchHook");
-		
-		autoTouch = hardwareMap.touchSensor.get("autoTouch");
+	motorRight = hardwareMap.dcMotor.get("motorRight");
+	motorLeft = hardwareMap.dcMotor.get("motorLeft");
+	motorHarvester = hardwareMap.dcMotor.get("motorHarvester");
+	motorShoulder = hardwareMap.dcMotor.get("motorShoulder");
+	motorArm = hardwareMap.dcMotor.get("motorArm");
+	motorWinch = hardwareMap.dcMotor.get("motorWinch");
+	
+	climber = hardwareMap.Servo.get("climber");
+	winchHook = hardwareMap.Servo.get("winchHook");
+	
+	autoTouch = hardwareMap.touchSensor.get("autoTouch");
 
 	}
 
@@ -170,97 +169,187 @@ public class SteelHawksOp extends OpMode {
 
 	@Override
 	public void loop() {
-		/*
+	/*
         *
         *
         * Gamepad 1 controls the driving via the left and right stick of Gamepad 1
         * Gamepad 2 controls the arm and the dumping action via the left and right stick of Gamepad 2
         */
 
-		float leftMotorPower = gamepad1.left_stick_y;
+	float leftMotorPower = gamepad1.left_stick_y;
+	float rightMotorPower = gamepad1.right_stick_y;
+
+	float harvesterPower = gamepad1.right_trigger;
+	float harvesterPowerReversed = gamepad1.left_trigger;
 
 
-		float rightMotorPower = -gamepad1.right_stick_y;
+	
+	    boolean rightPower = gamepad1.dpad_right;
+	    boolean leftPower = gamepad1.dpad_left;
 
 
-		float movingArmUp = -gamepad2.left_stick_y;
+	    boolean turboPower1 = gamepad1.y;
+	    boolean normalPower1 = gamepad1.a;
+	    if(turboPower1 == true)
+	    {
+	    	isTurboOnGamePad1 = true;
+	    }
+	    if(normalPower1 == false)
+	    {
+	    	isTurboOnGamePad1 = false;
+	    }
+
+	boolean winchPower = gamepad1.right_bumper;
+        boolean winchPowerReversed = gamepad1.left_bumper;
 
 
-		float dumpingArm = gamepad2.right_stick_x;
+	//float movingArmUp = -gamepad2.left_stick_y;
+        //float dumpingArm = gamepad2.right_stick_x;
+        
+
+        float shoulderPower = gamepad2.left_stick_y;
+        float armPower = gamepad2.right_stick_y;
+
+
+	    boolean turboPower2 = gamepad2.y;
+	    boolean normalPower2 = gamepad2.a;
+	    if(turboPower2 == true)
+	    {
+	    	isTurboOnGamePad2 = true;
+	    }
+	    if(normalPower2 == false)
+	    {
+	    	isTurboOnGamePad2 = false;
+	    }
+
+        float winchHookPower = gamepad2.right_trigger;
+        float reversedWinchHookPower = gamepad2.left_trigger;
+       
+        
+        /*
+        GamePad1:
+	Left & Right Analog Sticks: motorLeft and motorRight Turbo
+	Left & Right Triggers: harvester 
+	DPad Left, DPad Right: climber servo  
+	Left & Right Bumpers: motorWinch  
+	Y Button - Turbo Mode (motorLeft + motorRight Speed)
+	A Button - Normal Mode (motorLeft + motorRight speed)
+
+
+        GamePad2:
+        left and Right Trigger : winchHook
+        left stick : shoulder Turbo
+        right stick : arm Turbo
+        Y Button - Turbo Mode (motorLeft + motorRight Speed)
+	A Button - Normal Mode (motorLeft + motorRight speed)
+	
 
 
 
-		// clip the right/left values so that the values never exceed +/- 1
 
 
-		leftMotorPower = Range.clip(leftMotorPower, -1, 1);
 
+	// clip the right/left values so that the values never exceed +/- 1
 
-		rightMotorPower = Range.clip(rightMotorPower, -1, 1);
+*/
+	leftMotorPower = Range.clip(leftMotorPower, -1, 1);
+	righttMotorPower = Range.clip(rightMotorPower, -1, 1);
 
+	
+	shoulderPower = Range.clip(shoulderPower, -1, 1);
 
-		movingArmUp = Range.clip(movingArmUp, -1, 1);
+	armPower = Range.clip(armPower, -1, 1);
+	
 
+	//movingArmUp = Range.clip(movingArmUp, -1, 1);
+	//dumpingArm = Range.clip(dumpingArm, -1, 1);
 
-		dumpingArm = Range.clip(dumpingArm, -1, 1);
+	/*if (movingArmUp >= .3)
+	movingArmUp = (float)0.3;
+	else if (movingArmUp <= -.3)
+	movingArmUp = (float)-0.3;
 
-		/*if (movingArmUp >= .3)
-			movingArmUp = (float)0.3;
-		else if (movingArmUp <= -.3)
-			movingArmUp = (float)-0.3;
-
-		if (dumpingArm >= .3)
-			movingArmUp = (float)0.3;
-		else if (dumpingArm <= -.3)
-			movingArmUp = (float)-0.3;
+	if (dumpingArm >= .3)
+	movingArmUp = (float)0.3;
+	else if (dumpingArm <= -.3)
+	movingArmUp = (float)-0.3;
 */
 
-		// scale the joystick value to make it easier to control
-		// the robot more precisely at slower speeds.
-		leftMotorPower = (float)scaleInput(leftMotorPower);
+	// scale the joystick value to make it easier to control
+	// the robot more precisely at slower speeds.
+	leftMotorPower = (float)scaleInput(leftMotorPower);
+	rightMotorPower =  (float)scaleInput(rightMotorPower);
+	harvesterPower =  (float)scaleInput(harvesterPower);
+	shoulderPower =  (float)scaleInput(shoulderPower);
+	armPower =  (float)scaleInput(armPower);
+	winchHookPower =  (float)scaleInput(winchHookPower);
+	winchHookPowerReversed =  (float)scaleInput(winchHookPowerReversed);
+	harvesterPowerReversed = (float)scaleInput(harvesterPowerReversed);
 
-		rightMotorPower =  (float)scaleInput(rightMotorPower);
+	//movingArmUp=  (float)scaleInput(movingArmUp);
 
-		movingArmUp=  (float)scaleInput(movingArmUp);
+	//dumpingArm =  (float)scaleInput(dumpingArm);
 
-		dumpingArm =  (float)scaleInput(dumpingArm);
+	// write the values to the motors
+	motorRight.setPower(isTurboOnGamePad1 == true ? rightMotorPower : rightMotorPower/2);
+	motorLeft.setPower(isTurboOnGamePad1 == true ? leftMotorPower : leftMotorPower/2);
+	motorShoulder.setPower(isTurboOnGamePad2 == true ? shoulderPower : shoulderPower/2);
+	motorArm.setPower(isTurboOnGamePad2 == true ? armPower : armPower/2);
+	
+	if(harvesterPower > 0.2 && harvesterPower <0.6)
+	{
+	motorHarvester.setPower(-0.5);
+	}
+	else if(harvesterPower > 0.6)
+	{
+	motorHarvester.setPower(-1);
+	}
+	if(harvesterPowerReversed > 0.2 && harvesterPowerReversed <0.6)
+	{
+	motorHarvester.setPower(0.5);
+	}
+	else if(harvesterPowerReversed > 0.6)
+	{
+	motorHarvester.setPower(1);
+	}
 
-		// write the values to the motors
-		motorRight.setPower(rightMotorPower);
-
-		motorLeft.setPower(leftMotorPower);
-
-		motorArmDump.setPower(dumpingArm);
-
-		//Harvester
-		if (gamepad2.right_trigger > 0.2)
-		{
-			legacyController.setMotorPower(1, .5);
-		}
-		else if(gamepad2.left_trigger > 0.2)
-		{
-			legacyController.setMotorPower(1, -.5);
-		}
-		else
-		{
-			legacyController.setMotorPower(1, 0);
-		}
+	
 
 
-		//Arm lift
-		if (armTouch.isPressed() && movingArmUp > 0)
-			{
-			legacyController.setMotorPower(2, 0);
-		}
-		else
-		{
-			legacyController.setMotorPower(2, movingArmUp/2);
-		}
+
+
+
+	//motorArmDump.setPower(dumpingArm);
+
+	//Harvester
+	/*if (gamepad2.right_trigger > 0.2)
+	{
+	legacyController.setMotorPower(1, .5);
+	}
+	else if(gamepad2.left_trigger > 0.2)
+	{
+	legacyController.setMotorPower(1, -.5);
+	}
+	else
+	{
+	legacyController.setMotorPower(1, 0);
+	}
+
+
+	//Arm lift
+	if (armTouch.isPressed() && movingArmUp > 0)
+	{
+	legacyController.setMotorPower(2, 0);
+	}
+	else
+	{
+	legacyController.setMotorPower(2, movingArmUp/2);
+	}
 
 /*
 
 
-		//SAVE THIS CODE FOR LATER IF NEEDED
+	//SAVE THIS CODE FOR LATER IF NEEDED
         // update the position of the arm.
 \       if (gamepad1.y && isMoving == false) {
         // if the Y button is pushed on gamepad1, increment the position of
@@ -272,7 +361,7 @@ public class SteelHawksOp extends OpMode {
         }
 
 
-		if(movingArmUpend<System.currentTimeMillis())
+	if(movingArmUpend<System.currentTimeMillis())
         {
         motorArm.setPower(0);
         isMoving = false;
@@ -296,7 +385,7 @@ public class SteelHawksOp extends OpMode {
     // update the position of the claw
 
 
-			// the arm servo.
+	// the arm servo.
 
    if (gamepad1.x && isMoving==false) {
         // if the A button is pushed on gamepad1, decrease the position of
@@ -330,10 +419,10 @@ public class SteelHawksOp extends OpMode {
 
     }
 
-		// clip the position values so that they never exceed their allowed range.
+	// clip the position values so that they never exceed their allowed range.
 
 
-		// write position values to the wrist and claw servo
+	// write position values to the wrist and claw servo
 
 
         */
@@ -344,12 +433,12 @@ public class SteelHawksOp extends OpMode {
         * are currently write only.
          */
 
-		telemetry.addData("Text", "*** Robot Data***");
-		telemetry.addData("arm", "arm:  " + String.format("%.2f", movingArmUp));
-		telemetry.addData("claw", "claw:  " + String.format("%.2f", dumpingArm));
-		telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", leftMotorPower));
-		telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", rightMotorPower));
-		//telemetry.addData("voltage of mc1", "voltage: " + String.format("%.2f", )
+	telemetry.addData("Text", "*** Robot Data***");
+	telemetry.addData("arm", "arm:  " + String.format("%.2f", movingArmUp));
+	telemetry.addData("claw", "claw:  " + String.format("%.2f", dumpingArm));
+	telemetry.addData("left tgt pwr",  "left  pwr: " + String.format("%.2f", leftMotorPower));
+	telemetry.addData("right tgt pwr", "right pwr: " + String.format("%.2f", rightMotorPower));
+	//telemetry.addData("voltage of mc1", "voltage: " + String.format("%.2f", )
 	}
     /*
 
@@ -393,59 +482,59 @@ public class SteelHawksOp extends OpMode {
 	double scaleInput(double dVal)  {
 
 
-		double[] scaleArray = { 0.0, 0.05, 0.09, 0.10, 0.12, 0.15, 0.18, 0.24,
+	double[] scaleArray = { 0.0, 0.05, 0.09, 0.10, 0.12, 0.15, 0.18, 0.24,
 
 
-				0.30, 0.36, 0.43, 0.50, 0.60, 0.72, 0.85, 1.00, 1.00 };
+	0.30, 0.36, 0.43, 0.50, 0.60, 0.72, 0.85, 1.00, 1.00 };
 
-		// get the corresponding index for the scaleInput array.
+	// get the corresponding index for the scaleInput array.
 
-		int index = (int) (dVal * 16.0);
+	int index = (int) (dVal * 16.0);
 
-		// index should be positive.
-
-
-		if (index < 0) {
+	// index should be positive.
 
 
-			index = -index;
+	if (index < 0) {
 
 
-		}
-
-		// index cannot exceed size of array minus 1.
+	index = -index;
 
 
-		if (index > 16) {
+	}
+
+	// index cannot exceed size of array minus 1.
 
 
-			index = 16;
+	if (index > 16) {
 
 
-		}
-		// get value from the array.
+	index = 16;
 
 
-		double dScale = 0.0;
+	}
+	// get value from the array.
 
 
-		if (dVal < 0) {
+	double dScale = 0.0;
 
 
-			dScale = -scaleArray[index];
+	if (dVal < 0) {
 
 
-		}
-		else {
-
-			dScale = scaleArray[index];
-
-		}
-
-		// return scaled value.
+	dScale = -scaleArray[index];
 
 
-		return dScale;
+	}
+	else {
+
+	dScale = scaleArray[index];
+
+	}
+
+	// return scaled value.
+
+
+	return dScale;
 
 
 	}
