@@ -188,7 +188,7 @@ public class TeleOp extends SynchronousOpMode {
             } else {
                 leftHangString.setPower(0);
             }
-
+            //Old Turbo Code
             /*if (extendRightHangStringTurbo) {
                 rightHangString.setPower(-Functions.turboHangStringPower);
             } else if (retractRightHangStringTurbo) {
