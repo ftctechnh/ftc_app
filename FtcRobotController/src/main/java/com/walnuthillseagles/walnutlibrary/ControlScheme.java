@@ -24,7 +24,7 @@ public class ControlScheme {
     }
     public void stop(){
         for(int i=0;i<controls.size();i++){
-            controls.get(i).operate();
+            controls.get(i).stop();
         }
     }
 }
