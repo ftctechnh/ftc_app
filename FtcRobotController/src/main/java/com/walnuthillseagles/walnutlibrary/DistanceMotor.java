@@ -41,7 +41,9 @@ public class DistanceMotor extends LinearMotor implements Runnable, Auto {
     public void operate(double inches, double mySpeedLimit){
         //@TODO Does this handle Going backwards?
         distance = (int)((inches / circumference / gearRatio) * encoderRot * orientation);
-        speedLimit = mySpeedLimit;
+        speedLimit = Math.abs(mySpeedLimit);
+        if(distance < 0)
+            speedLimit = -1*speedLimit;
         //Start new process
         runner = new Thread(this);
         runner.start();
