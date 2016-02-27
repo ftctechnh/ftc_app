@@ -5,9 +5,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 
 /**
- * Created by wolfie on 2/7/16.
+ * Created by dimpledhawan on 2/13/16.
  */
-public class GyroMotorClass {
+public class GyroMotorClass
+{
     private LinearOpMode opMode;
     private DcMotor left;
     private DcMotor right;
@@ -16,7 +17,8 @@ public class GyroMotorClass {
     private boolean running;
     private Direction currMotor;
 
-    public GyroMotorClass(LinearOpMode opMode, GyroSensor gyro, DcMotor left, DcMotor right) {
+    public GyroMotorClass(LinearOpMode opMode, GyroSensor gyro, DcMotor left, DcMotor right)
+    {
         this.opMode = opMode;
         this.left = left;
         this.right = right;
@@ -25,54 +27,82 @@ public class GyroMotorClass {
         this.targetHeading = 0;
     }
 
-    public void startPivotTurn(int targetHeading, double power, Direction direction) {
-        // heading should be relative to current heading, pos or neg
-        int currHeading = this.gyro.getHeading();
-        if (targetHeading + currHeading < 0) {
-            this.targetHeading = targetHeading + currHeading + 360;
-        } else if (targetHeading + currHeading > 359) {
-            this.targetHeading = (targetHeading + (currHeading - 360));
-        } else {
-            this.targetHeading = targetHeading + currHeading;
-        }
-        if (Direction.MOTOR_RIGHT == direction) {
-            this.right.setPower(power);
-            this.currMotor = Direction.MOTOR_RIGHT;
-        } else {
-            this.left.setPower(power);
-            this.currMotor = Direction.MOTOR_LEFT;
-        }
+    public void startPivotTurn(int degrees, double power, Direction direction) //heading=rotation
+    {
+        //heading should be relative to current heading, pos or neg
+
+        /*if (Math.abs(targetHeading + currentHeading) < 0)
+            this.targetHeading = targetHeading + currentHeading + 360;
+        else if (Math.abs(targetHeading + currentHeading) > 359)
+            this.targetHeading = (targetHeading + currentHeading - 360);
+        else
+            this.targetHeading = targetHeading + currentHeading;
+
         this.running = true;
+            if (Direction.MOTOR_RIGHT.equals(direction))
+            {
+                this.right.setPower(power);
+                this.currMotor = Direction.MOTOR_RIGHT;
+            }
+            else
+            {
+                this.left.setPower(power);
+                this.currMotor = Direction.MOTOR_LEFT;
+            }*/
+
+        this.targetHeading = 45;
+        this.currMotor = Direction.MOTOR_LEFT;
+        int currentHeading = this.gyro.getHeading();
+
+        this.right.setPower(0);
+        this.left.setPower(.65);
+
+        while(Math.abs(currentHeading-targetHeading) <= 3)
+        {
+
+        }
+
+        right.setPower(0);
+        left.setPower(0);
     }
 
-    public boolean targetReached() {
-
+    public boolean targetReached()
+    {
         boolean reached = false;
-
-        if (gyro != null) {
+        if (gyro != null)
+        {
             int position = gyro.getHeading();
             //opMode.getTelemetryUtil().addData(name + ": B - Current position", position);
 
-            //choosing within 3 ( close enough)
-            if (Math.abs(position - this.targetHeading) <= 3) {
+            //choosing within 3 (close enough)
+            if (Math.abs(position - this.targetHeading) <= 3)
+            {
                 reached = true;
             }
         }
-
         return reached;
-
     }
 
-    public void stop() throws InterruptedException {
+    public void stop() throws InterruptedException
+    {
         running = false;
-        if (this.currMotor == Direction.MOTOR_RIGHT) {
+        if (this.currMotor == Direction.MOTOR_RIGHT)
+        {
             this.right.setPower(0);
-        } else if (this.currMotor == Direction.MOTOR_LEFT) {
+        }
+        else if (this.currMotor == Direction.MOTOR_LEFT)
+        {
             this.left.setPower(0);
         }
     }
 
-    public boolean isRunning() {
+    public boolean isRunning()
+    {
         return running;
     }
+    public int getTargetHeading(){
+        return this.targetHeading;
+    }
+
+
 }
