@@ -1,17 +1,12 @@
 package org.usfirst.ftc.theintersect.code;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.UltrasonicSensor;
-
+import com.qualcomm.robotcore.hardware.*;
 import org.swerverobotics.library.SynchronousOpMode;
 import org.swerverobotics.library.TelemetryDashboardAndLog;
 
 /**
- * An Autonomous for both teams using the LinearOpMode
+ * The Main Autonomous using the Synchronous OpMode
  */
 
 @org.swerverobotics.library.interfaces.Autonomous(name = "AutonomousWithCorrection")
@@ -81,10 +76,8 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
             if (updateGamepads()) {
                 if (gamepad1.x) {
                     team = "Blue";
-                    //dim.setLED(0, true);
                 } else if (gamepad1.b) {
                     team = "Red";
-                    //dim.setLED(1, true);
                 } else if (gamepad1.dpad_up) {
                     delay += 1;
                 } else if (gamepad1.dpad_down) {
@@ -128,6 +121,7 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
 			Functions.waitFor(delay * 1000);
 			//Autonomous Routine !!!!
             telemetry.addData("Status", "Working...");
+			//Blue Autonomous
 			if(team.equals("Blue")) {
 				moveRobotBackwardTime(3500, 0.4);
                 //moveRobotBackwardRotations(2000, 0.4, 10*1000);
@@ -135,7 +129,8 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
                 //stopAtWhiteDetect(1.0, 3000, telemetry);
                 stopAtWhiteDetect(0.5, 1750, telemetry);
                 debugWait();
-                while(detectedWhite == false) {
+				//Missaim Correction
+				while(detectedWhite == false) {
                     moveRobotForwardTime(1250 ,0.5);
                     debugWait();
                     spinClockwiseGyroNoCorrection(10,0.3,3000);
@@ -151,21 +146,24 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
                 debugWait();
                 //moveRobotBackwardTime(1500, 0.5);
                 debugWait();
-                while (ultrasonic.getUltrasonicLevel() > 15) {
+				//Waits until a valid ultrasonic value is received
+				while (ultrasonic.getUltrasonicLevel() > 15) {
                     moveRobotBackward(0.2, 0.2);
                 }
                 stopRobot();
                 debugWait();
                 dumpClimbersUltra(telemetry);
                 mountainClimber.setPosition(0.5);
-            } else if (team.equals("Red")) {
+				//Red Autonomous
+			} else if (team.equals("Red")) {
                 moveRobotBackwardTime(3500, 0.4);
                 //moveRobotBackwardRotations(2000, 0.4, 10*1000);
                 debugWait();
                 //stopAtWhiteDetect(1.0, 3000, telemetry);
                 stopAtWhiteDetect(0.5, 1750, telemetry);
                 debugWait();
-                while(detectedWhite == false) {
+				//Missaim Correction
+				while(detectedWhite == false) {
                     moveRobotForwardTime(1250 ,0.5);
                     debugWait();
                     spinCounterClockwiseGyroNoCorrection(10,0.3,3000);
@@ -181,7 +179,8 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
                 debugWait();
                 //moveRobotBackwardTime(1500, 0.5);
                 debugWait();
-                while (ultrasonic.getUltrasonicLevel() > 15) {
+				//Waits until a valid ultrasonic value is received
+				while (ultrasonic.getUltrasonicLevel() > 15) {
                     moveRobotBackward(0.2, 0.2);
                 }
                 stopRobot();

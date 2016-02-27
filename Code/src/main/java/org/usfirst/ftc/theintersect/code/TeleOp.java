@@ -3,7 +3,6 @@ package org.usfirst.ftc.theintersect.code;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
-
 import org.swerverobotics.library.SynchronousOpMode;
 
 /**
@@ -148,8 +147,6 @@ public class TeleOp extends SynchronousOpMode {
             linearSlideBackward = gamepad2.left_bumper || gamepad1.left_bumper;
             bumperDown = gamepad2.b || gamepad1.b;
             bumperUp = gamepad2.x || gamepad1.x;
-            //retractLeftHangString = gamepad1.left_bumper;
-            //retractRightHangString = gamepad1.right_bumper;
             retractLeftHangString = (gamepad1.left_trigger > Functions
                     .triggerThreshold && gamepad1.left_trigger < Functions.turboTriggerThreshold) || (gamepad2.right_trigger > Functions.triggerThreshold && gamepad2.right_trigger < Functions.turboTriggerThreshold);
             retractRightHangString = (gamepad1.right_trigger > Functions
