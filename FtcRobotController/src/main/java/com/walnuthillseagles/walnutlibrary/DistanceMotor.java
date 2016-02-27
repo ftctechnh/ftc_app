@@ -70,9 +70,9 @@ public class DistanceMotor extends LinearMotor implements Runnable, Auto {
         //Keep if encoders have passed distance before continueing
         //@TODO Should I just throw the exception up at this point?
         try{
-            this.resetEncoder();
-        } catch (InterruptedException e){
             this.fullStop();
+        } catch (InterruptedException e){
+            this.stop();
             Thread.currentThread().interrupt();
         }
 
