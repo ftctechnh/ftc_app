@@ -133,13 +133,13 @@ public class TeleOp extends SynchronousOpMode {
         //Wait for the game to start
         teleInit();
         waitForStart();
-        //long endTime = System.currentTimeMillis() + 120000;
+        long endTime = System.currentTimeMillis() + 120000;
         //Game Loop
-        while (opModeIsActive() /*&& System.currentTimeMillis() < endTime*/) {
+        while (opModeIsActive() && System.currentTimeMillis() < endTime) {
             //Controls for held buttons
             positionClimbersForward = gamepad2.dpad_up;
             positionClimbersBackward = gamepad2.dpad_down;
-            releaseClimbers = gamepad2.back;
+            releaseClimbers = gamepad2.dpad_left || gamepad2.dpad_right;
             containerTiltRight = gamepad1.dpad_right;
             containerTiltLeft = gamepad1.dpad_left;
             sweeperForward = (gamepad1.y || gamepad2.y);
@@ -154,15 +154,16 @@ public class TeleOp extends SynchronousOpMode {
                     .triggerThreshold && gamepad1.left_trigger < Functions.turboTriggerThreshold) || (gamepad2.right_trigger > Functions.triggerThreshold && gamepad2.right_trigger < Functions.turboTriggerThreshold);
             retractRightHangString = (gamepad1.right_trigger > Functions
                     .triggerThreshold && gamepad1.right_trigger < Functions.turboTriggerThreshold) || (gamepad2.right_trigger > Functions.triggerThreshold && gamepad2.right_trigger < Functions.turboTriggerThreshold);
-            extendLeftHangString = extendRightHangString = gamepad2
-                    .left_trigger > Functions.triggerThreshold && gamepad2.left_trigger < Functions.turboTriggerThreshold;
+            extendLeftHangString = extendRightHangString = (gamepad2
+                    .left_trigger > Functions.triggerThreshold) && (gamepad2.left_trigger < Functions.turboTriggerThreshold);
 
-            retractLeftHangStringTurbo = gamepad1.left_trigger > Functions
-                    .turboTriggerThreshold;
-            retractRightHangStringTurbo = gamepad1.right_trigger > Functions
-                    .turboTriggerThreshold;
-            extendLeftHangStringTurbo = extendRightHangString = gamepad2
+            retractLeftHangStringTurbo = (gamepad1.left_trigger > Functions
+                    .turboTriggerThreshold) || (gamepad2.right_trigger > Functions.turboTriggerThreshold);
+            retractRightHangStringTurbo = (gamepad1.right_trigger > Functions
+                    .turboTriggerThreshold) || (gamepad2.right_trigger > Functions.turboTriggerThreshold);
+            extendLeftHangStringTurbo = extendRightHangStringTurbo = gamepad2
                     .left_trigger > Functions.turboTriggerThreshold;
+
 
 
             //Moves robot when some of the buttons are held
@@ -238,14 +239,14 @@ public class TeleOp extends SynchronousOpMode {
 
             if (containerTiltRight) {
 				try {
-					tubeTilt.setPosition(tubeTilt.getPosition() + 0.02);
-				} catch (Exception e) {
+                    tubeTilt.setPosition(tubeTilt.getPosition() - 0.02);
+                } catch (Exception e) {
 
 				}
             } else if (containerTiltLeft) {
 				try {
-					tubeTilt.setPosition(tubeTilt.getPosition() - 0.02);
-				} catch(Exception e) {
+                    tubeTilt.setPosition(tubeTilt.getPosition() + 0.02);
+                } catch (Exception e) {
 
 				}
             } else {
@@ -325,7 +326,7 @@ public class TeleOp extends SynchronousOpMode {
                 tubeExtend = gamepad1.dpad_up;
                 tubeRetract = gamepad1.dpad_down;
                 toggleChurroHooks = gamepad1.start || gamepad2.start;
-                toggleBarHooks = gamepad1.back;
+                toggleBarHooks = gamepad1.back || gamepad2.back;
 
                 /*slowDriveBack = gamepad1.left_trigger;
                 slowDriveForward = gamepad1.right_trigger;!!*/
@@ -432,15 +433,15 @@ public class TeleOp extends SynchronousOpMode {
     }
 
 	public static void teleInit() {
-        mountainClimber.setPosition(Functions.mountainClimberInitPosition);
+        mountainClimber.setPosition(Functions.mountainClimberTeleInitPosition);
         mountainClimberRelease.setPosition(Functions.mountainClimberReleaseClose);
         tubeExtender.setPosition(Functions.tubeExtenderInitPosition);
 		tubeTilt.setPosition(Functions.tubeTiltInitPosition);
 		bumper.setPosition(Functions.bumperInitPosition);
         rightChurroHook.setPosition(Functions.churroHookUpPos);
         leftChurroHook.setPosition(Functions.churroHookUpPos);
-        rightBarHook.setPosition(Functions.barHookDownPos);
-        leftBarHook.setPosition(Functions.barHookDownPos);
+        rightBarHook.setPosition(Functions.barHookTeleInitPos);
+        leftBarHook.setPosition(Functions.barHookTeleInitPos);
     }
 
 	public static void end() {

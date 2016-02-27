@@ -175,9 +175,9 @@ public class LinearAutonomous extends LinearOpMode {
 	}
 
     public static void servoInit(){
-        mountainClimber.setPosition(Functions.mountainClimberInitPosition);
+		mountainClimber.setPosition(Functions.mountainClimberTeleInitPosition);
 		mountainClimberRelease.setPosition(Functions
-				.mountainClimberInitPosition);
+				.mountainClimberTeleInitPosition);
 		tubeExtender.setPosition(Functions.tubeExtenderInitPosition);
         tubeTilt.setPosition(Functions.tubeTiltInitPosition);
         bumper.setPosition(Functions.bumperInitPosition);

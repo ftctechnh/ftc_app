@@ -1,7 +1,12 @@
 package org.usfirst.ftc.theintersect.code;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
-import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.UltrasonicSensor;
+
 import org.swerverobotics.library.SynchronousOpMode;
 import org.swerverobotics.library.TelemetryDashboardAndLog;
 
@@ -224,7 +229,7 @@ public class SynchronousAutonomous extends SynchronousOpMode {
 	}
 
 	public static void preStartInit() {
-        mountainClimber.setPosition(Functions.mountainClimberInitPosition);
+        mountainClimber.setPosition(Functions.mountainClimberAutoInitPosition);
         mountainClimberRelease.setPosition(Functions.mountainClimberReleaseClose);
         tubeExtender.setPosition(Functions.tubeExtenderInitPosition);
 		tubeTilt.setPosition(Functions.tubeTiltInitPosition);
@@ -249,7 +254,7 @@ public class SynchronousAutonomous extends SynchronousOpMode {
 	}
 
     public static void servoInit() {
-        mountainClimber.setPosition(Functions.mountainClimberInitPosition);
+        mountainClimber.setPosition(Functions.mountainClimberAutoInitPosition);
         mountainClimberRelease
 				.setPosition(Functions.mountainClimberReleaseClose);
 		tubeExtender.setPosition(Functions.tubeExtenderInitPosition);

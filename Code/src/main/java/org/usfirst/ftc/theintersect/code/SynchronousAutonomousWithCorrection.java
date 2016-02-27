@@ -157,6 +157,7 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
                 stopRobot();
                 debugWait();
                 dumpClimbersUltra(telemetry);
+                mountainClimber.setPosition(0.5);
             } else if (team.equals("Red")) {
                 moveRobotBackwardTime(3500, 0.4);
                 //moveRobotBackwardRotations(2000, 0.4, 10*1000);
@@ -186,6 +187,8 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
                 stopRobot();
                 debugWait();
                 dumpClimbersUltra(telemetry);
+                mountainClimber.setPosition(0.5);
+
             }
             telemetry.addData("Status", "Done!");
         }
@@ -258,7 +261,7 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
 	}
 
 	public static void preStartInit() {
-        mountainClimber.setPosition(Functions.mountainClimberInitPosition);
+        mountainClimber.setPosition(Functions.mountainClimberAutoInitPosition);
         mountainClimberRelease.setPosition(Functions.mountainClimberReleaseClose);
         tubeExtender.setPosition(Functions.tubeExtenderInitPosition);
 		tubeTilt.setPosition(Functions.tubeTiltInitPosition);
@@ -283,13 +286,15 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
 	}
 
     public static void servoInit() {
-        mountainClimber.setPosition(Functions.mountainClimberInitPosition);
+        mountainClimber.setPosition(Functions.mountainClimberAutoInitPosition);
         mountainClimberRelease
 				.setPosition(Functions.mountainClimberReleaseClose);
 		tubeExtender.setPosition(Functions.tubeExtenderInitPosition);
         tubeTilt.setPosition(Functions.tubeTiltInitPosition);
 		bumper.setPosition(Functions.bumperInitPosition);
-	}
+        leftBarHook.setPosition(Functions.barHookAutoInitPos);
+        rightBarHook.setPosition(Functions.barHookAutoInitPos);
+    }
 
 
     public static double calculateArmPosition(double dist, TelemetryDashboardAndLog telemetry) {

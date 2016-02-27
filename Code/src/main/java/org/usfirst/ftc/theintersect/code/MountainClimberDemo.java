@@ -1,7 +1,12 @@
 package org.usfirst.ftc.theintersect.code;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
-import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.UltrasonicSensor;
+
 import org.swerverobotics.library.SynchronousOpMode;
 import org.swerverobotics.library.TelemetryDashboardAndLog;
 
@@ -31,8 +36,7 @@ public class MountainClimberDemo extends SynchronousOpMode {
 
     static ColorSensor lineColor;
     static ModernRoboticsI2cGyro gyro;
-    static UltrasonicSensor ultrasonicLeft;
-    static UltrasonicSensor ultrasonicRight;
+    static UltrasonicSensor ultrasonic;
 
     Thread mountainClimberMove;
 
@@ -47,7 +51,7 @@ public class MountainClimberDemo extends SynchronousOpMode {
         lineColor = hardwareMap.colorSensor.get("lineColor");
         gyro = (ModernRoboticsI2cGyro) unthunkedHardwareMap.gyroSensor.get("gyro");
 
-        ultrasonicLeft = hardwareMap.ultrasonicSensor.get("ultrasonicLeft");
+        ultrasonic = hardwareMap.ultrasonicSensor.get("ultrasonic");
 //        ultrasonicRight = hardwareMap.ultrasonicSensor.get("ultrasonicRight");
 
         tubeTilt = hardwareMap.servo.get("tubeTilt");
@@ -68,11 +72,16 @@ public class MountainClimberDemo extends SynchronousOpMode {
             double armPosition;
 
 
-            leftDistance = getUSDistance(ultrasonicLeft, telemetry);
+            leftDistance = getUSDistance(ultrasonic, telemetry);
             // insetPosition, 0: flat backward, 0.45: straight up, 0.9: flat forward
             armPosition = calculateArmPosition(leftDistance, telemetry);
             mountainClimber.setPosition(armPosition);
             telemetry.updateNow();
+            if (gamepad1.a || gamepad2.a) {
+                mountainClimberRelease.setPosition(Functions.mountainClimberReleaseOpen);
+            }
+            mountainClimberRelease.setPosition(Functions.mountainClimberReleaseOpen);
+
         }
     }
 
@@ -193,7 +202,7 @@ public class MountainClimberDemo extends SynchronousOpMode {
     }
 
     public static void servoInit() {
-        mountainClimber.setPosition(Functions.mountainClimberInitPosition);
+        mountainClimber.setPosition(Functions.mountainClimberAutoInitPosition);
         mountainClimberRelease.setPosition(
                 Functions.mountainClimberReleaseClose);
         tubeExtender.setPosition(Functions.tubeExtenderInitPosition);
