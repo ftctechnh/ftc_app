@@ -141,7 +141,7 @@ public class Demo extends SynchronousOpMode {
                 bumper.setPosition(bumper.getPosition() + 0.1);
                 n++;
             }
-            Functions.waitFor(5000);
+            Functions.waitFor(1500);
             bumper.setPosition(Functions.bumperInitPosition);
             sweeper.setPower(Functions.sweeperPower);
             Functions.waitFor(8000);
@@ -173,7 +173,7 @@ public class Demo extends SynchronousOpMode {
                 bumper.setPosition(bumper.getPosition() - 0.1);
                 m++;
             }
-            Functions.waitFor(5000);
+            Functions.waitFor(1500);
             bumper.setPosition(Functions.bumperInitPosition);
             stopRobot();
             end();
