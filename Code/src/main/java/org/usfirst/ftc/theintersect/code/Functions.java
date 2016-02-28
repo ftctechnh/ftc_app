@@ -13,7 +13,7 @@ public class Functions {
 	public static double colorError = 2.0;
     public static double backWheelCircumfrence = 4 * Math.PI;
 	public static double mountainClimberTeleInitPosition = 0.5;
-	public static double mountainClimberAutoInitPosition = 0.3;
+	public static double mountainClimberAutoInitPosition = 0.0;
 	public static double mountainClimberReleaseOpen = 0.0;
 	public static double mountainClimberReleaseClose = 1.0;
 	public static double bumperInitPosition = 0.5;
@@ -28,7 +28,7 @@ public class Functions {
     public static double barHookDownPos = 0.3;
     public static double barHookUpPos = 0.8;
     public static double barHookTeleInitPos = 0.5;
-	public static double barHookAutoInitPos = 0.5;
+	public static double barHookAutoInitPos = 1.0;
 	public static double linearSlidePower = 0.5;
     public static double triggerThreshold = 0.7;
     public static double turboTriggerThreshold = 0.95;

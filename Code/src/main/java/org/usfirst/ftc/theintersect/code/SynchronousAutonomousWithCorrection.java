@@ -135,6 +135,7 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
                 //stopAtWhiteDetect(1.0, 3000, telemetry);
                 stopAtWhiteDetect(0.5, 1750, telemetry);
                 debugWait();
+                double ultraVal;
                 while(detectedWhite == false) {
                     moveRobotForwardTime(1250 ,0.5);
                     debugWait();
@@ -149,10 +150,15 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
                 }
                 spinClockwiseGyroCorrection(45 - (Try * 10), 0.4, 5000);
                 debugWait();
-                //moveRobotBackwardTime(1500, 0.5);
-                debugWait();
-                while (ultrasonic.getUltrasonicLevel() > 15) {
+                moveRobotBackwardTime(300, 0.5);
+                Functions.waitFor(500);
+                while (true) {
                     moveRobotBackward(0.2, 0.2);
+                    ultraVal = ultrasonic.getUltrasonicLevel();
+                    if (ultraVal == 0) {
+                    } else if (ultraVal < 25) {
+                        break;
+                    }
                 }
                 stopRobot();
                 debugWait();
@@ -163,12 +169,13 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
                 //moveRobotBackwardRotations(2000, 0.4, 10*1000);
                 debugWait();
                 //stopAtWhiteDetect(1.0, 3000, telemetry);
+                double ultraVal;
                 stopAtWhiteDetect(0.5, 1750, telemetry);
                 debugWait();
                 while(detectedWhite == false) {
-                    moveRobotForwardTime(1250 ,0.5);
+                    moveRobotForwardTime(1250, 0.5);
                     debugWait();
-                    spinCounterClockwiseGyroNoCorrection(10,0.3,3000);
+                    spinCounterClockwiseGyroNoCorrection(10, 0.3, 5000);
                     debugWait();
                     stopAtWhiteDetect(0.5, 1250, telemetry);
                     Try++;
@@ -177,14 +184,25 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
                         break;
                     }
                 }
-                spinCounterClockwiseGyroCorrection(45 - (Try * 10), 0.4, 5000);
+                if (Try > 0) {
+                    spinClockwiseGyroNoCorrection(10 * Try, 0.3, 5000);
+                }
+                moveRobotForwardRotations(425, 0.4, 5000);
+                spinCounterClockwiseGyroCorrection(40, 0.4, 5000);
                 debugWait();
-                //moveRobotBackwardTime(1500, 0.5);
-                debugWait();
-                while (ultrasonic.getUltrasonicLevel() > 15) {
+                moveRobotBackwardTime(300, 0.5);
+                Functions.waitFor(500);
+                while (true) {
                     moveRobotBackward(0.2, 0.2);
+                    ultraVal = ultrasonic.getUltrasonicLevel();
+                    if (ultraVal == 0) {
+                    } else if (ultraVal < 25) {
+                        break;
+                    }
                 }
                 stopRobot();
+                telemetry.addData("Stopping Val", ultraVal);
+                telemetry.updateNow();
                 debugWait();
                 dumpClimbersUltra(telemetry);
                 mountainClimber.setPosition(0.5);
@@ -287,9 +305,8 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
 
     public static void servoInit() {
         mountainClimber.setPosition(Functions.mountainClimberAutoInitPosition);
-        mountainClimberRelease
-				.setPosition(Functions.mountainClimberReleaseClose);
-		tubeExtender.setPosition(Functions.tubeExtenderInitPosition);
+        mountainClimberRelease.setPosition(Functions.mountainClimberReleaseClose);
+        tubeExtender.setPosition(Functions.tubeExtenderInitPosition);
         tubeTilt.setPosition(Functions.tubeTiltInitPosition);
 		bumper.setPosition(Functions.bumperInitPosition);
         leftBarHook.setPosition(Functions.barHookAutoInitPos);
@@ -918,7 +935,7 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
         int overShootCount = 0;
         int underShootCount = 0;
         long endTime = System.currentTimeMillis() + timeoutMill;
-        int endHeading = gyro.getIntegratedZValue() - degrees;
+        int endHeading = gyro.getIntegratedZValue() + degrees;
         boolean fineAdjustment = false;
         resetEncoders(); // reset encoder and turn on run_to_position mode
         leftWheel.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);

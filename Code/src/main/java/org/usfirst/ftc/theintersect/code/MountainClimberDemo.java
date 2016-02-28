@@ -62,26 +62,32 @@ public class MountainClimberDemo extends SynchronousOpMode {
 
         autonomousInit(telemetry);
         telemetry.clearDashboard();
-
+        double prevDist = 15;
+        int increment = 7;
         waitForStart();
-
-
-        while (opModeIsActive() && !isStopRequested() ) {
-
-            double leftDistance;
-            double armPosition;
-
-
-            leftDistance = getUSDistance(ultrasonic, telemetry);
+        while (opModeIsActive() && !isStopRequested()) {
+            updateGamepads();
+            double Distance = getUSDistance(ultrasonic, telemetry);
             // insetPosition, 0: flat backward, 0.45: straight up, 0.9: flat forward
-            armPosition = calculateArmPosition(leftDistance, telemetry);
-            mountainClimber.setPosition(armPosition);
-            telemetry.updateNow();
-            if (gamepad1.a || gamepad2.a) {
-                mountainClimberRelease.setPosition(Functions.mountainClimberReleaseOpen);
+            if (Math.abs(prevDist - Distance) > increment) {
+                if (Distance > prevDist) {
+                    Distance = prevDist + increment;
+                } else {
+                    Distance = prevDist - increment;
+                }
             }
-            mountainClimberRelease.setPosition(Functions.mountainClimberReleaseOpen);
-
+            double armPosition = calculateArmPosition(Distance, telemetry);
+            mountainClimber.setPosition(armPosition);
+            prevDist = Distance;
+            if (gamepad1.a || gamepad2.a) {
+                telemetry.addData("Release", "Open");
+                mountainClimberRelease.setPosition(Functions.mountainClimberReleaseOpen);
+                Functions.waitFor(1500);
+            } else {
+                mountainClimberRelease.setPosition(Functions.mountainClimberReleaseClose);
+                telemetry.addData("Release", "Close");
+            }
+            telemetry.updateNow();
         }
     }
 
@@ -90,50 +96,54 @@ public class MountainClimberDemo extends SynchronousOpMode {
     // Update basketOffset based on the field setup
     // Set armLength based on robot construction
     //
+
     public static double calculateArmPosition(double dist, TelemetryDashboardAndLog telemetry) {
         final double basketOffset = 5.0; // offset between wall and basket
-        final double armLength = 40.5;   // Length of the mountain climber
+        final double armLength = 36.8;   // Length of the mountain climber
 
         double armDegree;
         double armPosition;
 
+
         // Set min and Max distance for angular calculation
         // the distance is the distance of the wall, it needs to be adjusted for
         dist = dist + basketOffset;
+
         if (dist < 5) { // too close
             dist = 5.0;
-        } else if (dist > ( armLength + 10 ) ) { // too far
+        } else if (dist > (armLength + 10)) { // too far
             dist = 0.0;
-        } else if ( dist > armLength ) {
+        } else if (dist > armLength) {
             dist = armLength;
         }
         armDegree = Math.toDegrees(Math.acos(dist / armLength));
-        armPosition = (180 - armDegree)/200;
+        armPosition = (180 - armDegree) / 200;
         telemetry.addData("Degree", armDegree);
         return armPosition;
     }
 
     // Read ultrasound sensor distance 5 times and remove min/max readings
-    public static double getUSDistance( UltrasonicSensor ultrasonic, TelemetryDashboardAndLog telemetry ){
+    public static double getUSDistance(UltrasonicSensor ultrasonic, TelemetryDashboardAndLog telemetry) {
         double minDistance = 1000;
         double maxDistance = 0;
-        double leftDistance = 0;
-        for ( int i = 0; i < 5; i++ ) {
+        double Distance = 0;
+        for (int i = 0; i < 5; i++) {
             double dist = ultrasonic.getUltrasonicLevel();
-            leftDistance += dist;
+            Distance += dist;
             if (dist > maxDistance) {
                 maxDistance = dist;
-            } else if (dist < minDistance) {
+            }
+            if (dist < minDistance) {
                 minDistance = dist;
             }
             Functions.waitFor(50);
         }
-        leftDistance = (leftDistance- minDistance - maxDistance ) / 3;
+        Distance = (Distance - minDistance - maxDistance) / 3;
         telemetry.addData("min ", minDistance);
         telemetry.addData("max ", maxDistance);
-        telemetry.addData("Distance ", leftDistance);
+        telemetry.addData("Distance ", Distance);
 
-        return(leftDistance);
+        return (Distance);
     }
 
     public static void directionInit() {
