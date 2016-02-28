@@ -2,6 +2,10 @@ package org.usfirst.ftc.theintersect.code;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+/**
+ * A class that holds universal functions and constants
+ */
+
 public class Functions {
 	//Important ratios for different types of motors
 	public static int neveRestPPR = 1120;
