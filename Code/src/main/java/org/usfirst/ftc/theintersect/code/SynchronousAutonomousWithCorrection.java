@@ -75,7 +75,8 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
 		leftBarHook = hardwareMap.servo.get("leftBarHook");
 
         autonomousInit(telemetry);
-
+        int redAngle = 42;
+        int blueAngle = 42;
         //Delay And Team Selection
          while (true) {
             if (updateGamepads()) {
@@ -123,13 +124,15 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
         telemetry.clearDashboard();
         telemetry.addData("gyroInit: ", endTime);
         telemetry.updateNow();
+        double ultraVal;
         if (opModeIsActive() && endTime > System.currentTimeMillis()) {
             //Starting based off of the delay
 			Functions.waitFor(delay * 1000);
 			//Autonomous Routine !!!!
             telemetry.addData("Status", "Working...");
-			if(team.equals("Blue")) {
-				moveRobotBackwardTime(3500, 0.4);
+            //blue routine
+            if(team.equals("Blue")) {
+                /*moveRobotBackwardTime(3500, 0.4);
                 //moveRobotBackwardRotations(2000, 0.4, 10*1000);
                 debugWait();
                 //stopAtWhiteDetect(1.0, 3000, telemetry);
@@ -148,7 +151,7 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
                         break;
                     }
                 }
-                spinClockwiseGyroCorrection(45 - (Try * 10), 0.4, 5000);
+                spinClockwiseGyroNoCorrection(45 - (Try * 10), 0.4, 5000);
                 debugWait();
                 moveRobotBackwardTime(300, 0.5);
                 Functions.waitFor(500);
@@ -160,16 +163,47 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
                         break;
                     }
                 }
+                stopRobot();*/
+                moveRobotBackwardTime(3500, 0.4);
+                //moveRobotBackwardRotations(2000, 0.4, 10*1000);
+                debugWait();
+                //stopAtWhiteDetect(1.0, 3000, telemetry);
+                stopAtWhiteDetect(0.5, 1750, telemetry);
+                debugWait();
+                while (detectedWhite == false) {
+                    moveRobotForwardTime(1250, 0.5);
+                    debugWait();
+                    spinClockwiseGyroNoCorrection(10, 0.3, 3000);
+                    debugWait();
+                    stopAtWhiteDetect(0.5, 1250, telemetry);
+                    Try++;
+                    debugWait();
+                    if (Try == 3) {
+                        break;
+                    }
+                }
+                spinClockwiseGyroCorrection(45 - (Try * 10), 0.4, 5000);
+                debugWait();
+                while (true) {
+                    moveRobotBackward(0.2, 0.2);
+                    ultraVal = ultrasonic.getUltrasonicLevel();
+                    if (ultraVal == 0) {
+                    } else if (ultraVal < 25) {
+                        break;
+                    }
+                }
                 stopRobot();
+                telemetry.addData("Stopping Val", ultraVal);
+                telemetry.updateNow();
                 debugWait();
                 dumpClimbersUltra(telemetry);
                 mountainClimber.setPosition(0.5);
+                //red routine
             } else if (team.equals("Red")) {
                 moveRobotBackwardTime(3500, 0.4);
                 //moveRobotBackwardRotations(2000, 0.4, 10*1000);
                 debugWait();
                 //stopAtWhiteDetect(1.0, 3000, telemetry);
-                double ultraVal;
                 stopAtWhiteDetect(0.5, 1750, telemetry);
                 debugWait();
                 while(detectedWhite == false) {
@@ -185,10 +219,12 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
                     }
                 }
                 if (Try > 0) {
+                    redAngle = 47;
                     spinClockwiseGyroNoCorrection(10 * Try, 0.3, 5000);
+
                 }
                 moveRobotForwardRotations(425, 0.4, 5000);
-                spinCounterClockwiseGyroCorrection(40, 0.4, 5000);
+                spinCounterClockwiseGyroNoCorrection(redAngle, 0.4, 5000);
                 debugWait();
                 moveRobotBackwardTime(300, 0.5);
                 Functions.waitFor(500);
@@ -218,12 +254,12 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
     }
 
     public static void directionInit() {
-		//Set motor channel modes and direction
-		rightWheel.setDirection(DcMotor.Direction.REVERSE);
+        //Set motor channel modes and direction
+        rightWheel.setDirection(DcMotor.Direction.REVERSE);
 		leftWheel.setDirection(DcMotor.Direction.FORWARD);
 		leftHangString.setDirection(DcMotor.Direction.REVERSE);
-		rightHangString.setDirection(DcMotor.Direction.REVERSE);
-		tubeTilt.setDirection(Servo.Direction.REVERSE);
+        rightHangString.setDirection(DcMotor.Direction.REVERSE);
+        tubeTilt.setDirection(Servo.Direction.REVERSE);
 		tubeExtender.setDirection(Servo.Direction.REVERSE);
 		mountainClimber.setDirection(Servo.Direction.FORWARD);
 		mountainClimberRelease.setDirection(Servo.Direction.REVERSE);
@@ -244,8 +280,8 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
         gyro.setHeadingMode(
                 ModernRoboticsI2cGyro.HeadingMode.HEADING_CARTESIAN);
         while (gyro.isCalibrating()) {
-			telemetry.addData("gyroInit: ", "Calibrating Gyro");
-			telemetry.updateNow();
+            telemetry.addData("gyroInit: ", "Calibrating Gyro");
+            telemetry.updateNow();
         }
         telemetry.addData("gyroInit: ", "Calibration Complete");
 		telemetry.updateNow();
@@ -275,8 +311,8 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
             totalCount++;
         }
         telemetry.addData("initGyroHeading: Done ", totalCount);
-		telemetry.updateNow();
-	}
+        telemetry.updateNow();
+    }
 
 	public static void preStartInit() {
         mountainClimber.setPosition(Functions.mountainClimberAutoInitPosition);
@@ -362,23 +398,27 @@ public class SynchronousAutonomousWithCorrection extends SynchronousOpMode {
 
     public static void dumpClimbersUltra(TelemetryDashboardAndLog telemetry) {
         //set the position for arm based on ultrasonic sensor
-        mountainClimber.setPosition(calculateArmPosition(getUSDistance(ultrasonic,telemetry),telemetry));
-		Functions.waitFor(2000);
-		mountainClimberRelease.setPosition(Functions.mountainClimberReleaseOpen);
-		Functions.waitFor(500);
-		mountainClimberRelease.setPosition(Functions.mountainClimberReleaseClose);
-        Functions.waitFor(100);
-        mountainClimberRelease.setPosition(Functions.mountainClimberReleaseOpen);
-		Functions.waitFor(1000);
-		mountainClimberRelease.setPosition(Functions.mountainClimberReleaseClose);
-        Functions.waitFor(100);
-        mountainClimberRelease.setPosition(Functions.mountainClimberReleaseOpen);
-        Functions.waitFor(100);
-        mountainClimberRelease.setPosition(Functions.mountainClimberReleaseClose);
-        Functions.waitFor(100);
-        mountainClimberRelease.setPosition(Functions.mountainClimberReleaseOpen);
-        Functions.waitFor(100);
-        mountainClimberRelease.setPosition(Functions.mountainClimberReleaseClose);
+        mountainClimber.setPosition(calculateArmPosition(getUSDistance(ultrasonic, telemetry), telemetry));
+        if (getUSDistance(ultrasonic, telemetry) > 5 && getUSDistance(ultrasonic, telemetry) < 26) {
+            Functions.waitFor(2000);
+            mountainClimberRelease.setPosition(Functions.mountainClimberReleaseOpen);
+            Functions.waitFor(500);
+            mountainClimberRelease.setPosition(Functions.mountainClimberReleaseClose);
+            Functions.waitFor(100);
+            mountainClimberRelease.setPosition(Functions.mountainClimberReleaseOpen);
+            Functions.waitFor(1000);
+            mountainClimberRelease.setPosition(Functions.mountainClimberReleaseClose);
+            Functions.waitFor(100);
+            mountainClimberRelease.setPosition(Functions.mountainClimberReleaseOpen);
+            Functions.waitFor(100);
+            mountainClimberRelease.setPosition(Functions.mountainClimberReleaseClose);
+            Functions.waitFor(100);
+            mountainClimberRelease.setPosition(Functions.mountainClimberReleaseOpen);
+            Functions.waitFor(100);
+            mountainClimberRelease.setPosition(Functions.mountainClimberReleaseClose);
+        } else {
+            Functions.waitFor(30000);
+        }
     }
 
     /*public static void dumpClimbersUltra(TelemetryDashboardAndLog telemetry) {

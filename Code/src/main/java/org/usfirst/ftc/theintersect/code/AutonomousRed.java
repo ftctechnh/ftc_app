@@ -1,15 +1,22 @@
 package org.usfirst.ftc.theintersect.code;
 
-import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.hardware.GyroSensor;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.UltrasonicSensor;
+
 import org.swerverobotics.library.SynchronousOpMode;
 import org.swerverobotics.library.TelemetryDashboardAndLog;
+import org.swerverobotics.library.interfaces.Disabled;
 
 /**
  * An Autonomous for the Red Team
  */
 
 @org.swerverobotics.library.interfaces.Autonomous(name = "Autonomous Red")
-@org.swerverobotics.library.interfaces.Disabled
+@Disabled
 public class AutonomousRed extends SynchronousOpMode {
     //Declare hardware
     static DcMotor frontRightWheel;

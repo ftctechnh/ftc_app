@@ -1,6 +1,7 @@
 package org.usfirst.ftc.theintersect.code;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+
 import org.swerverobotics.library.SynchronousOpMode;
 import org.swerverobotics.library.interfaces.Disabled;
 
@@ -9,6 +10,7 @@ import org.swerverobotics.library.interfaces.Disabled;
  */
 
 @org.swerverobotics.library.interfaces.TeleOp(name = "Test Motor")
+@Disabled
 public class TestMotor extends SynchronousOpMode {
 	//Declare hardware
 	static DcMotor testMotor;
