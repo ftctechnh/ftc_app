@@ -20,6 +20,14 @@ public class MasterLinear extends LinearOpMode {
     private int posNumber;
     //Important Constants
     public static final double MSECSTOSECS = 1000;
+    //Hardware
+    private DcMotor leftDriveMotor;
+    private DcMotor rightDriveMotor;
+    private DistanceMotor leftDrive;
+    private DistanceMotor rightDrive;
+    //Assignment
+
+
     //@param myDelay is in seconds
     public MasterLinear(int startingPos, double myDelay, String myTeam){
         posNumber = startingPos;
@@ -35,8 +43,36 @@ public class MasterLinear extends LinearOpMode {
 	    runOpMode();
         
     }
+    public void initRobot(){
+        leftDriveMotor = hardwareMap.dcMotor.get("motorLeft");
+        rightDriveMotor = hardwareMap.dcMotor.get("motorRight");
+        leftDrive = new DistanceMotor(leftDriveMotor, "Left",true,false,4,1,1440);
+        rightDrive = new DistanceMotor(rightDriveMotor, "Right",true, true, 4,1,1440);
+    }
     @Override
     public void runOpMode(){
-        return;
+        initRobot();
+        try{
+            telemetry.addData("Tests", "Waiting for start");
+            waitForStart();
+            telemetry.addData("Tests", "Starting First Test");
+            leftDrive.operate(20);
+            leftDrive.waitForCompletion();
+            telemetry.addData("Tests", "Finished First Test");
+            sleep(2000);
+            telemetry.addData("Tests", "Starting Second Test");
+            leftDrive.operate(20);
+            leftDrive.waitForCompletion();
+            telemetry.addData("Tests", "Finished Second Test");
+            sleep(2000);
+            leftDrive.operate(-20);
+            leftDrive.waitForCompletion();
+            sleep(2000);
+            telemetry.addData("Tests", "Complete");
+        }
+        catch(InterruptedException e){
+            Thread.currentThread().interrupt();
+        }
+
     }
 }

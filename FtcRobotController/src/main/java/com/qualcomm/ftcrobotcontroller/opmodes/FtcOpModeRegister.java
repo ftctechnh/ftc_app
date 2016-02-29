@@ -56,15 +56,16 @@ public class FtcOpModeRegister implements OpModeRegister {
      * If two or more op modes are registered with the same name, the app will display an error.
      */
 
-    manager.register("TeleOp", Tele_Test.class);
+    //manager.register("TeleOp", Tele_Test.class);
 
-    manager.register("Auto_redNear", Auto_redNear.class); //dumps climbers and gets out of alliance partner's way to score
-    manager.register("Auto_redNear_stay", Auto_redNear_stay.class); //dumps climbers and parks in floor goal
-    manager.register("Auto_redNear_wait_stay", Auto_redNear_wait_stay.class); //waits for 10 sec, drops climbers, and parks in floor goal
+    //manager.register("Auto_redNear", Auto_redNear.class); //dumps climbers and gets out of alliance partner's way to score
+    //manager.register("Auto_redNear_stay", Auto_redNear_stay.class); //dumps climbers and parks in floor goal
+    //manager.register("Auto_redNear_wait_stay", Auto_redNear_wait_stay.class); //waits for 10 sec, drops climbers, and parks in floor goal
 
-    manager.register("Auto_blueNear", Auto_blueNear.class);
-    manager.register("Auto_blueNear_stay", Auto_blueNear_stay.class);
-    manager.register("Auto_blueNear_wait_stay", Auto_blueNear_wait_stay.class);
-
+    //manager.register("Auto_blueNear", Auto_blueNear.class);
+    //manager.register("Auto_blueNear_stay", Auto_blueNear_stay.class);
+    //manager.register("Auto_blueNear_wait_stay", Auto_blueNear_wait_stay.class);
+    manager.register("Walnut Tele",MasterTeleOp.class);
+    manager.register("Linear Tests", MasterLinear.class);
   }
 }
