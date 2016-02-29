@@ -75,7 +75,7 @@ public class p1s1 extends OpMode {
             rightMotor.setPower(power);
 
         }
-        //Makes the robot turn left
+        //Makes the robot turn right
         if (mode.equals("left")) {
 
    //         leftMotor.setTargetPosition(-((int) returnCountsFromDistance(numberOfSquares)));
@@ -88,7 +88,7 @@ public class p1s1 extends OpMode {
             rightMotor.setPower(power);
 
         }
-        //Makes the robot turn right
+        //Makes the robot turn left
         if (mode.equals("right")) {
 
             leftMotor.setTargetPosition((int) returnCountsFromDistance(numberOfSquares));
@@ -114,7 +114,8 @@ public class p1s1 extends OpMode {
         double distanceToTurn90Degrees = 0.63;
         double motorPower = 0.5;
 
-        drive(1, motorPower, "both"); //forward 2 squares (50 cm)
+        drive(1, motorPower, "both"); //forward 1 squares (50 cm) // 0.61
+
 //
 //                try {
 //            wait(1000);
