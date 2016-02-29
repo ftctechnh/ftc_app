@@ -3,16 +3,29 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
+import android.util.Log;
 
-
-
+import com.qualcomm.ftcrobotcontroller.opmodes.sensorCode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.exception.RobotCoreException;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import java.lang.*;
 
 
 /**
  * Created by baptiste on 15/11/2015.
  */
-public class p1s1 extends OpMode {
+public class p1s1COPY extends OpMode {
+
+    sensorCode boschBNO055;
+
+    //The following arrays contain both the Euler angles reported by the IMU (indices = 0) AND the
+    // Tait-Bryan angles calculated from the 4 components of the quaternion vector (indices = 1)
+    volatile double[] rollAngle = new double[2], pitchAngle = new double[2], yawAngle = new double[2];
+
+    long systemTime;//Relevant values of System.nanoTime
+
+
     //This declares two motors
     DcMotor rightMotor;
     DcMotor leftMotor;
@@ -53,6 +66,24 @@ public class p1s1 extends OpMode {
 
     @Override
     public void init() {
+
+        try {
+            boschBNO055 = new sensorCode(hardwareMap, "bno055"
+
+                    //The following was required when the definition of the "I2cDevice" class was incomplete.
+                    //, "cdim", 5
+
+                    , (byte)(sensorCode.BNO055_ADDRESS_A * 2)//By convention the FTC SDK always does 8-bit I2C bus
+                    //addressing
+                    , (byte)sensorCode.OPERATION_MODE_IMU);
+        } catch (RobotCoreException e){
+            Log.i("FtcRobotController", "Exception: " + e.getMessage());
+        }
+
+        Log.i("FtcRobotController", "IMU Init method finished in: "
+                + (-(systemTime - (systemTime = System.nanoTime()))) + " ns.");
+
+
         //The code that runs when we start the robot. We assign the motors and reset the encoder count
         rightMotor = hardwareMap.dcMotor.get("motor_1");
         leftMotor = hardwareMap.dcMotor.get("motor_2");
@@ -80,13 +111,13 @@ public class p1s1 extends OpMode {
         //Makes the robot turn right
         if (mode.equals("left")) {
 
-   //         leftMotor.setTargetPosition(-((int) returnCountsFromDistance(numberOfSquares)));
+            //         leftMotor.setTargetPosition(-((int) returnCountsFromDistance(numberOfSquares)));
             rightMotor.setTargetPosition((int) returnCountsFromDistance(numberOfSquares));
 
-    //        leftMotor.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+            //        leftMotor.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
             rightMotor.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
 
-       //     leftMotor.setPower(-power);
+            //     leftMotor.setPower(-power);
             rightMotor.setPower(power);
 
         }
@@ -94,13 +125,13 @@ public class p1s1 extends OpMode {
         if (mode.equals("right")) {
 
             leftMotor.setTargetPosition((int) returnCountsFromDistance(numberOfSquares));
-         //   rightMotor.setTargetPosition(-((int) returnCountsFromDistance(numberOfSquares)));
+            //   rightMotor.setTargetPosition(-((int) returnCountsFromDistance(numberOfSquares)));
 
             leftMotor.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
-       //     rightMotor.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+            //     rightMotor.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
 
             leftMotor.setPower(power);
-        //    rightMotor.setPower(-power);
+            //    rightMotor.setPower(-power);
 
         }
 
@@ -110,23 +141,39 @@ public class p1s1 extends OpMode {
 
     }
 
+    public void turn() {
+        systemTime = System.nanoTime();
+        boschBNO055.startIMU();//Set up the IMU as needed for a continual stream of I2C reads.
+        Log.i("FtcRobotController", "IMU Start method finished in: "
+                + (-(systemTime - (systemTime = System.nanoTime()))) + " ns.");
+
+        boschBNO055.getIMUGyroAngles(rollAngle, pitchAngle, yawAngle);
+
+        double currentYawAngle = yawAngle[0];
+
+        while (yawAngle[0] < currentYawAngle+90) {
+
+            boschBNO055.getIMUGyroAngles(rollAngle, pitchAngle, yawAngle);
+
+            rightMotor.setPower(0.2);
+
+        }
+
+        rightMotor.setPower(0);
+    }
+
     @Override
     public void start() {
+
+
+        turn();
+
+
         //Tells us how far the robot has to travel to turn 90 degrees
         double distanceToTurn90Degrees = 0.63;
         double motorPower = 0.5;
 
-        drive(1, motorPower, "both"); //forward 1 squares (50 cm) // 0.61
-
-//
-//                try {
-//            wait(1000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-
-//        drive(distanceToTurn90Degrees, motorPower, "left"); //90 degress anticlockwise
-//        drive(2, motorPower, "both"); // move 2 squares forward
+    //    drive(1, motorPower, "both"); //forward 1 squares (50 cm) // 0.61
 
         stop();
 
@@ -135,7 +182,32 @@ public class p1s1 extends OpMode {
     @Override
     public void loop() {
 
+        boschBNO055.getIMUGyroAngles(rollAngle, pitchAngle, yawAngle);
+		/*
+		 * Send whatever telemetry data you want back to driver station.
+		 */
+        //telemetry.addData("Text", "*** Robot Data***");
+        telemetry.addData("Headings(yaw): ",
+                String.format("Euler= %4.5f, Quaternion calculated= %4.5f", yawAngle[0], yawAngle[1]));
+        telemetry.addData("Pitches: ",
+                String.format("Euler= %4.5f, Quaternion calculated= %4.5f", pitchAngle[0], pitchAngle[1]));
+        telemetry.addData("Max I2C read interval: ",
+                String.format("%4.4f ms. Average interval: %4.4f ms.", boschBNO055.maxReadInterval
+                        , boschBNO055.avgReadInterval));
+
+
         telemetry.addData("Left Position", leftMotor.getCurrentPosition());
         telemetry.addData("Right Position", rightMotor.getCurrentPosition());
 
-    }}
+    }
+
+    @Override
+    public void stop() {
+        systemTime = System.nanoTime();
+        Log.i("FtcRobotController", "IMU Stop method finished in: "
+                + (-(systemTime - (systemTime = System.nanoTime()))) + " ns.");
+        super.stop();
+    }
+}
+
+
