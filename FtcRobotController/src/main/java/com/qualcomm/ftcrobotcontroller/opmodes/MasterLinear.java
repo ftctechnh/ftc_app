@@ -53,8 +53,14 @@ public class MasterLinear extends LinearOpMode {
     public void runOpMode(){
         initRobot();
         try{
-            telemetry.addData("Tests", "Waiting for start");
+       	    telemetry.addData("Tests", "Waiting for start");
             waitForStart();
+        }
+        catch(InterruptedException e){
+            Thread.currentThread().interrupt();
+        }
+        try{
+
             telemetry.addData("Tests", "Starting First Test");
             leftDrive.operate(20);
             leftDrive.waitForCompletion();
