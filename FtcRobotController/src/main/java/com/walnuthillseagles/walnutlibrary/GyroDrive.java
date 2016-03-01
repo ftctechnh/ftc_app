@@ -8,7 +8,8 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
  */
 @Deprecated
 public class GyroDrive implements Runnable{
-    public static final long WAITRESOLUTION = 300;
+    public static final long WAITRESOLUTION = 200;
+    public static final int TOLERANCE = 3; 
     //Hare
     private GyroSensor gyro;
     private EncoderMotor left;
@@ -83,6 +84,28 @@ public class GyroDrive implements Runnable{
         }
         catch(InterruptedException e){
             Thread.currentThread();
+        }
+        
+        private int compareOrientation(int target, int currentVal){
+            int tarMax = target + TOLERANCE;
+            int tarMin = target - TOLERANCE;
+            int midPoint = target + 180;
+            
+            boolean inRange;
+            //Adjust Range
+            if(tarMax >= 360 || tarMin < 0)
+                inRange = (currentVal > adjustRange(tarMin)|| currentVal<adjustRange(tarMax);
+            return 0;
+        }
+        private int adjustRange(int tarValue){
+            int temp = tarValue; 
+            while(temp>=360){
+                temp-=360;
+            }
+            while(temp<0){
+                temp += 360;
+            }
+            return temp;
         }
 
     }
