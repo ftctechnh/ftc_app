@@ -130,7 +130,7 @@ public class K9AutoTime extends OpMode {
 
         /*
          * Use the 'time' variable of this op mode to determine
-         * how to adjust the motor power.
+         * how to adjust the motor setPower.
          */
         if (this.time <= 1) {
             // from 0 to 1 seconds, run the motors for five seconds.
@@ -155,7 +155,7 @@ public class K9AutoTime extends OpMode {
         }
 
 		/*
-		 * set the motor power
+		 * set the motor setPower
 		 */
         motorRight.setPower(left);
         motorLeft.setPower(right);

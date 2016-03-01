@@ -35,7 +35,7 @@ public class DigMotor extends TeleMotor implements Drivable{
         for(int i = 0;i<Buttons.size();i++){
             temp = Buttons.get(i);
             if(VirtualGamepad.boolValues[temp.getPos()]){
-                this.power(temp.getPow());
+                this.setPower(temp.getPow());
             }
             else if(!isToggle&&!VirtualGamepad.boolValues[temp.getPos()]){
                 this.fullStop();
@@ -43,5 +43,5 @@ public class DigMotor extends TeleMotor implements Drivable{
 
         }
     }
-    //Autonomous Methods in Walnut Motor (Called "power(int pow)")
+    //Autonomous Methods in Walnut Motor (Called "setPower(int pow)")
 }

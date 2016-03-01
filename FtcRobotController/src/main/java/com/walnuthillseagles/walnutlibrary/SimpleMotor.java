@@ -10,11 +10,12 @@ import com.qualcomm.robotcore.hardware.DcMotorController;
  */
 public class SimpleMotor {
     //Field
-    private DcMotor motor;
+    protected DcMotor motor;
     //Used for telemetry
-    private String name;
-    private boolean hasEncoders;
-    public static final long WAITRESOLUTION = 300;
+    protected String name;
+    protected boolean hasEncoders;
+    public static final long WAITRESOLUTION = 200;
+    public static final double MAXPOW = 0.9;
     SimpleMotor(DcMotor myMotor, String myName, boolean encoderCheck){
         motor = myMotor;
         name = myName;
@@ -66,11 +67,13 @@ public class SimpleMotor {
     public void stop(){
         motor.setPower(0);
     }
-    public void power(double pow){
-        if(pow>=-1.0&&pow <=1.0)
+    public void setPower(double pow){
+        //First statement should catch pow=0, but just to be sure...
+        if(pow>=-1.0 * MAXPOW&&pow <=MAXPOW)
             motor.setPower(pow);
-        else
-            System.err.println("Invalid Power Value");
+        else if(pow!=0)
+            motor.setPower(MAXPOW * (pow/Math.abs(pow)));
+        //val/|val| = 1 or -1, depending if val is negetive
     }
     protected void resetEncoder() throws InterruptedException {
 

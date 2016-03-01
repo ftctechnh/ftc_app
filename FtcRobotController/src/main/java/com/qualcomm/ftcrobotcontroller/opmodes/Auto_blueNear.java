@@ -48,7 +48,7 @@ public class Auto_blueNear extends LinearOpMode
 
         if (!motorTaskLeft.isRunning()) {
             double targEnc = 1440 * 72 / 4 / Math.PI; //62.5
-            //full power , forward for 8880
+            //full setPower , forward for 8880
             motorTaskLeft.startMotor("step1 left", .5, targEnc, Direction.MOTOR_BACKWARD);
         }
         if (!motorTaskRight.isRunning()) {
@@ -81,7 +81,7 @@ public class Auto_blueNear extends LinearOpMode
 
         if (!motorTaskLeft.isRunning()) {
             double targEnc = 1440 * 12 / 4 / Math.PI;
-            //full power , forward for 8880
+            //full setPower , forward for 8880
             motorTaskLeft.startMotor("step1 left", 0.5, targEnc, Direction.MOTOR_BACKWARD);
         }
         if (!motorTaskRight.isRunning()) {
@@ -109,7 +109,7 @@ public class Auto_blueNear extends LinearOpMode
 
         if (!motorTaskLeft.isRunning()) {
             double targEnc = 1440 * 29 / 4 / Math.PI;
-            //full power , forward for 8880
+            //full setPower , forward for 8880
             motorTaskLeft.startMotor("step1 left", 1, targEnc, Direction.MOTOR_BACKWARD);
         }
         if (!motorTaskRight.isRunning()) {

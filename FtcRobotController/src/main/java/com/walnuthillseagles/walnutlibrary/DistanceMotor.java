@@ -24,6 +24,9 @@ public class DistanceMotor extends LinearMotor implements Runnable, Auto {
                          double myDiameter,double myGearRatio, int myEncoder){
         //Create Motor
         super(myMotor, myName, encoderCheck, isReveresed);
+        if(motor == null){
+            throw(new NullPointerException("Motor not Init'd in distance motor"));
+        }
         motor.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
 
         //Values involving bot
@@ -58,12 +61,12 @@ public class DistanceMotor extends LinearMotor implements Runnable, Auto {
     public void run(){
         //Go for it
         motor.setTargetPosition(distance);
-        motor.setPower(speedLimit);
+        this.setPower(speedLimit);
         //Wait until in Pos
         //@TODO Better way to do this?
         while(!inRange(distance,motor.getCurrentPosition())) {
             try {
-                motor.wait(WAITRESOLUTION);
+                motor.wait(WAITRESOLUTION*5);
 
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
@@ -71,13 +74,13 @@ public class DistanceMotor extends LinearMotor implements Runnable, Auto {
         }
         this.fullStop();
     }
+    public int getDistance(){
+        return distance;
+    }
     //Timers
     public void waitForCompletion() throws InterruptedException{
         runner.join();
-        motor.wait(WAITRESOLUTION);
     }
     //Private helper methods
-    private boolean inRange(int target, int curr){
-        return (curr>(target-RANGEVAL)) && (curr<(taget+RANGEVAL));
-    }
+
 }

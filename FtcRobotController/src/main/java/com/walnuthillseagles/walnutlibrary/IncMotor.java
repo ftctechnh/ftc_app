@@ -125,5 +125,5 @@ public class IncMotor extends TeleMotor implements Drivable{
         else
             this.fullStop();
     }
-    //Autonomous Methods in Walnut Motor (Called "power(int pow)")
+    //Autonomous Methods in Walnut Motor (Called "setPower(int pow)")
 }

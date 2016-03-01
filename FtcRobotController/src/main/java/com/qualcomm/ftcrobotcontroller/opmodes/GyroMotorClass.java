@@ -41,12 +41,12 @@ public class GyroMotorClass
         this.running = true;
             if (Direction.MOTOR_RIGHT.equals(direction))
             {
-                this.right.setPower(power);
+                this.right.setPower(setPower);
                 this.currMotor = Direction.MOTOR_RIGHT;
             }
             else
             {
-                this.left.setPower(power);
+                this.left.setPower(setPower);
                 this.currMotor = Direction.MOTOR_LEFT;
             }*/
 

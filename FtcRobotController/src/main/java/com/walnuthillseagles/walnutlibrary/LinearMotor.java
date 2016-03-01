@@ -8,9 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class LinearMotor extends SimpleMotor implements Runnable, Auto {
     //Field
-    protected DcMotor motor;
-    protected String name;
-    protected boolean hasEncoders;
+
     protected double speedLimit;
     protected boolean isDone;
     //Value for a full encoder rotation

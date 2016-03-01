@@ -44,7 +44,7 @@ public class AutoTest extends LinearOpMode {
             switch (step) {
                 case 1:
                     if (! motorTaskLeft.isRunning()) {
-                        //full power , forward for 8880
+                        //full setPower , forward for 8880
                         motorTaskLeft.startMotor("step1 left", 1, 8712 , Direction.MOTOR_FORWARD);
                     }
                     if (!motorTaskRight.isRunning()) {
@@ -72,7 +72,7 @@ public class AutoTest extends LinearOpMode {
                     break;
                 case 3:
                     if (! motorTaskLeft.isRunning()) {
-                        //full power , forward for 8880
+                        //full setPower , forward for 8880
                         motorTaskLeft.startMotor("step1 left", 1, 2865 , Direction.MOTOR_FORWARD);
                     }
                     if (!motorTaskRight.isRunning()) {

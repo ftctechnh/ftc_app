@@ -85,6 +85,7 @@ public class GyroDrive implements Runnable{
         catch(InterruptedException e){
             Thread.currentThread();
         }
+    }
         
         private int compareOrientation(int target, int currentVal){
             int tarMax = target + TOLERANCE;
@@ -94,7 +95,7 @@ public class GyroDrive implements Runnable{
             boolean inRange;
             //Adjust Range
             if(tarMax >= 360 || tarMin < 0)
-                inRange = (currentVal > adjustRange(tarMin)|| currentVal<adjustRange(tarMax);
+                inRange = (currentVal > adjustRange(tarMin)|| currentVal<adjustRange(tarMax));
             return 0;
         }
         private int adjustRange(int tarValue){
@@ -108,6 +109,6 @@ public class GyroDrive implements Runnable{
             return temp;
         }
 
-    }
-    //Stuff I worry about
 }
+    //Stuff I worry about
+
