@@ -46,12 +46,16 @@ public class MasterLinear extends LinearOpMode {
     public void initRobot(){
         leftDriveMotor = hardwareMap.dcMotor.get("motorLeft");
         rightDriveMotor = hardwareMap.dcMotor.get("motorRight");
+        telemetry.addData("Tests", "Hardware Init'd");
         leftDrive = new DistanceMotor(leftDriveMotor, "Left",true,false,4,1,1440);
         rightDrive = new DistanceMotor(rightDriveMotor, "Right",true, true, 4,1,1440);
+
     }
     @Override
     public void runOpMode(){
+    	telemetry.addData("Tests","Init Robot");
         initRobot();
+        telemetry.addData("Tests", "Robot Init'd");
         try{
        	    telemetry.addData("Tests", "Waiting for start");
             waitForStart();
@@ -60,7 +64,6 @@ public class MasterLinear extends LinearOpMode {
             Thread.currentThread().interrupt();
         }
         try{
-
             telemetry.addData("Tests", "Starting First Test");
             leftDrive.operate(20);
             leftDrive.waitForCompletion();
