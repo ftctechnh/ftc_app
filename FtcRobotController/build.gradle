@@ -6,7 +6,11 @@ android {
         targetSdkVersion 19
     }
     compileSdkVersion 19
+<<<<<<< HEAD
     buildToolsVersion '19.1.0'
+=======
+    buildToolsVersion '21.1.2'
+>>>>>>> ftctechnh/beta
 }
 
 buildscript {
