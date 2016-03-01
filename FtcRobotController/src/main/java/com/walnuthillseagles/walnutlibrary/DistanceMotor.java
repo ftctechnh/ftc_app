@@ -83,5 +83,7 @@ public class DistanceMotor extends LinearMotor implements Runnable, Auto {
         motor.wait(WAITRESOLUTION);
     }
     //Private helper methods
-
+    private boolean inRange(int target, int curr){
+        return (curr>(target-RANGEVAL)) && (curr<(taget+RANGEVAL));
+    }
 }
