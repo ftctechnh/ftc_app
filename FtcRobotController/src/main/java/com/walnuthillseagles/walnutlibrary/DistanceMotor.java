@@ -69,13 +69,7 @@ public class DistanceMotor extends LinearMotor implements Runnable, Auto {
                 Thread.currentThread().interrupt();
             }
         }
-        //Keep if encoders have passed distance before continueing
-        //@TODO Should I just throw the exception up at this point?
-            this.fullStop();
-
-
-        //Reset Encoders NOTICE: Reset encoders is bugged
-        //motor.setMode(DcMotorController.RunMode.valueOf("RESET_ENCODERS"));
+        this.fullStop();
     }
     //Timers
     public void waitForCompletion() throws InterruptedException{
