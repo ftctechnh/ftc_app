@@ -66,7 +66,7 @@ public class DistanceMotor extends LinearMotor implements Runnable, Auto {
         //@TODO Better way to do this?
         while(!inRange(distance,motor.getCurrentPosition())) {
             try {
-                motor.wait(WAITRESOLUTION*5);
+                this.sleep(WAITRESOLUTION*5);
 
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
