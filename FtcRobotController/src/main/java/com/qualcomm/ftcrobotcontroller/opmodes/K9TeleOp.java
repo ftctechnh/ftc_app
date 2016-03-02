@@ -1,7 +1,7 @@
 /* Copyright (c) 2014 Qualcomm Technologies Inc
-
+//TESTING SSH
 All rights reserved.
-
+//RANDOM COMMENT THAT ONLY PROVES THE SSH WORKS
 Redistribution and use in source and binary forms, with or without modification,
 are permitted (subject to the limitations in the disclaimer below) provided that
 the following conditions are met:
@@ -201,7 +201,7 @@ public class K9TeleOp extends OpMode {
 	/*
 	 * Code to run when the op mode is first disabled goes here
 	 *
-	 * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#stop()
+	 * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#fullStop()
 	 */
 	@Override
 	public void stop() {

@@ -130,7 +130,7 @@ public class K9AutoTime extends OpMode {
 
         /*
          * Use the 'time' variable of this op mode to determine
-         * how to adjust the motor power.
+         * how to adjust the motor setPower.
          */
         if (this.time <= 1) {
             // from 0 to 1 seconds, run the motors for five seconds.
@@ -149,13 +149,13 @@ public class K9AutoTime extends OpMode {
             left = -0.15;
             right = 0.15;
         } else {
-            // after 20.75 seconds, stop.
+            // after 20.75 seconds, fullStop.
             left = 0.0;
             right = 0.0;
         }
 
 		/*
-		 * set the motor power
+		 * set the motor setPower
 		 */
         motorRight.setPower(left);
         motorLeft.setPower(right);
@@ -182,7 +182,7 @@ public class K9AutoTime extends OpMode {
 	/*
 	 * Code to run when the op mode is first disabled goes here
 	 *
-	 * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#stop()
+	 * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#fullStop()
 	 */
 	@Override
 	public void stop() {
