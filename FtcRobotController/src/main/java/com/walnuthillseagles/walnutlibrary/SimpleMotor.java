@@ -89,7 +89,7 @@ public class SimpleMotor {
         if (motor != null) {
             motor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
             while (motor.getCurrentPosition() != 0) {
-                motor.wait(WAITRESOLUTION);
+                waitOneFullHardwareCycle();
             }
             motor.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         }
@@ -97,6 +97,6 @@ public class SimpleMotor {
 
     }
     protected void sleep(long time) throws InterruptedException{
-        motor.wait(WAITRESOLUTION);
+        timer.sleep(WAITRESOLUTION);
     }
 }
