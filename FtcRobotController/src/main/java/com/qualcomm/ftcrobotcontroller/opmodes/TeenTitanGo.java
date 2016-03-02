@@ -62,7 +62,7 @@ public class TeenTitanGo extends OpMode {
 //        leftTriggerArm.setDirection(Servo.Direction.REVERSE);
 
         rightTriggerArmPosition = 0.0;
-        leftTriggerArmPosition = 0.0;
+        leftTriggerArmPosition = 0.3;
 
         rightTriggerArm.setPosition(rightTriggerArmPosition);
         leftTriggerArm.setPosition(leftTriggerArmPosition);
@@ -71,8 +71,9 @@ public class TeenTitanGo extends OpMode {
     public void initBucketServo() {
 
         bucketServo = hardwareMap.servo.get("bucket_servo");
+        bucketServo.setDirection(Servo.Direction.REVERSE);
 
-        bucketServoPosition = 0.4;
+        bucketServoPosition = 0.55;
 
         bucketServo.setPosition(bucketServoPosition);
 
@@ -168,7 +169,7 @@ public class TeenTitanGo extends OpMode {
             bucketServo.setPosition(bucketServoPosition);
         }
         if (gamepad2.y) {
-            bucketServoPosition = .4;
+            bucketServoPosition = .55;
             bucketServo.setPosition(bucketServoPosition);
         }
 
@@ -183,12 +184,12 @@ public class TeenTitanGo extends OpMode {
             rightTriggerArm.setPosition(rightTriggerArmPosition);
         }
         else if (gamepad2.dpad_left) {
-            leftTriggerArmPosition -= leftTriggerArmDelta;
+            leftTriggerArmPosition += leftTriggerArmDelta;
             leftTriggerArmPosition = Range.clip(leftTriggerArmPosition, ARM_MIN_RANGE, ARM_MAX_RANGE);
             leftTriggerArm.setPosition(leftTriggerArmPosition);
         } else {
-            if (leftTriggerArm.getPosition() != 0.0) {
-                leftTriggerArm.setPosition(0.0);
+            if (leftTriggerArm.getPosition() != 0.3) {
+                leftTriggerArm.setPosition(0.3);
             }
             if (rightTriggerArm.getPosition() != 0.0) {
                 rightTriggerArm.setPosition(0.0);

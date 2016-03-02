@@ -46,10 +46,10 @@ public class FtcOpModeRegister implements OpModeRegister {
    * @param manager op mode manager
    */
   public void register(OpModeManager manager) {
-    manager.register("TeenTitanGo", TeenTitanGo.class);
-    manager.register("OhmIZeus", OhmIZeus.class);
+//    manager.register("TeenTitanGo", TeenTitanGo.class);
+//    manager.register("OhmIZeusBeforeComp1", OhmIZeusBeforeComp1.class);
     manager.register("Autobots", Autobots.class);
-    manager.register("OhmIZeusNew", OhmIZeusNew.class);
+    manager.register("OhmIZeus", OhmIZeus.class);
     /* Custom Ops Modes here */
 //    manager.register("DavTest", DavTest.class);
 //    manager.register("TwoWheelTest", TwoWheelTest.class);
@@ -60,7 +60,7 @@ public class FtcOpModeRegister implements OpModeRegister {
 //    manager.register("ServoTest1", ServoTest1.class);
 //    manager.register("ServoBucket", ServoBucket.class);
 //    manager.register("ContinuousServo", ContinuousServo.class);
-//    manager.register("OhmIZeusOld", OhmIZeusOld.class);
+//    manager.register("OhmIZeusOriginal", OhmIZeusOriginal.class);
   //  manager.register("Help", Help.class);
   //  manager.register("ServoBucket", ServoBucket.class);
 

@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.Range;
 /**
  * Created by alex on 1/21/16.
  */
-public class OhmIZeusOld extends OpMode {
+public class OhmIZeusOriginal extends OpMode {
 
     DcMotor motorRight1;
     DcMotor motorRight2;
@@ -31,7 +31,7 @@ public class OhmIZeusOld extends OpMode {
 
 
 
-    public OhmIZeusOld() {
+    public OhmIZeusOriginal() {
 
 
     }
