@@ -14,6 +14,9 @@ public class SimpleMotor {
     //Used for telemetry
     protected String name;
     protected boolean hasEncoders;
+    
+    //Timer used for each object
+    protected LinearOpMode timer;
     public static final long WAITRESOLUTION = 200;
     public static final double MAXPOW = 0.9;
     SimpleMotor(DcMotor myMotor, String myName, boolean encoderCheck){
@@ -34,6 +37,12 @@ public class SimpleMotor {
             hasEncoders = false;
             motor.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
         }
+        timer = new LinearOpMode() {
+            @Override
+            public void runOpMode() throws InterruptedException {
+                return;
+            }
+        };
 
     }
     public DcMotor getMotor(){
@@ -80,7 +89,7 @@ public class SimpleMotor {
         if (motor != null) {
             motor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
             while (motor.getCurrentPosition() != 0) {
-                motor.wait(WAITRESOLUTION);
+                waitOneFullHardwareCycle();
             }
             motor.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
         }
@@ -88,6 +97,6 @@ public class SimpleMotor {
 
     }
     protected void sleep(long time) throws InterruptedException{
-        motor.wait(WAITRESOLUTION);
+        timer.sleep(WAITRESOLUTION);
     }
 }

@@ -26,9 +26,7 @@ public class MasterLinear extends LinearOpMode {
         leftDriveMotor = hardwareMap.dcMotor.get("motorLeft");
         rightDriveMotor = hardwareMap.dcMotor.get("motorRight");
         telemetry.addData("Tests", "Hardware Init'd");
-        if(leftDriveMotor == null){
-            throw(new NullPointerException("Left Motor not init'd"));
-        }
+
         leftDrive = new DistanceMotor(leftDriveMotor, "Left",true,false,4,1,1440);
         rightDrive = new DistanceMotor(rightDriveMotor, "Right",true, true, 4,1,1440);
         leftTimedDrive = new TimedMotor(leftDriveMotor,"Left",true,false);
