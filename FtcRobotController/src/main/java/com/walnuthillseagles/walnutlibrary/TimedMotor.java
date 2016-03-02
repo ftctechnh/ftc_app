@@ -11,20 +11,12 @@ public class TimedMotor extends LinearMotor implements Runnable, Auto {
     public static final int NSECSINSEC = 1000000;
     private int numMSecs;
     private Thread runner;
-    //Debuging variable
-    private LinearOpMode myOp;
 
 
 
     public TimedMotor(DcMotor myMotor, String name,boolean encoderCheck, boolean isReversed){
         super(myMotor, name, encoderCheck,isReversed);
         numMSecs = 0;
-        myOp = new LinearOpMode() {
-            @Override
-            public void runOpMode() throws InterruptedException {
-                return;
-            }
-        };
     }
 
     //Seconds precise up to three decimal places
@@ -44,9 +36,9 @@ public class TimedMotor extends LinearMotor implements Runnable, Auto {
     }
 
     public void run(){
-        motor.setPower(speedLimit);
+        this.setPower(speedLimit);
         try{
-            myOp.sleep(numMSecs);
+            timer.sleep(numMSecs);
         }
         catch(InterruptedException e){
             //@TODO: Overkill?
