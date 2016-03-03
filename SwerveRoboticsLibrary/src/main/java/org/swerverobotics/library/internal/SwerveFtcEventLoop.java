@@ -26,7 +26,6 @@ public class SwerveFtcEventLoop extends FtcEventLoop
     //----------------------------------------------------------------------------------------------
 
     protected SwerveOpModeManager swerveOpModeManager;
-    protected EventLoopManager    eventLoopManager;
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -35,7 +34,6 @@ public class SwerveFtcEventLoop extends FtcEventLoop
     public SwerveFtcEventLoop(HardwareFactory hardwareFactory, OpModeRegister register, UpdateUI.Callback callback, Context robotControllerContext)
         {
         super(hardwareFactory, register, callback, robotControllerContext);
-        setEventLoopManager();
         }
 
     @Override
@@ -45,29 +43,15 @@ public class SwerveFtcEventLoop extends FtcEventLoop
         return this.swerveOpModeManager;
         }
 
-    void setEventLoopManager()
-        {
-        if (null == this.eventLoopManager)
-            this.eventLoopManager = this.ftcEventLoopHandler.getEventLoopManager();
-        }
-
     //----------------------------------------------------------------------------------------------
     // Operations
     //----------------------------------------------------------------------------------------------
 
-    public EventLoopManager getEventLoopManager()
-        {
-        return this.eventLoopManager;
-        }
-
     @Override public void loop() throws RobotCoreException
     // Hook this so that we will have thread context set whenever we're running user
-    // code on the loop() thread
+    // code on the loop() thread. (Note: might no longer strictly be necessary.)
         {
         SwerveThreadContext context = SwerveThreadContext.createIfNecessary();
-        context.swerveFtcEventLoop = this;
-        setEventLoopManager();
-        //
         super.loop();
         }
 

@@ -20,7 +20,7 @@ import org.swerverobotics.library.internal.*;
  *
  * Extend this class and implement the {@link #main()} method to add your own code.
  */
-public abstract class SynchronousOpMode extends OpMode implements IThunkDispatcher
+public abstract class SynchronousOpMode extends OpMode
     {
     //----------------------------------------------------------------------------------------------
     // Public State
@@ -59,32 +59,10 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
      */
     public TelemetryDashboardAndLog telemetry;
 
-    /** Advanced: the number of nanoseconds in a millisecond. */
+    /** Advanced: the number of nanoseconds in a millisecond.
+     * @deprecated use ElapsedTime.MILLIS_IN_NANO instead. */
+    @Deprecated
     public static final long NANO_TO_MILLI = ElapsedTime.MILLIS_IN_NANO;
-
-    /**
-     * Advanced: msLoopDwellMax is the (soft) maximum number of milliseconds that
-     * our loop() implementation will spend in any one call before returning. 
-     * Usually, much less time than this maximum is expended.
-     *
-     * @return the current maximum loop dwell time.
-     */
-    public long getMsLoopDwellMax()                    { return msLoopDwellMax; }
-    /**
-     * Advanced: Sets the maximum loop dwell time.
-     *
-     * @param msLoopDwellMax the new maximum loop dwell time, in milliseconds
-     * @see #getMsLoopDwellMax()
-     * */
-    public void setMsLoopDwellMax(long msLoopDwellMax) { this.msLoopDwellMax = msLoopDwellMax; }
-
-    private long msLoopDwellMax = 15;
-
-    /**
-     * Advanced: loopDwellCheckCount is the number of thunks we will execute in loop()
-     * before checking whether we've exceeded msLoopDwellMax.
-     */
-    public int loopDwellCheckCount = 5;
 
     /**
      * Advanced: the number of times loop() has been called on the loop thread.
@@ -445,12 +423,9 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     private volatile boolean                started;
     private volatile boolean                stopRequested;
     private SynchronousOpModeHardwareFactory hardwareFactory = null;
-    private final   ActionQueueAndHistory   actionQueueAndHistory = new ActionQueueAndHistory();
     private         AtomicBoolean           gamePadCaptureStateChanged = new AtomicBoolean(false);
     private         boolean                 gamepadInputQueried = false;
     private final   Object                  loopLock = new Object();
-    private final   SparseArray<Runnable>   singletonLoopActions = new SparseArray<Runnable>();
-    private static  AtomicInteger           prevSingletonKey = new AtomicInteger(0);
 
     private         Thread                  loopThread;
     private final   ExecutorService         mainThreadExecutor    = ThreadPool.newSingleThreadExecutor();
@@ -467,80 +442,6 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     public SynchronousOpMode()
         {
         }
-
-    //----------------------------------------------------------------------------------------------
-    // Types
-    //----------------------------------------------------------------------------------------------
-
-    private class ActionQueueAndHistory
-        {
-        //-----------------------------------------------------------------------
-        // State
-
-        Queue<Runnable>  queue;
-        Queue<Runnable>  historicalActions;
-
-        //-----------------------------------------------------------------------
-        // Construction
-
-        ActionQueueAndHistory()
-            {
-            this.queue   = this.newQueue();
-            if (BuildConfig.DEBUG && false)
-                this.historicalActions = new LinkedList<Runnable>();
-            }
-        private Queue<Runnable> newQueue()
-            {
-            return new LinkedList<Runnable>();
-            }
-
-        //-----------------------------------------------------------------------
-        // Operations
-
-        synchronized void clear()
-            {
-            this.queue   = this.newQueue();
-            this.onChanged();
-            }
-
-        synchronized void clearHistory()
-            {
-            this.onChanged();
-            }
-
-        synchronized void add(Runnable action)
-            {
-            assertTrue(action!=null);
-            this.queue.add(action);
-            this.onChanged();
-            }
-
-        synchronized Runnable poll()
-            {
-            Runnable result = this.queue.poll();
-            if (result != null)
-                {
-                if (this.historicalActions != null)
-                    {
-                    this.historicalActions.add(result);
-                    }
-
-                this.onChanged();
-                }
-            return result;
-            }
-
-        private void onChanged()
-            {
-            this.notifyAll();
-            }
-        public void waitForChange() throws InterruptedException
-            {
-            // Note: caller must hold the monitor
-            this.wait();
-            }
-        }
-
 
     //----------------------------------------------------------------------------------------------
     // Management of synchronous threads
@@ -623,7 +524,6 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
         {
         SwerveThreadContext context = SwerveThreadContext.createIfNecessary();
         context.opMode = this;
-        context.thunker = this;
         context.isSynchronousThread = true;
         }
 
@@ -653,10 +553,6 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
 
             // Similarly replace the telemetry variable
             this.telemetry = new TelemetryDashboardAndLog(this);
-
-            // Paranoia: clear any state that may just perhaps be lingering
-            this.clearSingletons();
-            this.actionQueueAndHistory.clear();
 
             // We're being asked to start, not stop
             this.started = false;
@@ -751,9 +647,6 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
                 // Keep track of how many loop() calls we've seen
                 this.loopCount.getAndIncrement();
 
-                // The history of what was executed int the previous loop() call is now irrelevant
-                this.actionQueueAndHistory.clearHistory();
-
                 // If we had an exception thrown by a synchronous thread, then throw it here. 'Sort
                 // of like thunking the exceptions. Exceptions from the main thread take
                 // priority over those from worker threads. Note that the reads here are indeed
@@ -774,42 +667,6 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
                 // Call the subclass hook in case they might want to do something interesting
                 this.midLoopHook();
 
-                // Start measuring time so we don't spend too long here in loop(). That might
-                // happen if we got flooded with a bevy of non-waiting actions and we didn't have
-                // this check here.
-                long nanotimeStart = System.nanoTime();
-                long nanotimeMax   = nanotimeStart + this.getMsLoopDwellMax() * NANO_TO_MILLI;
-
-                // Do any actions we've been asked to execute here on the loop thread
-                for (int i = 1; ; i++)
-                    {
-                    // Get the next action in the queue. Get out of here if there aren't any more
-                    Runnable action;
-                    synchronized (this.actionQueueAndHistory)
-                        {
-                        action = this.actionQueueAndHistory.poll();
-                        if (null == action)
-                            break;
-                        }
-
-                    // Execute the work that needs to be done on the loop thread
-                    executeAction(action);
-
-                    // Periodically check whether we've run long enough for this loop() call.
-                    if (i % this.loopDwellCheckCount == 0)
-                        {
-                        if (System.nanoTime() >= nanotimeMax)
-                            break;
-                        }
-                    }
-
-                // Dig out and execute any of our singleton actions.
-                List<Runnable> actions = this.snarfSingletons();
-                for (Runnable action : actions)
-                    {
-                    executeAction(action);
-                    }
-
                 // Tell people that this loop cycle is complete
                 this.loopLock.notifyAll();
                 }
@@ -824,20 +681,6 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             }
         }
 
-    void executeAction(Runnable action)
-        {
-        try {
-            action.run();
-            }
-        catch (Exception e)
-            {
-            // Ignore. Actions generally are responsible for cleaning up their own
-            // mess; they shouldn't be disturbing us. Thus, we eat any exceptions to keep
-            // things moving.
-            Log.e(LOGGING_TAG, "action exception leaked through to loop thread: " + e);
-            }
-        }
-    
     /**
      * Advanced: The robot controller runtime calls stop() to shut down the OpMode.
      *
@@ -859,8 +702,8 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
             this.mainThreadExecutor.shutdownNow();
 
             // Serially wait for these folk to pack up and leave
-            ThreadPool.awaitTerminationOrExitApplication(this.workerThreadsExecutor, 30, TimeUnit.SECONDS, "synchronous threads", "unreasonable delay in user code?");
-            ThreadPool.awaitTerminationOrExitApplication(this.mainThreadExecutor, 30, TimeUnit.SECONDS, "synchronous main thread", "unreasonable delay in user code?");
+            ThreadPool.awaitTerminationOrExitApplication(this.workerThreadsExecutor, 10, TimeUnit.SECONDS, "synchronous threads", "unreasonable delay in user code?");
+            ThreadPool.awaitTerminationOrExitApplication(this.mainThreadExecutor, 10, TimeUnit.SECONDS, "synchronous main thread", "unreasonable delay in user code?");
 
             if (this.hardwareFactory != null)
                 {
@@ -945,82 +788,12 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     protected void postStopHook() { /* hook for subclasses */ }
 
     //----------------------------------------------------------------------------------------------
-    // IThunkDispatcher
-    //----------------------------------------------------------------------------------------------
-
-    /**
-     * Advanced: Execute the indicated action on the loop thread given that we are on a synchronous thread
-     */
-    @Override public void executeOnLoopThread(Runnable action)
-        {
-        SwerveThreadContext.assertSynchronousThread();
-        this.actionQueueAndHistory.add(action);
-        }
-
-    /**
-     * Advanced: Execute the indicated action on the loop thread if we are on a synchronous thread
-     * or the loop() thread.
-     *
-     * If a previous call has been made with the same key, then replace that previous action;
-     * otherwise, add a new action with the key.
-     */
-    @Override public void executeSingletonOnLoopThread(int singletonKey, Runnable action)
-        {
-        SwerveThreadContext.assertSynchronousThread();
-        synchronized (this.singletonLoopActions)
-            {
-            this.singletonLoopActions.put(singletonKey, action);
-            }
-        }
-
-    /**
-     * Advanced: Return a new key for use in executeSingletonOnLoopThread()
-     */
-    @Override public int getNewSingletonKey()
-        {
-        return staticGetNewSingletonKey();
-        }
-    
-    /**
-     * Advanced/Internal: Return a new key by which actions can be scheduled using executeSingletonOnLoopThread()
-     * @return the new singleton key.
-     */
-    public static int staticGetNewSingletonKey()
-        {
-        return prevSingletonKey.incrementAndGet();
-        }
-
-    /**
-     * Advanced: If we are running on a synchronous thread, then return the object
-     * which manages thunking from the current thread to the loop() thread.
-     *
-     * @return the thunk dispatcher object, or null if we are not on a synchronous thread
-     */
-    public static IThunkDispatcher getThreadThunker()
-        {
-        return SwerveThreadContext.getThunker();
-        }
-
-    //----------------------------------------------------------------------------------------------
     // Thunking helpers
     //----------------------------------------------------------------------------------------------
 
     private static SynchronousOpMode getThreadSynchronousOpMode()
         {
         return (SynchronousOpMode)(SwerveThreadContext.getOpMode());
-        }
-
-    /**
-     * Advanced/Internal: Wait until we encounter a loop() cycle that doesn't (yet) contain any actions which
-     * are also thunks and whose key is the one indicated.
-     * @param actionKey the key used to indicate which actions are of interest
-     * @throws InterruptedException thrown if the thread is interrupted
-     * @deprecated action key support is being removed
-     */
-    @Deprecated
-    public static void synchronousThreadWaitForLoopCycleEmptyOfActionKey(int actionKey) throws InterruptedException
-        {
-        // Nothing here any more
         }
 
     /**
@@ -1031,31 +804,5 @@ public abstract class SynchronousOpMode extends OpMode implements IThunkDispatch
     private boolean isLoopThread()
         {
         return this.loopThread.getId() == Thread.currentThread().getId();
-        }
-
-    private ArrayList<Runnable> snarfSingletons()
-    // Atomically retrieve a copy of the singleton loop actions. The lock on that object
-    // is a leaf lock, meaning that no further locks may be acquired if that lock is held.
-    // By this protocol we avoid deadlock, and that is a wonderful thing.
-        {
-        ArrayList<Runnable> result = new ArrayList<Runnable>();
-        synchronized (this.singletonLoopActions)
-            {
-            for (int i = 0; i < this.singletonLoopActions.size(); i++)
-                {
-                int key = this.singletonLoopActions.keyAt(i);
-                result.add(this.singletonLoopActions.get(key));
-                }
-            this.singletonLoopActions.clear();
-            }
-        return result;
-        }
-
-    private void clearSingletons()
-        {
-        synchronized (this.singletonLoopActions)
-            {
-            this.singletonLoopActions.clear();
-            }
         }
     }

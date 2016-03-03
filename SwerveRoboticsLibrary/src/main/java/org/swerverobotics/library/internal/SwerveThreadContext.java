@@ -17,9 +17,7 @@ public class SwerveThreadContext
 
     public final Thread     thread;
     public OpMode           opMode;
-    public IThunkDispatcher thunker;
     public boolean          isSynchronousThread;
-    public SwerveFtcEventLoop swerveFtcEventLoop;
 
     /**
      * tlsThreadContext is the thread local variable by which a SwerveThreadContext is associated with a thread
@@ -35,11 +33,9 @@ public class SwerveThreadContext
 
     public SwerveThreadContext()
         {
-        this.thread  = Thread.currentThread();
+        this.thread              = Thread.currentThread();
         this.opMode              = null;
-        this.thunker             = null;
         this.isSynchronousThread = false;
-        this.swerveFtcEventLoop  = null;
         }
 
     public static SwerveThreadContext createIfNecessary()
@@ -62,26 +58,9 @@ public class SwerveThreadContext
         return tlsThreadContext.get();
         }
 
-    @Deprecated
-    public static IThunkDispatcher getThunker()
-        {
-        return getThreadContext()==null ? null : getThreadContext().thunker;
-        }
     public static OpMode getOpMode()
         {
         return getThreadContext()==null ? null : getThreadContext().opMode;
-        }
-    public static EventLoopManager getEventLoopManager()
-        {
-        SwerveThreadContext me = getThreadContext();
-        if (me != null)
-            {
-            if (me.swerveFtcEventLoop != null)
-                {
-                return me.swerveFtcEventLoop.getEventLoopManager();
-                }
-            }
-        return null;
         }
 
     public static void assertSynchronousThread()
@@ -97,9 +76,5 @@ public class SwerveThreadContext
     public boolean thisIsSynchronousThread()
         {
         return this.isSynchronousThread;
-        }
-    @Deprecated public IThunkDispatcher thisGetThunker()
-        {
-        return this.thunker;
         }
     }
