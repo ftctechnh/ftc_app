@@ -2,12 +2,14 @@ package org.swerverobotics.library.internal;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.util.ThreadPool;
 
 import org.swerverobotics.library.SynchronousOpMode;
 import org.swerverobotics.library.interfaces.IOpModeLoopCounter;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -40,13 +42,13 @@ public class OpModeLoopCounter implements IOpModeLoopCounter
 
         this.linearCount    = new AtomicInteger(0);
         this.stopRequested  = false;
-        this.executor       = Executors.newSingleThreadExecutor();
+        this.executor       = ThreadPool.newSingleThreadExecutor();
 
         if (this.linearOpMode != null)
             {
             this.executor.execute(new Runnable() { @Override public void run()
                 {
-                while (!stopRequested)
+                while (!stopRequested && Thread.currentThread().isInterrupted())
                     {
                     try {
                         synchronized (linearOpMode)
@@ -80,6 +82,6 @@ public class OpModeLoopCounter implements IOpModeLoopCounter
         {
         this.stopRequested = true;
         this.executor.shutdownNow();
-        Util.awaitTermination(this.executor);
+        ThreadPool.awaitTerminationOrExitApplication(this.executor, 10, TimeUnit.SECONDS, "loop counter", "internal error");
         }
     }
