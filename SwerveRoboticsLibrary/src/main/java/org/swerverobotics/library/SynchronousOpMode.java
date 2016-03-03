@@ -478,7 +478,7 @@ public abstract class SynchronousOpMode extends OpMode
                 if (this.isMain)
                     requestOpModeStop();
                 }
-            catch (InterruptedException|RuntimeInterruptedException|CancellationException ignored)
+            catch (InterruptedException|CancellationException ignored)
                 {
                 // If the main() method itself doesn't catch the interrupt, at least
                 // we will do so here. The whole point of such interrupts is to

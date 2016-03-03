@@ -9,6 +9,7 @@ import org.swerverobotics.library.*;
 import org.swerverobotics.library.exceptions.*;
 import org.swerverobotics.library.interfaces.*;
 
+import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -636,7 +637,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, I2cDeviceSynchUser, 
                         Thread.yield(); // never do a hard spin
                     }
                 }
-            catch (InterruptedException|RuntimeInterruptedException e)
+            catch (InterruptedException|CancellationException e)
                 {
                 return;
                 }
