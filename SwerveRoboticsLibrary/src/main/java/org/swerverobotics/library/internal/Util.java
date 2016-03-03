@@ -116,33 +116,6 @@ public class Util
         }
 
     //----------------------------------------------------------------------------------------------
-    // Threads
-    //----------------------------------------------------------------------------------------------
-
-    public static void shutdownAndAwaitTermination(ExecutorService service)
-        {
-        service.shutdown();
-        awaitTermination(service);
-        }
-
-    public static void shutdownNowAndAwaitTermination(ExecutorService service)
-        {
-        service.shutdownNow();
-        awaitTermination(service);
-        }
-
-    public static void awaitTermination(ExecutorService service)
-        {
-        try {
-            service.awaitTermination(30, TimeUnit.DAYS);
-            }
-        catch (InterruptedException e)
-            {
-            Util.handleCapturedInterrupt(e);
-            }
-        }
-
-    //----------------------------------------------------------------------------------------------
     // Miscellany
     //----------------------------------------------------------------------------------------------
 
