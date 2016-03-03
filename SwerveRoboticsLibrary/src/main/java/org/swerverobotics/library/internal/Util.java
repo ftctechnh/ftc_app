@@ -600,12 +600,4 @@ public class Util
         {
         Thread.currentThread().interrupt();
         }
-
-    public static void handleCapturedException(Exception e)
-        {
-        if (e instanceof InterruptedException || e instanceof RuntimeInterruptedException)
-            Thread.currentThread().interrupt();
-        else
-            throw SwerveRuntimeException.wrap(e);
-        }
     }
