@@ -180,7 +180,7 @@ public class Util
         try {
             methods = clazz.getDeclaredMethods();
             }
-        catch (Exception e)
+        catch (Exception|LinkageError e)
             {
             methods = new Method[0];
             }
