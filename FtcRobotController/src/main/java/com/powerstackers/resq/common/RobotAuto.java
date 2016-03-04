@@ -8,6 +8,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import static com.powerstackers.resq.common.RobotConstants.CRS_STOP;
+import static com.powerstackers.resq.common.RobotConstants.HOPPER_LEFT_CLOSE;
+import static com.powerstackers.resq.common.RobotConstants.HOPPER_RIGHT_CLOSE;
+import static com.powerstackers.resq.common.RobotConstants.ZIPLINE_LEFT_CLOSE;
+import static com.powerstackers.resq.common.RobotConstants.ZIPLINE_RIGHT_CLOSE;
 import static com.powerstackers.resq.common.enums.PublicEnums.MotorSetting;
 
 /**
@@ -54,6 +58,12 @@ public class RobotAuto {
     private Servo servoChurroRight;
     private Servo servoLiftLeft;
     private Servo servoLiftRight;
+    private Servo servoHopperRight;
+    private Servo servoHopperLeft;
+    private Servo servoHook;
+    private Servo servoZippLineLeft;
+    private Servo servoZippLineRight;
+    private Servo servoHopperSlide;
 
 //    private DeviceInterfaceModule dim;
 //    private ColorSensor sensorColor;
@@ -85,10 +95,20 @@ public class RobotAuto {
         servoClimberFlipper = mode.hardwareMap.servo.get("servoClimbers");
         servoChurroLeft = mode.hardwareMap.servo.get("servoChurroLeft");
         servoChurroRight = mode.hardwareMap.servo.get("servoChurroRight");
+        servoHopperRight    = mode.hardwareMap.servo.get("servoHopperRight");
+        servoHopperLeft     = mode.hardwareMap.servo.get("servoHopperLeft");
+        servoZippLineLeft   = mode.hardwareMap.servo.get("servoZipplineLeft");
+        servoZippLineRight  = mode.hardwareMap.servo.get("servoZipplineRight");
+        servoHook           = mode.hardwareMap.servo.get("servoHook");
+        servoHopperSlide     = mode.hardwareMap.servo.get("servoHopperSlide");
 //
         servoClimberFlipper.setPosition(RobotConstants.CLIMBER_EXTEND);
         servoChurroRight.setPosition(RobotConstants.CHURRO_RIGHT_CLOSE);
         servoChurroLeft.setPosition(RobotConstants.CHURRO_LEFT_CLOSE);
+
+
+        servoHopperLeft.setPosition(HOPPER_LEFT_CLOSE);
+        servoHopperRight.setPosition(HOPPER_RIGHT_CLOSE);
 
         servoLiftLeft       = mode.hardwareMap.servo.get("servoLiftLeft");
         servoLiftRight      = mode.hardwareMap.servo.get("servoLiftRight");
@@ -116,8 +136,15 @@ public class RobotAuto {
      * Initialize the robot's servos and sensors.
      */
     public void initializeRobot() /*throws InterruptedException */{
+
+        servoHopperLeft.setPosition(HOPPER_LEFT_CLOSE);
+        servoHopperRight.setPosition(HOPPER_RIGHT_CLOSE);
 //        servoBeacon.setPosition(RobotConstants.BEACON_RESTING);
         servoClimberFlipper.setPosition(RobotConstants.CLIMBER_EXTEND);
+        servoHook.setPosition(CRS_STOP);
+        servoZippLineLeft.setPosition(ZIPLINE_LEFT_CLOSE);
+        servoZippLineRight.setPosition(ZIPLINE_RIGHT_CLOSE);
+        servoHopperSlide.setPosition(CRS_STOP);
 //        servoChurroRight.setPosition(RobotConstants.CHURRO_RIGHT_OPEN);
 //        servoChurroLeft.setPosition(RobotConstants.CHURRO_LEFT_OPEN);
         sensorGyro.calibrate();

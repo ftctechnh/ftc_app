@@ -125,7 +125,7 @@ public class Robot {
         servoHook           = mode.hardwareMap.servo.get("servoHook");
 
         servoHopperLeft.setPosition(HOPPER_LEFT_CLOSE);
-//        servoHopperRight.setPosition(RobotConstants.HOPPER_RIGHT_CLOSE);
+        servoHopperRight.setPosition(HOPPER_RIGHT_CLOSE);
         servoHopperSlide.setPosition(CRS_STOP);
         servoClimberFlipper.setPosition(CLIMBER_EXTEND);
         servoChurroRight.setPosition(CHURRO_RIGHT_OPEN);
