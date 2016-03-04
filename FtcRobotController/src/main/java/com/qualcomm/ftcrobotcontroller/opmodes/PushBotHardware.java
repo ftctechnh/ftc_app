@@ -119,6 +119,18 @@ public class PushBotHardware extends OpMode
             v_motor_left_arm = null;
         }
 
+        try
+        {
+            v_motor_right_arm = hardwareMap.dcMotor.get ("right_arm");
+        }
+        catch (Exception p_exeception)
+        {
+            m_warning_message ("right_arm");
+            DbgLog.msg (p_exeception.getLocalizedMessage ());
+
+            v_motor_right_arm = null;
+        }
+
         //
         // Connect the servo motors.
         //
@@ -285,10 +297,10 @@ public class PushBotHardware extends OpMode
         float l_power = Range.clip (p_power, -1, 1);
 
         float[] l_array =
-            { 0.00f, 0.05f, 0.09f, 0.10f, 0.12f
-            , 0.15f, 0.18f, 0.24f, 0.30f, 0.36f
-            , 0.43f, 0.50f, 0.60f, 0.72f, 0.85f
-            , 1.00f, 1.00f
+            { 0.00f, 0.06f, 0.12f, 0.18f, 0.24f
+            , 0.30f, 0.36f, 0.42f, 0.48f, 0.54f
+            , 0.60f, 0.66f, 0.72f, 0.78f, 0.84f
+            , 0.90f, 0.96f
             };
 
         //
@@ -311,6 +323,51 @@ public class PushBotHardware extends OpMode
         else
         {
             l_scale = l_array[l_index];
+        }
+
+        return l_scale;
+
+    } // scale_arm_motor_power
+
+    float scale_arm_motor_power (float p_power)
+    {
+        //
+        // Assume no scaling.
+        //
+        float l_scale = 0.0f;
+
+        //
+        // Ensure the values are legal.
+        //
+        float l_power = Range.clip (p_power, -1, 1);
+
+        float[] l_array =
+                { 0.00f, 0.06f, 0.12f, 0.18f, 0.24f
+                , 0.30f, 0.36f, 0.42f, 0.48f, 0.54f
+                , 0.60f, 0.66f, 0.72f, 0.78f, 0.84f
+                , 0.90f, 0.96f
+                };
+
+        //
+        // Get the corresponding index for the specified argument/parameter.
+        //
+        int l_index = (int)(l_power * 16.0);
+        if (l_index < 0)
+        {
+            l_index = -l_index;
+        }
+        else if (l_index > 16)
+        {
+            l_index = 16;
+        }
+
+        if (l_power < 0)
+        {
+            l_scale = (float) (-l_array[l_index]*.8);
+        }
+        else
+        {
+            l_scale = (float) (l_array[l_index]*.8);
         }
 
         return l_scale;
@@ -515,7 +572,32 @@ public class PushBotHardware extends OpMode
                 );
         }
 
+    } // reset_left_arm_encoder
+
+    public void reset_left_arm_encoder ()
+
+    {
+        if (v_motor_left_arm != null)
+        {
+            v_motor_left_arm.setMode
+                    ( DcMotorController.RunMode.RESET_ENCODERS
+                    );
+        }
+
     } // reset_left_drive_encoder
+
+    public void reset_right_arm_encoder ()
+
+    {
+        if (v_motor_right_arm != null)
+        {
+            v_motor_right_arm.setMode
+                    ( DcMotorController.RunMode.RESET_ENCODERS
+                    );
+        }
+
+    } // reset_left_drive_encoder
+
 
     //--------------------------------------------------------------------------
     //
@@ -553,6 +635,19 @@ public class PushBotHardware extends OpMode
         reset_right_drive_encoder ();
 
     } // reset_drive_encoders
+
+    public void reset_all_encoders ()
+
+    {
+        //
+        // Reset the motor encoders on the drive wheels.
+        //
+        reset_left_drive_encoder ();
+        reset_right_drive_encoder();
+        reset_left_arm_encoder();
+        reset_right_arm_encoder();
+
+    }
 
     //--------------------------------------------------------------------------
     //
@@ -594,6 +689,34 @@ public class PushBotHardware extends OpMode
         return l_return;
 
     } // a_right_encoder_count
+
+    int a_left_arm_encoder_count ()
+
+    {
+        int l_return = 0;
+
+        if (v_motor_left_arm != null)
+        {
+            l_return = v_motor_left_arm.getCurrentPosition ();
+        }
+
+        return l_return;
+
+    }
+
+    int a_right_arm_encoder_count ()
+
+    {
+        int l_return = 0;
+
+        if (v_motor_right_arm != null)
+        {
+            l_return = v_motor_right_arm.getCurrentPosition ();
+        }
+
+        return l_return;
+
+    }
 
     //--------------------------------------------------------------------------
     //
@@ -886,6 +1009,19 @@ public class PushBotHardware extends OpMode
 
     } // a_left_arm_power
 
+    double a_right_arm_power ()
+    {
+        double l_return = 0.0;
+
+        if (v_motor_right_arm != null)
+        {
+            l_return = v_motor_right_arm.getPower ();
+        }
+
+        return l_return;
+
+    } // a_left_arm_power
+
     //--------------------------------------------------------------------------
     //
     // m_left_arm_power
@@ -898,6 +1034,15 @@ public class PushBotHardware extends OpMode
         if (v_motor_left_arm != null)
         {
             v_motor_left_arm.setPower (p_level);
+        }
+
+    } // m_left_arm_power
+
+    void m_right_arm_power (double p_level)
+    {
+        if (v_motor_right_arm != null)
+        {
+            v_motor_right_arm.setPower (p_level);
         }
 
     } // m_left_arm_power
@@ -1024,6 +1169,8 @@ public class PushBotHardware extends OpMode
      * Manage the aspects of the left arm motor.
      */
     private DcMotor v_motor_left_arm;
+
+    private DcMotor v_motor_right_arm;
 
     //--------------------------------------------------------------------------
     //
