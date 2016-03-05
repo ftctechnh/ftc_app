@@ -15,16 +15,9 @@ public class SwerveThreadContext
     // Only to be accessed directly by internal Swerve Library components. All others to use methods.
     //----------------------------------------------------------------------------------------------
 
-    /**
-     * The action key used for write thunks that are issued by this thread
-     */
-    public int actionKeyWritesFromThisThread = Thunk.getNewActionKey();
-
     public final Thread     thread;
     public OpMode           opMode;
-    public IThunkDispatcher thunker;
     public boolean          isSynchronousThread;
-    public SwerveFtcEventLoop swerveFtcEventLoop;
 
     /**
      * tlsThreadContext is the thread local variable by which a SwerveThreadContext is associated with a thread
@@ -40,11 +33,9 @@ public class SwerveThreadContext
 
     public SwerveThreadContext()
         {
-        this.thread  = Thread.currentThread();
+        this.thread              = Thread.currentThread();
         this.opMode              = null;
-        this.thunker             = null;
         this.isSynchronousThread = false;
-        this.swerveFtcEventLoop  = null;
         }
 
     public static SwerveThreadContext createIfNecessary()
@@ -66,30 +57,15 @@ public class SwerveThreadContext
         {
         return tlsThreadContext.get();
         }
-    public static IThunkDispatcher getThunker()
-        {
-        return getThreadContext()==null ? null : getThreadContext().thunker;
-        }
+
     public static OpMode getOpMode()
         {
         return getThreadContext()==null ? null : getThreadContext().opMode;
         }
-    public static EventLoopManager getEventLoopManager()
-        {
-        SwerveThreadContext me = getThreadContext();
-        if (me != null)
-            {
-            if (me.swerveFtcEventLoop != null)
-                {
-                return me.swerveFtcEventLoop.getEventLoopManager();
-                }
-            }
-        return null;
-        }
 
     public static void assertSynchronousThread()
         {
-        junit.framework.Assert.assertTrue(!BuildConfig.DEBUG || isSynchronousThread());
+        junit.framework.Assert.assertTrue(isSynchronousThread());
         }
     public static boolean isSynchronousThread()
         {
@@ -100,9 +76,5 @@ public class SwerveThreadContext
     public boolean thisIsSynchronousThread()
         {
         return this.isSynchronousThread;
-        }
-    public IThunkDispatcher thisGetThunker()
-        {
-        return this.thunker;
         }
     }

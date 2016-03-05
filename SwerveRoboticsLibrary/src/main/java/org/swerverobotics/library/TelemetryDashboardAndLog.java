@@ -122,7 +122,7 @@ public class TelemetryDashboardAndLog
     private boolean                 updateSinceAddComposedLine = false;
 
     private long                    nanoLastUpdate = 0;
-    private EventLoopManager        eventLoopManager;
+    private OpMode                  opMode;
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -132,6 +132,7 @@ public class TelemetryDashboardAndLog
      * Instantiate a new telemetry dashboard and log for use within a given OpMode
      *
      * @param notUsed the previous telemetry object that the new one is to take over from
+     * @deprecated This constructor is no longer necessary. Use {@link #TelemetryDashboardAndLog()} instead.
      */
     @Deprecated
     public TelemetryDashboardAndLog(Telemetry notUsed)
@@ -140,14 +141,26 @@ public class TelemetryDashboardAndLog
         }
 
     /**
-     * Instantiate a new telemetry dashboard and log
+     * Instantiate a new telemetry dashboard and log. This constructor ONLY functions from within
+     * a synchronous OpMode.
+     * @see #TelemetryDashboardAndLog(OpMode)
      */
     public TelemetryDashboardAndLog()
         {
-        SwerveThreadContext context = SwerveThreadContext.getThreadContext();
-        this.eventLoopManager = context.swerveFtcEventLoop.getEventLoopManager();
-        this.log = new Log();
+        this(SwerveThreadContext.getOpMode());
+        }
+
+    /**
+     * Instantiate a new telemetry dashboard and log. This constructor functions from within any
+     * flavor of OpMode.
+     * @param opModeContext The OpMode within which the instance is to be used.
+     */
+    public TelemetryDashboardAndLog(OpMode opModeContext)
+        {
+        if (null == opModeContext) throw new IllegalArgumentException("TelemetryDashboardAndLog opModeContext can't be null");
         //
+        this.opMode = opModeContext;
+        this.log = new Log();
         this.clearDashboard();
         }
 
@@ -199,8 +212,41 @@ public class TelemetryDashboardAndLog
      */
     public synchronized void addData(String caption, float value)
         {
-        this.addData(caption, (double)value);
+        this.addComposedLine(caption, Float.toString(value));
         }
+
+    /**
+     * Add a one-time message to the dashboard. This message is erased after
+     * update() is called and must be reissued if it is to be shown
+     * in subsequent update() cycles.
+     *
+     * @param caption   the caption to put on the message
+     * @param value     the value to be formatted and displayed
+     *
+     * @see #addData(String, String)
+     * @see Telemetry#addData(String, float)
+     */
+    public synchronized void addData(String caption, int value)
+        {
+        this.addComposedLine(caption, Integer.toString(value));
+        }
+
+    /**
+     * Add a one-time message to the dashboard. This message is erased after
+     * update() is called and must be reissued if it is to be shown
+     * in subsequent update() cycles.
+     *
+     * @param caption   the caption to put on the message
+     * @param value     the value to be formatted and displayed
+     *
+     * @see #addData(String, String)
+     * @see Telemetry#addData(String, float)
+     */
+    public synchronized void addData(String caption, long value)
+        {
+        this.addComposedLine(caption, Long.toString(value));
+        }
+
 
     /**
      * Add a one-time message to the dashboard. This message is erased after
@@ -367,7 +413,7 @@ public class TelemetryDashboardAndLog
                 }
             //
             if (transmitter.hasData())
-                this.eventLoopManager.sendTelemetryData(transmitter);
+                this.opMode.updateTelemetryNow(transmitter);
 
             // Update our state for the next time around
             this.nanoLastUpdate = nanoNow;

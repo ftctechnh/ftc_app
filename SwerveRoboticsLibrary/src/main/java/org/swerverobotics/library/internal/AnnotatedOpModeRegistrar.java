@@ -86,30 +86,19 @@ public class AnnotatedOpModeRegistrar
         this.dexFile = new DexFile(this.context.getPackageCodePath());
         }
 
-    static Context getApplicationContextRaw() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException
+    /** Use magic to find the current application context */
+    private static Context getApplicationContextRaw() throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException
         {
         Class<?> activityThreadClass    = Class.forName("android.app.ActivityThread");
         Method methodCurrentApplication = activityThreadClass.getMethod("currentApplication");
         return (Application) methodCurrentApplication.invoke(null, (Object[]) null);
         }
 
-    /** Use magic to find the current application context */
-    public static Context getApplicationContext()
-        {
-        try {
-            return getApplicationContextRaw();
-            }
-        catch (Exception e)
-            {
-            return null;
-            }
-        }
-
     //----------------------------------------------------------------------------------------------
     // Operations
     //----------------------------------------------------------------------------------------------
 
-    void doRegistration()
+    private void doRegistration()
     // The body of this is from the following, without which we could not have been successful
     // in this endeavor.
     //      https://github.com/dmssargent/Xtensible-ftc_app/blob/master/FtcRobotController/src/main/java/com/qualcomm/ftcrobotcontroller/opmodes/FtcOpModeRegister.java
@@ -125,24 +114,15 @@ public class AnnotatedOpModeRegistrar
         this.findOpModesFromClassAnnotations();
         this.processAnnotatedStaticMethods();
 
-        // Sort the linked lists within opModes, first by flavor and second by name
+        // Sort the linked lists within each OpMode group, simply by name. If we in the future
+        // have more than a simple flat list of OpModes on the driver station, then it might worth
+        // separating TeleOp from Autonomous Opmodes. Note that the groups themselves provide
+        // a higher level of sorting.
         Comparator<Class<OpMode>> comparator = new Comparator<Class<OpMode>>()
             {
             @Override public int compare(Class<OpMode> lhs, Class<OpMode> rhs)
                 {
-                if (lhs.isAnnotationPresent(TeleOp.class) && rhs.isAnnotationPresent(TeleOp.class))
-                    return getOpModeName(lhs).compareTo(getOpModeName(rhs));
-
-                else if (lhs.isAnnotationPresent(Autonomous.class) && rhs.isAnnotationPresent(TeleOp.class))
-                    return 1;
-
-                else if (lhs.isAnnotationPresent(TeleOp.class) && rhs.isAnnotationPresent(Autonomous.class))
-                    return -1;
-
-                else if (lhs.isAnnotationPresent(Autonomous.class) && rhs.isAnnotationPresent(Autonomous.class))
-                    return getOpModeName(lhs).compareTo(getOpModeName(rhs));
-
-                return -1;
+                return getOpModeName(lhs).compareTo(getOpModeName(rhs));
                 }
             };
         for (String key : opModeGroups.keySet())
@@ -151,12 +131,11 @@ public class AnnotatedOpModeRegistrar
             }
 
         // Display each group on the driver station in alphabetical order according
-        // to the name of the first member of each group.
+        // to the name of group
         TreeMap<String, LinkedList<Class<OpMode>>> sortedOpModes = new TreeMap<>();
         for (String groupName : opModeGroups.keySet())
             {
-            Class<OpMode> groupSortKey = opModeGroups.get(groupName).getFirst();
-            sortedOpModes.put(getOpModeName(groupSortKey), opModeGroups.get(groupName));
+            sortedOpModes.put(groupName, opModeGroups.get(groupName));
             }
 
         // Flatten the list
@@ -178,7 +157,7 @@ public class AnnotatedOpModeRegistrar
             }
         }
 
-    void reportOpModeConfigurationError(String format, Object... args)
+    private void reportOpModeConfigurationError(String format, Object... args)
         {
         String message = String.format(format, args);
         // Show the message in the log
@@ -222,7 +201,7 @@ public class AnnotatedOpModeRegistrar
             }
         }
 
-    boolean checkOpModeClassConstraints(Class clazz, String opModeName)
+    private boolean checkOpModeClassConstraints(Class clazz, String opModeName)
         {
         // If the class doesn't extend OpMode, that's an error, we'll ignore it
         if (!isOpMode(clazz))
@@ -489,7 +468,7 @@ public class AnnotatedOpModeRegistrar
         switch (name)
             {
             case "":
-            case "Stop Robot":  // Reserved for use by the runtime infrastructure
+            case OpModeManager.DEFAULT_OP_MODE_NAME:
                 return false;
             default:
                 return true;

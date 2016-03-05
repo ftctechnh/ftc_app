@@ -12,7 +12,7 @@ import org.swerverobotics.library.interfaces.TeleOp;
  * It assumes that you have 1 led connected to a Core Device Interface
  * and that the led is named "led" in your robot configuration file.
  */
-@TeleOp(name="LED demo", group="Swerve Examples")
+@TeleOp(name="LED demo (Synch)", group="Swerve Examples")
 @Disabled
 public class SynchLEDDemo extends SynchronousOpMode {
 

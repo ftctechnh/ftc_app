@@ -5,8 +5,10 @@ import com.qualcomm.hardware.adafruit.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
+
+import org.swerverobotics.library.ClassFactory;
 import org.swerverobotics.library.exceptions.UnexpectedI2CDeviceException;
-import org.swerverobotics.library.interfaces.*;
+
 import java.nio.ByteOrder;
 
 import static org.swerverobotics.library.internal.Util.handleCapturedInterrupt;
@@ -104,25 +106,25 @@ public class AdaFruitTCS34725ColorSensor implements ColorSensor, IOpModeStateTra
     public static final int IREG_READ_FIRST     = TCS34725_CDATAL;
     public static final int IREG_READ_LAST      = TCS34725_BDATAH;
 
-    final I2cDeviceClient                       i2cDeviceClient;
-    boolean                                     ledIsEnabled;
-    boolean                                     ledStateIsKnown;
-    I2cDeviceReplacementHelper<ColorSensor>     helper;
+    final I2cDeviceSynch                    i2CDeviceSynch;
+    boolean                                 ledIsEnabled;
+    boolean                                 ledStateIsKnown;
+    I2cDeviceReplacementHelper<ColorSensor> helper;
 
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    private AdaFruitTCS34725ColorSensor(OpMode context, I2cDeviceClient i2cDeviceClient, ColorSensor target, I2cController controller, int targetPort)
+    private AdaFruitTCS34725ColorSensor(OpMode context, I2cDeviceSynch i2CDeviceSynch, ColorSensor target, I2cController controller, int targetPort)
         {
         this.helper          = new I2cDeviceReplacementHelper<ColorSensor>(context, this, target, controller, targetPort);
-        this.i2cDeviceClient = i2cDeviceClient;
+        this.i2CDeviceSynch  = i2CDeviceSynch;
         this.ledIsEnabled    = false;
         this.ledStateIsKnown = false;
 
-        this.i2cDeviceClient.setReadWindow(new II2cDeviceClient.ReadWindow(
+        this.i2CDeviceSynch.setReadWindow(new I2cDeviceSynch.ReadWindow(
                 IREG_READ_FIRST, IREG_READ_LAST - IREG_READ_FIRST + 1,
-                II2cDeviceClient.READ_MODE.REPEAT));
+                I2cDeviceSynch.ReadMode.REPEAT));
 
         RobotStateTransitionNotifier.register(context, this);
         }
@@ -148,9 +150,9 @@ public class AdaFruitTCS34725ColorSensor implements ColorSensor, IOpModeStateTra
 
     public static ColorSensor create(OpMode context, I2cController controller, int port, int i2cAddr8Bit, ColorSensor target)
         {
-        II2cDevice i2cDevice               = new I2cDeviceOnI2cDeviceController(controller, port);
-        I2cDeviceClient i2cDeviceClient    = new I2cDeviceClient(context, i2cDevice, i2cAddr8Bit, false);
-        AdaFruitTCS34725ColorSensor result = new AdaFruitTCS34725ColorSensor(context, i2cDeviceClient, target, controller, port);
+        I2cDevice i2cDevice                 = ClassFactory.createI2cDevice(controller, port);
+        I2cDeviceSynch i2CDeviceSynch       = new I2cDeviceSynchImpl(i2cDevice, i2cAddr8Bit, true);
+        AdaFruitTCS34725ColorSensor result  = new AdaFruitTCS34725ColorSensor(context, i2CDeviceSynch, target, controller, port);
         result.engage();
         result.initialize(new Parameters());
         return result;
@@ -179,18 +181,18 @@ public class AdaFruitTCS34725ColorSensor implements ColorSensor, IOpModeStateTra
     public void initialize(Parameters parameters)
         {
         // Verify that we're talking to whom we think we're talking to
-        byte id = this.i2cDeviceClient.read8(TCS34725_ID);
+        byte id = this.i2CDeviceSynch.read8(TCS34725_ID);
         if (id != 0x44 && id != 0x10)
             throw new UnexpectedI2CDeviceException(id);
 
         // Set the gain an integration time
-        this.i2cDeviceClient.write8(TCS34725_ATIME,   parameters.integrationTime.byteVal);
-        this.i2cDeviceClient.write8(TCS34725_CONTROL, parameters.gain.byteVal);
+        this.i2CDeviceSynch.write8(TCS34725_ATIME,   parameters.integrationTime.byteVal);
+        this.i2CDeviceSynch.write8(TCS34725_CONTROL, parameters.gain.byteVal);
 
         // Enable the device
-        this.i2cDeviceClient.write8(TCS34725_ENABLE, TCS34725_ENABLE_PON);
+        this.i2CDeviceSynch.write8(TCS34725_ENABLE, TCS34725_ENABLE_PON);
         delayExtra(3);
-        this.i2cDeviceClient.write8(TCS34725_ENABLE, TCS34725_ENABLE_PON | TCS34725_ENABLE_AEN);
+        this.i2CDeviceSynch.write8(TCS34725_ENABLE, TCS34725_ENABLE_PON | TCS34725_ENABLE_AEN);
         }
 
     void delayExtra(int ms)
@@ -215,7 +217,7 @@ public class AdaFruitTCS34725ColorSensor implements ColorSensor, IOpModeStateTra
         if (!this.helper.isEngaged())
             {
             this.helper.engage();
-            this.i2cDeviceClient.engage();
+            this.i2CDeviceSynch.engage();
             }
         }
 
@@ -223,7 +225,7 @@ public class AdaFruitTCS34725ColorSensor implements ColorSensor, IOpModeStateTra
         {
         if (this.helper.isEngaged())
             {
-            this.i2cDeviceClient.disengage();
+            this.i2CDeviceSynch.disengage();
             this.helper.disengage();
             }
         }
@@ -252,7 +254,7 @@ public class AdaFruitTCS34725ColorSensor implements ColorSensor, IOpModeStateTra
 
     @Override public void close()
         {
-        this.i2cDeviceClient.close();
+        this.i2CDeviceSynch.close();
         }
 
     @Override public int getVersion()
@@ -262,7 +264,7 @@ public class AdaFruitTCS34725ColorSensor implements ColorSensor, IOpModeStateTra
 
     @Override public String getConnectionInfo()
         {
-        return this.i2cDeviceClient.getConnectionInfo();
+        return this.i2CDeviceSynch.getConnectionInfo();
         }
 
     @Override public String getDeviceName()
@@ -276,13 +278,13 @@ public class AdaFruitTCS34725ColorSensor implements ColorSensor, IOpModeStateTra
 
     int read8(int ireg)
         {
-        byte b = this.i2cDeviceClient.read8(ireg);
+        byte b = this.i2CDeviceSynch.read8(ireg);
         return TypeConversion.unsignedByteToInt(b);
         }
 
     int readLH(int ireg)
         {
-        byte[] bytes = this.i2cDeviceClient.read(ireg, 2);
+        byte[] bytes = this.i2CDeviceSynch.read(ireg, 2);
         return TypeConversion.byteArrayToInt(bytes, ByteOrder.LITTLE_ENDIAN);
         }
 
@@ -328,12 +330,12 @@ public class AdaFruitTCS34725ColorSensor implements ColorSensor, IOpModeStateTra
 
     @Override public synchronized int getI2cAddress()
         {
-        return this.i2cDeviceClient.getI2cAddr();
+        return this.i2CDeviceSynch.getI2cAddr();
         }
 
     @Override public synchronized void setI2cAddress(int i2cAddr8Bit)
         {
-        this.i2cDeviceClient.setI2cAddr(i2cAddr8Bit);
+        this.i2CDeviceSynch.setI2cAddr(i2cAddr8Bit);
         }
     }
 

@@ -8,7 +8,7 @@ import org.swerverobotics.library.interfaces.*;
 /**
  * An example of a synchronous opmode that implements a simple drive-a-bot. 
  */
-@TeleOp(name="TeleOp (sync)", group="Swerve Examples")
+@TeleOp(name="TeleOp (Synch)", group="Swerve Examples")
 @Disabled
 public class SynchTeleOp extends SynchronousOpMode
     {
@@ -27,7 +27,8 @@ public class SynchTeleOp extends SynchronousOpMode
 
         // Configure the knobs of the hardware according to how you've wired your
         // robot. Here, we assume that there are no encoders connected to the motors,
-        // so we inform the motor objects of that fact.
+        // so we inform the motor objects of that fact so they drive well. We might still *read*
+        // the controllers in telemetry, just for fun, but that won't be used for logic purposes.
         this.motorLeft.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
         this.motorRight.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
 
@@ -117,23 +118,43 @@ public class SynchTeleOp extends SynchronousOpMode
     
     void configureDashboard()
         {
-        // Configure the dashboard. Here, it will have one line, which will contain three items
+        // Configure the dashboard.
         this.telemetry.addLine
             (
-            this.telemetry.item("left:", new IFunc<Object>()
+            this.telemetry.item("left: power: ", new IFunc<Object>()
                 {
                 @Override public Object value()
                     {
                     return format(motorLeft.getPower());
                     }
                 }),
-            this.telemetry.item("right: ", new IFunc<Object>()
+            this.telemetry.item("position: ", new IFunc<Object>()
                 {
                 @Override public Object value()
                     {
-                    return format(motorLeft.getPower());
+                    return format(motorLeft.getCurrentPosition());
+                    }
+                })
+            );
+        this.telemetry.addLine
+            (
+            this.telemetry.item("right: power: ", new IFunc<Object>()
+                {
+                @Override public Object value()
+                    {
+                    return format(motorRight.getPower());
                     }
                 }),
+            this.telemetry.item("position: ", new IFunc<Object>()
+                {
+                @Override public Object value()
+                    {
+                    return format(motorRight.getCurrentPosition());
+                    }
+                })
+            );
+        this.telemetry.addLine
+            (
             this.telemetry.item("mode: ", new IFunc<Object>()
                 {
                 @Override public Object value()
@@ -145,6 +166,10 @@ public class SynchTeleOp extends SynchronousOpMode
         }
 
     // Handy functions for formatting data for the dashboard
+    String format(int i)
+        {
+        return String.format("%d", i);
+        }
     String format(double d)
         {
         return String.format("%.1f", d);

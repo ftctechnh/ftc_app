@@ -11,7 +11,7 @@ import org.swerverobotics.library.interfaces.TeleOp;
  * It assumes that you have 3 servos connected to a Core Servo Controller
  * and that the servos are named "servo1", "servo2", and "servo3" in your robot configuration file.
  */
-@TeleOp(name="Servo demo", group="Swerve Examples")
+@TeleOp(name="Servo demo (Synch)", group="Swerve Examples")
 @Disabled
 public class SynchServoDemo extends SynchronousOpMode
 {

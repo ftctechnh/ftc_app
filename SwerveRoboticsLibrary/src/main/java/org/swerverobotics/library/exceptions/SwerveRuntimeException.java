@@ -1,5 +1,7 @@
 package org.swerverobotics.library.exceptions;
 
+import java.util.concurrent.CancellationException;
+
 /**
  * SwerveRuntimeException is a base for all runtime exceptions defined in the Swerve Robotics library
  */
@@ -14,7 +16,7 @@ public abstract class SwerveRuntimeException extends RuntimeException
      * a RuntimeException. The method is idempotent. The following exception mappings are made:
      * <table summary="Exception Mappings">
      *     <tr><td>RuntimeException    </td><td>=&gt;</td><td>itself</td></tr>
-     *     <tr><td>InterruptedException</td><td>=&gt;</td><td>RuntimeInterruptedException</td></tr>
+     *     <tr><td>InterruptedException</td><td>=&gt;</td><td>CancellationException</td></tr>
      *     <tr><td>other               </td><td>=&gt;</td><td>RuntimeException</td></tr>
      * </table>
      *
@@ -27,7 +29,7 @@ public abstract class SwerveRuntimeException extends RuntimeException
             return (RuntimeException)e;
 
         if (e instanceof InterruptedException)
-            return new RuntimeInterruptedException((InterruptedException)e);
+            return new CancellationException(String.format("thread '%s' was interrupted", Thread.currentThread().getName()));
 
         return new RuntimeException(e);
         }

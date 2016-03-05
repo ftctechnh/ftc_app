@@ -1,5 +1,6 @@
 package org.swerverobotics.library.examples;
 
+import com.qualcomm.robotcore.hardware.I2cDevice;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.interfaces.*;
@@ -9,7 +10,7 @@ import org.swerverobotics.library.interfaces.*;
  * SynchIMUDemo gives a short demo on how to use the BNO055 Inertial Motion Unit (IMU) from AdaFruit.
  * http://www.adafruit.com/products/2472
  */
-@TeleOp(name="IMU Demo", group="Swerve Examples")
+@TeleOp(name="IMU Demo (Synch)", group="Swerve Examples")
 @Disabled
 public class SynchIMUDemo extends SynchronousOpMode
     {
@@ -18,6 +19,7 @@ public class SynchIMUDemo extends SynchronousOpMode
     //----------------------------------------------------------------------------------------------
 
     // Our sensors, motors, and other devices go here, along with other long term state
+    I2cDevice               i2cDevice;
     IBNO055IMU              imu;
     ElapsedTime             elapsed    = new ElapsedTime();
     IBNO055IMU.Parameters   parameters = new IBNO055IMU.Parameters();
@@ -44,7 +46,8 @@ public class SynchIMUDemo extends SynchronousOpMode
         parameters.accelUnit      = IBNO055IMU.ACCELUNIT.METERS_PERSEC_PERSEC;
         parameters.loggingEnabled = false;
         parameters.loggingTag     = "BNO055";
-        imu = ClassFactory.createAdaFruitBNO055IMU(hardwareMap.i2cDevice.get("imu"), parameters);
+        i2cDevice = hardwareMap.i2cDevice.get("imu");
+        imu = ClassFactory.createAdaFruitBNO055IMU(i2cDevice, parameters);
 
         // Enable reporting of position using the naive integrator
         imu.startAccelerationIntegration(new Position(), new Velocity());
@@ -85,8 +88,8 @@ public class SynchIMUDemo extends SynchronousOpMode
                 // The rest of this is pretty cheap to acquire, but we may as well do it
                 // all while we're gathering the above.
                 loopCycles = getLoopCount();
-                i2cCycles  = ((II2cDeviceClientUser) imu).getI2cDeviceClient().getI2cCycleCount();
-                ms         = elapsed.time() * 1000.0;
+                i2cCycles  = i2cDevice.getCallbackCount();
+                ms         = elapsed.milliseconds();
                 }
             });
         telemetry.addLine(
