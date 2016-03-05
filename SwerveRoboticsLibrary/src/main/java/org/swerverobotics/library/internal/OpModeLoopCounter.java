@@ -48,7 +48,7 @@ public class OpModeLoopCounter implements IOpModeLoopCounter
             {
             this.executor.execute(new Runnable() { @Override public void run()
                 {
-                while (!stopRequested && Thread.currentThread().isInterrupted())
+                while (!stopRequested && !Thread.currentThread().isInterrupted())
                     {
                     try {
                         synchronized (linearOpMode)
