@@ -17,7 +17,7 @@ import org.swerverobotics.library.interfaces.TeleOp;
  */
 @TeleOp(name="Motor Servo Test (Synch)", group="Swerve Tests")
 @Disabled
-public class SyncMotorServoTest extends SynchronousOpMode
+public class SynchMotorServoTest extends SynchronousOpMode
     {
     DcMotor motor;
     Servo   servo;

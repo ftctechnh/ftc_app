@@ -10,11 +10,11 @@ import org.swerverobotics.library.interfaces.*;
  *
  * It expects two motors, named "motorLeft" and "motorRight".
  *
- * @see SyncAutoPolygonEncoders
+ * @see SynchAutoPolygonEncoders
  */
 @Autonomous(name="Auto Polygon (Synch)", group="Swerve Examples")
 @Disabled
-public class SyncAutoPolygon extends SynchronousOpMode
+public class SynchAutoPolygon extends SynchronousOpMode
     {
     DcMotor motorRight;
     DcMotor motorLeft;

@@ -2,6 +2,8 @@ package org.swerverobotics.library;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
+
+import org.swerverobotics.library.examples.SynchColorDemo;
 import org.swerverobotics.library.interfaces.*;
 import org.swerverobotics.library.internal.*;
 import java.util.*;
@@ -209,7 +211,7 @@ public final class ClassFactory
      *
      * @see #createSwerveColorSensor(OpMode, I2cController, int, int, SENSOR_FLAVOR)
      * @see org.swerverobotics.library.examples.LinearColorDemo
-     * @see org.swerverobotics.library.examples.SyncColorDemo
+     * @see SynchColorDemo
      */
     public static ColorSensor createSwerveColorSensor(OpMode opmodeContext, ColorSensor target)
         {
@@ -228,7 +230,7 @@ public final class ClassFactory
      *
      * @see #createSwerveColorSensor(OpMode, ColorSensor)
      * @see org.swerverobotics.library.examples.LinearColorDemo
-     * @see org.swerverobotics.library.examples.SyncColorDemo
+     * @see SynchColorDemo
      */
     public static ColorSensor createSwerveColorSensor(OpMode opmodeContext, I2cController controller, int port, int i2cAddr8Bit, ClassFactory.SENSOR_FLAVOR flavor)
         {
