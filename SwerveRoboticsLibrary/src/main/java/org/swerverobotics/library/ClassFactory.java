@@ -2,6 +2,8 @@ package org.swerverobotics.library;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
+
+import org.swerverobotics.library.examples.SynchColorDemo;
 import org.swerverobotics.library.interfaces.*;
 import org.swerverobotics.library.internal.*;
 import java.util.*;
@@ -21,6 +23,9 @@ public final class ClassFactory
     //----------------------------------------------------------------------------------------------
 
     /**
+     * @deprecated This functionality is now included in the core SDK; the implementation of this
+     *             method is now effectively a nop.
+     *
      * If the provided motors are using a legacy motor controller, createEasyMotorController swaps
      * that controller out and installs an alternate 'EasyLegacyMotorController' DCMotorController
      * implementation for the duration of the OpMode. If the motors are using a modern motor controller,
@@ -28,7 +33,7 @@ public final class ClassFactory
      * use, this function has no effect. The APIs to easy legacy and modern motor controllers
      * are <em>identical</em>, which helps simplify programming.
      *
-     * <p>EasyLegacyMotorController is implemented on top of an {@link II2cDeviceClient} instance
+     * <p>EasyLegacyMotorController is implemented on top of an {@link I2cDeviceSynch} instance
      * which completely handles all the complexities of read vs write mode switching and the
      * like, allowing the logic inside the controller itself to be extraordinarily simple.
      * In particular, the manual mode switching and loop() counting necessary with the stock
@@ -60,6 +65,7 @@ public final class ClassFactory
      *
      * @see org.swerverobotics.library.examples.SynchMotorLoopPerf
      */
+    @Deprecated
     public static DcMotorController createEasyMotorController(OpMode opmodeContext, DcMotor motor1, DcMotor motor2)
         {
         DcMotorController target = motor1==null ? null : motor1.getController();
@@ -67,16 +73,13 @@ public final class ClassFactory
         if (motor2 != null && target != null && motor2.getController()!=target)
             throw new IllegalArgumentException("motors do not share the same controller");
 
-        if (MemberUtil.isLegacyMotorController(target))
-            return EasyLegacyMotorController.create(opmodeContext, target, motor1, motor2);
-
-        else if (MemberUtil.isModernMotorController(target))
-            return EasyModernMotorController.create(opmodeContext, target, motor1, motor2);
-
-        else
-            return null;
+        return target;
         }
 
+    /**
+     * @deprecated Deprecated because of a poor choice of API name: insufficiently general.
+     * @see #createEasyMotorController(OpMode, DcMotor, DcMotor)
+     */
     @Deprecated
     public static void createEasyLegacyMotorController(OpMode opmodeContext, DcMotor motor1, DcMotor motor2)
         {
@@ -84,6 +87,9 @@ public final class ClassFactory
         }
 
     /**
+     * @deprecated This functionality is now included in the core SDK; the implementation of this
+     *             method is now effectively a nop.
+     *
      * Creates an alternate 'easy' implementation of the controller for the indicated collection
      * of servos, which must all share the same controller, and must be <em>all</em> the servos
      * which are found on that controller.
@@ -100,6 +106,7 @@ public final class ClassFactory
      *
      * @see #createEasyMotorController(OpMode, DcMotor, DcMotor)
      */
+    @Deprecated
     public static ServoController createEasyServoController(OpMode opmodeContext, Collection<Servo> servos)
         {
         if (servos != null && !servos.isEmpty())
@@ -113,14 +120,7 @@ public final class ClassFactory
                     throw new IllegalArgumentException("not all servos share the same controller");
                 }
 
-            if (MemberUtil.isModernServoController(controller))
-                return EasyModernServoController.create(opmodeContext, controller, servos);
-
-            else if (MemberUtil.isLegacyServoController(controller))
-                return EasyLegacyServoController.create(opmodeContext, controller, servos);
-
-            else
-                return null;
+            return controller;
             }
         else
             throw new IllegalArgumentException("no servos provided");
@@ -190,7 +190,7 @@ public final class ClassFactory
      * @param i2cDevice     the robot controller runtime object representing the sensor
      * @param parameters    the parameters with which the sensor should be initialized
      * @return              the interface to the instantiated sensor object. This object also
-     *                      supports the II2cDeviceClientUser interface, which can be useful
+     *                      supports the I2cDeviceSynchUser interface, which can be useful
      *                      for debugging.
      * @see #createAdaFruitBNO055IMU(OpMode, I2cDevice)
      */
@@ -211,7 +211,7 @@ public final class ClassFactory
      *
      * @see #createSwerveColorSensor(OpMode, I2cController, int, int, SENSOR_FLAVOR)
      * @see org.swerverobotics.library.examples.LinearColorDemo
-     * @see org.swerverobotics.library.examples.SyncColorDemo
+     * @see SynchColorDemo
      */
     public static ColorSensor createSwerveColorSensor(OpMode opmodeContext, ColorSensor target)
         {
@@ -230,7 +230,7 @@ public final class ClassFactory
      *
      * @see #createSwerveColorSensor(OpMode, ColorSensor)
      * @see org.swerverobotics.library.examples.LinearColorDemo
-     * @see org.swerverobotics.library.examples.SyncColorDemo
+     * @see SynchColorDemo
      */
     public static ColorSensor createSwerveColorSensor(OpMode opmodeContext, I2cController controller, int port, int i2cAddr8Bit, ClassFactory.SENSOR_FLAVOR flavor)
         {
@@ -243,62 +243,63 @@ public final class ClassFactory
     //----------------------------------------------------------------------------------------------
 
     /**
-     * Creates an II2cDevice interface around an I2cDevice.
+     * Creates an independent I2cDevice implementation using information from an existing
+     * I2cDevice as connectivity information. This is deprecated, as the underlying SDK now
+     * has I2cDevice as an interface separate from implementation, so there's no need to have
+     * our own here.
      *
      * @param i2cDevice the device to wrap
      * @return          the II2cDevice wrapping
+     *
+     * @deprecated I2cDevice, as defined in the SDK, is now an interface, not an implementation, so
+     *             this API is no longer necessary.
      */
-    public static II2cDevice createI2cDevice(I2cDevice i2cDevice)
+    @Deprecated
+    public static I2cDevice createI2cDevice(I2cDevice i2cDevice)
         {
-        I2cController i2cController = i2cDevice.getController();
+        I2cController i2cController = i2cDevice.getI2cController();
         int port                    = i2cDevice.getPort();
         return createI2cDevice(i2cController, port);
         }
 
     /**
-     * Creates an II2Device instance on a specific port on an I2cDeviceController
+     * Creates an I2Device instance on a specific port on an I2cDeviceController
      *
      * @param i2cController the controller on which to create the device
      * @param port          the port on the controller to use
      * @return              the created II2cDevice instance
      */
-    public static II2cDevice createI2cDevice(I2cController i2cController, int port)
+    public static I2cDevice createI2cDevice(I2cController i2cController, int port)
         {
-        return new I2cDeviceOnI2cDeviceController(i2cController, port);
+        return new I2cDeviceImpl(i2cController, port);
         }
 
     /**
-     * Create a new II2cDeviceClient on an I2cDevice instance. The client is initially disengaged,
-     * and must be engaged before use.
+     * Create a new I2cDeviceSynch on an I2cDevice instance. The new device is initially
+     * disengaged, and must be engaged before use. Closing the returned object does *not*
+     * automatically close the underlying I2cDevice.
      *
-     * @param opmodeContext         the OpMode within which the creation is taking place
      * @param i2cDevice             the II2cDevice to wrap
      * @param i2cAddr8Bit           the I2C address at which the client is to communicate
-     * @param closeOnOpModeStop     if true, then when the OpMode stops, the client will automatically close
-     * @return                      the newly instantiated I2c device client
-     * @see II2cDeviceClient#engage()
+     * @return                      the newly instantiated device
+     * @see Engagable#engage()
      */
-    public static II2cDeviceClient createI2cDeviceClient(OpMode opmodeContext, I2cDevice i2cDevice, int i2cAddr8Bit, boolean closeOnOpModeStop)
+    public static I2cDeviceSynch createI2cDeviceSynch(I2cDevice i2cDevice, int i2cAddr8Bit)
         {
-        II2cDevice ii2cDevice = createI2cDevice(i2cDevice);
-        return createI2cDeviceClient(opmodeContext, ii2cDevice, i2cAddr8Bit, closeOnOpModeStop);
+        return new I2cDeviceSynchImpl(i2cDevice, i2cAddr8Bit, false);
         }
 
-
     /**
-     * Create a new II2cDeviceClient on an II2cDevice instance. The client is initially
-     * disengaged, and must be engaged before use.
-     *
-     * @param opmodeContext         the OpMode within which the creation is taking place
-     * @param i2cDevice             the II2cDevice to wrap
-     * @param i2cAddr8Bit           the I2C address at which the client is to communicate
-     * @param closeOnOpModeStop     if true, then when the OpMode stops, the client will automatically close
-     * @return                      the newly instantiated I2c device client
-     * @see II2cDeviceClient#engage()
+     * @deprecated The creation API has been renamed to match changes in interface nomenclature.
+     *             Use {@link #createI2cDeviceSynch(I2cDevice, int) createI2cDeviceSynch()} instead.
+     * @see #createI2cDeviceSynch(I2cDevice, int)
      */
-    public static II2cDeviceClient createI2cDeviceClient(OpMode opmodeContext, II2cDevice i2cDevice, int i2cAddr8Bit, boolean closeOnOpModeStop)
+    @Deprecated
+    public static I2cDeviceSynch createI2cDeviceClient(OpMode opmodeContext, I2cDevice i2cDevice, int i2cAddr8Bit, boolean closeOnOpModeStop)
         {
-        return new I2cDeviceClient(opmodeContext, i2cDevice, i2cAddr8Bit, closeOnOpModeStop);
+        if (closeOnOpModeStop)
+            throw new UnsupportedOperationException("support for auto-closing on opmode stop has been removed");
+        return createI2cDeviceSynch(i2cDevice, i2cAddr8Bit);
         }
 
     //----------------------------------------------------------------------------------------------

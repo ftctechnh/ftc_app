@@ -116,40 +116,8 @@ public class Util
         }
 
     //----------------------------------------------------------------------------------------------
-    // Threads
-    //----------------------------------------------------------------------------------------------
-
-    public static void shutdownAndAwaitTermination(ExecutorService service)
-        {
-        service.shutdown();
-        awaitTermination(service);
-        }
-
-    public static void shutdownNowAndAwaitTermination(ExecutorService service)
-        {
-        service.shutdownNow();
-        awaitTermination(service);
-        }
-
-    public static void awaitTermination(ExecutorService service)
-        {
-        try {
-            service.awaitTermination(30, TimeUnit.DAYS);
-            }
-        catch (InterruptedException e)
-            {
-            Util.handleCapturedInterrupt(e);
-            }
-        }
-
-    //----------------------------------------------------------------------------------------------
     // Miscellany
     //----------------------------------------------------------------------------------------------
-
-    static public double milliseconds(ElapsedTime elapsed)
-        {
-        return elapsed.time() * 1000.0;
-        }
 
     static public String getStackTrace(Exception e)
         {
@@ -185,7 +153,7 @@ public class Util
         try {
             methods = clazz.getDeclaredMethods();
             }
-        catch (Exception e)
+        catch (Exception|LinkageError e)
             {
             methods = new Method[0];
             }
@@ -631,13 +599,5 @@ public class Util
     public static void handleCapturedInterrupt(InterruptedException e)
         {
         Thread.currentThread().interrupt();
-        }
-
-    public static void handleCapturedException(Exception e)
-        {
-        if (e instanceof InterruptedException || e instanceof RuntimeInterruptedException)
-            Thread.currentThread().interrupt();
-        else
-            throw SwerveRuntimeException.wrap(e);
         }
     }

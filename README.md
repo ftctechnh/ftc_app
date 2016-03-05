@@ -5,11 +5,13 @@ The purpose of our library is to augment the robot controller runtime library fr
 in order to simplify programming for FTC teams. The central aim here is not to change what's there,
 just to make it better. The library is a drop-in replacement: if your code works with the FTC HQ
 release, it will work with the Swerve library, but you can also take advantage of new things.
-Please consult the [GitHub release notes](https://github.com/SwerveRobotics/ftc_app/releases) 
+**Please** consult the [GitHub release notes](https://github.com/SwerveRobotics/ftc_app/releases)
 for details regarding a given release. You might also want to check out our related project, the 
 Swerve Robotics Tools Suite, also [here](https://github.com/SwerveRobotics/tools) on GitHub. 
 
-Notable features of the Swerve Robotics FTC Library include the following.
+Notable features of the Swerve Robotics FTC Library include the following. Note: the 'Easy' controllers
+are now part of the core SDK. The functionality is as described here, but they are now *always*
+in use, irrespective of the flavor of opmode.
 
 ### Easy Legacy Motor Controller
 **EasyLegacyMotorController** is a replacement for the stock DCMotorController implementation
@@ -18,10 +20,6 @@ switch motors from read mode to write mode and back again and the attendant comp
 loop counting, or waiting for hardware cycles that that requires. Just call `setPower()`, `getPosition()`,
 or whatever other motor methods you need to use, and the right things happen under the covers.
 
-EasyLegacyMotorController can be used from any OpMode, or indeed any thread. In SynchronousOpModes, 
-EasyLegacyMotorController is used automatically; in other OpModes it can be used by calling 
-`ClassFactory.createEasyMotorController()`.
- 
 ### Easy Modern Motor & Servo Controller and Easy Legacy Servo Controller
 In a conceptually similar way, alternate implementations for modern motor and servo controllers and
 for legacy servo controllers is also provided. The API simplifications for these controllers are less dramatic
@@ -33,11 +31,7 @@ of that change. You don't have to poll to see whether the mode change has taken 
 and then immediately change to run with encoders? Perfectly fine. It just works. Additionally, a handful 
 of bug fixes is included. For example, `Servo.getPosition()` is now functionally useful.
  
-These easy controllers can be used from any OpMode or any thread. In SynchronousOpModes, they are used
-automatically; in other OpModes, they can be used by calling `ClassFactory.createEasyMotorController()`
-or `ClassFactory.createEasyServoController()` respectively.
-
-### Alternate OpMode Registration 
+### Alternate OpMode Registration
 The library has an **alternate OpMode registration mechanism** (the old `FtcOpModeRegister.register()` still works too)
 that allows you to register your own OpModes simply by decorating them with `@TeleOp` or `@Autonomous` annotations.
 This helps promote clean living and easier integration of library updates over time by avoiding
@@ -73,17 +67,15 @@ soon as possible. The enhanced telemetry class can be used both by synchronous a
 opmodes, but is used automatically in SynchronousOpModes.
 
 ### Easy I2C Programming
-The library contains an **I2cDeviceClient** class that wraps I2cDevice instances and makes them easy to use by handling
-read-vs-write mode switches and attendant waits automatically and transparently. Just call `read8()`
-or `write8()` (and friends) to read and write device registers and the rest is taken care of.
-With the I2C register map you get from the sensor manufacturer in hand, it's now just dead easy to
-write your own code to talk to new I2C devices. Note that I2cDeviceClient is also decoupled
-from SynchronousOpMode, in that one need not be using SynchronousOpMode to use I2cDeviceClient.
-However as some operations are lengthy, a worker thread is suggested in that case in order to avoid
-long-running operations on the `loop()` thread.
+The library (indeed, now the core SDK) contains an **I2cDeviceSynch** class that wraps I2cDevice instances
+and makes them easy to use by handling read-vs-write mode switches and attendant waits automatically and
+transparently. Just call `read8()` or `write8()` (and friends) to read and write device registers and the
+rest is taken care of. With the I2C register map you get from the sensor manufacturer in hand, it's now
+just dead easy to write your own code to talk to new I2C devices. I2cDeviceSynch can be used from any
+flavor of OpMode.
 
 ### AdaFruit IMU Support
-The library contains a class that is built on I2cDeviceClient that provides a semantic interface to the **Bosch BNO055 absolute
+The library contains a class that is built on I2cDeviceSynch that provides a semantic interface to the **Bosch BNO055 absolute
 position sensor**, allowing teams to make easy use of the [AdaFruit inertial motion unit (IMU)](http://www.adafruit.com/products/2472)
 which incorporates that sensor module. Features of this sensor include a gyro that does rate
 integration in hardware to provide robust and accurate angular position indications, and a
@@ -137,9 +129,14 @@ Migrating from LinearOpMode to SyncronousOpMode is easy, usually simply involvin
 * optionally removing `waitOneFullHardwareCycle()` calls, as they are no longer necessary
 
 The Swerve Library now appears to be quite stable and functional. Our own teams are actively
-developing their competition code using it. It currently is synchronized to the release from
-FTC HQ that was published January 4th, 2016 (version 1.5). Please be sure to **update your driver station**
-app to the latest-available version.
+developing their competition code using it. It currently is synchronized to the beta release from
+FTC HQ that was published in March, 2016 (version 1.7).
+
+Please be sure to **update your driver station** app to the latest-available version by side-loading
+the .APK from the doc\apk directory. Side loading can be accomplished by any of several means. See
+the ADB command 'install' command, for example (ADB is found in the Android SDK). Alternately, any
+of several PC applications (such as http://apkinstaller.com/) and Android APK Installer apps (found
+in the Play Store) can be used. The thread here (http://ftcforum.usfirst.org/showthread.php?6101-FTC-Beta-Branch&p=24750#post24750) might also be helpful.
 
 ## Installing the Library
 

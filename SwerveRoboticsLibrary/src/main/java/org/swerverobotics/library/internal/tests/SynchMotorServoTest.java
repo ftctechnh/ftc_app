@@ -1,32 +1,29 @@
 package org.swerverobotics.library.internal.tests;
 
-import com.qualcomm.ftccommon.Device;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.robocol.Telemetry;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.swerverobotics.library.ClassFactory;
-import org.swerverobotics.library.TelemetryDashboardAndLog;
+import org.swerverobotics.library.SynchronousOpMode;
+import org.swerverobotics.library.interfaces.Autonomous;
 import org.swerverobotics.library.interfaces.Disabled;
 import org.swerverobotics.library.interfaces.IOpModeLoopCounter;
 import org.swerverobotics.library.interfaces.TeleOp;
 
 /**
- * A simple linear opmode that exercises a motor and a servo simultaneously
+ * A simple synchronous opmode that exercises a motor and a servo simultaneously
  */
-@TeleOp(name="Motor Servo Test (Linear)", group="Swerve Tests")
+@TeleOp(name="Motor Servo Test (Synch)", group="Swerve Tests")
 @Disabled
-public class LinearMotorServoTest extends LinearOpMode
+public class SynchMotorServoTest extends SynchronousOpMode
     {
     DcMotor motor;
-    Servo servo;
-    DcMotorController motorController;
+    Servo   servo;
 
     @Override
-    public void runOpMode() throws InterruptedException
+    protected void main() throws InterruptedException
         {
         motor = this.hardwareMap.dcMotor.get("motor");
         servo = this.hardwareMap.servo.get("servo");
@@ -47,6 +44,7 @@ public class LinearMotorServoTest extends LinearOpMode
             servoPosition += 1. / 256.;
             if (servoPosition >= 1)
                 servoPosition = 0;
+
             servo.setPosition(servoPosition);
 
             motor.setPower(0.1);
@@ -58,11 +56,13 @@ public class LinearMotorServoTest extends LinearOpMode
             telemetry.addData("#spin",    format(spinCount));
             telemetry.addData("ms/spin",  format(ms / spinCount));
             telemetry.addData("ms/loop",  format(ms / loopCount));
-            this.updateTelemetry(telemetry);
+            telemetry.update();
+            this.idle();
             }
 
         loopCounter.close();
         }
+
 
     static String format(double d)
         {
@@ -72,4 +72,4 @@ public class LinearMotorServoTest extends LinearOpMode
         {
         return String.format("%d", i);
         }
-    }
+  }

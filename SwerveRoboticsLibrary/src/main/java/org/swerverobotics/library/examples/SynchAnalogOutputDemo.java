@@ -18,7 +18,7 @@ import org.swerverobotics.library.interfaces.TeleOp;
  * and I don't know what the valid values are for the output port's "mode"
  * ("mode" is a byte which supposedly sets the output waveform to sine, square, triangle, or DC).
  */
-@TeleOp(name="AnalogOut demo", group="Swerve Examples")
+@TeleOp(name="AnalogOut demo (Synch)", group="Swerve Examples")
 @Disabled
 public class SynchAnalogOutputDemo extends SynchronousOpMode {
 

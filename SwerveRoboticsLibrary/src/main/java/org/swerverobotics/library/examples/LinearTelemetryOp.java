@@ -8,7 +8,7 @@ import org.swerverobotics.library.interfaces.*;
 /**
  * An example that illustrates use of the telemetry dashboard and log in a linear opmode
  */
-@TeleOp(name="Telemetry (linear)", group="Swerve Examples")
+@TeleOp(name="Telemetry (Linear)", group="Swerve Examples")
 @Disabled
 public class LinearTelemetryOp extends LinearOpMode
     {
@@ -39,11 +39,11 @@ public class LinearTelemetryOp extends LinearOpMode
                 // Update the telemetry dashboard with fresh values
                 this.telemetry.addData("time",  format(elapsed));
                 this.telemetry.addData("count", loopCounter.getLoopCount() - loopCountStart);
-                this.telemetry.addData("ms/loop", format(elapsed.time() * 1000.0 / (loopCounter.getLoopCount() - loopCountStart)) + "ms");
+                this.telemetry.addData("ms/loop", format(elapsed.milliseconds() / (loopCounter.getLoopCount() - loopCountStart)) + "ms");
 
                 // Update driver station and wait until there's something useful to do
                 this.telemetry.update();
-                this.waitOneFullHardwareCycle();
+                this.idle();
                 }
             }
         finally
@@ -55,7 +55,7 @@ public class LinearTelemetryOp extends LinearOpMode
     // A couple of handy functions for formatting data for the dashboard
     String format(ElapsedTime elapsed)
         {
-        return String.format("%.1fs", elapsed.time());
+        return String.format("%.1fs", elapsed.seconds());
         }
     String format(double d)
         {

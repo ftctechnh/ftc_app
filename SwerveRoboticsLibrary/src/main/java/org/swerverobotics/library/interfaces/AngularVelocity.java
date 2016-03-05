@@ -1,5 +1,6 @@
 package org.swerverobotics.library.interfaces;
 
+import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -39,7 +40,7 @@ public class AngularVelocity
         this.rateZ = rateZ;
         this.nanoTime = nanoTime;
         }
-    public AngularVelocity(II2cDeviceClient.TimestampedData ts, double scale)
+    public AngularVelocity(I2cDeviceSynch.TimestampedData ts, double scale)
         {
         ByteBuffer buffer = ByteBuffer.wrap(ts.data).order(ByteOrder.LITTLE_ENDIAN);
         this.rateX = buffer.getShort() / scale;

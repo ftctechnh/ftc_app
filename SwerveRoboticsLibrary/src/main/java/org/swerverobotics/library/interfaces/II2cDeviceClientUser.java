@@ -1,10 +1,9 @@
 package org.swerverobotics.library.interfaces;
 
 /**
- * II2cDeviceClientUser allows one to retrieve an underlying I2cDeviceClient from 
- * an object that respresents an I2C hardware sensor.
+ * @deprecated  Code that previously used II2cDeviceClientUser should use {@link I2cDeviceSynchUser} instead.
  */
-public interface II2cDeviceClientUser
+@Deprecated
+public interface II2cDeviceClientUser extends I2cDeviceSynchUser
     {
-    II2cDeviceClient getI2cDeviceClient();
     }

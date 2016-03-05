@@ -1,5 +1,6 @@
 package org.swerverobotics.library.interfaces;
 
+import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -43,7 +44,7 @@ public class Quaternion
         this.z = z;
         this.nanoTime = nanoTime;
         }
-    public Quaternion(II2cDeviceClient.TimestampedData ts, double scale)
+    public Quaternion(I2cDeviceSynch.TimestampedData ts, double scale)
         {
         ByteBuffer buffer = ByteBuffer.wrap(ts.data).order(ByteOrder.LITTLE_ENDIAN);
         this.w = buffer.getShort() / scale;
