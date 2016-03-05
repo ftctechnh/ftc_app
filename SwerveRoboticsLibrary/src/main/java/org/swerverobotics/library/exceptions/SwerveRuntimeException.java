@@ -29,7 +29,7 @@ public abstract class SwerveRuntimeException extends RuntimeException
             return (RuntimeException)e;
 
         if (e instanceof InterruptedException)
-            return new CancellationException();
+            return new CancellationException(String.format("thread '%s' was interrupted", Thread.currentThread().getName()));
 
         return new RuntimeException(e);
         }

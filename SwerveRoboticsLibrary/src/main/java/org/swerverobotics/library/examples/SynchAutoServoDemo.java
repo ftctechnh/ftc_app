@@ -38,9 +38,7 @@ public class SynchAutoServoDemo extends SynchronousOpMode
 
     void delay() throws InterruptedException
         {
-        ElapsedTime elapsed = new ElapsedTime();
-        while (elapsed.seconds() < 0.25)
-            this.idle();
+        Thread.sleep(250);
         }
 
     void configureDashboard()
