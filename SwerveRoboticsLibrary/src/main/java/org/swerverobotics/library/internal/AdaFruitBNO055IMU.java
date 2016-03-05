@@ -502,7 +502,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, I2cDeviceSynchUser, 
             this.accelerationAlgorithm.initialize(initalPosition, initialVelocity);
 
             // Make a new thread on which to do the integration
-            this.accelerationMananger = Executors.newSingleThreadExecutor();
+            this.accelerationMananger = ThreadPool.newSingleThreadExecutor();
 
             // Start the whole schebang a rockin...
             this.accelerationMananger.execute(new AccelerationManager(msPollInterval));
@@ -517,13 +517,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, I2cDeviceSynchUser, 
             if (this.accelerationMananger != null)
                 {
                 this.accelerationMananger.shutdownNow();
-                try {
-                    this.accelerationMananger.awaitTermination(30, TimeUnit.DAYS);
-                    }
-                catch (InterruptedException e)
-                    {
-                    Thread.currentThread().interrupt();
-                    }
+                ThreadPool.awaitTerminationOrExitApplication(this.accelerationMananger, 10, TimeUnit.SECONDS, "IMU acceleration", "unresponsive user acceleration code");
                 this.accelerationMananger = null;
                 }
             }
