@@ -12,7 +12,7 @@ import org.swerverobotics.library.interfaces.*;
  * This opmode works with both legacy and modern motor controllers, and
  * expects two motors, named "motorLeft" and "motorRight".
  */
-@Autonomous(name="Auto Polygon (Sync, encoders)", group="Swerve Examples")
+@Autonomous(name="Auto Polygon (Synch, encoders)", group="Swerve Examples")
 @Disabled
 public class SyncAutoPolygonEncoders extends SynchronousOpMode
     {

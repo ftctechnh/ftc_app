@@ -44,7 +44,7 @@ import org.swerverobotics.library.interfaces.TeleOp;
  * both with legacy and modern motor controllers.
  */
 @TeleOp(name="Display Position (Loop)", group="Swerve Tests")
-//@Disabled
+@Disabled
 public class NxtLoopDisplayPosition extends OpMode {
 
 	//----------------------------------------------------------------------------------------------

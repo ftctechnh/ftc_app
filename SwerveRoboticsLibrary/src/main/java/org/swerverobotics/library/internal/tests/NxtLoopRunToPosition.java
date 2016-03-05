@@ -44,7 +44,7 @@ import org.swerverobotics.library.interfaces.TeleOp;
  * both with legacy and modern motor controllers.
  */
 @TeleOp(name="Run To Position (Loop)", group="Swerve Tests")
-//@Disabled
+@Disabled
 public class NxtLoopRunToPosition extends OpMode {
 
 	//----------------------------------------------------------------------------------------------

@@ -10,7 +10,7 @@ import org.swerverobotics.library.interfaces.*;
  * This LinearOpMode illustrates a very simple use of the Swerve color sensor implementation.
  * The opmode expects either a HiTechnic or a Modern Robotics color sensor named "colorSensor".
  */
-@TeleOp(name="Color Demo (linear)", group="Swerve Examples")
+@TeleOp(name="Color Demo (Linear)", group="Swerve Examples")
 @Disabled
 public class LinearColorDemo extends LinearOpMode
     {
