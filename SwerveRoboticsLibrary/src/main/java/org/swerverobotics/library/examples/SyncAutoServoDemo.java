@@ -25,7 +25,7 @@ public class SyncAutoServoDemo extends SynchronousOpMode
 
         waitForStart();
 
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; opModeIsActive() && i < 10; i++)
             {
             this.servo.setPosition(0);
             delay();
