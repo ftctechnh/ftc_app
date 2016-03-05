@@ -15,7 +15,7 @@ import org.swerverobotics.library.interfaces.TeleOp;
 /**
  * A simple synchronous opmode that exercises a motor and a servo simultaneously
  */
-@TeleOp(name="Motor Servo Test (Sync)", group="Swerve Tests")
+@TeleOp(name="Motor Servo Test (Synch)", group="Swerve Tests")
 @Disabled
 public class SyncMotorServoTest extends SynchronousOpMode
     {

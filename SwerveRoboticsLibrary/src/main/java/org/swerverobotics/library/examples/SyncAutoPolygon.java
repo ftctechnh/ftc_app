@@ -12,7 +12,7 @@ import org.swerverobotics.library.interfaces.*;
  *
  * @see SyncAutoPolygonEncoders
  */
-@Autonomous(name="Auto Polygon (Sync)", group="Swerve Examples")
+@Autonomous(name="Auto Polygon (Synch)", group="Swerve Examples")
 @Disabled
 public class SyncAutoPolygon extends SynchronousOpMode
     {

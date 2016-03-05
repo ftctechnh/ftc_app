@@ -13,7 +13,7 @@ import org.swerverobotics.library.interfaces.*;
  * This OpMode expects two motors, named 'motorLeft' and 'motorRight'. A configuration
  * flag, set in the constructor, controls whether just one or both of the motors are used.
  */
-@TeleOp(name="Motor Perf (sync)", group="Swerve Examples")
+@TeleOp(name="Motor Perf (Synch)", group="Swerve Examples")
 @Disabled
 public class SynchMotorLoopPerf extends SynchronousOpMode
     {

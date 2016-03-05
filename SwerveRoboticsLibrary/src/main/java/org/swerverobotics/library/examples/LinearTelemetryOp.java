@@ -8,7 +8,7 @@ import org.swerverobotics.library.interfaces.*;
 /**
  * An example that illustrates use of the telemetry dashboard and log in a linear opmode
  */
-@TeleOp(name="Telemetry (linear)", group="Swerve Examples")
+@TeleOp(name="Telemetry (Linear)", group="Swerve Examples")
 @Disabled
 public class LinearTelemetryOp extends LinearOpMode
     {

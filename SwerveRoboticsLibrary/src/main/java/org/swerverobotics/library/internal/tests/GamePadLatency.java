@@ -11,7 +11,7 @@ import org.swerverobotics.library.interfaces.TeleOp;
  * Logs
  */
 @TeleOp(name="Gamepad Latency (Synch)", group="Swerve Tests")
-//@Disabled
+@Disabled
 public class GamePadLatency extends SynchronousOpMode
     {
     @Override

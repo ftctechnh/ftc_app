@@ -7,7 +7,7 @@ import org.swerverobotics.library.interfaces.*;
  * This is a very simple placeholder. It doesn't actually *do* anything. Rather, it merely 
  * shows you the basic skeletal structure of what a SynchronousOpMode should look like. 
  */
-@TeleOp(name="Skeletal", group="Swerve Examples")
+@TeleOp(name="Skeletal (Synch)", group="Swerve Examples")
 @Disabled
 public class SynchSkeletalOp extends SynchronousOpMode
     {

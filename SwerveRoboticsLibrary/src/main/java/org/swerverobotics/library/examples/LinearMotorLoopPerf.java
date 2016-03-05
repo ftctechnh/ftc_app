@@ -13,7 +13,7 @@ import org.swerverobotics.library.interfaces.*;
  * two motors, named "motorLeft" and "motorRight" that are mounted on the
  * same motor controller.
  */
-@TeleOp(name="Motor Perf (linear)", group="Swerve Examples")
+@TeleOp(name="Motor Perf (Linear)", group="Swerve Examples")
 @Disabled
 public class LinearMotorLoopPerf extends LinearOpMode
     {
