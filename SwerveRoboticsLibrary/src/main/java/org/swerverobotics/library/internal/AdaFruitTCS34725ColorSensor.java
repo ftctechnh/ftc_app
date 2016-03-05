@@ -5,6 +5,8 @@ import com.qualcomm.hardware.adafruit.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
+
+import org.swerverobotics.library.ClassFactory;
 import org.swerverobotics.library.exceptions.UnexpectedI2CDeviceException;
 
 import java.nio.ByteOrder;
@@ -148,8 +150,8 @@ public class AdaFruitTCS34725ColorSensor implements ColorSensor, IOpModeStateTra
 
     public static ColorSensor create(OpMode context, I2cController controller, int port, int i2cAddr8Bit, ColorSensor target)
         {
-        I2cDevice i2cDevice                 = new I2cDeviceImpl(controller, port);
-        I2cDeviceSynch i2CDeviceSynch       = new I2cDeviceSynchImpl(i2cDevice, i2cAddr8Bit, false /*REVIEW: it seems like i2cDevice would never get closed*/);
+        I2cDevice i2cDevice                 = ClassFactory.createI2cDevice(controller, port);
+        I2cDeviceSynch i2CDeviceSynch       = new I2cDeviceSynchImpl(i2cDevice, i2cAddr8Bit, true);
         AdaFruitTCS34725ColorSensor result  = new AdaFruitTCS34725ColorSensor(context, i2CDeviceSynch, target, controller, port);
         result.engage();
         result.initialize(new Parameters());
