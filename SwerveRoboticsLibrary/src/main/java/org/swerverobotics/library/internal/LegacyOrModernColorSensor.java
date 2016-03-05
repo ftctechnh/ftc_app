@@ -112,8 +112,8 @@ public class LegacyOrModernColorSensor implements ColorSensor, IOpModeStateTrans
 
     public static ColorSensor create(OpMode context, I2cController controller, int port, int i2cAddr8Bit, ClassFactory.SENSOR_FLAVOR flavor, ColorSensor target)
         {
-        I2cDevice i2cDevice              = new I2cDeviceImpl(controller, port);
-        I2cDeviceSynch i2cDeviceSynch    = new I2cDeviceSynchImpl(i2cDevice, i2cAddr8Bit, false /*WRONG: it seems like i2cDevice would never get closed*/);
+        I2cDevice i2cDevice              = ClassFactory.createI2cDevice(controller, port);
+        I2cDeviceSynch i2cDeviceSynch    = new I2cDeviceSynchImpl(i2cDevice, i2cAddr8Bit, true);
         LegacyOrModernColorSensor result = new LegacyOrModernColorSensor(context, i2cDeviceSynch, flavor, target, controller, port);
         result.engage();
         return result;
