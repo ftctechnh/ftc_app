@@ -13,7 +13,7 @@ import org.swerverobotics.library.interfaces.*;
  */
 @Autonomous(name="Auto Servo (Synch)", group="Swerve Examples")
 // @Disabled
-public class SyncAutoServoDemo extends SynchronousOpMode
+public class SynchAutoServoDemo extends SynchronousOpMode
     {
     Servo servo;
 

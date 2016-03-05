@@ -11,7 +11,7 @@ import org.swerverobotics.library.interfaces.*;
  */
 @TeleOp(name="Color Demo (Synch)", group="Swerve Examples")
 @Disabled
-public class SyncColorDemo extends SynchronousOpMode
+public class SynchColorDemo extends SynchronousOpMode
     {
     ColorSensor color;
     boolean     ledIsOn;

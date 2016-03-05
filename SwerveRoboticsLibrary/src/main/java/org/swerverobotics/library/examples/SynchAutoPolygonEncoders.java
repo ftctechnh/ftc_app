@@ -14,7 +14,7 @@ import org.swerverobotics.library.interfaces.*;
  */
 @Autonomous(name="Auto Polygon (Synch, encoders)", group="Swerve Examples")
 @Disabled
-public class SyncAutoPolygonEncoders extends SynchronousOpMode
+public class SynchAutoPolygonEncoders extends SynchronousOpMode
     {
     DcMotor motorRight;
     DcMotor motorLeft;

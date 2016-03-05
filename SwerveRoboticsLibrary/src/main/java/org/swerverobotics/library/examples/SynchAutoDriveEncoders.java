@@ -13,7 +13,7 @@ import org.swerverobotics.library.interfaces.*;
  */
 @Autonomous(name="Auto Drive (Synch)", group="Swerve Examples")
 @Disabled
-public class SyncAutoDriveEncoders extends SynchronousOpMode
+public class SynchAutoDriveEncoders extends SynchronousOpMode
     {
     //----------------------------------------------------------------------------------------------
     // State
