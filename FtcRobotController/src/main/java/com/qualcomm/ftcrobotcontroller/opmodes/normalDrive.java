@@ -110,9 +110,9 @@ public class normalDrive extends OpMode {
 		 *    "servo_6" controls the claw joint of the manipulator.
 		 */
         //This assigns the motor objects to the actual motors
-		motorRight = hardwareMap.dcMotor.get("motor_3");
+		motorRight = hardwareMap.dcMotor.get("motor_1");
 //        motorRightAlt = hardwareMap.dcMotor.get("motor_4");
-		motorLeft = hardwareMap.dcMotor.get("motor_1");
+		motorLeft = hardwareMap.dcMotor.get("motor_2");
 //        motorLeftAlt = hardwareMap.dcMotor.get("motor_2");
 		//This makes the right motor go in the oppsite direction to the left, so the robot doesn't spin in circles
 		motorRight.setDirection(DcMotor.Direction.REVERSE);

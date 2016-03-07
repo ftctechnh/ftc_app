@@ -116,7 +116,14 @@ public class p1s1 extends OpMode {
         double distanceToTurn90Degrees = 0.63;
         double motorPower = 0.5;
 
+        telemetry.addData("About to start", "0");
+
+    //    leftMotor.setPower(0.5);
+
         drive(1, motorPower, "both"); //forward 1 squares (50 cm) // 0.61
+
+        telemetry.addData("did drive", "1");
+
 
 //
 //                try {
@@ -128,7 +135,7 @@ public class p1s1 extends OpMode {
 //        drive(distanceToTurn90Degrees, motorPower, "left"); //90 degress anticlockwise
 //        drive(2, motorPower, "both"); // move 2 squares forward
 
-        stop();
+      //  stop();
 
     }
     //Not relevant because we just run the program once
