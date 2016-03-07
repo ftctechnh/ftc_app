@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<Robot>
+    <MotorController name="Motor Controller AUX" serialNumber="AL00UYTB">
+        <Motor name="motorLift" port="1" />
+        <Motor name="motorBrush" port="2" />
+    </MotorController>
+    <DeviceInterfaceModule name="dim" serialNumber="AI02RI51">
+    </DeviceInterfaceModule>
+    <MotorController name="Motor Controller Drive F" serialNumber="AL00VGKN">
+        <Motor name="motorFRight" port="1" />
+        <Motor name="motorFLeft" port="2" />
+    </MotorController>
+    <MotorController name="Motor Controller Drive B" serialNumber="AL00VV80">
+        <Motor name="motorBRight" port="1" />
+        <Motor name="motorBLeft" port="2" />
+    </MotorController>
+</Robot>

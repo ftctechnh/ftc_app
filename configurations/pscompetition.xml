@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<Robot>
+    <DeviceInterfaceModule name="Dim" serialNumber="AI02RI51">
+        <Gyro name="sensorGyro" port="0" />
+    </DeviceInterfaceModule>
+    <ServoController name="Servo Controller 1" serialNumber="AI02QTJ2">
+        <Servo name="servoLiftRight" port="1" />
+        <Servo name="servoLiftLeft" port="2" />
+        <Servo name="servoHopperLeft" port="3" />
+        <Servo name="servoChurroLeft" port="4" />
+        <Servo name="servoClimbers" port="5" />
+        <Servo name="servoChurroRight" port="6" />
+    </ServoController>
+    <MotorController name="lift and motorBRight" serialNumber="AL00VV80">
+        <Motor name="motorLift" port="1" />
+        <Motor name="motorBRight" port="2" />
+    </MotorController>
+    <MotorController name="motorBLeft and motorBrush" serialNumber="AL00UYTB">
+        <Motor name="motorBLeft" port="1" />
+        <Motor name="motorBrush" port="2" />
+    </MotorController>
+    <MotorController name="Motor Controller 2" serialNumber="AL00UWHD">
+        <Motor name="motorLHang" port="1" />
+        <Motor name="motorRHang" port="2" />
+    </MotorController>
+    <MotorController name="motorFLeft and motorFRight" serialNumber="AL00VGKN">
+        <Motor name="motorFLeft" port="1" />
+        <Motor name="motorFRight" port="2" />
+    </MotorController>
+    <ServoController name="Servo Controller 2" serialNumber="AI02QTEA">
+        <Servo name="servoHopperSlide" port="1" />
+        <Servo name="servoHopperRight" port="2" />
+        <Servo name="servoHook" port="3" />
+        <Servo name="servoZipplineLeft" port="4" />
+        <Servo name="servoZipplineRight" port="5" />
+    </ServoController>
+</Robot>

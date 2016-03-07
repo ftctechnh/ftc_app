@@ -1,13 +1,14 @@
-# ftc_app
-FTC Android Studio project to create FTC Robot Controller app.
+# Powerstackers FTC Team 5029
+This is the Powerstackers' personal fork of the FTC robot control app, for use with our robots that we will build this season. For information, contact us at powerstackers@gmail.com.
 
-This is the FTC SDK that can be used to create an FTC Robot Controller app, with custom op modes.
-The FTC Robot Controller app is designed to work in conjunction with the FTC Driver Station app.
-The FTC Driver Station app is available through Google Play.
+This repository contains code taken from the following sources:
+* [Swerve Robotics FTC Library](https://github.com/SwerveRobotics/ftc_app)
+* [LASA Robotics FTC Vision](https://github.com/lasarobotics/FTCVision)
 
 To use this SDK, download/clone the entire project to your local computer.
 Use Android Studio to import the folder  ("Import project (Eclipse ADT, Gradle, etc.)").
 
+## Documentation
 Documentation for the FTC SDK are included with this repository.  There is a subfolder called "doc" which contains several subfolders:
 
  * The folder "apk" contains the .apk files for the FTC Driver Station and FTC Robot Controller apps.
@@ -79,7 +80,7 @@ Release 15.11.04.001
  * Fix to keep references stable when updating gamepad.
  * For legacy Matrix motor/servo controllers removed necessity of appending "Motor" and "Servo" to controller names.
  * Updated HT color sensor driver to use constants from ModernRoboticsUsbLegacyModule class.
- * Updated MR color sensor driver to use constants from ModernRoboticsUsbDeviceInterfaceModule class. 
+ * Updated MR color sensor driver to use constants from ModernRoboticsUsbDeviceInterfaceModule class.
  * Correctly handle I2C Address change in all color sensors
  * Updated/cleaned up op modes.
   - Updated comments in LinearI2cAddressChange.java example op mode.
@@ -94,7 +95,7 @@ Release 15.11.04.001
 
 T. Eng
 November 5, 2015
- 
+
 **************************************************************************************
 
 Release 15.10.06.002
@@ -109,21 +110,14 @@ October 6, 2015
 
 **************************************************************************************
 
-In this latest version of the FTC SDK (20150803_001) the following changes should be noted:
+## License
+All our code is free and open to use. We publish our code under the GNU General Public License version 3. Code written by Qualcomm is not covered by this license and retains their original copyright. Code from LASA Robotics is covered by the MIT license.
+=======
 
- * New user interfaces for FTC Driver Station and FTC Robot Controller apps.
- * An init() method is added to the OpMode class.
-   - For this release, init() is triggered right before the start() method.
-   - Eventually, the init() method will be triggered when the user presses an "INIT" button on driver station.
-   - The init() and loop() methods are now required (i.e., need to be overridden in the user's op mode).
-   - The start() and stop() methods are optional.
- * A new LinearOpMode class is introduced.
-   - Teams can use the LinearOpMode mode to create a linear (not event driven) program model.
-   - Teams can use blocking statements like Thread.sleep() within a linear op mode.
- * The API for the Legacy Module and Core Device Interface Module have been updated.
-   - Support for encoders with the Legacy Module is now working.
- * The hardware loop has been updated for better performance.
+Copyright (C) 2015 Powerstackers
 
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
-T. Eng
-August 3, 2015
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with this program. If not, see http://www.gnu.org/licenses/.

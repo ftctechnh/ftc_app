@@ -39,11 +39,15 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.net.wifi.p2p.WifiP2pDevice;
+import android.os.*;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -63,15 +67,27 @@ import com.qualcomm.ftccommon.Restarter;
 import com.qualcomm.ftccommon.UpdateUI;
 import com.qualcomm.ftcrobotcontroller.opmodes.FtcOpModeRegister;
 import com.qualcomm.hardware.HardwareFactory;
+import com.qualcomm.robotcore.eventloop.EventLoopManager;
+import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.configuration.Utility;
+import com.qualcomm.robotcore.robocol.*;
+import com.qualcomm.robotcore.robot.Robot;
+import com.qualcomm.robotcore.robot.RobotState;
 import com.qualcomm.robotcore.util.Dimmer;
 import com.qualcomm.robotcore.util.ImmersiveMode;
 import com.qualcomm.robotcore.util.RobotLog;
 import com.qualcomm.robotcore.wifi.WifiDirectAssistant;
 
+import static junit.framework.Assert.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.regex.Pattern;
+
+import org.swerverobotics.library.*;
+import org.swerverobotics.library.internal.*;
 
 public class FtcRobotControllerActivity extends Activity {
 
@@ -92,18 +108,21 @@ public class FtcRobotControllerActivity extends Activity {
   protected TextView textDeviceName;
   protected TextView textWifiDirectStatus;
   protected TextView textRobotStatus;
+  protected TextView textWifiDirectPassphrase;
   protected TextView[] textGamepad = new TextView[NUM_GAMEPADS];
   protected TextView textOpMode;
   protected TextView textErrorMessage;
   protected ImmersiveMode immersion;
 
-  protected UpdateUI updateUI;
+  protected SwerveUpdateUIHook updateUI;
+  protected SwervePhoneNameVerifier nameVerifier;
   protected Dimmer dimmer;
   protected LinearLayout entireScreenLayout;
 
   protected FtcRobotControllerService controllerService;
 
   protected FtcEventLoop eventLoop;
+  protected Queue<UsbDevice> receivedUsbAttachmentNotifications;
 
   protected class RobotRestarter implements Restarter {
 
@@ -129,15 +148,44 @@ public class FtcRobotControllerActivity extends Activity {
   @Override
   protected void onNewIntent(Intent intent) {
     super.onNewIntent(intent);
-    if (UsbManager.ACTION_USB_ACCESSORY_ATTACHED.equals(intent.getAction())) {
-      // a new USB device has been attached
-      DbgLog.msg("USB Device attached; app restart may be needed");
+
+    if (UsbManager.ACTION_USB_DEVICE_ATTACHED.equals(intent.getAction())) {
+      UsbDevice usbDevice = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+      if (usbDevice != null) {  // paranoia
+        // We might get attachment notifications before the event loop is set up, so
+        // we hold on to them and pass them along only when we're good and ready.
+        if (receivedUsbAttachmentNotifications != null) { // *total* paranoia
+          receivedUsbAttachmentNotifications.add(usbDevice);
+          passReceivedUsbAttachmentsToEventLoop();
+        }
+      }
+    }
+  }
+
+  protected void passReceivedUsbAttachmentsToEventLoop() {
+    if (this.eventLoop != null) {
+      for (;;) {
+        UsbDevice usbDevice = receivedUsbAttachmentNotifications.poll();
+        if (usbDevice == null)
+          break;
+        this.eventLoop.onUsbDeviceAttached(usbDevice);
+      }
+    }
+    else {
+      // Paranoia: we don't want the pending list to grow without bound when we don't
+      // (yet) have an event loop
+      while (receivedUsbAttachmentNotifications.size() > 100) {
+        receivedUsbAttachmentNotifications.poll();
+      }
     }
   }
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+
+    receivedUsbAttachmentNotifications = new ConcurrentLinkedQueue<UsbDevice>();
+    eventLoop = null;
 
     setContentView(R.layout.activity_ftc_controller);
 
@@ -157,6 +205,7 @@ public class FtcRobotControllerActivity extends Activity {
     textRobotStatus = (TextView) findViewById(R.id.textRobotStatus);
     textOpMode = (TextView) findViewById(R.id.textOpMode);
     textErrorMessage = (TextView) findViewById(R.id.textErrorMessage);
+    textWifiDirectPassphrase = (TextView) findViewById(R.id.textWifiDirectPassphrase);
     textGamepad[0] = (TextView) findViewById(R.id.textGamepad1);
     textGamepad[1] = (TextView) findViewById(R.id.textGamepad2);
     immersion = new ImmersiveMode(getWindow().getDecorView());
@@ -164,11 +213,12 @@ public class FtcRobotControllerActivity extends Activity {
     dimmer.longBright();
     Restarter restarter = new RobotRestarter();
 
-    updateUI = new UpdateUI(this, dimmer);
+    updateUI = new SwerveUpdateUIHook(this, dimmer);
     updateUI.setRestarter(restarter);
     updateUI.setTextViews(textWifiDirectStatus, textRobotStatus,
-        textGamepad, textOpMode, textErrorMessage, textDeviceName);
-    callback = updateUI.new Callback();
+            textGamepad, textOpMode, textErrorMessage, textDeviceName);
+    callback = updateUI.new CallbackHook();
+    nameVerifier = new SwervePhoneNameVerifier();
 
     PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
     preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -196,10 +246,10 @@ public class FtcRobotControllerActivity extends Activity {
     callback.wifiDirectUpdate(WifiDirectAssistant.Event.DISCONNECTED);
 
     entireScreenLayout.setOnTouchListener(new View.OnTouchListener() {
-      @Override
-      public boolean onTouch(View v, MotionEvent event) {
-        dimmer.handleDimTimer();
-        return false;
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+      dimmer.handleDimTimer();
+      return false;
       }
     });
 
@@ -252,35 +302,38 @@ public class FtcRobotControllerActivity extends Activity {
 
   @Override
   public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case R.id.action_restart_robot:
+    int id = item.getItemId();
+    if (id==R.id.action_restart_robot) {
         dimmer.handleDimTimer();
         Toast.makeText(context, "Restarting Robot", Toast.LENGTH_SHORT).show();
         requestRobotRestart();
         return true;
-      case R.id.action_settings:
+    }
+    if (id==R.id.action_settings) {
         // The string to launch this activity must match what's in AndroidManifest of FtcCommon for this activity.
         Intent settingsIntent = new Intent("com.qualcomm.ftccommon.FtcRobotControllerSettingsActivity.intent.action.Launch");
         startActivityForResult(settingsIntent, LaunchActivityConstantsList.FTC_ROBOT_CONTROLLER_ACTIVITY_CONFIGURE_ROBOT);
         return true;
-      case R.id.action_about:
+    }
+    if (id==R.id.action_about) {
         // The string to launch this activity must match what's in AndroidManifest of FtcCommon for this activity.
         Intent intent = new Intent("com.qualcomm.ftccommon.configuration.AboutActivity.intent.action.Launch");
         startActivity(intent);
         return true;
-      case R.id.action_exit_app:
+    }
+    if (id==R.id.action_exit_app) {
         finish();
         return true;
-      case R.id.action_view_logs:
+    }
+    if (id==R.id.action_view_logs) {
         // The string to launch this activity must match what's in AndroidManifest of FtcCommon for this activity.
         Intent viewLogsIntent = new Intent("com.qualcomm.ftccommon.ViewLogsActivity.intent.action.Launch");
         viewLogsIntent.putExtra(LaunchActivityConstantsList.VIEW_LOGS_ACTIVITY_FILENAME, RobotLog.getLogFilename(this));
         startActivity(viewLogsIntent);
         return true;
-      default:
+    }
         return super.onOptionsItemSelected(item);
     }
-  }
 
   @Override
   public void onConfigurationChanged(Configuration newConfig) {
@@ -332,10 +385,12 @@ public class FtcRobotControllerActivity extends Activity {
     modernRoboticsFactory.setXmlInputStream(fis);
     factory = modernRoboticsFactory;
 
-    eventLoop = new FtcEventLoop(factory, new FtcOpModeRegister(), callback, this);
+    eventLoop = new SwerveFtcEventLoop(factory, new FtcOpModeRegister(), callback, this);
 
     controllerService.setCallback(callback);
     controllerService.setupRobot(eventLoop);
+
+    passReceivedUsbAttachmentsToEventLoop();
   }
 
   private FileInputStream fileSetup() {
@@ -389,4 +444,291 @@ public class FtcRobotControllerActivity extends Activity {
       }
     });
   }
+
+    //==============================================================================================
+
+    public static String LOGGING_TAG = SynchronousOpMode.LOGGING_TAG;
+
+    /**
+     * We are being notified that the FTC robot controller activity is being shut down.
+     *
+     * In response, we choose here to also terminate the underlying process. While not normally
+     * something one does in a well-behaved and fully-debugged Android app, we do it here in order
+     * to make the controller behavior more robust and reliable: there are known scenarios in which
+     * the controller can get into an inoperable state that *requires* that this underlying process
+     * be terminated (that is, there's something in that process state that's stuck). While this can
+     * be done manually with 'swiping' closed the process, relying on the user to do that is just
+     * silly. By terminating the process here, that will happen automatically when the user chooses
+     * 'Exit' from the menu.
+     *
+     * @see <a href="http://developer.android.com/reference/android/app/Activity.html">Activity Life Cycle</a>
+     */
+    @Override protected void onDestroy()
+        {
+        // Do required superclass stuff
+        super.onDestroy();
+
+        // Commit suicide
+        Log.i(LOGGING_TAG, "FtcRobotControllerActivity committing process suicide");
+        int pid = android.os.Process.myPid();
+        android.os.Process.killProcess(pid);
+        }
+
+
+    //==============================================================================================
+    // Hooking infrastructure (Swerve)
+    //
+    // The code below has been added to the stock FtcRobotControllerActivity in order to hook
+    // into state transitions of various kinds that happen within the robot controller application.
+    // Most of what's here is of necessity pretty obscure and technical in nature, but
+    // fortunately those details won't be of significance to most.
+
+    static class SwerveEventLoopMonitorHook implements EventLoopManager.EventLoopMonitor
+    // Hook to receive event monitor state transition
+        {
+        //------------------------------------------------------------------------------------------
+        // State
+        //------------------------------------------------------------------------------------------
+
+        // The previously installed hook
+        final EventLoopManager.EventLoopMonitor prevMonitor;
+
+        // The activity in which we live
+        final FtcRobotControllerActivity activity;
+
+        //------------------------------------------------------------------------------------------
+        // Construction
+        //------------------------------------------------------------------------------------------
+
+        SwerveEventLoopMonitorHook(EventLoopManager.EventLoopMonitor prevMonitor, FtcRobotControllerActivity activity)
+            {
+            this.prevMonitor = prevMonitor;
+            this.activity    = activity;
+            }
+
+        // Make sure we're installed in the in the hook of the current event loop
+        public synchronized static void installIfNecessary(FtcRobotControllerService service, FtcRobotControllerActivity activity)
+            {
+            if (service == null)
+                return;
+
+            Robot robot = MemberUtil.robotOfFtcRobotControllerService(service);
+            if (robot == null)
+                return;
+
+            EventLoopManager eventLoopManager = robot.eventLoopManager;
+            if (eventLoopManager == null)
+                return;
+
+            // Ok, the EventLoopManager is up and running. Install our hooks if we haven't already done so
+
+            EventLoopManager.EventLoopMonitor monitor = eventLoopManager.getMonitor();
+            if (monitor != null)
+                {
+                if (monitor instanceof SwerveEventLoopMonitorHook)
+                    {
+                    // we're already installed
+                    }
+                else
+                    {
+                    SwerveEventLoopMonitorHook newMonitor = new SwerveEventLoopMonitorHook(monitor, activity);
+                    eventLoopManager.setMonitor(newMonitor);
+                    Log.v(SynchronousOpMode.LOGGING_TAG, "installed SwerveEventLoopMonitorHook");
+                    }
+                }
+            }
+
+        //------------------------------------------------------------------------------------------
+        // Notifications
+        //------------------------------------------------------------------------------------------
+
+        @Override
+        public void onStateChange(RobotState newState)
+            {
+            this.prevMonitor.onStateChange(newState);
+
+            RobotStateTransitionNotifier.onRobotStateChange(newState);
+
+            if (newState == RobotState.RUNNING)
+                this.activity.nameVerifier.verifyLegalPhoneNames();
+            }
+
+        @Override
+        public void onErrorOrWarning()
+          {
+          this.prevMonitor.onErrorOrWarning();
+          }
+        }
+
+    class SwervePhoneNameVerifier
+        {
+        //------------------------------------------------------------------------------------------
+        // State
+        //------------------------------------------------------------------------------------------
+
+        /* The rule about how robot controllers and driver stations are to be named is the following:
+             <RS02> Each Team MUST “name” their Robot Controller with their official FTC Team
+             number and –RC (e.g. “1234-RC”). Each Team MUST “name” their Driver Station with
+             their official FTC Team number and –DS (e.g. 1234-DS). Spare Android devices
+             should be named with the Team number followed by a hyphen then a letter designation
+             beginning with “B” (e.g. “1234-B-RC”, “1234-C-RC”).
+           We're going to enforce that here.
+        */
+        Pattern legalRCNamePattern = Pattern.compile("^\\d{1,5}(-[B-Z])?-RC", Pattern.CASE_INSENSITIVE);
+        Pattern legalDSNamePattern = Pattern.compile("^\\d{1,5}(-[B-Z])?-DS", Pattern.CASE_INSENSITIVE);
+
+        // We match for all 'telephone's per the Wifi Simple Configuration Technical Specification v2.0.4.
+        // See Table 41 in that document. Example: "10-0050F204-5".
+        Pattern telephonePeerPattern = Pattern.compile("10-0050F204-\\d+", Pattern.CASE_INSENSITIVE);
+
+        //------------------------------------------------------------------------------------------
+        // Verification
+        //------------------------------------------------------------------------------------------
+
+        void verifyLegalPhoneNames()
+            {
+            if (controllerService != null)
+                {
+                WifiDirectAssistant assistant = controllerService.getWifiDirectAssistant();
+
+                // Check the robot controller name for legality. Sometimes, during startup, we get
+                // called back here before we can access the real RC name, so we check for the empty string.
+                String robotControllerName = assistant.getDeviceName();
+                if (robotControllerName != "")
+                    {
+                    if (!legalRCNamePattern.matcher(robotControllerName).matches())
+                        {
+                        reportWifiDirectError("\"%s\" is not a legal robot controller name (see <RS02>)", robotControllerName);
+                        }
+                    }
+
+                // We'd like to check all the peers as well, but some of them may not be actually
+                // the driver station but instead, e.g., development laptops. So we need to be a
+                // little careful.
+                for (WifiP2pDevice peer : assistant.getPeers())
+                    {
+                    if (isDriverStation(peer))
+                        {
+                        if (!legalDSNamePattern.matcher(peer.deviceName).matches())
+                            {
+                            reportWifiDirectError("\"%s\" is not a legal driver station name (see <RS02>)", peer.deviceName);
+                            }
+                        }
+                    }
+                }
+            }
+
+        //------------------------------------------------------------------------------------------
+        // Utility
+        //------------------------------------------------------------------------------------------
+
+        /** Is this peer a driver station? If in doubt, answer 'no'*/
+        boolean isDriverStation(WifiP2pDevice peer)
+            {
+            return this.telephonePeerPattern.matcher(peer.primaryDeviceType).matches();
+            }
+
+        void reportWifiDirectError(String format, Object... args)
+            {
+            String message = String.format(format, args);
+            // Show the message in the log
+            Log.w(LOGGING_TAG, String.format("wifi direct error: %s", message));
+            // Make the message appear on the driver station (only the first one will actually appear)
+            RobotLog.setGlobalErrorMsg(message);
+            }
+        }
+
+    class SwerveUpdateUIHook extends UpdateUI
+    // Hook used to augment the user interface
+        {
+        //------------------------------------------------------------------------------------------
+        // State
+        //------------------------------------------------------------------------------------------
+
+        FtcRobotControllerActivity activity;
+        FtcRobotControllerService  controllerService;
+
+        //------------------------------------------------------------------------------------------
+        // Construction
+        //------------------------------------------------------------------------------------------
+
+        SwerveUpdateUIHook(FtcRobotControllerActivity activity, Dimmer dimmer)
+            {
+            super(activity, dimmer);
+            this.activity = activity;
+            this.controllerService = null;
+            }
+
+        @Override
+        public void setControllerService(FtcRobotControllerService controllerService)
+            {
+            super.setControllerService(controllerService);
+            this.controllerService = controllerService;
+            }
+
+        //------------------------------------------------------------------------------------------
+        // Operations
+        //------------------------------------------------------------------------------------------
+
+        class CallbackHook extends UpdateUI.Callback
+            {
+            //--------------------------------------------------------------------------------------
+            // Operations
+            //--------------------------------------------------------------------------------------
+
+            @Override
+            public void robotUpdate(final String status)
+            // Called from FtcRobotControllerService.reportRobotStatus(). That is called from many
+            // places, but in particular it is called *immediately* after RobotFactory.createRobot()
+            // is called in FtcRobotControllerService.run(); that ensures we get to see the raw
+            // initial state.
+                {
+                // Make sure we get to see all the robot state transitions
+                SwerveEventLoopMonitorHook.installIfNecessary(controllerService, FtcRobotControllerActivity.this);
+
+                super.robotUpdate(status);
+                RobotStateTransitionNotifier.onRobotUpdate(status);
+                }
+
+            @Override
+            public void wifiDirectUpdate(WifiDirectAssistant.Event event)
+                {
+                super.wifiDirectUpdate(event);
+
+                final String message = controllerService == null
+                        ? ""
+                        : String.format("Wifi Direct passphrase: %s", controllerService.getWifiDirectAssistant().getPassphrase());
+
+                SwerveUpdateUIHook.this.activity.runOnUiThread(new Runnable()
+                {
+                @Override
+                public void run()
+                    {
+                    activity.textWifiDirectPassphrase.setText(message);
+                    }
+    });
+  }
+
+            }
+        }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
