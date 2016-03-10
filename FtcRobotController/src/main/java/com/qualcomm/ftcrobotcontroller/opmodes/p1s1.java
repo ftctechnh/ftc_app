@@ -21,7 +21,7 @@ public class p1s1 extends OpMode {
     final static int ENCODER_CPR = 757;     //Encoder Counts per Revolution
     final static double GEAR_RATIO = 56/24;      //Gear Ratio
     final static double WHEEL_DIAMETER = 0.98/Math.PI;     //Diameter of the wheel in m
-    final static double CIRCUMFERENCE = 0.98;
+    final static double CIRCUMFERENCE = 0.2;
     //Works out the number of encoder counts we need given the number of squares we have to travel
     public double returnCountsFromNumberOfSquares (double squares) {
 
@@ -98,7 +98,7 @@ public class p1s1 extends OpMode {
     @Override
     public void start() {
         //Tells us how far the robot has to travel to turn 90 degrees
-        double distanceToTurn90Degrees = 0.63;
+        double distanceToTurn90Degrees = 1.0;
         double motorPower = 0.5;
 
         telemetry.addData("About to start", "0");
