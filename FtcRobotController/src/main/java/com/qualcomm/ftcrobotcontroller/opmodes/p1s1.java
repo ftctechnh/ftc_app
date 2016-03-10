@@ -20,8 +20,8 @@ public class p1s1 extends OpMode {
     //This declares the constants we'll use to work out how many counts we need
     final static int ENCODER_CPR = 757;     //Encoder Counts per Revolution
     final static double GEAR_RATIO = 56/24;      //Gear Ratio
-    final static double WHEEL_DIAMETER = 0.98/Math.PI;     //Diameter of the wheel in m
-    final static double CIRCUMFERENCE = 0.2;
+    final static double WHEEL_DIAMETER = 0.08/Math.PI;     //Diameter of the wheel in m
+    final static double CIRCUMFERENCE = 0.16;
     //Works out the number of encoder counts we need given the number of squares we have to travel
     public double returnCountsFromNumberOfSquares (double squares) {
 
