@@ -12,6 +12,8 @@ import java.lang.*;
 /**
  * Created by baptiste on 15/11/2015.
  */
+
+//Currently 1 square drives about 51cm - arka & benjamin 10th march
 public class p1s1 extends OpMode {
     //This declares two motors
     DcMotor rightMotor;
@@ -21,7 +23,7 @@ public class p1s1 extends OpMode {
     final static int ENCODER_CPR = 757;     //Encoder Counts per Revolution
     final static double GEAR_RATIO = 56/24;      //Gear Ratio
     final static double WHEEL_DIAMETER = 0.08/Math.PI;     //Diameter of the wheel in m
-    final static double CIRCUMFERENCE = 0.16;
+    final static double CIRCUMFERENCE = 0.09;
     //Works out the number of encoder counts we need given the number of squares we have to travel
     public double returnCountsFromNumberOfSquares (double squares) {
 
@@ -93,19 +95,26 @@ public class p1s1 extends OpMode {
         }
         //This tries tell us what went wrong in the program?
 
+        /*
+        if (leftMotor.getCurrentPosition() == leftMotor.getTargetPosition() && rightMotor.getCurrentPosition() == rightMotor.getTargetPosition()){
+            leftMotor.setPower(0.0);
+            rightMotor.setPower(0.0);
+        }
+        */
+
     }
 
     @Override
     public void start() {
         //Tells us how far the robot has to travel to turn 90 degrees
-        double distanceToTurn90Degrees = 1.0;
+        double distanceToTurn90Degrees = .67;
         double motorPower = 0.5;
 
         telemetry.addData("About to start", "0");
 
     //    leftMotor.setPower(0.5);
 
-        drive(1, motorPower, "both"); //forward 1 squares (50 cm) // 0.61
+        //drive(1, motorPower, "both"); //forward 1 squares (50 cm) // 0.61
         telemetry.addData("did drive", "1");
 
 //
@@ -115,7 +124,7 @@ public class p1s1 extends OpMode {
 //            e.printStackTrace();
 //        }
 
-//        drive(distanceToTurn90Degrees, motorPower, "left"); //90 degress anticlockwise
+        drive(distanceToTurn90Degrees, motorPower, "left"); //90 degress anticlockwise
 //        drive(2, motorPower, "both"); // move 2 squares forward
 
       //  stop();
