@@ -16,40 +16,31 @@ public class p1s1 extends OpMode {
     //This declares two motors
     DcMotor rightMotor;
     DcMotor leftMotor;
+    //the length the track of the track is 98 cm
     //This declares the constants we'll use to work out how many counts we need
     final static int ENCODER_CPR = 757;     //Encoder Counts per Revolution
     final static double GEAR_RATIO = 56/24;      //Gear Ratio
-    final static double WHEEL_DIAMETER = 0.94/Math.PI;     //Diameter of the wheel in m
-    final static double CIRCUMFERENCE = 0.94;
+    final static double WHEEL_DIAMETER = 0.98/Math.PI;     //Diameter of the wheel in m
+    final static double CIRCUMFERENCE = 0.98;
     //Works out the number of encoder counts we need given the number of squares we have to travel
     public double returnCountsFromNumberOfSquares (double squares) {
 
 //        double distance2 = squares*0.61;
-
         double distance2 = squares*0.5;
 
         double ROTATIONS = distance2 / CIRCUMFERENCE;
-
-        double valueToReturn = ENCODER_CPR * ROTATIONS * GEAR_RATIO * 10 * (480/500);
-
+        double valueToReturn = ENCODER_CPR * ROTATIONS * GEAR_RATIO;
         telemetry.addData("Motor Target", valueToReturn);
-
         return valueToReturn;
-
 
     }
     //Works out the number of encoder counts we need given the distance we have to travel
     public double returnCountsFromDistance (double distance) {
-
-
-        double ROTATIONS = distance / CIRCUMFERENCE;
-        double valueToReturn = ENCODER_CPR * ROTATIONS * GEAR_RATIO * 10 * (480/500);
-
+        double ROTATIONS = distance/CIRCUMFERENCE;
+        double valueToReturn = ENCODER_CPR * ROTATIONS * GEAR_RATIO;
         telemetry.addData("Motor Target", valueToReturn);
-
         return valueToReturn;
     }
-
 
     @Override
     public void init() {
@@ -60,21 +51,19 @@ public class p1s1 extends OpMode {
         leftMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         rightMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
     }
-    //This makes us tell the motors how far to travel, and which track/s to move
+
+    //This makes us tell the motors how far to travel, and which tracks to move
     public void drive (double numberOfSquares, double power, String mode) {
         //Makes both motors go forwards
         if (mode.equals("both")) {
 
             leftMotor.setTargetPosition((int) returnCountsFromNumberOfSquares(numberOfSquares));
             rightMotor.setTargetPosition((int) returnCountsFromNumberOfSquares(numberOfSquares));
-
             leftMotor.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
             rightMotor.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
 
             leftMotor.setPower(power);
             rightMotor.setPower(power);
-
-
         }
         //Makes the robot turn right
         if (mode.equals("left")) {
@@ -102,10 +91,7 @@ public class p1s1 extends OpMode {
         //    rightMotor.setPower(-power);
 
         }
-
         //This tries tell us what went wrong in the program?
-
-
 
     }
 
@@ -120,7 +106,6 @@ public class p1s1 extends OpMode {
     //    leftMotor.setPower(0.5);
 
         drive(1, motorPower, "both"); //forward 1 squares (50 cm) // 0.61
-
         telemetry.addData("did drive", "1");
 
 //
