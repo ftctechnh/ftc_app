@@ -37,7 +37,7 @@ public class p1s1COPY extends OpMode {
     //Works out the number of encoder counts we need given the number of squares we have to travel
     public double returnCountsFromNumberOfSquares (double squares) {
 
-//        double distance2 = squares*0.61;
+//      double distance2 = squares*0.61;
 
         double distance2 = squares*0.5;
 
@@ -59,7 +59,6 @@ public class p1s1COPY extends OpMode {
         double valueToReturn = ENCODER_CPR * ROTATIONS * GEAR_RATIO * 10 * (480/500);
 
         telemetry.addData("Motor Target", valueToReturn);
-
         return valueToReturn;
     }
 
@@ -134,11 +133,9 @@ public class p1s1COPY extends OpMode {
             //    rightMotor.setPower(-power);
 
         }
-
+        leftMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        rightMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         //This tries tell us what went wrong in the program?
-
-
-
     }
 
     public void turn() {
@@ -174,7 +171,6 @@ public class p1s1COPY extends OpMode {
         double motorPower = 0.5;
 
     //    drive(1, motorPower, "both"); //forward 1 squares (50 cm) // 0.61
-
         stop();
 
     }

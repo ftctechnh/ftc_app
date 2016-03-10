@@ -56,9 +56,7 @@ public class p1s1 extends OpMode {
         //The code that runs when we start the robot. We assign the motors and reset the encoder count
         rightMotor = hardwareMap.dcMotor.get("motor_1");
         leftMotor = hardwareMap.dcMotor.get("motor_2");
-
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
-
         leftMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         rightMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
     }
@@ -75,6 +73,7 @@ public class p1s1 extends OpMode {
 
             leftMotor.setPower(power);
             rightMotor.setPower(power);
+
 
         }
         //Makes the robot turn right
@@ -123,7 +122,6 @@ public class p1s1 extends OpMode {
         drive(1, motorPower, "both"); //forward 1 squares (50 cm) // 0.61
 
         telemetry.addData("did drive", "1");
-
 
 //
 //                try {
