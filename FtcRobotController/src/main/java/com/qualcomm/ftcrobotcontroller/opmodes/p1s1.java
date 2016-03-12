@@ -1,11 +1,15 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
-
-
-
+import android.util.Log;
+import com.qualcomm.ftcrobotcontroller.opmodes.sensorCode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.exception.RobotCoreException;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import java.lang.*;
 
 
@@ -15,6 +19,13 @@ import java.lang.*;
 
 //Currently 1 square drives about 51cm - arka & benjamin 10th march
 public class p1s1 extends OpMode {
+    sensorCode boschBNO055;
+
+    //The following arrays contain both the Euler angles reported by the IMU (indices = 0) AND the
+    // Tait-Bryan angles calculated from the 4 components of the quaternion vector (indices = 1)
+    volatile double[] rollAngle = new double[2], pitchAngle = new double[2], yawAngle = new double[2];
+
+    long systemTime;//Relevant values of System.nanoTime
     //This declares two motors
     DcMotor rightMotor;
     DcMotor leftMotor;
@@ -52,8 +63,43 @@ public class p1s1 extends OpMode {
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
         leftMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         rightMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-    }
 
+        try {
+            boschBNO055 = new sensorCode(hardwareMap, "bno055"
+
+                    //The following was required when the definition of the "I2cDevice" class was incomplete.
+                    //, "cdim", 5
+
+                    , (byte)(sensorCode.BNO055_ADDRESS_A * 2)//By convention the FTC SDK always does 8-bit I2C bus
+                    //addressing
+                    , (byte)sensorCode.OPERATION_MODE_IMU);
+        } catch (RobotCoreException e){
+            Log.i("FtcRobotController", "Exception: " + e.getMessage());
+        }
+
+        Log.i("FtcRobotController", "IMU Init method finished in: "
+                + (-(systemTime - (systemTime = System.nanoTime()))) + " ns.");
+    }
+    public void turn() {
+        systemTime = System.nanoTime();
+        boschBNO055.startIMU();//Set up the IMU as needed for a continual stream of I2C reads.
+        Log.i("FtcRobotController", "IMU Start method finished in: "
+                + (-(systemTime - (systemTime = System.nanoTime()))) + " ns.");
+
+        boschBNO055.getIMUGyroAngles(rollAngle, pitchAngle, yawAngle);
+
+        double currentYawAngle = yawAngle[0];
+
+        while (yawAngle[0] < currentYawAngle+90) {
+
+            boschBNO055.getIMUGyroAngles(rollAngle, pitchAngle, yawAngle);
+
+            rightMotor.setPower(0.2);
+
+        }
+
+        rightMotor.setPower(0);
+    }
     //This makes us tell the motors how far to travel, and which tracks to move
     public void drive (double numberOfSquares, double power, String mode) {
         //Makes both motors go forwards
