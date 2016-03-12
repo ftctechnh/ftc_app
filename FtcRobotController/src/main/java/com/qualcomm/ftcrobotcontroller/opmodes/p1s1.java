@@ -92,7 +92,7 @@ public class p1s1 extends OpMode {
 
         while (yawAngle[0] < currentYawAngle+90) {
             boschBNO055.getIMUGyroAngles(rollAngle, pitchAngle, yawAngle);
-            rightMotor.setPower(0.2);
+            rightMotor.setPower(0.5);
         }
 
         rightMotor.setPower(0);
@@ -152,7 +152,7 @@ public class p1s1 extends OpMode {
     public void start() {
         //Tells us how far the robot has to travel to turn 90 degrees
         double distanceToTurn90Degrees = .68;
-        double motorPower = 0.5;
+        double motorPower = 0.75;
 
         telemetry.addData("About to start", "0");
     //    leftMotor.setPower(0.5);
