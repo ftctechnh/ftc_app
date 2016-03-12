@@ -33,9 +33,10 @@ public class p1s1 extends OpMode {
     //This declares the constants we'll use to work out how many counts we need
     final static int ENCODER_CPR = 757;     //Encoder Counts per Revolution
     final static double GEAR_RATIO = 56/24;      //Gear Ratio
-    final static double WHEEL_DIAMETER = 0.08/Math.PI;     //Diameter of the wheel in m
-    final static double CIRCUMFERENCE = 0.09;
+    final static double WHEEL_DIAMETER = 0.1/Math.PI;     //Diameter of the wheel in m
+    final static double CIRCUMFERENCE = 0.1;
     //Works out the number of encoder counts we need given the number of squares we have to travel
+
     public double returnCountsFromNumberOfSquares (double squares) {
 
 //        double distance2 = squares*0.61;
@@ -45,8 +46,8 @@ public class p1s1 extends OpMode {
         double valueToReturn = ENCODER_CPR * ROTATIONS * GEAR_RATIO;
         telemetry.addData("Motor Target", valueToReturn);
         return valueToReturn;
-
     }
+
     //Works out the number of encoder counts we need given the distance we have to travel
     public double returnCountsFromDistance (double distance) {
         double ROTATIONS = distance/CIRCUMFERENCE;
@@ -87,19 +88,16 @@ public class p1s1 extends OpMode {
                 + (-(systemTime - (systemTime = System.nanoTime()))) + " ns.");
 
         boschBNO055.getIMUGyroAngles(rollAngle, pitchAngle, yawAngle);
-
         double currentYawAngle = yawAngle[0];
 
         while (yawAngle[0] < currentYawAngle+90) {
-
             boschBNO055.getIMUGyroAngles(rollAngle, pitchAngle, yawAngle);
-
             rightMotor.setPower(0.2);
-
         }
 
         rightMotor.setPower(0);
     }
+
     //This makes us tell the motors how far to travel, and which tracks to move
     public void drive (double numberOfSquares, double power, String mode) {
         //Makes both motors go forwards
@@ -153,11 +151,10 @@ public class p1s1 extends OpMode {
     @Override
     public void start() {
         //Tells us how far the robot has to travel to turn 90 degrees
-        double distanceToTurn90Degrees = .67;
+        double distanceToTurn90Degrees = .68;
         double motorPower = 0.5;
 
         telemetry.addData("About to start", "0");
-
     //    leftMotor.setPower(0.5);
 
         //drive(1, motorPower, "both"); //forward 1 squares (50 cm) // 0.61
@@ -170,11 +167,11 @@ public class p1s1 extends OpMode {
 //            e.printStackTrace();
 //        }
 
-        drive(distanceToTurn90Degrees, motorPower, "left"); //90 degress anticlockwise
+//        drive(distanceToTurn90Degrees, motorPower, "left"); //90 degress anticlockwise
 //        drive(2, motorPower, "both"); // move 2 squares forward
 
-      //  stop();
-
+        drive(2,motorPower,"both");
+        turn()
     }
     //Not relevant because we just run the program once
     @Override
