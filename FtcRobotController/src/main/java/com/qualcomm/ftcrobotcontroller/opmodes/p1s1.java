@@ -171,7 +171,7 @@ public class p1s1 extends OpMode {
 //        drive(2, motorPower, "both"); // move 2 squares forward
 
         drive(2,motorPower,"both");
-        turn()
+        turn();
     }
     //Not relevant because we just run the program once
     @Override
