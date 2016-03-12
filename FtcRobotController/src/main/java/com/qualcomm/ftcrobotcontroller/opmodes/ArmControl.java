@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class ArmControl extends OpMode {
 
     DcMotor leftArm;
-    DcMotor rightArm
+    DcMotor rightArm;
 
     @Override
     public void init() {
