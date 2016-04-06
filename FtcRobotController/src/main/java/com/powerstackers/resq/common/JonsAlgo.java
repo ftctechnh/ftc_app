@@ -145,24 +145,29 @@ public class JonsAlgo {
 
         double degreesSoFar = robot.getGyroHeading();
 
+//        robot.calibrateGyro();
+//
+//        while(robot.isGyrocalibrate()){continue;}
+//        double degreesSoFar = 0;
+
 //        if (Range.clip(degrees ))
 
         if (degrees > 180) {                                            //left
             robot.setPowerLeft(-1 * speed);
             robot.setPowerRight(speed);
-//            mode.telemetry.addData("gyro1", robot.getGyroHeading());
+            mode.telemetry.addData("gyro1", robot.getGyroHeading());
         } else if (degrees < 180) {                                     //right
             robot.setPowerLeft(speed);
             robot.setPowerRight(-1 * speed);
-//            mode.telemetry.addData("gyro2", robot.getGyroHeading());
+            mode.telemetry.addData("gyro2", robot.getGyroHeading());
         } else {
             robot.setPowerAll(0);
         }
-
+        mode.telemetry.addData("Gyro", degrees + "," + degreesSoFar);
         // For as long as the current degree measure doesn't equal the target. This will work in the clockwise and
         // counterclockwise directions, since we are comparing the absolute values
-        while ((degreesSoFar) > (degrees)) {
-            mode.telemetry.addData("gyrocompare", robot.getGyroHeading());
+        while ((degreesSoFar) < (degrees)) {
+            mode.telemetry.addData("gyrocompare", degreesSoFar=robot.getGyroHeading());
         }
 
         // Stop all drive motors
