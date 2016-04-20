@@ -42,21 +42,27 @@ public class SigmaCatsOp extends OpMode
 
    if(gamepad1.a){
    Square();
+    motorLeft.setPower(0);
+     motorRight.setPower(0);
    }
    if(gamepad1.b){
    Triangle();
+    motorLeft.setPower(0);
+    motorRight.setPower(0);
    }
    if(gamepad1.x){
    Circle();
+    motorLeft.setPower(0);
+    motorRight.setPower(0);
    }
-        if(gamepad1.dpad_up){
-            penPosition += penMove;
-        }
+    if(gamepad1.dpad_up){
+    penPosition += penMove;
+    }
 
-        if(gamepad1.dpad_down){
-            penPosition -= penMove;
-        }
-        pen.setPosition(penPosition);
+     if(gamepad1.dpad_down){
+    penPosition -= penMove;
+      }
+    pen.setPosition(penPosition);
 
     }
 
@@ -72,6 +78,8 @@ public class SigmaCatsOp extends OpMode
     motorLeft.setPower(1);
     motorRight.setPower(1);
        }
+      motorLeft.setPower(0);
+        motorRight.setPower(0);  
     }
    
    
@@ -81,6 +89,8 @@ public class SigmaCatsOp extends OpMode
     motorLeft.setPower(1);
     motorRight.setPower(0);
        }
+        motorLeft.setPower(0);
+        motorRight.setPower(0);
     }
    
    
@@ -98,7 +108,7 @@ public class SigmaCatsOp extends OpMode
    
     public void Triangle(){
     int x = 0;
-    while(x <= 2){
+    while(x < 2){
     goStraight(.05);
     turnRight(.71);
     x++;
@@ -108,7 +118,7 @@ public class SigmaCatsOp extends OpMode
    
     public void Square(){
     int x = 0;
-    while(x <= 3){
+    while(x < 3){
     goStraight(.05);
     turnRight(.66);
 
