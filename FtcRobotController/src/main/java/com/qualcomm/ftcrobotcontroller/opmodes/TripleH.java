@@ -41,7 +41,7 @@ import com.qualcomm.robotcore.util.Range;
  * <p>
  * Enables control of the robot via the gamepad
  */
-public class K9TeleOp extends OpMode {
+public class TripleH extends OpMode {
    
    /*
     * Note: the configuration of the servos is such that
@@ -74,7 +74,7 @@ public class K9TeleOp extends OpMode {
    /**
     * Constructor
     */
-   public K9TeleOp() {
+   public TripleH() {
 
    }
 
@@ -153,13 +153,13 @@ public class K9TeleOp extends OpMode {
       motorLeft.setPower(left);
 
       // update the position of the arm.
-      if (gamepad1.right_stick_y) {
+      if (gamepad1.a) {
          // if the A button is pushed on gamepad1, increment the position of
          // the arm servo.
          armPosition += armDelta;
       }
 
-      if (-gamepad1.right_stick_y) {
+      if (gamepad1.y) {
          // if the Y button is pushed on gamepad1, decrease the position of
          // the arm servo.
          armPosition -= armDelta;
