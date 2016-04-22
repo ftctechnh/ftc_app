@@ -61,29 +61,17 @@ public class AutonomousProgram extends LinearOpMode {
             robot.setBrush(MotorSetting.STOP);
             robot.calibrateGyro();
             sleep(5000);
-//            while(robot.isGyrocalibrate()){
-//                robot.setPowerAll(0);
-//                waitOneFullHardwareCycle();
-//                waitOneFullHardwareCycle();
-//                waitOneFullHardwareCycle();
-//            }
-//            waitOneFullHardwareCycle();
             robot.algorithm.turnDegrees(45, 0.8);
-//            sleep(5000);
-//            robot.algorithm.goTicks(robot.algorithm.inchesToTicks(22), 0.4);
+            robot.algorithm.goTicks(robot.algorithm.inchesToTicks(22), 0.4);
             robot.setClimberFlipper(DoorSetting.OPEN);
         } else if (allianceColor== BLUE) {
             robot.setChurroGrabbers(DoorSetting.CLOSE);
             robot.setBrush(MotorSetting.FORWARD);
             robot.algorithm.goTicks(robot.algorithm.inchesToTicks(68), -0.4);
             robot.setBrush(MotorSetting.STOP);
-//            robot.calibrateGyro();
-//            while(robot.isGyrocalibrate() || !Thread.interrupted()){
-//
-//            }
-//            robot.algorithm.turnDegrees(315, 0.8);
-//            robot.algorithm.goTicks(robot.algorithm.inchesToTicks(22), 0.4);
-//            robot.setClimberFlipper(DoorSetting.OPEN);
+            robot.algorithm.turnDegrees(315, 0.8);
+            robot.algorithm.goTicks(robot.algorithm.inchesToTicks(22), 0.4);
+            robot.setClimberFlipper(DoorSetting.OPEN);
         } else {
             telemetry.addData("choosered", "deprecated: ");
             stop();

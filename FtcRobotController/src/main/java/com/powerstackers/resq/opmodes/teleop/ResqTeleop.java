@@ -291,6 +291,10 @@ public class ResqTeleop extends OpMode {
         telemetry.addData("tape tilt servo", tapeTiltPosition);
 //        telemetry.addData("gyro rotation", robot.getGyroRotation());
         telemetry.addData("gyro Heading", robot.getGyroHeading());
+        telemetry.addData("gryo x", robot.getGyroX());
+        telemetry.addData("gryo Y", robot.getGyroY());
+        telemetry.addData("gryo Z", robot.getGyroZ());
+
 //        telemetry.addData("hopper tilt pos", robot.hopperTiltPosition);
     }
 

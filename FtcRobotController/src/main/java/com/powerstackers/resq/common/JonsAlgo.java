@@ -146,8 +146,7 @@ public class JonsAlgo {
         double degreesSoFar = robot.getGyroHeading();
 
 //        robot.calibrateGyro();
-//
-//        while(robot.isGyrocalibrate()){continue;}
+
 //        double degreesSoFar = 0;
 
 //        if (Range.clip(degrees ))

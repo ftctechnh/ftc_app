@@ -463,6 +463,16 @@ public class Robot {
 //        return sensorGyro.getRotation();
 //    }
 
+    public double getGyroX(){
+        return sensorGyro.rawX();
+    }
+    public double getGyroY(){
+        return sensorGyro.rawY();
+    }
+    public double getGyroZ(){
+        return sensorGyro.rawZ();
+    }
+
     public long getGyroHeading() {
         return sensorGyro.getHeading();
     }
