@@ -59,7 +59,8 @@ public class FtcOpModeRegister implements OpModeRegister {
 
     manager.register("Build Tele", BuildBotOp.class);
     manager.register("Rossi Tele", Blue_Tank.class);
-
+    manager.register("SUPER DUPER! Auto", Super_Auto.class);
+    manager.register("Programming TeleOp", ProgrammingRobotOp.class);
 
   }
 }
