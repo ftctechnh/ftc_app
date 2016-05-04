@@ -41,6 +41,8 @@ public class DavTest extends OpMode {
 		 */
         motorRight1 = hardwareMap.dcMotor.get("motor_1_right");
         motorRight2 = hardwareMap.dcMotor.get("motor_2_right");
+        motorRight1.setDirection(DcMotor.Direction.REVERSE);
+        motorRight2.setDirection(DcMotor.Direction.REVERSE);
         motorLeft1 = hardwareMap.dcMotor.get("motor_1_left");
         motorLeft2 = hardwareMap.dcMotor.get("motor_2_left");
 

@@ -39,10 +39,10 @@ public class OhmIZeus extends OpMode {
 
         motorRight1 = hardwareMap.dcMotor.get("motor_1_right");
         motorRight2 = hardwareMap.dcMotor.get("motor_2_right");
-        motorRight1.setDirection(DcMotor.Direction.REVERSE);
-        motorRight2.setDirection(DcMotor.Direction.REVERSE);
+
         motorLeft1 = hardwareMap.dcMotor.get("motor_1_left");
         motorLeft2 = hardwareMap.dcMotor.get("motor_2_left");
+       
     }
 
     public void initSusanMotors() {
@@ -91,7 +91,7 @@ public class OhmIZeus extends OpMode {
         initWristMotor();
 //        initContinuousServo();
         initBucketServo();
-//        initGuardServo();
+        initGuardServo();
     }
 
    /* private void setupThrottle(float x, float y) {
@@ -252,7 +252,7 @@ public class OhmIZeus extends OpMode {
         loopWristMotor();
 //        loopContinuousServo();
         loopBucketServo();
-//        loopGuardServo();
+        loopGuardServo();
     }
 
     @Override
