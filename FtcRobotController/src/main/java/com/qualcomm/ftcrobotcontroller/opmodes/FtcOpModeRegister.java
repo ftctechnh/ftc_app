@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.qualcomm.ftcrobotcontroller.opmodes.FTC6347.BuildBotOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 
@@ -62,6 +63,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("K9Line", K9Line.class);
     manager.register ("PushBotAuto", PushBotAuto.class);
     manager.register ("PushBotManual", PushBotManual.class);
+    manager.register("BuildTele", BuildBotOp.class);
 
 
 
