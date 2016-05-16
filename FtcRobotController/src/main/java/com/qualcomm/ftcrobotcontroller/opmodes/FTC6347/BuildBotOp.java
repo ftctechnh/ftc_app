@@ -18,23 +18,42 @@ public class BuildBotOp extends OpMode {
         rightMotor = hardwareMap.dcMotor.get("rw");
         drive = hardwareMap.dcMotorController.get("c1");
 
-        leftMotor.setDirection(DcMotor.Direction.FORWARD);
-        rightMotor.setDirection(DcMotor.Direction.REVERSE); // motors are facing opposite direction, needs to be reversed
-
+        leftMotor.setDirection(DcMotor.Direction.REVERSE);
+        rightMotor.setDirection(DcMotor.Direction.FORWARD); // motors are facing opposite direction, needs to be reversed
     }
 
     @Override
     public void loop() {
         if (Math.abs(gamepad1.left_stick_y) > 0.2) {
-            leftMotor.setPower(gamepad1.left_stick_y);
+            leftMotor.setPower(gamepad1.left_stick_y); //Left motor main drive
         } else {
             leftMotor.setPower(0);
         }
 
         if (Math.abs(gamepad1.right_stick_y) > 0.2) {
-            rightMotor.setPower(gamepad1.right_stick_y);
+            rightMotor.setPower(gamepad1.right_stick_y); //Right motor main drive
         } else {
             rightMotor.setPower(0);
+        }
+
+        if (gamepad1.y) {
+            leftMotor.setPower(-.2);  //Slow Forward
+            rightMotor.setPower(-.2);
+        }
+
+        if (gamepad1.a) {
+            leftMotor.setPower(-.2);  //Slow Back
+            rightMotor.setPower(-.2);
+        }
+
+        if (gamepad1.x) {
+            leftMotor.setPower(-.2);  //Slow Left
+            rightMotor.setPower(-.2);
+        }
+
+        if (gamepad1.b) {
+            leftMotor.setPower(-.2);  //Slow Right
+            rightMotor.setPower(-.2);
         }
 
     }
