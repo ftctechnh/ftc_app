@@ -24,36 +24,39 @@ public class BuildBotOp extends OpMode {
 
     @Override
     public void loop() {
-        if (Math.abs(gamepad1.left_stick_y) > 0.2) {
-            leftMotor.setPower(gamepad1.left_stick_y); //Left motor main drive
-        } else {
-            leftMotor.setPower(0);
-        }
-
-        if (Math.abs(gamepad1.right_stick_y) > 0.2) {
-            rightMotor.setPower(gamepad1.right_stick_y); //Right motor main drive
-        } else {
-            rightMotor.setPower(0);
-        }
 
         if (gamepad1.y) {
             leftMotor.setPower(-.2);  //Slow Forward
             rightMotor.setPower(-.2);
         }
 
-        if (gamepad1.a) {
-            leftMotor.setPower(-.2);  //Slow Back
+        else if (gamepad1.a) {
+            leftMotor.setPower(.2);  //Slow Back
+            rightMotor.setPower(.2);
+        }
+
+        else if (gamepad1.x) {
+            leftMotor.setPower(.2);  //Slow Left
             rightMotor.setPower(-.2);
         }
 
-        if (gamepad1.x) {
-            leftMotor.setPower(-.2);  //Slow Left
-            rightMotor.setPower(-.2);
-        }
-
-        if (gamepad1.b) {
+        else if (gamepad1.b) {
             leftMotor.setPower(-.2);  //Slow Right
-            rightMotor.setPower(-.2);
+            rightMotor.setPower(.2);
+        }
+
+        else{
+            if (Math.abs(gamepad1.left_stick_y) > 0.2) {
+                leftMotor.setPower(gamepad1.left_stick_y); //Left motor main drive
+            } else {
+                leftMotor.setPower(0);
+            }
+
+            if (Math.abs(gamepad1.right_stick_y) > 0.2) {
+                rightMotor.setPower(gamepad1.right_stick_y); //Right motor main drive
+            } else {
+                rightMotor.setPower(0);
+            }
         }
 
     }

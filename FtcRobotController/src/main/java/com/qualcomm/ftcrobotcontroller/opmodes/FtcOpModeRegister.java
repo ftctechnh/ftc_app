@@ -31,7 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
-import com.qualcomm.ftcrobotcontroller.opmodes.Blue_Tank;
+import com.qualcomm.ftcrobotcontroller.opmodes.FTC6347.Blue_Tank;
 import com.qualcomm.ftcrobotcontroller.opmodes.FTC6347.BuildBotOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
