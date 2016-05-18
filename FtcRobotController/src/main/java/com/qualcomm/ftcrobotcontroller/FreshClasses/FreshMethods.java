@@ -214,4 +214,27 @@ public class FreshMethods {
 
 
     }
+    //Run Commands
+    public void moveForward(FreshMotors motors,float power){
+        motors.M_backLeft.setPower(power);
+        motors.M_backRight.setPower(power);
+        motors.M_frontRight.setPower(power);
+        motors.M_frontLeft.setPower(power);
+    }
+    public void moveBack(FreshMotors motors,float power){
+        motors.M_backLeft.setPower(power);
+        motors.M_backRight.setPower(power);
+        motors.M_frontRight.setPower(power);
+        motors.M_frontLeft.setPower(power);
+    }
+    public void moveLeft(FreshMotors motors,float power){
+        motors.M_backLeft.setPower(power);
+        motors.M_backRight.setPower(power);
+        motors.M_frontLeft.setPower(power);
+        motors.M_frontRight.setPower(power);
+
+    }
+    public void moveRight(FreshMotors motors,float power){
+
+    }
 }
