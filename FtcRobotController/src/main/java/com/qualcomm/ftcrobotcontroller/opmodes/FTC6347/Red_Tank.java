@@ -1,6 +1,7 @@
-package com.qualcomm.ftcrobotcontroller.opmodes.FTC6347;
+package com.qualcomm.ftcrobotcontroller.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.LightSensor;
@@ -10,15 +11,18 @@ import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 /**
  * Created by FTCGearedUP on 8/6/2015.
  */
-public class Blue_Tank extends OpMode {
+public class Red_Tank extends OpMode {
 
     DcMotor motor1;
     DcMotor motor2;
     DcMotor motor3;
     DcMotor motor4;
-    DcMotor motor5;
-    DcMotor motor6;
-    Servo hang;
+    Servo climbers;
+    Servo red;
+    Servo blue;
+    UltrasonicSensor ultrasonicSensor;
+    LightSensor reflectedLight;
+    ColorSensor colorSensor;
     int blue_toggle;
     int red_toggle;
 
@@ -30,8 +34,6 @@ public class Blue_Tank extends OpMode {
         motor2 = hardwareMap.dcMotor.get("2");
         motor3 = hardwareMap.dcMotor.get("3");
         motor4 = hardwareMap.dcMotor.get("4");
-        motor5 = hardwareMap.dcMotor.get("5");
-        motor6 = hardwareMap.dcMotor.get("6");
 
         motor2.setDirection(DcMotor.Direction.REVERSE);
         motor3.setDirection(DcMotor.Direction.REVERSE);
@@ -43,9 +45,19 @@ public class Blue_Tank extends OpMode {
         motor2.setChannelMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
 
         /////////////////////////////Servos/////////////////////////////
-        hang = hardwareMap.servo.get("sr6");
+        climbers = hardwareMap.servo.get("sr2");
+        red = hardwareMap.servo.get("sr3");
+        blue = hardwareMap.servo.get("sr1");
 
-        hang.setPosition(0.6);//initialize servo
+        climbers.setPosition(1.0); //initialize arm
+        red.setPosition(1); //initialize red arm
+        blue.setPosition(0); //initialize blue arm
+
+        //////////////////////////////Sensors///////////////////////////
+        reflectedLight = hardwareMap.lightSensor.get("s3");
+        ultrasonicSensor = hardwareMap.ultrasonicSensor.get("s4");
+        colorSensor = hardwareMap.colorSensor.get("s1");
+
         ////////////////////////////Variables//////////////////////////
         red_toggle = 0;
         blue_toggle = 0;
@@ -102,44 +114,35 @@ public class Blue_Tank extends OpMode {
             motor4.setPower(0); //intake stop
         }
 
-        if (gamepad2.left_trigger > 0.2){
-            motor5.setPower(0.3);
-        }
-        else{
-            motor5.setPower(0);
+        if (gamepad2.x){
+            red.setPosition(0);  //Blue toggle up
         }
 
-        if (gamepad2.right_trigger > 0.2){
-            motor5.setPower(-0.3);
-        }
-        else{
-            motor5.setPower(0);
+        if (gamepad2.b){
+            red.setPosition(0.5);  //Blue toggle down
         }
 
-        if(gamepad2.y){
-            hang.setPosition(1);
+        if (gamepad2.y){
+            climbers.setPosition(0.3); //throw climbers
         }
 
-        if(gamepad2.a){
-            hang.setPosition(0.6);
-        }
-
-        if(gamepad2.dpad_up){
-            motor6.setPower(1);
-        }
-        else{
-            motor6.setPower(0);
-        }
-
-        if(gamepad2.dpad_down && gamepad2.left_stick_button){
-            motor6.setPower(-1);
-        }
-        else{
-            motor6.setPower(0);
+        if (gamepad2.a){
+            climbers.setPosition(1.0); //retract arm
         }
 ///////////////////////////////////////Telemetry//////////////////////////////////////////
-
-
+        //reflection = reflectedLight.getLightDetectedRaw();
+        telemetry.addData("red", Double.toString(colorSensor.red()));
+        telemetry.addData("blue", Double.toString(colorSensor.blue()));
+        telemetry.addData("green", Double.toString(colorSensor.green()));
+        telemetry.addData("color", Double.toString(colorSensor.alpha()));
+        //telemetry.addData("Ultrasonic Status" , ultrasonicSensor.status());
+        //telemetry.addData("Ultrasonic Level", Double.toString(ultrasonicSensor.getUltrasonicLevel()));
+        //telemetry.addData("ods value", Double.toString(ods.getLightDetected()));
+        //telemetry.addData("ods raw", Double.toString(ods.getLightDetectedRaw()));
+        //telemetry.addData("Blue value", Double.toString(blue.getPosition()));
+        //telemetry.addData("Red value", Double.toString(red.getPosition()));
+        telemetry.addData("Color argb", Double.toString(colorSensor.argb()));
+        //telemetry.addData("Ultrasonic sensor", ultrasonicSensor.getUltrasonicLevel());
 
     }
 }
