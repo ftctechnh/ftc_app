@@ -43,48 +43,49 @@ import com.qualcomm.robotcore.util.Range;
  */
 public class TripleH extends OpMode {
 
-    /*
-     * Note: the configuration of the servos is such that
-     * as the arm servo approaches 0, the arm position moves up (away from the floor).
-     * Also, as the claw servo approaches 0, the claw opens up (drops the game element).
-     */
-    // TETRIX VALUES.
-    final static double ARM_MIN_RANGE  = 0.20;
-    final static double ARM_MAX_RANGE  = 0.90;
-    final static double CLAW_MIN_RANGE  = 0.20;
-    final static double CLAW_MAX_RANGE  = 0.7;
+   
+   /*
+    * Note: the configuration of the servos is such that
+    * as the arm servo approaches 0, the arm position moves up (away from the floor).
+    * Also, as the claw servo approaches 0, the claw opens up (drops the game element).
+    */
+   // TETRIX VALUES.
+   final static double ARM_MIN_RANGE  = 0.20;
+   final static double ARM_MAX_RANGE  = 0.90;
+   final static double CLAW_MIN_RANGE  = 0.20;
+   final static double CLAW_MAX_RANGE  = 0.7;
 
-    // position of the arm servo.
-    double armPosition;
+   // position of the arm servo.
+   double armPosition;
 
-    // amount to change the arm servo position.
-    double armDelta = 0.1;
+   // amount to change the arm servo position.
+   double armDelta = 0.1;
 
-    // position of the claw servo
-    double clawPosition;
+   // position of the claw servo
+   double clawPosition;
 
-    // amount to change the claw servo position by
-    double clawDelta = 0.1;
+   // amount to change the claw servo position by
+   double clawDelta = 0.1;
 
-    DcMotor motorRight;
-    DcMotor motorLeft;
-    Servo claw;
-    Servo arm;
+   DcMotor motorRight;
+   DcMotor motorLeft;
+   Servo claw;
+   Servo arm;
 
-    /**
-     * Constructor
-     */
-    public TripleH() {
+   /**
+    * Constructor
+    */
+   public TripleH() {
 
-    }
+   }
 
-    /*
-     * Code to run when the op mode is first enabled goes here
-     *
-     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
-     */
-    @Override
-    public void init() {
+   /*
+    * Code to run when the op mode is first enabled goes here
+    * 
+    * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
+    */
+   @Override
+   public void init() {
 
 
       /*
@@ -130,49 +131,50 @@ public class TripleH extends OpMode {
        * wrist/claw via the a,b, x, y buttons
        */
 
-        // throttle: left_stick_y ranges from -1 to 1, where -1 is full up, and
-        // 1 is full down
-        // direction: left_stick_x ranges from -1 to 1, where -1 is full left
-        // and 1 is full right
-        float throttle = -gamepad1.left_stick_y;
-        float direction = gamepad1.left_stick_x;
-        float right = throttle - direction;
-        float left = throttle + direction;
 
-        // clip the right/left values so that the values never exceed +/- 1
-        right = Range.clip(right, -1, 1);
-        left = Range.clip(left, -1, 1);
+      // throttle: left_stick_y ranges from -1 to 1, where -1 is full up, and
+      // 1 is full down
+      // direction: left_stick_x ranges from -1 to 1, where -1 is full left
+      // and 1 is full right
+      float throttle = -gamepad1.left_stick_y;
+      float direction = gamepad1.left_stick_x;
+      float right = throttle - direction;
+      float left = throttle + direction;
 
-        // scale the joystick value to make it easier to control
-        // the robot more precisely at slower speeds.
-        right = (float)scaleInput(right);
-        left =  (float)scaleInput(left);
+      // clip the right/left values so that the values never exceed +/- 1
+      right = Range.clip(right, -1, 1);
+      left = Range.clip(left, -1, 1);
 
-        // write the values to the motors
-        motorRight.setPower(right);
-        motorLeft.setPower(left);
+      // scale the joystick value to make it easier to control
+      // the robot more precisely at slower speeds.
+      right = (float)scaleInput(right);
+     left =  (float)scaleInput(left);
+     
+      // write the values to the motors
+      motorRight.setPower(right);
+      motorLeft.setPower(left);
 
-        // update the position of the arm.
-        if (gamepad1.a) {
-            // if the A button is pushed on gamepad1, increment the position of
-            // the arm servo.
-            armPosition += armDelta;
-        }
+      // update the position of the arm.
+      if (gamepad1.a) {
+         // if the A button is pushed on gamepad1, increment the position of
+         // the arm servo.
+         armPosition += armDelta;
+      }
 
-        if (gamepad1.y) {
-            // if the Y button is pushed on gamepad1, decrease the position of
-            // the arm servo.
-            armPosition -= armDelta;
-        }
+      if (gamepad1.y) {
+         // if the Y button is pushed on gamepad1, decrease the position of
+         // the arm servo.
+         armPosition -= armDelta;
+      }
 
-        // update the position of the claw
-        if (gamepad1.x) {
-            clawPosition += clawDelta;
-        }
+      // update the position of the claw
+      if (gamepad1.x) {
+         clawPosition += clawDelta;
+      }
 
-        if (gamepad1.b) {
-            clawPosition -= clawDelta;
-        }
+      if (gamepad1.b) {
+         clawPosition -= clawDelta;
+      }
 
         // clip the position values so that they never exceed their allowed range.
         armPosition = Range.clip(armPosition, ARM_MIN_RANGE, ARM_MAX_RANGE);
