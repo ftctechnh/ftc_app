@@ -6,7 +6,33 @@ android {
         targetSdkVersion 19
     }
     compileSdkVersion 19
-    buildToolsVersion '21.1.2'
+    buildToolsVersion '23.0.3'
+    buildTypes {
+        release {
+            minifyEnabled true
+        }
+
+        debug {
+            applicationIdSuffix ".debug"
+        }
+
+        /**
+         * The 'initWith' property allows you to copy configurations from other build types,
+         * so you don't have to configure one from the beginning. You can then configure
+         * just the settings you want to change. The following line initializes
+         * 'jnidebug' using the debug build type, and changes only the
+         * applicationIdSuffix and versionNameSuffix settings.
+         */
+
+        jnidebug {
+
+            // This copies the debuggable attribute and debug signing configurations.
+            initWith debug
+
+            applicationIdSuffix ".jnidebug"
+            jniDebuggable true
+        }
+    }
 }
 
 buildscript {
@@ -14,7 +40,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.2.3'
+        classpath 'com.android.tools.build:gradle:2.1.0'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -37,11 +63,11 @@ allprojects {
 }
 
 dependencies {
-    compile files('libs/android-support-v4.jar')
     compile(name: 'RobotCore-release', ext: 'aar')
     compile(name: 'Hardware-release', ext: 'aar')
     compile(name: 'FtcCommon-release', ext: 'aar')
     compile(name: 'ModernRobotics-release', ext: 'aar')
     compile(name: 'Analytics-release', ext: 'aar')
     compile(name: 'WirelessP2p-release', ext: 'aar')
+    compile 'com.android.support:support-v4:23.4.0'
 }
