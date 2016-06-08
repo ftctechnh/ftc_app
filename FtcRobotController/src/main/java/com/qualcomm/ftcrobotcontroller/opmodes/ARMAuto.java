@@ -1,47 +1,44 @@
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.qualcomm.ftcrobotcontroller.containers.Location;
+import com.qualcomm.ftcrobotcontroller.controllers.DriveControl;
+import com.qualcomm.ftcrobotcontroller.controllers.SensorModel;
+import com.qualcomm.ftcrobotcontroller.controllers.StateControl;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class ARMAuto extends LinearOpMode {
-    DcMotor leftMotor;
-    DcMotor rightMotor;
-
-    enum State { FWD, TURN, STOP}
+    private DriveControl driveController;
+    private StateControl stateController;
+    private SensorModel sensorModel;
 
     @Override
     public void runOpMode() throws InterruptedException {
-
-        boolean endCondition = false;
-        State current_state = State.STOP;
-
-        leftMotor = hardwareMap.dcMotor.get("left_drive");
-        rightMotor = hardwareMap.dcMotor.get("right_drive");
-        rightMotor.setDirection(DcMotor.Direction.REVERSE);
-
+        driveController = new DriveControl(hardwareMap);
+        stateController = new StateControl();
+        sensorModel = new SensorModel();
         waitForStart();
 
-        while (!endCondition) {
+        while (!stateController.isEndCondition()) {
 
-            //@TODO Update sensor model
+            sensorModel.update();
+            Location currentLocation = sensorModel.getCurrLocation();
 
-            //@TODO Update state conditions
-
-            switch (current_state) {
+            switch (stateController.getCurrent_state()) {
                 case FWD:
-                    //@TODO Use PD control to drive straight
+                    driveController.driveStraight(currentLocation);
                     //@TODO update current state
                     break;
                 case TURN:
-                    //@TODO Use P control to turn desired angle
+                    driveController.turn(currentLocation);
                     //@TODO update current state
                     break;
                 case STOP:
-                    //@TODO stop wheels
+                    driveController.stop();
                     //@TODO update current state
                     break;
                 default:
-                    current_state = State.STOP;
+                    stateController.setCurrent_state(StateControl.State.STOP);
                     break;
             }
         }
