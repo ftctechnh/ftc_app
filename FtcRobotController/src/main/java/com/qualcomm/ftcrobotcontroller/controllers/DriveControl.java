@@ -1,7 +1,9 @@
 package com.qualcomm.ftcrobotcontroller.controllers;
 
 import com.qualcomm.ftcrobotcontroller.containers.Location;
+import com.qualcomm.ftcrobotcontroller.opmodes.ARMAuto;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 /**
@@ -12,21 +14,21 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  */
 public class DriveControl {
 
-    private final double k1 = 0.01;
-    private final double k2 = 0.2;
-    private final double SPD = 0.5;
+    //@TODO tune the K values for the PID loops
+    private final double k2 = 0.25;
+    private final double k1 = Math.sqrt(4.0*k2);
+    private final double SPD = 0.4;
 
     private Location initLocation;
     private Location destLocation;
-    private DcMotor leftMotor;
-    private DcMotor rightMotor;
 
+    /**
+     * Default constructor. Initializes the motors and sets base initial/destination locations
+     * @param hardwareMap map defined by FTC for usage in initializing motor variables
+     */
     public DriveControl(HardwareMap hardwareMap) {
         this.initLocation = new Location();
         this.destLocation = new Location();
-        leftMotor = hardwareMap.dcMotor.get("left_drive");
-        rightMotor = hardwareMap.dcMotor.get("right_drive");
-        rightMotor.setDirection(DcMotor.Direction.REVERSE);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -37,8 +39,8 @@ public class DriveControl {
      * Stop both the left and the right wheels
      */
     public void stop() {
-        leftMotor.setPower(0);
-        rightMotor.setPower(0);
+        ARMAuto.leftMotor.setPower(0);
+        ARMAuto.rightMotor.setPower(0);
     }
 
     /**
@@ -46,8 +48,9 @@ public class DriveControl {
      * @param currLocation Current location that the robot is at
      */
     public void turn(Location currLocation) {
-        leftMotor.setPower(0);
-        rightMotor.setPower(0);
+        //@TODO implement the turning PID controller
+        ARMAuto.leftMotor.setPower(0);
+        ARMAuto.rightMotor.setPower(0);
     }
 
     /**
@@ -64,9 +67,14 @@ public class DriveControl {
                                     Math.pow(currLocation.getY()-initLocation.getY(), 2));
         double theta_error = currLocation.getTheta() - theta_b;
         double distance_error = distance*Math.sin(theta_d);
-        double y = k1*theta_error + (k2/currLocation.getSpd())*distance_error;
-        leftMotor.setPower(SPD+y);
-        rightMotor.setPower(SPD-y);
+        double y = k1*theta_error + (currLocation.getSpd()==0 ? 0 : (k2/currLocation.getSpd()))*distance_error;
+        ARMAuto.leftMotor.setPower(SPD+y);
+        ARMAuto.rightMotor.setPower(SPD-y);
+
+        //Debug messages
+        ARMAuto.debug.addData("theta_error", theta_error);
+        ARMAuto.debug.addData("distance_error", distance_error);
+        ARMAuto.debug.addData("error", y);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
