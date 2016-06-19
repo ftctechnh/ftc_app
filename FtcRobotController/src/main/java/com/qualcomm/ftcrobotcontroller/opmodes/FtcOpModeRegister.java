@@ -31,6 +31,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.qualcomm.ftcrobotcontroller.opmodes.ResQ_2016.CompBotTeleopV3;
+import com.qualcomm.ftcrobotcontroller.opmodes.ResQ_2016.LinearOpTest;
+import com.qualcomm.ftcrobotcontroller.opmodes.ResQ_2016.OpModeAutoTrial;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 
