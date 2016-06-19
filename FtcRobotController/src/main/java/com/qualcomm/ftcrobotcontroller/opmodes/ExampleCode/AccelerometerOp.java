@@ -1,4 +1,4 @@
-package com.qualcomm.ftcrobotcontroller.opmodes;
+package com.qualcomm.ftcrobotcontroller.opmodes.ExampleCode;
 
 import android.content.Context;
 import android.hardware.Sensor;
