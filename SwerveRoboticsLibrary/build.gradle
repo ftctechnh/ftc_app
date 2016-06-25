@@ -32,7 +32,6 @@ repositories {
 }
 
 dependencies {
-    compile files('libs/android-support-v4.jar')
     compile(name: 'RobotCore-release', ext: 'aar')
     compile(name: 'Hardware-release', ext: 'aar')
     compile(name: 'FtcCommon-release', ext: 'aar')
