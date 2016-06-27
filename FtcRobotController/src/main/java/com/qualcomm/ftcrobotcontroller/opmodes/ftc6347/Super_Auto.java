@@ -1,6 +1,5 @@
 package com.qualcomm.ftcrobotcontroller.opmodes.ftc6347;
 
-<<<<<<< HEAD
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
@@ -155,11 +154,3 @@ public class Super_Auto extends LinearOpMode {
 
     }
 }
-
-=======
-/**
- * Created by FTCGearedUP on 3/14/2016.
- */
-public class Super_Auto {
-}
->>>>>>> b203628... Rename OpModes

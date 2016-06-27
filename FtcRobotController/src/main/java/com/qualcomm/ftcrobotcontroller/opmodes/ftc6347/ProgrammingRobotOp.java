@@ -6,7 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 /**
  * Created by FTCGearedUP on 4/24/2016.
  */
-public class ProgrammingRobotOp extends OpMode {
+public class
+ProgrammingRobotOp extends OpMode {
 
     private DcMotor backLeftMotor;
     private DcMotor backRightMotor;
@@ -42,16 +43,36 @@ public class ProgrammingRobotOp extends OpMode {
     public void loop() {
         if(gamepad1.left_stick_y > GAMEPAD_THRESHOLD || gamepad1.left_stick_y < -GAMEPAD_THRESHOLD) {
             backLeftMotor.setPower(gamepad1.left_stick_y);
-            frontLeftMotor.setPower(gamepad1.left_stick_y);
+            frontLeftMotor.setPower(gamepad1.left_stick_y); //Forward, Backward
+            backRightMotor.setPower(gamepad1.left_stick_y);
+            frontRightMotor.setPower(gamepad1.left_stick_y);
         } else {
             backLeftMotor.setPower(0);
             frontLeftMotor.setPower(0);
+            backRightMotor.setPower(0);
+            frontRightMotor.setPower(0);
         }
 
-        if(gamepad1.right_stick_y > GAMEPAD_THRESHOLD || gamepad1.right_stick_y < -GAMEPAD_THRESHOLD) {
-            backRightMotor.setPower(gamepad1.right_stick_y);
-            frontRightMotor.setPower(gamepad1.right_stick_y);
+        if(gamepad1.left_stick_x > GAMEPAD_THRESHOLD || gamepad1.left_stick_x < -GAMEPAD_THRESHOLD) {
+            backLeftMotor.setPower(gamepad1.left_stick_x);
+            frontLeftMotor.setPower(-gamepad1.left_stick_x); //Left, Right
+            backRightMotor.setPower(-gamepad1.left_stick_x);
+            frontRightMotor.setPower(gamepad1.left_stick_x);
         } else {
+            backLeftMotor.setPower(0);
+            frontLeftMotor.setPower(0);
+            backRightMotor.setPower(0);
+            frontRightMotor.setPower(0);
+        }
+
+        if(gamepad1.right_stick_x > GAMEPAD_THRESHOLD || gamepad1.right_stick_x < -GAMEPAD_THRESHOLD) {
+            backLeftMotor.setPower(-gamepad1.right_stick_x);
+            frontLeftMotor.setPower(-gamepad1.right_stick_x); //Clockwise, counter clockwise
+            backRightMotor.setPower(gamepad1.right_stick_x);
+            frontRightMotor.setPower(gamepad1.right_stick_x);
+        } else {
+            backLeftMotor.setPower(0);
+            frontLeftMotor.setPower(0);
             backRightMotor.setPower(0);
             frontRightMotor.setPower(0);
         }

@@ -31,8 +31,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes.ftc6347;
 
-import com.qualcomm.ftcrobotcontroller.opmodes.FTC6347.Blue_Tank;
-import com.qualcomm.ftcrobotcontroller.opmodes.FTC6347.BuildBotOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 
@@ -57,18 +55,9 @@ public class FtcOpModeRegister implements OpModeRegister {
      * If two or more op modes are registered with the same name, the app will display an error.
      */
 
-
     manager.register("Build Tele", BuildBotOp.class);
     manager.register("Rossi Tele", Blue_Tank.class);
-    manager.register("SUPER DUPER! Auto", Super_Auto.class);
     manager.register("Programming TeleOp", ProgrammingRobotOp.class);
 
-    manager.register ("TELE OP", Blue_Tank.class);
-
-    manager.register ("Ultrasonic", VermontBlue2.class);
-
-    manager.register ("Gyro", VermontBlue1.class);
-
-    manager.register("Blue Ramp", Ramp_Blue.class);
   }
 }
