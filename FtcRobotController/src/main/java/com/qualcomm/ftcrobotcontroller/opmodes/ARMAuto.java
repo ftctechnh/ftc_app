@@ -31,12 +31,9 @@ public class ARMAuto extends LinearOpMode {
         debug = telemetry;
 
         //Create the motors
-        leftMotor = hardwareMap.dcMotor.get("left_drive");
-        rightMotor = hardwareMap.dcMotor.get("right_drive");
-        leftMotor.setDirection(DcMotor.Direction.REVERSE);
+        leftMotor = hardwareMap.dcMotor.get("motor_2");
+        rightMotor = hardwareMap.dcMotor.get("motor_1");
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
-        leftMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        rightMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
         waitOneFullHardwareCycle();
 
         //Initialize class objects

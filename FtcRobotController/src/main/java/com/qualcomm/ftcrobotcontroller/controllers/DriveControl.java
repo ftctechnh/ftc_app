@@ -17,7 +17,7 @@ public class DriveControl {
     //@TODO tune the K values for the PID loops
     private final double k2 = 0.25;
     private final double k1 = Math.sqrt(4.0*k2);
-    private final double SPD = 0.4;
+    private final double SPD = 0.3;
 
     private Location initLocation;
     private Location destLocation;
@@ -49,8 +49,8 @@ public class DriveControl {
      */
     public void turn(Location currLocation) {
         //@TODO implement the turning PID controller
-        ARMAuto.leftMotor.setPower(0);
-        ARMAuto.rightMotor.setPower(0);
+        ARMAuto.leftMotor.setPower(SPD*0.25);
+        ARMAuto.rightMotor.setPower(-SPD*0.25);
     }
 
     /**

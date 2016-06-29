@@ -8,9 +8,11 @@ public class SensorModel {
     //@TODO find the correct resolution of the encoders
     private final double ENCODER_RES = 1440;
     //@TODO measure the wheel radius of the robot
-    private final double WHEEL_RADIUS = 0.02;
+    private final double WHEEL_RADIUS = 0.04603;
     //@TODO measure the wheel base of the robot
-    private final double WHEEL_BASE = 0.2;
+    private final double WHEEL_BASE = 0.3048;
+
+    private final double GEAR_RATIO = 2.33;
 
     public SensorModel() {
         this.currLocation = new Location();
@@ -30,7 +32,7 @@ public class SensorModel {
         //Find delta encoder counts, distances and thetas
         int dr = r_count - currLocation.getRight_encoder();
         int dl = l_count - currLocation.getLeft_encoder();
-        double f1 = ((2.0*Math.PI*WHEEL_RADIUS)/ENCODER_RES);
+        double f1 = (((2.0*Math.PI*WHEEL_RADIUS)/GEAR_RATIO)/ENCODER_RES);
         double ds = ((dr+dl)/2.0)*f1;
         double dtheta = ((dr-dl)/WHEEL_BASE)*f1;
 
