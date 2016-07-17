@@ -42,7 +42,8 @@ allprojects {
 }
 
 dependencies {
-    compile files('libs/android-support-v4.jar')
+    // Android Support major version should match compileSdkVersion above.
+    compile "com.android.support:support-v4:19.+"
     compile(name: 'RobotCore-release', ext: 'aar')
     compile(name: 'Hardware-release', ext: 'aar')
     compile(name: 'FtcCommon-release', ext: 'aar')
