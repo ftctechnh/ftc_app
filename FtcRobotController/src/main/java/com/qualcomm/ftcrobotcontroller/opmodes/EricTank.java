@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class EricTank extends OpMode {
     DcMotor leftMotor;
     DcMotor rightMotor;
-    DcMotor leftMotor2;
+
 
     @Override
     public void init() {
