@@ -20,7 +20,7 @@ public class EricTank extends OpMode {
 
         //Reverse the Right Motor Direction
         // yet ahoaofaodsjajdsasd
-        // hello
+        // hello asdfasdf
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
 
     }
