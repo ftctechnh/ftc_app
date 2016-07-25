@@ -1,18 +1,21 @@
 package org.swerverobotics.library.internal;
 
+import android.app.Activity;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
+import com.qualcomm.robotcore.eventloop.opmode.OpModeManagerImpl;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.RobotLog;
 
-public class SwerveOpModeManager extends OpModeManager
+public class SwerveOpModeManager extends OpModeManagerImpl
     {
     //----------------------------------------------------------------------------------------------
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    public SwerveOpModeManager(HardwareMap map)
+    public SwerveOpModeManager(Activity activity, HardwareMap map)
         {
-        super(map);
+        super(activity, map);
         }
 
     //----------------------------------------------------------------------------------------------
@@ -24,7 +27,7 @@ public class SwerveOpModeManager extends OpModeManager
         {
         RobotLog.v("Swerve: OpModeManager: %s: stop ...", activeOpModeName);
         super.callActiveOpModeStop();
-        if (this.activeOpMode != OpModeManager.DEFAULT_OP_MODE)
+        if (this.activeOpMode != OpModeManagerImpl.DEFAULT_OP_MODE)
             {
             RobotStateTransitionNotifier.getInstance().onUserOpModeStop();
             }
@@ -53,7 +56,7 @@ public class SwerveOpModeManager extends OpModeManager
         // We need to shutdown the opmode if we really need to. But if we don't, don't bother,
         // since that will add additional log messages when FtcEventLoop.teardown() itself calls
         // stopActiveOpMode().
-        if (this.activeOpMode != OpModeManager.DEFAULT_OP_MODE)
+        if (this.activeOpMode != OpModeManagerImpl.DEFAULT_OP_MODE)
             {
             this.stopActiveOpMode();
             }

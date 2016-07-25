@@ -11,11 +11,9 @@ import org.swerverobotics.library.interfaces.*;
 
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import static org.swerverobotics.library.internal.Util.*;
-import static junit.framework.Assert.*;
 import static org.swerverobotics.library.interfaces.NavUtil.*;
 
 /**
@@ -63,12 +61,12 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, I2cDeviceSynchUser, 
     /** 
      * Instantiate an AdaFruitBNO055IMU on the indicated device whose I2C address is the one indicated.
      */
-    public AdaFruitBNO055IMU(OpMode opmodeContext, I2cDevice i2cDevice, int i2cAddr8Bit)
+    public AdaFruitBNO055IMU(OpMode opmodeContext, I2cDevice i2cDevice, I2cAddr i2cAddr)
         {
         this.opmodeContext          = opmodeContext;
 
         // We don't have the device auto-close since *we* handle the shutdown logic
-        this.deviceClient           = ClassFactory.createI2cDeviceSynch(i2cDevice, i2cAddr8Bit);
+        this.deviceClient           = ClassFactory.createI2cDeviceSynch(i2cDevice, i2cAddr);
         this.deviceClient.setReadWindow(lowerWindow);
         this.deviceClient.engage();
 
@@ -86,7 +84,7 @@ public final class AdaFruitBNO055IMU implements IBNO055IMU, I2cDeviceSynchUser, 
     public static IBNO055IMU create(OpMode opmodeContext, I2cDevice i2cDevice, Parameters parameters)
         {
         // Create a sensor which is a client of i2cDevice
-        IBNO055IMU result = new AdaFruitBNO055IMU(opmodeContext, i2cDevice, parameters.i2cAddr8Bit.bVal);
+        IBNO055IMU result = new AdaFruitBNO055IMU(opmodeContext, i2cDevice, parameters.i2cAddr);
         
         // Initialize it with the indicated parameters
         result.initialize(parameters);

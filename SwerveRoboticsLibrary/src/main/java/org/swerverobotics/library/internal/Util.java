@@ -56,7 +56,7 @@ public class Util
         void doAction(T t);
         }
 
-    public static <T> void remove(HardwareMap.DeviceMapping<T> from, IFuncArg<Boolean, T> predicate, IAction<T> action)
+    public static <T extends HardwareDevice> void remove(HardwareMap.DeviceMapping<T> from, IFuncArg<Boolean, T> predicate, IAction<T> action)
         {
         List<String> names = new LinkedList<String>();
         for (Map.Entry<String,T> pair : from.entrySet())
@@ -74,12 +74,12 @@ public class Util
             }
         }
 
-    public static <T> void removeName(HardwareMap.DeviceMapping<T> entrySet, String name)
+    public static <T extends HardwareDevice> void removeName(HardwareMap.DeviceMapping<T> entrySet, String name)
         {
         Util.<Map>getPrivateObjectField(entrySet,0).remove(name);
         }
 
-    public static <T> boolean contains(HardwareMap.DeviceMapping<T> map, String name)
+    public static <T extends HardwareDevice> boolean contains(HardwareMap.DeviceMapping<T> map, String name)
         {
         for (Map.Entry<String,T> pair : map.entrySet())
             {

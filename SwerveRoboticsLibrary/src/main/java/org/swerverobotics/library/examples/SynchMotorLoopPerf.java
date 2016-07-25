@@ -1,5 +1,7 @@
 package org.swerverobotics.library.examples;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
 import org.swerverobotics.library.*;

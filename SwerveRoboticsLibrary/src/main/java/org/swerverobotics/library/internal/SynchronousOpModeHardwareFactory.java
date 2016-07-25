@@ -351,7 +351,7 @@ public class SynchronousOpModeHardwareFactory
         T create(T t);
         }
 
-    private <T> void processHardwareMapping(HardwareMap.DeviceMapping<T> from, HardwareMap.DeviceMapping<T> to, IFactory<T> factory)
+    private <T extends HardwareDevice> void processHardwareMapping(HardwareMap.DeviceMapping<T> from, HardwareMap.DeviceMapping<T> to, IFactory<T> factory)
         {
         // Get a copy of things first so as to avoid concurrent modification exceptions
         // if the call to create() below happens to modify the map.
@@ -372,7 +372,7 @@ public class SynchronousOpModeHardwareFactory
 
     // Find and return the wrapping of the indicated target with the wrapping map; if absent,
     // return the ifAbsent value.
-    private <T> T findWrapper(HardwareMap.DeviceMapping<T> wrappingMap, T target, T ifAbsent)
+    private <T extends HardwareDevice> T findWrapper(HardwareMap.DeviceMapping<T> wrappingMap, T target, T ifAbsent)
         {
         for (Map.Entry<String,T> pair : wrappingMap.entrySet())
             {

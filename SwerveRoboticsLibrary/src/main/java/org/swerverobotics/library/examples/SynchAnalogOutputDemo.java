@@ -1,12 +1,12 @@
 package org.swerverobotics.library.examples;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogOutput;
 
 import org.swerverobotics.library.SynchronousOpMode;
 import org.swerverobotics.library.TelemetryDashboardAndLog;
-import org.swerverobotics.library.interfaces.Disabled;
 import org.swerverobotics.library.interfaces.IFunc;
-import org.swerverobotics.library.interfaces.TeleOp;
 
 /**
  * SynchAnalogOutputDemo is a short demo of an AnalogOutput port.

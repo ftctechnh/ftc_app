@@ -41,8 +41,8 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.robocol.Telemetry;
 import com.qualcomm.robotcore.util.Range;
 
-import org.swerverobotics.library.interfaces.Disabled;
-import org.swerverobotics.library.interfaces.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 /**
  * Linear Tele Op Mode
@@ -59,7 +59,7 @@ public class AsynchTest extends LinearOpMode {
   private void resetEncoder(DcMotor dcMotor)  {
     double startTime, stopTime = 0;
     startTime = this.getRuntime();
-    dcMotor.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+    dcMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     stopTime = this.getRuntime();
     DbgLog.msg(String.format("TIE - RESET_ENCODERS for %s, delta time = %.03f msec",
             dcMotor.getDeviceName(),
@@ -91,7 +91,7 @@ public class AsynchTest extends LinearOpMode {
   private void runToPosition(DcMotor dcMotor)  {
     double startTime, stopTime = 0;
     startTime = this.getRuntime();
-    dcMotor.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+    dcMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     stopTime = this.getRuntime();
     DbgLog.msg(String.format("TIE - RUN_TO_POSITION for %s, delta time = %.03f msec",
             dcMotor.getDeviceName(),

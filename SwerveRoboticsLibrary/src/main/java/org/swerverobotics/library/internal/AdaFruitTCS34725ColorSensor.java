@@ -102,7 +102,7 @@ public class AdaFruitTCS34725ColorSensor implements ColorSensor, IOpModeStateTra
     public static final int TCS34725_BDATAL           = 0x1A;    /* Blue channel data */
     public static final int TCS34725_BDATAH           = 0x1B;
 
-    public static final int ADDRESS_I2C         = TCS34725_ADDRESS * 2;
+    public static final I2cAddr ADDRESS_I2C     = I2cAddr.create7bit(TCS34725_ADDRESS);
     public static final int IREG_READ_FIRST     = TCS34725_CDATAL;
     public static final int IREG_READ_LAST      = TCS34725_BDATAH;
 
@@ -110,6 +110,7 @@ public class AdaFruitTCS34725ColorSensor implements ColorSensor, IOpModeStateTra
     boolean                                 ledIsEnabled;
     boolean                                 ledStateIsKnown;
     I2cDeviceReplacementHelper<ColorSensor> helper;
+    Parameters                              parameters;
 
     //----------------------------------------------------------------------------------------------
     // Construction
@@ -133,25 +134,25 @@ public class AdaFruitTCS34725ColorSensor implements ColorSensor, IOpModeStateTra
         {
         I2cController controller;
         int port;
-        int i2cAddr8Bit;
+        I2cAddr i2cAddr;
 
         if (target instanceof AdafruitI2cColorSensor)
             {
             AdafruitI2cColorSensor colorTarget = (AdafruitI2cColorSensor)target;
             controller  = colorTarget.getI2cController();
             port        = colorTarget.getPort();
-            i2cAddr8Bit = ADDRESS_I2C;
+            i2cAddr     = ADDRESS_I2C;
             }
         else
             throw new IllegalArgumentException(String.format("incorrect color sensor class: %s", target.getClass().getSimpleName()));
 
-        return create(context, controller, port, i2cAddr8Bit, target);
+        return create(context, controller, port, i2cAddr, target);
         }
 
-    public static ColorSensor create(OpMode context, I2cController controller, int port, int i2cAddr8Bit, ColorSensor target)
+    public static ColorSensor create(OpMode context, I2cController controller, int port, I2cAddr i2cAddr, ColorSensor target)
         {
         I2cDevice i2cDevice                 = ClassFactory.createI2cDevice(controller, port);
-        I2cDeviceSynch i2CDeviceSynch       = new I2cDeviceSynchImpl(i2cDevice, i2cAddr8Bit, true);
+        I2cDeviceSynch i2CDeviceSynch       = new I2cDeviceSynchImpl(i2cDevice, i2cAddr, true);
         AdaFruitTCS34725ColorSensor result  = new AdaFruitTCS34725ColorSensor(context, i2CDeviceSynch, target, controller, port);
         result.engage();
         result.initialize(new Parameters());
@@ -180,6 +181,8 @@ public class AdaFruitTCS34725ColorSensor implements ColorSensor, IOpModeStateTra
 
     public void initialize(Parameters parameters)
         {
+        this.parameters = parameters;
+
         // Verify that we're talking to whom we think we're talking to
         byte id = this.i2CDeviceSynch.read8(TCS34725_ID);
         if (id != 0x44 && id != 0x10)
@@ -272,6 +275,16 @@ public class AdaFruitTCS34725ColorSensor implements ColorSensor, IOpModeStateTra
         return "Swerve AdaFruit I2C Color Sensor";
         }
 
+    @Override public void resetDeviceConfigurationForOpMode()
+        {
+        this.initialize(this.parameters);
+        }
+
+    @Override public Manufacturer getManufacturer()
+        {
+        return Manufacturer.AdaFruit;
+        }
+
     //----------------------------------------------------------------------------------------------
     // ColorSensor
     //----------------------------------------------------------------------------------------------
@@ -328,14 +341,14 @@ public class AdaFruitTCS34725ColorSensor implements ColorSensor, IOpModeStateTra
             }
         }
 
-    @Override public synchronized int getI2cAddress()
+    @Override public synchronized I2cAddr getI2cAddress()
         {
         return this.i2CDeviceSynch.getI2cAddr();
         }
 
-    @Override public synchronized void setI2cAddress(int i2cAddr8Bit)
+    @Override public synchronized void setI2cAddress(I2cAddr i2cAddr)
         {
-        this.i2CDeviceSynch.setI2cAddr(i2cAddr8Bit);
+        this.i2CDeviceSynch.setI2cAddr(i2cAddr);
         }
     }
 

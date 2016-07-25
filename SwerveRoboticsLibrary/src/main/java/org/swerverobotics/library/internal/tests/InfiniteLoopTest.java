@@ -2,8 +2,8 @@ package org.swerverobotics.library.internal.tests;
 
 import com.qualcomm.ftccommon.DbgLog;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import org.swerverobotics.library.interfaces.Disabled;
-import org.swerverobotics.library.interfaces.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 /**
  * This simple OpMode exercises the logic that deals with runaway OpModes

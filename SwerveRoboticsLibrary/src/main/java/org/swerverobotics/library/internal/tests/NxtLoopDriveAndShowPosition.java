@@ -36,8 +36,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 
-import org.swerverobotics.library.interfaces.Disabled;
-import org.swerverobotics.library.interfaces.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 /**
  * NXTLoopEncoderPosition
@@ -79,12 +79,12 @@ public class NxtLoopDriveAndShowPosition extends OpMode {
 		motorLeft.setDirection(DcMotor.Direction.REVERSE);
 
 		// reset the encoders.
-		motorLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-		motorRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+		motorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+		motorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 		// switch to RUN_USING_ENCODERS mode.
-		motorLeft.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
-		motorRight.setMode(DcMotorController.RunMode.RUN_USING_ENCODERS);
+		motorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		motorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 		// set the motors to float so user can turn the motor shafts more easily.
 		motorLeft.setPowerFloat();

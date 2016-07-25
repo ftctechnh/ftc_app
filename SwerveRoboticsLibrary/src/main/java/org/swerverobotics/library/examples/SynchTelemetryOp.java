@@ -1,8 +1,9 @@
 package org.swerverobotics.library.examples;
 
 import org.swerverobotics.library.*;
-import org.swerverobotics.library.interfaces.Disabled;
-import org.swerverobotics.library.interfaces.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.*;

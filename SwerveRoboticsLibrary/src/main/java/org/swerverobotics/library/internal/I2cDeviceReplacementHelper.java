@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.Engagable;
+import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.I2cController;
 import com.qualcomm.robotcore.hardware.LegacyModule;
@@ -14,7 +15,7 @@ import java.util.Map;
  * A helper object that assists in managing the creation of replacement
  * hardware implementations for I2C-based objects.
  */
-public class I2cDeviceReplacementHelper<TARGET>
+public class I2cDeviceReplacementHelper<TARGET extends HardwareDevice>
     {
     //----------------------------------------------------------------------------------------------
     // State

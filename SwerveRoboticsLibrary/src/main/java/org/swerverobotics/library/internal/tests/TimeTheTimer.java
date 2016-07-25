@@ -2,10 +2,9 @@ package org.swerverobotics.library.internal.tests;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.MovingStatistics;
-
 import org.swerverobotics.library.SynchronousOpMode;
-import org.swerverobotics.library.interfaces.Disabled;
-import org.swerverobotics.library.interfaces.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name="Time the Timer (Synch)", group="Swerve Tests")
 @Disabled

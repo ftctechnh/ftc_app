@@ -1,5 +1,7 @@
 package org.swerverobotics.library.examples;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.*;
 
 import org.swerverobotics.library.SynchronousOpMode;
@@ -49,8 +51,8 @@ public class SynchAutoDriveEncoders extends SynchronousOpMode
         // just fine. That said, it's a little easier to interpret telemetry if we start them off
         // at zero, so we do that. But try commenting these lines out, and observe that the code
         // continues to work just fine, even as you run the OpMode multiple times.
-        this.motorLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-        this.motorRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+        this.motorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        this.motorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // Drive forward a while. The parameters here are arbitrary; they're just for illustration
         driveWithEncoders(4.7, 1.0);
@@ -67,8 +69,8 @@ public class SynchAutoDriveEncoders extends SynchronousOpMode
         this.motorRight.setTargetPosition(this.motorRight.getCurrentPosition() + denc);
 
         // Set them a-going
-        this.motorLeft.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
-        this.motorRight.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+        this.motorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        this.motorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
          // Give them the power level we want them to move at
         this.motorLeft.setPower(power);
@@ -104,15 +106,15 @@ public class SynchAutoDriveEncoders extends SynchronousOpMode
             );
         }
 
-    String format(DcMotorController.RunMode mode)
+    String format(DcMotor.RunMode mode)
         {
         switch (mode)
             {
             default:
-            case RUN_WITHOUT_ENCODERS: return "run";
-            case RESET_ENCODERS:     return "reset";
-            case RUN_TO_POSITION:    return "runToPos";
-            case RUN_USING_ENCODERS: return "runEnc";
+            case RUN_WITHOUT_ENCODER:       return "run";
+            case STOP_AND_RESET_ENCODER:    return "reset";
+            case RUN_TO_POSITION:           return "runToPos";
+            case RUN_USING_ENCODER:         return "runEnc";
             }
         }
     }
