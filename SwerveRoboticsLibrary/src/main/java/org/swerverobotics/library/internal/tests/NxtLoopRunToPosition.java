@@ -35,8 +35,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 
-import org.swerverobotics.library.interfaces.Disabled;
-import org.swerverobotics.library.interfaces.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 /**
  * NXTLoopEncoderPosition
@@ -81,12 +81,12 @@ public class NxtLoopRunToPosition extends OpMode {
 		motorLeft.setDirection(DcMotor.Direction.REVERSE);
 
 		// reset the encoders.
-		motorLeft.setMode(DcMotorController.RunMode.RESET_ENCODERS);
-		motorRight.setMode(DcMotorController.RunMode.RESET_ENCODERS);
+		motorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+		motorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 		// switch to RUN_TO_POSITION mode.
-		motorLeft.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
-		motorRight.setMode(DcMotorController.RunMode.RUN_TO_POSITION);
+		motorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+		motorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 		// set target position.
 		// turn the motor shaft 5 times.

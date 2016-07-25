@@ -1,9 +1,8 @@
 package org.swerverobotics.library.internal.tests;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-
-import org.swerverobotics.library.interfaces.Disabled;
-import org.swerverobotics.library.interfaces.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name="Long Init Test (Loop)", group="Swerve Tests")
 @Disabled

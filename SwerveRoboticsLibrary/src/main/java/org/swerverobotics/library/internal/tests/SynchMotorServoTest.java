@@ -7,10 +7,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.swerverobotics.library.ClassFactory;
 import org.swerverobotics.library.SynchronousOpMode;
-import org.swerverobotics.library.interfaces.Autonomous;
-import org.swerverobotics.library.interfaces.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.swerverobotics.library.interfaces.IOpModeLoopCounter;
-import org.swerverobotics.library.interfaces.TeleOp;
 
 /**
  * A simple synchronous opmode that exercises a motor and a servo simultaneously
@@ -33,7 +32,7 @@ public class SynchMotorServoTest extends SynchronousOpMode
         double servoPosition = 0;
         servo.setPosition(servoPosition);
 
-        motor.setMode(DcMotorController.RunMode.RUN_WITHOUT_ENCODERS);
+        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         ElapsedTime elapsedTime = new ElapsedTime();
         IOpModeLoopCounter loopCounter = ClassFactory.createLoopCounter(this);

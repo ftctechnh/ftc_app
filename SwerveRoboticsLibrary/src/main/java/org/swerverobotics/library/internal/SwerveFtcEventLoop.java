@@ -1,12 +1,15 @@
 package org.swerverobotics.library.internal;
 
+import android.app.Activity;
 import android.content.Context;
 import com.qualcomm.ftccommon.FtcEventLoop;
 import com.qualcomm.ftccommon.FtcEventLoopHandler;
+import com.qualcomm.ftccommon.ProgrammingModeController;
 import com.qualcomm.ftccommon.UpdateUI;
 import com.qualcomm.hardware.HardwareFactory;
 import com.qualcomm.robotcore.eventloop.EventLoopManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
+import com.qualcomm.robotcore.eventloop.opmode.OpModeManagerImpl;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -31,15 +34,15 @@ public class SwerveFtcEventLoop extends FtcEventLoop
     // Construction
     //----------------------------------------------------------------------------------------------
 
-    public SwerveFtcEventLoop(HardwareFactory hardwareFactory, OpModeRegister register, UpdateUI.Callback callback, Context robotControllerContext)
+    public SwerveFtcEventLoop(HardwareFactory hardwareFactory, OpModeRegister register, UpdateUI.Callback callback, Activity robotControllerContext, ProgrammingModeController programmingModeController)
         {
-        super(hardwareFactory, register, callback, robotControllerContext);
+        super(hardwareFactory, register, callback, robotControllerContext, programmingModeController);
         }
 
     @Override
-    protected OpModeManager createOpModeManager()
+    protected OpModeManagerImpl createOpModeManager()
         {
-        this.swerveOpModeManager = new SwerveOpModeManager(new HardwareMap(this.robotControllerContext));
+        this.swerveOpModeManager = new SwerveOpModeManager(this.activityContext, new HardwareMap(this.activityContext));
         return this.swerveOpModeManager;
         }
 

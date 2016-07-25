@@ -1,6 +1,7 @@
 package org.swerverobotics.library.interfaces;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.I2cDevice;
 
 /**
@@ -36,7 +37,7 @@ public interface IBNO055IMU
     class Parameters
         {
         /** the address at which the sensor resides on the I2C bus.  */
-        public I2CADDR          i2cAddr8Bit         = I2CADDR.DEFAULT;
+        public I2cAddr          i2cAddr             = I2CADDR_DEFAULT;
         
         /** the mode we wish to use the sensor in */
         public SENSOR_MODE      mode                = SENSOR_MODE.IMU;
@@ -317,7 +318,10 @@ public interface IBNO055IMU
     // Enumerations to make all of the above work 
     //----------------------------------------------------------------------------------------------
 
-    enum I2CADDR    { UNSPECIFIED(-1), DEFAULT(0x28*2), ALTERNATE(0x29*2); public final byte bVal; I2CADDR(int i)   { bVal =(byte)i; }}
+    public static final I2cAddr I2CADDR_UNSPECIFIED = I2cAddr.zero();
+    public static final I2cAddr I2CADDR_DEFAULT     = I2cAddr.create7bit(0x28);
+    public static final I2cAddr I2CADDR_ALTERNATE   = I2cAddr.create7bit(0x29);
+
     enum TEMPUNIT   { CELSIUS(0), FARENHEIT(1);                            public final byte bVal; TEMPUNIT(int i)  { bVal =(byte)i; }}
     enum ANGLEUNIT  { DEGREES(0), RADIANS(1);                              public final byte bVal; ANGLEUNIT(int i) { bVal =(byte)i; }}
     enum ACCELUNIT  { METERS_PERSEC_PERSEC(0), MILLIGALS(1);               public final byte bVal; ACCELUNIT(int i) { bVal =(byte)i; }}

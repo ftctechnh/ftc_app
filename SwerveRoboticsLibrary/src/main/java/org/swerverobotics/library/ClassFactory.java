@@ -232,7 +232,7 @@ public final class ClassFactory
      * @see org.swerverobotics.library.examples.LinearColorDemo
      * @see SynchColorDemo
      */
-    public static ColorSensor createSwerveColorSensor(OpMode opmodeContext, I2cController controller, int port, int i2cAddr8Bit, ClassFactory.SENSOR_FLAVOR flavor)
+    public static ColorSensor createSwerveColorSensor(OpMode opmodeContext, I2cController controller, int port, I2cAddr i2cAddr8Bit, ClassFactory.SENSOR_FLAVOR flavor)
         {
         return LegacyOrModernColorSensor.create(opmodeContext, controller, port, i2cAddr8Bit, flavor, null);
         }
@@ -284,7 +284,7 @@ public final class ClassFactory
      * @return                      the newly instantiated device
      * @see Engagable#engage()
      */
-    public static I2cDeviceSynch createI2cDeviceSynch(I2cDevice i2cDevice, int i2cAddr8Bit)
+    public static I2cDeviceSynch createI2cDeviceSynch(I2cDevice i2cDevice, I2cAddr i2cAddr8Bit)
         {
         return new I2cDeviceSynchImpl(i2cDevice, i2cAddr8Bit, false);
         }
@@ -295,7 +295,7 @@ public final class ClassFactory
      * @see #createI2cDeviceSynch(I2cDevice, int)
      */
     @Deprecated
-    public static I2cDeviceSynch createI2cDeviceClient(OpMode opmodeContext, I2cDevice i2cDevice, int i2cAddr8Bit, boolean closeOnOpModeStop)
+    public static I2cDeviceSynch createI2cDeviceClient(OpMode opmodeContext, I2cDevice i2cDevice, I2cAddr i2cAddr8Bit, boolean closeOnOpModeStop)
         {
         if (closeOnOpModeStop)
             throw new UnsupportedOperationException("support for auto-closing on opmode stop has been removed");
