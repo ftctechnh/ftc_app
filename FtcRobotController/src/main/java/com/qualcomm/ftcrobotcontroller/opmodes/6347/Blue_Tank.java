@@ -23,7 +23,6 @@ public class Blue_Tank extends OpMode {
     Servo hang;
     int blue_toggle;
     int red_toggle;
-    DcMotor motor7;
     DcMotorController winch;
     DcMotorController wheelie;
     Servo red;
@@ -33,7 +32,6 @@ public class Blue_Tank extends OpMode {
     Servo climberDump;
     UltrasonicSensor ultrasonic4;
     UltrasonicSensor ultrasonic5;
-    LightSensor reflectedLight;
     TouchSensor touch1;
     GyroSensor xAxis;
     GyroSensor zAxis;
@@ -52,14 +50,13 @@ public class Blue_Tank extends OpMode {
         motor4 = hardwareMap.dcMotor.get("4");
         motor5 = hardwareMap.dcMotor.get("5");
         motor6 = hardwareMap.dcMotor.get("6");
-        motor7 = hardwareMap.dcMotor.get("7");
 
         winch = hardwareMap.dcMotorController.get("c1"); //0
-        wheelie = hardwareMap.dcMotorController.get("c2"); //1
+
 
         motor1.setDirection(DcMotor.Direction.FORWARD);
         motor2.setDirection(DcMotor.Direction.REVERSE);
-        motor7.setDirection(DcMotor.Direction.REVERSE);
+
 
         telemetry.addData("Motor 1 Dir", motor1.getDirection().toString());
         telemetry.addData("Motor 2 Dir", motor2.getDirection().toString());
@@ -88,18 +85,6 @@ public class Blue_Tank extends OpMode {
         climberExtend.setPosition(0.6); //initialize climber extender
         climberDump.setPosition(0.82); //initialize climbers to be facing up
 
-        //////////////////////////////Sensors///////////////////////////
-        //////////////Legacy/////////////////
-        reflectedLight = hardwareMap.lightSensor.get("s3");
-        reflectedLight.enableLed(true);
-        ultrasonic4 = hardwareMap.ultrasonicSensor.get("s4"); //s4
-        ultrasonic5 = hardwareMap.ultrasonicSensor.get("s5"); //s5
-        ////////////CDI////////////
-        touch1 = hardwareMap.touchSensor.get("t1"); //D 0
-        xAxis = hardwareMap.gyroSensor.get("g2");//I2c 1
-        zAxis = hardwareMap.gyroSensor.get("g1");//I2c 0
-        xAxis.calibrate(); //calibrate both sensors
-        zAxis.calibrate();
 
         ////////////////////////////Variables//////////////////////////
         climberExtendVar = 0.6;
@@ -113,15 +98,7 @@ public class Blue_Tank extends OpMode {
 
         /////////////////////////////////////////////Driver 1/////////////////////////////////////////////////////
 
-        if (gamepad1.right_stick_y > 0.2 || gamepad1.right_stick_y < -0.2 || gamepad1.left_stick_y > 0.2 || gamepad1.left_stick_y < -0.2) {
-            motor1.setPower(gamepad1.right_stick_y);  //Main Drive
-            motor2.setPower(gamepad1.left_stick_y);
-        }
-
-        if (gamepad1.right_stick_y < 0.2 && gamepad1.right_stick_y > -0.2 && gamepad1.left_stick_y < 0.2 && gamepad1.left_stick_y > -0.2) {
-            motor1.setPower(0);  //Stop
-            motor2.setPower(0);
-        }
+        handleStick();
 
         if (gamepad1.y) {
             motor1.setPower(-.2);  //Slow Forward
@@ -197,6 +174,26 @@ public class Blue_Tank extends OpMode {
 ///////////////////////////////////////Telemetry//////////////////////////////////////////
 
 
+
+    }
+
+    private void handleStick() {
+        if (gamepad1.right_stick_y > 0.2 || gamepad1.right_stick_y < -0.2) {
+            motor1.setPower(gamepad1.right_stick_y);  //Main Drive
+        } else
+        {
+            motor1.setPower(0);
+        }
+
+        if (gamepad1.left_stick_y > 0.2 || gamepad1.left_stick_y < -0.2)
+        {
+            motor2.setPower(gamepad1.left_stick_y);
+        } else
+        {
+            motor2.setPower(0);
+        }
+        telemetry.addData("Right Power",gamepad1.right_stick_y);
+        telemetry.addData("Left Power",gamepad1.left_stick_y);
 
     }
 }
