@@ -171,6 +171,18 @@ public class Blue_Tank extends OpMode {
         else{
             motor6.setPower(0);
         }
+
+        // Red and blue arms
+        if(gamepad1.left_trigger > 0.2) {
+            blue.setPosition(0.6);
+        } else {
+            blue.setPosition(0.02);
+        }
+        if(gamepad1.right_trigger > 0.2) {
+            red.setPosition(0.47);
+        } else {
+            red.setPosition(0.91);
+        }
 ///////////////////////////////////////Telemetry//////////////////////////////////////////
 
 
