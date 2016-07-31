@@ -60,6 +60,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <string name="title_activity_view_logs">View Logs</string>
   <string name="button_text_clear_logs">Clear Logs</string>
 
+  <string name="wifi_connect_text">Connect to Wifi</string>
+
   <!-- Preferences -->
   <string name="pref_launch_settings">pref_launch_settings</string>
   <string name="pref_change_wifi_channel">Change Wifi Channel</string>

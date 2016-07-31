@@ -41,10 +41,13 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
+import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
+import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -73,6 +76,7 @@ import com.qualcomm.robotcore.wifi.WifiDirectAssistant;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -296,6 +300,27 @@ public class FtcRobotControllerActivity extends Activity {
         Intent settingsIntent = new Intent("com.qualcomm.ftccommon.FtcRobotControllerSettingsActivity.intent.action.Launch");
         startActivityForResult(settingsIntent, LaunchActivityConstantsList.FTC_ROBOT_CONTROLLER_ACTIVITY_CONFIGURE_ROBOT);
         return true;
+      case R.id.wifi_connect:
+        WifiP2pManager p2pManager = (WifiP2pManager)getSystemService(Context.WIFI_P2P_SERVICE);
+        WifiP2pManager.Channel c = p2pManager.initialize(this, getMainLooper(), null);
+        p2pManager.removeGroup(c, null);
+        callback.wifiDirectUpdate(WifiDirectAssistant.Event.DISCONNECTED);
+        WifiManager wifiManager = (WifiManager)getSystemService(Context.WIFI_SERVICE);
+        List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
+        for (WifiConfiguration i : list) {
+          if (i.SSID != null && i.SSID.equals("\"sdka_home\"")) {
+            Log.v("FTC_Kitkats", "disconnecting");
+            wifiManager.disconnect();
+            //Log.v("FTC_Kitkats", "enabling");
+            //wifiManager.enableNetwork(i.networkId, true);
+            Log.v("FTC_Kitkats", "reconnecting");
+            wifiManager.reconnect();
+            Log.v("FTC_Kitkats", "done");
+            break;
+          }
+        }
+        return true;
+
       case R.id.action_about:
         // The string to launch this activity must match what's in AndroidManifest of FtcCommon for this activity.
         Intent intent = new Intent("com.qualcomm.ftccommon.configuration.AboutActivity.intent.action.Launch");
