@@ -1,4 +1,6 @@
 # ftc_app
+[![Build Status](https://travis-ci.org/ftcgearedup/ftc_app.svg?branch=beta)](https://travis-ci.org/ftcgearedup/ftc_app)
+
 FTC Android Studio project to create FTC Robot Controller app.
 
 This is the FTC SDK that can be used to create an FTC Robot Controller app, with custom op modes.
