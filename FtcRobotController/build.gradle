@@ -22,7 +22,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.2.3'
+        classpath 'com.android.tools.build:gradle:2.1.2'
     }
 }
 
@@ -42,7 +42,7 @@ allprojects {
 }
 
 dependencies {
-    compile files('libs/android-support-v4.jar')
+    compile "com.android.support:support-v4:24.1.1" 
     compile(name: 'RobotCore-release', ext: 'aar')
     compile(name: 'Hardware-release', ext: 'aar')
     compile(name: 'FtcCommon-release', ext: 'aar')
