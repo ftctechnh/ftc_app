@@ -16,7 +16,7 @@ public class TimeTheTimer extends SynchronousOpMode
     protected void main() throws InterruptedException
         {
         waitForStart();
-        telemetry.log.add("starting");
+        telemetry.log().add("starting");
 
         while (opModeIsActive())
             {
@@ -50,7 +50,7 @@ public class TimeTheTimer extends SynchronousOpMode
             idle();
             }
 
-        telemetry.log.add("done");
+        telemetry.log().add("done");
         }
 
     String format(double f) { return String.format("%.2f", f); }

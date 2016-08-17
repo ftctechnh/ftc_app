@@ -50,15 +50,6 @@ public abstract class SynchronousOpMode extends OpMode
      */
     public final Gamepad gamepad2 = new Gamepad();
 
-    /**
-     * provides access to an object by which telemetry information can be transmitted
-     * from the robot controller to the driver station.
-     * 
-     * As with game pads, we hid the 'telemetry' variable of the super class and replace it
-     * with one that can work on synchronous threads.
-     */
-    public TelemetryDashboardAndLog telemetry;
-
     /** Advanced: the number of nanoseconds in a millisecond.
      * @deprecated use ElapsedTime.MILLIS_IN_NANO instead. */
     @Deprecated
@@ -550,9 +541,6 @@ public abstract class SynchronousOpMode extends OpMode
             // Note that we always leave the super one unchanged; this is important to OpModeShutdownNotifier.
             this.hardwareFactory = new SynchronousOpModeHardwareFactory(this, this.useExperimentalHardwareMap);
             this.hardwareMap     = this.hardwareFactory.createProcessedHardwareMap();
-
-            // Similarly replace the telemetry variable
-            this.telemetry = new TelemetryDashboardAndLog(this);
 
             // We're being asked to start, not stop
             this.started = false;

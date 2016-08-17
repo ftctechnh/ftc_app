@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.robot.RobotState;
+import com.qualcomm.robotcore.robot.RobotStatus;
 
 import org.swerverobotics.library.SynchronousOpMode;
 
@@ -163,7 +164,7 @@ public class RobotStateTransitionNotifier
         Log.d(SynchronousOpMode.LOGGING_TAG, "... state xtion: robot shutdown complete -------------");
         }
 
-    public static synchronized void onRobotUpdate(final String status)
+    public static synchronized void onRobotUpdate(RobotStatus status)
         {
         List<Runnable> copiedList = new LinkedList<Runnable>(onRobotUpdateActions);
         for (Runnable runnable : copiedList)

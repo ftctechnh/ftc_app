@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Func;
 import org.swerverobotics.library.SynchronousOpMode;
 import org.swerverobotics.library.interfaces.*;
 
@@ -31,10 +32,10 @@ public class SynchAutoServoDemo extends SynchronousOpMode
             {
             this.servo.setPosition(0);
             delay();
-            telemetry.updateNow();
+            telemetry.update();
             this.servo.setPosition(1);
             delay();
-            telemetry.updateNow();
+            telemetry.update();
             }
         }
 
@@ -45,12 +46,12 @@ public class SynchAutoServoDemo extends SynchronousOpMode
 
     void configureDashboard()
         {
-        telemetry.addLine(telemetry.item("position: ", new IFunc<Object>()
+        telemetry.addData("position: ", new Func<Object>()
             {
             @Override public Object value()
                 {
                 return servo.getPosition();
                 }
-            }));
+            });
         }
     }

@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.I2cDevice;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.Func;
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.interfaces.*;
 
@@ -75,7 +77,7 @@ public class SynchIMUDemo extends SynchronousOpMode
     void composeDashboard()
         {
         // The default dashboard update rate is a little too slow for our taste here, so we update faster
-        telemetry.setUpdateIntervalMs(200);
+        telemetry.setMsTransmissionInterval(200);
 
         // At the beginning of each telemetry update, grab a bunch of data
         // from the IMU that we will then display in separate lines.
@@ -94,99 +96,99 @@ public class SynchIMUDemo extends SynchronousOpMode
                 ms         = elapsed.milliseconds();
                 }
             });
-        telemetry.addLine(
-            telemetry.item("loop count: ", new IFunc<Object>()
+        telemetry.addLine()
+            .addData("loop count: ", new Func<Object>()
                 {
                 public Object value()
                     {
                     return loopCycles;
                     }
-                }),
-            telemetry.item("i2c cycle count: ", new IFunc<Object>()
+                })
+            .addData("i2c cycle count: ", new Func<Object>()
                 {
                 public Object value()
                     {
                     return i2cCycles;
                     }
-                }));
+                });
 
-        telemetry.addLine(
-            telemetry.item("loop rate: ", new IFunc<Object>()
+        telemetry.addLine()
+            .addData("loop rate: ", new Func<Object>()
                 {
                 public Object value()
                     {
                     return formatRate(ms / loopCycles);
                     }
-                }),
-            telemetry.item("i2c cycle rate: ", new IFunc<Object>()
+                })
+            .addData("i2c cycle rate: ", new Func<Object>()
                 {
                 public Object value()
                     {
                     return formatRate(ms / i2cCycles);
                     }
-                }));
+                });
 
-        telemetry.addLine(
-            telemetry.item("status: ", new IFunc<Object>()
+        telemetry.addLine()
+            .addData("status: ", new Func<Object>()
                 {
                 public Object value()
                     {
                     return decodeStatus(imu.getSystemStatus());
                     }
-                }),
-            telemetry.item("calib: ", new IFunc<Object>()
+                })
+            .addData("calib: ", new Func<Object>()
                 {
                 public Object value()
                     {
                     return decodeCalibration(imu.read8(IBNO055IMU.REGISTER.CALIB_STAT));
                     }
-                }));
+                });
 
-        telemetry.addLine(
-            telemetry.item("heading: ", new IFunc<Object>()
+        telemetry.addLine()
+            .addData("heading: ", new Func<Object>()
                 {
                 public Object value()
                     {
                     return formatAngle(angles.heading);
                     }
-                }),
-            telemetry.item("roll: ", new IFunc<Object>()
+                })
+            .addData("roll: ", new Func<Object>()
                 {
                 public Object value()
                     {
                     return formatAngle(angles.roll);
                     }
-                }),
-            telemetry.item("pitch: ", new IFunc<Object>()
+                })
+            .addData("pitch: ", new Func<Object>()
                 {
                 public Object value()
                     {
                     return formatAngle(angles.pitch);
                     }
-                }));
+                });
 
-        telemetry.addLine(
-            telemetry.item("x: ", new IFunc<Object>()
+        telemetry.addLine()
+            .addData("x: ", new Func<Object>()
                 {
                 public Object value()
                     {
                     return formatPosition(position.x);
                     }
-                }),
-            telemetry.item("y: ", new IFunc<Object>()
+                })
+            .addData("y: ", new Func<Object>()
                 {
                 public Object value()
                     {
                     return formatPosition(position.y);
                     }
-                }),
-            telemetry.item("z: ", new IFunc<Object>()
+                })
+            .addData("z: ", new Func<Object>()
                 {
                 public Object value()
                     {
                     return formatPosition(position.z);
                     }
-                }));
+                });
         }
 
     String formatAngle(double angle)

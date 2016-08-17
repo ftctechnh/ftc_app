@@ -2,10 +2,14 @@ package org.usfirst.ftc.exampleteam.yourcodehere;
 
 import android.content.Context;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
 import org.swerverobotics.library.SwerveUtil;
 import org.swerverobotics.library.interfaces.*;
 import org.swerverobotics.library.examples.*;
-import com.qualcomm.ftcrobotcontroller.opmodes.*;
 
 /**
  * MyRobotControllerAdministration is a container for 'administrative' methods that interact
@@ -56,7 +60,7 @@ public class MyRobotControllerAdministration
         manager.register(SynchTeleOp.class);
         manager.register(SynchTelemetryOp.class);
         manager.register(LinearAutonomousPolygon.class);
-        manager.register("FTC HQ NxtTeleOp", NxtTeleOp.class);
+        // manager.register("FTC HQ NxtTeleOp", NxtTeleOp.class);
         }
 
     /**
