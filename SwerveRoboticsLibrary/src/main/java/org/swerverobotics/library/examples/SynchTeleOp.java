@@ -2,6 +2,8 @@ package org.swerverobotics.library.examples;
 
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.*;
+
+import org.firstinspires.ftc.robotcore.external.Func;
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.interfaces.*;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -122,49 +124,46 @@ public class SynchTeleOp extends SynchronousOpMode
     void configureDashboard()
         {
         // Configure the dashboard.
-        this.telemetry.addLine
-            (
-            this.telemetry.item("left: power: ", new IFunc<Object>()
+        this.telemetry.addLine()
+            .addData("left: power: ", new Func<Object>()
                 {
                 @Override public Object value()
                     {
                     return format(motorLeft.getPower());
                     }
-                }),
-            this.telemetry.item("position: ", new IFunc<Object>()
+                })
+            .addData("position: ", new Func<Object>()
                 {
                 @Override public Object value()
                     {
                     return format(motorLeft.getCurrentPosition());
                     }
-                })
+                }
             );
-        this.telemetry.addLine
-            (
-            this.telemetry.item("right: power: ", new IFunc<Object>()
+        this.telemetry.addLine()
+            .addData("right: power: ", new IFunc<Object>()
                 {
                 @Override public Object value()
                     {
                     return format(motorRight.getPower());
                     }
-                }),
-            this.telemetry.item("position: ", new IFunc<Object>()
+                })
+            .addData("position: ", new IFunc<Object>()
                 {
                 @Override public Object value()
                     {
                     return format(motorRight.getCurrentPosition());
                     }
-                })
+                }
             );
-        this.telemetry.addLine
-            (
-            this.telemetry.item("mode: ", new IFunc<Object>()
+        this.telemetry.addLine()
+            .addData("mode: ", new IFunc<Object>()
                 {
                 @Override public Object value()
                     {
                     return motorLeft.getMode();
                     }
-                })
+                }
             );
         }
 

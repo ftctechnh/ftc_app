@@ -27,7 +27,7 @@ android {
 
 repositories {
     flatDir {
-        dirs '../FtcRobotController/libs'
+        dirs '../libs'
     }
 }
 
