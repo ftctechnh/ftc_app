@@ -82,7 +82,6 @@ import com.qualcomm.hardware.HardwareFactory;
 import com.qualcomm.robotcore.eventloop.EventLoopManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 import com.qualcomm.robotcore.hardware.configuration.Utility;
-import com.qualcomm.robotcore.robocol.Command;
 import com.qualcomm.robotcore.robocol.PeerAppRobotController;
 import com.qualcomm.robotcore.robot.Robot;
 import com.qualcomm.robotcore.robot.RobotState;
@@ -98,7 +97,6 @@ import com.qualcomm.robotcore.wifi.WifiDirectAssistant;
 import org.firstinspires.ftc.robotcore.internal.AppUtil;
 import org.firstinspires.inspection.RcInspectionActivity;
 import org.swerverobotics.library.SynchronousOpMode;
-import org.swerverobotics.library.internal.MemberUtil;
 import org.swerverobotics.library.internal.RobotStateTransitionNotifier;
 import org.swerverobotics.library.internal.SwerveFtcEventLoop;
 
@@ -579,7 +577,7 @@ public class FtcRobotControllerActivity extends Activity {
             if (service == null)
                 return;
 
-            Robot robot = MemberUtil.robotOfFtcRobotControllerService(service);
+            Robot robot = service.getRobot();
             if (robot == null)
                 return;
 
