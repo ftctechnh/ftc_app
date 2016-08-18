@@ -34,22 +34,6 @@ public class SwerveOpModeManager extends OpModeManagerImpl
         RobotLog.v("Swerve: OpModeManager: %s: ... stop complete", activeOpModeName);
         }
 
-    @Override
-    protected void callActiveOpModeInit()
-        {
-        RobotLog.v("Swerve: OpModeManager: %s: init...", activeOpModeName);
-        super.callActiveOpModeInit();
-        RobotLog.v("Swerve: OpModeManager: %s: ... init complete", activeOpModeName);
-        }
-
-    @Override
-    protected void callActiveOpModeStart()
-        {
-        RobotLog.v("Swerve: OpModeManager: %s: start...", activeOpModeName);
-        super.callActiveOpModeStart();
-        RobotLog.v("Swerve: OpModeManager: %s: ... start complete", activeOpModeName);
-        }
-
     public void onRobotShutdown()
         {
         RobotLog.v("Swerve: OpModeManager: onRobotShutdown ...");
