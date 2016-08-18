@@ -71,6 +71,7 @@ import com.qualcomm.ftccommon.FtcRobotControllerSettingsActivity;
 import com.qualcomm.ftccommon.LaunchActivityConstantsList;
 import com.qualcomm.ftccommon.ProgrammingModeController;
 import com.qualcomm.ftccommon.Restarter;
+import org.firstinspires.ftc.ftccommon.external.SoundPlayingRobotMonitor;
 import com.qualcomm.ftccommon.UpdateUI;
 import com.qualcomm.ftccommon.configuration.EditParameters;
 import com.qualcomm.ftccommon.configuration.FtcLoadFileActivity;
@@ -81,6 +82,7 @@ import com.qualcomm.hardware.HardwareFactory;
 import com.qualcomm.robotcore.eventloop.EventLoopManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 import com.qualcomm.robotcore.hardware.configuration.Utility;
+import com.qualcomm.robotcore.robocol.Command;
 import com.qualcomm.robotcore.robocol.PeerAppRobotController;
 import com.qualcomm.robotcore.robot.Robot;
 import com.qualcomm.robotcore.robot.RobotState;
@@ -203,6 +205,7 @@ public class FtcRobotControllerActivity extends Activity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    RobotLog.startupIfNecessary();
     RobotLog.vv(TAG, "onCreate()");
 
     receivedUsbAttachmentNotifications = new ConcurrentLinkedQueue<UsbDevice>();
@@ -228,6 +231,13 @@ public class FtcRobotControllerActivity extends Activity {
     ClassManagerFactory.processClasses();
     cfgFileMgr = new RobotConfigFileManager(this);
 
+    // Clean up 'dirty' status after a possible crash
+    RobotConfigFile configFile = cfgFileMgr.getActiveConfig();
+    if (configFile.isDirty()) {
+      configFile.markClean();
+      cfgFileMgr.setActiveConfig(false, configFile);
+    }
+
     textDeviceName = (TextView) findViewById(R.id.textDeviceName);
     textNetworkConnectionStatus = (TextView) findViewById(R.id.textNetworkConnectionStatus);
     textRobotStatus = (TextView) findViewById(R.id.textRobotStatus);
@@ -238,16 +248,12 @@ public class FtcRobotControllerActivity extends Activity {
     immersion = new ImmersiveMode(getWindow().getDecorView());
     dimmer = new Dimmer(this);
     dimmer.longBright();
-    Restarter restarter = new RobotRestarter();
 
     programmingModeController = new ProgrammingModeControllerImpl(
         this, (TextView) findViewById(R.id.textRemoteProgrammingMode));
 
-    updateUI = new SwerveUpdateUIHook(this, dimmer);
-    updateUI.setRestarter(restarter);
-    updateUI.setTextViews(textNetworkConnectionStatus, textRobotStatus,
-        textGamepad, textOpMode, textErrorMessage, textDeviceName);
-    callback = updateUI.new CallbackHook();
+    updateUI = createUpdateUI();
+    callback = createUICallback(updateUI);
 
     PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
@@ -258,11 +264,23 @@ public class FtcRobotControllerActivity extends Activity {
 
     if (USE_DEVICE_EMULATION) { HardwareFactory.enableDeviceEmulation(); }
 
-    // save 4MB of logcat to the SD card
-    RobotLog.writeLogcatToDisk(this, 4 * 1024);
     wifiLock.acquire();
     callback.networkConnectionUpdate(WifiDirectAssistant.Event.DISCONNECTED);
     bindToService();
+  }
+
+  protected SwerveUpdateUIHook createUpdateUI() {
+    Restarter restarter = new RobotRestarter();
+    SwerveUpdateUIHook result = new SwerveUpdateUIHook(this, dimmer);
+    result.setRestarter(restarter);
+    result.setTextViews(textNetworkConnectionStatus, textRobotStatus, textGamepad, textOpMode, textErrorMessage, textDeviceName);
+    return result;
+  }
+
+  protected UpdateUI.Callback createUICallback(SwerveUpdateUIHook updateUI) {
+    UpdateUI.Callback result = updateUI.new CallbackHook();
+    result.setStateMonitor(new SoundPlayingRobotMonitor());
+    return result;
   }
 
   @Override
@@ -308,7 +326,7 @@ public class FtcRobotControllerActivity extends Activity {
     RobotLog.vv(TAG, "onStop()");
 
     // We *do* shutdown the robot even when we go into configuration editing
-    controllerService.shutdownRobot();
+    if (controllerService != null) controllerService.shutdownRobot();
   }
 
   @Override
@@ -318,14 +336,22 @@ public class FtcRobotControllerActivity extends Activity {
 
     unbindFromService();
     wifiLock.release();
-    RobotLog.cancelWriteLogcatToDisk(this);
+    RobotLog.shutdown();
   }
 
   protected void bindToService() {
+    RobotLog.vv(TAG, "bindToService()");
     readNetworkType(NETWORK_TYPE_FILENAME);
     Intent intent = new Intent(this, FtcRobotControllerService.class);
     intent.putExtra(NetworkConnectionFactory.NETWORK_CONNECTION_TYPE, networkType);
     bindService(intent, connection, Context.BIND_AUTO_CREATE);
+  }
+
+  public void onServiceBind(FtcRobotControllerService service) {
+    RobotLog.vv(FtcRobotControllerService.TAG, "%s.controllerService=bound", TAG);
+    controllerService = service;
+    updateUI.setControllerService(controllerService);
+    updateUIAndRequestRobotSetup();
   }
 
   protected void unbindFromService() {
@@ -451,14 +477,6 @@ public class FtcRobotControllerActivity extends Activity {
       // We always do a refresh, whether it was a cancel or an OK, for robustness
       cfgFileMgr.getActiveConfigAndUpdateUI();
     }
-  }
-
-  public void onServiceBind(FtcRobotControllerService service) {
-    RobotLog.vv(FtcRobotControllerService.TAG, "%s.controllerService=bound", TAG);
-    controllerService = service;
-    updateUI.setControllerService(controllerService);
-
-    updateUIAndRequestRobotSetup();
   }
 
   private void updateUIAndRequestRobotSetup() {
@@ -611,6 +629,16 @@ public class FtcRobotControllerActivity extends Activity {
         @Override public void onTelemetryTransmitted()
             {
             this.prevMonitor.onTelemetryTransmitted();
+            }
+
+        @Override public void onPeerConnected()
+            {
+            this.prevMonitor.onPeerConnected();
+            }
+
+        @Override public void onPeerDisconnected()
+            {
+            this.prevMonitor.onPeerDisconnected();
             }
         }
 

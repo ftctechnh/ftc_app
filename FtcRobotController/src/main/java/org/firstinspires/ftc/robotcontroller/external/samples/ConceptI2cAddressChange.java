@@ -121,6 +121,7 @@ public class ConceptI2cAddressChange extends LinearOpMode {
 
     while(!dim.isI2cPortReady(port)) {
       telemetry.addData("I2cAddressChange", "waiting for the port to be ready...");
+      telemetry.update();
       sleep(1000);
     }
 
@@ -132,6 +133,7 @@ public class ConceptI2cAddressChange extends LinearOpMode {
     int[] initialArray = {READ_MODE, currentAddress.get8Bit(), ADDRESS_MEMORY_START, TOTAL_MEMORY_LENGTH, FIRMWARE_REV, MANUFACTURER_CODE, SENSOR_ID};
     while (!foundExpectedBytes(initialArray, readLock, readCache)) {
       telemetry.addData("I2cAddressChange", "Confirming that we're reading the correct bytes...");
+      telemetry.update();
       dim.readI2cCacheFromController(port);
       sleep(1000);
       count++;
@@ -139,6 +141,7 @@ public class ConceptI2cAddressChange extends LinearOpMode {
       if (count >= 10)  {
         telemetry.addData("I2cAddressChange", String.format("Looping too long with no change, probably have the wrong address. Current address: 0x%02x", currentAddress));
         hardwareMap.irSeekerSensor.get(String.format("Looping too long with no change, probably have the wrong address. Current address: 0x%02x", currentAddress));
+        telemetry.update();
       }
     }
 
@@ -151,6 +154,7 @@ public class ConceptI2cAddressChange extends LinearOpMode {
     dim.writeI2cCacheToController(port);
 
     telemetry.addData("I2cAddressChange", "Giving the hardware 60 seconds to make the change...");
+    telemetry.update();
 
     // Changing the I2C address takes some time.
     sleep(60000);
@@ -163,11 +167,13 @@ public class ConceptI2cAddressChange extends LinearOpMode {
     int[] confirmArray = {READ_MODE, newAddress.get8Bit(), ADDRESS_MEMORY_START, TOTAL_MEMORY_LENGTH, FIRMWARE_REV, MANUFACTURER_CODE, SENSOR_ID};
     while (!foundExpectedBytes(confirmArray, readLock, readCache)) {
       telemetry.addData("I2cAddressChange", "Have not confirmed the changes yet...");
+      telemetry.update();
       dim.readI2cCacheFromController(port);
       sleep(1000);
     }
 
     telemetry.addData("I2cAddressChange", "Successfully changed the I2C address. New address: 0x%02x", newAddress);
+    telemetry.update();
     RobotLog.i("Successfully changed the I2C address." + String.format("New address: 0x%02x", newAddress));
 
     /**** IMPORTANT NOTE ******/
