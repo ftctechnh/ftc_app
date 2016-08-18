@@ -78,6 +78,7 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");    //
+        telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();

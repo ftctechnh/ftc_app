@@ -112,7 +112,6 @@ public class PushbotAutoDriveToLine_Linear extends LinearOpMode {
 
             // Display the light level while we are looking for the line
             telemetry.addData("Light Level",  lightSensor.getLightDetected());
-
             telemetry.update();
             idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
         }

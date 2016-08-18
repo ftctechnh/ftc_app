@@ -83,6 +83,7 @@ public class ConceptCompassCalibration extends LinearOpMode {
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready to cal");    //
+        telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -90,11 +91,13 @@ public class ConceptCompassCalibration extends LinearOpMode {
         // Set the compass to calibration mode
         compass.setMode(CompassSensor.CompassMode.CALIBRATION_MODE);
         telemetry.addData("Compass", "Compass in calibration mode");
+        telemetry.update();
 
         sleep(HOLD_TIME_MS);  // Just do a sleep while we switch modes
 
         // Start the robot rotating clockwise
         telemetry.addData("Compass", "Calibration mode. Turning the robot...");
+        telemetry.update();
         robot.leftMotor.setPower(MOTOR_POWER);
         robot.rightMotor.setPower(-MOTOR_POWER);
 
@@ -110,6 +113,7 @@ public class ConceptCompassCalibration extends LinearOpMode {
         robot.rightMotor.setPower(0);
         compass.setMode(CompassSensor.CompassMode.MEASUREMENT_MODE);
         telemetry.addData("Compass", "Returning to measurement mode");
+        telemetry.update();
 
         sleep(HOLD_TIME_MS);  // Just do a sleep while we switch modes
 
@@ -118,6 +122,7 @@ public class ConceptCompassCalibration extends LinearOpMode {
             telemetry.addData("Compass", "Calibrate Failed. Try Again!");
         else
             telemetry.addData("Compass", "Calibrate Passed.");
+        telemetry.update();
 
     }
 }
