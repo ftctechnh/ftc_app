@@ -531,15 +531,6 @@ public class FtcRobotControllerActivity extends Activity {
     }
   }
 
-  public void showToast(final Toast toast) {
-    runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        toast.show();
-      }
-    });
-  }
-
     //==============================================================================================
     // Hooking infrastructure (Swerve)
     //
@@ -612,16 +603,6 @@ public class FtcRobotControllerActivity extends Activity {
             {
             this.prevMonitor.onStateChange(newState);
             RobotStateTransitionNotifier.onRobotStateChange(newState);
-            }
-
-        @Override public void onNetworkDisconnect()
-            {
-            this.prevMonitor.onNetworkDisconnect();
-            }
-
-        @Override public void onNetworkConnected()
-            {
-            this.prevMonitor.onNetworkConnected();
             }
 
         @Override public void onTelemetryTransmitted()
