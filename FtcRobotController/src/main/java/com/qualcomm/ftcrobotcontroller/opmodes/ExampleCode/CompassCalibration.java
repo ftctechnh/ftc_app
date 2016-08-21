@@ -56,6 +56,7 @@ public class CompassCalibration extends OpMode {
   CompassSensor compass;
   DcMotor motorRight;
   DcMotor motorLeft;
+  //change!
 
   @Override
   public void init() {
