@@ -1,18 +1,43 @@
-package com.qualcomm.ftcrobotcontroller.FreshClasses;
+package com.qualcomm.ftcrobotcontroller.opmodes.FreshClasses;
 
 import android.graphics.Color;
 
-import com.qualcomm.ftcrobotcontroller.opmodes.TheFreshMenAuton;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.PWMOutput;
+import java.util.Hashtable;
+
 
 /**
  * Created by Naisan on 4/16/2016.
  */
 public class FreshMethods {
 
-    public static void approach_ir_signal(FreshMotors motors, FreshSensors sensors, FreshServos servos, double end_signal_strength) { //this method will be called only if an ir signal is detected
+    public static Hashtable<String, Float> get_motor_values_teleop(float xAxis, float yAxis, float turn) {
+        Float xAxisSquare = xAxis*xAxis;
+        Float yAxisSquare = yAxis*yAxis;
+        Float turnSquare =  turn*turn;
+        if (xAxis < 0) {
+            xAxisSquare = -xAxisSquare;
+        }
+        if (yAxis < 0) {
+            yAxisSquare = -yAxisSquare;
+        }
+        if (turn < 0)
+            turnSquare = -turnSquare;
+
+        Hashtable<String, Float> valuesTable = new Hashtable<String, Float>();
+        valuesTable.put("XValue", xAxisSquare);
+        valuesTable.put("YValue", yAxisSquare);
+        valuesTable.put("TurnValue", turnSquare);
+
+        return valuesTable;
+    }
+
+    public static void approach_ir_signal(com.qualcomm.ftcrobotcontroller.opmodes.FreshClasses.FreshMotors motors,
+                                          com.qualcomm.ftcrobotcontroller.opmodes.FreshClasses.FreshSensors sensors,
+                                          com.qualcomm.ftcrobotcontroller.opmodes.FreshClasses.FreshServos servos,
+                                          double end_signal_strength) { //this method will be called only if an ir signal is detected
         double angle = sensors.irSensor.getAngle();
         double signal_strength = sensors.irSensor.getStrength();
         while (angle < -3) { //if the ir signal is to the left, slide to the left

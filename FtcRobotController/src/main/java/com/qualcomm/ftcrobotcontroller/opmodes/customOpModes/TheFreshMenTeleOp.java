@@ -1,5 +1,6 @@
-package com.qualcomm.ftcrobotcontroller.opmodes;
+package com.qualcomm.ftcrobotcontroller.opmodes.customOpModes;
 
+import com.qualcomm.ftcrobotcontroller.opmodes.FreshClasses.FreshMethods;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.PWMOutput;
@@ -7,33 +8,48 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
 
+import java.util.Hashtable;
+
 /**
  * Created by Naisan on 3/15/2016.
  */
+
+
 public class TheFreshMenTeleOp extends OpMode {
+
+    Hashtable<String, Float> valuesTable = new Hashtable<String, Float>();
+
     final float OFF = 0.0f,
-            LIFT_POWER = 1.0f,
-            SWEEPER_POWER = 1.0f,
-            BASKET_OPEN = 0.5f,
-            BASKET_CLOSE = 0.0f;
-    final int CSERVO_POWER = 100,
-            CRSERVO_START = 600,
-            CRSERVO_END = 2400;
-    private boolean LiftDown = true;
-    int CSERVO_RIGHTP = 600,
+                LIFT_POWER = 1.0f,
+                SWEEPER_POWER = 1.0f,
+                BASKET_OPEN = 0.5f,
+                BASKET_CLOSE = 0.0f;
+
+    final int   CSERVO_POWER = 100,
+                CRSERVO_START = 600,
+                CRSERVO_END = 2400;
+
+    int     CSERVO_RIGHTP = 600,
             CSERVO_LEFTP = 600;
 
-    DcMotor M_backLeft, //andy
-            M_backRight, //barry
-            M_frontLeft, //carl
-            M_frontRight, //daniel
-            M_rackPinion,
-            M_sweeper;
-    PWMOutput S_rackRight,
-            S_rackLeft;
-     Servo   S_bucket;
+    private boolean LiftDown = true;
+
+    //Motors
+    DcMotor     M_backLeft, //andy
+                M_backRight, //barry
+                M_frontLeft, //carl
+                M_frontRight, //daniel
+                M_rackPinion,
+                M_sweeper;
+    //Servos
+    PWMOutput   S_rackRight,
+                S_rackLeft;
+
+     Servo      S_bucket;
+
     //Sensors
     TouchSensor T_Lift;
+
     @Override
     public void init() {
         //DC Motors
@@ -52,42 +68,38 @@ public class TheFreshMenTeleOp extends OpMode {
 
     }
     public void loop() {
-        //Joystick Reading
-        float forwardAndBack = -gamepad1.left_stick_y;
-        float leftAndRight = gamepad1.left_stick_x;
-        float Turn = gamepad1.right_stick_x;
-        float forwardAndBackSquared = forwardAndBack * forwardAndBack;
-        float leftAndRightSquared = leftAndRight * leftAndRight;
-        float turnSquared = Turn * Turn;
-        if (forwardAndBack < 0) {
-            forwardAndBackSquared = -forwardAndBackSquared;
-        }
-        if (leftAndRight < 0) {
-            leftAndRightSquared = -leftAndRightSquared;
-        }
-        if (Turn < 0)
-            turnSquared = -turnSquared;
+
+        //Getting power values
+        valuesTable = FreshMethods.get_motor_values_teleop(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
+        float xvalue = valuesTable.get("XValue");
+        float yvalue = valuesTable.get("YValue");
+        float turnValue = valuesTable.get("TurnValue");
+
         //Power Calculations
-        double andypower = leftAndRightSquared + (-forwardAndBackSquared) + turnSquared;
-        double barrypower = leftAndRightSquared + forwardAndBackSquared + turnSquared;
-        double carlpower = -leftAndRightSquared + (-forwardAndBackSquared) + turnSquared;
-        double danielpower = -leftAndRight + forwardAndBackSquared + turnSquared;
+        double andypower = xvalue + (-yvalue) + turnValue;
+        double barrypower = xvalue + yvalue + turnValue;
+        double carlpower = -xvalue + (-yvalue) + turnValue;
+        double danielpower = -xvalue + yvalue + turnValue;
+
         //Clipping
         Range.clip(andypower, -1, 1);
         Range.clip(barrypower, -1, 1);
         Range.clip(carlpower, -1, 1);
         Range.clip(danielpower, -1, 1);
+
         //Power Set
         M_backLeft.setPower(andypower);
         M_backRight.setPower(barrypower);
         M_frontLeft.setPower(carlpower);
         M_frontRight.setPower(danielpower);
+
         // Print Power Data
         telemetry.addData("Text", "_____RobotData_____");
         telemetry.addData("BackLeft","Back Left Motor: " + andypower);
         telemetry.addData("BackRight","Back Right Motor: " + barrypower);
         telemetry.addData("FrontLeft","Front Left Motor: " + carlpower);
         telemetry.addData("FrontRight","Front Right Motor: " + danielpower);
+
         // Lift Calculations
         if(gamepad1.x) {
             CSERVO_RIGHTP = CSERVO_RIGHTP + CSERVO_POWER;

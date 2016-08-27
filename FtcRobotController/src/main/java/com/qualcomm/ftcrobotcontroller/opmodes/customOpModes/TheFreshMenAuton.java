@@ -1,9 +1,9 @@
-package com.qualcomm.ftcrobotcontroller.opmodes;
+package com.qualcomm.ftcrobotcontroller.opmodes.customOpModes;
 
-import com.qualcomm.ftcrobotcontroller.FreshClasses.FreshMethods;
-import com.qualcomm.ftcrobotcontroller.FreshClasses.FreshMotors;
-import com.qualcomm.ftcrobotcontroller.FreshClasses.FreshServos;
-import com.qualcomm.ftcrobotcontroller.FreshClasses.FreshSensors;
+import com.qualcomm.ftcrobotcontroller.opmodes.FreshClasses.FreshMethods;
+import com.qualcomm.ftcrobotcontroller.opmodes.FreshClasses.FreshMotors;
+import com.qualcomm.ftcrobotcontroller.opmodes.FreshClasses.FreshServos;
+import com.qualcomm.ftcrobotcontroller.opmodes.FreshClasses.FreshSensors;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -19,24 +19,30 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
  */
     public class TheFreshMenAuton extends LinearOpMode{
 
-    DcMotor M_backLeft, //andy
-            M_backRight, //barry
-            M_frontLeft, //carl
-            M_frontRight, //daniel
-            M_rackPinion,
-            M_sweeper;
-    Servo S_rackRight,
+    DcMotor     M_backLeft, //andy
+                M_backRight, //barry
+                M_frontLeft, //carl
+                M_frontRight, //daniel
+                M_rackPinion,
+                M_sweeper;
+
+    Servo   S_rackRight,
             S_rackLeft,
             S_bucket;
-    ColorSensor colorSensorLeft,
-                colorSensorRight;
-    OpticalDistanceSensor distanceSensor;
-    IrSeekerSensor irSensor;
+
+    ColorSensor     colorSensorLeft,
+                    colorSensorRight;
+
+    OpticalDistanceSensor   distanceSensor;
+
+    IrSeekerSensor  irSensor;
+
     TouchSensor T_Lift;
+
     FreshMethods autonMethods;
-    FreshMotors motors = new FreshMotors(M_backLeft, M_backRight, M_frontLeft,M_frontRight,M_rackPinion, M_sweeper);
-    FreshServos servos = new FreshServos(S_rackRight,S_rackLeft,S_bucket);
-    FreshSensors sensors = new FreshSensors(T_Lift, colorSensorLeft, colorSensorRight, distanceSensor, irSensor);
+    FreshMotors motors   =  new FreshMotors(M_backLeft, M_backRight, M_frontLeft,M_frontRight,M_rackPinion, M_sweeper);
+    FreshServos servos   =  new FreshServos(S_rackRight,S_rackLeft,S_bucket);
+    FreshSensors sensors =  new FreshSensors(T_Lift, colorSensorLeft, colorSensorRight, distanceSensor, irSensor);
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -47,6 +53,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
         M_frontRight = hardwareMap.dcMotor.get("FrontLeft");
         M_rackPinion = hardwareMap.dcMotor.get("RackPinion");
         M_sweeper = hardwareMap.dcMotor.get("Sweeper");
+
         //Servos
         S_bucket = hardwareMap.servo.get("Bucket");
         S_rackLeft = hardwareMap.servo.get("RackLeft");
@@ -64,10 +71,6 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
         */
 
         waitForStart();
-
-
-
-
 
     }
 
