@@ -1,5 +1,10 @@
 # Swerve Robotics FTC Library
 
+*Note: new use of the Swerve Robotics Library is not recommended, as nearly all the functionality provided
+therein has been folded into the core FTC SDK (and what little that hasn't likely soon will be). For those
+returning here from last year, welcome! A new release of the library will be forthcoming in time for kickoff 
+that will synchronize with the revised core SDK; your patience is appreciated.*
+
 Welcome to the Swerve Robotics library for the FTC robot controller runtime.
 The purpose of our library is to augment the robot controller runtime library from FTC HQ
 in order to simplify programming for FTC teams. The central aim here is not to change what's there,
