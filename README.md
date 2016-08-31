@@ -1,4 +1,6 @@
-# ftc_app
+# The FTC app for team 5452: Robot to the knee
+**Disclaimer: this is not the official repo for the [FTC app](https://github.com/ftctechnh/ftc_app), this is a forked version for team 5452** 
+
 FTC Android Studio project to create FTC Robot Controller app.
 
 This is the FTC SDK that can be used to create an FTC Robot Controller app, with custom op modes.
