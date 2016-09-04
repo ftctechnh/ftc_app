@@ -92,7 +92,8 @@ public class CompVisionTest extends LinearOpMode {
 
       //Check to see if the picture is visible, if so send telemetry accordingly
       for (VuforiaTrackable target : allTrackables) {
-        telemetry.addData(target.getName(), ((VuforiaTrackableDefaultListener)target.getListener()).isVisible() ? "Visible" : "Not Visible");
+        telemetry.addData(target.getName(), ((VuforiaTrackableDefaultListener)target.getListener()).isVisible() ? "Visible" : "Not Visible",
+                ((VuforiaTrackableDefaultListener)target.getListener()).getPose());
       }
 
       telemetry.update();
