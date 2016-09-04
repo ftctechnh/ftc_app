@@ -70,7 +70,7 @@ public class CompVisionTest extends LinearOpMode {
     VuforiaTrackable stones = stonesAndChips.get(0);
     VuforiaTrackable chips = stonesAndChips.get(1);
 
-    //Turn the data set into an easily parsed loop NOT USED
+    //Turn the data set into an easily parsed
     List<VuforiaTrackable> allTrackables = new ArrayList<>();
     allTrackables.addAll(stonesAndChips);
 
