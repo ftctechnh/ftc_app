@@ -36,6 +36,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.robot.Robot;
@@ -66,7 +67,7 @@ public class InvadersPushbot_Iterative extends OpMode{
                                                          // could also use HardwarePushbotMatrix class.
     double          clawOffset  = 0.0 ;                  // Servo mid position
     final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
-
+    TouchSensor     limitSwitch;                         // Connects to the PushBot Limit Switch
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -77,6 +78,10 @@ public class InvadersPushbot_Iterative extends OpMode{
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
+
+        // Initialize our limit switch sensor to the OpMode
+        limitSwitch = hardwareMap.touchSensor.get("arm limit");
+        assert(limitSwitch != null);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Prepare to be Invaded");
@@ -129,8 +134,11 @@ public class InvadersPushbot_Iterative extends OpMode{
         robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);
         robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset);
 
-        // Use right joystick to move the arm up and down
-        if (gamepad1.right_stick_y > 0)
+        // Read our limit switch to see if the arm is too high
+        boolean limitTriggered = limitSwitch.isPressed();
+
+        // Use right joystick the arm up (as long as our limit switch hasn't been triggered) or down
+        if ((gamepad1.right_stick_y > 0) && !limitTriggered)
             robot.armMotor.setPower(robot.ARM_UP_POWER);
         else if (gamepad1.right_stick_y < 0)
             robot.armMotor.setPower(robot.ARM_DOWN_POWER);
@@ -141,6 +149,7 @@ public class InvadersPushbot_Iterative extends OpMode{
         telemetry.addData("claw",  "Offset = %.2f", clawOffset);
         telemetry.addData("left",  "%.2f", left);
         telemetry.addData("right", "%.2f", right);
+        telemetry.addData("switch", "%s", limitTriggered ? "Triggered" : "Open");
         updateTelemetry(telemetry);
     }
 
