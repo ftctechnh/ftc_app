@@ -104,6 +104,8 @@ public class InvadersPushbot_Iterative extends OpMode{
     public void loop() {
         double left;
         double right;
+
+        // Use the left joystick to move the robot forwards/backwards and turn left/right
         double x = -gamepad1.left_stick_x; // Note: The joystick goes negative when pushed forwards, so negate it
         double y = -gamepad1.left_stick_y; // Note: The joystick goes negative when pushed right, so negate it
 
@@ -127,10 +129,10 @@ public class InvadersPushbot_Iterative extends OpMode{
         robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);
         robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset);
 
-        // Use gamepad buttons to move the arm up (Y) and down (A)
-        if (gamepad1.y)
+        // Use right joystick to move the arm up and down
+        if (gamepad1.right_stick_y > 0)
             robot.armMotor.setPower(robot.ARM_UP_POWER);
-        else if (gamepad1.a)
+        else if (gamepad1.right_stick_y < 0)
             robot.armMotor.setPower(robot.ARM_DOWN_POWER);
         else
             robot.armMotor.setPower(0.0);
