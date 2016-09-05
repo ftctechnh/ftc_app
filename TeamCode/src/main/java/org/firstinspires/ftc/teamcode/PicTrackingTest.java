@@ -32,15 +32,21 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
+import android.os.AsyncTask;
+import android.os.CountDownTimer;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.matrices.MatrixF;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -54,6 +60,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -71,11 +79,15 @@ import java.util.Locale;
 @Autonomous(name="Concept: PicTracking Test", group="Concept")
 public class PicTrackingTest extends LinearOpMode {
 
+    private ElapsedTime runtime = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
     public static final String TAG = "PicTrackingTest";
     VuforiaLocalizer vuforia;
 
     @Override
     public void runOpMode() throws InterruptedException {
+
+        DcMotor motorOne =  hardwareMap.dcMotor.get("MotorOne");
+
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
@@ -108,10 +120,14 @@ public class PicTrackingTest extends LinearOpMode {
 
                 if (picLocation != null) {
                     telemetry.addData("Pos", format(picLocation));
-                    if(getX(picLocation) > 110 || getX(picLocation) < -110) {
-                        telemetry.addData("Pos", "Out of bounds move phone");
+                    if(getX(picLocation) < 25 && getX(picLocation) > -25) {
+                        telemetry.addData("Pos", "In bounds");
+                        motorOne.setPower(0);
 
-                        //TODO: add the code to make a motor spin the phone around. Add some sort of ramp to move the motor smoothly
+                    } else if(getX(picLocation) > 110 || getX(picLocation) < -110){
+                        telemetry.addData("Pos", "Out of bounds");
+                        motorRamp(.5, motorOne);
+                        //TODO: Build the base that spins and tweak the motor behavior to match the physical device
                     }
                 } else {
                     telemetry.addData("Pos", "Unknown");
@@ -124,6 +140,23 @@ public class PicTrackingTest extends LinearOpMode {
         }
     }
 
+    public void motorRamp(double maxPower, DcMotor motor) {
+        if (motor.getPower() == maxPower) {
+            return;
+        }
+        if(maxPower < 0) {
+            motor.setDirection(DcMotorSimple.Direction.REVERSE);
+            maxPower = Math.abs(maxPower);
+        }else  {
+            motor.setDirection(DcMotorSimple.Direction.FORWARD);
+        }
+        double power = 0;
+        runtime.reset();
+        while (power < maxPower) {
+            power = (0.002*runtime.milliseconds());
+            motor.setPower(power);
+        }
+    }
     public float getX(OpenGLMatrix position) {
         VectorF translation = position.getTranslation();
 
