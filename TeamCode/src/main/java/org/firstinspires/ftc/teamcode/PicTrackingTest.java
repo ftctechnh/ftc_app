@@ -53,6 +53,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Locale;
 
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -85,6 +86,8 @@ public class PicTrackingTest extends LinearOpMode {
 
         List<VuforiaTrackable> allTrackable = new ArrayList<>();
         allTrackable.addAll(stonesAndChips);
+        allTrackable.get(0).setName("Stones");
+        allTrackable.get(1).setName("Chips");
 
         OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix.identityMatrix();
 
@@ -98,29 +101,43 @@ public class PicTrackingTest extends LinearOpMode {
         stonesAndChips.activate();
 
         while (opModeIsActive()) {
+            if(((VuforiaTrackableDefaultListener)stones.getListener()).isVisible()) {
+                telemetry.addData(stones.getName(), ((VuforiaTrackableDefaultListener)stones.getListener()).isVisible() ? "Visible" : "Not Visible");
 
-            for(VuforiaTrackable target : allTrackable) {
-                telemetry.addData(target.getName(), ((VuforiaTrackableDefaultListener)target.getListener()).isVisible() ? "Visible" : "Not Visible");
+                OpenGLMatrix picLocation = ((VuforiaTrackableDefaultListener)stones.getListener()).getPose();
 
-                OpenGLMatrix picLocation = ((VuforiaTrackableDefaultListener)target.getListener()).getPose();
-
-                if(picLocation != null) {
+                if (picLocation != null) {
                     telemetry.addData("Pos", format(picLocation));
+                    if(getX(picLocation) > 110 || getX(picLocation) < -110) {
+                        telemetry.addData("Pos", "Out of bounds move phone");
+
+                        //TODO: add the code to make a motor spin the phone around. Add some sort of ramp to move the motor smoothly
+                    }
                 } else {
                     telemetry.addData("Pos", "Unknown");
                 }
-                telemetry.update();
+            } else {
+                telemetry.addData(stones.getName(), "Not Visible");
             }
-
+            telemetry.update();
             idle();
         }
+    }
+
+    public float getX(OpenGLMatrix position) {
+        VectorF translation = position.getTranslation();
+
+        return translation.get(0);
     }
 
     public String format(OpenGLMatrix position) {
         VectorF translation = position.getTranslation();
 
+        //gets the x axis value they are stored such that x is the first value and the other values
+        //move like a normal coordinate system (x,y,z) -> (0,1,2)
+        float x = translation.get(0);
 
-        return String.format("%s", translation.toString());
+        return String.format(Locale.US, "%s, %f", translation.toString(), x);
     }
 }
 
