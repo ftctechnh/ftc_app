@@ -123,10 +123,10 @@ public class InvadersPushbot_Iterative extends OpMode{
         robot.leftMotor.setPower(left);
         robot.rightMotor.setPower(right);
 
-        // Use gamepad left & right Bumpers to open and close the claw
-        if (gamepad1.right_bumper)
+        // Use gamepad left & right triggers to open and close the claw
+        if (gamepad1.right_trigger > 0)
             clawOffset += CLAW_SPEED;
-        else if (gamepad1.left_bumper)
+        else if (gamepad1.left_trigger > 0)
             clawOffset -= CLAW_SPEED;
 
         // Move both servos to new position.  Assume servos are mirror image of each other.
