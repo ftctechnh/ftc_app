@@ -104,10 +104,15 @@ public class InvadersPushbot_Iterative extends OpMode{
     public void loop() {
         double left;
         double right;
+        double x = -gamepad1.left_stick_x; // Note: The joystick goes negative when pushed forwards, so negate it
+        double y = -gamepad1.left_stick_y; // Note: The joystick goes negative when pushed right, so negate it
 
-        // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-        left = -gamepad1.left_stick_y;
-        right = -gamepad1.right_stick_y;
+        // Algorithm for setting power to left/right motors based on joystick x/y values
+        // note: The Range.clip function just ensures we stay between Â±100%
+        left = Range.clip(y-x, -1, +1);
+        right = Range.clip(y+x, -1, +1);
+
+        // Call the setPower functions with our calculated values to activate the motors
         robot.leftMotor.setPower(left);
         robot.rightMotor.setPower(right);
 
