@@ -44,17 +44,17 @@ import com.qualcomm.robotcore.util.Range;
 
 
 /**
- * This file provides basic Telop driving for a Pushbot robot.
+ * This file provides Telop driving for the IfSpace Invaders 2015/16 Pushbot robot.
  * The code is structured as an Iterative OpMode
  *
  * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
- * All device access is managed through the HardwarePushbot class.
+ * Most device access is managed through the HardwarePushbot class.  A touch sensor was added to
+ * limit our robot arm range of motion and is manually connected to the robot during init().
  *
- * This particular OpMode executes a basic Tank Drive Teleop for a PushBot
- * It raises and lowers the claw using the Gampad Y and A buttons respectively.
- * It also opens and closes the claws slowly using the left and right Bumper buttons.
+ * This particular OpMode provides single-thumb navigation of PushBot using the left-thumbstick.
+ * It raises and lowers the claw using the right-thumbstick.
+ * It also opens and closes the claws slowly using the left and right Trigger buttons.
  *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
@@ -67,7 +67,7 @@ public class InvadersPushbot_Iterative extends OpMode{
                                                          // could also use HardwarePushbotMatrix class.
     double          clawOffset  = 0.0 ;                  // Servo mid position
     final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
-    TouchSensor     limitSwitch;                         // Connects to the PushBot Limit Switch
+    TouchSensor     limitSwitch;                         // Will be connected to PushBot's Limit Switch
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -79,7 +79,7 @@ public class InvadersPushbot_Iterative extends OpMode{
          */
         robot.init(hardwareMap);
 
-        // Initialize our limit switch sensor to the OpMode
+        // Connect our limit switch TouchSensor object to the Robot
         limitSwitch = hardwareMap.touchSensor.get("arm limit");
         assert(limitSwitch != null);
 
