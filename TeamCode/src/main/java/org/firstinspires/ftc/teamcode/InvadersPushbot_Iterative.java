@@ -58,7 +58,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="Invaders: Pushbot Teleop", group="Pushbot")
-@Disabled
+//@Disabled
 public class InvadersPushbot_Iterative extends OpMode{
 
     /* Declare OpMode members. */
