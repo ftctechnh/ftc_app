@@ -1,13 +1,24 @@
 # Swerve Robotics FTC Library
 
 *Note: new use of the Swerve Robotics Library is not recommended, as nearly all the functionality provided
-therein has been folded into the core FTC SDK (and what little that hasn't likely soon will be). For those
-returning here from last year, welcome! A new release of the library will be forthcoming in time for kickoff 
-that will synchronize with the revised core SDK; your patience is appreciated.*
+therein has been folded into the core FTC SDK. For those returning here from last year, welcome!*
 
 Welcome to the Swerve Robotics library for the FTC robot controller runtime.
-The purpose of our library is to augment the robot controller runtime library from FTC HQ
-in order to simplify programming for FTC teams. The central aim here is not to change what's there,
+The original purpose of our library was to augment the robot controller runtime library from FTC HQ
+in order to simplify programming for FTC teams. Over the course of the 2015-16 season, we implemented
+a considerable amount of functionality that aided in endeavor. However, during that
+season and through the subsequent summer, virtually all of that functionality was incorporated
+into the core FTC SDK (as of this writing, 5 Sept 2016, the only tiny remaining piece is a very
+small enhancement to color sensors, and with the new @I2cSensor support, that could be better
+implemented). Accordingly, for the time being at least, the Swerve Robotics library is being mothballed. 
+
+Thank you for your support and feedback. It was much appreciated.
+
+## Archive
+
+The remainder of this readme is of historical interest only.
+
+The central aim here is not to change what's there,
 just to make it better. The library is a drop-in replacement: if your code works with the FTC HQ
 release, it will work with the Swerve library, but you can also take advantage of new things.
 **Please** consult the [GitHub release notes](https://github.com/SwerveRobotics/ftc_app/releases)
