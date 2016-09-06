@@ -1,12 +1,12 @@
 package org.swerverobotics.library.examples;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogOutput;
 
+import org.firstinspires.ftc.robotcore.external.Func;
 import org.swerverobotics.library.SynchronousOpMode;
-import org.swerverobotics.library.TelemetryDashboardAndLog;
-import org.swerverobotics.library.interfaces.Disabled;
 import org.swerverobotics.library.interfaces.IFunc;
-import org.swerverobotics.library.interfaces.TeleOp;
 
 /**
  * SynchAnalogOutputDemo is a short demo of an AnalogOutput port.
@@ -93,29 +93,26 @@ public class SynchAnalogOutputDemo extends SynchronousOpMode {
             idle();
         }
     }
-    
+
     void composeDashboard() {
-        telemetry.addLine(
-                telemetry.item("help: ", new IFunc<Object>() {
-                    @Override
-                    public Object value() {
-                        return "freq:a+ b-, mode:x+ y-";
-                    }
-                }));
-        telemetry.addLine(
-                telemetry.item("frequency: ", new IFunc<Object>() {
-                    @Override
-                    public Object value() {
-                        return getFrequency(current_note_index);
-                    }
-                }));
-        telemetry.addLine(
-                telemetry.item("mode: ", new IFunc<Object>() {
-                    @Override
-                    public Object value() {
-                        return mode;
-                    }
-                }));
+        telemetry.addData("help", new Func<Object>() {
+            @Override
+            public Object value() {
+                return "freq:a+ b-, mode:x+ y-";
+            }
+        });
+        telemetry.addData("frequency", new Func<Object>() {
+            @Override
+            public Object value() {
+                return getFrequency(current_note_index);
+            }
+        });
+        telemetry.addData("mode", new Func<Object>() {
+            @Override
+            public Object value() {
+                return mode;
+            }
+        });
     }
-    
+
 }

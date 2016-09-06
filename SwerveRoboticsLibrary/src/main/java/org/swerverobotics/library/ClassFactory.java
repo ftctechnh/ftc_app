@@ -133,72 +133,6 @@ public final class ClassFactory
     /** An enumeration of the various sensor manufacturers we are involved with */
     public enum SENSOR_FLAVOR { HITECHNIC, MODERNROBOTICS, ADAFRUIT };
 
-    /**
-     * Instantiates a driver object for a  AdaFruit BNO055 sensor which resides at the indicated I2cDevice using
-     * default values for configuration parameters.
-     *
-     * @param opmodeContext the OpMode within which this creation is taking place
-     * @param i2cDevice     the robot controller runtime object representing the sensor
-     * @return              the interface to the instantiated sensor object.
-     * @see #createAdaFruitBNO055IMU(OpMode, I2cDevice, IBNO055IMU.Parameters)
-     */
-    public static IBNO055IMU createAdaFruitBNO055IMU(OpMode opmodeContext, I2cDevice i2cDevice)
-        {
-        return createAdaFruitBNO055IMU(opmodeContext, i2cDevice, new IBNO055IMU.Parameters());
-        }
-
-    /**
-     * Instantiates a driver object for an AdaFruit BNO055 sensor which resides at the indicated I2cDevice using
-     * the provided configuration parameters. This creation method only functions in a SynchronousOpMode.
-     *
-     * @param i2cDevice     the robot controller runtime object representing the sensor
-     * @param parameters    the parameters with which the sensor should be initialized
-     * @return              the interface to the instantiated sensor object.
-     * @see #createAdaFruitBNO055IMU(OpMode, I2cDevice, IBNO055IMU.Parameters)
-     */
-    public static IBNO055IMU createAdaFruitBNO055IMU(I2cDevice i2cDevice, IBNO055IMU.Parameters parameters)
-        {
-        SwerveThreadContext.assertSynchronousThread();
-        return createAdaFruitBNO055IMU(SwerveThreadContext.getOpMode(), i2cDevice, parameters);
-        }
-
-    /**
-     * Instantiates a driver object for an AdaFruit BNO055 sensor which resides at the indicated I2cDevice using
-     * the provided configuration parameters.
-     *
-     * <p>Features of this sensor include a gyro that does rate integration in hardware to
-     * provide robust and accurate angular position indications, and a separation of the output of the
-     * accelerometer into gravity and linear-motion-induced components.</p>
-     *
-     * <p>The driver builds on the linear-acceleration information to provide linear velocity
-     * and position measurements using integration in software. That said, the built-in accelerometer
-     * integration algorithm is quite naive. For a real robot, you'll want to do some investigation
-     * and reading and make a better one, whose use you can indicate using
-     * {@link org.swerverobotics.library.interfaces.IBNO055IMU.Parameters#accelerationIntegrationAlgorithm parameters.accelerationIntegrationAlgorithm}.</p>
-     *
-     * <p>Also, while the out-of-box sensor BNO055 works remarkably well, Bosch
-     * <a href="https://github.com/SwerveRobotics/ftc_app/raw/master/SwerveRoboticsLibrary/doc/reference/BST_BNO055_DS000_13.pdf">describes</a>
-     * a one-time calibration process that will make it even better (see Section 3.11).
-     * Perform this calibration process in the lab. Once you've got the sensor fully
-     * calibrated (or at least the gyro and the accelerometer), extract the configuration
-     * state with {@link IBNO055IMU#readCalibrationData()}. We suggest that you then incorporate
-     * the results as constants in your code, and provide them during OpMode startup in
-     * {@link org.swerverobotics.library.interfaces.IBNO055IMU.Parameters#calibrationData parameters.calibrationData}
-     * where they will automatically be applied.</p>
-     *
-     * @param opmodeContext the OpMode within which this creation is taking place
-     * @param i2cDevice     the robot controller runtime object representing the sensor
-     * @param parameters    the parameters with which the sensor should be initialized
-     * @return              the interface to the instantiated sensor object. This object also
-     *                      supports the I2cDeviceSynchUser interface, which can be useful
-     *                      for debugging.
-     * @see #createAdaFruitBNO055IMU(OpMode, I2cDevice)
-     */
-    public static IBNO055IMU createAdaFruitBNO055IMU(OpMode opmodeContext, I2cDevice i2cDevice, IBNO055IMU.Parameters parameters)
-        {
-        return AdaFruitBNO055IMU.create(opmodeContext, i2cDevice, parameters);
-        }
-
 
     /**
      * Creates an alternate implementation of the target color sensor. The target sensor is
@@ -209,7 +143,7 @@ public final class ClassFactory
      * @param target        the sensor whose implementation we are to replace
      * @return an alternate color sensor implementation
      *
-     * @see #createSwerveColorSensor(OpMode, I2cController, int, int, SENSOR_FLAVOR)
+     * @see #createSwerveColorSensor(OpMode, I2cController, int, I2cAddr, SENSOR_FLAVOR)
      * @see org.swerverobotics.library.examples.LinearColorDemo
      * @see SynchColorDemo
      */
@@ -232,7 +166,7 @@ public final class ClassFactory
      * @see org.swerverobotics.library.examples.LinearColorDemo
      * @see SynchColorDemo
      */
-    public static ColorSensor createSwerveColorSensor(OpMode opmodeContext, I2cController controller, int port, int i2cAddr8Bit, ClassFactory.SENSOR_FLAVOR flavor)
+    public static ColorSensor createSwerveColorSensor(OpMode opmodeContext, I2cController controller, int port, I2cAddr i2cAddr8Bit, ClassFactory.SENSOR_FLAVOR flavor)
         {
         return LegacyOrModernColorSensor.create(opmodeContext, controller, port, i2cAddr8Bit, flavor, null);
         }
@@ -284,7 +218,7 @@ public final class ClassFactory
      * @return                      the newly instantiated device
      * @see Engagable#engage()
      */
-    public static I2cDeviceSynch createI2cDeviceSynch(I2cDevice i2cDevice, int i2cAddr8Bit)
+    public static I2cDeviceSynch createI2cDeviceSynch(I2cDevice i2cDevice, I2cAddr i2cAddr8Bit)
         {
         return new I2cDeviceSynchImpl(i2cDevice, i2cAddr8Bit, false);
         }
@@ -295,7 +229,7 @@ public final class ClassFactory
      * @see #createI2cDeviceSynch(I2cDevice, int)
      */
     @Deprecated
-    public static I2cDeviceSynch createI2cDeviceClient(OpMode opmodeContext, I2cDevice i2cDevice, int i2cAddr8Bit, boolean closeOnOpModeStop)
+    public static I2cDeviceSynch createI2cDeviceClient(OpMode opmodeContext, I2cDevice i2cDevice, I2cAddr i2cAddr8Bit, boolean closeOnOpModeStop)
         {
         if (closeOnOpModeStop)
             throw new UnsupportedOperationException("support for auto-closing on opmode stop has been removed");

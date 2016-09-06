@@ -1,7 +1,11 @@
 package org.swerverobotics.library.examples;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.*;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.interfaces.*;
 
@@ -12,8 +16,6 @@ import org.swerverobotics.library.interfaces.*;
 @Disabled
 public class LinearTelemetryOp extends LinearOpMode
     {
-    TelemetryDashboardAndLog telemetry;
-
     @Override public void runOpMode() throws InterruptedException
         {
         final ElapsedTime elapsed = new ElapsedTime();
@@ -22,9 +24,8 @@ public class LinearTelemetryOp extends LinearOpMode
         final IOpModeLoopCounter loopCounter = ClassFactory.createLoopCounter(this);
 
         try {
-            this.telemetry = new TelemetryDashboardAndLog();
-            this.telemetry.log.setDisplayOldToNew(false);   // And we show the log in new to old order, just because we want to
-            this.telemetry.log.setCapacity(10);             // We can control the number of lines used by the log
+            this.telemetry.log().setDisplayOrder(Telemetry.Log.DisplayOrder.OLDEST_FIRST);
+            this.telemetry.log().setCapacity(10);
 
             // Wait until we've been given the ok to go
             this.waitForStart();
@@ -33,8 +34,8 @@ public class LinearTelemetryOp extends LinearOpMode
             // Go go gadget robot!
             while (this.opModeIsActive())
                 {
-                if (this.gamepad1.left_bumper)  { this.telemetry.log.add(format(elapsed) + ": left bumper pressed");  while (opModeIsActive() && this.gamepad1.left_bumper) Thread.yield(); }
-                if (this.gamepad1.right_bumper) { this.telemetry.log.add(format(elapsed) + ": right bumper pressed"); while (opModeIsActive() && this.gamepad1.right_bumper) Thread.yield(); }
+                if (this.gamepad1.left_bumper)  { this.telemetry.log().add(format(elapsed) + ": left bumper pressed");  while (opModeIsActive() && this.gamepad1.left_bumper) Thread.yield(); }
+                if (this.gamepad1.right_bumper) { this.telemetry.log().add(format(elapsed) + ": right bumper pressed"); while (opModeIsActive() && this.gamepad1.right_bumper) Thread.yield(); }
 
                 // Update the telemetry dashboard with fresh values
                 this.telemetry.addData("time",  format(elapsed));

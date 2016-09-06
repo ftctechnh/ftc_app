@@ -1,8 +1,10 @@
 package org.swerverobotics.library.examples;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.swerverobotics.library.*;
-import org.swerverobotics.library.interfaces.Disabled;
-import org.swerverobotics.library.interfaces.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.*;
@@ -17,8 +19,8 @@ public class SynchTelemetryOp extends SynchronousOpMode
         {
         final ElapsedTime elapsed = new ElapsedTime();
 
-        this.telemetry.log.setDisplayOldToNew(false);   // And we show the log in new to old order, just because we want to
-        this.telemetry.log.setCapacity(10);             // We can control the number of lines used by the log
+        this.telemetry.log().setDisplayOrder(Telemetry.Log.DisplayOrder.NEWEST_FIRST);
+        this.telemetry.log().setCapacity(10);             // We can control the number of lines used by the log
 
         // Wait until we've been given the ok to go. For fun, put out some
         // telemetry while we're doing so.
@@ -37,8 +39,8 @@ public class SynchTelemetryOp extends SynchronousOpMode
             if (this.updateGamepads())
                 {
                 // There is new gamepad input available. We choose to log some of its state.
-                if (this.gamepad1.left_bumper)  this.telemetry.log.add(format(elapsed) + ": left bumper pressed");
-                if (this.gamepad1.right_bumper) this.telemetry.log.add(format(elapsed) + ": right bumper pressed");
+                if (this.gamepad1.left_bumper)  this.telemetry.log().add(format(elapsed) + ": left bumper pressed");
+                if (this.gamepad1.right_bumper) this.telemetry.log().add(format(elapsed) + ": right bumper pressed");
                 }
 
             // Update the telemetry dashboard with fresh values

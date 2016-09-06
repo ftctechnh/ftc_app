@@ -2,10 +2,9 @@ package org.swerverobotics.library.internal.tests;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.MovingStatistics;
-
 import org.swerverobotics.library.SynchronousOpMode;
-import org.swerverobotics.library.interfaces.Disabled;
-import org.swerverobotics.library.interfaces.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name="Time the Timer (Synch)", group="Swerve Tests")
 @Disabled
@@ -17,7 +16,7 @@ public class TimeTheTimer extends SynchronousOpMode
     protected void main() throws InterruptedException
         {
         waitForStart();
-        telemetry.log.add("starting");
+        telemetry.log().add("starting");
 
         while (opModeIsActive())
             {
@@ -51,7 +50,7 @@ public class TimeTheTimer extends SynchronousOpMode
             idle();
             }
 
-        telemetry.log.add("done");
+        telemetry.log().add("done");
         }
 
     String format(double f) { return String.format("%.2f", f); }

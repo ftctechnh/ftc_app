@@ -1,5 +1,7 @@
 package org.swerverobotics.library.examples;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.*;
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.interfaces.*;
@@ -45,7 +47,7 @@ public class SynchAutoPolygonEncoders extends SynchronousOpMode
         motorLeft.setDirection(DcMotor.Direction.REVERSE);
 
         // Zero out the encoders
-        setModes(DcMotorController.RunMode.RESET_ENCODERS);
+        setModes(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // Indicate the power level we want the motors to run at. Nothing
         // will move right now, as the motors are currently in RESET_ENCODERS mode
@@ -58,7 +60,7 @@ public class SynchAutoPolygonEncoders extends SynchronousOpMode
         // on out, all we need to do is change motor target positions and the motors
         // will respond and move there.
         setPositionDelta(0, 0);
-        setModes(DcMotorController.RunMode.RUN_TO_POSITION);
+        setModes(DcMotor.RunMode.RUN_TO_POSITION);
 
         // Pause until the start button is pressed
         this.waitForStart();
@@ -81,7 +83,7 @@ public class SynchAutoPolygonEncoders extends SynchronousOpMode
         }
 
     /** sets the modes of both motors to the indicated value */
-    void setModes(DcMotorController.RunMode mode)
+    void setModes(DcMotor.RunMode mode)
         {
         motorLeft.setMode(mode);
         motorRight.setMode(mode);

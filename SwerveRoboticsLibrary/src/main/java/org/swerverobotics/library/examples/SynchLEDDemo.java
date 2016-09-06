@@ -1,11 +1,11 @@
 package org.swerverobotics.library.examples;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.LED;
 
 import org.swerverobotics.library.SynchronousOpMode;
-import org.swerverobotics.library.interfaces.Disabled;
 import org.swerverobotics.library.interfaces.IFunc;
-import org.swerverobotics.library.interfaces.TeleOp;
 
 /**
  * SynchLEDDemo is a short demo on using the digital output pins to light an LED.
@@ -48,28 +48,25 @@ public class SynchLEDDemo extends SynchronousOpMode {
     }
     
     void composeDashboard() {
-        telemetry.addLine(
-                telemetry.item("loop count: ", new IFunc<Object>() {
+        telemetry.addData("loop count: ", new IFunc<Object>() {
                     @Override
                     public Object value() {
                         return getLoopCount();
                     }
-                }));
-        telemetry.addLine(
-                telemetry.item("controls: ", new IFunc<Object>() {
+                });
+        telemetry.addData("controls: ", new IFunc<Object>() {
                     @Override
                     public Object value() {
                         return "a:on, b:off";
                     }
-                }));
-        telemetry.addLine(
-                telemetry.item("led state: ", new IFunc<Object>() {
+                });
+        telemetry.addData("led state: ", new IFunc<Object>() {
                     @Override
                     public Object value() {
                         //return led.getState(); //unlike DigitalChannel, leds don't let you read their state, so use the variable here instead.
                         return led_state;
                     }
-                }));
+                });
     }
 
 }

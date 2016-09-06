@@ -1,5 +1,6 @@
 package org.usfirst.ftc.exampleteam.yourcodehere;
 
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.*;
 import org.swerverobotics.library.*;
 import org.swerverobotics.library.interfaces.*;

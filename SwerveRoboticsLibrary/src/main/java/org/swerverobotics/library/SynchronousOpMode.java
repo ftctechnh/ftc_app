@@ -1,11 +1,11 @@
 package org.swerverobotics.library;
 
-import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 import android.util.*;
 import static junit.framework.Assert.*;
 import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.ThreadPool;
@@ -19,7 +19,12 @@ import org.swerverobotics.library.internal.*;
  * write op modes that can be coded in a traditional programming style.
  *
  * Extend this class and implement the {@link #main()} method to add your own code.
+ *
+ * @deprecated With the continuing evolution of the core SDK, {@link SynchronousOpMode}
+ *             provides little benefit beyond what is now available in {@link LinearOpMode}.
+ *             Use {@link LinearOpMode} instead.
  */
+@Deprecated
 public abstract class SynchronousOpMode extends OpMode
     {
     //----------------------------------------------------------------------------------------------
@@ -50,15 +55,6 @@ public abstract class SynchronousOpMode extends OpMode
      */
     public final Gamepad gamepad2 = new Gamepad();
 
-    /**
-     * provides access to an object by which telemetry information can be transmitted
-     * from the robot controller to the driver station.
-     * 
-     * As with game pads, we hid the 'telemetry' variable of the super class and replace it
-     * with one that can work on synchronous threads.
-     */
-    public TelemetryDashboardAndLog telemetry;
-
     /** Advanced: the number of nanoseconds in a millisecond.
      * @deprecated use ElapsedTime.MILLIS_IN_NANO instead. */
     @Deprecated
@@ -70,36 +66,6 @@ public abstract class SynchronousOpMode extends OpMode
      */
     public int getLoopCount() { return this.loopCount.get(); }
     private final AtomicInteger loopCount = new AtomicInteger(0);
-
-    /**
-     * We define a *local* hardwareMap variable here to hide the one in our base
-     * class as the one we want user code to see is the one with the processing in it.
-     * The original map is still available with {@link #getUnprocessedHardwareMap()}.
-     */
-    public HardwareMap hardwareMap = null;
-
-    /**
-     * Advanced: unthunkedHardwareMap contains the original hardware map provided
-     * in OpMode before it was replaced with a version that does thunking.
-     * @deprecated This member variable is redundant; use {@link #getUnprocessedHardwareMap()} instead.
-     */
-    @Deprecated
-    public HardwareMap unthunkedHardwareMap = null;
-
-    /**
-     * Returns the hardware map as originally created by the robot controller runtime, unoptimized
-     * and unprocessed by the SynchronousOpMode.
-     * @return the hardware map as originally created by the robot controller runtime
-     */
-    public HardwareMap getUnprocessedHardwareMap()
-        {
-        return super.hardwareMap;
-        }
-
-    /**
-     * Advanced: use experimental approaches to processing hardware devices
-     */
-    protected boolean useExperimentalHardwareMap = false;
 
     //----------------------------------------------------------------------------------------------
     // Key threading-related methods
@@ -128,7 +94,6 @@ public abstract class SynchronousOpMode extends OpMode
      * @see #waitForStart()
      * @see #opModeIsActive()
      * @see #updateGamepads()
-     * @see TelemetryDashboardAndLog#update()
      * @see #idle()
      */
     protected abstract void main() throws InterruptedException;
@@ -422,7 +387,6 @@ public abstract class SynchronousOpMode extends OpMode
 
     private volatile boolean                started;
     private volatile boolean                stopRequested;
-    private SynchronousOpModeHardwareFactory hardwareFactory = null;
     private         AtomicBoolean           gamePadCaptureStateChanged = new AtomicBoolean(false);
     private         boolean                 gamepadInputQueried = false;
     private final   Object                  loopLock = new Object();
@@ -543,16 +507,6 @@ public abstract class SynchronousOpMode extends OpMode
             // Remember who the loop thread is so that we know whom to communicate with from a
             // synchronous thread. Note: we ASSUME here that init() and loop() run on the same thread
             loopThread = Thread.currentThread();
-
-            // Remember the old hardware map somewhere that user code can easily get at it if it wants.
-            this.unthunkedHardwareMap = super.hardwareMap;
-            // Make a new processed hardware map, and remember it in a variable that shadows the super one.
-            // Note that we always leave the super one unchanged; this is important to OpModeShutdownNotifier.
-            this.hardwareFactory = new SynchronousOpModeHardwareFactory(this, this.useExperimentalHardwareMap);
-            this.hardwareMap     = this.hardwareFactory.createProcessedHardwareMap();
-
-            // Similarly replace the telemetry variable
-            this.telemetry = new TelemetryDashboardAndLog(this);
 
             // We're being asked to start, not stop
             this.started = false;
@@ -704,12 +658,6 @@ public abstract class SynchronousOpMode extends OpMode
             // Serially wait for these folk to pack up and leave
             ThreadPool.awaitTerminationOrExitApplication(this.workerThreadsExecutor, 10, TimeUnit.SECONDS, "synchronous threads", "unreasonable delay in user code?");
             ThreadPool.awaitTerminationOrExitApplication(this.mainThreadExecutor, 10, TimeUnit.SECONDS, "synchronous main thread", "unreasonable delay in user code?");
-
-            if (this.hardwareFactory != null)
-                {
-                this.hardwareFactory.stop();
-                this.hardwareFactory = null;
-                }
 
             Log.d(LOGGING_TAG, String.format("...stopped"));
             this.postStopHook();
