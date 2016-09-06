@@ -190,7 +190,7 @@ public class LegacyOrModernColorSensor implements ColorSensor, IOpModeStateTrans
         {
         switch (this.flavor)
             {
-            case ADAFRUIT:          return Manufacturer.AdaFruit;
+            case ADAFRUIT:          return Manufacturer.Adafruit;
             case MODERNROBOTICS:    return Manufacturer.ModernRobotics;
             case HITECHNIC:         return Manufacturer.HiTechnic;
             default: return Manufacturer.Unknown;

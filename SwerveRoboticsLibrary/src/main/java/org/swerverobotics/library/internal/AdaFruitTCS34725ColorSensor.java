@@ -282,7 +282,7 @@ public class AdaFruitTCS34725ColorSensor implements ColorSensor, IOpModeStateTra
 
     @Override public Manufacturer getManufacturer()
         {
-        return Manufacturer.AdaFruit;
+        return Manufacturer.Adafruit;
         }
 
     //----------------------------------------------------------------------------------------------

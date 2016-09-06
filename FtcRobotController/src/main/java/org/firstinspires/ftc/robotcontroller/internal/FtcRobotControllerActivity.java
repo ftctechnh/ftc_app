@@ -203,7 +203,6 @@ public class FtcRobotControllerActivity extends Activity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    RobotLog.startupIfNecessary();
     RobotLog.vv(TAG, "onCreate()");
 
     receivedUsbAttachmentNotifications = new ConcurrentLinkedQueue<UsbDevice>();
@@ -262,6 +261,8 @@ public class FtcRobotControllerActivity extends Activity {
 
     if (USE_DEVICE_EMULATION) { HardwareFactory.enableDeviceEmulation(); }
 
+    // save 4MB of logcat to the SD card
+    RobotLog.writeLogcatToDisk(this, 4 * 1024);
     wifiLock.acquire();
     callback.networkConnectionUpdate(WifiDirectAssistant.Event.DISCONNECTED);
     bindToService();
@@ -334,7 +335,7 @@ public class FtcRobotControllerActivity extends Activity {
 
     unbindFromService();
     wifiLock.release();
-    RobotLog.shutdown();
+    RobotLog.cancelWriteLogcatToDisk(this);
   }
 
   protected void bindToService() {
@@ -343,13 +344,6 @@ public class FtcRobotControllerActivity extends Activity {
     Intent intent = new Intent(this, FtcRobotControllerService.class);
     intent.putExtra(NetworkConnectionFactory.NETWORK_CONNECTION_TYPE, networkType);
     bindService(intent, connection, Context.BIND_AUTO_CREATE);
-  }
-
-  public void onServiceBind(FtcRobotControllerService service) {
-    RobotLog.vv(FtcRobotControllerService.TAG, "%s.controllerService=bound", TAG);
-    controllerService = service;
-    updateUI.setControllerService(controllerService);
-    updateUIAndRequestRobotSetup();
   }
 
   protected void unbindFromService() {
@@ -412,10 +406,16 @@ public class FtcRobotControllerActivity extends Activity {
     int id = item.getItemId();
 
     if (id == R.id.action_programming_mode) {
-      Intent programmingModeIntent = new Intent(ProgrammingModeActivity.launchIntent);
-      programmingModeIntent.putExtra(
-          LaunchActivityConstantsList.PROGRAMMING_MODE_ACTIVITY_NETWORK_TYPE, networkType);
-      startActivity(programmingModeIntent);
+      if (cfgFileMgr.getActiveConfig().isNoConfig()) {
+        // Tell the user they must configure the robot before starting programming mode.
+        AppUtil.getInstance().showToast(
+            context, context.getString(R.string.toastConfigureRobotBeforeProgrammingMode));
+      } else {
+        Intent programmingModeIntent = new Intent(ProgrammingModeActivity.launchIntent);
+        programmingModeIntent.putExtra(
+            LaunchActivityConstantsList.PROGRAMMING_MODE_ACTIVITY_NETWORK_TYPE, networkType);
+        startActivity(programmingModeIntent);
+      }
       return true;
     } else if (id == R.id.action_inspection_mode) {
       Intent inspectionModeIntent = new Intent(RcInspectionActivity.rcLaunchIntent);
@@ -477,6 +477,14 @@ public class FtcRobotControllerActivity extends Activity {
     }
   }
 
+  public void onServiceBind(FtcRobotControllerService service) {
+    RobotLog.vv(FtcRobotControllerService.TAG, "%s.controllerService=bound", TAG);
+    controllerService = service;
+    updateUI.setControllerService(controllerService);
+
+    updateUIAndRequestRobotSetup();
+  }
+
   private void updateUIAndRequestRobotSetup() {
     if (controllerService != null) {
       callback.networkConnectionUpdate(controllerService.getNetworkConnectionStatus());
@@ -530,8 +538,7 @@ public class FtcRobotControllerActivity extends Activity {
       });
     }
   }
-
-    //==============================================================================================
+    // ==================================================================================
     // Hooking infrastructure (Swerve)
     //
     // The code below has been added to the stock FtcRobotControllerActivity in order to hook
@@ -610,9 +617,9 @@ public class FtcRobotControllerActivity extends Activity {
             this.prevMonitor.onTelemetryTransmitted();
             }
 
-        @Override public void onPeerConnected()
+        @Override public void onPeerConnected(boolean peerLikelyChanged)
             {
-            this.prevMonitor.onPeerConnected();
+            this.prevMonitor.onPeerConnected(peerLikelyChanged);
             }
 
         @Override public void onPeerDisconnected()
