@@ -9,8 +9,10 @@ in order to simplify programming for FTC teams. Over the course of the 2015-16 s
 a considerable amount of functionality that aided in that endeavor. However, during that
 season and through the subsequent summer, virtually all of that functionality was incorporated
 into the core FTC SDK (as of this writing, 5 Sept 2016, the only tiny remaining piece is a very
-small enhancement to color sensors, and with the new @I2cSensor support, that could be better
-implemented). Accordingly, for the time being at least, the Swerve Robotics library is being mothballed. 
+small enhancement to color sensors, but (a) with the new @I2cSensor support, that could be better
+implemented, and (b) the SDK bugs that originally led to its inclusion are almost certainly fixed, though
+that needs to be verified). Accordingly, for the time being at least, the Swerve Robotics library is 
+being mothballed. 
 
 Thank you for your support and feedback. It was much appreciated.
 
