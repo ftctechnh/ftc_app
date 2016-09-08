@@ -14,6 +14,7 @@ public class OmniTestOp extends OpMode {
 
     @Override
     public void init() {
+        telemetry.clearData();
         //assign DcMotor to each wheel.
         wheel_n = hardwareMap.dcMotor.get("wheel_n");
         wheel_s = hardwareMap.dcMotor.get("wheel_s");
@@ -23,8 +24,10 @@ public class OmniTestOp extends OpMode {
 
     @Override
     public void loop() {
-        //get wheel powers from left controller stick.
+        //get x-axis and y-axis of left controller stick (gamepad 1).
         updateMotorDir();
+        //send basic info to the controller phone.
+        telemetry();
 
         //update wheel powers. N & S control the 'x-axis', E & W control the 'y-axis'.
         wheel_n.setPower(motor_power_x);
@@ -34,7 +37,13 @@ public class OmniTestOp extends OpMode {
     }
 
     public void updateMotorDir(){
+        //grab the left-stick y & x axis, and clip to stop any number too large/small errors.
         motor_power_x = -Range.clip(gamepad1.left_stick_x, -1, 1);
         motor_power_y = -Range.clip(gamepad1.left_stick_y, -1, 1);
+    }
+
+    public void telemetry(){
+        telemetry.addData("X_POWER", motor_power_x);
+        telemetry.addData("Y_POWER", motor_power_y);
     }
 }
