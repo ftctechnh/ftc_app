@@ -32,21 +32,13 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
-import android.os.AsyncTask;
-import android.os.CountDownTimer;
-import android.os.Looper;
-import android.support.annotation.NonNull;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.matrices.MatrixF;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -55,13 +47,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -86,49 +73,68 @@ public class PicTrackingTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        DcMotor motorOne =  hardwareMap.dcMotor.get("MotorOne");
+        //DcMotor motorOne =  hardwareMap.dcMotor.get("MotorOne");
 
+        //create a new set of parameters with the back camera selected. Then create an instance of
+        //the tracker class
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
+        //Setup the targets. We are getting them from a file located in the assets folder
         VuforiaTrackables stonesAndChips = this.vuforia.loadTrackablesFromAsset("StonesAndChips");
         VuforiaTrackable stones = stonesAndChips.get(0);
         VuforiaTrackable chips = stonesAndChips.get(1);
 
+        //Create a list of the targets that is easy to iterate through
         List<VuforiaTrackable> allTrackable = new ArrayList<>();
         allTrackable.addAll(stonesAndChips);
         allTrackable.get(0).setName("Stones");
         allTrackable.get(1).setName("Chips");
 
+        //Tell the engine where the phone is on the robot. In this example we do not care so we
+        //just feed it an identity matrix.
         OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix.identityMatrix();
 
+        //Tell the tracker the phone parameters we set earlier, and tell it where the phone is
+        //located.
         ((VuforiaTrackableDefaultListener)stones.getListener()).setPhoneInformation(phoneLocationOnRobot,parameters.cameraDirection);
         ((VuforiaTrackableDefaultListener)chips.getListener()).setPhoneInformation(phoneLocationOnRobot,parameters.cameraDirection);
 
+        //wait for the driver to press the start button
         telemetry.addData(">", "Press play to track");
         telemetry.update();
         waitForStart();
 
+        //Activate the tracker.
         stonesAndChips.activate();
 
-        while (opModeIsActive()) {
-            if(((VuforiaTrackableDefaultListener)stones.getListener()).isVisible()) {
-                telemetry.addData(stones.getName(), ((VuforiaTrackableDefaultListener)stones.getListener()).isVisible() ? "Visible" : "Not Visible");
+        boolean motorOn = false;
 
+        //Main Program Loop
+        while (opModeIsActive()) {
+            if (((VuforiaTrackableDefaultListener)stones.getListener()).isVisible()) {
+                telemetry.addData(stones.getName(), "Visible");
+
+                //Get the position matrix of the image from the tracker.
                 OpenGLMatrix picLocation = ((VuforiaTrackableDefaultListener)stones.getListener()).getPose();
 
                 if (picLocation != null) {
                     telemetry.addData("Pos", format(picLocation));
-                    if(getX(picLocation) < 25 && getX(picLocation) > -25) {
-                        telemetry.addData("Pos", "In bounds");
-                        motorOne.setPower(0);
+                    telemetry.addData("Pos Avg:", getXAvg(picLocation));
 
-                    } else if(getX(picLocation) > 110 || getX(picLocation) < -110){
-                        telemetry.addData("Pos", "Out of bounds");
-                        motorRamp(.5, motorOne);
-                        //TODO: Build the base that spins and tweak the motor behavior to match the physical device
+                    if (getXAvg(picLocation) > 60 && !motorOn) {
+                        telemetry.addData("Motor", "motor ON");
+                        motorOn = true;
+                    } else if (getXAvg(picLocation) < -60 && !motorOn) {
+                        telemetry.addData("Motor", "motor ON");
+                        motorOn = true;
                     }
+                    if (getXAvg(picLocation) < 25 && getXAvg(picLocation) > -25) {
+                        telemetry.addData("Motor", "Skipped");
+                        motorOn = false;
+                    }
+                    telemetry.addData("Motor Stat", motorOn);
                 } else {
                     telemetry.addData("Pos", "Unknown");
                 }
@@ -141,9 +147,6 @@ public class PicTrackingTest extends LinearOpMode {
     }
 
     public void motorRamp(double maxPower, DcMotor motor) {
-        if (motor.getPower() == maxPower) {
-            return;
-        }
         if(maxPower < 0) {
             motor.setDirection(DcMotorSimple.Direction.REVERSE);
             maxPower = Math.abs(maxPower);
@@ -157,19 +160,31 @@ public class PicTrackingTest extends LinearOpMode {
             motor.setPower(power);
         }
     }
-    public float getX(OpenGLMatrix position) {
-        VectorF translation = position.getTranslation();
 
+    public double getXAvg(OpenGLMatrix position) {
+        //gets the average of 5 readings of the X position. This usually shifts the trend back and
+        //lowers the chance of a major deviation in the readings
+
+        double avg = 0;
+        for(int i = 0; i < 4; i++) {
+            avg += getX(position);
+        }
+        return (avg/5d);
+    }
+
+    public float getX(OpenGLMatrix position) {
+        //gets an X value from the position on the phones coordinate system
+
+        VectorF translation = position.getTranslation();
         return translation.get(0);
     }
 
     public String format(OpenGLMatrix position) {
-        VectorF translation = position.getTranslation();
-
         //gets the x axis value they are stored such that x is the first value and the other values
         //move like a normal coordinate system (x,y,z) -> (0,1,2)
-        float x = translation.get(0);
 
+        VectorF translation = position.getTranslation();
+        float x = translation.get(0);
         return String.format(Locale.US, "%s, %f", translation.toString(), x);
     }
 }
