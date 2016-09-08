@@ -31,6 +31,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package com.qualcomm.ftcrobotcontroller.opmodes;
 
+import com.qualcomm.ftcrobotcontroller.opmodes.example.K9Line;
+import com.qualcomm.ftcrobotcontroller.opmodes.example.K9TeleOp;
+import com.qualcomm.ftcrobotcontroller.opmodes.example.MRGyroTest;
+import com.qualcomm.ftcrobotcontroller.opmodes.example.NullOp;
+import com.qualcomm.ftcrobotcontroller.opmodes.example.PushBotAuto;
+import com.qualcomm.ftcrobotcontroller.opmodes.example.PushBotManual;
+import com.qualcomm.ftcrobotcontroller.opmodes.test_omni.OmniTestOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 
@@ -62,7 +69,7 @@ public class FtcOpModeRegister implements OpModeRegister {
     manager.register("K9Line", K9Line.class);
     manager.register ("PushBotAuto", PushBotAuto.class);
     manager.register ("PushBotManual", PushBotManual.class);
-
+    manager.register("Omni-wheel", OmniTestOp.class);
 
 
     /*
