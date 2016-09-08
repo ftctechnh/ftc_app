@@ -73,7 +73,7 @@ public class PicTrackingTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        //DcMotor motorOne =  hardwareMap.dcMotor.get("MotorOne");
+        DcMotor motorOne =  hardwareMap.dcMotor.get("MotorOne");
 
         //create a new set of parameters with the back camera selected. Then create an instance of
         //the tracker class
@@ -125,13 +125,16 @@ public class PicTrackingTest extends LinearOpMode {
 
                     if (getXAvg(picLocation) > 60 && !motorOn) {
                         telemetry.addData("Motor", "motor ON");
+                        motorOne.setPower(-0.02);
                         motorOn = true;
                     } else if (getXAvg(picLocation) < -60 && !motorOn) {
                         telemetry.addData("Motor", "motor ON");
+                        motorOne.setPower(0.02);
                         motorOn = true;
                     }
                     if (getXAvg(picLocation) < 25 && getXAvg(picLocation) > -25) {
                         telemetry.addData("Motor", "Skipped");
+                        motorOne.setPower(0);
                         motorOn = false;
                     }
                     telemetry.addData("Motor Stat", motorOn);
