@@ -111,6 +111,8 @@ public class PicTrackingTest extends LinearOpMode {
 
         boolean motorOn = false;
 
+        double[] pos = new double[2];
+
         //Main Program Loop
         while (opModeIsActive()) {
             if (((VuforiaTrackableDefaultListener)stones.getListener()).isVisible()) {
@@ -125,11 +127,11 @@ public class PicTrackingTest extends LinearOpMode {
 
                     if (getXAvg(picLocation) > 60 && !motorOn) {
                         telemetry.addData("Motor", "motor ON");
-                        motorOne.setPower(-0.02);
+                        motorOne.setPower(-0.03);
                         motorOn = true;
                     } else if (getXAvg(picLocation) < -60 && !motorOn) {
                         telemetry.addData("Motor", "motor ON");
-                        motorOne.setPower(0.02);
+                        motorOne.setPower(0.03);
                         motorOn = true;
                     }
                     if (getXAvg(picLocation) < 25 && getXAvg(picLocation) > -25) {
@@ -138,11 +140,13 @@ public class PicTrackingTest extends LinearOpMode {
                         motorOn = false;
                     }
                     telemetry.addData("Motor Stat", motorOn);
+
                 } else {
                     telemetry.addData("Pos", "Unknown");
                 }
             } else {
                 telemetry.addData(stones.getName(), "Not Visible");
+                motorOne.setPower(0);
             }
             telemetry.update();
             idle();
