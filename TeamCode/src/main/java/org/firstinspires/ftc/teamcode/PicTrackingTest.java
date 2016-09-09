@@ -32,6 +32,9 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
+import android.hardware.Camera;
+import android.hardware.Camera.Parameters;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -70,11 +73,14 @@ public class PicTrackingTest extends LinearOpMode {
     public static final String TAG = "PicTrackingTest";
     VuforiaLocalizer vuforia;
 
+
+
     @Override
     public void runOpMode() throws InterruptedException {
 
+
         DcMotor motorOne =  hardwareMap.dcMotor.get("MotorOne");
-        motorOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        motorOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //create a new set of parameters with the back camera selected. Then create an instance of
         //the tracker class
@@ -124,11 +130,11 @@ public class PicTrackingTest extends LinearOpMode {
                     telemetry.addData("Pos", format(picLocation));
                     telemetry.addData("Pos Avg:", getXAvg(picLocation));
 
-                    if (getXAvg(picLocation) > 60 && !motorOn) {
+                    if (getXAvg(picLocation) > 60 /*&& !motorOn*/) {
                         telemetry.addData("Motor", "motor ON");
                         motorOne.setPower(-0.03);
                         motorOn = true;
-                    } else if (getXAvg(picLocation) < -60 && !motorOn) {
+                    } else if (getXAvg(picLocation) < -60 /*&& !motorOn*/) {
                         telemetry.addData("Motor", "motor ON");
                         motorOne.setPower(0.03);
                         motorOn = true;
