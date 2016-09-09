@@ -74,6 +74,7 @@ public class PicTrackingTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         DcMotor motorOne =  hardwareMap.dcMotor.get("MotorOne");
+        motorOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         //create a new set of parameters with the back camera selected. Then create an instance of
         //the tracker class
@@ -110,8 +111,6 @@ public class PicTrackingTest extends LinearOpMode {
         stonesAndChips.activate();
 
         boolean motorOn = false;
-
-        double[] pos = new double[2];
 
         //Main Program Loop
         while (opModeIsActive()) {
