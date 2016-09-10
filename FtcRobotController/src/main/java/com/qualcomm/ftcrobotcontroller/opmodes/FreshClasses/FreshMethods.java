@@ -5,6 +5,13 @@ import android.graphics.Color;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.PWMOutput;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.ftcrobotcontroller.opmodes.FreshClasses.FreshMotors;
+
+
+import java.lang.reflect.Array;
+import java.util.HashMap;
 import java.util.Hashtable;
 
 
@@ -13,7 +20,7 @@ import java.util.Hashtable;
  */
 public class FreshMethods {
 
-    public static Hashtable<String, Float> get_motor_values_teleop(float xAxis, float yAxis, float turn) {
+    public static Hashtable<String, Float> Square(float xAxis, float yAxis, float turn) {
         Float xAxisSquare = xAxis*xAxis;
         Float yAxisSquare = yAxis*yAxis;
         Float turnSquare =  turn*turn;
@@ -32,6 +39,10 @@ public class FreshMethods {
         valuesTable.put("TurnValue", turnSquare);
 
         return valuesTable;
+    }
+    public static HashMap<String,Float> TankDrive(float leftY, float rightY){
+        HashMap<String, Float> TankValues = new HashMap<String, Float>();
+        return TankValues;
     }
 
     public static void approach_ir_signal(com.qualcomm.ftcrobotcontroller.opmodes.FreshClasses.FreshMotors motors,

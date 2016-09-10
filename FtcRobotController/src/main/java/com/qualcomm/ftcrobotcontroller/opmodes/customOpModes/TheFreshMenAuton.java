@@ -1,5 +1,4 @@
 package com.qualcomm.ftcrobotcontroller.opmodes.customOpModes;
-
 import com.qualcomm.ftcrobotcontroller.opmodes.FreshClasses.FreshMethods;
 import com.qualcomm.ftcrobotcontroller.opmodes.FreshClasses.FreshMotors;
 import com.qualcomm.ftcrobotcontroller.opmodes.FreshClasses.FreshServos;
@@ -62,7 +61,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
         colorSensorRight = hardwareMap.colorSensor.get("colorSensorRight");
         distanceSensor = hardwareMap.opticalDistanceSensor.get("distancesSensor");
         irSensor = hardwareMap.irSeekerSensor.get("irSensor");
-        
+
         /*
         M_backLeft.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);
         M_backRight.setChannelMode(DcMotorController.RunMode.RESET_ENCODERS);

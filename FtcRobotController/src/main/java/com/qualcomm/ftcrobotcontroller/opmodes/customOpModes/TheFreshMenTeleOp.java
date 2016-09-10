@@ -42,13 +42,12 @@ public class TheFreshMenTeleOp extends OpMode {
                 M_rackPinion,
                 M_sweeper;
     //Servos
-    PWMOutput   S_rackRight,
+
+     Servo      S_bucket,
                 S_rackLeft;
 
-     Servo      S_bucket;
-
     //Sensors
-    TouchSensor T_Lift;
+    //TouchSensor T_Lift;
 
     @Override
     public void init() {
@@ -56,21 +55,20 @@ public class TheFreshMenTeleOp extends OpMode {
         M_backLeft = hardwareMap.dcMotor.get("BackLeft");
         M_backRight = hardwareMap.dcMotor.get("BackRight");
         M_frontLeft = hardwareMap.dcMotor.get("FrontLeft");
-        M_frontRight = hardwareMap.dcMotor.get("FrontLeft");
-        M_rackPinion = hardwareMap.dcMotor.get("RackPinion");
+        M_frontRight = hardwareMap.dcMotor.get("FrontRight");
+        M_rackPinion = hardwareMap.dcMotor.get("Lift");
         M_sweeper = hardwareMap.dcMotor.get("Sweeper");
         //Servos
         S_bucket = hardwareMap.servo.get("Bucket");
-        S_rackLeft = hardwareMap.pwmOutput.get("RackLeft");
-        S_rackRight = hardwareMap.pwmOutput.get("RackRight");
+        //S_rackLeft = hardwareMap.servo.get("RackLeft");
         //Sensors
-        T_Lift = hardwareMap.touchSensor.get("TouchSensor1");
+        //T_Lift = hardwareMap.touchSensor.get("TouchSensor1");
 
     }
     public void loop() {
 
         //Getting power values
-        valuesTable = FreshMethods.get_motor_values_teleop(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
+        valuesTable = FreshMethods.Square(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
         float xvalue = valuesTable.get("XValue");
         float yvalue = valuesTable.get("YValue");
         float turnValue = valuesTable.get("TurnValue");
@@ -82,16 +80,16 @@ public class TheFreshMenTeleOp extends OpMode {
         double danielpower = -xvalue + yvalue + turnValue;
 
         //Clipping
-        Range.clip(andypower, -1, 1);
-        Range.clip(barrypower, -1, 1);
-        Range.clip(carlpower, -1, 1);
-        Range.clip(danielpower, -1, 1);
+        andypower = Range.clip(andypower, -1, 1);
+        barrypower = Range.clip(barrypower, -1, 1);
+        carlpower = Range.clip(carlpower, -1, 1);
+        danielpower = Range.clip(danielpower, -1, 1);
 
         //Power Set
-        M_backLeft.setPower(andypower);
-        M_backRight.setPower(barrypower);
-        M_frontLeft.setPower(carlpower);
-        M_frontRight.setPower(danielpower);
+        M_backLeft.setPower(andypower*0.8);
+        M_backRight.setPower(barrypower*0.8);
+        M_frontLeft.setPower(carlpower*0.8);
+        M_frontRight.setPower(danielpower*0.8);
 
         // Print Power Data
         telemetry.addData("Text", "_____RobotData_____");
@@ -101,7 +99,7 @@ public class TheFreshMenTeleOp extends OpMode {
         telemetry.addData("FrontRight","Front Right Motor: " + danielpower);
 
         // Lift Calculations
-        if(gamepad1.x) {
+        /*if(gamepad1.x) {
             CSERVO_RIGHTP = CSERVO_RIGHTP + CSERVO_POWER;
             CSERVO_LEFTP = CSERVO_LEFTP + CSERVO_POWER;
             if (CSERVO_RIGHTP > CRSERVO_END)
@@ -123,20 +121,31 @@ public class TheFreshMenTeleOp extends OpMode {
             S_rackLeft.setPulseWidthOutputTime(CSERVO_LEFTP);
             M_rackPinion.setPower(-LIFT_POWER);
         }
+
         else{
             S_rackLeft.setPulseWidthOutputTime(CSERVO_LEFTP);
             S_rackRight.setPulseWidthOutputTime(CSERVO_RIGHTP);
             M_rackPinion.setPower(OFF);
         }
+        */
         //Sweeper Calculations
-        if (gamepad1.right_trigger > 1){
-            if (!T_Lift.isPressed())
-                M_sweeper.setPower(SWEEPER_POWER);
+        if (gamepad1.right_trigger > 0){
+            M_sweeper.setPower(SWEEPER_POWER);
         }
-        else if (gamepad1.left_trigger > 1)
+        else if (gamepad1.left_trigger > 0)
             M_sweeper.setPower(-SWEEPER_POWER);
         else
             M_sweeper.setPower(OFF);
+
+        if (gamepad1.x){
+            M_rackPinion.setPower(LIFT_POWER);
+        }
+        else if(gamepad1.y){
+            M_rackPinion.setPower(-LIFT_POWER);
+        }
+        else{
+            M_rackPinion.setPower(OFF);
+        }
         // Basket
         if (gamepad1.a)
             S_bucket.setPosition(BASKET_OPEN);
