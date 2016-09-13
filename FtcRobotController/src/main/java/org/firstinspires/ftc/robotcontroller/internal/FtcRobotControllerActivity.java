@@ -95,6 +95,8 @@ import java.io.File;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import edu.usrobotics.telemetry.TelemetryWriter;
+
 public class FtcRobotControllerActivity extends Activity {
 
   public static final String TAG = "RCActivity";
@@ -278,6 +280,8 @@ public class FtcRobotControllerActivity extends Activity {
     super.onStart();
     RobotLog.vv(TAG, "onStart()");
 
+    TelemetryWriter.init();
+
     // Undo the effects of shutdownRobot() that we might have done in onStop()
     updateUIAndRequestRobotSetup();
 
@@ -314,6 +318,8 @@ public class FtcRobotControllerActivity extends Activity {
     // called surprisingly often.
     super.onStop();
     RobotLog.vv(TAG, "onStop()");
+
+    TelemetryWriter.stop();
 
     // We *do* shutdown the robot even when we go into configuration editing
     controllerService.shutdownRobot();

@@ -1,2 +1,2 @@
-include ':FtcRobotController'
+include ':FtcRobotController', ':TelemetryClient', ':TelemetryAPI'
 include ':TeamCode'
