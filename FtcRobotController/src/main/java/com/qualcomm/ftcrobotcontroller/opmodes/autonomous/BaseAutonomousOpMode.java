@@ -26,6 +26,6 @@ public class BaseAutonomousOpMode extends LinearOpMode {
 
         base_set = new InstructionSet();
 
-        base_set.addInstruction(new MoveInstruction(1D,0D,1D,motors));
+        base_set.addInstruction(new MoveInstruction(1D,0D,10L,motors));
     }
 }
