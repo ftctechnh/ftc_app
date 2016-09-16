@@ -1,6 +1,7 @@
 package edu.usrobotics.opmode.tracker;
 
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 /**
  * Created by Max on 9/14/2016.
@@ -13,7 +14,7 @@ public interface Tracker {
 
     OpenGLMatrix getRobotPosition (); // Return robot position transform in millimeters
 
-    OpenGLMatrix getRobotOrientation (); // Return robot rotation transform in degrees
+    Orientation getRobotOrientation (); // Return robot rotation transform in degrees
 
     void setRobotPosition ();
 
