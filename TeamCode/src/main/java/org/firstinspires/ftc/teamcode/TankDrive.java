@@ -90,8 +90,8 @@ public class TankDrive extends OpMode
     public void loop() {
         telemetry.addData("Status", "Running: " + runtime.toString());
 
-        leftMotor.setPower(-gamepad1.left_stick_y);
-        rightMotor.setPower(-gamepad1.right_stick_y);
+        leftMotor.setPower(-gamepad1.left_stick_y/2);
+        rightMotor.setPower(-gamepad1.right_stick_y/2);
     }
 
     @Override
