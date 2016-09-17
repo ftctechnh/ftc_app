@@ -1,6 +1,6 @@
-package com.lasarobotics.library.sensor.modernrobotics;
+package org.lasarobotics.library.sensor.modernrobotics;
 
-import com.lasarobotics.library.util.RollingAverage;
+import org.lasarobotics.library.util.RollingAverage;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 

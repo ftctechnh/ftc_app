@@ -1,7 +1,7 @@
-package com.lasarobotics.library.monkeyc;
+package org.lasarobotics.library.monkeyc;
 
-import com.lasarobotics.library.controller.Controller;
-import com.lasarobotics.library.util.Timers;
+import org.lasarobotics.library.controller.*;
+import org.lasarobotics.library.util.*;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import java.util.ArrayList;

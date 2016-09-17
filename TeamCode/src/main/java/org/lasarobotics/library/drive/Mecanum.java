@@ -1,7 +1,7 @@
-package com.lasarobotics.library.drive;
+package org.lasarobotics.library.drive;
 
-import com.lasarobotics.library.sensor.legacy.hitechnic.Gyroscope;
-import com.lasarobotics.library.util.MathUtil;
+import org.lasarobotics.library.sensor.legacy.hitechnic.Gyroscope;
+import org.lasarobotics.library.util.MathUtil;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import java.util.Arrays;

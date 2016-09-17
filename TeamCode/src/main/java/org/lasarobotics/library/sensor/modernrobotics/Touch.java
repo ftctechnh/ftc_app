@@ -1,6 +1,6 @@
-package com.lasarobotics.library.sensor.modernrobotics;
+package org.lasarobotics.library.sensor.modernrobotics;
 
-import com.lasarobotics.library.controller.ButtonState;
+import org.lasarobotics.library.controller.ButtonState;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 /**

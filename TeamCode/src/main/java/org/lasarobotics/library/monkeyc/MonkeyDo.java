@@ -1,6 +1,6 @@
-package com.lasarobotics.library.monkeyc;
+package org.lasarobotics.library.monkeyc;
 
-import com.lasarobotics.library.util.Timers;
+import org.lasarobotics.library.util.Timers;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;

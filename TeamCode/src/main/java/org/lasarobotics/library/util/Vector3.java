@@ -1,4 +1,4 @@
-package com.lasarobotics.library.util;
+package org.lasarobotics.library.util;
 
 /**
  * 3D Vector : Immutable

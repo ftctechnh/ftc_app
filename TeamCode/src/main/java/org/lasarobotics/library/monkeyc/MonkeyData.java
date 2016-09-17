@@ -1,9 +1,9 @@
-package com.lasarobotics.library.monkeyc;
+package org.lasarobotics.library.monkeyc;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
-import com.lasarobotics.library.controller.Controller;
+import org.lasarobotics.library.controller.Controller;
 
 import org.json.JSONObject;
 

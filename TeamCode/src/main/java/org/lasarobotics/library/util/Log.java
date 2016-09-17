@@ -1,8 +1,8 @@
-package com.lasarobotics.library.util;
+package org.lasarobotics.library.util;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.lasarobotics.library.android.Util;
+import org.lasarobotics.library.android.Util;
 
 import java.io.BufferedWriter;
 import java.io.File;
