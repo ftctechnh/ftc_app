@@ -1,4 +1,4 @@
-package com.lasarobotics.library.controller;
+package org.lasarobotics.library.controller;
 
 /**
  * Contains button state variables

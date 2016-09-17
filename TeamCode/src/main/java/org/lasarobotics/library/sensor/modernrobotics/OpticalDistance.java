@@ -1,4 +1,4 @@
-package com.lasarobotics.library.sensor.modernrobotics;
+package org.lasarobotics.library.sensor.modernrobotics;
 
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 

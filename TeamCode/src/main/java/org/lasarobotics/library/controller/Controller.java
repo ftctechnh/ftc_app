@@ -1,4 +1,4 @@
-package com.lasarobotics.library.controller;
+package org.lasarobotics.library.controller;
 
 import com.google.gson.annotations.SerializedName;
 import com.qualcomm.robotcore.hardware.Gamepad;

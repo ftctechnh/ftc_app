@@ -1,4 +1,4 @@
-package com.lasarobotics.library.monkeyc;
+package org.lasarobotics.library.monkeyc;
 
 import android.os.Environment;
 
@@ -6,8 +6,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-import com.lasarobotics.library.android.Util;
-import com.lasarobotics.library.controller.Controller;
+import org.lasarobotics.library.android.*;
+import org.lasarobotics.library.controller.Controller;
 
 import org.json.JSONException;
 import org.json.JSONObject;

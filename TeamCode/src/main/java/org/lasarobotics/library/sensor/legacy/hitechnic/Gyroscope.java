@@ -1,6 +1,6 @@
-package com.lasarobotics.library.sensor.legacy.hitechnic;
+package org.lasarobotics.library.sensor.legacy.hitechnic;
 
-import com.lasarobotics.library.util.Timers;
+import org.lasarobotics.library.util.Timers;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 
 import java.util.concurrent.TimeUnit;

@@ -1,6 +1,6 @@
 package com.lasarobotics.library.drive;
 
-import com.lasarobotics.library.sensor.legacy.hitechnic.Gyroscope;
+import org.lasarobotics.library.sensor.legacy.hitechnic.Gyroscope;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
