@@ -1,3 +1,6 @@
+# MidKnight Magic Too Team 9942
+This is the official repository for the 2016-17 season Velocity Vortex.
+
 # ftc_app
 FTC Android Studio project to create FTC Robot Controller app.
 
