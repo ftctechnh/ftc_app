@@ -6,7 +6,8 @@
   └─ BaseOp
      └─ StateBasedOp
         └─ TrackedOp
-           └─ [ROBOT_NAME]Hardware
+           └─ LoggedOp
+              └─ [ROBOT_NAME]Hardware
               └─ [ROBOT_NAME]Auto
               └─ [ROBOT_NAME]Ctrl
 ```
@@ -20,8 +21,11 @@ The state machine that all of our OpModes run on. States are managed by it. *Rou
 ### `TrackedOp.java`
 Defines all robot tracking / mapping code. Can be passed *Tracker* objects implementing `Tracker.java` from robot-specific superclasses that are then used to track the robot. A single *Tracker* object provides methods to be ran that provide tracking data.
 
+### `LoggedOp.java`
+Handles custom telemetry (Bluetooth & File). Keeps track of device deltas to reduce redundant telemetry.
+
 ### *[ROBOT_NAME]*`Hardware.java`
-First robot-specific class. Defines / grabs all necessary hardware references to be used by the superclasses.
+Robot-specific class. Grabs / stores all necessary hardware references to be used by top level classes.
 
 ### *[ROBOT_NAME]*`Auto.java`
 Robot-specific OpMode that is ran for autonomous mode, handles autonomous logic / controls hardware.

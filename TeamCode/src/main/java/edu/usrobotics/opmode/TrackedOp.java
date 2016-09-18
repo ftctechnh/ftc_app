@@ -21,8 +21,13 @@ public class TrackedOp extends StateBasedOp {
     OpenGLMatrix lastRobotTransform;
     Orientation robotOrientation;
 
-    float maxPositionError_mm = 40f; // Maximum position deviation from reliable tracker acceptable in millimeters.
-    float maxRotationError_deg = 5f; // Maximum rotation deviation from reliable tracker acceptable in degrees.
+    float maxPositionError_mm = 40f; // Maximum acceptable translation deviation from reliable tracker in millimeters.
+    float maxRotationError_deg = 5f; // Maximum acceptable rotation deviation from reliable tracke in degrees.
+
+    float inch_mm        = 25.4f;
+    float RobotWidth_mm       = 18 * inch_mm;
+    float FTCFieldWidth_mm  = (12*12 - 2) * inch_mm;   // the FTC field is ~11'10" center-to-center of the glass panels
+
 
 
     public Tracker addTracker (Tracker t) {
@@ -89,6 +94,10 @@ public class TrackedOp extends StateBasedOp {
 
     public OpenGLMatrix getRobotTransform() {
         return robotTransform;
+    }
+
+    public Orientation getRobotOrientation() {
+        return robotOrientation;
     }
 
     @Override public void loop ()

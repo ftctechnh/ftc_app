@@ -31,16 +31,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package edu.usrobotics.opmode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * Base OpMode in OpMode Chain
  */
-@Autonomous(name = "BaseOp", group = "OpModes")
-@Disabled
 public class BaseOp extends OpMode {
 
   private ElapsedTime runtime = new ElapsedTime();

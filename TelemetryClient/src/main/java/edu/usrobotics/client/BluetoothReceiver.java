@@ -4,8 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
@@ -13,9 +12,9 @@ import javax.microedition.io.StreamConnection;
 /**
  * Created by Max on 9/11/2016.
  */
-public class BluetoothReceiver implements Runnable {
+public class BluetoothReceiver implements Runnable, Receiver {
 
-    Queue<String> receivedQueue = new LinkedList<> ();
+    LinkedBlockingQueue<String> receivedQueue = new LinkedBlockingQueue<> ();
     String connectionURL;
 
     public BluetoothReceiver(String connectionURL) {
@@ -50,5 +49,15 @@ public class BluetoothReceiver implements Runnable {
     @Override
     public void run() {
         connect ();
+    }
+
+    @Override
+    public boolean hasNext() {
+        return receivedQueue.peek() != null;
+    }
+
+    @Override
+    public String getNext() {
+        return receivedQueue.poll();
     }
 }

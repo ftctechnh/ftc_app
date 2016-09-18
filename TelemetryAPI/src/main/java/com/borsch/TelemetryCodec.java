@@ -8,11 +8,11 @@ import java.util.Arrays;
 public class TelemetryCodec {
 
     /*
-    * TelemetryData (Float timestamp, DataType type, String data)
+    * TelemetryData (int timestamp, DataType type, int id, String data)
     * /\
     * ||
     * \/
-    * "timestamp type.ordinal() data"
+    * "timestamp type.ordinal() id data[0]~data[1]~data[n]"
     */
 
     public static TelemetryData Decode (String line) {
@@ -22,17 +22,19 @@ public class TelemetryCodec {
             parts[i] = parts[i].replaceAll("~", " ");
         }
 
-        float timestamp = Float.parseFloat(parts[0]);
+        int timestamp = Integer.parseInt(parts[0]);
         DataType type = DataType.values()[Integer.parseInt(parts[1])];
-        String[] data = Arrays.copyOfRange (parts, 2, parts.length);
+        int id = Integer.parseInt(parts[2]);
+        String[] data = Arrays.copyOfRange (parts, 3, parts.length);
 
-        return new TelemetryData(timestamp, type, data);
+        return new TelemetryData(timestamp, type, id, data);
     }
 
     public static String Encode (TelemetryData data) {
         String s = "";
-        s += System.currentTimeMillis()/1000f + " ";
+        s += data.timestamp + " ";
         s += data.type.ordinal() + " ";
+        s += data.id + " ";
 
         for (String var : data.data) {
             s += var.replaceAll(" ", "~") + " ";

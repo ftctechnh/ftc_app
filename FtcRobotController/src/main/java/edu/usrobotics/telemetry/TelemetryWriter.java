@@ -11,8 +11,8 @@ import java.util.List;
  * Created by Max on 9/9/2016.
  */
 public class TelemetryWriter {
-    private static List<String> outputStreamQueue = Collections.synchronizedList(new ArrayList<String>());
     private static ITelemetryWriter[] writers = new ITelemetryWriter[2];
+    private static long startTime = System.currentTimeMillis();
 
     public static void init() {
         ITelemetryWriter bluetoothWriter = new BluetoothTelemetry ();
@@ -27,6 +27,10 @@ public class TelemetryWriter {
         ITelemetryWriter fileWriter = new FileTelemetry ();
         fileWriter.init();
         writers[1] = fileWriter;
+    }
+
+    public static int getTimestamp () {
+        return (int) (System.currentTimeMillis() - startTime);
     }
 
     public static boolean writeData(TelemetryData data) {
