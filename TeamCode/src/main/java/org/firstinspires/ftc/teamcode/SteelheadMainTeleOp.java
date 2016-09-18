@@ -32,12 +32,10 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
+import org.steelhead.ftc.HardwareSteelheadMainBot;
 import org.steelhead.ftc.HardwareSteelheadTestBot;
 
 /**
@@ -55,12 +53,12 @@ import org.steelhead.ftc.HardwareSteelheadTestBot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Steelhead TeleOp: Main TeleOp", group="Steelhead TeleOp")
+@TeleOp(name="Steelhead TeleOp: Test TeleOp", group="Steelhead TeleOp")
 
-public class SteelheadTeleOp extends OpMode{
+public class SteelheadMainTeleOp extends OpMode{
 
     /* Declare OpMode members. */
-    HardwareSteelheadTestBot robot = new HardwareSteelheadTestBot(); // use the class created to define a Pushbot's hardware
+    HardwareSteelheadMainBot robot = new HardwareSteelheadMainBot(); // use the class created to define a Pushbot's hardware
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -101,8 +99,8 @@ public class SteelheadTeleOp extends OpMode{
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
         left = gamepad1.left_stick_y;
         right = (-1d*gamepad1.right_stick_y);
-        robot.leftMotor.setPower(left);
-        robot.rightMotor.setPower(right);
+        robot.hardwareLeftPower(left);
+        robot.hardwareRightPower(right);
 
 
         telemetry.addData("left",  "%.2f", left);
