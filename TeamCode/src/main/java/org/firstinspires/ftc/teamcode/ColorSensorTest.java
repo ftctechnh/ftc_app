@@ -68,11 +68,13 @@ public class ColorSensorTest extends OpMode {
       if(runtime.seconds() >= 1) {
           if(!sensorLed) {
               sensorLed = true;
+          } else {
+              sensorLed = false;
           }
-          sensorLed = false;
           runtime.reset();
       }
       colorSensor.enableLed(sensorLed);
+
   }
 
   /*
@@ -82,7 +84,7 @@ public class ColorSensorTest extends OpMode {
   @Override
   public void start() {
       runtime.reset();
-      colorSensor.enableLed(true);
+      colorSensor.enableLed(false);
   }
 
   /*

@@ -53,7 +53,7 @@ import org.steelhead.ftc.HardwareSteelheadTestBot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Steelhead TeleOp: Test TeleOp", group="Steelhead TeleOp")
+@TeleOp(name="Steelhead TeleOp: Main TeleOp", group="Steelhead TeleOp")
 
 public class SteelheadMainTeleOp extends OpMode{
 
@@ -96,12 +96,33 @@ public class SteelheadMainTeleOp extends OpMode{
         double left;
         double right;
 
+
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
         left = gamepad1.left_stick_y;
         right = (-1d*gamepad1.right_stick_y);
         robot.hardwareLeftPower(left);
         robot.hardwareRightPower(right);
 
+        if(gamepad1.a) {
+            telemetry.addData("Shooter", "FIRE");
+            robot.shooterMotor.setPower(1);
+        } else {
+            robot.shooterMotor.setPower(0);
+        }
+
+        if(gamepad1.b) {
+            telemetry.addData("Arm", "Down");
+            robot.armMotor.setPower(0.25);
+        } else {
+            robot.armMotor.setPower(0);
+        }
+
+        if(gamepad1.y) {
+            telemetry.addData("Shooter", "Up");
+            robot.armMotor.setPower(-0.25);
+        } else {
+            robot.armMotor.setPower(0);
+        }
 
         telemetry.addData("left",  "%.2f", left);
         telemetry.addData("right", "%.2f", right);
