@@ -157,6 +157,7 @@
 <li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/DeviceInterfaceModule.html" title="interface in com.qualcomm.robotcore.hardware"><span class="strong">DeviceInterfaceModule</span></a> (also extends com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/AnalogInputController.html" title="interface in com.qualcomm.robotcore.hardware">AnalogInputController</a>, com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/AnalogOutputController.html" title="interface in com.qualcomm.robotcore.hardware">AnalogOutputController</a>, com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/I2cController.html" title="interface in com.qualcomm.robotcore.hardware">I2cController</a>, com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/PWMOutputController.html" title="interface in com.qualcomm.robotcore.hardware">PWMOutputController</a>)</li>
 </ul>
 </li>
+<li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/DistanceSensor.html" title="interface in com.qualcomm.robotcore.hardware"><span class="strong">DistanceSensor</span></a></li>
 <li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/GyroSensor.html" title="interface in com.qualcomm.robotcore.hardware"><span class="strong">GyroSensor</span></a></li>
 <li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/I2cController.html" title="interface in com.qualcomm.robotcore.hardware"><span class="strong">I2cController</span></a>
 <ul>
@@ -165,7 +166,7 @@
 </ul>
 </li>
 <li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/I2cDevice.html" title="interface in com.qualcomm.robotcore.hardware"><span class="strong">I2cDevice</span></a> (also extends com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/I2cControllerPortDevice.html" title="interface in com.qualcomm.robotcore.hardware">I2cControllerPortDevice</a>)</li>
-<li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html" title="interface in com.qualcomm.robotcore.hardware"><span class="strong">I2cDeviceSynchSimple</span></a>
+<li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html" title="interface in com.qualcomm.robotcore.hardware"><span class="strong">I2cDeviceSynchSimple</span></a> (also extends com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/I2cAddrConfig.html" title="interface in com.qualcomm.robotcore.hardware">I2cAddrConfig</a>)
 <ul>
 <li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.html" title="interface in com.qualcomm.robotcore.hardware"><span class="strong">I2cDeviceSynch</span></a> (also extends com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/Engagable.html" title="interface in com.qualcomm.robotcore.hardware">Engagable</a>)</li>
 </ul>
@@ -191,6 +192,19 @@
 <li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/VoltageSensor.html" title="interface in com.qualcomm.robotcore.hardware"><span class="strong">VoltageSensor</span></a></li>
 </ul>
 </li>
+<li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/I2cAddressableDevice.html" title="interface in com.qualcomm.robotcore.hardware"><span class="strong">I2cAddressableDevice</span></a>
+<ul>
+<li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/I2cAddrConfig.html" title="interface in com.qualcomm.robotcore.hardware"><span class="strong">I2cAddrConfig</span></a>
+<ul>
+<li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimple.html" title="interface in com.qualcomm.robotcore.hardware"><span class="strong">I2cDeviceSynchSimple</span></a> (also extends com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html" title="interface in com.qualcomm.robotcore.hardware">HardwareDevice</a>)
+<ul>
+<li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.html" title="interface in com.qualcomm.robotcore.hardware"><span class="strong">I2cDeviceSynch</span></a> (also extends com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/Engagable.html" title="interface in com.qualcomm.robotcore.hardware">Engagable</a>)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 <li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/I2cController.I2cPortReadyBeginEndNotifications.html" title="interface in com.qualcomm.robotcore.hardware"><span class="strong">I2cController.I2cPortReadyBeginEndNotifications</span></a></li>
 <li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/I2cController.I2cPortReadyCallback.html" title="interface in com.qualcomm.robotcore.hardware"><span class="strong">I2cController.I2cPortReadyCallback</span></a></li>
 <li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/I2cControllerPortDevice.html" title="interface in com.qualcomm.robotcore.hardware"><span class="strong">I2cControllerPortDevice</span></a>
@@ -211,19 +225,19 @@
 <li type="circle">java.lang.Enum&lt;E&gt; (implements java.lang.Comparable&lt;T&gt;, java.io.Serializable)
 <ul>
 <li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/CompassSensor.CompassMode.html" title="enum in com.qualcomm.robotcore.hardware"><span class="strong">CompassSensor.CompassMode</span></a></li>
-<li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/DcMotor.ZeroPowerBehavior.html" title="enum in com.qualcomm.robotcore.hardware"><span class="strong">DcMotor.ZeroPowerBehavior</span></a></li>
-<li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchImpl.READ_CACHE_STATUS.html" title="enum in com.qualcomm.robotcore.hardware"><span class="strong">I2cDeviceSynchImpl.READ_CACHE_STATUS</span></a></li>
-<li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/DeviceManager.DeviceType.html" title="enum in com.qualcomm.robotcore.hardware"><span class="strong">DeviceManager.DeviceType</span></a></li>
-<li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/Servo.Direction.html" title="enum in com.qualcomm.robotcore.hardware"><span class="strong">Servo.Direction</span></a></li>
-<li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/IrSeekerSensor.Mode.html" title="enum in com.qualcomm.robotcore.hardware"><span class="strong">IrSeekerSensor.Mode</span></a></li>
-<li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/DcMotor.RunMode.html" title="enum in com.qualcomm.robotcore.hardware"><span class="strong">DcMotor.RunMode</span></a></li>
-<li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/DcMotorSimple.Direction.html" title="enum in com.qualcomm.robotcore.hardware"><span class="strong">DcMotorSimple.Direction</span></a></li>
-<li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/ServoController.PwmStatus.html" title="enum in com.qualcomm.robotcore.hardware"><span class="strong">ServoController.PwmStatus</span></a></li>
 <li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.Manufacturer.html" title="enum in com.qualcomm.robotcore.hardware"><span class="strong">HardwareDevice.Manufacturer</span></a></li>
-<li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.ReadMode.html" title="enum in com.qualcomm.robotcore.hardware"><span class="strong">I2cDeviceSynch.ReadMode</span></a></li>
+<li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/ServoController.PwmStatus.html" title="enum in com.qualcomm.robotcore.hardware"><span class="strong">ServoController.PwmStatus</span></a></li>
+<li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/DcMotor.ZeroPowerBehavior.html" title="enum in com.qualcomm.robotcore.hardware"><span class="strong">DcMotor.ZeroPowerBehavior</span></a></li>
 <li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/DigitalChannelController.Mode.html" title="enum in com.qualcomm.robotcore.hardware"><span class="strong">DigitalChannelController.Mode</span></a></li>
-<li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchImpl.CONTROLLER_PORT_MODE.html" title="enum in com.qualcomm.robotcore.hardware"><span class="strong">I2cDeviceSynchImpl.CONTROLLER_PORT_MODE</span></a></li>
 <li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchImpl.WRITE_CACHE_STATUS.html" title="enum in com.qualcomm.robotcore.hardware"><span class="strong">I2cDeviceSynchImpl.WRITE_CACHE_STATUS</span></a></li>
+<li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchImpl.CONTROLLER_PORT_MODE.html" title="enum in com.qualcomm.robotcore.hardware"><span class="strong">I2cDeviceSynchImpl.CONTROLLER_PORT_MODE</span></a></li>
+<li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchImpl.READ_CACHE_STATUS.html" title="enum in com.qualcomm.robotcore.hardware"><span class="strong">I2cDeviceSynchImpl.READ_CACHE_STATUS</span></a></li>
+<li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/DcMotorSimple.Direction.html" title="enum in com.qualcomm.robotcore.hardware"><span class="strong">DcMotorSimple.Direction</span></a></li>
+<li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/IrSeekerSensor.Mode.html" title="enum in com.qualcomm.robotcore.hardware"><span class="strong">IrSeekerSensor.Mode</span></a></li>
+<li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/Servo.Direction.html" title="enum in com.qualcomm.robotcore.hardware"><span class="strong">Servo.Direction</span></a></li>
+<li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/DeviceManager.DeviceType.html" title="enum in com.qualcomm.robotcore.hardware"><span class="strong">DeviceManager.DeviceType</span></a></li>
+<li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.ReadMode.html" title="enum in com.qualcomm.robotcore.hardware"><span class="strong">I2cDeviceSynch.ReadMode</span></a></li>
+<li type="circle">com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/DcMotor.RunMode.html" title="enum in com.qualcomm.robotcore.hardware"><span class="strong">DcMotor.RunMode</span></a></li>
 </ul>
 </li>
 </ul>

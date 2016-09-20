@@ -189,7 +189,7 @@
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/qualcomm/robotcore/hardware/IrSeekerSensor.html" title="interface in com.qualcomm.robotcore.hardware">IrSeekerSensor</a></code></td>
-<td class="colLast"><code><strong><a href="../../../../com/qualcomm/robotcore/hardware/DeviceManager.html#createI2cIrSeekerSensorV3(com.qualcomm.robotcore.hardware.DeviceInterfaceModule,%20int)">createI2cIrSeekerSensorV3</a></strong>(<a href="../../../../com/qualcomm/robotcore/hardware/DeviceInterfaceModule.html" title="interface in com.qualcomm.robotcore.hardware">DeviceInterfaceModule</a>&nbsp;deviceInterfaceModule,
+<td class="colLast"><code><strong><a href="../../../../com/qualcomm/robotcore/hardware/DeviceManager.html#createI2cIrSeekerSensorV3(com.qualcomm.robotcore.hardware.I2cController,%20int)">createI2cIrSeekerSensorV3</a></strong>(<a href="../../../../com/qualcomm/robotcore/hardware/I2cController.html" title="interface in com.qualcomm.robotcore.hardware">I2cController</a>&nbsp;i2cController,
                          int&nbsp;physicalPort)</code>
 <div class="block">Create an instance of a IrSeekerSensorV3</div>
 </td>
@@ -698,16 +698,16 @@
 <dt><span class="strong">Returns:</span></dt><dd>an IrSeekerSensor</dd></dl>
 </li>
 </ul>
-<a name="createI2cIrSeekerSensorV3(com.qualcomm.robotcore.hardware.DeviceInterfaceModule, int)">
+<a name="createI2cIrSeekerSensorV3(com.qualcomm.robotcore.hardware.I2cController, int)">
 <!--   -->
 </a>
 <ul class="blockList">
 <li class="blockList">
 <h4>createI2cIrSeekerSensorV3</h4>
-<pre><a href="../../../../com/qualcomm/robotcore/hardware/IrSeekerSensor.html" title="interface in com.qualcomm.robotcore.hardware">IrSeekerSensor</a>&nbsp;createI2cIrSeekerSensorV3(<a href="../../../../com/qualcomm/robotcore/hardware/DeviceInterfaceModule.html" title="interface in com.qualcomm.robotcore.hardware">DeviceInterfaceModule</a>&nbsp;deviceInterfaceModule,
+<pre><a href="../../../../com/qualcomm/robotcore/hardware/IrSeekerSensor.html" title="interface in com.qualcomm.robotcore.hardware">IrSeekerSensor</a>&nbsp;createI2cIrSeekerSensorV3(<a href="../../../../com/qualcomm/robotcore/hardware/I2cController.html" title="interface in com.qualcomm.robotcore.hardware">I2cController</a>&nbsp;i2cController,
                                        int&nbsp;physicalPort)</pre>
 <div class="block">Create an instance of a IrSeekerSensorV3</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>deviceInterfaceModule</code> - Device Interface Module this device is connected to</dd><dd><code>physicalPort</code> - port number on the Device Interface Module this device is connected to</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>i2cController</code> - the <a href="../../../../com/qualcomm/robotcore/hardware/I2cController.html" title="interface in com.qualcomm.robotcore.hardware"><code>I2cController</code></a> this device is connected to</dd><dd><code>physicalPort</code> - port number on the Device Interface Module this device is connected to</dd>
 <dt><span class="strong">Returns:</span></dt><dd>an IrSeekerSensor</dd></dl>
 </li>
 </ul>
