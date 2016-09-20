@@ -1,4 +1,4 @@
-# RoboNatick 3737 Programs for the 2016-17 Challenge #
+# RoboNatick 3737 Programs for Velocity Vortex (2016-17) #
 ## Description ##
 This GitHub repository is used (and will be used) entirely for the upcoming 2016-17 FTC Robotics challenge, for team 3737 (RoboNatick).  All code is located in src/main, and all demo code in a nested package within the main package.  By following the coding guidelines below, this process should be streamlined.  
 
