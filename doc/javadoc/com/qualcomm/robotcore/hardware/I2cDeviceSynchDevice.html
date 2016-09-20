@@ -184,29 +184,55 @@ implements <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.h
 <th class="colLast" scope="col">Method and Description</th>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchDevice.html#close()">close</a></strong>()</code>
+<div class="block">Closes this device</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>protected void</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchDevice.html#disengage()">disengage</a></strong>()</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>protected abstract boolean</code></td>
 <td class="colLast"><code><strong><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchDevice.html#doInitialize()">doInitialize</a></strong>()</code>
 <div class="block">Actually carries out the initialization of the instance.</div>
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>protected void</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchDevice.html#engage()">engage</a></strong>()</code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchDevice.html#getConnectionInfo()">getConnectionInfo</a></strong>()</code>
+<div class="block">Get connection information about this device in a human readable format</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><strong><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchDevice.html#getVersion()">getVersion</a></strong>()</code>
+<div class="block">Version</div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><strong><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchDevice.html#initialize()">initialize</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected void</code></td>
 <td class="colLast"><code><strong><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchDevice.html#initializeIfNecessary()">initializeIfNecessary</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchDevice.html#onModuleStateChange(RobotArmingStateNotifier,%20RobotArmingStateNotifier.ARMINGSTATE)">onModuleStateChange</a></strong>(RobotArmingStateNotifier&nbsp;module,
                    RobotArmingStateNotifier.ARMINGSTATE&nbsp;state)</code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>protected void</code></td>
 <td class="colLast"><code><strong><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchDevice.html#registerArmingStateCallback()">registerArmingStateCallback</a></strong>()</code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><strong><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchDevice.html#resetDeviceConfigurationForOpMode()">resetDeviceConfigurationForOpMode</a></strong>()</code>
 <div class="block">Resets the device's configuration to that which is expected at the beginning of an OpMode.</div>
@@ -225,7 +251,7 @@ implements <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.h
 <!--   -->
 </a>
 <h3>Methods inherited from interface&nbsp;com.qualcomm.robotcore.hardware.<a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html" title="interface in com.qualcomm.robotcore.hardware">HardwareDevice</a></h3>
-<code><a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html#close()">close</a>, <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html#getConnectionInfo()">getConnectionInfo</a>, <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html#getDeviceName()">getDeviceName</a>, <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html#getManufacturer()">getManufacturer</a>, <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html#getVersion()">getVersion</a></code></li>
+<code><a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html#getDeviceName()">getDeviceName</a>, <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html#getManufacturer()">getManufacturer</a></code></li>
 </ul>
 </li>
 </ul>
@@ -305,6 +331,24 @@ implements <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.h
 <pre>protected&nbsp;void&nbsp;registerArmingStateCallback()</pre>
 </li>
 </ul>
+<a name="engage()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>engage</h4>
+<pre>protected&nbsp;void&nbsp;engage()</pre>
+</li>
+</ul>
+<a name="disengage()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>disengage</h4>
+<pre>protected&nbsp;void&nbsp;disengage()</pre>
+</li>
+</ul>
 <a name="onModuleStateChange(RobotArmingStateNotifier, RobotArmingStateNotifier.ARMINGSTATE)">
 <!--   -->
 </a>
@@ -347,7 +391,7 @@ implements <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.h
 <a name="resetDeviceConfigurationForOpMode()">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>resetDeviceConfigurationForOpMode</h4>
 <pre>public&nbsp;void&nbsp;resetDeviceConfigurationForOpMode()</pre>
@@ -358,6 +402,51 @@ implements <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.h
 <dt><strong>Specified by:</strong></dt>
 <dd><code><a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html#resetDeviceConfigurationForOpMode()">resetDeviceConfigurationForOpMode</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html" title="interface in com.qualcomm.robotcore.hardware">HardwareDevice</a></code></dd>
 </dl>
+</li>
+</ul>
+<a name="close()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>close</h4>
+<pre>public&nbsp;void&nbsp;close()</pre>
+<div class="block"><strong>Description copied from interface:&nbsp;<code><a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html#close()">HardwareDevice</a></code></strong></div>
+<div class="block">Closes this device</div>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code><a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html#close()">close</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html" title="interface in com.qualcomm.robotcore.hardware">HardwareDevice</a></code></dd>
+</dl>
+</li>
+</ul>
+<a name="getVersion()">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getVersion</h4>
+<pre>public&nbsp;int&nbsp;getVersion()</pre>
+<div class="block"><strong>Description copied from interface:&nbsp;<code><a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html#getVersion()">HardwareDevice</a></code></strong></div>
+<div class="block">Version</div>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code><a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html#getVersion()">getVersion</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html" title="interface in com.qualcomm.robotcore.hardware">HardwareDevice</a></code></dd>
+<dt><span class="strong">Returns:</span></dt><dd>get the version of this device</dd></dl>
+</li>
+</ul>
+<a name="getConnectionInfo()">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>getConnectionInfo</h4>
+<pre>public&nbsp;java.lang.String&nbsp;getConnectionInfo()</pre>
+<div class="block"><strong>Description copied from interface:&nbsp;<code><a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html#getConnectionInfo()">HardwareDevice</a></code></strong></div>
+<div class="block">Get connection information about this device in a human readable format</div>
+<dl>
+<dt><strong>Specified by:</strong></dt>
+<dd><code><a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html#getConnectionInfo()">getConnectionInfo</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html" title="interface in com.qualcomm.robotcore.hardware">HardwareDevice</a></code></dd>
+<dt><span class="strong">Returns:</span></dt><dd>connection info</dd></dl>
 </li>
 </ul>
 </li>
