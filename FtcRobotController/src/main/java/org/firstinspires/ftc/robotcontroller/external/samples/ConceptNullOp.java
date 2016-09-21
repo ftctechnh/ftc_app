@@ -43,13 +43,14 @@ import java.util.Date;
  * Demonstrates empty OpMode
  */
 @Autonomous(name = "Concept: NullOp", group = "Concept")
-@Disabled
+//@Disabled
 public class ConceptNullOp extends OpMode {
 
-  private ElapsedTime runtime = new ElapsedTime();
+    private ElapsedTime runtime = new ElapsedTime();
 
-  @Override
-  public void init() {
+    @Override
+    public void init()
+  {
     telemetry.addData("Status", "Initialized");
   }
 
@@ -57,25 +58,26 @@ public class ConceptNullOp extends OpMode {
      * Code to run when the op mode is first enabled goes here
      * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
      */
-  @Override
-  public void init_loop() {
-  }
+    @Override
+    public void init_loop()
+    {}
 
   /*
    * This method will be called ONCE when start is pressed
    * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
    */
-  @Override
-  public void start() {
+    @Override
+    public void start()
+    {
     runtime.reset();
-  }
+    }
 
   /*
    * This method will be called repeatedly in a loop
    * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
    */
   @Override
-  public void loop() {
+    public void loop() {
     telemetry.addData("Status", "Run Time: " + runtime.toString());
-  }
+    }
 }
