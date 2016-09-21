@@ -1,5 +1,3 @@
 // FTC Apps
 include (':FtcRobotController')
-include (':opencv-java')
-include (':ftc-visionlib')
-include (':ftc-cameratest')
+include ':TeamCode'
