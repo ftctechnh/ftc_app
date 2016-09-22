@@ -30,12 +30,14 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.teamcode;
+
 
 import com.qualcomm.ftcrobotcontroller.R;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -84,8 +86,10 @@ import java.util.List;
  * is explained below.
  */
 
-@Autonomous(name="Concept: Vuforia Navigation", group ="Concept")
-@Disabled
+@Autonomous(name="Invaders CV", group ="concept")
+//@Disabled
+//@TeleOp(name="Invaders: Vuforia", group="Pushbot")
+
 public class ConceptVuforiaNavigation extends LinearOpMode {
 
     public static final String TAG = "Vuforia Sample";
@@ -123,7 +127,7 @@ public class ConceptVuforiaNavigation extends LinearOpMode {
          * {@link Parameters} instance with which you initialize Vuforia.
          */
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
-        parameters.vuforiaLicenseKey = "ATsODcD/////AAAAAVw2lR...d45oGpdljdOh5LuFB9nDNfckoxb8COxKSFX";
+        parameters.vuforiaLicenseKey = "AeFRtfX/////AAAAGRHh8EVTK0wLtDO57MT9U28xcUCleehujIZ4fPbdAO6Dxpbv44hwwljJlZ9a2uDN90S7ohr/pE+FYZe8Bw3U2fU6fEAB8xt+zWrmF6qD8Z0rl7dLe9Pv7C+AvvbTcqHcg3DbTCvL2DTSsKKjCKo9ikn4Auq+QYcTrYycI+uknPC6UqyDi/oRMYjgcWqtTx8aBuPW2Bsgaf2B7bh3RvntEeJaQSYOQt3mmtuEuXrHtq5u0tABoC3z7g8l2OjszS8zkEJH34sn4RlLumIjp9bRttHVee96jqdvw67EBG/z/nucVVkNJCK7nJHKM7s/zLu5UiCB7Prw87HfJOTKZP3yXZLF62/01YWNZAvieZ7DiOar";
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 

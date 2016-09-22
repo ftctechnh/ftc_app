@@ -84,8 +84,10 @@ public class InvadersPushbot_Iterative extends OpMode{
         assert(limitSwitch != null);
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Prepare to be Invaded");
+        telemetry.addData("Say", "Uh oh, Matthew's messing with stuff.");
         updateTelemetry(telemetry);
+        robot.leftClaw.setPosition(0.0);
+        robot.rightClaw.setPosition(0.0);
     }
 
     /*
