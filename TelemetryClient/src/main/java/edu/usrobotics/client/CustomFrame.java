@@ -1,5 +1,6 @@
 package edu.usrobotics.client;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -11,6 +12,8 @@ import javax.swing.JFrame;
  */
 public class CustomFrame extends javax.swing.JFrame {
 
+    public static Color highlightColor = new Color(86, 145, 68);
+    public static Color higherlightColor = new Color(218, 243, 206);
     private int framePosX = 0;
     private int framePosY = 0;
 

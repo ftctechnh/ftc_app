@@ -18,7 +18,7 @@ public class BluetoothTelemetry extends Thread implements ITelemetryWriter {
     private BluetoothServerSocket serverSocket;
     private final String NAME = "Yolometry";
     private static UUID MY_UUID = UUID.fromString("446118f0-8b1e-11e2-9e96-0800200c9a69");//66
-    private ArrayList<BluetoothSocket> sockets = new ArrayList<BluetoothSocket>();
+    private ArrayList<BluetoothSocket> sockets = new ArrayList<>();
 
     private static List<byte[]> outputStreamQueue = Collections.synchronizedList(new ArrayList<byte[]>());
     public static boolean isSupported = false;
@@ -36,14 +36,17 @@ public class BluetoothTelemetry extends Thread implements ITelemetryWriter {
         }
 
 
-        BluetoothServerSocket tmp = null;
+        BluetoothServerSocket tmp;
         try {
             tmp = mBluetoothAdapter.listenUsingRfcommWithServiceRecord(NAME, MY_UUID);
+
+            serverSocket = tmp;
+            isSupported = true;
+
         } catch (IOException e) {
+            System.err.println("BluetoothTelemetry: Failed to start server!");
             e.printStackTrace();
         }
-        serverSocket = tmp;
-        isSupported = true;
     }
 
     @Override

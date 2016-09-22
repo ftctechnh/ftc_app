@@ -36,26 +36,42 @@ public class CreateTelemetry {
 
         outputWriter.println(TelemetryCodec.Encode(new TelemetryData(0, DataType.ROBOT_SPECS, 0, new String[]{"18", "18", "18"})));
 
-        TelemetryData data = new TelemetryData(getTime(), DataType.UPDATE_MAP, 0, new String[]{
+        TelemetryData data = new TelemetryData(0, DataType.UPDATE_MAP, 0, new String[]{
                 "0", "0", "0",
                 "0", "0", "0"
+        });
+
+        TelemetryData deviceData = new TelemetryData(0, DataType.UPDATE_DEVICE, 0, new String[]{
+                "0", "Right Encoder",
         });
 
         int num = 60;
         for (int i=0; i<num; i++) {
             data.timestamp = i * 100;
+            deviceData.timestamp = i*100;
+
             float decrease = ((float)i/(float)num);
 
             if (i == 0) {
                 data.id = 1;
                 data.data[0] = Float.toString(1800f);
                 data.data[2] = Float.toString(1800f);
+                outputWriter.println(TelemetryCodec.Encode(deviceData));
+                deviceData.data = new String[]{Integer.toString(i)};
+
             } else {
                 data.id = 0;
                 data.data[0] = Float.toString(800f + 500 * decrease);
                 int b = -30 + i;
                 data.data[2] = Float.toString(400 + 2*b*b + 20*b);
                 data.data[4] = Float.toString(i);
+
+                deviceData.id = 0;
+                deviceData.data = new String[]{Integer.toString(i)};
+                outputWriter.println(TelemetryCodec.Encode(deviceData));
+
+                deviceData.id = 1;
+                outputWriter.println(TelemetryCodec.Encode(deviceData));
             }
 
             outputWriter.println(TelemetryCodec.Encode(data));

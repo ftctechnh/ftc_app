@@ -20,7 +20,7 @@ public class TelemetryWriter {
 
         if (BluetoothTelemetry.isSupported) {
             System.out.println ("Launching Bluetooth Telemetry!");
-            ((Thread) bluetoothWriter).run();
+            ((Thread) bluetoothWriter).start();
         } else { writers[0] = bluetoothWriter; }
 
         System.out.println ("Launching File Telemetry!");

@@ -21,20 +21,21 @@ import javax.swing.JComponent;
 public class MapFrame extends CustomFrame {
 
     public ImageComponent component;
+    public final int mapSize = 256;
 
     @Override
     public void build() {
-        setSize(new Dimension(256 + 60, 256 + 60));
+        setSize(new Dimension(mapSize + 60, mapSize + 60));
         setLocation(TelemetryClient.logFrame.getLocation().x - 400, TelemetryClient.logFrame.getLocation().y);
         setType(javax.swing.JFrame.Type.UTILITY);
         setBackground(new Color(1.0f, 1.0f, 1.0f, 0f));
 
-        component = new ImageComponent("/field.png", TelemetryClient.FTCFieldWidth_mm);
+        component = new ImageComponent("/field.png", mapSize, TelemetryClient.FTCFieldWidth_mm);
         add(component);
     }
 
-    public void updateTrackable(int id, float x, float z, float r) {
-        component.updateTrackable(id, x, z, r);
+    public void updateTrackable(int id, float x, float y, float z, float rx, float ry, float rz) {
+        component.updateTrackable(id, x, y, z, rx, ry, rz);
     }
 }
 
@@ -46,35 +47,34 @@ class ImageComponent extends JComponent {
     private String[] idLocalizations = new String[]{"R", "T1", "T2"};
     private BufferedImage trailImage;
     private Graphics2D trailGraphics;
+    private int mapSize;
 
 
-    public ImageComponent(String img, float fieldSize_mm) {
+    public ImageComponent(String img, int mapSize, float fieldSize_mm) {
         image = new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getResource(img))).getImage();
+        this.mapSize = mapSize;
         this.fieldSize_mm = fieldSize_mm;
 
-        trailImage = new BufferedImage(256, 256, BufferedImage.TYPE_INT_ARGB);
+        trailImage = new BufferedImage(mapSize, mapSize, BufferedImage.TYPE_INT_ARGB);
         trailGraphics = trailImage.createGraphics();
         trailGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         trailGraphics.setStroke(new BasicStroke(1));
     }
 
-    public void updateTrackable(int id, float x, float z, float r) {
+    public void updateTrackable(int id, float x, float y, float z, float rx, float ry, float rz) {
         if (trackables[id] != null) {
             Trackable t = trackables[id];
-            t.lastTransform.set(t.transform.x, 0, t.transform.z);
-            t.lastTransform.ry = t.transform.y;
-            t.transform.set(x, 0, z);
-            t.transform.ry = r;
+            t.lastTransform.set(t.transform.x, t.transform.y, t.transform.z, t.transform.rx, t.transform.ry, t.transform.rz);
+            t.transform.set(x, y, z, rx, ry, rz);
 
         } else {
-            trackables[id] = new Trackable();
+            Trackable t = new Trackable();
 
-            Trackable t = trackables[id];
-            t.transform = new Transform(x, 0, z);
-            t.transform.ry = r;
-            t.lastTransform = new Transform(t.transform.x, 0, t.transform.z);
-            t.lastTransform.ry = t.transform.y;
+            t.trailColor = Color.YELLOW;
+            t.transform = new Transform(x, y, z, rx, ry, rz);
+            t.lastTransform = new Transform(t.transform.x, t.transform.y, t.transform.z, t.transform.rx, t.transform.ry, t.transform.rz);
 
+            trackables[id] = t;
         }
 
         repaint();
@@ -87,19 +87,19 @@ class ImageComponent extends JComponent {
 
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        g2.drawImage(image, 0, 0, 256, 256, this);
+        g2.drawImage(image, 0, 0, mapSize, mapSize, this);
 
-        g2.drawImage(trailImage, 0, 0, 256, 256, this);
+        g2.drawImage(trailImage, 0, 0, mapSize, mapSize, this);
 
         g2.setStroke(new BasicStroke(4));
 
         // Blue Station
-        g2.setColor(Color.BLUE);
-        g2.drawRect(256 + 8, 8, 30, 256 - 16);
+        g2.setColor(new Color(0, 0, 1, 0.5f));
+        g2.drawRect(mapSize + 8, 8, 30, mapSize - 16);
 
         // Red Station
-        g2.setColor(Color.RED);
-        g2.drawRect(8, 256 + 8, 256 - 16, 30);
+        g2.setColor(new Color(1, 0, 0, 0.5f));
+        g2.drawRect(8, mapSize + 8, mapSize - 16, 30);
 
         for (int i = 0; i < trackables.length; i++) {
             if (trackables[i] != null) {
@@ -108,11 +108,11 @@ class ImageComponent extends JComponent {
 
                 String name = i < idLocalizations.length ? idLocalizations[i] : Integer.toString(i);
 
-                int posX = (int) (v.x / fieldSize_mm * 256f);
-                int posY = (int) ((1 - v.z / fieldSize_mm) * 256f);
+                int posX = (int) (v.x / fieldSize_mm * (float)mapSize);
+                int posY = (int) ((1 - v.z / fieldSize_mm) * (float)mapSize);
 
-                int lastPosX = (int) (lastV.x / fieldSize_mm * 256f);
-                int lastPosY = (int) ((1 - lastV.z / fieldSize_mm) * 256f);
+                int lastPosX = (int) (lastV.x / fieldSize_mm * (float)mapSize);
+                int lastPosY = (int) ((1 - lastV.z / fieldSize_mm) * (float)mapSize);
 
                 g2.setFont(new Font("Garamond", Font.BOLD, 12));
                 FontMetrics metrics = g2.getFontMetrics();
@@ -121,7 +121,8 @@ class ImageComponent extends JComponent {
                 int labelSizeY = metrics.getHeight();
 
                 // Trail
-                trailGraphics.setColor(Color.YELLOW);
+                trackables[i].trailColor = trackables[i].trailColor.equals(Color.YELLOW) ? Color.BLACK : Color.YELLOW;
+                trailGraphics.setColor(trackables[i].trailColor);
                 trailGraphics.drawLine(lastPosX, lastPosY, posX, posY);
 
                 // Rotation Dot

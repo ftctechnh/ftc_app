@@ -28,6 +28,9 @@ import javax.swing.SwingConstants;
  */
 public class LogFrame extends CustomFrame {
 
+    private String logText = "";
+    private JTextPane log;
+
     @Override public void build () {
 
         JButton close = new JButton("X");
@@ -110,7 +113,7 @@ public class LogFrame extends CustomFrame {
         jobs.setFont(jobs.getFont().deriveFont(14.0f).deriveFont(1));
         jobs.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JTextPane log = new JTextPane();
+        log = new JTextPane();
         log.setPreferredSize(new Dimension(200, 340));
         log.setAlignmentX(Component.CENTER_ALIGNMENT);
         log.setBackground(Color.lightGray);
@@ -129,5 +132,10 @@ public class LogFrame extends CustomFrame {
         contentPane.add(menuPanel, BorderLayout.PAGE_START);
         contentPane.add(topContentPanel, BorderLayout.CENTER);
         contentPane.add(contentPanel, BorderLayout.PAGE_END);
+    }
+
+    public void log (String msg) {
+        logText+=msg+"\n";
+        log.setText(logText);
     }
 }

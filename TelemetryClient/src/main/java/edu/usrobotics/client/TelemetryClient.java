@@ -13,8 +13,9 @@ import javax.swing.UIManager;
 
 public class TelemetryClient {
 
-    static CustomFrame logFrame;
+    static LogFrame logFrame;
     static MapFrame mapFrame;
+    static TelemetryFrame telemetryFrame;
     static String deviceName;
     static RemoteDevice device;
     static String connectionURL;
@@ -29,16 +30,21 @@ public class TelemetryClient {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
-            System.out.println("Failed to set look and feel");
+            log("Failed to set look and feel");
         }
 
         logFrame = new LogFrame();
         mapFrame = new MapFrame();
+        telemetryFrame = new TelemetryFrame();
 
         logFrame.addWindowListener(new WindowAdapter() {
             public void windowActivated(WindowEvent e) {
                 if (TelemetryClient.mapFrame != null) {
                     TelemetryClient.mapFrame.toFront();
+                }
+
+                if (TelemetryClient.telemetryFrame != null) {
+                    TelemetryClient.telemetryFrame.toFront();
                 }
             }
         });
@@ -52,9 +58,11 @@ public class TelemetryClient {
 
         // If input is a file path
         if (deviceName.indexOf(".txt") > 0) {
+            log ("Playback from file: "+deviceName);
             fileInput();
 
         } else {
+            log ("Connecting to BT: "+deviceName);
             bluetoothInput();
         }
 
@@ -76,26 +84,35 @@ public class TelemetryClient {
     static TelemetryData processData(TelemetryData data, TelemetryData lastData) throws InterruptedException {
         Thread.sleep(lastData != null ? data.timestamp - lastData.timestamp : data.timestamp);
 
-        System.out.println("Timestamp: "+data.timestamp);
-
         switch (data.type){
 
             case ROBOT_SPECS:
-                RobotSize = new Transform(Float.parseFloat(data.data[0]), Float.parseFloat(data.data[1]), Float.parseFloat(data.data[2])).mutliplied(inch_mm);
+                RobotSize = new Transform(Float.parseFloat(data.data[0]), Float.parseFloat(data.data[1]), Float.parseFloat(data.data[2])).scaled(inch_mm);
+                break;
+
+            case UPDATE_DEVICE:
+                telemetryFrame.updateData(data.data.length > 1 ? data.data[1] : null, data.id, data.data[0]);
                 break;
 
             case UPDATE_MAP:
-                mapFrame.updateTrackable(data.id, Float.parseFloat(data.data[0]), Float.parseFloat(data.data[2]), Float.parseFloat(data.data[4]));
+                mapFrame.updateTrackable(data.id, Float.parseFloat(data.data[0]), Float.parseFloat(data.data[1]), Float.parseFloat(data.data[2]), Float.parseFloat(data.data[3]), Float.parseFloat(data.data[4]), Float.parseFloat(data.data[5]));
                 break;
 
             case STOP:
                 return null;
 
             default:
-                System.out.println("Unhandled telemetry DataType: " + data.type.name());
+                log("Unhandled telemetry DataType: " + data.type.name());
         }
 
         return data;
+    }
+
+    static void log (String msg) {
+        System.out.println (msg);
+        if (logFrame != null) {
+            logFrame.log (msg);
+        }
     }
 
     static void fileInput() {
@@ -133,6 +150,7 @@ public class TelemetryClient {
         receiver = new BluetoothReceiver(connectionURL);
         Thread receiverThread = new Thread((Runnable) receiver);
         receiverThread.start();
+        log ("BT Connected");
 
     }
 
