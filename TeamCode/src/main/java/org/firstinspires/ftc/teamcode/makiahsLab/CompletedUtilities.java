@@ -34,29 +34,7 @@ public class CompletedUtilities
         RUSSIAN_NATIONAL_ANTHEM
     }
 
-    public static String QueryUserInput()
-    {
-        String result = "";
-        try {
-            //Create the InputStream
-            InputStream inputStream = hardwareContext.openFileInput("FTCRobotConfig-" + Time.HOUR + ":" + Time.MINUTE + ":" + Time.SECOND + ".txt");
-
-            if ( inputStream != null ) {
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
-                result = bufferedReader.readLine();
-
-                inputStream.close();
-            }
-        }
-        catch (Exception e) {
-            output.addData("Exception", "Error reading config file: " + e.toString());
-        }
-
-        return result;
-    }
-
+    private  static MediaPlayer mediaPlayer = null;
     public static void PlaySong(DownloadedSongs song)
     {
         int selectedSong = com.qualcomm.ftcrobotcontroller.R.raw.jcena;
@@ -72,12 +50,19 @@ public class CompletedUtilities
                 selectedSong = com.qualcomm.ftcrobotcontroller.R.raw.nationalanthem;
                 break;
         }
-        final MediaPlayer mediaPlayer = MediaPlayer.create(hardwareContext, selectedSong);
+        mediaPlayer = MediaPlayer.create(hardwareContext, selectedSong);
         mediaPlayer.start();
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             public void onCompletion(MediaPlayer mediaPlayer1) {
                 mediaPlayer1.release();
             }
         });
+        output.addData("Playing ", song.toString());
+    }
+
+    public static void OnExit()
+    {
+        mediaPlayer.stop();
+        mediaPlayer.release();
     }
 }
