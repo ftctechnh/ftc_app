@@ -4,5 +4,7 @@ android:
     - tools
     - build-tools-21.1.2
     - android-21
+    - build-tools-23.0.3
+    - android-23
     - extra
 after_failure: "cat /home/travis/build/ftcgearedup/ftc_app/TeamCode/build/outputs/lint-results-debug.xml"
