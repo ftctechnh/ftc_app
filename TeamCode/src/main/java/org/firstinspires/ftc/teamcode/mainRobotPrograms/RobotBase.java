@@ -28,6 +28,8 @@ package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.teamcode.makiahsLab.CompletedUtilities;
+
 //Edited in order to have all of the important constants as final, so that no unintentional modifications are made.
 //This class should be used so that any changes made to the robot configuration propagates through all parts of the code that has been written.
 
@@ -55,6 +57,7 @@ public abstract class RobotBase extends LinearOpMode
         backRight.setDirection(DcMotor.Direction.REVERSE);
 
         //Custom Initialization steps.
+        CompletedUtilities.InitializeUtilityComponents(hardwareMap.appContext, telemetry);
         customInitialization();
 
         //Wait for the start button to be pressed.

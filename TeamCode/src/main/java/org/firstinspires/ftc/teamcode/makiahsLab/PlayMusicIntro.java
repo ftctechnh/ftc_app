@@ -42,20 +42,35 @@ public class PlayMusicIntro extends LinearOpMode
     public void runOpMode() throws InterruptedException
     {
 
+        //METHOD 1: Works, but is actually a runaway thread that plays the song in EXTREME slow motion.  Has to be fixed.
+//        final Handler handler = new Handler(Looper.getMainLooper());
+//        final Runnable r = new Runnable() {
+//            public void run()
+//            {
+//                //Using the hardware map as an app context.
+//                MediaPlayer mediaPlayer = MediaPlayer.create(hardwareMap.appContext, com.qualcomm.ftcrobotcontroller.R.raw.jcena);
+//                mediaPlayer.start(); // no need to call prepare(); create() does that for you
+//                handler.post(this);
+//            }
+//        };
+//        handler.post(r);
+
+        //METHOD 2: Media player technique: works, but stops even with the sleep method in effect.
+//        final MediaPlayer mediaPlayer = MediaPlayer.create(hardwareMap.appContext, com.qualcomm.ftcrobotcontroller.R.raw.jcena);
+//        mediaPlayer.start(); // no need to call prepare(); create() does that for you
+//        sleep(50000);
+//        mediaPlayer.stop();
+
+        //METHOD 3: StackOverflow handler method (just google the media player not finalized problem).
+        final MediaPlayer mediaPlayer = MediaPlayer.create(hardwareMap.appContext, com.qualcomm.ftcrobotcontroller.R.raw.jcena);
+        mediaPlayer.start();
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            public void onCompletion(MediaPlayer mediaPlayer1) {
+                mediaPlayer1.release();
+            }
+        });
+
         //Wait for the start button to be pressed.
         waitForStart();
-
-        //Play the John Cena theme song (create a new thread for this).
-        final Handler handler = new Handler(Looper.getMainLooper());
-        final Runnable r = new Runnable() {
-            public void run()
-            {
-                //Using the hardware map as an app context.
-                MediaPlayer mediaPlayer = MediaPlayer.create(hardwareMap.appContext, com.qualcomm.ftcrobotcontroller.R.raw.jcena);
-                mediaPlayer.start(); // no need to call prepare(); create() does that for you
-                handler.post(this);
-            }
-        };
-        handler.post(r);
     }
 }
