@@ -93,13 +93,13 @@ public class SteelheadMainTeleOp extends OpMode{
      */
     @Override
     public void loop() {
-        double left;
-        double right;
+        double left = 0;
+        double right = 0;
 
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
         left = gamepad1.left_stick_y;
-        right = (-1d*gamepad1.right_stick_y);
+        right = (gamepad1.right_stick_y);
         robot.hardwareLeftPower(left);
         robot.hardwareRightPower(right);
 
@@ -112,14 +112,14 @@ public class SteelheadMainTeleOp extends OpMode{
 
         if(gamepad1.b) {
             telemetry.addData("Arm", "Down");
-            robot.armMotor.setPower(0.25);
+            robot.armMotor.setPower(0.5);
         } else {
             robot.armMotor.setPower(0);
         }
 
         if(gamepad1.y) {
             telemetry.addData("Shooter", "Up");
-            robot.armMotor.setPower(-0.25);
+            robot.armMotor.setPower(-0.5);
         } else {
             robot.armMotor.setPower(0);
         }
