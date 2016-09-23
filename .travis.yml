@@ -1,8 +1,9 @@
 language: android
 android:
   components:
+    - platform-tools
     - tools
     - build-tools-23.0.3
     - android-23
     - extra
-script: ./gradlew build connectedCheck -x lint
+after_failure: "cat /home/travis/build/ftcgearedup/ftc_app/TeamCode/build/outputs/lint-results-debug.xml"
