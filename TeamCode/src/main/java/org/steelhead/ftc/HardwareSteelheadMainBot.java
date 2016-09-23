@@ -7,9 +7,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 /**
  * Created by Alec Matthews on 9/18/16.
  * Added this class so we don't have to
- * edit a sample one.
- *
- */
+ * edit a sample on
+ **/
+
 public class HardwareSteelheadMainBot {
     public DcMotor leftMotor_1      = null;
     public DcMotor leftMotor_2      = null;

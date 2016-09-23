@@ -32,10 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -54,7 +51,7 @@ import java.util.List;
 public class CompVisionTest extends LinearOpMode {
 
   public static final String TAG = "CompVisionTest";
-  VuforiaLocalizer vuforia;
+  private VuforiaLocalizer vuforia;
 
   @Override
   public void runOpMode() throws InterruptedException {
@@ -63,6 +60,7 @@ public class CompVisionTest extends LinearOpMode {
      */
     VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
     parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+    parameters.vuforiaLicenseKey = "AfKfmjn/////AAAAGYbqotFKtkJ9irGUPXqP+XJYGrQvtyI3Vp+udm5R/m2uNOK7qPA6pzFujQYQQPVErgy52HDW1FIi0tUGLi0cYmHXHKVHKqGiPyTcNLKMaI/TRFxBrn04qsi7R1UdWlSJ7qUL3G0IhJ4o4v4oSH5a0F+af1SHmBxYDkY3q+iUh/sl3eC5egEKCWKq2lYmcbsZnbFgMtGH7sSyfNEu9ycWcKYMiufB5CuyQYgpJOue44CuaJj0Mz75No5JTTKr4RlP0zCzPgk6a7+q+PNBVJAl2jPIIrp+3aSFxFu4rD4dcKdae6izkWSLzABVA4JJAvX74p+fM9b0aEilzdnmbjRPC/65+/drIzzJCTvIrK2CQVEr";
     this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
     //Load trackable objects
