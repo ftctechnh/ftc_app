@@ -38,11 +38,11 @@ public class HardwareSteelheadMainBot {
         leftMotor_1.setDirection(DcMotorSimple.Direction.FORWARD);
         leftMotor_2.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        rightMotor_1.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightMotor_2.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightMotor_1.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightMotor_2.setDirection(DcMotorSimple.Direction.REVERSE);
 
         armMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        shooterMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        shooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         hardwareLeftPower(0);
         hardwareRightPower(0);
