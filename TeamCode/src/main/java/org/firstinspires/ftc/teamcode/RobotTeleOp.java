@@ -232,7 +232,6 @@ public class RobotTeleOp extends RobotTelemetry {
         //
         // Send telemetry data to the driver station.
         //
-        update_telemetry(); // Update common telemetry
         update_gamepad_telemetry();
 
         telemetry.addData("ARM 1", get_arm_1_position());

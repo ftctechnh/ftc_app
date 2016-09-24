@@ -67,32 +67,7 @@ public class RobotTelemetry extends RobotHardware
     /**
      * Update the telemetry with current values from the base class.
      */
-    public void update_telemetry ()
-
-    {
-        if (a_warning_generated ())
-        {
-            set_first_message (a_warning_message ());
-        }
-        //
-        // Send telemetry data to the driver station.
-        //
-        telemetry.addData
-                ( "01"
-                        , "Left Drive: "
-                                + a_left_drive_power ()
-                                + ", "
-                                + a_left_encoder_count ()
-                );
-        telemetry.addData
-                ( "02"
-                        , "Right Drive: "
-                                + a_right_drive_power ()
-                                + ", "
-                                + a_right_encoder_count ()
-                );
-
-    } // update_telemetry
+    // update_telemetry
 
     //--------------------------------------------------------------------------
     //
