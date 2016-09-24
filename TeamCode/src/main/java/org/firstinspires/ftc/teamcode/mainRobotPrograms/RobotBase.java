@@ -45,7 +45,7 @@ public abstract class RobotBase extends LinearOpMode
     //Start timer
     protected long startTime = System.currentTimeMillis();
 
-    //This took a LONG TIME TO WRITE: DELETE IT AND MAKIAH WILL KILL YOU
+    //This took a LONG TIME TO WRITE
     protected <T extends HardwareDevice> T Initialize  (Class <T> hardwareDevice, String name)
     {
         try
@@ -95,7 +95,7 @@ public abstract class RobotBase extends LinearOpMode
         //In case the driver station says that the program has to end immediately.
         catch (InterruptedException e)
         {
-            DumpMediaPlayerResources(); // HAS TO BE FIRST LINE, otherwise this stops later on than it is supposed to.
+            StopPlayingAudio(); // HAS TO BE FIRST LINE, otherwise this stops later on than it is supposed to.
             OutputToDriverStation("Driver Station says STOP!");
             driverStationSaysSTOP();
             Thread.currentThread().interrupt();
@@ -147,6 +147,8 @@ public abstract class RobotBase extends LinearOpMode
             });
 
             OutputToDriverStation("Playing " + choice.toString());
+
+            sleep(1000); //Give the MediaPlayer some time to initialize, and register that a song is being played.
         }
         catch (Exception e)
         {
@@ -155,11 +157,16 @@ public abstract class RobotBase extends LinearOpMode
         }
     }
 
-    protected void DumpMediaPlayerResources()
+    //Used to make the media player stop playing audio, and also to prevent excess memory allocation from being taken up.
+    protected void StopPlayingAudio()
     {
-        mediaPlayer.stop(); //stop playing
-        mediaPlayer.release(); //prevent resource allocation
-        mediaPlayer = null; //nullify the reference.
+        if (mediaPlayer != null)
+        {
+            if (mediaPlayer.isPlaying())
+                mediaPlayer.stop(); //stop playing
+            mediaPlayer.release(); //prevent resource allocation
+            mediaPlayer = null; //nullify the reference.
+        }
     }
 
     /*** USE TO OUTPUT DATA IN A SLIGHTLY BETTER WAY THAT LINEAR OP MODES HAVE TO ***/
