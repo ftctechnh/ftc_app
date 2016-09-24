@@ -25,8 +25,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 
+import android.media.MediaPlayer;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareDevice;
+
+import java.util.ArrayList;
 
 //Edited in order to have all of the important constants as final, so that no unintentional modifications are made.
 //This class should be used so that any changes made to the robot configuration propagates through all parts of the code that has been written.
@@ -40,33 +45,145 @@ public abstract class RobotBase extends LinearOpMode
     //Start timer
     protected long startTime = System.currentTimeMillis();
 
-    // Called on initialization (once)
-    @Override
-    public void runOpMode() throws InterruptedException
+    //This took a LONG TIME TO WRITE
+    protected <T extends HardwareDevice> T Initialize  (Class <T> hardwareDevice, String name)
     {
-        //This all happens during init()
-
-        //Define driving motors
-        frontRight = hardwareMap.dcMotor.get("Front Right");
-        frontLeft = hardwareMap.dcMotor.get("Front Left");
-        backRight = hardwareMap.dcMotor.get("Back Right");
-        backLeft = hardwareMap.dcMotor.get("Back Left");
-        frontLeft.setDirection(DcMotor.Direction.REVERSE);
-        backRight.setDirection(DcMotor.Direction.REVERSE);
-
-        //Custom Initialization steps.
-        customInitialization();
-
-        //Wait for the start button to be pressed.
-        waitForStart();
-
-        runInstructions(); //This is where the child classes differ.
+        try
+        {
+            //Returns the last subclass (if this were a DcMotor it would pass back a Dc Motor.
+            return hardwareDevice.cast(hardwareMap.get(name));
+        }
+        catch (Exception e)
+        {
+            OutputToDriverStation("Could not find " + name + " in hardware map.");
+            return null;
+        }
     }
 
-    //This is used when custom initialization has to be used.  Optional overload.
-    protected void customInitialization() throws InterruptedException
-    {}
+    // Called on initialization (once)
+    @Override
+    public void runOpMode()
+    {
+        //Make sure that the robot components are found and initialized correctly.
+        //This all happens during init()
+        //Define driving motors
+        frontRight = Initialize(DcMotor.class, "Front Right");
+        frontLeft = Initialize(DcMotor.class, "Front Left");
+        backRight = Initialize(DcMotor.class, "Back Right");
+        backLeft = Initialize(DcMotor.class, "Back Left");
+        //Reverse the opposite side of the motors.
+        if (frontLeft != null)
+            frontLeft.setDirection(DcMotor.Direction.REVERSE);
+        if (backLeft != null)
+            backLeft.setDirection(DcMotor.Direction.REVERSE);
 
-    //This method is called when the start button has been pressed (all init() stuff is handled above).
-    protected abstract void runInstructions() throws InterruptedException;
+        //NOTE: Actually attempting to use null motors will cause the program to terminate.
+        //This advanced system is designed for when only specific hardware is required.
+        //This code should tell you which motors and sensors are not configured before the program starts running.
+
+        //Actual program thread
+        try {
+
+            //Custom Initialization steps.
+            driverStationSaysINITIALIZE();
+
+            //Wait for the start button to be pressed.
+            waitForStart();
+
+            driverStationSaysGO(); //This is where the child classes differ.
+        }
+        //In case the driver station says that the program has to end immediately.
+        catch (InterruptedException e)
+        {
+            StopPlayingAudio(); // HAS TO BE FIRST LINE, otherwise this stops later on than it is supposed to.
+            OutputToDriverStation("Driver Station says STOP!");
+            driverStationSaysSTOP();
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    //Optional overload.
+    protected void driverStationSaysINITIALIZE() throws InterruptedException {}
+    //Has to be implemented.
+    protected abstract void driverStationSaysGO() throws InterruptedException;
+    //Has to be implemented.
+    protected abstract void driverStationSaysSTOP(); //Can't throw InterruptedExceptions, this is why this is here.
+
+
+    /*** USE TO PLAY MUSIC, AND FOR DEBUGGING PURPOSES ***/
+    protected enum DownloadedSongs
+    {
+        JOHN_CENA_INTRO,
+        MISSION_IMPOSSIBLE,
+        RUSSIAN_NATIONAL_ANTHEM
+    }
+
+    private MediaPlayer mediaPlayer = null;
+    protected void PlayAudio(DownloadedSongs choice)
+    {
+        try
+        {
+            int selectedSong = com.qualcomm.ftcrobotcontroller.R.raw.jcena;
+            switch (choice)
+            {
+                case JOHN_CENA_INTRO:
+                    selectedSong = com.qualcomm.ftcrobotcontroller.R.raw.jcena;
+                    break;
+                case MISSION_IMPOSSIBLE:
+                    selectedSong = com.qualcomm.ftcrobotcontroller.R.raw.missionimpossible;
+                    break;
+                case RUSSIAN_NATIONAL_ANTHEM:
+                    selectedSong = com.qualcomm.ftcrobotcontroller.R.raw.nationalanthem;
+                    break;
+            }
+            mediaPlayer = MediaPlayer.create(hardwareMap.appContext, selectedSong);
+            mediaPlayer.start();
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener()
+            {
+                public void onCompletion(MediaPlayer mediaPlayer1)
+                {
+                    mediaPlayer1.release();
+                }
+            });
+
+            OutputToDriverStation("Playing " + choice.toString());
+
+            sleep(1000); //Give the MediaPlayer some time to initialize, and register that a song is being played.
+        }
+        catch (Exception e)
+        {
+            OutputToDriverStation("Error when attempting to play music.");
+            return;
+        }
+    }
+
+    //Used to make the media player stop playing audio, and also to prevent excess memory allocation from being taken up.
+    protected void StopPlayingAudio()
+    {
+        if (mediaPlayer != null)
+        {
+            if (mediaPlayer.isPlaying())
+                mediaPlayer.stop(); //stop playing
+            mediaPlayer.release(); //prevent resource allocation
+            mediaPlayer = null; //nullify the reference.
+        }
+    }
+
+    /*** USE TO OUTPUT DATA IN A SLIGHTLY BETTER WAY THAT LINEAR OP MODES HAVE TO ***/
+    ArrayList<String> linesAccessible = new ArrayList<>();
+    private int maxLines = 7;
+    protected void OutputToDriverStation(String newLine)
+    {
+        //Add new line at beginning of the lines.
+        linesAccessible.add(0, newLine);
+        //If there is more than 5 lines there, remove one.
+        if (linesAccessible.size() > maxLines)
+            linesAccessible.remove(maxLines);
+
+        //Output every line in order.
+        telemetry.update(); //Empty the output
+        for (String s : linesAccessible)
+            telemetry.addLine(s); //add all lines
+        telemetry.update(); //update the output with the added lines.
+    }
 }

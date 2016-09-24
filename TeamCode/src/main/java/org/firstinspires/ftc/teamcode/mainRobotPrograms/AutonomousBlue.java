@@ -10,7 +10,7 @@ public class AutonomousBlue extends AutonomousBase {
     //Autonomous code for the Blue alliance
 
     //Called after runOpMode() has finished initializing.
-    protected void runInstructions() throws InterruptedException
+    protected void driverStationSaysGO() throws InterruptedException
     {
     }
 }
