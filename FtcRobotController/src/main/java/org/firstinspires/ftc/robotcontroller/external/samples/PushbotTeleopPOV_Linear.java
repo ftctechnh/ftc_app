@@ -57,7 +57,7 @@ import com.qualcomm.robotcore.util.RobotLog;
 
 @TeleOp(name="Pushbot: Teleop POV", group="Pushbot")
 @Disabled
-public class PushbotTeleopPOV_Linear extends LinearOpMode {
+public class  PushbotTeleopPOV_Linear extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwarePushbot robot           = new HardwarePushbot();   // Use a Pushbot's hardware

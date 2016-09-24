@@ -1,4 +1,4 @@
-## Sample Class/Opmode conventions
+ ## Sample Class/Opmode conventions
 #### V 1.0.0  7/19/2016
 
 This document defines the FTC Sample OpMode and Class conventions.
