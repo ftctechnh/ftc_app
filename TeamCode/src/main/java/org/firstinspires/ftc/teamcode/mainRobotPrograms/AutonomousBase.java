@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.Range;
 
@@ -8,31 +9,49 @@ public abstract class AutonomousBase extends RobotBase {
 
     //Only used during autonomous.
     protected GyroSensor gyroscope;
+    protected ColorSensor colorSensor;
 
     @Override
-    protected void customInitialization() throws InterruptedException
+    protected void driverStationSaysINITIALIZE() throws InterruptedException
     {
+        //Initialize gyroscope
         try
         {
             //Get the gyroscope
             gyroscope = hardwareMap.gyroSensor.get("Gyroscope");
+            OutputToDriverStation("Found Gyroscope Sensor.");
             gyroscope.calibrate();
             sleep(1000);
             // Make sure gyroscope is calibrated
             while (gyroscope.isCalibrating())
             {
-                telemetry.addData("Gyroscope Calibrating", "");
+                OutputToDriverStation ("Gyroscope Calibrating");
                 sleep(50);
             }
-            telemetry.addData("Gyroscope Calibration Complete", "");
+            OutputToDriverStation ("Gyroscope Calibration Complete");
         } catch (Exception e) {
-            telemetry.addData("Error in Gyroscope Calibration!", "");
+            OutputToDriverStation ("Error in Gyroscope Calibration!");
             gyroscope = null;
+        }
+
+        //Initialize Color Sensor.
+        try
+        {
+            //Get the color sensor.
+            colorSensor = hardwareMap.colorSensor.get("Color Sensor");
+            OutputToDriverStation("Found color Sensor");
+        } catch (Exception e) {
+            OutputToDriverStation("Could not find sensor with name of Color Sensor");
+            colorSensor = null;
         }
     }
 
     //All children should have special instructions.
-    protected abstract void runInstructions() throws InterruptedException;
+    protected abstract void driverStationSaysGO() throws InterruptedException;
+    protected void driverStationSaysSTOP()
+    {
+        stopMotors();
+    }
 
     private final double MIN_TURN_POWER = .3, MAX_TURN_POWER = 1;
 
@@ -42,7 +61,7 @@ public abstract class AutonomousBase extends RobotBase {
         if (gyroscope != null)
         {
             //Output a message to the user.
-            telemetry.addData("Initiating turn with gyroscope...", "");
+            OutputToDriverStation("Initiating turn with gyroscope...");
 
             //Wait a moment: otherwise there tends to an error.
             sleep(500);
@@ -78,6 +97,7 @@ public abstract class AutonomousBase extends RobotBase {
                 backRight.setPower(rightPower);
 
                 //Output data to the DS.
+                //Don't change this, since it is useful to have real-time data in this case.
                 telemetry.addData("Current heading ", currHeading);
                 telemetry.addData("Turning to ", heading);
                 telemetry.addData("Left Power ", leftPower);
@@ -101,14 +121,13 @@ public abstract class AutonomousBase extends RobotBase {
         }
 
         stopMotors();
-
-        sleep(1000);
     }
 
     //Used to drive in a straight line with the aid of the gyroscope.
     protected void drive(double power, double length) throws InterruptedException
     {
-        telemetry.addData("Driving...", "");
+        //Add the output to the driver station.
+        OutputToDriverStation("Driving at " + power + " power, for " + length + " time.");
 
         //Initialize the gyro if it exists.
         if (gyroscope != null)
@@ -164,7 +183,7 @@ public abstract class AutonomousBase extends RobotBase {
                 telemetry.addData("R Power: ", rightPower);
             } else {
                 //Update the drivers.
-                telemetry.addData("Running WITHOUT gyro (none initialized)", "");
+                OutputToDriverStation("Running WITHOUT gyro (none initialized)");
                 //The code should handle stopping and the rest.
             }
 
@@ -173,8 +192,6 @@ public abstract class AutonomousBase extends RobotBase {
         }
         //Stop the bot.
         stopMotors();
-
-        sleep(1000);
     }
 
     //The gyroscope value goes from 0 to 360: when the bot turns left, it immediately goes to 360.  This makes sure that the value makes sense for calculations.

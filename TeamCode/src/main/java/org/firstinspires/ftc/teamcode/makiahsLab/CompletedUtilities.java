@@ -24,7 +24,6 @@ public class CompletedUtilities
     {
         hardwareContext = hardwareContext1;
         output = output1;
-        initialized = true;
     }
 
     public enum DownloadedSongs
@@ -37,32 +36,42 @@ public class CompletedUtilities
     private  static MediaPlayer mediaPlayer = null;
     public static void PlaySong(DownloadedSongs song)
     {
-        int selectedSong = com.qualcomm.ftcrobotcontroller.R.raw.jcena;
-        switch (song)
+        try
         {
-            case JOHN_CENA_INTRO:
-                selectedSong = com.qualcomm.ftcrobotcontroller.R.raw.jcena;
-                break;
-            case MISSION_IMPOSSIBLE:
-                selectedSong = com.qualcomm.ftcrobotcontroller.R.raw.missionimpossible;
-                break;
-            case RUSSIAN_NATIONAL_ANTHEM:
-                selectedSong = com.qualcomm.ftcrobotcontroller.R.raw.nationalanthem;
-                break;
-        }
-        mediaPlayer = MediaPlayer.create(hardwareContext, selectedSong);
-        mediaPlayer.start();
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            public void onCompletion(MediaPlayer mediaPlayer1) {
-                mediaPlayer1.release();
+            int selectedSong = com.qualcomm.ftcrobotcontroller.R.raw.jcena;
+            switch (song)
+            {
+                case JOHN_CENA_INTRO:
+                    selectedSong = com.qualcomm.ftcrobotcontroller.R.raw.jcena;
+                    break;
+                case MISSION_IMPOSSIBLE:
+                    selectedSong = com.qualcomm.ftcrobotcontroller.R.raw.missionimpossible;
+                    break;
+                case RUSSIAN_NATIONAL_ANTHEM:
+                    selectedSong = com.qualcomm.ftcrobotcontroller.R.raw.nationalanthem;
+                    break;
             }
-        });
-        output.addData("Playing ", song.toString());
+            mediaPlayer = MediaPlayer.create(hardwareContext, selectedSong);
+            mediaPlayer.start();
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener()
+            {
+                public void onCompletion(MediaPlayer mediaPlayer1)
+                {
+                    mediaPlayer1.release();
+                }
+            });
+            output.addData("Playing ", song.toString());
+            output.update();
+        } catch (Exception e) {
+            output.addLine("Error when attempting to play music.");
+            return;
+        }
     }
 
     public static void OnExit()
     {
         mediaPlayer.stop();
         mediaPlayer.release();
+        mediaPlayer = null;
     }
 }

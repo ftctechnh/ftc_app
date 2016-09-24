@@ -31,14 +31,18 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
 /**
  * A simple example of a linear op mode that will approach an IR beacon
  */
+
+@Autonomous(name="Drive Backward", group = "Utility Group")
 public class DriveBackward extends AutonomousBase {
 
     //Custom initialization
     @Override
-    protected void customInitialization() {
+    protected void driverStationSaysINITIALIZE() {
         backRight.setPower(.3);
         frontRight.setPower(.3);
         frontLeft.setPower(-.3);
@@ -46,11 +50,17 @@ public class DriveBackward extends AutonomousBase {
     }
 
     //Called after runOpMode() has finished initializing.
-    protected void runInstructions() throws InterruptedException
+    protected void driverStationSaysGO() throws InterruptedException
     {
         backRight.setPower(-.6);
         frontRight.setPower(-.6);
         frontLeft.setPower(-.6);
         backLeft.setPower(-.6);
+    }
+
+    @Override
+    protected void driverStationSaysSTOP()
+    {
+        stopMotors();
     }
 }

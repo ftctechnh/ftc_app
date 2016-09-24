@@ -16,18 +16,22 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class Teleop extends RobotBase {
 
     @Override
-    protected void customInitialization() {
+    protected void driverStationSaysINITIALIZE()
+    {
     }
 
-    protected void runInstructions() throws InterruptedException
+    protected void driverStationSaysGO() throws InterruptedException
     {
-
         //Keep looping while opmode is active (waiting a hardware cycle after all of this is completed, just like loop()).
-        while (opModeIsActive())
+        while (true)
         {
             //Insert code here.
             idle();
         }
+    }
+
+    protected void driverStationSaysSTOP ()
+    {
     }
 
     /*
