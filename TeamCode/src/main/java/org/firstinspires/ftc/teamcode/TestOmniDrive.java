@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 /**
@@ -12,29 +13,29 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class TestOmniDrive extends OpMode
 {
     private TestOmniDriveBot robot = new TestOmniDriveBot();
-    public float leftYIn;
-    public float leftXIn;
-    public float rightXIn;
 
     public void init()
     {
         robot.init(hardwareMap);
-        leftYIn = -gamepad1.left_stick_y;
-        leftXIn = gamepad1.left_stick_x;
-        rightXIn = gamepad1.right_stick_x;
         gamepad1.setJoystickDeadzone(0.01f);
+        robot.getfL().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.getfR().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.getbL().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.getbR().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public void loop()
     {
-        telemetry.addData("Gamepad left x", gamepad1.left_stick_x);
-        telemetry.addData("Gamepad left y", gamepad1.left_stick_y);
-        telemetry.addData("Gamepad right x", gamepad1.right_stick_x);
-        telemetry.update();
+        robot.setLeftYIn(gamepad1.left_stick_y);
+        robot.setLeftXIn(gamepad1.left_stick_x);
+        robot.setRightXIn(gamepad1.right_stick_x);
 
-        robot.getfR().setPower((leftYIn - leftXIn - rightXIn));
-        robot.getfL().setPower(-leftYIn - leftXIn - rightXIn);
-        robot.getbR().setPower(leftYIn + leftXIn - rightXIn);
-        robot.getbL().setPower(-leftYIn + leftXIn - rightXIn);
+        robot.drive();
+
+        telemetry.addData("fR Power", robot.getfRPower());
+        telemetry.addData("fL Power", robot.getfLPower());
+        telemetry.addData("bR Power", robot.getbRPower());
+        telemetry.addData("bL Power", robot.getbLPower());
+        telemetry.update();
     }
 }
