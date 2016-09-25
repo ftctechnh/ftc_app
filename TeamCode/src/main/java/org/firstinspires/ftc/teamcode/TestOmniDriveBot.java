@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -8,13 +7,20 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 /**
  * Created by Peter on 9/22/2016.
  */
-public class TestOmniDriveBot
+public class TestOmniDriveBot implements DriveTrainInterface
 {
     private HardwareMap hardwareMap = null;
     private DcMotor fL = null;
     private DcMotor fR = null;
     private DcMotor bL = null;
     private DcMotor bR = null;
+    public float leftYIn;
+    public float leftXIn;
+    public float rightXIn;
+    public float fRPower;
+    public float fLPower;
+    public float bRPower;
+    public float bLPower;
 
     public TestOmniDriveBot()
     {
@@ -45,6 +51,41 @@ public class TestOmniDriveBot
         bR.setPower(0);
     }
 
+    public void drive()
+    {
+        fRPower = leftYIn - leftXIn - rightXIn;
+        fLPower = -leftYIn - leftXIn - rightXIn;
+        bRPower = leftYIn + leftXIn - rightXIn;
+        bLPower = -leftYIn + leftXIn - rightXIn;
+        float scaleFactor = 1.0f;
+
+        if (Math.abs(fRPower) > scaleFactor)
+        {
+            scaleFactor = Math.abs(fRPower);
+        }
+        if (Math.abs(fLPower) > scaleFactor)
+        {
+            scaleFactor = Math.abs(fLPower);
+        }
+        if (Math.abs(bRPower) > scaleFactor)
+        {
+            scaleFactor = Math.abs(bRPower);
+        }
+        if (Math.abs(bLPower) > scaleFactor)
+        {
+            scaleFactor = Math.abs(bLPower);
+        }
+        fLPower = fLPower / scaleFactor;
+        bRPower = bRPower / scaleFactor;
+        bLPower = bLPower / scaleFactor;
+        fRPower = fRPower / scaleFactor;
+
+        fR.setPower(fRPower);
+        fL.setPower(fLPower);
+        bR.setPower(bRPower);
+        bL.setPower(bLPower);
+    }
+
     public DcMotor getfL()
     {
         return fL;
@@ -64,4 +105,38 @@ public class TestOmniDriveBot
     {
         return bR;
     }
+
+    public float getfRPower()
+    {
+        return fRPower;
+    }
+
+    public float getfLPower()
+    {
+        return fLPower;
+    }
+
+    public float getbRPower()
+    {
+        return bRPower;
+    }
+
+    public float getbLPower()
+    {
+        return bLPower;
+    }
+
+    public void setLeftYIn(float lYI)
+    {
+        leftYIn = -lYI;
+    }
+    public void setLeftXIn(float lXI)
+    {
+        leftXIn = lXI;
+    }
+    public void setRightXIn(float rXI)
+    {
+        rightXIn = -rXI;
+    }
+
 }
