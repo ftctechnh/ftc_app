@@ -42,7 +42,8 @@ public class DriveBackward extends AutonomousBase {
 
     //Custom initialization
     @Override
-    protected void driverStationSaysINITIALIZE() {
+    protected void driverStationSaysINITIALIZE()
+    {
         backRight.setPower(.3);
         frontRight.setPower(.3);
         frontLeft.setPower(-.3);

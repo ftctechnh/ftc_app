@@ -11,7 +11,9 @@ public class BetaTestRunner extends AutonomousBase
 {
     protected void driverStationSaysGO() throws InterruptedException
     {
+        //Play a random song.
         PlayAudio(DownloadedSongs.values()[(int) (Math.random() * DownloadedSongs.values().length)]);
+        //Idle indefinitely.
         while (true)
             idle();
     }

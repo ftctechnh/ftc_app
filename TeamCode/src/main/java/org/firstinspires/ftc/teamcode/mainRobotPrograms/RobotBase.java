@@ -121,39 +121,45 @@ public abstract class RobotBase extends LinearOpMode
     private MediaPlayer mediaPlayer = null;
     protected void PlayAudio(DownloadedSongs choice)
     {
-        try
+        if (mediaPlayer == null)
         {
-            int selectedSong = com.qualcomm.ftcrobotcontroller.R.raw.jcena;
-            switch (choice)
+            try
             {
-                case JOHN_CENA_INTRO:
-                    selectedSong = com.qualcomm.ftcrobotcontroller.R.raw.jcena;
-                    break;
-                case MISSION_IMPOSSIBLE:
-                    selectedSong = com.qualcomm.ftcrobotcontroller.R.raw.missionimpossible;
-                    break;
-                case RUSSIAN_NATIONAL_ANTHEM:
-                    selectedSong = com.qualcomm.ftcrobotcontroller.R.raw.nationalanthem;
-                    break;
-            }
-            mediaPlayer = MediaPlayer.create(hardwareMap.appContext, selectedSong);
-            mediaPlayer.start();
-            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener()
-            {
-                public void onCompletion(MediaPlayer mediaPlayer1)
+                int selectedSong = com.qualcomm.ftcrobotcontroller.R.raw.jcena;
+                switch (choice)
                 {
-                    mediaPlayer1.release();
+                    case JOHN_CENA_INTRO:
+                        selectedSong = com.qualcomm.ftcrobotcontroller.R.raw.jcena;
+                        break;
+                    case MISSION_IMPOSSIBLE:
+                        selectedSong = com.qualcomm.ftcrobotcontroller.R.raw.missionimpossible;
+                        break;
+                    case RUSSIAN_NATIONAL_ANTHEM:
+                        selectedSong = com.qualcomm.ftcrobotcontroller.R.raw.nationalanthem;
+                        break;
                 }
-            });
+                mediaPlayer = MediaPlayer.create(hardwareMap.appContext, selectedSong);
+                mediaPlayer.start();
+                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener()
+                {
+                    public void onCompletion(MediaPlayer mediaPlayer1)
+                    {
+                        mediaPlayer1.release();
+                    }
+                });
 
-            OutputToDriverStation("Playing " + choice.toString());
+                OutputToDriverStation("Playing " + choice.toString());
 
-            sleep(1000); //Give the MediaPlayer some time to initialize, and register that a song is being played.
+                sleep(1000); //Give the MediaPlayer some time to initialize, and register that a song is being played.
+            } catch (Exception e)
+            {
+                OutputToDriverStation("Error when attempting to play music.");
+                return;
+            }
         }
-        catch (Exception e)
+        else
         {
-            OutputToDriverStation("Error when attempting to play music.");
-            return;
+            OutputToDriverStation("Cannot play " + choice.toString() + ": already playing music.");
         }
     }
 
@@ -185,5 +191,14 @@ public abstract class RobotBase extends LinearOpMode
         for (String s : linesAccessible)
             telemetry.addLine(s); //add all lines
         telemetry.update(); //update the output with the added lines.
+    }
+
+    //Allows for more robust output of actual data instead of line by line.  Used for driving and turning.
+    protected void OutputRealTimeData (String[] data)
+    {
+        telemetry.update();
+        for (String s : data)
+            telemetry.addLine(s);
+        telemetry.update();
     }
 }

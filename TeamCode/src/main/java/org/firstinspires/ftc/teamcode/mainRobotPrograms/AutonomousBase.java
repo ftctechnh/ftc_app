@@ -25,12 +25,13 @@ public abstract class AutonomousBase extends RobotBase {
             // Make sure gyroscope is calibrated
             while (gyroscope.isCalibrating())
             {
-                OutputToDriverStation ("Gyroscope Calibrating");
+                //Otherwise it floods the console.
+                OutputRealTimeData (new String[] {"Gyroscope Calibrating"});
                 sleep(50);
             }
             OutputToDriverStation ("Gyroscope Calibration Complete");
         } catch (Exception e) {
-            OutputToDriverStation ("Error in Gyroscope Calibration!");
+            OutputToDriverStation ("Error in \"Gyroscope\" Calibration!");
             gyroscope = null;
         }
 
@@ -41,7 +42,7 @@ public abstract class AutonomousBase extends RobotBase {
             colorSensor = hardwareMap.colorSensor.get("Color Sensor");
             OutputToDriverStation("Found color Sensor");
         } catch (Exception e) {
-            OutputToDriverStation("Could not find sensor with name of Color Sensor");
+            OutputToDriverStation("Could not find sensor with name of \"Color Sensor\"");
             colorSensor = null;
         }
     }
@@ -66,6 +67,7 @@ public abstract class AutonomousBase extends RobotBase {
             //Wait a moment: otherwise there tends to an error.
             sleep(500);
             gyroscope.resetZAxisIntegrator();
+            sleep(500);
 
             //The variables used to calculate the way that the motors will turn.
             int currHeading;
@@ -98,16 +100,23 @@ public abstract class AutonomousBase extends RobotBase {
 
                 //Output data to the DS.
                 //Don't change this, since it is useful to have real-time data in this case.
-                telemetry.addData("Current heading ", currHeading);
-                telemetry.addData("Turning to ", heading);
-                telemetry.addData("Left Power ", leftPower);
-                telemetry.addData("Right Power ", rightPower);
+                OutputRealTimeData(
+                        new String[] {
+                                "Turning with gyro...",
+                                "Current heading " + currHeading,
+                                "Turning to " + heading,
+                                "Left Power " + leftPower,
+                                "Right Power " + rightPower
+                        }
+                );
+
+                OutputToDriverStation("Turned to " + heading + " degrees at " + power + " power");
 
                 idle();
             }
         } else {
             //Important for the driver to know.
-            telemetry.addData("Initiating turn WITHOUT GYRO", "");
+            OutputToDriverStation("Turning for " + heading + " seconds WITHOUT GYRO");
 
             //The turning point.
             frontLeft.setPower(power);
@@ -117,7 +126,8 @@ public abstract class AutonomousBase extends RobotBase {
 
             //Sleep for some period of time.
             sleep((int) (heading));
-            telemetry.addData("Turn complete!", "");
+
+            OutputToDriverStation("Turn complete!");
         }
 
         stopMotors();
@@ -176,14 +186,19 @@ public abstract class AutonomousBase extends RobotBase {
 
                 //Output data to the DS.
                 //Note: the 2nd parameter "%.2f" changes the output of the max decimal points.
-                telemetry.addData("Heading: ", heading);
-                telemetry.addData("Current Time: ", (System.currentTimeMillis() - startTime) * 1);
-                telemetry.addData("Stopping at: ", length);
-                telemetry.addData("L Power: ", leftPower);
-                telemetry.addData("R Power: ", rightPower);
+                OutputRealTimeData(
+                        new String[]{
+                                "Heading: " + heading,
+                                "Current Time: " + ((System.currentTimeMillis() - startTime) * 1),
+                                "Stopping at: " + length,
+                                "L Power: " + leftPower,
+                                "R Power: " + rightPower
+                        }
+                );
+
             } else {
                 //Update the drivers.
-                OutputToDriverStation("Running WITHOUT gyro (none initialized)");
+                OutputToDriverStation("Running WITHOUT gyro (none initialized!)");
                 //The code should handle stopping and the rest.
             }
 
@@ -192,6 +207,8 @@ public abstract class AutonomousBase extends RobotBase {
         }
         //Stop the bot.
         stopMotors();
+
+        OutputToDriverStation("Drove for " + length + " seconds at power " + power);
     }
 
     //The gyroscope value goes from 0 to 360: when the bot turns left, it immediately goes to 360.  This makes sure that the value makes sense for calculations.
