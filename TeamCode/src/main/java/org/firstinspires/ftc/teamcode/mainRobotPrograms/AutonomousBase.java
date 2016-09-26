@@ -14,37 +14,24 @@ public abstract class AutonomousBase extends RobotBase {
     @Override
     protected void driverStationSaysINITIALIZE() throws InterruptedException
     {
-        //Initialize gyroscope
-        try
+        //Initialize gyroscope (will output whether it was found or not.
+        gyroscope = Initialize(GyroSensor.class, "Gyroscope");
+        if (gyroscope != null)
         {
-            //Get the gyroscope
-            gyroscope = hardwareMap.gyroSensor.get("Gyroscope");
-            OutputToDriverStation("Found Gyroscope Sensor.");
+            //Start gyroscope calibration.
+            OutputToDriverStation("Gyroscope Calibrating...");
             gyroscope.calibrate();
+            //Pause to prevent errors.
             sleep(1000);
-            // Make sure gyroscope is calibrated
+
             while (gyroscope.isCalibrating())
-            {
-                //Otherwise it floods the console.
-                OutputRealTimeData (new String[] {"Gyroscope Calibrating"});
                 sleep(50);
-            }
-            OutputToDriverStation ("Gyroscope Calibration Complete");
-        } catch (Exception e) {
-            OutputToDriverStation ("Error in \"Gyroscope\" Calibration!");
-            gyroscope = null;
+
+            OutputToDriverStation("Gyroscope Calibration Complete!");
         }
 
-        //Initialize Color Sensor.
-        try
-        {
-            //Get the color sensor.
-            colorSensor = hardwareMap.colorSensor.get("Color Sensor");
-            OutputToDriverStation("Found color Sensor");
-        } catch (Exception e) {
-            OutputToDriverStation("Could not find sensor with name of \"Color Sensor\"");
-            colorSensor = null;
-        }
+        //Initialize color sensor.
+        colorSensor = Initialize(ColorSensor.class, "Color Sensor");
     }
 
     //All children should have special instructions.
@@ -110,10 +97,10 @@ public abstract class AutonomousBase extends RobotBase {
                         }
                 );
 
-                OutputToDriverStation("Turned to " + heading + " degrees at " + power + " power");
-
                 idle();
             }
+
+            OutputToDriverStation("Turned to " + heading + " degrees at " + power + " power");
         } else {
             //Important for the driver to know.
             OutputToDriverStation("Turning for " + heading + " seconds WITHOUT GYRO");
@@ -127,7 +114,7 @@ public abstract class AutonomousBase extends RobotBase {
             //Sleep for some period of time.
             sleep((int) (heading));
 
-            OutputToDriverStation("Turn complete!");
+            OutputToDriverStation("Turned for " + heading + " seconds at " + power + " power");
         }
 
         stopMotors();
@@ -137,7 +124,7 @@ public abstract class AutonomousBase extends RobotBase {
     protected void drive(double power, double length) throws InterruptedException
     {
         //Add the output to the driver station.
-        OutputToDriverStation("Driving at " + power + " power, for " + length + " time.");
+        OutputToDriverStation("Driving at " + power + " power, for " + length + " seconds," + "WITH" + (gyroscope == null ? "OUT" : "") + "a gyroscope");
 
         //Initialize the gyro if it exists.
         if (gyroscope != null)
@@ -155,6 +142,7 @@ public abstract class AutonomousBase extends RobotBase {
 
         sleep(500);
 
+        //Gyroscope turning mechanics.
         while (System.currentTimeMillis() - startTime < length) {
             if (gyroscope != null)
             {
@@ -196,10 +184,6 @@ public abstract class AutonomousBase extends RobotBase {
                         }
                 );
 
-            } else {
-                //Update the drivers.
-                OutputToDriverStation("Running WITHOUT gyro (none initialized!)");
-                //The code should handle stopping and the rest.
             }
 
             //Wait a hardware cycle.
