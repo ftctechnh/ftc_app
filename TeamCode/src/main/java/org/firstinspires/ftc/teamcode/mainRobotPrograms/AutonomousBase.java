@@ -48,8 +48,8 @@ public abstract class AutonomousBase extends RobotBase {
     {
         if (gyroscope != null)
         {
-            //Output a message to the user.
-            OutputToDriverStation("Initiating turn with gyroscope...");
+            //Output a message to the user
+            OutputToDriverStation("Turning to " + heading + " degrees WITH GYRO at " + power + " power.");
 
             //Wait a moment: otherwise there tends to an error.
             sleep(500);
@@ -99,25 +99,23 @@ public abstract class AutonomousBase extends RobotBase {
 
                 idle();
             }
-
-            OutputToDriverStation("Turned to " + heading + " degrees at " + power + " power");
         } else {
             //Important for the driver to know.
-            OutputToDriverStation("Turning for " + heading + " seconds WITHOUT GYRO");
+            OutputToDriverStation("Turning " + (power > 0 ? "left" : "right") + " for " + heading + " seconds WITHOUT GYRO");
 
             //The turning point.
             frontLeft.setPower(power);
             backLeft.setPower(power);
-            frontRight.setPower(power);
-            backRight.setPower(power);
+            frontRight.setPower(-power);
+            backRight.setPower(-power);
 
             //Sleep for some period of time.
             sleep((int) (heading));
-
-            OutputToDriverStation("Turned for " + heading + " seconds at " + power + " power");
         }
 
         stopMotors();
+
+        OutputToDriverStation("Turn completed.");
     }
 
     //Used to drive in a straight line with the aid of the gyroscope.
@@ -192,7 +190,7 @@ public abstract class AutonomousBase extends RobotBase {
         //Stop the bot.
         stopMotors();
 
-        OutputToDriverStation("Drove for " + length + " seconds at power " + power);
+        OutputToDriverStation("Movement completed");
     }
 
     //The gyroscope value goes from 0 to 360: when the bot turns left, it immediately goes to 360.  This makes sure that the value makes sense for calculations.
