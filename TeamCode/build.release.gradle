@@ -1,3 +1,9 @@
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
 dependencies {
     compile project(':FtcRobotController')
     compile (name: 'RobotCore-release', ext: 'aar')
@@ -6,4 +12,5 @@ dependencies {
     compile (name:'ModernRobotics-release', ext:'aar')
     compile (name:'Analytics-release', ext:'aar')
     compile (name:'WirelessP2p-release', ext:'aar')
+    compile (name:'navx_ftc-release', ext:'aar')
 }
