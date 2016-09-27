@@ -32,10 +32,14 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
+
+
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 import org.steelhead.ftc.HardwareSteelheadTestBot;
@@ -104,6 +108,38 @@ public class SteelheadTestTeleOp extends OpMode{
         robot.leftMotor.setPower(left);
         robot.rightMotor.setPower(right);
 
+        //color sensor looks at the right side on the beacon
+
+        //looks for red & presses red button
+        if(gamepad1.b){
+            //change values to represent red
+            if(robot.colorSensor.red() > 500 && robot.colorSensor.blue() < 500 && robot.colorSensor.green() < 500){
+                robot.pushRight.setPosition(1.0);
+            }
+            else{
+                robot.pushLeft.setPosition(1.0);
+            }
+            robot.pushRight.setPosition(0.0);
+            robot.pushLeft.setPosition(0.0);
+        }
+
+        //looks for blue & presses blue button
+        if(gamepad1.x){
+            //change values to represent blue
+            if(robot.colorSensor.blue() > 500 && robot.colorSensor.red() < 500 && robot.colorSensor.green() < 500){
+                robot.pushRight.setPosition(1.0);
+            }
+            else{
+                robot.pushLeft.setPosition(1.0);
+            }
+            robot.pushRight.setPosition(0.0);
+            robot.pushLeft.setPosition(0.0);
+        }
+
+
+        telemetry.addData("Red  ", robot.colorSensor.red());
+        telemetry.addData("Green", robot.colorSensor.green());
+        telemetry.addData("Blue ", robot.colorSensor.blue());
 
         telemetry.addData("left",  "%.2f", left);
         telemetry.addData("right", "%.2f", right);

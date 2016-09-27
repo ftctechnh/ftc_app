@@ -7,9 +7,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 /**
  * Created by Alec Matthews on 9/18/16.
  * Added this class so we don't have to
- * edit a sample one.
- *
- */
+ * edit a sample on
+ **/
+
 public class HardwareSteelheadMainBot {
     public DcMotor leftMotor_1      = null;
     public DcMotor leftMotor_2      = null;
@@ -38,11 +38,11 @@ public class HardwareSteelheadMainBot {
         leftMotor_1.setDirection(DcMotorSimple.Direction.FORWARD);
         leftMotor_2.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        rightMotor_1.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightMotor_2.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightMotor_1.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightMotor_2.setDirection(DcMotorSimple.Direction.REVERSE);
 
         armMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        shooterMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        shooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         hardwareLeftPower(0);
         hardwareRightPower(0);
