@@ -71,6 +71,7 @@ public abstract class RobotBase extends LinearOpMode
         frontLeft = Initialize(DcMotor.class, "Front Left");
         backRight = Initialize(DcMotor.class, "Back Right");
         backLeft = Initialize(DcMotor.class, "Back Left");
+
         //Reverse the opposite side of the motors.
         if (frontLeft != null)
             frontLeft.setDirection(DcMotor.Direction.REVERSE);
