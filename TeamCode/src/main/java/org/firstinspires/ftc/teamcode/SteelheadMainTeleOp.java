@@ -105,23 +105,23 @@ public class SteelheadMainTeleOp extends OpMode{
 
         if(gamepad1.a) {
             telemetry.addData("Shooter", "FIRE");
-            robot.shooterMotor.setPower(1);
+            //robot.shooterMotor.setPower(1);
         } else {
-            robot.shooterMotor.setPower(0);
+            //robot.shooterMotor.setPower(0);
         }
 
         if(gamepad1.b) {
             telemetry.addData("Arm", "Down");
-            robot.armMotor.setPower(0.5);
+            //robot.armMotor.setPower(0.5);
         } else {
-            robot.armMotor.setPower(0);
+            //robot.armMotor.setPower(0);
         }
 
         if(gamepad1.y) {
             telemetry.addData("Shooter", "Up");
-            robot.armMotor.setPower(-0.5);
+            //robot.armMotor.setPower(-0.5);
         } else {
-            robot.armMotor.setPower(0);
+            //robot.armMotor.setPower(0);
         }
 
         telemetry.addData("left",  "%.2f", left);

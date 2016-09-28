@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 /**
  * Created by Alec Matthews on 9/18/16.
  * Added this class so we don't have to
- * edit a sample on
+ * edit a sample one
  **/
 
 public class HardwareSteelheadMainBot {
@@ -16,8 +16,8 @@ public class HardwareSteelheadMainBot {
     public DcMotor rightMotor_1     = null;
     public DcMotor rightMotor_2     = null;
 
-    public DcMotor armMotor         = null;
-    public DcMotor shooterMotor     = null;
+    //public DcMotor armMotor         = null;
+    //public DcMotor shooterMotor     = null;
 
     private String leftMotorName_1  = "leftMotor1";
     private String leftMotorName_2 = "leftMotor2";
@@ -32,30 +32,30 @@ public class HardwareSteelheadMainBot {
         rightMotor_1 = aHwMap.dcMotor.get(rightMotorName_1);
         rightMotor_2 = aHwMap.dcMotor.get(rightMotorName_2);
 
-        armMotor = aHwMap.dcMotor.get("armMotor");
-        shooterMotor = aHwMap.dcMotor.get("shooterMotor");
+        //armMotor = aHwMap.dcMotor.get("armMotor");
+        //shooterMotor = aHwMap.dcMotor.get("shooterMotor");
 
-        leftMotor_1.setDirection(DcMotorSimple.Direction.FORWARD);
-        leftMotor_2.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftMotor_1.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftMotor_2.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        rightMotor_1.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightMotor_2.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightMotor_1.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightMotor_2.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        armMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        shooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        //armMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        //shooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         hardwareLeftPower(0);
         hardwareRightPower(0);
-        armMotor.setPower(0);
-        shooterMotor.setPower(0);
+        //armMotor.setPower(0);
+        //shooterMotor.setPower(0);
 
         leftMotor_1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftMotor_2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightMotor_1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightMotor_2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        shooterMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //shooterMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public void setLeftMotorName(String newName) {
