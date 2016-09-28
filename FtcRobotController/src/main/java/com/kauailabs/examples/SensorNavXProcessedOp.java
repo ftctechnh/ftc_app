@@ -32,6 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package com.kauailabs.examples;
 
 import com.kauailabs.navx.ftc.AHRS;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -49,7 +50,7 @@ import java.text.DecimalFormat;
  * Acceleration data.
  */
 @TeleOp(name = "Sensor: navX Motion-processed Data", group = "Sensor")
-// @Disabled Comment this in to remove this from the Driver Station OpMode List
+@Disabled
 public class SensorNavXProcessedOp extends OpMode {
 
   /* This is the port on the Core Device Interace Module */
