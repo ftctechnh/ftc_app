@@ -65,12 +65,12 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 public class Alyssa extends LinearOpMode {
 
     /* Declare OpMode members. */
-    HardwarePushbot         robot   = new HardwarePushbot();   // Use a Pushbot's hardware
-    private ElapsedTime     runtime = new ElapsedTime();
+    HardwarePushbot robot = new HardwarePushbot();   // Use a Pushbot's hardware
+    private ElapsedTime runtime = new ElapsedTime();
 
 
-    static final double     FORWARD_SPEED = 0.6;
-    static final double     TURN_SPEED    = 0.5;
+    static final double FORWARD_SPEED = 0.6;
+    static final double TURN_SPEED = 0.5;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -139,5 +139,6 @@ public class Alyssa extends LinearOpMode {
             telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
             idle();
+        }
     }
 }

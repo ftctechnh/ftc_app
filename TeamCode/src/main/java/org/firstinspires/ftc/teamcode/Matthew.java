@@ -117,12 +117,19 @@ public class Matthew extends LinearOpMode {
         // Step 4:  Stop and close the claw.
         robot.leftMotor.setPower(0);
         robot.rightMotor.setPower(0);
-        robot.leftClaw.setPosition(1.0);
-        robot.rightClaw.setPosition(0.0);
+        robot.leftClaw.setPosition(0.5);
+        robot.rightClaw.setPosition(0.5);
 
         telemetry.addData("Status", "Complete");
         telemetry.update();
         sleep(1000);
+        idle();
+
+        robot.leftMotor.setPower(-FORWARD_SPEED);
+        robot.rightMotor.setPower(-FORWARD_SPEED);
+        telemetry.update();
+        sleep(1000);
+        runtime.reset();
         idle();
     }
 }
