@@ -2,13 +2,14 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 /**
  * Created by jonathonmangan on 9/21/16.
  */
-@Autonomous(name="Protobot Tank", group="Protobot")
+@TeleOp(name="Protobot Tank", group="Protobot")
 public class ProtoBot extends OpMode {
 
     private DcMotor LT;
@@ -23,7 +24,7 @@ public class ProtoBot extends OpMode {
         RB = hardwareMap.dcMotor.get("r_back");
 
         LT.setDirection(DcMotor.Direction.REVERSE);
-        RT.setDirection(DcMotor.Direction.REVERSE);
+        RB.setDirection(DcMotor.Direction.REVERSE);
     }
     public void loop(){
 
@@ -31,13 +32,14 @@ public class ProtoBot extends OpMode {
         LT.setPower(gamepad1.left_stick_y);
         LB.setPower(gamepad1.left_stick_y);
 
-        RT.setPower(gamepad1.right_stick_y);
-        RB.setPower(gamepad1.right_stick_y);
+        RT.setPower(gamepad1.left_stick_x);
+        RB.setPower(gamepad1.left_stick_x);
 
-        if(Math.abs(gamepad1.left_stick_y) < .2 || Math.abs(gamepad1.right_stick_y) < .2){
+        if(Math.abs(gamepad1.left_stick_y) < .1 ) {
             LT.setPower(0);
-            RT.setPower(0);
             LB.setPower(0);
+        }else if(Math.abs(gamepad1.left_stick_x) < .1){
+            RT.setPower(0);
             RB.setPower(0);
         }
 
