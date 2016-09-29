@@ -1,27 +1,25 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 /**
  * Created by Peter on 9/22/2016.
  */
 @TeleOp(name = "OmniTest", group = "Tests")
-public class TestOmniDrive extends OpMode
+public class OmniDriveTeleOp extends OpMode
 {
-    private TestOmniDriveBot robot = new TestOmniDriveBot();
+    private OmniDriveBot robot = new OmniDriveBot();
 
     public void init()
     {
         robot.init(hardwareMap);
         gamepad1.setJoystickDeadzone(0.01f);
-        robot.getfL().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.getfR().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.getbL().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.getbR().setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.getfL().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.getfR().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.getbL().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.getbR().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void loop()

@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 /**
  * Created by Peter on 9/22/2016.
  */
-public class TestOmniDriveBot implements DriveTrainInterface
+public class OmniDriveBot implements DriveTrainInterface
 {
     private HardwareMap hardwareMap = null;
     private DcMotor fL = null;
@@ -22,7 +22,7 @@ public class TestOmniDriveBot implements DriveTrainInterface
     public float bRPower;
     public float bLPower;
 
-    public TestOmniDriveBot()
+    public OmniDriveBot()
     {
 
     }
@@ -57,6 +57,10 @@ public class TestOmniDriveBot implements DriveTrainInterface
         fLPower = -leftYIn - leftXIn - rightXIn;
         bRPower = leftYIn + leftXIn - rightXIn;
         bLPower = -leftYIn + leftXIn - rightXIn;
+        fR.setMaxSpeed(2400);
+        fL.setMaxSpeed(2400);
+        bR.setMaxSpeed(2400);
+        bL.setMaxSpeed(2400);
         float scaleFactor = 1.0f;
 
         if (Math.abs(fRPower) > scaleFactor)
