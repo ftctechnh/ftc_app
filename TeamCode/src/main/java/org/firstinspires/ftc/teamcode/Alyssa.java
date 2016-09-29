@@ -123,12 +123,21 @@ public class Alyssa extends LinearOpMode {
         // Step 4:  Stop and close the claw.
         robot.leftMotor.setPower(0);
         robot.rightMotor.setPower(0);
-        robot.leftClaw.setPosition(1.0);
-        robot.rightClaw.setPosition(0.0);
+        robot.leftClaw.setPosition(0.1);
+        robot.rightClaw.setPosition(0.1);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
         sleep(1000);
         idle();
+
+
+        robot.leftClaw.setPosition(FORWARD_SPEED);
+        robot.rightClaw.setPosition(FORWARD_SPEED);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 3.0)) {
+            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+            telemetry.update();
+            idle();
     }
 }
