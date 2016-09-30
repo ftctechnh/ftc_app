@@ -69,8 +69,8 @@ public class TwitchyTeleopTank_Linear extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        double left;
-        double right;
+        double vertical;
+        double horizontol;
 
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
@@ -87,14 +87,42 @@ public class TwitchyTeleopTank_Linear extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-            left = gamepad1.left_stick_y;
-            right = gamepad1.right_stick_y;
-            robot.leftBackMotor.setPower(left);
-            robot.leftFrontMotor.setPower(left);
-            robot.rightBackMotor.setPower(right);
-            robot.rightFrontMotor.setPower(right);
-//
+            vertical = gamepad1.left_stick_y;
+            horizontol = gamepad1.left_stick_x;
+            if(vertical>0){
+                robot.leftBackMotor.setPower(1.0);
+                robot.leftFrontMotor.setPower(1.0);
+                robot.rightBackMotor.setPower(1.0);
+                robot.rightFrontMotor.setPower(1.0);
+            } else if(vertical<0){
+                robot.leftBackMotor.setPower(-1.0);
+                robot.leftFrontMotor.setPower(-1.0);
+                robot.rightBackMotor.setPower(-1.0);
+                robot.rightFrontMotor.setPower(-1.0);
+            }else{
+                robot.leftBackMotor.setPower(0);
+                robot.leftFrontMotor.setPower(0);
+                robot.rightBackMotor.setPower(0);
+                robot.rightFrontMotor.setPower(0);
+            }
+
+            if(horizontol>0){
+                robot.leftBackMotor.setPower(1.0);
+                robot.leftFrontMotor.setPower(1.0);
+                robot.rightBackMotor.setPower(-1.0);
+                robot.rightFrontMotor.setPower(-1.0);
+            } else if(vertical<0){
+                robot.leftBackMotor.setPower(1.0);
+                robot.leftFrontMotor.setPower(1.0);
+                robot.rightBackMotor.setPower(-1.0);
+                robot.rightFrontMotor.setPower(-1.0);
+            }else{
+                robot.leftBackMotor.setPower(0);
+                robot.leftFrontMotor.setPower(0);
+                robot.rightBackMotor.setPower(0);
+                robot.rightFrontMotor.setPower(0);
+            }
+
 //            // Use gamepad Y & A raise and lower the arm
 //            if (gamepad1.a)
 //                armPosition += ARM_SPEED;
@@ -116,8 +144,8 @@ public class TwitchyTeleopTank_Linear extends LinearOpMode {
 //            // Send telemetry message to signify robot running;
 //            telemetry.addData("arm",   "%.2f", armPosition);
 //            telemetry.addData("claw",  "%.2f", clawPosition);
-            telemetry.addData("left",  "%.2f", left);
-            telemetry.addData("right", "%.2f", right);
+            telemetry.addData("horizontol",  "%.2f", horizontol);
+            telemetry.addData("vertical", "%.2f", vertical);
             telemetry.update();
 
             // Pause for metronome tick.  40 mS each cycle = update 25 times a second.
