@@ -43,6 +43,7 @@ import java.util.Date;
  * Demonstrates empty OpMode
  */
 @Autonomous(name = "Concept: NullOp", group = "Concept")
+@Disabled
 
 public class ConceptNullOp extends OpMode {
 
