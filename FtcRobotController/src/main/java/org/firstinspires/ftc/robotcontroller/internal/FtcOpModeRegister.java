@@ -29,60 +29,53 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.qualcomm.ftcrobotcontroller.opmodes;
+package org.firstinspires.ftc.robotcontroller.internal;
 
+import com.google.blocks.ftcrobotcontroller.runtime.BlocksOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
+import com.qualcomm.robotcore.eventloop.opmode.AnnotatedOpModeRegistrar;
+import org.firstinspires.ftc.robotcontroller.external.samples.ConceptNullOp;
 
 /**
- * Register Op Modes
+ * {@link FtcOpModeRegister} is responsible for registering opmodes for use in an FTC game.
+ * @see #register(OpModeManager)
  */
 public class FtcOpModeRegister implements OpModeRegister {
 
-  /**
-   * The Op Mode Manager will call this method when it wants a list of all
-   * available op modes. Add your op mode to the list to enable it.
-   *
-   * @param manager op mode manager
-   */
-  public void register(OpModeManager manager) {
-
-    /*
-     * register your op modes here.
-     * The first parameter is the name of the op mode
-     * The second parameter is the op mode class property
+    /**
+     * {@link #register(OpModeManager)} is called by the SDK game in order to register
+     * OpMode classes or instances that will participate in an FTC game.
      *
-     * If two or more op modes are registered with the same name, the ap
+     * There are two mechanisms by which an OpMode may be registered.
+     *
+     *  1) The preferred method is by means of class annotations in the OpMode itself.
+     *  See, for example the class annotations in {@link ConceptNullOp}.
+     *
+     *  2) The other, retired,  method is to modify this {@link #register(OpModeManager)}
+     *  method to include explicit calls to OpModeManager.register().
+     *  This method of modifying this file directly is discouraged, as it
+     *  makes updates to the SDK harder to integrate into your code.
+     *
+     * @param manager the object which contains methods for carrying out OpMode registrations
+     *
+     * @see com.qualcomm.robotcore.eventloop.opmode.TeleOp
+     * @see com.qualcomm.robotcore.eventloop.opmode.Autonomous
      */
-    //manager.register("Teleop", MyTankDrive.class);
+    public void register(OpModeManager manager) {
 
-    manager.register("TankDrive", NewTankDrive.class);
+        /**
+         * Register OpModes implemented in the Blocks visual programming language.
+         */
+        BlocksOpMode.registerAll(manager);
 
-    manager.register("Peopletestingtankdrive", MyTankDrive.class);
-    //manager.register("ColorSensorDriver", ColorSensorDriver.class);
+        /**
+         * Register OpModes that use the annotation-based registration mechanism.
+         */
+        AnnotatedOpModeRegistrar.register(manager);
 
-    //manager.register("IrSeekerOp", IrSeekerOp.class);
-    //manager.register("CompassCalibration", CompassCalibration.class);
-    //manager.register("I2cAddressChangeExample", LinearI2cAddressChange.class);
-
-
-    //manager.register("NxtTeleOp", NxtTeleOp.class);
-
-    //manager.register("LinearK9TeleOp", LinearK9TeleOp.class);
-    //manager.register("LinearIrExample", LinearIrExample.class);
-
-
-    //manager.register ("PushBotManual1", PushBotManual1.class);
-    //manager.register ("PushBotAutoSensors", PushBotAutoSensors.class);
-    //manager.register ("PushBotIrEvent", PushBotIrEvent.class);
-
-    //manager.register ("PushBotManualSensors", PushBotManualSensors.class);
-    //manager.register ("PushBotOdsDetectEvent", PushBotOdsDetectEvent.class);
-    //manager.register ("PushBotOdsFollowEvent", PushBotOdsFollowEvent.class);
-    //manager.register ("PushBotTouchEvent", PushBotTouchEvent.class);
-
-    //manager.register("PushBotDriveTouch", PushBotDriveTouch.java);
-    //manager.register("PushBotIrSeek", PushBotIrSeek.java);
-    //manager.register("PushBotSquare", PushBotSquare.java);
-  }
+        /**
+         * Any manual OpMode class registrations should go here.
+         */
+    }
 }
