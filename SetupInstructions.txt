@@ -31,3 +31,5 @@ IMPORTANT: make sure you put a checkmark in the boxes for "API 21", not a higher
 *** In step 7, when prompted to set up a proxy server, click Cancel (don't set up the proxy server yet!) and go through the rest of the set up steps. You will receive a message, "Android SDK is up to date." Continue with the next step.
 *** At the end of step 8 (after launching the SDK Manager), select Tools -> Options and fill in the information for the proxy server. Close the SDK Manager. In the "Welcome to Android Studio" screen, choose Configure -> Settings. Under "Appearance & Behavior" -> "System Settings" -> "HTTP Proxy", enter the proxy information and close the dialog. Close the Settings dialog and Android Studio. Re-open Android Studio and re-launch the SDK Manager, then continue with the next step.
 *** At the end of step 10, double-check that all the installations worked OK. Repeat them again for any items which failed. Continue with the next step.
+
+- If you need help, you need but ask, Eric
