@@ -1,0 +1,35 @@
+Android Studio: This is a much more complex program than App Inventor and takes a bunch of time (hours) to install. Without some easy and fool-proof installation instructions, see the appended "short" instructions, or the detailed instructions in https://github.com/ftctechnh/ftc_app...r/doc/tutorial, Chapter 7.
+
+Android Studio "short" installation instructions:
+1. Download the appropriate "Java SE Development Kit 7u79" for your computer from http://www.oracle.com/technetwork/ja...s-1880260.html
+2. Install the Java 7 SDK (just click Next -> Next -> Next, but if you're short on disk space, you can de-select the "Source Code" and "Public JRE" icons during the installation)
+3. Download the FTC SDK zip from https://github.com/ftctechnh/ftc_app/archive/master.zip
+4. Unzip the FTC SDK's master.zip file to a convenient directory.
+5. Download Android Studio from https://developer.android.com/sdk/index.html
+6. Install Android Studio (just click Next -> Next -> Next, but if you're short on disk space, you can uncheck the "Android Virtual Device" option on the "Choose Components" page). [I personally didn't do this because it sounded like it might be useful, despite the issues we were having with the App Inventor emulator.]
+7. Run Android Studio (the last panel of the installation may have started Android Studio for you). The first time you run Android Studio, it will prompt for some configuration options, but the default settings do not need to be changed. If you get the message, "Unable to access Android SDK add-on list", see Note 1 below.
+8. At the "Welcome to Android Studio" screen, choose Configure -> SDK Manager.
+9. Click "Deselect All", then click the checkboxes to add these items (if you're short on disk space, you can omit the items with an asterisk):
+• Android SDK Build-tools, revision 21.1.2
+• SDK Platform Android 5.0.1 API 21, revision 2
+• Samples for SDK API 21, revision 4 *
+• Google APIs, Android API 21, revision 1
+• Google APIs (ARM System Image) {for API 19} and/or Google APIs ARM EABI v7a System Image {for API 21} [don't know if it's right installing both, but ...]
+• Sources for Android SDK, API 21, revision 1 *
+• Google USB Driver, revision 11 (not needed or selectable on Mac OS)
+NOTE: Except for the first and last items in the list above, these items are under the "Android 5.0.1 (API 21)" node.
+IMPORTANT: make sure you put a checkmark in the boxes for "API 21", not a higher or lower version. Android Studio may install other versions by default (which won't cause any problems), but it will NOT install the API 21 versions unless you put a checkmark in these boxes.
+10. Accept the license for the packages, then click Install.
+11. Exit Android Studio, run it again and choose "Import project (Eclipse ADT, Gradle, etc)".
+12. Find the "ftc_app-master" directory where you unzipped the FTC SDK, then select the "build.gradle" file and click OK.
+13. Android Studio will compile. This will take a while, and it will require network access to get some additional files which aren't included in the SDK. When it's done, click the "Gradle Console" button on the bottom right and you should see a line at the end which says, "BUILD SUCCESSFUL".
+14. You may need to wait a few minutes before the next two steps will become available; Android Studio indexes the FTC SDK and may not allow you to do any more builds until the indexing is completed. Once the indexing has completed, select the Gradle Scripts node and choose Build -> Make Project.
+15. Expand the FTCRobotController node, then click Run -> Run 'FtcRobotController'.
+16. This will prompt you to run the FtcRobotController app, which you can run on your ZTE Speed or on the emulator.
+
+** Note 1: Some networks (typically those in a school or corporate environment) require a proxy server in order to connect to the Internet. Browsers can usually determine how to connect to a proxy server, but Java applications such as the Android Studio usually need to be configured separately. Ask the organization's network administrator for how to connect to the proxy server. At a minimum, you will need to know the host name and port number of the proxy server; some proxy servers will require a username and password, too. Once you have this information, you can go through the rest of the instructions, but you will need to do some steps differently:
+*** In step 7, when prompted to set up a proxy server, click Cancel (don't set up the proxy server yet!) and go through the rest of the set up steps. You will receive a message, "Android SDK is up to date." Continue with the next step.
+*** At the end of step 8 (after launching the SDK Manager), select Tools -> Options and fill in the information for the proxy server. Close the SDK Manager. In the "Welcome to Android Studio" screen, choose Configure -> Settings. Under "Appearance & Behavior" -> "System Settings" -> "HTTP Proxy", enter the proxy information and close the dialog. Close the Settings dialog and Android Studio. Re-open Android Studio and re-launch the SDK Manager, then continue with the next step.
+*** At the end of step 10, double-check that all the installations worked OK. Repeat them again for any items which failed. Continue with the next step.
+
+- If you need help, you need but ask, Eric
