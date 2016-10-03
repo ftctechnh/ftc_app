@@ -1,3 +1,10 @@
+# MidKnight Magic Too Team 9947
+This is the official repository for the 2016-17 season Velocity Vortex.
+
+# Vuforia
+The key for this team is:
+AdInH5v/////AAAAGUi5Xbur7ktgqUQXgs38JrgCkHuKviZgqug38OaJsDCOsEbHKIxJ20etRVeQn5JyYyPyY04Jnnr0NNMsY5VHQ9OSHTgdp60GXgg+0jfRikJXEJMuAyh0Jw5pbJ+rnG8/5AGTQ+yR8I3EmX9tfMGOsJiRrNRuaRJB3EFs9YHPkYVZwEyq+sKnc7j4qSrSqdn3kkTonfLEBLKF6mJzzsiZDGL+zpwIcV+Z5hqVhuWCmYRRrsrC0fBxGAUvOt1UfbBrn+8dZckf69whrz2ljU4+/xxrQt642d2bHU2AfGKDpFB0oeNCPZYBzjksoY5p7y714jrRVZDIco8vuoqqCESa0fYRlFOmRk70K+edl59Ul3d/
+
 # ftc_app
 FTC Android Studio project to create FTC Robot Controller app.
 
