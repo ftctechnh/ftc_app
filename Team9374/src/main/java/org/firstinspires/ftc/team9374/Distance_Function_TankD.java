@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.team9374;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -23,6 +23,7 @@ public class Distance_Function_TankD extends OpMode {
     public void loop() {
         float leftDC = gamepad1.left_stick_y;
         float rightDC =  gamepad1.right_stick_y;
+
 
         left.setPower(leftDC);
         right.setPower(rightDC);
