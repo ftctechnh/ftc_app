@@ -1,10 +1,8 @@
 import java.util.regex.Pattern
-
 //
 // build.gradle in FtcRobotController
 //
 apply plugin: 'com.android.library'
-
 android {
 
     defaultConfig {
@@ -19,21 +17,23 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
     lintOptions {
-       // set to true to turn off analysis progress reporting by lint
-       quiet true
-       // if true, stop the gradle build if errors are found
-       abortOnError false
-       // if true, only report errors
-       ignoreWarnings true
-       //disable 'TypographyFractions','TypographyQuotes'
+        // set to true to turn off analysis progress reporting by lint
+        quiet true
+        // if true, stop the gradle build if errors are found
+        abortOnError false
+        // if true, only report errors
+        ignoreWarnings true
+        //disable 'TypographyFractions','TypographyQuotes'
     }
 
 }
-
 repositories {
     flatDir {
         dirs '../libs'
     }
 }
-
 apply from: 'build.release.gradle'
+
+dependencies {
+    compile project(':opencv')
+}

@@ -1,0 +1,89 @@
+/**
+ * This build script cannot reference "../build.common.gradle
+ * since it applies the com.android.application plugin, when this is a library.
+ */
+
+import java.util.regex.Pattern
+
+apply plugin: 'com.android.library'
+
+android {
+
+    compileSdkVersion 23
+    buildToolsVersion '23.0.3'
+
+    defaultConfig {
+        minSdkVersion 19
+        targetSdkVersion 19
+
+        /**
+         * We keep the versionCode and versionName of robot controller applications in sync with
+         * the master information published in the AndroidManifest.xml file of the FtcRobotController
+         * module. This helps avoid confusion that might arise from having multiple versions of
+         * a robot controller app simultaneously installed on a robot controller device.
+         *
+         * We accomplish this with the help of a funky little Groovy script that maintains that
+         * correspondence automatically.
+         *
+         * @see <a href="http://developer.android.com/tools/building/configuring-gradle.html">Configure Your Build</a>
+         * @see <a href="http://developer.android.com/tools/publishing/versioning.html">Versioning Your App</a>
+         */
+        def manifestFile = file('../FtcRobotController/src/main/AndroidManifest.xml');
+        def manifestText = manifestFile.getText()
+        //
+        def vCodePattern = Pattern.compile("versionCode=\"(\\d+(\\.\\d+)*)\"")
+        def matcher = vCodePattern.matcher(manifestText)
+        matcher.find()
+        def vCode = Integer.parseInt(matcher.group(1))
+        //
+        def vNamePattern = Pattern.compile("versionName=\"(.*)\"")
+        matcher = vNamePattern.matcher(manifestText);
+        matcher.find()
+        def vName = matcher.group(1)
+        //
+        versionCode vCode
+        versionName vName
+    }
+
+    // Advanced user code might just want to use Vuforia directly, so we set up the libs as needed
+    buildTypes {
+        release {
+            debuggable true
+            ndk {
+                abiFilters "armeabi-v7a"
+            }
+        }
+        debug {
+            debuggable true
+            ndk {
+                abiFilters "armeabi-v7a"
+            }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
+    sourceSets.main {
+        jni.srcDirs = []
+        jniLibs.srcDir "../libs"
+    }
+    lintOptions {
+        // set to true to turn off analysis progress reporting by lint
+        //quiet true
+        // if true, stop the gradle build if errors are found
+        //abortOnError false
+        // if true, only report errors
+        //ignoreWarnings true
+        disable 'GoogleAppIndexingWarning'
+    }
+
+}
+
+repositories {
+    flatDir {
+        dirs '../libs'
+    }
+}
