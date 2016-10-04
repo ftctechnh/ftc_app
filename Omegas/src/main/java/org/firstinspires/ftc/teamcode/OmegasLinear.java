@@ -50,7 +50,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Omegas: Linear OpMode", group="Linear Opmode")  // @Autonomous(...) is the other common choice
+@TeleOp(name="Omegas: Linear OpMode", group="Linear Opmode")
 public class OmegasLinear extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -67,17 +67,10 @@ public class OmegasLinear extends LinearOpMode {
 
         Ω.init(hardwareMap);
 
-        /* eg: Initialize the hardware variables. Note that the strings used here as parameters
+        /* Initialize the hardware variables. Note that the strings used here as parameters
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        // leftMotor  = hardwareMap.dcMotor.get("left motor");
-        // rightMotor = hardwareMap.dcMotor.get("right motor");
-
-        // eg: Set the drive motor directions:
-        // "Reverse" the motor that runs backwards when connected directly to the battery
-        // leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        // rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -89,8 +82,8 @@ public class OmegasLinear extends LinearOpMode {
             telemetry.update();
 
             // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
-            Ω.leftMotor.setPower(gamepad1.left_stick_y);
-            Ω.rightMotor.setPower(gamepad1.right_stick_y);
+            Ω.leftMotor.setPower(-gamepad1.left_stick_y);
+            Ω.rightMotor.setPower(-gamepad1.right_stick_y);
 
             idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
         }
