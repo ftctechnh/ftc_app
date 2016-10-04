@@ -143,16 +143,22 @@ public class OmegasVuforia extends LinearOpMode {
          * example "StonesAndChips", datasets can be found in in this project in the
          * documentation directory.
          */
-        VuforiaTrackables stonesAndChips = this.vuforia.loadTrackablesFromAsset("StonesAndChips");
-        VuforiaTrackable redTarget = stonesAndChips.get(0);
-        redTarget.setName("RedTarget");  // Stones
+        VuforiaTrackables ftcTrackables = this.vuforia.loadTrackablesFromAsset("FTC_2016-17");
+        VuforiaTrackable wheelsTarget = ftcTrackables.get(0);
+        wheelsTarget.setName("WheelsTarget");  // Wheels
 
-        VuforiaTrackable blueTarget  = stonesAndChips.get(1);
-        blueTarget.setName("BlueTarget");  // Chips
+        VuforiaTrackable toolsTarget  = ftcTrackables.get(1);
+        toolsTarget.setName("ToolsTarget");  // Tools
+
+        VuforiaTrackable legosTarget  = ftcTrackables.get(2);
+        legosTarget.setName("LegosTarget");  // Legos
+
+        VuforiaTrackable gearsTarget  = ftcTrackables.get(3);
+        gearsTarget.setName("GearsTarget");  // Gears
 
         /** For convenience, gather together all the trackable objects in one easily-iterable collection */
         List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
-        allTrackables.addAll(stonesAndChips);
+        allTrackables.addAll(ftcTrackables);
 
         /**
          * We use units of mm here because that's the recommended units of measurement for the
@@ -200,12 +206,6 @@ public class OmegasVuforia extends LinearOpMode {
          *
          * </ol>
          *
-         * This example places the "stones" image on the perimeter wall to the Left
-         *  of the Red Driver station wall.  Similar to the Red Beacon Location on the Res-Q
-         *
-         * This example places the "chips" image on the perimeter wall to the Right
-         *  of the Blue Driver station.  Similar to the Blue Beacon Location on the Res-Q
-         *
          * See the doc folder of this project for a description of the field Axis conventions.
          *
          * Initially the target is conceptually lying at the origin of the field's coordinate system
@@ -216,12 +216,12 @@ public class OmegasVuforia extends LinearOpMode {
          * In a real situation we'd also account for the vertical (Z) offset of the target,
          * but for simplicity, we ignore that here; for a real robot, you'll want to fix that.
          *
-         * To place the Stones Target on the Red Audience wall:
+         * To place the Wheels and Tools Targets on the Red Audience wall:
          * - First we rotate it 90 around the field's X axis to flip it upright
          * - Then we rotate it  90 around the field's Z access to face it away from the audience.
          * - Finally, we translate it back along the X axis towards the red audience wall.
          */
-        OpenGLMatrix redTargetLocationOnField = OpenGLMatrix
+        OpenGLMatrix wheelsTargetLocationOnField = OpenGLMatrix
                 /* Then we translate the target off to the RED WALL. Our translation here
                 is a negative translation in X.*/
                 .translation(-mmFTCFieldWidth/2, 0, 0)
@@ -229,15 +229,26 @@ public class OmegasVuforia extends LinearOpMode {
                         /* First, in the fixed (field) coordinate system, we rotate 90deg in X, then 90 in Z */
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
                         AngleUnit.DEGREES, 90, 90, 0));
-        redTarget.setLocation(redTargetLocationOnField);
-        RobotLog.ii(TAG, "Red Target=%s", format(redTargetLocationOnField));
+        wheelsTarget.setLocation(wheelsTargetLocationOnField);
+        RobotLog.ii(TAG, "Red Target=%s", format(wheelsTargetLocationOnField));
 
-       /*
-        * To place the Stones Target on the Blue Audience wall:
-        * - First we rotate it 90 around the field's X axis to flip it upright
-        * - Finally, we translate it along the Y axis towards the blue audience wall.
-        */
-        OpenGLMatrix blueTargetLocationOnField = OpenGLMatrix
+        OpenGLMatrix toolsTargetLocationOnField = OpenGLMatrix
+                /* Then we translate the target off to the RED WALL. Our translation here
+                is a negative translation in X.*/
+                .translation(-mmFTCFieldWidth/2, 0, 0)
+                .multiplied(Orientation.getRotationMatrix(
+                        /* First, in the fixed (field) coordinate system, we rotate 90deg in X, then 90 in Z */
+                        AxesReference.EXTRINSIC, AxesOrder.XZX,
+                        AngleUnit.DEGREES, 90, 90, 0));
+        toolsTarget.setLocation(toolsTargetLocationOnField);
+        RobotLog.ii(TAG, "Red Target=%s", format(toolsTargetLocationOnField));
+
+        /**
+         * To place the Legos and Gears Targets on the Blue Audience wall:
+         * - First we rotate it 90 around the field's X axis to flip it upright
+         * - Finally, we translate it along the Y axis towards the blue audience wall.
+         */
+        OpenGLMatrix legosTargetLocationOnField = OpenGLMatrix
                 /* Then we translate the target off to the Blue Audience wall.
                 Our translation here is a positive translation in Y.*/
                 .translation(0, mmFTCFieldWidth/2, 0)
@@ -245,8 +256,19 @@ public class OmegasVuforia extends LinearOpMode {
                         /* First, in the fixed (field) coordinate system, we rotate 90deg in X */
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
                         AngleUnit.DEGREES, 90, 0, 0));
-        blueTarget.setLocation(blueTargetLocationOnField);
-        RobotLog.ii(TAG, "Blue Target=%s", format(blueTargetLocationOnField));
+        legosTarget.setLocation(legosTargetLocationOnField);
+        RobotLog.ii(TAG, "Blue Target=%s", format(toolsTargetLocationOnField));
+
+        OpenGLMatrix gearsTargetLocationOnField = OpenGLMatrix
+                /* Then we translate the target off to the Blue Audience wall.
+                Our translation here is a positive translation in Y.*/
+                .translation(0, mmFTCFieldWidth/2, 0)
+                .multiplied(Orientation.getRotationMatrix(
+                        /* First, in the fixed (field) coordinate system, we rotate 90deg in X */
+                        AxesReference.EXTRINSIC, AxesOrder.XZX,
+                        AngleUnit.DEGREES, 90, 0, 0));
+        gearsTarget.setLocation(gearsTargetLocationOnField);
+        RobotLog.ii(TAG, "Blue Target=%s", format(toolsTargetLocationOnField));
 
         /**
          * Create a transformation matrix describing where the phone is on the robot. Here, we
@@ -272,15 +294,17 @@ public class OmegasVuforia extends LinearOpMode {
          * listener is a {@link VuforiaTrackableDefaultListener} and can so safely cast because
          * we have not ourselves installed a listener of a different type.
          */
-        ((VuforiaTrackableDefaultListener)redTarget.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
-        ((VuforiaTrackableDefaultListener)blueTarget.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
+        ((VuforiaTrackableDefaultListener)wheelsTarget.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
+        ((VuforiaTrackableDefaultListener)toolsTarget.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
+        ((VuforiaTrackableDefaultListener)legosTarget.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
+        ((VuforiaTrackableDefaultListener)gearsTarget.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
 
         /**
          * A brief tutorial: here's how all the math is going to work:
          *
          * C = phoneLocationOnRobot  maps   phone coords -> robot coords
          * P = tracker.getPose()     maps   image target coords -> phone coords
-         * L = redTargetLocationOnField maps   image target coords -> field coords
+         * L = wheelsTargetLocationOnField maps   image target coords -> field coords
          *
          * So
          *
@@ -300,7 +324,7 @@ public class OmegasVuforia extends LinearOpMode {
         waitForStart();
 
         /** Start tracking the data sets we care about. */
-        stonesAndChips.activate();
+        ftcTrackables.activate();
 
         while (opModeIsActive()) {
 
@@ -310,7 +334,7 @@ public class OmegasVuforia extends LinearOpMode {
                  * the last time that call was made, or if the trackable is not currently visible.
                  * getRobotLocation() will return null if the trackable is not currently visible.
                  */
-                telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible() ? "Visible" : "Not Visible");    //
+                telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible() ? "Visible" : "Not Visible");
 
                 OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
                 if (robotLocationTransform != null) {
@@ -321,7 +345,6 @@ public class OmegasVuforia extends LinearOpMode {
              * Provide feedback as to where the robot was last located (if we know).
              */
             if (lastLocation != null) {
-                //  RobotLog.vv(TAG, "robot=%s", format(lastLocation));
                 telemetry.addData("Pos", format(lastLocation));
             } else {
                 telemetry.addData("Pos", "Unknown");
