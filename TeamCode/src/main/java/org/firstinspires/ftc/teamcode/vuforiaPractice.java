@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -22,7 +24,7 @@ import java.util.List;
  */
 
 @Autonomous(name="Vuforia Navigation Practice", group ="Practice")
-public class vuforiaPractice {
+public class vuforiaPractice extends LinearOpMode {
     public static final String TAG = "Vuforia Practice";
 
     OpenGLMatrix lastLocation = null;
@@ -38,15 +40,15 @@ public class vuforiaPractice {
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
 
-        VuforiaTrackables stonesAndChips = this.vuforia.loadTrackablesFromAsset("StonesAndChips");
-        VuforiaTrackable redTarget = stonesAndChips.get(0);
-        redTarget.setName("RedTarget");  // Stones
+        VuforiaTrackables Wheels = this.vuforia.loadTrackablesFromAsset("Wheels");
+        VuforiaTrackable redTarget = Wheels.get(0);
+        redTarget.setName("RedTarget");
 
-        VuforiaTrackable blueTarget  = stonesAndChips.get(1);
-        blueTarget.setName("BlueTarget");  // Chips
+        VuforiaTrackable blueTarget  = Wheels.get(1);
+        blueTarget.setName("BlueTarget");
 
         List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
-        allTrackables.addAll(stonesAndChips);
+        allTrackables.addAll(Wheels);
 
 
         float mmPerInch        = 25.4f;
@@ -94,7 +96,7 @@ public class vuforiaPractice {
         telemetry.update();
         waitForStart();
 
-        stonesAndChips.activate();
+        Wheels.activate();
 
         while (opModeIsActive()) {
 
