@@ -104,7 +104,7 @@ public class OmegasVuforia extends LinearOpMode {
         this.context = context.getApplicationContext();
     }
 
-    @Override public void runOpMode() throws InterruptedException {
+    @Override public void runOpMode() {
         /**
          * Start up Vuforia, telling it the id of the view that we wish to use as the parent for
          * the camera monitor feedback; if no camera monitor feedback is desired, use the parameterless
@@ -350,7 +350,6 @@ public class OmegasVuforia extends LinearOpMode {
                 telemetry.addData("Pos", "Unknown");
             }
             telemetry.update();
-            idle();
         }
     }
 

@@ -61,7 +61,7 @@ public class OmegasLinear extends LinearOpMode {
     static final double     TURN_SPEED    = 0.5;
 
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -84,8 +84,6 @@ public class OmegasLinear extends LinearOpMode {
             // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
             Ω.leftMotor.setPower(-gamepad1.left_stick_y);
             Ω.rightMotor.setPower(-gamepad1.right_stick_y);
-
-            idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
         }
     }
 }
