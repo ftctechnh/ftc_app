@@ -7,13 +7,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
  * Created by 111 on 9/29/2016.
  */
 @Autonomous(name = "Concept: NullOp", group = "Concept")
-public class AutonomousTestOp extends LinearOpMode {
-
-
+public class AutonomousTestOp extends LinearOpMode
+{
     DriveTrainInterface drive;
 
-
-    public void tunOpMode()
+    public void runOpMode()
     {
         drive.driveStraight(1, 1);
 
