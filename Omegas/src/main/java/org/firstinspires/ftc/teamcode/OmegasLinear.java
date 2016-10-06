@@ -84,6 +84,9 @@ public class OmegasLinear extends LinearOpMode {
             // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
             Ω.leftMotor.setPower(-gamepad1.left_stick_y);
             Ω.rightMotor.setPower(-gamepad1.right_stick_y);
+
+            Ω.beaconator.setPosition(-gamepad1.left_trigger
+                                     +gamepad1.right_trigger);
         }
     }
 }

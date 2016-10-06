@@ -26,6 +26,7 @@ public class HardwareOmegas
     /* Public OpMode members. */
     public DcMotor  leftMotor   = null;
     public DcMotor  rightMotor  = null;
+    public Servo    beaconator  = null;
 
     public static final double MID_SERVO       =  0.5 ;
     public static final double ARM_UP_POWER    =  0.45 ;
@@ -45,6 +46,11 @@ public class HardwareOmegas
         rightMotor  = hwMap.dcMotor.get("right_drive");
         leftMotor.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         rightMotor.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+
+        // Connect to servo (Assume PushBot Left Hand)
+        // Change the text in quotes to match any servo name on your robot.
+        beaconator  = hwMap.servo.get("left_hand");
+        beaconator.setDirection(Servo.Direction.FORWARD);
 
         // Set all motors to zero power
         leftMotor.setPower(0);
