@@ -90,6 +90,37 @@ public class OmniDriveBot implements DriveTrainInterface
         bL.setPower(bLPower);
     }
 
+    public void driveStraight(double distanceInches, int degree)
+    {
+
+        fL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        fR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        double degToRad = (180/3.1415926) * degree;
+
+        float leftXIn = (float)Math.sin(degToRad);
+        float leftYIn = (float)Math.cos(degToRad);
+        float fRPower = leftYIn - leftXIn;
+        float fLPower = -leftYIn - leftXIn;
+        float bRPower = leftYIn + leftXIn;
+        float bLPower = -leftYIn + leftXIn;
+
+        bL.setPower(bLPower);
+        bR.setPower(bRPower);
+        fL.setPower(fLPower);
+        fR.setPower(fRPower);
+
+
+
+    }
+
+    public void spin(float degree)
+    {
+
+    }
+
     public DcMotor getfL()
     {
         return fL;
