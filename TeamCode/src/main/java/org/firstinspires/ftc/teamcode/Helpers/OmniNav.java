@@ -2,6 +2,9 @@ package org.firstinspires.ftc.teamcode.Helpers;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.teamcode.Helpers.HW;
 
 /**
  * Driving functions for a Mecanum drive train in autonomous.
@@ -72,6 +75,42 @@ public class OmniNav {
         se.setPower(se_speed);
         sw.setPower(sw_speed);
         nw.setPower(nw_speed);
+    }
+    public static void setMotors(float x, float y, float rot, DcMotor ne, DcMotor se, DcMotor sw, DcMotor nw) {
+//        double theta = Math.atan(x/y) - Math.PI/4;
+        double scaler = 0.8;
+        double drive = (double) -y;
+        double strafe = (double) x;
+        double spin = (double) rot;
+
+
+        /*rot *= .5;
+        double magnitude = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+        magnitude = magnitude*(100/127) - rot;
+        magnitude = (scaler*Math.pow(magnitude, 3) + (1 - scaler) * magnitude);
+        double newX = Math.cos(theta)*magnitude;
+        double newY = Math.sin(theta)*magnitude;
+        double nePower, nwPower, sePower, swPower;
+        nePower = Range.clip(rot + newX, -1, 1);
+        nwPower = Range.clip(rot + newY, -1, 1);
+        sePower = Range.clip(rot - newX, -1, 1);
+        swPower = Range.clip(rot - newY, -1, 1);
+*/
+        double nePower, nwPower, sePower, swPower;
+        nwPower = Range.clip(drive + strafe + spin, -1, 1);
+        swPower = Range.clip(drive - strafe + spin, -1, 1);
+        nePower = Range.clip(drive - strafe - spin, -1, 1);
+        sePower = Range.clip(drive + strafe - spin, -1, 1);
+        nwPower = (scaler*Math.pow(nwPower, 3) + ( 1 - scaler) * nwPower);
+        nePower = -(scaler*Math.pow(nePower, 3) + ( 1 - scaler) * nePower);
+        swPower = (scaler*Math.pow(swPower, 3) + ( 1 - scaler) * swPower);
+        sePower = -(scaler*Math.pow(sePower, 3) + ( 1 - scaler) * sePower);
+
+        //from here on is just setting motor values
+        ne.setPower(nePower);
+        se.setPower(sePower);
+        sw.setPower(swPower);
+        nw.setPower(nwPower);
     }
 
     public void turn(double degrees) {
