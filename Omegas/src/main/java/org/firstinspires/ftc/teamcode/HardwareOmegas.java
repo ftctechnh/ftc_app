@@ -50,7 +50,7 @@ public class HardwareOmegas
         // Connect to servo (Assume PushBot Left Hand)
         // Change the text in quotes to match any servo name on your robot.
         beaconator  = hwMap.servo.get("left_hand");
-        beaconator.setDirection(Servo.Direction.FORWARD);
+        beaconator.setDirection(Servo.Direction.REVERSE);
 
         // Set all motors to zero power
         leftMotor.setPower(0);
@@ -69,7 +69,6 @@ public class HardwareOmegas
      * The function looks at the elapsed cycle time, and sleeps for the remaining time interval.
      *
      * @param periodMs  Length of wait cycle in mSec.
-     * @throws InterruptedException
      */
     public void waitForTick(long periodMs) {
 
