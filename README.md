@@ -31,7 +31,7 @@ Your First Programming Task
 To ensure that everyone is familiar with the code commit / review process, each member of the team should walk through making a very simple change, sending it for review, and seeing it committed to our master branch.
 
 - Checkout the latest 'master' branch.
-- Create a new branch titled 'Team-Members-<your initials>'.
+- Create a new branch titled 'Team-Members-your initials'.
 - Add your name to the list of team members in the 'Team-Members.txt' file.
 - Commit and push your branch.
 - Create a Pull Request (PR) and tag the team and Coach Tarbox to review.
