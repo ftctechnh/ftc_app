@@ -16,10 +16,6 @@ public class OmniDriveTeleOp extends OpMode
     {
         robot.init(hardwareMap);
         gamepad1.setJoystickDeadzone(0.01f);
-        robot.getfL().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.getfR().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.getbL().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.getbR().setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void loop()
