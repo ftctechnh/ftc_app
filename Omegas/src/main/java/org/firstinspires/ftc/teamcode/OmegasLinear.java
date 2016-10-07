@@ -85,8 +85,7 @@ public class OmegasLinear extends LinearOpMode {
             Ω.leftMotor.setPower(-gamepad1.left_stick_y);
             Ω.rightMotor.setPower(-gamepad1.right_stick_y);
 
-            Ω.beaconator.setPosition(-gamepad1.left_trigger
-                                     +gamepad1.right_trigger);
+            Ω.beaconator.setPower(Math.abs(gamepad1.left_trigger));
         }
     }
 }
