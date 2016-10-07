@@ -6,15 +6,16 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 /**
  * Created by 111 on 9/29/2016.
  */
-@Autonomous(name = "Concept: NullOp", group = "Concept")
+@Autonomous(name = "AutonomousTestOp", group = "Autonomous")
 public class AutonomousTestOp extends LinearOpMode
 {
-    DriveTrainInterface drive;
+    private OmniDriveBot robot = new OmniDriveBot();
 
-    public void runOpMode()
+    public void runOpMode() throws InterruptedException
     {
-        drive.driveStraight(1, 1);
-
+        robot.init(hardwareMap);
+        waitForStart();
+        robot.driveStraight(12, 45);
     }
 
 

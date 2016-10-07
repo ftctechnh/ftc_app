@@ -49,6 +49,16 @@ public class OmniDriveBot implements DriveTrainInterface
         fR.setPower(0);
         bL.setPower(0);
         bR.setPower(0);
+
+        fL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        fR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        fR.setMaxSpeed(2400);
+        fL.setMaxSpeed(2400);
+        bR.setMaxSpeed(2400);
+        bL.setMaxSpeed(2400);
     }
 
     public void drive()
@@ -57,10 +67,7 @@ public class OmniDriveBot implements DriveTrainInterface
         fLPower = -leftYIn - leftXIn - rightXIn;
         bRPower = leftYIn + leftXIn - rightXIn;
         bLPower = -leftYIn + leftXIn - rightXIn;
-        fR.setMaxSpeed(2400);
-        fL.setMaxSpeed(2400);
-        bR.setMaxSpeed(2400);
-        bL.setMaxSpeed(2400);
+
         float scaleFactor = 1.0f;
 
         if (Math.abs(fRPower) > scaleFactor)
@@ -92,13 +99,7 @@ public class OmniDriveBot implements DriveTrainInterface
 
     public void driveStraight(double distanceInches, int degree)
     {
-
-        fL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        fR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        bL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        bR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        double degToRad = (180/3.1415926) * degree;
+        double degToRad = (Math.PI/180) * degree;
 
         float leftXIn = (float)Math.sin(degToRad);
         float leftYIn = (float)Math.cos(degToRad);
@@ -112,8 +113,22 @@ public class OmniDriveBot implements DriveTrainInterface
         fL.setPower(fLPower);
         fR.setPower(fRPower);
 
+        int fLDistanceEncoders = (int)(Math.abs(fL.getCurrentPosition()) + (distanceInches*86));
+        int fRDistanceEncoders = (int)(Math.abs(fR.getCurrentPosition()) + (distanceInches*86));
 
+        while(Math.abs(fL.getCurrentPosition()) < fLDistanceEncoders)
+        {
 
+        }
+        while(Math.abs(fR.getCurrentPosition()) < fLDistanceEncoders)
+        {
+
+        }
+
+        bL.setPower(0);
+        bR.setPower(0);
+        fL.setPower(0);
+        fR.setPower(0);
     }
 
     public void spin(float degree)
