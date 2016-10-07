@@ -62,15 +62,15 @@ public class TwitchyTeleopTank_Linear extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareTwitchy   robot         = new HardwareTwitchy();            // Use a twitch's hardware
-    double          armPosition     = robot.ARM_HOME;                   // Servo safe position
+    double          beaconPosition     = robot.BEACON_HOME;                   // Servo safe position
     double          clawPosition    = robot.CLAW_HOME;                  // Servo safe position
-    final double    CLAW_SPEED      = 0.01 ;                            // sets rate to move servo
+    final double    beacon_SPEED      = 0.125 ;                            // sets rate to move servo
     final double    ARM_SPEED       = 0.01 ;                            // sets rate to move servo
 
     @Override
     public void runOpMode() throws InterruptedException {
         double vertical;
-        double horizontol;
+        double horizontal;
 
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
@@ -88,7 +88,7 @@ public class TwitchyTeleopTank_Linear extends LinearOpMode {
         while (opModeIsActive()) {
 
             vertical = gamepad1.left_stick_y;
-            horizontol = gamepad1.left_stick_x;
+            horizontal = gamepad1.left_stick_x;
             if(vertical>0){
                 robot.leftBackMotor.setPower(1.0);
                 robot.leftFrontMotor.setPower(1.0);
@@ -106,7 +106,7 @@ public class TwitchyTeleopTank_Linear extends LinearOpMode {
                 robot.rightFrontMotor.setPower(0);
             }
 
-            if(horizontol>0){
+            if(horizontal>0){
                 robot.leftBackMotor.setPower(1.0);
                 robot.leftFrontMotor.setPower(1.0);
                 robot.rightBackMotor.setPower(-1.0);
@@ -123,28 +123,30 @@ public class TwitchyTeleopTank_Linear extends LinearOpMode {
                 robot.rightFrontMotor.setPower(0);
             }
 
+            // Use gamepad X & B to move the beacon hitter left and right the Beacon
+            if (gamepad1.x)
+                beaconPosition += beacon_SPEED;
+            else if (gamepad1.b)
+                beaconPosition -= beacon_SPEED;
+
 //            // Use gamepad Y & A raise and lower the arm
 //            if (gamepad1.a)
 //                armPosition += ARM_SPEED;
 //            else if (gamepad1.y)
 //                armPosition  -= ARM_SPEED;
 //
-//            // Use gamepad X & B to open and close the claw
-//            if (gamepad1.x)
-//                clawPosition += CLAW_SPEED;
-//            else if (gamepad1.b)
-//                clawPosition -= CLAW_SPEED;
+
 //
 //            // Move both servos to new position.
-//            armPosition  = Range.clip(armPosition, robot.ARM_MIN_RANGE, robot.ARM_MAX_RANGE);
-//            robot.arm.setPosition(armPosition);
+            beaconPosition  = Range.clip(beaconPosition, robot.BEACON_MIN_RANGE, robot.BEACON_MAX_RANGE);
+            robot.beacon.setPosition(beaconPosition);
 //            clawPosition = Range.clip(clawPosition, robot.CLAW_MIN_RANGE, robot.CLAW_MAX_RANGE);
 //            robot.claw.setPosition(clawPosition);
 //
 //            // Send telemetry message to signify robot running;
-//            telemetry.addData("arm",   "%.2f", armPosition);
+            telemetry.addData("beacon",   "%.2f", beaconPosition);
 //            telemetry.addData("claw",  "%.2f", clawPosition);
-            telemetry.addData("horizontol",  "%.2f", horizontol);
+            telemetry.addData("horizontal",  "%.2f", horizontal);
             telemetry.addData("vertical", "%.2f", vertical);
             telemetry.update();
 
