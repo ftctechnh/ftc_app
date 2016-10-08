@@ -63,8 +63,8 @@ public class CakePushbotTeleopTank_Iterative extends OpMode{
     CakeHardwarePushbot robot       = new CakeHardwarePushbot(); // use the class created to define a Pushbot's hardware
                                                          // could also use HardwarePushbotMatrix class.
     double          clawOffset  = 0.0 ;                  // Servo mid position
-    final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
-
+    final double    CLAW_SPEED  = 0.02 ;// sets rate to move servo
+    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -74,7 +74,7 @@ public class CakePushbotTeleopTank_Iterative extends OpMode{
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        robot.init(hardwareMap);
+        robot.init(hardwareMap); //Maps hardware
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");    //
@@ -100,34 +100,33 @@ public class CakePushbotTeleopTank_Iterative extends OpMode{
      */
     @Override
     public void loop() {
-        double leftDriveMotorPower;
+        double leftDriveMotorPower; //defines variable
         double rightDriveMotorPower;
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
         leftDriveMotorPower = -gamepad1.left_stick_y;
-        rightDriveMotorPower = -gamepad1.right_stick_y;
-        robot.leftMotor.setPower(leftDriveMotorPower);
+        rightDriveMotorPower = -gamepad1.right_stick_y; //Have to offset the negatives
+        robot.leftMotor.setPower(leftDriveMotorPower); //Makes the robot run
         robot.rightMotor.setPower(rightDriveMotorPower);
 
-        // Use gamepad left & right Bumpers to open and close the claw
-/*        if (gamepad1.right_bumper)
-            clawOffset += CLAW_SPEED;
-        else if (gamepad1.left_bumper)
-            clawOffset -= CLAW_SPEED;
 
-        // Move both servos to new position.  Assume servos are mirror image of each other.
-        clawOffset = Range.clip(clawOffset, -0.5, 0.5);
-        robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);
-        robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset);
 
-        // Use gamepad buttons to move the arm up (Y) and down (A)
-        if (gamepad1.y)
-            robot.armMotor.setPower(robot.ARM_UP_POWER);
-        else if (gamepad1.a)
-            robot.armMotor.setPower(robot.ARM_DOWN_POWER);
+         //Use gamepad buttons to move the arm up (x) and down (b)
+        if (gamepad1.x)
+            robot.pushLeft.setPosition(1.5);
+        else if (gamepad1.b)
+            robot.pushRight.setPosition(1.5);
+    // Left bumper
+        if (gamepad1.left_bumper)
+            robot.ForkRight.setTargetPosition(1440);//Forklift in
+            robot.ForkLeft.setTargetPosition(1440);//Forklift out
+        // Right Bumper
+        if (gamepad1.right_bumper)
+            robot.forkRaise.setTargetPosition(1440); //Raises forklift
         else
-            robot.armMotor.setPower(0.0);
-*/
+        robot.forkRaise.setTargetPosition(0);
+
+
         // Send telemetry message to signify robot running;
  //       telemetry.addData("claw",  "Offset = %.2f", clawOffset);
         telemetry.addData("left drive motor power: ",  "%.2f", leftDriveMotorPower);
