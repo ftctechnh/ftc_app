@@ -16,6 +16,15 @@ public class AutonomousTestOp extends LinearOpMode
         robot.init(hardwareMap);
         waitForStart();
         robot.driveStraight(12, 45);
+        telemetry.addData("Front Left 1", robot.getfL().getCurrentPosition());
+        telemetry.addData("Front Right 1", robot.getfR().getCurrentPosition());
+        telemetry.update();
+        sleep(100);
+        robot.driveStraight(12, -45);
+        telemetry.addData("Front Left 2", robot.getfL().getCurrentPosition());
+        telemetry.addData("Front Right 2", robot.getfR().getCurrentPosition());
+        telemetry.update();
+        sleep(5000);
     }
 
 

@@ -116,13 +116,8 @@ public class OmniDriveBot implements DriveTrainInterface
         int fLDistanceEncoders = (int)(Math.abs(fL.getCurrentPosition()) + (distanceInches*86));
         int fRDistanceEncoders = (int)(Math.abs(fR.getCurrentPosition()) + (distanceInches*86));
 
-        while(Math.abs(fL.getCurrentPosition()) < fLDistanceEncoders)
+        while(Math.abs(fL.getCurrentPosition()) < fLDistanceEncoders & Math.abs(fR.getCurrentPosition()) < fRDistanceEncoders)
         {
-
-        }
-        while(Math.abs(fR.getCurrentPosition()) < fLDistanceEncoders)
-        {
-
         }
 
         bL.setPower(0);
