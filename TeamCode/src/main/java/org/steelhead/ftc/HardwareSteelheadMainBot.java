@@ -35,11 +35,11 @@ public class HardwareSteelheadMainBot {
         //armMotor = aHwMap.dcMotor.get("armMotor");
         //shooterMotor = aHwMap.dcMotor.get("shooterMotor");
 
-        leftMotor_1.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftMotor_1.setDirection(DcMotorSimple.Direction.FORWARD);
         leftMotor_2.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        rightMotor_1.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightMotor_2.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightMotor_1.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightMotor_2.setDirection(DcMotorSimple.Direction.FORWARD );
 
         //armMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         //shooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
