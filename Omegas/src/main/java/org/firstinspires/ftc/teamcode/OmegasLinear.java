@@ -34,7 +34,9 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -85,7 +87,14 @@ public class OmegasLinear extends LinearOpMode {
             Ω.leftMotor.setPower(-gamepad1.left_stick_y);
             Ω.rightMotor.setPower(-gamepad1.right_stick_y);
 
-            Ω.beaconator.setPower(Math.abs(gamepad1.left_trigger));
+            // Left beaconator management
+            if (gamepad1.left_trigger > 0) {
+                Ω.beaconator.setDirection(CRServo.Direction.FORWARD);
+                Ω.beaconator.setPower(Math.abs(gamepad1.left_trigger));
+            } else if (gamepad1.left_bumper) {
+                Ω.beaconator.setDirection(CRServo.Direction.REVERSE);
+                Ω.beaconator.setPower(1.0);
+            }
         }
     }
 }
