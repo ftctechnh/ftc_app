@@ -35,8 +35,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -89,11 +87,20 @@ public class OmegasLinear extends LinearOpMode {
 
             // Left beaconator management
             if (gamepad1.left_trigger > 0) {
-                Ω.beaconator.setDirection(CRServo.Direction.FORWARD);
-                Ω.beaconator.setPower(Math.abs(gamepad1.left_trigger));
+                Ω.leftBeaconator.setDirection(CRServo.Direction.FORWARD);
+                Ω.leftBeaconator.setPower(Math.abs(gamepad1.left_trigger));
             } else if (gamepad1.left_bumper) {
-                Ω.beaconator.setDirection(CRServo.Direction.REVERSE);
-                Ω.beaconator.setPower(1.0);
+                Ω.leftBeaconator.setDirection(CRServo.Direction.REVERSE);
+                Ω.leftBeaconator.setPower(1.0);
+            }
+
+            // Right beaconator management
+            if (gamepad1.right_trigger > 0) {
+                Ω.rightBeaconator.setDirection(CRServo.Direction.FORWARD);
+                Ω.rightBeaconator.setPower(Math.abs(gamepad1.left_trigger));
+            } else if (gamepad1.right_bumper) {
+                Ω.rightBeaconator.setDirection(CRServo.Direction.REVERSE);
+                Ω.rightBeaconator.setPower(1.0);
             }
         }
     }
