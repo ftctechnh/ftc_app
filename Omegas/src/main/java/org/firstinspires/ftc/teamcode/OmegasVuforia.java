@@ -230,7 +230,7 @@ public class OmegasVuforia extends LinearOpMode {
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
                         AngleUnit.DEGREES, 90, 90, 0));
         wheelsTarget.setLocation(wheelsTargetLocationOnField);
-        RobotLog.ii(TAG, "Red Target=%s", format(wheelsTargetLocationOnField));
+        RobotLog.ii(TAG, "Wheels Target=%s", format(wheelsTargetLocationOnField));
 
         OpenGLMatrix toolsTargetLocationOnField = OpenGLMatrix
                 /* Then we translate the target off to the RED WALL. Our translation here
@@ -241,7 +241,7 @@ public class OmegasVuforia extends LinearOpMode {
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
                         AngleUnit.DEGREES, 90, 90, 0));
         toolsTarget.setLocation(toolsTargetLocationOnField);
-        RobotLog.ii(TAG, "Red Target=%s", format(toolsTargetLocationOnField));
+        RobotLog.ii(TAG, "Tools Target=%s", format(toolsTargetLocationOnField));
 
         /**
          * To place the Legos and Gears Targets on the Blue Audience wall:
@@ -257,7 +257,7 @@ public class OmegasVuforia extends LinearOpMode {
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
                         AngleUnit.DEGREES, 90, 0, 0));
         legosTarget.setLocation(legosTargetLocationOnField);
-        RobotLog.ii(TAG, "Blue Target=%s", format(toolsTargetLocationOnField));
+        RobotLog.ii(TAG, "Legos Target=%s", format(toolsTargetLocationOnField));
 
         OpenGLMatrix gearsTargetLocationOnField = OpenGLMatrix
                 /* Then we translate the target off to the Blue Audience wall.
@@ -268,7 +268,7 @@ public class OmegasVuforia extends LinearOpMode {
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
                         AngleUnit.DEGREES, 90, 0, 0));
         gearsTarget.setLocation(gearsTargetLocationOnField);
-        RobotLog.ii(TAG, "Blue Target=%s", format(toolsTargetLocationOnField));
+        RobotLog.ii(TAG, "Gears Target=%s", format(toolsTargetLocationOnField));
 
         /**
          * Create a transformation matrix describing where the phone is on the robot. Here, we
