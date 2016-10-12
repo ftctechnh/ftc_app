@@ -59,6 +59,7 @@ import java.text.DecimalFormat;
 public class RotateToDegree extends OpMode {
 
     HardwareSteelheadMainBot robot = new HardwareSteelheadMainBot();
+    ElapsedTime loopTime = new ElapsedTime();
 
     /* This is the port on the Core Device Interface Module        */
     /* in which the navX-Model Device is connected.  Modify this  */
@@ -72,11 +73,11 @@ public class RotateToDegree extends OpMode {
 
     private final double TARGET_ANGLE_DEGREES = 90.0;
     private final double TOLERANCE_DEGREES = 2.0;
-    private final double MIN_MOTOR_OUTPUT_VALUE = -1.0;
-    private final double MAX_MOTOR_OUTPUT_VALUE = 1.0;
-    private final double YAW_PID_P = 0.005;
-    private final double YAW_PID_I = 0.0;
-    private final double YAW_PID_D = 0.0;
+    private final double MIN_MOTOR_OUTPUT_VALUE = -.25;
+    private final double MAX_MOTOR_OUTPUT_VALUE = 0.25;
+    private final double YAW_PID_P = 50.0;
+    private final double YAW_PID_I = 0.53;
+    private final double YAW_PID_D = 450.0;
 
     private boolean calibration_complete = false;
 
@@ -92,8 +93,8 @@ public class RotateToDegree extends OpMode {
                 AHRS.DeviceDataType.kProcessedData,
                 NAVX_DEVICE_UPDATE_RATE_HZ);
 
-        //robot.rightMotor_1.setDirection(DcMotor.Direction.FORWARD);
-        //robot.rightMotor_2.setDirection(DcMotorSimple.Direction.REVERSE);
+        robot.rightMotor_1.setDirection(DcMotor.Direction.FORWARD);
+        robot.rightMotor_2.setDirection(DcMotorSimple.Direction.FORWARD);
 
         robot.rightMotor_1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         robot.rightMotor_2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -128,6 +129,7 @@ public class RotateToDegree extends OpMode {
 
     @Override
     public void loop() {
+        loopTime.reset();
         if ( !calibration_complete ) {
             /* navX-Micro Calibration completes automatically ~15 seconds after it is
             powered on, as long as the device is still.  To handle the case where the
@@ -153,10 +155,10 @@ public class RotateToDegree extends OpMode {
                     telemetry.addData("Motor Output", df.format(0.00));
                 } else {
                     double output = yawPIDResult.getOutput();
-                    robot.rightMotor_1.setPower(-output);
-                    robot.rightMotor_2.setPower(-output);
-                    robot.leftMotor_1.setPower(output);
-                    robot.leftMotor_2.setPower(output);
+                    robot.rightMotor_1.setPower(output);
+                    robot.rightMotor_2.setPower(output);
+                    robot.leftMotor_1.setPower(-output);
+                    robot.leftMotor_2.setPower(-output);
                     telemetry.addData("Motor Output", df.format(output) + ", " +
                             df.format(-output));
                 }
@@ -166,6 +168,7 @@ public class RotateToDegree extends OpMode {
             /* need to update the motors at this time.                 */
             }
             telemetry.addData("Yaw", df.format(navx_device.getYaw()));
+            telemetry.addData("Loop Time", loopTime.milliseconds());
         }
     }
 
