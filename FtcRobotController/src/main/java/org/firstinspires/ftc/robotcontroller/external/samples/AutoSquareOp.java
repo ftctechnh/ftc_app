@@ -1,14 +1,19 @@
-package com.qualcomm.ftcrobotcontroller.opmodes;
+package org.firstinspires.ftc.robotcontroller.external.samples;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotor.Direction;
+import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 /**
  * Created by akhil on 8/30/2015.
  */
+
+@Autonomous(name="WeCo: Auto Square", group="WeCo")
+//@Disabled
 public class AutoSquareOp extends OpMode {
 
 

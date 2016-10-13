@@ -29,7 +29,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.qualcomm.ftcrobotcontroller.opmodes;
+package  org.firstinspires.ftc.robotcontroller.external.samples;
 
  import android.content.Context;
  import android.hardware.Sensor;
@@ -38,12 +38,16 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
  import android.hardware.SensorManager;
 
  import com.qualcomm.ftccommon.DbgLog;
+ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
  import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  import com.qualcomm.robotcore.hardware.DcMotor;
  import com.qualcomm.robotcore.hardware.DigitalChannel;
  import com.qualcomm.robotcore.hardware.Servo;
  import com.qualcomm.robotcore.util.Range;
 
+ @TeleOp(name="WeCo: TeleOpGyro", group="WeCo")
+ //@Disabled
  public class WeCoTeleOpGyro extends OpMode implements SensorEventListener {
 
    // orientation values

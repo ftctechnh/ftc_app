@@ -29,15 +29,18 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.qualcomm.ftcrobotcontroller.opmodes;
+package org.firstinspires.ftc.robotcontroller.external.samples;
 
+ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
  import com.qualcomm.robotcore.eventloop.opmode.OpMode;
  import com.qualcomm.robotcore.hardware.DcMotor;
  import com.qualcomm.robotcore.hardware.LightSensor;
  import com.qualcomm.robotcore.hardware.TouchSensor;
  import com.qualcomm.robotcore.util.Range;
 
-
+ @Autonomous(name="WeCo: AutoSquareOp2", group="WeCo")
+// @Disabled
  public class WeCoAutoSquareOp2Skip extends OpMode  {
    // Initialize HW Data Objects
      TouchSensor touchSensor1;  // Hardware Device Object
@@ -187,7 +190,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
        motorLeft1.setPower(motorLeft1Power);
 
        //Telemetry Data
-       telemetry.addData("Light1Raw", lightSensor1.getLightDetectedRaw());
+       telemetry.addData("Light1Raw", lightSensor1.getRawLightDetected());
        telemetry.addData("Light1Normal", lightSensor1.getLightDetected());
        telemetry.addData("Motor Left1 Power", "Motor Left1 power is " + String.format("%.2f", motorLeft1Power));
        telemetry.addData("Motor Right1 Power", "Motor Right1 power is " + String.format("%.2f", motorRight1Power));

@@ -29,7 +29,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package com.qualcomm.ftcrobotcontroller.opmodes;
+package org.firstinspires.ftc.robotcontroller.external.samples;
 
  import android.content.Context;
  import android.hardware.Sensor;
@@ -38,6 +38,8 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
  import android.hardware.SensorManager;
 
  import com.qualcomm.ftccommon.DbgLog;
+ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
  import com.qualcomm.robotcore.eventloop.opmode.OpMode;
  import com.qualcomm.robotcore.hardware.DcMotor;
  import com.qualcomm.robotcore.hardware.DigitalChannel;
@@ -47,7 +49,8 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
  import com.qualcomm.robotcore.util.ElapsedTime;
  import com.qualcomm.robotcore.util.Range;
 
-
+ @Autonomous(name="WeCo: Line Follow", group="WeCo")
+ //@Disabled
  public class WeCoLineFollow extends OpMode  {
 
    // orientation values
@@ -130,7 +133,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
      motorRight2.setPower(motorRight2Power);
 
      telemetry.addData("CenterLight", centerLight.getLightDetected());
-     telemetry.addData("CenterLightRaw", centerLight.getLightDetectedRaw());
+     telemetry.addData("CenterLightRaw", centerLight.getRawLightDetected());
      telemetry.addData("Motor Left1 Power", "Motor Left1 power is " + String.format("%.2f", motorLeft1Power));
      telemetry.addData("Motor Right1 Power", "Motor Right1 power is " + String.format("%.2f", motorRight1Power));
      telemetry.addData("Motor Left2 Power", "Motor Left2 power is " + String.format("%.2f", motorLeft2Power));
@@ -169,7 +172,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
    }
 
    public void followLine(LightSensor inLightSensor, double targetLight, float speed) {
-     double currentlightValue = inLightSensor.getLightDetectedRaw();
+     double currentlightValue = inLightSensor.getRawLightDetected();
      double error = targetLight - currentlightValue;
      double constantProporionality = 0.01;
 
