@@ -98,9 +98,9 @@ public class Matthew extends LinearOpMode {
             idle();
         }
 
-        // Step 2:  Spin right for 1.3 seconds
-        robot.leftMotor.setPower(TURN_SPEED);
-        robot.rightMotor.setPower(-TURN_SPEED);
+        // Step 2:  Move arm / servos to knock off cap ball
+        robot.leftMotor.setPower(-TURN_SPEED);
+        robot.rightMotor.setPower(TURN_SPEED);
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 2.2)) {
             idle();
@@ -120,10 +120,10 @@ public class Matthew extends LinearOpMode {
         robot.leftClaw.setPosition(0.5);
         robot.rightClaw.setPosition(0.5);
 
-        telemetry.addData("Status", "Complete");
+        /.telemetry.addData("Status", "Complete");
         telemetry.update();
         sleep(1000);
-        idle();
+        ./idle();
 
         robot.leftMotor.setPower(-FORWARD_SPEED);
         robot.rightMotor.setPower(-FORWARD_SPEED);
