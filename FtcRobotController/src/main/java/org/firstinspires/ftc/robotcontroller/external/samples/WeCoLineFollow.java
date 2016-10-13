@@ -63,7 +63,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
    float motorPowerMax = 1;
 
    static final float normalTurnSpeed = (float) 0.75;
-   static final float normalSpeed = (float) 0.75;
+   static final float normalSpeed = (float) 0.05;
 
    LightSensor centerLight;
    TouchSensor startstopTouch;
@@ -76,8 +76,6 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 
    @Override
    public void init() {
-     centerLight.enableLed(true);
-     whattodo = 1;
    }
 
    @Override
@@ -94,6 +92,9 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
      centerLight = hardwareMap.lightSensor.get("lightSensor1");
      startstopTouch = hardwareMap.touchSensor.get("touchSensor1");
 
+     centerLight.enableLed(true);
+     whattodo = 1;
+
    }
 
    @Override
@@ -108,7 +109,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
          // gets current position and uses formula to find rotations or distance in inches
          if(startstopTouch.isPressed())
            whattodo = 1;
-         followLine(centerLight,0.5, normalSpeed);
+         followLine(centerLight,120, -normalSpeed);
          break;
        default:
          whattodo = 0;
@@ -168,12 +169,13 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
    }
 
    public void followLine(LightSensor inLightSensor, double targetLight, float speed) {
-     double currentlightValue = inLightSensor.getLightDetected();
+     double currentlightValue = inLightSensor.getLightDetectedRaw();
      double error = targetLight - currentlightValue;
-     double constantProporionality = 0.7;
+     double constantProporionality = 0.01;
 
-     double leftPower = speed + constantProporionality * error;
-     double rightPower = speed - constantProporionality *error;
+     double leftPower = speed - constantProporionality * error;
+     double rightPower = speed + constantProporionality *error;
+     DbgLog.msg("Line Follow" + leftPower + "Error: "+ error);
 
      moveForward((float) leftPower, (float) rightPower);
    }

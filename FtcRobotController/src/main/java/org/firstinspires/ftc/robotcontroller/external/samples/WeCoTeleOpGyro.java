@@ -51,20 +51,34 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
    private float[] mGravity;       // latest sensor values
    private float[] mGeomagnetic;   // latest sensor values
 
+   private float azimuth = 0.0f;      // value in radians
+   private float pitch = 0.0f;        // value in radians
+   private float roll = 0.0f;
+
+   private String startDate;
+   private SensorManager mSensorManager;
+   Sensor accelerometer;
+   Sensor magnetometer;
+
+   public WeCoTeleOpGyro() {
+
+   }
 
    @Override
    public void init() {
 
    }
 
-   DcMotor motor1;
-   DcMotor motor2;
-   DcMotor motorLifter;
-   DcMotor motorLifterTilt;
-   DigitalChannel lifterHolofectSensor;
-   Servo servoHook;
-   Servo servoCD;
-   Servo servoTail ;
+   DcMotor motorLeft1;
+   DcMotor motorLeft2;
+   DcMotor motorRight1 ;
+   DcMotor motorRight2 ;
+   //DcMotor motorLifter;
+   //DcMotor motorLifterTilt;
+   //DigitalChannel lifterHolofectSensor;
+   //Servo servoHook;
+   //Servo servoCD;
+   //Servo servoTail ;
 
    final static double servoMinRange = 0.0;
    final static double servoMaxRange = 1.0;
@@ -82,66 +96,63 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
    double servoCDPosition = 0.5;
    String halleffectState = "On";
 
-   float motor1power;
-   float motor2power;
+   float motorLeft1power;
+   float motorLeft2power;
+   float motorRight1power;
+   float motorRight2power;
    float motorPowerMin = -1;
    float motorPowerMax = 1;
-   float motorLifterPower;
-   String motorLifterInverse = "Off" ;
-   String motorLifterNull = "Off" ;
-   float motorLifterTiltPower;
-   float tilterPower = (float) 0.5;
-   float lifterScalarFactor =  (float) 10 ;
-   String lifterFloat = "Off" ;
-   boolean scaleLB = false ;
-   boolean scaleRB = false ;
-   float servoTailPosition = (float) 1.0;
-   String servoTPString = "Up" ;
+   float motorScalar = 1 ;
+   String dpadPosition = "Off" ;
+   //float motorLifterPower;
+   //String motorLifterInverse = "Off" ;
+   //String motorLifterNull = "Off" ;
+   //float motorLifterTiltPower;
+   //float tilterPower = (float) 0.5;
+   //float lifterScalarFactor =  (float) 10 ;
+   //String lifterFloat = "Off" ;
+   //boolean scaleLB = false ;
+   //boolean scaleRB = false ;
+   //float servoTailPosition = (float) 1.0;
+   //String servoTPString = "Up" ;
    int scaleNum = 0;
    float wheelDiameter = 4;
-   double position1;
-   double position2;
-   double lifterPosition = 90;
-   double lifterPositionIdeal = 90;
-   private float azimuth = 0.0f;      // value in radians
-   private float pitch = 0.0f;        // value in radians
-   private float roll = 0.0f;
-   private String startDate;
-   private SensorManager mSensorManager;
-   private Sensor accelerometer;
-   private Sensor magnetometer;
+   double positionLeft;
+   double positionRight
+           ;
+   //double lifterPosition = 90;
+   //double lifterPositionIdeal = 90;
 
 
 
    @Override
    public void start() {
 
-     motor1 = hardwareMap.dcMotor.get("motorRight");
-     motor2 = hardwareMap.dcMotor.get("motorLeft");
-     motorLifter = hardwareMap.dcMotor.get("motorLifter");
-     motorLifterTilt = hardwareMap.dcMotor.get("motorLifterTilt");
-     lifterHolofectSensor = hardwareMap.digitalChannel.get("halleffect_1");
-     servoCD = hardwareMap.servo.get("servoCD");
-     servoHook = hardwareMap.servo.get("servoHook");
-     servoTail = hardwareMap.servo.get("servoTail") ;
+     motorLeft1 = hardwareMap.dcMotor.get("motorLeft1");
+     motorLeft2 = hardwareMap.dcMotor.get("motorLeft2");
+     motorRight1 = hardwareMap.dcMotor.get("motorRight1");
+     motorRight2 = hardwareMap.dcMotor.get("motorRight2");
+     //motorLifter = hardwareMap.dcMotor.get("motorLifter");
+     //motorLifterTilt = hardwareMap.dcMotor.get("motorLifterTilt");
+     //lifterHolofectSensor = hardwareMap.digitalChannel.get("halleffect_1");
+     //servoCD = hardwareMap.servo.get("servoCD");
+     //servoHook = hardwareMap.servo.get("servoHook");
+     //servoTail = hardwareMap.servo.get("servoTail") ;
      mSensorManager = (SensorManager) hardwareMap.appContext.getSystemService(Context.SENSOR_SERVICE);
      accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
      magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
 
-     motor2.setDirection(DcMotor.Direction.REVERSE);
-     motorLifterTilt.setDirection(DcMotor.Direction.REVERSE);
+     motorLeft1.setDirection(DcMotor.Direction.REVERSE);
+     motorLeft2.setDirection(DcMotor.Direction.REVERSE);
+     //motorLifterTilt.setDirection(DcMotor.Direction.REVERSE);
    }
 
    @Override
    public void loop() {
-
- //sets motor power
-     motor1power = (-gamepad1.left_stick_y - gamepad1.right_stick_x)/2;
-     motor2power = (-gamepad1.left_stick_y + gamepad1.right_stick_x)/2;
-
- //Makes lifter stay within desired area
+     /**  Remove Lifter
      if (lifterHolofectSensor.getState() == false) {
+
        DbgLog.msg("==== Hall Effect On ===");
      }
      if (lifterHolofectSensor.getState() == false) {
@@ -221,7 +232,7 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
        motorLifterTiltPower = 0 ;
      }
      lifterPositionIdeal = lifterPositionIdeal - (gamepad2.right_stick_y/2) ;
-     */
+
 
      if (gamepad2.left_bumper == true && !scaleLB) {
        lifterScalarFactor = lifterScalarFactor + 1 ;
@@ -261,42 +272,77 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
      } else {
        lifterFloat = "Off" ;
      }
+     End Remove LIfter**/
+
+ //sets motor power
+     motorLeft1power = (-gamepad1.left_stick_y - gamepad1.right_stick_x);
+     motorLeft2power = (-gamepad1.left_stick_y - gamepad1.right_stick_x);
+     motorRight1power = (-gamepad1.left_stick_y + gamepad1.right_stick_x);
+     motorRight2power = (-gamepad1.left_stick_y + gamepad1.right_stick_x);
+
+ //Makes lifter stay within desired area
+
 
      //goes slower if turning
      if (gamepad1.right_stick_x  != 0) {
-       motor1power = 2*(motor1power)/3 ;
-        motor2power = 2*(motor2power)/3 ;
+       motorLeft1power = 2*(motorLeft1power)/3 ;
+        motorLeft2power = 2*(motorLeft2power)/3 ;
      }
 
+     if (gamepad1.dpad_up == false && gamepad1.dpad_down == false) {
+       dpadPosition = "Off" ;
+     }
 
+     if (gamepad1.dpad_up == true && dpadPosition.equals("Off")) {
+       motorScalar = motorScalar/2 ;
+       dpadPosition = "Up" ;
+     }
+
+     if (gamepad1.dpad_down == true && dpadPosition.equals("Off")) {
+       motorScalar = motorScalar * 2 ;
+       dpadPosition = "Down" ;
+     }
+
+     motorLeft1power = motorLeft1power/motorScalar ;
+     motorLeft2power = motorLeft2power/motorScalar ;
+     motorRight1power = motorRight1power/motorScalar ;
+     motorRight2power = motorRight2power/motorScalar ;
 
  //clips motor and servo power/position
-     motorLifterPower = motorLifterPower/3 ;//scales final lifter power
-     motor1power = Range.clip(motor1power, motorPowerMin, motorPowerMax);
-     motor2power = Range.clip(motor2power, motorPowerMin, motorPowerMax);
-     motorLifterTiltPower = Range.clip(motorLifterTiltPower, motorPowerMin, motorPowerMax);
-     motorLifterPower = Range.clip(motorLifterPower, motorPowerMin, motorPowerMax);
-     servoHookPosition = Range.clip(servoHookPosition, servoMinRange, servoMaxRange);
-     servoCDPosition = Range.clip(servoCDPosition, servoMinRange, servoMaxRange);
+     //motorLifterPower = motorLifterPower/3 ;//scales final lifter power
+     motorLeft1power = Range.clip(motorLeft1power, motorPowerMin, motorPowerMax);
+     motorLeft2power = Range.clip(motorLeft2power, motorPowerMin, motorPowerMax);
+     motorRight1power = Range.clip(motorRight1power, motorPowerMin, motorPowerMax);
+     motorRight2power = Range.clip(motorRight2power, motorPowerMin, motorPowerMax);
+     //motorScalar = Range.clip(motorScalar, 1, 8) ;
+    // motorLifterTiltPower = Range.clip(motorLifterTiltPower, motorPowerMin, motorPowerMax);
+    // motorLifterPower = Range.clip(motorLifterPower, motorPowerMin, motorPowerMax);
+    // servoHookPosition = Range.clip(servoHookPosition, servoMinRange, servoMaxRange);
+     //servoCDPosition = Range.clip(servoCDPosition, servoMinRange, servoMaxRange);
 
  //sets motor and servo power/position
-     motor1.setPower(motor1power);
-     motor2.setPower(motor2power);
-     motorLifter.setPower(motorLifterPower);
-     servoHook.setPosition(servoHookPosition);
-     servoCD.setPosition(servoCDPosition);
-     servoTail.setPosition(servoTailPosition);
+     motorLeft1.setPower(motorLeft1power);
+     motorLeft2.setPower(motorLeft2power);
+     motorRight1.setPower(motorRight1power);
+     motorRight2.setPower(motorRight2power);
+     //motorLifter.setPower(motorLifterPower);
+     //servoHook.setPosition(servoHookPosition);
+     //servoCD.setPosition(servoCDPosition);
+     //servoTail.setPosition(servoTailPosition);
 
-     if (!motorLifterTilt.getPowerFloat() ) {
-       motorLifterTilt.setPower(motorLifterTiltPower) ;
-     }
+     //if (!motorLifterTilt.getPowerFloat() ) {
+       //motorLifterTilt.setPower(motorLifterTiltPower) ;
+     //}
 
  // gets current position and uses formula to find rotations or distance in inches
-     position1 = -motor1.getCurrentPosition();
-     position2 = motor2.getCurrentPosition();
+     positionLeft = -motorLeft1.getCurrentPosition();
+     positionRight
+             = motorRight1.getCurrentPosition();
 
-     position1 = (position1 / 2500);//(wheelDiameter*3.14159265358)
-     position2 = (position2 / 2500); //(wheelDiameter*3.14159265358)
+     positionLeft = (positionLeft / 2500);//(wheelDiameter*3.14159265358)
+     positionRight
+             = (positionRight
+             / 2500); //(wheelDiameter*3.14159265358)
  //
      if (-gamepad2.left_stick_y > 0) {
        stickDirection = DIRECTION.UP;
@@ -307,22 +353,26 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
 
  //telemetry data
      //telemetry.addData("Left Stick", "Left Stick is at " + String.format("%.2f", gamepad1.left_stick_y)); //left stick y-axis poition
-     telemetry.addData("0 Lifter Scalar", "The lifter is " + String.format("%.0f", lifterScalarFactor) + " tenths power"); // tells scale
-     telemetry.addData("0 Tilt Lifter Float", "The lifter float is " + lifterFloat);
-     telemetry.addData("1 Motor 1", "Motor 1 power is " + String.format("%.2f", motor1power)); //motor 1 power
-     telemetry.addData("1 Motor 2", "Motor 2 power is " + String.format("%.2f", motor2power)); // motor 2 power
-     //telemetry.addData("1.1 Left Distance", "Left motor has gone " + String.format("%.2f", position1) + " rotations"); //distance in rotations
-     //telemetry.addData("1.1 Right Distance", "Right motor has gone " + String.format("%.2f", position2) + " rotations"); //distance in rotations
-     telemetry.addData("2 Motor Lifter", "Motor Lifter power is " + String.format("%.2f", motorLifterPower)); //motor Lifter power
-     telemetry.addData("3 Servo Hook Position", "Servo Hook is at " + String.format("%.1f", servoHookPosition)); //servo hook position
-     telemetry.addData("3 Servo Tail", "Servo tail is " + servoTPString);//tells if servo tail is down/up
-     telemetry.addData("4 HalleffectSensor", "Halleffect sensor is " + halleffectState); //hallefect state
+     //telemetry.addData("0 Lifter Scalar", "The lifter is " + String.format("%.0f", lifterScalarFactor) + " tenths power"); // tells scale
+     //telemetry.addData("0 Tilt Lifter Float", "The lifter float is " + lifterFloat);
+     telemetry.addData("1 Motor 1", "Motor 1 power is " + String.format("%.2f", motorLeft1power)); //motor 1 power
+     telemetry.addData("1 Motor 2", "Motor 2 power is " + String.format("%.2f", motorLeft2power)); // motor 2 power
+     telemetry.addData("1 Motor 3", "Motor 3 power is " + String.format("%.2f", motorRight1power)); //motor 1 power
+     telemetry.addData("1 Motor 4", "Motor 4 power is " + String.format("%.2f", motorRight2power)); // motor 2 power
+     telemetry.addData("1.1 Motor Scalar", "Motor Scale is " + String.format("%f", motorScalar));
+     telemetry.addData("1.1 Dpad Position", "Dpad is " + dpadPosition) ;
+     telemetry.addData("1.2 Left Distance", "Left motor has gone " + String.format("%.2f", positionLeft) + " rotations"); //distance in rotations
+     telemetry.addData("1.2 Right Distance", "Right motor has gone " + String.format("%.2f", positionRight) + " rotations"); //distance in rotations
+     //telemetry.addData("2 Motor Lifter", "Motor Lifter power is " + String.format("%.2f", motorLifterPower)); //motor Lifter power
+    // telemetry.addData("3 Servo Hook Position", "Servo Hook is at " + String.format("%.1f", servoHookPosition)); //servo hook position
+    // telemetry.addData("3 Servo Tail", "Servo tail is " + servoTPString);//tells if servo tail is down/up
+     //telemetry.addData("4 HalleffectSensor", "Halleffect sensor is " + halleffectState); //hallefect state
      telemetry.addData("4 CurrentPosition", "Current position is " + currentPosition.name());
      telemetry.addData("4 StickDirection", "Stick is moving " + stickDirection.name());
-     telemetry.addData("4 Motor Lifter Null", "Motor Lifter Null is " + motorLifterNull);// allows you to move lifter no matter what
-     telemetry.addData("azimuth", Math.round(Math.toDegrees(azimuth)));
-     telemetry.addData("pitch", Math.round(Math.toDegrees(pitch)));
-     telemetry.addData("roll", Math.round(Math.toDegrees(roll)));
+    // telemetry.addData("4 Motor Lifter Null", "Motor Lifter Null is " + motorLifterNull);// allows you to move lifter no matter what
+     telemetry.addData("5 azimuth", Math.round(Math.toDegrees(azimuth)));
+     telemetry.addData("5 pitch", Math.round(Math.toDegrees(pitch)));
+     telemetry.addData("5 roll", Math.round(Math.toDegrees(roll)));
 
 
    }
@@ -336,11 +386,11 @@ package com.qualcomm.ftcrobotcontroller.opmodes;
      // not sure if needed, placeholder just in case
    }
 
-   float lifterTiltScale(float scaleInput/*motor power*/, float scaleInput2/*lifter scale factor*/) {
-     scaleInput = (scaleInput2 *scaleInput)/10 ;
+   //float lifterTiltScale(float scaleInput/*motor power*/, float scaleInput2/*lifter scale factor*/) {
+     //scaleInput = (scaleInput2 *scaleInput)/10 ;
 
-     return scaleInput ;
-   }
+     //return scaleInput ;
+   //}
 
    public void onSensorChanged(SensorEvent event) {
      // we need both sensor values to calculate orientation
