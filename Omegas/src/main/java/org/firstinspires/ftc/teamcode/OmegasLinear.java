@@ -67,7 +67,8 @@ public class OmegasLinear extends LinearOpMode {
 
         Ω.init(hardwareMap);
 
-        /* Initialize the hardware variables. Note that the strings used here as parameters
+        /**
+         * Initialize the hardware variables. Note that the strings used here as parameters
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
@@ -87,20 +88,16 @@ public class OmegasLinear extends LinearOpMode {
 
             // Left beaconator management
             if (gamepad1.left_trigger > 0) {
-                Ω.leftBeaconator.setDirection(CRServo.Direction.FORWARD);
-                Ω.leftBeaconator.setPower(Math.abs(gamepad1.left_trigger));
+                Ω.powerServo(Ω.leftBeaconator, gamepad1.left_trigger);
             } else if (gamepad1.left_bumper) {
-                Ω.leftBeaconator.setDirection(CRServo.Direction.REVERSE);
-                Ω.leftBeaconator.setPower(1.0);
+                Ω.retractServo(Ω.leftBeaconator);
             }
 
             // Right beaconator management
             if (gamepad1.right_trigger > 0) {
-                Ω.rightBeaconator.setDirection(CRServo.Direction.FORWARD);
-                Ω.rightBeaconator.setPower(Math.abs(gamepad1.left_trigger));
+                Ω.powerServo(Ω.rightBeaconator, gamepad1.right_trigger);
             } else if (gamepad1.right_bumper) {
-                Ω.rightBeaconator.setDirection(CRServo.Direction.REVERSE);
-                Ω.rightBeaconator.setPower(1.0);
+                Ω.retractServo(Ω.rightBeaconator);
             }
         }
     }
