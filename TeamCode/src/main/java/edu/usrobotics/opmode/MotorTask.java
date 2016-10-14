@@ -1,8 +1,11 @@
-package edu.usrobotics.opmode.task;
+package edu.usrobotics.opmode;
 
 import android.support.annotation.Nullable;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+
+import edu.usrobotics.opmode.task.Task;
+import edu.usrobotics.opmode.task.TaskType;
 
 /**
  * Created by Max on 9/18/2016.
