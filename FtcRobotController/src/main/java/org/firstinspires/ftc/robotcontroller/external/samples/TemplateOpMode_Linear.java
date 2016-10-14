@@ -32,6 +32,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.robotcontroller.external.samples;
 
+import org.opencv.android.OpenCVLoader;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -52,8 +54,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Template: Linear OpMode", group="Linear Opmode")  // @Autonomous(...) is the other common choice
-@Disabled
+@TeleOp(name="OpenCV", group="Testy")  // @Autonomous(...) is the other common choice
 public class TemplateOpMode_Linear extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -65,6 +66,10 @@ public class TemplateOpMode_Linear extends LinearOpMode {
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+
+        if(OpenCVLoader.initDebug()) telemetry.addData("OpenCV", "Locked and Loaded");
+        else telemetry.addData("OpenCV", "Sh*t Faced");
+
 
         /* eg: Initialize the hardware variables. Note that the strings used here as parameters
          * to 'get' must correspond to the names assigned during the robot configuration
