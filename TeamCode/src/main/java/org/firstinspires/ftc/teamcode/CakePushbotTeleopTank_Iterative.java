@@ -32,39 +32,38 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.Range;
-
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * This file provides basic Telop driving for a Pushbot robot.
  * The code is structured as an Iterative OpMode
- *
+ * <p>
  * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
  * All device access is managed through the HardwarePushbot class.
- *
+ * <p>
  * This particular OpMode executes a basic Tank Drive Teleop for a PushBot
  * It raises and lowers the claw using the Gampad Y and A buttons respectively.
  * It also opens and closes the claws slowly using the left and right Bumper buttons.
- *
+ * <p>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Pushbot: Cake Tank", group="Pushbot")
+@TeleOp(name = "Pushbot: Cake Tank", group = "Pushbot")
 //@Disabled
-public class CakePushbotTeleopTank_Iterative extends OpMode{
+public class CakePushbotTeleopTank_Iterative extends OpMode {
 
     /* Declare OpMode members. */
-    CakeHardwarePushbot robot       = new CakeHardwarePushbot(); // use the class created to define a Pushbot's hardware
-                                                         // could also use HardwarePushbotMatrix class.
-    double          clawOffset  = 0.0 ;                  // Servo mid position
-    final double    CLAW_SPEED  = 0.02 ;// sets rate to move servo
-    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
+    CakeHardwarePushbot robot = new CakeHardwarePushbot(); // use the class created to define a Pushbot's hardware
+    // could also use HardwarePushbotMatrix class.
+    double clawOffset = 0.0;                  // Servo mid position
+    final double CLAW_SPEED = 0.02;// sets rate to move servo
+    static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
+    private ElapsedTime runtime = new ElapsedTime();
+    static final double     FORWARD_SPEED = 0.6;
+
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -99,40 +98,50 @@ public class CakePushbotTeleopTank_Iterative extends OpMode{
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     @Override
+
     public void loop() {
         double leftDriveMotorPower; //defines variable
         double rightDriveMotorPower;
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-        leftDriveMotorPower = -gamepad1.left_stick_y;
-        rightDriveMotorPower = -gamepad1.right_stick_y; //Have to offset the negatives
-        robot.leftMotor.setPower(leftDriveMotorPower); //Makes the robot run
-        robot.rightMotor.setPower(rightDriveMotorPower);
+        robot.leftMotor.setPower(1);
+        //leftDriveMotorPower = -gamepad1.left_stick_y;
+        //rightDriveMotorPower = -gamepad1.right_stick_y; //Have to offset the negatives
+        //robot.leftMotor.setPower(leftDriveMotorPower); //Makes the robot run
+        //robot.rightMotor.setPower(rightDriveMotorPower);
+
+        //Use gamepad buttons to move the arm up (x) and down (b)
+        if (gamepad1.x) {
+          //  robot.pushLeft.setPosition(1.5);
+        }
+
+        if (gamepad1.b) {
+            //robot.pushRight.setPosition(1.5);
+        }
+
+        // Left bumper
+        // robot.forkRaise.setPower(FORWARD_SPEED);while (gamepad1.left_bumper && (runtime.seconds() < 3.0)) {
+            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
 
 
-
-         //Use gamepad buttons to move the arm up (x) and down (b)
-        if (gamepad1.x)
-            robot.pushLeft.setPosition(1.5);
-        else if (gamepad1.b)
-            robot.pushRight.setPosition(1.5);
-    // Left bumper
-        if (gamepad1.left_bumper)
-            robot.ForkRight.setTargetPosition(1440);//Forklift in
-            robot.ForkLeft.setTargetPosition(1440);//Forklift out
+        //if (gamepad1.left_bumper)
+            //robot.forkRight.setPower(1440);//Forklift in
+            //robot.forkLeft.setPower(1440);//Forklift out
         // Right Bumper
-        if (gamepad1.right_bumper)
-            robot.forkRaise.setTargetPosition(1440); //Raises forklift
-        else
-        robot.forkRaise.setTargetPosition(0);
+        //if (gamepad1.right_bumper)
+           // robot.forkRaise.setTargetPosition(1440); //Raises forklift
+        //else
+            //robot.forkRaise.setTargetPosition(0);
 
 
         // Send telemetry message to signify robot running;
- //       telemetry.addData("claw",  "Offset = %.2f", clawOffset);
-        telemetry.addData("left drive motor power: ",  "%.2f", leftDriveMotorPower);
-        telemetry.addData("right drive motor power: ", "%.2f", rightDriveMotorPower);
-        updateTelemetry(telemetry);
-    }
+        //       telemetry.addData("claw",  "Offset = %.2f", clawOffset);
+       // telemetry.addData("left drive motor power: ", "%.2f", leftDriveMotorPower);
+       // telemetry.addData("right drive motor power: ", "%.2f", rightDriveMotorPower);
+        //updateTelemetry(telemetry);
+   // }
 
     /*
      * Code to run ONCE after the driver hits STOP

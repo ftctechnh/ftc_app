@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -16,27 +15,18 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * This hardware class assumes the following device names have been configured on the robot:
  * Note:  All names are lower case and some have single spaces between words.
  *
- * Motor channel:  Left  drive motor:        "left_drive"
- * Motor channel:  Right drive motor:        "right_drive"
- * Motor channel:  Manipulator drive motor:  "left_arm"
- * Servo channel:  Servo to open left claw:  "left_hand"
- * Servo channel:  Servo to open right claw: "right_hand"
+
  */
 public class CakeHardwarePushbot
 {
     /* Public OpMode members. */
     public DcMotor  leftMotor   = null;
     public DcMotor  rightMotor  = null;
-    public DcMotor  ForkRight = null;
-    public DcMotor  ForkLeft = null;
+    public DcMotor forkRight = null;
+    public DcMotor forkLeft = null;
     public Servo    pushRight    = null;
     public Servo    pushLeft   = null;
     public DcMotor  forkRaise = null;
-
-
-    public static final double MID_SERVO       =  0.5 ;
-    public static final double ARM_UP_POWER    =  0.45 ;
-    public static final double ARM_DOWN_POWER  = -0.45 ;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -53,38 +43,38 @@ public class CakeHardwarePushbot
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftMotor   = hwMap.dcMotor.get("left_drive");
-        rightMotor  = hwMap.dcMotor.get("right_drive");
-        pushLeft = hwMap.servo.get("BeaconLeft");
-        pushRight = hwMap.servo.get("BeaconRight");
-        ForkRight = hwMap.dcMotor.get("ForkliftRight");
-        ForkLeft = hwMap.dcMotor.get("ForkliftLeft");
-        forkRaise = hwMap.dcMotor.get("ForkRaise");
+        leftMotor   = hwMap.dcMotor.get("left drive");
+        rightMotor  = hwMap.dcMotor.get("right drive");
+        pushLeft = hwMap.servo.get("beacon left");
+        pushRight = hwMap.servo.get("beacon right");
+        forkRight = hwMap.dcMotor.get("forklift right");
+        forkLeft = hwMap.dcMotor.get("forklift left");
+        forkRaise = hwMap.dcMotor.get("fork raise");
 
         //armMotor    = hwMap.dcMotor.get("left_arm");
         leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        ForkLeft.setDirection(DcMotor.Direction.REVERSE);
-        ForkRight.setDirection(DcMotor.Direction.REVERSE);
+        forkLeft.setDirection(DcMotor.Direction.REVERSE);
+        forkRight.setDirection(DcMotor.Direction.REVERSE);
         forkRaise.setDirection(DcMotor.Direction.REVERSE);
         // Set all motors to zero power
         leftMotor.setPower(0);
         rightMotor.setPower(0);
-        ForkLeft.setPower(0);
-        ForkRight.setPower(0);
+        forkLeft.setPower(0);
+        forkRight.setPower(0);
         forkRaise.setPower(0);
         //armMotor.setPower(0);
 
-        ForkRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        ForkLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        forkRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        forkLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         forkRaise.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        ForkLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        ForkRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        forkLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        forkRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         forkRaise.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         /*armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
