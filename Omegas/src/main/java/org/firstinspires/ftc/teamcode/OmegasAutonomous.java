@@ -68,7 +68,7 @@ public class OmegasAutonomous extends LinearOpMode {
         }
     }
 
-    // Test for red
+    // Test for a color.
     public void pushBeacon(int leftValue, int rightValue) {
         // Stop servo
         if (rightValue >= 10 && leftValue >= 10) {
@@ -80,9 +80,9 @@ public class OmegasAutonomous extends LinearOpMode {
         if (leftValue >= 10 && rightValue <= 10) {
             Ω.powerServo(Ω.leftBeaconator, 1.0f);
             Ω.retractServo(Ω.rightBeaconator);
-        } else if (leftValue >= 10 && rightValue <= 10) {
-            Ω.powerServo(Ω.leftBeaconator, 1.0f);
-            Ω.retractServo(Ω.rightBeaconator);
+        } else if (leftValue <= 10 && rightValue >= 10) {
+            Ω.powerServo(Ω.rightBeaconator, 1.0f);
+            Ω.retractServo(Ω.leftBeaconator);
         }
     }
 }
