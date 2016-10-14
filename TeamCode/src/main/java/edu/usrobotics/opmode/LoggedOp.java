@@ -5,6 +5,8 @@ import com.borsch.TelemetryData;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
@@ -60,8 +62,12 @@ public class LoggedOp extends TrackedOp {
     }
 
     public void LogTracking () {
+        OpenGLMatrix transform = getRobotTransform();
+        if (transform == null)
+            return;
+
         trackingData.timestamp = TelemetryWriter.getTimestamp();
-        VectorF tran = getRobotTransform().getTranslation();
+        VectorF tran = transform.getTranslation();
         Orientation rot = getRobotOrientation();
 
         trackingData.data = new String[]{
@@ -75,10 +81,15 @@ public class LoggedOp extends TrackedOp {
         };
     }
 
+    public void LogState () {
+        telemetry.addData("State", getState().name());
+    }
+
     @Override public void loop () {
         super.loop();
 
         LogTracking();
+        LogState();
     }
 
 }

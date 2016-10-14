@@ -87,9 +87,14 @@ public class TrackedOp extends StateBasedOp {
             }
         }
 
-        lastRobotTransform = robotTransform;
-        robotTransform = position.multiplied(rotation.getRotationMatrix());
-        robotOrientation = rotation;
+        if (position != null)
+            lastRobotTransform = robotTransform;
+
+        if (rotation != null) {
+            robotTransform = position.multiplied(rotation.getRotationMatrix());
+            robotOrientation = rotation;
+        }
+
     }
 
     public OpenGLMatrix getRobotTransform() {

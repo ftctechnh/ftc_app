@@ -11,23 +11,23 @@ public class MotorTask implements Task {
 
     private DcMotor motor; // The motor hardware device
     private Integer encoderGoal; // Encoder value motor attempts to reach, nullable
-    private int motorSpeed; // Max encoder ticks (1/4 deg) per second
-    private double power;
-    private float damping;
+    private int maxMotorSpeed; // Max encoder ticks (1/4 deg) per second
+    private double power; // Max power of motor
+    private float damping; // Percent along path to begin deceleration damping.
 
     private boolean encoderReset;
 
 
-    public MotorTask (DcMotor motor, @Nullable Integer encoderGoal, int motorSpeed, double power, float damping) {
+    public MotorTask (DcMotor motor, @Nullable Integer encoderGoal, @Nullable Integer maxMotorSpeed, double power, float damping) {
         this.motor = motor;
         this.encoderGoal = encoderGoal;
-        this.motorSpeed = motorSpeed;
+        this.maxMotorSpeed = maxMotorSpeed != null ? maxMotorSpeed : 3696;
         this.power = power;
         this.damping = damping;
     }
 
     public MotorTask (DcMotor motor) {
-        this (motor, null, 3696, 1d, 0f);
+        this (motor, null, null, 1d, 0f);
     }
 
     private double getDampedPower (double power) {
@@ -53,14 +53,14 @@ public class MotorTask implements Task {
                 motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 motor.setTargetPosition(encoderGoal);
                 motor.setPower(getDampedPower(power));
-                motor.setMaxSpeed(motorSpeed);
+                motor.setMaxSpeed(maxMotorSpeed);
 
             }
 
         } else { // If we are running blind until onExecuted() returns true
             motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             motor.setPower(power);
-            motor.setMaxSpeed(motorSpeed);
+            motor.setMaxSpeed(maxMotorSpeed);
         }
 
         return false;
