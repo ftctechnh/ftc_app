@@ -44,22 +44,25 @@ import org.steelhead.ftc.HardwareSteelheadMainBot;
 import java.text.DecimalFormat;
 
 /*
- * An example loop op mode where the robot will rotate
- * to a specified angle an then stop.
+ * An example loop op mode where the robot will drive in
+ * a straight line (where the driving direction is guided by
+ * the Yaw angle from a navX-Model device).
  *
  * This example uses a simple PID controller configuration
  * with a P coefficient, and will likely need tuning in order
  * to achieve optimal performance.
  *
  * Note that for the best accuracy, a reasonably high update rate
- * for the navX-Model sensor should be used.
+ * for the navX-Model sensor should be used.  This example uses
+ * the default update rate (50Hz), which may be lowered in order
+ * to reduce the frequency of the updates to the drive system.
  */
-@TeleOp(name = "Concept: navX Rotate to Angle PID - Loop", group = "Concept")
+
+@TeleOp(name = "Concept: navX Drive Straight PID - Loop", group = "Concept")
 //@Disabled
-public class RotateToDegree extends OpMode {
+public class ConceptNavXDriveStraight extends OpMode {
 
     HardwareSteelheadMainBot robot = new HardwareSteelheadMainBot();
-    ElapsedTime loopTime = new ElapsedTime();
 
     /* This is the port on the Core Device Interface Module        */
     /* in which the navX-Model Device is connected.  Modify this  */
@@ -71,10 +74,10 @@ public class RotateToDegree extends OpMode {
 
     private final byte NAVX_DEVICE_UPDATE_RATE_HZ = 50;
 
-    private final double TARGET_ANGLE_DEGREES = 90.0;
+    private final double TARGET_ANGLE_DEGREES = 10.0;
     private final double TOLERANCE_DEGREES = 2.0;
-    private final double MIN_MOTOR_OUTPUT_VALUE = -.25;
-    private final double MAX_MOTOR_OUTPUT_VALUE = 0.25;
+    private final double MIN_MOTOR_OUTPUT_VALUE = -0.5;
+    private final double MAX_MOTOR_OUTPUT_VALUE = 0.5;
     private final double YAW_PID_P = 0.06;
     private final double YAW_PID_I = 0.0012;
     private final double YAW_PID_D = 0.85;
@@ -86,6 +89,7 @@ public class RotateToDegree extends OpMode {
 
     @Override
     public void init() {
+
         robot.init(hardwareMap);
 
         navx_device = AHRS.getInstance(hardwareMap.deviceInterfaceModule.get("dim"),
@@ -93,13 +97,10 @@ public class RotateToDegree extends OpMode {
                 AHRS.DeviceDataType.kProcessedData,
                 NAVX_DEVICE_UPDATE_RATE_HZ);
 
-        robot.rightMotor_1.setDirection(DcMotor.Direction.FORWARD);
-        robot.rightMotor_2.setDirection(DcMotorSimple.Direction.FORWARD);
-
-        robot.rightMotor_1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        robot.rightMotor_2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        robot.leftMotor_1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        robot.leftMotor_2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        robot.leftMotor_1.setDirection(DcMotorSimple.Direction.REVERSE);
+        robot.leftMotor_2.setDirection(DcMotorSimple.Direction.FORWARD);
+        robot.rightMotor_1.setDirection(DcMotorSimple.Direction.REVERSE);
+        robot.rightMotor_2.setDirection(DcMotorSimple.Direction.REVERSE);
 
         /* If possible, use encoders when driving, as it results in more */
         /* predictable drive system response.                           */
@@ -121,15 +122,21 @@ public class RotateToDegree extends OpMode {
         df = new DecimalFormat("#.##");
     }
 
+    public double limit(double a) {
+        return Math.min(Math.max(a, MIN_MOTOR_OUTPUT_VALUE), MAX_MOTOR_OUTPUT_VALUE);
+    }
+
     @Override
     public void start() {
+        /* reset the navX-Model device yaw angle so that whatever direction */
+        /* it is currently pointing will be zero degrees.                   */
         navx_device.zeroYaw();
         yawPIDResult = new navXPIDController.PIDResult();
     }
 
     @Override
     public void loop() {
-        loopTime.reset();
+        runtime.reset();
         if ( !calibration_complete ) {
             /* navX-Micro Calibration completes automatically ~15 seconds after it is
             powered on, as long as the device is still.  To handle the case where the
@@ -146,29 +153,34 @@ public class RotateToDegree extends OpMode {
             /* Wait for new Yaw PID output values, then update the motors
                with the new PID value with each new output value.
              */
+
+            /* Drive straight forward at 1/2 of full drive speed */
+            double drive_speed = 0.25;
+
             if (yawPIDController.isNewUpdateAvailable(yawPIDResult)) {
                 if (yawPIDResult.isOnTarget()) {
-                    robot.rightMotor_1.setPower(0);
-                    robot.rightMotor_2.setPower(0);
-                    robot.leftMotor_1.setPower(0);
-                    robot.leftMotor_2.setPower(0);
-                    telemetry.addData("Motor Output", df.format(0.00));
+                    robot.leftMotor_1.setPower(drive_speed);
+                    robot.leftMotor_2.setPower(drive_speed);
+                    robot.rightMotor_1.setPower(drive_speed);
+                    robot.rightMotor_2.setPower(drive_speed);
+                    telemetry.addData("Motor Output", df.format(drive_speed) + ", " +
+                            df.format(drive_speed));
                 } else {
                     double output = yawPIDResult.getOutput();
-                    robot.rightMotor_1.setPower(output);
-                    robot.rightMotor_2.setPower(output);
-                    robot.leftMotor_1.setPower(-output);
-                    robot.leftMotor_2.setPower(-output);
-                    telemetry.addData("Motor Output", df.format(output) + ", " +
-                            df.format(-output));
+                    robot.leftMotor_1.setPower(limit(drive_speed + output));
+                    robot.leftMotor_2.setPower(limit(drive_speed + output));
+                    robot.rightMotor_1.setPower(limit(drive_speed - output));
+                    robot.rightMotor_2.setPower(limit(drive_speed - output));
+                    telemetry.addData("Motor Output", df.format(limit(drive_speed + output)) + ", " +
+                            df.format(limit(drive_speed - output)));
                 }
             } else {
-            /* No sensor update has been received since the last time  */
-            /* the loop() function was invoked.  Therefore, there's no */
-            /* need to update the motors at this time.                 */
+                /* No sensor update has been received since the last time  */
+                /* the loop() function was invoked.  Therefore, there's no */
+                /* need to update the motors at this time.                 */
             }
             telemetry.addData("Yaw", df.format(navx_device.getYaw()));
-            telemetry.addData("Loop Time", loopTime.milliseconds());
+            telemetry.addData("time", runtime.milliseconds());
         }
     }
 
