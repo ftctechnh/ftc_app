@@ -1,5 +1,4 @@
-/*
-Copyright (c) 2016 Robert Atkinson
+/* Copyright (c) 2014, 2015 Qualcomm Technologies Inc
 
 All rights reserved.
 
@@ -14,44 +13,28 @@ Redistributions in binary form must reproduce the above copyright notice, this
 list of conditions and the following disclaimer in the documentation and/or
 other materials provided with the distribution.
 
-Neither the name of Robert Atkinson nor the names of his contributors may be used to
-endorse or promote products derived from this software without specific prior
-written permission.
+Neither the name of Qualcomm Technologies Inc nor the names of its contributors
+may be used to endorse or promote products derived from this software without
+specific prior written permission.
 
 NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
 LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESSFOR A PARTICULAR PURPOSE
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
 ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
 FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
 DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
 SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
-TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
+
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-/**
- * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
- * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
- * of the FTC Driver Station. When an selection is made from the menu, the corresponding OpMode
- * class is instantiated on the Robot Controller and executed.
- *
- * This particular OpMode just executes a basic Tank Drive Teleop for a PushBot
- * It includes all the skeletal structure that all linear OpModes contain.
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
-
-@TeleOp(name="Omegas: Linear OpMode", group="Linear Opmode")
-public class OmegasLinear extends LinearOpMode {
+public abstract class OmegasAutonomous extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -80,25 +63,42 @@ public class OmegasLinear extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("Left color sensor blue: ", Ω.leftColorSensor.blue());
+            telemetry.addData("Left color sensor red: ", Ω.leftColorSensor.red());
+            telemetry.addData("Right color sensor blue: ", Ω.rightColorSensor.blue());
+            telemetry.addData("Right color sensor red: ", Ω.rightColorSensor.red());
             telemetry.update();
 
-            // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
-            Ω.leftMotor.setPower(-gamepad1.left_stick_y);
-            Ω.rightMotor.setPower(-gamepad1.right_stick_y);
-
-            // Left beaconator management
-            if (gamepad1.left_trigger > 0) {
-                Ω.powerServo(Ω.leftBeaconator, gamepad1.left_trigger);
-            } else if (gamepad1.left_bumper) {
-                Ω.retractServo(Ω.leftBeaconator);
+            switch (getColor()) {
+                case RED:
+                    pushBeacon(Ω.leftColorSensor.red(),
+                            Ω.rightColorSensor.red());
+                    break;
+                case BLUE:
+                    pushBeacon(Ω.leftColorSensor.blue(),
+                            Ω.rightColorSensor.blue());
+                    break;
             }
+        }
+    }
 
-            // Right beaconator management
-            if (gamepad1.right_trigger > 0) {
-                Ω.powerServo(Ω.rightBeaconator, gamepad1.right_trigger);
-            } else if (gamepad1.right_bumper) {
-                Ω.retractServo(Ω.rightBeaconator);
-            }
+    abstract OmegasAlliance getColor();
+
+    // Test for a color.
+    public void pushBeacon(int leftValue, int rightValue) {
+        // Cease beaconator motion
+        if (rightValue >= 10 && leftValue >= 10) {
+            Ω.powerServo(Ω.leftBeaconator, 0.0f);
+            Ω.powerServo(Ω.rightBeaconator, 0.0f);
+        }
+
+        // Press alliance's button
+        if (leftValue >= 10 && rightValue <= 10) {
+            Ω.powerServo(Ω.leftBeaconator, 1.0f);
+            Ω.retractServo(Ω.rightBeaconator);
+        } else if (leftValue <= 10 && rightValue >= 10) {
+            Ω.powerServo(Ω.rightBeaconator, 1.0f);
+            Ω.retractServo(Ω.leftBeaconator);
         }
     }
 }

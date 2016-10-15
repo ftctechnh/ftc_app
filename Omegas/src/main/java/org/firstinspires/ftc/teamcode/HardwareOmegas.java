@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -24,10 +25,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class HardwareOmegas
 {
     /* Public OpMode members. */
-    public DcMotor  leftMotor       = null;
-    public DcMotor  rightMotor      = null;
-    public CRServo  leftBeaconator  = null;
-    public CRServo  rightBeaconator = null;
+    ColorSensor     leftColorSensor  = null;
+    ColorSensor     rightColorSensor = null;
+    public DcMotor  leftMotor        = null;
+    public DcMotor  rightMotor       = null;
+    public CRServo  leftBeaconator   = null;
+    public CRServo  rightBeaconator  = null;
 
     public static final double MID_SERVO       =  0.5 ;
     public static final double ARM_UP_POWER    =  0.45 ;
@@ -52,6 +55,9 @@ public class HardwareOmegas
         // Change the text in quotes to match any servo name on your robot.
         leftBeaconator = hwMap.crservo.get("left_beaconator");
         rightBeaconator = hwMap.crservo.get("right_beaconator");
+
+        rightColorSensor = hwMap.colorSensor.get("left_color_sensor");
+        leftColorSensor = hwMap.colorSensor.get("right_color_sensor");
 
         // Set all motors to zero power
         leftMotor.setPower(0);
@@ -86,6 +92,16 @@ public class HardwareOmegas
 
         // Reset the cycle clock for the next pass.
         period.reset();
+    }
+
+    public void powerServo(CRServo beaconator, float power) {
+        beaconator.setDirection(CRServo.Direction.FORWARD);
+        beaconator.setPower(Math.abs(power));
+    }
+
+    public void retractServo(CRServo beaconator) {
+        beaconator.setDirection(CRServo.Direction.REVERSE);
+        beaconator.setPower(1.0);
     }
 }
 
