@@ -194,6 +194,10 @@ public class FtcRobotControllerActivity extends Activity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+<<<<<<< HEAD
+=======
+    RobotLog.writeLogcatToDisk();
+>>>>>>> ftctechnh/master
     RobotLog.vv(TAG, "onCreate()");
 
     receivedUsbAttachmentNotifications = new ConcurrentLinkedQueue<UsbDevice>();
@@ -252,8 +256,11 @@ public class FtcRobotControllerActivity extends Activity {
 
     if (USE_DEVICE_EMULATION) { HardwareFactory.enableDeviceEmulation(); }
 
+<<<<<<< HEAD
     // save 4MB of logcat to the SD card
     RobotLog.writeLogcatToDisk(this, 4 * 1024);
+=======
+>>>>>>> ftctechnh/master
     wifiLock.acquire();
     callback.networkConnectionUpdate(WifiDirectAssistant.Event.DISCONNECTED);
     bindToService();
@@ -326,7 +333,11 @@ public class FtcRobotControllerActivity extends Activity {
 
     unbindFromService();
     wifiLock.release();
+<<<<<<< HEAD
     RobotLog.cancelWriteLogcatToDisk(this);
+=======
+    RobotLog.cancelWriteLogcatToDisk();
+>>>>>>> ftctechnh/master
   }
 
   protected void bindToService() {

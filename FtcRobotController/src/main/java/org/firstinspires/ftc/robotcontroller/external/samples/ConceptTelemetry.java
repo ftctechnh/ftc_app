@@ -52,8 +52,12 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  */
 @Autonomous(name = "Concept: Telemetry", group = "Concept")
 @Disabled
+<<<<<<< HEAD
 public class ConceptTelemetry extends LinearOpMode
     {
+=======
+public class ConceptTelemetry extends LinearOpMode  {
+>>>>>>> ftctechnh/master
     /** keeps track of the line of the poem which is to be emitted next */
     int poemLine = 0;
 
@@ -83,9 +87,15 @@ public class ConceptTelemetry extends LinearOpMode
         "The teacher did reply.",
         "",
         ""
+<<<<<<< HEAD
         };
 
     @Override public void runOpMode() throws InterruptedException {
+=======
+    };
+
+    @Override public void runOpMode() {
+>>>>>>> ftctechnh/master
 
         /* we keep track of how long it's been since the OpMode was started, just
          * to have some interesting data to show */
@@ -107,7 +117,11 @@ public class ConceptTelemetry extends LinearOpMode
             telemetry.addData("time", "%.1f seconds", opmodeRunTime.seconds());
             telemetry.update();
             idle();
+<<<<<<< HEAD
             }
+=======
+        }
+>>>>>>> ftctechnh/master
 
         // Ok, we've been given the ok to go
 
@@ -123,7 +137,11 @@ public class ConceptTelemetry extends LinearOpMode
         telemetry.addData("voltage", "%.1f volts", new Func<Double>() {
             @Override public Double value() {
                 return getBatteryVoltage();
+<<<<<<< HEAD
                 }
+=======
+            }
+>>>>>>> ftctechnh/master
             });
 
         // Reset to keep some timing stats for the post-'start' part of the opmode
@@ -136,7 +154,11 @@ public class ConceptTelemetry extends LinearOpMode
             // Emit poetry if it's been a while
             if (poemElapsed.seconds() > sPoemInterval) {
                 emitPoemLine();
+<<<<<<< HEAD
                 }
+=======
+            }
+>>>>>>> ftctechnh/master
 
             // As an illustration, show some loop timing information
             telemetry.addData("loop count", loopCount);
@@ -158,16 +180,25 @@ public class ConceptTelemetry extends LinearOpMode
 
             /** Update loop info and play nice with the rest of the {@link Thread}s in the system */
             loopCount++;
+<<<<<<< HEAD
             idle();
             }
         }
+=======
+        }
+    }
+>>>>>>> ftctechnh/master
 
     // emits a line of poetry to the telemetry log
     void emitPoemLine() {
         telemetry.log().add(poem[poemLine]);
         poemLine = (poemLine+1) % poem.length;
         poemElapsed.reset();
+<<<<<<< HEAD
         }
+=======
+    }
+>>>>>>> ftctechnh/master
 
     // Computes the current battery voltage
     double getBatteryVoltage() {
@@ -176,8 +207,16 @@ public class ConceptTelemetry extends LinearOpMode
             double voltage = sensor.getVoltage();
             if (voltage > 0) {
                 result = Math.min(result, voltage);
+<<<<<<< HEAD
                 }
             }
         return result;
         }
     }
+=======
+            }
+        }
+        return result;
+    }
+}
+>>>>>>> ftctechnh/master

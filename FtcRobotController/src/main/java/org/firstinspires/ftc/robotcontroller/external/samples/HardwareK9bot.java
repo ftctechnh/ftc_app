@@ -14,8 +14,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * This hardware class assumes the following device names have been configured on the robot:
  * Note:  All names are lower case and some have single spaces between words.
  *
+<<<<<<< HEAD
  * Motor channel:  Left  drive motor:        "left motor"
  * Motor channel:  Right drive motor:        "right motor"
+=======
+ * Motor channel:  Left  drive motor:        "left_drive"
+ * Motor channel:  Right drive motor:        "right_drive"
+>>>>>>> ftctechnh/master
  * Servo channel:  Servo to raise/lower arm: "arm"
  * Servo channel:  Servo to open/close claw: "claw"
  *
@@ -52,8 +57,13 @@ public class HardwareK9bot
         hwMap = ahwMap;
 
         // Define and Initialize Motors
+<<<<<<< HEAD
         leftMotor   = hwMap.dcMotor.get("left motor");
         rightMotor  = hwMap.dcMotor.get("right motor");
+=======
+        leftMotor   = hwMap.dcMotor.get("left_drive");
+        rightMotor  = hwMap.dcMotor.get("right_drive");
+>>>>>>> ftctechnh/master
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
@@ -79,15 +89,30 @@ public class HardwareK9bot
      * The function looks at the elapsed cycle time, and sleeps for the remaining time interval.
      *
      * @param periodMs  Length of wait cycle in mSec.
+<<<<<<< HEAD
      * @throws InterruptedException
      */
     public void waitForTick(long periodMs)  throws InterruptedException {
+=======
+     */
+    public void waitForTick(long periodMs) {
+>>>>>>> ftctechnh/master
 
         long  remaining = periodMs - (long)period.milliseconds();
 
         // sleep for the remaining portion of the regular cycle period.
+<<<<<<< HEAD
         if (remaining > 0)
             Thread.sleep(remaining);
+=======
+        if (remaining > 0) {
+            try {
+                Thread.sleep(remaining);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+>>>>>>> ftctechnh/master
 
         // Reset the cycle clock for the next pass.
         period.reset();

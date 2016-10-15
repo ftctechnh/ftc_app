@@ -39,7 +39,11 @@ import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 /*
  * This is an example LinearOpMode that shows how to use
  * a Modern Robotics Optical Distance Sensor
+<<<<<<< HEAD
  * It assumes that the ODS sensor is configured with a name of "ods sensor".
+=======
+ * It assumes that the ODS sensor is configured with a name of "sensor_ods".
+>>>>>>> ftctechnh/master
  *
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
@@ -51,10 +55,17 @@ public class SensorMROpticalDistance extends LinearOpMode {
   OpticalDistanceSensor odsSensor;  // Hardware Device Object
 
   @Override
+<<<<<<< HEAD
   public void runOpMode() throws InterruptedException {
 
     // get a reference to our Light Sensor object.
     odsSensor = hardwareMap.opticalDistanceSensor.get("ods");
+=======
+  public void runOpMode() {
+
+    // get a reference to our Light Sensor object.
+    odsSensor = hardwareMap.opticalDistanceSensor.get("sensor_ods");
+>>>>>>> ftctechnh/master
 
     // wait for the start button to be pressed.
     waitForStart();
@@ -68,7 +79,10 @@ public class SensorMROpticalDistance extends LinearOpMode {
       telemetry.addData("Normal", odsSensor.getLightDetected());
 
       telemetry.update();
+<<<<<<< HEAD
       idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
+=======
+>>>>>>> ftctechnh/master
     }
   }
 }
