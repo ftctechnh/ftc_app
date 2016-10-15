@@ -1,11 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.ftccommon.DbgLog;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cCompassSensor;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.CompassSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
@@ -20,7 +24,8 @@ public class RobotHardware extends OpMode
         v_warning_generated = false;
         v_warning_message = "Can't map; ";
 
-        //
+        //region Old Hardware
+        /*
         try {
             v_motor_left_drive_front = hardwareMap.dcMotor.get("left_drive_front");
             v_motor_left_drive_front.setDirection(DcMotor.Direction.REVERSE);
@@ -91,7 +96,10 @@ public class RobotHardware extends OpMode
 
         }
 
-        //Sensorz
+        */
+        //#endregion
+
+        //Sensors
         //Color Sensors
         try {
             leftColorSensor = hardwareMap.colorSensor.get("leftColorSensor");
@@ -112,12 +120,12 @@ public class RobotHardware extends OpMode
         }
 
         try {
-            rightColorSensor = hardwareMap.colorSensor.get("rightColorSensor");
-            rightColorSensor.setI2cAddress(I2cAddr.create8bit(62));
+            beaconColorSensor = hardwareMap.colorSensor.get("beaconColorSensor");
+            beaconColorSensor.setI2cAddress(I2cAddr.create8bit(58));
         } catch (Exception p_exeception) {
             DbgLog.msg(p_exeception.getLocalizedMessage());
-            telemetry.addData("error: ", "right color");
-            rightColorSensor = null;
+            telemetry.addData("error: ", "beacon color");
+            beaconColorSensor = null;
         }
 
         try {
@@ -127,7 +135,53 @@ public class RobotHardware extends OpMode
             telemetry.addData("error: ", "range sensor");
             rangeSensor = null;
         }
+
+        try {
+            gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
+        } catch (Exception e) {
+            DbgLog.msg(e.getLocalizedMessage());
+            telemetry.addData("error", "gyro sensor");
+            gyroSensor = null;
+        }
+
+        try {
+            compassSensor = hardwareMap.get(ModernRoboticsI2cCompassSensor.class, "compassSensor");
+        } catch (Exception e) {
+            DbgLog.msg(e.getLocalizedMessage());
+            telemetry.addData("error", "compass sensor");
+            compassSensor = null;
+        }
+
+        try {
+            leftWheelMotor = hardwareMap.dcMotor.get("leftMotor");
+        } catch (Exception p_exeception) {
+            m_warning_message("leftMotor");
+            DbgLog.msg(p_exeception.getLocalizedMessage());
+
+            leftWheelMotor = null;
+        }
+
+        try {
+            rightWheelMotor = hardwareMap.dcMotor.get("rightMotor");
+            leftWheelMotor.setDirection(DcMotor.Direction.REVERSE);
+        } catch (Exception p_exeception) {
+            m_warning_message("rightMotor");
+            DbgLog.msg(p_exeception.getLocalizedMessage());
+
+            rightWheelMotor = null;
+        }
+
+        try {
+            beaconServo = hardwareMap.servo.get("beaconServo");
+        } catch (Exception p_exeception){
+            m_warning_message("beaconServo");
+            DbgLog.msg(p_exeception.getLocalizedMessage());
+
+            beaconServo = null;
+
+        }
     }
+
 
 
     //
@@ -137,14 +191,18 @@ public class RobotHardware extends OpMode
     // hand should be halfway opened/closed.
     //
     // ini
+    /*
     private Servo arm_servo_1;
     private Servo arm_servo_2;
     private Servo arm_servo_3;
+    */
 
 
 
     //-------------------------------------------------
     //Get Servo Postitions
+
+    /*
     double get_arm_1_position ()
     {
         double l_return = 0.0;
@@ -247,6 +305,8 @@ public class RobotHardware extends OpMode
         arm_1_position(0.0D);
         arm_2_position(0.0D);
     }
+
+    */
 
 
     //--------------------------------------------------------------------------
@@ -411,6 +471,7 @@ public class RobotHardware extends OpMode
     /**
      * Access the left drive motor's power level.
      */
+    /*
     double a_left_drive_power ()
     {
         double l_return = 0.0;
@@ -422,7 +483,8 @@ public class RobotHardware extends OpMode
 
         return l_return;
 
-    } // a_left_drive_power
+    }*/
+    // a_left_drive_power
 
     //--------------------------------------------------------------------------
     //
@@ -431,6 +493,8 @@ public class RobotHardware extends OpMode
     /**
      * Access the right drive motor's power level.
      */
+
+    /*
     double a_right_drive_power ()
     {
         double l_return = 0.0;
@@ -454,38 +518,22 @@ public class RobotHardware extends OpMode
     void set_drive_power (double p_left_power, double p_right_power)
 
     {
-        if (v_motor_left_drive_front != null && v_motor_left_drive_back != null)
+        if (leftWheelMotor != null && rightWheelMotor != null)
         {
-            v_motor_left_drive_front.setPower(p_left_power);
-            v_motor_left_drive_back.setPower(p_left_power);
-        }
-        if (v_motor_right_drive_front != null && v_motor_right_drive_back != null)
-        {
-            v_motor_right_drive_front.setPower (p_right_power);
-            v_motor_right_drive_back.setPower(p_right_power);
+            leftWheelMotor.setPower(p_left_power);
+            rightWheelMotor.setPower(p_right_power);
         }
 
+    }
+
+    void fireBallShooter(){
+        //TODO Throw Balls (͡°͜ʖ͡°)
     }
 
     void stopdrive() {
         set_drive_power(0, 0);
     }
 
-    void set_rear_drive_power (double p_left_power, double p_right_power)
-
-    {
-        if (v_motor_left_drive_back != null)
-        {
-            v_motor_left_drive_front.setPower (0D);
-            v_motor_left_drive_back.setPower(p_left_power);
-        }
-        if (v_motor_right_drive_back != null)
-        {
-            v_motor_right_drive_front.setPower (0D);
-            v_motor_right_drive_back.setPower(p_right_power);
-        }
-
-    }
 
     private boolean v_warning_generated = false;
 
@@ -505,15 +553,25 @@ public class RobotHardware extends OpMode
     /**
      * Manage the aspects of the left drive motor.
      */
+
+    /*
     private DcMotor v_motor_left_drive_front;
     private DcMotor v_motor_left_drive_back;
     private DcMotor v_motor_right_drive_front;
     private DcMotor v_motor_right_drive_back;
+    */
+
+    private DcMotor leftWheelMotor;
+    private DcMotor rightWheelMotor;
+    public Servo beaconServo;
 
     public ColorSensor leftColorSensor;
     public ColorSensor rightColorSensor;
     public ColorSensor beaconColorSensor;
     public ModernRoboticsI2cRangeSensor rangeSensor;
+    public GyroSensor gyroSensor;
+    public ModernRoboticsI2cCompassSensor compassSensor;
+
 
 
 }

@@ -15,9 +15,11 @@ public class HeadStart extends RobotHardware {
 
     @Override
     public void start(){
+        /*
         arm_1_position(0.26D);
         arm_2_position(0.54D);
         arm_3_position(0.40D);
+        */
     }
 
     @Override
