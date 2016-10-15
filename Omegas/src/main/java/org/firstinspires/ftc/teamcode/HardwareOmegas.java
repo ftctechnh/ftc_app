@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -25,9 +24,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class HardwareOmegas
 {
     /* Public OpMode members. */
-    public DcMotor  leftMotor   = null;
-    public DcMotor  rightMotor  = null;
-    public CRServo  beaconator  = null;
+    public DcMotor  leftMotor       = null;
+    public DcMotor  rightMotor      = null;
+    public CRServo  leftBeaconator  = null;
+    public CRServo  rightBeaconator = null;
 
     public static final double MID_SERVO       =  0.5 ;
     public static final double ARM_UP_POWER    =  0.45 ;
@@ -50,7 +50,8 @@ public class HardwareOmegas
 
         // Connect to servo (Assume PushBot Left Hand)
         // Change the text in quotes to match any servo name on your robot.
-        beaconator  = hwMap.crservo.get("left_hand");
+        leftBeaconator = hwMap.crservo.get("left_beaconator");
+        rightBeaconator = hwMap.crservo.get("right_beaconator");
 
         // Set all motors to zero power
         leftMotor.setPower(0);
