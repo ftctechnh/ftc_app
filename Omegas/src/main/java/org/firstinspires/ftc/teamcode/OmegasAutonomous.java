@@ -31,9 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 public abstract class OmegasAutonomous extends LinearOpMode {
@@ -75,7 +73,7 @@ public abstract class OmegasAutonomous extends LinearOpMode {
         }
     }
 
-    abstract Alliance getColor();
+    abstract OmegasAlliance getColor();
 
     // Test for a color.
     public void pushBeacon(int leftValue, int rightValue) {
