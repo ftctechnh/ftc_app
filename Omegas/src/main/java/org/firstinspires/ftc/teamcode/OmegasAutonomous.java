@@ -36,29 +36,38 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public abstract class OmegasAutonomous extends LinearOpMode {
 
+    /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    HardwareOmegas Ω = new HardwareOmegas();
+    HardwareOmegas      Ω       = new HardwareOmegas();
 
     // IPS Units
-    static final double FORWARD_SPEED = 0.6;
-    static final double TURN_SPEED = 0.5;
+    static final double     FORWARD_SPEED = 0.6;
+    static final double     TURN_SPEED    = 0.5;
 
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
+        /**
+         * Initialize the hardware variables. Note that the strings used here as parameters
+         * to 'get' must correspond to the names assigned during the robot configuration
+         * step (using the FTC Robot Controller app on the phone).
+         */
         Ω.init(hardwareMap);
+
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+            telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Left color sensor blue: ", Ω.leftColorSensor.blue());
             telemetry.addData("Left color sensor red: ", Ω.leftColorSensor.red());
             telemetry.addData("Right color sensor blue: ", Ω.rightColorSensor.blue());
             telemetry.addData("Right color sensor red: ", Ω.rightColorSensor.red());
+            telemetry.update();
 
             switch (getColor()) {
                 case RED:
@@ -77,13 +86,13 @@ public abstract class OmegasAutonomous extends LinearOpMode {
 
     // Test for a color.
     public void pushBeacon(int leftValue, int rightValue) {
-        // Stop servo
+        // Cease beaconator motion
         if (rightValue >= 10 && leftValue >= 10) {
             Ω.powerServo(Ω.leftBeaconator, 0.0f);
             Ω.powerServo(Ω.rightBeaconator, 0.0f);
         }
 
-        // Press button
+        // Press alliance's button
         if (leftValue >= 10 && rightValue <= 10) {
             Ω.powerServo(Ω.leftBeaconator, 1.0f);
             Ω.retractServo(Ω.rightBeaconator);

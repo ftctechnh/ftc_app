@@ -88,9 +88,12 @@ import java.util.List;
 public class OmegasVuforia extends LinearOpMode {
 
     public static final String TAG = "Vuforia Sample";
-
     HardwareOmegas             Ω   = new HardwareOmegas();   // Use our robot's hardware
     Context                    context;
+
+    // IPS Units
+    static final double     FORWARD_SPEED = 0.6;
+    static final double     TURN_SPEED    = 0.5;
 
     OpenGLMatrix lastLocation = null;
 
