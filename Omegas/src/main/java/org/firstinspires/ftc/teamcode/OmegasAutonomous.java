@@ -36,15 +36,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name = "Test: Color Sensor", group = "Linear Opmode")
-public class OmegasAutonomous extends LinearOpMode {
+public abstract class OmegasAutonomous extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
-    HardwareOmegas      Ω       = new HardwareOmegas();
+    HardwareOmegas Ω = new HardwareOmegas();
 
     // IPS Units
-    static final double     FORWARD_SPEED = 0.6;
-    static final double     TURN_SPEED    = 0.5;
+    static final double FORWARD_SPEED = 0.6;
+    static final double TURN_SPEED = 0.5;
 
     @Override
     public void runOpMode() {
@@ -63,10 +62,20 @@ public class OmegasAutonomous extends LinearOpMode {
             telemetry.addData("Right color sensor blue: ", Ω.rightColorSensor.blue());
             telemetry.addData("Right color sensor red: ", Ω.rightColorSensor.red());
 
-            pushBeacon(Ω.leftColorSensor.blue(),
-                    Ω.rightColorSensor.blue());
+            switch (getColor()) {
+                case RED:
+                    pushBeacon(Ω.leftColorSensor.red(),
+                            Ω.rightColorSensor.red());
+                    break;
+                case BLUE:
+                    pushBeacon(Ω.leftColorSensor.blue(),
+                            Ω.rightColorSensor.blue());
+                    break;
+            }
         }
     }
+
+    abstract Alliance getColor();
 
     // Test for a color.
     public void pushBeacon(int leftValue, int rightValue) {
