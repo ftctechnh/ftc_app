@@ -51,7 +51,7 @@ public class HardwareOmegas
         // Connect to servo (Assume PushBot Left Hand)
         // Change the text in quotes to match any servo name on your robot.
         leftBeaconator = hwMap.crservo.get("left_beaconator");
-        rightBeaconator = hwMap.crservo.get("right_beaconator");
+//        rightBeaconator = hwMap.crservo.get("right_beaconator");
 
         // Set all motors to zero power
         leftMotor.setPower(0);
