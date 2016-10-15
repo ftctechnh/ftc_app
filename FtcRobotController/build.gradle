@@ -26,4 +26,8 @@ repositories {
     }
 }
 
+<<<<<<< HEAD
 apply from: 'build.release.gradle'
+=======
+apply from: 'build.release.gradle'
+>>>>>>> refs/remotes/ftctechnh/master

@@ -96,7 +96,11 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
 
 
     @Override
+<<<<<<< HEAD
     public void runOpMode() throws InterruptedException {
+=======
+    public void runOpMode() {
+>>>>>>> refs/remotes/ftctechnh/master
 
         /*
          * Initialize the standard drive system variables.
@@ -116,8 +120,13 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
         gyro.calibrate();
 
         // make sure the gyro is calibrated before continuing
+<<<<<<< HEAD
         while (gyro.isCalibrating())  {
             Thread.sleep(50);
+=======
+        while (!isStopRequested() && gyro.isCalibrating())  {
+            sleep(50);
+>>>>>>> refs/remotes/ftctechnh/master
             idle();
         }
 
@@ -167,7 +176,11 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
     */
     public void gyroDrive ( double speed,
                             double distance,
+<<<<<<< HEAD
                             double angle) throws InterruptedException {
+=======
+                            double angle) {
+>>>>>>> refs/remotes/ftctechnh/master
 
         int     newLeftTarget;
         int     newRightTarget;
@@ -231,9 +244,12 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
                                                              robot.rightMotor.getCurrentPosition());
                 telemetry.addData("Speed",   "%5.2f:%5.2f",  leftSpeed, rightSpeed);
                 telemetry.update();
+<<<<<<< HEAD
 
                 // Allow time for other processes to run.
                 idle();
+=======
+>>>>>>> refs/remotes/ftctechnh/master
             }
 
             // Stop all motion;
@@ -256,16 +272,24 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
      * @param angle      Absolute Angle (in Degrees) relative to last gyro reset.
      *                   0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
      *                   If a relative angle is required, add/subtract from current heading.
+<<<<<<< HEAD
      * @throws InterruptedException
      */
     public void gyroTurn (  double speed, double angle)
                               throws InterruptedException {
+=======
+     */
+    public void gyroTurn (  double speed, double angle) {
+>>>>>>> refs/remotes/ftctechnh/master
 
         // keep looping while we are still active, and not on heading.
         while (opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF)) {
             // Update telemetry & Allow time for other processes to run.
             telemetry.update();
+<<<<<<< HEAD
             idle();
+=======
+>>>>>>> refs/remotes/ftctechnh/master
         }
     }
 
@@ -278,10 +302,15 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
      *                   0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
      *                   If a relative angle is required, add/subtract from current heading.
      * @param holdTime   Length of time (in seconds) to hold the specified heading.
+<<<<<<< HEAD
      * @throws InterruptedException
      */
     public void gyroHold( double speed, double angle, double holdTime)
                             throws InterruptedException {
+=======
+     */
+    public void gyroHold( double speed, double angle, double holdTime) {
+>>>>>>> refs/remotes/ftctechnh/master
 
         ElapsedTime holdTimer = new ElapsedTime();
 
@@ -291,7 +320,10 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
             // Update telemetry & Allow time for other processes to run.
             onHeading(speed, angle, P_TURN_COEFF);
             telemetry.update();
+<<<<<<< HEAD
             idle();
+=======
+>>>>>>> refs/remotes/ftctechnh/master
         }
 
         // Stop all motion;
