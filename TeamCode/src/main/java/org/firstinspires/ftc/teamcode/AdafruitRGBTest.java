@@ -34,9 +34,14 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
+import com.qualcomm.robotcore.hardware.DeviceManager;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DigitalChannelController;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.I2cDevice;
+import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -45,27 +50,26 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Autonomous(name = "Test: Adafruit RGB", group = "Test")
 public class AdafruitRGBTest extends OpMode {
 
-  private ElapsedTime runtime = new ElapsedTime();
-  private  DigitalChannel digital = null;
-  private boolean state = false;
+    private ElapsedTime runtime = new ElapsedTime();
+    private boolean state = false;
+    private I2cDevice sensorRGB;
+    private I2cDeviceSynch synch;
+    private DeviceInterfaceModule deviceInterfaceModule;
 
-  @Override
-  public void init() {
+    @Override
+    public void init() {
+        deviceInterfaceModule = hardwareMap.deviceInterfaceModule.get("dim");
+        sensorRGB = hardwareMap.i2cDevice.get("color");
+        synch = hardwareMap.i2cDeviceSynch.get("color");
 
-    digital =  hardwareMap.digitalChannel.get("color_led");
-    digital.setMode(DigitalChannelController.Mode.OUTPUT);
-    digital.setState(false);
+    }
 
-    telemetry.addData("Status", "Initialized");
-    runtime.reset();
-  }
-
-  /*
-     * Code to run when the op mode is first enabled goes here
-     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
-     */
-  @Override
-  public void init_loop() {
+    /*
+       * Code to run when the op mode is first enabled goes here
+       * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
+       */
+    @Override
+    public void init_loop() {
     /*if(runtime.milliseconds() >= 1000) {
       if (!state) {
         state = true;
@@ -74,23 +78,23 @@ public class AdafruitRGBTest extends OpMode {
       }
       digital.setState(state);
       runtime.reset();*/
-  }
+    }
 
-  /*
-   * This method will be called ONCE when start is pressed
-   * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
-   */
-  @Override
-  public void start() {
-    runtime.reset();
-  }
+    /*
+     * This method will be called ONCE when start is pressed
+     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
+     */
+    @Override
+    public void start() {
+        runtime.reset();
+    }
 
-  /*
-   * This method will be called repeatedly in a loop
-   * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
-   */
-  @Override
-  public void loop() {
-    telemetry.addData("Status", "Run Time: " + runtime.toString());
-  }
+    /*
+     * This method will be called repeatedly in a loop
+     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
+     */
+    @Override
+    public void loop() {
+        telemetry.addData("Status", "Run Time: " + runtime.toString());
+    }
 }
