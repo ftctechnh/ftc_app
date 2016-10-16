@@ -28,8 +28,8 @@ public class VuforiaTest extends LinearOpMode
     VuforiaLocalizer vuforiaLocalizer;
     VuforiaLocalizer.Parameters parameters;
     VuforiaTrackables visionTargets;
-    VuforiaTrackable target;
-    VuforiaTrackableDefaultListener listener;
+    VuforiaTrackable wheelsTarget, toolsTarget, legosTarget, gearsTarget;
+    VuforiaTrackableDefaultListener wheelsListener, toolsListener, legosListener, gearsListener;
 
     OpenGLMatrix lastKnownLocation;
     OpenGLMatrix phoneLocation;
@@ -81,16 +81,31 @@ public class VuforiaTest extends LinearOpMode
         visionTargets = vuforiaLocalizer.loadTrackablesFromAsset("FTC_2016-17");
 
         // Setup the target to be tracked
-        target = visionTargets.get(0); // 0 corresponds to the wheels target
-        target.setName("Wheels Target");
-        target.setLocation(createMatrix(0, 500, 0, 90, 0, 90));
+        wheelsTarget = visionTargets.get(0); // 0 corresponds to the wheels target
+        wheelsTarget.setName("Wheels Target");
+        wheelsTarget.setLocation(createMatrix(0, 500, 0, 90, 0, 90));
 
+        toolsTarget = visionTargets.get(1);
+        toolsTarget.setName("Tools Target");
+        toolsTarget.setLocation(createMatrix(0, 500, 0, 90, 0, 90));
+
+        legosTarget = visionTargets.get(1);
+        legosTarget.setName("Legos Target");
+        legosTarget.setLocation(createMatrix(0, 500, 0, 90, 0, 90));
+
+        gearsTarget = visionTargets.get(1);
+        gearsTarget.setName("Gears Target");
+        gearsTarget.setLocation(createMatrix(0, 500, 0, 90, 0, 90));
         // Set phone location on robot
         phoneLocation = createMatrix(0, 225, 0, 90, 0, 0);
 
         // Setup listener and inform it of phone information
-        listener = (VuforiaTrackableDefaultListener) target.getListener();
+   //     listener = (VuforiaTrackableDefaultListener) target.getListener();
         listener.setPhoneInformation(phoneLocation, parameters.cameraDirection);
+
+        wheelsListener = (VuforiaTrackableDefaultListener) wheelsTarget.getListener();
+
+
     }
 
     // Creates a matrix for determining the locations and orientations of objects
