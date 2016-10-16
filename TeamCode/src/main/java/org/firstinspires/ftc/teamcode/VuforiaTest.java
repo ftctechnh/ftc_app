@@ -52,19 +52,38 @@ public class VuforiaTest extends LinearOpMode
         while(opModeIsActive())
         {
             // Ask the listener for the latest information on where the robot is
-            OpenGLMatrix latestLocation = listener.getUpdatedRobotLocation();
+            if (wheelsListener.isVisible()) {
+                OpenGLMatrix latestLocation = wheelsListener.getUpdatedRobotLocation();
 
-            // The listener will sometimes return null, so we check for that to prevent errors
-            if(latestLocation != null)
-                lastKnownLocation = latestLocation;
+                // The listener will sometimes return null, so we check for that to prevent errors
+                if (latestLocation != null)
+                    lastKnownLocation = latestLocation;
 
-            // Send information about whether the target is visible, and where the robot is
-            telemetry.addData("Tracking " + target.getName(), listener.isVisible());
-            telemetry.addData("Last Known Location", formatMatrix(lastKnownLocation));
+                // Send information about whether the target is visible, and where the robot is
+                telemetry.addData("Tracking " + target.getName(), listener.isVisible());
+                telemetry.addData("Last Known Location", formatMatrix(lastKnownLocation));
 
-            // Send telemetry and idle to let hardware catch up
-            telemetry.update();
-            idle();
+                // Send telemetry and idle to let hardware catch up
+                telemetry.update();
+                idle();
+            }
+            else if (toolsListener.isVisible())
+            {
+
+            }
+            else if (legosListener.isVisible())
+            {
+
+            }
+            else if (gearsListener.isVisible())
+            {
+
+            }
+            else
+            {
+
+            }
+
         }
     }
 
@@ -83,29 +102,34 @@ public class VuforiaTest extends LinearOpMode
         // Setup the target to be tracked
         wheelsTarget = visionTargets.get(0); // 0 corresponds to the wheels target
         wheelsTarget.setName("Wheels Target");
-        wheelsTarget.setLocation(createMatrix(0, 500, 0, 90, 0, 90));
+        wheelsTarget.setLocation(createMatrix(0, 1981, 0, 90, 0, 90));
 
         toolsTarget = visionTargets.get(1);
         toolsTarget.setName("Tools Target");
-        toolsTarget.setLocation(createMatrix(0, 500, 0, 90, 0, 90));
+        toolsTarget.setLocation(createMatrix(914, 0, 0, 90, 0, 90));
 
         legosTarget = visionTargets.get(1);
         legosTarget.setName("Legos Target");
-        legosTarget.setLocation(createMatrix(0, 500, 0, 90, 0, 90));
+        legosTarget.setLocation(createMatrix(0, 914, 0, 90, 0, 90));
 
         gearsTarget = visionTargets.get(1);
         gearsTarget.setName("Gears Target");
-        gearsTarget.setLocation(createMatrix(0, 500, 0, 90, 0, 90));
+        gearsTarget.setLocation(createMatrix(1981, 0, 0, 90, 0, 90));
         // Set phone location on robot
         phoneLocation = createMatrix(0, 225, 0, 90, 0, 0);
 
         // Setup listener and inform it of phone information
-   //     listener = (VuforiaTrackableDefaultListener) target.getListener();
-        listener.setPhoneInformation(phoneLocation, parameters.cameraDirection);
-
         wheelsListener = (VuforiaTrackableDefaultListener) wheelsTarget.getListener();
+        wheelsListener.setPhoneInformation(phoneLocation, parameters.cameraDirection);
 
+        toolsListener = (VuforiaTrackableDefaultListener) toolsTarget.getListener();
+        toolsListener.setPhoneInformation(phoneLocation, parameters.cameraDirection);
 
+        legosListener = (VuforiaTrackableDefaultListener) legosTarget.getListener();
+        legosListener.setPhoneInformation(phoneLocation, parameters.cameraDirection);
+
+        gearsListener = (VuforiaTrackableDefaultListener) gearsTarget.getListener();
+        gearsListener.setPhoneInformation(phoneLocation, parameters.cameraDirection);
     }
 
     // Creates a matrix for determining the locations and orientations of objects
