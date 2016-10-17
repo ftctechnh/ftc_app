@@ -62,7 +62,10 @@ public class CakePushbotTeleopTank_Iterative extends OpMode {
     final double CLAW_SPEED = 0.02;// sets rate to move servo
     static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
     private ElapsedTime runtime = new ElapsedTime();
-    static final double     FORWARD_SPEED = 0.6;
+    static final double FORWARD_SPEED = 0.6;
+    static final double MAX_POS = 1.0;     // Maximum rotational position
+    static final double MIN_POS = 0.0;     // Minimum rotational position
+    double position = (MAX_POS - MIN_POS) / 2;
 
 
     /*
@@ -70,10 +73,13 @@ public class CakePushbotTeleopTank_Iterative extends OpMode {
      */
     @Override
     public void init() {
+
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap); //Maps hardware
+        robot.pushLeft.setPosition(1);
+        robot.pushRight.setPosition(1);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");    //
@@ -104,44 +110,42 @@ public class CakePushbotTeleopTank_Iterative extends OpMode {
         double rightDriveMotorPower;
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-        robot.leftMotor.setPower(1);
-        //leftDriveMotorPower = -gamepad1.left_stick_y;
-        //rightDriveMotorPower = -gamepad1.right_stick_y; //Have to offset the negatives
-        //robot.leftMotor.setPower(leftDriveMotorPower); //Makes the robot run
-        //robot.rightMotor.setPower(rightDriveMotorPower);
-
-        //Use gamepad buttons to move the arm up (x) and down (b)
-        if (gamepad1.x) {
-          //  robot.pushLeft.setPosition(1.5);
-        }
-
-        if (gamepad1.b) {
-            //robot.pushRight.setPosition(1.5);
-        }
-
+        // robot.leftMotor.setPower(1);
+        leftDriveMotorPower = -gamepad1.left_stick_y;
+        rightDriveMotorPower = -gamepad1.right_stick_y; //Have to offset the negatives
+        robot.leftMotor.setPower(leftDriveMotorPower); //Makes the robot run
+        robot.rightMotor.setPower(rightDriveMotorPower);
         // Left bumper
-        // robot.forkRaise.setPower(FORWARD_SPEED);while (gamepad1.left_bumper && (runtime.seconds() < 3.0)) {
-            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
+        //robot.forkRaise.setPower(FORWARD_SPEED);
+        //while (gamepad1.left_bumper && (runtime.seconds() < 3.0))
+        // {
+        telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+        telemetry.update();
+        //}
+
+
+        if (gamepad1.left_bumper) {
+            robot.forkRight.setPower(.5);//Forklift in
+            robot.forkLeft.setPower(.5);//Forklift out
+            runtime.reset();
+            while (runtime.seconds() < 2.0) {
+                telemetry.addData("%2.5f S Elapsed", runtime.seconds());
+                telemetry.update();
+            }
+            robot.forkRight.setPower(0);
+            robot.forkLeft.setPower(0);//Stop Motor
         }
-
-
-        //if (gamepad1.left_bumper)
-            //robot.forkRight.setPower(1440);//Forklift in
-            //robot.forkLeft.setPower(1440);//Forklift out
         // Right Bumper
-        //if (gamepad1.right_bumper)
-           // robot.forkRaise.setTargetPosition(1440); //Raises forklift
-        //else
-            //robot.forkRaise.setTargetPosition(0);
-
-
-        // Send telemetry message to signify robot running;
-        //       telemetry.addData("claw",  "Offset = %.2f", clawOffset);
-       // telemetry.addData("left drive motor power: ", "%.2f", leftDriveMotorPower);
-       // telemetry.addData("right drive motor power: ", "%.2f", rightDriveMotorPower);
-        //updateTelemetry(telemetry);
-   // }
+       // if (gamepad1.right_bumper) {
+            //robot.forkRaise.setTargetPosition(1440); //Raises forklift
+       // }
+    }
+    // Send telemetry message to signify robot running;
+    //       telemetry.addData("claw",  "Offset = %.2f", clawOffset);
+    // telemetry.addData("left drive motor power: ", "%.2f", leftDriveMotorPower);
+    // telemetry.addData("right drive motor power: ", "%.2f", rightDriveMotorPower);
+    //updateTelemetry(telemetry);
+    // }
 
     /*
      * Code to run ONCE after the driver hits STOP

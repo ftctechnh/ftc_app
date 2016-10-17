@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -54,7 +55,7 @@ public class CakeHardwarePushbot
         //armMotor    = hwMap.dcMotor.get("left_arm");
         leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        forkLeft.setDirection(DcMotor.Direction.REVERSE);
+        forkLeft.setDirection(DcMotor.Direction.FORWARD);
         forkRight.setDirection(DcMotor.Direction.REVERSE);
         forkRaise.setDirection(DcMotor.Direction.REVERSE);
         // Set all motors to zero power
