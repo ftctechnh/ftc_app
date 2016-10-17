@@ -87,18 +87,26 @@ public class OmegasLinear extends LinearOpMode {
             Ω.rightMotor.setPower(-gamepad1.right_stick_y);
 
             // Left beaconator management
-            if (gamepad1.left_trigger > 0) {
-                Ω.powerServo(Ω.leftBeaconator, gamepad1.left_trigger);
-            } else if (gamepad1.left_bumper) {
-                Ω.retractServo(Ω.leftBeaconator);
-            }
+            new Thread(new Runnable() {
+                public void run() {
+                    while (true) {
+                        if (gamepad1.left_trigger > 0) {
+                            Ω.beaconatorSequence(Ω.leftBeaconator, 700);
+                        }
+                    }
+                }
+            }).start();
 
             // Right beaconator management
-            if (gamepad1.right_trigger > 0) {
-                Ω.powerServo(Ω.rightBeaconator, gamepad1.right_trigger);
-            } else if (gamepad1.right_bumper) {
-                Ω.retractServo(Ω.rightBeaconator);
-            }
+            new Thread(new Runnable() {
+                public void run() {
+                    while (true) {
+                        if (gamepad1.right_trigger > 0) {
+                            Ω.beaconatorSequence(Ω.rightBeaconator, 700);
+                        }
+                    }
+                }
+            }).start();
         }
     }
 }

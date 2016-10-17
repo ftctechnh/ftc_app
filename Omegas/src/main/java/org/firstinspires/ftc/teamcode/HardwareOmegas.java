@@ -78,7 +78,6 @@ public class HardwareOmegas
      * @param periodMs  Length of wait cycle in mSec.
      */
     public void waitForTick(long periodMs) {
-
         long  remaining = periodMs - (long)period.milliseconds();
 
         // sleep for the remaining portion of the regular cycle period.
@@ -94,7 +93,22 @@ public class HardwareOmegas
         period.reset();
     }
 
-    public void powerServo(CRServo beaconator, float power) {
+    public void beaconatorSequence(CRServo beaconator, long milliseconds){
+        ElapsedTime timePushed = new ElapsedTime();
+
+        while (true) {
+            if (timePushed.milliseconds() < milliseconds) {
+                powerServo(beaconator, 1.0);
+            } else if (timePushed.milliseconds() < milliseconds * 2) {
+                retractServo(beaconator);
+            } else {
+                powerServo(beaconator, 0.0);
+                return;
+            }
+        }
+    }
+
+    public void powerServo(CRServo beaconator, double power) {
         beaconator.setDirection(CRServo.Direction.FORWARD);
         beaconator.setPower(Math.abs(power));
     }
