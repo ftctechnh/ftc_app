@@ -89,10 +89,8 @@ public class OmegasLinear extends LinearOpMode {
             // Left beaconator management
             new Thread(new Runnable() {
                 public void run() {
-                    while (true) {
-                        if (gamepad1.left_trigger > 0) {
-                            Ω.beaconatorSequence(Ω.leftBeaconator, 700);
-                        }
+                    if (gamepad1.left_trigger > 0) {
+                        Ω.beaconatorSequence(Ω.leftBeaconator, 700);
                     }
                 }
             }).start();
@@ -100,10 +98,8 @@ public class OmegasLinear extends LinearOpMode {
             // Right beaconator management
             new Thread(new Runnable() {
                 public void run() {
-                    while (true) {
-                        if (gamepad1.right_trigger > 0) {
-                            Ω.beaconatorSequence(Ω.rightBeaconator, 700);
-                        }
+                    if (gamepad1.right_trigger > 0) {
+                        Ω.beaconatorSequence(Ω.rightBeaconator, 700);
                     }
                 }
             }).start();
