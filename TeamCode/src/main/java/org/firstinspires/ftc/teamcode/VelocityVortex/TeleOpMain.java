@@ -39,9 +39,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 public class TeleOpMain extends RobotOpModes
 {
-    private float j1leftx;
-    private float j1lefty;
-    private float j1rightx;
+    private float strafe;
+    private float drive;
+    private float rotate;
 
     @Override
     public void init()
@@ -52,19 +52,14 @@ public class TeleOpMain extends RobotOpModes
     @Override
     public void loop()
     {
-        j1leftx = gamepad1.left_stick_x;
-        j1lefty = gamepad1.left_stick_y;
-        j1rightx = gamepad1.right_stick_x;
-/*
-        frontLeftPow = (float)(scaleInput(j1leftx + j1lefty + j1rightx));
-        backLeftPow = (float)(scaleInput(j1leftx + j1lefty - j1rightx));
-        frontRightPow = (float)(scaleInput(j1lefty - j1leftx - j1rightx));
-        backRightPow = (float)(scaleInput(j1lefty - j1leftx + j1rightx));
-*/
-        frontLeftPow = (float)(scaleInput(j1leftx + j1lefty));
-        backLeftPow = (float)(scaleInput(j1leftx + j1lefty));
-        frontRightPow = (float)(scaleInput(j1lefty - j1leftx));
-        backRightPow = (float)(scaleInput(j1lefty - j1leftx));
+        strafe = gamepad1.left_stick_x;
+        drive = gamepad1.left_stick_y;
+        rotate = gamepad1.right_stick_x;
+
+        frontLeftPow = (float)(scaleInput(drive + strafe + rotate));
+        backLeftPow = (float)(scaleInput(drive - strafe + rotate));
+        frontRightPow = (float)(scaleInput(drive - strafe - rotate));
+        backRightPow = (float)(scaleInput(drive + strafe - rotate));
 
         motorFrontLeft.setPower(frontLeftPow);
         motorBackLeft.setPower(backLeftPow);
