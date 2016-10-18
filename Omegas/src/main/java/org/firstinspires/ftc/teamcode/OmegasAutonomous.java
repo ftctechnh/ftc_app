@@ -69,6 +69,14 @@ public abstract class OmegasAutonomous extends LinearOpMode {
             telemetry.addData("Right color sensor red: ", Ω.rightColorSensor.red());
             telemetry.update();
 
+            if (runtime.milliseconds() < 7000) {
+                Ω.leftMotor.setPower(1.0);
+                Ω.rightMotor.setPower(1.0);
+            } else {
+                Ω.leftMotor.setPower(0.0);
+                Ω.rightMotor.setPower(0.0);
+            }
+
             switch (getColor()) {
                 case RED:
                     pushBeacon(Ω.leftColorSensor.red(),
