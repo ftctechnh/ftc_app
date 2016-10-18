@@ -10,12 +10,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Created by Kota Baer on 10/11/2016.
  */
 public class AutoDoubleBeacon extends LinearOpMode {
+    double Distance = 18.5;
 
     @Override
     public void runOpMode() throws InterruptedException {
         Hardware5035 robot   = new Hardware5035();
         robot.init(hardwareMap);
 
+       robot.drive(Distance);
 
     }
 }
