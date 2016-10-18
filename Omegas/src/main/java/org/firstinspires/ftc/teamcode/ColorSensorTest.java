@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import android.graphics.Color;
 
@@ -8,6 +9,7 @@ import android.graphics.Color;
  * Created by ethertyper on 10/17/16.
  */
 
+@TeleOp(name="Omegas: Color Sensor Test", group="Tests")
 public class ColorSensorTest extends LinearOpMode {
 
     /* Declare OpMode members. */
