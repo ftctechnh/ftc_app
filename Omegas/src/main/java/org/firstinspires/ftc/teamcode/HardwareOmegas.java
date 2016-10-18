@@ -16,11 +16,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * This hardware class assumes the following device names have been configured on the robot:
  * Note:  All names are lower case and some have single spaces between words.
  *
- * Motor channel:  Left  drive motor:        "left_drive"
- * Motor channel:  Right drive motor:        "right_drive"
- * Motor channel:  Manipulator drive motor:  "left_arm"
- * Servo channel:  Servo to open left claw:  "left_hand"
- * Servo channel:  Servo to open right claw: "right_hand"
+ * Motor channel:  Left  drive motor:                "left_drive"
+ * Motor channel:  Right drive motor:                "right_drive"
+ * Servo channel:  Servo to push left beaconator:    "left_beaconator"
+ * Servo channel:  Servo to open right beaconator:   "right_beaconator"
+ * Color sensor:  Color sensor for left beaconator:  "left_color_sensor"
+ * Color sensor:  Color sensor for right beaconator: "right_color_sensor"
  */
 public class HardwareOmegas
 {
@@ -56,8 +57,11 @@ public class HardwareOmegas
         leftBeaconator = hwMap.crservo.get("left_beaconator");
 //        rightBeaconator = hwMap.crservo.get("right_beaconator"); // Unimplemented for the time being.
 
-        rightColorSensor = hwMap.colorSensor.get("left_color_sensor");
-//        leftColorSensor = hwMap.colorSensor.get("right_color_sensor"); // Unimplemented for the time being.
+        leftColorSensor = hwMap.colorSensor.get("left_color_sensor");
+//        rightColorSensor = hwMap.colorSensor.get("right_color_sensor"); // Unimplemented for the time being.
+
+        leftColorSensor.enableLed(true);
+//        rightColorSensor.enableLed(true); // Unimplemented for the time being.
 
         // Set all motors to zero power
         leftMotor.setPower(0);
