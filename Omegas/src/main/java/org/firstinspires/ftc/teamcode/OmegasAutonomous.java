@@ -77,16 +77,18 @@ public abstract class OmegasAutonomous extends LinearOpMode {
                 Ω.rightMotor.setPower(0.0);
             }
 
-            switch (getColor()) {
-                case RED:
-                    pushBeacon(Ω.leftColorSensor.red(),
-                            Ω.rightColorSensor.red());
-                    break;
-                case BLUE:
-                    pushBeacon(Ω.leftColorSensor.blue(),
-                            Ω.rightColorSensor.blue());
-                    break;
-            }
+            /**
+             *  switch (getColor()) {
+             *      case RED:
+             *          pushBeacon(Ω.leftColorSensor.red(),
+             *              Ω.rightColorSensor.red());
+             *          break;
+             *      case BLUE:
+             *          pushBeacon(Ω.leftColorSensor.blue(),
+             *              Ω.rightColorSensor.blue());
+             *          break;
+             *  }
+             */
         }
     }
 
