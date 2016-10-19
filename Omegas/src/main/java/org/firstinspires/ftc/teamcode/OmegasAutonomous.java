@@ -78,6 +78,9 @@ public abstract class OmegasAutonomous extends LinearOpMode {
             }
 
             /**
+             * The following should, if uncommented, extend beaconators depending
+             * on the colors in front of its two color sensors.
+             *
              *  switch (getColor()) {
              *      case RED:
              *          pushBeacon(Ω.leftColorSensor.red(),
