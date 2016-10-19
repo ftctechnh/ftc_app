@@ -37,7 +37,7 @@ public class TeleOp5035 extends OpMode {
     public void loop() {
 
         //tank drive
-        if (null!=robot.leftMotor)             robot.leftMotor.setPower(gamepad1.left_stick_y);
-        if (null!=robot.rightMotor)             robot.rightMotor.setPower(gamepad1.right_stick_y);
+        if (null!=robot.leftMotor)             robot.leftMotor.setPower(-gamepad1.left_stick_y);
+        if (null!=robot.rightMotor)             robot.rightMotor.setPower(-gamepad1.right_stick_y);
     }
 }

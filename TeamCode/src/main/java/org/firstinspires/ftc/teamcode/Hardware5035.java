@@ -55,8 +55,8 @@ public class Hardware5035 {
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     /***
@@ -148,6 +148,9 @@ public class Hardware5035 {
     {
         return (int) (65.482 * inches);
     }
+
+
+
     public void turnDegrees (double degrees) throws InterruptedException {
         Reset_All_Encoders();
         int tickR = getTicksForTurn(degrees);
@@ -220,6 +223,7 @@ public class Hardware5035 {
         rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //waitOneFullHardwareCycle(); needed?
     }
+
     public void drive (double inches) throws InterruptedException {
 //12.6
 
