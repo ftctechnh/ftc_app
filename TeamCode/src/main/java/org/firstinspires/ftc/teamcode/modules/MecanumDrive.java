@@ -173,7 +173,7 @@ final static float JOYSTICK_DEADZONE = .1F;
 
         else if ((gamepad.left_stick_x <= -JOYSTICK_DEADZONE && gamepad.left_stick_y >= JOYSTICK_DEADZONE) || (gamepad.right_stick_x >= JOYSTICK_DEADZONE && gamepad.right_stick_y <= -JOYSTICK_DEADZONE)) {
             float power = (float) Math.sqrt(Math.pow(((gamepad.left_stick_x + gamepad.right_stick_x) / 2), 2) + Math.pow(((gamepad.left_stick_y + gamepad.right_stick_y) / 2), 2));
-            diagonalRight(frontLeft, frontRight, backLeft, backRight, power);
+            diagonalLeft(frontLeft, frontRight, backLeft, backRight, power);
         }
 
         else{
