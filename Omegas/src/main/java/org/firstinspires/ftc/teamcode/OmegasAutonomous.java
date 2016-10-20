@@ -71,7 +71,7 @@ public abstract class OmegasAutonomous extends LinearOpMode {
             telemetry.update();
 
             for (DcMotor motor : Ω.motors) {
-                    motor.setPower((runtime.milliseconds() < 7000) ? 1.0 : 0.0);
+                motor.setPower((runtime.milliseconds() < 7000) ? 1.0 : 0.0);
             }
 
             /**

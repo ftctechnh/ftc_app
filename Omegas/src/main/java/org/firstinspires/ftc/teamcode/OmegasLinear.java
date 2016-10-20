@@ -84,11 +84,15 @@ public class OmegasLinear extends LinearOpMode {
             telemetry.update();
 
             // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
-            for (DcMotor motor : Ω.motors) {
-                motor.setPower(-gamepad1.right_stick_y);
-            }
+            Ω.leftBackMotor.setPower(-gamepad1.left_stick_y);
+            Ω.leftFrontMotor.setPower(-gamepad1.left_stick_y);
+            Ω.rightBackMotor.setPower(-gamepad1.right_stick_y);
+            Ω.rightFrontMotor.setPower(-gamepad1.right_stick_y);
 
             /**
+             * The following should, if uncommented, extend and retract
+             * beaconators when the trigger keys are pressed.
+             *
              *  // Left beaconator management
              *  new Thread(new Runnable() {
              *      public void run() {
