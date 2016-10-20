@@ -40,9 +40,10 @@ public class HardwareOmegas
 
     ArrayList<DcMotor> motors;
 
-    public static final double MID_SERVO       =  0.5 ;
-    public static final double ARM_UP_POWER    =  0.45 ;
-    public static final double ARM_DOWN_POWER  = -0.45 ;
+    public static final double  MID_SERVO       =  0.5;
+    public static final double  ARM_UP_POWER    =  0.45;
+    public static final double  ARM_DOWN_POWER  = -0.45;
+    public static       boolean isExtending     = false;
 
     /* local OpMode members. */
     HardwareMap hwMap           = null;
@@ -118,6 +119,7 @@ public class HardwareOmegas
 
     public void beaconatorSequence(CRServo beaconator, long milliseconds){
         ElapsedTime timePushed = new ElapsedTime();
+        if (isExtending) return; else isExtending = true;
 
         while (true) {
             if (timePushed.milliseconds() < milliseconds) {
