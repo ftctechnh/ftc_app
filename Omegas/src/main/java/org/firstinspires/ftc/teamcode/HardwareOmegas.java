@@ -4,7 +4,10 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.configuration.DeviceConfiguration;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import java.util.ArrayList;
 
 /**
  * This is NOT an opmode.
@@ -28,10 +31,14 @@ public class HardwareOmegas
     /* Public OpMode members. */
     ColorSensor     leftColorSensor  = null;
     ColorSensor     rightColorSensor = null;
-    public DcMotor  leftMotor        = null;
-    public DcMotor  rightMotor       = null;
+    public DcMotor  leftFrontMotor   = null;
+    public DcMotor  leftBackMotor    = null;
+    public DcMotor  rightFrontMotor  = null;
+    public DcMotor  rightBackMotor  = null;
     public CRServo  leftBeaconator   = null;
     public CRServo  rightBeaconator  = null;
+
+    ArrayList<DcMotor> motors;
 
     public static final double MID_SERVO       =  0.5 ;
     public static final double ARM_UP_POWER    =  0.45 ;
@@ -47,30 +54,42 @@ public class HardwareOmegas
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftMotor   = hwMap.dcMotor.get("left_drive");
-        rightMotor  = hwMap.dcMotor.get("right_drive");
-        leftMotor.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
-        rightMotor.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+        leftFrontMotor  = hwMap.dcMotor.get("left_front");
+        leftBackMotor   = hwMap.dcMotor.get("left_back");
+        rightFrontMotor = hwMap.dcMotor.get("right_front");
+        rightBackMotor  = hwMap.dcMotor.get("right_back");
 
-        // Connect to servo (Assume PushBot Left Hand)
-        // Change the text in quotes to match any servo name on your robot.
-        leftBeaconator = hwMap.crservo.get("left_beaconator");
-//        rightBeaconator = hwMap.crservo.get("right_beaconator"); // Unimplemented for the time being.
+        motors = new ArrayList<DcMotor>(){
+            {
+                add(leftFrontMotor);
+                add(leftBackMotor);
+                add(rightFrontMotor);
+                add(rightBackMotor);
+            }
+        };
 
-        leftColorSensor = hwMap.colorSensor.get("left_color_sensor");
-//        rightColorSensor = hwMap.colorSensor.get("right_color_sensor"); // Unimplemented for the time being.
+        leftFrontMotor.setDirection(DcMotor.Direction.REVERSE);  // Set to REVERSE if using AndyMark motors
+        leftBackMotor.setDirection(DcMotor.Direction.REVERSE);   // Set to REVERSE if using AndyMark motors
+        rightFrontMotor.setDirection(DcMotor.Direction.FORWARD); // Set to FORWARD if using AndyMark motors
+        rightBackMotor.setDirection(DcMotor.Direction.FORWARD);  // Set to FORWARD if using AndyMark motors
 
-        leftColorSensor.enableLed(true);
-//        rightColorSensor.enableLed(true); // Unimplemented for the time being.
+//        // Connect to servo (Assume PushBot Left Hand)
+//        // Change the text in quotes to match any servo name on your robot.
+//        leftBeaconator = hwMap.crservo.get("left_beaconator");
+//        rightBeaconator = hwMap.crservo.get("right_beaconator");
+//
+//        leftColorSensor = hwMap.colorSensor.get("left_color_sensor");
+//        rightColorSensor = hwMap.colorSensor.get("right_color_sensor");
+//
+//        leftColorSensor.enableLed(true);
+//        rightColorSensor.enableLed(true);
 
-        // Set all motors to zero power
-        leftMotor.setPower(0);
-        rightMotor.setPower(0);
-
-        // Set all motors to run without encoders.
+        // Set all motors to zero power, and to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        for (DcMotor motor : motors) {
+            motor.setPower(0.0);
+            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
     }
 
     /***

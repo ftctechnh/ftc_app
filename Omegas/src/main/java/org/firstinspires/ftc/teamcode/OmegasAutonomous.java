@@ -32,6 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 public abstract class OmegasAutonomous extends LinearOpMode {
@@ -69,12 +70,8 @@ public abstract class OmegasAutonomous extends LinearOpMode {
             telemetry.addData("Right color sensor red: ", Ω.rightColorSensor.red());
             telemetry.update();
 
-            if (runtime.milliseconds() < 7000) {
-                Ω.leftMotor.setPower(1.0);
-                Ω.rightMotor.setPower(1.0);
-            } else {
-                Ω.leftMotor.setPower(0.0);
-                Ω.rightMotor.setPower(0.0);
+            for (DcMotor motor : Ω.motors) {
+                    motor.setPower((runtime.milliseconds() < 7000) ? 1.0 : 0.0);
             }
 
             /**

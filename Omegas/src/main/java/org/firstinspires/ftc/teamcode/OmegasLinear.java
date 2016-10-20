@@ -35,6 +35,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -83,26 +84,29 @@ public class OmegasLinear extends LinearOpMode {
             telemetry.update();
 
             // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
-            Ω.leftMotor.setPower(-gamepad1.left_stick_y);
-            Ω.rightMotor.setPower(-gamepad1.right_stick_y);
+            for (DcMotor motor : Ω.motors) {
+                motor.setPower(-gamepad1.right_stick_y);
+            }
 
-            // Left beaconator management
-            new Thread(new Runnable() {
-                public void run() {
-                    if (gamepad1.left_trigger > 0) {
-                        Ω.beaconatorSequence(Ω.leftBeaconator, 700);
-                    }
-                }
-            }).start();
-
-            // Right beaconator management
-            new Thread(new Runnable() {
-                public void run() {
-                    if (gamepad1.right_trigger > 0) {
-                        Ω.beaconatorSequence(Ω.rightBeaconator, 700);
-                    }
-                }
-            }).start();
+            /**
+             *  // Left beaconator management
+             *  new Thread(new Runnable() {
+             *      public void run() {
+             *          if (gamepad1.left_trigger > 0) {
+             *              Ω.beaconatorSequence(Ω.leftBeaconator, 700);
+             *          }
+             *      }
+             *  }).start();
+             *
+             *  // Right beaconator management
+             *  new Thread(new Runnable() {
+             *      public void run() {
+             *          if (gamepad1.right_trigger > 0) {
+             *              Ω.beaconatorSequence(Ω.rightBeaconator, 700);
+             *          }
+             *      }
+             *  }).start();
+             */
         }
     }
 }
