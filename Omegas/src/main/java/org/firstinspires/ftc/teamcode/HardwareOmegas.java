@@ -34,7 +34,7 @@ public class HardwareOmegas
     public DcMotor  leftFrontMotor   = null;
     public DcMotor  leftBackMotor    = null;
     public DcMotor  rightFrontMotor  = null;
-    public DcMotor  rightBackMotor  = null;
+    public DcMotor  rightBackMotor   = null;
     public CRServo  leftBeaconator   = null;
     public CRServo  rightBeaconator  = null;
 
@@ -73,14 +73,14 @@ public class HardwareOmegas
         rightFrontMotor.setDirection(DcMotor.Direction.FORWARD); // Set to FORWARD if using AndyMark motors
         rightBackMotor.setDirection(DcMotor.Direction.FORWARD);  // Set to FORWARD if using AndyMark motors
 
-//        // Connect to servo (Assume PushBot Left Hand)
-//        // Change the text in quotes to match any servo name on your robot.
-//        leftBeaconator = hwMap.crservo.get("left_beaconator");
+        // Connect to servo (Assume PushBot Left Hand)
+        // Change the text in quotes to match any servo name on your robot.
+        leftBeaconator = hwMap.crservo.get("left_beaconator");
 //        rightBeaconator = hwMap.crservo.get("right_beaconator");
-//
-//        leftColorSensor = hwMap.colorSensor.get("left_color_sensor");
+
+        leftColorSensor = hwMap.colorSensor.get("left_color_sensor");
 //        rightColorSensor = hwMap.colorSensor.get("right_color_sensor");
-//
+
 //        leftColorSensor.enableLed(true);
 //        rightColorSensor.enableLed(true);
 

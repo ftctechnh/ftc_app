@@ -92,17 +92,20 @@ public class OmegasLinear extends LinearOpMode {
             /**
              * The following should, if uncommented, extend and retract
              * beaconators when the trigger keys are pressed.
+             */
+
+             // Left beaconator management
+             new Thread(new Runnable() {
+                 public void run() {
+                     if (gamepad1.left_trigger > 0) {
+                         Ω.beaconatorSequence(Ω.leftBeaconator, 700);
+                     }
+                 }
+             }).start();
+
+            /**
+             * Right beaconator management
              *
-             *  // Left beaconator management
-             *  new Thread(new Runnable() {
-             *      public void run() {
-             *          if (gamepad1.left_trigger > 0) {
-             *              Ω.beaconatorSequence(Ω.leftBeaconator, 700);
-             *          }
-             *      }
-             *  }).start();
-             *
-             *  // Right beaconator management
              *  new Thread(new Runnable() {
              *      public void run() {
              *          if (gamepad1.right_trigger > 0) {
