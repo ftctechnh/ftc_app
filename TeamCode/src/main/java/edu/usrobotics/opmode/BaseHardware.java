@@ -10,9 +10,11 @@ public abstract class BaseHardware {
     public HardwareMap hardwareMap;
 
     public void init (HardwareMap hardwareMap) {
+
         this.hardwareMap = hardwareMap;
 
         getDevices();
+
     }
 
     public abstract void getDevices ();
