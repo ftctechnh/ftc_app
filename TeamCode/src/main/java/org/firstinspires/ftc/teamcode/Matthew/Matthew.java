@@ -33,6 +33,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode.Matthew;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -97,9 +98,9 @@ public class Matthew extends LinearOpMode {
             idle();
         }
 
-        // Step 2:  Spin right for 1.3 seconds
-        robot.leftMotor.setPower(TURN_SPEED);
-        robot.rightMotor.setPower(-TURN_SPEED);
+        // Step 2:  Move arm / servos to knock off cap ball
+        robot.leftMotor.setPower(-TURN_SPEED);
+        robot.rightMotor.setPower(TURN_SPEED);
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 2.2)) {
             idle();
@@ -114,14 +115,21 @@ public class Matthew extends LinearOpMode {
         }
 
         // Step 4:  Stop and close the claw.
-        robot.leftMotor.setPower(1);
-        robot.rightMotor.setPower(1);
-        robot.leftClaw.setPosition(0.0);
-        robot.rightClaw.setPosition(0.0);
+        robot.leftMotor.setPower(0);
+        robot.rightMotor.setPower(0);
+        robot.leftClaw.setPosition(0.5);
+        robot.rightClaw.setPosition(0.5);
 
         telemetry.addData("Status", "Complete");
         telemetry.update();
         sleep(1000);
+        idle();
+
+        robot.leftMotor.setPower(-FORWARD_SPEED);
+        robot.rightMotor.setPower(-FORWARD_SPEED);
+        telemetry.update();
+        sleep(1000);
+        runtime.reset();
         idle();
     }
 }

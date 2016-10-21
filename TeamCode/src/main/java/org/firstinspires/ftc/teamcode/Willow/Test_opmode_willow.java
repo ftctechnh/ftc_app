@@ -33,6 +33,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode.Willow;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -60,16 +61,16 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  */
 
 @Autonomous(name="I dont even know.", group="Pushbot")
-//@Disabled
+@Disabled
 public class Test_opmode_willow extends LinearOpMode {
 
     /* Declare OpMode members. */
-    HardwarePushbot         robot   = new HardwarePushbot();   // Use a Pushbot's hardware
-    private ElapsedTime     runtime = new ElapsedTime();
+    HardwarePushbot robot = new HardwarePushbot();   // Use a Pushbot's hardware
+    private ElapsedTime runtime = new ElapsedTime();
 
 
-    static final double     FORWARD_SPEED = 0.6;
-    static final double     TURN_SPEED    = 0.5;
+    static final double FORWARD_SPEED = 0.6;
+    static final double TURN_SPEED = 0.5;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -110,39 +111,38 @@ public class Test_opmode_willow extends LinearOpMode {
             idle();
 
 
-        // Step 2:  Spin right for 1.3 seconds
-        robot.leftMotor.setPower(TURN_SPEED);
-        robot.rightMotor.setPower(-TURN_SPEED);
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 1.3)) {
-            telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
+            // Step 2:  Spin right for 1.3 seconds
+            robot.leftMotor.setPower(TURN_SPEED);
+            robot.rightMotor.setPower(-TURN_SPEED);
+            runtime.reset();
+            while (opModeIsActive() && (runtime.seconds() < 1.3)) {
+                telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
+                telemetry.update();
+                idle();
+            }
+
+
+            // Step 3:  Drive Backwards for 1 Second
+            robot.leftMotor.setPower(-FORWARD_SPEED);
+            robot.rightMotor.setPower(-FORWARD_SPEED);
+            runtime.reset();
+            while (opModeIsActive() && (runtime.seconds() < 1.2)) {
+                telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
+                telemetry.update();
+                idle();
+            }
+
+
+            // Step 4:  Stop and close the claw.
+            robot.leftMotor.setPower(3);
+            robot.rightMotor.setPower(3);
+            robot.leftClaw.setPosition(1.0);
+            robot.rightClaw.setPosition(1.0);
+
+            telemetry.addData("Path", "Complete");
             telemetry.update();
+            sleep(1000);
             idle();
         }
-
-
-        // Step 3:  Drive Backwards for 1 Second
-        robot.leftMotor.setPower(-FORWARD_SPEED);
-        robot.rightMotor.setPower(-FORWARD_SPEED);
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 1.2)) {
-            telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
-            idle();
-        }
-
-
-
-
-        // Step 4:  Stop and close the claw.
-        robot.leftMotor.setPower(3);
-        robot.rightMotor.setPower(3);
-        robot.leftClaw.setPosition(1.0);
-        robot.rightClaw.setPosition(1.0);
-
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
-        sleep(1000);
-        idle();
     }
 }
