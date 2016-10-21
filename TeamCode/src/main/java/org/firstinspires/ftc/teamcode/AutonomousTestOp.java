@@ -16,22 +16,11 @@ public class AutonomousTestOp extends LinearOpMode
     {
         robot.init(hardwareMap);
         waitForStart();
-        int i = 0;
-        boolean aButton = false;
-        while(i < 7)
-        {
-            if(gamepad1.a == true)
-            {
-                aButton = true;
-            }
-            if(aButton == true)
-            {
-                int degree = 15 * i;
-                robot.driveStraight(12, degree);
-                i++;
-                aButton = false;
-            }
-        }
+        robot.spin(180);
+        sleep(5000);
+        robot.spin(90);
+        sleep(5000);
+        robot.spin(180);
     }
 }
 

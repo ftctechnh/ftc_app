@@ -130,7 +130,33 @@ public class OmniDriveBot implements DriveTrainInterface
 
     public void spin(float degree)
     {
+        double robotCircumference = 84.1;
+        //originally 90 was 86
+        int encoderTarget = (int)(Math.abs(degree)*robotCircumference*90/360);
+        int fLDistanceEncoders = (Math.abs(fL.getCurrentPosition()) + encoderTarget);
+        int fRDistanceEncoders = (Math.abs(fR.getCurrentPosition()) + encoderTarget);
 
+        if(degree > 0)
+        {
+            bL.setPower(-1);
+            bR.setPower(-1);
+            fL.setPower(-1);
+            fR.setPower(-1);
+        }
+        else
+        {
+            bL.setPower(1);
+            bR.setPower(1);
+            fL.setPower(1);
+            fR.setPower(1);
+        }
+        while(Math.abs(fL.getCurrentPosition()) < fLDistanceEncoders & Math.abs(fR.getCurrentPosition()) < fRDistanceEncoders)
+        {
+        }
+        bL.setPower(0);
+        bR.setPower(0);
+        fL.setPower(0);
+        fR.setPower(0);
     }
 
     public DcMotor getfL()
