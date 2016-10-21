@@ -62,26 +62,17 @@ public class ConceptTelemetry extends LinearOpMode
 
     static final String[] poem = new String[] {
 
-        "Mary had a little lamb,",
-        "His fleece was white as snow,",
-        "And everywhere that Mary went,",
-        "The lamb was sure to go.",
+        "Do you remember the twenty-first night of September,",
+        "Before you go cold like December,",
+        "And all you saw a cloudy day,",
         "",
-        "He followed her to school one day,",
-        "Which was against the rule,",
-        "It made the children laugh and play",
-        "To see a lamb at school.",
+        "And I remember that day when you surrender",
+        "You start turning 'cause you remember",
+        "The season it won't last away",
         "",
-        "And so the teacher turned it out,",
-        "But still it lingered near,",
-        "And waited patiently about,",
-        "Till Mary did appear.",
-        "",
-        "\"Why does the lamb love Mary so?\"",
-        "The eager children cry.",
-        "\"Why, Mary loves the lamb, you know,\"",
-        "The teacher did reply.",
-        "",
+        "Ba de ya, tell me you remember",
+        "Ba de ya, and your heart felt like September",
+        "You still had the joy and God was just a prayer away",
         ""
         };
 
@@ -94,9 +85,9 @@ public class ConceptTelemetry extends LinearOpMode
         // We show the log in oldest-to-newest order, as that's better for poetry
         telemetry.log().setDisplayOrder(Telemetry.Log.DisplayOrder.OLDEST_FIRST);
         // We can control the number of lines shown in the log
-        telemetry.log().setCapacity(6);
+        telemetry.log().setCapacity(8);
         // The interval between lines of poetry, in seconds
-        double sPoemInterval = 0.6;
+        double sPoemInterval = 2;
 
         /**
          * Wait until we've been given the ok to go. For something to do, we emit the
