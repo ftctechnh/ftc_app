@@ -42,6 +42,7 @@ public class HardwareOmegas
     public static final double  MID_SERVO       =  0.5;
     public static final double  ARM_UP_POWER    =  0.45;
     public static final double  ARM_DOWN_POWER  = -0.45;
+    public static final double  MS_PER_RADIAN   = 0;
     public static       boolean isExtending     = false;
 
     /* local OpMode members. */
@@ -117,7 +118,14 @@ public class HardwareOmegas
     }
 
     public void rotate(long radians) {
+        ElapsedTime timePushed = new ElapsedTime();
 
+        while (timePushed.milliseconds() < radians * MS_PER_RADIAN) {
+            leftBackMotor.setPower(1.0);
+            leftFrontMotor.setPower(1.0);
+            rightBackMotor.setPower(-1.0);
+            rightFrontMotor.setPower(-1.0);
+        }
     }
 
     public void beaconatorSequence(CRServo beaconator, long milliseconds) {
