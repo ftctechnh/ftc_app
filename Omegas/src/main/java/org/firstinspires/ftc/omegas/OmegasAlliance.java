@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.omegas;
 
 /**
  * This file contains a minimal enum variable to represent Alliance color. It is used more

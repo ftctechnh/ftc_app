@@ -1,17 +1,18 @@
-package org.firstinspires.ftc.teamcode.test;
+package org.firstinspires.ftc.omegas.test;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import android.graphics.Color;
 
-import org.firstinspires.ftc.teamcode.HardwareOmegas;
+import org.firstinspires.ftc.omegas.HardwareOmegas;
 
 /**
- * Created by ethertyper on 10/22/16.
+ * Created by ethertyper on 10/17/16.
  */
 
-@Autonomous(name="Omegas: Rotation Test", group="Tests")
-public class RotationTest extends LinearOpMode {
+@Autonomous(name="Omegas: Color Sensor Test", group="Tests")
+public class ColorSensorTest extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -31,11 +32,11 @@ public class RotationTest extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            // eg: Run wheels in tank mode opposite to each other.
-            Ω.leftBackMotor.setPower(1.0);
-            Ω.leftFrontMotor.setPower(1.0);
-            Ω.rightBackMotor.setPower(-1.0);
-            Ω.rightFrontMotor.setPower(-1.0);
+            telemetry.addData("Color",String.format("Red: %s\nGreen:%s\nBlue:%s\n",
+                    Color.red(Ω.leftColorSensor.argb()),
+                    Color.green(Ω.leftColorSensor.argb()),
+                    Color.blue(Ω.leftColorSensor.argb())));
+            telemetry.update();
         }
     }
 }

@@ -29,15 +29,14 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package org.firstinspires.ftc.teamcode.autonomous;
+package org.firstinspires.ftc.omegas.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.HardwareOmegas;
-import org.firstinspires.ftc.teamcode.OmegasAlliance;
+import org.firstinspires.ftc.omegas.HardwareOmegas;
+import org.firstinspires.ftc.omegas.OmegasAlliance;
 
 public abstract class OmegasAutonomous extends LinearOpMode {
 
