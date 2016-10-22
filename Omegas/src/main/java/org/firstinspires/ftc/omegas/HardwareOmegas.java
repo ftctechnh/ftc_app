@@ -69,10 +69,10 @@ public class HardwareOmegas
             }
         };
 
-        leftFrontMotor.setDirection(DcMotor.Direction.REVERSE);  // Set to REVERSE if using AndyMark motors
-        leftBackMotor.setDirection(DcMotor.Direction.REVERSE);   // Set to REVERSE if using AndyMark motors
-        rightFrontMotor.setDirection(DcMotor.Direction.FORWARD); // Set to FORWARD if using AndyMark motors
-        rightBackMotor.setDirection(DcMotor.Direction.FORWARD);  // Set to FORWARD if using AndyMark motors
+        leftFrontMotor.setDirection(DcMotor.Direction.FORWARD);  // Set to REVERSE if using AndyMark motors
+        leftBackMotor.setDirection(DcMotor.Direction.FORWARD);   // Set to REVERSE if using AndyMark motors
+        rightFrontMotor.setDirection(DcMotor.Direction.REVERSE); // Set to FORWARD if using AndyMark motors
+        rightBackMotor.setDirection(DcMotor.Direction.REVERSE);  // Set to FORWARD if using AndyMark motors
 
         // Connect to servo (Assume PushBot Left Hand)
         // Change the text in quotes to match any servo name on your robot.
