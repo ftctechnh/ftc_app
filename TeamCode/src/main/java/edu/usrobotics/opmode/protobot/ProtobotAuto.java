@@ -6,6 +6,7 @@ import edu.usrobotics.opmode.RobotOp;
 import edu.usrobotics.opmode.Route;
 import edu.usrobotics.opmode.task.ConcurrentTaskSet;
 import edu.usrobotics.opmode.task.MotorTask;
+import edu.usrobotics.opmode.tracker.VuforiaTracker;
 
 /**
  * Created by dsiegler19 on 10/13/16.
@@ -20,6 +21,8 @@ public class ProtobotAuto extends RobotOp {
 
         super.init();
 
+        addTracker(new VuforiaTracker());
+
         robot.init(hardwareMap);
 
     }
@@ -29,7 +32,7 @@ public class ProtobotAuto extends RobotOp {
 
         super.start();
 
-        Route happyTrail = new Route ();
+        /*Route happyTrail = new Route ();
 
         ConcurrentTaskSet forward = new ConcurrentTaskSet (
                 new MotorTask(robot.frontRight, null, null, 0.5d, 0.8f),
@@ -40,7 +43,7 @@ public class ProtobotAuto extends RobotOp {
 
         happyTrail.addTask (forward);
 
-        addRoute(happyTrail);
+        addRoute(happyTrail);*/
 
     }
 }

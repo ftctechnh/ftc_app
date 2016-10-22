@@ -7,6 +7,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.IllegalFormatCodePointException;
 
 import edu.usrobotics.opmode.tracker.Tracker;
 
@@ -109,6 +110,7 @@ public class TrackedOp extends StateBasedOp {
         super.loop();
 
         updateTrackers();
+
     }
 
     @Override public void start () {
