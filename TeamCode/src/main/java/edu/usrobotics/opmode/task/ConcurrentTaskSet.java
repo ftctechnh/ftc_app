@@ -1,4 +1,4 @@
-package edu.usrobotics.opmode;
+package edu.usrobotics.opmode.task;
 
 import edu.usrobotics.opmode.task.Task;
 import edu.usrobotics.opmode.task.TaskType;

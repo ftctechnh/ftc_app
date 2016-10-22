@@ -71,7 +71,6 @@ public class TrackedOp extends StateBasedOp {
                 if (r != null) {
                     if (rotation != null) {
                         VectorF normal = new VectorF(r.firstAngle, r.secondAngle, r.thirdAngle);
-                        //Orientation.getOrientation(rotation, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
                         VectorF normal2 = new VectorF(rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
 
                         // If precise rotation is near reliable rotation, we use precise rotation.
@@ -110,5 +109,13 @@ public class TrackedOp extends StateBasedOp {
         super.loop();
 
         updateTrackers();
+    }
+
+    @Override public void start () {
+        super.start();
+
+        for (Tracker t : trackers) {
+            t.init();
+        }
     }
 }

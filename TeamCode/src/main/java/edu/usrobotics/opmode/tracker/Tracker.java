@@ -19,4 +19,6 @@ public interface Tracker {
     void setRobotPosition ();
 
     void setRobotOrientation ();
+
+    void init ();
 }

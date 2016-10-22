@@ -86,11 +86,28 @@ import java.util.List;
 
 @Autonomous(name="Vuforia Tracker", group ="OpModes")
 @Disabled
-public class VuforiaTracker extends LinearOpMode {
+public class VuforiaTracker implements Tracker {
 
     public static final String TAG = "Vuforia Tracker";
 
+    /**
+     * We use units of mm here because that's the recommended units of measurement for the
+     * size values specified in the XML for the ImageTarget trackables in data sets. E.g.:
+     *      <ImageTarget name="stones" size="247 173"/>
+     * You don't *have to* use mm here, but the units here and the units used in the XML
+     * target configuration files *must* correspond for the math to work out correctly.
+     */
+    float mmPerInch        = 25.4f;
+    float mmBotWidth       = 18 * mmPerInch;            // ... or whatever is right for your robot
+    float mmFTCFieldWidth  = (12*12 - 2) * mmPerInch;   // the FTC field is ~11'10" center-to-center of the glass panels
+
+    OpenGLMatrix lastKnownLocation = null;
     OpenGLMatrix lastLocation = null;
+    OpenGLMatrix position = null;
+    Orientation rotation = null;
+
+    /** For convenience, gather together all the trackable objects in one easily-iterable collection */
+    List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
 
     /**
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
@@ -98,7 +115,7 @@ public class VuforiaTracker extends LinearOpMode {
      */
     VuforiaLocalizer vuforia;
 
-    @Override public void runOpMode() throws InterruptedException {
+    public void init () {
         /**
          * Start up Vuforia, telling it the id of the view that we wish to use as the parent for
          * the camera monitor feedback; if no camera monitor feedback is desired, use the parameterless
@@ -142,20 +159,7 @@ public class VuforiaTracker extends LinearOpMode {
         VuforiaTrackable blueTarget  = stonesAndChips.get(1);
         blueTarget.setName("BlueTarget");  // Chips
 
-        /** For convenience, gather together all the trackable objects in one easily-iterable collection */
-        List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
         allTrackables.addAll(stonesAndChips);
-
-        /**
-         * We use units of mm here because that's the recommended units of measurement for the
-         * size values specified in the XML for the ImageTarget trackables in data sets. E.g.:
-         *      <ImageTarget name="stones" size="247 173"/>
-         * You don't *have to* use mm here, but the units here and the units used in the XML
-         * target configuration files *must* correspond for the math to work out correctly.
-         */
-        float mmPerInch        = 25.4f;
-        float mmBotWidth       = 18 * mmPerInch;            // ... or whatever is right for your robot
-        float mmFTCFieldWidth  = (12*12 - 2) * mmPerInch;   // the FTC field is ~11'10" center-to-center of the glass panels
 
         /**
          * In order for localization to work, we need to tell the system where each target we
@@ -287,40 +291,12 @@ public class VuforiaTracker extends LinearOpMode {
          */
 
         /** Wait for the game to begin */
-        telemetry.addData(">", "Press Play to start tracking");
-        telemetry.update();
-        waitForStart();
+        //telemetry.addData(">", "Press Play to start tracking");
+        //telemetry.update();
+        //waitForStart();
 
         /** Start tracking the data sets we care about. */
         stonesAndChips.activate();
-
-        while (opModeIsActive()) {
-
-            for (VuforiaTrackable trackable : allTrackables) {
-                /**
-                 * getUpdatedRobotLocation() will return null if no new information is available since
-                 * the last time that call was made, or if the trackable is not currently visible.
-                 * getRobotLocation() will return null if the trackable is not currently visible.
-                 */
-                telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible() ? "Visible" : "Not Visible");    //
-
-                OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
-                if (robotLocationTransform != null) {
-                    lastLocation = robotLocationTransform;
-                }
-            }
-            /**
-             * Provide feedback as to where the robot was last located (if we know).
-             */
-            if (lastLocation != null) {
-                //  RobotLog.vv(TAG, "robot=%s", format(lastLocation));
-                telemetry.addData("Pos", format(lastLocation));
-            } else {
-                telemetry.addData("Pos", "Unknown");
-            }
-            telemetry.update();
-            idle();
-        }
     }
 
     /**
@@ -329,5 +305,51 @@ public class VuforiaTracker extends LinearOpMode {
      */
     String format(OpenGLMatrix transformationMatrix) {
         return transformationMatrix.formatAsTransform();
+    }
+
+    @Override
+    public float getReliability() {
+        return 0.8f;
+    }
+
+    @Override
+    public boolean track() {
+        for (VuforiaTrackable trackable : allTrackables) {
+            /**
+             * getUpdatedRobotLocation() will return null if no new information is available since
+             * the last time that call was made, or if the trackable is not currently visible.
+             * getRobotLocation() will return null if the trackable is not currently visible.
+             */
+            //telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible() ? "Visible" : "Not Visible");    //
+
+            lastLocation = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
+            if (lastLocation != null) {
+                lastKnownLocation = lastLocation;
+            }
+            rotation = lastLocation == null ? null : Orientation.getOrientation(lastLocation, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+            position = lastLocation == null ? null : lastLocation;
+        }
+
+        return false;
+    }
+
+    @Override
+    public OpenGLMatrix getRobotPosition() {
+        return position;
+    }
+
+    @Override
+    public Orientation getRobotOrientation() {
+        return rotation;
+    }
+
+    @Override
+    public void setRobotPosition() {
+
+    }
+
+    @Override
+    public void setRobotOrientation() {
+
     }
 }

@@ -2,11 +2,10 @@ package edu.usrobotics.opmode.protobot;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import edu.usrobotics.opmode.LoggedOp;
 import edu.usrobotics.opmode.RobotOp;
 import edu.usrobotics.opmode.Route;
-import edu.usrobotics.opmode.ConcurrentTaskSet;
-import edu.usrobotics.opmode.MotorTask;
+import edu.usrobotics.opmode.task.ConcurrentTaskSet;
+import edu.usrobotics.opmode.task.MotorTask;
 
 /**
  * Created by dsiegler19 on 10/13/16.
