@@ -363,11 +363,27 @@ public class OpmodeVuforiaNavigationTest1 extends OpMode {
                 if (robotLocationTransform != null) {
                     lastLocation = robotLocationTransform;
 
-                    VectorF temp = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation().getTranslation();
+                    OpenGLMatrix temp2 = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
 
-                    telemetry.addData(trackable.getName() + " X", temp.get(0));
-                    telemetry.addData(trackable.getName() + " Y", temp.get(1));
-                    telemetry.addData(trackable.getName() + " Z", temp.get(2));
+                    float ray[] = new float[3];
+                    boolean worked = false;
+
+                    try{
+                        VectorF temp = temp2.getTranslation();
+                        ray = temp.getData();
+                        worked = true;
+                    }
+                    catch (Exception e){
+                        telemetry.addData("No Position", 1);
+                    }
+
+                    if(worked){
+                        telemetry.addData("No Position", 0);
+                        for(int i = 0; i < ray.length; i++){
+                            telemetry.addData("Pos " + i, ray[i]);
+                        }
+                    }
+
                 }
 
             }
@@ -376,9 +392,9 @@ public class OpmodeVuforiaNavigationTest1 extends OpMode {
              */
             if (lastLocation != null) {
                 //  RobotLog.vv(TAG, "robot=%s", format(lastLocation));
-                telemetry.addData("Pos", format(lastLocation));
+                //telemetry.addData("Pos", format(lastLocation));
             } else {
-                telemetry.addData("Pos", "Unknown");
+                //telemetry.addData("Pos", "Unknown");
             }
     }
 
