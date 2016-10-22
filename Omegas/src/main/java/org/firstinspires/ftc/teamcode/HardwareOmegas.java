@@ -28,16 +28,16 @@ import java.util.ArrayList;
 public class HardwareOmegas
 {
     /* Public OpMode members. */
-    ColorSensor     leftColorSensor  = null;
-    ColorSensor     rightColorSensor = null;
-    public DcMotor  leftFrontMotor   = null;
-    public DcMotor  leftBackMotor    = null;
-    public DcMotor  rightFrontMotor  = null;
-    public DcMotor  rightBackMotor   = null;
-    public CRServo  leftBeaconator   = null;
-    public CRServo  rightBeaconator  = null;
+    public ColorSensor  leftColorSensor  = null;
+    public ColorSensor  rightColorSensor = null;
+    public DcMotor      leftFrontMotor   = null;
+    public DcMotor      leftBackMotor    = null;
+    public DcMotor      rightFrontMotor  = null;
+    public DcMotor      rightBackMotor   = null;
+    public CRServo      leftBeaconator   = null;
+    public CRServo      rightBeaconator  = null;
 
-    ArrayList<DcMotor> motors;
+    public ArrayList<DcMotor> motors;
 
     public static final double  MID_SERVO       =  0.5;
     public static final double  ARM_UP_POWER    =  0.45;
@@ -116,7 +116,11 @@ public class HardwareOmegas
         period.reset();
     }
 
-    public void beaconatorSequence(CRServo beaconator, long milliseconds){
+    public void rotate(long radians) {
+
+    }
+
+    public void beaconatorSequence(CRServo beaconator, long milliseconds) {
         ElapsedTime timePushed = new ElapsedTime();
         if (isExtending) return; else isExtending = true;
 
