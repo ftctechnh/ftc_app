@@ -17,6 +17,14 @@ public class StateBasedOp extends BaseOp {
 
 
 
+    public State getState() {
+        return state;
+    }
+
+    public Route getRoute() {
+        return route;
+    }
+
     public Route addRoute (Route r) {
         routeQueue.add(r);
 
@@ -37,6 +45,10 @@ public class StateBasedOp extends BaseOp {
 
         if (route == null) { // If there is no route
             // then we cri
+
+        } else {
+            state = State.ROUTE;
+
         }
     }
 
