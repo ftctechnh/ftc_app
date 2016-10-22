@@ -93,7 +93,7 @@ public class HardwareOmegas
         }
     }
 
-    /***
+    /**
      *
      * waitForTick implements a periodic delay. However, this acts like a metronome with a regular
      * periodic tick.  This is used to compensate for varying processing times for each cycle.
@@ -117,6 +117,12 @@ public class HardwareOmegas
         period.reset();
     }
 
+    /**
+     *
+     * rotate implements a robot rotation using on-robot motors.
+     *
+     * @param radians  Angle moved in radians.
+     */
     public void rotate(long radians) {
         ElapsedTime timePushed = new ElapsedTime();
 
