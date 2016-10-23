@@ -7,8 +7,6 @@ public class Manual extends RobotHardware {
 
     @Override public void loop() {
 
-        if(gamepad1.atRest()) set_drive_power(0, 0);
-
         //Dpads
 
         if(gamepad1.dpad_up) set_drive_power(1, 1);
@@ -24,7 +22,7 @@ public class Manual extends RobotHardware {
 
         ////////////////////
 
-        //Joysticks
+        //Joysticks1
 
         set_drive_power(gamepad1.left_stick_y, gamepad1.left_stick_x); //This may be wrong. Testing needed...
     }
