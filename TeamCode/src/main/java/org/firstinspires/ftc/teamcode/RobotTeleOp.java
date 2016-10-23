@@ -239,7 +239,5 @@ public class RobotTeleOp extends RobotTelemetry {
         telemetry.addData("ARM 2", get_arm_2_position());
         telemetry.addData("ARM 3", get_arm_3_position());
         telemetry.addData("Sanic Mode", toggle);
-
-
     }
 }
