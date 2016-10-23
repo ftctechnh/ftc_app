@@ -40,10 +40,10 @@ public class OmniDriveBot implements DriveTrainInterface
         bL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        fL.setDirection(DcMotorSimple.Direction.FORWARD);
-        fR.setDirection(DcMotorSimple.Direction.FORWARD);
-        bL.setDirection(DcMotorSimple.Direction.FORWARD);
-        bR.setDirection(DcMotorSimple.Direction.FORWARD);
+        fL.setDirection(DcMotorSimple.Direction.REVERSE);
+        fR.setDirection(DcMotorSimple.Direction.REVERSE);
+        bL.setDirection(DcMotorSimple.Direction.REVERSE);
+        bR.setDirection(DcMotorSimple.Direction.REVERSE);
 
         fL.setPower(0);
         fR.setPower(0);
@@ -132,27 +132,27 @@ public class OmniDriveBot implements DriveTrainInterface
     {
         double robotCircumference = 84.1;
         //originally 90 was 86
-        int encoderTarget = (int)(Math.abs(degree)*robotCircumference*90/360);
-        int fLDistanceEncoders = (Math.abs(fL.getCurrentPosition()) + encoderTarget);
-        int fRDistanceEncoders = (Math.abs(fR.getCurrentPosition()) + encoderTarget);
+        int encoderTarget = (int)(degree*robotCircumference*90/360);
+        int fLDistanceEncoders = fL.getCurrentPosition() + encoderTarget;
+        int fRDistanceEncoders = fR.getCurrentPosition() + encoderTarget;
 
         if(degree > 0)
-        {
-            bL.setPower(-1);
-            bR.setPower(-1);
-            fL.setPower(-1);
-            fR.setPower(-1);
-        }
-        else
         {
             bL.setPower(1);
             bR.setPower(1);
             fL.setPower(1);
             fR.setPower(1);
+            while(fL.getCurrentPosition() < fLDistanceEncoders & fR.getCurrentPosition() < fRDistanceEncoders);
         }
-        while(Math.abs(fL.getCurrentPosition()) < fLDistanceEncoders & Math.abs(fR.getCurrentPosition()) < fRDistanceEncoders)
+        else
         {
+            bL.setPower(-1);
+            bR.setPower(-1);
+            fL.setPower(-1);
+            fR.setPower(-1);
+            while(fL.getCurrentPosition() > fLDistanceEncoders & fR.getCurrentPosition() > fRDistanceEncoders);
         }
+
         bL.setPower(0);
         bR.setPower(0);
         fL.setPower(0);
