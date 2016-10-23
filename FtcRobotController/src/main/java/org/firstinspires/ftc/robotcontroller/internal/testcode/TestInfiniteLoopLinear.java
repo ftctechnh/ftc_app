@@ -53,7 +53,7 @@ public class TestInfiniteLoopLinear extends LinearOpMode {
                 telemetry.addData("count", count);
                 updateTelemetry(telemetry);
                 idle();
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 // ignore: we're trying to do an infinite loop!
             }
         }
