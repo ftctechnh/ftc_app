@@ -111,6 +111,7 @@ public class VuforiaTest extends LinearOpMode
                 telemetry.addData("Last Known Location", formatMatrix(lastKnownLocation));
             }
             telemetry.update();
+            telemetry.addData(getXLocation(lastKnownLocation) +" " +  getYLocation(lastKnownLocation), 00);
             idle();
         }
     }
@@ -174,4 +175,17 @@ public class VuforiaTest extends LinearOpMode
     {
         return matrix.formatAsTransform();
     }
+
+    public double getXLocation(OpenGLMatrix matrix) //returns x value
+    {
+        float[] robotLocationArray = matrix.getData();
+        return robotLocationArray[12];
+    }
+
+    public double getYLocation(OpenGLMatrix matrix) //Returns y value
+    {
+        float[] robotLocationArray = matrix.getData();
+        return robotLocationArray[13];
+    }
+
 }
