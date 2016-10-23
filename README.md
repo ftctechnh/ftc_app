@@ -20,8 +20,6 @@ For technical questions regarding the SDK, please visit the FTC Technology forum
 
 **************************************************************************************
 
-<<<<<<< HEAD
-=======
 Version 2.35 (released on 16.10.06)
   * Blockly programming mode - Removed unnecesary idle() call from blocks for new project.
 
@@ -52,7 +50,6 @@ Version 2.30 (released on 16.10.05)
 
 **************************************************************************************
 
->>>>>>> ftctechnh/master
 Version 2.20 (released on 16.09.08)
   * Support for Modern Robotics Compass Sensor.
   * Support for Modern Robotics Range Sensor.
@@ -266,7 +263,6 @@ Release 15.11.04.001
  * Updated javadoc documentation.
  * Updated release .apk files for Robot Controller and Driver Station apps.
 
-<<<<<<< HEAD
 T. Eng
 November 5, 2015
  
@@ -282,23 +278,6 @@ Release 15.10.06.002
 T. Eng
 October 6, 2015
 
-=======
-T. Eng
-November 5, 2015
- 
-**************************************************************************************
-
-Release 15.10.06.002
-
- * Added support for Legacy Matrix 9.6V motor/servo controller.
- * Cleaned up build.gradle file.
- * Minor UI and bug fixes for driver station and robot controller apps.
- * Throws error if Ultrasonic sensor (NXT) is not configured for legacy module port 4 or 5.
-
-T. Eng
-October 6, 2015
-
->>>>>>> ftctechnh/master
 **************************************************************************************
 
 In this latest version of the FTC SDK (20150803_001) the following changes should be noted:
