@@ -10,26 +10,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 @Autonomous(name="Beacon Follow")
 public class RobotAutoFollow extends RobotAutoBecaons {
 
-    boolean firstLaunch = false; //A variable used for initializing variables in different areas of the OpMode.
-    boolean pressed;
-    long startTime;
-    long endTime;
-
-    @Override
-    void getColor() {
-
-    }
-
-    @Override
-    void getBeacons() {
-
-    }
-
-    @Override
-    void beaconAction() {
-
-    }
-
     enum AUTO_STATE {
         FIND_BLUE_LINE,
         FOLLOW_BLUE_LINE,
@@ -38,9 +18,15 @@ public class RobotAutoFollow extends RobotAutoBecaons {
         END
     }
 
+    boolean firstLaunch = false; //A variable used for initializing variables in different areas of the OpMode.
+    boolean pressed;
+    long startTime;
+    long endTime;
     double SLOW_SPEED = 0.07;
     double QUICK_SPEED = 0.10;
     int COLOR_THRESHOLD = 5;
+    int BEACON_DISTANCE = 5;
+    double OPT_DISTANCE = 2.8;
 
     AUTO_STATE current_state;
 
@@ -65,14 +51,17 @@ public class RobotAutoFollow extends RobotAutoBecaons {
 
             case FOLLOW_BLUE_LINE:
                 telemetry.addLine("follow blue");
-                if (rangeSensor.cmUltrasonic() >= 15){
+                if (rangeSensor.cmUltrasonic() >= BEACON_DISTANCE || rangeSensor.cmOptical() >= OPT_DISTANCE || rangeSensor.cmOptical() == 0){
                     switch (getLineFollowState(VV_LINE_COLOR.BLUE, COLOR_THRESHOLD)){
                         case LEFT:
-                            set_drive_power(SLOW_SPEED, 0);
+                            set_drive_power(QUICK_SPEED, 0);
+                            break;
                         case RIGHT:
-                            set_drive_power(0, SLOW_SPEED);
+                            set_drive_power(0, QUICK_SPEED);
+                            break;
                         case BOTH:
                             set_drive_power(SLOW_SPEED, SLOW_SPEED);
+                            break;
                     }
                 }else{
                     current_state = AUTO_STATE.PREP_BEACON;
@@ -120,7 +109,7 @@ public class RobotAutoFollow extends RobotAutoBecaons {
                 break;
 
             case END:
-                stop();
+                requestOpModeStop();
                 break;
         }
     }

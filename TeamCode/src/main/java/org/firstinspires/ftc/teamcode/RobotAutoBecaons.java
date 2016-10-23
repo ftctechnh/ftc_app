@@ -8,83 +8,6 @@ import com.qualcomm.robotcore.hardware.CompassSensor;
  */
 abstract class RobotAutoBecaons extends RobotHardware {
 
-    //Variable Initilation
-    enum VV_BEACON_COLOR {RED, BLUE, NONE}
-    enum VV_LINE_COLOR {RED, BLUE, WHITE}
-    enum ROBOT_LINE_FOLLOW_STATE {LEFT, RIGHT, BOTH, NONE}
-
-    VV_BEACON_COLOR getBeaconColor() {
-        int red = beaconColorSensor.red();
-        int blue = beaconColorSensor.blue();
-
-        if (red >= 15 && red > blue){
-            return VV_BEACON_COLOR.RED;
-        }else{
-            if (blue >= 15 && blue > red) {
-                return VV_BEACON_COLOR.BLUE;
-            }else{
-                return VV_BEACON_COLOR.NONE;
-            }
-        }
-    }
-
-    void pushBeaconButton(boolean direction) {
-        prepareForBeacon(direction);
-        //TODO Push Beacon Button
-    }
-
-    public void prepareForBeacon(boolean direction) {
-        //Direction Variable
-        //
-        //TRUE - Right
-        //FALSE - Left
-
-        if (direction) {
-            beaconServo.setPosition(0);
-        }else {
-            beaconServo.setPosition(1);
-        }
-    }
-
-    public ROBOT_LINE_FOLLOW_STATE getLineFollowState(VV_LINE_COLOR color, int threshold) {
-        switch (color) {
-            case RED:
-                if (leftColorSensor != null || rightColorSensor != null) {
-                    if (leftColorSensor.red() >= threshold && rightColorSensor.red() < threshold) {
-                        return ROBOT_LINE_FOLLOW_STATE.LEFT;
-                    }
-                    if (leftColorSensor.red() < threshold && rightColorSensor.red() >= threshold) {
-                        return ROBOT_LINE_FOLLOW_STATE.RIGHT;
-                    }
-                    if (leftColorSensor.red() >= threshold && rightColorSensor.red() >= threshold) {
-                        return ROBOT_LINE_FOLLOW_STATE.BOTH;
-                    }
-                    if (leftColorSensor.red() < threshold && rightColorSensor.red() < threshold) {
-                        return ROBOT_LINE_FOLLOW_STATE.NONE;
-                    }
-                }
-            case BLUE:
-                if (leftColorSensor != null || rightColorSensor != null) {
-                    if (leftColorSensor.blue() >= threshold && rightColorSensor.blue() < threshold) {
-                        return ROBOT_LINE_FOLLOW_STATE.LEFT;
-                    }
-                    if (leftColorSensor.blue() < threshold && rightColorSensor.blue() >= threshold) {
-                        return ROBOT_LINE_FOLLOW_STATE.RIGHT;
-                    }
-                    if (leftColorSensor.blue() >= threshold && rightColorSensor.blue() >= threshold) {
-                        return ROBOT_LINE_FOLLOW_STATE.BOTH;
-                    }
-                    if (leftColorSensor.blue() < threshold && rightColorSensor.blue() < threshold) {
-                        return ROBOT_LINE_FOLLOW_STATE.NONE;
-                    }
-                }
-            case WHITE:
-                break;
-        }
-
-        return null;
-    }
-
     //region functions with while (they need redesigining)
     //WHILE
     public void turnDegrees(int degrees, double speed) {
@@ -232,8 +155,5 @@ abstract class RobotAutoBecaons extends RobotHardware {
     //endregion
 
     int threshold = 15;
-    abstract void getColor();
-    abstract void getBeacons();
-    abstract void beaconAction();
 
 }

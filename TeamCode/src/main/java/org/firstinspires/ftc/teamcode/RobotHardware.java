@@ -242,6 +242,7 @@ public class RobotHardware extends OpMode
         return l_return;
 
     }
+
     //-------------------------------------------------
     //Set servo positions
     void arm_1_position (double p_position)
@@ -561,6 +562,120 @@ public class RobotHardware extends OpMode
     private DcMotor v_motor_right_drive_front;
     private DcMotor v_motor_right_drive_back;
     */
+
+    void beaconPosition (double p_position)
+    {
+        //
+        // Ensure the specific value is legal.
+        //
+        double l_position = Range.clip(p_position, 0, 1);
+
+        //
+        // Set the value.  The right hand value must be opposite of the left
+        // value.
+        //
+        if (beaconServo != null)
+        {
+            beaconServo.setPosition(l_position);
+        }
+
+    }
+
+    double getBeaconPosition ()
+    {
+        double l_return = 0.0;
+
+        if (beaconServo != null)
+        {
+            l_return = beaconServo.getPosition();
+        }
+
+        return l_return;
+
+    }
+
+    //region Functions
+    VV_BEACON_COLOR getBeaconColor() {
+        int red = beaconColorSensor.red();
+        int blue = beaconColorSensor.blue();
+        int threshold = 3;
+
+        if (red >= threshold && red > blue){
+            return VV_BEACON_COLOR.RED;
+        }else{
+            if (blue >= threshold && blue > red) {
+                return VV_BEACON_COLOR.BLUE;
+            }else{
+                return VV_BEACON_COLOR.NONE;
+            }
+        }
+    }
+
+    public void pushBeaconButton(boolean direction) {
+        prepareForBeacon(direction);
+        //TODO Push Beacon Button
+    }
+
+    public void prepareForBeacon(boolean direction) {
+        //Direction Variable
+        //
+        //TRUE - Right
+        //FALSE - Left
+
+        if (direction) {
+            beaconServo.setPosition(0);
+        }else {
+            beaconServo.setPosition(1);
+        }
+    }
+
+    public ROBOT_LINE_FOLLOW_STATE getLineFollowState(VV_LINE_COLOR color, int threshold) {
+        switch (color) {
+            case RED:
+                if (leftColorSensor != null || rightColorSensor != null) {
+                    if (leftColorSensor.red() >= threshold && rightColorSensor.red() < threshold) {
+                        return ROBOT_LINE_FOLLOW_STATE.LEFT;
+                    }
+                    if (leftColorSensor.red() < threshold && rightColorSensor.red() >= threshold) {
+                        return ROBOT_LINE_FOLLOW_STATE.RIGHT;
+                    }
+                    if (leftColorSensor.red() >= threshold && rightColorSensor.red() >= threshold) {
+                        return ROBOT_LINE_FOLLOW_STATE.BOTH;
+                    }
+                    if (leftColorSensor.red() < threshold && rightColorSensor.red() < threshold) {
+                        return ROBOT_LINE_FOLLOW_STATE.NONE;
+                    }
+                }
+                break;
+
+            case BLUE:
+                if (leftColorSensor != null || rightColorSensor != null) {
+                    if (leftColorSensor.blue() >= threshold && rightColorSensor.blue() < threshold) {
+                        return ROBOT_LINE_FOLLOW_STATE.LEFT;
+                    }
+                    if (leftColorSensor.blue() < threshold && rightColorSensor.blue() >= threshold) {
+                        return ROBOT_LINE_FOLLOW_STATE.RIGHT;
+                    }
+                    if (leftColorSensor.blue() >= threshold && rightColorSensor.blue() >= threshold) {
+                        return ROBOT_LINE_FOLLOW_STATE.BOTH;
+                    }
+                    if (leftColorSensor.blue() < threshold && rightColorSensor.blue() < threshold) {
+                        return ROBOT_LINE_FOLLOW_STATE.NONE;
+                    }
+                }
+                break;
+
+            case WHITE:
+                break;
+        }
+
+        return null;
+    }
+    //endregion
+
+    enum VV_BEACON_COLOR {RED, BLUE, NONE}
+    enum VV_LINE_COLOR {RED, BLUE, WHITE}
+    enum ROBOT_LINE_FOLLOW_STATE {LEFT, RIGHT, BOTH, NONE}
 
     private DcMotor leftWheelMotor;
     private DcMotor rightWheelMotor;
