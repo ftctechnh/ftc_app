@@ -26,10 +26,8 @@ public class OmniDriveTeleOp extends OpMode
 
         robot.drive();
 
-        telemetry.addData("fR Power", robot.getfRPower());
-        telemetry.addData("fL Power", robot.getfLPower());
-        telemetry.addData("bR Power", robot.getbRPower());
-        telemetry.addData("bL Power", robot.getbLPower());
+        telemetry.addData("fR Power", robot.getfL().getCurrentPosition());
+        telemetry.addData("fL Power", robot.getfR().getCurrentPosition());
         telemetry.update();
     }
 }
