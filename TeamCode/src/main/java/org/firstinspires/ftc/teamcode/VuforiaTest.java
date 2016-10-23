@@ -21,7 +21,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  *
  */
 
-@TeleOp(name = "TestVuforia", group = "Concept")
+@TeleOp(name = "VuforiaTest", group = "Concept")
 public class VuforiaTest extends LinearOpMode
 {
     // Variables to be used for later
@@ -30,7 +30,6 @@ public class VuforiaTest extends LinearOpMode
     VuforiaTrackables visionTargets;
     VuforiaTrackable wheelsTarget, toolsTarget, legosTarget, gearsTarget;
     VuforiaTrackableDefaultListener wheelsListener, toolsListener, legosListener, gearsListener;
-
     OpenGLMatrix lastKnownLocation;
     OpenGLMatrix phoneLocation;
 
@@ -48,6 +47,7 @@ public class VuforiaTest extends LinearOpMode
 
         // Start tracking the targets
         visionTargets.activate();
+
         while(opModeIsActive())
         {
             // Ask the listener for the latest information on where the robot is
@@ -110,7 +110,6 @@ public class VuforiaTest extends LinearOpMode
                 telemetry.addData("no targets in sight", null);
                 telemetry.addData("Last Known Location", formatMatrix(lastKnownLocation));
             }
-
             telemetry.update();
             idle();
         }
@@ -135,15 +134,15 @@ public class VuforiaTest extends LinearOpMode
 
         toolsTarget = visionTargets.get(1);
         toolsTarget.setName("Tools Target");
-        toolsTarget.setLocation(createMatrix(914, 0, 0, 90, 0, 90));
+        toolsTarget.setLocation(createMatrix(914, 0, 0, 90, 0, 180));
 
-        legosTarget = visionTargets.get(1);
+        legosTarget = visionTargets.get(2);
         legosTarget.setName("Legos Target");
         legosTarget.setLocation(createMatrix(0, 914, 0, 90, 0, 90));
 
-        gearsTarget = visionTargets.get(1);
+        gearsTarget = visionTargets.get(3);
         gearsTarget.setName("Gears Target");
-        gearsTarget.setLocation(createMatrix(1981, 0, 0, 90, 0, 90));
+        gearsTarget.setLocation(createMatrix(1981, 0, 0, 90, 0, 180));
         // Set phone location on robot
         phoneLocation = createMatrix(0, 225, 0, 90, 0, 0);
 
