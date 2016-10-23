@@ -48,7 +48,6 @@ public class VuforiaTest extends LinearOpMode
 
         // Start tracking the targets
         visionTargets.activate();
-
         while(opModeIsActive())
         {
             // Ask the listener for the latest information on where the robot is
@@ -60,30 +59,60 @@ public class VuforiaTest extends LinearOpMode
                     lastKnownLocation = latestLocation;
 
                 // Send information about whether the target is visible, and where the robot is
-                telemetry.addData("Tracking " + target.getName(), listener.isVisible());
+                telemetry.addData("Tracking " + wheelsTarget.getName(), wheelsListener.isVisible());
                 telemetry.addData("Last Known Location", formatMatrix(lastKnownLocation));
-
-                // Send telemetry and idle to let hardware catch up
-                telemetry.update();
-                idle();
             }
             else if (toolsListener.isVisible())
             {
+                OpenGLMatrix latestLocation = toolsListener.getUpdatedRobotLocation();
 
+                // The listener will sometimes return null, so we check for that to prevent errors
+                if (latestLocation != null)
+                    lastKnownLocation = latestLocation;
+
+                // Send information about whether the target is visible, and where the robot is
+                telemetry.addData("Tracking " + toolsTarget.getName(), toolsListener.isVisible());
+                telemetry.addData("Last Known Location", formatMatrix(lastKnownLocation));
             }
             else if (legosListener.isVisible())
             {
+                OpenGLMatrix latestLocation = legosListener.getUpdatedRobotLocation();
 
+                // The listener will sometimes return null, so we check for that to prevent errors
+                if (latestLocation != null)
+                    lastKnownLocation = latestLocation;
+
+                // Send information about whether the target is visible, and where the robot is
+                telemetry.addData("Tracking " + legosTarget.getName(), legosListener.isVisible());
+                telemetry.addData("Last Known Location", formatMatrix(lastKnownLocation));
             }
             else if (gearsListener.isVisible())
             {
+                OpenGLMatrix latestLocation = gearsListener.getUpdatedRobotLocation();
 
+                // The listener will sometimes return null, so we check for that to prevent errors
+                if (latestLocation != null)
+                    lastKnownLocation = latestLocation;
+
+                // Send information about whether the target is visible, and where the robot is
+                telemetry.addData("Tracking " + gearsTarget.getName(), gearsListener.isVisible());
+                telemetry.addData("Last Known Location", formatMatrix(lastKnownLocation));
             }
             else
             {
+                OpenGLMatrix latestLocation = wheelsListener.getUpdatedRobotLocation();
 
+                // The listener will sometimes return null, so we check for that to prevent errors
+                if (latestLocation != null)
+                    lastKnownLocation = latestLocation;
+
+                // Send information about whether the target is visible, and where the robot is
+                telemetry.addData("no targets in sight", null);
+                telemetry.addData("Last Known Location", formatMatrix(lastKnownLocation));
             }
 
+            telemetry.update();
+            idle();
         }
     }
 
