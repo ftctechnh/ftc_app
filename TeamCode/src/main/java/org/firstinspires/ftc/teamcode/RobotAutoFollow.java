@@ -38,8 +38,9 @@ public class RobotAutoFollow extends RobotAutoBecaons {
         END
     }
 
-    double SLOW_SPEED = 0.05;
+    double SLOW_SPEED = 0.07;
     double QUICK_SPEED = 0.10;
+    int COLOR_THRESHOLD = 5;
 
     AUTO_STATE current_state;
 
@@ -57,7 +58,7 @@ public class RobotAutoFollow extends RobotAutoBecaons {
             case FIND_BLUE_LINE:
                 set_drive_power(SLOW_SPEED, SLOW_SPEED);
 
-                if (getLineFollowState(VV_LINE_COLOR.BLUE, 15) != ROBOT_LINE_FOLLOW_STATE.NONE){
+                if (getLineFollowState(VV_LINE_COLOR.BLUE, COLOR_THRESHOLD) != ROBOT_LINE_FOLLOW_STATE.NONE){
                     current_state = AUTO_STATE.FOLLOW_BLUE_LINE;
                 }
                 break;
@@ -65,7 +66,7 @@ public class RobotAutoFollow extends RobotAutoBecaons {
             case FOLLOW_BLUE_LINE:
                 telemetry.addLine("follow blue");
                 if (rangeSensor.cmUltrasonic() >= 15){
-                    switch (getLineFollowState(VV_LINE_COLOR.BLUE, 15)){
+                    switch (getLineFollowState(VV_LINE_COLOR.BLUE, COLOR_THRESHOLD)){
                         case LEFT:
                             set_drive_power(SLOW_SPEED, 0);
                         case RIGHT:

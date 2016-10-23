@@ -122,6 +122,7 @@ public class RobotHardware extends OpMode
         try {
             beaconColorSensor = hardwareMap.colorSensor.get("beaconColorSensor");
             beaconColorSensor.setI2cAddress(I2cAddr.create8bit(58));
+            beaconColorSensor.enableLed(false);
         } catch (Exception p_exeception) {
             DbgLog.msg(p_exeception.getLocalizedMessage());
             telemetry.addData("error: ", "beacon color");
