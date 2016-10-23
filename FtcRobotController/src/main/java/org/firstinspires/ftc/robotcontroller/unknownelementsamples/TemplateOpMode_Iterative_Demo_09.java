@@ -30,63 +30,38 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.firstinspires.ftc.teamcodesamples;
-
-import android.speech.tts.TextToSpeech;
+package org.firstinspires.ftc.robotcontroller.unknownelementsamples;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import java.util.Locale;
-
-@TeleOp(name="Template: IO 12", group="Iterative Opmode 1")  // @Autonomous(...) is the other common choice
-// @Disabled
-public class TemplateOpMode_Iterative_Demo_12 extends OpMode {
+@TeleOp(name="Template: IO 09", group="Iterative Opmode 2")  // @Autonomous(...) is the other common choice
+//@Disabled
+public class TemplateOpMode_Iterative_Demo_09 extends OpMode {
     /* Declare OpMode members. */
-
-    public boolean  debugmode = true;   //  set to false to enable commands for robot and surpress teleemetry
-
     private ElapsedTime runtime = new ElapsedTime();
-    NullPushbot_demo robot       = new NullPushbot_demo(); // use the class created to define a Pushbot's hardware
+    HardwarePushbot_demo robot       = new HardwarePushbot_demo(); // use the class created to define a Pushbot's hardware
     // could also use HardwarePushbotMatrix class.
     double          clawOffset  = 0.0 ;                  // Servo mid position
     final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
 
     private double          leftMotorSpeed = 0.0;               // remember what was requested based on joystick position
-    private double          rightMotorSpeed = 0.0;              // remember what was requested based on joystick position
+    private double          rightMotorSpeed = 0.0;               // remember what was requested based on joystick position
 
     private double          minimumDeadZone = 0.05;             // adjust this value to increase or descrease the deadzone
-    private double          maxMotorSpeed = 0.95;               // adjust this value to set the maximum motor speed, depends on motor type
-    private boolean         gamepad1YisReleased = true;         // support alternate action for a buutton : gamepad1.y
-    private TextToSpeech    textToSpeech = null;                // object to hold synthesizer
+    private double          maxMotorSpeed = 0.95;             // adjust this value to set the maximum motor speed, depends on motor type
 
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
-
-        if (debugmode) telemetry.addData("Status", "Initialized");
+        telemetry.addData("Status", "Initialized");
 
         /* eg: Initialize the hardware variables.          */
         // @todo add all additional initalization for hardware here
         robot.init(hardwareMap); // function for init drivetrain/servos **does not handle any sensors!!**
-
-        textToSpeech = new TextToSpeech(
-                hardwareMap.appContext,
-                new TextToSpeech.OnInitListener()
-                {
-                    @Override
-                    public void onInit(int status)
-                    {
-                        if (status != TextToSpeech.ERROR)
-                        {
-                            textToSpeech.setLanguage(Locale.US);
-                        }
-                    }
-                }
-        );
 
     }
 
@@ -115,7 +90,7 @@ public class TemplateOpMode_Iterative_Demo_12 extends OpMode {
     @Override
     public void loop() {
 
-        if (debugmode) telemetry.addData("Status", "Running: " + runtime.toString());
+        telemetry.addData("Status", "Running: " + runtime.toString());
 
         handleControls();       // function to read all input controls and set globals here
         handleDrivetrain();     //  function to handle drivetrain changes here
@@ -130,9 +105,7 @@ public class TemplateOpMode_Iterative_Demo_12 extends OpMode {
     @Override
     public void stop() {
 
-        //  add function to clean up status of robot
-        textToSpeech.stop();
-        textToSpeech.shutdown();
+        // @todo add function to clean up status of robot
 
     }
 
@@ -144,41 +117,24 @@ public class TemplateOpMode_Iterative_Demo_12 extends OpMode {
 
         left = -gamepad1.left_stick_y;   // (note: The joystick goes negative when pushed forwards, so negate it)
         right = -gamepad1.right_stick_y;
-        if (debugmode) telemetry.addData("LJoystickRaw", "%.2f", left);
-        if (debugmode) telemetry.addData("RJoystickRaw", "%.2f", right);
+        telemetry.addData("LJoystickRaw", "%.2f", left);
+        telemetry.addData("RJoystickRaw", "%.2f", right);
 
         left = scaleMotorPower(enforceDeadZone(left));   // don't move unless far enough from zero
         right = scaleMotorPower(enforceDeadZone(right));    // because physical 'dead stick' may not be seen as zero
-        if (debugmode) telemetry.addData("LMotorSpeed", "%.2f", left);
-        if (debugmode) telemetry.addData("RMotorSpeed", "%.2f", right);
+        telemetry.addData("LMotorSpeed", "%.2f", left);
+        telemetry.addData("RMotorSpeed", "%.2f", right);
 
         leftMotorSpeed = left;
         rightMotorSpeed = right;
 
-        // now handle buttons
-
-        if (gamepad1.y) {                       // if button is down now
-
-            if (gamepad1YisReleased) {          // was it previously released?
-                                                // so this is done only once for each press and release
-                gamepad1YisReleased = false;    // if so, remember that it is down, not released
-                debugmode = !debugmode;         // and toggle the debug mode
-                String sentence =  String.format("%s is %s.", " Debug ", debugmode);
-                textToSpeech.speak(sentence, TextToSpeech.QUEUE_FLUSH, null);
-
-
-            }
-
-        } else {                                // if button is not down now
-            gamepad1YisReleased = true;         // remember that button has been released
-        }
     }
 
 
     private void handleDrivetrain() { // @todo add code to update drivetrain state
 
-     //   if (!debugmode)    robot.leftMotor.setPower(leftMotorSpeed);
-     //   if (!debugmode)    robot.rightMotor.setPower(rightMotorSpeed);
+        robot.leftMotor.setPower(leftMotorSpeed);
+        robot.rightMotor.setPower(rightMotorSpeed);
     }
 
 
@@ -214,7 +170,7 @@ public class TemplateOpMode_Iterative_Demo_12 extends OpMode {
         //  need to compensate for deadzone
         // and use an acceleration curve
 
-        if (motorpower >= 0.0) {      // handle positive and negative separately
+        if (motorpower >= 0) {      // handle positive and negative separately
 
             motorpower -= minimumDeadZone;  // remove deadzone offzet, otherwise can't represent a power less than deadzone
             motorpower = motorpower * motorpower;    // square motorpower to generate the acceleration curve
@@ -223,7 +179,7 @@ public class TemplateOpMode_Iterative_Demo_12 extends OpMode {
 
             motorpower += minimumDeadZone;              // remove deadzone offzet, otherwise can't represent a power less than deadzone
             motorpower = motorpower * motorpower;       // square motorpower to generate the acceleration curve
-            motorpower = -1.0 * motorpower;               // put back the sign lost when squaring the value
+            motorpower = -1 * motorpower;               // put back the sign lostg when squaring the value
         }
 
         double scalefactor = 1.0 - minimumDeadZone;

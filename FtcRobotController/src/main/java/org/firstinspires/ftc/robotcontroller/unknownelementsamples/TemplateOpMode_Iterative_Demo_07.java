@@ -30,15 +30,16 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.firstinspires.ftc.teamcodesamples;
+package org.firstinspires.ftc.robotcontroller.unknownelementsamples;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name="Template: IO 08", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
-// @Disabled
-public class TemplateOpMode_Iterative_Demo_08 extends OpMode {
+@TeleOp(name="Template: Iterative OpMode", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
+@Disabled
+public class TemplateOpMode_Iterative_Demo_07 extends OpMode {
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
     HardwarePushbot_demo robot       = new HardwarePushbot_demo(); // use the class created to define a Pushbot's hardware
@@ -50,8 +51,6 @@ public class TemplateOpMode_Iterative_Demo_08 extends OpMode {
     private double          rightMotorSpeed = 0.0;               // remember what was requested based on joystick position
 
     private double          minimumDeadZone = 0.05;             // adjust this value to increase or descrease the deadzone
-    private double          maxMotorSpeed = 0.95;             // adjust this value to set the maximum motor speed, depends on motor type
-
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -158,26 +157,6 @@ public class TemplateOpMode_Iterative_Demo_08 extends OpMode {
         }
 
         return (joystickPos);
-    }
-
-    private double scaleMotorPower(double motorpower) {
-
-        //  need to compensate for deadzone
-        // and use an acceleration curve
-
-        if (motorpower >= 0) {      // handle positive and negative separately
-
-            motorpower -= minimumDeadZone;  // remove deadzone offzet, otherwise can't represent a power less than deadzone
-            motorpower = motorpower * motorpower;    // square motorpower to generate the acceleration curve
-
-        }   else    {               // not positive, so must be negative
-
-            motorpower += minimumDeadZone;              // remove deadzone offzet, otherwise can't represent a power less than deadzone
-            motorpower = motorpower * motorpower;       // square motorpower to generate the acceleration curve
-            motorpower = -1 * motorpower;               // put back the sign lostg when squaring the value
-        }
-
-        return (motorpower);
     }
 }
 
