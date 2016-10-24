@@ -1,6 +1,8 @@
 package edu.usrobotics.opmode.protobot;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import edu.usrobotics.opmode.RobotOp;
 import edu.usrobotics.opmode.Route;
@@ -15,15 +17,22 @@ import edu.usrobotics.opmode.tracker.VuforiaTracker;
 public class ProtobotAuto extends RobotOp {
 
     ProtobotHardware robot = new ProtobotHardware();
+    AutoState state = AutoState.INIT;
+    ElapsedTime elapsedTime = new ElapsedTime();
 
     @Override
     public void init () {
 
         super.init();
 
-        addTracker(new VuforiaTracker());
-
         robot.init(hardwareMap);
+
+        state = AutoState.FORWARD1;
+
+        robot.frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        robot.frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        robot.backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        robot.backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
     }
 
@@ -32,18 +41,79 @@ public class ProtobotAuto extends RobotOp {
 
         super.start();
 
-        /*Route happyTrail = new Route ();
+    }
 
-        ConcurrentTaskSet forward = new ConcurrentTaskSet (
-                new MotorTask(robot.frontRight, null, null, 0.5d, 0.8f),
-                new MotorTask(robot.frontLeft, null, null, 0.5d, 0.8f),
-                new MotorTask(robot.backRight, null, null, 0.5d, 0.8f),
-                new MotorTask(robot.backLeft, null, null, 0.5d, 0.8f)
-        );
+    @Override
+    public void loop(){
 
-        happyTrail.addTask (forward);
+        int forward1Time = 5000;
+        int turn1Time = 2000;
 
-        addRoute(happyTrail);*/
+        double time = elapsedTime.milliseconds();
+
+        if(state == AutoState.FORWARD1){
+
+            robot.frontRight.setPower(1);
+            robot.frontLeft.setPower(1);
+            robot.backRight.setPower(1);
+            robot.backLeft.setPower(1);
+
+            if(time >= forward1Time){
+
+                this.state = AutoState.TURN1;
+
+            }
+
+        }
+
+        else if(state == AutoState.TURN1){
+
+            robot.frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+            robot.frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+            robot.backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+            robot.backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+
+            robot.frontRight.setPower(1);
+            robot.frontLeft.setPower(1);
+            robot.backRight.setPower(1);
+            robot.backLeft.setPower(1);
+
+            if(time >= forward1Time + turn1Time){
+
+                this.state = AutoState.DONE;
+
+            }
+
+        }
+
+        if(state == AutoState.DONE){
+
+            robot.frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+            robot.frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+            robot.backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+            robot.backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+
+            robot.frontRight.setPower(0);
+            robot.frontLeft.setPower(0);
+            robot.backRight.setPower(0);
+            robot.backLeft.setPower(0);
+
+            addTracker(new VuforiaTracker());
+
+        }
+
+        telemetry.addData("Elapsed time: ", time);
+        telemetry.addData("State: ", state);
 
     }
+
+}
+
+enum AutoState{
+
+    INIT,
+    FORWARD1,
+    TURN1,
+    DONE
+
 }

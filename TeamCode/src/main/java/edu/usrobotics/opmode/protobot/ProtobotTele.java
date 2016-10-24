@@ -110,7 +110,7 @@ public class ProtobotTele extends RobotOp {
         robot.backRight.setPower(brPower);
         robot.backLeft.setPower(blPower);
 
-        robot.harvester.setPower(harvesterInputs);
+        //robot.harvester.setPower(harvesterInputs);
 
         robot.gate.setPosition(gateOpen ? robot.gateOpenedPosition : robot.gateClosedPosition);
 

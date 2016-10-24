@@ -23,11 +23,11 @@ public class TrackedOp extends StateBasedOp {
     Orientation robotOrientation;
 
     float maxPositionError_mm = 40f; // Maximum acceptable translation deviation from reliable tracker in millimeters.
-    float maxRotationError_deg = 5f; // Maximum acceptable rotation deviation from reliable tracke in degrees.
+    float maxRotationError_deg = 5f; // Maximum acceptable rotation deviation from reliable track in degrees.
 
     float inch_mm        = 25.4f;
     float RobotWidth_mm       = 18 * inch_mm;
-    float FTCFieldWidth_mm  = (12*12 - 2) * inch_mm;   // the FTC field is ~11'10" center-to-center of the glass panels
+    float FTCFieldWidth_mm  = (12 * 12 - 2) * inch_mm;   // the FTC field is ~11'10" center-to-center of the glass panels
 
 
 

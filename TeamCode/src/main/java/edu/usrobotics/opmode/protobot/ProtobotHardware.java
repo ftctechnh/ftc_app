@@ -17,7 +17,7 @@ public class ProtobotHardware extends BaseHardware {
     public DcMotor backRight;
     public DcMotor backLeft;
 
-    public DcMotor harvester;
+    //public DcMotor harvester;
 
     public Servo gate;
 
@@ -32,9 +32,9 @@ public class ProtobotHardware extends BaseHardware {
         backRight = hardwareMap.dcMotor.get ("br");
         backLeft = hardwareMap.dcMotor.get ("bl");
 
-        harvester = hardwareMap.dcMotor.get("harvester");
+        //harvester = hardwareMap.dcMotor.get("harvester");
 
-        harvester.setDirection(DcMotorSimple.Direction.REVERSE);
+        //harvester.setDirection(DcMotorSimple.Direction.REVERSE);
 
         gate = hardwareMap.servo.get("gate");
 

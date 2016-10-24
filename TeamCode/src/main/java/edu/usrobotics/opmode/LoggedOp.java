@@ -23,6 +23,7 @@ public class LoggedOp extends TrackedOp {
 
     Map<HardwareDevice, TelemetryData> loggedDevices = new HashMap<>(16); // Maximum logged devices
     int loggedDeviceCount = 0;
+    public static String debugOut = "None";
 
     TelemetryData trackingData = new TelemetryData(0, DataType.UPDATE_MAP, 0, null);
 
@@ -88,6 +89,10 @@ public class LoggedOp extends TrackedOp {
 
     }
 
+    public void LogDebug () {
+        telemetry.addData("Debug", debugOut);
+    }
+
     public void LogState () {
         telemetry.addData("State", getState().name());
     }
@@ -98,6 +103,7 @@ public class LoggedOp extends TrackedOp {
 
         LogTracking();
         LogState();
+        LogDebug();
 
         telemetry.update();
     }
