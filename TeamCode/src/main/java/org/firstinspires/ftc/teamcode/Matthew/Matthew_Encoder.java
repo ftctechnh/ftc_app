@@ -114,12 +114,38 @@ public class Matthew_Encoder extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+        encoderDrive(DRIVE_SPEED,  12,  12, 5);
+        robot.leftMotor.setPower(0);
+        robot.rightMotor.setPower(0);
 
-        robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
-        robot.rightClaw.setPosition(0.0);
+        // S1: Forward 53 Inches with 5 Sec timeout
+        //encoderDrive(DRIVE_SPEED, -12, -12, 5);
+        robot.leftMotor.setPower(0);
+        robot.rightMotor.setPower(0);
+        //encoderDrive(TURN_SPEED,   -6, 6, 5);  // S2: Turn Right 12 Inches with 4 Sec timeout
+        robot.leftMotor.setPower(0);
+        robot.rightMotor.setPower(0);
+        //encoderDrive(DRIVE_SPEED, 24, 24, 4.0);
+        robot.leftMotor.setPower(0);
+        robot.rightMotor.setPower(0);
+        //encoderDrive(DRIVE_SPEED, -6, 6, 4.0);
+        robot.leftMotor.setPower(0);
+        robot.rightMotor.setPower(0);
+        //This drives the robot to the beacon.
+
+        //TODO: Add color sensor so that we can lock on to the line in front of the beacon.
+
+        //Below drives from the beacon to the corner vortex.
+        //encoderDrive(DRIVE_SPEED, -24, -24, 5.0);
+        //encoderDrive(DRIVE_SPEED, -6, -6, 4.0);
+        //encoderDrive(DRIVE_SPEED, 24, 24, 5.0);
+
+        //TODO: Activate ball shooting mechanism here to dispense particles into corner vortex.
+
+        // S3: Reverse 24 Inches with 4 Sec timeout
+
+        //robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
+        //robot.rightClaw.setPosition(0.0);
         sleep(1000);     // pause for servos to move
 
         telemetry.addData("Path", "Complete");

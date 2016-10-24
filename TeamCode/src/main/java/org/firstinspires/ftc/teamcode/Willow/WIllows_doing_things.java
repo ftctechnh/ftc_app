@@ -168,8 +168,8 @@ public class WIllows_doing_things extends LinearOpMode {
         // Step 4:  Stop and close the claw.
         robot.leftMotor.setPower(3);
         robot.rightMotor.setPower(3);
-        robot.leftClaw.setPosition(1.0);
-        robot.rightClaw.setPosition(1.0);
+        //robot.leftClaw.setPosition(1.0);
+        //robot.rightClaw.setPosition(1.0);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();

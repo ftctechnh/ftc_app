@@ -35,6 +35,7 @@ package org.firstinspires.ftc.teamcode.Alyssa;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
@@ -69,8 +70,8 @@ public class Alyssa extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
 
-    static final double FORWARD_SPEED = 0.6;
-    static final double TURN_SPEED = 0.5;
+    static final double FORWARD_SPEED = 1.0;
+    static final double TURN_SPEED = 0.3;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -111,8 +112,8 @@ public class Alyssa extends LinearOpMode {
         }
 
         // Step 3:  Drive Backwards for 1 Second
-        robot.leftMotor.setPower(FORWARD_SPEED);
-        robot.rightMotor.setPower(FORWARD_SPEED);
+        robot.leftMotor.setPower(-FORWARD_SPEED);
+        robot.rightMotor.setPower(-FORWARD_SPEED);
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 1.0)) {
             telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
@@ -121,8 +122,8 @@ public class Alyssa extends LinearOpMode {
         }
 
         // Step 4:  Stop and close the claw.
-        robot.leftMotor.setPower(-FORWARD_SPEED);
-        robot.rightMotor.setPower(-FORWARD_SPEED);
+        robot.leftMotor.setPower(0);
+        robot.rightMotor.setPower(0);
        // robot.leftClaw.setPosition(0.1);
         //robot.rightClaw.setPosition(0.1);
 
@@ -132,7 +133,8 @@ public class Alyssa extends LinearOpMode {
         idle();
 
 
-        robot.leftMotor.setPower(0.3);
+        robot.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        robot.leftMotor.setPower(FORWARD_SPEED);
         robot.rightMotor.setPower(FORWARD_SPEED);
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 3.0)) {
@@ -140,6 +142,7 @@ public class Alyssa extends LinearOpMode {
             telemetry.update();
             idle();
         }
+        robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         robot.leftMotor.setPower(FORWARD_SPEED);
         robot.rightMotor.setPower(FORWARD_SPEED);
