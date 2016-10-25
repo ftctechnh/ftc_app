@@ -82,9 +82,6 @@ public class HardwareOmegas
         leftColorSensor = hwMap.colorSensor.get("left_color_sensor");
 //        rightColorSensor = hwMap.colorSensor.get("right_color_sensor");
 
-//        leftColorSensor.enableLed(true);
-//        rightColorSensor.enableLed(true);
-
         // Set all motors to zero power, and to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         for (DcMotor motor : motors) {
