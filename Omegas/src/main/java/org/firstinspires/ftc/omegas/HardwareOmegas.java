@@ -42,7 +42,7 @@ public class HardwareOmegas
     public static final double  MID_SERVO       =  0.5;
     public static final double  ARM_UP_POWER    =  0.45;
     public static final double  ARM_DOWN_POWER  = -0.45;
-    public static final double  MS_PER_RADIAN   = 0;
+    public static final double  MS_PER_RADIAN   =  1150;
     public static       boolean isExtending     = false;
 
     /* local OpMode members. */
@@ -123,7 +123,7 @@ public class HardwareOmegas
      *
      * @param radians  Angle moved in radians.
      */
-    public void rotate(long radians) {
+    public void rotate(double radians) {
         ElapsedTime timePushed = new ElapsedTime();
 
         while (timePushed.milliseconds() < radians * MS_PER_RADIAN) {

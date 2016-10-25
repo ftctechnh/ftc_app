@@ -42,7 +42,7 @@ public abstract class OmegasAutonomous extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    HardwareOmegas Ω       = new HardwareOmegas();
+    HardwareOmegas Ω            = new HardwareOmegas();
 
     // IPS Units
     static final double     FORWARD_SPEED = 0.6;
@@ -81,7 +81,7 @@ public abstract class OmegasAutonomous extends LinearOpMode {
             }
 
             if (runtime.milliseconds() > 8000 && !rotated) {
-                Ω.rotate(90);
+                Ω.rotate(Math.PI);
                 rotated = true;
             }
 
