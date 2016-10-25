@@ -1,8 +1,5 @@
 package edu.usrobotics.opmode.task;
 
-import edu.usrobotics.opmode.task.Task;
-import edu.usrobotics.opmode.task.TaskType;
-
 /**
  * Created by Max on 9/18/2016.
  */
@@ -52,5 +49,9 @@ public class ConcurrentTaskSet implements Task {
     @Override
     public void onCompleted() {
         for (Task t : tasks) t.onCompleted();
+    }
+
+    public boolean isTaskCompleted (int i) {
+        return completed[i];
     }
 }

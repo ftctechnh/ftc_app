@@ -39,7 +39,7 @@ public class MotorTask implements Task {
         float percentToTarget = (float)motor.getTargetPosition() / (float)encoderGoal; // Start must be 0, so this works.
         float percentToZero = 1f - (percentToTarget - damping) / ((float)motor.getTargetPosition()*(1f-damping));
 
-        return (percentToTarget < damping ? power : power * percentToZero);
+        return (percentToTarget < damping ? power : Math.max(0.2, power * percentToZero));
     }
 
     @Override
@@ -86,6 +86,6 @@ public class MotorTask implements Task {
 
     @Override
     public void onCompleted() {
-
+        motor.setPower(0);
     }
 }

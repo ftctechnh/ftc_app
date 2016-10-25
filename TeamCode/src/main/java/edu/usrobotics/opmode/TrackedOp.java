@@ -105,19 +105,23 @@ public class TrackedOp extends StateBasedOp {
         return robotOrientation;
     }
 
-    @Override public void loop ()
-    {
+    @Override
+    public void init(){
+
+        for (Tracker t : trackers) {
+
+            t.init();
+
+        }
+
+    }
+
+    @Override
+    public void loop () {
         super.loop();
 
         updateTrackers();
 
     }
 
-    @Override public void start () {
-        super.start();
-
-        for (Tracker t : trackers) {
-            t.init();
-        }
-    }
 }

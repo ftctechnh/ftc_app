@@ -16,8 +16,6 @@ public class StateBasedOp extends BaseOp {
 
     Queue<Route> routeQueue = new LinkedList<>(); // Contains routes that will be executed once 'route' is completed. (NO INCLUDE route)
 
-
-
     public State getState() {
         return state;
     }
