@@ -12,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
  */
 public final class Gyro {
 
-    public static void rotate(double degrees, BNO055IMU imu, DcMotor[] leftMotors, DcMotor[] rightMotors){
+    public static void rotate(double degrees, BNO055IMU imu, DcMotor[] leftMotors, DcMotor[]     rightMotors){
 
         for(DcMotor motor : leftMotors){
             motor.setPower(1.00);
@@ -23,7 +23,21 @@ public final class Gyro {
 
         Orientation orientation = imu.getAngularOrientation();
 
-        double initialHeading = orientation.firstAngle;
-        double targetHeading = initialHeading + degrees;
+        double heading = orientation.firstAngle;
+        double targetHeading = heading + degrees;
+
+        while(targetHeading < imu.getAngularOrientation().firstAngle){
+
+            double degreesLeft = targetHeading - heading;
+
+            heading = imu.getAngularOrientation().firstAngle;
+
+            for(DcMotor motor : leftMotors){
+                motor.setPower(-1.00);
+            }
+            for(DcMotor motor : rightMotors){
+                motor.setPower(1.00);
+            }
+        }
     }
 }
