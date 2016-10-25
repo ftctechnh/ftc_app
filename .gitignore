@@ -1,3 +1,13 @@
+## Wheeler Robotics:
+
+# Exclude whole Wheeler Robotics configs:
+WheelerRobotics/src/main/java/org/wheelerschool/robotics/config/*
+
+# Include Wheeler Robotics config examples:
+!WheelerRobotics/src/main/java/org/wheelerschool/robotics/config/example/
+
+
+## FTC Provided:
 # built application files
 *.apk
 *.ap_
