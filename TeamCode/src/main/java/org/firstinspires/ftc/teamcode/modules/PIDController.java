@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.modules;
 
 //we stole this from https://github.com/71104/simulejos/blob/master/Framework/src/lejos/util/PIDController.java via an ftc forum
 
-import java.util.logging.Logger;
-
 /**
  *  Proportional <tt>&lt;P&gt;</tt>, Integral <tt>&lt;I&gt;</tt>, Derivative <tt>&lt;D&gt;</tt> controller implementation.
  *
@@ -208,7 +206,6 @@ public class PIDController {
     private int rampThresold = 0;
     private double rampExtent = 1;
     private int msdelay;
-    private Logger dataLogger=null;
     private int cycleCount=0;
     private int PV;
 
@@ -383,25 +380,15 @@ public class PIDController {
         previous_error = error;
         outputMV=rampOut(outputMV);
 
-        // log data if logger registered
-        if (this.dataLogger!=null&&cycleCount>2) {
-            this.dataLogger.writeLog(setpoint);
-            this.dataLogger.writeLog(outputMV);
-            this.dataLogger.writeLog(processVariable);
-            this.dataLogger.writeLog(integral);
-            this.dataLogger.writeLog(Kp*error);
-            this.dataLogger.writeLog(Kd*derivative);
-            this.dataLogger.writeLog(error);
-            this.dataLogger.writeLog(dt);
-
-            this.dataLogger.finishLine();
-        }
-
         // delay the difference of desired cycle time and actual cycle time
         if (this.msdelay>0) {
             delay = this.msdelay-((int)(System.currentTimeMillis() - this.cycleTime)); // desired cycle time minus actual time
             if (delay>0) {
-                Delay.msDelay(delay);
+                try {
+                    wait(delay);
+                }
+                catch (InterruptedException e) {
+                }
             }
         }
 
@@ -410,48 +397,6 @@ public class PIDController {
         dt = (int)(System.currentTimeMillis() - this.cycleTime);
         this.cycleTime = System.currentTimeMillis();
         return outputMV;
-    }
-
-    /** Register a <code>NXTDataLogger</code> instance to log the PID variables. If the logger instance is in
-     * cached mode, the headers must not have been set before calling this method or <code>false</code> is returned. 
-     * <code>PIDController</code> will
-     * set the column headers and log values on every call to <code>doPID()</code>.
-     * <p>
-     * This is useful when using the NXJChartingLogger tool to visualize the PID response by monitoring the internal
-     * variables.
-     * @param dataLogger A <code>NXTDataLogger</code> instance in realtime or cached logging mode.
-     * @return <code>true</code> if successful, <code>false</code> otherwise.
-     * @see NXTDataLogger
-     * @see #deregisterDataLogger
-     */
-    public boolean registerDataLogger(Logger dataLogger){
-        LogColumn[] logColumns = {
-                new LogColumn("SP",LogColumn.DT_INTEGER),
-                new LogColumn("MV",LogColumn.DT_INTEGER),
-                new LogColumn("PV",LogColumn.DT_INTEGER),
-                new LogColumn("Integral",LogColumn.DT_INTEGER),
-                new LogColumn("Kp*error",LogColumn.DT_FLOAT),
-                new LogColumn("Kd*derivative",LogColumn.DT_FLOAT,2),
-                new LogColumn("error",LogColumn.DT_INTEGER),
-                new LogColumn("dt",LogColumn.DT_INTEGER),
-        };
-        try {
-            dataLogger.setColumns(logColumns);
-        } catch (UnsupportedOperationException e){
-            return false;
-        }
-        this.dataLogger=dataLogger;
-        return true;
-    }
-
-    /** De-register the registered <code>NXTDataLogger</code>. 
-     * @return The <code>NXTDataLogger</code> that was registered, <code>null</code> if no logger has been registered.
-     * @see #registerDataLogger
-     */
-    public Logger deregisterDataLogger(){
-        Logger tempDL=this.dataLogger;
-        this.dataLogger=null;
-        return tempDL;
     }
 
     private int rampOut(int ov){
