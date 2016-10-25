@@ -17,10 +17,6 @@ public class RotationTest extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     HardwareOmegas Ω       = new HardwareOmegas();
 
-    // IPS Units
-    static final double     FORWARD_SPEED = 0.6;
-    static final double     TURN_SPEED    = 0.5;
-
     @Override
     public void runOpMode() {
         Ω.init(hardwareMap);
