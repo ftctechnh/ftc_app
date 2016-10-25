@@ -163,18 +163,18 @@ final static float JOYSTICK_DEADZONE = .1F;
             backRight.setPower(0);
         }
 
-        else if ( Math.abs(gamepad.left_stick_y) < JOYSTICK_DEADZONE && Math.abs(gamepad.right_stick_y) < JOYSTICK_DEADZONE && gamepad.right_stick_y*gamepad.left_stick_y > 0){
+        else if ( Math.abs(gamepad.left_stick_y) < JOYSTICK_DEADZONE && Math.abs(gamepad.right_stick_y) < JOYSTICK_DEADZONE && gamepad.right_stick_x*gamepad.left_stick_x > 0){
             float power = (gamepad.left_stick_x + gamepad.right_stick_x)/2;
             shift(frontLeft, frontRight, backLeft, backRight, power);
         }
 
-        else if ((gamepad.left_stick_x >= JOYSTICK_DEADZONE && gamepad.left_stick_y >= JOYSTICK_DEADZONE) || (gamepad.right_stick_x <= -JOYSTICK_DEADZONE && gamepad.right_stick_y <= -JOYSTICK_DEADZONE)){
-            float power = (float)Math.sqrt(Math.pow(((gamepad.left_stick_x + gamepad.right_stick_x)/2), 2) + Math.pow(((gamepad.left_stick_y + gamepad.right_stick_y) / 2), 2));
+        else if ((gamepad.left_stick_x >= JOYSTICK_DEADZONE && gamepad.left_stick_y >= JOYSTICK_DEADZONE) && (gamepad.right_stick_x >= JOYSTICK_DEADZONE && gamepad.right_stick_y >= JOYSTICK_DEADZONE) || (gamepad.right_stick_x <= -JOYSTICK_DEADZONE && gamepad.right_stick_y <= -JOYSTICK_DEADZONE) && (gamepad.left_stick_x <= -JOYSTICK_DEADZONE && gamepad.left_stick_y <= -JOYSTICK_DEADZONE)){
+            float power = Math.signum(gamepad.left_stick_x)*(float)Math.sqrt(Math.pow(((gamepad.left_stick_x + gamepad.right_stick_x)/2), 2) + Math.pow(((gamepad.left_stick_y + gamepad.right_stick_y) / 2), 2));
             diagonalRight(frontLeft, frontRight, backLeft, backRight, power);
         }
 
-        else if ((gamepad.left_stick_x <= -JOYSTICK_DEADZONE && gamepad.left_stick_y >= JOYSTICK_DEADZONE) || (gamepad.right_stick_x >= JOYSTICK_DEADZONE && gamepad.right_stick_y <= -JOYSTICK_DEADZONE)) {
-            float power = (float) Math.sqrt(Math.pow(((gamepad.left_stick_x + gamepad.right_stick_x) / 2), 2) + Math.pow(((gamepad.left_stick_y + gamepad.right_stick_y) / 2), 2));
+        else if ((gamepad.left_stick_x <= -JOYSTICK_DEADZONE && gamepad.left_stick_y >= JOYSTICK_DEADZONE) && (gamepad.right_stick_x <= -JOYSTICK_DEADZONE && gamepad.right_stick_y >= JOYSTICK_DEADZONE) || (gamepad.right_stick_x >= JOYSTICK_DEADZONE && gamepad.right_stick_y <= -JOYSTICK_DEADZONE) && (gamepad.left_stick_x >= JOYSTICK_DEADZONE && gamepad.left_stick_y <= -JOYSTICK_DEADZONE)) {
+            float power = Math.signum(gamepad.left_stick_y)*(float) Math.sqrt(Math.pow(((gamepad.left_stick_x + gamepad.right_stick_x) / 2), 2) + Math.pow(((gamepad.left_stick_y + gamepad.right_stick_y) / 2), 2));
             diagonalLeft(frontLeft, frontRight, backLeft, backRight, power);
         }
 
