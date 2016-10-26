@@ -1,3 +1,8 @@
+
+# THIS IS NOT THE MASTER BRANCH
+## PLEASE DO DIRECTLY EDIT THIS BRANCH
+## EDIT THIS TEAM'S BRANCH IF YOU ARE TEAM 4097 OR _I WILL HARM YOU_
+
 # ftc_app
 FTC Android Studio project to create FTC Robot Controller app.
 
@@ -17,36 +22,6 @@ Documentation for the FTC SDK are included with this repository.  There is a sub
 For technical questions regarding the SDK, please visit the FTC Technology forum:
 
   http://ftcforum.usfirst.org/forumdisplay.php?156-FTC-Technology
-
-**************************************************************************************
-
-Version 2.35 (released on 16.10.06)
-  * Blockly programming mode - Removed unnecesary idle() call from blocks for new project.
-
-**************************************************************************************
-
-Version 2.30 (released on 16.10.05)
-  * Blockly programming mode:
-     - Mechanism added to save Blockly op modes from Programming Mode Server onto local device
-     - To avoid clutter, blocks are displayed in categorized folders
-     - Added support for DigitalChannel
-     - Added support for ModernRoboticsI2cCompassSensor
-     - Added support for ModernRoboticsI2cRangeSensor
-     - Added support for VoltageSensor
-     - Added support for AnalogInput
-     - Added support for AnalogOutput
-     - Fix for CompassSensor setMode block
-  * Vuforia
-     - Fix deadlock / make camera data available while Vuforia is running.
-     - Update to Vuforia 6.0.117 (recommended by Vuforia and Google to close security loophole). 
-  * Fix for autonomous 30 second timer bug (where timer was in effect, even though it appeared to have timed out).
-  * opModeIsActive changes to allow cleanup after op mode is stopped (with enforced 2 second safety timeout).
-  * Fix to avoid reading i2c twice.
-  * Updated sample Op Modes.
-  * Improved logging and fixed intermittent freezing.
-  * Added digital I/O sample.
-  * Cleaned up device names in sample op modes to be consistent with Pushbot guide.
-  * Fix to allow use of IrSeekerSensorV3.
 
 **************************************************************************************
 
