@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name = "AutoDoubleBeacon", group = "Concept")
 public class AutoDoubleBeacon extends LinearOpMode {
-    double Distance = 18.5; //in inches
+    double Distance = 12; //in inches
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -20,6 +20,7 @@ public class AutoDoubleBeacon extends LinearOpMode {
         robot.init(hardwareMap);
         waitForStart();
         robot.drive(Distance);
+        telemetry.addData("value of drive", Distance);
 
     }
 }

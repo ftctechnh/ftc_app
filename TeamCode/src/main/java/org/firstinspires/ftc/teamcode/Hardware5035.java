@@ -1,10 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.RobotLog;
+
 
 /**
  * Created by Kota Baer on 10/11/2016.
@@ -146,7 +150,7 @@ public class Hardware5035 {
 
     public int inchToTickConverter (double inches)
     {
-        return (int) (65.482 * inches);
+        return (int) (76.3925 * inches);
     }
 
 
