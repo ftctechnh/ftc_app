@@ -20,23 +20,30 @@ public abstract class AutonomousBase extends OpMode {
     //(1440*12) converts encoder reading, where one rotation is 1440, to feet.
     //**WARNING** Always calculate distance CHANGED, since encoders have no
     // concept of direction, and we are moving across a 2D plane.
+    
+    public static class MoveState{
+      public static final int STOP = 0;
+      public static final int FORWARD = 1;
+      public static final int BACKWARD = 2;
+      public static final int LEFT = 3;
+      public static final int RIGHT = 4;
+      public static final int TURN_TOWARDS_GOAL= 5;
+    }
 
-    DcMotor motorRT;
-    DcMotor motorRB;
-    DcMotor motorLT;
-    DcMotor motorLB;
-    DcMotor motorA;
-    DcMotor motorC;
-    DcMotor motorE;
-    DcMotor motorR;
+
+    DcMotor motorUp;
+    DcMotor motorDown;
+    DcMotor motorLeft;
+    DcMotor motorRight;
+    DcMotor motorRightShooter;
+    DcMotor motorLeftShooter;
+    DcMotor motorConveyer;
+    Servo servoCollector;
+    Servo servoLeftButton;
+    Servo servoRightButton;
+    TouchSensor touchRight;
+    TouchSensor touchLeft;
     GyroSensor gyro;
-    Servo climber;
-    Servo claw;
-    Servo swingLeft;
-    Servo blockRight;
-    Servo blockLeft;
-    Servo swingRight;
-    TouchSensor touch;
 
 
     //We stateful now, boys.
@@ -46,8 +53,8 @@ public abstract class AutonomousBase extends OpMode {
 
     double power;
     double heading;
-    int cDist, lDist;
-    int dDist; //the aforementioned difference (cDist-lDist) **CAN BE NEGATIVE
+    int cDistF, lDistF, dDistF; //Forward distance variables
+    int cDistS, lDistS, dDistS; //Sideways distance variables
     double tDiff; // getRuntime() does this really annoying thing where it counts init time, so I
     // mark the first time I exit init, and override getRuntime() to return that instead
     double climbTime;
@@ -57,58 +64,78 @@ public abstract class AutonomousBase extends OpMode {
 
 
     public void init() {
-        motorRT = hardwareMap.dcMotor.get("motor_RT");
-        motorRB = hardwareMap.dcMotor.get("motor_RB");
-        motorLT = hardwareMap.dcMotor.get("motor_LT");
-        motorLB = hardwareMap.dcMotor.get("motor_LB");
+        motorUp = hardwareMap.dcMotor.get("front");
+        motorDown = hardwareMap.dcMotor.get("back");
+        motorLeft = hardwareMap.dcMotor.get("left");
+        motorRight = hardwareMap.dcMotor.get("right");
 
-        motorLT.setDirection(DcMotor.Direction.FORWARD);
-        motorLB.setDirection(DcMotor.Direction.FORWARD);
-        motorRT.setDirection(DcMotor.Direction.REVERSE);
-        motorRB.setDirection(DcMotor.Direction.REVERSE);
+        motorUp.setDirection(DcMotor.Direction.REVERSE);
+        motorLeft.setDirection(DcMotor.Direction.REVERSE);
 
-        motorA = hardwareMap.dcMotor.get("motor_A");
-        motorC = hardwareMap.dcMotor.get("motor_C");
-        motorE = hardwareMap.dcMotor.get("motor_E");
-        motorR = hardwareMap.dcMotor.get("motor_R");
+        motorRightShooter = hardwareMap.dcMotor.get("r_shoot");
+        motorLeftShooter = hardwareMap.dcMotor.get("l_shoot");
+        motorConveyer = hardwareMap.dcMotor.get("convyer");
 
-        climber = hardwareMap.servo.get("climber");
-        claw = hardwareMap.servo.get("claw");
-        swingLeft = hardwareMap.servo.get("swing_l");
-        swingRight = hardwareMap.servo.get("swing_r");
-        blockRight = hardwareMap.servo.get("block_r");
-        blockLeft = hardwareMap.servo.get("block_l");
+        servoCollector = hardwareMap.servo.get("collector");
+        servoLeftButton = hardwareMap.servo.get("l_button");
+        servoRightButton = hardwareMap.servo.get("r_button");
 
-        touch = hardwareMap.touchSensor.get("touch");
+        touchRight = hardwareMap.touchSensor.get("right_touch");
+        touchLeft = hardwareMap.touchSensor.get("left_touch");
         gyro = hardwareMap.gyroSensor.get("gyro");
         gyro.calibrate();
     }
 
     public void moveState(){
         switch(moveState){
-            case 0:
+            case MoveState.STOP:
                 //Case zero is 'stop'
-                motorRT.setPower(0);
-                motorRB.setPower(0);
-                motorLT.setPower(0);
-                motorLB.setPower(0);
+                motorUp.setPower(0);
+                motorDown.setPower(0);
+                motorLeft.setPower(0);
+                motorRight.setPower(0);
                 break;
-            //Never should we be just 'moving', always move TOWARDS something.
-            case 1:
+            case MoveState.FORWARD:
                 //Case one is 'move towards' in the most literal sense. It assumes the path is
                 //clear, and that there is a goal(9), and us(1) on the map somewhere.
-                power = -.5; //power coefficient
+                power = .75; //power coefficient
                 if(map.distanceToGoal()>1/12) {
-                    motorRT.setPower(power);
-                    motorRB.setPower(power);
-                    motorLT.setPower(power);
-                    motorLB.setPower(power);
-                    map.moveRobot(dDist * DEGREES_TO_FEET, heading);
+                    motorLeft.setPower(power);
+                    motorRight.setPower(power);
+                    map.moveRobot(dDistF * DEGREES_TO_FEET, heading);
                 }
                 break;
-            case 2:
-                //Case Two is 'turn towards'.
-                power = -0.25;
+            case MoveState.BACKWARD:
+                //Case one is 'move towards' in the most literal sense. It assumes the path is
+                //clear, and that there is a goal(9), and us(1) on the map somewhere.
+                power = -.75; //power coefficient
+                if(map.distanceToGoal()>1/12) {
+                    motorLeft.setPower(power);
+                    motorRight.setPower(power);
+                    map.moveRobot(dDistF * DEGREES_TO_FEET, heading);
+                }
+                break;
+            case MoveState.LEFT:
+                power = .75; //power coefficient
+                if(map.distanceToGoal()>1/12) {
+                    motorUp.setPower(power);
+                    motorDown.setPower(power);
+                    map.moveRobot(dDistS * DEGREES_TO_FEET, heading);
+                }
+                break;
+
+           case MoveState.RIGHT:
+                power = -.75; //power coefficient
+                if(map.distanceToGoal()>1/12) {
+                    motorUp.setPower(power);
+                    motorDown.setPower(power);
+                    map.moveRobot(dDistS * DEGREES_TO_FEET, heading);
+                }
+                break;
+
+            case MoveState.TURN_TOWARDS_GOAL:
+                //Case Three is 'turn towards'.
+                power = .25;
                 boolean turnRight;
 
                 if(heading<=180){
@@ -117,41 +144,16 @@ public abstract class AutonomousBase extends OpMode {
                     turnRight = !(heading >= map.angleToGoal() && heading - 180 <= map.angleToGoal());
                 }
 
-                if(!turnRight){
-                    motorRT.setPower(-power);
-                    motorRB.setPower(-power);
-                    motorLT.setPower(power);
-                    motorLB.setPower(power);
+                if(turnRight){
+                    motorUp.setPower(power);
+                    motorDown.setPower(power);
+                    motorLeft.setPower(power);
+                    motorRight.setPower(power);
                 }else{
-                    motorRT.setPower(power);
-                    motorRB.setPower(power);
-                    motorLT.setPower(-power);
-                    motorLB.setPower(-power);
-                }
-                break;
-            case 3:
-                climber.setPosition(0); //Move climber back to up position
-                power = .5; //power coefficient
-                if(map.distanceToGoal()>1/12) {
-                    motorRT.setPower(power);
-                    motorRB.setPower(power);
-                    motorLT.setPower(power);
-                    motorLB.setPower(power);
-                    map.moveRobot(dDist * DEGREES_TO_FEET, heading);
-                }
-                break;
-            case 5:
-                if(climber.getPosition() < .5) climbTime = getRuntime();
-                climber.setPosition(1);
-                break;
-            case 6:
-                power = -.2; //power coefficient
-                if(map.distanceToGoal()>1/12) {
-                    motorRT.setPower(power);
-                    motorRB.setPower(power);
-                    motorLT.setPower(power);
-                    motorLB.setPower(power);
-                    map.moveRobot(dDist * DEGREES_TO_FEET, heading);
+                    motorUp.setPower(-power);
+                    motorDown.setPower(-power);
+                    motorLeft.setPower(-power);
+                    motorRight.setPower(-power);
                 }
                 break;
         }
@@ -159,31 +161,26 @@ public abstract class AutonomousBase extends OpMode {
 
     public void gameState(){
         heading = gyro.getHeading();
-        lDist = cDist;
-        cDist = ( motorLB.getCurrentPosition()
-                + motorRB.getCurrentPosition()
-                + motorLT.getCurrentPosition()
-                + motorRT.getCurrentPosition()
-        ) / 4;
-        dDist = cDist - lDist;
+        lDistF = cDistF;
+        cDistF = ( motorLeft.getCurrentPosition()
+                 + motorRight.getCurrentPosition()
+        ) / 2;
+        dDistF = cDistF - lDistF;
+
+        lDistS = cDistS;
+        cDistS = ( motorUp.getCurrentPosition()
+                 + motorDown.getCurrentPosition()
+        ) / 2;
+        dDistS = cDistS - lDistS;
+
         if(!inited){
-            climber.setPosition(0);
-            claw.setPosition(.5);
-            swingLeft.setPosition(.4);
-            swingRight.setPosition(.4);
-            blockRight.setPosition(1) ;
-            blockLeft.setPosition(0);
+            tDiff = getRuntime();
             inited = true;
         }
         //if(getRuntime() > 29) gameState = 777;  //robot death switch
     }
 
     public void telemetry(){
-        telemetry.addData("Runtime ",getRuntime());
-        telemetry.addData("States ",gameState + " " + moveState);
-        telemetry.addData("heading ",heading);
-        telemetry.addData("goal x,y ",map.getGoalX()+","+map.getGoalY());
-        telemetry.addData("robot x,y ",map.getRobotX()+","+map.getRobotY());
         telemetry.addData("angle to goal ",map.angleToGoal());
         telemetry.addData("dist from goal ",map.distanceToGoal());
     }
