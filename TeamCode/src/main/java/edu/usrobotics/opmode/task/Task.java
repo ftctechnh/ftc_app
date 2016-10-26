@@ -6,6 +6,9 @@ public interface Task {
     // Called to update the task, return true if completed.
     boolean execute ();
 
+    // Returns if the task is complete. It no longer needs updates.
+    boolean isCompleted ();
+
     // Returns the TaskType of this task.
     // Mostly used for debugging as Task Type can be set to anything regardless of the actual task purpose.
     TaskType getType ();

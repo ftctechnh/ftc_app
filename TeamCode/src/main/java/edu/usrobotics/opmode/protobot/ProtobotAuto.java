@@ -42,7 +42,7 @@ public class ProtobotAuto extends RobotOp {
         ) {
             @Override
             public boolean onExecuted() {
-                debugOut = "" + isTaskCompleted(0) + "" + isTaskCompleted(1) + "" + isTaskCompleted(2) + "" + isTaskCompleted(3);
+                debugOut = robot.frontRight.getCurrentPosition() + " " + isTaskCompleted(0) + "" + isTaskCompleted(1) + "" + isTaskCompleted(2) + "" + isTaskCompleted(3);
                 return isTaskCompleted(0);
             }
 
