@@ -17,12 +17,16 @@ public class ProtobotHardware extends BaseHardware {
     public DcMotor backRight;
     public DcMotor backLeft;
 
-    public DcMotor harvester;
+    //public DcMotor harvester;
 
     public Servo gate;
 
     public float gateClosedPosition = 0.3f;
     public float gateOpenedPosition = 1f;
+
+    public double wheelDiameter = 4.0d;
+    public double wheelRadius = wheelDiameter / 2;
+    public double wheelCircumfrence = 2 * Math.PI * wheelRadius;
 
     @Override
     public void getDevices() {
@@ -32,13 +36,19 @@ public class ProtobotHardware extends BaseHardware {
         backRight = hardwareMap.dcMotor.get ("br");
         backLeft = hardwareMap.dcMotor.get ("bl");
 
-        harvester = hardwareMap.dcMotor.get("harvester");
+        //harvester = hardwareMap.dcMotor.get("harvester");
 
-        harvester.setDirection(DcMotorSimple.Direction.REVERSE);
+        //harvester.setDirection(DcMotorSimple.Direction.REVERSE);
 
         gate = hardwareMap.servo.get("gate");
 
         gate.setPosition(gateClosedPosition);
+
+    }
+
+    public int inchesToEncoderTicks(float inches){
+
+        return (int) (inches / wheelCircumfrence * 1440f);
 
     }
 }

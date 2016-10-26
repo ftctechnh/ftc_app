@@ -1,23 +1,17 @@
 /*
 Copyright (c) 2016 Robert Atkinson
-
 All rights reserved.
-
 Redistribution and use in source and binary forms, with or without modification,
 are permitted (subject to the limitations in the disclaimer below) provided that
 the following conditions are met:
-
 Redistributions of source code must retain the above copyright notice, this list
 of conditions and the following disclaimer.
-
 Redistributions in binary form must reproduce the above copyright notice, this
 list of conditions and the following disclaimer in the documentation and/or
 other materials provided with the distribution.
-
 Neither the name of Robert Atkinson nor the names of his contributors may be used to
 endorse or promote products derived from this software without specific prior
 written permission.
-
 NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
 LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
@@ -106,6 +100,8 @@ public class VuforiaTracker implements Tracker {
     OpenGLMatrix position = null;
     Orientation rotation = null;
 
+    float reliability = 0.8f;
+
     /** For convenience, gather together all the trackable objects in one easily-iterable collection */
     List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
 
@@ -140,7 +136,7 @@ public class VuforiaTracker implements Tracker {
          * {@link Parameters} instance with which you initialize Vuforia.
          */
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
-        parameters.vuforiaLicenseKey = "AcKtA8P/////AAAAGV7zKmRlKErWlSYVF7cdsdRw6THMhi2MDEzL+1LE4EwDlnaRCBExepPPW1P+bIWumMW7jHOJ+B3qaQXQBBLwTFNxDHxVh0IJpI6lq6cg99Ml+UwvKYFXuxIjcOmPlR4az/KQ7XuAEIZ+YR4vPxAUigXtu+t7/r4KuQpzRkDby2tdawsoRDDNU3UgwZ7QkyO9B1vlK+p9KW0Pidht7XnOSnk4Gju7hS2NC2hNRxw7k9T4ayP/IdxWeLGpMN1gqb2Xt/6QOyq5h4uCPlwYa+dknGJX/KAzCv4MnuLZYRDue7ExzoZ0tm4sSqnqu1pnZyN4Oc48FLaoTi0D8NGgoV+tiz9msV3wMGf/m/RhzT+9+ipC";
+        parameters.vuforiaLicenseKey = "AXNYqM3/////AAAAGYQIKXSWw0Tks6wlqrbuRX57oAJcQXCMl6sWgwMfhn6xv7o9WjI06KYvYB9CmcvwlbIAmkWGtADZHG0/zWsrE6xnYt0p6ZFOfcRhCs+WM2wX+1jDzN3PMUQuLy62SWBVk/AcGmFESWXqVxZA+77CWBFVJD7HEFAfz9moYkI9c1hkd42e5MedBUpDxunnjdaaZHdrY4pAFNL7sfzCUVsDESnz0au/s5bTHVTBFgg6oPBhKMGJ02XhMGGuUm9V64MchllFKGKB2If1W8YuUTscp+XklelAW8wPXSa9Yl8+PBkZOvc4H+DwNYFj2gdP5illeTz8doe5CFnhp9W2mqozCxM3aWa2+PG8WXM+v9bZvIjp";
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
@@ -152,7 +148,7 @@ public class VuforiaTracker implements Tracker {
          * example "StonesAndChips", datasets can be found in in this project in the
          * documentation directory.
          */
-        VuforiaTrackables stonesAndChips = this.vuforia.loadTrackablesFromAsset("StonesAndChips");
+        VuforiaTrackables stonesAndChips = this.vuforia.loadTrackablesFromAsset("FTC_2016-17");
         VuforiaTrackable redTarget = stonesAndChips.get(0);
         redTarget.setName("RedTarget");  // Stones
 
@@ -309,11 +305,12 @@ public class VuforiaTracker implements Tracker {
 
     @Override
     public float getReliability() {
-        return 0.8f;
+        return reliability;
     }
 
     @Override
-    public boolean track() {
+    public boolean track(){
+        boolean foundTrackable = false;
         for (VuforiaTrackable trackable : allTrackables) {
             /**
              * getUpdatedRobotLocation() will return null if no new information is available since
@@ -325,12 +322,14 @@ public class VuforiaTracker implements Tracker {
             lastLocation = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
             if (lastLocation != null) {
                 lastKnownLocation = lastLocation;
+                foundTrackable = true;
             }
-            rotation = lastLocation == null ? null : Orientation.getOrientation(lastLocation, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
-            position = lastLocation == null ? null : lastLocation;
         }
 
-        return false;
+        rotation = lastKnownLocation == null ? null : Orientation.getOrientation(lastKnownLocation, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+        position = lastKnownLocation == null ? null : lastKnownLocation;
+
+        return foundTrackable;
     }
 
     @Override

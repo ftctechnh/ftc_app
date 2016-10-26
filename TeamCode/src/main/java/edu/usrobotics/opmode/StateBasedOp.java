@@ -1,5 +1,6 @@
 package edu.usrobotics.opmode;
 
+import java.util.IllegalFormatCodePointException;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -14,8 +15,6 @@ public class StateBasedOp extends BaseOp {
     Route route; // Currently Executed Route
 
     Queue<Route> routeQueue = new LinkedList<>(); // Contains routes that will be executed once 'route' is completed. (NO INCLUDE route)
-
-
 
     public State getState() {
         return state;
@@ -41,10 +40,10 @@ public class StateBasedOp extends BaseOp {
     }
 
     public void logicUpdate () {
-        route = (route != null ? route : routeQueue.remove()); // Grab current route, or new one from queue
+        route = (route != null ? route : (routeQueue.isEmpty() ? null : routeQueue.remove())); // Grab current route, or new one from queue
 
         if (route == null) { // If there is no route
-            // then we cri
+            // then we cringe
 
         } else {
             state = State.ROUTE;
@@ -123,6 +122,7 @@ public class StateBasedOp extends BaseOp {
             default:
 
                 break;
+
         }
     }
 

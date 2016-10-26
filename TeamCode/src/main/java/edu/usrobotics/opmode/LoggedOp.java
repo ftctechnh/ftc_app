@@ -11,6 +11,7 @@ import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 import java.util.HashMap;
+import java.util.IllegalFormatCodePointException;
 import java.util.Map;
 
 import edu.usrobotics.telemetry.TelemetryWriter;
@@ -22,6 +23,7 @@ public class LoggedOp extends TrackedOp {
 
     Map<HardwareDevice, TelemetryData> loggedDevices = new HashMap<>(16); // Maximum logged devices
     int loggedDeviceCount = 0;
+    public static String debugOut = "None";
 
     TelemetryData trackingData = new TelemetryData(0, DataType.UPDATE_MAP, 0, null);
 
@@ -63,8 +65,10 @@ public class LoggedOp extends TrackedOp {
 
     public void LogTracking () {
         OpenGLMatrix transform = getRobotTransform();
-        if (transform == null)
+        if (transform == null){
+            telemetry.addData("Transform", "null");
             return;
+        }
 
         trackingData.timestamp = TelemetryWriter.getTimestamp();
         VectorF tran = transform.getTranslation();
@@ -79,6 +83,14 @@ public class LoggedOp extends TrackedOp {
                 Float.toString(rot.secondAngle),
                 Float.toString(rot.thirdAngle),
         };
+
+        telemetry.addData("Position", tran.toString());
+        telemetry.addData("Rotation", rot.firstAngle + ", " + rot.secondAngle + ", " + rot.thirdAngle);
+
+    }
+
+    public void LogDebug () {
+        telemetry.addData("Debug", debugOut);
     }
 
     public void LogState () {
@@ -86,10 +98,14 @@ public class LoggedOp extends TrackedOp {
     }
 
     @Override public void loop () {
+
         super.loop();
 
         LogTracking();
         LogState();
+        LogDebug();
+
+        telemetry.update();
     }
 
 }
