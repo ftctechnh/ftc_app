@@ -183,7 +183,6 @@ final static float JOYSTICK_DEADZONE = .1F;
             backLeft.setPower(gamepad.left_stick_y_exponential(1));
             frontRight.setPower(gamepad.right_stick_y_exponential(1));
             backRight.setPower(gamepad.right_stick_y_exponential(1));
-
         }
 
     }
