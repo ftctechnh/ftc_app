@@ -5,24 +5,28 @@ package edu.usrobotics.opmode.task;
  */
 public class ConcurrentTaskSet implements Task {
     private Task[] tasks;
-    private boolean[] completedTasks;
-
     private boolean completed = false;
 
     public ConcurrentTaskSet (Task... tasks) {
         this.tasks = tasks;
-        this.completedTasks = new boolean[tasks.length];
     }
 
     @Override
     public boolean execute() {
         boolean allComplete = true;
 
-        for (int i=0; i<tasks.length; i++) {
-            completedTasks[i] = completedTasks[i] || tasks[i].execute();
-            completedTasks[i] = completedTasks[i] || tasks[i].onExecuted();
+        boolean taskCompleted;
+        for (Task task : tasks) {
+            if (task.isCompleted())
+                continue;
 
-            allComplete = allComplete && completedTasks[i]; // If a task is not completed, then the task set is not completed either.
+            taskCompleted = task.execute(); // Execute & Mark if completed during execution
+            taskCompleted = taskCompleted || task.onExecuted(); // Call Event & Mark if completed during event
+
+            if (taskCompleted)
+                task.onCompleted(); // Call completed event if task completed.
+
+            allComplete = allComplete && taskCompleted; // If task is not completed, task set is not completed either.
         }
 
         return allComplete;
@@ -50,6 +54,11 @@ public class ConcurrentTaskSet implements Task {
 
     @Override
     public void onCompleted() {
+        for (Task task : tasks) {
+            if (!task.isCompleted())
+                task.onCompleted();
+        }
+        completed = true;
     }
 
     public boolean isTaskCompleted (int i) {

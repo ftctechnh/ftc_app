@@ -11,7 +11,7 @@ import edu.usrobotics.opmode.task.MotorTask;
 import edu.usrobotics.opmode.tracker.VuforiaTracker;
 
 /**
- * Created by dsiegler19 on 10/13/16.
+ * Created by mborsch19 & dsiegler19 on 10/13/16.
  */
 @Autonomous(name="Protobot Auto", group="Protobot")
 public class ProtobotAuto extends RobotOp {
@@ -33,11 +33,12 @@ public class ProtobotAuto extends RobotOp {
         Route happyTrail = new Route();
 
 
+        int encoderGoal = robot.inchesToEncoderTicks(48);
         ConcurrentTaskSet forward = new ConcurrentTaskSet(
-                new MotorTask(robot.frontRight, robot.inchesToEncoderTicks(48), null, 0.5f, 0.8f),
-                new MotorTask(robot.frontLeft, null, null, 0.5f, 0.8f),
-                new MotorTask(robot.backRight, null, null, 0.5f, 0.8f),
-                new MotorTask(robot.backLeft, null, null, 0.5f, 0.8f)
+                new MotorTask(robot.frontRight, encoderGoal, null, 0.5f, 0.8f, null),
+                new MotorTask(robot.frontLeft, null, null, 0.5f, 0.8f, encoderGoal),
+                new MotorTask(robot.backRight, null, null, 0.5f, 0.8f, encoderGoal),
+                new MotorTask(robot.backLeft, null, null, 0.5f, 0.8f, encoderGoal)
 
         ) {
             @Override

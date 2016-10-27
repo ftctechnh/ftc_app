@@ -7,7 +7,7 @@ import edu.usrobotics.opmode.BaseHardware;
 
 
 /**
- * Created by dsiegler19 on 10/13/16.
+ * Created by mborsch19 & dsiegler19 on 10/13/16.
  */
 public class ProtobotHardware extends BaseHardware {
 
