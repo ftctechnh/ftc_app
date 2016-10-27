@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.util.ArrayList;
@@ -34,8 +35,8 @@ public class HardwareOmegas
     public DcMotor      leftBackMotor    = null;
     public DcMotor      rightFrontMotor  = null;
     public DcMotor      rightBackMotor   = null;
-    public CRServo      leftBeaconator   = null;
-    public CRServo      rightBeaconator  = null;
+    public Servo        leftBeaconator   = null;
+    public Servo        rightBeaconator  = null;
 
     public ArrayList<DcMotor> motors;
 
@@ -76,8 +77,8 @@ public class HardwareOmegas
 
         // Connect to servo (Assume PushBot Left Hand)
         // Change the text in quotes to match any servo name on your robot.
-        leftBeaconator = hwMap.crservo.get("left_beaconator");
-//        rightBeaconator = hwMap.crservo.get("right_beaconator");
+        leftBeaconator = hwMap.servo.get("left_beaconator");
+//        rightBeaconator = hwMap.servo.get("right_beaconator");
 
         leftColorSensor = hwMap.colorSensor.get("left_color_sensor");
 //        rightColorSensor = hwMap.colorSensor.get("right_color_sensor");
@@ -131,30 +132,31 @@ public class HardwareOmegas
         }
     }
 
-    public void beaconatorSequence(CRServo beaconator, long milliseconds) {
+    public void beaconatorSequence(Servo beaconator, long milliseconds) {
         ElapsedTime timePushed = new ElapsedTime();
+        beaconator.setDirection(Servo.Direction.FORWARD);
         if (isExtending) return; else isExtending = true;
 
         while (true) {
             if (timePushed.milliseconds() < milliseconds) {
-                powerServo(beaconator, 1.0);
+                postionServo(beaconator, 1.0);
             } else if (timePushed.milliseconds() < milliseconds * 2) {
                 retractServo(beaconator);
             } else {
-                powerServo(beaconator, 0.0);
+                postionServo(beaconator, 0.0);
                 return;
             }
         }
     }
 
-    public void powerServo(CRServo beaconator, double power) {
-        beaconator.setDirection(CRServo.Direction.FORWARD);
-        beaconator.setPower(Math.abs(power));
+    public void postionServo(Servo beaconator, double pos) {
+        beaconator.setDirection(Servo.Direction.FORWARD);
+        beaconator.setPosition(Math.abs(pos));
     }
 
-    public void retractServo(CRServo beaconator) {
-        beaconator.setDirection(CRServo.Direction.REVERSE);
-        beaconator.setPower(1.0);
+    public void retractServo(Servo beaconator) {
+        beaconator.setDirection(Servo.Direction.REVERSE);
+        beaconator.setPosition(0.0);
     }
 }
 
