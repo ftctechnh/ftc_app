@@ -42,7 +42,7 @@ public class TeleOpMain extends OpMode {
     public void loop() {
 
         // run drivetrain motors
-        if(gamepad1.dpad_left) {
+        /*if(gamepad1.dpad_left) {
             frontLeftMotor.setPower(-1.0);
             frontRightMotor.setPower(-1.0);
             backLeftMotor.setPower(1.0);
@@ -53,6 +53,59 @@ public class TeleOpMain extends OpMode {
             frontRightMotor.setPower(1.0);
             backLeftMotor.setPower(-1.0);
             backRightMotor.setPower(-1.0);
+        }
+        else if(gamepad1.x) {
+            frontLeftMotor.setPower(1.0);
+            frontRightMotor.setPower(1.0);
+            backLeftMotor.setPower(0.0);
+            backRightMotor.setPower(0.0);
+        }
+        else if(gamepad1.b) {
+            frontLeftMotor.setPower(0.0);
+            frontRightMotor.setPower(0.0);
+            backLeftMotor.setPower(1.0);
+            backRightMotor.setPower(1.0);
+        }*/
+        if(gamepad1.a) {
+            /*
+
+                         1,1,1,1
+                            |
+                 0,0,1,1    |    1,1,0,0
+                            |
+            -1,-1,1,1 ------------- 1,1,-1,-1
+                            |
+               -1,-1,0,0    |    0,0,-1,-1
+                            |
+                       -1,-1,-1,-1
+
+             */
+
+            float x = gamepad1.left_stick_x;
+            float y = -1 * gamepad1.left_stick_y;
+
+            float ySign = (y >= 0) ? 1 : -1;
+
+            float frontPower = (ySign * x > 0) ? ySign : (ySign * Math.abs(x) * -2 + ySign);
+            float backPower = (ySign * x < 0) ? ySign : (ySign * Math.abs(x) * -2 + ySign);
+
+            // left and right edge cases don't work
+            //float frontPower = (ySign * x > 0) ? y : (y * Math.abs(x) * -2 + y);
+            //float backPower = (ySign * x < 0) ? y : (y * Math.abs(x) * -2 + y);
+
+            if(x == 0 && y == 0){
+                frontPower = 0;
+                backPower = 0;
+            }
+
+            telemetry.addData("front", frontPower);
+            telemetry.addData("back", backPower);
+
+            frontLeftMotor.setPower(frontPower);
+            frontRightMotor.setPower(frontPower);
+            backLeftMotor.setPower(backPower);
+            backRightMotor.setPower(backPower);
+
         }
         else {
             frontLeftMotor.setPower(gamepad1.left_stick_y);
