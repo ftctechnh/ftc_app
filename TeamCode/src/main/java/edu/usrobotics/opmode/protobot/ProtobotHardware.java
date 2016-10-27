@@ -1,7 +1,6 @@
 package edu.usrobotics.opmode.protobot;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import edu.usrobotics.opmode.BaseHardware;
@@ -24,9 +23,9 @@ public class ProtobotHardware extends BaseHardware {
     public float gateClosedPosition = 0.3f;
     public float gateOpenedPosition = 1f;
 
-    public double wheelDiameter = 4.0d;
-    public double wheelRadius = wheelDiameter / 2;
-    public double wheelCircumfrence = 2 * Math.PI * wheelRadius;
+    public float wheelDiameter = 4.0f;
+    public float wheelRadius = wheelDiameter / 2f;
+    public float wheelCircumference = 2f * (float)(Math.PI) * wheelRadius;
 
     @Override
     public void getDevices() {
@@ -48,7 +47,7 @@ public class ProtobotHardware extends BaseHardware {
 
     public int inchesToEncoderTicks(float inches){
 
-        return (int) (inches / wheelCircumfrence * 1440f);
+        return (int) (inches / wheelCircumference * 1440f);
 
     }
 }

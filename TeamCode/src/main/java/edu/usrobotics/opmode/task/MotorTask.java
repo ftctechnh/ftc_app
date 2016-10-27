@@ -18,6 +18,7 @@ public class MotorTask implements Task {
     private double power; // Max power of motor
     private float damping; // Percent along path to begin deceleration damping.
 
+    private boolean completed;
     private boolean encoderReset;
 
 
@@ -70,6 +71,11 @@ public class MotorTask implements Task {
     }
 
     @Override
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    @Override
     public TaskType getType() {
         return TaskType.MOTOR;
     }
@@ -87,5 +93,6 @@ public class MotorTask implements Task {
     @Override
     public void onCompleted() {
         motor.setPower(0);
+        completed = true;
     }
 }
