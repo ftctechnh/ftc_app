@@ -108,6 +108,8 @@ public class TrackedOp extends StateBasedOp {
     @Override
     public void init(){
 
+        super.init();
+
         for (Tracker t : trackers) {
 
             t.init();

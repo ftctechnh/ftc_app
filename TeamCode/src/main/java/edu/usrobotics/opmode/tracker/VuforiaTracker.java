@@ -135,7 +135,7 @@ public class VuforiaTracker implements Tracker {
          */
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
         parameters.vuforiaLicenseKey = "AXNYqM3/////AAAAGYQIKXSWw0Tks6wlqrbuRX57oAJcQXCMl6sWgwMfhn6xv7o9WjI06KYvYB9CmcvwlbIAmkWGtADZHG0/zWsrE6xnYt0p6ZFOfcRhCs+WM2wX+1jDzN3PMUQuLy62SWBVk/AcGmFESWXqVxZA+77CWBFVJD7HEFAfz9moYkI9c1hkd42e5MedBUpDxunnjdaaZHdrY4pAFNL7sfzCUVsDESnz0au/s5bTHVTBFgg6oPBhKMGJ02XhMGGuUm9V64MchllFKGKB2If1W8YuUTscp+XklelAW8wPXSa9Yl8+PBkZOvc4H+DwNYFj2gdP5illeTz8doe5CFnhp9W2mqozCxM3aWa2+PG8WXM+v9bZvIjp";
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
         /**
