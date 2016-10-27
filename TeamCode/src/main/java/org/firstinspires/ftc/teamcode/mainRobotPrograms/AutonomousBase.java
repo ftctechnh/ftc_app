@@ -101,7 +101,7 @@ public abstract class AutonomousBase extends RobotBase {
             }
         } else {
             //Important for the driver to know.
-            OutputToDriverStation("Turning " + (power > 0 ? "left" : "right") + " for " + heading + " seconds WITHOUT GYRO");
+            OutputToDriverStation("Turning " + (power >= 0 ? "left" : "right") + " for " + heading + " seconds WITHOUT GYRO");
 
             //The turning point.
             frontLeft.setPower(power);

@@ -41,9 +41,8 @@ public abstract class RobotBase extends LinearOpMode
     /*** CONFIGURE ALL ROBOT ELEMENTS HERE ***/
     //Drive motors
     protected DcMotor frontRight, frontLeft, backRight, backLeft;
-
-    //Start timer
-    protected long startTime = System.currentTimeMillis();
+    //Other motors
+    protected DcMotor beaconPushingMotor;
 
     //This took a LONG TIME TO WRITE
     protected <T extends HardwareDevice> T Initialize  (Class <T> hardwareDevice, String name)
@@ -66,7 +65,7 @@ public abstract class RobotBase extends LinearOpMode
     {
         //Make sure that the robot components are found and initialized correctly.
         //This all happens during init()
-        //Define driving motors
+        /*************************** DRIVING MOTORS ***************************/
         frontRight = Initialize(DcMotor.class, "Front Right");
         frontLeft = Initialize(DcMotor.class, "Front Left");
         backRight = Initialize(DcMotor.class, "Back Right");
@@ -78,9 +77,13 @@ public abstract class RobotBase extends LinearOpMode
         if (backLeft != null)
             backLeft.setDirection(DcMotor.Direction.REVERSE);
 
+        /*************************** OTHER MOTORS ***************************/
+        beaconPushingMotor = Initialize(DcMotor.class, "Beacon Pushing Motor");
+
         //NOTE: Actually attempting to use null motors will cause the program to terminate.
         //This advanced system is designed for when only specific hardware is required.
         //This code should tell you which motors and sensors are not configured before the program starts running.
+        //Kudos Makiah
 
         //Actual program thread
         try {
@@ -164,10 +167,15 @@ public abstract class RobotBase extends LinearOpMode
         }
     }
 
+    protected boolean CurrentlyPlayingAudio()
+    {
+        return mediaPlayer != null;
+    }
+
     //Used to make the media player stop playing audio, and also to prevent excess memory allocation from being taken up.
     protected void StopPlayingAudio()
     {
-        if (mediaPlayer != null)
+        if (CurrentlyPlayingAudio())
         {
             if (mediaPlayer.isPlaying())
                 mediaPlayer.stop(); //stop playing
