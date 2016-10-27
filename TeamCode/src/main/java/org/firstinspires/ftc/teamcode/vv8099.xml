@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<Robot type="FirstInspires-FTC">
+    <DeviceInterfaceModule name="dim" serialNumber="AI02RKA5">
+        <DigitalDevice name="touch" port="0" />
+        <DigitalDevice name="digin" port="6" />
+        <DigitalDevice name="digout" port="7" />
+    </DeviceInterfaceModule>
+</Robot>
