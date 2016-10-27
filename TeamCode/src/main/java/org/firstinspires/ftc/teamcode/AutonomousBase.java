@@ -25,7 +25,12 @@ public abstract class AutonomousBase extends OpMode {
       public static final int BACKWARD = 2;
       public static final int LEFT = 3;
       public static final int RIGHT = 4;
-      public static final int TURN_TOWARDS_GOAL= 5;
+      public static final int TURN_TOWARDS_GOAL = 5;
+      public static final int SHOOT = 6;
+      public static final int SERVO_STARBOARD_R = 7;
+      public static final int SERVO_STARBOARD_L = 8;
+      public static final int SERVO_PORT_R = 9;
+      public static final int SERVO_PORT_L = 10;
     }
 
 
@@ -153,6 +158,18 @@ public abstract class AutonomousBase extends OpMode {
                     motorLeft.setPower(-power);
                     motorRight.setPower(-power);
                 }
+                break;
+            case MoveState.SERVO_STARBOARD_R:
+                servoRightButton.setPosition(1);
+                break;
+            case MoveState.SERVO_STARBOARD_L:
+                servoRightButton.setPosition(0);
+                break;
+            case MoveState.SERVO_PORT_R:
+                servoLeftButton.setPosition(1);
+                break;
+            case MoveState.SERVO_PORT_L:
+                servoLeftButton.setPosition(0);
                 break;
         }
     }
