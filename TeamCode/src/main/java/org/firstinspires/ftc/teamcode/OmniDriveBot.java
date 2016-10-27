@@ -63,10 +63,10 @@ public class OmniDriveBot implements DriveTrainInterface
 
     public void drive()
     {
-        fRPower = leftYIn - leftXIn - rightXIn;
-        fLPower = -leftYIn - leftXIn - rightXIn;
-        bRPower = leftYIn + leftXIn - rightXIn;
-        bLPower = -leftYIn + leftXIn - rightXIn;
+        fRPower = leftYIn - leftXIn + rightXIn;
+        fLPower = -leftYIn - leftXIn + rightXIn;
+        bRPower = leftYIn + leftXIn + rightXIn;
+        bLPower = -leftYIn + leftXIn + rightXIn;
 
         float scaleFactor = 1.0f;
 
@@ -115,8 +115,8 @@ public class OmniDriveBot implements DriveTrainInterface
         fR.setPower(fRPower);
 
         double distanceTravel = distanceInches/scalingFactor;
-        int fLDistanceEncoders = (int)(Math.abs(fL.getCurrentPosition()) + (distanceTravel*86));
-        int fRDistanceEncoders = (int)(Math.abs(fR.getCurrentPosition()) + (distanceTravel*86));
+        int fLDistanceEncoders = (int)(Math.abs(fL.getCurrentPosition()) + (distanceTravel*57));
+        int fRDistanceEncoders = (int)(Math.abs(fR.getCurrentPosition()) + (distanceTravel*57));
 
         while(Math.abs(fL.getCurrentPosition()) < fLDistanceEncoders & Math.abs(fR.getCurrentPosition()) < fRDistanceEncoders)
         {
@@ -131,8 +131,7 @@ public class OmniDriveBot implements DriveTrainInterface
     public void spin(float degree)
     {
         double robotCircumference = 84.1;
-        //originally 90 was 86
-        int encoderTarget = (int)(degree*robotCircumference*90/360);
+        int encoderTarget = (int)(degree*robotCircumference*65/360);
         int fLDistanceEncoders = fL.getCurrentPosition() + encoderTarget;
         int fRDistanceEncoders = fR.getCurrentPosition() + encoderTarget;
 
