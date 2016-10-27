@@ -138,17 +138,17 @@ public class HardwareOmegas
 
         while (true) {
             if (timePushed.milliseconds() < milliseconds) {
-                postionServo(beaconator, 1.0);
+                positionServo(beaconator, 1.0);
             } else if (timePushed.milliseconds() < milliseconds * 2) {
                 retractServo(beaconator);
             } else {
-                postionServo(beaconator, 0.0);
+                positionServo(beaconator, 0.0);
                 return;
             }
         }
     }
 
-    public void postionServo(Servo beaconator, double pos) {
+    public void positionServo(Servo beaconator, double pos) {
         beaconator.setDirection(Servo.Direction.FORWARD);
         beaconator.setPosition(Math.abs(pos));
     }

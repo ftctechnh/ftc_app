@@ -109,16 +109,16 @@ public abstract class OmegasAutonomous extends LinearOpMode {
     public void pushBeacon(int leftValue, int rightValue) {
         // Cease beaconator motion
         if (rightValue >= 10 && leftValue >= 10) {
-            Ω.postionServo(Ω.leftBeaconator, 0.0);
-            Ω.postionServo(Ω.rightBeaconator, 0.0);
+            Ω.positionServo(Ω.leftBeaconator, 0.0);
+            Ω.positionServo(Ω.rightBeaconator, 0.0);
         }
 
         // Press alliance's button
         if (leftValue >= 10 && rightValue <= 10) {
-            Ω.postionServo(Ω.leftBeaconator, 1.0);
+            Ω.positionServo(Ω.leftBeaconator, 1.0);
             Ω.retractServo(Ω.rightBeaconator);
         } else if (leftValue <= 10 && rightValue >= 10) {
-            Ω.postionServo(Ω.rightBeaconator, 1.0);
+            Ω.positionServo(Ω.rightBeaconator, 1.0);
             Ω.retractServo(Ω.leftBeaconator);
         }
     }
