@@ -75,7 +75,7 @@ public abstract class OmegasAutonomous extends LinearOpMode {
             telemetry.addData("Right color sensor red: ", Ω.rightColorSensor.red());
             telemetry.update();
 
-            double currentPower = (runtime.milliseconds() < 7000) ? 1.0 : (runtime.milliseconds() > 10000) ? 1.0 : 0.0;
+            double currentPower = (runtime.milliseconds() < 3000) ? 1.0 : (runtime.milliseconds() > 10000) ? 1.0 : 0.0;
             for (DcMotor motor : Ω.motors) {
                 motor.setPower(currentPower);
             }
