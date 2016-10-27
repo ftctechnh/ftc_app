@@ -78,8 +78,6 @@ import java.util.List;
  * is explained below.
  */
 
-@Autonomous(name="Vuforia Tracker", group ="OpModes")
-@Disabled
 public class VuforiaTracker implements Tracker {
 
     public static final String TAG = "Vuforia Tracker";

@@ -30,7 +30,7 @@ public class ProtobotAuto extends RobotOp {
         robot.backRight.setDirection(DcMotorSimple.Direction.FORWARD);
         robot.backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        Route happyTrail = new Route();
+        /*Route happyTrail = new Route();
 
 
         ConcurrentTaskSet forward = new ConcurrentTaskSet(
@@ -50,7 +50,7 @@ public class ProtobotAuto extends RobotOp {
 
         happyTrail.addTask(forward);
 
-        addRoute(happyTrail);
+        addRoute(happyTrail);*/
 
         addTracker(new VuforiaTracker());
 
