@@ -21,16 +21,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  *
  */
 
-@TeleOp(name = "TestVuforia", group = "Concept")
+@TeleOp(name = "VuforiaTest", group = "Concept")
 public class VuforiaTest extends LinearOpMode
 {
     // Variables to be used for later
     VuforiaLocalizer vuforiaLocalizer;
     VuforiaLocalizer.Parameters parameters;
     VuforiaTrackables visionTargets;
-    VuforiaTrackable target;
-    VuforiaTrackableDefaultListener listener;
-
+    VuforiaTrackable wheelsTarget, toolsTarget, legosTarget, gearsTarget;
+    VuforiaTrackableDefaultListener wheelsListener, toolsListener, legosListener, gearsListener;
     OpenGLMatrix lastKnownLocation;
     OpenGLMatrix phoneLocation;
 
@@ -52,18 +51,67 @@ public class VuforiaTest extends LinearOpMode
         while(opModeIsActive())
         {
             // Ask the listener for the latest information on where the robot is
-            OpenGLMatrix latestLocation = listener.getUpdatedRobotLocation();
+            if (wheelsListener.isVisible()) {
+                OpenGLMatrix latestLocation = wheelsListener.getUpdatedRobotLocation();
 
-            // The listener will sometimes return null, so we check for that to prevent errors
-            if(latestLocation != null)
-                lastKnownLocation = latestLocation;
+                // The listener will sometimes return null, so we check for that to prevent errors
+                if (latestLocation != null)
+                    lastKnownLocation = latestLocation;
 
-            // Send information about whether the target is visible, and where the robot is
-            telemetry.addData("Tracking " + target.getName(), listener.isVisible());
-            telemetry.addData("Last Known Location", formatMatrix(lastKnownLocation));
+                // Send information about whether the target is visible, and where the robot is
+                telemetry.addData("Tracking " + wheelsTarget.getName(), wheelsListener.isVisible());
+                telemetry.addData("Last Known Location", formatMatrix(lastKnownLocation));
+            }
+            else if (toolsListener.isVisible())
+            {
+                OpenGLMatrix latestLocation = toolsListener.getUpdatedRobotLocation();
 
-            // Send telemetry and idle to let hardware catch up
+                // The listener will sometimes return null, so we check for that to prevent errors
+                if (latestLocation != null)
+                    lastKnownLocation = latestLocation;
+
+                // Send information about whether the target is visible, and where the robot is
+                telemetry.addData("Tracking " + toolsTarget.getName(), toolsListener.isVisible());
+                telemetry.addData("Last Known Location", formatMatrix(lastKnownLocation));
+            }
+            else if (legosListener.isVisible())
+            {
+                OpenGLMatrix latestLocation = legosListener.getUpdatedRobotLocation();
+
+                // The listener will sometimes return null, so we check for that to prevent errors
+                if (latestLocation != null)
+                    lastKnownLocation = latestLocation;
+
+                // Send information about whether the target is visible, and where the robot is
+                telemetry.addData("Tracking " + legosTarget.getName(), legosListener.isVisible());
+                telemetry.addData("Last Known Location", formatMatrix(lastKnownLocation));
+            }
+            else if (gearsListener.isVisible())
+            {
+                OpenGLMatrix latestLocation = gearsListener.getUpdatedRobotLocation();
+
+                // The listener will sometimes return null, so we check for that to prevent errors
+                if (latestLocation != null)
+                    lastKnownLocation = latestLocation;
+
+                // Send information about whether the target is visible, and where the robot is
+                telemetry.addData("Tracking " + gearsTarget.getName(), gearsListener.isVisible());
+                telemetry.addData("Last Known Location", formatMatrix(lastKnownLocation));
+            }
+            else
+            {
+                OpenGLMatrix latestLocation = wheelsListener.getUpdatedRobotLocation();
+
+                // The listener will sometimes return null, so we check for that to prevent errors
+                if (latestLocation != null)
+                    lastKnownLocation = latestLocation;
+
+                // Send information about whether the target is visible, and where the robot is
+                telemetry.addData("no targets in sight", null);
+                telemetry.addData("Last Known Location", formatMatrix(lastKnownLocation));
+            }
             telemetry.update();
+            telemetry.addData(getXLocation(lastKnownLocation) +" " +  getYLocation(lastKnownLocation), 00);
             idle();
         }
     }
@@ -81,16 +129,36 @@ public class VuforiaTest extends LinearOpMode
         visionTargets = vuforiaLocalizer.loadTrackablesFromAsset("FTC_2016-17");
 
         // Setup the target to be tracked
-        target = visionTargets.get(0); // 0 corresponds to the wheels target
-        target.setName("Wheels Target");
-        target.setLocation(createMatrix(0, 500, 0, 90, 0, 90));
+        wheelsTarget = visionTargets.get(0); // 0 corresponds to the wheels target
+        wheelsTarget.setName("Wheels Target");
+        wheelsTarget.setLocation(createMatrix(0, 1981, 0, 90, 0, 90));
 
+        toolsTarget = visionTargets.get(1);
+        toolsTarget.setName("Tools Target");
+        toolsTarget.setLocation(createMatrix(914, 0, 0, 90, 0, 180));
+
+        legosTarget = visionTargets.get(2);
+        legosTarget.setName("Legos Target");
+        legosTarget.setLocation(createMatrix(0, 914, 0, 90, 0, 90));
+
+        gearsTarget = visionTargets.get(3);
+        gearsTarget.setName("Gears Target");
+        gearsTarget.setLocation(createMatrix(1981, 0, 0, 90, 0, 180));
         // Set phone location on robot
         phoneLocation = createMatrix(0, 225, 0, 90, 0, 0);
 
         // Setup listener and inform it of phone information
-        listener = (VuforiaTrackableDefaultListener) target.getListener();
-        listener.setPhoneInformation(phoneLocation, parameters.cameraDirection);
+        wheelsListener = (VuforiaTrackableDefaultListener) wheelsTarget.getListener();
+        wheelsListener.setPhoneInformation(phoneLocation, parameters.cameraDirection);
+
+        toolsListener = (VuforiaTrackableDefaultListener) toolsTarget.getListener();
+        toolsListener.setPhoneInformation(phoneLocation, parameters.cameraDirection);
+
+        legosListener = (VuforiaTrackableDefaultListener) legosTarget.getListener();
+        legosListener.setPhoneInformation(phoneLocation, parameters.cameraDirection);
+
+        gearsListener = (VuforiaTrackableDefaultListener) gearsTarget.getListener();
+        gearsListener.setPhoneInformation(phoneLocation, parameters.cameraDirection);
     }
 
     // Creates a matrix for determining the locations and orientations of objects
@@ -107,4 +175,17 @@ public class VuforiaTest extends LinearOpMode
     {
         return matrix.formatAsTransform();
     }
+
+    public double getXLocation(OpenGLMatrix matrix) //returns x value
+    {
+        float[] robotLocationArray = matrix.getData();
+        return robotLocationArray[12];
+    }
+
+    public double getYLocation(OpenGLMatrix matrix) //Returns y value
+    {
+        float[] robotLocationArray = matrix.getData();
+        return robotLocationArray[13];
+    }
+
 }
