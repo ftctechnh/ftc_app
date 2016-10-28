@@ -1,7 +1,8 @@
-package org.firstinspires.ftc.robotcontroller.internal.Devices;
+package org.firstinspires.ftc.robotcontroller.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import org.firstinspires.ftc.robotcontroller.internal.Devices.DriveSystem;
 
 /**
  * Created by abnaveed on 10/13/2016.
@@ -11,8 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class TeleOp extends OpMode
 {
     // TeleOp
-    public DcMotor leftMotor = null;
-    public DcMotor rightMotor = null;
+    DriveSystem robot = null;
 
     @Override
     public void init()
@@ -26,8 +26,10 @@ public class TeleOp extends OpMode
         // Getting joystick values
         double leftJoystick = gamepad1.left_stick_y;
         double rightJoystick = gamepad1.right_stick_y;
+        double convertedPower_Left = leftJoystick*100;
+        double convertedPower_Right = rightJoystick*100;
         // Converting joystick values to motor power values
-        rightMotor.setPower(rightJoystick);
-        leftMotor.setPower(leftJoystick);
+        robot.setPower(convertedPower_Left,convertedPower_Right);
+
     }
 }

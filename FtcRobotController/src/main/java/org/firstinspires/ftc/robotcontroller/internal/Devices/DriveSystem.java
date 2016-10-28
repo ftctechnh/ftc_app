@@ -1,4 +1,4 @@
-// Created by Adam Sweiger on 10/22/16
+package org.firstinspires.ftc.robotcontroller.internal.Devices;// Created by Adam Sweiger on 10/22/16
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -19,7 +19,7 @@ public class DriveSystem
     }
 
     // Sets power of the two left motors
-    public synchronized void setLeft(int power)
+    public synchronized void setLeft(double power)
     {
         double convertedPower = ((double)power)/100.0;
         // for each motor in leftMotors
@@ -30,7 +30,7 @@ public class DriveSystem
     }
 
     // Sets power of the two right motors
-    public synchronized void setRight(int power)
+    public synchronized void setRight(double power)
     {
         double convertedPower = ((double)power)/100.0;
         // for each motor in RightMotors
@@ -39,8 +39,10 @@ public class DriveSystem
             motor.setPower(convertedPower);
         }
     }
-    public synchronized void setPower(int leftPower, int rightPower)
+    public synchronized void setPower(double leftPower, double rightPower)
     {
+        setLeft(leftPower);
+        setRight(rightPower);
 
     }
 }
