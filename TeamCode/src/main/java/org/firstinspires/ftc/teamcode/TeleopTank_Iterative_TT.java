@@ -56,7 +56,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 @TeleOp(name="Pushbot: Teleop Tank", group="Pushbot")
 @Disabled
-public class PushbotTeleopTank_Iterative_TT extends OpMode{
+public class TeleopTank_Iterative_TT extends OpMode{
 
     /* Declare OpMode members. */
     HardwarePushbot_TT robot       = new HardwarePushbot_TT(); // use the class created to define a Pushbot's hardware
