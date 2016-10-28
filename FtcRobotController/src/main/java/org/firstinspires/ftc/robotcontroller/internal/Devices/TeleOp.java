@@ -8,10 +8,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  */
 public class TeleOp extends OpMode {
     // TeleOp class
-
-
-
-
     public DcMotor  leftMotor   = null;
     public DcMotor  rightMotor  = null;
 
@@ -19,7 +15,6 @@ public class TeleOp extends OpMode {
     public void init() {
 
     }
-
     @Override
     public void loop() {
         double Left_Joystick = -gamepad1.left_stick_y;
