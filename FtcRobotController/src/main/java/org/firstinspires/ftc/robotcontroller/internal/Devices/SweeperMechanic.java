@@ -8,5 +8,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class SweeperMechanic {
-    private axelRotation
+    public DcMotor[] axelRotation;
+    
 }
