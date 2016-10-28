@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -18,6 +19,7 @@ import com.qualcomm.robotcore.hardware.ServoController;
 /**
  * Created by FTC Team 4799-4800 on 10/13/2016.
  */
+
 @Autonomous(name = "DemoAuto", group = "")
 public class DemoAuto extends OpMode {
     DcMotorController wheelControllerLeft;
@@ -26,36 +28,70 @@ public class DemoAuto extends OpMode {
     DcMotorController wheelControllerRight;
     DcMotor motorBackRight;
     DcMotor motorFrontRight;
-    DcMotor arm;
-    DcMotorController armController;
-    ServoController hand;
-    Servo leftFinger;
-    Servo rightFinger;
-
-
-
+    ColorSensor cs;
+    ColorSensor cs2;
+    Servo buttonPusher;
+    double time;
+    boolean timeSet = false;
+    boolean followTime = false;
     public void init() {
         motorBackRight = hardwareMap.dcMotor.get("RightBack");
         motorFrontRight = hardwareMap.dcMotor.get("RightFront");
         motorBackLeft = hardwareMap.dcMotor.get("LeftBack");
         motorFrontLeft = hardwareMap.dcMotor.get("LeftFront");
-        arm = hardwareMap.dcMotor.get("Arm1");
-        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         wheelControllerRight = hardwareMap.dcMotorController.get("Right");
         wheelControllerLeft = hardwareMap.dcMotorController.get("Left");
-        armController = hardwareMap.dcMotorController.get("Arm");
-        hand = hardwareMap.servoController.get("Hand");
-        rightFinger = hardwareMap.servo.get("RightFinger");
-        leftFinger = hardwareMap.servo.get("LeftFinger");
-        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        cs = hardwareMap.colorSensor.get("cs");
+        cs2 = hardwareMap.colorSensor.get("cs2");
+        buttonPusher = hardwareMap.servo.get("buttonPusher");
+
+
+
     }
 
     public void loop() {
-        if (Math.abs(arm.getCurrentPosition()-1000)<50)
-            arm.setPower(0);
-        else
-            arm.setPower(1);
-        arm.setTargetPosition(1000);
+        if (Math.abs(6000-motorBackLeft.getCurrentPosition())>100) {
+            motorBackLeft.setPower(-1);
+            motorBackRight.setPower(1);
+            motorFrontLeft.setPower(-1);
+            motorFrontRight.setPower(1);
+            if (cs.blue()>20) {
+                motorBackLeft.setPower(-.5);
+                motorBackRight.setPower(1);
+                motorFrontLeft.setPower(-.5);
+                motorFrontRight.setPower(1);
+                followTime = true;
+            }
+            else if (followTime){
+                motorBackLeft.setPower(-1);
+                motorBackRight.setPower(.5);
+                motorFrontLeft.setPower(-1);
+                motorFrontRight.setPower(.5);
+            }
+        }
+        else{
+            motorBackLeft.setPower(0);
+            motorBackRight.setPower(0);
+            motorFrontLeft.setPower(0);
+            motorFrontRight.setPower(0);
+        }
+
+        if (cs2.red()>200 || cs2.blue()>200){
+            if (cs2.red()>200)
+                buttonPusher.setPosition(-1);
+            else
+                buttonPusher.setPosition(1);
+            if (timeSet == false){
+                time = getRuntime();
+                timeSet = true;
+            }
+            if (time != 0 && getRuntime()-time>2) {
+                motorBackLeft.setPower(-1);
+                motorBackRight.setPower(1);
+                motorFrontLeft.setPower(-1);
+                motorFrontRight.setPower(1);
+            }
+        }
     }
 }
 
