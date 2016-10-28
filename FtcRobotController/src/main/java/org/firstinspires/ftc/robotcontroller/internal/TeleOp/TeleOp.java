@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.robotcontroller.internal.Devices;
+package org.firstinspires.ftc.robotcontroller.internal.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -30,4 +30,5 @@ public class TeleOp extends OpMode
         rightMotor.setPower(rightJoystick);
         leftMotor.setPower(leftJoystick);
     }
+
 }
