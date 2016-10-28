@@ -57,15 +57,16 @@ public class HardwarePushbot_TT
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        frontLeftMotor   = hwMap.dcMotor.get("left_drive");
-        backLeftMotor  = hwMap.dcMotor.get("left_drive");
-        frontRightMotor   = hwMap.dcMotor.get("right_drive");
-        backRightMotor  = hwMap.dcMotor.get("right_drive");
+        frontLeftMotor   = hwMap.dcMotor.get("FrontLeft");
+        backLeftMotor  = hwMap.dcMotor.get("BackLeft");
+        frontRightMotor   = hwMap.dcMotor.get("FrontRight");
+        backRightMotor  = hwMap.dcMotor.get("BackRight");
         //armMotor    = hwMap.dcMotor.get("left_arm");
-        frontLeftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        backLeftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        frontRightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        backRightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+
+        backLeftMotor.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
+        frontRightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to REVERSE if using AndyMark motors
+        //backRightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to REVERSE if using AndyMark motors
+        //frontLeftMotor.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
 
         // Set all motors to zero power
         frontLeftMotor.setPower(0);
