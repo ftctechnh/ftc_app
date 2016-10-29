@@ -68,8 +68,8 @@ public class RegisterOpModes
     Or add your own lines to register your Team opmodes.
     */
       manager.register("MasterClass", MasterClass.class);
-
       manager.register("AutonomousTest", AutonomousTest.class);
+
       manager.register("AutoByEncoder_Linear_TT",AutoByEncoder_Linear_TT.class);
       manager.register("TeleopTank_Iterative_TT",TeleopTank_Iterative_TT.class);
     // Basic Templates
