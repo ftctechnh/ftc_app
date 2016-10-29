@@ -1,0 +1,52 @@
+From 0ac0e23f602289fbbad7fde92ad7214ccedf6695 Mon Sep 17 00:00:00 2001
+From: Eli Joesph Bradley <elijos03@gmail.com>
+Date: Sat, 29 Oct 2016 10:39:55 -0500
+Subject: [PATCH] Tetrix Ranger restrictions
+
+Signed-off-by: Eli Joesph Bradley <elijos03@gmail.com>
+---
+ .../java/org/firstinspires/ftc/omegas/HardwareOmegas.java  | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/Omegas/src/main/java/org/firstinspires/ftc/omegas/HardwareOmegas.java b/Omegas/src/main/java/org/firstinspires/ftc/omegas/HardwareOmegas.java
+index 60d10be..44ce10b 100644
+--- a/Omegas/src/main/java/org/firstinspires/ftc/omegas/HardwareOmegas.java
++++ b/Omegas/src/main/java/org/firstinspires/ftc/omegas/HardwareOmegas.java
+@@ -56,27 +56,27 @@ public class HardwareOmegas
+ 
+         // Define and Initialize Motors
+         leftFrontMotor  = hwMap.dcMotor.get("left_front");
+-        leftBackMotor   = hwMap.dcMotor.get("left_back");
++//        leftBackMotor   = hwMap.dcMotor.get("left_back");
+         rightFrontMotor = hwMap.dcMotor.get("right_front");
+-        rightBackMotor  = hwMap.dcMotor.get("right_back");
++//        rightBackMotor  = hwMap.dcMotor.get("right_back");
+ 
+         motors = new ArrayList<DcMotor>(){
+             {
+                 add(leftFrontMotor);
+-                add(leftBackMotor);
++//                add(leftBackMotor);
+                 add(rightFrontMotor);
+-                add(rightBackMotor);
++//                add(rightBackMotor);
+             }
+         };
+ 
+         leftFrontMotor.setDirection(DcMotor.Direction.FORWARD);  // Set to REVERSE if using AndyMark motors
+-        leftBackMotor.setDirection(DcMotor.Direction.FORWARD);   // Set to REVERSE if using AndyMark motors
++//        leftBackMotor.setDirection(DcMotor.Direction.FORWARD);   // Set to REVERSE if using AndyMark motors
+         rightFrontMotor.setDirection(DcMotor.Direction.REVERSE); // Set to FORWARD if using AndyMark motors
+-        rightBackMotor.setDirection(DcMotor.Direction.REVERSE);  // Set to FORWARD if using AndyMark motors
++//        rightBackMotor.setDirection(DcMotor.Direction.REVERSE);  // Set to FORWARD if using AndyMark motors
+ 
+         // Connect to servo (Assume PushBot Left Hand)
+         // Change the text in quotes to match any servo name on your robot.
+-        leftBeaconator = hwMap.servo.get("left_beaconator");
++//        leftBeaconator = hwMap.servo.get("left_beaconator");
+ //        rightBeaconator = hwMap.servo.get("right_beaconator");
+ 
+ //        leftColorSensor = hwMap.colorSensor.get("left_color_sensor");
+-- 
+2.10.1
+
