@@ -75,7 +75,7 @@ public class TouchTest extends LinearOpMode {
 
     // wait for the start button to be pressed.
     telemetry.addData("", "Test program for touch sensor");
-    telemetry.addData("", "Uses Device Interface Modeule <dim> with <touch0> sensor");
+    telemetry.addData("", "Uses Device Interface Modeule <dim> with <touch> sensor");
     telemetry.update();
     waitForStart();
 
