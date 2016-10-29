@@ -10,12 +10,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 /**
- * Created by Noah on 10/23/2016.
+ * Created by Noah on 10/29/2016.
  */
 
-@TeleOp(name="{InsertCleverName}", group="Normal_OpMode")
+@TeleOp(name="ColorTest", group="ColorTests")
 
-public class Noah_10_2_16_Thing extends OpMode {
+public class NoahColorSensorUser extends OpMode {
     DcMotor left;
     DcMotor right;
     Servo front;
@@ -56,7 +56,7 @@ public class Noah_10_2_16_Thing extends OpMode {
             left.setPower(leftDC);
             right.setPower(rightDC);}
         beaconBumper.setPosition(leftInput);
-       telemetry.addData("beaconBumper",beaconBumper.getPosition());
+        telemetry.addData("beaconBumper",beaconBumper.getPosition());
         telemetry.addData("blue",cory.blue());
         telemetry.addData("red",cory.red());
         telemetry.addData("alpha",cory.alpha());
@@ -64,7 +64,7 @@ public class Noah_10_2_16_Thing extends OpMode {
         telemetry.update();
 
 
-
-
     }
 }
+
+
