@@ -8,7 +8,7 @@ import org.firstinspires.ftc.omegas.OmegasAlliance;
  * Created by ethertyper on 10/14/16.
  */
 
-@Autonomous(name = "Red Alliance: Beacon Pusher", group = "Linear Opmode")
+@Autonomous(name = "Omegas: Red Alliance Autonomous Controls", group = "Linear Opmode")
 public class AutonomousRed extends OmegasAutonomous {
     public OmegasAlliance getColor() { return OmegasAlliance.RED; }
 }

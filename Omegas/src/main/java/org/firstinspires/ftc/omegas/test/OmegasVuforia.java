@@ -86,7 +86,7 @@ import java.util.List;
  * is explained below.
  */
 
-@Autonomous(name="Concept: Vuforia Navigation", group ="Concept")
+@Autonomous(name = "Omegas: Vuforia Navigation", group = "Tests")
 public class OmegasVuforia extends LinearOpMode {
 
     public static final String TAG = "Vuforia Sample";

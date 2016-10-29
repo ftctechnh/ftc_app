@@ -11,7 +11,7 @@ import org.firstinspires.ftc.omegas.HardwareOmegas;
  * Created by ethertyper on 10/29/16.
  */
 
-@TeleOp(name = "Test: Textrix Ranger", group = "Test")
+@TeleOp(name = "Tetrix Ranger: Drive Test", group = "Tests")
 public class OmegasRanger extends LinearOpMode {
 
     /* Declare OpMode members. */
