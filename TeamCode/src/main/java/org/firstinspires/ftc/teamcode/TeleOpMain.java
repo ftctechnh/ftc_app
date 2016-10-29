@@ -12,10 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 //@Disabled
 public class TeleOpMain extends OpMode {
 
-    DcMotor frontLeftMotor;
-    DcMotor frontRightMotor;
-    DcMotor backLeftMotor;
-    DcMotor backRightMotor;
+    BotHardware robot = new BotHardware();
 
     @Override
     public void init() {
@@ -23,16 +20,7 @@ public class TeleOpMain extends OpMode {
         telemetry.addData("Status", "Initialized");
 
         // hardware maps
-        frontLeftMotor = hardwareMap.dcMotor.get("front_left");
-        frontRightMotor = hardwareMap.dcMotor.get("front_right");
-        backLeftMotor = hardwareMap.dcMotor.get("back_left");
-        backRightMotor = hardwareMap.dcMotor.get("back_right");
-
-        // change directions if necessary
-        frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
-        frontRightMotor.setDirection(DcMotor.Direction.FORWARD);
-        backLeftMotor.setDirection(DcMotor.Direction.REVERSE);
-        backRightMotor.setDirection(DcMotor.Direction.FORWARD);
+        robot.init(hardwareMap);
     }
 
     @Override
@@ -99,20 +87,20 @@ public class TeleOpMain extends OpMode {
         }
         else {
             // joystick tank steering
-            frontLeftMotor.setPower(gamepad1.left_stick_y);
-            frontRightMotor.setPower(gamepad1.right_stick_y);
-            backLeftMotor.setPower(gamepad1.left_stick_y);
-            backRightMotor.setPower(gamepad1.right_stick_y);
+            robot.frontLeftMotor.setPower(gamepad1.left_stick_y);
+            robot.frontRightMotor.setPower(gamepad1.right_stick_y);
+            robot.backLeftMotor.setPower(gamepad1.left_stick_y);
+            robot.backRightMotor.setPower(gamepad1.right_stick_y);
         }
     }
 
     protected void setFrontPower(float power) {
-        frontLeftMotor.setPower(power);
-        frontRightMotor.setPower(power);
+        robot.frontLeftMotor.setPower(power);
+        robot.frontRightMotor.setPower(power);
     }
 
     protected void setBackPower(float power) {
-        backLeftMotor.setPower(power);
-        backRightMotor.setPower(power);
+        robot.backLeftMotor.setPower(power);
+        robot.backRightMotor.setPower(power);
     }
 }
