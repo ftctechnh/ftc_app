@@ -79,7 +79,7 @@ public class CakePushbotTeleopTank_Iterative extends OpMode {
          */
         robot.init(hardwareMap); //Maps hardware
         robot.pushLeft.setPosition(1);
-        robot.pushRight.setPosition(1);
+        robot.pushRight.setPosition(-1);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");    //
@@ -122,8 +122,12 @@ public class CakePushbotTeleopTank_Iterative extends OpMode {
         telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
         telemetry.update();
         //}
-
-
+        if (gamepad1.a) {
+            robot.pushRight.setPosition(1);
+        }
+        if (gamepad1.b) {
+            robot.pushLeft.setPosition(-1);
+        }
         if (gamepad1.left_bumper) {
             robot.forkRight.setPower(.5);//Forklift in
             robot.forkLeft.setPower(.5);//Forklift out
