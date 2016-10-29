@@ -32,8 +32,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
-import android.graphics.Path;
-
 import com.qualcomm.ftcrobotcontroller.R;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -226,15 +224,15 @@ public class OpmodeVuforiaNavigationTest1 extends OpMode {
          * In a real situation we'd also account for the vertical (Z) offset of the target,
          * but for simplicity, we ignore that here; for a real robot, you'll want to fix that.
          *
-         * To place the Wheels Target on the 1st Audience wall:
+         * To place the Wheels Target on the wall:
          * - First we rotate it 90 around the field's X axis to flip it upright
-         * - Then we rotate it 90 around the field's Z access to face it away from the audience.
-         * - Finally, we translate it back along the X axis towards the red audience wall.
+         * - Then we rotate it 90 around the field's Z axis to align it with the correct wall.
+         * - Finally, we translate it in X and Y to its position on the wall.
          */
         OpenGLMatrix wheelsTargetLocationOnField = OpenGLMatrix
                 /* Then we translate the target off to the RED WALL. Our translation here
                 is a negative translation in X.*/
-                .translation(-mmFTCFieldWidth / 2, 0, 0)
+                .translation(-mmFTCFieldWidth/2, mmFTCFieldWidth/12, 0)
                 .multiplied(Orientation.getRotationMatrix(
                         /* First, in the fixed (field) coordinate system, we rotate 90deg in X, then 90 in Z */
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
@@ -243,48 +241,49 @@ public class OpmodeVuforiaNavigationTest1 extends OpMode {
         RobotLog.ii(TAG, "Wheels Target=%s", format(wheelsTargetLocationOnField));
 
        /*
-        * To place the Tools Target on the 2nd Audience wall:
+        * To place the Tools Target on the wall:
         * - First we rotate it 90 around the field's X axis to flip it upright
-        * - Finally, we translate it along the Y axis towards the blue audience wall.
-        */
+        * - Then we rotate it 180 around the field's Z axis to align it with the correct wall.
+        * - Finally, we translate it in X and Y to its position on the wall.
+      */
         OpenGLMatrix toolsTargetLocationOnField = OpenGLMatrix
                 /* Then we translate the target off to the Blue Audience wall.
                 Our translation here is a positive translation in Y.*/
-                .translation(0, mmFTCFieldWidth / 2, 0)
+                .translation(-mmFTCFieldWidth/4, -mmFTCFieldWidth/2, 0)
                 .multiplied(Orientation.getRotationMatrix(
                         /* First, in the fixed (field) coordinate system, we rotate 90deg in X */
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
-                        AngleUnit.DEGREES, 90, 0, 0));
+                        AngleUnit.DEGREES, 90, 180, 0));
         toolsTarget.setLocation(toolsTargetLocationOnField);
         RobotLog.ii(TAG, "Tools Target=%s", format(toolsTargetLocationOnField));
 
         /*
-        * To place the Legos Target on the 3rd Audience wall:
+        * To place the Legos Target on the wall:
         * - First we rotate it 90 around the field's X axis to flip it upright
-        * - Then we rotate it  -90 around the field's Z access to face it away from the audience.
-        * - Finally, we translate it along the X axis towards the blue audience wall.
+        * - Then we rotate it 90 around the field's Z axis to align it with the correct wall.
+        * - Finally, we translate it in X and Y to its position on the wall.
         */
         OpenGLMatrix legosTargetLocationOnField = OpenGLMatrix
                 /* Then we translate the target off to the Blue Audience wall.
                 Our translation here is a positive translation in Y.*/
-                .translation(mmFTCFieldWidth / 2, 0, 0)
+                .translation(-mmFTCFieldWidth/2, -mmFTCFieldWidth/4, 0)
                 .multiplied(Orientation.getRotationMatrix(
                         /* First, in the fixed (field) coordinate system, we rotate 90deg in X */
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
-                        AngleUnit.DEGREES, 90, -90, 0));
+                        AngleUnit.DEGREES, 90, 90, 0));
         legosTarget.setLocation(legosTargetLocationOnField);
         RobotLog.ii(TAG, "Legos Target=%s", format(legosTargetLocationOnField));
 
         /*
-        * To place the Gears Target on the 4th wall:
+        * To place the Gears Target on the wall:
         * - First we rotate it 90 around the field's X axis to flip it upright
-        * - Then we rotate it 180 around the field's Z access to face it away from the audience.
-        * - Finally, we translate it along the -Y axis towards the blue audience wall.
+        * - Then we rotate it 180 around the field's Z axis to align it with the correct wall.
+        * - Finally, we translate it in X and Y to its position on the wall.
         */
         OpenGLMatrix gearsTargetLocationOnField = OpenGLMatrix
                 /* Then we translate the target off to the Blue Audience wall.
                 Our translation here is a positive translation in Y.*/
-                .translation(0, -mmFTCFieldWidth / 2, 0)
+                .translation(mmFTCFieldWidth/12, -mmFTCFieldWidth/2, 0)
                 .multiplied(Orientation.getRotationMatrix(
                         /* First, in the fixed (field) coordinate system, we rotate 90deg in X */
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
@@ -294,9 +293,11 @@ public class OpmodeVuforiaNavigationTest1 extends OpMode {
 
         /**
          * Create a transformation matrix describing where the phone is on the robot. Here, we
-         * put the phone on the right hand side of the robot with the screen facing in (see our
+         * put the phone with the back camera facing the front of the robot (see our
          * choice of BACK camera above) and in landscape mode. Starting from alignment between the
-         * robot's and phone's axes, this is a rotation of -90deg along the Y axis.
+         * robot's and phone's axes, assumed to be phone lying on the robot in portrait mode with
+         * the long axis point at the front of the robot this is a rotation of -90deg around the Y axis
+         * followed by 90 around Z, where robot axes are x->right, y->front, z->up.
          *
          * When determining whether a rotation is positive or negative, consider yourself as looking
          * down the (positive) axis of rotation from the positive towards the origin. Positive rotations
@@ -305,10 +306,10 @@ public class OpmodeVuforiaNavigationTest1 extends OpMode {
          * plane) is then CCW, as one would normally expect from the usual classic 2D geometry.
          */
         OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
-                .translation(mmBotWidth / 2, 0, 0)
+                .translation(0, 0, 0)
                 .multiplied(Orientation.getRotationMatrix(
-                        AxesReference.EXTRINSIC, AxesOrder.YZY,
-                        AngleUnit.DEGREES, -90, 0, 0));
+                        AxesReference.EXTRINSIC, AxesOrder.YZX,
+                        AngleUnit.DEGREES, -90, 90, 0));
         RobotLog.ii(TAG, "phone=%s", format(phoneLocationOnRobot));
 
         /**
@@ -358,43 +359,20 @@ public class OpmodeVuforiaNavigationTest1 extends OpMode {
                 telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible() ? "Visible" : "Not Visible");    //
 
                 OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
-
-
                 if (robotLocationTransform != null) {
                     lastLocation = robotLocationTransform;
-
-                    OpenGLMatrix temp2 = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
-
-                    float ray[] = new float[3];
-                    boolean worked = false;
-
-                    try{
-                        VectorF temp = temp2.getTranslation();
-                        ray = temp.getData();
-                        worked = true;
-                    }
-                    catch (Exception e){
-                        telemetry.addData("No Position", 1);
-                    }
-
-                    if(worked){
-                        telemetry.addData("No Position", 0);
-                        for(int i = 0; i < ray.length; i++){
-                            telemetry.addData("Pos " + i, ray[i]);
-                        }
-                    }
-
                 }
-
             }
             /**
              * Provide feedback as to where the robot was last located (if we know).
              */
             if (lastLocation != null) {
                 //  RobotLog.vv(TAG, "robot=%s", format(lastLocation));
-                //telemetry.addData("Pos", format(lastLocation));
+                telemetry.addData("Position:", formatPosition(lastLocation));
+                telemetry.addData("Orientation:", formatOrientation(lastLocation));
             } else {
-                //telemetry.addData("Pos", "Unknown");
+                telemetry.addData("Position:", "Unknown");
+                telemetry.addData("Orientation:", "Unknown");
             }
     }
 
@@ -403,10 +381,23 @@ public class OpmodeVuforiaNavigationTest1 extends OpMode {
     }
 
     /**
-     * A simple utility that extracts positioning information from a transformation matrix
-     * and formats it in a form palatable to a human being.
+     * Some simple utilities that extract information from a transformation matrix
+     * and format it in a form palatable to a human being.
      */
     String format(OpenGLMatrix transformationMatrix) {
-        return transformationMatrix.formatAsTransform();
+        //return transformationMatrix.formatAsTransform();
+        VectorF translation = transformationMatrix.getTranslation();
+        Orientation orientation = Orientation.getOrientation(transformationMatrix, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+        return String.format("%s %s", translation.toString(), orientation.toString());
+    }
+    String formatPosition(OpenGLMatrix transformationMatrix) {
+        //return transformationMatrix.formatAsTransform();
+        VectorF translation = transformationMatrix.getTranslation();
+        return String.format("%s", translation.toString());
+    }
+    String formatOrientation(OpenGLMatrix transformationMatrix) {
+        //return transformationMatrix.formatAsTransform();
+        Orientation orientation = Orientation.getOrientation(transformationMatrix, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+        return String.format("%s", orientation.toString());
     }
 }
