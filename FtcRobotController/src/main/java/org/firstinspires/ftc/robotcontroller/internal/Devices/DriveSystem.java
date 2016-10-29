@@ -1,4 +1,4 @@
-// Created by Adam Sweiger on 10/22/16
+package org.firstinspires.ftc.robotcontroller.internal.Devices;// Created by Adam Sweiger on 10/22/16
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
