@@ -11,11 +11,11 @@ public class DriveSystem
     public DriveSystem(HardwareMap hardwareMap)
     {
         leftMotors = new DcMotor[2];
-        leftMotors[1] = hardwareMap.dcMotor.get("frontLeftDriveMotor");
-        leftMotors[2] = hardwareMap.dcMotor.get("backLeftDriveMotor");
+        leftMotors[0] = hardwareMap.dcMotor.get("frontLeftDriveMotor");
+        leftMotors[1] = hardwareMap.dcMotor.get("backLeftDriveMotor");
         rightMotors = new DcMotor[2];
-        rightMotors[1] = hardwareMap.dcMotor.get("frontRightDriveMotor");
-        rightMotors[2] = hardwareMap.dcMotor.get("backRightDriveMotor");
+        rightMotors[0] = hardwareMap.dcMotor.get("frontRightDriveMotor");
+        rightMotors[1] = hardwareMap.dcMotor.get("backRightDriveMotor");
     }
 
     // Sets power of the two left motors
