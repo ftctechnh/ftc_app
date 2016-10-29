@@ -9,5 +9,5 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class SweeperMechanic {
     public DcMotor[] axelRotation;
-    
+
 }
