@@ -41,33 +41,7 @@ public class TeleOpMain extends OpMode {
     @Override
     public void loop() {
 
-        // run drivetrain motors
-        /*if(gamepad1.dpad_left) {
-            frontLeftMotor.setPower(-1.0);
-            frontRightMotor.setPower(-1.0);
-            backLeftMotor.setPower(1.0);
-            backRightMotor.setPower(1.0);
-        }
-        else if(gamepad1.dpad_right) {
-            frontLeftMotor.setPower(1.0);
-            frontRightMotor.setPower(1.0);
-            backLeftMotor.setPower(-1.0);
-            backRightMotor.setPower(-1.0);
-        }
-        else if(gamepad1.x) {
-            frontLeftMotor.setPower(1.0);
-            frontRightMotor.setPower(1.0);
-            backLeftMotor.setPower(0.0);
-            backRightMotor.setPower(0.0);
-        }
-        else if(gamepad1.b) {
-            frontLeftMotor.setPower(0.0);
-            frontRightMotor.setPower(0.0);
-            backLeftMotor.setPower(1.0);
-            backRightMotor.setPower(1.0);
-        }*/
-        if(gamepad1.a) {
-            /*
+        /*
 
                          1,1,1,1
                             |
@@ -79,39 +53,66 @@ public class TeleOpMain extends OpMode {
                             |
                        -1,-1,-1,-1
 
-             */
+        float x = gamepad1.left_stick_x;
+        float y = -1 * gamepad1.left_stick_y;
 
-            float x = gamepad1.left_stick_x;
-            float y = -1 * gamepad1.left_stick_y;
+        float ySign = (y >= 0) ? 1 : -1;
 
-            float ySign = (y >= 0) ? 1 : -1;
+        float frontPower = (ySign * x > 0) ? ySign : (ySign * Math.abs(x) * -2 + ySign);
+        float backPower = (ySign * x < 0) ? ySign : (ySign * Math.abs(x) * -2 + ySign);
 
-            float frontPower = (ySign * x > 0) ? ySign : (ySign * Math.abs(x) * -2 + ySign);
-            float backPower = (ySign * x < 0) ? ySign : (ySign * Math.abs(x) * -2 + ySign);
+        */
 
-            // left and right edge cases don't work
-            //float frontPower = (ySign * x > 0) ? y : (y * Math.abs(x) * -2 + y);
-            //float backPower = (ySign * x < 0) ? y : (y * Math.abs(x) * -2 + y);
-
-            if(x == 0 && y == 0){
-                frontPower = 0;
-                backPower = 0;
-            }
-
-            telemetry.addData("front", frontPower);
-            telemetry.addData("back", backPower);
-
-            frontLeftMotor.setPower(frontPower);
-            frontRightMotor.setPower(frontPower);
-            backLeftMotor.setPower(backPower);
-            backRightMotor.setPower(backPower);
-
+        // run drivetrain motors
+        // dpad steering
+        if(gamepad1.dpad_up && gamepad1.dpad_left) {
+            setFrontPower(0.0f);
+            setBackPower(-1.0f);
+        }
+        else if(gamepad1.dpad_up && gamepad1.dpad_right) {
+            setFrontPower(-1.0f);
+            setBackPower(0.0f);
+        }
+        else if(gamepad1.dpad_down && gamepad1.dpad_left) {
+            setFrontPower(1.0f);
+            setBackPower(0.0f);
+        }
+        else if(gamepad1.dpad_down && gamepad1.dpad_right) {
+            setFrontPower(0.0f);
+            setBackPower(1.0f);
+        }
+        else if(gamepad1.dpad_up) {
+            setFrontPower(-1.0f);
+            setBackPower(-1.0f);
+        }
+        else if(gamepad1.dpad_left) {
+            setFrontPower(1.0f);
+            setBackPower(-1.0f);
+        }
+        else if(gamepad1.dpad_right) {
+            setFrontPower(-1.0f);
+            setBackPower(1.0f);
+        }
+        else if(gamepad1.dpad_down) {
+            setFrontPower(1.0f);
+            setBackPower(1.0f);
         }
         else {
+            // joystick tank steering
             frontLeftMotor.setPower(gamepad1.left_stick_y);
             frontRightMotor.setPower(gamepad1.right_stick_y);
             backLeftMotor.setPower(gamepad1.left_stick_y);
             backRightMotor.setPower(gamepad1.right_stick_y);
         }
+    }
+
+    protected void setFrontPower(float power) {
+        frontLeftMotor.setPower(power);
+        frontRightMotor.setPower(power);
+    }
+
+    protected void setBackPower(float power) {
+        backLeftMotor.setPower(power);
+        backRightMotor.setPower(power);
     }
 }
