@@ -43,6 +43,5 @@ public class DriveSystem
     {
         setLeft(leftPower);
         setRight(rightPower);
-
     }
 }
