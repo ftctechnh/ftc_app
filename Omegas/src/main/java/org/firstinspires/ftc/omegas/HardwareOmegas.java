@@ -79,7 +79,7 @@ public class HardwareOmegas
         leftBeaconator = hwMap.servo.get("left_beaconator");
 //        rightBeaconator = hwMap.servo.get("right_beaconator");
 
-        leftColorSensor = hwMap.colorSensor.get("left_color_sensor");
+//        leftColorSensor = hwMap.colorSensor.get("left_color_sensor");
 //        rightColorSensor = hwMap.colorSensor.get("right_color_sensor");
 
         // Set all motors to zero power, and to run without encoders.
