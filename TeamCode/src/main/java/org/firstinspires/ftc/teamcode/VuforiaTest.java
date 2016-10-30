@@ -106,7 +106,7 @@ public class VuforiaTest extends LinearOpMode
                 telemetry.addData("no targets in sight", null);
             }
             telemetry.update();
-            telemetry.addData( "X:"+ getXLocation(lastKnownLocation) +"  Y:" +  getYLocation(lastKnownLocation), 00);
+            telemetry.addData( "X:"+ convertInToMM(getXLocation(lastKnownLocation)) +"  Y:" +  convertInToMM(getYLocation(lastKnownLocation)), 00);
             idle();
         }
     }
@@ -181,6 +181,11 @@ public class VuforiaTest extends LinearOpMode
     {
         float[] robotLocationArray = matrix.getData();
         return robotLocationArray[13];
+    }
+
+    public double convertInToMM (double mm)
+    {
+        return mm * 0.0393701;
     }
 
 }
