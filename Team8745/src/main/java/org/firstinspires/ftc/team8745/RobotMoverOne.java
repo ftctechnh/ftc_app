@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 /**
- * Created by solomnoa000 on 10/29/2016.
+ * Created by nintendo8 on 10/29/2016.
  */
 
 @TeleOp(name="Practice Drive", group="Normal_OpMode")
@@ -49,6 +49,9 @@ public class RobotMoverOne extends OpMode{
         }
         else {
             shooterRight.setPower(0)
-            shooterLeft.setPower(0)}
+            shooterLeft.setPower(0)
+        }
     }
 }
+/* And done! Ready for the orange wheel shooter! Guess what? You can edit files directly from GitHub! Couldn't use Android Studio, 
+* but this worked great!*/ 
