@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 /**
  * Created by Peter on 9/22/2016.
  */
-@TeleOp(name = "OmniTest", group = "Tests")
+@TeleOp(name = "OmniBotTele", group = "Comp")
 public class OmniDriveTeleOp extends OpMode
 {
     private OmniDriveBot robot = new OmniDriveBot();

@@ -17,16 +17,7 @@ public class AutonomousTestOp extends LinearOpMode
     {
         robot.init(hardwareMap);
         waitForStart();
-        robot.spin(-180);
-        telemetry.addData("fR Encoder", robot.getfR().getCurrentPosition());
-        telemetry.addData("fL Encoder", robot.getfL().getCurrentPosition());
-        telemetry.update();
-        sleep(2000);
-        robot.spin(180);
-        telemetry.addData("fR Encoder", robot.getfR().getCurrentPosition());
-        telemetry.addData("fL Encoder", robot.getfL().getCurrentPosition());
-        telemetry.update();
-        sleep(3000);
+        robot.driveStraight(12, 0);
     }
 }
 
