@@ -12,4 +12,6 @@ public interface AttachmentsInterface
     void raiseCapBall();
     void detectBeaconColor();
     void detectBeaconPicture();
+    void raiseShooter();
+    void lowerShooter();
 }
