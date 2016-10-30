@@ -6,24 +6,31 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import java.util.LinkedList;
+//Created by Michael on 10/14/2016.
 
-/**
- * Created by Michael on 10/14/2016.
- *
- * */
 @TeleOp(name="MotorTest")
 public class MotorTest extends RobotHardware {
 
+
+    boolean toggle;
+    boolean bPress;
+
     @Override public void loop() {
 
-        boolean toggle = gamepad1.x;
 
-            if(toggle) {
-                scooperMotor.setPower(0.25);
+        if (gamepad1.x){
+            if (!bPress){
+                bPress = true;
                 toggle = !toggle;
             }
+        }else{
+            bPress = false;
+        }
 
+        if (toggle){
+            scooperMotor.setPower(1);
+        }else{
+            scooperMotor.setPower(0);
+        }
     }
-
 }
