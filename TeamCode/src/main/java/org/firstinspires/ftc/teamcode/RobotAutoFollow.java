@@ -13,6 +13,7 @@ public class RobotAutoFollow extends RobotAutoBeacons {
         FIND_BLUE_LINE,
         FOLLOW_BLUE_LINE,
         PREP_BEACON,
+        WAIT_FOR_SERVO,
         PUSH_BEACON,
         END
     }
@@ -24,7 +25,7 @@ public class RobotAutoFollow extends RobotAutoBeacons {
     double SLOW_SPEED = 0.07;
     double QUICK_SPEED = 0.10;
     int COLOR_THRESHOLD = 5;
-    double OPT_DISTANCE = 3.08;
+    double OPT_DISTANCE = 3.20;
 
     AUTO_STATE current_state;
 
@@ -71,31 +72,41 @@ public class RobotAutoFollow extends RobotAutoBeacons {
                 break;
 
             case PREP_BEACON:
-                beaconPosition(1);
                 if (getBeaconColor() == VV_BEACON_COLOR.BLUE) {
                     if (!TEAM){
                         //red team
                         prepareForBeacon(true);
-                        current_state = AUTO_STATE.END;
+                        current_state = AUTO_STATE.WAIT_FOR_SERVO;
                         break;
                     }else{
                         //blue team
-                        current_state = AUTO_STATE.END;
+                        current_state = AUTO_STATE.WAIT_FOR_SERVO;
                         break;
                     }
                 }else {
                     if (!TEAM){
                         //red team
-                        current_state = AUTO_STATE.END;
+                        current_state = AUTO_STATE.WAIT_FOR_SERVO;
                         break;
                     }else{
                         //blue team
                         prepareForBeacon(true);
-                        current_state = AUTO_STATE.END;
+                        current_state = AUTO_STATE.WAIT_FOR_SERVO;
                         break;
                     }
                 }
 
+            case WAIT_FOR_SERVO:
+                if (firstLaunch){
+                    //Set times.
+                    startTime = System.currentTimeMillis();
+                    endTime = startTime + 1000;
+                    firstLaunch = false;
+                }
+
+                if (System.currentTimeMillis() >= endTime){
+                    current_state = AUTO_STATE.PUSH_BEACON;
+                }
 
             case PUSH_BEACON:
                 if (firstLaunch){
