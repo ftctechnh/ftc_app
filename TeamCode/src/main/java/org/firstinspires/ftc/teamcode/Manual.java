@@ -1,8 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
 /**
  * Created by Michael on 10/14/2016.
  */
+
+@TeleOp(name="Manual")
 public class Manual extends RobotHardware {
 
     @Override public void loop() {
@@ -25,6 +29,8 @@ public class Manual extends RobotHardware {
         //Joysticks1
 
         set_drive_power(gamepad1.left_stick_y, gamepad1.left_stick_x); //This may be wrong. Testing needed...
+
+        ////////////////////
     }
 
 }
