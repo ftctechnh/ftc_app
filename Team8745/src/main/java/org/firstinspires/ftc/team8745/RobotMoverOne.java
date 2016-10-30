@@ -43,10 +43,12 @@ public class RobotMoverOne extends OpMode{
         rightBACK.setPower(rightDC);
         if (bumperPressed == true) {
 
-        shooterLeft
-        shooterRight.
+        shooterLeft.setPower(1);
+        shooterRight.setPower(1);
 
         }
-
+        else {
+            shooterRight.setPower(0)
+            shooterLeft.setPower(0)}
     }
 }
