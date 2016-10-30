@@ -1,14 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 /**
  * Created by djfigs1 on 10/14/16.
  */
 
 @Autonomous(name="Beacon Follow")
-public class RobotAutoFollow extends RobotAutoBecaons {
+public class RobotAutoFollow extends RobotAutoBeacons {
 
     enum AUTO_STATE {
         FIND_BLUE_LINE,
@@ -25,10 +24,13 @@ public class RobotAutoFollow extends RobotAutoBecaons {
     double SLOW_SPEED = 0.07;
     double QUICK_SPEED = 0.10;
     int COLOR_THRESHOLD = 5;
-    int BEACON_DISTANCE = 5;
-    double OPT_DISTANCE = 2.8;
+    double OPT_DISTANCE = 3.08;
 
     AUTO_STATE current_state;
+
+    //false -- red
+    //true -- blue
+    boolean TEAM = true;
 
     @Override
     public void init() {
@@ -42,6 +44,7 @@ public class RobotAutoFollow extends RobotAutoBecaons {
 
         switch (current_state) {
             case FIND_BLUE_LINE:
+                beaconPosition(1);
                 set_drive_power(SLOW_SPEED, SLOW_SPEED);
 
                 if (getLineFollowState(VV_LINE_COLOR.BLUE, COLOR_THRESHOLD) != ROBOT_LINE_FOLLOW_STATE.NONE){
@@ -50,8 +53,7 @@ public class RobotAutoFollow extends RobotAutoBecaons {
                 break;
 
             case FOLLOW_BLUE_LINE:
-                telemetry.addLine("follow blue");
-                if (rangeSensor.cmUltrasonic() >= BEACON_DISTANCE || rangeSensor.cmOptical() >= OPT_DISTANCE || rangeSensor.cmOptical() == 0){
+                if (rangeSensor.cmOptical() >= OPT_DISTANCE || rangeSensor.cmOptical() == 0){
                     switch (getLineFollowState(VV_LINE_COLOR.BLUE, COLOR_THRESHOLD)){
                         case LEFT:
                             set_drive_power(QUICK_SPEED, 0);
@@ -69,16 +71,33 @@ public class RobotAutoFollow extends RobotAutoBecaons {
                 break;
 
             case PREP_BEACON:
-                telemetry.addLine("Prep beacon");
+                beaconPosition(1);
                 if (getBeaconColor() == VV_BEACON_COLOR.BLUE) {
-                    prepareForBeacon(true);
+                    if (!TEAM){
+                        //red team
+                        prepareForBeacon(true);
+                        current_state = AUTO_STATE.END;
+                        break;
+                    }else{
+                        //blue team
+                        current_state = AUTO_STATE.END;
+                        break;
+                    }
+                }else {
+                    if (!TEAM){
+                        //red team
+                        current_state = AUTO_STATE.END;
+                        break;
+                    }else{
+                        //blue team
+                        prepareForBeacon(true);
+                        current_state = AUTO_STATE.END;
+                        break;
+                    }
                 }
 
-                current_state = AUTO_STATE.PUSH_BEACON;
-                break;
 
             case PUSH_BEACON:
-                telemetry.addLine("push");
                 if (firstLaunch){
                     //Set times.
                     startTime = System.currentTimeMillis();

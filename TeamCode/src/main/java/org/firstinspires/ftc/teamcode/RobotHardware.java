@@ -577,7 +577,7 @@ public class RobotHardware extends OpMode
         //
         // Ensure the specific value is legal.
         //
-        double l_position = Range.clip(p_position, 0, 1);
+        double l_position = Range.clip(p_position, 0.2, 1);
 
         //
         // Set the value.  The right hand value must be opposite of the left
@@ -614,10 +614,10 @@ public class RobotHardware extends OpMode
         }else{
             if (blue >= threshold && blue > red) {
                 return VV_BEACON_COLOR.BLUE;
-            }else{
-                return VV_BEACON_COLOR.NONE;
             }
         }
+
+        return VV_BEACON_COLOR.NONE;
     }
 
     public void pushBeaconButton(boolean direction) {
@@ -632,9 +632,9 @@ public class RobotHardware extends OpMode
         //FALSE - Left
 
         if (direction) {
-            beaconServo.setPosition(0);
+            beaconPosition(0);
         }else {
-            beaconServo.setPosition(1);
+            beaconPosition(1);
         }
     }
 

@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.CompassSensor;
 /**
  * Created by djfigs1 on 9/23/16.
  */
-abstract class RobotAutoBecaons extends RobotHardware {
+abstract class RobotAutoBeacons extends RobotHardware {
 
     //region functions with while (they need redesigining)
     //WHILE
