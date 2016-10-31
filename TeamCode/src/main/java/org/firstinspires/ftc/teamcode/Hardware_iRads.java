@@ -34,11 +34,19 @@ public class Hardware_iRads
     // Servos:
     public Servo    buttonPusher        = null;
 
-    public static final double MID_SERVO          =  0.5 ;
-    public static final double LIFT_UP_POWER      =  0.45 ;
-    public static final double LIFT_DOWN_POWER    = -0.45 ;
-    public static final double MIN_LAUNCH_POWER   =  0.45 ;
-    public static final double MAX_LAUNCH_POWER   =  0.85 ;
+
+    public static final double MID_SERVO            =  0.5 ;
+
+    public static final double LAUNCH_WHEEL_DIAMETER_INCHES =  4;
+    public static final double DRIVE_WHEEL_DIAMETER_INCHES  =  4;
+
+    public static final int TICKS_PER_ROT_DRIVE     =  28*60; // Ticks per rotation
+    public static final int TICKS_PER_ROT_LIFT      =  28*60; // Ticks per rotation
+    public static final int TICKS_PER_ROT_LAUNCH    =  28*1 ; // Ticks per rotation
+
+    public static final int MAX_DRIVE_SPEED_TPS     =  1680 ; // Ticks per second
+    public static final int LIFT_MAX_SPEED_TPS      =  1680 ; // Ticks per second
+    public static final int MAX_LAUNCH_SPEED_TPS    =   280 ; // Ticks per second
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -82,6 +90,13 @@ public class Hardware_iRads
         leftLaunchMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
         rightLaunchMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
         liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
+
+        // Set ENCODER mode max speed (in Ticks per second)
+        leftDriveMotor.setMaxSpeed(MAX_DRIVE_SPEED_TPS);
+        rightDriveMotor.setMaxSpeed(MAX_DRIVE_SPEED_TPS);
+        leftLaunchMotor.setMaxSpeed(MAX_LAUNCH_SPEED_TPS);
+        rightLaunchMotor.setMaxSpeed(MAX_LAUNCH_SPEED_TPS);
+        liftMotor.setMaxSpeed(LIFT_MAX_SPEED_TPS);
 
 
         // Define and initialize ALL installed servos.

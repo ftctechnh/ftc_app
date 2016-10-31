@@ -119,9 +119,9 @@ public class iRadsTeleopTank_Iterative extends OpMode{
 
         // Use gamepad buttons to move the fork lift up (Y) and down (A)
         if (gamepad1.y)
-            robot.liftMotor.setPower(robot.LIFT_UP_POWER);
+            robot.liftMotor.setPower(1.0);  // Lift up, full speed
         else if (gamepad1.a)
-            robot.liftMotor.setPower(robot.LIFT_DOWN_POWER);
+            robot.liftMotor.setPower(-1.0); // Lift down, full speed
         else
             robot.liftMotor.setPower(0.0);
 
