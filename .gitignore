@@ -26,3 +26,8 @@ build/
 
 *ASUS_PC_01*
 
+# Vim temp files
+*.swp
+
+# Documentation and Media
+*.pdf

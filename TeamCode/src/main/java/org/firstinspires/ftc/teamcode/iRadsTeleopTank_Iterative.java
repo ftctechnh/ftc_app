@@ -40,29 +40,29 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 /**
- * This file provides basic Telop driving for a Pushbot robot.
+ * This file provides basic Telop driving for a iRads robot.
+ * Derived from a TeleopTank example for a Pushbot robot.
  * The code is structured as an Iterative OpMode
  *
- * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
- * All device access is managed through the HardwarePushbot class.
+ * This OpMode uses the iRads hardware class to define the devices on the robot.
+ * All device access is managed through the Hardware_iRads class.
  *
  * This particular OpMode executes a basic Tank Drive Teleop for a PushBot
- * It raises and lowers the claw using the Gampad Y and A buttons respectively.
- * It also opens and closes the claws slowly using the left and right Bumper buttons.
+ * It raises and lowers the forklift using the Gampad Y and A buttons respectively.
+ * It also swings the button pusher Servo using the left and right Bumper buttons.
  *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="iRads: Teleop Tank", group="Pushbot")
+@TeleOp(name="iRads: Teleop Tank", group="iRads")
 //@Disabled
 public class iRadsTeleopTank_Iterative extends OpMode{
 
     /* Declare OpMode members. */
     Hardware_iRads robot       = new Hardware_iRads();   // use the class created to define iRads hardware
                                                          // could also use HardwarePushbotMatrix class.
-    double          clawOffset  = 0.0 ;                  // Servo mid position
-    final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
+    double          buttonOffset  = 0.0 ;                // Servo mid position
+    final double    BUTTON_SPEED  = 0.04 ;               // sets rate to move servo
 
 
     /*
@@ -104,30 +104,29 @@ public class iRadsTeleopTank_Iterative extends OpMode{
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
         left = -gamepad1.left_stick_y;
         right = -gamepad1.right_stick_y;
-        robot.leftMotor.setPower(left);
-        robot.rightMotor.setPower(right);
+        robot.leftDriveMotor.setPower(left);
+        robot.rightDriveMotor.setPower(right);
 
-        // Use gamepad left & right Bumpers to open and close the claw
+        // Use gamepad left & right Bumpers to swing the buttonPusher right or  left.
         if (gamepad1.right_bumper)
-            clawOffset += CLAW_SPEED;
+            buttonOffset += BUTTON_SPEED;
         else if (gamepad1.left_bumper)
-            clawOffset -= CLAW_SPEED;
+            buttonOffset -= BUTTON_SPEED;
 
-        // Move both servos to new position.  Assume servos are mirror image of each other.
-        clawOffset = Range.clip(clawOffset, -0.5, 0.5);
-        robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);
-        robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset);
+        // Move servo to new position.
+        buttonOffset = Range.clip(buttonOffset, -0.5, 0.5);
+        robot.buttonPusher.setPosition(robot.MID_SERVO + buttonOffset);
 
-        // Use gamepad buttons to move the arm up (Y) and down (A)
+        // Use gamepad buttons to move the fork lift up (Y) and down (A)
         if (gamepad1.y)
-            robot.armMotor.setPower(robot.ARM_UP_POWER);
+            robot.liftMotor.setPower(robot.LIFT_UP_POWER);
         else if (gamepad1.a)
-            robot.armMotor.setPower(robot.ARM_DOWN_POWER);
+            robot.liftMotor.setPower(robot.LIFT_DOWN_POWER);
         else
-            robot.armMotor.setPower(0.0);
+            robot.liftMotor.setPower(0.0);
 
         // Send telemetry message to signify robot running;
-        telemetry.addData("claw",  "Offset = %.2f", clawOffset);
+        telemetry.addData("button",  "Offset = %.2f", buttonOffset);
         telemetry.addData("left",  "%.2f", left);
         telemetry.addData("right", "%.2f", right);
     }

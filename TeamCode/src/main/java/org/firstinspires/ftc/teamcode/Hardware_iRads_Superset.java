@@ -6,10 +6,19 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
- * This is NOT an opmode.
+ * This is NOT an opmode. (It isn't even a working Hardware calss. See below.)
  *
- * This class can be used to define all the specific hardware for a single robot.
- * In this case that robot is the iRads robot.
+ * This class is an EXAMPLE of a superset of possible iRads Hardware classes. 
+ * The intent is to provide redundant standardized naming conventions for possible 
+ * hardware configurations.
+ * This class defines 11 Motors, but the hardware can only support 8 Motor
+ * connections.  
+ *
+ * To use this class, copy it in Android studio, rename it something
+ * descriptive, and delete the Servos and Motors that are not required for your 
+ * configuration.
+ *
+ * ...
  *
  * This hardware class assumes the following device names have been configured on the robot:
  *
@@ -19,10 +28,21 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Motor channel:  Left  launch motor:       "leftLaunchMotor"
  * Motor channel:  Right launch motor:       "rightLaunchMotor"
  * Motor channel:  Cap ball lift motor:      "liftMotor"
+ * Motor channel:  Rotary sweeper  motor:    "sweeperMotor"
+ * Motor channel:  Ball elevator motor:      "ballElevatorMotor"
+ * For 4-wheel drive:
+ * Motor channel:  NorthWest drive motor:    "nwDriveMotor"
+ * Motor channel:  NorthEast drive motor:    "neDriveMotor"
+ * Motor channel:  SouthWest drive motor:    "swDriveMotor"
+ * Motor channel:  SouthEast drive motor:    "seDriveMotor"
  * Servos:
  * Servo channel:  Servo to push button:     "buttonPusher"
+ * Servo channel:  Servo for left flipper:   "leftFlipper"
+ * Servo channel:  Servo for right flipper:  "rightFlipper"
+ * Servo channel:  Servo load launcher:      "ballLoader"
+ * Servo channel:  Servo to push button:     "ballLoader"
  */
-public class Hardware_iRads
+public class Hardware_iRads_Superset
 {
     /* Public OpMode members. */
     // DcMotors:
@@ -31,8 +51,18 @@ public class Hardware_iRads
     public DcMotor  leftLaunchMotor     = null;
     public DcMotor  rightLaunchMotor    = null;
     public DcMotor  liftMotor           = null;
+    public DcMotor  sweeperMotor        = null;
+    public DcMotor  ballElevatorMotor   = null;
+        // 4-wheel drive DcMotors:
+    public DcMotor  nwDriveMotor        = null;
+    public DcMotor  neDriveMotor        = null;
+    public DcMotor  swDriveMotor        = null;
+    public DcMotor  seDriveMotor        = null;
     // Servos:
     public Servo    buttonPusher        = null;
+    public Servo    leftFlipper         = null;
+    public Servo    rightFlipper        = null;
+    public Servo    ballLoader          = null;
 
     public static final double MID_SERVO          =  0.5 ;
     public static final double LIFT_UP_POWER      =  0.45 ;
@@ -45,7 +75,7 @@ public class Hardware_iRads
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public Hardware_iRads(){
+    public Hardware_iRads_Superset(){
 
     }
 
@@ -60,11 +90,27 @@ public class Hardware_iRads
         leftLaunchMotor   = hwMap.dcMotor.get("leftLaunchMotor");
         rightLaunchMotor  = hwMap.dcMotor.get("rightLaunchMotor");
         liftMotor         = hwMap.dcMotor.get("liftMotor");
+        sweeperMotor      = hwMap.dcMotor.get("sweeperMotor");
+        ballElevatorMotor = hwMap.dcMotor.get("ballElevatorMotor");
+            // 4-wheel drive:
+        nwDriveMotor      = hwMap.dcMotor.get("nwDriveMotor");
+        neDriveMotor      = hwMap.dcMotor.get("neDriveMotor");
+        swDriveMotor      = hwMap.dcMotor.get("swDriveMotor");
+        seDriveMotor      = hwMap.dcMotor.get("seDriveMotor");
+
+
         // Set Motor Direction
         leftDriveMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightDriveMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
         leftLaunchMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightLaunchMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+            // 4-wheel drive:
+        nwDriveMotor.setDirection(DcMotor.Direction.FORWARD);// Set to REVERSE if using AndyMark motors
+        neDriveMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        swDriveMotor.setDirection(DcMotor.Direction.FORWARD);// Set to REVERSE if using AndyMark motors
+        seDriveMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+
+
 
         // Set all motors to zero power
         leftDriveMotor.setPower(0);
@@ -72,6 +118,13 @@ public class Hardware_iRads
         leftLaunchMotor.setPower(0);
         rightLaunchMotor.setPower(0);
         liftMotor.setPower(0);
+        sweeperMotor.setPower(0);
+        ballElevatorMotor.setPower(0);
+            // 4-wheel drive:
+        nwDriveMotor.setPower(0);
+        neDriveMotor.setPower(0);
+        swDriveMotor.setPower(0);
+        seDriveMotor.setPower(0);
 
 
         // Set all motors to run with encoders.
@@ -82,11 +135,24 @@ public class Hardware_iRads
         leftLaunchMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
         rightLaunchMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
         liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
+        sweeperMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
+        ballElevatorMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
+            // 4-wheel drive:
+        nwDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
+        neDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
+        swDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
+        seDriveMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
 
 
         // Define and initialize ALL installed servos.
         buttonPusher = hwMap.servo.get("buttonPusher");
+        leftFlipper  = hwMap.servo.get("leftFlipper");
+        rightFlipper = hwMap.servo.get("rightFlipper");
+        ballLoader   = hwMap.servo.get("ballLoader");
         buttonPusher.setPosition(MID_SERVO);
+        leftFlipper.setPosition(MID_SERVO);
+        rightFlipper.setPosition(MID_SERVO);
+        ballLoader.setPosition(MID_SERVO);
 
     }
 
