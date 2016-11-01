@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsUsbDeviceInterfaceModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -8,7 +10,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
-
 
 
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -22,47 +23,48 @@ import com.qualcomm.robotcore.hardware.ServoController;
 
 @Autonomous(name = "DemoAuto", group = "")
 public class DemoAuto extends OpMode {
-    DcMotorController wheelControllerLeft;
+    //DcMotorController wheelControllerLeft;
     DcMotor motorBackLeft;
     DcMotor motorFrontLeft;
-    DcMotorController wheelControllerRight;
+    //DcMotorController wheelControllerRight;
     DcMotor motorBackRight;
     DcMotor motorFrontRight;
-    ColorSensor cs;
-    ColorSensor cs2;
-    Servo buttonPusher;
-    double time;
-    boolean timeSet = false;
-    boolean followTime = false;
+    ModernRoboticsI2cColorSensor cs;
+    //Servo buttonPusher;
+    ModernRoboticsUsbDeviceInterfaceModule interfaceModule;
+    double cs1;
+    double cs2;
+    double cs3;
     public void init() {
         motorBackRight = hardwareMap.dcMotor.get("RightBack");
         motorFrontRight = hardwareMap.dcMotor.get("RightFront");
         motorBackLeft = hardwareMap.dcMotor.get("LeftBack");
         motorFrontLeft = hardwareMap.dcMotor.get("LeftFront");
-        wheelControllerRight = hardwareMap.dcMotorController.get("Right");
-        wheelControllerLeft = hardwareMap.dcMotorController.get("Left");
-        cs = hardwareMap.colorSensor.get("cs");
-        cs2 = hardwareMap.colorSensor.get("cs2");
-        buttonPusher = hardwareMap.servo.get("buttonPusher");
+        cs = hardwareMap.get(ModernRoboticsI2cColorSensor.class, "CS");
+        //buttonPusher = hardwareMap.servo.get("buttonPusher");
+        interfaceModule = hardwareMap.get(ModernRoboticsUsbDeviceInterfaceModule.class, "CDI");
 
-
-
+        motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     public void loop() {
-        if (Math.abs(6000-motorBackLeft.getCurrentPosition())>100) {
+        cs1 = interfaceModule.getAnalogInputVoltage(0);
+        cs2 = interfaceModule.getAnalogInputVoltage(1);
+        cs3 = interfaceModule.getAnalogInputVoltage(2);
+
+        if (Math.abs(-6000-motorBackLeft.getCurrentPosition())>100) {
             motorBackLeft.setPower(-1);
             motorBackRight.setPower(1);
             motorFrontLeft.setPower(-1);
             motorFrontRight.setPower(1);
-            if (cs.blue()>20) {
+            if (cs1<100 && cs2<100) {
                 motorBackLeft.setPower(-.5);
                 motorBackRight.setPower(1);
                 motorFrontLeft.setPower(-.5);
                 motorFrontRight.setPower(1);
-                followTime = true;
             }
-            else if (followTime){
+            else if (cs3<100 && cs2<100){
                 motorBackLeft.setPower(-1);
                 motorBackRight.setPower(.5);
                 motorFrontLeft.setPower(-1);
@@ -76,21 +78,11 @@ public class DemoAuto extends OpMode {
             motorFrontRight.setPower(0);
         }
 
-        if (cs2.red()>200 || cs2.blue()>200){
-            if (cs2.red()>200)
-                buttonPusher.setPosition(-1);
-            else
-                buttonPusher.setPosition(1);
-            if (timeSet == false){
-                time = getRuntime();
-                timeSet = true;
-            }
-            if (time != 0 && getRuntime()-time>2) {
-                motorBackLeft.setPower(-1);
-                motorBackRight.setPower(1);
-                motorFrontLeft.setPower(-1);
-                motorFrontRight.setPower(1);
-            }
+        if (cs.red()>200 || cs.blue()>200){
+            if (cs.red()>200);
+        //        buttonPusher.setPosition(-1);
+            else;
+        //        buttonPusher.setPosition(1);
         }
     }
 }

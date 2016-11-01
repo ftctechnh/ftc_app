@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -18,50 +19,30 @@ import com.qualcomm.robotcore.hardware.ServoController;
 /**
  * Created by Ian Ramsey on 9/19/2015. Updated to include arm functionality 5/3/16.
  */
-@TeleOp(name = "ArmBot", group = "")
-public class ArmbotFrame extends OpMode {
-    DcMotorController wheelControllerLeft;
+@TeleOp(name = "DriveTrain", group = "")
+public class DriveTrain extends OpMode {
     DcMotor motorBackLeft;
     DcMotor motorFrontLeft;
-    DcMotorController wheelControllerRight;
     DcMotor motorBackRight;
     DcMotor motorFrontRight;
-    DcMotor arm;
-    DcMotorController armController;
-    DcMotor motorRev;
-    DcMotorController revController;
-    ServoController launchController;
-    Servo launcher;
+
 
     public void init() {
         motorBackRight = hardwareMap.dcMotor.get("RightBack");
         motorFrontRight = hardwareMap.dcMotor.get("RightFront");
         motorBackLeft = hardwareMap.dcMotor.get("LeftBack");
         motorFrontLeft = hardwareMap.dcMotor.get("LeftFront");
-        arm = hardwareMap.dcMotor.get("Arm");
-        wheelControllerRight = hardwareMap.dcMotorController.get("Right");
-        wheelControllerLeft = hardwareMap.dcMotorController.get("Left");
-        armController = hardwareMap.dcMotorController.get("ArmController");
-        motorRev = hardwareMap.dcMotor.get("RevMotor");
-        launchController = hardwareMap.servoController.get("LaunchController");
-        launcher = hardwareMap.servo.get("Launcher");
     }
+
 
     public void loop() {
         float leftthrottle = -gamepad1.left_stick_y;
         float rightthrottle = -gamepad1.right_stick_y;
-        float armthrottle = -gamepad2.left_stick_y;
-        float revthrottle = gamepad2.right_stick_y;
 
-        motorBackLeft.setPower(-rightthrottle);
+        motorBackLeft.setPower(rightthrottle); //Note that I switched the sides so the tank drive goes in the opp. direction such that it's more intuitive
         motorFrontLeft.setPower(rightthrottle);
-        motorBackRight.setPower(leftthrottle);
+        motorBackRight.setPower(-leftthrottle);
         motorFrontRight.setPower(-leftthrottle);
-        arm.setPower(-armthrottle);
-        motorRev.setPower(revthrottle);
-        if (gamepad2.right_bumper)
-            launcher.setPosition(1);
-        else
-            launcher.setPosition(0);
     }
 }
+
