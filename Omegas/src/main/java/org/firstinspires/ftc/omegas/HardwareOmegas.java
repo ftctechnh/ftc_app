@@ -39,10 +39,9 @@ public class HardwareOmegas
 
     public ArrayList<DcMotor> motors;
 
-    public static final double  MID_SERVO       =  0.5;
-    public static final double  ARM_UP_POWER    =  0.45;
-    public static final double  ARM_DOWN_POWER  = -0.45;
-    public static final double  MS_PER_RADIAN   =  1150;
+    public static final double  MID_SERVO       =    0.5;
+    public static final double  SHOOTER_POWER   =    0.45;
+    public static final double  MS_PER_RADIAN   =  159.15;
     public static       boolean isExtending     = false;
 
     /* local OpMode members. */
