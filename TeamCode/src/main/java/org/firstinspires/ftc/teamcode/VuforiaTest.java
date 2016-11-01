@@ -106,6 +106,7 @@ public class VuforiaTest extends LinearOpMode
                 telemetry.addData("no targets in sight", null);
             }
             telemetry.update();
+            telemetry.addData("Angle: " + returnAngle(lastKnownLocation), null);
             telemetry.addData( "X:"+ convertInToMM(getXLocation(lastKnownLocation)) +"  Y:" +  convertInToMM(getYLocation(lastKnownLocation)), 00);
             idle();
         }
@@ -116,7 +117,7 @@ public class VuforiaTest extends LinearOpMode
         // Setup parameters to create localizer
         parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
         vuforiaLocalizer = ClassFactory.createVuforiaLocalizer(parameters);
 
         // These are the vision targets that we want to use
@@ -186,6 +187,12 @@ public class VuforiaTest extends LinearOpMode
     public double convertInToMM (double mm)
     {
         return mm * 0.0393701;
+    }
+
+    public double returnAngle (OpenGLMatrix robotLocationMatrix)
+    {
+        Orientation rot = Orientation.getOrientation(robotLocationMatrix, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.RADIANS);
+        return (rot.thirdAngle * 57.2958);
     }
 
 }
