@@ -99,20 +99,26 @@ public class Matthew extends LinearOpMode {
         }
 
         // Step 2:  Move arm / servos to knock off cap ball
-        robot.leftMotor.setPower(-TURN_SPEED);
+		//robot.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        robot.leftMotor.setPower(TURN_SPEED);
         robot.rightMotor.setPower(TURN_SPEED);
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 2.2)) {
             idle();
         }
+		//robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // Step 3:  Drive Backwards for 1 Second
+		robot.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+		robot.rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         robot.leftMotor.setPower(FORWARD_SPEED);
         robot.rightMotor.setPower(FORWARD_SPEED);
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 3.0)) {
             idle();
         }
+		//robot.rightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+		//robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // Step 4:  Stop and close the claw.
         robot.leftMotor.setPower(0);
@@ -132,4 +138,6 @@ public class Matthew extends LinearOpMode {
         runtime.reset();
         idle();
     }
+	robot.rightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+	robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 }
