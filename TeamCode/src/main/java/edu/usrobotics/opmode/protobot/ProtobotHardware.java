@@ -47,7 +47,8 @@ public class ProtobotHardware extends BaseHardware {
 
     public int inchesToEncoderTicks(float inches){
 
-        return (int) (inches / wheelCircumference * 1440f);
+        return (int) (inches / wheelCircumference * 360f * 3.12);
 
     }
+
 }

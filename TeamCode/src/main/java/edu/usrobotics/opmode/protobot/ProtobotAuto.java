@@ -23,29 +23,21 @@ public class ProtobotAuto extends RobotOp {
 
         robot.init(hardwareMap);
 
-        robot.frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        robot.frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        robot.backRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        robot.backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        robot.frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        robot.frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        robot.backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        robot.backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
 
         Route happyTrail = new Route();
 
 
         int encoderGoal = robot.inchesToEncoderTicks(48);
         ConcurrentTaskSet forward = new ConcurrentTaskSet(
-                new MotorTask(robot.frontRight, encoderGoal, null, 0.5f, 0.8f, null),//FIX DAMPING CHANGE 1f to 0.8f
-                new MotorTask(robot.frontLeft, null, null, 0.5f, 0.8f, null),
-                new MotorTask(robot.backRight, null, null, 0.5f, 0.8f, null),
-                new MotorTask(robot.backLeft, null, null, 0.5f, 0.8f, null)
-
-        ) {
-            @Override
-            public boolean onExecuted() {
-                debugOut = robot.frontRight.getCurrentPosition() + " " + isTaskCompleted(0) + "" + isTaskCompleted(1) + "" + isTaskCompleted(2) + "" + isTaskCompleted(3);
-                return isTaskCompleted(0);
-            }
-
-        };
+                new MotorTask(robot.frontRight, encoderGoal, null, 0.5f, 0.8f, encoderGoal),
+                new MotorTask(robot.frontLeft, encoderGoal, null, 0.5f, 0.8f, encoderGoal),
+                new MotorTask(robot.backRight, encoderGoal, null, 0.5f, 0.8f, encoderGoal),
+                new MotorTask(robot.backLeft, encoderGoal, null, 0.5f, 0.8f, encoderGoal)
+        );
 
         happyTrail.addTask(forward);
 

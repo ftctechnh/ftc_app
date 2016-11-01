@@ -59,8 +59,9 @@ public class MotorTask implements Task {
                 //**
                 motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 motor.setTargetPosition(encoderGoal);
-                motor.setPower(getDampedPower(power));
-                motor.setMaxSpeed(maxMotorSpeed);
+                //motor.setPower (1f);
+                motor.setPower(getDampedPower(power)); //TODO: This is changed
+                //motor.setMaxSpeed(maxMotorSpeed);
                 /**/
 
                 /**
