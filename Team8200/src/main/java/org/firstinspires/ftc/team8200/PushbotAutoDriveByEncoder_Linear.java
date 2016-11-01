@@ -112,11 +112,23 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
+       // encoderDrive(DRIVE_SPEED,  20,  20, 5.0);
+        rightTurnEqualPower();
+        /*sleep(5000);
+        leftTurnEqualPower();
+        sleep(5000);
+        rightTurnUnequalPower();
+        sleep(5000);
+        leftTurnUnequalPower();
+        sleep(5000);
+        */
+
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 48 Inches with 5 Sec timeout
+        /*encoderDrive(DRIVE_SPEED,  20,  20, 5.0);  // S1: Forward 48 Inches with 5 Sec timeout
         encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
         encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+        */
 
 
         sleep(1000);     // pause for servos to move
@@ -181,4 +193,28 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
             //  sleep(250);   // optional pause after each move
         }
     }
+
+    public void rightTurnEqualPower() {
+        encoderDrive(DRIVE_SPEED,  8,  8, 5.0);
+        encoderDrive(TURN_SPEED,   -7, 7, 4.0);
+        encoderDrive(DRIVE_SPEED,   -8,  -8, 5.0);
+
+    }
+
+    public void leftTurnEqualPower() {
+        //encoderDrive(DRIVE_SPEED,  10,  10, 5.0);
+        encoderDrive(TURN_SPEED,   5, -5, 4.0);
+        encoderDrive(DRIVE_SPEED,  -10,  -10, 5.0);
+
+
+    }
+    public void rightTurnUnequalPower()
+    {
+        encoderDrive(TURN_SPEED,   -5, 10, 4.0);
+    }
+    public void leftTurnUnequalPower()
+    {
+        encoderDrive(TURN_SPEED,  10, -5, 4.0);
+    }
+
 }
