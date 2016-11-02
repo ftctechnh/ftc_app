@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.robotcontroller.internal.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import org.firstinspires.ftc.robotcontroller.internal.Devices.DriveSystem;
 
 /**
  * Created by abnaveed on 10/13/2016.
@@ -11,14 +11,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class TeleOp extends OpMode
 {
     // TeleOp
-    public DcMotor leftMotor = null;
-    public DcMotor rightMotor = null;
+    public DriveSystem driveSystem;
     private static final float deadBand = .05f;
 
     @Override
     public void init()
     {
-
+        driveSystem = new DriveSystem(hardwareMap);
     }
 
     @Override
@@ -27,27 +26,24 @@ public class TeleOp extends OpMode
         // Getting joystick values
         double leftJoystick = gamepad1.left_stick_y;
         double rightJoystick = gamepad1.right_stick_y;
-        // Converting joystick values to motor power values
-        rightMotor.setPower(rightJoystick);
-        leftMotor.setPower(leftJoystick);
 
+        // Uses deadBand to prevent robot from constantly moving.
         if(leftJoystick > deadBand)
         {
-            leftMotor.setPower(leftJoystick);
+            driveSystem.setLeft(leftJoystick);
         }
         else
         {
-            leftMotor.setPower(0);
+            driveSystem.setLeft(0);
         }
 
         if(rightJoystick > deadBand)
         {
-            rightMotor.setPower(rightJoystick);
+            driveSystem.setRight(rightJoystick);
         }
         else
         {
-            leftMotor.setPower(0);
+            driveSystem.setRight(0);
         }
     }
-
 }
