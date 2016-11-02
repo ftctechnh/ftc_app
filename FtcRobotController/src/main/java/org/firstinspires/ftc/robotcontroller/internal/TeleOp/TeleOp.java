@@ -1,7 +1,11 @@
 package org.firstinspires.ftc.robotcontroller.internal.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpModeMeta;
 import com.qualcomm.robotcore.hardware.DcMotor;
+
+import org.firstinspires.ftc.robotcontroller.external.samples.HardwareK9bot;
+import org.firstinspires.ftc.robotcontroller.internal.Devices.FlyWheelMechanic;
 
 /**
  * Created by abnaveed on 10/13/2016.
@@ -13,12 +17,13 @@ public class TeleOp extends OpMode
     // TeleOp
     public DcMotor leftMotor = null;
     public DcMotor rightMotor = null;
+    public FlyWheelMechanic flymotor;
     private static final float deadBand = .05f;
 
     @Override
     public void init()
     {
-
+        flymotor = new FlyWheelMechanic(hardwareMap);
     }
 
     @Override
@@ -48,6 +53,10 @@ public class TeleOp extends OpMode
         {
             leftMotor.setPower(0);
         }
+
+
+        /// flywheel
+        boolean flyWheelPressed = gamepad2.right_bumper;
     }
 
 }
