@@ -12,7 +12,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-public class TrapDoorMechanic
+public class
+
+TrapDoorMechanic
 {
     private DcMotor[] axelRotation = null;
 
