@@ -32,10 +32,16 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -50,17 +56,21 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Template: Linear OpMode", group="Linear Opmode")  // @Autonomous(...) is the other common choice
-@Disabled
+@Autonomous(name="iRads: AutoOp Vision Linear", group="iRads")  // @Autonomous(...) is the other common choice
+//@Disabled
 public class iRadsAutoOpMode_Linear extends LinearOpMode {
 
     /* Declare OpMode members. */
+    private VisualNavigation visualNav = new VisualNavigation();
     private ElapsedTime runtime = new ElapsedTime();
     // DcMotor leftMotor = null;
     // DcMotor rightMotor = null;
 
     @Override
     public void runOpMode() {
+
+
+        this.visualNav.init(); // Initialize Visual Navigation
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -80,14 +90,55 @@ public class iRadsAutoOpMode_Linear extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
+        /** Start tracking the data sets we care about. */
+        this.visualNav.stonesAndChips.activate();
+        telemetry.addData("Status", "stonesAndChips Activate");
+
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
+//            telemetry.update();
+
+
+            // **************** Vuforia Test *********************
+
+            for (VuforiaTrackable trackable : this.visualNav.allTrackables) {
+                /**
+                 * getUpdatedRobotLocation() will return null if no new information is available since
+                 * the last time that call was made, or if the trackable is not currently visible.
+                 * getRobotLocation() will return null if the trackable is not currently visible.
+                 */
+                telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible() ? "Visible" : "Not Visible");    //
+
+                OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
+                if (robotLocationTransform != null) {
+                    this.visualNav.lastLocation = robotLocationTransform;
+                }
+            }
+            /**
+             * Provide feedback as to where the robot was last located (if we know).
+             */
+            if (this.visualNav.lastLocation != null) {
+                //  RobotLog.vv(TAG, "robot=%s", format(lastLocation));
+                telemetry.addData("Pos", format(this.visualNav.lastLocation));
+            } else {
+                telemetry.addData("Pos", "Unknown");
+            }
             telemetry.update();
+
+            // ***************** END Vuforia Testing *********************
+
+
 
             // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
             // leftMotor.setPower(-gamepad1.left_stick_y);
             // rightMotor.setPower(-gamepad1.right_stick_y);
-        }
-    }
-}
+        } // while(opModeIsActive())
+    } // runOpMode()
+
+    String format(OpenGLMatrix transformationMatrix) {
+        return transformationMatrix.formatAsTransform();
+    } // format(transformationMatrix)
+
+
+} // Class
