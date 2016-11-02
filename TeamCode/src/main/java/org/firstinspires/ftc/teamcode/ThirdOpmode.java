@@ -63,10 +63,6 @@ public class ThirdOpmode extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        telemetry.addData("Status(3)", "left_drive -- left stick");
-        telemetry.addData("         ", "right_drive -- right stick");
-        telemetry.update();
-
         /* eg: Initialize the hardware variables. Note that the strings used here as parameters
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
@@ -74,10 +70,8 @@ public class ThirdOpmode extends LinearOpMode {
         leftMotor  = hardwareMap.dcMotor.get("left_drive");
         rightMotor = hardwareMap.dcMotor.get("right_drive");
 
-        // eg: Set the drive motor directions:
-        // "Reverse" the motor that runs backwards when connected directly to the battery
-        leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        leftMotor.setDirection(DcMotor.Direction.REVERSE);
+        rightMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -85,12 +79,11 @@ public class ThirdOpmode extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            telemetry.addData("Status(3)", "Run(3) Time: " + runtime.toString());
+//            telemetry.addData("Run Time: " + runtime.toString());
             telemetry.addData("x", gamepad1.left_stick_y);
             telemetry.addData("y", gamepad1.right_stick_y);
             telemetry.update();
 
-            // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
             leftMotor.setPower(-gamepad1.left_stick_y);
             rightMotor.setPower(-gamepad1.right_stick_y);
 
