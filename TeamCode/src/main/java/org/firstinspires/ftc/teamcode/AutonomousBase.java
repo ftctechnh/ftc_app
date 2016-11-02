@@ -1,11 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
-
 /**
  * Created by minds on 1/23/2016.
  */
@@ -171,7 +171,12 @@ public abstract class AutonomousBase extends OpMode {
             case MoveState.SERVO_PORT_L:
                 servoLeftButton.setPosition(0);
                 break;
-        }
+            case MoveState.SHOOT:
+                motorLeftShooter.setPower(1);
+                motorRightShooter.setPower(1);
+                motorConveyer.setPower(1);
+                break;
+        } 
     }
 
     public void gameState(){
@@ -198,6 +203,12 @@ public abstract class AutonomousBase extends OpMode {
     public void telemetry(){
         telemetry.addData("angle to goal ",map.angleToGoal());
         telemetry.addData("dist from goal ",map.distanceToGoal());
+        telemetry.addData("goal (x,y) ","(" +
+          map.getGoalX() + "," + 
+          map.getGoalY() + ")");
+        telemetry.addData("goal (x,y) ","(" +
+          map.getRobotX() + "," + 
+          map.getRobotY() + ")");
     }
 
     @Override

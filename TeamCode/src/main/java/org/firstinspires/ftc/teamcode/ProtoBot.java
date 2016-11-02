@@ -96,11 +96,11 @@ public class ProtoBot extends OpMode {
         if(gamepad1.a){
             RS.setPower(1);
             LS.setPower(1);
-            MC.setPower(.2);
+            MC.setPower(1);
         }else if(gamepad1.b){
             RS.setPower(-1);
             LS.setPower(-1);
-            MC.setPower(-.2);
+            MC.setPower(-1);
         }else{
             RS.setPower(0);
             LS.setPower(0);
@@ -124,7 +124,7 @@ public class ProtoBot extends OpMode {
             BPR.setPosition(1);
         }else{
             BPL.setPosition(.5);
-            BPL.setPosition(.5);
+            BPR.setPosition(.5);
         }
         
         // Put telemetry here

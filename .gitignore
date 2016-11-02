@@ -11,6 +11,7 @@ gen/
 
 # Local configuration file (sdk path, etc)
 local.properties
+proto
 
 # Windows thumbnail db
 Thumbs.db
