@@ -102,15 +102,15 @@ public class Omni2MotorTeleopTank_Iterative extends OpMode{
         double right;
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-        left = -gamepad1.left_stick_y;
-        right = -gamepad1.right_stick_y;
+        left = -gamepad1.left_stick_y + (java.lang.Math.signum(-gamepad1.left_stick_y) - (-gamepad1.left_stick_y)) * gamepad1.left_stick_x;
+        right = -gamepad1.right_stick_y + (java.lang.Math.signum(-gamepad1.right_stick_y) - (-gamepad1.right_stick_y)) * gamepad1.right_stick_x;
         robot.leftMotor.setPower(left);
         robot.rightMotor.setPower(right);
 
         // Use gamepad left & right Bumpers to open and close the claw
-        if (gamepad1.right_bumper)
+        if (gamepad2.right_bumper)
             clawOffset += CLAW_SPEED;
-        else if (gamepad1.left_bumper)
+        else if (gamepad2.left_bumper)
             clawOffset -= CLAW_SPEED;
 
         // Move both servos to new position.  Assume servos are mirror image of each other.
@@ -119,9 +119,9 @@ public class Omni2MotorTeleopTank_Iterative extends OpMode{
         robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset);
 
         // Use gamepad buttons to move the arm up (Y) and down (A)
-        if (gamepad1.y)
+        if (gamepad2.y)
             robot.armMotor.setPower(robot.ARM_UP_POWER);
-        else if (gamepad1.a)
+        else if (gamepad2.a)
             robot.armMotor.setPower(robot.ARM_DOWN_POWER);
         else
             robot.armMotor.setPower(0.0);
