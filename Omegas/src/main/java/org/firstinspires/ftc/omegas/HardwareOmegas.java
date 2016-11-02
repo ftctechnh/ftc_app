@@ -138,7 +138,7 @@ public class HardwareOmegas
             if (timePushed.milliseconds() < milliseconds) {
                 positionServo(beaconator, 0.0);
             } else if (timePushed.milliseconds() < milliseconds * 2) {
-                retractServo(beaconator);
+                positionServo(beaconator, 1.0);
             } else {
                 positionServo(beaconator, 1.0);
                 isExtending = false;
@@ -153,11 +153,11 @@ public class HardwareOmegas
 
         while (true) {
             if (timePushed.milliseconds() < milliseconds) {
-                positionServo(beaconator, 0.0);
-            } else if (timePushed.milliseconds() < milliseconds * 2) {
-                retractServo(beaconator);
-            } else {
                 positionServo(beaconator, 1.0);
+            } else if (timePushed.milliseconds() < milliseconds * 2) {
+                positionServo(beaconator, 0.0);
+            } else {
+                positionServo(beaconator, 0.0);
                 isExtending = false;
                 return;
             }
@@ -166,10 +166,6 @@ public class HardwareOmegas
 
     public void positionServo(Servo beaconator, double pos) {
         beaconator.setPosition(Math.abs(pos));
-    }
-
-    public void retractServo(Servo beaconator) {
-        beaconator.setPosition(1.0);
     }
 }
 
