@@ -38,6 +38,10 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
+
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
  * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
@@ -52,10 +56,16 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="iRads: AutoOp Blank", group="iRads")  // @Autonomous(...) is the other common choice
-@Disabled
+@Autonomous(name="iRads: AutoOp Vision Iterative", group="iRads")  // @Autonomous(...) is the other common choice
+//@Disabled
 public class iRadsAutoOpMode_Iterative extends OpMode
 {
+
+    // Vuforia visual navigations
+    public VisualNavigation visualNav = new VisualNavigation();
+    // Provide 10sec instead of 5sec to initialize Vuforia.
+    protected int msStuckDetectInit = 10000; // Default 5000 (this line doesn't change timeout...)
+
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -67,7 +77,6 @@ public class iRadsAutoOpMode_Iterative extends OpMode
      */
     @Override
     public void init() {
-        telemetry.addData("Status", "Initialized");
 
         /* eg: Initialize the hardware variables. Note that the strings used here as parameters
          * to 'get' must correspond to the names assigned during the robot configuration
@@ -81,6 +90,10 @@ public class iRadsAutoOpMode_Iterative extends OpMode
         // leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         //  rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
         // telemetry.addData("Status", "Initialized");
+
+        // ****************************** Initialize Vuforia using VisualNavigation class *********
+        this.visualNav.init();
+        telemetry.addData("Status", "Initialized");
     }
 
     /*
@@ -96,6 +109,11 @@ public class iRadsAutoOpMode_Iterative extends OpMode
     @Override
     public void start() {
         runtime.reset();
+
+        /** Start tracking the data sets we care about. */
+        this.visualNav.stonesAndChips.activate();
+        telemetry.addData("Status", "stonesAndChips Activate");
+
     }
 
     /*
@@ -108,7 +126,41 @@ public class iRadsAutoOpMode_Iterative extends OpMode
         // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
         // leftMotor.setPower(-gamepad1.left_stick_y);
         // rightMotor.setPower(-gamepad1.right_stick_y);
-    }
+
+
+        // **************** Vuforia Test *********************
+
+        for (VuforiaTrackable trackable : this.visualNav.allTrackables) {
+            /**
+             * getUpdatedRobotLocation() will return null if no new information is available since
+             * the last time that call was made, or if the trackable is not currently visible.
+             * getRobotLocation() will return null if the trackable is not currently visible.
+             */
+            telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible() ? "Visible" : "Not Visible");    //
+
+            OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
+            if (robotLocationTransform != null) {
+                this.visualNav.lastLocation = robotLocationTransform;
+            }
+        }
+        /**
+         * Provide feedback as to where the robot was last located (if we know).
+         */
+        if (this.visualNav.lastLocation != null) {
+            //  RobotLog.vv(TAG, "robot=%s", format(lastLocation));
+            telemetry.addData("Pos", format(this.visualNav.lastLocation));
+        } else {
+            telemetry.addData("Pos", "Unknown");
+        }
+        telemetry.update();
+
+        // ***************** END Vuforia Testing *********************
+
+
+
+
+    } // loop() (main opMode function)
+
 
     /*
      * Code to run ONCE after the driver hits STOP
@@ -117,4 +169,12 @@ public class iRadsAutoOpMode_Iterative extends OpMode
     public void stop() {
     }
 
-}
+
+
+
+    String format(OpenGLMatrix transformationMatrix) {
+        return transformationMatrix.formatAsTransform();
+    } // format(transformationMatrix)
+
+
+} // class

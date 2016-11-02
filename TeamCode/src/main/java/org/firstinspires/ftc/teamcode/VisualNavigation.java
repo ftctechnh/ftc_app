@@ -61,6 +61,9 @@ public class VisualNavigation {
     public static final String TAG = "Vuforia Sample"; // Tag for logs
 
     public OpenGLMatrix lastLocation = null;
+    public VuforiaTrackables stonesAndChips = null;
+    public List<VuforiaTrackable> allTrackables = null;
+
 
     /**
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
@@ -112,16 +115,16 @@ public class VisualNavigation {
          * example "StonesAndChips", datasets can be found in in this project in the
          * documentation directory.
          */
-        VuforiaTrackables stonesAndChips = this.vuforia.loadTrackablesFromAsset("StonesAndChips");
-        VuforiaTrackable redTarget = stonesAndChips.get(0);
+        this.stonesAndChips = this.vuforia.loadTrackablesFromAsset("StonesAndChips");
+        VuforiaTrackable redTarget = this.stonesAndChips.get(0);
         redTarget.setName("RedTarget");  // Stones
 
-        VuforiaTrackable blueTarget  = stonesAndChips.get(1);
+        VuforiaTrackable blueTarget  = this.stonesAndChips.get(1);
         blueTarget.setName("BlueTarget");  // Chips
 
         /** For convenience, gather together all the trackable objects in one easily-iterable collection */
-        List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
-        allTrackables.addAll(stonesAndChips);
+        this.allTrackables = new ArrayList<VuforiaTrackable>();
+        this.allTrackables.addAll(this.stonesAndChips);
 
         /**
          * We use units of mm here because that's the recommended units of measurement for the
@@ -266,7 +269,7 @@ public class VisualNavigation {
 
 
     } // init()
-    
+
 
 
     String format(OpenGLMatrix transformationMatrix) {
