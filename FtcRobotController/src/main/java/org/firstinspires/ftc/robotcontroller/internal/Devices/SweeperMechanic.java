@@ -15,6 +15,8 @@ public class SweeperMechanic
     public SweeperMechanic(HardwareMap hardwareMap)
     {
         axelRotation = new DcMotor[1];
+        axelRotation[0] = hardwareMap.dcMotor.get("sweeperMechanicMotor");
+
     }
     public synchronized void setPower (double power)
     {

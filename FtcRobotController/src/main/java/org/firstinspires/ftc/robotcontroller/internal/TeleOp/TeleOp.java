@@ -2,6 +2,11 @@ package org.firstinspires.ftc.robotcontroller.internal.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.robotcontroller.internal.Devices.DriveSystem;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import org.firstinspires.ftc.robotcontroller.internal.Devices.FlyWheelMechanic;
+import org.firstinspires.ftc.robotcontroller.internal.Devices.SweeperMechanic;
+import org.firstinspires.ftc.robotcontroller.internal.Devices.TrapDoorMechanic;
+
 
 /**
  * Created by abnaveed on 10/13/2016.
@@ -10,14 +15,28 @@ import org.firstinspires.ftc.robotcontroller.internal.Devices.DriveSystem;
 
 public class TeleOp extends OpMode
 {
+    public DriveSystem drive;
+
+    public FlyWheelMechanic flywheel;
+
+    public SweeperMechanic sweeper;
+
+    public TrapDoorMechanic trapdoor;
+
     // TeleOp
     public DriveSystem driveSystem;
+    public DcMotor leftMotor = null;
+    public DcMotor rightMotor = null;
+    public FlyWheelMechanic flymotor;
     private static final float deadBand = .05f;
 
     @Override
     public void init()
     {
         driveSystem = new DriveSystem(hardwareMap);
+        flywheel = new FlyWheelMechanic(hardwareMap);
+        sweeper = new SweeperMechanic(hardwareMap);
+        trapdoor = new TrapDoorMechanic(hardwareMap);
     }
 
     @Override
@@ -45,5 +64,9 @@ public class TeleOp extends OpMode
         {
             driveSystem.setRight(0);
         }
+
+
+        /// flywheel
+        boolean flyWheelPressed = gamepad2.right_bumper;
     }
 }
