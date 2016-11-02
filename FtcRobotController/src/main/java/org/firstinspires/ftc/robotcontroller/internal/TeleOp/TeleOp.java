@@ -3,6 +3,11 @@ package org.firstinspires.ftc.robotcontroller.internal.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeMeta;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import org.firstinspires.ftc.robotcontroller.internal.Devices.DriveSystem;
+import org.firstinspires.ftc.robotcontroller.internal.Devices.FlyWheelMechanic;
+import org.firstinspires.ftc.robotcontroller.internal.Devices.SweeperMechanic;
+import org.firstinspires.ftc.robotcontroller.internal.Devices.TrapDoorMechanic;
+
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwareK9bot;
 import org.firstinspires.ftc.robotcontroller.internal.Devices.FlyWheelMechanic;
@@ -14,6 +19,14 @@ import org.firstinspires.ftc.robotcontroller.internal.Devices.FlyWheelMechanic;
 
 public class TeleOp extends OpMode
 {
+    public DriveSystem drive;
+
+    public FlyWheelMechanic flywheel;
+
+    public SweeperMechanic sweeper;
+
+    public TrapDoorMechanic trapdoor;
+
     // TeleOp
     public DcMotor leftMotor = null;
     public DcMotor rightMotor = null;
@@ -23,7 +36,9 @@ public class TeleOp extends OpMode
     @Override
     public void init()
     {
-        flymotor = new FlyWheelMechanic(hardwareMap);
+        flywheel = new FlyWheelMechanic(hardwareMap);
+        sweeper = new SweeperMechanic(hardwareMap);
+        trapdoor = new TrapDoorMechanic(hardwareMap);
     }
 
     @Override
