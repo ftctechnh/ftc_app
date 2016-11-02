@@ -31,12 +31,12 @@ public class ProtobotAuto extends RobotOp {
         Route happyTrail = new Route();
 
 
-        int encoderGoal = robot.inchesToEncoderTicks(48);
+        int encoderGoal = robot.inchesToEncoderTicks(64);
         ConcurrentTaskSet forward = new ConcurrentTaskSet(
-                new MotorTask(robot.frontRight, encoderGoal, null, 0.5f, 0.8f, encoderGoal),
-                new MotorTask(robot.frontLeft, encoderGoal, null, 0.5f, 0.8f, encoderGoal),
-                new MotorTask(robot.backRight, encoderGoal, null, 0.5f, 0.8f, encoderGoal),
-                new MotorTask(robot.backLeft, encoderGoal, null, 0.5f, 0.8f, encoderGoal)
+                new MotorTask(robot.frontRight, encoderGoal, null, 0.5f, 0.8f, encoderGoal, 0.2f),
+                new MotorTask(robot.frontLeft, encoderGoal, null, 0.5f, 0.8f, encoderGoal, 0.2f),
+                new MotorTask(robot.backRight, encoderGoal, null, 0.5f, 0.8f, encoderGoal, 0.2f),
+                new MotorTask(robot.backLeft, encoderGoal, null, 0.5f, 0.8f, encoderGoal, 0.2f)
         );
 
         happyTrail.addTask(forward);
