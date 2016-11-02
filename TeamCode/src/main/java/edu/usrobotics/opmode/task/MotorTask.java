@@ -32,6 +32,7 @@ public class MotorTask implements Task {
         this.power = power;
         this.damping = damping;
         this.dampingGoal = dampingGoal;//encoderGoal != null ? encoderGoal
+        this.ramping = ramping;
     }
 
     public MotorTask (DcMotor motor) {
@@ -44,12 +45,12 @@ public class MotorTask implements Task {
         float percentToTarget = Math.min(1, Math.max(0, (float)motor.getCurrentPosition() / dampingGoal));
         float percentDToZero = (-1f / (1f - damping)) * percentToTarget + (1f / (1f - damping));
         float percentRToOne = Math.min(1, Math.max(0, (float)motor.getCurrentPosition() / (dampingGoal * ramping)));
-        LoggedOp.debugOut = "ramp "+percentRToOne;
+        LoggedOp.debugOut = "ramp "+percentRToOne + " asd: " + dampingGoal + " sd2: " + ramping;
         return (percentToTarget < ramping ?
                     Math.max(0.2, power * percentRToOne) : // RAMP UP
                 percentToTarget < damping ?
                     power : // FULL SPED AHED!!11!1
-                Math.max(0.2, power * percentDToZero)); // DAMP DOWN
+                Math.max(0.2, power * percentDToZero)); // DAMP DOWN1
     }
 
     @Override
@@ -61,12 +62,11 @@ public class MotorTask implements Task {
                 if (!encoderReset) motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
             } else { // If encoder reset, run to encoderGoal
-                if (Math.abs(motor.getCurrentPosition()) >= Math.abs(encoderGoal)){ return true; // If we reached encoderGoal, return true
+                if (Math.abs(motor.getCurrentPosition()) >= Math.abs(encoderGoal)) return true; // If we reached encoderGoal, return true
 
                 //**
                 motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 motor.setTargetPosition(encoderGoal);
-                //motor.setPower (1f);
                 motor.setPower(getDampedPower(power));
                 //motor.setMaxSpeed(maxMotorSpeed);
                 /**/
