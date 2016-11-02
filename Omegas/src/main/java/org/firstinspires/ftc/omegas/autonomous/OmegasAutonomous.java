@@ -75,31 +75,31 @@ public abstract class OmegasAutonomous extends LinearOpMode {
             telemetry.addData("Right color sensor red: ", Ω.rightColorSensor.red());
             telemetry.update();
 
-            double currentPower = (runtime.milliseconds() < 3000) ? 1.0 : (runtime.milliseconds() > 10000) ? 1.0 : 0.0;
-            for (DcMotor motor : Ω.motors) {
-                motor.setPower(currentPower);
-            }
+//            double currentPower = (runtime.milliseconds() < 3000) ? 1.0 : (runtime.milliseconds() > 10000) ? 1.0 : 0.0;
+//            for (DcMotor motor : Ω.motors) {
+//                motor.setPower(currentPower);
+//            }
 
-            if (runtime.milliseconds() > 8000 && !rotated) {
-                Ω.rotate(Math.PI);
-                rotated = true;
-            }
+//            if (runtime.milliseconds() > 8000 && !rotated) {
+//                Ω.rotate(Math.PI);
+//                rotated = true;
+//            }
 
             /**
              * The following should, if uncommented, extend beaconators depending
              * on the colors in front of its two color sensors.
-             *
-             *  switch (getColor()) {
-             *      case RED:
-             *          pushBeacon(Ω.leftColorSensor.red(),
-             *              Ω.rightColorSensor.red());
-             *          break;
-             *      case BLUE:
-             *          pushBeacon(Ω.leftColorSensor.blue(),
-             *              Ω.rightColorSensor.blue());
-             *          break;
-             *  }
              */
+
+             switch (getColor()) {
+                 case RED:
+                     pushBeacon(Ω.leftColorSensor.red(),
+                             Ω.rightColorSensor.red());
+                     break;
+                 case BLUE:
+                     pushBeacon(Ω.leftColorSensor.blue(),
+                             Ω.rightColorSensor.blue());
+                     break;
+             }
         }
     }
 

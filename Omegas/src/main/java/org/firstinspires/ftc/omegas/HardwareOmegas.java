@@ -76,7 +76,7 @@ public class HardwareOmegas
         // Connect to servo (Assume PushBot Left Hand)
         // Change the text in quotes to match any servo name on your robot.
         leftBeaconator = hwMap.servo.get("left_beaconator");
-//        rightBeaconator = hwMap.servo.get("right_beaconator");
+        rightBeaconator = hwMap.servo.get("right_beaconator");
 
 //        leftColorSensor = hwMap.colorSensor.get("left_color_sensor");
 //        rightColorSensor = hwMap.colorSensor.get("right_color_sensor");
@@ -130,31 +130,46 @@ public class HardwareOmegas
         }
     }
 
-    public void beaconatorSequence(Servo beaconator, long milliseconds) {
+    public void rightBeaconatorSequence(Servo beaconator, long milliseconds) {
         ElapsedTime timePushed = new ElapsedTime();
-        beaconator.setDirection(Servo.Direction.FORWARD);
         if (isExtending) return; else isExtending = true;
 
         while (true) {
             if (timePushed.milliseconds() < milliseconds) {
-                positionServo(beaconator, 1.0);
+                positionServo(beaconator, 0.0);
             } else if (timePushed.milliseconds() < milliseconds * 2) {
                 retractServo(beaconator);
             } else {
+                positionServo(beaconator, 1.0);
+                isExtending = false;
+                return;
+            }
+        }
+    }
+
+    public void leftBeaconatorSequence(Servo beaconator, long milliseconds) {
+        ElapsedTime timePushed = new ElapsedTime();
+        if (isExtending) return; else isExtending = true;
+
+        while (true) {
+            if (timePushed.milliseconds() < milliseconds) {
                 positionServo(beaconator, 0.0);
+            } else if (timePushed.milliseconds() < milliseconds * 2) {
+                retractServo(beaconator);
+            } else {
+                positionServo(beaconator, 1.0);
+                isExtending = false;
                 return;
             }
         }
     }
 
     public void positionServo(Servo beaconator, double pos) {
-        beaconator.setDirection(Servo.Direction.FORWARD);
         beaconator.setPosition(Math.abs(pos));
     }
 
     public void retractServo(Servo beaconator) {
-        beaconator.setDirection(Servo.Direction.REVERSE);
-        beaconator.setPosition(0.0);
+        beaconator.setPosition(1.0);
     }
 }
 
