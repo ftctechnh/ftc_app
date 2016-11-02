@@ -194,19 +194,112 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
         }
     }
 
-    public void rightTurnEqualPower() {
+    public void rightTurnEqualPower()
+    {
         encoderDrive(DRIVE_SPEED,  8,  8, 5.0);
         encoderDrive(TURN_SPEED,   -7, 7, 4.0);
         encoderDrive(DRIVE_SPEED,   -8,  -8, 5.0);
 
     }
 
-    public void leftTurnEqualPower() {
+    public void leftTurnEqualPower()
+    {
         //encoderDrive(DRIVE_SPEED,  10,  10, 5.0);
         encoderDrive(TURN_SPEED,   5, -5, 4.0);
         encoderDrive(DRIVE_SPEED,  -10,  -10, 5.0);
 
 
+    }
+    public void DrawF()
+    {
+        encoderDrive(DRIVE_SPEED,  20,  20, 5.0);
+        //servo up
+        rightTurnEqualPower();
+        //servo down
+        encoderDrive(DRIVE_SPEED,  10,  10, 5.0);
+        //servo up
+        encoderDrive(DRIVE_SPEED,  -10,  -10, 5.0);
+        rightTurnEqualPower();
+        encoderDrive(DRIVE_SPEED,  7,  7, 5.0);
+        leftTurnEqualPower();
+        //servo down
+        encoderDrive(DRIVE_SPEED, 8, 8, 5.0);
+    }
+    public void DrawT()
+    {
+        encoderDrive(DRIVE_SPEED, 20, 20, 5.0);
+        //servo up
+        rightTurnEqualPower();
+        //servo down
+        encoderDrive(DRIVE_SPEED, 5, 5, 5.0);
+        encoderDrive(DRIVE_SPEED, -10, -10, 5.0);
+    }
+    public void DrawC()
+    {
+        //servo up
+        leftTurnEqualPower();
+        //servo down
+        encoderDrive(DRIVE_SPEED, 20, 20, 5.0);
+        //servo up
+        rightTurnEqualPower();
+        //servo down
+        encoderDrive(DRIVE_SPEED, 20, 20, 5.0);
+        //servo up
+        rightTurnEqualPower();
+        //servo down
+        encoderDrive(DRIVE_SPEED, 20, 20, 5.0);
+
+    }
+    public void DrawFTC()
+    {
+        DrawF();
+        //move back , then make a right turn, go forward,
+        // make a left turn
+        //go forward, servo down
+
+
+        //servo up
+        encoderDrive(DRIVE_SPEED, -8, -8, 5.0);
+        rightTurnEqualPower();
+        encoderDrive(DRIVE_SPEED, 15, 15, 5.0);
+        leftTurnEqualPower();
+        encoderDrive(DRIVE_SPEED, 25, 25, 5.0);
+        //servo down
+
+        DrawT();
+
+        //reverse 1/2, make right turn, move forward,
+        // make left turn, move forward, servo down
+
+        //servo up
+        encoderDrive(DRIVE_SPEED, 5, 5, 5.0);
+        rightTurnEqualPower();
+        encoderDrive(DRIVE_SPEED, 20, 20, 5.0);
+        leftTurnEqualPower();
+        encoderDrive(DRIVE_SPEED, 20, 20, 5.0);
+        //servo down
+
+        DrawC();
+    }
+    public void DrawI()
+    {
+
+    }
+    public void DrawR()
+    {
+
+    }
+    public void DrawS()
+    {
+
+    }
+    public void DrawFIRST()
+    {
+        DrawF();
+        DrawI();
+        DrawR();
+        DrawS();
+        DrawT();
     }
     public void rightTurnUnequalPower()
     {
