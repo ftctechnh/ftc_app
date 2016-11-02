@@ -8,6 +8,9 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
  * Created by Eamonn on 10/29/2016. Funtastic.
  */
 
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 public class TrapDoorMechanic
 {
@@ -24,3 +27,4 @@ public class TrapDoorMechanic
         axelRotation[0].setPower(power);
     }
 }
+
