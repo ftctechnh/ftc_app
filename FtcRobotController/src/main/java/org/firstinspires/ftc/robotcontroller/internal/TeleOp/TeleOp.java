@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.robotcontroller.internal.Devices;
+package org.firstinspires.ftc.robotcontroller.internal.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -13,6 +13,7 @@ public class TeleOp extends OpMode
     // TeleOp
     public DcMotor leftMotor = null;
     public DcMotor rightMotor = null;
+    private static final float deadBand = .05f;
 
     @Override
     public void init()
@@ -29,5 +30,24 @@ public class TeleOp extends OpMode
         // Converting joystick values to motor power values
         rightMotor.setPower(rightJoystick);
         leftMotor.setPower(leftJoystick);
+
+        if(leftJoystick > deadBand)
+        {
+            leftMotor.setPower(leftJoystick);
+        }
+        else
+        {
+            leftMotor.setPower(0);
+        }
+
+        if(rightJoystick > deadBand)
+        {
+            rightMotor.setPower(rightJoystick);
+        }
+        else
+        {
+            leftMotor.setPower(0);
+        }
     }
+
 }
