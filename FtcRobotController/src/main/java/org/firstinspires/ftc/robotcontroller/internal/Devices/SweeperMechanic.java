@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 public class SweeperMechanic
 {
-    private DcMotor[] axelRotation = null;
+    private static DcMotor[] axelRotation = null;
 
     public SweeperMechanic(HardwareMap hardwareMap)
     {
@@ -18,7 +18,7 @@ public class SweeperMechanic
         axelRotation[0] = hardwareMap.dcMotor.get("sweeperMechanicMotor");
 
     }
-    public synchronized void setPower (double power)
+    public static synchronized void setPower(double power)
     {
         axelRotation[0].setPower(power);
     }

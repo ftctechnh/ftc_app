@@ -67,6 +67,12 @@ public class TeleOp extends OpMode
 
 
         /// flywheel
-        boolean flyWheelPressed = gamepad2.right_bumper;
+        boolean sweeper = gamepad1.right_bumper;
+        if(sweeper){
+            SweeperMechanic.setPower(100.0);
+        }
+        else {
+            SweeperMechanic.setPower(0.0);
+        }
     }
 }
