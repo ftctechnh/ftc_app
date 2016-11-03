@@ -39,7 +39,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 
-@Autonomous(name="I dont even know.", group="Pushbot")
+@Autonomous(name="getting to the beacons", group="Pushbot")
 //@Disabled
 public class WIllows_doing_things extends LinearOpMode {
 
@@ -51,12 +51,12 @@ public class WIllows_doing_things extends LinearOpMode {
     static final double     FORWARD_SPEED = 1.0;
     static final double     TURN_SPEED    = 0.5;
 
-    @Override
-    public void runOpMode() throws InterruptedException {
-
+     //the software team does all the work here
         /*
          * Initialize the drive system variables.
-         * The init() method of the hardware class does all the work here
+         * The init() method of the hardware class does all the work h
+    @Override
+    public void runOpMode() throws InterruptedException {ere
          */
         robot.init(hardwareMap);
 
@@ -69,7 +69,7 @@ public class WIllows_doing_things extends LinearOpMode {
 
         // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
 
-        // Step 1:  Drive forward for 1 second
+        // Step 1:  Drive forward for .5 seconds
         robot.leftMotor.setPower(FORWARD_SPEED);
         robot.rightMotor.setPower(FORWARD_SPEED);
         runtime.reset();
@@ -90,9 +90,11 @@ public class WIllows_doing_things extends LinearOpMode {
             idle();*/
 
 
-        // Step 2:  Spin right for 1.3 seconds
+        // Step 2:  Spin right for 1.0 seconds
+    robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         robot.leftMotor.setPower(TURN_SPEED);
-        robot.rightMotor.setPower(-TURN_SPEED);
+    robot.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        robot.rightMotor.setPower(TURN_SPEED);
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 1.0)) {
             telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
@@ -112,7 +114,7 @@ public class WIllows_doing_things extends LinearOpMode {
         }*/
         
 
-        // Step 1:  Drive forward for 2 seconds
+        // Step 1:  Drive forward for 1 second
         robot.leftMotor.setPower(FORWARD_SPEED);
         robot.rightMotor.setPower(FORWARD_SPEED);
         runtime.reset();
@@ -124,7 +126,9 @@ public class WIllows_doing_things extends LinearOpMode {
         }
 
         // Step 2:  Spin left for 1.3 seconds
-        robot.leftMotor.setPower(-TURN_SPEED);
+    robot.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        robot.leftMotor.setPower(TURN_SPEED);
+    robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         robot.rightMotor.setPower(TURN_SPEED);
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 1.3)) {
@@ -133,7 +137,7 @@ public class WIllows_doing_things extends LinearOpMode {
             idle();
         }
 
-        // Step 1:  Drive forward for 1 second
+        // Step 1:  Drive forward for .5 seconds
         robot.leftMotor.setPower(FORWARD_SPEED);
         robot.rightMotor.setPower(FORWARD_SPEED);
         runtime.reset();
@@ -145,8 +149,10 @@ public class WIllows_doing_things extends LinearOpMode {
         }
 
         // Step 2:  Spin right for 1.3 seconds
+    robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         robot.leftMotor.setPower(TURN_SPEED);
-        robot.rightMotor.setPower(-TURN_SPEED);
+    robot.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        robot.rightMotor.setPower(TURN_SPEED);
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 1.0)) {
             telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
