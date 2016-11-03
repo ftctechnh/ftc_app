@@ -6,13 +6,24 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.ImageFormat;
+import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import java.nio.IntBuffer;
+import java.util.List;
 
-@TeleOp(name="Test: CameraTestOp", group="Test")
-public class  CameraTestOp extends OpMode {
+import org.firstinspires.ftc.teamcode.CameraLib;
+
+
+@Autonomous(name="Test: CameraLib Test 1", group ="Test")
+//@Disabled
+public class CameraTestOp extends OpMode {
 
     int mLoopCount;
     CameraLib.CameraAcquireFrames mCamAcqFr;
@@ -35,7 +46,7 @@ public class  CameraTestOp extends OpMode {
     public void loop() {
         // post some debug data
         telemetry.addData("loop count:", mLoopCount++);
-        telemetry.addData("version: ", "1.4");
+        telemetry.addData("version: ", "1.3");
 
         // get most recent frame from camera (may be same as last time or null)
         CameraLib.CameraImage frame = mCamAcqFr.loop();

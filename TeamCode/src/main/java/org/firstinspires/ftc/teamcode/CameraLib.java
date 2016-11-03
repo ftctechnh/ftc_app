@@ -84,7 +84,7 @@ public class CameraLib {
     static class Pixel extends Color {
         static float[] mHSV = new float[3];     // scratch storage - allocated once at start-up
         public static String toString(int rgb) {
-            return "pixel("+ Color.red(rgb)+","+green(rgb)+","+blue(rgb)+")";
+            return "pixel("+Color.red(rgb)+","+green(rgb)+","+blue(rgb)+")";
         }
         // return hue of given RGB pixel, discretized to 6 principal colors:
         // Red,Yellow,Green,Cyan,Blue,Magenta (1..6) or, if saturation < threshold, White(0)
