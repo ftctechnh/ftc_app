@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 /**
  * Created by Sean Ovens on 10/26/2016.
  */
-@Autonomous(name="Protobot Tank", group="Protobot")
+@Autonomous(name="Blue 6", group="Blue")
 public class AutoB1 extends AutonomousBase{
     @Override
     public void gameState() {
