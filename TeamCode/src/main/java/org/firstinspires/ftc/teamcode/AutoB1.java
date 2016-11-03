@@ -62,13 +62,15 @@ public class AutoB1 extends AutonomousBase{
                 }
                 gameState = 6;
                 break;
-            case 6: //Moves to tHe center and knocks off cap ball
+            case 6: //Moves to the center and knocks off cap ball
                 map.setGoal(6.8,5.5);
                 linedUp(1,2);
-                if(map.distanceToGoal()<=.1){moveState = MoveState.STOP;}
+                if(map.distanceToGoal()<=.1) {
+                    moveState = MoveState.STOP;
+                }
                 break;
             case 777:
-                moveState = 0;
+                moveState = MoveState.STOP;
                 break;
         }
     }
