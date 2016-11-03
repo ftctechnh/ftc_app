@@ -79,6 +79,7 @@ public class AutoBlueBNear extends LinearOpMode {
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.6;
+    static final double     PUSH_SPEED             = 0.1;
 
     @Override
     public void runOpMode() {
@@ -118,14 +119,14 @@ public class AutoBlueBNear extends LinearOpMode {
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         // This is for the nearest blue beacon towards our robot
-        encoderDrive(DRIVE_SPEED,  36,  36, 3.0);  //  Forward 36 Inches with 3 Sec timeout CHANGE TO REAL LENGTH
-        encoderDrive(TURN_SPEED,   12, -12, 3.0);  //  Turn Left 12 Inches with 3 Sec timeout (to be figured out)
-        encoderDrive(DRIVE_SPEED, 24, 24, 3.0);  //  Reverse 24 Inches with 3 Sec timeout CHANGE TO REAL LENGTH
-        encoderDrive(TURN_SPEED,   -12, 12, 3.0);  //  Turn Right 12 Inches with 3 Sec timeout (to be figured out)
+        encoderDrive(DRIVE_SPEED,  24,  24, 3.0);  //  Forward 36 Inches with 3 Sec timeout CHANGE TO REAL LENGTH
+        encoderDrive(TURN_SPEED,   12, -6, 3.0);  //  Turn Right 12 Inches with 3 Sec timeout (to be figured out)
+        encoderDrive(DRIVE_SPEED,  30, 30, 3.0);  //  Reverse 24 Inches with 3 Sec timeout CHANGE TO REAL LENGTH
+        // encoderDrive(TURN_SPEED,   12, -12, 3.0);  // S2: Turn Left 12 Inches with 3 Sec timeout (to be figured out)
+        encoderDrive(TURN_SPEED,   12, -6, 3.0);  //  Turn Right 12 Inches with 3 Sec timeout (to be figured out)
         encoderDrive(DRIVE_SPEED, 24, 24, 3.0); //  Forward 24 inches with 3 Sec timeout                            CHANGE TO REAL LENGTH
-        encoderDrive(TURN_SPEED,   12, -12, 3.0);  // S2: Turn Left 12 Inches with 3 Sec timeout (to be figured out)
-        encoderDrive(DRIVE_SPEED, 36, 36, 3.0); //  Forward 36 inches with 3 Sec timeout CHANGE TO REAL LENGTH
-        encoderDrive(DRIVE_SPEED, -72, -72, 3.0); //  Reverse 72 inches with 3 Sec timeout CHANGE TO REAL LENGTH
+        encoderDrive(PUSH_SPEED, 9, 9, 5.0); //  Forward 24 inches with 3 Sec timeout                            CHANGE TO REAL LENGTH
+        encoderDrive(DRIVE_SPEED, -42, -42, 5.0); //  Reverse 72 inches with 3 Sec timeout CHANGE TO REAL LENGTH
         //robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
         //robot.rightClaw.setPosition(0.0);
         sleep(1000);     // pause for servos to move
