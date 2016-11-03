@@ -31,3 +31,5 @@ build/
 
 # Documentation and Media
 *.pdf
+# Windows Shortcuts
+*.lnk
