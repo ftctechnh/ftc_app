@@ -44,19 +44,15 @@ public class DriveForward extends AutonomousBase {
     @Override
     protected void driverStationSaysINITIALIZE()
     {
-        backRight.setPower(-.3);
-        frontRight.setPower(-.3);
-        frontLeft.setPower(.3);
-        backLeft.setPower(.3);
+        right.setPower(-.3);
+        left.setPower(.3);
     }
 
     //Called after runOpMode() has finished initializing.
     protected void driverStationSaysGO() throws InterruptedException
     {
-        backRight.setPower(.6);
-        frontRight.setPower(.6);
-        frontLeft.setPower(.6);
-        backLeft.setPower(.6);
+        right.setPower(.6);
+        left.setPower(.6);
     }
 
     @Override

@@ -34,7 +34,7 @@ public class Teleop extends RobotBase {
         float lastTimeAudioTogglePressed = 0;
 
         //Normal mode variables
-        double left, right;
+        double leftPower, rightPower;
         boolean backwards = false;
         ControlMode currentControlMode = ControlMode.NORMAL;
         double lastTimeToggleDirectionPressed = 0;
@@ -44,6 +44,8 @@ public class Teleop extends RobotBase {
 
         //Toggle Variables
         double lastTimeDriveModeTogglePressed = 0;
+
+        //Other motor variables
 
         //Keep looping while opmode is active (waiting a hardware cycle after all of this is completed, just like loop()).
         while (true)
@@ -58,36 +60,35 @@ public class Teleop extends RobotBase {
                 else
                     currentControlMode = ControlMode.RACE_CAR;
 
-                OutputToDriverStation("Swapped to " + currentControlMode.toString() + " contro mode after getting X Press");
+                OutputToDriverStation("Swapped to " + currentControlMode.toString() + " control mode after getting X Press");
 
                 lastTimeDriveModeTogglePressed = System.currentTimeMillis();
             }
 
+            //Drive modes.
             if (currentControlMode == ControlMode.NORMAL)
             {
                 //Driving Toggle
-                if (backwards)
-                { // Driving backwards
-                    left = -gamepad1.right_stick_y;
-                    right = -gamepad1.left_stick_y;
+                if (!backwards)
+                { // Driving forward
+                    leftPower = -gamepad1.right_stick_y;
+                    rightPower = -gamepad1.left_stick_y;
                 } else
-                { // Driving forwards
-                    left = gamepad1.left_stick_y;
-                    right = gamepad1.right_stick_y;
+                { // Driving backward
+                    leftPower = gamepad1.left_stick_y;
+                    rightPower = gamepad1.right_stick_y;
                 }
 
                 // clip the right/left values so that the values never exceed +/- 1
-                right = Range.clip(right, -1, 1);
-                left = Range.clip(left, -1, 1);
+                rightPower = Range.clip(rightPower, -1, 1);
+                leftPower = Range.clip(leftPower, -1, 1);
 
                 // Write the values to the motors.  Scale the robot in order to run the robot more effectively at slower speeds.
-                frontLeft.setPower(scaleInput(left));
-                frontRight.setPower(scaleInput(right));
-                backLeft.setPower(scaleInput(left));
-                backRight.setPower(scaleInput(right));
+                left.setPower(scaleInput(leftPower));
+                right.setPower(scaleInput(rightPower));
 
                 //Wait a second before switching to backwards again (can only toggle once every second).
-                if (gamepad1.a && (System.currentTimeMillis() - lastTimeToggleDirectionPressed) > 1000)
+                if (gamepad1.back && (System.currentTimeMillis() - lastTimeToggleDirectionPressed) > 1000)
                 {
                     backwards = !backwards; // Switch driving direction
                     lastTimeToggleDirectionPressed = System.currentTimeMillis();
@@ -98,14 +99,12 @@ public class Teleop extends RobotBase {
                 //Get the power of the system.
                 raceCarPower = gamepad1.right_trigger - gamepad1.left_trigger;
 
-                double differenceFactor = (gamepad1.dpad_right ? 0.25 : 0) - (gamepad1.dpad_left ? 0.25 : 0);
-                double leftPower = 0.75 * raceCarPower - differenceFactor;
-                double rightPower = 0.75 * raceCarPower + differenceFactor;
+                double differenceFactor = 0.75 * gamepad1.left_stick_x;
+                double leftPowerR = 0.25 * raceCarPower - differenceFactor;
+                double rightPowerR = 0.25 * raceCarPower + differenceFactor;
 
-                frontLeft.setPower(leftPower);
-                backLeft.setPower(leftPower);
-                frontRight.setPower(rightPower);
-                backRight.setPower(rightPower);
+                left.setPower(leftPowerR);
+                right.setPower(rightPowerR);
             }
 
             /********************* AUDIO CONTROL ************************/
@@ -124,12 +123,36 @@ public class Teleop extends RobotBase {
                 lastTimeAudioTogglePressed = System.currentTimeMillis();
             }
 
+            /******************** OTHER MOTORS ********************/
+
+            //Harvester (hopefully just this simple)
+            if (gamepad1.b)
+                harvester.setPower(-.5);
+            else if (gamepad1.a)
+                harvester.setPower(.5);
+            else
+                harvester.setPower(0);
+
+            //Pusher
+            if (gamepad1.dpad_left)
+                pusher.setPower(-.5);
+            else if (gamepad1.dpad_right)
+                pusher.setPower(.5);
+            else
+                pusher.setPower(0);
+
             idle();
+
+            /******************** END OF LOOP ********************/
         }
     }
 
     protected void driverStationSaysSTOP ()
     {
+        left.setPower(0);
+        right.setPower(0);
+        harvester.setPower(0);
+        pusher.setPower(0);
     }
 
     /*
@@ -138,7 +161,8 @@ public class Teleop extends RobotBase {
      * the robot more precisely at slower speeds.
      */
 
-    double scaleInput(double dVal) {
+    double scaleInput(double dVal)
+    {
         double[] scaleArray = {0.0, 0.05, 0.09, 0.10, 0.12, 0.15, 0.18, 0.24,
                 0.30, 0.36, 0.43, 0.50, 0.60, 0.72, 0.85, 1.00, 1.00};
 

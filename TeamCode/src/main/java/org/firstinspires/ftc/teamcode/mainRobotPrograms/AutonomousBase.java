@@ -80,10 +80,8 @@ public abstract class AutonomousBase extends RobotBase {
                     rightPower = Range.clip(rightPower, -MAX_TURN_POWER, -MIN_TURN_POWER);
 
                 //Set the motor powers.
-                frontLeft.setPower(leftPower);
-                backLeft.setPower(leftPower);
-                frontRight.setPower(rightPower);
-                backRight.setPower(rightPower);
+                left.setPower(leftPower);
+                right.setPower(rightPower);
 
                 //Output data to the DS.
                 //Don't change this, since it is useful to have real-time data in this case.
@@ -104,10 +102,8 @@ public abstract class AutonomousBase extends RobotBase {
             OutputToDriverStation("Turning " + (power >= 0 ? "left" : "right") + " for " + heading + " seconds WITHOUT GYRO");
 
             //The turning point.
-            frontLeft.setPower(power);
-            backLeft.setPower(power);
-            frontRight.setPower(-power);
-            backRight.setPower(-power);
+            left.setPower(power);
+            right.setPower(power);
 
             //Sleep for some period of time.
             sleep((int) (heading));
@@ -133,10 +129,8 @@ public abstract class AutonomousBase extends RobotBase {
         int heading;
 
         //Set initial motor powers.
-        frontLeft.setPower(power);
-        backLeft.setPower(power);
-        frontRight.setPower(power);
-        backRight.setPower(power);
+        left.setPower(power);
+        right.setPower(power);
 
         sleep(500);
 
@@ -165,10 +159,8 @@ public abstract class AutonomousBase extends RobotBase {
                     rightPower = -1;
 
                 //Set the motor powers.
-                frontLeft.setPower(leftPower);
-                backLeft.setPower(leftPower);
-                frontRight.setPower(rightPower);
-                backRight.setPower(rightPower);
+                left.setPower(leftPower);
+                right.setPower(rightPower);
 
                 //Output data to the DS.
                 //Note: the 2nd parameter "%.2f" changes the output of the max decimal points.
@@ -205,9 +197,7 @@ public abstract class AutonomousBase extends RobotBase {
 
     //Stops all drive motors.
     protected void stopMotors() {
-        backLeft.setPower(0);
-        frontLeft.setPower(0);
-        backRight.setPower(0);
-        frontRight.setPower(0);
+        left.setPower(0);
+        right.setPower(0);
     }
 }

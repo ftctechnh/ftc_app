@@ -40,9 +40,9 @@ public abstract class RobotBase extends LinearOpMode
 {
     /*** CONFIGURE ALL ROBOT ELEMENTS HERE ***/
     //Drive motors
-    protected DcMotor frontRight, frontLeft, backRight, backLeft;
+    protected DcMotor left, right;
     //Other motors
-    protected DcMotor beaconPushingMotor;
+    protected DcMotor harvester, pusher;
 
     //This took a LONG TIME TO WRITE
     protected <T extends HardwareDevice> T Initialize  (Class <T> hardwareDevice, String name)
@@ -61,24 +61,22 @@ public abstract class RobotBase extends LinearOpMode
 
     // Called on initialization (once)
     @Override
+    //@SuppressWarnings("all")
     public void runOpMode()
     {
         //Make sure that the robot components are found and initialized correctly.
         //This all happens during init()
         /*************************** DRIVING MOTORS ***************************/
-        frontRight = Initialize(DcMotor.class, "Front Right");
-        frontLeft = Initialize(DcMotor.class, "Front Left");
-        backRight = Initialize(DcMotor.class, "Back Right");
-        backLeft = Initialize(DcMotor.class, "Back Left");
+        right = Initialize(DcMotor.class, "right");
+        left = Initialize(DcMotor.class, "left");
 
         //Reverse the opposite side of the motors.
-        if (frontLeft != null)
-            frontLeft.setDirection(DcMotor.Direction.REVERSE);
-        if (backLeft != null)
-            backLeft.setDirection(DcMotor.Direction.REVERSE);
+        if (left != null)
+            left.setDirection(DcMotor.Direction.REVERSE);
 
         /*************************** OTHER MOTORS ***************************/
-        beaconPushingMotor = Initialize(DcMotor.class, "Beacon Pushing Motor");
+        pusher = Initialize(DcMotor.class, "pusher");
+        harvester = Initialize(DcMotor.class, "harvester");
 
         //NOTE: Actually attempting to use null motors will cause the program to terminate.
         //This advanced system is designed for when only specific hardware is required.
@@ -99,10 +97,11 @@ public abstract class RobotBase extends LinearOpMode
         //In case the driver station says that the program has to end immediately.
         catch (InterruptedException e)
         {
+            //For some reason, this causes the app to restart.  Have to look into this.  Check SuppressWarnings maybe?
             StopPlayingAudio(); // HAS TO BE FIRST LINE, otherwise this stops later on than it is supposed to.
             OutputToDriverStation("Driver Station says STOP!");
             driverStationSaysSTOP();
-            Thread.currentThread().interrupt();
+            //Thread.currentThread().interrupt();
         }
     }
 
@@ -175,12 +174,13 @@ public abstract class RobotBase extends LinearOpMode
     //Used to make the media player stop playing audio, and also to prevent excess memory allocation from being taken up.
     protected void StopPlayingAudio()
     {
-        if (CurrentlyPlayingAudio())
+        if (mediaPlayer != null)
         {
             if (mediaPlayer.isPlaying())
                 mediaPlayer.stop(); //stop playing
             mediaPlayer.release(); //prevent resource allocation
             mediaPlayer = null; //nullify the reference.
+            OutputToDriverStation("Released Media Player");
         }
     }
 
