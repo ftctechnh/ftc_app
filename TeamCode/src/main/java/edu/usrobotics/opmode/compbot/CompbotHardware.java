@@ -29,12 +29,12 @@ public class CompbotHardware extends BaseHardware {
     public boolean brCorrectDirection = false;
     public boolean blCorrectDirection = true;
 
-    public boolean harvesterCorrectDirection = true;
+    public boolean harvesterCorrectDirection = false;
 
     public boolean liftCorrectDirection = true;
 
     public boolean rightShooterCorrectDirection = true;
-    public boolean leftShooterCorrectDirection = true;
+    public boolean leftShooterCorrectDirection = false;
 
     public float wheelDiameter = 4.0f;
     public float wheelRadius = wheelDiameter / 2f;

@@ -14,8 +14,8 @@ import edu.usrobotics.opmode.task.TaskType;
 public class MotorTask implements Task {
 
     private DcMotor motor; // The motor hardware device
-    private Integer encoderGoal; // Encoder value motor attempts to reach, nullable
-    private Integer dampingGoal; // Encoder value damping attempts to damp fully before reaching, nullable
+    private Goal<Integer> encoderGoal; // Encoder value motor attempts to reach, nullable
+    private Goal<Integer> dampingGoal; // Encoder value damping attempts to damp fully before reaching, nullable
     private int maxMotorSpeed; // Max encoder ticks (1/4 deg) per second
     private double power; // Max power of motor
     private float damping; // Percent along path to begin decelerating.
@@ -25,7 +25,7 @@ public class MotorTask implements Task {
     private boolean encoderReset;
 
 
-    public MotorTask (DcMotor motor, @Nullable Integer encoderGoal, @Nullable Integer maxMotorSpeed, double power, float damping, @Nullable Integer dampingGoal, float ramping) {
+    public MotorTask (DcMotor motor, @Nullable Goal<Integer> encoderGoal, @Nullable Integer maxMotorSpeed, double power, float damping, @Nullable Goal<Integer> dampingGoal, float ramping) {
         this.motor = motor;
         this.encoderGoal = encoderGoal;
         this.maxMotorSpeed = maxMotorSpeed != null ? maxMotorSpeed : Integer.MAX_VALUE;
@@ -42,9 +42,9 @@ public class MotorTask implements Task {
     private double getDampedPower (double power) {
         if (dampingGoal == null) return power; // We can't use damping if there is no damping goal
 
-        float percentToTarget = Math.min(1, Math.max(0, (float)motor.getCurrentPosition() / dampingGoal));
+        float percentToTarget = Math.min(1, Math.max(0, (float)motor.getCurrentPosition() / dampingGoal.getGoal()));
         float percentDToZero = (-1f / (1f - damping)) * percentToTarget + (1f / (1f - damping));
-        float percentRToOne = Math.min(1, Math.max(0, (float)motor.getCurrentPosition() / (dampingGoal * ramping)));
+        float percentRToOne = Math.min(1, Math.max(0, (float)motor.getCurrentPosition() / (dampingGoal.getGoal() * ramping)));
         LoggedOp.debugOut = "ramp "+percentRToOne + " asd: " + dampingGoal + " sd2: " + ramping;
         return (percentToTarget < ramping ?
                     Math.max(0.2, power * percentRToOne) : // RAMP UP
@@ -62,11 +62,11 @@ public class MotorTask implements Task {
                 if (!encoderReset) motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
             } else { // If encoder reset, run to encoderGoal
-                if (Math.abs(motor.getCurrentPosition()) >= Math.abs(encoderGoal)) return true; // If we reached encoderGoal, return true
+                if (Math.abs(motor.getCurrentPosition()) >= Math.abs(encoderGoal.getGoal())) return true; // If we reached encoderGoal, return true
 
                 //**
                 motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                motor.setTargetPosition(encoderGoal);
+                motor.setTargetPosition(encoderGoal.getGoal());
                 motor.setPower(getDampedPower(power));
                 //motor.setMaxSpeed(maxMotorSpeed);
                 /**/

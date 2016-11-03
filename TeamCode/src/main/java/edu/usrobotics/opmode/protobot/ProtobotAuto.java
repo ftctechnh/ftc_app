@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import edu.usrobotics.opmode.RobotOp;
 import edu.usrobotics.opmode.Route;
 import edu.usrobotics.opmode.task.ConcurrentTaskSet;
+import edu.usrobotics.opmode.task.Goal;
 import edu.usrobotics.opmode.task.MotorTask;
 import edu.usrobotics.opmode.tracker.VuforiaTracker;
 
@@ -23,27 +24,43 @@ public class ProtobotAuto extends RobotOp {
 
         robot.init(hardwareMap);
 
-        robot.frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        robot.frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        robot.backRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        robot.backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        robot.setDirection(ProtobotHardware.MovementDirection.NORTH_EAST);
 
         Route happyTrail = new Route();
 
 
-        int encoderGoal = robot.inchesToEncoderTicks(64);
-        ConcurrentTaskSet forward = new ConcurrentTaskSet(
-                new MotorTask(robot.frontRight, encoderGoal, null, 0.5f, 0.8f, encoderGoal, 0.2f),
+        /*Goal<Integer> encoderGoal = new Goal<> (robot.inchesStraifingToEncoderTicks(24));
+        ConcurrentTaskSet crab = new ConcurrentTaskSet(
                 new MotorTask(robot.frontLeft, encoderGoal, null, 0.5f, 0.8f, encoderGoal, 0.2f),
-                new MotorTask(robot.backRight, encoderGoal, null, 0.5f, 0.8f, encoderGoal, 0.2f),
-                new MotorTask(robot.backLeft, encoderGoal, null, 0.5f, 0.8f, encoderGoal, 0.2f)
-        );
+                new MotorTask(robot.backRight, encoderGoal, null, 0.5f, 0.8f, encoderGoal, 0.2f)
+        ) {
+            @Override
+            public boolean onExecuted() {
+                return isTaskCompleted (0);
+            }
+        };
 
-        happyTrail.addTask(forward);
+        happyTrail.addTask(crab);*/
+
+        robot.setDirection(ProtobotHardware.MovementDirection.TURN_RIGHT);
+        Goal<Integer> encoderGoal = new Goal<> (robot.degreesToEncoderTicks(180));
+        ConcurrentTaskSet turn = new ConcurrentTaskSet(
+                new MotorTask(robot.frontRight, encoderGoal, null, 0.5f, 0.9f, encoderGoal, 0.1f),
+                new MotorTask(robot.frontLeft, encoderGoal, null, 0.5f, 0.9f, encoderGoal, 0.1f),
+                new MotorTask(robot.backRight, encoderGoal, null, 0.5f, 0.9f, encoderGoal, 0.1f),
+                new MotorTask(robot.backLeft, encoderGoal, null, 0.5f, 0.9f, encoderGoal, 0.1f)
+        ) {
+            @Override
+            public boolean onExecuted() {
+                return isTaskCompleted (0);
+            }
+        };
+
+        happyTrail.addTask(turn);
 
         addRoute(happyTrail);
 
-        addTracker(new VuforiaTracker());
+        //addTracker(new VuforiaTracker());
 
         super.init();
     }
