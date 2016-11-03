@@ -1,9 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
@@ -12,7 +11,7 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
 /**
  * Created by Team 10464 on 9/21/16.
  */
-@Autonomous(name="Protobot Tank", group="Protobot")
+@TeleOp(name="Protobot Tank", group="Protobot")
 public class ProtoBot extends OpMode {
 
     private DcMotor LT;
