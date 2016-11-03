@@ -1,5 +1,5 @@
 package org.firstinspires.ftc.teamcode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+//import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -15,14 +15,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 /**
- * Created by Jeremy on 10/6/2016.
- * Using template created by Fromen8923 on Github
- * https://github.com/SwerveRoboticsTeams/ftc_app/blob/Tutorials/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Vuforia.java#L3
+ * Created by Jeremy + Kaitlin on 11/1/16
  *
  */
 
-@Autonomous(name = "VuforiaTest", group = "Concept")
-public class VuforiaTest extends LinearOpMode
+@Autonomous(name = "PositionChangingVuforia", group = "Concept")
+public class PositionChangingVuforia extends LinearOpMode
 {
     // Variables to be used for later
     VuforiaLocalizer vuforiaLocalizer;
@@ -32,6 +30,9 @@ public class VuforiaTest extends LinearOpMode
     VuforiaTrackableDefaultListener wheelsListener, toolsListener, legosListener, gearsListener;
     OpenGLMatrix lastKnownLocation;
     OpenGLMatrix phoneLocation;
+
+    private double currentX, currentY, currentDeg, wantedX = 305, wantedY = 914, wantedDeg;
+
 
     public static final String VUFORIA_KEY = "AepnoMf/////AAAAGWsPSj5vh0WQpMc0OEApBsgbZVwduMSeEZFjXMlBPW7WiZRgwGXsOTLiGMxL4qjU0MYpZitHxs4E/nOUHseMX+SW0oopu6BnWL3cAqFIptSrdMpy4y6yB3N6l+FPcGFZxzadvRoiOfAuYIu5QMHSeulfQ1XApDhBQ79lNUXv9LZ7bngBI3BEYVB+slmTGHKhRW2NI5fUtF+rLRiou4ZcNir2eZh0OxEW4zAnTnciVB2R28yyHkYz8xJtACm+4heWLdpw/zf66LRpvTGLwkASci7ZkGJp4NrG5Of4C0b3+iq/EeEmX2PiY5lq2fkUE0dejdztmkFWYBW7c/Y+bIYGER/3gt6I8UhAB78cR7p2mOaY"; //Key used for Vuforia.
 
@@ -80,6 +81,7 @@ public class VuforiaTest extends LinearOpMode
                 if (latestLocation != null)
                     lastKnownLocation = latestLocation;
 
+
                 // Send information about whether the target is visible, and where the robot is
                 telemetry.addData("Tracking " + legosTarget.getName(), legosListener.isVisible());
             }
@@ -108,6 +110,9 @@ public class VuforiaTest extends LinearOpMode
             telemetry.update();
             telemetry.addData("Angle: " + returnAngle(lastKnownLocation), null);
             telemetry.addData( "X:"+ convertInToMM(getXLocation(lastKnownLocation)) +"  Y:" +  convertInToMM(getYLocation(lastKnownLocation)), 00);
+            currentX = getXLocation(lastKnownLocation);
+            currentY = getYLocation(lastKnownLocation);
+            currentDeg = returnAngle(lastKnownLocation);
             idle();
         }
     }
