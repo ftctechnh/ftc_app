@@ -197,10 +197,9 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
     public void rightTurnEqualPower() {
         robot.arm.setPosition(0.1);
         encoderDrive(DRIVE_SPEED,  8,  8, 5.0);
-        encoderDrive(TURN_SPEED,   -16.5, 16.5, 4.0);
-        encoderDrive(DRIVE_SPEED,   -6,  -6, 5.0);
+        encoderDrive(TURN_SPEED,   -19.5, 19.5, 5.0);
+        encoderDrive(DRIVE_SPEED,   -7,  -7, 5.0);
         robot.arm.setPosition(0.9);
-
 
     }
 
@@ -225,17 +224,14 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
     public void DrawF()
     {
         encoderDrive(DRIVE_SPEED,  20,  20, 5.0);
-        //servo up
         rightTurnEqualPower();
-        //servo down
         encoderDrive(DRIVE_SPEED,  10,  10, 5.0);
-        //servo up
+        robot.arm.setPosition(0.1);
         encoderDrive(DRIVE_SPEED,  -10,  -10, 5.0);
         rightTurnEqualPower();
         encoderDrive(DRIVE_SPEED,  7,  7, 5.0);
         leftTurnEqualPower();
-        //servo down
-        encoderDrive(DRIVE_SPEED, 8, 8, 5.0);
+            encoderDrive(DRIVE_SPEED, 8, 8, 5.0);
     }
     public void DrawT()
     {
