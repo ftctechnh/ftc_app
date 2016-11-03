@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -10,12 +9,12 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
  * Created by minds on 1/23/2016.
  */
 public abstract class AutonomousBase extends OpMode {
-    public final double TOL = 7; //tolerance for heading calculations
-    public final double DEGREES_TO_FEET = 0.0007257875336263644793718177649;
+    public final double HEADING_TOLERANCE = 7; //tolerance for heading calculations
+    public final double DISTANCE_TOLERANCE = 1/12; //tolerance for heading calculations
+    public final double DEGREES_TO_FEET = 4*Math.PI/1440/12;
     //EXPLAINATION:
-    //204.5=65(diameter of sprocket in mm)*PI
-    //.03937 = millimeter to inch conversion
-    //(1440*12) converts encoder reading, where one rotation is 1440, to feet.
+    // (wheel diameter) * pi / (encoder ticks per rotation) /(inches in a foot)
+    // This converts encoder ticks into feet.
     //**WARNING** Always calculate distance CHANGED, since encoders have no
     // concept of direction, and we are moving across a 2D plane.
     
@@ -40,7 +39,7 @@ public abstract class AutonomousBase extends OpMode {
     DcMotor motorRight;
     DcMotor motorRightShooter;
     DcMotor motorLeftShooter;
-    DcMotor motorConveyer;
+    DcMotor motorConveyor;
     Servo servoCollector;
     Servo servoLeftButton;
     Servo servoRightButton;
@@ -77,7 +76,7 @@ public abstract class AutonomousBase extends OpMode {
 
         motorRightShooter = hardwareMap.dcMotor.get("r_shoot");
         motorLeftShooter = hardwareMap.dcMotor.get("l_shoot");
-        motorConveyer = hardwareMap.dcMotor.get("convyer");
+        motorConveyor = hardwareMap.dcMotor.get("convyer");
 
         servoCollector = hardwareMap.servo.get("collector");
         servoLeftButton = hardwareMap.servo.get("l_button");
@@ -102,7 +101,7 @@ public abstract class AutonomousBase extends OpMode {
                 //Case one is 'move towards' in the most literal sense. It assumes the path is
                 //clear, and that there is a goal(9), and us(1) on the map somewhere.
                 power = .75; //power coefficient
-                if(map.distanceToGoal()>1/12) {
+                if(map.distanceToGoal()>DISTANCE_TOLERANCE) {
                     motorLeft.setPower(power);
                     motorRight.setPower(power);
                     map.moveRobot(dDistF * DEGREES_TO_FEET, heading);
@@ -112,7 +111,7 @@ public abstract class AutonomousBase extends OpMode {
                 //Case one is 'move towards' in the most literal sense. It assumes the path is
                 //clear, and that there is a goal(9), and us(1) on the map somewhere.
                 power = -.75; //power coefficient
-                if(map.distanceToGoal()>1/12) {
+                if(map.distanceToGoal()>DISTANCE_TOLERANCE) {
                     motorLeft.setPower(power);
                     motorRight.setPower(power);
                     map.moveRobot(dDistF * DEGREES_TO_FEET, heading);
@@ -120,7 +119,7 @@ public abstract class AutonomousBase extends OpMode {
                 break;
             case MoveState.LEFT:
                 power = .75; //power coefficient
-                if(map.distanceToGoal()>1/12) {
+                if(map.distanceToGoal()>DISTANCE_TOLERANCE) {
                     motorUp.setPower(power);
                     motorDown.setPower(power);
                     map.moveRobot(dDistS * DEGREES_TO_FEET, heading);
@@ -129,7 +128,7 @@ public abstract class AutonomousBase extends OpMode {
 
            case MoveState.RIGHT:
                 power = -.75; //power coefficient
-                if(map.distanceToGoal()>1/12) {
+                if(map.distanceToGoal()>DISTANCE_TOLERANCE) {
                     motorUp.setPower(power);
                     motorDown.setPower(power);
                     map.moveRobot(dDistS * DEGREES_TO_FEET, heading);
@@ -174,7 +173,7 @@ public abstract class AutonomousBase extends OpMode {
             case MoveState.SHOOT:
                 motorLeftShooter.setPower(1);
                 motorRightShooter.setPower(1);
-                motorConveyer.setPower(1);
+                motorConveyor.setPower(1);
                 break;
         } 
     }
@@ -219,14 +218,14 @@ public abstract class AutonomousBase extends OpMode {
     }
 
     public void linedUp(int o, int n) {
-        if (Math.abs(heading - map.angleToGoal()) < TOL || (heading > 360 - TOL && map.angleToGoal() < TOL || (heading < TOL && map.angleToGoal() > 360 - TOL))) {
+        if (Math.abs(heading - map.angleToGoal()) < HEADING_TOLERANCE || (heading > 360 - HEADING_TOLERANCE && map.angleToGoal() < HEADING_TOLERANCE || (heading < HEADING_TOLERANCE && map.angleToGoal() > 360 - HEADING_TOLERANCE))) {
             moveState = o;
         } else {
             moveState = n;
         }
     }
     public void linedUpRev(int o, int n) {
-        if (Math.abs(heading - map.angleToGoalRev()) < TOL || (heading > 360 - TOL && map.angleToGoalRev() < TOL || (heading < TOL && map.angleToGoalRev() > 360 - TOL))) {
+        if (Math.abs(heading - map.angleToGoalRev()) < HEADING_TOLERANCE || (heading > 360 - HEADING_TOLERANCE && map.angleToGoalRev() < HEADING_TOLERANCE || (heading < HEADING_TOLERANCE && map.angleToGoalRev() > 360 - HEADING_TOLERANCE))) {
             moveState = o;
         } else {
             moveState = n;
