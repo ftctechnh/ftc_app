@@ -120,10 +120,15 @@ public class AutoByEncoder_Linear_TT extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  48,  48, 3.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        //encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        encoderDrive(DRIVE_SPEED, -24, -24, 3.0);  // S3: Reverse 24 Inches with 4 Sec timeout
-
+        // This is for the nearest blue beacon towards our robot
+        encoderDrive(DRIVE_SPEED,  36,  36, 3.0);  //  Forward 36 Inches with 3 Sec timeout CHANGE TO REAL LENGTH
+        encoderDrive(TURN_SPEED,   -12, 12, 3.0);  //  Turn Right 12 Inches with 3 Sec timeout (to be figured out)
+        encoderDrive(DRIVE_SPEED, 24, 24, 3.0);  //  Reverse 24 Inches with 3 Sec timeout CHANGE TO REAL LENGTH
+        encoderDrive(TURN_SPEED,   12, -12, 3.0);  //  Turn Left 12 Inches with 3 Sec timeout (to be figured out)
+        encoderDrive(DRIVE_SPEED, 24, 24, 3.0); //  Forward 24 inches with 3 Sec timeout                            CHANGE TO REAL LENGTH
+        encoderDrive(TURN_SPEED,   -12, 12, 3.0);  // S2: Turn Right 12 Inches with 3 Sec timeout (to be figured out)
+        encoderDrive(DRIVE_SPEED, 36, 36, 3.0); //  Forward 36 inches with 3 Sec timeout CHANGE TO REAL LENGTH
+        encoderDrive(DRIVE_SPEED, -72, -72, 3.0); //  Reverse 72 inches with 3 Sec timeout CHANGE TO REAL LENGTH
         //robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
         //robot.rightClaw.setPosition(0.0);
         sleep(1000);     // pause for servos to move
