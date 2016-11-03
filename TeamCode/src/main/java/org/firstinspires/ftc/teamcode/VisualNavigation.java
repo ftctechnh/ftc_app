@@ -61,8 +61,10 @@ public class VisualNavigation {
     public static final String TAG = "Vuforia Sample"; // Tag for logs
 
     public OpenGLMatrix lastLocation = null;
-    public VuforiaTrackables stonesAndChips = null;
+    public VuforiaTrackables visualTargets = null;
     public List<VuforiaTrackable> allTrackables = null;
+
+    public float targetHeight = 100; // target center Height in mm
 
 
     /**
@@ -115,16 +117,22 @@ public class VisualNavigation {
          * example "StonesAndChips", datasets can be found in in this project in the
          * documentation directory.
          */
-        this.stonesAndChips = this.vuforia.loadTrackablesFromAsset("StonesAndChips");
-        VuforiaTrackable redTarget = this.stonesAndChips.get(0);
-        redTarget.setName("RedTarget");  // Stones
+        this.visualTargets = this.vuforia.loadTrackablesFromAsset("FTC_2016-17");
+        VuforiaTrackable wheelTarget = this.visualTargets.get(0);
+        wheelTarget.setName("WheelTarget");  // Wheels
 
-        VuforiaTrackable blueTarget  = this.stonesAndChips.get(1);
-        blueTarget.setName("BlueTarget");  // Chips
+        VuforiaTrackable toolTarget  = this.visualTargets.get(1);
+        toolTarget.setName("ToolTarget");  // Tools
+
+        VuforiaTrackable legoTarget  = this.visualTargets.get(2);
+        legoTarget.setName("LegoTarget");  // Legos
+
+        VuforiaTrackable gearTarget  = this.visualTargets.get(3);
+        gearTarget.setName("GearTarget");  // Gears
 
         /** For convenience, gather together all the trackable objects in one easily-iterable collection */
         this.allTrackables = new ArrayList<VuforiaTrackable>();
-        this.allTrackables.addAll(this.stonesAndChips);
+        this.allTrackables.addAll(this.visualTargets);
 
         /**
          * We use units of mm here because that's the recommended units of measurement for the
@@ -193,32 +201,59 @@ public class VisualNavigation {
          * - Then we rotate it  90 around the field's Z access to face it away from the audience.
          * - Finally, we translate it back along the X axis towards the red audience wall.
          */
-        OpenGLMatrix redTargetLocationOnField = OpenGLMatrix
+        // Wheels, near center, blue wall
+        OpenGLMatrix wheelTargetLocationOnField = OpenGLMatrix
                 /* Then we translate the target off to the RED WALL. Our translation here
                 is a negative translation in X.*/
-                .translation(-mmFTCFieldWidth/2, 0, 0)
+                .translation(mmFTCFieldWidth*(1/12), mmFTCFieldWidth/2, this.targetHeight)
                 .multiplied(Orientation.getRotationMatrix(
                         /* First, in the fixed (field) coordinate system, we rotate 90deg in X, then 90 in Z */
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
-                        AngleUnit.DEGREES, 90, 90, 0));
-        redTarget.setLocation(redTargetLocationOnField);
-        RobotLog.ii(TAG, "Red Target=%s", format(redTargetLocationOnField));
+                        AngleUnit.DEGREES, 90, 0, 0));
+        wheelTarget.setLocation(wheelTargetLocationOnField);
+        RobotLog.ii(TAG, "Wheel Target=%s", format(wheelTargetLocationOnField));
 
        /*
         * To place the Stones Target on the Blue Audience wall:
         * - First we rotate it 90 around the field's X axis to flip it upright
         * - Finally, we translate it along the Y axis towards the blue audience wall.
         */
-        OpenGLMatrix blueTargetLocationOnField = OpenGLMatrix
+        //Legos, near audience, blue wall
+        OpenGLMatrix legoTargetLocationOnField = OpenGLMatrix
                 /* Then we translate the target off to the Blue Audience wall.
                 Our translation here is a positive translation in Y.*/
-                .translation(0, mmFTCFieldWidth/2, 0)
+                .translation(-mmFTCFieldWidth*(3/12), mmFTCFieldWidth/2, this.targetHeight)
                 .multiplied(Orientation.getRotationMatrix(
                         /* First, in the fixed (field) coordinate system, we rotate 90deg in X */
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
                         AngleUnit.DEGREES, 90, 0, 0));
-        blueTarget.setLocation(blueTargetLocationOnField);
-        RobotLog.ii(TAG, "Blue Target=%s", format(blueTargetLocationOnField));
+        legoTarget.setLocation(legoTargetLocationOnField);
+        RobotLog.ii(TAG, "Lego Target=%s", format(legoTargetLocationOnField));
+
+
+        // Gears, near center, red wall
+        OpenGLMatrix gearTargetLocationOnField = OpenGLMatrix
+                /* Then we translate the target off to the RED WALL. Our translation here
+                is a negative translation in X.*/
+                .translation(-mmFTCFieldWidth/2, -mmFTCFieldWidth*(1/12), this.targetHeight)
+                .multiplied(Orientation.getRotationMatrix(
+                        /* First, in the fixed (field) coordinate system, we rotate 90deg in X, then 90 in Z */
+                        AxesReference.EXTRINSIC, AxesOrder.XZX,
+                        AngleUnit.DEGREES, 90, 90, 0));
+        gearTarget.setLocation(gearTargetLocationOnField);
+        RobotLog.ii(TAG, "Gear Target=%s", format(gearTargetLocationOnField));
+
+        // Tools, near audience, red wall
+        OpenGLMatrix toolTargetLocationOnField = OpenGLMatrix
+                /* Then we translate the target off to the RED WALL. Our translation here
+                is a negative translation in X.*/
+                .translation(-mmFTCFieldWidth/2, mmFTCFieldWidth*(3/12), this.targetHeight)
+                .multiplied(Orientation.getRotationMatrix(
+                        /* First, in the fixed (field) coordinate system, we rotate 90deg in X, then 90 in Z */
+                        AxesReference.EXTRINSIC, AxesOrder.XZX,
+                        AngleUnit.DEGREES, 90, 90, 0));
+        toolTarget.setLocation(toolTargetLocationOnField);
+        RobotLog.ii(TAG, "Tool Target=%s", format(toolTargetLocationOnField));
 
         /**
          * Create a transformation matrix describing where the phone is on the robot. Here, we
@@ -236,7 +271,7 @@ public class VisualNavigation {
                 .translation(mmBotWidth/2,0,0)
                 .multiplied(Orientation.getRotationMatrix(
                         AxesReference.EXTRINSIC, AxesOrder.YZY,
-                        AngleUnit.DEGREES, -90, 0, 0));
+                        AngleUnit.DEGREES, 0, 0, 0));  //-90,0,0 for landscape.
         RobotLog.ii(TAG, "phone=%s", format(phoneLocationOnRobot));
 
         /**
@@ -244,8 +279,10 @@ public class VisualNavigation {
          * listener is a {@link VuforiaTrackableDefaultListener} and can so safely cast because
          * we have not ourselves installed a listener of a different type.
          */
-        ((VuforiaTrackableDefaultListener)redTarget.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
-        ((VuforiaTrackableDefaultListener)blueTarget.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
+        ((VuforiaTrackableDefaultListener)wheelTarget.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
+        ((VuforiaTrackableDefaultListener)legoTarget.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
+        ((VuforiaTrackableDefaultListener)gearTarget.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
+        ((VuforiaTrackableDefaultListener)toolTarget.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
 
         /**
          * A brief tutorial: here's how all the math is going to work:

@@ -91,8 +91,8 @@ public class iRadsAutoOpMode_Linear extends LinearOpMode {
         runtime.reset();
 
         /** Start tracking the data sets we care about. */
-        this.visualNav.stonesAndChips.activate();
-        telemetry.addData("Status", "stonesAndChips Activate");
+        this.visualNav.visualTargets.activate();
+        telemetry.addData("Status", "visualTargets Activate");
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
