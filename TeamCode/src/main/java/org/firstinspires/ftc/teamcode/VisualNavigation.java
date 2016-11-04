@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.matrices.MatrixF;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -13,6 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.robotcore.internal.TelemetryImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +68,9 @@ public class VisualNavigation {
     public List<VuforiaTrackable> allTrackables = null;
 
     public float targetHeight = 100; // target center Height in mm
+    public ElapsedTime runtime = null; // Set by calling OpMode.
+    public double lastLocationUpdateTime = -1; // update when lastLocation is updated.
+    public Telemetry telemetry = null; // Set by calling OpMode.
 
 
     /**
@@ -85,6 +91,15 @@ public class VisualNavigation {
 
     }
 
+    // Return number of seconds since lastLocation was updated.
+    public double getTrackAge() {
+        if (this.lastLocationUpdateTime > 0) {
+            return (this.runtime.time() - this.lastLocationUpdateTime);
+        }
+        else {
+            return -1; // no valid update timestamp available.
+        }
+    } // getTrackAge()
 
 
     /* Initialize Vuforia Navigation */

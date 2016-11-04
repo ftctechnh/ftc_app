@@ -67,6 +67,8 @@ public class iRadsAutoOpMode_Linear extends LinearOpMode {
 
         // Initialization
 //        robot.init(hardwareMap); // Initialize Hardware (5 motors/encoders, 1 servo)
+        this.visualNav.telemetry = this.telemetry;  // Helps output navigation messages.
+        this.visualNav.runtime = this.runtime;      // Helps create navigation timestamps.
         this.visualNav.init(); // Initialize Visual Navigation
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -101,6 +103,7 @@ public class iRadsAutoOpMode_Linear extends LinearOpMode {
                 OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
                 if (robotLocationTransform != null) {
                     this.visualNav.lastLocation = robotLocationTransform;
+                    this.visualNav.lastLocationUpdateTime = this.visualNav.runtime.time(); // update timestamp
                 }
             } // for each trackable
             /**
@@ -112,6 +115,8 @@ public class iRadsAutoOpMode_Linear extends LinearOpMode {
             } else {
                 telemetry.addData("Pos", "Unknown");
             }
+                // output time since last location update.
+                telemetry.addData("trackAge",this.visualNav.getTrackAge());
             telemetry.update();
 
             // ***************** END Vuforia Testing *********************
