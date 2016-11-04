@@ -61,8 +61,13 @@ public class VisualNavigation {
 
 
     /* Public members. */
-    public static final String TAG = "Vuforia Sample"; // Tag for logs
+    public static final String TAG = "Vuforia Nav"; // Tag for logs
 
+    /**
+     * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
+     * localization engine.
+     */
+    public VuforiaLocalizer vuforia;
     private OpenGLMatrix lastLocation = null;
     public VuforiaTrackables visualTargets = null;
     public List<VuforiaTrackable> allTrackables = null;
@@ -72,19 +77,10 @@ public class VisualNavigation {
     public double lastLocationUpdateTime = -1; // update when lastLocation is updated.
     public Telemetry telemetry = null; // Set by calling OpMode.
 
-
-    /**
-     * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
-     * localization engine.
-     */
-    public VuforiaLocalizer vuforia;
+    public enum DisplayMode {SHOW_OUTPUT, NO_OUTPUT}
 
 
-
-
-    /* Local members. */
-
-
+    
 
     /* Constructor */
     public VisualNavigation() {
@@ -338,7 +334,7 @@ public class VisualNavigation {
 
 
 
-    public void updateTracks() {
+    public void updateTracks(DisplayMode displayMode ) {
 
         // Vuforia trackables loop
         for (VuforiaTrackable trackable : this.allTrackables) {
@@ -347,7 +343,9 @@ public class VisualNavigation {
              * the last time that call was made, or if the trackable is not currently visible.
              * getRobotLocation() will return null if the trackable is not currently visible.
              */
-            telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible() ? "Visible" : "Not Visible");    //
+            if (displayMode == DisplayMode.SHOW_OUTPUT) {
+                telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible() ? "Visible" : "Not Visible");    //
+            }
 
             OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
             if (robotLocationTransform != null) {
@@ -358,17 +356,16 @@ public class VisualNavigation {
 
 
         // Provide feedback as to where the robot was last located (if we know).
-        if (this.getLastLocation() != null) {
-            //  RobotLog.vv(TAG, "robot=%s", format(lastLocation));
-            telemetry.addData("Pos", format(this.getLastLocation()));
-        } else {
-            telemetry.addData("Pos", "Unknown");
-        }
+        if (displayMode == DisplayMode.SHOW_OUTPUT) {
+            if (this.getLastLocation() != null) {
+                //  RobotLog.vv(TAG, "robot=%s", format(lastLocation));
+                telemetry.addData("Pos", format(this.getLastLocation()));
+            } else {
+                telemetry.addData("Pos", "Unknown");
+            }
+        } // if displayMode
 
     } // updateTracks()  (vuforiaTrackable loop)
-
-
-
 
 
 

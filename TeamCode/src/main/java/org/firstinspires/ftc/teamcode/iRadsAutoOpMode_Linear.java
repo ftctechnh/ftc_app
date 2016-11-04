@@ -87,7 +87,7 @@ public class iRadsAutoOpMode_Linear extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            visualNav.updateTracks(); // vuforiaTrackables loop
+            visualNav.updateTracks(VisualNavigation.DisplayMode.SHOW_OUTPUT); // vuforiaTrackables loop
             // output time since last location update.
             telemetry.addData("trackAge", this.visualNav.getTrackAge());
             telemetry.update();
