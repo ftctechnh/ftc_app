@@ -87,37 +87,15 @@ public class iRadsAutoOpMode_Linear extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-
-
-            // **************** Vuforia Test *********************
-
-            for (VuforiaTrackable trackable : this.visualNav.allTrackables) {
-                /**
-                 * getUpdatedRobotLocation() will return null if no new information is available since
-                 * the last time that call was made, or if the trackable is not currently visible.
-                 * getRobotLocation() will return null if the trackable is not currently visible.
-                 */
-                telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible() ? "Visible" : "Not Visible");    //
-
-                OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
-                if (robotLocationTransform != null) {
-                    this.visualNav.setLastLocation(robotLocationTransform); // updates lastLocationUpdateTime automatically.
-                }
-            } // for each trackable
-            /**
-             * Provide feedback as to where the robot was last located (if we know).
-             */
-            if (this.visualNav.getLastLocation() != null) {
-                //  RobotLog.vv(TAG, "robot=%s", format(lastLocation));
-                telemetry.addData("Pos", format(this.visualNav.getLastLocation()));
-            } else {
-                telemetry.addData("Pos", "Unknown");
-            }
+            visualNav.updateTracks(); // vuforiaTrackables loop
             // output time since last location update.
             telemetry.addData("trackAge", this.visualNav.getTrackAge());
             telemetry.update();
 
-            // ***************** END Vuforia Testing *********************
+
+            // Robot behavior goes here:
+
+
 
 
 

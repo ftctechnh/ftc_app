@@ -337,6 +337,45 @@ public class VisualNavigation {
 
 
 
+
+    public void updateTracks() {
+
+        // Vuforia trackables loop
+        for (VuforiaTrackable trackable : this.allTrackables) {
+            /**
+             * getUpdatedRobotLocation() will return null if no new information is available since
+             * the last time that call was made, or if the trackable is not currently visible.
+             * getRobotLocation() will return null if the trackable is not currently visible.
+             */
+            telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible() ? "Visible" : "Not Visible");    //
+
+            OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
+            if (robotLocationTransform != null) {
+                this.setLastLocation(robotLocationTransform); // updates lastLocationUpdateTime automatically.
+            }
+        } // for each trackable
+
+
+
+        // Provide feedback as to where the robot was last located (if we know).
+        if (this.getLastLocation() != null) {
+            //  RobotLog.vv(TAG, "robot=%s", format(lastLocation));
+            telemetry.addData("Pos", format(this.getLastLocation()));
+        } else {
+            telemetry.addData("Pos", "Unknown");
+        }
+
+    } // updateTracks()  (vuforiaTrackable loop)
+
+
+
+
+
+
+
+
+
+
     String format(OpenGLMatrix transformationMatrix) {
         return transformationMatrix.formatAsTransform();
     } // format(transformationMatrix)
