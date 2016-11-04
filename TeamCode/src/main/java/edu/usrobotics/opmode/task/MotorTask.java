@@ -45,7 +45,7 @@ public class MotorTask implements Task {
         float percentToTarget = Math.min(1, Math.max(0, (float)motor.getCurrentPosition() / dampingGoal.getGoal()));
         float percentDToZero = (-1f / (1f - damping)) * percentToTarget + (1f / (1f - damping));
         float percentRToOne = Math.min(1, Math.max(0, (float)motor.getCurrentPosition() / (dampingGoal.getGoal() * ramping)));
-        LoggedOp.debugOut = "ramp "+percentRToOne + " asd: " + dampingGoal + " sd2: " + ramping;
+
         return (percentToTarget < ramping ?
                     Math.max(0.2, power * percentRToOne) : // RAMP UP
                 percentToTarget < damping ?
@@ -62,7 +62,7 @@ public class MotorTask implements Task {
                 if (!encoderReset) motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
             } else { // If encoder reset, run to encoderGoal
-                if (Math.abs(motor.getCurrentPosition()) >= Math.abs(encoderGoal.getGoal())) return true; // If we reached encoderGoal, return true
+                if (Math.abs(motor.getCurrentPosition() - Math.abs(encoderGoal.getGoal())) < 4) return true; // If we reached encoderGoal, return true
 
                 //**
                 motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -111,6 +111,7 @@ public class MotorTask implements Task {
 
     @Override
     public void onCompleted() {
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setPower(0);
         completed = true;
     }

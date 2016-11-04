@@ -78,7 +78,7 @@ public class ProtobotHardware extends BaseHardware {
 
     public int degreesToEncoderTicks(float degrees){
 
-        return (int) degrees * 24;
+        return (int) degrees * 26;
 
     }
 
