@@ -44,6 +44,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 
 /**
+ * Linear Autonomous Op Mode for iRads Robot.
+ * Currently, only vision is implemented. Efforts have been made to move Vuforia code to
+ * the VisualNavigation class, which is instantiated as 'visualNav' in this OpMode.
+ *
+ * Hardware has been instantiated using the Hardware_iRads class, but has not been initialized.
+ * To initialize, simply uncomment 'robot.init(hardwareMap)' in the initialization block below.
+ *
  */
 
 @Autonomous(name="iRads: AutoOp Vision Linear", group="iRads")  // @Autonomous(...) is the other common choice
@@ -53,11 +60,13 @@ public class iRadsAutoOpMode_Linear extends LinearOpMode {
     /* Declare OpMode members. */
     private VisualNavigation visualNav = new VisualNavigation();
     private ElapsedTime runtime = new ElapsedTime();
+    Hardware_iRads robot = new Hardware_iRads();   // use the class created to define iRads hardware
 
     @Override
     public void runOpMode() {
 
-
+        // Initialization
+//        robot.init(hardwareMap); // Initialize Hardware (5 motors/encoders, 1 servo)
         this.visualNav.init(); // Initialize Visual Navigation
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -93,7 +102,7 @@ public class iRadsAutoOpMode_Linear extends LinearOpMode {
                 if (robotLocationTransform != null) {
                     this.visualNav.lastLocation = robotLocationTransform;
                 }
-            }
+            } // for each trackable
             /**
              * Provide feedback as to where the robot was last located (if we know).
              */
