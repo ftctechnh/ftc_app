@@ -1,2 +1,5 @@
-// FTC Apps
-include (':FtcRobotController')
+include ':FtcRobotController'
+include ':TeamCode'
+include ':Team4800'
+include ':Team4799'
+include ':TeamArchived'
