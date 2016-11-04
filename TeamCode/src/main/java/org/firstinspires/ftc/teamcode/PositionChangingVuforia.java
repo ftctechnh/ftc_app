@@ -20,8 +20,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  */
 
 @Autonomous(name = "PositionChangingVuforia", group = "Concept")
-public class PositionChangingVuforia extends LinearOpMode
-{
+public class PositionChangingVuforia extends LinearOpMode {
     // Variables to be used for later
     VuforiaLocalizer vuforiaLocalizer;
     VuforiaLocalizer.Parameters parameters;
@@ -31,94 +30,68 @@ public class PositionChangingVuforia extends LinearOpMode
     OpenGLMatrix lastKnownLocation;
     OpenGLMatrix phoneLocation;
 
-    private double currentX, currentY, currentDeg, wantedX = 305, wantedY = 914, wantedDeg;
 
+    OmniDriveBot drive = new OmniDriveBot();
+    private double currentX, currentY, currentDeg, wantedX = 305, wantedY = 914, wantedDeg = -90;
 
     public static final String VUFORIA_KEY = "AepnoMf/////AAAAGWsPSj5vh0WQpMc0OEApBsgbZVwduMSeEZFjXMlBPW7WiZRgwGXsOTLiGMxL4qjU0MYpZitHxs4E/nOUHseMX+SW0oopu6BnWL3cAqFIptSrdMpy4y6yB3N6l+FPcGFZxzadvRoiOfAuYIu5QMHSeulfQ1XApDhBQ79lNUXv9LZ7bngBI3BEYVB+slmTGHKhRW2NI5fUtF+rLRiou4ZcNir2eZh0OxEW4zAnTnciVB2R28yyHkYz8xJtACm+4heWLdpw/zf66LRpvTGLwkASci7ZkGJp4NrG5Of4C0b3+iq/EeEmX2PiY5lq2fkUE0dejdztmkFWYBW7c/Y+bIYGER/3gt6I8UhAB78cR7p2mOaY"; //Key used for Vuforia.
 
-    public void runOpMode() throws InterruptedException
-    {
+    public void runOpMode() throws InterruptedException {
+        drive.init(hardwareMap);
         setupVuforia();
 
         // We don't know where the robot is, so set it to the origin
         // If we don't include this, it would be null, which would cause errors later on
         lastKnownLocation = createMatrix(0, 0, 0, 0, 0, 0);
-
+        visionTargets.activate();
         waitForStart();
 
         // Start tracking the targets
-        visionTargets.activate();
 
-        while(opModeIsActive())
-        {
+        OpenGLMatrix latestLocation = null;
+        while (opModeIsActive()) {
             // Ask the listener for the latest information on where the robot is
             if (wheelsListener.isVisible()) {
-                OpenGLMatrix latestLocation = wheelsListener.getUpdatedRobotLocation();
+                latestLocation = wheelsListener.getUpdatedRobotLocation();
 
-                // The listener will sometimes return null, so we check for that to prevent errors
-                if (latestLocation != null)
-                    lastKnownLocation = latestLocation;
 
                 // Send information about whether the target is visible, and where the robot is
                 telemetry.addData("Tracking " + wheelsTarget.getName(), wheelsListener.isVisible());
-            }
-            else if (toolsListener.isVisible())
-            {
-                OpenGLMatrix latestLocation = toolsListener.getUpdatedRobotLocation();
+            } else if (toolsListener.isVisible()) {
+                latestLocation = toolsListener.getUpdatedRobotLocation();
 
-                // The listener will sometimes return null, so we check for that to prevent errors
-                if (latestLocation != null)
-                    lastKnownLocation = latestLocation;
-
-                // Send information about whether the target is visible, and where the robot is
                 telemetry.addData("Tracking " + toolsTarget.getName(), toolsListener.isVisible());
-            }
-            else if (legosListener.isVisible())
-            {
-                OpenGLMatrix latestLocation = legosListener.getUpdatedRobotLocation();
-
-                // The listener will sometimes return null, so we check for that to prevent errors
-                if (latestLocation != null)
-                    lastKnownLocation = latestLocation;
-
+            } else if (legosListener.isVisible()) {
+                latestLocation = legosListener.getUpdatedRobotLocation();
 
                 // Send information about whether the target is visible, and where the robot is
                 telemetry.addData("Tracking " + legosTarget.getName(), legosListener.isVisible());
-            }
-            else if (gearsListener.isVisible())
-            {
-                OpenGLMatrix latestLocation = gearsListener.getUpdatedRobotLocation();
+
+            } else if (gearsListener.isVisible()) {
+                latestLocation = gearsListener.getUpdatedRobotLocation();
 
                 // The listener will sometimes return null, so we check for that to prevent errors
-                if (latestLocation != null)
-                    lastKnownLocation = latestLocation;
 
-                // Send information about whether the target is visible, and where the robot is
+//              // Send information about whether the target is visible, and where the robot is
                 telemetry.addData("Tracking " + gearsTarget.getName(), gearsListener.isVisible());
-            }
-            else
-            {
-                OpenGLMatrix latestLocation = wheelsListener.getUpdatedRobotLocation();
-
-                // The listener will sometimes return null, so we check for that to prevent errors
-                if (latestLocation != null)
-                    lastKnownLocation = latestLocation;
-
-                // Send information about whether the target is visible, and where the robot is
+            } else {
                 telemetry.addData("no targets in sight", null);
             }
             telemetry.update();
-            telemetry.addData("Angle: " + returnAngle(lastKnownLocation), null);
-            telemetry.addData( "X:"+ convertInToMM(getXLocation(lastKnownLocation)) +"  Y:" +  convertInToMM(getYLocation(lastKnownLocation)), 00);
-            currentX = getXLocation(lastKnownLocation);
-            currentY = getYLocation(lastKnownLocation);
-            currentDeg = returnAngle(lastKnownLocation);
+            telemetry.addData("Angle: " + currentDeg, null);
+            telemetry.addData("X:" + convertMMToIn(currentX) + "  Y:" + convertMMToIn(currentY), 00);
+            if (latestLocation != null) {
+                lastKnownLocation = latestLocation;
+                updateRobotLocation();
+                moveToPosition(305, 914, -90);
+                while (true)
+                    idle();
+            }
             idle();
         }
     }
 
-    public void setupVuforia()
-    {
+    public void setupVuforia() {
         // Setup parameters to create localizer
         parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
@@ -164,16 +137,14 @@ public class PositionChangingVuforia extends LinearOpMode
 
     // Creates a matrix for determining the locations and orientations of objects
     // Units are millimeters for x, y, and z, and degrees for u, v, and w
-    public OpenGLMatrix createMatrix(float x, float y, float z, float u, float v, float w)
-    {
+    public OpenGLMatrix createMatrix(float x, float y, float z, float u, float v, float w) {
         return OpenGLMatrix.translation(x, y, z).
                 multiplied(Orientation.getRotationMatrix(
                         AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES, u, v, w));
     }
 
     // Formats a matrix into a readable string
-    public String formatMatrix(OpenGLMatrix matrix)
-    {
+    public String formatMatrix(OpenGLMatrix matrix) {
         return matrix.formatAsTransform();
     }
 
@@ -189,15 +160,59 @@ public class PositionChangingVuforia extends LinearOpMode
         return robotLocationArray[13];
     }
 
-    public double convertInToMM (double mm)
-    {
+    public double convertMMToIn(double mm) {
         return mm * 0.0393701;
     }
 
-    public double returnAngle (OpenGLMatrix robotLocationMatrix)
+    public double returnAngle(OpenGLMatrix robotLocationMatrix)
     {
         Orientation rot = Orientation.getOrientation(robotLocationMatrix, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.RADIANS);
         return (rot.thirdAngle * 57.2958);
     }
 
+    public void moveToPosition(double wantedX, double wantedY, double wantedDeg)
+    {
+        float difference = (float) (convertMMToIn((currentX - wantedX)));
+
+        if (Math.abs(difference) > 1) {
+            if (difference > 0) //currentX is greater than wanted X so move left
+            {
+                drive.driveStraight(difference, -90);
+            } else //CurrentX is less than wantedX, so move right
+            {
+                drive.driveStraight(difference, 90);
+            }
+        }
+/*
+        difference = (float)convertMMToIn(currentY - wantedY);
+        if(Math.abs(difference) > 1)
+        {
+            if (difference > 0) //currenty is greater, so that means that the phone is to above the target
+            {
+                drive.driveStraight(difference, 0); //Move down
+                while (Math.abs(difference) > 1) {}
+            }
+            else  // Currenty is less, so move up
+            {
+                drive.driveStraight(difference, 0);
+                while (Math.abs(difference) > 1) {}
+            }
+        }
+
+        difference = (float)(currentDeg - wantedDeg);
+        if(Math.abs(difference) > 1)
+        {
+            drive.spin(difference);
+            while (Math.abs(difference) > 1) {}
+        }
+    }
+*/
+    }
+
+    public void updateRobotLocation()
+    {
+        currentX = getXLocation(lastKnownLocation);
+        currentY = getYLocation(lastKnownLocation);
+        currentDeg = returnAngle(lastKnownLocation);
+    }
 }
