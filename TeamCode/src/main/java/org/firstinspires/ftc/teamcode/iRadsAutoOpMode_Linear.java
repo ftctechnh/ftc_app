@@ -87,7 +87,6 @@ public class iRadsAutoOpMode_Linear extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-//            telemetry.update();
 
 
             // **************** Vuforia Test *********************
@@ -102,21 +101,20 @@ public class iRadsAutoOpMode_Linear extends LinearOpMode {
 
                 OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
                 if (robotLocationTransform != null) {
-                    this.visualNav.lastLocation = robotLocationTransform;
-                    this.visualNav.lastLocationUpdateTime = this.visualNav.runtime.time(); // update timestamp
+                    this.visualNav.setLastLocation(robotLocationTransform); // updates lastLocationUpdateTime automatically.
                 }
             } // for each trackable
             /**
              * Provide feedback as to where the robot was last located (if we know).
              */
-            if (this.visualNav.lastLocation != null) {
+            if (this.visualNav.getLastLocation() != null) {
                 //  RobotLog.vv(TAG, "robot=%s", format(lastLocation));
-                telemetry.addData("Pos", format(this.visualNav.lastLocation));
+                telemetry.addData("Pos", format(this.visualNav.getLastLocation()));
             } else {
                 telemetry.addData("Pos", "Unknown");
             }
-                // output time since last location update.
-                telemetry.addData("trackAge",this.visualNav.getTrackAge());
+            // output time since last location update.
+            telemetry.addData("trackAge", this.visualNav.getTrackAge());
             telemetry.update();
 
             // ***************** END Vuforia Testing *********************

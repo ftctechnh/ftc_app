@@ -63,7 +63,7 @@ public class VisualNavigation {
     /* Public members. */
     public static final String TAG = "Vuforia Sample"; // Tag for logs
 
-    public OpenGLMatrix lastLocation = null;
+    private OpenGLMatrix lastLocation = null;
     public VuforiaTrackables visualTargets = null;
     public List<VuforiaTrackable> allTrackables = null;
 
@@ -100,6 +100,19 @@ public class VisualNavigation {
             return -1; // no valid update timestamp available.
         }
     } // getTrackAge()
+
+    // Set method for lastLocation (OpenGLMatrix)
+    // updates lastLocationUpdateTime (double) at the same time.
+    public void setLastLocation(OpenGLMatrix lastLocation) {
+        this.lastLocation = lastLocation;
+        this.lastLocationUpdateTime = this.runtime.time();
+    }
+
+    // Get method for lastLocation
+    public OpenGLMatrix getLastLocation() {
+        return lastLocation;
+    }
+
 
 
     /* Initialize Vuforia Navigation */
