@@ -64,18 +64,9 @@ public class MotorTask implements Task {
             } else { // If encoder reset, run to encoderGoal
                 if (Math.abs(motor.getCurrentPosition() - Math.abs(encoderGoal.getGoal())) < 4) return true; // If we reached encoderGoal, return true
 
-                //**
                 motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 motor.setTargetPosition(encoderGoal.getGoal());
                 motor.setPower(getDampedPower(power));
-                //motor.setMaxSpeed(maxMotorSpeed);
-                /**/
-
-                /**
-                motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                motor.setMaxSpeed(maxMotorSpeed);
-                motor.setPower(getDampedPower(power));
-                **/
 
             }
 

@@ -26,7 +26,7 @@ public class ProtobotAuto extends RobotOp {
 
         Route happyTrail = new Route();
 
-        Goal<Integer> encoderGoal = new Goal<> (robot.inchesStraifingToEncoderTicks(48));
+        Goal<Integer> encoderGoal = new Goal<> (robot.inchesStraifingToEncoderTicks(24));
         ConcurrentTaskSet forward = new ConcurrentTaskSet(
                 new MotorTask(robot.frontRight, encoderGoal, null, 0.5f, 0.7f, encoderGoal, 0.1f),
                 new MotorTask(robot.frontLeft, null, null, 0.5f, 0.7f, encoderGoal, 0.1f),
@@ -42,12 +42,12 @@ public class ProtobotAuto extends RobotOp {
             public void onReached() {
                 super.onReached();
 
-                robot.setDirection(ProtobotHardware.MovementDirection.NORTH_EAST);
+                robot.setDirection(ProtobotHardware.MovementDirection.TURN_RIGHT);
             }
         };
 
         Goal<Integer> encoderGoal2 = new Goal<> (robot.degreesToEncoderTicks(180));
-        ConcurrentTaskSet turn2 = new ConcurrentTaskSet(
+        ConcurrentTaskSet turn1 = new ConcurrentTaskSet(
                 new MotorTask(robot.frontRight, encoderGoal2, null, 0.5f, 0.7f, encoderGoal2, 0.1f),
                 new MotorTask(robot.frontLeft, null, null, 0.5f, 0.7f, encoderGoal2, 0.1f),
                 new MotorTask(robot.backRight, null, null, 0.5f, 0.7f, encoderGoal2, 0.1f),
@@ -62,16 +62,14 @@ public class ProtobotAuto extends RobotOp {
             public void onReached() {
                 super.onReached();
 
-                robot.setDirection(ProtobotHardware.MovementDirection.TURN_RIGHT);
+                robot.setDirection(ProtobotHardware.MovementDirection.SOUTH_WEST);
             }
         };
 
-        Goal<Integer> encoderGoal3 = new Goal<> (robot.inchesToEncoderTicks(48));
-        ConcurrentTaskSet backward = new ConcurrentTaskSet(
-                new MotorTask(robot.frontRight, encoderGoal3, null, 0.5f, 0.7f, encoderGoal3, 0.1f),
+        Goal<Integer> encoderGoal3 = new Goal<> (robot.inchesStraifingToEncoderTicks(5.6f));
+        ConcurrentTaskSet crab1 = new ConcurrentTaskSet(
                 new MotorTask(robot.frontLeft, null, null, 0.5f, 0.7f, encoderGoal3, 0.1f),
-                new MotorTask(robot.backRight, null, null, 0.5f, 0.7f, encoderGoal3, 0.1f),
-                new MotorTask(robot.backLeft, null, null, 0.5f, 0.7f, encoderGoal3, 0.1f)
+                new MotorTask(robot.backRight, null, null, 0.5f, 0.7f, encoderGoal3, 0.1f)
         ) {
             @Override
             public boolean onExecuted() {
@@ -82,13 +80,13 @@ public class ProtobotAuto extends RobotOp {
             public void onReached() {
                 super.onReached();
 
-                robot.setDirection(ProtobotHardware.MovementDirection.SOUTH);
+                robot.setDirection(ProtobotHardware.MovementDirection.TURN_RIGHT);
             }
         };
 
         happyTrail.addTask(forward);
-        happyTrail.addTask(turn2);
-        happyTrail.addTask(backward);
+        happyTrail.addTask(turn1);
+        happyTrail.addTask(crab1);
 
         addRoute(happyTrail);
 
