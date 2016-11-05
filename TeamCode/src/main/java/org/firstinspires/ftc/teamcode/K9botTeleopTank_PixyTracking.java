@@ -62,6 +62,7 @@ public class K9botTeleopTank_PixyTracking extends LinearOpMode {
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");    //
         telemetry.update();
+        
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -111,10 +112,29 @@ public class K9botTeleopTank_PixyTracking extends LinearOpMode {
             if (voltreading > pixyMax || voltreading < pixyMin) {
                 telemetry.addData("Out of Range", "");
             } else if(voltreading>pixyCenter) {
-                xPosition = xPosition - .01;
+                if (voltreading>3.7) {
+                    xPosition = xPosition - .2;
+                } else if (voltreading>3.28) {
+                    xPosition = xPosition - .1;
+                } else if (voltreading>2.885) {
+                    xPosition = xPosition - .075;
+                } else if (voltreading>2.49) {
+                    xPosition = xPosition - .05;
+                } else if (voltreading>2.1) {
+                    xPosition = xPosition - .01;
+                }
             } else if (voltreading<pixyCenter) {
-                xPosition = xPosition + .01;
-
+                if (voltreading<.3) {
+                    xPosition = xPosition + .2;
+                } else if (voltreading<.715) {
+                    xPosition = xPosition + .1;
+                } else if (voltreading<1.11) {
+                    xPosition = xPosition + .075;
+                } else if (voltreading<1.505) {
+                    xPosition = xPosition + .05;
+                } else if (voltreading<1.9) {
+                    xPosition = xPosition + .01;
+                }
             }
 
             // Move both servos to new position.
