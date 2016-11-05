@@ -32,9 +32,10 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -50,44 +51,89 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="FirstOpmode", group="Testing")  // @Autonomous(...) is the other common choice
-@Disabled
-public class FirstOpmode extends LinearOpMode {
+@TeleOp(name="MotorOpmode", group="Testing")  // @Autonomous(...) is the other common choice
+//@Disabled
+public class MotorOpmode extends LinearOpMode {
 
     /* Declare OpMode members. */
+    static final double SLICER_UP   = 0.6;      // top of the slicer
+    static final double SLICER_DOWN = 0.0;      // bottom of the slicer
+
+    static final double SHOOT_OPEN = 0.9;
+    static final double SHOOT_TRAP = 0.45;      // .6 is too high
+    static final double SHOOT_FIRE = 0.2;       // .3 vertical
+
+    static final long SHOOTING_TIME_MS = 1000;   // time required to shoot the ball
+
     private ElapsedTime runtime = new ElapsedTime();
-    // DcMotor leftMotor = null;
-    // DcMotor rightMotor = null;
+    DcMotor leftMotor = null;
+    DcMotor rightMotor = null;
+    Servo servoSlicer, servoPusher;
+
+    boolean shootingBall;
+
 
     @Override
     public void runOpMode() {
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
-
         /* eg: Initialize the hardware variables. Note that the strings used here as parameters
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        // leftMotor  = hardwareMap.dcMotor.get("left_drive");
-        // rightMotor = hardwareMap.dcMotor.get("right_drive");
+        leftMotor  = hardwareMap.dcMotor.get("left_drive");
+        rightMotor = hardwareMap.dcMotor.get("right_drive");
+        servoSlicer = hardwareMap.servo.get("ball_slicer");
+        servoPusher = hardwareMap.servo.get("ball_pusher");
 
-        // eg: Set the drive motor directions:
-        // "Reverse" the motor that runs backwards when connected directly to the battery
-        // leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        // rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        leftMotor.setDirection(DcMotor.Direction.REVERSE);
+        rightMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
 
+        // set the shoot open & ball slicer down/default position
+        servoPusher.setPosition(SHOOT_OPEN);
+        servoSlicer.setPosition(SLICER_DOWN);
+        shootingBall = false;
+
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
+//            telemetry.addData("Run Time: " + runtime.toString());
+            telemetry.addData("x", gamepad1.left_stick_y);
+            telemetry.addData("y", gamepad1.right_stick_y);
             telemetry.update();
 
-            // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
-            // leftMotor.setPower(-gamepad1.left_stick_y);
-            // rightMotor.setPower(-gamepad1.right_stick_y);
+            leftMotor.setPower(-gamepad1.left_stick_y);
+            rightMotor.setPower(-gamepad1.right_stick_y);
+
+            if (gamepad1.left_bumper) {
+                // assume the ball is in position, trap it
+                // TODO:  need to set a logical variable so that trap doesn't reset
+                servoPusher.setPosition(SHOOT_TRAP);
+            }
+
+            if (gamepad1.right_bumper) {
+                shootingBall = true;
+                leftMotor.setPower(0);      // stop the robot before shooting
+                rightMotor.setPower(0);
+
+                // spin up the ball shooter motors
+                //
+
+                // lift the ball gate
+                servoSlicer.setPosition(SLICER_UP);
+                sleep(SHOOTING_TIME_MS);
+
+                // push/load the ball
+                servoPusher.setPosition(SHOOT_FIRE);
+                sleep(SHOOTING_TIME_MS);
+                shootingBall = false;
+            } else {
+                // TODO: check a logical variable to ensure that we can open the pusher
+                servoPusher.setPosition(SHOOT_OPEN);
+                // no need to reset the motors, just wait for the next opModeIsActive loop iteration
+                servoSlicer.setPosition(SLICER_DOWN);
+            }
 
             idle();     // allow something else to run (aka, release the CPU)
         }
