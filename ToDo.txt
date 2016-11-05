@@ -1,0 +1,5 @@
+Configure elevator servo as continuous rotation
+
+Map the controller buttons to work with our new motors and servos
+
+Configure the Adafruit color sensor
