@@ -21,8 +21,8 @@ import com.qualcomm.robotcore.hardware.ServoController;
  * Created by FTC Team 4799-4800 on 10/13/2016.
  */
 
-@Autonomous(name = "RedAuto", group = "")
-public class DemoAuto extends OpMode {
+@Autonomous(name = "BlueAuto", group = "")
+public class AutoBlue extends OpMode {
     //DcMotorController wheelControllerLeft;
     DcMotor motorBackLeft;
     DcMotor motorFrontLeft;
