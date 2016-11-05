@@ -85,6 +85,14 @@ public class eaglebot_left_auto extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
+        robot.leftMotor.setPower(0);
+        robot.rightMotor.setPower(0);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 8)) {
+            telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+
         robot.leftMotor.setPower(FORWARD_SPEED);
         robot.rightMotor.setPower(FORWARD_SPEED);
         runtime.reset();
