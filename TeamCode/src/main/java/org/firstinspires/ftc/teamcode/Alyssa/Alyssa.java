@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
@@ -102,6 +103,7 @@ public class Alyssa extends LinearOpMode {
         }
 
         // Step 2:  Spin right for 1.3 seconds
+        robot.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         robot.leftMotor.setPower(-TURN_SPEED);
         robot.rightMotor.setPower(TURN_SPEED);
         runtime.reset();
@@ -110,7 +112,11 @@ public class Alyssa extends LinearOpMode {
             telemetry.update();
             idle();
         }
+        robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
+
+        robot.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        robot.rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         // Step 3:  Drive Backwards for 1 Second
         robot.leftMotor.setPower(-FORWARD_SPEED);
         robot.rightMotor.setPower(-FORWARD_SPEED);
@@ -120,6 +126,8 @@ public class Alyssa extends LinearOpMode {
             telemetry.update();
             idle();
         }
+        robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        robot.rightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // Step 4:  Stop and close the claw.
         robot.leftMotor.setPower(0);

@@ -35,6 +35,7 @@ package org.firstinspires.ftc.teamcode.Matthew;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
@@ -137,7 +138,12 @@ public class Matthew extends LinearOpMode {
         sleep(1000);
         runtime.reset();
         idle();
+
+
+
     }
-	robot.rightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-	robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+	//robot.rightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+	//robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+
+
 }
