@@ -21,7 +21,7 @@ import com.qualcomm.robotcore.hardware.ServoController;
  * Created by FTC Team 4799-4800 on 10/13/2016.
  */
 
-@Autonomous(name = "RedAuto", group = "")
+@Autonomous(name = "DemoAuto", group = "")
 public class DemoAuto extends OpMode {
     //DcMotorController wheelControllerLeft;
     DcMotor motorBackLeft;
@@ -52,17 +52,13 @@ public class DemoAuto extends OpMode {
         motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        buttonPusher.setPosition(-1);
     }
 
     public void loop() {
-        motorBackLeft.setTargetPosition(10000);
-        motorBackRight.setTargetPosition(-10000);
-        motorFrontRight.setTargetPosition(-10000);
-        motorFrontLeft.setTargetPosition(10000);
-
-
+        motorBackLeft.setTargetPosition(1000);
+        motorBackRight.setTargetPosition(-1000);
+        motorFrontRight.setTargetPosition(-1000);
+        motorFrontLeft.setTargetPosition(1000);
         telemetry.update();
         telemetry.addData("vex1:", cs1);
         telemetry.addData("vex2:", cs2);
@@ -70,32 +66,27 @@ public class DemoAuto extends OpMode {
         telemetry.addData("red:", cs.red());
         telemetry.addData("blue:", cs.blue());
         telemetry.addData("isBusy():", motorBackLeft.isBusy());
-        telemetry.addData("Position:", motorBackLeft.getCurrentPosition());
-
 
         cs1 = interfaceModule.getAnalogInputVoltage(0);
         cs2 = interfaceModule.getAnalogInputVoltage(1);
         cs3 = interfaceModule.getAnalogInputVoltage(2);
 
-
         if (motorBackLeft.isBusy()) {
-            motorBackLeft.setPower(.5);
-            motorBackRight.setPower(.5);
-            motorFrontLeft.setPower(.5);
-            motorFrontRight.setPower(.5);
-
-
-            if (cs1<3) {
-                motorBackLeft.setPower(0);
-                motorBackRight.setPower(.5);
-                motorFrontLeft.setPower(0);
-                motorFrontRight.setPower(.5);
-            }
-            else if (cs3<3){
+            motorBackLeft.setPower(1);
+            motorBackRight.setPower(1);
+            motorFrontLeft.setPower(1);
+            motorFrontRight.setPower(1);
+            if (cs1<1.5 && cs2<1.5) {
                 motorBackLeft.setPower(.5);
-                motorBackRight.setPower(0);
+                motorBackRight.setPower(1);
                 motorFrontLeft.setPower(.5);
-                motorFrontRight.setPower(0);
+                motorFrontRight.setPower(1);
+            }
+            else if (cs3<1.5 && cs2<1.5){
+                motorBackLeft.setPower(1);
+                motorBackRight.setPower(.5);
+                motorFrontLeft.setPower(1);
+                motorFrontRight.setPower(.5);
             }
         }
         else{
@@ -105,16 +96,15 @@ public class DemoAuto extends OpMode {
             motorFrontRight.setPower(0);
         }
 
-
-        if (cs.red()>5 || cs.blue()>5){
-            if (cs.red()>5)
+        if (cs.red()>50 || cs.blue()>50){
+            if (cs.red()>50)
                 buttonPusher.setPosition(-1);
             else
                 buttonPusher.setPosition(1);
-            motorBackLeft.setPower(.3);
-            motorBackRight.setPower(.3);
-            motorFrontLeft.setPower(.3);
-            motorFrontRight.setPower(.3);
+            motorBackLeft.setPower(1);
+            motorBackRight.setPower(1);
+            motorFrontLeft.setPower(1);
+            motorFrontRight.setPower(1);
         }
     }
 }

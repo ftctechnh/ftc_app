@@ -58,12 +58,12 @@ public class ArmbotFrame extends OpMode {
             rightthrottle = -gamepad1.right_stick_y;
         }
         else{
-            leftthrottle = gamepad1.right_stick_y;
-            rightthrottle = gamepad1.left_stick_y;
+            leftthrottle = gamepad1.left_stick_y;
+            rightthrottle = gamepad1.right_stick_y;
             if (gamepad1.left_bumper)
-                buttonPusher.setPosition(-1);
-            if (gamepad1.right_bumper)
                 buttonPusher.setPosition(1);
+            if (gamepad1.right_bumper)
+                buttonPusher.setPosition(-1);
         }
         float armthrottle = -gamepad2.left_stick_y;
         float revthrottle = gamepad2.right_stick_y;
@@ -75,8 +75,8 @@ public class ArmbotFrame extends OpMode {
         arm.setPower(armthrottle);
         motorRev.setPower(-revthrottle);
         if (gamepad2.right_bumper)
-            launcher.setPosition(-1);
-        else
             launcher.setPosition(1);
+        else
+            launcher.setPosition(0);
     }
 }
