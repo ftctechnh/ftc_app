@@ -107,8 +107,8 @@ public class AutoBlueBNear extends LinearOpMode {
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",
-                          robot.frontLeftMotor.getCurrentPosition(),
-                          robot.frontRightMotor.getCurrentPosition(),
+                        robot.frontLeftMotor.getCurrentPosition(),
+                        robot.frontRightMotor.getCurrentPosition(),
                         robot.backLeftMotor.getCurrentPosition(),
                         robot.backRightMotor.getCurrentPosition());
         telemetry.update();
