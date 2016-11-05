@@ -55,7 +55,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwareK9bot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="K9bot: Telop Tank", group="K9bot")
+@TeleOp(name="K9bot: Teleop Tank", group="K9bot")
 //@Disabled
 public class K9botTeleopTank_Linear extends LinearOpMode {
 
