@@ -374,8 +374,7 @@ public class VisualNavigation {
 
 
     public String format(OpenGLMatrix transformationMatrix) {
-        return transformationMatrix.formatAsTransform(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
-//        return transformationMatrix.formatAsTransform(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        return transformationMatrix.formatAsTransform(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
     } // format(transformationMatrix)
 
 
