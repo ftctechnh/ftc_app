@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.robotcontroller.external.samples;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -32,6 +33,7 @@ public class HardwarePushbot
     public Servo    BallElevator    = null;
     public DcMotor  LeftBallLauncher   = null;
     public DcMotor  RightBallLauncher   = null;
+    public Servo    pusher  = null;
 
 
     public static final double MID_SERVO       =  0.5 ;
@@ -56,10 +58,12 @@ public class HardwarePushbot
         leftMotor   = hwMap.dcMotor.get("left_drive");
         rightMotor  = hwMap.dcMotor.get("right_drive");
         armMotor    = hwMap.dcMotor.get("left_arm");
-        RightBallLauncher = hwMap.dcMotor.get("RightBallLauncher");
-        LeftBallLauncher = hwMap.dcMotor.get("LeftBallLauncher");
+        RightBallLauncher = hwMap.dcMotor.get("RightLauncher");
+        LeftBallLauncher = hwMap.dcMotor.get("LeftLauncher");
         leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        RightBallLauncher.setDirection(DcMotor.Direction.FORWARD);
+        LeftBallLauncher.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
         leftMotor.setPower(0);
@@ -76,13 +80,18 @@ public class HardwarePushbot
         RightBallLauncher.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         LeftBallLauncher.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+
+        //// TODO: 11/5/2016 Uncomment the servos when the servo controller is installed again.
         // Define and initialize ALL installed servos.
         //leftClaw = hwMap.servo.get("left_hand");
         //rightClaw = hwMap.servo.get("right_hand");
+        pusher = hwMap.servo.get("Pusher");
         //leftClaw.setPosition(MID_SERVO);
         //rightClaw.setPosition(MID_SERVO);
         //BallElevator = hwMap.servo.get("BallElevator");
         //BallElevator.setPosition(MID_SERVO);
+        pusher.setPosition(MID_SERVO);
+
     }
 
     /***
