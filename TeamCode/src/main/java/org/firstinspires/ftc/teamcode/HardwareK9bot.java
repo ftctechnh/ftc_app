@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -28,10 +30,11 @@ public class HardwareK9bot
     /* Public OpMode members. */
     public DcMotor leftMotor   = null;
     public DcMotor rightMotor  = null;
-    public Servo arm         = null;
+    public Servo xPivot         = null;
     public Servo claw        = null;
+    public AnalogInput pixySensor       = null;
 
-    public final static double ARM_HOME = 0.2;
+    public final static double xPivot_HOME = 0.5;
     public final static double CLAW_HOME = 0.2;
     public final static double ARM_MIN_RANGE  = 0.20;
     public final static double ARM_MAX_RANGE  = 0.90;
@@ -56,6 +59,9 @@ public class HardwareK9bot
         rightMotor  = hwMap.dcMotor.get("right_drive");
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
 
+        AnalogInput pixySensor;
+        pixySensor = hwMap.analogInput.get("pixy");
+
         // Set all motors to zero power
         leftMotor.setPower(0);
         rightMotor.setPower(0);
@@ -66,9 +72,9 @@ public class HardwareK9bot
         rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define and initialize ALL installed servos.
-        arm = hwMap.servo.get("arm");
+        xPivot = hwMap.servo.get("arm");
         claw = hwMap.servo.get("claw");
-        arm.setPosition(ARM_HOME);
+        xPivot.setPosition(xPivot_HOME);
         claw.setPosition(CLAW_HOME);
     }
 
