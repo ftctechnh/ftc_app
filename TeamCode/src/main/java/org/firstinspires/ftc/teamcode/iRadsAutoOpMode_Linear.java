@@ -89,7 +89,10 @@ public class iRadsAutoOpMode_Linear extends LinearOpMode {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             visualNav.updateTracks(VisualNavigation.DisplayMode.SHOW_OUTPUT); // vuforiaTrackables loop
             // output time since last location update.
-            telemetry.addData("trackAge", this.visualNav.getTrackAge());
+            telemetry.addData("trackAge", String.format("%.3f",this.visualNav.getTrackAge()));
+            telemetry.addData("X-value", visualNav.getX());
+            telemetry.addData("Y-value", visualNav.getY());
+            telemetry.addData("Heading", visualNav.getHeading());
             telemetry.update();
 
 

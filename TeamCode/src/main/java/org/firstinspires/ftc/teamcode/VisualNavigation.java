@@ -7,6 +7,7 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.matrices.MatrixF;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -108,6 +109,34 @@ public class VisualNavigation {
     public OpenGLMatrix getLastLocation() {
         return lastLocation;
     }
+
+    // Simplified X, Y, and Heading get() methods:
+    public double getX() {
+        if (getLastLocation() != null)
+            return Math.round(this.lastLocation.getTranslation().get(0));
+        else
+            return 0;// may be ambiguous with actually being at the origin.
+    }
+
+    public double getY() {
+        if (getLastLocation() != null)
+            return Math.round(this.lastLocation.getTranslation().get(1));
+        else
+            return 0;// may be ambiguous with actually being at the origin.
+    }
+
+    public double getHeading() {
+        if (getLastLocation() != null) {
+            return Math.round(Orientation.getOrientation(this.lastLocation,
+                    AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle);
+            // returns Yaw, positive to left, from x-axis
+        }
+        else
+            return 0; // may be ambiguous with actually being at the origin.
+    }
+
+
+
 
 
 
