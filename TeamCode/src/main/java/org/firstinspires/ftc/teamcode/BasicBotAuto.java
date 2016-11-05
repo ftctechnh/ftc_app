@@ -53,41 +53,26 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @TeleOp(name="Basic Bot: Auto", group="Linear Opmode")  // @Autonomous(...) is the other common choice
 @Disabled
 public class BasicBotAuto extends LinearOpMode {
-
-    /* Declare OpMode members. */
-    private ElapsedTime runtime = new ElapsedTime();
-    // DcMotor leftMotor = null;
-    // DcMotor rightMotor = null;
+    BasicBotHardware robot = new BasicBotHardware();
 
     @Override
     public void runOpMode() throws InterruptedException {
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
-
-        /* eg: Initialize the hardware variables. Note that the strings used here as parameters
-         * to 'get' must correspond to the names assigned during the robot configuration
-         * step (using the FTC Robot Controller app on the phone).
-         */
-        // leftMotor  = hardwareMap.dcMotor.get("left motor");
-        // rightMotor = hardwareMap.dcMotor.get("right motor");
-
-        // eg: Set the drive motor directions:
-        // "Reverse" the motor that runs backwards when connected directly to the battery
-        // leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        // rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        robot.init(hardwareMap);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        runtime.reset();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("Status", "Running...");
             telemetry.update();
 
-            // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
-            // leftMotor.setPower(-gamepad1.left_stick_y);
-            // rightMotor.setPower(-gamepad1.right_stick_y);
+            double left = -gamepad1.left_stick_y;
+            double right = -gamepad1.right_stick_y;
+            robot.l1.setPower(left);
+            robot.l2.setPower(left);
+            robot.r1.setPower(right);
+            robot.r2.setPower(right);
 
             idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
         }
