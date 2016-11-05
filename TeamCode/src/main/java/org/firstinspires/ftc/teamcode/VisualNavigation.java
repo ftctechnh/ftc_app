@@ -295,7 +295,7 @@ public class VisualNavigation {
                 .translation(mmBotWidth/2,0,0)
                 .multiplied(Orientation.getRotationMatrix(
                         AxesReference.EXTRINSIC, AxesOrder.YZY,
-                        AngleUnit.DEGREES, 0, 0, 0));  //-90,0,0 for landscape.
+                        AngleUnit.DEGREES, -90, 0, 0));
         RobotLog.ii(TAG, "phone=%s", format(phoneLocationOnRobot));
 
         /**
