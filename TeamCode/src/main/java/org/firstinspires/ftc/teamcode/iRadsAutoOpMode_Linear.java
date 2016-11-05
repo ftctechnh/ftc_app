@@ -102,9 +102,6 @@ public class iRadsAutoOpMode_Linear extends LinearOpMode {
         } // while(opModeIsActive())
     } // runOpMode()
 
-    String format(OpenGLMatrix transformationMatrix) {
-        return transformationMatrix.formatAsTransform();
-    } // format(transformationMatrix)
 
 
 } // Class
