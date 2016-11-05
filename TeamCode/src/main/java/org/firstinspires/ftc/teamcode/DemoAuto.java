@@ -30,7 +30,7 @@ public class DemoAuto extends OpMode {
     DcMotor motorBackRight;
     DcMotor motorFrontRight;
     ModernRoboticsI2cColorSensor cs;
-    //Servo buttonPusher;
+    Servo buttonPusher;
     ModernRoboticsUsbDeviceInterfaceModule interfaceModule;
     double cs1;
     double cs2;
@@ -41,33 +41,51 @@ public class DemoAuto extends OpMode {
         motorBackLeft = hardwareMap.dcMotor.get("LeftBack");
         motorFrontLeft = hardwareMap.dcMotor.get("LeftFront");
         cs = hardwareMap.get(ModernRoboticsI2cColorSensor.class, "CS");
-        //buttonPusher = hardwareMap.servo.get("buttonPusher");
+        buttonPusher = hardwareMap.servo.get("buttonPusher");
         interfaceModule = hardwareMap.get(ModernRoboticsUsbDeviceInterfaceModule.class, "CDI");
 
         motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public void loop() {
+        motorBackLeft.setTargetPosition(1000);
+        motorBackRight.setTargetPosition(-1000);
+        motorFrontRight.setTargetPosition(-1000);
+        motorFrontLeft.setTargetPosition(1000);
+        telemetry.update();
+        telemetry.addData("vex1:", cs1);
+        telemetry.addData("vex2:", cs2);
+        telemetry.addData("vex3:", cs3);
+        telemetry.addData("red:", cs.red());
+        telemetry.addData("blue:", cs.blue());
+        telemetry.addData("isBusy():", motorBackLeft.isBusy());
+
         cs1 = interfaceModule.getAnalogInputVoltage(0);
         cs2 = interfaceModule.getAnalogInputVoltage(1);
         cs3 = interfaceModule.getAnalogInputVoltage(2);
 
-        if (Math.abs(-6000-motorBackLeft.getCurrentPosition())>100) {
-            motorBackLeft.setPower(-1);
+        if (motorBackLeft.isBusy()) {
+            motorBackLeft.setPower(1);
             motorBackRight.setPower(1);
-            motorFrontLeft.setPower(-1);
+            motorFrontLeft.setPower(1);
             motorFrontRight.setPower(1);
-            if (cs1<100 && cs2<100) {
-                motorBackLeft.setPower(-.5);
+            if (cs1<1.5 && cs2<1.5) {
+                motorBackLeft.setPower(.5);
                 motorBackRight.setPower(1);
-                motorFrontLeft.setPower(-.5);
+                motorFrontLeft.setPower(.5);
                 motorFrontRight.setPower(1);
             }
-            else if (cs3<100 && cs2<100){
-                motorBackLeft.setPower(-1);
+            else if (cs3<1.5 && cs2<1.5){
+                motorBackLeft.setPower(1);
                 motorBackRight.setPower(.5);
-                motorFrontLeft.setPower(-1);
+                motorFrontLeft.setPower(1);
                 motorFrontRight.setPower(.5);
             }
         }
@@ -78,11 +96,15 @@ public class DemoAuto extends OpMode {
             motorFrontRight.setPower(0);
         }
 
-        if (cs.red()>200 || cs.blue()>200){
-            if (cs.red()>200);
-        //        buttonPusher.setPosition(-1);
-            else;
-        //        buttonPusher.setPosition(1);
+        if (cs.red()>50 || cs.blue()>50){
+            if (cs.red()>50)
+                buttonPusher.setPosition(-1);
+            else
+                buttonPusher.setPosition(1);
+            motorBackLeft.setPower(1);
+            motorBackRight.setPower(1);
+            motorFrontLeft.setPower(1);
+            motorFrontRight.setPower(1);
         }
     }
 }
