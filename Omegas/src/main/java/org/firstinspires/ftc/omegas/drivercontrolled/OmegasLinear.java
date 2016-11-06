@@ -98,9 +98,9 @@ public class OmegasLinear extends LinearOpMode {
         new Thread(new Runnable() {
             public void run() {
                 while (opModeIsActive()) {
-                    if (gamepad1.left_trigger > 0) {
+                    if (gamepad2.left_trigger > 0) {
                         Ω.leftBeaconatorSequence(Ω.leftBeaconator, 1000);
-                    } else if (gamepad1.right_trigger > 0) {
+                    } else if (gamepad2.right_trigger > 0) {
                         Ω.leftBeaconatorSequence(Ω.rightBeaconator, 1000);
                     }
                 }
