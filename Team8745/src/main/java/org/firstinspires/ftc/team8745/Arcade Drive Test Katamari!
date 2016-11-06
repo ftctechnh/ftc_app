@@ -1,0 +1,50 @@
+
+
+// Will add formatting and stuff
+
+// Will switch with every loop using this boolean, hopefully
+
+Boolean switcher = false
+
+if (switcher = true) {
+rightDC.setPower(left_stick_y);
+leftDC.setPower(left_stick_y);
+}  }
+
+// if pushed right
+
+if (left_stick_x>0) {
+if (switcher = false){ 
+leftDC.setPower(left_stick_x);
+rightDC.setPower(-left_stick_x);
+} }
+
+// if pushed left
+
+if(left_stick_x<0){
+if (switcher = false){ 
+leftDC.setPower(-left_stick_x);
+rightDC.setpower(left_stick_x);
+} }
+
+// If no y input (for emergency turns)
+
+if (left_stick_y=0) {
+if (left_stick_x<0){
+leftDC.setPower(-left_stick_x);
+rightDC.setpower(left_stick_x);
+}
+else {
+leftDC.setPower (left_stick_x);
+rightDC.setPower (-left_stick_x);
+} }
+
+if (switcher = true) { 
+leftDC.setPower(left_stick_y);
+rightDC.setPower(left_stick_y);
+switcher = false}
+
+// If no x input (for emergency zooming forward
+if (left_stick_x=0){
+RightDC.setPower(left_stick_y);
+leftDC.setPower (left_stick_y);} 
