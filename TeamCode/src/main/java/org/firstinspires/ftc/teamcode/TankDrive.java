@@ -4,22 +4,22 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@TeleOp(name="Tank Drive")
-public class TankDrive extends PakbotsBaseTeleOpMode {
+import static org.firstinspires.ftc.teamcode.ComponentsInit.ComponentMap.M_FRONT_LEFT;
+import static org.firstinspires.ftc.teamcode.ComponentsInit.ComponentMap.M_FRONT_RIGHT;
+import static org.firstinspires.ftc.teamcode.ComponentsInit.ComponentMap.M_REAR_LEFT;
+import static org.firstinspires.ftc.teamcode.ComponentsInit.ComponentMap.M_REAR_RIGHT;
 
-    public void init() {
-        motorInit();
+public class TankDrive {
+
+    public TankDrive(DcMotor...motors){
+        this.motors=motors;
     }
 
-    public void loop() {
-        //motor
-        double ly = -gamepad1.left_stick_y;
-        double ry = -gamepad1.right_stick_y;
-
-        mFrontLeft.setPower(ly);
-        mRearLeft.setPower(ly);
-        mFrontRight.setPower(ry);
-        mRearRight.setPower(ry);
-
+    public void setValues(double ly,double ry){
+        motors[M_FRONT_LEFT].setPower(ly);
+        motors[M_FRONT_RIGHT].setPower(ry);
+        motors[M_REAR_LEFT].setPower(ly);
+        motors[M_REAR_RIGHT].setPower(ry);
     }
+    DcMotor[] motors;
 }
