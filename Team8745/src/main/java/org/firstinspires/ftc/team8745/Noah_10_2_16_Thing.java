@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.team8745;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -13,8 +14,8 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
  * Created by Noah on 10/23/2016.
  */
 
-@TeleOp(name="{InsertCleverName}", group="Normal_OpMode")
-
+@TeleOp(name="{InsertCleverName}")
+@Disabled
 public class Noah_10_2_16_Thing extends OpMode {
     DcMotor left;
     DcMotor right;

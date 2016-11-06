@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.team8745;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -8,8 +9,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
  * Created by nintendo8 on 10/29/2016.
  */
 
-@TeleOp(name="Practice Drive", group="Normal_OpMode")
-
+@TeleOp(name="Practice Drive")
+@Disabled
 public class RobotMoverOne extends OpMode{
     DcMotor leftFRONT;
     DcMotor rightFRONT;
@@ -36,20 +37,24 @@ public class RobotMoverOne extends OpMode{
     public void loop() {
         float leftDC = gamepad1.left_stick_y;
         float rightDC = gamepad1.right_stick_y;
-        boolean bumperPressed = gamepad1.right_bumper;
+        float rightTrigger = gamepad1.right_trigger;
+        boolean rightBumperPressed = gamepad1.right_bumper;
         leftFRONT.setPower(leftDC);
         rightFRONT.setPower(rightDC);
         leftBACK.setPower(leftDC);
         rightBACK.setPower(rightDC);
-        if (bumperPressed == true) {
+
+
+
+        if (rightBumperPressed) {
 
         shooterLeft.setPower(1);
         shooterRight.setPower(1);
 
         }
         else {
-            shooterRight.setPower(0)
-            shooterLeft.setPower(0)
+            shooterRight.setPower(rightTrigger);
+            shooterLeft.setPower(rightTrigger);
         }
     }
 }
