@@ -26,7 +26,11 @@ public class AutoB1 extends AutonomousBase{
                 break;
             case 2: //Move to beacon A push pos.
                 map.setGoal(11,6);
-                linedUp(1,2);
+                if(linedUp()){
+                    moveState = MoveState.FORWARD;
+                }else{
+                    moveState = MoveState.TURN_TOWARDS_GOAL;
+                }
                 if(map.distanceToGoal()<=.1){
                     moveState = MoveState.STOP;
                     gameState = 3;
@@ -34,14 +38,22 @@ public class AutoB1 extends AutonomousBase{
                 break;
             case 3: //Move pear. to wall
                 map.setGoal(11,0);
-                linedUp(MoveState.STOP, MoveState.TURN_TOWARDS_GOAL);
+                if(linedUp()){
+                    moveState = MoveState.STOP;
+                }else{
+                    moveState = MoveState.TURN_TOWARDS_GOAL;
+                }
                 gameState = 4;
                 break;
             case 4: //Move to wall and back up and button press A
                 map.setGoal(12,6);
                 moveState = MoveState.RIGHT;
-                if(map.distanceToGoal()<=.1) {moveState = MoveState.STOP;}
-                while(!touchRight.isPressed()){moveState = MoveState.BACKWARD;}
+                if(map.distanceToGoal()<=.1){
+                    moveState = MoveState.STOP;
+                }
+                while(!touchRight.isPressed()){ //GET RID OF THIS WHILE ASAP @SEAN
+                    moveState = MoveState.BACKWARD;
+                }
                 moveState = MoveState.STOP;
                 if(true) { //// TODO: 10/26/2016 ADD COLOR LOGIC
                     moveState = MoveState.SERVO_PORT_L;
@@ -52,7 +64,9 @@ public class AutoB1 extends AutonomousBase{
                 gameState = 5;
                 break;
             case 5: //move up and button press B
-                while(!touchLeft.isPressed()){moveState = MoveState.FORWARD;}
+                while(!touchLeft.isPressed()){
+                    moveState = MoveState.FORWARD;
+                }
                 moveState = MoveState.STOP;
                 if(true) { //// TODO: 10/26/2016 ADD COLOR LOGIC
                     moveState = MoveState.SERVO_STARBOARD_L;
@@ -64,7 +78,11 @@ public class AutoB1 extends AutonomousBase{
                 break;
             case 6: //Moves to the center and knocks off cap ball
                 map.setGoal(6.8,5.5);
-                linedUp(1,2);
+                if(linedUp()){
+                    moveState = MoveState.FORWARD;
+                }else{
+                    moveState = MoveState.TURN_TOWARDS_GOAL;
+                }
                 if(map.distanceToGoal()<=.1) {
                     moveState = MoveState.STOP;
                 }

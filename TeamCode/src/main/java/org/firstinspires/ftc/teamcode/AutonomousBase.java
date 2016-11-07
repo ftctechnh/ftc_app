@@ -76,7 +76,7 @@ public abstract class AutonomousBase extends OpMode {
 
         motorRightShooter = hardwareMap.dcMotor.get("r_shoot");
         motorLeftShooter = hardwareMap.dcMotor.get("l_shoot");
-        motorConveyor = hardwareMap.dcMotor.get("convyer");
+        motorConveyor = hardwareMap.dcMotor.get("conveyor");
 
         servoCollector = hardwareMap.servo.get("collector");
         servoLeftButton = hardwareMap.servo.get("l_button");
@@ -148,14 +148,14 @@ public abstract class AutonomousBase extends OpMode {
 
                 if(turnRight){
                     motorUp.setPower(power);
-                    motorDown.setPower(power);
+                    motorDown.setPower(-power);
                     motorLeft.setPower(power);
-                    motorRight.setPower(power);
+                    motorRight.setPower(-power);
                 }else{
                     motorUp.setPower(-power);
-                    motorDown.setPower(-power);
+                    motorDown.setPower(power);
                     motorLeft.setPower(-power);
-                    motorRight.setPower(-power);
+                    motorRight.setPower(power);
                 }
                 break;
             case MoveState.SERVO_STARBOARD_R:
@@ -208,6 +208,8 @@ public abstract class AutonomousBase extends OpMode {
         telemetry.addData("goal (x,y) ","(" +
           map.getRobotX() + "," + 
           map.getRobotY() + ")");
+        telemetry.addData("robot theta",heading);
+        telemetry.addData("Am I lined up?", linedUp());
     }
 
     @Override
@@ -217,18 +219,18 @@ public abstract class AutonomousBase extends OpMode {
         telemetry();
     }
 
-    public void linedUp(int o, int n) {
+    public boolean linedUp() {
         if (Math.abs(heading - map.angleToGoal()) < HEADING_TOLERANCE || (heading > 360 - HEADING_TOLERANCE && map.angleToGoal() < HEADING_TOLERANCE || (heading < HEADING_TOLERANCE && map.angleToGoal() > 360 - HEADING_TOLERANCE))) {
-            moveState = o;
+            return true;
         } else {
-            moveState = n;
+            return false;
         }
     }
-    public void linedUpRev(int o, int n) {
+    public boolean linedUpRev() {
         if (Math.abs(heading - map.angleToGoalRev()) < HEADING_TOLERANCE || (heading > 360 - HEADING_TOLERANCE && map.angleToGoalRev() < HEADING_TOLERANCE || (heading < HEADING_TOLERANCE && map.angleToGoalRev() > 360 - HEADING_TOLERANCE))) {
-            moveState = o;
+            return true;
         } else {
-            moveState = n;
+            return false;
         }
     }
 

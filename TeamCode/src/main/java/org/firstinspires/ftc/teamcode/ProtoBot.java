@@ -37,7 +37,7 @@ public class ProtoBot extends OpMode {
         
         RS = hardwareMap.dcMotor.get("r_shoot");
         LS = hardwareMap.dcMotor.get("l_shoot");
-        MC = hardwareMap.dcMotor.get("conveyer");
+        MC = hardwareMap.dcMotor.get("conveyor");
 
         C = hardwareMap.servo.get("collector");
         BPL = hardwareMap.servo.get("l_button");
@@ -66,11 +66,6 @@ public class ProtoBot extends OpMode {
         // motorspeed = dx/dt * (60 seconds/1 minute) * (1 rotation/1120 encoder degrees) = (rotations/minute)
         double motorSpeed = 60*tDist/(getRuntime() - resetTime)/1120;
 
-        // Resets motor speed readings 
-        if(gamepad1.left_bumper){ 
-          resetTime = getRuntime();
-          tDist = 0;
-        }
         // Drivetrain controls
         if(gamepad1.left_trigger > .1 || gamepad1.right_trigger > .1){
             if(gamepad1.left_trigger > gamepad1.right_trigger){
@@ -115,10 +110,10 @@ public class ProtoBot extends OpMode {
             C.setPosition(.5);
         }
         
-        if(gamepad2.right_bumper){
+        if(gamepad1.right_bumper){
             BPL.setPosition(0);
             BPR.setPosition(0);
-        }else if(gamepad2.left_bumper){
+        }else if(gamepad1.left_bumper){
             BPL.setPosition(1);
             BPR.setPosition(1);
         }else{

@@ -12,7 +12,11 @@ public class AutonomousTest extends AutonomousBase{
         switch(gameState){
             case 0:
               map.setGoal(6,9);
-              linedUp(MoveState.FORWARD,MoveState.TURN_TOWARDS_GOAL);
+              if(linedUp()){
+                  moveState = MoveState.FORWARD;
+              }else{
+                  moveState = MoveState.TURN_TOWARDS_GOAL;
+              }
               break;
         }
     }
