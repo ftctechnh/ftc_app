@@ -43,10 +43,11 @@ public class CompbotTele extends RobotOp {
         float shooterInput = 0;
 
         //Harvester
-        harvesterInput = gamepad2.right_trigger;
+        harvesterInput += gamepad2.right_trigger;
+        harvesterInput -= gamepad2.left_trigger;
 
         //Shooter
-        shooterInput = gamepad2.left_trigger;
+        shooterInput = gamepad2.right_stick_y;
 
         //Lift
         liftInput = gamepad2.left_stick_y;
@@ -83,19 +84,15 @@ public class CompbotTele extends RobotOp {
                 (robot.blCorrectDirection ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD));
 
         DcMotorSimple.Direction harvesterDirection = (harvesterInput >= 0 ?
-                (robot.blCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE) :
-                (robot.blCorrectDirection ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD));
-
-        DcMotorSimple.Direction liftDirection = (liftInput >= 0 ?
-                (robot.liftCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE) :
-                (robot.liftCorrectDirection ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD));
+                (robot.harvesterCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE) :
+                (robot.harvesterCorrectDirection ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD));
 
         robot.frontRight.setDirection(frDirection);
         robot.frontLeft.setDirection(flDirection);
         robot.backRight.setDirection(brDirection);
         robot.backLeft.setDirection(blDirection);
 
-        robot.lift.setDirection(liftDirection);
+        robot.harvester.setDirection(harvesterDirection);
 
         float frPower = Math.min(Math.abs(frInputs), 1);
         float flPower = Math.min(Math.abs(flInputs), 1);
@@ -126,6 +123,7 @@ public class CompbotTele extends RobotOp {
 
         telemetry.addData("GP2 Right Trigger", gamepad2.right_trigger);
         telemetry.addData("GP2 Left Trigger", gamepad2.left_trigger);
+        telemetry.addData("GP2 Right Stick Y", gamepad2.right_stick_y);
         telemetry.addData("GP2 Left Stick Y", gamepad2.left_stick_y);
 
         telemetry.addData("frInputs", frInputs);

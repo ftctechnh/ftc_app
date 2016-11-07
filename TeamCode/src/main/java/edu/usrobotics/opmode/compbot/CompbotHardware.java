@@ -24,7 +24,7 @@ public class CompbotHardware extends BaseHardware {
     public DcMotor shooterRight;
     public DcMotor shooterLeft;
 
-    public boolean frCorrectDirection = true;
+    public boolean frCorrectDirection = false;
     public boolean flCorrectDirection = true;
     public boolean brCorrectDirection = false;
     public boolean blCorrectDirection = true;

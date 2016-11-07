@@ -163,4 +163,13 @@ public class ProtobotHardware extends BaseHardware {
 
     }
 
+    public void setDrivePower(double power){
+
+        frontRight.setPower(power);
+        frontLeft.setPower(power);
+        backRight.setPower(power);
+        backLeft.setPower(power);
+
+    }
+
 }

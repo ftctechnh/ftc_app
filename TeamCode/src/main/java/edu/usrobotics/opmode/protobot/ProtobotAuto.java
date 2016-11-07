@@ -24,9 +24,11 @@ public class ProtobotAuto extends RobotOp {
 
         robot.init(hardwareMap);
 
+        robot.setDirection(ProtobotHardware.MovementDirection.NORTH);
+
         Route happyTrail = new Route();
 
-        Goal<Integer> encoderGoal = new Goal<> (robot.inchesStraifingToEncoderTicks(24));
+        Goal<Integer> encoderGoal = new Goal<> (robot.inchesStraifingToEncoderTicks(36));
         ConcurrentTaskSet forward = new ConcurrentTaskSet(
                 new MotorTask(robot.frontRight, encoderGoal, null, 0.5f, 0.7f, encoderGoal, 0.1f),
                 new MotorTask(robot.frontLeft, null, null, 0.5f, 0.7f, encoderGoal, 0.1f),
@@ -38,15 +40,10 @@ public class ProtobotAuto extends RobotOp {
                 return isTaskCompleted (0);
             }
 
-            @Override
-            public void onReached() {
-                super.onReached();
 
-                robot.setDirection(ProtobotHardware.MovementDirection.TURN_RIGHT);
-            }
         };
 
-        Goal<Integer> encoderGoal2 = new Goal<> (robot.degreesToEncoderTicks(180));
+        /*Goal<Integer> encoderGoal2 = new Goal<> (robot.degreesToEncoderTicks(180));
         ConcurrentTaskSet turn1 = new ConcurrentTaskSet(
                 new MotorTask(robot.frontRight, encoderGoal2, null, 0.5f, 0.7f, encoderGoal2, 0.1f),
                 new MotorTask(robot.frontLeft, null, null, 0.5f, 0.7f, encoderGoal2, 0.1f),
@@ -68,7 +65,7 @@ public class ProtobotAuto extends RobotOp {
 
         Goal<Integer> encoderGoal3 = new Goal<> (robot.inchesStraifingToEncoderTicks(5.6f));
         ConcurrentTaskSet crab1 = new ConcurrentTaskSet(
-                new MotorTask(robot.frontLeft, null, null, 0.5f, 0.7f, encoderGoal3, 0.1f),
+                new MotorTask(robot.frontLeft, encoderGoal3, null, 0.5f, 0.7f, encoderGoal3, 0.1f),
                 new MotorTask(robot.backRight, null, null, 0.5f, 0.7f, encoderGoal3, 0.1f)
         ) {
             @Override
@@ -82,11 +79,11 @@ public class ProtobotAuto extends RobotOp {
 
                 robot.setDirection(ProtobotHardware.MovementDirection.TURN_RIGHT);
             }
-        };
+        };*/
 
         happyTrail.addTask(forward);
-        happyTrail.addTask(turn1);
-        happyTrail.addTask(crab1);
+        //happyTrail.addTask(turn1);
+        //happyTrail.addTask(crab1);
 
         addRoute(happyTrail);
 
