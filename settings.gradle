@@ -1,4 +1,4 @@
-include ':FtcRobotController'
+include ':FtcRobotController', ':FtcUtils'
 include ':Team9853'
 include ':Team11248'
 include ':opencv-java'

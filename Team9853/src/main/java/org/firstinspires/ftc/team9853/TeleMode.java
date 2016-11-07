@@ -12,9 +12,9 @@ import java.util.Map;
 /**
  * teleop opmode
  */
-@TeleOp(name = "Driving-9853", group = "General")
+@TeleOp(name = "Driving", group = "General")
 
-public class TeleMode9853 extends OpMode {
+public class TeleMode extends OpMode {
     /*
      * Config
      */

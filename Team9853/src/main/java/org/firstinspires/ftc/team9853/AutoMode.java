@@ -1,9 +1,6 @@
 package org.firstinspires.ftc.team9853;
 
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.RobotLog;
-import org.firstinspires.ftc.team9853.OmniWheelDriver;
 
 import org.lasarobotics.vision.opmode.LinearVisionOpMode;
 
@@ -12,7 +9,7 @@ import java.util.Map;
 /**
  * Autonoumous program for 9853
  */
-public class AutoMode9853 extends LinearVisionOpMode {
+public class AutoMode extends LinearVisionOpMode {
     private OmniWheelDriver driver;
 
     static double startPoisitonOne = 6.00;
@@ -40,8 +37,8 @@ public class AutoMode9853 extends LinearVisionOpMode {
     /*
      * Setup new autonomous mode.
      */
-    public AutoMode9853(String team) {this(team, startPoisitonOne, beaconPoisitonOne);}
-    public AutoMode9853(String team, double startPosition, double beaconPosition) {
+    public AutoMode(String team) {this(team, startPoisitonOne, beaconPoisitonOne);}
+    public AutoMode(String team, double startPosition, double beaconPosition) {
         this.isRedTeam = team.toLowerCase().equals("red");
         this.beaconPosition = beaconPosition;
         this.startPosition = startPosition;

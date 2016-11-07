@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * backup autonomous
  */
-public class AutoModeBackup9853 extends LinearOpMode {
+public class AutoModeCharge extends LinearOpMode {
     private OmniWheelDriver driver;
 
     static final long waitTime = 10000;
@@ -26,7 +26,7 @@ public class AutoModeBackup9853 extends LinearOpMode {
     /*
      * Setup new autonomous mode.
      */
-    public AutoModeBackup9853(String team) {
+    public AutoModeCharge(String team) {
         this.isRedTeam = team.toLowerCase().equals("red");
     }
 
