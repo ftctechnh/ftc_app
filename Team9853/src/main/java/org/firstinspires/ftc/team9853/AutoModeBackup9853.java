@@ -1,23 +1,21 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.team9853;
 
-import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.lasarobotics.vision.opmode.LinearVisionOpMode;
+import org.firstinspires.ftc.team9853.OmniWheelDriver;
+import org.firstinspires.ftc.team9853.StoppedException;
 
 import java.util.Map;
 
 /**
- * Autonoumous program for 9853
+ * backup autonomous
  */
-public class AutoMode9853 extends LinearVisionOpMode {
+public class AutoModeBackup9853 extends LinearOpMode {
     private OmniWheelDriver driver;
 
-    static double startPoisitonOne = 6.00;
-    static double startPoisitonTwo = 8.00;
-    static double beaconPoisitonOne = 5.00;
-    static double beaconPoisitonTwo = 7.00;
-    static double fieldLength = 12.00;
+    static final long waitTime = 10000;
+    static final long driveTime = 3000;
 
     /*
      * team
@@ -26,23 +24,10 @@ public class AutoMode9853 extends LinearVisionOpMode {
     public boolean isRedTeam;
 
     /*
-     * Start position
-     */
-    public double startPosition;
-
-    /*
-     * Beacon Position
-     */
-    public double beaconPosition;
-
-    /*
      * Setup new autonomous mode.
      */
-    public AutoMode9853(String team) {this(team, startPoisitonOne, beaconPoisitonOne);}
-    public AutoMode9853(String team, double startPosition, double beaconPosition) {
+    public AutoModeBackup9853(String team) {
         this.isRedTeam = team.toLowerCase().equals("red");
-        this.beaconPosition = beaconPosition;
-        this.startPosition = startPosition;
     }
 
     /*
@@ -61,8 +46,16 @@ public class AutoMode9853 extends LinearVisionOpMode {
     /*
      * called on start
      */
-    public void runRobot() throws StoppedException{
+    public void runRobot() throws StoppedException {
+        for(long endTime = System.currentTimeMillis() + waitTime; System.currentTimeMillis() < endTime;) {
+            statusCheck();
+            // Do nothing
+        }
 
+        for(long endTime = System.currentTimeMillis() + driveTime; System.currentTimeMillis() < endTime;) {
+            statusCheck();
+            driver.move(isRedTeam ? -1 : 1, 1, 0, .7);
+        }
     }
 
     /*

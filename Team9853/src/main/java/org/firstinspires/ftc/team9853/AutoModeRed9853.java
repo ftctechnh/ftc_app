@@ -1,6 +1,8 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.team9853;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
+import org.firstinspires.ftc.team9853.AutoMode9853;
 
 /**
  * red autonomous
@@ -8,7 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Autonomous(name = "AutoModeRed-9853", group = "General")
 
-public class AutoModeRed9853 extends AutoMode9853{
+public class AutoModeRed9853 extends AutoMode9853 {
     public AutoModeRed9853() {
         super("red");
     }
