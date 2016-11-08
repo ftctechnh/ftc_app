@@ -128,7 +128,7 @@ public class OmniDriveBot implements DriveTrainInterface
         fR.setPower(0);
     }
 
-    public void spin(float degree)
+    public void spin(double degree)
     {
         double robotCircumference = 84.1;
         int encoderTarget = (int)(degree*robotCircumference*65/360);

@@ -177,8 +177,6 @@ public class PositionChangingVuforia extends LinearOpMode {
             robotDeg -= 360;
         }
 
-
-
         //First step, make phone face wanted degree
   //      float difference = (float) (convertMMToIn((currentDeg - wantedDeg)));
     /*
@@ -219,9 +217,7 @@ public class PositionChangingVuforia extends LinearOpMode {
         }
 
 */
-        float difference = (float) (convertMMToIn((wantedX - currentX))); //change in x
-        double wantedOrientation;
-
+        double difference = (convertMMToIn((wantedX - currentX))); //change in x
 
         if (difference < 0)
         { //this means that current x is greater than wanted x, so move robot in -90 deg
@@ -231,6 +227,21 @@ public class PositionChangingVuforia extends LinearOpMode {
         {
 
         }
+
+        difference = (convertMMToIn(wantedY - currentY));
+        if (difference < 0) // Means current y is greater than wanted y, so the robot is above, so move down , 0 deg,
+        {
+            drive.driveStraight(Math.abs(difference), (-1* currentDeg));
+        }
+        else if (difference > 0) //
+        {
+            drive.driveStraight(Math.abs(difference), 180 - currentDeg);
+        }
+
+        //spin
+
+        drive.spin((wantedDeg - currentDeg));
+
         /*
         difference = (float)(convertMMToIn((currentY - wantedY)));
 
