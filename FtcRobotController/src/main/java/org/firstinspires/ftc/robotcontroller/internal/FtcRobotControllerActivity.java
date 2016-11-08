@@ -90,12 +90,16 @@ import com.qualcomm.robotcore.wifi.WifiDirectAssistant;
 
 import org.firstinspires.ftc.robotcore.internal.AppUtil;
 import org.firstinspires.inspection.RcInspectionActivity;
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.CameraBridgeViewBase;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
 
 import java.io.File;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class FtcRobotControllerActivity extends Activity {
+public class FtcRobotControllerActivity extends Activity{
 
   public static final String TAG = "RCActivity";
 
@@ -111,7 +115,7 @@ public class FtcRobotControllerActivity extends Activity {
   protected ProgrammingModeController programmingModeController;
 
   protected UpdateUI.Callback callback;
-  protected Context context;
+  protected static Context context;
   protected Utility utility;
   protected AppUtil appUtil = AppUtil.getInstance();
 
@@ -133,6 +137,11 @@ public class FtcRobotControllerActivity extends Activity {
 
   protected FtcEventLoop eventLoop;
   protected Queue<UsbDevice> receivedUsbAttachmentNotifications;
+
+  //user code for context
+  public static Context getAppContext() {
+    return context;
+  }
 
   protected class RobotRestarter implements Restarter {
 
