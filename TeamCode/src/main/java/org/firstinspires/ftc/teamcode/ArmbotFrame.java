@@ -20,7 +20,7 @@ import com.qualcomm.robotcore.hardware.ServoController;
  */
 @TeleOp(name = "ArmBot", group = "")
 public class ArmbotFrame extends OpMode {
-    boolean beaconMode;
+    boolean beaconMode = true;
     DcMotorController wheelControllerLeft;
     DcMotor motorBackLeft;
     DcMotor motorFrontLeft;
@@ -45,7 +45,7 @@ public class ArmbotFrame extends OpMode {
         arm = hardwareMap.dcMotor.get("Arm");
         motorRev = hardwareMap.dcMotor.get("RevMotor");
         launcher = hardwareMap.servo.get("Launcher");
-        buttonPusher = hardwareMap.servo.get("ButtonPusher");
+        buttonPusher = hardwareMap.servo.get("buttonPusher");
     }
 
     public void loop() {
@@ -58,8 +58,8 @@ public class ArmbotFrame extends OpMode {
             rightthrottle = -gamepad1.right_stick_y;
         }
         else{
-            leftthrottle = gamepad1.left_stick_y;
-            rightthrottle = gamepad1.right_stick_y;
+            leftthrottle = gamepad1.right_stick_y;
+            rightthrottle = gamepad1.left_stick_y;
             if (gamepad1.left_bumper)
                 buttonPusher.setPosition(1);
             if (gamepad1.right_bumper)
@@ -75,8 +75,8 @@ public class ArmbotFrame extends OpMode {
         arm.setPower(armthrottle);
         motorRev.setPower(-revthrottle);
         if (gamepad2.right_bumper)
-            launcher.setPosition(1);
-        else
             launcher.setPosition(0);
+        else
+            launcher.setPosition(1);
     }
 }

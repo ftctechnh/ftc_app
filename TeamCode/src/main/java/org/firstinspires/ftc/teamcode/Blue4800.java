@@ -21,8 +21,8 @@ import com.qualcomm.robotcore.hardware.ServoController;
  * Created by FTC Team 4799-4800 on 10/13/2016.
  */
 
-@Autonomous(name = "4799AutoBlue", group = "")
-public class DemoAuto extends OpMode {
+@Autonomous(name = "4800AutoBlue", group = "")
+public class Blue4800 extends OpMode {
     //DcMotorController wheelControllerLeft;
     DcMotor motorBackLeft;
     DcMotor motorFrontLeft;
@@ -55,10 +55,10 @@ public class DemoAuto extends OpMode {
     }
 
     public void loop() {
-        motorBackLeft.setTargetPosition(10000);
+        motorBackLeft.setTargetPosition(-10000);
         motorBackRight.setTargetPosition(-10000);
         motorFrontRight.setTargetPosition(-10000);
-        motorFrontLeft.setTargetPosition(10000);
+        motorFrontLeft.setTargetPosition(-10000);
         telemetry.update();
         telemetry.addData("vex1:", cs1);
         telemetry.addData("vex2:", cs2);
@@ -74,19 +74,19 @@ public class DemoAuto extends OpMode {
         if (motorBackLeft.isBusy()) {
             motorBackLeft.setPower(.5);
             motorBackRight.setPower(.5);
-            motorFrontLeft.setPower(.5);
-            motorFrontRight.setPower(.5);
+            motorFrontLeft.setPower(-.35);
+            motorFrontRight.setPower(-.35);
             if (cs1<3) {
                 motorBackLeft.setPower(.2);
                 motorBackRight.setPower(.5);
-                motorFrontLeft.setPower(.2);
-                motorFrontRight.setPower(.5);
+                motorFrontLeft.setPower(-.69*.2);
+                motorFrontRight.setPower(-.69*.5);
             }
             else if (cs3<3){
                 motorBackLeft.setPower(.5);
                 motorBackRight.setPower(.2);
-                motorFrontLeft.setPower(.5);
-                motorFrontRight.setPower(.2);
+                motorFrontLeft.setPower(-.69*.5);
+                motorFrontRight.setPower(-.69*.2);
             }
         }
         else{
@@ -103,8 +103,8 @@ public class DemoAuto extends OpMode {
                 buttonPusher.setPosition(.5);
             motorBackLeft.setPower(.5);
             motorBackRight.setPower(.5);
-            motorFrontLeft.setPower(.5);
-            motorFrontRight.setPower(.5);
+            motorFrontLeft.setPower(-.69*.5);
+            motorFrontRight.setPower(-.69*.5);
         }
     }
 }
