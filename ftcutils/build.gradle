@@ -18,6 +18,10 @@ android {
     }
 }
 
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+repositories {
+    flatDir {
+        dirs '../libs'
+    }
 }
+
+apply from: 'build.release.gradle'
