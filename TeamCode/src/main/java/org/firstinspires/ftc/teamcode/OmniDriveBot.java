@@ -97,13 +97,13 @@ public class OmniDriveBot implements DriveTrainInterface
         bL.setPower(bLPower);
     }
 
-    public void driveStraight(double distanceInches, int degree)
+    public void driveStraight(double distanceInches, double degree)
     {
         double degToRad = (Math.PI/180) * degree;
         double scalingFactor = (0.157 * Math.sin(3.963 * (degToRad) + 1.755)) + 0.846;
 
-        float leftXIn = (float)Math.sin(degToRad);
-        float leftYIn = (float)Math.cos(degToRad);
+        float leftXIn = -(float)Math.sin(degToRad);
+        float leftYIn = -(float)Math.cos(degToRad);
         float fRPower = leftYIn - leftXIn;
         float fLPower = -leftYIn - leftXIn;
         float bRPower = leftYIn + leftXIn;
