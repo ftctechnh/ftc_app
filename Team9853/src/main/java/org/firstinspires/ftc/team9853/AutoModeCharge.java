@@ -1,13 +1,8 @@
 package org.firstinspires.ftc.team9853;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-
 import org.chathamrobotics.ftcutils.AutoMode;
-import org.chathamrobotics.ftcutils.OmniWheelDriver;
 import org.chathamrobotics.ftcutils.StoppedException;
 
-import java.util.Map;
 
 /**
  * backup autonomous

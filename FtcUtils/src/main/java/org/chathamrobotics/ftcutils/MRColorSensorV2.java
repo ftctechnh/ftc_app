@@ -13,9 +13,9 @@ import com.qualcomm.robotcore.hardware.I2cDeviceSynchImpl;
 public class MRColorSensorV2 extends ModernRoboticsI2cColorSensor implements ColorSensor{
     // Stateful
     private I2cDeviceSynch sensorSynch;
-    private int frequency;
-    private boolean active;
-    private int lastCommand;
+    private volatile int frequency;
+    private volatile boolean active;
+    private volatile int lastCommand;
 
     /*
      * Creates new MRColorSensorV2
