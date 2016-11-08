@@ -34,7 +34,8 @@ public class OmniWheelDriver {
     public boolean silent = false;
 
     /*
-     * Builds new OmniWheelDriver using default names for motors ("FrontLeft","FrontRight","BackLeft","BackRight")
+     * Builds new OmniWheelDriver using default names for motors
+     * ("FrontLeft","FrontRight","BackLeft","BackRight")
      * @param {HardwareMap} hardwareMap
      * @param {Telemetry} [telemetry]
      */
@@ -56,7 +57,8 @@ public class OmniWheelDriver {
      * @param {DcMotor} backRight
      * @param {Telemetry} telemetry
      */
-    public OmniWheelDriver(DcMotor frontLeft, DcMotor frontRight, DcMotor backLeft, DcMotor backRight, Telemetry telemetry) {
+    public OmniWheelDriver(DcMotor frontLeft, DcMotor frontRight, DcMotor backLeft,
+                           DcMotor backRight, Telemetry telemetry) {
         this.frontLeft = frontLeft;
         this.frontRight = frontRight;
         this.backLeft = backLeft;
