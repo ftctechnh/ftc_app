@@ -83,11 +83,18 @@ public class PositionChangingVuforia extends LinearOpMode {
             if (latestLocation != null) {
                 lastKnownLocation = latestLocation;
                 updateRobotLocation();
-                moveToPosition(305, 914, -90, getXLocation(lastKnownLocation), getYLocation(lastKnownLocation));
-                break;
+                idle();
+                //moveToPosition(305, 914, -90);
+                //break;
             }
-            idle();
-        }
+            int robotDeg = (int)(-1 * currentDeg) + 90;
+            drive.driveStraight(12, robotDeg);
+           /* if (robotDeg >= 360)
+            {
+                robotDeg -= 360;
+            }
+            telemetry.addData("robotDeg", robotDeg);*/
+       }
     }
 
     public void setupVuforia() {
@@ -169,8 +176,15 @@ public class PositionChangingVuforia extends LinearOpMode {
         return (rot.thirdAngle * 57.2958);
     }
 
-    public void moveToPosition(double wantedX, double wantedY, double wantedDeg, double x, double y)
+    public void moveToPosition(double wantedX, double wantedY, double wantedDeg)
     {
+      double robotDeg = (-1 * currentDeg) + 90;
+        if (robotDeg >= 360)
+        {
+            robotDeg -= 360;
+        }
+
+
 
         //First step, make phone face wanted degree
   //      float difference = (float) (convertMMToIn((currentDeg - wantedDeg)));
@@ -212,31 +226,19 @@ public class PositionChangingVuforia extends LinearOpMode {
         }
 
 */
-
-        float difference = (float) (convertMMToIn((currentX - wantedX)));
+        float difference = (float) (convertMMToIn((wantedX - currentX))); //change in x
         double wantedOrientation;
 
-        if (Math.abs(difference) > 1) {
-            if (difference > 0) //currentX is greater than wanted X so move left
-            {
-                if (currentDeg > 0) //current deg is pos
-                    wantedOrientation = currentDeg - 270;
-                else
-                    wantedOrientation = currentDeg + 90;
 
-                drive.driveStraight(difference, (int)wantedOrientation);
-            }
-            else //CurrentX is less than wantedX, so move right
-            {
-                if (currentDeg > 0) //current deg is pos
-                    wantedOrientation = currentDeg - 90;
-                else
-                    wantedOrientation = currentDeg + 270;
-
-                drive.driveStraight(difference, (int)wantedOrientation);
-            }
+        if (difference < 0)
+        { //this means that current x is greater than wanted x, so move robot in -90 deg
+           drive.driveStraight(Math.abs(difference), robotDeg);
         }
-/*
+        else if (difference > 0)
+        {
+
+        }
+        /*
         difference = (float)(convertMMToIn((currentY - wantedY)));
 
         if(Math.abs(difference) > 1)
