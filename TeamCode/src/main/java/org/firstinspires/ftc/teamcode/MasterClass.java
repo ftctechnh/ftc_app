@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
  */
 
 @TeleOp(name="MasterClass", group="Pushbot")
-@Disabled
+//@Disabled
 
 public class MasterClass extends OpMode {
 
@@ -59,16 +59,16 @@ public class MasterClass extends OpMode {
 
         float rightY = -gamepad1.right_stick_y;
 
-        BackRight.setPower(rightY);
+        //BackRight.setPower(rightY);
 
-        FrontRight.setPower(leftY);
+        //FrontRight.setPower(leftY);
 
-        BackLeft.setPower(leftY);
+        //BackLeft.setPower(leftY);
 
-        FrontLeft.setPower(rightY);
+        //FrontLeft.setPower(rightY);
 
-        //FlyRight.setPower(rightY);
+        FlyRight.setPower(rightY);
 
-        //FlyLeft.setPower(rightY);
+        FlyLeft.setPower(rightY);
     }
 }
