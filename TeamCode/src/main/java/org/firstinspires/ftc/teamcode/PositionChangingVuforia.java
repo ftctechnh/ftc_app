@@ -83,9 +83,8 @@ public class PositionChangingVuforia extends LinearOpMode {
             if (latestLocation != null) {
                 lastKnownLocation = latestLocation;
                 updateRobotLocation();
-                moveToPosition(305, 914, -90);
-                while (true)
-                    idle();
+                moveToPosition(305, 914, -90, getXLocation(lastKnownLocation), getYLocation(lastKnownLocation));
+                break;
             }
             idle();
         }
@@ -170,19 +169,86 @@ public class PositionChangingVuforia extends LinearOpMode {
         return (rot.thirdAngle * 57.2958);
     }
 
-    public void moveToPosition(double wantedX, double wantedY, double wantedDeg)
+    public void moveToPosition(double wantedX, double wantedY, double wantedDeg, double x, double y)
     {
+
+        //First step, make phone face wanted degree
+  //      float difference = (float) (convertMMToIn((currentDeg - wantedDeg)));
+    /*
+        if (Math.abs(difference) > 1)
+        {
+            if (difference > 0) //different is pos 45 to -90
+            {
+                drive.spin();
+            }
+            else
+                drive.spin();
+
+        }
+
+      */
+/*
+        double driveAngle = Math.atan2(y - wantedY, x - wantedX);
+
+        drive.driveStraight(Math.sqrt(Math.abs(y - wantedY)*Math.abs(y - wantedY)* + Math.abs(x - wantedX)*Math.abs(x - wantedX) ),(int)driveAngle);
+
+
+        //SPin so that it faces wanted angle
+        if (Math.abs(currentDeg - wantedDeg) > 2)
+        {
+            if (currentDeg > 0 && wantedDeg > 0)
+            {
+                drive.spin((float)(Math.abs(wantedDeg - currentDeg)));
+            }
+            else if (currentDeg < 0 && wantedDeg < 0)
+            {
+                drive.spin((float)(Math.abs(wantedDeg - currentDeg)) * -1);
+            }
+            else
+            {
+
+            }
+
+        }
+
+*/
+
         float difference = (float) (convertMMToIn((currentX - wantedX)));
+        double wantedOrientation;
 
         if (Math.abs(difference) > 1) {
             if (difference > 0) //currentX is greater than wanted X so move left
             {
-                drive.driveStraight(difference, -90);
-            } else //CurrentX is less than wantedX, so move right
+                if (currentDeg > 0) //current deg is pos
+                    wantedOrientation = currentDeg - 270;
+                else
+                    wantedOrientation = currentDeg + 90;
+
+                drive.driveStraight(difference, (int)wantedOrientation);
+            }
+            else //CurrentX is less than wantedX, so move right
             {
-                drive.driveStraight(difference, 90);
+                if (currentDeg > 0) //current deg is pos
+                    wantedOrientation = currentDeg - 90;
+                else
+                    wantedOrientation = currentDeg + 270;
+
+                drive.driveStraight(difference, (int)wantedOrientation);
             }
         }
+/*
+        difference = (float)(convertMMToIn((currentY - wantedY)));
+
+        if(Math.abs(difference) > 1)
+        {
+            if (currentDeg > 0)
+            {
+                wantedOrientation
+            }
+                else
+
+        }
+*/
 /*
         difference = (float)convertMMToIn(currentY - wantedY);
         if(Math.abs(difference) > 1)
