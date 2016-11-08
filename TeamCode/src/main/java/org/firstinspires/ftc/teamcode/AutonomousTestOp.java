@@ -17,7 +17,11 @@ public class AutonomousTestOp extends LinearOpMode
     {
         robot.init(hardwareMap);
         waitForStart();
-        robot.driveStraight(12, 0);
+        robot.driveStraight(12, 90);
+        sleep(1000);
+        robot.driveStraight(12, 120);
+        sleep(1000);
+        robot.driveStraight(12, 60);
     }
 }
 
