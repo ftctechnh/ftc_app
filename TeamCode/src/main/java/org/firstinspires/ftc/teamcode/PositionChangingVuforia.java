@@ -87,13 +87,6 @@ public class PositionChangingVuforia extends LinearOpMode {
                 //moveToPosition(305, 914, -90);
                 //break;
             }
-            int robotDeg = (int)(-1 * currentDeg) + 90;
-            drive.driveStraight(12, robotDeg);
-           /* if (robotDeg >= 360)
-            {
-                robotDeg -= 360;
-            }
-            telemetry.addData("robotDeg", robotDeg);*/
        }
     }
 
