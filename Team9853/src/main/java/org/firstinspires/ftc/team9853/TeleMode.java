@@ -55,7 +55,7 @@ public class TeleMode extends OpMode {
         if(gamepad1.dpad_down){driver.offsetAngle = Math.PI;}
         if(gamepad1.dpad_right){driver.offsetAngle = (3*Math.PI)/2;}
 
-        driver.move(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
+        driver.move(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x, true);
 
         telemetryData();
     }
