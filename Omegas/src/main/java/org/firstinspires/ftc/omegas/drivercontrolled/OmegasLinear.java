@@ -78,6 +78,22 @@ public class OmegasLinear extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
+        /**
+         * The following should, if uncommented, extend and retract
+         * beaconators when the trigger keys are pressed.
+         */
+        new Thread(new Runnable() {
+            public void run() {
+                while (opModeIsActive()) {
+                    if (gamepad2.left_trigger > 0) {
+                        Ω.leftBeaconatorSequence(Ω.leftBeaconator, 1000);
+                    } else if (gamepad2.right_trigger > 0) {
+                        Ω.rightBeaconatorSequence(Ω.rightBeaconator, 1000);
+                    }
+                }
+            }
+        }).start();
+
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
@@ -89,26 +105,5 @@ public class OmegasLinear extends LinearOpMode {
             Ω.rightBackMotor.setPower(-gamepad1.right_stick_y);
             Ω.rightFrontMotor.setPower(-gamepad1.right_stick_y);
         }
-
-        /**
-         * The following should, if uncommented, extend and retract
-         * beaconators when the trigger keys are pressed.
-         */
-
-        new Thread(new Runnable() {
-            public void run() {
-                while (opModeIsActive()) {
-                    if (gamepad2.left_trigger > 0) {
-                        Ω.leftBeaconatorSequence(Ω.leftBeaconator, 1000);
-                    } else if (gamepad2.right_trigger > 0) {
-                        Ω.leftBeaconatorSequence(Ω.rightBeaconator, 1000);
-                    }
-                }
-            }
-        }).start();
-
-        try {
-            Thread.sleep(10);
-        } catch (InterruptedException e) { }
     }
 }
