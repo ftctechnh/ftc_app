@@ -122,9 +122,12 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         if (gamepad1.y)
             robot.armMotor.setPower(robot.ARM_UP_POWER);
         else if (gamepad1.a)
-0            robot.armMotor.setPower(robot.ARM_DOWN_POWER);
+            robot.armMotor.setPower(robot.ARM_DOWN_POWER);
         else
             robot.armMotor.setPower(0.0);
+
+        if ()
+
 
         // Send telemetry message to signify robot running;
         telemetry.addData("claw",  "Offset = %.2f", clawOffset);
