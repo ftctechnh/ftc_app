@@ -72,7 +72,7 @@ public class ProtobotAuto extends RobotOp {
         };
 
         Goal<Integer> encoderGoal3 = new Goal<> (robot.inchesStraifingToEncoderTicks(43f));
-        ConcurrentTaskSet crab1 = new ConcurrentTaskSet( // A ~30˚ crab
+        ConcurrentTaskSet crab1 = new ConcurrentTaskSet( // this is crabbing
                 new MotorTask(robot.frontLeft, encoderGoal3, null, 0.5f, 0.7f, encoderGoal3, 0.1f),
                 new MotorTask(robot.backRight, encoderGoal3, null, 0.5f, 0.7f, encoderGoal3, 0.1f)
         ) {
