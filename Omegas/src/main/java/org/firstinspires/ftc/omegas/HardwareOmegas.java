@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.omegas;
 
+import android.content.Context;
+
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -38,6 +40,7 @@ public class HardwareOmegas
     public Servo        rightBeaconator  = null;
 
     public ArrayList<DcMotor> motors;
+    public Context            appContext;
 
     public static final double  MID_SERVO       =    0.5;
     public static final double  SHOOTER_POWER   =    0.45;
@@ -50,8 +53,9 @@ public class HardwareOmegas
 
     /* Initialize standard Hardware interfaces */
     public void init(HardwareMap ahwMap) {
-        // Save reference to Hardware map
+        // Save reference to Hardware map and app context.
         hwMap = ahwMap;
+        appContext = hwMap.appContext;
 
         // Define and Initialize Motors
         leftFrontMotor  = hwMap.dcMotor.get("left_front");

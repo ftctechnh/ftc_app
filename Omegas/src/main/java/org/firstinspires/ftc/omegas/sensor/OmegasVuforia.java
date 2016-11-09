@@ -91,7 +91,6 @@ public class OmegasVuforia extends LinearOpMode {
 
     public static final String TAG = "Vuforia Sample";
     HardwareOmegas Ω   = new HardwareOmegas();   // Use our robot's hardware
-    Context                    context;
 
     // IPS Units
     static final double     FORWARD_SPEED = 0.6;
@@ -104,10 +103,6 @@ public class OmegasVuforia extends LinearOpMode {
      * localization engine.
      */
     VuforiaLocalizer vuforia;
-
-    public OmegasVuforia(Context context){
-        this.context = context.getApplicationContext();
-    }
 
     @Override public void runOpMode() {
         /**
@@ -134,7 +129,7 @@ public class OmegasVuforia extends LinearOpMode {
          * {@link Parameters} instance with which you initialize Vuforia.
          */
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
-        parameters.vuforiaLicenseKey = context.getString(R.string.vuforiaLicense);
+        parameters.vuforiaLicenseKey = Ω.appContext.getString(R.string.vuforiaLicense);
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
