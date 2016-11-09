@@ -16,6 +16,8 @@ public class StateBasedOp extends BaseOp {
 
     Queue<Route> routeQueue = new LinkedList<>(); // Contains routes that will be executed once 'route' is completed. (NO INCLUDE route)
 
+    boolean firstOnReached = false;
+
     public State getState() {
         return state;
     }
@@ -48,6 +50,10 @@ public class StateBasedOp extends BaseOp {
         } else {
             state = State.ROUTE;
 
+            if (route.getCurrentTask() != null) { // Run first onReached event in route
+                route.getCurrentTask().onReached();
+            }
+
         }
     }
 
@@ -58,6 +64,7 @@ public class StateBasedOp extends BaseOp {
             telemetry.addData("Task", task.getType().name());
 
             boolean completed = executeTask (task);
+
             if (completed) { // If task completed
                 onTaskCompleted (route.getCurrentTask(), route);
             }

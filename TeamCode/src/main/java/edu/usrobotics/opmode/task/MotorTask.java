@@ -42,9 +42,11 @@ public class MotorTask implements Task {
     private double getDampedPower (double power) {
         if (dampingGoal == null) return power; // We can't use damping if there is no damping goal
 
-        float percentToTarget = Math.min(1, Math.max(0, (float)motor.getCurrentPosition() / dampingGoal.getGoal()));
+        float currentPosition = (float)Math.abs(motor.getCurrentPosition());
+
+        float percentToTarget = Math.min(1, Math.max(0, currentPosition / dampingGoal.getGoal()));
         float percentDToZero = (-1f / (1f - damping)) * percentToTarget + (1f / (1f - damping));
-        float percentRToOne = Math.min(1, Math.max(0, (float)motor.getCurrentPosition() / (dampingGoal.getGoal() * ramping)));
+        float percentRToOne = Math.min(1, Math.max(0, currentPosition / (dampingGoal.getGoal() * ramping)));
 
         return (percentToTarget < ramping ?
                     Math.max(0.2, power * percentRToOne) : // RAMP UP

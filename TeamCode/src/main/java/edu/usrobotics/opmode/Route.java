@@ -24,7 +24,7 @@ public class Route {
     }
 
     public Task getCurrentTask () {
-        return tasks.get(taskIndex);
+        return taskIndex > tasks.size() - 1 ? null : tasks.get(taskIndex);
     }
 
     public Task getTask (int taskIndex) {
