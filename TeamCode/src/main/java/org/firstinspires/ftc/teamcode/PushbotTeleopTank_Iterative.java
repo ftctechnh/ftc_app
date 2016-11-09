@@ -126,7 +126,18 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         else
             robot.armMotor.setPower(0.0);
 
-        if ()
+
+        //spinning arm thing
+        if (gamepad1.dpad_up){
+            robot.BCM.setPower(.5);
+        }
+        else if (gamepad1.dpad_down){
+            robot.BCM.setPower(-.5);
+        }
+        else {
+            robot.BCM.setPower(0.0);
+        }
+
 
 
         // Send telemetry message to signify robot running;
