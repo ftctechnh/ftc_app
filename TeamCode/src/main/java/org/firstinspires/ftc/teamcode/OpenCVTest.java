@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.os.Environment;
 import android.view.SurfaceView;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -11,6 +12,12 @@ import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
+import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.video.Video;
+import org.opencv.videoio.VideoCapture;
+import org.opencv.videoio.Videoio;
+
+import java.io.File;
 
 /**
  * Created by Robotics on 10/28/2016.
@@ -18,61 +25,33 @@ import org.opencv.core.Mat;
 
 @TeleOp(name = "OpenCVTest", group = "Test")
 //@Disabled
-public class OpenCVTest extends OpMode implements CameraBridgeViewBase.CvCameraViewListener {
+public class OpenCVTest extends OpMode {
 
-    private CameraBridgeViewBase mOpenCvCameraView;
-
-    private boolean cvLoaded = false;
-
-    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(FtcRobotControllerActivity.getAppContext()) {
-        @Override
-        public void onManagerConnected(int status) {
-            switch (status) {
-                case LoaderCallbackInterface.SUCCESS:
-                {
-                    cvLoaded = true;
-                } break;
-                default:
-                {
-                    cvLoaded = false;
-                    super.onManagerConnected(status);
-                } break;
-            }
-        }
-    };
-
-    @Override
-    public void onCameraViewStarted(int width, int height) {
-    }
-
-    @Override
-    public void onCameraViewStopped() {
-    }
-
-    @Override
-    public Mat onCameraFrame(Mat outputFrame) {
-        return outputFrame;
-    }
 
     @Override
     public void init() {
-        if(cvLoaded && OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_6, FtcRobotControllerActivity.getAppContext(), mLoaderCallback)){
-            telemetry.addData("OpenCV:", "Loaded");
-        }
-        else{
-            telemetry.addData("OpenCV:", "Hah Nope");
-        }
-
-        //mOpenCvCameraView.setCvCameraViewListener(this);
-
+        FtcRobotControllerActivity.startCamera();
+        telemetry.addData("Camera", "Started");
     }
 
     @Override
-    public void start() {}
+    public void start() {
+        Mat temp = FtcRobotControllerActivity.getCameraMat();
+
+        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        File image = new File(path, "save.png");
+
+        Imgcodecs.imwrite(image.toString(), temp);
+        telemetry.addData("Camera grab", "Worked!");
+    }
 
     @Override
     public void loop() {
+    }
 
+    @Override
+    public void stop(){
+        FtcRobotControllerActivity.stopCamera();
     }
 
 }

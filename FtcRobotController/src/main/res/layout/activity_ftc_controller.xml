@@ -124,6 +124,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       android:layout_below="@+id/textOpMode"
       android:layout_above="@+id/textGamepad1">
 
+      <org.opencv.android.JavaCameraView
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:orientation="vertical"
+          android:id="@+id/image_manipulations_activity_surface_view" />
+
       <LinearLayout
           android:id="@+id/cameraMonitorViewId"
           android:layout_width="match_parent"
