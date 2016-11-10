@@ -1,5 +1,6 @@
 package edu.usrobotics.opmode.protobot;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -16,6 +17,8 @@ public class ProtobotHardware extends BaseHardware {
     public DcMotor frontLeft;
     public DcMotor backRight;
     public DcMotor backLeft;
+
+    public ColorSensor colorSensor;
 
     boolean frCorrectDirection = false;
     boolean flCorrectDirection = true;
@@ -37,14 +40,14 @@ public class ProtobotHardware extends BaseHardware {
 
     //public DcMotor harvester;
 
-    public Servo gate;
+    //public Servo gate;
 
-    public float gateClosedPosition = 0.3f;
-    public float gateOpenedPosition = 1f;
+    //public float gateClosedPosition = 0.3f;
+    //public float gateOpenedPosition = 1f;
 
     public float wheelDiameter = 4.0f;
     public float wheelRadius = wheelDiameter / 2f;
-    public float wheelCircumference = 2f * (float)(Math.PI) * wheelRadius;
+    public float wheelCircumference = 2f * (float) (Math.PI) * wheelRadius;
 
     @Override
     public void getDevices() {
@@ -54,13 +57,16 @@ public class ProtobotHardware extends BaseHardware {
         backRight = hardwareMap.dcMotor.get ("br");
         backLeft = hardwareMap.dcMotor.get ("bl");
 
+        colorSensor = hardwareMap.colorSensor.get("cs");
+        colorSensor.enableLed(true);
+
         //harvester = hardwareMap.dcMotor.get("harvester");
 
         //harvester.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        gate = hardwareMap.servo.get("gate");
+        //gate = hardwareMap.servo.get("gate");
 
-        gate.setPosition(gateClosedPosition);
+        //gate.setPosition(gateClosedPosition);
 
     }
 

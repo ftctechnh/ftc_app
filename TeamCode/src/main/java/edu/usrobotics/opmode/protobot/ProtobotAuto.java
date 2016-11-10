@@ -71,7 +71,7 @@ public class ProtobotAuto extends RobotOp {
             }
         };
 
-        Goal<Integer> encoderGoal3 = new Goal<> (robot.inchesStraifingToEncoderTicks(43f));
+        Goal<Integer> encoderGoal3 = new Goal<> (robot.inchesStraifingToEncoderTicks(43.6f));
         ConcurrentTaskSet crab1 = new ConcurrentTaskSet( // this is crabbing
                 new MotorTask(robot.frontLeft, encoderGoal3, null, 0.5f, 0.7f, encoderGoal3, 0.1f),
                 new MotorTask(robot.backRight, encoderGoal3, null, 0.5f, 0.7f, encoderGoal3, 0.1f)
@@ -89,7 +89,7 @@ public class ProtobotAuto extends RobotOp {
             }
         };
 
-        Goal<Integer> encoderGoal4 = new Goal<> (robot.inchesToEncoderTicks(24));
+        Goal<Integer> encoderGoal4 = new Goal<> (robot.inchesToEncoderTicks(17));
         ConcurrentTaskSet straif1 = new ConcurrentTaskSet(
                 new MotorTask(robot.frontRight, encoderGoal4, null, 0.5f, 0.7f, encoderGoal4, 0.1f),
                 new MotorTask(robot.frontLeft, encoderGoal4, null, 0.5f, 0.7f, encoderGoal4, 0.1f),
@@ -125,6 +125,19 @@ public class ProtobotAuto extends RobotOp {
     public void start () {
 
         super.start();
+
+    }
+
+    @Override
+    public void loop(){
+        telemetry.addData("Red:", robot.colorSensor.red());
+        telemetry.addData("Green:", robot.colorSensor.green());
+        telemetry.addData("Blue:", robot.colorSensor.blue());
+        telemetry.addData("Alpha:", robot.colorSensor.alpha());
+
+        super.loop();
+
+
 
     }
 

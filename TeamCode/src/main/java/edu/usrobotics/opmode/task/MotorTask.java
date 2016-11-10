@@ -4,6 +4,8 @@ import android.support.annotation.Nullable;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import java.util.Objects;
+
 import edu.usrobotics.opmode.LoggedOp;
 import edu.usrobotics.opmode.task.Task;
 import edu.usrobotics.opmode.task.TaskType;
@@ -64,7 +66,7 @@ public class MotorTask implements Task {
                 if (!encoderReset) motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
             } else { // If encoder reset, run to encoderGoal
-                if (Math.abs(motor.getCurrentPosition() - Math.abs(encoderGoal.getGoal())) < 4) return true; // If we reached encoderGoal, return true
+                if (Math.abs(motor.getCurrentPosition() - Math.abs(encoderGoal.getGoal())) < 4 * 2) return true; // If we reached encoderGoal, return true
 
                 motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 motor.setTargetPosition(encoderGoal.getGoal());
@@ -75,7 +77,7 @@ public class MotorTask implements Task {
         } else { // If we are running blind until onExecuted() returns true
             motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             motor.setMaxSpeed(maxMotorSpeed);
-            motor.setPower(power);
+            motor.setPower(getDampedPower(power));
         }
 
         return false;
@@ -104,8 +106,10 @@ public class MotorTask implements Task {
 
     @Override
     public void onCompleted() {
+
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setPower(0);
         completed = true;
+
     }
 }

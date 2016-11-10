@@ -107,7 +107,7 @@ public class ProtobotTele extends RobotOp {
 
         //robot.harvester.setPower(harvesterInputs);
 
-        robot.gate.setPosition(gateOpen ? robot.gateOpenedPosition : robot.gateClosedPosition);
+        //robot.gate.setPosition(gateOpen ? robot.gateOpenedPosition : robot.gateClosedPosition);
 
         telemetry.addData("GP1 Right Stick X", gamepad1.right_stick_x);
         telemetry.addData("GP1 Right Stick Y", gamepad1.right_stick_y);
