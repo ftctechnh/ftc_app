@@ -5,13 +5,14 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 /**
  * Created by minds on 1/23/2016.
  */
 public abstract class AutonomousBase extends OpMode {
-    public final double HEADING_TOLERANCE = 7; //tolerance for heading calculations
-    public final double DISTANCE_TOLERANCE = 1/12; //tolerance for heading calculations
-    public final double DEGREES_TO_FEET = 4*Math.PI/1440/12;
+    public final double HEADING_TOLERANCE = 12; //tolerance for heading calculations
+    public final double DISTANCE_TOLERANCE = 1.0/12; //tolerance for heading calculations
+    public final double DEGREES_TO_FEET = 4*Math.PI/1120/12;
     //EXPLAINATION:
     // (wheel diameter) * pi / (encoder ticks per rotation) /(inches in a foot)
     // This converts encoder ticks into feet.
@@ -45,6 +46,10 @@ public abstract class AutonomousBase extends OpMode {
     Servo servoRightButton;
     TouchSensor touchRight;
     TouchSensor touchLeft;
+    ColorSensor colorLeft1;
+    ColorSensor colorLeft2;
+    ColorSensor colorRight1;
+    ColorSensor colorRight2;
     GyroSensor gyro;
 
 
@@ -71,8 +76,8 @@ public abstract class AutonomousBase extends OpMode {
         motorLeft = hardwareMap.dcMotor.get("left");
         motorRight = hardwareMap.dcMotor.get("right");
 
-        motorUp.setDirection(DcMotor.Direction.REVERSE);
-        motorLeft.setDirection(DcMotor.Direction.REVERSE);
+        motorDown.setDirection(DcMotor.Direction.REVERSE);
+        motorRight.setDirection(DcMotor.Direction.REVERSE);
 
         motorRightShooter = hardwareMap.dcMotor.get("r_shoot");
         motorLeftShooter = hardwareMap.dcMotor.get("l_shoot");
@@ -84,6 +89,12 @@ public abstract class AutonomousBase extends OpMode {
 
         touchRight = hardwareMap.touchSensor.get("right_touch");
         touchLeft = hardwareMap.touchSensor.get("left_touch");
+
+        colorLeft1 = hardwareMap.colorSensor.get("color_left_1");
+        colorLeft2 = hardwareMap.colorSensor.get("color_left_2");
+        colorRight1 = hardwareMap.colorSensor.get("color_right_1");
+        colorRight2 = hardwareMap.colorSensor.get("color_right_2");
+
         gyro = hardwareMap.gyroSensor.get("gyro");
         gyro.calibrate();
     }
@@ -118,26 +129,26 @@ public abstract class AutonomousBase extends OpMode {
                 }
                 break;
             case MoveState.LEFT:
-                power = .75; //power coefficient
-                if(map.distanceToGoal()>DISTANCE_TOLERANCE) {
-                    motorUp.setPower(power);
-                    motorDown.setPower(power);
-                    map.moveRobot(dDistS * DEGREES_TO_FEET, heading);
-                }
-                break;
-
-           case MoveState.RIGHT:
                 power = -.75; //power coefficient
                 if(map.distanceToGoal()>DISTANCE_TOLERANCE) {
                     motorUp.setPower(power);
                     motorDown.setPower(power);
-                    map.moveRobot(dDistS * DEGREES_TO_FEET, heading);
+                    map.moveRobot(-dDistS * DEGREES_TO_FEET, heading);
+                }
+                break;
+
+           case MoveState.RIGHT:
+                power = .75; //power coefficient
+                if(map.distanceToGoal()>DISTANCE_TOLERANCE) {
+                    motorUp.setPower(power);
+                    motorDown.setPower(power);
+                    map.moveRobot(-dDistS * DEGREES_TO_FEET, heading);
                 }
                 break;
 
             case MoveState.TURN_TOWARDS_GOAL:
                 //Case Three is 'turn towards'.
-                power = .25;
+                power = .1;
                 boolean turnRight;
 
                 if(heading<=180){
@@ -205,11 +216,16 @@ public abstract class AutonomousBase extends OpMode {
         telemetry.addData("goal (x,y) ","(" +
           map.getGoalX() + "," + 
           map.getGoalY() + ")");
-        telemetry.addData("goal (x,y) ","(" +
+        telemetry.addData("Robot(x,y) ","(" +
           map.getRobotX() + "," + 
           map.getRobotY() + ")");
         telemetry.addData("robot theta",heading);
         telemetry.addData("Am I lined up?", linedUp());
+        telemetry.addData("Colour Sensor Left1", colorLeft1.red()<colorLeft1.blue()?"blue":"red");
+        telemetry.addData("Colour Sensor Left2", colorLeft2.red()<colorLeft2.blue()?"blue":"red");
+        telemetry.addData("moveState", moveState);
+        telemetry.addData("gameState", gameState);
+        telemetry.addData("distance_tolerance", DISTANCE_TOLERANCE);
     }
 
     @Override
