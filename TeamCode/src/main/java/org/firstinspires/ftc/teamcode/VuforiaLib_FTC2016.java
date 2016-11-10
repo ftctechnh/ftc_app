@@ -334,10 +334,11 @@ public class VuforiaLib_FTC2016 implements HeadingSensor, LocationSensor {
                 if (bTelemetry)
                     mOpMode.telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible() ? "Visible" : "Not Visible");    //
 
-                OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
-                //if (robotLocationTransform != null) {
+                lastLocation = null;
+                OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getRobotLocation();
+                if (robotLocationTransform != null) {
                     lastLocation = robotLocationTransform;
-                //}
+                }
             }
             /**
              * Provide feedback as to where the robot was last located (if we know).

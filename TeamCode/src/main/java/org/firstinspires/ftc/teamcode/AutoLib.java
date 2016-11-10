@@ -414,8 +414,14 @@ public class AutoLib {
         {
             // compute absolute direction vector to target position on field
             VectorF position = mLocSensor.getLocation();
-            if (position == null)
+            if (position == null){
+                mMotorSteps.get(0).setPower(0.2); //fr
+                mMotorSteps.get(1).setPower(0.2); //br
+                mMotorSteps.get(2).setPower(-0.2); //fl
+                mMotorSteps.get(3).setPower(-0.2); //bl
                 return false;       // not done
+            }
+
             VectorF dirToTarget = mTargetPosition.subtracted(position);
 
             // compute absolute field heading to target: zero aligned with Y axis, positive CCW, degrees 0/359
