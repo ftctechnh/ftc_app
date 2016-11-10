@@ -58,7 +58,7 @@ public class WIllows_doing_things extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {ere
          */
-        robot.init(hardwareMap);
+        robot.init(hardwareMap);{
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready to run");    //

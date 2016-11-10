@@ -86,6 +86,7 @@ public class HardwarePushbot
         //leftClaw = hwMap.servo.get("left_hand");
         //rightClaw = hwMap.servo.get("right_hand");
         pusher = hwMap.servo.get("Pusher");
+        pusher = hwMap.servo.get("Pusher");
         //leftClaw.setPosition(MID_SERVO);
         //rightClaw.setPosition(MID_SERVO);
         //BallElevator = hwMap.servo.get("BallElevator");
