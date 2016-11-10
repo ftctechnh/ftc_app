@@ -30,9 +30,13 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+
+/*
+
 package org.firstinspires.ftc.teamcode.Willow;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -40,10 +44,10 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 
 @Autonomous(name="getting to the beacons", group="Pushbot")
-//@Disabled
+@Disabled
 public class WIllows_doing_things extends LinearOpMode {
 
-    /* Declare OpMode members. */
+    /* Declare OpMode members.
     HardwarePushbot         robot   = new HardwarePushbot();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
@@ -57,7 +61,7 @@ public class WIllows_doing_things extends LinearOpMode {
          * The init() method of the hardware class does all the work h
     @Override
     public void runOpMode() throws InterruptedException {ere
-         */
+
         robot.init(hardwareMap);{
 
         // Send telemetry message to signify robot waiting;
@@ -87,7 +91,7 @@ public class WIllows_doing_things extends LinearOpMode {
         while (opModeIsActive() && (runtime.seconds() < 1.0)) {
             telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
-            idle();*/
+            idle();
 
 
         // Step 2:  Spin right for 1.0 seconds
@@ -111,7 +115,7 @@ public class WIllows_doing_things extends LinearOpMode {
             telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
             idle();
-        }*/
+        }
         
 
         // Step 1:  Drive forward for 1 second
@@ -183,3 +187,6 @@ public class WIllows_doing_things extends LinearOpMode {
         idle();
     }
 }
+/*
+
+ */

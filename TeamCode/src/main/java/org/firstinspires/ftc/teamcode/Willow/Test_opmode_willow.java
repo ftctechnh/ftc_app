@@ -112,9 +112,9 @@ public class Test_opmode_willow extends LinearOpMode {
 
 
             // Step 2:  Spin right for 1.3 seconds
-            robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+            //robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
             robot.leftMotor.setPower(TURN_SPEED);
-            robot.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+            //robot.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
             robot.rightMotor.setPower(TURN_SPEED);
             runtime.reset();
             while (opModeIsActive() && (runtime.seconds() < 1.3)) {
