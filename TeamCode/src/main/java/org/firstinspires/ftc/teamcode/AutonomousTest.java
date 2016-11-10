@@ -10,14 +10,45 @@ public class AutonomousTest extends AutonomousBase{
         super.gameState();
 
         switch(gameState){
-            case 0:
-              map.setGoal(6,9);
-              if(linedUp()){
-                  moveState = MoveState.FORWARD;
-              }else{
-                  moveState = MoveState.TURN_TOWARDS_GOAL;
-              }
-              break;
+          case 0: 
+            if(!gyro.isCalibrating()){
+              gameState = 1;
+            }
+          break;
+          case 1:
+            map.setGoal(6,9);
+            if(linedUp()){
+              moveState = MoveState.FORWARD;
+            }else{
+              moveState = MoveState.TURN_TOWARDS_GOAL;
+            }
+            if(map.distanceToGoal() < DISTANCE_TOLERANCE){
+              gameState = 2;
+            }
+          break;
+          case 2:
+            map.setGoal(5,9);
+            heading = (heading + 270) % 360; // We're moving sideways, so we line up oddly
+            if(linedUp()){
+              moveState = MoveState.LEFT;
+            }else{
+              moveState = MoveState.TURN_TOWARDS_GOAL;
+            }
+            if(map.distanceToGoal() < DISTANCE_TOLERANCE){
+              gameState = 3;
+            }
+          break;
+          case 3:
+            map.setGoal(5,8);
+            if(linedUp()){
+              moveState = MoveState.STOP;
+            }else{
+              moveState = MoveState.TURN_TOWARDS_GOAL;
+            }
+            if(map.distanceToGoal() < DISTANCE_TOLERANCE){
+              gameState = 3;
+            }
+          break;
         }
     }
 }
