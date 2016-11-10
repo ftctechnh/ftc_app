@@ -47,8 +47,8 @@ public class Map {
     }
 
     public void moveRobot(double feet,double heading) {
-        robotX += feet * Math.cos(Math.toRadians((heading + 450) % 360));
-        robotY += feet * Math.sin(Math.toRadians((heading + 450) % 360));
+        robotX -= feet * Math.cos(Math.toRadians((heading + 450) % 360));
+        robotY -= feet * Math.sin(Math.toRadians((heading + 450) % 360));
     }
 
     public double angleToGoalRev() {
