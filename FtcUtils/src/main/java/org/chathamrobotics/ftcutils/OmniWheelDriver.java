@@ -35,7 +35,8 @@ public class OmniWheelDriver {
     public boolean silent = false;
 
     /*
-     * Builds new OmniWheelDriver using default names for motors ("FrontLeft","FrontRight","BackLeft","BackRight")
+     * Builds new OmniWheelDriver using default names for motors
+     * ("FrontLeft","FrontRight","BackLeft","BackRight")
      * @param {HardwareMap} hardwareMap
      * @param {Telemetry} [telemetry]
      */
@@ -57,7 +58,8 @@ public class OmniWheelDriver {
      * @param {DcMotor} backRight
      * @param {Telemetry} telemetry
      */
-    public OmniWheelDriver(DcMotor frontLeft, DcMotor frontRight, DcMotor backLeft, DcMotor backRight, Telemetry telemetry) {
+    public OmniWheelDriver(DcMotor frontLeft, DcMotor frontRight, DcMotor backLeft,
+                           DcMotor backRight, Telemetry telemetry) {
         this.frontLeft = frontLeft;
         this.frontRight = frontRight;
         this.backLeft = backLeft;
@@ -68,16 +70,37 @@ public class OmniWheelDriver {
     /*
      * TODO: 11/7/2016 write this
      */
-    public void drive(double x, double y, double rotation, double magnitude) {
-        // NOTE: I think this works but someone should check. I think -0 does some wonk things
-        move(Math.atan2(y, x), rotation, magnitude);
+    public void drive(double x, double y, double rotation, boolean smooth) {
+        //Default magnitude
+        drive(x,y,rotation,Math.sqrt((x*x) + (y*y)), smooth);
+    }
+
+    public void drive(double x, double y, double rotation, double magnitude, boolean smooth) {
+        double angle = 0;
+        // if x is 0, atan comes out undefined instead of PI/2 or 3PI/bo
+        if (x != 0) {
+            angle = Math.atan(y / x);
+            if(x<0)
+                angle += Math.PI;
+        }else if(y > 0)//if it's 90 degrees use PI/2
+            angle = Math.PI/2;
+        else
+            angle = (3 * Math.PI)/2;
+
+        //Using a function on variable r will smooth out the slow values but still give full range
+        if(smooth)
+            magnitude = magnitude*magnitude;
+        move(angle, rotation, magnitude);
+        //move(Math.atan2(y, x), rotation, magnitude);
     }
 
     /*
      * TODO: 11/7/2016 write this
      */
     public void move(double angle, double rotation, double magnitude) {
-        if(! silent) {
+        double FL, FR, BL, BR;
+
+        if(!silent) {
             telemetry.addData("OmniWheelDriver 1", "rotation=" + rotation);
             telemetry.addData("OmniWheelDriver 2", "angle=" + angle);
             telemetry.addData("OmniWheelDriver 3", "angle(corrected)=" + (angle + OMNI_WHEEL_ANGLE_CORRECTION));
@@ -88,6 +111,20 @@ public class OmniWheelDriver {
 
         angle += OMNI_WHEEL_ANGLE_CORRECTION + offsetAngle;
 
-        // TODO: 11/7/2016 write this
+        FL = BR =  Math.sin(angle) * magnitude; //takes new angle and radius and converts them into the motor values
+        FR = BL = Math.cos(angle) * magnitude;
+
+        //implements rotation
+        FL -= rotation;
+        FR -= rotation;
+        BL += rotation;
+        BR += rotation;
+
+        if(FL<=1 & FR<=1 & BR <=1 & BL<=1) {// Prevent fatal error
+            frontLeft.setPower(FL); // -rot fl br y
+            frontRight.setPower(FR); // -
+            backLeft.setPower(-BL); // +
+            backRight.setPower(-BR); //+
+        }
     }
 }
