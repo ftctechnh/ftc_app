@@ -14,7 +14,7 @@ public class AutoB1 extends AutonomousBase{
         switch(gameState){
             case 0: //Start
                 if(tDiff == 0){tDiff = getRuntime();}
-                // todo                  REMOVE?
+                // TODO: REMOVE?
                 if(getRuntime() > 5 || !gyro.isCalibrating()) {
                     gameState = 1;
                     sTime = getRuntime();
@@ -36,47 +36,75 @@ public class AutoB1 extends AutonomousBase{
                     gameState = 3;
                 }
                 break;
-            case 3: //Move pear. to wall
+            case 3: //Move paralell to wall
                 map.setGoal(11,0);
                 if(linedUp()){
                     moveState = MoveState.STOP;
-                }else{
+                    gameState = 4;
+                }
+		else{
                     moveState = MoveState.TURN_TOWARDS_GOAL;
                 }
-                gameState = 4;
                 break;
             case 4: //Move to wall and back up and button press A
                 map.setGoal(12,6);
                 moveState = MoveState.RIGHT;
                 if(map.distanceToGoal()<=.1){
                     moveState = MoveState.STOP;
+		    gameState = 5;
                 }
-                while(!touchRight.isPressed()){ //GET RID OF THIS WHILE ASAP @SEAN
-                    moveState = MoveState.BACKWARD;
-                }
-                moveState = MoveState.STOP;
-                if(true) { //// TODO: 10/26/2016 ADD COLOR LOGIC
+                break;
+           case 5:
+                if(touchRight.isPressed()){
+                  moveState = MoveState.STOP;
+                  if(true) { //// TODO: 10/26/2016 ADD COLOR LOGIC
                     moveState = MoveState.SERVO_PORT_L;
-                }
-                else{
+                  }
+                  else{
                     moveState = MoveState.SERVO_PORT_R;
+                  }
+                  gameState = 6;
                 }
-                gameState = 5;
+		else{
+		  moveState = MoveState.BACKWARD;
+		}	
                 break;
-            case 5: //move up and button press B
-                while(!touchLeft.isPressed()){
+	    case 6:
+	 	map.setGoal(11, map.getRobotY());
+		moveState = MoveState.LEFT;
+		if(map.distanceToGoal()<= .1){
+		  moveState = MoveState.STOP;
+		  gameState = 7;
+		}		
+		break;
+	    case 7:
+		map.setGoal(11, 10);
+		moveState = MoveState.FORWARD;
+		if(map.distanceToGoal()<=.1){
+		  map.setGoal(12, 10);
+		  moveState = MoveState.RIGHT;
+		  if(map.distanceToGoal()<= .1){
+		    moveState = MoveState.STOP;
+	            gameState = 8;
+	          }
+		}
+		break;
+            case 8: //move up and button press B
+                if(touchLeft.isPressed()){
+		    moveState = MoveState.STOP;
+		    if(true){//TODO: add color Logic
+                        moveState = MoveState.SERVO_PORT_L;
+		    }
+		    else{
+                        moveState = MoveState.SERVO_PORT_R;
+		    }
+                    gameState = 9;
+		}
+		else{    
                     moveState = MoveState.FORWARD;
-                }
-                moveState = MoveState.STOP;
-                if(true) { //// TODO: 10/26/2016 ADD COLOR LOGIC
-                    moveState = MoveState.SERVO_STARBOARD_L;
-                }
-                else{
-                    moveState = MoveState.SERVO_STARBOARD_R;
-                }
-                gameState = 6;
+		}
                 break;
-            case 6: //Moves to the center and knocks off cap ball
+            case 9: //Moves to the center and knocks off cap ball
                 map.setGoal(6.8,5.5);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
