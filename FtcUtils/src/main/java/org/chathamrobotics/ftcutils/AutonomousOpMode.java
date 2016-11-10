@@ -3,12 +3,14 @@ package org.chathamrobotics.ftcutils;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.lasarobotics.vision.opmode.LinearVisionOpMode;
+
 import java.util.Map;
 
 /**
  * basic autonomous
  */
-public abstract class AutoMode extends LinearOpMode {
+public abstract class AutonomousOpMode extends LinearOpMode {
     // State
     public OmniWheelDriver driver;
 
@@ -17,20 +19,13 @@ public abstract class AutoMode extends LinearOpMode {
      */
     public boolean isRedTeam;
 
-    /*
-     * Setup OpMode
-     * @param {boolean} isRedTeam   Whether the current team is red
-     */
-    public AutoMode() { this.isRedTeam = true; }
-    public AutoMode(boolean isRedTeam) {
-        this.isRedTeam = isRedTeam;
-    }
+
 
     /*
      * Initializes robot
      */
     public void initRobot() {
-        driver = OmniWheelDriver.build(hardwareMap, telemetry);
+        driver = OmniWheelDriver.build(this);
     }
 
     /*
@@ -42,9 +37,7 @@ public abstract class AutoMode extends LinearOpMode {
      * called on stop
      */
     public void stopRobot() {
-        for (Map.Entry<String, DcMotor> entry : hardwareMap.dcMotor.entrySet()) {
-            entry.getValue().setPower(0);
-        }
+        OpModeTools.stop(this);
     }
 
     /*
@@ -83,13 +76,7 @@ public abstract class AutoMode extends LinearOpMode {
      * Updates telemetry readings
      */
     public void debug() {
-        // For each motor
-        for (Map.Entry<String, DcMotor> entry : hardwareMap.dcMotor.entrySet()) {
-            telemetry.addData("Motor Power", entry.getKey() + "="
-                    + entry.getValue().getController().getMotorPower(entry.getValue().getPortNumber()));
-        }
-
-        telemetry.update();
+        OpModeTools.debug(this);
     }
 
     /*

@@ -10,6 +10,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 public class AutoModeChargeBlue extends AutoModeCharge {
     public AutoModeChargeBlue() {
-        super("blue");
+        super(false);
     }
 }

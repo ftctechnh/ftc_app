@@ -1,15 +1,23 @@
 package org.firstinspires.ftc.team9853;
 
-import org.chathamrobotics.ftcutils.AutoMode;
+import org.chathamrobotics.ftcutils.AutonomousOpMode;
 import org.chathamrobotics.ftcutils.StoppedException;
 
 
 /**
  * backup autonomous
  */
-public class AutoModeCharge extends AutoMode {
+public class AutoModeCharge extends AutonomousOpMode {
     static final long waitTime = 10000;
     static final long driveTime = 3000;
+
+    /*
+     * Setup OpMode
+     * @param {boolean} isRedTeam   Whether the current team is red
+     */
+    public AutoModeCharge(boolean isRedTeam) {
+        this.isRedTeam = isRedTeam;
+    }
 
     /*
      * called on start
@@ -22,7 +30,7 @@ public class AutoModeCharge extends AutoMode {
 
         for(long endTime = System.currentTimeMillis() + driveTime; System.currentTimeMillis() < endTime;) {
             statusCheck();
-            driver.drive(isRedTeam ? -1 : 1, 1, 0, .7);
+            driver.move(Math.toRadians(isRedTeam ? 135 : 45), 0, .7);
         }
     }
 }
