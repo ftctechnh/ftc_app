@@ -41,6 +41,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 /*
  *
@@ -55,37 +56,30 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
-@TeleOp(name = "Sensor: MR Color", group = "Sensor")
+@TeleOp(name = "Sensor: MR Color", group = "Pushbot")
 //@Disabled
 public class SensorMRColor_TT extends LinearOpMode {
 
   //ColorSensor colorSensor;    // Hardware Device Object
   HardwarePushbot_TT         robot   = new HardwarePushbot_TT();   // Use a Pushbot's hardware
+  private ElapsedTime runtime = new ElapsedTime();
 
 
   @Override
   public void runOpMode() {
 
-    // hsvValues is an array that will hold the hue, saturation, and value information.
-    float hsvValues[] = {0F,0F,0F};
-
-    // values is a reference to the hsvValues array.
-    final float values[] = hsvValues;
-
-    // get a reference to the RelativeLayout so we can change the background
-    // color of the Robot Controller app to match the hue detected by the RGB sensor.
-    final View relativeLayout = ((Activity) hardwareMap.appContext).findViewById(R.id.RelativeLayout);
-
     // bPrevState and bCurrState represent the previous and current state of the button.
     boolean bPrevState = false;
     boolean bCurrState = false;
+    robot.init(hardwareMap);
 
     // bLedOn represents the state of the LED.
-    boolean bLedOn = true;
+    boolean bLedOn = false;
 
     // get a reference to our ColorSensor object.
     // Set the LED in the beginning
     robot.color.enableLed(bLedOn);
+
 
     // wait for the start button to be pressed.
     waitForStart();
@@ -94,23 +88,6 @@ public class SensorMRColor_TT extends LinearOpMode {
     // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
     while (opModeIsActive()) {
 
-      // check the status of the x button on either gamepad.
-      bCurrState = gamepad1.x;
-
-      // check for button state transitions.
-      if ((bCurrState == true) && (bCurrState != bPrevState))  {
-
-        // button is transitioning to a pressed state. So Toggle LED
-        bLedOn = !bLedOn;
-        robot.color.enableLed(bLedOn);
-
-      }
-
-      // update previous state variable.
-      bPrevState = bCurrState;
-
-      // convert the RGB values to HSV values.
-      Color.RGBToHSV(robot.color.red() * 8, robot.color.green() * 8, robot.color.blue() * 8, hsvValues);
 
       // send the info back to driver station using telemetry function.
 //      telemetry.addData("LED", bLedOn ? "On" : "Off");
@@ -121,39 +98,36 @@ public class SensorMRColor_TT extends LinearOpMode {
 //      telemetry.addData("Hue", hsvValues[0]);
 
 
-
-      // change the background color to match the color detected by the RGB sensor.
-      // pass a reference to the hue, saturation, and value array as an argument
-      // to the HSVToColor method.
-      relativeLayout.post(new Runnable() {
-        public void run() {
-          relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, values));
-        }
-      });
-
       telemetry.addData("2 Clear", robot.color.alpha());
       telemetry.addData("3 Red  ", robot.color.red());
       telemetry.addData("4 Green", robot.color.green());
       telemetry.addData("5 Blue ", robot.color.blue());
-      telemetry.addData("6 Hue  ", hsvValues[0]);
 
-      if(robot.color.red()>robot.color.blue() || robot.color.blue()>robot.color.green())
-      {
-        robot.cdim.setLED(1, true);
-        robot.cdim.setLED(0, false);
+      if (robot.color.red() > robot.color.blue()) {
+        telemetry.addData("Detecting Red");
       }
-      else if(robot.color.blue()> robot.color.red() ||robot.color.blue()>robot.color.green())
-      {
-        robot.cdim.setLED(1, false);
-        robot.cdim.setLED(0, true);
+      else{
+        telemetry.addData("Detecting Blue");
+      }
+      telemetry.update();
 
-      }
-      else
-      {
-        robot.cdim.setLED(1, false);
-        robot.cdim.setLED(0, false);
-      }
-      waitForStart();
+//      if(robot.color.red()>robot.color.blue() || robot.color.blue()>robot.color.green())
+//      {
+//        robot.cdim.setLED(1, true);
+//        robot.cdim.setLED(0, false);
+//      }
+//      else if(robot.color.blue()> robot.color.red() ||robot.color.blue()>robot.color.green())
+//      {
+//        robot.cdim.setLED(1, false);
+//        robot.cdim.setLED(0, true);
+//
+//      }
+//      else
+//      {
+//        robot.cdim.setLED(1, false);
+//        robot.cdim.setLED(0, false);
+//      }
+//      waitForStart();
     }
 
   }
