@@ -118,6 +118,7 @@ public class VuforiaLib_FTC2016 implements HeadingSensor, LocationSensor {
                 (licenseKey != null && licenseKey.length() > 0) ? licenseKey :
                 "ARf809H/////AAAAGRswBQwUCUJ5nqfgZxGbDEQ8oO7YP5GdnbReYr8ZHinqQ74OsP7UdOxNZJDmhaF2OeGD20jpSexpr2CcXGSGuHXNB2p9Z6zUNLDTfEggL+yg4ujefoqdkSpCqZf1medpwh3KXcK76FcfSJuqEudik2PC6kQW/cqJXnnHofVrrDTzJmWMnK3hlqTMjig81DEPMAHbRnA5wn7Eu0irnmqqboWyOlQ0xTF+P4LVuxaOUFlQC8zPqkr1Gvzvix45paWtyuLCnS9YDWMvI1jIM4giMrTRCT0lG8F+vkuKMiK647KJp9QIsFdWQ0ecQhau3ODNQ03pcTzprVN72b9VObpv6FNBpjGKRAcA59xlZiM2l6fc";
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        parameters.useExtendedTracking = true;  //ask paul about this
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
         /**
@@ -334,10 +335,10 @@ public class VuforiaLib_FTC2016 implements HeadingSensor, LocationSensor {
                 if (bTelemetry)
                     mOpMode.telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible() ? "Visible" : "Not Visible");    //
 
-                OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
-                //if (robotLocationTransform != null) {
+                OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getRobotLocation();
+                if (robotLocationTransform != null) {
                     lastLocation = robotLocationTransform;
-                //}
+                }
             }
             /**
              * Provide feedback as to where the robot was last located (if we know).
