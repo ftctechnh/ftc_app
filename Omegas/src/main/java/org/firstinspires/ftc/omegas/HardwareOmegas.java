@@ -26,6 +26,8 @@ import java.util.ArrayList;
  * Servo channel:  Servo to open right beaconator:   "right_beaconator"
  * Color sensor:  Color sensor for left beaconator:  "left_color_sensor"
  * Color sensor:  Color sensor for right beaconator: "right_color_sensor"
+ *
+ * (The "beaconators" are our colloquial term for beacon pushers.)
  */
 public class HardwareOmegas
 {
