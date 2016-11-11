@@ -42,11 +42,11 @@ public abstract class OmegasAutonomous extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    HardwareOmegas Ω            = new HardwareOmegas();
+    HardwareOmegas Ω = new HardwareOmegas();
 
     // IPS Units
-    static final double     FORWARD_SPEED = 0.6;
-    static final double     TURN_SPEED    = 0.5;
+    static final double FORWARD_SPEED = 0.6;
+    static final double TURN_SPEED = 0.5;
 
     @Override
     public void runOpMode() {
@@ -69,37 +69,28 @@ public abstract class OmegasAutonomous extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Left color sensor blue: ", Ω.leftColorSensor.blue());
-            telemetry.addData("Left color sensor red: ", Ω.leftColorSensor.red());
-            telemetry.addData("Right color sensor blue: ", Ω.rightColorSensor.blue());
-            telemetry.addData("Right color sensor red: ", Ω.rightColorSensor.red());
             telemetry.update();
 
-//            double currentPower = (runtime.milliseconds() < 3000) ? 1.0 : (runtime.milliseconds() > 10000) ? 1.0 : 0.0;
-//            for (DcMotor motor : Ω.motors) {
-//                motor.setPower(currentPower);
-//            }
-
-//            if (runtime.milliseconds() > 8000 && !rotated) {
-//                Ω.rotate(Math.PI);
-//                rotated = true;
-//            }
+            double currentPower = (runtime.milliseconds() < 1800) ? 1.0 : 0.0;
+            for (DcMotor motor : Ω.motors) {
+                motor.setPower(currentPower);
+            }
 
             /**
              * The following should, if uncommented, extend beaconators depending
              * on the colors in front of its two color sensors.
              */
 
-             switch (getColor()) {
-                 case RED:
-                     pushBeacon(Ω.leftColorSensor.red(),
-                             Ω.rightColorSensor.red());
-                     break;
-                 case BLUE:
-                     pushBeacon(Ω.leftColorSensor.blue(),
-                             Ω.rightColorSensor.blue());
-                     break;
-             }
+//             switch (getColor()) {
+//                 case RED:
+//                     pushBeacon(Ω.leftColorSensor.red(),
+//                             Ω.rightColorSensor.red());
+//                     break;
+//                 case BLUE:
+//                     pushBeacon(Ω.leftColorSensor.blue(),
+//                             Ω.rightColorSensor.blue());
+//                     break;
+//             }
         }
     }
 
