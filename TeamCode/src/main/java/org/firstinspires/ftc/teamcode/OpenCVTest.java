@@ -99,7 +99,7 @@ public class OpenCVTest extends OpenCVLib {
             for (int o = 0; o < imgCol; o++) {
                 if(ray[i][o] == 0 || (o < 50 || o > imgCol - 50)) buff[i * imgCol + o] = 0;
                 else{
-                    buff[i * imgCol + o] = 255.0f;
+                    buff[i * imgCol + o] = 165.0f;
                     totalRow += i;
                     totalCol += o;
                     totalPix++;
