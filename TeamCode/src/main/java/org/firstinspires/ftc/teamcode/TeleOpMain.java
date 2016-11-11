@@ -54,36 +54,36 @@ public class TeleOpMain extends OpMode {
         // run drivetrain motors
         // dpad steering
         if(gamepad1.dpad_up && gamepad1.dpad_left) {
-            setFrontPower(0.0f);
-            setBackPower(-1.0f);
+            robot.setFrontPower(0.0);
+            robot.setBackPower(-1.0);
         }
         else if(gamepad1.dpad_up && gamepad1.dpad_right) {
-            setFrontPower(-1.0f);
-            setBackPower(0.0f);
+            robot.setFrontPower(-1.0);
+            robot.setBackPower(0.0);
         }
         else if(gamepad1.dpad_down && gamepad1.dpad_left) {
-            setFrontPower(1.0f);
-            setBackPower(0.0f);
+            robot.setFrontPower(1.0);
+            robot.setBackPower(0.0);
         }
         else if(gamepad1.dpad_down && gamepad1.dpad_right) {
-            setFrontPower(0.0f);
-            setBackPower(1.0f);
+            robot.setFrontPower(0.0);
+            robot.setBackPower(1.0);
         }
         else if(gamepad1.dpad_up) {
-            setFrontPower(-1.0f);
-            setBackPower(-1.0f);
+            robot.setFrontPower(-1.0);
+            robot.setBackPower(-1.0);
         }
         else if(gamepad1.dpad_left) {
-            setFrontPower(1.0f);
-            setBackPower(-1.0f);
+            robot.setFrontPower(1.0);
+            robot.setBackPower(-1.0);
         }
         else if(gamepad1.dpad_right) {
-            setFrontPower(-1.0f);
-            setBackPower(1.0f);
+            robot.setFrontPower(-1.0);
+            robot.setBackPower(1.0);
         }
         else if(gamepad1.dpad_down) {
-            setFrontPower(1.0f);
-            setBackPower(1.0f);
+            robot.setFrontPower(1.0);
+            robot.setBackPower(1.0);
         }
         else {
             // joystick tank steering
@@ -92,15 +92,24 @@ public class TeleOpMain extends OpMode {
             robot.backLeftMotor.setPower(gamepad1.left_stick_y);
             robot.backRightMotor.setPower(gamepad1.right_stick_y);
         }
-    }
 
-    protected void setFrontPower(float power) {
-        robot.frontLeftMotor.setPower(power);
-        robot.frontRightMotor.setPower(power);
-    }
+        // run lifter motor
+        if(gamepad2.left_bumper) {
+            robot.lifterMotor.setPower(1.0);
+        }
+        else if(gamepad2.right_bumper) {
+            robot.lifterMotor.setPower(-1.0);
+        }
+        else {
+            robot.lifterMotor.setPower(0.0);
+        }
 
-    protected void setBackPower(float power) {
-        robot.backLeftMotor.setPower(power);
-        robot.backRightMotor.setPower(power);
+        // run launcher motor
+        if(gamepad2.a) {
+            robot.launcherMotor.setPower(1.0);
+        }
+        else {
+            robot.launcherMotor.setPower(0.0);
+        }
     }
 }
