@@ -64,9 +64,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Auto Right (Sensor) 1", group="Pushbot")
+@Autonomous(name="Auto Blue Team(Sensor)", group="Pushbot")
 //@Disabled
-public class AutoRight_Sensor extends LinearOpMode {
+public class AutoBlueTeam_Sensor extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwarePushbot_TT         robot   = new HardwarePushbot_TT();   // Use a Pushbot's hardware
@@ -78,7 +78,7 @@ public class AutoRight_Sensor extends LinearOpMode {
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.6;
-    static final double     TURN_SPEED              = 0.6;
+    static final double     TURN_SPEED              = 0.4;
     static final double     PUSH_SPEED             = 0.1;
 
     @Override
@@ -89,6 +89,8 @@ public class AutoRight_Sensor extends LinearOpMode {
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
+        boolean colorBlueSensed;
+        colorBlueSensed = false;
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders");    //
@@ -125,11 +127,19 @@ public class AutoRight_Sensor extends LinearOpMode {
         // encoderDrive(TURN_SPEED,   12, -12, 3.0);  // S2: Turn Left 12 Inches with 3 Sec timeout (to be figured out)
         encoderDrive(TURN_SPEED,   12, -6, 3.0);  //  Turn Right 12 Inches with 3 Sec timeout (to be figured out)
         encoderDrive(DRIVE_SPEED, 24, 24, 3.0); //  Forward 24 inches with 3 Sec timeout                            CHANGE TO REAL LENGTH
-        encoderDrive(PUSH_SPEED, 9, 9, 5.0); //  Forward 24 inches with 3 Sec timeout                            CHANGE TO REAL LENGTH
-        encoderDrive(DRIVE_SPEED, -42, -42, 5.0); //  Reverse 72 inches with 3 Sec timeout CHANGE TO REAL LENGTH
-        //robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
-        //robot.rightClaw.setPosition(0.0);
-        sleep(1000);     // pause for servos to move
+
+        // now you are near the beacon. Sense color
+        // if the color sensed is blue, then push ahead, if not backup turn left, go straight make right, go forward towards beacon
+        // and push forward
+
+        colorBlueSensed = wasBlueSensed(colorBlueSensed) ;
+        if (colorBlueSensed = true) {
+            encoderDrive(PUSH_SPEED, 9, 9, 5.0); //  Forward 24 inches with 3 Sec timeout                            CHANGE TO REAL LENGTH
+            encoderDrive(DRIVE_SPEED, -42, -42, 5.0); //  Reverse 72 inches with 3 Sec timeout CHANGE TO REAL LENGTH
+        }
+        else {
+            //TODO
+        }
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
@@ -205,4 +215,30 @@ public class AutoRight_Sensor extends LinearOpMode {
             //  sleep(250);   // optional pause after each move
         }
     }
+
+    private boolean wasBlueSensed(boolean colorBlueSensed) {
+
+        colorBlueSensed = false;
+
+        if (opModeIsActive()) {
+
+//            telemetry.addData("2 Clear", robot.color.alpha());
+//            telemetry.addData("3 Red  ", robot.color.red());
+//            telemetry.addData("4 Green", robot.color.green());
+//            telemetry.addData("5 Blue ", robot.color.blue());
+
+            if (robot.color.red() > robot.color.blue()) {
+                colorBlueSensed = false;
+                telemetry.addData("Detecting", "Red");
+            } else {
+                colorBlueSensed = true;
+                telemetry.addData("Detecting", "Blue");
+
+            }
+            telemetry.update();
+        }
+
+        return (colorBlueSensed);
+    }
 }
+

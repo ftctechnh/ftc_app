@@ -104,10 +104,10 @@ public class SensorMRColor_TT extends LinearOpMode {
       telemetry.addData("5 Blue ", robot.color.blue());
 
       if (robot.color.red() > robot.color.blue()) {
-        telemetry.addData("Detecting Red");
+        telemetry.addData("Detecting", "Red");
       }
       else{
-        telemetry.addData("Detecting Blue");
+        telemetry.addData("Detecting", "Blue");
       }
       telemetry.update();
 
