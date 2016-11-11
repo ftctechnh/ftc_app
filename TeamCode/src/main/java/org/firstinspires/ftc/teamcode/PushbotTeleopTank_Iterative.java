@@ -98,14 +98,22 @@ public class PushbotTeleopTank_Iterative extends OpMode{
      */
     @Override
     public void loop() {
-        double left;
-        double right;
+
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-        left = -gamepad1.left_stick_y;
-        right = -gamepad1.right_stick_y;
-        robot.leftMotor.setPower(left);
-        robot.rightMotor.setPower(right);
+        // basic scaling for driving
+        if(gamepad1.left_stick_y != 0){
+            robot.leftMotor.setPower((double) gamepad1.left_stick_y/2.5);
+        }else{
+            robot.leftMotor.setPower(0.0);
+        }
+
+        if(gamepad1.right_stick_y != 0){
+            robot.rightMotor.setPower((double) gamepad1.right_stick_y/2.5);
+        }else{
+            robot.leftMotor.setPower(0.0
+            );
+        }
 
         // Use gamepad left & right Bumpers to open and close the claw
         if (gamepad1.right_bumper)
@@ -129,10 +137,10 @@ public class PushbotTeleopTank_Iterative extends OpMode{
 
         //spinning arm thing
         if (gamepad1.dpad_up == true){
-            robot.BCM.setPower(.5);
+            robot.BCM.setPower(1);
         }
         else if (gamepad1.dpad_down == true){
-            robot.BCM.setPower(-.5);
+            robot.BCM.setPower(-1);
         }
         else {
             robot.BCM.setPower(0.0);
@@ -142,9 +150,10 @@ public class PushbotTeleopTank_Iterative extends OpMode{
 
         // Send telemetry message to signify robot running;
         telemetry.addData("claw",  "Offset = %.2f", clawOffset);
-        telemetry.addData("left",  "%.2f", left);
-        telemetry.addData("right", "%.2f", right);
+        telemetry.addData("left",  "%.2f", (gamepad1.left_stick_y/2.5));
+        telemetry.addData("right", "%.2f", (gamepad2.right_stick_y/2.5));
     }
+
 
     /*
      * Code to run ONCE after the driver hits STOP
