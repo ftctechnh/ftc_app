@@ -39,7 +39,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="Template: Iterative OpMode", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
 @Disabled
-public class TemplateOpMode_Iterative_Demo_07 extends OpMode {
+public class TemplateOpMode_Iterative_Demo_07_EnforceDeadZone extends OpMode {
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
     HardwarePushbot_demo robot       = new HardwarePushbot_demo(); // use the class created to define a Pushbot's hardware

@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -38,6 +40,9 @@ public class HardwarePushbot_TT
     public DcMotor frontRightMotor = null;
     public DcMotor frontLeftMotor = null;
 
+    public ColorSensor color;    // Hardware Device Object
+    public DeviceInterfaceModule cdim;
+
     /* public static final double MID_SERVO       =  0.5 ;
     public static final double ARM_UP_POWER    =  0.45 ;
     public static final double ARM_DOWN_POWER  = -0.45 ;
@@ -62,6 +67,8 @@ public class HardwarePushbot_TT
         backLeftMotor  = hwMap.dcMotor.get("BackLeft");
         frontRightMotor   = hwMap.dcMotor.get("FrontRight");
         backRightMotor  = hwMap.dcMotor.get("BackRight");
+        color=    hwMap.colorSensor.get("ColorSensor");
+        cdim = hwMap.deviceInterfaceModule.get("Device Interface Module 1");
         //armMotor    = hwMap.dcMotor.get("left_arm");
 
         frontLeftMotor.setDirection(DcMotor.Direction.REVERSE); // Set to FORWARD if using AndyMark motors
