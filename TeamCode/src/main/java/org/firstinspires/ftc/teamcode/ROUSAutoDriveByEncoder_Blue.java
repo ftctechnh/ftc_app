@@ -9,12 +9,18 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
+import com.qualcomm.robotcore.hardware.DigitalChannelController;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 
-@Autonomous(name="AutoRed", group="Pushbot")
+
+
+@Autonomous(name="AutoBlue", group="Pushbot")
 //@Disabled
-public class ROUSAutoDriveByEncoder_Red extends LinearOpMode {
+public class ROUSAutoDriveByEncoder_Blue extends LinearOpMode {
     ColorSensor sensorRGB;
     //DeviceInterfaceModule cdim;
 
@@ -32,9 +38,9 @@ public class ROUSAutoDriveByEncoder_Red extends LinearOpMode {
     static final double     Pi                      = 3.14159265358979323846264338327950288419716939937510582097494459230781640628620899f;
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION)/
             (WHEEL_DIAMETER_INCHES * Pi);
-    static final double     DRIVE_SPEED             = .5;
-    static final double     TURN_SPEED              = 0.3;
-    static final double     SCAN_SPEED              =.1;
+    static final double     DRIVE_SPEED             = .3;
+    static final double     TURN_SPEED              = 0.1;
+    static final double     SCAN_SPEED              =.25;
 
 
     @Override
@@ -140,26 +146,38 @@ public class ROUSAutoDriveByEncoder_Red extends LinearOpMode {
             //int difference = sensorRGB.red()- sensorRGB.blue();
             // Step through each leg of the path,
             // Note: Reverse movement is obtained by setting a negative distance (not speed)
-            encoderDrive(DRIVE_SPEED, 24, 24, 20);
-            sleep(250);                                                // S1: Forward 45 Inches with 20 Sec timeout
-            encoderDrive(TURN_SPEED, 10.99557429, -10.99557429, 20);
+            encoderDrive(DRIVE_SPEED, -8, -8, 20);
             sleep(250);
-            encoderDrive(DRIVE_SPEED, 24, 24, 20);
+            encoderDrive(TURN_SPEED, -4.974188368, 4.974188368, 5);
             sleep(250);
-            encoderDrive(TURN_SPEED, 10.99557429, -10.99557429,20 );
+            encoderDrive(DRIVE_SPEED, -74, -74, 10);
             sleep(250);
-            encoderDrive(DRIVE_SPEED, 24, 24, 20);
+            encoderDrive(SCAN_SPEED, -1, -5, 10);
             sleep(250);
-            encoderDrive(TURN_SPEED, 10.99557429, -10.99557429, 20);
+            encoderDrive(DRIVE_SPEED, 4, 4, 10 );
             sleep(250);
-            encoderDrive(DRIVE_SPEED, 12, 12, 10);
-            sleep(250);
-            encoderDrive(TURN_SPEED, 10.99557429, -10.99557429, 20);
-            sleep(250);
-            encoderDrive(DRIVE_SPEED, 12, 12, 10);
-            sleep(250);
-            encoderDrive(TURN_SPEED, 10.99557429, -10.99557429, 20);
-            sleep(250);
+
+
+            //original
+           //encoderDrive(DRIVE_SPEED, 24, 24, 20);
+           // encoderDrive(TURN_SPEED, -10.99557429, 10.99557429, 20);
+            //sleep(250);
+           // encoderDrive(DRIVE_SPEED, 24, 24, 20);
+          //  sleep(250);
+            //encoderDrive(TURN_SPEED,-10.99557429,10.99557429,20 );
+            //sleep(250);
+            //encoderDrive(DRIVE_SPEED,24, 24, 20);
+            //sleep(250);
+            //encoderDrive(TURN_SPEED,-10.99557429, 10.99557429, 20);
+            //sleep(250);
+            //encoderDrive(DRIVE_SPEED, 12, 12, 10);
+            //sleep(250);
+            //encoderDrive(TURN_SPEED,-10.99557429, 10.99557429, 20);
+            //sleep(250);
+            //encoderDrive(DRIVE_SPEED,12, 12, 10);
+            //sleep(250);
+            //encoderDrive(TURN_SPEED, -10.99557429, 10.99557429, 20);
+            //sleep(250);
             //encoderDrive(TURN_SPEED, 11.38827337, -11.38827337, 20);
             //sleep(250);                                                            //S3: Turn 90deg to the left to return to a strait orientation// S5: Turn 90deg to the right
             //encoderDrive(DRIVE_SPEED, 42, 42, 10);
@@ -176,8 +194,8 @@ public class ROUSAutoDriveByEncoder_Red extends LinearOpMode {
                     telemetry.addData("Color", "BLUE");
                     telemetry.update();
                     sleep(125);
-                    robot.PressR.setPosition(1);
-                    sleep(250);
+                    robot.PressL.setDirection(Servo.Direction.REVERSE);
+                    sleep(500);
                     encoderDrive(SCAN_SPEED, -7, -7, 10);
                     sleep(125);
                     stop();
@@ -190,8 +208,8 @@ public class ROUSAutoDriveByEncoder_Red extends LinearOpMode {
                     telemetry.addData("Color", "RED");
                     telemetry.update();
                     sleep(125);
-                    robot.PressL.setPosition(0);
-                    sleep(250);
+                    robot.PressR.setDirection(Servo.Direction.FORWARD);
+                    sleep(500);
                     encoderDrive(SCAN_SPEED, -7, -7, 10);
                     sleep(125);
                     stop();

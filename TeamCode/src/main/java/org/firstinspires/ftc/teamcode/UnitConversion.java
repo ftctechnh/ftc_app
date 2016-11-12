@@ -1,8 +1,5 @@
-package org.firstinspires.ftc.teamcode.math;
+package org.firstinspires.ftc.teamcode;
 
-/**
- * Created by blaisg on 10/22/2016.
- */
 public class UnitConversion {
     private static final  float mmPerInch  = 25.4f;
 

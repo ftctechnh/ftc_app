@@ -29,8 +29,8 @@ public class ROUSAutoHardware_WithServos
     /* Public OpMode members. */
     public DcMotor  leftMotor   = null;
     public DcMotor  rightMotor  = null;
-    //public Servo    PressR      = null;
-    //public Servo    PressL      = null;
+    public Servo    PressR      = null;
+    public Servo    PressL      = null;
 
 
 
@@ -65,8 +65,8 @@ public class ROUSAutoHardware_WithServos
 
 
         // Define and initialize ALL installed servos.
-        //PressL = hwMap.servo.get("left servo");
-        //PressR = hwMap.servo.get("right servo");
+        PressL = hwMap.servo.get("left servo");
+        PressR = hwMap.servo.get("right servo");
         //Ex. Servo                  leftClaw = hwMap.servo.get("left_hand");
         //Ex. Servo position set     leftClaw.setPosition(MID_SERVO);
 
