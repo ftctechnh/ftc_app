@@ -1,1 +1,3 @@
-Before issuing a pull request, please see the contributing page.
+<!--
+Before issuing a pull request, please see https://github.com/ftctechnh/ftc_app/blob/master/.github/CONTRIBUTING.md.
+-->
