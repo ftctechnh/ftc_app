@@ -4,10 +4,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.*;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.MatrixF;
@@ -26,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @TeleOp(name = "TeleOpVuf", group = "Concept")
-//@Disabled
+@Disabled
 public class TeleOpMainVuf extends OpMode {
 
     DcMotor frontLeftMotor;

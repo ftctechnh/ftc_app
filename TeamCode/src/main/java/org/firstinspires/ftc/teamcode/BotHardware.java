@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
@@ -10,7 +11,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class BotHardware
 {
-    static final int LEFT_LED_CHANNEL = 5;
 
     /* Public OpMode members. */
     public DcMotor frontLeftMotor = null;
@@ -20,35 +20,48 @@ public class BotHardware
     public DcMotor lifterMotor = null;
     public DcMotor launcherMotor = null;
 
-    /*public ColorSensor sensorRGB = null;
-    public DeviceInterfaceModule cdim = null;*/
+    public Servo leftServo = null;
+    public Servo rightServo = null;
+
+    public ColorSensor leftSensor = null;
+    public ColorSensor rightSensor = null;
+    public DeviceInterfaceModule cdim = null;
 
     /* local OpMode members. */
-    HardwareMap hwMap = null;
     private ElapsedTime period = new ElapsedTime();
 
     /* Constructor */
     public BotHardware() {}
 
     /* Initialize standard Hardware interfaces */
-    public void init(HardwareMap ahwMap) {
+    public void init(OpMode opMode, boolean debug) {
 
-        // Save reference to Hardware map
-        hwMap = ahwMap;
+        AutoLib.HardwareFactory hw;
+
+        if (debug)
+            hw = new AutoLib.TestHardwareFactory(opMode);
+        else
+            hw = new AutoLib.RealHardwareFactory(opMode);
 
         // Define and Initialize Motors
-        frontLeftMotor = hwMap.dcMotor.get("front_left");
-        frontRightMotor = hwMap.dcMotor.get("front_right");
-        backLeftMotor = hwMap.dcMotor.get("back_left");
-        backRightMotor = hwMap.dcMotor.get("back_right");
-        lifterMotor = hwMap.dcMotor.get("lifter");
-        launcherMotor = hwMap.dcMotor.get("launcher");
+        frontLeftMotor = hw.getDcMotor("front_left");
+        frontRightMotor = hw.getDcMotor("front_right");
+        backLeftMotor = hw.getDcMotor("back_left");
+        backRightMotor = hw.getDcMotor("back_right");
+        lifterMotor = hw.getDcMotor("lifter");
+        launcherMotor = hw.getDcMotor("launcher");
 
-        /*cdim = hwMap.deviceInterfaceModule.get("dim");
-        sensorRGB = hwMap.colorSensor.get("left_color_sensor");
+        leftServo = hw.getServo("servo_left");
+        rightServo = hw.getServo("servo_right");
 
-        // set up color sensors
-        cdim.setDigitalChannelMode(LEFT_LED_CHANNEL, DigitalChannelController.Mode.OUTPUT);*/
+        try{
+            cdim = opMode.hardwareMap.deviceInterfaceModule.get("dim");
+            leftSensor = opMode.hardwareMap.colorSensor.get("sensor_left");
+            rightSensor = opMode.hardwareMap.colorSensor.get("sensor_right");
+        }
+        catch (Exception e) {
+            opMode.telemetry.addData("Color sensors failed to load!", "");
+        }
 
 
         // change directions if necessary
@@ -77,6 +90,14 @@ public class BotHardware
         frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        //set servo directions
+        leftServo.setDirection(Servo.Direction.REVERSE);
+        rightServo.setDirection(Servo.Direction.FORWARD);
+
+        //set servos default positions
+        leftServo.setPosition(0.5);
+        rightServo.setPosition(0.5);
     }
 
     /***
@@ -141,6 +162,10 @@ public class BotHardware
     public void setBackPower(double power) {
         backLeftMotor.setPower(power);
         backRightMotor.setPower(power);
+    }
+
+    public DcMotor[] getMotorArray(){
+        return new DcMotor[] {frontRightMotor, backRightMotor, frontLeftMotor, backLeftMotor};
     }
 }
 

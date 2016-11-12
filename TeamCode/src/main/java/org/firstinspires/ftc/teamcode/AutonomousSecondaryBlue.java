@@ -32,9 +32,13 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.adafruit.AdafruitBNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
@@ -54,11 +58,11 @@ import org.opencv.android.OpenCVLoader;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Blue Auto", group="Main")  // @Autonomous(...) is the other common choice
+@Autonomous(name="Blue Auto", group="Main")  // @Autonomous(...) is the other common choice
 public class AutonomousSecondaryBlue extends LinearOpMode {
 
+    BotHardware robot = new BotHardware();
     /* Declare OpMode members. */
-    DcMotor mMotors[];                      // motors, some of which can be null: assumed order is fr, br, fl, bl
 
     VuforiaLib_FTC2016 Vuf;
 
@@ -69,53 +73,53 @@ public class AutonomousSecondaryBlue extends LinearOpMode {
     static final double squareToMm = footToMm * 2;
 
     // parameters of the PID controller for this sequence
-    float Kp = 0.035f;        // motor power proportional term correction per degree of deviation
-    float Ki = 0.02f;         // ... integrator term
-    float Kd = 0;             // ... derivative term
-    float KiCutoff = 3.0f;    // maximum angle error for which we update integrator
+    final float Kp = 0.035f;        // motor power proportional term correction per degree of deviation
+    final float Ki = 0.02f;         // ... integrator term
+    final float Kd = 0;             // ... derivative term
+    final float KiCutoff = 3.0f;    // maximum angle error for which we update integrator
 
     @Override
     public void runOpMode() {
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
-
-        AutoLib.HardwareFactory mf = null;
+        //init robot hardware
         final boolean debug = false;
-        if (debug)
-            mf = new AutoLib.TestHardwareFactory(this);
-        else
-            mf = new AutoLib.RealHardwareFactory(this);
+        robot.init(this, debug);
 
-        // get the motors: depending on the factory we created above, these may be
-        // either dummy motors that just log data or real ones that drive the hardware
-        // assumed order is fr, br, fl, bl
-        mMotors = new DcMotor[4];
-        mMotors[0] = mf.getDcMotor("front_right");
-        mMotors[1] = mf.getDcMotor("back_right");
-        (mMotors[2] = mf.getDcMotor("front_left")).setDirection(DcMotor.Direction.REVERSE);
-        (mMotors[3] = mf.getDcMotor("back_left")).setDirection(DcMotor.Direction.REVERSE);
-
+        //init vuforia
         Vuf = new VuforiaLib_FTC2016();
         Vuf.init(this, null);     // pass it this OpMode (so it can do telemetry output) and use its license key for now
 
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+
         // create an autonomous sequence with the steps to drive
-        float power = 0.5f;
-        float error = 254.0f;       // get us within 10" for this test
-        float targetZ = 6*25.4f;
+        final float power = 0.5f;
+        final float error = 254.0f;       // get us within 10" for this test
+        final float angleError = 5.0f;    //and within 5 degrees for turning
+        final float targetZ = 6*25.4f;
+
+        //constants for pushy pushy
+        final double readPos = 0.2;
+        final double pushPos = 0.4;
+        final double time = 2.0;
+        final boolean red = false;
 
         // create the root Sequence for this autonomous OpMode
         AutoLib.Sequence mSequence = new AutoLib.LinearSequence();
-        // drive a full square diagonnslly forward
-        mSequence.add(new AutoLib.MoveSquirrelyByTimeStep(mMotors, 45, power, 0.6, true));
-        mSequence.add(new AutoLib.VuforiaSquirrelyDriveStep(this, new VectorF(-1500,300,targetZ), Vuf, Vuf, mMotors, power, error));    // Wheels
+        // drive to the first beacon
+        mSequence.add(new AutoLib.MoveSquirrelyByTimeStep(robot.getMotorArray(), 45, power, 0.6, true));
+        mSequence.add(new AutoLib.VuforiaSquirrelyDriveStep(this, new VectorF(-1500,300,targetZ), Vuf, Vuf, robot.getMotorArray(), power, error));    // Wheels
+        mSequence.add(new AutoLib.GyroTurnStep(this, -90, Vuf, robot.getMotorArray(), power, angleError, true));
         //pushy pushy
+        mSequence.add(new pushypushy(robot.leftSensor, robot.rightSensor, robot.leftServo, robot.rightServo, readPos, pushPos, time, red)); //SO. MANY. VARIABLES.
         //drive to the second beacon
-        AutoLib.Sequence mSequence2 = new AutoLib.LinearSequence();
-        mSequence2.add(new AutoLib.VuforiaSquirrelyDriveStep(this, new VectorF(-1500,-914,targetZ), Vuf, Vuf, mMotors, power, error));   // Legos
+        mSequence.add(new AutoLib.MoveSquirrelyByTimeStep(robot.getMotorArray(), 90, power, 0.6, true));
+        mSequence.add(new AutoLib.VuforiaSquirrelyDriveStep(this, new VectorF(-1500,-914,targetZ), Vuf, Vuf, robot.getMotorArray(), power, error));   // Legos
+        mSequence.add(new AutoLib.GyroTurnStep(this, -90, Vuf, robot.getMotorArray(), power, angleError, true));
         //pushy pushy
-        AutoLib.Sequence mSequence3 = new AutoLib.LinearSequence();
-        mSequence3.add(new AutoLib.VuforiaSquirrelyDriveStep(this, new VectorF((int)(-footToMm * 2), (int)(footToMm * 2),targetZ), Vuf, Vuf, mMotors, power, error));// yoga ball
-        mSequence3.add(new AutoLib.MoveByTimeStep(mMotors, 0.0, 0, true));
+        mSequence.add(new pushypushy(robot.leftSensor, robot.rightSensor, robot.leftServo, robot.rightServo, readPos, pushPos, time, red));
+        //drive to yoga ball
+        mSequence.add(new AutoLib.VuforiaSquirrelyDriveStep(this, new VectorF((int)(-footToMm * 2), (int)(footToMm * 2),targetZ), Vuf, Vuf, robot.getMotorArray(), power, error));// yoga ball
+        mSequence.add(new AutoLib.MoveByTimeStep(robot.getMotorArray(), 0.0, 0, true));
 
         // start out not-done
         boolean bDone = false;
@@ -132,31 +136,7 @@ public class AutonomousSecondaryBlue extends LinearOpMode {
             telemetry.update();
         }
 
-        telemetry.addData("First sequence finished", "");
-
-        pushypushy();
-
-        bDone = false;
-
-        while (!bDone) {
-            Vuf.loop(true);
-            bDone = mSequence2.loop();       // returns true when we're done
-            telemetry.update();
-        }
-
-        telemetry.addData("Second sequence finished", "");
-
-        pushypushy();
-
-        bDone = false;
-
-        while (!bDone) {
-            Vuf.loop(true);
-            bDone = mSequence2.loop();       // returns true when we're done
-            telemetry.update();
-        }
-
-        telemetry.addData("Third sequence finished", "");
+        telemetry.addData("Sequence finished!", "");
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -168,10 +148,68 @@ public class AutonomousSecondaryBlue extends LinearOpMode {
 
     //function which handles pushing of beacons
     //assumes robot is in front of the beacon
-    private void pushypushy(){
-        //extend color sensor
-        //decide
-        //pushy
-        return;
+
+    private class pushypushy extends AutoLib.LinearSequence{
+
+        pushypushy(ColorSensor leftSensor, ColorSensor rightSensor, Servo leftServo, Servo rightServo, double readPos, double pushPos, double time, boolean red){
+            //extend the right and left servo arms so color sensors get an accurate reading
+            AutoLib.ConcurrentSequence servoExtend = new AutoLib.ConcurrentSequence();
+            servoExtend.add(new AutoLib.TimedServoStep(leftServo, readPos, time, false));
+            servoExtend.add(new AutoLib.TimedServoStep(rightServo, readPos, time, false));
+            this.add(servoExtend);
+
+            //run color detection and pushing
+            this.add(new pushyDetect(leftSensor, rightSensor, leftServo, rightServo, pushPos, time, red));
+
+            //pull servos back to default position
+            AutoLib.ConcurrentSequence servoDetract = new AutoLib.ConcurrentSequence();
+            servoDetract.add(new AutoLib.TimedServoStep(leftServo, leftServo.getPosition(), time, false));
+            servoDetract.add(new AutoLib.TimedServoStep(rightServo, rightServo.getPosition(), time, false));
+            this.add(servoDetract);
+        }
+
+    }
+
+    private class pushyDetect extends AutoLib.Step {
+        ColorSensor mLeftSensor;
+        ColorSensor mRightSensor;
+        Servo mLeftServo;
+        Servo mRightServo;
+        double mPushPos;
+        AutoLib.Timer mTime;
+        boolean mRed;
+
+        public pushyDetect(ColorSensor leftSensor, ColorSensor rightSensor, Servo leftServo, Servo rightServo, double pushPos, double time, boolean red){
+            mLeftSensor = leftSensor;
+            mRightSensor = rightSensor;
+            mLeftServo = leftServo;
+            mRightServo = rightServo;
+            mPushPos = pushPos;
+            mTime = new AutoLib.Timer(time);
+            mRed = red;
+        }
+
+        public boolean loop(){
+            boolean left = false;
+            if(firstLoopCall()){
+                //compare sensor values
+                if(mRed){
+                    left = mLeftSensor.red() > mRightSensor.red();
+                }
+                else{
+                    left = mLeftSensor.blue() > mRightSensor.blue();
+                }
+
+                //start servo timer
+                mTime.start();
+            }
+
+            //if left side is color, push left, else push right
+            if(left) mLeftServo.setPosition(mPushPos);
+            else mRightServo.setPosition(mPushPos);
+
+            //finish when time is up
+            return mTime.done();
+        }
     }
 }

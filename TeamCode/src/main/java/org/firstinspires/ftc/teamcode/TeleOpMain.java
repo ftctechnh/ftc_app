@@ -20,7 +20,7 @@ public class TeleOpMain extends OpMode {
         telemetry.addData("Status", "Initialized");
 
         // hardware maps
-        robot.init(hardwareMap);
+        robot.init(this, false);
     }
 
     @Override

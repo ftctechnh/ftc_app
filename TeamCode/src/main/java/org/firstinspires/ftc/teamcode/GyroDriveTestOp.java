@@ -1,8 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.*;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 
@@ -14,7 +13,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 // simple example sequence that tests either of gyro-based AzimuthCountedDriveStep or AzimuthTimedDriveStep to drive along a square path
 @Autonomous(name="Test: Gyro Drive Test 1", group ="Test")
-//@Disabled
+@Disabled
 public class GyroDriveTestOp extends OpMode {
 
     AutoLib.Sequence mSequence;             // the root of the sequence tree

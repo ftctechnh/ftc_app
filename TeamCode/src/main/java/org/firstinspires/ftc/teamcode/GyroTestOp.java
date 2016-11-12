@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.GyroSensor;
+import com.qualcomm.robotcore.eventloop.opmode.*;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 
 
@@ -11,7 +9,7 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
  * Test hardware gyro
  */
 @Autonomous(name="Test: MR Gyro Test 1", group ="Test")
-//@Disabled
+@Disabled
 public class GyroTestOp extends OpMode {
 
     private ModernRoboticsI2cGyro mGyro;

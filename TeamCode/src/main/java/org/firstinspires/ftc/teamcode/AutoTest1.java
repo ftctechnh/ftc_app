@@ -1,11 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-
-import org.firstinspires.ftc.teamcode.AutoLib;
-
+import com.qualcomm.robotcore.eventloop.opmode.*;
 
 /**
  * A test example of autonomous opmode programming using AutoLib classes.
@@ -14,7 +10,7 @@ import org.firstinspires.ftc.teamcode.AutoLib;
 
 
 @Autonomous(name="Test: AutoLib Sequencer Test 1", group ="Test")
-//@Disabled
+@Disabled
 public class AutoTest1 extends OpMode {
 
     AutoLib.Sequence mSequence;     // the root of the sequence tree

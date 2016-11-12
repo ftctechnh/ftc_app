@@ -15,8 +15,8 @@ import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 
 
 // simple example sequence that tests either of gyro-based AzimuthCountedDriveStep or AzimuthTimedDriveStep to drive along a square path
-@Autonomous(name="AutonomousSecondary", group="Main")
-@Disabled
+@Autonomous(name="Testing Vuforia Turn", group="Test")
+//@Disabled
 public class AutonomousSecondary extends OpMode {
 
     AutoLib.Sequence mSequence;             // the root of the sequence tree
@@ -31,16 +31,10 @@ public class AutonomousSecondary extends OpMode {
     static final double footToMm = inchToMm * 12;
     static final double squareToMm = footToMm * 2;
 
-    // parameters of the PID controller for this sequence
-    float Kp = 0.035f;        // motor power proportional term correction per degree of deviation
-    float Ki = 0.02f;         // ... integrator term
-    float Kd = 0;             // ... derivative term
-    float KiCutoff = 3.0f;    // maximum angle error for which we update integrator
-
     @Override
     public void init() {
         AutoLib.HardwareFactory mf = null;
-        final boolean debug = false;
+        final boolean debug = true;
         if (debug)
             mf = new AutoLib.TestHardwareFactory(this);
         else
@@ -60,22 +54,21 @@ public class AutonomousSecondary extends OpMode {
 
         // create an autonomous sequence with the steps to drive
         float power = 0.5f;
-        float error = 254.0f;       // get us within 10" for this test
+        float error = 5.0f;       // get us within 10 degrees for this test
         float targetZ = 6*25.4f;
 
         // create the root Sequence for this autonomous OpMode
         mSequence = new AutoLib.LinearSequence();
 
-        // drive a full square diagonnslly forward
-        mSequence.add(new AutoLib.MoveSquirrelyByTimeStep(mMotors, 45, power, 0.6, true));
-        mSequence.add(new AutoLib.VuforiaSquirrelyDriveStep(this, new VectorF(-1500,300,targetZ), Vuf, Vuf, mMotors, power, error));    // Wheels
-        //pushy pushy
-        mSequence.add(new AutoLib.VuforiaSquirrelyDriveStep(this, new VectorF(-1500,-914,targetZ), Vuf, Vuf, mMotors, power, error));   // Legos
-        //pushy pushy
-        mSequence.add(new AutoLib.VuforiaSquirrelyDriveStep(this, new VectorF((int)(-footToMm * 2), (int)(footToMm * 2),targetZ), Vuf, Vuf, mMotors, power, error));   // yoga ball
+        mSequence.add(new AutoLib.GyroTurnStep(this, 45.0f, Vuf, mMotors, power, error, true));
 
         // start out not-done
         bDone = false;
+    }
+
+    @Override
+    public void start(){
+        Vuf.start();
     }
 
     @Override
@@ -86,11 +79,14 @@ public class AutonomousSecondary extends OpMode {
             bDone = mSequence.loop();       // returns true when we're done
         else
             telemetry.addData("First sequence finished", "");
+
+        Vuf.loop(true);
     }
 
     @Override
     public void stop() {
         super.stop();
+        Vuf.stop();
     }
 }
 

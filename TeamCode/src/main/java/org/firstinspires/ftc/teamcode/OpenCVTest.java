@@ -1,31 +1,16 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.os.Environment;
-import android.view.SurfaceView;
-
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.RobotLog;
 
-import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
-import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
-import org.opencv.android.LoaderCallbackInterface;
-import org.opencv.android.OpenCVLoader;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
-import org.opencv.core.Range;
-import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
-import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
-import org.opencv.video.Video;
-import org.opencv.videoio.VideoCapture;
-import org.opencv.videoio.Videoio;
 
-import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,7 +20,7 @@ import static org.opencv.core.CvType.*;
  * Created by Robotics on 10/28/2016.
  */
 
-@TeleOp(name = "OpenCVTest", group = "Test")
+@Autonomous(name = "OpenCVTest", group = "Test")
 //@Disabled
 public class OpenCVTest extends OpenCVLib {
     //edge kernel (stolen from http://roboreal.com)

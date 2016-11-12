@@ -33,8 +33,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.ftcrobotcontroller.R;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.*;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -85,7 +84,7 @@ import java.util.List;
  */
 
 @Autonomous(name="Concept: Vuforia Navigation 1", group ="Concept")
-//@Disabled
+@Disabled
 public class OpmodeVuforiaNavigationTest1 extends OpMode {
 
     public static final String TAG = "Vuforia Test1";

@@ -1,13 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.opencv.android.CameraBridgeViewBase;
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
-import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
 import static org.opencv.core.CvType.CV_32F;
@@ -17,15 +15,9 @@ import static org.opencv.core.CvType.CV_8U;
  * Created by Robotics on 10/28/2016.
  */
 
-@TeleOp(name = "OpenCVSimpleTest", group = "Test")
+@Autonomous(name = "OpenCVSimpleTest", group = "Test")
 //@Disabled
 public class OpenCVSimpleTest extends OpenCVLib {
-    //edge kernel (stolen from http://roboreal.com)
-    private static final float[][] kernel = {{-1, -1, -1, -1, -1},
-            {-1,  0,  0,  0, -1},
-            {-1,  0, 16,  0, -1},
-            {-1,  0,  0,  0, -1},
-            {-1, -1, -1, -1, -1}};
 
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame frame){
         //here we gooooooooo!

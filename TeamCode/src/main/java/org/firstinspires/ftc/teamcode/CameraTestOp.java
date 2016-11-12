@@ -6,23 +6,13 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.*;
 
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.ImageFormat;
-import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
-
-import java.nio.IntBuffer;
-import java.util.List;
-
-import org.firstinspires.ftc.teamcode.CameraLib;
 
 
 @Autonomous(name="Test: CameraLib Test 1", group ="Test")
-//@Disabled
+@Disabled
 public class CameraTestOp extends OpMode {
 
     int mLoopCount;

@@ -44,7 +44,7 @@ import com.qualcomm.robotcore.util.Range;
  * Enables control of the robot via the gamepad using Squirrely Wheels
  */
 @TeleOp(name="Test: SquirrelyDrive1", group="Test")  // @Autonomous(...) is the other common choice
-//@Disabled
+@Disabled
 public class SquirrelyDrive1 extends OpMode {
 
 	DcMotor motorFrontRight;

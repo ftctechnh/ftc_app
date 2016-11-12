@@ -68,6 +68,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  */
 
 @Autonomous(name="Encoder Counter", group="Concept")
+@Disabled
 public class EncoderTest extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -85,7 +86,7 @@ public class EncoderTest extends LinearOpMode {
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
          */
-        robot.init(hardwareMap);
+        robot.init(this, false);
 
         // Send telemetry message to signify robot waiting;
         //telemetry.addData("Status", "Resetting Encoders");    //
