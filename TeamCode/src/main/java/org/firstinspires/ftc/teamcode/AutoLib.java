@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
 import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 
@@ -646,36 +647,39 @@ public class AutoLib {
     }
 
     //a step which runs a servo for a given amount of time
-    static private class TimedServo extends Step{
+    static public class TimedServoStep extends Step{
         Servo mServo;
         double mPosition;
         Timer mTimer;
+        boolean mRewind;
+        private double lastPosition;
 
-        public TimedServo(Servo servo, double position, double time){
+        public TimedServoStep(Servo servo, double position, double time, boolean rewind){
             mServo = servo;
             mPosition = position;
             mTimer = new Timer(time);
+            mRewind = rewind;
         }
 
         public boolean loop(){
             if(firstLoopCall()){
+                lastPosition = mServo.getPosition();
                 mServo.setPosition(mPosition);
                 mTimer.start();
             }
-            return mTimer.done();
+
+            if(mTimer.done()){
+                //RobotLog.vv("AutoLib", "Timer: " + mTimer.elapsed());
+                if(mRewind){
+                    mRewind = false;
+                    mServo.setPosition(lastPosition);
+                    mTimer.start();
+                    //RobotLog.vv("AutoLib", "MRewind Called!");
+                }
+                else return true;
+            }
+            return false;
         }
-    }
-
-    //and a step class which adds a bit of abstraction, so you can pull the servo back
-    static public class TimedServoStep extends LinearSequence{
-
-        public TimedServoStep(Servo servo, double position, double time, boolean rewind){
-            double lastPosition = servo.getPosition();
-
-            this.add(new TimedServo(servo, position, time));
-            if(rewind)  this.add(new TimedServo(servo, lastPosition, time));
-        }
-
     }
 
     // a Step that uses gyro input to drive along a given course for a given distance given by motor encoders.
@@ -942,7 +946,9 @@ public class AutoLib {
 
         // return elapsed time in seconds since timer was created or restarted
         public double elapsed() {
-            return (double) (System.nanoTime() - mStartTime) / (double) TimeUnit.SECONDS.toNanos(1L);
+            double ret = (double) (System.nanoTime() - mStartTime) / (double) TimeUnit.SECONDS.toNanos(1L);
+            if(ret > 1000) return 0.0;
+            else return ret;
         }
 
         public double remaining() {
