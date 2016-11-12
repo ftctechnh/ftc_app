@@ -33,6 +33,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -57,16 +58,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Eaglebot: Straight, Autonomous", group="Omni2Motor")
-public class eaglebot_straight_auto extends LinearOpMode {
+@Autonomous(name="Eaglebot: Motor and Servo Test", group="Omni2Motor")
+public class eaglebot_test extends LinearOpMode {
 
     /* Declare OpMode members. */
-    Omni2Motor       robot   = new Omni2Motor();   // Use a Pushbot's hardware
+    Eaglebot robot   = new Eaglebot();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
-
-
-    static final double     FORWARD_SPEED = 0.6;
-    static final double     TURN_SPEED    = 0.5;
 
     @Override
     public void runOpMode() {
@@ -83,28 +80,29 @@ public class eaglebot_straight_auto extends LinearOpMode {
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-
-        robot.leftMotor.setPower(0);
-        robot.rightMotor.setPower(0);
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 8)) {
-            telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
-
-        robot.leftMotor.setPower(FORWARD_SPEED);
-        robot.rightMotor.setPower(FORWARD_SPEED);
+        // run each motor at full power for two seconds
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 2)) {
-            telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
+            robot.frontLeft.setPower(1);
         }
+            robot.frontLeft.setPower(0);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 2)) {
+            robot.frontRight.setPower(1);
+        }
+            robot.frontRight.setPower(0);
 
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 2)) {
+            robot.backLeft.setPower(1);
+        }
+            robot.backLeft.setPower(0);
 
-        robot.leftMotor.setPower(0);
-        robot.rightMotor.setPower(0);
-        robot.leftClaw.setPosition(1.0);
-        robot.rightClaw.setPosition(0.0);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 2)) {
+            robot.backRight.setPower(1);
+        }
+        robot.backRight.setPower(0);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
