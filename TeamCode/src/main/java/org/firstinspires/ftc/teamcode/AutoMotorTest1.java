@@ -5,8 +5,7 @@ package org.firstinspires.ftc.teamcode;
  * Created by phanau on 12/14/15.
  */
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.*;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.AutoLib;
@@ -20,7 +19,7 @@ import org.firstinspires.ftc.teamcode.AutoLib;
 
 
 @Autonomous(name="Test: AutoLib Motor Step Test 1", group ="Test")
-//@Disabled
+@Disabled
 public class AutoMotorTest1 extends OpMode {
 
     AutoLib.Sequence mSequence;     // the root of the sequence tree

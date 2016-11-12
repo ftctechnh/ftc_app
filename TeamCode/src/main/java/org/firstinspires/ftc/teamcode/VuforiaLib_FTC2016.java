@@ -36,6 +36,10 @@ import com.qualcomm.ftcrobotcontroller.R;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.RobotLog;
+import com.vuforia.Frame;
+import com.vuforia.Image;
+import com.vuforia.PIXEL_FORMAT;
+import com.vuforia.State;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.MatrixF;
@@ -120,6 +124,7 @@ public class VuforiaLib_FTC2016 implements HeadingSensor, LocationSensor {
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         parameters.useExtendedTracking = true;  //ask paul about this
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+        vuforia.setFrameQueueCapacity(1); //store 1 frame at a time
 
         /**
          * Load the data sets that for the trackable objects we wish to track. These particular data
@@ -326,34 +331,34 @@ public class VuforiaLib_FTC2016 implements HeadingSensor, LocationSensor {
 
     public void loop(boolean bTelemetry)
     {
-            for (VuforiaTrackable trackable : allTrackables) {
-                /**
-                 * getUpdatedRobotLocation() will return null if no new information is available since
-                 * the last time that call was made, or if the trackable is not currently visible.
-                 * getRobotLocation() will return null if the trackable is not currently visible.
-                 */
-                if (bTelemetry)
-                    mOpMode.telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible() ? "Visible" : "Not Visible");    //
-
-                //lastLocation = null;
-                OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getRobotLocation();
-                if (robotLocationTransform != null) {
-                    lastLocation = robotLocationTransform;
-                }
-            }
+        for (VuforiaTrackable trackable : allTrackables) {
             /**
-             * Provide feedback as to where the robot was last located (if we know).
+             * getUpdatedRobotLocation() will return null if no new information is available since
+             * the last time that call was made, or if the trackable is not currently visible.
+             * getRobotLocation() will return null if the trackable is not currently visible.
              */
-            if (bTelemetry) {
-                if (lastLocation != null) {
-                    //  RobotLog.vv(TAG, "robot=%s", format(lastLocation));
-                    mOpMode.telemetry.addData("Position:", formatPosition(lastLocation));
-                    mOpMode.telemetry.addData("Orientation:", formatOrientation(lastLocation));
-                } else {
-                    mOpMode.telemetry.addData("Position:", "Unknown");
-                    mOpMode.telemetry.addData("Orientation:", "Unknown");
-                }
+            if (bTelemetry)
+                mOpMode.telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible() ? "Visible" : "Not Visible");    //
+
+            //lastLocation = null;
+            OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getRobotLocation();
+            if (robotLocationTransform != null) {
+                lastLocation = robotLocationTransform;
             }
+        }
+        /**
+         * Provide feedback as to where the robot was last located (if we know).
+         */
+        if (bTelemetry) {
+            if (lastLocation != null) {
+                //  RobotLog.vv(TAG, "robot=%s", format(lastLocation));
+                mOpMode.telemetry.addData("Position:", formatPosition(lastLocation));
+                mOpMode.telemetry.addData("Orientation:", formatOrientation(lastLocation));
+            } else {
+                mOpMode.telemetry.addData("Position:", "Unknown");
+                mOpMode.telemetry.addData("Orientation:", "Unknown");
+            }
+        }
     }
 
     public void stop()
@@ -410,6 +415,9 @@ public class VuforiaLib_FTC2016 implements HeadingSensor, LocationSensor {
 
     // implements LocationSensor interface
     public VectorF getLocation() { return getFieldPosition(); }
+
+    //idk what a blocking queue is, but whatever
+    public java.util.concurrent.BlockingQueue<VuforiaLocalizer.CloseableFrame> getFrames() { return vuforia.getFrameQueue(); }
 
     /**
      * Some simple utilities that extract information from a transformation matrix

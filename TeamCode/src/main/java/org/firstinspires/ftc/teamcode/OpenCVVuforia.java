@@ -32,36 +32,24 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.ftcrobotcontroller.R;
-import com.qualcomm.robotcore.eventloop.opmode.*;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.vuforia.Image;
 
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.matrices.MatrixF;
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.core.Mat;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This OpMode illustrates the basics of using the VuforiaLib_FTC2016 library to determine
  * positioning and orientation of robot on the FTC field.
  */
 
-@Autonomous(name="Test: Vuforia Navigation Test 1", group ="Test")
-@Disabled
-public class VuforiaNavigationTest1 extends OpMode {
+@Autonomous(name="OpenCV with Vuforia", group ="Test")
+//@Disabled
+public class OpenCVVuforia extends OpenCVLib {
 
     VuforiaLib_FTC2016 mVLib;
 
@@ -71,6 +59,8 @@ public class VuforiaNavigationTest1 extends OpMode {
          */
         mVLib = new VuforiaLib_FTC2016();
         mVLib.init(this, null);     // pass it this OpMode (so it can do telemetry output) and use its license key for now
+
+        initOpenCV();
     }
 
     @Override public void start()
@@ -90,8 +80,10 @@ public class VuforiaNavigationTest1 extends OpMode {
 
             ByteBuffer buf = img.getPixels();
 
+            //this currently throws an unsupportedOperation exception
+            byte[] ray = buf.array();
             Mat m = new Mat();
-            m.put(0,0,buf.array());
+            m.put(0,0,ray);
             telemetry.addData("Mat Width:", m.width());
             telemetry.addData("Mat Height:", m.height());
         }
@@ -101,6 +93,10 @@ public class VuforiaNavigationTest1 extends OpMode {
     @Override public void stop()
     {
         mVLib.stop();
+    }
+
+    public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame frame){
+        return frame.gray();
     }
 
 }

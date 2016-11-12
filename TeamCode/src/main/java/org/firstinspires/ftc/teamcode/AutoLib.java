@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Path;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
@@ -493,6 +495,87 @@ public class AutoLib {
 
     }
 
+    // a Step that provides gyro-based guidance to motors controlled by other concurrent Steps (e.g. encoder or time-based)
+    // assumes an even number of concurrent drive motor steps in order right ..., left ...
+    // this step tries to turn the to a given angle by adjusting the left vs. right motors to change the robot's heading.
+    static public class GyroTurnStep extends Step {
+        private float mPower;                               // basic power setting of all 4 motors -- adjusted for steering along path
+        private float mHeading;                             // compass heading to steer for (-180 .. +180 degrees)
+        private float mError;
+        private boolean mStop;
+        private OpMode mOpMode;                             // needed so we can log output (may be null)
+        private HeadingSensor mGyro;                        // sensor to use for heading information (e.g. Gyro or Vuforia)
+        private DcMotor[] mMotors;            // the motor steps we're guiding - assumed order is right ... left ...
+
+        public GyroTurnStep(OpMode mode, float heading, HeadingSensor gyro,
+                             DcMotor[] motors, float power, float error, boolean stop)
+        {
+            mOpMode = mode;
+            mHeading = heading;
+            mGyro = gyro;
+            mMotors = motors;
+            mPower = power;
+            mError = error;
+            mStop = stop;
+        }
+
+        public boolean loop()
+        {
+            //check if heading exists
+            float heading;
+            try{
+                heading = mGyro.getHeading();     // get latest reading from direction sensor
+                // convention is positive angles CCW, wrapping from 359-0
+            }
+            //and if not run search code
+            catch (NullPointerException e){
+                mMotors[0].setPower(0.2); //fr
+                mMotors[1].setPower(0.2); //br
+                mMotors[2].setPower(-0.2); //fl
+                mMotors[3].setPower(-0.2); //bl
+
+                //log some data
+                if(mOpMode != null)
+                    mOpMode.telemetry.addData("heading ", "Null");
+
+                return false;       // not done
+            }
+
+            float dist = SensorLib.Utils.wrapAngle(heading-mHeading);   // deviation from desired heading
+            // deviations to left are positive, to right are negative
+
+            //check if turning has finshed
+            if(Math.abs(dist) < mError){
+                if(mStop) {
+                    for(DcMotor em : mMotors)
+                        em.setPower(0.0);
+                }
+                return true;
+            }
+
+            float power = Range.clip(dist / 45.0f, -mPower, mPower);
+
+            // compute new right/left motor powers
+            float rightPower = -power;
+            float leftPower = power;
+
+            // log some data
+            if (mOpMode != null) {
+                mOpMode.telemetry.addData("heading ", heading);
+                mOpMode.telemetry.addData("left power ", leftPower);
+                mOpMode.telemetry.addData("right power ", rightPower);
+            }
+
+            // set the motor powers -- handle both time-based and encoder-based motor Steps
+            // assumed order is right motors followed by an equal number of left motors
+            int i = 0;
+            for (DcMotor ms : mMotors) {
+                ms.setPower((i++ < mMotors.length/2) ? rightPower : leftPower);
+            }
+
+            return false;
+        }
+    }
 
     // a Step that provides gyro-based guidance to motors controlled by other concurrent Steps (e.g. encoder or time-based)
     // assumes an even number of concurrent drive motor steps in order right ..., left ...
@@ -560,6 +643,39 @@ public class AutoLib {
             // all the motors it's controlling are done
             return true;
         }
+    }
+
+    //a step which runs a servo for a given amount of time
+    static private class TimedServo extends Step{
+        Servo mServo;
+        double mPosition;
+        Timer mTimer;
+
+        public TimedServo(Servo servo, double position, double time){
+            mServo = servo;
+            mPosition = position;
+            mTimer = new Timer(time);
+        }
+
+        public boolean loop(){
+            if(firstLoopCall()){
+                mServo.setPosition(mPosition);
+                mTimer.start();
+            }
+            return mTimer.done();
+        }
+    }
+
+    //and a step class which adds a bit of abstraction, so you can pull the servo back
+    static public class TimedServoStep extends LinearSequence{
+
+        public TimedServoStep(Servo servo, double position, double time, boolean rewind){
+            double lastPosition = servo.getPosition();
+
+            this.add(new TimedServo(servo, position, time));
+            if(rewind)  this.add(new TimedServo(servo, lastPosition, time));
+        }
+
     }
 
     // a Step that uses gyro input to drive along a given course for a given distance given by motor encoders.
