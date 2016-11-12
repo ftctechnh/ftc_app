@@ -70,7 +70,8 @@ public class MotorOpmode extends LinearOpMode {
     DcMotor rightMotor = null;
     Servo servoSlicer, servoPusher;
 
-    boolean shootingBall;
+    boolean trappingBall;
+    boolean trapReleased;
 
 
     @Override
@@ -94,7 +95,8 @@ public class MotorOpmode extends LinearOpMode {
         // set the shoot open & ball slicer down/default position
         servoPusher.setPosition(SHOOT_OPEN);
         servoSlicer.setPosition(SLICER_DOWN);
-        shootingBall = false;
+        trappingBall = false;
+        trapReleased = false;
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -106,14 +108,42 @@ public class MotorOpmode extends LinearOpMode {
             leftMotor.setPower(-gamepad1.left_stick_y);
             rightMotor.setPower(-gamepad1.right_stick_y);
 
-            if (gamepad1.left_bumper) {
-                // assume the ball is in position, trap it
-                // TODO:  need to set a logical variable so that trap doesn't reset
-                servoPusher.setPosition(SHOOT_TRAP);
+
+            //much of this is unnecessary, but it helps to understand what is happening.
+            if (gamepad1.left_bumper && !trapReleased) {
+                // if the button is pressed and hasn't been released yet
+                trappingBall = true;
+                trapReleased = false;
+            }
+            else if(trappingBall && !gamepad1.left_bumper) {
+                // if currently trapping ball, and the bumper is released
+                trappingBall = true;
+                trapReleased = true;
+            }
+            else if(gamepad1.left_bumper && trapReleased) {
+                // if the bumper was pressed, released, and pressed again, stop trapping ball.
+                trappingBall = false;
+                trapReleased = true;
+            }
+            else {
+                // if the button is not pressed and not trapping ball
+                trappingBall = false;
+                trapReleased = false;
             }
 
+
+            if (trappingBall) {
+                // assume the ball is in position, trap it
+                servoPusher.setPosition(SHOOT_TRAP);
+            } else {
+                // the final state, SHOOT_FIRE, is only used when shooting the ball
+                servoPusher.setPosition(SHOOT_OPEN);
+            }
+
+
             if (gamepad1.right_bumper) {
-                shootingBall = true;
+                trappingBall = false;       // tells robot to stop trapping the ball
+                trapReleased = true;       // will make sure the pusher opens after firing
                 leftMotor.setPower(0);      // stop the robot before shooting
                 rightMotor.setPower(0);
 
@@ -126,12 +156,11 @@ public class MotorOpmode extends LinearOpMode {
 
                 // push/load the ball
                 servoPusher.setPosition(SHOOT_FIRE);
+
+                // waits for the pusher to push the ball before returning to open position
                 sleep(SHOOTING_TIME_MS);
-                shootingBall = false;
-            } else {
-                // TODO: check a logical variable to ensure that we can open the pusher
-                servoPusher.setPosition(SHOOT_OPEN);
                 // no need to reset the motors, just wait for the next opModeIsActive loop iteration
+            } else {
                 servoSlicer.setPosition(SLICER_DOWN);
             }
 
