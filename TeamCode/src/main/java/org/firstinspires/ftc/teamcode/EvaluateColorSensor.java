@@ -4,8 +4,9 @@ import android.graphics.Color;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
-
-
+/**
+ *
+ */
 public class EvaluateColorSensor {
 
     static private int colorThreshold = 32; /** color comparrison value in range of 1 to 128 */
