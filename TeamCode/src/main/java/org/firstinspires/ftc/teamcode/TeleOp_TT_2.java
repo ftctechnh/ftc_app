@@ -38,7 +38,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcontroller.unknownelementsamples.HardwarePushbot_demo;
 
-@TeleOp(name="TeleOp TT", group="PushBot")  // @Autonomous(...) is the other common choice
+@TeleOp(name="TeleOp TT 2", group="PushBot")  // @Autonomous(...) is the other common choice
 // @Disabled
 public class TeleOp_TT_2 extends OpMode {
     /* Declare OpMode members. */

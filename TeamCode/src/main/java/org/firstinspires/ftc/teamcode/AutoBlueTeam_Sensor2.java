@@ -64,9 +64,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Auto Blue Team(Sensor)", group="Pushbot")
+@Autonomous(name="Auto Blue Team(Sensor) 2", group="Pushbot")
 //@Disabled
-public class AutoBlueTeam_Sensor extends LinearOpMode {
+public class AutoBlueTeam_Sensor2 extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwarePushbot_TT         robot   = new HardwarePushbot_TT();   // Use a Pushbot's hardware
@@ -129,22 +129,24 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
         encoderDrive(DRIVE_SPEED,  17, 17, 3.0); // Going forward to push the beacon
         //encoderDrive(PUSH_SPEED,   10, 10, 3.0 );
 
-        while (opModeIsActive() && (runtime.seconds() < 1.0) ){
+        while (robot.color.blue() == 0 && robot.color.red() == 0 && runtime.seconds() < 3.0){
+            encoderDrive(PUSH_SPEED,1,1,3.0);
+
             if (robot.color.blue() < robot.color.red()) {
                 colorBlueSensed = 1;
                 telemetry.addData("Detecting", "Red");
                 telemetry.update();
-                sleep(10000);
+//                sleep(10000);
             } else if (robot.color.blue() > robot.color.red()){
                 colorBlueSensed = 2;
                 telemetry.addData("Detecting", "Blue");
                 telemetry.update();
-                sleep(10000);
+//                sleep(10000);
             } else {
                 colorBlueSensed = 0;
                 telemetry.addData("Detecting", "Neither");
                 telemetry.update();
-                sleep(10000);
+//                sleep(10000);
             }
         }
 
