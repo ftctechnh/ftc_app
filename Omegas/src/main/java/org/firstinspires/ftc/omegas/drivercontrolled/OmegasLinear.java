@@ -43,24 +43,24 @@ import org.firstinspires.ftc.omegas.HardwareOmegas;
  * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
  * of the FTC Driver Station. When an selection is made from the menu, the corresponding OpMode
  * class is instantiated on the Robot Controller and executed.
- *
+ * <p>
  * This particular OpMode just executes a basic Tank Drive Teleop for a PushBot
  * It includes all the skeletal structure that all linear OpModes contain.
- *
+ * <p>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Omegas: Linear OpMode", group="Linear Opmode")
+@TeleOp(name = "Omegas: Linear OpMode", group = "Linear Opmode")
 public class OmegasLinear extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    HardwareOmegas      Ω       = new HardwareOmegas();
+    HardwareOmegas Ω = new HardwareOmegas();
 
     // IPS Units
-    static final double     FORWARD_SPEED = 0.6;
-    static final double     TURN_SPEED    = 0.5;
+    static final double FORWARD_SPEED = 0.6;
+    static final double TURN_SPEED = 0.5;
 
     @Override
     public void runOpMode() {
@@ -104,6 +104,8 @@ public class OmegasLinear extends LinearOpMode {
             Ω.leftFrontMotor.setPower(-gamepad1.left_stick_y);
             Ω.rightBackMotor.setPower(-gamepad1.right_stick_y);
             Ω.rightFrontMotor.setPower(-gamepad1.right_stick_y);
+
+            telemetry.addData("Status", "Run Time: " + runtime.toString() + " " + -gamepad1.right_stick_y + " " + -gamepad1.right_stick_y);
         }
     }
 }
