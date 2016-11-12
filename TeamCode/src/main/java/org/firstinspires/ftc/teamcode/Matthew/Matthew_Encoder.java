@@ -68,7 +68,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  */
 
 @Autonomous(name="Matthew Drive By Encoder", group="Pushbot")
-//@Disabled
+@Disabled
 public class Matthew_Encoder extends LinearOpMode {
 
     /* Declare OpMode members. */

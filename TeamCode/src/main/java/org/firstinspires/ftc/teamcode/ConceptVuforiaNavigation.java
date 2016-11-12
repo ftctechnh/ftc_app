@@ -87,7 +87,7 @@ import java.util.List;
  */
 
 @Autonomous(name="Invaders CV", group ="concept")
-//@Disabled
+@Disabled
 //@TeleOp(name="Invaders: Vuforia", group="Pushbot")
 
 public class ConceptVuforiaNavigation extends LinearOpMode {

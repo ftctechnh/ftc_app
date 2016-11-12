@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Matthew;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
@@ -22,6 +23,7 @@ public class Matthew_TeleOp {
         double clawOffset = 0;                       // Servo mid position
         final double CLAW_SPEED = 0.02;                   // sets rate to move servo
 
+
         @Override
         public void runOpMode() throws InterruptedException {
             double left;
@@ -34,13 +36,28 @@ public class Matthew_TeleOp {
             robot.init(hardwareMap);
 
             // Send telemetry message to signify robot waiting;
-            telemetry.addData("Say", "Hello Driver");    //
+            telemetry.addData("Say", "Ready player 1");    //
             telemetry.update();
 
             // Wait for the game to start (driver presses PLAY)
             waitForStart();
 
             // run until the end of the match (driver presses STOP)
+
+            int robotState = 0;
+
+            /*
+
+            0 = Moving elevator down until imaginary limit switch is pressed.
+            1 = Opening pusher servo
+            2 = Paused state
+            3 = Move elevator up to the top.
+
+
+
+
+             */
+
             while (opModeIsActive()) {
 
                 // Run wheels in POV mode (note: The joystick goes negative when pushed forwards, so negate it)
@@ -70,24 +87,59 @@ public class Matthew_TeleOp {
                 //robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset);
 
                 // Use gamepad buttons to move arm up (Y) and down (A)
-                if (gamepad1.y)
-                    robot.armMotor.setPower(robot.ARM_UP_POWER);
-                else if (gamepad1.a)
-                    robot.armMotor.setPower(robot.ARM_DOWN_POWER);
-                else
-                    robot.armMotor.setPower(0.0);
+                //if (gamepad1.y)
+                    //robot.//armMotor.setPower(robot.ARM_UP_POWER);
+                //else if (gamepad1.a)
+                    //robot.armMotor.setPower(robot.ARM_DOWN_POWER);
+                //else if (gamepad1.x)
+                    //robot.pusher.setPosition(1);
+                //else if (gamepad1.b) {
+                    //robot.BallElevator.setPosition(1);
+                    sleep(3000);
+                    //robot.BallElevator.setPosition(0.5);
+                    sleep(500);
+                    //robot.BallElevator.setPosition(0);
+                    sleep(3000);
+                }
+
+                //else
+                    //robot.armMotor.setPower(0.0);
+                    robot.pusher.setPosition(0);
+                    //robot.BallElevator.setPosition(0.5);
 
                 // Send telemetry message to signify robot running;
                 telemetry.addData("claw", "Offset = %.2f", clawOffset);
-                telemetry.addData("left", "%.2f", left);
-                telemetry.addData("right", "%.2f", right);
+                //telemetry.addData("left", "%.2f", left);
+                //telemetry.addData("right", "%.2f", right);
                 telemetry.update();
 
                 // Pause for metronome tick.  40 mS each cycle = update 25 times a second.
                 robot.waitForTick(40);
 
                 //robot.
+
+                switch (robotState){
+                    case 0:
+                    {
+                        robot.BallElevator.setDirection(DcMotorSimple.Direction.FORWARD);
+                    }
+                    case 1:
+                    {
+                        robot.pusher.setPosition(1);
+                    }
+                    case 2:
+                    {
+                        //Pause
+                    }
+                    case 3:
+                    {
+                        robot.pusher.setPosition(0);
+                    }
+
+
+
+                }
             }
         }
     }
-}
+
