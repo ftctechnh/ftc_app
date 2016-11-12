@@ -2,9 +2,9 @@ package edu.usrobotics.opmode.compbot;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import edu.usrobotics.opmode.RobotOp;
-import edu.usrobotics.opmode.protobot.ProtobotHardware;
 
 /**
  * Created by dsiegler19 on 10/13/16.
@@ -12,7 +12,13 @@ import edu.usrobotics.opmode.protobot.ProtobotHardware;
 @TeleOp(name="Compbot TeleOp", group="Compbot")
 public class CompbotTele extends RobotOp {
 
+    ElapsedTime time;
+
     CompbotHardware robot = new CompbotHardware();
+
+    boolean aButtonPressedLastTime = false;
+
+    double timeLastPressed;
 
     @Override
     public void init () {
@@ -44,7 +50,9 @@ public class CompbotTele extends RobotOp {
 
         //Harvester
         harvesterInput += gamepad2.right_trigger;
-        harvesterInput -= gamepad2.left_trigger;
+        harvesterInput += gamepad2.left_trigger;
+
+        harvesterInput += (gamepad2.left_bumper ? -1 : 0);
 
         //Shooter
         shooterInput = gamepad2.right_stick_y;
@@ -103,7 +111,44 @@ public class CompbotTele extends RobotOp {
 
         float liftPower = liftInput;
 
-        float shooterPower = shooterInput;
+        float shooterPower = Math.min(shooterInput, 1);
+
+        if(gamepad2.right_trigger <= 0.05){
+
+            if(robot.touchSensor.isPressed() && !gamepad2.a){
+
+                harvesterPower = 0;
+                shooterPower = 0;
+
+            }
+
+            if(gamepad2.a && !aButtonPressedLastTime){
+
+                shooterPower = 1;
+                aButtonPressedLastTime = true;
+                timeLastPressed = time.milliseconds();
+
+            }
+
+            else if(gamepad2.a && aButtonPressedLastTime){
+
+                shooterPower = 1;
+
+                if(time.milliseconds() - timeLastPressed >= 500){
+
+                    harvesterPower = 1;
+
+                }
+
+            }
+
+            else if(gamepad2.a){
+
+                aButtonPressedLastTime = false;
+
+            }
+
+        }
 
         robot.frontRight.setPower(frPower);
         robot.frontLeft.setPower(flPower);
@@ -136,6 +181,8 @@ public class CompbotTele extends RobotOp {
         telemetry.addData("shooterInput", shooterInput);
 
         telemetry.addData("liftInput", liftInput);
+
+        telemetry.addData("buttonPressed", robot.touchSensor.isPressed());
 
     }
 }

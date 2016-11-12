@@ -3,6 +3,7 @@ package edu.usrobotics.opmode.compbot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import edu.usrobotics.opmode.BaseHardware;
 
@@ -23,6 +24,8 @@ public class CompbotHardware extends BaseHardware {
 
     public DcMotor shooterRight;
     public DcMotor shooterLeft;
+
+    public TouchSensor touchSensor;
 
     public boolean frCorrectDirection = false;
     public boolean flCorrectDirection = true;
@@ -54,6 +57,8 @@ public class CompbotHardware extends BaseHardware {
 
         shooterRight = hardwareMap.dcMotor.get("sr");
         shooterLeft = hardwareMap.dcMotor.get("sl");
+
+        touchSensor = hardwareMap.touchSensor.get("ts");
 
         harvester.setDirection(harvesterCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
 

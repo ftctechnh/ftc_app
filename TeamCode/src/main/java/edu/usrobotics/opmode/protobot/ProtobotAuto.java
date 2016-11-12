@@ -137,8 +137,6 @@ public class ProtobotAuto extends RobotOp {
 
         super.loop();
 
-
-
     }
 
 }
