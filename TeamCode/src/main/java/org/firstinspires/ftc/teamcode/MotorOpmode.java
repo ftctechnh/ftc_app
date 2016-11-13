@@ -64,15 +64,16 @@ public class MotorOpmode extends LinearOpMode {
     static final double SHOOT_FIRE = 0.2;       // .3 vertical
 
     static final long SHOOTING_TIME_MS = 1000;   // time required to shoot the ball
+    static final double SHOOTING_POWER = 1;
 
     private ElapsedTime runtime = new ElapsedTime();
     DcMotor leftMotor = null;
     DcMotor rightMotor = null;
+    DcMotor ballMotor = null;
     Servo servoSlicer, servoPusher;
 
-    boolean trappingBall;
-    boolean trapReleased;
-
+    public enum pusherState {OPEN, TRAP, FIRE};
+    pusherState pState;
 
     @Override
     public void runOpMode() {
@@ -80,13 +81,14 @@ public class MotorOpmode extends LinearOpMode {
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
+        ballMotor = hardwareMap.dcMotor.get("ball_motor");
         leftMotor  = hardwareMap.dcMotor.get("left_drive");
         rightMotor = hardwareMap.dcMotor.get("right_drive");
         servoSlicer = hardwareMap.servo.get("ball_slicer");
         servoPusher = hardwareMap.servo.get("ball_pusher");
-
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
         rightMotor.setDirection(DcMotor.Direction.FORWARD);
+        ballMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -95,8 +97,7 @@ public class MotorOpmode extends LinearOpMode {
         // set the shoot open & ball slicer down/default position
         servoPusher.setPosition(SHOOT_OPEN);
         servoSlicer.setPosition(SLICER_DOWN);
-        trappingBall = false;
-        trapReleased = false;
+        pState = pusherState.OPEN;
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -108,61 +109,68 @@ public class MotorOpmode extends LinearOpMode {
             leftMotor.setPower(-gamepad1.left_stick_y);
             rightMotor.setPower(-gamepad1.right_stick_y);
 
-
-            //much of this is unnecessary, but it helps to understand what is happening.
-            if (gamepad1.left_bumper && !trapReleased) {
-                // if the button is pressed and hasn't been released yet
-                trappingBall = true;
-                trapReleased = false;
-            }
-            else if(trappingBall && !gamepad1.left_bumper) {
-                // if currently trapping ball, and the bumper is released
-                trappingBall = true;
-                trapReleased = true;
-            }
-            else if(gamepad1.left_bumper && trapReleased) {
-                // if the bumper was pressed, released, and pressed again, stop trapping ball.
-                trappingBall = false;
-                trapReleased = true;
-            }
-            else {
-                // if the button is not pressed and not trapping ball
-                trappingBall = false;
-                trapReleased = false;
+            //state transitions
+            switch (pState) {
+                case OPEN:
+                    if(gamepad1.left_bumper){
+                        pState = pusherState.TRAP;
+                    }
+                    break;
+                case TRAP:
+                    if(gamepad1.right_bumper){
+                        pState = pusherState.FIRE;
+                    }
+                    else if(gamepad1.left_trigger> 0.5){
+                        pState = pusherState.OPEN;
+                    }
+                    break;
+                default:
+                    telemetry.addData("State Transition", "Error default");
+                    break;
             }
 
+            //motor actions
+            switch (pState) {
+                case OPEN:
+                    servoPusher.setPosition(SHOOT_OPEN);
+                    servoSlicer.setPosition(SLICER_DOWN);
+                    telemetry.addData("State", "OPEN");
+                    break;
+                case TRAP:
+                    servoPusher.setPosition(SHOOT_TRAP);
+                    servoSlicer.setPosition(SLICER_DOWN);
+                    telemetry.addData("State", "TRAP");
+                    break;
+                case FIRE:
+                    leftMotor.setPower(0);      // stop the robot before shooting
+                    rightMotor.setPower(0);
+                    telemetry.addData("State", "FIRE");
+                    telemetry.update();
 
-            if (trappingBall) {
-                // assume the ball is in position, trap it
-                servoPusher.setPosition(SHOOT_TRAP);
-            } else {
-                // the final state, SHOOT_FIRE, is only used when shooting the ball
-                servoPusher.setPosition(SHOOT_OPEN);
+                    // spin up the ball shooter motors
+                    ballMotor.setPower(SHOOTING_POWER/2);
+                    sleep(SHOOTING_TIME_MS/2);
+                    ballMotor.setPower(SHOOTING_POWER);
+
+                    // lift the ball gate
+                    servoSlicer.setPosition(SLICER_UP);
+                    sleep(SHOOTING_TIME_MS);
+                    sleep(SHOOTING_TIME_MS);
+
+                    // push/load the ball
+                    servoPusher.setPosition(SHOOT_FIRE);
+
+                    // waits for the pusher to push the ball before returning to open position
+                    sleep(SHOOTING_TIME_MS);
+                    ballMotor.setPower(0);
+                    //Automatically transition to Open State
+                    pState = pusherState.OPEN;
+                    // no need to reset the motors, just wait for the next opModeIsActive loop iteration
+                    break;
+                default:
+                    break;
             }
-
-
-            if (gamepad1.right_bumper) {
-                trappingBall = false;       // tells robot to stop trapping the ball
-                trapReleased = true;       // will make sure the pusher opens after firing
-                leftMotor.setPower(0);      // stop the robot before shooting
-                rightMotor.setPower(0);
-
-                // spin up the ball shooter motors
-                //
-
-                // lift the ball gate
-                servoSlicer.setPosition(SLICER_UP);
-                sleep(SHOOTING_TIME_MS);
-
-                // push/load the ball
-                servoPusher.setPosition(SHOOT_FIRE);
-
-                // waits for the pusher to push the ball before returning to open position
-                sleep(SHOOTING_TIME_MS);
-                // no need to reset the motors, just wait for the next opModeIsActive loop iteration
-            } else {
-                servoSlicer.setPosition(SLICER_DOWN);
-            }
+            telemetry.update();
 
             idle();     // allow something else to run (aka, release the CPU)
         }
