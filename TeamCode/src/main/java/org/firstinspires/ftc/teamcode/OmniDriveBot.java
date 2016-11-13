@@ -99,11 +99,12 @@ public class OmniDriveBot implements DriveTrainInterface
 
     public void driveStraight(double distanceInches, double degree)
     {
+
         double degToRad = (Math.PI/180) * degree;
         double scalingFactor = (0.157 * Math.sin(3.963 * (degToRad) + 1.755)) + 0.846;
 
         float leftXIn = -(float)Math.sin(degToRad);
-        float leftYIn = -(float)Math.cos(degToRad);
+        float leftYIn = (float)Math.cos(degToRad);
         float fRPower = leftYIn - leftXIn;
         float fLPower = -leftYIn - leftXIn;
         float bRPower = leftYIn + leftXIn;
@@ -114,7 +115,7 @@ public class OmniDriveBot implements DriveTrainInterface
         fL.setPower(fLPower);
         fR.setPower(fRPower);
 
-        double distanceTravel = distanceInches/scalingFactor;
+       double distanceTravel = distanceInches/scalingFactor;
         int fLDistanceEncoders = (int)(Math.abs(fL.getCurrentPosition()) + (distanceTravel*57));
         int fRDistanceEncoders = (int)(Math.abs(fR.getCurrentPosition()) + (distanceTravel*57));
 
@@ -126,7 +127,8 @@ public class OmniDriveBot implements DriveTrainInterface
         bR.setPower(0);
         fL.setPower(0);
         fR.setPower(0);
-    }
+
+     }
 
     public void spin(double degree)
     {

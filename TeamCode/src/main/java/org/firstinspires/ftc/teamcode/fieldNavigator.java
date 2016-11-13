@@ -24,11 +24,11 @@ public class FieldNavigator
     VuforiaTrackables visionTargets;
     VuforiaTrackable wheelsTarget, toolsTarget, legosTarget, gearsTarget;
     VuforiaTrackableDefaultListener wheelsListener, toolsListener, legosListener, gearsListener;
-    OpenGLMatrix lastKnownLocation;
+    OpenGLMatrix lastKnownLocation = null;
     OpenGLMatrix phoneLocation;
     OmniDriveBot robot;
 
-    private double currentX, currentY, currentDeg, wantedX = 305, wantedY = 914, wantedDeg = -90;
+    private double currentX, currentY, currentDeg;
 
     public static final String VUFORIA_KEY = "AepnoMf/////AAAAGWsPSj5vh0WQpMc0OEApBsgbZVwduMSeEZFjXMlBPW7WiZRgwGXsOTLiGMxL4qjU0MYpZitHxs4E/nOUHseMX+SW0oopu6BnWL3cAqFIptSrdMpy4y6yB3N6l+FPcGFZxzadvRoiOfAuYIu5QMHSeulfQ1XApDhBQ79lNUXv9LZ7bngBI3BEYVB+slmTGHKhRW2NI5fUtF+rLRiou4ZcNir2eZh0OxEW4zAnTnciVB2R28yyHkYz8xJtACm+4heWLdpw/zf66LRpvTGLwkASci7ZkGJp4NrG5Of4C0b3+iq/EeEmX2PiY5lq2fkUE0dejdztmkFWYBW7c/Y+bIYGER/3gt6I8UhAB78cR7p2mOaY"; //Key used for Vuforia.
 
@@ -83,11 +83,8 @@ public class FieldNavigator
 
     public void visionTrack()
     {
-        lastKnownLocation = createMatrix(0, 0, 0, 0, 0, 0);
         visionTargets.activate();
-
         // Start tracking the targets
-
         OpenGLMatrix latestLocation = null;
             // Ask the listener for the latest information on where the robot is
             if (wheelsListener.isVisible())
@@ -148,15 +145,16 @@ public class FieldNavigator
 
     public void moveToPosition(double wantedX, double wantedY, double wantedDeg)
     {
+        if (lastKnownLocation == null)
+            return;
+
         double robotDeg = (-1 * currentDeg) + 90;
         if (robotDeg >= 360)
         {
             robotDeg -= 360;
         }
 
-        float difference = (float) (convertMMToIn((wantedX - currentX))); //change in x
-        double wantedOrientation;
-
+        double difference = (convertMMToIn((wantedX - currentX))); //change in x
 
         if (difference < 0)
         { //this means that current x is greater than wanted x, so move robot in -90 deg
@@ -164,8 +162,22 @@ public class FieldNavigator
         }
         else if (difference > 0)
         {
-
+            robot.driveStraight(Math.abs(difference), ((90 * -1) - currentDeg));
         }
+
+        difference = (convertMMToIn(wantedY - currentY)); //change in y
+
+        if (difference < 0) // Means current y is greater than wanted y, so the robot is above, so move down , 0 deg,
+        {
+            robot.driveStraight(Math.abs(difference), (-1* currentDeg));
+        }
+        else if (difference > 0) //move 180 deg
+        {
+            robot.driveStraight(Math.abs(difference), 180 - currentDeg);
+        }
+
+        //spin
+        robot.spin((wantedDeg - currentDeg));
     }
 
     public void updateRobotLocation()
@@ -173,5 +185,20 @@ public class FieldNavigator
         currentX = getXLocation(lastKnownLocation);
         currentY = getYLocation(lastKnownLocation);
         currentDeg = returnAngle(lastKnownLocation);
+    }
+
+    public void setRobotLocation(double x, double y, double angle)
+    {
+
+    }
+
+    public boolean canSeeTarget()
+    {
+        for (short i = 0; i < 5000; i++)
+        {
+            if (wheelsListener.isVisible() || toolsListener.isVisible() || gearsListener.isVisible() || legosListener.isVisible())
+                return true;
+        }
+        return false;
     }
 }
