@@ -36,6 +36,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.RobotLog;
 
+import org.firstinspires.ftc.omegas.HardwareOmegas;
+import org.firstinspires.ftc.omegas.R;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.MatrixF;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -47,10 +49,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.omegas.HardwareOmegas;
-import org.firstinspires.ftc.omegas.R;
-
-import android.content.Context;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,29 +57,29 @@ import java.util.List;
  * This OpMode illustrates the basics of using the Vuforia localizer to determine
  * positioning and orientation of robot on the FTC field.
  * The code is structured as a LinearOpMode
- *
+ * <p>
  * Vuforia uses the phone's camera to inspect it's surroundings, and attempt to locate target images.
- *
+ * <p>
  * When images are located, Vuforia is able to determine the position and orientation of the
  * image relative to the camera.  This sample code than combines that information with a
  * knowledge of where the target images are on the field, to determine the location of the camera.
- *
+ * <p>
  * This example assumes a "diamond" field configuration where the red and blue alliance stations
  * are adjacent on the corner of the field furthest from the audience.
  * From the Audience perspective, the Red driver station is on the right.
  * The two vision target are located on the two walls closest to the audience, facing in.
  * The Stones are on the RED side of the field, and the Chips are on the Blue side.
- *
+ * <p>
  * A final calculation then uses the location of the camera on the robot to determine the
  * robot's location and orientation on the field.
  *
  * @see VuforiaLocalizer
  * @see VuforiaTrackableDefaultListener
  * see  ftc_app/doc/tutorial/FTC_FieldCoordinateSystemDefinition.pdf
- *
+ * <p>
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
- *
+ * <p>
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
@@ -90,11 +88,11 @@ import java.util.List;
 public class OmegasVuforia extends LinearOpMode {
 
     public static final String TAG = "Vuforia Sample";
-    HardwareOmegas Ω   = new HardwareOmegas();   // Use our robot's hardware
+    HardwareOmegas Ω = new HardwareOmegas();   // Use our robot's hardware
 
     // IPS Units
-    static final double     FORWARD_SPEED = 0.6;
-    static final double     TURN_SPEED    = 0.5;
+    static final double FORWARD_SPEED = 0.6;
+    static final double TURN_SPEED = 0.5;
 
     OpenGLMatrix lastLocation = null;
 
@@ -104,7 +102,8 @@ public class OmegasVuforia extends LinearOpMode {
      */
     VuforiaLocalizer vuforia;
 
-    @Override public void runOpMode() {
+    @Override
+    public void runOpMode() {
         /**
          * Start up Vuforia, telling it the id of the view that we wish to use as the parent for
          * the camera monitor feedback; if no camera monitor feedback is desired, use the parameterless
@@ -147,13 +146,13 @@ public class OmegasVuforia extends LinearOpMode {
         VuforiaTrackable wheelsTarget = ftcTrackables.get(0);
         wheelsTarget.setName("WheelsTarget");  // Wheels
 
-        VuforiaTrackable toolsTarget  = ftcTrackables.get(1);
+        VuforiaTrackable toolsTarget = ftcTrackables.get(1);
         toolsTarget.setName("ToolsTarget");  // Tools
 
-        VuforiaTrackable legosTarget  = ftcTrackables.get(2);
+        VuforiaTrackable legosTarget = ftcTrackables.get(2);
         legosTarget.setName("LegosTarget");  // Legos
 
-        VuforiaTrackable gearsTarget  = ftcTrackables.get(3);
+        VuforiaTrackable gearsTarget = ftcTrackables.get(3);
         gearsTarget.setName("GearsTarget");  // Gears
 
         /** For convenience, gather together all the trackable objects in one easily-iterable collection */
@@ -167,9 +166,9 @@ public class OmegasVuforia extends LinearOpMode {
          * You don't *have to* use mm here, but the units here and the units used in the XML
          * target configuration files *must* correspond for the math to work out correctly.
          */
-        float mmPerInch        = 25.4f;
-        float mmBotWidth       = 18 * mmPerInch;            // ... or whatever is right for your robot
-        float mmFTCFieldWidth  = (12*12 - 2) * mmPerInch;   // the FTC field is ~11'10" center-to-center of the glass panels
+        float mmPerInch = 25.4f;
+        float mmBotWidth = 18 * mmPerInch;            // ... or whatever is right for your robot
+        float mmFTCFieldWidth = (12 * 12 - 2) * mmPerInch;   // the FTC field is ~11'10" center-to-center of the glass panels
 
         /**
          * In order for localization to work, we need to tell the system where each target we
@@ -224,7 +223,7 @@ public class OmegasVuforia extends LinearOpMode {
         OpenGLMatrix wheelsTargetLocationOnField = OpenGLMatrix
                 /* Then we translate the target off to the RED WALL. Our translation here
                 is a negative translation in X.*/
-                .translation(-mmFTCFieldWidth/2, 0, 0)
+                .translation(-mmFTCFieldWidth / 2, 0, 0)
                 .multiplied(Orientation.getRotationMatrix(
                         /* First, in the fixed (field) coordinate system, we rotate 90deg in X, then 90 in Z */
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
@@ -235,7 +234,7 @@ public class OmegasVuforia extends LinearOpMode {
         OpenGLMatrix toolsTargetLocationOnField = OpenGLMatrix
                 /* Then we translate the target off to the RED WALL. Our translation here
                 is a negative translation in X.*/
-                .translation(-mmFTCFieldWidth/2, 0, 0)
+                .translation(-mmFTCFieldWidth / 2, 0, 0)
                 .multiplied(Orientation.getRotationMatrix(
                         /* First, in the fixed (field) coordinate system, we rotate 90deg in X, then 90 in Z */
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
@@ -251,7 +250,7 @@ public class OmegasVuforia extends LinearOpMode {
         OpenGLMatrix legosTargetLocationOnField = OpenGLMatrix
                 /* Then we translate the target off to the Blue Audience wall.
                 Our translation here is a positive translation in Y.*/
-                .translation(0, mmFTCFieldWidth/2, 0)
+                .translation(0, mmFTCFieldWidth / 2, 0)
                 .multiplied(Orientation.getRotationMatrix(
                         /* First, in the fixed (field) coordinate system, we rotate 90deg in X */
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
@@ -262,7 +261,7 @@ public class OmegasVuforia extends LinearOpMode {
         OpenGLMatrix gearsTargetLocationOnField = OpenGLMatrix
                 /* Then we translate the target off to the Blue Audience wall.
                 Our translation here is a positive translation in Y.*/
-                .translation(0, mmFTCFieldWidth/2, 0)
+                .translation(0, mmFTCFieldWidth / 2, 0)
                 .multiplied(Orientation.getRotationMatrix(
                         /* First, in the fixed (field) coordinate system, we rotate 90deg in X */
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
@@ -283,7 +282,7 @@ public class OmegasVuforia extends LinearOpMode {
          * plane) is then CCW, as one would normally expect from the usual classic 2D geometry.
          */
         OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
-                .translation(mmBotWidth/2,0,0)
+                .translation(mmBotWidth / 2, 0, 0)
                 .multiplied(Orientation.getRotationMatrix(
                         AxesReference.EXTRINSIC, AxesOrder.YZY,
                         AngleUnit.DEGREES, -90, 0, 0));
@@ -294,10 +293,10 @@ public class OmegasVuforia extends LinearOpMode {
          * listener is a {@link VuforiaTrackableDefaultListener} and can so safely cast because
          * we have not ourselves installed a listener of a different type.
          */
-        ((VuforiaTrackableDefaultListener)wheelsTarget.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
-        ((VuforiaTrackableDefaultListener)toolsTarget.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
-        ((VuforiaTrackableDefaultListener)legosTarget.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
-        ((VuforiaTrackableDefaultListener)gearsTarget.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
+        ((VuforiaTrackableDefaultListener) wheelsTarget.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
+        ((VuforiaTrackableDefaultListener) toolsTarget.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
+        ((VuforiaTrackableDefaultListener) legosTarget.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
+        ((VuforiaTrackableDefaultListener) gearsTarget.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
 
         /**
          * A brief tutorial: here's how all the math is going to work:
@@ -334,9 +333,9 @@ public class OmegasVuforia extends LinearOpMode {
                  * the last time that call was made, or if the trackable is not currently visible.
                  * getRobotLocation() will return null if the trackable is not currently visible.
                  */
-                telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible() ? "Visible" : "Not Visible");
+                telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible() ? "Visible" : "Not Visible");
 
-                OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
+                OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener) trackable.getListener()).getUpdatedRobotLocation();
                 if (robotLocationTransform != null) {
                     lastLocation = robotLocationTransform;
                 }

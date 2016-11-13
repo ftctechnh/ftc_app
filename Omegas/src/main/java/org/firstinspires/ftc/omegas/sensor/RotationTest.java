@@ -10,12 +10,12 @@ import org.firstinspires.ftc.omegas.HardwareOmegas;
  * Created by ethertyper on 10/22/16.
  */
 
-@Autonomous(name="Omegas: Rotation Test", group="Tests")
+@Autonomous(name = "Omegas: Rotation Test", group = "Tests")
 public class RotationTest extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    HardwareOmegas Ω       = new HardwareOmegas();
+    HardwareOmegas Ω = new HardwareOmegas();
 
     @Override
     public void runOpMode() {

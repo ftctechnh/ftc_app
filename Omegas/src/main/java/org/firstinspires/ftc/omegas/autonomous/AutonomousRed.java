@@ -10,5 +10,7 @@ import org.firstinspires.ftc.omegas.OmegasAlliance;
 
 @Autonomous(name = "Omegas: Red Alliance Autonomous Controls", group = "Linear Opmode")
 public class AutonomousRed extends OmegasAutonomous {
-    public OmegasAlliance getColor() { return OmegasAlliance.RED; }
+    public OmegasAlliance getColor() {
+        return OmegasAlliance.RED;
+    }
 }

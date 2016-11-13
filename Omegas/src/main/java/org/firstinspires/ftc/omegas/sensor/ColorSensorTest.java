@@ -1,9 +1,10 @@
 package org.firstinspires.ftc.omegas.sensor;
 
+import android.graphics.Color;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import android.graphics.Color;
 
 import org.firstinspires.ftc.omegas.HardwareOmegas;
 
@@ -11,12 +12,12 @@ import org.firstinspires.ftc.omegas.HardwareOmegas;
  * Created by ethertyper on 10/17/16.
  */
 
-@Autonomous(name="Omegas: Color Sensor Test", group="Tests")
+@Autonomous(name = "Omegas: Color Sensor Test", group = "Tests")
 public class ColorSensorTest extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    HardwareOmegas Ω       = new HardwareOmegas();
+    HardwareOmegas Ω = new HardwareOmegas();
 
     @Override
     public void runOpMode() {
@@ -28,7 +29,7 @@ public class ColorSensorTest extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            telemetry.addData("Color",String.format("Red: %s\nGreen:%s\nBlue:%s\n",
+            telemetry.addData("Color", String.format("Red: %s\nGreen:%s\nBlue:%s\n",
                     Color.red(Ω.leftColorSensor.argb()),
                     Color.green(Ω.leftColorSensor.argb()),
                     Color.blue(Ω.leftColorSensor.argb())));

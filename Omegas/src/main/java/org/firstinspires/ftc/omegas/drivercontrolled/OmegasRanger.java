@@ -16,11 +16,11 @@ public class OmegasRanger extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    HardwareOmegas Ω       = new HardwareOmegas();
+    HardwareOmegas Ω = new HardwareOmegas();
 
     // IPS Units
-    static final double     FORWARD_SPEED = 0.6;
-    static final double     TURN_SPEED    = 0.5;
+    static final double FORWARD_SPEED = 0.6;
+    static final double TURN_SPEED = 0.5;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -40,12 +40,12 @@ public class OmegasRanger extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            for (DcMotor motor: Ω.motors) {
+            for (DcMotor motor : Ω.motors) {
                 motor.setPower(FORWARD_SPEED);
             }
         }
 
-        for (DcMotor motor: Ω.motors) {
+        for (DcMotor motor : Ω.motors) {
             motor.setPower(0.0f);
         }
     }

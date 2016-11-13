@@ -12,46 +12,45 @@ import java.util.ArrayList;
 
 /**
  * This is NOT an opmode.
- *
+ * <p>
  * This class can be used to define all the specific hardware for a single robot.
  * It will be updated to accurately reflect the peripherals and components
  * available on our finished FTC Velocity Vortex robot.
- *
+ * <p>
  * This hardware class assumes the following device names have been configured on the robot:
  * Note:  All names are lower case and some have single spaces between words.
- *
+ * <p>
  * Motor channel:  Left  drive motor:                "left_drive"
  * Motor channel:  Right drive motor:                "right_drive"
  * Servo channel:  Servo to push left beaconator:    "left_beaconator"
  * Servo channel:  Servo to open right beaconator:   "right_beaconator"
  * Color sensor:  Color sensor for left beaconator:  "left_color_sensor"
  * Color sensor:  Color sensor for right beaconator: "right_color_sensor"
- *
+ * <p>
  * (The "beaconators" are our colloquial term for beacon pushers.)
  */
-public class HardwareOmegas
-{
+public class HardwareOmegas {
     /* Public OpMode members. */
-    public ColorSensor  leftColorSensor  = null;
-    public ColorSensor  rightColorSensor = null;
-    public DcMotor      leftFrontMotor   = null;
-    public DcMotor      leftBackMotor    = null;
-    public DcMotor      rightFrontMotor  = null;
-    public DcMotor      rightBackMotor   = null;
-    public Servo        leftBeaconator   = null;
-    public Servo        rightBeaconator  = null;
+    public ColorSensor leftColorSensor = null;
+    public ColorSensor rightColorSensor = null;
+    public DcMotor leftFrontMotor = null;
+    public DcMotor leftBackMotor = null;
+    public DcMotor rightFrontMotor = null;
+    public DcMotor rightBackMotor = null;
+    public Servo leftBeaconator = null;
+    public Servo rightBeaconator = null;
 
     public ArrayList<DcMotor> motors;
-    public Context            appContext;
+    public Context appContext;
 
-    public static final double  MID_SERVO       =    0.5;
-    public static final double  SHOOTER_POWER   =    0.45;
-    public static final double  MS_PER_RADIAN   =  159.15;
-    public static       boolean isExtending     = false;
+    public static final double MID_SERVO = 0.5;
+    public static final double SHOOTER_POWER = 0.45;
+    public static final double MS_PER_RADIAN = 159.15;
+    public static boolean isExtending = false;
 
     /* local OpMode members. */
-    HardwareMap hwMap           = null;
-    private ElapsedTime period  = new ElapsedTime();
+    HardwareMap hwMap = null;
+    private ElapsedTime period = new ElapsedTime();
 
     /* Initialize standard Hardware interfaces */
     public void init(HardwareMap ahwMap) {
@@ -60,12 +59,12 @@ public class HardwareOmegas
         appContext = hwMap.appContext;
 
         // Define and Initialize Motors
-        leftFrontMotor  = hwMap.dcMotor.get("left_front");
-        leftBackMotor   = hwMap.dcMotor.get("left_back");
+        leftFrontMotor = hwMap.dcMotor.get("left_front");
+        leftBackMotor = hwMap.dcMotor.get("left_back");
         rightFrontMotor = hwMap.dcMotor.get("right_front");
-        rightBackMotor  = hwMap.dcMotor.get("right_back");
+        rightBackMotor = hwMap.dcMotor.get("right_back");
 
-        motors = new ArrayList<DcMotor>(){
+        motors = new ArrayList<DcMotor>() {
             {
                 add(leftFrontMotor);
                 add(leftBackMotor);
@@ -98,15 +97,14 @@ public class HardwareOmegas
     }
 
     /**
-     *
      * waitForTick implements a periodic delay. However, this acts like a metronome with a regular
      * periodic tick.  This is used to compensate for varying processing times for each cycle.
      * The function looks at the elapsed cycle time, and sleeps for the remaining time interval.
      *
-     * @param periodMs  Length of wait cycle in mSec.
+     * @param periodMs Length of wait cycle in mSec.
      */
     public void waitForTick(long periodMs) {
-        long  remaining = periodMs - (long)period.milliseconds();
+        long remaining = periodMs - (long) period.milliseconds();
 
         // sleep for the remaining portion of the regular cycle period.
         if (remaining > 0) {
@@ -122,10 +120,9 @@ public class HardwareOmegas
     }
 
     /**
-     *
      * rotate implements a robot rotation using on-robot motors.
      *
-     * @param radians  Angle moved in radians.
+     * @param radians Angle moved in radians.
      */
     public void rotate(double radians) {
         ElapsedTime timePushed = new ElapsedTime();
@@ -140,7 +137,8 @@ public class HardwareOmegas
 
     public void rightBeaconatorSequence(Servo beaconator, long milliseconds) {
         ElapsedTime timePushed = new ElapsedTime();
-        if (isExtending) return; else isExtending = true;
+        if (isExtending) return;
+        else isExtending = true;
 
         while (true) {
             if (timePushed.milliseconds() < milliseconds) {
@@ -157,7 +155,8 @@ public class HardwareOmegas
 
     public void leftBeaconatorSequence(Servo beaconator, long milliseconds) {
         ElapsedTime timePushed = new ElapsedTime();
-        if (isExtending) return; else isExtending = true;
+        if (isExtending) return;
+        else isExtending = true;
 
         while (true) {
             if (timePushed.milliseconds() < milliseconds) {
