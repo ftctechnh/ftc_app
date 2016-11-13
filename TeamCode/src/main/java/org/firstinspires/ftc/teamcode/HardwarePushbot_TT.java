@@ -39,7 +39,7 @@ public class HardwarePushbot_TT
     public DcMotor backLeftMotor = null;
     public DcMotor frontRightMotor = null;
     public DcMotor frontLeftMotor = null;
-
+    public DcMotor armMotor = null;
     public ColorSensor color;    // Hardware Device Object
     public DeviceInterfaceModule cdim;
 
@@ -69,20 +69,20 @@ public class HardwarePushbot_TT
         backRightMotor  = hwMap.dcMotor.get("BackRight");
         color=    hwMap.colorSensor.get("ColorSensor");
         cdim = hwMap.deviceInterfaceModule.get("Device Interface Module 1");
-        //armMotor    = hwMap.dcMotor.get("left_arm");
+        armMotor    = hwMap.dcMotor.get("ArmMotor");
 
         frontLeftMotor.setDirection(DcMotor.Direction.REVERSE); // Set to FORWARD if using AndyMark motors
         backLeftMotor.setDirection(DcMotor.Direction.REVERSE); // Set to FORWARD if using AndyMark motors
         frontRightMotor.setDirection(DcMotor.Direction.FORWARD);// Set to REVERSE if using AndyMark motors
         backRightMotor.setDirection(DcMotor.Direction.FORWARD);// Set to REVERSE if using AndyMark motors
-
+        armMotor.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
         frontLeftMotor.setPower(0);
         backLeftMotor.setPower(0);
         frontRightMotor.setPower(0);
         backRightMotor.setPower(0);
-        //armMotor.setPower(0);
+        armMotor.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -90,8 +90,7 @@ public class HardwarePushbot_TT
         backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        //armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define and initialize ALL installed servos.
         /*leftClaw = hwMap.servo.get("left_hand");

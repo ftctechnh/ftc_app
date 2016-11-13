@@ -126,7 +126,8 @@ public class AutoLeft_1 extends LinearOpMode {
         encoderDrive(TURN_SPEED,   -6, 17, 3.0);  //  Turn Left 12 Inches with 3 Sec timeout (to be figured out)
         encoderDrive(DRIVE_SPEED, 24, 24, 3.0); //  Forward 24 inches with 3 Sec timeout                            CHANGE TO REAL LENGTH
         encoderDrive(PUSH_SPEED, 9, 9, 5.0); //  Forward 24 inches with 3 Sec timeout                            CHANGE TO REAL LENGTH
-        encoderDrive(DRIVE_SPEED, -48, -48, 6.0); //  Reverse 72 inches with 3 Sec timeout CHANGE TO REAL LENGTH
+        encoderDrive(DRIVE_SPEED, -52, -52, 6.0); //  Reverse 72 inches with 3 Sec timeout CHANGE TO REAL LENGTH
+        encoderDrive(TURN_SPEED, 0,-6,3.0); // pivot on the left wheel to push the cap ball away
         //robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
         //robot.rightClaw.setPosition(0.0);
         sleep(1000);     // pause for servos to move

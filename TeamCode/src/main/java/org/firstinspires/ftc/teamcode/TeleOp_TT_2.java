@@ -56,7 +56,7 @@ public class TeleOp_TT_2 extends OpMode {
 
     private double          leftMotorSpeed = 0.0;               // remember what was requested based on joystick position
     private double          rightMotorSpeed = 0.0;               // remember what was requested based on joystick position
-
+    private double          armMotorSpeed = 0.0;
     private double          minimumDeadZone = 0.05;             // adjust this value to increase or descrease the deadzone
     private double          maxMotorSpeed = 0.95;             // adjust this value to set the maximum motor speed, depends on motor type
 
@@ -120,16 +120,18 @@ public class TeleOp_TT_2 extends OpMode {
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
         double left = 0.0;
         double right = 0.0;
+        double arm = 0.0;
 
         left = -gamepad1.left_stick_y;   // (note: The joystick goes negative when pushed forwards, so negate it)
         right = -gamepad1.right_stick_y;
-
+        arm = -gamepad1.right_trigger;
         left = enforceDeadZone(left);   // don't move unless far enought from zero
         right = enforceDeadZone(right);    // because physical 'dead stick' mayn not be seen as zero
-
+        arm = enforceDeadZone(arm);
 
         leftMotorSpeed = left;
         rightMotorSpeed = right;
+        armMotorSpeed = arm;
 
     }
 
@@ -140,7 +142,7 @@ public class TeleOp_TT_2 extends OpMode {
         robot.frontLeftMotor.setPower(leftMotorSpeed);
         robot.backRightMotor.setPower(rightMotorSpeed);
         robot.frontRightMotor.setPower(rightMotorSpeed);
-
+        robot.armMotor.setPower(armMotorSpeed);
     }
 
 
