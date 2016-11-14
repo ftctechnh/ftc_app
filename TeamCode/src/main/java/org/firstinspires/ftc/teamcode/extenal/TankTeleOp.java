@@ -45,7 +45,9 @@ public class TankTeleOp extends OpMode {
 
         //set the power of the motors with the game pad values
         leftMotor.setPower(leftY);
-        leftMotorback.setPower(rightY);
+        leftMotorback.setPower(leftY);
+        rightMotor.setPower(rightY);
+        rightMotorback.setPower(rightY);
     }
     /*
      * Code to run ONCE after the driver hits STOP
