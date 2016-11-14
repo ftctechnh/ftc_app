@@ -2,6 +2,7 @@ package org.firstinspires.ftc.team8745;
 //1120
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -13,7 +14,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Created by some guy "named" 8K Proggramming on 10/30/2016.
  */
 @Autonomous(name="8k Autonomous shooter 1")
-
+//@Disabled
 public class AutonomousWithShooter8K extends LinearOpMode {
     private static final int TICS_PER_REV =1120;
 
