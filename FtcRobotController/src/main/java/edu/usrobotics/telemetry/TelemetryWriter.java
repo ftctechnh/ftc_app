@@ -52,7 +52,7 @@ public class TelemetryWriter {
     public static void stop() {
         for (int i=0; i<writers.length; i++) {
             if (writers[i] != null) {
-                writers[i].stop();
+                //writers[i].stop();
             }
         }
     }
