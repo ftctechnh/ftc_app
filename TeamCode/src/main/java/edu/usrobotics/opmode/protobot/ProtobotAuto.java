@@ -1,24 +1,22 @@
 package edu.usrobotics.opmode.protobot;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import edu.usrobotics.opmode.LoggedOp;
 import edu.usrobotics.opmode.RobotOp;
 import edu.usrobotics.opmode.Route;
 import edu.usrobotics.opmode.task.ConcurrentTaskSet;
 import edu.usrobotics.opmode.task.Goal;
 import edu.usrobotics.opmode.task.MotorTask;
-import edu.usrobotics.opmode.tracker.VuforiaTracker;
 
 /**
  * Created by mborsch19 & dsiegler19 on 10/13/16.
  */
-@Autonomous(name="Protobot Auto", group="Protobot")
-public class ProtobotAuto extends RobotOp {
+public abstract class ProtobotAuto extends RobotOp {
 
     ProtobotHardware robot = new ProtobotHardware();
+    private final boolean isBlueTeam;
+
+    public ProtobotAuto (boolean isBlueTeam) {
+        this.isBlueTeam = isBlueTeam;
+    }
 
     @Override
     public void init () {
@@ -26,7 +24,7 @@ public class ProtobotAuto extends RobotOp {
         robot.init(hardwareMap);
 
 
-        Route happyTrail = new Route();
+        final Route happyTrail = new Route();
 
         robot.setDirection(ProtobotHardware.MovementDirection.NORTH);
 
@@ -65,7 +63,6 @@ public class ProtobotAuto extends RobotOp {
             @Override
             public void onReached() {
                 super.onReached();
-                LoggedOp.debugOut="fsk";
 
                 robot.setDirection(ProtobotHardware.MovementDirection.TURN_RIGHT);
             }
@@ -89,6 +86,103 @@ public class ProtobotAuto extends RobotOp {
             }
         };
 
+        // MOVE TO OTHER BUTTON
+        Goal<Integer> encoderGoal5 = new Goal<> (robot.inchesToEncoderTicks(4.5f));
+        final ConcurrentTaskSet move_to_other_button = new ConcurrentTaskSet(
+                new MotorTask(robot.frontRight, encoderGoal5, null, 0.5f, 0.7f, encoderGoal5, 0.1f),
+                new MotorTask(robot.frontLeft, encoderGoal5, null, 0.5f, 0.7f, encoderGoal5, 0.1f),
+                new MotorTask(robot.backRight, encoderGoal5, null, 0.5f, 0.7f, encoderGoal5, 0.1f),
+                new MotorTask(robot.backLeft, encoderGoal5, null, 0.5f, 0.7f, encoderGoal5, 0.1f)
+        ) {
+            @Override
+            public boolean onExecuted() {
+                return isTaskCompleted (0);
+            }
+
+            @Override
+            public void onReached() {
+                super.onReached();
+
+                robot.setDirection(ProtobotHardware.MovementDirection.SOUTH);
+            }
+        };
+
+        // HIT BUTTON WEST SIDE
+        Goal<Integer> encoderGoal6 = new Goal<> (robot.inchesToEncoderTicks(5));
+        final ConcurrentTaskSet hit_button_west = new ConcurrentTaskSet(
+                new MotorTask(robot.frontRight, encoderGoal6, null, 0.5f, 0.7f, encoderGoal6, 0.1f),
+                new MotorTask(robot.frontLeft, encoderGoal6, null, 0.5f, 0.7f, encoderGoal6, 0.1f),
+                new MotorTask(robot.backRight, encoderGoal6, null, 0.5f, 0.7f, encoderGoal6, 0.1f),
+                new MotorTask(robot.backLeft, encoderGoal6, null, 0.5f, 0.7f, encoderGoal6, 0.1f)
+        ) {
+            @Override
+            public boolean onExecuted() {
+                return isTaskCompleted (0);
+            }
+
+            @Override
+            public void onReached() {
+                super.onReached();
+
+                robot.setDirection(ProtobotHardware.MovementDirection.WEST);
+            }
+        };
+
+        // LEAVE BUTTON WEST SIDE
+        Goal<Integer> encoderGoal8 = new Goal<> (robot.inchesToEncoderTicks(5));
+        final ConcurrentTaskSet leave_button_west = new ConcurrentTaskSet(
+                new MotorTask(robot.frontRight, encoderGoal8, null, 0.5f, 0.7f, encoderGoal8, 0.1f),
+                new MotorTask(robot.frontLeft, encoderGoal8, null, 0.5f, 0.7f, encoderGoal8, 0.1f),
+                new MotorTask(robot.backRight, encoderGoal8, null, 0.5f, 0.7f, encoderGoal8, 0.1f),
+                new MotorTask(robot.backLeft, encoderGoal8, null, 0.5f, 0.7f, encoderGoal8, 0.1f)
+        ) {
+            @Override
+            public boolean onExecuted() {
+                return isTaskCompleted (0);
+            }
+
+            @Override
+            public void onReached() {
+                super.onReached();
+
+                robot.setDirection(ProtobotHardware.MovementDirection.EAST);
+            }
+        };
+
+        // MOVE TO NEXT BEACON
+        Goal<Integer> encoderGoal7 = new Goal<> (robot.inchesToEncoderTicks(48f));
+        final ConcurrentTaskSet move_to_next_beacon = new ConcurrentTaskSet(
+                new MotorTask(robot.frontRight, encoderGoal7, null, 0.5f, 0.7f, encoderGoal7, 0.1f),
+                new MotorTask(robot.frontLeft, encoderGoal7, null, 0.5f, 0.7f, encoderGoal7, 0.1f),
+                new MotorTask(robot.backRight, encoderGoal7, null, 0.5f, 0.7f, encoderGoal7, 0.1f),
+                new MotorTask(robot.backLeft, encoderGoal7, null, 0.5f, 0.7f, encoderGoal7, 0.1f)
+        ) {
+            @Override
+            public boolean onExecuted() {
+                return isTaskCompleted (0);
+            }
+
+            @Override
+            public void onReached() {
+                super.onReached();
+
+                robot.setDirection(ProtobotHardware.MovementDirection.SOUTH);
+            }
+
+            @Override
+            public void onCompleted() {
+                super.onCompleted();
+
+                if (robot.colorSensor.red() > robot.colorSensor.blue() && isBlueTeam) { // If it is red and we are blue move forward
+                    happyTrail.addTask(move_to_other_button);
+                }
+
+                happyTrail.addTask(hit_button_west);
+                happyTrail.addTask(leave_button_west);
+
+            }
+        };
+
         Goal<Integer> encoderGoal4 = new Goal<> (robot.inchesToEncoderTicks(17));
         ConcurrentTaskSet straif1 = new ConcurrentTaskSet(
                 new MotorTask(robot.frontRight, encoderGoal4, null, 0.5f, 0.7f, encoderGoal4, 0.1f),
@@ -106,6 +200,20 @@ public class ProtobotAuto extends RobotOp {
                 super.onReached();
 
                 robot.setDirection(ProtobotHardware.MovementDirection.WEST);
+            }
+
+            @Override
+            public void onCompleted() {
+                super.onCompleted();
+
+                if (robot.colorSensor.red() > robot.colorSensor.blue() && isBlueTeam) { // If it is red and we are blue move forward
+                    happyTrail.addTask(move_to_other_button);
+                }
+
+                happyTrail.addTask(hit_button_west);
+                happyTrail.addTask(leave_button_west);
+                happyTrail.addTask(move_to_next_beacon);
+
             }
         };
 
@@ -130,10 +238,7 @@ public class ProtobotAuto extends RobotOp {
 
     @Override
     public void loop(){
-        telemetry.addData("Red:", robot.colorSensor.red());
-        telemetry.addData("Green:", robot.colorSensor.green());
-        telemetry.addData("Blue:", robot.colorSensor.blue());
-        telemetry.addData("Alpha:", robot.colorSensor.alpha());
+        telemetry.addData("R,G,B", robot.colorSensor.red() + ", " + robot.colorSensor.green() + ", " + robot.colorSensor.blue());
 
         super.loop();
 

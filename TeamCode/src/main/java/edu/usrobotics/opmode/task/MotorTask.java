@@ -4,12 +4,6 @@ import android.support.annotation.Nullable;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import java.util.Objects;
-
-import edu.usrobotics.opmode.LoggedOp;
-import edu.usrobotics.opmode.task.Task;
-import edu.usrobotics.opmode.task.TaskType;
-
 /**
  * Created by Max on 9/18/2016.
  */
@@ -51,10 +45,10 @@ public class MotorTask implements Task {
         float percentRToOne = Math.min(1, Math.max(0, currentPosition / (dampingGoal.getGoal() * ramping)));
 
         return (percentToTarget < ramping ?
-                    Math.max(0.2, power * percentRToOne) : // RAMP UP
+                Math.max(0.2, power * percentRToOne) : // RAMP UP
                 percentToTarget < damping ?
-                    power : // FULL SPED AHED!!11!1
-                Math.max(0.2, power * percentDToZero)); // DAMP DOWN1
+                        power : // FULL SPED AHED!!11!1
+                        Math.max(0.2, power * percentDToZero)); // DAMP DOWN1
     }
 
     @Override
