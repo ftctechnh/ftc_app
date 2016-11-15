@@ -49,7 +49,8 @@ public class PositionChangingVuforia extends LinearOpMode {
         // Start tracking the targets
 
         OpenGLMatrix latestLocation = null;
-        while (opModeIsActive()) {
+        while (opModeIsActive())
+        {
             // Ask the listener for the latest information on where the robot is
             if (wheelsListener.isVisible()) {
                 latestLocation = wheelsListener.getUpdatedRobotLocation();
@@ -80,12 +81,13 @@ public class PositionChangingVuforia extends LinearOpMode {
             telemetry.update();
             telemetry.addData("Angle: " + currentDeg, null);
             telemetry.addData("X:" + convertMMToIn(currentX) + "  Y:" + convertMMToIn(currentY), 00);
-            if (latestLocation != null) {
+            if (latestLocation != null)
+            {
                 lastKnownLocation = latestLocation;
                 updateRobotLocation();
                 idle();
-                //moveToPosition(305, 914, -90);
-                //break;
+                moveToPosition(305, 914, -90);
+                break;
             }
        }
     }
@@ -104,7 +106,7 @@ public class PositionChangingVuforia extends LinearOpMode {
         // Setup the target to be tracked
         wheelsTarget = visionTargets.get(0); // 0 corresponds to the wheels target
         wheelsTarget.setName("Wheels Target");
-        wheelsTarget.setLocation(createMatrix(0, 1981, 32, 90, 0, 90));
+        wheelsTarget.setLocation(createMatrix(0, 2134, 32, 90, 0, 90));
 
         toolsTarget = visionTargets.get(1);
         toolsTarget.setName("Tools Target");
@@ -116,7 +118,7 @@ public class PositionChangingVuforia extends LinearOpMode {
 
         gearsTarget = visionTargets.get(3);
         gearsTarget.setName("Gears Target");
-        gearsTarget.setLocation(createMatrix(1981, 0, 32, 90, 0, 180));
+        gearsTarget.setLocation(createMatrix(2134, 0, 32, 90, 0, 180));
         // Set phone location on robot
         phoneLocation = createMatrix(0, 0, 0, 90, 0, 0);
 
@@ -132,6 +134,8 @@ public class PositionChangingVuforia extends LinearOpMode {
 
         gearsListener = (VuforiaTrackableDefaultListener) gearsTarget.getListener();
         gearsListener.setPhoneInformation(phoneLocation, parameters.cameraDirection);
+
+
     }
 
     // Creates a matrix for determining the locations and orientations of objects
@@ -177,8 +181,6 @@ public class PositionChangingVuforia extends LinearOpMode {
             robotDeg -= 360;
         }
 
-
-
         //First step, make phone face wanted degree
   //      float difference = (float) (convertMMToIn((currentDeg - wantedDeg)));
     /*
@@ -219,18 +221,36 @@ public class PositionChangingVuforia extends LinearOpMode {
         }
 
 */
-        float difference = (float) (convertMMToIn((wantedX - currentX))); //change in x
-        double wantedOrientation;
-
+        double difference = (convertMMToIn((wantedX - currentX))); //change in x
 
         if (difference < 0)
         { //this means that current x is greater than wanted x, so move robot in -90 deg
-           drive.driveStraight(Math.abs(difference), robotDeg);
+         drive.driveStraight(Math.abs(difference), robotDeg);
+      //      telemetry.addData("1. Go forward" + Math.abs(difference) + "inches or " + Math.abs(difference)/24 + " tiles, degrees:" + robotDeg , null);
         }
         else if (difference > 0)
         {
-
+       //     telemetry.addData("1. Go forward" + Math.abs(difference) + "inches or " + Math.abs(difference)/24 + " tiles, degrees:" + ((90 * -1) - currentDeg), null);
+            drive.driveStraight(Math.abs(difference), ((90 * -1) - currentDeg));
         }
+
+        difference = (convertMMToIn(wantedY - currentY));
+        if (difference < 0) // Means current y is greater than wanted y, so the robot is above, so move down , 0 deg,
+        {
+    //        telemetry.addData("2. Go forward" + Math.abs(difference) + "inches or " + Math.abs(difference)/24 + " tiles, degrees:" + ((-1* currentDeg)), null);
+             drive.driveStraight(Math.abs(difference), 180 - currentDeg);
+        }
+        else if (difference > 0) //
+        {
+      //      telemetry.addData("2. Go forward" + Math.abs(difference) + "inches or " + Math.abs(difference)/24 + " tiles, degrees:" + (180 - currentDeg), null);
+            drive.driveStraight(Math.abs(difference), (-1* currentDeg));
+        }
+
+        //spin
+
+        drive.spin((wantedDeg - currentDeg));
+
+        //telemetry.addData("3. Spin " + (wantedDeg - currentDeg), null);
         /*
         difference = (float)(convertMMToIn((currentY - wantedY)));
 
