@@ -12,5 +12,7 @@
     <uses-permission
         android:name="android.permission.CAMERA"
         android:required="true" />
-    <application android:icon="@drawable/icon_xxxhdpi" tools:replace="android:icon"/>
+    <application
+        android:icon="@drawable/icon_xxxhdpi"
+        tools:replace="android:icon" />
 </manifest>
