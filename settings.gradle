@@ -1,2 +1,4 @@
 include ':FtcRobotController'
+include ':opencv-java'
+include ':ftc-visionlib'
 include ':Omegas'

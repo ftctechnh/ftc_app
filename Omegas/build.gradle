@@ -8,8 +8,12 @@
 // please think carefully as to whether such customizations are really necessary
 // before doing so.
 
-
 // Custom definitions may go here
 
 // Include common definitions from above.
 apply from: '../build.common.gradle'
+
+dependencies {
+    compile project(':opencv-java')
+    compile project(':ftc-visionlib')
+}
