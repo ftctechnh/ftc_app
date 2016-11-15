@@ -62,12 +62,12 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-<<<<<<< HEAD
+
 @Autonomous(name="I dont even know.", group="Pushbot")
-=======
-@Autonomous(name="early test", group="Pushbot")
->>>>>>> origin/Invaders
-@Disabled
+
+//@Autonomous(name="early test", group="Pushbot")
+//origin/Invaders
+//@Disabled
 public class Test_opmode_willow extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -118,15 +118,15 @@ public class Test_opmode_willow extends LinearOpMode {
 
 
             // Step 2:  Spin right for 1.3 seconds
-<<<<<<< HEAD
+
             robot.leftMotor.setPower(TURN_SPEED);
             robot.rightMotor.setPower(-TURN_SPEED);
-=======
+
             //robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
             robot.leftMotor.setPower(TURN_SPEED);
             //robot.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
             robot.rightMotor.setPower(TURN_SPEED);
->>>>>>> origin/Invaders
+
             runtime.reset();
             while (opModeIsActive() && (runtime.seconds() < 1.3)) {
                 telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
