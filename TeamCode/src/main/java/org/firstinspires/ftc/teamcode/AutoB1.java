@@ -22,7 +22,9 @@ public class AutoB1 extends AutonomousBase{
       break;
       case 1: //Shoot
         moveState = MoveState.SHOOT;
-        if(getRuntime() - sTime >= 3){gameState = 2;}
+        if(getRuntime() - sTime >= 3){
+          gameState = 2;
+        }
       break;
       case 2: //Move to beacon A push pos.
         map.setGoal(map.getRobotX(),map.getRobotY()+1);
@@ -61,9 +63,9 @@ public class AutoB1 extends AutonomousBase{
           if(touchRight.isPressed()){
             moveState = MoveState.STOP;
             if(true) { //// TODO: 10/26/2016 ADD COLOR LOGIC
-              moveState = MoveState.SERVO_PORT_L;
+              moveState = MoveState.SERVO_L;
             }else{
-              moveState = MoveState.SERVO_PORT_R;
+              moveState = MoveState.SERVO_R;
             }
             
             gameState = 6;
@@ -95,9 +97,9 @@ public class AutoB1 extends AutonomousBase{
           if(touchLeft.isPressed()){
           moveState = MoveState.STOP;
           if(true){//TODO: add color Logic
-            moveState = MoveState.SERVO_PORT_L;
+            moveState = MoveState.SERVO_L;
           }else{
-            moveState = MoveState.SERVO_PORT_R;
+            moveState = MoveState.SERVO_R;
           }
           gameState = 9;
         }

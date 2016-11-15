@@ -27,10 +27,8 @@ public abstract class AutonomousBase extends OpMode {
       public static final int RIGHT = 4;
       public static final int TURN_TOWARDS_GOAL = 5;
       public static final int SHOOT = 6;
-      public static final int SERVO_STARBOARD_R = 7;
-      public static final int SERVO_STARBOARD_L = 8;
-      public static final int SERVO_PORT_R = 9;
-      public static final int SERVO_PORT_L = 10;
+      public static final int SERVO_R = 7;
+      public static final int SERVO_L = 8;
     }
 
 
@@ -42,12 +40,9 @@ public abstract class AutonomousBase extends OpMode {
     DcMotor motorLeftShooter;
     DcMotor motorConveyor;
     Servo servoCollector;
-    Servo servoLeftButton;
     Servo servoRightButton;
     TouchSensor touchRight;
     TouchSensor touchLeft;
-    ColorSensor colorLeft1;
-    ColorSensor colorLeft2;
     ColorSensor colorRight1;
     ColorSensor colorRight2;
     GyroSensor gyro;
@@ -84,16 +79,15 @@ public abstract class AutonomousBase extends OpMode {
         motorConveyor = hardwareMap.dcMotor.get("conveyor");
 
         servoCollector = hardwareMap.servo.get("collector");
-        servoLeftButton = hardwareMap.servo.get("l_button");
         servoRightButton = hardwareMap.servo.get("r_button");
 
         touchRight = hardwareMap.touchSensor.get("right_touch");
         touchLeft = hardwareMap.touchSensor.get("left_touch");
 
-        colorLeft1 = hardwareMap.colorSensor.get("color_left_1");
-        colorLeft2 = hardwareMap.colorSensor.get("color_left_2");
-        colorLeft1.enableLed(false);
-        colorLeft2.enableLed(false);
+        colorRight1 = hardwareMap.colorSensor.get("color_left_1");
+        colorRight2 = hardwareMap.colorSensor.get("color_left_2");
+        colorRight1.enableLed(false);
+        colorRight2.enableLed(false);
 
         gyro = hardwareMap.gyroSensor.get("gyro");
         gyro.calibrate();
@@ -169,17 +163,11 @@ public abstract class AutonomousBase extends OpMode {
                     motorRight.setPower(power);
                 }
                 break;
-            case MoveState.SERVO_STARBOARD_R:
+            case MoveState.SERVO_R:
                 servoRightButton.setPosition(1);
                 break;
-            case MoveState.SERVO_STARBOARD_L:
+            case MoveState.SERVO_L:
                 servoRightButton.setPosition(0);
-                break;
-            case MoveState.SERVO_PORT_R:
-                servoLeftButton.setPosition(1);
-                break;
-            case MoveState.SERVO_PORT_L:
-                servoLeftButton.setPosition(0);
                 break;
             case MoveState.SHOOT:
                 motorLeftShooter.setPower(1);
@@ -221,8 +209,8 @@ public abstract class AutonomousBase extends OpMode {
           map.getRobotY() + ")");
         telemetry.addData("robot theta",heading);
         telemetry.addData("Am I lined up?", linedUp());
-        telemetry.addData("Color Sensor 1 blue", colorLeft1.blue());
-        telemetry.addData("Color Sensor 2 blue", colorLeft2.blue());
+        telemetry.addData("Color Sensor 1 blue", colorRight1.blue());
+        telemetry.addData("Color Sensor 2 blue", colorRight2.blue());
         telemetry.addData("moveState", moveState);
         telemetry.addData("gameState", gameState);
         telemetry.addData("distance_tolerance", DISTANCE_TOLERANCE);

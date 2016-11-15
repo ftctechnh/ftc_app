@@ -40,7 +40,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Demonstrates empty OpMode
  */
 @Autonomous(name = "Concept: NullOp", group = "Concept")
-public class ConceptNullOp extends OpMode {
+public class ConceptNullOp extends AutonomousBase {
 
   private ElapsedTime runtime = new ElapsedTime();
 
