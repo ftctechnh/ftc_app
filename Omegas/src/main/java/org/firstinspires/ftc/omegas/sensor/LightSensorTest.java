@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.omegas.sensor;
 
-import android.graphics.Color;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -13,7 +11,7 @@ import org.firstinspires.ftc.omegas.HardwareOmegas;
  */
 
 @Autonomous(name = "Omegas: Color Sensor Test", group = "Tests")
-public class ColorSensorTest extends LinearOpMode {
+public class LightSensorTest extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -29,10 +27,7 @@ public class ColorSensorTest extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            telemetry.addData("Color", String.format("Red: %s\nGreen:%s\nBlue:%s\n",
-                    Color.red(Ω.leftColorSensor.argb()),
-                    Color.green(Ω.leftColorSensor.argb()),
-                    Color.blue(Ω.leftColorSensor.argb())));
+            telemetry.addData("Data", "Light amount: ", Ω.lineSensor.getLightDetected());
             telemetry.update();
         }
     }

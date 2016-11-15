@@ -12,7 +12,7 @@ import org.lasarobotics.vision.util.ScreenOrientation;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
 
-/*
+/**
  * Created by ethertyper on 11/14/16.
  *
  * Copyright (c) 2015 LASA Robotics and Contributors

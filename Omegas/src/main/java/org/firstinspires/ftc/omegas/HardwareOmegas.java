@@ -5,6 +5,7 @@ import android.content.Context;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -31,8 +32,7 @@ import java.util.ArrayList;
  */
 public class HardwareOmegas {
     /* Public OpMode members. */
-    public ColorSensor leftColorSensor = null;
-    public ColorSensor rightColorSensor = null;
+    public LightSensor lineSensor = null;
     public DcMotor leftFrontMotor = null;
     public DcMotor leftBackMotor = null;
     public DcMotor rightFrontMotor = null;
@@ -83,9 +83,9 @@ public class HardwareOmegas {
         leftBeaconator = hwMap.servo.get("left_beaconator");
         rightBeaconator = hwMap.servo.get("right_beaconator");
 
-//        leftColorSensor = hwMap.colorSensor.get("left_color_sensor");
+//        lineSensor = hwMap.colorSensor.get("left_color_sensor");
 //        rightColorSensor = hwMap.colorSensor.get("right_color_sensor");
-//        leftColorSensor.enableLed(true);
+//        lineSensor.enableLed(true);
 //        rightColorSensor.enableLed(true);
 
         // Set all motors to zero power, and to run without encoders.
