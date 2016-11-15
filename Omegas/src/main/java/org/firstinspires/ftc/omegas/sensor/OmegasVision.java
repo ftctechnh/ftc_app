@@ -20,7 +20,7 @@ import org.opencv.core.Size;
  */
 
 @Autonomous(name = "Omegas: FTC-Vision Test", group = "Tests")
-public class VisionOpMode extends LinearVisionOpMode {
+public class OmegasVision extends LinearVisionOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -35,9 +35,6 @@ public class VisionOpMode extends LinearVisionOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        // Wait for vision to initialize - this should be the first thing you do
-        waitForVisionStart();
-
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
@@ -47,6 +44,11 @@ public class VisionOpMode extends LinearVisionOpMode {
          * step (using the FTC Robot Controller app on the phone).
          */
         Ω.init(hardwareMap);
+
+        // Wait for the game to start and vision to initialize (driver presses PLAY)
+        waitForStart();
+        waitForVisionStart();
+        runtime.reset();
 
         /**
          * Set the camera used for detection
