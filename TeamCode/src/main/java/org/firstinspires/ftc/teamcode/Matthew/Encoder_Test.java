@@ -12,15 +12,15 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  */
 
 public class Encoder_Test {
-    @TeleOp(name = "Matthew TeleOp", group = "Pushbot")
-    @Disabled
+    @TeleOp(name = "Encoder Test", group = "Pushbot")
+    //@Disabled
     public class PushbotTeleopPOV_Linear extends LinearOpMode {
 
         /* Declare OpMode members. */
         HardwarePushbot robot = new HardwarePushbot();   // Use a Pushbot's hardware
         // could also use HardwarePushbotMatrix class.
-        double clawOffset = 0;                       // Servo mid position
-        final double CLAW_SPEED = 0.02;                   // sets rate to move servo
+        //double clawOffset = 0;                       // Servo mid position
+        //final double CLAW_SPEED = 0.02;                   // sets rate to move servo
 
         @Override
         public void runOpMode() throws InterruptedException {
@@ -51,8 +51,8 @@ public class Encoder_Test {
                     int RightEncoderValue = robot.rightMotor.getCurrentPosition();
                     int LeftEncoderValue = robot.leftMotor.getCurrentPosition();
 
-                    telemetry.addData("Say", RightEncoderValue);
-                    telemetry.addData("Say", LeftEncoderValue);
+                    telemetry.addData("RightEnc ", RightEncoderValue);
+                    telemetry.addData("LeftEnc ", LeftEncoderValue);
 
                     sleep(500);
                 }

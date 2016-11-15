@@ -2,7 +2,7 @@ Figure out what's wrong with Willow's opmode. (Woo hoo! There are only 2 errors 
 
 Configure elevator servo as continuous rotation
 
-Map the controller buttons to work with our new motors and servos
+*Map the controller buttons to work with our new motors and servos
 
 Configure the Adafruit color sensor
 
