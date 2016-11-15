@@ -1,28 +1,21 @@
-From 0ac0e23f602289fbbad7fde92ad7214ccedf6695 Mon Sep 17 00:00:00 2001
-From: Eli Joesph Bradley <elijos03@gmail.com>
-Date: Sat, 29 Oct 2016 10:39:55 -0500
-Subject: [PATCH] Tetrix Ranger restrictions
-
-Signed-off-by: Eli Joesph Bradley <elijos03@gmail.com>
----
- .../java/org/firstinspires/ftc/omegas/HardwareOmegas.java  | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/Omegas/src/main/java/org/firstinspires/ftc/omegas/HardwareOmegas.java b/Omegas/src/main/java/org/firstinspires/ftc/omegas/HardwareOmegas.java
-index 60d10be..44ce10b 100644
---- a/Omegas/src/main/java/org/firstinspires/ftc/omegas/HardwareOmegas.java
-+++ b/Omegas/src/main/java/org/firstinspires/ftc/omegas/HardwareOmegas.java
-@@ -56,27 +56,27 @@ public class HardwareOmegas
+Index: Omegas/src/main/java/org/firstinspires/ftc/omegas/HardwareOmegas.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- Omegas/src/main/java/org/firstinspires/ftc/omegas/HardwareOmegas.java	(revision 00bbce4c0eb02b05236724a31e4a754bfcaac4d7)
++++ Omegas/src/main/java/org/firstinspires/ftc/omegas/HardwareOmegas.java	(revision )
+@@ -60,28 +60,28 @@
  
          // Define and Initialize Motors
-         leftFrontMotor  = hwMap.dcMotor.get("left_front");
--        leftBackMotor   = hwMap.dcMotor.get("left_back");
-+//        leftBackMotor   = hwMap.dcMotor.get("left_back");
+         leftFrontMotor = hwMap.dcMotor.get("left_front");
+-        leftBackMotor = hwMap.dcMotor.get("left_back");
++//        leftBackMotor = hwMap.dcMotor.get("left_back");
          rightFrontMotor = hwMap.dcMotor.get("right_front");
--        rightBackMotor  = hwMap.dcMotor.get("right_back");
-+//        rightBackMotor  = hwMap.dcMotor.get("right_back");
+-        rightBackMotor = hwMap.dcMotor.get("right_back");
++//        rightBackMotor = hwMap.dcMotor.get("right_back");
  
-         motors = new ArrayList<DcMotor>(){
+         motors = new ArrayList<DcMotor>() {
              {
                  add(leftFrontMotor);
 -                add(leftBackMotor);
@@ -43,10 +36,9 @@ index 60d10be..44ce10b 100644
          // Connect to servo (Assume PushBot Left Hand)
          // Change the text in quotes to match any servo name on your robot.
 -        leftBeaconator = hwMap.servo.get("left_beaconator");
+-        rightBeaconator = hwMap.servo.get("right_beaconator");
 +//        leftBeaconator = hwMap.servo.get("left_beaconator");
- //        rightBeaconator = hwMap.servo.get("right_beaconator");
++//        rightBeaconator = hwMap.servo.get("right_beaconator");
  
- //        leftColorSensor = hwMap.colorSensor.get("left_color_sensor");
--- 
-2.10.1
-
+         lineSensor = hwMap.lightSensor.get("left_color_sensor");
+         lineSensor.enableLed(true);
