@@ -31,19 +31,11 @@ public class Teleop extends RobotBase {
     protected void driverStationSaysGO() throws InterruptedException
     {
         //Audio Control Variables
-        float lastTimeAudioTogglePressed = 0;
 
         //Normal mode variables
         double leftPower, rightPower;
         boolean backwards = false;
-        ControlMode currentControlMode = ControlMode.NORMAL;
         double lastTimeToggleDirectionPressed = 0;
-
-        //Race Car Mode Variables
-        double raceCarPower = 0;
-
-        //Toggle Variables
-        double lastTimeDriveModeTogglePressed = 0;
 
         //Other motor variables
 
@@ -51,76 +43,30 @@ public class Teleop extends RobotBase {
         while (true)
         {
             /******************** DRIVING CONTROL ********************/
-
-            //Toggle Drive Mode
-            if (gamepad1.x && (System.currentTimeMillis() - lastTimeDriveModeTogglePressed) > 1000)
-            {
-                if (currentControlMode == ControlMode.RACE_CAR)
-                    currentControlMode = ControlMode.NORMAL;
-                else
-                    currentControlMode = ControlMode.RACE_CAR;
-
-                OutputToDriverStation("Swapped to " + currentControlMode.toString() + " control mode after getting X Press");
-
-                lastTimeDriveModeTogglePressed = System.currentTimeMillis();
+            //Driving Toggle
+            if (!backwards)
+            { // Driving forward
+                leftPower = -gamepad1.right_stick_y;
+                rightPower = -gamepad1.left_stick_y;
+            } else
+            { // Driving backward
+                leftPower = gamepad1.left_stick_y;
+                rightPower = gamepad1.right_stick_y;
             }
 
-            //Drive modes.
-            if (currentControlMode == ControlMode.NORMAL)
-            {
-                //Driving Toggle
-                if (!backwards)
-                { // Driving forward
-                    leftPower = -gamepad1.right_stick_y;
-                    rightPower = -gamepad1.left_stick_y;
-                } else
-                { // Driving backward
-                    leftPower = gamepad1.left_stick_y;
-                    rightPower = gamepad1.right_stick_y;
-                }
-
-                // clip the right/left values so that the values never exceed +/- 1
-                rightPower = Range.clip(rightPower, -1, 1);
-                leftPower = Range.clip(leftPower, -1, 1);
+            // clip the right/left values so that the values never exceed +/- 1
+            rightPower = Range.clip(rightPower, -1, 1);
+            leftPower = Range.clip(leftPower, -1, 1);
 
                 // Write the values to the motors.  Scale the robot in order to run the robot more effectively at slower speeds.
-                left.setPower(0.9 * scaleInput(leftPower));
-                right.setPower(0.9 * scaleInput(rightPower));
+            left.setPower(scaleInput(leftPower));
+            right.setPower(scaleInput(rightPower));
 
-                //Wait a second before switching to backwards again (can only toggle once every second).
-                if (gamepad1.back && (System.currentTimeMillis() - lastTimeToggleDirectionPressed) > 1000)
-                {
-                    backwards = !backwards; // Switch driving direction
-                    lastTimeToggleDirectionPressed = System.currentTimeMillis();
-                }
-            }
-            else if (currentControlMode == ControlMode.RACE_CAR)
+            //Wait a second before switching to backwards again (can only toggle once every second).
+            if (gamepad1.back && (System.currentTimeMillis() - lastTimeToggleDirectionPressed) > 1000)
             {
-                //Get the power of the system.
-                raceCarPower = (gamepad1.right_trigger > 0 ? 1 : 0) - (gamepad1.left_trigger > 0 ? 1 : 0);
-
-                double differenceFactor = 0.75 * gamepad1.left_stick_x;
-                double leftPowerR = Range.clip(raceCarPower - differenceFactor, -1, 1);
-                double rightPowerR = Range.clip(raceCarPower + differenceFactor, -1, 1);
-
-                left.setPower(leftPowerR);
-                right.setPower(rightPowerR);
-            }
-
-            /********************* AUDIO CONTROL ************************/
-            if (gamepad1.y && (System.currentTimeMillis() - lastTimeAudioTogglePressed) > 1000)
-            {
-                if (CurrentlyPlayingAudio())
-                {
-                    StopPlayingAudio();
-                    OutputToDriverStation("Got Y toggle, stopped playing audio.");
-                }
-                else
-                {
-                    PlayAudio(DownloadedSongs.values()[(int) (Math.random() * DownloadedSongs.values().length)]);
-                    OutputToDriverStation("Got Y toggle, started playing a new song.");
-                }
-                lastTimeAudioTogglePressed = System.currentTimeMillis();
+                backwards = !backwards; // Switch driving direction
+                lastTimeToggleDirectionPressed = System.currentTimeMillis();
             }
 
             /******************** OTHER MOTORS ********************/

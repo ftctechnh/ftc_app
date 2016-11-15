@@ -97,7 +97,6 @@ public abstract class RobotBase extends LinearOpMode
         catch (InterruptedException e)
         {
             //For some reason, this causes the app to restart.  Have to look into this.  Check SuppressWarnings maybe?
-            StopPlayingAudio(); // HAS TO BE FIRST LINE, otherwise this stops later on than it is supposed to.
             OutputToDriverStation("Driver Station says STOP!");
             driverStationSaysSTOP();
             Thread.currentThread().interrupt();
@@ -111,78 +110,6 @@ public abstract class RobotBase extends LinearOpMode
     protected abstract void driverStationSaysGO() throws InterruptedException;
     //Has to be implemented.
     protected abstract void driverStationSaysSTOP(); //Can't throw InterruptedExceptions, this is why this is here.
-
-
-    /*** USE TO PLAY MUSIC, AND FOR DEBUGGING PURPOSES ***/
-    protected enum DownloadedSongs
-    {
-        JOHN_CENA_INTRO,
-        MISSION_IMPOSSIBLE,
-        RUSSIAN_NATIONAL_ANTHEM
-    }
-
-    private MediaPlayer mediaPlayer = null;
-    protected void PlayAudio(DownloadedSongs choice)
-    {
-        if (mediaPlayer == null)
-        {
-            try
-            {
-                int selectedSong = com.qualcomm.ftcrobotcontroller.R.raw.jcena;
-                switch (choice)
-                {
-                    case JOHN_CENA_INTRO:
-                        selectedSong = com.qualcomm.ftcrobotcontroller.R.raw.jcena;
-                        break;
-                    case MISSION_IMPOSSIBLE:
-                        selectedSong = com.qualcomm.ftcrobotcontroller.R.raw.missionimpossible;
-                        break;
-                    case RUSSIAN_NATIONAL_ANTHEM:
-                        selectedSong = com.qualcomm.ftcrobotcontroller.R.raw.nationalanthem;
-                        break;
-                }
-                mediaPlayer = MediaPlayer.create(hardwareMap.appContext, selectedSong);
-                mediaPlayer.start();
-                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener()
-                {
-                    public void onCompletion(MediaPlayer mediaPlayer1)
-                    {
-                        mediaPlayer1.release();
-                    }
-                });
-
-                OutputToDriverStation("Playing " + choice.toString());
-
-                sleep(1000); //Give the MediaPlayer some time to initialize, and register that a song is being played.
-            } catch (Exception e)
-            {
-                OutputToDriverStation("Error when attempting to play music.");
-                return;
-            }
-        }
-        else
-        {
-            OutputToDriverStation("Cannot play " + choice.toString() + ": already playing music.");
-        }
-    }
-
-    protected boolean CurrentlyPlayingAudio()
-    {
-        return mediaPlayer != null;
-    }
-
-    //Used to make the media player stop playing audio, and also to prevent excess memory allocation from being taken up.
-    protected void StopPlayingAudio()
-    {
-        if (mediaPlayer != null)
-        {
-            if (mediaPlayer.isPlaying())
-                mediaPlayer.stop(); //stop playing
-            mediaPlayer.release(); //prevent resource allocation
-            mediaPlayer = null; //nullify the reference.
-            OutputToDriverStation("Released Media Player");
-        }
-    }
 
     /*** USE TO OUTPUT DATA IN A SLIGHTLY BETTER WAY THAT LINEAR OP MODES HAVE TO ***/
     ArrayList<String> linesAccessible = new ArrayList<>();
