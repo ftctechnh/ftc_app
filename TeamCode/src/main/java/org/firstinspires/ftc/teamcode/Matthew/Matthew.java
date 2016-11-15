@@ -30,13 +30,15 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.teamcode.Matthew;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.LightSensor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 /**
  * This file illustrates the concept of driving a path based on time.
@@ -59,9 +61,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: Auto Drive By Time", group="Pushbot")
+@Autonomous(name="Matthew", group="Pushbot")
 @Disabled
-public class PushbotAutoDriveByTime_Linear extends LinearOpMode {
+public class Matthew extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwarePushbot         robot   = new HardwarePushbot();   // Use a Pushbot's hardware
@@ -81,7 +83,7 @@ public class PushbotAutoDriveByTime_Linear extends LinearOpMode {
         robot.init(hardwareMap);
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Ready to run");    //
+        telemetry.addData("Status", "Ready");    //
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
@@ -94,40 +96,54 @@ public class PushbotAutoDriveByTime_Linear extends LinearOpMode {
         robot.rightMotor.setPower(FORWARD_SPEED);
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 3.0)) {
-            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
             idle();
         }
 
-        // Step 2:  Spin right for 1.3 seconds
+        // Step 2:  Move arm / servos to knock off cap ball
+		//robot.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         robot.leftMotor.setPower(TURN_SPEED);
-        robot.rightMotor.setPower(-TURN_SPEED);
+        robot.rightMotor.setPower(TURN_SPEED);
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 1.3)) {
-            telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
+        while (opModeIsActive() && (runtime.seconds() < 2.2)) {
             idle();
         }
+		//robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // Step 3:  Drive Backwards for 1 Second
-        robot.leftMotor.setPower(-FORWARD_SPEED);
-        robot.rightMotor.setPower(-FORWARD_SPEED);
+		robot.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+		robot.rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        robot.leftMotor.setPower(FORWARD_SPEED);
+        robot.rightMotor.setPower(FORWARD_SPEED);
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 1.0)) {
-            telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
+        while (opModeIsActive() && (runtime.seconds() < 3.0)) {
             idle();
         }
+		//robot.rightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+		//robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // Step 4:  Stop and close the claw.
         robot.leftMotor.setPower(0);
         robot.rightMotor.setPower(0);
-        //robot.leftClaw.setPosition(1.0);
-        //robot.rightClaw.setPosition(0.0);
+        robot.leftClaw.setPosition(0.5);
+        robot.rightClaw.setPosition(0.5);
 
-        telemetry.addData("Path", "Complete");
+        telemetry.addData("Status", "Complete");
         telemetry.update();
         sleep(1000);
         idle();
+
+        robot.leftMotor.setPower(-FORWARD_SPEED);
+        robot.rightMotor.setPower(-FORWARD_SPEED);
+        telemetry.update();
+        sleep(1000);
+        runtime.reset();
+        idle();
+
+
+
     }
+	//robot.rightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+	//robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+
+
 }

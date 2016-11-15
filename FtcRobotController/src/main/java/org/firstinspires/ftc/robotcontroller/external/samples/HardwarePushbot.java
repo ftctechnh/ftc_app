@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.robotcontroller.external.samples;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -26,9 +28,14 @@ public class HardwarePushbot
     /* Public OpMode members. */
     public DcMotor  leftMotor   = null;
     public DcMotor  rightMotor  = null;
-    public DcMotor  armMotor    = null;
+    //public DcMotor  armMotor    = null;
     public Servo    leftClaw    = null;
     public Servo    rightClaw   = null;
+    public CRServo BallElevator    = null;
+    //public DcMotor  LeftBallLauncher   = null;
+    //public DcMotor  RightBallLauncher   = null;
+    public Servo    pusher  = null;
+
 
     public static final double MID_SERVO       =  0.5 ;
     public static final double ARM_UP_POWER    =  0.45 ;
@@ -51,26 +58,42 @@ public class HardwarePushbot
         // Define and Initialize Motors
         leftMotor   = hwMap.dcMotor.get("left_drive");
         rightMotor  = hwMap.dcMotor.get("right_drive");
-        armMotor    = hwMap.dcMotor.get("left_arm");
+        //armMotor    = hwMap.dcMotor.get("left_arm");
+        //RightBallLauncher = hwMap.dcMotor.get("RightLauncher");
+        //LeftBallLauncher = hwMap.dcMotor.get("LeftLauncher");
         leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        //RightBallLauncher.setDirection(DcMotor.Direction.FORWARD);
+        //LeftBallLauncher.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
         leftMotor.setPower(0);
         rightMotor.setPower(0);
-        armMotor.setPower(0);
+        //armMotor.setPower(0);
+        //RightBallLauncher.setPower(0);
+        //LeftBallLauncher.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //RightBallLauncher.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //LeftBallLauncher.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+
+        //// TODO: 11/5/2016 Uncomment the servos when the servo controller is installed again.
         // Define and initialize ALL installed servos.
-        leftClaw = hwMap.servo.get("left_hand");
-        rightClaw = hwMap.servo.get("right_hand");
-        leftClaw.setPosition(MID_SERVO);
-        rightClaw.setPosition(MID_SERVO);
+        //leftClaw = hwMap.servo.get("left_hand");
+        //rightClaw = hwMap.servo.get("right_hand");
+        pusher = hwMap.servo.get("pusher");
+        //pusher = hwMap.servo.get("pusher");
+        //leftClaw.setPosition(MID_SERVO);
+        //rightClaw.setPosition(MID_SERVO);
+        BallElevator = hwMap.crservo.get("BallElevator");
+        //BallElevator.;
+        //pusher.setPosition(0.5);
+
     }
 
     /***

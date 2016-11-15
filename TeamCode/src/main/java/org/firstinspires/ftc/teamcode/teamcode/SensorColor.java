@@ -29,7 +29,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.teamcode;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -37,7 +37,6 @@ import android.view.View;
 
 import com.qualcomm.ftcrobotcontroller.R;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
@@ -52,7 +51,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
-@Autonomous(name = "Sensor: HT color2", group = "Sensor")
+@Autonomous(name = "Sensor: HT color", group = "Sensor")
 //@Disabled
 public class SensorColor extends LinearOpMode {
 

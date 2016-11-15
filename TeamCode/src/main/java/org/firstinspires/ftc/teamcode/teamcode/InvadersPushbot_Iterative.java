@@ -30,41 +30,41 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.teamcode.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.robot.Robot;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
+
+
 /**
- * This file provides basic Telop driving for a Pushbot robot.
+ * This file provides Telop driving for the IfSpace Invaders 2015/16 Pushbot robot.
  * The code is structured as an Iterative OpMode
  *
  * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
- * All device access is managed through the HardwarePushbot class.
+ * Most device access is managed through the HardwarePushbot class.  A touch sensor was added to
+ * limit our robot arm range of motion and is manually connected to the robot during init().
  *
- * This particular OpMode executes a basic Tank Drive Teleop for a PushBot
- * It raises and lowers the claw using the Gampad Y and A buttons respectively.
- * It also opens and closes the claws slowly using the left and right Bumper buttons.
+ * This particular OpMode provides single-thumb navigation of PushBot using the left-thumbstick.
+ * It raises and lowers the claw using the right-thumbstick.
+ * It also opens and closes the claws slowly using the left and right Trigger buttons.
  *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Pushbot: Teleop Tank", group="Pushbot")
-@Disabled
-public class PushbotTeleopTank_Iterative extends OpMode{
+@TeleOp(name="Invaders: Pushbot Teleop", group="Pushbot")
+//@Disabled
+public class InvadersPushbot_Iterative extends OpMode{
 
     /* Declare OpMode members. */
     HardwarePushbot robot       = new HardwarePushbot(); // use the class created to define a Pushbot's hardware
                                                          // could also use HardwarePushbotMatrix class.
     double          clawOffset  = 0.0 ;                  // Servo mid position
     final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
-
+    TouchSensor     limitSwitch;                         // Will be connected to PushBot's Limit Switch
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -76,9 +76,15 @@ public class PushbotTeleopTank_Iterative extends OpMode{
          */
         robot.init(hardwareMap);
 
+        // Connect our limit switch TouchSensor object to the Robot
+        limitSwitch = hardwareMap.touchSensor.get("arm limit");
+        assert(limitSwitch != null);
+
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Hello Driver");    //
+        telemetry.addData("Say", "Uh oh, Matthew's messing with stuff.");
         updateTelemetry(telemetry);
+        robot.leftClaw.setPosition(0.0);
+        robot.rightClaw.setPosition(0.0);
     }
 
     /*
@@ -103,16 +109,23 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         double left;
         double right;
 
-        // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-        left = -gamepad1.left_stick_y;
-        right = -gamepad1.right_stick_y;
+        // Use the left joystick to move the robot forwards/backwards and turn left/right
+        double x = -gamepad1.left_stick_x; // Note: The joystick goes negative when pushed forwards, so negate it
+        double y = -gamepad1.left_stick_y; // Note: The joystick goes negative when pushed right, so negate it
+
+        // Algorithm for setting power to left/right motors based on joystick x/y values
+        // note: The Range.clip function just ensures we stay between Â±100%
+        left = Range.clip(y-x, -1, +1);
+        right = Range.clip(y+x, -1, +1);
+
+        // Call the setPower functions with our calculated values to activate the motors
         robot.leftMotor.setPower(left);
         robot.rightMotor.setPower(right);
 
-        // Use gamepad left & right Bumpers to open and close the claw
-        if (gamepad1.right_bumper)
+        // Use gamepad left & right triggers to open and close the claw
+        if (gamepad1.right_trigger > 0)
             clawOffset += CLAW_SPEED;
-        else if (gamepad1.left_bumper)
+        else if (gamepad1.left_trigger > 0)
             clawOffset -= CLAW_SPEED;
 
         // Move both servos to new position.  Assume servos are mirror image of each other.
@@ -120,10 +133,13 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);
         robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset);
 
-        // Use gamepad buttons to move the arm up (Y) and down (A)
-        if (gamepad1.y)
+        // Read our limit switch to see if the arm is too high
+        boolean limitTriggered = limitSwitch.isPressed();
+
+        // Use right joystick the arm up (as long as our limit switch hasn't been triggered) or down
+        if ((gamepad1.right_stick_y > 0) && !limitTriggered)
             //robot.armMotor.setPower(robot.ARM_UP_POWER);
-        //else if (gamepad1.a)
+        //else if (gamepad1.right_stick_y < 0)
             //robot.armMotor.setPower(robot.ARM_DOWN_POWER);
         //else
             //robot.armMotor.setPower(0.0);
@@ -132,6 +148,7 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         telemetry.addData("claw",  "Offset = %.2f", clawOffset);
         telemetry.addData("left",  "%.2f", left);
         telemetry.addData("right", "%.2f", right);
+        telemetry.addData("switch", "%s", limitTriggered ? "Triggered" : "Open");
         updateTelemetry(telemetry);
     }
 

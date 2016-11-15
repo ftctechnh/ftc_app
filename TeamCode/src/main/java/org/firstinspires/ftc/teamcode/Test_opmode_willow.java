@@ -61,7 +61,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  */
 
 @Autonomous(name="I dont even know.", group="Pushbot")
-//@Disabled
+@Disabled
 public class Test_opmode_willow extends LinearOpMode {
 
     /* Declare OpMode members. */

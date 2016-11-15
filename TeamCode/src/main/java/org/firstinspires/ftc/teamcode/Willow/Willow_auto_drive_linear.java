@@ -30,13 +30,15 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.teamcode.Willow;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -65,9 +67,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: Auto Drive By Encoder", group="Pushbot")
+@Autonomous(name="Willow auto drive linear", group="Pushbot")
 //@Disabled
-public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
+public class Willow_auto_drive_linear extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwarePushbot         robot   = new HardwarePushbot();   // Use a Pushbot's hardware
@@ -112,12 +114,12 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  48,  48, 50.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(DRIVE_SPEED,  53,  53, 5.0);  // S1: Forward 53 Inches with 5 Sec timeout
         encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
         encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
-        //robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
-        //robot.rightClaw.setPosition(0.0);
+        robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
+        robot.rightClaw.setPosition(0.0);
         sleep(1000);     // pause for servos to move
 
         telemetry.addData("Path", "Complete");
