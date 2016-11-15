@@ -92,8 +92,8 @@ public abstract class AutonomousBase extends OpMode {
 
         colorLeft1 = hardwareMap.colorSensor.get("color_left_1");
         colorLeft2 = hardwareMap.colorSensor.get("color_left_2");
-        colorLeft1.enableLed(false);
-        colorLeft2.enableLed(false);
+        colorRight1 = hardwareMap.colorSensor.get("color_right_1");
+        colorRight2 = hardwareMap.colorSensor.get("color_right_2");
 
         gyro = hardwareMap.gyroSensor.get("gyro");
         gyro.calibrate();
@@ -221,8 +221,8 @@ public abstract class AutonomousBase extends OpMode {
           map.getRobotY() + ")");
         telemetry.addData("robot theta",heading);
         telemetry.addData("Am I lined up?", linedUp());
-        telemetry.addData("Color Sensor 1 blue", colorLeft1.blue());
-        telemetry.addData("Color Sensor 2 blue", colorLeft2.blue());
+        telemetry.addData("Colour Sensor Left1", colorLeft1.red()<colorLeft1.blue()?"blue":"red");
+        telemetry.addData("Colour Sensor Left2", colorLeft2.red()<colorLeft2.blue()?"blue":"red");
         telemetry.addData("moveState", moveState);
         telemetry.addData("gameState", gameState);
         telemetry.addData("distance_tolerance", DISTANCE_TOLERANCE);
