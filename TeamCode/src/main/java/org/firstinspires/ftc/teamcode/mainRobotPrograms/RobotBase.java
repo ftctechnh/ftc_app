@@ -61,7 +61,6 @@ public abstract class RobotBase extends LinearOpMode
 
     // Called on initialization (once)
     @Override
-    //@SuppressWarnings("all")
     public void runOpMode()
     {
         //Make sure that the robot components are found and initialized correctly.
@@ -84,8 +83,8 @@ public abstract class RobotBase extends LinearOpMode
         //Kudos Makiah
 
         //Actual program thread
-        try {
-
+        try
+        {
             //Custom Initialization steps.
             driverStationSaysINITIALIZE();
 
@@ -101,7 +100,8 @@ public abstract class RobotBase extends LinearOpMode
             StopPlayingAudio(); // HAS TO BE FIRST LINE, otherwise this stops later on than it is supposed to.
             OutputToDriverStation("Driver Station says STOP!");
             driverStationSaysSTOP();
-            //Thread.currentThread().interrupt();
+            Thread.currentThread().interrupt();
+            return;
         }
     }
 

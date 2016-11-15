@@ -84,8 +84,8 @@ public class Teleop extends RobotBase {
                 leftPower = Range.clip(leftPower, -1, 1);
 
                 // Write the values to the motors.  Scale the robot in order to run the robot more effectively at slower speeds.
-                left.setPower(scaleInput(leftPower));
-                right.setPower(scaleInput(rightPower));
+                left.setPower(0.9 * scaleInput(leftPower));
+                right.setPower(0.9 * scaleInput(rightPower));
 
                 //Wait a second before switching to backwards again (can only toggle once every second).
                 if (gamepad1.back && (System.currentTimeMillis() - lastTimeToggleDirectionPressed) > 1000)
@@ -97,11 +97,11 @@ public class Teleop extends RobotBase {
             else if (currentControlMode == ControlMode.RACE_CAR)
             {
                 //Get the power of the system.
-                raceCarPower = gamepad1.right_trigger - gamepad1.left_trigger;
+                raceCarPower = (gamepad1.right_trigger > 0 ? 1 : 0) - (gamepad1.left_trigger > 0 ? 1 : 0);
 
                 double differenceFactor = 0.75 * gamepad1.left_stick_x;
-                double leftPowerR = 0.25 * raceCarPower - differenceFactor;
-                double rightPowerR = 0.25 * raceCarPower + differenceFactor;
+                double leftPowerR = Range.clip(raceCarPower - differenceFactor, -1, 1);
+                double rightPowerR = Range.clip(raceCarPower + differenceFactor, -1, 1);
 
                 left.setPower(leftPowerR);
                 right.setPower(rightPowerR);
@@ -134,9 +134,9 @@ public class Teleop extends RobotBase {
                 harvester.setPower(0);
 
             //Pusher
-            if (gamepad1.dpad_left)
+            if (gamepad1.left_bumper)
                 pusher.setPower(-.5);
-            else if (gamepad1.dpad_right)
+            else if (gamepad1.right_bumper)
                 pusher.setPower(.5);
             else
                 pusher.setPower(0);
