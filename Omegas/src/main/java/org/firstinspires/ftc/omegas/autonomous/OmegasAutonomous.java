@@ -75,22 +75,6 @@ public abstract class OmegasAutonomous extends LinearOpMode {
             for (DcMotor motor : Ω.motors) {
                 motor.setPower(currentPower);
             }
-
-            /**
-             * The following should, if uncommented, extend beaconators depending
-             * on the colors in front of its two color sensors.
-             */
-
-//             switch (getColor()) {
-//                 case RED:
-//                     pushBeacon(Ω.lineSensor.red(),
-//                             Ω.rightColorSensor.red());
-//                     break;
-//                 case BLUE:
-//                     pushBeacon(Ω.lineSensor.blue(),
-//                             Ω.rightColorSensor.blue());
-//                     break;
-//             }
         }
     }
 
