@@ -61,7 +61,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  */
 
 @Autonomous(name="Matthew", group="Pushbot")
-//@Disabled
+@Disabled
 public class Matthew extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -120,10 +120,10 @@ public class Matthew extends LinearOpMode {
         robot.leftClaw.setPosition(0.5);
         robot.rightClaw.setPosition(0.5);
 
-        /.telemetry.addData("Status", "Complete");
+        telemetry.addData("Status", "Complete");
         telemetry.update();
         sleep(1000);
-        ./idle();
+        idle();
 
         robot.leftMotor.setPower(-FORWARD_SPEED);
         robot.rightMotor.setPower(-FORWARD_SPEED);
