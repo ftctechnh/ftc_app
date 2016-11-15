@@ -14,5 +14,6 @@
         android:required="true" />
     <application
         android:icon="@drawable/icon_xxxhdpi"
-        tools:replace="android:icon" />
+        tools:replace="android:icon"
+        android:allowBackup="true" />
 </manifest>
