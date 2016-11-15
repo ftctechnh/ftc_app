@@ -10,7 +10,7 @@ public interface DriveTrainInterface
     void init(HardwareMap hardwareMap);
     void drive();
     void driveStraight(double Distance, double degrees);
-    void spin(float degree);
+    void spin(double degree);
 }
 
 
