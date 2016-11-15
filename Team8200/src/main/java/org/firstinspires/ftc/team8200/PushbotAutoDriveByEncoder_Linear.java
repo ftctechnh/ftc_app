@@ -80,8 +80,8 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.6;
-    static final double     TURN_SPEED              = 0.6;
+    static final double     DRIVE_SPEED             = 0.3;
+    static final double     TURN_SPEED              = 0.3;
 
     @Override
     public void runOpMode() {
@@ -113,7 +113,14 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
         waitForStart();
 
        // encoderDrive(DRIVE_SPEED,  20,  20, 5.0);
-        rightTurnEqualPower();
+        //
+        DrawF();
+        sleep(5000);
+        leftTurnEqualPower();
+        DrawT();
+        sleep(5000);
+
+        DrawC();
         /*sleep(5000);
         leftTurnEqualPower();
         sleep(5000);
@@ -174,6 +181,8 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
                    (runtime.seconds() < timeoutS) &&
                    (robot.leftMotor.isBusy() && robot.rightMotor.isBusy())) {
 
+
+
                 // Display it for the driver.
                 telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
                 telemetry.addData("Path2",  "Running at %7d :%7d",
@@ -194,11 +203,25 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
         }
     }
 
+    public void servoDown() {
+
+        robot.arm.setPosition(0.9);
+
+
+    }
+
+    public void servoUp() {
+
+        robot.arm.setPosition(0.1);
+
+
+    }
+
     public void rightTurnEqualPower() {
         robot.arm.setPosition(0.1);
-        encoderDrive(DRIVE_SPEED,  8,  8, 5.0);
-        encoderDrive(TURN_SPEED,   -19.5, 19.5, 5.0);
-        encoderDrive(DRIVE_SPEED,   -7,  -7, 5.0);
+        encoderDrive(DRIVE_SPEED,  5,  5, 5.0);
+        encoderDrive(TURN_SPEED,   -4, 4, 5.0);
+        encoderDrive(DRIVE_SPEED,   -5,  -5, 5.0);
         robot.arm.setPosition(0.9);
 
     }
@@ -206,8 +229,8 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
     public void leftTurnEqualPower() {
         robot.arm.setPosition(0.1);
         encoderDrive(DRIVE_SPEED,  5,  5, 5.0);
-        encoderDrive(TURN_SPEED,   18, -18, 4.0);
-        encoderDrive(DRIVE_SPEED,  -15,  -15, 5.0);
+        encoderDrive(TURN_SPEED,   4, -4, 4.0);
+        encoderDrive(DRIVE_SPEED,  -5,  -5, 5.0);
         robot.arm.setPosition(0.9);
 
 
@@ -223,39 +246,34 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
 
     public void DrawF()
     {
-        encoderDrive(DRIVE_SPEED,  20,  20, 5.0);
+        servoDown();
+        encoderDrive(DRIVE_SPEED,  5,  5, 5.0);
         rightTurnEqualPower();
-        encoderDrive(DRIVE_SPEED,  10,  10, 5.0);
-        robot.arm.setPosition(0.1);
-        encoderDrive(DRIVE_SPEED,  -10,  -10, 5.0);
+        encoderDrive(DRIVE_SPEED,  5,  5, 5.0);
+        servoUp();
+        encoderDrive(DRIVE_SPEED,  -5,  -5, 5.0);
         rightTurnEqualPower();
-        encoderDrive(DRIVE_SPEED,  7,  7, 5.0);
+        servoUp();
+        encoderDrive(DRIVE_SPEED,  1,  1, 5.0);
         leftTurnEqualPower();
-            encoderDrive(DRIVE_SPEED, 8, 8, 5.0);
+        encoderDrive(DRIVE_SPEED, 2.5, 2.5, 5.0);
     }
     public void DrawT()
     {
-        encoderDrive(DRIVE_SPEED, 20, 20, 5.0);
-        //servo up
-        rightTurnEqualPower();
-        //servo down
+        servoDown();
         encoderDrive(DRIVE_SPEED, 5, 5, 5.0);
-        encoderDrive(DRIVE_SPEED, -10, -10, 5.0);
+        rightTurnEqualPower();
+        encoderDrive(DRIVE_SPEED, 1.2, 1.2, 5.0);
+        encoderDrive(DRIVE_SPEED, -2.5, -2.5, 5.0);
     }
     public void DrawC()
     {
-        //servo up
-        leftTurnEqualPower();
-        //servo down
-        encoderDrive(DRIVE_SPEED, 20, 20, 5.0);
-        //servo up
+        //leftTurnEqualPower();
+        encoderDrive(DRIVE_SPEED, 5, 5, 5.0);
         rightTurnEqualPower();
-        //servo down
-        encoderDrive(DRIVE_SPEED, 20, 20, 5.0);
-        //servo up
+        encoderDrive(DRIVE_SPEED, 5, 5, 5.0);
         rightTurnEqualPower();
-        //servo down
-        encoderDrive(DRIVE_SPEED, 20, 20, 5.0);
+        encoderDrive(DRIVE_SPEED, 5, 5, 5.0);
 
     }
     public void DrawFTC()
@@ -269,7 +287,7 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
         encoderDrive(DRIVE_SPEED, 15, 15, 5.0);
         leftTurnEqualPower();
         encoderDrive(DRIVE_SPEED, 25, 25, 5.0);
-        //servo down
+        servoDown();
 
         DrawT();
 

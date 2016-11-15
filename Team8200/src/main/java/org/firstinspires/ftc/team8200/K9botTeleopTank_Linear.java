@@ -68,8 +68,10 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        double left;
-        double right;
+        double leftY;
+        double leftX;
+        double rightX;
+        double rightY;
 
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
@@ -87,28 +89,108 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
         while (opModeIsActive()) {
 
             // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-            left = -gamepad1.left_stick_y;
-            right = -gamepad1.right_stick_y;
-            robot.leftMotor.setPower(left);
-            robot.rightMotor.setPower(right);
+            leftY = gamepad1.left_stick_y;
+            rightY = gamepad1.right_stick_y;
+            leftX = Range.clip(leftY, -1, 1);
+            rightY = Range.clip(rightY, -1, 1);
+            leftX = gamepad1.left_stick_x;
+            rightX = gamepad1.right_stick_x;
+            rightX = Range.clip(rightX, -1, 1);
+            leftX = Range.clip(leftX, -1, 1);
 
             /*
+             left = the power x
+             right = the powerx
+            leftup = the power y
+            right up = the power y
+            if(left > 0 || right > 0)
+            {
+            left.motor.setPower(1)
+            rightMotor.setPower(1)
+            }
+            if(left < 0 || right < 0)
+            {
+            left.motor.setPower(-1)
+            rightMotor.setPower(-1)
+            }
+            if(leftup > 0)
+            {
+            LEFTmotor.setPower(leftup)
+            rightMotorsetpOWER(leftUp*-1)
+            }
+            f(rightUp > 0)
+            {
+            rightmotor.setPower(rightUp)
+            leftMotorsetpOWER(rightUp*-1)
+            }
+            if(leftup < 0)
+            {
+            LEFTmotor.setPower(leftup)
+            rightMotorsetpOWER(leftUp*-1)
+            }
+            f(rightUp < 0)
+            {
+            rightmotor.setPower(rightUp)
+            leftMotorsetpOWER(rightUp*-1)
+            }
+                         */
+
+            if(leftY > 0 && rightY >0)
+            {
+                robot.leftMotor.setPower(1);
+                robot.rightMotor.setPower(1)  ;
+            }
+            else if(leftY < 0 && rightY < 0)
+            {
+                robot.leftMotor.setPower(-1);
+                robot.rightMotor.setPower(-1)  ;
+            }
+
+            else if(rightX > 0)
+            {
+                robot.leftMotor.setPower(0.5);
+                robot.rightMotor.setPower(-0.5)  ;
+            }
+            else if(rightX < 0)
+            {
+                robot.leftMotor.setPower(-0.5);
+                robot.rightMotor.setPower(0.5)  ;
+            }
+
+            else if(leftX > 0)
+            {
+                robot.leftMotor.setPower(-0.5);
+                robot.rightMotor.setPower(0.5)  ;
+            }
+            else if(leftX < 0)
+            {
+                robot.leftMotor.setPower(0.5);
+                robot.rightMotor.setPower(-0.5)  ;
+            }
+            else
+            {
+                robot.leftMotor.setPower(0);
+                robot.rightMotor.setPower(0)  ;
+            }
+
+
             // Use gamepad Y & A raise and lower the arm
             if (gamepad1.a)
-                armPosition += ARM_SPEED;
+                armPosition = 0.9;
             else if (gamepad1.y)
-                armPosition -= ARM_SPEED;
+                armPosition = 0.1;
 
             // Use gamepad X & B to open and close the claw
-            if (gamepad1.x)
+            /*if (gamepad1.x)
                 clawPosition += CLAW_SPEED;
             else if (gamepad1.b)
                 clawPosition -= CLAW_SPEED;
+                */
 
             // Move both servos to new position.
             armPosition  = Range.clip(armPosition, robot.ARM_MIN_RANGE, robot.ARM_MAX_RANGE);
             robot.arm.setPosition(armPosition);
-            clawPosition = Range.clip(clawPosition, robot.CLAW_MIN_RANGE, robot.CLAW_MAX_RANGE);
+            /*clawPosition = Range.clip(clawPosition, robot.CLAW_MIN_RANGE, robot.CLAW_MAX_RANGE);
             robot.claw.setPosition(clawPosition);
 
             // Send telemetry message to signify robot running;
@@ -116,8 +198,10 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
             telemetry.addData("claw",  "%.2f", clawPosition);
 
             */
-            telemetry.addData("left",  "%.2f", left);
-            telemetry.addData("right", "%.2f", right);
+            telemetry.addData("leftX",  "%.2f", leftX);
+            telemetry.addData("righXt", "%.2f", rightX);
+            telemetry.addData("leftY",  "%.2f", leftY);
+            telemetry.addData("rightY", "%.2f", rightY);
             telemetry.update();
 
             // Pause for metronome tick.  40 mS each cycle = update 25 times a second.
