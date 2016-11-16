@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -31,6 +32,8 @@ public class Hardware5035 {
     /* Public OpMode members. */
     public DcMotor leftMotor = null;
     public DcMotor rightMotor = null;
+    public DcMotor throwingmotor1 = null;
+    public DcMotor throwingmotor2  = null;
 
 
     /* local OpMode members. */
@@ -48,10 +51,14 @@ public class Hardware5035 {
         hwMap = ahwMap;
 
         // Define and Initialize Motors
+        throwingmotor1 = hwMap.dcMotor.get("throwing motor1");
+        throwingmotor2 = hwMap.dcMotor.get("throwing motor2");
         leftMotor = hwMap.dcMotor.get("left drive");
         rightMotor = hwMap.dcMotor.get("right drive");
         leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        throwingmotor1.setDirection(DcMotor.Direction.FORWARD);
+        throwingmotor2.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
         leftMotor.setPower(0);
@@ -150,7 +157,7 @@ public class Hardware5035 {
 
     public int inchToTickConverter (double inches)
     {
-        return (int) (76.3925 * inches);
+        return (int) (72.858708 * inches);
     }
 
 
@@ -241,6 +248,26 @@ public class Hardware5035 {
         while(rightMotor.getCurrentPosition() < tickR || leftMotor.getCurrentPosition() < tickL) {
             leftMotor.setPower(getPowerForTicksfordrive(tickL - leftMotor.getCurrentPosition()));
             rightMotor.setPower(getPowerForTicksfordrive(tickR - rightMotor.getCurrentPosition()));
+            //waitOneFullHardwareCycle();
+            //telemetry.addData("drive count", String.format("count= %d tickR=%d tickL=%d motorR=%d motorL=%d", count, tickR, tickL, motorRightRemote1.getCurrentPosition(), motorLeftRemote1.getCurrentPosition()));
+            ++count;
+        }
+        //telemetry.addData("drive end", String.format("tickR=%d tickL=%d motorR=%d motorL=%d", tickR, tickL, motorRightRemote1.getCurrentPosition(), motorLeftRemote1.getCurrentPosition()));
+        setDrivePower(0);
+    }
+    public void driveReverse (double inches) throws InterruptedException {
+//12.6
+
+        int multier = 0;
+        Reset_All_Encoders();
+        int ReversetickR = inchToTickConverter(inches);
+        int ReversetickL = inchToTickConverter(inches);
+
+        //telemetry.addData("drive start", String.format("tickR=%d tickL=%d motorR=%d motorL=%d", tickR, tickL, motorRightRemote1.getCurrentPosition(), motorLeftRemote1.getCurrentPosition()));
+        int count = 0;
+        while(rightMotor.getCurrentPosition() < ReversetickR || leftMotor.getCurrentPosition() < ReversetickL) {
+            leftMotor.setPower(-getPowerForTicksfordrive(ReversetickL - leftMotor.getCurrentPosition()));
+            rightMotor.setPower(-getPowerForTicksfordrive(ReversetickL - rightMotor.getCurrentPosition()));
             //waitOneFullHardwareCycle();
             //telemetry.addData("drive count", String.format("count= %d tickR=%d tickL=%d motorR=%d motorL=%d", count, tickR, tickL, motorRightRemote1.getCurrentPosition(), motorLeftRemote1.getCurrentPosition()));
             ++count;

@@ -19,8 +19,16 @@ public class AutoDoubleBeacon extends LinearOpMode {
         Hardware5035 robot = new Hardware5035();
         robot.init(hardwareMap);
         waitForStart();
+        /*
         robot.drive(Distance);
+        robot.driveReverse(Distance);
         telemetry.addData("value of drive", Distance);
-
+        telemetry.update();
+         */
+        while(true) {
+            robot.throwingmotor1.setPower(1);
+            robot.throwingmotor2.setPower(1);
+            idle();
+        }
     }
 }
