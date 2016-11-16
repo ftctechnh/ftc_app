@@ -55,7 +55,8 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  */
 
 @TeleOp(name="Pushbot: Teleop Tank", group="Pushbot")
-@Disabled
+/*@Disabled*/
+/*Commented out @Disable so the opmode shows at the Driver Station*/
 public class TeleopTank_Iterative extends OpMode{
 
     /* Declare OpMode members. */
