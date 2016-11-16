@@ -50,7 +50,8 @@ import com.qualcomm.robotcore.hardware.LightSensor;
 @TeleOp(name = "Sensor: LEGO light", group = "Sensor")
 public class Eaglebot_light extends LinearOpMode {
 
-  LightSensor lightSensor;  // Hardware Device Object
+  LightSensor lightSensorBeacon;  // Hardware Device Object
+  LightSensor lightSensorFloor;
 
   @Override
   public void runOpMode() {
@@ -63,10 +64,12 @@ public class Eaglebot_light extends LinearOpMode {
     boolean bLedOn = true;
 
     // get a reference to our Light Sensor object.
-    lightSensor = hardwareMap.lightSensor.get("sensor_light");
+    lightSensorBeacon = hardwareMap.lightSensor.get("sensor_light_beacon");
+    lightSensorFloor = hardwareMap.lightSensor.get("sensor_light_floor");
 
     // Set the LED state in the beginning.
-    lightSensor.enableLed(bLedOn);
+    lightSensorBeacon.enableLed(bLedOn);
+    lightSensorFloor.enableLed(bLedOn);
 
     // wait for the start button to be pressed.
     waitForStart();
@@ -79,11 +82,12 @@ public class Eaglebot_light extends LinearOpMode {
       bCurrState = gamepad1.x;
 
       // check for button state transitions.
-      if ((bCurrState == true) && (bCurrState != bPrevState))  {
+      if ((bCurrState == true) && (bCurrState != bPrevState)) {
 
         // button is transitioning to a pressed state.  Toggle LED
         bLedOn = !bLedOn;
-        lightSensor.enableLed(bLedOn);
+        lightSensorBeacon.enableLed(bLedOn);
+        lightSensorFloor.enableLed(bLedOn);
       }
 
       // update previous state variable.
@@ -91,8 +95,10 @@ public class Eaglebot_light extends LinearOpMode {
 
       // send the info back to driver station using telemetry function.
       telemetry.addData("LED", bLedOn ? "On" : "Off");
-      telemetry.addData("Raw", lightSensor.getRawLightDetected());
-      telemetry.addData("Normal", lightSensor.getLightDetected());
+      telemetry.addData("Beacon Raw", lightSensorBeacon.getRawLightDetected());
+      telemetry.addData("Beacon Normal", lightSensorBeacon.getLightDetected());
+      telemetry.addData("Floor Normal", lightSensorFloor.getLightDetected());
+      telemetry.addData("Floor Raw", lightSensorFloor.getLightDetected());
 
       telemetry.update();
     }

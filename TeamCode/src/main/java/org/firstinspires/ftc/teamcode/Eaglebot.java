@@ -29,7 +29,8 @@ public class Eaglebot
     public DcMotor frontLeft = null;
     public DcMotor backRight = null;
     public DcMotor backLeft = null;
-    public LightSensor lightSensor = null;
+    public LightSensor lightSensorBeacon = null;
+    public LightSensor lightSensorFloor = null;
 
 
 
@@ -56,7 +57,8 @@ public class Eaglebot
         backLeft = hwMap.dcMotor.get("left_drive2");
         frontRight = hwMap.dcMotor.get("right_drive1");
         backRight = hwMap.dcMotor.get("right_drive2");
-        lightSensor = hwMap.lightSensor.get("light_sensor");
+        lightSensorBeacon = hwMap.lightSensor.get("light_sensor_beacon");
+        lightSensorFloor = hwMap.lightSensor.get ("light_sensor_floor");
 
 
         frontLeft.setDirection(DcMotor.Direction.FORWARD);
