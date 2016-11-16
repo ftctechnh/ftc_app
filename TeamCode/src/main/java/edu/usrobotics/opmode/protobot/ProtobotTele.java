@@ -1,10 +1,9 @@
 package edu.usrobotics.opmode.protobot;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import edu.usrobotics.opmode.LoggedOp;
 import edu.usrobotics.opmode.RobotOp;
 
 /**
@@ -30,6 +29,11 @@ public class ProtobotTele extends RobotOp {
         robot.frontLeft.setDirection(robot.flCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
         robot.backRight.setDirection(robot.brCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
         robot.backLeft.setDirection(robot.blCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
+
+        robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
 
@@ -108,6 +112,35 @@ public class ProtobotTele extends RobotOp {
         //robot.harvester.setPower(harvesterInputs);
 
         //robot.gate.setPosition(gateOpen ? robot.gateOpenedPosition : robot.gateClosedPosition);
+
+        if(gamepad1.a){
+
+            robot.frontRight.setPower(1);
+
+        }
+
+        if(gamepad1.b){
+
+            robot.frontLeft.setPower(1);
+
+        }
+
+        if(gamepad1.x){
+
+            robot.backRight.setPower(1);
+
+        }
+
+        if(gamepad1.y) {
+
+            robot.backLeft.setPower(1);
+
+        }
+
+        telemetry.addData("Front right encoder: ", robot.frontRight.getCurrentPosition());
+        telemetry.addData("Front left encoder: ", robot.frontLeft.getCurrentPosition());
+        telemetry.addData("Back right encoder: ", robot.backRight.getCurrentPosition());
+        telemetry.addData("Back left encoder: ", robot.backLeft.getCurrentPosition());
 
         telemetry.addData("GP1 Right Stick X", gamepad1.right_stick_x);
         telemetry.addData("GP1 Right Stick Y", gamepad1.right_stick_y);

@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  * Created by Max on 11/12/2016.
  */
 
-@Autonomous(name="Protobot Blue", group="Protobot")
+@Autonomous(name="Protobot Auto Blue", group="Protobot")
 public class ProtobotBlue extends ProtobotAuto {
 
     public ProtobotBlue() {

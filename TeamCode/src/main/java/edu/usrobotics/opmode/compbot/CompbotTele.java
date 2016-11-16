@@ -1,6 +1,7 @@
 package edu.usrobotics.opmode.compbot;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -32,6 +33,11 @@ public class CompbotTele extends RobotOp {
         robot.backRight.setDirection(robot.brCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
         robot.backLeft.setDirection(robot.blCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
 
+        robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
     }
 
     @Override
@@ -50,6 +56,7 @@ public class CompbotTele extends RobotOp {
 
         //Harvester
         harvesterInput += gamepad2.right_trigger;
+        harvesterInput += -gamepad2.left_trigger;
         harvesterInput += gamepad2.left_trigger;
 
         harvesterInput += (gamepad2.left_bumper ? -1 : 0);
@@ -113,7 +120,7 @@ public class CompbotTele extends RobotOp {
 
         float shooterPower = Math.min(shooterInput, 1);
 
-        if(gamepad2.right_trigger <= 0.05){
+        /*if(gamepad2.right_trigger <= 0.05){
 
             if(robot.touchSensor.isPressed() && !gamepad2.a){
 
@@ -148,12 +155,36 @@ public class CompbotTele extends RobotOp {
 
             }
 
-        }
+        }*/
 
         robot.frontRight.setPower(frPower);
         robot.frontLeft.setPower(flPower);
         robot.backRight.setPower(brPower);
         robot.backLeft.setPower(blPower);
+
+        if(gamepad1.a){
+
+            robot.frontRight.setPower(1);
+
+        }
+
+        if(gamepad1.b){
+
+            robot.frontLeft.setPower(1);
+
+        }
+
+        if(gamepad1.x){
+
+            robot.backRight.setPower(1);
+
+        }
+
+        if(gamepad1.y){
+
+            robot.backLeft.setPower(1);
+
+        }
 
         robot.harvester.setPower(harvesterPower);
 
@@ -161,6 +192,11 @@ public class CompbotTele extends RobotOp {
         robot.shooterLeft.setPower(shooterPower);
 
         robot.lift.setPower(liftPower);
+
+        telemetry.addData("Front right encoder: ", robot.frontRight.getCurrentPosition());
+        telemetry.addData("Front left encoder: ", robot.frontLeft.getCurrentPosition());
+        telemetry.addData("Back right encoder: ", robot.backRight.getCurrentPosition());
+        telemetry.addData("Back left encoder: ", robot.backLeft.getCurrentPosition());
 
         telemetry.addData("GP1 Right Stick X", gamepad1.right_stick_x);
         telemetry.addData("GP1 Right Stick Y", gamepad1.right_stick_y);
@@ -182,7 +218,7 @@ public class CompbotTele extends RobotOp {
 
         telemetry.addData("liftInput", liftInput);
 
-        telemetry.addData("buttonPressed", robot.touchSensor.isPressed());
+        //telemetry.addData("buttonPressed", robot.touchSensor.isPressed());
 
     }
 }
