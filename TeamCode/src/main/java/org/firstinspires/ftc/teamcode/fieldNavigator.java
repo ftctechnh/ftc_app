@@ -194,7 +194,7 @@ public class FieldNavigator
 
     public boolean canSeeTarget()
     {
-        for (short i = 0; i < 5000; i++)
+        for (short i = 0; i < 10000; i++)
         {
             if (wheelsListener.isVisible() || toolsListener.isVisible() || gearsListener.isVisible() || legosListener.isVisible())
                 return true;
