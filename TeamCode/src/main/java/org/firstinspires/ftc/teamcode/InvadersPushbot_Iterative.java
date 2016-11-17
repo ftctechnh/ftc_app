@@ -177,8 +177,21 @@ public class InvadersPushbot_Iterative extends OpMode{
 
         if (gamepad1.a == true){
             if (limitSwitch.isPressed() == true){
-                
+
             }
+            else {
+                robot.BallElevator.setPower(1);
+                if (limitSwitch.isPressed() == true){
+                    robot.BallElevator.setPower(0);
+                }
+            }
+        }
+
+        if (gamepad1.y == true){
+            robot.BallElevator.setPower(-1);
+        }
+        else {
+            robot.BallElevator.setPower(0);
         }
 
 
