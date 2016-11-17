@@ -7,7 +7,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  */
 
 public class Blue2beacons {@Autonomous(name="getting to the blue beacon #2", group="Pushbot")
-//@Disabled
+@Disabled
 public class redbeaconleft extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -40,7 +40,7 @@ public class redbeaconleft extends LinearOpMode {
     robot.leftMotor.setPower(FORWARD_SPEED);
     robot.rightMotor.setPower(FORWARD_SPEED);
     runtime.reset();
-    while (
+
 
     redbeaconleft() && (runtime.seconds() < 0.5)) {
         telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
