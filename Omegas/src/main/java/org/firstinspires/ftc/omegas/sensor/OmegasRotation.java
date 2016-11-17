@@ -7,11 +7,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.omegas.HardwareOmegas;
 
 /**
- * Created by ethertyper on 10/17/16.
+ * Created by ethertyper on 10/22/16.
  */
 
-@Autonomous(name = "Omegas: Light Sensor Test", group = "Tests")
-public class LightSensorTest extends LinearOpMode {
+@Autonomous(name = "Omegas: Rotation Test", group = "Tests")
+public class OmegasRotation extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -25,10 +25,7 @@ public class LightSensorTest extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        // run until the end of the match (driver presses STOP)
-        while (opModeIsActive()) {
-            telemetry.addData("Data", "Light amount: " + Ω.lineSensor.getLightDetected());
-            telemetry.update();
-        }
+        // Rotate for a clean thirty seconds.
+        Ω.rotate(30000 - runtime.milliseconds());
     }
 }
