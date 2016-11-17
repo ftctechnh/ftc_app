@@ -36,6 +36,7 @@ public class AutonomousWithShooter extends LinearOpMode {
 
     final double kServoNullPosition = 0.5;
     final double kServoRange = 0.4;
+    final double kShooterEnginePower = 1.0;
 
 
     private int ticsForInches(double inches){
@@ -105,8 +106,8 @@ public class AutonomousWithShooter extends LinearOpMode {
         */
 
         // Shoot Loaded Balls
-        shooterRight.setPower(1);
-        shooterLeft.setPower(1);
+        shooterRight.setPower(kShooterEnginePower);
+        shooterLeft.setPower(kShooterEnginePower);
 
         for (int i = 1; i <= 2; i++) {
             shooterServo.setPosition(kServoNullPosition);
