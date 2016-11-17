@@ -23,11 +23,6 @@ public class Teleop extends RobotBase {
     {
     }
 
-    private enum ControlMode
-    {
-        RACE_CAR,
-        NORMAL
-    }
     protected void driverStationSaysGO() throws InterruptedException
     {
         //Audio Control Variables
@@ -67,22 +62,23 @@ public class Teleop extends RobotBase {
             {
                 backwards = !backwards; // Switch driving direction
                 lastTimeToggleDirectionPressed = System.currentTimeMillis();
+                OutputToDriverStation("Toggled drive mode to " + (backwards ? "backwards" : "forwards"));
             }
 
             /******************** OTHER MOTORS ********************/
 
             //Harvester (hopefully just this simple)
-            if (gamepad1.b)
+            if (gamepad2.b)
                 harvester.setPower(-.5);
-            else if (gamepad1.a)
+            else if (gamepad2.x)
                 harvester.setPower(.5);
             else
                 harvester.setPower(0);
 
             //Pusher
-            if (gamepad1.left_bumper)
+            if (gamepad2.dpad_left)
                 pusher.setPower(-.5);
-            else if (gamepad1.right_bumper)
+            else if (gamepad2.dpad_right)
                 pusher.setPower(.5);
             else
                 pusher.setPower(0);

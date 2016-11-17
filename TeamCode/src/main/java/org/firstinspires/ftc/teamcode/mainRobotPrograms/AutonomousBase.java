@@ -41,7 +41,7 @@ public abstract class AutonomousBase extends RobotBase {
         stopMotors();
     }
 
-    private final double MIN_TURN_POWER = .3, MAX_TURN_POWER = 1;
+    private final double MIN_TURN_POWER = .1, MAX_TURN_POWER = .5;
 
     //Used to turn to a specified heading.
     protected void turn(double power, double heading) throws InterruptedException
@@ -135,7 +135,8 @@ public abstract class AutonomousBase extends RobotBase {
         sleep(500);
 
         //Gyroscope turning mechanics.
-        while (System.currentTimeMillis() - startTime < length) {
+        while (System.currentTimeMillis() - startTime < length)
+        {
             if (gyroscope != null)
             {
                 // Get the heading info.
@@ -144,8 +145,8 @@ public abstract class AutonomousBase extends RobotBase {
                 //The gyroscope heading value has to be translated into a useful value.  It currently goes to 359 and then moves down when moving clockwise, and goes up from 0 at moving counter-clockwise.
 
                 //Create values.
-                double leftPower = power + (heading) / (20.0);
-                double rightPower = power - (heading) / (20.0);
+                double leftPower = power + (heading) / (5.0);
+                double rightPower = power - (heading) / (5.0);
 
                 //Clamp values.
                 if (leftPower > 1)
