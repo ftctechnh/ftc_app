@@ -69,9 +69,11 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
     @Override
     public void runOpMode() {
         double leftY;
-        double leftX;
-        double rightX;
+        //double leftX;
+        //double rightX;
         double rightY;
+        double armPosition = 0.2;
+        double armHitPosition = 0.9;
 
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
@@ -91,12 +93,31 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
             // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
             leftY = gamepad1.left_stick_y;
             rightY = gamepad1.right_stick_y;
-            leftX = Range.clip(leftY, -1, 1);
+            //leftX = Range.clip(leftY, -1, 1);
             rightY = Range.clip(rightY, -1, 1);
-            leftX = gamepad1.left_stick_x;
-            rightX = gamepad1.right_stick_x;
-            rightX = Range.clip(rightX, -1, 1);
-            leftX = Range.clip(leftX, -1, 1);
+            leftY = Range.clip(leftY, -1, 1);
+            //leftX = gamepad1.left_stick_x;
+            //rightX = gamepad1.right_stick_x;
+            //rightX = Range.clip(rightX, -1, 1);
+            //leftX = Range.clip(leftX, -1, 1);
+            float harvesterPower = gamepad1.right_trigger;
+            float harvesterPowerReversed = gamepad1.left_trigger;
+
+            if (harvesterPower > 0.2) {
+                robot.harvester.setPower(-0.5);
+            }
+            else if (harvesterPowerReversed > 0.2) {
+                robot.harvester.setPower(-0.5);
+            }
+            /*if (gamepad1.dpad_up) {
+                robot.arm.setPosition(armPosition);
+            }
+            else if(gamepad1.dpad_down) {
+                robot.arm.setPosition(armHitPosition);
+
+            }
+            robot.leftMotor.setPower(leftY);
+            robot.rightMotor.setPower(rightY);
 
             /*
              left = the power x
@@ -135,7 +156,7 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
             }
                          */
 
-            if(leftY > 0 && rightY >0)
+            /*if(leftY > 0 && rightY >0)
             {
                 robot.leftMotor.setPower(1);
                 robot.rightMotor.setPower(1)  ;
@@ -198,8 +219,8 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
             telemetry.addData("claw",  "%.2f", clawPosition);
 
             */
-            telemetry.addData("leftX",  "%.2f", leftX);
-            telemetry.addData("righXt", "%.2f", rightX);
+           // telemetry.addData("leftX",  "%.2f", leftX);
+           // telemetry.addData("righXt", "%.2f", rightX);
             telemetry.addData("leftY",  "%.2f", leftY);
             telemetry.addData("rightY", "%.2f", rightY);
             telemetry.update();
