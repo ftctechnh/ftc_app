@@ -12,7 +12,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
  */
 //@Disabled //For now...
 @TeleOp(name="8K_Tank_NoShooter")
-@Disabled
 
 public class TankDrive extends OpMode{
 

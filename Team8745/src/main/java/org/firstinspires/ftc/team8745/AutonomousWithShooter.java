@@ -14,8 +14,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Created by some guy "named" 8K Proggramming on 10/30/2016.
  */
 @Autonomous(name="8k Autonomous shooter 1")
-@Disabled
-public class AutonomousWithShooter8K extends LinearOpMode {
+//@Disabled
+public class AutonomousWithShooter extends LinearOpMode {
     private static final int TICS_PER_REV =1120;
 
     private double WHEEL_DIAMETER = 4;
@@ -32,14 +32,12 @@ public class AutonomousWithShooter8K extends LinearOpMode {
 
     public ElapsedTime runtime = new ElapsedTime();
 
-    public  int ticks = ticsForInches(60);
+    public int ticks = ticsForInches(60);
 
 
     private int ticsForInches(double inches){
         return (int)((inches*TICS_PER_REV)/(Math.PI*WHEEL_DIAMETER));
     }
-
-
 
 
     // 4 Inches
@@ -52,7 +50,7 @@ public class AutonomousWithShooter8K extends LinearOpMode {
         leftBACK = hardwareMap.dcMotor.get("motor-leftBACK");
         rightBACK = hardwareMap.dcMotor.get("motor-rightBACK");
 
-       //Shooter Motors
+        //Shooter Motors
         shooterLeft = hardwareMap.dcMotor.get("shooter-left");
         shooterRight = hardwareMap.dcMotor.get("shooter-right");
 
@@ -98,8 +96,6 @@ public class AutonomousWithShooter8K extends LinearOpMode {
         shooterLeft.setPower(1);
 
         lifter.setPosition(.75);
-
-
 
         if (leftFRONT.getMode() != DcMotor.RunMode.RUN_TO_POSITION) {
             //Run to posiiton

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.team8745;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -8,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 /**
  * Created by some guy "named" Nintendo8 on 11/6/2016.
  */
+@Disabled
 @TeleOp(name="Katamari One")
 public class Arcade_Drive_Katamari extends OpMode {
     DcMotor leftFRONT;

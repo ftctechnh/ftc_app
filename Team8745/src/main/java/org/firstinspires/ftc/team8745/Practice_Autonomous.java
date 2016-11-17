@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.team8745;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -7,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 /**
  * Created by some guy "named" Nintendo8 on 10/30/2016.
  */
+@Disabled
 @Autonomous(name="Noah's First Autonomous")
 
 public class Practice_Autonomous extends OpMode {

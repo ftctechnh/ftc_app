@@ -24,8 +24,12 @@ public class TankDriveShooter extends OpMode{
     DcMotor rightBACK;
     DcMotor shooterLeft;
     DcMotor shooterRight;
-    Servo darwin;
+    Servo shooterServo;
     long startTime = 0;
+
+    final double kServoNullPosition = 0.5;
+    final double kServoRange = 0.4;
+
     public void init() {
         //Front Motors
         leftFRONT = hardwareMap.dcMotor.get("motor-left");
@@ -39,7 +43,7 @@ public class TankDriveShooter extends OpMode{
         shooterRight = hardwareMap.dcMotor.get("shooter-right");
         shooterLeft = hardwareMap.dcMotor.get("shooter-left");
         //Servos
-        darwin = hardwareMap.servo.get("shooter-servo");
+        shooterServo = hardwareMap.servo.get("shooter-servo");
 
 
         //Reverse Mode
@@ -56,20 +60,24 @@ public class TankDriveShooter extends OpMode{
         rightFRONT.setPower(rightDC);
         leftBACK.setPower(leftDC);
         rightBACK.setPower(rightDC);
-        darwin.setPosition(gamepad1.left_trigger);
+        //shooterServo.setPosition(gamepad1.left_trigger);
         float rightTrigger = gamepad1.right_trigger;
         boolean rightBumperPressed = gamepad1.right_bumper;
+        float leftTrigger = gamepad1.left_trigger;
 
-        telemetry.addData("Servo Position", darwin.getPosition());
+        shooterServo.setPosition((leftTrigger * kServoRange) + kServoNullPosition);
+        //telemetry.addData("Servo Position", shooterServo.getPosition());
 
         if (rightBumperPressed) {
-            shooterLeft.setPower(1);
-            shooterRight.setPower(1);
+            shooterLeft.setPower(1.0);
+            shooterRight.setPower(1.0);
         }
         else {
             shooterRight.setPower(rightTrigger);
             shooterLeft.setPower(rightTrigger);
         }
+
+
 
 
     }
