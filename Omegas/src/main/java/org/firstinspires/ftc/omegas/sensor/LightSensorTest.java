@@ -27,7 +27,7 @@ public class LightSensorTest extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            telemetry.addData("Data", "Light amount: ", Ω.lineSensor.getLightDetected());
+            telemetry.addData("Data", "Light amount: " + Ω.lineSensor.getLightDetected());
             telemetry.update();
         }
     }
