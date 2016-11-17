@@ -58,8 +58,12 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
+
+
+//This opmode lets the driver drive with only one stick. This means that we have a lot of buttons to map to other things.
+
 @TeleOp(name="Invaders: Pushbot Teleop", group="Pushbot")
-@Disabled
+//@Disabled
 public class InvadersPushbot_Iterative extends OpMode{
 
     /* Declare OpMode members. */
@@ -67,7 +71,11 @@ public class InvadersPushbot_Iterative extends OpMode{
                                                          // could also use HardwarePushbotMatrix class.
     double          clawOffset  = 0.0 ;                  // Servo mid position
     final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
-    TouchSensor     limitSwitch;                         // Will be connected to PushBot's Limit Switch
+                             // Will be connected to PushBot's Limit Switch
+    TouchSensor limitSwitch;                         // Will be connected to PushBot's Limit Switch
+
+
+
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -78,16 +86,20 @@ public class InvadersPushbot_Iterative extends OpMode{
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
-
+        limitSwitch = hardwareMap.touchSensor.get("down limit");
+        assert (limitSwitch != null);
         // Connect our limit switch TouchSensor object to the Robot
         limitSwitch = hardwareMap.touchSensor.get("arm limit");
-        assert(limitSwitch != null);
-
+        TouchSensor limitSwitch;
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Uh oh, Matthew's messing with stuff.");
+        //telemetry.addData("Say", "Uh oh, Matthew's messing with stuff.");
         updateTelemetry(telemetry);
         robot.leftClaw.setPosition(0.0);
         robot.rightClaw.setPosition(0.0);
+
+        //assert (limitSwitch != null);
+
+
     }
 
     /*
@@ -153,6 +165,23 @@ public class InvadersPushbot_Iterative extends OpMode{
         telemetry.addData("right", "%.2f", right);
         telemetry.addData("switch", "%s", limitTriggered ? "Triggered" : "Open");
         updateTelemetry(telemetry);
+
+
+        if (gamepad1.x == true){
+            robot.pusher.setPosition(1);
+        }
+
+        if (gamepad1.b == true){
+            robot.pusher.setPosition(0);
+        }
+
+        if (gamepad1.a == true){
+            if (limitSwitch.isPressed() == true){
+                
+            }
+        }
+
+
     }
 
     /*
