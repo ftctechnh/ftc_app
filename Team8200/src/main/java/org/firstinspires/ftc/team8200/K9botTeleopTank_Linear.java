@@ -104,10 +104,25 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
             float harvesterPowerReversed = gamepad1.left_trigger;
 
             if (harvesterPower > 0.2) {
-                robot.harvester.setPower(-0.5);
+                if (gamepad1.right_bumper) {
+                    robot.harvester.setPower(1);
+                }
+                else {
+                    robot.harvester.setPower(0.5);
+                }
             }
             else if (harvesterPowerReversed > 0.2) {
-                robot.harvester.setPower(-0.5);
+                if (gamepad1.right_bumper) {
+                    robot.harvester.setPower(-1);
+                }
+                else {
+                    robot.harvester.setPower(-0.5);
+                }
+            }
+            else {
+
+                robot.harvester.setPower(0);
+
             }
             /*if (gamepad1.dpad_up) {
                 robot.arm.setPosition(armPosition);
