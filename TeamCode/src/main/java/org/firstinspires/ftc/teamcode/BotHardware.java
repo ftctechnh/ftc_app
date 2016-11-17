@@ -55,9 +55,12 @@ public class BotHardware
         rightServo = hw.getServo("servo_right");
 
         try{
-            cdim = opMode.hardwareMap.deviceInterfaceModule.get("dim");
+            //cdim = opMode.hardwareMap.deviceInterfaceModule.get("dim");
             leftSensor = opMode.hardwareMap.colorSensor.get("sensor_left");
             rightSensor = opMode.hardwareMap.colorSensor.get("sensor_right");
+
+            leftSensor.enableLed(false);
+            rightSensor.enableLed(false);
         }
         catch (Exception e) {
             opMode.telemetry.addData("Color sensors failed to load!", "");

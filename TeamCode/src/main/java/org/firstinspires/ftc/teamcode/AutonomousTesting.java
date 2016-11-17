@@ -44,9 +44,9 @@ public class AutonomousTesting extends OpMode {
         //Vuf.init(this, null);     // pass it this OpMode (so it can do telemetry output) and use its license key for now
 
         // create the root Sequence for this autonomous OpMode
-        mSequence = new AutoLib.LinearSequence();
+        //mSequence = new AutoLib.LinearSequence();
 
-        mSequence.add(new AutoLib.TimedServoStep(robot.leftServo, 0.5, 5.0, true));
+        //mSequence.add(new AutoLib.TimedServoStep(robot.leftServo, 0.5, 5.0, true));
 
         // start out not-done
         bDone = false;
@@ -61,12 +61,15 @@ public class AutonomousTesting extends OpMode {
     public void loop() {
 
         // until we're done, keep looping through the current Step(s)
-        if (!bDone)
-            bDone = mSequence.loop();       // returns true when we're done
-        else
-            telemetry.addData("First sequence finished", "");
+        //if (!bDone)
+        //    bDone = mSequence.loop();       // returns true when we're done
+        //else
+        //    telemetry.addData("First sequence finished", "");
 
         //Vuf.loop(true);
+        telemetry.addData("Red", robot.leftSensor.red());
+        telemetry.addData("Blue", robot.leftSensor.blue());
+        telemetry.addData("Green", robot.leftSensor.green());
     }
 
     @Override
