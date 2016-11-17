@@ -105,10 +105,10 @@ public class Willow_Current extends LinearOpMode {
         /*robot.leftMotor.setPower(-FORWARD_SPEED);
         robot.rightMotor.setPower(-FORWARD_SPEED);
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 1.0)) {
+        while (blue1beacons() && (runtime.seconds() < 1.0)) {
             telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
-            idle();*/
+            blue1beacons();*/
 
 
         // Step 2:  Spin right for 1.3 seconds
@@ -126,10 +126,10 @@ public class Willow_Current extends LinearOpMode {
        /* robot.leftMotor.setPower(-FORWARD_SPEED);
         robot.rightMotor.setPower(-FORWARD_SPEED);
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 1.2)) {
+        while (blue1beacons() && (runtime.seconds() < 1.2)) {
             telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
-            idle();
+            blue1beacons();
         }*/
 
         // Step 1:  Drive forward for 2 seconds

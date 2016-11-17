@@ -32,8 +32,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode.Willow;
 
-//// TODO: 11/10/2016 We need to get the encoders and motors wired up again to test this. 
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -52,22 +50,18 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  *   The desired path in this example is:
  *   - Drive forward for 3 seconds
  *   - Spin right for 1.3 seconds
- *   - Drive Backwards for 1 Second
+ *   - Drive Backwards for 1 Second robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
  *   - Stop and close the claw.
  *
  *  The code is written in a simple form with no optimizations.
- *  However, there are several ways that this type of sequence could be streamlined,
+ *  However, there are several ways that this type of sequence could be streamlined, robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
  *
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-
-@Autonomous(name="I dont even know.", group="Pushbot")
-
-//@Autonomous(name="early test", group="Pushbot")
-//origin/Invaders
-//@Disabled
+@Autonomous(name="early test", group="Pushbot")
+@Disabled
 public class Test_opmode_willow extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -118,15 +112,10 @@ public class Test_opmode_willow extends LinearOpMode {
 
 
             // Step 2:  Spin right for 1.3 seconds
-
+            robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
             robot.leftMotor.setPower(TURN_SPEED);
-            robot.rightMotor.setPower(-TURN_SPEED);
-
-            //robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-            robot.leftMotor.setPower(TURN_SPEED);
-            //robot.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+            robot.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
             robot.rightMotor.setPower(TURN_SPEED);
-
             runtime.reset();
             while (opModeIsActive() && (runtime.seconds() < 1.3)) {
                 telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
