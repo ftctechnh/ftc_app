@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.view.View;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.DigitalChannelController;
@@ -12,10 +14,13 @@ import com.qualcomm.robotcore.hardware.DigitalChannelController;
 /**
  * Created by Peter on 11/6/2016.
  */
+
+@TeleOp(name = "ColorSensTest", group = "Test")
 public class AdafruitColorTest extends OpMode
 {
-    private OmniDriveBot robot = new OmniDriveBot();
-    ColorSensor sensorRGB;
+  //  private OmniDriveBot robot = new OmniDriveBot();
+    //ColorSensor sensorRGB;
+    ColorSensor flagColorSensor, beaconColorSensor;
     DeviceInterfaceModule cdim;
     boolean bPrevState;
     boolean bCurrState;
@@ -29,7 +34,7 @@ public class AdafruitColorTest extends OpMode
 
     public void init()
     {
-        robot.init(hardwareMap);
+//        robot.init(hardwareMap);
 
         // get a reference to the RelativeLayout so we can change the background
         // color of the Robot Controller app to match the hue detected by the RGB sensor.
@@ -51,10 +56,11 @@ public class AdafruitColorTest extends OpMode
         cdim.setDigitalChannelMode(LED_CHANNEL, DigitalChannelController.Mode.OUTPUT);
 
         // get a reference to our ColorSensor object.
-        sensorRGB = hardwareMap.colorSensor.get("sensor_color");
-
+        flagColorSensor = hardwareMap.colorSensor.get("flagColorSensor");
+        beaconColorSensor = hardwareMap.colorSensor.get("beaconColorSensor");
         // turn the LED on in the beginning, just so user will know that the sensor is active.
         cdim.setDigitalChannelState(LED_CHANNEL, bLedOn);
+
     }
 
     public void loop()
@@ -73,15 +79,25 @@ public class AdafruitColorTest extends OpMode
         bPrevState = bCurrState;
 
         // convert the RGB values to HSV values.
-        Color.RGBToHSV((sensorRGB.red() * 255) / 800, (sensorRGB.green() * 255) / 800, (sensorRGB.blue() * 255) / 800, hsvValues);
-
+        Color.RGBToHSV((flagColorSensor.red() * 255) / 800, (flagColorSensor.green() * 255) / 800, (flagColorSensor.blue() * 255) / 800, hsvValues);
+        Color.RGBToHSV((beaconColorSensor.red() * 255) / 800, (beaconColorSensor.green() * 255) / 800, (beaconColorSensor.blue() * 255) / 800, hsvValues);
         // send the info back to driver station using telemetry function.
+        telemetry.addData("flagColorSensor:" , null);
         telemetry.addData("LED", bLedOn ? "On" : "Off");
-        telemetry.addData("Clear", sensorRGB.alpha());
-        telemetry.addData("Red  ", sensorRGB.red());
-        telemetry.addData("Green", sensorRGB.green());
-        telemetry.addData("Blue ", sensorRGB.blue());
+        telemetry.addData("Clear", flagColorSensor.alpha());
+        telemetry.addData("Red  ", flagColorSensor.red());
+        telemetry.addData("Green", flagColorSensor.green());
+        telemetry.addData("Blue ", flagColorSensor.blue());
         telemetry.addData("Hue", hsvValues[0]);
+
+        telemetry.addData("beaconColorSensor" , null);
+        telemetry.addData("LED", bLedOn ? "On" : "Off");
+        telemetry.addData("Clear", beaconColorSensor.alpha());
+        telemetry.addData("Red  ", beaconColorSensor.red());
+        telemetry.addData("Green", beaconColorSensor.green());
+        telemetry.addData("Blue ", beaconColorSensor.blue());
+        telemetry.addData("Hue", hsvValues[0]);
+
         telemetry.update();
     }
 }

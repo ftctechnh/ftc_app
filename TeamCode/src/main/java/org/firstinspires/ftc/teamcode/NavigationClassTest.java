@@ -20,6 +20,19 @@ public class NavigationClassTest extends LinearOpMode {
 
         waitForStart();
         robot.driveStraight(48, 120);
+
+        if (navigator.canSeeTarget())
+        {
+            for(short i = 0; i < 10000; i++)
+                navigator.visionTrack();
+        }
+
+        idle(); //idle essentially waits for software to catch up with hardware
+        if (navigator.lastKnownLocation != null)
+        {
+            navigator.moveToPosition(305, 914, -90);
+        }
+
         /*
         while(opModeIsActive())
         {
