@@ -182,7 +182,7 @@ public class Willow_auto_drive_linear extends LinearOpMode {
             robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            //  blue1beacons(250);   // optional pause after each move
+            //  sleep(250);   // optional pause after each move
         }
     }
 }

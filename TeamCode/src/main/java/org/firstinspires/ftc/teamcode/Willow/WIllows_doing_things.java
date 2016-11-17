@@ -30,75 +30,77 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+
+/*
+
 package org.firstinspires.ftc.teamcode.Willow;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 
-@Autonomous(name="getting to the blue beacons ", group="Pushbot")
-//@Disabled
-public class blue1beacons extends LinearOpMode {
+@Autonomous(name="getting to the beacons", group="Pushbot")
+@Disabled
+public class WIllows_doing_things extends LinearOpMode {
 
-    /* Declare OpMode members. */
-    HardwarePushbot robot = new HardwarePushbot();   // Use a Pushbot's hardware
-    private ElapsedTime runtime = new ElapsedTime();
+    /* Declare OpMode members.
+    HardwarePushbot         robot   = new HardwarePushbot();   // Use a Pushbot's hardware
+    private ElapsedTime     runtime = new ElapsedTime();
 
 
-    static final double FORWARD_SPEED = 1.0;
-    static final double TURN_SPEED = 0.5;
+    static final double     FORWARD_SPEED = 1.0;
+    static final double     TURN_SPEED    = 0.5;
 
-    //the software team does all the work here
+     //the software team does all the work here
         /*
          * Initialize the drive system variables.
-         * The init() method of the hardware class does all the work here
-         */
+         * The init() method of the hardware class does all the work h
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() throws InterruptedException {ere
 
-    robot.init(hardwareMap);
+        robot.init(hardwareMap);{
 
-    // Send telemetry message to signify robot waiting
-    telemetry.addData("Status","Ready to run");    //
-    telemetry.update();
-
-    // Wait for the game to start (driver presses PLAY)
-    //blue1beacons();
-
-    // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
-
-    // Step 1:  Drive forward for .5 seconds
-    robot.leftMotor.setPower(FORWARD_SPEED);
-    robot.rightMotor.setPower(FORWARD_SPEED);
-    runtime.reset();
-
-    while (runtime.seconds() < 0.5)
-    {
-        telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+        // Send telemetry message to signify robot waiting;
+        telemetry.addData("Status", "Ready to run");    //
         telemetry.update();
-        idle();
-    }
+
+        // Wait for the game to start (driver presses PLAY)
+        waitForStart();
+
+        // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
+
+        // Step 1:  Drive forward for .5 seconds
+        robot.leftMotor.setPower(FORWARD_SPEED);
+        robot.rightMotor.setPower(FORWARD_SPEED);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 0.5)) {
+            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+            telemetry.update();
+            idle();
+
+        }
 
 // Step 3:  Drive Backwards for 1 Second
         /*robot.leftMotor.setPower(-FORWARD_SPEED);
         robot.rightMotor.setPower(-FORWARD_SPEED);
         runtime.reset();
-        while (blue1beacons() && (runtime.seconds() < 1.0)) {
+        while (opModeIsActive() && (runtime.seconds() < 1.0)) {
             telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
-            blue1beacons();*/
-     // Step 2:  Spin right for 1.0 seconds
-    robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-    encoderDrive(TURN_SPEED, 6, -6, 5); // S2: Turn Right 12 Inches with 4 Sec timeout
-    robot.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-    encoderDrive(TURN_SPEED, -6, 6, 5); // S2: Turn Right 12 Inches with 4 Sec timeout
-        runtime.reset();
-        while (
+            idle();
 
-    redbeaconleft() && (runtime.seconds() < 1.0)) {
+
+        // Step 2:  Spin right for 1.0 seconds
+    robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        robot.leftMotor.setPower(TURN_SPEED);
+    robot.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        robot.rightMotor.setPower(TURN_SPEED);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 1.0)) {
             telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
             idle();
@@ -109,20 +111,18 @@ public class blue1beacons extends LinearOpMode {
        /* robot.leftMotor.setPower(-FORWARD_SPEED);
         robot.rightMotor.setPower(-FORWARD_SPEED);
         runtime.reset();
-        while (blue1beacons() && (runtime.seconds() < 1.2)) {
+        while (opModeIsActive() && (runtime.seconds() < 1.2)) {
             telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
-            blue1beacons();
-        }*/
+            idle();
+        }
         
 
         // Step 1:  Drive forward for 1 second
         robot.leftMotor.setPower(FORWARD_SPEED);
         robot.rightMotor.setPower(FORWARD_SPEED);
         runtime.reset();
-        while (
-
-    redbeaconleft() && (runtime.seconds() < 1.0)) {
+        while (opModeIsActive() && (runtime.seconds() < 1.0)) {
             telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
             idle();
@@ -131,13 +131,11 @@ public class blue1beacons extends LinearOpMode {
 
         // Step 2:  Spin left for 1.3 seconds
     robot.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-    encoderDrive(TURN_SPEED, -6, 6, 5); // S2: Turn Right 12 Inches with 4 Sec timeout
+        robot.leftMotor.setPower(TURN_SPEED);
     robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-    encoderDrive(TURN_SPEED, 6, -6, 5); // S2: Turn Right 12 Inches with 4 Sec timeout
+        robot.rightMotor.setPower(TURN_SPEED);
         runtime.reset();
-        while (
-
-    redbeaconleft() && (runtime.seconds() < 1.3)) {
+        while (opModeIsActive() && (runtime.seconds() < 1.3)) {
             telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
             idle();
@@ -147,24 +145,20 @@ public class blue1beacons extends LinearOpMode {
         robot.leftMotor.setPower(FORWARD_SPEED);
         robot.rightMotor.setPower(FORWARD_SPEED);
         runtime.reset();
-        while (
-
-    redbeaconleft() && (runtime.seconds() < 0.5)) {
+        while (opModeIsActive() && (runtime.seconds() < 0.5)) {
             telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
             idle();
 
         }
 
-        // Step 2:  Spin right for 1.3 secondsrobot.rightMotor.setPower(TURN_SPEED);
+        // Step 2:  Spin right for 1.3 seconds
     robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-    encoderDrive(TURN_SPEED, 6, -6, 5); // S2: Turn Right 12 Inches with 4 Sec timeout
+        robot.leftMotor.setPower(TURN_SPEED);
     robot.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-    encoderDrive(TURN_SPEED, -6, 6, 5); // S2: Turn Right 12 Inches with 4 Sec timeout
+        robot.rightMotor.setPower(TURN_SPEED);
         runtime.reset();
-        while (
-
-    redbeaconleft() && (runtime.seconds() < 1.0)) {
+        while (opModeIsActive() && (runtime.seconds() < 1.0)) {
             telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
             idle();
@@ -174,9 +168,7 @@ public class blue1beacons extends LinearOpMode {
         robot.leftMotor.setPower(FORWARD_SPEED);
         robot.rightMotor.setPower(FORWARD_SPEED);
         runtime.reset();
-        while (
-
-    redbeaconleft() && (runtime.seconds() < 0.2)) {
+        while (opModeIsActive() && (runtime.seconds() < 0.2)) {
             telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
             idle();
@@ -191,7 +183,10 @@ public class blue1beacons extends LinearOpMode {
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
-        redbeaconleft(1000);
-        redbeaconleft();
+        sleep(1000);
+        idle();
     }
 }
+/*
+
+ */
