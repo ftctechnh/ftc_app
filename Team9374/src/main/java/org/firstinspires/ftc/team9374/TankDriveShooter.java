@@ -14,7 +14,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  * Created by some guy "named" Nintendo8 on 11/6/2016.
  */
 @Disabled //For now...
-@TeleOp(name="8K_Tank_Shooter")
+@TeleOp(name="9K_Tank_Drive_Shooter")
 
 public class TankDriveShooter extends OpMode{
 
