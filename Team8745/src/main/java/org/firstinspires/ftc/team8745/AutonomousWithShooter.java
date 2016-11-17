@@ -28,11 +28,14 @@ public class AutonomousWithShooter extends LinearOpMode {
     DcMotor shooterLeft;
     DcMotor shooterRight;
 
-    Servo lifter;
+    Servo shooterServo;
 
     public ElapsedTime runtime = new ElapsedTime();
 
     public int ticks = ticsForInches(60);
+
+    final double kServoNullPosition = 0.5;
+    final double kServoRange = 0.4;
 
 
     private int ticsForInches(double inches){
@@ -55,7 +58,8 @@ public class AutonomousWithShooter extends LinearOpMode {
         shooterRight = hardwareMap.dcMotor.get("shooter-right");
 
         //servos
-        lifter = hardwareMap.servo.get("shooter-servo");
+        shooterServo = hardwareMap.servo.get("shooter-servo");
+
         //Running with encoder
         shooterRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFRONT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -76,10 +80,17 @@ public class AutonomousWithShooter extends LinearOpMode {
         //Shooter directions
         shooterRight.setDirection(DcMotorSimple.Direction.FORWARD);
         shooterLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        //servos
-        lifter.setPosition(1);
+        //servos in Up position
+        shooterServo.setPosition(kServoNullPosition + kServoRange);
 
         runtime.reset();
+    }
+
+    public void waitNSeconds(int secondsToWait) {
+        double startTime = runtime.time();
+        while (runtime.time() - startTime < secondsToWait) {
+
+        }
     }
 
     @Override
@@ -92,10 +103,17 @@ public class AutonomousWithShooter extends LinearOpMode {
             return;
         }
         */
+
+        // Shoot Loaded Balls
         shooterRight.setPower(1);
         shooterLeft.setPower(1);
 
-        lifter.setPosition(.75);
+        for (int i = 1; i <= 2; i++) {
+            shooterServo.setPosition(kServoNullPosition);
+            waitNSeconds(1);
+            shooterServo.setPosition((kServoNullPosition + kServoRange));
+        }
+
 
         if (leftFRONT.getMode() != DcMotor.RunMode.RUN_TO_POSITION) {
             //Run to posiiton
