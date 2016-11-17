@@ -20,15 +20,15 @@ public class AutonomousWithShooter8K extends LinearOpMode {
 
     private double WHEEL_DIAMETER = 4;
 
-    private DcMotor leftFRONT;
-    private DcMotor rightFRONT;
-    private DcMotor leftBACK;
-    private DcMotor rightBACK;
+    DcMotor leftFRONT;
+    DcMotor rightFRONT;
+    DcMotor leftBACK;
+    DcMotor rightBACK;
 
-    private DcMotor shooterLeft;
-    private DcMotor shooterRight;
+    DcMotor shooterLeft;
+    DcMotor shooterRight;
 
-    private Servo lifter;
+    Servo lifter;
 
     public ElapsedTime runtime = new ElapsedTime();
 
