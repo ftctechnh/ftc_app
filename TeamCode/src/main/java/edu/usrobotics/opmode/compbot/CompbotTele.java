@@ -17,9 +17,7 @@ public class CompbotTele extends RobotOp {
 
     CompbotHardware robot = new CompbotHardware();
 
-    boolean aButtonPressedLastTime = false;
-
-    double timeLastPressed;
+    boolean isLiftServoOpen = true;
 
     @Override
     public void init () {
@@ -85,6 +83,19 @@ public class CompbotTele extends RobotOp {
         flInputs += gamepad1.left_stick_x;
         blInputs += gamepad1.left_stick_x;
 
+        //Lift Servo
+        if(gamepad2.dpad_left){
+
+            isLiftServoOpen = true;
+
+        }
+
+        if(gamepad2.dpad_right){
+
+            isLiftServoOpen = false;
+
+        }
+
         DcMotorSimple.Direction frDirection = (frInputs >= 0 ?
                 (robot.frCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE) :
                 (robot.frCorrectDirection ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD));
@@ -120,47 +131,14 @@ public class CompbotTele extends RobotOp {
 
         float shooterPower = Math.min(shooterInput, 1);
 
-        /*if(gamepad2.right_trigger <= 0.05){
-
-            if(robot.touchSensor.isPressed() && !gamepad2.a){
-
-                harvesterPower = 0;
-                shooterPower = 0;
-
-            }
-
-            if(gamepad2.a && !aButtonPressedLastTime){
-
-                shooterPower = 1;
-                aButtonPressedLastTime = true;
-                timeLastPressed = time.milliseconds();
-
-            }
-
-            else if(gamepad2.a && aButtonPressedLastTime){
-
-                shooterPower = 1;
-
-                if(time.milliseconds() - timeLastPressed >= 500){
-
-                    harvesterPower = 1;
-
-                }
-
-            }
-
-            else if(gamepad2.a){
-
-                aButtonPressedLastTime = false;
-
-            }
-
-        }*/
+        double liftServoPosition = (isLiftServoOpen ? robot.liftServoOpenPosition : robot.liftServoClosePosition);
 
         robot.frontRight.setPower(frPower);
         robot.frontLeft.setPower(flPower);
         robot.backRight.setPower(brPower);
         robot.backLeft.setPower(blPower);
+
+        robot.liftServo.setPosition(liftServoPosition);
 
         if(gamepad1.a){
 
@@ -206,6 +184,8 @@ public class CompbotTele extends RobotOp {
         telemetry.addData("GP2 Left Trigger", gamepad2.left_trigger);
         telemetry.addData("GP2 Right Stick Y", gamepad2.right_stick_y);
         telemetry.addData("GP2 Left Stick Y", gamepad2.left_stick_y);
+        telemetry.addData("GP2 DPAD Right", gamepad2.dpad_right);
+        telemetry.addData("GP2 DPAD Left", gamepad2.dpad_left);
 
         telemetry.addData("frInputs", frInputs);
         telemetry.addData("flInputs", flInputs);
@@ -218,7 +198,8 @@ public class CompbotTele extends RobotOp {
 
         telemetry.addData("liftInput", liftInput);
 
-        //telemetry.addData("buttonPressed", robot.touchSensor.isPressed());
+        telemetry.addData("isLiftServoOpen", isLiftServoOpen);
+        telemetry.addData("liftServoPosition", liftServoPosition);
 
     }
 }

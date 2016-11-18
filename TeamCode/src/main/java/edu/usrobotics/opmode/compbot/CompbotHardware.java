@@ -3,6 +3,7 @@ package edu.usrobotics.opmode.compbot;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import edu.usrobotics.opmode.BaseHardware;
 
@@ -24,6 +25,8 @@ public class CompbotHardware extends BaseHardware {
     public DcMotor shooterRight;
     public DcMotor shooterLeft;
 
+    public Servo liftServo;
+
     public ColorSensor colorSensor;
 
     //public TouchSensor touchSensor;
@@ -39,6 +42,9 @@ public class CompbotHardware extends BaseHardware {
 
     public boolean rightShooterCorrectDirection = true;
     public boolean leftShooterCorrectDirection = false;
+
+    public double liftServoClosePosition = 0;
+    public double liftServoOpenPosition = 0.5f;
 
     public float wheelDiameter = 4.0f;
     public float wheelRadius = wheelDiameter / 2f;
@@ -72,6 +78,8 @@ public class CompbotHardware extends BaseHardware {
         shooterRight = hardwareMap.dcMotor.get("sr");
         shooterLeft = hardwareMap.dcMotor.get("sl");
 
+        liftServo = hardwareMap.servo.get("ls");
+
         colorSensor = hardwareMap.colorSensor.get("cs");
 
         //touchSensor = hardwareMap.touchSensor.get("ts");
@@ -82,6 +90,8 @@ public class CompbotHardware extends BaseHardware {
         shooterLeft.setDirection(leftShooterCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
 
         lift.setDirection(liftCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
+
+        liftServo.setPosition(liftServoClosePosition);
 
     }
 
