@@ -30,7 +30,7 @@ public class HardwareK9bot
     public DcMotor  rightMotor  = null;
     public DcMotor harvester = null;
     //public Servo arm;
-    //public Servo    arm         = null;
+    public Servo    arm         = null;
     /*
     public Servo    claw        = null;*/
 
@@ -58,7 +58,7 @@ public class HardwareK9bot
         leftMotor   = hwMap.dcMotor.get("motor_left");
         rightMotor  = hwMap.dcMotor.get("motor_right");
         harvester  = hwMap.dcMotor.get("harvester");
-        //arm = hwMap.servo.get("arm");
+        arm = hwMap.servo.get("arm");
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
 
 

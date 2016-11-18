@@ -72,8 +72,8 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
         //double leftX;
         //double rightX;
         double rightY;
-        double armPosition = 0.2;
-        double armHitPosition = 0.9;
+        double armPosition = -1;
+        double armHitPosition = 1;
 
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
@@ -96,6 +96,8 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
             //leftX = Range.clip(leftY, -1, 1);
             rightY = Range.clip(rightY, -1, 1);
             leftY = Range.clip(leftY, -1, 1);
+            robot.leftMotor.setPower(leftY);
+            robot.rightMotor.setPower(rightY);
             //leftX = gamepad1.left_stick_x;
             //rightX = gamepad1.right_stick_x;
             //rightX = Range.clip(rightX, -1, 1);
@@ -112,7 +114,7 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
                 }
             }
             else if (harvesterPowerReversed > 0.2) {
-                if (gamepad1.right_bumper) {
+                if (gamepad1.left_bumper) {
                     robot.harvester.setPower(-1);
                 }
                 else {
@@ -124,15 +126,17 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
                 robot.harvester.setPower(0);
 
             }
-            /*if (gamepad1.dpad_up) {
-                robot.arm.setPosition(armPosition);
+
+            if (gamepad1.dpad_up) {
+                robot.arm.setPosition(armHitPosition);
             }
             else if(gamepad1.dpad_down) {
-                robot.arm.setPosition(armHitPosition);
+                robot.arm.setPosition(armPosition);
 
             }
-            robot.leftMotor.setPower(leftY);
-            robot.rightMotor.setPower(rightY);
+
+            //robot.leftMotor.setPower(leftY);
+            //robot.rightMotor.setPower(rightY);
 
             /*
              left = the power x
