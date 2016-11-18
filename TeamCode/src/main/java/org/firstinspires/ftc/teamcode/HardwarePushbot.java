@@ -24,18 +24,21 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class HardwarePushbot
 {
     /* Public OpMode members. */
-    public DcMotor  leftMotor   = null;
-    public DcMotor  rightMotor  = null;
-    public DcMotor  backMotor   = null;
-    //public DcMotor  armMotor    = null;
-    public Servo    leftClaw    = null;
-    public Servo    rightClaw   = null;
-    public Servo    backClaw    = null;
-    public Servo    frontClaw   = null;
+    public DcMotor  leftFrontMotor  = null;
+    public DcMotor  rightFrontMotor = null;
+    public DcMotor  leftBackMotor   = null;
+    public DcMotor  rightBackMotor  = null;
 
-    public static final double MID_SERVO       =  0.5 ;
-    public static final double ARM_UP_POWER    =  0.45 ;
-    public static final double ARM_DOWN_POWER  = -0.45 ;
+    //public Servo    leftClaw        = null;
+    //public Servo    rightClaw       = null;
+    //public Servo    backClaw        = null;
+    //public Servo    frontClaw       = null;
+
+    //public static final double MID_SERVO       =  0.5 ;
+
+    public static final double FORWARD_POWER    =  0.45 ;
+    public static final double BACKWARD_POWER   = -0.45 ;
+    public static final double STOP_POWER       =  0.0;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -52,35 +55,39 @@ public class HardwarePushbot
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftMotor   = hwMap.dcMotor.get("left motor");
-        rightMotor  = hwMap.dcMotor.get("right motor");
-        backMotor   = hwMap.dcMotor.get("back motor");
-        //armMotor    = hwMap.dcMotor.get("left_arm");
-        leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        leftFrontMotor   = hwMap.dcMotor.get("lf motor");
+        rightFrontMotor  = hwMap.dcMotor.get("rf motor");
+        leftBackMotor    = hwMap.dcMotor.get("lb motor");
+        rightBackMotor   = hwMap.dcMotor.get("rb motor");
+
+        leftFrontMotor.setDirection(DcMotor.Direction.FORWARD);
+        leftBackMotor.setDirection(DcMotor.Direction.FORWARD);
+
+        rightFrontMotor.setDirection(DcMotor.Direction.FORWARD);
+        rightBackMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // Set all motors to zero power
-        leftMotor.setPower(0);
-        rightMotor.setPower(0);
-        backMotor.setPower(0);
-        //armMotor.setPower(0);
+        leftFrontMotor.setPower(0);
+        rightFrontMotor.setPower(0);
+        leftBackMotor.setPower(0);
+        rightBackMotor.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        backMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define and initialize ALL installed servos.
-        leftClaw = hwMap.servo.get("left claw");
-        rightClaw = hwMap.servo.get("right claw");
-        backClaw = hwMap.servo.get("back claw");
-        frontClaw = hwMap.servo.get("front claw");
-        leftClaw.setPosition(MID_SERVO);
-        rightClaw.setPosition(MID_SERVO);
-        backClaw.setPosition(MID_SERVO);
-        frontClaw.setPosition(MID_SERVO);
+        // leftClaw = hwMap.servo.get("left claw");
+        // rightClaw = hwMap.servo.get("right claw");
+        // backClaw = hwMap.servo.get("back claw");
+        // frontClaw = hwMap.servo.get("front claw");
+        // leftClaw.setPosition(MID_SERVO);
+        // rightClaw.setPosition(MID_SERVO);
+        // backClaw.setPosition(MID_SERVO);
+        // frontClaw.setPosition(MID_SERVO);
     }
 
     /***
@@ -104,4 +111,3 @@ public class HardwarePushbot
         period.reset();
     }
 }
-
