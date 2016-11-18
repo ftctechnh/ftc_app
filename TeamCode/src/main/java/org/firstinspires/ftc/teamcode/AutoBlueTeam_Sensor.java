@@ -64,7 +64,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Auto Blue Team(Sensor)", group="Pushbot")
+@Autonomous(name="Auto Blue Team(Sensor) 2", group="Pushbot")
 //@Disabled
 public class AutoBlueTeam_Sensor extends LinearOpMode {
 
@@ -91,6 +91,8 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
         robot.init(hardwareMap);
         int colorBlueSensed ;
         colorBlueSensed = 0;
+
+        int sensorLoopCycles = 0 ;
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders");    //
@@ -121,51 +123,64 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         // This is for the nearest blue beacon towards our robot
-        encoderDrive(DRIVE_SPEED,  20,  20, 3.0);  //  Forward 36 Inches with 3 Sec timeout CHANGE TO REAL LENGTH
+        encoderDrive(DRIVE_SPEED,  24,  24, 3.0);  //  Forward 36 Inches with 3 Sec timeout CHANGE TO REAL LENGTH
         encoderDrive(TURN_SPEED,   12, -6, 3.0);  //  Turn Right 12 Inches with 3 Sec timeout (to be figured out)
-        encoderDrive(DRIVE_SPEED,  36, 36, 3.0);  //  Reverse 24 Inches with 3 Sec timeout CHANGE TO REAL LENGTH
-        //encoderDrive(TURN_SPEED,   12, -12, 3.0);  // S2: Turn Left 12 Inches with 3 Sec timeout (to be figured out)
+        encoderDrive(DRIVE_SPEED,  30, 30, 3.0);  //  Reverse 24 Inches with 3 Sec timeout CHANGE TO REAL LENGTH
+        // encoderDrive(TURN_SPEED,   12, -12, 3.0);  // S2: Turn Left 12 Inches with 3 Sec timeout (to be figured out)
         encoderDrive(TURN_SPEED,   12, -6, 3.0);  //  Turn Right 12 Inches with 3 Sec timeout (to be figured out)
-        encoderDrive(DRIVE_SPEED,  17, 17, 3.0); // Going forward to push the beacon
-        //encoderDrive(PUSH_SPEED,   10, 10, 3.0 );
+        encoderDrive(DRIVE_SPEED, 24, 24, 3.0); //  Forward 24 inches with 3 Sec timeout
+        sleep(2000) ;
+//        encoderDrive(PUSH_SPEED, 9, 9, 5.0); //  Forward 24 inches with 3 Sec timeout
+//        encoderDrive(DRIVE_SPEED, -50, -50, 5.0); //  Reverse 72 inches with 3 Sec timeout CHANGE TO REAL LENGTH
+//        encoderDrive(TURN_SPEED, -6,0,3.0); // pivot on the right wheel to push the cap ball away
 
-        while (opModeIsActive() && (runtime.seconds() < 1.0) ){
+
+        while (robot.color.blue() == 0 && robot.color.red() == 0 && sensorLoopCycles < 6){
+            encoderDrive(PUSH_SPEED,1,1,3.0);
+
             if (robot.color.blue() < robot.color.red()) {
                 colorBlueSensed = 1;
                 telemetry.addData("Detecting", "Red");
                 telemetry.update();
-                sleep(10000);
+                sleep(1000);
             } else if (robot.color.blue() > robot.color.red()){
                 colorBlueSensed = 2;
                 telemetry.addData("Detecting", "Blue");
                 telemetry.update();
-                sleep(10000);
+                sleep(1000);
             } else {
                 colorBlueSensed = 0;
                 telemetry.addData("Detecting", "Neither");
                 telemetry.update();
-                sleep(10000);
+                sleep(1000);
             }
+            sensorLoopCycles = sensorLoopCycles + 1 ;
         }
 
-        if (colorBlueSensed == 1) {
+        if (robot.color.red() > robot.color.blue()) {
+            colorBlueSensed = 1;
+            telemetry.addData("Detecting", "Red");
+            telemetry.update();
+            sleep(1000);
             encoderDrive(PUSH_SPEED,    -12, -12, 3.0);
-        } else if (colorBlueSensed == 2){
-            encoderDrive(PUSH_SPEED,    12,12, 3.0);
+        } else if (robot.color.blue() > robot.color.red()){
+            colorBlueSensed = 2;
+            telemetry.addData("Detecting", "Blue");
+            telemetry.update();
+            sleep(1000);
+            encoderDrive(PUSH_SPEED, 6,6, 3.0);
         } else {
+            colorBlueSensed = 0;
+            telemetry.addData("Detecting", "Neither");
+            telemetry.update();
+            sleep(1000);
             encoderDrive(DRIVE_SPEED,  -30, -30, 3.0); // Back up and park
         }
 
-        // now you are near the beacon. Sense color
-        // if the color sensed is blue, then push ahead, if not backup turn left, go straight make right, go forward towards beacon
-        // and push forward
+        telemetry.addData("Path", "Complete");
+        telemetry.update();
+    }
 
-//
-//        telemetry.addData("Path", "Complete");
-//        telemetry.addData("Status", "Complete");
-//        telemetry.update();
-        }
-        //this.sleep(350);
     /*
      *  Method to perfmorm a relative move, based on encoder counts.
      *  Encoders are not reset as the move is based on the current position.
