@@ -51,7 +51,7 @@ class ImageComponent extends JComponent {
 
 
     public ImageComponent(String img, int mapSize, float fieldSize_mm) {
-        image = new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getResource(img))).getImage();
+        image = new ImageIcon(img).getImage();
         this.mapSize = mapSize;
         this.fieldSize_mm = fieldSize_mm;
 

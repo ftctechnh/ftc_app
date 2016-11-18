@@ -1,6 +1,7 @@
 package edu.usrobotics.opmode.compbot;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -16,9 +17,7 @@ public class CompbotTele extends RobotOp {
 
     CompbotHardware robot = new CompbotHardware();
 
-    boolean aButtonPressedLastTime = false;
-
-    double timeLastPressed;
+    boolean isLiftServoOpen = true;
 
     @Override
     public void init () {
@@ -31,6 +30,11 @@ public class CompbotTele extends RobotOp {
         robot.frontLeft.setDirection(robot.flCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
         robot.backRight.setDirection(robot.brCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
         robot.backLeft.setDirection(robot.blCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
+
+        robot.frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
 
@@ -50,6 +54,7 @@ public class CompbotTele extends RobotOp {
 
         //Harvester
         harvesterInput += gamepad2.right_trigger;
+        harvesterInput += -gamepad2.left_trigger;
         harvesterInput += gamepad2.left_trigger;
 
         harvesterInput += (gamepad2.left_bumper ? -1 : 0);
@@ -77,6 +82,19 @@ public class CompbotTele extends RobotOp {
         brInputs -= gamepad1.left_stick_x;
         flInputs += gamepad1.left_stick_x;
         blInputs += gamepad1.left_stick_x;
+
+        //Lift Servo
+        if(gamepad2.dpad_left){
+
+            isLiftServoOpen = true;
+
+        }
+
+        if(gamepad2.dpad_right){
+
+            isLiftServoOpen = false;
+
+        }
 
         DcMotorSimple.Direction frDirection = (frInputs >= 0 ?
                 (robot.frCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE) :
@@ -113,47 +131,38 @@ public class CompbotTele extends RobotOp {
 
         float shooterPower = Math.min(shooterInput, 1);
 
-        if(gamepad2.right_trigger <= 0.05){
-
-            if(robot.touchSensor.isPressed() && !gamepad2.a){
-
-                harvesterPower = 0;
-                shooterPower = 0;
-
-            }
-
-            if(gamepad2.a && !aButtonPressedLastTime){
-
-                shooterPower = 1;
-                aButtonPressedLastTime = true;
-                timeLastPressed = time.milliseconds();
-
-            }
-
-            else if(gamepad2.a && aButtonPressedLastTime){
-
-                shooterPower = 1;
-
-                if(time.milliseconds() - timeLastPressed >= 500){
-
-                    harvesterPower = 1;
-
-                }
-
-            }
-
-            else if(gamepad2.a){
-
-                aButtonPressedLastTime = false;
-
-            }
-
-        }
+        double liftServoPosition = (isLiftServoOpen ? robot.liftServoOpenPosition : robot.liftServoClosePosition);
 
         robot.frontRight.setPower(frPower);
         robot.frontLeft.setPower(flPower);
         robot.backRight.setPower(brPower);
         robot.backLeft.setPower(blPower);
+
+        robot.liftServo.setPosition(liftServoPosition);
+
+        if(gamepad1.a){
+
+            robot.frontRight.setPower(1);
+
+        }
+
+        if(gamepad1.b){
+
+            robot.frontLeft.setPower(1);
+
+        }
+
+        if(gamepad1.x){
+
+            robot.backRight.setPower(1);
+
+        }
+
+        if(gamepad1.y){
+
+            robot.backLeft.setPower(1);
+
+        }
 
         robot.harvester.setPower(harvesterPower);
 
@@ -161,6 +170,11 @@ public class CompbotTele extends RobotOp {
         robot.shooterLeft.setPower(shooterPower);
 
         robot.lift.setPower(liftPower);
+
+        telemetry.addData("Front right encoder: ", robot.frontRight.getCurrentPosition());
+        telemetry.addData("Front left encoder: ", robot.frontLeft.getCurrentPosition());
+        telemetry.addData("Back right encoder: ", robot.backRight.getCurrentPosition());
+        telemetry.addData("Back left encoder: ", robot.backLeft.getCurrentPosition());
 
         telemetry.addData("GP1 Right Stick X", gamepad1.right_stick_x);
         telemetry.addData("GP1 Right Stick Y", gamepad1.right_stick_y);
@@ -170,6 +184,8 @@ public class CompbotTele extends RobotOp {
         telemetry.addData("GP2 Left Trigger", gamepad2.left_trigger);
         telemetry.addData("GP2 Right Stick Y", gamepad2.right_stick_y);
         telemetry.addData("GP2 Left Stick Y", gamepad2.left_stick_y);
+        telemetry.addData("GP2 DPAD Right", gamepad2.dpad_right);
+        telemetry.addData("GP2 DPAD Left", gamepad2.dpad_left);
 
         telemetry.addData("frInputs", frInputs);
         telemetry.addData("flInputs", flInputs);
@@ -182,7 +198,8 @@ public class CompbotTele extends RobotOp {
 
         telemetry.addData("liftInput", liftInput);
 
-        telemetry.addData("buttonPressed", robot.touchSensor.isPressed());
+        telemetry.addData("isLiftServoOpen", isLiftServoOpen);
+        telemetry.addData("liftServoPosition", liftServoPosition);
 
     }
 }

@@ -62,8 +62,8 @@ public class LogFrame extends CustomFrame {
             }
         });
 
-        final ImageIcon inactiveOptions = new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/settings_inactive.png")));
-        final ImageIcon activeOptions = new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/settings.png")));
+        final ImageIcon inactiveOptions = new ImageIcon("/settings_inactive.png");
+        final ImageIcon activeOptions = new ImageIcon("/settings.png");
 
         JButton options = new JButton();
         options.setIcon(inactiveOptions);
