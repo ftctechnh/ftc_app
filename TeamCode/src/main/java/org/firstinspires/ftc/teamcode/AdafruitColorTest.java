@@ -20,7 +20,7 @@ public class AdafruitColorTest extends OpMode
 {
   //  private OmniDriveBot robot = new OmniDriveBot();
     //ColorSensor sensorRGB;
-    ColorSensor flagColorSensor, beaconColorSensor;
+    ColorSensor beaconColorSensor;
     DeviceInterfaceModule cdim;
     boolean bPrevState;
     boolean bCurrState;
@@ -56,7 +56,6 @@ public class AdafruitColorTest extends OpMode
         cdim.setDigitalChannelMode(LED_CHANNEL, DigitalChannelController.Mode.OUTPUT);
 
         // get a reference to our ColorSensor object.
-        flagColorSensor = hardwareMap.colorSensor.get("flagColorSensor");
         beaconColorSensor = hardwareMap.colorSensor.get("beaconColorSensor");
         // turn the LED on in the beginning, just so user will know that the sensor is active.
         cdim.setDigitalChannelState(LED_CHANNEL, bLedOn);
@@ -79,16 +78,8 @@ public class AdafruitColorTest extends OpMode
         bPrevState = bCurrState;
 
         // convert the RGB values to HSV values.
-        Color.RGBToHSV((flagColorSensor.red() * 255) / 800, (flagColorSensor.green() * 255) / 800, (flagColorSensor.blue() * 255) / 800, hsvValues);
         Color.RGBToHSV((beaconColorSensor.red() * 255) / 800, (beaconColorSensor.green() * 255) / 800, (beaconColorSensor.blue() * 255) / 800, hsvValues);
         // send the info back to driver station using telemetry function.
-        telemetry.addData("flagColorSensor:" , null);
-        telemetry.addData("LED", bLedOn ? "On" : "Off");
-        telemetry.addData("Clear", flagColorSensor.alpha());
-        telemetry.addData("Red  ", flagColorSensor.red());
-        telemetry.addData("Green", flagColorSensor.green());
-        telemetry.addData("Blue ", flagColorSensor.blue());
-        telemetry.addData("Hue", hsvValues[0]);
 
         telemetry.addData("beaconColorSensor" , null);
         telemetry.addData("LED", bLedOn ? "On" : "Off");
