@@ -80,18 +80,7 @@ public class AutonomousSecondaryBlue extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        //init robot hardware
-        final boolean debug = false;
-        robot.init(this, debug);
-
-        //init vuforia
-        Vuf = new VuforiaLib_FTC2016();
-        Vuf.init(this, null);     // pass it this OpMode (so it can do telemetry output) and use its license key for now
-
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
-
-        // create an autonomous sequence with the steps to drive
+        // / create an autonomous sequence with the steps to drive
         final float power = 0.5f;
         final float error = 254.0f;       // get us within 10" for this test
         final float angleError = 5.0f;    //and within 5 degrees for turning
@@ -103,8 +92,21 @@ public class AutonomousSecondaryBlue extends LinearOpMode {
         final double time = 2.0;
         final boolean red = false;
 
+        final boolean debug = false;
+
+        boolean lastState = false;
+
+        robot.init(this, debug);
+
+        //init vuforia
+        Vuf = new VuforiaLib_FTC2016();
+        Vuf.init(this, null);     // pass it this OpMode (so it can do telemetry output) and use its license key for now
+
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+
         // create the root Sequence for this autonomous OpMode
-        AutoLib.Sequence mSequence = new AutoLib.LinearSequence();
+        AutoLib.DebugLinearSequence mSequence = new AutoLib.DebugLinearSequence(this);  //TODO: Un-Debug
         // drive to the first beacon
         mSequence.add(new AutoLib.MoveSquirrelyByTimeStep(robot.getMotorArray(), 45, power, 0.6, true));
         mSequence.add(new AutoLib.VuforiaSquirrelyDriveStep(this, new VectorF(-1500,300,targetZ), Vuf, Vuf, robot.getMotorArray(), power, error));    // Wheels
@@ -133,6 +135,13 @@ public class AutonomousSecondaryBlue extends LinearOpMode {
         while (!bDone) {
             Vuf.loop(true);
             bDone = mSequence.loop();       // returns true when we're done
+
+            //increment sequence on button push
+            if(lastState != gamepad1.a){
+                if(gamepad1.a) mSequence.incStep();
+                lastState = gamepad1.a;
+            }
+
             telemetry.update();
         }
 

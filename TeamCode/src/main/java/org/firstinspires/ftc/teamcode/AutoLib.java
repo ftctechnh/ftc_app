@@ -118,6 +118,39 @@ public class AutoLib {
 
     }
 
+    static public class DebugLinearSequence extends Sequence {
+        OpMode mMode;
+        int mIndex;
+
+        public DebugLinearSequence() {
+            mIndex = 0;
+            mMode = null;
+        }
+
+        public DebugLinearSequence(OpMode mode){
+            mIndex = 0;
+            mMode = mode;
+        }
+
+        public boolean loop(){
+            super.loop();
+            boolean bDone = true;
+
+            if(mIndex < mSteps.size()) bDone = mSteps.get(mIndex).loop();
+
+            if(mMode != null){
+                mMode.telemetry.addData("Step #", mIndex);
+                mMode.telemetry.addData("Step Done", bDone);
+            }
+
+            return mIndex >= mSteps.size();
+        }
+
+        public void incStep(){
+            mIndex++;
+        }
+    }
+
 
     // ------------------ some implementations of primitive Steps ----------------------------
 
