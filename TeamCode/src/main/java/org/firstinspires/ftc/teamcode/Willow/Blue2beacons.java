@@ -1,16 +1,16 @@
-package org.firstinspires.ftc.teamcode.Willow;
+/*package org.firstinspires.ftc.teamcode.Willow;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 /**
  * Created by windorabug on 11/15/16.
- */
+/
 
 public class Blue2beacons {@Autonomous(name="getting to the blue beacon #2", group="Pushbot")
 @Disabled
 public class redbeaconleft extends LinearOpMode {
 
-    /* Declare OpMode members. */
+    /* Declare OpMode members. *
     HardwarePushbot robot   = new HardwarePushbot();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
@@ -24,7 +24,7 @@ public class redbeaconleft extends LinearOpMode {
          * The init() method of the hardware class does all the work here
     @Override
     public void runOpMode() throws InterruptedException {
-         */
+         /
     robot.init(hardwareMap);
 
     // Send telemetry message to signify robot waiting
@@ -56,7 +56,7 @@ public class redbeaconleft extends LinearOpMode {
         while (blue1beacons() && (runtime.seconds() < 1.0)) {
             telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
-            blue1beacons();*/
+            blue1beacons();/
 
 
     // Step 2:  Spin right for 1.0 seconds
@@ -82,7 +82,7 @@ public class redbeaconleft extends LinearOpMode {
             telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
             blue1beacons();
-        }*/
+        }/
 
 
     // Step 1:  Drive forward for .7 second
@@ -166,3 +166,4 @@ public class redbeaconleft extends LinearOpMode {
 }
 
 }
+*/

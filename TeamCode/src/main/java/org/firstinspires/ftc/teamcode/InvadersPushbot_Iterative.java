@@ -194,6 +194,15 @@ public class InvadersPushbot_Iterative extends OpMode{
             robot.BallElevator.setPower(0);
         }
 
+        if (gamepad1.start == true){
+            robot.LeftBallLauncher.setPower(1);
+            robot.RightBallLauncher.setPower(1);
+        }
+        else {
+            robot.LeftBallLauncher.setPower(0);
+            robot.RightBallLauncher.setPower(0);
+        }
+
 
     }
 
