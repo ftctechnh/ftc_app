@@ -12,10 +12,11 @@ public class AutonomousRed extends AutonomousBase {
     //Called after runOpMode() has finished initializing.
     protected void driverStationSaysGO() throws InterruptedException
     {
+        sleep(0);
         drive(80, 1200);
-        turn(.3, 110);
+        turn(0.3, 110);
         drive(80, 2000);
-        harvester.setPower(.5);
+        harvester.setPower(0.5);
         sleep(3000);
     }
 }

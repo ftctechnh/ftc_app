@@ -43,8 +43,7 @@ public class Teleop extends RobotBase {
             { // Driving forward
                 leftPower = -gamepad1.right_stick_y;
                 rightPower = -gamepad1.left_stick_y;
-            } else
-            { // Driving backward
+            } else { // Driving backward
                 leftPower = gamepad1.left_stick_y;
                 rightPower = gamepad1.right_stick_y;
             }
@@ -69,17 +68,17 @@ public class Teleop extends RobotBase {
 
             //Harvester (hopefully just this simple)
             if (gamepad2.b)
-                harvester.setPower(-.5);
-            else if (gamepad2.x)
-                harvester.setPower(.5);
+                harvester.setPower(-0.5);
+            else if (gamepad2.a)
+                harvester.setPower(0.5);
             else
                 harvester.setPower(0);
 
             //Pusher
             if (gamepad2.dpad_left)
-                pusher.setPower(-.5);
+                pusher.setPower(-0.5);
             else if (gamepad2.dpad_right)
-                pusher.setPower(.5);
+                pusher.setPower(0.5);
             else
                 pusher.setPower(0);
 
