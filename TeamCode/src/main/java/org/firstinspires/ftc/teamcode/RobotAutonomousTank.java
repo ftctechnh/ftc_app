@@ -123,7 +123,7 @@ public class RobotAutonomousTank extends LinearOpMode {
 
         if (x != -1 && System.nanoTime() < TIMER) {
             move(0.45,0.45);
-            telemetry.addData("Driver", x + " " + System.nanoTime());
+            telemetry.addData("Driver", TIMER + " " + System.nanoTime());
             telemetry.update();
             return;
         } else {
