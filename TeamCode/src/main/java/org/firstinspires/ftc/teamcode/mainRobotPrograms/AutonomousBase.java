@@ -12,7 +12,7 @@ public abstract class AutonomousBase extends RobotBase {
     protected ColorSensor colorSensor;
 
     @Override
-    protected void driverStationSaysINITIALIZE() throws InterruptedException
+    protected void driverStationSaysINITIALIZE()
     {
         //Initialize gyroscope (will output whether it was found or not.
         gyroscope = Initialize(GyroSensor.class, "Gyroscope");
@@ -35,16 +35,12 @@ public abstract class AutonomousBase extends RobotBase {
     }
 
     //All children should have special instructions.
-    protected abstract void driverStationSaysGO() throws InterruptedException;
-    protected void driverStationSaysSTOP()
-    {
-        stopMotors();
-    }
+    protected abstract void driverStationSaysGO();
 
     private final double MIN_TURN_POWER = .1, MAX_TURN_POWER = .5;
 
     //Used to turn to a specified heading.
-    protected void turn(double power, double heading) throws InterruptedException
+    protected void turn(double power, double heading)
     {
         if (gyroscope != null)
         {
@@ -115,7 +111,7 @@ public abstract class AutonomousBase extends RobotBase {
     }
 
     //Used to drive in a straight line with the aid of the gyroscope.
-    protected void drive(double power, double length) throws InterruptedException
+    protected void drive(double power, double length)
     {
         //Add the output to the driver station.
         OutputToDriverStation("Driving at " + power + " power, for " + length + " seconds," + "WITH" + (gyroscope == null ? "OUT" : "") + "a gyroscope");
@@ -145,8 +141,8 @@ public abstract class AutonomousBase extends RobotBase {
                 //The gyroscope heading value has to be translated into a useful value.  It currently goes to 359 and then moves down when moving clockwise, and goes up from 0 at moving counter-clockwise.
 
                 //Create values.
-                double leftPower = power + (heading) / (5.0);
-                double rightPower = power - (heading) / (5.0);
+                double leftPower = power + (heading) / (20.0);
+                double rightPower = power - (heading) / (20.0);
 
                 //Clamp values.
                 if (leftPower > 1)

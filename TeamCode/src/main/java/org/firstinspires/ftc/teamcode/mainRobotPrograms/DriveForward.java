@@ -49,15 +49,9 @@ public class DriveForward extends AutonomousBase {
     }
 
     //Called after runOpMode() has finished initializing.
-    protected void driverStationSaysGO() throws InterruptedException
+    protected void driverStationSaysGO()
     {
         right.setPower(.6);
         left.setPower(.6);
-    }
-
-    @Override
-    protected void driverStationSaysSTOP()
-    {
-        stopMotors();
     }
 }

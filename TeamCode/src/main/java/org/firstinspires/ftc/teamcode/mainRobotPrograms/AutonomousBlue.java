@@ -10,12 +10,12 @@ public class AutonomousBlue extends AutonomousBase {
     //Autonomous code for the Blue alliance
 
     //Called after runOpMode() has finished initializing.
-    protected void driverStationSaysGO() throws InterruptedException
+    protected void driverStationSaysGO()
     {
         sleep(0);
-        drive(80, 1200);
+        drive(0.8, 1500);
         turn(0.3, -110);
-        drive(80, 2000);
+        drive(1, 2000);
         harvester.setPower(0.5);
         sleep(3000);
     }

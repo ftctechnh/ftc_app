@@ -83,33 +83,19 @@ public abstract class RobotBase extends LinearOpMode
         //Kudos Makiah
 
         //Actual program thread
-        try
-        {
-            //Custom Initialization steps.
-            driverStationSaysINITIALIZE();
+        //Custom Initialization steps.
+        driverStationSaysINITIALIZE();
 
-            //Wait for the start button to be pressed.
-            waitForStart();
+        //Wait for the start button to be pressed.
+        waitForStart();
 
-            driverStationSaysGO(); //This is where the child classes differ.
-        }
-        //In case the driver station says that the program has to end immediately.
-        catch (InterruptedException e)
-        {
-            //For some reason, this causes the app to restart.  Have to look into this.  Check SuppressWarnings maybe?
-            OutputToDriverStation("Driver Station says STOP!");
-            driverStationSaysSTOP();
-            Thread.currentThread().interrupt();
-            return;
-        }
+        driverStationSaysGO(); //This is where the child classes differ.
     }
 
     //Optional overload.
-    protected void driverStationSaysINITIALIZE() throws InterruptedException {}
+    protected void driverStationSaysINITIALIZE() {}
     //Has to be implemented.
-    protected abstract void driverStationSaysGO() throws InterruptedException;
-    //Has to be implemented.
-    protected abstract void driverStationSaysSTOP(); //Can't throw InterruptedExceptions, this is why this is here.
+    protected abstract void driverStationSaysGO();
 
     /*** USE TO OUTPUT DATA IN A SLIGHTLY BETTER WAY THAT LINEAR OP MODES HAVE TO ***/
     ArrayList<String> linesAccessible = new ArrayList<>();

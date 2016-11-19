@@ -23,7 +23,7 @@ public class Teleop extends RobotBase {
     {
     }
 
-    protected void driverStationSaysGO() throws InterruptedException
+    protected void driverStationSaysGO()
     {
         //Audio Control Variables
 
@@ -35,7 +35,7 @@ public class Teleop extends RobotBase {
         //Other motor variables
 
         //Keep looping while opmode is active (waiting a hardware cycle after all of this is completed, just like loop()).
-        while (true)
+        while (opModeIsActive())
         {
             /******************** DRIVING CONTROL ********************/
             //Driving Toggle
@@ -86,14 +86,6 @@ public class Teleop extends RobotBase {
 
             /******************** END OF LOOP ********************/
         }
-    }
-
-    protected void driverStationSaysSTOP ()
-    {
-        left.setPower(0);
-        right.setPower(0);
-        harvester.setPower(0);
-        pusher.setPower(0);
     }
 
     /*
