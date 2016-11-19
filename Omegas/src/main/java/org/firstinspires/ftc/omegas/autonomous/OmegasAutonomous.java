@@ -71,7 +71,9 @@ public abstract class OmegasAutonomous extends LinearOpMode {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.update();
 
-            double currentPower = (runtime.milliseconds() < 10000) ? 0.0 : (runtime.milliseconds() < 12000) ? 1.0 : 0.0;
+            double currentPower = (runtime.milliseconds() < 4000) ? 0.5
+                    : (runtime.milliseconds() < 8000) ? 0.0
+                    : (runtime.milliseconds() < 10000) ? 0.5 : 0.0;
             for (DcMotor motor : Ω.motors) {
                 motor.setPower(currentPower);
             }
