@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 /**
  * Created by some guy "named" Nintendo8 on 11/6/2016.
  */
-//@Disabled //For now...
+@Disabled //For now...
 @TeleOp(name="8K_Tank_NoShooter")
 
 public class TankDrive extends OpMode{

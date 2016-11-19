@@ -34,9 +34,9 @@ public class AutonomousWithShooter extends LinearOpMode {
 
     public int ticks = ticsForInches(60);
 
-    final double kServoNullPosition = 0.5;
-    final double kServoRange = 0.4;
-    final double kShooterEnginePower = 1.0;
+    final double kServoNullPosition = 0.4;
+    final double kServoRange = 0.6;
+    final double kShooterEnginePower = 0.7;
 
 
     private int ticsForInches(double inches){
@@ -109,10 +109,11 @@ public class AutonomousWithShooter extends LinearOpMode {
         shooterRight.setPower(kShooterEnginePower);
         shooterLeft.setPower(kShooterEnginePower);
 
-        for (int i = 1; i <= 2; i++) {
-            shooterServo.setPosition(kServoNullPosition);
+        for (int i = 1; i <= 3; i++) {
             waitNSeconds(1);
-            shooterServo.setPosition((kServoNullPosition + kServoRange));
+            shooterServo.setPosition((kServoNullPosition + (-kServoRange)));
+            waitNSeconds(1);
+            shooterServo.setPosition(kServoNullPosition);
         }
 
 

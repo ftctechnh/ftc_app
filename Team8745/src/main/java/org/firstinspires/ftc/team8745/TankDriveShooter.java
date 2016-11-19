@@ -27,8 +27,9 @@ public class TankDriveShooter extends OpMode{
     Servo shooterServo;
     long startTime = 0;
 
-    final double kServoNullPosition = 0.5;
-    final double kServoRange = 0.4;
+    final double kServoNullPosition = 0.4;
+    final double kServoRange = 0.6;
+    final double kShootPower = 0.7;
 
     public void init() {
         //Front Motors
@@ -49,8 +50,8 @@ public class TankDriveShooter extends OpMode{
         //Reverse Mode
         leftFRONT.setDirection(DcMotorSimple.Direction.REVERSE);
         leftBACK.setDirection(DcMotorSimple.Direction.REVERSE);
-        shooterLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        shooterRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        shooterLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        shooterRight.setDirection(DcMotorSimple.Direction.FORWARD);
     }
     @Override
     public void loop() {
@@ -65,7 +66,8 @@ public class TankDriveShooter extends OpMode{
         boolean rightBumperPressed = gamepad1.right_bumper;
         float leftTrigger = gamepad1.left_trigger;
 
-        shooterServo.setPosition((leftTrigger * kServoRange) + kServoNullPosition);
+        //shooterServo.setPosition(0.1);
+        shooterServo.setPosition((leftTrigger * (-kServoRange)) + kServoNullPosition);
         //telemetry.addData("Servo Position", shooterServo.getPosition());
 
         if (rightBumperPressed) {
@@ -73,8 +75,8 @@ public class TankDriveShooter extends OpMode{
             shooterRight.setPower(1.0);
         }
         else {
-            shooterRight.setPower(rightTrigger);
-            shooterLeft.setPower(rightTrigger);
+            shooterRight.setPower(rightTrigger * kShootPower);
+            shooterLeft.setPower(rightTrigger * kShootPower);
         }
 
 
