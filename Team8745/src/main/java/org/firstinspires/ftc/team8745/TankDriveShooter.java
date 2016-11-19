@@ -62,9 +62,9 @@ public class TankDriveShooter extends OpMode{
         leftBACK.setPower(leftDC);
         rightBACK.setPower(rightDC);
 
-        float rightTrigger = gamepad1.right_trigger;
-        boolean rightBumperPressed = gamepad1.right_bumper;
-        float leftTrigger = gamepad1.left_trigger;
+        float rightTrigger = gamepad2.right_trigger;
+        boolean rightBumperPressed = gamepad2.right_bumper;
+        float leftTrigger = gamepad2.left_trigger;
 
         //shooterServo.setPosition(0.1);
         shooterServo.setPosition((leftTrigger * (-kServoRange)) + kServoNullPosition);
