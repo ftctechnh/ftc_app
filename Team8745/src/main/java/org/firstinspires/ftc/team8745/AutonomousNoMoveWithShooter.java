@@ -13,9 +13,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 /**
  * Created by some guy "named" 8K Proggramming on 10/30/2016.
  */
-@Autonomous(name="8k Auto Shoot And Move")
+@Autonomous(name="8k Auto NO MOVE Shoot")
 //@Disabled
-public class AutonomousWithShooter extends LinearOpMode {
+public class AutonomousNoMoveWithShooter extends LinearOpMode {
     private static final int TICS_PER_REV =1120;
 
     private double WHEEL_DIAMETER = 4;
@@ -116,40 +116,5 @@ public class AutonomousWithShooter extends LinearOpMode {
             shooterServo.setPosition(kServoNullPosition);
         }
 
-
-        if (leftFRONT.getMode() != DcMotor.RunMode.RUN_TO_POSITION) {
-            //Run to posiiton
-            rightFRONT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightBACK.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            leftFRONT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            leftBACK.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            //Our ticks for the motors
-
-            rightFRONT.setTargetPosition(ticks);
-            rightBACK.setTargetPosition(ticks);
-            leftFRONT.setTargetPosition(ticks);
-            leftBACK.setTargetPosition(ticks);
-
-        }
-
-
-
-        //Waiting for robot to reach position.
-        while (true) {
-            telemetry.addData("Ticks:",rightFRONT.getCurrentPosition());
-            telemetry.addData("Target:",rightFRONT.getTargetPosition());
-            telemetry.addData("Time elapsed:", runtime);
-            if (runtime.time() > 10) {
-                rightFRONT.setPower(.5);
-                rightBACK.setPower(.5);
-                leftFRONT.setPower(.5);
-                leftBACK.setPower(.5);
-            }
-
-            if (leftFRONT.getCurrentPosition() > ticks){
-                break;
-            }
-
-        }
     }
 }

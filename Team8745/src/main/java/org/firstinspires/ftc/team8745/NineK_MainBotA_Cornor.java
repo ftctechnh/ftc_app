@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.team8745;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -19,17 +20,18 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  *      TILE FROM THE CORNOR
  *
  */
+@Disabled
 @Autonomous(name = "9374_AUTONOMOUS_CORNOR_VOTREX",group = "null")
 
 public class NineK_MainBotA_Cornor extends LinearOpMode {
 
-    DcMotor left_f;
-    DcMotor right_f;
-    DcMotor left_b;
-    DcMotor right_b;
+    DcMotor leftFRONT;
+    DcMotor rightFRONT;
+    DcMotor leftBACK;
+    DcMotor rightBack;
 
-    DcMotor shooter_l;
-    DcMotor shooter_r;
+    DcMotor shooterLeft;
+    DcMotor shooterRight;
 
     Servo center;
 
@@ -41,34 +43,34 @@ public class NineK_MainBotA_Cornor extends LinearOpMode {
     // Please note that this needs to be changed for any wheel size that we decide to use
 
     public void runOpMode() throws InterruptedException  {
-        left_f = hardwareMap.dcMotor.get("Eng1-left");
-        right_f = hardwareMap.dcMotor.get("Eng1-right");
-        left_b = hardwareMap.dcMotor.get("Eng2-left");
-        right_b = hardwareMap.dcMotor.get("Eng2-right");
+        leftFRONT = hardwareMap.dcMotor.get("motor-left");
+        rightFRONT = hardwareMap.dcMotor.get("motor-right");
+        leftBACK = hardwareMap.dcMotor.get("motor-leftBACK");
+        rightBack = hardwareMap.dcMotor.get("motor-rightBACK");
 
-        shooter_r = hardwareMap.dcMotor.get("Eng3-left");
-        shooter_l = hardwareMap.dcMotor.get("Eng3-right");
+        shooterRight = hardwareMap.dcMotor.get("shooter-right");
+        shooterLeft = hardwareMap.dcMotor.get("shooter-left");
 
-        center = hardwareMap.servo.get("Ser1-center");
-        left_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        right_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        left_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        right_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        center = hardwareMap.servo.get("shooter-servo");
+        leftFRONT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFRONT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftBACK.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        left_b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        right_f.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        right_b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        left_f.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBACK.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFRONT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFRONT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        left_b.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        right_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        right_b.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        left_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftBACK.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFRONT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftFRONT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        right_f.setDirection(DcMotorSimple.Direction.REVERSE);
-        right_b.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightFRONT.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        shooter_r.setDirection(DcMotorSimple.Direction.REVERSE);
+        shooterRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         runTime.reset();
 
@@ -79,8 +81,8 @@ public class NineK_MainBotA_Cornor extends LinearOpMode {
         while(super.opModeIsActive()) {
             //This needs to be called at the begginning of every program.
             while (true) {
-                shooter_l.setPower(1);
-                shooter_r.setPower(1);
+                shooterLeft.setPower(1);
+                shooterRight.setPower(1);
                 if (runTime.time() > 5) {
                     center.setPosition(.2);
                     if (runTime.time() > 10) {
@@ -97,8 +99,8 @@ public class NineK_MainBotA_Cornor extends LinearOpMode {
 
             while (opModeIsActive()) {
                 telemetry.addData("Target:", clicks);
-                telemetry.addData("Left Position", left_f.getCurrentPosition());
-                if (left_f.getCurrentPosition() > clicks) {
+                telemetry.addData("Left Position", leftFRONT.getCurrentPosition());
+                if (leftFRONT.getCurrentPosition() > clicks) {
                     break;
                 }
             }
@@ -113,8 +115,8 @@ public class NineK_MainBotA_Cornor extends LinearOpMode {
 
             while (opModeIsActive()) {
                 telemetry.addData("Target:", clicks);
-                telemetry.addData("Left Position", left_f.getCurrentPosition());
-                if (left_f.getCurrentPosition() > clicks) {
+                telemetry.addData("Left Position", leftFRONT.getCurrentPosition());
+                if (leftFRONT.getCurrentPosition() > clicks) {
                     break;
                 }
             }
@@ -141,22 +143,22 @@ public class NineK_MainBotA_Cornor extends LinearOpMode {
         if (direction){         //Going counter-clockwise
             setALLposition(ticks);
 
-            left_b.setPower(-speed);
-            left_f.setPower(-speed);
-            right_b.setPower(speed);
-            right_f.setPower(speed);
+            leftBACK.setPower(-speed);
+            leftFRONT.setPower(-speed);
+            rightBack.setPower(speed);
+            rightFRONT.setPower(speed);
 
         } else { //Going clockwise
             setALLposition(ticks);
 
-            left_f.setPower(speed);
-            left_b.setPower(speed);
-            right_f.setPower(-speed);
-            right_b.setPower(-speed);
+            leftFRONT.setPower(speed);
+            leftBACK.setPower(speed);
+            rightFRONT.setPower(-speed);
+            rightBack.setPower(-speed);
         }
         while (true) {
-            telemetry.addData("CurrentPos",left_f.getCurrentPosition());
-            if ((left_f.getCurrentPosition() - ticks) < 5){
+            telemetry.addData("CurrentPos",leftFRONT.getCurrentPosition());
+            if ((leftFRONT.getCurrentPosition() - ticks) < 5){
                 break;
             }
         }
@@ -173,22 +175,22 @@ public class NineK_MainBotA_Cornor extends LinearOpMode {
         setALLposition(calcClicksForInches(distanceInIN));
         setALLpower(power);
         while (true){
-            if (left_f.getCurrentPosition() > calcClicksForInches(distanceInIN)){
+            if (leftFRONT.getCurrentPosition() > calcClicksForInches(distanceInIN)){
                 break;
             }
         }
     }
     public void setALLpower(double power){
-        left_b.setPower(power);
-        left_f.setPower(power);
-        right_b.setPower(power);
-        right_f.setPower(power);
+        leftBACK.setPower(power);
+        leftFRONT.setPower(power);
+        rightBack.setPower(power);
+        rightFRONT.setPower(power);
     }
     public void setALLposition(int position) {
-        left_b.setTargetPosition(position);
-        left_f.setTargetPosition(position);
-        right_b.setTargetPosition(position);
-        right_f.setTargetPosition(position);
+        leftBACK.setTargetPosition(position);
+        leftFRONT.setTargetPosition(position);
+        rightBack.setTargetPosition(position);
+        rightFRONT.setTargetPosition(position);
 
     }
 }
