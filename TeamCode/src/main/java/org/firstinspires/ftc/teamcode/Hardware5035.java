@@ -1,14 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.RobotLog;
 
 
 /**
@@ -32,8 +28,11 @@ public class Hardware5035 {
     /* Public OpMode members. */
     public DcMotor leftMotor = null;
     public DcMotor rightMotor = null;
-    public DcMotor throwingmotor1 = null;
-    public DcMotor throwingmotor2  = null;
+    public DcMotor ballBooster1 = null;
+    public DcMotor ballBooster2 = null;
+    public DcMotor ballDump = null;
+    public Servo popUp = null;
+
 
 
     /* local OpMode members. */
@@ -51,23 +50,34 @@ public class Hardware5035 {
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        throwingmotor1 = hwMap.dcMotor.get("throwing motor1");
-        throwingmotor2 = hwMap.dcMotor.get("throwing motor2");
+        ballBooster1 = hwMap.dcMotor.get("ball booster 1");
+        ballBooster2 = hwMap.dcMotor.get("ball booster 2");
         leftMotor = hwMap.dcMotor.get("left drive");
         rightMotor = hwMap.dcMotor.get("right drive");
+        ballDump = hwMap.dcMotor.get("ball dump");
+        popUp = hwMap.servo.get("pop up");
         leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        throwingmotor1.setDirection(DcMotor.Direction.FORWARD);
-        throwingmotor2.setDirection(DcMotor.Direction.REVERSE);
+        ballBooster1.setDirection(DcMotor.Direction.FORWARD);
+        ballBooster2.setDirection(DcMotor.Direction.REVERSE);
+        ballDump.setDirection(DcMotor.Direction.FORWARD);
+
+
 
         // Set all motors to zero power
         leftMotor.setPower(0);
         rightMotor.setPower(0);
+        ballBooster1.setPower(0);
+        ballBooster2.setPower(0);
+        ballDump.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //Encoders are not currently hooked up. uncoment these lines when they are.
+        ballBooster1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        ballBooster2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     /***

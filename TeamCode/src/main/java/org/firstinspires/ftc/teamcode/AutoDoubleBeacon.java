@@ -1,10 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * Created by Kota Baer on 10/11/2016.
@@ -26,8 +23,8 @@ public class AutoDoubleBeacon extends LinearOpMode {
         telemetry.update();
          */
         while(true) {
-            robot.throwingmotor1.setPower(1);
-            robot.throwingmotor2.setPower(1);
+            robot.ballBooster1.setPower(1);
+            robot.ballBooster2.setPower(1);
             idle();
         }
     }
