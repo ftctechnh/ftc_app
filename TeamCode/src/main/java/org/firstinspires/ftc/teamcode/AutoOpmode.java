@@ -26,10 +26,13 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.TouchSensor;
@@ -47,7 +50,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="AutoOpmode", group="Testing")  // @Autonomous(...) is the other common choice
+@Autonomous(name="AutoOpmode", group="Testing")  // @Autonomous(...) is the other common choice
 //@Disabled
 public class AutoOpmode extends LinearOpMode {
 
@@ -60,10 +63,20 @@ public class AutoOpmode extends LinearOpMode {
     DcMotor rightMotor = null;
     DcMotor ballMotor = null;
     Servo servoSlicer, servoPusher;
-    TouchSensor touchSensor;
+    DeviceInterfaceModule dim;                  // Device Object
+    DigitalChannel        touchSensor;           // Device Object
+    //TouchSensor touchSensor;
     boolean goingForward = true;
     boolean running = true;
 
+    private double TIME_ONE = 1;
+    private double TIME_TWO = 10;
+
+    private double TIME_EXTRA = .25;
+
+    private double LOW_POWER = .25;
+    private double MID_POWER = .35;
+    private double HIGH_POWER = .5;
 
     @Override
     public void runOpMode() {
@@ -71,15 +84,14 @@ public class AutoOpmode extends LinearOpMode {
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        touchSensor = hardwareMap.touchSensor.get("sensor_touch");
-        ballMotor = hardwareMap.dcMotor.get("ball_motor");
+        dim = hardwareMap.get(DeviceInterfaceModule.class, "dim");   //  Use generic form of device mapping
+        touchSensor = hardwareMap.get(DigitalChannel.class, "sensor_touch"); //  Use generic form of device mapping
         leftMotor  = hardwareMap.dcMotor.get("left_drive");
         rightMotor = hardwareMap.dcMotor.get("right_drive");
-        servoSlicer = hardwareMap.servo.get("ball_slicer");
-        servoPusher = hardwareMap.servo.get("ball_pusher");
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
         rightMotor.setDirection(DcMotor.Direction.FORWARD);
-        ballMotor.setDirection(DcMotor.Direction.FORWARD);
+        leftMotor.setPower(0);
+        rightMotor.setPower(0);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -87,38 +99,35 @@ public class AutoOpmode extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive() && running) {
-//            telemetry.addData("Run Time: " + runtime.toString());
-            telemetry.addData("x", gamepad1.left_stick_y);
-            telemetry.addData("y", gamepad1.right_stick_y);
-            telemetry.update();
 
-            while(!touchSensor.isPressed() && goingForward==true) {
-                if(runtime.seconds()<1) {
-                    leftMotor.setPower(.5);
-                    rightMotor.setPower(.5);
+            while(!touchSensor.getState() && goingForward)
+            {
+                if(runtime.seconds()<TIME_ONE) {
+                    leftMotor.setPower(LOW_POWER);
+                    rightMotor.setPower(LOW_POWER);
                 }
-                else if(runtime.seconds() < 2){
-                    leftMotor.setPower(.75);
-                    rightMotor.setPower(.75);
+                else if(runtime.seconds() < TIME_TWO){
+                    leftMotor.setPower(MID_POWER);
+                    rightMotor.setPower(MID_POWER);
                 }
                 else{
-                    leftMotor.setPower(.9);
-                    rightMotor.setPower(.9);
+                    leftMotor.setPower(HIGH_POWER);
+                    rightMotor.setPower(HIGH_POWER);
                 }
                 telemetry.update();
             }
+
             keepPushingtime.reset();
-            while(keepPushingtime.seconds()<.25) {
-                leftMotor.setPower(.9);
-                rightMotor.setPower(.9);
+            while(keepPushingtime.seconds()<TIME_EXTRA && goingForward)
+            {
+                leftMotor.setPower(HIGH_POWER);
+                rightMotor.setPower(HIGH_POWER);
             }
+
             goingForward = false;
             leftMotor.setPower(0);
             rightMotor.setPower(0);
             telemetry.update();
-            if(runtime.seconds()>29){
-                running = false;
-            }
             idle();     // allow something else to run (aka, release the CPU)
         }
     }

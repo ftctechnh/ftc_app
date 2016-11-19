@@ -35,8 +35,12 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import java.util.ArrayList;
+
+import java.util.List;
 
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -57,20 +61,28 @@ public class PusherOpmode extends LinearOpMode {
 
     /* Declare OpMode members. */
     static final double SLICER_UP   = 0.0;      // top of the slicer
-    static final double SLICER_DOWN = 0.9;      // bottom of the slicer
+    static final double SLICER_DOWN = 1.0;      // bottom of the slicer
 
+
+    static final double SHOOT_DOWN = 0.5;      // starting position
     static final double SHOOT_UP = 0.9;
-    static final double SHOOT_DOWN = 0.45;      // .6 is too high
 
-    static final long RETURN_TIME_MS = 1000;   // time required to shoot the ball
+    static final long RETURN_TIME_MS = 5000;   // time required to shoot the ball
+
+    static final int SAMPLE_SIZE = 15;
 
     private ElapsedTime runtime = new ElapsedTime();
     DcMotor leftMotor = null;
     DcMotor rightMotor = null;
     Servo servoSlicer, servoPusher;
 
+    double slicePosition = SLICER_UP;
+    List<Float> rightJoyStickValues = new ArrayList();
+    List<Float> leftJoyStickValues = new ArrayList();
+
     @Override
     public void runOpMode() {
+
         /* eg: Initialize the hardware variables. Note that the strings used here as parameters
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
@@ -81,24 +93,57 @@ public class PusherOpmode extends LinearOpMode {
         servoPusher = hardwareMap.servo.get("ball_pusher");
         leftMotor.setDirection(DcMotor.Direction.FORWARD);
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
+        leftMotor.setPower(0);
+        rightMotor.setPower(0);
+
+        // set the shoot open & ball slicer down/default position
+        servoPusher.setDirection(Servo.Direction.FORWARD);
+        servoPusher.setPosition(SHOOT_DOWN);
+        servoSlicer.setPosition(SLICER_UP);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
 
-        // set the shoot open & ball slicer down/default position
-        servoPusher.setPosition(SHOOT_DOWN);
-        servoSlicer.setPosition(SLICER_UP);
+        for(int i=0; i<SAMPLE_SIZE; i++)
+        {
+            rightJoyStickValues.add(0f);
+            leftJoyStickValues.add(0f);
+        }
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 //            telemetry.addData("Run Time: " + runtime.toString());
-            telemetry.addData("x", gamepad1.right_stick_y);
-            telemetry.addData("y", gamepad1.left_stick_y);
-            telemetry.update();
 
-            leftMotor.setPower(-gamepad1.right_stick_y);
-            rightMotor.setPower(-gamepad1.left_stick_y);
+            if(gamepad1.x)
+            {
+                servoPusher.setPosition(.7);
+            }
+            else if(gamepad1.b)
+            {
+                servoPusher.setPosition(1);
+            }
+
+
+            rightJoyStickValues.remove(0);
+            rightJoyStickValues.add(gamepad1.right_stick_y);
+
+            leftJoyStickValues.remove(0);
+            leftJoyStickValues.add(gamepad1.left_stick_y);
+
+            float sumRight = 0;
+            float sumLeft = 0;
+            for(int i=0; i<SAMPLE_SIZE; i++)
+            {
+                sumRight += rightJoyStickValues.get(i);
+                sumLeft += leftJoyStickValues.get(i);
+            }
+            float rightPower = sumRight/SAMPLE_SIZE;
+            float leftPower = sumLeft/SAMPLE_SIZE;
+
+            //This is backwards on purpose...
+            leftMotor.setPower(leftPower); //gamepad1.right_stick_y);//
+            rightMotor.setPower(rightPower); //gamepad1.left_stick_y);//
 
             if (gamepad1.left_bumper) {
                 servoSlicer.setPosition(SLICER_DOWN);
@@ -107,16 +152,16 @@ public class PusherOpmode extends LinearOpMode {
                 servoSlicer.setPosition(SLICER_UP);
             }
 
-            if (gamepad1.right_bumper) {
-                servoPusher.setPosition(SHOOT_UP);
-                sleep(RETURN_TIME_MS);
-                servoPusher.setPosition(SHOOT_DOWN);
-            }
-            else if (gamepad1.right_trigger > .5) {
-                servoPusher.setPosition(SHOOT_DOWN);
-                sleep(RETURN_TIME_MS);
-                servoSlicer.setPosition(SLICER_UP);
-            }
+//            if (gamepad1.right_bumper) {
+//                servoPusher.setPosition(SHOOT_UP);
+//                sleep(RETURN_TIME_MS);
+//                servoPusher.setPosition(SHOOT_DOWN);
+//            }
+
+            telemetry.addData("x", rightPower);
+            telemetry.addData("y", leftPower);
+            telemetry.addData("pusher", servoPusher.getPosition());
+            telemetry.addData("direction", servoPusher.getDirection());
             telemetry.update();
 
             idle();     // allow something else to run (aka, release the CPU)
