@@ -26,7 +26,8 @@ public class TeleOp4799 extends OpMode {
     DcMotor motorBackRight;
     DcMotor motorFrontRight;
     Servo buttonPusher;
-
+    DcMotor motorElevator;
+    Servo pineapple;
 
     public void init() {
         motorBackRight = hardwareMap.dcMotor.get("RightBack");
@@ -34,6 +35,8 @@ public class TeleOp4799 extends OpMode {
         motorBackLeft = hardwareMap.dcMotor.get("LeftBack");
         motorFrontLeft = hardwareMap.dcMotor.get("LeftFront");
         buttonPusher = hardwareMap.servo.get("buttonPusher");
+        motorElevator = hardwareMap.dcMotor.get("Elevator");
+        pineapple = hardwareMap.servo.get("Rack");
     }
 
 
@@ -46,10 +49,12 @@ public class TeleOp4799 extends OpMode {
         motorBackRight.setPower(-rightthrottle);
         motorFrontRight.setPower(-rightthrottle);
 
+        motorElevator.setPower(gamepad2.left_stick_y);
+
         if (gamepad1.left_bumper)
-            buttonPusher.setPosition(-1);
+            pineapple.setPosition(1);
         if (gamepad1.right_bumper)
-            buttonPusher.setPosition(1);
+            pineapple.setPosition(-1);
     }
 }
 

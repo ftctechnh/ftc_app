@@ -57,10 +57,10 @@ public class Demo_Bot extends OpMode {
         float fingerstate = (float) ((1.0-gamepad2.right_stick_y)/2.0);
 
 
-        motorBackLeft.setPower(rightthrottle); //Note that I switched the sides so the tank drive goes in the opp. direction such that it's more intuitive
-        motorFrontLeft.setPower(rightthrottle);
-        motorBackRight.setPower(-leftthrottle);
-        motorFrontRight.setPower(-leftthrottle);
+        motorBackLeft.setPower(-leftthrottle); //Note that I switched the sides so the tank drive goes in the opp. direction such that it's more intuitive
+        motorFrontLeft.setPower(-leftthrottle);
+        motorBackRight.setPower(rightthrottle);
+        motorFrontRight.setPower(rightthrottle);
         arm.setPower(-armthrottle);
         rightFinger.setPosition(fingerstate);
         leftFinger.setPosition(1-fingerstate);

@@ -36,6 +36,9 @@ public class ArmbotFrame extends OpMode {
     Servo buttonPusher;
     float rightthrottle;
     float leftthrottle;
+    float revthrottle;
+    double forwardTimer;
+    double backwardTimer;
 
     public void init() {
         motorBackRight = hardwareMap.dcMotor.get("RightBack");
@@ -46,9 +49,20 @@ public class ArmbotFrame extends OpMode {
         motorRev = hardwareMap.dcMotor.get("RevMotor");
         launcher = hardwareMap.servo.get("Launcher");
         buttonPusher = hardwareMap.servo.get("buttonPusher");
+        forwardTimer=0;
+        backwardTimer=0;
     }
 
     public void loop() {
+        if (-revthrottle>0&&forwardTimer<getRuntime()) {
+            backwardTimer = getRuntime() + 1;
+            motorRev.setPower(revthrottle);
+        }
+        if (revthrottle>0&&backwardTimer<getRuntime()) {
+            forwardTimer = getRuntime() + 1;
+            motorRev.setPower(revthrottle);
+        }
+
         if (gamepad1.a)
             beaconMode = true;
         if (gamepad1.b)
@@ -66,14 +80,12 @@ public class ArmbotFrame extends OpMode {
                 buttonPusher.setPosition(-1);
         }
         float armthrottle = -gamepad2.left_stick_y;
-        float revthrottle = gamepad2.right_stick_y;
-
+        revthrottle = gamepad2.right_stick_y;
         motorBackLeft.setPower(-rightthrottle);
         motorFrontLeft.setPower(.69*rightthrottle);
         motorBackRight.setPower(leftthrottle);
         motorFrontRight.setPower(.69*-leftthrottle);
         arm.setPower(armthrottle);
-        motorRev.setPower(-revthrottle);
         if (gamepad2.right_bumper)
             launcher.setPosition(0);
         else

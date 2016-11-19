@@ -70,5 +70,9 @@ public class PushBot4800 extends OpMode {
         if (getRuntime()>10){
             launcher.setPosition(0);
         }
+        if (getRuntime()>11){
+            launcher.setPosition(1);
+            revMotor.setPower(0);
+        }
     }
 }
