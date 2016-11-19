@@ -99,7 +99,7 @@ public class PusherOpmode extends LinearOpMode {
         // set the shoot open & ball slicer down/default position
         servoPusher.setDirection(Servo.Direction.FORWARD);
         servoPusher.setPosition(SHOOT_DOWN);
-        servoSlicer.setPosition(SLICER_UP);
+        servoSlicer.setPosition(SLICER_DOWN);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();

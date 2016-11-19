@@ -69,14 +69,14 @@ public class AutoOpmode extends LinearOpMode {
     boolean goingForward = true;
     boolean running = true;
 
-    private double TIME_ONE = 1;
+    private double TIME_ONE = 2;
     private double TIME_TWO = 10;
 
-    private double TIME_EXTRA = .25;
+    private double TIME_EXTRA = .2;
 
-    private double LOW_POWER = .25;
-    private double MID_POWER = .35;
-    private double HIGH_POWER = .5;
+    private double LOW_POWER = .1;
+    private double MID_POWER = .15;
+    private double HIGH_POWER = .2;
 
     @Override
     public void runOpMode() {
