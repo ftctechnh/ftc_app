@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class BotHardware
 {
 
+    //comment
     /* Public OpMode members. */
     public DcMotor frontLeftMotor = null;
     public DcMotor frontRightMotor = null;
