@@ -58,19 +58,18 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 @Disabled
-@Autonomous(name="Eaglebot: Turn Left, Autonomous", group="Omni2Motor")
-public class eaglebot_left_auto extends LinearOpMode {
+@Autonomous(name="Eaglebot: Center Ball", group="Omni2Motor")
+public class eaglebot_center extends LinearOpMode {
 
     /* Declare OpMode members. */
-    Omni2Motor       robot   = new Omni2Motor();   // Use a Pushbot's hardware
+    Eaglebot      robot   = new Eaglebot();
     private ElapsedTime     runtime = new ElapsedTime();
 
 
-    static final double     FORWARD_SPEED = 0.6;
-    static final double     TURN_SPEED    = 0.5;
 
     @Override
     public void runOpMode() {
+
 
         /*
          * Initialize the drive system variables.
@@ -85,44 +84,25 @@ public class eaglebot_left_auto extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        robot.leftMotor.setPower(0);
-        robot.rightMotor.setPower(0);
+        robot.frontLeft.setPower(0);
+        robot.frontRight.setPower(0);
+        robot.backLeft.setPower(0);
+        robot.backRight.setPower(0);
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 8)) {
             telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
-
-        robot.leftMotor.setPower(FORWARD_SPEED);
-        robot.rightMotor.setPower(FORWARD_SPEED);
+        robot.forward(robot.FORWARD_SPEED);
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 0.2)) {
+        while (opModeIsActive() && (runtime.seconds() < 4)) {
             telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
-
-        robot.leftMotor.setPower(-TURN_SPEED);
-        robot.rightMotor.setPower(TURN_SPEED);
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 1.0)) {
-            telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
-
-
-        robot.leftMotor.setPower(FORWARD_SPEED);
-        robot.rightMotor.setPower(FORWARD_SPEED);
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 1.5)) {
-            telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
-
-
-        robot.leftMotor.setPower(0);
-        robot.rightMotor.setPower(0);
-        robot.leftClaw.setPosition(1.0);
-        robot.rightClaw.setPosition(0.0);
+        robot.frontLeft.setPower(0);
+        robot.frontRight.setPower(0);
+        robot.backLeft.setPower(0);
+        robot.backRight.setPower(0);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();

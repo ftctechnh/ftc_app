@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 
 /**
  * This is NOT an opmode.
@@ -31,6 +32,9 @@ public class Eaglebot
     public DcMotor backLeft = null;
     public LightSensor lightSensorBeacon = null;
     public LightSensor lightSensorFloor = null;
+    public double FORWARD_SPEED = 0.6;
+    public double TURN_SPEED = 0.5;
+    // public OpticalDistanceSensor odsSensor = null;
 
 
 
@@ -72,6 +76,7 @@ public class Eaglebot
         backLeft.setPower(0);
         backRight.setPower(0);
 
+
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -85,7 +90,24 @@ public class Eaglebot
         // leftClaw.setPosition(MID_SERVO);
         // rightClaw.setPosition(MID_SERVO);
     }
-
+    void forward(double speed) {
+        frontLeft.setPower(speed);
+        frontRight.setPower(speed);
+        backLeft.setPower(speed);
+        backRight.setPower(speed);
+    }
+    void stop() {
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backRight.setPower(0);
+        backLeft.setPower(0);
+    }
+    void turn (double speed) {
+        frontLeft.setPower(speed);
+        frontRight.setPower(-speed);
+        backRight.setPower(-speed);
+        backLeft.setPower(speed);
+    }
     /***
      *
      * waitForTick implements a periodic delay. However, this acts like a metronome with a regular
