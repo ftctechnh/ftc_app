@@ -21,8 +21,8 @@ import com.qualcomm.robotcore.hardware.ServoController;
  * Created by FTC Team 4799-4800 on 10/13/2016.
  */
 
-@Autonomous(name = "4799AutoBlue", group = "")
-public class DemoAuto extends OpMode {
+@Autonomous(name = "4800AutoRed", group = "")
+public class Red4800 extends OpMode {
     //DcMotorController wheelControllerLeft;
     DcMotor motorBackLeft;
     DcMotor motorFrontLeft;
@@ -74,19 +74,19 @@ public class DemoAuto extends OpMode {
         if (motorBackLeft.isBusy()) {
             motorBackLeft.setPower(.5);
             motorBackRight.setPower(.5);
-            motorFrontLeft.setPower(.5);
-            motorFrontRight.setPower(.5);
+            motorFrontLeft.setPower(.69*.5);
+            motorFrontRight.setPower(.69*.5);
             if (cs1<3) {
                 motorBackLeft.setPower(.2);
                 motorBackRight.setPower(.5);
-                motorFrontLeft.setPower(.2);
-                motorFrontRight.setPower(.5);
+                motorFrontLeft.setPower(.69*.2);
+                motorFrontRight.setPower(.69*.5);
             }
             else if (cs3<3){
                 motorBackLeft.setPower(.5);
                 motorBackRight.setPower(.2);
-                motorFrontLeft.setPower(.5);
-                motorFrontRight.setPower(.2);
+                motorFrontLeft.setPower(.69*.5);
+                motorFrontRight.setPower(.69*.2);
             }
         }
         else{
@@ -97,14 +97,14 @@ public class DemoAuto extends OpMode {
         }
 
         if (cs.red()>20 || cs.blue()>20){
-            if (cs.blue()>20)
+            if (cs.red()>20)
                 buttonPusher.setPosition(-1);
             else
                 buttonPusher.setPosition(.5);
             motorBackLeft.setPower(.5);
             motorBackRight.setPower(.5);
-            motorFrontLeft.setPower(.5);
-            motorFrontRight.setPower(.5);
+            motorFrontLeft.setPower(.69*.5);
+            motorFrontRight.setPower(.69*.5);
         }
     }
 }

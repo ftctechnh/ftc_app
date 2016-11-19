@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.team4800;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsUsbDeviceInterfaceModule;
@@ -21,8 +21,8 @@ import com.qualcomm.robotcore.hardware.ServoController;
  * Created by FTC Team 4799-4800 on 10/13/2016.
  */
 
-@Autonomous(name = "4799AutoBlue", group = "")
-public class DemoAuto extends OpMode {
+@Autonomous(name = "BeaconAuto", group = "")
+public class BeaconAuto4799 extends OpMode {
     //DcMotorController wheelControllerLeft;
     DcMotor motorBackLeft;
     DcMotor motorFrontLeft;
@@ -55,10 +55,10 @@ public class DemoAuto extends OpMode {
     }
 
     public void loop() {
-        motorBackLeft.setTargetPosition(10000);
-        motorBackRight.setTargetPosition(-10000);
-        motorFrontRight.setTargetPosition(-10000);
-        motorFrontLeft.setTargetPosition(10000);
+        motorBackLeft.setTargetPosition(9000);
+        motorBackRight.setTargetPosition(-9000);
+        motorFrontRight.setTargetPosition(-9000);
+        motorFrontLeft.setTargetPosition(9000);
         telemetry.update();
         telemetry.addData("vex1:", cs1);
         telemetry.addData("vex2:", cs2);
@@ -76,36 +76,6 @@ public class DemoAuto extends OpMode {
             motorBackRight.setPower(.5);
             motorFrontLeft.setPower(.5);
             motorFrontRight.setPower(.5);
-            if (cs1<3) {
-                motorBackLeft.setPower(.2);
-                motorBackRight.setPower(.5);
-                motorFrontLeft.setPower(.2);
-                motorFrontRight.setPower(.5);
-            }
-            else if (cs3<3){
-                motorBackLeft.setPower(.5);
-                motorBackRight.setPower(.2);
-                motorFrontLeft.setPower(.5);
-                motorFrontRight.setPower(.2);
-            }
-        }
-        else{
-            motorBackLeft.setPower(0);
-            motorBackRight.setPower(0);
-            motorFrontLeft.setPower(0);
-            motorFrontRight.setPower(0);
-        }
-
-        if (cs.red()>20 || cs.blue()>20){
-            if (cs.blue()>20)
-                buttonPusher.setPosition(-1);
-            else
-                buttonPusher.setPosition(.5);
-            motorBackLeft.setPower(.5);
-            motorBackRight.setPower(.5);
-            motorFrontLeft.setPower(.5);
-            motorFrontRight.setPower(.5);
         }
     }
 }
-
