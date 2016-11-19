@@ -28,6 +28,7 @@ public class HardwarePushbot
     public DcMotor  rightFrontMotor = null;
     public DcMotor  leftBackMotor   = null;
     public DcMotor  rightBackMotor  = null;
+    public Servo  pusherServo = null;
 
     //public Servo    leftClaw        = null;
     //public Servo    rightClaw       = null;
@@ -38,6 +39,8 @@ public class HardwarePushbot
 
     public static final double FORWARD_POWER    =  0.45 ;
     public static final double BACKWARD_POWER   = -0.45 ;
+    public static final double TURN_POWER       = 0.2;
+    public static final double BACKWARD_TURN_POWER = -0.2;
     public static final double STOP_POWER       =  0.0;
 
     /* local OpMode members. */
@@ -59,6 +62,7 @@ public class HardwarePushbot
         rightFrontMotor  = hwMap.dcMotor.get("rf motor");
         leftBackMotor    = hwMap.dcMotor.get("lb motor");
         rightBackMotor   = hwMap.dcMotor.get("rb motor");
+        pusherServo     =  hwMap.servo.get("pusher");
 
         leftFrontMotor.setDirection(DcMotor.Direction.FORWARD);
         leftBackMotor.setDirection(DcMotor.Direction.FORWARD);
