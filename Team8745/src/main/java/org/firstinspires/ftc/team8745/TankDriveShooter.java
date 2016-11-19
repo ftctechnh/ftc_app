@@ -27,7 +27,7 @@ public class TankDriveShooter extends OpMode{
     Servo shooterServo;
     long startTime = 0;
 
-    final double kServoNullPosition = 0.4;
+    final double kServoNullPosition = 0.8;
     final double kServoRange = 0.6;
     final double kShootPower = 0.7;
 
