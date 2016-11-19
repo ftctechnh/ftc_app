@@ -67,9 +67,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="8200: CenterVortex", group="Pushbot")
+@Autonomous(name="8200: Corner Vortex", group="Pushbot")
 //@Disabled
-public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
+public class CornerVortex extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareK9bot robot   = new HardwareK9bot();   // Use a Pushbot's hardware
@@ -79,7 +79,7 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-                                                      (WHEEL_DIAMETER_INCHES * 3.1415);
+            (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.3;
     static final double     TURN_SPEED              = 0.3;
 
@@ -105,14 +105,14 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",
-                          robot.leftMotor.getCurrentPosition(),
-                          robot.rightMotor.getCurrentPosition());
+                robot.leftMotor.getCurrentPosition(),
+                robot.rightMotor.getCurrentPosition());
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-       // encoderDrive(DRIVE_SPEED,  20,  20, 5.0);
+        // encoderDrive(DRIVE_SPEED,  20,  20, 5.0);
         //
 //        DrawF();
 //        sleep(5000);
@@ -179,16 +179,16 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             while (opModeIsActive() &&
-                   (runtime.seconds() < timeoutS) &&
-                   (robot.leftMotor.isBusy() && robot.rightMotor.isBusy())) {
+                    (runtime.seconds() < timeoutS) &&
+                    (robot.leftMotor.isBusy() && robot.rightMotor.isBusy())) {
 
 
 
                 // Display it for the driver.
                 telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
                 telemetry.addData("Path2",  "Running at %7d :%7d",
-                                            robot.leftMotor.getCurrentPosition(),
-                                            robot.rightMotor.getCurrentPosition());
+                        robot.leftMotor.getCurrentPosition(),
+                        robot.rightMotor.getCurrentPosition());
                 telemetry.update();
             }
 
@@ -239,7 +239,7 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
 //        encoderDrive(TURN_SPEED,  10, -5, 4.0);
 //    }
 
-//    public void DrawF()
+    //    public void DrawF()
 //    {
 //        servoDown();
 //        encoderDrive(DRIVE_SPEED,  5,  5, 5.0);
@@ -298,8 +298,23 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
 //    }
     public void moveCenter() {
         servoUp();
-        encoderDrive(DRIVE_SPEED,  -5,  -5, 3.0);
-        robot.harvester.setPower(-1);
+        encoderDrive(-DRIVE_SPEED,  5,  5, 1.0);
+       // encoderDrive(DRIVE_SPEED, -2, 2, 3.0);
+
+
+        robot.leftMotor.setPower(1);
+        robot.rightMotor.setPower(-1);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 0.8)) {
+            //telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+            //telemetry.update();
+        }
+
+
+         encoderDrive(1 ,  -5, -5, 3.0);
+        //robot.harvester.setPower(-1);
+
+
     }
 
 
