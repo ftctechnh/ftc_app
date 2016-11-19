@@ -28,6 +28,7 @@ public class HardwarePushbot
     public DcMotor  rightFrontMotor = null;
     public DcMotor  leftBackMotor   = null;
     public DcMotor  rightBackMotor  = null;
+    public DcMotor  collectorMotor  = null;
     public Servo  pusherServo = null;
 
     //public Servo    leftClaw        = null;
@@ -63,6 +64,7 @@ public class HardwarePushbot
         leftBackMotor    = hwMap.dcMotor.get("lb motor");
         rightBackMotor   = hwMap.dcMotor.get("rb motor");
         pusherServo     =  hwMap.servo.get("pusher");
+        collectorMotor  =  hwMap.dcMotor.get("collector");
 
         leftFrontMotor.setDirection(DcMotor.Direction.FORWARD);
         leftBackMotor.setDirection(DcMotor.Direction.FORWARD);
