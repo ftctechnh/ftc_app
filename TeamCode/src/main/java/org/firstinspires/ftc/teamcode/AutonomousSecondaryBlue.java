@@ -81,14 +81,13 @@ public class AutonomousSecondaryBlue extends LinearOpMode {
     @Override
     public void runOpMode() {
         // / create an autonomous sequence with the steps to drive
-        final float power = 0.5f;
-        final float error = 254.0f;       // get us within 10" for this test
+        final float power = 0.2f;
+        final float error = 50.0f;       // get us within 10" for this test
         final float angleError = 5.0f;    //and within 5 degrees for turning
         final float targetZ = 6*25.4f;
 
         //constants for pushy pushy
-        final double readPos = 0.2;
-        final double pushPos = 0.4;
+        final double pushPos = 1.0;
         final double time = 2.0;
         final boolean red = false;
 
@@ -106,22 +105,23 @@ public class AutonomousSecondaryBlue extends LinearOpMode {
         telemetry.update();
 
         // create the root Sequence for this autonomous OpMode
-        AutoLib.DebugLinearSequence mSequence = new AutoLib.DebugLinearSequence(this);  //TODO: Un-Debug
+        AutoLib.Sequence mSequence = new AutoLib.LinearSequence();  //TODO: Un-Debug
         // drive to the first beacon
-        mSequence.add(new AutoLib.MoveSquirrelyByTimeStep(robot.getMotorArray(), 45, power, 0.6, true));
-        mSequence.add(new AutoLib.VuforiaSquirrelyDriveStep(this, new VectorF(-1500,300,targetZ), Vuf, Vuf, robot.getMotorArray(), power, error));    // Wheels
-        mSequence.add(new AutoLib.GyroTurnStep(this, -90, Vuf, robot.getMotorArray(), power, angleError, true));
-        //pushy pushy
-        mSequence.add(new pushypushy(robot.leftSensor, robot.rightSensor, robot.leftServo, robot.rightServo, readPos, pushPos, time, red)); //SO. MANY. VARIABLES.
-        //drive to the second beacon
-        mSequence.add(new AutoLib.MoveSquirrelyByTimeStep(robot.getMotorArray(), 90, power, 0.6, true));
-        mSequence.add(new AutoLib.VuforiaSquirrelyDriveStep(this, new VectorF(-1500,-914,targetZ), Vuf, Vuf, robot.getMotorArray(), power, error));   // Legos
-        mSequence.add(new AutoLib.GyroTurnStep(this, -90, Vuf, robot.getMotorArray(), power, angleError, true));
-        //pushy pushy
-        mSequence.add(new pushypushy(robot.leftSensor, robot.rightSensor, robot.leftServo, robot.rightServo, readPos, pushPos, time, red));
-        //drive to yoga ball
-        mSequence.add(new AutoLib.VuforiaSquirrelyDriveStep(this, new VectorF((int)(-footToMm * 2), (int)(footToMm * 2),targetZ), Vuf, Vuf, robot.getMotorArray(), power, error));// yoga ball
+        //mSequence.add(new AutoLib.MoveSquirrelyByTimeStep(robot.getMotorArray(), 45, 1.0, 3.0, true));
+        mSequence.add(new AutoLib.VuforiaSquirrelyDriveStep(this, new VectorF(-1600,300,targetZ), Vuf, Vuf, robot.getMotorArray(), power, error));    // Wheels
         mSequence.add(new AutoLib.MoveByTimeStep(robot.getMotorArray(), 0.0, 0, true));
+        //mSequence.add(new AutoLib.GyroTurnStep(this, -90, Vuf, robot.getMotorArray(), power, angleError, true));
+        //pushy pushy
+        mSequence.add(new pushypushy(robot.leftSensor, robot.rightSensor, robot.leftServo, robot.rightServo, pushPos, time, red)); //SO. MANY. VARIABLES.
+        //drive to the second beacon
+        //mSequence.add(new AutoLib.MoveSquirrelyByTimeStep(robot.getMotorArray(), 90, power, 0.6, true));
+        //mSequence.add(new AutoLib.VuforiaSquirrelyDriveStep(this, new VectorF(-1500,-914,targetZ), Vuf, Vuf, robot.getMotorArray(), power, error));   // Legos
+        //mSequence.add(new AutoLib.GyroTurnStep(this, -90, Vuf, robot.getMotorArray(), power, angleError, true));
+        //pushy pushy
+        //mSequence.add(new pushypushy(robot.leftSensor, robot.rightSensor, robot.leftServo, robot.rightServo, pushPos, time, red));
+        //drive to yoga ball
+        //mSequence.add(new AutoLib.VuforiaSquirrelyDriveStep(this, new VectorF((int)(-footToMm * 2), (int)(footToMm * 2),targetZ), Vuf, Vuf, robot.getMotorArray(), power, error));// yoga ball
+        //mSequence.add(new AutoLib.MoveByTimeStep(robot.getMotorArray(), 0.0, 0, true));
 
         // start out not-done
         boolean bDone = false;
@@ -137,10 +137,10 @@ public class AutonomousSecondaryBlue extends LinearOpMode {
             bDone = mSequence.loop();       // returns true when we're done
 
             //increment sequence on button push
-            if(lastState != gamepad1.a){
-                if(gamepad1.a) mSequence.incStep();
-                lastState = gamepad1.a;
-            }
+            //if(lastState != gamepad1.a){
+            //    if(gamepad1.a) mSequence.incStep();
+            //    lastState = gamepad1.a;
+            //}
 
             telemetry.update();
         }
@@ -149,7 +149,7 @@ public class AutonomousSecondaryBlue extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            Vuf.loop(true);
+            //Vuf.loop(true);
             telemetry.update();
         }
         Vuf.stop();
@@ -160,13 +160,7 @@ public class AutonomousSecondaryBlue extends LinearOpMode {
 
     private class pushypushy extends AutoLib.LinearSequence{
 
-        pushypushy(ColorSensor leftSensor, ColorSensor rightSensor, Servo leftServo, Servo rightServo, double readPos, double pushPos, double time, boolean red){
-            //extend the right and left servo arms so color sensors get an accurate reading
-            AutoLib.ConcurrentSequence servoExtend = new AutoLib.ConcurrentSequence();
-            servoExtend.add(new AutoLib.TimedServoStep(leftServo, readPos, time, false));
-            servoExtend.add(new AutoLib.TimedServoStep(rightServo, readPos, time, false));
-            this.add(servoExtend);
-
+        pushypushy(ColorSensor leftSensor, ColorSensor rightSensor, Servo leftServo, Servo rightServo, double pushPos, double time, boolean red){
             //run color detection and pushing
             this.add(new pushyDetect(leftSensor, rightSensor, leftServo, rightServo, pushPos, time, red));
 

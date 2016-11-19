@@ -14,6 +14,11 @@ public class TeleOpMain extends OpMode {
 
     BotHardware robot = new BotHardware();
 
+    boolean lastLeftBumperState = false;
+    boolean lastRightBumperState = false;
+    double leftPusherState = -1.0;
+    double rightPusherState = -1.0;
+
     @Override
     public void init() {
 
@@ -21,6 +26,9 @@ public class TeleOpMain extends OpMode {
 
         // hardware maps
         robot.init(this, false);
+
+        robot.leftServo.setPosition(leftPusherState);
+        robot.rightServo.setPosition(rightPusherState);
     }
 
     @Override
@@ -55,50 +63,50 @@ public class TeleOpMain extends OpMode {
         // dpad steering
         if(gamepad1.dpad_up && gamepad1.dpad_left) {
             robot.setFrontPower(0.0);
-            robot.setBackPower(-1.0);
+            robot.setBackPower(1.0);
         }
         else if(gamepad1.dpad_up && gamepad1.dpad_right) {
-            robot.setFrontPower(-1.0);
+            robot.setFrontPower(1.0);
             robot.setBackPower(0.0);
         }
         else if(gamepad1.dpad_down && gamepad1.dpad_left) {
-            robot.setFrontPower(1.0);
+            robot.setFrontPower(-1.0);
             robot.setBackPower(0.0);
         }
         else if(gamepad1.dpad_down && gamepad1.dpad_right) {
             robot.setFrontPower(0.0);
-            robot.setBackPower(1.0);
+            robot.setBackPower(-1.0);
         }
         else if(gamepad1.dpad_up) {
-            robot.setFrontPower(-1.0);
-            robot.setBackPower(-1.0);
+            robot.setFrontPower(1.0);
+            robot.setBackPower(1.0);
         }
         else if(gamepad1.dpad_left) {
-            robot.setFrontPower(1.0);
-            robot.setBackPower(-1.0);
-        }
-        else if(gamepad1.dpad_right) {
             robot.setFrontPower(-1.0);
             robot.setBackPower(1.0);
         }
-        else if(gamepad1.dpad_down) {
+        else if(gamepad1.dpad_right) {
             robot.setFrontPower(1.0);
-            robot.setBackPower(1.0);
+            robot.setBackPower(-1.0);
+        }
+        else if(gamepad1.dpad_down) {
+            robot.setFrontPower(-1.0);
+            robot.setBackPower(-1.0);
         }
         else {
             // joystick tank steering
-            robot.frontLeftMotor.setPower(gamepad1.left_stick_y);
-            robot.frontRightMotor.setPower(gamepad1.right_stick_y);
-            robot.backLeftMotor.setPower(gamepad1.left_stick_y);
-            robot.backRightMotor.setPower(gamepad1.right_stick_y);
+            robot.frontLeftMotor.setPower(-gamepad1.left_stick_y);
+            robot.frontRightMotor.setPower(-gamepad1.right_stick_y);
+            robot.backLeftMotor.setPower(-gamepad1.left_stick_y);
+            robot.backRightMotor.setPower(-gamepad1.right_stick_y);
         }
 
         // run lifter motor
-        if(gamepad2.left_bumper) {
-            robot.lifterMotor.setPower(-1.0);
-        }
-        else if(gamepad2.right_bumper) {
+        if(gamepad2.left_trigger > 0.0) {
             robot.lifterMotor.setPower(1.0);
+        }
+        else if(gamepad2.right_trigger > 0.0) {
+            robot.lifterMotor.setPower(-1.0);
         }
         else {
             robot.lifterMotor.setPower(0.0);
@@ -111,5 +119,19 @@ public class TeleOpMain extends OpMode {
         else {
             robot.launcherMotor.setPower(0.0);
         }
+
+        // toggle button pushers
+        if(!lastLeftBumperState && gamepad2.left_bumper) {
+            leftPusherState *= -1.0;
+        }
+        if(!lastRightBumperState && gamepad2.right_bumper) {
+            rightPusherState *= -1.0;
+        }
+
+        robot.leftServo.setPosition(leftPusherState);
+        robot.rightServo.setPosition(rightPusherState);
+
+        lastLeftBumperState = gamepad2.left_bumper;
+        lastRightBumperState = gamepad2.right_bumper;
     }
 }

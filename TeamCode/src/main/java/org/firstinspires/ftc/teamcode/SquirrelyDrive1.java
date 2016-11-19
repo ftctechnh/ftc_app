@@ -44,7 +44,7 @@ import com.qualcomm.robotcore.util.Range;
  * Enables control of the robot via the gamepad using Squirrely Wheels
  */
 @TeleOp(name="Test: SquirrelyDrive1", group="Test")  // @Autonomous(...) is the other common choice
-@Disabled
+//@Disabled
 public class SquirrelyDrive1 extends OpMode {
 
 	DcMotor motorFrontRight;
@@ -82,12 +82,12 @@ public class SquirrelyDrive1 extends OpMode {
 		 *   "fr" and "br" are front and back right wheels
 		 */
 		try {
-			motorFrontRight = hardwareMap.dcMotor.get("fr");
-			motorFrontLeft = hardwareMap.dcMotor.get("fl");
-			motorBackRight = hardwareMap.dcMotor.get("br");
-			motorBackLeft = hardwareMap.dcMotor.get("bl");
-			motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
-			motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
+			motorFrontRight = hardwareMap.dcMotor.get("front_right");
+			motorFrontLeft = hardwareMap.dcMotor.get("front_left");
+			motorBackRight = hardwareMap.dcMotor.get("back_right");
+			motorBackLeft = hardwareMap.dcMotor.get("back_left");
+			motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
+			motorBackRight.setDirection(DcMotor.Direction.REVERSE);
 		}
 		catch (IllegalArgumentException iax) {
 			bDebug = true;

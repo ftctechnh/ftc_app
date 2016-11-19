@@ -121,6 +121,7 @@ public class AutoLib {
     static public class DebugLinearSequence extends Sequence {
         OpMode mMode;
         int mIndex;
+        boolean mDone = false;
 
         public DebugLinearSequence() {
             mIndex = 0;
@@ -134,19 +135,19 @@ public class AutoLib {
 
         public boolean loop(){
             super.loop();
-            boolean bDone = true;
 
-            if(mIndex < mSteps.size()) bDone = mSteps.get(mIndex).loop();
+            if(!mDone && mIndex < mSteps.size()) mDone = mSteps.get(mIndex).loop();
 
             if(mMode != null){
                 mMode.telemetry.addData("Step #", mIndex);
-                mMode.telemetry.addData("Step Done", bDone);
+                mMode.telemetry.addData("Step Done", mDone);
             }
 
             return mIndex >= mSteps.size();
         }
 
         public void incStep(){
+            mDone = false;
             mIndex++;
         }
     }
@@ -347,7 +348,7 @@ public class AutoLib {
             // compute absolute direction vector to target position on field
             VectorF position = mLocSensor.getLocation();
             if (position == null) {
-                float searchPower = 0.2f;
+                float searchPower = -0.1f;
                 mMotorSteps.get(0).setPower(searchPower); //right
                 mMotorSteps.get(1).setPower(searchPower);
                 mMotorSteps.get(2).setPower(-searchPower); //left
@@ -368,16 +369,16 @@ public class AutoLib {
 
             // compute motor powers needed to go in that direction
             MotorPowers mp = GetSquirrelyWheelMotorPowers(robotHeading);
-            double frontPower = mp.Front() * mPower;
-            double backPower = mp.Back() * mPower;
+            double frontPower = Range.clip(mp.Front(), -mPower, mPower);
+            double backPower = Range.clip(mp.Back(), -mPower, mPower);
 
             // reduce motor powers when we're very close to the target position
-            final double slowDist = 254.0;   // start slowing down when we're this close (10")
+            //final double slowDist = 254.0;   // start slowing down when we're this close
             double distToTarget = dirToTarget.magnitude();
-            if (distToTarget < slowDist) {
-                frontPower *= distToTarget/slowDist;
-                backPower  *= distToTarget/slowDist;
-            }
+            //if (distToTarget < slowDist) {
+            //    frontPower *= distToTarget/slowDist;
+            //    backPower  *= distToTarget/slowDist;
+            //}
 
             // output debug telemetry
             mOpMode.telemetry.addData("VSGS:", "abs heading: %4.1f  distance: %4.1f", headingToTarget, distToTarget);
@@ -391,6 +392,15 @@ public class AutoLib {
 
             // are we there yet?
             boolean bDone = distToTarget < mError;     // within an inch of target position?
+
+            if(bDone){
+                double searchPower = 0.0;
+                mMotorSteps.get(0).setPower(searchPower); //right
+                mMotorSteps.get(1).setPower(searchPower);
+                mMotorSteps.get(2).setPower(searchPower); //left
+                mMotorSteps.get(3).setPower(searchPower);
+            }
+
             return bDone;
         }
     }
