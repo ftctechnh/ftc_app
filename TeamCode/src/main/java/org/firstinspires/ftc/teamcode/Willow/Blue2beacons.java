@@ -1,16 +1,19 @@
-/*package org.firstinspires.ftc.teamcode.Willow;
+package org.firstinspires.ftc.teamcode.Willow;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 /**
  * Created by windorabug on 11/15/16.
-/
+ */
 
-public class Blue2beacons {@Autonomous(name="getting to the blue beacon #2", group="Pushbot")
-@Disabled
+public class Blue2beacons { @Autonomous(name="getting to the blue beacon #2", group="Pushbot")
+//@Disabled
 public class redbeaconleft extends LinearOpMode {
 
-    /* Declare OpMode members. *
+    /* Declare OpMode members. */
     HardwarePushbot robot   = new HardwarePushbot();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
@@ -24,15 +27,18 @@ public class redbeaconleft extends LinearOpMode {
          * The init() method of the hardware class does all the work here
     @Override
     public void runOpMode() throws InterruptedException {
-         /
+         */
     robot.init(hardwareMap);
 
     // Send telemetry message to signify robot waiting
     telemetry.addData("Status", "Ready to run");    //
     telemetry.update();
 
-    // Wait for the game to start (driver presses PLAY)
-    redbeaconleft();
+    /* Wait for the game to start (driver presses PLAY)
+    */
+
+
+    Blue1beacons();
 
     // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
 
@@ -40,7 +46,7 @@ public class redbeaconleft extends LinearOpMode {
     robot.leftMotor.setPower(FORWARD_SPEED);
     robot.rightMotor.setPower(FORWARD_SPEED);
     runtime.reset();
-
+    while (
 
     redbeaconleft() && (runtime.seconds() < 0.5)) {
         telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
@@ -56,7 +62,7 @@ public class redbeaconleft extends LinearOpMode {
         while (blue1beacons() && (runtime.seconds() < 1.0)) {
             telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
-            blue1beacons();/
+            blue1beacons();*/
 
 
     // Step 2:  Spin right for 1.0 seconds
@@ -67,7 +73,7 @@ public class redbeaconleft extends LinearOpMode {
     runtime.reset();
     while (
 
-    redbeaconleft() && (runtime.seconds() < 1.0)) {
+    Blue1beacons() && (runtime.seconds() < 1.0)) {
         telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
         telemetry.update();
         idle();
@@ -82,10 +88,10 @@ public class redbeaconleft extends LinearOpMode {
             telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
             blue1beacons();
-        }/
+        }*/
 
 
-    // Step 1:  Drive forward for .7 second
+    // Step 3:  Drive forward for .7 second
     robot.leftMotor.setPower(FORWARD_SPEED);
     robot.rightMotor.setPower(FORWARD_SPEED);
     runtime.reset();
@@ -98,7 +104,7 @@ public class redbeaconleft extends LinearOpMode {
 
     }
 
-    // Step 2:  Spin left for 1.3 seconds
+    // Step 4:  Spin left for 1.3 seconds
     robot.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     robot.leftMotor.setPower(TURN_SPEED);
     robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -112,7 +118,7 @@ public class redbeaconleft extends LinearOpMode {
         idle();
     }
 
-    // Step 1:  Drive forward for .6 seconds
+    // Step 5:  Drive forward for .6 seconds
     robot.leftMotor.setPower(FORWARD_SPEED);
     robot.rightMotor.setPower(FORWARD_SPEED);
     runtime.reset();
@@ -125,7 +131,7 @@ public class redbeaconleft extends LinearOpMode {
 
     }
 
-    // Step 2:  Spin right for 1.3 seconds
+    // Step 6:  Spin right for 1.3 seconds
     robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
     robot.leftMotor.setPower(TURN_SPEED);
     robot.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -139,7 +145,7 @@ public class redbeaconleft extends LinearOpMode {
         idle();
     }
 
-    // Step 1:  Drive forward for 0.5 seconds
+    // Step 7:  Drive forward for 0.5 seconds
     robot.leftMotor.setPower(FORWARD_SPEED);
     robot.rightMotor.setPower(FORWARD_SPEED);
     runtime.reset();
@@ -152,7 +158,7 @@ public class redbeaconleft extends LinearOpMode {
 
     }
 
-    // Step 4:  Stop and close the claw.
+    // Step 8:  Stop and close the claw.
     robot.leftMotor.setPower(3);
     robot.rightMotor.setPower(3);
     //robot.leftClaw.setPosition(1.0);
@@ -166,4 +172,3 @@ public class redbeaconleft extends LinearOpMode {
 }
 
 }
-*/
