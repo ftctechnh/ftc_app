@@ -1,5 +1,4 @@
 package org.firstinspires.ftc.teamcode;
-
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsUsbDeviceInterfaceModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -21,16 +20,19 @@ import com.qualcomm.robotcore.hardware.ServoController;
  * Created by FTC Team 4799-4800 on 10/13/2016.
  */
 
-@Autonomous(name = "4799AutoBlue", group = "")
-public class DemoAuto extends OpMode {
+@Autonomous(name = "PushBot4800", group = "")
+public class PushBot4800 extends OpMode {
     //DcMotorController wheelControllerLeft;
     DcMotor motorBackLeft;
     DcMotor motorFrontLeft;
     //DcMotorController wheelControllerRight;
     DcMotor motorBackRight;
     DcMotor motorFrontRight;
+    DcMotor arm;
+    DcMotor revMotor;
     ModernRoboticsI2cColorSensor cs;
     Servo buttonPusher;
+    Servo launcher;
     ModernRoboticsUsbDeviceInterfaceModule interfaceModule;
     double cs1;
     double cs2;
@@ -40,10 +42,16 @@ public class DemoAuto extends OpMode {
         motorFrontRight = hardwareMap.dcMotor.get("RightFront");
         motorBackLeft = hardwareMap.dcMotor.get("LeftBack");
         motorFrontLeft = hardwareMap.dcMotor.get("LeftFront");
+        arm = hardwareMap.dcMotor.get("Arm");
+        revMotor = hardwareMap.dcMotor.get("RevMotor");
+        launcher = hardwareMap.servo.get("Launcher");
+
         cs = hardwareMap.get(ModernRoboticsI2cColorSensor.class, "CS");
         buttonPusher = hardwareMap.servo.get("buttonPusher");
         interfaceModule = hardwareMap.get(ModernRoboticsUsbDeviceInterfaceModule.class, "CDI");
 
+        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -55,57 +63,16 @@ public class DemoAuto extends OpMode {
     }
 
     public void loop() {
-        motorBackLeft.setTargetPosition(10000);
-        motorBackRight.setTargetPosition(-10000);
-        motorFrontRight.setTargetPosition(-10000);
-        motorFrontLeft.setTargetPosition(10000);
-        telemetry.update();
-        telemetry.addData("vex1:", cs1);
-        telemetry.addData("vex2:", cs2);
-        telemetry.addData("vex3:", cs3);
-        telemetry.addData("red:", cs.red());
-        telemetry.addData("blue:", cs.blue());
-        telemetry.addData("isBusy():", motorBackLeft.isBusy());
-
-        cs1 = interfaceModule.getAnalogInputVoltage(0);
-        cs2 = interfaceModule.getAnalogInputVoltage(1);
-        cs3 = interfaceModule.getAnalogInputVoltage(2);
-
-        if (motorBackLeft.isBusy()) {
-            motorBackLeft.setPower(.5);
-            motorBackRight.setPower(.5);
-            motorFrontLeft.setPower(.5);
-            motorFrontRight.setPower(.5);
-            if (cs1<3) {
-                motorBackLeft.setPower(.2);
-                motorBackRight.setPower(.5);
-                motorFrontLeft.setPower(.2);
-                motorFrontRight.setPower(.5);
-            }
-            else if (cs3<3){
-                motorBackLeft.setPower(.5);
-                motorBackRight.setPower(.2);
-                motorFrontLeft.setPower(.5);
-                motorFrontRight.setPower(.2);
-            }
+        arm.setPower(1);
+        arm.setTargetPosition(3000);
+        if (!arm.isBusy())
+        revMotor.setPower(.8);
+        if (getRuntime()>10){
+            launcher.setPosition(0);
         }
-        else{
-            motorBackLeft.setPower(0);
-            motorBackRight.setPower(0);
-            motorFrontLeft.setPower(0);
-            motorFrontRight.setPower(0);
-        }
-
-        if (cs.red()>20 || cs.blue()>20){
-            if (cs.blue()>20)
-                buttonPusher.setPosition(-1);
-            else
-                buttonPusher.setPosition(.5);
-            motorBackLeft.setPower(.5);
-            motorBackRight.setPower(.5);
-            motorFrontLeft.setPower(.5);
-            motorFrontRight.setPower(.5);
+        if (getRuntime()>11){
+            launcher.setPosition(1);
+            revMotor.setPower(0);
         }
     }
 }
-

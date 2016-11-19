@@ -20,7 +20,7 @@ import com.qualcomm.robotcore.hardware.ServoController;
  */
 @TeleOp(name = "ArmBot", group = "")
 public class ArmbotFrame extends OpMode {
-    boolean beaconMode;
+    boolean beaconMode = true;
     DcMotorController wheelControllerLeft;
     DcMotor motorBackLeft;
     DcMotor motorFrontLeft;
@@ -36,6 +36,9 @@ public class ArmbotFrame extends OpMode {
     Servo buttonPusher;
     float rightthrottle;
     float leftthrottle;
+    float revthrottle;
+    double forwardTimer;
+    double backwardTimer;
 
     public void init() {
         motorBackRight = hardwareMap.dcMotor.get("RightBack");
@@ -45,10 +48,21 @@ public class ArmbotFrame extends OpMode {
         arm = hardwareMap.dcMotor.get("Arm");
         motorRev = hardwareMap.dcMotor.get("RevMotor");
         launcher = hardwareMap.servo.get("Launcher");
-        buttonPusher = hardwareMap.servo.get("ButtonPusher");
+        buttonPusher = hardwareMap.servo.get("buttonPusher");
+        forwardTimer=0;
+        backwardTimer=0;
     }
 
     public void loop() {
+        if (-revthrottle>0&&forwardTimer<getRuntime()) {
+            backwardTimer = getRuntime() + 1;
+            motorRev.setPower(revthrottle);
+        }
+        if (revthrottle>0&&backwardTimer<getRuntime()) {
+            forwardTimer = getRuntime() + 1;
+            motorRev.setPower(revthrottle);
+        }
+
         if (gamepad1.a)
             beaconMode = true;
         if (gamepad1.b)
@@ -58,25 +72,23 @@ public class ArmbotFrame extends OpMode {
             rightthrottle = -gamepad1.right_stick_y;
         }
         else{
-            leftthrottle = gamepad1.left_stick_y;
-            rightthrottle = gamepad1.right_stick_y;
+            leftthrottle = gamepad1.right_stick_y;
+            rightthrottle = gamepad1.left_stick_y;
             if (gamepad1.left_bumper)
                 buttonPusher.setPosition(1);
             if (gamepad1.right_bumper)
                 buttonPusher.setPosition(-1);
         }
         float armthrottle = -gamepad2.left_stick_y;
-        float revthrottle = gamepad2.right_stick_y;
-
+        revthrottle = gamepad2.right_stick_y;
         motorBackLeft.setPower(-rightthrottle);
         motorFrontLeft.setPower(.69*rightthrottle);
         motorBackRight.setPower(leftthrottle);
         motorFrontRight.setPower(.69*-leftthrottle);
         arm.setPower(armthrottle);
-        motorRev.setPower(-revthrottle);
         if (gamepad2.right_bumper)
-            launcher.setPosition(1);
-        else
             launcher.setPosition(0);
+        else
+            launcher.setPosition(1);
     }
 }
