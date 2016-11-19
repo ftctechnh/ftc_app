@@ -52,7 +52,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannelController;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
 */
 @TeleOp(name = "TouchTest", group = "Testing")
-//@Disabled
+@Disabled
 public class TouchTest extends LinearOpMode {
 
   final int BLUE_LED_CHANNEL = 0;      // address for BLUE LED on the Device Interface Module

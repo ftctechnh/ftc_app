@@ -53,7 +53,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @TeleOp(name="ThirdOpmode", group="Testing")  // @Autonomous(...) is the other common choice
-//@Disabled
+@Disabled
 public class ThirdOpmode extends LinearOpMode {
 
     /* Declare OpMode members. */

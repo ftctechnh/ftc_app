@@ -32,6 +32,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -52,7 +53,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @TeleOp(name="MotorOpmode", group="Testing")  // @Autonomous(...) is the other common choice
-//@Disabled
+@Disabled
 public class MotorOpmode extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -97,7 +98,7 @@ public class MotorOpmode extends LinearOpMode {
         // set the shoot open & ball slicer down/default position
         servoPusher.setPosition(SHOOT_OPEN);
         servoSlicer.setPosition(SLICER_DOWN);
-        pState = pusherState.OPEN;
+        pState = pusherState.TRAP;
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
