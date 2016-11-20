@@ -40,28 +40,29 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 /**
- * This file provides basic Telop driving for a Pushbot robot.
- * The code is structured as an Iterative OpMode
+ * Modified by the Inspiration Team FTC #11128
+ * This file provides basic Telop driving.
+ * Using Iterative OpMode
  *
- * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
- * All device access is managed through the HardwarePushbot class.
+ * All device access is managed through the Hardware class.
  *
- * This particular OpMode executes a basic Tank Drive Teleop for a PushBot
+ * This particular OpMode executes a basic Tank Drive Teleop
  * It raises and lowers the claw using the Gampad Y and A buttons respectively.
- * It also opens and closes the claws slowly using the left and right Bumper buttons.
  *
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Pushbot: Teleop Tank", group="Pushbot")
-/*@Disabled*/
-/*Commented out @Disable so the opmode shows at the Driver Station*/
+@TeleOp(name="#11128 - TELEOPERATION Competition", group="Robot")
+/* @Disabled */
+/* Commented out @Disable so the opmode shows at the Driver Station*/
 public class TeleopTank_Iterative extends OpMode{
 
     /* Declare OpMode members. */
     HardwarePushbot robot       = new HardwarePushbot(); // use the class created to define a Pushbot's hardware
                                                          // could also use HardwarePushbotMatrix class.
+/*
+rename these variable to mean something for our robot. ex: positions of fingers to push the beacon.
+*/
     double          clawOffset  = 0.0 ;                  // Servo mid position
     final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
 
@@ -108,6 +109,10 @@ public class TeleopTank_Iterative extends OpMode{
         robot.leftMotor.setPower(left);
         robot.rightMotor.setPower(right);
 
+
+
+
+
         // Use gamepad left & right Bumpers to open and close the claw
         if (gamepad1.right_bumper)
             clawOffset += CLAW_SPEED;
@@ -126,6 +131,11 @@ public class TeleopTank_Iterative extends OpMode{
             robot.armMotor.setPower(robot.ARM_DOWN_POWER);
         else
             robot.armMotor.setPower(0.0);
+
+
+
+
+
 
         // Send telemetry message to signify robot running;
         telemetry.addData("claw",  "Offset = %.2f", clawOffset);
