@@ -7,20 +7,29 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 /**
  * Created by inspirationteam on 11/10/2016.
  */
-@TeleOp(name = "Pushbot: TankTeleOp", group = "Pushbot")
+@TeleOp(name = "#11183: TeleOp Competition", group = "Robot")
 public class CompetitionTeleOp extends OpMode {
-    DcMotor leftMotor;
-    DcMotor leftMotorback;
-    DcMotor rightMotor;
-    DcMotor rightMotorback;
+/*
+   Define the actuator we use in the robot here
+*/
+    DcMotor leftWheelMotorFront;
+    DcMotor leftWheelMotorBack;
+    DcMotor rightWheelMotorFront;
+    DcMotor rightWheelMotorBack;
+
+/*
+    Get references to the hardware installed on the robot and anme them here
+*/
     @Override
     public void init() {
-        leftMotor = hardwareMap.dcMotor.get("left_motor");//get references to the hardware installed on the robot
-        leftMotorback = hardwareMap.dcMotor.get("leftmotorback");//names of the motors
-        rightMotor = hardwareMap.dcMotor.get("right_motor");
-        rightMotorback = hardwareMap.dcMotor.get("right_motorback");
+        leftWheelMotorFront = hardwareMap.dcMotor.get("left_motor");
+        leftWheelMotorBack = hardwareMap.dcMotor.get("left_motorback");
+        rightWheelMotorFront = hardwareMap.dcMotor.get("right_motor");
+        rightWheelMotorBack = hardwareMap.dcMotor.get("right_motorback");
 
-        rightMotor.setDirection(DcMotor.Direction.REVERSE);
+        /* lets reverse the direction of the right wheel motor*/
+        rightWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
+        rightWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
     }
     /*
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
@@ -39,14 +48,14 @@ public class CompetitionTeleOp extends OpMode {
 
     @Override
     public void loop(){
-        float leftY = -gamepad1.left_stick_y;
-        float rightY = -gamepad1.right_stick_y;
+        float leftY_gp1 = -gamepad1.left_stick_y;
+        float rightY_gp1 = -gamepad1.right_stick_y;
 
         //set the power of the motors with the game pad values
-        leftMotor.setPower(leftY);
-        leftMotorback.setPower(leftY);
-        rightMotor.setPower(rightY);
-        rightMotorback.setPower(rightY);
+        leftWheelMotorFront.setPower(leftY_gp1);
+        leftWheelMotorBack.setPower(leftY_gp1);
+        rightWheelMotorFront.setPower(rightY_gp1);
+        rightWheelMotorBack.setPower(rightY_gp1);
     }
     /*
      * Code to run ONCE after the driver hits STOP
