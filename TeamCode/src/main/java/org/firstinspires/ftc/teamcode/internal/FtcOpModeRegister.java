@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.ConceptNullOp;
+import org.firstinspires.ftc.teamcode.Ivan.VuforiaOp;
 import org.firstinspires.ftc.teamcode.Steven.TankTeleOp;
 
 /**
@@ -70,6 +71,7 @@ public class FtcOpModeRegister implements OpModeRegister {
          * Register OpModes implemented in the Blocks visual programming language.
          */
         manager.register("TankTeleOp", TankTeleOp.class);
+        manager.register("VuforiaExample", VuforiaOp.class);
         BlocksOpMode.registerAll(manager);
 
         /**

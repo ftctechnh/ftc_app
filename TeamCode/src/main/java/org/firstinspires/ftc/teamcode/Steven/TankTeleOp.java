@@ -10,22 +10,24 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
  */
 @TeleOp(name = "TankTeleOp", group = "Pushbot")
 public class TankTeleOp extends OpMode {
-    DcMotor leftMotor;
-    DcMotor leftMotorback;
-    DcMotor rightMotor;
-    DcMotor rightMotorback;
+    DcMotor leftWheelMotorFront;
+    DcMotor leftWheelMotorBack;
+    DcMotor rightWheelMotorFront;
+    DcMotor rightWheelMotorBack;
     DcMotor intakeMotor;
+    //DcMotor flickermotor;
     @Override
     public void init() {
-        leftMotor = hardwareMap.dcMotor.get("left_motor");//get references to the hardware installed on the robot
-        leftMotorback = hardwareMap.dcMotor.get("leftmotorback");//names of the motors
-        rightMotor = hardwareMap.dcMotor.get("right_motor");
-        rightMotorback = hardwareMap.dcMotor.get("right_motorback");
-        intakeMotor = hardwareMap.dcMotor.get("intake_motor");
+        leftWheelMotorFront = hardwareMap.dcMotor.get("leftWheelMotorFront");
+        leftWheelMotorBack = hardwareMap.dcMotor.get("leftWheelMotorBack");
+        rightWheelMotorFront = hardwareMap.dcMotor.get("rightWheelMotorFront");
+        rightWheelMotorBack = hardwareMap.dcMotor.get("rightWheelMotorBack");
+        intakeMotor = hardwareMap.dcMotor.get("intakemotor");
+        //flickermotor = hardwareMap.dcMotor.get("flickermotor");
 
-
-        rightMotor.setDirection(DcMotor.Direction.REVERSE);
-        rightMotorback.setDirection(DcMotor.Direction.REVERSE);
+        /* lets reverse the direction of the right wheel motor*/
+        rightWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
+        rightWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
     }
     /*
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
@@ -59,10 +61,10 @@ public class TankTeleOp extends OpMode {
         float rightY = -gamepad1.right_stick_y;
 
         //set the power of the motors with the game pad values
-        leftMotor.setPower(leftY);
-        leftMotorback.setPower(leftY);
-        rightMotor.setPower(rightY);
-        rightMotorback.setPower(rightY);
+        leftWheelMotorFront.setPower(leftY);
+        leftWheelMotorBack.setPower(leftY);
+        rightWheelMotorFront.setPower(rightY);
+        rightWheelMotorBack.setPower(rightY);
     }
     public void intake(){
         boolean intake = gamepad1.right_bumper;
@@ -78,5 +80,9 @@ public class TankTeleOp extends OpMode {
             intakeMotor.setPower(0);
         }
     }
+   // public void flickershoot(){
+
+
+    //}
 
 }
