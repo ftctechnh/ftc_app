@@ -55,7 +55,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  */
 
 @TeleOp(name="Omni2Motor: Teleop Tank Copy", group="Omni2Motor")
-//@Disabled
+@Disabled
 public class Omni2MotorTeleopTank_Iterative extends OpMode{
 
     /* Declare OpMode members. */
