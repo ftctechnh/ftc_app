@@ -22,10 +22,10 @@ public class CompetitionTeleOp extends OpMode {
 */
     @Override
     public void init() {
-        leftWheelMotorFront = hardwareMap.dcMotor.get("left_motor");
-        leftWheelMotorBack = hardwareMap.dcMotor.get("left_motorback");
-        rightWheelMotorFront = hardwareMap.dcMotor.get("right_motor");
-        rightWheelMotorBack = hardwareMap.dcMotor.get("right_motorback");
+        leftWheelMotorFront = hardwareMap.dcMotor.get("leftWheelMotorFront");
+        leftWheelMotorBack = hardwareMap.dcMotor.get("leftWheelMotorBack");
+        rightWheelMotorFront = hardwareMap.dcMotor.get("rightWheelMotorFront");
+        rightWheelMotorBack = hardwareMap.dcMotor.get("rightWheelMotorBack");
 
         /* lets reverse the direction of the right wheel motor*/
         rightWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
