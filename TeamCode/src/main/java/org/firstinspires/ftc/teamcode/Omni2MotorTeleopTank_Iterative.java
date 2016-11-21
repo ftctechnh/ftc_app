@@ -54,7 +54,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Omni2Motor: Teleop Tank", group="Omni2Motor")
+@TeleOp(name="Omni2Motor: Teleop Tank Copy", group="Omni2Motor")
 //@Disabled
 public class Omni2MotorTeleopTank_Iterative extends OpMode{
 

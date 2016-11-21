@@ -57,10 +57,10 @@ public class Eaglebot
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        frontLeft  = hwMap.dcMotor.get("left_drive1");
-        backLeft = hwMap.dcMotor.get("left_drive2");
-        frontRight = hwMap.dcMotor.get("right_drive1");
-        backRight = hwMap.dcMotor.get("right_drive2");
+        frontLeft  = hwMap.dcMotor.get("nw_motor");
+        backLeft = hwMap.dcMotor.get("sw_motor");
+        frontRight = hwMap.dcMotor.get("ne_motor");
+        backRight = hwMap.dcMotor.get("se_motor");
         lightSensorBeacon = hwMap.lightSensor.get("light_sensor_beacon");
         lightSensorFloor = hwMap.lightSensor.get ("light_sensor_floor");
 
