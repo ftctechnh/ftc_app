@@ -1,6 +1,4 @@
 /*
-Copyright (c) 2016 Robert Atkinson
-
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
@@ -34,93 +32,90 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+//import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot_TT;
+import org.firstinspires.ftc.teamcode.HardwarePushbot_TT ;
 /**
- * This file illustrates the concept of driving a path based on encoder counts.
+ * This file illustrates the concept of driving a path based on Gyro heading and encoder counts.
  * It uses the common Pushbot hardware class to define the drive on the robot.
  * The code is structured as a LinearOpMode
  *
  * The code REQUIRES that you DO have encoders on the wheels,
  *   otherwise you would use: PushbotAutoDriveByTime;
  *
- *  This code ALSO requires that the drive Motors have been configured such that a positive
- *  power command moves them forwards, and causes the encoders to count UP.
+ *  This code ALSO requires that you have a Modern Robotics I2C gyro with the name "gyro"
+ *   otherwise you would use: PushbotAutoDriveByEncoder;
  *
- *   The desired path in this example is:
- *   - Drive forward for 48 inches
- *   - Spin right for 12 Inches
- *   - Drive Backwards for 24 inches
- *   - Stop and close the claw.
+ *  This code requires that the drive Motors have been configured such that a positive
+ *  power command moves them forward, and causes the encoders to count UP.
  *
- *  The code is written using a method called: encoderDrive(speed, leftInches, rightInches, timeoutS)
- *  that performs the actual movement.
- *  This methods assumes that each movement is relative to the last stopping place.
- *  There are other ways to perform encoder based moves, but this method is probably the simplest.
  *  This code uses the RUN_TO_POSITION mode to enable the Motor controllers to generate the run profile
+ *
+ *  In order to calibrate the Gyro correctly, the robot must remain stationary during calibration.
+ *  This is performed when the INIT button is pressed on the Driver Station.
+ *  This code assumes that the robot is stationary when the INIT button is pressed.
+ *  If this is not the case, then the INIT should be performed again.
+ *
+ *  Note: in this example, all angles are referenced to the initial coordinate frame set during the
+ *  the Gyro Calibration process, or whenever the program issues a resetZAxisIntegrator() call on the Gyro.
+ *
+ *  The angle of movement/rotation is assumed to be a standardized rotation around the robot Z axis,
+ *  which means that a Positive rotation is Counter Clock Wise, looking down on the field.
+ *  This is consistent with the FTC field coordinate conventions set out in the document:
+ *  ftc_app\doc\tutorial\FTC_FieldCoordinateSystemDefinition.pdf
  *
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Auto Blue Team(Sensor) 2", group="Pushbot")
+@Autonomous(name="Pushbot: Auto Drive By Gyro", group="Pushbot")
 //@Disabled
-public class AutoBlueTeam_Sensor extends LinearOpMode {
+public class PushbotAutoDriveByGyro_Linear_TT extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwarePushbot_TT         robot   = new HardwarePushbot_TT();   // Use a Pushbot's hardware
-    private ElapsedTime     runtime = new ElapsedTime();
-    ModernRoboticsI2cGyro gyro    = null;                    // Additional Gyro device
+    ModernRoboticsI2cGyro   gyro    = null;                    // Additional Gyro device
 
     static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: ANDY Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-                                                      (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.6;
-    static final double     TURN_SPEED              = 0.2;
-    static final double     PUSH_SPEED             = 0.1;
+            (WHEEL_DIAMETER_INCHES * 3.1415);
+
+    // These constants define the desired driving/control characteristics
+    // The can/should be tweaked to suite the specific robot drive train.
 
     static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
     static final double     P_TURN_COEFF            = 0.1;     // Larger is more responsive, but also less stable
     static final double     P_DRIVE_COEFF           = 0.15;     // Larger is more responsive, but also less stable
 
+    //added
+    static final double     DRIVE_SPEED             = 0.4;
+    static final double     TURN_SPEED              = 0.1;
+    static final double     PUSH_SPEED             = 0.1;
+
+
     @Override
     public void runOpMode() {
 
         /*
-         * Initialize the drive system variables.
-         * The init() method of the hardware class does all the work here
+         * Initialize the standard drive system variables.
+         * The init() method of the hardware class does most of the work here
          */
         robot.init(hardwareMap);
+//        gyro = (ModernRoboticsI2cGyro)hardwareMap.gyroSensor.get("gyro");
         gyro = robot.gyro;
-
-        int colorBlueSensed;
-        colorBlueSensed = 0;
-
-        int sensorLoopCycles = 0;
-
-        boolean lastResetState = false;
-        boolean curResetState  = false;
-
-
-        // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Resetting Encoders");    //
-        telemetry.update();
-
+        // Ensure the robot it stationary, then reset the encoders and calibrate the gyro.
         robot.frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        idle();
 
-        robot.frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to alert driver that we are calibrating;
         telemetry.addData(">", "Calibrating Gyro");    //
@@ -137,6 +132,12 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
         telemetry.addData(">", "Robot Ready.");    //
         telemetry.update();
 
+        robot.frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
         // Wait for the game to start (Display Gyro value), and reset gyro before we move..
         while (!isStarted()) {
             telemetry.addData(">", "Robot Heading = %d", gyro.getIntegratedZValue());
@@ -145,217 +146,33 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
         }
         gyro.resetZAxisIntegrator();
 
-        // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0", "Starting at %7d :%7d",
-                robot.frontLeftMotor.getCurrentPosition(),
-                robot.frontRightMotor.getCurrentPosition(),
-                robot.backLeftMotor.getCurrentPosition(),
-                robot.backRightMotor.getCurrentPosition());
-        telemetry.update();
-
-        // Wait for the game to start (driver presses PLAY)
-        waitForStart();
-
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        // This is for the nearest blue beacon towards our robot
-        //Step 1
-        gyroDrive(DRIVE_SPEED, 24.0, 0.0);    // Drive FWD
+        // Put a hold after each turn
+        gyroDrive(DRIVE_SPEED, 12.0, 0.0);    // Drive FWD 48 inches
         sleep(1000);
-        //Step 2
         gyroTurn( TURN_SPEED, -45.0);         // Turn  CCW to -45 Degrees
         sleep(1000);
         gyroHold( TURN_SPEED, -45.0, 0.5);    // Hold -45 Deg heading for a 1/2 second
         sleep(1000);
-//        Step 3
-        gyroDrive(PUSH_SPEED, 24.0, 0.0);    // Drive FWD
-        sleep(10000);
-        //Step 4
-        gyroTurn( TURN_SPEED, -45.0);         // Turn  CCW to -45 Degrees
-        sleep(1000);
-        gyroHold( TURN_SPEED, -45.0, 0.5);    // Hold -45 Deg heading for a 1/2 second
-        sleep(1000);
-
-//        Step 1
-//        encoderDrive(DRIVE_SPEED, 24, 24, 3.0);  //  Forward 36 Inches with 3 Sec timeout CHANGE TO REAL LENGTH
-//         Step 2
-// encoderDrive(TURN_SPEED, 12, -6, 3.0);  //  Turn Right 12 Inches with 3 Sec timeout (to be figured out)
-//        Step3
-//        encoderDrive(DRIVE_SPEED, 30, 30, 3.0);  //  Reverse 24 Inches with 3 Sec timeout CHANGE TO REAL LENGTH
-        //Step 4
-//        encoderDrive(TURN_SPEED, 12, -6, 3.0);  //  Turn Right 12 Inches with 3 Sec timeout (to be figured out)
-        encoderDrive(DRIVE_SPEED, 24, 24, 3.0); //  Forward 24 inches with 3 Sec timeout
-        sleep(2000);
-
-        //Touch sensor loop - TODO
-        while (!robot.touch.isPressed() && sensorLoopCycles < 6) {
-            if (robot.touch.isPressed()) {
-                telemetry.addData("Touch", "Is Pressed");
-                encoderDrive(DRIVE_SPEED, -12, -12, 3.0);
-            }else{
-            telemetry.addData("Touch", "Is Not Pressed");
-            encoderDrive(PUSH_SPEED, 1, 1, 3.0);
-
-            telemetry.update();
-            }
-            sensorLoopCycles = sensorLoopCycles + 1 ;
-        }
-
-        // Light sensor loop - TODO
-        sensorLoopCycles = 0;
-        while (robot.color.blue() == 0 && robot.color.red() == 0 && sensorLoopCycles < 6){
-            encoderDrive(PUSH_SPEED,1,1,3.0);
-
-            if (robot.color.blue() < robot.color.red()) {
-                colorBlueSensed = 1;
-                telemetry.addData("Detecting", "Red");
-                telemetry.update();
-                sleep(1000);
-            } else if (robot.color.blue() > robot.color.red()){
-                colorBlueSensed = 2;
-                telemetry.addData("Detecting", "Blue");
-                telemetry.update();
-                sleep(1000);
-            } else {
-                colorBlueSensed = 0;
-                telemetry.addData("Detecting", "Neither");
-                telemetry.update();
-                sleep(1000);
-            }
-            sensorLoopCycles = sensorLoopCycles + 1 ;
-        }
-
-        if (robot.color.red() > robot.color.blue()) {
-            colorBlueSensed = 1;
-            telemetry.addData("Detecting", "Red");
-            telemetry.update();
-            sleep(1000);
-            encoderDrive(PUSH_SPEED,    -12, -12, 3.0);
-            encoderDrive(TURN_SPEED,    -3,6,3.0);
-            encoderDrive(PUSH_SPEED,    12,12,3.0);
-        } else if (robot.color.blue() > robot.color.red()){
-            colorBlueSensed = 2;
-            telemetry.addData("Detecting", "Blue");
-            telemetry.update();
-            sleep(1000);
-            encoderDrive(PUSH_SPEED, 6,6, 3.0);
-        } else {
-            colorBlueSensed = 0;
-            telemetry.addData("Detecting", "Neither");
-            telemetry.update();
-            sleep(1000);
-            encoderDrive(DRIVE_SPEED,  -30, -30, 3.0); // Back up and park
-        }
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
 
-    /*
-     *  Method to perfmorm a relative move, based on encoder counts.
-     *  Encoders are not reset as the move is based on the current position.
-     *  Move will stop if any of three conditions occur:
-     *  1) Move gets to the desired position
-     *  2) Move runs out of time
-     *  3) Driver stops the opmode running.
-     */
-    public void encoderDrive(double speed,
-                             double leftInches, double rightInches,
-                             double timeoutS) {
-        int newLeftTarget;
-        int newRightTarget;
 
-        // Ensure that the opmode is still active
-        if (opModeIsActive()) {
-
-            // Determine new target position, and pass to motor controller
-            newLeftTarget = robot.frontLeftMotor.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightTarget = robot.frontRightMotor.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            newLeftTarget = robot.backLeftMotor.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightTarget = robot.backRightMotor.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            robot.frontLeftMotor.setTargetPosition(newLeftTarget);
-            robot.frontRightMotor.setTargetPosition(newRightTarget);
-            robot.backLeftMotor.setTargetPosition(newLeftTarget);
-            robot.backRightMotor.setTargetPosition(newRightTarget);
-
-            // Turn On RUN_TO_POSITION
-            robot.frontLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.backRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.backLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            // reset the timeout time and start motion.
-            runtime.reset();
-            robot.frontRightMotor.setPower(Math.abs(speed));
-            robot.frontLeftMotor.setPower(Math.abs(speed));
-            robot.backRightMotor.setPower(Math.abs(speed));
-            robot.backLeftMotor.setPower(Math.abs(speed));
-
-            // keep looping while we are still active, and there is time left, and both motors are running.
-            while (opModeIsActive() &&
-                   (runtime.seconds() < timeoutS) &&
-                   (robot.frontLeftMotor.isBusy() && robot.backLeftMotor.isBusy() && robot.frontRightMotor.isBusy() && robot.backRightMotor.isBusy())) {
-
-                // Display it for the driver.
-                telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
-                telemetry.addData("Path2",  "Running at %7d :%7d",
-                                            robot.frontLeftMotor.getCurrentPosition(),
-                                            robot.frontRightMotor.getCurrentPosition(),
-                                            robot.backLeftMotor.getCurrentPosition(),
-                                            robot.backRightMotor.getCurrentPosition());
-                telemetry.update();
-            }
-
-            // Stop all motion;
-            robot.frontLeftMotor.setPower(0);
-            robot.frontRightMotor.setPower(0);
-            robot.backLeftMotor.setPower(0);
-            robot.backRightMotor.setPower(0);
-
-            // Turn off RUN_TO_POSITION
-            robot.frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-            //  sleep(250);   // optional pause after each move
-        }
-    }
-
-    public void calibrateGyro() {
-
-        // Ensure that the opmode is still active
-        // start calibrating the gyro.
-        telemetry.addData(">", "Gyro Calibrating. Do Not move!");
-        telemetry.update();
-        robot.gyro.calibrate();
-
-        // make sure the gyro is calibrated.
-        while (!isStopRequested() && robot.gyro.isCalibrating()) {
-            sleep(50);
-            idle();
-        }
-
-        telemetry.addData(">", "Gyro Calibrated.  Press Start.");
-        telemetry.update();
-
-        // wait for the start button to be pressed.
-//      waitForStart();
-
-    }
-
-    /**
-     *  Method to drive on a fixed compass bearing (angle), based on encoder counts.
-     *  Move will stop if either of these conditions occur:
-     *  1) Move gets to the desired position
-     *  2) Driver stops the opmode running.
-     *
-     * @param speed      Target speed for forward motion.  Should allow for _/- variance for adjusting heading
-     * @param distance   Distance (in inches) to move from current position.  Negative distance means move backwards.
-     * @param angle      Absolute Angle (in Degrees) relative to last gyro reset.
-     *                   0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
-     *                   If a relative angle is required, add/subtract from current heading.
-     */
+   /**
+    *  Method to drive on a fixed compass bearing (angle), based on encoder counts.
+    *  Move will stop if either of these conditions occur:
+    *  1) Move gets to the desired position
+    *  2) Driver stops the opmode running.
+    *
+    * @param speed      Target speed for forward motion.  Should allow for _/- variance for adjusting heading
+    * @param distance   Distance (in inches) to move from current position.  Negative distance means move backwards.
+    * @param angle      Absolute Angle (in Degrees) relative to last gyro reset.
+    *                   0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
+    *                   If a relative angle is required, add/subtract from current heading.
+    */
     public void gyroDrive ( double speed,
                             double distance,
                             double angle) {
@@ -399,7 +216,7 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
 
             // keep looping while we are still active, and BOTH motors are running.
             while (opModeIsActive() &&
-                    (robot.frontLeftMotor.isBusy() && robot.frontRightMotor.isBusy() && robot.backLeftMotor.isBusy()&& robot.backRightMotor.isBusy() )) {
+                   (robot.frontLeftMotor.isBusy() && robot.frontRightMotor.isBusy() && robot.backLeftMotor.isBusy()&& robot.backRightMotor.isBusy() )) {
 
                 // adjust relative speed based on heading error.
                 error = getError(angle);
@@ -429,7 +246,7 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
                 telemetry.addData("Err/St",  "%5.1f/%5.1f",  error, steer);
                 telemetry.addData("Target",  "%7d:%7d",      newLeftTarget,  newRightTarget);
                 telemetry.addData("Actual",  "%7d:%7d:%7d:%7d",      robot.frontLeftMotor.getCurrentPosition(),
-                        robot.frontRightMotor.getCurrentPosition(),robot.backLeftMotor.getCurrentPosition(),robot.backRightMotor.getCurrentPosition());
+                                                             robot.frontRightMotor.getCurrentPosition(),robot.backLeftMotor.getCurrentPosition(),robot.backRightMotor.getCurrentPosition());
                 telemetry.addData("Speed",   "%5.2f:%5.2f",  leftSpeed, rightSpeed);
                 telemetry.update();
             }
@@ -574,6 +391,3 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
     }
 
 }
-
-
-
