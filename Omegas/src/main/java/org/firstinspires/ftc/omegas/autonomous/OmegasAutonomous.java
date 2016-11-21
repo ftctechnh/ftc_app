@@ -75,7 +75,7 @@ public abstract class OmegasAutonomous extends LinearOpMode {
                     : (runtime.milliseconds() < 2250) ? -1.0 : 0.0;
             double rightPower = (runtime.milliseconds() < 1500) ? 0.25
                     : (runtime.milliseconds() < 2000) ? -1.0
-                    : (runtime.milliseconds() < 2250) ? 0.5 : 0.0;
+                    : (runtime.milliseconds() < 2250) ? 1.0 : 0.0;
             Ω.leftBackMotor.setPower(leftPower);
             Ω.leftFrontMotor.setPower(leftPower);
             Ω.rightBackMotor.setPower(rightPower);
