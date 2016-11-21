@@ -32,7 +32,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package org.firstinspires.ftc.omegas.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.omegas.HardwareOmegas;
@@ -71,12 +70,16 @@ public abstract class OmegasAutonomous extends LinearOpMode {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.update();
 
-            double currentPower = (runtime.milliseconds() < 4000) ? 0.5
-                    : (runtime.milliseconds() < 8000) ? 0.0
-                    : (runtime.milliseconds() < 10000) ? 0.5 : 0.0;
-            for (DcMotor motor : Ω.motors) {
-                motor.setPower(currentPower);
-            }
+            double leftPower = (runtime.milliseconds() < 1500) ? 0.25
+                    : (runtime.milliseconds() < 2000) ? 1.0
+                    : (runtime.milliseconds() < 2250) ? -1.0 : 0.0;
+            double rightPower = (runtime.milliseconds() < 1500) ? 0.25
+                    : (runtime.milliseconds() < 2000) ? -1.0
+                    : (runtime.milliseconds() < 2250) ? 0.5 : 0.0;
+            Ω.leftBackMotor.setPower(leftPower);
+            Ω.leftFrontMotor.setPower(leftPower);
+            Ω.rightBackMotor.setPower(rightPower);
+            Ω.rightFrontMotor.setPower(rightPower);
         }
     }
 
