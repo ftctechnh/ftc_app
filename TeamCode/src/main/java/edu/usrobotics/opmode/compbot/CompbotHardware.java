@@ -43,7 +43,7 @@ public class CompbotHardware extends BaseHardware {
     public boolean rightShooterCorrectDirection = true;
     public boolean leftShooterCorrectDirection = false;
 
-    public double liftServoClosePosition = 0;
+    public double liftServoClosePosition = 0f;
     public double liftServoOpenPosition = 0.5f;
 
     public float wheelDiameter = 4.0f;
@@ -109,7 +109,7 @@ public class CompbotHardware extends BaseHardware {
 
     public int degreesToEncoderTicks(float degrees){
 
-        return (int) degrees * 26;
+        return (int) (degrees * 21.5f);
 
     }
 

@@ -44,9 +44,11 @@ public class ServicesSearch {
             DiscoveryListener listener = new DiscoveryListener() {
 
                 public void deviceDiscovered(RemoteDevice btDevice, DeviceClass cod) {
+                    System.out.println (btDevice.toString() + ", " + cod);
                 }
 
                 public void inquiryCompleted(int discType) {
+                    System.out.println ("Inquiry Completed");
                 }
 
                 /* Find service URL of bluetooth device */

@@ -39,7 +39,7 @@ public class FileTelemetry implements ITelemetryWriter {
     }
 
     @Override
-    public void stop () {
+    public void close () {
         if (outputWriter != null) {
             outputWriter.close();
         }

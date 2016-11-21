@@ -9,7 +9,7 @@ import edu.usrobotics.opmode.protobot.ProtobotAuto;
  */
 
 @Autonomous(name="Compbot Auto Red", group="Compbot")
-public class CompbotRed extends ProtobotAuto {
+public class CompbotRed extends CompbotAuto {
 
     public CompbotRed() {
         super(false);

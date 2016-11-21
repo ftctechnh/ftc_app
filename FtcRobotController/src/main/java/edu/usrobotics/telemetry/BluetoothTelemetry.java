@@ -38,6 +38,7 @@ public class BluetoothTelemetry extends Thread implements ITelemetryWriter {
 
         BluetoothServerSocket tmp;
         try {
+            mBluetoothAdapter.setName("10237 On-board BT");
             tmp = mBluetoothAdapter.listenUsingRfcommWithServiceRecord(NAME, MY_UUID);
 
             serverSocket = tmp;
@@ -53,6 +54,11 @@ public class BluetoothTelemetry extends Thread implements ITelemetryWriter {
     public boolean write(String line) {
         outputStreamQueue.add(line.getBytes());
         return true;
+    }
+
+    @Override
+    public void close() {
+        cancel();
     }
 
     public void run() {
@@ -112,7 +118,9 @@ public class BluetoothTelemetry extends Thread implements ITelemetryWriter {
 
     public void cancel() {
         try {
-            serverSocket.close();
+            if (serverSocket != null) {
+                serverSocket.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

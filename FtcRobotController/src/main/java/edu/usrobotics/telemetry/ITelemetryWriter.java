@@ -7,5 +7,5 @@ public interface ITelemetryWriter {
 
     void init ();
     boolean write (String line);
-    void stop ();
+    void close ();
 }

@@ -30,7 +30,7 @@ public class MapFrame extends CustomFrame {
         setType(javax.swing.JFrame.Type.UTILITY);
         setBackground(new Color(1.0f, 1.0f, 1.0f, 0f));
 
-        component = new ImageComponent("/field.png", mapSize, TelemetryClient.FTCFieldWidth_mm);
+        component = new ImageComponent("TelemetryClient/src/main/resources/field.png", mapSize, TelemetryClient.FTCFieldWidth_mm);
         add(component);
     }
 

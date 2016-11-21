@@ -24,9 +24,11 @@ public class RemoteDeviceDiscovery {
 
                 public void deviceDiscovered(RemoteDevice btDevice, DeviceClass cod) {
                     try {
+                        System.out.println ("Discovered: " + btDevice.getFriendlyName(false));
+
                         if (btDevice.getFriendlyName(false).equals(deviceName)) {
                             device = btDevice;
-                            LocalDevice.getLocalDevice().getDiscoveryAgent().cancelInquiry(this);
+                            //LocalDevice.getLocalDevice().getDiscoveryAgent().cancelInquiry(this);
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -42,10 +44,12 @@ public class RemoteDeviceDiscovery {
 
                 /* To find service on bluetooth */
                 public void serviceSearchCompleted(int transID, int respCode) {
+                    System.out.println ("serviceSearchCompleted: " + transID);
                 }
 
                 /* To find service on bluetooth */
                 public void servicesDiscovered(int transID, ServiceRecord[] servRecord) {
+                    System.out.println ("servicesDiscovered: " + transID);
                 }
             };
 

@@ -147,6 +147,8 @@ public class TelemetryClient {
 
         connectionURL = ss.getBluetoothServiceURL(device, "446118f08b1e11e29e960800200c9a69");
 
+        System.out.println (connectionURL);
+
         receiver = new BluetoothReceiver(connectionURL);
         Thread receiverThread = new Thread((Runnable) receiver);
         receiverThread.start();
@@ -162,7 +164,7 @@ public class TelemetryClient {
                 JOptionPane.PLAIN_MESSAGE,
                 null,
                 null,
-                "Yolometry"
+                "10237 On-board BT"
         );
     }
 }

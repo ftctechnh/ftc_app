@@ -17,7 +17,7 @@ public class CompbotTele extends RobotOp {
 
     CompbotHardware robot = new CompbotHardware();
 
-    boolean isLiftServoOpen = true;
+    boolean isLiftServoOpen = false;
 
     @Override
     public void init () {
@@ -139,30 +139,6 @@ public class CompbotTele extends RobotOp {
         robot.backLeft.setPower(blPower);
 
         robot.liftServo.setPosition(liftServoPosition);
-
-        if(gamepad1.a){
-
-            robot.frontRight.setPower(1);
-
-        }
-
-        if(gamepad1.b){
-
-            robot.frontLeft.setPower(1);
-
-        }
-
-        if(gamepad1.x){
-
-            robot.backRight.setPower(1);
-
-        }
-
-        if(gamepad1.y){
-
-            robot.backLeft.setPower(1);
-
-        }
 
         robot.harvester.setPower(harvesterPower);
 

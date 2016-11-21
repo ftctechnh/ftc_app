@@ -62,8 +62,8 @@ public class LogFrame extends CustomFrame {
             }
         });
 
-        final ImageIcon inactiveOptions = new ImageIcon("/settings_inactive.png");
-        final ImageIcon activeOptions = new ImageIcon("/settings.png");
+        final ImageIcon inactiveOptions = new ImageIcon("TelemetryClient/src/main/resources/settings_inactive.png");
+        final ImageIcon activeOptions = new ImageIcon("TelemetryClient/src/main/resources/settings.png");
 
         JButton options = new JButton();
         options.setIcon(inactiveOptions);
