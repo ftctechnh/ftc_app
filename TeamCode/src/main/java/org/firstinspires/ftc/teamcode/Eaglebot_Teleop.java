@@ -84,7 +84,7 @@ public class Eaglebot_Teleop extends OpMode{
         double bLeft;
         double bRight;
 
-        // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
+
         fRight = gamepad1.left_stick_y - gamepad1.right_stick_x - gamepad1.left_stick_x;
         bRight = gamepad1.left_stick_y - gamepad1.right_stick_x + gamepad1.left_stick_x;
         fLeft = gamepad1.left_stick_y + gamepad1.right_stick_x + gamepad1.left_stick_x;

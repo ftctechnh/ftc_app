@@ -64,8 +64,8 @@ public class Eaglebot_light extends LinearOpMode {
     boolean bLedOn = true;
 
     // get a reference to our Light Sensor object.
-    lightSensorBeacon = hardwareMap.lightSensor.get("sensor_light_beacon");
-    lightSensorFloor = hardwareMap.lightSensor.get("sensor_light_floor");
+    lightSensorBeacon = hardwareMap.lightSensor.get("light_sensor_beacon");
+    lightSensorFloor = hardwareMap.lightSensor.get("light_sensor_floor");
 
     // Set the LED state in the beginning.
     lightSensorBeacon.enableLed(bLedOn);
