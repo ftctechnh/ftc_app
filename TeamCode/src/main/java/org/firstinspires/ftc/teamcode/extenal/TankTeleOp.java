@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 /**
  * Created by inspirationteam on 11/10/2016.
  */
-@TeleOp(name = "Pushbot: TankTeleOp", group = "Pushbot")
+@TeleOp(name = "TankTeleOp", group = "Pushbot")
 public class TankTeleOp extends OpMode {
     DcMotor leftMotor;
     DcMotor leftMotorback;
