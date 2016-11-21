@@ -27,10 +27,9 @@ public abstract class AutonomousBase extends OpMode {
       public static final int RIGHT = 4;
       public static final int TURN_TOWARDS_GOAL = 5;
       public static final int SHOOT = 6;
-      public static final int SERVO_STARBOARD_R = 7;
-      public static final int SERVO_STARBOARD_L = 8;
-      public static final int SERVO_PORT_R = 9;
-      public static final int SERVO_PORT_L = 10;
+      public static final int SERVO_R = 7;
+      public static final int SERVO_L = 8;
+      public static final int BACKWARD_SLOW = 9;
     }
 
 
@@ -64,7 +63,8 @@ public abstract class AutonomousBase extends OpMode {
     int cDistS, lDistS, dDistS; //Sideways distance variables
     double tDiff; // getRuntime() does this really annoying thing where it counts init time, so I
     // mark the first time I exit init, and override getRuntime() to return that instead
-    double climbTime;
+    double sTime; //Shooting timer
+    double pTime; //Button presser timer
 
     int startPos = 6;
     Map map = new Map(startPos); //this map object will allow for easy manipulations.
@@ -82,6 +82,7 @@ public abstract class AutonomousBase extends OpMode {
         motorRightShooter = hardwareMap.dcMotor.get("r_shoot");
         motorLeftShooter = hardwareMap.dcMotor.get("l_shoot");
         motorConveyor = hardwareMap.dcMotor.get("conveyor");
+        motorLeftShooter.setDirection(DcMotor.Direction.REVERSE);
 
         servoCollector = hardwareMap.servo.get("collector");
         servoLeftButton = hardwareMap.servo.get("l_button");
@@ -128,6 +129,14 @@ public abstract class AutonomousBase extends OpMode {
                     map.moveRobot(dDistF * DEGREES_TO_FEET, heading);
                 }
                 break;
+            case MoveState.BACKWARD_SLOW:
+                power = -.2; //power coefficient
+                if(map.distanceToGoal()>DISTANCE_TOLERANCE) {
+                    motorLeft.setPower(power);
+                    motorRight.setPower(power);
+                    map.moveRobot(dDistF * DEGREES_TO_FEET, heading);
+                }
+                break;               
             case MoveState.LEFT:
                 power = -.75; //power coefficient
                 if(map.distanceToGoal()>DISTANCE_TOLERANCE) {
@@ -148,7 +157,7 @@ public abstract class AutonomousBase extends OpMode {
 
             case MoveState.TURN_TOWARDS_GOAL:
                 //Case Three is 'turn towards'.
-                power = .1;
+                power = .25;
                 boolean turnRight;
 
                 if(heading<=180){
@@ -169,16 +178,10 @@ public abstract class AutonomousBase extends OpMode {
                     motorRight.setPower(power);
                 }
                 break;
-            case MoveState.SERVO_STARBOARD_R:
-                servoRightButton.setPosition(1);
-                break;
-            case MoveState.SERVO_STARBOARD_L:
-                servoRightButton.setPosition(0);
-                break;
-            case MoveState.SERVO_PORT_R:
+            case MoveState.SERVO_R:
                 servoLeftButton.setPosition(1);
                 break;
-            case MoveState.SERVO_PORT_L:
+            case MoveState.SERVO_L:
                 servoLeftButton.setPosition(0);
                 break;
             case MoveState.SHOOT:
