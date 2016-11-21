@@ -14,14 +14,14 @@ public class TankTeleOp extends OpMode {
     DcMotor leftMotorback;
     DcMotor rightMotor;
     DcMotor rightMotorback;
-   // DcMotor intakeMotor;
+    DcMotor intakeMotor;
     @Override
     public void init() {
         leftMotor = hardwareMap.dcMotor.get("left_motor");//get references to the hardware installed on the robot
         leftMotorback = hardwareMap.dcMotor.get("leftmotorback");//names of the motors
         rightMotor = hardwareMap.dcMotor.get("right_motor");
         rightMotorback = hardwareMap.dcMotor.get("right_motorback");
-        //intakeMotor = hardwareMap.dcMotor.get("intake_motor");
+        intakeMotor = hardwareMap.dcMotor.get("intake_motor");
 
 
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -45,6 +45,7 @@ public class TankTeleOp extends OpMode {
     @Override
     public void loop(){
         fourwheelmove();
+        intake();
     }
     /*
      * Code to run ONCE after the driver hits STOP
@@ -63,7 +64,7 @@ public class TankTeleOp extends OpMode {
         rightMotor.setPower(rightY);
         rightMotorback.setPower(rightY);
     }
-    /*public void intake(){
+    public void intake(){
         boolean intake = gamepad1.right_bumper;
         boolean outtake = gamepad1.left_bumper;
 
@@ -76,6 +77,6 @@ public class TankTeleOp extends OpMode {
         else{
             intakeMotor.setPower(0);
         }
-    }*/
+    }
 
 }
