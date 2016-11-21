@@ -19,10 +19,11 @@ public class AutoB1 extends AutonomousBase{
                 }
                 break;
             case 1: //Shoot
-//                moveState = MoveState.SHOOT;
-//                if(getRuntime() - sTime >= 3){
+                  moveState = MoveState.SHOOT;
+                  if(getRuntime() - sTime >= 3){
+                    moveState = MoveState.SHTOOT_STOP;
                     gameState = 2;
-//                }
+                  }
                 break;
             case 2:
                 map.setGoal(6,9);
