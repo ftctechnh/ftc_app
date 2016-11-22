@@ -8,17 +8,23 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Created by inspirationteam on 11/10/2016.
  */
 @TeleOp(name = "#11183: TeleOp Competition", group = "Robot")
-public class CompetitionTeleOp extends OpMode {
+public class JackCompetitionTeleOp extends OpMode {
+
+//---------------------------------------------------------------------------------------------
 /*
-   Define the actuator we use in the robot here
+   Define the actuators we use in the robot here
 */
     DcMotor leftWheelMotorFront;
     DcMotor leftWheelMotorBack;
     DcMotor rightWheelMotorFront;
     DcMotor rightWheelMotorBack;
+    DcMotor ballCollectorMotor;
+    /*DcMotor ballShooterMotor;*/
+
+// ----------------------------------------------------------------------------------------------
 
 /*
-    Get references to the hardware installed on the robot and anme them here
+    Get references to the hardware installed on the robot and name them here
 */
     @Override
     public void init() {
@@ -31,12 +37,16 @@ public class CompetitionTeleOp extends OpMode {
         rightWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
         rightWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
     }
-    /*
-     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-     */
+//---------------------------------------------------------------------------------------------
+
+/*
+ * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
+ */
     @Override
     public void init_loop() {
     }
+
+//---------------------------------------------------------------------------------------------
 
     /*
      * Code to run ONCE when the driver hits PLAY
@@ -44,7 +54,7 @@ public class CompetitionTeleOp extends OpMode {
     @Override
     public void start() {
     }
-
+//---------------------------------------------------------------------------------------------
 
     @Override
     public void loop(){
@@ -57,6 +67,20 @@ public class CompetitionTeleOp extends OpMode {
         rightWheelMotorFront.setPower(rightY_gp1);
         rightWheelMotorBack.setPower(rightY_gp1);
     }
+    public void CollectBalls(){
+        boolean intake = gamepad1.right_bumper;
+        boolean outtake = gamepad1.left_bumper;
+
+        if(intake){
+            ballCollectorMotor.setPower(1);
+        }
+        else if(outtake){
+            ballCollectorMotor.setPower(-1);
+        }
+        else{
+            ballCollectorMotor.setPower(0);
+        }
+
     /*
      * Code to run ONCE after the driver hits STOP
      */
