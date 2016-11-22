@@ -1,6 +1,7 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.seasons.resq;
 
-import org.firstinspires.ftc.teamcode.DriveFunctions.DIRECTION;
+import org.firstinspires.ftc.teamcode.seasons.resq.DriveFunctions;
+import org.firstinspires.ftc.teamcode.seasons.resq.DriveFunctions.DIRECTION;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;

@@ -1,6 +1,8 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.seasons.resq;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+import org.firstinspires.ftc.teamcode.seasons.resq.HardwareMapper;
 
 /**
  * Created by FTCGearedUP on 2/15/2016.
