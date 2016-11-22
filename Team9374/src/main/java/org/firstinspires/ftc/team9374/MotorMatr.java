@@ -8,6 +8,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -19,6 +20,12 @@ public class MotorMatr {
     Orientation[] angles = new Orientation[2];
 
     public DcMotor[][] Motors = new DcMotor[10][4];
+
+    public void addMotors(int row, DcMotor... motors) {
+        for (int i = 0; i < motors.length; i++) {
+            this.Motors[row][i] = motors[i];
+        }
+    }
 
     public void runMotors(int column, float power) {
         for (int i = 0; i < this.Motors.length; i++) {
