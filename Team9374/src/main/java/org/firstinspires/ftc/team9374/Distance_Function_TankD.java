@@ -8,28 +8,31 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Created by darwin on 9/20/16.
  */
 
-@TeleOp(name="Basic Tank Drive!", group="Noramal_Opmode")
+@TeleOp(name="Basic Tank Drive!", group="Normal_Opmode")
 
 public class Distance_Function_TankD extends OpMode {
-    DcMotor left;
-    DcMotor right;
-
+    DcMotor leftFront;
+    DcMotor rightFront;
+    DcMotor leftBack;
+    DcMotor rightBack;
+    MotorMatr Test = new MotorMatr();
     public void init()  {
-        left = hardwareMap.dcMotor.get("Motor-left");
-        right = hardwareMap.dcMotor.get("Motor-right");
+        leftFront = hardwareMap.dcMotor.get("Motor-left");
+        rightFront = hardwareMap.dcMotor.get("Motor-right");
+        leftBack = hardwareMap.dcMotor.get("Motor-rear-left");
+        rightBack = hardwareMap.dcMotor.get("Motor-rear-right");
+        // Combine all the motors into a single Object; [[0, 1, 2, 3], ...]
+        Test.addMotors(0, leftFront, rightFront);
+        Test.addMotors(1, leftBack, rightBack);
     }
 
-    @Override
     public void loop() {
-        float leftDC = gamepad1.left_stick_y;
-        float rightDC =  gamepad1.right_stick_y;
+        float leftDC = -gamepad1.left_stick_y;
+        float rightDC =  -gamepad1.right_stick_y;
 
-
-        left.setPower(leftDC);
-        right.setPower(rightDC);
-        //if(leftDCy > 0)
-
-
-
+        // Run all motors at [0]
+        Test.runMotors(0, leftDC);
+        // Run all motors at [1]
+        Test.runMotors(1, rightDC);
     }
 }
