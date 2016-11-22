@@ -37,6 +37,7 @@ public class AutoLib {
             mLoopCount = 0;
         }
 
+
         // returns true iff called from the first call to loop() on this Step
         boolean firstLoopCall() {
             boolean flc = (mLoopCount == 1);    // assume this is called AFTER super.loop()
@@ -66,6 +67,11 @@ public class AutoLib {
         public Step add(Step step) {
             mSteps.add(step);
             return this;        // allows daisy-chaining of calls
+        }
+
+        public Step preAdd(Step step){
+            mSteps.add(0, step);
+            return this;
         }
 
         // run the next time-slice of the Sequence; return true when the Sequence is completed.
@@ -422,7 +428,7 @@ public class AutoLib {
                 }
 
             // add a concurrent Step to control the motor steps based on Vuforia input
-            this.add(new VuforiaSquirrelyGuideStep(mode, targetPosition, locSensor, yawSensor, steps, power, error));
+            this.preAdd(new VuforiaSquirrelyGuideStep(mode, targetPosition, locSensor, yawSensor, steps, power, error));
 
         }
 
@@ -529,7 +535,7 @@ public class AutoLib {
                 }
 
             // add a concurrent Step to control the motor steps based on Vuforia input
-            this.add(new VuforiaSquirrelyGuideStep(mode, targetPosition, locSensor, yawSensor, steps, power, error));
+            this.preAdd(new VuforiaSquirrelyGuideStep(mode, targetPosition, locSensor, yawSensor, steps, power, error));
 
         }
 
@@ -743,7 +749,7 @@ public class AutoLib {
                 }
 
             // add a concurrent Step to control the motor steps based on gyro input
-            this.add(new GyroGuideStep(mode, heading, gyro, pid, steps, power));
+            this.preAdd(new GyroGuideStep(mode, heading, gyro, pid, steps, power));
 
         }
 
@@ -770,7 +776,7 @@ public class AutoLib {
                 }
 
             // add a concurrent Step to control the motor steps based on gyro input
-            this.add(new GyroGuideStep(mode, heading, gyro, pid, steps, power));
+            this.preAdd(new GyroGuideStep(mode, heading, gyro, pid, steps, power));
 
         }
 

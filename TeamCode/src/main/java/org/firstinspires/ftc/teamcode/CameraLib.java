@@ -98,6 +98,11 @@ public class CameraLib {
                 iHue = 0;                           // red is either 0 or 360 degrees of hue
             return iHue+1;          // return discretized hue RYGCBM (1..6)
         }
+        // return value of given RGB pixel
+        public static int value(int pix) {
+            float[] hsv = RGBtoHSV(pix, mHSV);
+            return (int)(hsv[2] * 255);
+        }
         // return "dominant color" of an RGB pixel if it has one (or white if it doesn't)
         public static int dominantColor(int pix) {
             final float n = 1.5F;    // dominance factor threshold
@@ -225,6 +230,19 @@ public class CameraLib {
                     hist.add(domClr);                            // add a sample to Histogram for this band
             }
             return sDom;
+        }
+
+        // return a string representation of the value along the given scanline
+        byte[] scanlineValue(int y) {
+            // scan the given horizontal line of the image for red, green, and blue strips and report
+            // value
+            byte[] val = new byte[cameraSize().width];
+            for (int x=0; x<cameraSize().width; x++) {
+                int pix = getPixel(x, y);
+                int domVal = CameraLib.Pixel.value(pix);            // or, use hue(pix) instead ...
+                val[x] = (byte)domVal;
+            }
+            return val;
         }
 
     }
