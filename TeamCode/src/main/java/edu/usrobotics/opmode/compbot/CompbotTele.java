@@ -19,6 +19,8 @@ public class CompbotTele extends RobotOp {
 
     boolean isLiftServoOpen = false;
 
+    boolean aButtonPressedLastTime = false;
+
     @Override
     public void init () {
 
@@ -55,15 +57,28 @@ public class CompbotTele extends RobotOp {
         //Harvester
         harvesterInput += gamepad2.right_trigger;
         harvesterInput += -gamepad2.left_trigger;
-        harvesterInput += gamepad2.left_trigger;
-
-        harvesterInput += (gamepad2.left_bumper ? -1 : 0);
 
         //Shooter
-        shooterInput = gamepad2.right_stick_y;
+        if(gamepad2.right_bumper){
+
+            shooterInput += 1;
+
+        }
+
+        else if(gamepad2.left_bumper){
+
+            shooterInput -= 1;
+
+        }
 
         //Lift
-        liftInput = gamepad2.left_stick_y;
+        liftInput = -gamepad2.left_stick_y;
+
+        if(!gamepad2.dpad_down && liftInput < 0){
+
+            liftInput = 0;
+
+        }
 
         //Forward and backwards
         frInputs += -gamepad1.right_stick_y;
@@ -84,15 +99,16 @@ public class CompbotTele extends RobotOp {
         blInputs += gamepad1.left_stick_x;
 
         //Lift Servo
-        if(gamepad2.dpad_left){
+        if(gamepad2.a && !aButtonPressedLastTime){
 
-            isLiftServoOpen = true;
+            isLiftServoOpen = !isLiftServoOpen;
+            aButtonPressedLastTime = true;
 
         }
 
-        if(gamepad2.dpad_right){
+        if(!gamepad2.a){
 
-            isLiftServoOpen = false;
+            aButtonPressedLastTime = false;
 
         }
 
@@ -113,6 +129,18 @@ public class CompbotTele extends RobotOp {
                 (robot.harvesterCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE) :
                 (robot.harvesterCorrectDirection ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD));
 
+        DcMotorSimple.Direction rightShooterDirection = (shooterInput >= 0 ?
+                (robot.rightShooterCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE) :
+                (robot.rightShooterCorrectDirection ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD));
+
+        DcMotorSimple.Direction leftShooterDirection = (shooterInput >= 0 ?
+                (robot.leftShooterCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE) :
+                (robot.leftShooterCorrectDirection ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD));
+
+        DcMotorSimple.Direction liftDirection = (liftInput >= 0 ?
+                (robot.liftCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE) :
+                (robot.liftCorrectDirection ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD));
+
         robot.frontRight.setDirection(frDirection);
         robot.frontLeft.setDirection(flDirection);
         robot.backRight.setDirection(brDirection);
@@ -120,16 +148,21 @@ public class CompbotTele extends RobotOp {
 
         robot.harvester.setDirection(harvesterDirection);
 
+        robot.shooterRight.setDirection(rightShooterDirection);
+        robot.shooterLeft.setDirection(leftShooterDirection);
+
+        robot.lift.setDirection(liftDirection);
+
         float frPower = Math.min(Math.abs(frInputs), 1);
         float flPower = Math.min(Math.abs(flInputs), 1);
         float brPower = Math.min(Math.abs(brInputs), 1);
         float blPower = Math.min(Math.abs(blInputs), 1);
 
-        float harvesterPower = harvesterInput;
+        float harvesterPower = Math.min(Math.abs(harvesterInput), 1);
 
-        float liftPower = liftInput;
+        float liftPower = Math.min(Math.abs(liftInput), 1);
 
-        float shooterPower = Math.min(shooterInput, 1);
+        float shooterPower = Math.min(Math.abs(shooterInput), 1);
 
         double liftServoPosition = (isLiftServoOpen ? robot.liftServoOpenPosition : robot.liftServoClosePosition);
 

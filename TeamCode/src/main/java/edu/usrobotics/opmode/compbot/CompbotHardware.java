@@ -29,8 +29,6 @@ public class CompbotHardware extends BaseHardware {
 
     public ColorSensor colorSensor;
 
-    //public TouchSensor touchSensor;
-
     public boolean frCorrectDirection = false;
     public boolean flCorrectDirection = true;
     public boolean brCorrectDirection = false;
@@ -38,7 +36,7 @@ public class CompbotHardware extends BaseHardware {
 
     public boolean harvesterCorrectDirection = false;
 
-    public boolean liftCorrectDirection = true;
+    public boolean liftCorrectDirection = false;
 
     public boolean rightShooterCorrectDirection = true;
     public boolean leftShooterCorrectDirection = false;
@@ -73,16 +71,21 @@ public class CompbotHardware extends BaseHardware {
 
         harvester = hardwareMap.dcMotor.get("harvester");
 
+        harvester.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         lift = hardwareMap.dcMotor.get("lft");
+
+        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         shooterRight = hardwareMap.dcMotor.get("sr");
         shooterLeft = hardwareMap.dcMotor.get("sl");
 
+        shooterRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        shooterLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         liftServo = hardwareMap.servo.get("ls");
 
         colorSensor = hardwareMap.colorSensor.get("cs");
-
-        //touchSensor = hardwareMap.touchSensor.get("ts");
 
         harvester.setDirection(harvesterCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
 
@@ -189,18 +192,9 @@ public class CompbotHardware extends BaseHardware {
 
     }
 
-    public DcMotorSimple.Direction getMotorDirection(DcMotorSimple.Direction regular, boolean correctDirection){
+    public DcMotorSimple.Direction getMotorDirection(DcMotorSimple.Direction regular, boolean correctDirection) {
 
         return (correctDirection ? regular : (regular.equals(DcMotorSimple.Direction.REVERSE) ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE));
-
-    }
-
-    public void setDrivePower(double power){
-
-        frontRight.setPower(power);
-        frontLeft.setPower(power);
-        backRight.setPower(power);
-        backLeft.setPower(power);
 
     }
 
