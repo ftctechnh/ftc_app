@@ -31,7 +31,7 @@ public abstract class AutonomousBase extends OpMode {
       public static final int SERVO_L = 8;
       public static final int BACKWARD_SLOW = 9;
       public static final int SERVO_M = 10;
-      public static final int SHTOOT_STOP = 11;
+      public static final int SHOOT_STOP = 11;
       public static final int FULL_STOP = 12;
     }
 
@@ -222,7 +222,7 @@ public abstract class AutonomousBase extends OpMode {
                 motorRightShooter.setPower(0);
                 motorConveyor.setPower(0);
                 break;
-            case MoveState.SHTOOT_STOP:
+            case MoveState.SHOOT_STOP:
                 motorLeftShooter.setPower(0);
                 motorRightShooter.setPower(0);
                 motorConveyor.setPower(0);
