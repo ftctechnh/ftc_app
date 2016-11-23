@@ -57,7 +57,7 @@ public class JackTeleOpCompetition extends OpMode {
 
     @Override
     public void loop() {
-        fourWheelDrive();
+        FourWheelDrive();
         CollectBalls();
         BallShooter();
 
@@ -68,7 +68,7 @@ public class JackTeleOpCompetition extends OpMode {
     Functions go here
  */
 
-    public void fourWheelDrive(){
+    public void FourWheelDrive(){
         /*
         read the gamepad values and put into variables
          */
