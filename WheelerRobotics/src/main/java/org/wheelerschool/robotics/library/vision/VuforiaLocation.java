@@ -114,8 +114,8 @@ public class VuforiaLocation {
 
         List<String> targets = new ArrayList<>(); // Wheels Legos Tools Gears
         targets.add("wheels");
-        targets.add("legos");
         targets.add("tools");
+        targets.add("legos");
         targets.add("gears");
 
         OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
