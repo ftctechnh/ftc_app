@@ -78,14 +78,11 @@ NOTE: Make sure to set 'VUFORIA_KEY' in 'org.wheelerschool.robotics.config.Confi
 
 public class VuforiaLocation {
     // DEFAULT VARIABLES:
-    private static float MM_PER_INCH = 25.4f;
-    private static float DEFAULT_MM_BOT_WIDTH = 19.5f * MM_PER_INCH;
-    // the FTC field is ~11'10" center-to-center of the glass panels
+    public static float MM_PER_INCH = 25.4f;
     private static float MM_FTC_FIELD_WIDTH = (12 * 12 - 2) * MM_PER_INCH;
 
     // Variables:
     public static final String TAG = "Vuforia Location";
-    private Float mmBotWidth = null;
     private float mmFieldWidth = MM_FTC_FIELD_WIDTH;
 
     //  Vuforia:
@@ -96,13 +93,9 @@ public class VuforiaLocation {
 
     OpenGLMatrix lastLocation = null;
 
-    public VuforiaLocation() {
-        this(DEFAULT_MM_BOT_WIDTH);
-    }
 
-    public VuforiaLocation(float mmBotWidth) {
-        // Variable Setup:
-        this.mmBotWidth = mmBotWidth;
+    public VuforiaLocation(float phoneX, float phoneRotX, float phoneY, float phoneRotY,
+                           float phoneZ, float phoneRotZ) {
 
         // Vuforia Setup:
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
@@ -119,10 +112,10 @@ public class VuforiaLocation {
         targets.add("gears");
 
         OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
-                .translation(this.mmBotWidth / 2, 0, 0)
+                .translation(phoneX, phoneY, phoneZ)
                 .multiplied(Orientation.getRotationMatrix(
                         AxesReference.EXTRINSIC, AxesOrder.YZY,
-                        AngleUnit.DEGREES, -90, 0, 0));
+                        AngleUnit.DEGREES, phoneRotX, phoneRotY, phoneRotZ));
         RobotLog.ii(TAG, "phone=%s", format(phoneLocationOnRobot));
 
 
