@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Steven;
+package org.firstinspires.ftc.teamcode.Eric;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -8,22 +8,22 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 /**
  * Created by inspirationteam on 11/10/2016.
  */
-@TeleOp(name = "TankTeleOp", group = "Pushbot")
-public class TankTeleOp extends OpMode {
+@TeleOp(name = "#11183:Eric TeleOp Competition", group = "Robot")
+public class EricCompTeleop extends OpMode {
     DcMotor leftWheelMotorFront;
     DcMotor leftWheelMotorBack;
     DcMotor rightWheelMotorFront;
     DcMotor rightWheelMotorBack;
     DcMotor intakeMotor;
-    DcMotor flickermotor;
+    DcMotor flickerMotor;
     @Override
     public void init() {
         leftWheelMotorFront = hardwareMap.dcMotor.get("leftWheelMotorFront");
         leftWheelMotorBack = hardwareMap.dcMotor.get("leftWheelMotorBack");
         rightWheelMotorFront = hardwareMap.dcMotor.get("rightWheelMotorFront");
         rightWheelMotorBack = hardwareMap.dcMotor.get("rightWheelMotorBack");
-        intakeMotor = hardwareMap.dcMotor.get("intakemotor");
-        flickermotor = hardwareMap.dcMotor.get("flickermotor");
+        intakeMotor = hardwareMap.dcMotor.get("intakeMotor");
+        flickerMotor = hardwareMap.dcMotor.get("flickerMotor");
 
         /* lets reverse the direction of the right wheel motor*/
         rightWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
@@ -86,13 +86,13 @@ public class TankTeleOp extends OpMode {
         boolean outtake = gamepad1.x;
 
         if (intake) {
-            flickermotor.setPower(1);
+            flickerMotor.setPower(1);
         }
         else if(outtake) {
-            flickermotor.setPower(-1);
+            flickerMotor.setPower(-1);
         }
         else {
-            flickermotor.setPower(0);
+            flickerMotor.setPower(0);
         }
         }
     }

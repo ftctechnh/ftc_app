@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 @TeleOp(name = "#11183: TeleOp Competition", group = "Robot")
 public class JackCompetitionTeleOp extends OpMode {
 
-//---------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------
 /*
    Define the actuators we use in the robot here
 */
@@ -19,13 +19,13 @@ public class JackCompetitionTeleOp extends OpMode {
     DcMotor rightWheelMotorFront;
     DcMotor rightWheelMotorBack;
     DcMotor ballCollectorMotor;
-    /*DcMotor ballShooterMotor;*/
+    DcMotor ballShooterMotor;
 
 // ----------------------------------------------------------------------------------------------
 
-/*
-    Get references to the hardware installed on the robot and name them here
-*/
+    /*
+        Get references to the hardware installed on the robot and name them here
+    */
     @Override
     public void init() {
         leftWheelMotorFront = hardwareMap.dcMotor.get("leftWheelMotorFront");
@@ -39,9 +39,9 @@ public class JackCompetitionTeleOp extends OpMode {
     }
 //---------------------------------------------------------------------------------------------
 
-/*
- * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
- */
+    /*
+     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
+     */
     @Override
     public void init_loop() {
     }
@@ -57,7 +57,7 @@ public class JackCompetitionTeleOp extends OpMode {
 //---------------------------------------------------------------------------------------------
 
     @Override
-    public void loop(){
+    public void loop() {
         float leftY_gp1 = -gamepad1.left_stick_y;
         float rightY_gp1 = -gamepad1.right_stick_y;
 
@@ -67,25 +67,25 @@ public class JackCompetitionTeleOp extends OpMode {
         rightWheelMotorFront.setPower(rightY_gp1);
         rightWheelMotorBack.setPower(rightY_gp1);
     }
-    public void CollectBalls(){
+
+    public void CollectBalls() {
         boolean intake = gamepad1.right_bumper;
         boolean outtake = gamepad1.left_bumper;
 
-        if(intake){
+        if (intake) {
             ballCollectorMotor.setPower(1);
-        }
-        else if(outtake){
+        } else if (outtake) {
             ballCollectorMotor.setPower(-1);
-        }
-        else{
+        } else {
             ballCollectorMotor.setPower(0);
         }
-
+    }
+}
     /*
      * Code to run ONCE after the driver hits STOP
      */
-    @Override
+    /*@Override
     public void stop() {
     }
+   */
 
-}
