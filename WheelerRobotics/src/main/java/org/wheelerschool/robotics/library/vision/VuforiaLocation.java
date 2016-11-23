@@ -180,7 +180,7 @@ public class VuforiaLocation {
             target = OpenGLMatrix
                     /* Wheels Target
                     * Blue side, closest to corner vortex. */
-                    .translation(mmFieldWidth / 6, mmFieldWidth / 2, 0)
+                    .translation(mmFieldWidth / 12, mmFieldWidth / 2, 0)
                     .multiplied(Orientation.getRotationMatrix(
                             AxesReference.EXTRINSIC, AxesOrder.XZX,
                             AngleUnit.DEGREES, 90, 0, 0));
@@ -190,7 +190,7 @@ public class VuforiaLocation {
             target = OpenGLMatrix
                     /* Legos Target
                     * Blue side, furthest from corner vortex. */
-                    .translation(-mmFieldWidth / 6, mmFieldWidth / 2, 0)
+                    .translation(-mmFieldWidth * 3 / 12, mmFieldWidth / 2, 0)
                     .multiplied(Orientation.getRotationMatrix(
                             AxesReference.EXTRINSIC, AxesOrder.XZX,
                             AngleUnit.DEGREES, 90, 0, 0));
@@ -201,7 +201,7 @@ public class VuforiaLocation {
             target = OpenGLMatrix
                     /* Gears Target
                     * Red side, closest to corner vortex. */
-                    .translation(-mmFieldWidth / 2, -mmFieldWidth / 6, 0)
+                    .translation(-mmFieldWidth / 2, -mmFieldWidth / 12, 0)
                     .multiplied(Orientation.getRotationMatrix(
                             AxesReference.EXTRINSIC, AxesOrder.XZX,
                             AngleUnit.DEGREES, 90, 90, 0));
@@ -211,7 +211,7 @@ public class VuforiaLocation {
             target = OpenGLMatrix
                     /* Tools Target
                     * Red side, furthest from corner vortex. */
-                    .translation(-mmFieldWidth / 2, mmFieldWidth / 6, 0)
+                    .translation(-mmFieldWidth / 2, mmFieldWidth * 3/ 12, 0)
                     .multiplied(Orientation.getRotationMatrix(
                             AxesReference.EXTRINSIC, AxesOrder.XZX,
                             AngleUnit.DEGREES, 90, 90, 0));
