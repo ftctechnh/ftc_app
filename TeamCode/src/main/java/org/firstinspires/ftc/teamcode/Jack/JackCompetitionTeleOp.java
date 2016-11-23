@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 /**
  * Created by inspirationteam on 11/10/2016.
  */
-@TeleOp(name = "#11183: TeleOp Competition", group = "Robot")
+@TeleOp(name = "#11183: Jack TeleOp Competition", group = "Robot")
 public class JackCompetitionTeleOp extends OpMode {
 
 //---------------------------------------------------------------------------------------------
