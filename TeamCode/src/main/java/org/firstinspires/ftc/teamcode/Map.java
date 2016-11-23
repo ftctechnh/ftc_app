@@ -17,6 +17,11 @@ public class Map {
         goalX = x;
         goalY = y;
     }
+    
+    public void setRobot(double x, double y){
+        robotX = x;
+        robotY = y;
+    }
 
     public double getGoalX(){
         return goalX;
