@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 public class AutonomousColorTest extends AutonomousBase{
     public void gameState(){
         super.gameState();
-        if(colorRight1.blue() > colorRight2.blue()){
+        if(colorLeft1.blue() > colorLeft2.blue()){
             moveState = MoveState.SERVO_R;
         }else{
             moveState = MoveState.SERVO_L;

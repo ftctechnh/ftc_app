@@ -10,12 +10,13 @@ public class AutonomousTest extends AutonomousBase{
         super.gameState();
 
         String whichIsBlue ="";
-        if (colorLeft1.blue() > colorRight1.blue()){
-        whichIsBlue = "left";
+        if (colorLeft1.blue() > colorLeft2.blue()){
+            whichIsBlue = "left";
         }
         else{
-        whichIsBlue = "right";
+            whichIsBlue = "right";
         }
+
         switch(gameState){
           case 0: 
             if(!gyro.isCalibrating()){
