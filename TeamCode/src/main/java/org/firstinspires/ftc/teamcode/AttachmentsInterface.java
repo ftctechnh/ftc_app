@@ -14,4 +14,6 @@ public interface AttachmentsInterface
     void detectBeaconPicture();
     void raiseShooter();
     void lowerShooter();
+    void pushLeftBeacon();
+    void pushRightBeacon();
 }

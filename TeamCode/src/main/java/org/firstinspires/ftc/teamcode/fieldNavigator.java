@@ -28,14 +28,14 @@ public class FieldNavigator
     OpenGLMatrix phoneLocation;
     OmniDriveBot robot;
 
-    private double currentX, currentY, currentDeg;
-
-    public static final String VUFORIA_KEY = "AepnoMf/////AAAAGWsPSj5vh0WQpMc0OEApBsgbZVwduMSeEZFjXMlBPW7WiZRgwGXsOTLiGMxL4qjU0MYpZitHxs4E/nOUHseMX+SW0oopu6BnWL3cAqFIptSrdMpy4y6yB3N6l+FPcGFZxzadvRoiOfAuYIu5QMHSeulfQ1XApDhBQ79lNUXv9LZ7bngBI3BEYVB+slmTGHKhRW2NI5fUtF+rLRiou4ZcNir2eZh0OxEW4zAnTnciVB2R28yyHkYz8xJtACm+4heWLdpw/zf66LRpvTGLwkASci7ZkGJp4NrG5Of4C0b3+iq/EeEmX2PiY5lq2fkUE0dejdztmkFWYBW7c/Y+bIYGER/3gt6I8UhAB78cR7p2mOaY"; //Key used for Vuforia.
-
-    public void FieldNavigator(OmniDriveBot obj)
+    public FieldNavigator(OmniDriveBot obj)
     {
         robot = obj;
     }
+
+    private double currentX, currentY, currentDeg;
+
+    public static final String VUFORIA_KEY = "AepnoMf/////AAAAGWsPSj5vh0WQpMc0OEApBsgbZVwduMSeEZFjXMlBPW7WiZRgwGXsOTLiGMxL4qjU0MYpZitHxs4E/nOUHseMX+SW0oopu6BnWL3cAqFIptSrdMpy4y6yB3N6l+FPcGFZxzadvRoiOfAuYIu5QMHSeulfQ1XApDhBQ79lNUXv9LZ7bngBI3BEYVB+slmTGHKhRW2NI5fUtF+rLRiou4ZcNir2eZh0OxEW4zAnTnciVB2R28yyHkYz8xJtACm+4heWLdpw/zf66LRpvTGLwkASci7ZkGJp4NrG5Of4C0b3+iq/EeEmX2PiY5lq2fkUE0dejdztmkFWYBW7c/Y+bIYGER/3gt6I8UhAB78cR7p2mOaY"; //Key used for Vuforia.
 
     public void setupVuforia() {
         // Setup parameters to create localizer
@@ -145,9 +145,12 @@ public class FieldNavigator
 
     public void moveToPosition(double wantedX, double wantedY, double wantedDeg)
     {
+        /*
         if (lastKnownLocation == null)
+        {
             return;
-
+        }
+        */
         double robotDeg = (-1 * currentDeg) + 90;
         if (robotDeg >= 360)
         {
@@ -187,9 +190,10 @@ public class FieldNavigator
         currentDeg = returnAngle(lastKnownLocation);
     }
 
-    public void setRobotLocation(double x, double y, double angle)
+    public void setRobotLocation(float xIn, float yIn, float angle)
     {
-
+        lastKnownLocation = createMatrix(inToMM(xIn), inToMM(yIn), 0, 90, 0, angle);
+        updateRobotLocation();
     }
 
     public boolean canSeeTarget()
@@ -200,5 +204,10 @@ public class FieldNavigator
                 return true;
         }
         return false;
+    }
+
+    public static float inToMM(float in)
+    {
+        return (float)(in * 25.4);
     }
 }
