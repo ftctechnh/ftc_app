@@ -1,15 +1,15 @@
-package org.firstinspires.ftc.teamcode.Jack;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
- * Created by inspirationteam on 11/10/2016.
+ * Created by inspirationteam on 11/20/2016.
  */
 
-@TeleOp(name = "#11183: Jack TeleOp Competition", group = "Robot")
-public class JackTeleOpCompetition extends OpMode {
+@TeleOp(name = "#11183: TeleOp Competition", group = "Robot")
+public class TeleOpCompetition extends OpMode {
 
 /*
     ---------------------------------------------------------------------------------------------
@@ -68,6 +68,7 @@ public class JackTeleOpCompetition extends OpMode {
 
     Functions go here
  */
+
 
     public void FourWheelDrive(){
         /*
