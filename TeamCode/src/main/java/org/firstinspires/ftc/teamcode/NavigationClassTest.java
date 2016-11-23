@@ -20,23 +20,44 @@ public class NavigationClassTest extends LinearOpMode {
         robot.init(hardwareMap);
 
         waitForStart();
+        telemetry.addData("telemetry is wpromg ", null);
+        telemetry.update();
         robot.driveStraight(61, 130);
         telemetry.addData("Drive 61 in at 130 deg" , null);
+        telemetry.update();
         telemetry.addData("Check to see if can see target", null);
-        for(short i = 0; i < 2000; i++)
+        telemetry.update();
+
+        for(short i = 0; i < 20000; i++)
         {
             navigator.visionTrack();
             if (navigator.lastKnownLocation != null)
             {
                 telemetry.addData("Can see target", null);
+                telemetry.update();
                 targetDetected = true;
                 break;
             }
-            sleep(100);
+            sleep(10);
         }
 
+        /*
+        while (true)
+        {
+            if (targetDetected == true)
+            {
+                telemetry.addData("Difference in (x) (in):" + (2134-navigator.currentX) * 0.0393701, null);
+                telemetry.addData("Difference in y (in)" + (203-navigator.currentY) * 0.0393701, null);
+            }
+            sleep(100);
+            telemetry.update();
+        }
+        */
+        if (targetDetected)
+            navigator.moveToPosition(84, 8, 0);
+       /*
         idle(); //idle essentially waits for software to catch up with hardware
-        if (!targetDetected)
+        if (!targetDetected) //assume location
         {
             navigator.setRobotLocation((24*3)+12, 8, 0);
             telemetry.addData("Setting robot location at 2134, 305; angle 0",null);
@@ -44,6 +65,8 @@ public class NavigationClassTest extends LinearOpMode {
         telemetry.addData("moveToPosition(914, 150, -90)", null);
         navigator.moveToPosition(2362, 457, 90);
 
+        navigator.moveToPosition(2134, 305, 0);
+        */
         /*
         while(opModeIsActive())
         {
