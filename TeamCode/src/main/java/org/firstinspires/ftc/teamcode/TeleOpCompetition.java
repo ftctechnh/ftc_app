@@ -53,8 +53,17 @@ public class TeleOpCompetition extends OpMode {
  ---------------------------------------------------------------------------------------------
 
       Code to run ONCE when the driver hits PLAY
-      Main code loop goes here
+
 */
+    @Override
+    public void start(){
+
+    }
+
+    /*
+    Code to run REPEATEDLY after the driver hit PLAY
+    Main code loop goes here
+     */
 
     @Override
     public void loop() {
