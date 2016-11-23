@@ -115,8 +115,8 @@ public class TeleOpCompetition extends OpMode {
 */
 
     public void BallShooter(){
-        boolean intake = gamepad2.a;
-        boolean outtake = gamepad2.x;
+        boolean intake = gamepad1.a;
+        boolean outtake = gamepad1.x;
 
         if (intake) {
             ballShooterMotor.setPower(1);

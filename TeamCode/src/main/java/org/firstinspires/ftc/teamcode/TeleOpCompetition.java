@@ -115,7 +115,10 @@ public class TeleOpCompetition extends OpMode {
 */
 
     public void BallShooter(){
-        boolean intake = gamepad1.a;
+        float shoot = -gamepad2.right_stick_y;
+
+        ballShooterMotor.setPower(shoot);
+        /*boolean intake = gamepad1.a;
         boolean outtake = gamepad1.x;
 
         if (intake) {
@@ -126,7 +129,8 @@ public class TeleOpCompetition extends OpMode {
         }
         else {
             ballShooterMotor.setPower(0);
-        }
+        }*/
+
     }
 /*
 ---------------------------------------------------------------------------------------------
