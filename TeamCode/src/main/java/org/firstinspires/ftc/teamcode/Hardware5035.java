@@ -21,8 +21,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * This hardware class assumes the following device names have been configured on the robot:
  * Note:  All names are lower case and some have single spaces between words.
  * <p/>
- * Motor channel:  Left  drive motor:        "left_drive"
- * Motor channel:  Right drive motor:        "right_drive"
+ * Motor channel:  Left  driveReverse motor:        "left_drive"
+ * Motor channel:  Right driveReverse motor:        "right_drive"
  */
 public class Hardware5035 {
     /* Public OpMode members. */
@@ -52,8 +52,8 @@ public class Hardware5035 {
         // Define and Initialize Motors
         ballBooster1 = hwMap.dcMotor.get("ball booster 1");
         ballBooster2 = hwMap.dcMotor.get("ball booster 2");
-        leftMotor = hwMap.dcMotor.get("left drive");
-        rightMotor = hwMap.dcMotor.get("right drive");
+        leftMotor = hwMap.dcMotor.get("left driveReverse");
+        rightMotor = hwMap.dcMotor.get("right driveReverse");
         ballDump = hwMap.dcMotor.get("ball dump");
         popUp = hwMap.servo.get("pop up");
         leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
@@ -70,6 +70,7 @@ public class Hardware5035 {
         ballBooster1.setPower(0);
         ballBooster2.setPower(0);
         ballDump.setPower(0);
+        popUp.setPosition(0.81);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -190,7 +191,7 @@ public class Hardware5035 {
         //tickR *= basePowerR;
         //tickL *= basePowerL;
 
-        //telemetry.addData("drive start", String.format("tickR=%d tickL=%d motorR=%d motorL=%d", tickR, tickL, motorRightRemote1.getCurrentPosition(), motorLeftRemote1.getCurrentPosition()));
+        //telemetry.addData("driveReverse start", String.format("tickR=%d tickL=%d motorR=%d motorL=%d", tickR, tickL, motorRightRemote1.getCurrentPosition(), motorLeftRemote1.getCurrentPosition()));
         int count = 0;
 
         int rightTicksToGo = (tickR - rightMotor.getCurrentPosition() * basePowerR);
@@ -245,7 +246,7 @@ public class Hardware5035 {
         //waitOneFullHardwareCycle(); needed?
     }
 
-    public void drive (double inches) throws InterruptedException {
+    public void driveReverse(double inches) throws InterruptedException {
 //12.6
 
         int multier = 0;
@@ -253,19 +254,19 @@ public class Hardware5035 {
         int tickR = inchToTickConverter(inches);
         int tickL = inchToTickConverter(inches);
 
-        //telemetry.addData("drive start", String.format("tickR=%d tickL=%d motorR=%d motorL=%d", tickR, tickL, motorRightRemote1.getCurrentPosition(), motorLeftRemote1.getCurrentPosition()));
+        //telemetry.addData("driveReverse start", String.format("tickR=%d tickL=%d motorR=%d motorL=%d", tickR, tickL, motorRightRemote1.getCurrentPosition(), motorLeftRemote1.getCurrentPosition()));
         int count = 0;
         while(rightMotor.getCurrentPosition() < tickR || leftMotor.getCurrentPosition() < tickL) {
             leftMotor.setPower(getPowerForTicksfordrive(tickL - leftMotor.getCurrentPosition()));
             rightMotor.setPower(getPowerForTicksfordrive(tickR - rightMotor.getCurrentPosition()));
             //waitOneFullHardwareCycle();
-            //telemetry.addData("drive count", String.format("count= %d tickR=%d tickL=%d motorR=%d motorL=%d", count, tickR, tickL, motorRightRemote1.getCurrentPosition(), motorLeftRemote1.getCurrentPosition()));
+            //telemetry.addData("driveReverse count", String.format("count= %d tickR=%d tickL=%d motorR=%d motorL=%d", count, tickR, tickL, motorRightRemote1.getCurrentPosition(), motorLeftRemote1.getCurrentPosition()));
             ++count;
         }
-        //telemetry.addData("drive end", String.format("tickR=%d tickL=%d motorR=%d motorL=%d", tickR, tickL, motorRightRemote1.getCurrentPosition(), motorLeftRemote1.getCurrentPosition()));
+        //telemetry.addData("driveReverse end", String.format("tickR=%d tickL=%d motorR=%d motorL=%d", tickR, tickL, motorRightRemote1.getCurrentPosition(), motorLeftRemote1.getCurrentPosition()));
         setDrivePower(0);
     }
-    public void driveReverse (double inches) throws InterruptedException {
+    public void driveForward(double inches) throws InterruptedException {
 //12.6
 
         int multier = 0;
@@ -273,16 +274,16 @@ public class Hardware5035 {
         int ReversetickR = inchToTickConverter(inches);
         int ReversetickL = inchToTickConverter(inches);
 
-        //telemetry.addData("drive start", String.format("tickR=%d tickL=%d motorR=%d motorL=%d", tickR, tickL, motorRightRemote1.getCurrentPosition(), motorLeftRemote1.getCurrentPosition()));
+        //telemetry.addData("driveReverse start", String.format("tickR=%d tickL=%d motorR=%d motorL=%d", tickR, tickL, motorRightRemote1.getCurrentPosition(), motorLeftRemote1.getCurrentPosition()));
         int count = 0;
         while(rightMotor.getCurrentPosition() < ReversetickR || leftMotor.getCurrentPosition() < ReversetickL) {
             leftMotor.setPower(-getPowerForTicksfordrive(ReversetickL - leftMotor.getCurrentPosition()));
             rightMotor.setPower(-getPowerForTicksfordrive(ReversetickL - rightMotor.getCurrentPosition()));
             //waitOneFullHardwareCycle();
-            //telemetry.addData("drive count", String.format("count= %d tickR=%d tickL=%d motorR=%d motorL=%d", count, tickR, tickL, motorRightRemote1.getCurrentPosition(), motorLeftRemote1.getCurrentPosition()));
+            //telemetry.addData("driveReverse count", String.format("count= %d tickR=%d tickL=%d motorR=%d motorL=%d", count, tickR, tickL, motorRightRemote1.getCurrentPosition(), motorLeftRemote1.getCurrentPosition()));
             ++count;
         }
-        //telemetry.addData("drive end", String.format("tickR=%d tickL=%d motorR=%d motorL=%d", tickR, tickL, motorRightRemote1.getCurrentPosition(), motorLeftRemote1.getCurrentPosition()));
+        //telemetry.addData("driveReverse end", String.format("tickR=%d tickL=%d motorR=%d motorL=%d", tickR, tickL, motorRightRemote1.getCurrentPosition(), motorLeftRemote1.getCurrentPosition()));
         setDrivePower(0);
     }
 
