@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 /**
  * Created by inspirationteam on 11/10/2016.
  */
-@TeleOp(name = "#11183: TeleOp Competition", group = "Robot")
+@TeleOp(name = "#11183: Jack TeleOp Competition", group = "Robot")
 public class JackCompetitionTeleOp extends OpMode {
 
     //---------------------------------------------------------------------------------------------
@@ -32,6 +32,8 @@ public class JackCompetitionTeleOp extends OpMode {
         leftWheelMotorBack = hardwareMap.dcMotor.get("leftWheelMotorBack");
         rightWheelMotorFront = hardwareMap.dcMotor.get("rightWheelMotorFront");
         rightWheelMotorBack = hardwareMap.dcMotor.get("rightWheelMotorBack");
+        ballCollectorMotor = hardwareMap.dcMotor.get("ballCollectorMotor");
+        ballShooterMotor = hardwareMap.dcMotor.get("ballShooterMotor");
 
         /* lets reverse the direction of the right wheel motor*/
         rightWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
@@ -55,20 +57,34 @@ public class JackCompetitionTeleOp extends OpMode {
     public void start() {
     }
 //---------------------------------------------------------------------------------------------
-
+/*
+Main code loop goes here
+ */
     @Override
+<<<<<<< HEAD
     public void loop() {
+=======
+    public void loop(){
+        // read the gamepad values and put into variables
+>>>>>>> d1af4182201c10d2e493898c6c5a20866d31a98f
         float leftY_gp1 = -gamepad1.left_stick_y;
         float rightY_gp1 = -gamepad1.right_stick_y;
 
-        //set the power of the motors with the game pad values
+        //run the motors by setting power to the motors with the game pad values
         leftWheelMotorFront.setPower(leftY_gp1);
         leftWheelMotorBack.setPower(leftY_gp1);
         rightWheelMotorFront.setPower(rightY_gp1);
         rightWheelMotorBack.setPower(rightY_gp1);
     }
+<<<<<<< HEAD
 
     public void CollectBalls() {
+=======
+//---------------------------------------------------------------------------------------------
+
+
+    public void CollectBalls(){
+>>>>>>> d1af4182201c10d2e493898c6c5a20866d31a98f
         boolean intake = gamepad1.right_bumper;
         boolean outtake = gamepad1.left_bumper;
 
@@ -79,8 +95,13 @@ public class JackCompetitionTeleOp extends OpMode {
         } else {
             ballCollectorMotor.setPower(0);
         }
+<<<<<<< HEAD
     }
 }
+=======
+
+//---------------------------------------------------------------------------------------------
+>>>>>>> d1af4182201c10d2e493898c6c5a20866d31a98f
     /*
      * Code to run ONCE after the driver hits STOP
      */
@@ -89,3 +110,8 @@ public class JackCompetitionTeleOp extends OpMode {
     }
    */
 
+<<<<<<< HEAD
+=======
+}
+//---------------------------------------------------------------------------------------------
+>>>>>>> d1af4182201c10d2e493898c6c5a20866d31a98f
