@@ -80,7 +80,7 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.2;
+    static final double     DRIVE_SPEED             = 0.4;
     static final double     TURN_SPEED              = 0.1;
     static final double     PUSH_SPEED             = 0.1;
 
@@ -122,28 +122,8 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
         robot.backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // Send telemetry message to alert driver that we are calibrating;
-        telemetry.addData(">", "Calibrating Gyro");    //
-        telemetry.update();
-
-        gyro.calibrate();
-
-        // make sure the gyro is calibrated before continuing
-        while (!isStopRequested() && gyro.isCalibrating())  {
-            sleep(50);
-            idle();
-        }
-
-        telemetry.addData(">", "Robot Ready.");    //
-        telemetry.update();
-
-        // Wait for the game to start (Display Gyro value), and reset gyro before we move..
-        while (!isStarted()) {
-            telemetry.addData(">", "Robot Heading = %d", gyro.getIntegratedZValue());
-            telemetry.update();
-            idle();
-        }
-        gyro.resetZAxisIntegrator();
+        //Calibrate Gyro sensor before starting
+        calibrateGyro();
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0", "Starting at %7d :%7d",
@@ -163,16 +143,14 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
 //        gyroDrive(DRIVE_SPEED, 24.0, 0.0);    // Drive FWD
         encoderDrive(DRIVE_SPEED, 24, 24, 10.0); // Drive fwd
         telemetry.addData("Step 1 GyroDrive", " Completed");
-        telemetry.addData("Current Heading: ", gyro.getHeading()) ;
         telemetry.update();
-        sleep(1000);
+        sleep(500);
 
         //Step 2
         gyroTurn( TURN_SPEED, -45.0);         // Turn  CCW to -45 Degrees
         telemetry.addData("Step 2 GyroTurn", " Completed");
-        telemetry.addData("Current Heading: ", gyro.getHeading()) ;
         telemetry.update();
-        sleep(2000);
+        sleep(500);
 
 //        gyroHold( TURN_SPEED, -45.0, 0.5);    // Hold -45 Deg heading for a 1/2 second
 //        telemetry.addData("Step 2 Gyro HOLD", " Completed");
@@ -183,47 +161,37 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
 //        gyroDrive(DRIVE_SPEED, 24.0, 0.0);    // Drive FWD
         encoderDrive(DRIVE_SPEED, 24, 24, 10.0); // Drive fwd
         telemetry.addData("Step 3 GyroDrive", " Completed");
-        telemetry.addData("Current Heading: ", gyro.getHeading()) ;
         telemetry.update();
 
-        sleep(2000);
+        sleep(500);
 
         //Step 4
         gyroTurn( TURN_SPEED, -90.0);         // Turn  CCW to -45 Degrees
         telemetry.addData("Step 4 GyroTurn", " Completed");
-        telemetry.addData("Current Heading: ", gyro.getHeading()) ;
         telemetry.update();
-        sleep(10000);
+        sleep(500);
 
 //        gyroHold( TURN_SPEED, -45.0, 0.5);    // Hold -45 Deg heading for a 1/2 second
 //        telemetry.addData("Step 4 Gyro HOLD", " Completed");
 //        telemetry.update();
 //        sleep(2000);
 
-//        Step 1
-//        encoderDrive(DRIVE_SPEED, 24, 24, 3.0);  //  Forward 36 Inches with 3 Sec timeout CHANGE TO REAL LENGTH
-//         Step 2
-// encoderDrive(TURN_SPEED, 12, -6, 3.0);  //  Turn Right 12 Inches with 3 Sec timeout (to be figured out)
-//        Step3
-//        encoderDrive(DRIVE_SPEED, 30, 30, 3.0);  //  Reverse 24 Inches with 3 Sec timeout CHANGE TO REAL LENGTH
-        //Step 4
-//        encoderDrive(TURN_SPEED, 12, -6, 3.0);  //  Turn Right 12 Inches with 3 Sec timeout (to be figured out)
         encoderDrive(DRIVE_SPEED, 24, 24, 3.0); //  Forward 24 inches with 3 Sec timeout
-        sleep(2000);
+        sleep(750);
 
-        //Touch sensor loop - TODO
-        while (!robot.touch.isPressed() && sensorLoopCycles < 6) {
-            if (robot.touch.isPressed()) {
-                telemetry.addData("Touch", "Is Pressed");
-                encoderDrive(DRIVE_SPEED, -12, -12, 3.0);
-            }else{
-            telemetry.addData("Touch", "Is Not Pressed");
-            encoderDrive(PUSH_SPEED, 1, 1, 3.0);
-
-            telemetry.update();
-            }
-            sensorLoopCycles = sensorLoopCycles + 1 ;
-        }
+//        //Touch sensor loop - TODO
+//        while (!robot.touch.isPressed() && sensorLoopCycles < 6) {
+//            if (robot.touch.isPressed()) {
+//                telemetry.addData("Touch", "Is Pressed");
+//                encoderDrive(DRIVE_SPEED, -12, -12, 3.0);
+//            }else{
+//            telemetry.addData("Touch", "Is Not Pressed");
+//            encoderDrive(PUSH_SPEED, 1, 1, 3.0);
+//
+//            telemetry.update();
+//            }
+//            sensorLoopCycles = sensorLoopCycles + 1 ;
+//        }
 
         // Light sensor loop - TODO
         sensorLoopCycles = 0;
@@ -234,17 +202,17 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
                 colorBlueSensed = 1;
                 telemetry.addData("Detecting", "Red");
                 telemetry.update();
-                sleep(1000);
+                sleep(500);
             } else if (robot.color.blue() > robot.color.red()){
                 colorBlueSensed = 2;
                 telemetry.addData("Detecting", "Blue");
                 telemetry.update();
-                sleep(1000);
+                sleep(500);
             } else {
                 colorBlueSensed = 0;
                 telemetry.addData("Detecting", "Neither");
                 telemetry.update();
-                sleep(1000);
+                sleep(750);
             }
             sensorLoopCycles = sensorLoopCycles + 1 ;
         }
@@ -253,21 +221,23 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
             colorBlueSensed = 1;
             telemetry.addData("Detecting", "Red");
             telemetry.update();
-            sleep(1000);
+//            sleep(500);
             encoderDrive(PUSH_SPEED,    -12, -12, 3.0);
-            encoderDrive(TURN_SPEED,    -3,6,3.0);
-            encoderDrive(PUSH_SPEED,    12,12,3.0);
+//            encoderDrive(TURN_SPEED,    -3,6,3.0);
+            gyroTurn(TURN_SPEED, -80.0);
+            encoderDrive(PUSH_SPEED,    6,6,3.0);
+            gyroTurn(TURN_SPEED, -90.0);
         } else if (robot.color.blue() > robot.color.red()){
             colorBlueSensed = 2;
             telemetry.addData("Detecting", "Blue");
             telemetry.update();
-            sleep(1000);
+//            sleep(500);
             encoderDrive(PUSH_SPEED, 6,6, 3.0);
         } else {
             colorBlueSensed = 0;
             telemetry.addData("Detecting", "Neither");
             telemetry.update();
-            sleep(1000);
+//            sleep(500);
             encoderDrive(DRIVE_SPEED,  -30, -30, 3.0); // Back up and park
         }
 
@@ -362,6 +332,14 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
 
         telemetry.addData(">", "Gyro Calibrated.  Press Start.");
         telemetry.update();
+
+        // Wait for the game to start (Display Gyro value), and reset gyro before we move..
+        while (!isStarted()) {
+            telemetry.addData(">", "Robot Heading = %d. Press Start.", gyro.getIntegratedZValue());
+            telemetry.update();
+            idle();
+        }
+        gyro.resetZAxisIntegrator();
 
         // wait for the start button to be pressed.
 //      waitForStart();
@@ -491,6 +469,9 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
             // Update telemetry & Allow time for other processes to run.
             telemetry.update();
         }
+
+        telemetry.addData("Current Heading: ", gyro.getHeading()) ;
+        telemetry.update();
     }
 
     /**
