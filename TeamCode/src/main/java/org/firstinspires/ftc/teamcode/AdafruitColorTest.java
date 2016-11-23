@@ -88,7 +88,6 @@ public class AdafruitColorTest extends OpMode
         telemetry.addData("Green", beaconColorSensor.green());
         telemetry.addData("Blue ", beaconColorSensor.blue());
         telemetry.addData("Hue", hsvValues[0]);
-
         telemetry.update();
     }
 }
