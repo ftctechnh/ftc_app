@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.provider.Settings;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.opencv.android.CameraBridgeViewBase;
@@ -8,8 +10,7 @@ import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
-import static org.opencv.core.CvType.CV_32F;
-import static org.opencv.core.CvType.CV_8U;
+import static org.opencv.core.CvType.*;
 
 /**
  * Created by Robotics on 10/28/2016.
@@ -20,57 +21,46 @@ import static org.opencv.core.CvType.CV_8U;
 public class OpenCVSimpleTest extends OpenCVLib {
 
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame frame){
+        //final long startTime = System.nanoTime();
+
         //here we gooooooooo!
-        //my not very simple edge detection algorithm!
         Mat src = frame.gray();
 
-        src.convertTo(src, CV_32F);
+        final int topScanY = src.rows() / 4;
+        final int middleScanY = src.rows() / 2;
+        final int bottomScanY = (src.rows() * 3) / 4;
 
-        float[] ray = new float[(int)src.total()];
+        final int thresh = 255;
 
-        src.get(0, 0, ray);
+        byte[] topRay = new byte[src.cols()];
+        byte[] middleRay = new byte[src.cols()];
+        byte[] bottomRay = new byte[src.cols()];
 
-        int imgRow = src.rows();
-        int imgCol = src.cols();
+        //apply adaptive threshold to image
+        Imgproc.threshold(src, src, 0, 200, Imgproc.THRESH_OTSU + Imgproc.THRESH_BINARY);
 
-        src.get(0, 0, ray);
+        //do all the position calculations
+        src.row(topScanY).get(0, 0, topRay);
+        src.row(middleScanY).get(0, 0, middleRay);
+        src.row(bottomScanY).get(0, 0, bottomRay);
 
-        int thresh = 200;
+        //final int topThresh = threshFind(topRay);
+        //final int middleThresh = threshFind(middleRay);
+        //final int bottomThresh = threshFind(bottomRay);
 
-        float totalRow = 0;
-        float totalCol = 0;
-        long totalPix = 0;
+        final int topPos = findAvgOverZero(topRay);
+        final int middlePos = findAvgOverZero(middleRay);
+        final int bottomPos = findAvgOverZero(bottomRay);
 
-        for(int i = 0; i < imgRow; i++){
-            for(int o = 0; o < imgCol; o++){
-                if(ray[i * imgCol + o] > thresh){
-                    ray[i * imgCol] = 165;
-                    totalRow += i;
-                    totalCol += o;
-                    totalPix++;
-                }
-                else{
-                    ray[i * imgCol + o] = 0;
-                }
-            }
-        }
+        //final long stopTime = System.nanoTime();
 
-        if(totalPix != 0){
-            totalCol /= totalPix;
-            totalRow /= totalPix;
-        }
-        else{
-            totalCol = imgCol/2.0f;
-            totalRow = imgRow/2.0f;
-        }
+        //telemetry.addData("Exec. Time", stopTime - startTime);
 
-        src.put(0, 0, ray);
+        Imgproc.circle(src, new Point(topPos, topScanY), 10, new Scalar(255,0,0));
 
-        src.convertTo(src, CV_8U);
+        Imgproc.circle(src, new Point(middlePos, middleScanY), 10, new Scalar(255,0,0));
 
-        Imgproc.circle(src, new Point((int)totalCol, (int)totalRow), 4, new Scalar(255,0,0));
-
-        Imgproc.circle(src, new Point(imgCol/2, imgRow/2), 10, new Scalar(255,0,0));
+        Imgproc.circle(src, new Point(bottomPos, bottomScanY), 10, new Scalar(255,0,0));
 
         return src;
     }
@@ -93,6 +83,32 @@ public class OpenCVSimpleTest extends OpenCVLib {
     @Override
     public void stop(){
         stopCamera();
+    }
+
+    //takes a n array of bytes, and returns (min + max)/2 for a threshold
+    private int threshFind(int[] ray){
+        int min = 0;
+        int max = 0;
+        for(int i = 0; i < ray.length; i++){
+            if(min > ray[i]) min = ray[i];
+            else if(max < ray[i]) max = ray[i];
+        }
+
+        return (min + max) / 2;
+    }
+
+    private int findAvgOverZero(byte[] ray){
+        int totalPos = 0;
+        int totalNum = 0;
+        for(int i = 0; i < ray.length; i++){
+            if(ray[i] != 0){
+                totalPos += i;
+                totalNum++;
+            }
+        }
+
+        if(totalNum == 0) return 0;
+        else return totalPos/totalNum;
     }
 
 }

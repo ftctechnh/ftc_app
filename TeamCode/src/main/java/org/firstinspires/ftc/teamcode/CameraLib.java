@@ -233,14 +233,14 @@ public class CameraLib {
         }
 
         // return a string representation of the value along the given scanline
-        byte[] scanlineValue(int y) {
+        int[] scanlineValue(int y) {
             // scan the given horizontal line of the image for red, green, and blue strips and report
             // value
-            byte[] val = new byte[cameraSize().width];
+            int[] val = new int[cameraSize().width];
             for (int x=0; x<cameraSize().width; x++) {
                 int pix = getPixel(x, y);
                 int domVal = CameraLib.Pixel.value(pix);            // or, use hue(pix) instead ...
-                val[x] = (byte)domVal;
+                val[x] = domVal;
             }
             return val;
         }

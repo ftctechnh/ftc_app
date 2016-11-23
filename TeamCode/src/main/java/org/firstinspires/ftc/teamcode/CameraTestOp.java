@@ -38,9 +38,9 @@ public class CameraTestOp extends OpMode {
         telemetry.addData("loop count:", mLoopCount++);
         telemetry.addData("version: ", "1.3");
 
-        byte[] topScan;
-        byte[] middleScan;
-        byte[] bottomScan;
+        int[] topScan;
+        int[] middleScan;
+        int[] bottomScan;
 
         // get most recent frame from camera (may be same as last time or null)
         CameraLib.CameraImage frame = mCamAcqFr.loop();
@@ -64,12 +64,14 @@ public class CameraTestOp extends OpMode {
             middleScan = frame.scanlineValue(camSize.height / 2);
             bottomScan = frame.scanlineValue(camSize.height * 2 / 3);
 
-            telemetry.addData("value a(1/3): ", topScan);
-            telemetry.addData("value b(1/2): ", middleScan);
-            telemetry.addData("value c(2/3): ", bottomScan);
-            //telemetry.addData("dom a(1/3): ", frame.scanlineDomColor(camSize.height / 3, bandSize));
-            //telemetry.addData("dom b(1/2): ", frame.scanlineDomColor(camSize.height / 2, bandSize));
-            //telemetry.addData("dom c(2/3): ", frame.scanlineDomColor(2*camSize.height / 3, bandSize));
+            //telemetry.addData("value a(1/3): ", topScan);
+            //telemetry.addData("value b(1/2): ", middleScan);
+            //telemetry.addData("value c(2/3): ", bottomScan);
+
+            final int bandSize = 10;
+            telemetry.addData("hue a(1/3): ", frame.scanlineHue(camSize.height / 3, bandSize));
+            telemetry.addData("hue b(1/2): ", frame.scanlineHue(camSize.height / 2, bandSize));
+            telemetry.addData("hue c(2/3): ", frame.scanlineHue(2*camSize.height / 3, bandSize));
 
             int topThresh = threshFind(topScan);
             int middleThresh = threshFind(middleScan);
@@ -93,8 +95,8 @@ public class CameraTestOp extends OpMode {
         mCamAcqFr.stop();
     }
 
-    //takes a n array of bytes, anbd returns (min + max)/2 for a threshold
-    private int threshFind(byte[] ray){
+    //takes a n array of bytes, and returns (min + max)/2 for a threshold
+    private int threshFind(int[] ray){
         int min = 0;
         int max = 0;
         for(int i = 0; i < ray.length; i++){
@@ -105,7 +107,7 @@ public class CameraTestOp extends OpMode {
         return (min + max) / 2;
     }
 
-    private int findAvgOverThresh(byte[] ray, int thresh){
+    private int findAvgOverThresh(int[] ray, int thresh){
         int totalPos = 0;
         int totalNum = 0;
         for(int i = 0; i < ray.length; i++){
