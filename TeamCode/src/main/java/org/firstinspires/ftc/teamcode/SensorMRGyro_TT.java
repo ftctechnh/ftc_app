@@ -51,7 +51,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
 */
 @Autonomous(name = "Sensor: MR Gyro TT", group = "Sensor")
-//@Disabled
+@Disabled
 public class SensorMRGyro_TT extends LinearOpMode {
 
   HardwarePushbot_TT         robot   = new HardwarePushbot_TT();   // Use a Pushbot's hardware

@@ -66,7 +66,7 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Auto Blue Team(Sensor) 2", group="Pushbot")
+@Autonomous(name="Auto Blue Right (Sensor)", group="Pushbot")
 //@Disabled
 public class AutoBlueTeam_Sensor extends LinearOpMode {
 
@@ -80,8 +80,8 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.6;
-    static final double     TURN_SPEED              = 0.2;
+    static final double     DRIVE_SPEED             = 0.2;
+    static final double     TURN_SPEED              = 0.1;
     static final double     PUSH_SPEED             = 0.1;
 
     static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
@@ -160,21 +160,45 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         // This is for the nearest blue beacon towards our robot
         //Step 1
-        gyroDrive(DRIVE_SPEED, 24.0, 0.0);    // Drive FWD
+//        gyroDrive(DRIVE_SPEED, 24.0, 0.0);    // Drive FWD
+        encoderDrive(DRIVE_SPEED, 24, 24, 10.0); // Drive fwd
+        telemetry.addData("Step 1 GyroDrive", " Completed");
+        telemetry.addData("Current Heading: ", gyro.getHeading()) ;
+        telemetry.update();
         sleep(1000);
+
         //Step 2
         gyroTurn( TURN_SPEED, -45.0);         // Turn  CCW to -45 Degrees
-        sleep(1000);
-        gyroHold( TURN_SPEED, -45.0, 0.5);    // Hold -45 Deg heading for a 1/2 second
-        sleep(1000);
+        telemetry.addData("Step 2 GyroTurn", " Completed");
+        telemetry.addData("Current Heading: ", gyro.getHeading()) ;
+        telemetry.update();
+        sleep(2000);
+
+//        gyroHold( TURN_SPEED, -45.0, 0.5);    // Hold -45 Deg heading for a 1/2 second
+//        telemetry.addData("Step 2 Gyro HOLD", " Completed");
+//        telemetry.update();
+//        sleep(2000);
+
 //        Step 3
-        gyroDrive(PUSH_SPEED, 24.0, 0.0);    // Drive FWD
-        sleep(10000);
+//        gyroDrive(DRIVE_SPEED, 24.0, 0.0);    // Drive FWD
+        encoderDrive(DRIVE_SPEED, 24, 24, 10.0); // Drive fwd
+        telemetry.addData("Step 3 GyroDrive", " Completed");
+        telemetry.addData("Current Heading: ", gyro.getHeading()) ;
+        telemetry.update();
+
+        sleep(2000);
+
         //Step 4
-        gyroTurn( TURN_SPEED, -45.0);         // Turn  CCW to -45 Degrees
-        sleep(1000);
-        gyroHold( TURN_SPEED, -45.0, 0.5);    // Hold -45 Deg heading for a 1/2 second
-        sleep(1000);
+        gyroTurn( TURN_SPEED, -90.0);         // Turn  CCW to -45 Degrees
+        telemetry.addData("Step 4 GyroTurn", " Completed");
+        telemetry.addData("Current Heading: ", gyro.getHeading()) ;
+        telemetry.update();
+        sleep(10000);
+
+//        gyroHold( TURN_SPEED, -45.0, 0.5);    // Hold -45 Deg heading for a 1/2 second
+//        telemetry.addData("Step 4 Gyro HOLD", " Completed");
+//        telemetry.update();
+//        sleep(2000);
 
 //        Step 1
 //        encoderDrive(DRIVE_SPEED, 24, 24, 3.0);  //  Forward 36 Inches with 3 Sec timeout CHANGE TO REAL LENGTH

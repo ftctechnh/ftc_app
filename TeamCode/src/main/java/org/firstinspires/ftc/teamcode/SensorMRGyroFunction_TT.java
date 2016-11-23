@@ -32,6 +32,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -47,7 +48,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
 */
 @Autonomous(name = "Sensor: MR Gyro Function TT", group = "Sensor")
-//@Disabled
+@Disabled
 public class SensorMRGyroFunction_TT extends LinearOpMode {
 
   HardwarePushbot_TT robot = new HardwarePushbot_TT();   // Use a Pushbot's hardware
