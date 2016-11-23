@@ -61,6 +61,7 @@ public abstract class AutonomousBase extends OpMode {
     double heading;
     int cDistF, lDistF, dDistF; //Forward distance variables
     int cDistS, lDistS, dDistS; //Sideways distance variables
+    int cDistW, lDistW, dDistW; //Sideways distance variables
     double tDiff; // getRuntime() does this really annoying thing where it counts init time, so I
     // mark the first time I exit init, and override getRuntime() to return that instead
     double sTime; //Shooting timer
@@ -75,7 +76,12 @@ public abstract class AutonomousBase extends OpMode {
         motorDown = hardwareMap.dcMotor.get("back");
         motorLeft = hardwareMap.dcMotor.get("left");
         motorRight = hardwareMap.dcMotor.get("right");
-
+        
+        motorUp.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
+        motorDown.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
+        motorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
+        motorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODERS);
+        
         motorDown.setDirection(DcMotor.Direction.REVERSE);
         motorRight.setDirection(DcMotor.Direction.REVERSE);
 
@@ -114,6 +120,8 @@ public abstract class AutonomousBase extends OpMode {
                 //clear, and that there is a goal(9), and us(1) on the map somewhere.
                 power = .75; //power coefficient
                 if(map.distanceToGoal()>DISTANCE_TOLERANCE) {
+                    motorUp.setPower(0);
+                    motorDown.setPower(0);
                     motorLeft.setPower(power);
                     motorRight.setPower(power);
                     map.moveRobot(dDistF * DEGREES_TO_FEET, heading);
@@ -124,6 +132,8 @@ public abstract class AutonomousBase extends OpMode {
                 //clear, and that there is a goal(9), and us(1) on the map somewhere.
                 power = -.75; //power coefficient
                 if(map.distanceToGoal()>DISTANCE_TOLERANCE) {
+                    motorUp.setPower(0);
+                    motorDown.setPower(0);
                     motorLeft.setPower(power);
                     motorRight.setPower(power);
                     map.moveRobot(dDistF * DEGREES_TO_FEET, heading);
@@ -134,12 +144,17 @@ public abstract class AutonomousBase extends OpMode {
                 if(map.distanceToGoal()>DISTANCE_TOLERANCE) {
                     motorLeft.setPower(power);
                     motorRight.setPower(power);
+                    motorUp.setPower(0);
+                    motorDown.setPower(0);
                     map.moveRobot(dDistF * DEGREES_TO_FEET, heading);
                 }
+                servoLeftButton.setPosition(.5); // HACK
                 break;               
             case MoveState.LEFT:
                 power = -.75; //power coefficient
                 if(map.distanceToGoal()>DISTANCE_TOLERANCE) {
+                    motorLeft.setPower(0);
+                    motorRight.setPower(0);
                     motorUp.setPower(power);
                     motorDown.setPower(power);
                     map.moveRobot(-dDistS * DEGREES_TO_FEET, heading);
@@ -149,6 +164,8 @@ public abstract class AutonomousBase extends OpMode {
            case MoveState.RIGHT:
                 power = .75; //power coefficient
                 if(map.distanceToGoal()>DISTANCE_TOLERANCE) {
+                    motorLeft.setPower(0);
+                    motorRight.setPower(0);
                     motorUp.setPower(power);
                     motorDown.setPower(power);
                     map.moveRobot(-dDistS * DEGREES_TO_FEET, heading);
@@ -194,6 +211,7 @@ public abstract class AutonomousBase extends OpMode {
 
     public void gameState(){
         heading = gyro.getHeading();
+
         lDistF = cDistF;
         cDistF = ( motorLeft.getCurrentPosition()
                  + motorRight.getCurrentPosition()
@@ -205,6 +223,12 @@ public abstract class AutonomousBase extends OpMode {
                  + motorDown.getCurrentPosition()
         ) / 2;
         dDistS = cDistS - lDistS;
+
+        lDistW = cDistW;
+        cDistW = ( motorLeftShooter.getCurrentPosition()
+                 + motorRightShooter.getCurrentPosition()
+        ) / 2;
+        dDistW = cDistW - lDistW;
 
         if(!inited){
             tDiff = getRuntime();
