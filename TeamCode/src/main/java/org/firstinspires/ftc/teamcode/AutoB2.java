@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 /**
- * Created by Sean Ovens on 11/23/2016.
+ * Created by Sean O on 11/23/2016.
  */
 @Autonomous(name="Blue Ball", group="Blue")
 public class AutoB2 extends AutonomousBase {
