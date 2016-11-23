@@ -136,6 +136,9 @@ public class VuforiaLocation {
             ((VuforiaTrackableDefaultListener) trackableObject.getListener())
                     .setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
         }
+
+            /** Start tracking the data sets we care about. */
+            this.FTCVisionTargets.activate();
     }
 
     private VuforiaTrackable setUpTrackable(int trackableNumb, String trackableName){
@@ -148,9 +151,6 @@ public class VuforiaLocation {
         OpenGLMatrix lastLocation = null;
         OpenGLMatrix robotLocationTransform = null;
         Map<String, Boolean> trackableData = new HashMap<>();
-
-        /** Start tracking the data sets we care about. */
-        this.FTCVisionTargets.activate();
 
         for (Map.Entry<String, VuforiaTrackable> trackableEntry : this.allTrackables.entrySet()) {
             VuforiaTrackable trackable = trackableEntry.getValue();
