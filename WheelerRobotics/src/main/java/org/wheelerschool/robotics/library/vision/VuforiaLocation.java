@@ -132,7 +132,6 @@ public class VuforiaLocation {
             VuforiaTrackable trackableObject = this.setUpTrackable(ii, name);
             trackableObject.setLocation(getTargetLocation(name));
 
-            this.FTCVisionTargets.set(ii, trackableObject);
             this.allTrackables.put(name, trackableObject);
             ((VuforiaTrackableDefaultListener) trackableObject.getListener())
                     .setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
