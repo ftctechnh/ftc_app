@@ -38,9 +38,9 @@ public class CameraTestOp extends OpMode {
         telemetry.addData("loop count:", mLoopCount++);
         telemetry.addData("version: ", "1.3");
 
-        String topScan;
-        String middleScan;
-        String bottomScan;
+        byte[] topScan;
+        byte[] middleScan;
+        byte[] bottomScan;
 
         // get most recent frame from camera (may be same as last time or null)
         CameraLib.CameraImage frame = mCamAcqFr.loop();
@@ -59,35 +59,65 @@ public class CameraTestOp extends OpMode {
             telemetry.addData("frame number: ", mCamAcqFr.frameCount());
 
             // log text representations of several significant scanlines
-            final int bandSize = 10;
 
-            topScan = frame.scanlineHue(camSize.height / 3, bandSize);
-            middleScan = frame.scanlineHue(camSize.height / 2, bandSize);
-            bottomScan = frame.scanlineHue(camSize.height * 2 / 3, bandSize);
+            topScan = frame.scanlineValue(camSize.height / 3);
+            middleScan = frame.scanlineValue(camSize.height / 2);
+            bottomScan = frame.scanlineValue(camSize.height * 2 / 3);
 
-            telemetry.addData("hue a(1/3): ", topScan);
-            telemetry.addData("hue b(1/2): ", middleScan);
-            telemetry.addData("hue c(2/3): ", bottomScan);
-            telemetry.addData("dom a(1/3): ", frame.scanlineDomColor(camSize.height / 3, bandSize));
-            telemetry.addData("dom b(1/2): ", frame.scanlineDomColor(camSize.height / 2, bandSize));
-            telemetry.addData("dom c(2/3): ", frame.scanlineDomColor(2*camSize.height / 3, bandSize));
+            telemetry.addData("value a(1/3): ", topScan);
+            telemetry.addData("value b(1/2): ", middleScan);
+            telemetry.addData("value c(2/3): ", bottomScan);
+            //telemetry.addData("dom a(1/3): ", frame.scanlineDomColor(camSize.height / 3, bandSize));
+            //telemetry.addData("dom b(1/2): ", frame.scanlineDomColor(camSize.height / 2, bandSize));
+            //telemetry.addData("dom c(2/3): ", frame.scanlineDomColor(2*camSize.height / 3, bandSize));
 
-            //threshhold <code></code>
-            //find a min/max
-            int min;
-            int max;
+            int topThresh = threshFind(topScan);
+            int middleThresh = threshFind(middleScan);
+            int bottomThresh = threshFind(bottomScan);
 
-            for(int i = 0; i < topScan.length(); i++){
-                if(min > )
-            }
+            telemetry.addData("Top Thresh", topThresh);
+            telemetry.addData("Middle Thresh", middleThresh);
+            telemetry.addData("Bottom Thresh", bottomThresh);
 
+            int topPos = findAvgOverThresh(topScan, topThresh);
+            int middlePos = findAvgOverThresh(middleScan, middleThresh);
+            int bottomPos = findAvgOverThresh(bottomScan, bottomThresh);
 
+            telemetry.addData("Top Pos", topPos);
+            telemetry.addData("Middle Pos", middlePos);
+            telemetry.addData("Bottom Pos", bottomPos);
         }
     }
 
     public void stop() {
         mCamAcqFr.stop();
     }
+
+    //takes a n array of bytes, anbd returns (min + max)/2 for a threshold
+    private int threshFind(byte[] ray){
+        int min = 0;
+        int max = 0;
+        for(int i = 0; i < ray.length; i++){
+            if(min > ray[i]) min = ray[i];
+            else if(max < ray[i]) max = ray[i];
+        }
+
+        return (min + max) / 2;
+    }
+
+    private int findAvgOverThresh(byte[] ray, int thresh){
+        int totalPos = 0;
+        int totalNum = 0;
+        for(int i = 0; i < ray.length; i++){
+            if(ray[i] >= thresh){
+                totalPos += i;
+                totalNum++;
+            }
+        }
+
+        return totalPos/totalNum;
+    }
+
 
 }
 
