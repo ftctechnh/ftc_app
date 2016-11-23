@@ -54,7 +54,11 @@ public class JackCompetitionTeleOp extends OpMode {
       Code to run ONCE when the driver hits PLAY
 */
     @Override
-    public void start() {
+    public void loop() {
+        fourWheelDrive();
+        CollectBalls();
+        setBallShooter();
+
     }
 /*
 ---------------------------------------------------------------------------------------------
@@ -62,8 +66,7 @@ public class JackCompetitionTeleOp extends OpMode {
 Main code loop goes here
 
  */
-    @Override
-    public void loop(){
+    public void fourWheelDrive(){
         /*
         read the gamepad values and put into variables
          */
@@ -75,6 +78,7 @@ Main code loop goes here
         leftWheelMotorBack.setPower(leftY_gp1);
         rightWheelMotorFront.setPower(rightY_gp1);
         rightWheelMotorBack.setPower(rightY_gp1);
+
     }
 /*---------------------------------------------------------------------------------------------
 */
@@ -91,7 +95,20 @@ Main code loop goes here
             ballCollectorMotor.setPower(0);
         }
     }
+    public void setBallShooter(){
+        boolean intake = gamepad1.a;
+        boolean outtake = gamepad1.x;
 
+        if (intake) {
+            ballShooterMotor.setPower(1);
+        }
+        else if(outtake) {
+            ballShooterMotor.setPower(-1);
+        }
+        else {
+            ballShooterMotor.setPower(0);
+        }
+    }
 /*
 ---------------------------------------------------------------------------------------------
 
