@@ -41,6 +41,7 @@ import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -93,8 +94,8 @@ public class VuforiaLocation {
 
 
     public OpenGLMatrix lastLocation = null;
-    public float[] lastLocationXYZ = null;
     public Map<String, Boolean> lastTrackableData;
+    public VectorF lastLocationXYZ = null;
 
 
     public VuforiaLocation(float phoneX, float phoneRotX, float phoneY, float phoneRotY, float phoneZ,
@@ -170,14 +171,8 @@ public class VuforiaLocation {
 
         this.lastTrackableData = trackableData;
         this.lastLocation = lastLocation;
-        if (lastLocation != null) {
-            this.lastLocationXYZ = new float[3];
-            this.lastLocationXYZ[0] = lastLocation.get(0, 3);
-            this.lastLocationXYZ[1] = lastLocation.get(1, 3);
-            this.lastLocationXYZ[2] = lastLocation.get(2, 3);
-        } else {
-            this.lastLocationXYZ = null;
-        }
+
+        this.lastLocationXYZ = (lastLocation == null ? null : lastLocation.getTranslation());
     }
 
     private OpenGLMatrix getTargetLocation(String targetName) {
