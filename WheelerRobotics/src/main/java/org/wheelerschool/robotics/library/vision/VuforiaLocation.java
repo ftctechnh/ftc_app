@@ -83,6 +83,7 @@ public class VuforiaLocation {
 
     // Variables:
     public static final String TAG = "Vuforia Location";
+    private final float scale;
     private float mmFieldWidth = MM_FTC_FIELD_WIDTH;
 
     //  Vuforia:
@@ -96,8 +97,10 @@ public class VuforiaLocation {
     public Map<String, Boolean> lastTrackableData;
 
 
-    public VuforiaLocation(float phoneX, float phoneRotX, float phoneY, float phoneRotY,
-                           float phoneZ, float phoneRotZ) {
+    public VuforiaLocation(float scale, float phoneX, float phoneRotX, float phoneY,
+                           float phoneRotY, float phoneZ, float phoneRotZ) {
+        // Variable Setup:
+        this.scale = scale;
 
         // Vuforia Setup:
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
@@ -217,6 +220,7 @@ public class VuforiaLocation {
                             AngleUnit.DEGREES, 90, 90, 0));
         }
 
+        target.scale(this.scale);
         return target;
     }
 
