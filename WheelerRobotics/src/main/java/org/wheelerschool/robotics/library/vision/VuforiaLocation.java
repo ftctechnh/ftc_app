@@ -94,9 +94,9 @@ public class VuforiaLocation {
 
 
     public OpenGLMatrix lastLocation = null;
-    public Map<String, Boolean> lastTrackableData;
     public VectorF lastLocationXYZ = null;
     public Orientation lastRotationXYZ = null;
+    public Map<String, Boolean> lastTrackableData = null;
 
 
     public VuforiaLocation(float phoneX, float phoneRotX, float phoneY, float phoneRotY, float phoneZ,
