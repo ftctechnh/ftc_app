@@ -41,7 +41,6 @@ public class PushBotAuto extends OpMode {
         motorBackLeft = hardwareMap.dcMotor.get("LeftBack");
         motorFrontLeft = hardwareMap.dcMotor.get("LeftFront");
         cs = hardwareMap.get(ModernRoboticsI2cColorSensor.class, "CS");
-        buttonPusher = hardwareMap.servo.get("buttonPusher");
         interfaceModule = hardwareMap.get(ModernRoboticsUsbDeviceInterfaceModule.class, "CDI");
 
         motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -71,7 +70,7 @@ public class PushBotAuto extends OpMode {
         cs2 = interfaceModule.getAnalogInputVoltage(1);
         cs3 = interfaceModule.getAnalogInputVoltage(2);
 
-        if (motorBackLeft.isBusy()) {
+        if (getRuntime()>5) {
             motorBackLeft.setPower(.5);
             motorBackRight.setPower(.5);
             motorFrontLeft.setPower(.5);

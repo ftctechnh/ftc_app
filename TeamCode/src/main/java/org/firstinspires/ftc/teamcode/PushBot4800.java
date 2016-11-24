@@ -64,15 +64,28 @@ public class PushBot4800 extends OpMode {
 
     public void loop() {
         arm.setPower(1);
-        arm.setTargetPosition(3000);
-        if (!arm.isBusy())
-        revMotor.setPower(.8);
-        if (getRuntime()>10){
+        arm.setTargetPosition(3500);
+        if (getRuntime()>5){
+            revMotor.setPower(0-1*(1.3/3));
+            if (getRuntime()>10)
             launcher.setPosition(0);
         }
         if (getRuntime()>11){
             launcher.setPosition(1);
             revMotor.setPower(0);
         }
+        if ((getRuntime()>12)&&(getRuntime()<14)){
+            arm.setTargetPosition(0);
+            arm.setPower(-1);
+            motorBackLeft.setPower(-1);
+            motorFrontLeft.setPower(0.6);
+            motorBackRight.setPower(1);
+            motorBackRight.setPower(-0.6);
+            telemetry.addData("I'm doing it",arm.isBusy());
+        }
+
+
+        telemetry.addData("amIBusy()",arm.isBusy());
+        telemetry.update();
     }
 }
