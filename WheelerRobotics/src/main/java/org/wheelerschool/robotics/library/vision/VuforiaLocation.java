@@ -92,6 +92,7 @@ public class VuforiaLocation {
 
 
     public OpenGLMatrix lastLocation = null;
+    public float[] lastLocationXYZ = null;
     public Map<String, Boolean> lastTrackableData;
 
 
@@ -161,6 +162,14 @@ public class VuforiaLocation {
 
         this.lastTrackableData = trackableData;
         this.lastLocation = lastLocation;
+        if (lastLocation != null) {
+            this.lastLocationXYZ = new float[3];
+            this.lastLocationXYZ[0] = lastLocation.get(0, 3);
+            this.lastLocationXYZ[1] = lastLocation.get(1, 3);
+            this.lastLocationXYZ[2] = lastLocation.get(2, 3);
+        } else {
+            this.lastLocationXYZ = null;
+        }
     }
 
     private OpenGLMatrix getTargetLocation(String targetName) {
