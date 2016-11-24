@@ -46,6 +46,7 @@ public class HardwarePushbot_TT
     public ColorSensor color;    // Hardware Device Object
     public TouchSensor touch;  // Hardware Device Object
     public ModernRoboticsI2cGyro gyro;  // Hardware Device Object
+    public ColorSensor color2;    // Hardware Device Object
     public DeviceInterfaceModule cdim;
     public DcMotor flyRight = null;
     public DcMotor flyLeft = null;
@@ -75,7 +76,7 @@ public class HardwarePushbot_TT
         backRightMotor = hwMap.dcMotor.get("BackRight");
         touch = hwMap.touchSensor.get("TouchSensor");
         color = hwMap.colorSensor.get("ColorSensor");
-//        gyro = hwMap.gyroSensor.get("GyroSensor");
+        color2 = hwMap.colorSensor.get("ColorSensor2");
         gyro = (ModernRoboticsI2cGyro)hwMap.gyroSensor.get("GyroSensor");
         cdim = hwMap.deviceInterfaceModule.get("Device Interface Module 1");
         //armMotor    = hwMap.dcMotor.get("ArmMotor");

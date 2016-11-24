@@ -56,7 +56,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
-@TeleOp(name = "Sensor: MR Color", group = "Pushbot")
+@Autonomous(name = "Sensor: MR Color", group = "Pushbot")
 //@Disabled
 public class SensorMRColor_TT extends LinearOpMode {
 
@@ -78,7 +78,7 @@ public class SensorMRColor_TT extends LinearOpMode {
 
     // get a reference to our ColorSensor object.
     // Set the LED in the beginning
-    robot.color.enableLed(bLedOn);
+    robot.color2.enableLed(bLedOn);
 
 
     // wait for the start button to be pressed.
@@ -98,10 +98,11 @@ public class SensorMRColor_TT extends LinearOpMode {
 //      telemetry.addData("Hue", hsvValues[0]);
 
 
-      telemetry.addData("2 Clear", robot.color.alpha());
-      telemetry.addData("3 Red  ", robot.color.red());
-      telemetry.addData("4 Green", robot.color.green());
-      telemetry.addData("5 Blue ", robot.color.blue());
+      telemetry.addData("2 Clear", robot.color2.alpha());
+      telemetry.addData("3 Red  ", robot.color2.red());
+      telemetry.addData("4 Green", robot.color2.green());
+      telemetry.addData("5 Blue ", robot.color2.blue());
+      telemetry.addData("6 I2C address", robot.color2.
 
       if (robot.color.red() > robot.color.blue()) {
         telemetry.addData("Detecting", "Red");

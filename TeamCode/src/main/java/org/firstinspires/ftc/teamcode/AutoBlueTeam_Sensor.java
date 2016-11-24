@@ -147,7 +147,7 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
         sleep(500);
 
         //Step 2
-        gyroTurn( TURN_SPEED, -45.0);         // Turn  CCW to -45 Degrees
+        gyroTurn( TURN_SPEED, -55.0);         // Turn  CCW to -55 Degrees
         telemetry.addData("Step 2 GyroTurn", " Completed");
         telemetry.update();
         sleep(500);
@@ -159,9 +159,14 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
 
 //        Step 3
 //        gyroDrive(DRIVE_SPEED, 24.0, 0.0);    // Drive FWD
-        encoderDrive(DRIVE_SPEED, 24, 24, 10.0); // Drive fwd
-        telemetry.addData("Step 3 GyroDrive", " Completed");
+        encoderDrive(DRIVE_SPEED, 39, 39, 10.0); // Drive fwd
+        telemetry.addData("Step 3a GyroDrive", " Completed");
         telemetry.update();
+
+        encoderDrive(PUSH_SPEED, 6, 6, 10.0); // Drive fwd
+        telemetry.addData("Step 3b GyroDrive", " Completed");
+        telemetry.update();
+
 
         sleep(500);
 
@@ -176,7 +181,7 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
 //        telemetry.update();
 //        sleep(2000);
 
-        encoderDrive(DRIVE_SPEED, 24, 24, 3.0); //  Forward 24 inches with 3 Sec timeout
+        encoderDrive(DRIVE_SPEED, 6, 6, 3.0); //  Forward 24 inches with 3 Sec timeout
         sleep(750);
 
 //        //Touch sensor loop - TODO
@@ -224,15 +229,16 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
 //            sleep(500);
             encoderDrive(PUSH_SPEED,    -12, -12, 3.0);
 //            encoderDrive(TURN_SPEED,    -3,6,3.0);
-            gyroTurn(TURN_SPEED, -80.0);
-            encoderDrive(PUSH_SPEED,    6,6,3.0);
+            gyroTurn(TURN_SPEED, -60.0);
+            encoderDrive(PUSH_SPEED,    20,20,3.0);
             gyroTurn(TURN_SPEED, -90.0);
+            encoderDrive(PUSH_SPEED,    3,3,3.0);
         } else if (robot.color.blue() > robot.color.red()){
             colorBlueSensed = 2;
             telemetry.addData("Detecting", "Blue");
             telemetry.update();
 //            sleep(500);
-            encoderDrive(PUSH_SPEED, 6,6, 3.0);
+            encoderDrive(PUSH_SPEED, 4,4, 3.0);
         } else {
             colorBlueSensed = 0;
             telemetry.addData("Detecting", "Neither");
