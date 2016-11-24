@@ -91,7 +91,8 @@ public class VuforiaLocation {
     Map<String, VuforiaTrackable> allTrackables = null;
 
 
-    OpenGLMatrix lastLocation = null;
+    public OpenGLMatrix lastLocation = null;
+    public Map<String, Boolean> lastTrackableData;
 
 
     public VuforiaLocation(float phoneX, float phoneRotX, float phoneY, float phoneRotY,
@@ -140,7 +141,7 @@ public class VuforiaLocation {
         return trackable;
     }
 
-    public Map<String, Object> getData() {
+    public void readData() {
         OpenGLMatrix lastLocation = null;
         OpenGLMatrix robotLocationTransform = null;
         Map<String, Boolean> trackableData = new HashMap<>();
@@ -158,10 +159,8 @@ public class VuforiaLocation {
             }
         }
 
-        Map<String, Object> returnData = new HashMap<>();
-        returnData.put("robotLocation", lastLocation);
-        returnData.put("trackables", trackableData);
-        return returnData;
+        this.lastTrackableData = trackableData;
+        this.lastLocation = lastLocation;
     }
 
     private OpenGLMatrix getTargetLocation(String targetName) {
