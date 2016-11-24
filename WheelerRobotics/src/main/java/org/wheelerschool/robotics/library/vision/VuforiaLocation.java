@@ -79,6 +79,7 @@ public class VuforiaLocation {
     // DEFAULT VARIABLES:
     public static float MM_PER_INCH = 25.4f;
     private static float MM_FTC_FIELD_WIDTH = (12 * 12 - 2) * MM_PER_INCH;
+    public static float DEFAULT_FTC_FIELD_SCALE = 1.2f;
 
     // Variables:
     public static final String TAG = "Vuforia Location";
@@ -95,6 +96,11 @@ public class VuforiaLocation {
     public float[] lastLocationXYZ = null;
     public Map<String, Boolean> lastTrackableData;
 
+
+    public VuforiaLocation(float phoneX, float phoneRotX, float phoneY, float phoneRotY, float phoneZ,
+                           float phoneRotZ) {
+        this(DEFAULT_FTC_FIELD_SCALE, phoneX, phoneRotX, phoneY, phoneRotY, phoneZ, phoneRotZ);
+    }
 
     public VuforiaLocation(float scale, float phoneX, float phoneRotX, float phoneY,
                            float phoneRotY, float phoneZ, float phoneRotZ) {
