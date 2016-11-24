@@ -16,7 +16,7 @@ import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 
 // simple example sequence that tests either of gyro-based AzimuthCountedDriveStep or AzimuthTimedDriveStep to drive along a square path
 @Autonomous(name="Testing Vuforia Turn", group="Test")
-//@Disabled
+@Disabled
 public class AutonomousSecondary extends OpMode {
 
     AutoLib.Sequence mSequence;             // the root of the sequence tree

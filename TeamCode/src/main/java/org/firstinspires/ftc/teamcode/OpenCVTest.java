@@ -19,8 +19,8 @@ import static org.opencv.core.CvType.*;
  * Created by Robotics on 10/28/2016.
  */
 
-@Autonomous(name = "OpenCVTest", group = "Test")
-@Disabled
+@Autonomous(name = "Line Follow Algorithm 1", group = "Line Follow")
+//@Disabled
 public class OpenCVTest extends OpenCVLib {
     //edge kernel (stolen from http://roboreal.com)
     private static final float[][] kernel = {{-1, -1, -1, -1, -1},
@@ -29,6 +29,7 @@ public class OpenCVTest extends OpenCVLib {
             {-1,  0,  0,  0, -1},
             {-1, -1, -1, -1, -1}};
 
+    @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame frame){
         //here we gooooooooo!
         //my not very simple edge detection algorithm!

@@ -6,16 +6,17 @@ import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
+import static org.opencv.core.CvType.*;
 
 /**
  * Created by Robotics on 10/28/2016.
  */
 
-@Autonomous(name = "Line Follow Algorithm 2", group = "Line Follow")
+@Autonomous(name = "Line Follow Algorithm 3", group = "Line Follow")
 //@Disabled
-public class OpenCVSimpleTest extends OpenCVLib {
+public class OpenCVSimplerTest extends OpenCVLib {
 
-    private int[] yValStore = new int[3];
+    private int yVal;
 
     private BotHardware robot = new BotHardware();
 
@@ -30,14 +31,10 @@ public class OpenCVSimpleTest extends OpenCVLib {
         Mat frame = getCameraFrame();
 
         //init scanline Y values
-        yValStore[0] = frame.cols() / 4;
-        yValStore[1] = frame.cols() / 2;
-        yValStore[2] = (frame.cols() * 3) / 4;
+        yVal = frame.cols() / 8;
 
         //log all the data
-        telemetry.addData("Top Y Value", yValStore[0]);
-        telemetry.addData("Middle Y Value", yValStore[1]);
-        telemetry.addData("Bottom Y Value", yValStore[2]);
+        telemetry.addData("Y Value", yVal);
 
         telemetry.addData("Frame Width", frame.width());
         telemetry.addData("Frame Height", frame.height());
@@ -53,9 +50,10 @@ public class OpenCVSimpleTest extends OpenCVLib {
         //get frame
         Mat frame = getCameraFrame();
 
-        //log data
-        telemetry.addData("Angle", LineFollowLib.getAngle(frame, yValStore[0], yValStore[2]));
-        telemetry.addData("Displacement", LineFollowLib.getDisplacment(frame, yValStore[1]));
+        double linePos = LineFollowLib.getDisplacment(frame, yVal);
+
+        if(linePos == LineFollowLib.ERROR_TOO_NOISY) telemetry.addData("Line Position", "ERROR");
+        else telemetry.addData("Line Position", linePos);
     }
 
     @Override

@@ -34,6 +34,10 @@ public abstract class OpenCVLib extends OpMode implements CameraBridgeViewBase.C
     private Context mContext;
     private View mView;
 
+    private boolean catchFrame = false;
+
+    private Mat frameStore = new Mat();
+
     OpenCVLib(){
         mContext = FtcRobotControllerActivity.getAppContext();
         mView = FtcRobotControllerActivity.getCameraView();
@@ -71,7 +75,7 @@ public abstract class OpenCVLib extends OpMode implements CameraBridgeViewBase.C
         mOpenCvCameraView = (CameraBridgeViewBase) mView;
         mOpenCvCameraView.setAlpha(0.0f);
         mOpenCvCameraView.setCameraIndex(CameraBridgeViewBase.CAMERA_ID_BACK);
-        mOpenCvCameraView.setMaxFrameSize(400,400);
+        //mOpenCvCameraView.setMaxFrameSize(400,400);
         mOpenCvCameraView.setCvCameraViewListener(this);
     }
 
@@ -100,6 +104,23 @@ public abstract class OpenCVLib extends OpMode implements CameraBridgeViewBase.C
     }
 
     public void stopCamera(){
+        frameStore.empty();
+        catchFrame = false;
         stopOpenCV();
+    }
+
+    public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame frame){
+        if(catchFrame){
+            frameStore = frame.gray();
+            catchFrame = false;
+        }
+
+        return frame.rgba();
+    }
+
+    public Mat getCameraFrame(){
+        catchFrame = true;
+        while (catchFrame);
+        return frameStore.clone();
     }
 }

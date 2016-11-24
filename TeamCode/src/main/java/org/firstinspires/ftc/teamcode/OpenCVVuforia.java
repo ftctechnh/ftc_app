@@ -32,7 +32,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.vuforia.Image;
 
@@ -48,7 +48,7 @@ import java.nio.ByteBuffer;
  */
 
 @Autonomous(name="OpenCV with Vuforia", group ="Test")
-//@Disabled
+@Disabled
 public class OpenCVVuforia extends OpenCVLib {
 
     VuforiaLib_FTC2016 mVLib;

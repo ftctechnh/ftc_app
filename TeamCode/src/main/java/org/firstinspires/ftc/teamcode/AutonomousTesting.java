@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 // simple example sequence that tests either of gyro-based AzimuthCountedDriveStep or AzimuthTimedDriveStep to drive along a square path
 @Autonomous(name="Testing Servo Code", group="Test")
-//@Disabled
+@Disabled
 public class AutonomousTesting extends OpMode {
 
     AutoLib.Sequence mSequence;             // the root of the sequence tree
