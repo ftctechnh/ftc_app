@@ -136,6 +136,11 @@ public class BotHardware
         frontRightMotor.setMode(mode);
         backLeftMotor.setMode(mode);
         backRightMotor.setMode(mode);
+
+        frontLeftMotor.setDirection(DcMotor.Direction.FORWARD);
+        frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
+        backLeftMotor.setDirection(DcMotor.Direction.FORWARD);
+        backRightMotor.setDirection(DcMotor.Direction.REVERSE);
     }
 
     public void setPowerAll(double power){

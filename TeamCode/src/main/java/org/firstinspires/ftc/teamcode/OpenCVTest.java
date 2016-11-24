@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.*;
 
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.core.CvType;
@@ -21,7 +20,7 @@ import static org.opencv.core.CvType.*;
  */
 
 @Autonomous(name = "OpenCVTest", group = "Test")
-//@Disabled
+@Disabled
 public class OpenCVTest extends OpenCVLib {
     //edge kernel (stolen from http://roboreal.com)
     private static final float[][] kernel = {{-1, -1, -1, -1, -1},

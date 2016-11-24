@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.view.View;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -71,7 +72,6 @@ public abstract class OpenCVLib extends OpMode implements CameraBridgeViewBase.C
         mOpenCvCameraView.setAlpha(0.0f);
         mOpenCvCameraView.setCameraIndex(CameraBridgeViewBase.CAMERA_ID_BACK);
         mOpenCvCameraView.setMaxFrameSize(400,400);
-        //mOpenCvCameraView.setVisibility(CameraBridgeViewBase.INVISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
     }
 
