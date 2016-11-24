@@ -54,18 +54,9 @@ public class ArmbotFrame extends OpMode {
     }
 
     public void loop() {
-        if (-revthrottle>0&&forwardTimer<getRuntime()) {
-            backwardTimer = getRuntime() + 1;
-            motorRev.setPower(revthrottle);
-        }
-        if (revthrottle>0&&backwardTimer<getRuntime()) {
-            forwardTimer = getRuntime() + 1;
-            motorRev.setPower(revthrottle);
-        }
-
-        if (gamepad1.a)
-            beaconMode = true;
         if (gamepad1.b)
+            beaconMode = true;
+        if (gamepad1.a)
             beaconMode = false;
         if (!beaconMode) {
             leftthrottle = -gamepad1.left_stick_y;
@@ -79,8 +70,13 @@ public class ArmbotFrame extends OpMode {
             if (gamepad1.right_bumper)
                 buttonPusher.setPosition(-1);
         }
+
         float armthrottle = -gamepad2.left_stick_y;
         revthrottle = gamepad2.right_stick_y;
+        if(revthrottle>0)
+            motorRev.setPower((1.3/3)*revthrottle);
+        else
+            motorRev.setPower((1.3/3)*revthrottle);
         motorBackLeft.setPower(-rightthrottle);
         motorFrontLeft.setPower(.69*rightthrottle);
         motorBackRight.setPower(leftthrottle);
@@ -90,5 +86,7 @@ public class ArmbotFrame extends OpMode {
             launcher.setPosition(0);
         else
             launcher.setPosition(1);
+        telemetry.addData("revAdjusted?:",revthrottle);
+        telemetry.update();
     }
 }
