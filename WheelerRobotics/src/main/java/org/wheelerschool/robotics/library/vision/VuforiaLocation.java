@@ -96,6 +96,7 @@ public class VuforiaLocation {
     public OpenGLMatrix lastLocation = null;
     public Map<String, Boolean> lastTrackableData;
     public VectorF lastLocationXYZ = null;
+    public Orientation lastRotationXYZ = null;
 
 
     public VuforiaLocation(float phoneX, float phoneRotX, float phoneY, float phoneRotY, float phoneZ,
@@ -173,6 +174,7 @@ public class VuforiaLocation {
         this.lastLocation = lastLocation;
 
         this.lastLocationXYZ = (lastLocation == null ? null : lastLocation.getTranslation());
+        this.lastRotationXYZ = (lastLocation == null ? null : Orientation.getOrientation(lastLocation, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.RADIANS));
     }
 
     private OpenGLMatrix getTargetLocation(String targetName) {
