@@ -41,16 +41,16 @@ public class TeleOpOmniBot extends OpMode {
 
     public void loop() {
         float rotation = -joystick1ToMotor(gamepad1.right_stick_x);
-        float forward = joystick1ToMotor(gamepad1.right_stick_y);
+        float forward = joystick1ToMotor(gamepad1.left_stick_y);
         float side = joystick1ToMotor(gamepad1.left_stick_x);
         //motorBackLeft.setPower(rotation + forward - side);
         motorBackLeft.setPower(rotation + forward - side);
-        motorFrontLeft.setPower(rotation + forward + side);
-        motorBackRight.setPower(rotation - forward - side);
+        motorFrontLeft.setPower(-rotation - forward - side);
+        motorBackRight.setPower(-rotation + forward + side);
         motorFrontRight.setPower(rotation - forward + side);
         telemetry.addData("rotation", rotation);
         telemetry.addData("forward", forward);
-        telemetry.addData("side", side);
+        telemetry.addData("S2S", side);
         telemetry.update();
     }
 }
