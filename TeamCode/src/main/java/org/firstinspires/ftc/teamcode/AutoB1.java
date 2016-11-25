@@ -59,17 +59,26 @@ public class AutoB1 extends AutonomousBase{
                     moveState = MoveState.TURN_TOWARDS_GOAL;
                 }
                 break;
-            case 5: //Move to wall and back up and button press A
+            case 5: //Move to wall 
                 map.setGoal(11,map.getRobotY());
                 heading = (heading + 270) % 360; // We're moving sideways, so we line up oddly
                 moveState = MoveState.RIGHT;
                 if(map.distanceToGoal()<=.1){
                     moveState = MoveState.STOP;
-		    gameState = 6;
+		    gameState = 100;
                 }
                 break;
-           case 6:
-                map.setGoal(0,0); // I need the goal far away so moveState keeps going
+           case 100:
+               map.setGoal(10.7,map.getRobotY());
+               heading = (heading + 270) % 360; // We're moving sideways, so we line up oddly
+               moveState = MoveState.LEFT;
+               if(map.distanceToGoal()<=.1){
+                   moveState = MoveState.STOP;
+                   gameState = 6;
+                }
+               break;
+           case 6: //back up and button press A
+                map.setGoal(12,0); // I need the goal far away so moveState keeps going
                 if(touchRight.isPressed()){
                   if(colorLeft1.blue() > colorLeft2.blue()) { 
                     moveState = MoveState.SERVO_L;
@@ -82,12 +91,16 @@ public class AutoB1 extends AutonomousBase{
                   map.setRobot(12,7); //Since we're positive of our position after pressing the button, we might as well use that
                 }
                 else{
-		  moveState = MoveState.BACKWARD_SLOW;
+                  if(linedUp()){
+		      moveState = MoveState.BACKWARD_SLOW;
+                  }else{
+                      moveState = MoveState.TURN_TOWARDS_GOAL;
+                  }
 		}
                 break;
 	    case 7: // moves out from wall
                 if(getRuntime() - pTime > 3){
-	 	     map.setGoal(11, map.getRobotY());
+	 	     map.setGoal(11.5, map.getRobotY());
                      heading = (heading + 270) % 360; // We're moving sideways, so we line up oddly
         	     moveState = MoveState.LEFT;
 	  	     if(map.distanceToGoal()<= .1){
@@ -95,7 +108,10 @@ public class AutoB1 extends AutonomousBase{
 		       gameState = 8;
 		     }
                 }else{
-                    moveState = MoveState.STOP;
+                    if(map.getRobotX() < 12.5);{
+                        heading = (heading + 270) % 360; // We're moving sideways, so we line up oddly
+                        moveState = MoveState.RIGHT;
+                   }
                 }
 	        break;
 	    case 8: // moves up to push Beacon B
@@ -112,11 +128,20 @@ public class AutoB1 extends AutonomousBase{
                 moveState = MoveState.RIGHT;
                 if(map.distanceToGoal()<= .1){
 		    moveState = MoveState.STOP;
-	            gameState = 10;
+	            gameState = 101;
 	          }
 		break;
+           case 101:
+               map.setGoal(11.7,map.getRobotY());
+               heading = (heading + 270) % 360; // We're moving sideways, so we line up oddly
+               moveState = MoveState.LEFT;
+               if(map.distanceToGoal()<=.1){
+                   moveState = MoveState.STOP;
+                   gameState = 10;
+                }
+               break;
             case 10: //move back  and button press B
-                map.setGoal(0,0); // I need the goal far away so moveState keeps going
+                map.setGoal(12,0); // I need the goal far away so moveState keeps going
                 if(touchRight.isPressed()){
                   if(colorLeft1.blue() > colorLeft2.blue()) { 
                     moveState = MoveState.SERVO_L;
@@ -125,10 +150,15 @@ public class AutoB1 extends AutonomousBase{
                     moveState = MoveState.SERVO_R;
                   }
                   gameState = 11;
+                  map.setRobot(12,3);
                   pTime = getRuntime();
                 }
                 else{
-                  moveState = MoveState.BACKWARD_SLOW;
+                    if(linedUp()){
+		        moveState = MoveState.BACKWARD_SLOW;
+                    }else{
+                        moveState = MoveState.TURN_TOWARDS_GOAL;
+                    }
                 }
                 break;
 	    case 11: // moves out from wall
