@@ -57,7 +57,8 @@ public abstract class OmegasAutonomous extends LinearOpMode {
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        Ω.init(hardwareMap);
+        Ω.initDriveMotors(hardwareMap);
+        Ω.initBeaconators(hardwareMap);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -74,10 +75,10 @@ public abstract class OmegasAutonomous extends LinearOpMode {
             double rightPower = (runtime.milliseconds() < 1500) ? 0.25
                     : (runtime.milliseconds() < 2000) ? -1.0
                     : (runtime.milliseconds() < 2250) ? 1.0 : 0.0;
-            Ω.leftBackMotor.setPower(leftPower);
-            Ω.leftFrontMotor.setPower(leftPower);
-            Ω.rightBackMotor.setPower(rightPower);
-            Ω.rightFrontMotor.setPower(rightPower);
+            Ω.getLeftBackMotor().setPower(leftPower);
+            Ω.getLeftFrontMotor().setPower(leftPower);
+            Ω.getRightBackMotor().setPower(rightPower);
+            Ω.getRightFrontMotor().setPower(rightPower);
         }
     }
 
@@ -87,17 +88,17 @@ public abstract class OmegasAutonomous extends LinearOpMode {
     public void pushBeacon(int leftValue, int rightValue) {
         // Cease beaconator motion
         if (rightValue >= 10 && leftValue >= 10) {
-            Ω.positionServo(Ω.leftBeaconator, 0.0);
-            Ω.positionServo(Ω.rightBeaconator, 0.0);
+            Ω.positionServo(Ω.getLeftBeaconator(), 0.0);
+            Ω.positionServo(Ω.getRightBeaconator(), 0.0);
         }
 
         // Press alliance's button
         if (leftValue >= 10 && rightValue <= 10) {
-            Ω.positionServo(Ω.leftBeaconator, 1.0);
-            Ω.positionServo(Ω.rightBeaconator, 1.0);
+            Ω.positionServo(Ω.getLeftBeaconator(), 1.0);
+            Ω.positionServo(Ω.getRightBeaconator(), 1.0);
         } else if (leftValue <= 10 && rightValue >= 10) {
-            Ω.positionServo(Ω.rightBeaconator, 1.0);
-            Ω.positionServo(Ω.leftBeaconator, 0.0);
+            Ω.positionServo(Ω.getRightBeaconator(), 1.0);
+            Ω.positionServo(Ω.getLeftBeaconator(), 0.0);
         }
     }
 }

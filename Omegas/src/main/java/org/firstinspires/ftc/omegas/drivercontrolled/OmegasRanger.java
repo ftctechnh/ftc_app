@@ -32,7 +32,7 @@ public class OmegasRanger extends LinearOpMode {
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        Ω.init(hardwareMap);
+        Ω.initDriveMotors(hardwareMap);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -40,12 +40,12 @@ public class OmegasRanger extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            for (DcMotor motor : Ω.motors) {
+            for (DcMotor motor : Ω.getMotors()) {
                 motor.setPower(FORWARD_SPEED);
             }
         }
 
-        for (DcMotor motor : Ω.motors) {
+        for (DcMotor motor : Ω.getMotors()) {
             motor.setPower(0.0f);
         }
     }

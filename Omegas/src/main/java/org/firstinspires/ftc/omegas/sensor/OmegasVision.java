@@ -45,7 +45,8 @@ public class OmegasVision extends LinearVisionOpMode {
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        Ω.init(hardwareMap);
+        Ω.initDriveMotors(hardwareMap);
+        //TODO: Add init calls to any other hardware needed here
 
         // Wait for the game to start and vision to initialize (driver presses PLAY)
         waitForStart();

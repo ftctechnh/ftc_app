@@ -19,7 +19,8 @@ public class OmegasRotation extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        Ω.init(hardwareMap);
+        Ω.initDriveMotors(hardwareMap);
+        //TODO: Add init calls to any other hardware needed here
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();

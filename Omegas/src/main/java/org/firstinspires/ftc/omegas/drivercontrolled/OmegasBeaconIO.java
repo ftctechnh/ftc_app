@@ -67,7 +67,8 @@ public class OmegasBeaconIO extends LinearOpMode {
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        Ω.init(hardwareMap);
+        Ω.initDriveMotors(hardwareMap);
+        Ω.initBeaconators(hardwareMap);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -81,13 +82,13 @@ public class OmegasBeaconIO extends LinearOpMode {
             public void run() {
                 while (opModeIsActive()) {
                     if (gamepad2.left_bumper) {
-                        Ω.positionServo(Ω.leftBeaconator, 1.0);
+                        Ω.positionServo(Ω.getLeftBeaconator(), 1.0);
                     } else if (gamepad2.left_trigger > 0) {
-                        Ω.positionServo(Ω.leftBeaconator, 0.0);
+                        Ω.positionServo(Ω.getLeftBeaconator(), 0.0);
                     } else if (gamepad2.right_bumper) {
-                        Ω.positionServo(Ω.rightBeaconator, 0.0);
+                        Ω.positionServo(Ω.getRightBeaconator(), 0.0);
                     } else if (gamepad2.right_trigger > 0) {
-                        Ω.positionServo(Ω.rightBeaconator, 1.0);
+                        Ω.positionServo(Ω.getRightBeaconator(), 1.0);
                     }
                 }
             }
@@ -99,10 +100,10 @@ public class OmegasBeaconIO extends LinearOpMode {
             telemetry.update();
 
             // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
-            Ω.leftBackMotor.setPower(-gamepad1.left_stick_y);
-            Ω.leftFrontMotor.setPower(-gamepad1.left_stick_y);
-            Ω.rightBackMotor.setPower(-gamepad1.right_stick_y);
-            Ω.rightFrontMotor.setPower(-gamepad1.right_stick_y);
+            Ω.getLeftBackMotor().setPower(-gamepad1.left_stick_y);
+            Ω.getLeftFrontMotor().setPower(-gamepad1.left_stick_y);
+            Ω.getRightBackMotor().setPower(-gamepad1.right_stick_y);
+            Ω.getRightFrontMotor().setPower(-gamepad1.right_stick_y);
 
             telemetry.addData("Status", "Run Time: " + runtime.toString() + " " + -gamepad1.right_stick_y + " " + -gamepad1.right_stick_y);
         }

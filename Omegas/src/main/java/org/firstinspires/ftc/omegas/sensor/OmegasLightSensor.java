@@ -19,7 +19,7 @@ public class OmegasLightSensor extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        Ω.init(hardwareMap);
+        Ω.initLightSensor(hardwareMap);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -27,7 +27,7 @@ public class OmegasLightSensor extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            telemetry.addData("Data", "Light amount: " + Ω.lineSensor.getLightDetected());
+            telemetry.addData("Data", "Light amount: " + Ω.getLineSensor().getLightDetected());
             telemetry.update();
         }
     }
