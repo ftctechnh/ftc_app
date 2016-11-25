@@ -73,7 +73,8 @@ public class OmegasBeaconIO extends LinearOpMode {
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        Ω.init();
+        Ω.initDriveMotors(hardwareMap);
+        Ω.initBeaconators(hardwareMap);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();

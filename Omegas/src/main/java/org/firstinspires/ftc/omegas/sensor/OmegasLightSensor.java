@@ -24,12 +24,7 @@ public class OmegasLightSensor extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        /**
-         * Initialize the hardware variables. Note that the strings used here as parameters
-         * to 'get' must correspond to the names assigned during the robot configuration
-         * step (using the FTC Robot Controller app on the phone).
-         */
-        Ω.init();
+        Ω.initLightSensor(hardwareMap);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
