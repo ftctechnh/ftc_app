@@ -18,7 +18,7 @@ public class AutoB2 extends AutonomousBase {
                 }
                 break;
             case 1: //moves to shooter post
-                map.setGoal(6, 8);
+                map.setGoal(6, 7);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
                 }else{
@@ -34,12 +34,13 @@ public class AutoB2 extends AutonomousBase {
                 if(linedUp()){
                     moveState = MoveState.STOP;
                     gameState = 3;
+                    sTime = getRuntime();
+                    telemetry.addData("sTime", sTime);
                 }else{
                     moveState = MoveState.TURN_TOWARDS_GOAL;
                 }
                 break;
             case 3:
-                 sTime = getRuntime();
                  moveState = MoveState.SHOOT;
                  if(getRuntime() - sTime >= 3) {
                      moveState = MoveState.SHOOT_STOP;
