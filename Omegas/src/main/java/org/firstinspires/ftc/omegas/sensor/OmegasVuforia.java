@@ -91,7 +91,7 @@ public class OmegasVuforia extends LinearOpMode {
     HardwareOmegas Ω = new HardwareOmegas() {
         @Override
         public void init() {
-
+            initAppContext(hardwareMap);
         }
     };   // Use our robot's hardware
 

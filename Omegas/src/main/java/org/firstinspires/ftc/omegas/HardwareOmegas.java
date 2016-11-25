@@ -101,6 +101,10 @@ public abstract class HardwareOmegas {
         getLineSensor().enableLed(true);
     }
 
+    public void initAppContext(HardwareMap hwMap) {
+        appContext = hwMap.appContext;
+    }
+
     /**
      * waitForTick implements a periodic delay. However, this acts like a metronome with a regular
      * periodic tick.  This is used to compensate for varying processing times for each cycle.
