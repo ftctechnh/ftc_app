@@ -121,7 +121,7 @@ public abstract class AutonomousBase extends OpMode {
             case MoveState.FORWARD:
                 //Case one is 'move towards' in the most literal sense. It assumes the path is
                 //clear, and that there is a goal(9), and us(1) on the map somewhere.
-                power = .75; //power coefficient
+                power = .5; //power coefficient
                 if(map.distanceToGoal()>DISTANCE_TOLERANCE) {
                     motorUp.setPower(0);
                     motorDown.setPower(0);
@@ -133,7 +133,7 @@ public abstract class AutonomousBase extends OpMode {
             case MoveState.BACKWARD:
                 //Case one is 'move towards' in the most literal sense. It assumes the path is
                 //clear, and that there is a goal(9), and us(1) on the map somewhere.
-                power = -.75; //power coefficient
+                power = -.5; //power coefficient
                 if(map.distanceToGoal()>DISTANCE_TOLERANCE) {
                     motorUp.setPower(0);
                     motorDown.setPower(0);
@@ -154,7 +154,7 @@ public abstract class AutonomousBase extends OpMode {
                 servoLeftButton.setPosition(.5); // HACK
                 break;               
             case MoveState.LEFT:
-                power = -.75; //power coefficient
+                power = -.5; //power coefficient
                 if(map.distanceToGoal()>DISTANCE_TOLERANCE) {
                     motorLeft.setPower(0);
                     motorRight.setPower(0);
@@ -165,7 +165,7 @@ public abstract class AutonomousBase extends OpMode {
                 break;
 
            case MoveState.RIGHT:
-                power = .75; //power coefficient
+                power = .5; //power coefficient
                 if(map.distanceToGoal()>DISTANCE_TOLERANCE) {
                     motorLeft.setPower(0);
                     motorRight.setPower(0);
