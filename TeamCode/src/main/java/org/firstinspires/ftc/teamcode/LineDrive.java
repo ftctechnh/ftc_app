@@ -1,15 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.eventloop.opmode.*;
 
 import org.opencv.core.Mat;
-
-import java.util.ArrayList;
 
 
 /**
@@ -33,7 +26,7 @@ public class LineDrive extends OpenCVLib implements HeadingSensor {
     SensorLib.PID mPid;                     // PID controller for the sequence
 
     // parameters of the PID controller for this sequence
-    float Kp = 1.000f;        // motor power proportional term correction per unit of deviation
+    float Kp = 0.500f;        // motor power proportional term correction per unit of deviation
     float Ki = 0.02f;         // ... integrator term
     float Kd = 0;             // ... derivative term
     float KiCutoff = 0.05f;    // maximum angle error for which we update integrator
