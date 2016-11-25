@@ -37,7 +37,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.omegas.HardwareOmegas;
 import org.firstinspires.ftc.omegas.OmegasAlliance;
 
-public abstract class OmegasAutonomous extends LinearOpMode {
+abstract class OmegasAutonomous extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
