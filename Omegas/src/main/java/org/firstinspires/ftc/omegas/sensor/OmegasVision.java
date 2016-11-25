@@ -26,7 +26,12 @@ public class OmegasVision extends LinearVisionOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    HardwareOmegas Ω = new HardwareOmegas();
+    HardwareOmegas Ω = new HardwareOmegas() {
+        @Override
+        public void init() {
+
+        }
+    };
 
     // IPS Units
     static final double FORWARD_SPEED = 0.6;
@@ -39,14 +44,6 @@ public class OmegasVision extends LinearVisionOpMode {
     public void runOpMode() throws InterruptedException {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-
-        /**
-         * Initialize the hardware variables. Note that the strings used here as parameters
-         * to 'get' must correspond to the names assigned during the robot configuration
-         * step (using the FTC Robot Controller app on the phone).
-         */
-        Ω.initDriveMotors(hardwareMap);
-        //TODO: Add init calls to any other hardware needed here
 
         // Wait for the game to start and vision to initialize (driver presses PLAY)
         waitForStart();

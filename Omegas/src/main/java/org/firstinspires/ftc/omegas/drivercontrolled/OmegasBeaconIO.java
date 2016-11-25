@@ -51,7 +51,13 @@ public class OmegasBeaconIO extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    HardwareOmegas Ω = new HardwareOmegas();
+    HardwareOmegas Ω = new HardwareOmegas() {
+        @Override
+        public void init() {
+            initDriveMotors(hardwareMap);
+            initBeaconators(hardwareMap);
+        }
+    };
 
     // IPS Units
     static final double FORWARD_SPEED = 0.6;

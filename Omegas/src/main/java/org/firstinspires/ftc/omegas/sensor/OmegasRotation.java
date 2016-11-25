@@ -2,6 +2,7 @@ package org.firstinspires.ftc.omegas.sensor;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.omegas.HardwareOmegas;
@@ -15,13 +16,15 @@ public class OmegasRotation extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    HardwareOmegas Ω = new HardwareOmegas();
+    HardwareOmegas Ω = new HardwareOmegas() {
+        @Override
+        public void init() {
+            initDriveMotors(hardwareMap);
+        }
+    };
 
     @Override
     public void runOpMode() {
-        Ω.initDriveMotors(hardwareMap);
-        //TODO: Add init calls to any other hardware needed here
-
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();

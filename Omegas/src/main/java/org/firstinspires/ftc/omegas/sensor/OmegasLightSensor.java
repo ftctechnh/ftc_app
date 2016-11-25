@@ -15,8 +15,12 @@ public class OmegasLightSensor extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    HardwareOmegas Ω = new HardwareOmegas();
-
+    HardwareOmegas Ω = new HardwareOmegas() {
+        @Override
+        public void init() {
+            initLightSensor(hardwareMap);
+        }
+    };
     @Override
     public void runOpMode() {
         Ω.initLightSensor(hardwareMap);

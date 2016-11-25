@@ -56,7 +56,13 @@ public class OmegasLinear extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    HardwareOmegas Ω = new HardwareOmegas();
+    HardwareOmegas Ω = new HardwareOmegas() {
+        @Override
+        public void init() {
+            initDriveMotors(hardwareMap);
+            initBeaconators(hardwareMap);
+        }
+    };
 
     // IPS Units
     static final double FORWARD_SPEED = 0.6;
@@ -66,14 +72,6 @@ public class OmegasLinear extends LinearOpMode {
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-
-        /**
-         * Initialize the hardware variables. Note that the strings used here as parameters
-         * to 'get' must correspond to the names assigned during the robot configuration
-         * step (using the FTC Robot Controller app on the phone).
-         */
-        Ω.initDriveMotors(hardwareMap);
-        Ω.initBeaconators(hardwareMap);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();

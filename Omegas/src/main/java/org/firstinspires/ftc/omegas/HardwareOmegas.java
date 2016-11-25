@@ -29,26 +29,26 @@ import java.util.ArrayList;
  * <p>
  * (The "beaconators" are our colloquial term for beacon pushers.)
  */
-public class HardwareOmegas {
+public abstract class HardwareOmegas {
     /* Public OpMode members. */
-    private LightSensor lineSensor = null;
-    private DcMotor leftFrontMotor = null;
-    private DcMotor leftBackMotor = null;
-    private DcMotor rightFrontMotor = null;
-    private DcMotor rightBackMotor = null;
-    private Servo leftBeaconator = null;
-    private Servo rightBeaconator = null;
+    private LightSensor lineSensor;
+    private DcMotor leftFrontMotor;
+    private DcMotor leftBackMotor;
+    private DcMotor rightFrontMotor;
+    private DcMotor rightBackMotor;
+    private Servo leftBeaconator;
+    private Servo rightBeaconator;
 
     private ArrayList<DcMotor> motors;
     private Context appContext;
 
-    private static final double MID_SERVO = 0.5;
-    private static final double SHOOTER_POWER = 0.45;
     private static final double MS_PER_RADIAN = 159.15;
     private static boolean isExtending = false;
 
     /* local OpMode members. */
     private ElapsedTime period = new ElapsedTime();
+
+    public abstract void init();
 
     /* Initialize Drive Motor interfaces */
     public void initDriveMotors(HardwareMap hwMap) {
@@ -193,7 +193,7 @@ public class HardwareOmegas {
     }
 
     public DcMotor getRightBackMotor() {
-        return rightFrontMotor;
+        return rightBackMotor;
     }
 
     public Servo getLeftBeaconator() {
