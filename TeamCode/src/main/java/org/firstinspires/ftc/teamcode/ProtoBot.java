@@ -87,11 +87,11 @@ public class ProtoBot extends OpMode {
         }
         
         // Activates shooters
-        if(gamepad1.a){
+        if(gamepad1.b){
             RS.setPower(1);
             LS.setPower(1);
             MC.setPower(1);
-        }else if(gamepad1.b){
+        }else if(gamepad1.a){
             RS.setPower(-1);
             LS.setPower(-1);
             MC.setPower(-1);
