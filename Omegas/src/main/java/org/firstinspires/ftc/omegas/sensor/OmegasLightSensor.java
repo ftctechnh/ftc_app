@@ -21,6 +21,7 @@ public class OmegasLightSensor extends LinearOpMode {
             initLightSensor(hardwareMap);
         }
     };
+
     @Override
     public void runOpMode() {
         Ω.initLightSensor(hardwareMap);
