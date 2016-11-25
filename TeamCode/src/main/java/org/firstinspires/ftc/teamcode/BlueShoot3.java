@@ -7,13 +7,13 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  */
 @Autonomous(name="Blue Shoot 3", group="Blue")
 public class BlueShoot3 extends AutonomousBase {
+    boolean init;
     @Override
-    boolean initt;
     public void gameState() {
         super.gameState();
-        if(!initt){
-            initt = true;
-
+        if(!init){
+            init = true;
+            map.setRobot(3,10.25);
         }
 
         switch(gameState){
@@ -24,7 +24,7 @@ public class BlueShoot3 extends AutonomousBase {
                 }
                 break;
             case 1: //moves to shooter post
-                map.setGoal(5, 7);
+                map.setGoal(6, 8);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
                 }else{
@@ -35,8 +35,8 @@ public class BlueShoot3 extends AutonomousBase {
                     gameState = 2;
                 }
                 break;
-            /*case 2: // turns and shoots
-                map.setGoal(4, 10);
+            case 2: // turns and shoots
+                map.setGoal(6.6, 10 );
                 if(linedUp()){
                     moveState = MoveState.STOP;
                     gameState = 3;
@@ -45,7 +45,7 @@ public class BlueShoot3 extends AutonomousBase {
                 }else{
                     moveState = MoveState.TURN_TOWARDS_GOAL;
                 }
-                break;*/
+                break;
             case 3:
                 moveState = MoveState.SHOOT;
                 if(getRuntime() - sTime >= 3) {
