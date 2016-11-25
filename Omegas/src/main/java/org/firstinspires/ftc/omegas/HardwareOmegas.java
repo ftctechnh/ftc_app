@@ -56,8 +56,6 @@ public abstract class HardwareOmegas {
 
     /* Initialize Drive Motor interfaces */
     protected void initDriveMotors(HardwareMap hwMap) {
-        appContext = hwMap.appContext;
-
         // Define and Initialize Motors
         leftFrontMotor = hwMap.dcMotor.get("left_front");
         leftBackMotor = hwMap.dcMotor.get("left_back");
