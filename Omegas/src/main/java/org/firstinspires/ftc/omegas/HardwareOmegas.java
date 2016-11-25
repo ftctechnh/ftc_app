@@ -48,6 +48,10 @@ public abstract class HardwareOmegas {
     /* local OpMode members. */
     private ElapsedTime period = new ElapsedTime();
 
+    protected HardwareOmegas() {
+        init();
+    }
+
     public abstract void init();
 
     /* Initialize Drive Motor interfaces */
