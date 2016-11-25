@@ -207,7 +207,7 @@ public abstract class AutonomousBase extends OpMode {
             case MoveState.SHOOT:
                 motorLeftShooter.setPower(1);
                 motorRightShooter.setPower(1);
-                motorConveyor.setPower(1);
+                motorConveyor.setPower(-1);
                 break;
             case MoveState.SERVO_M:
                 servoLeftButton.setPosition(.5);
