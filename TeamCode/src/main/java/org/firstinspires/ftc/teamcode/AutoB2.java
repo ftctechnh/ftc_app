@@ -18,7 +18,7 @@ public class AutoB2 extends AutonomousBase {
                 }
                 break;
             case 1: //moves to shooter post
-                map.setGoal(6,7);
+                map.setGoal(6, 8);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
                 }else{
