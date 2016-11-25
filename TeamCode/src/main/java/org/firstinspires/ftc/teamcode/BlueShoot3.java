@@ -8,18 +8,23 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 @Autonomous(name="Blue Shoot 3", group="Blue")
 public class BlueShoot3 extends AutonomousBase {
     @Override
+    boolean initt;
     public void gameState() {
         super.gameState();
+        if(!initt){
+            initt = true;
+
+        }
+
         switch(gameState){
             case 0: //Start
                 if(tDiff == 0){tDiff = getRuntime();}
                 if(getRuntime() > 5 || !gyro.isCalibrating()) {
                     gameState = 1;
-                    sTime = getRuntime();
                 }
                 break;
             case 1: //moves to shooter post
-                map.setGoal(6,8);
+                map.setGoal(5, 7);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
                 }else{
@@ -30,19 +35,22 @@ public class BlueShoot3 extends AutonomousBase {
                     gameState = 2;
                 }
                 break;
-            case 2: // turns and shoots
+            /*case 2: // turns and shoots
                 map.setGoal(4, 10);
                 if(linedUp()){
-                    moveState = MoveState.FORWARD;
+                    moveState = MoveState.STOP;
+                    gameState = 3;
+                    sTime = getRuntime();
+                    telemetry.addData("sTime", sTime);
                 }else{
                     moveState = MoveState.TURN_TOWARDS_GOAL;
                 }
-                if(map.distanceToGoal()<=.1){
-                    moveState = MoveState.STOP;
-                    moveState = MoveState.SHOOT;
-                    if(getRuntime() - sTime >= 3){
-                        moveState = MoveState.SHOOT_STOP;
-                    }
+                break;*/
+            case 3:
+                moveState = MoveState.SHOOT;
+                if(getRuntime() - sTime >= 3) {
+                    moveState = MoveState.SHOOT_STOP;
+                    gameState = 4;
                 }
                 break;
             case 777:
