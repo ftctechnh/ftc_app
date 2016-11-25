@@ -33,17 +33,20 @@ public class AutoB2 extends AutonomousBase {
                 map.setGoal(4, 10);
                 if(linedUp()){
                     moveState = MoveState.STOP;
-                    sTime = getRuntime();
-                    moveState = MoveState.SHOOT;
-                    if(getRuntime() - sTime >= 3){
-                        moveState = MoveState.SHOOT_STOP;
-                        gameState = 3;
-                    }
+                    gameState = 3;
                 }else{
                     moveState = MoveState.TURN_TOWARDS_GOAL;
                 }
                 break;
-            case 3: //MOVE TO KNOCK OFF BALL
+            case 3:
+                 sTime = getRuntime();
+                 moveState = MoveState.SHOOT;
+                 if(getRuntime() - sTime >= 3) {
+                     moveState = MoveState.SHOOT_STOP;
+                     gameState = 4;
+                 }
+                break;
+            case 4: //MOVE TO KNOCK OFF BALL
                 map.setGoal(6.8,6.8);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
