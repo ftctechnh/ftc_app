@@ -43,7 +43,7 @@ public class OrientedProtoBot extends OpMode {
         servoLeftButton = hardwareMap.servo.get("l_button");
         servoRightButton = hardwareMap.servo.get("r_button");
         
-        touchRight = hardwareMap.touchSensor.get("touchRight");
+        touchRight = hardwareMap.touchSensor.get("right_touch");
         gyro = hardwareMap.gyroSensor.get("gyro");
         gyro.calibrate();
 
@@ -80,18 +80,22 @@ public class OrientedProtoBot extends OpMode {
                 motorRight.setPower(gamepad1.right_trigger);
             }
         }else{ // Sets Motor powers based on heading.
-          motorUp.setPower(-Math.sin(heading - Math.atan2(gamepad1.left_stick_x, gamepad1.right_stick_x)));
-          motorDown.setPower(-Math.sin(heading - Math.atan2(gamepad1.left_stick_x,gamepad1.right_stick_x)));
-          motorLeft.setPower(Math.cos(heading - Math.atan2(gamepad1.left_stick_x, gamepad1.right_stick_x)));
-          motorRight.setPower(Math.cos(heading - Math.atan2(gamepad1.left_stick_x,gamepad1.right_stick_x)));
+          motorUp.setPower(-((gamepad1.left_stick_y+gamepad1.left_stick_x)/2)*Math.sin((heading*Math.PI)/180 - (Math.PI-Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y))));
+          motorDown.setPower(-((gamepad1.left_stick_y+gamepad1.left_stick_x)/2)*Math.sin((heading*Math.PI)/180 - (Math.PI-Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y))));
+          motorLeft.setPower(((gamepad1.left_stick_y+gamepad1.left_stick_x)/2)*Math.cos((heading*Math.PI)/180 - (Math.PI-Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y))));
+          motorRight.setPower(((gamepad1.left_stick_y+gamepad1.left_stick_x)/2)*Math.cos((heading*Math.PI)/180 - (Math.PI-Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y))));
         }
-        
+          telemetry.addData("Mx",((gamepad1.left_stick_y+gamepad1.left_stick_x)/2)*Math.sin((heading*Math.PI)/180 - (Math.PI+Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y))));
+          telemetry.addData("My",((gamepad1.left_stick_y+gamepad1.left_stick_x)/2)*Math.sin((heading*Math.PI)/180 - (2*Math.PI+Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y))));
+          telemetry.addData("R",(gamepad1.left_stick_y+gamepad1.left_stick_x)/2);
+          telemetry.addData("H",(heading*Math.PI)/180);
+          telemetry.addData("H'",(2*Math.PI+Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y))%(2*Math.PI));
         // Activates shooters
-        if(gamepad1.a){
+        if(gamepad1.b){
             motorRightShooter.setPower(1);
             motorLeftShooter.setPower(1);
             motorConveyer.setPower(1);
-        }else if(gamepad1.b){
+        }else if(gamepad1.a){
             motorRightShooter.setPower(-1);
             motorLeftShooter.setPower(-1);
             motorConveyer.setPower(-1);
@@ -119,6 +123,9 @@ public class OrientedProtoBot extends OpMode {
         }else{
             servoLeftButton.setPosition(.5);
             servoRightButton.setPosition(.5);
+        }
+        if(gamepad1.left_stick_button){
+            gyro.calibrate();
         }
         
         // Put telemetry here
