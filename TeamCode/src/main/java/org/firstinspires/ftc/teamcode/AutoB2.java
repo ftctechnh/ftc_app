@@ -15,11 +15,10 @@ public class AutoB2 extends AutonomousBase {
                 if(tDiff == 0){tDiff = getRuntime();}
                 if(getRuntime() > 5 || !gyro.isCalibrating()) {
                     gameState = 1;
-                    sTime = getRuntime();
                 }
                 break;
             case 1: //moves to shooter post
-                map.setGoal(6,8);
+                map.setGoal(6,7);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
                 }else{
@@ -34,6 +33,7 @@ public class AutoB2 extends AutonomousBase {
                 map.setGoal(4, 10);
                 if(linedUp()){
                     moveState = MoveState.STOP;
+                    sTime = getRuntime();
                     moveState = MoveState.SHOOT;
                     if(getRuntime() - sTime >= 3){
                         moveState = MoveState.SHOOT_STOP;
