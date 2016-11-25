@@ -45,6 +45,13 @@ public class OmegasVision extends LinearVisionOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
+        /**
+         * Initialize the hardware variables. Note that the strings used here as parameters
+         * to 'get' must correspond to the names assigned during the robot configuration
+         * step (using the FTC Robot Controller app on the phone).
+         */
+        Ω.init();
+
         // Wait for the game to start and vision to initialize (driver presses PLAY)
         waitForStart();
         waitForVisionStart();
