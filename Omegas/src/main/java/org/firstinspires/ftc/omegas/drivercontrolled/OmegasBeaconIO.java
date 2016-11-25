@@ -68,14 +68,6 @@ public class OmegasBeaconIO extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        /**
-         * Initialize the hardware variables. Note that the strings used here as parameters
-         * to 'get' must correspond to the names assigned during the robot configuration
-         * step (using the FTC Robot Controller app on the phone).
-         */
-        Ω.initDriveMotors(hardwareMap);
-        Ω.initBeaconators(hardwareMap);
-
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();

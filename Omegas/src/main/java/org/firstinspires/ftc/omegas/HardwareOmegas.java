@@ -55,7 +55,7 @@ public abstract class HardwareOmegas {
     public abstract void init();
 
     /* Initialize Drive Motor interfaces */
-    public void initDriveMotors(HardwareMap hwMap) {
+    protected void initDriveMotors(HardwareMap hwMap) {
         appContext = hwMap.appContext;
 
         // Define and Initialize Motors
@@ -88,7 +88,7 @@ public abstract class HardwareOmegas {
     }
 
     /* Initialize Beaconator interfaces */
-    public void initBeaconators(HardwareMap hwMap) {
+    protected void initBeaconators(HardwareMap hwMap) {
         // Connect to servo (Assume PushBot Left Hand)
         // Change the text in quotes to match any servo name on your robot.
         leftBeaconator = hwMap.servo.get("left_beaconator");
@@ -96,12 +96,12 @@ public abstract class HardwareOmegas {
     }
 
     /* Initialize LightSensor interfaces */
-    public void initLightSensor(HardwareMap hwMap) {
+    protected void initLightSensor(HardwareMap hwMap) {
         lineSensor = hwMap.lightSensor.get("light_sensor");
         getLineSensor().enableLed(true);
     }
 
-    public void initAppContext(HardwareMap hwMap) {
+    protected void initAppContext(HardwareMap hwMap) {
         appContext = hwMap.appContext;
     }
 

@@ -24,8 +24,6 @@ public class OmegasLightSensor extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        Ω.initLightSensor(hardwareMap);
-
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
