@@ -31,30 +31,27 @@ import java.util.ArrayList;
  */
 public class HardwareOmegas {
     /* Public OpMode members. */
-    public LightSensor lineSensor = null;
-    public DcMotor leftFrontMotor = null;
-    public DcMotor leftBackMotor = null;
-    public DcMotor rightFrontMotor = null;
-    public DcMotor rightBackMotor = null;
-    public Servo leftBeaconator = null;
-    public Servo rightBeaconator = null;
+    private LightSensor lineSensor = null;
+    private DcMotor leftFrontMotor = null;
+    private DcMotor leftBackMotor = null;
+    private DcMotor rightFrontMotor = null;
+    private DcMotor rightBackMotor = null;
+    private Servo leftBeaconator = null;
+    private Servo rightBeaconator = null;
 
-    public ArrayList<DcMotor> motors;
-    public Context appContext;
+    private ArrayList<DcMotor> motors;
+    private Context appContext;
 
-    public static final double MID_SERVO = 0.5;
-    public static final double SHOOTER_POWER = 0.45;
-    public static final double MS_PER_RADIAN = 159.15;
-    public static boolean isExtending = false;
+    private static final double MID_SERVO = 0.5;
+    private static final double SHOOTER_POWER = 0.45;
+    private static final double MS_PER_RADIAN = 159.15;
+    private static boolean isExtending = false;
 
     /* local OpMode members. */
-    HardwareMap hwMap = null;
     private ElapsedTime period = new ElapsedTime();
 
-    /* Initialize standard Hardware interfaces */
-    public void init(HardwareMap ahwMap) {
-        // Save reference to Hardware map and app context.
-        hwMap = ahwMap;
+    /* Initialize Drive Motor interfaces */
+    public void initDriveMotors(HardwareMap hwMap) {
         appContext = hwMap.appContext;
 
         // Define and Initialize Motors
@@ -65,32 +62,39 @@ public class HardwareOmegas {
 
         motors = new ArrayList<DcMotor>() {
             {
-                add(leftFrontMotor);
-                add(leftBackMotor);
-                add(rightFrontMotor);
-                add(rightBackMotor);
+                add(getLeftFrontMotor());
+                add(getLeftBackMotor());
+                add(getRightFrontMotor());
+                add(getRightBackMotor());
             }
         };
 
-        leftFrontMotor.setDirection(DcMotor.Direction.FORWARD);  // Set to REVERSE if using AndyMark motors
-        leftBackMotor.setDirection(DcMotor.Direction.FORWARD);   // Set to REVERSE if using AndyMark motors
-        rightFrontMotor.setDirection(DcMotor.Direction.REVERSE); // Set to FORWARD if using AndyMark motors
-        rightBackMotor.setDirection(DcMotor.Direction.REVERSE);  // Set to FORWARD if using AndyMark motors
+        // Set all motors to zero power, and to run without encoders.
+        // May want to use RUN_USING_ENCODERS if encoders are installed.
+        for (DcMotor motor : getMotors()) {
+            motor.setPower(0.0);
+            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
 
+        getLeftFrontMotor().setDirection(DcMotor.Direction.FORWARD);  // Set to REVERSE if using AndyMark motors
+        getLeftBackMotor().setDirection(DcMotor.Direction.FORWARD);   // Set to REVERSE if using AndyMark motors
+        getRightFrontMotor().setDirection(DcMotor.Direction.REVERSE); // Set to FORWARD if using AndyMark motors
+        getRightBackMotor().setDirection(DcMotor.Direction.REVERSE);  // Set to FORWARD if using AndyMark motors
+
+    }
+
+    /* Initialize Beaconator interfaces */
+    public void initBeaconators(HardwareMap hwMap) {
         // Connect to servo (Assume PushBot Left Hand)
         // Change the text in quotes to match any servo name on your robot.
         leftBeaconator = hwMap.servo.get("left_beaconator");
         rightBeaconator = hwMap.servo.get("right_beaconator");
+    }
 
+    /* Initialize LightSensor interfaces */
+    public void initLightSensor(HardwareMap hwMap) {
         lineSensor = hwMap.lightSensor.get("light_sensor");
-        lineSensor.enableLed(true);
-
-        // Set all motors to zero power, and to run without encoders.
-        // May want to use RUN_USING_ENCODERS if encoders are installed.
-        for (DcMotor motor : motors) {
-            motor.setPower(0.0);
-            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        }
+        getLineSensor().enableLed(true);
     }
 
     /**
@@ -125,10 +129,10 @@ public class HardwareOmegas {
         ElapsedTime timePushed = new ElapsedTime();
 
         while (timePushed.milliseconds() < radians * MS_PER_RADIAN) {
-            leftBackMotor.setPower(1.0);
-            leftFrontMotor.setPower(1.0);
-            rightBackMotor.setPower(-1.0);
-            rightFrontMotor.setPower(-1.0);
+            getLeftBackMotor().setPower(1.0);
+            getLeftFrontMotor().setPower(1.0);
+            getRightBackMotor().setPower(-1.0);
+            getRightFrontMotor().setPower(-1.0);
         }
     }
 
@@ -170,6 +174,42 @@ public class HardwareOmegas {
 
     public void positionServo(Servo beaconator, double pos) {
         beaconator.setPosition(Math.abs(pos));
+    }
+
+    public LightSensor getLineSensor() {
+        return lineSensor;
+    }
+
+    public DcMotor getLeftFrontMotor() {
+        return leftFrontMotor;
+    }
+
+    public DcMotor getLeftBackMotor() {
+        return leftBackMotor;
+    }
+
+    public DcMotor getRightFrontMotor() {
+        return rightFrontMotor;
+    }
+
+    public DcMotor getRightBackMotor() {
+        return rightFrontMotor;
+    }
+
+    public Servo getLeftBeaconator() {
+        return leftBeaconator;
+    }
+
+    public Servo getRightBeaconator() {
+        return rightBeaconator;
+    }
+
+    public ArrayList<DcMotor> getMotors() {
+        return motors;
+    }
+
+    public Context getAppContext() {
+        return appContext;
     }
 }
 
