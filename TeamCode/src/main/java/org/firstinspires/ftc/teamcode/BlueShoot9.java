@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 /**
  * Created by Sean O on 11/23/2016.
  */
-@Autonomous(name="Blue Ball", group="Blue")
-public class AutoB2 extends AutonomousBase {
+@Autonomous(name="Blue Shoot 9", group="Blue")
+public class BlueShoot9 extends AutonomousBase {
     @Override
     public void gameState() {
         super.gameState();
@@ -19,7 +19,7 @@ public class AutoB2 extends AutonomousBase {
                 }
                 break;
             case 1: //moves to shooter post
-                map.setGoal(6,8);
+                map.setGoal(8.5,8.5);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
                 }else{
@@ -31,7 +31,7 @@ public class AutoB2 extends AutonomousBase {
                 }
                 break;
             case 2: // turns and shoots
-                map.setGoal(4, 10);
+                map.setGoal(map.getRobotX(), 12);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
                 }else{
@@ -42,19 +42,7 @@ public class AutoB2 extends AutonomousBase {
                     moveState = MoveState.SHOOT;
                     if(getRuntime() - sTime >= 3){
                         moveState = MoveState.SHOOT_STOP;
-                        gameState = 3;
                     }
-                }
-                break;
-            case 3: //MOVE TO KNOCK OFF BALL
-                map.setGoal(6.8,6.8);
-                if(linedUp()){
-                    moveState = MoveState.FORWARD;
-                }else{
-                    moveState = MoveState.TURN_TOWARDS_GOAL;
-                }
-                if(map.distanceToGoal()<=.1){
-                    moveState = MoveState.STOP;
                 }
                 break;
             case 777:
@@ -63,3 +51,4 @@ public class AutoB2 extends AutonomousBase {
         }
     }
 }
+
