@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * Created by Peter on 9/22/2016.
@@ -14,6 +15,12 @@ public class OmniDriveBot implements DriveTrainInterface
     private DcMotor fR = null;
     private DcMotor bL = null;
     private DcMotor bR = null;
+    private DcMotor lifterMotor = null;
+    private DcMotor shooterMotorOne = null;
+    private DcMotor shooterMotorTwo = null;
+    private Servo scooperServo = null;
+    private Servo shooterPitchServo = null;
+
     public float leftYIn;
     public float leftXIn;
     public float rightXIn;
@@ -21,6 +28,12 @@ public class OmniDriveBot implements DriveTrainInterface
     public float fLPower;
     public float bRPower;
     public float bLPower;
+    public float lifterPower;
+    public float shooterPowerOne;
+    public float shooterPowerTwo;
+    public float shooterPitchServoPos;
+    public float scooperServoPos;
+
 
     public OmniDriveBot()
     {
@@ -34,6 +47,11 @@ public class OmniDriveBot implements DriveTrainInterface
         fR = hardwareMap.dcMotor.get("frontRight");
         bL = hardwareMap.dcMotor.get("backLeft");
         bR = hardwareMap.dcMotor.get("backRight");
+        lifterMotor = hardwareMap.dcMotor.get("lifterMotor");
+        shooterMotorOne = hardwareMap.dcMotor.get("shooterMotorOne");
+        shooterMotorTwo = hardwareMap.dcMotor.get("shooterMotorTwo");
+        scooperServo = hardwareMap.servo.get("scooperServo");
+        shooterPitchServo = hardwareMap.servo.get("shooterPitchServo");
 
         fL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         fR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -95,6 +113,12 @@ public class OmniDriveBot implements DriveTrainInterface
         fL.setPower(fLPower);
         bR.setPower(bRPower);
         bL.setPower(bLPower);
+        lifterMotor.setPower(lifterPower);
+        shooterMotorOne.setPower(shooterPowerOne);
+        shooterMotorTwo.setPower(shooterPowerTwo);
+        scooperServo.setPosition(scooperServoPos);
+        //not sure how to program non-continuous servos yet disabled until further notice
+        //shooterPitchServo.setPosition(shooterPitchServoPos);
     }
 
     public void driveStraight(double distanceInches, double degree)
@@ -199,6 +223,31 @@ public class OmniDriveBot implements DriveTrainInterface
     {
         return bLPower;
     }
+
+    public float getLifterPower() {return lifterPower; }
+
+    public float getShooterPowerOne() {return shooterPowerOne; }
+
+    public float getShooterPowerTwo() {return shooterPowerTwo; }
+
+    public float getShooterPitchServoPos() { return shooterPitchServoPos; }
+
+    public float getScooperServoPos() { return scooperServoPos; }
+
+    public void setLifterPower(float pow)
+    { lifterPower = pow; }
+
+    public void setShooterPowerOne(float pow)
+    { shooterPowerOne = pow; }
+
+    public void setShooterPowerTwo(float pow)
+    { shooterPowerTwo = pow;; }
+
+    public void setShooterPitchServoPos(float pow)
+    { shooterPitchServoPos = pow; }
+
+    public void setScooperServoPos(float pow)
+    { scooperServoPos = pow; }
 
     public void setLeftYIn(float lYI)
     {

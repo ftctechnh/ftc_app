@@ -20,14 +20,74 @@ public class OmniDriveTeleOp extends OpMode
 
     public void loop()
     {
+        //driver 1 controls
         robot.setLeftYIn(gamepad1.left_stick_y);
         robot.setLeftXIn(gamepad1.left_stick_x);
         robot.setRightXIn(gamepad1.right_stick_x);
 
-        robot.drive();
+        if(gamepad1.left_bumper == true)
+        {
+            robot.spin(90);
+        }
+        else if(gamepad1.right_bumper == true)
+        {
+            robot.spin(-90);
+        }
 
-        telemetry.addData("fR Power", robot.getfL().getCurrentPosition());
-        telemetry.addData("fL Power", robot.getfR().getCurrentPosition());
-        telemetry.update();
+        //driver 2 controls
+
+        //scoop in and out controls
+        if(gamepad2.left_bumper == true)
+        {
+            robot.setScooperServoPos(0.5f);
+        }
+        else if(gamepad2.left_trigger != 0)
+        {
+            robot.setScooperServoPos(1.0f);
+        }
+        else
+        {
+            robot.setScooperServoPos(0.0f);
+        }
+        //lifter up and down controls
+        if(gamepad2.right_bumper == true)
+        {
+            robot.setLifterPower(1.0f);
+        }
+        else if(gamepad2.right_trigger != 0)
+        {
+            robot.setLifterPower(-1.0f);
+        }
+        else
+        {
+            robot.setScooperServoPos(0.0f);
+        }
+        //shooter pitch controls
+        if(gamepad2.dpad_up == true)
+        {
+            robot.setShooterPitchServoPos(0.5f);
+        }
+        else if(gamepad2.dpad_down == true)
+        {
+            robot.setShooterPitchServoPos(1.0f);
+        }
+        else
+        {
+            robot.setShooterPitchServoPos(0.0f);
+        }
+        // rev up shooter motors
+        if(gamepad2.a == true)
+        {
+            robot.setShooterPowerOne(1.0f);
+            robot.setShooterPowerTwo(-1.0f);
+        }
+        else
+        {
+            robot.setShooterPowerOne(0.0f);
+            robot.setShooterPowerTwo(0.0f);
+        }
+
+        //apply changes and move robot
+        robot.drive();
     }
 }
