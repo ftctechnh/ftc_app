@@ -80,13 +80,13 @@ public class OrientedProtoBot extends OpMode {
                 motorRight.setPower(gamepad1.right_trigger);
             }
         }else{ // Sets Motor powers based on heading.
-          motorUp.setPower(-((gamepad1.left_stick_y+gamepad1.left_stick_x)/2)*Math.sin((heading*Math.PI)/180 - (Math.PI-Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y))));
-          motorDown.setPower(-((gamepad1.left_stick_y+gamepad1.left_stick_x)/2)*Math.sin((heading*Math.PI)/180 - (Math.PI-Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y))));
-          motorLeft.setPower(((gamepad1.left_stick_y+gamepad1.left_stick_x)/2)*Math.cos((heading*Math.PI)/180 - (Math.PI-Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y))));
-          motorRight.setPower(((gamepad1.left_stick_y+gamepad1.left_stick_x)/2)*Math.cos((heading*Math.PI)/180 - (Math.PI-Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y))));
+          motorUp.setPower(((Math.abs(gamepad1.left_stick_y)+Math.abs(gamepad1.left_stick_x)/2))*Math.sin((heading*Math.PI)/180 - (Math.PI-Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y))));
+          motorDown.setPower(((Math.abs(gamepad1.left_stick_y)+Math.abs(gamepad1.left_stick_x)/2))*Math.sin((heading*Math.PI)/180 - (Math.PI-Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y))));
+          motorLeft.setPower(-((Math.abs(gamepad1.left_stick_y)+Math.abs(gamepad1.left_stick_x)/2))*Math.cos((heading*Math.PI)/180 - (Math.PI-Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y))));
+          motorRight.setPower(-((Math.abs(gamepad1.left_stick_y)+Math.abs(gamepad1.left_stick_x)/2))*Math.cos((heading*Math.PI)/180 - (Math.PI-Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y))));
         }
-          telemetry.addData("Mx",((gamepad1.left_stick_y+gamepad1.left_stick_x)/2)*Math.sin((heading*Math.PI)/180 - (Math.PI+Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y))));
-          telemetry.addData("My",((gamepad1.left_stick_y+gamepad1.left_stick_x)/2)*Math.sin((heading*Math.PI)/180 - (2*Math.PI+Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y))));
+          telemetry.addData("Mx",((Math.abs(gamepad1.left_stick_y+gamepad1.left_stick_x)/2))*Math.sin((heading*Math.PI)/180 - (Math.PI+Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y))));
+          telemetry.addData("My",((Math.abs(gamepad1.left_stick_y+gamepad1.left_stick_x)/2))*Math.sin((heading*Math.PI)/180 - (2*Math.PI+Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y))));
           telemetry.addData("R",(gamepad1.left_stick_y+gamepad1.left_stick_x)/2);
           telemetry.addData("H",(heading*Math.PI)/180);
           telemetry.addData("H'",(2*Math.PI+Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y))%(2*Math.PI));
