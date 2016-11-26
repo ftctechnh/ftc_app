@@ -126,7 +126,7 @@ public class VuforiaLocation {
         OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
                 .translation(phoneX, phoneY, phoneZ)
                 .multiplied(Orientation.getRotationMatrix(
-                        AxesReference.EXTRINSIC, AxesOrder.YZY,
+                        AxesReference.EXTRINSIC, AxesOrder.XYZ,
                         AngleUnit.DEGREES, phoneRotX, phoneRotY, phoneRotZ));
         RobotLog.ii(TAG, "phone=%s", format(phoneLocationOnRobot));
 
