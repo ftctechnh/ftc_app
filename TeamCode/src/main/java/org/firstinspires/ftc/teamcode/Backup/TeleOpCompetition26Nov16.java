@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Backup;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -10,8 +10,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  */
 
 @TeleOp(name = "#11183: TeleOp Competition", group = "Robot")
+@Disabled
 
-public class TeleOpCompetition extends OpMode {
+public class TeleOpCompetition26Nov16 extends OpMode {
 
 /*
     ---------------------------------------------------------------------------------------------
@@ -118,20 +119,18 @@ public class TeleOpCompetition extends OpMode {
         float shoot = -gamepad2.right_stick_y;//gets value from 2nd gamepad's joystick
 
         ballShooterMotor.setPower(shoot);//set power
+        /*boolean intake = gamepad1.a;
+        boolean outtake = gamepad1.x;
 
-
-       /*saving previous code sample if using only one gamepad*/
-        /*
-
-        boolean shoot = gamepad1.a;
-        if (shot) {
+        if (intake) {
             ballShooterMotor.setPower(1);
-        } else {
-            ballShooterMotor.setPower(-1);
-            ballShooterMotor.setPower(0)
         }
-
-        */
+        else if(outtake) {
+            ballShooterMotor.setPower(-1);
+        }
+        else {
+            ballShooterMotor.setPower(0);
+        }*/
 
     }
 /*
