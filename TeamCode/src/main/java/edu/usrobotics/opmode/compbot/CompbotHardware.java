@@ -36,7 +36,7 @@ public class CompbotHardware extends BaseHardware {
 
     public boolean harvesterCorrectDirection = false;
 
-    public boolean liftCorrectDirection = false;
+    public boolean liftCorrectDirection = true;
 
     public boolean rightShooterCorrectDirection = true;
     public boolean leftShooterCorrectDirection = false;
