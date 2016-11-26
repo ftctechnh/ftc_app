@@ -99,13 +99,12 @@ public class VuforiaLocation {
     public Map<String, Boolean> lastTrackableData = null;
 
 
-    public VuforiaLocation(float phoneX, float phoneRotX, float phoneY, float phoneRotY, float phoneZ,
-                           float phoneRotZ) {
-        this(DEFAULT_FTC_FIELD_SCALE, phoneX, phoneRotX, phoneY, phoneRotY, phoneZ, phoneRotZ);
+    public VuforiaLocation(OpenGLMatrix phoneLocationOnRobot) {
+        this(DEFAULT_FTC_FIELD_SCALE, phoneLocationOnRobot);
     }
 
-    public VuforiaLocation(float scale, float phoneX, float phoneRotX, float phoneY,
-                           float phoneRotY, float phoneZ, float phoneRotZ) {
+    public VuforiaLocation(float scale, OpenGLMatrix phoneLocationOnRobot) {
+        RobotLog.ii(TAG, "phone=%s", format(phoneLocationOnRobot));
         // Variable Setup:
         this.scale = scale;
 
@@ -122,13 +121,6 @@ public class VuforiaLocation {
         targets.add("tools");
         targets.add("legos");
         targets.add("gears");
-
-        OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
-                .translation(phoneX, phoneY, phoneZ)
-                .multiplied(Orientation.getRotationMatrix(
-                        AxesReference.EXTRINSIC, AxesOrder.XYZ,
-                        AngleUnit.DEGREES, phoneRotX, phoneRotY, phoneRotZ));
-        RobotLog.ii(TAG, "phone=%s", format(phoneLocationOnRobot));
 
 
         this.allTrackables = new HashMap<>();
