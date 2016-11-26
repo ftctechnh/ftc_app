@@ -80,7 +80,7 @@ public class VuforiaLocation {
     // DEFAULT VARIABLES:
     public static float MM_PER_INCH = 25.4f;
     private static float MM_FTC_FIELD_WIDTH = (12 * 12 - 2) * MM_PER_INCH;
-    public static float DEFAULT_FTC_FIELD_SCALE = 1.2f;
+    public static float DEFAULT_FTC_FIELD_SCALE = 1.1f;
 
     // Variables:
     public static final String TAG = "Vuforia Location";
