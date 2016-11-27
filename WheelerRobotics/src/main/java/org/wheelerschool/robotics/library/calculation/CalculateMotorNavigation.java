@@ -59,21 +59,21 @@ public class CalculateMotorNavigation {
          */
 
         // Motor Side Powers:
-        double leftMotorPower;  // Left motor power
-        double rightMotorPower;  // Right motor power
+        public double leftMotorPower;  // Left motor power
+        public double rightMotorPower;  // Right motor power
 
         // Other helpful values:
-        boolean onTarget;
+        public boolean onTarget;
 
         // Debug values:
-        double translationAngle;
-        double translationDistance;
-        double rotationAmount;
+        public double translationAngle;
+        public double translationDistance;
+        public double rotationAmount;
         //      Speed calculation:
-        double forwardPower;
-        double forwardGain;
-        double rotationPower;
-        double rotationGain;
+        public double forwardPower;
+        public double forwardGain;
+        public double rotationPower;
+        public double rotationGain;
     }
 
     public CalculationData calculateMotorPower(double translationX, double translationY, double robotAngle) {
