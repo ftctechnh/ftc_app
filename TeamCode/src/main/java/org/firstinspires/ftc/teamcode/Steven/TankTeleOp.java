@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Steven;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -9,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
  * Created by inspirationteam on 11/10/2016.
  */
 @TeleOp(name = "TankTeleOp", group = "Pushbot")
+@Disabled
 public class TankTeleOp extends OpMode {
     DcMotor leftWheelMotorFront;
     DcMotor leftWheelMotorBack;
