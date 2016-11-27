@@ -57,11 +57,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/*
-===================================================================================================
-NOTE: Make sure to set 'VUFORIA_KEY' in 'org.wheelerschool.robotics.config.Config' to your Vuforia key
-===================================================================================================
-*/
+/**
+ * =================================================================================================
+ * NOTE: Make sure to set 'VUFORIA_KEY' in 'org.wheelerschool.robotics.config.Config' to your Vuforia key
+ * =================================================================================================
+ */
 
 /**
  * Library to find the robot locations on the field using "VuforiaLocalizer"
@@ -73,6 +73,9 @@ NOTE: Make sure to set 'VUFORIA_KEY' in 'org.wheelerschool.robotics.config.Confi
  *
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
+ *
+ * @author luciengaitskell
+ * @version 1.0
  */
 
 
@@ -100,13 +103,20 @@ public class VuforiaLocation {
 
 
     public VuforiaLocation(OpenGLMatrix phoneLocationOnRobot) {
+        /**
+         * Create instance using default field scaling.
+         */
         this(DEFAULT_FTC_FIELD_SCALE, phoneLocationOnRobot);
     }
 
     public VuforiaLocation(float scale, OpenGLMatrix phoneLocationOnRobot) {
+        /**
+         * Create instance with custom field scaling.
+         */
+
         RobotLog.ii(TAG, "phone=%s", format(phoneLocationOnRobot));
         // Variable Setup:
-        this.scale = scale;
+        this.scale = scale;  // Set the scale of the field / targets
 
         // Vuforia Setup:
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
@@ -114,8 +124,10 @@ public class VuforiaLocation {
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
+        // Load trackables:
         this.FTCVisionTargets = this.vuforia.loadTrackablesFromAsset("FTC_2016-17");
 
+        // List of targets with names:
         List<String> targets = new ArrayList<>(); // Wheels Legos Tools Gears
         targets.add("wheels");
         targets.add("tools");
@@ -123,6 +135,7 @@ public class VuforiaLocation {
         targets.add("gears");
 
 
+        // Iterate through trackables and set names and other data:
         this.allTrackables = new HashMap<>();
         for (int ii=0; ii < targets.size(); ii++) {
             String name = targets.get(ii);
@@ -134,17 +147,23 @@ public class VuforiaLocation {
                     .setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
         }
 
-            /** Start tracking the data sets we care about. */
+            // Start tracking the data sets we care about
             this.FTCVisionTargets.activate();
     }
 
     private VuforiaTrackable setUpTrackable(int trackableNumb, String trackableName){
+        /**
+         * Get a trackable by name and set the name
+         */
         VuforiaTrackable trackable = this.FTCVisionTargets.get(trackableNumb);
         trackable.setName(trackableName);
         return trackable;
     }
 
     public void readData() {
+        /**
+         * Read the robot location data and set the object variables with the read data.
+         */
         OpenGLMatrix lastLocation = null;
         OpenGLMatrix robotLocationTransform = null;
         Map<String, Boolean> trackableData = new HashMap<>();
@@ -170,9 +189,17 @@ public class VuforiaLocation {
     }
 
     private OpenGLMatrix getTargetLocation(String targetName) {
+        /**
+         * Get the target location based on the name.
+         */
+
+        // Make sure name is lower case:
         targetName = targetName.toLowerCase();
 
+        // Set default target location value:
         OpenGLMatrix target = null;
+
+        // Wheels target:
         if (targetName == "wheels") {
             target = OpenGLMatrix
                     /* Wheels Target
@@ -183,6 +210,7 @@ public class VuforiaLocation {
                             AngleUnit.DEGREES, 90, 0, 0));
         }
 
+        // Legos target:
         else if (targetName == "legos") {
             target = OpenGLMatrix
                     /* Legos Target
@@ -193,6 +221,7 @@ public class VuforiaLocation {
                             AngleUnit.DEGREES, 90, 0, 0));
         }
 
+        // Gears target:
         else if (targetName == "gears") {
             // Red Side Targets:
             target = OpenGLMatrix
@@ -204,6 +233,7 @@ public class VuforiaLocation {
                             AngleUnit.DEGREES, 90, 90, 0));
         }
 
+        // Tools target:
         else if (targetName == "tools") {
             target = OpenGLMatrix
                     /* Tools Target
@@ -214,6 +244,7 @@ public class VuforiaLocation {
                             AngleUnit.DEGREES, 90, 90, 0));
         }
 
+        // Scale target:
         target.scale(this.scale);
         return target;
     }
