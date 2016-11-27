@@ -13,7 +13,7 @@ import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
  */
 
 
-public class CalculateMotorNavigation {
+public class TranslationMotorNavigation {
     // Configuration (with defaults):
     public int MAX_SPEED_CALCULATE_DISTANCE = 620; /* MAX distance that speed will be
         calculated (mm). If out of this range, speed will be the maximum */
@@ -43,7 +43,7 @@ public class CalculateMotorNavigation {
     }
 
     // Constructor (Creates target location):
-    public CalculateMotorNavigation() {
+    public TranslationMotorNavigation() {
     }
 
     public static VectorF calculateTranslation(VectorF robotLocation,  VectorF targetLocation) {
@@ -55,7 +55,7 @@ public class CalculateMotorNavigation {
         /**
          * A class containing data that is calculated by 'calculateMotorPower'.
          *
-         * @see CalculateMotorNavigation#calculateMotorPower(double, double, double)
+         * @see TranslationMotorNavigation#calculateMotorPower(double, double, double)
          */
 
         // Motor Side Powers:
