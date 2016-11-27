@@ -53,9 +53,9 @@ public class TranslationMotorNavigation {
 
     public class NavigationData {
         /**
-         * A class containing data that is calculated by 'calculateMotorPower'.
+         * A class containing data that is calculated by 'calculateNavigationData'.
          *
-         * @see TranslationMotorNavigation#calculateMotorPower(double, double, double)
+         * @see TranslationMotorNavigation#calculateNavigationData(double, double, double)
          */
 
         // Motor Side Powers:
@@ -76,7 +76,7 @@ public class TranslationMotorNavigation {
         public double rotationGain;
     }
 
-    public NavigationData calculateMotorPower(double translationX, double translationY, double robotAngle) {
+    public NavigationData calculateNavigationData(double translationX, double translationY, double robotAngle) {
         /**
          * Calculate a left and right motor power for a specific translation and robot angle.
          */
