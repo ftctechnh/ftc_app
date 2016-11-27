@@ -35,32 +35,26 @@ public class OmniDriveTeleOp extends OpMode
         }
 
         //driver 2 controls
+        //sets all attachments to stop
+        robot.stopAttachments();
 
         //scoop in and out controls
         if(gamepad2.left_bumper == true)
         {
-            robot.setScooperServoPos(0.5f);
+            robot.setScooperServoPos(0.0f);
         }
         else if(gamepad2.left_trigger != 0)
         {
             robot.setScooperServoPos(1.0f);
         }
-        else
-        {
-            robot.setScooperServoPos(0.0f);
-        }
         //lifter up and down controls
         if(gamepad2.right_bumper == true)
         {
-            robot.setLifterPower(1.0f);
+            robot.setLifterPower(-1.0f);
         }
         else if(gamepad2.right_trigger != 0)
         {
-            robot.setLifterPower(-1.0f);
-        }
-        else
-        {
-            robot.setScooperServoPos(0.0f);
+            robot.setLifterPower(1.0f);
         }
         //shooter pitch controls
         if(gamepad2.dpad_up == true)
@@ -71,22 +65,12 @@ public class OmniDriveTeleOp extends OpMode
         {
             robot.setShooterPitchServoPos(1.0f);
         }
-        else
-        {
-            robot.setShooterPitchServoPos(0.0f);
-        }
         // rev up shooter motors
         if(gamepad2.a == true)
         {
             robot.setShooterPowerOne(1.0f);
             robot.setShooterPowerTwo(-1.0f);
         }
-        else
-        {
-            robot.setShooterPowerOne(0.0f);
-            robot.setShooterPowerTwo(0.0f);
-        }
-
         //apply changes and move robot
         robot.drive();
     }
