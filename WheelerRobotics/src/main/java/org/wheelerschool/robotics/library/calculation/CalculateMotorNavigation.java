@@ -14,16 +14,16 @@ import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 
 
 public class CalculateMotorNavigation {
-    // Configuration:
-    private static int MAX_SPEED_CALCULATE_DISTANCE = 620; /* MAX distance that speed will be
+    // Configuration (with defaults):
+    public int MAX_SPEED_CALCULATE_DISTANCE = 620; /* MAX distance that speed will be
         calculated (mm). If out of this range, speed will be the maximum */
-    private static int MIN_DRIVE_DISTANCE = 180; // MIN distance that motors will run (mm).
-    private static double DRIVE_SPEED_OFFSET = 0.08;
-    private static double MAX_DRIVE_SPEED = 0.25;
-    private static double DEFAULT_FORWARD_GAIN = 1.0; // GAIN for the FORWARD movement
-    private static double DEFAULT_ROTATION_GAIN = 2.5; // GAIN for the ROTATION amount
-    private static int ROTATION_IGNORE_DISTANCE = 300;
-    private static double IGNORED_ROTATION_GAIN = 0.5;
+    public int MIN_DRIVE_DISTANCE = 180; // MIN distance that motors will run (mm).
+    public double DRIVE_SPEED_OFFSET = 0.08;
+    public double MAX_DRIVE_SPEED = 0.25;
+    public double DEFAULT_FORWARD_GAIN = 1.0; // GAIN for the FORWARD movement
+    public double DEFAULT_ROTATION_GAIN = 2.5; // GAIN for the ROTATION amount
+    public int ROTATION_IGNORE_DISTANCE = 300;
+    public double IGNORED_ROTATION_GAIN = 0.5;
     // Other:
     public static String LOG_TAG = "Motor Nav Calculation";
 
