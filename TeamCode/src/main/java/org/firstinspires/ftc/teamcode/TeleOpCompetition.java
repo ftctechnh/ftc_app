@@ -18,11 +18,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class TeleOpCompetition extends OpMode {
 
-/*
-    * The op mode assumes that the color sensor
-    * is configured with a name of "sensor_color".
-*/
-    ColorSensor colorSensor;    // Hardware Device Object
 
 /*
     ---------------------------------------------------------------------------------------------
@@ -35,6 +30,18 @@ public class TeleOpCompetition extends OpMode {
     DcMotor rightWheelMotorBack;
     DcMotor ballCollectorMotor;
     DcMotor ballShooterMotor;
+
+/*
+    ---------------------------------------------------------------------------------------------
+
+   Define the sensors we use in the robot here
+*/
+
+
+    ColorSensor colorSensor;    // Hardware Device Object
+
+
+
 /*
  ----------------------------------------------------------------------------------------------
 Declare global variables here
@@ -179,6 +186,9 @@ Declare global variables here
     telemetry.addData("Blue ", colorSensor.blue());
     telemetry.addData("Hue", hsvValues[0]);
     telemetry.update();
+
+    if (colorSensor.red()>1000) /*need to find out the treashold for */
+        redOrBlue='r';
     bLedOn = !bLedOn;
     colorSensor.enableLed(bLedOn);
     return redOrBlue;
