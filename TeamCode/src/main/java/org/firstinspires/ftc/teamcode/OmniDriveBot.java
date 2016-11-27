@@ -123,8 +123,26 @@ public class OmniDriveBot implements DriveTrainInterface
 
     public void driveStraight(double distanceInches, double degree)
     {
-
+        //Converts inputs appropriately if distance inches is negative
+        if(distanceInches < 0)
+        {
+            distanceInches *= -1;
+            degree += 180;
+        }
+        //Shift input degree between +-180
+        while(degree > 180)
+        {
+            degree -= 360;
+        }
+        //degree is now guaranteed to be less than 180
+        while(degree < -180)
+        {
+            degree += 360;
+        }
+        //degree is now guaranteed to be greater than -180
         double degToRad = (Math.PI/180) * degree;
+        //Numbers in equation below came from a sinReg on a calculator using observed travel from 0 to 90 degrees at 12 inches
+        //with increments of 15 degrees
         double scalingFactor = (0.157 * Math.sin(3.963 * (degToRad) + 1.755)) + 0.846;
 
         float leftXIn = -(float)Math.sin(degToRad);
