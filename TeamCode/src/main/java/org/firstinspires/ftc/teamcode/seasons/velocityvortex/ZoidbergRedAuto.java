@@ -34,42 +34,35 @@ public class ZoidbergRedAuto extends LinearOpMode {
         frontRangeReader.engage();
         leftRangeReader.engage();
 
-        //waitForStart();
+        // loop similar to waitForStart()
         while (!isStarted()){
             readRangeSensors();
-        }
 
+            if(robot.getGyroSensor().isCalibrating()) {
+                telemetry.addData("gyro sensor calibrating", "yes");
+            } else {
+                telemetry.addData("gyro sensor calibrating", "no");
+            }
+        }
 
         while(opModeIsActive()) {
             readRangeSensors();
 
             switch (state) {
             case 0:
-                if(leftRange < 85) {
-                    robot.driveRight(0.2);
+
+                // if the robot is rotated right
+                if(robot.getGyroSensor().getIntegratedZValue() > 5) {
+                    robot.getBackRightDrive().setPower(-0.3);
+                // if the robot is rotated left
+                } else if(robot.getGyroSensor().getIntegratedZValue() > 354) {
+                    robot.getFrontLeftDrive().setPower(0.3);
                 } else {
-                    robot.stopRobot();
-                    state = 1;
+                    robot.getFrontLeftDrive().setPower(0.2);
+                    robot.getBackRightDrive().setPower(-0.2);
                 }
 
                 break;
-            case 1:
-                if(frontRange > 20) {
-                    robot.driveForward(0.2);
-                } else {
-                    robot.stopRobot();
-                    state = 2;
-                }
-
-                break;
-            case 2:
-                if(robot.getFrontLightSensor().getLightDetected() < 0.28 &&
-                        robot.getBackLightSensor().getLightDetected() < 0.28) {
-                    robot.driveRight(0.2);
-                } else {
-                    robot.stopRobot();
-                    break;
-                }
             }
         }
 

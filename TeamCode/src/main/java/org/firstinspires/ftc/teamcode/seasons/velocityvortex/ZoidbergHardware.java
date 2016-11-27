@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.seasons.velocityvortex;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.I2cDevice;
@@ -45,12 +47,14 @@ public class ZoidbergHardware {
     private OpticalDistanceSensor launcherOds;
     private OpticalDistanceSensor diskOds;
 
+    private ModernRoboticsI2cGyro gyroSensor;
+
     public static final I2cAddr FRONT_RANGE_SENSOR_I2C_ADDR = I2cAddr.create8bit(0x28);
     public static final I2cAddr LEFT_RANGE_SENSOR_I2C_ADDR = I2cAddr.create8bit(0x2a);
 
     public static final int RANGE_SENSOR_REG_START = 0x04;
 
-    public ZoidbergHardware(HardwareMap hardwareMap) {
+    public ZoidbergHardware(HardwareMap hardwareMap) throws InterruptedException {
 
         driveController1 = hardwareMap.dcMotorController.get("mc0");
         driveController2 = hardwareMap.dcMotorController.get("mc1");
@@ -87,6 +91,9 @@ public class ZoidbergHardware {
 
         launcherOds = hardwareMap.opticalDistanceSensor.get("launcherOds");
         diskOds = hardwareMap.opticalDistanceSensor.get("diskOds");
+
+        gyroSensor = (ModernRoboticsI2cGyro)hardwareMap.gyroSensor.get("gy");
+        gyroSensor.calibrate();
     }
 
     public void driveRight(double power) {
@@ -191,5 +198,9 @@ public class ZoidbergHardware {
     public OpticalDistanceSensor getLauncherOds() { return launcherOds; }
 
     public OpticalDistanceSensor getDiskOds() { return diskOds; }
+
+    public ModernRoboticsI2cGyro getGyroSensor() {
+        return gyroSensor;
+    }
 
 }
