@@ -124,6 +124,20 @@ public class ZoidbergHardware {
         backRightDrive.setPower(0);
     }
 
+    public void pivotLeft(double power) {
+        frontLeftDrive.setPower(-power);
+        frontRightDrive.setPower(-power);
+        backLeftDrive.setPower(-power);
+        backRightDrive.setPower(-power);
+    }
+
+    public void pivotRight(double power) {
+        frontLeftDrive.setPower(power);
+        frontRightDrive.setPower(power);
+        backLeftDrive.setPower(power);
+        backRightDrive.setPower(power);
+    }
+
     public DcMotor getIntakeMotor() {
         return intakeMotor;
     }

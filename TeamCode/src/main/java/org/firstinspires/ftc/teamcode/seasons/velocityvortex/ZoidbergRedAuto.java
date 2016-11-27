@@ -13,75 +13,132 @@ public class ZoidbergRedAuto extends LinearOpMode {
 
     private ZoidbergHardware robot;
 
-    private byte[] frontRangeCache;
-    private byte[] leftRangeCache;
+    private int state = 0;
+
+    private int frontRange;
+    private int leftRange;
+
+    private I2cDeviceSynch frontRangeReader;
+    private I2cDeviceSynch leftRangeReader;
 
     @Override
     public void runOpMode() throws InterruptedException {
         robot = new ZoidbergHardware(hardwareMap);
 
-        I2cDeviceSynchImpl frontRangeReader = new I2cDeviceSynchImpl(robot.getFrontRangeSensor(),
+        frontRangeReader = new I2cDeviceSynchImpl(robot.getFrontRangeSensor(),
                 ZoidbergHardware.FRONT_RANGE_SENSOR_I2C_ADDR, false);
 
-        I2cDeviceSynchImpl leftRangeReader = new I2cDeviceSynchImpl(robot.getLeftRangeSensor(),
+        leftRangeReader = new I2cDeviceSynchImpl(robot.getLeftRangeSensor(),
                 ZoidbergHardware.LEFT_RANGE_SENSOR_I2C_ADDR, false);
 
         frontRangeReader.engage();
         leftRangeReader.engage();
 
-        int leftRange = 0;
-        int frontRange = 0;
-
-
-
-        waitForStart();
-
-        while(leftRange < 85) {
-
-            // read sensor values in byte buffer
-            leftRangeCache = leftRangeReader.read(ZoidbergHardware.RANGE_SENSOR_REG_START, 2);
-            leftRange = leftRangeCache[0] & 0xFF;
-
-            print(frontRangeReader,leftRangeReader);
-
-            robot.driveRight(0.4);
+        //waitForStart();
+        while (!isStarted()){
+            readRangeSensors();
         }
 
-        //robot.stopRobot();
-        //sleep(100);
 
-        while(true) {
+        while(opModeIsActive()) {
+            readRangeSensors();
 
-            frontRangeCache = frontRangeReader.read(ZoidbergHardware.RANGE_SENSOR_REG_START, 2);
-            frontRange = frontRangeCache[0] & 0xFF;
+            switch (state) {
+            case 0:
+                if(leftRange < 85) {
+                    robot.driveRight(0.2);
+                } else {
+                    robot.stopRobot();
+                    state = 1;
+                }
 
-            if  (frontRange > 10){// read sensor values in byte buffer
-                frontRangeCache = frontRangeReader.read(ZoidbergHardware.RANGE_SENSOR_REG_START, 2);
-                frontRange = frontRangeCache[0] & 0xFF;
+                break;
+            case 1:
+                if(frontRange > 20) {
+                    robot.driveForward(0.2);
+                } else {
+                    robot.stopRobot();
+                    state = 2;
+                }
 
-                robot.driveForward(0.25);
+                break;
+            case 2:
+                if(robot.getFrontLightSensor().getLightDetected() < 0.28 &&
+                        robot.getBackLightSensor().getLightDetected() < 0.28) {
+                    robot.driveRight(0.2);
+                } else {
+                    robot.stopRobot();
+                    break;
+                }
             }
-            else {
-                robot.stopRobot();
-            }
-            print(frontRangeReader,leftRangeReader);
         }
 
+//        while(opModeIsActive() && leftRange < 85) {
+//
+//            // read sensor values in byte buffer
+//            leftRangeCache = leftRangeReader.read(ZoidbergHardware.RANGE_SENSOR_REG_START, 2);
+//            leftRange = leftRangeCache[0] & 0xFF;
+//
+//            print(frontRangeReader, leftRangeReader);
+//
+//            robot.driveRight(0.4);
+//        }
+//
+//        robot.stopRobot();
+//        sleep(100);
+//
+//
+//        while(opModeIsActive() && frontRange > 20) {
+//
+//            // read sensor values in byte buffer
+//            frontRangeCache = frontRangeReader.read(ZoidbergHardware.RANGE_SENSOR_REG_START, 2);
+//            frontRange = frontRangeCache[0] & 0xFF;
+//
+//            robot.driveForward(0.2);
+//
+//            print(frontRangeReader, leftRangeReader);
+//
+//            telemetry.addData("front light", robot.getFrontLightSensor());
+//            telemetry.addData("back light", robot.getBackLightSensor());
+//
+//            telemetry.update();
+//        }
+//
+//        robot.stopRobot();
+//
+//        // both sensor detecting the mat
+//        while(robot.getFrontLightSensor().getLightDetected() < 0.28 &&
+//                robot.getBackLightSensor().getLightDetected() < 0.28) {
+//            robot.driveRight(0.2);
+//        }
+//
+//        // if both detect white
+//        if(robot.getFrontLightSensor().getLightDetected() > 0.28 &&
+//                robot.getFrontLightSensor().getLightDetected() > 0.28) {
+//            robot.stopRobot();
+//        } else if(robot.getFrontLightSensor().getLightDetected() > 0.28) {
+//            robot.pivotLeft(0.1);
+//        } else if(robot.getBackLightSensor().getLightDetected() > 0.28) {
+//            robot.pivotRight(0.1);
+//        }
+//            robot.pivotLeft(0.1);
+//        } else if(robot.getFrontLightSensor().getLightDetected() > 0.28)  {
+//            robot.pivotRight(0.1);
+//        }
     }
 
-    void print(I2cDeviceSynchImpl frontRangeReader, I2cDeviceSynchImpl leftRangeReader){
-        frontRangeCache = frontRangeReader.read(ZoidbergHardware.RANGE_SENSOR_REG_START, 2);
-        leftRangeCache = leftRangeReader.read(ZoidbergHardware.RANGE_SENSOR_REG_START, 2);
+    private void readRangeSensors() {
+        byte[] frontCache = frontRangeReader.read(ZoidbergHardware.RANGE_SENSOR_REG_START, 2);
+        byte[] leftCache = leftRangeReader.read(ZoidbergHardware.RANGE_SENSOR_REG_START, 2);
 
-        telemetry.addLine("front ")
-                .addData("ultrasonic: ", frontRangeCache[0] & 0xFF)
-                .addData("ODS: ", frontRangeCache[1] & 0xFF);
+        this.frontRange = frontCache[0] & 0xFF;
+        this.leftRange = leftCache[0] & 0xFF;
 
-        telemetry.addLine("left ")
-                .addData("ultrasonic: ", leftRangeCache[0] & 0xFF)
-                .addData("ODS: ", leftRangeCache[1] & 0xFF);
+        telemetry.addData("state", this.state);
+        telemetry.addData("front range", frontRange);
+        telemetry.addData("left range", leftRange);
 
         telemetry.update();
-
     }
+
 }
