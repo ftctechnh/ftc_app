@@ -35,7 +35,7 @@ public class ColorSensorTestOp extends OpMode{
  ----------------------------------------------------------------------------------------------
 Declare global variables here
 */
-
+    private boolean bLedOn;
 
         /*---------------------------------------------------------------------------------------------
                 Get references to the hardware installed on the robot and name them here
@@ -45,6 +45,9 @@ Declare global variables here
 
         /* get a reference to our ColorSensor object */
             colorSensor = hardwareMap.colorSensor.get("sensor_color");
+
+            /* bLedOn represents the state of the LED.*/
+             bLedOn = true;
         }
         /*
         ---------------------------------------------------------------------------------------------
@@ -98,8 +101,6 @@ Declare global variables here
     /* hsvValues is an array that will hold the hue, saturation, and value information */
             float hsvValues[] = {0F,0F,0F};
 
-    /* bLedOn represents the state of the LED.*/
-            boolean bLedOn = true;
 
     /* Set the LED in the beginning*/
             colorSensor.enableLed(bLedOn);
@@ -118,8 +119,7 @@ Declare global variables here
 
             if (colorSensor.red()>1000) /*need to find out the treashold for */
                 redOrBlue='r';
-            bLedOn = !bLedOn;
-            colorSensor.enableLed(bLedOn);
+
             return redOrBlue;
         }
 
@@ -131,6 +131,8 @@ Declare global variables here
         */
         @Override
         public void stop() {
+            bLedOn = !bLedOn;
+            colorSensor.enableLed(bLedOn);
         }
 
 /*
