@@ -51,7 +51,7 @@ public class TranslationMotorNavigation {
     }
 
 
-    public class CalculationData {
+    public class NavigationData {
         /**
          * A class containing data that is calculated by 'calculateMotorPower'.
          *
@@ -76,12 +76,12 @@ public class TranslationMotorNavigation {
         public double rotationGain;
     }
 
-    public CalculationData calculateMotorPower(double translationX, double translationY, double robotAngle) {
+    public NavigationData calculateMotorPower(double translationX, double translationY, double robotAngle) {
         /**
          * Calculate a left and right motor power for a specific translation and robot angle.
          */
         // Initiate object to hold data:
-        CalculationData calculationData = new CalculationData();
+        NavigationData navigationData = new NavigationData();
 
         // Get the distance from robot to the target:
         double translationDistance = Math.sqrt((Math.pow(Math.abs(translationX), 2)
@@ -94,22 +94,22 @@ public class TranslationMotorNavigation {
         double rotationAmount = angleDifference(translationAngle, robotAngle);
 
         // Default motor values:
-        calculationData.leftMotorPower = 0;
-        calculationData.rightMotorPower = 0;
+        navigationData.leftMotorPower = 0;
+        navigationData.rightMotorPower = 0;
         //      Debug:
-        calculationData.forwardPower = 0;
-        calculationData.forwardGain = 0;
-        calculationData.rotationPower = 0;
-        calculationData.rotationGain = 0;
+        navigationData.forwardPower = 0;
+        navigationData.forwardGain = 0;
+        navigationData.rotationPower = 0;
+        navigationData.rotationGain = 0;
 
         // Assume that robot is on the target:
-        calculationData.onTarget = true;
+        navigationData.onTarget = true;
 
         // Motor Speed Calculation:
         //      Only drive motors if not in minimum distance:
         if (translationDistance > MIN_DRIVE_DISTANCE) {
             // Robot is not on target:
-            calculationData.onTarget = false;
+            navigationData.onTarget = false;
 
             double leftPower;
             double rightPower;
@@ -146,10 +146,10 @@ public class TranslationMotorNavigation {
                 rotationGain = IGNORED_ROTATION_GAIN;
             }
             // Save POWER and GAIN values for debug:
-            calculationData.forwardPower = forwardPower;
-            calculationData.forwardGain = forwardGain;
-            calculationData.rotationPower = rotationPower;
-            calculationData.rotationGain = rotationGain;
+            navigationData.forwardPower = forwardPower;
+            navigationData.forwardGain = forwardGain;
+            navigationData.rotationPower = rotationPower;
+            navigationData.rotationGain = rotationGain;
 
 
             // CALCULATE MOTOR SIDES DRIVE POWER:
@@ -179,15 +179,15 @@ public class TranslationMotorNavigation {
                     forwardPower, rotationPower, rotationAmount, translationDistance,
                     translationAngle, leftPower, rightPower, robotAngle));
             // Set motor power:
-            calculationData.leftMotorPower = leftPower;
-            calculationData.rightMotorPower = -1 * rightPower;
+            navigationData.leftMotorPower = leftPower;
+            navigationData.rightMotorPower = -1 * rightPower;
         }
 
         // Add debug values to data object:
-        calculationData.translationDistance = translationDistance;
-        calculationData.translationAngle = translationAngle;
-        calculationData.rotationAmount = rotationAmount;
+        navigationData.translationDistance = translationDistance;
+        navigationData.translationAngle = translationAngle;
+        navigationData.rotationAmount = rotationAmount;
 
-        return calculationData;
+        return navigationData;
     }
 }
