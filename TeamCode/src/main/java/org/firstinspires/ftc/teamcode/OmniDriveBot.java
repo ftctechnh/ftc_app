@@ -21,18 +21,18 @@ public class OmniDriveBot implements DriveTrainInterface
     private Servo scooperServo = null;
     private Servo shooterPitchServo = null;
 
-    public float leftYIn;
-    public float leftXIn;
-    public float rightXIn;
-    public float fRPower;
-    public float fLPower;
-    public float bRPower;
-    public float bLPower;
-    public float lifterPower;
-    public float shooterPowerOne;
-    public float shooterPowerTwo;
-    public float shooterPitchServoPos;
-    public float scooperServoPos;
+    private float leftYIn;
+    private float leftXIn;
+    private float rightXIn;
+    private float fRPower;
+    private float fLPower;
+    private float bRPower;
+    private float bLPower;
+    private float lifterPower;
+    private float shooterPowerOne;
+    private float shooterPowerTwo;
+    private float shooterPitchServoPos;
+    private float scooperServoPos;
 
 
     public OmniDriveBot()
@@ -77,6 +77,9 @@ public class OmniDriveBot implements DriveTrainInterface
         fL.setMaxSpeed(2400);
         bR.setMaxSpeed(2400);
         bL.setMaxSpeed(2400);
+
+        shooterPitchServo.setPosition(0.0f);
+        scooperServo.setPosition(0.5f);
     }
 
     public void drive()
@@ -117,8 +120,7 @@ public class OmniDriveBot implements DriveTrainInterface
         shooterMotorOne.setPower(shooterPowerOne);
         shooterMotorTwo.setPower(shooterPowerTwo);
         scooperServo.setPosition(scooperServoPos);
-        //not sure how to program non-continuous servos yet disabled until further notice
-        //shooterPitchServo.setPosition(shooterPitchServoPos);
+        shooterPitchServo.setPosition(shooterPitchServoPos);
     }
 
     public void driveStraight(double distanceInches, double degree)
@@ -280,4 +282,11 @@ public class OmniDriveBot implements DriveTrainInterface
         rightXIn = -rXI;
     }
 
+    public void stopAttachments()
+    {
+        lifterPower = 0;
+        shooterPowerOne = 0;
+        shooterPowerTwo = 0;
+        scooperServoPos = 0.5f;
+    }
 }
