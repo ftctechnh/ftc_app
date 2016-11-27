@@ -66,9 +66,9 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Auto Blue Right (Sensor)", group="Pushbot")
+@Autonomous(name="Auto Blue Right (Sensor) Copy", group="Pushbot")
 //@Disabled
-public class AutoBlueTeam_Sensor extends LinearOpMode {
+public class AutoBlueTeam_Sensor_Copy extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwarePushbot_TT         robot   = new HardwarePushbot_TT();   // Use a Pushbot's hardware
@@ -106,118 +106,63 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
         boolean lastResetState = false;
         boolean curResetState  = false;
 
+        // bLedOn represents the state of the LED.
+        boolean bLedOn = true;
+        bLedOn = true ;
+        // get a reference to our ColorSensor object.
+        // Set the LED in the beginning
+        robot.color.enableLed(bLedOn);
 
-        // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Resetting Encoders");    //
-        telemetry.update();
-
-        robot.frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        idle();
-
-        robot.frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        // Send telemetry message to signify robot waiting;
+//        telemetry.addData("Status", "Resetting Encoders");    //
+//        telemetry.update();
+//
+//        robot.frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        robot.frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        robot.backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        robot.backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        idle();
+//
+//        robot.frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        robot.frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        robot.backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        robot.backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //Calibrate Gyro sensor before starting
-        calibrateGyro();
+        //calibrateGyro();
 
-        // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0", "Starting at %7d :%7d",
-                robot.frontLeftMotor.getCurrentPosition(),
-                robot.frontRightMotor.getCurrentPosition(),
-                robot.backLeftMotor.getCurrentPosition(),
-                robot.backRightMotor.getCurrentPosition());
-        telemetry.update();
+//        // Send telemetry message to indicate successful Encoder reset
+//        telemetry.addData("Path0", "Starting at %7d :%7d",
+//                robot.frontLeftMotor.getCurrentPosition(),
+//                robot.frontRightMotor.getCurrentPosition(),
+//                robot.backLeftMotor.getCurrentPosition(),
+//                robot.backRightMotor.getCurrentPosition());
+//        telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        // Step through each leg of the path,
-        // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        // This is for the nearest blue beacon towards our robot
-        //Step 1
-//        gyroDrive(DRIVE_SPEED, 24.0, 0.0);    // Drive FWD
-        encoderDrive(DRIVE_SPEED, 24, 24, 10.0); // Drive fwd
-        telemetry.addData("Step 1 GyroDrive", " Completed");
-        telemetry.update();
-        sleep(250);
-
-        //Step 2
-        gyroTurn( TURN_SPEED, -55.0);         // Turn  CCW to -55 Degrees
-        telemetry.addData("Step 2 GyroTurn", " Completed");
-        telemetry.update();
-        sleep(250);
-
-//        gyroHold( TURN_SPEED, -45.0, 0.5);    // Hold -45 Deg heading for a 1/2 second
-//        telemetry.addData("Step 2 Gyro HOLD", " Completed");
-//        telemetry.update();
-//        sleep(2000);
-
-//        Step 3
-//        gyroDrive(DRIVE_SPEED, 24.0, 0.0);    // Drive FWD
-        encoderDrive(DRIVE_SPEED, 36, 36, 10.0); // Drive fwd
-        telemetry.addData("Step 3a GyroDrive", " Completed");
-        telemetry.update();
-
-        encoderDrive(PUSH_SPEED, 6, 6, 10.0); // Drive fwd
-        telemetry.addData("Step 3b GyroDrive", " Completed");
-        telemetry.update();
-
-
-        sleep(250);
-
-        //Step 4
-        gyroTurn( TURN_SPEED, -90.0);         // Turn  CCW to -45 Degrees
-        telemetry.addData("Step 4 GyroTurn", " Completed");
-        telemetry.update();
-        sleep(250);
-
-//        gyroHold( TURN_SPEED, -45.0, 0.5);    // Hold -45 Deg heading for a 1/2 second
-//        telemetry.addData("Step 4 Gyro HOLD", " Completed");
-//        telemetry.update();
-//        sleep(2000);
-
-        encoderDrive(DRIVE_SPEED, 6, 6, 3.0); //  Forward 24 inches with 3 Sec timeout
-        sleep(250);
-
-//        //Touch sensor loop - TODO
-//        while (!robot.touch.isPressed() && sensorLoopCycles < 6) {
-//            if (robot.touch.isPressed()) {
-//                telemetry.addData("Touch", "Is Pressed");
-//                encoderDrive(DRIVE_SPEED, -12, -12, 3.0);
-//            }else{
-//            telemetry.addData("Touch", "Is Not Pressed");
-//            encoderDrive(PUSH_SPEED, 1, 1, 3.0);
-//
-//            telemetry.update();
-//            }
-//            sensorLoopCycles = sensorLoopCycles + 1 ;
-//        }
-
         // Light sensor loop - TODO
         sensorLoopCycles = 0;
         while (robot.color.blue() == 0 && robot.color.red() == 0 && sensorLoopCycles < 6){
-            encoderDrive(PUSH_SPEED,1,1,3.0);
+//            encoderDrive(PUSH_SPEED,1,1,3.0);
+            telemetry.addData("Going %7d", sensorLoopCycles);
 
             if (robot.color.blue() < robot.color.red()) {
                 colorBlueSensed = 1;
                 telemetry.addData("Detecting", "Red");
                 telemetry.update();
-                sleep(250);
+                sleep(500);
             } else if (robot.color.blue() > robot.color.red()){
                 colorBlueSensed = 2;
                 telemetry.addData("Detecting", "Blue");
                 telemetry.update();
-                sleep(250);
+                sleep(500);
             } else {
                 colorBlueSensed = 0;
                 telemetry.addData("Detecting", "Neither");
                 telemetry.update();
-                sleep(250);
+                sleep(750);
             }
             sensorLoopCycles = sensorLoopCycles + 1 ;
         }
@@ -227,26 +172,26 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
             telemetry.addData("Detecting", "Red");
             telemetry.update();
 //            sleep(500);
-            encoderDrive(PUSH_SPEED,    -12, -12, 3.0);
+//            encoderDrive(PUSH_SPEED,    -12, -12, 3.0);
 //            encoderDrive(TURN_SPEED,    -3,6,3.0);
-            gyroTurn(TURN_SPEED, -60.0);
-            encoderDrive(PUSH_SPEED,    20,20,3.0);
-            gyroTurn(TURN_SPEED, -90.0);
-            encoderDrive(PUSH_SPEED,    9,9,3.0);
+//            gyroTurn(TURN_SPEED, -60.0);
+//            encoderDrive(PUSH_SPEED,    20,20,3.0);
+//            gyroTurn(TURN_SPEED, -90.0);
+//            encoderDrive(PUSH_SPEED,    9,9,3.0);
         } else if (robot.color.blue() > robot.color.red()){
             colorBlueSensed = 2;
             telemetry.addData("Detecting", "Blue");
             telemetry.update();
 //            sleep(500);
-            encoderDrive(PUSH_SPEED, 4,4, 3.0);
+//            encoderDrive(PUSH_SPEED, 4,4, 3.0);
         } else {
             colorBlueSensed = 0;
             telemetry.addData("Detecting", "Neither");
             telemetry.update();
 //            sleep(500);
+//            encoderDrive(DRIVE_SPEED,  -30, -30, 3.0); // Back up and park
         }
 
-        encoderDrive(DRIVE_SPEED,  -48, -48, 3.0); // Back up and park
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }

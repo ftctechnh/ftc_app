@@ -31,15 +31,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package org.firstinspires.ftc.teamcode;
 
-import android.app.Activity;
-import android.graphics.Color;
-import android.view.View;
-
 import com.qualcomm.ftcrobotcontroller.R;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -63,71 +58,65 @@ public class SensorMRColor_TT extends LinearOpMode {
   //ColorSensor colorSensor;    // Hardware Device Object
   HardwarePushbot_TT         robot   = new HardwarePushbot_TT();   // Use a Pushbot's hardware
   private ElapsedTime runtime = new ElapsedTime();
+  ColorSensor colorLocal = null;
 
 
   @Override
   public void runOpMode() {
 
-    // bPrevState and bCurrState represent the previous and current state of the button.
-    boolean bPrevState = false;
-    boolean bCurrState = false;
+    // hsvValues is an array that will hold the hue, saturation, and value information.
+    float hsvValues[] = {0F,0F,0F};
+
+    // values is a reference to the hsvValues array.
+    final float values[] = hsvValues;
+
     robot.init(hardwareMap);
+    colorLocal = robot.color ;
 
     // bLedOn represents the state of the LED.
     boolean bLedOn = false;
 
     // get a reference to our ColorSensor object.
     // Set the LED in the beginning
-    robot.color2.enableLed(bLedOn);
-
-
-    // wait for the start button to be pressed.
-    waitForStart();
+//    colorLocal.enableLed(bLedOn);
 
     // while the op mode is active, loop and read the RGB data.
     // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
+
+    // wait for the start button to be pressed.
+    telemetry.addData("Initiatilized", "Press Start");
+    telemetry.update();
+    waitForStart();
+
     while (opModeIsActive()) {
-
-
-      // send the info back to driver station using telemetry function.
-//      telemetry.addData("LED", bLedOn ? "On" : "Off");
-//      telemetry.addData("Clear", robot.mrColorSensor.alpha());
-//      telemetry.addData("Red  ", robot.mrColorSensor.red());
-//      telemetry.addData("Green", robot.mrColorSensor.green());
-//      telemetry.addData("Blue ", robot.mrColorSensor.blue());
-//      telemetry.addData("Hue", hsvValues[0]);
-
-
-      telemetry.addData("2 Clear", robot.color2.alpha());
-      telemetry.addData("3 Red  ", robot.color2.red());
-      telemetry.addData("4 Green", robot.color2.green());
-      telemetry.addData("5 Blue ", robot.color2.blue());
-      telemetry.addData("6 I2C address", robot.color2.
 
       if (robot.color.red() > robot.color.blue()) {
         telemetry.addData("Detecting", "Red");
+        telemetry.update();
       }
-      else{
+      else if (robot.color.red() < robot.color.blue()){
         telemetry.addData("Detecting", "Blue");
+        telemetry.update();
       }
-      telemetry.update();
+      else {
+        telemetry.addData("Detecting", "Neither");
+        telemetry.update();
+      }
 
-//      if(robot.color.red()>robot.color.blue() || robot.color.blue()>robot.color.green())
-//      {
-//        robot.cdim.setLED(1, true);
-//        robot.cdim.setLED(0, false);
-//      }
-//      else if(robot.color.blue()> robot.color.red() ||robot.color.blue()>robot.color.green())
-//      {
-//        robot.cdim.setLED(1, false);
-//        robot.cdim.setLED(0, true);
-//
-//      }
-//      else
-//      {
-//        robot.cdim.setLED(1, false);
-//        robot.cdim.setLED(0, false);
-//      }
+      // send the info back to driver station using telemetry function.
+//      telemetry.addData("LED", bLedOn ? "On" : "Off");
+//      telemetry.addData("2 Clear", colorLocal.alpha());
+//      telemetry.addData("3 Red  ", colorLocal.red());
+//      telemetry.addData("4 Green", colorLocal.green());
+//      telemetry.addData("5 Blue ", colorLocal.blue());
+//      telemetry.addData("Hue", hsvValues[0]);
+//      telemetry.addData("Saturation", hsvValues[1]);
+//      telemetry.addData("Values", hsvValues[2]);
+//      //telemetry.update();
+
+
+      // convert the RGB values to HSV values.
+//      Color.RGBToHSV(colorLocal.red() * 8, colorLocal.green() * 8, colorLocal.blue() * 8, hsvValues);
 //      waitForStart();
     }
 

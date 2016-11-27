@@ -79,7 +79,7 @@ public class HardwarePushbot_TT
         color2 = hwMap.colorSensor.get("ColorSensor2");
         gyro = (ModernRoboticsI2cGyro)hwMap.gyroSensor.get("GyroSensor");
         cdim = hwMap.deviceInterfaceModule.get("Device Interface Module 1");
-        //armMotor    = hwMap.dcMotor.get("ArmMotor");
+        armMotor    = hwMap.dcMotor.get("ArmMotor");
 //        flyRight = hwMap.dcMotor.get("FlyLeft");
 //        flyRight = hwMap.dcMotor.get("FlyLeft");
 
@@ -87,7 +87,7 @@ public class HardwarePushbot_TT
         backLeftMotor.setDirection(DcMotor.Direction.REVERSE); // Set to FORWARD if using AndyMark motors
         frontRightMotor.setDirection(DcMotor.Direction.FORWARD);// Set to REVERSE if using AndyMark motors
         backRightMotor.setDirection(DcMotor.Direction.FORWARD);// Set to REVERSE if using AndyMark motors
-//        armMotor.setDirection(DcMotor.Direction.REVERSE);
+        armMotor.setDirection(DcMotor.Direction.FORWARD);
 //        flyLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 //        flyRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -97,7 +97,7 @@ public class HardwarePushbot_TT
         backLeftMotor.setPower(0);
         frontRightMotor.setPower(0);
         backRightMotor.setPower(0);
-//        armMotor.setPower(0);
+        armMotor.setPower(0);
 //        flyLeft.setPower(0);
 //        flyRight.setPower(0);
 
@@ -107,7 +107,7 @@ public class HardwarePushbot_TT
         backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//        armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 //        flyLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 //        flyRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // Define and initialize ALL installed servos.

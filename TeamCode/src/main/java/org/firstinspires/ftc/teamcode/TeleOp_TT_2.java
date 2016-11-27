@@ -34,6 +34,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcontroller.unknownelementsamples.HardwarePushbot_demo;
@@ -120,18 +122,37 @@ public class TeleOp_TT_2 extends OpMode {
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
         double left = 0.0;
         double right = 0.0;
-        double arm = 0.0;
+        double armUp = 0.0;
+        double armDown = 0.0;
+
+        boolean bPrevState = false;
+        boolean bCurrState = false;
 
         left = -gamepad1.left_stick_y;   // (note: The joystick goes negative when pushed forwards, so negate it)
         right = -gamepad1.right_stick_y;
-        arm = -gamepad1.right_trigger;
+        armUp = -gamepad1.right_trigger;
+
+        bCurrState = gamepad1.x;
+
+        // check for button state transitions.
+        if ((bCurrState == true) && (bCurrState != bPrevState))  {
+
+            robot.armMotor.setDirection(DcMotor.Direction.FORWARD);
+        }
+        else {
+            robot.armMotor.setDirection(DcMotor.Direction.REVERSE);
+        }
+
+        // update previous state variable.
+        bPrevState = bCurrState;
+
         left = enforceDeadZone(left);   // don't move unless far enought from zero
         right = enforceDeadZone(right);    // because physical 'dead stick' mayn not be seen as zero
-        arm = enforceDeadZone(arm);
+        armUp = enforceDeadZone(armUp);
 
         leftMotorSpeed = left;
         rightMotorSpeed = right;
-        armMotorSpeed = arm;
+        armMotorSpeed = armUp;
 
     }
 
@@ -142,12 +163,12 @@ public class TeleOp_TT_2 extends OpMode {
         robot.frontLeftMotor.setPower(leftMotorSpeed);
         robot.backRightMotor.setPower(rightMotorSpeed);
         robot.frontRightMotor.setPower(rightMotorSpeed);
-        robot.armMotor.setPower(armMotorSpeed);
+
     }
 
 
     private void handleFeatures() {  // @todo add code to update aux features state
-
+        robot.armMotor.setPower(armMotorSpeed);
 
     }
 
