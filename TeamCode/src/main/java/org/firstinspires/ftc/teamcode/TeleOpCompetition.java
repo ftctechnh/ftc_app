@@ -1,8 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.app.Activity;
+import android.graphics.Color;
+import android.view.View;
+
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
@@ -12,6 +17,12 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 @TeleOp(name = "#11183: TeleOp Competition", group = "Robot")
 
 public class TeleOpCompetition extends OpMode {
+
+/*
+    * The op mode assumes that the color sensor
+    * is configured with a name of "sensor_color".
+*/
+    ColorSensor colorSensor;    // Hardware Device Object
 
 /*
     ---------------------------------------------------------------------------------------------
@@ -26,7 +37,11 @@ public class TeleOpCompetition extends OpMode {
     DcMotor ballShooterMotor;
 /*
  ----------------------------------------------------------------------------------------------
+Declare global variables here
+*/
 
+
+/*---------------------------------------------------------------------------------------------
         Get references to the hardware installed on the robot and name them here
 */
     @Override
@@ -35,12 +50,13 @@ public class TeleOpCompetition extends OpMode {
         leftWheelMotorBack = hardwareMap.dcMotor.get("leftWheelMotorBack");
         rightWheelMotorFront = hardwareMap.dcMotor.get("rightWheelMotorFront");
         rightWheelMotorBack = hardwareMap.dcMotor.get("rightWheelMotorBack");
+            /* lets reverse the direction of the right wheel motor*/
+            rightWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
+            rightWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
         ballCollectorMotor = hardwareMap.dcMotor.get("ballCollectorMotor");
         ballShooterMotor = hardwareMap.dcMotor.get("ballShooterMotor");
-
-        /* lets reverse the direction of the right wheel motor*/
-        rightWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
-        rightWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
+        /* get a reference to our ColorSensor object */
+        colorSensor = hardwareMap.colorSensor.get("sensor_color");
     }
 /*
 ---------------------------------------------------------------------------------------------
@@ -134,6 +150,41 @@ public class TeleOpCompetition extends OpMode {
         */
 
     }
+
+/*---------------------------------------------------------------------------------------------
+*/
+    /* Read the color sensor and return "b" for Blue or "r" for Red */
+    public char ReadColorSensor(){
+
+    char redOrBlue = 'b';
+
+    /* Variables used to store value of the color sensor*/
+    /* hsvValues is an array that will hold the hue, saturation, and value information */
+    float hsvValues[] = {0F,0F,0F};
+
+    /* bLedOn represents the state of the LED.*/
+    boolean bLedOn = true;
+
+    /* Set the LED in the beginning*/
+    colorSensor.enableLed(bLedOn);
+
+    /* convert the RGB values to HSV values*/
+    Color.RGBToHSV(colorSensor.red() * 8, colorSensor.green() * 8, colorSensor.blue() * 8, hsvValues);
+
+    /* send the info back to driver station using telemetry function.*/
+    telemetry.addData("LED", bLedOn ? "On" : "Off");
+    telemetry.addData("Clear", colorSensor.alpha());
+    telemetry.addData("Red  ", colorSensor.red());
+    telemetry.addData("Green", colorSensor.green());
+    telemetry.addData("Blue ", colorSensor.blue());
+    telemetry.addData("Hue", hsvValues[0]);
+    telemetry.update();
+    bLedOn = !bLedOn;
+    colorSensor.enableLed(bLedOn);
+    return redOrBlue;
+    }
+
+
 /*
 ---------------------------------------------------------------------------------------------
 
