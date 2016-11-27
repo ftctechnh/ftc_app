@@ -38,6 +38,8 @@ public class HardwarePushbot_TT
     */
 
     // Defining our motors in here - Varun
+    public Servo leftServo = null;
+    public Servo rightServo = null;
     public DcMotor backRightMotor = null;
     public DcMotor backLeftMotor = null;
     public DcMotor frontRightMotor = null;
@@ -80,17 +82,20 @@ public class HardwarePushbot_TT
         gyro = (ModernRoboticsI2cGyro)hwMap.gyroSensor.get("GyroSensor");
         cdim = hwMap.deviceInterfaceModule.get("Device Interface Module 1");
         armMotor    = hwMap.dcMotor.get("ArmMotor");
-//        flyRight = hwMap.dcMotor.get("FlyLeft");
-//        flyRight = hwMap.dcMotor.get("FlyLeft");
+        flyRight = hwMap.dcMotor.get("FlyLeft");
+        flyRight = hwMap.dcMotor.get("FlyLeft");
+        leftServo = hwMap.servo.get("LeftServo") ;
+        rightServo = hwMap.servo.get("RightServo") ;
 
         frontLeftMotor.setDirection(DcMotor.Direction.REVERSE); // Set to FORWARD if using AndyMark motors
         backLeftMotor.setDirection(DcMotor.Direction.REVERSE); // Set to FORWARD if using AndyMark motors
         frontRightMotor.setDirection(DcMotor.Direction.FORWARD);// Set to REVERSE if using AndyMark motors
         backRightMotor.setDirection(DcMotor.Direction.FORWARD);// Set to REVERSE if using AndyMark motors
         armMotor.setDirection(DcMotor.Direction.FORWARD);
-//        flyLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-//        flyRight.setDirection(DcMotorSimple.Direction.REVERSE);
-
+        flyLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        flyRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftServo.setDirection(Servo.Direction.REVERSE);
+        rightServo.setDirection(Servo.Direction.FORWARD);
 
         // Set all motors to zero power
         frontLeftMotor.setPower(0);
@@ -98,8 +103,8 @@ public class HardwarePushbot_TT
         frontRightMotor.setPower(0);
         backRightMotor.setPower(0);
         armMotor.setPower(0);
-//        flyLeft.setPower(0);
-//        flyRight.setPower(0);
+        flyLeft.setPower(0);
+        flyRight.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -108,8 +113,8 @@ public class HardwarePushbot_TT
         frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//        flyLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//        flyRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        flyLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        flyRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // Define and initialize ALL installed servos.
         /*leftClaw = hwMap.servo.get("left_hand");
         rightClaw = hwMap.servo.get("right_hand");
