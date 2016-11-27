@@ -93,11 +93,6 @@ public class CalculateMotorNavigation {
         // Calculate needed change in angle:
         double rotationAmount = angleDifference(translationAngle, robotAngle);
 
-        // Add debug values to data object:
-        calculationData.translationDistance = translationDistance;
-        calculationData.translationAngle = translationAngle;
-        calculationData.rotationAmount = rotationAmount;
-
         // Default motor values:
         calculationData.leftMotorPower = 0;
         calculationData.rightMotorPower = 0;
@@ -181,6 +176,11 @@ public class CalculateMotorNavigation {
             calculationData.leftMotorPower = leftPower;
             calculationData.rightMotorPower = -1 * rightPower;
         }
+
+        // Add debug values to data object:
+        calculationData.translationDistance = translationDistance;
+        calculationData.translationAngle = translationAngle;
+        calculationData.rotationAmount = rotationAmount;
 
         return calculationData;
     }
