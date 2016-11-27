@@ -115,6 +115,8 @@ public class CalculateMotorNavigation {
             double rightPower;
             double forwardPower;
             double rotationPower;
+            double forwardGain = DEFAULT_FORWARD_GAIN;
+            double rotationGain = DEFAULT_ROTATION_GAIN;
 
 
             // POWER VALUE CALCULATION:
@@ -132,8 +134,6 @@ public class CalculateMotorNavigation {
 
             // GAIN CALCULATION:
             //      Special GAIN calculation:
-            double forwardGain = DEFAULT_FORWARD_GAIN;
-            double rotationGain = DEFAULT_ROTATION_GAIN;
             //          Ignore ROTATION input at certain distance:
             if (translationDistance < ROTATION_IGNORE_DISTANCE) {
                 Log.d(LOG_TAG, "Ignored rotation gain (" + IGNORED_ROTATION_GAIN + ")");
