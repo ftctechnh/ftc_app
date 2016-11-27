@@ -119,6 +119,12 @@ public class CalculateMotorNavigation {
             double rotationGain = DEFAULT_ROTATION_GAIN;
 
 
+            // If rotation is more that PI/2, drive backwards:
+            if (Math.abs(rotationAmount) > Math.PI/2) {
+                forwardGain = -1 * forwardGain;
+                rotationAmount = rotationAmount - (Math.signum(rotationAmount) * Math.PI);
+            }
+
             // POWER VALUE CALCULATION:
             //      Calculate forward power only when within a certain distance of the target:
             if (translationDistance < MAX_SPEED_CALCULATE_DISTANCE) {
