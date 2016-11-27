@@ -59,8 +59,15 @@ public class TeleOp_TT_2 extends OpMode {
     private double          leftMotorSpeed = 0.0;               // remember what was requested based on joystick position
     private double          rightMotorSpeed = 0.0;               // remember what was requested based on joystick position
     private double          armMotorSpeed = 0.0;
+    private double          leftServoPos = 0.0;
+    private double          rightServoPos = 0.0;
+
     private double          minimumDeadZone = 0.05;             // adjust this value to increase or descrease the deadzone
     private double          maxMotorSpeed = 0.95;             // adjust this value to set the maximum motor speed, depends on motor type
+
+    public final static double CLAW_HOME = 0.0;
+    public final static double CLAW_OPEN  = 0.60;
+    public final static double CLAW_HOLD  = 0.30;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -124,6 +131,13 @@ public class TeleOp_TT_2 extends OpMode {
         double right = 0.0;
         double armUp = 0.0;
         double armDown = 0.0;
+        boolean openClawA = false;
+        boolean closeClawB = true;
+        boolean foldClawX = false;
+
+        // ClawState = 0 for Home, 1 for Open, 2 for holding the ball
+        int iPrevStateClaw = 0;
+        int iCurrStateClaw = 0;
 
         boolean bPrevState = false;
         boolean bCurrState = false;
@@ -131,15 +145,17 @@ public class TeleOp_TT_2 extends OpMode {
         left = -gamepad1.left_stick_y;   // (note: The joystick goes negative when pushed forwards, so negate it)
         right = -gamepad1.right_stick_y;
         armUp = -gamepad1.right_trigger;
+        openClawA = gamepad2.a;
+        closeClawB = gamepad2.b;
+        foldClawX = gamepad2.x;
 
         bCurrState = gamepad1.x;
 
         // check for button state transitions.
-        if ((bCurrState == true) && (bCurrState != bPrevState))  {
+        if ((bCurrState == true) && (bCurrState != bPrevState)) {
 
             robot.armMotor.setDirection(DcMotor.Direction.FORWARD);
-        }
-        else {
+        } else {
             robot.armMotor.setDirection(DcMotor.Direction.REVERSE);
         }
 
@@ -149,13 +165,59 @@ public class TeleOp_TT_2 extends OpMode {
         left = enforceDeadZone(left);   // don't move unless far enought from zero
         right = enforceDeadZone(right);    // because physical 'dead stick' mayn not be seen as zero
         armUp = enforceDeadZone(armUp);
+//        leftServo = enforceDeadZone(leftServo);
+//        rightServo = enforceDeadZone(rightServo);
 
         leftMotorSpeed = left;
         rightMotorSpeed = right;
         armMotorSpeed = armUp;
 
-    }
 
+        if (openClawA == true) {
+//            iPrevStateClaw = iCurrStateClaw ;
+            iCurrStateClaw = 1;
+            openClawA = false;
+            closeClawB = false;
+            foldClawX = false;
+            robot.leftServo.setPosition(CLAW_OPEN);
+            robot.rightServo.setPosition(-CLAW_OPEN);
+        } else if (closeClawB == true) {
+//            iPrevStateClaw = iCurrStateClaw ;
+            iCurrStateClaw = 2;
+            openClawA = false;
+            closeClawB = false;
+            foldClawX = false;
+            robot.leftServo.setPosition(CLAW_HOLD);
+            robot.rightServo.setPosition(-CLAW_HOLD);
+        } else if (foldClawX == true) {
+//            iPrevStateClaw = iCurrStateClaw ;
+            iCurrStateClaw = 0;
+            openClawA = false;
+            closeClawB = false;
+            foldClawX = false;
+            robot.leftServo.setPosition(CLAW_HOME);
+            robot.rightServo.setPosition(-CLAW_HOME);
+        }
+
+
+//        if (iCurrStateClaw == 0) {
+//            robot.leftServo.setPosition(CLAW_HOME);
+//            robot.rightServo.setPosition(-CLAW_HOME);
+//        } else if (iCurrStateClaw == 1){
+//            robot.leftServo.setPosition(CLAW_OPEN);
+//            robot.rightServo.setPosition(-CLAW_OPEN);
+//        } else if (iCurrStateClaw == 2){
+//            robot.leftServo.setPosition(CLAW_HOLD);
+//            robot.rightServo.setPosition(-CLAW_HOLD);
+//        }
+
+        telemetry.addData("Left Servo", robot.leftServo.getPosition()) ;
+        telemetry.addData("Right Servo", robot.rightServo.getPosition()) ;
+        telemetry.addData("x State", gamepad2.x);
+        telemetry.addData("a State", gamepad2.a) ;
+        telemetry.addData("b State", gamepad2.b) ;
+        telemetry.addData("Curr State", iCurrStateClaw);
+    }
 
     private void handleDrivetrain() { // @todo add code to update drivetrain state
 

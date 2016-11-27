@@ -30,12 +30,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class HardwarePushbot_TT
 {
     /* Public OpMode members. */
-    /*public DcMotor  leftMotor   = null;
-    public DcMotor  rightMotor  = null;
-    public DcMotor  armMotor    = null;
-    public Servo    leftClaw    = null;
-    public Servo    rightClaw   = null;
-    */
 
     // Defining our motors in here - Varun
     public Servo leftServo = null;
@@ -52,10 +46,6 @@ public class HardwarePushbot_TT
     public DeviceInterfaceModule cdim;
     public DcMotor flyRight = null;
     public DcMotor flyLeft = null;
-    /* public static final double MID_SERVO       =  0.5 ;
-    public static final double ARM_UP_POWER    =  0.45 ;
-    public static final double ARM_DOWN_POWER  = -0.45 ;
-    */
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -82,8 +72,8 @@ public class HardwarePushbot_TT
         gyro = (ModernRoboticsI2cGyro)hwMap.gyroSensor.get("GyroSensor");
         cdim = hwMap.deviceInterfaceModule.get("Device Interface Module 1");
         armMotor    = hwMap.dcMotor.get("ArmMotor");
-        flyRight = hwMap.dcMotor.get("FlyLeft");
-        flyRight = hwMap.dcMotor.get("FlyLeft");
+        flyRight = hwMap.dcMotor.get("FlyRight");
+        flyLeft = hwMap.dcMotor.get("FlyLeft");
         leftServo = hwMap.servo.get("LeftServo") ;
         rightServo = hwMap.servo.get("RightServo") ;
 
@@ -92,10 +82,10 @@ public class HardwarePushbot_TT
         frontRightMotor.setDirection(DcMotor.Direction.FORWARD);// Set to REVERSE if using AndyMark motors
         backRightMotor.setDirection(DcMotor.Direction.FORWARD);// Set to REVERSE if using AndyMark motors
         armMotor.setDirection(DcMotor.Direction.FORWARD);
-        flyLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        flyRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        leftServo.setDirection(Servo.Direction.REVERSE);
-        rightServo.setDirection(Servo.Direction.FORWARD);
+        flyLeft.setDirection(DcMotor.Direction.REVERSE);
+        flyRight.setDirection(DcMotor.Direction.FORWARD);
+//        leftServo.setDirection(Servo.Direction.REVERSE);
+//        rightServo.setDirection(Servo.Direction.FORWARD);
 
         // Set all motors to zero power
         frontLeftMotor.setPower(0);
@@ -115,12 +105,12 @@ public class HardwarePushbot_TT
         armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         flyLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         flyRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        // Define and initialize ALL installed servos.
-        /*leftClaw = hwMap.servo.get("left_hand");
-        rightClaw = hwMap.servo.get("right_hand");
-        leftClaw.setPosition(MID_SERVO);
-        rightClaw.setPosition(MID_SERVO);
-        */
+
+        leftServo.setPosition(Servo.MIN_POSITION);
+        rightServo.setPosition(Servo.MIN_POSITION);
+//        leftClaw.setPosition(MID_SERVO);
+//        rightClaw.setPosition(MID_SERVO);
+
 
     }
 
