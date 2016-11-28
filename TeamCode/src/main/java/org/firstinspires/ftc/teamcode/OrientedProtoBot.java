@@ -79,17 +79,19 @@ public class OrientedProtoBot extends OpMode {
                 motorDown.setPower(gamepad1.right_trigger);
                 motorRight.setPower(gamepad1.right_trigger);
             }
-        }else{ // Sets Motor powers based on heading.
-          motorUp.setPower(((Math.abs(gamepad1.left_stick_y)+Math.abs(gamepad1.left_stick_x)/2))*Math.sin((heading*Math.PI)/180 - (Math.PI-Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y))));
-          motorDown.setPower(((Math.abs(gamepad1.left_stick_y)+Math.abs(gamepad1.left_stick_x)/2))*Math.sin((heading*Math.PI)/180 - (Math.PI-Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y))));
-          motorLeft.setPower(-((Math.abs(gamepad1.left_stick_y)+Math.abs(gamepad1.left_stick_x)/2))*Math.cos((heading*Math.PI)/180 - (Math.PI-Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y))));
-          motorRight.setPower(-((Math.abs(gamepad1.left_stick_y)+Math.abs(gamepad1.left_stick_x)/2))*Math.cos((heading*Math.PI)/180 - (Math.PI-Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y))));
+        }else { // Sets robot movement vector independent of robot heading.
+            // Power coefficient
+            double P = ((Math.abs(gamepad1.left_stick_y) + Math.abs(gamepad1.left_stick_x) / 2));
+            // Robot heading
+            double H = (heading * Math.PI) / 180;
+            // heading of sticks
+            double Ht = (Math.PI + Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y));
+
+            motorUp.setPower(P * Math.sin(H - Ht));
+            motorDown.setPower(P * Math.sin(H - Ht));
+            motorLeft.setPower(-P * Math.cos(H - Ht));
+            motorRight.setPower(-P * Math.cos(H - Ht));
         }
-          telemetry.addData("Mx",((Math.abs(gamepad1.left_stick_y+gamepad1.left_stick_x)/2))*Math.sin((heading*Math.PI)/180 - (Math.PI+Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y))));
-          telemetry.addData("My",((Math.abs(gamepad1.left_stick_y+gamepad1.left_stick_x)/2))*Math.sin((heading*Math.PI)/180 - (2*Math.PI+Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y))));
-          telemetry.addData("R",(gamepad1.left_stick_y+gamepad1.left_stick_x)/2);
-          telemetry.addData("H",(heading*Math.PI)/180);
-          telemetry.addData("H'",(2*Math.PI+Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y))%(2*Math.PI));
         // Activates shooters
         if(gamepad1.b){
             motorRightShooter.setPower(1);
