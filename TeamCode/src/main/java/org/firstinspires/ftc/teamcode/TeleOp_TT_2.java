@@ -180,7 +180,8 @@ public class TeleOp_TT_2 extends OpMode {
             closeClawB = false;
             foldClawX = false;
             robot.leftServo.setPosition(CLAW_OPEN);
-            robot.rightServo.setPosition(-CLAW_OPEN);
+            robot.rightServo.setPosition(CLAW_OPEN);
+
         } else if (closeClawB == true) {
 //            iPrevStateClaw = iCurrStateClaw ;
             iCurrStateClaw = 2;
