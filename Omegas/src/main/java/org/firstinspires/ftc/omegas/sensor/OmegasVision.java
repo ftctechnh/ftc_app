@@ -26,12 +26,7 @@ public class OmegasVision extends LinearVisionOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    HardwareOmegas Ω = new HardwareOmegas() {
-        @Override
-        public void init() {
-
-        }
-    };
+    HardwareOmegas Ω = null;
 
     // IPS Units
     static final double FORWARD_SPEED = 0.6;
@@ -49,6 +44,13 @@ public class OmegasVision extends LinearVisionOpMode {
         waitForStart();
         waitForVisionStart();
         runtime.reset();
+
+        Ω = new HardwareOmegas() {
+            @Override
+            public void init() {
+
+            }
+        };
 
         try {
             Looper.prepare();

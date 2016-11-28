@@ -15,18 +15,20 @@ public class OmegasLightSensor extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    HardwareOmegas Ω = new HardwareOmegas() {
-        @Override
-        public void init() {
-            initLightSensor(hardwareMap);
-        }
-    };
+    HardwareOmegas Ω = null;
 
     @Override
     public void runOpMode() {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
+
+        Ω = new HardwareOmegas() {
+            @Override
+            public void init() {
+                initLightSensor(hardwareMap);
+            }
+        };
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {

@@ -88,12 +88,7 @@ import java.util.List;
 public class OmegasVuforia extends LinearOpMode {
 
     public static final String TAG = "Vuforia Sample";
-    HardwareOmegas Ω = new HardwareOmegas() {
-        @Override
-        public void init() {
-            initAppContext(hardwareMap);
-        }
-    };   // Use our robot's hardware
+    HardwareOmegas Ω = null;
 
     // IPS Units
     static final double FORWARD_SPEED = 0.6;
@@ -136,6 +131,13 @@ public class OmegasVuforia extends LinearOpMode {
         parameters.vuforiaLicenseKey = Ω.getAppContext().getString(R.string.vuforiaLicense);
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+
+        Ω = new HardwareOmegas() {
+            @Override
+            public void init() {
+                initAppContext(hardwareMap);
+            }
+        };   // Use our robot's hardware
 
         /**
          * Load the data sets that for the trackable objects we wish to track. These particular data

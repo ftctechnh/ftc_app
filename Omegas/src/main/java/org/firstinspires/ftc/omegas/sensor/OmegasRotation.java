@@ -15,18 +15,20 @@ public class OmegasRotation extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    HardwareOmegas Ω = new HardwareOmegas() {
-        @Override
-        public void init() {
-            initDriveMotors(hardwareMap);
-        }
-    };
+    HardwareOmegas Ω = null;
 
     @Override
     public void runOpMode() {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
+
+        Ω = new HardwareOmegas() {
+            @Override
+            public void init() {
+                initDriveMotors(hardwareMap);
+            }
+        };
 
         // Rotate for a clean thirty seconds.
         Ω.rotate(30000 - runtime.milliseconds());

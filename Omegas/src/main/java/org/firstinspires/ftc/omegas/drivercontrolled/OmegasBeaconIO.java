@@ -51,13 +51,7 @@ public class OmegasBeaconIO extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    HardwareOmegas Ω = new HardwareOmegas() {
-        @Override
-        public void init() {
-            initDriveMotors(hardwareMap);
-            initBeaconators(hardwareMap);
-        }
-    };
+    HardwareOmegas Ω = null;
 
     // IPS Units
     static final double FORWARD_SPEED = 0.6;
@@ -71,6 +65,14 @@ public class OmegasBeaconIO extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
+
+        Ω = new HardwareOmegas() {
+            @Override
+            public void init() {
+                initDriveMotors(hardwareMap);
+                initBeaconators(hardwareMap);
+            }
+        };
 
         /**
          * The following should, if uncommented, extend and retract

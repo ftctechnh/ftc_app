@@ -16,12 +16,7 @@ public class OmegasRanger extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    HardwareOmegas Ω = new HardwareOmegas() {
-        @Override
-        public void init() {
-            initDriveMotors(hardwareMap);
-        }
-    };
+    HardwareOmegas Ω = null;
 
     // IPS Units
     static final double FORWARD_SPEED = 0.6;
@@ -35,6 +30,13 @@ public class OmegasRanger extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
+
+        Ω = new HardwareOmegas() {
+            @Override
+            public void init() {
+                initDriveMotors(hardwareMap);
+            }
+        };
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
