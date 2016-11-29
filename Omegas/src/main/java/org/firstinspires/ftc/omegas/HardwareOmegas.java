@@ -42,7 +42,7 @@ public abstract class HardwareOmegas {
     private ArrayList<DcMotor> motors;
     private Context appContext;
 
-    private static final double MS_PER_RADIAN = 159.15;
+    private static final double MS_PER_RADIAN = 509.295;
     private static boolean isExtending = false;
 
     /* local OpMode members. */
@@ -130,30 +130,32 @@ public abstract class HardwareOmegas {
      * rotate implements a robot rotation using on-robot motors.
      *
      * @param radians Angle moved in radians.
+     * @param right   Whether rotating right or left.
      */
-    public void rotate(double radians) {
+    public void rotate(double radians, boolean right) {
         ElapsedTime timePushed = new ElapsedTime();
+        double multiplier = right ? 1 : -1;
 
         while (timePushed.milliseconds() < radians * MS_PER_RADIAN) {
-            getLeftBackMotor().setPower(1.0);
-            getLeftFrontMotor().setPower(1.0);
-            getRightBackMotor().setPower(-1.0);
-            getRightFrontMotor().setPower(-1.0);
+            getLeftBackMotor().setPower(0.5 * multiplier);
+            getLeftFrontMotor().setPower(0.5 * multiplier);
+            getRightBackMotor().setPower(-0.5 * multiplier);
+            getRightFrontMotor().setPower(-0.5 * multiplier);
         }
     }
 
     /**
      * Drive forward for given amount of time
-     * @param duration
+     *
+     * @param duration Time moved in milliseconds.
      */
     public void driveForward(double duration) {
         ElapsedTime timePushed = new ElapsedTime();
 
         while (timePushed.milliseconds() < duration) {
-            getLeftBackMotor().setPower(0.5);
-            getLeftFrontMotor().setPower(0.5);
-            getRightBackMotor().setPower(0.5);
-            getRightFrontMotor().setPower(0.5);
+            for (DcMotor motor : getMotors()) {
+                motor.setPower(0.5);
+            }
         }
         stopDriving();
     }
@@ -161,41 +163,10 @@ public abstract class HardwareOmegas {
     /**
      * Stop all four drive motors
      */
-    public void stopDriving() {
-        getLeftBackMotor().setPower(0.0);
-        getLeftFrontMotor().setPower(0.0);
-        getRightBackMotor().setPower(0.0);
-        getRightFrontMotor().setPower(0.0);
-    }
-
-    /**
-     * Rotate the robot 90 degress clockwise (right)
-     */
-    public void rotate90DegRight()
-    {
-        ElapsedTime timePushed = new ElapsedTime();
-        while (timePushed.milliseconds() < 800.0) {
-            getLeftBackMotor().setPower(0.5);
-            getLeftFrontMotor().setPower(0.5);
-            getRightBackMotor().setPower(-0.5);
-            getRightFrontMotor().setPower(-0.5);
+    private void stopDriving() {
+        for (DcMotor motor : getMotors()) {
+            motor.setPower(0.0);
         }
-        stopDriving();
-    }
-
-    /**
-     * Rotate the robot 90 degress conter-clockwise (left)
-     */
-    public void rotate90DegLeft()
-    {
-        ElapsedTime timePushed = new ElapsedTime();
-        while (timePushed.milliseconds() < 800.0) {
-            getLeftBackMotor().setPower(-0.5);
-            getLeftFrontMotor().setPower(-0.5);
-            getRightBackMotor().setPower(0.5);
-            getRightFrontMotor().setPower(0.5);
-        }
-        stopDriving();
     }
 
     public void rightBeaconatorSequence(Servo beaconator, long milliseconds) {
