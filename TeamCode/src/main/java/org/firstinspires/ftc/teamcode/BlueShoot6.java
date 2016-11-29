@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 /**
  * Created by Sean O on 11/23/2016.
  */
-@Autonomous(name="Blue Ball", group="Blue")
-public class AutoB2 extends AutonomousBase {
+@Autonomous(name="Blue Shoot 6", group="Blue")
+public class BlueShoot6 extends AutonomousBase {
     @Override
     public void gameState() {
         super.gameState();
@@ -43,7 +43,7 @@ public class AutoB2 extends AutonomousBase {
             case 3: // ... and shoots
                  moveState = MoveState.SHOOT_WHEEL;
                  if(getRuntime() - sTime >= 1){
-                     moveState = MoveState.SHOOT_CONVEYER;
+                     moveState = MoveState.SHOOT_CONVEYOR;
                  }
                  if(getRuntime() - sTime >= 3) {
                      moveState = MoveState.SHOOT_STOP;

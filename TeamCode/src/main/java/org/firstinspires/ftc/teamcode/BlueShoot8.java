@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  * Created by Sean O on 11/23/2016.
  */
 @Autonomous(name="Blue Shoot 8", group="Blue")
-public class BlueShoot9 extends AutonomousBase {
+public class BlueShoot8 extends AutonomousBase {
     boolean init;
     @Override
     public void gameState() {
@@ -50,7 +50,7 @@ public class BlueShoot9 extends AutonomousBase {
             case 3: // ... and shoots
                 moveState = MoveState.SHOOT_WHEEL;
                 if (getRuntime() - sTime >= 1) {
-                    moveState = MoveState.SHOOT_CONVEYER;
+                    moveState = MoveState.SHOOT_CONVEYOR;
                 }
                 if (getRuntime() - sTime >= 3) {
                     moveState = MoveState.SHOOT_STOP;

@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 /**
  * Created by Sean Ovens on 10/26/2016.
  */
-@Autonomous(name="Blue 6", group="Blue")
-public class AutoB1 extends AutonomousBase{
+@Autonomous(name="Blue Button 6", group="Blue")
+public class BlueButton6 extends AutonomousBase{
     @Override
     public void gameState() {
         super.gameState();
