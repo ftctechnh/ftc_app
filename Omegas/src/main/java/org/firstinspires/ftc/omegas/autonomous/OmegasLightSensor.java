@@ -10,7 +10,7 @@ import org.firstinspires.ftc.omegas.HardwareOmegas;
  * Created by ethertyper on 10/17/16.
  */
 
-@Autonomous(name = "Omegas: Line Sensor Test", group = "Tests")
+@Autonomous(name = "Omegas: Light Sensor Test", group = "Tests")
 public class OmegasLightSensor extends LinearOpMode {
 
     /* Declare OpMode members. */
