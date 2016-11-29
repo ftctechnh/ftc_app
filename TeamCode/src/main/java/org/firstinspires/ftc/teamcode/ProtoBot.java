@@ -14,42 +14,42 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
 @TeleOp(name="Protobot Tank", group="Protobot")
 public class ProtoBot extends OpMode {
 
-    private DcMotor LT;
-    private DcMotor LB;
-    private DcMotor RT;
-    private DcMotor RB;
-    private DcMotor RS;
-    private DcMotor LS;
-    private DcMotor MC;
-    private Servo C;
-    private Servo BPL;
-    private Servo BPR;
-    private TouchSensor right_touch;
+    private DcMotor motorUp;
+    private DcMotor motorDown;
+    private DcMotor motorLeft;
+    private DcMotor motorRight;
+    private DcMotor motorRightShooter;
+    private DcMotor motorLeftShooter;
+    private DcMotor motorConveyer;
+    private Servo servoCollector;
+    private Servo servoLeftButton;
+    private Servo servoRightButton;
+    private TouchSensor touchRight;
     private GyroSensor gyro;
     private double resetTime;
     private int cDist, lDist, dDist, tDist;
 
     public void init(){
-        LT = hardwareMap.dcMotor.get("front");
-        LB = hardwareMap.dcMotor.get("back");
-        RT = hardwareMap.dcMotor.get("left");
-        RB = hardwareMap.dcMotor.get("right");
+        motorUp = hardwareMap.dcMotor.get("front");
+        motorDown = hardwareMap.dcMotor.get("back");
+        motorLeft = hardwareMap.dcMotor.get("left");
+        motorRight = hardwareMap.dcMotor.get("right");
         
-        RS = hardwareMap.dcMotor.get("r_shoot");
-        LS = hardwareMap.dcMotor.get("l_shoot");
-        MC = hardwareMap.dcMotor.get("conveyor");
+        motorRightShooter = hardwareMap.dcMotor.get("r_shoot");
+        motorLeftShooter = hardwareMap.dcMotor.get("l_shoot");
+        motorConveyer = hardwareMap.dcMotor.get("conveyor");
 
-        C = hardwareMap.servo.get("collector");
-        BPL = hardwareMap.servo.get("l_button");
-        BPR = hardwareMap.servo.get("r_button");
+        servoCollector = hardwareMap.servo.get("collector");
+        servoLeftButton = hardwareMap.servo.get("l_button");
+        servoRightButton = hardwareMap.servo.get("r_button");
         
-        right_touch = hardwareMap.touchSensor.get("right_touch");
+        touchRight = hardwareMap.touchSensor.get("right_touch");
         gyro = hardwareMap.gyroSensor.get("gyro");
         gyro.calibrate();
 
-        LT.setDirection(DcMotor.Direction.REVERSE);
-        RT.setDirection(DcMotor.Direction.REVERSE);
-        RS.setDirection(DcMotor.Direction.REVERSE);
+        motorUp.setDirection(DcMotor.Direction.REVERSE);
+        motorLeft.setDirection(DcMotor.Direction.REVERSE);
+        motorRightShooter.setDirection(DcMotor.Direction.REVERSE);
     }
     public void loop(){
         int theta = gyro.getHeading();
@@ -60,7 +60,7 @@ public class ProtoBot extends OpMode {
         // tDist - total distance traveled since we reset
         // resetTime - time since reset
         lDist = cDist;
-        cDist = RS.getCurrentPosition();
+        cDist = motorRightShooter.getCurrentPosition();
         dDist = cDist - lDist; 
         tDist += dDist;
         // motorspeed = dx/dt * (60 seconds/1 minute) * (1 rotation/1120 encoder degrees) = (rotations/minute)
@@ -69,56 +69,56 @@ public class ProtoBot extends OpMode {
         // Drivetrain controls
         if(gamepad1.left_trigger > .1 || gamepad1.right_trigger > .1){
             if(gamepad1.left_trigger > gamepad1.right_trigger){
-                LT.setPower(gamepad1.left_trigger);
-                RT.setPower(gamepad1.left_trigger);
-                LB.setPower(-gamepad1.left_trigger);
-                RB.setPower(-gamepad1.left_trigger);
+                motorUp.setPower(gamepad1.left_trigger);
+                motorLeft.setPower(gamepad1.left_trigger);
+                motorDown.setPower(-gamepad1.left_trigger);
+                motorRight.setPower(-gamepad1.left_trigger);
             }else{
-                LT.setPower(-gamepad1.right_trigger);
-                RT.setPower(-gamepad1.right_trigger);
-                LB.setPower(gamepad1.right_trigger);
-                RB.setPower(gamepad1.right_trigger);
+                motorUp.setPower(-gamepad1.right_trigger);
+                motorLeft.setPower(-gamepad1.right_trigger);
+                motorDown.setPower(gamepad1.right_trigger);
+                motorRight.setPower(gamepad1.right_trigger);
             }
         }else{
-          LT.setPower(-gamepad1.left_stick_x);
-          LB.setPower(-gamepad1.left_stick_x);
-          RT.setPower(gamepad1.left_stick_y);
-          RB.setPower(gamepad1.left_stick_y);
+          motorUp.setPower(-gamepad1.left_stick_x);
+          motorDown.setPower(-gamepad1.left_stick_x);
+          motorLeft.setPower(gamepad1.left_stick_y);
+          motorRight.setPower(gamepad1.left_stick_y);
         }
         
         // Activates shooters
         if(gamepad1.b){
-            RS.setPower(1);
-            LS.setPower(1);
-            MC.setPower(1);
+            motorRightShooter.setPower(1);
+            motorLeftShooter.setPower(1);
+            motorConveyer.setPower(1);
         }else if(gamepad1.a){
-            RS.setPower(-1);
-            LS.setPower(-1);
-            MC.setPower(-1);
+            motorRightShooter.setPower(-1);
+            motorLeftShooter.setPower(-1);
+            motorConveyer.setPower(-1);
         }else{
-            RS.setPower(0);
-            LS.setPower(0);
-            MC.setPower(0);
+            motorRightShooter.setPower(0);
+            motorLeftShooter.setPower(0);
+            motorConveyer.setPower(0);
         }
 
         // Activates collectors
         if(gamepad1.x){
-            C.setPosition(1);
+            servoCollector.setPosition(1);
         }else if(gamepad1.y){
-            C.setPosition(0);
+            servoCollector.setPosition(0);
         }else{
-            C.setPosition(.5);
+            servoCollector.setPosition(.5);
         }
         
         if(gamepad1.right_bumper){
-            BPL.setPosition(0);
-            BPR.setPosition(0);
+            servoLeftButton.setPosition(0);
+            servoRightButton.setPosition(0);
         }else if(gamepad1.left_bumper){
-            BPL.setPosition(1);
-            BPR.setPosition(1);
+            servoLeftButton.setPosition(1);
+            servoRightButton.setPosition(1);
         }else{
-            BPL.setPosition(.5);
-            BPR.setPosition(.5);
+            servoLeftButton.setPosition(.5);
+            servoRightButton.setPosition(.5);
         }
         
         // Put telemetry here
