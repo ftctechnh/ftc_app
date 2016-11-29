@@ -11,7 +11,7 @@ import org.firstinspires.ftc.omegas.HardwareOmegas;
  */
 
 @Autonomous(name = "Omegas: Line Sensor Test", group = "Tests")
-public class OmegasLineSensor extends LinearOpMode {
+public class OmegasLightSensor extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -26,10 +26,10 @@ public class OmegasLineSensor extends LinearOpMode {
         Ω = new HardwareOmegas() {
             @Override
             public void init() {
-                initLineSensor(hardwareMap);
+                initLightSensor(hardwareMap);
                 initDriveMotors(hardwareMap);
                 initDriveMotors(hardwareMap);
-                getLineSensor().enableLed(true);
+                getLightSensor().enableLed(true);
             }
         };
 
@@ -37,7 +37,7 @@ public class OmegasLineSensor extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            light = Ω.getLineSensor().getLightDetected();
+            light = Ω.getLightSensor().getLightDetected();
             telemetry.addData("Data", "Light amount: " + light);
             telemetry.update();
 
@@ -56,6 +56,6 @@ public class OmegasLineSensor extends LinearOpMode {
             }
         }
 
-        Ω.getLineSensor().enableLed(false);
+        Ω.getLightSensor().enableLed(false);
     }
 }

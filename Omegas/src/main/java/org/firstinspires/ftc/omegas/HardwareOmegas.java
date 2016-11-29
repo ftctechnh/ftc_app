@@ -31,7 +31,7 @@ import java.util.ArrayList;
  */
 public abstract class HardwareOmegas {
     /* Public OpMode members. */
-    private LightSensor lineSensor;
+    private LightSensor lightSensor;
     private DcMotor leftFrontMotor;
     private DcMotor leftBackMotor;
     private DcMotor rightFrontMotor;
@@ -94,9 +94,9 @@ public abstract class HardwareOmegas {
     }
 
     /* Initialize LineSensor interfaces */
-    protected void initLineSensor(HardwareMap hwMap) {
-        lineSensor = hwMap.lightSensor.get("light_sensor");
-        getLineSensor().enableLed(true);
+    protected void initLightSensor(HardwareMap hwMap) {
+        lightSensor = hwMap.lightSensor.get("light_sensor");
+        getLightSensor().enableLed(true);
     }
 
     protected void initAppContext(HardwareMap hwMap) {
@@ -209,8 +209,8 @@ public abstract class HardwareOmegas {
         beaconator.setPosition(Math.abs(pos));
     }
 
-    public LightSensor getLineSensor() {
-        return lineSensor;
+    public LightSensor getLightSensor() {
+        return lightSensor;
     }
 
     public DcMotor getLeftFrontMotor() {
