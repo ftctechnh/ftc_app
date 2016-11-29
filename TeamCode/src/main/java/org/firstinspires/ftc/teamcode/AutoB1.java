@@ -69,7 +69,7 @@ public class AutoB1 extends AutonomousBase{
                 }
                 break;
             case 100:
-                map.setGoal(10.7,map.getRobotY());
+                map.setGoal(10.9,map.getRobotY());
                 heading = (heading + 270) % 360; // We're moving sideways, so we line up oddly
                 moveState = MoveState.LEFT;
                 if(map.distanceToGoal()<=.1){
@@ -80,7 +80,7 @@ public class AutoB1 extends AutonomousBase{
             case 6: //back up and button press A
                 map.setGoal(12,0); // I need the goal far away so moveState keeps going
                 if(touchRight.isPressed()){
-                    if(colorLeft1.blue() > colorLeft2.blue()) {
+                    if(colorLeft1.blue()/colorLeft1.red() < colorLeft2.blue()/colorLeft2.red()) {
                         moveState = MoveState.SERVO_L;
                     }
                     else{
@@ -90,11 +90,11 @@ public class AutoB1 extends AutonomousBase{
                     pTime = getRuntime();
                 }else{
                      if(linedUp()){
-		                 moveState = MoveState.BACKWARD_SLOW;
+		         moveState = MoveState.BACKWARD_SLOW;
                      }else{
                          moveState = MoveState.TURN_TOWARDS_GOAL;
                      }
-		        }
+                }
                 break;
 	        case 7: // moves out from wall
                 if(getRuntime() - pTime > 3){
@@ -129,7 +129,7 @@ public class AutoB1 extends AutonomousBase{
                 }
             break;
             case 101:
-                map.setGoal(11.7,map.getRobotY());
+                map.setGoal(12.4,map.getRobotY());
                 heading = (heading + 270) % 360; // We're moving sideways, so we line up oddly
                 moveState = MoveState.LEFT;
                 if(map.distanceToGoal()<=.1){
@@ -140,7 +140,7 @@ public class AutoB1 extends AutonomousBase{
             case 10: //move back  and button press B
                 map.setGoal(12,0); // I need the goal far away so moveState keeps going
                 if(touchRight.isPressed()){
-                    if(colorLeft1.blue() > colorLeft2.blue()) {
+                    if(colorLeft1.blue()/colorLeft1.red() < colorLeft2.blue()/colorLeft2.red()) {
                         moveState = MoveState.SERVO_L;
                     }
                     else{

@@ -25,7 +25,7 @@ public class BlueShoot9 extends AutonomousBase {
                 }
                 break;
             case 1: //moves to shooter post
-                map.setGoal(7.8, 7.8);
+                map.setGoal(8, 8);
                 if (linedUp()) {
                     moveState = MoveState.FORWARD;
                 } else {
@@ -37,7 +37,7 @@ public class BlueShoot9 extends AutonomousBase {
                 }
                 break;
             case 2: // turns ...
-                map.setGoal(10, 10);
+                map.setGoal(9, 10);
                 if (linedUp()) {
                     moveState = MoveState.STOP;
                     gameState = 3;
@@ -48,7 +48,10 @@ public class BlueShoot9 extends AutonomousBase {
                 }
                 break;
             case 3: // ... and shoots
-                moveState = MoveState.SHOOT;
+                moveState = MoveState.SHOOT_WHEEL;
+                if (getRuntime() - sTime >= 1) {
+                    moveState = MoveState.SHOOT_CONVEYER;
+                }
                 if (getRuntime() - sTime >= 3) {
                     moveState = MoveState.SHOOT_STOP;
                     gameState = 8;
