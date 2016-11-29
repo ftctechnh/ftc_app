@@ -34,100 +34,77 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
-/**
- * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
- * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
- * of the FTC Driver Station. When an selection is made from the menu, the corresponding OpMode
- * class is instantiated on the Robot Controller and executed.
- *
- * This particular OpMode just executes a basic Tank Drive Teleop for a PushBot
- * It includes all the skeletal structure that all linear OpModes contain.
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
 
 @Autonomous(name="AutoOpmode", group="Testing")  // @Autonomous(...) is the other common choice
 //@Disabled
 public class AutoOpmode extends LinearOpMode {
 
-    /* Declare OpMode members. */
-    
-    
-    private ElapsedTime runtime = new ElapsedTime();
-    private ElapsedTime keepPushingtime = new ElapsedTime();
-    DcMotor leftMotor = null;
-    DcMotor rightMotor = null;
-    DcMotor ballMotor = null;
-    Servo servoSlicer, servoPusher;
-    DeviceInterfaceModule dim;                  // Device Object
-    DigitalChannel        touchSensor;           // Device Object
-    //TouchSensor touchSensor;
+    //This is our timer
+    private ElapsedTime timer = new ElapsedTime();
+
+    //The engine which controlls our drive motors
+    DriveEngine engine = null;
+
+    //The touch sensor devices
+    DeviceInterfaceModule dim = null;
+    DigitalChannel touchSensor = null;
+
+    //Flag to indicate we are still moving
     boolean goingForward = true;
-    boolean running = true;
 
-    private double TIME_ONE = 2;
-    private double TIME_TWO = 10;
+    //Time constants
+    private static final double TIME_ONE = 2;
+    private static final double TIME_TWO = 10;
+    private static final double TIME_EXTRA = .2;
 
-    private double TIME_EXTRA = .2;
-
-    private double LOW_POWER = .1;
-    private double MID_POWER = .15;
-    private double HIGH_POWER = .2;
+    //Power constants
+    private static final double LOW_POWER = .1;
+    private static final double MID_POWER = .15;
+    private static final double HIGH_POWER = .2;
 
     @Override
     public void runOpMode() {
-        /* eg: Initialize the hardware variables. Note that the strings used here as parameters
-         * to 'get' must correspond to the names assigned during the robot configuration
-         * step (using the FTC Robot Controller app on the phone).
-         */
-        dim = hardwareMap.get(DeviceInterfaceModule.class, "dim");   //  Use generic form of device mapping
-        touchSensor = hardwareMap.get(DigitalChannel.class, "sensor_touch"); //  Use generic form of device mapping
-        leftMotor  = hardwareMap.dcMotor.get("left_drive");
-        rightMotor = hardwareMap.dcMotor.get("right_drive");
-        leftMotor.setDirection(DcMotor.Direction.REVERSE);
-        rightMotor.setDirection(DcMotor.Direction.FORWARD);
-        leftMotor.setPower(0);
-        rightMotor.setPower(0);
+        engine = new DriveEngine(DriveEngine.engineMode.directMode, hardwareMap, gamepad1);
+        dim = hardwareMap.get(DeviceInterfaceModule.class, "dim");
+        touchSensor = hardwareMap.get(DigitalChannel.class, "sensor_touch");
 
-        // Wait for the game to start (driver presses PLAY)
+        //Wait for the game to start (driver presses PLAY)
         waitForStart();
-        runtime.reset();
+        timer.reset();
 
-        // run until the end of the match (driver presses STOP)
-        while (opModeIsActive() && running) {
-
+        //Run until the end of autonomous
+        while (opModeIsActive())
+        {
+            //Run until we hit something
             while(!touchSensor.getState() && goingForward)
             {
-                if(runtime.seconds()<TIME_ONE) {
-                    leftMotor.setPower(LOW_POWER);
-                    rightMotor.setPower(LOW_POWER);
-                }
-                else if(runtime.seconds() < TIME_TWO){
-                    leftMotor.setPower(MID_POWER);
-                    rightMotor.setPower(MID_POWER);
-                }
-                else{
-                    leftMotor.setPower(HIGH_POWER);
-                    rightMotor.setPower(HIGH_POWER);
-                }
-                telemetry.update();
+                if(timer.seconds()<TIME_ONE)
+                    engine.drive(LOW_POWER);
+                else if(timer.seconds() < TIME_TWO)
+                    engine.drive(MID_POWER);
+                else
+                    engine.drive(HIGH_POWER);
             }
 
-            keepPushingtime.reset();
-            while(keepPushingtime.seconds()<TIME_EXTRA && goingForward)
+            //Reset the timer
+            timer.reset();
+            //Keep moving just a little longer to land on the black square
+            while(timer.seconds()<TIME_EXTRA && goingForward)
             {
-                leftMotor.setPower(HIGH_POWER);
-                rightMotor.setPower(HIGH_POWER);
+                engine.drive(HIGH_POWER);
             }
 
+            //Stop everything
             goingForward = false;
-            leftMotor.setPower(0);
-            rightMotor.setPower(0);
+            engine.stop();
+
+            telemetry.addLine("Stopped");
             telemetry.update();
             idle();     // allow something else to run (aka, release the CPU)
         }
