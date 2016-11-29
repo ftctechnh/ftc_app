@@ -31,7 +31,7 @@ import java.util.ArrayList;
  */
 public class HardwareOmegas {
     /* Public OpMode members. */
-    private LightSensor lineSensor = null;
+    private LightSensor lightSensor = null;
     private DcMotor leftFrontMotor = null;
     private DcMotor leftBackMotor = null;
     private DcMotor rightFrontMotor = null;
@@ -93,8 +93,8 @@ public class HardwareOmegas {
 
     /* Initialize LightSensor interfaces */
     public void initLightSensor(HardwareMap hwMap) {
-        lineSensor = hwMap.lightSensor.get("light_sensor");
-        getLineSensor().enableLed(true);
+        lightSensor = hwMap.lightSensor.get("light_sensor");
+        getLightSensor().enableLed(true);
     }
 
     /**
@@ -134,6 +134,62 @@ public class HardwareOmegas {
             getRightBackMotor().setPower(-1.0);
             getRightFrontMotor().setPower(-1.0);
         }
+    }
+
+    /**
+     * Drive forward for given amount of time
+     * @param duration
+     */
+    public void driveForward(double duration) {
+        ElapsedTime timePushed = new ElapsedTime();
+
+        while (timePushed.milliseconds() < duration) {
+            getLeftBackMotor().setPower(0.5);
+            getLeftFrontMotor().setPower(0.5);
+            getRightBackMotor().setPower(0.5);
+            getRightFrontMotor().setPower(0.5);
+        }
+        stopDriving();
+    }
+
+    /**
+     * Stop all four drive motors
+     */
+    public void stopDriving() {
+        getLeftBackMotor().setPower(0.0);
+        getLeftFrontMotor().setPower(0.0);
+        getRightBackMotor().setPower(0.0);
+        getRightFrontMotor().setPower(0.0);
+    }
+
+    /**
+     * Rotate the robot 90 degress clockwise (right)
+     */
+    public void rotate90DegRight()
+    {
+        ElapsedTime timePushed = new ElapsedTime();
+        while (timePushed.milliseconds() < 800.0) {
+            getLeftBackMotor().setPower(0.5);
+            getLeftFrontMotor().setPower(0.5);
+            getRightBackMotor().setPower(-0.5);
+            getRightFrontMotor().setPower(-0.5);
+        }
+        stopDriving();
+    }
+
+    /**
+     * Rotate the robot 90 degress conter-clockwise (left)
+     */
+    public void rotate90DegLeft()
+    {
+        ElapsedTime timePushed = new ElapsedTime();
+        while (timePushed.milliseconds() < 800.0) {
+            getLeftBackMotor().setPower(-0.5);
+            getLeftFrontMotor().setPower(-0.5);
+            getRightBackMotor().setPower(0.5);
+            getRightFrontMotor().setPower(0.5);
+        }
+        stopDriving();
     }
 
     public void rightBeaconatorSequence(Servo beaconator, long milliseconds) {
@@ -176,8 +232,8 @@ public class HardwareOmegas {
         beaconator.setPosition(Math.abs(pos));
     }
 
-    public LightSensor getLineSensor() {
-        return lineSensor;
+    public LightSensor getLightSensor() {
+        return lightSensor;
     }
 
     public DcMotor getLeftFrontMotor() {
@@ -193,16 +249,14 @@ public class HardwareOmegas {
     }
 
     public DcMotor getRightBackMotor() {
-        return rightFrontMotor;
+        return rightBackMotor;
     }
 
     public Servo getLeftBeaconator() {
         return leftBeaconator;
     }
 
-    public Servo getRightBeaconator() {
-        return rightBeaconator;
-    }
+    public Servo getRightBeaconator() { return rightBeaconator; }
 
     public ArrayList<DcMotor> getMotors() {
         return motors;
