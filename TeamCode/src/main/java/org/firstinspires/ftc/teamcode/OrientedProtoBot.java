@@ -85,7 +85,7 @@ public class OrientedProtoBot extends OpMode {
             // Robot heading
             double H = (heading * Math.PI) / 180;
             // heading of sticks
-            double Ht = (Math.PI + Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y));
+            double Ht = (Math.PI - Math.atan2(gamepad1.left_stick_x, gamepad1.left_stick_y));
 
             motorUp.setPower(P * Math.sin(H - Ht));
             motorDown.setPower(P * Math.sin(H - Ht));
