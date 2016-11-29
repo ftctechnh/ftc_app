@@ -99,9 +99,18 @@ public class DriveEngine
 
     private void takeJoyStickSample()
     {
-        //This is where we can put Preston's idea
-        //If the joystick values go negative then reset the list
-        //See function above :)
+        /*
+        //Copied Preston's code here...
+        //Need to review the logic to use absolute power.
+        //What we really need to know is when we change
+        //direction.  The values of the stick go from -1 to 1...
+
+        if(Math.abs(gamepad.right_stick_y) < Math.abs(rightPower))
+            resetJoyStickSamples(gamepad.right_stick_y);
+
+        if(Math.abs(gamepad.left_stick_y) < Math.abs(leftPower))
+            resetJoyStickSamples(gamepad.left_stick_y);
+        */
 
         rightJoyStickValues.remove(0);
         rightJoyStickValues.add(gamepad.right_stick_y);
