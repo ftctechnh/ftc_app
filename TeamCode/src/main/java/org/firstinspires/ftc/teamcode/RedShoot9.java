@@ -7,8 +7,13 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  */
 @Autonomous(name="Red Shoot 9", group="Red")
 public class RedShoot9 extends AutonomousBase {
+    boolean init;
     @Override
     public void gameState() {
+        if(!init){
+            init = true;
+            map.setRobot(9,11.25);
+        }
         super.gameState();
         switch(gameState){
             case 0: //Start

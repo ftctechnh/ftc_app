@@ -5,25 +5,25 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 /**
  * Created by Sean O on 11/23/2016.
  */
-@Autonomous(name="Red Ball", group="Red")
-public class AutoR2 extends AutonomousBase {
+@Autonomous(name="Red Wait 4", group="Red")
+public class RedWait4 extends AutonomousBase {
     boolean init;
     @Override
     public void gameState() {
         if(!init){
             init = true;
-            map.setRobot(6,11.25);
+            map.setRobot(4,11.25);
         }
         super.gameState();
         switch(gameState){
             case 0: //Start
                 if(tDiff == 0){tDiff = getRuntime();}
-                if(getRuntime() > 5 || !gyro.isCalibrating()) {
+                if(getRuntime() > 15 && !gyro.isCalibrating()) {
                     gameState = 1;
                 }
                 break;
             case 1: //moves to shooter post
-                map.setGoal(6, 9);
+                map.setGoal(4, 8);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
                 }else{
@@ -35,7 +35,7 @@ public class AutoR2 extends AutonomousBase {
                 }
                 break;
             case 2: // turns ...
-                map.setGoal(6.7, 10);
+                map.setGoal(2, 10);
                 if(linedUp()){
                     moveState = MoveState.STOP;
                     gameState = 3;
@@ -46,16 +46,27 @@ public class AutoR2 extends AutonomousBase {
                 }
                 break;
             case 3: // ... and shoots
-                 moveState = MoveState.SHOOT_WHEEL;
-                 if(getRuntime() - sTime >= 1){
-                     moveState = MoveState.SHOOT_CONVEYER;
-                 }
-                 if(getRuntime() - sTime >= 3) {
-                     moveState = MoveState.SHOOT_STOP;
-                     gameState = 4;
-                 }
+                moveState = MoveState.SHOOT_WHEEL;
+                if(getRuntime() - sTime >= 1){
+                    moveState = MoveState.SHOOT_CONVEYER;
+                }
+                if(getRuntime() - sTime >= 3) {
+                    moveState = MoveState.SHOOT_STOP;
+                    gameState = 4;
+                }
                 break;
-            case 4: //MOVE TO KNOCK OFF BALL
+            case 4: //MOVE TO LINE UP TO KNOCK OFF BALL
+                map.setGoal(8,10);
+                if(linedUp()){
+                    moveState = MoveState.FORWARD;
+                }else{
+                    moveState = MoveState.TURN_TOWARDS_GOAL;
+                }
+                if(map.distanceToGoal()<=.1){
+                    moveState = MoveState.STOP;
+                    gameState = 5;
+                }
+            case 5: //MOVE TO ACTUALLY KNOCK OFF BALL
                 map.setGoal(5,6);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
@@ -65,10 +76,6 @@ public class AutoR2 extends AutonomousBase {
                 if(map.distanceToGoal()<=.1){
                     moveState = MoveState.STOP;
                 }
-                break;
-            case 777:
-                moveState = MoveState.STOP;
-                break;
-        } 
+        }
     }
 }

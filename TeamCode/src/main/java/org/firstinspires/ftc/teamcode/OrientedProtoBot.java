@@ -92,20 +92,6 @@ public class OrientedProtoBot extends OpMode {
             motorLeft.setPower(-P * Math.cos(H - Ht));
             motorRight.setPower(-P * Math.cos(H - Ht));
         }
-        // Activates shooters
-        if(gamepad1.b){
-            motorRightShooter.setPower(1);
-            motorLeftShooter.setPower(1);
-            motorConveyer.setPower(1);
-        }else if(gamepad1.a){
-            motorRightShooter.setPower(-1);
-            motorLeftShooter.setPower(-1);
-            motorConveyer.setPower(-1);
-        }else{
-            motorRightShooter.setPower(0);
-            motorLeftShooter.setPower(0);
-            motorConveyer.setPower(0);
-        }
 
         // Activates collectors
         if(gamepad1.x){
@@ -115,11 +101,35 @@ public class OrientedProtoBot extends OpMode {
         }else{
             servoCollector.setPosition(.5);
         }
-        
-        if(gamepad1.right_bumper){
+
+        // GAME PAD 2 CODE
+        // Activates shooters
+        if(gamepad2.right_trigger > .1){
+            motorRightShooter.setPower(1);
+            motorLeftShooter.setPower(1);
+        }else if(gamepad2.left_trigger > .1){
+            motorRightShooter.setPower(-1);
+            motorLeftShooter.setPower(-1);
+        }else{
+            motorRightShooter.setPower(0);
+            motorLeftShooter.setPower(0);
+        }
+
+        // Activates Conveyer
+        if(gamepad2.b){
+            motorConveyer.setPower(-1);
+        }
+        else if(gamepad2.a){
+            motorConveyer.setPower(1);
+        }
+        else{
+            motorConveyer.setPower(0);
+        }
+        // Button press
+        if(gamepad2.right_bumper){
             servoLeftButton.setPosition(0);
             servoRightButton.setPosition(0);
-        }else if(gamepad1.left_bumper){
+        }else if(gamepad2.left_bumper){
             servoLeftButton.setPosition(1);
             servoRightButton.setPosition(1);
         }else{

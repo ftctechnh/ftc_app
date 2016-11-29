@@ -20,7 +20,7 @@ public class BlueWait9 extends AutonomousBase {
                 if (tDiff == 0) {
                     tDiff = getRuntime();
                 }
-                if (getRuntime() > 15 & !gyro.isCalibrating()) {
+                if (getRuntime() > 15 && !gyro.isCalibrating()) {
                     gameState = 1;
                 }
                 break;
