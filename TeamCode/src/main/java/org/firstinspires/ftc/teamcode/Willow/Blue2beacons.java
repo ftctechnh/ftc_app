@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.Willow;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
@@ -15,7 +17,7 @@ public class redbeaconleft extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwarePushbot robot   = new HardwarePushbot();   // Use a Pushbot's hardware
-    private ElapsedTime     runtime = new ElapsedTime();
+    private ElapsedTime runtime = new ElapsedTime();
 
 
     static final double     FORWARD_SPEED = 1.0;
@@ -24,10 +26,10 @@ public class redbeaconleft extends LinearOpMode {
     //the software team does all the work here
         /*
          * Initialize the drive system variables.
-         * The init() method of the hardware class does all the work here
+         * The init() method of the hardware class does all the work here*/
     @Override
     public void runOpMode() throws InterruptedException {
-         */
+
     robot.init(hardwareMap);
 
     // Send telemetry message to signify robot waiting
@@ -38,7 +40,7 @@ public class redbeaconleft extends LinearOpMode {
     */
 
 
-    Blue1beacons();
+    ();
 
     // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
 
@@ -96,12 +98,12 @@ public class redbeaconleft extends LinearOpMode {
     robot.rightMotor.setPower(FORWARD_SPEED);
     runtime.reset();
     while (
-
-    redbeaconleft() && (runtime.seconds() < 0.7)) {
+/*
+            () && (runtime.seconds() < 0.7)) {
         telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
         telemetry.update();
         idle();
-
+*/
     }
 
     // Step 4:  Spin left for 1.3 seconds
@@ -112,7 +114,7 @@ public class redbeaconleft extends LinearOpMode {
     runtime.reset();
     while (
 
-    redbeaconleft() && (runtime.seconds() < 1.3)) {
+   () && (runtime.seconds() < 1.3)) {
         telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
         telemetry.update();
         idle();
@@ -124,7 +126,7 @@ public class redbeaconleft extends LinearOpMode {
     runtime.reset();
     while (
 
-    redbeaconleft() && (runtime.seconds() < 0.6)) {
+    () && (runtime.seconds() < 0.6)) {
         telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
         telemetry.update();
         idle();
@@ -139,7 +141,7 @@ public class redbeaconleft extends LinearOpMode {
     runtime.reset();
     while (
 
-    redbeaconleft() && (runtime.seconds() < 1.0)) {
+    () && (runtime.seconds() < 1.0)) {
         telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
         telemetry.update();
         idle();
@@ -151,7 +153,7 @@ public class redbeaconleft extends LinearOpMode {
     runtime.reset();
     while (
 
-    redbeaconleft() && (runtime.seconds() < 0.2)) {
+    () && (runtime.seconds() < 0.2)) {
         telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
         telemetry.update();
         idle();
@@ -166,8 +168,8 @@ public class redbeaconleft extends LinearOpMode {
 
     telemetry.addData("Path", "Complete");
     telemetry.update();
-    redbeaconright(1000);
-    redbeaconright();
+        Blue1beacons(1000);
+        Blue1beacons();
 }
 }
 

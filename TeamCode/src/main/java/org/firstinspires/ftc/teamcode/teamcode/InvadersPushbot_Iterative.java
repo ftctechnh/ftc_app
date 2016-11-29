@@ -55,7 +55,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Invaders: Pushbot Teleop", group="Pushbot")
+@TeleOp(name="Invaders: Pushbot Teleop2", group="Pushbot")
 //@Disabled
 public class InvadersPushbot_Iterative extends OpMode{
 
