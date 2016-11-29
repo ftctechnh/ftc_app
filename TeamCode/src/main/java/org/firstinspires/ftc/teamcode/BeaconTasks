@@ -442,6 +442,8 @@ public class BeaconTasks extends LinearOpMode {
             //turn motors off after 1 second
             robot.leftMotor.setPower(0);
             robot.rightMotor.setPower(0);
+            
+            encoderDrive(DRIVE_SPEED,  -5,  -5, 5.0);  // S1: foreward 24 Inches with 5 Sec timeout
 
             // end pushBeacon
         }
