@@ -112,7 +112,7 @@ public class CompbotHardware extends BaseHardware {
 
     public int degreesToEncoderTicks(float degrees){
 
-        return (int) (degrees * 21.5f);
+        return (int) (degrees * 24f);
 
     }
 
