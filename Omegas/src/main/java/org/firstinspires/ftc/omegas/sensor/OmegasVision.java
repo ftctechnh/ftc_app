@@ -152,7 +152,7 @@ public class OmegasVision extends LinearVisionOpMode {
                 }
 
                 // Wait for a hardware cycle to allow other processes to run
-                waitOneFullHardwareCycle();
+                Thread.yield();
             }
         } catch (InterruptedException e) {
             telemetry.addData("ERROR", e.toString());
