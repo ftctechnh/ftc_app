@@ -93,8 +93,8 @@ public abstract class HardwareOmegas {
         rightBeaconator = hwMap.servo.get("right_beaconator");
     }
 
-    /* Initialize LightSensor interfaces */
-    protected void initLightSensor(HardwareMap hwMap) {
+    /* Initialize LineSensor interfaces */
+    protected void initLineSensor(HardwareMap hwMap) {
         lineSensor = hwMap.lightSensor.get("light_sensor");
         getLineSensor().enableLed(true);
     }
@@ -140,6 +140,62 @@ public abstract class HardwareOmegas {
             getRightBackMotor().setPower(-1.0);
             getRightFrontMotor().setPower(-1.0);
         }
+    }
+
+    /**
+     * Drive forward for given amount of time
+     * @param duration
+     */
+    public void driveForward(double duration) {
+        ElapsedTime timePushed = new ElapsedTime();
+
+        while (timePushed.milliseconds() < duration) {
+            getLeftBackMotor().setPower(0.5);
+            getLeftFrontMotor().setPower(0.5);
+            getRightBackMotor().setPower(0.5);
+            getRightFrontMotor().setPower(0.5);
+        }
+        stopDriving();
+    }
+
+    /**
+     * Stop all four drive motors
+     */
+    public void stopDriving() {
+        getLeftBackMotor().setPower(0.0);
+        getLeftFrontMotor().setPower(0.0);
+        getRightBackMotor().setPower(0.0);
+        getRightFrontMotor().setPower(0.0);
+    }
+
+    /**
+     * Rotate the robot 90 degress clockwise (right)
+     */
+    public void rotate90DegRight()
+    {
+        ElapsedTime timePushed = new ElapsedTime();
+        while (timePushed.milliseconds() < 800.0) {
+            getLeftBackMotor().setPower(0.5);
+            getLeftFrontMotor().setPower(0.5);
+            getRightBackMotor().setPower(-0.5);
+            getRightFrontMotor().setPower(-0.5);
+        }
+        stopDriving();
+    }
+
+    /**
+     * Rotate the robot 90 degress conter-clockwise (left)
+     */
+    public void rotate90DegLeft()
+    {
+        ElapsedTime timePushed = new ElapsedTime();
+        while (timePushed.milliseconds() < 800.0) {
+            getLeftBackMotor().setPower(-0.5);
+            getLeftFrontMotor().setPower(-0.5);
+            getRightBackMotor().setPower(0.5);
+            getRightFrontMotor().setPower(0.5);
+        }
+        stopDriving();
     }
 
     public void rightBeaconatorSequence(Servo beaconator, long milliseconds) {

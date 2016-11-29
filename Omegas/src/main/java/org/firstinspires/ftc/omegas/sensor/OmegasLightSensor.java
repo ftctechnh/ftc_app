@@ -19,9 +19,16 @@ public class OmegasLightSensor extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        initLightSensor(hardwareMap);
+        initDriveMotors(hardwareMap);
+        initBeaconators(hardwareMap);
+
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        runtime.reset();
+//        runtime.reset();
+
+        Ω.getLightSensor().enableLed(true);
+        double light;
 
         Ω = new HardwareOmegas() {
             @Override
@@ -32,8 +39,20 @@ public class OmegasLightSensor extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            telemetry.addData("Data", "Light amount: " + Ω.getLineSensor().getLightDetected());
+            light = Ω.getLightSensor().getLightDetected();
+            telemetry.addData("Data", "Light amount: " + light);
             telemetry.update();
+            if (light<0.4) {
+                Ω.driveForward(50.0);
+            }
+            else {
+                Ω.driveForward(100.0);
+                Ω.rotate90DegLeft();
+                Ω.driveForward(500.0);
+                Ω.rightBeaconatorSequence(Ω.getRightBeaconator(), 1500);
+                break;
+            }
         }
+        Ω.getLightSensor().enableLed(false);
     }
 }
