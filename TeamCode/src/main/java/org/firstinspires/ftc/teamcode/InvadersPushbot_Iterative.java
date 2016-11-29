@@ -62,7 +62,7 @@ import com.qualcomm.robotcore.util.Range;
 
 //This opmode lets the driver drive with only one stick. This means that we have a lot of buttons to map to other things.
 
-@TeleOp(name="Invaders: Pushbot Teleop", group="Pushbot")
+@TeleOp(name="Bigly", group="Pushbot")
 //@Disabled
 public class InvadersPushbot_Iterative extends OpMode{
 
@@ -89,13 +89,13 @@ public class InvadersPushbot_Iterative extends OpMode{
         limitSwitch = hardwareMap.touchSensor.get("down limit");
         assert (limitSwitch != null);
         // Connect our limit switch TouchSensor object to the Robot
-        limitSwitch = hardwareMap.touchSensor.get("arm limit");
+        //limitSwitch = hardwareMap.touchSensor.get("arm limit");
         TouchSensor limitSwitch;
         // Send telemetry message to signify robot waiting;
         //telemetry.addData("Say", "Uh oh, Matthew's messing with stuff.");
-        updateTelemetry(telemetry);
-        robot.leftClaw.setPosition(0.0);
-        robot.rightClaw.setPosition(0.0);
+         updateTelemetry(telemetry);
+        //robot.leftClaw.setPosition(0.0);
+        //robot.rightClaw.setPosition(0.0);
 
         //assert (limitSwitch != null);
 
@@ -145,8 +145,8 @@ public class InvadersPushbot_Iterative extends OpMode{
 
         // Move both servos to new position.  Assume servos are mirror image of each other.
         clawOffset = Range.clip(clawOffset, -0.5, 0.5);
-        robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);
-        robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset);
+        //robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);
+        //robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset);
 
         // Read our limit switch to see if the arm is too high
         boolean limitTriggered = limitSwitch.isPressed();
@@ -164,6 +164,7 @@ public class InvadersPushbot_Iterative extends OpMode{
         telemetry.addData("left",  "%.2f", left);
         telemetry.addData("right", "%.2f", right);
         telemetry.addData("switch", "%s", limitTriggered ? "Triggered" : "Open");
+        telemetry.addData("Pusher", robot.pusher.getPosition());
         updateTelemetry(telemetry);
 
 
@@ -195,12 +196,12 @@ public class InvadersPushbot_Iterative extends OpMode{
         }
 
         if (gamepad1.start == true){
-            robot.LeftBallLauncher.setPower(1);
-            robot.RightBallLauncher.setPower(1);
+            //robot.LeftBallLauncher.setPower(1);
+            //robot.RightBallLauncher.setPower(1);
         }
         else {
-            robot.LeftBallLauncher.setPower(0);
-            robot.RightBallLauncher.setPower(0);
+            //robot.LeftBallLauncher.setPower(0);
+            //robot.RightBallLauncher.setPower(0);
         }
 
 
