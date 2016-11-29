@@ -31,6 +31,6 @@ public class OmegasRotation extends LinearOpMode {
         };
 
         // Rotate for a clean thirty seconds.
-        Ω.rotate(30000 - runtime.milliseconds());
+        Ω.rotate(30000 - runtime.milliseconds(), true);
     }
 }

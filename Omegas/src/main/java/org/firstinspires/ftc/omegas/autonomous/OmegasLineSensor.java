@@ -44,9 +44,12 @@ public class OmegasLineSensor extends LinearOpMode {
             if (light < 0.4) {
                 Ω.driveForward(50.0);
             } else {
-                Ω.driveForward(100.0);
-                Ω.rotate(Math.PI / 2, false);
-                Ω.driveForward(500.0);
+                try {
+                    Thread.sleep(200);
+                } catch (Exception e) {
+                    System.err.print("You can't even sleep right...");
+                }
+                Ω.rotate(Math.PI * 4 / 9, true);
                 Ω.rightBeaconatorSequence(Ω.getRightBeaconator(), 1500);
 
                 break;
