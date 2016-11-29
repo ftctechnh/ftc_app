@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 /**
  * Created by Sean O on 11/23/2016.
  */
-@Autonomous(name="Red Ball", group="Red")
-public class AutoR2 extends AutonomousBase {
+@Autonomous(name="Red Shoot 4", group="Red")
+public class RedShoot4 extends AutonomousBase {
     @Override
     public void gameState() {
         super.gameState();
@@ -18,7 +18,7 @@ public class AutoR2 extends AutonomousBase {
                 }
                 break;
             case 1: //moves to shooter post
-                map.setGoal(6, 9);
+                map.setGoal(4, 8);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
                 }else{
@@ -30,7 +30,7 @@ public class AutoR2 extends AutonomousBase {
                 }
                 break;
             case 2: // turns ...
-                map.setGoal(6.8, 10);
+                map.setGoal(2, 10);
                 if(linedUp()){
                     moveState = MoveState.STOP;
                     gameState = 3;
@@ -50,7 +50,18 @@ public class AutoR2 extends AutonomousBase {
                      gameState = 4;
                  }
                 break;
-            case 4: //MOVE TO KNOCK OFF BALL
+            case 4: //MOVE TO LINE UP TO KNOCK OFF BALL
+                map.setGoal(8,10);
+                if(linedUp()){
+                    moveState = MoveState.FORWARD;
+                }else{
+                    moveState = MoveState.TURN_TOWARDS_GOAL;
+                }
+                if(map.distanceToGoal()<=.1){
+                    moveState = MoveState.STOP;
+                    gameState = 5;
+                }
+            case 5: //MOVE TO ACTUALLY KNOCK OFF BALL
                 map.setGoal(5,6);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
@@ -60,10 +71,6 @@ public class AutoR2 extends AutonomousBase {
                 if(map.distanceToGoal()<=.1){
                     moveState = MoveState.STOP;
                 }
-                break;
-            case 777:
-                moveState = MoveState.STOP;
-                break;
-        } 
+        }
     }
 }
