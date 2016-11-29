@@ -73,14 +73,33 @@ public class TankDriveShooter extends OpMode{
         if (rightBumperPressed) {
             shooterLeft.setPower(1.0);
             shooterRight.setPower(1.0);
-        }
-        else {
+        } else {
             shooterRight.setPower(rightTrigger * kShootPower);
             shooterLeft.setPower(rightTrigger * kShootPower);
         }
 
+            boolean up = gamepad1.dpad_up;
+            boolean down = gamepad1.dpad_down;
+            if (up){
+                leftBACK.setPower(0.5);
+                leftFRONT.setPower(0.5);
+                rightBACK.setPower(0.5);
+                rightFRONT.setPower(0.5);
+            }
+            if (down){
+                leftBACK.setPower(-0.5);
+                leftFRONT.setPower(-0.5);
+                rightBACK.setPower(-0.5);
+                rightFRONT.setPower(-0.5);
+            }
+            if (!up){
+                if(!down){
+                    leftBACK.setPower(gamepad1.left_stick_y);
+                    leftFRONT.setPower(gamepad1.left_stick_y);
+                    rightBACK.setPower(gamepad1.right_stick_y);
+                    rightFRONT.setPower(gamepad1.right_stick_y);}}
+                }
+            }
 
 
-
-    }
 }
