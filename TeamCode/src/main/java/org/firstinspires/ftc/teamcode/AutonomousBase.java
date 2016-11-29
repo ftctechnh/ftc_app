@@ -33,6 +33,8 @@ public abstract class AutonomousBase extends OpMode {
       public static final int SERVO_M = 10;
       public static final int SHOOT_STOP = 11;
       public static final int FULL_STOP = 12;
+      public static final int SHOOT_CONVEYER = 13;
+      public static final int SHOOT_WHEEL = 14;
     }
 
 
@@ -222,10 +224,17 @@ public abstract class AutonomousBase extends OpMode {
                 motorRightShooter.setPower(0);
                 motorConveyor.setPower(0);
                 break;
-            case MoveState.SHOOT_STOP:
+              case MoveState.SHOOT_STOP:
                 motorLeftShooter.setPower(0);
                 motorRightShooter.setPower(0);
                 motorConveyor.setPower(0);
+                break;
+           case MoveState.SHOOT_WHEEL:
+                motorLeftShooter.setPower(1);
+                motorRightShooter.setPower(1);
+                break;
+           case MoveState.SHOOT_CONVEYER:
+                motorConveyor.setPower(-1);
                 break;
         } 
     }
@@ -270,6 +279,8 @@ public abstract class AutonomousBase extends OpMode {
         telemetry.addData("robot theta",heading);
         telemetry.addData("Am I lined up?", linedUp());
         telemetry.addData("Color Sensor 1 blue", colorLeft1.blue());
+        telemetry.addData("Color Sensor 2 red", colorLeft2.red());
+        telemetry.addData("Color Sensor 1 red", colorLeft1.red());
         telemetry.addData("Color Sensor 2 blue", colorLeft2.blue());
         telemetry.addData("moveState", moveState);
         telemetry.addData("gameState", gameState);
