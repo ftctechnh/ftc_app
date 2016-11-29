@@ -42,7 +42,7 @@ public abstract class HardwareOmegas {
     private ArrayList<DcMotor> motors;
     private Context appContext;
 
-    private static final double MS_PER_RADIAN = 509.295;
+    private static final double MS_PER_RADIAN = 340.0;
     private static boolean isExtending = false;
 
     /* local OpMode members. */
@@ -137,10 +137,10 @@ public abstract class HardwareOmegas {
         double multiplier = right ? 1 : -1;
 
         while (timePushed.milliseconds() < radians * MS_PER_RADIAN) {
-            getLeftBackMotor().setPower(0.5 * multiplier);
-            getLeftFrontMotor().setPower(0.5 * multiplier);
-            getRightBackMotor().setPower(-0.5 * multiplier);
-            getRightFrontMotor().setPower(-0.5 * multiplier);
+            getLeftBackMotor().setPower(0.75 * multiplier);
+            getLeftFrontMotor().setPower(0.75 * multiplier);
+            getRightBackMotor().setPower(-0.75 * multiplier);
+            getRightFrontMotor().setPower(-0.75 * multiplier);
         }
     }
 
