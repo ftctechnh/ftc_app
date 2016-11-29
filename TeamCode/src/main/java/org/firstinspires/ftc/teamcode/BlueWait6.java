@@ -5,15 +5,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 /**
  * Created by Sean O on 11/23/2016.
  */
-@Autonomous(name="Red Wait 9", group="Red")
-public class RedWait9 extends AutonomousBase {
-    boolean init;
+@Autonomous(name="Blue Wait 6", group="Blue")
+public class BlueWait6 extends AutonomousBase {
     @Override
     public void gameState() {
-        if(!init){
-            init = true;
-            map.setRobot(9,11.25);
-        }
         super.gameState();
         switch(gameState){
             case 0: //Start
@@ -23,7 +18,7 @@ public class RedWait9 extends AutonomousBase {
                 }
                 break;
             case 1: //moves to shooter post
-                map.setGoal(7, 8);
+                map.setGoal(5.8, 7.3);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
                 }else{
@@ -35,7 +30,7 @@ public class RedWait9 extends AutonomousBase {
                 }
                 break;
             case 2: // turns ...
-                map.setGoal(9.5, 10);
+                map.setGoal(4, 10);
                 if(linedUp()){
                     moveState = MoveState.STOP;
                     gameState = 3;
@@ -46,17 +41,17 @@ public class RedWait9 extends AutonomousBase {
                 }
                 break;
             case 3: // ... and shoots
-                moveState = MoveState.SHOOT_WHEEL;
-                if(getRuntime() - sTime >= 1){
-                    moveState = MoveState.SHOOT_CONVEYOR;
-                }
-                if(getRuntime() - sTime >= 3) {
-                    moveState = MoveState.SHOOT_STOP;
-                    gameState = 4;
-                }
+                 moveState = MoveState.SHOOT_WHEEL;
+                 if(getRuntime() - sTime >= 1){
+                     moveState = MoveState.SHOOT_CONVEYOR;
+                 }
+                 if(getRuntime() - sTime >= 3) {
+                     moveState = MoveState.SHOOT_STOP;
+                     gameState = 4;
+                 }
                 break;
             case 4: //MOVE TO KNOCK OFF BALL
-                map.setGoal(6,5);
+                map.setGoal(6.5,6.5);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
                 }else{
@@ -65,6 +60,10 @@ public class RedWait9 extends AutonomousBase {
                 if(map.distanceToGoal()<=.1){
                     moveState = MoveState.STOP;
                 }
+                break;
+            case 777:
+                moveState = MoveState.STOP;
+                break;
         }
     }
 }

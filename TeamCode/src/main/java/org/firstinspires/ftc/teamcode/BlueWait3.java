@@ -19,18 +19,12 @@ public class BlueWait3 extends AutonomousBase {
             case 0: //Start
                 if(tDiff == 0){tDiff = getRuntime();}
                 if(getRuntime() > 15 && !gyro.isCalibrating()) {
-                    gameState = 8;
+                    gameState = 1;
                     sTime = getRuntime();
                 }
                 break;
-            case 8:
-                if(getRuntime() - sTime >= .6) {
-                    moveState = MoveState.FORWARD;
-                    gameState = 1;
-                }
-                break;
             case 1: //moves to shooter post
-                map.setGoal(6, 11);
+                map.setGoal(5, 8);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
                 }else{
@@ -42,7 +36,7 @@ public class BlueWait3 extends AutonomousBase {
                 }
                 break;
             case 2: // turns ...
-                map.setGoal(5, 10);
+                map.setGoal(3.8, 9);
                 if(linedUp()){
                     moveState = MoveState.STOP;
                     gameState = 3;
@@ -53,7 +47,10 @@ public class BlueWait3 extends AutonomousBase {
                 }
                 break;
             case 3: // ... and shoots
-                moveState = MoveState.SHOOT;
+                moveState = MoveState.SHOOT_WHEEL;
+                if(getRuntime() - sTime >= 1) {
+                    moveState = MoveState.SHOOT_CONVEYOR;
+                }
                 if(getRuntime() - sTime >= 3) {
                     moveState = MoveState.SHOOT_STOP;
                     gameState = 4;
