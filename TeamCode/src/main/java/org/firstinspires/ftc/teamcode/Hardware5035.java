@@ -1,8 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
 
+import android.hardware.Sensor;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -32,6 +36,7 @@ public class Hardware5035 {
     public DcMotor ballBooster2 = null;
     public DcMotor ballDump = null;
     public Servo popUp = null;
+    public TouchSensor grabbutton;
 
 
 
@@ -56,11 +61,14 @@ public class Hardware5035 {
         rightMotor = hwMap.dcMotor.get("right driveReverse");
         ballDump = hwMap.dcMotor.get("ball dump");
         popUp = hwMap.servo.get("pop up");
-        leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        grabbutton = hwMap.touchSensor.get("grab button");
+        leftMotor.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
+        rightMotor.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         ballBooster1.setDirection(DcMotor.Direction.FORWARD);
         ballBooster2.setDirection(DcMotor.Direction.REVERSE);
         ballDump.setDirection(DcMotor.Direction.FORWARD);
+        ballBooster1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        ballBooster2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
 
 
@@ -70,15 +78,15 @@ public class Hardware5035 {
         ballBooster1.setPower(0);
         ballBooster2.setPower(0);
         ballDump.setPower(0);
-        popUp.setPosition(0.81);
+        popUp.setPosition(1);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //Encoders are not currently hooked up. uncoment these lines when they are.
-        ballBooster1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        ballBooster2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        ballBooster1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        ballBooster2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     /***
@@ -100,6 +108,13 @@ public class Hardware5035 {
 
         // Reset the cycle clock for the next pass.
         period.reset();
+    }
+    public void triggered() {
+        if(null != popUp)              popUp.setPosition(.70);
+    }
+
+    public void detriggered() {
+        if(null != popUp)              popUp.setPosition(1);
     }
 
     public double getPowerForTicksfordrive (int ticksToGo)
