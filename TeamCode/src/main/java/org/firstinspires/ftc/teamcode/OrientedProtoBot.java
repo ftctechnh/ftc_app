@@ -94,9 +94,9 @@ public class OrientedProtoBot extends OpMode {
         }
 
         // Activates collectors
-        if(gamepad1.x){
+        if(gamepad2.x){
             servoCollector.setPosition(1);
-        }else if(gamepad1.y){
+        }else if(gamepad2.y){
             servoCollector.setPosition(0);
         }else{
             servoCollector.setPosition(.5);
