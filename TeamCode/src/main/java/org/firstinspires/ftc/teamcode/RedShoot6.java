@@ -23,7 +23,7 @@ public class RedShoot6 extends AutonomousBase {
                 }
                 break;
             case 1: //moves to shooter post
-                map.setGoal(6, 9);
+                map.setGoal(6.3, 9);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
                 }else{
@@ -35,14 +35,14 @@ public class RedShoot6 extends AutonomousBase {
                 }
                 break;
             case 2: // turns ...
-                map.setGoal(6.7, 10);
-                if(linedUp()){
+                desiredAngle = 150;
+                if(linedUpAngle()){
                     moveState = MoveState.STOP;
                     gameState = 3;
                     sTime = getRuntime();
                     telemetry.addData("sTime", sTime);
                 }else{
-                    moveState = MoveState.TURN_TOWARDS_GOAL;
+                    moveState = MoveState.TURN_TOWARDS_ANGLE;
                 }
                 break;
             case 3: // ... and shoots

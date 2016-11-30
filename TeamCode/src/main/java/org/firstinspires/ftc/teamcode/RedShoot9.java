@@ -56,7 +56,7 @@ public class RedShoot9 extends AutonomousBase {
                  }
                 break;
             case 4: //MOVE TO KNOCK OFF BALL
-                map.setGoal(6,5);
+                map.setGoal(5,7);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
                 }else{
