@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 /**
  * Created by Jeremy Yao on 11/13/2016.
@@ -10,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 @Autonomous(name = "NavigationClassTest", group = "Concept")
 public class NavigationClassTest extends LinearOpMode {
     OmniDriveBot robot = new OmniDriveBot();
-    FieldNavigator navigator = new FieldNavigator(robot);
+    fieldNavigator navigator = new fieldNavigator(robot);
 
     public void runOpMode() throws InterruptedException
     {
