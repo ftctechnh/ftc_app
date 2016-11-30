@@ -35,6 +35,8 @@ public abstract class AutonomousBase extends OpMode {
       public static final int FULL_STOP = 12;
       public static final int SHOOT_CONVEYOR = 13;
       public static final int SHOOT_WHEEL = 14;
+      public static final int STRAFE_TOWARDS_GOAL = 15;
+      public static final int TURN_TOWARDS_ANGLE = 16;
     }
 
 
@@ -62,6 +64,8 @@ public abstract class AutonomousBase extends OpMode {
 
     double power;
     double heading;
+    double desiredAngle;
+    boolean turnRight;
     int cDistF, lDistF, dDistF; //Forward distance variables
     int cDistS, lDistS, dDistS; //Sideways distance variables
     int cDistW, lDistW, dDistW; //Sideways distance variables
@@ -174,16 +178,48 @@ public abstract class AutonomousBase extends OpMode {
                     map.moveRobot(-dDistS * DEGREES_TO_FEET, heading);
                 }
                 break;
-
+            case MoveState.STRAFE_TOWARDS_GOAL:
+                double P = .25;
+                double H = Math.toRadians(heading);
+                double Ht = Math.toRadians(map.angleToGoal());
+ 
+                motorUp.setPower(-P * Math.sin(H - Ht));
+                motorDown.setPower(-P * Math.sin(H - Ht));
+                motorLeft.setPower(P * Math.cos(H - Ht));
+                motorRight.setPower(P * Math.cos(H - Ht));
+                
+                map.moveRobot(-dDistS * DEGREES_TO_FEET, (heading+270%360));
+                map.moveRobot(dDistF * DEGREES_TO_FEET, heading);
+  
+                break;
             case MoveState.TURN_TOWARDS_GOAL:
                 //Case Three is 'turn towards'.
                 power = .25;
-                boolean turnRight;
-
                 if(heading<=180){
                     turnRight = heading <= map.angleToGoal() && heading + 180 >= map.angleToGoal();
                 }else{
                     turnRight = !(heading >= map.angleToGoal() && heading - 180 <= map.angleToGoal());
+                }
+
+                if(turnRight){
+                    motorUp.setPower(power);
+                    motorDown.setPower(-power);
+                    motorLeft.setPower(power);
+                    motorRight.setPower(-power);
+                }else{
+                    motorUp.setPower(-power);
+                    motorDown.setPower(power);
+                    motorLeft.setPower(-power);
+                    motorRight.setPower(power);
+                }
+                break;
+            case MoveState.TURN_TOWARDS_ANGLE:
+                //Case Three is 'turn towards'.
+                power = .25;
+                if(heading<=180){
+                    turnRight = heading <= desiredAngle && heading + 180 >= desiredAngle;
+                }else{
+                    turnRight = !(heading >= desiredAngle && heading - 180 <= desiredAngle);
                 }
 
                 if(turnRight){
@@ -278,6 +314,7 @@ public abstract class AutonomousBase extends OpMode {
         telemetry.addData("Am I lined up?", linedUp());
         telemetry.addData("moveState", moveState);
         telemetry.addData("gameState", gameState);
+        telemetry.addData("tDiff", gameState);
     }
 
     @Override
@@ -286,9 +323,15 @@ public abstract class AutonomousBase extends OpMode {
         moveState();
         telemetry();
     }
-
     public boolean linedUp() {
         if (Math.abs(heading - map.angleToGoal()) < HEADING_TOLERANCE || (heading > 360 - HEADING_TOLERANCE && map.angleToGoal() < HEADING_TOLERANCE || (heading < HEADING_TOLERANCE && map.angleToGoal() > 360 - HEADING_TOLERANCE))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public boolean linedUpAngle() {
+        if (Math.abs(heading - desiredAngle) < HEADING_TOLERANCE || (heading > 360 - HEADING_TOLERANCE && desiredAngle < HEADING_TOLERANCE || (heading < HEADING_TOLERANCE && desiredAngle > 360 - HEADING_TOLERANCE))) {
             return true;
         } else {
             return false;
