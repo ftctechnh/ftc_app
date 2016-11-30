@@ -13,11 +13,17 @@ import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * Created by ftc6347 on 10/16/16.
  */
 public class ZoidbergHardware {
+
+    public static final I2cAddr FRONT_RANGE_SENSOR_I2C_ADDR = I2cAddr.create8bit(0x28);
+    public static final I2cAddr LEFT_RANGE_SENSOR_I2C_ADDR = I2cAddr.create8bit(0x2a);
+
+    public static final int RANGE_SENSOR_REG_START = 0x04;
 
     private DcMotorController driveController1;
     private DcMotorController driveController2;
@@ -49,12 +55,11 @@ public class ZoidbergHardware {
 
     private ModernRoboticsI2cGyro gyroSensor;
 
-    public static final I2cAddr FRONT_RANGE_SENSOR_I2C_ADDR = I2cAddr.create8bit(0x28);
-    public static final I2cAddr LEFT_RANGE_SENSOR_I2C_ADDR = I2cAddr.create8bit(0x2a);
-
-    public static final int RANGE_SENSOR_REG_START = 0x04;
+    private ElapsedTime runtime;
 
     public ZoidbergHardware(HardwareMap hardwareMap) throws InterruptedException {
+
+        runtime = new ElapsedTime();
 
         driveController1 = hardwareMap.dcMotorController.get("mc0");
         driveController2 = hardwareMap.dcMotorController.get("mc1");
@@ -70,7 +75,7 @@ public class ZoidbergHardware {
 
         blue1 = hardwareMap.servo.get("b1");    // Up =.3 Down =1.0
         red2 = hardwareMap.servo.get("r2");     //Up =.7 Down =0.0
-        door3 = hardwareMap.servo.get("d3");   //Closed = 0.5 Open = 0.25
+        door3 = hardwareMap.servo.get("d3");   //Closed = 0.55 Open = 0.25
 
         // initialize positions
         blue1.setPosition(1.0);
@@ -201,6 +206,10 @@ public class ZoidbergHardware {
 
     public ModernRoboticsI2cGyro getGyroSensor() {
         return gyroSensor;
+    }
+
+    public ElapsedTime getRuntime() {
+        return runtime;
     }
 
 }

@@ -70,7 +70,7 @@ public class ZoidbergTeleop extends LinearOpMode {
             robot.getIntakeMotor().setPower(-1.0);
         }
         else if(gamepad2.right_stick_y >= 0.2 || gamepad2.right_stick_y <= -0.2 ){
-            robot.getDoor3().setPosition(0.5);
+            robot.getDoor3().setPosition(0.55);
             robot.getIntakeMotor().setPower(gamepad2.right_stick_y);
         }
         else {
