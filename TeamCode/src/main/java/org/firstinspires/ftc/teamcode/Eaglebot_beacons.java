@@ -118,7 +118,6 @@ public class Eaglebot_beacons extends LinearOpMode {
             telemetry.addData("Light Level", robot.lightSensorFloor.getLightDetected());
             telemetry.update();
         }
-
         robot.forward(APPROACH_SPEED);
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 5)) {
@@ -133,6 +132,7 @@ public class Eaglebot_beacons extends LinearOpMode {
             while (runtime.seconds() < 1) {
                 robot.turn(robot.TURN_SPEED);
             }
+
 
 
         }

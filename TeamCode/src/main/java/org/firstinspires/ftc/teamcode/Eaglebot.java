@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -34,6 +35,8 @@ public class Eaglebot
     public LightSensor lightSensorFloor = null;
     public double FORWARD_SPEED = 0.6;
     public double TURN_SPEED = 0.5;
+    public double threshold = 1.94;
+    public double TOP_SPEED = 1.0;
     // public OpticalDistanceSensor odsSensor = null;
 
 

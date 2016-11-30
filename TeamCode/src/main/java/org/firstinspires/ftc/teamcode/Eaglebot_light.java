@@ -49,7 +49,7 @@ import com.qualcomm.robotcore.hardware.LightSensor;
  */
 @TeleOp(name = "Sensor: LEGO light", group = "Sensor")
 public class Eaglebot_light extends LinearOpMode {
-
+  Eaglebot robot = new Eaglebot();
   LightSensor lightSensorBeacon;  // Hardware Device Object
   LightSensor lightSensorFloor;
 
@@ -101,6 +101,12 @@ public class Eaglebot_light extends LinearOpMode {
       telemetry.addData("Floor Raw", lightSensorFloor.getLightDetected());
 
       telemetry.update();
+      if (lightSensorBeacon.getLightDetected() > robot.threshold) {
+        robot.forward(robot.FORWARD_SPEED);
+      }
+      else {
+        robot.turn(robot.TURN_SPEED);
+      }
     }
   }
 }

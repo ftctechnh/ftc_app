@@ -85,10 +85,10 @@ public class Eaglebot_Teleop extends OpMode{
         double bRight;
 
 
-        fRight = gamepad1.left_stick_y - gamepad1.right_stick_x - gamepad1.left_stick_x;
-        bRight = gamepad1.left_stick_y - gamepad1.right_stick_x + gamepad1.left_stick_x;
-        fLeft = gamepad1.left_stick_y + gamepad1.right_stick_x + gamepad1.left_stick_x;
-        bLeft = gamepad1.left_stick_y + gamepad1.right_stick_x - gamepad1.left_stick_x;
+        fRight = gamepad1.left_stick_y + gamepad1.right_stick_x + gamepad1.left_stick_x;
+        bRight = gamepad1.left_stick_y + gamepad1.right_stick_x - gamepad1.left_stick_x;
+        fLeft = gamepad1.left_stick_y - gamepad1.right_stick_x - gamepad1.left_stick_x;
+        bLeft = gamepad1.left_stick_y - gamepad1.right_stick_x + gamepad1.left_stick_x;
         robot.frontRight.setPower(fRight);
         robot.frontLeft.setPower(fLeft);
         robot.backLeft.setPower(bLeft);
