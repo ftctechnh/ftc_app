@@ -20,11 +20,11 @@ public class TestMode extends OpMode  {
     public void loop() {
         if (gamepad1.x)
         {
-            robot.popUp.setPosition(Math.min(robot.popUp.getPosition() + 0.001, 1));
+            robot.popUp.setPosition(Math.min(robot.popUp.getPosition() + 0.009, 1));
         }
         if (gamepad1.y)
         {
-            robot.popUp.setPosition(Math.max(robot.popUp.getPosition() + -0.001, 0));
+            robot.popUp.setPosition(Math.max(robot.popUp.getPosition() + -0.009, 0));
         }
         telemetry.addData("Position of server", robot.popUp.getPosition());
         telemetry.update();

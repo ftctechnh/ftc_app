@@ -25,13 +25,13 @@ public class AutoDoubleBeacon extends LinearOpMode {
 
         robot.ballBooster1.setPower(1);
         robot.ballBooster2.setPower(1);
-        robot.popUp.setPosition(.25);
+        robot.triggered();
         wait(250);
-        robot.popUp.setPosition(0);
+        robot.detriggered();
         wait(1000);
-        robot.popUp.setPosition(.25);
+        robot.triggered();
         wait(250);
-        robot.popUp.setPosition(0);
+        robot.detriggered();
         wait(250);
         robot.ballBooster1.setPower(0);
         robot.ballBooster2.setPower(0);
