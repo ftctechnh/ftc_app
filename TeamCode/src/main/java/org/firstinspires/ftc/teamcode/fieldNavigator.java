@@ -12,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 /**
  * Created by Peter on 11/6/2016.
  */
-public class fieldNavigator
+public class FieldNavigator
 {
     // Variables to be used for later
     private VuforiaLocalizer vuforiaLocalizer;
@@ -24,7 +24,7 @@ public class fieldNavigator
     private OpenGLMatrix phoneLocation,latestLocation;
     private OmniDriveBot robot;
 
-    public fieldNavigator(OmniDriveBot obj)
+    public FieldNavigator(OmniDriveBot obj)
     {
         robot = obj;
     }
