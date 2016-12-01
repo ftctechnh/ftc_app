@@ -92,7 +92,7 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
 
             // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
             leftY = -gamepad1.left_stick_y;
-            rightY = -gamepad1.right_stick_y;`
+            rightY = -gamepad1.right_stick_y;
             //leftX = Range.clip(leftY, -1, 1);
             rightY = Range.clip(rightY, -1, 1);
             leftY = Range.clip(leftY, -1, 1);
