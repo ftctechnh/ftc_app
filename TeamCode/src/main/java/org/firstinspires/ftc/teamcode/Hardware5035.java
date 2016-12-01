@@ -37,6 +37,7 @@ public class Hardware5035 {
     public DcMotor ballDump = null;
     public Servo popUp = null;
     public TouchSensor grabbutton;
+    public TouchSensor balldumpup;
 
 
 
@@ -62,6 +63,7 @@ public class Hardware5035 {
         ballDump = hwMap.dcMotor.get("ball dump");
         popUp = hwMap.servo.get("pop up");
         grabbutton = hwMap.touchSensor.get("grab button");
+        balldumpup = hwMap.touchSensor.get("ballarmup");
         leftMotor.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         rightMotor.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         ballBooster1.setDirection(DcMotor.Direction.FORWARD);

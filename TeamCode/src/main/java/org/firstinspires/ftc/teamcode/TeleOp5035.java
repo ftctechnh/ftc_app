@@ -1,14 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.robot.Robot;
-import com.qualcomm.robotcore.util.Range;
-
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 /**
  * This file provides basic Telop driving for a Pushbot robot.
@@ -32,8 +26,11 @@ public class TeleOp5035 extends OpMode {
 
     boolean BallBoosterPoweringUp = false;
     boolean touchPressedLastLoop = false;
+    boolean GuidePressedLastFrame = false;
     boolean Reverse = false;
+    int PosNum = 0;
     int counter = 0;
+    //int DesiredPickupAction = 0;
     @Override
     public void init() {
         robot.init(hardwareMap);
@@ -43,23 +40,17 @@ public class TeleOp5035 extends OpMode {
     public void loop() {
 
         //tank driveReverse add
-        if(gamepad1.guide && Reverse == false && counter > 500) {
-            Reverse = true;
-            counter = 0;
+        if(gamepad1.guide && !GuidePressedLastFrame) {
+            Reverse = !Reverse;
         }
-        if(gamepad1.guide && Reverse == true && counter > 500) {
-            Reverse = false;
-            counter = 0;
-        }
-        counter++;
-        
-        if(Reverse == false)
+
+        if(Reverse)
         {
-        if (null != robot.leftMotor) robot.leftMotor.setPower(gamepad1.left_stick_y);
-        if (null != robot.rightMotor) robot.rightMotor.setPower(gamepad1.right_stick_y);
-        } else if (Reverse) {
-            if (null != robot.leftMotor) robot.leftMotor.setPower(-gamepad1.right_stick_y);
-            if (null != robot.rightMotor) robot.rightMotor.setPower(-gamepad1.left_stick_y);
+            if (null != robot.leftMotor) robot.leftMotor.setPower(gamepad1.right_stick_y);
+            if (null != robot.rightMotor) robot.rightMotor.setPower(gamepad1.left_stick_y);
+        } else {
+            if (null != robot.leftMotor) robot.leftMotor.setPower(-gamepad1.left_stick_y);
+            if (null != robot.rightMotor) robot.rightMotor.setPower(-gamepad1.right_stick_y);
         }
 
         ballFiringLoop();
@@ -93,22 +84,79 @@ public class TeleOp5035 extends OpMode {
             robot.detriggered();
         }
     }
-    public void ballPickupLoop(){
-        if(gamepad1.right_trigger > .10)
+    //pos bot 0 mid 150 top 325
+    public void ballPickupLoop() {
+        /*
+        if (!robot.grabbutton.isPressed())
         {
-            if(null !=robot.ballDump)          robot.ballDump.setPower((gamepad1.right_trigger / 2));//Range.scale(gamepad1.left_trigger, .1, 1.0, 0.1, 0.5));
-        }
-        else if (gamepad1.left_trigger > .10)
-        {
-            if(null !=robot.ballDump)           robot.ballDump.setPower(-(gamepad1.left_trigger / 2));//-Range.scale(gamepad1.right_trigger, .1, 1.0, 0.1, 0.5));
+            if(gamepad1.dpad_down){
+                DesiredPickupAction = 1;
+                robot.ballDump.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                //
+            }
         }
         else
         {
-            if(null !=robot.ballDump)          robot.ballDump.setPower(0);
+
+            if (touchPressedLastLoop == false){
+                DesiredPickupAction = 0;
+                robot.ballDump.setPower(0);
+                robot.ballDump.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            }
         }
-        if(robot.grabbutton.isPressed() && touchPressedLastLoop == false){
-            robot.ballDump.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        if(gamepad1.dpad_right){
+            DesiredPickupAction = 3;
+            robot.ballDump.setPower(0);
+            robot.ballDump.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
+        if(gamepad1.dpad_up){
+            DesiredPickupAction = 2;
+            robot.ballDump.setPower(0);
+            robot.ballDump.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            }
+        */
+        if (gamepad1.dpad_down) {
+            robot.ballDump.setPower(-1);
+        }
+        if (robot.grabbutton.isPressed()) {
+            robot.ballDump.setPower(0);
+        }
+        if (gamepad1.dpad_up) {
+            robot.ballDump.setPower(1);
+        }
+        if (robot.balldumpup.isPressed()) {
+            robot.ballDump.setPower(0);
+        }
+
+        /*
+        switch (DesiredPickupAction) {
+            case 1:
+                if (robot.ballDump.getMode() == DcMotor.RunMode.RUN_TO_POSITION)
+                {
+                    robot.ballDump.setTargetPosition(0);
+                    robot.ballDump.setPower(-.50);
+                }
+                if (robot.grabbutton.isPressed())
+                {
+                    DesiredPickupAction = 0;
+                    robot.ballDump.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    robot.ballDump.setPower(0);
+                }
+                break;
+            case 2:
+           ''     if (robot.ballDump.getMode() == DcMotor.RunMode.RUN_TO_POSITION) {
+                    robot.ballDump.setTargetPosition(400);
+                    robot.ballDump.setPower(1);
+                }
+                break;
+            case 3:
+                if (robot.ballDump.getMode() == DcMotor.RunMode.RUN_TO_POSITION){
+                    robot.ballDump.setTargetPosition(150);
+                    robot.ballDump.setPower(1);
+                }
+                break;
+        }
+        */
         telemetry.addData("Values type = Unknown/ BallBooster is active", BallBoosterPoweringUp);
         telemetry.addData("Ball Booster Power", robot.ballBooster1.getPower());
         telemetry.addData("Position of server", robot.popUp.getPosition());
@@ -116,9 +164,11 @@ public class TeleOp5035 extends OpMode {
         telemetry.addData("Triggered Left", gamepad1.left_trigger);
         telemetry.addData("Triggered Right",gamepad1.right_trigger);
         telemetry.addData("motor encode", robot.ballDump.getCurrentPosition());
-        telemetry.addData("this is a message", "hi");
+        telemetry.addData("Button press", robot.grabbutton.isPressed());
+        telemetry.addData("this is a message", "you work right!!!");
         telemetry.update(); //this should work
         touchPressedLastLoop = robot.grabbutton.isPressed();
+        GuidePressedLastFrame = gamepad1.guide;
     }
 
 }
