@@ -19,8 +19,12 @@ public class CompbotTele extends RobotOp {
 
     boolean aButtonPressedLastTime = false;
     boolean bButtonPressedLastTime = false;
+    boolean xButtonPressedLastTime = false;
+    boolean yButtonPressedLastTime = false;
 
     boolean controlsReversed = false;
+
+    double lockServoPosition = robot.lockServoStartPosition;
 
     @Override
     public void init () {
@@ -57,6 +61,44 @@ public class CompbotTele extends RobotOp {
 
         double liftServoPosition;
 
+        if(!controlsReversed){
+
+            //Forward and backwards regular
+            frInputs += -gamepad1.right_stick_y;
+            flInputs += -gamepad1.right_stick_y;
+            brInputs += -gamepad1.right_stick_y;
+            blInputs += -gamepad1.right_stick_y;
+
+            //Strafing regular
+            frInputs -= gamepad1.right_stick_x;
+            flInputs += gamepad1.right_stick_x;
+            brInputs += gamepad1.right_stick_x;
+            blInputs -= gamepad1.right_stick_x;
+
+        }
+
+        else{
+
+            //Forward and backwards reversed
+            frInputs += gamepad1.right_stick_y;
+            flInputs += gamepad1.right_stick_y;
+            brInputs += gamepad1.right_stick_y;
+            blInputs += gamepad1.right_stick_y;
+
+            //Strafing reversed
+            frInputs += gamepad1.right_stick_x;
+            flInputs -= gamepad1.right_stick_x;
+            brInputs -= gamepad1.right_stick_x;
+            blInputs += gamepad1.right_stick_x;
+
+        }
+
+        //Skid steering
+        frInputs -= gamepad1.left_stick_x;
+        brInputs -= gamepad1.left_stick_x;
+        flInputs += gamepad1.left_stick_x;
+        blInputs += gamepad1.left_stick_x;
+
         //Harvester
         harvesterInput += gamepad2.right_trigger;
         harvesterInput += -gamepad2.left_trigger;
@@ -83,12 +125,6 @@ public class CompbotTele extends RobotOp {
 
         }
 
-        //Skid steering
-        frInputs -= gamepad1.left_stick_x;
-        brInputs -= gamepad1.left_stick_x;
-        flInputs += gamepad1.left_stick_x;
-        blInputs += gamepad1.left_stick_x;
-
         //Lift Servo
         if(gamepad2.a && !aButtonPressedLastTime){
 
@@ -103,6 +139,33 @@ public class CompbotTele extends RobotOp {
 
         }
 
+        //Lock servo
+        if(gamepad2.x && !xButtonPressedLastTime){
+
+            lockServoPosition += (lockServoPosition == robot.lockServoMaxPosition ? 0 : robot.lockServoDelta);
+            xButtonPressedLastTime = true;
+
+        }
+
+        if(!gamepad2.x){
+
+            xButtonPressedLastTime = false;
+
+        }
+
+        if(gamepad2.y && !yButtonPressedLastTime){
+
+            lockServoPosition += (lockServoPosition == robot.lockServoStartPosition ? 0 : -robot.lockServoDelta);
+            yButtonPressedLastTime = true;
+
+        }
+
+        if(!gamepad2.x){
+
+            yButtonPressedLastTime = false;
+
+        }
+
         //Reversing the controls
         if(gamepad1.b && !bButtonPressedLastTime){
 
@@ -114,38 +177,6 @@ public class CompbotTele extends RobotOp {
         if(!gamepad1.b){
 
             bButtonPressedLastTime = false;
-
-        }
-
-        if(!controlsReversed){
-
-            //Forward and backwards
-            frInputs += -gamepad1.right_stick_y;
-            flInputs += -gamepad1.right_stick_y;
-            brInputs += -gamepad1.right_stick_y;
-            blInputs += -gamepad1.right_stick_y;
-
-            //Strafing
-            frInputs -= gamepad1.right_stick_x;
-            flInputs += gamepad1.right_stick_x;
-            brInputs += gamepad1.right_stick_x;
-            blInputs -= gamepad1.right_stick_x;
-
-        }
-
-        else{
-
-            //Forward and backwards
-            frInputs += gamepad1.right_stick_y;
-            flInputs += gamepad1.right_stick_y;
-            brInputs += gamepad1.right_stick_y;
-            blInputs += gamepad1.right_stick_y;
-
-            //Strafing
-            frInputs += gamepad1.right_stick_x;
-            flInputs -= gamepad1.right_stick_x;
-            brInputs -= gamepad1.right_stick_x;
-            blInputs += gamepad1.right_stick_x;
 
         }
 
@@ -208,14 +239,16 @@ public class CompbotTele extends RobotOp {
         robot.backRight.setPower(brPower);
         robot.backLeft.setPower(blPower);
 
-        robot.liftServo.setPosition(liftServoPosition);
-
         robot.harvester.setPower(harvesterPower);
 
         robot.shooterRight.setPower(shooterPower);
         robot.shooterLeft.setPower(shooterPower);
 
         robot.lift.setPower(liftPower);
+
+        robot.liftServo.setPosition(liftServoPosition);
+
+        robot.lockServo.setPosition(lockServoPosition);
 
         telemetry.addData("Front right encoder: ", robot.frontRight.getCurrentPosition());
         telemetry.addData("Front left encoder: ", robot.frontLeft.getCurrentPosition());

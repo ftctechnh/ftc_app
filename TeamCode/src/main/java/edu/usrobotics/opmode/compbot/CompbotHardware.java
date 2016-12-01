@@ -26,6 +26,7 @@ public class CompbotHardware extends BaseHardware {
     public DcMotor shooterLeft;
 
     public Servo liftServo;
+    public Servo lockServo;
 
     public ColorSensor colorSensor;
 
@@ -43,6 +44,10 @@ public class CompbotHardware extends BaseHardware {
 
     public double liftServoClosePosition = 0f;
     public double liftServoOpenPosition = 0.5f;
+
+    public double lockServoStartPosition = 0f;
+    public double lockServoMaxPosition = 1f;
+    public double lockServoDelta = 0.25f;
 
     public float wheelDiameter = 4.0f;
     public float wheelRadius = wheelDiameter / 2f;
@@ -85,6 +90,8 @@ public class CompbotHardware extends BaseHardware {
 
         liftServo = hardwareMap.servo.get("ls");
 
+        lockServo = hardwareMap.servo.get("los");
+
         colorSensor = hardwareMap.colorSensor.get("cs");
 
         harvester.setDirection(harvesterCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
@@ -95,6 +102,8 @@ public class CompbotHardware extends BaseHardware {
         lift.setDirection(liftCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
 
         liftServo.setPosition(liftServoClosePosition);
+
+        lockServo.setPosition(lockServoStartPosition);
 
     }
 
