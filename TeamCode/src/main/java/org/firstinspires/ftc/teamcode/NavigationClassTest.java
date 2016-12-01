@@ -2,15 +2,14 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 /**
  * Created by Jeremy Yao on 11/13/2016.
  */
-@Autonomous(name = "TestNavigationClass", group = "Concept")
+@Autonomous(name = "NavigationClassTest", group = "Concept")
 public class NavigationClassTest extends LinearOpMode {
     OmniDriveBot robot = new OmniDriveBot();
-    FieldNavigator navigator = new FieldNavigator(robot);
+    fieldNavigator navigator = new fieldNavigator(robot);
 
     public void runOpMode() throws InterruptedException
     {
@@ -28,10 +27,10 @@ public class NavigationClassTest extends LinearOpMode {
         telemetry.addData("Check to see if can see target", null);
         telemetry.update();
 
-        for(short i = 0; i < 20000; i++)
+        for(short i = 0; i < 200; i++)
         {
             navigator.visionTrack();
-            if (navigator.lastKnownLocation != null)
+            if (navigator.isDetectingTarget())
             {
                 telemetry.addData("Can see target", null);
                 telemetry.update();
@@ -53,8 +52,16 @@ public class NavigationClassTest extends LinearOpMode {
             telemetry.update();
         }
         */
-        if (targetDetected)
-            navigator.moveToPosition(84, 8, 0);
+        if (!targetDetected)
+            navigator.setRobotLocation(84, 24, 0);
+
+        telemetry.update();
+        navigator.moveToPosition(84, 13, 90); //only spins
+        //orientation is -90 on phone, robot is
+
+        robot.driveStraight(84 - navigator.returnCurrentX(), -180);
+        robot.driveStraight(24 - navigator.returnCurrentY(), 90); //robot is now at beacon
+
        /*
         idle(); //idle essentially waits for software to catch up with hardware
         if (!targetDetected) //assume location
@@ -85,7 +92,5 @@ public class NavigationClassTest extends LinearOpMode {
         */
 
     }
-
-
 
 }
