@@ -11,11 +11,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class OmniDriveTeleOp extends OpMode
 {
     private OmniDriveBot robot = new OmniDriveBot();
+    private int shooterPitchStep;
 
     public void init()
     {
         robot.init(hardwareMap);
         gamepad1.setJoystickDeadzone(0.01f);
+        shooterPitchStep = 0;
     }
 
     public void loop()
@@ -70,6 +72,28 @@ public class OmniDriveTeleOp extends OpMode
         {
             robot.setShooterPowerOne(1.0f);
             robot.setShooterPowerTwo(-1.0f);
+        }
+        if(gamepad2.b == true)
+        {
+            switch (shooterPitchStep)
+            {
+                case 0:
+                    //set servo pos to first pos
+                    shooterPitchStep++;
+                    break;
+                case 1:
+                    //set servo to second pos
+                    shooterPitchStep++;
+                    break;
+                case 2:
+                    //set servo to third pos
+                    shooterPitchStep++;
+                    break;
+                case 3:
+                    //set servo to fourht pos
+                    shooterPitchStep++;
+                    break;
+            }
         }
         //apply changes and move robot
         robot.drive();
