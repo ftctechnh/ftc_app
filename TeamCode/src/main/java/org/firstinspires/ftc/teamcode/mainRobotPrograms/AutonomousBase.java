@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 
+import android.os.Handler;
+
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 //For added simplicity while coding autonomous with the new FTC system. Utilized inheritance and polymorphism.
@@ -9,13 +12,16 @@ public abstract class AutonomousBase extends RobotBase {
 
     //Only used during autonomous.
     protected GyroSensor gyroscope;
-    protected ColorSensor colorSensor;
+    protected ColorSensor leftColorSensor, rightColorSensor, bottomColorSensor;
+    protected Servo leftSensorServo, rightSensorServo;
+    protected final int LEFT_SERVO_MAX = 90, RIGHT_SERVO_MAX = 90;
 
     @Override
     protected void driverStationSaysINITIALIZE()
     {
         //Initialize gyroscope (will output whether it was found or not.
         gyroscope = Initialize(GyroSensor.class, "Gyroscope");
+        OutputToDriverStation("Got gyro sensor");
         if (gyroscope != null)
         {
             //Start gyroscope calibration.
@@ -30,8 +36,13 @@ public abstract class AutonomousBase extends RobotBase {
             OutputToDriverStation("Gyroscope Calibration Complete!");
         }
 
-        //Initialize color sensor.
-        colorSensor = Initialize(ColorSensor.class, "Color Sensor");
+        //Initialize color sensors for either side (do in AutonomousBase because they are useless during teleop.
+        leftColorSensor = Initialize(ColorSensor.class, "colorLeft");
+        rightColorSensor = Initialize(ColorSensor.class, "colorRight");
+        bottomColorSensor = Initialize(ColorSensor.class, "colorBottom");
+
+        leftSensorServo = Initialize(Servo.class, "servoLeft");
+        rightSensorServo = Initialize(Servo.class, "servoRight");
     }
 
     //All children should have special instructions.
@@ -128,7 +139,7 @@ public abstract class AutonomousBase extends RobotBase {
         left.setPower(power);
         right.setPower(power);
 
-        sleep(500);
+        sleep(100);
 
         //Gyroscope turning mechanics.
         while (System.currentTimeMillis() - startTime < length)
@@ -180,6 +191,48 @@ public abstract class AutonomousBase extends RobotBase {
         stopMotors();
 
         OutputToDriverStation("Movement completed");
+    }
+
+    private Handler handler;
+    private Runnable thread;
+
+    protected void startDriving (double power)
+    {
+        if (handler == null)
+        {
+            OutputToDriverStation("Started driver thread");
+            handler = new Handler(hardwareMap.appContext.getMainLooper());
+
+            thread = new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    OutputToDriverStation("Thread just ran through one loop.");
+                    sleep(50);
+                }
+            };
+
+            handler.post(thread);
+        }
+        else
+        {
+            OutputToDriverStation("Can't make new handler, handler is already created!");
+        }
+    }
+
+    protected void stopDriving()
+    {
+        if (handler != null)
+        {
+            OutputToDriverStation("Stopped handler on stop");
+            handler.removeCallbacks(thread);
+            handler = null;
+        }
+        else
+        {
+            OutputToDriverStation("Can't stop handler, handler is not created!");
+        }
     }
 
     //The gyroscope value goes from 0 to 360: when the bot turns left, it immediately goes to 360.  This makes sure that the value makes sense for calculations.

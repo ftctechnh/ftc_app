@@ -25,8 +25,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 
-import android.media.MediaPlayer;
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
@@ -80,7 +78,7 @@ public abstract class RobotBase extends LinearOpMode
         //NOTE: Actually attempting to use null motors will cause the program to terminate.
         //This advanced system is designed for when only specific hardware is required.
         //This code should tell you which motors and sensors are not configured before the program starts running.
-        //Kudos Makiah
+        //Kudos Makiah Bennett. Also, Ben was here
 
         //Actual program thread
         //Custom Initialization steps.
