@@ -45,8 +45,8 @@ public class CompbotHardware extends BaseHardware {
     public double liftServoClosePosition = 0f;
     public double liftServoOpenPosition = 0.5f;
 
-    public double lockServoStartPosition = 0f;
-    public double lockServoMaxPosition = 1f;
+    public double lockServoStartPosition;
+    public double lockServoMaxPosition;
     public double lockServoDelta = 0.25f;
 
     public float wheelDiameter = 4.0f;
@@ -91,6 +91,9 @@ public class CompbotHardware extends BaseHardware {
         liftServo = hardwareMap.servo.get("ls");
 
         lockServo = hardwareMap.servo.get("los");
+
+        lockServoStartPosition = lockServo.MIN_POSITION;
+        lockServoMaxPosition = lockServo.MAX_POSITION;
 
         colorSensor = hardwareMap.colorSensor.get("cs");
 

@@ -160,7 +160,7 @@ public class CompbotTele extends RobotOp {
 
         }
 
-        if(!gamepad2.x){
+        if(!gamepad2.y){
 
             yButtonPressedLastTime = false;
 
@@ -279,6 +279,8 @@ public class CompbotTele extends RobotOp {
 
         telemetry.addData("isLiftServoOpen", isLiftServoOpen);
         telemetry.addData("liftServoPosition", liftServoPosition);
+
+        telemetry.addData("lockServoPosition", lockServoPosition);
 
     }
 }
