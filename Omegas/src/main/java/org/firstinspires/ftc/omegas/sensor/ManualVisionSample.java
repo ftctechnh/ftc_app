@@ -2,6 +2,7 @@ package org.firstinspires.ftc.omegas.sensor;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.omegas.OmegasBeacon;
 import org.lasarobotics.vision.android.Cameras;
 import org.lasarobotics.vision.detection.ColorBlobDetector;
 import org.lasarobotics.vision.ftc.velocityvortex.Beacon;
@@ -10,6 +11,9 @@ import org.lasarobotics.vision.util.ScreenOrientation;
 import org.lasarobotics.vision.util.color.ColorHSV;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Manual Vision Sample
@@ -32,6 +36,7 @@ public class ManualVisionSample extends ManualVisionOpMode {
     private Beacon.BeaconAnalysis colorAnalysis = new Beacon.BeaconAnalysis();
     private ColorBlobDetector detectorRed;
     private ColorBlobDetector detectorBlue;
+    private ArrayList<OmegasBeacon> beaconColorArrayList = new ArrayList<>();
 
     @Override
     public void init() {
@@ -60,10 +65,39 @@ public class ManualVisionSample extends ManualVisionOpMode {
     public void loop() {
         super.loop();
 
+        String[] currentBeaconColors = colorAnalysis.getColorString().split(", ");
+        beaconColorArrayList.add(new OmegasBeacon(currentBeaconColors[0], currentBeaconColors[1]));
+
+        double leftBlue = 0.0, rightBlue = 0.0;
+        int leftCount = 0, rightCount = 0;
+
+        for (int i = beaconColorArrayList.size() - 1; i > 0 && leftCount <= 100; i--) {
+            if (beaconColorArrayList.get(i).left != OmegasBeacon.Color.UNDEFINED) {
+                if (beaconColorArrayList.get(i).left == OmegasBeacon.Color.BLUE) leftBlue++;
+                leftCount++;
+            }
+        }
+
+        for (int i = beaconColorArrayList.size() - 1; i > 0 && rightCount <= 100; i--) {
+            if (beaconColorArrayList.get(i).right != OmegasBeacon.Color.UNDEFINED) {
+                if (beaconColorArrayList.get(i).right == OmegasBeacon.Color.BLUE) rightBlue++;
+                rightCount++;
+            }
+        }
+
+        leftBlue /= leftCount;
+        rightBlue /= rightCount;
+
         telemetry.addData("Vision FPS", fps.getFPSString());
-        telemetry.addData("Vision Color", colorAnalysis.getColorString());
-        telemetry.addData("Analysis Confidence", colorAnalysis.getConfidenceString());
+        telemetry.addData("Vision Color", Arrays.toString(currentBeaconColors));
+        telemetry.addData("Analysis Confidence", "Left: " + leftBlue + " Right: " + rightBlue);
         telemetry.addData("Vision Size", "Width: " + width + " Height: " + height);
+
+        try {
+            Thread.sleep(50);
+        } catch (InterruptedException e) {
+            telemetry.addData("ERROR", e.toString());
+        }
     }
 
     @Override
