@@ -81,7 +81,7 @@ public class OmegasVision extends LinearVisionOpMode {
              * Set the beacon analysis method
              * Try them all and see what works!
              */
-            beacon.setAnalysisMethod(Beacon.AnalysisMethod.FAST);
+            beacon.setAnalysisMethod(Beacon.AnalysisMethod.REALTIME);
 
             /**
              * Set color tolerances
@@ -134,14 +134,17 @@ public class OmegasVision extends LinearVisionOpMode {
                 telemetry.addData("Frame Size", "Width: " + width + " Height: " + height);
                 telemetry.addData("Frame Counter", frameCount);
 
+                Mat rgba = null;
+                Mat gray = null;
+
                 // You can access the most recent frame data and modify it here using getFrameRgba() or getFrameGray()
                 // Vision will run asynchronously (parallel) to any user code so your programs won't hang
                 // You can use hasNewFrame() to test whether vision processed a new frame
                 // Once you copy the frame, discard it immediately with discardFrame()
                 if (hasNewFrame()) {
                     // Get the frame
-                    Mat rgba = getFrameRgba();
-                    Mat gray = getFrameGray();
+                    rgba = getFrameRgba();
+                    gray = getFrameGray();
 
                     // Discard the current frame to allow for the next one to render
                     discardFrame();
@@ -149,6 +152,10 @@ public class OmegasVision extends LinearVisionOpMode {
                     // Do all of your custom frame processing here
                     // For this demo, let's just add to a frame counter
                     frameCount++;
+                }
+
+                if (rgba != null && gray != null) {
+                    telemetry.addData("Just discarded", rgba.toString() + "\n" + gray.toString());
                 }
 
                 // Wait for a hardware cycle to allow other processes to run
