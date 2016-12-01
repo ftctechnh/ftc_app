@@ -5,6 +5,7 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.I2cAddr;
@@ -80,7 +81,7 @@ public class ZoidbergHardware {
         // initialize positions
         blue1.setPosition(1.0);
         red2.setPosition(0.0);
-        door3.setPosition(0.5);
+        door3.setPosition(0.55);
 
         frontLightSensor = hardwareMap.lightSensor.get("fls");
         backLightSensor = hardwareMap.lightSensor.get("bls");
@@ -99,6 +100,11 @@ public class ZoidbergHardware {
 
         gyroSensor = (ModernRoboticsI2cGyro)hardwareMap.gyroSensor.get("gy");
         gyroSensor.calibrate();
+
+        backLeftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        backRightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontLeftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontRightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
     public void driveRight(double power) {
@@ -120,6 +126,11 @@ public class ZoidbergHardware {
         backLeftDrive.setPower(power);
         frontRightDrive.setPower(-power);
         backRightDrive.setPower(-power);
+    }
+
+    public void backwardPull(double power) {
+        backRightDrive.setPower(power);
+        backLeftDrive.setPower(-power);
     }
 
     public void driveBackward(double power) {
