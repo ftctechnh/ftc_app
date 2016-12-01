@@ -167,11 +167,13 @@ public class InvadersPushbot_Iterative extends OpMode{
         telemetry.addData("Pusher", robot.pusher.getPosition());
         updateTelemetry(telemetry);
 
+        //Beacon buttons
+       robot.beacon.setPosition(gamepad1.left_trigger);
 
-        if (gamepad1.x == true){
-            robot.pusher.setPosition(1);
-        }
-
+        //Pusher Buttons
+       if (gamepad1.x == true){
+           robot.pusher.setPosition(1);
+       }
         if (gamepad1.b == true){
             robot.pusher.setPosition(0);
         }

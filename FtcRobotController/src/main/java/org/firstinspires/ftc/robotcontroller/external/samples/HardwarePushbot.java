@@ -35,7 +35,7 @@ public class HardwarePushbot
     //public DcMotor  LeftBallLauncher   = null;
     //public DcMotor  RightBallLauncher   = null;
     public Servo    pusher  = null;
-
+    public Servo    beacon  = null;
 
     public static final double MID_SERVO       =  0.5 ;
     public static final double ARM_UP_POWER    =  0.45 ;
@@ -87,6 +87,7 @@ public class HardwarePushbot
         //leftClaw = hwMap.servo.get("left_hand");
         //rightClaw = hwMap.servo.get("right_hand");
         pusher = hwMap.servo.get("pusher");
+        beacon = hwMap.servo.get("beacon");
         //pusher = hwMap.servo.get("pusher");
         //leftClaw.setPosition(MID_SERVO);
         //rightClaw.setPosition(MID_SERVO);
