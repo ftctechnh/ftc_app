@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 @Autonomous(name = "NavigationClassTest", group = "Concept")
 public class NavigationClassTest extends LinearOpMode {
     OmniDriveBot robot = new OmniDriveBot();
-    fieldNavigator navigator = new fieldNavigator(robot);
+    FieldNavigator navigator = new FieldNavigator(robot);
 
     public void runOpMode() throws InterruptedException
     {
