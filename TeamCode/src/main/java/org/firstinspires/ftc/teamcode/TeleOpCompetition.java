@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.media.MediaCodecInfo;
 import android.view.View;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -31,6 +32,7 @@ public class TeleOpCompetition extends OpMode {
     DcMotor ballCollectorMotor;
     DcMotor ballShooterMotor;
 
+
 /*
     ---------------------------------------------------------------------------------------------
 
@@ -38,7 +40,7 @@ public class TeleOpCompetition extends OpMode {
 */
 
 
-    ColorSensor colorSensor;    // Hardware Device Object
+   // ColorSensor colorSensor;    // Hardware Device Object
 
 
 
@@ -63,7 +65,7 @@ Declare global variables here
         ballCollectorMotor = hardwareMap.dcMotor.get("ballCollectorMotor");
         ballShooterMotor = hardwareMap.dcMotor.get("ballShooterMotor");
         /* get a reference to our ColorSensor object */
-        colorSensor = hardwareMap.colorSensor.get("sensor_color");
+        //colorSensor = hardwareMap.colorSensor.get("sensor_color");
     }
 /*
 ---------------------------------------------------------------------------------------------
@@ -140,7 +142,7 @@ Declare global variables here
     public void BallShooter(){
         float shoot = -gamepad2.right_stick_y;//gets value from 2nd gamepad's joystick
 
-        ballShooterMotor.setPower(shoot);//set power
+        ballShooterMotor.setPower(Math.abs(shoot));//set power
 
 
        /*saving previous code sample if using only one gamepad*/
@@ -161,24 +163,24 @@ Declare global variables here
 /*---------------------------------------------------------------------------------------------
 */
     /* Read the color sensor and return "b" for Blue or "r" for Red */
-    public char ReadColorSensor(){
+   /* public char ReadColorSensor(){
 
     char redOrBlue = 'b';
 
-    /* Variables used to store value of the color sensor*/
-    /* hsvValues is an array that will hold the hue, saturation, and value information */
+    /* Variables used to store value of the color sensor
+    /* hsvValues is an array that will hold the hue, saturation, and value information
     float hsvValues[] = {0F,0F,0F};
 
-    /* bLedOn represents the state of the LED.*/
+    /* bLedOn represents the state of the LED.
     boolean bLedOn = true;
 
-    /* Set the LED in the beginning*/
+    /* Set the LED in the beginning
     colorSensor.enableLed(bLedOn);
 
-    /* convert the RGB values to HSV values*/
+    /* convert the RGB values to HSV values
     Color.RGBToHSV(colorSensor.red() * 8, colorSensor.green() * 8, colorSensor.blue() * 8, hsvValues);
 
-    /* send the info back to driver station using telemetry function.*/
+    /* send the info back to driver station using telemetry function.
     telemetry.addData("LED", bLedOn ? "On" : "Off");
     telemetry.addData("Clear", colorSensor.alpha());
     telemetry.addData("Red  ", colorSensor.red());
@@ -187,12 +189,12 @@ Declare global variables here
     telemetry.addData("Hue", hsvValues[0]);
     telemetry.update();
 
-    if (colorSensor.red()>1000) /*need to find out the treashold for */
+    if (colorSensor.red()>1000) /*need to find out the treashold for
         redOrBlue='r';
     bLedOn = !bLedOn;
     colorSensor.enableLed(bLedOn);
     return redOrBlue;
-    }
+    }*/
 
 
 /*
