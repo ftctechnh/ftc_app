@@ -69,9 +69,7 @@ public class InvadersPushbot_Iterative extends OpMode{
     /* Declare OpMode members. */
     HardwarePushbot robot       = new HardwarePushbot(); // use the class created to define a Pushbot's hardware
                                                          // could also use HardwarePushbotMatrix class.
-    double          clawOffset  = 0.0 ;                  // Servo mid position
-    final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
-                             // Will be connected to PushBot's Limit Switch
+    // Will be connected to PushBot's Limit Switch
     TouchSensor limitSwitch;                         // Will be connected to PushBot's Limit Switch
 
 
@@ -86,16 +84,12 @@ public class InvadersPushbot_Iterative extends OpMode{
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
+        // Connect our limit switch TouchSensor object to the Robot
         limitSwitch = hardwareMap.touchSensor.get("down limit");
         assert (limitSwitch != null);
-        // Connect our limit switch TouchSensor object to the Robot
-        //limitSwitch = hardwareMap.touchSensor.get("arm limit");
-        TouchSensor limitSwitch;
+
         // Send telemetry message to signify robot waiting;
-        //telemetry.addData("Say", "Uh oh, Matthew's messing with stuff.");
          updateTelemetry(telemetry);
-        //robot.leftClaw.setPosition(0.0);
-        //robot.rightClaw.setPosition(0.0);
 
         //assert (limitSwitch != null);
 
@@ -137,46 +131,28 @@ public class InvadersPushbot_Iterative extends OpMode{
         robot.leftMotor.setPower(left);
         robot.rightMotor.setPower(right);
 
-        // Use gamepad left & right triggers to open and close the claw
-        if (gamepad1.right_trigger > 0)
-            clawOffset += CLAW_SPEED;
-        else if (gamepad1.left_trigger > 0)
-            clawOffset -= CLAW_SPEED;
-
-        // Move both servos to new position.  Assume servos are mirror image of each other.
-        clawOffset = Range.clip(clawOffset, -0.5, 0.5);
-        //robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);
-        //robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset);
-
         // Read our limit switch to see if the arm is too high
         boolean limitTriggered = limitSwitch.isPressed();
 
-        // Use right joystick the arm up (as long as our limit switch hasn't been triggered) or down
-        //if ((gamepad1.right_stick_y > 0) && !limitTriggered)
-            //robot.//armMotor.setPower(robot.ARM_UP_POWER);
-        //else if (gamepad1.right_stick_y < 0)
-            //robot.//armMotor.setPower(robot.ARM_DOWN_POWER);
-        //else
-            //robot.//armMotor.setPower(0.0);
-
         // Send telemetry message to signify robot running;
-        telemetry.addData("claw",  "Offset = %.2f", clawOffset);
         telemetry.addData("left",  "%.2f", left);
         telemetry.addData("right", "%.2f", right);
         telemetry.addData("switch", "%s", limitTriggered ? "Triggered" : "Open");
         telemetry.addData("Pusher", robot.pusher.getPosition());
+        telemetry.addData("beacon", robot.beacon.getPosition());
         updateTelemetry(telemetry);
 
-        //Beacon buttons
-       robot.beacon.setPosition(gamepad1.left_trigger);
+        //Beacon button and pusher button
+       robot.beacon.setPosition(1-gamepad1.left_trigger);
+        robot.pusher.setPosition(gamepad1.right_trigger);
 
         //Pusher Buttons
-       if (gamepad1.x == true){
-           robot.pusher.setPosition(1);
-       }
-        if (gamepad1.b == true){
-            robot.pusher.setPosition(0);
-        }
+//       if (gamepad1.x == true){
+//           robot.pusher.setPosition(1);
+//       }
+//        if (gamepad1.b == true){
+//            robot.pusher.setPosition(0);
+//        }
 
         if (gamepad1.a == true){
             if (limitSwitch.isPressed() == true){
