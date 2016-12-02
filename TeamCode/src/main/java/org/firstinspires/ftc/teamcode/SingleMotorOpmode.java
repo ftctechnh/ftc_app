@@ -32,47 +32,22 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import java.util.ArrayList;
 
-import java.util.List;
-
-@TeleOp(name="PusherOpmode", group="Testing")  // @Autonomous(...) is the other common choice
+@TeleOp(name="SingleMotorOpmode", group="Testing")  // @Autonomous(...) is the other common choice
 //@Disabled
-public class PusherOpmode extends LinearOpMode {
-
-    static final double SLICER_UP   = 0.0; // top of the slicer
-    static final double SLICER_DOWN = 1.0; // bottom of the slicer
-    static final double SHOOT_DOWN = 0.7;  // starting position
-    static final double SHOOT_UP = 1;      // shoot position
+public class SingleMotorOpmode extends LinearOpMode {
+    DcMotor beaconL = null;
 
     private ElapsedTime runtime = new ElapsedTime();
-
-    //The engine which controlls our drive motors
-    DriveEngine engine = null;
-
-    //Servos used to move particles
-    Servo servoSlicer = null;
-    Servo servoPusher = null;
 
     @Override
     public void runOpMode() {
 
-        engine = new DriveEngine(DriveEngine.engineMode.defaultMode, hardwareMap, gamepad1);
-
-        servoSlicer = hardwareMap.servo.get("ball_slicer");
-        servoPusher = hardwareMap.servo.get("ball_pusher");
-
-        // set the shoot open & ball slicer down/default position
-        servoPusher.setDirection(Servo.Direction.FORWARD);
-        servoPusher.setPosition(SHOOT_DOWN);
-        servoSlicer.setPosition(SLICER_DOWN);
+        beaconL  = hardwareMap.dcMotor.get("Beacon_LMotor");
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -81,30 +56,8 @@ public class PusherOpmode extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive())
         {
-            engine.drive();
-
-            if(gamepad1.x)
-            {
-                servoPusher.setPosition(SHOOT_DOWN);
-            }
-            else if(gamepad1.b)
-            {
-                servoPusher.setPosition(SHOOT_UP);
-            }
-
-            if (gamepad1.left_bumper)
-            {
-                servoSlicer.setPosition(SLICER_DOWN);
-            }
-            else if (gamepad1.left_trigger > .5)
-            {
-                servoSlicer.setPosition(SLICER_UP);
-            }
-
-            telemetry.addData("leftPower", engine.getLeftPower());
-            telemetry.addData("rightPower", engine.getRightPower());
-            telemetry.addData("pusher", servoPusher.getPosition());
-            telemetry.addData("slicer", servoSlicer.getPosition());
+            beaconL.setPower(.2);
+            telemetry.addData("beacon", beaconL.getPower());
             telemetry.update();
 
             idle();     // allow something else to run (aka, release the CPU)

@@ -34,8 +34,8 @@ public class DriveEngine
 
     //Variables for pusherMode
     static final int SAMPLE_SIZE = 15;
-    List<Float> rightJoyStickValues = new ArrayList(SAMPLE_SIZE);
-    List<Float> leftJoyStickValues = new ArrayList(SAMPLE_SIZE);
+    List<Float> rightJoyStickValues = new ArrayList();
+    List<Float> leftJoyStickValues = new ArrayList();
 
 
     public DriveEngine(engineMode mode, HardwareMap hardwareMap, Gamepad gamepad)
@@ -55,8 +55,8 @@ public class DriveEngine
 
         for(int i=0; i<SAMPLE_SIZE; i++)
         {
-            rightJoyStickValues.set(i, 0f);
-            leftJoyStickValues.set(i, 0f);
+            rightJoyStickValues.add(0f);
+            leftJoyStickValues.add(0f);
         }
     }
 
@@ -136,14 +136,14 @@ public class DriveEngine
 
     public void setEngineToGamePad()
     {
-        rightPower = gamepad.right_stick_y;
-        leftPower = gamepad.left_stick_y;
+        this.rightPower = gamepad.right_stick_y;
+        this.leftPower = gamepad.left_stick_y;
     }
 
-    public void setEngineToPower(double rightPower, double leftPower)
+    public void setEngineToPower(double rPower, double lPower)
     {
-        this.rightPower = rightPower;
-        this.leftPower = leftPower;
+        rightPower = rPower;
+        leftPower = lPower;
     }
 
     public void setEngineToLevel()
@@ -167,7 +167,7 @@ public class DriveEngine
          */
     }
 
-    public void drive(double duration, double rightPower, double leftPower)
+    public void drive(double duration, double rPower, double lPower)
     {
         switch (mode)
         {
@@ -176,7 +176,7 @@ public class DriveEngine
                 break;
 
             case directMode:
-                setEngineToPower(rightPower, leftPower);
+                setEngineToPower(rPower, lPower);
                 break;
 
             case defaultMode:
