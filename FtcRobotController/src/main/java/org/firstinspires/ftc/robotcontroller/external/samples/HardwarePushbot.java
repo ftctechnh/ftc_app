@@ -63,8 +63,8 @@ public class HardwarePushbot
         LeftBallLauncher = hwMap.dcMotor.get("LeftLauncher");
         leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        RightBallLauncher.setDirection(DcMotor.Direction.FORWARD);
-        LeftBallLauncher.setDirection(DcMotor.Direction.REVERSE);
+        RightBallLauncher.setDirection(DcMotor.Direction.REVERSE);
+        LeftBallLauncher.setDirection(DcMotor.Direction.FORWARD);
 
         // Set all motors to zero power
         leftMotor.setPower(0);
