@@ -47,7 +47,9 @@ Declare global variables here
             colorSensor = hardwareMap.colorSensor.get("sensor_color");
 
             /* bLedOn represents the state of the LED.*/
-             bLedOn = true;
+             bLedOn = false;
+            /* Set the LED in the beginning*/
+            colorSensor.enableLed(bLedOn);
         }
         /*
         ---------------------------------------------------------------------------------------------
@@ -77,8 +79,8 @@ Declare global variables here
         @Override
         public void loop() {
 
-            telemetry.addData("Red or Blue:", ReadColorSensor());
-            telemetry.update();
+             ReadColorSensor();
+
 
         }
 /*
@@ -102,8 +104,6 @@ Declare global variables here
             float hsvValues[] = {0F,0F,0F};
 
 
-    /* Set the LED in the beginning*/
-            colorSensor.enableLed(bLedOn);
 
     /* convert the RGB values to HSV values*/
             Color.RGBToHSV(colorSensor.red() * 8, colorSensor.green() * 8, colorSensor.blue() * 8, hsvValues);
@@ -115,11 +115,13 @@ Declare global variables here
             telemetry.addData("Green", colorSensor.green());
             telemetry.addData("Blue ", colorSensor.blue());
             telemetry.addData("Hue", hsvValues[0]);
+
+
+            if (colorSensor.red()>colorSensor.blue()) {/*need to find out the treashold for */
+                redOrBlue = 'r';
+            }
+            telemetry.addData("Red or Blue", redOrBlue);
             telemetry.update();
-
-            if (colorSensor.red()>1000) /*need to find out the treashold for */
-                redOrBlue='r';
-
             return redOrBlue;
         }
 
@@ -131,7 +133,7 @@ Declare global variables here
         */
         @Override
         public void stop() {
-            bLedOn = !bLedOn;
+            bLedOn = false;
             colorSensor.enableLed(bLedOn);
         }
 
