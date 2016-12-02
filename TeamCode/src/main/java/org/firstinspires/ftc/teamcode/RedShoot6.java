@@ -35,7 +35,7 @@ public class RedShoot6 extends AutonomousBase {
                 }
                 break;
             case 2: // turns ...
-                desiredAngle = 150;
+                desiredAngle = 140;
                 if(linedUpAngle()){
                     moveState = MoveState.STOP;
                     gameState = 3;
