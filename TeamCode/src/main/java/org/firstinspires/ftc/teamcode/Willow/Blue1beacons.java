@@ -106,82 +106,82 @@ public class Blue1beacons extends LinearOpMode {
 
         // Step 2:  Spin right for 1.0 seconds
         robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        encoderDrive(TURN_SPEED, 6, -6, 5); // S2: Turn Right 12 Inches with 4 Sec timeout
+        //encoderDrive(TURN_SPEED, 6, -6, 5); // S2: Turn Right 12 Inches with 4 Sec timeout
         robot.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        encoderDrive(TURN_SPEED, -6, 6, 5); // S2: Turn Right 12 Inches with 4 Sec timeout
+        //encoderDrive(TURN_SPEED, -6, 6, 5); // S2: Turn Right 12 Inches with 4 Sec timeout
         runtime.reset();
-        while (
+        //while (
 
-                Blue1beacons() && (runtime.seconds() < 1.0)) {
+                //Blue1beacons() && (runtime.seconds() < 1.0)) {
             telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
             idle();
         }
 
         // Step 3:  Drive forward for 1 second
-        robot.leftMotor.setPower(FORWARD_SPEED);
-        robot.rightMotor.setPower(FORWARD_SPEED);
-        runtime.reset();
+        //robot.leftMotor.setPower(FORWARD_SPEED);
+        //robot.rightMotor.setPower(FORWARD_SPEED);
+        //runtime.reset();
 
-        while (runtime.seconds() < 1.0)
+        //while (runtime.seconds() < 1.0)
         {
             telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
-            idle();
+        //    idle();
         }
 
 
         // Step 2:  Spin left for 1.3 seconds
-        robot.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        encoderDrive(TURN_SPEED, -6, 6, 5); // S2: Turn Right 12 Inches with 4 Sec timeout
-        robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        encoderDrive(TURN_SPEED, 6, -6, 5); // S2: Turn Right 12 Inches with 4 Sec timeout
-        runtime.reset();
-        while (
+        //robot.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        //encoderDrive(TURN_SPEED, -6, 6, 5); // S2: Turn Right 12 Inches with 4 Sec timeout
+        //robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        //encoderDrive(TURN_SPEED, 6, -6, 5); // S2: Turn Right 12 Inches with 4 Sec timeout
+        //runtime.reset();
+        //while (
 
-                Blue1beacons() && (runtime.seconds() < 1.3)) {
-            telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
-            idle();
+          //      Blue1beacons() && (runtime.seconds() < 1.3)) {
+            //telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
+            //telemetry.update();
+            //idle();
         }
 
         // Step 2:  Spin right for 1.3 seconds
-        robot.rightMotor.setPower(TURN_SPEED);
-        robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        encoderDrive(TURN_SPEED, 6, -6, 5); // S2: Turn Right 12 Inches with 4 Sec timeout
-        robot.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        encoderDrive(TURN_SPEED, -6, 6, 5); // S2: Turn Right 12 Inches with 4 Sec timeout
-        runtime.reset();
-        while (
+        //robot.rightMotor.setPower(TURN_SPEED);
+        //robot.leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        //encoderDrive(TURN_SPEED, 6, -6, 5); // S2: Turn Right 12 Inches with 4 Sec timeout
+        //robot.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        //encoderDrive(TURN_SPEED, -6, 6, 5); // S2: Turn Right 12 Inches with 4 Sec timeout
+        //runtime.reset();
+        //while (
 
-                Blue1beacons() && (runtime.seconds() < 1.0)) {
-            telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
-            idle();
-        }
+          //      Blue1beacons() && (runtime.seconds() < 1.0)) {
+          //  telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
+          //  telemetry.update();
+          //  idle();
+        //}
 
         // Step 1:  Drive forward for .5 seconds
-        robot.leftMotor.setPower(FORWARD_SPEED);
-        robot.rightMotor.setPower(FORWARD_SPEED);
-        runtime.reset();
+        //robot.leftMotor.setPower(FORWARD_SPEED);
+        //robot.rightMotor.setPower(FORWARD_SPEED);
+        //runtime.reset();
 
-        while (runtime.seconds() < 0.5)
-        {
-            telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
-            idle();
-        }
+        //while (runtime.seconds() < 0.5)
+        //{
+          //  telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+            //telemetry.update();
+            //idle();
+        //}
 
 
         // Step 4:  Stop and close the claw.
-        robot.leftMotor.setPower(0);
-        robot.rightMotor.setPower(0);
+        //robot.leftMotor.setPower(0);
+        //robot.rightMotor.setPower(0);
         //robot.leftClaw.setPosition(1.0);
         //robot.rightClaw.setPosition(0.0);
 
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
-        sleep(1000);
-        idle();
-    }
-}
+        //telemetry.addData("Path", "Complete");
+        //telemetry.update();
+        //sleep(1000);
+        //idle();
+    //}
+//}
