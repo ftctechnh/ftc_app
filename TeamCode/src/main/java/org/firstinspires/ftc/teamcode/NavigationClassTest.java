@@ -39,7 +39,6 @@ public class NavigationClassTest extends LinearOpMode {
             }
             sleep(10);
         }
-
         /*
         while (true)
         {
@@ -52,7 +51,7 @@ public class NavigationClassTest extends LinearOpMode {
             telemetry.update();
         }
         */
-        if (!targetDetected)
+       /* if (!targetDetected)
             navigator.setRobotLocation(84, 24, 0);
 
         telemetry.update();
