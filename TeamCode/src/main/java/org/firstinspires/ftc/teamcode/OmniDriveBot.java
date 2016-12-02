@@ -1,7 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
+import com.qualcomm.robotcore.hardware.DigitalChannelController;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -33,6 +38,16 @@ public class OmniDriveBot implements DriveTrainInterface
     private float shooterPowerTwo;
     private float shooterPitchServoPos;
     private float scooperServoPos;
+
+    ColorSensor beaconColorSensor;
+    DeviceInterfaceModule cdim;
+    boolean bLedOn;
+    float hsvValues[] = {0F,0F,0F};
+    final float values[] = hsvValues;
+
+    // we assume that the LED pin of the RGB sensor is connected to
+    // digital port 5 (zero indexed).
+    static final int LED_CHANNEL = 5;
 
 
     public OmniDriveBot()
@@ -80,6 +95,22 @@ public class OmniDriveBot implements DriveTrainInterface
 
         shooterPitchServo.setPosition(1.0f);
         scooperServo.setPosition(0.4f);
+
+        // bLedOn represents the state of the LED.
+        bLedOn = true;
+
+        // get a reference to our DeviceInterfaceModule object.
+        cdim = hardwareMap.deviceInterfaceModule.get("dim");
+
+        // set the digital channel to output mode.
+        // remember, the Adafruit sensor is actually two devices.
+        // It's an I2C sensor and it's also an LED that can be turned on or off.
+        cdim.setDigitalChannelMode(LED_CHANNEL, DigitalChannelController.Mode.OUTPUT);
+
+        // get a reference to our ColorSensor object.
+        beaconColorSensor = hardwareMap.colorSensor.get("beaconColorSensor");
+        // turn the LED on in the beginning, just so user will know that the sensor is active.
+        cdim.setDigitalChannelState(LED_CHANNEL, bLedOn);
     }
 
     public void drive()
@@ -121,6 +152,9 @@ public class OmniDriveBot implements DriveTrainInterface
         shooterMotorTwo.setPower(shooterPowerTwo);
         scooperServo.setPosition(scooperServoPos);
         shooterPitchServo.setPosition(shooterPitchServoPos);
+
+        // convert the RGB values to HSV values.
+        Color.RGBToHSV((beaconColorSensor.red() * 255) / 800, (beaconColorSensor.green() * 255) / 800, (beaconColorSensor.blue() * 255) / 800, hsvValues);
     }
 
     public void driveStraight(double distanceInches, double degree)
@@ -253,6 +287,23 @@ public class OmniDriveBot implements DriveTrainInterface
     public float getShooterPitchServoPos() { return shooterPitchServoPos; }
 
     public float getScooperServoPos() { return scooperServoPos; }
+
+    public int getSensorRed()
+    {
+        return beaconColorSensor.red();
+    }
+
+    public int getSensorBlue()
+    {
+        return beaconColorSensor.blue();
+
+    }
+
+    public int getSensorGreen()
+    {
+        return beaconColorSensor.green();
+
+    }
 
     public void setLifterPower(float pow)
     { lifterPower = pow; }

@@ -12,16 +12,16 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class AutonomousTestOp extends LinearOpMode
 {
     private OmniDriveBot robot = new OmniDriveBot();
+    private FieldNavigator nav = new FieldNavigator(robot);
 
     public void runOpMode()
     {
         robot.init(hardwareMap);
+        nav.setupVuforia();
+
         waitForStart();
-        robot.driveStraight(12, 90);
-        sleep(1000);
-        robot.driveStraight(12, 120);
-        sleep(1000);
-        robot.driveStraight(12, 60);
+        nav.setRobotLocation(0,0,0);
+        nav.moveToPosition(12,12,0);
     }
 }
 
