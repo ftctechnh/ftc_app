@@ -30,9 +30,9 @@ public class OpenCVSimpleTest extends OpenCVLib {
         Mat frame = getCameraFrame();
 
         //init scanline Y values
-        yValStore[0] = frame.cols() / 4;
-        yValStore[1] = frame.cols() / 2;
-        yValStore[2] = (frame.cols() * 3) / 4;
+        yValStore[0] = frame.rows() / 4;
+        yValStore[1] = frame.rows() / 2;
+        yValStore[2] = (frame.rows() * 3) / 4;
 
         //log all the data
         telemetry.addData("Top Y Value", yValStore[0]);

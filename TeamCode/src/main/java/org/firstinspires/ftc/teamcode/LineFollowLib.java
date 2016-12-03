@@ -12,9 +12,10 @@ public final class LineFollowLib {
 
     //get the angle of the phone relative to robot through line following
     public static double getAngle(Mat src, int topY, int bottomY){
-        int[] linePos;
+        int[] linePos = new int[2];
 
-        linePos = scanlineAvg(src, new int[]{topY, bottomY});
+        linePos[0] = scanlineAvg(src, topY);
+        linePos[1] = scanlineAvg(src, bottomY);
 
         if(linePos[0] == ERROR_TOO_NOISY || linePos[1] == ERROR_TOO_NOISY) return ERROR_TOO_NOISY;
 
@@ -36,7 +37,7 @@ public final class LineFollowLib {
         if(linePos == ERROR_TOO_NOISY) return ERROR_TOO_NOISY;
 
         //convert to value from -1 to 1
-        return  (double)((src.cols() / 2) - linePos)  / (double)(src.cols() / 2);
+        return  (double)(linePos - (src.cols() / 2))  / (double)(src.cols() / 2);
     }
 
     public static int[] scanlineAvg(Mat src, int[] scanlineYs) {

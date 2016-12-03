@@ -14,6 +14,7 @@ import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.JavaCameraView;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
@@ -36,7 +37,7 @@ public abstract class OpenCVLib extends OpMode implements CameraBridgeViewBase.C
 
     private boolean catchFrame = false;
 
-    private Mat frameStore = new Mat();
+    private Mat frameStore;
 
     OpenCVLib(){
         mContext = FtcRobotControllerActivity.getAppContext();
@@ -64,6 +65,9 @@ public abstract class OpenCVLib extends OpMode implements CameraBridgeViewBase.C
     };
 
     public void initOpenCV(){
+
+        //System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+
         if (!OpenCVLoader.initDebug()) {
             RobotLog.vv(cvTAG, "Internal OpenCV library not found. Using OpenCV Manager for initialization");
             OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_0_0, mContext, mLoaderCallback);
@@ -72,8 +76,10 @@ public abstract class OpenCVLib extends OpMode implements CameraBridgeViewBase.C
             mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
 
+        frameStore = new Mat();
+
         mOpenCvCameraView = (CameraBridgeViewBase) mView;
-        mOpenCvCameraView.setAlpha(0.0f);
+        //mOpenCvCameraView.setAlpha(0.0f);
         mOpenCvCameraView.setCameraIndex(CameraBridgeViewBase.CAMERA_ID_BACK);
         //mOpenCvCameraView.setMaxFrameSize(400,400);
         mOpenCvCameraView.setCvCameraViewListener(this);
@@ -89,12 +95,12 @@ public abstract class OpenCVLib extends OpMode implements CameraBridgeViewBase.C
 
     public void onCameraViewStarted(int width, int height){
         RobotLog.vv(cvTAG, "Camera view started: " + width + ", " + height);
-        mOpenCvCameraView.setAlpha(1.0f);
+        //mOpenCvCameraView.setAlpha(1.0f);
     }
 
     public void onCameraViewStopped(){
         RobotLog.vv(cvTAG, "Camera view stopped");
-        mOpenCvCameraView.setAlpha(0.0f);
+        //mOpenCvCameraView.setAlpha(0.0f);
     }
 
     public void startCamera(){

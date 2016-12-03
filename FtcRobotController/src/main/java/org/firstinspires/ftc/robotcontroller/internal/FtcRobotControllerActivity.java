@@ -284,8 +284,8 @@ public class FtcRobotControllerActivity extends Activity {
     //user code
     lastContext = context;
     cameraView = findViewById(R.id.image_manipulations_activity_surface_view);
-    View thing = findViewById(R.id.image_manipulations_activity_surface_view);
-    thing.setAlpha(0.0f);
+    //View thing = findViewById(R.id.image_manipulations_activity_surface_view);
+    //thing.setAlpha(0.0f);
     //end user code
 
     bindToService();
