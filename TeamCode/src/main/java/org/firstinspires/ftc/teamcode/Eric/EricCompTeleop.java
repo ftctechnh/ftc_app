@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Eric;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -9,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
  * Created by inspirationteam on 11/10/2016.
  */
 @TeleOp(name = "#11183:Eric TeleOp Competition", group = "Robot")
+@Disabled
 public class EricCompTeleop extends OpMode {
     DcMotor leftWheelMotorFront;
     DcMotor leftWheelMotorBack;

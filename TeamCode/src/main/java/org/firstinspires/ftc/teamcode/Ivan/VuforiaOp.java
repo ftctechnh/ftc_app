@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Ivan;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.vuforia.HINT;
 import com.vuforia.Vuforia;
@@ -19,6 +20,7 @@ import org.firstinspires.ftc.teamcode.R;
  */
 
 @Autonomous(name="VuforiaExample", group="Vuforia")
+@Disabled
 public class VuforiaOp extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Steven;
 
 import android.graphics.Color;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -11,6 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Created by Steven on 11/27/2016.
  */
 @TeleOp(name = "#11183: Color Sensor Test", group = "Robot")
+@Disabled
 public class ColorSensorTestOp extends OpMode{
 
 
