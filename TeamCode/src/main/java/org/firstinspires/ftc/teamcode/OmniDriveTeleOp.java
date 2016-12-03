@@ -67,12 +67,20 @@ public class OmniDriveTeleOp extends OpMode
         {
             robot.setShooterPitchServoPos(1.0f);
         }
-        // rev up shooter motors
+
         if(gamepad2.a == true)
         {
+            // rev up shooter motors high
             robot.setShooterPowerOne(1.0f);
             robot.setShooterPowerTwo(-1.0f);
         }
+        else if(gamepad2.x == true)
+        {
+            //revs up shooter motors low
+            robot.setShooterPowerOne(0.7f);
+            robot.setShooterPowerTwo(-0.7f);
+        }
+
         if(gamepad2.b == true)
         {
             switch (shooterPitchStep)

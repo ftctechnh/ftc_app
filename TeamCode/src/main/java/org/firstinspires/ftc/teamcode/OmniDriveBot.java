@@ -94,9 +94,9 @@ public class OmniDriveBot implements DriveTrainInterface
         bL.setMaxSpeed(2400);
 
         shooterPitchServo.setPosition(1.0f);
-        scooperServo.setPosition(0.4f);
+        scooperServo.setPosition(.5f);
 
-        // bLedOn represents the state of the LED.
+        //bLedOn represents the state of the LED.
         bLedOn = true;
 
         // get a reference to our DeviceInterfaceModule object.
