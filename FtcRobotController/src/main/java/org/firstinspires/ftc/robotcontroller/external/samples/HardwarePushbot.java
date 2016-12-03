@@ -60,17 +60,11 @@ public class HardwarePushbot
         //armMotor    = hwMap.dcMotor.get("left_arm");
         RightBallLauncher = hwMap.dcMotor.get("RightLauncher");
         LeftBallLauncher = hwMap.dcMotor.get("LeftLauncher");
-<<<<<<< HEAD
+
         leftMotor.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         rightMotor.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         RightBallLauncher.setDirection(DcMotor.Direction.FORWARD);
         LeftBallLauncher.setDirection(DcMotor.Direction.REVERSE);
-=======
-        leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        RightBallLauncher.setDirection(DcMotor.Direction.REVERSE);
-        LeftBallLauncher.setDirection(DcMotor.Direction.FORWARD);
->>>>>>> origin/Invaders
 
         // Set all motors to zero power
         leftMotor.setPower(0);
