@@ -1,11 +1,10 @@
 package org.firstinspires.ftc.team9374;
 
 import com.qualcomm.hardware.adafruit.BNO055IMU;
+import com.qualcomm.hardware.adafruit.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 import java.util.List;
@@ -16,35 +15,42 @@ import java.util.Locale;
  */
 
 public class MotorMatr {
+    //----------------------------------------------------------------------------------------------
+    // State
+    //----------------------------------------------------------------------------------------------
 
-    Orientation[] angles = new Orientation[2];
+    // The IMU sensor object
+    BNO055IMU imu;
 
-    public DcMotor[][] Motors = new DcMotor[10][4];
+    // State used for updating telemetry
+    Orientation angles;
+    Acceleration gravity;
 
-    public void addMotors(int row, DcMotor... motors) {
-        for (int i = 0; i < motors.length; i++) {
-            this.Motors[row][i] = motors[i];
-        }
+    //----------------------------------------------------------------------------------------------
+    // Main logic
+    //----------------------------------------------------------------------------------------------
+
+    public void launch() {
+
+        // Set up the parameters with which we will use our IMU. Note that integration
+        // algorithm here just reports accelerations to the logcat log; it doesn't actually
+        // provide positional information.
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "AdafruitIMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
+        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
+        // and named "imu".
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
     }
 
-    public void runMotors(int column, float power) {
-        for (int i = 0; i < this.Motors.length; i++) {
-            this.Motors[i][column-1].setPower(power);
-        }
-    }
-
-    public void rotateDegrees(BNO055IMU imu, float degrees, int left, int right) {
-        angles[0] = imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX);
-        double init = formatAngle(angles[0].angleUnit, angles[0].firstAngle);
-        double cur = formatAngle(angles[0].angleUnit, angles[0].firstAngle);
-        while (Math.abs(init-cur) != init + degrees) {
-            runMotors(left, -(degrees/Math.abs(degrees)));
-            runMotors(right, (degrees/Math.abs(degrees)));
-            cur = formatAngle(angles[0].angleUnit, angles[0].firstAngle);
-        }
-    }
-
-    double formatAngle(AngleUnit angleUnit, double angle) {
-        return AngleUnit.DEGREES.fromUnit(angleUnit, angle);
+    public void run() {
+        
     }
 }
