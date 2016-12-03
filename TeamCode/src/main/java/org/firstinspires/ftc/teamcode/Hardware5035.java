@@ -79,7 +79,7 @@ public class Hardware5035 {
         rightMotor.setPower(0);
         ballBooster1.setPower(0);
         ballBooster2.setPower(0);
-        ballDump.setPower(0);
+        ballDump.setPower(0.10);
         popUp.setPosition(1);
 
         // Set all motors to run without encoders.
