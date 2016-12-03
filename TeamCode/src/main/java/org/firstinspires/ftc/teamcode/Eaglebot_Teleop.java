@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 // Eaglebot Teleop
 @TeleOp(name="Eaglebot: Teleop", group="Eaglebot")
@@ -44,6 +45,8 @@ public class Eaglebot_Teleop extends OpMode{
 
     /* Declare OpMode members. */
     Eaglebot robot       = new Eaglebot(); // class defining an Eaglebot is in the 'Eaglebot' teamcode file
+    double paddle;
+    private ElapsedTime runtime = new ElapsedTime();
 
 
     /*
@@ -93,6 +96,34 @@ public class Eaglebot_Teleop extends OpMode{
         robot.frontLeft.setPower(fLeft);
         robot.backLeft.setPower(bLeft);
         robot.backRight.setPower(bRight);
+        if (gamepad1.dpad_up) {
+            robot.leftArm.setPosition(1);
+            runtime.reset();
+            while (runtime.seconds() < 0.5) {
+
+            }
+            robot.rightArm.setPosition(1);
+        }
+        else if (gamepad1.dpad_down) {
+            robot.rightArm.setPosition(0);
+            runtime.reset();
+            while (runtime.seconds() < 0.5) {
+
+            }
+            robot.leftArm.setPosition(0);
+        }
+        if (gamepad1.a) {
+            if (paddle < 1) {
+                paddle += 0.2;
+            }
+            robot.ballPusher.setPosition(paddle);
+        }
+        else if (gamepad1.y) {
+            if (paddle > 0) {
+                paddle -= 0.2;
+            }
+            robot.ballPusher.setPosition(paddle);
+        }
 
     }
 

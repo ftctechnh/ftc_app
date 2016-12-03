@@ -12,8 +12,8 @@ import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
  * This is NOT an opmode.
  *
  * This class can be used to define all the specific hardware for a single robot.
- * In this case that robot is a Pushbot.
- * See PushbotTeleopTank_Iterative and others classes starting with "Pushbot" for usage examples.
+ * The robot is the Eaglebot
+ *
  *
  * This hardware class assumes the following device names have been configured on the robot:
  * Note:  All names are lower case and some have single spaces between words.
@@ -31,13 +31,16 @@ public class Eaglebot
     public DcMotor frontLeft = null;
     public DcMotor backRight = null;
     public DcMotor backLeft = null;
+    public Servo  leftArm = null;
+    public Servo rightArm = null;
+    public Servo ballPusher = null;
     public LightSensor lightSensorBeacon = null;
     public LightSensor lightSensorFloor = null;
     public double FORWARD_SPEED = 0.6;
     public double TURN_SPEED = 0.5;
     public double threshold = 1.94;
     public double TOP_SPEED = 1.0;
-    // public OpticalDistanceSensor odsSensor = null;
+   // public OpticalDistanceSensor odsSensor = null;
 
 
 
@@ -66,6 +69,11 @@ public class Eaglebot
         backRight = hwMap.dcMotor.get("se_motor");
         lightSensorBeacon = hwMap.lightSensor.get("light_sensor_beacon");
         lightSensorFloor = hwMap.lightSensor.get ("light_sensor_floor");
+        // odsSensor = hwMap.opticalDistanceSensor.get("optical_distance");
+        leftArm = hwMap.servo.get("left_arm");
+        rightArm = hwMap.servo.get("right_arm");
+        rightArm.setDirection(Servo.Direction.REVERSE);
+        ballPusher = hwMap.servo.get("paddle");
 
 
         frontLeft.setDirection(DcMotor.Direction.FORWARD);
@@ -84,7 +92,7 @@ public class Eaglebot
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define and initialize ALL installed servos.

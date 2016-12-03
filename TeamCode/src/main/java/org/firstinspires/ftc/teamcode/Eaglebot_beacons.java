@@ -132,9 +132,15 @@ public class Eaglebot_beacons extends LinearOpMode {
             while (runtime.seconds() < 1) {
                 robot.turn(robot.TURN_SPEED);
             }
+            while (robot.lightSensorFloor.getLightDetected() < robot.threshold) {
+                robot.turn(0.3);
+
+                }
+            robot.forward(APPROACH_SPEED);
+            }
 
 
 
         }
     }
-}
+
