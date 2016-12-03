@@ -15,7 +15,7 @@ public class ColorSensorTester extends AutonomousBase
     {
         bottomColorSensor.enableLed(true);
         leftColorSensor.enableLed(true);
-//        rightColorSensor.enableLed(true);
+        rightColorSensor.enableLed(true);
 
         while (opModeIsActive())
         {

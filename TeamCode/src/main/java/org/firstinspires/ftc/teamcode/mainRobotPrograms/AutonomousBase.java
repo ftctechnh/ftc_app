@@ -43,9 +43,6 @@ public abstract class AutonomousBase extends RobotBase {
 
         leftSensorServo = Initialize(Servo.class, "servoLeft");
         rightSensorServo = Initialize(Servo.class, "servoRight");
-
-        leftSensorServo.setPosition(1.0);
-        rightSensorServo.setPosition(1.0);
     }
 
     //All children should have special instructions.
