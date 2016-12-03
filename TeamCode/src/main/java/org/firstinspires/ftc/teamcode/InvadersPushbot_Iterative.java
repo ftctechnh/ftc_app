@@ -90,10 +90,6 @@ public class InvadersPushbot_Iterative extends OpMode{
 
         // Send telemetry message to signify robot waiting;
          updateTelemetry(telemetry);
-
-        //assert (limitSwitch != null);
-
-
     }
 
     /*
@@ -119,7 +115,7 @@ public class InvadersPushbot_Iterative extends OpMode{
         double right;
 
         // Use the left joystick to move the robot forwards/backwards and turn left/right
-        double x = -gamepad1.left_stick_x; // Note: The joystick goes negative when pushed forwards, so negate it
+        double x = gamepad1.left_stick_x; // Note: The joystick goes negative when pushed forwards, so negate it
         double y = -gamepad1.left_stick_y; // Note: The joystick goes negative when pushed right, so negate it
 
         // Algorithm for setting power to left/right motors based on joystick x/y values
@@ -134,6 +130,10 @@ public class InvadersPushbot_Iterative extends OpMode{
         // Read our limit switch to see if the arm is too high
         boolean limitTriggered = limitSwitch.isPressed();
 
+        if(limitTriggered) {
+            robot.BallElevator.setPower(0);  //Elevator off
+        }
+
         // Send telemetry message to signify robot running;
         telemetry.addData("left",  "%.2f", left);
         telemetry.addData("right", "%.2f", right);
@@ -143,50 +143,36 @@ public class InvadersPushbot_Iterative extends OpMode{
         updateTelemetry(telemetry);
 
         //Beacon button and pusher button
-       robot.beacon.setPosition(1-gamepad1.left_trigger);
-        robot.pusher.setPosition(gamepad1.right_trigger);
+        robot.beacon.setPosition(1-gamepad1.left_trigger);
+        robot.pusher.setPosition(1-(gamepad1.right_trigger*0.5));  // Limit pusher range from 100% to 50% (ie all the way open to halfway closed)
 
-        //Pusher Buttons
-//       if (gamepad1.x == true){
-//           robot.pusher.setPosition(1);
-//       }
-//        if (gamepad1.b == true){
-//            robot.pusher.setPosition(0);
-//        }
 
         if (gamepad1.a == true){
             if (limitSwitch.isPressed() == true){
-
+                robot.BallElevator.setPower(0);
             }
             else {
-                robot.BallElevator.setPower(1);
-                if (limitSwitch.isPressed() == true){
-                    robot.BallElevator.setPower(0);
-                }
+                robot.BallElevator.setPower(-1); // Elevator down
             }
         }
-
-        if (gamepad1.y == true){
-            robot.BallElevator.setPower(-1);
+        else if (gamepad1.y == true){
+            robot.BallElevator.setPower(1);
         }
         else {
             robot.BallElevator.setPower(0);
         }
 
         if (gamepad1.start == true){
-            robot.LeftBallLauncher.setPower(1);
-            robot.RightBallLauncher.setPower(1);
+            robot.LeftBallLauncher.setPower(-1);
+            robot.RightBallLauncher.setPower(-1);
         }
-        else {
+        else if (gamepad1.back == true) {
             robot.LeftBallLauncher.setPower(0);
             robot.RightBallLauncher.setPower(0);
+            if(!limitTriggered) {
+                robot.BallElevator.setPower(-1);  //Elevator down
+            }
         }
-        if (gamepad1.back == true) {
-            robot.LeftBallLauncher.setPower(0);
-            robot.RightBallLauncher.setPower(0);
-        }
-
-
     }
 
     /*
@@ -194,6 +180,12 @@ public class InvadersPushbot_Iterative extends OpMode{
      */
     @Override
     public void stop() {
+        robot.pusher.setPosition(0.5);
+        robot.beacon.setPosition(0.5);
+        robot.BallElevator.setPower(0);
+        robot.leftMotor.setPower(0.0);
+        robot.rightMotor.setPower(0.0);
+        robot.LeftBallLauncher.setPower(0.0);
+        robot.RightBallLauncher.setPower(0.0);
     }
-
 }
