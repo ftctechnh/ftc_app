@@ -143,8 +143,13 @@ public class InvadersPushbot_Iterative extends OpMode{
         updateTelemetry(telemetry);
 
         //Beacon button and pusher button
+<<<<<<< HEAD
         robot.beacon.setPosition(1-gamepad1.left_trigger);
         robot.pusher.setPosition(1-(gamepad1.right_trigger*0.5));  // Limit pusher range from 100% to 50% (ie all the way open to halfway closed)
+=======
+        robot.beacon.setPosition(Math.abs(.9-gamepad1.left_trigger));
+        robot.pusher.setPosition(Math.abs(gamepad1.right_trigger-0.1));
+>>>>>>> origin/Invaders
 
 
         if (gamepad1.a == true){
@@ -152,14 +157,19 @@ public class InvadersPushbot_Iterative extends OpMode{
                 robot.BallElevator.setPower(0);
             }
             else {
+<<<<<<< HEAD
                 robot.BallElevator.setPower(-1); // Elevator down
             }
         }
         else if (gamepad1.y == true){
             robot.BallElevator.setPower(1);
+=======
+                robot.BallElevator.setPower(1);
+            }
         }
-        else {
-            robot.BallElevator.setPower(0);
+        else if (gamepad1.y == true){
+            robot.BallElevator.setPower(-1);
+>>>>>>> origin/Invaders
         }
 
         if (gamepad1.start == true){
