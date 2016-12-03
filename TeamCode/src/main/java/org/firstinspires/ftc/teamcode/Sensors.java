@@ -32,7 +32,8 @@ public class Sensors
 //        colorSensorLeft = hardwareMap.colorSensor.get("sensor_color_left");
 //        colorSensorRight = hardwareMap.colorSensor.get("sensor_color_right");
 //        colorSensorBottom = hardwareMap.colorSensor.get("sensor_color_bottom");
-//        rangeSensorFront = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "");
+        rangeSensorFront = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "");
+        rangeSensorBack = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "");
 //        colorSensorBottom = hardwareMap.
     }
 
