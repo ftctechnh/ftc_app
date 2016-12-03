@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.hardware.I2cAddr;
 
 //For added simplicity while coding autonomous with the new FTC system. Utilized inheritance and polymorphism.
 public abstract class AutonomousBase extends RobotBase {
@@ -20,10 +21,13 @@ public abstract class AutonomousBase extends RobotBase {
     {
         //Initialize color sensors for either side (do in AutonomousBase because they are useless during teleop.
         leftColorSensor = Initialize(ColorSensor.class, "colorLeft");
+        leftColorSensor.setI2cAddress(I2cAddr.create8bit(0x2c));
         leftColorSensor.enableLed(true);
 //        rightColorSensor = Initialize(ColorSensor.class, "colorRight");
+//        rightColorSensor.setI2cAddress(I2cAddr.create8bit(0x3c));
 //        rightColorSensor.enableLed(true);
         bottomColorSensor = Initialize(ColorSensor.class, "colorBottom");
+        bottomColorSensor.setI2cAddress(I2cAddr.create8bit(0x4c));
         bottomColorSensor.enableLed(true);
 
         leftSensorServo = Initialize(Servo.class, "servoLeft");
