@@ -2,9 +2,7 @@ package org.firstinspires.ftc.team8745;
 //1120
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -13,9 +11,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 /**
  * Created by some guy "named" 8K Proggramming on 10/30/2016.
  */
-@Autonomous(name="8k Auto NO MOVE Shoot")
+@Autonomous(name="8k Auto NO MOVE Shoot Corner")
 //@Disabled
-public class AutonomousNoMoveWithShooter extends LinearOpMode {
+public class A_NoMoveWithShooterNearCorner extends LinearOpMode {
     private static final int TICS_PER_REV =1120;
 
     private double WHEEL_DIAMETER = 4;
@@ -34,9 +32,9 @@ public class AutonomousNoMoveWithShooter extends LinearOpMode {
 
     public int ticks = ticsForInches(60);
 
-    final double kServoNullPosition = 0.8;
+    final double kServoNullPosition = 0.83;
     final double kServoRange = 0.6;
-    final double kShooterEnginePower = 0.8;
+    final double kShooterEnginePower = 0.7;
 
 
     private int ticsForInches(double inches){
