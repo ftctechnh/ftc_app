@@ -17,11 +17,11 @@ public class RangePair
     double distanceApart;
 
 
-    public RangePair(HardwareMap hardwareMap, double distanceBetweenSensors)
+    public RangePair(HardwareMap hardwareMap, double cmBetweenSensors)
     {
         rangeSensorFront = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "");
         rangeSensorBack = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "");
-        distanceApart = distanceBetweenSensors;
+        distanceApart = cmBetweenSensors;
     }
 
     public double meanDistance()

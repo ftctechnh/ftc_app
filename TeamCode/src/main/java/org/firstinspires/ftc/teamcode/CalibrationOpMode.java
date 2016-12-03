@@ -47,10 +47,26 @@ public class CalibrationOpMode extends LinearOpMode {
     //Power constants
     private static final double LOW_POWER = .1;
 
+    //Calibration variables
+    public double leftCalibrator;
+    public double rightCalibrator;
+    private double calibrationDecrement;
+
+    //Time constants
+    private static final double TIME_ONE = 10.0;
+
+    RangePair rangePair = null;
+
     @Override
     public void runOpMode() {
         engine = new DriveEngine(DriveEngine.engineMode.directMode, hardwareMap, gamepad1);
         sensors = new Sensors(hardwareMap);
+        rangePair = new RangePair(hardwareMap, 30);
+
+        leftCalibrator = 1;
+        rightCalibrator = 1;
+        calibrationDecrement = .04;
+
         //Wait for the game to start (driver presses PLAY)
         waitForStart();
         timer.reset();
@@ -58,19 +74,32 @@ public class CalibrationOpMode extends LinearOpMode {
         //Run until the end of autonomous
         while (opModeIsActive())
         {
-            //Run until we hit something
-            while(sensors.rangeSensorFront.cmUltrasonic() && goingForward)
+            //Run until the end of time_one
+            while(timer.seconds()<TIME_ONE)
             {
-                if(timer.seconds()<TIME_ONE)
-                    engine.drive(LOW_POWER);
-                else if(timer.seconds() < TIME_TWO)
-                    engine.drive(MID_POWER);
-                else
-                    engine.drive(HIGH_POWER);
+                //Sets the default power to low_power
+                engine.drive(1, LOW_POWER * rightCalibrator, LOW_POWER * leftCalibrator);
+
+                //Modifies the power to the motors using a decrement
+                if(rangePair.angleToWall()>0)
+                {
+                    if(leftCalibrator == 1)
+                        rightCalibrator -= calibrationDecrement;
+
+                    //makes sure that one motor is always at the full power
+                    else
+                        leftCalibrator = 1;
+                }
+
+                if(rangePair.angleToWall()<0)
+                {
+                    if(leftCalibrator == 1)
+                        rightCalibrator -= calibrationDecrement;
+                    else
+                        leftCalibrator = 1;
+                }
             }
 
-            //Reset the timer
-            timer.reset();
 
             engine.stop();
 
