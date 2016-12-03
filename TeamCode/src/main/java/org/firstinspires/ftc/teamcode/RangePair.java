@@ -11,28 +11,25 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class RangePair
 {
-    ModernRoboticsI2cRangeSensor rangeSensorFront = null;
-    ModernRoboticsI2cRangeSensor rangeSensorBack = null;
+    Sensors sensors = null;
 
     double distanceApart;
 
 
-    public RangePair(HardwareMap hardwareMap, double cmBetweenSensors)
+    public RangePair(HardwareMap hardwareMap, double cmBetweenSensors, Sensors sensors)
     {
-        rangeSensorFront = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "");
-        rangeSensorBack = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "");
         distanceApart = cmBetweenSensors;
     }
 
     public double meanDistance()
     {
-        return (rangeSensorBack.getDistance(DistanceUnit.CM)+rangeSensorFront.getDistance(DistanceUnit.CM))/2;
+        return (sensors.rangeSensorBack.getDistance(DistanceUnit.CM)+sensors.rangeSensorFront.getDistance(DistanceUnit.CM))/2;
     }
 
     public double angleToWall()
     {
-        double frontDistance = rangeSensorFront.getDistance(DistanceUnit.CM);
-        double backDistance = rangeSensorBack.getDistance(DistanceUnit.CM);
+        double frontDistance = sensors.rangeSensorFront.getDistance(DistanceUnit.CM);
+        double backDistance = sensors.rangeSensorBack.getDistance(DistanceUnit.CM);
         double difference = frontDistance - backDistance;
 
         return Math.atan(difference/distanceApart);
