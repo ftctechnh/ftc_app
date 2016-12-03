@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 //For added simplicity while coding autonomous with the new FTC system. Utilized inheritance and polymorphism.
@@ -9,11 +10,27 @@ public abstract class AutonomousBase extends RobotBase {
 
     //Only used during autonomous.
     protected GyroSensor gyroscope;
-    protected ColorSensor colorSensor;
+    protected ColorSensor leftColorSensor, rightColorSensor, bottomColorSensor;
+    protected Servo leftSensorServo, rightSensorServo;
+    protected final double RIGHT_SERVO_CLOSED = 1.0, LEFT_SERVO_CLOSED = 1.0;
+    protected final double LEFT_SERVO_MAX = 0.48, RIGHT_SERVO_MAX = 0.48;
 
     @Override
     protected void driverStationSaysINITIALIZE()
     {
+        //Initialize color sensors for either side (do in AutonomousBase because they are useless during teleop.
+        leftColorSensor = Initialize(ColorSensor.class, "colorLeft");
+        leftColorSensor.enableLed(true);
+//        rightColorSensor = Initialize(ColorSensor.class, "colorRight");
+//        rightColorSensor.enableLed(true);
+        bottomColorSensor = Initialize(ColorSensor.class, "colorBottom");
+        bottomColorSensor.enableLed(true);
+
+        leftSensorServo = Initialize(Servo.class, "servoLeft");
+        leftSensorServo.setPosition(LEFT_SERVO_CLOSED);
+        rightSensorServo = Initialize(Servo.class, "servoRight");
+        rightSensorServo.setPosition(RIGHT_SERVO_CLOSED);
+
         //Initialize gyroscope (will output whether it was found or not.
         gyroscope = Initialize(GyroSensor.class, "Gyroscope");
         if (gyroscope != null)
@@ -24,14 +41,12 @@ public abstract class AutonomousBase extends RobotBase {
             //Pause to prevent errors.
             sleep(1000);
 
-            while (gyroscope.isCalibrating())
+            while (opModeIsActive() && gyroscope.isCalibrating())
                 sleep(50);
 
             OutputToDriverStation("Gyroscope Calibration Complete!");
         }
 
-        //Initialize color sensor.
-        colorSensor = Initialize(ColorSensor.class, "Color Sensor");
     }
 
     //All children should have special instructions.

@@ -13,6 +13,21 @@ public class AutonomousDriveForward extends AutonomousBase
     //Called after runOpMode() has finished initializing.
     protected void driverStationSaysGO()
     {
-        drive(0.8, 2000);
+        while (opModeIsActive()) {
+            OutputRealTimeData(new String[]{
+                    "Bottom Color Sensor",
+                    "--------------------",
+                    "ARGB: " + bottomColorSensor.argb() + " Alpha: " + bottomColorSensor.alpha(),
+                    "Blue: " + bottomColorSensor.blue() + " Red: " + bottomColorSensor.red(),
+                    "Green: " + bottomColorSensor.green(),
+                    "Left Color Sensor",
+                    "--------------------",
+                    "ARGB: " + leftColorSensor.argb() + " Alpha: " + leftColorSensor.alpha(),
+                    "Blue: " + leftColorSensor.blue() + " Red: " + leftColorSensor.red(),
+                    "Green: " + leftColorSensor.green()
+            });
+            idle();
+        } // alpha > 10 = white
+//        drive(0.8, 2000);
     }
 }
