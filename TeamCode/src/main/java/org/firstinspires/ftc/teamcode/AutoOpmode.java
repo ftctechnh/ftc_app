@@ -79,14 +79,12 @@ public class AutoOpmode extends LinearOpMode {
         timer.reset();
 
         //Run until the end of autonomous
-        while (opModeIsActive())
-        {
+        while (opModeIsActive()) {
             //Run until we hit something
-            while(!touchSensor.getState() && goingForward)
-            {
-                if(timer.seconds()<TIME_ONE)
+            while (!touchSensor.getState() && goingForward) {
+                if (timer.seconds() < TIME_ONE)
                     engine.drive(LOW_POWER);
-                else if(timer.seconds() < TIME_TWO)
+                else if (timer.seconds() < TIME_TWO)
                     engine.drive(MID_POWER);
                 else
                     engine.drive(HIGH_POWER);
@@ -95,8 +93,7 @@ public class AutoOpmode extends LinearOpMode {
             //Reset the timer
             timer.reset();
             //Keep moving just a little longer to land on the black square
-            while(timer.seconds()<TIME_EXTRA && goingForward)
-            {
+            while (timer.seconds() < TIME_EXTRA && goingForward) {
                 engine.drive(HIGH_POWER);
             }
 
@@ -109,4 +106,5 @@ public class AutoOpmode extends LinearOpMode {
             idle();     // allow something else to run (aka, release the CPU)
         }
     }
+
 }
