@@ -137,31 +137,31 @@ public class FieldNavigator
     public void moveToPosition(double wantedX_in, double wantedY_in, double wantedDeg)
     {
 
-        /*double robotDeg = (-1 * currentDeg) + 90;
+        double robotDeg = (-1 * currentDeg) + 90;
 
-        double difference = (wantedX_in - currentX); //change in x
+        double differenceX = (wantedX_in - currentX); //change in x
 
-        if (difference < 0)
+        if (differenceX < 0)
         { //this means that current x is greater than wanted x, so move robot in -90 deg
-            //robot.driveStraight(difference, -robotDeg - 90);
+            robot.driveStraight(differenceX, robotDeg - 90);
         }
-        else if (difference > 0)
+        else if (differenceX > 0)
         {
-           // robot.driveStraight(difference -90 - robotDeg);
+           robot.driveStraight(differenceX, -90 - robotDeg);
         }
 
-        difference = wantedY_in - currentY; //change in y
+        double differenceY = wantedY_in - currentY; //change in y
 
-        if (difference < 0) // Means current y is greater than wanted y, so the robot is above, so move down , 0 deg,
+        if (differenceY < 0) // Means current y is greater than wanted y, so the robot is above, so move down , 0 deg,
         {
-         //   robot.driveStraight(difference, 180 - robotDeg);
+            robot.driveStraight(differenceY, robotDeg);
         }
-        else if (difference > 0) //move 180 deg
+        else if (differenceY > 0) //move 180 deg
         {
-       //     robot.driveStraight(difference, 180 - robotDeg);
+            robot.driveStraight(differenceY, robotDeg - 180);
         }
         //spin, positive values spin counter c, negative values for wanted deg does clock wise
-        */
+
         robot.spin((wantedDeg - currentDeg));
     }
 
