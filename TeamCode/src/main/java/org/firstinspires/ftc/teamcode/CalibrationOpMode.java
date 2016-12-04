@@ -26,79 +26,81 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
-import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 
 
 @Autonomous(name="AutoOpmode", group="Testing")  // @Autonomous(...) is the other common choice
 //@Disabled
-public class AutoOpmode extends LinearOpMode {
+public class CalibrationOpMode extends LinearOpMode {
 
     //This is our timer
     private ElapsedTime timer = new ElapsedTime();
 
-    //The engine which controlls our drive motors
+    //The engine which controls our drive motors
     DriveEngine engine = null;
-
-    //The touch sensor devices
-    DeviceInterfaceModule dim = null;
-    DigitalChannel touchSensor = null;
-
-    //Flag to indicate we are still moving
-    boolean goingForward = true;
-
-    //Time constants
-    private static final double TIME_ONE = 2;
-    private static final double TIME_TWO = 10;
-    private static final double TIME_EXTRA = .2;
+    Sensors sensors = null;
 
     //Power constants
     private static final double LOW_POWER = .1;
-    private static final double MID_POWER = .15;
-    private static final double HIGH_POWER = .2;
+
+    //Calibration variables
+    public double leftCalibrator;
+    public double rightCalibrator;
+    private double calibrationDecrement;
+
+    //Time constants
+    private static final double TIME_ONE = 10.0;
+
+    RangePair rangePair = null;
 
     @Override
     public void runOpMode() {
         engine = new DriveEngine(DriveEngine.engineMode.directMode, hardwareMap, gamepad1);
-        dim = hardwareMap.get(DeviceInterfaceModule.class, "dim");
-        touchSensor = hardwareMap.get(DigitalChannel.class, "sensor_touch");
+        sensors = new Sensors(hardwareMap);
+        rangePair = new RangePair(hardwareMap, 30, sensors);
+
+        leftCalibrator = 1;
+        rightCalibrator = 1;
+        calibrationDecrement = .04;
 
         //Wait for the game to start (driver presses PLAY)
         waitForStart();
         timer.reset();
 
         //Run until the end of autonomous
-        while (opModeIsActive()) {
-            //Run until we hit something
-            while (!touchSensor.getState() && goingForward) {
-                if (timer.seconds() < TIME_ONE)
-                    engine.drive(LOW_POWER);
-                else if (timer.seconds() < TIME_TWO)
-                    engine.drive(MID_POWER);
-                else
-                    engine.drive(HIGH_POWER);
+        while (opModeIsActive())
+        {
+            //Run until the end of time_one
+            while(timer.seconds()<TIME_ONE)
+            {
+                //Sets the default power to low_power
+                engine.drive(1, LOW_POWER * rightCalibrator, LOW_POWER * leftCalibrator);
+
+                //Modifies the power to the motors using a decrement
+                if(rangePair.angleToWall()>0)
+                {
+                    if(leftCalibrator == 1)
+                        rightCalibrator -= calibrationDecrement;
+
+                    //makes sure that one motor is always at the full power
+                    else
+                        leftCalibrator = 1;
+                }
+
+                if(rangePair.angleToWall()<0)
+                {
+                    if(leftCalibrator == 1)
+                        rightCalibrator -= calibrationDecrement;
+                    else
+                        leftCalibrator = 1;
+                }
             }
 
-            //Reset the timer
-            timer.reset();
-            //Keep moving just a little longer to land on the black square
-            while (timer.seconds() < TIME_EXTRA && goingForward) {
-                engine.drive(HIGH_POWER);
-            }
 
-            //Stop everything
-            goingForward = false;
             engine.stop();
 
             telemetry.addLine("Stopped");
@@ -106,5 +108,4 @@ public class AutoOpmode extends LinearOpMode {
             idle();     // allow something else to run (aka, release the CPU)
         }
     }
-
 }
