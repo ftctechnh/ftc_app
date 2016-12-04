@@ -61,7 +61,7 @@ public class CalibrationOpMode extends LinearOpMode {
     public void runOpMode() {
         engine = new DriveEngine(DriveEngine.engineMode.directMode, hardwareMap, gamepad1);
         sensors = new Sensors(hardwareMap);
-        rangePair = new RangePair(hardwareMap, 30);
+        rangePair = new RangePair(hardwareMap, 30, sensors);
 
         leftCalibrator = 1;
         rightCalibrator = 1;
