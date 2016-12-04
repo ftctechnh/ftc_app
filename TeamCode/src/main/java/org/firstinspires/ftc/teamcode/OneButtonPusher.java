@@ -7,8 +7,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class OneButtonPusher
 {
-
-
     private ElapsedTime timer = null;
 
     DcMotor frontPusher = null;
@@ -18,7 +16,6 @@ public class OneButtonPusher
     private DcMotor.Direction frontDirection = DcMotor.Direction.REVERSE;
 
     private double frontPower = 0;  //[0.0, 1.0]
-    private double backPower = 0; //[0.0, 1.0]
 
 
 
@@ -39,11 +36,6 @@ public class OneButtonPusher
     public Double getFrontPower()
     {
         return frontPower;
-    }
-
-    public Double getBackPower()
-    {
-        return backPower;
     }
 
     public void invertDirection()
