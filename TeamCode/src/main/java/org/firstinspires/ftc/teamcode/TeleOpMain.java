@@ -32,6 +32,10 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
+import android.app.Activity;
+import android.graphics.Color;
+import android.view.View;
+
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -39,6 +43,14 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
+import org.firstinspires.ftc.robotcore.external.Func;
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+
+import java.util.Locale;
 
 /**
  * This file provides basic Telop driving for a Pushbot robot.
@@ -54,8 +66,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
-
-@TeleOp(name="TeleOp Main", group="DM")
+@TeleOp(name="TeleOpMain", group="DM")
 // @Disabled
 
 public class TeleOpMain extends OpMode{
@@ -69,8 +80,23 @@ public class TeleOpMain extends OpMode{
     static final int     NR_MAX_RPM              = 6600;
     static final int     SHOOT_MAX_RPM           = NR_MAX_RPM * COUNTS_PER_MOTOR_REV;
 
-    static double           shootSpeed              = .50;
+    static double           shootSpeed              = .65;
     static boolean          shootPressed            = false;
+
+
+
+    // State used for reading Gyro
+    Orientation angles;
+    Acceleration gravity;
+
+    // Variables used for reading and processing Adafruit color sensor
+    // hsvValues is an array that will hold the hue, saturation, and value information.
+    float hsvValues[] = {0F,0F,0F};
+    // values is a reference to the hsvValues array.
+    final float values[] = hsvValues;
+    View relativeLayout;
+
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -89,8 +115,14 @@ public class TeleOpMain extends OpMode{
         robot.lShoot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.rShoot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Hello Driver");
+
+        //Setup for Adafruit RGB sensor
+        // get a reference to the RelativeLayout so we can change the background
+        // color of the Robot Controller app to match the hue detected by the RGB sensor.
+        relativeLayout = ((Activity) robot.hwMap.appContext).findViewById(com.qualcomm.ftcrobotcontroller.R.id.RelativeLayout);
+
+        // Set up our telemetry dashboard for Gyro
+        // composeTelemetry();
 
         updateTelemetry(telemetry);
     }
@@ -149,29 +181,27 @@ public class TeleOpMain extends OpMode{
 
 
         // Firing cam
-        if (gamepad2.a) {
+        if (gamepad2.right_trigger <= 0.2) {
             robot.fire.setPower(0.0);
-        } else if (gamepad2.b) {
-            robot.fire.setPower(0.5);
-        } else if (gamepad2.y) {
+        } else if (gamepad2.right_trigger > 0.2) {
             robot.fire.setPower(1.0);
         }
 
         // Shooter flywheel on/off
-        if (gamepad2.left_bumper) {
+        if (gamepad2.left_trigger <= 0.2) {
             robot.lShoot.setPower(0.0);
             robot.rShoot.setPower(0.0);
-        } else if (gamepad2.right_bumper) {
+        } else if (gamepad2.left_trigger > 0.2) {
             robot.lShoot.setPower(shootSpeed);
             robot.rShoot.setPower(shootSpeed);
         }
 
         // Adjust shooter speed
         if (gamepad2.dpad_down && !shootPressed) {
-            shootSpeed -= 0.05;
+            shootSpeed -= 0.025;
             shootPressed = true;
         } else if (gamepad2.dpad_up && !shootPressed) {
-            shootSpeed += 0.05;
+            shootSpeed += 0.025;
             shootPressed = true;
         }
         if (shootPressed && !gamepad2.dpad_down && !gamepad2.dpad_up) {
@@ -184,7 +214,48 @@ public class TeleOpMain extends OpMode{
         telemetry.addData("Shoot", shootSpeed);
         updateTelemetry(telemetry);
 
+
+        // Drive the ball intake
+        /*
+        if (gamepad1.b) {
+            robot.intake.setPower(0.0);
+        } else if (gamepad1.a) {
+            // feed in
+            robot.intake.setPower(1.0);
+        } else if (gamepad1.y) {
+            // feed reverse
+            robot.intake.setPower(-1.0);
+        }
+        */
+        if (gamepad1.right_trigger > 0.2) {
+            robot.intake.setPower(1.0);
+        } else if (gamepad1.left_trigger > 0.2) {
+            robot.intake.setPower(-1.0);
+        } else if (gamepad1.a ){
+            robot.intake.setPower(0.0);
+        }
+
+        // Read and report heading
+        angles   = robot.imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX);
+
+        telemetry.addData("heading", formatAngle(angles.angleUnit, angles.firstAngle) );
+
+
+        // Read and report Adafruit RGB sensor
+
+        // convert the RGB values to HSV values.
+        Color.RGBToHSV((robot.sensorRGB.red() * 255) / 800, (robot.sensorRGB.green() * 255) / 800,
+                (robot.sensorRGB.blue() * 255) / 800, hsvValues);
+
+        // send the info back to driver station using telemetry function.
+        //telemetry.addData("Clear", robot.sensorRGB.alpha());
+        //telemetry.addData("Red  ", robot.sensorRGB.red());
+        //telemetry.addData("Green", robot.sensorRGB.green());
+        //telemetry.addData("Blue ", robot.sensorRGB.blue());
+        telemetry.addData("Hue", hsvValues[0]);
+
     }
+
 
     /*
      * Code to run ONCE after the driver hits STOP
@@ -247,6 +318,64 @@ public class TeleOpMain extends OpMode{
                 return 0.0;
 
         }
+    }
+
+    void composeTelemetry() {
+
+        // At the beginning of each telemetry update, grab a bunch of data
+        // from the IMU that we will then display in separate lines.
+        telemetry.addAction(new Runnable() { @Override public void run()
+        {
+            // Acquiring the angles is relatively expensive; we don't want
+            // to do that in each of the three items that need that info, as that's
+            // three times the necessary expense.
+            angles   = robot.imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX);
+            gravity  = robot.imu.getGravity();
+        }
+        });
+
+        telemetry.addLine()
+                .addData("status", new Func<String>() {
+                    @Override public String value() {
+                        return robot.imu.getSystemStatus().toShortString();
+                    }
+                })
+                .addData("calib", new Func<String>() {
+                    @Override public String value() {
+                        return robot.imu.getCalibrationStatus().toString();
+                    }
+                });
+
+        telemetry.addLine()
+                .addData("heading", new Func<String>() {
+                    @Override public String value() {
+                        return formatAngle(angles.angleUnit, angles.firstAngle);
+                    }
+                })
+                .addData("roll", new Func<String>() {
+                    @Override public String value() {
+                        return formatAngle(angles.angleUnit, angles.secondAngle);
+                    }
+                })
+                .addData("pitch", new Func<String>() {
+                    @Override public String value() {
+                        return formatAngle(angles.angleUnit, angles.thirdAngle);
+                    }
+                });
+
+
+    }
+
+    //----------------------------------------------------------------------------------------------
+    // Formatting
+    //----------------------------------------------------------------------------------------------
+
+    String formatAngle(AngleUnit angleUnit, double angle) {
+        return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
+    }
+
+    String formatDegrees(double degrees){
+        return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
 
 }

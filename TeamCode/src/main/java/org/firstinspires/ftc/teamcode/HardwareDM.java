@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.adafruit.BNO055IMU;
+import com.qualcomm.hardware.adafruit.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -39,8 +42,17 @@ public class HardwareDM
     public DcMotor lShoot = null;
     public DcMotor rShoot = null;
 
+    /*  Intake motor */
+    public DcMotor intake = null;
+
     /* Shooter feed cam */
     public CRServo fire = null;
+
+    // The IMU sensor object
+    BNO055IMU imu;
+
+    /* Adafruit RGB Sensor */
+    ColorSensor sensorRGB;
 
     /* Local OpMode members. */
     HardwareMap hwMap  = null;
@@ -62,6 +74,7 @@ public class HardwareDM
         rrDrive   = hwMap.dcMotor.get("rr motor");
         lShoot    = hwMap.dcMotor.get("l shoot");
         rShoot    = hwMap.dcMotor.get("r shoot");
+        intake    = hwMap.dcMotor.get("intake");
 
         // Define and initialize servos
         fire = hwMap.crservo.get("fire");
@@ -75,6 +88,7 @@ public class HardwareDM
         lShoot.setPower(0.0);
         rShoot.setPower(0.0);
         fire.setPower(0.0);
+        intake.setPower(0.0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -84,15 +98,37 @@ public class HardwareDM
         rrDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         lShoot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rShoot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Set drive train motor directions
         lfDrive.setDirection(DcMotor.Direction.REVERSE);
         lrDrive.setDirection(DcMotor.Direction.REVERSE);
         rfDrive.setDirection(DcMotor.Direction.FORWARD);
         rrDrive.setDirection(DcMotor.Direction.FORWARD);
-        lShoot.setDirection(DcMotor.Direction.FORWARD);
-        rShoot.setDirection(DcMotor.Direction.REVERSE);
+        lShoot.setDirection(DcMotor.Direction.REVERSE);
+        rShoot.setDirection(DcMotor.Direction.FORWARD);
+        intake.setDirection(DcMotor.Direction.REVERSE);
 
+
+        // Set up the parameters with which we will use our IMU. Note that integration
+        // algorithm here just reports accelerations to the logcat log; it doesn't actually
+        // provide positional information.
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "AdafruitIMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
+        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
+        // and named "imu".
+        imu = hwMap.get(BNO055IMU.class, "gyro");
+        imu.initialize(parameters);
+
+        // Retrieve and initialize the Adafruit color sensor
+        sensorRGB = hwMap.colorSensor.get("color");
     }
 
     /***

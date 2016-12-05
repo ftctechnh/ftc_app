@@ -67,21 +67,29 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: Auto Drive By Encoder", group="Pushbot")
-@Disabled
+@Autonomous(name="Auto Drive Blue", group="DM")
+// @Disabled
 public class AutoDriveByEncoder extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareDM         robot   = new HardwareDM ();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
-    static final double     COUNTS_PER_MOTOR_REV    = 28 ;    // eg: TETRIX Motor Encoder
+    static final int        COUNTS_PER_MOTOR_REV    = 7 ;    // eg: AM Neverrest
     static final double     DRIVE_GEAR_REDUCTION    = 40.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
-    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+    static final double     COUNTS_PER_INCH         = (4 * COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.6;
+    static final double     DRIVE_SPEED             = 0.3;
     static final double     TURN_SPEED              = 0.5;
+
+    /* Shooter constants */
+
+    static final int     NR_MAX_RPM              = 6600;
+    static final int     SHOOT_MAX_RPM           = NR_MAX_RPM * COUNTS_PER_MOTOR_REV;
+
+    static double           shootSpeed              = .65;
+    static boolean          shootPressed            = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -110,24 +118,55 @@ public class AutoDriveByEncoder extends LinearOpMode {
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",
                           robot.lfDrive.getCurrentPosition(),
-                          robot.lrDrive.getCurrentPosition(),
-                          robot.rfDrive.getCurrentPosition(),
-                          robot.rrDrive.getCurrentPosition());
+                          robot.rfDrive.getCurrentPosition());
         telemetry.update();
+
+        // Setup max shooter motor speed limit
+        robot.lShoot.setMaxSpeed(SHOOT_MAX_RPM);
+        robot.rShoot.setMaxSpeed(SHOOT_MAX_RPM);
+
+        // Use encoder for shooter speed
+        robot.lShoot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.rShoot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
         // Step through each leg of the path,
-        // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
-        /*
-        robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
-        robot.rightClaw.setPosition(0.0);
-        sleep(1000);     // pause for servos to move
-        */
+
+        // Spin up the shooter
+        robot.lShoot.setPower(shootSpeed);
+        robot.rShoot.setPower(shootSpeed);
+
+        // Move forward 26 inches
+        encoderDrive(DRIVE_SPEED,  26,  26, 5.0);  // S1: Forward 24 Inches with 5 Sec timeout
+
+        // Fire the balls
+        robot.fire.setPower(1.0);
+        sleep(5000);        // Wait 5 seconds for shot to finish
+
+        // Stop the shooter
+        robot.fire.setPower(0.0);
+        robot.lShoot.setPower(0.0);
+        robot.rShoot.setPower(0.0);
+
+        // Intake full reverse to push cap ball
+        robot.intake.setPower(-1.0);
+
+        // Drive forward to push cap ball
+        encoderDrive(DRIVE_SPEED, 18, 18, 3.0);
+
+        // Back off and Turn right
+        encoderDrive(DRIVE_SPEED, -10, -10, 1.0);
+        encoderDrive(DRIVE_SPEED, amIBlue()*25, amIBlue()*-25, 3.0);
+
+        // And drive onto center vortex
+        encoderDrive(DRIVE_SPEED, -28, -28, 5.0);
+
+        // And shut down
+        robot.intake.setPower(0.0);
+
+
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
@@ -143,22 +182,24 @@ public class AutoDriveByEncoder extends LinearOpMode {
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,
                              double timeoutS) throws InterruptedException {
-        int newLeftTarget;
-        int newRightTarget;
+        int newLFTarget;
+        int newRFTarget;
+        int newLRTarget;
+        int newRRTarget;
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
 
-            newLeftTarget = robot.lfDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newLeftTarget = robot.lrDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newLeftTarget = robot.rfDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightTarget = robot.rrDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            robot.lfDrive.setTargetPosition(newLeftTarget);
-            robot.lrDrive.setTargetPosition(newLeftTarget);
-            robot.rfDrive.setTargetPosition(newLeftTarget);
-            robot.rrDrive.setTargetPosition(newRightTarget);
+            newLFTarget = robot.lfDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newLRTarget = robot.lrDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+            newRFTarget = robot.rfDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newRRTarget = robot.rrDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            robot.lfDrive.setTargetPosition(newLFTarget);
+            robot.lrDrive.setTargetPosition(newLRTarget);
+            robot.rfDrive.setTargetPosition(newRFTarget);
+            robot.rrDrive.setTargetPosition(newRRTarget);
 
             // Turn On RUN_TO_POSITION
             robot.lfDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -176,11 +217,13 @@ public class AutoDriveByEncoder extends LinearOpMode {
             // keep looping while we are still active, and there is time left, and both motors are running.
             while (opModeIsActive() &&
                    (runtime.seconds() < timeoutS) &&
-                   (robot.lfDrive.isBusy() && robot.lrDrive.isBusy() && robot.rfDrive.isBusy()&& robot.rrDrive.isBusy())) {
+                   (robot.lfDrive.isBusy() || robot.lrDrive.isBusy()
+                           || robot.rfDrive.isBusy()|| robot.rrDrive.isBusy())) {
 
                 // Display it for the driver.
-                telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
-                telemetry.addData("Path2",  "Running at %7d :%7d",
+                telemetry.addData("Path1",  "Running to %7d %7d : %7d %7d", newLFTarget,  newLRTarget,
+                    newRFTarget, newRRTarget);
+                telemetry.addData("Path2",  "Running at %7d %7d : %7d  %7d",
                                             robot.lfDrive.getCurrentPosition(),
                                             robot.lrDrive.getCurrentPosition(),
                                             robot.rfDrive.getCurrentPosition(),
@@ -206,5 +249,9 @@ public class AutoDriveByEncoder extends LinearOpMode {
 
             //  sleep(250);   // optional pause after each move
         }
+    }
+
+    public double amIBlue() {
+        return 1.0;
     }
 }
