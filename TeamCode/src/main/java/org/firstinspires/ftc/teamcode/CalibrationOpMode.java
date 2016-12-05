@@ -98,10 +98,15 @@ public class CalibrationOpMode extends LinearOpMode {
                     else
                         leftCalibrator = 1;
                 }
+                telemetry.addData("LeftCalibrator", leftCalibrator);
+                telemetry.addData("RightCalibrator", rightCalibrator);
             }
 
 
             engine.stop();
+
+            telemetry.addData("LeftCalibrator", leftCalibrator);
+            telemetry.addData("RightCalibrator", rightCalibrator);
 
             telemetry.addLine("Stopped");
             telemetry.update();
