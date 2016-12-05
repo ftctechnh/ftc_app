@@ -20,8 +20,8 @@ public class Sensors
     ColorSensor colorSensorRight = null;
     ColorSensor colorSensorBottom = null;
 
-    ModernRoboticsI2cRangeSensor rangeSensorFront = null;
-    ModernRoboticsI2cRangeSensor rangeSensorBack = null;
+    ModernRoboticsI2cRangeSensor rangeSensorLeft = null;
+    ModernRoboticsI2cRangeSensor rangeSensorRight = null;
 
     public Sensors(HardwareMap hardwareMap)
     {
@@ -32,8 +32,8 @@ public class Sensors
 //        colorSensorLeft = hardwareMap.colorSensor.get("sensor_color_left");
 //        colorSensorRight = hardwareMap.colorSensor.get("sensor_color_right");
 //        colorSensorBottom = hardwareMap.colorSensor.get("sensor_color_bottom");
-        rangeSensorFront = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "");
-        rangeSensorBack = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "");
+        rangeSensorLeft = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "");
+        rangeSensorRight = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "");
 //        colorSensorBottom = hardwareMap.
     }
 
