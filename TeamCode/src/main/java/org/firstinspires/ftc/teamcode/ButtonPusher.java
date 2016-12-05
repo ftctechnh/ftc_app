@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-public class OneButtonPusher
+public class ButtonPusher
 {
     private ElapsedTime timer = null;
 
@@ -19,7 +19,7 @@ public class OneButtonPusher
 
 
 
-    public OneButtonPusher(HardwareMap hardwareMap, Gamepad gamepad, Sensors sensors)
+    public ButtonPusher(HardwareMap hardwareMap, Gamepad gamepad, Sensors sensors)
     {
         this.gamepad = gamepad;
 
