@@ -17,6 +17,15 @@ import java.util.List;
 public class DcMotorUtil {
     private DcMotorUtil() {}  // Prevent instantiation
 
+    public static void setMotorsRunMode(List<DcMotor> motors, DcMotor.RunMode runMode) {
+        /**
+         * Set the RunMode of all motors in a list.
+         */
+        for (DcMotor mtr : motors) {
+            mtr.setMode(runMode);
+        }
+    }
+
     public static void setMotorsPower(List<DcMotor> motors, double power) {
         /**
          * Set the power of all motors in a list.
