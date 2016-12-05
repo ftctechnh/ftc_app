@@ -26,37 +26,57 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
-import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 
 
-@Autonomous(name="AutoOpmode", group="Testing")  // @Autonomous(...) is the other common choice
+@Autonomous(name="RedAutoOpmode", group="Testing")  // @Autonomous(...) is the other common choice
 //@Disabled
-public class AutoOpmode extends LinearOpMode {
+public class RedAutoOpmode extends LinearOpMode
+{
+    //Variable code by what mechanical pieces we have
+    int numSideColorSensors = 1;
+    int numButtonPushers = 1;
+
+    public enum Goal
+    {
+        ballColors,
+        justColors,
+        justBall,
+    }
+    Goal goal = Goal.ballColors;
+
+    public enum PusherMode
+    {
+        //How many pushers, how many color sensors
+        P1S1,
+        P1S2,
+        P2S1,
+        P2S2,
+    }
+    PusherMode pusherMode = PusherMode.P1S1;
 
     //This is our timer
     private ElapsedTime timer = new ElapsedTime();
+    private double timeToHit = 0;
 
-    //The engine which controlls our drive motors
+    //The engine which controls our drive motors
     DriveEngine engine = null;
 
     //The touch sensor devices
     DeviceInterfaceModule dim = null;
     DigitalChannel touchSensor = null;
 
-    //Flag to indicate we are still moving
-    boolean goingForward = true;
+    //Button Pushers
+    ButtonPusher pusher1 = null;
+    ButtonPusher pusher2 = null;
+
+    //Sensors
+
+
 
     //Time constants
     private static final double TIME_ONE = 2;
@@ -67,6 +87,14 @@ public class AutoOpmode extends LinearOpMode {
     private static final double LOW_POWER = .1;
     private static final double MID_POWER = .15;
     private static final double HIGH_POWER = .2;
+
+    //If blue
+    boolean blue = false;
+
+    RedAutoOpmode(boolean blue)
+    {
+        this.blue = blue;
+    }
 
     @Override
     public void runOpMode() {
@@ -80,31 +108,54 @@ public class AutoOpmode extends LinearOpMode {
 
         //Run until the end of autonomous
         while (opModeIsActive()) {
-            //Run until we hit something
-            while (!touchSensor.getState() && goingForward) {
-                if (timer.seconds() < TIME_ONE)
-                    engine.drive(LOW_POWER);
-                else if (timer.seconds() < TIME_TWO)
-                    engine.drive(MID_POWER);
-                else
+            if(goal == Goal.ballColors || goal == Goal.justBall)
+            {
+                //Run until we hit something
+                while (!touchSensor.getState()) {
+                    if (timer.seconds() < TIME_ONE)
+                        engine.drive(LOW_POWER);
+                    else if (timer.seconds() < TIME_TWO)
+                        engine.drive(MID_POWER);
+                    else
+                        engine.drive(HIGH_POWER);
+                }
+                timeToHit = timer.seconds();
+
+                //Reset the timer
+                timer.reset();
+                //Keep moving just a little longer to land on the black square
+                while (timer.seconds() < TIME_EXTRA) {
                     engine.drive(HIGH_POWER);
+                }
             }
 
-            //Reset the timer
-            timer.reset();
-            //Keep moving just a little longer to land on the black square
-            while (timer.seconds() < TIME_EXTRA && goingForward) {
-                engine.drive(HIGH_POWER);
+            if(goal == Goal.justBall) {
+                //Stop everything
+                engine.stop();
+
+                telemetry.addLine("Stopped");
+                telemetry.update();
+                idle();     // allow something else to run (aka, release the CPU)
             }
 
-            //Stop everything
-            goingForward = false;
-            engine.stop();
+            if(goal == Goal.ballColors){
+                engine.turn(180);
+                timer.reset();
+                while (timer.seconds()<timeToHit-.5) {
+                    if (timer.seconds() < TIME_ONE)
+                        engine.drive(LOW_POWER);
+                    else if (timer.seconds() < TIME_TWO)
+                        engine.drive(MID_POWER);
+                    else
+                        engine.drive(HIGH_POWER);
+                }
+                engine.stop();
 
-            telemetry.addLine("Stopped");
-            telemetry.update();
-            idle();     // allow something else to run (aka, release the CPU)
+            }
         }
+
     }
+
+   // public void driveAlongWall()
 
 }
