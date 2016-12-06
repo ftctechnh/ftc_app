@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.robocol.Heartbeat;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.opencv.core.Mat;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 // simple example sequence that tests either of gyro-based AzimuthCountedDriveStep or AzimuthTimedDriveStep to drive along a square path
 @Autonomous(name="Line Drive", group ="Line Follow")
 //@Disabled
-public class LineDrive extends OpenCVLib implements HeadingSensor, DisplacementSensor, FinishSensor {
+public class LineDrive extends OpenCVLib implements HeadingSensor, DisplacementSensor{
 
     private int yValStore[] = new int[3];
     private double lastLinePos = 0;
@@ -33,19 +34,31 @@ public class LineDrive extends OpenCVLib implements HeadingSensor, DisplacementS
     SensorLib.PID mgPid;                     // PID controller for the sequence
     SensorLib.PID mdPid;
 
-    // parameters of the PID controller for this sequence
+    // parameters of the PID controller for the heading of this sequence
     float Kp = 0.010f;        // motor power proportional term correction per degree of deviation
     float Ki = 0.000f;         // ... integrator term
     float Kd = 0;             // ... derivative term
     float KiCutoff = 3.0f;    // maximum angle error for which we update integrator
 
+    // parameters of the PID controller for the displacement of this sequence
     float Kp2 = 0.25f;
     float Ki2 = 0.0f;
     float Kd2 = 0;
     float Ki2Cutoff = 0.01f;
 
+    final double ultraDistS1 = 20;
+    final double ultraDistS2 = 13.5;
+
+    //constants for pushy pushy
+    final double pushPos = 1.0;
+    final double time = 2.0;
+    final boolean red = false;
+    final int colorThresh = 200;
+    final float driveTime = 0.1f;
+    final int driveLoopCount = 2;
+
     @Override
-public void init() {
+    public void init() {
         //init hardware objects
         final boolean debug = false;
         robot = new BotHardware();
@@ -64,8 +77,13 @@ public void init() {
         mSequence = new AutoLib.LinearSequence();
 
         mSequence.add(new DriveUntilLine(robot.getMotorArray(), power + 0.1, true));
-        mSequence.add(new LineGuideStep(this, 0, this, this, this, mgPid, mdPid, robot.getMotorArray(), power));
-        mSequence.add(new AutoLib.MoveByTimeStep(robot.getMotorArray(), 0, 0.0, false));
+        //two-stage line follow
+        mSequence.add(new LineDriveStep(this, 0, this, this, new UltraStop(ultraDistS1), mgPid, mdPid, robot.getMotorArray(), power + 0.1f, false));
+        mSequence.add(new LineDriveStep(this, 0, this, this, new UltraStop(ultraDistS2), mgPid, mdPid, robot.getMotorArray(), power + 0.1f, true));
+        //pushy pushy
+        mSequence.add(new PushyLib.pushypushy(robot.getMotorArray(), robot.leftSensor, robot.rightSensor, robot.leftServo, robot.rightServo,
+                pushPos, time, red, colorThresh, power, driveTime, driveLoopCount));
+
 
         // start out not-done
         bDone = false;
@@ -131,23 +149,25 @@ public void init() {
         return (float)linePos;
     }
 
+    private class UltraStop implements FinishSensor{
 
+        double mDist;
 
-    public boolean checkStop(){
-        //wait a small amount of time for robot to center
-        //if(mTimer == null) mTimer = new AutoLib.Timer(0.5);
-        //else if(!mTimer.done());
-        //else {
+        UltraStop(double dist){
+            mDist = dist;
+        }
+
+        public boolean checkStop(){
             //get ultrasonic distance
             double dist = robot.distSensor.getUltrasonicLevel();
 
             telemetry.addData("Ultra", dist);
             //cutoff ridiculous values
             if(dist > 200 || dist < 5) return false;
-            //now check if the robot is in range
-            else return dist < 13.5;
-        //}
-        //return false;
+                //now check if the robot is in range
+            else return dist < mDist;
+        }
+
     }
 
     // a Step that provides gyro-based guidance to motors controlled by other concurrent Steps (e.g. encoder or time-based)
@@ -159,20 +179,18 @@ public void init() {
         private OpMode mOpMode;                             // needed so we can log output (may be null)
         private HeadingSensor mGyro;                        // sensor to use for heading information (e.g. Gyro or Vuforia)
         private DisplacementSensor mDisp;
-        private FinishSensor mStop;
         private SensorLib.PID mgPid;                         // proportional–integral–derivative controller (PID controller)
         private SensorLib.PID mdPid;
         private double mPrevTime;                           // time of previous loop() call
-        private DcMotor[] mMotorSteps;            // the motor steps we're guiding - assumed order is right ... left ...
+        private ArrayList<AutoLib.SetPower> mMotorSteps;            // the motor steps we're guiding - assumed order is right ... left ...
 
-        public LineGuideStep(OpMode mode, float heading, HeadingSensor gyro, DisplacementSensor disp, FinishSensor stop, SensorLib.PID gPid, SensorLib.PID dPid,
-                             DcMotor[] motorsteps, float power)
+        public LineGuideStep(OpMode mode, float heading, HeadingSensor gyro, DisplacementSensor disp, SensorLib.PID gPid, SensorLib.PID dPid,
+                             ArrayList<AutoLib.SetPower> motorsteps, float power)
         {
             mOpMode = mode;
             mHeading = heading;
             mGyro = gyro;
             mDisp = disp;
-            mStop = stop;
             mgPid = gPid;
             mdPid = dPid;
             mMotorSteps = motorsteps;
@@ -211,10 +229,10 @@ public void init() {
 
             // set the motor powers -- handle both time-based and encoder-based motor Steps
             // assumed order is right motors followed by an equal number of left motors
-            mMotorSteps[0].setPower(frontRight);
-            mMotorSteps[1].setPower(backRight);
-            mMotorSteps[2].setPower(frontLeft);
-            mMotorSteps[3].setPower(backLeft);
+            mMotorSteps.get(0).setPower(frontRight);
+            mMotorSteps.get(1).setPower(backRight);
+            mMotorSteps.get(2).setPower(frontLeft);
+            mMotorSteps.get(3).setPower(backLeft);
 
             // log some data
             if (mOpMode != null) {
@@ -225,8 +243,34 @@ public void init() {
 
             // guidance step always returns "done" so the CS in which it is embedded completes when
             // all the motors it's controlling are done
-            return mStop.checkStop();
+            return true;
         }
+    }
+
+    // a Step that uses Vuforia input to drive a normal wheel robot to a given position on the field.
+    // uses a VuforiaGuideStep to adjust power to the 4 motors, assuming order fr, br, fl, bl.
+    static public class LineDriveStep extends AutoLib.ConcurrentSequence {
+
+        public LineDriveStep(OpMode mode, float heading, HeadingSensor gyro, DisplacementSensor disp, FinishSensor fin, SensorLib.PID gPid, SensorLib.PID dPid,
+                             DcMotor[] motors, float power, boolean stop)
+        {
+            // add a concurrent Step to control each motor
+            ArrayList<AutoLib.SetPower> steps = new ArrayList<AutoLib.SetPower>();
+            for (DcMotor em : motors)
+                if (em != null) {
+                    DriveUntilStopMotorStep step = new DriveUntilStopMotorStep(em, power, fin, stop);  // always set requested power and return "done"
+                    this.add(step);
+                    steps.add(step);
+                }
+
+            // add a concurrent Step to control the motor steps based on Vuforia input
+            this.preAdd(new LineGuideStep(mode, heading, gyro, disp, gPid, dPid, steps, power));
+
+        }
+
+        // the base class loop function does all we need --
+        // since the motors always return done, the composite step will return "done" when
+        // the GuideStep says it's done, i.e. we've reached the target location.
     }
 
     public class DriveUntilLine extends AutoLib.ConcurrentSequence implements FinishSensor {

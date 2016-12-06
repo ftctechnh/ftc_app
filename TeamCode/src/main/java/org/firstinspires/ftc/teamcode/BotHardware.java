@@ -1,12 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.kauailabs.navx.ftc.AHRS;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
-import com.qualcomm.robotcore.hardware.DigitalChannelController;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -30,8 +28,10 @@ public class BotHardware
     public ColorSensor leftSensor = null;
     public ColorSensor rightSensor = null;
     public UltrasonicSensor distSensor = null;
+    public DeviceInterfaceModule dim;
+    public AHRS navX;
 
-
+    private final byte NAVX_DEVICE_UPDATE_RATE_HZ = 50;
 
     /* local OpMode members. */
     private ElapsedTime period = new ElapsedTime();
@@ -78,6 +78,20 @@ public class BotHardware
         }
         catch (Exception e){
             opMode.telemetry.addData("Ultrasonic sensor fail to load!", "");
+        }
+
+        try {
+            dim = opMode.hardwareMap.deviceInterfaceModule.get("dim");
+        }
+        catch (Exception e){
+            opMode.telemetry.addData("Device interface module failed to load", "");
+        }
+
+        try{
+            navX = AHRS.getInstance(dim, 2, AHRS.DeviceDataType.kProcessedData, NAVX_DEVICE_UPDATE_RATE_HZ);
+        }
+        catch (Exception e){
+            opMode.telemetry.addData("NavX failed to load!", "");
         }
 
 
@@ -141,6 +155,19 @@ public class BotHardware
 
         // Reset the cycle clock for the next pass.
         period.reset();
+    }
+
+    public void startNavX(){
+        while (navX.isCalibrating());
+        navX.zeroYaw();
+    }
+
+    public class navXHeading implements HeadingSensor{
+
+        public float getHeading(){
+            return navX.getFusedHeading();
+        }
+
     }
 
     //start crappy code!

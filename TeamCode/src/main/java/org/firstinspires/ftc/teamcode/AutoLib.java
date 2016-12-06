@@ -275,7 +275,6 @@ public class AutoLib {
 
     }
 
-
     // a Step that runs a DcMotor at a given power, for a given encoder count
     static public class EncoderMotorStep extends Step implements SetPower {
         DcMotor mMotor;    // motor to control
