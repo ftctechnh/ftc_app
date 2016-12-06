@@ -31,7 +31,7 @@ public class OpenCVSimplerTest extends OpenCVLib {
         Mat frame = getCameraFrame();
 
         //init scanline Y values
-        yVal = frame.cols() / 8;
+        yVal = frame.rows() / 8;
 
         //log all the data
         telemetry.addData("Y Value", yVal);

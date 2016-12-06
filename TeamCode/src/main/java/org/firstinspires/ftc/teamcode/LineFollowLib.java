@@ -76,6 +76,20 @@ public final class LineFollowLib {
         else return avg;
     }
 
+    public static int[] minMax(Mat src, int scanlineY){
+        byte[] ray = new byte[src.cols()];
+
+        src.row(scanlineY).get(0, 0, ray);
+
+        int min = 0;
+        int max = 0;
+        for(int i = 0; i < ray.length; i++){
+            if(min > ray[i]) min = ray[i];
+            else if(max < ray[i]) max = ray[i];
+        }
+
+        return new int[] {min, max};
+    }
 
     //takes a n array of bytes, and returns (min + max)/2 for a threshold
     private static int threshFind(int[] ray){
@@ -101,7 +115,7 @@ public final class LineFollowLib {
         }
 
         //and return it in a value between -1 and 1, or and error if there is too much noise
-        if(totalNum > ray.length * 2 / 3 || totalNum < 25) return -400;
+        if(totalNum > ray.length / 2) return -400;
         else if(totalNum == 0) return 0;
         else return totalPos/totalNum;
     }

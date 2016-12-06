@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.DigitalChannelController;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class BotHardware
@@ -27,7 +28,9 @@ public class BotHardware
 
     public ColorSensor leftSensor = null;
     public ColorSensor rightSensor = null;
-    public DeviceInterfaceModule cdim = null;
+    public UltrasonicSensor distSensor = null;
+
+
 
     /* local OpMode members. */
     private ElapsedTime period = new ElapsedTime();
@@ -58,14 +61,21 @@ public class BotHardware
 
         try{
             //cdim = opMode.hardwareMap.deviceInterfaceModule.get("dim");
-            leftSensor = opMode.hardwareMap.colorSensor.get("sensor_left");
-            rightSensor = opMode.hardwareMap.colorSensor.get("sensor_right");
+            leftSensor = opMode.hardwareMap.colorSensor.get("color_left");
+            rightSensor = opMode.hardwareMap.colorSensor.get("color_right");
 
             leftSensor.enableLed(false);
             rightSensor.enableLed(false);
         }
         catch (Exception e) {
             opMode.telemetry.addData("Color sensors failed to load!", "");
+        }
+
+        try {
+            distSensor = opMode.hardwareMap.ultrasonicSensor.get("ultra");
+        }
+        catch (Exception e){
+            opMode.telemetry.addData("Ultrasonic sensor fail to load!", "");
         }
 
 
@@ -91,10 +101,10 @@ public class BotHardware
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //set servo directions
         leftServo.setDirection(Servo.Direction.FORWARD);

@@ -36,6 +36,7 @@ public abstract class OpenCVLib extends OpMode implements CameraBridgeViewBase.C
     private View mView;
 
     private boolean catchFrame = false;
+    private boolean updateNeeded = true;
 
     private Mat frameStore;
 
@@ -121,12 +122,15 @@ public abstract class OpenCVLib extends OpMode implements CameraBridgeViewBase.C
             catchFrame = false;
         }
 
+        if(!updateNeeded) updateNeeded = true;
+
         return frame.rgba();
     }
 
     public Mat getCameraFrame(){
         catchFrame = true;
-        while (catchFrame);
+        while (catchFrame && updateNeeded);
+        updateNeeded = false;
         return frameStore.clone();
     }
 }

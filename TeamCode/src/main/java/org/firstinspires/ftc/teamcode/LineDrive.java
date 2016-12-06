@@ -25,7 +25,7 @@ public class LineDrive extends OpenCVLib implements HeadingSensor, DisplacementS
     private int yValStore[] = new int[3];
     private double lastLinePos = 0;
 
-    private double lastDisp = 0;
+    AutoLib.Timer mTimer;
 
     AutoLib.Sequence mSequence;             // the root of the sequence tree
     boolean bDone;                          // true when the programmed sequence is done
@@ -57,14 +57,15 @@ public void init() {
 
         // create an autonomous sequence with the steps to drive
         // several legs of a polygonal course ---
-        final float power = 0.1f;
+        final float power = 0.05f;
         final float time = 30.0f;
 
         // create the root Sequence for this autonomous OpMode
         mSequence = new AutoLib.LinearSequence();
 
-        mSequence.add(new DriveUntilLine(robot.getMotorArray(), power, this, true));
+        mSequence.add(new DriveUntilLine(robot.getMotorArray(), power + 0.1, true));
         mSequence.add(new LineGuideStep(this, 0, this, this, this, mgPid, mdPid, robot.getMotorArray(), power));
+        mSequence.add(new AutoLib.MoveByTimeStep(robot.getMotorArray(), 0, 0.0, false));
 
         // start out not-done
         bDone = false;
@@ -130,8 +131,23 @@ public void init() {
         return (float)linePos;
     }
 
+
+
     public boolean checkStop(){
-        return false;
+        //wait a small amount of time for robot to center
+        //if(mTimer == null) mTimer = new AutoLib.Timer(0.5);
+        //else if(!mTimer.done());
+        //else {
+            //get ultrasonic distance
+            double dist = robot.distSensor.getUltrasonicLevel();
+
+            telemetry.addData("Ultra", dist);
+            //cutoff ridiculous values
+            if(dist > 200 || dist < 5) return false;
+            //now check if the robot is in range
+            else return dist < 13.5;
+        //}
+        //return false;
     }
 
     // a Step that provides gyro-based guidance to motors controlled by other concurrent Steps (e.g. encoder or time-based)
@@ -215,20 +231,18 @@ public void init() {
 
     public class DriveUntilLine extends AutoLib.ConcurrentSequence implements FinishSensor {
 
-        DisplacementSensor mDisp;
         int lineCount = 0;
 
-        public DriveUntilLine(DcMotor motors[], double power, DisplacementSensor disp, boolean stop)
+        public DriveUntilLine(DcMotor motors[], double power, boolean stop)
         {
-            mDisp = disp;
-
             for (DcMotor em : motors)
                 if (em != null)
                     this.add(new DriveUntilStopMotorStep(em, power, this, stop));
         }
 
         public boolean checkStop(){
-            if(mDisp.getDisp() != LineFollowLib.ERROR_TOO_NOISY) lineCount++;
+
+            if(LineFollowLib.getDisplacment(getCameraFrame(), yValStore[2]) != LineFollowLib.ERROR_TOO_NOISY) lineCount++;
             else lineCount = 0;
 
             return lineCount > 5;
