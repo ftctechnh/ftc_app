@@ -66,8 +66,8 @@ abstract class OmegasVision extends ManualVisionOpMode {
 
         driveThread = new Thread(new Runnable() {
             public void run() {
-                if (!approachingBeaconator) {
-                    while (true) {
+                while (true) {
+                    if (!approachingBeaconator) {
                         if (Ω.getLightSensor().getLightDetected() >= 0.4) {
                             Ω.rotate(Math.PI * 4 / 9, true);
                             Ω.driveForward(200.0);
