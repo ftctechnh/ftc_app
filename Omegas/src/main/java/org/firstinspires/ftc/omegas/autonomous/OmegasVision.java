@@ -32,6 +32,7 @@ abstract class OmegasVision extends ManualVisionOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = null;
+    boolean approachingBeaconator = false;
     HardwareOmegas Ω = null;
 
     private static final ColorHSV lowerBoundRed = new ColorHSV((int) (305 / 360.0 * 255.0), (int) (0.200 * 255.0), (int) (0.300 * 255.0));
@@ -85,7 +86,7 @@ abstract class OmegasVision extends ManualVisionOpMode {
 
         double leftBlue = 0.0, rightBlue = 0.0;
         int leftCount = 0, rightCount = 0;
-        double light = Ω.getLightSensor().getLightDetected();
+        final double light = Ω.getLightSensor().getLightDetected();
 
         for (int i = beaconColorArrayList.size() - 1; i > 0 && leftCount <= 100; i--) {
             if (beaconColorArrayList.get(i).left != OmegasBeacon.Color.UNDEFINED) {
@@ -111,16 +112,19 @@ abstract class OmegasVision extends ManualVisionOpMode {
         telemetry.addData("Data", "Light amount: " + light);
         telemetry.update();
 
-        if (light < 0.4) {
-            Ω.driveForward(50.0);
-        } else {
-            try {
-                Thread.sleep(200);
-            } catch (Exception e) {
-                System.err.print("You can't even sleep right...");
+        new Thread(new Runnable() {
+            public void run() {
+                if (light >= 0.4) {
+                    Ω.rotate(Math.PI * 4 / 9, true);
+                    Ω.driveForward(200.0);
+                    approachingBeaconator = true;
+                } else if (!approachingBeaconator) {
+                    Ω.driveForward(50.0);
+                }
             }
-            Ω.rotate(Math.PI * 4 / 9, true);
+        }).start();
 
+        if (approachingBeaconator) {
             /**
              * Beacon: Which beacon is blue - `leftBlue > rightBlue`
              *      true: Left beacon
@@ -144,9 +148,15 @@ abstract class OmegasVision extends ManualVisionOpMode {
             } else {
                 Ω.leftBeaconatorSequence(Ω.getRightBeaconator(), 1500);
             }
+
+            approachingBeaconator = false;
         }
 
-        Thread.yield();
+        try {
+            Thread.sleep(2);
+        } catch (Exception e) {
+            System.err.print("Thread.sleep failure");
+        }
     }
 
     abstract OmegasAlliance getColor();
