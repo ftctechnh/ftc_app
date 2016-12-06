@@ -22,6 +22,7 @@ public class BotHardware
     public DcMotor backRightMotor = null;
     public DcMotor lifterMotor = null;
     public DcMotor launcherMotor = null;
+    public DcMotor sweeperMotor = null;
 
     public Servo leftServo = null;
     public Servo rightServo = null;
@@ -55,6 +56,7 @@ public class BotHardware
         backRightMotor = hw.getDcMotor("back_right");
         lifterMotor = hw.getDcMotor("lifter");
         launcherMotor = hw.getDcMotor("launcher");
+        sweeperMotor = hw.getDcMotor("sweeper");
 
         leftServo = hw.getServo("servo_left");
         rightServo = hw.getServo("servo_right");
@@ -92,6 +94,7 @@ public class BotHardware
         backRightMotor.setPower(0);
         lifterMotor.setPower(0);
         launcherMotor.setPower(0);
+        sweeperMotor.setPower(0);
 
         //set zero behavior
         //frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

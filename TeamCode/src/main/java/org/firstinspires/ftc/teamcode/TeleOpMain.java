@@ -104,12 +104,15 @@ public class TeleOpMain extends OpMode {
         // run lifter motor
         if(gamepad2.left_trigger > 0.0) {
             robot.lifterMotor.setPower(1.0);
+            robot.sweeperMotor.setPower(-1.0);
         }
         else if(gamepad2.right_trigger > 0.0) {
             robot.lifterMotor.setPower(-1.0);
+            robot.sweeperMotor.setPower(1.0);
         }
         else {
             robot.lifterMotor.setPower(0.0);
+            robot.sweeperMotor.setPower(0.0);
         }
 
         // run launcher motor
