@@ -125,6 +125,8 @@ abstract class OmegasVision extends ManualVisionOpMode {
         }).start();
 
         if (approachingBeaconator) {
+            final boolean blueBeacon = leftBlue > rightBlue;
+
             /**
              * Beacon: Which beacon is blue - `leftBlue > rightBlue`
              *      true: Left beacon
@@ -134,7 +136,7 @@ abstract class OmegasVision extends ManualVisionOpMode {
              *      false: Red alliance
              * Beaconator: Which beaconator to extend - `Beacon == Alliance`
              *      true: Left beaconator
-             *      false: Right beaconor
+             *      false: Right beaconator
              *
              * XNOR/Equality Logic Table:
              *
@@ -143,11 +145,16 @@ abstract class OmegasVision extends ManualVisionOpMode {
              * | Blue (Alliance==true) | Left (Beaconator==true)   | Right (Beaconator==false) |
              * | Red (Alliance==false) | Right (Beaconator==false) | Left (Beaconator==true)   |
              */
-            if (leftBlue > rightBlue == (getColor() == OmegasAlliance.RED)) {
-                Ω.rightBeaconatorSequence(Ω.getRightBeaconator(), 1500);
-            } else {
-                Ω.leftBeaconatorSequence(Ω.getRightBeaconator(), 1500);
-            }
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    if (blueBeacon == (getColor() == OmegasAlliance.RED)) {
+                        Ω.rightBeaconatorSequence(Ω.getRightBeaconator(), 1500);
+                    } else {
+                        Ω.leftBeaconatorSequence(Ω.getRightBeaconator(), 1500);
+                    }
+                }
+            }).start();
 
             approachingBeaconator = false;
         }
