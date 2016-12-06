@@ -34,6 +34,7 @@ abstract class OmegasVision extends ManualVisionOpMode {
     private ElapsedTime runtime = null;
     private boolean approachingBeaconator = false;
     private HardwareOmegas Ω = null;
+    private Thread driveThread = null;
 
     private static final ColorHSV lowerBoundRed = new ColorHSV((int) (305 / 360.0 * 255.0), (int) (0.200 * 255.0), (int) (0.300 * 255.0));
     private static final ColorHSV upperBoundRed = new ColorHSV((int) ((360.0 + 5.0) / 360.0 * 255.0), 255, 255);
@@ -61,6 +62,20 @@ abstract class OmegasVision extends ManualVisionOpMode {
                 getLightSensor().enableLed(true);
             }
         };
+
+        driveThread = new Thread(new Runnable() {
+            public void run() {
+                if (!approachingBeaconator) {
+                    if (Ω.getLightSensor().getLightDetected() >= 0.4) {
+                        Ω.rotate(Math.PI * 4 / 9, true);
+                        Ω.driveForward(200.0);
+                        approachingBeaconator = true;
+                    } else {
+                        Ω.driveForward(50.0);
+                    }
+                }
+            }
+        });
 
         /**
          * Set the camera used for detection
@@ -112,17 +127,7 @@ abstract class OmegasVision extends ManualVisionOpMode {
         telemetry.addData("Data", "Light amount: " + light);
         telemetry.update();
 
-        new Thread(new Runnable() {
-            public void run() {
-                if (light >= 0.4) {
-                    Ω.rotate(Math.PI * 4 / 9, true);
-                    Ω.driveForward(200.0);
-                    approachingBeaconator = true;
-                } else if (!approachingBeaconator) {
-                    Ω.driveForward(50.0);
-                }
-            }
-        }).start();
+        driveThread.start();
 
         if (approachingBeaconator) {
             final boolean blueBeacon = leftBlue > rightBlue;
@@ -171,6 +176,8 @@ abstract class OmegasVision extends ManualVisionOpMode {
     @Override
     public void stop() {
         super.stop();
+
+        driveThread.interrupt();
     }
 
     @Override
