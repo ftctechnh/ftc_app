@@ -1,7 +1,9 @@
-package org.firstinspires.ftc.omegas.sensor;
+package org.firstinspires.ftc.omegas.autonomous;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.omegas.HardwareOmegas;
+import org.firstinspires.ftc.omegas.OmegasAlliance;
 import org.firstinspires.ftc.omegas.OmegasBeacon;
 import org.lasarobotics.vision.android.Cameras;
 import org.lasarobotics.vision.detection.ColorBlobDetector;
@@ -26,8 +28,11 @@ import java.util.Arrays;
  * can still call the extensions' init(), loop(), and frame() methods if you want to use them,
  */
 
-@Autonomous(name = "Omegas: Manual FTC-Vision Test", group = "Tests")
-public class OmegasManualVision extends ManualVisionOpMode {
+abstract class OmegasVision extends ManualVisionOpMode {
+
+    /* Declare OpMode members. */
+    private ElapsedTime runtime = null;
+    HardwareOmegas Ω = null;
 
     private static final ColorHSV lowerBoundRed = new ColorHSV((int) (305 / 360.0 * 255.0), (int) (0.200 * 255.0), (int) (0.300 * 255.0));
     private static final ColorHSV upperBoundRed = new ColorHSV((int) ((360.0 + 5.0) / 360.0 * 255.0), 255, 255);
@@ -45,6 +50,16 @@ public class OmegasManualVision extends ManualVisionOpMode {
         /* Initialize all detectors here */
         detectorRed = new ColorBlobDetector(lowerBoundRed, upperBoundRed);
         detectorBlue = new ColorBlobDetector(lowerBoundBlue, upperBoundBlue);
+
+        Ω = new HardwareOmegas() {
+            @Override
+            public void init() {
+                initLightSensor(hardwareMap);
+                initDriveMotors(hardwareMap);
+                initBeaconators(hardwareMap);
+                getLightSensor().enableLed(true);
+            }
+        };
 
         /**
          * Set the camera used for detection
@@ -70,6 +85,7 @@ public class OmegasManualVision extends ManualVisionOpMode {
 
         double leftBlue = 0.0, rightBlue = 0.0;
         int leftCount = 0, rightCount = 0;
+        double light = Ω.getLightSensor().getLightDetected();
 
         for (int i = beaconColorArrayList.size() - 1; i > 0 && leftCount <= 100; i--) {
             if (beaconColorArrayList.get(i).left != OmegasBeacon.Color.UNDEFINED) {
@@ -92,13 +108,48 @@ public class OmegasManualVision extends ManualVisionOpMode {
         telemetry.addData("Vision Color", Arrays.toString(currentBeaconColors));
         telemetry.addData("Analysis Confidence", "Left: " + leftBlue + " Right: " + rightBlue);
         telemetry.addData("Vision Size", "Width: " + width + " Height: " + height);
+        telemetry.addData("Data", "Light amount: " + light);
+        telemetry.update();
 
-        try {
-            Thread.sleep(50);
-        } catch (InterruptedException e) {
-            telemetry.addData("ERROR", e.toString());
+        if (light < 0.4) {
+            Ω.driveForward(50.0);
+        } else {
+            try {
+                Thread.sleep(200);
+            } catch (Exception e) {
+                System.err.print("You can't even sleep right...");
+            }
+            Ω.rotate(Math.PI * 4 / 9, true);
+
+            /**
+             * Beacon: Which beacon is blue - `leftBlue > rightBlue`
+             *      true: Left beacon
+             *      false: Right beacon
+             * Alliance: Which alliance we are - `getColor() == OmegasAlliance.RED`
+             *      true: Blue alliance
+             *      false: Red alliance
+             * Beaconator: Which beaconator to extend - `Beacon == Alliance`
+             *      true: Left beaconator
+             *      false: Right beaconor
+             *
+             * XNOR/Equality Logic Table:
+             *
+             * |                       | Left (Beacon==true)       | Right (Beacon==false)     |
+             * |-----------------------|---------------------------|---------------------------|
+             * | Blue (Alliance==true) | Left (Beaconator==true)   | Right (Beaconator==false) |
+             * | Red (Alliance==false) | Right (Beaconator==false) | Left (Beaconator==true)   |
+             */
+            if (leftBlue > rightBlue == (getColor() == OmegasAlliance.RED)) {
+                Ω.rightBeaconatorSequence(Ω.getRightBeaconator(), 1500);
+            } else {
+                Ω.leftBeaconatorSequence(Ω.getRightBeaconator(), 1500);
+            }
         }
+
+        Thread.yield();
     }
+
+    abstract OmegasAlliance getColor();
 
     @Override
     public void stop() {
