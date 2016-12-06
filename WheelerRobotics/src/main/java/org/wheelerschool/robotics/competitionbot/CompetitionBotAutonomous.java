@@ -48,39 +48,32 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
     public List<DcMotor> leftMotors = new ArrayList<>();
     public List<DcMotor> rightMotors = new ArrayList<>();
 
+    // Setup:
+    //      Phone Location
+    private OpenGLMatrix phoneLocation = OpenGLMatrix
+            .translation((15 * VuforiaLocation.MM_PER_INCH) / 2,
+                    -1.75f * VuforiaLocation.MM_PER_INCH,
+                    4 * VuforiaLocation.MM_PER_INCH)
+            .multiplied(Orientation.getRotationMatrix(
+                    AxesReference.EXTRINSIC, AxesOrder.XYZ,
+                    AngleUnit.DEGREES, 0, -90, 0));
+    //      Vuforia Target Setup:
+    private VuforiaLocation vuforia = new VuforiaLocation(phoneLocation);
+
     // Config:
     public static String LOG_TAG = "Comp Bot Auto";
     private static long MAX_TIME_TIMEOUT = 200; // MAX time until TIMEOUT when running OpMode (millis)
     private static double NO_BEACON_ROTATE_SPEED = 0.25;
 
 
-    public void runOpMode() throws InterruptedException {
-        // Hardware Setup:
-        //      Motors:
-        this.leftMotors.add(hardwareMap.dcMotor.get("frontLeft"));
-        this.leftMotors.add(hardwareMap.dcMotor.get("backLeft"));
-        this.rightMotors.add(hardwareMap.dcMotor.get("frontRight"));
-        this.rightMotors.add(hardwareMap.dcMotor.get("backRight"));
 
-        // Set phone location:
-        OpenGLMatrix phoneLocation = OpenGLMatrix
-                .translation((15 * VuforiaLocation.MM_PER_INCH) / 2,
-                        -1.75f * VuforiaLocation.MM_PER_INCH,
-                        4 * VuforiaLocation.MM_PER_INCH)
-                .multiplied(Orientation.getRotationMatrix(
-                        AxesReference.EXTRINSIC, AxesOrder.XYZ,
-                        AngleUnit.DEGREES, 0, -90, 0));
+    /*------------------------------------AUTONOMOUS SECTIONS-------------------------------------*/
 
-        // Vuforia Target Setup:
-        VuforiaLocation vuforia = new VuforiaLocation(phoneLocation);
-
+    private void driveToPosition() throws InterruptedException {
+        /*---------------------------------DRIVE TO INITIAL POINT---------------------------------*/
         // Translation Navigation Setup:
         TranslationMotorNavigation translationNavigation = new TranslationMotorNavigation();
 
-        // Wait for start button to be pushed:
-        waitForStart();
-
-        /*---------------------------------DRIVE TO INITIAL POINT---------------------------------*/
         long time = System.currentTimeMillis();
         while (opModeIsActive()) {
             // Set 'Phase' in the telemetry:
@@ -161,5 +154,24 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
             // Sleep to control loop:
             Thread.sleep(50);
         }
+    }
+
+
+
+    // OpMode:
+    public void runOpMode() throws InterruptedException {
+        // Hardware Setup:
+        //      Motors:
+        this.leftMotors.add(hardwareMap.dcMotor.get("frontLeft"));
+        this.leftMotors.add(hardwareMap.dcMotor.get("backLeft"));
+        this.rightMotors.add(hardwareMap.dcMotor.get("frontRight"));
+        this.rightMotors.add(hardwareMap.dcMotor.get("backRight"));
+
+        // Wait for start button to be pushed:
+        waitForStart();
+
+        // Autonomous Sections:
+
+        driveToPosition();
     }
 }
