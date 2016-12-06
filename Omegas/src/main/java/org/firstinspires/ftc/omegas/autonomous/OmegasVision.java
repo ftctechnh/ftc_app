@@ -33,6 +33,7 @@ abstract class OmegasVision extends ManualVisionOpMode {
     /* Declare OpMode members. */
     private ElapsedTime runtime = null;
     private boolean approachingBeaconator = false;
+    private boolean startedDriving = false;
     private HardwareOmegas Ω = null;
     private Thread driveThread = null;
 
@@ -66,12 +67,14 @@ abstract class OmegasVision extends ManualVisionOpMode {
         driveThread = new Thread(new Runnable() {
             public void run() {
                 if (!approachingBeaconator) {
-                    if (Ω.getLightSensor().getLightDetected() >= 0.4) {
-                        Ω.rotate(Math.PI * 4 / 9, true);
-                        Ω.driveForward(200.0);
-                        approachingBeaconator = true;
-                    } else {
-                        Ω.driveForward(50.0);
+                    while (true) {
+                        if (Ω.getLightSensor().getLightDetected() >= 0.4) {
+                            Ω.rotate(Math.PI * 4 / 9, true);
+                            Ω.driveForward(200.0);
+                            approachingBeaconator = true;
+                        } else {
+                            Ω.driveForward(50.0);
+                        }
                     }
                 }
             }
@@ -127,7 +130,10 @@ abstract class OmegasVision extends ManualVisionOpMode {
         telemetry.addData("Data", "Light amount: " + light);
         telemetry.update();
 
-        driveThread.start();
+        if (!startedDriving) {
+            driveThread.start();
+            startedDriving = true;
+        }
 
         if (approachingBeaconator) {
             final boolean blueBeacon = leftBlue > rightBlue;
