@@ -32,8 +32,8 @@ abstract class OmegasVision extends ManualVisionOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = null;
-    boolean approachingBeaconator = false;
-    HardwareOmegas Ω = null;
+    private boolean approachingBeaconator = false;
+    private HardwareOmegas Ω = null;
 
     private static final ColorHSV lowerBoundRed = new ColorHSV((int) (305 / 360.0 * 255.0), (int) (0.200 * 255.0), (int) (0.300 * 255.0));
     private static final ColorHSV upperBoundRed = new ColorHSV((int) ((360.0 + 5.0) / 360.0 * 255.0), 255, 255);
