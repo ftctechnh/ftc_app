@@ -34,6 +34,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.adafruit.AdafruitBNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -63,6 +64,7 @@ import java.util.ArrayList;
  */
 
 @Autonomous(name="Blue Auto", group="Main")  // @Autonomous(...) is the other common choice
+@Disabled
 public class AutonomousSecondaryBlue extends OpMode {
 
     BotHardware robot = new BotHardware();
@@ -214,7 +216,7 @@ public class AutonomousSecondaryBlue extends OpMode {
     // a Step that uses gyro input to drive along a given course for a given distance given by motor encoders.
     // uses a SquirleyGuideStep to adjust power to 2 or 4 motors.
     // assumes a robot with up to 4 drive motors in assumed order right motors, left motors
-    static private class SquirrleyAzimuthTimedDriveStep extends AutoLib.ConcurrentSequence {
+    static public class SquirrleyAzimuthTimedDriveStep extends AutoLib.ConcurrentSequence {
 
         public SquirrleyAzimuthTimedDriveStep(OpMode mode, float heading, HeadingSensor gyro, SensorLib.PID pid,
                                      DcMotor motors[], float power, float time, boolean stop)

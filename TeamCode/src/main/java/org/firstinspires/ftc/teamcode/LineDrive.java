@@ -1,12 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.*;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.robocol.Heartbeat;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.opencv.core.Mat;
 
 import java.util.ArrayList;
@@ -25,24 +22,32 @@ public class LineDrive extends OpenCVLib implements HeadingSensor, DisplacementS
 
     private int yValStore[] = new int[3];
     private double lastLinePos = 0;
+    private double lastLineHeading = 0;
 
     AutoLib.Sequence mSequence;             // the root of the sequence tree
     boolean bDone;                          // true when the programmed sequence is done
     BotHardware robot;                      // robot hardware object
-    SensorLib.PID mgPid;                     // PID controller for the sequence
+    SensorLib.PID mPid;
+    SensorLib.PID mgPid;                     // PID controllers for the sequence
     SensorLib.PID mdPid;
 
-    // parameters of the PID controller for the heading of this sequence
-    float Kp = 0.010f;        // motor power proportional term correction per degree of deviation
-    float Ki = 0.000f;         // ... integrator term
+    // parameters of the PID controller for this sequence's first part
+    float Kp = 1.0f;        // degree heading proportional term correction per degree of deviation
+    float Ki = 0.0f;         // ... integrator term
     float Kd = 0;             // ... derivative term
-    float KiCutoff = 3.0f;    // maximum angle error for which we update integrator
+    float KiCutoff = 1.0f;    // maximum angle error for which we update integrator
 
-    // parameters of the PID controller for the displacement of this sequence
-    float Kp2 = 0.25f;
-    float Ki2 = 0.0f;
+    // parameters of the PID controller for the heading of the line following
+    float Kp2 = 0.010f;
+    float Ki2 = 0.000f;
     float Kd2 = 0;
-    float Ki2Cutoff = 0.01f;
+    float Ki2Cutoff = 3.0f;
+
+    // parameters of the PID controller for the displacement of the line following
+    float Kp3 = 0.25f;
+    float Ki3 = 0.0f;
+    float Kd3 = 0;
+    float Ki3Cutoff = 0.01f;
 
     final double ultraDistS1 = 20;
     final double ultraDistS2 = 13.5;
@@ -63,24 +68,27 @@ public class LineDrive extends OpenCVLib implements HeadingSensor, DisplacementS
         robot.init(this, debug);
 
         // create a PID controller for the sequence
-        mgPid = new SensorLib.PID(Kp, Ki, Kd, KiCutoff);    // make the object that implements PID control algorithm
-        mdPid = new SensorLib.PID(Kp2, Ki2, Kd2, Ki2Cutoff);
+        mPid = new SensorLib.PID(Kp, Ki, Kd, KiCutoff);
+        mgPid = new SensorLib.PID(Kp2, Ki2, Kd2, Ki2Cutoff);    // make the object that implements PID control algorithm
+        mdPid = new SensorLib.PID(Kp3, Ki3, Kd3, Ki3Cutoff);
 
         // create an autonomous sequence with the steps to drive
         // several legs of a polygonal course ---
         final float power = 0.05f;
-        final float time = 30.0f;
 
         // create the root Sequence for this autonomous OpMode
         mSequence = new AutoLib.LinearSequence();
 
-        mSequence.add(new DriveUntilLine(robot.getMotorArray(), power + 0.1, true));
+        mSequence.add(new AutonomousSecondaryBlue.SquirrleyAzimuthTimedDriveStep(this, -90.0f, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), power, 5.0f, true));
+        mSequence.add(new AutonomousSecondaryBlue.SquirrleyAzimuthTimedDriveStep(this, 0, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), power, 5.0f, true));
+
+        //mSequence.add(new DriveUntilLine(robot.getMotorArray(), power + 0.1, true));
         //two-stage line follow
-        mSequence.add(new LineDriveStep(this, 0, this, this, new UltraStop(ultraDistS1), mgPid, mdPid, robot.getMotorArray(), power + 0.1f, false));
-        mSequence.add(new LineDriveStep(this, 0, this, this, new UltraStop(ultraDistS2), mgPid, mdPid, robot.getMotorArray(), power + 0.1f, true));
+        //mSequence.add(new LineDriveStep(this, 0, this, this, new UltraStop(ultraDistS1), mgPid, mdPid, robot.getMotorArray(), power + 0.1f, false));
+        //mSequence.add(new LineDriveStep(this, 0, this, this, new UltraStop(ultraDistS2), mgPid, mdPid, robot.getMotorArray(), power + 0.1f, true));
         //pushy pushy
-        mSequence.add(new PushyLib.pushypushy(robot.getMotorArray(), robot.leftSensor, robot.rightSensor, robot.leftServo, robot.rightServo,
-                pushPos, time, red, colorThresh, power, driveTime, driveLoopCount));
+        //mSequence.add(new PushyLib.pushypushy(robot.getMotorArray(), robot.leftSensor, robot.rightSensor, robot.leftServo, robot.rightServo,
+        //        pushPos, time, red, colorThresh, power, driveTime, driveLoopCount));
 
 
         // start out not-done
@@ -129,9 +137,10 @@ public class LineDrive extends OpenCVLib implements HeadingSensor, DisplacementS
         double linePos = -LineFollowLib.getAngle(frame, yValStore[0], yValStore[2]);
         //if it's an error, turn to where line was last
         if(linePos == LineFollowLib.ERROR_TOO_NOISY){
-            if(lastLinePos > 0) return 180.0f;
-            else return -180.0f;
+            if(lastLineHeading > 0) return 50.0f;
+            else return -50.0f;
         }
+        else lastLineHeading = linePos;
 
         return (float)linePos;
     }
@@ -141,14 +150,14 @@ public class LineDrive extends OpenCVLib implements HeadingSensor, DisplacementS
         double linePos = -LineFollowLib.getDisplacment(frame, yValStore[1]);
         //if it's an error, turn to where line was last
         if(linePos == LineFollowLib.ERROR_TOO_NOISY){
-            if(lastLinePos > 0) return 1.0f;
-            else return -1.0f;
+            if(lastLinePos > 0) return 0.8f;
+            else return -0.8f;
         }
+        else lastLinePos = linePos;
         return (float)linePos;
     }
 
     private class UltraStop implements FinishSensor{
-
         double mDist;
 
         UltraStop(double dist){
@@ -165,7 +174,6 @@ public class LineDrive extends OpenCVLib implements HeadingSensor, DisplacementS
                 //now check if the robot is in range
             else return dist < mDist;
         }
-
     }
 
     // a Step that provides gyro-based guidance to motors controlled by other concurrent Steps (e.g. encoder or time-based)
@@ -261,9 +269,8 @@ public class LineDrive extends OpenCVLib implements HeadingSensor, DisplacementS
                     steps.add(step);
                 }
 
-            // add a concurrent Step to control the motor steps based on Vuforia input
+            // add a concurrent Step to control the motor steps based on camera input
             this.preAdd(new LineGuideStep(mode, heading, gyro, disp, gPid, dPid, steps, power));
-
         }
 
         // the base class loop function does all we need --
@@ -283,13 +290,11 @@ public class LineDrive extends OpenCVLib implements HeadingSensor, DisplacementS
         }
 
         public boolean checkStop(){
-
             if(LineFollowLib.getDisplacment(getCameraFrame(), yValStore[2]) != LineFollowLib.ERROR_TOO_NOISY) lineCount++;
             else lineCount = 0;
 
             return lineCount > 5;
         }
-
     }
 
     // a Step that runs a DcMotor at a given power, for a given time
@@ -328,6 +333,5 @@ public class LineDrive extends OpenCVLib implements HeadingSensor, DisplacementS
 
             return done;
         }
-
     }
 }
