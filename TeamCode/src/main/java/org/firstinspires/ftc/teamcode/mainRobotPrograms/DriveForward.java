@@ -32,26 +32,34 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
  * A simple example of a linear op mode that will approach an IR beacon
  */
 
 @Autonomous(name="Drive Forward", group = "Utility Group")
-public class DriveForward extends AutonomousBase {
+public class DriveForward extends _AutonomousBase
+{
 
     //Custom initialization
     @Override
     protected void driverStationSaysINITIALIZE()
     {
-        right.setPower(-.3);
-        left.setPower(.3);
+        //Set the motor powers.
+        for (DcMotor lMotor : leftDriveMotors)
+            lMotor.setPower(-.3);
+        for (DcMotor rMotor : rightDriveMotors)
+            rMotor.setPower(.3);
     }
 
     //Called after runOpMode() has finished initializing.
     protected void driverStationSaysGO()
     {
-        right.setPower(.6);
-        left.setPower(.6);
+        //Set the motor powers.
+        for (DcMotor lMotor : leftDriveMotors)
+            lMotor.setPower(.6);
+        for (DcMotor rMotor : rightDriveMotors)
+            rMotor.setPower(.6);
     }
 }

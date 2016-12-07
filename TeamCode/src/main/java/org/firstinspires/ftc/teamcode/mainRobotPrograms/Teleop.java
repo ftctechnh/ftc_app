@@ -1,10 +1,8 @@
 package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
-
-import java.util.ResourceBundle;
 
 /**
  * TeleOp Mode
@@ -16,13 +14,15 @@ import java.util.ResourceBundle;
 @TeleOp(name="Teleop", group="Teleop Group")
 //@Disabled
 
-public class Teleop extends RobotBase {
-
+public class Teleop extends _RobotBase
+{
+    //Not really required, just initialize everything that needs to be implemented in teleop.
     @Override
     protected void driverStationSaysINITIALIZE()
     {
     }
 
+    //All teleop controls are here.
     protected void driverStationSaysGO()
     {
         //Audio Control Variables
@@ -52,9 +52,11 @@ public class Teleop extends RobotBase {
             rightPower = Range.clip(rightPower, -1, 1);
             leftPower = Range.clip(leftPower, -1, 1);
 
-                // Write the values to the motors.  Scale the robot in order to run the robot more effectively at slower speeds.
-            left.setPower(scaleInput(leftPower));
-            right.setPower(scaleInput(rightPower));
+            // Write the values to the motors.  Scale the robot in order to run the robot more effectively at slower speeds.
+            for (DcMotor lMotor : leftDriveMotors)
+                lMotor.setPower(scaleInput(leftPower));
+            for (DcMotor rMotor : rightDriveMotors)
+                rMotor.setPower(scaleInput(rightPower));
 
             //Wait a second before switching to backwards again (can only toggle once every second).
             if (gamepad1.back && (System.currentTimeMillis() - lastTimeToggleDirectionPressed) > 1000)

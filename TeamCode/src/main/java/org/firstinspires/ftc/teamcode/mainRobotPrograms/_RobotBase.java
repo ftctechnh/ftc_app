@@ -36,11 +36,11 @@ import java.util.ArrayList;
 //Edited in order to have all of the important constants as final, so that no unintentional modifications are made.
 //This class should be used so that any changes made to the robot configuration propagates through all parts of the code that has been written.
 
-public abstract class RobotBase extends LinearOpMode
+public abstract class _RobotBase extends LinearOpMode
 {
     /*** CONFIGURE ALL ROBOT ELEMENTS HERE ***/
-    //Drive motors
-    protected DcMotor left, right;
+    //Drive motors (they are lists because it helps when we add on new motors.
+    protected ArrayList <DcMotor> leftDriveMotors = new ArrayList <>(), rightDriveMotors = new ArrayList<>();
     //Other motors
     protected DcMotor harvester, pusher;
 
@@ -66,12 +66,11 @@ public abstract class RobotBase extends LinearOpMode
         //Make sure that the robot components are found and initialized correctly.
         //This all happens during init()
         /*************************** DRIVING MOTORS ***************************/
-        right = Initialize(DcMotor.class, "right");
-        left = Initialize(DcMotor.class, "left");
+        rightDriveMotors.add(Initialize(DcMotor.class, "right"));
 
-        //Reverse the opposite side of the motors.
-        if (left != null)
-            left.setDirection(DcMotor.Direction.REVERSE);
+        leftDriveMotors.add(Initialize(DcMotor.class, "left"));
+        for(DcMotor motor : leftDriveMotors)
+                motor.setDirection(DcMotor.Direction.REVERSE);
 
         /*************************** OTHER MOTORS ***************************/
         pusher = Initialize(DcMotor.class, "pusher");
@@ -115,7 +114,7 @@ public abstract class RobotBase extends LinearOpMode
         telemetry.update(); //update the output with the added lines.
     }
 
-    //Allows for more robust output of actual data instead of line by line.  Used for driving and turning.
+    //Allows for more robust output of actual data instead of line by line without wrapping.  Used for driving and turning.
     protected void OutputRealTimeData (String[] data)
     {
         telemetry.update();

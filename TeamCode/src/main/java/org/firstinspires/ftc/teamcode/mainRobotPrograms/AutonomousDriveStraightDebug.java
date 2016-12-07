@@ -8,11 +8,11 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Autonomous(name = "Autonomous - Debug Edition", group = "Autonomous Group")
 
-public class AutonomousDriveStraightDebug extends AutonomousBase
+public class AutonomousDriveStraightDebug extends _AutonomousBase
 {
     //Called after runOpMode() has finished initializing.
     protected void driverStationSaysGO()
     {
-        drive(0.8, 10000);
+        driveForTime(0.8, 10000);
     }
 }
