@@ -5,10 +5,15 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 /**
  * Created by Sean Ovens on 10/26/2016.
  */
-@Autonomous(name="Blue 6", group="Blue")
-public class AutoB1 extends AutonomousBase{
+@Autonomous(name="Red Button 6", group="Red")
+public class RedButton6 extends AutonomousBase{
+    boolean init;
     @Override
     public void gameState() {
+        if(!init){
+            init = true;
+            map.setRobot(6,11.25);
+        }
         super.gameState();
         switch(gameState){
             case 0: //Start
@@ -19,11 +24,10 @@ public class AutoB1 extends AutonomousBase{
                 }
                 break;
             case 1: //Shoot
-//                  moveState = MoveState.SHOOT;
-//                  if(getRuntime() - sTime >= 3){
-//                    moveState = MoveState.SHOOT_STOP;
+//                moveState = MoveState.SHOOT;
+//                if(getRuntime() - sTime >= 3){
                     gameState = 2;
-//                  }
+//                }
                 break;
             case 2:
                 map.setGoal(6,9);
@@ -38,7 +42,7 @@ public class AutoB1 extends AutonomousBase{
                 }
                 break;
             case 3: //Move to beacon A push pos.
-                map.setGoal(9,6);
+                map.setGoal(3,7.5);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
                 }else{
@@ -50,7 +54,7 @@ public class AutoB1 extends AutonomousBase{
                 }
                 break;
             case 4: //Move paralell to wall
-                map.setGoal(9,0);
+                map.setGoal(3,12);
                 if(linedUp()){
                     moveState = MoveState.STOP;
                     gameState = 5;
@@ -59,28 +63,19 @@ public class AutoB1 extends AutonomousBase{
                     moveState = MoveState.TURN_TOWARDS_GOAL;
                 }
                 break;
-            case 5: //Move to wall 
-                map.setGoal(11,map.getRobotY());
+            case 5: //Move to wall and back up and button press A
+                map.setGoal(0,map.getRobotY());
                 heading = (heading + 270) % 360; // We're moving sideways, so we line up oddly
                 moveState = MoveState.RIGHT;
                 if(map.distanceToGoal()<=.1){
                     moveState = MoveState.STOP;
-		    gameState = 100;
+		    gameState = 6;
                 }
                 break;
-           case 100:
-               map.setGoal(10.7,map.getRobotY());
-               heading = (heading + 270) % 360; // We're moving sideways, so we line up oddly
-               moveState = MoveState.LEFT;
-               if(map.distanceToGoal()<=.1){
-                   moveState = MoveState.STOP;
-                   gameState = 6;
-                }
-               break;
-           case 6: //back up and button press A
-                map.setGoal(12,0); // I need the goal far away so moveState keeps going
+           case 6:
+                map.setGoal(0,0);
                 if(touchRight.isPressed()){
-                  if(colorLeft1.blue() > colorLeft2.blue()) { 
+                  if(colorLeft1.blue() < colorLeft2.blue()) { 
                     moveState = MoveState.SERVO_L;
                   }
                   else{
@@ -88,19 +83,15 @@ public class AutoB1 extends AutonomousBase{
                   }
                   gameState = 7;
                   pTime = getRuntime();
-                  map.setRobot(12,7); //Since we're positive of our position after pressing the button, we might as well use that
+                  map.setRobot(.75,3);
                 }
                 else{
-                  if(linedUp()){
-		      moveState = MoveState.BACKWARD_SLOW;
-                  }else{
-                      moveState = MoveState.TURN_TOWARDS_GOAL;
-                  }
+		  moveState = MoveState.BACKWARD_SLOW;
 		}
                 break;
 	    case 7: // moves out from wall
                 if(getRuntime() - pTime > 3){
-	 	     map.setGoal(11.5, map.getRobotY());
+	 	     map.setGoal(1.5, map.getRobotY());
                      heading = (heading + 270) % 360; // We're moving sideways, so we line up oddly
         	     moveState = MoveState.LEFT;
 	  	     if(map.distanceToGoal()<= .1){
@@ -108,40 +99,27 @@ public class AutoB1 extends AutonomousBase{
 		       gameState = 8;
 		     }
                 }else{
-                    if(map.getRobotX() < 12.5);{
-                        heading = (heading + 270) % 360; // We're moving sideways, so we line up oddly
-                        moveState = MoveState.RIGHT;
-                   }
+                    moveState = MoveState.STOP;
                 }
 	        break;
 	    case 8: // moves up to push Beacon B
-		map.setGoal(map.getRobotX(), 2);
-		moveState = MoveState.FORWARD;
+		map.setGoal(map.getRobotX(), 5);
+		moveState = MoveState.BACKWARD;
 		if(map.distanceToGoal()<=.1){
                     moveState = MoveState.STOP;
                     gameState = 9;
                 }
                 break;
 	    case 9: //moves to wall
-                map.setGoal(12.5, map.getRobotY());
+                map.setGoal(-.5, 4);
                 heading = (heading + 270) % 360;
                 moveState = MoveState.RIGHT;
                 if(map.distanceToGoal()<= .1){
 		    moveState = MoveState.STOP;
-	            gameState = 101;
+	            gameState = 10;
 	          }
 		break;
-           case 101:
-               map.setGoal(11.7,map.getRobotY());
-               heading = (heading + 270) % 360; // We're moving sideways, so we line up oddly
-               moveState = MoveState.LEFT;
-               if(map.distanceToGoal()<=.1){
-                   moveState = MoveState.STOP;
-                   gameState = 10;
-                }
-               break;
             case 10: //move back  and button press B
-                map.setGoal(12,0); // I need the goal far away so moveState keeps going
                 if(touchRight.isPressed()){
                   if(colorLeft1.blue() > colorLeft2.blue()) { 
                     moveState = MoveState.SERVO_L;
@@ -150,32 +128,13 @@ public class AutoB1 extends AutonomousBase{
                     moveState = MoveState.SERVO_R;
                   }
                   gameState = 11;
-                  map.setRobot(12,3);
                   pTime = getRuntime();
                 }
                 else{
-                    if(linedUp()){
-		        moveState = MoveState.BACKWARD_SLOW;
-                    }else{
-                        moveState = MoveState.TURN_TOWARDS_GOAL;
-                    }
-                }
-                break;
-	    case 11: // moves out from wall
-                if(getRuntime() - pTime > 3){
-	 	     map.setGoal(11, map.getRobotY());
-                     heading = (heading + 270) % 360; // We're moving sideways, so we line up oddly
-        	     moveState = MoveState.LEFT;
-	  	     if(map.distanceToGoal()<= .1){
-		       moveState = MoveState.STOP;
-		       gameState = 12;
-		     }
-                }else{
-                    moveState = MoveState.STOP;
-                }
-	        break;
-            case 12: //Moves to the center and knocks off cap ball
-                map.setGoal(7,7);
+                  moveState = MoveState.BACKWARD_SLOW;
+		}
+            case 11: //Moves to the center and knocks off cap ball
+                map.setGoal(6.8,5.5);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
                 }else{
