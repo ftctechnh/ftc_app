@@ -33,9 +33,9 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-@Autonomous(name="RedAutoOpmode", group="Testing")  // @Autonomous(...) is the other common choice
+@Autonomous(name="RedAutoOpmodeBallAndBeacons", group="Testing")  // @Autonomous(...) is the other common choice
 //@Disabled
-public class RedAutoOpmode extends LinearOpMode
+public class RedAutoOpmodeJustBeacons extends LinearOpMode
 {
     //Variable code by what mechanical pieces we have
     int numSideColorSensors = 1;
@@ -47,7 +47,6 @@ public class RedAutoOpmode extends LinearOpMode
         justColors,
         justBall,
     }
-    Goal goal = Goal.ballColors;
 
     public enum PusherMode
     {
@@ -66,17 +65,9 @@ public class RedAutoOpmode extends LinearOpMode
     //The engine which controls our drive motors
     DriveEngine engine = null;
 
-    //The touch sensor devices
-    DeviceInterfaceModule dim = null;
-    DigitalChannel touchSensor = null;
-
-    //Button Pushers
-    ButtonPusher pusher1 = null;
-    ButtonPusher pusher2 = null;
-
     //Sensors
-
-
+    Sensors sensors=null;
+    RangePair rangepair = null;
 
     //Time constants
     private static final double TIME_ONE = 2;
@@ -91,7 +82,7 @@ public class RedAutoOpmode extends LinearOpMode
     //If blue
     boolean blue = false;
 
-    RedAutoOpmode(boolean blue)
+    RedAutoOpmodeJustBeacons(boolean blue)
     {
         this.blue = blue;
     }
@@ -99,63 +90,39 @@ public class RedAutoOpmode extends LinearOpMode
     @Override
     public void runOpMode() {
         engine = new DriveEngine(DriveEngine.engineMode.directMode, hardwareMap, gamepad1);
-        dim = hardwareMap.get(DeviceInterfaceModule.class, "dim");
-        touchSensor = hardwareMap.get(DigitalChannel.class, "sensor_touch");
-
+        sensors = new Sensors(hardwareMap);
+        rangepair = new RangePair(hardwareMap, 9, sensors);
         //Wait for the game to start (driver presses PLAY)
         waitForStart();
         timer.reset();
 
         //Run until the end of autonomous
         while (opModeIsActive()) {
-            if(goal == Goal.ballColors || goal == Goal.justBall)
-            {
-                //Run until we hit something
-                while (!touchSensor.getState()) {
-                    if (timer.seconds() < TIME_ONE)
-                        engine.drive(LOW_POWER);
-                    else if (timer.seconds() < TIME_TWO)
-                        engine.drive(MID_POWER);
-                    else
-                        engine.drive(HIGH_POWER);
-                }
-                timeToHit = timer.seconds();
-
-                //Reset the timer
-                timer.reset();
-                //Keep moving just a little longer to land on the black square
-                while (timer.seconds() < TIME_EXTRA) {
-                    engine.drive(HIGH_POWER);
-                }
-            }
-
-            if(goal == Goal.justBall) {
-                //Stop everything
-                engine.stop();
-
-                telemetry.addLine("Stopped");
-                telemetry.update();
-                idle();     // allow something else to run (aka, release the CPU)
-            }
-
-            if(goal == Goal.ballColors){
-                engine.turn(180);
-                timer.reset();
-                while (timer.seconds()<timeToHit-.5) {
-                    if (timer.seconds() < TIME_ONE)
-                        engine.drive(LOW_POWER);
-                    else if (timer.seconds() < TIME_TWO)
-                        engine.drive(MID_POWER);
-                    else
-                        engine.drive(HIGH_POWER);
-                }
-                engine.stop();
-
-            }
+            driveAlongWall(8, engine.inchesBetweenMotors, .7);
         }
 
     }
 
-   // public void driveAlongWall()
+   public void driveAlongWall(double targetDistanceFromWall, double distanceBetweenMotors, double maxPower)
+   {
+       double dBM = distanceBetweenMotors;
+       double inchesAway = rangepair.minDistanceAway();
+       double distanceToTarget = inchesAway - targetDistanceFromWall;
+       //finds the radius of the target circular path
+       double circleRadius = Math.tan(90-rangepair.angleToWall()) * Math.abs(distanceToTarget);
+       //found at https://botballprogramming.org/site-maps/right-brain-site-map/bonus-supplemental-information-tips/assignments/formula-for-turn-radius/
+       double minPower = dBM/circleRadius*(maxPower*(circleRadius/dBM)-maxPower);
+       if(distanceToTarget > 0)
+       {
+           //right is greater
+           engine.setEngineToPower(minPower, maxPower);
+       }
+       if(distanceToTarget < 0)
+       {
+           //right is greater
+           engine.setEngineToPower(maxPower, minPower);
+       }
+
+   }
 
 }
