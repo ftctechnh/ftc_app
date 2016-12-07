@@ -14,7 +14,7 @@ public class AutonomousBlue extends _AutonomousBase
     {
         sleep(0);
         driveForTime(0.8, 1500);
-        turn(-110);
+        turnToHeading (-110);
         driveForTime(0.8, 2400);
         harvester.setPower(0.5);
         sleep(3000);

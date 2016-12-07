@@ -4,8 +4,6 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.BatteryChecker;
-import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 
 //For added simplicity while coding autonomous with the new FTC system. Utilized inheritance and polymorphism.
@@ -132,115 +130,72 @@ public abstract class _AutonomousBase extends _RobotBase
     }
 
     //Used to turn to a specified heading.
-    private final double MIN_TURN_POWER = .1, MAX_TURN_POWER = .5;
-    protected void turn (double heading)
+    protected double initialTurnPower = .3; //Can be any value less than 1 (but should be less than .5)
+    protected double successiveTurnReduction = 2; //Should be greater than 1.
+    protected double incrementFactor = 0.1;
+    protected void turnToHeading (int desiredHeading)
     {
-        if (gyroscope != null)
+        zeroHeading(); //Initialization step.
+
+        //This variable changes for each successive turn.
+        double turnPower = initialTurnPower;
+        while (opModeIsActive()) // Will eventually be BROKEN out of.
         {
-            //Output a message to the user
-            outputNewLineToDriverStation("Turning to " + heading + " degrees WITH GYRO");
-
-            //Wait a moment: otherwise there tends to an error.
-            zeroHeading();
-
-            //The variables used to calculate the way that the motors will turn.
-            int currHeading;
-            double leftPower, rightPower;
-
-            while (opModeIsActive() && getValidGyroHeading() != heading)
+            double incrementValue = turnPower * incrementFactor;
+            int initialSign = Integer.signum((int) (getValidGyroHeading() - desiredHeading));
+            //Wait until the desired value is turned over or reached.
+            int currentSign = initialSign;
+            do
             {
-                //Get the gyroscope heading.
-                currHeading = getValidGyroHeading();
-
-                //Calculate the power of each respective motor.
-                double differenceInHeadings = heading - currHeading;
-                double power = 0.10 * Math.pow(differenceInHeadings, 2) + MIN_TURN_POWER;
-                leftPower = -power;
-                rightPower = power;
-
-                //Clamp values.
-                if (leftPower >= 0)
-                    leftPower = Range.clip(leftPower, MIN_TURN_POWER, MAX_TURN_POWER);
-                else if (leftPower < 0)
-                    leftPower = Range.clip(leftPower, -MAX_TURN_POWER, -MIN_TURN_POWER);
-
-                if (rightPower >= 0)
-                    rightPower = Range.clip(rightPower, MIN_TURN_POWER, MAX_TURN_POWER);
-                else if (rightPower < 0)
-                    rightPower = Range.clip(rightPower, -MAX_TURN_POWER, -MIN_TURN_POWER);
-
-                //Set the motor powers.
-                for (DcMotor lMotor: leftDriveMotors)
-                    lMotor.setPower(leftPower);
+                for (DcMotor lMotor : leftDriveMotors)
+                    lMotor.setPower(-1 * currentSign * turnPower);
                 for (DcMotor rMotor : rightDriveMotors)
-                    rMotor.setPower(rightPower);
+                    rMotor.setPower(currentSign * turnPower);
 
-                //Output data to the DS.
-                //Don't change this, since it is useful to have real-time data in this case.
-                outputConstantLinesToDriverStation(
-                        new String[] {
-                                "Turning with gyro...",
-                                "Current heading " + currHeading,
-                                "Turning to " + heading,
-                                "Left Power " + leftPower,
-                                "Right Power " + rightPower
-                        }
-                );
-
+                currentSign = Integer.signum((int) (getValidGyroHeading() - desiredHeading));
                 idle();
+
+                turnPower += incrementValue; //Increase the value by a marginal amount over time to prevent stalling.
             }
-        } else {
-            int coefficient = heading < 0 ? -1 : 1;
-            //The turning point..
-            for (DcMotor lMotor: leftDriveMotors)
-                lMotor.setPower(heading * .3);
-            for (DcMotor rMotor : rightDriveMotors)
-                rMotor.setPower(heading * -.3);
+            while (Integer.signum((int) (getValidGyroHeading() - desiredHeading)) == initialSign ||
+                Integer.signum((int) (getValidGyroHeading() - desiredHeading)) == 0);
 
-            //Sleep for some period of time.
-            sleep((int) (heading));
+            sleep(700); //Give the gyro a short break to check.
+
+            if (getValidGyroHeading() != desiredHeading)
+                turnPower /= successiveTurnReduction;
+            else
+                break; //Exit the loop if the end has been achieved.
         }
-
-        stopDriving();
-
-        outputNewLineToDriverStation("Turn completed.");
     }
 
     //Used to driveForTime in a straight line with the aid of the gyroscope.
     protected void driveForTime(double power, long length)
     {
-        if (gyroscope != null)
-        {
-            //Add the output to the driver station.
-            outputNewLineToDriverStation("Driving at " + power + " power, for " + length + " milliseconds, with a gyroscope");
+        //Add the output to the driver station.
+        outputNewLineToDriverStation("Driving at " + power + " power, for " + length + " milliseconds, with a gyroscope");
 
-            zeroHeading(); // Set the direction to move.
+        zeroHeading(); // Set the direction to move.
 
-            setMovementPower(power); // Set the initial power.
+        setMovementPower(power); // Set the initial power.
 
-            //Required variables.
-            double startTime = System.currentTimeMillis();
+        //Required variables.
+        double startTime = System.currentTimeMillis();
 
-            sleep(500);
+        sleep(500);
 
-            //Gyroscope turning mechanics.
-            while (opModeIsActive() && System.currentTimeMillis() - startTime < length)
-                updateMotorPowersBasedOnGyroHeading();
+        //Gyroscope turning mechanics.
+        while (opModeIsActive() && System.currentTimeMillis() - startTime < length)
+            updateMotorPowersBasedOnGyroHeading();
 
-            //Stop the bot.
-            stopDriving();
+        //Stop the bot.
+        stopDriving();
 
-            outputNewLineToDriverStation("Drove for " + length + " at " + power + ".");
-        }
-        else
-        {
-            setMovementPower(power); // Set the initial power.
-            outputNewLineToDriverStation("Driving at " + power + " power, for " + length + " milliseconds, without a gyroscope");
-            sleep(length);
-        }
+        outputNewLineToDriverStation("Drove for " + length + " at " + power + ".");
     }
 
-    //The gyroscope value goes from 0 to 360: when the bot turns left, it immediately goes to 360.  This makes sure that the value makes sense for calculations.
+    //The gyroscope value goes from 0 to 360: when the bot turns left, it immediately goes to 360.
+    //This makes sure that the value makes sense for calculations.
     protected int getValidGyroHeading()
     {
         int heading = gyroscope.getHeading();
@@ -251,7 +206,7 @@ public abstract class _AutonomousBase extends _RobotBase
         return heading;
     }
 
-    //Stops all driveForTime motors.
+    //Stops all drive motors.
     protected void stopDriving ()
     {
         for (DcMotor lMotor: leftDriveMotors)
