@@ -12,7 +12,7 @@ public class AutonomousBlueBeacons extends _AutonomousBase
     //Called after runOpMode() has finished initializing.
     protected void driverStationSaysGO()
     {
-        rightSensorServo.setPosition(RIGHT_SERVO_MAX);
+        rightSensorServo.setPosition(RIGHT_SERVO_OPEN);
         sleep(0);
         driveForTime(0.5, 200);   // Drive forward a little ways from the wall.
         turn(.6, -40);       // Turn 40 degrees.
@@ -20,7 +20,7 @@ public class AutonomousBlueBeacons extends _AutonomousBase
         //Drive to the color sensor.
         zeroHeading();
         setMovementPower(0.5);
-        while (bottomColorSensor.alpha() < 10)
+        while (opModeIsActive() && bottomColorSensor.alpha() < 10)
             updateMotorPowersBasedOnGyroHeading();
 
         stopDriving();

@@ -10,7 +10,7 @@ public class ColorSensorDebugging extends _AutonomousBase
     protected void driverStationSaysGO()
     {
         while (opModeIsActive()) {
-            OutputRealTimeData(new String[]{
+            outputConstantLinesToDriverStation(new String[]{
                     "Bottom Color Sensor",
                     "--------------------",
                     "ARGB: " + bottomColorSensor.argb() + " Alpha: " + bottomColorSensor.alpha(),
@@ -26,7 +26,7 @@ public class ColorSensorDebugging extends _AutonomousBase
 //                    "ARGB: " + rightColorSensor.argb() + " Alpha: " + rightColorSensor.alpha(),
 //                    "Blue: " + rightColorSensor.blue() + " Red: " + rightColorSensor.red(),
 //                    "Green: " + rightColorSensor.green(),
-                    "Heading: " + getGyroscopeHeading()
+                    "Heading: " + getValidGyroHeading()
             });
             idle();
         } // alpha > 10 = white

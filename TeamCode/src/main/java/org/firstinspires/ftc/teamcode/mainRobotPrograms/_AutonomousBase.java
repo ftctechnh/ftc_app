@@ -10,48 +10,48 @@ import com.qualcomm.robotcore.hardware.I2cAddr;
 //For added simplicity while coding autonomous with the new FTC system. Utilized inheritance and polymorphism.
 public abstract class _AutonomousBase extends _RobotBase
 {
-
     //Only used during autonomous.
     protected GyroSensor gyroscope;
-    protected ColorSensor leftColorSensor, rightColorSensor, bottomColorSensor;
+    protected ColorSensor leftColorSensor, rightColorSensor, bottomColorSensor; //Must have different I2C addresses.
     protected Servo leftSensorServo, rightSensorServo;
     protected final double RIGHT_SERVO_CLOSED = 1.0, LEFT_SERVO_CLOSED = 1.0;
-    protected final double LEFT_SERVO_MAX = 0.48, RIGHT_SERVO_MAX = 0.48;
+    protected final double LEFT_SERVO_OPEN = 0.48, RIGHT_SERVO_OPEN = 0.48;
 
-    //Initialize everything required in autonomous that isn't initialized in RobotBase (sensors)
+    //initialize everything required in autonomous that isn't initialized in RobotBase (sensors)
     @Override
     protected void driverStationSaysINITIALIZE()
     {
-        //Initialize color sensors for either side (do in _AutonomousBase because they are useless during teleop.
-        leftColorSensor = Initialize(ColorSensor.class, "colorLeft");
+        //initialize color sensors for either side (do in _AutonomousBase because they are useless during teleop.
+        leftColorSensor = initialize(ColorSensor.class, "colorLeft");
         leftColorSensor.setI2cAddress(I2cAddr.create8bit(0x2c));
         leftColorSensor.enableLed(true);
-//        rightColorSensor = Initialize(ColorSensor.class, "colorRight");
+//        rightColorSensor = initialize(ColorSensor.class, "colorRight");
 //        rightColorSensor.setI2cAddress(I2cAddr.create8bit(0x3c));
 //        rightColorSensor.enableLed(true);
-        bottomColorSensor = Initialize(ColorSensor.class, "colorBottom");
+        bottomColorSensor = initialize(ColorSensor.class, "colorBottom");
         bottomColorSensor.setI2cAddress(I2cAddr.create8bit(0x4c));
         bottomColorSensor.enableLed(true);
 
-        leftSensorServo = Initialize(Servo.class, "servoLeft");
+        leftSensorServo = initialize(Servo.class, "servoLeft");
         leftSensorServo.setPosition(LEFT_SERVO_CLOSED);
-        rightSensorServo = Initialize(Servo.class, "servoRight");
+        rightSensorServo = initialize(Servo.class, "servoRight");
         rightSensorServo.setPosition(RIGHT_SERVO_CLOSED);
 
-        //Initialize gyroscope (will output whether it was found or not.
-        gyroscope = Initialize(GyroSensor.class, "Gyroscope");
+        //initialize gyroscope (will output whether it was found or not.
+        gyroscope = initialize(GyroSensor.class, "Gyroscope");
         if (gyroscope != null)
         {
             //Start gyroscope calibration.
-            OutputToDriverStation("Gyroscope Calibrating...");
+            outputNewLineToDriverStation("Gyroscope Calibrating...");
             gyroscope.calibrate();
+
             //Pause to prevent errors.
             sleep(1000);
 
             while (opModeIsActive() && gyroscope.isCalibrating())
                 sleep(50);
 
-            OutputToDriverStation("Gyroscope Calibration Complete!");
+            outputNewLineToDriverStation("Gyroscope Calibration Complete!");
         }
 
     }
@@ -86,7 +86,7 @@ public abstract class _AutonomousBase extends _RobotBase
         if (gyroscope != null)
         {
             // Get the heading info.
-            int heading = getGyroscopeHeading();
+            int heading = getValidGyroHeading();
 
             //Create values.
             double leftPower = movementPower + (heading) / (100f - offCourseSensitivity);
@@ -111,7 +111,7 @@ public abstract class _AutonomousBase extends _RobotBase
 
             //Output data to the DS.
             //Note: the 2nd parameter "%.2f" changes the output of the max decimal points.
-            OutputRealTimeData(
+            outputConstantLinesToDriverStation(
                     new String[] {
                             "Heading: " + heading,
                             "L Power: " + leftPower,
@@ -120,7 +120,7 @@ public abstract class _AutonomousBase extends _RobotBase
             );
         } else
         {
-            OutputRealTimeData(
+            outputConstantLinesToDriverStation(
                     new String[] {
                             "Can't adjust heading, no gyro attached!"
                     }
@@ -137,7 +137,7 @@ public abstract class _AutonomousBase extends _RobotBase
         if (gyroscope != null)
         {
             //Output a message to the user
-            OutputToDriverStation("Turning to " + heading + " degrees WITH GYRO at " + power + " power.");
+            outputNewLineToDriverStation("Turning to " + heading + " degrees WITH GYRO at " + power + " power.");
 
             //Wait a moment: otherwise there tends to an error.
             zeroHeading();
@@ -146,10 +146,10 @@ public abstract class _AutonomousBase extends _RobotBase
             int currHeading;
             double leftPower, rightPower;
 
-            while (opModeIsActive() && getGyroscopeHeading() != heading)
+            while (opModeIsActive() && getValidGyroHeading() != heading)
             {
                 //Get the gyroscope heading.
-                currHeading = getGyroscopeHeading();
+                currHeading = getValidGyroHeading();
 
                 //Calculate the power of each respective motor.
                 leftPower = (currHeading - heading) * power;
@@ -174,7 +174,7 @@ public abstract class _AutonomousBase extends _RobotBase
 
                 //Output data to the DS.
                 //Don't change this, since it is useful to have real-time data in this case.
-                OutputRealTimeData(
+                outputConstantLinesToDriverStation(
                         new String[] {
                                 "Turning with gyro...",
                                 "Current heading " + currHeading,
@@ -188,7 +188,7 @@ public abstract class _AutonomousBase extends _RobotBase
             }
         } else {
             //Important for the driver to know.
-            OutputToDriverStation("Turning " + (power >= 0 ? "left" : "right") + " for " + heading + " seconds WITHOUT GYRO");
+            outputNewLineToDriverStation("Turning " + (power >= 0 ? "left" : "right") + " for " + heading + " seconds WITHOUT GYRO");
 
             //The turning point..
             for (DcMotor lMotor: leftDriveMotors)
@@ -202,36 +202,45 @@ public abstract class _AutonomousBase extends _RobotBase
 
         stopDriving();
 
-        OutputToDriverStation("Turn completed.");
+        outputNewLineToDriverStation("Turn completed.");
     }
 
     //Used to driveForTime in a straight line with the aid of the gyroscope.
-    protected void driveForTime(double power, double length)
+    protected void driveForTime(double power, long length)
     {
-        //Add the output to the driver station.
-        OutputToDriverStation("Driving at " + power + " power, for " + length + " seconds," + "WITH" + (gyroscope == null ? "OUT" : "") + "a gyroscope");
+        if (gyroscope != null)
+        {
+            //Add the output to the driver station.
+            outputNewLineToDriverStation("Driving at " + power + " power, for " + length + " milliseconds, with a gyroscope");
 
-        zeroHeading(); // Set the direction to move.
+            zeroHeading(); // Set the direction to move.
 
-        setMovementPower(power); // Set the initial power.
+            setMovementPower(power); // Set the initial power.
 
-        //Required variables.
-        double startTime = System.currentTimeMillis();
+            //Required variables.
+            double startTime = System.currentTimeMillis();
 
-        sleep(500);
+            sleep(500);
 
-        //Gyroscope turning mechanics.
-        while (opModeIsActive() && System.currentTimeMillis() - startTime < length)
-            updateMotorPowersBasedOnGyroHeading();
+            //Gyroscope turning mechanics.
+            while (opModeIsActive() && System.currentTimeMillis() - startTime < length)
+                updateMotorPowersBasedOnGyroHeading();
 
-        //Stop the bot.
-        stopDriving();
+            //Stop the bot.
+            stopDriving();
 
-        OutputToDriverStation("Drove for " + length + " at " + power + ".");
+            outputNewLineToDriverStation("Drove for " + length + " at " + power + ".");
+        }
+        else
+        {
+            setMovementPower(power); // Set the initial power.
+            outputNewLineToDriverStation("Driving at " + power + " power, for " + length + " milliseconds, without a gyroscope");
+            sleep(length);
+        }
     }
 
     //The gyroscope value goes from 0 to 360: when the bot turns left, it immediately goes to 360.  This makes sure that the value makes sense for calculations.
-    protected int getGyroscopeHeading()
+    protected int getValidGyroHeading()
     {
         int heading = gyroscope.getHeading();
 

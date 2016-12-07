@@ -63,7 +63,7 @@ public class Teleop extends _RobotBase
             {
                 backwards = !backwards; // Switch driving direction
                 lastTimeToggleDirectionPressed = System.currentTimeMillis();
-                OutputToDriverStation("Toggled drive mode to " + (backwards ? "backwards" : "forwards"));
+                outputNewLineToDriverStation("Toggled drive mode to " + (backwards ? "backwards" : "forwards"));
             }
 
             /******************** OTHER MOTORS ********************/

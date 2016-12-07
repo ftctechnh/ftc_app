@@ -1,31 +1,4 @@
-/* Copyright (c) 2014 Qualcomm Technologies Inc
-All rights reserved.
-Redistribution and use in source and binary forms, with or without modification,
-are permitted (subject to the limitations in the disclaimer below) provided that
-the following conditions are met:
-Redistributions of source code must retain the above copyright notice, this list
-of conditions and the following disclaimer.
-Redistributions in binary form must reproduce the above copyright notice, this
-list of conditions and the following disclaimer in the documentation and/or
-other materials provided with the distribution.
-Neither the name of Qualcomm Technologies Inc nor the names of its contributors
-may be used to endorse or promote products derived from this software without
-specific prior written permission.
-NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
-LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
-
 package org.firstinspires.ftc.teamcode.mainRobotPrograms;
-
-import android.media.MediaPlayer;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -45,7 +18,7 @@ public abstract class _RobotBase extends LinearOpMode
     protected DcMotor harvester, pusher;
 
     //This took a LONG TIME TO WRITE
-    protected <T extends HardwareDevice> T Initialize  (Class <T> hardwareDevice, String name)
+    protected <T extends HardwareDevice> T initialize(Class <T> hardwareDevice, String name)
     {
         try
         {
@@ -54,7 +27,7 @@ public abstract class _RobotBase extends LinearOpMode
         }
         catch (Exception e)
         {
-            OutputToDriverStation("Could not find " + name + " in hardware map.");
+            outputNewLineToDriverStation("Could not find " + name + " in hardware map.");
             return null;
         }
     }
@@ -66,15 +39,15 @@ public abstract class _RobotBase extends LinearOpMode
         //Make sure that the robot components are found and initialized correctly.
         //This all happens during init()
         /*************************** DRIVING MOTORS ***************************/
-        rightDriveMotors.add(Initialize(DcMotor.class, "right"));
+        rightDriveMotors.add(initialize(DcMotor.class, "right"));
 
-        leftDriveMotors.add(Initialize(DcMotor.class, "left"));
+        leftDriveMotors.add(initialize(DcMotor.class, "left"));
         for(DcMotor motor : leftDriveMotors)
                 motor.setDirection(DcMotor.Direction.REVERSE);
 
         /*************************** OTHER MOTORS ***************************/
-        pusher = Initialize(DcMotor.class, "pusher");
-        harvester = Initialize(DcMotor.class, "harvester");
+        pusher = initialize(DcMotor.class, "pusher");
+        harvester = initialize(DcMotor.class, "harvester");
 
         //NOTE: Actually attempting to use null motors will cause the program to terminate.
         //This advanced system is designed for when only specific hardware is required.
@@ -99,7 +72,7 @@ public abstract class _RobotBase extends LinearOpMode
     /*** USE TO OUTPUT DATA IN A SLIGHTLY BETTER WAY THAT LINEAR OP MODES HAVE TO ***/
     ArrayList<String> linesAccessible = new ArrayList<>();
     private int maxLines = 7;
-    protected void OutputToDriverStation(String newLine)
+    protected void outputNewLineToDriverStation(String newLine)
     {
         //Add new line at beginning of the lines.
         linesAccessible.add(0, newLine);
@@ -115,7 +88,7 @@ public abstract class _RobotBase extends LinearOpMode
     }
 
     //Allows for more robust output of actual data instead of line by line without wrapping.  Used for driving and turning.
-    protected void OutputRealTimeData (String[] data)
+    protected void outputConstantLinesToDriverStation (String[] data)
     {
         telemetry.update();
         for (String s : data)

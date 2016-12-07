@@ -12,7 +12,7 @@ public class AutonomousRedBeacons extends _AutonomousBase
     //Called after runOpMode() has finished initializing.
     protected void driverStationSaysGO()
     {
-        rightSensorServo.setPosition(RIGHT_SERVO_MAX);
+        rightSensorServo.setPosition(RIGHT_SERVO_OPEN);
         sleep(0);
         driveForTime(0.5f, 200);   // Drive forward a little ways from the wall.
         turn(.6f, -40);       // Turn 40 degrees.
