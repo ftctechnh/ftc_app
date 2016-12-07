@@ -14,12 +14,12 @@ public class AutonomousRedBeacons extends _AutonomousBase
     {
         rightSensorServo.setPosition(RIGHT_SERVO_OPEN);
         sleep(0);
-        driveForTime(0.5f, 200);   // Drive forward a little ways from the wall.
-        turn(.6f, -40);       // Turn 40 degrees.
+        driveForTime (0.5, 200);   // Drive forward a little ways from the wall.
+        turn (-50);       // Turn 40 degrees.
 
         //Drive to the color sensor.
         zeroHeading();
-        setMovementPower(0.5f);
+        setMovementPower (0.5);
         while (opModeIsActive() && bottomColorSensor.alpha() < 10)
             updateMotorPowersBasedOnGyroHeading();
 

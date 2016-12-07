@@ -15,7 +15,7 @@ public class AutonomousBlueBeacons extends _AutonomousBase
         rightSensorServo.setPosition(RIGHT_SERVO_OPEN);
         sleep(0);
         driveForTime(0.5, 200);   // Drive forward a little ways from the wall.
-        turn(.6, -40);       // Turn 40 degrees.
+        turn(50);       // Turn 40 degrees.
 
         //Drive to the color sensor.
         zeroHeading();

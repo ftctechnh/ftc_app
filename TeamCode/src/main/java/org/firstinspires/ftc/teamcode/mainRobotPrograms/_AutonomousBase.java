@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.BatteryChecker;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 
@@ -80,7 +81,7 @@ public abstract class _AutonomousBase extends _RobotBase
     }
 
     //More complex method that adjusts the heading based on the gyro heading.
-    protected double offCourseSensitivity = 90; //Max of 100, Min of 0 (DON'T DO 100 OR DIV BY 0 ERROR)
+    protected double offCourseSensitivity = 50; //Max of 100, Min of 0 (DON'T DO 100 OR DIV BY 0 ERROR)
     protected void updateMotorPowersBasedOnGyroHeading()
     {
         if (gyroscope != null)
@@ -131,13 +132,13 @@ public abstract class _AutonomousBase extends _RobotBase
     }
 
     //Used to turn to a specified heading.
-    private final double MIN_TURN_POWER = .1, MAX_TURN_POWER = .3;
-    protected void turn (double power, double heading)
+    private final double MIN_TURN_POWER = .1, MAX_TURN_POWER = .5;
+    protected void turn (double heading)
     {
         if (gyroscope != null)
         {
             //Output a message to the user
-            outputNewLineToDriverStation("Turning to " + heading + " degrees WITH GYRO at " + power + " power.");
+            outputNewLineToDriverStation("Turning to " + heading + " degrees WITH GYRO");
 
             //Wait a moment: otherwise there tends to an error.
             zeroHeading();
@@ -152,8 +153,10 @@ public abstract class _AutonomousBase extends _RobotBase
                 currHeading = getValidGyroHeading();
 
                 //Calculate the power of each respective motor.
-                leftPower = (currHeading - heading) * power;
-                rightPower = (heading - currHeading) * power;
+                double differenceInHeadings = heading - currHeading;
+                double power = Math.pow(differenceInHeadings, 2) + MIN_TURN_POWER;
+                leftPower = -power;
+                rightPower = power;
 
                 //Clamp values.
                 if (leftPower >= 0)
@@ -187,14 +190,12 @@ public abstract class _AutonomousBase extends _RobotBase
                 idle();
             }
         } else {
-            //Important for the driver to know.
-            outputNewLineToDriverStation("Turning " + (power >= 0 ? "left" : "right") + " for " + heading + " seconds WITHOUT GYRO");
-
+            int coefficient = heading < 0 ? -1 : 1;
             //The turning point..
             for (DcMotor lMotor: leftDriveMotors)
-                lMotor.setPower(power);
+                lMotor.setPower(heading * .3);
             for (DcMotor rMotor : rightDriveMotors)
-                rMotor.setPower(-power);
+                rMotor.setPower(heading * -.3);
 
             //Sleep for some period of time.
             sleep((int) (heading));

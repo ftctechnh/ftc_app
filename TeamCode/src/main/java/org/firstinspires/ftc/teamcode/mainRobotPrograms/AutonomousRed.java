@@ -14,7 +14,7 @@ public class AutonomousRed extends _AutonomousBase
     {
         sleep(0);
         driveForTime(0.8, 1500); // Drive to hit cap ball
-        turn(0.3, 110); // Turn towards corner vortex
+        turn(110); // Turn towards corner vortex
         driveForTime(1, 2000); // Drive onto corner vortex
         harvester.setPower(0.5); // Score pre-loaded balls
         sleep(3000);
