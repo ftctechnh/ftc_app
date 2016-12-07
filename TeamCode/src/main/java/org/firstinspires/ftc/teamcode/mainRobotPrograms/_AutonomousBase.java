@@ -17,7 +17,7 @@ public abstract class _AutonomousBase extends _RobotBase
     protected final double RIGHT_SERVO_CLOSED = 1.0, LEFT_SERVO_CLOSED = 1.0;
     protected final double LEFT_SERVO_OPEN = 0.48, RIGHT_SERVO_OPEN = 0.48;
 
-    //initialize everything required in autonomous that isn't initialized in RobotBase (sensors)
+    // Initialize everything required in autonomous that isn't initialized in RobotBase (sensors)
     @Override
     protected void driverStationSaysINITIALIZE()
     {
@@ -80,7 +80,7 @@ public abstract class _AutonomousBase extends _RobotBase
     }
 
     //More complex method that adjusts the heading based on the gyro heading.
-    protected double offCourseSensitivity = 80f; //Max of 100, Min of 0 (DON'T DO 100 OR DIV BY 0 ERROR)
+    protected double offCourseSensitivity = 90; //Max of 100, Min of 0 (DON'T DO 100 OR DIV BY 0 ERROR)
     protected void updateMotorPowersBasedOnGyroHeading()
     {
         if (gyroscope != null)
@@ -89,8 +89,8 @@ public abstract class _AutonomousBase extends _RobotBase
             int heading = getValidGyroHeading();
 
             //Create values.
-            double leftPower = movementPower + (heading) / (100f - offCourseSensitivity);
-            double rightPower = movementPower - (heading) / (100f - offCourseSensitivity);
+            double leftPower = movementPower + (heading) / (100.0 - offCourseSensitivity);
+            double rightPower = movementPower - (heading) / (100.0 - offCourseSensitivity);
 
             //Clamp values.
             if (leftPower > 1)

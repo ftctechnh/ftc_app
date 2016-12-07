@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 //Add the teleop to the op mode register.
-@TeleOp(name="Teleop", group="Teleop Group")
+@TeleOp(name="Teleop - Badass Mode", group="Teleop Group")
 //@Disabled
 
 public class Teleop extends _RobotBase
