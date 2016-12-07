@@ -26,8 +26,6 @@ public class LineDrive extends OpenCVLib implements HeadingSensor, DisplacementS
     private int yValStore[] = new int[3];
     private double lastLinePos = 0;
 
-    AutoLib.Timer mTimer;
-
     AutoLib.Sequence mSequence;             // the root of the sequence tree
     boolean bDone;                          // true when the programmed sequence is done
     BotHardware robot;                      // robot hardware object

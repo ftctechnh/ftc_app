@@ -31,6 +31,8 @@ public class BotHardware
     public DeviceInterfaceModule dim;
     public AHRS navX;
 
+    public NavXHeading navXHeading;
+
     private final byte NAVX_DEVICE_UPDATE_RATE_HZ = 50;
 
     /* local OpMode members. */
@@ -89,6 +91,7 @@ public class BotHardware
 
         try{
             navX = AHRS.getInstance(dim, 2, AHRS.DeviceDataType.kProcessedData, NAVX_DEVICE_UPDATE_RATE_HZ);
+            navXHeading = new NavXHeading();
         }
         catch (Exception e){
             opMode.telemetry.addData("NavX failed to load!", "");
@@ -132,6 +135,14 @@ public class BotHardware
         rightServo.setPosition(0.0);
     }
 
+    public class NavXHeading implements HeadingSensor{
+
+        public float getHeading(){
+            return navX.getFusedHeading();
+        }
+
+    }
+
     /***
      *
      * waitForTick implements a periodic delay. However, this acts like a metronome with a regular
@@ -162,12 +173,8 @@ public class BotHardware
         navX.zeroYaw();
     }
 
-    public class navXHeading implements HeadingSensor{
-
-        public float getHeading(){
-            return navX.getFusedHeading();
-        }
-
+    public HeadingSensor getNavXHeadingSensor(){
+        return navXHeading;
     }
 
     //start crappy code!
