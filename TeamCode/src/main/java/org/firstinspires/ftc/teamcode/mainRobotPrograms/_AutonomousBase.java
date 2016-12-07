@@ -157,8 +157,8 @@ public abstract class _AutonomousBase extends _RobotBase
 
                 turnPower += incrementValue; //Increase the value by a marginal amount over time to prevent stalling.
             }
-            while (Integer.signum((int) (getValidGyroHeading() - desiredHeading)) == initialSign ||
-                Integer.signum((int) (getValidGyroHeading() - desiredHeading)) == 0);
+            //This makes sure that the turn has either overshot the desired value or hit it spot-on.  
+            while (Integer.signum((int) (getValidGyroHeading() - desiredHeading)) == initialSign);
 
             sleep(700); //Give the gyro a short break to check.
 
