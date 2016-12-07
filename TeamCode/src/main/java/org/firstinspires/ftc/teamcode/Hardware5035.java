@@ -6,6 +6,7 @@ import android.hardware.Sensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -38,6 +39,8 @@ public class Hardware5035 {
     public Servo popUp = null;
     public TouchSensor grabbutton;
     public TouchSensor balldumpup;
+    public LightSensor leftLightSensor; //
+    public LightSensor rightLightSensor;
 
 
 
@@ -64,6 +67,8 @@ public class Hardware5035 {
         popUp = hwMap.servo.get("pop up");
         grabbutton = hwMap.touchSensor.get("grab button");
         balldumpup = hwMap.touchSensor.get("ballarmup");
+        leftLightSensor = hwMap.lightSensor.get("left Sensor");
+        rightLightSensor = hwMap.lightSensor.get("right Sensor");
         leftMotor.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         rightMotor.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         ballBooster1.setDirection(DcMotor.Direction.FORWARD);
@@ -71,6 +76,8 @@ public class Hardware5035 {
         ballDump.setDirection(DcMotor.Direction.FORWARD);
         ballBooster1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         ballBooster2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        leftLightSensor.enableLed(true);
+        rightLightSensor.enableLed(true);
 
 
 
@@ -124,23 +131,23 @@ public class Hardware5035 {
         int multi = 3;
         if (ticksToGo > 1440 * multi)
         {
-            return .2;
+            return .6;
         }
         if (ticksToGo > 720 * multi)
         {
-            return .175;
+            return .375;
         }
         if (ticksToGo > 520 * multi)
         {
-            return .175;
+            return .375;
         }
         if (ticksToGo > 120 * multi)
         {
-            return .1555;
+            return .3555;
         }
         if (ticksToGo >= 0 * multi)
         {
-            return .150;
+            return .350;
         }
         return 0;
     }
@@ -274,8 +281,8 @@ public class Hardware5035 {
         //telemetry.addData("driveReverse start", String.format("tickR=%d tickL=%d motorR=%d motorL=%d", tickR, tickL, motorRightRemote1.getCurrentPosition(), motorLeftRemote1.getCurrentPosition()));
         int count = 0;
         while(rightMotor.getCurrentPosition() < tickR || leftMotor.getCurrentPosition() < tickL) {
-            leftMotor.setPower(getPowerForTicksfordrive(tickL - leftMotor.getCurrentPosition()));
-            rightMotor.setPower(getPowerForTicksfordrive(tickR - rightMotor.getCurrentPosition()));
+            leftMotor.setPower(-getPowerForTicksfordrive(tickL - leftMotor.getCurrentPosition()));
+            rightMotor.setPower(-getPowerForTicksfordrive(tickR - rightMotor.getCurrentPosition()));
             //waitOneFullHardwareCycle();
             //telemetry.addData("driveReverse count", String.format("count= %d tickR=%d tickL=%d motorR=%d motorL=%d", count, tickR, tickL, motorRightRemote1.getCurrentPosition(), motorLeftRemote1.getCurrentPosition()));
             ++count;
@@ -294,8 +301,8 @@ public class Hardware5035 {
         //telemetry.addData("driveReverse start", String.format("tickR=%d tickL=%d motorR=%d motorL=%d", tickR, tickL, motorRightRemote1.getCurrentPosition(), motorLeftRemote1.getCurrentPosition()));
         int count = 0;
         while(rightMotor.getCurrentPosition() < ReversetickR || leftMotor.getCurrentPosition() < ReversetickL) {
-            leftMotor.setPower(-getPowerForTicksfordrive(ReversetickL - leftMotor.getCurrentPosition()));
-            rightMotor.setPower(-getPowerForTicksfordrive(ReversetickL - rightMotor.getCurrentPosition()));
+            leftMotor.setPower(getPowerForTicksfordrive(ReversetickL - leftMotor.getCurrentPosition()));
+            rightMotor.setPower(getPowerForTicksfordrive(ReversetickL - rightMotor.getCurrentPosition()));
             //waitOneFullHardwareCycle();
             //telemetry.addData("driveReverse count", String.format("count= %d tickR=%d tickL=%d motorR=%d motorL=%d", count, tickR, tickL, motorRightRemote1.getCurrentPosition(), motorLeftRemote1.getCurrentPosition()));
             ++count;

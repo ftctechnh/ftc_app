@@ -33,9 +33,9 @@ public class TeleOp5035 extends OpMode {
     boolean Reverse = false;
     int PosNum = 0;
     int counter = 0;
-    static final double DurDown = 250;
-    static final double DurUp = 250;
-    static final double PickUpSpeed = .75;
+    static final double DurDown = 100;
+    static final double DurUp = 10;
+    static final double PickUpSpeed = .80;
     static final double BallDumpIdlePower = 0.10;
     ElapsedTime BallPickUpTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
 
@@ -97,39 +97,42 @@ public class TeleOp5035 extends OpMode {
         if (!IsMovingBallPickUpArm) {
             if (gamepad2.right_stick_x > .15) {
                 BallPickUpTimer.reset();
-                robot.ballDump.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                robot.ballDump.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 robot.ballDump.setPower(0.17);
             } else if (gamepad2.right_stick_y > .15) {
                 BallPickUpTimer.reset();
-                robot.ballDump.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                robot.ballDump.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 robot.ballDump.setPower(-0.02);
             } else {
-                 robot.ballDump.setPower(BallDumpIdlePower);
+                 //robot.ballDump.setPower(BallDumpIdlePower);
             }
         }
 
-        if (gamepad1.right_trigger > .15 && !IsMovingBallPickUpArm && !robot.grabbutton.isPressed()) {
+
+        if (gamepad1.right_trigger > .15 && !IsMovingBallPickUpArm) {
             IsMovingBallPickUpArm = true;
             BallPickUpTimer.reset();
-            robot.ballDump.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            robot.ballDump.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             robot.ballDump.setPower(-0.2);
         }
-        if (gamepad1.right_bumper && !IsMovingBallPickUpArm && !robot.grabbutton.isPressed()){
+        if (gamepad1.right_bumper && !IsMovingBallPickUpArm){
             IsMovingBallPickUpArm = true;
             BallPickUpTimer.reset();
-            robot.ballDump.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            robot.ballDump.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             robot.ballDump.setPower(-1);
         }
-        if ((robot.grabbutton.isPressed() && robot.ballDump.getPower() < 0) || (BallPickUpTimer.time() >= DurDown && robot.ballDump.getPower() < 0)) {
+
+        if ((BallPickUpTimer.time() >= DurDown && robot.ballDump.getPower() < 0)) {
             IsMovingBallPickUpArm = false;
             IsUp = true;
             robot.ballDump.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             robot.ballDump.setPower(0);
         }
+
         if (gamepad1.left_trigger > .15 && !IsMovingBallPickUpArm && !robot.balldumpup.isPressed()) {
             IsMovingBallPickUpArm = true;
             BallPickUpTimer.reset();
-            robot.ballDump.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            robot.ballDump.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             robot.ballDump.setPower(PickUpSpeed);
         }
 //        if (BallPickUpTimer.time() < 750 && robot.ballDump.getPower() > 0) {
@@ -138,7 +141,7 @@ public class TeleOp5035 extends OpMode {
         if ((robot.balldumpup.isPressed() && robot.ballDump.getPower() > 0) || (BallPickUpTimer.time() >= DurUp && robot.ballDump.getPower() > 0)) {
             IsMovingBallPickUpArm = false;
             IsUp = false;
-            robot.ballDump.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            robot.ballDump.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             robot.ballDump.setPower(BallDumpIdlePower);
         }
 
