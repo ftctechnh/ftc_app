@@ -28,19 +28,16 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 @Autonomous(name="BlueAutoOpmode", group="Testing")  // @Autonomous(...) is the other common choice
 //@Disabled
 public class BlueAutoOpmode extends LinearOpMode
 {
-    RedAutoOpmode redAutoOpmode = new RedAutoOpmode(true);
+    RedAutoOpmodeBallAndBeacons redAutoOpmodeBallAndBeacons = new RedAutoOpmodeBallAndBeacons(true);
     @Override
     public void runOpMode() {
-        redAutoOpmode.runOpMode();
+        redAutoOpmodeBallAndBeacons.runOpMode();
     }
 
 }

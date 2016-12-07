@@ -13,23 +13,28 @@ public class RangePair
 {
     Sensors sensors = null;
 
-    double distanceApart;
+    private double distanceApart;
 
 
-    public RangePair(HardwareMap hardwareMap, double cmBetweenSensors, Sensors sensors)
+    public RangePair(HardwareMap hardwareMap, double inBetweenSensors, Sensors sensors)
     {
-        distanceApart = cmBetweenSensors;
+        distanceApart = inBetweenSensors;
     }
 
     public double meanDistance()
     {
-        return (sensors.rangeSensorBack.getDistance(DistanceUnit.CM)+sensors.rangeSensorFront.getDistance(DistanceUnit.CM))/2;
+        return (sensors.rangeSensorBack.getDistance(DistanceUnit.INCH)+sensors.rangeSensorFront.getDistance(DistanceUnit.INCH))/2;
+    }
+
+    public double minDistanceAway()
+    {
+        return Math.min(sensors.rangeSensorBack.getDistance(DistanceUnit.INCH),sensors.rangeSensorFront.getDistance(DistanceUnit.INCH));
     }
 
     public double angleToWall()
     {
-        double frontDistance = sensors.rangeSensorFront.getDistance(DistanceUnit.CM);
-        double backDistance = sensors.rangeSensorBack.getDistance(DistanceUnit.CM);
+        double frontDistance = sensors.rangeSensorFront.getDistance(DistanceUnit.INCH);
+        double backDistance = sensors.rangeSensorBack.getDistance(DistanceUnit.INCH);
         double difference = frontDistance - backDistance;
 
         return Math.atan(difference/distanceApart);

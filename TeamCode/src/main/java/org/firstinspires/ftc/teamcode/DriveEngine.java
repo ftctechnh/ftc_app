@@ -32,6 +32,8 @@ public class DriveEngine
     double leftPower = 0;  //[0.0, 1.0]
     double rightPower = 0; //[0.0, 1.0]
 
+    double inchesBetweenMotors = 14;
+
     //Variables for pusherMode
     static final int SAMPLE_SIZE = 15;
     List<Float> rightJoyStickValues = new ArrayList();
@@ -99,7 +101,7 @@ public class DriveEngine
 
     private void takeJoyStickSample()
     {
-        /*
+
         //Copied Preston's code here...
         //Need to review the logic to use absolute power.
         //What we really need to know is when we change
@@ -110,7 +112,7 @@ public class DriveEngine
 
         if(Math.abs(gamepad.left_stick_y) < Math.abs(leftPower))
             resetJoyStickSamples(gamepad.left_stick_y);
-        */
+
 
         rightJoyStickValues.remove(0);
         rightJoyStickValues.add(gamepad.right_stick_y);
