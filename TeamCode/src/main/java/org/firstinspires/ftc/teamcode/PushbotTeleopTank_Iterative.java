@@ -136,10 +136,10 @@ public class PushbotTeleopTank_Iterative extends OpMode{
 
         //spinning arm thing
         if (gamepad1.dpad_up == true){
-            robot.BCM.setPower(1);
+            robot.BCM.setPower(0.5);
         }
         else if (gamepad1.dpad_down == true){
-            robot.BCM.setPower(-1);
+            robot.BCM.setPower(-0.5);
         }
         else {
             robot.BCM.setPower(0.0);
