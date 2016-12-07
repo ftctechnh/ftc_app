@@ -154,7 +154,7 @@ public abstract class _AutonomousBase extends _RobotBase
 
                 //Calculate the power of each respective motor.
                 double differenceInHeadings = heading - currHeading;
-                double power = Math.pow(differenceInHeadings, 2) + MIN_TURN_POWER;
+                double power = 0.10 * Math.pow(differenceInHeadings, 2) + MIN_TURN_POWER;
                 leftPower = -power;
                 rightPower = power;
 
