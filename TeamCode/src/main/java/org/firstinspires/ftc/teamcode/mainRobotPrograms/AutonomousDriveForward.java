@@ -25,6 +25,11 @@ public class AutonomousDriveForward extends AutonomousBase
                     "ARGB: " + leftColorSensor.argb() + " Alpha: " + leftColorSensor.alpha(),
                     "Blue: " + leftColorSensor.blue() + " Red: " + leftColorSensor.red(),
                     "Green: " + leftColorSensor.green(),
+//                    "Right Color Sensor",
+//                    "--------------------",
+//                    "ARGB: " + rightColorSensor.argb() + " Alpha: " + rightColorSensor.alpha(),
+//                    "Blue: " + rightColorSensor.blue() + " Red: " + rightColorSensor.red(),
+//                    "Green: " + rightColorSensor.green(),
                     "Heading: " + getGyroscopeHeading()
             });
             idle();

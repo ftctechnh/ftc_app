@@ -56,7 +56,7 @@ public abstract class AutonomousBase extends RobotBase {
     //All children should have special instructions.
     protected abstract void driverStationSaysGO();
 
-    private final double MIN_TURN_POWER = .1, MAX_TURN_POWER = .5;
+    private final double MIN_TURN_POWER = .1, MAX_TURN_POWER = .3;
 
     //Used to turn to a specified heading.
     protected void turn(double power, double heading)
@@ -135,9 +135,9 @@ public abstract class AutonomousBase extends RobotBase {
         //Add the output to the driver station.
         OutputToDriverStation("Driving at " + power + " power, for " + length + " seconds," + "WITH" + (gyroscope == null ? "OUT" : "") + "a gyroscope");
 
-        //Initialize the gyro if it exists.
-        if (gyroscope != null)
-            gyroscope.resetZAxisIntegrator();
+        sleep(500);
+        gyroscope.resetZAxisIntegrator();
+        sleep(500);
 
         //Required variables.
         double startTime = System.currentTimeMillis();
