@@ -75,6 +75,8 @@ abstract class OmegasVision extends ManualVisionOpMode {
                         } else {
                             Ω.driveForward(50.0);
                         }
+                    } else {
+                        return;
                     }
                 }
             }
