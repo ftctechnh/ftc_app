@@ -39,7 +39,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 /**
  * {@link TestInfiniteLoopLinear} is a simple test that runs an infinite loop
  */
-@TeleOp(name = "Test: Infinite Loop (Linear)", group = "Tests")
+//@TeleOp(name = "Test: Infinite Loop (Linear)", group = "Tests")
 @Disabled
 public class TestInfiniteLoopLinear extends LinearOpMode {
 
@@ -48,14 +48,14 @@ public class TestInfiniteLoopLinear extends LinearOpMode {
         waitForStart();
 
         // Do nothing, forever
-        for (int count = 0; ; count++) {
-            try {
-                telemetry.addData("count", count);
-                updateTelemetry(telemetry);
-                idle();
-            } catch (InterruptedException e) {
+        //for (int count = 0; ; count++) {
+            //try {
+                //telemetry.addData("count", count);
+                //updateTelemetry(telemetry);
+                //idle();
+            //} catch (InterruptedException e) {
                 // ignore: we're trying to do an infinite loop!
-            }
-        }
+            //}
+       // }
     }
 }
