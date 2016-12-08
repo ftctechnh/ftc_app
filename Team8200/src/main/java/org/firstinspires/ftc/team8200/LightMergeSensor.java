@@ -1,7 +1,40 @@
+/* Copyright (c) 2015 Qualcomm Technologies Inc
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted (subject to the limitations in the disclaimer below) provided that
+the following conditions are met:
+
+Redistributions of source code must retain the above copyright notice, this list
+of conditions and the following disclaimer.
+
+Redistributions in binary form must reproduce the above copyright notice, this
+list of conditions and the following disclaimer in the documentation and/or
+other materials provided with the distribution.
+
+Neither the name of Qualcomm Technologies Inc nor the names of its contributors
+may be used to endorse or promote products derived from this software without
+specific prior written permission.
+
+NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
+LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
+
 package org.firstinspires.ftc.team8200;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.view.View;
 
 import com.qualcomm.ftcrobotcontroller.R;
@@ -39,6 +72,12 @@ public class LightMergeSensor extends LinearOpMode {
 
     HardwareK9bot robot = new HardwareK9bot();
 
+    // Timer
+    private ElapsedTime runtime = new ElapsedTime();
+
+    static final double LIGHT_MAX = 1.0;
+    static final double LIGHT_MIN = 0.0;
+
     @Override
     public void runOpMode() {
 
@@ -72,9 +111,6 @@ public class LightMergeSensor extends LinearOpMode {
         // Set the LED state in the beginning.
         lightSensor.enableLed(bLedOn);
 
-        // Timer
-        ElapsedTime timer = new ElapsedTime();
-
         // wait for the start button to be pressed.
         waitForStart();
 
@@ -106,14 +142,22 @@ public class LightMergeSensor extends LinearOpMode {
             leftMotor.setPower(0);
             rightMotor.setPower(0);
 
-            while(timer.seconds() < 10){
-                // Move bot forward
-                robot.leftMotor.setPower(1);
-                robot.rightMotor.setPower(1);
+            // Light Sensor: 1 == Black
+            //               0 == White
 
-                if(lightSensor.getLightDetected() == 1){
-                    robot.leftMotor.setPower(0);
-                    robot.rightMotor.setPower(1);
+            while (lightSensor.getLightDetected() == LIGHT_MAX) {
+                rightMotor.setPower(1);
+                leftMotor.setPower(1);
+
+                // Check if sensor is detecting 'white'
+                if(lightSensor.getLightDetected() == LIGHT_MIN){
+                    leftMotor.setPower(0);
+                    rightMotor.setPower(1);
+                }
+
+                if (runtime.seconds() > 10){
+                    leftMotor.setPower(0);
+                    rightMotor.setPower(0);
                 }
             }
 
