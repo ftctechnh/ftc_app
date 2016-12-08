@@ -56,70 +56,45 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 @TeleOp(name = "Sensor: LEGO light", group = "Sensor")
-@Disabled
+//@Disabled
 public class LightExceed extends LinearOpMode {
 
     LightSensor lightSensor;
-    HardwareK9bot robot   = new HardwareK9bot();// Hardware Device Object
-    double whiteReading;
+    HardwareK9bot robot   = new HardwareK9bot(); // Hardware Device Object
     private ElapsedTime runtime = new ElapsedTime();
+
+    static final double     WHITE_THRESHOLD        = 0.7;
+
+
     @Override
     public void runOpMode() {
 
-//        // bPrevState and bCurrState represent the previous and current state of the button.
-//        boolean bPrevState = false;
-//        boolean bCurrState = false;
-//
 //        // bLedOn represents the state of the LED.
-           boolean bLedOn = true;
-//
+         boolean bLedOn = true;
+
 //        // get a reference to our Light Sensor object.
          lightSensor = hardwareMap.lightSensor.get("light");
-//
+
 //        // Set the LED state in the beginning.
          lightSensor.enableLed(bLedOn);
-        whiteReading = 1.0;
-//
-//        // wait for the start button to be pressed.
-//        waitForStart();
-//
-//        // while the op mode is active, loop and read the light levels.
-//        // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
-//        while (opModeIsActive()) {
-//
-//            // check the status of the x button .
-//            bCurrState = gamepad1.x;
-//
-//            // check for button state transitions.
-//            if ((bCurrState == true) && (bCurrState != bPrevState))  {
-//
-//                // button is transitioning to a pressed state.  Toggle LED
-//                bLedOn = !bLedOn;
-//                lightSensor.enableLed(bLedOn);
-//            }
-//
-//            // update previous state variable.
-//            bPrevState = bCurrState;
-//
-//            // send the info back to driver station using telemetry function.
-//            telemetry.addData("LED", bLedOn ? "On" : "Off");
-//            telemetry.addData("Raw", lightSensor.getRawLightDetected());
-//            telemetry.addData("Normal", lightSensor.getLightDetected());
-//
-//            telemetry.update();
-        }
 
-    public void MoveToBeacon()
-    {
+//        // wait for the start button to be pressed.
+         waitForStart();
+
+         MoveToBeacon();
+    }
+
+    public void MoveToBeacon() {
         // Move to white line
-        while(lightSensor.getLightDetected() != whiteReading)
-        {
+        while(lightSensor.getLightDetected() < WHITE_THRESHOLD) {
             robot.leftMotor.setPower(0.5);
             robot.rightMotor.setPower(0.5);
         }
+
         //step 2
         robot.rightMotor.setPower(0);
         robot.leftMotor.setPower(0);
+
         //step 3 waiting for 1 second
         long waitTime = 1L;
         try {
@@ -127,22 +102,21 @@ public class LightExceed extends LinearOpMode {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        // step 4 turning for ___ seconds
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 0.25)) {
-            robot.leftMotor.setPower(0);
-            robot.rightMotor.setPower(0.5);
-            //telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
-            //telemetry.update();
-        }
-        //step follow the line
-        while(lightSensor.getLightDetected() == whiteReading)
-        {
-            robot.leftMotor.setPower(0.5);
-            robot.rightMotor.setPower(0.5);
+
+        while (true) { //while the touch sensor is not touching the wall (or proximity sensor is not touching wall)
+            // step 4 turning for ___ seconds
+            runtime.reset();
+            while (opModeIsActive() && (runtime.seconds() < 0.25)) {
+                robot.leftMotor.setPower(0);
+                robot.rightMotor.setPower(0.5);
+            }
+
+            //step 5 follow the line
+            while (lightSensor.getLightDetected() >= WHITE_THRESHOLD) { //follows white light is above threshold AND touch sensor is not touching
+                robot.leftMotor.setPower(0.5);
+                robot.rightMotor.setPower(0.5);
+            }
+
         }
     }
-
-
-
 }
