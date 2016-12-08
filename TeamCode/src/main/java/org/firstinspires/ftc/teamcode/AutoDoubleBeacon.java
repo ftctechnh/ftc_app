@@ -52,6 +52,8 @@ public class AutoDoubleBeacon extends LinearOpMode {
         robot.ballBooster2.setPower(0);
         robot.driveForward(OneFoot * 1);
         robot.turnDegrees(-90);
+        robot.turnDegrees(-30);
+        robot.driveForward(OneFoot * 4);
         /*
 
         robot.driveForward(12);
