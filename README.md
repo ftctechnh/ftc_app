@@ -44,6 +44,8 @@ Note: Some names start with "Team" and others start with "team".  This is intent
     
 6.  Open up Android Studios and clean out any old files by using the menu to "Build/Clean Project""
 
+## Documentation
+
 The Javadoc reference documentation for the FTC SDK is now available online.  Visit the following URL to view the FTC SDK documentation as a live website:
 
 http://ftctechnh.github.io/ftc_app/doc/javadoc/index.html
