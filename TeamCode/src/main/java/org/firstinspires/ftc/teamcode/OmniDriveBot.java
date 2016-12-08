@@ -340,4 +340,27 @@ public class OmniDriveBot implements DriveTrainInterface
         shooterPowerTwo = 0;
         scooperServoPos = 0.5f;
     }
+
+    public float getSensorHue()
+    {
+        Color.RGBToHSV((beaconColorSensor.red() * 255) / 800, (beaconColorSensor.green() * 255) / 800, (beaconColorSensor.blue() * 255) / 800, hsvValues);
+        return hsvValues[0];
+    }
+
+    //Hue color value visual: https://i.stack.imgur.com/YOBFy.png
+    public boolean isDetectingBlue()
+    {
+        if(getSensorHue() > 180 && getSensorHue() < 265) //if hue is between 180 and 265, it is blue
+            return true;
+
+        return false;
+    }
+
+    public boolean isDetectingRed()
+    {
+        if(getSensorHue() < 25 || getSensorHue() > 330 && getSensorHue() < 360) //hue is between 330 and 360 and if it's is less than 25, it's red
+            return true;
+
+        return false;
+    }
 }
