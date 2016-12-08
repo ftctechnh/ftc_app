@@ -44,5 +44,14 @@ Note: Some names start with "Team" and others start with "team".  This is intent
     
 6.  Open up Android Studios and clean out any old files by using the menu to "Build/Clean Project""
 
+The Javadoc reference documentation for the FTC SDK is now available online.  Visit the following URL to view the FTC SDK documentation as a live website:
+
+http://ftctechnh.github.io/ftc_app/doc/javadoc/index.html
+
+Documentation for the FTC SDK is also included with this repository.  There is a subfolder called "doc" which contains several subfolders:
+
+ * The folder "apk" contains the .apk files for the FTC Driver Station and FTC Robot Controller apps.
+ * The folder "javadoc" contains the JavaDoc user documentation for the FTC SDK.
+ * The folder "tutorial" contains PDF files that help teach the basics of using the FTC SDK.
 
 Note: Special thanks to LASA for the FTC Vision library.
