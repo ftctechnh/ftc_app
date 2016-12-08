@@ -90,7 +90,7 @@ public class BotHardware
         }
 
         try{
-            navX = AHRS.getInstance(dim, 2, AHRS.DeviceDataType.kProcessedData, NAVX_DEVICE_UPDATE_RATE_HZ);
+            navX = AHRS.getInstance(dim, 5, AHRS.DeviceDataType.kProcessedData, NAVX_DEVICE_UPDATE_RATE_HZ);
             navXHeading = new NavXHeading();
         }
         catch (Exception e){
@@ -138,7 +138,7 @@ public class BotHardware
     public class NavXHeading implements HeadingSensor{
 
         public float getHeading(){
-            return navX.getFusedHeading();
+            return navX.getYaw();
         }
 
     }

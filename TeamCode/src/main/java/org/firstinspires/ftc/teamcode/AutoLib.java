@@ -304,7 +304,9 @@ public class AutoLib {
             // we need a little state machine to make the encoders happy
             if (firstLoopCall()) {
                 // set up the motor on our first call
+                DcMotorSimple.Direction reverasl = mMotor.getDirection();
                 mMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                mMotor.setDirection(reverasl);
                 mMotor.setTargetPosition(mMotor.getCurrentPosition() + mEncoderCount);
                 mMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 mMotor.setPower(mPower);

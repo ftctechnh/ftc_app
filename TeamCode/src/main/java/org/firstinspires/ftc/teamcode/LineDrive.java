@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.adafruit.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.*;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
@@ -32,10 +33,10 @@ public class LineDrive extends OpenCVLib implements HeadingSensor, DisplacementS
     SensorLib.PID mdPid;
 
     // parameters of the PID controller for this sequence's first part
-    float Kp = 1.0f;        // degree heading proportional term correction per degree of deviation
-    float Ki = 0.0f;         // ... integrator term
+    float Kp = 0.035f;        // degree heading proportional term correction per degree of deviation
+    float Ki = 0.02f;         // ... integrator term
     float Kd = 0;             // ... derivative term
-    float KiCutoff = 1.0f;    // maximum angle error for which we update integrator
+    float KiCutoff = 3.0f;    // maximum angle error for which we update integrator
 
     // parameters of the PID controller for the heading of the line following
     float Kp2 = 0.010f;
@@ -60,6 +61,8 @@ public class LineDrive extends OpenCVLib implements HeadingSensor, DisplacementS
     final float driveTime = 0.1f;
     final int driveLoopCount = 2;
 
+    final int countPerRotation = 280;
+
     @Override
     public void init() {
         //init hardware objects
@@ -74,18 +77,18 @@ public class LineDrive extends OpenCVLib implements HeadingSensor, DisplacementS
 
         // create an autonomous sequence with the steps to drive
         // several legs of a polygonal course ---
-        final float power = 0.05f;
+        final float power = 0.5f;
 
         // create the root Sequence for this autonomous OpMode
         mSequence = new AutoLib.LinearSequence();
 
-        mSequence.add(new AutonomousSecondaryBlue.SquirrleyAzimuthTimedDriveStep(this, -90.0f, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), power, 5.0f, true));
-        mSequence.add(new AutonomousSecondaryBlue.SquirrleyAzimuthTimedDriveStep(this, 0, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), power, 5.0f, true));
+        mSequence.add(new DriveUntilLine(this, 50.0f, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), power, true));
+        //mSequence.add(new AutonomousSecondaryBlue.SquirrleyAzimuthTimedDriveStep(this, 0, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), power, 5.0f, true));
 
         //mSequence.add(new DriveUntilLine(robot.getMotorArray(), power + 0.1, true));
         //two-stage line follow
-        //mSequence.add(new LineDriveStep(this, 0, this, this, new UltraStop(ultraDistS1), mgPid, mdPid, robot.getMotorArray(), power + 0.1f, false));
-        //mSequence.add(new LineDriveStep(this, 0, this, this, new UltraStop(ultraDistS2), mgPid, mdPid, robot.getMotorArray(), power + 0.1f, true));
+        //mSequence.add(new LineDriveStep(this, 0, this, this, new UltraStop(ultraDistS1), mgPid, mdPid, robot.getMotorArray(), 0.1f, false));
+        //mSequence.add(new LineDriveStep(this, 0, this, this, new UltraStop(ultraDistS2), mgPid, mdPid, robot.getMotorArray(), 0.05f, true));
         //pushy pushy
         //mSequence.add(new PushyLib.pushypushy(robot.getMotorArray(), robot.leftSensor, robot.rightSensor, robot.leftServo, robot.rightServo,
         //        pushPos, time, red, colorThresh, power, driveTime, driveLoopCount));
@@ -112,6 +115,8 @@ public class LineDrive extends OpenCVLib implements HeadingSensor, DisplacementS
 
         telemetry.addData("Frame Width", frame.width());
         telemetry.addData("Frame Height", frame.height());
+
+        robot.startNavX();
     }
 
     @Override
@@ -282,11 +287,17 @@ public class LineDrive extends OpenCVLib implements HeadingSensor, DisplacementS
 
         int lineCount = 0;
 
-        public DriveUntilLine(DcMotor motors[], double power, boolean stop)
+        public DriveUntilLine(OpMode mode, float heading, HeadingSensor gyro, SensorLib.PID pid, DcMotor motors[], float power, boolean stop)
         {
-            for (DcMotor em : motors)
-                if (em != null)
-                    this.add(new DriveUntilStopMotorStep(em, power, this, stop));
+            ArrayList<AutoLib.SetPower> steps = new ArrayList<AutoLib.SetPower>();
+            for (DcMotor em : motors) {
+                if (em != null) {
+                    DriveUntilStopMotorStep step = new DriveUntilStopMotorStep(em, 0, this, stop);
+                    this.add(step);
+                    steps.add(step);
+                }
+            }
+            this.preAdd(new AutonomousSecondaryBlue.SquirrleyGuideStep(mode, heading, gyro, pid, steps, power));
         }
 
         public boolean checkStop(){
