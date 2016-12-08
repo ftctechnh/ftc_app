@@ -69,7 +69,7 @@ abstract class OmegasVision extends ManualVisionOpMode {
                 while (true) {
                     if (!approachingBeaconator) {
                         if (Ω.getLightSensor().getLightDetected() >= 0.4) {
-                            Ω.rotate(Math.PI * 4 / 9, true);
+                            Ω.rotate(Math.PI * 4 / 9, getColor() == OmegasAlliance.BLUE);
                             Ω.driveForward(200.0);
                             approachingBeaconator = true;
                         } else {
