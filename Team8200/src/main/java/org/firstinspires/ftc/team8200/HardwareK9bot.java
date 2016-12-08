@@ -26,13 +26,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class HardwareK9bot
 {
     /* Public OpMode members. */
-    public DcMotor  leftMotor   = null;
-    public DcMotor  rightMotor  = null;
-    public DcMotor harvester = null;
-    //public Servo arm;
-    public Servo    arm         = null;
-    /*
-    public Servo    claw        = null;*/
+    public DcMotor  leftMotor;
+    public DcMotor  rightMotor;
+    public DcMotor harvester;
+    public Servo    arm;
 
     /*public final static double ARM_HOME = 0.2;
     public final static double CLAW_HOME = 0.2;
@@ -57,7 +54,7 @@ public class HardwareK9bot
         // Define and Initialize Motors
         leftMotor   = hwMap.dcMotor.get("motor_left");
         rightMotor  = hwMap.dcMotor.get("motor_right");
-        harvester  = hwMap.dcMotor.get("harvester");
+        //harvester  = hwMap.dcMotor.get("harvester");
         arm = hwMap.servo.get("arm");
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
 

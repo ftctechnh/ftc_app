@@ -55,7 +55,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
-@TeleOp(name = "Sensor: LEGO light", group = "Sensor")
+@Autonomous(name = "8200: Line Follower", group = "Sensor")
 //@Disabled
 public class LightExceed extends LinearOpMode {
 
@@ -68,6 +68,9 @@ public class LightExceed extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+
+        robot.init(hardwareMap);
+
 
 //        // bLedOn represents the state of the LED.
          boolean bLedOn = true;
