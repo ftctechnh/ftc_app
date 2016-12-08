@@ -39,7 +39,7 @@ public class Hardware5035 {
     public Servo popUp = null;
     public TouchSensor grabbutton;
     public TouchSensor balldumpup;
-    public LightSensor leftLightSensor; //
+    public LightSensor leftLightSensor;
     public LightSensor rightLightSensor;
 
 

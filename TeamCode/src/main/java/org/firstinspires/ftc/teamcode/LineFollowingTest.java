@@ -2,12 +2,13 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.LightSensor;
 
 /**
  * Created by Kota Baer on 12/6/2016.
  */
-@Autonomous(name = "LineFollowingTest", group = "Concept")
+@Autonomous(name = "LineFollowingTest")
 public class LineFollowingTest  extends LinearOpMode {
     double speedmulti = 1;
     double turnSpeed = .17 * speedmulti;
@@ -16,21 +17,22 @@ public class LineFollowingTest  extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         Hardware5035 robot = new Hardware5035();
+        robot.init(hardwareMap);
         //super.runOpMode();
         //robot.leftLightSensor.enableLed(true);
         //robot.rightLightSensor.enableLed(true);
-        //telemetry.addData("robot stat",robot.leftLightSensor.status() + " " + robot.rightLightSensor.status());
+        telemetry.addData("robot stat",robot.leftLightSensor.status() + " " + robot.rightLightSensor.status());
+        telemetry.update();
+
         waitForStart();
 
-        //while (life == true) {
 
-        /*
         while(true) {
             telemetry.addData("LightValueL", robot.leftLightSensor.getLightDetected());
             telemetry.addData("LightValueL", robot.rightLightSensor.getLightDetected());
             telemetry.update();
         }
-        */
+
             /*
             if (robot.leftLightSensor.getLightDetected() > .5) {
                 robot.leftMotor.setPower(-turnSpeed);
