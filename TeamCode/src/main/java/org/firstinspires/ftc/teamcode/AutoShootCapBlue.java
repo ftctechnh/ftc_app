@@ -67,9 +67,9 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Auto Drive Blue", group="DM")
+@Autonomous(name="Auto ShootCap Blue", group="DM")
 // @Disabled
-public class AutoDriveByEncoder extends LinearOpMode {
+public class AutoShootCapBlue extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareDM         robot   = new HardwareDM ();   // Use a Pushbot's hardware

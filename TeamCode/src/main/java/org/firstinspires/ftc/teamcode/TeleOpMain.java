@@ -121,9 +121,6 @@ public class TeleOpMain extends OpMode{
         // color of the Robot Controller app to match the hue detected by the RGB sensor.
         relativeLayout = ((Activity) robot.hwMap.appContext).findViewById(com.qualcomm.ftcrobotcontroller.R.id.RelativeLayout);
 
-        // Set up our telemetry dashboard for Gyro
-        // composeTelemetry();
-
         updateTelemetry(telemetry);
     }
 
@@ -176,8 +173,8 @@ public class TeleOpMain extends OpMode{
 
 
         // Send telemetry message to signify robot running;
-        telemetry.addData("left",  "%.2f", left);
-        telemetry.addData("right", "%.2f", right);
+        //telemetry.addData("left",  "%.2f", left);
+        //telemetry.addData("right", "%.2f", right);
 
 
         // Firing cam
@@ -212,7 +209,6 @@ public class TeleOpMain extends OpMode{
 
         shootSpeed = Range.clip(shootSpeed, 0.0, 1.0);
         telemetry.addData("Shoot", shootSpeed);
-        updateTelemetry(telemetry);
 
 
         // Drive the ball intake
@@ -253,6 +249,8 @@ public class TeleOpMain extends OpMode{
         //telemetry.addData("Green", robot.sensorRGB.green());
         //telemetry.addData("Blue ", robot.sensorRGB.blue());
         telemetry.addData("Hue", hsvValues[0]);
+
+        updateTelemetry(telemetry);
 
     }
 

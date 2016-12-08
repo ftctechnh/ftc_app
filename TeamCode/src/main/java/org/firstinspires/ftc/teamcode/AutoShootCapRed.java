@@ -33,9 +33,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -64,9 +61,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Auto Drive Red", group="DM")
+@Autonomous(name="Auto ShootCap Red", group="DM")
 // @Disabled
-public class AutoDriveRed extends AutoDriveByEncoder {
+public class AutoShootCapRed extends AutoShootCapBlue {
 
 
     public double amIBlue() {
