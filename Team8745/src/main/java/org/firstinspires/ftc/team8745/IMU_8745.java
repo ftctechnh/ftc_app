@@ -40,14 +40,18 @@ public class IMU_8745 extends LinearOpMode {
     DcMotor left_b;
     DcMotor right_b;
 
-   // DcMotor shooter_l;
-    //DcMotor shooter_r;
+    DcMotor shooter_l;
+    DcMotor shooter_r;
 
-    //Servo shooterServo;
+    Servo shooterServo;
 
 
     public ElapsedTime runtime = new ElapsedTime();
 
+
+    final double kServoNullPosition = 0.8;
+    final double kServoRange = 0.6;
+    final double kShooterEnginePower = 0.8;
 
     private int ticsForInches(double inches) {
         return (int) ((inches * TICS_PER_REV) / (Math.PI * WHEEL_DIAMETER));
@@ -66,11 +70,18 @@ public class IMU_8745 extends LinearOpMode {
         right_b = hardwareMap.dcMotor.get("motor-rightBACK");
 
 
+        //Shooter Motors
+        shooter_l = hardwareMap.dcMotor.get("shooter-left");
+        shooter_r = hardwareMap.dcMotor.get("shooter-right");
+
+        //servos
+        shooterServo = hardwareMap.servo.get("shooter-servo");
+
         //Running with encoder
-        //shooter_r.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        shooter_r.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         right_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         right_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //shooter_l.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        shooter_l.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         left_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         left_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //stopping with Encoder
@@ -83,6 +94,13 @@ public class IMU_8745 extends LinearOpMode {
         right_b.setDirection(DcMotorSimple.Direction.FORWARD);
         left_f.setDirection(DcMotorSimple.Direction.REVERSE);
         left_b.setDirection(DcMotorSimple.Direction.REVERSE);
+
+
+
+
+
+
+
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -118,207 +136,212 @@ public class IMU_8745 extends LinearOpMode {
             return;
         }
         */
+        // Shoot Loaded Balls
+        shooter_r.setPower(kShooterEnginePower);
+        shooter_l.setPower(kShooterEnginePower);
+
+        for (int i = 1; i <= 3; i++) {
+            waitNSeconds(1);
+            shooterServo.setPosition((kServoNullPosition + (-kServoRange)));
+            waitNSeconds(1);
+            shooterServo.setPosition(kServoNullPosition);
+
+            int ticks = ticsForInches(12);
+
+            //Run to posiiton
+            right_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            right_b.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            left_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            left_b.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            //Our ticks for the motors
+
+            right_f.setTargetPosition(ticks);
+            right_b.setTargetPosition(ticks);
+            left_f.setTargetPosition(ticks);
+            left_b.setTargetPosition(ticks);
 
 
-        int ticks = ticsForInches(12);
+            //Waiting for robot to reach position.
+            while (super.opModeIsActive()) {
+                telemetry.addData("Ticks:", right_f.getCurrentPosition());
+                telemetry.addData("Target:", right_f.getTargetPosition());
+                telemetry.addData("Time elapsed:", runtime);
+                telemetry.update();
+                if (runtime.time() > 10) {
+                    right_f.setPower(.5);
+                    right_b.setPower(.5);
+                    left_f.setPower(.5);
+                    left_b.setPower(.5);
+                }
 
-        //Run to posiiton
-        right_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        right_b.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        left_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        left_b.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        //Our ticks for the motors
+                if (left_f.getCurrentPosition() > ticks) {
+                    break;
+                }
 
-        right_f.setTargetPosition(ticks);
-        right_b.setTargetPosition(ticks);
-        left_f.setTargetPosition(ticks);
-        left_b.setTargetPosition(ticks);
+            }// end while
 
+            right_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            right_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            left_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            left_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        //Waiting for robot to reach position.
-        while (super.opModeIsActive()) {
-            telemetry.addData("Ticks:", right_f.getCurrentPosition());
-            telemetry.addData("Target:", right_f.getTargetPosition());
-            telemetry.addData("Time elapsed:", runtime);
-            telemetry.update();
-            if (runtime.time() > 10) {
-                right_f.setPower(.5);
-                right_b.setPower(.5);
-                left_f.setPower(.5);
-                left_b.setPower(.5);
-            }
+            turnimu(-90);
 
-            if (left_f.getCurrentPosition() > ticks) {
-                break;
-            }
+            //////end turning//
+            right_f.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            right_b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            left_f.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            left_b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            ticks = ticsForInches(24);
 
-        }// end while
+            //Run to posiiton
+            right_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            right_b.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            left_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            left_b.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            //Our ticks for the motors
 
-        right_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        right_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        left_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        left_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        angles = imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX);
-
-        float initialHeading = AngleUnit.DEGREES.normalize(angles.firstAngle);
-        float targetAngle = initialHeading - 90;
-        telemetry.addData("heading", initialHeading);
-        telemetry.update();
-
-        right_f.setPower(.10);
-        right_b.setPower(.10);
-        left_f.setPower(-.10);
-        left_b.setPower(-.10);
-
-        while (super.opModeIsActive()) {
-            angles = imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX);
-            float currentHeading = AngleUnit.DEGREES.normalize(angles.firstAngle);
-            float delta = targetAngle - currentHeading;
-            telemetry.addData("initial", initialHeading);
-            telemetry.addData("heading", currentHeading);
-            telemetry.addData("target", targetAngle);
-            telemetry.addData("delta", delta);
-            telemetry.update();
-            if (Math.abs(delta) < 2) {
-                right_f.setPower(0);
-                right_b.setPower(0);
-                left_f.setPower(0);
-                left_b.setPower(0);
-                break;
-            }
-        }
-
-        //////end turning//
-         ticks = ticsForInches(24);
-
-        //Run to posiiton
-        right_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        right_b.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        left_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        left_b.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        //Our ticks for the motors
-
-        right_f.setTargetPosition(ticks);
-        right_b.setTargetPosition(ticks);
-        left_f.setTargetPosition(ticks);
-        left_b.setTargetPosition(ticks);
+            right_f.setTargetPosition(ticks);
+            right_b.setTargetPosition(ticks);
+            left_f.setTargetPosition(ticks);
+            left_b.setTargetPosition(ticks);
 
 
-        //Waiting for robot to reach position.
-        while (super.opModeIsActive()) {
-            telemetry.addData("Ticks:", right_f.getCurrentPosition());
-            telemetry.addData("Target:", right_f.getTargetPosition());
-            telemetry.addData("Time elapsed:", runtime);
-            telemetry.update();
-            if (runtime.time() > 10) {
-                right_f.setPower(.5);
-                right_b.setPower(.5);
-                left_f.setPower(.5);
-                left_b.setPower(.5);
-            }
+            //Waiting for robot to reach position.
+            while (super.opModeIsActive()) {
+                telemetry.addData("Ticks:", right_f.getCurrentPosition());
+                telemetry.addData("Target:", right_f.getTargetPosition());
+                telemetry.addData("Time elapsed:", runtime);
+                telemetry.update();
+                if (runtime.time() > 10) {
+                    right_f.setPower(.5);
+                    right_b.setPower(.5);
+                    left_f.setPower(.5);
+                    left_b.setPower(.5);
+                }
 
-            if (left_f.getCurrentPosition() > ticks) {
-                break;
-            }
+                if (left_f.getCurrentPosition() > ticks) {
+                    break;
+                }
 
-        }// end while
+            }// end while
 
-        right_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        right_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        left_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        left_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            right_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            right_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            left_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            left_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 ///////// turn 45
-        angles = imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX);
 
-         initialHeading = AngleUnit.DEGREES.normalize(angles.firstAngle);
-         targetAngle = initialHeading - 45;
-        telemetry.addData("heading", initialHeading);
-        telemetry.update();
+            turnimu(-45);
 
-        right_f.setPower(.10);
-        right_b.setPower(.10);
-        left_f.setPower(-.10);
-        left_b.setPower(-.10);
+            //////end turning//
 
-        while (super.opModeIsActive()) {
-            angles = imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX);
-            float currentHeading = AngleUnit.DEGREES.normalize(angles.firstAngle);
-            float delta = targetAngle - currentHeading;
-            telemetry.addData("initial", initialHeading);
-            telemetry.addData("heading", currentHeading);
-            telemetry.addData("target", targetAngle);
-            telemetry.addData("delta", delta);
-            telemetry.update();
-            if (Math.abs(delta) < 2) {
-                right_f.setPower(0);
-                right_b.setPower(0);
-                left_f.setPower(0);
-                left_b.setPower(0);
-                break;
+
+            ///////end turn 45
+            right_f.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            right_b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            left_f.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            left_b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            ticks = ticsForInches(24);
+
+            //Run to posiiton
+            right_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            right_b.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            left_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            left_b.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            //Our ticks for the motors
+
+            right_f.setTargetPosition(ticks);
+            right_b.setTargetPosition(ticks);
+            left_f.setTargetPosition(ticks);
+            left_b.setTargetPosition(ticks);
+
+
+            //Waiting for robot to reach position.
+            while (super.opModeIsActive()) {
+                telemetry.addData("Ticks:", right_f.getCurrentPosition());
+                telemetry.addData("Target:", right_f.getTargetPosition());
+                telemetry.addData("Time elapsed:", runtime);
+                telemetry.update();
+                if (runtime.time() > 10) {
+                    right_f.setPower(.5);
+                    right_b.setPower(.5);
+                    left_f.setPower(.5);
+                    left_b.setPower(.5);
+                }
+
+                if (left_f.getCurrentPosition() > ticks) {
+                    break;
+                }
+
+            }// end while
+
+            right_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            right_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            left_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            left_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
+            while (super.opModeIsActive()) {
+                Thread.sleep(10);
+                Thread.yield();
             }
         }
-
-        //////end turning//
-
+    }
 
 
 
-        ///////end turn 45
-         ticks = ticsForInches(24);
-
-        //Run to posiiton
-        right_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        right_b.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        left_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        left_b.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        //Our ticks for the motors
-
-        right_f.setTargetPosition(ticks);
-        right_b.setTargetPosition(ticks);
-        left_f.setTargetPosition(ticks);
-        left_b.setTargetPosition(ticks);
-
-
-        //Waiting for robot to reach position.
-        while (super.opModeIsActive()) {
-            telemetry.addData("Ticks:", right_f.getCurrentPosition());
-            telemetry.addData("Target:", right_f.getTargetPosition());
-            telemetry.addData("Time elapsed:", runtime);
-            telemetry.update();
-            if (runtime.time() > 10) {
-                right_f.setPower(.5);
-                right_b.setPower(.5);
-                left_f.setPower(.5);
-                left_b.setPower(.5);
-            }
-
-            if (left_f.getCurrentPosition() > ticks) {
-                break;
-            }
-
-        }// end while
-
-        right_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        right_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        left_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        left_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-
-
-
-
-
-
-
-
-
-        while(super.opModeIsActive()){
-            Thread.sleep(10);
-            Thread.yield();
-        }
+    public double getcurrentheading() {
+        return AngleUnit.DEGREES.normalize(imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX).firstAngle);
 
     }
 
+    public static double calculateDelta(double targetheading, double currentheading) {
+        double ih =  AngleUnit.DEGREES.normalize(targetheading);
+        double ch =  AngleUnit.DEGREES.normalize(currentheading);
+
+        return   AngleUnit.DEGREES.normalize(ih - ch);
+    }
+
+
+    public void turnimu(double turnangle) {
+        double initialHeading = getcurrentheading();
+
+
+        double targetAngle = initialHeading + turnangle;
+        targetAngle = AngleUnit.DEGREES.normalize(targetAngle);
+        telemetry.addData("heading", initialHeading);
+        telemetry.update();
+
+        right_f.setPower(.10);
+        right_b.setPower(.10);
+        left_f.setPower(-.10);
+        left_b.setPower(-.10);
+
+        while (super.opModeIsActive()) {
+
+            double currentHeading = getcurrentheading();
+            double delta = calculateDelta(targetAngle,currentHeading);
+            telemetry.addData("initial", initialHeading);
+            telemetry.addData("heading", currentHeading);
+            telemetry.addData("target", targetAngle);
+            telemetry.addData("delta", delta);
+            telemetry.update();
+            right_f.setPower(Math.signum(delta)*-.10);
+            right_b.setPower(Math.signum(delta)*-.10);
+            left_f.setPower(Math.signum(delta)*.10);
+            left_b.setPower(Math.signum(delta)*.10);
+            if (Math.abs(delta) < 2) {
+                right_f.setPower(0);
+                right_b.setPower(0);
+                left_f.setPower(0);
+                left_b.setPower(0);
+                return;
+
+            }
+        }
+
+    }
 
 }
 

@@ -36,7 +36,7 @@ public class AutonomousWithShooter extends LinearOpMode {
 
     final double kServoNullPosition = 0.8;
     final double kServoRange = 0.6;
-    final double kShooterEnginePower = 0.7;
+    final double kShooterEnginePower = 0.75;
 
 
     private int ticsForInches(double inches){
@@ -90,6 +90,8 @@ public class AutonomousWithShooter extends LinearOpMode {
     public void waitNSeconds(int secondsToWait) {
         double startTime = runtime.time();
         while (runtime.time() - startTime < secondsToWait) {
+
+
 
         }
     }
