@@ -5,21 +5,20 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 /**
  * Created by Sean O on 11/23/2016.
  */
-@Autonomous(name="Blue Ball", group="Blue")
-public class AutoB2 extends AutonomousBase {
+@Autonomous(name="Blue Wait 6", group="Blue")
+public class BlueWait6 extends AutonomousBase {
     @Override
     public void gameState() {
         super.gameState();
         switch(gameState){
             case 0: //Start
                 if(tDiff == 0){tDiff = getRuntime();}
-                if(getRuntime() > 5 || !gyro.isCalibrating()) {
+                if(getRuntime() > 15 && !gyro.isCalibrating()) {
                     gameState = 1;
-                    sTime = getRuntime();
                 }
                 break;
             case 1: //moves to shooter post
-                map.setGoal(6.5,5.8);
+                map.setGoal(5.8, 7.3);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
                 }else{
@@ -30,24 +29,29 @@ public class AutoB2 extends AutonomousBase {
                     gameState = 2;
                 }
                 break;
-            case 2: // turns and shoots
-                map.setGoal(map.getRobotX(), 12);
+            case 2: // turns ...
+                map.setGoal(4, 10);
                 if(linedUp()){
-                    moveState = MoveState.FORWARD;
+                    moveState = MoveState.STOP;
+                    gameState = 3;
+                    sTime = getRuntime();
+                    telemetry.addData("sTime", sTime);
                 }else{
                     moveState = MoveState.TURN_TOWARDS_GOAL;
                 }
-                if(map.distanceToGoal()<=.1){
-                    moveState = MoveState.STOP;
-                    moveState = MoveState.SHOOT;
-                    if(getRuntime() - sTime >= 3){
-                        moveState = MoveState.SHOOT_STOP;
-                        gameState = 3;
-                    }
-                }
                 break;
-            case 3: //MOVE TO KNOCK OFF BALL
-                map.setGoal(6.8,6.8);
+            case 3: // ... and shoots
+                 moveState = MoveState.SHOOT_WHEEL;
+                 if(getRuntime() - sTime >= 1){
+                     moveState = MoveState.SHOOT_CONVEYOR;
+                 }
+                 if(getRuntime() - sTime >= 3) {
+                     moveState = MoveState.SHOOT_STOP;
+                     gameState = 4;
+                 }
+                break;
+            case 4: //MOVE TO KNOCK OFF BALL
+                map.setGoal(6.5,6.5);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
                 }else{

@@ -9,14 +9,6 @@ public class AutonomousTest extends AutonomousBase{
     public void gameState() {
         super.gameState();
 
-        String whichIsBlue ="";
-        if (colorLeft1.blue() > colorLeft2.blue()){
-            whichIsBlue = "left";
-        }
-        else{
-            whichIsBlue = "right";
-        }
-
         switch(gameState){
           case 0: 
             if(!gyro.isCalibrating()){
@@ -47,14 +39,11 @@ public class AutonomousTest extends AutonomousBase{
             }
           break;
           case 3:
-            map.setGoal(5,8);
-            if(linedUp()){
-              moveState = MoveState.STOP;
-            }else{
-              moveState = MoveState.TURN_TOWARDS_GOAL;
-            }
+            map.setGoal(6,8);
+            moveState = MoveState.STRAFE_TOWARDS_GOAL;
             if(map.distanceToGoal() < DISTANCE_TOLERANCE){
-              gameState = 3;
+              moveState = MoveState.STOP;
+              gameState = 4;
             }
           break;
         }
