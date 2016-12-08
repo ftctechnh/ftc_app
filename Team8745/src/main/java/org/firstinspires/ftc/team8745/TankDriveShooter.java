@@ -25,7 +25,9 @@ public class TankDriveShooter extends OpMode{
     DcMotor shooterLeft;
     DcMotor shooterRight;
     Servo shooterServo;
+    double speedFactor;
     long startTime = 0;
+
 
     final double kServoNullPosition = 0.8;
     final double kServoRange = 0.6;
@@ -52,6 +54,9 @@ public class TankDriveShooter extends OpMode{
         leftBACK.setDirection(DcMotorSimple.Direction.REVERSE);
         shooterLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         shooterRight.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        // speed factor
+        speedFactor = 1.0;
     }
     @Override
     public void loop() {
@@ -78,28 +83,28 @@ public class TankDriveShooter extends OpMode{
             shooterLeft.setPower(rightTrigger * kShootPower);
         }
 
-            boolean up = gamepad1.dpad_up;
-            boolean down = gamepad1.dpad_down;
-            if (up){
-                leftBACK.setPower(0.5);
-                leftFRONT.setPower(0.5);
-                rightBACK.setPower(0.5);
-                rightFRONT.setPower(0.5);
+        boolean up = gamepad1.dpad_up;
+        boolean down = gamepad1.dpad_down;
+
+        telemetry.addData("Up",up);
+        telemetry.addData("Down",down);
+        if (up){
+            speedFactor = 1.0;
             }
-            if (down){
-                leftBACK.setPower(-0.5);
-                leftFRONT.setPower(-0.5);
-                rightBACK.setPower(-0.5);
-                rightFRONT.setPower(-0.5);
+        else if (down){
+            speedFactor = 0.5;
             }
-            if (!up){
-                if(!down){
-                    leftBACK.setPower(gamepad1.left_stick_y);
-                    leftFRONT.setPower(gamepad1.left_stick_y);
-                    rightBACK.setPower(gamepad1.right_stick_y);
-                    rightFRONT.setPower(gamepad1.right_stick_y);}}
-                }
-            }
+
+        telemetry.addData("speedFactor", speedFactor);
+
+        leftBACK.setPower(gamepad1.left_stick_y * speedFactor);
+        leftFRONT.setPower(gamepad1.left_stick_y * speedFactor);
+        rightBACK.setPower(gamepad1.right_stick_y * speedFactor);
+        rightFRONT.setPower(gamepad1.right_stick_y * speedFactor);
+    }
+}
+
+
 
 
 

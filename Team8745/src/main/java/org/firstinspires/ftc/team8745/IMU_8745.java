@@ -51,7 +51,7 @@ public class IMU_8745 extends LinearOpMode {
 
     final double kServoNullPosition = 0.8;
     final double kServoRange = 0.6;
-    final double kShooterEnginePower = 0.8;
+    final double kShooterEnginePower = 1.0;
 
     private int ticsForInches(double inches) {
         return (int) ((inches * TICS_PER_REV) / (Math.PI * WHEEL_DIAMETER));
@@ -94,7 +94,11 @@ public class IMU_8745 extends LinearOpMode {
         right_b.setDirection(DcMotorSimple.Direction.FORWARD);
         left_f.setDirection(DcMotorSimple.Direction.REVERSE);
         left_b.setDirection(DcMotorSimple.Direction.REVERSE);
-
+//////////shooting direction
+        shooter_l.setDirection(DcMotorSimple.Direction.REVERSE);
+        shooter_r.setDirection(DcMotorSimple.Direction.FORWARD);
+        //servos in Up position
+        shooterServo.setPosition(kServoNullPosition + kServoRange);
 
 
 
@@ -146,7 +150,7 @@ public class IMU_8745 extends LinearOpMode {
             waitNSeconds(1);
             shooterServo.setPosition(kServoNullPosition);
 
-            int ticks = ticsForInches(12);
+            int ticks = ticsForInches(22);
 
             //Run to posiiton
             right_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -192,7 +196,7 @@ public class IMU_8745 extends LinearOpMode {
             right_b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             left_f.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             left_b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            ticks = ticsForInches(24);
+            ticks = ticsForInches(34);
 
             //Run to posiiton
             right_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -275,7 +279,10 @@ public class IMU_8745 extends LinearOpMode {
                 }
 
             }// end while
-
+            right_f.setPower(0);
+            right_b.setPower(0);
+            left_f.setPower(0);
+            left_b.setPower(0);
             right_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             right_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             left_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

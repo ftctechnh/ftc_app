@@ -36,7 +36,7 @@ public class AutonomousWithShooter extends LinearOpMode {
 
     final double kServoNullPosition = 0.8;
     final double kServoRange = 0.6;
-    final double kShooterEnginePower = 0.75;
+    final double kShooterEnginePower = 1.0;
 
 
     private int ticsForInches(double inches){
