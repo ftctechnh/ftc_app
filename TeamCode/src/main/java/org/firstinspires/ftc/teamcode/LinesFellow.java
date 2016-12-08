@@ -19,24 +19,32 @@ public class LinesFellow extends LinearOpMode{
         telemetry.addData("Init", "true");
         telemetry.update();
         waitForStart();
+        while(robot.leftLightSensor.getLightDetected() < .25 || robot.rightLightSensor.getLightDetected() < .25 ){
+            robot.setDrivePower(.25);
+        }
+        robot.setDrivePower(0);
+        /*
         while(opModeIsActive()){
             telemetry.addData("IsRunning","true");
-            if (robot.leftLightSensor.getLightDetected() > .5) {
+
+            if (robot.leftLightSensor.getLightDetected() > .25) {
                 robot.leftMotor.setPower(-turnSpeed);
                 robot.rightMotor.setPower(turnSpeed);
             }
-            if (robot.rightLightSensor.getLightDetected() > .5) {
+            if (robot.rightLightSensor.getLightDetected() > .25) {
                 robot.rightMotor.setPower(-turnSpeed);
                 robot.leftMotor.setPower(turnSpeed);
             }
-            if (robot.rightLightSensor.getLightDetected() > .7 && robot.leftLightSensor.getLightDetected() > .7) {
+            if (robot.rightLightSensor.getLightDetected() > .25 && robot.leftLightSensor.getLightDetected() > .25) {
                 robot.rightMotor.setPower(-turnSpeed);
                 robot.leftMotor.setPower(turnSpeed);
             }
+
             telemetry.addData("LightValueL", robot.leftLightSensor.getLightDetected());
             telemetry.addData("LightValueR", robot.rightLightSensor.getLightDetected());
             telemetry.update();
         }
+    */
         robot.rightMotor.setPower(0);
         robot.leftMotor.setPower(0);
     }

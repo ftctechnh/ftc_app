@@ -9,8 +9,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Created by Kota Baer on 10/11/2016.
  */
 
-@Autonomous(name = "AutoDoubleBeacon", group = "Concept")
-public class AutoDoubleBeacon extends LinearOpMode {
+@Autonomous(name = "AutoDoubleBeaconBlue2", group = "Concept")
+public class AutoDoubleBeaconBlue2 extends LinearOpMode {
     double OneFoot = 12; //in inches
 
     @Override
@@ -18,13 +18,11 @@ public class AutoDoubleBeacon extends LinearOpMode {
         Hardware5035 robot = new Hardware5035();
         robot.init(hardwareMap);
         waitForStart();
-
         //robot.turnDegrees(45);
         //robot.turnDegrees(-45);
         robot.ballBooster1.setPower(1);
         robot.ballBooster2.setPower(1);
-        robot.driveForward(OneFoot * 2.25);
-
+        robot.driveForward(OneFoot * 2);
         sleep(2000);
         robot.triggered();
         sleep(500);
@@ -37,11 +35,17 @@ public class AutoDoubleBeacon extends LinearOpMode {
         robot.ballBooster1.setPower(0);
         robot.ballBooster2.setPower(0);
         robot.driveForward(OneFoot * 1);
+        robot.driveForward(OneFoot * 4);
+        robot.turnDegrees(90);
+        while(robot.leftLightSensor.getLightDetected() < .25 || robot.rightLightSensor.getLightDetected() < .25){
+            robot.setDrivePower(.25);
+        }
+        robot.setDrivePower(0);
         robot.turnDegrees(-90);
-        robot.turnDegrees(-33);
-        robot.driveForward(OneFoot * 4.25); //this line of code is the drive that places us on the ramp. //robot.driveForward(OneFoot * <here is where you put the Number of feet to travel for the drive>)
-
+        robot.driveForward(.5);
         telemetry.addData("value of driveReverse", OneFoot + " inches");
         telemetry.update();
+
     }
 }
+

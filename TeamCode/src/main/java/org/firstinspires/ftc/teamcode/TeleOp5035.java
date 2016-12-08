@@ -35,7 +35,7 @@ public class TeleOp5035 extends OpMode {
     int counter = 0;
     static final double DurDown = 100;
     static final double DurUp = 10;
-    static final double PickUpSpeed = .80;
+    static final double PickUpSpeed = .60; // power of the arm in the up direction
     static final double BallDumpIdlePower = 0.10;
     ElapsedTime BallPickUpTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
 
@@ -109,41 +109,47 @@ public class TeleOp5035 extends OpMode {
         }
 
 
-        if (gamepad1.right_trigger > .15 && !IsMovingBallPickUpArm) {
+        //Code Bellow is all for driver 1's arm motions
+        //VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+        if (gamepad1.right_trigger > .15 && !IsMovingBallPickUpArm && !robot.grabbutton.isPressed()) {
             IsMovingBallPickUpArm = true;
             BallPickUpTimer.reset();
             robot.ballDump.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            robot.ballDump.setPower(-0.2);
+            robot.ballDump.setPower(-0.20);// power of arm in the down direction
         }
+        /*
         if (gamepad1.right_bumper && !IsMovingBallPickUpArm){
             IsMovingBallPickUpArm = true;
             BallPickUpTimer.reset();
             robot.ballDump.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             robot.ballDump.setPower(-1);
         }
+        */
 
-        if ((BallPickUpTimer.time() >= DurDown && robot.ballDump.getPower() < 0)) {
+        if ((BallPickUpTimer.milliseconds() >= DurDown && robot.ballDump.getPower() < 0)) {
             IsMovingBallPickUpArm = false;
             IsUp = true;
             robot.ballDump.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             robot.ballDump.setPower(0);
         }
 
-        if (gamepad1.left_trigger > .15 && !IsMovingBallPickUpArm && !robot.balldumpup.isPressed()) {
+        if (gamepad1.left_trigger > .15 && !IsMovingBallPickUpArm && !robot.balldumpup.isPressed()) {// if trigger is pressed and the arm is not currently moving and the top button is not currently pressed move arm up
             IsMovingBallPickUpArm = true;
             BallPickUpTimer.reset();
             robot.ballDump.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            robot.ballDump.setPower(PickUpSpeed);
+            robot.ballDump.setPower(PickUpSpeed);//setting up arm motor up power
         }
 //        if (BallPickUpTimer.time() < 750 && robot.ballDump.getPower() > 0) {
 //            robot.ballDump.setPower(Math.max(BallPickUpTimer.time() / 1000.0, .40));
 //        }
-        if ((robot.balldumpup.isPressed() && robot.ballDump.getPower() > 0) || (BallPickUpTimer.time() >= DurUp && robot.ballDump.getPower() > 0)) {
+        if ((robot.balldumpup.isPressed() && robot.ballDump.getPower() > 0) || (BallPickUpTimer.milliseconds() >= DurUp && robot.ballDump.getPower() > 0)) {
             IsMovingBallPickUpArm = false;
             IsUp = false;
             robot.ballDump.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            robot.ballDump.setPower(BallDumpIdlePower);
+            robot.ballDump.setPower(BallDumpIdlePower);// sets the arm motor to a holding position
         }
+        //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        //Driver 2's arm motion Code is above
 
 
         telemetry.addData("Values type = Unknown/ BallBooster is active", BallBoosterPoweringUp);

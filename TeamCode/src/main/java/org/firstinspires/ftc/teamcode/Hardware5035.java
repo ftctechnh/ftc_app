@@ -73,7 +73,7 @@ public class Hardware5035 {
         rightMotor.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         ballBooster1.setDirection(DcMotor.Direction.FORWARD);
         ballBooster2.setDirection(DcMotor.Direction.REVERSE);
-        ballDump.setDirection(DcMotor.Direction.FORWARD);
+        ballDump.setDirection(DcMotor.Direction.REVERSE);
         ballBooster1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         ballBooster2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         leftLightSensor.enableLed(true);
