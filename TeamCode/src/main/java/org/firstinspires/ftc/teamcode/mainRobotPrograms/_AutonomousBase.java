@@ -78,8 +78,15 @@ public abstract class _AutonomousBase extends _RobotBase
         sleep(500);
     }
 
+    //Account for drifting tendency of the bot.
+    protected void adjustHeading()
+    {
+        int headingOffset = getValidGyroHeading();
+        turnToHeading(-headingOffset);
+    }
+
     //More complex method that adjusts the heading based on the gyro heading.
-    protected double offCourseSensitivity = 50; //Max of 100, Min of 0 (DON'T DO 100 OR DIV BY 0 ERROR)
+    protected double offCourseSensitivity = 92; //Max of 100, Min of 0 (DON'T DO 100 OR DIV BY 0 ERROR)
     protected void updateMotorPowersBasedOnGyroHeading()
     {
         if (gyroscope != null)
@@ -88,8 +95,9 @@ public abstract class _AutonomousBase extends _RobotBase
             int heading = getValidGyroHeading();
 
             //Create values.
-            double leftPower = movementPower + (heading) / (100.0 - offCourseSensitivity);
-            double rightPower = movementPower - (heading) / (100.0 - offCourseSensitivity);
+            double gyroFactor = (heading) / (100.0 - offCourseSensitivity);
+            double leftPower = movementPower + gyroFactor;
+            double rightPower = movementPower - gyroFactor;
 
             //Clamp values.
             if (leftPower > 1)
@@ -130,11 +138,16 @@ public abstract class _AutonomousBase extends _RobotBase
     }
 
     //Used to turn to a specified heading.
-    protected double initialTurnPower = .3; //Can be any value less than 1 (but should be less than .5)
+    protected double initialTurnPower = .25; //Can be any value less than 1 (but should be less than .5)
     protected double successiveTurnReduction = 2; //Should be greater than 1.
-    protected double incrementFactor = 0.1;
+    protected double incrementFactor = 0.00015; //The rate at which the bot slowly speeds up.
+    protected double precisionFactor = 3; //precisionFactor * 2 radius is acceptable.
     protected void turnToHeading (int desiredHeading)
     {
+        //Just exit the method if the heading is already achieved.
+        if (desiredHeading == 0)
+            return;
+
         zeroHeading(); //Initialization step.
 
         //This variable changes for each successive turn.
@@ -142,30 +155,38 @@ public abstract class _AutonomousBase extends _RobotBase
         while (opModeIsActive()) // Will eventually be BROKEN out of.
         {
             double incrementValue = turnPower * incrementFactor;
-            int initialSign = Integer.signum((int) (getValidGyroHeading() - desiredHeading));
+            int initialSign = Integer.signum(getValidGyroHeading() - desiredHeading);
             //Wait until the desired value is turned over or reached.
             int currentSign = initialSign;
             do
             {
+                //Set new motor powers.
                 for (DcMotor lMotor : leftDriveMotors)
-                    lMotor.setPower(-1 * currentSign * turnPower);
+                    lMotor.setPower(currentSign * turnPower);
                 for (DcMotor rMotor : rightDriveMotors)
-                    rMotor.setPower(currentSign * turnPower);
+                    rMotor.setPower(-1 * currentSign * turnPower);
 
-                currentSign = Integer.signum((int) (getValidGyroHeading() - desiredHeading));
+                currentSign = Integer.signum(getValidGyroHeading() - desiredHeading);
                 idle();
 
+                outputConstantLinesToDriverStation(new String[] {
+                        "Current gyro heading = " + getValidGyroHeading() + " and dHeading is " + desiredHeading + " so sign is " + currentSign
+                });
+
                 turnPower += incrementValue; //Increase the value by a marginal amount over time to prevent stalling.
+
+                if (turnPower > 1)
+                    turnPower = 1;
             }
-            while (Integer.signum((int) (getValidGyroHeading() - desiredHeading)) == initialSign ||
-                Integer.signum((int) (getValidGyroHeading() - desiredHeading)) == 0);
+            while (currentSign == initialSign && opModeIsActive());
 
-            sleep(700); //Give the gyro a short break to check.
+            stopDriving();
+            sleep(300); //Give the gyro a short break to check.
 
-            if (getValidGyroHeading() != desiredHeading)
+            if (!(getValidGyroHeading() - precisionFactor <= desiredHeading && desiredHeading <= getValidGyroHeading() + precisionFactor))
                 turnPower /= successiveTurnReduction;
             else
-                break; //Exit the loop if the end has been achieved.
+                return; //Exit the loop if the end has been achieved.
         }
     }
 
@@ -182,7 +203,7 @@ public abstract class _AutonomousBase extends _RobotBase
         //Required variables.
         double startTime = System.currentTimeMillis();
 
-        sleep(500);
+        sleep(300);
 
         //Gyroscope turning mechanics.
         while (opModeIsActive() && System.currentTimeMillis() - startTime < length)
@@ -192,6 +213,8 @@ public abstract class _AutonomousBase extends _RobotBase
         stopDriving();
 
         outputNewLineToDriverStation("Drove for " + length + " at " + power + ".");
+
+        adjustHeading();
     }
 
     //The gyroscope value goes from 0 to 360: when the bot turns left, it immediately goes to 360.
@@ -213,5 +236,17 @@ public abstract class _AutonomousBase extends _RobotBase
             lMotor.setPower(0);
         for (DcMotor rMotor : rightDriveMotors)
             rMotor.setPower(0);
+    }
+
+    //Should be constant among all classes.
+    protected void pushButton()
+    {
+        //Press button
+        pusher.setPower(.1);
+        sleep(500);
+        pusher.setPower(-.1);
+        sleep(500);
+        pusher.setPower(0);
+
     }
 }

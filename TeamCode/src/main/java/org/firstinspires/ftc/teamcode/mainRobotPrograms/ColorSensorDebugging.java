@@ -11,6 +11,7 @@ public class ColorSensorDebugging extends _AutonomousBase
     {
         while (opModeIsActive()) {
             outputConstantLinesToDriverStation(new String[]{
+                    "Current gyro = " + gyroscope.getHeading(),
                     "Bottom Color Sensor",
                     "--------------------",
                     "ARGB: " + bottomColorSensor.argb() + " Alpha: " + bottomColorSensor.alpha(),
