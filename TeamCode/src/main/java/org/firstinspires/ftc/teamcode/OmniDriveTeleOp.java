@@ -106,4 +106,8 @@ public class OmniDriveTeleOp extends OpMode
         //apply changes and move robot
         robot.drive();
     }
+    public void stop()
+    {
+        robot.stop();
+    }
 }
