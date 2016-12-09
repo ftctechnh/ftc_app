@@ -78,10 +78,6 @@ public class PushbotTeleopTank_Iterative extends OpMode{
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");    //
-<<<<<<< HEAD
-        updateTelemetry(telemetry);
-=======
->>>>>>> refs/remotes/ftctechnh/master
     }
 
     /*
@@ -135,10 +131,6 @@ public class PushbotTeleopTank_Iterative extends OpMode{
         telemetry.addData("claw",  "Offset = %.2f", clawOffset);
         telemetry.addData("left",  "%.2f", left);
         telemetry.addData("right", "%.2f", right);
-<<<<<<< HEAD
-        updateTelemetry(telemetry);
-=======
->>>>>>> refs/remotes/ftctechnh/master
     }
 
     /*

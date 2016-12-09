@@ -80,22 +80,12 @@ public class HardwarePushbot
      * The function looks at the elapsed cycle time, and sleeps for the remaining time interval.
      *
      * @param periodMs  Length of wait cycle in mSec.
-<<<<<<< HEAD
-     * @throws InterruptedException
-     */
-    public void waitForTick(long periodMs) throws InterruptedException {
-=======
      */
     public void waitForTick(long periodMs) {
->>>>>>> refs/remotes/ftctechnh/master
 
         long  remaining = periodMs - (long)period.milliseconds();
 
         // sleep for the remaining portion of the regular cycle period.
-<<<<<<< HEAD
-        if (remaining > 0)
-            Thread.sleep(remaining);
-=======
         if (remaining > 0) {
             try {
                 Thread.sleep(remaining);
@@ -103,7 +93,6 @@ public class HardwarePushbot
                 Thread.currentThread().interrupt();
             }
         }
->>>>>>> refs/remotes/ftctechnh/master
 
         // Reset the cycle clock for the next pass.
         period.reset();
