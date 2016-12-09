@@ -62,17 +62,13 @@ public class BasicBotAuto extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
+
+
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             telemetry.addData("Status", "Running...");
             telemetry.update();
 
-            double left = -gamepad1.left_stick_y;
-            double right = -gamepad1.right_stick_y;
-            robot.l1.setPower(left);
-            robot.l2.setPower(left);
-            robot.r1.setPower(right);
-            robot.r2.setPower(right);
 
             idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
         }

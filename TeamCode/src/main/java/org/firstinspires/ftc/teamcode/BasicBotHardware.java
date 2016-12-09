@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class BasicBotHardware
@@ -12,6 +13,7 @@ public class BasicBotHardware
     public DcMotor l2   = null;
     public DcMotor r1   = null;
     public DcMotor r2   = null;
+    public ColorSensor Color = null;
 
     /* local OpMode members. */
     HardwareMap hwMap           = null;
