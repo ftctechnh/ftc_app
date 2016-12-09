@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.team8745;
-
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+//1120
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -8,17 +7,26 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 /**
  * Created by some guy "named" Nintendo8 on 10/30/2016.
  */
-@Disabled
-@Autonomous(name="Noah's First Autonomous")
+@Autonomous(name="8k Autonomous 1")
 
 public class Practice_Autonomous extends OpMode {
-    DcMotor leftFRONT;
-    DcMotor rightFRONT;
-    DcMotor leftBACK;
-    DcMotor rightBACK;
-    DcMotor shooterLeft;
-    DcMotor shooterRight;
-    int wheelDiameter = 4;
+    private static final int TICS_PER_REV =1120;
+    private double WHEEL_DIAMETER = 4;
+   private DcMotor leftFRONT;
+   private DcMotor rightFRONT;
+   private DcMotor leftBACK;
+   private DcMotor rightBACK;
+   private DcMotor shooterLeft;
+    private DcMotor shooterRight;
+
+
+    private int ticsForInches(double x){
+      return (int)((x*TICS_PER_REV)/(Math.PI*WHEEL_DIAMETER));
+    }
+
+
+
+
     // 4 Inches
     public void init() {
         //Front Motors
@@ -38,10 +46,12 @@ public class Practice_Autonomous extends OpMode {
         rightBACK.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftFRONT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftBACK.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftFRONT.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftBACK.setDirection(DcMotorSimple.Direction.REVERSE);
-
-
+        //setting direction
+        rightFRONT.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightBACK.setDirection(DcMotorSimple.Direction.REVERSE);
+        //The next two lines are obsolete
+        leftFRONT.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftBACK.setDirection(DcMotorSimple.Direction.FORWARD);
 
     }
 
@@ -53,16 +63,17 @@ public class Practice_Autonomous extends OpMode {
         rightBACK.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftFRONT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftBACK.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        int ticks = ticsForInches(60);
+        rightFRONT.setTargetPosition(ticks);
+        rightBACK.setTargetPosition(ticks);
+        leftFRONT.setTargetPosition(ticks);
+        leftBACK.setTargetPosition(ticks);
 
-        rightFRONT.setTargetPosition(1000);
-        rightBACK.setTargetPosition(1000);
-        leftFRONT.setTargetPosition(1000);
-        leftBACK.setTargetPosition(1000);
+        rightFRONT.setPower(.5);
+        rightBACK.setPower(.5);
+        leftFRONT.setPower(.5);
+        leftBACK.setPower(.5);
 
-        rightFRONT.setPower(1);
-        rightBACK.setPower(1);
-        leftFRONT.setPower(1);
-        leftBACK.setPower(1);
 
     }
 
