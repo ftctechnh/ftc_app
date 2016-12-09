@@ -87,11 +87,16 @@ public class OmniDriveBot implements DriveTrainInterface
         fR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        shooterMotorTwo.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        shooterMotorTwo.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         fR.setMaxSpeed(2400);
         fL.setMaxSpeed(2400);
         bR.setMaxSpeed(2400);
         bL.setMaxSpeed(2400);
+
+        shooterMotorOne.setMaxSpeed(2900);
+        shooterMotorTwo.setMaxSpeed(2900);
 
         shooterPitchServo.setPosition(1.0f);
         scooperServo.setPosition(.5f);
@@ -155,6 +160,18 @@ public class OmniDriveBot implements DriveTrainInterface
 
         // convert the RGB values to HSV values.
         Color.RGBToHSV((beaconColorSensor.red() * 255) / 800, (beaconColorSensor.green() * 255) / 800, (beaconColorSensor.blue() * 255) / 800, hsvValues);
+    }
+
+    public void stop()
+    {
+        fLPower = 0;
+        fRPower = 0;
+        bLPower = 0;
+        bRPower = 0;
+        lifterPower = 0;
+        shooterPowerTwo = 0;
+        shooterPowerOne = 0;
+        shooterPitchServoPos = 0.5f;
     }
 
     public void driveStraight(double distanceInches, double degree)
