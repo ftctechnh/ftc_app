@@ -3,9 +3,6 @@ package org.firstinspires.ftc.teamcode.modules;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-/**
- * Created by billcipher1344 on 10/17/2016.
- */
 @TeleOp
 public final class MecanumDrive {
 final static float JOYSTICK_DEADZONE = .1F;
@@ -186,7 +183,5 @@ final static float JOYSTICK_DEADZONE = .1F;
         }
 
     }
-
-
 
 }
