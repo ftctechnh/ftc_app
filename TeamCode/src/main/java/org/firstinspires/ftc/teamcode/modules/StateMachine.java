@@ -1,57 +1,62 @@
 package org.firstinspires.ftc.teamcode.modules;
 
-import java.util.Collection;
-import java.util.HashMap;
+import android.util.Log;
+
 import java.util.Map;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.locks.Lock;
+import java.util.HashMap;
 
-public class StateMachine {
-    private final Object eventLock = new Object();
-    private Map<String, Event> eventMap;
-    private Queue<Event> eventQueue;
+public final class StateMachine {
+    private Map<String, State> states;
+    protected State activeState;
+    private ActiveStateThread activeStateThread;
 
-    public StateMachine() {
-        eventMap = new HashMap<String, Event>();
-        eventQueue = new ConcurrentLinkedQueue<>();
-    }
+    public StateMachine(State initialState, State... otherStates) {
+        this.states = new HashMap<>();
 
-    public interface Event {
-        void call();
-    }
+        this.activeState = initialState;
+        this.activeStateThread = new ActiveStateThread();
+        this.activeState.stateMachine = this;
 
-    public enum State {
-        QUEUED,
-        RUNNING,
-        STOPPED
-    }
-
-    public void register(String name, Event event) {
-        synchronized (eventLock) {
-            eventMap.put(name, event);
+        this.states.put(activeState.id, activeState);
+        for (State state : otherStates) {
+            this.states.put(state.id, state);
+            state.stateMachine = this;
         }
     }
 
-    public Collection<Event> events() {
-        return eventMap.values();
+    public void changeState(String stateId) {
+        State result = this.states.get(stateId);
+        if(result == null) {
+            Log.d("State", "State ID " + stateId + " is invalid!");
+        }
+        else {
+            this.stop();
+            this.activeState = result;
+            this.activeStateThread = new StateMachine.ActiveStateThread();
+            this.start();
+        }
     }
 
-    public Event getEvent(String name) {
-        return eventMap.get(name);
+    private class ActiveStateThread extends Thread {
+        private boolean terminate = false;
+
+        @Override
+        public void run() {
+            while(!terminate) {
+                StateMachine.this.activeState.run();
+            }
+        }
     }
 
-    public boolean queueEvent(String name) {
-        Event event = getEvent(name);
+    public void start() {
+        activeStateThread.start();
+    }
 
-        if (event == null) {
-            return false;
-        }
-        synchronized (eventLock) {
-            eventQueue.offer(event);
-        }
+    public void stop() {
+        this.activeStateThread.terminate = true;
+    }
 
-        return true;
+    public boolean isOn() {
+        return !this.activeStateThread.terminate;
     }
 }
