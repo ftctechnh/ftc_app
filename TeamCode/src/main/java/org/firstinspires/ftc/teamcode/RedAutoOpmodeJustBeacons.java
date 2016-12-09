@@ -113,44 +113,44 @@ public class RedAutoOpmodeJustBeacons extends LinearOpMode
        double inchesAway = rangepair.minDistanceAway();
        double distanceToTarget = inchesAway - targetDistanceFromWall;
        double radius = Math.tan(90-rangepair.angleToWall()) * Math.abs(distanceToTarget);
+       boolean targetOnRight = sensorsOnLeft == (distanceToTarget < 0);
 
-       //If not facing the direction we want to go, always swiggle
+       //If not facing the direction we want to go, always curve towards the target
        if(rangepair.angleToWall() < 0 && distanceToTarget > 0 || rangepair.angleToWall() > 0 && distanceToTarget < 0)
        {
-           swiggle(targetDistanceFromWall, distanceBetweenMotors, maxPower, sensorsOnLeft);
+           curveTowards(targetDistanceFromWall, distanceBetweenMotors, maxPower, targetOnRight);
        }
 
 
        else if(distanceToTarget < 3)
        {
-           curve(distanceToTarget, distanceBetweenMotors, maxPower, sensorsOnLeft);
+           curveAway(distanceToTarget, distanceBetweenMotors, maxPower, targetOnRight);
        }
 
        //ensures that we can curve without going over the target line
        else if(radius < (distanceBetweenMotors+2))
        {
-           curve(distanceToTarget, distanceBetweenMotors, maxPower, sensorsOnLeft);
+           curveAway(distanceToTarget, distanceBetweenMotors, maxPower, targetOnRight);
        }
 
        else
        {
-           swiggle(distanceToTarget, distanceBetweenMotors, maxPower, sensorsOnLeft);
+           curveTowards(distanceToTarget, distanceBetweenMotors, maxPower, targetOnRight);
        }
    }
 
-    public void curve(double distanceToTarget, double distanceBetweenMotors, double maxPower, boolean clockwise)
+    public void curveAway(double distanceToTarget, double distanceBetweenMotors, double maxPower, boolean targetOnRight)
     {
-        //finds the radius of the target circular path
+        //Finds the radius of the target circular path
         //Turns away from the target line
 
         double radius = Math.tan(90-rangepair.angleToWall()) * Math.abs(distanceToTarget);
 
-        boolean targetOnRight = clockwise == (distanceToTarget < 0);
 
         engine.setCircleMotorPower(radius, maxPower, !targetOnRight);
     }
 
-    public void swiggle(double distanceToTarget, double distanceBetweenMotors, double maxPower, boolean clockwise)
+    public void curveTowards(double distanceToTarget, double distanceBetweenMotors, double maxPower, boolean targetOnRight)
     {
         // First, curves robot to  60 degrees from the target based on a
         // circle centered at where the distance beams hit the wall.
@@ -159,7 +159,6 @@ public class RedAutoOpmodeJustBeacons extends LinearOpMode
         // Turns towards the target line
 
         double radius = distanceToTarget / Math.cos(rangepair.angleToWall());
-        boolean targetOnRight = clockwise == (distanceToTarget < 0);
 
         if(rangepair.angleToWall() < 60)
         {
