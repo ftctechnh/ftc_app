@@ -25,7 +25,6 @@ public class GamepadV2 extends Gamepad{
      * Copies the contents of the other gamepad, place this in the loop() section of your TeleOp OpMode
      * @param gamepad original gamepad
      */
-
     public void update(Gamepad gamepad){
         try {
             this.copy(gamepad);
@@ -63,11 +62,11 @@ public class GamepadV2 extends Gamepad{
     }
 
     public boolean left_trigger(){
-        return this.left_trigger > 0F;
+        return this.left_trigger >= 0.5F;
     }
 
     public boolean right_trigger(){
-        return this.right_trigger > 0F;
+        return this.right_trigger >= 0.5F;
     }
 
     public boolean a_isReleased(boolean onPress){
