@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -26,12 +27,14 @@ public class TankDriveShooter extends OpMode{
     DcMotor shooterRight;
     Servo shooterServo;
     double speedFactor;
-    long startTime = 0;
+    long lastTime = System.currentTimeMillis();
+    long lsTicks = 0;
+    long rsTicks = 0;
 
 
     final double kServoNullPosition = 0.8;
     final double kServoRange = 0.6;
-    final double kShootPower = 0.7;
+    double kShootPower = 0.65;
 
     public void init() {
         //Front Motors
@@ -54,53 +57,70 @@ public class TankDriveShooter extends OpMode{
         leftBACK.setDirection(DcMotorSimple.Direction.REVERSE);
         shooterLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         shooterRight.setDirection(DcMotorSimple.Direction.FORWARD);
-
+        shooterLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        shooterRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // speed factor
         speedFactor = 1.0;
     }
     @Override
     public void loop() {
-        float leftDC = gamepad1.left_stick_y;
-        float rightDC = gamepad1.right_stick_y;
-        leftFRONT.setPower(leftDC);
+        //float leftDC = gamepad1.left_stick_y;
+        //float rightDC = gamepad1.right_stick_y;
+       /* leftFRONT.setPower(leftDC);
         rightFRONT.setPower(rightDC);
         leftBACK.setPower(leftDC);
         rightBACK.setPower(rightDC);
-
+       */
         float rightTrigger = gamepad2.right_trigger;
         boolean rightBumperPressed = gamepad2.right_bumper;
         float leftTrigger = gamepad2.left_trigger;
 
         //shooterServo.setPosition(0.1);
         shooterServo.setPosition((leftTrigger * (-kServoRange)) + kServoNullPosition);
-        //telemetry.addData("Servo Position", shooterServo.getPosition());
+        telemetry.addData("Servo Position", shooterServo.getPosition());
 
-        if (rightBumperPressed) {
-            shooterLeft.setPower(1.0);
-            shooterRight.setPower(1.0);
-        } else {
-            shooterRight.setPower(rightTrigger * kShootPower);
-            shooterLeft.setPower(rightTrigger * kShootPower);
-        }
+//        if (rightBumperPressed) {
+//            shooterLeft.setPower(1.0);
+//            shooterRight.setPower(1.0);
+//        } else {
+//            shooterRight.setPower(rightTrigger * kShootPower);
+//            shooterLeft.setPower(rightTrigger * kShootPower);
+//        }
 
-        boolean up = gamepad1.dpad_up;
-        boolean down = gamepad1.dpad_down;
+        boolean up = gamepad2.dpad_up;
+        boolean down = gamepad2.dpad_down;
 
         telemetry.addData("Up",up);
         telemetry.addData("Down",down);
         if (up){
-            speedFactor = 1.0;
+            kShootPower = Range.clip( kShootPower+ .05, .2, 1);
             }
-        else if (down){
-            speedFactor = 0.5;
+        if (down){
+            kShootPower = Range.clip( kShootPower- .05, .2, 1);
             }
 
-        telemetry.addData("speedFactor", speedFactor);
+        shooterRight.setPower( rightTrigger * kShootPower);
+        shooterLeft.setPower( rightTrigger* kShootPower);
 
-        leftBACK.setPower(gamepad1.left_stick_y * speedFactor);
-        leftFRONT.setPower(gamepad1.left_stick_y * speedFactor);
-        rightBACK.setPower(gamepad1.right_stick_y * speedFactor);
-        rightFRONT.setPower(gamepad1.right_stick_y * speedFactor);
+        long currentTime = System.currentTimeMillis();
+        double deltat = Math.max(1,currentTime-lastTime);
+        lastTime = currentTime;
+
+        double lcps = (shooterLeft.getCurrentPosition() - lsTicks)/deltat;
+        lsTicks = shooterLeft.getCurrentPosition();
+
+        double rcps = (shooterRight.getCurrentPosition() - rsTicks)/deltat;
+        rsTicks = shooterRight.getCurrentPosition();
+
+        telemetry.addData("leftShooterSpeed", String.format("%.2f", lcps));
+        telemetry.addData("rightShooterSpeed", String.format("%.2f", rcps));
+        telemetry.addData("shooterPower",  kShootPower);
+        telemetry.addData("deltaT", deltat);
+        telemetry.update();
+        leftBACK.setPower(gamepad1.left_stick_y );
+        leftFRONT.setPower(gamepad1.left_stick_y );
+        rightBACK.setPower(gamepad1.right_stick_y );
+        rightFRONT.setPower(gamepad1.right_stick_y );
     }
 }
 
