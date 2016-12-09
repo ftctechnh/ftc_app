@@ -99,7 +99,11 @@ public class ConceptI2cAddressChange extends LinearOpMode {
   DeviceInterfaceModule dim;
 
   @Override
+<<<<<<< HEAD
   public void runOpMode() throws InterruptedException {
+=======
+  public void runOpMode() {
+>>>>>>> refs/remotes/ftctechnh/master
 
     // set up the hardware devices we are going to use
     dim = hardwareMap.deviceInterfaceModule.get("dim");

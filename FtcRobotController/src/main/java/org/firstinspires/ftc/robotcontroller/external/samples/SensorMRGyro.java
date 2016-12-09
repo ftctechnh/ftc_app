@@ -53,7 +53,11 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
 public class SensorMRGyro extends LinearOpMode {
 
   @Override
+<<<<<<< HEAD
   public void runOpMode() throws InterruptedException {
+=======
+  public void runOpMode() {
+>>>>>>> refs/remotes/ftctechnh/master
 
     ModernRoboticsI2cGyro gyro;   // Hardware Device Object
     int xVal, yVal, zVal = 0;     // Gyro rate Values
@@ -71,8 +75,13 @@ public class SensorMRGyro extends LinearOpMode {
     gyro.calibrate();
 
     // make sure the gyro is calibrated.
+<<<<<<< HEAD
     while (gyro.isCalibrating())  {
       Thread.sleep(50);
+=======
+    while (!isStopRequested() && gyro.isCalibrating())  {
+      sleep(50);
+>>>>>>> refs/remotes/ftctechnh/master
       idle();
     }
 
@@ -109,7 +118,10 @@ public class SensorMRGyro extends LinearOpMode {
       telemetry.addData("3", "Y av. %03d", yVal);
       telemetry.addData("4", "Z av. %03d", zVal);
       telemetry.update();
+<<<<<<< HEAD
       idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
+=======
+>>>>>>> refs/remotes/ftctechnh/master
     }
   }
 }
