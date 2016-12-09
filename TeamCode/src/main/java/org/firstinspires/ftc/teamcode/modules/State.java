@@ -15,8 +15,8 @@ public abstract class State {
     public abstract void run();
 
     public final void changeState(@NonNull String stateId) {
-        if(this != stateMachine.activeState) {
-            Log.d("State", this.id + " is not the active state!");
+        if(this == stateMachine.activeState) {
+            Log.d("State", this.id + " is already the active state!");
             return;
         }
 
