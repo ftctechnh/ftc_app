@@ -25,5 +25,5 @@ repositories {
 apply from: 'build.release.gradle'
 
 dependencies {
-    compile project(':openCVLibrary310')
+    compile project(':openCVLibrary310dev')
 }

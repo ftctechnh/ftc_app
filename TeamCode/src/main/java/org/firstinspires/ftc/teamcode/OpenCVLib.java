@@ -111,7 +111,7 @@ public abstract class OpenCVLib extends OpMode implements CameraBridgeViewBase.C
     }
 
     public void stopCamera(){
-        frameStore.empty();
+        frameStore.release();
         catchFrame = false;
         stopOpenCV();
     }

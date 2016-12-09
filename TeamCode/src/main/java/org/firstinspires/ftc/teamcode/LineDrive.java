@@ -19,7 +19,7 @@ import java.util.ArrayList;
 // simple example sequence that tests either of gyro-based AzimuthCountedDriveStep or AzimuthTimedDriveStep to drive along a square path
 @Autonomous(name="Line Drive", group ="Line Follow")
 //@Disabled
-public class LineDrive extends OpenCVLib implements HeadingSensor, DisplacementSensor{
+public class LineDrive extends OpenCVLib{
 
     private int yValStore[] = new int[3];
     private double lastLinePos = 0;
@@ -31,6 +31,7 @@ public class LineDrive extends OpenCVLib implements HeadingSensor, DisplacementS
     SensorLib.PID mPid;
     SensorLib.PID mgPid;                     // PID controllers for the sequence
     SensorLib.PID mdPid;
+    LineSensors lineSensors;
 
     // parameters of the PID controller for this sequence's first part
     float Kp = 0.035f;        // degree heading proportional term correction per degree of deviation
@@ -75,6 +76,8 @@ public class LineDrive extends OpenCVLib implements HeadingSensor, DisplacementS
         mgPid = new SensorLib.PID(Kp2, Ki2, Kd2, Ki2Cutoff);    // make the object that implements PID control algorithm
         mdPid = new SensorLib.PID(Kp3, Ki3, Kd3, Ki3Cutoff);
 
+        lineSensors = new LineSensors();
+
         // create an autonomous sequence with the steps to drive
         // several legs of a polygonal course ---
         final float power = 0.5f;
@@ -87,8 +90,8 @@ public class LineDrive extends OpenCVLib implements HeadingSensor, DisplacementS
 
         //mSequence.add(new DriveUntilLine(robot.getMotorArray(), power + 0.1, true));
         //two-stage line follow
-        //mSequence.add(new LineDriveStep(this, 0, this, this, new UltraStop(ultraDistS1), mgPid, mdPid, robot.getMotorArray(), 0.1f, false));
-        //mSequence.add(new LineDriveStep(this, 0, this, this, new UltraStop(ultraDistS2), mgPid, mdPid, robot.getMotorArray(), 0.05f, true));
+        mSequence.add(new LineDriveStep(this, 0, lineSensors, lineSensors, new UltraStop(ultraDistS1), mgPid, mdPid, robot.getMotorArray(), 0.1f, false));
+        mSequence.add(new LineDriveStep(this, 0, lineSensors, lineSensors, new UltraStop(ultraDistS2), mgPid, mdPid, robot.getMotorArray(), 0.05f, true));
         //pushy pushy
         //mSequence.add(new PushyLib.pushypushy(robot.getMotorArray(), robot.leftSensor, robot.rightSensor, robot.leftServo, robot.rightServo,
         //        pushPos, time, red, colorThresh, power, driveTime, driveLoopCount));
@@ -135,31 +138,34 @@ public class LineDrive extends OpenCVLib implements HeadingSensor, DisplacementS
         stopCamera();
     }
 
-    //heading sensor code for line following
-    public float getHeading(){
-        Mat frame = getCameraFrame();
-        //get line displacement
-        double linePos = -LineFollowLib.getAngle(frame, yValStore[0], yValStore[2]);
-        //if it's an error, turn to where line was last
-        if(linePos == LineFollowLib.ERROR_TOO_NOISY){
-            if(lastLineHeading > 0) return 50.0f;
-            else return -50.0f;
-        }
-        else lastLineHeading = linePos;
+    private class LineSensors implements HeadingSensor, DisplacementSensor{
 
-        return (float)linePos;
-    }
+        //heading sensor code for line following
+        public float getHeading(){
+            Mat frame = getCameraFrame();
+            //get line displacement
+            double linePos = -LineFollowLib.getAngle(frame, yValStore[0], yValStore[2]);
+            //if it's an error, turn to where line was last
+            if(linePos == LineFollowLib.ERROR_TOO_NOISY){
+                if(lastLineHeading > 0) return 50.0f;
+                else return -50.0f;
+            }
+            else lastLineHeading = linePos;
 
-    public float getDisp(){
-        Mat frame = getCameraFrame();
-        double linePos = -LineFollowLib.getDisplacment(frame, yValStore[1]);
-        //if it's an error, turn to where line was last
-        if(linePos == LineFollowLib.ERROR_TOO_NOISY){
-            if(lastLinePos > 0) return 0.8f;
-            else return -0.8f;
+            return (float)linePos;
         }
-        else lastLinePos = linePos;
-        return (float)linePos;
+
+        public float getDisp(){
+            Mat frame = getCameraFrame();
+            double linePos = -LineFollowLib.getDisplacment(frame, yValStore[1]);
+            //if it's an error, turn to where line was last
+            if(linePos == LineFollowLib.ERROR_TOO_NOISY){
+                if(lastLinePos > 0) return 0.8f;
+                else return -0.8f;
+            }
+            else lastLinePos = linePos;
+            return (float)linePos;
+        }
     }
 
     private class UltraStop implements FinishSensor{
