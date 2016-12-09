@@ -105,24 +105,72 @@ public class RedAutoOpmodeJustBeacons extends LinearOpMode
 
    public void driveAlongWall(double targetDistanceFromWall, double distanceBetweenMotors, double maxPower)
    {
-       double dBM = distanceBetweenMotors;
        double inchesAway = rangepair.minDistanceAway();
        double distanceToTarget = inchesAway - targetDistanceFromWall;
-       //finds the radius of the target circular path
-       double circleRadius = Math.tan(90-rangepair.angleToWall()) * Math.abs(distanceToTarget);
-       //found at https://botballprogramming.org/site-maps/right-brain-site-map/bonus-supplemental-information-tips/assignments/formula-for-turn-radius/
-       double minPower = dBM/circleRadius*(maxPower*(circleRadius/dBM)-maxPower);
-       if(distanceToTarget > 0)
+       double radius = Math.tan(90-rangepair.angleToWall()) * Math.abs(distanceToTarget);
+
+       //If not facing the direction we want to go, always swiggle
+       if(rangepair.angleToWall() < 0 && distanceToTarget > 0 || rangepair.angleToWall() > 0 && distanceToTarget < 0)
        {
-           //right is greater
-           engine.setEngineToPower(minPower, maxPower);
-       }
-       if(distanceToTarget < 0)
-       {
-           //right is greater
-           engine.setEngineToPower(maxPower, minPower);
+           swiggle(targetDistanceFromWall, distanceBetweenMotors, maxPower);
        }
 
+
+       else if(distanceToTarget < 3)
+       {
+           curve(targetDistanceFromWall, distanceBetweenMotors, maxPower);
+       }
+
+       else if(radius < 2 * 12)
+       {
+           curve(targetDistanceFromWall, distanceBetweenMotors, maxPower);
+       }
+
+       else
+       {
+           swiggle(targetDistanceFromWall, distanceBetweenMotors, maxPower);
+       }
    }
+
+    public void curve(double targetDistanceFromWall, double distanceBetweenMotors, double maxPower, boolean clockwise)
+    {
+        double width = distanceBetweenMotors;
+        double inchesAway = rangepair.minDistanceAway();
+        double distanceToTarget = inchesAway - targetDistanceFromWall;
+        //finds the radius of the target circular path
+        double radius = Math.tan(90-rangepair.angleToWall()) * Math.abs(distanceToTarget);
+
+        if(distanceToTarget < 0)
+        {
+            boolean turnRight = clockwise;
+            engine.setCircleMotorPower(radius, maxPower, turnRight);
+        }
+        if(distanceToTarget > 0)
+        {
+            boolean turnRight = !clockwise;
+            engine.setCircleMotorPower(radius, maxPower, turnRight);
+        }
+    }
+
+    public void swiggle(double targetDistanceFromWall, double distanceBetweenMotors, double maxPower)
+    {
+        // First, curves robot to  45 degrees from the target based on a
+        // circle centered at the intersection of the target and a line perpendicular to the robot's path of travel.
+        // Then continues at 45 degrees until the curve radius is less than 2 feet (driveAlongWall switches to curve)
+        double width = distanceBetweenMotors;
+        double inchesAway = rangepair.minDistanceAway();
+        double distanceToTarget = inchesAway - targetDistanceFromWall;
+
+        double radius = distanceToTarget / Math.cos(rangepair.angleToWall());
+
+        if(rangepair.angleToWall() < 45)
+        {
+            double minPower = radius*maxPower/(width+radius);
+            engine.setCircleMotorPower(radius, maxPower, );
+        }
+
+    }
+
+
 
 }

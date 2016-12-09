@@ -32,7 +32,7 @@ public class DriveEngine
     double leftPower = 0;  //[0.0, 1.0]
     double rightPower = 0; //[0.0, 1.0]
 
-    double inchesBetweenMotors = 14;
+    public double inchesBetweenMotors = 14;
 
     //Variables for pusherMode
     static final int SAMPLE_SIZE = 15;
@@ -142,7 +142,7 @@ public class DriveEngine
         this.leftPower = gamepad.left_stick_y;
     }
 
-    public void setEngineToPower(double rPower, double lPower)
+    public void setEngineToPower(double lPower, double rPower)
     {
         rightPower = rPower;
         leftPower = lPower;
@@ -169,7 +169,23 @@ public class DriveEngine
          */
     }
 
-    public void drive(double duration, double rPower, double lPower)
+    public void setCircleMotorPower(double radius, double maxPower, boolean turnRight)
+    {
+        //v1 * r2 = v2 * r1
+        double minPower = radius*maxPower/(inchesBetweenMotors+radius);
+        if(turnRight)
+        {
+            //right is greater
+            setEngineToPower(minPower, maxPower);
+        }
+        else
+        {
+            //left is greater
+            setEngineToPower(maxPower, minPower);
+        }
+    }
+
+    public void drive(double duration, double lPower, double rPower)
     {
         switch (mode)
         {
@@ -178,7 +194,7 @@ public class DriveEngine
                 break;
 
             case directMode:
-                setEngineToPower(rPower, lPower);
+                setEngineToPower(lPower, rPower);
                 break;
 
             case defaultMode:

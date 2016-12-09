@@ -35,7 +35,8 @@ public class RangePair
     {
         double frontDistance = sensors.rangeSensorFront.getDistance(DistanceUnit.INCH);
         double backDistance = sensors.rangeSensorBack.getDistance(DistanceUnit.INCH);
-        double difference = frontDistance - backDistance;
+        //gives positive values when angled towards wall
+        double difference = backDistance - frontDistance;
 
         return Math.atan(difference/distanceApart);
     }
