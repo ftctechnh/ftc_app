@@ -83,8 +83,8 @@ public class HardwarePushbot
         pusher = hwMap.servo.get("pusher");
         beacon = hwMap.servo.get("beacon");
         BallElevator = hwMap.crservo.get("BallElevator");
-        pusher.setPosition(.95);
-        beacon.setPosition(0.5);
+        pusher.setPosition(.50);
+        beacon.setPosition(0.1);
         BallElevator.setPower(0.0);
     }
 

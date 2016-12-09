@@ -36,11 +36,16 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.robot.Robot;
 import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 
 
 /**
@@ -72,6 +77,12 @@ public class InvadersPushbot_Iterative extends OpMode{
     // Will be connected to PushBot's Limit Switch
     TouchSensor limitSwitch;                         // Will be connected to PushBot's Limit Switch
 
+    ColorSensor colorSensor;
+
+    OpticalDistanceSensor distanceSensor;
+
+    Gamepad lastGamePadState = new Gamepad();
+
 
 
 
@@ -90,6 +101,9 @@ public class InvadersPushbot_Iterative extends OpMode{
 
         // Send telemetry message to signify robot waiting;
          updateTelemetry(telemetry);
+        colorSensor = hardwareMap.colorSensor.get("color");
+        colorSensor.enableLed(false);
+        distanceSensor = hardwareMap.opticalDistanceSensor.get("ODS");
     }
 
     /*
@@ -140,6 +154,8 @@ public class InvadersPushbot_Iterative extends OpMode{
         telemetry.addData("switch", "%s", limitTriggered ? "Triggered" : "Open");
         telemetry.addData("Pusher", robot.pusher.getPosition());
         telemetry.addData("beacon", robot.beacon.getPosition());
+        telemetry.addData("Color: ", "R%d,G%d,B%d", colorSensor.red(), colorSensor.green(), colorSensor.blue());
+        telemetry.addData("Distance:", "Light%.2f", distanceSensor.getLightDetected());
         updateTelemetry(telemetry);
 
         //Beacon button and pusher button
@@ -149,33 +165,46 @@ public class InvadersPushbot_Iterative extends OpMode{
 
         if (gamepad1.a == true){
             if (limitSwitch.isPressed() == true){
-                robot.BallElevator.setPower(0);
+                setBallElevator( 0);
             }
             else {
 
-                robot.BallElevator.setPower(-1); // Elevator down
+                setBallElevator(-1); // Elevator down
             }
         }
         else if (gamepad1.y == true){
-            robot.BallElevator.setPower(1);
+            //robot.BallElevator.setPower(1);
+            setBallElevator(1);
         }
         else {
-            robot.BallElevator.setPower(0);
+            setBallElevator(0);
         }
 
         if (gamepad1.start == true){
-            robot.LeftBallLauncher.setPower(-1);
-            robot.RightBallLauncher.setPower(-1);
+            //robot.LeftBallLauncher.setPower(-1);
+            //robot.RightBallLauncher.setPower(-1);
+            setLauncherPower(1);
         }
         else if (gamepad1.back == true) {
-            robot.LeftBallLauncher.setPower(0);
-            robot.RightBallLauncher.setPower(0);
+            //robot.LeftBallLauncher.setPower(0);
+            //robot.RightBallLauncher.setPower(0);
+            setLauncherPower(0);
             if(!limitTriggered) {
-                robot.BallElevator.setPower(-1);  //Elevator down
+                setBallElevator(-1);  //Elevator down
             }
         }
     }
 
+    void setBallElevator(float power)
+    {
+        //@todo Write to a file what we're about to do to the motor here
+        robot.BallElevator.setPower(power);
+    }
+
+    void setLauncherPower(float power){
+        robot.LeftBallLauncher.setPower(-power);
+        robot.RightBallLauncher.setPower(-power);
+    }
     /*
      * Code to run ONCE after the driver hits STOP
      */
