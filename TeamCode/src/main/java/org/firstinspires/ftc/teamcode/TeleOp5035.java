@@ -94,6 +94,7 @@ public class TeleOp5035 extends OpMode {
     public void ballPickupLoop() {
 
 
+        /*
         if (!IsMovingBallPickUpArm) {
             if (gamepad2.right_stick_x > .15) {
                 BallPickUpTimer.reset();
@@ -107,6 +108,7 @@ public class TeleOp5035 extends OpMode {
                  //robot.ballDump.setPower(BallDumpIdlePower);
             }
         }
+        */
 
 
         //Code Bellow is all for driver 1's arm motions
