@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -53,6 +54,13 @@ public class HardwareDM
 
     /* Adafruit RGB Sensor */
     ColorSensor sensorRGB;
+
+    DeviceInterfaceModule cdim;
+
+    // we assume that the LED pin of the RGB sensor is connected to
+    // digital port 5 (zero indexed).
+    static final int LED_CHANNEL = 0;
+
 
     /* Local OpMode members. */
     HardwareMap hwMap  = null;
@@ -109,7 +117,6 @@ public class HardwareDM
         rShoot.setDirection(DcMotor.Direction.FORWARD);
         intake.setDirection(DcMotor.Direction.REVERSE);
 
-
         // Set up the parameters with which we will use our IMU. Note that integration
         // algorithm here just reports accelerations to the logcat log; it doesn't actually
         // provide positional information.
@@ -129,6 +136,10 @@ public class HardwareDM
 
         // Retrieve and initialize the Adafruit color sensor
         sensorRGB = hwMap.colorSensor.get("color");
+
+        cdim = hwMap.deviceInterfaceModule.get("dim");
+        cdim.setDigitalChannelState(LED_CHANNEL, false); // Turn RGB light off
+
     }
 
     /***

@@ -87,7 +87,7 @@ public class AutoBetaBlue extends LinearOpMode {
 
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
-    static final double     DRIVE_SPEED             = 0.3;     // Nominal speed for better accuracy.
+    static final double     DRIVE_SPEED             = 0.8;     // Nominal speed for better accuracy.
     static final double     TURN_SPEED              = 0.5;     // Nominal half speed for better accuracy.
 
     static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
@@ -158,36 +158,44 @@ public class AutoBetaBlue extends LinearOpMode {
         // Step through each leg of the path,
 
         // Spin up the shooter
-        robot.lShoot.setPower(shootSpeed);
-        robot.rShoot.setPower(shootSpeed);
+        //robot.lShoot.setPower(shootSpeed);
+        //robot.rShoot.setPower(shootSpeed);
+        telemetry.addData("Path", " Start");
+        telemetry.update();
 
         // Move forward 26 inches
-        encoderDrive(DRIVE_SPEED,  26,  26, 5.0, true);  // S1: Forward 24 Inches with 5 Sec timeout
+        encoderDrive(DRIVE_SPEED,  26,  26, 5.0, false);  // S1: Forward 24 Inches with 5 Sec timeout
+
+        sleep(500);
+
+        gyroTurn(TURN_SPEED, 90);
+
+
 
         // Fire the balls
-        robot.fire.setPower(1.0);
-        sleep(5000);        // Wait 5 seconds for shot to finish
+        //robot.fire.setPower(1.0);
+        //sleep(5000);        // Wait 5 seconds for shot to finish
 
         // Stop the shooter
-        robot.fire.setPower(0.0);
-        robot.lShoot.setPower(0.0);
-        robot.rShoot.setPower(0.0);
+        //robot.fire.setPower(0.0);
+        //robot.lShoot.setPower(0.0);
+        //robot.rShoot.setPower(0.0);
 
         // Intake full reverse to push cap ball
-        robot.intake.setPower(-1.0);
+        //robot.intake.setPower(-1.0);
 
         // Drive forward to push cap ball
-        encoderDrive(DRIVE_SPEED, 18, 18, 3.0, true);
+        //encoderDrive(DRIVE_SPEED, 18, 18, 3.0, true);
 
         // Back off and Turn right
-        encoderDrive(DRIVE_SPEED, -10, -10, 1.0, true);
-        encoderDrive(DRIVE_SPEED, amIBlue()*25, amIBlue()*-25, 3.0, true);
+        //encoderDrive(DRIVE_SPEED, -10, -10, 1.0, true);
+        //encoderDrive(DRIVE_SPEED, amIBlue()*25, amIBlue()*-25, 3.0, true);
 
         // And drive onto center vortex
-        encoderDrive(DRIVE_SPEED, -28, -28, 5.0, true);
+        //encoderDrive(DRIVE_SPEED, -28, -28, 5.0, true);
 
         // And shut down
-        robot.intake.setPower(0.0);
+        //robot.intake.setPower(0.0);
 
 
         telemetry.addData("Path", "Complete");
@@ -211,8 +219,8 @@ public class AutoBetaBlue extends LinearOpMode {
         int newLRTarget;
         int newRRTarget;
 
-        final double MINSPEED = 0.20;
-        final double SPEEDINCR = 0.01;
+        final double MINSPEED = 0.30;
+        final double SPEEDINCR = 0.015;
         double curSpeed;                // Keep track of speed as we ramp up
 
         double holdHeading;
@@ -235,19 +243,19 @@ public class AutoBetaBlue extends LinearOpMode {
 
             while(robot.lfDrive.getTargetPosition() != newLFTarget){
                 robot.lfDrive.setTargetPosition(newLFTarget);
-                sleep(5);
+                sleep(1);
             }
             while(robot.lrDrive.getTargetPosition() != newLRTarget){
                 robot.lrDrive.setTargetPosition(newLRTarget);
-                sleep(5);
+                sleep(1);
             }
             while(robot.rfDrive.getTargetPosition() != newRFTarget){
                 robot.rfDrive.setTargetPosition(newRFTarget);
-                sleep(5);
+                sleep(1);
             }
             while(robot.rrDrive.getTargetPosition() != newRRTarget){
                 robot.rrDrive.setTargetPosition(newRRTarget);
-                sleep(5);
+                sleep(1);
             }
 
             // Record the starting heading
@@ -257,19 +265,20 @@ public class AutoBetaBlue extends LinearOpMode {
             // Turn On RUN_TO_POSITION
             while (robot.lfDrive.getMode() != DcMotor.RunMode.RUN_TO_POSITION){
                 robot.lfDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                sleep(5);
+               sleep(1);
             }
+
             while (robot.lrDrive.getMode() != DcMotor.RunMode.RUN_TO_POSITION){
                 robot.lrDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                sleep(5);
+                sleep(1);
             }
             while (robot.rfDrive.getMode() != DcMotor.RunMode.RUN_TO_POSITION){
                 robot.rfDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                sleep(5);
+                sleep(1);
             }
             while (robot.rrDrive.getMode() != DcMotor.RunMode.RUN_TO_POSITION){
                 robot.rrDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                sleep(5);
+                sleep(1);
             }
 
 
@@ -287,8 +296,8 @@ public class AutoBetaBlue extends LinearOpMode {
             // keep looping while we are still active, and there is time left, and both motors are running.
             while (opModeIsActive() &&
                    (runtime.seconds() < timeoutS) &&
-                   ((robot.lfDrive.isBusy() && robot.lrDrive.isBusy())
-                           || (robot.rfDrive.isBusy()&& robot.rrDrive.isBusy()))) {
+                   ((robot.lfDrive.isBusy())
+                           || (robot.rfDrive.isBusy()))) {
 
                 // Ramp up motor powers as needed
                 if (curSpeed < speed) {
@@ -340,6 +349,7 @@ public class AutoBetaBlue extends LinearOpMode {
                 // Allow time for other processes to run.
                 idle();
             }
+
 
             // Stop all motion;
             robot.lfDrive.setPower(0);
@@ -443,7 +453,7 @@ public class AutoBetaBlue extends LinearOpMode {
         }
         else {
             steer = getSteer(error, PCoeff);
-            rightSpeed  = speed * steer;
+            rightSpeed  = -speed * steer;
             leftSpeed   = -rightSpeed;
         }
 
