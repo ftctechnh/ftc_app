@@ -14,6 +14,7 @@ public class RangePair
     Sensors sensors = null;
 
     private double distanceApart;
+    private boolean forwards;
 
 
     public RangePair(HardwareMap hardwareMap, double inBetweenSensors, Sensors sensors)
@@ -38,7 +39,18 @@ public class RangePair
         //gives positive values when angled towards wall
         double difference = backDistance - frontDistance;
 
-        return Math.atan(difference/distanceApart);
+        if(forwards){
+            return Math.atan(difference/distanceApart);
+        }
+        else{
+            return -1 * Math.atan(difference/distanceApart);
+        }
+
+    }
+
+    public void invertDirection()
+    {
+        forwards = !forwards;
     }
 
 }
