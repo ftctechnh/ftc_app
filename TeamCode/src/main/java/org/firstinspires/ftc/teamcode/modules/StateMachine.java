@@ -37,6 +37,10 @@ public final class StateMachine {
         }
     }
 
+    public String getActiveState() {
+        return activeState.id;
+    }
+
     private class ActiveStateThread extends Thread {
         private boolean terminate = false;
 
