@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Created by Noah Pietrafesa on 12/5/16.
  */
 
-public class NoahAutonomous extends OpMode {
+public class NoahLinearOp extends OpMode {
 
 
     @Override
