@@ -21,7 +21,7 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name = "TeleOp5035")
+@TeleOp(name = "TeleOp50352")
 public class TeleOp5035 extends OpMode {
     Hardware5035 robot = new Hardware5035();
 
@@ -33,10 +33,10 @@ public class TeleOp5035 extends OpMode {
     boolean Reverse = false;
     int PosNum = 0;
     int counter = 0;
-    static final double DurDown = 100;
+    static final double DurDown = 140;
     static final double DurUp = 10;
     static final double PickUpSpeed = .60; // power of the arm in the up direction
-    static final double BallDumpIdlePower = 0.10;
+    static final double BallDumpIdlePower = 0.06;
     ElapsedTime BallPickUpTimer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
 
     //int DesiredPickupAction = 0;
@@ -115,7 +115,7 @@ public class TeleOp5035 extends OpMode {
             IsMovingBallPickUpArm = true;
             BallPickUpTimer.reset();
             robot.ballDump.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            robot.ballDump.setPower(-0.20);// power of arm in the down direction
+            robot.ballDump.setPower(-0.50);// power of arm in the down direction
         }
         /*
         if (gamepad1.right_bumper && !IsMovingBallPickUpArm){
