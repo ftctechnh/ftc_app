@@ -76,7 +76,11 @@ public class SensorAdafruitIMU extends LinearOpMode
     // Main logic
     //----------------------------------------------------------------------------------------------
 
+<<<<<<< HEAD
     @Override public void runOpMode() throws InterruptedException {
+=======
+    @Override public void runOpMode() {
+>>>>>>> refs/remotes/ftctechnh/master
 
         // Set up the parameters with which we will use our IMU. Note that integration
         // algorithm here just reports accelerations to the logcat log; it doesn't actually
@@ -107,7 +111,10 @@ public class SensorAdafruitIMU extends LinearOpMode
         // Loop and update the dashboard
         while (opModeIsActive()) {
             telemetry.update();
+<<<<<<< HEAD
             idle();
+=======
+>>>>>>> refs/remotes/ftctechnh/master
         }
     }
 
