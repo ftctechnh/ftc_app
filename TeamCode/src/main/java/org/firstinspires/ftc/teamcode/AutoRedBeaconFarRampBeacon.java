@@ -17,7 +17,7 @@ public class AutoRedBeaconFarRampBeacon extends LinearOpMode
 
         waitForStart();
 
-        robot.driveStraight(120, 160);
+        robot.driveStraight(103, 153);
         sleep(100);
         robot.spin(90);
         sleep(100);
@@ -29,7 +29,7 @@ public class AutoRedBeaconFarRampBeacon extends LinearOpMode
         telemetry.addData("HUE", robot.getSensorHue());
         sleep(10000);\
         */
-
+        /*
         //assumes robot is on the left side of the beacon from the side with battery
         if(robot.isDetectingRed() && !robot.isDetectingBlue())
         {
@@ -47,8 +47,10 @@ public class AutoRedBeaconFarRampBeacon extends LinearOpMode
         }
 
         //Next beacon,
-
+        sleep(100);
         robot.driveStraight(48, 0);
+        sleep(100);
+
         //Same logic as before, the robot's color sensor is assumed on the left side(relative to the side with the battery)
         if(robot.isDetectingRed() && !robot.isDetectingBlue())
         {
@@ -64,5 +66,6 @@ public class AutoRedBeaconFarRampBeacon extends LinearOpMode
             robot.driveStraight(8,-90);
             robot.driveStraight(6,0);
         }
+        */
     }
 }
