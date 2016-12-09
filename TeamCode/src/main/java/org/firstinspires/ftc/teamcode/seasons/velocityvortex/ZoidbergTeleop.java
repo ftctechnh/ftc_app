@@ -91,27 +91,22 @@ public class ZoidbergTeleop extends LinearOpMode {
                 // stop the motor once the black stripe is detected
                 robot.getLauncherMotor().setPower(0);
 
-                // wait 100 milliseconds for the ball to be launched
-                sleep(100);
-
-                // drive the motor past the black stripe for 0.25 seconds
-                robot.getLauncherMotor().setPower(0.1);
-                sleep(250);
-                robot.getLauncherMotor().setPower(0);
-
                 // forget that the Y button was pressed so that the launcher
                 // motor will not run until it detects the black stripe
                 yButtonPressed = false;
             }
+        // run the launcher motor at full speed to launch the particle when the Y button is pressed
         } else if(gamepad2.y) {
-            // if the Y button on the second gamepad was pressed,
-            // run the launcher motor at full speed to launch the particle
-            robot.getLauncherMotor().setPower(1);
-            sleep(900);
+            robot.getRuntime().reset();
+            
+            while(robot.getRuntime().milliseconds() < 900) {
+                robot.getLauncherMotor().setPower(1);
+            }
+            
             robot.getLauncherMotor().setPower(0);
 
             // remember that the Y button was pressed so that the code that runs the launcher motor
-            // until it detects the black stripe in the above "if" statement will be executed
+            // until it detects the black stripe in the above if-statement will be executed
             yButtonPressed = true;
         }
     }
