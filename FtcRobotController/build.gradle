@@ -1,8 +1,10 @@
 import java.util.regex.Pattern
+
 //
 // build.gradle in FtcRobotController
 //
 apply plugin: 'com.android.library'
+
 android {
 
     defaultConfig {
@@ -17,13 +19,11 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
 }
+
 repositories {
     flatDir {
         dirs '../libs'
     }
 }
-apply from: 'build.release.gradle'
 
-dependencies {
-    compile project(':TelemetryAPI')
-}
+apply from: 'build.release.gradle'

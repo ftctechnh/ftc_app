@@ -3,10 +3,6 @@ package edu.usrobotics.telemetry;
 import com.borsch.TelemetryCodec;
 import com.borsch.TelemetryData;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 /**
  * Created by Max on 9/9/2016.
  */
