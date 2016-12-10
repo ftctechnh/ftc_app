@@ -47,7 +47,6 @@ public class BeaconFinderAuto extends LinearOpMode {
     public static int checkColor()
     {
         //Now that we are in front of a beacon, we need to figure out the color
-        String BeaconColor = "NULL";
         int ColorBlue = 0;
         int ColorRed = 0;
         if(Color.blue(ColorBlue) > Color.red(ColorRed))
