@@ -105,7 +105,7 @@ public class RedAutoOpmodeBallAndBeacons extends LinearOpMode
         //Wait for the game to start (driver presses PLAY)
         waitForStart();
         timer.reset();
-
+        
         //Run until the end of autonomous
         while (opModeIsActive()) {
             if(goal == Goal.ballColors || goal == Goal.justBall)
