@@ -40,6 +40,7 @@ public class RedAutoOpmodeJustBeacons extends LinearOpMode
     //Variable code by what mechanical pieces we have
     int numSideColorSensors = 1;
     int numButtonPushers = 1;
+    int numDistancesensors = 0;
 
     public enum Goal
     {
@@ -103,7 +104,14 @@ public class RedAutoOpmodeJustBeacons extends LinearOpMode
 
         //Run until the end of autonomous
         while (opModeIsActive()) {
-            driveAlongWall(8, engine.inchesBetweenMotors, .7, blue);
+            // Point robot to closer white line
+            // Then curve, and press the second beacon
+
+            while(sensors.isBottomWhite())
+            if(numDistancesensors == 2){
+                driveAlongWall(8, engine.inchesBetweenMotors, .7, blue);
+            }
+
         }
 
     }

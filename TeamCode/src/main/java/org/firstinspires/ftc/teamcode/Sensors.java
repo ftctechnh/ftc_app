@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
@@ -18,7 +19,7 @@ public class Sensors {
     TouchSensor touchSensor = null;
 
     //Probably wont use these...
-    OpticalDistanceSensor opSensor1 = null;
+    OpticalDistanceSensor opSensorBottom = null;
     OpticalDistanceSensor opSensor2 = null;
 
     ColorSensor colorSensorLeft = null;
@@ -31,18 +32,18 @@ public class Sensors {
     final static private int COLOR_MAX = 255;
     final static private int RED_COLOR = 255;
     final static private int BLUE_COLOR = 255;
-    final static private int WHITE_COLOR = 255;
+    final static private int WHITE_COLOR = 240;
 
     public Sensors(HardwareMap hardwareMap) {
         dim = hardwareMap.deviceInterfaceModule.get("dim");
-        opSensor1 = hardwareMap.opticalDistanceSensor.get("op_sense1");
-        opSensor2 = hardwareMap.opticalDistanceSensor.get("op_sense2");
+        opSensorBottom = hardwareMap.opticalDistanceSensor.get("op_sense1");
+//        opSensor2 = hardwareMap.opticalDistanceSensor.get("op_sense2");
         touchSensor = hardwareMap.touchSensor.get("sensor_touch");
         colorSensorLeft = hardwareMap.colorSensor.get("sensor_color_left");
-        colorSensorRight = hardwareMap.colorSensor.get("sensor_color_right");
-        colorSensorBottom = hardwareMap.colorSensor.get("sensor_color_bottom");
-        rangeSensorFront = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "");
-        rangeSensorBack = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "");
+//        colorSensorRight = hardwareMap.colorSensor.get("sensor_color_right");
+//        colorSensorBottom = hardwareMap.colorSensor.get("sensor_color_bottom");
+//        rangeSensorFront = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "");
+//        rangeSensorBack = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "");
 //        colorSensorBottom = hardwareMap.
     }
 //
@@ -72,6 +73,7 @@ public class Sensors {
             return true;
         else
             return false;
+
     }
 
     boolean isLeftBlue() {
@@ -90,15 +92,19 @@ public class Sensors {
 
     boolean isBottomWhite()
     {
-        if(colorSensorBottom.red() >= COLOR_MAX & colorSensorBottom.blue() >= COLOR_MAX & colorSensorBottom.green() >= COLOR_MAX)
+        if(colorSensorBottom != null && colorSensorBottom.red() >= COLOR_MAX & colorSensorBottom.blue() >= COLOR_MAX & colorSensorBottom.green() >= COLOR_MAX)
             return true;
-        else
+
+        else if (colorSensorBottom.alpha() >= WHITE_COLOR) {
+           return true;
+        } else {
             return false;
-//        if (colorSensorBottom.alpha() >=WHITE_COLOR) {
-//            return true;
-//        } else {
-//            return false;
-//        }
+        }
+    }
+
+    boolean opIsBottomWhite()
+    {
+        return opSensorBottom.getLightDetected() > 200;
     }
 
     double getFrontDistance()
@@ -113,7 +119,7 @@ public class Sensors {
 
     public OpticalDistanceSensor getOp(int index) {
         if (index == 1)
-            return opSensor1;
+            return opSensorBottom;
         if (index == 2)
             return opSensor2;
         return null;
