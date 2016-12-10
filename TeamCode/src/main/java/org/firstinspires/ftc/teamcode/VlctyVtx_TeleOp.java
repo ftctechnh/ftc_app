@@ -53,8 +53,8 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Pushbot: Teleop Tank", group="Pushbot")
-public class RoboBacon_TeleOp extends OpMode{
+@TeleOp(name="Velocity Vortex: Teleop Tank", group="Pushbot")
+public class VlctyVtx_TeleOp extends OpMode{
     
     /* Declare OpMode members. */
     HardwarePushbot robot       = new HardwarePushbot(); // use the class created to define a Pushbot's hardware
@@ -83,11 +83,10 @@ public class RoboBacon_TeleOp extends OpMode{
     @Override
     public void init_loop() {
     }
-
-    /*
-     * Code to run ONCE when the driver hits PLAY
-     */
+    /* Code to run ONCE when the driver hits PLAY
+    */
     @Override
+     // Code to run ONCE when the driver hits PLAYOverride
     public void start() {
     }
 
@@ -106,20 +105,20 @@ public class RoboBacon_TeleOp extends OpMode{
         robot.rightMotor.setPower(right);
 
         // Use gamepad left & right Bumpers to open and close the claw
-        if (gamepad1.right_bumper)
+        if (gamepad2.right_bumper)
             clawOffset += CLAW_SPEED;
-        else if (gamepad1.left_bumper)
+        else if (gamepad2.left_bumper)
             clawOffset -= CLAW_SPEED;
 
         // Move both servos to new position.  Assume servos are mirror image of each other.
-        clawOffset = Range.clip(clawOffset, -0.5, 0.5);
+        clawOffset = Range.clip(clawOffset,-0.5,0.5);
         robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);
         robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset);
 
         // Use gamepad buttons to move the arm up (Y) and down (A)
-        if (gamepad1.y)
+        if (gamepad2.y)
             robot.armMotor.setPower(robot.ARM_UP_POWER);
-        else if (gamepad1.a)
+        else if (gamepad2.a)
             robot.armMotor.setPower(robot.ARM_DOWN_POWER);
         else
             robot.armMotor.setPower(0.0);
