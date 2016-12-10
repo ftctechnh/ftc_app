@@ -13,11 +13,18 @@ import edu.usrobotics.opmode.RobotOp;
 @TeleOp(name="Compbot TeleOp", group="Compbot")
 public class CompbotTele extends RobotOp {
 
-    ElapsedTime time;
-
     CompbotHardware robot = new CompbotHardware();
 
     boolean isLiftServoOpen = false;
+
+    boolean aButtonPressedLastTime = false;
+    boolean bButtonPressedLastTime = false;
+    boolean xButtonPressedLastTime = false;
+    boolean yButtonPressedLastTime = false;
+
+    boolean controlsReversed = false;
+
+    double lockServoPosition = robot.lockServoStartPosition;
 
     @Override
     public void init () {
@@ -52,30 +59,39 @@ public class CompbotTele extends RobotOp {
 
         float shooterInput = 0;
 
-        //Harvester
-        harvesterInput += gamepad2.right_trigger;
-        harvesterInput += -gamepad2.left_trigger;
-        harvesterInput += gamepad2.left_trigger;
+        double liftServoPosition;
 
-        harvesterInput += (gamepad2.left_bumper ? -1 : 0);
+        if(!controlsReversed){
 
-        //Shooter
-        shooterInput = gamepad2.right_stick_y;
+            //Forward and backwards regular
+            frInputs += -gamepad1.right_stick_y;
+            flInputs += -gamepad1.right_stick_y;
+            brInputs += -gamepad1.right_stick_y;
+            blInputs += -gamepad1.right_stick_y;
 
-        //Lift
-        liftInput = gamepad2.left_stick_y;
+            //Strafing regular
+            frInputs -= gamepad1.right_stick_x;
+            flInputs += gamepad1.right_stick_x;
+            brInputs += gamepad1.right_stick_x;
+            blInputs -= gamepad1.right_stick_x;
 
-        //Forward and backwards
-        frInputs += -gamepad1.right_stick_y;
-        flInputs += -gamepad1.right_stick_y;
-        brInputs += -gamepad1.right_stick_y;
-        blInputs += -gamepad1.right_stick_y;
+        }
 
-        //Strafing
-        frInputs -= gamepad1.right_stick_x;
-        flInputs += gamepad1.right_stick_x;
-        brInputs += gamepad1.right_stick_x;
-        blInputs -= gamepad1.right_stick_x;
+        else{
+
+            //Forward and backwards reversed
+            frInputs += gamepad1.right_stick_y;
+            flInputs += gamepad1.right_stick_y;
+            brInputs += gamepad1.right_stick_y;
+            blInputs += gamepad1.right_stick_y;
+
+            //Strafing reversed
+            frInputs += gamepad1.right_stick_x;
+            flInputs -= gamepad1.right_stick_x;
+            brInputs -= gamepad1.right_stick_x;
+            blInputs += gamepad1.right_stick_x;
+
+        }
 
         //Skid steering
         frInputs -= gamepad1.left_stick_x;
@@ -83,16 +99,84 @@ public class CompbotTele extends RobotOp {
         flInputs += gamepad1.left_stick_x;
         blInputs += gamepad1.left_stick_x;
 
-        //Lift Servo
-        if(gamepad2.dpad_left){
+        //Harvester
+        harvesterInput += gamepad2.right_trigger;
+        harvesterInput += -gamepad2.left_trigger;
 
-            isLiftServoOpen = true;
+        //Shooter
+        if(gamepad2.right_bumper){
+
+            shooterInput += 1;
 
         }
 
-        if(gamepad2.dpad_right){
+        else if(gamepad2.left_bumper){
 
-            isLiftServoOpen = false;
+            shooterInput -= 1;
+
+        }
+
+        //Lift
+        liftInput = -gamepad2.left_stick_y;
+
+        if(!gamepad2.dpad_down && liftInput < 0){
+
+            liftInput = 0;
+
+        }
+
+        //Lift Servo
+        if(gamepad2.a && !aButtonPressedLastTime){
+
+            isLiftServoOpen = !isLiftServoOpen;
+            aButtonPressedLastTime = true;
+
+        }
+
+        if(!gamepad2.a){
+
+            aButtonPressedLastTime = false;
+
+        }
+
+        //Lock servo
+        if(gamepad2.x && !xButtonPressedLastTime){
+
+            lockServoPosition += robot.lockServoDelta;
+            xButtonPressedLastTime = true;
+
+        }
+
+        if(!gamepad2.x){
+
+            xButtonPressedLastTime = false;
+
+        }
+
+        if(gamepad2.y && !yButtonPressedLastTime){
+
+            lockServoPosition += -robot.lockServoDelta;
+            yButtonPressedLastTime = true;
+
+        }
+
+        if(!gamepad2.y){
+
+            yButtonPressedLastTime = false;
+
+        }
+
+        //Reversing the controls
+        if(gamepad1.b && !bButtonPressedLastTime){
+
+            controlsReversed = !controlsReversed;
+            bButtonPressedLastTime = true;
+
+        }
+
+        if(!gamepad1.b){
+
+            bButtonPressedLastTime = false;
 
         }
 
@@ -113,6 +197,18 @@ public class CompbotTele extends RobotOp {
                 (robot.harvesterCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE) :
                 (robot.harvesterCorrectDirection ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD));
 
+        DcMotorSimple.Direction rightShooterDirection = (shooterInput >= 0 ?
+                (robot.rightShooterCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE) :
+                (robot.rightShooterCorrectDirection ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD));
+
+        DcMotorSimple.Direction leftShooterDirection = (shooterInput >= 0 ?
+                (robot.leftShooterCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE) :
+                (robot.leftShooterCorrectDirection ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD));
+
+        DcMotorSimple.Direction liftDirection = (liftInput >= 0 ?
+                (robot.liftCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE) :
+                (robot.liftCorrectDirection ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD));
+
         robot.frontRight.setDirection(frDirection);
         robot.frontLeft.setDirection(flDirection);
         robot.backRight.setDirection(brDirection);
@@ -120,25 +216,28 @@ public class CompbotTele extends RobotOp {
 
         robot.harvester.setDirection(harvesterDirection);
 
+        robot.shooterRight.setDirection(rightShooterDirection);
+        robot.shooterLeft.setDirection(leftShooterDirection);
+
+        robot.lift.setDirection(liftDirection);
+
         float frPower = Math.min(Math.abs(frInputs), 1);
         float flPower = Math.min(Math.abs(flInputs), 1);
         float brPower = Math.min(Math.abs(brInputs), 1);
         float blPower = Math.min(Math.abs(blInputs), 1);
 
-        float harvesterPower = harvesterInput;
+        float harvesterPower = Math.min(Math.abs(harvesterInput), 1);
 
-        float liftPower = liftInput;
+        float liftPower = Math.min(Math.abs(liftInput), 1);
 
-        float shooterPower = Math.min(shooterInput, 1);
+        float shooterPower = Math.min(Math.abs(shooterInput), 1);
 
-        double liftServoPosition = (isLiftServoOpen ? robot.liftServoOpenPosition : robot.liftServoClosePosition);
+        liftServoPosition = (isLiftServoOpen ? robot.liftServoOpenPosition : robot.liftServoClosePosition);
 
         robot.frontRight.setPower(frPower);
         robot.frontLeft.setPower(flPower);
         robot.backRight.setPower(brPower);
         robot.backLeft.setPower(blPower);
-
-        robot.liftServo.setPosition(liftServoPosition);
 
         robot.harvester.setPower(harvesterPower);
 
@@ -146,6 +245,10 @@ public class CompbotTele extends RobotOp {
         robot.shooterLeft.setPower(shooterPower);
 
         robot.lift.setPower(liftPower);
+
+        robot.liftServo.setPosition(liftServoPosition);
+
+        robot.lockServo.setPosition(lockServoPosition);
 
         telemetry.addData("Front right encoder: ", robot.frontRight.getCurrentPosition());
         telemetry.addData("Front left encoder: ", robot.frontLeft.getCurrentPosition());
@@ -176,6 +279,8 @@ public class CompbotTele extends RobotOp {
 
         telemetry.addData("isLiftServoOpen", isLiftServoOpen);
         telemetry.addData("liftServoPosition", liftServoPosition);
+
+        telemetry.addData("lockServoPosition", lockServoPosition);
 
     }
 }

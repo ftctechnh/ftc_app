@@ -3,7 +3,11 @@ package edu.usrobotics.opmode.compbot;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
+import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import java.util.concurrent.locks.Lock;
 
 import edu.usrobotics.opmode.BaseHardware;
 
@@ -26,10 +30,12 @@ public class CompbotHardware extends BaseHardware {
     public DcMotor shooterLeft;
 
     public Servo liftServo;
+    public Servo lockServo;
 
-    public ColorSensor colorSensor;
+    public ColorSensor buttonPresserColorSensor;
+    public ColorSensor leftBottomColorSensor;
 
-    //public TouchSensor touchSensor;
+    public DeviceInterfaceModule dim;
 
     public boolean frCorrectDirection = false;
     public boolean flCorrectDirection = true;
@@ -45,6 +51,10 @@ public class CompbotHardware extends BaseHardware {
 
     public double liftServoClosePosition = 0f;
     public double liftServoOpenPosition = 0.5f;
+
+    public double lockServoStartPosition;
+    public double lockServoMaxPosition;
+    public double lockServoDelta = 0.25f;
 
     public float wheelDiameter = 4.0f;
     public float wheelRadius = wheelDiameter / 2f;
@@ -73,16 +83,32 @@ public class CompbotHardware extends BaseHardware {
 
         harvester = hardwareMap.dcMotor.get("harvester");
 
+        harvester.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         lift = hardwareMap.dcMotor.get("lft");
+
+        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         shooterRight = hardwareMap.dcMotor.get("sr");
         shooterLeft = hardwareMap.dcMotor.get("sl");
 
+        shooterRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        shooterLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         liftServo = hardwareMap.servo.get("ls");
 
-        colorSensor = hardwareMap.colorSensor.get("cs");
+        lockServo = hardwareMap.servo.get("los");
 
-        //touchSensor = hardwareMap.touchSensor.get("ts");
+        lockServoStartPosition = lockServo.MIN_POSITION;
+        lockServoMaxPosition = lockServo.MAX_POSITION;
+
+        buttonPresserColorSensor = hardwareMap.colorSensor.get("cs");
+        buttonPresserColorSensor.enableLed(false);
+
+        dim = hardwareMap.deviceInterfaceModule.get("dim");
+
+        leftBottomColorSensor = hardwareMap.colorSensor.get("lcs");
+        leftBottomColorSensor.enableLed(true);
 
         harvester.setDirection(harvesterCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
 
@@ -92,6 +118,8 @@ public class CompbotHardware extends BaseHardware {
         lift.setDirection(liftCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
 
         liftServo.setPosition(liftServoClosePosition);
+
+        lockServo.setPosition(lockServoStartPosition);
 
     }
 
@@ -109,7 +137,7 @@ public class CompbotHardware extends BaseHardware {
 
     public int degreesToEncoderTicks(float degrees){
 
-        return (int) (degrees * 21.5f);
+        return (int) (degrees * 24f);
 
     }
 
@@ -189,18 +217,9 @@ public class CompbotHardware extends BaseHardware {
 
     }
 
-    public DcMotorSimple.Direction getMotorDirection(DcMotorSimple.Direction regular, boolean correctDirection){
+    public DcMotorSimple.Direction getMotorDirection(DcMotorSimple.Direction regular, boolean correctDirection) {
 
         return (correctDirection ? regular : (regular.equals(DcMotorSimple.Direction.REVERSE) ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE));
-
-    }
-
-    public void setDrivePower(double power){
-
-        frontRight.setPower(power);
-        frontLeft.setPower(power);
-        backRight.setPower(power);
-        backLeft.setPower(power);
 
     }
 
