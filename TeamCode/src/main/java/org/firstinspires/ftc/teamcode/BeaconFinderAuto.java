@@ -76,7 +76,7 @@ public class BeaconFinderAuto extends LinearOpMode {
 
     public static void moveRobot(int speed, int distance)
     {
-        
+
     }
     public void reachBeacon()
     {
