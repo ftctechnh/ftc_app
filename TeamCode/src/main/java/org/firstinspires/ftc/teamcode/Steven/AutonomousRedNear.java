@@ -92,7 +92,7 @@ public class AutonomousRedNear extends LinearOpMode {
     static final double     WHEEL_PERIMETER_CM   = 29;     // For figuring circumference
     static final double     COUNTS_PER_CM         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_PERIMETER_CM);
-    static final double     DRIVE_SPEED             = 0.6;
+    static final double     DRIVE_SPEED             = 1.0;
     static final double     TURN_SPEED              = 0.5;
     static  int             INITIAL_SHOOTERPOS;
 
@@ -155,8 +155,8 @@ public class AutonomousRedNear extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  13,  40, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(DRIVE_SPEED,  2,  -2, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(DRIVE_SPEED,  15,  45, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(DRIVE_SPEED,  4,  -4, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
         //encoderDrive(TURN_SPEED,   9, -9, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
 
 
@@ -176,7 +176,9 @@ public class AutonomousRedNear extends LinearOpMode {
         shootingDrive(1.0, 800);
         sleep(500);     // pause for servos to move
 
-        encoderDrive(DRIVE_SPEED, 120,35 , 5.0);
+       // encoderDrive(DRIVE_SPEED, 15,-15 , 5.0);
+      //  encoderDrive(DRIVE_SPEED, -25,-25 , 5.0);
+        encoderDrive(DRIVE_SPEED, 110,40 , 5.0);
         //encoderDrive(DRIVE_SPEED,  -49,  -35, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
         telemetry.addData("Path", "Complete");
         telemetry.update();
