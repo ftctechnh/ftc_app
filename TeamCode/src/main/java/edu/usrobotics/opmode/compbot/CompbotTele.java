@@ -142,7 +142,7 @@ public class CompbotTele extends RobotOp {
         //Lock servo
         if(gamepad2.x && !xButtonPressedLastTime){
 
-            lockServoPosition += (lockServoPosition == robot.lockServoMaxPosition ? 0 : robot.lockServoDelta);
+            lockServoPosition += robot.lockServoDelta;
             xButtonPressedLastTime = true;
 
         }
@@ -155,7 +155,7 @@ public class CompbotTele extends RobotOp {
 
         if(gamepad2.y && !yButtonPressedLastTime){
 
-            lockServoPosition += (lockServoPosition == robot.lockServoStartPosition ? 0 : -robot.lockServoDelta);
+            lockServoPosition += -robot.lockServoDelta;
             yButtonPressedLastTime = true;
 
         }

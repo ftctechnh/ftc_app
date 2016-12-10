@@ -21,7 +21,7 @@ public class ConcurrentTaskSet implements Task {
                 continue;
 
             taskCompleted = task.execute(); // Execute & Mark if completed during execution
-            taskCompleted = taskCompleted || task.onExecuted(); // Call Event & Mark if completed during event
+            taskCompleted =  task.onExecuted() || taskCompleted; // Call Event & Mark if completed during event
 
             if (taskCompleted)
                 task.onCompleted(); // Call completed event if task completed.

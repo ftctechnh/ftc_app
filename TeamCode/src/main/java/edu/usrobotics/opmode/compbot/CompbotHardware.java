@@ -3,7 +3,11 @@ package edu.usrobotics.opmode.compbot;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
+import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import java.util.concurrent.locks.Lock;
 
 import edu.usrobotics.opmode.BaseHardware;
 
@@ -28,7 +32,8 @@ public class CompbotHardware extends BaseHardware {
     public Servo liftServo;
     public Servo lockServo;
 
-    public ColorSensor colorSensor;
+    public ColorSensor buttonPresserColorSensor;
+    public ReasignedColorSensor leftBottomColorSensor;
 
     public boolean frCorrectDirection = false;
     public boolean flCorrectDirection = true;
@@ -95,7 +100,13 @@ public class CompbotHardware extends BaseHardware {
         lockServoStartPosition = lockServo.MIN_POSITION;
         lockServoMaxPosition = lockServo.MAX_POSITION;
 
-        colorSensor = hardwareMap.colorSensor.get("cs");
+        buttonPresserColorSensor = hardwareMap.colorSensor.get("cs");
+        buttonPresserColorSensor.enableLed(false);
+
+        dim = hardwareMap.deviceInterfaceModule.get("dim");
+
+        leftBottomColorSensor = new ReasignedColorSensor(dim, 3); // hardwareMap.colorSensor.get("lcs");
+        leftBottomColorSensor.enableLed(true);
 
         harvester.setDirection(harvesterCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
 
