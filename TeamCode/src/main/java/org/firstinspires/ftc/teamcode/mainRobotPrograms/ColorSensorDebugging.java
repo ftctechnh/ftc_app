@@ -9,9 +9,12 @@ public class ColorSensorDebugging extends _AutonomousBase
     //Called after runOpMode() has finished initializing.
     protected void driverStationSaysGO()
     {
+        leftSensorServo.setPosition(LEFT_SERVO_OPEN);
+        rightSensorServo.setPosition(RIGHT_SERVO_OPEN);
+
         while (opModeIsActive()) {
-            outputConstantLinesToDriverStation(new String[]{
-                    "Current gyro = " + gyroscope.getHeading(),
+            outputConstantLinesToDriverStation(new String[]
+                    {
                     "Bottom Color Sensor",
                     "--------------------",
                     "ARGB: " + bottomColorSensor.argb() + " Alpha: " + bottomColorSensor.alpha(),
@@ -22,11 +25,11 @@ public class ColorSensorDebugging extends _AutonomousBase
                     "ARGB: " + leftColorSensor.argb() + " Alpha: " + leftColorSensor.alpha(),
                     "Blue: " + leftColorSensor.blue() + " Red: " + leftColorSensor.red(),
                     "Green: " + leftColorSensor.green(),
-//                    "Right Color Sensor",
-//                    "--------------------",
-//                    "ARGB: " + rightColorSensor.argb() + " Alpha: " + rightColorSensor.alpha(),
-//                    "Blue: " + rightColorSensor.blue() + " Red: " + rightColorSensor.red(),
-//                    "Green: " + rightColorSensor.green(),
+                    "Right Color Sensor",
+                    "--------------------",
+                    "ARGB: " + rightColorSensor.argb() + " Alpha: " + rightColorSensor.alpha(),
+                    "Blue: " + rightColorSensor.blue() + " Red: " + rightColorSensor.red(),
+                    "Green: " + rightColorSensor.green(),
                     "Heading: " + getValidGyroHeading()
             });
             idle();

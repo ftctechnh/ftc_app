@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.I2cAddr;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 //For added simplicity while coding autonomous with the new FTC system. Utilized inheritance and polymorphism.
 public abstract class _AutonomousBase extends _RobotBase
@@ -13,6 +14,7 @@ public abstract class _AutonomousBase extends _RobotBase
     protected GyroSensor gyroscope;
     protected ColorSensor leftColorSensor, rightColorSensor, bottomColorSensor; //Must have different I2C addresses.
     protected Servo leftSensorServo, rightSensorServo;
+    protected TouchSensor touchSensor;
     protected final double RIGHT_SERVO_CLOSED = 1.0, LEFT_SERVO_CLOSED = 1.0;
     protected final double LEFT_SERVO_OPEN = 0.48, RIGHT_SERVO_OPEN = 0.48;
 
@@ -22,11 +24,11 @@ public abstract class _AutonomousBase extends _RobotBase
     {
         //initialize color sensors for either side (do in _AutonomousBase because they are useless during teleop.
         leftColorSensor = initialize(ColorSensor.class, "colorLeft");
-        leftColorSensor.setI2cAddress(I2cAddr.create8bit(0x2c));
+        leftColorSensor.setI2cAddress(I2cAddr.create8bit(0x5c));
         leftColorSensor.enableLed(true);
-//        rightColorSensor = initialize(ColorSensor.class, "colorRight");
-//        rightColorSensor.setI2cAddress(I2cAddr.create8bit(0x3c));
-//        rightColorSensor.enableLed(true);
+        rightColorSensor = initialize(ColorSensor.class, "colorRight");
+        rightColorSensor.setI2cAddress(I2cAddr.create8bit(0x2c));
+        rightColorSensor.enableLed(true);
         bottomColorSensor = initialize(ColorSensor.class, "colorBottom");
         bottomColorSensor.setI2cAddress(I2cAddr.create8bit(0x4c));
         bottomColorSensor.enableLed(true);
@@ -35,6 +37,8 @@ public abstract class _AutonomousBase extends _RobotBase
         leftSensorServo.setPosition(LEFT_SERVO_CLOSED);
         rightSensorServo = initialize(Servo.class, "servoRight");
         rightSensorServo.setPosition(RIGHT_SERVO_CLOSED);
+
+        touchSensor = initialize(TouchSensor.class, "touchSensor");
 
         //initialize gyroscope (will output whether it was found or not.
         gyroscope = initialize(GyroSensor.class, "Gyroscope");
@@ -73,20 +77,19 @@ public abstract class _AutonomousBase extends _RobotBase
     //Just resets the gyro.
     protected void zeroHeading()
     {
-        sleep(500);
         gyroscope.resetZAxisIntegrator();
-        sleep(500);
+        sleep(300);
     }
 
     //Account for drifting tendency of the bot.
     protected void adjustHeading()
     {
         int headingOffset = getValidGyroHeading();
-        turnToHeading(-headingOffset);
+        turnToHeading(-headingOffset, turnMode.BOTH);
     }
 
     //More complex method that adjusts the heading based on the gyro heading.
-    protected double offCourseSensitivity = 92; //Max of 100, Min of 0 (DON'T DO 100 OR DIV BY 0 ERROR)
+    protected double offCourseSensitivity = 42; //Max of 100, Min of 0 (DON'T DO 100 OR DIV BY 0 ERROR)
     protected void updateMotorPowersBasedOnGyroHeading()
     {
         if (gyroscope != null)
@@ -138,11 +141,16 @@ public abstract class _AutonomousBase extends _RobotBase
     }
 
     //Used to turn to a specified heading.
-    protected double initialTurnPower = .25; //Can be any value less than 1 (but should be less than .5)
-    protected double successiveTurnReduction = 2; //Should be greater than 1.
-    protected double incrementFactor = 0.00015; //The rate at which the bot slowly speeds up.
-    protected double precisionFactor = 3; //precisionFactor * 2 radius is acceptable.
-    protected void turnToHeading (int desiredHeading)
+    protected double initialTurnPower = .1; //Can be any value less than 1 (but should be less than .5)
+    protected void setInitialTurnPower(double turnPower) {initialTurnPower = turnPower;}
+    protected double successiveTurnReduction = 3.6; //Should be greater than 1.
+    protected double incrementFactor = 0.00012; //The rate at which the bot slowly speeds up.
+    protected double precisionFactor = 5; //precisionFactor * 2 radius is acceptable.
+    protected void setPrecision(double newPrecision) {precisionFactor = newPrecision;}
+    enum turnMode {
+        LEFT, RIGHT, BOTH
+    }
+    protected void turnToHeading (int desiredHeading, turnMode mode)
     {
         //Just exit the method if the heading is already achieved.
         if (desiredHeading == 0)
@@ -160,11 +168,18 @@ public abstract class _AutonomousBase extends _RobotBase
             int currentSign = initialSign;
             do
             {
-                //Set new motor powers.
-                for (DcMotor lMotor : leftDriveMotors)
-                    lMotor.setPower(currentSign * turnPower);
-                for (DcMotor rMotor : rightDriveMotors)
-                    rMotor.setPower(-1 * currentSign * turnPower);
+                if (mode == turnMode.LEFT || mode == turnMode.BOTH)
+                {
+                    //Set new motor powers.
+                    for (DcMotor lMotor : leftDriveMotors)
+                        lMotor.setPower(currentSign * turnPower);
+                }
+
+                if (mode == turnMode.RIGHT || mode == turnMode.BOTH)
+                {
+                    for (DcMotor rMotor : rightDriveMotors)
+                        rMotor.setPower(-1 * currentSign * turnPower);
+                }
 
                 currentSign = Integer.signum(getValidGyroHeading() - desiredHeading);
                 idle();
@@ -213,8 +228,6 @@ public abstract class _AutonomousBase extends _RobotBase
         stopDriving();
 
         outputNewLineToDriverStation("Drove for " + length + " at " + power + ".");
-
-        adjustHeading();
     }
 
     //The gyroscope value goes from 0 to 360: when the bot turns left, it immediately goes to 360.
@@ -236,17 +249,5 @@ public abstract class _AutonomousBase extends _RobotBase
             lMotor.setPower(0);
         for (DcMotor rMotor : rightDriveMotors)
             rMotor.setPower(0);
-    }
-
-    //Should be constant among all classes.
-    protected void pushButton()
-    {
-        //Press button
-        pusher.setPower(.1);
-        sleep(500);
-        pusher.setPower(-.1);
-        sleep(500);
-        pusher.setPower(0);
-
     }
 }
