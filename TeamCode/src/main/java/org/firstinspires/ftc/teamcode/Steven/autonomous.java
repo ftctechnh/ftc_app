@@ -68,12 +68,12 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: AutonomousRedNear", group="Pushbot")
+@Autonomous(name="Pushbot: AutonomousRedFar", group="Pushbot")
 
-public class AutonomousRedNear extends LinearOpMode {
+public class autonomous extends LinearOpMode {
 
     /* Declare OpMode members. */
-    //   motors to drive the robot
+ //   motors to drive the robot
     DcMotor front_right_motor;
     DcMotor front_left_motor;
     DcMotor back_right_motor;
@@ -91,7 +91,7 @@ public class AutonomousRedNear extends LinearOpMode {
     static final double     DRIVE_GEAR_REDUCTION    = 2.3333 ;     // 56/24
     static final double     WHEEL_PERIMETER_CM   = 29;     // For figuring circumference
     static final double     COUNTS_PER_CM         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_PERIMETER_CM);
+                                                      (WHEEL_PERIMETER_CM);
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
     static  int             INITIAL_SHOOTERPOS;
@@ -155,14 +155,14 @@ public class AutonomousRedNear extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  13,  40, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(DRIVE_SPEED,  2,  -2, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(DRIVE_SPEED,  10,  30, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(DRIVE_SPEED,  -22,  22, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
         //encoderDrive(TURN_SPEED,   9, -9, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
 
 
         sleep(1000);     // pause for servos to move
 
-        // intakeDrive(0.8, 900);
+       // intakeDrive(0.8, 900);
 
         shootingDrive(1.0, 800);
 
@@ -176,18 +176,17 @@ public class AutonomousRedNear extends LinearOpMode {
         shootingDrive(1.0, 800);
         sleep(500);     // pause for servos to move
 
-        encoderDrive(DRIVE_SPEED, 120,35 , 5.0);
         //encoderDrive(DRIVE_SPEED,  -49,  -35, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
         telemetry.addData("Path", "Complete");
         telemetry.update();
-        //encoderDrive(DRIVE_SPEED, -16, -40, 5.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+        encoderDrive(DRIVE_SPEED, -16, -40, 5.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
     }
 
 
     // drive shooting motor for the given time in msec
     public void intakeDrive(double speed,
-                            int timeoutS)
+                              int timeoutS)
     {
         intake_motor.setPower(speed);
         // Display the current value
@@ -202,9 +201,9 @@ public class AutonomousRedNear extends LinearOpMode {
         telemetry.update();
     }
 
-    // drive shooting motor for the given time in msec
+// drive shooting motor for the given time in msec
     public void shootingDrive(double speed,
-                              int timeoutS)
+                             int timeoutS)
     {
         shooting_motor.setPower(speed);
         // Display the current value
@@ -272,8 +271,8 @@ public class AutonomousRedNear extends LinearOpMode {
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
-                    (back_left_motor.isBusy() && back_right_motor.isBusy())) {
+                   (runtime.seconds() < timeoutS) &&
+                   (back_left_motor.isBusy() && back_right_motor.isBusy())) {
 
                 // Display it for the driver.
                 telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);

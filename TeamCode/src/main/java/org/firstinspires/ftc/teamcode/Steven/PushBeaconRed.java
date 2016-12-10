@@ -7,14 +7,17 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Created by inspirationteam on 12/2/2016.
  */
 @Autonomous(name = "pushBeacon", group = "Pushbot")
-public class pushBeacon extends OpMode {
+public class PushBeaconRed extends OpMode {
     Servo leftPlate;
     Servo rightPlate;
     boolean bLedOn;
+
 
     ColorSensor colorSensor;
 
@@ -26,6 +29,8 @@ public class pushBeacon extends OpMode {
         colorSensor = hardwareMap.colorSensor.get("sensor_color");
         bLedOn = false;
         colorSensor.enableLed(bLedOn);
+        leftPlate.setPosition(0);
+        rightPlate.setPosition(1);
     }
 
     @Override
@@ -39,14 +44,33 @@ public class pushBeacon extends OpMode {
 
         //wait 20 seconds
 
-        if(ReadColorSensor() == 'r'){
+        //found these values by trial and error
+
+
+
+
+
+
+        if(ReadColorSensor() == 'b'){
             //push button if on blue team, don't push if on red team
+            leftPlate.setPosition(0.8);//this is the servo with the modern robotics logo on the opposite side of the plate
+            rightPlate.setPosition(0.3);//this is the servo with the modern robotics logo on the same side of the plate
         }
-        else if (ReadColorSensor() == 'b'){
+        /*else if (ReadColorSensor() == 'b'){
             //push button if on red team, don't push if on blue team
-        }
+        }*/
+
     }
     public void loop(){
+
+        // this is only a test to see what the positions are
+         /*telemetry.addData("Left Servo Position", leftPlate.getPosition());
+            telemetry.addData("Right Servo Position", rightPlate.getPosition());
+            telemetry.update();
+        if (position != 1) {
+            position += 0.1;
+            leftPlate.setPosition(position);
+        }*/
 
     }
 
@@ -54,21 +78,24 @@ public class pushBeacon extends OpMode {
 
     }
 
+    public void sleep(int seconds) throws InterruptedException{
+        TimeUnit.SECONDS.sleep(seconds);
+    }
 
     public char ReadColorSensor(){
 
         char redOrBlue = 'b';
 
-    /* Variables used to store value of the color sensor*/
-    /* hsvValues is an array that will hold the hue, saturation, and value information */
+    //* Variables used to store value of the color sensor
+    //* hsvValues is an array that will hold the hue, saturation, and value information
         float hsvValues[] = {0F,0F,0F};
 
 
 
-    /* convert the RGB values to HSV values*/
+    //convert the RGB values to HSV values
         Color.RGBToHSV(colorSensor.red() * 8, colorSensor.green() * 8, colorSensor.blue() * 8, hsvValues);
 
-    /* send the info back to driver station using telemetry function.*/
+    // send the info back to driver station using telemetry function.
         telemetry.addData("LED", bLedOn ? "On" : "Off");
         telemetry.addData("Clear", colorSensor.alpha());
         telemetry.addData("Red  ", colorSensor.red());
@@ -77,7 +104,7 @@ public class pushBeacon extends OpMode {
         telemetry.addData("Hue", hsvValues[0]);
 
 
-        if (colorSensor.red()>colorSensor.blue()) {/*need to find out the treashold for */
+        if (colorSensor.red()>colorSensor.blue()) {//need to find out the treashold for
             redOrBlue = 'r';
         }
         telemetry.addData("Red or Blue", redOrBlue);

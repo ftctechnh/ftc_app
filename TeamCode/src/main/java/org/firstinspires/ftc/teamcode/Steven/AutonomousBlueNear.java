@@ -1,3 +1,9 @@
+package org.firstinspires.ftc.teamcode.Steven;
+
+/**
+ * Created by inspirationteam on 12/9/2016.
+ */
+
 /*
 Copyright (c) 2016 Robert Atkinson
 
@@ -30,7 +36,13 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.firstinspires.ftc.teamcode.Steven;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -68,9 +80,9 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: AutonomousRedNear", group="Pushbot")
+@Autonomous(name="Pushbot: AutonomousBlueNear", group="Pushbot")
 
-public class AutonomousRedNear extends LinearOpMode {
+public class AutonomousBlueNear extends LinearOpMode {
 
     /* Declare OpMode members. */
     //   motors to drive the robot
@@ -85,7 +97,7 @@ public class AutonomousRedNear extends LinearOpMode {
     // motor definition to intake the small ball
     DcMotor intake_motor;
 
-    private ElapsedTime     runtime = new ElapsedTime();
+    private ElapsedTime runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 757 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 2.3333 ;     // 56/24
@@ -155,8 +167,8 @@ public class AutonomousRedNear extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  13,  40, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(DRIVE_SPEED,  2,  -2, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(DRIVE_SPEED,  40,  13, 5.0);
+        encoderDrive(DRIVE_SPEED,  30,  -30, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
         //encoderDrive(TURN_SPEED,   9, -9, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
 
 
@@ -176,11 +188,10 @@ public class AutonomousRedNear extends LinearOpMode {
         shootingDrive(1.0, 800);
         sleep(500);     // pause for servos to move
 
-        encoderDrive(DRIVE_SPEED, 120,35 , 5.0);
         //encoderDrive(DRIVE_SPEED,  -49,  -35, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
         telemetry.addData("Path", "Complete");
         telemetry.update();
-        //encoderDrive(DRIVE_SPEED, -16, -40, 5.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+        encoderDrive(DRIVE_SPEED, -16, -40, 5.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
     }
 
