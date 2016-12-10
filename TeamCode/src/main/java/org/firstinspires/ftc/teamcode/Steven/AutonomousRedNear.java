@@ -155,30 +155,31 @@ public class AutonomousRedNear extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  15,  45, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(DRIVE_SPEED,  4,  -4, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(DRIVE_SPEED,  20,  20, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+      //  encoderDrive(DRIVE_SPEED,  -6,  6, 5.0);
+         // S1: Forward 47 Inches with 5 Sec timeout
         //encoderDrive(TURN_SPEED,   9, -9, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
 
-
+        encoderDrive(DRIVE_SPEED,  6,  -6, 5.0);
         sleep(1000);     // pause for servos to move
 
         // intakeDrive(0.8, 900);
 
-        shootingDrive(1.0, 800);
+        shootingDrive(.6, 850);
 
         sleep(500);     // pause for servos to move
         intakeDrive(0.8, 1100);
 
-        shootingDrive(1.0, 800);
+        shootingDrive(.6, 850);
         sleep(500);     // pause for servos to move
         intakeDrive(0.8, 1100);
 
-        shootingDrive(1.0, 800);
+        shootingDrive(.6, 850);
         sleep(500);     // pause for servos to move
-
+        encoderDrive(DRIVE_SPEED,  6,  -6, 5.0);
        // encoderDrive(DRIVE_SPEED, 15,-15 , 5.0);
       //  encoderDrive(DRIVE_SPEED, -25,-25 , 5.0);
-        encoderDrive(DRIVE_SPEED, 110,40 , 5.0);
+        encoderDrive(DRIVE_SPEED, 100,30 , 5.0);
         //encoderDrive(DRIVE_SPEED,  -49,  -35, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
         telemetry.addData("Path", "Complete");
         telemetry.update();
