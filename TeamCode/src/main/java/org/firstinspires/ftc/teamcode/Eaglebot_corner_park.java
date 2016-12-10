@@ -53,8 +53,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Eaglebot: Center Ball", group="Omni2Motor")
-public class eaglebot_center extends LinearOpMode {
+@Autonomous(name="Eaglebot: Park in Right Corner", group="Omni2Motor")
+public class Eaglebot_corner_park extends LinearOpMode {
 
     /* Declare OpMode members. */
     Eaglebot      robot   = new Eaglebot();
@@ -79,22 +79,31 @@ public class eaglebot_center extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        robot.stop();
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 8)) {
-            telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
-        robot.forward(robot.FORWARD_SPEED);
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 4)) {
-            telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
-        robot.stop();
 
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
-        sleep(1000);
+        robot.turn(robot.TURN_SPEED);
+        runtime.reset();
+        while (opModeIsActive() && runtime.seconds() < 1) {
+            telemetry.addData("turning", "right");
+            telemetry.update();
+        }
+        robot.forward(0.4);
+        runtime.reset();
+        while (opModeIsActive() && runtime.seconds() < 2) {
+            telemetry.addData("Moving", "forward");
+            telemetry.update();
+        }
+        robot.turn(robot.TURN_SPEED);
+        runtime.reset();
+            while(opModeIsActive() && runtime.seconds() < 1) {
+                telemetry.addData("turning", "right");
+                telemetry.update();
+            }
+        robot.forward(robot.TOP_SPEED);
+        runtime.reset();
+        while (opModeIsActive() && runtime.seconds() < 2) {
+
+        }
+        robot.stop();
+        }
     }
-}
+

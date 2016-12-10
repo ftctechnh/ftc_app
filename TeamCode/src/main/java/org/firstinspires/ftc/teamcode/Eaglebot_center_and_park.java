@@ -46,6 +46,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  *   otherwise you would use: PushbotAutoDriveByEncoder;
  *
  *
+ *
  *  The code is written in a simple form with no optimizations.
  *  However, there are several ways that this type of sequence could be streamlined,
  *
@@ -53,8 +54,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Eaglebot: Center Ball", group="Omni2Motor")
-public class eaglebot_center extends LinearOpMode {
+@Autonomous(name="Eaglebot: Center Ball and Park in Center", group="Omni2Motor")
+public class Eaglebot_center_and_park extends LinearOpMode {
 
     /* Declare OpMode members. */
     Eaglebot      robot   = new Eaglebot();
@@ -90,6 +91,16 @@ public class eaglebot_center extends LinearOpMode {
         while (opModeIsActive() && (runtime.seconds() < 4)) {
             telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
+        }
+        robot.leftTurn(robot.TURN_SPEED);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 1)) {
+
+        }
+        robot.forward(0.4);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 1)) {
+
         }
         robot.stop();
 

@@ -119,6 +119,13 @@ public class Eaglebot
         backRight.setPower(-speed);
         backLeft.setPower(speed);
     }
+
+    void leftTurn (double speed) {
+        frontLeft.setPower(-speed);
+        frontRight.setPower(speed);
+        backLeft.setPower(-speed);
+        backRight.setPower(speed);
+    }
     /***
      *
      * waitForTick implements a periodic delay. However, this acts like a metronome with a regular
