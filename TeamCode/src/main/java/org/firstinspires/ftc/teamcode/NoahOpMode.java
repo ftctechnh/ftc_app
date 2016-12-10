@@ -34,6 +34,7 @@ public class NoahOpMode extends OpMode {
         left2.setPower(gamepad1.left_stick_y);
         right2.setPower(-1*(gamepad1.right_stick_y));
         right1.setPower(-1*(gamepad1.right_stick_y));
-        sweeper2.setPower(gamepad1.right_trigger);
+        sweeper2.setPower(gamepad1.right_trigger - gamepad1.left_trigger);
+
     }
 }
