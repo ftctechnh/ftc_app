@@ -33,7 +33,9 @@ public class CompbotHardware extends BaseHardware {
     public Servo lockServo;
 
     public ColorSensor buttonPresserColorSensor;
-    public ReasignedColorSensor leftBottomColorSensor;
+    public ColorSensor leftBottomColorSensor;
+
+    public DeviceInterfaceModule dim;
 
     public boolean frCorrectDirection = false;
     public boolean flCorrectDirection = true;
@@ -105,7 +107,7 @@ public class CompbotHardware extends BaseHardware {
 
         dim = hardwareMap.deviceInterfaceModule.get("dim");
 
-        leftBottomColorSensor = new ReasignedColorSensor(dim, 3); // hardwareMap.colorSensor.get("lcs");
+        leftBottomColorSensor = hardwareMap.colorSensor.get("lcs");
         leftBottomColorSensor.enableLed(true);
 
         harvester.setDirection(harvesterCorrectDirection ? DcMotorSimple.Direction.FORWARD : DcMotorSimple.Direction.REVERSE);
