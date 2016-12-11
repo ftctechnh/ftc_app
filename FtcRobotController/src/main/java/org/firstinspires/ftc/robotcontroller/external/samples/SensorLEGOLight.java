@@ -47,7 +47,7 @@ import com.qualcomm.robotcore.hardware.LightSensor;
  *
  * This is an example LinearOpMode that shows how to use
  * a legacy (NXT-compatible) Light Sensor.
- * It assumes that the light sensor is configured with a name of "sensor_light".
+ * It assumes that the light sensor is configured with a name of "light sensor".
  *
  * You can use the X button on gamepad1 to turn Toggle the LED on and off.
  *
@@ -61,7 +61,7 @@ public class SensorLEGOLight extends LinearOpMode {
   LightSensor lightSensor;  // Hardware Device Object
 
   @Override
-  public void runOpMode() {
+  public void runOpMode() throws InterruptedException {
 
     // bPrevState and bCurrState represent the previous and current state of the button.
     boolean bPrevState = false;
@@ -71,7 +71,7 @@ public class SensorLEGOLight extends LinearOpMode {
     boolean bLedOn = true;
 
     // get a reference to our Light Sensor object.
-    lightSensor = hardwareMap.lightSensor.get("sensor_light");
+    lightSensor = hardwareMap.lightSensor.get("light sensor");
 
     // Set the LED state in the beginning.
     lightSensor.enableLed(bLedOn);
@@ -103,6 +103,7 @@ public class SensorLEGOLight extends LinearOpMode {
       telemetry.addData("Normal", lightSensor.getLightDetected());
 
       telemetry.update();
+      idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
     }
   }
 }

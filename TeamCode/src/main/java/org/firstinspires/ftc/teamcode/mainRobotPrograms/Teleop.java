@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 /**
@@ -17,13 +18,11 @@ import com.qualcomm.robotcore.util.Range;
 public class Teleop extends _RobotBase
 {
     //Not really required, just initialize everything that needs to be implemented in teleop.
-    @Override
-    protected void driverStationSaysINITIALIZE()
-    {
-    }
+    protected Servo leftSensorServo, rightSensorServo;
+    protected final double RIGHT_SERVO_CLOSED = 1.0, LEFT_SERVO_CLOSED = 1.0;
 
     //All teleop controls are here.
-    protected void driverStationSaysGO()
+    protected void driverStationSaysGO() throws InterruptedException
     {
         //Audio Control Variables
 

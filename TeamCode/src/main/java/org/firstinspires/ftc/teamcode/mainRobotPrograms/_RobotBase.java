@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import java.util.ArrayList;
 
@@ -16,6 +17,10 @@ public abstract class _RobotBase extends LinearOpMode
     protected ArrayList <DcMotor> leftDriveMotors = new ArrayList <>(), rightDriveMotors = new ArrayList<>();
     //Other motors
     protected DcMotor harvester, pusher;
+    protected Servo leftSensorServo, rightSensorServo; //Have to be initialized differently.
+    protected final double RIGHT_SERVO_CLOSED = 1.0, LEFT_SERVO_CLOSED = 1.0;
+    protected final double LEFT_SERVO_OPEN = 0.48, RIGHT_SERVO_OPEN = 0.48;
+
 
     //This took a LONG TIME TO WRITE
     protected <T extends HardwareDevice> T initialize(Class <T> hardwareDevice, String name)
@@ -34,7 +39,7 @@ public abstract class _RobotBase extends LinearOpMode
 
     // Called on initialization (once)
     @Override
-    public void runOpMode()
+    public void runOpMode() throws InterruptedException
     {
         //Make sure that the robot components are found and initialized correctly.
         //This all happens during init()
@@ -49,6 +54,11 @@ public abstract class _RobotBase extends LinearOpMode
         pusher = initialize(DcMotor.class, "pusher");
         harvester = initialize(DcMotor.class, "harvester");
 
+        leftSensorServo = initialize(Servo.class, "servoLeft");
+        leftSensorServo.setPosition(LEFT_SERVO_CLOSED);
+        rightSensorServo = initialize(Servo.class, "servoRight");
+        rightSensorServo.setPosition(RIGHT_SERVO_CLOSED);
+
         //NOTE: Actually attempting to use null motors will cause the program to terminate.
         //This advanced system is designed for when only specific hardware is required.
         //This code should tell you which motors and sensors are not configured before the program starts running.
@@ -56,18 +66,28 @@ public abstract class _RobotBase extends LinearOpMode
 
         //Actual program thread
         //Custom Initialization steps.
-        driverStationSaysINITIALIZE();
+        try
+        {
+            driverStationSaysINITIALIZE();
 
-        //Wait for the start button to be pressed.
-        waitForStart();
+            //Wait for the start button to be pressed.
+            waitForStart();
 
-        driverStationSaysGO(); //This is where the child classes differ.
+            driverStationSaysGO(); //This is where the child classes differ.
+        }
+        catch (InterruptedException e)
+        {
+            driverStationSaysSTOP();
+            Thread.currentThread().interrupt();
+        }
     }
 
     //Optional overload.
-    protected void driverStationSaysINITIALIZE() {}
+    protected void driverStationSaysINITIALIZE() throws InterruptedException {}
     //Has to be implemented.
-    protected abstract void driverStationSaysGO();
+    protected abstract void driverStationSaysGO() throws InterruptedException;
+    //Optional overload.
+    protected void driverStationSaysSTOP() {}
 
     /*** USE TO OUTPUT DATA IN A SLIGHTLY BETTER WAY THAT LINEAR OP MODES HAVE TO ***/
     ArrayList<String> linesAccessible = new ArrayList<>();
