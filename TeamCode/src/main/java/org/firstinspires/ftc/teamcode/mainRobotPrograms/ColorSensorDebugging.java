@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 public class ColorSensorDebugging extends _AutonomousBase
 {
     //Called after runOpMode() has finished initializing.
-    protected void driverStationSaysGO()
+    protected void driverStationSaysGO() throws InterruptedException
     {
         leftSensorServo.setPosition(LEFT_SERVO_OPEN);
         rightSensorServo.setPosition(RIGHT_SERVO_OPEN);

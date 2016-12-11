@@ -10,7 +10,7 @@ public class AutonomousBlueCapBall extends _AutonomousBase
     //Autonomous code for the Blue alliance
 
     //Called after runOpMode() has finished initializing.
-    protected void driverStationSaysGO()
+    protected void driverStationSaysGO() throws InterruptedException
     {
         zeroHeading();
         setMovementPower(-0.5);

@@ -13,14 +13,11 @@ public abstract class _AutonomousBase extends _RobotBase
     //Only used during autonomous.
     protected GyroSensor gyroscope;
     protected ColorSensor leftColorSensor, rightColorSensor, bottomColorSensor; //Must have different I2C addresses.
-    protected Servo leftSensorServo, rightSensorServo;
     protected TouchSensor touchSensor;
-    protected final double RIGHT_SERVO_CLOSED = 1.0, LEFT_SERVO_CLOSED = 1.0;
-    protected final double LEFT_SERVO_OPEN = 0.48, RIGHT_SERVO_OPEN = 0.48;
 
     // Initialize everything required in autonomous that isn't initialized in RobotBase (sensors)
     @Override
-    protected void driverStationSaysINITIALIZE()
+    protected void driverStationSaysINITIALIZE() throws InterruptedException
     {
         //initialize color sensors for either side (do in _AutonomousBase because they are useless during teleop.
         leftColorSensor = initialize(ColorSensor.class, "colorLeft");
@@ -32,11 +29,6 @@ public abstract class _AutonomousBase extends _RobotBase
         bottomColorSensor = initialize(ColorSensor.class, "colorBottom");
         bottomColorSensor.setI2cAddress(I2cAddr.create8bit(0x4c));
         bottomColorSensor.enableLed(true);
-
-        leftSensorServo = initialize(Servo.class, "servoLeft");
-        leftSensorServo.setPosition(LEFT_SERVO_CLOSED);
-        rightSensorServo = initialize(Servo.class, "servoRight");
-        rightSensorServo.setPosition(RIGHT_SERVO_CLOSED);
 
         touchSensor = initialize(TouchSensor.class, "touchSensor");
 
@@ -60,7 +52,7 @@ public abstract class _AutonomousBase extends _RobotBase
     }
 
     //All children should have special instructions.
-    protected abstract void driverStationSaysGO();
+    protected abstract void driverStationSaysGO() throws InterruptedException;
 
     //Used to set drive move power initially.
     protected double movementPower = .5f;
@@ -75,14 +67,14 @@ public abstract class _AutonomousBase extends _RobotBase
     }
 
     //Just resets the gyro.
-    protected void zeroHeading()
+    protected void zeroHeading() throws InterruptedException
     {
         gyroscope.resetZAxisIntegrator();
         sleep(300);
     }
 
     //Account for drifting tendency of the bot.
-    protected void adjustHeading()
+    protected void adjustHeading() throws InterruptedException
     {
         int headingOffset = getValidGyroHeading();
         turnToHeading(-headingOffset, turnMode.BOTH);
@@ -90,7 +82,7 @@ public abstract class _AutonomousBase extends _RobotBase
 
     //More complex method that adjusts the heading based on the gyro heading.
     protected double offCourseSensitivity = 42; //Max of 100, Min of 0 (DON'T DO 100 OR DIV BY 0 ERROR)
-    protected void updateMotorPowersBasedOnGyroHeading()
+    protected void updateMotorPowersBasedOnGyroHeading() throws InterruptedException
     {
         if (gyroscope != null)
         {
@@ -150,7 +142,7 @@ public abstract class _AutonomousBase extends _RobotBase
     enum turnMode {
         LEFT, RIGHT, BOTH
     }
-    protected void turnToHeading (int desiredHeading, turnMode mode)
+    protected void turnToHeading (int desiredHeading, turnMode mode) throws InterruptedException
     {
         //Just exit the method if the heading is already achieved.
         if (desiredHeading == 0)
@@ -206,7 +198,7 @@ public abstract class _AutonomousBase extends _RobotBase
     }
 
     //Used to driveForTime in a straight line with the aid of the gyroscope.
-    protected void driveForTime(double power, long length)
+    protected void driveForTime(double power, long length) throws InterruptedException
     {
         //Add the output to the driver station.
         outputNewLineToDriverStation("Driving at " + power + " power, for " + length + " milliseconds, with a gyroscope");

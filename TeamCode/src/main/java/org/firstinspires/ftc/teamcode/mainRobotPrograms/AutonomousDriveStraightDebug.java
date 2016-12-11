@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 public class AutonomousDriveStraightDebug extends _AutonomousBase
 {
     //Called after runOpMode() has finished initializing.
-    protected void driverStationSaysGO()
+    protected void driverStationSaysGO() throws InterruptedException
     {
         driveForTime(0.8, 10000);
     }

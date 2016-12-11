@@ -11,7 +11,7 @@ public class AutonomousBlueBeacons extends _AutonomousBase
     //Autonomous code for the Blue alliance
 
     //Called after runOpMode() has finished initializing.
-    protected void driverStationSaysGO()
+    protected void driverStationSaysGO() throws InterruptedException
     {
         //Make color sensor available.
         rightSensorServo.setPosition(RIGHT_SERVO_OPEN);
@@ -107,7 +107,7 @@ public class AutonomousBlueBeacons extends _AutonomousBase
     }
 
     //Should be constant among all classes.
-    protected void pushButton()
+    protected void pushButton() throws InterruptedException
     {
         //Press button
         pusher.setPower(.12);
@@ -116,5 +116,11 @@ public class AutonomousBlueBeacons extends _AutonomousBase
         sleep(1600);
         pusher.setPower(0);
 
+    }
+
+    @Override
+    protected void driverStationSaysSTOP()
+    {
+        rightSensorServo.setPosition(RIGHT_SERVO_CLOSED);
     }
 }
