@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 /**
@@ -17,9 +18,15 @@ import com.qualcomm.robotcore.util.Range;
 public class Teleop extends _RobotBase
 {
     //Not really required, just initialize everything that needs to be implemented in teleop.
+    protected Servo leftSensorServo, rightSensorServo;
+    protected final double RIGHT_SERVO_CLOSED = 1.0, LEFT_SERVO_CLOSED = 1.0;
     @Override
     protected void driverStationSaysINITIALIZE()
     {
+        leftSensorServo = initialize(Servo.class, "servoLeft");
+        leftSensorServo.setPosition(LEFT_SERVO_CLOSED);
+        rightSensorServo = initialize(Servo.class, "servoRight");
+        rightSensorServo.setPosition(RIGHT_SERVO_CLOSED);
     }
 
     //All teleop controls are here.

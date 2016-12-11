@@ -23,12 +23,12 @@ public class AutonomousRedBeacons extends _AutonomousBase
         //Turn to face between the lines
         setInitialTurnPower(.16);
         setPrecision(20);
-        turnToHeading(-30, turnMode.BOTH);
+        turnToHeading(-24, turnMode.BOTH);
         outputNewLineToDriverStation("Turned to face toward intermediary part of white line");
         int currentHeading = getValidGyroHeading();
 
         //Drive toward the wall.
-        driveForTime(-0.9, 1600);
+        driveForTime(-0.9, 1800);
         outputNewLineToDriverStation("Driving forward toward that part.");
 
         //Turn to face the wall
@@ -45,12 +45,13 @@ public class AutonomousRedBeacons extends _AutonomousBase
         //The wall resets our heading (YES)
         zeroHeading();
         sleep(300);
+        driveForTime(0.1, 5);
 
         setInitialTurnPower(.2);
-        setPrecision(5);
-        turnToHeading(-93, turnMode.LEFT); //Back facing to near beacon
+        setPrecision(4);
+        turnToHeading(-92, turnMode.LEFT); //Back facing to near beacon
 
-        driveForTime(0.2, 1400);
+        driveForTime(0.2, 1200);
 
         //Drive to the first color line.
         zeroHeading();
@@ -62,13 +63,13 @@ public class AutonomousRedBeacons extends _AutonomousBase
 
         /********   BUTTON PUSHING SEQUENCE GOES HERE   ********/
 
-        driveForTime(0.1, 500);
+        driveForTime(0.1, 700);
 
         if (leftColorSensor.red() >= 2 && leftColorSensor.blue() <= 2)
             pushButton();
         else
         {
-            driveForTime(0.2, 450);
+            driveForTime(0.2, 550);
             pushButton();
         }
 
@@ -92,13 +93,13 @@ public class AutonomousRedBeacons extends _AutonomousBase
 
         /********   BUTTON PUSHING SEQUENCE GOES HERE   ********/
 
-        driveForTime(0.1, 500);
+        driveForTime(0.1, 700);
 
         if (leftColorSensor.red() >= 2 && leftColorSensor.blue() <= 2)
             pushButton();
         else
         {
-            driveForTime(0.2, 450);
+            driveForTime(0.2, 550);
             pushButton();
         }
 
