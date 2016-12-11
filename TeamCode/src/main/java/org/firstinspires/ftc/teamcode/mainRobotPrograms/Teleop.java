@@ -77,13 +77,20 @@ public class Teleop extends _RobotBase
 
             //Pusher
             if (gamepad2.dpad_left)
-                pusher.setPower(-0.5);
+                pusher.setPower(-0.3);
             else if (gamepad2.dpad_right)
-                pusher.setPower(0.5);
+                pusher.setPower(0.3);
             else
                 pusher.setPower(0);
 
             idle();
+
+            outputConstantLinesToDriverStation(
+                    new String[]
+                    {
+                            "Current distance is " + opticalDistanceSensor.getLightDetected()
+                    }
+            );
 
             /******************** END OF LOOP ********************/
         }

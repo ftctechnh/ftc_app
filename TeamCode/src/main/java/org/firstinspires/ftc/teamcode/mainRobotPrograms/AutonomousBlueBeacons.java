@@ -19,11 +19,12 @@ public class AutonomousBlueBeacons extends _AutonomousBase
         //Drive forward a bit
         driveForTime(-0.9, 600);
         outputNewLineToDriverStation("Went forward");
+        adjustHeading();
 
         //Turn to face between the lines
         setInitialTurnPower(.16);
-        setPrecision(20);
-        turnToHeading(40, turnMode.BOTH);
+        setPrecision(10);
+        turnToHeading(42, turnMode.BOTH);
         outputNewLineToDriverStation("Turned to face toward intermediary part of white line");
         int currentHeading = getValidGyroHeading();
 
@@ -43,6 +44,7 @@ public class AutonomousBlueBeacons extends _AutonomousBase
             idle();
         stopDriving();
         //The wall resets our heading (YES)
+        sleep(1000);
         zeroHeading();
         sleep(300);
 

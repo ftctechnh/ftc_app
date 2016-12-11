@@ -69,8 +69,9 @@ public abstract class _AutonomousBase extends _RobotBase
     //Just resets the gyro.
     protected void zeroHeading() throws InterruptedException
     {
+        sleep(200);
         gyroscope.resetZAxisIntegrator();
-        sleep(300);
+        sleep(800);
     }
 
     //Account for drifting tendency of the bot.
@@ -139,6 +140,7 @@ public abstract class _AutonomousBase extends _RobotBase
     protected double incrementFactor = 0.00012; //The rate at which the bot slowly speeds up.
     protected double precisionFactor = 5; //precisionFactor * 2 radius is acceptable.
     protected void setPrecision(double newPrecision) {precisionFactor = newPrecision;}
+
     enum turnMode {
         LEFT, RIGHT, BOTH
     }
@@ -152,7 +154,8 @@ public abstract class _AutonomousBase extends _RobotBase
 
         //This variable changes for each successive turn.
         double turnPower = initialTurnPower;
-        while (opModeIsActive()) // Will eventually be BROKEN out of.
+        int previousHeading = getValidGyroHeading();
+        while (true) // Will eventually be BROKEN out of.
         {
             double incrementValue = turnPower * incrementFactor;
             int initialSign = Integer.signum(getValidGyroHeading() - desiredHeading);
@@ -180,7 +183,10 @@ public abstract class _AutonomousBase extends _RobotBase
                         "Current gyro heading = " + getValidGyroHeading() + " and dHeading is " + desiredHeading + " so sign is " + currentSign
                 });
 
-                turnPower += incrementValue; //Increase the value by a marginal amount over time to prevent stalling.
+                if (previousHeading == getValidGyroHeading())
+                    turnPower += incrementValue; //Increase the value by a marginal amount over time to prevent stalling.
+
+                previousHeading = getValidGyroHeading();
 
                 if (turnPower > 1)
                     turnPower = 1;

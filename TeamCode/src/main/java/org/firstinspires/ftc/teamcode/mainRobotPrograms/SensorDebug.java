@@ -2,9 +2,9 @@ package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous(name = "Color Sensor Debugger", group = "Autonomous Group")
+@Autonomous(name = "Sensor Debug", group = "Autonomous Group")
 
-public class ColorSensorDebugging extends _AutonomousBase
+public class SensorDebug extends _AutonomousBase
 {
     //Called after runOpMode() has finished initializing.
     protected void driverStationSaysGO() throws InterruptedException
@@ -30,7 +30,10 @@ public class ColorSensorDebugging extends _AutonomousBase
                     "ARGB: " + rightColorSensor.argb() + " Alpha: " + rightColorSensor.alpha(),
                     "Blue: " + rightColorSensor.blue() + " Red: " + rightColorSensor.red(),
                     "Green: " + rightColorSensor.green(),
-                    "Heading: " + getValidGyroHeading()
+                    "Heading: " + getValidGyroHeading(),
+                            "Optical Distance Sensor",
+                            "------------------------",
+                            "Dist is " + opticalDistanceSensor.getLightDetected()
             });
             idle();
         } // alpha > 10 = white

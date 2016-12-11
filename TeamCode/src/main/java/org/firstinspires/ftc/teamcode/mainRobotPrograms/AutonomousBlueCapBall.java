@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous(name = "Autonomous - Blue Edition", group = "Autonomous Group")
+@Autonomous(name = "Autonomous - Blue Cap Ball Edition", group = "Autonomous Group")
 //@Disabled
 
 public class AutonomousBlueCapBall extends _AutonomousBase
@@ -19,16 +19,14 @@ public class AutonomousBlueCapBall extends _AutonomousBase
         stopDriving();
         adjustHeading();
 
-        setPrecision(4);
-        turnToHeading(-45, turnMode.BOTH);
+        setPrecision(5);
+        turnToHeading(-105, turnMode.BOTH);
 
         zeroHeading();
         setMovementPower(0.5);
         while (bottomColorSensor.blue() <= 2)
             updateMotorPowersBasedOnGyroHeading();
         stopDriving();
-
-        driveForTime(0.7, 700);
 
         harvester.setPower(-0.5);
         sleep(2000);

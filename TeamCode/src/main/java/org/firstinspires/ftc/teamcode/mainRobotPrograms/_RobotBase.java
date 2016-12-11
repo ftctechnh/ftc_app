@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareDevice;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ public abstract class _RobotBase extends LinearOpMode
     protected final double RIGHT_SERVO_CLOSED = 1.0, LEFT_SERVO_CLOSED = 1.0;
     protected final double LEFT_SERVO_OPEN = 0.48, RIGHT_SERVO_OPEN = 0.48;
 
+    protected OpticalDistanceSensor opticalDistanceSensor;
 
     //This took a LONG TIME TO WRITE
     protected <T extends HardwareDevice> T initialize(Class <T> hardwareDevice, String name)
@@ -58,6 +60,8 @@ public abstract class _RobotBase extends LinearOpMode
         leftSensorServo.setPosition(LEFT_SERVO_CLOSED);
         rightSensorServo = initialize(Servo.class, "servoRight");
         rightSensorServo.setPosition(RIGHT_SERVO_CLOSED);
+
+        opticalDistanceSensor = initialize(OpticalDistanceSensor.class, "ods");
 
         //NOTE: Actually attempting to use null motors will cause the program to terminate.
         //This advanced system is designed for when only specific hardware is required.
