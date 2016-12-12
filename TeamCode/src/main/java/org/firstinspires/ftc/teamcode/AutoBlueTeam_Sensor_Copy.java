@@ -66,7 +66,7 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Auto Blue Right (Sensor) Copy", group="Pushbot")
+@Autonomous(name="Auto Blue Right (Sensor) Copy", group="Sample")
 //@Disabled
 public class AutoBlueTeam_Sensor_Copy extends LinearOpMode {
 
