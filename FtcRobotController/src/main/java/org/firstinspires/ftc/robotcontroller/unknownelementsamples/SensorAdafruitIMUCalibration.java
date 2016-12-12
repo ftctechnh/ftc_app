@@ -44,6 +44,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.internal.AppUtil;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
 
 import java.io.File;
 import java.util.Locale;
@@ -101,7 +103,7 @@ import java.util.Locale;
  * @see <a href="https://ae-bst.resource.bosch.com/media/_tech/media/datasheets/BST_BNO055_DS000_14.pdf">BNO055 specification</a>
  */
 @TeleOp(name = "Sensor: Adafruit IMU Calibration", group = "Sensor")
-// @Disabled                            // Uncomment this to add to the opmode list
+ @Disabled                            // Uncomment this to add to the opmode list
 public class SensorAdafruitIMUCalibration extends LinearOpMode
     {
     //----------------------------------------------------------------------------------------------

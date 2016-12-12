@@ -92,27 +92,31 @@ public class SensorMRColor_TT extends LinearOpMode {
 
       if (robot.color.red() > robot.color.blue()) {
         telemetry.addData("Detecting", "Red");
-        telemetry.update();
+//        telemetry.update();
       }
       else if (robot.color.red() < robot.color.blue()){
         telemetry.addData("Detecting", "Blue");
-        telemetry.update();
+//        telemetry.update();
       }
       else {
         telemetry.addData("Detecting", "Neither");
-        telemetry.update();
+//        telemetry.update();
       }
 
       // send the info back to driver station using telemetry function.
-//      telemetry.addData("LED", bLedOn ? "On" : "Off");
-//      telemetry.addData("2 Clear", colorLocal.alpha());
-//      telemetry.addData("3 Red  ", colorLocal.red());
-//      telemetry.addData("4 Green", colorLocal.green());
-//      telemetry.addData("5 Blue ", colorLocal.blue());
+      telemetry.addData("LED", bLedOn ? "On" : "Off");
+      telemetry.addData("2 Clear", colorLocal.alpha());
+      telemetry.addData("3 Red  ", colorLocal.red());
+      telemetry.addData("4 Green", colorLocal.green());
+      telemetry.addData("5 Blue ", colorLocal.blue());
 //      telemetry.addData("Hue", hsvValues[0]);
 //      telemetry.addData("Saturation", hsvValues[1]);
 //      telemetry.addData("Values", hsvValues[2]);
-//      //telemetry.update();
+      telemetry.addData("1 Address", robot.color.getI2cAddress()) ;
+      telemetry.addData("1 Connection", robot.color.getConnectionInfo()) ;
+      telemetry.addData("2 Address", robot.color2.getI2cAddress()) ;
+      telemetry.addData("2 Connection", robot.color2.getConnectionInfo()) ;
+      telemetry.update();
 
 
       // convert the RGB values to HSV values.

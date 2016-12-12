@@ -45,6 +45,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
 
 import java.util.Locale;
 
@@ -57,7 +59,7 @@ import java.util.Locale;
  * @see <a href="http://www.adafruit.com/products/2472">Adafruit IMU</a>
  */
 @Autonomous(name = "Sensor: Adafruit IMU", group = "Sensor")
-// @Disabled                            // Uncomment this to add to the opmode list
+ @Disabled                            // Uncomment this to add to the opmode list
 public class SensorAdafruitIMU extends LinearOpMode
     {
     //----------------------------------------------------------------------------------------------

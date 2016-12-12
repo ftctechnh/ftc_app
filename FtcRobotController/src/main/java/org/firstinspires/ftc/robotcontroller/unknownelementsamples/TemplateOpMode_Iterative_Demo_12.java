@@ -37,11 +37,13 @@ import android.speech.tts.TextToSpeech;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
 
 import java.util.Locale;
 
 @TeleOp(name="Template: IO 12", group="Iterative Opmode 1")  // @Autonomous(...) is the other common choice
-// @Disabled
+ @Disabled
 public class TemplateOpMode_Iterative_Demo_12 extends OpMode {
     /* Declare OpMode members. */
 
