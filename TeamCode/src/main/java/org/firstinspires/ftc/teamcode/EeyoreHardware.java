@@ -1,26 +1,29 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-public class BasicBotHardware
+public class EeyoreHardware
 {
     /* Public OpMode members. */
     public DcMotor l1   = null;
     public DcMotor l2   = null;
     public DcMotor r1   = null;
     public DcMotor r2   = null;
-    public ColorSensor Color = null;
+    public DcMotor shooter   = null;
+    public DcMotor collection   = null;
+    public ColorSensor color   = null;
 
     /* local OpMode members. */
     HardwareMap hwMap           = null;
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public BasicBotHardware() {
+    public EeyoreHardware() {
 
     }
 
@@ -34,18 +37,26 @@ public class BasicBotHardware
         l2 = hwMap.dcMotor.get("l2");
         r1 = hwMap.dcMotor.get("r1");
         r2 = hwMap.dcMotor.get("r2");
+        shooter = hwMap.dcMotor.get("shooter");
+        collection = hwMap.dcMotor.get("collection");
+
+        color = hwMap.colorSensor.get("color");
 
         // Set motor direction
         l1.setDirection(DcMotor.Direction.REVERSE);
         l2.setDirection(DcMotor.Direction.REVERSE);
         r1.setDirection(DcMotor.Direction.FORWARD);
         r2.setDirection(DcMotor.Direction.FORWARD);
+        shooter.setDirection(DcMotor.Direction.FORWARD);
+        collection.setDirection(DcMotor.Direction.FORWARD);
 
         // Set all motors to zero power
         l1.setPower(0);
         l2.setPower(0);
         r1.setPower(0);
         r2.setPower(0);
+        shooter.setPower(0);
+        collection.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -53,7 +64,8 @@ public class BasicBotHardware
         l2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         r1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         r2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
+        shooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        collection.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // Define and initialize ALL installed servos.
         // None yet
     }
