@@ -34,6 +34,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
      *  2. fartherMotors
      *  3. sideUltrasonicSensor
      *  4. INITAL_LOCATION
+     *  5. PRE_WALL_FOLLOW_ANGLE
      */
     //      Wall Follow Motors:
     public List<DcMotor> closeMotors;
@@ -44,6 +45,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
     public UltrasonicSensor sideUltrasonicSensor;
     //      Other:
     public VectorF INITAL_LOCATION;
+    public double PRE_WALL_FOLLOW_ANGLE; // The angle to turn to before following the wall (radians)
 
 
     // Hardware Setup:
@@ -69,12 +71,14 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
     public static String LOG_TAG = "Comp Bot Auto";
     private static long MAX_TIME_TIMEOUT = 200; // MAX time until TIMEOUT when running OpMode (millis)
     private static double NO_BEACON_ROTATE_SPEED = 0.25;
-
+    private static double MINIMUM_ROTATION_DEG_DIFF = AngleUnit.RADIANS.fromUnit(AngleUnit.DEGREES, 5);
+    private static double MINIMUM_ROTATION_SPEED = 0.08;
+    private static double PRE_WALL_FOLLOW_TURN_GAIN = 1;
 
 
     /*------------------------------------AUTONOMOUS SECTIONS-------------------------------------*/
 
-    private void driveToPosition() throws InterruptedException {
+    private Double driveToPosition() throws InterruptedException {
         /*---------------------------------DRIVE TO INITIAL POINT---------------------------------*/
         // Translation Navigation Setup:
         TranslationMotorNavigation translationNavigation = new TranslationMotorNavigation();
@@ -108,9 +112,9 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
                 TranslationMotorNavigation.NavigationData calculationData =
                         translationNavigation.calculateNavigationData(translation.get(0), translation.get(1), robotRot);
 
-                // Break if on target:
+                // Break if on target (and return robot rotation):
                 if (calculationData.onTarget) {
-                    break;
+                    return (double) robotRot;
                 }
 
                 // Add data to telemetry for debug:
@@ -159,9 +163,67 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
             // Sleep to control loop:
             Thread.sleep(50);
         }
+
+        // Return null if interrupted:
+        return null;
     }
 
 
+    private Orientation getIMUOrientation() {
+        /**
+         * Get the IMU orientation with the designated settings.
+         */
+        return this.imu.getAngularOrientation().toAngleUnit(AngleUnit.RADIANS)
+                .toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX);
+    }
+
+    private void rotateRobotIMU(double angle, double rotationGain) {
+        /**
+         * Rotate the robot by a certain degree angle using the IMU.
+         */
+        // Record initial angle:
+        Orientation initialAngle = getIMUOrientation();
+        // Get robot heading:
+        double initialRotation = initialAngle.firstAngle;
+        // Add rotation to initial angle and make sure that it is a -180 - 180 value:
+        double targetAngle = TranslationMotorNavigation.angleDifference(angle + initialRotation, 0);
+
+        // Loop while OpMode is active
+        while (opModeIsActive()) {
+            telemetry.addData("Phase", "Rotate to Angle");
+            // Get current robot angle:
+            double robotAngle = getIMUOrientation().firstAngle;
+
+            // Calculate the needed angle of rotation to get to target:
+            double rotationAngle = TranslationMotorNavigation.angleDifference(robotAngle, targetAngle);
+            telemetry.addData("rotationAmount", rotationAngle);
+            // Calculate rotation power to be applied to motors:
+            double rotationPower = (rotationAngle / Math.PI);
+            rotationPower = (rotationPower * rotationGain) + MINIMUM_ROTATION_SPEED;
+            telemetry.addData("rotationPower", rotationPower);
+
+            // Break if rotation angle is smaller than minimum rotation difference
+            //  (on target rotation):
+            if (Math.abs(rotationAngle) < MINIMUM_ROTATION_DEG_DIFF) {
+                Log.d(LOG_TAG, "Rotation Angle: " + rotationAngle + " < Minimum Rot: " + MINIMUM_ROTATION_DEG_DIFF);
+                break;
+            }
+
+            // Calculate left motors power and set motors the reverse rotation of the motors
+            //  cancels out the negatives:
+            double leftPower = Range.clip(rotationPower, -1, 1);
+            telemetry.addData("Left Motor Power", leftPower);
+            DcMotorUtil.setMotorsPower(this.leftMotors, leftPower);
+
+            // Calculate right motors power and set motors:
+            double rightPower = Range.clip(rotationPower, -1, 1);
+            telemetry.addData("Right Motor Power", rightPower);
+            DcMotorUtil.setMotorsPower(this.rightMotors, rightPower);
+
+            // Update telemetry:
+            telemetry.update();
+        }
+    }
 
     // OpMode:
     public void runOpMode() throws InterruptedException {
@@ -190,6 +252,25 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
 
         // Autonomous Sections:
 
-        driveToPosition();
+        //      Drive to the wall:
+        Double robotRot = driveToPosition();
+        // Log final robot angle:
+        Log.d(LOG_TAG, "Robot Angle: " + robotRot);
+
+        //      Rotate to follow wall:
+        // Log the needed angle:
+        Log.d(LOG_TAG, "Needed Angle: " + PRE_WALL_FOLLOW_ANGLE);
+
+        // Only continue if wasn't interrupted:
+        if (robotRot != null) {
+            // Calculate needed relative rotation:
+            double rotationAngle = TranslationMotorNavigation.angleDifference(PRE_WALL_FOLLOW_ANGLE, robotRot);
+            // Log the relative rotation:
+            Log.d(LOG_TAG, "Rotation Angle: " + rotationAngle);
+            // Start IMU based robot rotation:
+            rotateRobotIMU(rotationAngle, PRE_WALL_FOLLOW_TURN_GAIN);
+        } else {  // This means that the drive to position was interrupted:
+            Log.e(LOG_TAG, "Final Robot angle was 'null' (interrupted). ENDING!");
+        }
     }
 }
