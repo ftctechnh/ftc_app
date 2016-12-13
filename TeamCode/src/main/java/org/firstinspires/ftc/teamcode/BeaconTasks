@@ -30,7 +30,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.xavier;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -44,7 +44,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.teamcode.BeaconHardwarePushbot;
+import org.firstinspires.ftc.teamcode.libraries.HardwarePushbot;
 
 
 /**
@@ -73,9 +73,9 @@ import org.firstinspires.ftc.teamcode.BeaconHardwarePushbot;
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
-@Autonomous(name="move to beacon", group="Pushbot")
+//@Autonomous(name="Tasks", group="Pushbot")
 //@Disabled
-public class BeaconTasks extends LinearOpMode {
+public class BeaconTasks1 extends LinearOpMode {
 //public class BeaconTasks extends LinearOpMode {  changed from LinearOpMode to OpMode on 11/26 at 7:30pm
 
     // alliance color is either "red" or "blue" set in the calling OpMode
@@ -83,7 +83,7 @@ public class BeaconTasks extends LinearOpMode {
 
 
     /* Declare OpMode members. */
-    BeaconHardwarePushbot         robot   = new BeaconHardwarePushbot();   // Use a Pushbot's hardware
+    HardwarePushbot         robot   = new HardwarePushbot();   // Use a Pushbot's hardware
     // used in drive by time
     private ElapsedTime     runtime = new ElapsedTime();
     // declare light sensor and color sensors
@@ -160,8 +160,7 @@ public class BeaconTasks extends LinearOpMode {
         // runs toSecondBeacon method
         toSecondBeacon();
         // runs pushBeacon method
-        pushBeacon()
-        
+        pushBeacon();
     }
 
     // driveToBeacon method
@@ -188,10 +187,10 @@ public class BeaconTasks extends LinearOpMode {
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         encoderDrive(DRIVE_SPEED,  20,  20, 5.0);  // S1: foreward 24 Inches with 5 Sec timeout
-        //sleep(1000); //optional wait between steps
+        sleep(50); //optional wait between steps
 
         // sets the number of inches to turn on the first turn
-        double turn1distance = 10;
+        double turn1distance = 9;
         // if alliance color is blue, turn right
         if (allianceColor=="blue"){
             encoderDrive(TURN_SPEED, turn1distance, -turn1distance, 4.0);  // S2: Turn Right 13 Inches with 4 Sec timeout
@@ -199,7 +198,7 @@ public class BeaconTasks extends LinearOpMode {
             encoderDrive(TURN_SPEED, -turn1distance, turn1distance, 4.0);  // S2: Turn Left 13 Inches with 4 Sec timeout
         }
 
-        sleep(1000); // optional wait between steps
+        sleep(50); // optional wait between steps
 
         //******************start of light sensor section
         // get a reference to our Light Sensor object.
@@ -208,11 +207,11 @@ public class BeaconTasks extends LinearOpMode {
         // turn LED on
         lightSensor.enableLed(true);
 
-        sleep(1000); // pause after turning LED on
+        sleep(50); // pause after turning LED on
 
         // go forward while dark color is being detected
         // light colors have higher values than dark colors
-        while ((lightSensor.getLightDetected()) < 0.35){
+        while ((lightSensor.getLightDetected()) < 0.35 && opModeIsActive()){
             robot.leftMotor.setPower(DRIVE_SPEED);
             robot.rightMotor.setPower(DRIVE_SPEED);
         }
@@ -227,22 +226,22 @@ public class BeaconTasks extends LinearOpMode {
         //run light sensor section or this line
         //encoderDrive(DRIVE_SPEED, 80, 80, 4.0);  // S3: foreward 40 Inches with 4 Sec timeout
 
-        sleep(1000); // optional wait between steps
+        sleep(50); // optional wait between steps
 
         // sets number of inches to turn on second turn
-        double turn2distance = 8;
+        double turn2distance = 7;
         // if alliance color is blue, turn right
         if (allianceColor=="blue"){
             encoderDrive(TURN_SPEED, turn2distance, -turn2distance, 4.0);  // S2: Turn Right 11 Inches with 4 Sec timeout
         }else{ //if alliance color is red, turn left
-            encoderDrive(TURN_SPEED, -turn2distance, turn2distance, 4.0);  // S2: Turn Left 11 Inches with 4 Sec timeout
+            encoderDrive(TURN_SPEED, -6, 6, 4.0);  // S2: Turn Left 11 Inches with 4 Sec timeout
         }
 
-        // Drive forward for 1.5 seconds so the robot runs in to the wall right in front of the beacon
+        // Drive forward for 2 seconds so the robot runs in to the wall right in front of the beacon
         robot.leftMotor.setPower(DRIVE_SPEED);
         robot.rightMotor.setPower(DRIVE_SPEED);
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 1.5)) {
+        while (opModeIsActive() && (runtime.seconds() < 2.0)) {
             telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
@@ -250,7 +249,7 @@ public class BeaconTasks extends LinearOpMode {
         robot.leftMotor.setPower(0);
         robot.rightMotor.setPower(0);
 
-        sleep(1000);
+        sleep(50);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
@@ -313,7 +312,7 @@ public class BeaconTasks extends LinearOpMode {
             robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            //  sleep(250);
+            sleep(25);
 
             // end encoderDrive
         }
@@ -407,11 +406,110 @@ public class BeaconTasks extends LinearOpMode {
         if (allianceColor==leftBeaconColor) {
             // push left side of beacon
             // back up for 10 inches
+            encoderDrive(DRIVE_SPEED, -4, -4, 5.0);  // S1: backward 10 Inches with 5 Sec timeout
+            // pause
+            sleep(50);
+            // move left servo to straight out position
+            servoLeft.setPosition(0.87);//Was 0.85
+            // pause
+            sleep(50);
+            // Drive forward for 1 second so the robot pushes the beacon
+            robot.leftMotor.setPower(DRIVE_SPEED);
+            robot.rightMotor.setPower(DRIVE_SPEED);
+            runtime.reset();
+            while (opModeIsActive() && (runtime.seconds() < 1.0)) {
+                telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+                telemetry.update();
+            }
+            //turn motors off after 1 second
+            robot.leftMotor.setPower(0);
+            robot.rightMotor.setPower(0);
+
+        } else { // right side of beacon matches alliance color
+            //push right side of beacon
+            // back up for 10 inches
+            encoderDrive(DRIVE_SPEED, -4, -4, 5.0);  // S1: backward 10 Inches with 5 Sec timeout
+            // pause
+            sleep(50);
+            // move right servo
+            servoRight.setPosition(0.03);//was .07
+            // pause
+            sleep(50);
+            // Drive forward for 1 second so the robot runs in to the wall right in front of the beacon
+            robot.leftMotor.setPower(DRIVE_SPEED);
+            robot.rightMotor.setPower(DRIVE_SPEED);
+            runtime.reset();
+            while (opModeIsActive() && (runtime.seconds() < 1.0)) {
+                telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+                telemetry.update();
+            }
+            //turn motors off after 1 second
+            robot.leftMotor.setPower(0);
+            robot.rightMotor.setPower(0);
+
+        }
+        sleep(50);
+
+
+
+        // back up
+        encoderDrive(DRIVE_SPEED, -10, -10, 5.0);
+        // put servos down
+        servoLeft.setPosition(0.5);
+        servoRight.setPosition(0.45);
+
+
+        /*
+        // sets the number of inches to turn on the third turn
+        double turn3distance = 18;
+        // if alliance color is blue, turn right
+        if (allianceColor=="blue"){
+            encoderDrive(TURN_SPEED, -turn3distance, turn3distance, 4.0);  // S2: Turn Left 13 Inches with 4 Sec timeout
+        }else{ //else alliance color is red, turn left
+            encoderDrive(TURN_SPEED, turn3distance, -turn3distance, 4.0);  // S2: Turn Right 13 Inches with 4 Sec timeout
+        }
+
+        /*//******************start of light sensor section
+        // get a reference to our Light Sensor object.
+        lightSensor = hardwareMap.lightSensor.get("sensor_light");
+
+        // turn LED on
+        lightSensor.enableLed(true);
+
+        sleep(1000); // pause after turning LED on
+
+        // go forward while dark color is being detected
+        // light colors have higher values than dark colors
+        while ((lightSensor.getLightDetected()) < 0.35){
+            robot.leftMotor.setPower(DRIVE_SPEED);
+            robot.rightMotor.setPower(DRIVE_SPEED);
+        }
+        // turn motors off when white is detected
+        robot.leftMotor.setPower(0);
+        robot.rightMotor.setPower(0);
+
+        // turn LED off when white is detected
+        lightSensor.enableLed(false);
+        /*//**************************end of light sensor section
+
+        // sets the number of inches to turn on the first turn
+        double turn4distance = 18;
+        // if alliance color is blue, turn right
+        if (allianceColor=="blue"){
+            encoderDrive(TURN_SPEED, turn4distance, -turn4distance, 4.0);  // S2: Turn Right 13 Inches with 4 Sec timeout
+        }else{ //else alliance color is red, trun left
+            encoderDrive(TURN_SPEED, -turn4distance, turn4distance, 4.0);  // S2: Turn Left 13 Inches with 4 Sec timeout
+        }*/
+
+        //if left side of beacon matches alliance color, either red or blue
+        /*if (allianceColor==leftBeaconColor) {
+            // push left side of beacon
+            // back up for 10 inches
             encoderDrive(DRIVE_SPEED, -10, -10, 5.0);  // S1: backward 10 Inches with 5 Sec timeout
             // pause
             sleep(500);
             // move left servo to straight out position
-            servoLeft.setPosition(0.85);
+            servoLeft.setPosition(0.9);//Was 0.85
             // pause
             sleep(2000);
             // Drive forward for 1 second so the robot pushes the beacon
@@ -433,7 +531,7 @@ public class BeaconTasks extends LinearOpMode {
             // pause
             sleep(500);
             // move right servo
-            servoRight.setPosition(0.1);
+            servoRight.setPosition(0.04);//was .07
             // pause
             sleep(2000);
             // Drive forward for 1 second so the robot runs in to the wall right in front of the beacon
@@ -449,17 +547,17 @@ public class BeaconTasks extends LinearOpMode {
             robot.rightMotor.setPower(0);
 
             // end pushBeacon
-        }
+        }*/
     }
-    
+
     // method to drive to the second beacon
     protected void toSecondBeacon(){
-    
-         // back up
-         encoderDrive(TURN_SPEED, -24, -24, 5.0)
-         
-         // sets the number of inches to turn on the third turn
-        double turn3distance = 10;
+
+        // back up
+        encoderDrive(TURN_SPEED, -24, -24, 5.0);
+
+        // sets the number of inches to turn on the third turn
+        double turn3distance = 12;
         // if alliance color is blue, turn left
         if (allianceColor=="blue"){
             encoderDrive(TURN_SPEED, -turn3distance, turn3distance, 4.0);
@@ -467,7 +565,9 @@ public class BeaconTasks extends LinearOpMode {
             encoderDrive(TURN_SPEED, turn3distance, -turn3distance, 4.0);
         }
 
-        sleep(1000); // optional wait between steps
+        sleep(50); // optional wait between steps
+
+        encoderDrive(DRIVE_SPEED, 10, 10, 4.0);
 
         //******************start of light sensor section
         // get a reference to our Light Sensor object.
@@ -476,18 +576,18 @@ public class BeaconTasks extends LinearOpMode {
         // turn LED on
         lightSensor.enableLed(true);
 
-        sleep(1000); // pause after turning LED on
+        sleep(50); // pause after turning LED on
 
         // go forward while dark color is being detected
         // light colors have higher values than dark colors
-        while ((lightSensor.getLightDetected()) < 0.35){
+        while ((lightSensor.getLightDetected()) < 0.35 && opModeIsActive()){
             robot.leftMotor.setPower(DRIVE_SPEED);
             robot.rightMotor.setPower(DRIVE_SPEED);
         }
         // turn motors off when white is detected
         robot.leftMotor.setPower(0);
         robot.rightMotor.setPower(0);
-        
+
         // turn LED off when white is detected
         lightSensor.enableLed(false);
         //**************************end of light sensor section
@@ -495,15 +595,15 @@ public class BeaconTasks extends LinearOpMode {
         //run light sensor section or this line
         //encoderDrive(DRIVE_SPEED, 80, 80, 4.0);  // S3: foreward 40 Inches with 4 Sec timeout
 
-        sleep(1000); // optional wait between steps
+        sleep(50); // optional wait between steps
 
         // sets number of inches to turn on fourth turn
-        double turn4distance = 8;
+        double turn4distance = 12.5; // was 12
         // if alliance color is blue, turn right
         if (allianceColor=="blue"){
             encoderDrive(TURN_SPEED, turn4distance, -turn4distance, 4.0);  // S2: Turn Right 11 Inches with 4 Sec timeout
         }else{ //if alliance color is red, turn left
-            encoderDrive(TURN_SPEED, -turn4distance, turn4distance, 4.0);  // S2: Turn Left 11 Inches with 4 Sec timeout
+            encoderDrive(TURN_SPEED, -12, 12, 4.0);  // S2: Turn Left 11 Inches with 4 Sec timeout
         }
 
         // Drive forward for 1.5 seconds so the robot runs in to the wall right in front of the beacon
@@ -517,7 +617,9 @@ public class BeaconTasks extends LinearOpMode {
         //turn motors off after 1 second
         robot.leftMotor.setPower(0);
         robot.rightMotor.setPower(0);
-     
+
         // end toSecondBeacon
+
     }
 }
+
