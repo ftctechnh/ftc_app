@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
 
-@TeleOp(name="Basic Bot", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
+@TeleOp(name="Beacon Finder", group="Iterative Opmode")  // @Autonomous(...) is the other common choice
 
 
 public class BeaconFinderAuto extends LinearOpMode {
@@ -82,7 +82,11 @@ public class BeaconFinderAuto extends LinearOpMode {
         robot.r2.setPower(speed);
         robot.l1.setPower(speed);
         robot.l2.setPower(speed);
-
+        try {   //Not sure this portion will work, we need to test it and find out if it's accurate
+            Thread.sleep(time);
+        } catch(InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
 
     }
     public void reachBeacon()
