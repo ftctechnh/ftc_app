@@ -19,7 +19,7 @@ import java.util.ArrayList;
 // simple example sequence that tests either of gyro-based AzimuthCountedDriveStep or AzimuthTimedDriveStep to drive along a square path
 @Autonomous(name="Line Drive", group ="Line Follow")
 //@Disabled
-public class LineDrive extends OpenCVLib{
+public class LineDrive extends OpenCVLib {
 
     private int yValStore[] = new int[3];
     private double lastLinePos = 0;
@@ -59,8 +59,8 @@ public class LineDrive extends OpenCVLib{
     final double time = 2.0;
     final boolean red = false;
     final int colorThresh = 200;
-    final float driveTime = 0.1f;
-    final int driveLoopCount = 2;
+    final float driveTime = 0.0f;
+    final int driveLoopCount = 0;
 
     final int countPerRotation = 280;
 
@@ -85,16 +85,17 @@ public class LineDrive extends OpenCVLib{
         // create the root Sequence for this autonomous OpMode
         mSequence = new AutoLib.LinearSequence();
 
-        mSequence.add(new DriveUntilLine(this, 50.0f, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), power, true));
-        //mSequence.add(new AutonomousSecondaryBlue.SquirrleyAzimuthTimedDriveStep(this, 0, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), power, 5.0f, true));
+        //mSequence.add(new DriveUntilLine(this, 52.0f, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.5f, true));
+        //mSequence.add(new SquirrleyAzimuthTimedDriveStep(this, 63, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.5f, 10.0f, true));
+        //mSequence.add(new SquirrleyAzimuthTimedDriveStep(this, -135, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.2f, 10.0f, true));
 
         //mSequence.add(new DriveUntilLine(robot.getMotorArray(), power + 0.1, true));
         //two-stage line follow
-        mSequence.add(new LineDriveStep(this, 0, lineSensors, lineSensors, new UltraStop(ultraDistS1), mgPid, mdPid, robot.getMotorArray(), 0.1f, false));
-        mSequence.add(new LineDriveStep(this, 0, lineSensors, lineSensors, new UltraStop(ultraDistS2), mgPid, mdPid, robot.getMotorArray(), 0.05f, true));
+        //mSequence.add(new LineDriveStep(this, 0, lineSensors, lineSensors, new UltraStop(ultraDistS1), mgPid, mdPid, robot.getMotorArray(), 0.1f, false));
+        //mSequence.add(new LineDriveStep(this, 0, lineSensors, lineSensors, new UltraStop(ultraDistS2), mgPid, mdPid, robot.getMotorArray(), 0.05f, true));
         //pushy pushy
-        //mSequence.add(new PushyLib.pushypushy(robot.getMotorArray(), robot.leftSensor, robot.rightSensor, robot.leftServo, robot.rightServo,
-        //        pushPos, time, red, colorThresh, power, driveTime, driveLoopCount));
+        mSequence.add(new PushyLib.pushypushy(this, robot.getMotorArray(), robot.leftSensor, robot.rightSensor, robot.leftServo, robot.rightServo,
+                pushPos, time, red, colorThresh, power, driveTime, driveLoopCount));
 
 
         // start out not-done
@@ -138,50 +139,48 @@ public class LineDrive extends OpenCVLib{
         stopCamera();
     }
 
-    private class LineSensors implements HeadingSensor, DisplacementSensor{
+    private class LineSensors implements HeadingSensor, DisplacementSensor {
 
         //heading sensor code for line following
-        public float getHeading(){
+        public float getHeading() {
             Mat frame = getCameraFrame();
             //get line displacement
             double linePos = -LineFollowLib.getAngle(frame, yValStore[0], yValStore[2]);
             //if it's an error, turn to where line was last
-            if(linePos == LineFollowLib.ERROR_TOO_NOISY){
-                if(lastLineHeading > 0) return 50.0f;
+            if (linePos == LineFollowLib.ERROR_TOO_NOISY) {
+                if (lastLineHeading > 0) return 50.0f;
                 else return -50.0f;
-            }
-            else lastLineHeading = linePos;
+            } else lastLineHeading = linePos;
 
-            return (float)linePos;
+            return (float) linePos;
         }
 
-        public float getDisp(){
+        public float getDisp() {
             Mat frame = getCameraFrame();
             double linePos = -LineFollowLib.getDisplacment(frame, yValStore[1]);
             //if it's an error, turn to where line was last
-            if(linePos == LineFollowLib.ERROR_TOO_NOISY){
-                if(lastLinePos > 0) return 0.8f;
+            if (linePos == LineFollowLib.ERROR_TOO_NOISY) {
+                if (lastLinePos > 0) return 0.8f;
                 else return -0.8f;
-            }
-            else lastLinePos = linePos;
-            return (float)linePos;
+            } else lastLinePos = linePos;
+            return (float) linePos;
         }
     }
 
-    private class UltraStop implements FinishSensor{
+    private class UltraStop implements FinishSensor {
         double mDist;
 
-        UltraStop(double dist){
+        UltraStop(double dist) {
             mDist = dist;
         }
 
-        public boolean checkStop(){
+        public boolean checkStop() {
             //get ultrasonic distance
             double dist = robot.distSensor.getUltrasonicLevel();
 
             telemetry.addData("Ultra", dist);
             //cutoff ridiculous values
-            if(dist > 200 || dist < 5) return false;
+            if (dist > 200 || dist < 5) return false;
                 //now check if the robot is in range
             else return dist < mDist;
         }
@@ -202,8 +201,7 @@ public class LineDrive extends OpenCVLib{
         private ArrayList<AutoLib.SetPower> mMotorSteps;            // the motor steps we're guiding - assumed order is right ... left ...
 
         public LineGuideStep(OpMode mode, float heading, HeadingSensor gyro, DisplacementSensor disp, SensorLib.PID gPid, SensorLib.PID dPid,
-                             ArrayList<AutoLib.SetPower> motorsteps, float power)
-        {
+                             ArrayList<AutoLib.SetPower> motorsteps, float power) {
             mOpMode = mode;
             mHeading = heading;
             mGyro = gyro;
@@ -214,8 +212,7 @@ public class LineDrive extends OpenCVLib{
             mPower = power;
         }
 
-        public boolean loop()
-        {
+        public boolean loop() {
             // initialize previous-time on our first call -> dt will be zero on first call
             if (firstLoopCall()) {
                 mPrevTime = mOpMode.getRuntime();           // use timer provided by OpMode
@@ -224,7 +221,7 @@ public class LineDrive extends OpenCVLib{
             float heading = mGyro.getHeading();     // get latest reading from direction sensor
             // convention is positive angles CCW, wrapping from 359-0
 
-            float error = SensorLib.Utils.wrapAngle(heading-mHeading);   // deviation from desired heading
+            float error = SensorLib.Utils.wrapAngle(heading - mHeading);   // deviation from desired heading
             // deviations to left are positive, to right are negative
 
             // compute delta time since last call -- used for integration time of PID step
@@ -233,10 +230,10 @@ public class LineDrive extends OpenCVLib{
             mPrevTime = time;
 
             // feed error through PID to get motor power correction value
-            float gCorrection = -mgPid.loop(error, (float)dt);
+            float gCorrection = -mgPid.loop(error, (float) dt);
 
             //feed other error through PID to get more values
-            float dCorrection = -mdPid.loop(mDisp.getDisp(), (float)dt);
+            float dCorrection = -mdPid.loop(mDisp.getDisp(), (float) dt);
 
             // compute new right/left motor powers
             float frontRight = Range.clip(mPower + gCorrection + dCorrection, -1, 1);
@@ -269,8 +266,7 @@ public class LineDrive extends OpenCVLib{
     static public class LineDriveStep extends AutoLib.ConcurrentSequence {
 
         public LineDriveStep(OpMode mode, float heading, HeadingSensor gyro, DisplacementSensor disp, FinishSensor fin, SensorLib.PID gPid, SensorLib.PID dPid,
-                             DcMotor[] motors, float power, boolean stop)
-        {
+                             DcMotor[] motors, float power, boolean stop) {
             // add a concurrent Step to control each motor
             ArrayList<AutoLib.SetPower> steps = new ArrayList<AutoLib.SetPower>();
             for (DcMotor em : motors)
@@ -293,8 +289,7 @@ public class LineDrive extends OpenCVLib{
 
         int lineCount = 0;
 
-        public DriveUntilLine(OpMode mode, float heading, HeadingSensor gyro, SensorLib.PID pid, DcMotor motors[], float power, boolean stop)
-        {
+        public DriveUntilLine(OpMode mode, float heading, HeadingSensor gyro, SensorLib.PID pid, DcMotor motors[], float power, boolean stop) {
             ArrayList<AutoLib.SetPower> steps = new ArrayList<AutoLib.SetPower>();
             for (DcMotor em : motors) {
                 if (em != null) {
@@ -303,11 +298,12 @@ public class LineDrive extends OpenCVLib{
                     steps.add(step);
                 }
             }
-            //this.preAdd(new AutonomousSecondaryBlue.SquirrleyGuideStep(mode, heading, gyro, pid, steps, power));
+            this.preAdd(new SquirrleyGuideStep(mode, heading, gyro, pid, steps, power));
         }
 
-        public boolean checkStop(){
-            if(LineFollowLib.getDisplacment(getCameraFrame(), yValStore[2]) != LineFollowLib.ERROR_TOO_NOISY) lineCount++;
+        public boolean checkStop() {
+            if (LineFollowLib.getDisplacment(getCameraFrame(), yValStore[2]) != LineFollowLib.ERROR_TOO_NOISY)
+                lineCount++;
             else lineCount = 0;
 
             return lineCount > 5;
@@ -350,5 +346,97 @@ public class LineDrive extends OpenCVLib{
 
             return done;
         }
+    }
+
+    static public class SquirrleyGuideStep extends AutoLib.Step {
+        private float mPower;                               // basic power setting of all 4 motors -- adjusted for steering along path
+        private float mHeading;                             // compass heading to steer for (-180 .. +180 degrees)
+        private float mStartHeading;
+        private OpMode mOpMode;                             // needed so we can log output (may be null)
+        private HeadingSensor mGyro;                        // sensor to use for heading information (e.g. Gyro or Vuforia)
+        private SensorLib.PID mPid;                         // proportional–integral–derivative controller (PID controller)
+        private double mPrevTime;                           // time of previous loop() call
+        private ArrayList<AutoLib.SetPower> mMotorSteps;            // the motor steps we're guiding - assumed order is right ... left ...
+
+        public SquirrleyGuideStep(OpMode mode, float heading, HeadingSensor gyro, SensorLib.PID pid,
+                                  ArrayList<AutoLib.SetPower> motorsteps, float power) {
+            mOpMode = mode;
+            mHeading = heading;
+            mGyro = gyro;
+            mPid = pid;
+            mMotorSteps = motorsteps;
+            mPower = power;
+        }
+
+        public boolean loop() {
+            // initialize previous-time on our first call -> dt will be zero on first call
+            if (firstLoopCall()) {
+                mPrevTime = mOpMode.getRuntime();           // use timer provided by OpMode
+                mStartHeading = mGyro.getHeading();
+            }
+
+            final float heading = mGyro.getHeading();     // get latest reading from direction sensor
+            // convention is positive angles CCW, wrapping from 359-0
+
+            final float error = SensorLib.Utils.wrapAngle(heading - mStartHeading);   // deviation from desired heading
+            // deviations to left are positive, to right are negative
+
+            // compute delta time since last call -- used for integration time of PID step
+            final double time = mOpMode.getRuntime();
+            final double dt = time - mPrevTime;
+            mPrevTime = time;
+
+            // feed error through PID to get motor power correction value
+            final float correction = -mPid.loop(error, (float) dt);
+
+            //calculate motor powers for fancy wheels
+            AutoLib.MotorPowers mp = AutoLib.GetSquirrelyWheelMotorPowers(mHeading);
+
+            final float leftPower = correction;
+            final float rightPower = -correction;
+
+            //set the powers
+            mMotorSteps.get(0).setPower((rightPower + mp.Front()) * mPower);
+            mMotorSteps.get(1).setPower((rightPower + mp.Back()) * mPower);
+            mMotorSteps.get(2).setPower((leftPower + mp.Front()) * mPower);
+            mMotorSteps.get(3).setPower((leftPower + mp.Back()) * mPower);
+
+            // log some data
+            if (mOpMode != null) {
+                mOpMode.telemetry.addData("heading ", heading);
+                mOpMode.telemetry.addData("front power ", mp.Front());
+                mOpMode.telemetry.addData("back power ", mp.Back());
+            }
+
+            // guidance step always returns "done" so the CS in which it is embedded completes when
+            // all the motors it's controlling are done
+            return true;
+        }
+
+    }
+
+    // a Step that uses gyro input to drive along a given course for a given distance given by motor encoders.
+    // uses a SquirleyGuideStep to adjust power to 2 or 4 motors.
+    // assumes a robot with up to 4 drive motors in assumed order right motors, left motors
+    static public class SquirrleyAzimuthTimedDriveStep extends AutoLib.ConcurrentSequence {
+
+        public SquirrleyAzimuthTimedDriveStep(OpMode mode, float heading, HeadingSensor gyro, SensorLib.PID pid,
+                                              DcMotor motors[], float power, float time, boolean stop) {
+            // add a concurrent Step to control each motor
+
+            ArrayList<AutoLib.SetPower> steps = new ArrayList<AutoLib.SetPower>();
+            for (DcMotor em : motors)
+                if (em != null) {
+                    AutoLib.TimedMotorStep step = new AutoLib.TimedMotorStep(em, 0, time, stop);
+                    this.add(step);
+                    steps.add(step);
+                }
+
+            // add a concurrent Step to control the motor steps based on gyro input
+            this.preAdd(new SquirrleyGuideStep(mode, heading, gyro, pid, steps, power));
+        }
+
+        // the base class loop function does all we need -- it will return "done" when
+        // all the motors are done.
     }
 }

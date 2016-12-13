@@ -115,7 +115,7 @@ public class AutonomousSecondaryBlue extends OpMode {
         mSequence.add(new AutoLib.MoveByTimeStep(robot.getMotorArray(), 0.0, 0, true));
 
         //pushy pushy
-        mSequence.add(new PushyLib.pushypushy(robot.getMotorArray(), robot.leftSensor, robot.rightSensor, robot.leftServo, robot.rightServo,
+        mSequence.add(new PushyLib.pushypushy(this, robot.getMotorArray(), robot.leftSensor, robot.rightSensor, robot.leftServo, robot.rightServo,
                 pushPos, time, red, colorThresh, power, driveTime, driveLoopCount)); //SO. MANY. VARIABLES.
 
         telemetry.addData("Status", "Initialized");
@@ -142,7 +142,7 @@ public class AutonomousSecondaryBlue extends OpMode {
         robot.navX.close();
     }
 
-    static public class SquirrleyGuideStep extends AutoLib.Step{
+    static public class SquirrleyAngledGuideStep extends AutoLib.Step{
         private float mPower;                               // basic power setting of all 4 motors -- adjusted for steering along path
         private float mHeading;                             // compass heading to steer for (-180 .. +180 degrees)
         private float mStartHeading;
@@ -154,7 +154,7 @@ public class AutonomousSecondaryBlue extends OpMode {
         private double mPrevTime;                           // time of previous loop() call
         private ArrayList<AutoLib.SetPower> mMotorSteps;            // the motor steps we're guiding - assumed order is right ... left ...
 
-        public SquirrleyGuideStep(OpMode mode, float heading, HeadingSensor gyro, HeadingSensor vel, SensorLib.PID gPid, SensorLib.PID vPid,
+        public SquirrleyAngledGuideStep(OpMode mode, float heading, HeadingSensor gyro, HeadingSensor vel, SensorLib.PID gPid, SensorLib.PID vPid,
                              ArrayList<AutoLib.SetPower> motorsteps, float power)
         {
             mOpMode = mode;
@@ -224,9 +224,9 @@ public class AutonomousSecondaryBlue extends OpMode {
     // a Step that uses gyro input to drive along a given course for a given distance given by motor encoders.
     // uses a SquirleyGuideStep to adjust power to 2 or 4 motors.
     // assumes a robot with up to 4 drive motors in assumed order right motors, left motors
-    static public class SquirrleyAzimuthTimedDriveStep extends AutoLib.ConcurrentSequence {
+    static public class SquirrleyAzimuthTimedAngledDriveStep extends AutoLib.ConcurrentSequence {
 
-        public SquirrleyAzimuthTimedDriveStep(OpMode mode, float heading, HeadingSensor gyro, HeadingSensor vel, SensorLib.PID gPid, SensorLib.PID vPid,
+        public SquirrleyAzimuthTimedAngledDriveStep(OpMode mode, float heading, HeadingSensor gyro, HeadingSensor vel, SensorLib.PID gPid, SensorLib.PID vPid,
                                      DcMotor motors[], float power, float time, boolean stop)
         {
             // add a concurrent Step to control each motor
@@ -240,7 +240,7 @@ public class AutonomousSecondaryBlue extends OpMode {
                 }
 
             // add a concurrent Step to control the motor steps based on gyro input
-            this.preAdd(new SquirrleyGuideStep(mode, heading, gyro, vel, gPid, vPid, steps, power));
+            this.preAdd(new SquirrleyAngledGuideStep(mode, heading, gyro, vel, gPid, vPid, steps, power));
         }
 
         // the base class loop function does all we need -- it will return "done" when

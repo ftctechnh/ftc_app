@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -15,10 +16,10 @@ public final class PushyLib {
 
     public static class pushypushy extends AutoLib.LinearSequence{
 
-        pushypushy(DcMotor[] motors, ColorSensor leftSensor, ColorSensor rightSensor, Servo leftServo, Servo rightServo,
+        pushypushy(OpMode mode, DcMotor[] motors, ColorSensor leftSensor, ColorSensor rightSensor, Servo leftServo, Servo rightServo,
                    double pushPos, double time, boolean red, int colorThresh, float drivePower, float driveTime, int maxDriveLoop){
             //run color detection and pushing
-            this.add(new pushyDetect(motors, leftSensor, rightSensor, leftServo, rightServo, pushPos, time, red, colorThresh, drivePower, driveTime, maxDriveLoop));
+            this.add(new pushyDetect(mode, motors, leftSensor, rightSensor, leftServo, rightServo, pushPos, time, red, colorThresh, drivePower, driveTime, maxDriveLoop));
 
             //pull servos back to default position
             AutoLib.ConcurrentSequence servoDetract = new AutoLib.ConcurrentSequence();
@@ -43,8 +44,9 @@ public final class PushyLib {
         final float mDriveTime;
         boolean mLeft;
         int mMaxDriveLoop;
+        OpMode mMode;
 
-        public pushyDetect(DcMotor[] motors, ColorSensor leftSensor, ColorSensor rightSensor, Servo leftServo, Servo rightServo,
+        public pushyDetect(OpMode mode, DcMotor[] motors, ColorSensor leftSensor, ColorSensor rightSensor, Servo leftServo, Servo rightServo,
                            double pushPos, double time, boolean red, int colorThresh, float drivePower, float driveTime, int maxDriveLoop){
             //You know what, I think I'm missing some variables
             //oh never mind here they are
@@ -60,6 +62,7 @@ public final class PushyLib {
             mDrivePower = drivePower;
             mDriveTime = driveTime;
             mMaxDriveLoop = maxDriveLoop;
+            mMode = mode;
         }
 
         public boolean loop(){
@@ -70,6 +73,13 @@ public final class PushyLib {
                 }
                 else{
                     mLeft = mLeftSensor.blue() > mRightSensor.blue();
+                }
+
+                if(mMode != null){
+                    mMode.telemetry.addData("Left Red", mLeftSensor.red());
+                    mMode.telemetry.addData("Right Red", mRightSensor.red());
+                    mMode.telemetry.addData("Left Blue", mLeftSensor.blue());
+                    mMode.telemetry.addData("Right Blue", mRightSensor.blue());
                 }
 
                 //if left side is color, push left, else push right

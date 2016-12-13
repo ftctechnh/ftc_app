@@ -141,8 +141,8 @@ public class OpticalFlowDemo extends OpenCVLib {
 
         bot.startNavX();
 
-        mSeq.add(new AutonomousSecondaryBlue.SquirrleyAzimuthTimedDriveStep(this, 45, bot.getNavXHeadingSensor(), sense, mPid, vPid, bot.getMotorArray(), 0.2f, 10.0f, true));
-        mSeq.add(new AutonomousSecondaryBlue.SquirrleyAzimuthTimedDriveStep(this, -135, bot.getNavXHeadingSensor(), sense, mPid, vPid, bot.getMotorArray(), 0.2f, 10.0f, true));
+        mSeq.add(new AutonomousSecondaryBlue.SquirrleyAzimuthTimedAngledDriveStep(this, 45, bot.getNavXHeadingSensor(), sense, mPid, vPid, bot.getMotorArray(), 0.2f, 10.0f, true));
+        mSeq.add(new AutonomousSecondaryBlue.SquirrleyAzimuthTimedAngledDriveStep(this, -135, bot.getNavXHeadingSensor(), sense, mPid, vPid, bot.getMotorArray(), 0.2f, 10.0f, true));
     }
 
     @Override

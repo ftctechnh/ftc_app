@@ -11,8 +11,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 
 // simple example sequence that tests either of gyro-based AzimuthCountedDriveStep or AzimuthTimedDriveStep to drive along a square path
-@Autonomous(name="Testing Servo Code", group="Test")
-@Disabled
+@Autonomous(name="Testing Color Code", group="Test")
+//@Disabled
 public class AutonomousTesting extends OpMode {
 
     AutoLib.Sequence mSequence;             // the root of the sequence tree
@@ -67,9 +67,13 @@ public class AutonomousTesting extends OpMode {
         //    telemetry.addData("First sequence finished", "");
 
         //Vuf.loop(true);
-        telemetry.addData("Red", robot.leftSensor.red());
-        telemetry.addData("Blue", robot.leftSensor.blue());
-        telemetry.addData("Green", robot.leftSensor.green());
+        telemetry.addData("Red L", robot.leftSensor.red());
+        telemetry.addData("Blue L", robot.leftSensor.blue());
+        telemetry.addData("Green L", robot.leftSensor.green());
+
+        //telemetry.addData("Red R", robot.rightSensor.red());
+        //telemetry.addData("Blue R", robot.rightSensor.blue());
+        //telemetry.addData("Green R", robot.rightSensor.green());
     }
 
     @Override

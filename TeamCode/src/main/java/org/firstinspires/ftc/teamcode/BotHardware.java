@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
+import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -66,10 +67,15 @@ public class BotHardware
         try{
             //cdim = opMode.hardwareMap.deviceInterfaceModule.get("dim");
             leftSensor = opMode.hardwareMap.colorSensor.get("color_left");
-            rightSensor = opMode.hardwareMap.colorSensor.get("color_right");
+
+            //leftSensor.setI2cAddress(new I2cAddr(0x49));
+
+            //rightSensor = opMode.hardwareMap.colorSensor.get("color_right");
+
+
 
             leftSensor.enableLed(false);
-            rightSensor.enableLed(false);
+            //rightSensor.enableLed(false);
         }
         catch (Exception e) {
             opMode.telemetry.addData("Color sensors failed to load!", "");
