@@ -67,6 +67,7 @@ public class BasicBotHardware
      * @param periodMs  Length of wait cycle in mSec.
      * @throws InterruptedException
      */
+
     public void waitForTick(long periodMs) throws InterruptedException {
 
         long  remaining = periodMs - (long)period.milliseconds();

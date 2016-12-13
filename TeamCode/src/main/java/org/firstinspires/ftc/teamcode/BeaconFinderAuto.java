@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Color;
 
+import org.firstinspires.ftc.teamcode.EeyoreHardware;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -13,7 +14,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 
 
 public class BeaconFinderAuto extends LinearOpMode {
-    BasicBotHardware robot = new BasicBotHardware();
+    EeyoreHardware robot = new EeyoreHardware();
 
     int color = 0;
     int teamColor = 3; //Not zero because I don't want color and teamColor to be equal initially
@@ -55,6 +56,7 @@ public class BeaconFinderAuto extends LinearOpMode {
 
     public void pushBeacons() {
         //Now that we are in front of the first beacon, we need to figure out the color
+        robot.init(hardwareMap);
         int ColorBlue = 0;
         int ColorRed = 0;
         if (Color.blue(ColorBlue) > Color.red(ColorRed)) {
@@ -74,8 +76,13 @@ public class BeaconFinderAuto extends LinearOpMode {
         }
     }
 
-    public static void moveRobot(int speed, int distance)
+    public void moveRobot(int speed, int time)
     {
+        robot.r1.setPower(speed);
+        robot.r2.setPower(speed);
+        robot.l1.setPower(speed);
+        robot.l2.setPower(speed);
+
 
     }
     public void reachBeacon()
