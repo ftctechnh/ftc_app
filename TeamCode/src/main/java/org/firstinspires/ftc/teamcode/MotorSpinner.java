@@ -45,9 +45,9 @@ public class MotorSpinner extends LinearOpMode {
         while (opModeIsActive()) {
             float power = 0;
 
-            if(gamepad1.a) {
+            if (gamepad1.a) {
                 power = 1;
-            } else if(gamepad1.y) {
+            } else if (gamepad1.y) {
                 power = -1;
             }
 
@@ -60,4 +60,4 @@ public class MotorSpinner extends LinearOpMode {
             idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
         }
     }
-21
+}
