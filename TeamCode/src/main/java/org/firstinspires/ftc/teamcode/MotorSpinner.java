@@ -11,6 +11,7 @@ import android.hardware.Camera;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import java.io.ByteArrayOutputStream;
@@ -28,31 +29,35 @@ import java.io.ByteArrayOutputStream;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Basic Bot: Auto", group="Linear Opmode")  // @Autonomous(...) is the other common choice
-@Disabled
-public class BasicBotAuto extends LinearOpMode {
-    BasicBotHardware robot = new BasicBotHardware();
+@TeleOp(name="Motor Spinner", group="Linear Opmode")  // @Autonomous(...) is the other common choice
+//@Disabled
+public class MotorSpinner extends LinearOpMode {
+    public DcMotor motor = null;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        robot.init(hardwareMap);
+        motor = hardwareMap.dcMotor.get("motor");
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            telemetry.addData("Status", "Running...");
-            telemetry.update();
+            float power = 0;
 
-            double left = -gamepad1.left_stick_y;
-            double right = -gamepad1.right_stick_y;
-            robot.l1.setPower(left);
-            robot.l2.setPower(left);
-            robot.r1.setPower(right);
-            robot.r2.setPower(right);
+            if(gamepad1.a) {
+                power = 1;
+            } else if(gamepad1.y) {
+                power = -1;
+            }
+
+            motor.setPower(power);
+
+            telemetry.addData("Status", "Running...");
+            telemetry.addData("Motor", "%.2f", motor.getPower());
+            telemetry.update();
 
             idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
         }
     }
-}
+21
