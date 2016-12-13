@@ -69,7 +69,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
 
     /*------------------------------------AUTONOMOUS SECTIONS-------------------------------------*/
 
-    private void driveToPosition() throws InterruptedException {
+    private void driveToPosition(VectorF targetLocation) throws InterruptedException {
         /*---------------------------------DRIVE TO INITIAL POINT---------------------------------*/
         // Translation Navigation Setup:
         TranslationMotorNavigation translationNavigation = new TranslationMotorNavigation();
@@ -97,7 +97,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
                 Log.d(LOG_TAG, String.format("X: %.3f, Y: %.3f, Rot: " + lastRotation.toString(), x, y));
 
                 // Calculate translation required to get to target:
-                VectorF translation = INITAL_LOCATION.subtracted(lastLocation);
+                VectorF translation = targetLocation.subtracted(lastLocation);
 
                 // Calculate motor power for navigation to target:
                 TranslationMotorNavigation.NavigationData calculationData =
@@ -174,6 +174,6 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
 
         // Autonomous Sections:
 
-        driveToPosition();
+        driveToPosition(INITAL_LOCATION);
     }
 }
