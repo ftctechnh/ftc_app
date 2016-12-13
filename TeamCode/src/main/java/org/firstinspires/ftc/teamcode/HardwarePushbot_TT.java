@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -74,18 +75,35 @@ public class HardwarePushbot_TT
         armMotor    = hwMap.dcMotor.get("ArmMotor");
         flyRight = hwMap.dcMotor.get("FlyRight");
         flyLeft = hwMap.dcMotor.get("FlyLeft");
-        leftServo = hwMap.servo.get("LeftServo") ;
-        rightServo = hwMap.servo.get("RightServo") ;
+//        leftServo = hwMap.servo.get("LeftServo") ;
+//        rightServo = hwMap.servo.get("RightServo") ;
 
+        // Set defaults for the Drive Motors
         frontLeftMotor.setDirection(DcMotor.Direction.REVERSE); // Set to FORWARD if using AndyMark motors
         backLeftMotor.setDirection(DcMotor.Direction.REVERSE); // Set to FORWARD if using AndyMark motors
         frontRightMotor.setDirection(DcMotor.Direction.FORWARD);// Set to REVERSE if using AndyMark motors
         backRightMotor.setDirection(DcMotor.Direction.FORWARD);// Set to REVERSE if using AndyMark motors
+
+        // Set defaults for the Linear Slide motors
         armMotor.setDirection(DcMotor.Direction.FORWARD);
-        flyLeft.setDirection(DcMotor.Direction.REVERSE);
-        flyRight.setDirection(DcMotor.Direction.FORWARD);
 //        leftServo.setDirection(Servo.Direction.REVERSE);
 //        rightServo.setDirection(Servo.Direction.FORWARD);
+
+        // Set defaults for the fly wheel thrower motors
+        flyLeft.setDirection(DcMotor.Direction.REVERSE);
+        flyRight.setDirection(DcMotor.Direction.FORWARD);
+
+        // Set defaults for the Sensors
+        // Default I2C address for ColorSensor is 0x3c. We will leave the default for the front facing color sensor
+        // The second Color sensor facing the ground must be changed to 0x3a using "Core Device Discovery" software from
+        // modernrobotics's website.
+        // The default I2C address for the Gyro is 0x20. We will leave this default unchanged
+
+        //Use MR Core Device Discovery to change address
+        I2cAddr i2CAddressColorFront = I2cAddr.create8bit(0x3c);
+        I2cAddr i2CAddressColorBottom = I2cAddr.create8bit(0x3a);
+        color.setI2cAddress(i2CAddressColorFront);
+        color2.setI2cAddress(i2CAddressColorBottom);
 
         // Set all motors to zero power
         frontLeftMotor.setPower(0);
@@ -106,11 +124,8 @@ public class HardwarePushbot_TT
         flyLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         flyRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        leftServo.setPosition(Servo.MIN_POSITION);
-        rightServo.setPosition(Servo.MIN_POSITION);
-//        leftClaw.setPosition(MID_SERVO);
-//        rightClaw.setPosition(MID_SERVO);
-
+//        leftServo.setPosition(Servo.MIN_POSITION);
+//        rightServo.setPosition(Servo.MIN_POSITION);
 
     }
 

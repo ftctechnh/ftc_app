@@ -112,10 +112,12 @@ public class SensorMRColor_TT extends LinearOpMode {
 //      telemetry.addData("Hue", hsvValues[0]);
 //      telemetry.addData("Saturation", hsvValues[1]);
 //      telemetry.addData("Values", hsvValues[2]);
-      telemetry.addData("1 Address", robot.color.getI2cAddress()) ;
-      telemetry.addData("1 Connection", robot.color.getConnectionInfo()) ;
+//      telemetry.addData("1 Address", robot.color.getI2cAddress()) ;
+//      telemetry.addData("1 Connection", robot.color.getConnectionInfo()) ;
 //      telemetry.addData("2 Address", robot.color2.getI2cAddress()) ;
 //      telemetry.addData("2 Connection", robot.color2.getConnectionInfo()) ;
+      telemetry.addData("Front color", robot.color.argb());
+      telemetry.addData("Bottom color", robot.color2.argb());
       telemetry.update();
 
 
