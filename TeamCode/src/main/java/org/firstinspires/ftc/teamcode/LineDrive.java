@@ -303,7 +303,7 @@ public class LineDrive extends OpenCVLib{
                     steps.add(step);
                 }
             }
-            this.preAdd(new AutonomousSecondaryBlue.SquirrleyGuideStep(mode, heading, gyro, pid, steps, power));
+            //this.preAdd(new AutonomousSecondaryBlue.SquirrleyGuideStep(mode, heading, gyro, pid, steps, power));
         }
 
         public boolean checkStop(){

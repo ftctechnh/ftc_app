@@ -107,8 +107,8 @@ public class AutonomousSecondaryBlue extends OpMode {
         robot.init(this, debug);
 
         // drive to the first beacon
-        mSequence.add(new SquirrleyAzimuthTimedDriveStep(this, -90.0f, robot.getNavXHeadingSensor(), mdPid, robot.getMotorArray(), power, 10000, true));
-        mSequence.add(new SquirrleyAzimuthTimedDriveStep(this, 0, robot.getNavXHeadingSensor(), mdPid, robot.getMotorArray(), power, 5000, true));
+        //mSequence.add(new SquirrleyAzimuthTimedDriveStep(this, -90.0f, robot.getNavXHeadingSensor(), mdPid, robot.getMotorArray(), power, 10000, true));
+        //mSequence.add(new SquirrleyAzimuthTimedDriveStep(this, 0, robot.getNavXHeadingSensor(), mdPid, robot.getMotorArray(), power, 5000, true));
 
         //line following here
 
@@ -148,17 +148,21 @@ public class AutonomousSecondaryBlue extends OpMode {
         private float mStartHeading;
         private OpMode mOpMode;                             // needed so we can log output (may be null)
         private HeadingSensor mGyro;                        // sensor to use for heading information (e.g. Gyro or Vuforia)
-        private SensorLib.PID mPid;                         // proportional–integral–derivative controller (PID controller)
+        private HeadingSensor mVel;
+        private SensorLib.PID mgPid;                         // proportional–integral–derivative controller (PID controller)
+        private SensorLib.PID mvPid;
         private double mPrevTime;                           // time of previous loop() call
         private ArrayList<AutoLib.SetPower> mMotorSteps;            // the motor steps we're guiding - assumed order is right ... left ...
 
-        public SquirrleyGuideStep(OpMode mode, float heading, HeadingSensor gyro, SensorLib.PID pid,
+        public SquirrleyGuideStep(OpMode mode, float heading, HeadingSensor gyro, HeadingSensor vel, SensorLib.PID gPid, SensorLib.PID vPid,
                              ArrayList<AutoLib.SetPower> motorsteps, float power)
         {
             mOpMode = mode;
             mHeading = heading;
             mGyro = gyro;
-            mPid = pid;
+            mVel = vel;
+            mgPid = gPid;
+            mvPid = vPid;
             mMotorSteps = motorsteps;
             mPower = power;
         }
@@ -171,22 +175,28 @@ public class AutonomousSecondaryBlue extends OpMode {
                 mStartHeading = mGyro.getHeading();
             }
 
+            // compute delta time since last call -- used for integration time of PID step
+            final double time = mOpMode.getRuntime();
+            final double dt = time - mPrevTime;
+            mPrevTime = time;
+
             final float heading = mGyro.getHeading();     // get latest reading from direction sensor
             // convention is positive angles CCW, wrapping from 359-0
 
             final float error = SensorLib.Utils.wrapAngle(heading - mStartHeading);   // deviation from desired heading
             // deviations to left are positive, to right are negative
 
-            // compute delta time since last call -- used for integration time of PID step
-            final double time = mOpMode.getRuntime();
-            final double dt = time - mPrevTime;
-            mPrevTime = time;
-
             // feed error through PID to get motor power correction value
-            final float correction = -mPid.loop(error, (float)dt);
+            final float correction = -mgPid.loop(error, (float)dt);
+
+            final float vHeading = mVel.getHeading();
+
+            final float vError = SensorLib.Utils.wrapAngle(vHeading - mHeading);
+
+            final float vCorrection = -mvPid.loop(vError, (float)dt);
 
             //calculate motor powers for fancy wheels
-            AutoLib.MotorPowers mp = AutoLib.GetSquirrelyWheelMotorPowers(mHeading);
+            AutoLib.MotorPowers mp = AutoLib.GetSquirrelyWheelMotorPowers(mHeading + vCorrection);
 
             final float leftPower = correction;
             final float rightPower = -correction;
@@ -216,7 +226,7 @@ public class AutonomousSecondaryBlue extends OpMode {
     // assumes a robot with up to 4 drive motors in assumed order right motors, left motors
     static public class SquirrleyAzimuthTimedDriveStep extends AutoLib.ConcurrentSequence {
 
-        public SquirrleyAzimuthTimedDriveStep(OpMode mode, float heading, HeadingSensor gyro, SensorLib.PID pid,
+        public SquirrleyAzimuthTimedDriveStep(OpMode mode, float heading, HeadingSensor gyro, HeadingSensor vel, SensorLib.PID gPid, SensorLib.PID vPid,
                                      DcMotor motors[], float power, float time, boolean stop)
         {
             // add a concurrent Step to control each motor
@@ -230,7 +240,7 @@ public class AutonomousSecondaryBlue extends OpMode {
                 }
 
             // add a concurrent Step to control the motor steps based on gyro input
-            this.preAdd(new SquirrleyGuideStep(mode, heading, gyro, pid, steps, power));
+            this.preAdd(new SquirrleyGuideStep(mode, heading, gyro, vel, gPid, vPid, steps, power));
         }
 
         // the base class loop function does all we need -- it will return "done" when
