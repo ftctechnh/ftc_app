@@ -2,9 +2,12 @@ package org.wheelerschool.robotics.competitionbot;
 
 import android.util.Log;
 
+import com.qualcomm.hardware.adafruit.BNO055IMU;
+import com.qualcomm.hardware.adafruit.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
@@ -47,6 +50,8 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
     //      Motor:
     public List<DcMotor> leftMotors = new ArrayList<>();
     public List<DcMotor> rightMotors = new ArrayList<>();
+    //      IMU:
+    BNO055IMU imu;
 
     // Setup:
     //      Phone Location
@@ -168,6 +173,17 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         this.rightMotors.add(hardwareMap.dcMotor.get("frontRight"));
         this.rightMotors.add(hardwareMap.dcMotor.get("backRight"));
         DcMotorUtil.setMotorsRunMode(this.rightMotors, DcMotor.RunMode.RUN_USING_ENCODER);
+        //      IMU:
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "AdafruitIMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+        //          Retrieve and initialize the IMU:
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
 
         // Wait for start button to be pushed:
         waitForStart();
