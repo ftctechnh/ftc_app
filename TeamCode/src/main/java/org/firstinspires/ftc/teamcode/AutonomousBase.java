@@ -307,6 +307,7 @@ public abstract class AutonomousBase extends OpMode {
 
     public void telemetry(){
         telemetry.addData("angle to goal ",map.angleToGoal());
+        telemetry.addData("Runtime ",getRuntime());
         telemetry.addData("dist from goal ",map.distanceToGoal());
         telemetry.addData("goal (x,y) ","(" +
           map.getGoalX() + "," + 

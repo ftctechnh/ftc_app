@@ -7,22 +7,18 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  */
 @Autonomous(name="Blue Shoot 8", group="Blue")
 public class BlueShoot8 extends AutonomousBase {
-    boolean init;
     @Override
     public void gameState() {
         super.gameState();
-        if(!init){
-            init = true;
-            map.setRobot(8,10.25);
-        }
         switch(gameState) {
             case 0: //Start
-                if (getRuntime() > 5 || !gyro.isCalibrating()) {
+                if (getRuntime() > 3 && !gyro.isCalibrating()) {
                     gameState = 1;
+                    map.setRobot(8,11.25);
                 }
                 break;
             case 1: //moves to shooter post
-                map.setGoal(8, 8);
+                map.setGoal(7, 8.5);
                 if (linedUp()) {
                     moveState = MoveState.FORWARD;
                 } else {
@@ -34,14 +30,13 @@ public class BlueShoot8 extends AutonomousBase {
                 }
                 break;
             case 2: // turns ...
-                map.setGoal(9, 10);
-                if (linedUp()) {
+                desiredAngle = 180;
+                if (linedUpAngle()) {
                     moveState = MoveState.STOP;
                     gameState = 3;
                     sTime = getRuntime();
-                    telemetry.addData("sTime", sTime);
                 } else {
-                    moveState = MoveState.TURN_TOWARDS_GOAL;
+                    moveState = MoveState.TURN_TOWARDS_ANGLE;
                 }
                 break;
             case 3: // ... and shoots
@@ -51,11 +46,11 @@ public class BlueShoot8 extends AutonomousBase {
                 }
                 if (getRuntime() - sTime >= 3) {
                     moveState = MoveState.SHOOT_STOP;
-                    gameState = 8;
+                    gameState = 4;
                 }
                 break;
-            case 8:
-                map.setGoal(5.5, 9);
+            case 4:
+                map.setGoal(4, 10);
                 if (linedUp()) {
                     moveState = MoveState.FORWARD;
                 } else {
@@ -63,10 +58,10 @@ public class BlueShoot8 extends AutonomousBase {
                 }
                 if (map.distanceToGoal() <= .1) {
                     moveState = MoveState.STOP;
-                    gameState = 4;
+                    gameState = 5;
                 }
                 break;
-            case 4: //MOVE TO KNOCK OFF BALL
+            case 5: //MOVE TO KNOCK OFF BALL
                 map.setGoal(6.5, 6.5);
                 if (linedUp()) {
                     moveState = MoveState.FORWARD;

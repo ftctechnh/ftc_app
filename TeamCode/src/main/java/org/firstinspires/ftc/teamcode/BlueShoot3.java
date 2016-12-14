@@ -12,7 +12,7 @@ public class BlueShoot3 extends AutonomousBase {
         super.gameState();
         switch(gameState){
             case 0: //Start
-                if(getRuntime() > 5 || !gyro.isCalibrating()) {
+                if(getRuntime() > 3 && !gyro.isCalibrating()) {
                     gameState = 1;
                     map.setRobot(3,11.25);
                 }
@@ -36,7 +36,7 @@ public class BlueShoot3 extends AutonomousBase {
                     gameState = 3;
                     sTime = getRuntime();
                 }else{
-                    moveState = MoveState.TURN_TOWARDS_GOAL;
+                    moveState = MoveState.TURN_TOWARDS_ANGLE;
                 }
                 break;
             case 3: // ... and shoots
