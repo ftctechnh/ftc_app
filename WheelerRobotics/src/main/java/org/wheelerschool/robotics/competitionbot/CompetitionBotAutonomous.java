@@ -45,6 +45,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
     public UltrasonicSensor sideUltrasonicSensor;
     //      Other:
     public VectorF INITAL_LOCATION;
+    public double TOWARDS_BEACON_ANGLE;
     public double PRE_WALL_FOLLOW_ANGLE; // The angle to turn to before following the wall (radians)
 
 
@@ -71,9 +72,30 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
     public static String LOG_TAG = "Comp Bot Auto";
     private static long MAX_TIME_TIMEOUT = 200; // MAX time until TIMEOUT when running OpMode (millis)
     private static double NO_BEACON_ROTATE_SPEED = 0.25;
-    private static double MINIMUM_ROTATION_DEG_DIFF = AngleUnit.RADIANS.fromUnit(AngleUnit.DEGREES, 5);
-    private static double PRE_WALL_FOLLOW_TURN_GAIN = 1;
+    private static double MINIMUM_ROTATION_DIFF = AngleUnit.RADIANS.fromUnit(AngleUnit.DEGREES, 5);
+    private static double ROBOT_ROTATION_GAIN = 1.5;
 
+
+    private void noTargetSearchRotate() throws InterruptedException {
+        // Log data and add to telemetry for debug:
+        telemetry.addData("ERROR", "Target has not been seen in " + MAX_TIME_TIMEOUT + "ms");
+        Log.d("Vuforia Data", "Lost beacon (" + MAX_TIME_TIMEOUT + "ms). Rotating...");
+
+        // Set motors to rotate:
+        DcMotorUtil.setMotorsPower(this.leftMotors, NO_BEACON_ROTATE_SPEED);
+        DcMotorUtil.setMotorsPower(this.rightMotors, NO_BEACON_ROTATE_SPEED);
+
+        // Sleep to allow for rotation:
+        Thread.sleep(200);
+
+        // Stop motors:
+        DcMotorUtil.setMotorsPower(this.leftMotors, 0);
+        DcMotorUtil.setMotorsPower(this.rightMotors, 0);
+        Log.d("Vuforia Data", "Ended Rotation");
+
+        // Wait to allow camera to adjust and acquire a lock on a target
+        Thread.sleep(500);
+    }
 
     /*------------------------------------AUTONOMOUS SECTIONS-------------------------------------*/
 
@@ -168,6 +190,81 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
     }
 
 
+    private boolean robotRotation(double rotationAngle, double rotationGain) {
+        /**
+         * Drive the motors to rotate the robot based on a target rotation angle and a rotation gain.
+         *
+         * Returns: (boolean) If robot is on the target or not.
+         */
+
+        // Calculate rotation power to be applied to motors:
+        double rotationPower = (rotationAngle / Math.PI);
+        rotationPower = (rotationPower * rotationGain);
+        telemetry.addData("rotationPower", rotationPower);
+
+        // Break if rotation angle is smaller than minimum rotation difference
+        //  (on target rotation):
+        if (Math.abs(rotationAngle) < MINIMUM_ROTATION_DIFF) {
+            Log.d(LOG_TAG, "Rotation Angle: " + rotationAngle + " < Minimum Rot: " + MINIMUM_ROTATION_DIFF);
+            return true;
+        } else {
+            Log.d(LOG_TAG, "Rotation Angle: " + rotationAngle + " > Minimum Rot: " + MINIMUM_ROTATION_DIFF);
+        }
+
+        // Calculate left motors power and set motors the reverse rotation of the motors
+        //  cancels out the negatives:
+        double leftPower = Range.clip(rotationPower, -1, 1);
+        telemetry.addData("Left Motor Power", leftPower);
+        DcMotorUtil.setMotorsPower(this.leftMotors, leftPower);
+
+        // Calculate right motors power and set motors:
+        double rightPower = Range.clip(rotationPower, -1, 1);
+        telemetry.addData("Right Motor Power", rightPower);
+        DcMotorUtil.setMotorsPower(this.rightMotors, rightPower);
+
+        return false;
+    }
+
+
+    private Double rotateRobotVision(double directAngle, double rotationGain) throws InterruptedException {
+        // Initiate variable for no target timeout:
+        long timeSinceLastData = System.currentTimeMillis();
+
+        while (opModeIsActive()) {
+            // Read vuforia data:
+            vuforia.readData();
+            Orientation lastRotation = vuforia.lastRotationXYZ;
+
+            if (lastRotation != null) {
+                // Update last target read time:
+                timeSinceLastData = System.currentTimeMillis();
+
+                // Get the robot rotation from Orientation object
+                double robotRotation = lastRotation.thirdAngle;
+
+                // Calculate the needed angle of rotation to get to target:
+                double rotationAngle = TranslationMotorNavigation.angleDifference(robotRotation,
+                        directAngle);
+                telemetry.addData("rotationAmount", rotationAngle);
+
+                // Rotate robot using rotation angle and gain:
+                boolean finishedRotation = robotRotation(rotationAngle, rotationGain);
+                if (finishedRotation) {  // Break from loop if the rotation has been ended:
+                    return robotRotation;
+                }
+            } if (System.currentTimeMillis() - timeSinceLastData > MAX_TIME_TIMEOUT) {
+                // Run a target search if no targets are in sight:
+                noTargetSearchRotate();
+            }
+
+            // Update telemetry:
+            telemetry.update();
+        }
+
+        return null;
+    }
+
+
     private Orientation getIMUOrientation() {
         /**
          * Get the IMU orientation with the designated settings.
@@ -203,8 +300,8 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
 
             // Break if rotation angle is smaller than minimum rotation difference
             //  (on target rotation):
-            if (Math.abs(rotationAngle) < MINIMUM_ROTATION_DEG_DIFF) {
-                Log.d(LOG_TAG, "Rotation Angle: " + rotationAngle + " < Minimum Rot: " + MINIMUM_ROTATION_DEG_DIFF);
+            if (Math.abs(rotationAngle) < MINIMUM_ROTATION_DIFF) {
+                Log.d(LOG_TAG, "Rotation Angle: " + rotationAngle + " < Minimum Rot: " + MINIMUM_ROTATION_DIFF);
                 break;
             }
 
@@ -256,6 +353,16 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
         // Log final robot angle:
         Log.d(LOG_TAG, "Robot Angle: " + robotRot);
 
+        //      Rotate to wall (using Vuforia):
+        Log.d(LOG_TAG, "Rotate to: " + TOWARDS_BEACON_ANGLE);
+        robotRot = rotateRobotVision(TOWARDS_BEACON_ANGLE, ROBOT_ROTATION_GAIN);
+        Log.d(LOG_TAG, "SHOULD BE FACING BEACON");
+        // Log final robot angle:
+        Log.d(LOG_TAG, "Robot Angle: " + robotRot);
+
+        // Sleep to break between rotate towards wall and rotate away
+        Thread.sleep(1000);
+
         //      Rotate to follow wall:
         // Log the needed angle:
         Log.d(LOG_TAG, "Needed Angle: " + PRE_WALL_FOLLOW_ANGLE);
@@ -267,7 +374,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
             // Log the relative rotation:
             Log.d(LOG_TAG, "Rotation Angle: " + rotationAngle);
             // Start IMU based robot rotation:
-            rotateRobotIMU(rotationAngle, PRE_WALL_FOLLOW_TURN_GAIN);
+            rotateRobotIMU(rotationAngle, ROBOT_ROTATION_GAIN);
         } else {  // This means that the drive to position was interrupted:
             Log.e(LOG_TAG, "Final Robot angle was 'null' (interrupted). ENDING!");
         }
