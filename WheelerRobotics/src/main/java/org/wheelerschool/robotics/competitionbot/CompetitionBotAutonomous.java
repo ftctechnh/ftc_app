@@ -72,7 +72,6 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
     private static long MAX_TIME_TIMEOUT = 200; // MAX time until TIMEOUT when running OpMode (millis)
     private static double NO_BEACON_ROTATE_SPEED = 0.25;
     private static double MINIMUM_ROTATION_DEG_DIFF = AngleUnit.RADIANS.fromUnit(AngleUnit.DEGREES, 5);
-    private static double MINIMUM_ROTATION_SPEED = 0.08;
     private static double PRE_WALL_FOLLOW_TURN_GAIN = 1;
 
 
@@ -199,7 +198,7 @@ public abstract class CompetitionBotAutonomous extends LinearOpMode {
             telemetry.addData("rotationAmount", rotationAngle);
             // Calculate rotation power to be applied to motors:
             double rotationPower = (rotationAngle / Math.PI);
-            rotationPower = (rotationPower * rotationGain) + MINIMUM_ROTATION_SPEED;
+            rotationPower = (rotationPower * rotationGain);
             telemetry.addData("rotationPower", rotationPower);
 
             // Break if rotation angle is smaller than minimum rotation difference
