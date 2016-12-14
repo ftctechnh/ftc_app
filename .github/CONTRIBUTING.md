@@ -6,7 +6,7 @@ The following is a set of guidelines for contributing the FIRST FTC SDK.  The FT
 
 ### Pull requests
 
-__STOP!__  If you are new to git, do not understand the mechanics of forks, branches, and pulls, if what you just read is confusing, __do not__ push this button.  Most likely it won't do what you think it will.
+__STOP!__  If you are new to git and do not understand the mechanics of forks, branches, and pulls, then __do not__ push this button.  Most likely it won't do what you think it will.
 
 ![Pull Button](../doc/media/PullRequest.PNG)
 
