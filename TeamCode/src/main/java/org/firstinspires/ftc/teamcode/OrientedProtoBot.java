@@ -117,10 +117,10 @@ public class OrientedProtoBot extends OpMode {
 
         // Activates Conveyer
         if(gamepad2.b){
-            motorConveyer.setPower(-1);
+            motorConveyer.setPower(1);
         }
         else if(gamepad2.a){
-            motorConveyer.setPower(1);
+            motorConveyer.setPower(-1);
         }
         else{
             motorConveyer.setPower(0);

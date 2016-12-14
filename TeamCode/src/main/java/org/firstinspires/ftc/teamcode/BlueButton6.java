@@ -12,7 +12,6 @@ public class BlueButton6 extends AutonomousBase{
         super.gameState();
         switch(gameState){
             case 0: //Start
-                if(tDiff == 0){tDiff = getRuntime();}
                 if(getRuntime() > 5 || !gyro.isCalibrating()) {
                     gameState = 1;
                     sTime = getRuntime();
@@ -61,7 +60,6 @@ public class BlueButton6 extends AutonomousBase{
                 break;
             case 5: //Move to wall 
                 map.setGoal(11,map.getRobotY());
-                heading = (heading + 270) % 360; // We're moving sideways, so we line up oddly
                 moveState = MoveState.RIGHT;
                 if(map.distanceToGoal()<=.1){
                     moveState = MoveState.STOP;
@@ -70,7 +68,6 @@ public class BlueButton6 extends AutonomousBase{
                 break;
             case 100:
                 map.setGoal(10.9,map.getRobotY());
-                heading = (heading + 270) % 360; // We're moving sideways, so we line up oddly
                 moveState = MoveState.LEFT;
                 if(map.distanceToGoal()<=.1){
                     moveState = MoveState.STOP;
@@ -99,7 +96,6 @@ public class BlueButton6 extends AutonomousBase{
 	        case 7: // moves out from wall
                 if(getRuntime() - pTime > 3){
                     map.setGoal(11.5, map.getRobotY());
-                    heading = (heading + 270) % 360; // We're moving sideways, so we line up oddly
                     moveState = MoveState.LEFT;
                     if(map.distanceToGoal()<= .1){
                         moveState = MoveState.STOP;
@@ -107,7 +103,6 @@ public class BlueButton6 extends AutonomousBase{
                     }
                 }else{
                     map.setRobot(12,7); //Since we're positive of our position after pressing the button, we might as well use that
-                    heading = (heading + 270) % 360; // We're moving sideways, so we line up oddly
                     moveState = MoveState.RIGHT;
                 }
                 break;
@@ -121,7 +116,6 @@ public class BlueButton6 extends AutonomousBase{
                 break;
             case 9: //moves to wall
                 map.setGoal(12.5, map.getRobotY());
-                heading = (heading + 270) % 360;
                 moveState = MoveState.RIGHT;
                 if(map.distanceToGoal()<= .1){
                     moveState = MoveState.STOP;
@@ -130,7 +124,6 @@ public class BlueButton6 extends AutonomousBase{
             break;
             case 101:
                 map.setGoal(12.4,map.getRobotY());
-                heading = (heading + 270) % 360; // We're moving sideways, so we line up oddly
                 moveState = MoveState.LEFT;
                 if(map.distanceToGoal()<=.1){
                     moveState = MoveState.STOP;
@@ -160,7 +153,6 @@ public class BlueButton6 extends AutonomousBase{
             case 11: // moves out from wall
                 if(getRuntime() - pTime > 3){
                     map.setGoal(11, map.getRobotY());
-                    heading = (heading + 270) % 360; // We're moving sideways, so we line up oddly
                     moveState = MoveState.LEFT;
                     if(map.distanceToGoal()<= .1){
                         moveState = MoveState.STOP;
@@ -168,7 +160,6 @@ public class BlueButton6 extends AutonomousBase{
                     }
                 }else{
                     map.setRobot(12,3);
-                    heading = (heading + 270) % 360; // We're moving sideways, so we line up oddly
                     moveState = MoveState.RIGHT;
                 }
                 break;

@@ -17,7 +17,6 @@ public class RedShoot4 extends AutonomousBase {
         super.gameState();
         switch(gameState){
             case 0: //Start
-                if(tDiff == 0){tDiff = getRuntime();}
                 if(getRuntime() > 5 || !gyro.isCalibrating()) {
                     gameState = 1;
                 }

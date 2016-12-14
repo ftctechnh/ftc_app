@@ -28,7 +28,6 @@ public class AutonomousTest extends AutonomousBase{
           break;
           case 2:
             map.setGoal(5,9);
-            heading = (heading + 270) % 360; // We're moving sideways, so we line up oddly
             if(linedUp()){
               moveState = MoveState.LEFT;
             }else{

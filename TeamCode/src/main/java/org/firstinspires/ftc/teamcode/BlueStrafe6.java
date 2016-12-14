@@ -12,12 +12,9 @@ public class BlueStrafe6 extends AutonomousBase {
         super.gameState();
         switch(gameState){
             case 0: //Start
-                if(tDiff == 0){
-                    tDiff = getRuntime();
-                    map.setRobot(6,11.25);
-                }
                 if(getRuntime() > 5 || !gyro.isCalibrating()) {
                     gameState = 1;
+                    map.setRobot(6,11.25);
                 }
                 break;
             case 1: //move forward a bit
@@ -33,7 +30,7 @@ public class BlueStrafe6 extends AutonomousBase {
                 }
                 break;
             case 2: // turns to shooting angle
-                desiredAngle = 195;
+                desiredAngle = 180;
                 if(linedUpAngle()){
                     moveState = MoveState.STOP;
                     gameState = 100;
@@ -42,7 +39,7 @@ public class BlueStrafe6 extends AutonomousBase {
                 }
                 break;
             case 100:
-                map.setGoal(5.8,8.8);
+                map.setGoal(7,8.5);
                 moveState = MoveState.STRAFE_TOWARDS_GOAL;
                 if(map.distanceToGoal() <= .1){
                     moveState = MoveState.STOP;
@@ -52,7 +49,6 @@ public class BlueStrafe6 extends AutonomousBase {
                 }
                 break;
             case 101: // turns to shooting angle
-                desiredAngle = 195;
                 if(linedUpAngle()){
                     moveState = MoveState.STOP;
                     gameState = 3;

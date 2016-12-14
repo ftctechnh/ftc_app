@@ -17,9 +17,6 @@ public class BlueWait8 extends AutonomousBase {
         }
         switch(gameState) {
             case 0: //Start
-                if (tDiff == 0) {
-                    tDiff = getRuntime();
-                }
                 if (getRuntime() > 15 && !gyro.isCalibrating()) {
                     gameState = 1;
                 }

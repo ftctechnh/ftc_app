@@ -17,7 +17,6 @@ public class RedButton6 extends AutonomousBase{
         super.gameState();
         switch(gameState){
             case 0: //Start
-                if(tDiff == 0){tDiff = getRuntime();}
                 if(getRuntime() > 5 || !gyro.isCalibrating()) {
                     gameState = 1;
                     sTime = getRuntime();
@@ -65,7 +64,6 @@ public class RedButton6 extends AutonomousBase{
                 break;
             case 5: //Move to wall and back up and button press A
                 map.setGoal(0,map.getRobotY());
-                heading = (heading + 270) % 360; // We're moving sideways, so we line up oddly
                 moveState = MoveState.RIGHT;
                 if(map.distanceToGoal()<=.1){
                     moveState = MoveState.STOP;
@@ -92,7 +90,6 @@ public class RedButton6 extends AutonomousBase{
 	    case 7: // moves out from wall
                 if(getRuntime() - pTime > 3){
 	 	     map.setGoal(1.5, map.getRobotY());
-                     heading = (heading + 270) % 360; // We're moving sideways, so we line up oddly
         	     moveState = MoveState.LEFT;
 	  	     if(map.distanceToGoal()<= .1){
 		       moveState = MoveState.STOP;
@@ -112,7 +109,6 @@ public class RedButton6 extends AutonomousBase{
                 break;
 	    case 9: //moves to wall
                 map.setGoal(-.5, 4);
-                heading = (heading + 270) % 360;
                 moveState = MoveState.RIGHT;
                 if(map.distanceToGoal()<= .1){
 		    moveState = MoveState.STOP;
