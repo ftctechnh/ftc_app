@@ -1,9 +1,17 @@
+# markdown stuff
+# added to prevent weirdness happening between forks because of different readmes.
+*.md
+
 # built application files
 *.apk
 *.ap_
 
 # Java class files
 *.class
+
+# My script(s)
+push.sh
+pull.sh
 
 # generated files
 bin/
