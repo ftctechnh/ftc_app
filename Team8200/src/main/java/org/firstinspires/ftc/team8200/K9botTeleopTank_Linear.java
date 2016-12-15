@@ -127,15 +127,13 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
 
             }
 
-<<<<<<< Updated upstream
             if (gamepad1.dpad_up) {
                 robot.arm.setPosition(armHitPosition);
-=======
+            }
             robot.leftMotor.setPower(leftY);
-            robot.rightMotor.setPower(leftY)  ;
+            robot.rightMotor.setPower(leftY);
             /*if (gamepad1.dpad_up) {
                 robot.arm.setPosition(armPosition);
->>>>>>> Stashed changes
             }
             else if(gamepad1.dpad_down) {
                 robot.arm.setPosition(armPosition);
