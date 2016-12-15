@@ -69,7 +69,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="8200: CenterVortex", group="Pushbot")
 //@Disabled
-public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
+public class CenterVortex extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareK9bot robot   = new HardwareK9bot();   // Use a Pushbot's hardware
