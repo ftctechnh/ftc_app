@@ -204,7 +204,7 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
             //  sleep(250);   // optional pause after each move
         }
     }
-
+/*
     public void servoDown() {
         robot.arm.setPosition(-1);
     }
@@ -212,6 +212,7 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
         robot.arm.setPosition(1);
 
     }
+    */
 //
 //    public void rightTurnEqualPower() {
 //        robot.arm.setPosition(0.1);
@@ -298,9 +299,8 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
 //        DrawC();
 //    }
     public void moveCenter() {
-        servoUp();
+        //servoUp();
         encoderDrive(DRIVE_SPEED,  -5,  -5, 3.0);
-        robot.harvester.setPower(-1);
     }
 
 

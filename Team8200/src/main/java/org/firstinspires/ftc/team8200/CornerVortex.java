@@ -203,7 +203,7 @@ public class CornerVortex extends LinearOpMode {
             //  sleep(250);   // optional pause after each move
         }
     }
-
+/*
     public void servoDown() {
         robot.arm.setPosition(-1);
     }
@@ -211,6 +211,7 @@ public class CornerVortex extends LinearOpMode {
         robot.arm.setPosition(1);
 
     }
+    */
 //
 //    public void rightTurnEqualPower() {
 //        robot.arm.setPosition(0.1);
@@ -297,7 +298,7 @@ public class CornerVortex extends LinearOpMode {
 //        DrawC();
 //    }
     public void moveCenter() {
-        servoUp();
+        //servoUp();
         encoderDrive(-DRIVE_SPEED,  5,  5, 1.0);
         // encoderDrive(DRIVE_SPEED, -2, 2, 3.0);
 

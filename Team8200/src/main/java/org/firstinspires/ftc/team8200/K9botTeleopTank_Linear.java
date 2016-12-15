@@ -62,8 +62,6 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
     /* Declare OpMode members. */
     HardwareK9bot   robot           = new HardwareK9bot();              // Use a K9'shardware
     //double          armPosition     = robot.ARM_HOME;                   // Servo safe position
-    //double          clawPosition    = robot.CLAW_HOME;                  // Servo safe position
-    //final double    CLAW_SPEED      = 0.01 ;                            // sets rate to move servo
     //final double    ARM_SPEED       = 0.01 ;                            // sets rate to move servo
 
     @Override
@@ -72,8 +70,8 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
         //double leftX;
         //double rightX;
         double rightY;
-        double armPosition = -1;
-        double armHitPosition = 1;
+        //double armPosition = -1;
+        //double armHitPosition = 1;
 
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
@@ -93,15 +91,14 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
             // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
             leftY = -gamepad1.left_stick_y;
             rightY = -gamepad1.right_stick_y;
-            //leftX = Range.clip(leftY, -1, 1);
+
             rightY = Range.clip(rightY, -1, 1);
             leftY = Range.clip(leftY, -1, 1);
+
             robot.leftMotor.setPower(leftY);
             robot.rightMotor.setPower(rightY);
-            //leftX = gamepad1.left_stick_x;
-            //rightX = gamepad1.right_stick_x;
-            //rightX = Range.clip(rightX, -1, 1);
-            //leftX = Range.clip(leftX, -1, 1);
+
+            /* Commented out because we are not currently using harvester
             float harvesterPower = gamepad1.right_trigger;
             float harvesterPowerReversed = gamepad1.left_trigger;
 
@@ -127,6 +124,9 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
 
             }
 
+            */
+
+            /* Commented out for when we use arm
             if (gamepad1.dpad_up) {
                 robot.arm.setPosition(armHitPosition);
             }
@@ -139,110 +139,13 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
                 robot.arm.setPosition(armPosition);
 
             }
-
-            //robot.leftMotor.setPower(leftY);
-            //robot.rightMotor.setPower(rightY);
-
-            /*
-             left = the power x
-             right = the powerx
-            leftup = the power y
-            right up = the power y
-            if(left > 0 || right > 0)
-            {
-            left.motor.setPower(1)
-            rightMotor.setPower(1)
-            }
-            if(left < 0 || right < 0)
-            {
-            left.motor.setPower(-1)
-            rightMotor.setPower(-1)
-            }
-            if(leftup > 0)
-            {
-            LEFTmotor.setPower(leftup)
-            rightMotorsetpOWER(leftUp*-1)
-            }
-            f(rightUp > 0)
-            {
-            rightmotor.setPower(rightUp)
-            leftMotorsetpOWER(rightUp*-1)
-            }
-            if(leftup < 0)
-            {
-            LEFTmotor.setPower(leftup)
-            rightMotorsetpOWER(leftUp*-1)
-            }
-            f(rightUp < 0)
-            {
-            rightmotor.setPower(rightUp)
-            leftMotorsetpOWER(rightUp*-1)
-            }
-                         */
-
-            /*if(leftY > 0 && rightY >0)
-            {
-                robot.leftMotor.setPower(1);
-                robot.rightMotor.setPower(1)  ;
-            }
-            else if(leftY < 0 && rightY < 0)
-            {
-                robot.leftMotor.setPower(-1);
-                robot.rightMotor.setPower(-1)  ;
-            }
-
-            else if(rightX > 0)
-            {
-                robot.leftMotor.setPower(0.5);
-                robot.rightMotor.setPower(-0.5)  ;
-            }
-            else if(rightX < 0)
-            {
-                robot.leftMotor.setPower(-0.5);
-                robot.rightMotor.setPower(0.5)  ;
-            }
-
-            else if(leftX > 0)
-            {
-                robot.leftMotor.setPower(-0.5);
-                robot.rightMotor.setPower(0.5)  ;
-            }
-            else if(leftX < 0)
-            {
-                robot.leftMotor.setPower(0.5);
-                robot.rightMotor.setPower(-0.5)  ;
-            }
-            else
-            {
-                robot.leftMotor.setPower(0);
-                robot.rightMotor.setPower(0)  ;
-            }
+            */
 
 
-            // Use gamepad Y & A raise and lower the arm
-           /* if (gamepad1.a)
-                armPosition = 0.9;
-            else if (gamepad1.y)
-                armPosition = 0.1;
-
-            // Use gamepad X & B to open and close the claw
-            /*if (gamepad1.x)
-                clawPosition += CLAW_SPEED;
-            else if (gamepad1.b)
-                clawPosition -= CLAW_SPEED;
-                */
-
-            // Move both servos to new position.
-           // armPosition  = Range.clip(armPosition, robot.ARM_MIN_RANGE, robot.ARM_MAX_RANGE);
-            //robot.arm.setPosition(armPosition);
-            /*clawPosition = Range.clip(clawPosition, robot.CLAW_MIN_RANGE, robot.CLAW_MAX_RANGE);
-            robot.claw.setPosition(clawPosition);
 
             // Send telemetry message to signify robot running;
-            telemetry.addData("arm",   "%.2f", armPosition);
-            telemetry.addData("claw",  "%.2f", clawPosition);
 
-            */
+
            // telemetry.addData("leftX",  "%.2f", leftX);
            // telemetry.addData("righXt", "%.2f", rightX);
             telemetry.addData("leftY",  "%.2f", leftY);
