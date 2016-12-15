@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.omegas.autonomous;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.omegas.HardwareOmegas;
@@ -73,7 +74,9 @@ abstract class OmegasVision extends ManualVisionOpMode {
                             Ω.driveForward(200.0);
                             approachingBeaconator = true;
                         } else {
-                            Ω.driveForward(50.0);
+                            for (DcMotor motor: Ω.getMotors()) {
+                                motor.setPower(0.25);
+                            }
                         }
                     } else {
                         return;
