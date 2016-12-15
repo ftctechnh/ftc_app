@@ -60,7 +60,6 @@ public abstract class AutonomousBase extends OpMode {
     //We stateful now, boys.
     int gameState;
     int moveState;
-    boolean inited = false;
 
     double power;
     double heading;
@@ -71,6 +70,7 @@ public abstract class AutonomousBase extends OpMode {
     int cDistW, lDistW, dDistW; //Sideways distance variables
     double sTime; //Shooting timer
     double pTime; //Button presser timer
+    double tDiff;
 
     int startPos = 6;
     Map map = new Map(startPos); //this map object will allow for easy manipulations.
@@ -180,13 +180,11 @@ public abstract class AutonomousBase extends OpMode {
                 double P = .25;
                 double H = Math.toRadians(heading);
                 double Ht = Math.toRadians(map.angleToGoal());
-                // delta heading: returns a value between -.125 and .125 that scales with distance from desired angle
-                double dH = (((heading - desiredAngle + 180) % 360 ) - 180)/1440;
 
-                motorUp.setPower(-P * Math.sin(H - Ht) + dH);
-                motorDown.setPower(-P * Math.sin(H - Ht) - dH);
-                motorLeft.setPower(P * Math.cos(H - Ht) + dH);
-                motorRight.setPower(P * Math.cos(H - Ht) - dH);
+                motorUp.setPower(-P * Math.sin(H - Ht));
+                motorDown.setPower(-P * Math.sin(H - Ht));
+                motorLeft.setPower(P * Math.cos(H - Ht));
+                motorRight.setPower(P * Math.cos(H - Ht));
                 break;
             case MoveState.TURN_TOWARDS_GOAL:
                 // Orients the bot to face the goal
@@ -300,8 +298,8 @@ public abstract class AutonomousBase extends OpMode {
         ) / 2;
         dDistW = cDistW - lDistW;
 
-        if(!inited){
-            inited = true;
+        if(tDiff == 0){
+            tDiff = getRuntime();
         }
     }
 
@@ -348,5 +346,7 @@ public abstract class AutonomousBase extends OpMode {
             return false;
         }
     }
-
+    public double actualRuntime() {
+        return getRuntime() - tDiff;
+    }
 }
