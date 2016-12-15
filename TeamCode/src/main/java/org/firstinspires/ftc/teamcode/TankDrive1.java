@@ -1,4 +1,4 @@
-/*
+package org.firstinspires.ftc.teamcode;/*
 Copyright (c) 2016 Robert Atkinson
 
 All rights reserved.
@@ -55,7 +55,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwareK9bot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="TankDrive1", group="K9bot")
+@TeleOp(name="org.firstinspires.ftc.teamcode.TankDrive1", group="K9bot")
 @Disabled
 public class TankDrive1 extends LinearOpMode {
 
