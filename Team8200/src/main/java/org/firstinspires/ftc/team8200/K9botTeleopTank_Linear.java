@@ -81,7 +81,7 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
         robot.init(hardwareMap);
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Hello BASE Student");    //
+        telemetry.addData("Say", "Hello BASE Studen");    //
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
