@@ -7,22 +7,18 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  */
 @Autonomous(name="Red Shoot 6", group="Red")
 public class RedShoot6 extends AutonomousBase {
-    boolean init;
     @Override
     public void gameState() {
-        if(!init){
-            init = true;
-            map.setRobot(6,11.25);
-        }
         super.gameState();
         switch(gameState){
             case 0: //Start
-                if(getRuntime() > 5 || !gyro.isCalibrating()) {
+                if(actualRuntime() > 3 && !gyro.isCalibrating()) {
                     gameState = 1;
+                    map.setRobot(6,11.25);
                 }
                 break;
             case 1: //moves to shooter post
-                map.setGoal(6.3, 9);
+                map.setGoal(5, 8.5);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
                 }else{
@@ -34,12 +30,11 @@ public class RedShoot6 extends AutonomousBase {
                 }
                 break;
             case 2: // turns ...
-                desiredAngle = 140;
+                desiredAngle = 180;
                 if(linedUpAngle()){
                     moveState = MoveState.STOP;
                     gameState = 3;
                     sTime = getRuntime();
-                    telemetry.addData("sTime", sTime);
                 }else{
                     moveState = MoveState.TURN_TOWARDS_ANGLE;
                 }
@@ -54,8 +49,19 @@ public class RedShoot6 extends AutonomousBase {
                      gameState = 4;
                  }
                 break;
-            case 4: //MOVE TO KNOCK OFF BALL
-                map.setGoal(5,6);
+            case 4: // Line up with cap ball
+                map.setGoal(8,10);
+                if(linedUp()){
+                    moveState = MoveState.FORWARD;
+                }else{
+                    moveState = MoveState.TURN_TOWARDS_GOAL;
+                }
+                if(map.distanceToGoal()<=.1){
+                    moveState = MoveState.STOP;
+                }
+                break;
+            case 5: //MOVE TO KNOCK OFF BALL
+                map.setGoal(5.5,6.5);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
                 }else{
