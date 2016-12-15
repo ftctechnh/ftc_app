@@ -81,10 +81,45 @@ public class FromRed2 extends LinearOpMode {
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
+    public int GyroDegrees = 0;
 
-    public void RunWithEncoders(float speed, int LeftDistance, int RightDistance){
-      private int timeout = LeftDistance + RightDistance / 10;
-      robot.lef
+    public void RunWithEncoders(float speed, float LeftDistance, float RightDistance, float timeout) {
+        try {
+            encoderDrive(1.0, LeftDistance, RightDistance, timeout);
+            encoderDrive(1.0, LeftDistance, RightDistance, timeout);
+        }
+        catch (InterruptedException ex) {
+        }
+    }
+
+    public void GyroTurn(float speed, float degrees) {
+        //I think I will set this up so that if it is a positive number, the robot will turn left, and if it is negative it will turn right.
+        //// TODO: 12/15/2016 This probably won't work, so Dad, please take a look at this. You can probably tell what I'm trying to do. 
+        if(degrees > 0 == true){
+            GyroDegrees = 0;
+            if (GyroDegrees < degrees == true){
+                robot.leftMotor.setPower(0.5);
+                robot.rightMotor.setPower(-0.5);
+            }
+            else{
+                robot.leftMotor.setPower(0);
+                robot.rightMotor.setPower(0);
+            }
+            
+        }
+        else {
+            GyroDegrees = 0;
+            if (GyroDegrees < degrees == true) {
+                robot.leftMotor.setPower(-0.5);
+                robot.rightMotor.setPower(0.5);
+            }
+            else {
+                robot.leftMotor.setPower(0);
+                robot.rightMotor.setPower(0);
+            }
+                
+            
+        }
     }
 
     @Override
@@ -139,7 +174,7 @@ public class FromRed2 extends LinearOpMode {
      *  2) Move runs out of time
      *  3) Driver stops the opmode running.
      */
-    public void encoderDrive(double speed,
+    public void  encoderDrive(double speed,
                              double leftInches, double rightInches,
                              double timeoutS) throws InterruptedException {
         int newLeftTarget;
