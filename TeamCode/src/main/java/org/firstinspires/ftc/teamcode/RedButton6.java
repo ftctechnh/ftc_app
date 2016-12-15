@@ -7,19 +7,15 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  */
 @Autonomous(name="Red Button 6", group="Red")
 public class RedButton6 extends AutonomousBase{
-    boolean init;
     @Override
     public void gameState() {
-        if(!init){
-            init = true;
-            map.setRobot(6,11.25);
-        }
         super.gameState();
         switch(gameState){
             case 0: //Start
-                if(getRuntime() > 5 || !gyro.isCalibrating()) {
+                if(actualRuntime() > 5 && !gyro.isCalibrating()) {
                     gameState = 1;
                     sTime = getRuntime();
+                    map.setRobot(6,11.25);
                 }
                 break;
             case 1: //Shoot
@@ -73,12 +69,12 @@ public class RedButton6 extends AutonomousBase{
            case 6:
                 map.setGoal(0,0);
                 if(touchRight.isPressed()){
-                  if(colorLeft1.blue() < colorLeft2.blue()) { 
-                    moveState = MoveState.SERVO_L;
-                  }
-                  else{
+//                  if(colorLeft1.blue() < colorLeft2.blue()) { 
+//                    moveState = MoveState.SERVO_L;
+//                  }
+//                  else{
                     moveState = MoveState.SERVO_R;
-                  }
+//                  }
                   gameState = 7;
                   pTime = getRuntime();
                   map.setRobot(.75,3);
@@ -117,12 +113,12 @@ public class RedButton6 extends AutonomousBase{
 		break;
             case 10: //move back  and button press B
                 if(touchRight.isPressed()){
-                  if(colorLeft1.blue() > colorLeft2.blue()) { 
-                    moveState = MoveState.SERVO_L;
-                  }
-                  else{
+//                  if(colorLeft1.blue() > colorLeft2.blue()) { 
+//                    moveState = MoveState.SERVO_L;
+//                  }
+//                  else{
                     moveState = MoveState.SERVO_R;
-                  }
+//                  }
                   gameState = 11;
                   pTime = getRuntime();
                 }

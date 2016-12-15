@@ -12,9 +12,10 @@ public class BlueButton6 extends AutonomousBase{
         super.gameState();
         switch(gameState){
             case 0: //Start
-                if(getRuntime() > 5 || !gyro.isCalibrating()) {
+                if(actualRuntime() > 5 && !gyro.isCalibrating()) {
                     gameState = 1;
                     sTime = getRuntime();
+                    map.setRobot(6,11.25);
                 }
                 break;
             case 1: //Shoot
@@ -77,12 +78,12 @@ public class BlueButton6 extends AutonomousBase{
             case 6: //back up and button press A
                 map.setGoal(12,0); // I need the goal far away so moveState keeps going
                 if(touchRight.isPressed()){
-                    if(colorLeft1.blue()/colorLeft1.red() < colorLeft2.blue()/colorLeft2.red()) {
-                        moveState = MoveState.SERVO_L;
-                    }
-                    else{
+//                    if(colorLeft1.blue()/colorLeft1.red() < colorLeft2.blue()/colorLeft2.red()) {
+//                        moveState = MoveState.SERVO_L;
+//                    }
+//                    else{
                         moveState = MoveState.SERVO_R;
-                    }
+//                    }
                     gameState = 7;
                     pTime = getRuntime();
                 }else{
@@ -133,12 +134,12 @@ public class BlueButton6 extends AutonomousBase{
             case 10: //move back  and button press B
                 map.setGoal(12,0); // I need the goal far away so moveState keeps going
                 if(touchRight.isPressed()){
-                    if(colorLeft1.blue()/colorLeft1.red() < colorLeft2.blue()/colorLeft2.red()) {
-                        moveState = MoveState.SERVO_L;
-                    }
-                    else{
+//                    if(colorLeft1.blue()/colorLeft1.red() < colorLeft2.blue()/colorLeft2.red()) {
+//                        moveState = MoveState.SERVO_L;
+//                    }
+//                    else{
                         moveState = MoveState.SERVO_R;
-                    }
+//                    }
                     gameState = 11;
                     pTime = getRuntime();
                 }

@@ -52,8 +52,8 @@ public abstract class AutonomousBase extends OpMode {
     Servo servoRightButton;
     TouchSensor touchRight;
     TouchSensor touchLeft;
-    ColorSensor colorLeft1;
-    ColorSensor colorLeft2;
+//    ColorSensor colorLeft1;
+//    ColorSensor colorLeft2;
     GyroSensor gyro;
 
 
@@ -104,10 +104,10 @@ public abstract class AutonomousBase extends OpMode {
         touchRight = hardwareMap.touchSensor.get("right_touch");
         touchLeft = hardwareMap.touchSensor.get("left_touch");
 
-        colorLeft1 = hardwareMap.colorSensor.get("color_left_1");
-        colorLeft2 = hardwareMap.colorSensor.get("color_left_2");
-        colorLeft1.enableLed(false);
-        colorLeft2.enableLed(false);
+//        colorLeft1 = hardwareMap.colorSensor.get("color_left_1");
+//        colorLeft2 = hardwareMap.colorSensor.get("color_left_2");
+//        colorLeft1.enableLed(false);
+//        colorLeft2.enableLed(false);
 
         gyro = hardwareMap.gyroSensor.get("gyro");
         gyro.calibrate();
