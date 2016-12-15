@@ -7,23 +7,18 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  */
 @Autonomous(name="Blue Wait 3", group="Blue")
 public class BlueWait3 extends AutonomousBase {
-    boolean init;
     @Override
     public void gameState() {
         super.gameState();
-        if(!init){
-            init = true;
-            map.setRobot(3,10.25);
-        }
         switch(gameState){
             case 0: //Start
-                if(getRuntime() > 15 && !gyro.isCalibrating()) {
+                if(actualRuntime() > 15 && !gyro.isCalibrating()) {
                     gameState = 1;
-                    sTime = getRuntime();
+                    map.setRobot(3,11.25);
                 }
                 break;
             case 1: //moves to shooter post
-                map.setGoal(5, 8);
+                map.setGoal(7, 8.5);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
                 }else{
@@ -35,14 +30,13 @@ public class BlueWait3 extends AutonomousBase {
                 }
                 break;
             case 2: // turns ...
-                map.setGoal(3.8, 9);
-                if(linedUp()){
+                desiredAngle = 180;
+                if(linedUpAngle()){
                     moveState = MoveState.STOP;
                     gameState = 3;
                     sTime = getRuntime();
-                    telemetry.addData("sTime", sTime);
                 }else{
-                    moveState = MoveState.TURN_TOWARDS_GOAL;
+                    moveState = MoveState.TURN_TOWARDS_ANGLE;
                 }
                 break;
             case 3: // ... and shoots
@@ -56,6 +50,18 @@ public class BlueWait3 extends AutonomousBase {
                 }
                 break;
             case 4: //MOVE TO KNOCK OFF BALL
+                map.setGoal(5,10);
+                if(linedUp()){
+                    moveState = MoveState.FORWARD;
+                }else{
+                    moveState = MoveState.TURN_TOWARDS_GOAL;
+                }
+                if(map.distanceToGoal()<=.1){
+                    moveState = MoveState.STOP;
+                    gameState = 5;
+                }
+                break;
+            case 5: //MOVE TO KNOCK OFF BALL
                 map.setGoal(6.5,6.5);
                 if(linedUp()){
                     moveState = MoveState.FORWARD;
