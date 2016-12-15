@@ -65,6 +65,7 @@ public class LightExceed extends LinearOpMode {
 
     static final double     WHITE_THRESHOLD        = 0.7;
 
+    boolean bLedOn;
 
     @Override
     public void runOpMode() {
@@ -73,7 +74,7 @@ public class LightExceed extends LinearOpMode {
 
 
 //        // bLedOn represents the state of the LED.
-         boolean bLedOn = true;
+        bLedOn = true;
 
 //        // get a reference to our Light Sensor object.
          lightSensor = hardwareMap.lightSensor.get("light");
@@ -92,6 +93,7 @@ public class LightExceed extends LinearOpMode {
         while(lightSensor.getLightDetected() < WHITE_THRESHOLD) {
             robot.leftMotor.setPower(0.5);
             robot.rightMotor.setPower(0.5);
+            updateTelemetry();
         }
 
         //step 2
@@ -99,12 +101,12 @@ public class LightExceed extends LinearOpMode {
         robot.leftMotor.setPower(0);
 
         //step 3 waiting for 1 second
-        long waitTime = 1L;
-        try {
-            wait(waitTime);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        long waitTime = 1L;
+//        try {
+//            wait(waitTime);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
 
         while (true) { //while the touch sensor is not touching the wall (or proximity sensor is not touching wall)
             // step 4 turning for ___ seconds
@@ -121,5 +123,12 @@ public class LightExceed extends LinearOpMode {
             }
 
         }
+    }
+
+    public void updateTelemetry() {
+
+        telemetry.addData("Raw", lightSensor.getRawLightDetected());
+        telemetry.addData("Normal", lightSensor.getLightDetected());
+
     }
 }
