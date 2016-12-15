@@ -27,8 +27,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class HardwareK9bot
 {
     /* Public OpMode members. */
-    public DcMotor  leftMotor   = null;
-    public DcMotor  rightMotor  = null;
+    public DcMotor leftMotor = null;
+    public DcMotor rightMotor = null;
     public LightSensor lightSensor = null;
 
     /*
@@ -38,8 +38,8 @@ public class HardwareK9bot
     */
 
     /* Local OpMode members. */
-    HardwareMap hwMap  = null;
-    private ElapsedTime period  = new ElapsedTime();
+    HardwareMap hwMap = null;
+    private ElapsedTime period = new ElapsedTime();
 
     /* Constructor */
     public HardwareK9bot() {
@@ -51,8 +51,8 @@ public class HardwareK9bot
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftMotor   = hwMap.dcMotor.get("motor_left");
-        rightMotor  = hwMap.dcMotor.get("motor_right");
+        leftMotor = hwMap.dcMotor.get("motor_left");
+        rightMotor = hwMap.dcMotor.get("motor_right");
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
@@ -64,16 +64,11 @@ public class HardwareK9bot
         leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-
-        // Define and initialize ALL installed servos.
-
-
         //Define and initialize ALL sensors
         lightSensor = hwMap.lightSensor.get("light");
-
     }
 
-    /***
+    /*
      *
      * waitForTick implements a periodic delay. However, this acts like a metronome with a regular
      * periodic tick.  This is used to compensate for varying processing times for each cycle.

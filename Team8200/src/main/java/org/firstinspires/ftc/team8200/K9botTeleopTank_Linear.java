@@ -38,7 +38,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
 
-/**
+/*
  * This OpMode uses the common HardwareK9bot class to define the devices on the robot.
  * All device access is managed through the HardwareK9bot class. (See this class for device names)
  * The code is structured as a LinearOpMode
@@ -60,9 +60,9 @@ import com.qualcomm.robotcore.util.Range;
 public class K9botTeleopTank_Linear extends LinearOpMode {
 
     /* Declare OpMode members. */
-    HardwareK9bot   robot           = new HardwareK9bot();              // Use a K9'shardware
-    //double          armPosition     = robot.ARM_HOME;                   // Servo safe position
-    //final double    ARM_SPEED       = 0.01 ;                            // sets rate to move servo
+    HardwareK9bot robot = new HardwareK9bot(); // Use a K9's hardware
+    //double armPosition = robot.ARM_HOME; // Servo safe position
+    //final double ARM_SPEED = 0.01 ; // sets rate to move servo
 
     @Override
     public void runOpMode() {
@@ -79,7 +79,7 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
         robot.init(hardwareMap);
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Hello BASE Studen");    //
+        telemetry.addData("Say", "Hello BASE Studen");
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
@@ -98,61 +98,54 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
             robot.leftMotor.setPower(leftY);
             robot.rightMotor.setPower(rightY);
 
-            /* Commented out because we are not currently using harvester
+            /* HARVESTER IS COMMENTED SINCE WE ARE NOT USING
             float harvesterPower = gamepad1.right_trigger;
             float harvesterPowerReversed = gamepad1.left_trigger;
 
             if (harvesterPower > 0.2) {
                 if (gamepad1.right_bumper) {
                     robot.harvester.setPower(1);
-                }
-                else {
+                } else {
                     robot.harvester.setPower(0.5);
                 }
             }
             else if (harvesterPowerReversed > 0.2) {
                 if (gamepad1.left_bumper) {
                     robot.harvester.setPower(-1);
-                }
-                else {
+                } else {
                     robot.harvester.setPower(-0.5);
                 }
-            }
-            else {
-
+            } else {
                 robot.harvester.setPower(0);
-
             }
-
             */
 
-            /* Commented out for when we use arm
+            /* UNCOMMENT WHEN 'ARM' IS NEEDED FOR USAGE
             if (gamepad1.dpad_up) {
                 robot.arm.setPosition(armHitPosition);
             }
             robot.leftMotor.setPower(leftY);
             robot.rightMotor.setPower(leftY);
-            /*if (gamepad1.dpad_up) {
+
+            if (gamepad1.dpad_up) {
                 robot.arm.setPosition(armPosition);
             }
             else if(gamepad1.dpad_down) {
                 robot.arm.setPosition(armPosition);
-
             }
             */
 
+            // Send telemetry message to signify robot running
+            // Telemetry messages go here if we need in the future
 
-
-            // Send telemetry message to signify robot running;
-
-
-           // telemetry.addData("leftX",  "%.2f", leftX);
-           // telemetry.addData("righXt", "%.2f", rightX);
+            // telemetry.addData("leftX",  "%.2f", leftX);
+            // telemetry.addData("righXt", "%.2f", rightX);
             telemetry.addData("leftY",  "%.2f", leftY);
             telemetry.addData("rightY", "%.2f", rightY);
             telemetry.update();
 
-            // Pause for metronome tick.  40 mS each cycle = update 25 times a second.
+            // Pause for metronome tick.
+            // 40 ms each cycle = update 25 times a second.
             robot.waitForTick(40);
         }
     }
