@@ -69,6 +69,7 @@ public class RedWait6 extends AutonomousBase {
                 }
                 if(map.distanceToGoal()<=.1){
                     moveState = MoveState.STOP;
+                    gameState = 5;
                 }
                 break;
             case 777:

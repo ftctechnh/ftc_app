@@ -57,6 +57,7 @@ public class RedShoot6 extends AutonomousBase {
                     moveState = MoveState.TURN_TOWARDS_GOAL;
                 }
                 if(map.distanceToGoal()<=.1){
+                    gameState = 5;
                     moveState = MoveState.STOP;
                 }
                 break;
