@@ -94,7 +94,8 @@ public class FromRed2 extends LinearOpMode {
 
     public void GyroTurn(float speed, float degrees) {
         //I think I will set this up so that if it is a positive number, the robot will turn left, and if it is negative it will turn right.
-        //// TODO: 12/15/2016 This probably won't work, so Dad, please take a look at this. You can probably tell what I'm trying to do. 
+        //// TODO: 12/15/2016 This probably won't work, so Dad, please take a look at this. You can probably tell what I'm trying to do.
+        //testing to make sure I can commit
         if(degrees > 0 == true){
             GyroDegrees = 0;
             if (GyroDegrees < degrees == true){
