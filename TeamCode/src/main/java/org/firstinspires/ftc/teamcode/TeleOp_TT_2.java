@@ -38,7 +38,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+//import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
 import org.firstinspires.ftc.robotcontroller.unknownelementsamples.HardwarePushbot_demo;
+
+import static java.lang.Thread.sleep;
 
 @TeleOp(name="TeleOp TT 2", group="PushBot")  // @Autonomous(...) is the other common choice
 // @Disabled
@@ -65,9 +69,12 @@ public class TeleOp_TT_2 extends OpMode {
     private double          minimumDeadZone = 0.05;             // adjust this value to increase or descrease the deadzone
     private double          maxMotorSpeed = 0.95;             // adjust this value to set the maximum motor speed, depends on motor type
 
-    public final static double CLAW_HOME = 0.0;
-    public final static double CLAW_OPEN  = 0.60;
-    public final static double CLAW_HOLD  = 0.30;
+    public final static double LEFT_CLAW_FOLD = 1.0;
+    public final static double RIGHT_CLAW_FOLD = 0.0;
+    public final static double LEFT_CLAW_OPEN  = 0.50;
+    public final static double RIGHT_CLAW_OPEN  = 0.10;
+    public final static double LEFT_CLAW_CLOSE  = 1.00;
+    public final static double RIGHT_CLAW_CLOSE  = 0.30;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -132,7 +139,7 @@ public class TeleOp_TT_2 extends OpMode {
         double armUp = 0.0;
         double armDown = 0.0;
         boolean openClawA = false;
-        boolean closeClawB = true;
+        boolean closeClawB = false; //May need to change
         boolean foldClawX = false;
 
         // ClawState = 0 for Home, 1 for Open, 2 for holding the ball
@@ -179,8 +186,18 @@ public class TeleOp_TT_2 extends OpMode {
             openClawA = false;
             closeClawB = false;
             foldClawX = false;
-            robot.leftServo.setPosition(CLAW_OPEN);
-            robot.rightServo.setPosition(CLAW_OPEN);
+            robot.backLeftMotor.setPower(leftMotorSpeed/2);
+            robot.frontLeftMotor.setPower(leftMotorSpeed/2);
+            robot.backRightMotor.setPower(rightMotorSpeed/2);
+            robot.frontRightMotor.setPower(rightMotorSpeed/2);
+
+            robot.rightServo.setPosition(LEFT_CLAW_OPEN+.3);
+            try {
+                sleep(500);
+            }
+            catch (InterruptedException e) {
+                //do nothing
+            }
 
         } else if (closeClawB == true) {
 //            iPrevStateClaw = iCurrStateClaw ;
@@ -188,29 +205,33 @@ public class TeleOp_TT_2 extends OpMode {
             openClawA = false;
             closeClawB = false;
             foldClawX = false;
-            robot.leftServo.setPosition(CLAW_HOLD);
-            robot.rightServo.setPosition(-CLAW_HOLD);
+            robot.backLeftMotor.setPower(leftMotorSpeed/2);
+            robot.frontLeftMotor.setPower(leftMotorSpeed/2);
+            robot.backRightMotor.setPower(rightMotorSpeed/2);
+            robot.frontRightMotor.setPower(rightMotorSpeed/2);
+
+            robot.leftServo.setPosition(RIGHT_CLAW_CLOSE-.3);
+            try {
+                sleep(500);
+            }
+            catch (InterruptedException e) {
+                //do nothing
+            }
+
+
         } else if (foldClawX == true) {
 //            iPrevStateClaw = iCurrStateClaw ;
             iCurrStateClaw = 0;
             openClawA = false;
             closeClawB = false;
             foldClawX = false;
-            robot.leftServo.setPosition(CLAW_HOME);
-            robot.rightServo.setPosition(-CLAW_HOME);
+            robot.backLeftMotor.setPower(leftMotorSpeed);
+            robot.frontLeftMotor.setPower(leftMotorSpeed);
+            robot.backRightMotor.setPower(rightMotorSpeed);
+            robot.frontRightMotor.setPower(rightMotorSpeed);
+            robot.leftServo.setPosition(LEFT_CLAW_FOLD);
+            robot.rightServo.setPosition(RIGHT_CLAW_FOLD);
         }
-
-
-//        if (iCurrStateClaw == 0) {
-//            robot.leftServo.setPosition(CLAW_HOME);
-//            robot.rightServo.setPosition(-CLAW_HOME);
-//        } else if (iCurrStateClaw == 1){
-//            robot.leftServo.setPosition(CLAW_OPEN);
-//            robot.rightServo.setPosition(-CLAW_OPEN);
-//        } else if (iCurrStateClaw == 2){
-//            robot.leftServo.setPosition(CLAW_HOLD);
-//            robot.rightServo.setPosition(-CLAW_HOLD);
-//        }
 
         telemetry.addData("Left Servo", robot.leftServo.getPosition()) ;
         telemetry.addData("Right Servo", robot.rightServo.getPosition()) ;
