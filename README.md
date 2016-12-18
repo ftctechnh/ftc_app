@@ -268,5 +268,37 @@ Release 15.11.04.001
  * Updated release .apk files for Robot Controller and Driver Station apps.
 
 T. Eng
-May 28, 2015
+November 5, 2015
+ 
+**************************************************************************************
 
+Release 15.10.06.002
+
+ * Added support for Legacy Matrix 9.6V motor/servo controller.
+ * Cleaned up build.gradle file.
+ * Minor UI and bug fixes for driver station and robot controller apps.
+ * Throws error if Ultrasonic sensor (NXT) is not configured for legacy module port 4 or 5.
+
+T. Eng
+October 6, 2015
+
+**************************************************************************************
+
+In this latest version of the FTC SDK (20150803_001) the following changes should be noted:
+
+ * New user interfaces for FTC Driver Station and FTC Robot Controller apps.
+ * An init() method is added to the OpMode class.
+   - For this release, init() is triggered right before the start() method.
+   - Eventually, the init() method will be triggered when the user presses an "INIT" button on driver station.
+   - The init() and loop() methods are now required (i.e., need to be overridden in the user's op mode).
+   - The start() and stop() methods are optional.
+ * A new LinearOpMode class is introduced.
+   - Teams can use the LinearOpMode mode to create a linear (not event driven) program model.
+   - Teams can use blocking statements like Thread.sleep() within a linear op mode.
+ * The API for the Legacy Module and Core Device Interface Module have been updated.
+   - Support for encoders with the Legacy Module is now working.
+ * The hardware loop has been updated for better performance.
+
+
+T. Eng
+August 3, 2015
