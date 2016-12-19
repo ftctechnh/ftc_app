@@ -149,6 +149,87 @@ public class BotHardware
 
     }
 
+    public class MuxColor implements ColorSensor{
+        private int mPort;
+        private MultiplexColorSensor mSensor;
+        private int[] crgb = new int[4];
+        private double lastTime;
+
+        MuxColor(int port, MultiplexColorSensor sensor){
+            mPort = port;
+            mSensor = sensor;
+        }
+
+        private boolean updateColor(){
+            if(period.milliseconds() - lastTime > 50){
+                crgb = mux.getCRGB(mPort);
+                lastTime = period.milliseconds();
+            }
+            return crgb[0] != 65535;
+        }
+
+        public int alpha(){
+            if(!updateColor()) return -1;
+            return crgb[0];
+        }
+
+        public int red(){
+            if(!updateColor()) return -1;
+            return crgb[1];
+        }
+
+        public int green(){
+            if(!updateColor()) return -1;
+            return crgb[2];
+        }
+
+        public int blue(){
+            if(!updateColor()) return -1;
+            return crgb[3];
+        }
+
+        //below are functions that should not be used under any circumstance
+        public int argb(){
+            return -1;
+        }
+
+        public void enableLed(boolean duh){
+
+        }
+
+        public void setI2cAddress(I2cAddr newAddr){
+
+        }
+
+        public I2cAddr getI2cAddress(){
+            return new I2cAddr(0);
+        }
+
+        public Manufacturer getManufacturer(){
+            return Manufacturer.Adafruit;
+        }
+
+        public String getDeviceName(){
+            return "Multiplexed Color Sensors";
+        }
+
+        public String getConnectionInfo(){
+            return "Connected (I hope)";
+        }
+
+        public int getVersion(){
+            return 9001;
+        }
+
+        public void resetDeviceConfigurationForOpMode(){
+            //no
+        }
+
+        public void close(){
+            //will only activate on a thursday
+        }
+    }
+
     /***
      *
      * waitForTick implements a periodic delay. However, this acts like a metronome with a regular
