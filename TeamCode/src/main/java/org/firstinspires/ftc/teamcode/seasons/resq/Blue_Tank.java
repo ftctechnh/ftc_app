@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.seasons.resq;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,6 +13,7 @@ import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 /**
  * Created by FTCGearedUP on 8/6/2015.
  */
+@Disabled
 @TeleOp(name = "Rossie", group = "Competitions")
 public class Blue_Tank extends OpMode {
 

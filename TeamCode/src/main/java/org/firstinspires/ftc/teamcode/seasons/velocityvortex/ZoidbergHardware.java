@@ -26,9 +26,6 @@ public class ZoidbergHardware {
 
     public static final int RANGE_SENSOR_REG_START = 0x04;
 
-    private DcMotorController driveController1;
-    private DcMotorController driveController2;
-
     private DcMotorController attachmentsController;
 
     private DcMotor frontLeftDrive;
@@ -48,22 +45,21 @@ public class ZoidbergHardware {
 
     private ColorSensor colorSensor;
 
-    private I2cDevice frontRangeSensor;
-    private I2cDevice leftRangeSensor;
+    private RangeSensorWrapper frontRange;
+    private RangeSensorWrapper leftRange;
 
     private OpticalDistanceSensor launcherOds;
     private OpticalDistanceSensor diskOds;
+    private OpticalDistanceSensor ods3;
 
     private ModernRoboticsI2cGyro gyroSensor;
 
     private ElapsedTime runtime;
 
     public ZoidbergHardware(HardwareMap hardwareMap) throws InterruptedException {
-
+        // initialize runtime instance variable
         runtime = new ElapsedTime();
 
-        driveController1 = hardwareMap.dcMotorController.get("mc0");
-        driveController2 = hardwareMap.dcMotorController.get("mc1");
         attachmentsController = hardwareMap.dcMotorController.get("mc3");
 
         frontLeftDrive = hardwareMap.dcMotor.get("fl");
@@ -78,11 +74,6 @@ public class ZoidbergHardware {
         red2 = hardwareMap.servo.get("r2");     //Up =.7 Down =0.0
         door3 = hardwareMap.servo.get("d3");   //Closed = 0.55 Open = 0.25
 
-        // initialize positions
-        blue1.setPosition(1.0);
-        red2.setPosition(0.0);
-        door3.setPosition(0.55);
-
         frontLightSensor = hardwareMap.lightSensor.get("fls");
         backLightSensor = hardwareMap.lightSensor.get("bls");
 
@@ -92,19 +83,34 @@ public class ZoidbergHardware {
         colorSensor = hardwareMap.colorSensor.get("clr");
         colorSensor.enableLed(false);
 
-        frontRangeSensor = hardwareMap.i2cDevice.get("frs");
-        leftRangeSensor = hardwareMap.i2cDevice.get("lrs");
+        frontRange = new RangeSensorWrapper(hardwareMap.i2cDevice.get("frs"),
+                ZoidbergHardware.FRONT_RANGE_SENSOR_I2C_ADDR);
+
+        leftRange = new RangeSensorWrapper(hardwareMap.i2cDevice.get("lrs"),
+                ZoidbergHardware.LEFT_RANGE_SENSOR_I2C_ADDR);
 
         launcherOds = hardwareMap.opticalDistanceSensor.get("launcherOds");
         diskOds = hardwareMap.opticalDistanceSensor.get("diskOds");
+        ods3 = hardwareMap.opticalDistanceSensor.get("ods3");
 
-        gyroSensor = (ModernRoboticsI2cGyro)hardwareMap.gyroSensor.get("gy");
-        gyroSensor.calibrate();
+//        gyroSensor = (ModernRoboticsI2cGyro)hardwareMap.gyroSensor.get("gy");
+//        gyroSensor.calibrate();
 
-        backLeftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
-        backRightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
-        frontLeftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
-        frontRightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        // reverse all drive motors
+        backLeftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        // initialize positions
+        blue1.setPosition(1.0);
+        red2.setPosition(0.0);
+        door3.setPosition(0.53);
+
+        // stop all motors
+        launcherMotor.setPower(0);
+        intakeMotor.setPower(0);
+        stopRobot();
     }
 
     public void driveRight(double power) {
@@ -148,17 +154,33 @@ public class ZoidbergHardware {
     }
 
     public void pivotLeft(double power) {
+        frontLeftDrive.setPower(power);
+        frontRightDrive.setPower(power);
+        backLeftDrive.setPower(power);
+        backRightDrive.setPower(power);
+    }
+
+    public void pivotRight(double power) {
         frontLeftDrive.setPower(-power);
         frontRightDrive.setPower(-power);
         backLeftDrive.setPower(-power);
         backRightDrive.setPower(-power);
     }
 
-    public void pivotRight(double power) {
-        frontLeftDrive.setPower(power);
-        frontRightDrive.setPower(power);
-        backLeftDrive.setPower(power);
-        backRightDrive.setPower(power);
+    public void launchParticle() {
+        runtime.reset();
+
+        // run launcher motor for an entire rotation
+        while(runtime.milliseconds() < 900) {
+            launcherMotor.setPower(1.0);
+        }
+
+        // stop the launcher motor on the black line
+        while(diskOds.getRawLightDetected() > 2) {
+            launcherMotor.setPower(0.3);
+        }
+
+        launcherMotor.setPower(0);
     }
 
     public DcMotor getIntakeMotor() {
@@ -203,21 +225,25 @@ public class ZoidbergHardware {
         return colorSensor;
     }
 
-    public I2cDevice getFrontRangeSensor() {
-        return frontRangeSensor;
+    public RangeSensorWrapper getFrontRange() {
+        return frontRange;
     }
 
-    public I2cDevice getLeftRangeSensor() {
-        return leftRangeSensor;
+    public RangeSensorWrapper getLeftRange() {
+        return leftRange;
     }
 
     public OpticalDistanceSensor getLauncherOds() { return launcherOds; }
 
     public OpticalDistanceSensor getDiskOds() { return diskOds; }
 
-    public ModernRoboticsI2cGyro getGyroSensor() {
-        return gyroSensor;
+    public OpticalDistanceSensor getOds3() {
+        return ods3;
     }
+
+//    public ModernRoboticsI2cGyro getGyroSensor() {
+//        return gyroSensor;
+//    }
 
     public ElapsedTime getRuntime() {
         return runtime;

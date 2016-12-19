@@ -16,12 +16,13 @@ Support is available by emailing support@modernroboticsinc.com.
 */
 
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynchImpl;
 
-
+@Disabled
 @TeleOp(name = "Range test", group = "tests")
 //@Disabled
 public class ZoidbergDistanceTest extends LinearOpMode {

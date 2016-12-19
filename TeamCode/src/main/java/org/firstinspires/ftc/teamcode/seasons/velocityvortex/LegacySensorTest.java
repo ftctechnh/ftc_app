@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.seasons.velocityvortex;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.LegacyModule;
@@ -9,6 +10,7 @@ import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 /**
  * Created by ftc6347 on 9/26/16.
  */
+@Disabled
 @TeleOp(name = "Sensor test", group = "tests")
 public class LegacySensorTest extends OpMode {
 

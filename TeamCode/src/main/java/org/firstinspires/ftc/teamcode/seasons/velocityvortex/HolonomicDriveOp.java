@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.seasons.velocityvortex;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 /**
  * Created by ftc6347 on 9/22/16.
  */
+@Disabled
 @TeleOp(name = "Holonomic Drive", group = "Tests")
 public class HolonomicDriveOp extends LinearOpMode {
 

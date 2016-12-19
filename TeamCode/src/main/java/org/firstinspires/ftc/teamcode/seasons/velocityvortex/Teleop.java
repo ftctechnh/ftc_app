@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 /**
  * Created by ftc6347 on 10/16/16.
  */
-@TeleOp(name = "Competition TeleOp", group = "tests")
-public class ZoidbergTeleop extends LinearOpMode {
+@TeleOp(name = "Teleop", group = "teleop")
+public class Teleop extends LinearOpMode {
 
     private static final float JOYSTICK_DEADZONE = 0.2f;
 
@@ -58,6 +58,7 @@ public class ZoidbergTeleop extends LinearOpMode {
             handleLauncher();
 
             telemetry.addData("ods2 : ", robot.getDiskOds().getRawLightDetected());
+            telemetry.addData("launcher ods", robot.getLauncherOds().getLightDetected());
             telemetry.update();
 
             idle();
@@ -112,10 +113,10 @@ public class ZoidbergTeleop extends LinearOpMode {
     }
 
     private void handlePivot() {
-        frontLeftPower += gamepad1.left_stick_x;
-        frontRightPower += gamepad1.left_stick_x;
-        backLeftPower += gamepad1.left_stick_x;
-        backRightPower += gamepad1.left_stick_x;
+        frontLeftPower -= gamepad1.left_stick_x;
+        frontRightPower -= gamepad1.left_stick_x;
+        backLeftPower -= gamepad1.left_stick_x;
+        backRightPower -= gamepad1.left_stick_x;
     }
 
     private void handleStrafe() {
