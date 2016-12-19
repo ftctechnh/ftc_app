@@ -26,11 +26,13 @@ public class BotHardware
     public Servo leftServo = null;
     public Servo rightServo = null;
 
-    public ColorSensor leftSensor = null;
-    public ColorSensor rightSensor = null;
+    public MuxColor leftSensor = null;
+    public MuxColor rightSensor = null;
     public UltrasonicSensor distSensor = null;
     public DeviceInterfaceModule dim;
     public AHRS navX;
+
+    private MultiplexColorSensor mux = null;
 
     public NavXHeading navXHeading;
 
@@ -66,7 +68,7 @@ public class BotHardware
 
         try{
             //cdim = opMode.hardwareMap.deviceInterfaceModule.get("dim");
-            leftSensor = opMode.hardwareMap.colorSensor.get("color_left");
+            //leftSensor = opMode.hardwareMap.colorSensor.get("color_left");
 
             //leftSensor.setI2cAddress(new I2cAddr(0x49));
 
