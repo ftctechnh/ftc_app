@@ -53,7 +53,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Eaglebot: Park in Right Corner", group="Omni2Motor")
+@Autonomous(name="Eaglebot: Park in Left Corner", group="Eaglebot")
 public class Eaglebot_corner_park extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -79,28 +79,33 @@ public class Eaglebot_corner_park extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
+        robot.forward(robot.FORWARD_SPEED);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 1)) {
 
-        robot.turn(robot.TURN_SPEED);
-        runtime.reset();
-        while (opModeIsActive() && runtime.seconds() < 1) {
-            telemetry.addData("turning", "right");
-            telemetry.update();
         }
-        robot.forward(0.4);
+
+        robot.leftTurn(robot.TURN_SPEED);
         runtime.reset();
-        while (opModeIsActive() && runtime.seconds() < 2) {
-            telemetry.addData("Moving", "forward");
-            telemetry.update();
+        while (opModeIsActive() && (runtime.seconds() < 1)) {
+
         }
-        robot.turn(robot.TURN_SPEED);
+
+        robot.forward(robot.FORWARD_SPEED);
         runtime.reset();
-            while(opModeIsActive() && runtime.seconds() < 1) {
-                telemetry.addData("turning", "right");
-                telemetry.update();
-            }
+        while(opModeIsActive() && (runtime.seconds() < 1)) {
+
+        }
+
+        robot.leftTurn(robot.TURN_SPEED);
+        runtime.reset();
+        while(opModeIsActive() && (runtime.seconds() < 1)) {
+
+        }
+
         robot.forward(robot.TOP_SPEED);
         runtime.reset();
-        while (opModeIsActive() && runtime.seconds() < 2) {
+        while(opModeIsActive() && (runtime.seconds() < 1.5)) {
 
         }
         robot.stop();

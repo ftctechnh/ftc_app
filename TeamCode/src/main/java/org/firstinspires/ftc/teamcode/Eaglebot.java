@@ -41,6 +41,8 @@ public class Eaglebot
     public double threshold = 1.94;
     public double TOP_SPEED = 1.0;
    // public OpticalDistanceSensor odsSensor = null;
+    public DcMotor armMotor = null;
+    public DcMotor launcher = null;
 
 
 
@@ -74,6 +76,9 @@ public class Eaglebot
         rightArm = hwMap.servo.get("right_arm");
         rightArm.setDirection(Servo.Direction.REVERSE);
         ballPusher = hwMap.servo.get("paddle");
+        armMotor = hwMap.dcMotor.get("arm_motor");
+        launcher = hwMap.dcMotor.get("launch_motor");
+
 
 
         frontLeft.setDirection(DcMotor.Direction.FORWARD);
@@ -86,6 +91,11 @@ public class Eaglebot
         frontRight.setPower(0);
         backLeft.setPower(0);
         backRight.setPower(0);
+        launcher.setPower(0);
+        armMotor.setPower(0);
+
+        leftArm.setPosition(0);
+        rightArm.setPosition(0);
 
 
         // Set all motors to run without encoders.
@@ -94,7 +104,8 @@ public class Eaglebot
         frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
+        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        launcher.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // Define and initialize ALL installed servos.
         // leftClaw = hwMap.servo.get("left_hand");
         // rightClaw = hwMap.servo.get("right_hand");
@@ -102,9 +113,9 @@ public class Eaglebot
         // rightClaw.setPosition(MID_SERVO);
     }
     void forward(double speed) {
-        frontLeft.setPower(speed);
+        frontLeft.setPower(-speed);
         frontRight.setPower(speed);
-        backLeft.setPower(speed);
+        backLeft.setPower(-speed);
         backRight.setPower(speed);
     }
     void stop() {
@@ -114,17 +125,13 @@ public class Eaglebot
         backLeft.setPower(0);
     }
     void turn (double speed) {
-        frontLeft.setPower(speed);
-        frontRight.setPower(-speed);
-        backRight.setPower(-speed);
-        backLeft.setPower(speed);
+        frontLeft.setPower(-speed);
+        backRight.setPower(speed);
     }
 
     void leftTurn (double speed) {
-        frontLeft.setPower(-speed);
         frontRight.setPower(speed);
         backLeft.setPower(-speed);
-        backRight.setPower(speed);
     }
     /***
      *

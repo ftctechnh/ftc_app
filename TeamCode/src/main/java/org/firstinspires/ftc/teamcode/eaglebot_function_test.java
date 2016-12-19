@@ -33,7 +33,6 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -45,7 +44,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * The code assumes that you do NOT have encoders on the wheels,
  *   otherwise you would use: PushbotAutoDriveByEncoder;
  *
- *
+ *   The desired path in this example is:
+ *   - Drive forward for 3 seconds
+ *   - Spin right for 1.3 seconds
+ *   - Drive Backwards for 1 Second
+ *   - Stop and close the claw.
  *
  *  The code is written in a simple form with no optimizations.
  *  However, there are several ways that this type of sequence could be streamlined,
@@ -54,17 +57,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Eaglebot: Center Ball and Left Corner Park", group="Eaglebot")
-public class Eaglebot_center_and_park extends LinearOpMode {
+@Autonomous(name="Eaglebot: Function Test", group="Eaglebot")
+public class eaglebot_function_test extends LinearOpMode {
 
     /* Declare OpMode members. */
-    Eaglebot robot = new Eaglebot();
-    private ElapsedTime runtime = new ElapsedTime();
-
+    Eaglebot robot   = new Eaglebot();   // Use a Pushbot's hardware
+    private ElapsedTime     runtime = new ElapsedTime();
 
     @Override
     public void runOpMode() {
-
 
         /*
          * Initialize the drive system variables.
@@ -78,22 +79,30 @@ public class Eaglebot_center_and_park extends LinearOpMode {
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
+        // run each motor at full power for two seconds
+        robot.forward(robot.FORWARD_SPEED);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 3)) {
 
+        }
         robot.stop();
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 8)) {
-            telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
-        robot.forward(robot.TOP_SPEED);
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 2)) {
 
-        }
         robot.leftTurn(robot.TURN_SPEED);
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 1.5)){
+        while (opModeIsActive() && (runtime.seconds() < 3)) {
 
         }
+        robot.stop();
+
+        robot.turn(robot.TURN_SPEED);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 3)) {
+
+        }
+        robot.stop();
+
+        telemetry.addData("Path", "Complete");
+        telemetry.update();
+        sleep(1000);
     }
 }
