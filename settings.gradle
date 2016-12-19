@@ -1,4 +1,3 @@
-// FTC Apps
-include(':FtcRobotController')
+include ':FtcRobotController'
 include ':TeamCode', ':OpenCVTest'
 include ':opencv'

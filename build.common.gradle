@@ -70,7 +70,8 @@ android {
     // Advanced user code might just want to use Vuforia directly, so we set up the libs as needed
     buildTypes {
         release {
-            debuggable true
+            // Disable debugging for release versions so it can be uploaded to Google Play.
+            //debuggable true
             ndk {
                 abiFilters "armeabi-v7a"
             }
@@ -92,16 +93,6 @@ android {
         jni.srcDirs = []
         jniLibs.srcDir "../libs"
     }
-    lintOptions {
-        // set to true to turn off analysis progress reporting by lint
-        //quiet true
-        // if true, stop the gradle build if errors are found
-        //abortOnError false
-        // if true, only report errors
-        //ignoreWarnings true
-        disable 'GoogleAppIndexingWarning'
-    }
-
 }
 
 repositories {
