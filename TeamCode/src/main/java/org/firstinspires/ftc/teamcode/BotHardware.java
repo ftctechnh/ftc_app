@@ -67,17 +67,16 @@ public class BotHardware
         rightServo = hw.getServo("servo_right");
 
         try{
-            //cdim = opMode.hardwareMap.deviceInterfaceModule.get("dim");
-            //leftSensor = opMode.hardwareMap.colorSensor.get("color_left");
+            final int[] ports = {6,7};
+            final int milliSeconds = 48;
+            mux = new MultiplexColorSensor(opMode.hardwareMap, "mux", "color",
+                    ports, milliSeconds,
+                    MultiplexColorSensor.GAIN_16X);
 
-            //leftSensor.setI2cAddress(new I2cAddr(0x49));
+            mux.startPolling();
 
-            //rightSensor = opMode.hardwareMap.colorSensor.get("color_right");
-
-
-
-            leftSensor.enableLed(false);
-            //rightSensor.enableLed(false);
+            leftSensor = new MuxColor(ports[1], mux);
+            rightSensor = new MuxColor(ports[0], mux);
         }
         catch (Exception e) {
             opMode.telemetry.addData("Color sensors failed to load!", "");

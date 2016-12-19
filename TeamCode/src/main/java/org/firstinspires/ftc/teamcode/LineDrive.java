@@ -92,7 +92,7 @@ public class LineDrive extends OpenCVLib {
         //mSequence.add(new DriveUntilLine(robot.getMotorArray(), power + 0.1, true));
         //two-stage line follow
         //mSequence.add(new LineDriveStep(this, 0, lineSensors, lineSensors, new UltraStop(ultraDistS1), mgPid, mdPid, robot.getMotorArray(), 0.1f, false));
-        //mSequence.add(new LineDriveStep(this, 0, lineSensors, lineSensors, new UltraStop(ultraDistS2), mgPid, mdPid, robot.getMotorArray(), 0.05f, true));
+        mSequence.add(new LineDriveStep(this, 0, lineSensors, lineSensors, new UltraStop(ultraDistS2), mgPid, mdPid, robot.getMotorArray(), 0.05f, true));
         //pushy pushy
         mSequence.add(new PushyLib.pushypushy(this, robot.getMotorArray(), robot.leftSensor, robot.rightSensor, robot.leftServo, robot.rightServo,
                 pushPos, time, red, colorThresh, power, driveTime, driveLoopCount));

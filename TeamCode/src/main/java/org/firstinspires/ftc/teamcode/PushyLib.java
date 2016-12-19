@@ -106,7 +106,7 @@ public final class PushyLib {
                 }
 
                 //if it's done, stop the motors
-                if(done || mMaxDriveLoop < 0){
+                if(done || mMaxDriveLoop <= 0){
                     for (int i = 0; i < mMotors.length; i++) {
                         mMotors[i].setPower(0);
                     }
