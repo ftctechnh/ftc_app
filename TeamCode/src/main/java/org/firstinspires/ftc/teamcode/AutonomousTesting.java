@@ -50,6 +50,8 @@ public class AutonomousTesting extends OpMode {
 
         // start out not-done
         bDone = false;
+
+        robot.startNavX();
     }
 
     @Override
@@ -67,9 +69,7 @@ public class AutonomousTesting extends OpMode {
         //    telemetry.addData("First sequence finished", "");
 
         //Vuf.loop(true);
-        telemetry.addData("Red L", robot.leftSensor.red());
-        telemetry.addData("Blue L", robot.leftSensor.blue());
-        telemetry.addData("Green L", robot.leftSensor.green());
+        telemetry.addData("Heading", robot.navX.getYaw());
 
         //telemetry.addData("Red R", robot.rightSensor.red());
         //telemetry.addData("Blue R", robot.rightSensor.blue());

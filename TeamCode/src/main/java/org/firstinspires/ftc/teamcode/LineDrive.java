@@ -34,7 +34,7 @@ public class LineDrive extends OpenCVLib {
     LineSensors lineSensors;
 
     // parameters of the PID controller for this sequence's first part
-    float Kp = 0.035f;        // degree heading proportional term correction per degree of deviation
+    float Kp = 0.055f;        // degree heading proportional term correction per degree of deviation
     float Ki = 0.02f;         // ... integrator term
     float Kd = 0;             // ... derivative term
     float KiCutoff = 3.0f;    // maximum angle error for which we update integrator
@@ -52,15 +52,16 @@ public class LineDrive extends OpenCVLib {
     float Ki3Cutoff = 0.01f;
 
     final double ultraDistS1 = 20;
-    final double ultraDistS2 = 13.5;
+    final double ultraDistS2 = 13;
 
     //constants for pushy pushy
     final double pushPos = 1.0;
     final double time = 2.0;
     final boolean red = false;
     final int colorThresh = 200;
-    final float driveTime = 0.0f;
-    final int driveLoopCount = 0;
+    final float driveTime = 0.1f;
+    final int driveLoopCount = 1;
+    final float pushyPower = 0.2f;
 
     final int countPerRotation = 280;
 
@@ -91,11 +92,21 @@ public class LineDrive extends OpenCVLib {
 
         //mSequence.add(new DriveUntilLine(robot.getMotorArray(), power + 0.1, true));
         //two-stage line follow
-        //mSequence.add(new LineDriveStep(this, 0, lineSensors, lineSensors, new UltraStop(ultraDistS1), mgPid, mdPid, robot.getMotorArray(), 0.1f, false));
+        mSequence.add(new LineDriveStep(this, 0, lineSensors, lineSensors, new UltraStop(ultraDistS1), mgPid, mdPid, robot.getMotorArray(), 0.1f, false));
         mSequence.add(new LineDriveStep(this, 0, lineSensors, lineSensors, new UltraStop(ultraDistS2), mgPid, mdPid, robot.getMotorArray(), 0.05f, true));
         //pushy pushy
         mSequence.add(new PushyLib.pushypushy(this, robot.getMotorArray(), robot.leftSensor, robot.rightSensor, robot.leftServo, robot.rightServo,
-                pushPos, time, red, colorThresh, power, driveTime, driveLoopCount));
+                pushPos, time, red, colorThresh, pushyPower, driveTime, driveLoopCount));
+
+        mSequence.add(new SquirrleyAzimuthTimedDriveStep(this, 120.0f, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, 0.6f, false));
+        //mSequence.add(new SquirrleyAzimuthTimedDriveStep(this, 90.0f, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, 0.5f, false));
+        mSequence.add(new SquirrleyAzimuthFinDriveStep(this, 90.0f, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, lineSensors, true));
+
+        mSequence.add(new LineDriveStep(this, 0, lineSensors, lineSensors, new UltraStop(ultraDistS1), mgPid, mdPid, robot.getMotorArray(), 0.1f, false));
+        mSequence.add(new LineDriveStep(this, 0, lineSensors, lineSensors, new UltraStop(ultraDistS2), mgPid, mdPid, robot.getMotorArray(), 0.08f, true));
+        //pushy pushy
+        mSequence.add(new PushyLib.pushypushy(this, robot.getMotorArray(), robot.leftSensor, robot.rightSensor, robot.leftServo, robot.rightServo,
+                pushPos, time, red, colorThresh, pushyPower, driveTime, driveLoopCount));
 
 
         // start out not-done
@@ -139,7 +150,9 @@ public class LineDrive extends OpenCVLib {
         stopCamera();
     }
 
-    private class LineSensors implements HeadingSensor, DisplacementSensor {
+    private class LineSensors implements HeadingSensor, DisplacementSensor, FinishSensor {
+
+        int lineCount = 0;
 
         //heading sensor code for line following
         public float getHeading() {
@@ -164,6 +177,15 @@ public class LineDrive extends OpenCVLib {
                 else return -0.8f;
             } else lastLinePos = linePos;
             return (float) linePos;
+        }
+
+        public boolean checkStop() {
+            if (LineFollowLib.getDisplacment(getCameraFrame(), yValStore[2]) != LineFollowLib.ERROR_TOO_NOISY)
+                //lineCount++;
+                return true;
+            //else lineCount = 0;
+            return false;
+            //return lineCount > 5;
         }
     }
 
@@ -210,6 +232,9 @@ public class LineDrive extends OpenCVLib {
             mdPid = dPid;
             mMotorSteps = motorsteps;
             mPower = power;
+
+            gPid.reset();
+            dPid.reset();
         }
 
         public boolean loop() {
@@ -350,8 +375,7 @@ public class LineDrive extends OpenCVLib {
 
     static public class SquirrleyGuideStep extends AutoLib.Step {
         private float mPower;                               // basic power setting of all 4 motors -- adjusted for steering along path
-        private float mHeading;                             // compass heading to steer for (-180 .. +180 degrees)
-        private float mStartHeading;
+        private float mHeading;                             // compass heading to steer for (-180 .. +180 degrees
         private OpMode mOpMode;                             // needed so we can log output (may be null)
         private HeadingSensor mGyro;                        // sensor to use for heading information (e.g. Gyro or Vuforia)
         private SensorLib.PID mPid;                         // proportional–integral–derivative controller (PID controller)
@@ -366,19 +390,20 @@ public class LineDrive extends OpenCVLib {
             mPid = pid;
             mMotorSteps = motorsteps;
             mPower = power;
+
+            mPid.reset();
         }
 
         public boolean loop() {
             // initialize previous-time on our first call -> dt will be zero on first call
             if (firstLoopCall()) {
                 mPrevTime = mOpMode.getRuntime();           // use timer provided by OpMode
-                mStartHeading = mGyro.getHeading();
             }
 
             final float heading = mGyro.getHeading();     // get latest reading from direction sensor
             // convention is positive angles CCW, wrapping from 359-0
 
-            final float error = SensorLib.Utils.wrapAngle(heading - mStartHeading);   // deviation from desired heading
+            final float error = SensorLib.Utils.wrapAngle(heading);   // deviation from desired heading
             // deviations to left are positive, to right are negative
 
             // compute delta time since last call -- used for integration time of PID step
@@ -428,6 +453,28 @@ public class LineDrive extends OpenCVLib {
             for (DcMotor em : motors)
                 if (em != null) {
                     AutoLib.TimedMotorStep step = new AutoLib.TimedMotorStep(em, 0, time, stop);
+                    this.add(step);
+                    steps.add(step);
+                }
+
+            // add a concurrent Step to control the motor steps based on gyro input
+            this.preAdd(new SquirrleyGuideStep(mode, heading, gyro, pid, steps, power));
+        }
+
+        // the base class loop function does all we need -- it will return "done" when
+        // all the motors are done.
+    }
+
+    static public class SquirrleyAzimuthFinDriveStep extends AutoLib.ConcurrentSequence {
+
+        public SquirrleyAzimuthFinDriveStep(OpMode mode, float heading, HeadingSensor gyro, SensorLib.PID pid,
+                                              DcMotor motors[], float power, FinishSensor fin, boolean stop) {
+            // add a concurrent Step to control each motor
+
+            ArrayList<AutoLib.SetPower> steps = new ArrayList<AutoLib.SetPower>();
+            for (DcMotor em : motors)
+                if (em != null) {
+                    DriveUntilStopMotorStep step = new DriveUntilStopMotorStep(em, 0, fin, stop);
                     this.add(step);
                     steps.add(step);
                 }

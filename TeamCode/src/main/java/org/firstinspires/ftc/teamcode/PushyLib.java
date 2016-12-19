@@ -94,15 +94,11 @@ public final class PushyLib {
                 //check to make sure the pushy worked
                 boolean done = false;
 
-                if(mRed){
-                    //left side, left sensor
-                    if(mLeft && mLeftSensor.red() < mColorThresh) done = true;
-                        //right side, right sensor
-                    else if(!mLeft && mRightSensor.red() < mColorThresh) done = true;
+                if(!mRed){
+                    if(Math.abs(mLeftSensor.red() - mRightSensor.red()) < mColorThresh) done = true;
                 }
                 else{
-                    if(mLeft && mLeftSensor.blue() < mColorThresh) done = true;
-                    else if(!mLeft && mRightSensor.blue() < mColorThresh) done = true;
+                    if(Math.abs(mLeftSensor.blue() - mRightSensor.blue()) < mColorThresh) done = true;
                 }
 
                 //if it's done, stop the motors
@@ -110,7 +106,7 @@ public final class PushyLib {
                     for (int i = 0; i < mMotors.length; i++) {
                         mMotors[i].setPower(0);
                     }
-                    return false;
+                    return true;
                 }
 
                 //else, clearly it hasn't, so we run the smash-n-push <code></code>

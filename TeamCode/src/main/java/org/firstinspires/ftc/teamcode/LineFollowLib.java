@@ -115,7 +115,7 @@ public final class LineFollowLib {
         }
 
         //and return it in a value between -1 and 1, or and error if there is too much noise
-        if(totalNum > ray.length / 2) return -400;
+        if(totalNum > ray.length / 2 || totalNum < ray.length / 16) return -400;
         else if(totalNum == 0) return 0;
         else return totalPos/totalNum;
     }

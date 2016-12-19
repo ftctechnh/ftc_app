@@ -76,6 +76,10 @@ public class SensorLib {
             return output;
         }
 
+        public void reset(){
+            mPrevError = 0;
+            mIntegral = 0;
+        }
     }
 
     // class that tries to correct systemic errors in ModernRoboticsI2cGyro output
