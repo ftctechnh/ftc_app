@@ -1,2 +1,7 @@
-include ':FtcRobotController'
-include ':TeamCode'
+include ':FtcRobotController', ':FtcUtils'
+include ':Team9853'
+include ':Team11248'
+include ':opencv-java'
+include ':ftc-visionlib'
+project(':opencv-java').projectDir = new File('ftc-vision/opencv-java')
+project(':ftc-visionlib').projectDir = new File('ftc-vision/ftc-visionlib')
