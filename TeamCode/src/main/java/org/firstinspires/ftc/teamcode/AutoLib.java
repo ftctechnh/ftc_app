@@ -874,6 +874,25 @@ public class AutoLib {
 
     }
 
+    //simple interface to run step based on function pointer
+
+    public interface FunctionCall {
+        void run();
+    }
+
+    public static class RunCodeStep extends Step{
+        FunctionCall funcPoint;
+
+        RunCodeStep(FunctionCall call){
+            funcPoint = call;
+        }
+
+        public boolean loop(){
+            funcPoint.run();
+            return true;
+        }
+    }
+
     // linear interpolation
     private static double lerp (double x, double x0, double x1, double y0, double y1)
     {

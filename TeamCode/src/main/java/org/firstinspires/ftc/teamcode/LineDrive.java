@@ -4,6 +4,7 @@ import com.qualcomm.hardware.adafruit.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.*;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.util.RobotLog;
 
 import org.opencv.core.Mat;
 
@@ -20,19 +21,12 @@ import java.util.ArrayList;
 @Autonomous(name="Line Drive", group ="Line Follow")
 //@Disabled
 public class LineDrive extends OpenCVLib {
-
-    private int yValStore[] = new int[3];
-    private double lastLinePos = 0;
-    private double lastLineHeading = 0;
-
     AutoLib.Sequence mSequence;             // the root of the sequence tree
     boolean bDone;                          // true when the programmed sequence is done
     BotHardware robot;                      // robot hardware object
     SensorLib.PID mPid;
     SensorLib.PID mgPid;                     // PID controllers for the sequence
     SensorLib.PID mdPid;
-    LineSensors lineSensors;
-
     // parameters of the PID controller for this sequence's first part
     float Kp = 0.055f;        // degree heading proportional term correction per degree of deviation
     float Ki = 0.02f;         // ... integrator term
@@ -77,11 +71,18 @@ public class LineDrive extends OpenCVLib {
         mgPid = new SensorLib.PID(Kp2, Ki2, Kd2, Ki2Cutoff);    // make the object that implements PID control algorithm
         mdPid = new SensorLib.PID(Kp3, Ki3, Kd3, Ki3Cutoff);
 
-        lineSensors = new LineSensors();
-
         // create an autonomous sequence with the steps to drive
         // several legs of a polygonal course ---
         final float power = 0.5f;
+        initOpenCV();
+        startCamera();
+
+        //start up opencv
+
+        RobotLog.vv(OpenCVLib.cvTAG, "Finished init camera");
+
+        //catch a frame
+        Mat frame = getCameraFrame();
 
         // create the root Sequence for this autonomous OpMode
         mSequence = new AutoLib.LinearSequence();
@@ -92,44 +93,33 @@ public class LineDrive extends OpenCVLib {
 
         //mSequence.add(new DriveUntilLine(robot.getMotorArray(), power + 0.1, true));
         //two-stage line follow
-        mSequence.add(new LineDriveStep(this, 0, lineSensors, lineSensors, new UltraStop(ultraDistS1), mgPid, mdPid, robot.getMotorArray(), 0.1f, false));
-        mSequence.add(new LineDriveStep(this, 0, lineSensors, lineSensors, new UltraStop(ultraDistS2), mgPid, mdPid, robot.getMotorArray(), 0.05f, true));
+        mSequence.add(new LineDriveStep(this, 0, new LineSensors(frame), new LineSensors(frame), new UltraStop(ultraDistS1), mgPid, mdPid, robot.getMotorArray(), 0.1f, false));
+        mSequence.add(new LineDriveStep(this, 0, new LineSensors(frame), new LineSensors(frame), new UltraStop(ultraDistS2), mgPid, mdPid, robot.getMotorArray(), 0.05f, true));
         //pushy pushy
         mSequence.add(new PushyLib.pushypushy(this, robot.getMotorArray(), robot.leftSensor, robot.rightSensor, robot.leftServo, robot.rightServo,
                 pushPos, time, red, colorThresh, pushyPower, driveTime, driveLoopCount));
+
+        mSequence.add(new AutoLib.RunCodeStep(new AutoLib.FunctionCall() {
+            public void run() {
+                robot.navX.zeroYaw();
+            }
+        }));
 
         mSequence.add(new SquirrleyAzimuthTimedDriveStep(this, 120.0f, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, 0.6f, false));
         //mSequence.add(new SquirrleyAzimuthTimedDriveStep(this, 90.0f, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, 0.5f, false));
-        mSequence.add(new SquirrleyAzimuthFinDriveStep(this, 90.0f, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, lineSensors, true));
+        mSequence.add(new SquirrleyAzimuthFinDriveStep(this, 90.0f, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, new LineSensors(frame), true));
 
-        mSequence.add(new LineDriveStep(this, 0, lineSensors, lineSensors, new UltraStop(ultraDistS1), mgPid, mdPid, robot.getMotorArray(), 0.1f, false));
-        mSequence.add(new LineDriveStep(this, 0, lineSensors, lineSensors, new UltraStop(ultraDistS2), mgPid, mdPid, robot.getMotorArray(), 0.08f, true));
+        mSequence.add(new LineDriveStep(this, 0, new LineSensors(frame), new LineSensors(frame), new UltraStop(ultraDistS1), mgPid, mdPid, robot.getMotorArray(), 0.1f, false));
+        mSequence.add(new LineDriveStep(this, 0, new LineSensors(frame), new LineSensors(frame), new UltraStop(ultraDistS2), mgPid, mdPid, robot.getMotorArray(), 0.05f, true));
         //pushy pushy
         mSequence.add(new PushyLib.pushypushy(this, robot.getMotorArray(), robot.leftSensor, robot.rightSensor, robot.leftServo, robot.rightServo,
                 pushPos, time, red, colorThresh, pushyPower, driveTime, driveLoopCount));
 
 
+        RobotLog.vv(OpenCVLib.cvTAG, "Finished init sequence");
+
         // start out not-done
         bDone = false;
-
-        //start up opencv
-        initOpenCV();
-        startCamera();
-
-        //catch a frame
-        Mat frame = getCameraFrame();
-
-        //init scanline Y values
-        yValStore[0] = frame.rows() / 4;
-        yValStore[1] = frame.rows() / 2;
-        yValStore[2] = (frame.rows() * 3) / 4;
-
-        telemetry.addData("Top Y Value", yValStore[0]);
-        telemetry.addData("Middle Y Value", yValStore[1]);
-        telemetry.addData("Bottom Y Value", yValStore[2]);
-
-        telemetry.addData("Frame Width", frame.width());
-        telemetry.addData("Frame Height", frame.height());
 
         robot.startNavX();
     }
@@ -152,7 +142,23 @@ public class LineDrive extends OpenCVLib {
 
     private class LineSensors implements HeadingSensor, DisplacementSensor, FinishSensor {
 
-        int lineCount = 0;
+        int lineCount;
+        private double lastLinePos;
+        private double lastLineHeading;
+        private int yValStore[] = new int[3];
+
+        LineSensors(Mat calib){
+            yValStore[0] = calib.rows() / 4;
+            yValStore[1] = calib.rows() / 2;
+            yValStore[2] = (calib.rows() * 3) / 4;
+            reset();
+        }
+
+        public void reset(){
+            lineCount = 0;
+            lastLinePos = 0;
+            lastLineHeading = 0;
+        }
 
         //heading sensor code for line following
         public float getHeading() {
@@ -161,7 +167,8 @@ public class LineDrive extends OpenCVLib {
             double linePos = -LineFollowLib.getAngle(frame, yValStore[0], yValStore[2]);
             //if it's an error, turn to where line was last
             if (linePos == LineFollowLib.ERROR_TOO_NOISY) {
-                if (lastLineHeading > 0) return 50.0f;
+                if (lastLineHeading == 0) return 0.0f;
+                else if (lastLineHeading > 0) return 50.0f;
                 else return -50.0f;
             } else lastLineHeading = linePos;
 
@@ -173,19 +180,19 @@ public class LineDrive extends OpenCVLib {
             double linePos = -LineFollowLib.getDisplacment(frame, yValStore[1]);
             //if it's an error, turn to where line was last
             if (linePos == LineFollowLib.ERROR_TOO_NOISY) {
-                if (lastLinePos > 0) return 0.8f;
+                if(lastLinePos == 0) return 0.0f;
+                else if (lastLinePos > 0) return 0.8f;
                 else return -0.8f;
             } else lastLinePos = linePos;
             return (float) linePos;
         }
 
         public boolean checkStop() {
-            if (LineFollowLib.getDisplacment(getCameraFrame(), yValStore[2]) != LineFollowLib.ERROR_TOO_NOISY)
-                //lineCount++;
-                return true;
-            //else lineCount = 0;
-            return false;
-            //return lineCount > 5;
+            if (LineFollowLib.getDisplacment(getCameraFrame(), yValStore[2]) != LineFollowLib.ERROR_TOO_NOISY){
+                lineCount++;
+            }
+            else lineCount = 0;
+            return lineCount >= 3;
         }
     }
 
@@ -308,31 +315,6 @@ public class LineDrive extends OpenCVLib {
         // the base class loop function does all we need --
         // since the motors always return done, the composite step will return "done" when
         // the GuideStep says it's done, i.e. we've reached the target location.
-    }
-
-    public class DriveUntilLine extends AutoLib.ConcurrentSequence implements FinishSensor {
-
-        int lineCount = 0;
-
-        public DriveUntilLine(OpMode mode, float heading, HeadingSensor gyro, SensorLib.PID pid, DcMotor motors[], float power, boolean stop) {
-            ArrayList<AutoLib.SetPower> steps = new ArrayList<AutoLib.SetPower>();
-            for (DcMotor em : motors) {
-                if (em != null) {
-                    DriveUntilStopMotorStep step = new DriveUntilStopMotorStep(em, 0, this, stop);
-                    this.add(step);
-                    steps.add(step);
-                }
-            }
-            this.preAdd(new SquirrleyGuideStep(mode, heading, gyro, pid, steps, power));
-        }
-
-        public boolean checkStop() {
-            if (LineFollowLib.getDisplacment(getCameraFrame(), yValStore[2]) != LineFollowLib.ERROR_TOO_NOISY)
-                lineCount++;
-            else lineCount = 0;
-
-            return lineCount > 5;
-        }
     }
 
     // a Step that runs a DcMotor at a given power, for a given time
