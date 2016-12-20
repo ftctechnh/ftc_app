@@ -110,6 +110,8 @@ Declare global variables here
         /*
         read the gamepad values and put into variables
          */
+        telemetry.addData("leftWheel Motor front encoder value: %d ", leftWheelMotorFront.getCurrentPosition());
+        telemetry.update();
         float leftY_gp1 = -gamepad1.left_stick_y;
         float rightY_gp1 = -gamepad1.right_stick_y;
 

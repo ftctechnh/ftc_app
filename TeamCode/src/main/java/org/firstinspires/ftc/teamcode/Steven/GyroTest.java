@@ -14,7 +14,7 @@ public class GyroTest extends OpMode {
     @Override
     public void init() {
         gyroSensor = hardwareMap.gyroSensor.get("gyroSensor");
-        
+
     }
 
     @Override

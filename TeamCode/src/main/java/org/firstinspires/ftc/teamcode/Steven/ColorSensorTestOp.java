@@ -119,7 +119,7 @@ Declare global variables here
             telemetry.addData("Hue", hsvValues[0]);
 
 
-            if (colorSensor.red()>colorSensor.blue()) {/*need to find out the treashold for */
+            if (colorSensor.red()>colorSensor.blue() && colorSensor.red() > 50) {/*need to find out the treashold for */
                 redOrBlue = 'r';
             }
             telemetry.addData("Red or Blue", redOrBlue);

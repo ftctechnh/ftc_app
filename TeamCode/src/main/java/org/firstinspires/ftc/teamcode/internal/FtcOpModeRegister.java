@@ -33,6 +33,7 @@ package org.firstinspires.ftc.teamcode.internal;
 
 import com.google.blocks.ftcrobotcontroller.runtime.BlocksOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.AnnotatedOpModeRegistrar;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 

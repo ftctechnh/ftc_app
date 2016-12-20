@@ -90,8 +90,8 @@ public class autonomous extends LinearOpMode {
     static final double     COUNTS_PER_MOTOR_REV    = 757 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 2.3333 ;     // 56/24
     static final double     WHEEL_PERIMETER_CM   = 29;     // For figuring circumference
-    static final double     COUNTS_PER_CM         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-                                                      (WHEEL_PERIMETER_CM);
+    static final double     COUNTS_PER_CM         = (COUNTS_PER_MOTOR_REV ) /
+            (WHEEL_PERIMETER_CM*DRIVE_GEAR_REDUCTION);
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
     static  int             INITIAL_SHOOTERPOS;
