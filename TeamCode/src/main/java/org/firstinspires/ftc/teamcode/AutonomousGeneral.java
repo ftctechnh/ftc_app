@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -7,7 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 /**
  * Created by inspirationteam on 12/18/2016.
  */
-
+@Disabled
 public class AutonomousGeneral extends LinearOpMode{
     private static double     COUNTS_PER_MOTOR_REV;    // eg: TETRIX Motor Encoder
     private static double     DRIVE_GEAR_REDUCTION;     // 56/24

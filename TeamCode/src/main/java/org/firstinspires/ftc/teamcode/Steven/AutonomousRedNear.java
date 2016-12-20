@@ -91,26 +91,26 @@ public class AutonomousRedNear extends AutonomousGeneral {
         waitForStart();
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  20,  20, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(DRIVE_SPEED,  62.23,  62.23, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
       //  encoderDrive(DRIVE_SPEED,  -6,  6, 5.0);
          // S1: Forward 47 Inches with 5 Sec timeout
         //encoderDrive(TURN_SPEED,   9, -9, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
 
-        encoderDrive(DRIVE_SPEED,  6,  -6, 5.0);
+        //encoderDrive(DRIVE_SPEED,  6,  -6, 5.0);
         sleep(1000);     // pause for servos to move
 
         // intakeDrive(0.8, 900);
 
-        shootingDrive(.6, 850);
+        shootingDrive(0.8, 850);
 
         sleep(500);     // pause for servos to move
         intakeDrive(0.8, 1100);
 
-        shootingDrive(.6, 850);
+        shootingDrive(0.8, 850);
         sleep(500);     // pause for servos to move
         intakeDrive(0.8, 1100);
 
-        shootingDrive(.6, 850);
+        shootingDrive(0.8, 850);
         sleep(500);     // pause for servos to move
         encoderDrive(DRIVE_SPEED,  6,  -6, 5.0);
        // encoderDrive(DRIVE_SPEED, 15,-15 , 5.0);
