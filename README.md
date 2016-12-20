@@ -1,4 +1,9 @@
 # ftc_app
+
+## Usage:
+1. Follow instructions in "example_config.java" in the "org.wheelerschool.robotics.config.example" package
+
+## Description:
 FTC Android Studio project to create FTC Robot Controller app.
 
 This is the FTC SDK that can be used to create an FTC Robot Controller app, with custom op modes.
