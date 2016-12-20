@@ -2,7 +2,7 @@
 
 Welcome!
 
-This module, Omegas, is the place where FTC 6504 (the Omegas) will write/paste the code for your team's robot controller App. This module currently only contains templates for older robots and library usage.
+This module, Omegas, is the place where FTC 6504 (the Omegas) will write/paste the code for our team's robot controller app. This module contains templates for older robots and library usage, as well as helper classes like `HardwareOmegas` and `OmegasBeacon`, and useful opmodes, like `OmegasVision` and `OmegasLinear`.
 
 ## Using our app:  Cloning the Omegas Module
 
