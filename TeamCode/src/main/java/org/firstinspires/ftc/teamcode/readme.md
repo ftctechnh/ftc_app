@@ -95,7 +95,7 @@ prior to clicking to the green Run arrow.
 
 Warning:  This is not for the inexperienced Software developer.
 You will need to be comfortable with File manipulations and managing Android Studio Modules.
-These changes are performed OUTSIDE of Android Studios, so close Android Studios before you do this.
+These changes are performed OUTSIDE of Android Studio, so close Android Studio before you do this.
  
 Also.. Make a full project backup before you start this :)
 
