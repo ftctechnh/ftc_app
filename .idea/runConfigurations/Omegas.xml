@@ -22,12 +22,14 @@
       <option name="SHOW_STATIC_VARS" value="true" />
       <option name="WORKING_DIR" value="" />
       <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+      <option name="SHOW_OPTIMIZED_WARNING" value="true" />
     </Auto>
     <Hybrid>
       <option name="USE_JAVA_AWARE_DEBUGGER" value="false" />
       <option name="SHOW_STATIC_VARS" value="true" />
       <option name="WORKING_DIR" value="" />
       <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+      <option name="SHOW_OPTIMIZED_WARNING" value="true" />
     </Hybrid>
     <Java />
     <Native>
@@ -35,11 +37,10 @@
       <option name="SHOW_STATIC_VARS" value="true" />
       <option name="WORKING_DIR" value="" />
       <option name="TARGET_LOGGING_CHANNELS" value="lldb process:gdb-remote packets" />
+      <option name="SHOW_OPTIMIZED_WARNING" value="true" />
     </Native>
     <Profilers>
       <option name="ENABLE_ADVANCED_PROFILING" value="false" />
-      <option name="GAPID_ENABLED" value="false" />
-      <option name="GAPID_DISABLE_PCS" value="false" />
       <option name="SUPPORT_LIB_ENABLED" value="true" />
       <option name="INSTRUMENTATION_ENABLED" value="true" />
     </Profilers>
