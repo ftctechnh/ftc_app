@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.I2cAddr;
 /**
  * Created by minds on 1/23/2016.
  */
@@ -52,8 +53,8 @@ public abstract class AutonomousBase extends OpMode {
     Servo servoRightButton;
     TouchSensor touchRight;
     TouchSensor touchLeft;
-//    ColorSensor colorLeft1;
-//    ColorSensor colorLeft2;
+    ColorSensor colorLeft;
+    ColorSensor colorRight;
     GyroSensor gyro;
 
 
@@ -104,8 +105,12 @@ public abstract class AutonomousBase extends OpMode {
         touchRight = hardwareMap.touchSensor.get("right_touch");
         touchLeft = hardwareMap.touchSensor.get("left_touch");
 
-//        colorLeft1 = hardwareMap.colorSensor.get("color_left_1");
-//        colorLeft2 = hardwareMap.colorSensor.get("color_left_2");
+        I2cAddr colorAddrLeft = I2cAddr.create8bit(0x3C);
+        I2cAddr colorAddrRight = I2cAddr.create8bit(0x4C);
+        colorLeft = hardwareMap.colorSensor.get("color_l");
+        colorRight = hardwareMap.colorSensor.get("color_r");
+        colorLeft.setI2cAddress(colorAddrLeft);
+        colorRight.setI2cAddress(colorAddrRight);
 //        colorLeft1.enableLed(false);
 //        colorLeft2.enableLed(false);
 
@@ -306,6 +311,8 @@ public abstract class AutonomousBase extends OpMode {
     public void telemetry(){
         telemetry.addData("angle to goal ",map.angleToGoal());
         telemetry.addData("Runtime ",getRuntime());
+        telemetry.addData("colorLeft ","Left R: " + colorLeft.red() + " G: " + colorLeft.green() + " B: " + colorLeft.blue());
+        telemetry.addData("colorRight ","Right R: " + colorRight.red() + " G: " + colorRight.green() + " B: " + colorRight.blue());
         telemetry.addData("dist from goal ",map.distanceToGoal());
         telemetry.addData("goal (x,y) ","(" +
           map.getGoalX() + "," + 
