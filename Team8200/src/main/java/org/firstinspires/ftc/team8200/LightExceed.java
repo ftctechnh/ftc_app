@@ -91,8 +91,8 @@ public class LightExceed extends LinearOpMode {
     public void MoveToBeacon() {
         // Move to white line
         while(lightSensor.getLightDetected() < WHITE_THRESHOLD) {
-            robot.leftMotor.setPower(0.5);
-            robot.rightMotor.setPower(0.5);
+            robot.leftMotor.setPower(0.2);
+            robot.rightMotor.setPower(0.2);
             updateTelemetry();
         }
 
@@ -113,13 +113,13 @@ public class LightExceed extends LinearOpMode {
             runtime.reset();
             while (opModeIsActive() && (runtime.seconds() < 0.25)) {
                 robot.leftMotor.setPower(0);
-                robot.rightMotor.setPower(0.5);
+                robot.rightMotor.setPower(0.2);
             }
 
             //step 5 follow the line
             while (lightSensor.getLightDetected() >= WHITE_THRESHOLD) { //follows white light is above threshold AND touch sensor is not touching
-                robot.leftMotor.setPower(0.5);
-                robot.rightMotor.setPower(0.5);
+                robot.leftMotor.setPower(0.2);
+                robot.rightMotor.setPower(0.2);
             }
 
         }
@@ -129,6 +129,7 @@ public class LightExceed extends LinearOpMode {
 
         telemetry.addData("Raw", lightSensor.getRawLightDetected());
         telemetry.addData("Normal", lightSensor.getLightDetected());
+        telemetry.update();
 
     }
 }
