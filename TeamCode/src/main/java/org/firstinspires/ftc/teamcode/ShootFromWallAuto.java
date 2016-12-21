@@ -36,5 +36,6 @@ public class ShootFromWallAuto extends LinearOpMode
             sleep(100);
             robot.driveStraight(8.5, 45);
         }
+        robot.stop();
     }
 }

@@ -87,11 +87,16 @@ public class OmniDriveBot implements DriveTrainInterface
         fR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        shooterMotorTwo.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        shooterMotorTwo.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         fR.setMaxSpeed(2400);
         fL.setMaxSpeed(2400);
         bR.setMaxSpeed(2400);
         bL.setMaxSpeed(2400);
+
+        shooterMotorOne.setMaxSpeed(2900);
+        shooterMotorTwo.setMaxSpeed(2900);
 
         shooterPitchServo.setPosition(1.0f);
         scooperServo.setPosition(.5f);
@@ -157,8 +162,35 @@ public class OmniDriveBot implements DriveTrainInterface
         Color.RGBToHSV((beaconColorSensor.red() * 255) / 800, (beaconColorSensor.green() * 255) / 800, (beaconColorSensor.blue() * 255) / 800, hsvValues);
     }
 
+    public void stop()
+    {
+        fLPower = 0;
+        fRPower = 0;
+        bLPower = 0;
+        bRPower = 0;
+        lifterPower = 0;
+        shooterPowerTwo = 0;
+        shooterPowerOne = 0;
+        shooterPitchServoPos = 0.5f;
+    }
+
+    public void resetEncoders()
+    {
+        fL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        fR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        fL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        fR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
     public void driveStraight(double distanceInches, double degree)
     {
+        //Resets Encoders
+        resetEncoders();
         //Converts inputs appropriately if distance inches is negative
         if(distanceInches < 0)
         {
@@ -188,14 +220,37 @@ public class OmniDriveBot implements DriveTrainInterface
         float bRPower = leftYIn + leftXIn;
         float bLPower = -leftYIn + leftXIn;
 
+        float scaleFactor = 1.0f;
+
+        if (Math.abs(fRPower) > scaleFactor)
+        {
+            scaleFactor = Math.abs(fRPower);
+        }
+        if (Math.abs(fLPower) > scaleFactor)
+        {
+            scaleFactor = Math.abs(fLPower);
+        }
+        if (Math.abs(bRPower) > scaleFactor)
+        {
+            scaleFactor = Math.abs(bRPower);
+        }
+        if (Math.abs(bLPower) > scaleFactor)
+        {
+            scaleFactor = Math.abs(bLPower);
+        }
+        fLPower = fLPower / scaleFactor;
+        bRPower = bRPower / scaleFactor;
+        bLPower = bLPower / scaleFactor;
+        fRPower = fRPower / scaleFactor;
+
+        double distanceTravel = distanceInches/scalingFactor;
+        int fLDistanceEncoders = (int)(distanceTravel*57);
+        int fRDistanceEncoders = (int)(distanceTravel*57);
+
         bL.setPower(bLPower);
         bR.setPower(bRPower);
         fL.setPower(fLPower);
         fR.setPower(fRPower);
-
-       double distanceTravel = distanceInches/scalingFactor;
-        int fLDistanceEncoders = (int)(Math.abs(fL.getCurrentPosition()) + (distanceTravel*57));
-        int fRDistanceEncoders = (int)(Math.abs(fR.getCurrentPosition()) + (distanceTravel*57));
 
         while(Math.abs(fL.getCurrentPosition()) < fLDistanceEncoders & Math.abs(fR.getCurrentPosition()) < fRDistanceEncoders)
         {
