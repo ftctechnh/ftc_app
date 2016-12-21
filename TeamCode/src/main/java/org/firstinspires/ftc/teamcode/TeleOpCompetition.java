@@ -31,6 +31,8 @@ public class TeleOpCompetition extends OpMode {
     DcMotor rightWheelMotorBack;
     DcMotor ballCollectorMotor;
     DcMotor ballShooterMotor;
+
+    double shooterGearRatio = 2.333;
 //asdfasdf
 
 /*
@@ -97,6 +99,7 @@ Declare global variables here
         FourWheelDrive();
         CollectBalls();
         BallShooter();
+        shoot();
 
     }
 /*
@@ -164,6 +167,24 @@ Declare global variables here
 
 /*---------------------------------------------------------------------------------------------
 */
+    public void shoot(){
+
+        if (gamepad2.a){
+        ballShooterMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        ballShooterMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        ballShooterMotor.setTargetPosition(ballShooterMotor.getCurrentPosition() + (1478* shooterGearRatio);
+        ballShooterMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        ballShooterMotor.setPower(1);
+        while (ballShooterMotor.isBusy()){
+            telemetry.addData("", "Shooting...");
+            telemetry.update();
+        }
+        telemetry.addData("", "Done Shooting");
+        telemetry.update();
+        ballShooterMotor.setPower(0);
+        }
+
+    }
     /* Read the color sensor and return "b" for Blue or "r" for Red */
    /* public char ReadColorSensor(){
 
