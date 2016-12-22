@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 /**
  * Created by Jeremy Yao on 11/13/2016.
  */
-@Autonomous(name = "NavigationClassTest", group = "Concept")
+//@Autonomous(name = "NavigationClassTest", group = "Concept")
 public class NavigationClassTest extends LinearOpMode {
     OmniDriveBot robot = new OmniDriveBot();
     FieldNavigator navigator = new FieldNavigator(robot);

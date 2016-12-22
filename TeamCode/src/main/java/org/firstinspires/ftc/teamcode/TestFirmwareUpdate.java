@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Created by Peter on 9/18/2016.
  */
 
-@TeleOp(name = "Firmware Update", group = "Tests")
+//@TeleOp(name = "Firmware Update", group = "Tests")
 public class TestFirmwareUpdate extends LinearOpMode
 {
     //new System requires that we make a robot object
