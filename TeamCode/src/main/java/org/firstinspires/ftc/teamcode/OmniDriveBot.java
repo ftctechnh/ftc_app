@@ -95,8 +95,8 @@ public class OmniDriveBot implements DriveTrainInterface
         bR.setMaxSpeed(2400);
         bL.setMaxSpeed(2400);
 
-        shooterMotorOne.setMaxSpeed(2900);
-        shooterMotorTwo.setMaxSpeed(2900);
+        shooterMotorOne.setMaxSpeed(3000);
+        shooterMotorTwo.setMaxSpeed(3000);
 
         shooterPitchServo.setPosition(1.0f);
         scooperServo.setPosition(.5f);
