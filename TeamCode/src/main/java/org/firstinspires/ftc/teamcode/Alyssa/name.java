@@ -66,9 +66,9 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="GoStraight", group="Pushbot")
+@Autonomous(name="junk", group="Pushbot")
 //@Disabled
-public class Go_straight extends LinearOpMode {
+public class name extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwarePushbot         robot   = new HardwarePushbot();   // Use a Pushbot's hardware
@@ -113,21 +113,19 @@ public class Go_straight extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  80,  1, 20.0);  // Drive to Cap Ball
+        //encoderDrive(DRIVE_SPEED,  48,  48, 10.0);  // Drive to Cap Ball
         //encoderDrive(DRIVE_SPEED, -12, -12, 10); //Back away to avoid plywood
         //encoderDrive(TURN_SPEED,   30, -30, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
         //encoderDrive(DRIVE_SPEED, -60, -60, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
-
-
-        //robot.leftMotor.setPower(1);
-        //robot.rightMotor.setPower(1);
-        //sleep(5000);
-        //robot.leftMotor.setPower(0);
-        //robot.rightMotor.setPower(0);
+        robot.leftMotor.setPower(1);
+        robot.rightMotor.setPower(1);
+        sleep(5000);
+        robot.leftMotor.setPower(0);
+        robot.rightMotor.setPower(0);
 
         //robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
         //robot.rightClaw.setPosition(0.0);
-        //sleep(1000);     // pause for servos to move
+        sleep(1000);     // pause for servos to move
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
@@ -191,6 +189,9 @@ public class Go_straight extends LinearOpMode {
             robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             //  sleep(250);   // optional pause after each move
+            
+
+
         }
     }
 }
