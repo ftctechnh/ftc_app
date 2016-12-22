@@ -7,7 +7,7 @@ package org.firstinspires.ftc.teamcode;
 /**
  * Created by 111 on 11/17/2016.
  */
-@Autonomous(name = "AdafruitColorTest", group = "Concept")
+//@Autonomous(name = "AdafruitColorTest", group = "Concept")
 public class AdafruitAutoTest
 {
     //  private AdafruitColorSensor colorSens = new AdafruitColorSensor(HardwareMap);

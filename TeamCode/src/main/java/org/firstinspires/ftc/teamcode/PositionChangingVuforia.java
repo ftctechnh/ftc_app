@@ -19,7 +19,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  *
  */
 
-@Autonomous(name = "PositionChangingVuforia", group = "Concept")
+//@Autonomous(name = "PositionChangingVuforia", group = "Concept")
 public class PositionChangingVuforia extends LinearOpMode {
     // Variables to be used for later
     VuforiaLocalizer vuforiaLocalizer;
