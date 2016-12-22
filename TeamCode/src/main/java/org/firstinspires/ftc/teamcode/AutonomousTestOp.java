@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 /**
  * Created by 111 on 9/29/2016.
  */
-@TeleOp(name = "AutonomousTestOp", group = "Autonomous")
+@Autonomous(name = "AutonomousTestOp", group = "Autonomous")
 public class AutonomousTestOp extends OpMode
 {
     private OmniDriveBot robot = new OmniDriveBot();

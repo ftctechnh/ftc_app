@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannelController;
  * Created by Peter on 11/6/2016.
  */
 
-@TeleOp(name = "ColorSensTest", group = "Test")
+//@TeleOp(name = "ColorSensTest", group = "Test")
 public class AdafruitColorTest extends OpMode
 {
   //  private OmniDriveBot robot = new OmniDriveBot();

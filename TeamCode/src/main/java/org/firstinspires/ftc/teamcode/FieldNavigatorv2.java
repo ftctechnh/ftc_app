@@ -103,11 +103,57 @@ public class FieldNavigatorv2
         if (latestLocation != null)
         {
             lastKnownLocation = latestLocation;
+            updateRobotLocation();
         }
     }
+
+    public boolean isDetectingTarget()
+    {
+        if(latestLocation != null)
+            return true;
+
+        return false;
+    }
+
     // Creates a matrix for determining the locations and orientations of objects
     // Units are millimeters for x, y, and z, and degrees for u, v, and w
     public OpenGLMatrix createMatrix(float x, float y, float z, float u, float v, float w) {
         return OpenGLMatrix.translation(x, y, z).multiplied(Orientation.getRotationMatrix(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES, u, v, w));
+    }
+
+    public void moveTo(double xPos, double yPos, int deg)
+    {
+
+    }
+
+    public double convertToInches(double milimeterInput)
+    {
+        return milimeterInput/25.4;
+    }
+
+    public void updateRobotLocation()
+    {
+        currentX = convertToInches(lastKnownLocation.getData()[12]);
+        currentY = convertToInches(lastKnownLocation.getData()[13]);
+        Orientation rot = Orientation.getOrientation(lastKnownLocation, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.RADIANS);
+        currentDeg = (rot.thirdAngle * 57.2958);
+    }
+
+    public double getCurrentX()
+    {
+        //UNITS: INCHES
+        return currentX;
+    }
+
+    public double getCurrentY()
+    {
+        //UNITS: INCHES
+        return currentY;
+    }
+
+    public double getCurrentDeg()
+    {
+        //UNITS: DEGREES
+        return currentDeg;
     }
 }
