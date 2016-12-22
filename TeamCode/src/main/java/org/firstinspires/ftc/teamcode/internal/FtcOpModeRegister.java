@@ -33,11 +33,11 @@ package org.firstinspires.ftc.teamcode.internal;
 
 import com.google.blocks.ftcrobotcontroller.runtime.BlocksOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.AnnotatedOpModeRegistrar;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.ConceptNullOp;
+import org.firstinspires.ftc.teamcode.Aditya.BeaconPress;
 import org.firstinspires.ftc.teamcode.Ivan.VuforiaOp;
 import org.firstinspires.ftc.teamcode.Steven.TankTeleOp;
 import org.firstinspires.ftc.teamcode.TeleOpCompetition;
@@ -75,6 +75,7 @@ public class FtcOpModeRegister implements OpModeRegister {
         manager.register("TankTeleOp", TankTeleOp.class);
         manager.register("VuforiaExample", VuforiaOp.class);
         manager.register("11183: TeleOp Competition", TeleOpCompetition.class);
+        manager.register("#11183: Beacon Press", BeaconPress.class);
         BlocksOpMode.registerAll(manager);
 
         /**
