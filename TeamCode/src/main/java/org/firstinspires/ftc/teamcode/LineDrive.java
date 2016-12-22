@@ -141,7 +141,7 @@ public class LineDrive extends OpenCVLib {
         mPushy.add(new PushyLib.pushypushy(this, robot.getMotorArray(), robot.leftSensor, robot.rightSensor, robot.leftServo, robot.rightServo,
                 pushPos, time, red, colorThresh, pushyPower, driveTime, driveLoopCount));
 
-        mPushy.add(new UltraSquirrleyAzimuthFinDriveStep(this, 90, 0, robot.getNavXHeadingSensor(), new UltraSensors(25), mPid, muPid, robot.getMotorArray(), 0.3f, new LineSensors(frame, 2000), true));
+        mPushy.add(new UltraSquirrleyAzimuthFinDriveStep(this, 90, 0, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(25), mPid, muPid, robot.getMotorArray(), 0.3f, new LineSensors(frame, 2000), true));
 
         //mPushy.add(new SquirrleyAzimuthTimedDriveStep(this, 120.0f, 0.0f, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, 0.45f, false));
         //mPushy.add(new SquirrleyAzimuthTimedDriveStep(this, 90.0f, 0.0f, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, 0.5f, false));
@@ -274,6 +274,7 @@ public class LineDrive extends OpenCVLib {
 
     private class UltraSensors implements FinishSensor, DisplacementSensor {
         float mDist;
+        float mHeading;
 
         UltraSensors(float dist) {
             mDist = dist;
@@ -300,9 +301,29 @@ public class LineDrive extends OpenCVLib {
             if (dist > 200) return 100.0f - mDist;
             if (dist < 5) return 5.0f - mDist;
             return dist - mDist;
-
-
         }
+    }
+
+    private class UltraCorrectedDisplacement{
+        private float mDist;
+
+        UltraCorrectedDisplacement(float dist) {
+            mDist = dist;
+        }
+
+        public float getDisp(float angleError){
+            float dist = (float)robot.distSensor.getUltrasonicLevel();
+
+            telemetry.addData("Ultra", dist);
+
+            if(dist > 200) dist = 200;
+            else if (dist < 5) dist = 5;
+
+            dist *= Math.cos(Math.toRadians(angleError));
+
+            return dist - mDist;
+        }
+
     }
 
     // a Step that provides gyro-based guidance to motors controlled by other concurrent Steps (e.g. encoder or time-based)
@@ -565,13 +586,13 @@ public class LineDrive extends OpenCVLib {
         private float mHeading;
         private OpMode mOpMode;                             // needed so we can log output (may be null)
         private HeadingSensor mGyro;                        // sensor to use for heading information (e.g. Gyro or Vuforia)
-        private DisplacementSensor mUltra;
+        private UltraCorrectedDisplacement mUltra;
         private SensorLib.PID gPid;                         // proportional–integral–derivative controller (PID controller)
         private SensorLib.PID dPid;
         private double mPrevTime;                           // time of previous loop() call
         private ArrayList<AutoLib.SetPower> mMotorSteps;            // the motor steps we're guiding - assumed order is right ... left ...
 
-        public UltraSquirrleyGuideStep(OpMode mode, float direction, float heading, HeadingSensor gyro, DisplacementSensor ultra, SensorLib.PID gpid,
+        public UltraSquirrleyGuideStep(OpMode mode, float direction, float heading, HeadingSensor gyro, UltraCorrectedDisplacement ultra, SensorLib.PID gpid,
                                        SensorLib.PID dpid, ArrayList<AutoLib.SetPower> motorsteps, float power) {
             mOpMode = mode;
             mDirection = direction;
@@ -604,7 +625,7 @@ public class LineDrive extends OpenCVLib {
             // feed error through PID to get motor power correction value
             final float gCorrection = -gPid.loop(error, (float) dt);
 
-            final float dCorrection = -dPid.loop(mUltra.getDisp(), (float) dt);
+            final float dCorrection = -dPid.loop(mUltra.getDisp(error), (float) dt);
 
             //calculate motor powers for fancy wheels
             AutoLib.MotorPowers mp = AutoLib.GetSquirrelyWheelMotorPowers(mDirection);
@@ -635,7 +656,7 @@ public class LineDrive extends OpenCVLib {
 
     static public class UltraSquirrleyAzimuthTimedDriveStep extends AutoLib.ConcurrentSequence {
 
-        public UltraSquirrleyAzimuthTimedDriveStep(OpMode mode, float direction, float heading, HeadingSensor gyro, DisplacementSensor ultra, SensorLib.PID gpid, SensorLib.PID dpid,
+        public UltraSquirrleyAzimuthTimedDriveStep(OpMode mode, float direction, float heading, HeadingSensor gyro, UltraCorrectedDisplacement ultra, SensorLib.PID gpid, SensorLib.PID dpid,
                                               DcMotor motors[], float power, float time, boolean stop) {
             // add a concurrent Step to control each motor
 
@@ -657,7 +678,7 @@ public class LineDrive extends OpenCVLib {
 
     static public class UltraSquirrleyAzimuthFinDriveStep extends AutoLib.ConcurrentSequence {
 
-        public UltraSquirrleyAzimuthFinDriveStep(OpMode mode, float direction, float heading, HeadingSensor gyro, DisplacementSensor ultra, SensorLib.PID gpid, SensorLib.PID dpid,
+        public UltraSquirrleyAzimuthFinDriveStep(OpMode mode, float direction, float heading, HeadingSensor gyro, UltraCorrectedDisplacement ultra, SensorLib.PID gpid, SensorLib.PID dpid,
                                                    DcMotor motors[], float power, FinishSensor fin, boolean stop) {
             // add a concurrent Step to control each motor
 
