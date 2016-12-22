@@ -98,11 +98,31 @@ public class VlctyVtx_TeleOp extends OpMode{
         double left;
         double right;
 
+
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
+        //Also when left trigger  is pressed it divides the motor power value by 8 to slow it down
         left = -gamepad1.left_stick_y;
         right = -gamepad1.right_stick_y;
+        if ((gamepad1.left_trigger > 0)&&((-gamepad1.left_stick_y > 0)||(-gamepad1.left_stick_y < 0)))
+            left = left/8;
+        robot.leftMotor.setPower(left);
+        if ((gamepad1.left_trigger > 0)&&((-gamepad1.right_stick_y > 0)||(-gamepad1.right_stick_y < 0)))
+            right = right/8;
+        robot.rightMotor.setPower(right);
+
+        //Run wheels in tank mode (note: this is effected by the loop and is jerky... It doesn't work)
+        /*if (gamepad1.left_trigger > 0)
+             left = 0.3;
+        if (gamepad1.right_trigger > 0)
+             right = 0.3;
         robot.leftMotor.setPower(left);
         robot.rightMotor.setPower(right);
+        if (gamepad1.left_bumper)
+            left = -0.3;
+        if (gamepad1.right_bumper)
+            right = -0.3;
+        robot.leftMotor.setPower(left);
+        robot.rightMotor.setPower(right);*/
 
         // Use gamepad left & right Bumpers to open and close the claw
         if (gamepad2.right_bumper)

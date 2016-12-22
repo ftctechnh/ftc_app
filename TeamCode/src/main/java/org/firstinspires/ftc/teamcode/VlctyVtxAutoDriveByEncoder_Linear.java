@@ -109,9 +109,9 @@ sleep(500);
                           robot.rightMotor.getCurrentPosition());
         telemetry.update();
 
-        /*robot.armMotor.setPower(robot.ARM_UP_POWER);
+        robot.armMotor.setPower(robot.ARM_UP_POWER);
         sleep(500);
-        robot.armMotor.setPower(0.0);*/
+        robot.armMotor.setPower(0.0);
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
@@ -122,7 +122,7 @@ sleep(500);
         sleep(1000);
 
 
-        encoderDrive(DRIVE_SPEED, 7, 7, 10.0);  // S1: Forward 48 Inches with 5 Sec timeout
+        encoderDrive(DRIVE_SPEED, 7, 7, 5.0);  // S1: Forward 48 Inches with 5 Sec timeout
         telemetry.addData("Path", "After encoderdrive 48");
         telemetry.update();
         sleep(1000);
