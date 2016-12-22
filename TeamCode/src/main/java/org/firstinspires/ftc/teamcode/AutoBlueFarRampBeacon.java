@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-/*
+/**
 Made by jeremy, needs testing with beacons!!!!!!!!!
  */
 @Autonomous(name = "AutoBlueFarRampBeacon", group = "Autonomous")
@@ -17,10 +17,14 @@ public class AutoBlueFarRampBeacon extends LinearOpMode
 
         waitForStart();
 
+        //A suggestion but add part to shoot particles into center washing machine
+
         robot.driveStraight(103, -153);
         sleep(100);
-        robot.spin(-90);
+        robot.driveStraight(14,-180);
         sleep(100);
+        robot.spin(90);
+
         /* test if color sensors can get beacon color; basically test code
         telemetry.addData("BLUE:", robot.getSensorBlue());
         telemetry.addData("RED:", robot.getSensorRed());
@@ -29,7 +33,6 @@ public class AutoBlueFarRampBeacon extends LinearOpMode
         telemetry.addData("HUE", robot.getSensorHue());
         sleep(10000);\
         */
-
 
         //assumes robot is on the left side of the beacon from the side with battery
         if(robot.isDetectingRed() && !robot.isDetectingBlue())
@@ -66,6 +69,9 @@ public class AutoBlueFarRampBeacon extends LinearOpMode
             robot.driveStraight(8, -90);
             robot.driveStraight(8,90);
             robot.driveStraight(6,180);
+
         }
+
+        //maybe hit ball last?????????
     }
 }

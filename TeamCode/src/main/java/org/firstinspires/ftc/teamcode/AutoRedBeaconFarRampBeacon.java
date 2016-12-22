@@ -17,10 +17,12 @@ public class AutoRedBeaconFarRampBeacon extends LinearOpMode
 
         waitForStart();
 
+        //Suggest that first part of auto should shoot balls into washing machine???
         robot.driveStraight(103, 153);
         sleep(100);
         robot.spin(90);
         sleep(100);
+
         /* test if color sensors can get beacon color; basically test code
         telemetry.addData("BLUE:", robot.getSensorBlue());
         telemetry.addData("RED:", robot.getSensorRed());
