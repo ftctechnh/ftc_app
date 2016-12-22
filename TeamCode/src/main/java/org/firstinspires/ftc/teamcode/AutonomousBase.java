@@ -111,8 +111,8 @@ public abstract class AutonomousBase extends OpMode {
         colorRight = hardwareMap.colorSensor.get("color_r");
         colorLeft.setI2cAddress(colorAddrLeft);
         colorRight.setI2cAddress(colorAddrRight);
-//        colorLeft1.enableLed(false);
-//        colorLeft2.enableLed(false);
+        colorLeft.enableLed(false);
+        colorRight.enableLed(false);
 
         gyro = hardwareMap.gyroSensor.get("gyro");
         gyro.calibrate();
