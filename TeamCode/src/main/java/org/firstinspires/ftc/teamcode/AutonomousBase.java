@@ -311,8 +311,8 @@ public abstract class AutonomousBase extends OpMode {
     public void telemetry(){
         telemetry.addData("angle to goal ",map.angleToGoal());
         telemetry.addData("Runtime ",getRuntime());
-        telemetry.addData("colorLeft ","Left R: " + colorLeft.red() + " G: " + colorLeft.green() + " B: " + colorLeft.blue());
-        telemetry.addData("colorRight ","Right R: " + colorRight.red() + " G: " + colorRight.green() + " B: " + colorRight.blue());
+        telemetry.addData("colorLeft ","Left R: " + colorLeft.red() + " G: " + colorLeft.green() + " B: " + colorLeft.blue() + " A: " + colorLeft.alpha() + " RGBA: " + colorLeft.argb());
+        telemetry.addData("colorRight ","Right R: " + colorRight.red() + " G: " + colorRight.green() + " B: " + colorRight.blue() + " A: " + colorRight.alpha() + " RGBA: " + colorRight.argb());
         telemetry.addData("dist from goal ",map.distanceToGoal());
         telemetry.addData("goal (x,y) ","(" +
           map.getGoalX() + "," + 
@@ -353,6 +353,7 @@ public abstract class AutonomousBase extends OpMode {
             return false;
         }
     }
+
     public double actualRuntime() {
         return getRuntime() - tDiff;
     }
