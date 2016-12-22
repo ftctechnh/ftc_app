@@ -172,7 +172,7 @@ Declare global variables here
         if (gamepad2.a){
         ballShooterMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         ballShooterMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        ballShooterMotor.setTargetPosition(ballShooterMotor.getCurrentPosition() + (1478* shooterGearRatio);
+        ballShooterMotor.setTargetPosition((int)(ballShooterMotor.getCurrentPosition() + (1478* shooterGearRatio)));
         ballShooterMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         ballShooterMotor.setPower(1);
         while (ballShooterMotor.isBusy()){

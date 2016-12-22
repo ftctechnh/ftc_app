@@ -68,7 +68,7 @@ Declare global variables here
         beaconPress = hardwareMap.servo.get("beaconPress");
         /* get a reference to our ColorSensor object */
         //colorSensor = hardwareMap.colorSensor.get("sensor_color");
-        beaconPress.setPosition(1.0);
+        beaconPress.setPosition(0.5);
 
     }
     /*
@@ -159,14 +159,14 @@ Declare global variables here
     }
     */
     public void servoMove() {
-        double up_step = 1.0;
-        double down_step = -1.0;
+        double up_step = 0.25;
+        double down_step = -0.25;
 
-        if(gamepad2.dpad_down = true && (beaconPress.getPosition() ) + down_step >= 0){
+        if(gamepad2.dpad_down && (beaconPress.getPosition() ) + down_step >= 0){
             beaconPress.setPosition(beaconPress.getPosition() + down_step);
         }
 
-        if(gamepad2.dpad_up = true && (beaconPress.getPosition() ) + up_step >= 0){
+        if(gamepad2.dpad_up && (beaconPress.getPosition() ) + up_step >= 0){
             beaconPress.setPosition(beaconPress.getPosition() + up_step);
         }
 
