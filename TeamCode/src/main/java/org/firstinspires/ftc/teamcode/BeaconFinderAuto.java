@@ -91,6 +91,6 @@ public class BeaconFinderAuto extends LinearOpMode {
     }
     public void reachBeacon()
     {
-
+        //This function will get the beacon
     }
 }
