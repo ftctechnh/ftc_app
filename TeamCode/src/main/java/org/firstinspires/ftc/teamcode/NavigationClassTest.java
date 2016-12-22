@@ -39,27 +39,31 @@ public class NavigationClassTest extends LinearOpMode {
             }
             sleep(10);
         }
-        /*
-        while (true)
+        /*while (true)
         {
             if (targetDetected == true)
             {
                 telemetry.addData("Difference in (x) (in):" + (2134-navigator.currentX) * 0.0393701, null);
-                telemetry.addData("Difference in y (in)" + (203-navigator.currentY) * 0.0393701, null);
+                telemetry.addData("Difference in y (in)" + (203-navigator.getcurrentY) * 0.0393701, null);
             }
             sleep(100);
             telemetry.update();
-        }
-        */
-       /* if (!targetDetected)
-            navigator.setRobotLocation(84, 24, 0);
-
+        }*/
+       if (!targetDetected)
+       {
+           navigator.setRobotLocation(84, 24, 0);
+       }
+        telemetry.addData("Current X", navigator.returnCurrentX());
+        telemetry.addData("Current Y", navigator.returnCurrentY());
+        telemetry.addData("Drive X", 84-navigator.returnCurrentX());
+        telemetry.addData("Drive Y", 13-navigator.returnCurrentY());
         telemetry.update();
-        navigator.moveToPosition(84, 13, 90); //only spins
+        sleep(10000);
+        //navigator.moveToPosition(84, 13, 90); //only spins
         //orientation is -90 on phone, robot is
 
-        robot.driveStraight(84 - navigator.returnCurrentX(), -180);
-        robot.driveStraight(24 - navigator.returnCurrentY(), 90); //robot is now at beacon
+        /*robot.driveStraight(84 - navigator.returnCurrentX(), -180);
+        robot.driveStraight(24 - navigator.returnCurrentY(), 90); //robot is now at beacon*/
 
        /*
         idle(); //idle essentially waits for software to catch up with hardware
