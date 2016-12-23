@@ -61,7 +61,7 @@ public class VlctyVtx_TeleOp extends OpMode{
                                                          // could also use HardwarePushbotMatrix class.
     double          clawOffset  = 0.0 ;                  // Servo mid position
     final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
-
+    static double   SPEED_REDUCTION = 8;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -104,10 +104,10 @@ public class VlctyVtx_TeleOp extends OpMode{
         left = -gamepad1.left_stick_y;
         right = -gamepad1.right_stick_y;
         if ((gamepad1.left_trigger > 0)&&((-gamepad1.left_stick_y > 0)||(-gamepad1.left_stick_y < 0)))
-            left = left/8;
+            left = left/SPEED_REDUCTION;
         robot.leftMotor.setPower(left);
         if ((gamepad1.left_trigger > 0)&&((-gamepad1.right_stick_y > 0)||(-gamepad1.right_stick_y < 0)))
-            right = right/8;
+            right = right/SPEED_REDUCTION;
         robot.rightMotor.setPower(right);
 
         //Run wheels in tank mode (note: this is effected by the loop and is jerky... It doesn't work)

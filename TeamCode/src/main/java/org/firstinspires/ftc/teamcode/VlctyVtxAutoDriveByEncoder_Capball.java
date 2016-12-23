@@ -67,9 +67,9 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Velocity Vortex: Auto Drive By Encoder", group="Pushbot")
+@Autonomous(name="Velocity Vortex: Auto Capball Square", group="Pushbot")
 //@Disabled
-public class VlctyVtxAutoDriveByEncoder_Linear extends LinearOpMode {
+public class VlctyVtxAutoDriveByEncoder_Capball extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwarePushbot         robot   = new HardwarePushbot();   // Use a Pushbot's hardware
@@ -99,10 +99,10 @@ public class VlctyVtxAutoDriveByEncoder_Linear extends LinearOpMode {
         robot.leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         idle();
-sleep(2500);
+sleep(1000);
         robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-sleep(500);
+sleep(250);
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",
                           robot.leftMotor.getCurrentPosition(),
@@ -110,7 +110,7 @@ sleep(500);
         telemetry.update();
 
         robot.armMotor.setPower(robot.ARM_UP_POWER);
-        sleep(500);
+        sleep(250);
         robot.armMotor.setPower(0.0);
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -119,18 +119,24 @@ sleep(500);
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
         telemetry.addData("Path", "before encoderdrive 48");
         telemetry.update();
-        sleep(1000);
-
-
-        encoderDrive(DRIVE_SPEED, 7, 7, 5.0);  // S1: Forward 48 Inches with 5 Sec timeout
+        sleep(500);
+//Robot's middle starting 6 feet in from either side on blue team wall with particles.
+// Move forward 4 feet to approach the Capball for removal.
+        encoderDrive(DRIVE_SPEED, 48, 48, 10.0);  // S1: Forward 48 Inches with 10 Sec timeout
         telemetry.addData("Path", "After encoderdrive 48");
         telemetry.update();
-        sleep(1000);
-
-        encoderDrive(0, 0, 0, 3.0);
-        encoderDrive(DRIVE_SPEED, 7, 7, 2.0);  //Forward 7 Inches with 2 Sec timeout
-        //encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+        sleep(500);
+//Turn 4 inches to the right to remove capball to the beacon area.
+        //encoderDrive(DRIVE_SPEED, 7, 7, 2.0);  //Forward 7 Inches with 2 Sec timeout
+        encoderDrive(TURN_SPEED,   4, -4, 4.0);  // S2: Turn Right 4 Inches with 4 Sec timeout
+        // Pause after hitting the cap ball.
+        sleep(250);
+        //Turn back 4 inches to square back up to the square
+        encoderDrive(TURN_SPEED, -4, 4, 4.0);
+        //Pause for 2.5 seconds to make sure capball is out of the way of the square to park.
+        sleep(2500);
+        //Move forward 9 inches to park onto the center square.
+        encoderDrive(DRIVE_SPEED, 9, 9, 4.0);  // S3: Move forward 9 Inches with 4 Sec timeout
 
         //robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
         //robot.rightClaw.setPosition(0.0);
