@@ -34,7 +34,7 @@ public class AutonomousTesting extends OpMode {
     static final float error = 5.0f;       // get us within 10 degrees for this test
     static final float targetZ = 6*25.4f;
 
-    final boolean debug = true;
+    final boolean debug = false;
 
     @Override
     public void init() {
@@ -69,7 +69,7 @@ public class AutonomousTesting extends OpMode {
         //    telemetry.addData("First sequence finished", "");
 
         //Vuf.loop(true);
-        telemetry.addData("Heading", robot.navX.getYaw());
+        telemetry.addData("Heading", robot.distSensor.getUltrasonicLevel());
 
         //telemetry.addData("Red R", robot.rightSensor.red());
         //telemetry.addData("Blue R", robot.rightSensor.blue());

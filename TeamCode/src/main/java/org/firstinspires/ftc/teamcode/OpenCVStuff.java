@@ -18,52 +18,34 @@ import org.opencv.core.Mat;
 //@Disabled
 public class OpenCVStuff extends OpenCVLib {
 
-    private int yVal;
-    private Mat lastMat;
-    private boolean firstCall = true;
-
-    private double xPos = 0;
-    private double yPos = 0;
-
-    FilterLib.MovingWindowAngleFilter filter = new FilterLib.MovingWindowAngleFilter();
-
-    @Override
-    public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame frame){
-        Mat grey = frame.gray();
-
-        Mat optic = grey.clone();
-
-        if(!firstCall) {
-
-        }
-
-        lastMat = grey;
-
-        if(!lastMat.empty()) firstCall = false;
-
-        return optic;
-    }
+    private int[] yValStore = new int[3];
 
     @Override
     public void init(){
         initOpenCV();
+        startCamera();
 
-        lastMat = new Mat();
+        Mat frame = getCameraFrame();
+
+        //init scanline Y values
+        yValStore[0] = frame.rows() / 4;
+        yValStore[1] = frame.rows() / 2;
+        yValStore[2] = (frame.rows() * 3) / 4;
     }
 
     @Override
     public void start(){
-        startCamera();
+
     }
 
     @Override
     public void loop(){
-
+        Mat frame = getCameraFrame();
+        telemetry.addData("Find Avg", LineFollowLib.scanlineAvgDebug(frame, yValStore[1], this));
     }
 
     @Override
     public void stop(){
         stopCamera();
-        lastMat.release();
     }
 }

@@ -33,13 +33,13 @@ public class LineDrive extends OpenCVLib {
     SensorLib.PID mdPid;
     SensorLib.PID muPid;
     // parameters of the PID controller for this sequence's first part
-    float Kp = 0.035f;        // degree heading proportional term correction per degree of deviation
+    float Kp = 0.05f;        // degree heading proportional term correction per degree of deviation
     float Ki = 0.02f;         // ... integrator term
     float Kd = 0;             // ... derivative term
     float KiCutoff = 3.0f;    // maximum angle error for which we update integrator
 
     // parameters of the PID controller for the heading of the line following
-    float Kp2 = 1.000f;
+    float Kp2 = 0.500f;
     float Ki2 = 0.000f;
     float Kd2 = 0;
     float Ki2Cutoff = 0.0f;
@@ -110,8 +110,8 @@ public class LineDrive extends OpenCVLib {
 
         mDrive.add(new SquirrleyAzimuthTimedDriveStep(this, 90, 0, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, 2.0f, false));
         mDrive.add(new SquirrleyAzimuthTimedDriveStep(this, 0, 0, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, 1.5f, false));
-        mDrive.add(new SquirrleyAzimuthTimedDriveStep(this, 90, 0, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, 0.5f, true));
-        mDrive.add(new SquirrleyAzimuthTimedDriveStep(this, 0, 0, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, 0.3f, true));
+        mDrive.add(new SquirrleyAzimuthTimedDriveStep(this, 90, 0, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, 0.5f, false));
+        mDrive.add(new SquirrleyAzimuthFinDriveStep(this, 0, 0, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.3f, new UltraSensors(30), true));
         mDrive.add(new SquirrleyAzimuthFinDriveStep(this, 90, 0, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.3f, new LineSensors(frame), true));
 
         mSequence.add(mDrive);
@@ -141,7 +141,7 @@ public class LineDrive extends OpenCVLib {
         mPushy.add(new PushyLib.pushypushy(this, robot.getMotorArray(), robot.leftSensor, robot.rightSensor, robot.leftServo, robot.rightServo,
                 pushPos, time, red, colorThresh, pushyPower, driveTime, driveLoopCount));
 
-        mPushy.add(new UltraSquirrleyAzimuthFinDriveStep(this, 90, 0, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(25), mPid, muPid, robot.getMotorArray(), 0.3f, new LineSensors(frame, 2000), true));
+        mPushy.add(new UltraSquirrleyAzimuthFinDriveStep(this, 90, 0, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(22), mPid, muPid, robot.getMotorArray(), 0.4f, new LineSensors(frame, 3000.0f), true));
 
         //mPushy.add(new SquirrleyAzimuthTimedDriveStep(this, 120.0f, 0.0f, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, 0.45f, false));
         //mPushy.add(new SquirrleyAzimuthTimedDriveStep(this, 90.0f, 0.0f, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, 0.5f, false));
@@ -305,6 +305,7 @@ public class LineDrive extends OpenCVLib {
     }
 
     private class UltraCorrectedDisplacement{
+        private final float Kp = 1.0f/3.0f;
         private float mDist;
 
         UltraCorrectedDisplacement(float dist) {
@@ -319,7 +320,7 @@ public class LineDrive extends OpenCVLib {
             if(dist > 200) dist = 200;
             else if (dist < 5) dist = 5;
 
-            dist *= Math.cos(Math.toRadians(angleError));
+            dist += angleError * Kp;
 
             return dist - mDist;
         }

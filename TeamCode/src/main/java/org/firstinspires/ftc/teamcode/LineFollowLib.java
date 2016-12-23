@@ -1,5 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Path;
+
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.robot.Robot;
+import com.qualcomm.robotcore.util.RobotLog;
+
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
 
@@ -113,6 +119,37 @@ public final class LineFollowLib {
                 totalNum++;
             }
         }
+
+        //and return it in a value between -1 and 1, or and error if there is too much noise
+        if(totalNum > ray.length / 4 || totalNum < ray.length / 16) return -400;
+        else if(totalNum == 0) return 0;
+        else return totalPos/totalNum;
+    }
+
+    public static int scanlineAvgDebug(Mat src, int scanlineY, OpMode mode){
+        byte[] ray = new byte[src.cols()];
+
+        Imgproc.threshold(src, src, 0, 200, Imgproc.THRESH_OTSU + Imgproc.THRESH_BINARY);
+
+        src.row(scanlineY).get(0, 0, ray);
+
+        final int avg = findAvgOverZeroDebug(ray, mode);
+        if(avg == -400) return ERROR_TOO_NOISY;
+        else return avg;
+    }
+
+    //find the average position of all numbers > 0 in an array
+    private static int findAvgOverZeroDebug(byte[] ray, OpMode mode){
+        int totalPos = 0;
+        int totalNum = 0;
+        for(int i = 0; i < ray.length; i++){
+            if(ray[i] != 0){
+                totalPos += i;
+                totalNum++;
+            }
+        }
+
+        mode.telemetry.addData("Total Num Pixel", totalNum);
 
         //and return it in a value between -1 and 1, or and error if there is too much noise
         if(totalNum > ray.length / 4 || totalNum < ray.length / 16) return -400;
