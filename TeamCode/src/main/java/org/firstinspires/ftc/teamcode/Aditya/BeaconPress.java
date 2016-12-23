@@ -164,14 +164,24 @@ Declare global variables here
 
         if(gamepad2.dpad_down && (beaconPress.getPosition() ) + down_step >= 0){
             beaconPress.setPosition(beaconPress.getPosition() + down_step);
+            sleep(125);
         }
 
         if(gamepad2.dpad_up && (beaconPress.getPosition() ) + up_step >= 0){
             beaconPress.setPosition(beaconPress.getPosition() + up_step);
+            sleep(125);
         }
 
         }
 
+        public void sleep(long pauseInMS) {
+            long time_sleepStart = System.currentTimeMillis();
+            long endTime = time_sleepStart + pauseInMS;
+
+            while(endTime - System.currentTimeMillis() > 0) {
+
+            }
+        }
 
     public void BallShooter(){
         float shoot = -gamepad2.right_stick_y;//gets value from 2nd gamepad's joystick
