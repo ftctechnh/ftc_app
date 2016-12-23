@@ -14,8 +14,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Autonomous(name = "pushBeacon", group = "Pushbot")
 public class PushBeaconRed extends OpMode {
-    Servo leftPlate;
-    Servo rightPlate;
+    Servo beaconPress;
     boolean bLedOn;
 
 
@@ -23,14 +22,13 @@ public class PushBeaconRed extends OpMode {
 
     @Override
     public void init(){
-        leftPlate = hardwareMap.servo.get("leftplate");
-        rightPlate = hardwareMap.servo.get("rightplate");
+        beaconPress = hardwareMap.servo.get("beaconPress");
+
 
         colorSensor = hardwareMap.colorSensor.get("sensor_color");
         bLedOn = false;
         colorSensor.enableLed(bLedOn);
-        leftPlate.setPosition(0);
-        rightPlate.setPosition(1);
+        beaconPress.setPosition(0.85);
     }
 
     @Override
@@ -51,10 +49,10 @@ public class PushBeaconRed extends OpMode {
 
 
 
-        if(ReadColorSensor() == 'b'){
+        if(ReadColorSensor() == 'r'){
             //push button if on blue team, don't push if on red team
-            leftPlate.setPosition(0.8);//this is the servo with the modern robotics logo on the opposite side of the plate
-            rightPlate.setPosition(0.3);//this is the servo with the modern robotics logo on the same side of the plate
+            //leftPlate.setPosition(0.8);//this is the servo with the modern robotics logo on the opposite side of the plate
+            beaconPress.setPosition(0);//this is the servo with the modern robotics logo on the same side of the plate
         }
         /*else if (ReadColorSensor() == 'b'){
             //push button if on red team, don't push if on blue team
