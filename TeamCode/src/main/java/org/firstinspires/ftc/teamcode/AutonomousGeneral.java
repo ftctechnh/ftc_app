@@ -179,6 +179,29 @@ public class AutonomousGeneral extends LinearOpMode{
 
     }
 
+    public void turnLeft(double speed){
+        front_left_motor.setPower(-speed);
+        back_left_motor.setPower(-speed);
+
+        front_right_motor.setPower(speed);
+        back_right_motor.setPower(speed);
+    }
+
+    public void turnRight(double speed){
+        front_right_motor.setPower(-speed);
+        back_right_motor.setPower(-speed);
+
+        front_left_motor.setPower(speed);
+        back_left_motor.setPower(speed);
+    }
+    public void stopMotors(){
+
+        front_right_motor.setPower(0);
+        front_left_motor.setPower(0);
+        back_right_motor.setPower(0);
+        back_left_motor.setPower(0);
+    }
+
     // drive shooting motor for the given time in msec
     public void intakeDrive(double speed,
                             int timeoutS)
@@ -214,5 +237,20 @@ public class AutonomousGeneral extends LinearOpMode{
         //resetShooter(0.7);
         telemetry.addData(">", "Done");
         telemetry.update();
+    }
+
+    public void encoderShoot(double speed){
+       shooting_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        shooting_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        shooting_motor.setTargetPosition((int)(shooting_motor.getCurrentPosition() + (1478* getDriveGearReduction())));
+        shooting_motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        shooting_motor.setPower(1);
+        while (shooting_motor.isBusy()){
+            telemetry.addData("", "Shooting...");
+            telemetry.update();
+        }
+        telemetry.addData("", "Done Shooting");
+        telemetry.update();
+        shooting_motor.setPower(0);
     }
 }
