@@ -100,6 +100,9 @@ public class LightExceed extends LinearOpMode {
         robot.rightMotor.setPower(0);
         robot.leftMotor.setPower(0);
 
+        telemetry.addData("Say", "Motors just stopped.");
+        telemetry.update();
+
         //step 3 waiting for 1 second
 //        long waitTime = 1L;
 //        try {
@@ -114,12 +117,17 @@ public class LightExceed extends LinearOpMode {
             while (opModeIsActive() && (runtime.seconds() < 0.25)) {
                 robot.leftMotor.setPower(0);
                 robot.rightMotor.setPower(0.2);
+                telemetry.addData("Raw", lightSensor.getRawLightDetected());
+                telemetry.addData("Say", "Motors turning.");
+                telemetry.update();
             }
 
             //step 5 follow the line
             while (lightSensor.getLightDetected() >= WHITE_THRESHOLD) { //follows white light is above threshold AND touch sensor is not touching
                 robot.leftMotor.setPower(0.2);
                 robot.rightMotor.setPower(0.2);
+                telemetry.addData("Say", "Motors following line.");
+                telemetry.update();
             }
 
         }

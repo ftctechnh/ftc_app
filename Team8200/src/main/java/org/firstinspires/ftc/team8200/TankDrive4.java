@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;/*
+/*
 Copyright (c) 2016 Robert Atkinson
 
 All rights reserved.
@@ -30,6 +30,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+package org.firstinspires.ftc.team8200;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -55,9 +56,9 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwareK9bot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="org.firstinspires.ftc.teamcode.TankDrive1", group="K9bot")
+@TeleOp(name="Tank Drive 4", group="K9bot")
 @Disabled
-public class TankDrive1 extends LinearOpMode {
+public class TankDrive4 extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareK9bot   robot           = new HardwareK9bot();              // Use a K9'shardware
@@ -70,8 +71,6 @@ public class TankDrive1 extends LinearOpMode {
     public void runOpMode() {
         double left;
         double right;
-        double up;
-        double down;
 
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
@@ -89,33 +88,11 @@ public class TankDrive1 extends LinearOpMode {
         while (opModeIsActive()) {
 
             // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-            left = -gamepad1.right_stick_x;
-            right = -gamepad1.right_stick_x;
+            left = -gamepad1.left_stick_y;
+            right = -gamepad1.right_stick_y;
             robot.leftMotor.setPower(left);
             robot.rightMotor.setPower(right);
 
-            up = -gamepad1.left_stick_y;
-            down = -gamepad1.left_stick_y;
-            robot.leftMotor.setPower(up);
-            robot.rightMotor.setPower(down);
-
-            // Use gamepad Y & A raise and lower the arm
-            if (gamepad1.a)
-                armPosition += ARM_SPEED;
-            else if (gamepad1.y)
-                armPosition -= ARM_SPEED;
-
-            // Use gamepad X & B to open and close the claw
-            if (gamepad1.x)
-                clawPosition += CLAW_SPEED;
-            else if (gamepad1.b)
-                clawPosition -= CLAW_SPEED;
-
-            // Move both servos to new position.
-            armPosition  = Range.clip(armPosition, robot.ARM_MIN_RANGE, robot.ARM_MAX_RANGE);
-            robot.arm.setPosition(armPosition);
-            clawPosition = Range.clip(clawPosition, robot.CLAW_MIN_RANGE, robot.CLAW_MAX_RANGE);
-            robot.claw.setPosition(clawPosition);
 
             // Send telemetry message to signify robot running;
             telemetry.addData("arm",   "%.2f", armPosition);
