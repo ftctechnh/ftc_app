@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -18,6 +19,7 @@ public class AutonomousGeneral extends LinearOpMode{
     protected DcMotor front_left_motor;
     protected DcMotor back_right_motor;
     protected DcMotor back_left_motor;
+    protected GyroSensor gyro;                      //turning clockwise = +degrees, turning counterclockwise = -degrees
     protected static final double     DRIVE_SPEED             = 1.0;
     protected static final double     TURN_SPEED              = 0.5;
     // motor definition to shoot the small ball
@@ -48,6 +50,10 @@ public class AutonomousGeneral extends LinearOpMode{
         // Change the text in quotes to match any motor name on your robot.
         shooting_motor = hardwareMap.dcMotor.get("ballShooterMotor");
         intake_motor = hardwareMap.dcMotor.get("ballCollectorMotor");
+
+        //Initiate sensors:
+        gyro = hardwareMap.gyroSensor.get("gyro");
+
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
@@ -73,6 +79,13 @@ public class AutonomousGeneral extends LinearOpMode{
                 front_left_motor.getCurrentPosition(),
                 front_right_motor.getCurrentPosition());
         telemetry.update();
+
+
+        //calibrate gyro
+        gyro.calibrate();
+        while(gyro.isCalibrating()){
+
+        }
 
     }
 
