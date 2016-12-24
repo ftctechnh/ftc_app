@@ -55,8 +55,8 @@ public class HardwarePushbot
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftMotor   = hwMap.dcMotor.get("left_drive");
-        rightMotor  = hwMap.dcMotor.get("right_drive");
+        leftMotor   = hwMap.dcMotor.get("front_left");
+        rightMotor  = hwMap.dcMotor.get("front_right");
         //armMotor    = hwMap.dcMotor.get("left_arm");
         RightBallLauncher = hwMap.dcMotor.get("RightLauncher");
         LeftBallLauncher = hwMap.dcMotor.get("LeftLauncher");

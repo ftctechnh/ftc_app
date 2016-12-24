@@ -30,7 +30,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.firstinspires.ftc.teamcode.Alyssa;
+package org.firstinspires.ftc.teamcode.MightExplode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -66,9 +66,9 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="GoStraight", group="Pushbot")
+@Autonomous(name="Red 2", group="Pushbot")
 //@Disabled
-public class Go_straight extends LinearOpMode {
+public class FromRed2 extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwarePushbot         robot   = new HardwarePushbot();   // Use a Pushbot's hardware
@@ -78,9 +78,50 @@ public class Go_straight extends LinearOpMode {
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415);
+                                                      (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
+    public int GyroDegrees = 0;
+
+    public void RunWithEncoders(float speed, float LeftDistance, float RightDistance, float timeout) {
+        try {
+            encoderDrive(1.0, LeftDistance, RightDistance, timeout);
+            encoderDrive(1.0, LeftDistance, RightDistance, timeout);
+        }
+        catch (InterruptedException ex) {
+        }
+    }
+
+    public void GyroTurn(float speed, float degrees) {
+        //I think I will set this up so that if it is a positive number, the robot will turn left, and if it is negative it will turn right.
+        //// TODO: 12/15/2016 This probably won't work, so Dad, please take a look at this. You can probably tell what I'm trying to do.
+        //Yay! I can commit!
+        if(degrees > 0 == true){
+            GyroDegrees = 0;
+            if (GyroDegrees < degrees == true){
+                robot.leftMotor.setPower(0.5);
+                robot.rightMotor.setPower(-0.5);
+            }
+            else{
+                robot.leftMotor.setPower(0);
+                robot.rightMotor.setPower(0);
+            }
+            
+        }
+        else {
+            GyroDegrees = 0;
+            if (GyroDegrees < degrees == true) {
+                robot.leftMotor.setPower(-0.5);
+                robot.rightMotor.setPower(0.5);
+            }
+            else {
+                robot.leftMotor.setPower(0);
+                robot.rightMotor.setPower(0);
+            }
+                
+            
+        }
+    }
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -104,8 +145,8 @@ public class Go_straight extends LinearOpMode {
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",
-                robot.leftMotor.getCurrentPosition(),
-                robot.rightMotor.getCurrentPosition());
+                          robot.leftMotor.getCurrentPosition(),
+                          robot.rightMotor.getCurrentPosition());
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
@@ -113,21 +154,14 @@ public class Go_straight extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  80,  1, 20.0);  // Drive to Cap Ball
-        //encoderDrive(DRIVE_SPEED, -12, -12, 10); //Back away to avoid plywood
-        //encoderDrive(TURN_SPEED,   30, -30, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        //encoderDrive(DRIVE_SPEED, -60, -60, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
-
-
-        //robot.leftMotor.setPower(1);
-        //robot.rightMotor.setPower(1);
-        //sleep(5000);
-        //robot.leftMotor.setPower(0);
-        //robot.rightMotor.setPower(0);
+        encoderDrive(DRIVE_SPEED,  48,  48, 10.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(DRIVE_SPEED, -12, -12, 10); //Back away to avoid plywood
+        encoderDrive(TURN_SPEED,   -30, 30, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+        encoderDrive(DRIVE_SPEED, -60, -60, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
         //robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
         //robot.rightClaw.setPosition(0.0);
-        //sleep(1000);     // pause for servos to move
+        sleep(1000);     // pause for servos to move
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
@@ -141,7 +175,7 @@ public class Go_straight extends LinearOpMode {
      *  2) Move runs out of time
      *  3) Driver stops the opmode running.
      */
-    public void encoderDrive(double speed,
+    public void  encoderDrive(double speed,
                              double leftInches, double rightInches,
                              double timeoutS) throws InterruptedException {
         int newLeftTarget;
@@ -165,21 +199,22 @@ public class Go_straight extends LinearOpMode {
                     (runtime.seconds() < timeoutS) &&
                     (robot.leftMotor.isBusy() && robot.rightMotor.isBusy())) {
 
-                // Turn On RUN_TO_POSITION
-                robot.leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                robot.rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            // Turn On RUN_TO_POSITION
+            robot.leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
                 // Display it for the driver.
                 telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
                 telemetry.addData("Path2",  "Running at %7d :%7d",
-                        robot.leftMotor.getCurrentPosition(),
-                        robot.rightMotor.getCurrentPosition());
+                                            robot.leftMotor.getCurrentPosition(),
+                                            robot.rightMotor.getCurrentPosition());
                 telemetry.update();
-
 
                 // Allow time for other processes to run.
                 idle();
+
+
             }
 
             // Stop all motion;
