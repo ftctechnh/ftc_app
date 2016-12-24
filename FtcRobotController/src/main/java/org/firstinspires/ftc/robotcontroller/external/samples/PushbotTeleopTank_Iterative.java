@@ -78,7 +78,6 @@ public class PushbotTeleopTank_Iterative extends OpMode{
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");    //
-        updateTelemetry(telemetry);
     }
 
     /*
@@ -122,17 +121,16 @@ public class PushbotTeleopTank_Iterative extends OpMode{
 
         // Use gamepad buttons to move the arm up (Y) and down (A)
         if (gamepad1.y)
-            //robot.armMotor.setPower(robot.ARM_UP_POWER);
-        //else if (gamepad1.a)
-            //robot.armMotor.setPower(robot.ARM_DOWN_POWER);
-        //else
-            //robot.armMotor.setPower(0.0);
+            robot.armMotor.setPower(robot.ARM_UP_POWER);
+        else if (gamepad1.a)
+            robot.armMotor.setPower(robot.ARM_DOWN_POWER);
+        else
+            robot.armMotor.setPower(0.0);
 
         // Send telemetry message to signify robot running;
         telemetry.addData("claw",  "Offset = %.2f", clawOffset);
         telemetry.addData("left",  "%.2f", left);
         telemetry.addData("right", "%.2f", right);
-        updateTelemetry(telemetry);
     }
 
     /*

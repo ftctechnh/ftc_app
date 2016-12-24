@@ -66,7 +66,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @Autonomous(name="Pushbot: Auto Drive By Encoder", group="Pushbot")
-//@Disabled
+@Disabled
 public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
 
     /* Declare OpMode members. */
@@ -82,7 +82,7 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
     static final double     TURN_SPEED              = 0.5;
 
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() {
 
         /*
          * Initialize the drive system variables.
@@ -112,12 +112,12 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  48,  48, 50.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
         encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
         encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
-        //robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
-        //robot.rightClaw.setPosition(0.0);
+        robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
+        robot.rightClaw.setPosition(0.0);
         sleep(1000);     // pause for servos to move
 
         telemetry.addData("Path", "Complete");
@@ -134,7 +134,7 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
      */
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,
-                             double timeoutS) throws InterruptedException {
+                             double timeoutS) {
         int newLeftTarget;
         int newRightTarget;
 
@@ -167,9 +167,6 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
                                             robot.leftMotor.getCurrentPosition(),
                                             robot.rightMotor.getCurrentPosition());
                 telemetry.update();
-
-                // Allow time for other processes to run.
-                idle();
             }
 
             // Stop all motion;
