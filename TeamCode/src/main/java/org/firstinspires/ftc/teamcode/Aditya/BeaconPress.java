@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+
 /**
  * Created by adi, inspirationteam on 11/20/2016.
  */
@@ -33,6 +34,7 @@ public class BeaconPress extends OpMode {
     DcMotor ballCollectorMotor;
     DcMotor ballShooterMotor;
     Servo beaconPress;
+    ColorSensor colorSensor;
 
 /*
     ---------------------------------------------------------------------------------------------
@@ -69,6 +71,10 @@ Declare global variables here
         /* get a reference to our ColorSensor object */
         //colorSensor = hardwareMap.colorSensor.get("sensor_color");
         beaconPress.setPosition(0.5);
+        colorSensor = hardwareMap.colorSensor.get("colorSensor");
+        //Sets team!
+        boolean teamRed = false;
+        boolean teamBlue = true;
 
     }
     /*
@@ -90,8 +96,10 @@ Declare global variables here
     */
     @Override
     public void start(){
-
+        colorSensor.enableLed(true);
     }
+
+    //enables the color sensor to work
 
     /*
     Code to run REPEATEDLY after the driver hit PLAY
@@ -100,10 +108,14 @@ Declare global variables here
 
     @Override
     public void loop() {
+        colorSensor.enableLed(true);
+
+
         FourWheelDrive();
         CollectBalls();
         BallShooter();
         servoMove();
+        readColor();
     }
 /*
 ---------------------------------------------------------------------------------------------
@@ -116,8 +128,8 @@ Declare global variables here
         /*
         read the gamepad values and put into variables
          */
-        telemetry.addData("leftWheel Motor front encoder value: %d ", leftWheelMotorFront.getCurrentPosition());
-        telemetry.update();
+        //telemetry.addData("leftWheel Motor front encoder value: %d ", leftWheelMotorFront.getCurrentPosition());
+        //telemetry.update();
         float leftY_gp1 = -gamepad1.left_stick_y;
         float rightY_gp1 = -gamepad1.right_stick_y;
 
@@ -182,6 +194,44 @@ Declare global variables here
 
             }
         }
+
+    public void readColor() {
+
+        // hsvValues is an array that will hold the hue, saturation, and value information.
+        float hsvValues[] = {0F,0F,0F};
+
+        // values is a reference to the hsvValues array.
+        final float values[] = hsvValues;
+
+
+        //convert the RGB values to HSV values
+        Color.RGBToHSV(colorSensor.red() * 8, colorSensor.green() * 8, colorSensor.blue() * 8, hsvValues);
+
+        int red = colorSensor.red();
+        int blue = colorSensor.blue();
+        int green = colorSensor.green();
+        String currentColor = "blank";
+
+        colorSensor.enableLed(true);
+
+        if(red > blue && red > green) {
+            currentColor = "red";
+        } else if (blue > red && blue > green) {
+            currentColor = "blue";
+        } else if (green > red && green > blue) {
+            currentColor = "green";
+        }
+
+        telemetry.addData("r value", colorSensor.red());
+        telemetry.addData("g value", colorSensor.green());
+        telemetry.addData("b value", colorSensor.blue());
+        telemetry.addData("current beacon color", currentColor);
+        telemetry.addData("Hue", hsvValues[0]);
+        telemetry.addData("Saturation", hsvValues[1]);
+        telemetry.addData("Value", hsvValues[2]);
+
+        telemetry.update();
+    }
 
     public void BallShooter(){
         float shoot = -gamepad2.right_stick_y;//gets value from 2nd gamepad's joystick
