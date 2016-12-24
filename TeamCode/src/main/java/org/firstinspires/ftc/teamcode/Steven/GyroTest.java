@@ -40,9 +40,9 @@ public class GyroTest extends OpMode {
         }
         telemetry.addData("Gyro heading value (Z axis value): ", gyroSensor.getHeading());
         telemetry.update();
-        if (gyroSensor.getHeading() == 0){
+        //if (gyroSensor.getHeading() == 0){
             telemetry.addData("","You have reached the target value (0)");
-        }
+        //}
 
 
     }

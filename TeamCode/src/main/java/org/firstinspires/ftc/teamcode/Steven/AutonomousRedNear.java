@@ -112,11 +112,14 @@ public class AutonomousRedNear extends AutonomousGeneral {
 
         shootingDrive(0.8, 850);
         sleep(500);     // pause for servos to move
-        encoderDrive(DRIVE_SPEED,  6,  -6, 5.0);
-       // encoderDrive(DRIVE_SPEED, 15,-15 , 5.0);
-      //  encoderDrive(DRIVE_SPEED, -25,-25 , 5.0);
-        encoderDrive(DRIVE_SPEED, 100,30 , 5.0);
-        //encoderDrive(DRIVE_SPEED,  -49,  -35, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        //encoderDrive(DRIVE_SPEED,  6,  -6, 5.0);
+       //// encoderDrive(DRIVE_SPEED, 15,-15 , 5.0);
+      ////  encoderDrive(DRIVE_SPEED, -25,-25 , 5.0);
+        //encoderDrive(DRIVE_SPEED, 100,30 , 5.0);
+        while(gyro.getHeading() < 40 || gyro.getHeading() >350 ){
+            turnRight(0.5);
+        }
+        ////encoderDrive(DRIVE_SPEED,  -49,  -35, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
         telemetry.addData("Path", "Complete");
         telemetry.update();
         //encoderDrive(DRIVE_SPEED, -16, -40, 5.0);  // S3: Reverse 24 Inches with 4 Sec timeout
