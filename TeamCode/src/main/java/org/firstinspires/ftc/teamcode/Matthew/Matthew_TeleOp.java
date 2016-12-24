@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
+import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
 
 /**
  * Created by matth on 11/5/2016.
@@ -18,7 +18,7 @@ public class Matthew_TeleOp {
     public class PushbotTeleopPOV_Linear extends LinearOpMode {
 
         /* Declare OpMode members. */
-        HardwarePushbot robot = new HardwarePushbot();   // Use a Pushbot's hardware
+        InvadersVelocityVortexBot robot = new InvadersVelocityVortexBot();   // Invaders Robot HW
         // could also use HardwarePushbotMatrix class.
         double clawOffset = 0;                       // Servo mid position
         final double CLAW_SPEED = 0.02;                   // sets rate to move servo
@@ -94,18 +94,18 @@ public class Matthew_TeleOp {
                 //else if (gamepad1.x)
                     //robot.pusher.setPosition(1);
                 //else if (gamepad1.b) {
-                    //robot.BallElevator.setPosition(1);
+                    //robot.ballElevator.setPosition(1);
                     sleep(3000);
-                    //robot.BallElevator.setPosition(0.5);
+                    //robot.ballElevator.setPosition(0.5);
                     sleep(500);
-                    //robot.BallElevator.setPosition(0);
+                    //robot.ballElevator.setPosition(0);
                     sleep(3000);
                 }
 
                 //else
                     //robot.armMotor.setPower(0.0);
                     robot.pusher.setPosition(0);
-                    //robot.BallElevator.setPosition(0.5);
+                    //robot.ballElevator.setPosition(0.5);
 
                 // Send telemetry message to signify robot running;
                 telemetry.addData("claw", "Offset = %.2f", clawOffset);
@@ -121,7 +121,7 @@ public class Matthew_TeleOp {
                 switch (robotState){
                     case 0:
                     {
-                        robot.BallElevator.setDirection(DcMotorSimple.Direction.FORWARD);
+                        robot.ballElevator.setDirection(DcMotorSimple.Direction.FORWARD);
                     }
                     case 1:
                     {

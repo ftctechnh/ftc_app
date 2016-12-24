@@ -39,7 +39,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
+import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
 
 
 /**
@@ -62,7 +62,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 public class Matthew_Teleop_Iterative extends OpMode {
 
     /* Declare OpMode members. */
-    HardwarePushbot robot = new HardwarePushbot(); // use the class created to define a Pushbot's hardware
+    InvadersVelocityVortexBot robot = new InvadersVelocityVortexBot(); // Invaders Robot HW
     // could also use HardwarePushbotMatrix class.
     double clawOffset = 0.0;                  // Servo mid position
     final double CLAW_SPEED = 0.02;                 // sets rate to move servo
@@ -170,15 +170,15 @@ public class Matthew_Teleop_Iterative extends OpMode {
         switch (robotState) {
             case 0: {
                 if (limitSwitch.isPressed() == false) {
-                    robot.BallElevator.setDirection(DcMotorSimple.Direction.REVERSE);
-                    robot.BallElevator.setPower(1);
+                    robot.ballElevator.setDirection(DcMotorSimple.Direction.REVERSE);
+                    robot.ballElevator.setPower(1);
                 } else {
                     //Do nothing.
                 }
             }
             case 1: {
                 robot.pusher.setPosition(0.751);
-                robot.BallElevator.setPower(0);
+                robot.ballElevator.setPower(0);
             }
             case 2: {
                 //Pause

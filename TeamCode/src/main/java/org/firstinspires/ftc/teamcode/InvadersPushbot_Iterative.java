@@ -31,21 +31,14 @@ TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.robot.Robot;
 import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 
 
 /**
@@ -72,7 +65,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 public class InvadersPushbot_Iterative extends OpMode{
 
     /* Declare OpMode members. */
-    HardwarePushbot robot       = new HardwarePushbot(); // use the class created to define a Pushbot's hardware
+    InvadersVelocityVortexBot robot       = new InvadersVelocityVortexBot(); // use the class created to define a Pushbot's hardware
                                                          // could also use HardwarePushbotMatrix class.
     // Will be connected to PushBot's Limit Switch
     TouchSensor limitSwitch;                         // Will be connected to PushBot's Limit Switch
@@ -145,7 +138,7 @@ public class InvadersPushbot_Iterative extends OpMode{
         boolean limitTriggered = limitSwitch.isPressed();
 
         if(limitTriggered) {
-            robot.BallElevator.setPower(0);  //Elevator off
+            robot.ballElevator.setPower(0);  //Elevator off
         }
 
         // Send telemetry message to signify robot running;
@@ -173,7 +166,7 @@ public class InvadersPushbot_Iterative extends OpMode{
             }
         }
         else if (gamepad1.y == true){
-            //robot.BallElevator.setPower(1);
+            //robot.ballElevator.setPower(1);
             setBallElevator(1);
         }
         else {
@@ -181,13 +174,13 @@ public class InvadersPushbot_Iterative extends OpMode{
         }
 
         if (gamepad1.start == true){
-            //robot.LeftBallLauncher.setPower(-1);
-            //robot.RightBallLauncher.setPower(-1);
+            //robot.leftBallLauncher.setPower(-1);
+            //robot.rightBallLauncher.setPower(-1);
             setLauncherPower(1);
         }
         else if (gamepad1.back == true) {
-            //robot.LeftBallLauncher.setPower(0);
-            //robot.RightBallLauncher.setPower(0);
+            //robot.leftBallLauncher.setPower(0);
+            //robot.rightBallLauncher.setPower(0);
             setLauncherPower(0);
             if(!limitTriggered) {
                 setBallElevator(-1);  //Elevator down
@@ -198,12 +191,12 @@ public class InvadersPushbot_Iterative extends OpMode{
     void setBallElevator(float power)
     {
         //@todo Write to a file what we're about to do to the motor here
-        robot.BallElevator.setPower(power);
+        robot.ballElevator.setPower(power);
     }
 
     void setLauncherPower(float power){
-        robot.LeftBallLauncher.setPower(-power);
-        robot.RightBallLauncher.setPower(-power);
+        robot.leftBallLauncher.setPower(-power);
+        robot.rightBallLauncher.setPower(-power);
     }
     /*
      * Code to run ONCE after the driver hits STOP
@@ -212,10 +205,10 @@ public class InvadersPushbot_Iterative extends OpMode{
     public void stop() {
         robot.pusher.setPosition(0.5);
         robot.beacon.setPosition(0.5);
-        robot.BallElevator.setPower(0);
+        robot.ballElevator.setPower(0);
         robot.leftMotor.setPower(0.0);
         robot.rightMotor.setPower(0.0);
-        robot.LeftBallLauncher.setPower(0.0);
-        robot.RightBallLauncher.setPower(0.0);
+        robot.leftBallLauncher.setPower(0.0);
+        robot.rightBallLauncher.setPower(0.0);
     }
 }
