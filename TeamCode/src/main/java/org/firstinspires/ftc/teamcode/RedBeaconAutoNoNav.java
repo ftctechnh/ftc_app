@@ -15,23 +15,20 @@ public class RedBeaconAutoNoNav extends LinearOpMode
     {
         robot.init(hardwareMap);
         waitForStart();
-        while(opModeIsActive())
-        {
-            robot.driveStraightPow(58, 130, .75);
-            sleep(100);
-            //makes robot wait until a is pressed
-            while (!gamepad1.a) {
-            }
-            robot.driveStraightPow(17, 180, .75);
-            sleep(100);
-            while (!gamepad1.a) {
-            }
-            robot.spin(92);
-            sleep(100);
-            telemetry.addData("RED?", robot.isDetectingRed());
-            telemetry.addData("BLUE?", robot.isDetectingBlue());
-            telemetry.update();
-            sleep(10000);
+        robot.driveStraight(58, 130, .75);
+        sleep(100);
+        //makes robot wait until a is pressed
+        while (!gamepad1.a) {
         }
+        robot.driveStraight(17, 180, .75);
+        sleep(100);
+        while (!gamepad1.a) {
+        }
+        robot.spin(92);
+        sleep(100);
+        telemetry.addData("RED?", robot.isDetectingRed());
+        telemetry.addData("BLUE?", robot.isDetectingBlue());
+        telemetry.update();
+        sleep(10000);
     }
 }
