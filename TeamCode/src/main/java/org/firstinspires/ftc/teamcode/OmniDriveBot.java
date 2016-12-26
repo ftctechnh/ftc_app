@@ -189,81 +189,10 @@ public class OmniDriveBot implements DriveTrainInterface
 
     public void driveStraight(double distanceInches, double degree)
     {
-        //Resets Encoders
-        resetEncoders();
-        //Converts inputs appropriately if distance inches is negative
-        if(distanceInches < 0)
-        {
-            distanceInches *= -1;
-            degree += 180;
-        }
-        //Shift input degree between +-180
-        while(degree > 180)
-        {
-            degree -= 360;
-        }
-        //degree is now guaranteed to be less than 180
-        while(degree < -180)
-        {
-            degree += 360;
-        }
-        //degree is now guaranteed to be greater than -180
-        double degToRad = (Math.PI/180) * degree;
-        //Numbers in equation below came from a sinReg on a calculator using observed travel from 0 to 90 degrees at 12 inches
-        //with increments of 15 degrees
-        double scalingFactor = (0.157 * Math.sin(3.963 * (degToRad) + 1.755)) + 0.846;
+        driveStraight(distanceInches, degree, 0.75);
+    }
 
-        float leftXIn = -(float)Math.sin(degToRad);
-        float leftYIn = (float)Math.cos(degToRad);
-        float fRPower = leftYIn - leftXIn;
-        float fLPower = -leftYIn - leftXIn;
-        float bRPower = leftYIn + leftXIn;
-        float bLPower = -leftYIn + leftXIn;
-
-        float scaleFactor = 1.0f;
-
-        if (Math.abs(fRPower) > scaleFactor)
-        {
-            scaleFactor = Math.abs(fRPower);
-        }
-        if (Math.abs(fLPower) > scaleFactor)
-        {
-            scaleFactor = Math.abs(fLPower);
-        }
-        if (Math.abs(bRPower) > scaleFactor)
-        {
-            scaleFactor = Math.abs(bRPower);
-        }
-        if (Math.abs(bLPower) > scaleFactor)
-        {
-            scaleFactor = Math.abs(bLPower);
-        }
-        fLPower = fLPower / scaleFactor;
-        bRPower = bRPower / scaleFactor;
-        bLPower = bLPower / scaleFactor;
-        fRPower = fRPower / scaleFactor;
-
-        double distanceTravel = distanceInches/scalingFactor;
-        int fLDistanceEncoders = (int)(distanceTravel*57);
-        int fRDistanceEncoders = (int)(distanceTravel*57);
-
-        bL.setPower(bLPower);
-        bR.setPower(bRPower);
-        fL.setPower(fLPower);
-        fR.setPower(fRPower);
-
-        while(Math.abs(fL.getCurrentPosition()) < fLDistanceEncoders & Math.abs(fR.getCurrentPosition()) < fRDistanceEncoders)
-        {
-        }
-
-        bL.setPower(0);
-        bR.setPower(0);
-        fL.setPower(0);
-        fR.setPower(0);
-
-     }
-
-    public void driveStraightPow(double distanceInches, double degree, double power)
+    public void driveStraight(double distanceInches, double degree, double power)
     {
         //Resets Encoders
         resetEncoders();
