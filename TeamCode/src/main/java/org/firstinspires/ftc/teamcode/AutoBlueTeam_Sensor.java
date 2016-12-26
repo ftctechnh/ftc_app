@@ -144,13 +144,13 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
         encoderDrive(DRIVE_SPEED, 24, 24, 10.0); // Drive fwd
         telemetry.addData("Step 1 GyroDrive", " Completed");
         telemetry.update();
-        sleep(250);
+        sleep(2500);
 
         //Step 2
         gyroTurn( TURN_SPEED, -55.0);         // Turn  CCW to -55 Degrees
         telemetry.addData("Step 2 GyroTurn", " Completed");
         telemetry.update();
-        sleep(250);
+        sleep(2500);
 
 //        gyroHold( TURN_SPEED, -45.0, 0.5);    // Hold -45 Deg heading for a 1/2 second
 //        telemetry.addData("Step 2 Gyro HOLD", " Completed");
@@ -159,30 +159,31 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
 
 //        Step 3
 //        gyroDrive(DRIVE_SPEED, 24.0, 0.0);    // Drive FWD
-        encoderDrive(DRIVE_SPEED, 36, 36, 10.0); // Drive fwd
+        encoderDrive(DRIVE_SPEED, 42, 42, 10.0); // Drive fwd
         telemetry.addData("Step 3a GyroDrive", " Completed");
         telemetry.update();
+        sleep(2500);
 
-        encoderDrive(PUSH_SPEED, 6, 6, 10.0); // Drive fwd
+        encoderDrive(PUSH_SPEED, 12, 12, 10.0); // Drive fwd
         telemetry.addData("Step 3b GyroDrive", " Completed");
         telemetry.update();
 
 
-        sleep(250);
+        sleep(2500);
 
         //Step 4
         gyroTurn( TURN_SPEED, -90.0);         // Turn  CCW to -45 Degrees
         telemetry.addData("Step 4 GyroTurn", " Completed");
         telemetry.update();
-        sleep(250);
+        sleep(2500);
 
 //        gyroHold( TURN_SPEED, -45.0, 0.5);    // Hold -45 Deg heading for a 1/2 second
 //        telemetry.addData("Step 4 Gyro HOLD", " Completed");
 //        telemetry.update();
 //        sleep(2000);
 
-        encoderDrive(DRIVE_SPEED, 6, 6, 3.0); //  Forward 24 inches with 3 Sec timeout
-        sleep(250);
+        encoderDrive(DRIVE_SPEED, 3, 3, 3.0); //  Forward 24 inches with 3 Sec timeout
+        sleep(2500);
 
 //        //Touch sensor loop - TODO
 //        while (!robot.touch.isPressed() && sensorLoopCycles < 6) {
@@ -229,9 +230,9 @@ public class AutoBlueTeam_Sensor extends LinearOpMode {
 //            sleep(500);
             encoderDrive(PUSH_SPEED,    -12, -12, 3.0);
 //            encoderDrive(TURN_SPEED,    -3,6,3.0);
-            gyroTurn(TURN_SPEED, -60.0);
+            gyroTurn(TURN_SPEED, 60.0);
             encoderDrive(PUSH_SPEED,    20,20,3.0);
-            gyroTurn(TURN_SPEED, -90.0);
+            gyroTurn(TURN_SPEED, 90.0);
             encoderDrive(PUSH_SPEED,    9,9,3.0);
         } else if (robot.color.blue() > robot.color.red()){
             colorBlueSensed = 2;
