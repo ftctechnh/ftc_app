@@ -607,8 +607,8 @@ public class AutoLib {
             float power = Range.clip(dist / 45.0f, -mPower, mPower);
 
             // compute new right/left motor powers
-            float rightPower = -power;
-            float leftPower = power;
+            float rightPower = power;
+            float leftPower = -power;
 
             // log some data
             if (mOpMode != null) {

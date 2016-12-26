@@ -32,6 +32,7 @@ public class LineDrive extends OpenCVLib {
     SensorLib.PID mgPid;                     // PID controllers for the sequence
     SensorLib.PID mdPid;
     SensorLib.PID muPid;
+    SensorLib.PID mGPid;
     // parameters of the PID controller for this sequence's first part
     float Kp = 0.05f;        // degree heading proportional term correction per degree of deviation
     float Ki = 0.02f;         // ... integrator term
@@ -51,24 +52,32 @@ public class LineDrive extends OpenCVLib {
     float Ki3Cutoff = 0.00f;
 
     // parameters of the PID controller for the ultrasonic sensor driving
-    float Kp4 = 0.125f;
-    float Ki4 = 0.0f;
+    float Kp4 = 0.03f;
+    float Ki4 = 0.00f;
     float Kd4 = 0;
     float Ki4Cutoff = 0.00f;
+
+    //parameters for gyro PID, but cranked up
+    float Kp5 = 0.1f;        // degree heading proportional term correction per degree of deviation
+    float Ki5 = 0.05f;         // ... integrator term
+    float Kd5 = 0;             // ... derivative term
+    float Ki5Cutoff = 3.0f;    // maximum angle error for which we update integrator
 
     final float ultraDistS1 = 20;
     final float ultraDistS2 = 13;
 
     //constants for pushy pushy
     final double pushPos = 1.0;
-    final double time = 1.0;
-    final boolean red = false;
+    final double time = 0.25;
+    boolean red;
     final int colorThresh = 200;
     final float driveTime = 0.025f;
     final int driveLoopCount = 1;
     final float pushyPower = 0.2f;
 
     final int countPerRotation = 280;
+
+
 
     @Override
     public void init() {
@@ -77,11 +86,14 @@ public class LineDrive extends OpenCVLib {
         robot = new BotHardware();
         robot.init(this, debug);
 
+        red = false;
+
         // create a PID controller for the sequence
         mPid = new SensorLib.PID(Kp, Ki, Kd, KiCutoff);
         mgPid = new SensorLib.PID(Kp2, Ki2, Kd2, Ki2Cutoff);    // make the object that implements PID control algorithm
         mdPid = new SensorLib.PID(Kp3, Ki3, Kd3, Ki3Cutoff);
         muPid = new SensorLib.PID(Kp4, Ki4, Kd4, Ki4Cutoff);
+        mGPid = new SensorLib.PID(Kp5, Ki5, Kd5, Ki5Cutoff);
 
         // create an autonomous sequence with the steps to drive
         // several legs of a polygonal course ---
@@ -108,11 +120,34 @@ public class LineDrive extends OpenCVLib {
 
         mDrive = new AutoLib.LinearSequence();
 
-        mDrive.add(new SquirrleyAzimuthTimedDriveStep(this, 90, 0, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, 2.0f, false));
-        mDrive.add(new SquirrleyAzimuthTimedDriveStep(this, 0, 0, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, 1.5f, false));
-        mDrive.add(new SquirrleyAzimuthTimedDriveStep(this, 90, 0, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, 0.5f, false));
-        mDrive.add(new SquirrleyAzimuthFinDriveStep(this, 0, 0, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.3f, new UltraSensors(30), true));
-        mDrive.add(new SquirrleyAzimuthFinDriveStep(this, 90, 0, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.3f, new LineSensors(frame), true));
+        float time;
+
+        if(red)
+            time = 1.5f;
+        else
+            time = 2.0f;
+
+
+        mDrive.add(new SquirrleyAzimuthTimedDriveStep(this, 90, 0, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, time, false));
+
+        int heading;
+        int rightAngle;
+
+        if(red){
+            mDrive.add(new AutoLib.GyroTurnStep(this, 180, robot.getNavXHeadingSensor(), robot.getMotorArray(), 0.3f, 3.0f, true));
+
+            heading = 180;
+            rightAngle = -90;
+        }
+        else {
+            heading = 0;
+            rightAngle = 90;
+        }
+
+        mDrive.add(new SquirrleyAzimuthTimedDriveStep(this, 0, heading, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, time - 0.5f, false));
+        //mDrive.add(new AutoLib.LogTimeStep(this, "YAY", 0.5));
+        mDrive.add(new SquirrleyAzimuthFinDriveStep(this, 0, heading, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, new UltraSensors(60), true));
+        mDrive.add(new UltraSquirrleyAzimuthFinDriveStep(this, rightAngle, heading, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(25), mGPid, muPid, robot.getMotorArray(), 0.3f, new LineSensors(frame), true));
 
         mSequence.add(mDrive);
 
@@ -141,7 +176,7 @@ public class LineDrive extends OpenCVLib {
         mPushy.add(new PushyLib.pushypushy(this, robot.getMotorArray(), robot.leftSensor, robot.rightSensor, robot.leftServo, robot.rightServo,
                 pushPos, time, red, colorThresh, pushyPower, driveTime, driveLoopCount));
 
-        mPushy.add(new UltraSquirrleyAzimuthFinDriveStep(this, 90, 0, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(22), mPid, muPid, robot.getMotorArray(), 0.4f, new LineSensors(frame, 3000.0f), true));
+        mPushy.add(new UltraSquirrleyAzimuthFinDriveStep(this, rightAngle, 0, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(22), mGPid, muPid, robot.getMotorArray(), 0.4f, new LineSensors(frame, 3000.0f), true));
 
         //mPushy.add(new SquirrleyAzimuthTimedDriveStep(this, 120.0f, 0.0f, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, 0.45f, false));
         //mPushy.add(new SquirrleyAzimuthTimedDriveStep(this, 90.0f, 0.0f, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, 0.5f, false));
@@ -165,7 +200,7 @@ public class LineDrive extends OpenCVLib {
             }
         }));
 
-        mPushy.add(new SquirrleyAzimuthTimedDriveStep(this, 180.0f, 0.0f, robot.getNavXHeadingSensor(), mPid, robot.getMotorArray(), 0.4f, 0.5f, true));
+        mPushy.add(new AutoLib.MoveByTimeStep(robot.getMotorArray(), 0.4, 1.0, true));
 
         mSequence.add(mPushy);
 
