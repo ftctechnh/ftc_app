@@ -18,12 +18,14 @@ public class AutoBlueFarRampBeacon extends LinearOpMode
         waitForStart();
 
         //A suggestion but add part to shoot particles into center washing machine
-
-        robot.driveStraight(103, -153);
+        while(!gamepad1.a){}
+        robot.driveStraight(90, -153);
         sleep(100);
-        robot.driveStraight(14,-180);
-        sleep(100);
+        while(!gamepad1.a){}
         robot.spin(90);
+        sleep(100);
+        while(!gamepad1.a){}
+        robot.driveStraight(29,90);
 
         /* test if color sensors can get beacon color; basically test code
         telemetry.addData("BLUE:", robot.getSensorBlue());
@@ -33,6 +35,8 @@ public class AutoBlueFarRampBeacon extends LinearOpMode
         telemetry.addData("HUE", robot.getSensorHue());
         sleep(10000);\
         */
+
+        /*
 
         //assumes robot is on the left side of the beacon from the side with battery
         if(robot.isDetectingRed() && !robot.isDetectingBlue())
@@ -50,12 +54,26 @@ public class AutoBlueFarRampBeacon extends LinearOpMode
             robot.driveStraight(6,180);
         }
 
+        */
+        while(!gamepad1.a){}
         //Next beacon,
         sleep(100);
-        robot.driveStraight(48, 180);
+
+        while(!robot.isDetectingBlue())
+        {
+            telemetry.addData("IS blue?", robot.isDetectingBlue());
+            telemetry.addData("HUE:", robot.getSensorHue());
+            robot.driveStraight(1,180);
+            telemetry.update();
+            sleep(200);
+        }
+     //   robot.driveStraight(48, 180);
         sleep(100);
 
+        while(!gamepad1.a){}
+        robot.driveStraight(3,90);
         //Same logic as before, the robot's color sensor is assumed on the left side(relative to the side with the battery)
+        /*
         if(robot.isDetectingRed() && !robot.isDetectingBlue())
         {
             //robot drive at 90 deg, press button
@@ -71,6 +89,7 @@ public class AutoBlueFarRampBeacon extends LinearOpMode
             robot.driveStraight(6,180);
 
         }
+        */
 
         //maybe hit ball last?????????
     }
