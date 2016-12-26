@@ -53,7 +53,7 @@ import java.util.List;
 /**
  * Name the opMode and put it in the appropriate group
  */
-@Autonomous(name = " OpModeLib - AutoMecanumBaseTemplate", group = "COMP")
+@Autonomous(name = " OpModeLib - AutoMecanumBaseTemplate", group = "OpModeLib")
 
 public class AutoMecanumBaseTemplate extends LinearOpMode {
 
