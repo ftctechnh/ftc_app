@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
@@ -69,16 +68,15 @@ public abstract class _AutonomousBase extends _RobotBase
     //Just resets the gyro.
     protected void zeroHeading() throws InterruptedException
     {
-        sleep(200);
         gyroscope.resetZAxisIntegrator();
-        sleep(800);
+        sleep(800); //Resetting gyro heading has an annoying tendency to not actually zero, which is kinda annoying but not much can be done about it.
     }
 
     //Account for drifting tendency of the bot.
     protected void adjustHeading() throws InterruptedException
     {
         int headingOffset = getValidGyroHeading();
-        turnToHeading(-headingOffset, turnMode.BOTH);
+        turnToHeading(-headingOffset, TurnMode.BOTH);
     }
 
     //More complex method that adjusts the heading based on the gyro heading.
@@ -134,17 +132,19 @@ public abstract class _AutonomousBase extends _RobotBase
     }
 
     //Used to turn to a specified heading.
-    protected double initialTurnPower = .1; //Can be any value less than 1 (but should be less than .5)
-    protected void setInitialTurnPower(double turnPower) {initialTurnPower = turnPower;}
-    protected double successiveTurnReduction = 3.6; //Should be greater than 1.
-    protected double incrementFactor = 0.00012; //The rate at which the bot slowly speeds up.
-    protected double precisionFactor = 5; //precisionFactor * 2 radius is acceptable.
-    protected void setPrecision(double newPrecision) {precisionFactor = newPrecision;}
-
-    enum turnMode {
+    private double initialTurnPower = .1; //Can be any value less than 1 (but should be less than .5)
+    protected void setInitialTurnPower(double initialTurnPower) {this.initialTurnPower = initialTurnPower;}
+    private double successiveTurnReduction = 3.6; //Should be greater than 1.
+    protected void setSuccessiveTurnReduction (double successiveTurnReduction) {this.successiveTurnReduction = successiveTurnReduction;}
+    private double accelerationFactor = 0.00012; //The rate at which the bot slowly speeds up.
+    protected void setAccelerationFactor(double accelerationFactor) {this.accelerationFactor = accelerationFactor;}
+    private double precisionFactor = 5; //precisionFactor * 2 radius is acceptable.
+    protected void setPrecisionFactor (double precisionFactor) {this.precisionFactor = precisionFactor;}
+    enum TurnMode {
         LEFT, RIGHT, BOTH
     }
-    protected void turnToHeading (int desiredHeading, turnMode mode) throws InterruptedException
+
+    protected void turnToHeading (int desiredHeading, TurnMode mode) throws InterruptedException
     {
         //Just exit the method if the heading is already achieved.
         if (desiredHeading == 0)
@@ -157,20 +157,20 @@ public abstract class _AutonomousBase extends _RobotBase
         int previousHeading = getValidGyroHeading();
         while (true) // Will eventually be BROKEN out of.
         {
-            double incrementValue = turnPower * incrementFactor;
+            double incrementValue = turnPower * accelerationFactor;
             int initialSign = Integer.signum(getValidGyroHeading() - desiredHeading);
             //Wait until the desired value is turned over or reached.
             int currentSign = initialSign;
             do
             {
-                if (mode == turnMode.LEFT || mode == turnMode.BOTH)
+                if (mode == TurnMode.LEFT || mode == TurnMode.BOTH)
                 {
                     //Set new motor powers.
                     for (DcMotor lMotor : leftDriveMotors)
                         lMotor.setPower(currentSign * turnPower);
                 }
 
-                if (mode == turnMode.RIGHT || mode == turnMode.BOTH)
+                if (mode == TurnMode.RIGHT || mode == TurnMode.BOTH)
                 {
                     for (DcMotor rMotor : rightDriveMotors)
                         rMotor.setPower(-1 * currentSign * turnPower);

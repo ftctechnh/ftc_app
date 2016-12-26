@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.mainRobotPrograms;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 @Autonomous(name = "Autonomous - Blue Beacons Edition", group = "Autonomous Group")
 //@Disabled
@@ -23,8 +22,8 @@ public class AutonomousBlueBeacons extends _AutonomousBase
 
         //Turn to face between the lines
         setInitialTurnPower(.16);
-        setPrecision(10);
-        turnToHeading(42, turnMode.BOTH);
+        setPrecisionFactor(10);
+        turnToHeading(42, TurnMode.BOTH);
         outputNewLineToDriverStation("Turned to face toward intermediary part of white line");
         int currentHeading = getValidGyroHeading();
 
@@ -33,8 +32,8 @@ public class AutonomousBlueBeacons extends _AutonomousBase
         outputNewLineToDriverStation("Driving forward toward that part.");
 
         //Turn to face the wall
-        setPrecision(24);
-        turnToHeading(90-currentHeading, turnMode.BOTH);
+        setPrecisionFactor(24);
+        turnToHeading(90-currentHeading, TurnMode.BOTH);
         outputNewLineToDriverStation("Turning to face wall.  ");
 
         //Drive to the wall until touch sensor registered.
@@ -49,8 +48,8 @@ public class AutonomousBlueBeacons extends _AutonomousBase
         sleep(300);
 
         setInitialTurnPower(.2);
-        setPrecision(5);
-        turnToHeading(93, turnMode.RIGHT); //Back facing to near beacon
+        setPrecisionFactor(5);
+        turnToHeading(93, TurnMode.RIGHT); //Back facing to near beacon
 
         driveForTime(0.2, 1400);
 
@@ -76,7 +75,7 @@ public class AutonomousBlueBeacons extends _AutonomousBase
 
         outputNewLineToDriverStation("red is " + rightColorSensor.red() + " blue is " + rightColorSensor.blue());
 
-        setPrecision(2);
+        setPrecisionFactor(2);
         adjustHeading();
 
         /********        END BUTTON PUSH SEQUENCE       ********/

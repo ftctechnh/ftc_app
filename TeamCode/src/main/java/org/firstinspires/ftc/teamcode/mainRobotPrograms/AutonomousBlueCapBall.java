@@ -19,8 +19,8 @@ public class AutonomousBlueCapBall extends _AutonomousBase
         stopDriving();
         adjustHeading();
 
-        setPrecision(5);
-        turnToHeading(-105, turnMode.BOTH);
+        setPrecisionFactor(5);
+        turnToHeading(-105, TurnMode.BOTH);
 
         zeroHeading();
         setMovementPower(0.5);

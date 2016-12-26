@@ -13,30 +13,31 @@ public class SensorDebug extends _AutonomousBase
         rightSensorServo.setPosition(RIGHT_SERVO_OPEN);
 
         while (opModeIsActive()) {
-            outputConstantLinesToDriverStation(new String[]
+            outputConstantLinesToDriverStation(
+                    new String[]
                     {
-                    "Bottom Color Sensor",
-                    "--------------------",
-                    "ARGB: " + bottomColorSensor.argb() + " Alpha: " + bottomColorSensor.alpha(),
-                    "Blue: " + bottomColorSensor.blue() + " Red: " + bottomColorSensor.red(),
-                    "Green: " + bottomColorSensor.green(),
-                    "Left Color Sensor",
-                    "--------------------",
-                    "ARGB: " + leftColorSensor.argb() + " Alpha: " + leftColorSensor.alpha(),
-                    "Blue: " + leftColorSensor.blue() + " Red: " + leftColorSensor.red(),
-                    "Green: " + leftColorSensor.green(),
-                    "Right Color Sensor",
-                    "--------------------",
-                    "ARGB: " + rightColorSensor.argb() + " Alpha: " + rightColorSensor.alpha(),
-                    "Blue: " + rightColorSensor.blue() + " Red: " + rightColorSensor.red(),
-                    "Green: " + rightColorSensor.green(),
-                    "Heading: " + getValidGyroHeading(),
+                            "Bottom Color Sensor",
+                            "--------------------",
+                            "ARGB: " + bottomColorSensor.argb() + " Alpha: " + bottomColorSensor.alpha(),
+                            "Blue: " + bottomColorSensor.blue() + " Red: " + bottomColorSensor.red(),
+                            "Green: " + bottomColorSensor.green(),
+                            "Left Color Sensor",
+                            "--------------------",
+                            "ARGB: " + leftColorSensor.argb() + " Alpha: " + leftColorSensor.alpha(),
+                            "Blue: " + leftColorSensor.blue() + " Red: " + leftColorSensor.red(),
+                            "Green: " + leftColorSensor.green(),
+                            "Right Color Sensor",
+                            "--------------------",
+                            "ARGB: " + rightColorSensor.argb() + " Alpha: " + rightColorSensor.alpha(),
+                            "Blue: " + rightColorSensor.blue() + " Red: " + rightColorSensor.red(),
+                            "Green: " + rightColorSensor.green(),
+                            "Heading: " + getValidGyroHeading(),
                             "Optical Distance Sensor",
                             "------------------------",
                             "Dist is " + opticalDistanceSensor.getLightDetected()
-            });
+                    }
+            );
             idle();
-        } // alpha > 10 = white
-//        driveForTime(0.8, 2000);
+        }
     }
 }
