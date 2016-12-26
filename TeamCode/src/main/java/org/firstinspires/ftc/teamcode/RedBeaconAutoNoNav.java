@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 /**
  * Created by Peter G on 12/1/2016.
  */
-@Autonomous(name = "BeaconAutoNoNav", group = "Autonomous")
-public class BeaconAutoNoNav extends LinearOpMode
+@Autonomous(name = "RedBeaconAutoNoNav", group = "Autonomous")
+public class RedBeaconAutoNoNav extends LinearOpMode
 {
     private OmniDriveBot robot = new OmniDriveBot();
 
@@ -15,13 +15,15 @@ public class BeaconAutoNoNav extends LinearOpMode
     {
         robot.init(hardwareMap);
         waitForStart();
-        robot.driveStraight(61, 130);
+        robot.driveStraight(63, 130);
         sleep(100);
-        robot.driveStraight(17, 180);
+        //makes robot wait until a is pressed
+        while(!gamepad1.a){}
+        robot.driveStraight(14, 180);
         sleep(100);
+        while(!gamepad1.a){}
         robot.spin(92);
-        telemetry.addData("RED", robot.getSensorBlue());
-        telemetry.addData("BLUE", robot.getSensorRed());
+        telemetry.addData("Hue", robot.getSensorHue());
         telemetry.update();
         sleep(10000);
     }
