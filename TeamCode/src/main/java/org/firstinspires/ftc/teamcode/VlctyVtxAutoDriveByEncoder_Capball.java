@@ -41,21 +41,16 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 /**
- * This file illustrates the concept of driving a path based on encoder counts.
- * It uses the common Pushbot hardware class to define the drive on the robot.
- * The code is structured as a LinearOpMode
+ * This program takes place in the 30 second autonomous period.
+ * The robot will hit the Capball, dislodging it from the starting position and then will
+ * park on the middle square. If all goes right, this should score 10 points for our alliance.
+ * The robot should start the Driver_Control period parked on the center square.
  *
- * The code REQUIRES that you DO have encoders on the wheels,
- *   otherwise you would use: PushbotAutoDriveByTime;
+ * The code REQUIRES that you DO have encoders on the wheels.
  *
  *  This code ALSO requires that the drive Motors have been configured such that a positive
  *  power command moves them forwards, and causes the encoders to count UP.
  *
- *   The desired path in this example is:
- *   - Drive forward for 48 inches
- *   - Spin right for 12 Inches
- *   - Drive Backwards for 24 inches
- *   - Stop and close the claw.
  *
  *  The code is written using a method called: encoderDrive(speed, leftInches, rightInches, timeoutS)
  *  that performs the actual movement.
@@ -64,7 +59,6 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  *  This code uses the RUN_TO_POSITION mode to enable the Motor controllers to generate the run profile
  *
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
 @Autonomous(name="Velocity Vortex: Auto Capball Square", group="Pushbot")
@@ -80,8 +74,8 @@ public class VlctyVtxAutoDriveByEncoder_Capball extends LinearOpMode {
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.6;
-    static final double     TURN_SPEED              = 0.5;
+    static final double     DRIVE_SPEED             = 0.7;
+    static final double     TURN_SPEED              = 0.65;
 
     @Override
     public void runOpMode() {
@@ -133,8 +127,8 @@ sleep(250);
         sleep(250);
         //Turn back 4 inches to square back up to the square
         encoderDrive(TURN_SPEED, -4, 4, 4.0);
-        //Pause for 2.5 seconds to make sure capball is out of the way of the square to park.
-        sleep(2500);
+        //Pause for 2 seconds to make sure capball is out of the way of the square to park.
+        sleep(2000);
         //Move forward 9 inches to park onto the center square.
         encoderDrive(DRIVE_SPEED, 9, 9, 4.0);  // S3: Move forward 9 Inches with 4 Sec timeout
 
