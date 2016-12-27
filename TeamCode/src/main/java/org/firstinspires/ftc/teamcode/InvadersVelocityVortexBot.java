@@ -42,7 +42,67 @@ public class InvadersVelocityVortexBot
     public ColorSensor color1 = null;
 
 
+//FUNCTIONS
 
+    public void GyroTurn(float speed, float degrees) {
+        //I think I will set this up so that if it is a positive number, the robot will turn left, and if it is negative it will turn right.
+        //// TODO: 12/15/2016 This probably won't work, so Dad, please take a look at this. You can probably tell what I'm trying to do.
+        //// TODO: 12/27/2016 Nvm, this probably will work, but we can't test because of the fuse problems.
+        //Yay! I can commit!
+        int GyroDegrees = 0;
+        if(degrees > 0 == true){
+            GyroDegrees = 0;
+            while (GyroDegrees < degrees == true){
+                leftMotor.setPower(0.5);
+                rightMotor.setPower(-0.5);
+            }
+
+            leftMotor.setPower(0);
+            rightMotor.setPower(0);
+
+
+        }
+        else {
+            GyroDegrees = 0;
+            while (GyroDegrees < degrees == true) {
+                leftMotor.setPower(-0.5);
+                rightMotor.setPower(0.5);
+            }
+
+            leftMotor.setPower(0);
+            rightMotor.setPower(0);
+
+
+
+        }
+    }
+
+    public void DistanceDrive(float distance, float power) {
+        while (UDS.getUltrasonicLevel() > distance) {
+            leftMotor.setPower(power);
+            rightMotor.setPower(power);
+        }
+
+        leftMotor.setPower(0);
+        rightMotor.setPower(0);
+    }
+
+    public void ColorDrive(int Red, int Blue, int Green){
+        while (color1.red() < Red){
+            rightMotor.setPower(0.5);
+            leftMotor.setPower(0.5);
+        }
+        while (color1.green() < Green){
+            rightMotor.setPower(0.5);
+            leftMotor.setPower(0.5);
+        }
+        while (color1.blue() < Blue){
+            rightMotor.setPower(0.5);
+            leftMotor.setPower(0.5);
+        }
+        rightMotor.setPower(0);
+        leftMotor.setPower(0);
+    }
 
 
 
