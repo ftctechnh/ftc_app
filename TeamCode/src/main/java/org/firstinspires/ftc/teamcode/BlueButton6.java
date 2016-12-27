@@ -60,41 +60,40 @@ public class BlueButton6 extends AutonomousBase{
                 }
                 break;
             case 5: //Move to wall 
-                map.setGoal(11,map.getRobotY());
+                map.setGoal(12,map.getRobotY());
                 moveState = MoveState.RIGHT;
-                if(map.distanceToGoal()<=.1){
+                if(touchWall.isPressed()){
                     moveState = MoveState.STOP;
-		            gameState = 100;
-                }
-                break;
-            case 100:
-                map.setGoal(10.9,map.getRobotY());
-                moveState = MoveState.LEFT;
-                if(map.distanceToGoal()<=.1){
-                    moveState = MoveState.STOP;
-                    gameState = 6;
+		            gameState = 6;
                 }
                 break;
             case 6: //back up and button press A
                 map.setGoal(12,0); // I need the goal far away so moveState keeps going
-                if(touchRight.isPressed()){
-//                    if(colorLeft1.blue()/colorLeft1.red() < colorLeft2.blue()/colorLeft2.red()) {
-//                        moveState = MoveState.SERVO_L;
-//                    }
-//                    else{
-                        moveState = MoveState.SERVO_R;
-//                    }
-                    gameState = 7;
-                    pTime = getRuntime();
-                }else{
-                     if(linedUp()){
-		         moveState = MoveState.BACKWARD_SLOW;
-                     }else{
-                         moveState = MoveState.TURN_TOWARDS_GOAL;
-                     }
+                if(!touchWall.isPressed()){
+                    moveState = MoveState.RIGHT_SLOW;
+                }else {
+                    if (touchRight.isPressed()) {
+                        if (colorRight.blue() > colorRight.red() && colorLeft.red() < colorRight.red()) {
+                            moveState = MoveState.SERVO_L;
+                            gameState = 7;
+                            pTime = getRuntime();
+                        } else if (colorRight.blue() < colorRight.red() && colorLeft.red() > colorRight.red()) {
+                            moveState = MoveState.SERVO_R;
+                            gameState = 7;
+                            pTime = getRuntime();
+                        } else {
+                            moveState = MoveState.LEFT_SLOW;
+                        }
+                    } else {
+                        if (linedUp()) {
+                            moveState = MoveState.BACKWARD_SLOW;
+                        } else {
+                            moveState = MoveState.TURN_TOWARDS_GOAL;
+                        }
+                    }
                 }
                 break;
-	        case 7: // moves out from wall
+            case 7: // moves out from wall
                 if(getRuntime() - pTime > 3){
                     map.setGoal(11.5, map.getRobotY());
                     moveState = MoveState.LEFT;
@@ -116,13 +115,13 @@ public class BlueButton6 extends AutonomousBase{
                 }
                 break;
             case 9: //moves to wall
-                map.setGoal(12.5, map.getRobotY());
+                map.setGoal(12.5 ,map.getRobotY());
                 moveState = MoveState.RIGHT;
-                if(map.distanceToGoal()<= .1){
+                if(touchWall.isPressed()){
                     moveState = MoveState.STOP;
                     gameState = 101;
                 }
-            break;
+                break;
             case 101:
                 map.setGoal(12.4,map.getRobotY());
                 moveState = MoveState.LEFT;
@@ -130,7 +129,7 @@ public class BlueButton6 extends AutonomousBase{
                     moveState = MoveState.STOP;
                     gameState = 10;
                 }
-               break;
+                break;
             case 10: //move back  and button press B
                 map.setGoal(12,0); // I need the goal far away so moveState keeps going
                 if(touchRight.isPressed()){
