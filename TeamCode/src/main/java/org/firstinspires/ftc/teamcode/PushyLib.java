@@ -120,6 +120,7 @@ public final class PushyLib {
                 mTime = new AutoLib.Timer(mDriveTime);
                 mTime.start();
             }
+
             return false;
         }
     }

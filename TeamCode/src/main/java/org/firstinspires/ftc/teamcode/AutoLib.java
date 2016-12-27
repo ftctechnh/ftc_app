@@ -703,6 +703,7 @@ public class AutoLib {
         Timer mTimer;
         boolean mRewind;
         private double lastPosition;
+        OpMode mMode;
 
         public TimedServoStep(Servo servo, double position, double time, boolean rewind){
             mServo = servo;
@@ -728,6 +729,7 @@ public class AutoLib {
                 }
                 else return true;
             }
+
             return false;
         }
     }

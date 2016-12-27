@@ -32,40 +32,40 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.*;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-@Autonomous(name="Old Auto", group="Main")
+@Autonomous(name="Blue Auto (Push Beacons)", group="Main")
 //@Disabled
-public class AutonomousMain extends LinearOpMode {
+public class BlueAutoPointer extends OpMode {
 
     BotHardware robot = new BotHardware();
 
+    LineDrive auto = new LineDrive(this, false);
+
     @Override
-    public void runOpMode() {
+    public void init(){
+        auto.init();
+    }
 
-        robot.init(this, false);
+    @Override
+    public void init_loop(){
+        auto.init_loop();
+    }
 
-        // launch first ball
-        robot.launcherMotor.setPower(1.0);
+    @Override
+    public void start(){
+        auto.start();
+    }
 
-        robot.waitForTick(2000);
+    @Override
+    public void loop(){
+        auto.loop();
+    }
 
-        robot.launcherMotor.setPower(0.0);
-
-        // load second ball
-        robot.lifterMotor.setPower(-1.0);
-
-        robot.waitForTick(5000);
-
-        robot.lifterMotor.setPower(0.0);
-
-        // launch second ball
-        robot.launcherMotor.setPower(1.0);
-
-        robot.waitForTick(2000);
-
-        robot.launcherMotor.setPower(0.0);
-
+    @Override
+    public void stop(){
+        auto.stop();
     }
 
 }

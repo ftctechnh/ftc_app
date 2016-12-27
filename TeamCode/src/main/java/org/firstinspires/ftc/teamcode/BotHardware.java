@@ -47,24 +47,7 @@ public class BotHardware
     /* Initialize standard Hardware interfaces */
     public void init(OpMode opMode, boolean debug) {
 
-        AutoLib.HardwareFactory hw;
-
-        if (debug)
-            hw = new AutoLib.TestHardwareFactory(opMode);
-        else
-            hw = new AutoLib.RealHardwareFactory(opMode);
-
-        // Define and Initialize Motors
-        frontLeftMotor = hw.getDcMotor("front_left");
-        frontRightMotor = hw.getDcMotor("front_right");
-        backLeftMotor = hw.getDcMotor("back_left");
-        backRightMotor = hw.getDcMotor("back_right");
-        lifterMotor = hw.getDcMotor("lifter");
-        launcherMotor = hw.getDcMotor("launcher");
-        sweeperMotor = hw.getDcMotor("sweeper");
-
-        leftServo = hw.getServo("servo_left");
-        rightServo = hw.getServo("servo_right");
+        initMotors(opMode, debug);
 
         try{
             final int[] ports = {6,7};
@@ -103,7 +86,27 @@ public class BotHardware
         catch (Exception e){
             opMode.telemetry.addData("NavX failed to load!", "");
         }
+    }
 
+    public void initMotors(OpMode opMode, boolean debug){
+        AutoLib.HardwareFactory hw;
+
+        if (debug)
+            hw = new AutoLib.TestHardwareFactory(opMode);
+        else
+            hw = new AutoLib.RealHardwareFactory(opMode);
+
+        // Define and Initialize Motors
+        frontLeftMotor = hw.getDcMotor("front_left");
+        frontRightMotor = hw.getDcMotor("front_right");
+        backLeftMotor = hw.getDcMotor("back_left");
+        backRightMotor = hw.getDcMotor("back_right");
+        lifterMotor = hw.getDcMotor("lifter");
+        launcherMotor = hw.getDcMotor("launcher");
+        sweeperMotor = hw.getDcMotor("sweeper");
+
+        leftServo = hw.getServo("servo_left");
+        rightServo = hw.getServo("servo_right");
 
         // change directions if necessary
         frontLeftMotor.setDirection(DcMotor.Direction.FORWARD);
@@ -256,9 +259,11 @@ public class BotHardware
         period.reset();
     }
 
-    public void startNavX(){
-        while (navX.isCalibrating());
-        navX.zeroYaw();
+    public boolean startNavX(){
+        if (!navX.isCalibrating())
+            navX.zeroYaw();
+        else return false;
+        return true;
     }
 
     public HeadingSensor getNavXHeadingSensor(){
