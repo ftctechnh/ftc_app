@@ -87,11 +87,11 @@ public class AutoBetaBlue extends LinearOpMode {
 
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
-    static final double     DRIVE_SPEED             = 0.8;     // Nominal speed for better accuracy.
-    static final double     TURN_SPEED              = 0.5;     // Nominal half speed for better accuracy.
+    static final double     DRIVE_SPEED             = 1.0;     // Nominal speed for better accuracy.
+    static final double     TURN_SPEED              = 1.0;     // Nominal half speed for better accuracy.
 
     static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
-    static final double     P_TURN_COEFF            = 0.1;     // Larger is more responsive, but also less stable
+    static final double     P_TURN_COEFF            = 0.009;     // Larger is more responsive, but also less stable
     static final double     P_DRIVE_COEFF           = 0.15;     // Larger is more responsive, but also less stable
 
 
@@ -110,7 +110,7 @@ public class AutoBetaBlue extends LinearOpMode {
     static final int     NR_MAX_RPM              = 6600;
     static final int     SHOOT_MAX_RPM           = NR_MAX_RPM * COUNTS_PER_MOTOR_REV;
 
-    static double           shootSpeed              = .65;
+    static double           shootSpeed              = .95;
     static boolean          shootPressed            = false;
 
     @Override
@@ -126,16 +126,10 @@ public class AutoBetaBlue extends LinearOpMode {
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
 
-        robot.lfDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.lrDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rfDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rrDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.setDriveMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         idle();
 
-        robot.lfDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.lrDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rfDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rrDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.setDriveMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
         // Send telemetry message to indicate successful Encoder reset
@@ -158,28 +152,44 @@ public class AutoBetaBlue extends LinearOpMode {
         // Step through each leg of the path,
 
         // Spin up the shooter
-        //robot.lShoot.setPower(shootSpeed);
-        //robot.rShoot.setPower(shootSpeed);
+        robot.lShoot.setPower(shootSpeed);
+        robot.rShoot.setPower(shootSpeed);
         telemetry.addData("Path", " Start");
         telemetry.update();
 
         // Move forward 26 inches
-        encoderDrive(DRIVE_SPEED,  26,  26, 5.0, false);  // S1: Forward 24 Inches with 5 Sec timeout
-
-        sleep(500);
-
-        gyroTurn(TURN_SPEED, 90);
-
-
+        encoderDrive(DRIVE_SPEED,  26.0, 5.0, false);  // S1: Forward 24 Inches with 5 Sec timeout
 
         // Fire the balls
-        //robot.fire.setPower(1.0);
-        //sleep(5000);        // Wait 5 seconds for shot to finish
+        robot.fire.setPower(1.0);
+        sleep(3000);        // Wait 3 seconds for shot to finish
 
         // Stop the shooter
-        //robot.fire.setPower(0.0);
-        //robot.lShoot.setPower(0.0);
-        //robot.rShoot.setPower(0.0);
+        robot.fire.setPower(0.0);
+        robot.lShoot.setPower(0.0);
+        robot.rShoot.setPower(0.0);
+
+        gyroTurn(TURN_SPEED, -70);
+
+        encoderDrive(DRIVE_SPEED, 52.0, 5.0, false);
+
+        gyroTurn(TURN_SPEED, 0);
+
+        encoderDrive(DRIVE_SPEED, 10.0, 3.0, false);
+
+        robot.beacon.setPosition(robot.BEACON_MAX_RANGE);
+        sleep (1000);
+        robot.beacon.setPosition((robot.BEACON_HOME));
+        encoderDrive(DRIVE_SPEED, 46.0, 4.0, false);
+
+        robot.beacon.setPosition(robot.BEACON_MAX_RANGE);
+        sleep (1000);
+        robot.beacon.setPosition((robot.BEACON_HOME));
+
+        sleep (10000);
+
+
+
 
         // Intake full reverse to push cap ball
         //robot.intake.setPower(-1.0);
@@ -198,6 +208,7 @@ public class AutoBetaBlue extends LinearOpMode {
         //robot.intake.setPower(0.0);
 
 
+
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
@@ -211,8 +222,8 @@ public class AutoBetaBlue extends LinearOpMode {
      *  3) Driver stops the opmode running.
      */
     public void encoderDrive(double speed,
-                             double leftInches, double rightInches,
-                             double timeoutS,
+                             double distance,
+                             double timeout,
                              boolean useGyro) throws InterruptedException {
         int newLFTarget;
         int newRFTarget;
@@ -236,21 +247,21 @@ public class AutoBetaBlue extends LinearOpMode {
 
             // Determine new target position, and pass to motor controller
 
-            newLFTarget = robot.lfDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newLRTarget = robot.lrDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRFTarget = robot.rfDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            newRRTarget = robot.rrDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newLFTarget = robot.lfDrive.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
+            newLRTarget = robot.lrDrive.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
+            newRFTarget = robot.rfDrive.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
+            newRRTarget = robot.rrDrive.getCurrentPosition() + (int)(distance * COUNTS_PER_INCH);
 
             while(robot.lfDrive.getTargetPosition() != newLFTarget){
                 robot.lfDrive.setTargetPosition(newLFTarget);
                 sleep(1);
             }
-            while(robot.lrDrive.getTargetPosition() != newLRTarget){
-                robot.lrDrive.setTargetPosition(newLRTarget);
-                sleep(1);
-            }
             while(robot.rfDrive.getTargetPosition() != newRFTarget){
                 robot.rfDrive.setTargetPosition(newRFTarget);
+                sleep(1);
+            }
+            while(robot.lrDrive.getTargetPosition() != newLRTarget){
+                robot.lrDrive.setTargetPosition(newLRTarget);
                 sleep(1);
             }
             while(robot.rrDrive.getTargetPosition() != newRRTarget){
@@ -258,29 +269,13 @@ public class AutoBetaBlue extends LinearOpMode {
                 sleep(1);
             }
 
+
             // Record the starting heading
             angles = robot.imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX);
             holdHeading = angles.firstAngle;
 
-            // Turn On RUN_TO_POSITION
-            while (robot.lfDrive.getMode() != DcMotor.RunMode.RUN_TO_POSITION){
-                robot.lfDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-               sleep(1);
-            }
-
-            while (robot.lrDrive.getMode() != DcMotor.RunMode.RUN_TO_POSITION){
-                robot.lrDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                sleep(1);
-            }
-            while (robot.rfDrive.getMode() != DcMotor.RunMode.RUN_TO_POSITION){
-                robot.rfDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                sleep(1);
-            }
-            while (robot.rrDrive.getMode() != DcMotor.RunMode.RUN_TO_POSITION){
-                robot.rrDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                sleep(1);
-            }
-
+            // Turn On fronts only to RUN_TO_POSITION
+            robot.setDriveMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             runtime.reset();
@@ -288,6 +283,7 @@ public class AutoBetaBlue extends LinearOpMode {
             speed = Math.abs(speed);    // Make sure its positive
             curSpeed = Math.min(MINSPEED,speed);
 
+            // Power only the fronts -- let the rears glide
             robot.lfDrive.setPower(Math.abs(curSpeed));
             robot.lrDrive.setPower(Math.abs(curSpeed));
             robot.rfDrive.setPower(Math.abs(curSpeed));
@@ -295,7 +291,7 @@ public class AutoBetaBlue extends LinearOpMode {
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             while (opModeIsActive() &&
-                   (runtime.seconds() < timeoutS) &&
+                   (runtime.seconds() < timeout) &&
                    ((robot.lfDrive.isBusy())
                            || (robot.rfDrive.isBusy()))) {
 
@@ -313,7 +309,7 @@ public class AutoBetaBlue extends LinearOpMode {
                     steer = getSteer(error, P_DRIVE_COEFF);
 
                     // if driving in reverse, the motor correction also needs to be reversed
-                    if (leftInches < 0)
+                    if (distance < 0)
                         steer *= -1.0;
 
                     leftSpeed -= steer;
@@ -330,20 +326,19 @@ public class AutoBetaBlue extends LinearOpMode {
 
                 }
 
-                // And rewrite the motor speeds
+                // And rewrite the front motor speeds
                 robot.lfDrive.setPower(Math.abs(leftSpeed));
                 robot.lrDrive.setPower(Math.abs(leftSpeed));
                 robot.rfDrive.setPower(Math.abs(rightSpeed));
                 robot.rrDrive.setPower(Math.abs(rightSpeed));
 
+
                 // Display it for the driver.
-                telemetry.addData("Path1",  "Running to %7d %7d : %7d %7d", newLFTarget,  newLRTarget,
-                    newRFTarget, newRRTarget);
-                telemetry.addData("Path2",  "Running at %7d %7d : %7d  %7d",
+                telemetry.addData("Path1",  "Running to %7d: %7d", newLFTarget,
+                    newRFTarget);
+                telemetry.addData("Path2",  "Running at %7d : %7d",
                                             robot.lfDrive.getCurrentPosition(),
-                                            robot.lrDrive.getCurrentPosition(),
-                                            robot.rfDrive.getCurrentPosition(),
-                                            robot.rrDrive.getCurrentPosition());
+                                            robot.rfDrive.getCurrentPosition());
                 telemetry.update();
 
                 // Allow time for other processes to run.
@@ -358,20 +353,7 @@ public class AutoBetaBlue extends LinearOpMode {
             robot.rrDrive.setPower(0);
 
             // Turn off RUN_TO_POSITION
-            while (robot.lfDrive.getMode() != DcMotor.RunMode.RUN_USING_ENCODER){
-                robot.lfDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            }
-            while (robot.lrDrive.getMode() != DcMotor.RunMode.RUN_USING_ENCODER){
-                robot.lrDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            }
-            while (robot.rfDrive.getMode() != DcMotor.RunMode.RUN_USING_ENCODER){
-                robot.rfDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            }
-            while (robot.rrDrive.getMode() != DcMotor.RunMode.RUN_USING_ENCODER){
-                robot.rrDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            }
-
-
+            robot.setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
 
@@ -393,6 +375,7 @@ public class AutoBetaBlue extends LinearOpMode {
         while (opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF)) {
             // Update telemetry & Allow time for other processes to run.
             telemetry.update();
+            idle();
         }
     }
 
@@ -453,14 +436,14 @@ public class AutoBetaBlue extends LinearOpMode {
         }
         else {
             steer = getSteer(error, PCoeff);
-            rightSpeed  = -speed * steer;
+            rightSpeed  = speed * steer;
             leftSpeed   = -rightSpeed;
         }
 
         // Send desired speeds to motors.
         robot.lfDrive.setPower(leftSpeed);
-        robot.lrDrive.setPower(rightSpeed);
-        robot.rfDrive.setPower(leftSpeed);
+        robot.lrDrive.setPower(leftSpeed);
+        robot.rfDrive.setPower(rightSpeed);
         robot.rrDrive.setPower(rightSpeed);
 
         // Display it for the driver.

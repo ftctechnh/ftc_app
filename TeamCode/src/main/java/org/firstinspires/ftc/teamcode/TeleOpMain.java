@@ -36,13 +36,11 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.view.View;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -80,12 +78,16 @@ public class TeleOpMain extends OpMode{
     static final int     NR_MAX_RPM              = 6600;
     static final int     SHOOT_MAX_RPM           = NR_MAX_RPM * COUNTS_PER_MOTOR_REV;
 
-    static double           shootSpeed              = .65;
+    static double           shootSpeed              = .95;
     static boolean          shootPressed            = false;
 
+    /* Servo positions and constants */
+    double          beaconPos = robot.BEACON_HOME;
+    double          pivotPos = robot.PIVOT_HOME;
+    double          BEACON_SPEED = 0.1;
+    double          PIVOT_SPEED = 0.1;
 
-
-    // State used for reading Gyro
+    // State used for reading Gyro b
     Orientation angles;
     Acceleration gravity;
 
@@ -110,10 +112,6 @@ public class TeleOpMain extends OpMode{
         // Setup max shooter motor speed limit
         robot.lShoot.setMaxSpeed(SHOOT_MAX_RPM);
         robot.rShoot.setMaxSpeed(SHOOT_MAX_RPM);
-
-        // Use encoder for shooter speed
-        robot.lShoot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rShoot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
         //Setup for Adafruit RGB sensor
@@ -176,6 +174,7 @@ public class TeleOpMain extends OpMode{
         //telemetry.addData("left",  "%.2f", left);
         //telemetry.addData("right", "%.2f", right);
 
+
         // Firing cam
         if (gamepad2.right_trigger <= 0.2) {
             robot.fire.setPower(0.0);
@@ -205,46 +204,59 @@ public class TeleOpMain extends OpMode{
             shootPressed = false;
         }
 
+        double beaconPos = robot.beacon.getPosition();
+        double pivotPos = robot.pivot.getPosition();
+
+        // Adjust beacon servo position
+        if (gamepad1.right_bumper) {
+            beaconPos = robot.BEACON_MAX_RANGE;
+        } else beaconPos = robot.BEACON_MIN_RANGE;
+
+        // Adjust lift's pivot servo position
+        if (gamepad1.left_bumper) {
+            pivotPos = robot.PIVOT_MAX_RANGE;
+        } else pivotPos = robot.PIVOT_MIN_RANGE;
+
+        beaconPos = Range.clip(beaconPos, robot.BEACON_MIN_RANGE, robot.BEACON_MAX_RANGE);
+        robot.beacon.setPosition(beaconPos);
+        pivotPos = Range.clip(pivotPos, robot.PIVOT_MIN_RANGE, robot.PIVOT_MAX_RANGE);
+        robot.pivot.setPosition(pivotPos);
+
+        // Lift up and down
+        if ((gamepad1.dpad_up) && (!robot.liftLimit.isPressed())) {
+            robot.liftMotor.setPower(1.0);
+        } else if (gamepad1.dpad_down) {
+            robot.liftMotor.setPower(-0.25);
+        } else robot.liftMotor.setPower(0.0);
+
 
         shootSpeed = Range.clip(shootSpeed, 0.0, 1.0);
         telemetry.addData("Shoot", shootSpeed);
+        //telemetry.addData("beaconPos", beaconPos);
+        //telemetry.addData("pivotPos", pivotPos);
 
 
         // Drive the ball intake
-
-        if (gamepad1.x) {
+        /*
+        if (gamepad1.b) {
             robot.intake.setPower(0.0);
-        } else if (gamepad1.y) {
+        } else if (gamepad1.a) {
             // feed in
             robot.intake.setPower(1.0);
-        } else if (gamepad1.a) {
+        } else if (gamepad1.y) {
             // feed reverse
             robot.intake.setPower(-1.0);
         }
-
-
-        // Drive the cap ball lift
+        */
         if (gamepad1.right_trigger > 0.2) {
-            robot.lift.setPower(1.0);
+            robot.intake.setPower(1.0);
         } else if (gamepad1.left_trigger > 0.2) {
-            robot.lift.setPower(-1.0);
-        } else robot.lift.setPower(0.0);
+            robot.intake.setPower(-1.0);
+        } else if (gamepad1.a ){
+            robot.intake.setPower(0.0);
+        }
 
-        // Adjust the pivot of cap ball lift
-        if (gamepad1.dpad_down) {
-            robot.pivot.setPosition(1.0);
-        } else if (gamepad1.dpad_up) {
-            robot.pivot.setPosition(0.0);
-
-        // Beacon button pushing
-        if (gamepad1.b) {
-            robot.beacon.setPosition(1.0);
-        } else robot.beacon.setPosition(0.0);
-
-
-    }
-
-    // Read and report heading
+        // Read and report heading
         angles   = robot.imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX);
 
         telemetry.addData("heading", formatAngle(angles.angleUnit, angles.firstAngle) );
@@ -253,15 +265,15 @@ public class TeleOpMain extends OpMode{
         // Read and report Adafruit RGB sensor
 
         // convert the RGB values to HSV values.
-        Color.RGBToHSV((robot.sensorRGB.red() * 255) / 800, (robot.sensorRGB.green() * 255) / 800,
-                (robot.sensorRGB.blue() * 255) / 800, hsvValues);
+        Color.RGBToHSV((robot.beaconColor.red() * 255) / 800, (robot.beaconColor.green() * 255) / 800,
+                (robot.beaconColor.blue() * 255) / 800, hsvValues);
 
         // send the info back to driver station using telemetry function.
-        //telemetry.addData("Clear", robot.sensorRGB.alpha());
-        //telemetry.addData("Red  ", robot.sensorRGB.red());
-        //telemetry.addData("Green", robot.sensorRGB.green());
-        //telemetry.addData("Blue ", robot.sensorRGB.blue());
-        telemetry.addData("Hue", hsvValues[0]);
+        //telemetry.addData("Clear", robot.beaconColor.alpha());
+        //telemetry.addData("Red  ", robot.beaconColor.red());
+        //telemetry.addData("Green", robot.beaconColor.green());
+        //telemetry.addData("Blue ", robot.beaconColor.blue());
+        //telemetry.addData("Hue", hsvValues[0]);
 
         updateTelemetry(telemetry);
 
