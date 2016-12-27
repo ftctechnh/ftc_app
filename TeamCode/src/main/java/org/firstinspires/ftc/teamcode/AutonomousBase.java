@@ -38,6 +38,8 @@ public abstract class AutonomousBase extends OpMode {
       public static final int SHOOT_WHEEL = 14;
       public static final int STRAFE_TOWARDS_GOAL = 15;
       public static final int TURN_TOWARDS_ANGLE = 16;
+      public static final int LEFT_SLOW = 17;
+      public static final int RIGHT_SLOW = 18;
     }
 
 
@@ -52,7 +54,7 @@ public abstract class AutonomousBase extends OpMode {
     Servo servoLeftButton;
     Servo servoRightButton;
     TouchSensor touchRight;
-    TouchSensor touchLeft;
+    TouchSensor touchWall;
     ColorSensor colorLeft;
     ColorSensor colorRight;
     GyroSensor gyro;
@@ -103,7 +105,7 @@ public abstract class AutonomousBase extends OpMode {
         servoRightButton = hardwareMap.servo.get("r_button");
 
         touchRight = hardwareMap.touchSensor.get("right_touch");
-        touchLeft = hardwareMap.touchSensor.get("left_touch");
+        touchWall = hardwareMap.touchSensor.get("wall_touch");
 
         I2cAddr colorAddrLeft = I2cAddr.create8bit(0x3C);
         I2cAddr colorAddrRight = I2cAddr.create8bit(0x4C);
@@ -169,10 +171,29 @@ public abstract class AutonomousBase extends OpMode {
                     motorDown.setPower(power);
                 }
                 break;
-
-           case MoveState.RIGHT:
+            case MoveState.LEFT_SLOW:
+                // Moves the bot left at half speed
+                power = -.2; //power coefficient
+                if(map.distanceToGoal()>DISTANCE_TOLERANCE) {
+                    motorLeft.setPower(0);
+                    motorRight.setPower(0);
+                    motorUp.setPower(power);
+                    motorDown.setPower(power);
+                }
+                break;
+            case MoveState.RIGHT:
                 // Moves the bot right at half speed
                 power = .5; //power coefficient
+                if(map.distanceToGoal()>DISTANCE_TOLERANCE) {
+                    motorLeft.setPower(0);
+                    motorRight.setPower(0);
+                    motorUp.setPower(power);
+                    motorDown.setPower(power);
+                }
+                break;
+            case MoveState.RIGHT_SLOW:
+                // Moves the bot right at half speed
+                power = .2; //power coefficient
                 if(map.distanceToGoal()>DISTANCE_TOLERANCE) {
                     motorLeft.setPower(0);
                     motorRight.setPower(0);
