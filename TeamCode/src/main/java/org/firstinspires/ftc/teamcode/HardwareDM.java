@@ -43,11 +43,20 @@ public class HardwareDM
     public DcMotor lShoot = null;
     public DcMotor rShoot = null;
 
+    /* Lift motor */
+    public DcMotor lift = null;
+
     /*  Intake motor */
     public DcMotor intake = null;
 
     /* Shooter feed cam */
     public CRServo fire = null;
+
+    /* Beacon servo motor */
+    public Servo beacon = null;
+
+    /* Lift angle servo motor */
+    public Servo pivot = null;
 
     // The IMU sensor object
     BNO055IMU imu;
@@ -82,10 +91,16 @@ public class HardwareDM
         rrDrive   = hwMap.dcMotor.get("rr motor");
         lShoot    = hwMap.dcMotor.get("l shoot");
         rShoot    = hwMap.dcMotor.get("r shoot");
+        lift      = hwMap.dcMotor.get("lift");
         intake    = hwMap.dcMotor.get("intake");
+
 
         // Define and initialize servos
         fire = hwMap.crservo.get("fire");
+        beacon = hwMap.servo.get("beacon");
+        pivot = hwMap.servo.get("pivot");
+
+
 
 
         // Set all motors to zero power
@@ -95,8 +110,13 @@ public class HardwareDM
         rrDrive.setPower(0.0);
         lShoot.setPower(0.0);
         rShoot.setPower(0.0);
+        lift.setPower(0.0);
         fire.setPower(0.0);
         intake.setPower(0.0);
+
+        // Set position of servos
+        beacon.setPosition(0.0);
+        pivot.setPosition(0.0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -106,6 +126,7 @@ public class HardwareDM
         rrDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         lShoot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rShoot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Set drive train motor directions
@@ -116,6 +137,7 @@ public class HardwareDM
         lShoot.setDirection(DcMotor.Direction.REVERSE);
         rShoot.setDirection(DcMotor.Direction.FORWARD);
         intake.setDirection(DcMotor.Direction.REVERSE);
+        lift.setDirection(DcMotor.Direction.REVERSE);
 
         // Set up the parameters with which we will use our IMU. Note that integration
         // algorithm here just reports accelerations to the logcat log; it doesn't actually

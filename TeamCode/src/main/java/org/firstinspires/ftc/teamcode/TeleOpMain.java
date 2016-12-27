@@ -176,7 +176,6 @@ public class TeleOpMain extends OpMode{
         //telemetry.addData("left",  "%.2f", left);
         //telemetry.addData("right", "%.2f", right);
 
-
         // Firing cam
         if (gamepad2.right_trigger <= 0.2) {
             robot.fire.setPower(0.0);
@@ -212,26 +211,40 @@ public class TeleOpMain extends OpMode{
 
 
         // Drive the ball intake
-        /*
-        if (gamepad1.b) {
+
+        if (gamepad1.x) {
             robot.intake.setPower(0.0);
-        } else if (gamepad1.a) {
+        } else if (gamepad1.y) {
             // feed in
             robot.intake.setPower(1.0);
-        } else if (gamepad1.y) {
+        } else if (gamepad1.a) {
             // feed reverse
             robot.intake.setPower(-1.0);
         }
-        */
-        if (gamepad1.right_trigger > 0.2) {
-            robot.intake.setPower(1.0);
-        } else if (gamepad1.left_trigger > 0.2) {
-            robot.intake.setPower(-1.0);
-        } else if (gamepad1.a ){
-            robot.intake.setPower(0.0);
-        }
 
-        // Read and report heading
+
+        // Drive the cap ball lift
+        if (gamepad1.right_trigger > 0.2) {
+            robot.lift.setPower(1.0);
+        } else if (gamepad1.left_trigger > 0.2) {
+            robot.lift.setPower(-1.0);
+        } else robot.lift.setPower(0.0);
+
+        // Adjust the pivot of cap ball lift
+        if (gamepad1.dpad_down) {
+            robot.pivot.setPosition(1.0);
+        } else if (gamepad1.dpad_up) {
+            robot.pivot.setPosition(0.0);
+
+        // Beacon button pushing
+        if (gamepad1.b) {
+            robot.beacon.setPosition(1.0);
+        } else robot.beacon.setPosition(0.0);
+
+
+    }
+
+    // Read and report heading
         angles   = robot.imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX);
 
         telemetry.addData("heading", formatAngle(angles.angleUnit, angles.firstAngle) );
