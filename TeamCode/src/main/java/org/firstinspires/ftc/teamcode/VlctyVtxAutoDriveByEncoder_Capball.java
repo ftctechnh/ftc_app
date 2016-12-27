@@ -114,7 +114,7 @@ sleep(250);
         telemetry.addData("Path", "before encoderdrive 48");
         telemetry.update();
         sleep(500);
-//Robot's middle starting 6 feet in from either side on blue team wall with particles.
+//Robot's middle starting 6 feet in from either side (3 tiles) on blue team wall with particles.
 // Move forward 4 feet to approach the Capball for removal.
         encoderDrive(DRIVE_SPEED, 48, 48, 10.0);  // S1: Forward 48 Inches with 10 Sec timeout
         telemetry.addData("Path", "After encoderdrive 48");

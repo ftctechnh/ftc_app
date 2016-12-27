@@ -41,15 +41,14 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 /**
  * This program takes place in the 30 second autonomous period.
- * The robot will hit the Capball, dislodging it from the starting position and then will
- * park on the middle square. If all goes right, this should score 10 points for our alliance.
- * The robot should start the Driver_Control period parked on the center square.
+ * The robot will take a pre-loaded particle and score it in our alliance's corner vortex and
+ * park fully on the corner vortex. If all goes right, this should score 15 points for our alliance.
+ * The robot should start the Driver_Control period parked on the corner vortex.
  *
  * The code REQUIRES that you DO have encoders on the wheels.
  *
  *  This code ALSO requires that the drive Motors have been configured such that a positive
  *  power command moves them forwards, and causes the encoders to count UP.
- *
  *
  *  The code is written using a method called: encoderDrive(speed, leftInches, rightInches, timeoutS)
  *  that performs the actual movement.
@@ -57,7 +56,6 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  *  There are other ways to perform encoder based moves, but this method is probably the simplest.
  *  This code uses the RUN_TO_POSITION mode to enable the Motor controllers to generate the run profile
  *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  */
 
 @Autonomous(name="Velocity Vortex: Auto Capball Square", group="Pushbot")
@@ -110,29 +108,27 @@ sleep(250);
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        telemetry.addData("Path", "before encoderdrive 48");
+        telemetry.addData("Path", "before encoderdrive 24");
         telemetry.update();
-        sleep(500);
-//Robot's middle starting 6 feet in from either side on blue team wall with particles.
-// Move forward 4 feet to approach the Capball for removal.
-        encoderDrive(DRIVE_SPEED, 48, 48, 10.0);  // S1: Forward 48 Inches with 10 Sec timeout
+        sleep(100);
+//Robot's middle starting 4 feet from the vortex side wall (2 tiles) on blue team wall with particles.
+// Move forward 2 feet to setup our turn toward the corner vortex.
+        encoderDrive(DRIVE_SPEED, 24, 24, 5.0);  // S1: Forward 24 Inches with 5 Sec timeout
         telemetry.addData("Path", "After encoderdrive 48");
         telemetry.update();
-        sleep(500);
-//Turn 4 inches to the right to remove capball to the beacon area.
-        //encoderDrive(DRIVE_SPEED, 7, 7, 2.0);  //Forward 7 Inches with 2 Sec timeout
-        encoderDrive(TURN_SPEED,   4, -4, 4.0);  // S2: Turn Right 4 Inches with 4 Sec timeout
-        // Pause after hitting the cap ball.
-        sleep(250);
-        //Turn back 4 inches to square back up to the square
-        encoderDrive(TURN_SPEED, -4, 4, 4.0);
-        //Pause for 2 seconds to make sure capball is out of the way of the square to park.
-        sleep(2000);
-        //Move forward 9 inches to park onto the center square.
-        encoderDrive(DRIVE_SPEED, 9, 9, 4.0);  // S3: Move forward 9 Inches with 4 Sec timeout
+        sleep(100);
+//Turn 18 inches to the right, lining up with the vortex.
+        encoderDrive(TURN_SPEED,   18, -18, 5.0);  // S2: Turn Right 18 Inches with 5 Sec timeout
+        // Pause after turning toward the vortex.
+        sleep(100);
+       robot.armMotor.setPower(robot.ARM_UP_POWER);
+        sleep(1000);
+        robot.armMotor.setPower(0.0);
+        //Move forward 29.51 inches to park onto the corner vortex.
+        encoderDrive(DRIVE_SPEED, 29.51, 29.51, 7.0);  // S3: Move forward 29.51 Inches with 7 Sec timeout
 
-        //robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
-        //robot.rightClaw.setPosition(0.0);
+        robot.leftClaw.setPosition(0.0);            // S4: Stop and close the claw.
+        robot.rightClaw.setPosition(1.0);
         sleep(3000);     // pause for servos to move
 
         telemetry.addData("Path", "Complete");
