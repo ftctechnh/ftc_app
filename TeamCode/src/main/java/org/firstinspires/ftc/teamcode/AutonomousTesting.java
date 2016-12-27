@@ -1,7 +1,19 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.content.*;
+import android.hardware.usb.UsbDevice;
+import android.hardware.usb.UsbEndpoint;
+import android.hardware.usb.UsbInterface;
+import android.hardware.usb.UsbManager;
+
 import com.qualcomm.robotcore.eventloop.opmode.*;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.RobotLog;
+
+import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
+
+import java.util.HashMap;
+import java.util.Iterator;
 
 
 /**
@@ -36,22 +48,64 @@ public class AutonomousTesting extends OpMode {
 
     final boolean debug = false;
 
+    final static String TAG = "MouseUSBMess";
+
+    final Context mahContext = FtcRobotControllerActivity.getAppContext();
+
     @Override
     public void init() {
-        robot.init(this, debug);
+
+        UsbManager mManager = (UsbManager) mahContext.getSystemService(Context.USB_SERVICE);
+        HashMap<String, UsbDevice> deviceList = mManager.getDeviceList();
+        Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
+
+        while (deviceIterator.hasNext())
+        {
+            UsbDevice device = deviceIterator.next();
+            RobotLog.vv(TAG,"Model: " + device.getDeviceName());
+            RobotLog.vv(TAG,"ID: " + device.getDeviceId());
+            RobotLog.vv(TAG,"Class: " + device.getDeviceClass());
+            RobotLog.vv(TAG,"Protocol: " + device.getDeviceProtocol());
+            RobotLog.vv(TAG,"Vendor ID " + device.getVendorId());
+            RobotLog.vv(TAG,"Product ID: " + device.getProductId());
+            RobotLog.vv(TAG,"Interface count: " + device.getInterfaceCount());
+            RobotLog.vv(TAG,"---------------------------------------");
+            // Get interface details
+            for (int index = 0; index < device.getInterfaceCount(); index++)
+            {
+                UsbInterface mUsbInterface = device.getInterface(index);
+                RobotLog.vv(TAG,"  *****     *****");
+                RobotLog.vv(TAG,"  Interface index: " + index);
+                RobotLog.vv(TAG,"  Interface ID: " + mUsbInterface.getId());
+                RobotLog.vv(TAG,"  Inteface class: " + mUsbInterface.getInterfaceClass());
+                RobotLog.vv(TAG,"  Interface protocol: " + mUsbInterface.getInterfaceProtocol());
+                RobotLog.vv(TAG,"  Endpoint count: " + mUsbInterface.getEndpointCount());
+                // Get endpoint details
+                for (int epi = 0; epi < mUsbInterface.getEndpointCount(); epi++)
+                {
+                    UsbEndpoint mEndpoint = mUsbInterface.getEndpoint(epi);
+                    RobotLog.vv(TAG,"    ++++   ++++   ++++");
+                    RobotLog.vv(TAG,"    Endpoint index: " + epi);
+                    RobotLog.vv(TAG,"    Attributes: " + mEndpoint.getAttributes());
+                    RobotLog.vv(TAG,"    Direction: " + mEndpoint.getDirection());
+                    RobotLog.vv(TAG,"    Number: " + mEndpoint.getEndpointNumber());
+                    RobotLog.vv(TAG,"    Interval: " + mEndpoint.getInterval());
+                    RobotLog.vv(TAG,"    Packet size: " + mEndpoint.getMaxPacketSize());
+                    RobotLog.vv(TAG,"    Type: " + mEndpoint.getType());
+                }
+            }
+        }
+        RobotLog.vv(TAG," No more devices connected.");
+
+        //robot.init(this, debug);
 
         //Vuf = new VuforiaLib_FTC2016();
         //Vuf.init(this, null);     // pass it this OpMode (so it can do telemetry output) and use its license key for now
 
-        // create the root Sequence for this autonomous OpMode
-        //mSequence = new AutoLib.LinearSequence();
-
-        //mSequence.add(new AutoLib.TimedServoStep(robot.leftServo, 0.5, 5.0, true));
-
         // start out not-done
         bDone = false;
 
-        robot.startNavX();
+        //robot.startNavX();
     }
 
     @Override
@@ -82,4 +136,95 @@ public class AutonomousTesting extends OpMode {
         //Vuf.stop();
     }
 }
+
+//deal with this sometime
+
+/*
+UsbManager usbManager;
+UsbDevice usbDevice;
+
+private void connect() {
+    this.usbManager = (UsbManager) context.getSystemService(Context.USB_SERVICE);
+    HashMap<String, UsbDevice> deviceList = usbManager.getDeviceList();
+
+    // just get the first enumerated USB device
+    Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
+    if (deviceIterator.hasNext()) {
+        this.usbDevice = deviceIterator.next();
+    }
+
+    if (usbDevice == null) {
+        Log.w(TAG, "no USB device found");
+        return;
+    }
+
+    // ask for permission
+
+    final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
+    final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
+
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (ACTION_USB_PERMISSION.equals(action)) {
+                synchronized (this) {
+                    UsbDevice device = (UsbDevice)intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+
+                    if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
+                        if(device != null){
+                            // call method to set up device communication
+                            Log.i(TAG, "permission granted. access mouse.");
+
+                            // repeat in a different thread
+                            transfer(device);
+                        }
+                    }
+                    else {
+                        Log.d(TAG, "permission denied for device " + device);
+                    }
+                }
+            } else if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
+                UsbDevice device = (UsbDevice)intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+                if (device != null) {
+                    // TODO:
+                    // call your method that cleans up and closes communication with the device
+                    // usbInterface.releaseInterface();
+                    // usbDeviceConnection.close();
+                }
+            }
+        }
+    };
+
+    PendingIntent mPermissionIntent = PendingIntent.getBroadcast(context, 0, new Intent(ACTION_USB_PERMISSION), 0);
+    IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
+    context.registerReceiver(mUsbReceiver, filter);
+
+    usbManager.requestPermission(usbDevice, mPermissionIntent);
+}
+
+private void transfer(UsbDevice device) {
+
+    int TIMEOUT = 0;
+    boolean forceClaim = true;
+
+    // just grab the first endpoint
+    UsbInterface intf = device.getInterface(0);
+    UsbEndpoint endpoint = intf.getEndpoint(0);
+    UsbDeviceConnection connection = this.usbManager.openDevice(device);
+    connection.claimInterface(intf, forceClaim);
+
+    byte[] bytes = new byte[endpoint.getMaxPacketSize()];
+
+    connection.bulkTransfer(endpoint, bytes, bytes.length, TIMEOUT);
+
+    // depending on mouse firmware and vendor the information you're looking for may
+    // be in a different order or position. For some logitech devices the following
+    // is true:
+
+    int x = (int) bytes[1];
+    int y = (int) bytes[2];
+    int scrollwheel = (int) bytes[3]
+
+    // call a listener, process your data ...
+}
+ */
 
