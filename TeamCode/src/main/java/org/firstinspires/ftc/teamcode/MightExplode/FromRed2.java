@@ -35,9 +35,11 @@ package org.firstinspires.ftc.teamcode.MightExplode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
+import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -66,12 +68,12 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Red 2", group="Pushbot")
+@Autonomous(name="From Red 2", group="Pushbot")
 //@Disabled
 public class FromRed2 extends LinearOpMode {
 
     /* Declare OpMode members. */
-    HardwarePushbot         robot   = new HardwarePushbot();   // Use a Pushbot's hardware
+    InvadersVelocityVortexBot robot   = new InvadersVelocityVortexBot();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
@@ -95,32 +97,60 @@ public class FromRed2 extends LinearOpMode {
     public void GyroTurn(float speed, float degrees) {
         //I think I will set this up so that if it is a positive number, the robot will turn left, and if it is negative it will turn right.
         //// TODO: 12/15/2016 This probably won't work, so Dad, please take a look at this. You can probably tell what I'm trying to do.
+        //// TODO: 12/27/2016 Nvm, this probably will work, but we can't test because of the fuse problems.
         //Yay! I can commit!
         if(degrees > 0 == true){
             GyroDegrees = 0;
-            if (GyroDegrees < degrees == true){
+            while (GyroDegrees < degrees == true){
                 robot.leftMotor.setPower(0.5);
                 robot.rightMotor.setPower(-0.5);
             }
-            else{
-                robot.leftMotor.setPower(0);
-                robot.rightMotor.setPower(0);
-            }
+
+            robot.leftMotor.setPower(0);
+            robot.rightMotor.setPower(0);
+
             
         }
         else {
             GyroDegrees = 0;
-            if (GyroDegrees < degrees == true) {
+            while (GyroDegrees < degrees == true) {
                 robot.leftMotor.setPower(-0.5);
                 robot.rightMotor.setPower(0.5);
             }
-            else {
-                robot.leftMotor.setPower(0);
-                robot.rightMotor.setPower(0);
-            }
+
+            robot.leftMotor.setPower(0);
+            robot.rightMotor.setPower(0);
+
                 
             
         }
+    }
+
+    public void DistanceDrive(float distance, float power) {
+        while (robot.UDS.getUltrasonicLevel() > distance) {
+            robot.leftMotor.setPower(power);
+            robot.rightMotor.setPower(power);
+        }
+
+        robot.leftMotor.setPower(0);
+        robot.rightMotor.setPower(0);
+    }
+
+    public void ColorDrive(int Red, int Blue, int Green){
+        while (robot.color1.red() < Red){
+            robot.rightMotor.setPower(0.5);
+            robot.leftMotor.setPower(0.5);
+        }
+        while (robot.color1.green() < Green){
+            robot.rightMotor.setPower(0.5);
+            robot.leftMotor.setPower(0.5);
+        }
+        while (robot.color1.blue() < Blue){
+            robot.rightMotor.setPower(0.5);
+            robot.leftMotor.setPower(0.5);
+        }
+        robot.rightMotor.setPower(0);
+        robot.leftMotor.setPower(0);
     }
 
     @Override

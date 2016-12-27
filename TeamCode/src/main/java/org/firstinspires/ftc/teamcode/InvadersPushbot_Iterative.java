@@ -35,9 +35,11 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.Range;
 
 
@@ -74,6 +76,8 @@ public class InvadersPushbot_Iterative extends OpMode{
 
     OpticalDistanceSensor distanceSensor;
 
+    UltrasonicSensor UDS;
+
     Gamepad lastGamePadState = new Gamepad();
 
 
@@ -97,6 +101,7 @@ public class InvadersPushbot_Iterative extends OpMode{
         colorSensor = hardwareMap.colorSensor.get("color");
         colorSensor.enableLed(false);
         distanceSensor = hardwareMap.opticalDistanceSensor.get("ODS");
+        UDS = hardwareMap.ultrasonicSensor.get("UDS");
     }
 
     /*
@@ -196,7 +201,7 @@ public class InvadersPushbot_Iterative extends OpMode{
 
     void setCapBallMotorPower(double power)
     {
-
+    robot.capBall.setPower(power);
     }
     
     void setBallElevator(float power)
