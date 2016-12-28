@@ -21,16 +21,6 @@ public class TeleOpMain extends OpMode {
     double leftPusherState = -1.0;
     double rightPusherState = -1.0;
 
-    //parameters for gyro PID, but cranked up
-    float Kp = 0.1f;        // degree heading proportional term correction per degree of deviation
-    float Ki = 0.05f;         // ... integrator term
-    float Kd = 0;             // ... derivative term
-    float KiCutoff = 3.0f;    // maximum angle error for which we update integrator
-
-    int mPrevTime = 0;
-
-    SensorLib.PID gPid = new SensorLib.PID(Kp, Ki, Kd, KiCutoff);
-
     @Override
     public void init() {
 
@@ -117,8 +107,6 @@ public class TeleOpMain extends OpMode {
             robot.frontRightMotor.setPower(-gamepad1.right_stick_y);
             robot.backLeftMotor.setPower(-gamepad1.left_stick_y);
             robot.backRightMotor.setPower(-gamepad1.right_stick_y);
-
-            mPrevTime = 0;
         }
 
         // run lifter motor
