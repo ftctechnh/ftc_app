@@ -98,8 +98,8 @@ Declare global variables here
     public void loop() {
         FourWheelDrive();
         CollectBalls();
-        BallShooter();
-        //shoot();
+        //BallShooter();
+        shoot();
 
     }
 /*
@@ -144,7 +144,7 @@ Declare global variables here
 /*---------------------------------------------------------------------------------------------
 */
 
-    public void BallShooter(){
+    /*public void BallShooter(){
         float shoot = -gamepad2.right_stick_y;//gets value from 2nd gamepad's joystick
 
         ballShooterMotor.setPower(Math.abs(shoot));//set power
@@ -161,15 +161,15 @@ Declare global variables here
             ballShooterMotor.setPower(0)
         }
 
-        */
 
-    }
+
+    }*/
 
 /*---------------------------------------------------------------------------------------------
 */
-  /*  public void shoot(){
+    public void shoot(){
 
-        if (gamepad2.a){
+        if (gamepad2.right_bumper){
         ballShooterMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         ballShooterMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         ballShooterMotor.setTargetPosition((int)(ballShooterMotor.getCurrentPosition() + (1478* shooterGearRatio)));
@@ -184,7 +184,7 @@ Declare global variables here
         ballShooterMotor.setPower(0);
         }
 
-    }*/
+    }
     /* Read the color sensor and return "b" for Blue or "r" for Red */
    /* public char ReadColorSensor(){
 
