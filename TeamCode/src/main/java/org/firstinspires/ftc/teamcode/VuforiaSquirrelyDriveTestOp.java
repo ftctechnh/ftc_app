@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.*;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
@@ -17,7 +18,7 @@ import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 // one of the target images is visible.
 
 @Autonomous(name="Test: Vuforia Squirrely Drive Test 1", group ="Test")
-@Disabled
+//@Disabled
 public class VuforiaSquirrelyDriveTestOp extends OpMode {
 
     AutoLib.Sequence mSequence;             // the root of the sequence tree
