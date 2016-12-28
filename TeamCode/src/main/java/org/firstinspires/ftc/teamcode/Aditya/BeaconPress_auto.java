@@ -42,8 +42,8 @@ public class BeaconPress_auto extends OpMode {
     static final double DRIVE_SPEED = 0.6;
     static final double TURN_SPEED = 0.5;
     static int INITIAL_SHOOTERPOS;
-
-    int currentColor = 0;
+    String currentColor = "blank";
+    int currentColorInt = 0;
 
     @Override
     public void init() {
@@ -59,7 +59,6 @@ public class BeaconPress_auto extends OpMode {
         beaconPress = hardwareMap.servo.get("beaconPress");
         /* get a reference to our ColorSensor object */
         //colorSensor = hardwareMap.colorSensor.get("sensor_color");
-        beaconPress.setPosition(0.5);
         colorSensor = hardwareMap.colorSensor.get("colorSensor");
 
 
@@ -80,8 +79,8 @@ public class BeaconPress_auto extends OpMode {
         INITIAL_SHOOTERPOS = ballShooterMotor.getCurrentPosition();
         telemetry.addData("Inital Shooter Position", INITIAL_SHOOTERPOS);
 
-        boolean teamRed = false;
-        boolean teamBlue = true;
+
+
     }
 
     @Override
@@ -91,13 +90,15 @@ public class BeaconPress_auto extends OpMode {
 
     @Override
     public void start() {
-        setColor(true, false);
-
+        // setColor("blue");
+        // beaconRead(1);
+        // beaconread decalres the team. 1 is for blue, 2 is for red :)
+        // justServo("red");
     }
 
     @Override
     public void loop() {
-
+        justServo("red");
     }
 
     @Override
@@ -105,8 +106,11 @@ public class BeaconPress_auto extends OpMode {
 
     }
 
-    public void beaconScan(String colorFirstLetterofAliance) {
-
+    public void straightDrive(double power){
+        leftWheelMotorBack.setPower(power);
+        leftWheelMotorFront.setPower(power);
+        rightWheelMotorBack.setPower(power);
+        rightWheelMotorFront.setPower(power);
     }
 
     public void encoderDrive(double speed, double leftInches, double rightInches) {
@@ -157,7 +161,7 @@ public class BeaconPress_auto extends OpMode {
         }
     }
 
-    public void readColor() {
+     public void readColor() {
 
         // hsvValues is an array that will hold the hue, saturation, and value information.
         float hsvValues[] = {0F,0F,0F};
@@ -172,24 +176,29 @@ public class BeaconPress_auto extends OpMode {
         int red = colorSensor.red();
         int blue = colorSensor.blue();
         int green = colorSensor.green();
-        int currentColor = 0;
 //declares the colors that it sees by default, in a different name!
 
         colorSensor.enableLed(true);
 
         if(red > blue && red > green) {
-            currentColor = 1;
+            currentColor = "red";
+            currentColorInt = 1;
         } else if (blue > red && blue > green) {
-            currentColor = 2;
+            currentColor = "blue";
+            currentColorInt = 2;
         } else if (green > red && green > blue) {
-            currentColor = 3;
+            currentColor = "green";
+            currentColorInt = 0;
+        } else {
+            currentColor = "other";
+            currentColorInt = 0;
         }
         //checks which color the side currently is
 
         telemetry.addData("r value", colorSensor.red());
         telemetry.addData("g value", colorSensor.green());
         telemetry.addData("b value", colorSensor.blue());
-        telemetry.addData("current beacon color, (1 is red, 2 is blue)",currentColor);
+        telemetry.addData("current beacon color",currentColor);
         telemetry.addData("Hue", hsvValues[0]);
         telemetry.addData("Saturation", hsvValues[1]);
         telemetry.addData("Value", hsvValues[2]);
@@ -199,72 +208,118 @@ public class BeaconPress_auto extends OpMode {
 
 
 
-    public void setColor(boolean isItRed, boolean isItBlue) {
+    public void setColor(String team) {
+
+        colorSensor.enableLed(true);
         //sets team to what we put in the beginning input of the function
-        boolean teamRed = isItRed;
-        boolean teamBlue = isItBlue;
+        int teamRed = 1;
+        int teamBlue = 2;
+        int currentTeam = 0;
+
+
+        if(team.equals("red")) {
+
+            currentTeam = teamRed;
+
+        } else if(team.equals("blue")) {
+
+            currentTeam = teamBlue;
+
+        }
+        //the 2 "if statements" make the teams picked form the input.
 
         //sets the colors for the side of the beacon
-        boolean sideOne = false;
-        boolean sideTwo = false;
-
-        int readNumber = 0;
-
-        readColor();
-
-        if(currentColor == 1 && isItRed){
-            sideOne = isItRed;
-        } else if(currentColor == 2 && isItBlue) {
-            sideOne = isItBlue;
-        }
-
-//reads first part of beacon
-
-        encoderDrive(0.75, -10.5, -10.5);
+        int sideOne = 0;
+        int sideTwo = 0;
 
 
 
         readColor();
+        String colorRead = currentColor;
+        if(colorRead.equals("red")){
+            telemetry.addData("color seen is RED ", colorSensor.red());
+            telemetry.update();
 
-        if(currentColor == 1 && isItRed){
-            sideTwo = isItRed;
-        } else if(currentColor == 2 && isItBlue) {
-            sideTwo = isItBlue;
+            sideOne = teamRed;
+
+        } else if(colorRead.equals("blue")){
+
+            sideOne = teamBlue;
         }
 
-        if(sideOne && sideTwo){
 
-        } else if(sideOne == true && sideTwo == false) {
+        sleep(1750);
+        encoderDrive(0.8,-20,-20);
+        sleep(750);
 
-            sleep(250);
-            encoderDrive(0.75, 6.5, 6.5);
-            sleep(350);
+        readColor();
+
+        String colorReadtwo = currentColor;
+        if(colorReadtwo.equals("red")){
+            telemetry.addData("color seen is RED ", colorSensor.red());
+            telemetry.update();
+
+            sideTwo = teamRed;
+
+        } else if(!colorReadtwo.equals("blue")){
+
+            sideTwo = teamBlue;
+        }
+
+
+        if(sideOne == currentTeam && sideTwo == currentTeam) {
+            //do nothing
+        }
+        else if(sideOne != currentTeam && sideTwo == currentTeam) {
+            encoderDrive(0.5, -6.5, -6.5);
+            sleep(1000);
             beaconPress.setPosition(0.1);
-            sleep(1500);
-            beaconPress.setPosition(0.55);
-            sleep(150);
-
-            //moves backward, as the color we need to press is behind, and then it presses the color we need
-        } else if(sideOne == false && sideTwo == true) {
-
-            encoderDrive(0.75,-5,-5);
+            sleep(4000);
+            beaconPress.setPosition(0.3);
+        }
+        else if(sideOne != currentTeam && sideTwo == currentTeam) {
+            encoderDrive(0.5, 2.5, 2.5);
+            sleep(1000);
             beaconPress.setPosition(0.1);
-            sleep(1500);
-            beaconPress.setPosition(0.55);
-            sleep(150);
+            sleep(4000);
+            beaconPress.setPosition(0.3);
+        }
+        else if(sideOne != currentTeam && sideTwo != currentTeam) {
+            encoderDrive(0.5, 2.5, 2.5);
+            sleep(1000);
+            beaconPress.setPosition(0.1);
+            sleep(4000);
+            beaconPress.setPosition(0.3);
+        }
 
-            //presses beacon
-        } else if(sideOne == false && sideTwo == false){
 
-            encoderDrive(0.75, -5, -5);
-            beaconPress.setPosition(0);
-            sleep(1500);
-            beaconPress.setPosition(0.8);
-            sleep(150);
+
+    }
+
+    public void beaconRead(int team /* 1 = blue, 2 = red */) {
+
+        while(currentColorInt == 0){
+            straightDrive(-0.7);
             readColor();
-
-            //presses beacon
         }
+
+        readColor();
+        int readOne = currentColorInt;
+        if(readOne == team) {
+            encoderDrive(0.6,-4,-4);
+            beaconPress.setPosition(0.15);
+        } else if(readOne != team){
+            encoderDrive(0.6,-20,-20);
+        }
+
+        readColor();
+        int readTwo = currentColorInt;
+
+        if(readTwo == team){
+            encoderDrive(0.6,-5,-5);
+            beaconPress.setPosition(0.15);
+        }
+
     }
 
     public void sleep(long pauseInMS) {
@@ -276,4 +331,53 @@ public class BeaconPress_auto extends OpMode {
         }
     }
 
-}
+    public void justServo(String team){
+
+        int currentTeam = 0;
+        int teamRed = 1;
+        int teamBlue = 2;
+
+        if(team.equals("red")){
+            currentTeam = teamRed;
+        }
+
+        if(team.equals("blue")){
+            currentTeam = teamBlue;
+        }
+
+        readColor();
+
+        while(currentColorInt != currentTeam) {
+            straightDrive(-0.3);
+            readColor();
+        }
+
+        if(team == currentColor){
+            sleep(200);
+            beaconPress.setPosition(0.0);
+            sleep(5000);
+            beaconPress.setPosition(0.5);
+        }
+
+        readColor();
+
+        while(currentColorInt == currentTeam) {
+            straightDrive(-0.75);
+            readColor();
+        }
+
+        while(currentColorInt != currentTeam) {
+            straightDrive(-0.3);
+            readColor();
+        }
+
+        if(currentTeam == currentColorInt){
+            sleep(200);
+            beaconPress.setPosition(0.0);
+            sleep(3000);
+            beaconPress.setPosition(0.5);
+        }
+    }
+    }
+
+

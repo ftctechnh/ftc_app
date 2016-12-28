@@ -99,7 +99,7 @@ Declare global variables here
         FourWheelDrive();
         CollectBalls();
         BallShooter();
-        shoot();
+        //shoot();
 
     }
 /*
@@ -167,7 +167,7 @@ Declare global variables here
 
 /*---------------------------------------------------------------------------------------------
 */
-    public void shoot(){
+  /*  public void shoot(){
 
         if (gamepad2.a){
         ballShooterMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -184,7 +184,7 @@ Declare global variables here
         ballShooterMotor.setPower(0);
         }
 
-    }
+    }*/
     /* Read the color sensor and return "b" for Blue or "r" for Red */
    /* public char ReadColorSensor(){
 
