@@ -197,7 +197,6 @@ public class AutoLib {
 
     }
 
-
     // a simple Step that just logs its existence for a given length of time
     static public class LogTimeStep extends Step {
         OpMode mOpMode;     // needed so we can log output
@@ -323,6 +322,158 @@ public class AutoLib {
             return done;
         }
 
+    }
+
+    // a Step that runs a DcMotor at a given power, for a given time
+    static public class DriveUntilStopMotorStep extends AutoLib.Step implements AutoLib.SetPower {
+        FinishSensor mSensor;
+        DcMotor mMotor;
+        double mPower;
+        boolean mStop;          // stop motor when count is reached
+
+        public DriveUntilStopMotorStep(DcMotor motor, double power, FinishSensor sensor, boolean stop) {
+            mMotor = motor;
+            mPower = power;
+            mSensor = sensor;
+            mStop = stop;
+        }
+
+        // for dynamic adjustment of power during the Step
+        public void setPower(double power) {
+            mPower = power;
+        }
+
+        public boolean loop() {
+            super.loop();
+
+            // start the Timer and start the motor on our first call
+            if (firstLoopCall()) {
+                mMotor.setPower(mPower);
+            }
+
+            // run the motor at the requested power until the Timer runs out
+            boolean done = mSensor.checkStop();
+            if (done && mStop)
+                mMotor.setPower(0);
+            else
+                mMotor.setPower(mPower);        // update power in case it changed
+
+            return done;
+        }
+    }
+
+    static public class SquirrleyGuideStep extends AutoLib.Step {
+        private float mPower;                               // basic power setting of all 4 motors -- adjusted for steering along path
+        private float mDirection;                             // compass heading to steer for (-180 .. +180 degrees
+        private float mHeading;
+        private OpMode mOpMode;                             // needed so we can log output (may be null)
+        private HeadingSensor mGyro;                        // sensor to use for heading information (e.g. Gyro or Vuforia)
+        private SensorLib.PID mPid;                         // proportional–integral–derivative controller (PID controller)
+        private double mPrevTime;                           // time of previous loop() call
+        private ArrayList<AutoLib.SetPower> mMotorSteps;            // the motor steps we're guiding - assumed order is right ... left ...
+
+        public SquirrleyGuideStep(OpMode mode, float direction, float heading, HeadingSensor gyro, SensorLib.PID pid,
+                                  ArrayList<AutoLib.SetPower> motorsteps, float power) {
+            mOpMode = mode;
+            mDirection = direction;
+            mHeading = heading;
+            mGyro = gyro;
+            mPid = pid;
+            mMotorSteps = motorsteps;
+            mPower = power;
+        }
+
+        public boolean loop() {
+            // initialize previous-time on our first call -> dt will be zero on first call
+            if (firstLoopCall()) {
+                mPrevTime = mOpMode.getRuntime();           // use timer provided by OpMode
+            }
+
+            final float heading = mGyro.getHeading();     // get latest reading from direction sensor
+            // convention is positive angles CCW, wrapping from 359-0
+
+            final float error = SensorLib.Utils.wrapAngle(heading - mHeading);   // deviation from desired heading
+            // deviations to left are positive, to right are negative
+
+            // compute delta time since last call -- used for integration time of PID step
+            final double time = mOpMode.getRuntime();
+            final double dt = time - mPrevTime;
+            mPrevTime = time;
+
+            // feed error through PID to get motor power correction value
+            final float correction = -mPid.loop(error, (float) dt);
+
+            //calculate motor powers for fancy wheels
+            AutoLib.MotorPowers mp = AutoLib.GetSquirrelyWheelMotorPowers(mDirection);
+
+            final float leftPower = correction;
+            final float rightPower = -correction;
+
+            //set the powers
+            mMotorSteps.get(0).setPower((rightPower + mp.Front()) * mPower);
+            mMotorSteps.get(1).setPower((rightPower + mp.Back()) * mPower);
+            mMotorSteps.get(2).setPower((leftPower + mp.Front()) * mPower);
+            mMotorSteps.get(3).setPower((leftPower + mp.Back()) * mPower);
+
+            // log some data
+            if (mOpMode != null) {
+                mOpMode.telemetry.addData("heading ", heading);
+                mOpMode.telemetry.addData("front power ", mp.Front());
+                mOpMode.telemetry.addData("back power ", mp.Back());
+            }
+
+            // guidance step always returns "done" so the CS in which it is embedded completes when
+            // all the motors it's controlling are done
+            return true;
+        }
+
+    }
+
+    // a Step that uses gyro input to drive in a given direction with the robot pointing in a given heading
+    // uses a SquirleyGuideStep to adjust power to 2 or 4 motors.
+    // assumes a robot with up to 4 drive motors in assumed order right motors, left motors
+    static public class SquirrleyAzimuthTimedDriveStep extends AutoLib.ConcurrentSequence {
+
+        public SquirrleyAzimuthTimedDriveStep(OpMode mode, float direction, float heading, HeadingSensor gyro, SensorLib.PID pid,
+                                              DcMotor motors[], float power, float time, boolean stop) {
+            // add a concurrent Step to control each motor
+
+            ArrayList<AutoLib.SetPower> steps = new ArrayList<AutoLib.SetPower>();
+            for (DcMotor em : motors)
+                if (em != null) {
+                    AutoLib.TimedMotorStep step = new AutoLib.TimedMotorStep(em, 0, time, stop);
+                    this.add(step);
+                    steps.add(step);
+                }
+
+            // add a concurrent Step to control the motor steps based on gyro input
+            this.preAdd(new SquirrleyGuideStep(mode, direction, heading, gyro, pid, steps, power));
+        }
+
+        // the base class loop function does all we need -- it will return "done" when
+        // all the motors are done.
+    }
+
+    static public class SquirrleyAzimuthFinDriveStep extends AutoLib.ConcurrentSequence {
+
+        public SquirrleyAzimuthFinDriveStep(OpMode mode, float direction, float heading, HeadingSensor gyro, SensorLib.PID pid,
+                                            DcMotor motors[], float power, FinishSensor fin, boolean stop) {
+            // add a concurrent Step to control each motor
+
+            ArrayList<AutoLib.SetPower> steps = new ArrayList<AutoLib.SetPower>();
+            for (DcMotor em : motors)
+                if (em != null) {
+                    AutoLib.DriveUntilStopMotorStep step = new AutoLib.DriveUntilStopMotorStep(em, 0, fin, stop);
+                    this.add(step);
+                    steps.add(step);
+                }
+
+            // add a concurrent Step to control the motor steps based on gyro input
+            this.preAdd(new SquirrleyGuideStep(mode, direction, heading, gyro, pid, steps, power));
+        }
+
+        // the base class loop function does all we need -- it will return "done" when
+        // all the motors are done.
     }
 
     // a Step that provides Vuforia-based guidance to motors controlled by other concurrent Steps (e.g. encoder or time-based)

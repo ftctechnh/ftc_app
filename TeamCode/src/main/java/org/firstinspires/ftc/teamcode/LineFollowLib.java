@@ -3,11 +3,15 @@ package org.firstinspires.ftc.teamcode;
 import android.graphics.Path;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.robot.Robot;
+import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
+
+import java.util.ArrayList;
 
 /**
  * Created by Noah on 11/24/2016.
@@ -155,5 +159,105 @@ public final class LineFollowLib {
         if(totalNum > ray.length / 4 || totalNum < ray.length / 16) return -400;
         else if(totalNum == 0) return 0;
         else return totalPos/totalNum;
+    }
+
+    // a Step that provides heading + displacement guidance to motors controlled by other concurrent Steps (e.g. encoder or time-based)
+    // assumes an even number of concurrent drive motor steps in order right ..., left ...
+    // this step tries to keep the robot on the given course by adjusting the left vs. right motors to change the robot's heading.
+    static public class LineGuideStep extends AutoLib.Step {
+        private float mPower;                               // basic power setting of all 4 motors -- adjusted for steering along path
+        private float mHeading;                             // compass heading to steer for (-180 .. +180 degrees)
+        private OpMode mOpMode;                             // needed so we can log output (may be null)
+        private HeadingSensor mGyro;                        // sensor to use for heading information (e.g. Gyro or Vuforia)
+        private DisplacementSensor mDisp;
+        private SensorLib.PID mgPid;                         // proportional–integral–derivative controller (PID controller)
+        private SensorLib.PID mdPid;
+        private double mPrevTime;                           // time of previous loop() call
+        private ArrayList<AutoLib.SetPower> mMotorSteps;            // the motor steps we're guiding - assumed order is right ... left ...
+
+        public LineGuideStep(OpMode mode, float heading, HeadingSensor gyro, DisplacementSensor disp, SensorLib.PID gPid, SensorLib.PID dPid,
+                             ArrayList<AutoLib.SetPower> motorsteps, float power) {
+            mOpMode = mode;
+            mHeading = heading;
+            mGyro = gyro;
+            mDisp = disp;
+            mgPid = gPid;
+            mdPid = dPid;
+            mMotorSteps = motorsteps;
+            mPower = power;
+
+            gPid.reset();
+            dPid.reset();
+        }
+
+        public boolean loop() {
+            // initialize previous-time on our first call -> dt will be zero on first call
+            if (firstLoopCall()) {
+                mPrevTime = mOpMode.getRuntime();           // use timer provided by OpMode
+            }
+
+            float heading = mGyro.getHeading();     // get latest reading from direction sensor
+            // convention is positive angles CCW, wrapping from 359-0
+
+            float error = SensorLib.Utils.wrapAngle(heading - mHeading);   // deviation from desired heading
+            // deviations to left are positive, to right are negative
+
+            // compute delta time since last call -- used for integration time of PID step
+            double time = mOpMode.getRuntime();
+            double dt = time - mPrevTime;
+            mPrevTime = time;
+
+            // feed error through PID to get motor power correction value
+            float gCorrection = -mgPid.loop(error, (float) dt);
+
+            //feed other error through PID to get more values
+            float dCorrection = -mdPid.loop(mDisp.getDisp(), (float) dt);
+
+            // compute new right/left motor powers
+            float frontRight = Range.clip(1 + gCorrection + dCorrection, -1, 1) * mPower;
+            float backRight = Range.clip(1 + gCorrection - dCorrection, -1, 1) * mPower;
+            float frontLeft = Range.clip(1 - gCorrection + dCorrection, -1, 1) * mPower;
+            float backLeft = Range.clip(1 - gCorrection - dCorrection, -1, 1) * mPower;
+
+            // set the motor powers -- handle both time-based and encoder-based motor Steps
+            // assumed order is right motors followed by an equal number of left motors
+            mMotorSteps.get(0).setPower(frontRight);
+            mMotorSteps.get(1).setPower(backRight);
+            mMotorSteps.get(2).setPower(frontLeft);
+            mMotorSteps.get(3).setPower(backLeft);
+
+            // log some data
+            if (mOpMode != null) {
+                mOpMode.telemetry.addData("heading ", heading);
+                mOpMode.telemetry.addData("left power ", frontLeft);
+                mOpMode.telemetry.addData("right power ", frontRight);
+            }
+
+            // guidance step always returns "done" so the CS in which it is embedded completes when
+            // all the motors it's controlling are done
+            return true;
+        }
+    }
+
+    static public class LineDriveStep extends AutoLib.ConcurrentSequence {
+
+        public LineDriveStep(OpMode mode, float heading, HeadingSensor gyro, DisplacementSensor disp, FinishSensor fin, SensorLib.PID gPid, SensorLib.PID dPid,
+                             DcMotor[] motors, float power, boolean stop) {
+            // add a concurrent Step to control each motor
+            ArrayList<AutoLib.SetPower> steps = new ArrayList<AutoLib.SetPower>();
+            for (DcMotor em : motors)
+                if (em != null) {
+                    AutoLib.DriveUntilStopMotorStep step = new AutoLib.DriveUntilStopMotorStep(em, power, fin, stop);  // always set requested power and return "done"
+                    this.add(step);
+                    steps.add(step);
+                }
+
+            // add a concurrent Step to control the motor steps based on camera input
+            this.preAdd(new LineGuideStep(mode, heading, gyro, disp, gPid, dPid, steps, power));
+        }
+
+        // the base class loop function does all we need --
+        // since the motors always return done, the composite step will return "done" when
+        // the GuideStep says it's done, i.e. we've reached the target location.
     }
 }
