@@ -23,7 +23,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 /**
  * Created by Steven on 12/27/2016.
  */
-@Autonomous(name = "#11183: TeleOp Competition", group = "Robot")
+@Autonomous(name = "RangeSensorOp", group = "Robot")
 public class DistanceSensorTest extends OpMode{
 
 
