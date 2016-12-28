@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import java.util.ArrayList;
+
 @TeleOp(name = "TeleOpMain", group = "Main")
 //@Disabled
 public class TeleOpMain extends OpMode {
@@ -19,6 +21,16 @@ public class TeleOpMain extends OpMode {
     double leftPusherState = -1.0;
     double rightPusherState = -1.0;
 
+    //parameters for gyro PID, but cranked up
+    float Kp = 0.1f;        // degree heading proportional term correction per degree of deviation
+    float Ki = 0.05f;         // ... integrator term
+    float Kd = 0;             // ... derivative term
+    float KiCutoff = 3.0f;    // maximum angle error for which we update integrator
+
+    int mPrevTime = 0;
+
+    SensorLib.PID gPid = new SensorLib.PID(Kp, Ki, Kd, KiCutoff);
+
     @Override
     public void init() {
 
@@ -29,6 +41,11 @@ public class TeleOpMain extends OpMode {
 
         robot.leftServo.setPosition(leftPusherState);
         robot.rightServo.setPosition(rightPusherState);
+    }
+
+    @Override
+    public void init_loop(){
+        telemetry.addData("NavX Ready", robot.startNavX());
     }
 
     @Override
@@ -62,6 +79,7 @@ public class TeleOpMain extends OpMode {
         // run drivetrain motors
         // dpad steering
         if(gamepad1.dpad_up && gamepad1.dpad_left) {
+
             robot.setFrontPower(0.0);
             robot.setBackPower(1.0);
         }
@@ -99,6 +117,8 @@ public class TeleOpMain extends OpMode {
             robot.frontRightMotor.setPower(-gamepad1.right_stick_y);
             robot.backLeftMotor.setPower(-gamepad1.left_stick_y);
             robot.backRightMotor.setPower(-gamepad1.right_stick_y);
+
+            mPrevTime = 0;
         }
 
         // run lifter motor
@@ -136,5 +156,32 @@ public class TeleOpMain extends OpMode {
 
         lastLeftBumperState = gamepad2.left_bumper;
         lastRightBumperState = gamepad2.right_bumper;
+    }
+
+
+    public static float[] getCorrectedSquirrleyMotorPowers(float dt, float mDirection, float mHeading, HeadingSensor mGyro, SensorLib.PID mPid, float mPower) {
+        final float heading = mGyro.getHeading();     // get latest reading from direction sensor
+        // convention is positive angles CCW, wrapping from 359-0
+
+        final float error = SensorLib.Utils.wrapAngle(heading - mHeading);   // deviation from desired heading
+        // deviations to left are positive, to right are negative
+
+        // feed error through PID to get motor power correction value
+        final float correction = -mPid.loop(error, dt);
+
+        //calculate motor powers for fancy wheels
+        AutoLib.MotorPowers mp = AutoLib.GetSquirrelyWheelMotorPowers(mDirection);
+
+        final float leftPower = correction;
+        final float rightPower = -correction;
+
+        //fr, br, fl, bl
+        final float[] ret = {
+                (rightPower + (float)mp.Front()) * mPower,
+                (rightPower + (float)mp.Back()) * mPower,
+                (leftPower + (float)mp.Front()) * mPower,
+                (leftPower + (float)mp.Back()) * mPower};
+
+        return ret;
     }
 }
