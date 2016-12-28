@@ -66,18 +66,7 @@ public class DistanceSensorTest extends OpMode{
     public void start(){
 
 
-        rangeSensor.enableLed(true);
-        telemetry.addData("cmOptical", rangeSensor.cmOptical());//use this for a range of 1-7cm
-        telemetry.update();
-        sleep(5000);
-        rangeSensor.enableLed(false);
 
-        telemetry.addData("cmUltrasonic", rangeSensor.cmUltrasonic());//use this for a range of 5-255cm
-        telemetry.update();
-        sleep(5000);
-
-        telemetry.addData("distance",rangeSensor.getDistance(DistanceUnit.CM));
-        telemetry.update();
 
     }
 
@@ -90,6 +79,18 @@ public class DistanceSensorTest extends OpMode{
     public void loop() {
 
         //shoot();
+        //rangeSensor.enableLed(true);
+        telemetry.addData("cmOptical", rangeSensor.cmOptical());//use this for a range of 1-7cm
+        telemetry.update();
+        sleep(5000);
+        rangeSensor.enableLed(false);
+
+        telemetry.addData("cmUltrasonic", rangeSensor.cmUltrasonic());//use this for a range of 5-255cm
+        telemetry.update();
+        sleep(5000);
+
+        telemetry.addData("distance",rangeSensor.getDistance(DistanceUnit.CM));
+        telemetry.update();
 
     }
 
@@ -111,7 +112,7 @@ public class DistanceSensorTest extends OpMode{
         long time_sleepStart = System.currentTimeMillis();
         long endTime = time_sleepStart + pauseInMS;
 
-        while(endTime - System.currentTimeMillis() > 0) {
+        while(endTime - System.currentTimeMillis() > 0.1) {
 
         }
     }
