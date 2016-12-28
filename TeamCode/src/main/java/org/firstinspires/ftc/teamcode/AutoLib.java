@@ -1445,6 +1445,14 @@ public class AutoLib {
         }
     }
 
+    static public float scaleMotorFactor(float[] ray){
+        float maxVal = 0;
+        for(int i = 0; i < ray.length; i++){
+            if(Math.abs(ray[i]) > maxVal) maxVal = Math.abs(ray[i]);
+        }
+        if(maxVal == 0) return 1.0f;
+        return 1.0f / maxVal;
+    }
 }
 
 

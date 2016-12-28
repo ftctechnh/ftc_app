@@ -52,7 +52,7 @@ public class LineDrive extends OpenCVLib {
     float Ki3Cutoff = 0.00f;
 
     // parameters of the PID controller for the ultrasonic sensor driving
-    float Kp4 = 0.03f;
+    float Kp4 = 0.015f;
     float Ki4 = 0.00f;
     float Kd4 = 0;
     float Ki4Cutoff = 0.00f;
@@ -119,7 +119,7 @@ public class LineDrive extends OpenCVLib {
         mShoot.add(new AutoLib.TimedMotorStep(robot.lifterMotor, 1.0, 1.0, true));
         mShoot.add(new AutoLib.TimedMotorStep(robot.launcherMotor, 1.0, 1.0, true));
 
-        mSequence.add(mShoot);
+        //mSequence.add(mShoot);
 
         mDrive = new AutoLib.LinearSequence();
 
@@ -177,7 +177,7 @@ public class LineDrive extends OpenCVLib {
         mPushy.add(new PushyLib.pushypushy(modePointer, robot.getMotorArray(), robot.leftSensor, robot.rightSensor, robot.leftServo, robot.rightServo,
                 pushPos, pushyTime, red, colorThresh, pushyPower, driveTime, driveLoopCount));
 
-        mPushy.add(new UltraSquirrleyAzimuthFinDriveStep(modePointer, rightAngle, 0, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(20), mGPid, muPid, robot.getMotorArray(), 0.4f, new LineSensors(frame, 3000.0f), true));
+        mPushy.add(new UltraSquirrleyAzimuthFinDriveStep(modePointer, rightAngle, 0, robot.getNavXHeadingSensor(), new UltraCorrectedDisplacement(20), mPid, muPid, robot.getMotorArray(), 0.4f, new LineSensors(frame, 3000.0f), true));
 
 
         mPushy.add(new AutoLib.RunCodeStep(new AutoLib.FunctionCall() {
@@ -421,11 +421,18 @@ public class LineDrive extends OpenCVLib {
             final float frontPower = -dCorrection;
             final float backPower = -dCorrection;
 
+            final float[] motorPowers = {frontPower + rightPower + (float)mp.Front(),
+                    backPower + rightPower + (float)mp.Back(),
+                    frontPower + leftPower + (float)mp.Front(),
+                    backPower + leftPower + (float)mp.Back()};
+
+            final float scale = AutoLib.scaleMotorFactor(motorPowers);
+
             //set the powers
-            mMotorSteps.get(0).setPower(Range.clip(frontPower + rightPower + mp.Front(), -1, 1) * mPower);
-            mMotorSteps.get(1).setPower(Range.clip(backPower + rightPower + mp.Back(), -1, 1) * mPower);
-            mMotorSteps.get(2).setPower(Range.clip(frontPower + leftPower + mp.Front(), -1, 1) * mPower);
-            mMotorSteps.get(3).setPower(Range.clip(backPower + leftPower + mp.Back(), -1, 1) * mPower);
+            mMotorSteps.get(0).setPower(motorPowers[0] * scale * mPower);
+            mMotorSteps.get(1).setPower(motorPowers[1] * scale * mPower);
+            mMotorSteps.get(2).setPower(motorPowers[2] * scale * mPower);
+            mMotorSteps.get(3).setPower(motorPowers[3] * scale * mPower);
 
             // log some data
             if (mOpMode != null) {
