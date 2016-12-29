@@ -364,6 +364,6 @@ public class AutonomousGeneral_newName extends LinearOpMode{
     }
 
     public void wallDrive(double distFromWall) {
-        turnLeft();
+        //turnLeft();
     }
 }

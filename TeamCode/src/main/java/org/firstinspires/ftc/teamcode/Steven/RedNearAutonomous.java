@@ -108,19 +108,19 @@ public class RedNearAutonomous extends AutonomousGeneral {
         while(gyro.isCalibrating()){
 
         }
-        while(gyro.getHeading() > angle || gyro.getHeading() < otherangle){ //turn left until the angle becomes as small as you want it
+       /* while(gyro.getHeading() > angle || gyro.getHeading() < otherangle){ //turn left until the angle becomes as small as you want it
             //gyro.getHeading() returns values from 0 to 359
             turnLeft(0.4);
-        }
+        }*/
         stopMotors();
 
         //drive forward to wall
-        while(rangeSensor.getDistance(DistanceUnit.CM) > distance){//distance is the desired distance from the wall
+        /*while(rangeSensor.getDistance(DistanceUnit.CM) > distance){//distance is the desired distance from the wall
             front_left_motor.setPower(0.5);
             back_left_motor.setPower(0.5);
             front_right_motor.setPower(0.5);
             back_right_motor.setPower(0.5);
-        }
+        }*/
         stopMotors();
 
 
@@ -130,10 +130,10 @@ public class RedNearAutonomous extends AutonomousGeneral {
         while(gyro.isCalibrating()){
 
         }
-        while(gyro.getHeading() > angle || gyro.getHeading() < otherangle ){
+       /* while(gyro.getHeading() > angle || gyro.getHeading() < otherangle ){
             turnLeft(0.5);
         }
-
+*/
         //drive
 
 
