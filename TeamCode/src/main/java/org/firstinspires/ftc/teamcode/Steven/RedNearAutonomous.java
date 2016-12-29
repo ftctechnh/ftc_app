@@ -89,7 +89,7 @@ public class RedNearAutonomous extends AutonomousGeneral {
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
 
         //drive forward a general distance
-        encoderDrive(DRIVE_SPEED,  62.23,  62.23, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(DRIVE_SPEED,  45.72,  45.72, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
         sleep(1000);     // pause for servos to move
 
 
@@ -103,24 +103,29 @@ public class RedNearAutonomous extends AutonomousGeneral {
         encoderShoot(0.8);
         sleep(500);     // pause for servos to move
 
+
+        encoderDrive(DRIVE_SPEED, 48, 48, 5.0);
+        sleep(1000);
+
         //turn to face wall
         gyro.calibrate();
         while(gyro.isCalibrating()){
 
         }
-       /* while(gyro.getHeading() > angle || gyro.getHeading() < otherangle){ //turn left until the angle becomes as small as you want it
+        turnLeft(0.4);
+        while(gyro.getHeading() > 310 || gyro.getHeading() < 10){ //turn left until the angle becomes as small as you want it
             //gyro.getHeading() returns values from 0 to 359
-            turnLeft(0.4);
-        }*/
+
+        }
         stopMotors();
 
         //drive forward to wall
-        /*while(rangeSensor.getDistance(DistanceUnit.CM) > distance){//distance is the desired distance from the wall
+        while(rangeSensor.getDistance(DistanceUnit.CM) > 15){//distance is the desired distance from the wall
             front_left_motor.setPower(0.5);
             back_left_motor.setPower(0.5);
             front_right_motor.setPower(0.5);
             back_right_motor.setPower(0.5);
-        }*/
+        }
         stopMotors();
 
 
@@ -130,10 +135,13 @@ public class RedNearAutonomous extends AutonomousGeneral {
         while(gyro.isCalibrating()){
 
         }
-       /* while(gyro.getHeading() > angle || gyro.getHeading() < otherangle ){
-            turnLeft(0.5);
+
+        turnLeft(0.5);
+        while(gyro.getHeading() > 270 || gyro.getHeading() < 10 ){
+
         }
-*/
+        stopMotors();
+
         //drive
 
 
