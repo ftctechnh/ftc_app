@@ -33,14 +33,9 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode.Steven;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.teamcode.AutonomousGeneral;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
+import org.firstinspires.ftc.teamcode.AutonomousGeneral;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -69,9 +64,9 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: AutonomousRedNear", group="Pushbot")
+@Autonomous(name="Pushbot: NewAutonomousRedNear", group="Pushbot")
 
-public class AutonomousRedNear extends AutonomousGeneral {
+public class RedNearAutonomous extends AutonomousGeneral {
 
 
     private ElapsedTime     runtime = new ElapsedTime();
@@ -112,13 +107,13 @@ public class AutonomousRedNear extends AutonomousGeneral {
 
         shootingDrive(0.8, 850);
         sleep(500);     // pause for servos to move
-        //encoderDrive(DRIVE_SPEED,  6,  -6, 5.0);
-       //// encoderDrive(DRIVE_SPEED, 15,-15 , 5.0);
-      ////  encoderDrive(DRIVE_SPEED, -25,-25 , 5.0);
-        //encoderDrive(DRIVE_SPEED, 100,30 , 5.0);
-        while(gyro.getHeading() < 40 || gyro.getHeading() >350 ){
+        encoderDrive(DRIVE_SPEED,  6,  -6, 5.0);
+       // encoderDrive(DRIVE_SPEED, 15,-15 , 5.0);
+      //  encoderDrive(DRIVE_SPEED, -25,-25 , 5.0);
+        encoderDrive(DRIVE_SPEED, 100,30 , 5.0);
+        /*while(gyro.getHeading() < 40 || gyro.getHeading() >350 ){
             turnRight(0.5);
-        }
+        }*/
         ////encoderDrive(DRIVE_SPEED,  -49,  -35, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
         telemetry.addData("Path", "Complete");
         telemetry.update();
