@@ -73,7 +73,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
  */
 
 @Autonomous(name="Auto PID Tuning", group="DM")
-// @Disabled
+@Disabled
 public class AutoTestPID extends LinearOpMode {
 
     /* Declare OpMode members. */

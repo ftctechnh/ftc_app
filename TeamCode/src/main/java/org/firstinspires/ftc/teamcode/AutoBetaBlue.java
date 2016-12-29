@@ -87,7 +87,7 @@ public class AutoBetaBlue extends LinearOpMode {
 
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
-    static final double     DRIVE_SPEED             = 1.0;     // Nominal speed for better accuracy.
+    static final double     DRIVE_SPEED             = 0.8;     // Nominal speed for better accuracy.
     static final double     TURN_SPEED              = 1.0;     // Nominal half speed for better accuracy.
 
     static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
@@ -158,36 +158,36 @@ public class AutoBetaBlue extends LinearOpMode {
         telemetry.update();
 
         // Move forward 26 inches
-        encoderDrive(DRIVE_SPEED,  26.0, 5.0, false);  // S1: Forward 24 Inches with 5 Sec timeout
+        encoderDrive(DRIVE_SPEED,  26.0, 5.0, true, 0.0);  // S1: Forward 26 Inches with 5 Sec timeout
 
         // Fire the balls
         robot.fire.setPower(1.0);
         sleep(3000);        // Wait 3 seconds for shot to finish
+
+        gyroTurn(TURN_SPEED, -70.0);
 
         // Stop the shooter
         robot.fire.setPower(0.0);
         robot.lShoot.setPower(0.0);
         robot.rShoot.setPower(0.0);
 
-        gyroTurn(TURN_SPEED, -70);
 
-        encoderDrive(DRIVE_SPEED, 52.0, 5.0, false);
+        encoderDrive(DRIVE_SPEED, 52.0, 5.0, true, -70.0);
 
-        gyroTurn(TURN_SPEED, 0);
+        gyroTurn(TURN_SPEED, 0.0);
 
-        encoderDrive(DRIVE_SPEED, 10.0, 3.0, false);
+        encoderDrive(DRIVE_SPEED, 10.0, 3.0, true, 0.0);
 
         robot.beacon.setPosition(robot.BEACON_MAX_RANGE);
         sleep (1000);
         robot.beacon.setPosition((robot.BEACON_HOME));
-        encoderDrive(DRIVE_SPEED, 46.0, 4.0, false);
+        encoderDrive(DRIVE_SPEED, 46.0, 4.0, true, 0.0);
 
         robot.beacon.setPosition(robot.BEACON_MAX_RANGE);
         sleep (1000);
         robot.beacon.setPosition((robot.BEACON_HOME));
 
         sleep (10000);
-
 
 
 
@@ -224,7 +224,8 @@ public class AutoBetaBlue extends LinearOpMode {
     public void encoderDrive(double speed,
                              double distance,
                              double timeout,
-                             boolean useGyro) throws InterruptedException {
+                             boolean useGyro,
+                             double heading) throws InterruptedException {
         int newLFTarget;
         int newRFTarget;
         int newLRTarget;
@@ -233,8 +234,6 @@ public class AutoBetaBlue extends LinearOpMode {
         final double MINSPEED = 0.30;
         final double SPEEDINCR = 0.015;
         double curSpeed;                // Keep track of speed as we ramp up
-
-        double holdHeading;
 
         double error;
         double steer;
@@ -272,9 +271,8 @@ public class AutoBetaBlue extends LinearOpMode {
 
             // Record the starting heading
             angles = robot.imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX);
-            holdHeading = angles.firstAngle;
 
-            // Turn On fronts only to RUN_TO_POSITION
+            // Turn On motors to RUN_TO_POSITION
             robot.setDriveMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
@@ -292,8 +290,10 @@ public class AutoBetaBlue extends LinearOpMode {
             // keep looping while we are still active, and there is time left, and both motors are running.
             while (opModeIsActive() &&
                    (runtime.seconds() < timeout) &&
-                   ((robot.lfDrive.isBusy())
-                           || (robot.rfDrive.isBusy()))) {
+                    robot.lfDrive.isBusy() &&
+                    robot.lrDrive.isBusy() &&
+                    robot.rfDrive.isBusy() &&
+                    robot.rrDrive.isBusy())) {
 
                 // Ramp up motor powers as needed
                 if (curSpeed < speed) {
@@ -305,7 +305,7 @@ public class AutoBetaBlue extends LinearOpMode {
 
                 if (useGyro){
                     // adjust relative speed based on heading error if desired
-                    error = getError(holdHeading);
+                    error = getError(heading);
                     steer = getSteer(error, P_DRIVE_COEFF);
 
                     // if driving in reverse, the motor correction also needs to be reversed
@@ -379,34 +379,6 @@ public class AutoBetaBlue extends LinearOpMode {
         }
     }
 
-    /**
-     *  Method to obtain & hold a heading for a finite amount of time
-     *  Move will stop once the requested time has elapsed
-     *
-     * @param speed      Desired speed of turn.
-     * @param angle      Absolute Angle (in Degrees) relative to last gyro reset.
-     *                   0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
-     *                   If a relative angle is required, add/subtract from current heading.
-     * @param holdTime   Length of time (in seconds) to hold the specified heading.
-     */
-    public void gyroHold( double speed, double angle, double holdTime) {
-
-        ElapsedTime holdTimer = new ElapsedTime();
-
-        // keep looping while we have time remaining.
-        holdTimer.reset();
-        while (opModeIsActive() && (holdTimer.time() < holdTime)) {
-            // Update telemetry & Allow time for other processes to run.
-            onHeading(speed, angle, P_TURN_COEFF);
-            telemetry.update();
-        }
-
-        // Stop all motion;
-        robot.lfDrive.setPower(0);
-        robot.lrDrive.setPower(0);
-        robot.rfDrive.setPower(0);
-        robot.rrDrive.setPower(0);
-    }
 
     /**
      * Perform one cycle of closed loop heading control.
