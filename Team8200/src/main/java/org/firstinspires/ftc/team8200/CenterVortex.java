@@ -69,19 +69,18 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="8200: CenterVortex", group="Pushbot")
 //@Disabled
-public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
+public class CenterVortex extends LinearOpMode {
 
     /* Declare OpMode members. */
-    HardwareK9bot robot   = new HardwareK9bot();   // Use a Pushbot's hardware
-    private ElapsedTime     runtime = new ElapsedTime();
+    HardwareK9bot robot = new HardwareK9bot(); // Use a Pushbot's hardware
+    private ElapsedTime runtime = new ElapsedTime();
 
-    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
-    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
-    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-                                                      (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.3;
-    static final double     TURN_SPEED              = 0.3;
+    static final double COUNTS_PER_MOTOR_REV = 1440; // eg: TETRIX Motor Encoder
+    static final double DRIVE_GEAR_REDUCTION = 2.0; // This is < 1.0 if geared UP
+    static final double WHEEL_DIAMETER_INCHES = 4.0; // For figuring circumference
+    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * 3.1415);
+    static final double DRIVE_SPEED = 0.3;
+    static final double TURN_SPEED = 0.3;
 
     @Override
     public void runOpMode() {
@@ -93,7 +92,7 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
         robot.init(hardwareMap);
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Resetting Encoders");    //
+        telemetry.addData("Status", "Resetting Encoders");
         telemetry.update();
 
         robot.leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -104,58 +103,35 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
         robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0",  "Starting at %7d :%7d",
-                          robot.leftMotor.getCurrentPosition(),
-                          robot.rightMotor.getCurrentPosition());
+        telemetry.addData("Path0",  "Starting at %7d :%7d", robot.leftMotor.getCurrentPosition(), robot.rightMotor.getCurrentPosition());
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-       // encoderDrive(DRIVE_SPEED,  20,  20, 5.0);
-        //
-//        DrawF();
-//        sleep(5000);
-//        leftTurnEqualPower();
-//        DrawT();
-//        sleep(5000);
-//
-        moveCenter();
-//        DrawC();
-        /*sleep(5000);
-        leftTurnEqualPower();
-        sleep(5000);
-        rightTurnUnequalPower();
-        sleep(5000);
-        leftTurnUnequalPower();
-        sleep(5000);
-        */
-
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        /*encoderDrive(DRIVE_SPEED,  20,  20, 5.0);  // S1: Forward 48 Inches with 5 Sec timeout
+        /*
+        encoderDrive(DRIVE_SPEED,  20,  20, 5.0);  // S1: Forward 48 Inches with 5 Sec timeout
         encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
         encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
         */
 
-
-//        sleep(1000);     // pause for servos to move
+        // sleep(1000); // pause for servos to move
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
 
     /*
-     *  Method to perfmorm a relative move, based on encoder counts.
+     *  Method to perform a relative move, based on encoder counts.
      *  Encoders are not reset as the move is based on the current position.
      *  Move will stop if any of three conditions occur:
      *  1) Move gets to the desired position
      *  2) Move runs out of time
      *  3) Driver stops the opmode running.
      */
-    public void encoderDrive(double speed,
-                             double leftInches, double rightInches,
-                             double timeoutS) {
+    public void encoderDrive(double speed, double leftInches, double rightInches, double timeoutS) {
         int newLeftTarget;
         int newRightTarget;
 
@@ -178,17 +154,11 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
             robot.rightMotor.setPower(Math.abs(speed));
 
             // keep looping while we are still active, and there is time left, and both motors are running.
-            while (opModeIsActive() &&
-                   (runtime.seconds() < timeoutS) &&
-                   (robot.leftMotor.isBusy() && robot.rightMotor.isBusy())) {
-
-
+            while (opModeIsActive() && (runtime.seconds() < timeoutS) && (robot.leftMotor.isBusy() && robot.rightMotor.isBusy())) {
 
                 // Display it for the driver.
                 telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
-                telemetry.addData("Path2",  "Running at %7d :%7d",
-                                            robot.leftMotor.getCurrentPosition(),
-                                            robot.rightMotor.getCurrentPosition());
+                telemetry.addData("Path2",  "Running at %7d :%7d", robot.leftMotor.getCurrentPosition(), robot.rightMotor.getCurrentPosition());
                 telemetry.update();
             }
 
@@ -200,10 +170,11 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
             robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            //  sleep(250);   // optional pause after each move
+            // sleep(250); // optional pause after each move
         }
     }
 
+    /*
     public void servoDown() {
         robot.arm.setPosition(-1);
     }
@@ -211,96 +182,31 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
         robot.arm.setPosition(1);
 
     }
-//
-//    public void rightTurnEqualPower() {
-//        robot.arm.setPosition(0.1);
-//        encoderDrive(DRIVE_SPEED,  5,  5, 5.0);
-//        encoderDrive(TURN_SPEED,   -4, 4, 5.0);
-//        encoderDrive(DRIVE_SPEED,   -5,  -5, 5.0);
-//        robot.arm.setPosition(0.9);
-//
-//    }
-//
-//    public void leftTurnEqualPower() {
-//        robot.arm.setPosition(0.1);
-//        encoderDrive(DRIVE_SPEED,  5,  5, 5.0);
-//        encoderDrive(TURN_SPEED,   4, -4, 4.0);
-//        encoderDrive(DRIVE_SPEED,  -5,  -5, 5.0);
-//        robot.arm.setPosition(0.9);
-//
-//
-//    }
-//    public void rightTurnUnequalPower()
-//    {
-//        encoderDrive(TURN_SPEED,   -5, 10, 4.0);
-//    }
-//    public void leftTurnUnequalPower()
-//    {
-//        encoderDrive(TURN_SPEED,  10, -5, 4.0);
-//    }
+    */
 
-//    public void DrawF()
-//    {
-//        servoDown();
-//        encoderDrive(DRIVE_SPEED,  5,  5, 5.0);
-//        rightTurnEqualPower();
-//        encoderDrive(DRIVE_SPEED,  5,  5, 5.0);
-//        servoUp();
-//        encoderDrive(DRIVE_SPEED,  -5,  -5, 5.0);
-//        rightTurnEqualPower();
-//        servoUp();
-//        encoderDrive(DRIVE_SPEED,  1,  1, 5.0);
-//        leftTurnEqualPower();
-//        encoderDrive(DRIVE_SPEED, 2.5, 2.5, 5.0);
-//    }
-//    public void DrawT()
-//    {
-//        servoDown();
-//        encoderDrive(DRIVE_SPEED, 5, 5, 5.0);
-//        rightTurnEqualPower();
-//        encoderDrive(DRIVE_SPEED, 1.2, 1.2, 5.0);
-//        encoderDrive(DRIVE_SPEED, -2.5, -2.5, 5.0);
-//    }
-//    public void DrawC()
-//    {
-//        //leftTurnEqualPower();
-//        encoderDrive(DRIVE_SPEED, 5, 5, 5.0);
-//        rightTurnEqualPower();
-//        encoderDrive(DRIVE_SPEED, 5, 5, 5.0);
-//        rightTurnEqualPower();
-//        encoderDrive(DRIVE_SPEED, 5, 5, 5.0);
-//
-//    }
-//    public void DrawFTC()
-//    {
-//        DrawF();
-//        //move back , then make a right turn, go forward,
-//        // make a left turn
-//        //go forward, servo down
-//        encoderDrive(DRIVE_SPEED, -8, -8, 5.0);
-//        rightTurnEqualPower();
-//        encoderDrive(DRIVE_SPEED, 15, 15, 5.0);
-//        leftTurnEqualPower();
-//        encoderDrive(DRIVE_SPEED, 25, 25, 5.0);
-//        servoDown();
-//
-//        DrawT();
-//
-//        //reverse 1/2, make right turn, move forward,
-//        // make left turn, move forward, servo down
-//        encoderDrive(DRIVE_SPEED, 5, 5, 5.0);
-//        rightTurnEqualPower();
-//        encoderDrive(DRIVE_SPEED, 20, 20, 5.0);
-//        leftTurnEqualPower();
-//        encoderDrive(DRIVE_SPEED, 20, 20, 5.0);
-//
-//        DrawC();
-//    }
-    public void moveCenter() {
-        servoUp();
-        encoderDrive(DRIVE_SPEED,  -5,  -5, 3.0);
-        robot.harvester.setPower(-1);
+    /*
+    public void rightTurnEqualPower() {
+        robot.arm.setPosition(0.1);
+        encoderDrive(DRIVE_SPEED,  5,  5, 5.0);
+        encoderDrive(TURN_SPEED,   -4, 4, 5.0);
+        encoderDrive(DRIVE_SPEED,   -5,  -5, 5.0);
+        robot.arm.setPosition(0.9);
     }
 
+    public void leftTurnEqualPower() {
+        robot.arm.setPosition(0.1);
+        encoderDrive(DRIVE_SPEED,  5,  5, 5.0);
+        encoderDrive(TURN_SPEED,   4, -4, 4.0);
+        encoderDrive(DRIVE_SPEED,  -5,  -5, 5.0);
+        robot.arm.setPosition(0.9);
 
+
+    }
+    public void rightTurnUnequalPower() {
+        encoderDrive(TURN_SPEED,   -5, 10, 4.0);
+    }
+    public void leftTurnUnequalPower() {
+        encoderDrive(TURN_SPEED,  10, -5, 4.0);
+    }
+    */
 }

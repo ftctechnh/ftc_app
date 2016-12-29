@@ -205,10 +205,10 @@ public class CornerVortexBall extends LinearOpMode {
     }
 
     public void servoDown() {
-        robot.arm.setPosition(-1);
+        //robot.arm.setPosition(-1);
     }
     public void servoUp() {
-        robot.arm.setPosition(1);
+        //robot.arm.setPosition(1);
 
     }
 //
@@ -313,7 +313,7 @@ public class CornerVortexBall extends LinearOpMode {
 
         encoderDrive(1 ,  5, 5, 2.0 );
 
-        robot.harvester.setPower(-1);
+        //robot.harvester.setPower(-1);
         runtime.reset();
 
         while (opModeIsActive() && (runtime.seconds() < 1)) {

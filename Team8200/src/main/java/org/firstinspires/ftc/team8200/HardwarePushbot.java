@@ -24,22 +24,20 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class HardwarePushbot
 {
     /* Public OpMode members. */
-    public DcMotor  leftMotor   = null;
-    public DcMotor  rightMotor  = null;
-    public Servo    arm  = null;
+    public DcMotor leftMotor = null;
+    public DcMotor rightMotor = null;
+    public Servo arm = null;
 
-    public static final double MID_SERVO       =  0.5 ;
-    //public static final double ARM_UP_POWER    =  0.45 ;
-    //public static final double ARM_DOWN_POWER  = -0.45 ;
-
+    public static final double MID_SERVO = 0.5;
+    //public static final double ARM_UP_POWER = 0.45;
+    //public static final double ARM_DOWN_POWER = -0.45;
 
     /* local OpMode members. */
-    HardwareMap hwMap           =  null;
-    private ElapsedTime period  = new ElapsedTime();
+    HardwareMap hwMap = null;
+    private ElapsedTime period = new ElapsedTime();
 
     /* Constructor */
-    public HardwarePushbot(){
-
+    public HardwarePushbot() {
     }
 
     /* Initialize standard Hardware interfaces */
@@ -48,12 +46,12 @@ public class HardwarePushbot
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftMotor   = hwMap.dcMotor.get("motor_left");
-        rightMotor  = hwMap.dcMotor.get("motor_right");
-        arm         = hwMap.servo.get("armServo");
+        leftMotor = hwMap.dcMotor.get("motor_left");
+        rightMotor = hwMap.dcMotor.get("motor_right");
+        arm = hwMap.servo.get("armServo");
 
         leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        rightMotor.setDirection(DcMotor.Direction.REVERSE); // Set to FORWARD if using AndyMark motors
 
         // Set all motors to zero power
         leftMotor.setPower(0);
@@ -65,10 +63,9 @@ public class HardwarePushbot
         rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         arm.setPosition(MID_SERVO);
-
     }
 
-    /***
+    /*
      *
      * waitForTick implements a periodic delay. However, this acts like a metronome with a regular
      * periodic tick.  This is used to compensate for varying processing times for each cycle.
