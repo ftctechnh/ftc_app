@@ -32,6 +32,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -88,14 +90,20 @@ public class AutoBetaBlue extends LinearOpMode {
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
     static final double     DRIVE_SPEED             = 0.8;     // Nominal speed for better accuracy.
+    static final double     DRIVE_SPEED_SLOW        = 0.5;
     static final double     TURN_SPEED              = 1.0;     // Nominal half speed for better accuracy.
 
-    static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
+    static final double     HEADING_THRESHOLD       = 4 ;      // As tight as we can make it with an integer gyro
     static final double     P_TURN_COEFF            = 0.009;     // Larger is more responsive, but also less stable
-    static final double     P_DRIVE_COEFF           = 0.15;     // Larger is more responsive, but also less stable
+    static final double     P_DRIVE_COEFF           = 0.05;     // Larger is more responsive, but also less stable
 
+    static final double     WHITE_THRESHOLD         = 2.0;      // Line finder
+    static final double     BEACON_ALPHA_MIN        = 50.0;
 
-
+    static final double     BLUE_MIN                = -180;
+    static final double     BLUE_MAX                = -100;
+    static final double     RED_MIN                 = -40;
+    static final double     RED_MAX                 = 40;
 
     // State used for reading Gyro
     Orientation angles;
@@ -104,26 +112,34 @@ public class AutoBetaBlue extends LinearOpMode {
     // Keep track of the reference start heading at start of match
     double startHeading;
 
+    double distCorrection = 0.0;
 
     /* Shooter constants */
 
     static final int     NR_MAX_RPM              = 6600;
     static final int     SHOOT_MAX_RPM           = NR_MAX_RPM * COUNTS_PER_MOTOR_REV;
 
-    static double           shootSpeed              = .95;
-    static boolean          shootPressed            = false;
+    static double           shootSpeed              = .925;
+
+    // adaHSV is an array that will hold the hue, saturation, and value information.
+    float[] adaHSV = {0F, 0F, 0F};
+
+    // adaValues is a reference to the adaHSV array.
+    final float adaValues[] = adaHSV;
 
     @Override
     public void runOpMode() throws InterruptedException {
-
+        int beacon = 0;         // What color beacon do we see
         /*
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
 
+        robot.stripeColor.enableLed(true);
+
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Resetting Encoders");    //
+        //telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
 
         robot.setDriveMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -133,9 +149,9 @@ public class AutoBetaBlue extends LinearOpMode {
 
 
         // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0",  "Starting at %7d :%7d",
-                          robot.lfDrive.getCurrentPosition(),
-                          robot.rfDrive.getCurrentPosition());
+        //telemetry.addData("Path0",  "Starting at %7d :%7d",
+        //                  robot.lfDrive.getCurrentPosition(),
+        //                  robot.rfDrive.getCurrentPosition());
         telemetry.update();
 
         // Setup max shooter motor speed limit
@@ -154,7 +170,7 @@ public class AutoBetaBlue extends LinearOpMode {
         // Spin up the shooter
         robot.lShoot.setPower(shootSpeed);
         robot.rShoot.setPower(shootSpeed);
-        telemetry.addData("Path", " Start");
+        //telemetry.addData("Path", " Start");
         telemetry.update();
 
         // Move forward 26 inches
@@ -162,7 +178,7 @@ public class AutoBetaBlue extends LinearOpMode {
 
         // Fire the balls
         robot.fire.setPower(1.0);
-        sleep(3000);        // Wait 3 seconds for shot to finish
+        sleep(1500);        // Wait 2 seconds for shot to finish
 
         gyroTurn(TURN_SPEED, -70.0);
 
@@ -172,24 +188,75 @@ public class AutoBetaBlue extends LinearOpMode {
         robot.rShoot.setPower(0.0);
 
 
-        encoderDrive(DRIVE_SPEED, 52.0, 5.0, true, -70.0);
+        encoderDrive(DRIVE_SPEED, 51.5, 5.0, true, -70.0);
 
         gyroTurn(TURN_SPEED, 0.0);
 
-        encoderDrive(DRIVE_SPEED, 10.0, 3.0, true, 0.0);
+        encoderDrive(DRIVE_SPEED_SLOW, 8.0, 1.0, true, 0.0);
 
-        robot.beacon.setPosition(robot.BEACON_MAX_RANGE);
-        sleep (1000);
-        robot.beacon.setPosition((robot.BEACON_HOME));
-        encoderDrive(DRIVE_SPEED, 46.0, 4.0, true, 0.0);
+        findLine(0.2, 3.0);
 
-        robot.beacon.setPosition(robot.BEACON_MAX_RANGE);
-        sleep (1000);
-        robot.beacon.setPosition((robot.BEACON_HOME));
+        // Wait for beacon color sensor
+        sleep(1000);
 
-        sleep (10000);
+        // Check the beacon color
+        beacon = beaconColor();
+
+        //sleep(5000);
+
+        if (beacon == 1) {
+            distCorrection = 2.25;
+        } else if (beacon == -1) {
+            distCorrection = -3.25;
+        } else {
+            distCorrection = 0;
+        }
+
+        if (beacon != 0) {
+           // We saw a beacon color so move to align beacon pusher
+            encoderDrive(DRIVE_SPEED, distCorrection, 2.0, true, -4*beacon);
+            robot.beacon.setPosition(robot.BEACON_MAX_RANGE);
+            sleep (1000);
+            robot.beacon.setPosition((robot.BEACON_HOME));
+
+        }
+
+        //sleep(5000);
+
+        encoderDrive(DRIVE_SPEED_SLOW, 43.0 - distCorrection, 4.0, true, 0.0);
+
+        findLine(0.2, 3.0);
+
+        // wait for color sensor
+        sleep(1000);
+
+        // Check the beacon color
+        beacon = beaconColor();
+
+        //sleep(5000);
 
 
+        if (beacon == 1) {
+            distCorrection = 2.25;
+        } else if (beacon == -1) {
+            distCorrection = -3.25;
+        } else {
+            distCorrection = 0;
+        }
+
+        if (beacon != 0) {
+            // We saw a beacon color so move to align beacon pusher
+            encoderDrive(DRIVE_SPEED, distCorrection, 2.0, true, -4*beacon);
+
+            robot.beacon.setPosition(robot.BEACON_MAX_RANGE);
+            sleep (1000);
+            robot.beacon.setPosition((robot.BEACON_HOME));
+
+        }
+
+        encoderDrive(1.0, -73.0, 10.0, true, -60.0);
+
+        sleep(10000);
 
         // Intake full reverse to push cap ball
         //robot.intake.setPower(-1.0);
@@ -209,7 +276,7 @@ public class AutoBetaBlue extends LinearOpMode {
 
 
 
-        telemetry.addData("Path", "Complete");
+        //telemetry.addData("Path", "Complete");
         telemetry.update();
     }
 
@@ -270,7 +337,7 @@ public class AutoBetaBlue extends LinearOpMode {
 
 
             // Record the starting heading
-            angles = robot.imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX);
+            // angles = robot.imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX);
 
             // Turn On motors to RUN_TO_POSITION
             robot.setDriveMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -293,7 +360,7 @@ public class AutoBetaBlue extends LinearOpMode {
                     robot.lfDrive.isBusy() &&
                     robot.lrDrive.isBusy() &&
                     robot.rfDrive.isBusy() &&
-                    robot.rrDrive.isBusy())) {
+                    robot.rrDrive.isBusy()) {
 
                 // Ramp up motor powers as needed
                 if (curSpeed < speed) {
@@ -334,11 +401,11 @@ public class AutoBetaBlue extends LinearOpMode {
 
 
                 // Display it for the driver.
-                telemetry.addData("Path1",  "Running to %7d: %7d", newLFTarget,
-                    newRFTarget);
-                telemetry.addData("Path2",  "Running at %7d : %7d",
-                                            robot.lfDrive.getCurrentPosition(),
-                                            robot.rfDrive.getCurrentPosition());
+                //telemetry.addData("Path1",  "Running to %7d: %7d", newLFTarget,
+                //    newRFTarget);
+                //telemetry.addData("Path2",  "Running at %7d : %7d",
+                //                            robot.lfDrive.getCurrentPosition(),
+                //                            robot.rfDrive.getCurrentPosition());
                 telemetry.update();
 
                 // Allow time for other processes to run.
@@ -357,6 +424,38 @@ public class AutoBetaBlue extends LinearOpMode {
         }
     }
 
+    /**
+     * Method to find white line
+     */
+    public boolean findLine(double speed, double timeout) {
+        // Try to find white line
+        // loop and read the RGB data.
+        // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
+        robot.setDriveZeroPower(DcMotor.ZeroPowerBehavior.BRAKE);
+        runtime.reset();
+        while (opModeIsActive() &&
+                robot.stripeColor.alpha() < WHITE_THRESHOLD &&
+                runtime.seconds() < timeout) {
+
+            // Drive til we see the stripe
+            robot.lfDrive.setPower(0.2);
+            robot.lrDrive.setPower(0.2);
+            robot.rfDrive.setPower(0.2);
+            robot.rrDrive.setPower(0.2);
+            idle();
+        }
+
+        boolean finished = (runtime.seconds() < timeout);
+
+        robot.lfDrive.setPower(0.0);
+        robot.lrDrive.setPower(0.0);
+        robot.rfDrive.setPower(0.0);
+        robot.rrDrive.setPower(0.0);
+
+        robot.setDriveZeroPower(DcMotor.ZeroPowerBehavior.FLOAT);
+
+        return finished;
+    }
 
     /**
      *  Method to spin on central axis to point in a new direction.
@@ -374,7 +473,7 @@ public class AutoBetaBlue extends LinearOpMode {
         // keep looping while we are still active, and not on heading.
         while (opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF)) {
             // Update telemetry & Allow time for other processes to run.
-            telemetry.update();
+            //telemetry.update();
             idle();
         }
     }
@@ -419,9 +518,9 @@ public class AutoBetaBlue extends LinearOpMode {
         robot.rrDrive.setPower(rightSpeed);
 
         // Display it for the driver.
-        telemetry.addData("Target", "%5.2f", angle);
-        telemetry.addData("Err/St", "%5.2f/%5.2f", error, steer);
-        telemetry.addData("Speed.", "%5.2f:%5.2f", leftSpeed, rightSpeed);
+        //telemetry.addData("Target", "%5.2f", angle);
+        //telemetry.addData("Err/St", "%5.2f/%5.2f", error, steer);
+        //telemetry.addData("Speed.", "%5.2f:%5.2f", leftSpeed, rightSpeed);
 
         return onTarget;
     }
@@ -454,6 +553,52 @@ public class AutoBetaBlue extends LinearOpMode {
      */
     public double getSteer(double error, double PCoeff) {
         return Range.clip(error * PCoeff, -1, 1);
+    }
+
+    public int beaconColor () {
+
+        // Return 1 for Blue and -1 for Red
+        // convert the RGB adaValues to HSV adaValues.
+        Color.RGBToHSV((robot.beaconColor.red() * 255) / 800, (robot.beaconColor.green() * 255) / 800,
+                (robot.beaconColor.blue() * 255) / 800, adaHSV);
+
+        // Normalize hue to -180 to 180 degrees
+        if (adaHSV[0] > 180.0) {
+            adaHSV[0] -= 360.0;
+        }
+
+        telemetry.addData("Alpha", robot.beaconColor.alpha());
+        telemetry.addData("Hue",  adaHSV[0]);
+
+
+        // Only continue if we see beacon i.e. enough light
+        if (robot.beaconColor.alpha() < BEACON_ALPHA_MIN) {
+            telemetry.addData("beacon", 0);
+            telemetry.update();
+            return 0;
+        }
+
+        // Return 1 for Blue and -1 for Red
+        // convert the RGB adaValues to HSV adaValues.
+
+        // Check for blue
+        if (adaHSV[0] > BLUE_MIN && adaHSV[0] < BLUE_MAX) {
+            // we see blue so return 1.0
+            telemetry.addData("beacon", 1);
+            telemetry.update();
+            return 1;
+        }
+
+        // Check for red
+        if (adaHSV[0] > RED_MIN && adaHSV[0] < RED_MAX) {
+            telemetry.addData("beacon", -1);
+            telemetry.update();
+            return -1;
+        }
+
+        telemetry.addData("beacon", 100);
+        telemetry.update();
+        return 0;         // We didn't see either color so don't know
     }
 
 

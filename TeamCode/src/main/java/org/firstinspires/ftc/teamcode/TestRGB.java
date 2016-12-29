@@ -77,6 +77,7 @@ public class TestRGB extends LinearOpMode {
 
   @Override
   public void runOpMode() throws InterruptedException {
+    robot.init(hardwareMap);
 
       // adaHSV is an array that will hold the hue, saturation, and value information.
       float[] adaHSV = {0F, 0F, 0F};

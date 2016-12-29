@@ -38,6 +38,7 @@ import android.view.View;
 import com.qualcomm.ftcrobotcontroller.R;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 /*
  *
@@ -75,13 +76,14 @@ public class LineFinderTest extends LinearOpMode {
   @Override
   public void runOpMode() throws InterruptedException {
 
+    robot.init(hardwareMap);
       // adaHSV is an array that will hold the hue, saturation, and value information.
       float[] adaHSV = {0F, 0F, 0F};
 
     // adaValues is a reference to the adaHSV array.
     final float adaValues[] = adaHSV;
 
-    float WHITE_THRESHOLD = 0.5F;
+    float WHITE_THRESHOLD = 2.0F;
 
 
     // get a reference to the RelativeLayout so we can change the background
@@ -94,9 +96,11 @@ public class LineFinderTest extends LinearOpMode {
     // Set Stripe finder LED on
     robot.stripeColor.enableLed(true);
 
+    robot.setDriveZeroPower(DcMotor.ZeroPowerBehavior.BRAKE);
     // loop and read the RGB data.
     // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
     while (opModeIsActive() && robot.stripeColor.alpha() < WHITE_THRESHOLD)  {
+
 
       // Drive til we see the stripe
       robot.lfDrive.setPower(0.8);
@@ -125,7 +129,7 @@ public class LineFinderTest extends LinearOpMode {
       telemetry.update();
       idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
     }
-
+    robot.setDriveZeroPower(DcMotor.ZeroPowerBehavior.FLOAT);
     robot.lfDrive.setPower(0.0);
     robot.lrDrive.setPower(0.0);
     robot.rfDrive.setPower(0.0);

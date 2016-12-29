@@ -273,7 +273,7 @@ public class TeleOpMain extends OpMode{
         //telemetry.addData("Red  ", robot.beaconColor.red());
         //telemetry.addData("Green", robot.beaconColor.green());
         //telemetry.addData("Blue ", robot.beaconColor.blue());
-        //telemetry.addData("Hue", hsvValues[0]);
+        telemetry.addData("Hue", hsvValues[0]);
 
         updateTelemetry(telemetry);
 
