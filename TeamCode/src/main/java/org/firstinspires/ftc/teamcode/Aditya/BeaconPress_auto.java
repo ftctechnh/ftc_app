@@ -83,10 +83,6 @@ public class BeaconPress_auto extends OpMode {
 
     }
 
-    @Override
-    public void init_loop() {
-
-    }
 
     @Override
     public void start() {
@@ -94,17 +90,18 @@ public class BeaconPress_auto extends OpMode {
         // beaconRead(1);
         // beaconread decalres the team. 1 is for blue, 2 is for red :)
         // justServo("red");
+        newBeacon("red");
     }
 
-    @Override
     public void loop() {
-        justServo("red");
+
     }
 
-    @Override
     public void stop() {
 
     }
+
+
 
     public void straightDrive(double power){
         leftWheelMotorBack.setPower(power);
@@ -376,8 +373,48 @@ public class BeaconPress_auto extends OpMode {
             beaconPress.setPosition(0.0);
             sleep(3000);
             beaconPress.setPosition(0.5);
-        }
+        } }
+
+        public void newBeacon(String team){
+
+            int teamRed = 1;
+            int teamBlue = 2;
+            int currentTeam = 0;
+
+            if(team.equals("red")) {
+                currentTeam = teamRed;
+            }
+
+            if(team.equals("blue")) {
+                currentTeam = teamBlue;
+            }
+            readColor();
+
+            while(!currentColor.equals(team)) {
+                straightDrive(0.25);
+                readColor();
+            }
+
+            if(currentColor.equals(team)) {
+                encoderDrive(0.4, 3, 3);
+                sleep(750);
+                beaconPress.setPosition(0);
+                sleep(5500);
+                beaconPress.setPosition(0.5);
+            }
+
+            readColor();
+
+            telemetry.addData("pressed!", currentColor);
+            telemetry.update();
+
+            if(currentColor.equals(team)) {
+                encoderDrive(0.5, 30, 30);
+            }
+
+
     }
     }
+
 
 
