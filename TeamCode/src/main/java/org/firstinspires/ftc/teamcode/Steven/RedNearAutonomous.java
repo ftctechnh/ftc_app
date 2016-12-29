@@ -35,6 +35,7 @@ package org.firstinspires.ftc.teamcode.Steven;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.AutonomousGeneral;
 
 /**
@@ -86,38 +87,61 @@ public class RedNearAutonomous extends AutonomousGeneral {
         waitForStart();
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  62.23,  62.23, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-      //  encoderDrive(DRIVE_SPEED,  -6,  6, 5.0);
-         // S1: Forward 47 Inches with 5 Sec timeout
-        //encoderDrive(TURN_SPEED,   9, -9, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
 
-        //encoderDrive(DRIVE_SPEED,  6,  -6, 5.0);
+        //drive forward a general distance
+        encoderDrive(DRIVE_SPEED,  62.23,  62.23, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
         sleep(1000);     // pause for servos to move
 
-        // intakeDrive(0.8, 900);
 
-        shootingDrive(0.8, 850);
-
+        //shoot three times
+        encoderShoot(0.8);
+        sleep(500);     // pause for servos to move
+        intakeDrive(0.8, 900);
+        encoderShoot(0.8);
         sleep(500);     // pause for servos to move
         intakeDrive(0.8, 1100);
-
-        shootingDrive(0.8, 850);
+        encoderShoot(0.8);
         sleep(500);     // pause for servos to move
-        intakeDrive(0.8, 1100);
 
-        shootingDrive(0.8, 850);
-        sleep(500);     // pause for servos to move
-        encoderDrive(DRIVE_SPEED,  6,  -6, 5.0);
-       // encoderDrive(DRIVE_SPEED, 15,-15 , 5.0);
-      //  encoderDrive(DRIVE_SPEED, -25,-25 , 5.0);
-        encoderDrive(DRIVE_SPEED, 100,30 , 5.0);
-        /*while(gyro.getHeading() < 40 || gyro.getHeading() >350 ){
-            turnRight(0.5);
-        }*/
-        ////encoderDrive(DRIVE_SPEED,  -49,  -35, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        //turn to face wall
+        gyro.calibrate();
+        while(gyro.isCalibrating()){
+
+        }
+        while(gyro.getHeading() > angle || gyro.getHeading() < otherangle){ //turn left until the angle becomes as small as you want it
+            //gyro.getHeading() returns values from 0 to 359
+            turnLeft(0.4);
+        }
+        stopMotors();
+
+        //drive forward to wall
+        while(rangeSensor.getDistance(DistanceUnit.CM) > distance){//distance is the desired distance from the wall
+            front_left_motor.setPower(0.5);
+            back_left_motor.setPower(0.5);
+            front_right_motor.setPower(0.5);
+            back_right_motor.setPower(0.5);
+        }
+        stopMotors();
+
+
+
+        //turn left so that the beacon pusher faces the wall
+        gyro.calibrate();
+        while(gyro.isCalibrating()){
+
+        }
+        while(gyro.getHeading() > angle || gyro.getHeading() < otherangle ){
+            turnLeft(0.5);
+        }
+
+        //drive
+
+
+
+
+
         telemetry.addData("Path", "Complete");
         telemetry.update();
-        //encoderDrive(DRIVE_SPEED, -16, -40, 5.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
     }
 

@@ -1,7 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -20,6 +24,8 @@ public class AutonomousGeneral extends LinearOpMode{
     protected DcMotor back_right_motor;
     protected DcMotor back_left_motor;
     protected GyroSensor gyro;                      //turning clockwise = +degrees, turning counterclockwise = -degrees
+    protected ModernRoboticsI2cRangeSensor rangeSensor;
+    protected ColorSensor colorSensor;
     protected static final double     DRIVE_SPEED             = 1.0;
     protected static final double     TURN_SPEED              = 0.5;
     // motor definition to shoot the small ball
@@ -53,6 +59,8 @@ public class AutonomousGeneral extends LinearOpMode{
 
         //Initiate sensors:
         gyro = hardwareMap.gyroSensor.get("gyro");
+        rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
+        colorSensor = hardwareMap.colorSensor.get("colorSensor");
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders");    //
@@ -265,5 +273,22 @@ public class AutonomousGeneral extends LinearOpMode{
         telemetry.addData("", "Done Shooting");
         telemetry.update();
         shooting_motor.setPower(0);
+    }
+
+    public boolean isWhite(){
+        colorSensor.enableLed(true);
+
+        /* hsvValues is an array that will hold the hue, saturation, and value information */
+        //float hsvValues[] = {0F,0F,0F};
+        /* convert the RGB values to HSV values*/
+        //Color.RGBToHSV(colorSensor.red() * 8, colorSensor.green() * 8, colorSensor.blue() * 8, hsvValues);
+
+        if(colorSensor.red() == colorSensor.blue() && colorSensor.blue() == colorSensor.green()){
+            return true;
+        }
+        else{
+            return false;
+        }
+
     }
 }
