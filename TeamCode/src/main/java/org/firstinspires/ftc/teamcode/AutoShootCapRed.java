@@ -61,12 +61,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Auto ShootCap Red", group="DM")
+@Autonomous(name="Auto Beta Red", group="DM")
 // @Disabled
-public class AutoShootCapRed extends AutoShootCapBlue {
+public class AutoShootCapRed extends AutoBetaBlue {
 
 
-    public double amIBlue() {
-        return -1.0;
+    public boolean amIBlue() {
+        return false;
     }
 }
