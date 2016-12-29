@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 /**
  * Created by inspirationteam on 12/18/2016.
@@ -363,7 +364,64 @@ public class AutonomousGeneral_newName extends LinearOpMode{
         telemetry.update();
     }
 
-    public void wallDrive(double distFromWall) {
-        //turnLeft();
+    public void wallDrive(double targetWallDist) {
+
+        double sensorGapInCM = 30.0;
+        double frontRead = 0.0;
+        double rearRead = 0.0;
+        double measureWallDist = 0.0;
+
+        frontRead = frontUltra.getDistance(DistanceUnit.CM);
+        rearRead = rearUltra.getDistance(DistanceUnit.CM);
+
+        measureWallDist = Math.sqrt(
+                            Math.pow(((frontRead + rearRead) / 2), 2.0)-
+                            ((Math.pow(sensorGapInCM, 2) + Math.pow((rearRead - frontRead), 2))) / 2);
+
+        telemetry.addData("mesureWallDist", measureWallDist);
+        telemetry.addData("frontRead", frontRead);
+        telemetry.addData("rearRead", rearRead);
+        telemetry.addData("targetWallDist", targetWallDist);
+        telemetry.update();
+        sleep(1000);
+
+        while(true) {
+            straightDrive(0.1);
+
+            frontRead = frontUltra.getDistance(DistanceUnit.CM);
+            rearRead = rearUltra.getDistance(DistanceUnit.CM);
+
+            measureWallDist = Math.sqrt(
+                    Math.pow(((frontRead + rearRead) / 2), 2.0)-
+                            ((Math.pow(sensorGapInCM, 2) + Math.pow((rearRead - frontRead), 2))) / 2);
+
+            telemetry.addData("mesureWallDist", measureWallDist);
+            telemetry.addData("frontRead", frontRead);
+            telemetry.addData("rearRead", rearRead);
+            telemetry.addData("targetWallDist", targetWallDist);
+            telemetry.update();
+
+
+            while(frontRead < rearRead) {
+
+                turnLeft(0.1);
+                frontRead = frontUltra.getDistance(DistanceUnit.CM);
+                rearRead = rearUltra.getDistance(DistanceUnit.CM);
+            }
+
+            while(frontRead > rearRead) {
+
+                turnRight(0.1);
+                frontRead = frontUltra.getDistance(DistanceUnit.CM);
+                rearRead = rearUltra.getDistance(DistanceUnit.CM);
+            }
+
+            while(frontRead == rearRead){
+
+                straightDrive(0.1);
+                frontRead = frontUltra.getDistance(DistanceUnit.CM);
+                rearRead = rearUltra.getDistance(DistanceUnit.CM);
+            }
+        }
     }
 }
