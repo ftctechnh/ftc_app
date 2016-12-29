@@ -1,119 +1,76 @@
+/*
+Copyright (c) 2016 Robert Atkinson
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted (subject to the limitations in the disclaimer below) provided that
+the following conditions are met:
+
+Redistributions of source code must retain the above copyright notice, this list
+of conditions and the following disclaimer.
+
+Redistributions in binary form must reproduce the above copyright notice, this
+list of conditions and the following disclaimer in the documentation and/or
+other materials provided with the distribution.
+
+Neither the name of Robert Atkinson nor the names of his contributors may be used to
+endorse or promote products derived from this software without specific prior
+written permission.
+
+NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
+LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESSFOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
+TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 package org.firstinspires.ftc.teamcode.Steven;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-
-import android.app.Activity;
-import android.graphics.Color;
-import android.media.MediaCodecInfo;
-import android.view.View;
-
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 /**
- * Created by Steven on 12/27/2016.
+ * {@link //SensorMRRangeSensor} illustrates how to use the Modern Robotics
+ * Range Sensor.
+ *
+ * The op mode assumes that the range sensor is configured with a name of "sensor_range".
+ *
+ * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
+ * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
+ *
+ * @see <a href="http://modernroboticsinc.com/range-sensor">MR Range Sensor</a>
  */
-@Autonomous(name = "RangeSensorOp", group = "Robot")
-public class DistanceSensorTest extends OpMode{
+@Autonomous(name = "Sensor: MR range sensor", group = "Sensor")
+//@Disabled   // comment out or remove this line to enable this opmode
+public class DistanceSensorTest extends LinearOpMode {
 
+    ModernRoboticsI2cRangeSensor rangeSensor;
 
-/*
-    ---------------------------------------------------------------------------------------------
+    @Override public void runOpMode() {
 
-   Define the sensors we use in the robot here
-*/
-
-
-
-    ModernRoboticsI2cRangeSensor rangeSensor;//combines ultrasonic and optical measuring elements
-
-
-    /*---------------------------------------------------------------------------------------------
-            Get references to the hardware installed on the robot and name them here
-    */
-    @Override
-    public void init() {
+        // get a reference to our compass
         rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
-    }
 
-    /*
-    ---------------------------------------------------------------------------------------------
+        // wait for the start button to be pressed
+        waitForStart();
 
-          Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-    */
-    @Override
-    public void init_loop() {
-
-    }
-
-    /*
-     ---------------------------------------------------------------------------------------------
-
-          Code to run ONCE when the driver hits PLAY
-
-    */
-    @Override
-    public void start(){
-
-
-
-
-    }
-
-    /*
-    Code to run REPEATEDLY after the driver hit PLAY
-    Main code loop goes here
-     */
-
-    @Override
-    public void loop() {
-
-        //shoot();
-        //rangeSensor.enableLed(true);
-        telemetry.addData("cmOptical", rangeSensor.cmOptical());//use this for a range of 1-7cm
-        telemetry.update();
-        sleep(5000);
-        rangeSensor.enableLed(false);
-
-        telemetry.addData("cmUltrasonic", rangeSensor.cmUltrasonic());//use this for a range of 5-255cm
-        telemetry.update();
-        sleep(5000);
-
-        telemetry.addData("distance",rangeSensor.getDistance(DistanceUnit.CM));
-        telemetry.update();
-
-    }
-
-    @Override
-    public void stop(){
-
-    }
-
-
-/*
----------------------------------------------------------------------------------------------
-
-
-    Functions go here
- */
-
-
-    public void sleep(long pauseInMS) {
-        long time_sleepStart = System.currentTimeMillis();
-        long endTime = time_sleepStart + pauseInMS;
-
-        while(endTime - System.currentTimeMillis() > 0.1) {
-
+        while (opModeIsActive()) {
+            telemetry.addData("raw ultrasonic", rangeSensor.rawUltrasonic());
+            telemetry.addData("cm ultrasonic", "%.2f cm", rangeSensor.cmUltrasonic());
+            telemetry.addData("raw optical", rangeSensor.rawOptical());
+            telemetry.addData("cm optical", "%.2f cm", rangeSensor.cmOptical());
+            telemetry.addData("cm", "%.2f cm", rangeSensor.getDistance(DistanceUnit.CM));
+            telemetry.update();
         }
     }
 }
