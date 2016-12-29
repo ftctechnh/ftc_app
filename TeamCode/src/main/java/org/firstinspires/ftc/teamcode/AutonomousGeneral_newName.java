@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Color;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -9,6 +10,7 @@ import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 /**
  * Created by inspirationteam on 12/18/2016.
@@ -36,6 +38,8 @@ public class AutonomousGeneral_newName extends LinearOpMode{
     String currentColor = "blank";
 
     protected Servo beaconPress;
+    protected ModernRoboticsI2cRangeSensor frontUltra;
+    protected ModernRoboticsI2cRangeSensor rearUltra;
 
 
     public void initiate(){
@@ -98,6 +102,10 @@ public class AutonomousGeneral_newName extends LinearOpMode{
         colorSensor = hardwareMap.colorSensor.get("colorSensor");
 
         beaconPress = hardwareMap.servo.get("beaconPress");
+        beaconPress.setPosition(0.5);
+
+        rearUltra = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rearUltra");
+        frontUltra = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "frontUltra");
     }
 
 
@@ -287,17 +295,7 @@ public class AutonomousGeneral_newName extends LinearOpMode{
 
     public void newBeacon(String team){
 
-        int teamRed = 1;
-        int teamBlue = 2;
-        int currentTeam = 0;
 
-        if(team.equals("red")) {
-            currentTeam = teamRed;
-        }
-
-        if(team.equals("blue")) {
-            currentTeam = teamBlue;
-        }
         readColor();
 
         while(!currentColor.equals(team)) {
@@ -306,11 +304,12 @@ public class AutonomousGeneral_newName extends LinearOpMode{
         }
 
         if(currentColor.equals(team)) {
-            encoderDrive(0.4, -3, -3, 10);
-            sleep(750);
-            beaconPress.setPosition(0.3);
-            sleep(5500);
-            beaconPress.setPosition(0.5);
+            //encoderDrive(0.4, -15, -15, 10);
+            sleep(2000);
+            beaconPress.setPosition(0.2);
+            sleep(1000);
+            beaconPress.setPosition(0.7);
+            sleep(1000);
         }
 
         readColor();
@@ -362,5 +361,9 @@ public class AutonomousGeneral_newName extends LinearOpMode{
         telemetry.addData("Value", hsvValues[2]);
 
         telemetry.update();
+    }
+
+    public void wallDrive(double distFromWall) {
+        turnLeft();
     }
 }
