@@ -26,12 +26,13 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 
-@Autonomous(name="BlueAutoOpmode", group="Testing")  // @Autonomous(...) is the other common choice
-//@Disabled
+@Autonomous(name="BlueAuto", group="Testing")  // @Autonomous(...) is the other common choice
+@Disabled
 public class BlueAutoOpmode extends LinearOpMode
 {
     RedAutoOpmodeBallAndBeacons redAutoOpmodeBallAndBeacons = new RedAutoOpmodeBallAndBeacons(true);

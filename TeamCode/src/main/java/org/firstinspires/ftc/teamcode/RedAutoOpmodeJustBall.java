@@ -33,7 +33,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-@Autonomous(name="RedAutoOpmodeBallAndBeacons", group="Testing")  // @Autonomous(...) is the other common choice
+@Autonomous(name="RedAuto-JustBall", group="Testing")  // @Autonomous(...) is the other common choice
 //@Disabled
 public class RedAutoOpmodeJustBall extends LinearOpMode
 {

@@ -52,29 +52,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="MotorOpmode", group="Testing")  // @Autonomous(...) is the other common choice
-@Disabled
-public class MotorOpmode extends LinearOpMode {
+@TeleOp(name="DriveTestOpmode", group="Testing")  // @Autonomous(...) is the other common choice
+//@Disabled
+public class DriveTestOpmode extends LinearOpMode {
 
     /* Declare OpMode members. */
-    static final double SLICER_UP   = 0.6;      // top of the slicer
-    static final double SLICER_DOWN = 0.0;      // bottom of the slicer
-
-    static final double SHOOT_OPEN = 0.9;
-    static final double SHOOT_TRAP = 0.45;      // .6 is too high
-    static final double SHOOT_FIRE = 0.2;       // .3 vertical
-
-    static final long SHOOTING_TIME_MS = 1000;   // time required to shoot the ball
-    static final double SHOOTING_POWER = 1;
-
     private ElapsedTime runtime = new ElapsedTime();
     DcMotor leftMotor = null;
     DcMotor rightMotor = null;
-    DcMotor ballMotor = null;
-    Servo servoSlicer, servoPusher;
-
-    public enum pusherState {OPEN, TRAP, FIRE};
-    pusherState pState;
+    DcMotor pusherLeftMotor = null;
 
     @Override
     public void runOpMode() {
@@ -82,23 +68,16 @@ public class MotorOpmode extends LinearOpMode {
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        ballMotor = hardwareMap.dcMotor.get("ball_motor");
+        pusherLeftMotor = hardwareMap.dcMotor.get("pusher_left");
         leftMotor  = hardwareMap.dcMotor.get("left_drive");
         rightMotor = hardwareMap.dcMotor.get("right_drive");
-        servoSlicer = hardwareMap.servo.get("ball_slicer");
-        servoPusher = hardwareMap.servo.get("ball_pusher");
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
         rightMotor.setDirection(DcMotor.Direction.FORWARD);
-        ballMotor.setDirection(DcMotor.Direction.FORWARD);
+        pusherLeftMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
-
-        // set the shoot open & ball slicer down/default position
-        servoPusher.setPosition(SHOOT_OPEN);
-        servoSlicer.setPosition(SLICER_DOWN);
-        pState = pusherState.TRAP;
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -110,67 +89,6 @@ public class MotorOpmode extends LinearOpMode {
             leftMotor.setPower(-gamepad1.left_stick_y);
             rightMotor.setPower(-gamepad1.right_stick_y);
 
-            //state transitions
-            switch (pState) {
-                case OPEN:
-                    if(gamepad1.left_bumper){
-                        pState = pusherState.TRAP;
-                    }
-                    break;
-                case TRAP:
-                    if(gamepad1.right_bumper){
-                        pState = pusherState.FIRE;
-                    }
-                    else if(gamepad1.left_trigger> 0.5){
-                        pState = pusherState.OPEN;
-                    }
-                    break;
-                default:
-                    telemetry.addData("State Transition", "Error default");
-                    break;
-            }
-
-            //motor actions
-            switch (pState) {
-                case OPEN:
-                    servoPusher.setPosition(SHOOT_OPEN);
-                    servoSlicer.setPosition(SLICER_DOWN);
-                    telemetry.addData("State", "OPEN");
-                    break;
-                case TRAP:
-                    servoPusher.setPosition(SHOOT_TRAP);
-                    servoSlicer.setPosition(SLICER_DOWN);
-                    telemetry.addData("State", "TRAP");
-                    break;
-                case FIRE:
-                    leftMotor.setPower(0);      // stop the robot before shooting
-                    rightMotor.setPower(0);
-                    telemetry.addData("State", "FIRE");
-                    telemetry.update();
-
-                    // spin up the ball shooter motors
-                    ballMotor.setPower(SHOOTING_POWER/2);
-                    sleep(SHOOTING_TIME_MS/2);
-                    ballMotor.setPower(SHOOTING_POWER);
-
-                    // lift the ball gate
-                    servoSlicer.setPosition(SLICER_UP);
-                    sleep(SHOOTING_TIME_MS);
-                    sleep(SHOOTING_TIME_MS);
-
-                    // push/load the ball
-                    servoPusher.setPosition(SHOOT_FIRE);
-
-                    // waits for the pusher to push the ball before returning to open position
-                    sleep(SHOOTING_TIME_MS);
-                    ballMotor.setPower(0);
-                    //Automatically transition to Open State
-                    pState = pusherState.OPEN;
-                    // no need to reset the motors, just wait for the next opModeIsActive loop iteration
-                    break;
-                default:
-                    break;
-            }
             telemetry.update();
 
             idle();     // allow something else to run (aka, release the CPU)
