@@ -43,32 +43,32 @@ public class MyBotTest extends LinearOpMode {
                     robot.leftMotor.setPower(1);
                     robot.rightMotor.setPower(1);
                     sleep(1000);
-                    robot.leftMotor.setPower(1);
-                    robot.rightMotor.setPower(1);
+                    robot.leftMotor.setPower(0);
+                    robot.rightMotor.setPower(0);
                 break;
                     
                 case 2:
                     robot.leftMotor.setPower(1);
                     robot.rightMotor.setPower(1);
                     sleep(500);
-                    robot.leftMotor.setPower(1);
-                    robot.rightMotor.setPower(1);
+                    robot.leftMotor.setPower(0);
+                    robot.rightMotor.setPower(0);
                 break;
                     
                 case 3:
                     robot.leftMotor.setPower(0.5);
                     robot.rightMotor.setPower(0.5);
                     sleep(1000);
-                    robot.leftMotor.setPower(0.5);
-                    robot.rightMotor.setPower(0.5);
+                    robot.leftMotor.setPower(0);
+                    robot.rightMotor.setPower(0);
                 break;
                     
                 case 4:
                     robot.leftMotor.setPower(0.5);
                     robot.rightMotor.setPower(0.5);
                     sleep(500);
-                    robot.leftMotor.setPower(0.5);
-                    robot.rightMotor.setPower(0.5);
+                    robot.leftMotor.setPower(0);
+                    robot.rightMotor.setPower(0);
                 break;
                     
                 default:
