@@ -1,9 +1,8 @@
-package org.firstinspires.ftc.robotcontroller.external.samples;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name="MyBot: Test", group="K9bot")
 @Disabled
@@ -11,10 +10,6 @@ import com.qualcomm.robotcore.util.Range;
 public class MyBotTest extends LinearOpMode {
     
     MyBot robot = new MyBot();
-    double armPosition = robot.ARM_HOME;
-    double clawPosition = robot.CLAW_HOME;
-    final double CLAW_SPEED = 0.01;
-    final double ARM_SPEED = 0.01;
     
     @Override
     public void runOpMode() {
@@ -25,7 +20,7 @@ public class MyBotTest extends LinearOpMode {
         
         robot.init(hardwareMap);
         
-        telemetry.addData("Ready for testing...");
+        telemetry.addData("MyBotTest","Ready for testing...");
         telemetry.update();
         
         waitForStart();
@@ -37,7 +32,7 @@ public class MyBotTest extends LinearOpMode {
             if (gamepad1.x) mode = 3;
             if (gamepad1.y) mode = 4;
             
-            switch (mode) {
+            switch ((int)mode) {
                 
                 case 1:
                     robot.leftMotor.setPower(1);
@@ -81,7 +76,8 @@ public class MyBotTest extends LinearOpMode {
             }
             
             mode = 0;
-            
+
+            robot.waitForTick(40);
         }
         
     }
