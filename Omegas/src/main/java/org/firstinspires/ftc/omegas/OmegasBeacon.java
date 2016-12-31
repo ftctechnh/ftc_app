@@ -21,6 +21,6 @@ public class OmegasBeacon {
         this.right = Color.parse(right);
     }
 
-    public Color left;
-    public Color right;
+    public final Color left;
+    public final Color right;
 }

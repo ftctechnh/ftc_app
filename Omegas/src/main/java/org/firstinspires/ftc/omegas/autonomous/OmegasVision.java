@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.omegas.autonomous;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.omegas.HardwareOmegas;
 import org.firstinspires.ftc.omegas.OmegasAlliance;
@@ -32,7 +31,6 @@ import java.util.Arrays;
 abstract class OmegasVision extends ManualVisionOpMode {
 
     /* Declare OpMode members. */
-    private ElapsedTime runtime = null;
     private boolean approachingBeaconator = false;
     private boolean startedDriving = false;
     private HardwareOmegas Ω = null;
@@ -45,7 +43,7 @@ abstract class OmegasVision extends ManualVisionOpMode {
     private Beacon.BeaconAnalysis colorAnalysis = new Beacon.BeaconAnalysis();
     private ColorBlobDetector detectorRed;
     private ColorBlobDetector detectorBlue;
-    private ArrayList<OmegasBeacon> beaconColorArrayList = new ArrayList<>();
+    private final ArrayList<OmegasBeacon> beaconColorArrayList = new ArrayList<>();
 
     @Override
     public void init() {
@@ -165,9 +163,9 @@ abstract class OmegasVision extends ManualVisionOpMode {
                 @Override
                 public void run() {
                     if (blueBeacon == (getColor() == OmegasAlliance.RED)) {
-                        Ω.rightBeaconatorSequence(Ω.getRightBeaconator(), 1500);
+                        Ω.rightBeaconatorSequence(Ω.getRightBeaconator());
                     } else {
-                        Ω.leftBeaconatorSequence(Ω.getRightBeaconator(), 1500);
+                        Ω.leftBeaconatorSequence(Ω.getRightBeaconator());
                     }
                 }
             }).start();

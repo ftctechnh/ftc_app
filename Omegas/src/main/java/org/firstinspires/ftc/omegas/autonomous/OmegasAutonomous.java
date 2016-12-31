@@ -31,22 +31,20 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package org.firstinspires.ftc.omegas.autonomous;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.omegas.HardwareOmegas;
-import org.firstinspires.ftc.omegas.OmegasAlliance;
 
-abstract class OmegasAutonomous extends LinearOpMode {
+@SuppressWarnings("unused")
+@Autonomous(name = "Omegas: Autonomous Controls", group = "Linear Opmode")
+class OmegasAutonomous extends LinearOpMode {
 
     /* Declare OpMode members. */
-    private ElapsedTime runtime = new ElapsedTime();
-    HardwareOmegas Ω = null;
-
-    // IPS Units
-    static final double FORWARD_SPEED = 0.6;
-    static final double TURN_SPEED = 0.5;
+    private final ElapsedTime runtime = new ElapsedTime();
+    private HardwareOmegas Ω = null;
 
     @Override
     public void runOpMode() {
@@ -74,26 +72,6 @@ abstract class OmegasAutonomous extends LinearOpMode {
                 motor.setPower((runtime.milliseconds() < 10000) ? 0.0
                         : (runtime.milliseconds() < 12500) ? 0.25 : 0.0);
             }
-        }
-    }
-
-    abstract OmegasAlliance getColor();
-
-    // Test for a color.
-    public void pushBeacon(int leftValue, int rightValue) {
-        // Cease beaconator motion
-        if (rightValue >= 10 && leftValue >= 10) {
-            Ω.positionServo(Ω.getLeftBeaconator(), 0.0);
-            Ω.positionServo(Ω.getRightBeaconator(), 0.0);
-        }
-
-        // Press alliance's button
-        if (leftValue >= 10 && rightValue <= 10) {
-            Ω.positionServo(Ω.getLeftBeaconator(), 1.0);
-            Ω.positionServo(Ω.getRightBeaconator(), 1.0);
-        } else if (leftValue <= 10 && rightValue >= 10) {
-            Ω.positionServo(Ω.getRightBeaconator(), 1.0);
-            Ω.positionServo(Ω.getLeftBeaconator(), 0.0);
         }
     }
 }

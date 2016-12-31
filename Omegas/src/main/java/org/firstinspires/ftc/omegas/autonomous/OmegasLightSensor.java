@@ -51,7 +51,7 @@ public class OmegasLightSensor extends LinearOpMode {
                     System.err.print("You can't even sleep right...");
                 }
                 Ω.rotate(Math.PI * 4 / 9, true);
-                Ω.rightBeaconatorSequence(Ω.getRightBeaconator(), 1500);
+                Ω.rightBeaconatorSequence(Ω.getRightBeaconator());
 
                 break;
             }

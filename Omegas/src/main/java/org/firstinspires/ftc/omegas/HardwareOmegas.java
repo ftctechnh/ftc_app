@@ -29,6 +29,7 @@ import java.util.ArrayList;
  * <p>
  * (The "beaconators" are our colloquial term for beacon pushers.)
  */
+@SuppressWarnings("unused")
 public abstract class HardwareOmegas {
     /* Public OpMode members. */
     private LightSensor lightSensor;
@@ -46,7 +47,7 @@ public abstract class HardwareOmegas {
     private static boolean isExtending = false;
 
     /* local OpMode members. */
-    private ElapsedTime period = new ElapsedTime();
+    private final ElapsedTime period = new ElapsedTime();
 
     protected HardwareOmegas() {
         init();
@@ -169,15 +170,15 @@ public abstract class HardwareOmegas {
         }
     }
 
-    public void rightBeaconatorSequence(Servo beaconator, long milliseconds) {
+    public void rightBeaconatorSequence(Servo beaconator) {
         ElapsedTime timePushed = new ElapsedTime();
         if (isExtending) return;
         else isExtending = true;
 
         while (true) {
-            if (timePushed.milliseconds() < milliseconds) {
+            if (timePushed.milliseconds() < 1500) {
                 positionServo(beaconator, 0.0);
-            } else if (timePushed.milliseconds() < milliseconds * 2) {
+            } else if (timePushed.milliseconds() < 3000) {
                 positionServo(beaconator, 1.0);
             } else {
                 positionServo(beaconator, 1.0);
@@ -187,15 +188,15 @@ public abstract class HardwareOmegas {
         }
     }
 
-    public void leftBeaconatorSequence(Servo beaconator, long milliseconds) {
+    public void leftBeaconatorSequence(Servo beaconator) {
         ElapsedTime timePushed = new ElapsedTime();
         if (isExtending) return;
         else isExtending = true;
 
         while (true) {
-            if (timePushed.milliseconds() < milliseconds) {
+            if (timePushed.milliseconds() < 1500) {
                 positionServo(beaconator, 1.0);
-            } else if (timePushed.milliseconds() < milliseconds * 2) {
+            } else if (timePushed.milliseconds() < 3000) {
                 positionServo(beaconator, 0.0);
             } else {
                 positionServo(beaconator, 0.0);
