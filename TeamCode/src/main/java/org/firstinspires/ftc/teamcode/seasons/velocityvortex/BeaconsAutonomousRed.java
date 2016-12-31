@@ -44,7 +44,7 @@ public class BeaconsAutonomousRed extends LinearOpMode {
 
                     robot.getRuntime().reset();
 
-                    while(robot.getRuntime().milliseconds() < 2500) {
+                    while(opModeIsActive() && robot.getRuntime().milliseconds() < 2500) {
                         robot.getFrontLeftDrive().setPower(0.5);
                         robot.getBackRightDrive().setPower(-0.5);
                     }
@@ -84,13 +84,13 @@ public class BeaconsAutonomousRed extends LinearOpMode {
                         robot.driveForward(0.2);
                     } else {
                         robot.getRuntime().reset();
-                        while(robot.getRuntime().milliseconds() < 250) {
+                        while(opModeIsActive() && robot.getRuntime().milliseconds() < 250) {
                             robot.driveBackward(0.2);
                         }
 
                         // pause for the beacon to change color
                         robot.getRuntime().reset();
-                        while(robot.getRuntime().milliseconds() < 500) {
+                        while(opModeIsActive() && robot.getRuntime().milliseconds() < 500) {
                             idle();
                         }
 
@@ -99,31 +99,31 @@ public class BeaconsAutonomousRed extends LinearOpMode {
                             robot.stopRobot();
 
                             robot.getRuntime().reset();
-                            while(robot.getRuntime().milliseconds() < 5000) {
+                            while(opModeIsActive() && robot.getRuntime().milliseconds() < 5000) {
                                 idle();
                             }
 
-                            while(robot.getFrontRange().cmUltrasonic() >= 5) {
+                            while(opModeIsActive() && robot.getFrontRange().cmUltrasonic() >= 5) {
                                 robot.driveForward(0.2);
                             }
 
-                            while(robot.getFrontRange().cmUltrasonic() < 6) {
+                            while(opModeIsActive() && robot.getFrontRange().cmUltrasonic() < 6) {
                                 robot.driveBackward(0.2);
                             }
                         }
 
                         robot.getRuntime().reset();
-                        while(robot.getRuntime().milliseconds() < 3000) {
+                        while(opModeIsActive() && robot.getRuntime().milliseconds() < 3000) {
                             robot.driveRight(0.2);
                         }
 
                         robot.getRuntime().reset();
-                        while(robot.getRuntime().milliseconds() < 500) {
+                        while(opModeIsActive() && robot.getRuntime().milliseconds() < 500) {
                             robot.pivotRight(0.2);
                         }
 
                         robot.getRuntime().reset();
-                        while(robot.getRuntime().milliseconds() < 500) {
+                        while(opModeIsActive() && robot.getRuntime().milliseconds() < 500) {
                             robot.driveBackward(0.5);
                         }
 
@@ -135,13 +135,13 @@ public class BeaconsAutonomousRed extends LinearOpMode {
                 case 6:
                     // launch particle
                     robot.getRuntime().reset();
-                    while(robot.getRuntime().milliseconds() < 900) {
+                    while(opModeIsActive() && robot.getRuntime().milliseconds() < 900) {
                         robot.getLauncherMotor().setPower(1);
                     }
 
                     robot.getLauncherMotor().setPower(0);
 
-                    while(robot.getDiskOds().getRawLightDetected() > 2) {
+                    while(opModeIsActive() && robot.getDiskOds().getRawLightDetected() > 2) {
                         robot.getLauncherMotor().setPower(0.3);
                     }
 
@@ -155,7 +155,7 @@ public class BeaconsAutonomousRed extends LinearOpMode {
 
                     // run intake
                     robot.getRuntime().reset();
-                    while(robot.getRuntime().milliseconds() < 2000) {
+                    while(opModeIsActive() && robot.getRuntime().milliseconds() < 2000) {
                         robot.getIntakeMotor().setPower(-1);
                     }
                     robot.getIntakeMotor().setPower(0);
@@ -165,11 +165,11 @@ public class BeaconsAutonomousRed extends LinearOpMode {
                 case 8:
                     // launch particle
                     robot.getRuntime().reset();
-                    while(robot.getRuntime().milliseconds() < 900) {
+                    while(opModeIsActive() && robot.getRuntime().milliseconds() < 900) {
                         robot.getLauncherMotor().setPower(1);
                     }
 
-                    while(robot.getDiskOds().getLightDetected() > 2) {
+                    while(opModeIsActive() && robot.getDiskOds().getLightDetected() > 2) {
                         robot.getLauncherMotor().setPower(0.3);
                     }
 

@@ -68,7 +68,7 @@ public class AutonomousBlue extends LinearOpMode {
 
                     robot.getRuntime().reset();
 
-                    while(robot.getRuntime().milliseconds() < 1000) {
+                    while(opModeIsActive() && robot.getRuntime().milliseconds() < 1000) {
                         robot.driveBackward(0.5);
                     }
 
@@ -89,7 +89,7 @@ public class AutonomousBlue extends LinearOpMode {
                     // open intake door
                     robot.getDoor3().setPosition(0.25);
 
-                    while(robot.getRuntime().milliseconds() < 3000) {
+                    while(opModeIsActive() && robot.getRuntime().milliseconds() < 3000) {
                         robot.getIntakeMotor().setPower(-1);
                     }
 
@@ -109,7 +109,7 @@ public class AutonomousBlue extends LinearOpMode {
                 case 6:
                     robot.getRuntime().reset();
 
-                    while(robot.getRuntime().milliseconds() < 2000) {
+                    while(opModeIsActive() && robot.getRuntime().milliseconds() < 2000) {
                         robot.driveBackward(0.5);
                     }
 
@@ -121,7 +121,7 @@ public class AutonomousBlue extends LinearOpMode {
 
                 case 7:
                     robot.getRuntime().reset();
-                    while(robot.getRuntime().milliseconds() < 1000) {
+                    while(opModeIsActive() && robot.getRuntime().milliseconds() < 1000) {
                         robot.driveRight(0.5);
                     }
 
@@ -135,12 +135,12 @@ public class AutonomousBlue extends LinearOpMode {
 
     private void launchParticle() {
         robot.getRuntime().reset();
-        while(robot.getRuntime().milliseconds() < 1000) {
+        while(opModeIsActive() && robot.getRuntime().milliseconds() < 1000) {
             // drive the motor past the black stripe for 0.25 seconds
             robot.getLauncherMotor().setPower(1);
         }
 
-        while (robot.getDiskOds().getRawLightDetected() > 2) {
+        while(opModeIsActive() && robot.getDiskOds().getRawLightDetected() > 2) {
             // run the launcher motor at a slower speed to find the black stripe
             robot.getLauncherMotor().setPower(0.3);
         }
