@@ -45,8 +45,8 @@ public class ZoidbergHardware {
 
     private ColorSensor colorSensor;
 
-    private RangeSensorWrapper frontRange;
-    private RangeSensorWrapper leftRange;
+    private ModernRoboticsI2cRangeSensor frontRange;
+    private ModernRoboticsI2cRangeSensor leftRange;
 
     private OpticalDistanceSensor launcherOds;
     private OpticalDistanceSensor diskOds;
@@ -83,11 +83,8 @@ public class ZoidbergHardware {
         colorSensor = hardwareMap.colorSensor.get("clr");
         colorSensor.enableLed(false);
 
-        frontRange = new RangeSensorWrapper(hardwareMap.i2cDevice.get("frs"),
-                ZoidbergHardware.FRONT_RANGE_SENSOR_I2C_ADDR);
-
-        leftRange = new RangeSensorWrapper(hardwareMap.i2cDevice.get("lrs"),
-                ZoidbergHardware.LEFT_RANGE_SENSOR_I2C_ADDR);
+        frontRange = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "frs");
+        leftRange = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "lrs");
 
         launcherOds = hardwareMap.opticalDistanceSensor.get("launcherOds");
         diskOds = hardwareMap.opticalDistanceSensor.get("diskOds");
@@ -225,11 +222,11 @@ public class ZoidbergHardware {
         return colorSensor;
     }
 
-    public RangeSensorWrapper getFrontRange() {
+    public ModernRoboticsI2cRangeSensor getFrontRange() {
         return frontRange;
     }
 
-    public RangeSensorWrapper getLeftRange() {
+    public ModernRoboticsI2cRangeSensor getLeftRange() {
         return leftRange;
     }
 

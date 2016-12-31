@@ -152,8 +152,8 @@ public class AutonomousBlue extends LinearOpMode {
 
     private void readRangeSensors() {
         telemetry.addData("state", this.state);
-        telemetry.addData("front range", robot.getFrontRange().readUltrasonic());
-        telemetry.addData("left range", robot.getLeftRange().readUltrasonic());
+        telemetry.addData("front range", robot.getFrontRange().cmUltrasonic());
+        telemetry.addData("left range", robot.getLeftRange().cmUltrasonic());
 
 //        telemetry.addData("gyro",robot.getGyroSensor().getIntegratedZValue());
         telemetry.addData("timer",this.time);

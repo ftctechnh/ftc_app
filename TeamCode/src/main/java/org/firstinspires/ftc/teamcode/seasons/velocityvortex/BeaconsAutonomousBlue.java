@@ -80,7 +80,7 @@ public class BeaconsAutonomousBlue extends LinearOpMode {
                     state = 5;
                     break;
                 case 5:
-                    if(robot.getFrontRange().readUltrasonic() >= 5) {
+                    if(robot.getFrontRange().cmUltrasonic() >= 5) {
                         robot.driveForward(0.2);
                     } else {
                         robot.getRuntime().reset();
@@ -103,11 +103,11 @@ public class BeaconsAutonomousBlue extends LinearOpMode {
                                 idle();
                             }
 
-                            while(robot.getFrontRange().readUltrasonic() >= 5) {
+                            while(robot.getFrontRange().cmUltrasonic() >= 5) {
                                 robot.driveForward(0.2);
                             }
 
-                            while(robot.getFrontRange().readUltrasonic() < 6) {
+                            while(robot.getFrontRange().cmUltrasonic() < 6) {
                                 robot.driveBackward(0.2);
                             }
                         }
@@ -162,8 +162,8 @@ public class BeaconsAutonomousBlue extends LinearOpMode {
 
     private void readRangeSensors() {
         telemetry.addData("state", this.state);
-        telemetry.addData("front range", robot.getFrontRange().readUltrasonic());
-        telemetry.addData("left range", robot.getLeftRange().readUltrasonic());
+        telemetry.addData("front range", robot.getFrontRange().cmUltrasonic());
+        telemetry.addData("left range", robot.getLeftRange().cmUltrasonic());
 
         telemetry.addData("red color", robot.getColorSensor().red());
         telemetry.addData("blue color", robot.getColorSensor().blue());
