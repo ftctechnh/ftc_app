@@ -77,6 +77,7 @@ public class OmegasLinear extends LinearOpMode {
             public void init() {
                 initDriveMotors(hardwareMap);
                 initBeaconators(hardwareMap);
+                initMeganServo(hardwareMap);
             }
         };
 
@@ -99,6 +100,12 @@ public class OmegasLinear extends LinearOpMode {
                 }
             }
         }).start();
+
+        if (gamepad2.a) {
+            Ω.getMeganServo().setPosition(Ω.getMeganServo().getPosition()+0.25);
+        } else if (gamepad2.b) {
+            Ω.getMeganServo().setPosition(Ω.getMeganServo().getPosition()-0.25);
+        }
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
