@@ -10,6 +10,7 @@ import org.firstinspires.ftc.omegas.HardwareOmegas;
  * Created by ethertyper on 10/22/16.
  */
 
+@SuppressWarnings("unused")
 @Autonomous(name = "Omegas: Rotation Test", group = "Tests")
 public class OmegasRotation extends LinearOpMode {
 

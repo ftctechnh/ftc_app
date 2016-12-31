@@ -84,6 +84,7 @@ import java.util.List;
  * is explained below.
  */
 
+@SuppressWarnings("unused")
 @Autonomous(name = "Omegas: Vuforia Navigation", group = "Tests")
 public class OmegasVuforia extends LinearOpMode {
 

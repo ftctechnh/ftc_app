@@ -51,6 +51,7 @@ import org.firstinspires.ftc.omegas.HardwareOmegas;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
+@SuppressWarnings("unused")
 @TeleOp(name = "Omegas: Linear OpMode", group = "Linear Opmode")
 public class OmegasLinear extends LinearOpMode {
 

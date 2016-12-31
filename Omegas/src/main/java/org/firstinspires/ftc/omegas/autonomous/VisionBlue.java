@@ -8,6 +8,7 @@ import org.firstinspires.ftc.omegas.OmegasAlliance;
  * Created by ethertyper on 12/5/16.
  */
 
+@SuppressWarnings("unused")
 @Autonomous(name = "Omegas: Blue Alliance Vision Control", group = "Linear Opmode")
 public class VisionBlue extends OmegasVision {
     public OmegasAlliance getColor() {
