@@ -1,4 +1,5 @@
-## Omegas Module
+# Omegas Module
+## FTC 6504's official Velocity Vortex Robot Controller implementation
 
 Welcome!
 
