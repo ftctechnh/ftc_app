@@ -70,6 +70,8 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
         //double leftX;
         //double rightX;
         double rightY;
+        double leftWS;
+        double rightWS;
         //double armPosition = -1;
         //double armHitPosition = 1;
 
@@ -98,7 +100,16 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
             robot.leftMotor.setPower(leftY);
             robot.rightMotor.setPower(rightY);
 
-            /* HARVESTER IS COMMENTED SINCE WE ARE NOT USING
+            leftWS = -gamepad2.left_stick_y;
+            rightWS = -gamepad2.right_stick_y;
+
+            rightWS = Range.clip(rightWS, -1, 1);
+            leftWS = Range.clip(leftWS, -1, 1);
+
+            robot.leftWheelShooter.setPower(leftWS);
+            robot.rightWheelShooter.setPower(rightWS);
+
+            // HARVESTER IS COMMENTED SINCE WE ARE NOT USING
             float harvesterPower = gamepad1.right_trigger;
             float harvesterPowerReversed = gamepad1.left_trigger;
 
@@ -118,7 +129,22 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
             } else {
                 robot.harvester.setPower(0);
             }
-            */
+            float elevatorPower = gamepad1.right_trigger;
+            float elevatorPowerReversed = gamepad1.left_trigger;
+            if(elevatorPower > 0.2)
+            {
+                robot.elevator.setPower(0.5);
+            }
+            else if(elevatorPowerReversed > 0.2)
+            {
+                robot.elevator.setPower(0.5);
+            }
+            else
+            {
+                robot.elevator.setPower(0);
+            }
+
+
 
             /* UNCOMMENT WHEN 'ARM' IS NEEDED FOR USAGE
             if (gamepad1.dpad_up) {

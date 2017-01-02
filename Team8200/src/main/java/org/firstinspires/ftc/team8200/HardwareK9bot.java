@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.team8200;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.LightSensor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -30,6 +31,10 @@ public class HardwareK9bot
     public DcMotor leftMotor = null;
     public DcMotor rightMotor = null;
     public LightSensor lightSensor = null;
+    public DcMotor leftWheelShooter = null;
+    public DcMotor rightWheelShooter = null;
+    public DcMotor harvester = null;
+    public DcMotor elevator = null;
 
     /*
     public final static double ARM_HOME = 0.2;
@@ -53,12 +58,21 @@ public class HardwareK9bot
         // Define and Initialize Motors
         leftMotor = hwMap.dcMotor.get("motor_left");
         rightMotor = hwMap.dcMotor.get("motor_right");
+        leftWheelShooter = hwMap.dcMotor.get("leftWS");
+        rightWheelShooter = hwMap.dcMotor.get("rightWS");
+        harvester = hwMap.dcMotor.get("harvester");
+        elevator = hwMap.dcMotor.get("elevator");
+
+        leftWheelShooter.setDirection(DcMotor.Direction.REVERSE);
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
         leftMotor.setPower(0);
         rightMotor.setPower(0);
-
+        leftWheelShooter.setPower(0);
+        rightWheelShooter.setPower(0);
+        harvester.setPower(0);
+        elevator.setPower(0);
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
