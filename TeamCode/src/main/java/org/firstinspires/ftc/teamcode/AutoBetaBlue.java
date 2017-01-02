@@ -34,6 +34,7 @@ package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Color;
 
+import com.qualcomm.ftccommon.DbgLog;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -45,6 +46,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -98,7 +100,7 @@ public class AutoBetaBlue extends LinearOpMode {
     static final double     P_DRIVE_COEFF           = 0.05;     // Larger is more responsive, but also less stable
 
     static final double     WHITE_THRESHOLD         = 2.0;      // Line finder
-    static final double     BEACON_ALPHA_MIN        = 50.0;
+    static final double     BEACON_ALPHA_MIN        = 100.0;
 
     static final double     BLUE_MIN                = -180;
     static final double     BLUE_MAX                = -100;
@@ -134,7 +136,9 @@ public class AutoBetaBlue extends LinearOpMode {
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
          */
+        DbgLog.msg("DM10337- Starting auto init");
         robot.init(hardwareMap);
+
 
         robot.stripeColor.enableLed(true);
 
@@ -162,9 +166,11 @@ public class AutoBetaBlue extends LinearOpMode {
         robot.lShoot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.rShoot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        DbgLog.msg("DM10337- Finished Init");
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
+        DbgLog.msg("DM10337- Auto Pressed Start");
         // Step through each leg of the path,
 
         // Spin up the shooter
@@ -207,17 +213,20 @@ public class AutoBetaBlue extends LinearOpMode {
         //sleep(5000);
 
         if (beacon == 1) {
-            distCorrection = amIBlue()?2.25:-3.75;
+            // We see blue
+            distCorrection = amIBlue()?2.25:-3.50;
         } else if (beacon == -1) {
-            distCorrection = amIBlue()?-3.25:2.75;
+            // We see red
+            distCorrection = amIBlue()?-3.25:2.50;
         } else {
+            // We see neither
             distCorrection = 0;
         }
 
         if (beacon != 0) {
            // We saw a beacon color so move to align beacon pusher
             encoderDrive(DRIVE_SPEED, distCorrection, 2.5, true,
-                    (amIBlue()?-4:5)*beacon + (amIBlue()?0:180));
+                    amIBlue()?(0-4*beacon):(180+4*beacon));
             robot.beacon.setPosition(robot.BEACON_MAX_RANGE);
             sleep (1000);
             robot.beacon.setPosition((robot.BEACON_HOME));
@@ -226,7 +235,7 @@ public class AutoBetaBlue extends LinearOpMode {
 
         //sleep(5000);
 
-        encoderDrive(DRIVE_SPEED_SLOW, amIBlue()?43.0:-50.0 - distCorrection, 4.0,
+        encoderDrive(DRIVE_SPEED_SLOW, amIBlue()?43.0:-44.0 - distCorrection, 4.0,
                 true, amIBlue()?0.0:179.0);
 
         findLine(amIBlue()?0.2:-0.2, 3.0);
@@ -241,17 +250,20 @@ public class AutoBetaBlue extends LinearOpMode {
 
 
         if (beacon == 1) {
-            distCorrection = amIBlue()?2.25:-3.75;
+            // I see blue
+            distCorrection = amIBlue()?2.25:-3.50;
         } else if (beacon == -1) {
-            distCorrection = amIBlue()?-3.25:2.75;
+            // I see red
+            distCorrection = amIBlue()?-3.25:2.50;
         } else {
+            // I see neither
             distCorrection = 0;
         }
 
         if (beacon != 0) {
             // We saw a beacon color so move to align beacon pusher
             encoderDrive(DRIVE_SPEED, distCorrection, 2.5, true,
-                    (amIBlue()?0:180) + (amIBlue()?-4:5)*beacon);
+                    amIBlue()?(0-4*beacon):(180+4*beacon));
 
             robot.beacon.setPosition(robot.BEACON_MAX_RANGE);
             sleep (1000);
@@ -260,10 +272,13 @@ public class AutoBetaBlue extends LinearOpMode {
         }
 
         robot.intake.setPower(-1.0);
-        encoderDrive(1.0, amIBlue()?-73.0:73.0, 10.0, true,
+        encoderDrive(1.0, amIBlue()?-75.0:74.0, 10.0, true,
                 amIBlue()?-60.0:250);
-        robot.intake.setPower(0.0);
+
+        DbgLog.msg("DM10337- Finished last move of auto");
         sleep(10000);
+        robot.intake.setPower(0.0);
+
 
         // Intake full reverse to push cap ball
         //robot.intake.setPower(-1.0);
@@ -351,6 +366,9 @@ public class AutoBetaBlue extends LinearOpMode {
 
             // reset the timeout time and start motion.
             runtime.reset();
+            DbgLog.msg("DM10337- Starting encoderDrive speed:" + speed +
+            "  distance:" + distance + "  timeout:" + timeout +
+            "  useGyro:" + useGyro + " heading:" + heading);
 
             speed = Math.abs(speed);    // Make sure its positive
             curSpeed = Math.min(MINSPEED,speed);
@@ -420,6 +438,15 @@ public class AutoBetaBlue extends LinearOpMode {
             }
 
 
+            angles = robot.imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX);
+
+            DbgLog.msg("DM10337- encoderDrive done" +
+                    "  lftarget: " +newLFTarget + "  lfactual:" + robot.lfDrive.getCurrentPosition() +
+                    "  lrtarget: " +newLRTarget + "  lractual:" + robot.lrDrive.getCurrentPosition() +
+                    "  rftarget: " +newRFTarget + "  rfactual:" + robot.rfDrive.getCurrentPosition() +
+                    "  rrtarget: " +newRRTarget + "  rractual:" + robot.rrDrive.getCurrentPosition() +
+                    "  heading:" + angles.firstAngle);
+
             // Stop all motion;
             robot.lfDrive.setPower(0);
             robot.lrDrive.setPower(0);
@@ -445,10 +472,10 @@ public class AutoBetaBlue extends LinearOpMode {
                 runtime.seconds() < timeout) {
 
             // Drive til we see the stripe
-            robot.lfDrive.setPower(0.2);
-            robot.lrDrive.setPower(0.2);
-            robot.rfDrive.setPower(0.2);
-            robot.rrDrive.setPower(0.2);
+            robot.lfDrive.setPower(speed);
+            robot.lrDrive.setPower(speed);
+            robot.rfDrive.setPower(speed);
+            robot.rrDrive.setPower(speed);
             idle();
         }
 
@@ -477,12 +504,17 @@ public class AutoBetaBlue extends LinearOpMode {
      */
     public void gyroTurn (  double speed, double angle) {
 
+        DbgLog.msg("DM10337- gyroTurn start  speed:" + speed +
+            "  heading:" + angle);
         // keep looping while we are still active, and not on heading.
         while (opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF)) {
             // Update telemetry & Allow time for other processes to run.
             //telemetry.update();
             idle();
         }
+        angles = robot.imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX);
+
+        DbgLog.msg("DM10337- gyroTurn done   heading actual:" + angles.firstAngle);
     }
 
 
@@ -582,6 +614,8 @@ public class AutoBetaBlue extends LinearOpMode {
         if (robot.beaconColor.alpha() < BEACON_ALPHA_MIN) {
             telemetry.addData("beacon", 0);
             telemetry.update();
+            DbgLog.msg("DM10337- Beacon color red nothing found   alpha:" +
+                robot.beaconColor.alpha());
             return 0;
         }
 
@@ -593,6 +627,9 @@ public class AutoBetaBlue extends LinearOpMode {
             // we see blue so return 1.0
             telemetry.addData("beacon", 1);
             telemetry.update();
+            DbgLog.msg("DM10337- Beacon color found blue  alpha:" +
+                robot.beaconColor.alpha() +
+                "  hue:" + adaHSV[0] );
             return 1;
         }
 
@@ -600,11 +637,17 @@ public class AutoBetaBlue extends LinearOpMode {
         if (adaHSV[0] > RED_MIN && adaHSV[0] < RED_MAX) {
             telemetry.addData("beacon", -1);
             telemetry.update();
+            DbgLog.msg("DM10337- Beacon color found red  alpha:" +
+                    robot.beaconColor.alpha() +
+                    "  hue:" + adaHSV[0] );
             return -1;
         }
 
         telemetry.addData("beacon", 100);
         telemetry.update();
+        DbgLog.msg("DM10337- Beacon color found neither  alpha:" +
+                robot.beaconColor.alpha() +
+                "  hue:" + adaHSV[0] );
         return 0;         // We didn't see either color so don't know
     }
 
