@@ -180,7 +180,7 @@ public class AutoBetaBlue extends LinearOpMode {
         robot.fire.setPower(1.0);
         sleep(1500);        // Wait 2 seconds for shot to finish
 
-        gyroTurn(TURN_SPEED, amIBlue()?-70.0:70.0);
+        gyroTurn(TURN_SPEED, amIBlue()?-70.0:65.0);
 
         // Stop the shooter
         robot.fire.setPower(0.0);
@@ -188,14 +188,15 @@ public class AutoBetaBlue extends LinearOpMode {
         robot.rShoot.setPower(0.0);
 
 
-        encoderDrive(DRIVE_SPEED, amIBlue()?51.5:49.5, 5.0,
-                true, amIBlue()?-70.0:70.0);
+        encoderDrive(DRIVE_SPEED, amIBlue()?51.5:51.75, 5.0,
+                true, amIBlue()?-70.0:65.0);
 
-        gyroTurn(TURN_SPEED, amIBlue()?0.0:180.0);
+        gyroTurn(TURN_SPEED, amIBlue()?0.0:175.0);
 
-        encoderDrive(DRIVE_SPEED_SLOW, amIBlue()?8.0:0.0, 1.0, true, 0.0);
+        encoderDrive(DRIVE_SPEED_SLOW, amIBlue()?8.0:2.0, 1.0, true,
+                amIBlue()?0.0:180.0);
 
-        findLine(amIBlue()?0.2:-0.2, 3.0);
+        findLine(amIBlue()?0.2:0.2, 3.0);
 
         // Wait for beacon color sensor
         sleep(1000);
@@ -206,17 +207,17 @@ public class AutoBetaBlue extends LinearOpMode {
         //sleep(5000);
 
         if (beacon == 1) {
-            distCorrection = amIBlue()?2.25:-3.25;
+            distCorrection = amIBlue()?2.25:-3.75;
         } else if (beacon == -1) {
-            distCorrection = amIBlue()?-3.25:1.25;
+            distCorrection = amIBlue()?-3.25:2.75;
         } else {
             distCorrection = 0;
         }
 
         if (beacon != 0) {
            // We saw a beacon color so move to align beacon pusher
-            encoderDrive(DRIVE_SPEED, distCorrection, 2.0, true,
-                    -4*beacon + (amIBlue()?0:180));
+            encoderDrive(DRIVE_SPEED, distCorrection, 2.5, true,
+                    (amIBlue()?-4:5)*beacon + (amIBlue()?0:180));
             robot.beacon.setPosition(robot.BEACON_MAX_RANGE);
             sleep (1000);
             robot.beacon.setPosition((robot.BEACON_HOME));
@@ -225,8 +226,8 @@ public class AutoBetaBlue extends LinearOpMode {
 
         //sleep(5000);
 
-        encoderDrive(DRIVE_SPEED_SLOW, amIBlue()?43.0:-55.0 - distCorrection, 4.0,
-                true, amIBlue()?0.0:180.0);
+        encoderDrive(DRIVE_SPEED_SLOW, amIBlue()?43.0:-50.0 - distCorrection, 4.0,
+                true, amIBlue()?0.0:179.0);
 
         findLine(amIBlue()?0.2:-0.2, 3.0);
 
@@ -240,17 +241,17 @@ public class AutoBetaBlue extends LinearOpMode {
 
 
         if (beacon == 1) {
-            distCorrection = 2.25;
+            distCorrection = amIBlue()?2.25:-3.75;
         } else if (beacon == -1) {
-            distCorrection = -3.25;
+            distCorrection = amIBlue()?-3.25:2.75;
         } else {
             distCorrection = 0;
         }
 
         if (beacon != 0) {
             // We saw a beacon color so move to align beacon pusher
-            encoderDrive(DRIVE_SPEED, distCorrection, 2.0, true,
-                    amIBlue()?0:180 -4*beacon);
+            encoderDrive(DRIVE_SPEED, distCorrection, 2.5, true,
+                    (amIBlue()?0:180) + (amIBlue()?-4:5)*beacon);
 
             robot.beacon.setPosition(robot.BEACON_MAX_RANGE);
             sleep (1000);
@@ -258,8 +259,10 @@ public class AutoBetaBlue extends LinearOpMode {
 
         }
 
-        //encoderDrive(1.0, -73.0, 10.0, true, -60.0);
-
+        robot.intake.setPower(-1.0);
+        encoderDrive(1.0, amIBlue()?-73.0:73.0, 10.0, true,
+                amIBlue()?-60.0:250);
+        robot.intake.setPower(0.0);
         sleep(10000);
 
         // Intake full reverse to push cap ball

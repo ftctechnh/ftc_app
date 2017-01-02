@@ -78,7 +78,7 @@ public class TeleOpMain extends OpMode{
     static final int     NR_MAX_RPM              = 6600;
     static final int     SHOOT_MAX_RPM           = NR_MAX_RPM * COUNTS_PER_MOTOR_REV;
 
-    static double           shootSpeed              = .95;
+    static double           shootSpeed              = .925;
     static boolean          shootPressed            = false;
 
     /* Servo positions and constants */
