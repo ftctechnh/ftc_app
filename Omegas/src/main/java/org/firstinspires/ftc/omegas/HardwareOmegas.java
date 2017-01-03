@@ -39,7 +39,7 @@ public abstract class HardwareOmegas {
     private DcMotor rightBackMotor;
     private Servo leftBeaconator;
     private Servo rightBeaconator;
-    private Servo meganServo;
+    private Servo liftServo;
 
     private ArrayList<DcMotor> motors;
     private Context appContext;
@@ -96,7 +96,7 @@ public abstract class HardwareOmegas {
     }
 
     protected void initMeganServo(HardwareMap hwMap) {
-
+        liftServo = hwMap.servo.get("lift_servo");
     }
 
     /* Initialize LineSensor interfaces */
@@ -243,8 +243,8 @@ public abstract class HardwareOmegas {
         return rightBeaconator;
     }
 
-    public Servo getMeganServo() {
-        return meganServo;
+    public Servo getLiftServo() {
+        return liftServo;
     }
 
     public ArrayList<DcMotor> getMotors() {
