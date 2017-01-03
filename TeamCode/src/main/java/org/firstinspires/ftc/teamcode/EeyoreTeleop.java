@@ -50,23 +50,36 @@ public class EeyoreTeleop extends OpMode {
         robot.r1.setPower(right);
         robot.r2.setPower(right);
 
-        if(gamepad1.a)
-        {
-            robot.collection.setPower(1);
-        }
-        else if(gamepad1.y)
-        {
-            robot.collection.setPower(-1);
+        // Collection control
+        if(gamepad1.a) {
+            if(robot.collection.getPower() == 0) {
+                robot.collection.setPower(1);
+            } else {
+                robot.collection.setPower(0);
+            }
+        } else if(gamepad1.y) {
+            if(robot.collection.getPower() == 0) {
+                robot.collection.setPower(-1);
+            } else {
+                robot.collection.setPower(0);
+            }
         }
 
-        if(gamepad1.x)
-        {
-            robot.shooter.setPower(1);
+        // Shooter control
+        if(gamepad1.x) {
+            if(robot.shooter.getPower() == 0) {
+                robot.shooter.setPower(1);
+            } else {
+                robot.shooter.setPower(0);
+            }
+        } else if(gamepad1.b) {
+            if(robot.shooter.getPower() == 0) {
+                robot.shooter.setPower(-1);
+            } else {
+                robot.shooter.setPower(0);
+            }
         }
-        else if(gamepad1.b)
-        {
-            robot.shooter.setPower(-1);
-        }
+
         // Send telemetry message to signify robot running;
         telemetry.addData("left", "%.2f", left);
         telemetry.addData("right", "%.2f", right);
