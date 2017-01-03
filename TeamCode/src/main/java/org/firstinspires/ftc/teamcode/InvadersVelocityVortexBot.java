@@ -46,9 +46,11 @@ public class InvadersVelocityVortexBot
     public UltrasonicSensor UDS = null;
     public ColorSensor color1 = null;
 /*
-     TODO Matthew, Willow, or Alyssa - Please add in a new state variable for each
-     I2C sensor on our robot (we should have two color sensors total, one gyro sensor, and one
-     ultrasonic range sensor) of type FtcI2cDeviceState.
+     TODO Matthew, Willow, or Alyssa - Please add in a new state variable for each old-style
+     I2C sensor on our robot (we should have two color sensors total, one gyro sensor) of type
+     FtcI2cDeviceState.  Note: The Ultrasonic sensor is a newer I2C device that doesn't work with
+     the FtcI2cDeviceState class.
+     
      Reference GitHub Commit: https://github.com/IfSpace/ftc_app/commit/9bc2de71a8464b4a608382e7af89070efbdd0301
      An example variable for our ultrasonic distance sensor (which we declared on line 46 above as
      'UDS' would look like this:
