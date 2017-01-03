@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Created by Kota Baer on 10/11/2016.
  */
 
-@Autonomous(name = "AutoDoubleBeacon", group = "Concept")
+@Autonomous(name = "AutoDoubleBeaconBlue", group = "Concept")
 public class AutoDoubleBeacon extends LinearOpMode {
     double OneFoot = 12; //in inches
 
@@ -23,7 +23,7 @@ public class AutoDoubleBeacon extends LinearOpMode {
         //robot.turnDegrees(-45);
         robot.ballBooster1.setPower(1);
         robot.ballBooster2.setPower(1);
-        robot.driveForward(OneFoot * 2.25);
+        robot.driveForward((OneFoot * 2.25) - 1);
 
         sleep(2000);
         robot.triggered();

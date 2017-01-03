@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.LightSensor;
@@ -9,6 +10,7 @@ import com.qualcomm.robotcore.hardware.LightSensor;
  * Created by Kota Baer on 12/6/2016.
  */
 @Autonomous(name = "LineFollowingTest")
+@Disabled
 public class LineFollowingTest  extends LinearOpMode {
     double speedmulti = 1;
     double turnSpeed = .17 * speedmulti;

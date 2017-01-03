@@ -24,7 +24,7 @@ public class AutoDoubleBeaconRed extends LinearOpMode {
 
         robot.ballBooster1.setPower(1);
         robot.ballBooster2.setPower(1);
-        robot.driveForward(OneFoot * 2);
+        robot.driveForward((OneFoot * 2.25) - 1);
 
         sleep(2000);
         robot.triggered();

@@ -33,7 +33,7 @@ public class TeleOp5035 extends OpMode {
     boolean Reverse = false;
     int PosNum = 0;
     int counter = 0;
-    static final double DurDown = 140;
+    static final double DurDown = 350;
     static final double DurUp = 10;
     static final double PickUpSpeed = .60; // power of the arm in the up direction
     static final double BallDumpIdlePower = 0.06;

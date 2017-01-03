@@ -31,6 +31,7 @@ import java.util.List;
  * using Vuforia in FTC.
  */
 @Autonomous(name = "Vuforia5035")
+@Disabled
 public class Vuforia5035 extends LinearOpMode
 {
 

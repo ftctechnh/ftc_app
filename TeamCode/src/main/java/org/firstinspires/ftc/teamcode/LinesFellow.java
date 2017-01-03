@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -8,6 +9,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  * Created by Kota Baer on 12/7/2016.
  */
 @Autonomous(name = "LightTest", group = "Concept")
+@Disabled
 public class LinesFellow extends LinearOpMode{
     double speedmulti = 1;
     double turnSpeed = .17 * speedmulti;

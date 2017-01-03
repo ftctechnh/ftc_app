@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -7,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * Created by Kota Baer on 11/22/2016.
  */
 @TeleOp(name = "TestMode")
+@Disabled
 public class TestMode extends OpMode  {
     Hardware5035 robot = new Hardware5035();
 
