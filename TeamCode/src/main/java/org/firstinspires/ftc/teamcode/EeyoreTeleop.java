@@ -67,16 +67,20 @@ public class EeyoreTeleop extends OpMode {
 
         // Shooter control
         if(gamepad1.x) {
-            if(robot.shooter.getPower() == 0) {
-                robot.shooter.setPower(1);
+            if(robot.shooter1.getPower() == 0) {
+                robot.shooter1.setPower(1);
+                robot.shooter2.setPower(1);
             } else {
-                robot.shooter.setPower(0);
+                robot.shooter1.setPower(0);
+                robot.shooter2.setPower(0);
             }
         } else if(gamepad1.b) {
-            if(robot.shooter.getPower() == 0) {
-                robot.shooter.setPower(-1);
+            if(robot.shooter1.getPower() == 0) {
+                robot.shooter1.setPower(-1);
+                robot.shooter2.setPower(-1);
             } else {
-                robot.shooter.setPower(0);
+                robot.shooter1.setPower(0);
+                robot.shooter2.setPower(0);
             }
         }
 

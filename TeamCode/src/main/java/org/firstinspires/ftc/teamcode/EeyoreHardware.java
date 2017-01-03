@@ -14,7 +14,8 @@ public class EeyoreHardware
     public DcMotor l2   = null;
     public DcMotor r1   = null;
     public DcMotor r2   = null;
-    public DcMotor shooter   = null;
+    public DcMotor shooter1   = null;
+    public DcMotor shooter2   = null;
     public DcMotor collection   = null;
     public ColorSensor color   = null;
 
@@ -37,17 +38,19 @@ public class EeyoreHardware
         l2 = hwMap.dcMotor.get("l2");
         r1 = hwMap.dcMotor.get("r1");
         r2 = hwMap.dcMotor.get("r2");
-        shooter = hwMap.dcMotor.get("shooter");
+        shooter1 = hwMap.dcMotor.get("shooter1");
+        shooter2 = hwMap.dcMotor.get("shooter2");
         collection = hwMap.dcMotor.get("collection");
 
-        color = hwMap.colorSensor.get("color");
+        //color = hwMap.colorSensor.get("color");
 
         // Set motor direction
         l1.setDirection(DcMotor.Direction.REVERSE);
         l2.setDirection(DcMotor.Direction.REVERSE);
         r1.setDirection(DcMotor.Direction.FORWARD);
         r2.setDirection(DcMotor.Direction.FORWARD);
-        shooter.setDirection(DcMotor.Direction.FORWARD);
+        shooter1.setDirection(DcMotor.Direction.FORWARD);
+        shooter2.setDirection(DcMotor.Direction.FORWARD);
         collection.setDirection(DcMotor.Direction.FORWARD);
 
         // Set all motors to zero power
@@ -55,7 +58,8 @@ public class EeyoreHardware
         l2.setPower(0);
         r1.setPower(0);
         r2.setPower(0);
-        shooter.setPower(0);
+        shooter1.setPower(0);
+        shooter2.setPower(0);
         collection.setPower(0);
 
         // Set all motors to run without encoders.
@@ -64,7 +68,8 @@ public class EeyoreHardware
         l2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         r1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         r2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        shooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        shooter1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        shooter2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         collection.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // Define and initialize ALL installed servos.
         // None yet
