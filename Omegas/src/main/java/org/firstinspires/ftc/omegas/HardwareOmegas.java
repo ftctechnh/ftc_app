@@ -95,7 +95,7 @@ public abstract class HardwareOmegas {
         rightBeaconator = hwMap.servo.get("right_beaconator");
     }
 
-    protected void initMeganServo(HardwareMap hwMap) {
+    protected void initLiftServo(HardwareMap hwMap) {
         liftServo = hwMap.servo.get("lift_servo");
     }
 
