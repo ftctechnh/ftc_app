@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -16,7 +18,8 @@ public class EeyoreHardware
     public DcMotor r2   = null;
     public DcMotor shooter   = null;
     public DcMotor collection   = null;
-    public ColorSensor color   = null;
+    public ColorSensor Color   = null;
+    public GyroSensor gyro = null;
 
     /* local OpMode members. */
     HardwareMap hwMap           = null;
@@ -40,7 +43,9 @@ public class EeyoreHardware
         shooter = hwMap.dcMotor.get("shooter");
         collection = hwMap.dcMotor.get("collection");
 
-        color = hwMap.colorSensor.get("color");
+        //color = hwMap.colorSensor.get("color");
+        Color = hwMap.colorSensor.get("color");
+        gyro = hwMap.gyroSensor.get("gyro");
 
         // Set motor direction
         l1.setDirection(DcMotor.Direction.REVERSE);
@@ -68,6 +73,8 @@ public class EeyoreHardware
         collection.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // Define and initialize ALL installed servos.
         // None yet
+
+
     }
 
     /***
