@@ -111,16 +111,32 @@ public class Blue2 extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        // Step through each leg of the path,
-        // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  48,  48, 10.0);  // Drive to Cap Ball
-        encoderDrive(DRIVE_SPEED, -12, -12, 10); //Back away to avoid plywood
-        encoderDrive(TURN_SPEED,   30, -30, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        encoderDrive(DRIVE_SPEED, -60, -60, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+//        // Step through each leg of the path,
+//        // Note: Reverse movement is obtained by setting a negative distance (not speed)
+//        encoderDrive(DRIVE_SPEED,  48,  48, 10.0);  // Drive to Cap Ball
+//        encoderDrive(DRIVE_SPEED, -12, -12, 10); //Back away to avoid plywood
+//        encoderDrive(TURN_SPEED,   30, -30, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+//        encoderDrive(DRIVE_SPEED, -60, -60, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+//
+//        //robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
+//        //robot.rightClaw.setPosition(0.0);
+//        sleep(1000);     // pause for servos to move
+//
 
-        //robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
-        //robot.rightClaw.setPosition(0.0);
-        sleep(1000);     // pause for servos to move
+
+        // 1.  Use our shoot function to shoot the particles into the center vortex.
+        // 2.  Drive forward using the encoders (or timing)
+        // 3.  Use our gyro turn function to turn 90 degrees.
+        // 4.  Use our drive forward with the distance sensor function to drive to the wall.
+        // 5.  Turn using the gyro sensor another 90 degrees so we are lined up with the wall.
+        // 6.  Make a function that drives us forward until the line sensor sees the white tape.
+        // 7.  Drive forward abut 2 inches.
+        // 8.  Find out what color the beacon is. If it's blue, push the button. If it's red, drive backwards and press the button.
+        // 9.  Do the same for the next beacon.
+        // 10. Drive backwards onto the corner vortex.
+
+
+
 
         telemetry.addData("Path", "Complete");
         telemetry.update();

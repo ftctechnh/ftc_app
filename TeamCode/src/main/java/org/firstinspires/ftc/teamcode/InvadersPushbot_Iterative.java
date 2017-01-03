@@ -35,9 +35,11 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.Range;
 
 
@@ -74,6 +76,8 @@ public class InvadersPushbot_Iterative extends OpMode{
 
     OpticalDistanceSensor distanceSensor;
 
+    UltrasonicSensor UDS;
+
     Gamepad lastGamePadState = new Gamepad();
 
 
@@ -97,6 +101,7 @@ public class InvadersPushbot_Iterative extends OpMode{
         colorSensor = hardwareMap.colorSensor.get("color");
         colorSensor.enableLed(false);
         distanceSensor = hardwareMap.opticalDistanceSensor.get("ODS");
+        UDS = hardwareMap.ultrasonicSensor.get("UDS");
     }
 
     /*
@@ -127,8 +132,8 @@ public class InvadersPushbot_Iterative extends OpMode{
 
         // Algorithm for setting power to left/right motors based on joystick x/y values
         // note: The Range.clip function just ensures we stay between Â±100%
-        left = Range.clip(y-x, -1, +1);
-        right = Range.clip(y+x, -1, +1);
+        left = Range.clip(y - x, -1, +1);
+        right = Range.clip(y + x, -1, +1);
 
         // Call the setPower functions with our calculated values to activate the motors
         robot.leftMotor.setPower(left);
@@ -137,12 +142,12 @@ public class InvadersPushbot_Iterative extends OpMode{
         // Read our limit switch to see if the arm is too high
         boolean limitTriggered = limitSwitch.isPressed();
 
-        if(limitTriggered) {
+        if (limitTriggered) {
             robot.ballElevator.setPower(0);  //Elevator off
         }
 
         // Send telemetry message to signify robot running;
-        telemetry.addData("left",  "%.2f", left);
+        telemetry.addData("left", "%.2f", left);
         telemetry.addData("right", "%.2f", right);
         telemetry.addData("switch", "%s", limitTriggered ? "Triggered" : "Open");
         telemetry.addData("Pusher", robot.pusher.getPosition());
@@ -153,39 +158,50 @@ public class InvadersPushbot_Iterative extends OpMode{
 
         //Beacon button and pusher button
 
-        robot.beacon.setPosition(1-gamepad1.left_trigger);
-        robot.pusher.setPosition(1-(gamepad1.right_trigger*0.5));  // Limit pusher range from 100% to 50% (ie all the way open to halfway closed)
+        robot.beacon.setPosition(1 - gamepad1.left_trigger);
+        robot.pusher.setPosition(1 - (gamepad1.right_trigger * 0.5));  // Limit pusher range from 100% to 50% (ie all the way open to halfway closed)
 
-        if (gamepad1.a == true){
-            if (limitSwitch.isPressed() == true){
-                setBallElevator( 0);
-            }
-            else {
+        if (gamepad1.a == true) {
+            if (limitSwitch.isPressed() == true) {
+                setBallElevator(0);
+            } else {
 
                 setBallElevator(-1); // Elevator down
             }
-        }
-        else if (gamepad1.y == true){
+        } else if (gamepad1.y == true) {
             //robot.ballElevator.setPower(1);
             setBallElevator(1);
-        }
-        else {
+        } else {
             setBallElevator(0);
         }
 
-        if (gamepad1.start == true){
+        if (gamepad1.start == true) {
             //robot.leftBallLauncher.setPower(-1);
             //robot.rightBallLauncher.setPower(-1);
             setLauncherPower(1);
-        }
-        else if (gamepad1.back == true) {
+        } else if (gamepad1.back == true) {
             //robot.leftBallLauncher.setPower(0);
             //robot.rightBallLauncher.setPower(0);
             setLauncherPower(0);
-            if(!limitTriggered) {
+            if (!limitTriggered) {
                 setBallElevator(-1);  //Elevator down
             }
         }
+        //CapBall lifter
+        if (gamepad1.dpad_up) {
+            setCapBallMotorPower(0.5);
+        } else if (gamepad1.dpad_down) {
+            setCapBallMotorPower(-0.5);
+        } else
+        {
+            setCapBallMotorPower(0);
+        }
+
+    }
+
+    void setCapBallMotorPower(double power)
+    {
+    robot.capBall.setPower(power);
     }
 
     void setBallElevator(float power)
