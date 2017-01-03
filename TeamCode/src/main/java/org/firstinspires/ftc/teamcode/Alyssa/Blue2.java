@@ -37,7 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
+import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -71,7 +71,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 public class Blue2 extends LinearOpMode {
 
     /* Declare OpMode members. */
-    HardwarePushbot         robot   = new HardwarePushbot();   // Use a Pushbot's hardware
+    InvadersVelocityVortexBot robot   = new InvadersVelocityVortexBot();
     private ElapsedTime     runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
@@ -123,6 +123,21 @@ public class Blue2 extends LinearOpMode {
 //        sleep(1000);     // pause for servos to move
 //
 
+
+        /* TODO: Alyssa now that you have our ten steps clearly defined, its time to start calling
+           the robot functions required to make the robot do the things we want it to.  Matthew
+           added some functions to InvadersVelocityVortexBot.java that you can use to do
+           gyro turns and driving using the ultrasonic sensor.  You can access them by typing:
+               robot.GyroTurn(...);
+               robot.DistanceDrive(...);
+           You can read the color sensor value by typing
+                robot.color1.red();
+                robot.color1.blue();
+           Of course, our robot should have two color sensors (one for the beacon and one for the
+           line, so hopefully someone changes color1's name to something more descriptive, so we
+           aren't accidentally trying to read the line color sensor when trying to decide which
+           beacon to press.
+        */
 
         // 1.  Use our shoot function to shoot the particles into the center vortex.
         // 2.  Drive forward using the encoders (or timing)
