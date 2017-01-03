@@ -35,6 +35,7 @@ public class MyBotTest extends LinearOpMode {
             switch ((int)mode) {
                 
                 case 1:
+                    // Go full power for 1 second
                     robot.leftMotor.setPower(1);
                     robot.rightMotor.setPower(1);
                     sleep(1000);
@@ -43,6 +44,7 @@ public class MyBotTest extends LinearOpMode {
                 break;
                     
                 case 2:
+                    // Go full power for half a second
                     robot.leftMotor.setPower(1);
                     robot.rightMotor.setPower(1);
                     sleep(500);
@@ -51,6 +53,7 @@ public class MyBotTest extends LinearOpMode {
                 break;
                     
                 case 3:
+                    // Go half power for 1 second
                     robot.leftMotor.setPower(0.5);
                     robot.rightMotor.setPower(0.5);
                     sleep(1000);
@@ -59,6 +62,7 @@ public class MyBotTest extends LinearOpMode {
                 break;
                     
                 case 4:
+                    // Go half power for half a second
                     robot.leftMotor.setPower(0.5);
                     robot.rightMotor.setPower(0.5);
                     sleep(500);
@@ -67,6 +71,7 @@ public class MyBotTest extends LinearOpMode {
                 break;
                     
                 default:
+                    // Control with gamepad1's right and left sticks
                     left = -gamepad1.left_stick_y;
                     right = -gamepad1.right_stick_y;
                     robot.leftMotor.setPower(left);
