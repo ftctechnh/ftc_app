@@ -14,7 +14,7 @@ public class MyBotTest extends LinearOpMode {
     @Override
     public void runOpMode() {
         
-        double mode = 0;
+        int mode = 0;
         double left;
         double right;
         
@@ -32,7 +32,7 @@ public class MyBotTest extends LinearOpMode {
             if (gamepad1.x) mode = 3;
             if (gamepad1.y) mode = 4;
             
-            switch ((int)mode) {
+            switch (mode) {
                 
                 case 1:
                     // Go full power for 1 second
