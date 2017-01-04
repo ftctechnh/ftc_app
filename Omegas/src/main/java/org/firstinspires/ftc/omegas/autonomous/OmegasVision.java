@@ -63,7 +63,7 @@ abstract class OmegasVision extends ManualVisionOpMode {
             }
         };
 
-        driveThread = new Thread(new Runnable() {
+        driveThread = new Thread() {
             public void run() {
                 while (true) {
                     if (!approachingBeaconator) {
@@ -72,7 +72,7 @@ abstract class OmegasVision extends ManualVisionOpMode {
                             Ω.driveForward(200.0);
                             approachingBeaconator = true;
                         } else {
-                            for (DcMotor motor: Ω.getMotors()) {
+                            for (DcMotor motor : Ω.getMotors()) {
                                 motor.setPower(0.25);
                             }
                         }
@@ -81,7 +81,7 @@ abstract class OmegasVision extends ManualVisionOpMode {
                     }
                 }
             }
-        });
+        };
 
         /**
          * Set the camera used for detection
@@ -131,6 +131,7 @@ abstract class OmegasVision extends ManualVisionOpMode {
         telemetry.addData("Analysis Confidence", "Left: " + leftBlue + " Right: " + rightBlue);
         telemetry.addData("Vision Size", "Width: " + width + " Height: " + height);
         telemetry.addData("Data", "Light amount: " + light);
+        telemetry.addData("Data", "Light sensor activated: " + (light > 0.4));
         telemetry.update();
 
         if (!startedDriving) {
@@ -159,7 +160,7 @@ abstract class OmegasVision extends ManualVisionOpMode {
              * | Blue (Alliance==true) | Left (Beaconator==true)   | Right (Beaconator==false) |
              * | Red (Alliance==false) | Right (Beaconator==false) | Left (Beaconator==true)   |
              */
-            new Thread(new Runnable() {
+            new Thread() {
                 @Override
                 public void run() {
                     if (blueBeacon == (getColor() == OmegasAlliance.RED)) {
@@ -168,7 +169,7 @@ abstract class OmegasVision extends ManualVisionOpMode {
                         Ω.leftBeaconatorSequence(Ω.getRightBeaconator());
                     }
                 }
-            }).start();
+            }.start();
 
             approachingBeaconator = false;
         }
