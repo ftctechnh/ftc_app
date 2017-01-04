@@ -85,7 +85,7 @@ public class OmegasLinear extends LinearOpMode {
          * The following should, if uncommented, extend and retract
          * beaconators when the trigger keys are pressed.
          */
-        new Thread(new Runnable() {
+        new Thread() {
             public void run() {
                 while (opModeIsActive()) {
                     if (gamepad2.left_bumper) {
@@ -99,7 +99,7 @@ public class OmegasLinear extends LinearOpMode {
                     }
                 }
             }
-        }).start();
+        }.start();
 
         if (gamepad2.a) {
             Ω.getLiftServo().setPosition(Ω.getLiftServo().getPosition()+0.25);
