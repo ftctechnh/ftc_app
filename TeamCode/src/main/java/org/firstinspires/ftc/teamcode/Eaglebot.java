@@ -42,7 +42,7 @@ public class Eaglebot
     public double TOP_SPEED = 1.0;
     public double ARM_SPEED = 0.25;
     public double launch_speed = 0.25;
-   // public OpticalDistanceSensor odsSensor = null;
+    public OpticalDistanceSensor odsSensor = null;
     public DcMotor armMotor = null;
     public DcMotor launcher = null;
 
@@ -71,15 +71,15 @@ public class Eaglebot
         backLeft = hwMap.dcMotor.get("sw_motor");
         frontRight = hwMap.dcMotor.get("ne_motor");
         backRight = hwMap.dcMotor.get("se_motor");
-        lightSensorBeacon = hwMap.lightSensor.get("light_sensor_beacon");
-        lightSensorFloor = hwMap.lightSensor.get ("light_sensor_floor");
-        // odsSensor = hwMap.opticalDistanceSensor.get("optical_distance");
+        //lightSensorBeacon = hwMap.lightSensor.get("light_sensor_beacon");
+        //lightSensorFloor = hwMap.lightSensor.get ("light_sensor_floor");
+        odsSensor = hwMap.opticalDistanceSensor.get("optical_distance");
         leftArm = hwMap.servo.get("left_arm");
         rightArm = hwMap.servo.get("right_arm");
         rightArm.setDirection(Servo.Direction.REVERSE);
         ballPusher = hwMap.servo.get("paddle");
-        armMotor = hwMap.dcMotor.get("arm_motor");
-        launcher = hwMap.dcMotor.get("launch_motor");
+        //armMotor = hwMap.dcMotor.get("arm_motor");
+        //launcher = hwMap.dcMotor.get("launch_motor");
 
 
 
@@ -93,8 +93,8 @@ public class Eaglebot
         frontRight.setPower(0);
         backLeft.setPower(0);
         backRight.setPower(0);
-        launcher.setPower(0);
-        armMotor.setPower(0);
+        //launcher.setPower(0);
+        //armMotor.setPower(0);
 
         leftArm.setPosition(0);
         rightArm.setPosition(0);
@@ -106,8 +106,8 @@ public class Eaglebot
         frontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        launcher.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //launcher.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // Define and initialize ALL installed servos.
         // leftClaw = hwMap.servo.get("left_hand");
         // rightClaw = hwMap.servo.get("right_hand");

@@ -103,21 +103,21 @@ public class Eaglebot_Teleop extends OpMode{
         robot.backLeft.setPower(bLeft);
         robot.backRight.setPower(bRight);
 
-        if (gamepad2.dpad_up) {
-            robot.armMotor.setPower(robot.ARM_SPEED);
-        }
-        else if (gamepad2.dpad_down) {
-            robot.armMotor.setPower(-robot.ARM_SPEED);
-        }
-        else {
-            robot.armMotor.setPower(0);
-        }
-        if (gamepad2.a) {
-            robot.launcher.setPower(robot.launch_speed);
-        }
-        else {
-            robot.launcher.setPower(0);
-        }
+//        if (gamepad2.dpad_up) {
+//            robot.armMotor.setPower(robot.ARM_SPEED);
+//        }
+//        else if (gamepad2.dpad_down) {
+//            robot.armMotor.setPower(-robot.ARM_SPEED);
+//        }
+//        else {
+//            robot.armMotor.setPower(0);
+//        }
+//        if (gamepad2.a) {
+//            robot.launcher.setPower(robot.launch_speed);
+//        }
+//        else {
+//            robot.launcher.setPower(0);
+//        }
         if (gamepad1.dpad_up) {
             robot.leftArm.setPosition(1);
             runtime.reset();
