@@ -139,6 +139,7 @@ public class LineDrive extends OpenCVLib {
 
         if(red){
             mDrive.add(new AutoLib.GyroTurnStep(modePointer, 180, robot.getNavXHeadingSensor(), robot.getMotorArray(), 0.3f, 3.0f, true));
+            mDrive.add(new AutoLib.GyroTurnStep(modePointer, 180, robot.getNavXHeadingSensor(), robot.getMotorArray(), -0.2f, 3.0f, true));
 
             heading = 180;
             rightAngle = -90;
