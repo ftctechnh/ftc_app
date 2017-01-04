@@ -40,6 +40,8 @@ public class Eaglebot
     public double TURN_SPEED = 0.5;
     public double threshold = 1.94;
     public double TOP_SPEED = 1.0;
+    public double ARM_SPEED = 0.25;
+    public double launch_speed = 0.25;
    // public OpticalDistanceSensor odsSensor = null;
     public DcMotor armMotor = null;
     public DcMotor launcher = null;
@@ -113,9 +115,9 @@ public class Eaglebot
         // rightClaw.setPosition(MID_SERVO);
     }
     void forward(double speed) {
-        frontLeft.setPower(-speed);
+        frontLeft.setPower(speed);
         frontRight.setPower(speed);
-        backLeft.setPower(-speed);
+        backLeft.setPower(speed);
         backRight.setPower(speed);
     }
     void stop() {
