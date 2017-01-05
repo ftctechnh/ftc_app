@@ -269,7 +269,7 @@ public class K9botTeleopTank_Linear extends LinearOpMode {
 
             // Pause for metronome tick.
             // 40 ms each cycle = update 25 times a second.
-            robot.waitForTick(40);
+//            robot.waitForTick(40);
         }
     }
 }
