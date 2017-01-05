@@ -37,10 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-<<<<<<< HEAD
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
-=======
->>>>>>> origin/Invaders
+
 import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
 
 /**
@@ -75,11 +72,9 @@ import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
 public class Blue2 extends LinearOpMode {
 
     /* Declare OpMode members. */
-<<<<<<< HEAD
+
     InvadersVelocityVortexBot robot   = new InvadersVelocityVortexBot();   // Use a Pushbot's hardware
-=======
-    InvadersVelocityVortexBot robot   = new InvadersVelocityVortexBot();
->>>>>>> origin/Invaders
+
     private ElapsedTime     runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
