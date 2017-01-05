@@ -154,6 +154,35 @@ public class Blue2 extends LinearOpMode {
         // 10. Drive backwards onto the corner vortex.
 
 
+     //  Color sensor.
+     int red = robot.color1.red();
+     int blue = robot.color1.blue();
+
+     while (blue < 50){
+         robot.leftMotor.setPower(1);
+         robot.rightMotor.setPower(1);
+     }
+     robot.leftMotor.setPower(0);
+     robot.rightMotor.setPower(0);
+
+        double distance = robot.UDS.getUltrasonicLevel();
+
+        while (distance > 10 ){
+
+                robot.leftMotor.setPower(1);
+                robot.rightMotor.setPower(1);
+    }
+     robot.leftMotor.setPower(0);
+     robot.rightMotor.setPower(0);
+
+
+
+
+
+
+
+
+
 
 
         telemetry.addData("Path", "Complete");
