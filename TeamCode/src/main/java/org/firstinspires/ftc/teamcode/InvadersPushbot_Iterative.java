@@ -203,7 +203,7 @@ public class InvadersPushbot_Iterative extends OpMode{
     {
     robot.capBall.setPower(power);
     }
-    
+
     void setBallElevator(float power)
     {
         //@todo Write to a file what we're about to do to the motor here

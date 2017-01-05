@@ -37,7 +37,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+<<<<<<< HEAD
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
+=======
+>>>>>>> origin/Invaders
 import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
 
 /**
@@ -72,7 +75,11 @@ import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
 public class Blue2 extends LinearOpMode {
 
     /* Declare OpMode members. */
+<<<<<<< HEAD
     InvadersVelocityVortexBot robot   = new InvadersVelocityVortexBot();   // Use a Pushbot's hardware
+=======
+    InvadersVelocityVortexBot robot   = new InvadersVelocityVortexBot();
+>>>>>>> origin/Invaders
     private ElapsedTime     runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
@@ -112,16 +119,47 @@ public class Blue2 extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        // Step through each leg of the path,
-        // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  48,  48, 10.0);  // Drive to Cap Ball
-        encoderDrive(DRIVE_SPEED, -12, -12, 10); //Back away to avoid plywood
-        encoderDrive(TURN_SPEED,   30, -30, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        encoderDrive(DRIVE_SPEED, -60, -60, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+//        // Step through each leg of the path,
+//        // Note: Reverse movement is obtained by setting a negative distance (not speed)
+//        encoderDrive(DRIVE_SPEED,  48,  48, 10.0);  // Drive to Cap Ball
+//        encoderDrive(DRIVE_SPEED, -12, -12, 10); //Back away to avoid plywood
+//        encoderDrive(TURN_SPEED,   30, -30, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+//        encoderDrive(DRIVE_SPEED, -60, -60, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+//
+//        //robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
+//        //robot.rightClaw.setPosition(0.0);
+//        sleep(1000);     // pause for servos to move
+//
 
-        //robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
-        //robot.rightClaw.setPosition(0.0);
-        sleep(1000);     // pause for servos to move
+
+        /* TODO: Alyssa now that you have our ten steps clearly defined, its time to start calling
+           the robot functions required to make the robot do the things we want it to.  Matthew
+           added some functions to InvadersVelocityVortexBot.java that you can use to do
+           gyro turns and driving using the ultrasonic sensor.  You can access them by typing:
+               robot.GyroTurn(...);
+               robot.DistanceDrive(...);
+           You can read the color sensor value by typing
+                robot.color1.red();
+                robot.color1.blue();
+           Of course, our robot should have two color sensors (one for the beacon and one for the
+           line, so hopefully someone changes color1's name to something more descriptive, so we
+           aren't accidentally trying to read the line color sensor when trying to decide which
+           beacon to press.
+        */
+
+        // 1.  Use our shoot function to shoot the particles into the center vortex.
+        // 2.  Drive forward using the encoders (or timing)
+        // 3.  Use our gyro turn function to turn 90 degrees.
+        // 4.  Use our drive forward with the distance sensor function to drive to the wall.
+        // 5.  Turn using the gyro sensor another 90 degrees so we are lined up with the wall.
+        // 6.  Make a function that drives us forward until the line sensor sees the white tape.
+        // 7.  Drive forward abut 2 inches.
+        // 8.  Find out what color the beacon is. If it's blue, push the button. If it's red, drive backwards and press the button.
+        // 9.  Do the same for the next beacon.
+        // 10. Drive backwards onto the corner vortex.
+
+
+
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
