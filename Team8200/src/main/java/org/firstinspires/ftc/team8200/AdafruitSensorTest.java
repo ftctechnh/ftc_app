@@ -129,7 +129,7 @@ public class AdafruitSensorTest extends LinearOpMode {
       if ((bCurrState == true) && (bCurrState != bPrevState))  {
 
         // button is transitioning to a pressed state. Toggle the LED.
-        bLedOn = !bLedOn;
+       // bLedOn = !bLedOn;
         cdim.setDigitalChannelState(LED_CHANNEL, bLedOn);
       }
 
