@@ -36,7 +36,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwareK9bot;
+//import org.firstinspires.ftc.robotcontroller.external.samples.HardwareK9bot;
 
 /**
  * This OpMode uses the common HardwareK9bot class to define the devices on the robot.
@@ -55,7 +55,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwareK9bot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="org.firstinspires.ftc.teamcode.TankDrive1", group="K9bot")
+@TeleOp(name="Golden Eagles: TankDrive1", group="K9bot")
 @Disabled
 public class TankDrive1 extends LinearOpMode {
 
