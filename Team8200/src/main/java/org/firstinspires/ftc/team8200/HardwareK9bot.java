@@ -90,6 +90,7 @@ public class HardwareK9bot
      *
      * @param periodMs  Length of wait cycle in mSec.
      */
+    /*
     public void waitForTick(long periodMs) {
 
         long  remaining = periodMs - (long)period.milliseconds();
@@ -105,5 +106,7 @@ public class HardwareK9bot
 
         // Reset the cycle clock for the next pass.
         period.reset();
+        */
     }
-}
+
+
