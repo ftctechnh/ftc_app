@@ -131,12 +131,11 @@ public class FromRed2 extends LinearOpMode {
         encoderDrive(DRIVE_SPEED, -12, -12, 10); //Back away to avoid plywood
         encoderDrive(TURN_SPEED,   -30, 30, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
         encoderDrive(DRIVE_SPEED, -60, -60, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
-        robot.
+
 
         //robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
         //robot.rightClaw.setPosition(0.0);
-        sleep(1000);     // pause for servos to move
-
+        //// TODO: 1/2/2017 Add a "Sleep" here. 
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
