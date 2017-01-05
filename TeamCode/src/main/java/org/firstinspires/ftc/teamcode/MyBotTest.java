@@ -38,7 +38,7 @@ public class MyBotTest extends LinearOpMode {
                     // Go full power for 1 second
                     robot.leftMotor.setPower(1);
                     robot.rightMotor.setPower(1);
-                    sleep(1000);
+                    wait(1000);
                     robot.leftMotor.setPower(0);
                     robot.rightMotor.setPower(0);
                 break;
@@ -47,7 +47,7 @@ public class MyBotTest extends LinearOpMode {
                     // Go full power for half a second
                     robot.leftMotor.setPower(1);
                     robot.rightMotor.setPower(1);
-                    sleep(500);
+                    wait(500);
                     robot.leftMotor.setPower(0);
                     robot.rightMotor.setPower(0);
                 break;
@@ -56,7 +56,7 @@ public class MyBotTest extends LinearOpMode {
                     // Go half power for 1 second
                     robot.leftMotor.setPower(0.5);
                     robot.rightMotor.setPower(0.5);
-                    sleep(1000);
+                    wait(1000);
                     robot.leftMotor.setPower(0);
                     robot.rightMotor.setPower(0);
                 break;
@@ -65,7 +65,7 @@ public class MyBotTest extends LinearOpMode {
                     // Go half power for half a second
                     robot.leftMotor.setPower(0.5);
                     robot.rightMotor.setPower(0.5);
-                    sleep(500);
+                    wait(500);
                     robot.leftMotor.setPower(0);
                     robot.rightMotor.setPower(0);
                 break;
@@ -85,5 +85,14 @@ public class MyBotTest extends LinearOpMode {
             robot.waitForTick(40);
         }
         
+    }
+    
+    public static void wait(int ms) {
+        try {
+            Thread.sleep(ms);
+        }
+        catch (InterruptedException e) {
+            System.out.println("interrupted");
+        }
     }
 }
