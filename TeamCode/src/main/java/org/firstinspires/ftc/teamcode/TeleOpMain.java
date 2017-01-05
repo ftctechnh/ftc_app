@@ -131,6 +131,13 @@ public class TeleOpMain extends OpMode {
             robot.launcherMotor.setPower(0.0);
         }
 
+        //open ball gate
+        if (gamepad2.b){
+            robot.ballGate.setPosition(1.0);
+        } else {
+            robot.ballGate.setPosition(0.0);
+        }
+
         // toggle button pushers
         if(!lastLeftBumperState && gamepad2.left_bumper) {
             leftPusherState *= -1.0;

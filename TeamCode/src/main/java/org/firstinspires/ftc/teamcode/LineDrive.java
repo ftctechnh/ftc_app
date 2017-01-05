@@ -117,6 +117,7 @@ public class LineDrive extends OpenCVLib {
         mShoot = new AutoLib.LinearSequence();
 
         mShoot.add(new AutoLib.TimedMotorStep(robot.launcherMotor, 1.0, 0.6, true));
+        mShoot.add(new AutoLib.TimedServoStep(robot.ballGate, 1.0, 0.2, false));
         mShoot.add(new AutoLib.TimedMotorStep(robot.lifterMotor, 1.0, 1.0, true));
         mShoot.add(new AutoLib.TimedMotorStep(robot.launcherMotor, 1.0, 0.6, true));
 
@@ -223,12 +224,17 @@ public class LineDrive extends OpenCVLib {
 
     @Override
     public void loop() {
-
-        // until we're done, keep looping through the current Step(s)
-        if (!bDone)
-            bDone = mSequence.loop();       // returns true when we're done
-        else
-            modePointer.telemetry.addData("sequence finished", "");
+        try{
+            // until we're done, keep looping through the current Step(s)
+            if (!bDone)
+                bDone = mSequence.loop();       // returns true when we're done
+            else
+                modePointer.telemetry.addData("sequence finished", "");
+        }
+        catch (Exception e){
+            telemetry.addData("Exception: ", e.getMessage());
+            init();
+        }
     }
 
     @Override
