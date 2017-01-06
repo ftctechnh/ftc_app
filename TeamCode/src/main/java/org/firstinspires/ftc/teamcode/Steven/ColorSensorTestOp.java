@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Created by Steven on 11/27/2016.
  */
 @TeleOp(name = "#11183: Color Sensor Test", group = "Robot")
-@Disabled
+//@Disabled
 public class ColorSensorTestOp extends OpMode{
 
 
@@ -49,7 +49,7 @@ Declare global variables here
             colorSensor = hardwareMap.colorSensor.get("sensor_color");
 
             /* bLedOn represents the state of the LED.*/
-             bLedOn = false;
+             bLedOn = true;
             /* Set the LED in the beginning*/
             colorSensor.enableLed(bLedOn);
         }
@@ -106,6 +106,7 @@ Declare global variables here
             float hsvValues[] = {0F,0F,0F};
 
 
+            
 
     /* convert the RGB values to HSV values*/
             Color.RGBToHSV(colorSensor.red() * 8, colorSensor.green() * 8, colorSensor.blue() * 8, hsvValues);
