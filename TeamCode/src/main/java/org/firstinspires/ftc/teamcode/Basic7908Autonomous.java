@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 //@Disabled
-@TeleOp(name="Basic7908Teleop", group="7098")
-public class Basic7908Teleop extends OpMode
+@Autonomous(name="Basic7908Autonomous", group="7098")
+public class Basic7908Autonomous extends OpMode
 {
     private Hardware7908Robot robot;
 

@@ -1,14 +1,17 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 /**
  * Created by ssuri on 10/19/16.
+ *
  */
 public class Hardware7908Robot
 {
     private DcMotor lf, lb, rf, rb;
+    private ColorSensor cs1, cs2;
 
     public Hardware7908Robot(HardwareMap map)
     {
@@ -16,6 +19,8 @@ public class Hardware7908Robot
         lb = map.dcMotor.get("lb");
         rf = map.dcMotor.get("rf");
         rb = map.dcMotor.get("rb");
+        cs1 = null;
+        cs2 = null;
     }
 
     public void drive(double pow)
@@ -47,7 +52,19 @@ public class Hardware7908Robot
         rb.setPower(pow * (left ? 0 : 1));
     }
 
-    public void winMatch()
+    public void lineFollow(LineFollowData data)
     {
+    }
+
+    public static class LineFollowData
+    {
+        public int colorSensorNum;
+        private int integral, differential;
+        private float kP, kI, kD;
+
+        public LineFollowData(int colorSensorNum, float kP, float kI, float kD)
+        {
+            this.colorSensorNum = colorSensorNum;
+        }
     }
 }
