@@ -104,7 +104,7 @@ public class Matthew_TeleOp {
 
                 //else
                     //robot.armMotor.setPower(0.0);
-                    robot.pusher.setPosition(0);
+                    //robot.pusher.setPosition(0);
                     //robot.ballElevator.setPosition(0.5);
 
                 // Send telemetry message to signify robot running;
@@ -125,7 +125,7 @@ public class Matthew_TeleOp {
                     }
                     case 1:
                     {
-                        robot.pusher.setPosition(1);
+                        //robot.pusher.setPosition(1);
                     }
                     case 2:
                     {
@@ -133,7 +133,7 @@ public class Matthew_TeleOp {
                     }
                     case 3:
                     {
-                        robot.pusher.setPosition(0);
+                        //robot.pusher.setPosition(0);
                     }
 
 

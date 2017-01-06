@@ -42,6 +42,8 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
 
 /**
  * This file provides Telop driving for the IfSpace Invaders 2015/16 Pushbot robot.
@@ -69,15 +71,6 @@ public class InvadersPushbot_Iterative extends OpMode{
     /* Declare OpMode members. */
     InvadersVelocityVortexBot robot       = new InvadersVelocityVortexBot(); // use the class created to define a Pushbot's hardware
                                                          // could also use HardwarePushbotMatrix class.
-    // Will be connected to PushBot's Limit Switch
-    TouchSensor limitSwitch;                         // Will be connected to PushBot's Limit Switch
-
-    ColorSensor colorSensor;
-
-    OpticalDistanceSensor distanceSensor;
-
-    UltrasonicSensor UDS;
-
     Gamepad lastGamePadState = new Gamepad();
 
 
@@ -92,16 +85,9 @@ public class InvadersPushbot_Iterative extends OpMode{
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
-        // Connect our limit switch TouchSensor object to the Robot
-        limitSwitch = hardwareMap.touchSensor.get("down limit");
-        assert (limitSwitch != null);
 
         // Send telemetry message to signify robot waiting;
          updateTelemetry(telemetry);
-        colorSensor = hardwareMap.colorSensor.get("color");
-        colorSensor.enableLed(false);
-        distanceSensor = hardwareMap.opticalDistanceSensor.get("ODS");
-        UDS = hardwareMap.ultrasonicSensor.get("UDS");
     }
 
     /*
@@ -140,7 +126,7 @@ public class InvadersPushbot_Iterative extends OpMode{
         robot.rightMotor.setPower(right);
 
         // Read our limit switch to see if the arm is too high
-        boolean limitTriggered = limitSwitch.isPressed();
+        boolean limitTriggered = robot.touchSensor.isPressed();
 
         if (limitTriggered) {
             robot.ballElevator.setPower(0);  //Elevator off
@@ -149,20 +135,25 @@ public class InvadersPushbot_Iterative extends OpMode{
         // Send telemetry message to signify robot running;
         telemetry.addData("left", "%.2f", left);
         telemetry.addData("right", "%.2f", right);
-        telemetry.addData("switch", "%s", limitTriggered ? "Triggered" : "Open");
-        telemetry.addData("Pusher", robot.pusher.getPosition());
-        telemetry.addData("beacon", robot.beacon.getPosition());
-        telemetry.addData("Color: ", "R%d,G%d,B%d", colorSensor.red(), colorSensor.green(), colorSensor.blue());
-        telemetry.addData("Distance:", "Light%.2f", distanceSensor.getLightDetected());
+        telemetry.addData("touchSensor:", "%s", limitTriggered ? "Triggered" : "Open");
+        telemetry.addData("ballElevator:", robot.ballElevator.getPower());
+        telemetry.addData("beacon servos", "L: %.02f, R: %.02f", robot.beaconLeft.getPosition(), robot.beaconRight.getPosition());
+        telemetry.addData("Color: ", "A:%03d,R%03d,G%03d,B%03d",
+                robot.floorSensor.red(),
+                robot.floorSensor.green(),
+                robot.floorSensor.blue(),
+                robot.floorSensor.alpha());
+        telemetry.addData("UDS:", "%.2fcm", robot.UDS.getDistance(DistanceUnit.CM));
+        telemetry.addData("ODS:", "%.2fpercent", robot.ODS.getLightDetected());
         updateTelemetry(telemetry);
 
         //Beacon button and pusher button
-
-        robot.beacon.setPosition(1 - gamepad1.left_trigger);
-        robot.pusher.setPosition(1 - (gamepad1.right_trigger * 0.5));  // Limit pusher range from 100% to 50% (ie all the way open to halfway closed)
+        robot.beaconLeft.setPosition(1 - gamepad1.left_trigger);
+        robot.beaconRight.setPosition(1 - gamepad1.left_trigger);
+        robot.sweeper.setPower(1 - gamepad1.right_trigger);
 
         if (gamepad1.a == true) {
-            if (limitSwitch.isPressed() == true) {
+            if (robot.touchSensor.isPressed() == true) {
                 setBallElevator(0);
             } else {
 
@@ -219,9 +210,13 @@ public class InvadersPushbot_Iterative extends OpMode{
      */
     @Override
     public void stop() {
-        robot.pusher.setPosition(0.5);
-        robot.beacon.setPosition(0.5);
+        // Reset/Stop the servos
+        robot.beaconLeft.setPosition(0.5);
+        robot.beaconRight.setPosition(0.5);
         robot.ballElevator.setPower(0);
+
+        // Stop the motors
+        robot.sweeper.setPower(0);
         robot.leftMotor.setPower(0.0);
         robot.rightMotor.setPower(0.0);
         robot.leftBallLauncher.setPower(0.0);

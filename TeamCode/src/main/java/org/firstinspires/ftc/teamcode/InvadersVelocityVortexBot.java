@@ -1,14 +1,18 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.UltrasonicSensor;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 /**
  * This is NOT an opmode.
@@ -33,18 +37,29 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 public class InvadersVelocityVortexBot
 {
+    public static final double MID_SERVO       =  0.5 ;
+    /* local OpMode members. */
+    HardwareMap hwMap           =  null;
+    private ElapsedTime period  = new ElapsedTime();
+
     /* Public OpMode members. */
     public DcMotor leftMotor   = null;
     public DcMotor rightMotor  = null;
     public CRServo ballElevator = null;
     public DcMotor leftBallLauncher = null;
     public DcMotor rightBallLauncher = null;
-    public Servo   pusher  = null;
-    public Servo   beacon  = null;
+    public DcMotor sweeper = null;
     public DcMotor capBall  = null;
 
-    public UltrasonicSensor UDS = null;
-    public ColorSensor color1 = null;
+    public Servo   beaconLeft  = null;
+    public Servo   beaconRight  = null;
+
+    public ModernRoboticsI2cRangeSensor UDS = null; // Best for longer range sensing (>12")
+    public OpticalDistanceSensor ODS = null; // Best for short-range sensing (<12")
+    public ColorSensor beaconSensor = null;
+    public ColorSensor floorSensor = null;
+    ModernRoboticsI2cGyro gyroSensor = null;
+    public TouchSensor touchSensor = null;
 /*
      @todo Matthew, Willow, or Alyssa - Please add in a new state variable for each old-style
      I2C sensor on our robot (we should have two color sensors total, one gyro sensor) of type
@@ -125,8 +140,8 @@ public class InvadersVelocityVortexBot
         }
     }
 
-    public void DistanceDrive(float distance, float power) {
-        while (UDS.getUltrasonicLevel() > distance) {
+    public void DistanceDrive(float distance, DistanceUnit distanceUnit, float power) {
+        while (UDS.getDistance(distanceUnit) > distance) {
             leftMotor.setPower(power);
             rightMotor.setPower(power);
         }
@@ -150,29 +165,21 @@ public class InvadersVelocityVortexBot
      * @param Green
      */
     public void ColorDrive(int Red, int Blue, int Green){
-        while (color1.red() < Red){
+        while (floorSensor.red() < Red){
             rightMotor.setPower(0.5);
             leftMotor.setPower(0.5);
         }
-        while (color1.green() < Green){
+        while (floorSensor.green() < Green){
             rightMotor.setPower(0.5);
             leftMotor.setPower(0.5);
         }
-        while (color1.blue() < Blue){
+        while (floorSensor.blue() < Blue){
             rightMotor.setPower(0.5);
             leftMotor.setPower(0.5);
         }
         rightMotor.setPower(0);
         leftMotor.setPower(0);
     }
-
-
-
-    public static final double MID_SERVO       =  0.5 ;
-
-    /* local OpMode members. */
-    HardwareMap hwMap           =  null;
-    private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
     public InvadersVelocityVortexBot(){
@@ -185,20 +192,19 @@ public class InvadersVelocityVortexBot
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftMotor   = hwMap.dcMotor.get("front_left");
-        rightMotor  = hwMap.dcMotor.get("front_right");
+        leftMotor   = hwMap.dcMotor.get("backLeft");
+        rightMotor  = hwMap.dcMotor.get("backRight");
         rightBallLauncher = hwMap.dcMotor.get("RightLauncher");
         leftBallLauncher = hwMap.dcMotor.get("LeftLauncher");
         capBall = hwMap.dcMotor.get("CapBall");
-
-        UDS = hwMap.ultrasonicSensor.get("UDS");
-        color1 = hwMap.colorSensor.get("color1");
+        sweeper = hwMap.dcMotor.get("Sweeper");
 
         leftMotor.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         rightMotor.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         rightBallLauncher.setDirection(DcMotor.Direction.FORWARD);
         leftBallLauncher.setDirection(DcMotor.Direction.REVERSE);
         capBall.setDirection(DcMotorSimple.Direction.FORWARD);
+        sweeper.setDirection(DcMotorSimple.Direction.FORWARD);
 
         // Set all motors to zero power
         leftMotor.setPower(0);
@@ -206,6 +212,7 @@ public class InvadersVelocityVortexBot
         rightBallLauncher.setPower(0);
         leftBallLauncher.setPower(0);
         capBall.setPower(0);
+        sweeper.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -214,14 +221,23 @@ public class InvadersVelocityVortexBot
         rightBallLauncher.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftBallLauncher.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         capBall.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        sweeper.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define and initialize ALL installed servos.
-        pusher = hwMap.servo.get("pusher");
-        beacon = hwMap.servo.get("beacon");
-        ballElevator = hwMap.crservo.get("ballElevator");
-        pusher.setPosition(.50);
-        beacon.setPosition(0.1);
+        beaconLeft = hwMap.servo.get("beaconLeft");
+        beaconRight = hwMap.servo.get("beaconRight");
+        ballElevator = hwMap.crservo.get("BallElevator");
+        beaconLeft.setPosition(0.1);
+        beaconRight.setPosition(0.1);
         ballElevator.setPower(0.0);
+
+        // Define our sensors
+        touchSensor = hwMap.touchSensor.get("downLimit");
+        UDS = hwMap.get(ModernRoboticsI2cRangeSensor.class, "UDS");
+        ODS = hwMap.opticalDistanceSensor.get("ODS");
+        beaconSensor = hwMap.colorSensor.get("beaconSensor");
+        floorSensor = hwMap.colorSensor.get("floorSensor");
+        gyroSensor = (ModernRoboticsI2cGyro)hwMap.gyroSensor.get("gyroSensor");
     }
 
     /***
@@ -249,4 +265,3 @@ public class InvadersVelocityVortexBot
         period.reset();
     }
 }
-

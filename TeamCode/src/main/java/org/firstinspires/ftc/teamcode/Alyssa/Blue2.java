@@ -38,6 +38,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.InvadersVelocityVortexBot;
 
 /**
@@ -155,8 +156,8 @@ public class Blue2 extends LinearOpMode {
 
 
      //  Color sensor.
-     int red = robot.color1.red();
-     int blue = robot.color1.blue();
+     int red = robot.beaconSensor.red();
+     int blue = robot.beaconSensor.blue();
 
      while (blue < 50){
          robot.leftMotor.setPower(1);
@@ -165,9 +166,7 @@ public class Blue2 extends LinearOpMode {
      robot.leftMotor.setPower(0);
      robot.rightMotor.setPower(0);
 
-        double distance = robot.UDS.getUltrasonicLevel();
-
-        while (distance > 10 ){
+        while (robot.UDS.getDistance(DistanceUnit.CM) > 10 ){
 
                 robot.leftMotor.setPower(1);
                 robot.rightMotor.setPower(1);
