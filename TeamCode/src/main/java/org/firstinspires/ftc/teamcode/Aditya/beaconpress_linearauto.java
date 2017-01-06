@@ -1,12 +1,8 @@
 package org.firstinspires.ftc.teamcode.Aditya;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.teamcode.AutonomousGeneral_newName;
+import org.firstinspires.ftc.teamcode.Main.AutonomousGeneral_newName;
 /**
  * Created by inspirationteam on 12/28/2016.
  */

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Main;
 
 import android.graphics.Color;
 
@@ -291,4 +291,34 @@ public class AutonomousGeneral extends LinearOpMode{
         }
 
     }
+
+    public void gyro_leftTurn(int degrees, double speed){
+        gyro.calibrate();
+        while(gyro.isCalibrating()){
+
+        }
+        turnLeft(speed);
+        while((gyro.getHeading() > degrees) ||(gyro.getHeading() < 10)){ //turn left until the angle becomes as small as you want it
+            //gyro.getHeading() returns values from 0 to 359
+            telemetry.addData("current gyro pos", gyro.getHeading());
+            telemetry.update();
+        }
+        stopMotors();
+    }
+
+    public void gyro_rightTurn(int degrees, double speed){
+        gyro.calibrate();
+        while(gyro.isCalibrating()){
+
+        }
+        turnRight(speed);
+        while((gyro.getHeading() < degrees) ||(gyro.getHeading() > 350)){ //turn left until the angle becomes as small as you want it
+            //gyro.getHeading() returns values from 0 to 359
+            telemetry.addData("current gyro pos", gyro.getHeading());
+            telemetry.update();
+        }
+        stopMotors();
+    }
+
+
 }
