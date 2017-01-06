@@ -19,7 +19,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * This hardware class assumes the following device names have been configured on the robot:
  * Note:  All names are lower case and some have single spaces between words.
  *
- * TODO Matthew, Alyssa, or Willow, please update these Motor Channel comments to match what we are
+ * @todo Matthew, Alyssa, or Willow, please update these Motor Channel comments to match what we are
  * actually using.  These current defintions were left over from last-year's pushbot robot.
  * Also, please add in the Sensor definitions as well.  The goal is that the comment section here
  * clearly shows all of the sensors/motors were using on the robot and has names that match what
@@ -46,11 +46,11 @@ public class InvadersVelocityVortexBot
     public UltrasonicSensor UDS = null;
     public ColorSensor color1 = null;
 /*
-     TODO Matthew, Willow, or Alyssa - Please add in a new state variable for each old-style
+     @todo Matthew, Willow, or Alyssa - Please add in a new state variable for each old-style
      I2C sensor on our robot (we should have two color sensors total, one gyro sensor) of type
      FtcI2cDeviceState.  Note: The Ultrasonic sensor is a newer I2C device that doesn't work with
      the FtcI2cDeviceState class.
-     
+
      Reference GitHub Commit: https://github.com/IfSpace/ftc_app/commit/9bc2de71a8464b4a608382e7af89070efbdd0301
      An example variable for our ultrasonic distance sensor (which we declared on line 46 above as
      'UDS' would look like this:
@@ -78,7 +78,7 @@ public class InvadersVelocityVortexBot
      */
     public void GyroTurn(float speed, float degrees) {
 /*
-        TODO Matthew, Alyssa, or Willow - we need to decide here what 'degrees' means here.
+        @todo Matthew, Alyssa, or Willow - we need to decide here what 'degrees' means here.
            Should it be an Absolute heading  (ie turn to 350° always means the same direction,
            regardless of what direction we were facing when we started).
            If we use this approach, we should only zeroize our gyro sensor once (at the start of the
@@ -100,7 +100,7 @@ public class InvadersVelocityVortexBot
             leftMotor.setPower(0.2);
             rightMotor.setPower(-0.2);
             while (GyroDegrees < degrees == true){
-                // TODO Matthew, Alyssa, or Willow - this while loop doesn't update the value of
+                // @todo Matthew, Alyssa, or Willow - this while loop doesn't update the value of
                 // GyroDegrees so we'll be stuck here forever in an endless loop.  We need to read
                 // the gyro sensor's value here.
             }
@@ -112,7 +112,7 @@ public class InvadersVelocityVortexBot
             leftMotor.setPower(-0.2);
             rightMotor.setPower(0.2);
             while (GyroDegrees < degrees == true) {
-                // TODO Matthew, Alyssa, or Willow - this while loop doesn't update the value of
+                // @todo Matthew, Alyssa, or Willow - this while loop doesn't update the value of
                 // GyroDegrees so we'll be stuck here forever in an endless loop.  We need to read
                 // the gyro sensor's value here.
             }
@@ -136,7 +136,7 @@ public class InvadersVelocityVortexBot
     }
 
     /**
-     * ColorDrive TODO Matthew, Alyssa, or Willow - we need to decide how this function is going to
+     * ColorDrive @todo Matthew, Alyssa, or Willow - we need to decide how this function is going to
      * work.  How do we use this to drive to the white line?  The current logic below has us
      * driving until red matches, then checking green, then blue.  But what if blue matched first
      * but we drove past it looking for a red match?  This is going to be tricky.  I think we may
@@ -145,7 +145,7 @@ public class InvadersVelocityVortexBot
      * have changed from their initial values to at least what our changed values are.  Testing this
      * by passing a color sensor over a black sheet of paper with a white taped line on it may help
      * you decide what is best to look for.
-     * @param Red TODO add the color parameter descriptions for Red, Blue, and Green once you decide what they mean.
+     * @param Red @todo add the color parameter descriptions for Red, Blue, and Green once you decide what they mean.
      * @param Blue
      * @param Green
      */

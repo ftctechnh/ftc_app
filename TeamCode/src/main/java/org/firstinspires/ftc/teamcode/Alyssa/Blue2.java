@@ -127,7 +127,7 @@ public class Blue2 extends LinearOpMode {
 //
 
 
-        /* TODO: Alyssa now that you have our ten steps clearly defined, its time to start calling
+        /* @todo: Alyssa now that you have our ten steps clearly defined, its time to start calling
            the robot functions required to make the robot do the things we want it to.  Matthew
            added some functions to InvadersVelocityVortexBot.java that you can use to do
            gyro turns and driving using the ultrasonic sensor.  You can access them by typing:

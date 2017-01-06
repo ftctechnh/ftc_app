@@ -133,14 +133,14 @@ public class Matthew_Encoder extends LinearOpMode {
         robot.rightMotor.setPower(0);
         //This drives the robot to the beacon.
 
-        //TODO: Add color sensor so that we can lock on to the line in front of the beacon.
+        //@todo: Add color sensor so that we can lock on to the line in front of the beacon.
 
         //Below drives from the beacon to the corner vortex.
         encoderDrive(DRIVE_SPEED, -24, -24, 5.0);
         encoderDrive(DRIVE_SPEED, -6, -6, 4.0);
         encoderDrive(DRIVE_SPEED, 24, 24, 5.0);
 
-        //TODO: Activate ball shooting mechanism here to dispense particles into corner vortex.
+        //@todo: Activate ball shooting mechanism here to dispense particles into corner vortex.
 
         // S3: Reverse 24 Inches with 4 Sec timeout
 
